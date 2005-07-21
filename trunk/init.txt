@@ -1,0 +1,370 @@
+#
+# Crawl Init file
+#
+# Lines begining with '#' are comments.  The basic syntax is:
+#
+# field = value         or      field.subfield = value
+#
+# Only one specification is allowed per line.
+#
+# The terms are typically case-insensitive except in the fairly obvious
+# cases (the character's name and specifying files or directories when
+# on a system that has case-sensitive filenames).
+#
+# White space is stripped from the begining and end of the line, as
+# well as imediately before and after the '='.  All other whitespace
+# is left alone.
+#
+
+
+#
+# Player name
+#
+
+# name=kernel
+
+
+# Directory for reading macro.txt and init.txt, and dumping characters.
+# It should end with the path delimiter.
+# crawl_dir=/home/bwross/crawl/
+
+
+# Here's a list of autopickup types:
+#
+#    )		Weapons
+#    (		Missiles
+#    [		Armour
+#    /		Wands
+#    %		Food
+#    ?		Scrolls
+#    " or =     jewellery
+#    !		Potions
+#    + or :	Books
+#    \ or |	Staves
+#    0		Orbs
+#    }		Misc items
+#    X		Corpses
+#    $		Gold
+
+autopickup = $?!:"/0
+
+
+# verbose dump causes less important item details to appear in character dumps
+# verbose_dump  = false
+
+
+# Colours out of sight map features on the playing screen
+colour_map    = true
+
+
+# Cleans up out of sight monsters and clouds on the map
+clean_map     = false
+
+
+# Open doors by moving on to them
+# easy_open     = false
+
+
+# Auto-switch to uncursed short blade for butchery (EXPERIMENTAL!)
+easy_butcher  = true
+
+
+# Allows auto removal of armour when dropping it
+# easy_armour   = false
+
+
+# Make confirmation queations easier to answer:
+#       none = force capitals on Y/N questions
+#       safe = force only on questions that will end game
+#       all  = never force capitals
+
+# WARNING TO KEYPAD USERS: The number 7 is mapped to the letter 'y',
+# which can result in accidentally answering yes to questions; it is
+# suggested that you use a value of 'none' or 'safe'
+
+easy_confirm  = safe
+
+
+# Setting this option to true allows the quitting of item listing with
+# space as well as escape.  These lists are essentially all of those 
+# that are requesting an inventory item and accept '?' and '*'.
+#
+# The identify list will never easy quit.  The default is false.
+
+# easy_quit_item_lists = true
+
+
+# This option adds the text "uncursed" to items where the
+# curse status is relevent and known.  Does not bother to
+# show "uncursed" on items that are fully identified (showing pluses),
+# since that wound be redundant and waste space.
+
+show_uncursed = true
+
+
+#
+# The weapon option allows defaulting on the weapon selection screen
+#
+# Valid weapons are short sword, hand axe, spear, mace, and trident...
+# although tridents are restricted to only merfolk and gladiators, so
+# you'll get queries for the illegal cases.
+#
+
+# weapon = hand axe
+
+
+#
+# These allow auto-selection of other third-screen options.
+#
+# Select "random" for random choice.
+#
+# chaos_knight => Xom or Makleb
+# death_knight => necromancy or Yredelemnul
+# priest       => Zin or Yredelemnul
+#
+
+# chaos_knight = xom
+# death_knight = necromancy
+# priest       = random
+
+
+#
+# The random_pick option will randomly generate a character.
+# The above options (weapons and class options) will override where
+# appropriate.
+#
+
+# random_pick = true
+
+
+# Macro colours to other colours
+#
+# Useful for terminals where some colours are hards to read (and cannot
+# be adjusted), as well as for creating a custom scheme, especially
+# when used with the background option on a terminal with a non-black
+# background.
+#
+# Format is colour.OLDCOLOUR = NEWCOLOUR, later rules take preference and
+# the NEWCOLOUR is always literal (ie. it won't re-evaluate to a different
+# colour).
+#
+# The colours are:
+#
+# black, blue, green, cyan, red, magenta, brown, lightgrey, darkgrey,
+# lightblue, lightgreen, lightcyan, lightred, lightmagenta, yellow, white
+#
+# lightgray = lightgrey, darkgray = darkgrey
+
+# colour.lightgray = black
+# colour.white     = black
+# colour.lightcyan = cyan
+# colour.yellow    = brown
+
+
+#
+# always_greet will give the race/class and god messages everytime the
+# game is started.
+#
+
+always_greet = true
+
+
+# Set the default background colour of your window
+# Warning: setting this to a value different than the window's background
+#          colour, will probably result in some very ugly results.
+
+# background = white
+
+
+#
+# Brand friendly monsters with a curses attribute... these might not
+# do what you think, it depends on the terminal being used (and won't
+# work with non-curses compiles).
+#
+# Available options, with typical results:
+#
+# standout      -- often the same as reverse, might be underline or dim
+# bold          -- used by colour curses for brightening foreground colours
+# blink         -- used by colour curses for brightening background colours
+# reverse       -- this will probably work
+# dim           -- probably no effect
+# underline     -- this will probably work
+#
+# This is somewhat interesting (blink here is used to give friends a
+# dark grey background, and then we change dark grey so we can see bats):
+#
+# friend_brand = blink
+# colour.darkgrey = magenta
+
+friend_brand = reverse
+
+
+# Message channel options:
+#
+# Format is channel.CHANNEL_NAME = (COLOUR|mute|default|on|off|plain)
+#
+# CHANNEL_NAME can currently be one of these:
+#   plain           = regular text (and things "uncoloured")
+#   prompt          = input prompts to the player
+#   god             = messages from the gods
+#   duration        = messages about character spells/effects wearing off
+#   danger          = serious threats to the characters existence
+#   food            = warnings about food
+#   warning         = various other warnings
+#   recovery        = recovery from disease/stat loss/poison conditions
+#   talk            = monsters talking (acting)
+#   intrinsic_gain  = level/stat/species power gains
+#   mutation        = gain/lose mutations
+#   monster_spell   = messages about monsters gesturing and casting spells
+#   monster_enchant = messages pertaining to monster enchantments (up or down)
+#   monster_damage  = messages telling how damaged a monster is
+#   rotten_meat     = messages about chunks/corpses becoming rotten
+#
+# COLOUR can be any of the colours in the colour section above.
+#
+# Other channel options:
+#
+#   mute      = show no messages from channel (dangerous, be careful!)
+#   default   = turn channel on to it's default scheme
+#   alternate = turn channel on to it's alternate "colourful" scheme
+#   on        = same as default
+#   plain     = make channel the same colour as the "plain" channel
+#               (won't do anything silly like "mute" if plain == mute, though)
+#   off       = same as plain
+#
+# Note: The only multi-colour channels currently are monster_damage and
+#       god.  Setting god to a COLOUR will make all god messages that
+#       colour.  Setting monster_damage to a colour will make the
+#       "monster dies" messages that colour, and the "injured" messages
+#       will be plain coloured.  More control of these and other channels
+#       will be coming later.
+#
+
+# channel.plain = green
+# channel.talk = mute
+# channel.warning = plain
+# channel.diagnostic = mute
+# channel.rotten_meat = yellow
+# channel.god = alternate 
+# channel.mutation = green
+
+
+#
+# hp_warning gives "* * * LOW HITPOINT WARNING * * *" on the danger channel
+# when the player takens damage and their hitpoints are less than this
+# percentage of their maximum (use 0 to turn off these messages).
+
+hp_warning = 25
+
+
+# race 
+#
+# Use to preselect race.  Argument can be:
+#
+# - letter used in the character creation process
+# - two letter abbreviation used on the high score board
+# - a string to match against the full name
+
+# race = human
+
+
+# class 
+#
+# Used to preselect class.  Same format as race option above.
+
+# class = fighter
+
+
+#
+# Wizard mode options (available only in WIZARD compiles):
+#
+#     yes   = start games in wizard mode (game might not be scored)
+#     no    = still allows player to enter wizard mode after start of game
+#     never = never allow a wizard command to be used
+#
+
+wiz_mode = no
+
+
+#
+# Fire command options
+#
+# fire_items_start - sets the first inventory item to consider (default is a)
+#
+# fire_order       - controls when to consider types of items
+#
+#     launcher, dart, stone, dagger, spear, handaxe, club
+#
+# The list should be on one line, with commas between items.
+#
+# Launcher refers to firing the appropriate missile for the wielded 
+# weapon (ie crossbow, bow, sling)... you'll probably want it first, as 
+# it'll be ignored when you're not wielding a ranged weapon.  The default
+# is "launcher, dart" which matches the old behaviour.
+#
+
+fire_items_start = c
+fire_order = launcher, dart, stone
+
+
+#
+# auto_list
+#
+# Setting this to true if you want to automatically list appropriate 
+# inventory items for commands like quaff and read.  This is like 
+# immediately hitting '?', and can be confusing to beginners because 
+# they won't get to see the prompts.
+#
+# This option does not apply to spell casting... Conjurers would probably 
+# find that really annoying.
+# 
+
+# auto_list = true
+
+
+#
+# Input buffer flushing options (flush.*)
+#
+# These are useful when using macros.  Setting one of these 
+# sub-options to true will cause the entire input buffer to 
+# be dumped and thus effectively stop the macro.
+#
+# The sub-options currently are (and their defaults):
+#
+# failure -- when spells/abilities get miscast (true)
+# command -- whenever the game is aboutn to get the next command (false)
+# message -- whenever the game outputs a non-mute message (false)
+#
+# flush.failure = false
+# flush.command = true
+# flush.message = true
+
+#
+# lowercase_invocations
+#
+# Set this option to true if you prefer to have invocations on 'a'-'e'
+# instead of the traditional 'A'-'E' (which is the default).
+#
+
+lowercase_invocations = true
+
+
+#
+# terse_hand
+#
+# Set this to false to have the "in hand" description on the main screen
+# the same as the inventory.  The default setting of true will give the
+# newer more terse description that should fit the limited space better
+# (but will be harder for newbies to understand).
+
+# terse_hand = false
+
+
+#
+# delay_message_clear - experimental (may be ugly at points)
+#
+# Setting this option to true will delay the clearing of messages until 
+# the message space is full (default is false which results in clearing
+# between player actions).
+
+# delay_message_clear = true

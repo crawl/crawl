@@ -1,0 +1,62 @@
+# -*- Makefile -*- for Dungeon Crawl (linux)
+
+#APPNAME = crawl
+GAME = crawl
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+OBJECTS += liblinux.o
+
+CXX = g++
+DELETE = rm -f
+COPY = cp
+OS_TYPE = BSD
+CFLAGS = -Wall -D$(OS_TYPE) $(EXTRA_FLAGS)
+LDFLAGS = -static -L/usr/lib
+MCHMOD = 711
+# INSTALLDIR = /usr/games
+INSTALLDIR = /tmp/CRAWLTEST/testdev
+LIB = -lncurses
+
+# Include for Linux
+INCLUDES = -I/usr/include/ncurses
+
+all:            $(GAME)
+
+install:        $(GAME)
+		$(COPY) $(GAME) ${INSTALLDIR}
+		chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
+
+clean:
+		$(DELETE) *.o
+
+distclean:
+		$(DELETE) *.o 
+		$(DELETE) bones.*
+		$(DELETE) morgue.txt
+		$(DELETE) scores 
+		$(DELETE) $(GAME)
+		$(DELETE) *.sav
+		$(DELETE) core
+		$(DELETE) *.0*
+		$(DELETE) *.lab
+
+
+$(GAME): $(OBJECTS)
+	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	strip $(GAME)
+	chmod ${MCHMOD} $(GAME)
+
+debug: $(OBJECTS)
+	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+profile:	$(OBJECTS)
+	${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $< ${INCLUDE}
+
+.h.cc:
+	touch $@

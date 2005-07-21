@@ -1,0 +1,53 @@
+#
+# Makefile for Borland C++ 5.5 free commandline tools
+#
+
+!include makefile.obj
+
+GAME = ..\crawl.exe
+
+all : $(GAME)
+
+.PHONY : clean
+.PHONY : debug
+.PHONY : noopt
+.PHONY : install
+.PHONY : wizard
+
+clean : 
+	$(DEL) *.o
+
+debug : 
+
+noopt : 
+
+install : 
+
+wizard : 
+
+#
+# Borland C++ tools
+#
+CC     = bcc32
+LINK   = ilink32
+DEL    = del
+
+# 
+# windows defines,  including windows version to make sure code runs on
+# all windows systems
+#
+WIN32DEFINES = WIN32CONSOLE;NEED_SPRINTF;WINVER=0x0400;_WIN32_WINNT=0x0400;__BCPLUSPLUS__
+
+#
+# Options
+#
+LINKOPTS    = -Tpe -ap -c -x /V4.0
+CFLAGS      = -I. -D$(WIN32DEFINES) -4 -a -k- -Oc -OS -Oi -Ov -H- -P -c
+NICEFLAGS   = -w-8004
+DEBUGFLAGS  = -v -y
+
+$(GAME) : $(OBJECTS) libw32c.o
+	$(LINK) $(LINKOPTS) c0x32.obj $?, $(GAME),, import32.lib cw32.lib
+
+.cc.o:
+	$(CC) $(CFLAGS) $(NICEFLAGS) -o$*.o $< 

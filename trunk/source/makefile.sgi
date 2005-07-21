@@ -1,0 +1,54 @@
+# Make file for Dungeon Crawl (irix)
+
+APPNAME = crawl
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+CXX = CC
+DELETE = rm -f
+COPY = cp
+OS_TYPE = LINUX
+CFLAGS = -Wall -D$(OS_TYPE) $(EXTRA_FLAGS)
+LDFLAGS = -L/usr/lib
+MCHMOD = 711
+INSTALLDIR = /usr/games
+LIB = -lncurses
+
+# Include for Linux
+INCLUDES = -I/usr/include/ncurses
+
+all:            $(APPNAME)
+
+%.o:		%.cc
+		@echo hello
+		@${CXX} ${CFLAGS} -c $< ${INCLUDE}
+
+install:        $(APPNAME)
+		$(COPY) $(APPNAME) ${INSTALLDIR}
+		chmod ${MCHMOD} ${INSTALLDIR}/$(APPNAME)
+
+clean:
+		$(DELETE) *.o
+
+distclean:
+		$(DELETE) *.o 
+		$(DELETE) bones.*
+		$(DELETE) morgue.txt
+		$(DELETE) scores 
+		$(DELETE) $(APPNAME) 
+
+$(APPNAME):	$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+		strip $(APPNAME)
+		chmod ${MCHMOD} $(APPNAME)
+
+debug:		$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+profile:	$(OBJECTS)
+		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+.h.cc:
+		touch $@

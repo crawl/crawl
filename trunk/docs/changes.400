@@ -1,0 +1,3278 @@
+9 August 2001, Michal Valvoda
+ * Gordon's destroy_item() fix included
+ * Complete clean-up of dungeon.cc::give_item() + few changes
+      for example
+      - Until now was a lot of items colored twice (by give_item()
+        and by item_colour()) and sometimes differently
+      - every item goes to right MSLOT-no more MISCELLANY in MSLOT_POTION
+      - magical items (wands, scrolls, potions) distribution
+ * repel undead is working again (in turn_undead() was missing call for
+   behavior_event())
+ * added messages for rotting chunks/corpses in player's inventory
+ * message when Corona wears out + few other new messages
+ * fixed some (I hope that all) problems with "polymorph other".
+   As side effect of some solutions
+      - MONS_HUMAN and MONS_ELF are now valid and fully functional
+        polymorph targets
+      - useless MONS_ANOTHER_LAVA_THING was changed to
+        MONS_SALAMANDER (in case of problem switch it off in dungeon.cc,
+        yes, there because water and lava monsters are generated differently)
+ * Renamed MSLOT_UNASIGNED_I to MSLOT_MISCELLANY, added NUM_MISCELLANY
+ * rewrote misc. object generation to use NUM_MISCELLANY.
+   Not important for now but I have many new misc. objects I want to include
+   after release and it will help later. Also new code is much more readable
+   and easier to modificate.
+ * inteligent monsters now pick up gold
+ * added some new unrand artifacts
+   (ring of Shadows is getting a bit tired :)
+ * added underground rivers and lakes,
+   improved water generation
+ * 3 new compile options
+   #define USE_NEW_UNRANDS - switches new unrands on
+   #define USE_RIVERS - switches new underground rivers and lakes on
+   #define MISSILE_TRAILS_OFF - turns misile trails off.
+                              - not optimal, but works well on
+                                many computers
+                              - defaultly unset
+ * other minor fixes and updates
+ * changes.400 updated
+
+ Notes:
+ ! generation of water and lava monsters isn't very nice, an it would be
+   fine to change it one day
+ ! spells in WIZARD mode probably should be cast with some power
+
+
+
+
+
+
+
+BUGLIST:
+
+
+LEGEND
+** outstanding bug;  reproduced or definitely needs fixing
+xx outstanding bug report; unreproducable,  currently unfixable,
+   or not a candidate for 4.0.0 release
+== fixed and released in some form (alpha, beta, etc - see version.h)
+-- fixed bug,  not yet released
+
+
+
+
+** Various XXX and FIXME comments throughout code from Brent.
+
+== 1. Casting "Corona" at self shows message "The 0 hits you !" and
+hurts you (same for Hibernation, maybe also other spells.)
+
+>> fixed Corona and Hibernation.  Possible that other spells still
+>> allow this goofy behavior.
+
+== 2. Dwarven hunters starts with CYAN leather armor (maybe also
+others). It should be BROWN.
+
+== 3. Missing space in message "You feel verybuoyant !" (same problem
+with  "You feel morebuoyant !")
+
+== 4. No message when you quaff potion of restore abilities and nothing
+happens.
+
+> fixed by Brent?
+
+== 5. Maybe there should be some message when you cast "Static
+Discharge" and no monster around.
+
+== 6. Inscription on "Innate abilities, Weirdness & Mutations" screen
+should be centered (my fault).
+
+== 7. Polymorph and unpolymorph messages are really odd -
+e.g. I polymorphed kobold and I got message
+ "The stone giantThe kobold evaporates and reforms as a stone giant."
+
+== 8. Empty ebony casket should be DARKGREY and not BLACK.
+
+== 9. Rare weapons (quick blade, double/triple sword etc.) aren't as
+rare as they should be.
+
+> line 2006 in dungeon.cc should be 1+random(10) <= rarity
+
+== 11. Missing space in "Elyvilondemands penance!". Of course, same
+problem with other gods.
+
+== 12. 2 messages when wearing crystal armor about that it's too
+cumbersome
+
+== 13. map under DOS is working bad - each next line is shifted by one
+character
+LRH - At line 1810 of view.cc, in the map function, there is a
+for loop involved in printing the map. At present it's
+for (i = 0; i < 79; i ++);. To work under DOS, the 79 should
+be 80, otherwise the map is skewed to the left and looks
+very ugly.
+
+== 14. stoneskin isn't working - if you look at cast_stoneskin() zou
+will see it does nothing with AC
+
+> I have a fix for this - basically remove the 'else' before the
+> transformation-AC-adjustment switch in player.cc::{player}_AC().
+
+> There's another "bug" there, too, which is that the corresponding
+> 'if' ought to include '|| you.attr[ATTR_TRANSFORMATION] =
+TRAN_BLADE_HANDS'.
+
+== 15. Saw "a buggy helmet"
+        "a buggy orange potion"
+        "a buggy red potion"
+
+== 16. Buggy targeting - can't hit monsters in LOS.  Could fix.. both
+   for throwing and beaming?
+
+== 17. A hill Orc Chaos Knight (Zom) started with 14/15 hit points.  !?
+
+== 20.One more thing that needs cleaning: the new invisible monster code.
+    You don't get a message when your missile hits a monster, but you
+    *do* get a message when your missile *misses* an invisible monster.
+    IMO if we do make invisible monsters harder to detect than they
+    were, we ought to make these (absent) messages exactly opposite:
+    no message for miss, yes message for hit.
+
+
+xx 21. wearing Troll Hide, read unknown scroll, ASSERT(index < SIZE) in
+    FixVec fails, abortion, core.
+
+== 22. Amulet of Rage isn't auto-identified when put on, but ability is
+    visible in 'A' menu.
+
+== 23. torment_monsters in spells4.cc asserts like crazy. It should have a line
+like:
+    if (mon != NON_MONSTER) {
+
+> fixed again;  player wasn't getting hit.   Not adding magic resist.
+
+
+== 24. In dungeon.cc there's a huge function called builder() with some code at
+    the bottom that looks like this:
+
+    if ( you.where_are_you == BRANCH_HALL_OF_BLADES )
+    {
+        for (bi = 1; bi < GXM; bj++)
+          for (bj = 1; bj < GYM; bi++)
+            if ( grd[bi][bj] >= DNGN_STONE_STAIRS_DOWN_I && grd[bi][bj]
+<= DNGN_ROCK_STAIRS_UP )
+              grd[bi][bj] = DNGN_FLOOR;
+    }
+
+    The increment in the for loops should be swapped.
+
+== 25. A backtrace does indeed reveal the problem.  From line 2432 of
+    monstuff.cc:
+
+    for (count_x = 0; count_x < 3; count_x++)
+      for (count_y = 0; count_y < 3; count_y++)
+      {
+          good_move[count_x][count_y] = true;
+
+...
+
+          if ( grd[monster->x + count_x - 1][monster->y + count_y - 1] < okmove )
+          {
+              good_move[count_x][count_y] = false;
+              continue;
+          }
+
+    There's a monster at (39, 69), the above loop references (38,70).
+
+== 26. This line
+
+    unsigned char grik = grd[monster->x + mmov_x][monster->y + mmov_y];
+
+    from monstuff.cc around line 2730 is also causing an ASSERT failure.
+
+    GDL: in fact, there are a bunch of places in monstuff.cc where fleeing
+      or confused monsters can try to "run off the map",  apart from the
+      'good move' checking in bug 25 above.
+
+
+== 27.  monsters equipped with missile weapons
+    commonly associated with launchers who
+    insist on tossing the missiles by hand.
+
+== 28.About line 909 of monstuff.cc is
+
+        if ( show[monster->x - you.x_pos + 6][monster->y - you.y_pos + 6] )
+
+    The electric eel is at (48,36), I'm at (55,32), so we're indexing (-1,10).
+    The array show is 19x19, and I'm thinking the +6 should be +9.
+
+    There's a similar construct for lava snakes a little further up.
+
+== 29.  An indexing error in item_use.cc, line 3092 or so, after reading a scroll
+    of enchant armour while not wearing body armour.
+
+    you.inv_type[you.equip[EQ_BODY_ARMOUR]] is inspected even though
+    you.equip[EQ_BODY_ARMOUR] is -1.
+
+
+    do
+    {
+        affected = 1 + random2(6);
+    }
+    while ( you.equip[affected] == -1 );
+
+  // NOTE: It is assumed that armour which changes in this way
+  // does not change
+  //  into a form of armour with a different evasion modifier.
+
+    if ( you.inv_type[you.equip[EQ_BODY_ARMOUR]] == ARM_DRAGON_HIDE
+          || you.inv_type[you.equip[EQ_BODY_ARMOUR]] == ARM_ICE_DRAGON_HIDE
+          .
+          .
+          .
+       )
+
+== 31.      I just disarmed a blade trap, and the game seemed to hang.
+
+Since TRAP_BLADE are of type DNGN_TRAP_MECHANICAL, this code in misc.cc,
+line 1492 or so, tries to make a stack of trap items:
+
+    if ( trap_category(env.trap_type[i]) == DNGN_TRAP_MECHANICAL )
+    {
+        for (j = 0; j < 20; j++)
+        {
+            itrap(&beam[0], i);     // places items (eg darts), which will automatically stack
+
+            if ( j > 10 && one_chance_in(3) )
+              break;
+        }
+    }
+
+But misc::itrap() doesn't create these blades, and instead:
+
+      default:
+        getch();
+        break;
+
+waits for input.  It seems like a very strange default.  Ultimately,
+you can wait it out by moving back and forth.  Then you find a few
+questionable item where the trap was.
+
+== 32.  Banishing self to Abyss when you are at Abyss does really
+   strange effects
+  ("The 0 hits you !" - I really don't understand why)
+   Propably it's connected with 0-beams problem -
+   some spells shows message "The 0 hits you !" when cast at player
+   I suggest some kind of check whenever is 0-beam casted (e.g. if
+   its targeted at player then shows message "It's not good idea."
+   or so)
+
+== 33. I don't know how it happened but I've found 2 off-screen corridors.
+   (Btw. I hopped it was fixed)
+- Finally, what you've all been waiting for: a fix for the
+infamous "corridor off the screen bug" (or at least one of its
+aspects). In dungeon.cc in vault_grid(...), add the line
+(vgrid == '\0') ? DNGN_ROCK_WALL :
+amongst all of the other ones. The problem was that the
+vault code was null-terminating some of the lines of the map,
+causing the default of DNGN_FLOOR to be put in place of all
+the '\0's.
+
+== 34. Potions, scrolls & wands are not updated when wielded and used.
+
+== 35. I've already reported this one but I remind that -
+   When zapping some bolt towards the top of the screen and
+   gaining level during it the rest of the bolt is drawn at the
+   bottom of the screen (at message lines)
+
+== 36. Missing space in message "<Servant>is recalled."
+   e.g. "Mummyis recalled."
+
+== 37. Redundant space in message "You are  diseased."
+
+== 38. Why is "demon whip of flaming" white ? I've found such one.
+>> demon weapons are always given random colours.
+>> MV: Should not be fixed now.
+
+== 39. "Summon Daeva" spell summons Angel.
+   Why ? "Daeva" exists and it's possible
+   to summon it during summon_ice_beast_etc()
+
+== 40. At fight.cc::monster_die() is line
+    ( you.religion == GOD_VEHUMET
+           && (!player_under_penance()
+           && random2(you.piety) >= 20) )
+   There should be 30 and not 20, because piety equal to 30 is limit
+   for this ability (see religion.cc).
+
+== 41. It was mentioned already but -
+    Descriptive messages like
+    "It's lightly enchanted to do more damage."
+    can never appear because of badly placed brackets - {}
+    in describe.cc::describe_weapon()
+    Program gets on line
+        if ( item_dam >= NWPN_SINGING_SWORD )
+    and if this fails the programs continues on the line
+        int spec_ench = item_dam % 30;
+    and it means it can't get to messages about enchantment.
+
+    Or am I missing something ?
+
+== 42.In monstuff.cc::mons_speaks() is few times used sprintf() insteed
+   of strcat(), e.g.
+
+        sprintf(info, " %s \"Help!\"",
+        coinflip() ? "yells" : "wails");
+
+   Problem is that in the begining _info_ contains name of the monster
+   but sprintf() deletes it. It means that output is
+   e.g. " yells "Help!"" instead of "Sigmund yells "Help!""
+
+== 43. Which compile time options will be made standard?  What are the the
+   appropriate defaults for the config file (set in initfile.cc)?  These
+   have to be laid out before the release.
+
+SEPARATE_SELECTION_SCREENS_FOR_SUBSPECIES     I vote no on this one.  Could be made into an initfile or command
+    line option if people really want it, but there just aren't enough
+    subspecies to justify it.
+ALLOW_DRACONIAN_TYPE_SELECTION     This one is typically considered "cheating".  Part of the fun of
+    being draconian is finding out what you actually are.
+USE_ELVISH_GLAMOUR_ABILITY     Haven't really tried out glamour.  The grey elf or two I've played
+    that has had it has never really successfully used it.
+USE_BETTER_MINOR_MAGIC_BOOKS     These should be okay now.
+USE_NEW_CLOUD_CODE     This code is pretty cool, I sometimes wonder about potential
+    twinkiness at high levels with this in a corridor (where it
+    could fill quite a stretch reaching more than a half dozen
+    squares from the center of the effect in a single turn).
+    Maybe a safeguard should be added to keep the effect within
+    a certain radius from the target?
+USE_SILENCE_CODE     I've never been overly fond of silence.  I don't like the
+    way it cancels enemy priests and spellcasters.
+USE_HARDER_AC_RULES    Things are more sane with is option, unless scaled demonspawn
+   transformers turn into scaly spiders.
+USE_NEW_ALTAR_CODE     I liked things a bit more random.  I once had orcish mines with
+    three Ely altars (which I thought was pretty interesting).
+    Modifying this code so there's at least a chance of an outside
+    altar would be nice.
+USE_NEW_MINIVAULTS     These are probably okay.
+
+USE_GOD_COLOURS     We do much worse than this right now with all the channels on.
+// > USE_GOD_COLOURS
+// Yes. Actually, this option should probably be either removed or replaced with
+a USE_MESSAGE_CHANNEL_COLOURS option or some such (gods are just part of
+this system now).  Brings back to mind the possibility of specifying
+non-colour-based highlighting options like "stars", "capitalized",
+"indented", and such.  Would have to switch from an enum to a bitfield,
+and the initfile parser would have to be adjusted, but other than that
+it would be simple to do.
+
+USE_OPTIONAL_WIZARD_DEATH     Test option, don't need this.
+USE_LIGHTER_MAGIC_ITEMS     These are reasonable.
+USE_NEW_TORMENT_CODE     This is good.
+USE_SEMI_CONTROLLED_BLINK     It's powerful, but as long as it needs the blink spell and
+    a separate form of teleport control it's probably okay.
+    As an all in one spell it's over powered (but that's only
+    in the code for wizard mode testing right now).
+USE_NEW_COMBAT_STATS     Not sure these really have much of an effect on anyone's
+    game.  Could be left out.
+USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES     Not sure about the wanderers.  The ranger and spellcaster templates
+    might just be encouraging people to try and re-roll for twinkiness.
+    Might be best with just the basic warrior wander type.
+USE_SKILL_POOL_DRAIN     This one is pretty silly.  There's no real reason to punish people
+    who get a large pool (mostly from killing a large monster or two).
+    To increase the cost because of that doesn't make much sense, and
+    the skill cost doesn't need to be made any tighter (it might even
+    be due for a bit of loosening).
+USE_NEW_RANDOM     Should be default, the suggestion to reverse it into USE_OLD_RANDOM
+    is probably good.
+
+From Michal:
+> SEPARATE_SELECTION_SCREENS_FOR_SUBSPECIES
+No.
+> ALLOW_DRACONIAN_TYPE_SELECTION
+No.
+> USE_ELVISH_GLAMOUR_ABILITY
+Yes. Works fine.
+> USE_BETTER_MINOR_MAGIC_BOOKS
+Yes.
+> USE_NEW_CLOUD_CODE
+Yes.
+> USE_SILENCE_CODE
+>     I've never been overly fond of silence.  I don't like the
+>     way it cancels enemy priests and spellcasters.
+I don't think so.I vote for this.
+
+> USE_HARDER_AC_RULES
+Yes.
+> USE_NEW_ALTAR_CODE
+>     I liked things a bit more random.  I once had orcish mines with
+>     three Ely altars (which I thought was pretty interesting).
+>     Modifying this code so there's at least a chance of an outside
+>     altar would be nice.
+Agree
+> USE_NEW_MINIVAULTS
+Yes.
+> USE_GOD_COLOURS
+Yes.
+> USE_OPTIONAL_WIZARD_DEATH
+>     Test option, don't need this.
+Of course no.
+> USE_LIGHTER_MAGIC_ITEMS
+Yes.
+> USE_NEW_TORMENT_CODE
+Yes.
+> USE_SEMI_CONTROLLED_BLINK
+Yes.
+> USE_NEW_COMBAT_STATS
+>     Not sure these really have much of an effect on anyone's
+>     game.  Could be left out.
+I think this one is OK, I vote for.
+
+> USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
+Yes.
+> USE_SKILL_POOL_DRAIN
+No.
+
+xx 44. might want to branch off a version of the source for the next release,
+   with the unused spells and code cut out (along with some of the
+   unimporant comments).  The full code would naturally still be used
+   as the development code.
+
+** 45. documentation (crawl.txt, crawl.6 will probably need some changes)
+
+== 46. bow messages on skill screen might take up too much real estate
+   (things are already tight for people on 24 line terminals once they
+   get all the skills)
+
+== 47. very noisy gcc --Wall compile (it was bad before, I'm afraid I've
+   made it worse, it's hard to tell I get a lot of warnings from
+   curses that have to do with some unimportant system conflicts).
+
+Oh, in makefile.sol... one of the $(INCLUDES) is spelled INCLUDE
+
+== 48. giant spores sometimes seg fault when exploding (I added a simple check
+   for NULL, but that's probably not the problem)
+
+    ugly, ugly, ugly, ugly.  But fixed.  the problem was that spores
+    were kind of cleaned up before exploding (so that the death message
+    wouldn't come twice),  but then they fell through to the "handle
+    special ability" case the next time through the "monster action" loop
+    and all hell broke loose.
+
+== 50. look into why you.equip[EQ_WEAPON] (aka weapon) is used in
+    fight.cc::monster_fight() and monster_attack() (ie. when the
+    player isn't even involved!)
+
+    > no effect in monster_attack()
+    > bizarre use in monster_fight() - the
+      attacking monster gets several attributes of the player's
+      weapon!!!  This is clearly wrong.
+    > MSLOT_WEAPON was also used in a couple places where hand_use
+      was required.
+
+== 51. BUG: no "scores" file == segfault.
+
+> some pretty nasty bugs in the score file stuff.  Cleaned up segfault
+> and some ranking bugs.   Scores file is now proper text;  Crawl can
+> still read old scores files.  Scores of 0 no longer printed.  No more
+> segfault on non-existent file.
+
+xx 52. 'X' (view map) causes core dumps on terminals larger than 64 lines?
+
+> could not repro on Win32.  Tried 65 line terminal, 'X' look no problem.
+
+== 53. Anyway, up on onelist.com (or egroups.com, whatever)
+is an updated mon-spll.h file including the enums for
+MST_foo and a couple MS_foo that Brent had missed
+in the file ... note that the comments before these lines
+in mon-util.cc:
+
+static unsigned char mspell_list[][7] = {
+#include "mon-spll.h"
+};
+
+are duplicitous of those in mon-spll.h, and can probably
+be struck (or vice versa?) ... I had also thought that there
+was a MS_foo matching value 100 (the beastly equivalent
+of SPELL_NO_SPELL) ... maybe Gordon can add it in?
+clear application to mon-spll.h and monstuff::handle_spell().
+
+
+of course, one could go whole hog and add enum constants
+for the "slots" in the template (actually the position *less one*
+would be enummed, see handle_spell() and mons_spell_list()
+for details) ...
+
+
+these lines in monstuff::handle_spell() can be enummed
+with the appropriate MST_foo enum constants:
+
+int msecc = ((monster->type == MONS_HELLION)           ? 30 :
+  (monster->type == MONS_PANDEMONIUM_DEMON) ? 119
+  : monster->number);
+
+[[ 30 == MST_BURNING_DEVIL, 119 == MST_GHOST ]]
+
+that 119 value also turns up in mon-until::mons_spell_list() ... but
+this gets into "overlap land" because these values are stored in the
+sec field of the monster struct, which stores a number of values
+unrelated to spell-casting (though I guess applying the template
+enum throughout the codebase is one way of sifting out when sec
+values are used for one purpose instead of another ...) *ANYWAY*
+
+== 54.In enum.h --
+
+/* these are for the player spell struct, we'll see what's what later
+*/
+
+#define SPELL_FOOD(x)  (x)
+#define SPELL_MANA(x)  (x)
+#define SPELL_LEVEL(x) (x)
+
+
+All of the above can be killed, as the macros are no longer used.
+
+The SPELL_EXCLUSION enumeration (right below the macro
+definitions) can also be killed, as I never implemented it, and in
+hindsight, if it is ever to be stuck back into the player spell
+data structures, there is a much better way of doing it. So, please
+yank these out, before someone gets hurt :P
+
+So, this bit in spl-util.cc can also be axed:
+
+/* //jmf: commented out; add field `restriction' to spell struct if desired
+   //     (and if anyone finds a use for such a thing)
+   int spell_restriction( int which_spell, int which_restriction )
+   {
+   int this_restriction = (int) seekspell(which_spell)->restriction;
+   return ( this_restriction == which_restriction );
+   }          // end spell_restriction()
+
+ */
+
+
+== 55. Minor typo:
+
+MST_RAKSHAKA
+
+should be
+
+MST_RAKSHASA
+
+so that it matches up with the monster's actual
+name throughout the codebase. Nothing major,
+but it will require fixing (present in enum.h and
+the enummed mon-spll.h I just uploaded).
+
+== 56. "* * * LOW HITPOINT WARNING * * *
+    You die..."
+
+   At that point, it's really too late. The warning perhaps
+   ought to occur at the beginning of the player's turn as
+   opposed to when the character takes damage.
+
+   I've also seen two warnings in one combat turn ... can't
+   remember if death accounted for one of them.
+
+> The problem is that the check is you.hp... it should be (you.hp > 0)...
+> I quick-fixed that one while I was trying to get the code out the
+> door and missed.
+
+== 57. Hunger messages don't seem to appear, even if their color   is set.
+
+> Gave general cleanup of food.cc;  merged hunger_warning and food_change.
+> removed unnecessary modification of hunger status from level save/load,
+> fixed up some logic problems.
+
+
+== 59.  Lot's of the enums in enum.h have trailing commas, eg
+   enum CONFIRM_LEVEL
+   {
+       CONFIRM_NONE_EASY,
+       CONFIRM_SAFE_EASY,
+       CONFIRM_ALL_EASY,
+   };
+I don't think this is legal in ANSI C.
+
+> Borland C++ didn't complain with Wall,  so it's not a problem.
+
+== 61. In libmac.cc there's a function called FlashButton. The line that calls
+HiliteControl should look like this:
+    HiliteControl(control, kControlEntireControl);
+
+== 62. In message.cc mpr's definition includes default arguments. This isn't
+legal C++ (only the declaration can have default arguments). The same
+applies to random_near_space and simple_monster_message in monstuff.cc,
+apply_random_around_player in spells4.cc, and yesno in stuff.cc.
+
+== 63. monspeak.cc needs to include monspeak.h at the top of the file, not
+monstuff.h.
+
+== 64. overmap.cc includes curses.h, this should be wrapped in #if !macintosh.
+
+> Acutally it should be wrapped if USE_CURSES is not defined.  Which it is now.
+
+== 65. spl-util.cc should include the standard limits.h instead of the
+non-standard values.h and should use INT_MAX instead of MAXINT.
+
+== 66. The MacStuff directory should be deleted.
+
+== 67. Very Old Buglet:
+   Spider Form spell turns one into a black 's', which corresponds
+   in monsterland to a scorpion, while giving one all the features
+   of the noble wolf spider, represented by a brown 's'.
+
+== 68. It's really not that bad.  Worse is the fact that I noticed that
+breathe fire gives a bonus if the player is transformed (doesn't
+matter what: Ice Beast, Blade Hands, or Dragon)... that's a bug.
+
+== 69. player.cc - If you look at line 2312 you'll see that
+               redraw_screen () is called. But it's problem under
+               DOS because redraw_screen() is defined only under
+               PLAIN_TERM.
+	    See stuff.cc - there is
+		#ifdef PLAIN_TERM
+		void redraw_screen( void );
+
+> got rid of all of the plain_term() wrappers around redraw_screen.
+> instead,  redraw_screen() becomes a no-op for non-plain term systems.
+> I hate seeing #defines all over (supposedly) non-system dependent code!!!
+
+== 70. view.cc - at two place there is
+
+        #ifdef DOS_TERM
+        puttext(2, 1, 34, 17, buffy);
+        #endif
+
+        Probably it's possible to compile that with some compilers
+        but not all and corretly it should be
+
+        #ifdef DOS_TERM
+        puttext(2, 1, 34, 17, buffy.buffer());
+        #endif
+
+== 71. When you cast "Twist" spell and choose direction you'll always get
+message
+"There is no monster there!"
+even if it's not true. If you want to hit monster you have to target
+monster by using "*" or "+". At least this spell shouldn't ask for
+direction but for target.
+
+xx 72. After battle with guardian naga character is told he is not carrying anything.
+
+> don't see how this could happen.. g. nagas can't affect player inventory.
+> must have hit a key that tried to use an inv type you didn't have, or num_inv_items
+> got out of whack.
+
+xx 73. Some initial prompts not prompt colour. I'll have to document which.
+
+== 74. Throwing anything left seems to cause a segfault and core file ... hmmm ...
+  item_use.cc, line 1294: DUMB BAD CODE! Throwing anything while weilding
+  nothing results in a crash. Clearly someone plays neither Transmuters nor
+  Monks. Clearly we need some function to safely get the current weapon.
+
+== 75. Throwing stuff while weak: I'm of the opinion that things thrown ought
+  to land at least next to the player, while currently, large things end
+  up at the player's feet. This annoys me - "I didn't say (d)rop, I said
+  (t)hrow!".
+
+> it's a playability issue,  especially with large amounts of items and
+> autopickup.  All thrown objects will go at least 1 square - we'll
+> consider a 'throw' of a very heavy object equivalent to 'shove' it.  :)
+
+== 77.  line 234 of mon-util.cc ought to be:
+     "if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)"
+   but instead it's:
+     ""
+
+   This will fix the elemental damage problem I was complaining about --
+   clearly Linux does not automagically give clean pages.
+
+== 78.  Remove trailing commas in enum.h
+
+== 79. Stores are still trying to sell me gold pieces, and at extortionary rates.
+
+== 81. + spells4.cc::418 assert failed: ASSERT( targs[i].x != 0 && targs[i].y != 0 );
+  should this be ( targs[i].x || targs[i].y ) ?  (YES)
+
+== 82. if (mons_flag(monster->type, M_SPEAKS) && one_chance_in(21)
+            && !silenced(monster->x, monster->y))
+{
+  mons_speaks(monster);       // mv: removed silence check
+}
+
+That check for silence shouldn't be there, because mons_speaks()
+handles silence by itself - see monspeak.cc (Btw. I've already removed
+this check when I wrote mons_speak(), but somebody have returned
+it back *grin* ).
+
+== 83. However, in a couple places in acr.cc, there is code like this:
+
+    if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
+        || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER)
+    {
+        if (you.species == SP_MERFOLK)
+        {
+            mpr("You dive into the water and return to your normal form.");
+            merfolk_start_swimming();
+        }
+
+        fall_into_a_pool(true, grd[you.x_pos][you.y_pos]);
+    }
+
+== 84. // From: Daniel Ligon <makmorn@qis.net>
+[easy_butcher]
+// When I see it happen, I have no weapon in hand and no weapon in the
+// "a" slot.  After hitting "D" to Dissect, I am prompted for a weapon.
+// I can choose a cursed weapon of either known or unknown status and will
+// receive a message that the weapon sticks to my hand.  In both cases,
+// I return to unarmed after butchering - and the weapon is now identified
+// as being cursed.
+
+Okay, then the problem isn't with the original check... all that
+needs to be done is make sure that is the target weapon (after the
+call to wield_weapon which does all the validating and prompting)
+isn't removed if it's cursed.  Should be a fairly simple check,
+although it has to validate if a weapon is wield first (of course).
+
+== 85. This seems to be a new bug (can't see an obvious cause)...
+    Brain Worms seem to have a sticky flame attack now.
+
+> SOMETHING was(is?) setting mon->number to be equal to mon_type. This
+> was setting butterflies (MONS_BUTTERFLY == 66) to have a colour
+> of 66,  and brain worms (MONS_BRAIN_WORM == 69) to have the
+> spell type of MST_MOTTLED_DRAGON (69).  Why?? I don't know yet.
+
+>> turned out to be define_zombie.  Random zombies were not getting
+>> zombified due to some parameters getting passed incorrectly from mons_place().
+>> all quasi-zombies were getting correct mons->number set but then mon->type
+>> was not being set.
+
+== 86. This appears in player.cc::player_hunger_rate()
+
+    // jmf: hunger isn't fair while you can't eat
+    // Actually, it is since you can detransform any time you like - bwr
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+        return 0;
+
+Some testing reveals that in fact one cannot untransform ("You're too
+hungry.") nor even turn visible. If hunger was not meant to preclude
+these reversions, there's a bug in the ability code.
+
+ - Josh
+I would guess that there is a bug in the ability code wrt
+untransform - I have not looked at the code for this in a
+while, but the "untransform" ability is likely lumped with
+all other abilities in terms of forcing a check of one's
+current hunger level before proceeding further into checks
+and then (finally) triggering the ability.
+
+Trivial fix, that is where the bug is: the ability code (98%
+certain) - it does not make sense to attach a hunger cost
+to detransformation, unless you wanted to curse players
+first learning how to transform with costs on both ends
+(it takes effort to change shape, effort to change back).
+
+The latter model of double-ended costs associated with
+transformations make sense, but I do not believe this was
+the intended model in Crawl.
+
+xx 87. PS: I was looking through player.cc because a white imp "chilled" my
+    mummy assassin. Still looking for how that could happen.
+
+> everything seems to be WAD:
+> could have been wearing two rings of fire, or dragon armour, or had a
+> randart with cold susceptability.  Mummy only gives resist, not immune.
+
+== 88. PPS: White imps seem to pick up darts & stuff, while red imps don't.
+     IMHO that's exactly backwards. White imps are have a much better
+     range attack than darts provide, while a dart-throwing red imp
+     would be a major pain.
+
+> actually the issue is gmon_use (the last parameter in mon-data.h)
+> - red imps have 1 (opens doors) while white imps have 3 (doors,
+> weapons & armour). sorry not explicit enough.
+
+>> No, make white_imp.gmon_res=1; red_imp.gmon_res=3. Current values
+>> but reversed.
+
+== 89. PPPS: Noticed punctuation creep: "You can't weild a two handed weapon
+      *AND* a shield at the same time."  Patriots should conserve stars.
+
+== 90. The eat chunks on the ground prompt is uncoloured.
+Following prompts are coloured.
+
+== 91. Prompt & crashes: try doing an x-look while you
+can't see any monsters, then press '+'. You will
+get a nice, shiny new core file in your directory.
+
+The x-look prompt also claims to allow you to go
+to the current target using 'p', but does not. 'P'
+does nothing.
+
+== 92. Elves in their Halls seem to wear a lot of Orcish armour.
+
+== 93. > And finally to end on a good note...
+> I've love what has been done with the coloring, the autopickup and
+> the automatic door opening.  This is *very* useful and as a user I
+> truly do appreciate the effort here.  (It would still be nice to be
+> able to pick up gold when your slots are full but I'm not going to
+> complain.)
+
+Argh. I haven't checked the latest dev source (but I will
+this weekend), but is this still the case? If so, can Gordon
+please put it in the bug queue as something to fix for the
+upcoming release of 3.*cough* ???
+
+== 94.
+> I was descending through the Elven Halls, and reached level 6.  On this
+> level were three stairwells down to level 7, and an entrance to the
+> Labyrinth.
+>
+> It is my habit to descend/ascend each stairwell as I find them, since
+> the dungeon areas of crawl are sometimes disconnected.  So I believe
+> the three stairwells on this level actually did lead to level 7.
+>
+> After filling my gut on fresh elven meat, I descended in the Labyrinth,
+> spiraled in to the Minotaur, slew it, grabbed its stash, and ascended
+> back to the Elven Halls, appearing at one of the stairwells down.
+>
+> But now all three of the down stairwells on this level lead to the
+> Labyrinth rather than level 7, and the Labyrinth is being mapped.
+
+I can verify that I had visited Elven Halls level 7 (I had saved a
+copy of my player files before entering the Labyrinth).  As it happens,
+level 7 was the bottom of the Elven Halls with the Vault.
+
+I cleaned out the Vault, then returned to the Labyrinth.  Once again
+returning from the Labyrinth caused all the stairwells on level 6 to
+lead to a mappable Labyrinth.
+
+>> Fixed.  up_stairs() was not correctly setting was_a_labyrinth in
+>> the call to load(),  and so the labyrinth level would get saved
+>> _over_ the n+1 th 'real' level.  REALLY BAD.  Yuck.  Bleah!
+
+== 95. Auto-butcher + Staff of Power + dagger in off slot.
+Every time a corpse is butchered max SP is reduced...
+
+This probably has to do with the fact that staves of power are one of
+the few things that are toggled on wield/unwield (a lot of the other
+properties are calculated as required).
+
+== 97. The routine mon-util::seekmonster() needs to check that
+>
+>      mon_entry[(*p_monsterid)]
+>
+> is not -1 before returning
+>
+>      &mondata[mon_entry[(*p_monsterid)]]
+>
+
+== 98. In my current game, I found an entrance to the Hall of Blades on
+> level 4 of the Vaults.  I entered, killed a few weapons, and returned.
+> Upon returning, the game crashed.  When I restarted, I was on level 1
+> of the Crypt.  I exited the Crypt was back at the entrance I had found
+> on level 3 of the Vaults.
+>
+
+- Fix for the Hall of Blades staircase bug... Although the
+staircases leading out of the HoB are called staircases "back
+to the crypt", and although the enum for them describes them
+as returning to the crypt, and although climbing one of them
+sends you to the crypt, they are in fact supposed to lead back
+to the vaults, and the level range of the HoB has been set
+accordingly. To fix:
+ - Change the name of the enum DNGN_RETURN_CRYPT_II to
+   DNGN_RETURN_VAULTS_II  (may need to be _II or _III)
+ - Change in direct.cc, in look_around(...), "A staircase
+   leading back to the crypt" to "A staircase leading back to
+   the vaults"
+ - Do the same in item.cc in item_check(), where it tells you
+   what you're standing on
+ - And, finally, in up_stairs() in misc.cc, the case for
+   DNGN_RETURN_VAULTS_II (or whatever it's changed to) needs to set
+   you.where_are_you to BRANCH_VAULTS.
+
+>> this code needs a complete overhaul to be more comprehensible,
+>> but I don't know if I'm up to it at the moment.  :\
+
+== 99. There was lava in the Crypt.  I don't object to it, but it seems a
+> little out of character, much like Josh's observation that elves wear
+> a lot of orcish armour.
+
+== 100. Characters who might go berserk while fighting, say from the mutation
+> or wielding a randart, can have go_berserk() called on them while they're
+> already berserk.
+
+>> which is fine.  Fixed up berserk messages for all possible situations -
+>> no more double messages,  or inappropriate ones.
+
+== 101. I've run across a couple Borises in my current game.  It must be a
+> popular name among Liches.
+
+>> fixed.  Bad range check in dungeon.cc.
+
+== 102. If a monster tries to mutate you and fails due to your resistance
+> to such, you get a message from mutate() - "You feel rather odd for a
+> moment." and from direct_effect() - "You feel very weird for a moment."
+
+>> fixed all manner of mutation messages.
+
+== 103. Removing a ring of strength causes these messages:
+>
+>   You are being crushed by all of your possessions.
+>   You possessions no longer seem quite so burdensome.
+>
+> since this happens in item_use::remove_ring():
+>
+>     case RING_STRENGTH:
+>         decrease_stats(STAT_STRENGTH, (you.inv_plus[ring_wear_2] % 100), true);
+>         increase_stats(STAT_STRENGTH, 50, true);
+>         break;
+>
+> The suppress_msg flag of decrease_stats and increase_stats does not get
+> passed to player::burden_change(), which has no arguments.
+>
+> It is interesting to compare that code with similar code to remove the
+> strength one gets from a randart ring.  From it_use2::unuse_randart():
+>
+>     const int str_plus = inv_randart_wpn_properties( unw, 0, RAP_STRENGTH );
+>     if (str_plus != 0)
+>     {
+>         you.strength -= str_plus;
+>         you.max_strength -= str_plus;
+>         you.redraw_strength = 1;
+>     }
+>
+
+== 104. There is a monster named "another lava thing".  Not a bad name, but
+> it leads to "You kill the another lava thing!" messages.  Perhaps a name
+> change to "mother of all lava things" or "lava thing's cousin".
+
+> "another lava thing" has no stats in mon-data.h,  so it was
+> obviously a dummy placeholder and has been removed from possible
+> generation lists.
+
+== 105. Assorted typos:
+>
+>    You possessions no longer seem quite so burdensome.
+>    You heara loud "Zot"!
+>
+>    File name: Minh.txt
+>    File name: Minh.txted successfully.
+
+== 106. Something causes misformatting of the descriptions for
+>    SPELL_APPORTATION and RING_TELEPORT_CONTROL;
+
+== 107. After I picked something up, I could drop one thing, but nothing after
+// that. I think we ought to have periodic checks that num_inv_items is
+// correct - recounting once per turn is not a significant calculation.
+
+Ah!  There's the problem... that variable was deprecated a while back
+and replaced with explicit code in the standard places (because it
+was impossible to keep it up to date).  If someone is actually making
+use of it again then of course the entire system is going to break
+down.
+
+>> really deprecated this time.
+
+== 108. Fixed apply_area_within_radius().  Makes far fewer unnecessary calculations
+   now.
+
+== 109. Fixed rendering slowdown on windows console.
+
+== 110. Scorefile reading doesn't pick up special characters like a-umlaut or e-ague
+
+== 111. I was in the Tomb, slaying mummies with style and grace, so naturally
+a fair amount of cursing of my stuff took place.
+
+The Ring of Shadows now has an inv_plus of 100, I assume since
+monstuff::curse_an_item() adds 100 to inv_plus.  I can't remove it,
+since inv_plus > 80.  It is not labeled as cursed and scrolls of remove
+curse are ineffective since inv_plus < 130.  I suggest that, for now,
+curse_an_item() should leave randarts alone.
+
+As an aside, is "artefact" a valid variant spelling of "artifact"?
+
+
+== 112. Another result of the great Mummy slaying was that my flesh would
+rot away.  I think display_char_status() should list this.
+
+
+xx 113. I came a across a butterfly which had color 66.  I could not
+determine why (N.B. 66 is MONS_BUTTERFLY.. what's going on?!)
+
+> me neither.  All calls to create butterflies should go through
+> define_monster(), which sets m->number to 0..15.  See #85.
+
+== 114. in view.cc, inside the #ifdef DOS_TERM things there are some
+bad things happening to the puttext calls. buffer.buffer()
+should be replaced with buffer, and buffer2.buffer() (or is it
+buffer.buffer2()? I forget) should be replaced with buffer2.
+Otherwise it refuses to compile (this may be an incompatibility
+between borland C++ and djgpp, Gordon)
+
+MV: Buffer.buffer() should be only buffer. Problem is with _buffy_ which
+needs to be _buffy.buffer()_.
+
+== 115. Also in view.cc in noisy() at 1304 the distance function is
+being used wrongly. Change if (dist <= distance(... to
+if (dist >= distance(.... This problem caused most monsters on
+a level to wake up as soon as a noise was made, and was why
+characters were getting mobbed.
+
+== 116. the init file is broken, at least under DOS. It is reading
+in the player's name okay and is finding the other options,
+but when read_bool() tries to work out whether an option is
+followed by "true"/"1" or "false"/"0" it fails to detect
+anything and just goes with the default. I don't know how any
+of the weird code in initfile.cc works (what was wrong with
+the stdlib string functions?) but, at a guess, this might
+have to do with the way DOS writes End Of Line in its text
+files - if a line is concluded by something other than
+'\0' the string code might fail. But that's just a guess.
+
+>> made a couple changes and it seems to work fine on win32..
+>> but this is highly dependent on the compiler's implementation
+>> of the standard string template (grrr!)
+
+== 117. A blank/empty scorefile will not be updated;  scores of 0 not kept.
+
+> both fixed.
+
+== 118. If you aren't carrying anything except money, you can't drop it (money)
+
+> can now specify quantity of money to drop.  Accepts any value.
+
+== 119. My character entered the Tomb, arriving in the upper left hand corner,
+at position (9,7).  I tried to target, and failed the ASSERT for the
+mgrd array.  This took place around line 1227 of direct.cc in the
+mons_find() routine.         const int targ_x = you.x_pos + temp_xps - 17;
+        const int targ_y = you.y_pos + temp_yps - 9;
+        const int targ_mon = mgrd[ targ_x ][ targ_y ];
+
+In this case, you.y_pos is 7, temp_yps is 1, and so targ_y is -1.
+
+== 120. The Amulet of Cekugob does not stop one from teleporting when one
+     has the teleport mutation.
+
+== 121. I entered Hell from level 22.  When I exited Hell I was placed on
+     dungeon level 27.
+
+BWR:I believe this was the better alternative of earlier problems dealing
+with returning to the main dungeon... used to be you could end up on
+level zero, or on a semi-random level inside solid rock.  After those
+problems were fixed the portals seemed to work as above.
+
+== 122. When I returned to Hell, I was placed on one of the down stairwells.
+
+== 123. Remove which piece of jewellery?
+     That isn't a piece of jewellry.
+
+Webster has jewelry, jeweled.  Changed all occurances.
+
+
+== 124. Oops, that ring feels deathly cold.
+     B - a cursed amulet of the gourmand (around neck)
+
+xx 126. I hit a giant spore with a bolt of poison flame, and the critter
+> didn't explode.  It just disappeared.
+
+LRH writes:
+Not sure exactly, but I'm pretty sure that if you do enough
+damage to a spore with a single attack it will fail to explode.
+The relevant code should be in monster_die().
+
+== 127. A fire giant hit my Spriggan (AC: 5, EV: 13) with several fire balls
+> over a few turns, but none hurt much.  I didn't get any messages about
+> resisting the effects.  Is this the odd fire resistance problem?
+
+>> monster fireball damage wasn't being set correctly.
+
+== 128. The Spriggan has strength 10 and dexterity 21.  When he wields a bow
+> or crossbow, I get the message:
+>
+>   Your relatively low strength is limiting your use of this weapon.
+>
+> I don't think strength has any effect with crossbow, and probably doesn't
+> effect bows.
+
+BWR: As a side note, is the low Throwing skill message still on the skills
+screen?  Has anybody tested it with all the skills yet (there is a
+lack of room, and the screen should fit in 24 lines).  Maybe that
+message would be better as a message when wielding the bow itself,
+although I'm not sure how much the mechanic is required (I typically
+upped Throwing skill along with Bows because it's a cheaper and faster
+way to up accuracy and damage than raising Bows alone).
+
+== 129. The file makefile.obj seems to be missing... this is a problem
+    for most of the other makefiles which include it.
+
+== 130. The APPNAME in makefile.sol should probably be changed back to crawl.
+
+== 132. In spells0.cc should be also included stdio.h under DOS
+because sprintf() is used.
+
+xx 133. > Are you going to do the player-ghost/demonlord "structure" as well?
+//
+ Um,  dare I ask,  why?   I've never looked at this part of the code.
+BWR:
+It's currently an array of chars.  It would probably be easier to
+understand as a struct with fields for AC, max HP, spells, resistances
+and such.
+
+== 134. When I cast Static Discharge, I get occasional fails of the ASSERT
+on line 419 of spells4.cc:         for (int i = 0; i < targs_found; i++)
+        {
+            ASSERT( targs[i].x && targs[i].y );
+            func( targs[i].x, targs[i].y, divided_power, 0 );
+        }
+
+> Fixed.  Brent's algorithm is sound,  but his coding wasn't. :P
+
+== 135. When I use the Sif Muna granted ability of Selective Amnesia, I hit
+an array bounds assert in seekspell() - which is exactly:
+
+return &spelldata[plyrspell_list[spell]];
+
+The value of spell is 210 (SPELL_NO_SPELL), and so plyrspell_list[]
+goes out of bounds (it is not protected by the Fix[Ary|Vec] stuff)
+which then triggers spelldata[] going out of bounds.
+
+>> plyrspell_list[xx] being set to SPELL_NO_SPELL _before_ call
+>> to spell_power.  stupid logic error.
+
+== 136. I swung my Staff of Air:
+
+You miss the imp.
+You miss the imp.the imp is jolted.
+You are wielding a staff of air.
+
+== 137. I'm wearing an amulet of the gourmand, but I never seem to get labelled
+as being Full (or Engorged).
+
+>> is this a problem?  Gourmand allows you to eat rotten/contaminated flesh,
+>> how could this be related?
+
+== 138. Trolls can eat huge amount of chunks of flesh without becoming full
+
+> oops.  Nobody could ever get full.  Stupid logic error.
+
+== 139. Name in INI file causes crash unless all caps.
+
+xx 140. Non-Beams displayed one cell at a time (thanks to Michal)
+
+== 141. M_SPELLCASTER removed from ball lightning.
+
+== 142. All beams/missiles leave a visible trail now (at least until window
+   redraw).  Was too hard to get right w.r.t.  killed creatures and cloud
+   trails,  and most liked it the other way anyways.
+
+== 143. Some enchantment beam behavior fixed.
+
+== 144. Update & examine command-line switches & options
+
+// - update & verify behavior of command line switches & options
+Monochrome isn't connected to anything.  The "no colour" option could
+be handled by imposing a set of colour macros (if they were made widely
+available)... most monochrome systems can do bold/standout, although
+that typically ends up backwards or ugly (if it's done via reverse).
+Could possibly just be removed rather than bother with it.
+The "-nb" (no black) option is obsolete with colour macroing.
+Basic options to consider:
+- list scores (param for top X)
+- select race/class
+- character name (for loading and starting new character)
+- pointer to game directory (ala crawl_dir option)
+- pointer to initfile (ala CRAWL_RC environment variable)
+Later things can get fancy, but we should at least have those.
+
+xx 145. I'm playing the latest win32 binary pre-release (January 11).
+The first problem is that I can't get to the religion screen. To produce
+'^' with my keyboard I have to press <Shift> + <the button with ^>
+followed by a space. However, in Crawl this doesn't work (it used to work
+with earlier versions before this series of win32 binary pre-releases).
+All I get is 'Unknown command'.
+
+== 146. When zapping a wand of Draining at a line of Kobolds and Big Kobolds,
+: the game froze if something was killed.  The game was recoverable, and
+: the bug repeated itself.  Killing these by hand caused no problems.
+: Using this wand on other creatures caused no problems.
+
+>> probably related to double-whammy monsters were suffering from poison/
+>> draining.  Hit dice might have gone below zero, etc.
+
+== 147.  Any ranged attack that hits you has a chance of destroying
+: your scrolls, not just fire-based ones, and they all give the message
+: that your scroll has burst into flames.  Confused the heck outta me
+: the first time it happened.  "The puff of frost hits you!  One of your
+: scrolls bursts into flames!"
+
+== 148.
+:    1 other thing I just thought of.  When targetting in version 3.43
+: you could use the dot on the keypad to select the target.  Now, to
+: use that dot, I have to use the shift button with it.
+
+xx 149. Also it seems like mummies have lost some of their cold resistance... I
+had trouble with an ice dragon that should probably have been real easy...
+on the other hand fire damage does not seem to be all that nasty to them
+anymore (I dunno about the mummy monster but this seems to be the case for
+mummy player chars, none of my equipment provided fire resistance).
+
+== 150. Fixed new description() problem.  Oops.
+
+== 151. Changed some messages for burning and chilling monster attacks.
+   note that mummies _could_ be chilled by melee attacks - "chilled" in fact
+   means that the player resists cold.  New messages are tied to actual
+   extra damage from fire/cold.
+
+== 152. Fixed "always poison/drain" on beams/bolts that didn't actually
+   hit (problem with side effects in check_mons_resists() ->
+   mons_adjust_flavoured())
+
+xx 153. The level files for my characters don't seem to get deleted, even after
+the character dies.  I'm assuming that they're meant to be deleted, as
+they used to be... or is there some reason that the game now keeps them?
+
+> can't repro - works fine on 2000.
+
+== 154. I found one of those checkerboard-like rooms with alternating wall and
+floor squares (you know what I mean?  The ones where you can only move
+diagonally, sort of like the Hive, but occuring in the regular
+dungeon?)... it was made of metal walls, and had a small open area in the
+middle.  There were some items which seem like they should have been
+placed inside the open area, but were inside the walls instead, and
+therefore inaccessible.  I can't figure out how to get Crawl to dump a
+screenshot, but I'll recreate it here, using X to represent a wall.
+.X.XXXX
+X.X.[.X
+.X.X@)X
+X.XX!.X
+.X..XXX
+X...X.X
+.X.X'X.
+All three of the items around my character are inside walls; examining
+them says:
+You see a [item name] here.
+A metal wall.
+You can't move on to them or anything.  Note that if you shifted them all
+three squares down and two to the left, they'd fit nicely in that little
+open area, which leads me to suspect that possibly that's where they were
+meant to be.
+
+>> several places in dungeon.cc where this could happen.  Think I've squished
+>> them.
+
+== 155. I'd suggest killing /unused, but only after moving oldmaps.txt
+into /misc. Within /misc, scoretab.cc should probably be updated
+to the new scorefile format (or killed) and untab.pl should be
+killed, as it is an unreliable detab script - rh.bat seems
+near useless.
+
+In /Docs (why is this uppercase?), NEW.txt is empty, buglist.txt
+should be updated to the current status (about which, Gordon only
+knows), I need to migrate messlog into changes.340, changes.340
+needs to be renamed changes.400, the remaining files need to be
+updated.
+
+The old LOS code can die, I think I lost my fascination with it.
+I don't believe anyone else was defending its existence.
+
+== 156. On this topic, I get tons of warnings about FixVec.h and FixAry.h
+not having a final newline.   Could you add one to these?
+
+== 157. The compiler also noted a problem in dungeon.cc:
+    if (you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
+    {
+        if (type_floor == DNGN_LAVA)
+            type_floor = DNGN_SHALLOW_WATER;
+        if (type_2 == DNGN_LAVA)
+            type_2 == DNGN_SHALLOW_WATER;
+    }
+The last statement should probably be an assignment.
+
+== 158. Finally, I can't compile dungeon.cc at all:
+dungeon.cc: In function `void link_items ()':
+dungeon.cc:6395: warning: comparison between signed and unsigned integer expressions
+FixVec.h: In method `FixedVector<TYPE, SIZE>::FixedVector (TYPE, TYPE, ...)
+[with TYPE = char, int SIZE = 7]':
+dungeon.cc:7998:    instantiated from here FixVec.h:125: `char' is promoted to `int'
+when passed through `...' FixVec.h:125: (so you should pass `int' not `char' to `va_arg')
+
+This also affects spells4.cc (instantiated from line 729).
+
+== 159. Problems with print_description() under DOS?
+Stupid, stupid, stupid.. good god.  used .data() instead of .c_str()
+
+== 160. Make Boris back into a non-Unique and give him appropriate mons_speak()
+
+== 161. More portable savefile format.
+
+== 162. Well, played with the new pre release, speed is the same (drat) and the
+ghoul food bug still exists... the one where they have to eat a meat
+ration to cure the 'hungry' status. Haven't hit on any other bugs yet but
+I've only run 3 characters who all had very short lives.
+
+== 164. Direct-effect monster castings (smiting, etc) would crash the
+game (forgot to set beam_source for non-beam type attacks).
+
+== 165. The warning messages given for wielding objects should also be given
+at the start of the game (if applicable).
+
+== 166. Anyways, I'm starting to
+think that the margin should be a little smaller, the 79 colomn one is
+just too wide to read comfortably... a 70 column one should be fine.
+
+== 167.
+// > All staves work like this - the special power can activate even if
+// > you miss your foe by a mile.
+// >
+// > Is this desired behavior?
+//
+// I would think not.
+
+** 168. Enable loading of 3.30/1.x chars & level files.
+
+== 169. When casting Corona and hitting somebody I'm allways getting
+additional message "Nothing appears to happen.".
+eg. The goblin is outlined in light.
+    Nothing appears to happen.
+
+    (silly logic problem)
+
+== 170. In ouch.cc is under DOS missing #include <file.h>
+
+== 171.  There is still small problem with new print_description().
+   Description window for DOS is (25,1,80,25) - see for example
+   describe_spell(). It means that lineWidth in print_description()
+   can't be 70 under DOS_TERM  and should be 54 or so (of course
+   those windows can be changed but it's much more work).
+   DOS term and shoul be 54.
+
+== 172. I started a grey elf wizard and it begins play with an orcish robe, not an
+elven one.   (flimsy coding)
+
+== 173.
+"You miss the ice beast.
+The ice beast hits you!
+The ice beastchills you.
+Ouch!  That really hurt!"
+
+== 174. tag.h and monstuff.cc need final newlines
+
+== 175. tags.cc and files.cc include mem.h, but gcc doesn't come with one.
+   The routine memcpy is declared in string.h, which is already included
+   in these files, so commenting out worked for me.
+
+== 176. spells3.cc has the same problem with FixVec.h that dungeon.cc had
+   in pr6.
+
+I guess around line 729 or so.  :) g++ -Wall -DLINUX -g -DDEBUG -c spells3.cc
+FixVec.h: In method `FixedVector<TYPE, SIZE>::FixedVector (TYPE, TYPE, ...)
+[with TYPE = unsigned char, int SIZE = 7]':
+spells3.cc:729:   instantiated from here
+FixVec.h:125: `unsigned char' is promoted to `int' when passed through `...'
+FixVec.h:125: (so you should pass `int' not `unsigned char' to `va_arg')
+
+== 177. Was just looking at that code, and noticed the comment about the
+"other five gods" (the one's the player cannot start the game
+worshipping).  Anyways, that comment was added there before the
+always_greet option, which does meet the requirement for filling
+in the extra gods (since the real purpose of always_greet is to
+remind the player of some non-obvious details about their character
+in case they haven't been playing in a while (ie. race, class, deity,
+weapon penalty).
+
+== 178. Could you please put the string "-O2 -fno-strength-reduce" in your makefiles
+dealing with GCC? It'll speed up the game by a *huge* amount. (The
+-fno-strength-reduce is to get around a bug in many versions of GCC.)
+Because of the exceeding slowness in the released versions, I compiled my own
+version, which leads to point
+
+== 179. Why in the name of Cthulu did you remove "#include <files.h>" from ouch.cc?
+To misquote Rufus Wainwright, "Cause all I get is instant errors/Instant errors
+Instant errors".
+
+== 180. Update scorefile format to a delimited ACSII numeric representation.
+   (hmmm - will take some thought)
+
+xx 181. I am not sure if its a bug or not, but using pr7 on NT4, every now and
+again when I die, Crawl causes a general protection fault (or whatever its
+called in NT) and the game crashes. The good side to this is I don't lose
+my character and can go back to my last save and keep playing.
+
+> When I'm having a good character going ("good" being
+> 1000+ points or so), the game tends to crash when the character dies.
+
+== 182. I just got the mutation "you can exhale a cloud of poison" but I recieved
+no special ability to activate it. At the time of the mutation, I was
+wearing a ring of shadows that gave me the ability to turn invisible.
+Perhaps the ring interfered with it? Hope this helps.
+
+> data error in mutation.cc.  Fixed.  Nagas now get breathe poison
+> sometimes if they _would_ have got the spit poison mutation.
+
+jmf> That mutation ought only occur for Nagas. A non-Naga getting
+jmf> the mutation is a bug.
+
+xx 183. Move rand(), random(), srand(), srandom() to libxxx
+
+> behavior is too complicated..
+
+
+
+== 184. Files are not cleaned up in DOS - see end_game() in ouch.cc
+
+== 185. Fixed more monster spell crashing-if-kills-player problems.
+
+== 186. Quokkas have no mass, hence they never leave corpses.
+
+> That was there original stat, should probably be set to 200.
+
+== 187. I found lots of bug while using 'recall undead slave' skill.
+
+I noticed this bug as well. Seems the recall spell places your servants in
+spaces next to you, regardless if there is already something there or not.
+In effect, monsters which are stacked seem unable to move, including
+hostile monsters. When the top monster leaves the space the game places a
+"floor" tile there.
+
+> really, really dumb logic error - corrupted mgrd as a side effect!!
+
+== 188. Several piles of gold on the same spot should merge
+
+>> so should other things.  Fixed item_place() and drop_gold() appropriately.
+
+== 189. Merfolk hunters not available, NEWGAME.CC suggests they should
+
+== 190. Weld potion drank should dissappear from the screen
+
+== 191. First the bug: While in the Abyss, I came across an orange 8.  Hit x and positioned
+the cursor over it to see what it was (thinking it was probably a type
+of golem I'd never seen or something) and it said:
+
+>> There was a tiny bit of overlap between the area which got nuked and
+>> the area that got transferred.  Probably left pointers to invalid
+>> items lying around,  which would produce exactly this:
+
+!questionable item (c100, +0, p50, p(2)50, d0:q0)
+
+== 192. Now the complaint: Because you can use the letter keys to move around,
+the numeric pad
+has obviously been modified so that the numbers map on to the letter
+keys... but there is a problem with this, namely that 7 maps on to y,
+and can therefore be used to answer in the affirmative to a question.
+I now realize why easy_confirm exists, since some people no doubt use
+the letter keys to move and may accidentally say yes to something they
+didn't intend to... but for those of us who use the numeric pad, the
+option doesn't seem to make much sense, since your finger doesn't come
+near the 'y' key all that often, so I just had it set to all.  Then I
+was in a situation with one of my best characters ever where there was
+lava directly north of me and I wanted to move northwest, but my
+finger hit directly between the two keys, basically hitting 8 then 7
+in rapid succession, plunging me into the lava and killing me.  I
+suggest one of two things; either make the numeric pad work the same
+way as the letters ONLY for movement, since the only time other than
+movement when you're going to receive input from the numeric pad is
+when it's accidental, or at least put a warning in the init.txt where
+it talks about easy_confirm saying something like "WARNING TO KEYPAD
+USERS: The number 7 is mapped on to the letter 'y,' which can result
+in accidentally answering yes to questions; it is suggested that you
+leave easy_confirm off."
+
+== 193. > An orc priest who hellfired him.
+
+>> fixed in general non-tracer spell cleanup.  Oops.
+
+== 194. Scrolls of immolation don't do anything.  The big fireball
+: appears on the screen, centred on you, but it doesn't damage you or
+: any of the creatures surrounding you, and doesn't have any other
+: effects.  I'm assuming that this is a bug.
+
+> Good catch.  Direct explosions were being treated as tracers.  :P
+
+== 195. A more minor bug: if you read a scroll of teleportation, then
+: start butchering a corpse, you'll continue to butcher the corpse even
+: after you've teleported, successfully  chopping it to pieces, even
+: though it hasn't come with you.
+
+== 196. Well, the title says it all, but, when I reach level 27 of the dungeon the game
+crashes (not a windows page fault, a 'dos page fault'). The character has not
+retrieved any of the runes of zot yet, so I figure I'll try again after getting
+one (or if that don't cure it 3 just in case). I'm on a windows 98 computer
+running the DOS compilation of pre release 7. I also had a few times on level
+26 where I couldn't move (alt tabbing out and forcing the game closed worked
+but I was set back a ways... so I made it a point to level level 26 hehe). One
+other thing I noticed was the dungeon clean up never happened (on level 25 but
+I had no problems on that level even after the floor was full). New monsters
+seemed to get weapons and armor but no more corpses once the floor was full.
+
+Something else I've always wondered about was the slime pits, are you supposed
+to get a rune of zot out of there or does the royal jelly 'eat' it or
+something, I've never gotten anything from there but it seems like it's the
+kind of place that would have one (specially with a monster that is no where
+else in the game sitting in a pre-fab dungeon).
+
+ ...and then this follow-up on Feb 9th...
+ I mention the runes because it was level 27 I was trying to enter when it
+crashed on me, I wasn't actually entering zot, just the level with all the
+gateways to zot. Was just trying to go down there to get a little more exp
+before I went to get the runes necessary to get into zot (the advantage of
+being a mummy... you can go do things in squirly order according to whim hehe
+
+mannix writes:
+
+Just confirmed it, lvl 27 is definitely a gaurenteed crash, even with 3
+(well, 4... got two in pandemonium... should that have been possible?) I
+still crashed when I tried to enter lvl 27. On the other hand I've found
+some fairly nifty places to explore for exp :). Another problem I found
+was that in a lot of areas the dungeon clean up is not nearly aggressive
+enough, I'd go so far as to say that when it happens all non-quest items
+should probably be removed, in some areas after spending a bit of time
+repeatedly killing random monsters (the joys of playing a mummy hehe) item
+drops would show up something like 'item 923589237 has dropped' (and
+that's a sure sign of impending doom, or at least a lock up on exit). I
+worked around the problem on one level by using my own clean up method...
+summoning imps/demons... some of them will pick up weapons (and in places
+like hall of blades that's all you'll normally see) and when they
+dissappear those items are gone for good.
+
+== 197. : Using a spell staff of smiting in melee combat reveals the following message:
+: You're wielding some sort of staff I've never heard of. (fight.cc)
+
+== 198.  Trying to cast Apportation on a pile of gold crashes the game
+         (division by zero)
+
+== 199.  Draconian Hunters start with a club instead of a bow.
+
+> It's a little bit worse than that... The bow is clobbered into being
+> a club instead of the leather armour being turned into a robe (draconians
+> shouldn't being wearing leather armour since it doesn't fit).
+
+== 200.  Need more aggressive item cleanup.
+
+>> perhaps trigger this on item creation,  if a spot can't be found.. go
+>> through the item list destroying less valuable items or small piles of
+>> gold.
+
+== 201. Teleporting a fish (by hitting it with weapon of distortion) might
+cause misc. problems - e.g. fish is teleported again and again
+(because it lands on the floor)
+
+> won't happen;  checked & rewrote bits of monster_teleport() to be
+> more readable,  but the code was fine.
+
+== 202. I was getting mutations after wielding/unwielding weapon of
+distortion
+
+> yes, it's in the code.  Nice eh?
+
+== 203.Darts of bugginess found in shop
+
+> dumb logic in dungeon.cc::items()
+
+xx 204. Electric eels sometimes shoots lightning to strange (probably
+random) places and not at player.
+
+> don't see how.
+
+== 205. Put in a fix for scorefile lines longer than 80 chars (will break)
+
+== 206. a new score at the bottom of the list would not be added.
+
+== 207. Misc documentation changes from Don
+
+== 208. Won't get "Sorry, you can't target what you can't see." when you're
+just looking around.(with 'x')
+
+== 209. Improved 'C' command (gives XP left to go)
+
+== 210. Far strike & twist could not target with direction keys (they are
+pseudo-direct effects,  which screwed stuff up.  Argh!).  Changed mode
+for those spells to DIR_TARGET,  which means hitting a direction key will
+take player into targetting mode.   No doubt will be hearing gripes about
+this too.
+
+== 211. Patched up multiuser compile.
+
+== 212. Quokkas don't generate corpses now.  Someone else wants to revamp
+the corpse system,  go for it.
+
+== 213. Easy butcher defaults to false now.
+
+== 214. Options for Race & Class added to init file
+
+== 215. Replace mutate() calls for miscast effects with addition to mutagenic
+radiation;  perhaps all miscasts (may) add to this,  and high level miscasts
+changed to give_bad_mutation?
+
+>> done.  all spell miscasts give small mutagens;  high level spell miscasts
+>> can get pretty nasty too,  but still only small chances of mutation unless
+>> you're also invisible/hasted/wielding nasty artifact.
+>> missing a couple high level spells badly in quick succession can be really
+>> nasty.  I'll leave it as an easter egg.  :)
+
+== 216. Monsters won't throw stuff if they can melee.
+
+== 218. Misc stylistic & code fixes from Jesse
+
+== 219. Charmed monsters will no longer be described as 'friendly'.
+
+== 220. Brave attempt made to use correct pronouns (introduced mons_pronoun)
+
+== 221. Shop names more visible when looking around & moving
+
+== 222. Can now pickup auto-combine items even with full pack
+
+== 223. scrolls of fear won't auto-identify if nobody is scared by them.
+
+== 224. "Killed by giant ant" when smitten from afar by Orc priest?
+
+> very subtle.  Death_source can be zero,  since it is an index into
+> the monster array.   But I didn't think it could be - if killed by
+> monster#0,  scores like this would be generated:
+:4:0:89:Methea:0:6:3::3:14:3:0:0:0::2:0:0:0:0:
+> which would be translated to "killed by a giant ant"
+
+== 225. Don't generate monsters in LOS?
+
+== 226. Get name after race & class (pretty easy now)
+
+== 227. Fixed up some job titles.
+
+xx 228. Game crash on character death;  after equip list, but before hiscore list
+
+== 229. Massive speedup on win95/98.  Fixed all cursor dance and buffering
+problems.   Fullscreen is still pokey on most machines,  but it's finally
+playable.
+
+== 230. No staircases to Zot on level 27 (dlevel == 26).  It looks like a
+   piece of code in dungeon.cc::builder() may be changing stairways to Zot
+   to dungeon floors, regardless of level (occurs after place_branch_
+   entrances())
+
+== 231. crawl -plain now actually uses non-gfx character set
+
+== 232. All female uniques are now properly gendered (missing break statement)
+
+== 233. Divine resistance messaged a bit better (w.r.t. Xom, Makhleb)
+
+== 234. messaging for vampiric attacks fixed up.
+
+== 235. Monsters generated on teleport traps will have unobtainable loot!
+   > shouldn't generate them on tport traps any more.
+
+== 236. Fixed DOS include of <files.h>
+
+== 237. Fixed overly long string in '?' screen
+
+== 238. More multiuser fixups.  Changed default makefile to linux.
+
+== 239. Moved god favor messages more in line with prayer messages (too confusing
+   otherwise).  Fixed a couple grammatical errors.
+
+== 240. Can't hit some monsters in LOS (rounding problem?)
+   Need to rewrite for integer math.  :P
+
+== 241. Crash on long player names (duh!)
+
+== 242. Miscellaneous spelling/grammatical errors
+
+== 243. Do something about this:  probably remove from compile options.  But leave
+   bow/throwing warning in,  as it is a _very_ important penalty.
+
+              : One odd thing, though.  I chose a Human Fighter with a short sword and when
+              : I began the game I get "Your relatively low dexterity is limiting your use
+              : of your weapon."  Other than the three occurrences of "your" in this
+              : sentence, I find it odd that 10 dexterity is too low to wield a short
+              : sword.  Or is this a bug?
+
+              "Your relatively low <foo> is limiting use of your <weapon name>."
+
+              Would be a slight alteration to kill one "your" and actually
+              designate the weapon being affected (I know it is pretty clear
+              that the only weapon affected is the one wielded, but I like
+              some things spelled out).
+
+              To avoid those excessively long weapon names with all the plusses
+              and things, the weapon name string should probably be just the base
+              weapon type (e.g., "short sword" instead of "+1, +2 short sword of
+              orc-slaying and back-scratching"). As the str/dex modifiers are
+              based on the base type and not all that other goodness, this seems
+              an ok thing to do.
+
+              Anyway ... I still think that this check ought to be performed
+              prior to weapon selection by a player at start-up, so that he
+              or she knows his/her character will be handicapped by the choice
+              of one weapon type or another. I think that thread was raised
+              briefly last week or so.
+
+== 244. The game crashes when I start a monk.
+
+              In skills2::wield_warning(), these two statements need to be swapped:
+
+                  int wepType  = you.inv_type[you.equip[EQ_WEAPON]];
+
+                  // early out - no weapon
+                  if (you.equip[EQ_WEAPON] == -1)
+                       return;
+
+
+== 246. Rewrote monster behavior routines.
+
+== 247. Cleaned up some function prototypes in dungeon.cc
+
+== 249. Put gendering into monspeak.cc
+
+>> couldn't find anything.. wonder what Michal meant?
+
+== 250. More typos
+
+== 251. remove caps from filenames
+
+== 252. Summoned critter problems:
+From: "Ben Goetter" <goetter@m...>
+Sent: Thursday, March 15, 2001 9:45 PM
+Subject: Crawl 4.0pr10z 13 Mar report Bug report: summoned creatures are
+appearing in the same space as the
+caster.  (Cast spell, summoned creature not visible; move one space,
+creature appears in space vacated by caster.)
+<FIXED>
+Date: Fri, 16 Mar 2001 09:00:41 PST
+From: tgord <clubs-mail@y...>
+Subject: Re: Crawl 4.00 pr10zf  [Yahoo! Clubs: Linley's Dungeon Crawl]
+I've noticed that summoned monsters sometimes appear on the other sides of
+walls now.                                              ^^^^^^^^^^^
+<FIXED, for player summons>
+
+== 253. Change messages for weidling awkward weps to show up only at
+   values <= -4 (for real problems) and change message to "not taking
+   full advantage of the weapon" or somesuch.  More flavour, too..
+   maybe messages like "you're too clumsy" for dex<10;  others for
+   high (but unbalanced) stats: "You'd be (a lot) better with
+   that weapon if you were (stronger/more dextrous)"
+
+xx 254. Give Earth Elementalists a few stones (say 10-15) to help them
+   get started?
+
+>> addressed with the new, 'easier to run away from' monster AI?
+
+== 255. I thought someone had added the MST_* enum usage to mon-data.h,
+
+== 256. Would be nice if the wizard patch I put up in the files directory
+    made it into the code.
+
+== 257.PS Oh, using crawl -scores leaves the terminal in a bad mode...
+   stty sane is required to sort things out (either curses shouldn't be brought
+   up with this option, or it should be shut down properly).
+
+Just change the exit() call to a stuff::end() call.
+// check for highscore list - must be done BEFORE libw32c init
+    if (Options.sc_entries > 0)
+    {
+        cprintf(" Best Crawlers -"EOL);
+        hiscores_print_list();
+        end(0);
+    } The argument to end() is the exit value.  That should probably be 0,
+rather than 1, since there's no error here.
+
+== 258. This bug ( if it is a bug ) has been around for a while... it seems
+: that sometimes when you poison a monster and it dies from the poison,
+: it gives you exp, and other times it doesn't.  Is there some logic
+: behind this?  A low level character of mine just barely managed to
+: kill an OOD hippogriff using poison, and got gypped of the exp. =(
+
+>> Very old problem in beam code;  poison_monster was being called
+>> incorrectly.
+
+xx 259. I once got a corpse from a summoned snake - I hadn't been
+able to reproduce it, but it's corroboration.
+
+== 260. Give monsters large bonus while target is MHITYOU and behavior is
+   BEH_WANDER,  during player stealth checks - monsters will still be on
+   the lookout for the player.
+
+   Give a small chance each clock tick of deleting the MHITYOU; i.e. monster
+   'forgets' about the player.  Stupid monsters forget faster..
+
+== 261.
+I was playing a transmuter, and noted that I was getting "You
+punch the <foo>" messages while fighting in spider form.  I'm not
+getting the unarmed punch attack, so I think the verb comes from
+fight::weapon_type_modify(), which doesn't take transformations into
+account:
+
+static int weapon_type_modify(int weapnum, char *noise, char *noise2,
+                              int damage)
+{
+    int weap_type = WPN_UNKNOWN;     if (damage >= HIT_WEAK)
+    {
+        if (weapnum == -1)
+            weap_type = WPN_UNARMED;
+        else
+        {
+            if (you.inv_class[weapnum] == OBJ_STAVES)
+                weap_type = WPN_QUARTERSTAFF;
+            else if (you.inv_class[weapnum] == OBJ_WEAPONS)
+                weap_type = you.inv_type[weapnum];
+        }
+    }     strcpy(noise2, "");     switch (weap_type)
+    {     ...     case WPN_UNARMED:
+        if (you.species == SP_TROLL || you.mutation[MUT_CLAWS])
+        {
+            if (damage < HIT_MED)
+                strcpy(noise, "claw");
+            else if (damage < HIT_STRONG)
+                strcpy(noise, "mangle");
+            else
+                strcpy(noise, "eviscerate");
+        }
+        else
+        {
+            if (damage < HIT_MED)
+                strcpy(noise, "punch");
+            else
+                strcpy(noise, "pummel");
+        }
+        return damage;     ...     }
+}
+
+xx 262.
+
+from Win32 precompiled pr10 on Windows 2000:
+
+You see here a white potion.
+B - a white potion
+Drink which item? (I choose B)
+You feel much better.
+Eat which item?
+That banana was delicious!
+B - a white potion
+You finish eating.
+
+>> Must have had autopickup off,  but I cannot reproduce.. think it
+>> might have been fixed by fixes to message.cc
+
+== 263. When i name a character 'con' or 'Con' it freezes the game.
+
+== 264.  Generate wandering monsters on/near stairs about 10% of the time,
+  regardless of player position,  but disallow banding and generate a
+  message ("A %d enters from above/below!") if player is around.
+
+== 265. Has anyone else noticed that after a draconian dies, every high-score on the
+  screen is listed as having been a draconian? When a non-draconian dies, the
+  draconian is listed as having come from race "Yr".
+
+== 266. Cleaned up monster blinking.
+
+== 267. Monsters following up the stairs if they are "not aware" of the player (odd!)
+
+== 268. Some problems with monsters not following player position correctly,  or
+   just plain waggling back and forth when they should be beating on the player.
+   Sigh.. gotta look closer at those movement routines.  :P   Not ready for
+   prime time yet.
+
+== 269. Simple fix to handle_behavior()
+
+== 270. After a while, crawl again went of bounds, this time with this
+              backtrace:
+
+              #6  0x80e9119 in seekmonster (p_monsterid=0xbffff1e0) at mon-util.cc:816
+              #7  0x80e91bc in mons_intel (mc=-1) at mon-util.cc:837
+              #8  0x80db2a7 in behavior_event (mon=0x8247e90, event=1, param=0)
+                  at monstuff.cc:394
+              #9  0x81339c7 in noisy (loudness=8 '\b', nois_x=45 '-', nois_y=34 '"')
+                  at view.cc:1249
+              #10 0x8132927 in monster_grid (do_updates=true) at view.cc:941
+              #11 0x8131bca in viewwindow2 (draw_it=0 '\000', do_updates=true) at view.cc:574
+              #12 0x8052f76 in input () at acr.cc:2020
+
+              The bad thing here is that line #7 has mc=-1, and seekmonster() will use
+              that as an index.
+
+== 271. Could we tie this to smartitude? Killer Bees and other insects can
+              forget that I exist when they can't see me while Liches ought to
+              cast 'detect exact player loaction' and Dig or teleport their way
+              to me, for a LOOOOOOOONG time after I damage one.
+
+== 272. Cleaned up abyss generation;  there was a monster leak and some very strange
+   code.
+
+== 273. Fixed minor screen redraw problem (screen should have updated before monsters'
+   turn,  but it wasn't.  Caused some odd SFX artifacts,  like beams/missiles going
+   through walls)
+
+== 274. Fixed nasty bug with cornered monsters which had them looping from flee->
+   cornered->seek->flee->...
+
+== 275. Fixed small logic error with perma-mutations
+
+== 276. I was invisible and an orc spotted me, shouted, and then came at me.
+
+== 277. gotta clean up monster target aquisition and release.  Make more 'sensible'
+>> Add 'persist' variable;  which is # of turns a monster will go towards their
+>> CURRENT target even if it is not in LOS anymore.
+
+== 278.  Fixed type usage problem with quadrant_blink()
+
+== 279.  Made monsters move a little more unpredictably along oblique paths
+
+== 280.  Fixed up all cases I could find of friendly monsters frying players
+   (NOTE: they might still do so as part of calculated plans to help the player
+   out - some collateral damage is acceptable!)
+
+== 281. "The your cursed +1 robe is stuck to your body."
+        "You are a elf wizard."
+
+== 282. Can't pick a target with Apportation spell.
+
+>> works fine for me.  Added a helpful message.
+
+== 283. It seems that sometimes monsters are not interested at you even if
+              you shout ("!") at them. Or is it feature ?
+
+>> nope,  bug.  Any noise coming from the player's position should alert
+>> hostiles within range depending on the volume of the noise.
+
+== 284. Sometimes monsters (rats, bats and probably others) attacks you,
+              but they are still described  as "not interested".
+
+>> fixed in direct.cc.
+
+== 285. I have also
+      made some changes to the file attributes when it is compiled with MULTIUSER
+      option turned on, since I think the player's save and level files should NOT
+      be group writeable :), but the score file should be.
+
+>> .sav and level files are private (600).  Ghost and score files are not (664)
+
+== 286. There seems to be a more serious bug with summoning monsters in Crawl pr11:
+: I`ve found that summoned creatures aren`t giving any experience to your
+: character when they kill things any more, which makes summoners a bit crap.
+:
+: Also, when my Chaos Knight summoned a demon ( yquxy whatsit) it kept trying
+: to eat my intelligence and mutate me, which has never happened before.
+: Demons killing monsters didn`t give me any message from Makhleb either.
+
+Both fixed.  #1 is logic problem, #2 is generic friendly fire problem.
+
+== 287.
+    I'm playing pr11, DOS version. My merfolk healer was in a situation like
+    this:
+
+    ................. (water squares...
+    ..;;.............
+    .................
+    .................
+    .................
+    .................
+    .................
+    ......;.......... water squares end)
+    ......@.......... this is solid ground
+
+    The placing of the symbols is not accurate.
+    Now none of the eels could hit me with their blasts. The eel right next to
+    my character kept shooting straight upwards and the two eels farther away
+    kept missing me by my right side. At least one of them also hit the eel
+    right next to me. I killed the nearest eel, after which the other two just
+    kept missing me. My character was not invisible.
+
+: Also, it's not just electric eels. Storm dragons also tend to shoot in
+: the exact opposite direction to the character. Looks to me like it might
+: be a sign problem...
+
+>> ugh. bad side effect from tracer explosions.  Fixed.
+
+== 288. Fixed whopper of a bug with generation of fast monsters which often hung
+  the game (especially in areas with lots of fast monsters, like the hive).
+
+== 289. Brent's balance patches
+
+>> applied all, reduced missile damages by 1 to compensate.  Gave daggers
+>> and spears better chances to hit.
+
+== 290. The "temporarily insulated" message is weak... it's kind of
+      confuing and looks a bit like a bug.  Better would be a "god
+      protected you" message after the explosion... that would tell
+      both the source and the reason for the insulation.
+
+>> agreed.  Changed to post-divine blast message.
+
+== 291. Hate to follow up to myself, but a small thing was brought to
+      my attention.  Now that the dice for damage are one based, this
+      means that Magic Dart is now really the best first level spell,
+      this being because it uses the 3dX notation (ie dam > 100), so
+      it does a minimum of three damage (which isn't bad) and always
+      hits (which makes this too good for a spell which is very common).
+
+    So I'm suggesting that the damage for Magic Dart be converted to:
+
+        damage = 1 + (power / 2)  (this is in it_use2.cc).
+
+>> changed to 1+pow/4.
+
+== 292. The third ability gained by followers of Zin is pestilence.  This summons
+    a variety of bugs that hopefully will helpfully kill off whatever happens
+    to be bugging you.
+
+    Trouble is, every time my character uses it at least one my little
+    chitinous friends gets killed.  Zin doesn't like that, so my character
+    feels guilty.
+
+    The same thing happens with the fifth ability, Summon Guardian, but
+    it's not so bad there.  The summoned Angel (or Daeva, for fans of the
+    TSO) can generally take care of itself, although I did lose a Daeva to
+    a dragon once.  Luckily it left behind a long sword of holy wrath to
+    assuage my guilt.
+
+>> add a flag to god-summoned critters so that their death doesn't cause
+>> piety loss.   Summoned friendlies will still give piety loss;  the 'good'
+>> gods don't appreciate you summoning beings as cannon fodder!
+
+>> tried to apply the god_gift flag wherever it made sense; Zin Pestilence
+>> was the only place I could find.
+
+== 293.  Finally found and fixed 'critters summoned out of LOS' bug.
+
+== 294.  Fixed logic problem in quadrant_blink()
+
+== 295.  Fixed buffer overflow in acr.cc during char dumps.
+
+== 296.  Fixed minor display problem in backlight_monsters()
+
+== 297.  Added Guus' -plain and doc patches
+
+== 298.  CHMOD_PUBLIC now uses 664 instead of 666.
+
+xx 299. Actually, there was at least the comment from the newsgroup
+about elven conjurors starting with the Ice/Air book (because
+they're better at Air than Earth and equal in Fire and Ice).
+The actual spells tend to lean a bit more to the Fire/Ice
+side so I really don't see why they shouldn't have the choice
+(or rather why anyone should have this auto-picked).  Adding a
+selection screen and an initfile option wouldn't be that hard.
+
+== 300. Change magic dart damage to 2+power/4
+
+== 301.
+>I'm wearing a ring of Shadows.  When I try to take it off, it says
+: >that it's stuck to me.  When I 'v'iew it, it says that it has a curse
+: >placed upon it.  But it doesn't show up as cursed in my inventory
+: >list, and scrolls of remove curse don't work.
+:
+: Oh... and if it helps at all: I killed a mummy at a certain point,
+: with no apparent curse effect.  This may be how the ring got cursed
+
+>> the check for randart rings was looking for 200,  but the actual
+>> inv_dam value for randart rings is 201.  "Pluses2" of 100 is not
+>> well defined in the code... :(
+
+== 302. Abyss go to shits after abyss_teleport()
+>> wasn't setting terrain to DNGN_UNSEEN.  Was using old (stupid)
+>> value of 30 (white triangle!)
+
+== 303. In fact, they seem able to sneak right up to alert monsters and still
+deliver the first blow.  I think that such a blow should sometimes count
+as a stabbing attack, just as blows delivered to fleeing or confused
+monsters currently are.  Currently such attacks have a
+
+random2(200) <= you.skills[SK_STABBING] + you.dex
+
+chance of being stabs.
+
+>>Gave chance if monster isn't paying attention to you (foe != MHITYOU), but
+>>stab bonus is much lower (3) than stabbing a sleeping/fleeing monster.
+
+== 304.  Not sure if you saw my big report on roguelike.misc, since it hasn't
+: been fixed and doesn't seem to appear on the 'to do' list. The spell
+: 'Lee's Rapid Deconstruction' doesn't do any damage at present. It
+: occasionally destroys the wall which is targetted, but I detonated 20
+: walls next to a rat and didn't scratch it. This leaves Earth Mages
+: without an area-effect damage spell, which is rather detrimental to
+: their health :(.
+
+>> Fixed.  Needed subtle wrinkle in explosion map,  as well as some
+>> fixes to the spell itself.
+
+== 305. Currently, if you skip the first naming screen but use the second
+you can overwrite a previous game.  Although this is unusual
+behaviour, it's not very desirable, it should at least warn
+about this and potentially give an option to load the old game.
+
+>> fixed. good catch.
+
+== 306. Wielding a bunch of stones and trying to throw one of them,
+results in all of the stones being thrown (and potentially disappearing
+as well).
+
+>> Very, very subtle bug in beam.cc inherited from original codebase.
+>> Fixed.
+
+== 307. monster_move(monster);
+        // reevaluate behavior, since the monster's
+        // surroundings have changed (it moved)
+        handle_behavior(monster);
+
+        Some monsters are getting killed on their move, and then the
+        code in handle_behavior() will fail an ASSERT since monster->type
+        will be -1.
+
+== 308. After one hit with a poison dart, "the goblin looks rather
+more sickly". The non-"...more..." message is (repeatably)
+never shown.  - Josh PS: Could we consolidate the poison-effect-namespace to either
+"ill" + "rather more ill" or "sickly" + "rather more sickly"?
+I favor the former.
+
+>> oops.  simple messaging problem.  Similar prob. in sticky flame.
+
+== 309. Only one bug found - in newgame.cc (line 2222) should be used
+strnicmp() instead of strncmpi(), because the second one isn't
+existing function :)
+
+From BWR:
+>Actually, we should probably avoid both, I don't think they're
+>very stardard (BSDish systems will use "case" over "i").
+>strncmp() is POSIX (among others) so it's okay, but the case
+>insensitive compare almost always causes problems (if we're going
+>to use it, we should probably have it defined somewhere, so it
+>can be adjusted or handled by autoconf (should we go that route)).
+
+>> correct - neither are POSIX.  However it is being used in a DOS/win32
+>> section only,  and strnicmp() is the proper call as Michael pointed out.
+
+== 310. I've looked at monster pronouns and IMO (supported by dictionary)
+ Erica and Frances should be female and Francis should be male.
+
+ Probably also description of uniques could be slightly changed
+according their gender, for example
+Jessica - "An evil apprentice sorceress."
+
+>> done.
+
+== 311.
+In either event, to get crawl to compile, the str<foo>cmp(x,y) == NULL
+in initfile.cc needs to be changed to "...== 0". The line is near 520.
+
+== 312. Change shops back to old [0][5+i] item location.  Leave items
+   carried (ie not on grid) at 0,0.  Make sure to modify link_items();
+   keep compatibility with old saved games.
+
+== 313. I think giving Ogre and Troll Fighters Dodging 2 is probably in order.
+
+== 314. Fleeing monsters were not taking advantage of the flexible movement
+  code (Guus)
+
+== 315. Gave monsters a little better chance of sniffing out foes (stealthy
+   players will fare better).  After arriving at target x,y, will do a check
+   for continuing on via ESP/noise/whatever.
+
+== 316. Removed ability of monsters to see through walls.  :)
+
+== 317. : Just tried casting Tukima's dance while wielding an artifact weapon.
+      : I get the message "You hear a popping sound." and although my artifact
+      : stays in my hand, something that looks like a Shadow appears.  Its
+      : name: 36317738 iron wands.  If you 'x' it and hit '?' it says "A
+      : dancing weapon floating in the air." just as if the spell had worked
+      : right.  The thing even moves and attacks like a summoned monster, and
+      : seems to have combat stats of some sort, since it can kill things.
+      : When the spell expires, it says "The weapon drops from the air." as
+      : normal, but the monster just ceases to exist; it doesn't leave a copy
+      : of the weapon behind or anything.  You can even summon several of
+      : these "36317738 iron wands."
+
+>> ugh, two separate logic problems in dancing_weapon(). Fixed.
+
+xx 318. I could be wrong, but I think that the Orcish Mines had no scrolls,
+      potions, wands, rings, or amulets.  Very odd.  But since Gordon just
+      rewrote dungeon.cc, we should wait for reports about pr13.
+
+>> this is working exactly as designed, if I read the original code correctly.
+
+== 319. But I failed in my casting too often, and the
+      buildup of mutagenic energy had some unfortunate effects.  Even after I
+      gained some levels in Divination, and my Success chance was up to Fair,
+      I failed to successfully cast the spell sufficiently often that I mutated.
+      So be wary of casting even second level spells.
+
+    from BWR:
+    We've have people getting mutations here from level one spells.
+    I'm thinking that at the very least we need to lower the baseline
+    for noticing that you're accumulating radiation... and possibly
+    put in some warning messages so people know that they're getting
+    a bit "hot" and that they need to take it easy for a while.
+
+>> messaging much better.  toned down nastiness from low level spell failure.
+>> made my easter egg much less abusable.
+
+== 321.  I do wonder that Zin wasn't upset when I zapped the Angel initially.
+
+>> Zin is stupid and can't differentiate between a hurtful and helpful
+>> spell.  Perhaps a small subset could be classed as obviously harmful,
+>> so that if you e.g. healed or hasted the daeve it wouldn't get pissed.
+>> have to be done in beam.cc, I think... any non-enchantment would be
+>> classified as harmful, I think.  (?)  Other enchantments would have to
+>> go in a big if/switch.
+
+>> this will also help to NOT piss monsters off if you're trying to help
+>> them.
+
+== 322. 2) Item clean-up in the dungeon seems far more
+      aggressive than before. I've dropped items,
+      popped down a staircase and right back up,
+      only to find everything I dropped gone, gone,
+      gone! This would be on "cleared" levels where
+      the likelihood of item overload is almost nil.
+      Is this a change in gameplay that I missed? In
+      pr13, I am finding myself holding onto *everything*
+      because I *know* that if I drop it and leave the
+      level it will simply disappear ... a PITA situation
+      for low-strength characters wanting to stash some
+      extra stuff for later.
+
+>> oops.  Somehow broke item save/reload for any item dropped by player
+>> or monster.  Took closer look,  cleaned up horrible hacky code.  :P
+
+== 324. Make random zombie generation reflect the actual level;  it is currently
+      random.
+
+>> no more horribly OOD zombies.
+
+== 325. Monsters with OFFENSIVE spells in mspell[2] will still use them
+  on the player (sigh..)
+
+>> fixed all cases in mon-spell.h
+
+== 326. Accidentally doubled the number of monsters created w/ level.
+
+== 327. : Scrolls of fear appear to be bugged.  Read one, got messages saying
+  : that the monsters were frightened (ie, not "The blah resists."), but
+  : they kept moving towards me and attacking me.
+
+== 328. In pr12, my Troll could see an unseen horror.  He was not wearing any
+      devices that could lend him see invisible, and orcish wizards were
+      turning invisible earlier in the game.
+
+>> oops.  logic problem in mons_del_ench()
+
+== 329. Sigmund and other uniques appearing multiple times
+
+>> logic error in dungeon.cc
+
+== 330. Magical staves are described using the old style (speed)
+
+== 332. Monsters walk into clouds, except for intelligent ones?? Check code:
+mannix writes:
+Now here's an idea to which I can warm: stupid animals
+  thinking "where there's smoke, there's fire", and more
+  intelligent critters in possession of the ability to
+  discern betwen the two.
+
+== 333. Monster Placement: is there a place where, if you can't find a sensible
+    location for a monster in a group, you just put that one anywyere?
+    I think that's part of what makes monsters appear in LOS ... I just
+    got a gnoll and two orcs.
+
+>> stupid error in monplace.cc.   Forgot that distance() function returns squared
+>> values.
+
+== 334. Shapeshifters: one turned into a Swamp Worm. This ought not happen,
+    as those are water-only monsters, despite their worm designation.
+
+>> fixed. Won't let monster poly into water-based monster on land.
+
+== 335. dungeon.cc::pick_an_altar(): needs to have a case added, near line 5988:
+      case BRANCH_SLIME_PITS:
+      case BRANCH_ECUMENICAL_TEMPLE: //jmf: ADD THIS LINE
+        altar_type = DNGN_FLOOR;
+        break;
+
+    ... to prevent "bonus" altars in the Temple. This was probably the
+    original author's bug (i.e.: mine).
+
+== 336. So the city-like dungeon code has some sort of an off-by-one error.
+    The "buildings" (squares with doors) once were separated by at least
+    one space of floor; no longer! Furthermore, they once didn't overlap.
+
+    The changes provide much more interesting cities, however the door
+    generation hasn't quite caught up. I've seen things like:
+
+    #########
+    ####+...#
+    #####...#
+    #####...#
+    #########
+
+    ... where it's fairly obvious what went wrong. (I discovered these
+    types of things when playing a gnome.)
+
+    The quick fix would be to restore the 'air' around buildings, but
+    IMHO that would be a loss. The new cities are so much cooler.
+
+    A more complex fix would be in two steps:
+
+    1) make sure there's a passageway around the border of the level.
+       A single sweep setting all those squares to floor would be fine.
+
+>> tightened up door placement in box_room();  since both city_level()
+>> and plan_4() use it,  stuff works better now.
+
+== 337.
+    Sticky Flame puts monsters in the player's thrall
+
+    This last one is really bizarre, because it doesn't happen
+    in the wizard mode compile (although I can take that character
+    over to the normal version and have it happen there).
+
+    It's intestesting to note that these monsters end up with
+    enchantment number 30, which is one less than the sticky
+    flame enchantments... in the wizard mode they seem to get
+    enchantment number 60 (which is one less than the other
+    set of monster sticky flame enchantments... also known
+    as POISON_IV).  I'm wondering if anyone else can verify
+    this.
+
+    I suspect that there's some problems in the enchantment system, which
+    could be responsible for both of these.  Looking at sticky flame today
+    it seems that my sticky flame ends up as ENCH_POISON_III or _IV
+    (59 or 60) regardless of playing crawl or wizcrawl.  The in-thrall
+    thing seems to not be happening right now.  It occurs to me that I
+    never actually got "burn" messages in pr12 when I was using napalm
+    (I hit an Ice Dragon about six times with it and it never seemed
+    to take any damage after the initial hit)... looking at the code now,
+    I'm pretty sure I should have been (and that any appearance of working
+    in the recent past might have in fact been delayed poisoning).
+
+>> Fixed.  sticky_flame_monster() was badly broken.  gawd I bunged that up.
+
+== 338. As a side note, I now backstab bats quick often (I take it that
+this is a side effect of the new backstabing situtation).  I'm
+not really sure I should be able to do that (or more to the point,
+does this mean I can expect regular backstabbing of ball lightning
+and spatial vortices which might be a bigger problem).
+
+== 339. In Win32 pr13, if you set class = C in init.txt, your character will be a
+priest ('c') instead of a wanderer ('C').  This happens regardless of if
+your race allows wanderers.
+
+>> bug in initfile.cc
+
+== 340. Basically, nowdays if you turn a bat into an undead slave,
+it suddenly comes to it's senses and becomes an inadvertant
+killing machine (well against monsters that can't easily kill
+it in one hit), as it walks straight up to them and hits them
+3 or 4 times a round.  Undead bats should still flutter around
+(that's what keeps them in check considering their amazing speed).
+
+== 341. I've run into some surprisingly powerful ghosts in pr13.
+They are only overly powerful in non-wizard compiles; the
+two times I switched to a wizard-compile they acted normal. One
+was casting MS_ENERGY_BOLT instead of either magic
+dart or throw flame (the two spells that character knew).
+
+>> very bad indexing bug in ghost loading.  Who knows what else
+>> this was screwing up.. :P
+
+== 342. Some attempts to animate a skeleton result in a puff of smoke in addition
+(I think) to a new slave.
+
+== 343. We've had several reports here about necromancers zombies and skeletons
+actually getting poisoned from time to time by monsters.  As far as
+I can tell this really shouldn't be happening.
+
+>> probably a side-effect of messed up enchantment code.
+
+xx 344. If you start a game with -plain, Save, then continue the game without -plain,
+then the displayed map for remembered locations uses the -plain characters.
+
+If you start a game without -plain, Save, then continue the game with -plain,
+then the displayed map for remembered locations uses the extended characters.
+
+== 345. I haven't heard this one mentioned, but when wielding an ego item you
+typically get this:
+
+d - an elven short sword (weapon in hand)
+Wielding this short sword is a little awkward.
+It softly glows with a divine radiance!
+
+The elven short sword should be id'd as "holy wrath" in the first line...
+it was unid'd when I did this, so it looks like a simple case of moving
+the identify code to a place before the printing.
+
+xx 346. Breathing fire via the mutation prints this unnecessary line:
+" .\n"
+
+xx 347. I got a segfault when entering the abyss; wasn't playing under
+gdb, for some reason, so didn't get a stackdump. Sorry.
+
+== 348. Brent's XP patches
+
+== 349. Josh's sludge elf, etc patches
+
+== 350. In mon_util.c::define_monsters(), there are some mystical values
+      assigned to m2_sec, some of which can be made more apparent by
+      using the appropriate MST_* values.
+
+== 351. Actually, a thought just occured to me that the new stabbing
+      code that gives occasional backstabs against flutterers, is
+      probably very annoying to Paladins.  We might need at least an
+      additional check to prevent some of the excusable backstabs from
+      being naughty...  perhaps it's just as simple as only making
+      attacks on fleeing, sleeping, and confused monsters call naughty
+      (in which case, it might be reasonable to remove the random
+      chance for TSO applying penance).
+
+      One of the problems with confusion based stabbing is that some
+      monsters are created with it, and most of those probably shouldn't
+      be backstabable (various voritices, ball lightning, vapours).  So
+      maybe we might need some way of distinguishing if the stab is
+      appropriate (or if not that, we should probably leave them off the
+      above list for naughtiness).
+
+>> new code to void backstabbing against flutterers (solely because
+>> they are flutterers) and perma-confused critters (solely because
+>> of confusion).
+
+== 352.  in check_mons_magres(), the return value for the special "< 6"
+         bonus is backwards.  I'm probably to blame for not noticing that
+         the function is logically backwards, I probably got confused by
+         one of the cases in spells4.cc which use this function backwards
+         (a few of which are my own).
+
+== 353.  I added a "gotoxy( 18, 9 )" to the top of our direction function,
+         which nicely solved the porblem where the cursor was left at the
+         end of a prompt (ie for conjure flame).
+
+xx 354.  We've had a report of skeletons picking up skeletons.
+
+xx 355.  I've had several people reporting some oddness when returning
+         to a level via a straight up and down... things like monsters
+         completely disappearing and traps being created.
+
+== 356.  pets seem to try and track the target monster even when they're
+         on the wrong level.  Basically, if you go down stairs and tell
+         your pets to attack something and the go upstairs to try and
+         bring more pets down, the upstairs pets will be running around
+         wildly... going downstairs and killing the target made the
+         upstairs pets return to the master homing behaviour.
+
+>> simple fix.  Set pet_target to MHITNOT on level change.
+
+== 357. The lastest in the bizarre happenings around here was a friendly
+      player ghost... wonderful entertainment as it would should out
+      things like "Run, I'll cover you" and such.
+
+>> always a possible problem;  some fields were left uninitialized from
+>> monster_cleanup(),  and never initialized in the ghost code!!
+
+== 358.  Removed digging ability from Disrupt()
+
+== 359.  Added 'random' beam that affects each cell as one of { fire,
+    cold, magic, electricity, poison, negative energy, acid }.  Only
+    used in my easter egg so far.
+
+== 360. Maybe we should instead be considering shifting the greater
+vaults down to level 10+, and the lesser vaults to 7+ (there
+are many more mini-vaults (and better quality these days, and
+this does have the advantage removing dlev 4 guardian naga
+encounters... we've had several).
+
+== 361. Okay, compiled it up and the only problem was that link_items() is
+declared both static and extern (removed the static prototype).
+
+== 362. One other little problem:  The magic resistance check for monsters
+is now correct, but there are some inappropriate calls to it over
+in spells4.cc (in particular Twist is currently unusable).
+
+>> reversed the logic..  this was just too non-intuitive and backwards.
+
+== 363. Move the Crawl.mcp file out of the source folder.
+
+== 364. Add "#define ESCAPE 0x1B" to defines.h
+
+== 365. In eat_food() in food.cc add some code before the "You don't have
+    any such object." case:
+     if (keyin == ESCAPE)
+         return;
+
+== 366. lava_spaces and water_spaces in builder_monsters() in dungeon.cc
+aren't inited. (This looks like a nasty bug).
+6) In quadrant_blink() in spells4.cc there's a line that reads "while
+(!done && random2(100) < pow--);". Please move the semi-colon to its
+own line.
+
+== 367. Snakes now flutter like bats did. They also display the "not interested
+in you" message when e'x'amined.
+
+ Josh:
+ I've had a batty frog and batty snake. Both had the old
+ 'not interested in you' inspection message. Most frogs
+ and snakes were not batty.
+
+>> oops.  Monster->flags was not being set to 0 at monster creation.
+
+== 368. in monstuff.cc::handle_spell(), the CONFUSION && !vapour
+   should probably be changed to use M_CONFUSION to be generic.
+
+== 369. the contamination messages should probably be in the warning channel
+
+== 370. wizard's hats say they give AC, but they don't
+
+xx 371.Fireballs are rather larger than I remember.
+Mana explosions from magic accumulation are the same size (very big).
+I'm pretty sure the former is unintentional; is the latter?
+
+== 372. There's an illiterate "it's" in the description of Silence. The word
+ought to be "its". (This is a peeve of mine. "We hate's them, ye's
+presciou's!")
+
+beam.cc::2753
+- hearMsg = "You hear a gentle \'poof\'";
++ hearMsg = "You hear a gentle \'poof\'.";
+
+== 373. I haven't seen any miscast effects except for the irradiation one.
+I think this is due to a loop in spell.cc which tries to figure out
+which school of miscast-effects applies to a given spell. The loop is
+a bit past line 300 and seems to ignore the new 'bitmap' representation
+of spell-schools. I know that miscast_effects is getting bogus sptyps.
+
+Full, real fix:
+unsigned int sptype = 0;
+do {
+    sptype = 1 << (random2(SPTYP_LAST_EXPONENT+1));
+} while (!spell_typematch(spc2, sptype));
+
+== 374.
+newgame.cc::3410 + if (you.species == SP_HILL_DWARF ||
++     you.species == SP_MOUNTAIN_DWARF)
++   you.skills[SK_MACES_FLAILS] = 1;
++ else
+    you.skills[SK_SHORT_BLADES] = 1;
+
+== 375. Later in newgame.cc: Now that Sludge Elves suck at enchantments
+and conjurations, we could remove the options for them to be Conjurers,
+Reavers, Enchanters and Crusaders.
+
+** 376. Something is still deleting the ABJ_xx enchantment for summoned
+monsters.  Don't know what though.
+
+== 377.  Fixed magic resistance of normal & small snakes.
+
+== 378. case CLOUD_POISON:
+        case CLOUD_POISON_MON:
+            if (mons_res_poison(monster->type) > 0)
+                continue;
+            if (monster->hit_points >= random2avg(37, 4))
+                continue;
+            break;
+
+THIS IS WRONG   VVV
+
+        // dumb monsters can be fooled by smoke
+        if (mons_intel(monster->type) > I_ANIMAL || coinflip())
+            continue;
+
+        // this isn't harmful,  but dumb critters might think so.
+        case CLOUD_GREY_SMOKE:
+        case CLOUD_GREY_SMOKE_MON:
+            if (mons_res_fire(monster->type) > 0
+                || (monster->inv[MSLOT_ARMOUR] != NON_ITEM
+                    && mitm.special[monster->inv[MSLOT_ARMOUR]] % 30
+                                            == SPARM_FIRE_RESISTANCE))
+            {
+                continue;
+            }
+
+== 379. Brent's 'friend-brand' patch
+
+== 380. Undead should *not* have morale failures, nor should the dumber ones avoid
+        flaming clouds of death (brown & white 'z's & 'Z's). Skeletal warriors
+        might avoid FCoD since they do make one other intelligent decision (wrt/
+        casting their spell), but they ought never run away.
+
+>> who says running away is due to morale failure?
+>> REALLY dumb (I_PLANT) creatures will now walk through harmful clouds.
+>> this includes most of the shambling (mindless) undead
+
+== 381. quadrant_blink() from Brent
+Brent Ross <bwross@c...>
+
+    In this method, what we're going to try for is the best match, and
+    allow the number of choices to be based on power.  The basic hope
+    is that while even high power characters have to put up with some
+    randomness, the diameter of the cone decreases making it more
+    reliable.
+
+    let line = line segment extending out from player in the chosen dir
+    let best = NO_SQUARE
+
+    for i = 1 to f(power)
+        targ = random nearby square
+        if (dist( targ, line ) < dist( best, line)) then
+            best = targ
+        else if (dist( targ, line ) == dist( best, line )) then
+            // Not really sure we want this part, maybe we should throw in
+            // a random to keep the distance sane.
+            if (dist( targ, player ) > dist( best, player )) then
+                best = targ
+            endif
+        endif
+    endfor
+
+    if (best == NO_SQUARE)
+        mpr( "teleport control screwed up" )
+        random_blink
+    else
+        player = best
+    endif
+
+== 382. De-twink wanderers
+
+>> undefined USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES until we have
+>> "hedge" magic.
+
+== 383. Check that all spell books are listed for generation.. at least war chants
+  is missing.
+
+== 384. Add "Blowgun" (launcher) and "needle" (ammo)
+: basically, go through all code looking for BOW, add blowgun
+: go through all code looking for ARROW, add needle
+: assassins now start w/ blowgun & needles
+  except for deep elves; they get hand xbows since they tend to
+  suck at HTH and will rely more on ranged damage.
+: some chance for needles of Foo? (dungeon.cc)  just poisoned
+: some chance for blowguns of Foo? (dungeon.cc)  of venom
+: must remember to add in to item generation tables. :)
+: change throw_it() so that blowguns and thrown darts are
+  very quiet;  all others make a noise - check fight.cc for
+  a good noise value.  Note that alert() is simply not called.
+: give a couple monsters blowguns & needles to start
+: needles get damaged far less often (but make them rarer;
+  maybe only carried by assassinish-monsters.
+: Needle trap at higher levels;  could be a source of needles?
+
+TODO: dungeon.cc::give_item() .  which monsters have bguns/needles?
+other files not searched for WPN_BOW and MI_ARROW (our template for
+this stuff):
+
+== 385. fixed logic problem in cast_sandblast()
+
+== 386.  If I cast a fire spell at something in the water, it leaves a trail of
+steam behind it.  A fireball should have the same effect (but of course
+over a larger area)
+
+== 387. Josh' new diff (mostly Xom acts)
+
+== 388. A Skeletal Warrior just drank a potion of healing. This strikes me as
+wrong, from both pseudo-physiological and gameplay perspectives.
+
+== 389. I saw hellwing which polymorphed jackal to lava fish. Probably
+this is not bug but we should consider this.
+
+== 390. We've had
+someone complain here about his Ogre not being able to wear one.
+I thought we had decided that caps and wizard hats were wearable
+by all characters, regardless of headsize or horns.
+Anyone remember?
+
+>> there's a comment in item_use about caps & wiz hats being
+>> wearable by anyone "unless their head is too big (ogres, etc)"
+
+== 391. I've found a number of eggplants in pr15, err, 4.1.15
+ (these were supposed to be MI_NEEDLE.. what happened!?)
+
+== 392.
+I made it to the Abyss...  Now I'm stuck in this loop in
+dungeon::define_zombie():         while(true)
+        {
+            // this limit can be updated if mons->number goes >8 bits..
+            test = random2(182);            // not guaranteed to be valid, so..
+            cls = mons_charclass(test);
+            if (cls == MONS_PROGRAM_BUG || mons_rarity(cls) == 0)
+                continue;
+
+>> VERY tricky to fix correctly.. no wonder it was never done.
+
+(which monsters to allow as zombies in the abyss?)
+
+BWR:
+Or perhaps just picks with the base level set as high as
+possible...  which will allow for Zombie Titans (which are high
+enough level that they're never "naturally" generated, I believ
+
+Well simulacrums are out right away.  They don't appear naturally
+anywhere, due to the fact they sublimate away.  On a similar note,
+ball lightning shouldn't be generated anywhere, but I believe I
+accidentally put them in the Realm of Zot... short lived creatures
+should have to be summoned in.  As for zombie/skeletons or even spectres (which I don't believe
+are generated anywhere.... Spectral Warriors are generated,
+but they're like Skeletal Dragons in that they're completely
+different... don't think I've ever seen a Spectral "Thing"
+in any dungeon, at least not one I didn't create myself) are
+probably okay in the abyss... there are things like abominations,
+necrophages, skeletal dragons/warriors there already.  Spectres
+might also be interesting in the Realm of Zot.
+
+== 393. Oh, dear.  I think I might have left in a debugging bit that changes _all_
+generated traps to needle traps - they're supposed to be fairly rare,  and only
+seen below level 3!
+
+== 394. It looks like the logic in poison_monster() needs adjusting, too, if you're
+getting credit for monsters done in by the poison from needle traps.  Ah well.
+
+== 395. // * fixed: magical staves now described with new speed
+
+Actually, there's still one problem here.  The '%' needs to be doubled,
+since the description string will eventually be fired through cprintf()...
+it currently gets dropped in both cases (weapon and stave).
+
+xx 396. An eloquent method of handling this would be to 'queue' shouting messages
+between character actions and conflating multiple shouts into a single
+message ("Several <foo>s shout" or whatever), possibly conflating by
+monster type ("Several <foo>s shout out! A <bar> yelps!") so that the
+player can be alerted to unique shouts and/or get the *flavor* of all
+the various bellowing beasties.
+
+== 397. Make zombie monsters appear a few levels (3-4?) earlier than their non-zombie
+counterparts
+
+== 398.
+> I was blowing needles at an orc wizard, and he very politely gathered
+> all the needles up for me.  I appreciated him doing that rather than
+> casting those nasty spells at me.  :)
+
+Now, I thought that logic had been fixed (at least, in the case
+of darts) such that monsters with potent HTH or spell attacks would
+not lower themselves to gather scattered items for characters :P
+
+>> fixed better.  Monsters won't pick up if there's not much there, they're
+>> not wandering,  and they already have ammo.  Fleeing monsters never stop
+>> to pick up ammo.
+
+== 399. Needle traps will poison the player even if he or she resists poison.
+
+xx 400. Some first level spells won't allow the player to target him- or herself.
+This means that a player can't use those spells to see if he or she
+resists their damage type. Knowing if one resists a damage type is useful
+when trying on mysterious rings.
+
+>> need some restructuring to do this;  burn_freeze() isn't set up to
+>> actually affect the player.  :P
+
+== 401. Personally,
+I think Ijyb should probably get an XP modifier of 5 (and even
+then is still worth 40 xp)
+
+== 403.
+I think some kind of notice should be given, when body wich is carried
+becomes rottens. And ghouls should definetly be able to see when
+chunks of meat become rotten. As should everyone else, I think.
+
+>>mv: added appropriate messages
+
+
+== 404. My Draconian monk (not so difficult as you might think) got mangled
+by a goblin with seemingly limitless ammount of scrolls of summoning.
+He summoned like 5-7 abdominations before my monk got killed. And
+this was at level 2. Extremely bad luck or bug?
+
+== 405. Crash in pr14
+This occurred in the Realm of Zot, while attacking an Orb of Fire, which had
+just exploded.
+
+>> very nasty.  Fleeing monsters with "emergency" spells requiring tracers
+>> would crash the game.
+
+xx 406.
+When using Stone Skin with Dragonian it says "Your skin feels harder"
+and "Your skin feels tender" instead of "Your scales feel harder" and
+"You scales feel softer".
+
+>> These guys still have skin underneath all those scales..
+
+== 407. Fix quadrant blink again:
+Which gives us the one-step formula:
+
+              dist = abs(    (y - you.y_pos) * (tx - you.x_pos)
+                          -  (x - you.x_pos) * (ty - you.y_pos)   )  / s
+
+              where (x,y) is the player's targeted square/vector,
+                    (tx,ty) is the spell's targeted square,
+                    (you.x_pos, you.y_pos) is the player's position,
+
+                    and s is the distance between (x,y) and (you.x_pos, you.y_pos).
+
+
+              The important thing to notice here is that s is constant for all
+              of the trials (one or root-2), and since we don't care about
+              an accurate measurement (only a relative one between trials),
+              we can reduce it to one
+
+== 408. Although, 'f' does fire needles correctly, the ')' command doesn't
+        actually show that this is the case (see command.cc::list_weapons()).
+
+== 409. Poisoned needle gives messages in bad order.  Patch from Guus.
+
+== 410. > I just noticed that my character has a Dex of 63.  I've chosen every
+        > ability increase to be in dex, and he occasionally wields an artefact
+        > dagger that is +3 to dex.  I don't think it relates to save files,
+        > as I haven't saved the game in three days.
+
+          The stat growth is caused by autobutchering when the butchering weapon
+          has a stat bonus.  I get the stat bonus when I wield the weapon, but do
+          not relinquish the bonus when I unwield it.
+
+>> ewww.  this was ugly.
+
+xx 411. I was playing a Spriggan Transmuter when i entered the mines.  I was
+              overwhelmed by +10 Orcs so i went back up.  One orc followed me.  I
+              then started running away until i was several spaces away, turned and
+              cast disrupt killing the orc.  As the orc died the stairs to the
+              mines disappeared.
+
+>> can't reproduce.
+
+== 412. I've been trying out Chaos Knights and the critters that Xom summons
+              for you have this annoying habit of polymorphing the bad guys to
+              *way* OOD monsters. For example, my last knight was level 3 and is
+              listed at -19/28 HPs in the morgue file. This was one spell and he
+              was at full health when it happened. Although this was before the
+              latest patch so perhaps it's related to the other OOD problems.
+
+== 413. >I've seen that disorder message a few times too. The first time the
+              >game hung when I tried to go back up to that level. After that I
+              >avoided loading those levels again. :-) There really needs to be
+              >better sanity checking here. It's not right that a bad level can be
+              >generated and only found when the player stumbles across a bad pile
+              >of items.
+
+              From what I can remember, this kind of thing is almost
+              certainly the result of bugs in either the monster inventory
+              code or the code responsible for placing monster corpses on
+              death. The behaviour where the player picks up an item and
+              it doesn't get listed in the inventory tended to be caused
+              by the existence of a link to an item with a quantity of 0
+              (this also causes "a scrolls labelled SDFKLSFD" - when the
+              quantity is zero it puts an 's' on 'scroll' but leaves the 'a'
+              in front).
+
+== 414. Characters cannot exercise fighting, weapon, or unarmed combat skills
+              against plants/fungi, so perhaps they shouldn't exercise stabbing.
+              And plants/fungi should probably always appear disinterested.
+
+              This assassin has also been paralyzing monsters, but can't seem to stab
+              one afterwards.
+
+== 415. My assassin carefully approached his victim:
+
+                      Move the cursor around to observe a square.
+                      Press '?' for a monster description.
+                      A plant.
+                      It doesn't appear to be interested in you.
+                      Floor.
+
+>> obviously need some kind of data-driven thingie here for stabbing / paying
+>> attention.
+
+== 416. I fire a "Disrupt" at a worm just off screen (as I'm running away):
+
+              You kill the worm!
+              Nothing appears to happen.
+
+== 417. He was standing on a down stairwell.  He had full view of each of the
+              adjacent squares, but not all of distance 2 squares.  He was at a little
+              over half his hp, and I hit '5' to rest and recover.
+
+              Suddenly there was a bellow, and a hydra was beside him.  The hydra
+              proceeded to lay the smack down, slaying the poor assassin.  I guess
+              it's poetic justice, since the assassin slew quite a few monsters
+              by suddenly appearing beside them, fiery blade in hand.
+
+>> almost definitely a result of the new 'near stairs' code.  Needs some
+>> refinement, I suppose.   (evil grin)
+
+
+== 418.       Elyvilon got upset when a needle trap killed a monster just after
+              I had prayed.  :)
+
+
+== 419.       Over the course of the game I obtained around a dozen blowguns and only
+              one crossbow, so they may be too numerous.
+
+              (most blowguns came from the ground)
+
+== 420.  Two minor quibbles on spell descriptions.
+
+              a) Unlike the other brand weapon spell dscriptionss, the Poison Weapon
+                 spell description does not mention that the spell won't work on
+                 branded weapons.
+
+              b) The description of the Disrupt spell says that the spell "disrupts the
+                 matter of another creature's body", but the spell also affects
+                 creatures with non-material bodies.
+
+== 421.  Fixed formatting problem with randart descriptions
+
+== 422.  Changed slaying to be a little less powerful.
+
+== 423. Butchering with bare hands and a short blade in slot a doesn't
+switch back to bare hands. (Naturally, I'm using the experimental
+auto switch when butchering -setting.)
+
+== 424. mons_speed() should be extern,  remove static declaration from mon-util.
+
+** 425. I have a ring of Baldness that somehow got cursed and now I am
+stuck with it. Scrolls of remove curse have no effect.
+Its not bad ring, but the increased metabolism isn't nice.
+
+== 426. More inventory problems:
+while playing 4.0.0b16 I found two bugs:
+1) when picking up items from the floor, after picking them up - it says "no
+more items" (but it picks up the item). This bug is strange it happens only
+at the very beginning of the game. For some reason after descending to Level
+2 it has stopped from happening.
+
+2) picking up items from the same type: when you have say 2-chokos and there
+is on the floor another one then when you stand on top of it - it says
+3-chokos(it takes into account the ones you have in your inventory). Or the
+other solution is that when you pickit up from the floor it replaces your
+previous chokos with the last amount of that type picked up. (Because I had
+2 chokos and after picking 3 chokos = I got 3, so it could be either
+problem...dunno)
+
+== 427. Fix descrip. for rings of slaying.
+
+== 428. I met monsters with infinite potions. I hope it's also fixed.
+
+== 429.
+  in monstuff.cc::handle_nearby_ability() should be also handled
+  monsters behaviour - BEH_WANDER and BEH_SEEK, beacuse monsters speak
+  even if they don't know about player. Also it looks that Giant
+  eyeball can stare at player even if he isn't noticed (or if he is
+  invisible, but it's probably feature)
+
+== 430. Michal's patch (new unrands?)
+  >> mv: now included - not only unrands but mainly clean-ups and minor upgrades
+
+== 431. In view.cc:viewwindow2() was buffy changed from unsigned char to
+  unsigned short (I'm talking about
+  FixedVector <unsigned char, BUFFER_SIZE> buffy).
+  But at least with my compiler it doesn't work and viewwindow2()
+  doesn't show anything (only black screen). When I changed buffy back
+  to unsigned char it started to work again.
+
+== 432. Giant eyeballs no longer stare at friends.
+
+== 433. You throw a dart.
+        You throw a dart.
+        You throw a poisoned orcish dart.
+        You shoot a poisoned needle.
+        You shoot a poisoned needle.
+        You hear a grinding noise.
+
+        ... with a dex 18 / darts 7 / throwing 4 player!
+        This is repeatable, and at times, I managed to
+        clear a rock wall with just two needles!!! Couple
+        this with the durability of needles, and players
+        have a poor-man's dig spell at their disposal.
+
+== 434.
+I think I will change this condition so that a
+  monster with no ammo won't bother picking any up,
+  unless their melee attack really sucks.
+
+== 435.
+  You destroy the shapeshifter zombie!
+
+  I sneak up on a defenseless cockroach and crush it with
+      my quarterstaff, only to be messaged that my character's
+      stabbing skill has increased. Is is just me, or does the
+      idea of stabbing with a quarterstaff seem a bit off? I
+      weakly suggest changing the name of the skill to something
+      less tied to impaling weapon types. "Ambush" skill or
+      "Bushwhack" skill or something similar.
+
+>> no more shapeshifter zombies.  Improved messaging for stabbing.
+
+** 436.
+
+
+              Hi,
+
+              Could you add a description of the / and * keys to the help screen? Keypad is
+              not always useable, especially not with ctrl and shift keys, this might help
+              some people. Patch attached.
+
+
+== 437.
+  Note the extra space before the period:
+
+  Methea's ghost stares at you . You feel cold.
+
+
+  This is a common construction used (I presume)
+      in mon_speak() [or whatever]. There should be
+      a comma placed after the verb ['begs' in this
+      case] for grammar's sake:
+
+  Methea's ghost begs "Please don't hurt me!"
+
+== 439.
+  Package: crawl
+  Version: 1:4.0.0beta16-1
+  Severity: minor
+
+    Another small upstream gameplay issue.  In the context of a rat I had
+  summoned attacking a kobold which was wielding a poisoned dagger:
+
+  The rat hits the kobold.
+  The rat hits the kobold!
+  The kobold hits the rat with a runed dagger!
+  The rat looks ill.
+  You kill the rat!
+  That felt strangely unrewarding.
+  The rat's corpse disappears in a puff of smoke!
+
+    The rat was killed by the kobold (via poison), not by me, but the messages
+  seem to indicate I killed it.
+
+    This may be very tricky to reproduce, unfortunately :(
+
+== 440.
+> * removed: no more spellcasting wanderers,  until such time as we
+>   have some reasonable "hedge magic",  which I will not add before
+>   release.
+
+ A healthy percentage of my wanderers still start out with magic
+ skills.
+
+ >> but not spells.
+
+
+== 442.  Repel undead doesn't seem to actually repel the undead.
+
+ >> mv: fixed
+
+== 443.  The enslaved stay enslaved even when you attack them.
+
+== 444.  Change 'points' to 'point' if points needed == 1 in 'C' message
+
+== 445.
+This is me and a summoned zombie vs. a goblin:
+
+  You miss the goblin.
+  The goblin hits you with a club!
+  The giant cockroach zombie misses the goblin.
+  The goblin fails to defend itself.
+  You kill the goblin!
+
+>> very possible.  Goblin was concentrating on the cockroach (lucky
+you!)
+
+== 446.  Add ???'s patch for FreeBSD support
+
+== 447. Zombie generation hangs in the various hells, the crypt, and probably
+   slime pits,  ecu. temple, and others.
+
+   >> think I got all cases of levels with no zombifiable native life.
+
+== 448. Monster polymorph can hang in HoB:
+ >> only valid monster for poly in HoB is Dancing weapon, which is EXPLICITLY
+    NOT a valid poly target.  So it hangs.  Duh!
+
+== 449. Shapeshifters no longer gain the extra abilities (spells, specials)
+   of their forms (they used to - I considered this a bug).
+
+== 450. Incredibly,  monster enchantments were not being reset when a new level
+   was generated.  This is an absolute showstopper and has probably corrupted all
+   games in progess.  Most notable with permanent enchantments like shapeshifter -
+   this is what caused the "shapeshifter" dancing weapons that Josh (indirectly)
+   reported.
+
+**  451. As you read the scroll, it crumbles to dust.
+Your club glows black for a moment.
+Drop which item?
+You drop a +0 dwarven hand axe.
+You are empty-handed.
+
+-- 452.
+I hit an assert failure after reading a scroll of curse armour.  From the
+traceback, we see an immediate problem at the call to itemname::in_name()
+at line 3358 of item_use.cc.  The object to be named is -1.
+#6  0x80b1797 in in_name (inn=-1, des=4 '\004',
+    str_pass=0x825b9a0 "a +1,+0 elven long sword") at itemname.cc:69
+#7  0x80b125b in read_scroll () at item_use.cc:3358
+#8  0x8050e2d in input () at acr.cc:880
+
+Doing a quick compare between the pr16 & pr17 code, I think this line:
+             ok_to_curse[i] == (you.equip[i] != -1
+                && you.inv_plus[you.equip[i]] < 130);
+
+should be:
+             ok_to_curse[i] = (you.equip[i] != -1
+                && you.inv_plus[you.equip[i]] <= 130);
+
+** 453.
+DOS, 486sx
+4.1.16  Floating above a (dart) trap discovers it but gives no message.
+
+  I'd like to see a message when Coronas wear out.
+
+  >> mv: added
+
+4.1.17  Loading the game; Okawaru says: Welcome,  disciple.
+
+A monster called "a human" was displayed as a darker (non-visible)
+ floor tile.
+
+  >> mv: fixed
+
+
+** 454 .Goblins and orcs still get infinite potions of healing??
+
+** 455. I'm playing Crawl pr17 (I double-checked this time) under Solaris, and I just
+got the "Too many items" bug with a minotaur monk.  It had to do with a
+cursed runed leather armor that I was carrying.  I had a bunch of stuff in
+my inventory, and read a scroll of detect curse (this is how I discovered
+that the armor was cursed).  So I dropped the armor and moved to another
+spot.  There I dropped some weapons that I wasn't interested in.  I stepped
+back to this spot later, there's a cursed runed leather armor.  There's also
+a cursed runed leather armor on the spot where I actually dropped it.  I
+picked one up and dropped in on the other, looked, and "Too many items."  The
+game hung when I tried to save.  :^/
+
+** 456. I was playing the same minotaur monk (I was able to salvage the game) when I
+saw what I thought was a statue (an '8').  When I looked at it, I saw:
+
+You see 26 !questionable item (c100,t0,p0,p(2)0,d0:q26)s here.
+
+** 457.
+I was wandering along when I met a hobgoblin. I kill him and decide to pick
+up his weapon to see if it's good.  I then get "do you want to pick up
+hobgoblin corpse (y/n/a/q)"(or something like that).  I type no.  "do you
+want to pick up hobgoblin corpse" No. "do you want... " no ad nauseum. I
+give up and press q the game crashes.  I restart and load the autosave.
+Same thing happens. I this time press a and get
+x - a hobgoblin corpse
+x - a hobgoblin corpse
+x - a hobgoblin corpse etc
+It won't stop doing that
+
+Yours
+
+William Hull
+
+Another one:
+at another time there was this situation:
+
+###
+@g!  the potion is yellow
+###
+
+###
+@!! after killing the goblin,a second yellow potion appeared
+###
+
+but walking over both just gave me the msg "m - a yellow potion" twice.
+afterwards i had just one yellow potion in my pack.
+
+(more)
+
+The item bug (duplicate items and potential lockup) seems to happen whenever
+a monster picks something up off the floor.  The most recent incident is
+typical (at least in my games).
+
+
+   #'####
+   #!
+   # ###
+   #K#
+     #
+ <@  ###
+
+Near the door is an emulsified red potion.  After I kill the kobold (who had
+previously been wandering around, i.e. he wasn't asleep), I find that he was
+carrying an emulsifed red potion.  Coincidence?  I think not.  In this
+instance, I left the potion where it was sitting and checked out the potion
+near the door.  Underneath the potion is a kobold corpse.  I go up the stairs
+to the previous level, then return; the corpse and potion near the door are
+gone.  From previous experience, I know that picking up both potions/corpses
+would have left me with just one potion/corpse in my inventory (assuming I
+didn't have any before), and picking up one potion/corpse and dropping it
+on top of the other potion/corpse will create the "Too many items" bug, and
+cause the game to hang when saving the level.
+
+(more)
+
+Sorry to follow up on my own post, but I was browsing through the sources and
+I noticed that in pickup() in items.cc, relink_cells() is called after the
+player successfully picks up an item off of the floor.  No such function is
+called in handle_pickup() in monstuff.cc.  Perhaps handle_pickup() should
+call relink_cells() (which we know works) instead of trying to update the
+igrd array itself.
+
+
+-- 458. My char with some stabbing skill stabbed a mimic wich was nerly dead
+after many rounds of battle. I know there is bonus when attacking a
+fleeing moster, but mimics cannot flee.
+
+>> fixed.  Immobile monsters cannot flee.
+
+** 459. An artifact weapon of holy wrath does allow a demonspawn to wield it, wich
+is bug or maybe not.
+
+** 460. ..to Sif Muna, so I went back to the Temple and converted.  Little did I know
+that Vehumet would hold a grudge.  I survived a blue demon, an abomination,
+and several magical blasts, but Vehumet eventually blasted me when I was low
+on HP and did me in.  *sigh*
+
+Anyway, here's the buglet: the high score list claims that my character was
+killed by bad targeting.
+
+-- 461. There is another one in monstuff.cc in handle_scroll when checking for
+negative numbers of scrolls...
+And yes it would be cool if they removed all the warnings (or at least
+most of them). Removing unused variables would be a first step.
+
+>>
+
+** 462. In the dos binary of Crawl 17, when running the game with "crawl -plain"
+option, the game screen is totally black.  I still get the player statistics
+and messages, but the map display that you normally see is blacked out.
+
+This is bad because the normal crawl display (without -plain) is a bit buggy
+for me. (no cursor under the character).  I also kinda prefer the #
+character for walls (got used to ADOM) :)
+
+xx 463. Beam tracers: tweak to take into account what might happen if they _miss_.
+
+** 464. Level draining can cause -1/-1 -magic when used against ogre (or maybe
+troll) character.
+
+== 465. Automatic weapon change when dissectiong gives a litle funny messages when
+berserk:
+Switching to your swap slot weapon.
+You are too berserk!
+Maybe you should try using a sharper implement.
+Switching back to a - the uncursed great mace "Res".
+
+ >> mv: fixed
+
+xx 466. My deep elf summoner cast summon demon from a staff of summoning (A
+great item for a starting summoner.), and received an orange demon,
+which proceded to attack me.  None of the other demons had attacked.  Is
+this a bug, or is there some way to make demons hostile?
+
+>> 1 in 4 chance of hostile demon.
+
+-- 467. Ettins have no description. I just met an elf and I think those should only
+appear as corpses. It had description "A monster whose description has yet
+to be written.".
+
+
+== 468. Invalid polymorph targets (this has been reported several times).
+   There are several generic monster types which are _not_ valid poly.
+   targets:  'human' and 'elf' being two of the more common results when
+   polymorphing stuff.  And yet,  'human' should probably be given some
+   generic statistics and then allowed as a target (it makes sense, after
+   all).
+
+>> mv: fixed now

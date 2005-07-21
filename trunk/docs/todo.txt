@@ -1,0 +1,456 @@
+Enhancements:
+
+* make screen update correctly when player vision is <2.
+
+* Make dangerous things be shown on top of a stack.  This includes traps,
+  walls of fire, etc.
+
+* Make food acquirement give you more kinds of food.
+
+* file locking for the high score file
+
+* adjust EV for low levels.
+
+* repopulate levels on the way out
+
+* should species armour bonus work on EV instead of AC?
+
+* make rings of fire/ice (and others?) auto identify with use
+
+* miscast effects too weak?  Not enough of a threat, especially when used
+  by gods, Zot traps, or mummies as a form of punishment.
+
+* add toggled stealthy mode?
+
+* print out '@' status in character dumps (might be nice to have the
+  chacters status in the dump... method of death might be good as well).
+
+* fix green crystal room so its not boring (pretty vault, just no real
+  point to it currently)
+
+* fix the summoning abuse problem properly.  Ideally, the player should
+  not get piety for killing things he summoned, but should get piety
+  for things that are summoned against him.
+
+* Add a wizard debugging function to output several thousand items for 
+  a particular depth (should make item frequency tuning easier).
+
+* Perhaps races should be physically "described" (stucture or bit
+  fields) to keep track of their size and physical body parts that 
+  interfer with armour.  This could also be used in other ways...
+  small races could be harder to hit with ranged weapons
+  than larger ones, but the larger races might get a bonus
+  to carrying capacity... could also probably simplify the
+  extra unarmed combat attacks code
+
+* Speaking of the character info, I really like that Linley now displays
+  the weapon being wielded.  We should think about displaying all ten
+  wielded/worn objects.
+
+* Need to make sure that ghost names will be OK when long player names
+  are used.
+
+* Blink prompt is bogus (probably also happens elsewhere). Can probably
+  fix this by adding a prompt argument to look_around.
+
+* Some of the more important messages should be in color?
+
+* The spores contaminate the food by exploding, only the 
+	> explosion effect should destroy food on the ground.
+
+	Right. Maybe this should be implemented (it shouldn't be too
+	hard; fiery explosions already destroy scrolls laying on the
+	floor).
+
+	One idea I had with contaminated food was to use the it_plus2
+	variable (which IIRC is currently unused for all types of
+	food) to store the number of items in a stack of food which
+	are contaminated. Say you have a stack of 4 meat rations, if the
+	plus2 value is 1 then one is bad, 3 are good. Any operations
+	carried out on the stack (eating, dropping, picking up etc)
+	have a 1 in 4 chance of taking the bad ration and 3/4 of
+	taking the good. A quantum thing, sort of. Poisoned food could
+	be done in the same way (if there are any variables left - dam?)
+
+	This means that contaminated food doesn't just disappear, it
+	stays around to haunt you. 
+
+	This could perhaps lead into a 'food' skill, which lets you
+	cook food, get the most out of corpses, separate the good
+	food from the bad etc.
+
+* Heavy armor doesn't offer enough protection?
+	>The big problem is the strange evasion modifier calculation that
+	>results in armour completely destroying your EV with the 
+	>double subtraction thing.
+
+	I don't think this is so strange. It only affects chars who have
+	high dodging skills, and it makes sense to me that dodging 
+	effectively and wearing heavy armour should be mutually
+	exclusive unless you're used to wearing heavy armour, in which
+	case the evasion penalty is reduced according to your armour
+	skill and the dodging skill (which can only be picked up when 
+	you're wearing light or no armour) is usually ignored.
+
+	I did it this way so that the two skills (dodging and armour)
+	would rarely both be useful at the same time, so players would
+	have to choose between them. Otherwise they could just practice
+	both and everyone would end up the same.
+
+	Personally, I think the double subtraction thing should be left
+	in, but with the following changes to the way armour works:
+	- base AC should be upped considerably, as discussed
+	- the limit on the proportion of the evasion penalty removed by
+	a high armour skill could be raised or scrapped (currently only
+	half of the evasion penalty of a piece of body armour can be
+	negated by the armour skill)
+
+	I would have fixed these problems before I stopped working on the
+	code myself, except that nobody ever complained about them and I
+	didn't notice them myself.
+
+    -- EV penalty now recovered faster, Armour skill slightly easier to
+       get -- base ACs should probably still be upped (bwross)
+
+* New spell realms (Linley doesn't like these):
+	NATURE  - spells connected with some nature forces, animals and plants
+e.g. summon small mammal, summon scorpions, summon elemental, passwall, 
+resist <element>, create plant/fungus, charm animal/plant and so on
+	
+	PROTECTION - protective spells - shield, resist sth., Fire/Ice armor, 
+Deflect missiles... HEALING - Cure Light/Serious/Critical Wounds, Cure 
+Disease, Neutralize/Slow Poison, Heal
+
+* DRUID class - with spells allowing him to summon animals   & plants, 
+charm them, also some to work with natural forces - eg. elementals, 
+resist fire..., also some healing spells - neutralize poison etc...
+
+* Maybe some God of Nature, which offers to his believers some of Druid 
+  ablities
+
+* "write scroll" skill
+
+* Dagger of Backstabbing - hit and Damage bonus when you are backstabbing
+
+* purify food spell
+
+* create water/lava pool spell, also some monsters creating this kind 
+  of terrain
+
+* Some work needs to be done for multi-user environments.
+    -- some done, more could be useful (bwross)
+
+* Targetting isn't intuitive enough?
+    -- slightly improved (bwross)
+
+* Use gdbm to save games? However gdbm won't compensate for endian 
+  differences...
+
+* Use gdmn to save bones?
+
+* Use zlib to compress saved games?
+
+* larger windows
+    -- number of lines is now handled more dynamically, but only at
+	during init or compile time (depending on NUMBER_OF_LINES) (bwross)
+
+* multiple-windows
+
+* Use XML for monster definitions
+
+* Use XML for room layout/fixed levels
+
+* Use XML for item definitions?
+
+* moves[0], beam[0] should be simplified to use pointers to structs instead.
+
+* Locking to prevent multiple game loads/save file overwrites?
+
+* Allow access to the new longer high score files... add user id field (for
+  multi-user systems).
+
+* Add DEC graphics support for non-IBM machines (like nethack).
+
+* Come up with a better save file system that will accomidate versions
+  easily and involve (hopefully) one smaller file... instead of the 
+  large number of current files.
+
+* Add Food/Survival skill
+
+> (1) Cooking Food -- by far the most potential to unbalance the game.
+> 
+>     Cooking food should probably cost a limited resource to use (fire
+>     sources? -- some like spellcasting would be very powerful). It would
+>     allow anyone to eat chunks of flesh, thus removing an advantage
+>     that carnivores and gourmands have... so you probably don't want
+>     to add other advantages like extended shelf life.  The food value
+>     of chunks of flesh would probably have to be made smaller to maintain
+>     the food balance.
+> 
+>     Maybe cooking should be an ability that's either granted by a god,
+>     being a member of a race or class, or becomes available with a 
+>     certain (high) level of the Food skill (perhaps Survival is a better
+>     encompassing name... it could potentially be used for other things
+>     as well then).
+>     
+> (2) Butchery -- not much of a game unbalance.
+> 
+>     This doesn't effect the game balance unless its made really powerful
+>     (ie. I can get 6 chunks from a bat).  Right now you can get a full
+>     stomach off of any number of large monsters.  A few extra chunks
+>     doesn't count for much unless you can improve their shelf life.
+> 
+> (3) Detecting Bad Food -- depends
+> 
+>     If Giant Spores secretly contaminate rations this could be an
+>     important skill.  Perhaps it could give you a slightly better 
+>     save on eating meat chunks (limiting the advantage of the
+>     carnivore's save and to a lesser extent the "AotG).  It could
+>     also warn you about things like mutagenic and necrophage meat
+>     (give you a yes/no prompt you wouldn't normally get).
+
+
+* New inventory/equip/drop system
+
+>>> // > Makes a certain sense, but I can drop any number of the healing potions
+>>> // > as one action that suggests a bit more care... also I could just drop
+>>> // > all of my potions and that would take an action for each stack I had,
+>>> // > whereas all it probably requires is me dropping my "potion sack" or
+>>> // > dumping it out.
+>>> // >
+>>> // 	How about a compromise where you can hit d% to drop all your food,
+>>> // or d! to drop all your potions, but if you want to discriminate you have
+>>> // to do them individually?
+>>> 
+>>> I'm wanting something a bit more featured like the nethack system (not
+>>> the old traditional, but the newer ones).  Bascia concept would be that
+>>> I could either select via inventory slot letter, or optionally pull down
+>>> an inventory browser/selector and select the items I want.  Complete 
+>>> with options like "select all potions", "toggle all potions", "select all",
+>>> and "unselect all" (for example).
+>>> 
+>>> If you want to add aditional time for discrimination, you can do it
+>>> Ragnarok style (I like the Ragnarok armour equip system) and have a
+>>> counter on the top line (with a short list of commands) that tells the
+>>> player how many turns the action will take.  There are a few problems
+>>> with calculating this value, because there are any number of ways
+>>> I can select all potions and the value should be independant of
+>>> which ever I choose to use.
+>>
+>>	Well, it would seem that the time calculation should depend on the
+>>final set of selected items rather than the steps taken to select them.
+>>That would remove abiguity.  We could generate a time based on the variety
+>>of things dropped.  So, if you were dropping potions, swords, rings, and
+>>scrolls, it would take you much longer than to just drop your rings.  It
+>>might be worth it to let weight factor into drop speed as well.
+>
+>You don't want to get too complicated.  There's a limit to the 
+>granularity here, as you probably don't want to have it taking a
+>couple dozen actions to drop some equipment.  A simple little
+>penalty for dropping only part of a stack, or only some types
+>of potions is probably enough of a change.
+
+
+* Options files
+   -- must keep two distinct types of options and handle them separate:
+       - ones that would be loaded from a "crawlrc" file and would effect
+         the players characters in a general way.
+       - ones selected during the game and would be carried between 
+         saves, but not to other characters the player is playing.
+
+* fix non-magical traps
+   -- should have some number of "charges" for those that shoot items...
+      these should be more dangerous as well.
+   -- monsters should "learn" the traps of a level. 
+
+> Could be done with a bit array (if there is a limit of 32 traps on
+> a level, that would be bonus... but it could be extended to more
+> for not too much trouble).  That would take up little space, and 
+> testing would be by simple boolean operators (to test if the monster
+> knows about trap X, you check (monster.traps & (1 << X))).  We could
+> have the code test the line of sight from a trap everytime it is 
+> activated, and set the appropriate bit of the array in any monster
+> within line of sight.
+
+
+* Revert/change the Elementalist spellbooks?
+
+> // >This brings up another little problem around here.  People around
+> // >here weren't entirely happy about the change to the Elemental
+> // >Spellbooks in 3.30.  For the most part its considered that the 
+> // >elementalists are becoming less individual in flavour and that 
+> // >they're now just slight variations of Fire.  In particular (and
+> // >pertaining to this discussion), was the loss of levitation from
+> // >the Air book, which was considered a useful "Tensor's Disk" for
+> // >lifting stuff up stairs.
+> // 
+> // I removed levitation because it no longer fit, and I didn't
+> // want to stretch air out to three books. As for the other changes,
+> // these were made because I thought the non-fire elements were too
+> // weak by far. Which spells in particular are problematic? (I'll 
+> // try to write an explanation for the differences between the
+> // elements when I have a little more time)
+> 
+> Well, we didn't think the other elements were actually "weaker".
+> They're only weaker in combat potential -- Fire was all attack, the
+> others offered more utility and defensive abilities.  There was 
+> enough combat in the others to get you well into the midgame, at
+> which point you adapt to whatever books you find (its typically
+> quite hard to get the advanced versions of your magic discipline...
+> I remember how happy I was when I finally had a necromancer find
+> Unlife... my Paladin had a complete set of death books early on).
+> 
+> The main problem is that the elements were made too similar (we 
+> really liked the fact that they all played quite different, it
+> was one of the things that made crawl really popular here).
+> 
+> For example, they all start with a slight variation of the same spell.
+> This means that they all start playing the same way, with the same
+> tactics.  Before you could play Earth for the range attack, or Air for
+> the somewhat risky-yet-powerful Shock.
+> 
+> There's still a little varity left, but certain bits are gone.  You
+> can't depend on getting summoning when you start with Ice, for
+> example.  The Levitation spell is now only in the Enchantment book,
+> it used to be a something you could depend on as an Air mage (now 
+> you have to hope to get the book of Sky, and that gets you Fly, which
+> is better, but is also a level four spell).
+> 
+> Earth had a little issue before (too many similar throwing spells),
+> but replacing Throw Pebble with Crush just makes it the same as the
+> other elements.  Stone Arrow has always been better than Iron Bolt,
+> IMO... iron bolt just isn't effective enough to justify the extra 
+> cost and difficulty... it requires really high skill levels to 
+> be better.  I would have rather seen Iron Bolt go, in favour of 
+> something a bit more interesting (Earthquake, Pass Wall, Stair
+> Creation).
+
+* Improve running code
+
+* Carrion eating mutation
+    -- like vegetarian and carnivore, only gives a preference for
+       rotten meat.  Progesses with level until the character 
+       can only effectively eat rotten food.
+
+* Add rumours/fortune cookies?
+
+* Improvements to the character dump
+    -- is the current dump as verbose as wanted/too verbose?
+    -- add spell failures to dump?
+
+* Change character for throwing weapons to '(' and small armour to '['.
+    -- Problem: '(' is used for dancing weapons.
+
+* Put some limits of teleport/teleport control? Make it rarer?
+
+* Improve artefacts to compete better with Sword of Power?  Improve
+  non-sword weapons so they become more of a choice?
+
+*  Currently possible to gain 0hp when gaining a level... should
+   be safeguards added to make sure this is at least never negative,
+   if not guaranteeing 1hp / level.
+
+*  should be able to see contents of books in stores?
+
+*  remove possibility of teleport control with the Blink spell (require
+   the player to use the Control Blink spell instead).
+
+*  merge the chardump spell listing code with the other spell listing code.
+
+*  throw traces to target should coincide with line-of-sight better
+
+*  item inscriptions
+
+*  are crossbows correct?  The other launchers seem to be adding their
+   skill bonuses twice
+
+*  The Throwing skill isn't particularly useful.  You could use it for 
+   throwing daggers, axes, or spears but they don't stack and are 
+   heavy.
+
+*  add some weapons/change weapon code so that non-swords are more of
+   an option
+
+    // >I was thinking that this might be a good way to increase the value of
+    // >non-sword weapons.
+    // 
+    // .. which probably needs to be done anyway. One or two
+    // suggestions for new weapons which could help:
+    // 
+    // - axe (just axe, no 'hand' or 'battle' there): this would be to
+    // a hand axe what a long sword is to a short sword. Skills may
+    // need to be adjusted (a new 'great axes' skill, covering the
+    // two-handed axes? Or just condense the sword skills).
+    // - Spiked flail: like a flail, but more damage and slightly
+    // slower (heavier etc).
+    // - Great flail/mace: two-handed versions.
+
+    These would certainly help out a bit.  The other weapon classes were
+    lacking good intermediates.  I don't think a "great axe" skill is 
+    required, removing "great swords" might be correct (although it
+    does add a limiting factor on the power of swords).  Having weapon
+    skills where only one member of the class exists doesn't seem very
+    worthwhile.  Maybe fighting style skills could be used instead...
+
+     - 'two handed weapons' could be a skill for all two handed weapons,
+       it would be used in conjunction with the appropriate weapon skill.
+
+     - 'shields' would cover "weapon and shield" style, maybe allowing 
+       for the possibility of offensive shield bashing.
+
+     - 'unarmed combat' or 'fighting' could cover the cases where one
+       or both hands are empty.  Characters not using one of the other
+       styles should be able to use unarmed strikes more often and
+       more efficiently.
+
+    Potentially, you could add a bastard sword to the game.  Its hand and
+    a half nature could put it in any of the above categories (if you 
+    have a shield, it would be the second... if not it could be either
+    of the other two).
+
+    Of course, adding new skills has its own problems... there is already a
+    shortage of space on the skills screen.
+
+   -- add special attacks to weapons and allow them to be accessed by the
+      player via SHIFT-<move> onto an adjacent monster.
+
+- fix monster enchantments to have proper timeouts and a better structure
+
+- score file still gets messed up from time to time... should probably 
+  change the format into something that can be expanded and contains more
+  information that might be printed (user id on multiuser systems, time, etc)
+
+-- add checking for legal background colour (or just let it ignore the
+   "bold" colours like it does now?)
+
+-- change file formats and functions
+    -- change score file format (see nethack for additional fields... also
+       maybe a field for damage done by killing attack... could be used to
+       spice up the death description (use final HP?))... also a userid
+       field for MULTIUSER systems would be nice (to tell likenamed 
+       charcters apart and identify the player).
+
+-- sort out spells into separate spl-* files based on type/skill
+
+-- make all this you.inv_*, mitm/itm stuff the same instead of 
+   having conversions everywhere.
+
+-- differentiate the good gods more
+
+-- break up dungeon.cc more
+
+-- a check floor for lava/water function
+
+-- a simple "summon hostile unfriendly/random demon" spell with fewer params?
+
+-- centralize the elemental resistance code into a single entry point that
+   takes damage and type and does the appropriate things... some of the
+   cases are notably special, so some extra damage cateogries might have
+   to be created (ie. stepping/falling into lava is an instadeath for 
+   characters with negative fire resistance, but being hit with a lava
+   bolt is only extra damage).
+
+-- functions to check for specific equipment (ie reduce checks for "!= -1")
+
+-- move ghost/demon array into a proper structure.
+

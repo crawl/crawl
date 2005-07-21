@@ -1,0 +1,562 @@
+CHANGES TO pr31:
+
+
+
+* #defines MWATER6-10 (values 436 - 440) removed, unused in code, not needed and there is no point in reserving space for nonexistent monsters
+* #defines for MLAVA4,5,6,7,8,10 (and MLAVA10 should really have been MLAVA9, anyway), values 424-429, removed -- now unneeded, unused in code anyway.
+* #ifdef'd (USE_DEBRIS_CODE) enum DEBRIS -- really have to look at how this is implemented now!
+* ATTR_LAST_ATTR -> NUM_ATTRIBUTES
+* BEAM_CLOUD -> BEAM_ACID on strength of evidence in plant_spit() and zappy(), but now stinking_cloud() looks odd ... hmmm
+* DEBRIS_LAST -> NUM_DEBRIS
+* DNGN_TRAP_I -> DNGN_TRAP_MECHANICAL; DNGN_TRAP_II -> DNGN_TRAP_MAGICAL
+* ENCH_LAST_ENCH -> NUM_ENCHANTMENTS
+* FOOD_LAST -> NUM_FOODS
+* GOD_LAST_GOD -> NUM_GODS
+* GOOD_LAST_GOOD -> NUM_GOOD_THINGS
+* KILLED_LAST_KILLED -> NUM_KILLBY
+* MH_NORMAL -> MH_NATURAL, H_NORMAL -> H_NATURAL ... may want to add in {M}H_MAGICAL for creatures that are mortal though magical ...
+* MI_LAST_MI -> NUM_MISSILES
+* MONS_LAST_MONS -> NUM_MONSTERS
+* MONS_SMALL_SKELETON -> MONS_SKELETON_SMALL; MONS_LARGE_SKELETON -> MONS_SKELETON_LARGE; removed #defines in enum.h that josh added to achieve similar effect
+* MS_LAST_MS -> NUM_MONSTER_SPELLS
+* NAUGHTY_LAST_NAUGHTY -> NUM_NAUGHTY THINGS
+* OBJ_LAST_OBJ -> NUM_OBJECT_CLASSES
+* POT_LAST_POT -> NUM_POTIONS
+* SCR_LAST_SCR -> NUM_SCROLLS
+* SHOP_LAST_SHOP -> NUM_SHOPS
+* SK_LAST_SK -> NUM_SKILLS
+* SPELL_LAST_SPELL -> NUM_SPELLS
+* SPELL_MANNA and spells4::cast_manna() struck from the code, along with all supporting tie-ins
+* SPWPN_LAST_SPWPN -> NUM_SPECIAL_WEAPONS
+* STAFF_LAST_STAFF -> NUM_STAVES
+* SYM_SPORE -> SYM_BURST, as it is used all over the place for things other than spores
+* TOTAL_CARDS replaced with enum meber NUM_CARDS
+* TRAN_LAST_TRAN -> NUM_TRANSFORMATIONS
+* Vehumet will no longer shield one's intelligence when casting SUMMON_HORRIBLE_THINGS -- made no sense that he did in the first place
+* ZAP_LAST_ZAP -> NUM_ZAPS
+* a lot of cleanup/compaction in itemname.cc
+* a lot of general clean-up
+* a lot of mpr() clean-up
+* ability::show_abilities() made static
+* ability::species_ability() -> activate_ability()
+* abyss::generate_area() recoded for efficiency in selecting replacement tiles
+* abyss::priest_spells() -> player::priest_spells() and commented out, declaration from abyss.h moved to atop player.cc and also commented out -- part and parcel of above reasoning
+* added "you.redraw_hit_points = 1" to calc_hp() -- caught a number of instances where it was not being set
+* added #define ENDOFPACK for max size of player backpack
+* added #undef MAX to macro definition in it_use3::reaching_weapon_attack()
+* added CANNED_MESSAGES and stuff::msg_something_appears -> stuff::canned_msg() with appropriate parameter
+* added DARM_PLAIN to fill out ARMOUR_DESCRIPTIONS enum
+* added DNGN_LAST_SOLID_TILE to track this value's usage ... wish me luck
+* added DWPN_PLAIN
+* added MDSC_NOMSG_WOUNDS for monsters that do not message wound status to player
+* added MONSTER_DESCRIPTORS and monstuff:monster_descriptor() to handle usage
+* added MSG_SPELL_FIZZLES to stuff::canned_msg()
+* added NUM_TRAPS and TRAP_RANDOM
+* added OBJ_RANDOM
+* added OBJ_UNASSIGNED
+* added SHOP_UNASSIGNED and SHOP_RANDOM
+* added SPARM_RANDART_I
+* added STAT_ALL to deal with royal jelly, etc.
+* added TRAP_UNASSIGNED
+* added a number of CANNED_MESSAGES and handling by stuff::canned_msg()
+* added and implemented newgame::jobs_hpmp_init()
+* added declaration for monstuff::handle_behavior() atop file
+* added declaration of monstuff::flag_ench() atop monstuff.cc -- no idea why there wasn't one
+* added enum DIRECTION and applied members to codebase
+* added enum GENUS_PLAYER and started population of the enum for cases
+* added enum MONSTER_INVENTORY_SLOTS and applied members to codebase
+* added enum PLAYER_DESCRIPTORS
+* added enum SPECIAL_ROOMS and applied to codebase
+* added food::make_hungry(int bool) to streamline hunger decrements and messaging
+* added itemname::is_demonic() and applied to codebase -- probably should be expanded at a later date as more demonic items are introduced
+* added itemname::launched_by() which returns the appropriate missile subtype for a given weapon[launcher] subtype and implemented into code -- this will probably have to be reworked
+* added itemname::launches_things() which simply returns whether or not a WPN_foo launches other objects or not
+* added message to spells2::cast_toxic_radiance() for cases where light passes through invisible monsters
+* added misc::trap_at_xy() to handle determination of "which trap" for a given (x,y) coordinate
+* added misc::trap_category() to return grd[][] symbol for a given env.trap_type[]
+* added monstuff::message_current_target() for multiple instances of same messaging -- seemed the best place to stick it
+* added monstuff::monster_index() to return index value of a given monster pointer
+* added monstuff:heal_monster() and applied to codebase
+* added monstuff:hurt_monster() and applied to codebase
+* added monstuff:monster_habitat() to determine native habitat of creatures without resorting to range checking on MONSTERS enum -- better future flexibility
+* added mstruct::mons_itemuse() to replace global array gmon_use[1000] -- too much memory wasted there
+* added newgame::enterPlayerName()
+* added newgame::give_basic_knowledge()
+* added newgame::give_basic_spells()
+* added newgame::openingScreen()
+* added newgame::verifyPlayerName()
+* added player::dec_hp() -- probably should be inline or macro -- to unify handling decrementing of hp and catch error of not setting redraw to 1 (!!!)
+* added player::dec_mp() -- probably should be inline or macro -- to unify handling decrementing of mp and catch error of not setting redraw to 1 (!!!)
+* added player::decrease_stats() -- yes, I know that decrease_stats() and increase_stats() could be merged, but I'm too tired to do it now
+* added player::deflate_hp() to catch possible redraw bugs
+* added player::enuf_hp() to clarify ability.cc
+* added player::enuf_mp() to clarify ability.cc
+* added player::inc_hp() to catch possible redraw problems and bounds checking
+* added player::inc_mp() -- probably should be inline or macro -- to unify handling incrementing of mp and catch error of not setting redraw to 1 (!!!)
+* added player::job_title() and implemented
+* added player::player_descriptor() -- plan on future expansion
+* added player::reset_hp() to catch possible redraw problems
+* added player::set_hp() to catch possible redraw bugs
+* added player::set_mp() to catch redraw problems and to clarify coding
+* added player::species_abbrev() to stand in place of code in ouch::ouch()
+* added spellbook::spelltype_name() to permit recoding of certain portions of code as loops!!! (see: spells0.cc, spellbook.cc) - maybe should be moved elsewhere - output not in traditional order, but does it matter? -- cf. chardump::spell_type_name() -- grrrr!!!
+* added spells0::set_spellflags() to handle routine tasks
+* added spells0::spell_enhancement()
+* added spells0::spell_type2skill()
+* added static enum CARDS to decks.cc -- only used within this file -- and applied
+* added stuff::canned_msg(MSG_SOMETHING_APPEARS) to handle frequent use of set message: "Something appears at your feet."
+* added stuff::index_to_letter() and applied across codebase
+* added stuff::player_can_hear() to handle silence checking for both a distant (x,y) coordinate and the player's own coordinate
+* added stuff::random_colour() to generate a random color -- clarifies usage of particular calculation, prefer overhead of function to macro definition -- and applied to codebase
+* added view::mons_near_2() as future replacement for view::mons_near() -- takes a pointer rather than an index
+* anything relating to #ifdef CLASSES has been pulled out of the codebase -- it was never defined (or undefined for that matter), the code was out-of-date, got in the way of the actual operating code, and there is was a note dating all the way back to version 3.10 stating all this and more -- hope no one will miss it
+* applied stuff::yesno() to codebase -- a couple more complicated instances can use application
+* bang::explosion() now takes into account monster clouds as well as player clouds for "sizzle"
+* bang::explosion() now takes struct bolt * instead of struct bolt[] as second parameter
+* bang::explosion1() now takes struct bolt * instead of struct bolt[] as only parameter
+* beam::beam() now takes struct bolt * instead of struct bolt[] as only parameter
+* beam::check_mons_magres() returns bool instead of int
+* beam::check_mons_magres() takes struct monsters * instead of int as first parameter
+* beam::check_mons_resists() now takes struct bolt * instead of struct bolt[] as second parameter
+* beam::check_mons_resists() takes struct monsters * instead of int as second parameter
+* beam::mimic_alert() now takes struct monsters * instead of int as parameter
+* beam::missile() now takes struct bolt * instead of struct bolt[] as first parameter
+* beam::mons_ench_f2() no longer takes the second parameter (int foo[]) -- completely uneccesary, as it can be passed directly to the bolt struct
+* beam::mons_ench_f2() now returns bool instead of int -- not that the return value is ever used elsewhere
+* beam::mons_ench_f2() now takes struct bolt * instead of struct bolt[] as third parameter
+* beam::mons_ench_f2() takes bool as second parameter instead of char
+* beam::poison_monster() now takes struct monsters * instead of int as parameter
+* beam::poison_monster() takes bool instead of char for second parameter, renamed from "source" to "fromPlayer" and values reversed in passes (as it actually was t/f on fromMonster, but double m's looked silly)
+* beam::sticky_flame_monster() takes bool instead of char for second parameter -- no idea what it really means, as the function is called but once and the parameter ("source") is set to false
+* beam::tracer_f() now takes struct bolt * instead of struct bolt[] as second parameter
+* beam::tracer_f() now takes struct monster * instead of int as first parameter
+* bugfix (again): mummies get "closer to death" at levels 13 and 26
+* bugfix (of sorts): wizard commands 'x' and '$' no longer add to experience and call level_change() directly, but rather call gain_exp() instead -- these commands should still be bound by experience limits imposed by player::gain_exp()
+* bugfix in beam::beam() referenced menv[0] when menv[o] was meant ... cripes (!!!)
+* bugfix(?): items::handle_time() now forces one to exercise stealth -or- armour ... the original coding was a little odd (players with no or light armor had less of a chance to exercise stealth than those with heavier armour) -- but the intent seemed to be to make this tradeoff ... can't be stealthy in plate (unless elven), don't even try ... will potentially boost learning of armour skill by not wasting xp on stealth practicing. -- odds collapse on stealth practicing is 1 in 18 ... cf. to armour, which is 1 in 6 -- does that seem right, because that was the way it was and still is.
+* bugfix(minor) monstuff::monster_move() now cases monster clouds as well as player clouds for determination of safe move
+* bugfix/added itemname::hide2armour() and applied to codebase -- includes STEAM_DRAGON_HIDE, which had for some reason been overlooked in certain routines in dungeon.cc
+* bugfix/kinda: mstuff2::mons_trap() rewritten for better handling, silence checks for Zot trap, etc.
+* bugfix: (I think this was the case) warning message for followers of good gods weilding demonic weapons now outputs upon wield regardless of how special the item is
+* bugfix: I think I got the "off-by-one" for the Overmap error fixed
+* bugfix: NAMED_WEAPONS now begins at 181 and not 581 [josh admits fault here]
+* bugfix: [Daniel] SPWPN_FLAMING -> SPWPN_FLAME and SPWPN_FREEZING -> SPWPN_FROST for missile weapons in dungeon::items()
+* bugfix: abilities exercised by monsters in monstuff::handle_nearby_ability() were often dependent upon whether or not the monster was visible to the player -- which is stupid, a monster should stare at you (for example) regardless of whether you can see it
+* bugfix: ability case for ABIL_TO_PANDEMONIUM was only checking for 4 magic points when ability costs 7
+* bugfix: acr::input() -- changed "if ( you.duration[DUR_WEAPON_BRAND] > 0 )" to "if ( you.duration[DUR_WEAPON_BRAND] > 1 )" and else-if'd the ( you.duration[DUR_WEAPON_BRAND] == 1 ) -- as coded before, brands would jump from 2 to 1 to 0 in one call to input() -- just plain wrong!
+* bugfix: acr::input() -- changed instances of "if (foo > 1) foo--; if (foo == 1) foo = 0;" for durational things to "if (foo > 1) foo--; else if (foo == 1) foo = 0;" so that durational values of 2 would mean "two turns left" and not "expire now" as the code actually worked
+* bugfix: added #include <string.h> atop spell.cc {Brent}
+* bugfix: added bounds checking to dungeon::check_doors()
+* bugfix: added descriptor strings for transformation states missing from chardump::dump_char()
+* bugfix: added josh's acquirement book bugfix to dungeon::items() [Josh]
+* bugfix: applied SPTYP_RANDOM to appropriate spells::miscast_effect() calls and added appropriate code to spells::miscast_effect() -- much easier to change later, now
+* bugfix: bang::explosion1() had the potential to dump out duplicate lines from info[] due to careless placement of mpr() calls
+* bugfix: calls to "miscast_effect(10+random2(15), ...)" changed to "miscast_effect(10+random2(14), ...)" as there is no SPTYP_foo value assigned to 24!
+* bugfix: ditto for spells4::tame_beast_monsters()
+* bugfix: dungeon::build_minivaults() would attempt to build an undefined vault 1 out of 34 times ... no idea whether it would cause the game to hang, but not good to do that
+* bugfix: dungeon::give_item() was placing scrolls in the potion slot of monsters -- cripes (!!!)
+* bugfix: dungeon::hide_doors() fixed to not reference things outside bounds of grd[][]
+* bugfix: dungeon::items() for OBJ_WEAPONS was going off a value of 0 [no descrip] and not 3 [DWPN_ORCISH] in disallowing orcish weapons of orc slaying or holiness
+* bugfix: dungeon::items() was not generating the last four spellbooks (Josh's additions) -- it is now
+* bugfix: effects::forget_spell() would only check to "forget" spells in range of [0,19] and not [0,24], the full range of you.spells[] - and infinite loop check rewritten so as not to be probabilistic itself (!!!)
+* bugfix: eliminated references to feet for players who are centaurs
+* bugfix: fight::jelly_divide was locating suitable spots for the new jelly thusly:
+     "if ( mgrd[parent.x + jex][parent.y + jey] == MNG && mgrd[parent.x + jex][parent.y + jey] > 10 && ( parent.x + jex != you.x_pos || parent.y + jey != you.y_pos ) )"
+  the second grid check should be against grd[][] and not mgrd[][] -- the way it is coded, the second conditional is automativally satisfied by the first (MNG > 10) !!!
+* bugfix: fight::monster_polymorph() will only message the transformation if the player is near, the monster is visible or player can see invisible (before, messaging would only check for first case, and would do the strcpy/strcat regardless, only putting mpr() within a conditional)
+* bugfix: fight::you_attack() change in to hit bonus for sure blade changed from "5 + random2(10)" to "5 + random2limit(you.sure_blade, 25)" [Daniel] and changed messages in player::display_char_status()
+* bugfix: food::eating() case FOOD_PIZZA to properly display the "Mmmm..." string prior to the name of player's favorite kind of pizza
+* bugfix: for some reason Red Draconians were the only Draconians that did not get a tailslap attack in fight.cc -- now they do
+* bugfix: general change of "if (mons_near(o) && menv[o].enchantment[2] != ENCH_INVIS)" to "if (mons_near(o) && ( menv[o].enchantment[2] != ENCH_INVIS) || player_see_invis() ) )" -> simple_monster_message() where appropriate and some bugfixes with where checks were not applied against messages 
+* bugfix: in abilities, moved some spells cast to positions prior to exercising so players would not get potential skill increase (and application) during act of casting
+* bugfix: in acr::input() you.delay was decrementing from 2 to 0 ... fixed by making an if-else rather than if-if situation
+* bugfix: in beam::beam() wand_id for LIGHTGREY (TELEPORTATION), WHITE (DISINTEGRATION), LIGHTRED (ENSLAVEMENT), BEAM_SLEEP only set to 1 for monsters that player can see
+* bugfix: in dungeon::plan_3() it was calling clear_area() to replace DNGN_FLOOR with DNGN_FLOOR -> should have been replacing DNGN_ROCK_WALL with DNGN_FLOOR {linley}
+* bugfix: in dungeon::plan_4() it was calling clear_area() to replace DNGN_FLOOR with DNGN_FLOOR -> should have been replacing DNGN_ROCK_WALL with DNGN_FLOOR {linley}
+* bugfix: in fight::monster_die() for case KILL_RESET cloud was only being placed if monster was near player
+* bugfix: in mstuff2::mons_cast() menv[0] was being referenced, preventing monster abjuration for spells MS_LEVEL_SUMMON, MS_SUMMON_DEMON, MS_SUMMON_UNDEAD, and MS_SUMMON_DEMON_GREATER
+* bugfix: in skills::exercise2() fixed determination of which skills impact recalculation of certain stats and/or forced redraws
+* bugfix: it_use2::unwear_armour() removed message checking for SPARM_COLD_RESISTANCE  -- no real check for "lowered" resistance [how to save state w/o recalling player_res_foo()? problem with "stateless" resistances!]
+* bugfix: item_in_shop() no longer generates items of type OBJ_UNKNOWN_I or OBJ_UNKNOWN_II
+* bugfix: items::add_items() calculations for item_weight recoded to take advantage of itemname::mass() properly and permit Josh's USE_LIGHTER_MAGIC_ITEMS modification -- screwy it was
+* bugfix: message in player::display_char_status() for sure_blade now based on you.sure_blade and not you.confusing_touch [Daniel Ligon]
+* bugfix: messaging for spells2::holy_word() would only happen for invisible monsters for players unable to see invisible !!! (d'oh!)
+* bugfix: messaging screwed-up for monstuff::handle_potion() -- also, would only quaff potions of invis or haste iff not near player (latter makes little sense)
+* bugfix: misc::manage_clouds() now handles monster clouds, too.
+* bugfix: misc::in_a_cloud() for MIASMA cases was doing "double damage" by decrementing hp directly, then calling ouch (which does the same)
+* bugfix: monster flying over trap message was copied into info but never output by mpr()
+* bugfix: mstuff2::mons_throw() was checking against MSLOT_MISSILE instead of MSLOT_WEAPON in determining whether monster was in fact using a missile launcher (I think that was a bug)
+* bugfix: mstuff2::mons_throw() was checking against a value of 120 (not possible, AFAIK) and not DWPN_ELVEN in providing a to-hit bonus to the use of elven missile launchers
+* bugfix: mstuff2::monster_teleport() messaging was occurring for nearby monsters that were either visible or in the presence of a player that could not see invisible -- odd
+* bugfix: no description was output for runes of zot if id level was 0 (actually, would output debug string)
+* bugfix: no more messaging that a monster "almost triggered" a blade trap and no more revealing the trap, then -- makes no sense if it was "almost triggered" to perform either action
+* bugfix: player thrown missiles now match monster thrown missiles
+* bugfix: player::level_change() had mummies receiving "closer to powers of death" messages at levels 13 and 23 and not 13 and 27 as set in player::player_spec_death() [Daniel]
+* bugfix: related to above, gift timeout for YRED not set if he can't get a servant to you
+* bugfix: religion::lose_piety() did not have a message of losing ability to hasten self if follower of GOD_OKAWARU (piety > 120) or ability to receive minor healing (piety > 50) or ability of temporary might (piety > 30)
+* bugfix: repaired messaging for it_use3::box_of_beasts() to check to see whether a creature actually appears before saying one does (!!!)
+* bugfix: same as above for items::item_place()
+* bugfix: shopping::item_value() was going off a value of 6 [DARM_ORCISH] (and not 3 [DWPN_ORCISH]) when devaluing ocish weapons
+* bugfix: some possible messages were not being directed to player because of improper random limits being set in religion::Xom_acts()
+* bugfix: species selection screen in newgame::new_game() now starts with clrscr() call for all platforms -- was ugly under linux with just two EOLs output
+* bugfix: spells3::cast_selective_amnesia() will now return mana to player equivalent to the spell's cost ... looks like it was supposed to, but prior code did nothing at all
+* bugfix: spells3::entomb() did not destroy the traps it overwrote with walls - now, mechanical traps destroyed, magical traps retained
+* bugfix: spells4::cast_evaporate() was not messaging string constructed for "hands flaking" case
+* bugfix: spells4::make_shuggoth() could potentially have referenced menv[-1] -- fixed, but I still have to fix messaging
+* bugfix: spells4::passwall() attempts to reference areas outside the bounds of grd[][] -- still need to figure out what proper "borders" should be (see function)
+* bugfix: spells4::sleep_monsters() was using check_mons_magres() instead of !check_mons_magres() for condition where monster "saved" -- yes, I know it is a bit backward, but that is the code
+* bugfix: started applying GXM and GYM - caught instances where things were being checked/added/whatever beyond bounds of env.foo[][]
+* bugfix: the "Symbol of Immediate Regeneration" card was producing POT_HEALING effect, when it should have been generating a POT_HEAL_WOUNDS effect, according to the commented name of the card and the fact that there is already a Card of Healing
+* bugfix: dungeon::give_item() switched "(mitm.quantity[bp] == 0 || mitm.quantity[bp] == 100)" to "(mitm.quantity[bp] == 0 || mitm.base_type[bp] == 100)" as it should have been all along
+* bugfix: restore_foo() will no longer reset foo to foo_max in cases where foo >= foo_max -- don't know if it is the case, but may be at some point in the future
+* bugfixes: messaging based on create_monster() has been fixed to be dependent upon whether a monster actually appears -- probably did not get them all << checks spells2, spells3, and spells4 still >>
+* changed H_foo to MH_foo in spells4.cc (shame on you, Josh)
+* clean-up of mons_lev.cc
+* clean-up: player::player_AC() recoded as switch on species rather than bunch of if's -- too bad things weren't coded as species/subspecies to make working with draconians easier!!! (future change?)
+* cleaned up remaining "% 100" madness when it comes to cloud handling routines
+* cleaned-up cloud description coding in direct::look_around() -- last of the "foo % 100" coding, I think
+* cleaned-up dungeon::prepare_swamp() <again>
+* cleaned-up dungeon::prepare_water()
+* cleaned-up dungeon::vault_grid()
+* cleaning up my own bugs
+* codebase: it_use3 definition of "extern unsigned char show_green" removed - already in externs.h, which is included
+* codebase: moved spells4.cc and spells4.h to "unused" folder for the time being, removed spells4.o from makefile.obj list -- none of the functions in these files are called elsewhere
+* codebase: which_spellbook() definition moved from atop spells.cc to atop spellbook.cc -- it is only used there
+* commented out GOOD_ATTACKED_FRIEND in enum.h and only reference to it in fight::you_attack() -- not even accounted for in religion::done_good() so what the h*** is the point? way open to potential abuse if implemented, anyway. grumble, grumble.
+* commented out global char filenam[80] in dungeon.cc -- cannot find a single instance of usage
+* commented out global char save_file[9] in dungeon.cc -- cannot find a single instance of usage
+* commented out global char whole_line[80] in dungeon.cc -- cannot find a single instance of usage
+* commented out global char wm_1[5] in dungeon.cc -- cannot find a single instance of usage
+* commented out global char wm_2 in dungeon.cc -- cannot find a single instance of usage
+* commented out global int leng_str in dungeon.cc -- cannot find a single instance of usage
+* commented out global int old_x in dungeon.cc -- cannot find a single instance of usage
+* commented out global int old_y in dungeon.cc -- cannot find a single instance of usage
+* commented out global int rd in dungeon.cc -- only used in dungeon::specr_2() as near as I can tell
+* commented out global int x_fin and y_fin in dungeon.cc -- cannot find a single instance of usage
+* commented out global int x_max and y_max in dungeon.cc -- can only find variables local to dungeon::clear_area() that share these names
+* commented out globals int put_x and put_y in dungeon.cc -- cannot find a single instance of usage
+* commented out mstruct::def_letters() as the function is no longer being used anywhere
+* commented out stuff::output_value() - not used anywhere in the codebase
+* commented out unused gods in enum GODS and their unused altars in enum DUNGEON_FEATURES
+* completed ifdef of ABIL_GLAMOUR routines in abilities.cc -- josh didn't do it all the way through
+* created obj-weap.cc, corrected signage on parameters passed to some functions (char -> unsigned char)
+* deck_of_wonders[], deck_of_summoning[], deck_of_tricks[], and deck_of_power[] made static to decks.cc
+* decks::cards() made static to decks.cc
+* declaration for food::can_ingest() moved from food.h to atop food.cc -- internal to sourcefile
+* declaration for food::eat_from_floor() moved from food.h to atop food.cc -- internal to sourcefile
+* declaration for food::eaten() moved from food.h to atop food.cc -- internal to sourcefile
+* declaration for monstuff::simple_monster_message() moved from atop monstuff.cc to monstuff.h as it is now used in other sourcefiles
+* declaration of spells4::cast_detect_magic() moved from spells4.h to atop spells4.cc and commented out, along with actual function -- not in current usage
+* declaration of spells4::cast_eringyas_surprising_bouquet() moved from spells4.h to atop spells4.cc and commented out, along with actual function -- not in current usage
+* declaration of spells4::cast_summon_serpents() moved from spells4.h to atop spells4.cc and commented out, along with actual function -- not in current usage
+* declaration of spells4::do_monster_rot() moved from spells4.h to atop spells4.cc and commented out, along with actual function -- not in current usage
+* declaration of spells4::make_a_random_cloud() moved from spells4.h to atop spells4.cc
+* declaration of spells4::make_a_rot_cloud() moved from spells4.h to atop spells4.cc
+* definition of monstuff::handle_special_ability() added atop monstuff.cc -- no idea why it was not there already
+* definition of religion::divine_retribution() moved from religion.h to atop religion.cc
+* dungeon::item_in_shop() returns unsigned char instead of char, and takes unsigned char instead of char as sole parameter
+* dungeon::items() takes unsigned char instead of int for second and third parameters
+* dungeon::place_spec_shop() takes unsigned char instead of char for all three parameters
+* dungeon::plan_1() returns unsigned char instead of char
+* dungeon::plan_2() returns unsigned char instead of char
+* dungeon::plan_4() returns unsigned char instead of char
+* dungeon::plan_5() returns unsigned char instead of char
+* effects::direct_effect() now takes struct bolt * instead of struct bolt[] as parameter
+* effects::mons_direct_effect() now takes struct bolt * instead of struct bolt[] as first parameter
+* eliminated default parameter for spells3::cast_selective_amnesia()
+* enum: MUT_LAST_MUT reverted back to NUM_MUTATIONS ... to me, it is clearer to use NUM_foo rather than the particular enum prefix, as it denotes clearly that *this is not really a member of the enum, but rather a description of them* also for cases where LAST is not really last (see MONSTER_CATEGORIES), also removed related #define
+* enum: SPTYP_LAST -> NUM_SPELL_TYPES
+* enum: added SPTYP_RANDOM for use in spells::miscast_effect() -- I'd like to set to 255, but don't know how many things need to be switched to unsigned char to do so
+* enum: added SPWLD_PRUNE, SPWLD_HUM, SPWLD_CHIME, SPWLD_BECKON, SPWLD_SHOUT as per it_use3::special_wielded()
+* enumery and clean-up
+* enumery in describe.cc
+* enummed MH_foo where appropriate and changed inequalities to equivalence tests
+* etc. etc. on the messaging bugfixes
+* f(x): added food::hunger_warning() to break-out functionality from acr::input
+* f(x): spells::miscast_effect() returns bool instead of char
+* fight::jelly_divide() takes struct monsters * instead of int as parameter
+* fight::monster_die() takes struct monsters * instead of int as first parameter
+* fight::monster_polymorph() now returns bool -- whether the polymorphing took place or not  -- needs to be more rigorous in determation of return value, though
+* fight::monster_polymorph() takes struct monsters * instead of int for first parameter
+* fight::place_monster_corpse() takes struct monsters * instead of int as parameter
+* fight::place_monster_corpse() takes struct monsters * instead of unsigned char as parameter
+* figured out proper inclusions for spells4.h throughout codebase
+* figured out proper places to #include items.h
+* files::find_spell() returns bool instead of char
+* files::load() now takes bool instead of char for 2nd, 3rd, 5th and 6th parameters
+* files::save_game() takes bool instead of char for only parameter
+* files::save_level() now takes bool instead of char for 2nd parameter
+* filpped first and second parameters to beam::check_mons_resists() -- makes more sense
+* finished putting in new spell struct, see spl-util.cc/.h and spl-data.h
+* first parameter to bang::explosion() renamed from ex_size to is5x5 to denote properly what it means -- changed to bool (as the f(x) only does 3x3 and 5x5 explosions now)
+* first two parameters to beam::mons_ench_f2() replaced by a single parameter of type struct monsters *
+* fixed a bug in dungeon::item_colour() which was not colouring namwed weapons properly
+* fully ifdef'd anything relating to elvish glamour
+* general clean-up
+* general clean-up
+* general clean-up
+* general clean-up
+* general clean-up
+* general clean-up
+* general clean-up -- trying to rid the codebase of goto statements here and there
+* general clean-up and enumery
+* general clean-up and enumery
+* general clean-up and enummery -- starting to unravel dungeon::give_item()
+* general clean-up and optimization in dungeon.cc -- starting to unravel the mysteries of dungeon.cc and all its glory!
+* general clean-up in monstuff.cc --> don't bother to strcpy()/strcat() if final mpr() dependent upon mons_near() -- *all* operations dependent on mons_near(), then !!!
+* general clean-up of religion.cc
+* general clean-up, mostly in dungeon.cc
+* general cleanup
+* general cleanup and enumery
+* general fixing of messaging for invisibility checks
+* general: indentation and enumming
+* global "int diag_door = 0" in dungeon.cc deleted -- only used and set within dungeon::make_room()
+* global "int max_doors" in dungeon.cc moved to atop dungeon::builder() -- only passed between builder() and make_room() -- which now takes an int [max_doors] and not "void" as parameter
+* global int band and band_no moved into dungeon::place_monster() -- only used within that function, near as I can tell
+* global int dir_x2 and dir_y2 moved into dungeon::make_trail() -- only used within that function near as I can tell
+* global int no_rooms moved into dungeon::builder() -- only used within that function near as I can tell
+* global int roomsize moved into dungeon::builder() -- only used within that function near as I can tell
+* global int x_start and y_start moved into dungeon::builder() -- only used within that function near as I can tell
+* global ints cx and cy in dungeon.cc moved into dungeon::specr_2(), only used there
+* global ints dx and dy in dungeon.cc moved into dungeon::specr_2(), only used there
+* global ints sx and sy in dungeon.cc moved into dungeon::specr_2(), only used there
+* got rid of the MLAVAfoo defines
+* got rid of the MWATERfoo defines
+* had to un-#ifdef the DEBRIS enum ... I want it gone, goddamn it!!!
+* heavy_armour modifier in fight::you_attack() for large species using large shields fixed at +1, and not potentially +3 -- reasoning that id ARM_SHIELD is +1 regardless for all races, ARM_LARGE_SHIELD should be equivalent modifier for large races (SHIELD :: SPECIES as LARGE_SHIELD :: LARGE_SPECIES), and besides, on average, large and regular/small species were getting the same modifier on use of large shields, which did not seem fair.
+* implemented newgame::give_last_paycheck()
+* implemented newgame::jobs_stat_init()
+* implemented wrapper f(x) religion::simple_god_message()
+* in monstuff:handle_wand() - monsters will no longer zap themselves with wand of invisibility if player can see invisible -- a cheat, I know, but every bit helps
+* invent::list_commands() now takes bool instead of int
+* it_use2:: zapping() <---> zappy() relationship worked out, parameters passed between them have changed
+* it_use2::zapping() now takes struct bolt * instead of struct bolt[] as last parameter
+* it_use2::zappy() made static
+* it_use3::ball_of_energy() made static
+* it_use3::ball_of_fixation() made static
+* it_use3::ball_of_seeing() made static
+* it_use3::box_of_beasts() made static
+* it_use3::disc_of_storms() made static
+* it_use3::efreet_flask() made static
+* it_use3::staff_spell() made static
+* item_use::eat_food() -> food::eat_food() -- just so I can keep everything together wrt food thingees
+* item_use::throw_it() made static
+* item_use::throw_it() takes struct bolt * instead of struct bolt[] as first parameter
+* itemname::is_a_vowel() now returns bool instead of char
+* items::conv_letter() -> stuff::letter_to_index() -- more descriptive of actual function, stuff more central for now
+* made global char is_a_specroom in dungeon.cc into a static variable -- not utilized outside this file
+* made global char oblique in dungeon.cc into a static variable -- not utilized outside this file
+* made global char oblique_max in dungeon.cc into a static variable -- not utilized outside this file
+* made global int bno_mons in dungeon.cc into a static variable -- not utilized outside this file
+* made global int corrlength in dungeon.cc into a static variable -- not utilized outside this file
+* made global int finish in dungeon.cc into a static variable -- not utilized outside this file
+* made global int intersect_chance in dungeon.cc into a static variable -- not utilized outside this file
+* made global int no_corr in dungeon.cc into a static variable -- not utilized outside this file
+* made global int time_run in dungeon.cc into a static variable -- not utilized outside this file
+* made global ints room_x1 and room_x2 in dungeon.cc into static variables -- not utilized outside this file
+* made global ints room_y1 and room_y2 in dungeon.cc into static variables -- not utilized outside this file
+* made global ints vsx and vsy in dungeon.cc into static variables -- not utilized outside this file
+* made global ints x_ps and y_ps in dungeon.cc into static variables -- not utilized outside this file
+* made several functions in mons_lev.cc static
+* made spells4:::yesno() accept lower-case responses, too
+* maintenance: removed curly-braces at end of lines to indented beginning of next line, as per coding standard
+* mass enumery of m_list.h and reformatting for legibility
+* minor bugfix in dungeon::items() -- demon tridents apparently forgotten in initial conditional to set special enchantments on weapons -- esp. given that they are singled out later in a nested conditional, added back in to parent conditional
+* minor bugfix in dungeon::items() -- many_many was being set from 351 to 200 when determing weapon specials, but a subsequent conditional was still relying on the value of 351, meaning fewer special weapons than the algortihm intended
+* minor bugix: reading scroll of summoning will only message if the creature actually appears
+* minor clean-up of dungeon::labyrinth_level()
+* minor tweak - fight::monster_polymorph() will no longer allow monsters to polymorph "in place" -- i.e. to the same type as they already are
+* minor tweak -- wand_id for polymorphing now dependent upon outcome of monster_polymorph()
+* minor tweak: monsters that drain hps and heal beyond current max hp will gain +1 max_hp in some circumstances {just to make things a bit more interesting}
+* misc::dart_trap() made static
+* misc::dart_trap() takes struct bolt * instead of struct bolt[] as first parameter
+* misc::itrap() takes struct bolt * instead of struct bolt[] as first parameter
+* misc::manage_clouds() now returns void instead of int -- since env.foo is externed, no need to pass back integer value to acr.cc
+* misc::manage_clouds() rewritten slightly to clarify logic of function
+* misc::trap_item() returns bool instead of int
+* mon-util::mon_init() scrapped and replaced by mon-util::mons_colour() -- let's see what the slowdown is
+* mon-util::mons_pan() -> mon-pick::mons_pan()
+* monstuff::distance() -> stuff::distance()
+* monstuff::handle_behavior() now takes struct monsters * instead of int as only parameter
+* monstuff::handle_enchantment() takes struct monsters * instead of int as parameter
+* monstuff::handle_movement() takes struct monsters * instead of int as parameter
+* monstuff::handle_nearby_ability() takes struct monsters * instead of int as parameter
+* monstuff::handle_potion() takes struct monsters * instead of int as parameter
+* monstuff::handle_reaching() takes struct monsters * instead of int as parameter
+* monstuff::handle_scroll() takes struct monsters * instead of int as parameter
+* monstuff::handle_special_ability() takes struct monsters * instead of int as parameter
+* monstuff::handle_spell() takes struct monsters * instead of int as parameter
+* monstuff::handle_throw() takes struct monsters * instead of int as parameter
+* monstuff::mons_in_cloud() now takes struct monsters * instead of int as parameter
+* monstuff::mons_pickup() made static monstuff.cc for the time being
+* monstuff::mons_pickup() returns bool instead of char -- it never returns anything other than false, is this intentional?
+* monstuff::mons_pickup() takes struct monsters * instead of int as parameter
+* monstuff::monster_blink() takes struct monsters * instead of int as parameter
+* monstuff::monster_habitat() takes struct monsters * instead of int as parameter -- had to create monplace::monster_habitat_2() as a workaround for one case for the time being
+* monstuff::monster_move() made static monstuff.cc for the time being
+* monstuff::monster_speaks() made static to monstuff.cc for the time being
+* monstuff::monster_speaks() takes struct monsters * instead of int as parameter
+* monstuff::plant_spit() now takes struct bolt * instead of struct bolt[] as only parameter
+* monstuff::plant_spit() takes struct monsters * instead of int as parameter
+* monstuff::print_wounds() now takes struct monsters * instead of int as parameter
+* monstuff::simple_monster_message() no longer requires first parameter, so it has been dropped
+* monstuff::simple_monster_message() returns bool intead of void to permit testing and outputting of alternate message <not implemented yet>
+* monstuff::swap_places() takes struct monsters * instead of int as parameter
+* monstuff:mons_in_cloud() and monstuff:plant_spit() made static to monstuff.cc for now
+* monstuff:monster() -- commented all lines having to do with variable no_mons -- it was initialized, decremented, and incremented, but never applied in the codebase
+* monstuff:monster_regenerates(foo) removed in favor of monstuff::monster_descriptor(foo, MDSC_REGENERATES)
+* more clean-up
+* more general clean-up
+* more general clean-up
+* more messaging fixes
+* more work toward completing determination of proper #includes for each file
+* moved enum DEBRIS from enum.h to atop spells4.cc -- not well-implemented yet, so buried there instead
+* moved some things from skills::exercise2() into skills::exercise() -- function could probably be folded in together, given the set value of deg ...
+* moved the #ifdef inside of spells4::silence() to clarify that it all applies to a single function
+* moved the FEATURE enum from overmap.h to atop overmap.cc -- no need to open it to use outside the file
+* mstuff2::dragon() now takes struct bolt * instead of struct bolt[] as second parameter
+* mstuff2::dragon() takes struct monsters * instead of int as parameter
+* mstuff2::mons_cast() takes struct bolt * instead of struct bolt[] as second parameter
+* mstuff2::mons_cast() takes struct monsters * instead of int as first parameter
+* mstuff2::mons_throw() takes struct bolt * instead of struct bolt[] as second parameter
+* mstuff2::mons_throw() takes struct monsters * instead of int as first parameter
+* mstuff2::mons_trap() takes struct monsters * instead of int as first parameter
+* mstuff2::monster_teleport() now takes struct monstes * instead of int as first parameter
+* mstuff2::spore_goes_pop() takes struct monsters * instead of int as parameter
+* much cleanup and compaction of religion.cc
+* newgame::new_game() now returns bool instead of char
+* optimization: some optimization of it_use3::special_wielded()
+* optimized mon-util::seekmonster() but odd things are happening (monsters on level 1 don't awaken and missiles may now appear to go through walls)
+* player::forget_map() takes unsigned char instead of char for sole parameter
+* player::how_hungered() -> food::how_hungered() added appropriate #include atop it_use2.cc
+* player::increase_stats() now can increase by more than one by adding a a third parameter for amount of increase
+* player::reset_hp() pulled in favor of more flexible player::set_hp()
+* player::species_name() takes unsigned char instead of char to match you.species
+* player::you_are_draconian() -> player::player_genus(), now uses switch (don't use comparatives!) and broadened to cover other cases
+* possible bugfix: fight::monster_polymorph() - first two parameters were of type unsigned char when they should have been of type int (MONS_foo definitely falls outside range [0,255]) -- also double-checked types of old_foo variables used within the function itself
+* propagated effects::lose_stat() throughout codebase
+* propagation of silenced() to cover instances of "You hear ..." messages << bang.cc - 
+* pulled out all the code relating to MONS_TUNNELING_WORM and MONS_WORM_TAIL -- haphazard and deprecated (monster never appeared)
+* pulled out all the code relating to the QUOKKA, SWORD, GUARDIAN ROBOT, and DORGI -- all were deprecated a long time ago
+* recoded dungeon::special_room() for efficiency -- was filling monster arrays on each and every loop-through (sheesh!)
+* recoded monplace::mons_place() to do away with way too many calls to random2() in order to generate random nasty for dungeoneers heading downwards
+* recoded monplace::summon_any_demon() to make types more apparent and to remove calls to stuff::table_lookup()
+* recoded monstuff::print_wounds() for clarity of logic flow, got rid of that damn goto statement
+* religion::Xom_acts() now takes bool for first and third parameters
+* religion::god_name_long() commented out (but left intact) -- as jmf flagged, this function is not in use within the codebase
+* religion::god_name_long() struck from codebase -- relevant salvaged information now conveyed through comments
+* religion::god_speaks() no longer has a default parameter value -- confusing use of GOD_foo enum as it was
+* religion::naughty() now ordered by deity then by naughty -- makes more sense to be able to see naughty by deity rather than deity response by naughty
+* removed Isk's Cross garbage from spell::your_spells() -- no longer a spell, had been replaced by Symbol of Torment
+* removed MS_ZULZER -- only used by Dorgi ...
+* removed some useless typedefs from atop mon-util.h and randart.cc
+* removed the "guarantee knife" code in dungeon::builder() as per brent's suggestion
+* rename mons_lev -> mon-pick
+* renamed ability -> ply-abil
+* renamed levels -> lev-pand
+* renamed m_list -> mon-list
+* renamed mstruct -> mon-util
+* replaced C_foo defines with appropriate CE_foo enums
+* replaced H_foo defines with appropriate MH_foo enums
+* restructured monplace::create_monster() to get rid of the silly goto statements and clarify program flow
+* reversed the parameters passed to player::slaying_bonus() to align with PWPN_foo and applied enum function calls
+* rewrote a lot of ability.cc
+* rewrote effects::lose_stat() to be a bit more robust and now player_sust_abil() no longer fullproof protection against stat loss
+* ripped out mstruct::def_letters() -- no longer in use anywhere in the codebase
+* second parameter passed to ouch is now int instead of char -- typical of source code that it should be int and not anything else, as it refers to menv[foo]
+* set wield_change to a single type (it was used as a char, unsigned char, and int all over the place) -- I decided to make it type bool for clarity
+* shifted MH_foo and H_foo flags up one to start at 0 and include MH_HOLY at start -- should not be problematic
+* shopping::clear_line() removed entirely -- did not do anything but return upon being called
+* simple_monster_message() propagated throughout codebase
+* skills2::best_skill() now takes unsigned char instead of char for all three parameters -- it also now returns unsigned char instead of char
+* skills2::calc_ep() -> calc_mp() -- I always think of experience and not magic points when I see the f(x) - you.redraw_magic_points moved into f(x) and duplicate settings removed from codebase
+* skills2::skill_name() takes unsigned char instead of char for sole parameter
+* skills2::skill_title() no longer takes you.char_class as third parameter -- available globally and no longer utilized within the f(x) itself
+* skills2::skill_title() no longer takes you.experience_level as fourth parameter -- not utilized at all within function, meaningless pass
+* skills2::skill_title() takes unsigned char instead of char for its two remaining parameters
+* skills::exercise2() made static
+* some enumeration work
+* some enumery
+* some enumery and housekkeeping
+* some enummery and clean-up in files.cc
+* some fixing up in dungeon::item() -- knive will no longer be quite so common in the deeper parts of the dungeon (minor bugfix/tweak)
+* some general clean-up
+* some general clean-up
+* some more general cleanup
+* some restructuring of newgame.cc to clarify what is being done
+* spell::exercise_spell() second and third params now bool not int
+* spell::surge_power() made static
+* spell::your_spells() returns bool instead of char, third parameter (allow_fail) now bool not char
+* spellbook::spellbook_contents() returned unsigned char instead of char
+* spellbook_contents() declaration moved from spellbook.h to atop spellbook.cc - native only to file
+* spells0::spell_hunger() now takes only the first parameter - second parameter not used in function
+* spells0::spell_spec() no longer takes a second parameter -- it was never used !!!
+* spells1::identify() now takes a power parameter (currently unused) and a value of -1 flags it as coming from an item (in this case, a scroll)
+* spells1::spell_direction() takes struct bolt * instead of struct bolt[] as last parameter
+* spells2::manage_shock_shield() -> spells1::manage_shock_shield() and definition moved from spells2.h to spells1.h -- better fit here
+* spells2::restore_foo() [three functions] rolled into spells2::restore_stat() -- permits restoration of STAT_RANDOM now, which may be useful at some future point
+* spells2::summon_butter() -> effects::summon_butter() and definition moved from spells2.h to atop effects.cc (only used here)
+* spells3::aistrike() now returns a success value
+* spells3::cast_bone_shards() now returns a success value
+* spells3::cast_smiting() now returns a success value
+* spells3::create_noise() now returns a success value
+* spells3::create_noise2() renamed to spells3::create_noise() -- what happened to the other function?
+* spells3::death_channel() now returns a success value
+* spells3::entomb() now returns a success value
+* spells3::monster_on_level() made static
+* spells3::recall() now returns a [apparent] success value
+* spells4::cast_summon_large_mammal() -> summon_large_mammal()
+* spells4::cast_warp_brand() deleted -- does not conform to existing usage of brands in spell.cc
+* spells4::drop_everything() -> transfor::drop_everything(), declaration moved from spells4.h to atop transfor.cc -- only used here (for now), so just move it there, already
+* spells4::silenced() -> stuff::silenced()
+* spells4::yesno() -> stuff::yesno() <need to check includes again>
+* standardized somewhat the ordering of ability evaluation and effects when used in abilities.cc to make editing easier
+* started cleaning up maps.cc -- made everything static, moved old, unused vault maps to "unused" folder
+* started newgame.cc cleanup
+* started rectifying the global vars in dungeon.cc: int's rannum, randnum, & q deleted - border_type moved into builder() - lev_mons moved into place_monster() and special_room() - passout moved to place_monster() - char dung1 & dung2 deleted, set to random2(100) each in builder() but never used beyond that - skipped moved to builder()
+* starting clearing out oddball global variables in spellbook.cc: int's i, sc_read_1, sc_read_2; unsigned char keyin
+* stuff::magic_ability() folded into player::player_mag_abil() and the latter function now takes parameter as to whether or not to weight value by intelligence
+* stuff::magic_ability() no longer takes a second parameter
+* stuff::output_value() struck from the codebase -- not used anywhere
+* stuff::table_lookup() yanked -- I think I was trying to swat a fly with a sledgehammer originally
+* too much time spent cleaning-up ouch::item_corrode() but recoded nonetheless
+* tweak(minor) - jellies may now split upon eating secret / closed doors, and the types of jellies that do has been expanded
+* tweak/bugfix: airstriking your own tile causes spell to fizzle
+* tweak: all draconians now get a 20% lowering on breath failures if transformed into dragons -- should not affect much, as failure rates are already pretty low.
+* tweak: blinking in the abyss is a bit more difficult -- reordered the conditionals in spells1::blink() to place barring of teleport in abyss prior to merely interfering with it
+* tweak: in religion::pray() sustenance is now only provided by ZIN and ZIN only, as per discussion on onelist
+* tweak: it_use3::ball_of_seeing() and it_use3::ball_of_energy() now flow to confusion case from drain mana case when invoker has no mana at time of invocation
+* tweak: monstuff::handle_behavior() now picks a new target tile for BEH_WANDER that is within "normal" bounds of dungeon (10 to GfooM-11 instead of 0 to GfooM-1) -- wonder if it will keep monsters more to center
+* tweak: spells3::detect_curse() take a bool parameter and returns a bool signifying success -- scrolls of detect curse no longer ID if no curses detected
+* tweak: spells3::remove_curse() take a bool parameter and returns a bool signifying success -- scrolls of remove curse no longer ID if no curses removed
+* updated VERSION and BUILD_DATE
+* variable "char already" struck from ability:show_abilities() -- initialized to zero and never used
+* view::mons_near(int) replaced with view::mons_near(struct monsters *) and applied throughout codebase -- should not be a problem
+* which also means that skills2::add_skill() was pulled, meaning that the definition of the function in skills2.h had to be pulled (now why wasn't *that* #ifdef'd, I ask?)
+
+
+*** SOME OF THE THINGS SINCE THE TESTDEV RELEASE ***
+
+* fixed typo concerning Chaos Knights [josh]
+* added in macro definitions to replace the ENUMS for SPLFOOD SPLMANA and SPLEVEL [brent]
+* stuff::yesno() fixed to take uppercase only, also now clears message screen and reprints query [josh]
+* SPELL_POISON_CLOUD now has the correct associated types [POISON/CONJURATION/AIR] [brent]
+* SPELL_MEPHITIC_CLOUD now has the correct associated types [POISON/CONJURATION/AIR] [josh]
+* bugfixes: some fixes noted by Jesse were applied -- and then even more fixes noted by Jesse were applied
+* all tabs removed from the sources
+* bugfixes: more fixes noted by Jesse in re: array indexing
+* bugfix (potential): ghoul rotting separated out from regular rotting, preventing negative you.rotting value from arising
+* "You smell ..." messages now take into account the fact that mummies cannot smell -- except for a couple mutations and a random demon description
+* added enum SPECIAL_MISSILES to separate out weapon and missile specials
+* bugfix: players resistant to poison eating poisonous chunks will no longer get diseased, unless chunk is rotting
+* bugfix: amulet of gourmand now works as described, and will work to the benefit of both normal species and ghouls
+* added food::lessen_hunger() and food::set_hunger() and some other routines, which led to ...
+* reworked food.cc
+* bugfix: ghouls will no longer become "full"
+* bugfix: summon_small_mammals() will now summon at least one creature [Daniel]
+* minor messaging tweaks here and there
+* killed monster_habitat_2() and reverted monster_habitat() to take int instead of pointer to monster struct
+* added in Jesse's Mac-specific files
+* borrowed a couple tweaks from Gordon
+* fixed a few minor things in spells4.cc and added some small annotations
+

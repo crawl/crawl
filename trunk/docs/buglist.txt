@@ -1,0 +1,423 @@
+                              Bugs Outstanding
+
+
+Compiling
+
+
+COMP01. [unknown - no date]:
+makefile.sgi for IRIX does not work -- no clue why
+
+COMP02. [unknown - no date]:
+DJGPP may puke up a lung on some of the very long functions if
+compiled using certain options -- sometimes simply running make
+again will work; sometimes changing the options will force compile
+
+
+
+
+Critical Errors
+
+
+CRIT01. [BCR - 10 Jan 2000]: weird crash bug: trying ctrl-numbers
+(for control movement under Linux) from the top of the keyboard and
+ctrl-4 apparently kills the program -- ran it in the debugger and
+it said it got a SIGQUIT signal in libc_read
+
+CRIT02. [unknown - no date]:
+skeletal warrior cast a spell and seg-faulted the game in the Abyss
+
+CRIT03. [unknown - no date]:
+sometimes leaving the Abyss through an exit sends game into an
+infinite loop -- hard to replicate, though
+
+CRIT04. [unknown - no date]:
+using stairs/portals sometimes misplaces the player, either into
+solid rock or onto bogus levels -- e.g., level 28 of the dungeon,
+level -1 of a sub-dungeon
+
+CRIT06. [jmf - 31 mar 2000]:
+Taking down stairs onto new level sometimes hangs the game.
+Hard to replicate.
+
+CRIT07. [jmf - 31 mar 2000]:
+Dungeons sometimes generated that feature off-the-edge corrodors.
+Monsters or player moving too close causes segfault.
+
+
+Platform Specific
+
+
+PLAT01. [unknown - no date]:
+Linux: various odd effects when playing in term -- may be
+terminfo's fault
+
+PLAT02. [DLB - 12 Jan 2000]:
+Playing under Linux, I am encountering an atrocious "garbaging" of
+the screen in Wizmode -- the screen fails to update properly after
+using the wizmode help function (&-?) ... has anyone else
+encountered this. Also, keypad support is very spotty under Linux,
+or at least mine ...
+
+     [BCR - 12 Jan 2000]:
+     Yeah, Linux support is still far from perfect. I've never been able
+     to get shift or ctrl numpad keys to work in Linux, and have had
+     various display problems. The wizmode help actually uses the same
+     function as the regular help, so it should behave the same.
+
+     [DLB - 20 Mar 2000]:
+     Still no support under Linux console for keypad when in 'X'-map
+     mode
+
+PLAT03. [BWR - 13 Jan 2000]:
+The escape key no longer seems to be cancelling my actions (ie.
+looking at spell lists, maps, etc.). This is a desired feature
+because I typically don't trust space in roguelike games. (This is
+under Solaris.)
+
+     [DLB - 13 Jan 2000]:
+     I noticed this "feature" under Linux, as well ... guess I am not
+     the only one.
+
+     [BWR - 18 Jan 2000]:
+     I've looked at the escape problem and the problem is that at some
+     point the keypad( stdscr, FALSE ) line turns into a TRUE. This ends
+     up cooking escapes (it has to pause for a bit to wait to see if its
+     an escape sequence and this screws up all the checks for escape).
+     I've moved this into the #ifndef SOLARIS block with the scrollok.
+     Everybody here uses roguelike keys except for those people who are
+     luck to get terminals that will output the actual numbers in one of
+     their modes, or have hacked their xmodmap to handle the keypad (to
+     do pretty much the same).
+
+PLAT04. [BWR - 20 Mar 2000]:
+There's one other bug that we seem to have here (under Solaris).
+Occasionally the game hangs when changing levels. At first it was
+only happening to one person, so I thought it had something to do
+with his environment (I know he's giving incorrect term types to
+get colour, as well as doing some magic with xmodmap to get the
+keypad to work on some terminals), but it did happen to me once so
+I know its real. Nothing really special about the stairs I used,
+they were regular dungeon (I've noticed his games have hanged in
+sub-branches) and I had no monsters around me. This could be a
+problem with either level generation (I was going to a new level)
+or with the save level function. Don't have much time to look at
+either... keep your eyes open for it, if it doesn't happen anywhere
+else, its probably with the SOLARIS or SAVE_GAME_DIR code.
+
+PLAT05. [BCR - 9 Mar 2000]:
+Its not a big deal, but 2 and 8 on the numpad still don't work with
+ctrl for disarming traps. We should at least stick it in the
+buglist. (This is under Windows NT.)
+
+     [LRH - 13 Mar 2000]:
+     Re: the bug with ctrl-2 and -8 not working: IIRC The last time this
+     happened it was as a result of the keyin variable in which
+     keypresses entered in the main input loop are stored having been
+     set either signed or unsigned, I don't remember which (just that it
+     was the wrong one). The problem is that the values for ctrl-2/ 8
+     are above 127, so when the variable declaration was changed they
+     either started or stopped wrapping.
+     Of course, it's a while since I've done any coding, so don't
+     believe everything I say.
+
+     [BCR - 13 Mar 2000]:
+     I spent some time debugging today and it seems that the ctrl-8/2
+     problem under NT is a library bug. The external getch() function
+     doesn't return when you hit those keys. This maybe be a DJGPP
+     thing. I have the borland compiler on this comp too, so if I get
+     some time I will try setting it up and seeing if the problem is the
+     same there as well...
+
+
+
+
+Display
+
+
+DISP01. [Graeme Dice <grdice@home.com> - 10 Jan 2000]:
+(small, cosmetic) bug with the new, cool XP-left-for-skills
+display: when one gains skills such that 3-4 digits of XP are
+removed, the right parenthesis is not removed (^R fixes)
+
+DISP02. [unknown - no date]:
+missing space when printing gold amounts?
+
+DISP03. [unknown - no date]:
+hunger status not redrawn with level change -- happens when
+engorged and I think also when full
+
+     [BWR - no date]
+     should be fixed now
+
+     [JDJ - no date]
+     still not fixed
+
+DISP04. [unknown - no date]:
+check for screen length problems and fix them -- e.g., map
+centering is still off base, line 12 (should this be shifted for
+longer windows?)
+
+DISP05. [BWR - 18 Jan 2000]:
+Speaking of the help screen, the help for the fast scroll on the
+map screen is still wrong: the commands are +/- not +/& like it
+implies.
+
+DISP06. [Tloma Desk - 7 Feb 2000]:
+When gaining level during zapping some bolt towards the top of the
+screen, part of bolt is drawn at the bottom of the screen.
+
+DISP07. [DLB - 17 Mar 2000]:
+the key for list weapons is not displayed after issuing a '?'
+command
+
+DISP08. [DLB - 18 Mar 2000]:
+The spell "Detect creatures" should be "Detect Creatures" (both
+words capitalized) when viewing list of spells known.
+
+
+
+
+Items
+
+
+ITEM01. [LRH - 12 Jan 2000]:
+When you eat a poisonous corpse while poison resistant, it always
+makes you ill (ie diseased) -- Should this be fixed?
+
+     [BWR - 12 Jan 2000]:
+     Almost certainly. Doesn't make sense to punish players like this.
+
+ITEM02. [unknown - no date]:
+"-5 stone" heavily enchanted to do *more* damage and costs 100
+
+ITEM03. [unknown - no date]:
+jewelry shop generated "+6", a missile weapon
+
+ITEM04. [unknown - no date]:
+found "an amulet of Cekugob" (an unrandart) that should identify as
+"the amulet of Cekugob" -- a 'V' check indicated none of its
+powers, but at least some of them were being applied to my
+character
+
+ITEM05. [unknown - no date]:
+an item is cursed if its "iplus" value is "big enough" -- however,
+"big enough" is >80 in some places, >130 in others, and perhaps
+>120 in others (I'm not sure about the >120; I recall seeing it but
+can't find it now). Right now I have an artifact ring that I can't
+uncurse since the value used when uncursing is 130 and the value
+used when sticking is 80 -- the uncursing code checks against 80 on
+one hand and against 130 on the other
+
+ITEM06. [CDL - 18 Mar 2000]:
+I had just had a level 7 Spriggan Venom Mage, with all of his 24
+HP, die from reading a scroll of immolation. The official cause of
+death was listed as "killed by bad targetting".
+
+     [DLB - 18 Mar 2000]:
+     Appears that item_use::read_scroll() for
+     SCR_IMMOLATION hands off a value of beam.thing_thrown as KILL_YOU
+     to bang::explosion() and is eventually handled by these lines:
+
+     if ( beam[0].thing_thrown == KILL_YOU
+           || beam[0].thing_thrown == KILL_YOU_MISSILE )
+        ouch(hurted, 0, KILLED_BY_TARGETTING);
+     else if (beam[0].flavour == BEAM_SPORE) // cdl
+        ouch(hurted, 0, KILLED_BY_SPORE);
+     else
+        ouch(hurted, beam[0].beam_source, KILLED_BY_BEAM);
+
+     Problem is, there is no KILLED_BY_EXPLOSION, so unless someone
+     wants to add that case, KILLED_BY_BURNING (now used by "liquid
+     flames" in acr.cc only) would be the closest fit ...
+     Maybe a better long-term solution would be to add to the KILLER
+     enum cases for KILL_YOU_EXPLOSION and KILL_MON_EXPLOSION and work
+     from there ??? Right now KILL_YOU and KILL_MON serve double duty
+     for both direct (non-missile) and explosion kills -- separate them
+     out???
+
+ITEM07. [Tloma Desk - 7 Feb 2000]:
+Magical staves are identified by fighting with them.
+
+ITEM08. [Tloma Desk - 7 Feb 2000]:
+Weapon descriptions are not complete - "It's ... enchanted to do
+more damage." part is missing
+
+ITEM09. [<taran@hotmail.com> - 17 Mar 2000]:
+Reading scroll of detect curse discovers artifact names.
+
+ITEM10. [CDL - 19 Mar 2000]:
+My current character has a spell staff of destruction with these
+spells:
+
+ Spells                      Type            Level
+ a - Throw Frost        Ice/Conjuration        2
+ b - Bolt of Cold       Ice/Conjuration        5
+ c - Lightning Bolt     Air/Conjuration        6
+
+I am unable to cast Throw Frost with it, but can cast the other two
+spells. I can't figure out the problem, but when I added enough
+print statements, the problem went away. :(
+There's something odd going on here, as
+dungeon::spellbook_template() gets called once with "spellbook" 13,
+rather than with 53 (the above staff).
+
+
+
+
+Monsters
+
+
+MONS01. [unknown - no date]:
+artefact weapons of Holy Wrath wielded by undead
+
+MONS02. [unknown - no date]:
+monsters shout upon seeing a player who cannot see them
+
+MONS03. [BWR - 13 Jan 2000]:
+Another thing that was noticed in this version. Polymorphing
+Sigmund (or any other named monster) resulted in "a giant beetle"
+changing its form. My guess is some confusion on which table is
+being indexed.
+
+MONS04. [BWR - 27 Jan 2000]:
+On the subject of summoning, a little thing (bug) that has been
+noticed around here... summoned monsters that die overtop of
+corpses, take the corpse with them.
+
+MONS05. [<taran@hotmail.com> - 17 Mar 2000]:
+You can use Yedremewhatewer "enslave undead" invocation to enslave
+shapeshifter acting as an undead. When it changes, the enslavement
+stays. I am not certain if this is a bug or a feature.
+
+
+
+
+Characters
+
+
+PLYR01. [unknown - no date]:
+currently possible to gain zero hp when gaining a level --
+safeguards should exist to prevent negative values, if not
+guaranteeing at least 1 hp per level
+
+PLYR02. [BWR - 12 Feb 2000]:
+calc_hp() and calc_ep() need to be called before you.hp is set so
+that race-classes that start with 5 Fighting don't start with 18/19
+hps (see Ogre Fighters).
+
+
+
+
+Inventory
+
+
+INVN01. [unknown - no date]:
+full inventory doesn't account for possible item stacking or for
+picking up gold
+
+     [DLB - 19 Mar 2000]:
+     When a player's pack is full, he/she is unable to pick up gold from
+     the ground. This, at least should be allowable, if not also item
+     stacking (see parent comment).
+
+INVN02. [unknown - no date]:
+inventory count bug: inventory counter occasionally gets out of
+sync (should either be moved or fixed)
+
+
+
+
+Combat Related
+
+
+COMB01. [unknown - no date]:
+EV seems to get screwed up after transforms -- it seems to get at
+the transform value when the player has no armour (calculated
+correctly once armour is on)
+
+
+
+
+Magic
+
+
+MAGI01. [LRH - 12 Jan 2000]:
+The burn_freeze function (which covers the spells burn, freeze,
+crush and arc) doesn't set a friendly creature targetted by it to
+hostile. It should. And I really should have gotten around to
+implementing these spells for monsters, so that ghosts can use
+them.
+
+MAGI02. [LRH - 13 Jan 2000]:
+Summon Shadow Creatures is now Ice/Summoning -- this seems very
+odd.
+
+     [BWR - 13 Jan 2000]:
+     Same here.
+
+MAGI03. [CDL - 18 Mar 2000]:
+This is in player.cc:
+
+if (you.sure_blade)
+{
+   if (you.confusing_touch > 15)
+      mpr( "You have a strong bond with your blade." );
+   else if (you.confusing_touch > 5)
+      mpr( "You have a bond with your blade." );
+   else
+      mpr( "Your bond with your blade is waning." );
+}
+
+The "confusing_touch"es in the body should probably be
+"sure_blade"s.
+
+
+
+
+Teleportation
+
+
+TELE01. [unknown - no date]:
+if you have teleport control you'll see a prompt that says:
+"You may choose your destination (press '.' or delete to select)."
+I somehow got into the habit of immediately blowing by this prompt
+without ever reading it so I was always flailing around whenever I
+tried to teleport. I've changed show_map() so that it accepts '\r'
+as well as '.' (which should be much more intuitive) but I don't
+see a check for the delete key in show_map() so I think the prompt
+is wrong
+
+TELE02. [unknown - no date]:
+teleport control is really wacky -- I'd expect to be able to use
+the return key to select the square but it seems to key off one of
+the keypad keys
+
+
+
+
+Targeting
+
+
+TARG01. [unknown - no date]:
+targeting is off at times (possible rounding errors)
+
+TARG02. [unknown - no date]:
+fired beams sometimes take the wrong route and can't hit targets in
+LOS
+
+
+
+
+Codebase
+
+
+CODE01. [unknown - no date]:
+in monsters enum, values 250 to 310 should be reserved for Uniques,
+but 260 to 280 are occupied by other monsters -- should move them
+if it won't mess anything else up (if moved, remember to alter
+ouch.cc check for placing 'a' is put in front of the unique's name
+in the scores) -- not really a bug.
+
+CODE02. [unknown - no date]:
+from the code, it appears that dropping items takes zero time
+

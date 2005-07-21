@@ -1,0 +1,53 @@
+# Make file for Dungeon Crawl (dos)
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+# need .exe so make will find the right file
+APPNAME = crawl.exe
+CXX = gxx
+DELETE = del
+COPY = copy
+OS_TYPE = DOS
+CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
+LDFLAGS = -Bc:/djgpp/contrib/pdcurs22/lib 
+INSTALLDIR = c:\games\crawl
+# LIB = -lcurso -lpano
+
+all:            $(APPNAME)
+
+install:        $(APPNAME)
+		$(COPY) $(APPNAME) ${INSTALLDIR}
+
+clean:
+		$(DELETE) *.o
+
+distclean:
+		$(DELETE) *.o 
+		$(DELETE) bones.*
+		$(DELETE) morgue.txt
+		$(DELETE) scores 
+		$(DELETE) $(APPNAME) 
+		$(DELETE) *.sav
+		$(DELETE) core
+		$(DELETE) *.0*
+		$(DELETE) *.lab
+
+$(APPNAME):	$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+		strip $(APPNAME)
+
+debug:		$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+profile:	$(OBJECTS)
+		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+.cc.o:
+		${CXX} ${CFLAGS} -c $< ${INCLUDE}
+
+# I don't have touch for DOS, but if you do, you can put this back.
+#
+#.h.cc:
+#		touch $@
