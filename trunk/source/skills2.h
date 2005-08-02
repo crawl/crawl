@@ -3,6 +3,8 @@
  *  Summary:    More skill related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <2>     -/--/--        WL              Extensive mods from Wladimir van der Laan.
@@ -68,7 +70,7 @@ int calc_hp(void);
 /* ***********************************************************************
  * called from: newgame - skills - skills2
  * *********************************************************************** */
-int species_skills(char skill, char species);
+int species_skills(int skill, int species);
 
 
 // last_updated 24may2000 {dlb}

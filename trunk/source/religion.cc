@@ -3,6 +3,8 @@
  *  Summary:    Misc religion related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *
@@ -53,18 +55,18 @@
 #include "stuff.h"
 
 const char *sacrifice[] = {
-    {" glows silver and disappears."},
-    {" glows a brilliant golden colour and disappears."},
-    {" rots away in an instant."},
-    {" crumbles to dust."},
-    {" is eaten by a bug."},    /* Xom - no sacrifices */
-    {" explodes into nothingness."},
-    {" is consumed in a burst of flame."},
-    {" is consumed in a roaring column of flame."},
-    {" glows faintly for a moment, then is gone."},
-    {" is consumed in a roaring column of flame."},
-    {" glows with a rainbow of weird colours and disappears."},
-    {" evaporates."}
+    " glows silver and disappears.",
+    " glows a brilliant golden colour and disappears.",
+    " rots away in an instant.",
+    " crumbles to dust.",
+    " is eaten by a bug.",    /* Xom - no sacrifices */
+    " explodes into nothingness.",
+    " is consumed in a burst of flame.",
+    " is consumed in a roaring column of flame.",
+    " glows faintly for a moment, then is gone.",
+    " is consumed in a roaring column of flame.",
+    " glows with a rainbow of weird colours and disappears.",
+    " evaporates."
 };
 
 void altar_prayer(void);

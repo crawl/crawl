@@ -3,6 +3,8 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -51,7 +53,7 @@ int corpse_rot(int power);
 /* ***********************************************************************
  * called from: it_use3 - spell
  * *********************************************************************** */
-int summon_elemental(int pow, unsigned char restricted_type, unsigned char unfriendly);
+int summon_elemental(int pow, int restricted_type, unsigned char unfriendly);
 
 
 // last updated 24may2000 {dlb}

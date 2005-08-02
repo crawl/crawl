@@ -2,6 +2,8 @@
  *  File:       libutil.cc
  *  Summary:    Functions that may be missing from some systems
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <1> 2001/Nov/01        BWR     Created
@@ -11,6 +13,7 @@
 #include "AppHdr.h"
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 void get_input_line( char *const buff, int len )
 {

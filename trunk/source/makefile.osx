@@ -1,5 +1,9 @@
 # -*- Makefile -*- for Dungeon Crawl (OS X)
 
+#
+# Modified for Crawl Reference by $Author$ on $Date$
+#
+
 #APPNAME = crawl
 GAME = crawl
 
@@ -15,17 +19,16 @@ COPY = cp
 OS_TYPE = BSD
 
 CFLAGS = -D$(OS_TYPE) -DOSX $(EXTRA_FLAGS) -Wall -Werror \
-            -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes \
-            -Wmissing-declarations
+            -Wwrite-strings
 
-LDFLAGS = -L/sw/lib -L/usr/lib
 MCHMOD = 711 
 # INSTALLDIR = /usr/games
 INSTALLDIR = /tmp/CRAWLTEST/testdev
 LIB = -lncurses -lstdc++
 
-# Include for Fink's version of curses
-INCLUDES = -I/sw/include
+# Include/library for Fink's version of curses
+# INCLUDES += -I/sw/include
+# LDFLAGS  += -L/sw/lib
 
 all: $(GAME)
 

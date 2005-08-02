@@ -3,6 +3,8 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <2>    11/04/99        cdl     added a break to spell selection
@@ -259,7 +261,7 @@ int mons_charclass(int mc)
 }                               // end mons_charclass()
 
 
-char mons_shouts(int mc)
+int mons_shouts(int mc)
 {
     int u = smc->shouts;
 

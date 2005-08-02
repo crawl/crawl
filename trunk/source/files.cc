@@ -3,6 +3,8 @@
  *  Summary:    Functions used to save and load levels/games.
  *  Written by: Linley Henzell and Alexey Guzeev
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <7>   19 June 2000  GDL    Change handle to FILE *
@@ -461,8 +463,8 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         // BEGIN -- must load the old level : pre-load tasks
 
         // LOAD various tags
-        char majorVersion;
-        char minorVersion;
+        char majorVersion = 0;
+        char minorVersion = 0;
 
         if (!determine_level_version( levelFile, majorVersion, minorVersion ))
         {
@@ -1122,8 +1124,8 @@ void restore_game(void)
         end(-1);
     }
 
-    char majorVersion;
-    char minorVersion;
+    char majorVersion = 0;
+    char minorVersion = 0;
 
     if (!determine_version(restoreFile, majorVersion, minorVersion))
     {

@@ -3,6 +3,8 @@
  *  Summary:    Functions for handling player mutations.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <5>      7/29/00        JDJ             Made give_cosmetic_mutation static
@@ -1106,7 +1108,7 @@ void display_mutations(void)
 
 bool mutate(int which_mutation, bool failMsg)
 {
-    char mutat = which_mutation;
+    int  mutat = which_mutation;
     bool force_mutation = false;        // is mutation forced?
     int  i;
 
@@ -1598,9 +1600,9 @@ int how_mutated(void)
     return (j);
 }                               // end how_mutated()
 
-bool delete_mutation(char which_mutation)
+bool delete_mutation(int which_mutation)
 {
-    char mutat = which_mutation;
+    int mutat = which_mutation;
     int i;
 
     if (you.mutation[MUT_MUTATION_RESISTANCE] > 1
@@ -1803,7 +1805,7 @@ char body_covered(void)
     return covered;
 }
 
-const char *mutation_name( char which_mutat, int level )
+const char *mutation_name(int which_mutat, int level )
 {
     static char mut_string[INFO_SIZE];
 

@@ -19,7 +19,7 @@ bool is_vowel( const char chr );
 /* ***********************************************************************
  * called from: describe - effects - item_use - shopping
  * *********************************************************************** */
-char get_ident_type(char cla, char ty);
+char get_ident_type(char cla, int ty);
 
 
 /* ***********************************************************************
@@ -144,7 +144,7 @@ void save_id(char identy[4][50]);
 /* ***********************************************************************
  * called from: files - item_use - newgame - ouch - shopping - spells1
  * *********************************************************************** */
-void set_ident_type( char cla, char ty, char setting, bool force = false );
+void set_ident_type( char cla, int ty, char setting, bool force = false );
 
 
 /* ***********************************************************************

@@ -3,6 +3,8 @@
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      9/09/99        BWR             Added hands_required function
@@ -2082,7 +2084,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
 
 void save_id(char identy[4][50])
 {
-    char x = 0, jx = 0;
+    int x = 0, jx = 0;
 
     for (x = 0; x < 4; x++)
     {
@@ -2096,7 +2098,7 @@ void save_id(char identy[4][50])
 void clear_ids(void)
 {
 
-    char i = 0, j = 0;
+    int i = 0, j = 0;
 
     for (i = 0; i < 4; i++)
     {
@@ -2109,7 +2111,7 @@ void clear_ids(void)
 }                               // end clear_ids()
 
 
-void set_ident_type( char cla, char ty, char setting, bool force )
+void set_ident_type( char cla, int ty, char setting, bool force )
 {
     // Don't allow overwriting of known type with tried unless forced.
     if (!force 
@@ -2142,7 +2144,7 @@ void set_ident_type( char cla, char ty, char setting, bool force )
     }
 }                               // end set_ident_type()
 
-char get_ident_type(char cla, char ty)
+char get_ident_type(char cla, int ty)
 {
     switch (cla)
     {
@@ -2871,12 +2873,10 @@ void make_name(unsigned char var1, unsigned char var2, unsigned char var3,
 {
     char name[ ITEMNAME_SIZE ] = "";
     FixedVector < unsigned char, 15 > numb;
-    char len;
-    char i = 0;
-    char nexty = 0;
-    char j = 0;
-    char igo = 0;
-
+    int len;
+    int i = 0;
+    int nexty = 0;
+    int j = 0;
     int x = 0;
 
     numb[0] = var1 * var2;
@@ -2953,10 +2953,9 @@ void make_name(unsigned char var1, unsigned char var2, unsigned char var3,
                 goto two_letter;
             else
                 name[i] = numb[j];
-
-          hello:
-            igo++;
         }
+
+        hello:
 
         if ((nexty == 0 && is_random_name_vowel(name[i]))
             || (nexty == 1 && !is_random_name_vowel(name[i])))

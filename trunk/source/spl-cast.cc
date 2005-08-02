@@ -3,6 +3,8 @@
  *  Summary:    Spell casting and miscast functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      1/02/00        jmf             changed values, marked //jmf:
@@ -12,12 +14,13 @@
  */
 
 #include "AppHdr.h"
-#include "spl-cast.h"
 
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#include "spl-cast.h"
 
 #include "externs.h"
 

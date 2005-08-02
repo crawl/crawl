@@ -3,6 +3,8 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <4>    03jan1999    jmf     Changed summon_small_mammals so at
@@ -1083,7 +1085,7 @@ char burn_freeze(int pow, char flavour)
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
 //              anyway)
-int summon_elemental(int pow, unsigned char restricted_type,
+int summon_elemental(int pow, int restricted_type,
                      unsigned char unfriendly)
 {
     int type_summoned = MONS_PROGRAM_BUG;       // error trapping {dlb}

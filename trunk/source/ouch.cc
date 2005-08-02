@@ -3,6 +3,8 @@
  *  Summary:    Functions used when Bad Things happen to the player.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <8>      7/30/00        JDJ     Fixed end_game so that it works with filenames longer than 6 characters.
@@ -23,7 +25,6 @@
  */
 
 #include "AppHdr.h"
-#include "ouch.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -53,6 +54,8 @@
 #else
 #include <sys/stat.h>
 #endif
+
+#include "ouch.h"
 
 #include "externs.h"
 

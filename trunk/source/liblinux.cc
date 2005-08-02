@@ -3,6 +3,8 @@
  *  Summary:    Functions for linux, unix, and curses support
  *  Written by: ?
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <6>     10/11/99        BCR     Swapped 'v' and 'V' commands, fixed
@@ -225,137 +227,137 @@ void init_key_to_command()
     }
 
     // lower case
-    key_to_command_table['a'] = CMD_USE_ABILITY;
-    key_to_command_table['b'] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table['c'] = CMD_CLOSE_DOOR;
-    key_to_command_table['d'] = CMD_DROP;
-    key_to_command_table['e'] = CMD_EAT;
-    key_to_command_table['f'] = CMD_FIRE;
-    key_to_command_table['g'] = CMD_PICKUP;
-    key_to_command_table['h'] = CMD_MOVE_LEFT;
-    key_to_command_table['i'] = CMD_DISPLAY_INVENTORY;
-    key_to_command_table['j'] = CMD_MOVE_DOWN;
-    key_to_command_table['k'] = CMD_MOVE_UP;
-    key_to_command_table['l'] = CMD_MOVE_RIGHT;
-    key_to_command_table['m'] = CMD_DISPLAY_SKILLS;
-    key_to_command_table['n'] = CMD_MOVE_DOWN_RIGHT;
-    key_to_command_table['o'] = CMD_OPEN_DOOR;
-    key_to_command_table['p'] = CMD_PRAY;
-    key_to_command_table['q'] = CMD_QUAFF;
-    key_to_command_table['r'] = CMD_READ;
-    key_to_command_table['s'] = CMD_SEARCH;
-    key_to_command_table['t'] = CMD_THROW;
-    key_to_command_table['u'] = CMD_MOVE_UP_RIGHT;
-    key_to_command_table['v'] = CMD_EXAMINE_OBJECT;
-    key_to_command_table['w'] = CMD_WIELD_WEAPON;
-    key_to_command_table['x'] = CMD_LOOK_AROUND;
-    key_to_command_table['y'] = CMD_MOVE_UP_LEFT;
-    key_to_command_table['z'] = CMD_ZAP_WAND;
+    key_to_command_table[(int) 'a'] = CMD_USE_ABILITY;
+    key_to_command_table[(int) 'b'] = CMD_MOVE_DOWN_LEFT;
+    key_to_command_table[(int) 'c'] = CMD_CLOSE_DOOR;
+    key_to_command_table[(int) 'd'] = CMD_DROP;
+    key_to_command_table[(int) 'e'] = CMD_EAT;
+    key_to_command_table[(int) 'f'] = CMD_FIRE;
+    key_to_command_table[(int) 'g'] = CMD_PICKUP;
+    key_to_command_table[(int) 'h'] = CMD_MOVE_LEFT;
+    key_to_command_table[(int) 'i'] = CMD_DISPLAY_INVENTORY;
+    key_to_command_table[(int) 'j'] = CMD_MOVE_DOWN;
+    key_to_command_table[(int) 'k'] = CMD_MOVE_UP;
+    key_to_command_table[(int) 'l'] = CMD_MOVE_RIGHT;
+    key_to_command_table[(int) 'm'] = CMD_DISPLAY_SKILLS;
+    key_to_command_table[(int) 'n'] = CMD_MOVE_DOWN_RIGHT;
+    key_to_command_table[(int) 'o'] = CMD_OPEN_DOOR;
+    key_to_command_table[(int) 'p'] = CMD_PRAY;
+    key_to_command_table[(int) 'q'] = CMD_QUAFF;
+    key_to_command_table[(int) 'r'] = CMD_READ;
+    key_to_command_table[(int) 's'] = CMD_SEARCH;
+    key_to_command_table[(int) 't'] = CMD_THROW;
+    key_to_command_table[(int) 'u'] = CMD_MOVE_UP_RIGHT;
+    key_to_command_table[(int) 'v'] = CMD_EXAMINE_OBJECT;
+    key_to_command_table[(int) 'w'] = CMD_WIELD_WEAPON;
+    key_to_command_table[(int) 'x'] = CMD_LOOK_AROUND;
+    key_to_command_table[(int) 'y'] = CMD_MOVE_UP_LEFT;
+    key_to_command_table[(int) 'z'] = CMD_ZAP_WAND;
 
     // upper case
-    key_to_command_table['A'] = CMD_DISPLAY_MUTATIONS;
-    key_to_command_table['B'] = CMD_RUN_DOWN_LEFT;
-    key_to_command_table['C'] = CMD_EXPERIENCE_CHECK;
-    key_to_command_table['D'] = CMD_BUTCHER;
-    key_to_command_table['E'] = CMD_EVOKE;
-    key_to_command_table['F'] = CMD_NO_CMD;
-    key_to_command_table['G'] = CMD_NO_CMD;
-    key_to_command_table['H'] = CMD_RUN_LEFT;
-    key_to_command_table['I'] = CMD_OBSOLETE_INVOKE;
-    key_to_command_table['J'] = CMD_RUN_DOWN;
-    key_to_command_table['K'] = CMD_RUN_UP;
-    key_to_command_table['L'] = CMD_RUN_RIGHT;
-    key_to_command_table['M'] = CMD_MEMORISE_SPELL;
-    key_to_command_table['N'] = CMD_RUN_DOWN_RIGHT;
-    key_to_command_table['O'] = CMD_DISPLAY_OVERMAP;
-    key_to_command_table['P'] = CMD_WEAR_JEWELLERY;
-    key_to_command_table['Q'] = CMD_QUIT;
-    key_to_command_table['R'] = CMD_REMOVE_JEWELLERY;
-    key_to_command_table['S'] = CMD_SAVE_GAME;
-    key_to_command_table['T'] = CMD_REMOVE_ARMOUR;
-    key_to_command_table['U'] = CMD_RUN_UP_RIGHT;
-    key_to_command_table['V'] = CMD_GET_VERSION;
-    key_to_command_table['W'] = CMD_WEAR_ARMOUR;
-    key_to_command_table['X'] = CMD_DISPLAY_MAP;
-    key_to_command_table['Y'] = CMD_RUN_UP_LEFT;
-    key_to_command_table['Z'] = CMD_CAST_SPELL;
+    key_to_command_table[(int) 'A'] = CMD_DISPLAY_MUTATIONS;
+    key_to_command_table[(int) 'B'] = CMD_RUN_DOWN_LEFT;
+    key_to_command_table[(int) 'C'] = CMD_EXPERIENCE_CHECK;
+    key_to_command_table[(int) 'D'] = CMD_BUTCHER;
+    key_to_command_table[(int) 'E'] = CMD_EVOKE;
+    key_to_command_table[(int) 'F'] = CMD_NO_CMD;
+    key_to_command_table[(int) 'G'] = CMD_NO_CMD;
+    key_to_command_table[(int) 'H'] = CMD_RUN_LEFT;
+    key_to_command_table[(int) 'I'] = CMD_OBSOLETE_INVOKE;
+    key_to_command_table[(int) 'J'] = CMD_RUN_DOWN;
+    key_to_command_table[(int) 'K'] = CMD_RUN_UP;
+    key_to_command_table[(int) 'L'] = CMD_RUN_RIGHT;
+    key_to_command_table[(int) 'M'] = CMD_MEMORISE_SPELL;
+    key_to_command_table[(int) 'N'] = CMD_RUN_DOWN_RIGHT;
+    key_to_command_table[(int) 'O'] = CMD_DISPLAY_OVERMAP;
+    key_to_command_table[(int) 'P'] = CMD_WEAR_JEWELLERY;
+    key_to_command_table[(int) 'Q'] = CMD_QUIT;
+    key_to_command_table[(int) 'R'] = CMD_REMOVE_JEWELLERY;
+    key_to_command_table[(int) 'S'] = CMD_SAVE_GAME;
+    key_to_command_table[(int) 'T'] = CMD_REMOVE_ARMOUR;
+    key_to_command_table[(int) 'U'] = CMD_RUN_UP_RIGHT;
+    key_to_command_table[(int) 'V'] = CMD_GET_VERSION;
+    key_to_command_table[(int) 'W'] = CMD_WEAR_ARMOUR;
+    key_to_command_table[(int) 'X'] = CMD_DISPLAY_MAP;
+    key_to_command_table[(int) 'Y'] = CMD_RUN_UP_LEFT;
+    key_to_command_table[(int) 'Z'] = CMD_CAST_SPELL;
 
     // control
-    key_to_command_table[ CONTROL('A') ] = CMD_TOGGLE_AUTOPICKUP;
-    key_to_command_table[ CONTROL('B') ] = CMD_OPEN_DOOR_DOWN_LEFT;
-    key_to_command_table[ CONTROL('C') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('A') ] = CMD_TOGGLE_AUTOPICKUP;
+    key_to_command_table[ (int) CONTROL('B') ] = CMD_OPEN_DOOR_DOWN_LEFT;
+    key_to_command_table[ (int) CONTROL('C') ] = CMD_NO_CMD;
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND
-    key_to_command_table[ CONTROL('D') ] = CMD_DESTROY_ITEM;
+    key_to_command_table[ (int) CONTROL('D') ] = CMD_DESTROY_ITEM;
 #else
-    key_to_command_table[ CONTROL('D') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('D') ] = CMD_NO_CMD;
 #endif
 
-    key_to_command_table[ CONTROL('E') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('F') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('G') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('H') ] = CMD_OPEN_DOOR_LEFT;
-    key_to_command_table[ CONTROL('I') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('J') ] = CMD_OPEN_DOOR_DOWN;
-    key_to_command_table[ CONTROL('K') ] = CMD_OPEN_DOOR_UP;
-    key_to_command_table[ CONTROL('L') ] = CMD_OPEN_DOOR_RIGHT;
-    key_to_command_table[ CONTROL('M') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('N') ] = CMD_OPEN_DOOR_DOWN_RIGHT;
-    key_to_command_table[ CONTROL('O') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('P') ] = CMD_REPLAY_MESSAGES;
-    key_to_command_table[ CONTROL('Q') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('R') ] = CMD_REDRAW_SCREEN;
-    key_to_command_table[ CONTROL('S') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('T') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('U') ] = CMD_OPEN_DOOR_UP_LEFT;
-    key_to_command_table[ CONTROL('V') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('W') ] = CMD_NO_CMD;
-    key_to_command_table[ CONTROL('X') ] = CMD_SAVE_GAME_NOW;
-    key_to_command_table[ CONTROL('Y') ] = CMD_OPEN_DOOR_UP_RIGHT;
-    key_to_command_table[ CONTROL('Z') ] = CMD_SUSPEND_GAME;
+    key_to_command_table[ (int) CONTROL('E') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('F') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('G') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('H') ] = CMD_OPEN_DOOR_LEFT;
+    key_to_command_table[ (int) CONTROL('I') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('J') ] = CMD_OPEN_DOOR_DOWN;
+    key_to_command_table[ (int) CONTROL('K') ] = CMD_OPEN_DOOR_UP;
+    key_to_command_table[ (int) CONTROL('L') ] = CMD_OPEN_DOOR_RIGHT;
+    key_to_command_table[ (int) CONTROL('M') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('N') ] = CMD_OPEN_DOOR_DOWN_RIGHT;
+    key_to_command_table[ (int) CONTROL('O') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('P') ] = CMD_REPLAY_MESSAGES;
+    key_to_command_table[ (int) CONTROL('Q') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('R') ] = CMD_REDRAW_SCREEN;
+    key_to_command_table[ (int) CONTROL('S') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('T') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('U') ] = CMD_OPEN_DOOR_UP_LEFT;
+    key_to_command_table[ (int) CONTROL('V') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('W') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('X') ] = CMD_SAVE_GAME_NOW;
+    key_to_command_table[ (int) CONTROL('Y') ] = CMD_OPEN_DOOR_UP_RIGHT;
+    key_to_command_table[ (int) CONTROL('Z') ] = CMD_SUSPEND_GAME;
 
     // other printables
-    key_to_command_table['.'] = CMD_MOVE_NOWHERE;
-    key_to_command_table['<'] = CMD_GO_UPSTAIRS;
-    key_to_command_table['>'] = CMD_GO_DOWNSTAIRS;
-    key_to_command_table['@'] = CMD_DISPLAY_CHARACTER_STATUS;
-    key_to_command_table[','] = CMD_PICKUP;
-    key_to_command_table[';'] = CMD_INSPECT_FLOOR;
-    key_to_command_table['!'] = CMD_SHOUT;
-    key_to_command_table['^'] = CMD_DISPLAY_RELIGION;
-    key_to_command_table['#'] = CMD_CHARACTER_DUMP;
-    key_to_command_table['='] = CMD_ADJUST_INVENTORY;
-    key_to_command_table['?'] = CMD_DISPLAY_COMMANDS;
-    key_to_command_table['`'] = CMD_MACRO_ADD;
-    key_to_command_table['~'] = CMD_MACRO_SAVE;
-    key_to_command_table['&'] = CMD_WIZARD;
-    key_to_command_table['"'] = CMD_LIST_JEWELLERY;
+    key_to_command_table[(int) '.'] = CMD_MOVE_NOWHERE;
+    key_to_command_table[(int) '<'] = CMD_GO_UPSTAIRS;
+    key_to_command_table[(int) '>'] = CMD_GO_DOWNSTAIRS;
+    key_to_command_table[(int) '@'] = CMD_DISPLAY_CHARACTER_STATUS;
+    key_to_command_table[(int) ','] = CMD_PICKUP;
+    key_to_command_table[(int) ';'] = CMD_INSPECT_FLOOR;
+    key_to_command_table[(int) '!'] = CMD_SHOUT;
+    key_to_command_table[(int) '^'] = CMD_DISPLAY_RELIGION;
+    key_to_command_table[(int) '#'] = CMD_CHARACTER_DUMP;
+    key_to_command_table[(int) '='] = CMD_ADJUST_INVENTORY;
+    key_to_command_table[(int) '?'] = CMD_DISPLAY_COMMANDS;
+    key_to_command_table[(int) '`'] = CMD_MACRO_ADD;
+    key_to_command_table[(int) '~'] = CMD_MACRO_SAVE;
+    key_to_command_table[(int) '&'] = CMD_WIZARD;
+    key_to_command_table[(int) '"'] = CMD_LIST_JEWELLERY;
 
 
     // I'm making this both, because I'm tried of changing it
     // back to '[' (the character that represents armour on the map) -- bwr
-    key_to_command_table['['] = CMD_LIST_ARMOUR;
-    key_to_command_table[']'] = CMD_LIST_ARMOUR;
+    key_to_command_table[(int) '['] = CMD_LIST_ARMOUR;
+    key_to_command_table[(int) ']'] = CMD_LIST_ARMOUR;
 
     // This one also ended up backwards this time, so it's also going on
     // both now -- should be ')'... the same character that's used to
     // represent weapons.
-    key_to_command_table[')'] = CMD_LIST_WEAPONS;
-    key_to_command_table['('] = CMD_LIST_WEAPONS;
+    key_to_command_table[(int) ')'] = CMD_LIST_WEAPONS;
+    key_to_command_table[(int) '('] = CMD_LIST_WEAPONS;
 
-    key_to_command_table['\\'] = CMD_DISPLAY_KNOWN_OBJECTS;
-    key_to_command_table['\''] = CMD_WEAPON_SWAP;
+    key_to_command_table[(int) '\\'] = CMD_DISPLAY_KNOWN_OBJECTS;
+    key_to_command_table[(int) '\''] = CMD_WEAPON_SWAP;
 
     // digits
-    key_to_command_table['1'] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table['2'] = CMD_MOVE_DOWN;
-    key_to_command_table['3'] = CMD_MOVE_DOWN_RIGHT;
-    key_to_command_table['4'] = CMD_MOVE_LEFT;
-    key_to_command_table['5'] = CMD_REST;
-    key_to_command_table['6'] = CMD_MOVE_RIGHT;
-    key_to_command_table['7'] = CMD_MOVE_UP_LEFT;
-    key_to_command_table['8'] = CMD_MOVE_UP;
-    key_to_command_table['9'] = CMD_MOVE_UP_RIGHT;
+    key_to_command_table[(int) '1'] = CMD_MOVE_DOWN_LEFT;
+    key_to_command_table[(int) '2'] = CMD_MOVE_DOWN;
+    key_to_command_table[(int) '3'] = CMD_MOVE_DOWN_RIGHT;
+    key_to_command_table[(int) '4'] = CMD_MOVE_LEFT;
+    key_to_command_table[(int) '5'] = CMD_REST;
+    key_to_command_table[(int) '6'] = CMD_MOVE_RIGHT;
+    key_to_command_table[(int) '7'] = CMD_MOVE_UP_LEFT;
+    key_to_command_table[(int) '8'] = CMD_MOVE_UP;
+    key_to_command_table[(int) '9'] = CMD_MOVE_UP_RIGHT;
 
     // keypad
     key_to_command_table[KEY_A1] = CMD_MOVE_UP_LEFT;
@@ -382,8 +384,8 @@ void init_key_to_command()
     // these are invalid keys, but to help kludge running
     // pass them through unmolested
     key_to_command_table[128] = 128;
-    key_to_command_table['*'] = '*';
-    key_to_command_table['/'] = '/';
+    key_to_command_table[(int) '*'] = '*';
+    key_to_command_table[(int) '/'] = '/';
 }
 
 int key_to_command(int keyin)

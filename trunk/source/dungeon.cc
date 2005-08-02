@@ -3,6 +3,8 @@
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *
@@ -5143,8 +5145,8 @@ static void build_vaults(int level_number, int force_vault)
                                       RANDOM_MONSTER,
                                       RANDOM_MONSTER);
 
-    char roomsss = 10 + random2(90);
-    char which_room = 0;
+    int roomsss = 10 + random2(90);
+    int which_room = 0;
 
     bool exclusive = (one_chance_in(10) ? false : true);
 
@@ -6947,14 +6949,14 @@ static char plan_3(void)
      */
     int i;
     char cnx, cny;
-    char roomsss = 30 + random2(90);
+    int roomsss = 30 + random2(90);
 
     bool exclusive = (one_chance_in(10) ? false : true);
     bool exclusive2 = coinflip();
 
     char romx1[30], romy1[30], romx2[30], romy2[30];
 
-    char which_room = 0;
+    int which_room = 0;
 
     for (i = 0; i < roomsss; i++)
     {

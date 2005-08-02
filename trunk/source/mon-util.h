@@ -3,6 +3,8 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -203,7 +205,7 @@ bool mons_player_visible( struct monsters *mon );
 /* ***********************************************************************
  * called from: view
  * *********************************************************************** */
-char mons_shouts(int mclass);
+int mons_shouts(int mclass);
 
 bool mons_is_unique(int mclass);
 

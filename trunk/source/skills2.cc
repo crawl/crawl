@@ -3,6 +3,8 @@
  *  Summary:    More skill related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     01aug2000 jmf             RESTORED TITLES TO THEIR FORMER GLORY! MUA-HA!
@@ -2258,7 +2260,7 @@ unsigned int skill_exp_needed(int lev)
 }
 
 
-int species_skills(char skill, char species)
+int species_skills(int skill, int species)
 {
     // Spellcasting is more expensive, invocations and evocations are cheaper
     if (skill == SK_SPELLCASTING)
