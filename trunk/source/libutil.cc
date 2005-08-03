@@ -1,6 +1,7 @@
 /*
  *  File:       libutil.cc
  *  Summary:    Functions that may be missing from some systems
+ *  Written by: ?
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
@@ -19,8 +20,8 @@ void get_input_line( char *const buff, int len )
 {
     buff[0] = '\0';         // just in case
 
-#if defined(LINUX)
-    get_input_line_from_curses( buff, len ); // inplemented in liblinux.cc
+#if defined(UNIX)
+    get_input_line_from_curses( buff, len ); // implemented in libunix.cc
 #elif defined(MAC) || defined(WIN32CONSOLE)
     getstr( buff, len );        // implemented in libmac.cc
 #else

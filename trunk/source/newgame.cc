@@ -3,6 +3,8 @@
  *  Summary:    Functions used when starting a new game.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <16>      19-Jun-2000    GDL   changed handle to FILE *
@@ -58,7 +60,7 @@
 #include <conio.h>
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>

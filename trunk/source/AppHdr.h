@@ -49,134 +49,56 @@
 // =========================================================================
 //  System Defines
 // =========================================================================
-// Define plain_term for linux and similar, and dos_term for DOS and EMX.
-#ifdef LINUX
+// Define plain_term for Unix and dos_term for DOS and EMX.
 
-    #define PLAIN_TERM
-    // #define CHARACTER_SET           A_ALTCHARSET
-    #define CHARACTER_SET           0
-    #define USE_ASCII_CHARACTERS
-    #define MULTIUSER
-
-    // Set curses include file if you don't want the default curses.h
-    #define USE_CURSES
-    // #define CURSES_INCLUDE_FILE     <ncurses.h>
-    #define EOL "\n"
-
-    // This is used for Posix termios.
-    #define USE_POSIX_TERMIOS
-
-    // This is used for BSD tchars type ioctl, use this if you can't
-    // use the Posix support above.
-    // #define USE_TCHARS_IOCTL
-    //
-    // This uses Unix signal control to block some things, may be
-    // useful in conjunction with USE_TCHARS_IOCTL.
-    //
+#if defined(LINUX)
+    #define UNIX
     #define USE_UNIX_SIGNALS
-
-    #include <string>
-    #include "liblinux.h"
-
 #elif defined(SOLARIS)
-    // Most of the linux stuff applies, and so we want it
-    #define LINUX
-    #define PLAIN_TERM
-    #define MULTIUSER
-    #include "liblinux.h"
-
-    // The ALTCHARSET may come across as DEC characters/JIS on non-ibm platforms
-    #define CHARACTER_SET           0
-
-    // Set curses include file if you don't want the default curses.h
-    #define USE_CURSES
-    // #define CURSES_INCLUDE_FILE     <ncurses.h>
-    #define EOL "\n"
-
-    // This is used for Posix termios.
-    #define USE_POSIX_TERMIOS
-
-    // This is used for BSD tchars type ioctl, use this if you can't
-    // use the Posix support above.
-    // #define USE_TCHARS_IOCTL
-      
-    // This uses Unix signal control to block SIGQUIT and SIGINT,
-    // which can be annoying (especially since control-Y sends
-    // SIGQUIT).
+    #define UNIX
     #define USE_UNIX_SIGNALS
-
-    // This is for older versions of Solaris... comment if you have it.
-    // #define NEED_USLEEP
-
-    // Default to non-ibm character set
-    #define USE_ASCII_CHARACTERS
-
-#elif defined (HPUX)
-    // Most of the linux stuff applies, and so we want it
-    #define LINUX
-    #define PLAIN_TERM
-    #define MULTIUSER
-    #include "liblinux.h"
-
-    // The ALTCHARSET may come across as DEC characters/JIS on non-ibm platforms
-    #define CHARACTER_SET           0
-
-    // Set curses include file if you don't want the default curses.h
-    // Under HP-UX its typically easier to use ncurses than try and
+#elif defined(BSD)
+    #define UNIX
+#elif defined(OSX)
+    #define UNIX
+    // Darkgrey is a particular problem in Terminal.app.
+    #define USE_8_COLOUR_TERM_MAP
+    #define COL_TO_REPLACE_DARKGREY     BLUE
+#elif defined(HPUX)
+    #define UNIX
+    #define USE_UNIX_SIGNALS
+    // Under HP-UX it's typically easier to use ncurses than try and
     // get the colour curses library to work. -- bwr
-    #define USE_CURSES
     #define CURSES_INCLUDE_FILE         <ncurses.h>
-    #define EOL "\n"
+#endif
 
-    // This is used for Posix termios.
-    #define USE_POSIX_TERMIOS
-
-    // This is used for BSD tchars type ioctl, use this if you can't
-    // use the Posix support above.
-    // #define USE_TCHARS_IOCTL
-    //
-    // This uses Unix signal control to block some things, may be
-    // useful in conjunction with USE_TCHARS_IOCTL.
-    //
-    #define USE_UNIX_SIGNALS
-
-    // This is for systems with no usleep... comment if you have it.
-    // #define NEED_USLEEP
-
-    // Default to non-ibm character set
-    #define USE_ASCII_CHARACTERS
-
-// Define plain_term for linux and similar, and dos_term for DOS and EMX.
-#elif defined ( BSD )
-    // Most of the linux stuff applies, and so we want it
-    #define LINUX
+#ifdef UNIX
     #define PLAIN_TERM
-//#define MULTIUSER
-    #include "liblinux.h"
+    #define MULTIUSER
 
-    // The ALTCHARSET may come across as DEC characters/JIS on non-ibm platforms
     #define CHARACTER_SET           0
-
-    // Set curses include file if you don't want the default curses.h
+    #define USE_ASCII_CHARACTERS
     #define USE_CURSES
-    // #define CURSES_INCLUDE_FILE     <ncurses.h>
     #define EOL "\n"
 
-    // This is used for Posix termios.
-    #define USE_POSIX_TERMIOS
+    // Unix builds use curses/ncurses, which supports colour.
+    // 
+    // This will allow using the standout attribute in curses to
+    // mark friendly monsters... results depend on the type of 
+    // term used... under X Windows try "rxvt".
+    #define USE_COLOUR_OPTS
 
-    // This is used for BSD tchars type ioctl, use this if you can't
-    // use the Posix support above.
-    #define USE_TCHARS_IOCTL
-
-    // This uses Unix signal control to block some things, may be
-    // useful in conjunction with USE_TCHARS_IOCTL.
+    // For cases when the game will be played on terms that don't support the
+    // curses "bold == lighter" 16 colour mode. -- bwr
     //
-    // #define USE_UNIX_SIGNALS
-
-    // Default to non-ibm character set
-    #define USE_ASCII_CHARACTERS
-
+    // Darkgrey is a particular problem in the 8 colour mode.  Popular values
+    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  THis 
+    // option has no affect in 16 colour mode. -- bwr
+    //
+    // #define USE_8_COLOUR_TERM_MAP
+    // #define COL_TO_REPLACE_DARKGREY     MAGENTA
+    
+    #include "libunix.h"
 
 // To compile with EMX for OS/2 define USE_EMX macro with compiler command line
 // (already defined in supplied makefile.emx)
@@ -202,14 +124,6 @@
     #define CHARACTER_SET           A_ALTCHARSET
     #include <string>
     #include "libmac.h"
-
-#if OSX
-    #define USE_8_COLOUR_TERM_MAP
-
-    // Darkgrey is a particular problem in the 8 colour mode.  Popular v
-    // alues for replacing it around here are: WHITE, BLUE, and MAGENTA.
-    #define COL_TO_REPLACE_DARKGREY     MAGENTA
-#endif
 
 #elif defined(DOS)
     #define DOS_TERM
@@ -271,25 +185,6 @@
     #endif
 #endif
 
-// =========================================================================
-//  Curses features:
-// =========================================================================
-#ifdef USE_CURSES
-    // This will allow using the standout attribute in curses to
-    // mark friendly monsters... results depend on the type of 
-    // term used... under X Windows try "rxvt".
-    #define USE_COLOUR_OPTS
-
-    // For cases when the game will be played on terms that don't support the
-    // curses "bold == lighter" 16 colour mode. -- bwr
-    //
-    // Darkgrey is a particular problem in the 8 colour mode.  Popular values
-    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  THis 
-    // option has no affect in 16 colour mode. -- bwr
-    //
-    // #define USE_8_COLOUR_TERM_MAP
-    // #define COL_TO_REPLACE_DARKGREY     MAGENTA
-#endif
 
 // =========================================================================
 //  Game Play Defines
@@ -377,7 +272,8 @@
     // Setting it to nothing or not setting it will cause all game files to
     // be dumped in the current directory.
     //
-    #define SAVE_DIR_PATH       "/opt/crawl/lib/"
+    // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
+    #define SAVE_DIR_PATH       ""
 
     // will make this little thing go away.  Define SAVE_PACKAGE_CMD
     // to a command to compress and bundle the save game files into a
@@ -389,9 +285,9 @@
     //
     // Comment these lines out if you want to leave the save files uncompressed.
     //
-    #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
-    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d" SAVE_DIR_PATH
-    #define PACKAGE_SUFFIX      ".zip"
+    // #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
+    // #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d" SAVE_DIR_PATH
+    // #define PACKAGE_SUFFIX      ".zip"
 
     // This provides some rudimentary protection against people using
     // save file cheats on multi-user systems.

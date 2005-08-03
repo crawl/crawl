@@ -3,6 +3,8 @@
  *  Summary:    Functions used to print player related info.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>      5/20/99        BWR             Efficiency changes for curses.
@@ -75,7 +77,7 @@ void print_stats(void)
         if (max_max_hp != you.hp_max)
             cprintf( " (%d)", max_max_hp );
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf("        ");
@@ -90,7 +92,7 @@ void print_stats(void)
 
         cprintf( "%d/%d", you.magic_points, you.max_magic_points );
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf("        ");
@@ -246,7 +248,7 @@ void print_stats(void)
                  you.experience_level, you.experience, you.exp_available );
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf("   ");
@@ -257,7 +259,7 @@ void print_stats(void)
     if (you.wield_change)
     {
         gotoxy(40, 13);
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf("                                       ");
@@ -306,7 +308,7 @@ void print_stats(void)
     {
         gotoxy(40, 14);
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf( "                                       " );
@@ -367,7 +369,7 @@ void print_stats(void)
     {
         gotoxy(40, 15);
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf( "                                       " );
@@ -452,7 +454,7 @@ void print_stats(void)
     {
         gotoxy(40, 16);
 
-#ifdef LINUX
+#ifdef UNIX
         clear_to_end_of_line();
 #else
         cprintf( "                                       " );
@@ -532,7 +534,7 @@ void print_stats(void)
     cprintf( "Position (%2d,%2d)", you.x_pos, you.y_pos );
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
     // get curses to redraw screen
     update_screen();
 #endif

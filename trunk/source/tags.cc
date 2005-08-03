@@ -3,6 +3,8 @@
  *  Summary:    Auxilary functions to make savefile versioning simpler.
  *  Written by: Gordon Lipford
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <2>   16 Mar 2001      GDL    Added TAG_LEVEL_ATTITUDE
@@ -56,7 +58,7 @@
 #include <stdio.h>
 #include <string.h>            // for memcpy
 
-#ifdef LINUX
+#ifdef UNIX
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

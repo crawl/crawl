@@ -3,6 +3,8 @@
  *  Summary:    Functions related to special abilities.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *  <6>    19mar2000     jmf    added elvish Glamour
@@ -55,8 +57,8 @@
 #include "view.h"
 
 
-#ifdef LINUX
-#include "liblinux.h"
+#ifdef UNIX
+#include "libunix.h"
 #endif
 
 // this all needs to be split into data/util/show files

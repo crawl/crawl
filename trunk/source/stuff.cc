@@ -3,6 +3,8 @@
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <4>    11/14/99     cdl    added random40(), made arg to random*() signed
@@ -28,8 +30,8 @@
 #include <conio.h>
 #endif
 
-#ifdef LINUX
-#include "liblinux.h"
+#ifdef UNIX
+#include "libunix.h"
 #endif
 
 #include "externs.h"
@@ -255,8 +257,8 @@ bool see_grid(unsigned char grx, unsigned char gry)
 
 void end(int end_arg)
 {
-#ifdef LINUX
-    lincurses_shutdown();
+#ifdef UNIX
+    unixcurses_shutdown();
 #endif
 
 #ifdef MAC

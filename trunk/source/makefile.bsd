@@ -1,13 +1,16 @@
-# -*- Makefile -*- for Dungeon Crawl (linux)
+# -*- Makefile -*- for Dungeon Crawl (BSD)
 
-#APPNAME = crawl
+#
+# Modified for Crawl Reference by $Author$ on $Date$
+#
+
 GAME = crawl
 
 # this file contains a list of the libraries.
 # it will make a variable called OBJECTS that contains all the libraries
 include makefile.obj
 
-OBJECTS += liblinux.o
+OBJECTS += libunix.o
 
 CXX = g++
 DELETE = rm -f
@@ -20,7 +23,6 @@ MCHMOD = 711
 INSTALLDIR = /tmp/CRAWLTEST/testdev
 LIB = -lncurses
 
-# Include for Linux
 INCLUDES = -I/usr/include/ncurses
 
 all:            $(GAME)

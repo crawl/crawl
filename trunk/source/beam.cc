@@ -1411,7 +1411,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
                 gotoxy(drawx, drawy);
                 putch(pbolt.type);
 
-#ifdef LINUX
+#ifdef UNIX
                 // get curses to update the screen so we can see the beam
                 update_screen();
 #endif
@@ -4046,7 +4046,7 @@ void explosion( struct bolt &beam, bool hole_in_the_middle )
             }
 
             // new-- delay after every 'ring' {gdl}
-#ifdef LINUX
+#ifdef UNIX
             // If we don't refresh curses we won't
             // guarantee that the explosion is visible
             if (drawing)

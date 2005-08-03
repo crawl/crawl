@@ -37,7 +37,7 @@
 #include <file.h>
 #endif
 
-#ifdef LINUX
+#ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>

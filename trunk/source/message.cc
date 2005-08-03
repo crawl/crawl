@@ -3,6 +3,8 @@
  *  Summary:    Functions used to print messages.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>      5/20/99        BWR             Extended screen lines support
@@ -298,7 +300,7 @@ void mesclr( bool force )
 
     gotoxy(1, startLine);
 
-#ifdef LINUX
+#ifdef UNIX
     clear_to_end_of_screen();
 #else
 

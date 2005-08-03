@@ -3,6 +3,8 @@
  *  Summary:    Mac specific routines used by Crawl.
  *  Written by: Jesse Jones (jesjones@mindspring.com)
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <5>     5/25/02     JDJ     Rewrote to use Carbon Events and Mach-O.
@@ -1781,7 +1783,7 @@ char* strlwr(char* str)
 //
 // itoa
 //
-// Converts an integer to a string (after liblinux.cc).
+// Converts an integer to a string (after libunix.cc).
 //
 //---------------------------------------------------------------
 void itoa(int value, char* buffer, int radix)

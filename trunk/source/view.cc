@@ -3,6 +3,8 @@
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <10>     29 Jul 00  JDJ    show_map iterates horizontally to 79 instead of 80.
@@ -88,7 +90,7 @@ void monster_grid(bool do_updates);
 //---------------------------------------------------------------
 int get_number_of_lines(void)
 {
-#ifdef LINUX
+#ifdef UNIX
     return (get_number_of_lines_from_curses());
 #elif MAC
     return (MAC_NUMBER_OF_LINES);
@@ -1892,7 +1894,7 @@ void show_map( FixedVector<int, 2> &spec_place )
     if (spec_place[0] == 0 && getty != 0 && getty != '+' && getty != '-'
         && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
         && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-#ifdef LINUX
+#ifdef UNIX
         && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
         && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
 #endif
@@ -1904,7 +1906,7 @@ void show_map( FixedVector<int, 2> &spec_place )
     if (spec_place[0] == 1 && getty != 0 && getty != '+' && getty != '-'
         && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
         && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-#ifdef LINUX
+#ifdef UNIX
         && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
         && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
 #endif
@@ -1966,7 +1968,7 @@ void show_map( FixedVector<int, 2> &spec_place )
         move_y = 0;
         break;
 
-#ifndef LINUX
+#ifndef UNIX
         // This is old DOS keypad support
     case 'H':
         move_y = -1;

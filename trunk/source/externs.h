@@ -3,6 +3,8 @@
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <3>     7/29/00    JDJ   Renamed sh_x, sh_y, sh_greed, sh_type, sh_level so
@@ -489,9 +491,7 @@ struct game_options
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
     bool        lowercase_invocations;          // prefer lowercase invocations
 
-#ifdef CURSES
-    int         num_colours;    // used for setting up colour table (8 or 16)
-#endif
+    int         num_colours;    // used for setting up curses colour table (8 or 16)
     
 #ifdef WIZARD
     int         wiz_mode;       // yes, no, never in wiz mode to start

@@ -1,5 +1,5 @@
-#ifndef LIBLINUX_H
-#define LIBLINUX_H
+#ifndef LIBUNIX_H
+#define LIBUNIX_H
 
 
 // Some replacement routines missing in gcc
@@ -33,12 +33,12 @@ void get_input_line_from_curses( char *const buff, int len );
 void _setcursortype(int curstype);
 void delay(unsigned long time);
 void init_key_to_command();
-void lincurses_shutdown(void);
-void lincurses_startup(void);
+void unixcurses_shutdown(void);
+void unixcurses_startup(void);
 void textbackground(int bg);
 void textcolor(int col);
 
-#ifndef _LIBLINUX_IMPLEMENTATION
+#ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"
 {

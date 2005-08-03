@@ -3,6 +3,8 @@
  *  Summary:    Simple reading of an init file and system variables
  *  Written by: David Loewenstern
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>     5 May 2000      GDL             Add field stripping for 'name'
@@ -33,7 +35,7 @@ extern unsigned char (*mapch2) (unsigned char);
 extern unsigned char mapchar3(unsigned char ldfk);
 extern unsigned char mapchar4(unsigned char ldfk);
 
-#ifdef LINUX
+#ifdef UNIX
 extern int character_set;       // unices only
 #endif
 
@@ -933,7 +935,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 viewwindow = &viewwindow3;
                 mapch = &mapchar3;
                 mapch2 = &mapchar4;
-#ifdef LINUX
+#ifdef UNIX
                 character_set = 0;
 #endif
             }

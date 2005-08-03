@@ -173,7 +173,7 @@ unsigned char mapchar3(unsigned char ldfk);
 unsigned char mapchar4(unsigned char ldfk);
 
 /*
-   Function pointers are used to make switching between Linux and DOS char sets
+   Function pointers are used to make switching between Unix and DOS char sets
    possible as a runtime option (command-line -c)
 */
 
@@ -247,8 +247,8 @@ int main( int argc, char *argv[] )
         exit(0);
     }
 
-#ifdef LINUX
-    lincurses_startup();
+#ifdef UNIX
+    unixcurses_startup();
 #endif
 
 #ifdef MAC
@@ -349,8 +349,8 @@ int main( int argc, char *argv[] )
 
     // Should never reach this stage, right?
 
-#ifdef LINUX
-    lincurses_shutdown();
+#ifdef UNIX
+    unixcurses_shutdown();
 #endif
 
 #ifdef MAC
@@ -851,7 +851,7 @@ static void input(void)
 
     int keyin = 0;
 
-#ifdef LINUX
+#ifdef UNIX
     // Stuff for the Unix keypad kludge
     bool running = false;
     bool opening = false;
@@ -861,7 +861,7 @@ static void input(void)
 
     you.time_taken = player_speed();
 
-#ifdef LINUX
+#ifdef UNIX
     update_screen();
 #else
     window( 1, 1, 80, get_number_of_lines() );
@@ -926,7 +926,7 @@ static void input(void)
 
             mesclr();
 
-#ifdef LINUX
+#ifdef UNIX
             // Kludging running and opening as two character sequences
             // for Unix systems.  This is an easy way out... all the
             // player has to do is find a termcap and numlock setting
@@ -990,7 +990,7 @@ static void input(void)
         you.turn_is_over = 0;
     }
 
-#ifndef LINUX
+#ifndef UNIX
   get_keyin_again:
 #endif //jmf: just stops an annoying gcc warning
 
@@ -1044,7 +1044,7 @@ static void input(void)
         // straight 5s for long rests... might need to define a roguelike
         // rest key and get people switched over. -- bwr
 
-#ifdef LINUX
+#ifdef UNIX
         if (!running && !opening)
             start_running( RDIR_REST, 100 );
         else
@@ -1081,7 +1081,7 @@ static void input(void)
     case 'L': case CMD_RUN_RIGHT:       
         start_running( RDIR_RIGHT, 2 ); break;
 
-#ifdef LINUX
+#ifdef UNIX
         // taken care of via key -> command mapping
 #else
         // Old DOS keypad support
@@ -1393,9 +1393,9 @@ static void input(void)
         // because we want to have CTRL-Y available...
         // and unfortuantely they tend to be stuck together. 
         clrscr();
-        lincurses_shutdown();
+        unixcurses_shutdown();
         kill(0, SIGTSTP);
-        lincurses_startup();
+        unixcurses_startup();
         redraw_screen();
         break;
 #endif
@@ -1533,7 +1533,7 @@ static void input(void)
 
     }
 
-#ifdef LINUX
+#ifdef UNIX
     // New Unix keypad stuff
     if (running)
     {

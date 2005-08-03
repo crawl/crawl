@@ -1,6 +1,6 @@
 /*
- *  File:       liblinux.cc
- *  Summary:    Functions for linux, unix, and curses support
+ *  File:       libunix.cc
+ *  Summary:    Functions for unix and curses support
  *  Written by: ?
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
@@ -39,30 +39,17 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <ctype.h>
-#define _LIBLINUX_IMPLEMENTATION
-#include "liblinux.h"
+#define _LIBUNIX_IMPLEMENTATION
+#include "libunix.h"
 #include "defines.h"
 
 #include "enum.h"
 #include "externs.h"
 
-
-#if defined(USE_POSIX_TERMIOS)
 #include <termios.h>
 
 static struct termios def_term;
 static struct termios game_term;
-
-#elif defined(USE_TCHARS_IOCTL)
-#include <sys/ttold.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <errno.h>
-
-static struct ltchars def_term;
-static struct ltchars game_term;
-
-#endif
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
@@ -182,8 +169,6 @@ static void setup_colour_pairs( void )
 }          // end setup_colour_pairs()
 
 
-#if defined(USE_POSIX_TERMIOS)
-
 static void termio_init()
 {
     tcgetattr(0, &def_term);
@@ -203,18 +188,6 @@ static void termio_init()
     tcsetattr(0, TCSAFLUSH, &game_term);
 }
 
-#elif defined(USE_TCHARS_IOCTL)
-
-static void termio_init()
-{
-    ioctl(0, TIOCGLTC, &def_term);
-    memcpy(&game_term, &def_term, sizeof(struct ltchars));
-
-    game_term.t_suspc = game_term.t_dsuspc = -1;
-    ioctl(0, TIOCSLTC, &game_term);
-}
-
-#endif
 
 void init_key_to_command()
 {
@@ -393,11 +366,9 @@ int key_to_command(int keyin)
     return (key_to_command_table[keyin]);
 }
 
-void lincurses_startup( void )
+void unixcurses_startup( void )
 {
-#if defined(USE_POSIX_TERMIOS) || defined(USE_TCHARS_IOCTL)
     termio_init();
-#endif
 
 #ifdef USE_UNIX_SIGNALS
 #ifdef SIGQUIT
@@ -432,13 +403,9 @@ void lincurses_startup( void )
 }
 
 
-void lincurses_shutdown()
+void unixcurses_shutdown()
 {
-#if defined(USE_POSIX_TERMIOS)
     tcsetattr(0, TCSAFLUSH, &def_term);
-#elif defined(USE_TCHARS_IOCTL)
-    ioctl(0, TIOCSLTC, &def_term);
-#endif
 
 #ifdef USE_UNIX_SIGNALS
 #ifdef SIGQUIT

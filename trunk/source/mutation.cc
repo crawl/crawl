@@ -27,8 +27,8 @@
 #include <conio.h>
 #endif
 
-#ifdef LINUX
-#include "liblinux.h"
+#ifdef UNIX
+#include "libunix.h"
 #endif
 
 #include "externs.h"
