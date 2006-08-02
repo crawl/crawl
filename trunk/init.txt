@@ -23,6 +23,11 @@
 
 # name=kernel
 
+#
+# If remember_name set, the game remembers the last name you used.
+#
+
+# remember_name = true
 
 # Directory for reading macro.txt and init.txt, and dumping characters.
 # It should end with the path delimiter.
@@ -48,6 +53,245 @@
 
 autopickup = $?!:"/0
 
+#
+# assign_item_slot
+#
+# When picking up items, the inventory slot into which the item goes is 
+# normally the first free slot from a-zA-Z. Setting assign_item_slot to
+# "backward" changes the slot assignment to work backwards. For instance, if
+# you have items on 'a' and 'c', and assign_item_slot = forward, the next item
+# will go into 'b'. If assign_item_slot = backward, the next item will go to
+# 'd' instead.
+# 
+# assign_item_slot = backward
+
+#
+# dump_kill_places
+#
+# In the Vanquished Creatures list, this option controls how the locations of
+# each kill are displayed. Use 'none' to suppress place display altogether,
+# 'all' to display all known kill places, anything else to default to showing
+# the kill place only for single kills
+# 
+# dump_kill_places = all
+
+#
+# dump_item_origins
+#
+# The game remembers where you find items. If you want this item origin memory
+# listed in your dumps, use this option to select which items get annotated. The
+# default behaviour is for artifacts and rods to get annotated.
+# 
+# Available selectors: artifacts, ego_arm, ego_weap, jewellery, runes, rods,
+# staves, books, all.
+#
+# If you use multiple dump_item_origins lines, the last line takes effect; all
+# preceding lines are ignored.
+# 
+# If you don't want any items to be annotated, set dump_item_origins to "none",
+# and set dump_item_origin_price to -1.
+#
+# dump_item_origins = artifacts, ego_weap, ego_arm, rods, staves, runes
+
+# 
+# dump_item_origin_price
+#
+# Item origins are dumped if the price of the item is greater than or equal
+# to this amount. Set this to -1 to prevent selection by price.
+#
+# dump_item_origin_price = 100
+
+#
+# Base Lua file that's needed by other Lua scripts. You must source this
+# before you source any Lua script that relies on this. For safety, always
+# source this first.
+# 
+# lua_file = lua\base.lua
+
+#
+# Control what messages stop shift+running and resting.
+#
+# lua_file = lua\runrest.lua
+
+#
+# If you want more detailed kill statistics, you can use a LUA script to do
+# that. See kills.lua for more ideas.
+# 
+# lua_file = lua\kills.lua
+
+#
+# If you'd like to switch quickly between sets of gear, you can use this. See
+# gearset.lua for more information.
+#
+# lua_file = lua\gearset.lua
+
+#
+# This lua script prompts you to eat chunks in inventory (after prompting for
+# eating off the floor).
+#
+# lua_file = lua\eat.lua
+
+#
+# stash.lua annotates items to make for easier stash-searches. Weapons are
+# prefixed by the name of the weapon skill, so you can search for "long blades"
+# and find everything that exercises that skill. See stash.lua for more details.
+#
+# lua_file = lua\stash.lua
+
+#
+# wield.lua selects items to show in the wield menu based on the spells your
+# character knows. For instance, if you know Sublimation of Blood, chunks
+# will be added to your wield menu.
+#
+# lua_file = lua\wield.lua
+
+# The number of messages to be displayed in character dump files. Defaults to 4
+dump_message_count = 4
+
+# Set to false to disable targeting zero exp monsters in hostile targeting mode
+# target_zero_exp = false
+
+#
+# Set to true if targeting should wrap around from last to first and vice versa
+#
+# target_wrap = true
+
+#
+# When cycling through items/features with 'x' look-around, setting target_oos
+# to true allows you to jump the cursor to items and features that are outside
+# line-of-sight but in the main view. Defaults to true. See also
+# target_los_first.
+#
+target_oos = true
+
+#
+# When cycling through items/features with the 'x' look-around command, setting 
+# target_los_first to true will force the cursor to squares in line-of-sight
+# before going to squares outside LOS. Defaults to true.
+#
+target_los_first = true
+
+#
+# Allows you to specify special characters as \{nn} when creating macros or
+# keymaps. For instance, you can macro a key to Enter by specifying a mapping
+# of \{13} when this is set to true. If you want to map a key to a backslash
+# with macro_meta_entry set true, escape the backslash as \\.
+#
+# Defaults to true.
+#
+macro_meta_entry = true
+
+# pickup_thrown causes autopickup to grab thrown/fired missiles
+#
+pickup_thrown = true
+
+# pickup_dropped lets autopickup affect objects you've dropped. Set to false to
+# block autopickup for dropped objects
+#
+pickup_dropped = false
+
+# assign_item_slot = backward
+
+# List of item name regexes for items which autopickup will never touch. You
+# can use multiple ban_pickup lines.
+#
+# ban_pickup = degeneration,decay,confusion
+# ban_pickup = inaccuracy
+# ban_pickup = scrolls? of paper
+
+# Option to turn off colouring the level-map with travel information
+# travel_colour = false
+
+#
+# Monsters found by detect creatures will be coloured this colour (defaults
+# to darkgrey):
+#
+detected_monster_colour = lightred
+
+
+#
+# Items found by detect items will be given this colour (defaults to darkgrey)
+#
+detected_item_colour    = green
+
+#
+# Remembered monsters can be shown with their actual colours (real), or 
+# assigned an arbitrary colour by name.
+#
+# remembered_monster_colour = real
+remembered_monster_colour = darkgrey
+
+
+# How long travel waits after each move (milliseconds).
+#
+travel_delay = 20
+
+# Prevent travel from routing through shallow water.
+# travel_avoid_terrain = shallow water
+
+# For merfolk and/or characters with permanent levitation, prevent travel from
+# routing through shallow _or_ deep water
+#
+# travel_avoid_terrain = shallow water, deep water
+
+# The square of the radius around travel-excluded squares where travel will
+# refuse to go. Set to zero if you want to exclude single squares.
+#
+# travel_exclude_radius2 = 68
+
+# If set to true (the default), waypoints will be numbered on the level map,
+# assuming that they're on a floor square with nothing on it.
+#
+# show_waypoints = false
+
+# Explore will stop for one of these conditions. Whatever you set this option
+# to, anything that stops travel will also stop explore.
+#
+# Multiple explore_stop lines are *not* cumulative! The last explore_stop
+# line will override all previous explore_stop lines.
+# 
+explore_stop = items,stairs,shops,altars
+
+# How many squares the cursor moves on the level map when using Shift+direction.
+# Defaults to 10.
+# 
+# level_map_cursor_step = 10
+
+# Playing sounds:
+# Option is set as sound = <regex>:<path to sound file>. Your regex should not
+# include commas or colons.
+# sound = LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+
+# Tracking stashes. Valid options are 'all', 'dropped' and 'explicit'. Anything
+# else disables stash tracking
+stash_tracking = all
+
+# Filter corpses (14) and chunks of meat (4:21) out of the stash-tracker.
+# The filter syntax is object class:object subtype. So, to filter, say, potions
+# of degeneration, you'd use 8:14 (where 8 is for OBJ_POTIONS and 14 is
+# POT_DEGENERATION). See enum.h for all the magic numbers involved.
+stash_filter = 14, 4:21
+
+# Substrings that will stop travel if they're present in any message the game
+# displays. Substrings can be comma separated, and multiple stop_travel lines 
+# are accepted.
+
+# Stop travel if Xom grants us a gift suddenly.
+stop_travel = Something appears 
+
+# To limit a substring match to a message channel, prefix the substring with the
+# channel name and a colon. For instance, if you want travel to stop when you're
+# hit by divine retribution, you could use:
+# stop_travel = god:wrath finds you
+
+# If you'd like to stop travel for any message sent to a particular channel, use
+# a stop_travel line with that message channel name and a colon alone.  For
+# example, if you've an amulet of the gourmand, and are hankering after rotten
+# meat, or you're playing a ghoul: 
+# stop_travel = rotten_meat:
+
+# Stop travel for any god messages (including prayer)
+stop_travel = god:
 
 # verbose dump causes less important item details to appear in character dumps
 # verbose_dump  = false
@@ -60,6 +304,20 @@ colour_map    = true
 # Cleans up out of sight monsters and clouds on the map
 clean_map     = false
 
+# To be able to drop multiple items from the drop menu in one go, enable
+# multidrop (you can also switch to multidrop from the classic drop menu using
+# the @ key).
+#
+# drop_mode = multi
+
+# When selecting items using the global select key (, or -) in a multidrop
+# listing, you can choose to apply a filter - only items whose names match
+# the filter will be selected. The filter strings are regexes. 
+#
+# For instance, to quickly select carrion and rotting chunks of meat, you 
+# could use:
+#
+# drop_filter = skeleton, rotting, corpse
 
 # Open doors by moving on to them
 # easy_open     = false
@@ -93,6 +351,10 @@ easy_confirm  = safe
 
 # easy_quit_item_lists = true
 
+# In multidrop (and pickup) menus, paging past the end will exit the menu if
+# you set the easy_exit_menu option
+#
+# easy_exit_menu = true
 
 # This option adds the text "uncursed" to items where the
 # curse status is relevent and known.  Does not bother to
@@ -189,14 +451,58 @@ always_greet = true
 # reverse       -- this will probably work
 # dim           -- probably no effect
 # underline     -- this will probably work
+# highlight:col -- set background colour of highlighted monsters to "col"
 #
 # This is somewhat interesting (blink here is used to give friends a
 # dark grey background, and then we change dark grey so we can see bats):
 #
 # friend_brand = blink
 # colour.darkgrey = magenta
+#
+# Brand friends with a green background. If the friend is itself green, it'll
+# show up as black on green.
+#
+# friend_brand = hi:green
 
 friend_brand = reverse
+
+#
+# Stab warning.
+# 
+# Some deities object to you stabbing monsters. Certain classes specialise
+# in stabbing monsters. For both these cases, it helps to identify monsters 
+# that are susceptible to being stabbed without using the 'x' command. This
+# option brands sleeping monsters. All the normal 'brand' options apply.
+#
+# stab_brand = hi:blue
+
+#
+# Stabbing may be possible even if the monster is not asleep (if it's confused,
+# for instance). This option brands monsters that you *might* be able to stab,
+# provided the monster is adjacent to you. Primarily useful for worshippers of
+# The Su^WShining One. Purists may consider this unnecessarily spoily and a 
+# cheat. Direct such opinions to <scintilla@gmail.com>
+#
+# may_stab_brand = hi:darkgrey
+#
+
+#
+# On DOS and Windows, if you're using a console that can do high-intensity
+# background colours, set this option to true for superior friend-branding.
+# If your console doesn't like this option, some friendly monsters will appear
+# as blinking characters (and setting this option to false may be advisable
+# to preserve your sanity in such cases).
+#
+# dos_use_background_intensity = true
+
+# Colour items on level-map
+#
+# item_colour = true
+
+# Brand heaps of items (more than one item or stack). Options apply as for
+# friend_brand.
+# 
+# heap_brand = reverse
 
 
 # Message channel options:
