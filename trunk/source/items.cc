@@ -2447,7 +2447,7 @@ void handle_time( long time_delta )
     int temp_rand;              // probability determination {dlb}
 
     // so as not to reduplicate f(x) calls {dlb}
-    unsigned char which_miscast = SPTYP_RANDOM;
+    unsigned int which_miscast = SPTYP_RANDOM;
 
     bool summon_instead;        // for branching within a single switch {dlb}
     int which_beastie = MONS_PROGRAM_BUG;       // error trapping {dlb}
