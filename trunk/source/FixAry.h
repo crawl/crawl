@@ -42,11 +42,6 @@ public:
                             
                         FixedArray()                            {}
 
-private:
-                        FixedArray(const FixedArray& rhs);
-                        
-            FixedArray& operator=(const FixedArray& rhs);
-
 //-----------------------------------
 //    API
 //

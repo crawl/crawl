@@ -100,7 +100,11 @@ unsigned char detect_items( int pow )
 
             if (igrd[i][j] != NON_ITEM)
             {
-                env.map[i - 1][j - 1] = '~';
+                unsigned short flags = env.map[i - 1][j - 1];
+                flags = !flags || (flags & ENVF_DETECTED)?
+                            ENVF_DETECTED
+                          : 0;
+                env.map[i - 1][j - 1] = '~' | ENVF_DETECT_ITEM | flags;
             }
         }
     }
@@ -129,7 +133,13 @@ unsigned char detect_creatures( int pow )
             {
                 struct monsters *mon = &menv[ mgrd[i][j] ];
 
-                env.map[i - 1][j - 1] = mons_char( mon->type );
+                unsigned short flags = env.map[i - 1][j - 1];
+                flags = !flags || (flags & ENVF_DETECTED)?
+                            ENVF_DETECTED
+                          : 0;
+
+                env.map[i - 1][j - 1] = 
+                    mons_char( mon->type ) | ENVF_DETECT_MONS | flags;
 
                 // Assuming that highly intelligent spellcasters can
                 // detect scyring. -- bwr
@@ -156,7 +166,7 @@ int corpse_rot(int power)
     char minx = you.x_pos - 6;
     char maxx = you.x_pos + 7;
     char miny = you.y_pos - 6;
-    char maxy = you.y_pos + 6;
+    char maxy = you.y_pos + 7;
     char xinc = 1;
     char yinc = 1;
 
@@ -239,7 +249,7 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
     int minx = you.x_pos - 6;
     int maxx = you.x_pos + 7;
     int miny = you.y_pos - 6;
-    int maxy = you.y_pos + 6;
+    int maxy = you.y_pos + 7;
     int xinc = 1;
     int yinc = 1;
 
@@ -316,16 +326,23 @@ int animate_a_corpse( int axps,  int ayps, int corps_beh, int corps_hit,
 {
     if (igrd[axps][ayps] == NON_ITEM)
         return 0;
-    else if (mitm[igrd[axps][ayps]].base_type != OBJ_CORPSES)
-        return 0;
-    else if (class_allowed == CORPSE_SKELETON
-             && mitm[igrd[axps][ayps]].sub_type != CORPSE_SKELETON)
-        return 0;
-    else
-        if (raise_corpse( igrd[axps][ayps], axps, ayps, 
-                          corps_beh, corps_hit, 1 ) > 0)
+
+    int objl = igrd[axps][ayps];
+    // This searches all the items on the ground for a corpse
+    while (objl != NON_ITEM)
     {
-        mpr("The dead are walking!");
+        if (mitm[objl].base_type != OBJ_CORPSES
+             || (class_allowed == CORPSE_SKELETON
+                && mitm[objl].sub_type != CORPSE_SKELETON))
+        {
+            objl = mitm[objl].link;
+            continue;
+        }
+
+        if (raise_corpse(objl, axps, ayps,
+                         corps_beh, corps_hit, 1 ) > 0)
+            mpr("The dead are walking!");
+        break;
     }
 
     return 0;

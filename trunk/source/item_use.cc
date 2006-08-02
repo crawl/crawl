@@ -72,7 +72,61 @@ void use_randart(unsigned char item_wield_2);
 static bool enchant_weapon( int which_stat, bool quiet = false );
 static bool enchant_armour( void );
 
-void wield_weapon(bool auto_wield)
+// Rather messy - we've gathered all the can't-wield logic from wield_weapon()
+// here.
+bool can_wield(const item_def& weapon)
+{
+    if (you.berserker)   return false;
+    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
+            && !can_equip( EQ_WEAPON ))
+        return false;
+
+    if (you.equip[EQ_WEAPON] != -1
+            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
+            && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
+        return false;
+
+    if (weapon.base_type != OBJ_WEAPONS && weapon.base_type == OBJ_STAVES
+            && you.equip[EQ_SHIELD] != -1)
+        return false;
+
+    if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
+            && mass_item( weapon ) >= 500)
+        return false;
+
+    if ((you.species == SP_HALFLING || you.species == SP_GNOME
+            || you.species == SP_KOBOLD || you.species == SP_SPRIGGAN)
+            && (weapon.sub_type == WPN_GREAT_SWORD
+                || weapon.sub_type == WPN_TRIPLE_SWORD
+                || weapon.sub_type == WPN_GREAT_MACE
+                || weapon.sub_type == WPN_GREAT_FLAIL
+                || weapon.sub_type == WPN_BATTLEAXE
+                || weapon.sub_type == WPN_EXECUTIONERS_AXE
+                || weapon.sub_type == WPN_HALBERD
+                || weapon.sub_type == WPN_GLAIVE
+                || weapon.sub_type == WPN_GIANT_CLUB
+                || weapon.sub_type == WPN_GIANT_SPIKED_CLUB
+                || weapon.sub_type == WPN_SCYTHE))
+        return false;
+
+    if (hands_reqd_for_weapon( weapon.base_type,
+                              weapon.sub_type ) == HANDS_TWO_HANDED
+            && you.equip[EQ_SHIELD] != -1)
+        return false;
+
+        int weap_brand = get_weapon_brand( weapon );
+
+    if ((you.is_undead || you.species == SP_DEMONSPAWN)
+            && (!is_fixed_artefact( weapon )
+                && (weap_brand == SPWPN_HOLY_WRATH 
+                    || weap_brand == SPWPN_DISRUPTION)))
+        return false;
+
+    // We can wield this weapon. Phew!
+    return true;
+}
+
+bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 {
     int item_slot = 0;
     char str_pass[ ITEMNAME_SIZE ];
@@ -80,13 +134,13 @@ void wield_weapon(bool auto_wield)
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return;
+        return (false);
     }
 
     if (you.berserker)
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
+        return (false);
     }
 
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
@@ -94,7 +148,7 @@ void wield_weapon(bool auto_wield)
         if (!can_equip( EQ_WEAPON ))
         {
             mpr("You can't wield anything in your present form.");
-            return;
+            return (false);
         }
     }
 
@@ -103,7 +157,7 @@ void wield_weapon(bool auto_wield)
         && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
     {
         mpr("You can't unwield your weapon to draw a new one!");
-        return;
+        return (false);
     }
 
     if (you.sure_blade)
@@ -118,19 +172,28 @@ void wield_weapon(bool auto_wield)
             item_slot = 1;
         else
             item_slot = 0;
+        if (slot != -1) item_slot = slot;
     }
+
+    bool force_unwield = 
+                you.inv[item_slot].base_type != OBJ_WEAPONS
+                   && you.inv[item_slot].base_type != OBJ_MISSILES
+                   && you.inv[item_slot].base_type != OBJ_STAVES;
 
     // Prompt if not using the auto swap command, 
     // or if the swap slot is empty.
-    if (!auto_wield || !is_valid_item( you.inv[item_slot] ))
+    if (!auto_wield || !is_valid_item(you.inv[item_slot]) || force_unwield)
     {
-        item_slot = prompt_invent_item( "Wield which item (- for none)?",
-                                        OBJ_WEAPONS, true, true, true, '-' );
+        if (!auto_wield)
+            item_slot = prompt_invent_item( "Wield which item (- for none)?",
+                                        OSEL_WIELD, true, true, true, '-' );
+        else
+            item_slot = PROMPT_GOT_SPECIAL;
 
         if (item_slot == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
-            return;
+            return (false);
         }
         else if (item_slot == PROMPT_GOT_SPECIAL)  // '-' or bare hands
         {
@@ -148,14 +211,14 @@ void wield_weapon(bool auto_wield)
             {
                 mpr( "You are already empty-handed." );
             }
-            return;
+            return (true);
         }
     }
 
     if (item_slot == you.equip[EQ_WEAPON])
     {
         mpr("You are already wielding that!");
-        return;
+        return (true);
     }
 
     for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
@@ -163,7 +226,7 @@ void wield_weapon(bool auto_wield)
         if (item_slot == you.equip[i])
         {
             mpr("You are wearing that object!");
-            return;
+            return (false);
         }
     }
 
@@ -173,7 +236,7 @@ void wield_weapon(bool auto_wield)
             && you.equip[EQ_SHIELD] != -1)
         {
             mpr("You can't wield that with a shield.");
-            return;
+            return (false);
         }
 
         if (you.equip[EQ_WEAPON] != -1)
@@ -187,7 +250,7 @@ void wield_weapon(bool auto_wield)
             && mass_item( you.inv[item_slot] ) >= 500)
         {
             mpr("That's too large and heavy for you to wield.");
-            return;
+            return (false);
         }
 
         if ((you.species == SP_HALFLING || you.species == SP_GNOME
@@ -206,7 +269,7 @@ void wield_weapon(bool auto_wield)
                 || you.inv[item_slot].sub_type == WPN_SCYTHE))
         {
             mpr("That's too large for you to wield.");
-            return;
+            return (false);
 
         }
 
@@ -215,7 +278,7 @@ void wield_weapon(bool auto_wield)
             && you.equip[EQ_SHIELD] != -1)
         {
             mpr("You can't wield that with a shield.");
-            return;
+            return (false);
         }
 
         int weap_brand = get_weapon_brand( you.inv[item_slot] );
@@ -227,7 +290,7 @@ void wield_weapon(bool auto_wield)
         {
             mpr("This weapon will not allow you to wield it.");
             you.turn_is_over = 1;
-            return;
+            return (false);
         }
 
         if (you.equip[EQ_WEAPON] != -1)
@@ -237,7 +300,7 @@ void wield_weapon(bool auto_wield)
     }
 
     // any oddness on wielding taken care of here
-    wield_effects(item_slot, true);
+    wield_effects(item_slot, show_weff_messages);
 
     in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
     mpr( str_pass );
@@ -251,6 +314,8 @@ void wield_weapon(bool auto_wield)
 
     you.wield_change = true;
     you.turn_is_over = 1;
+
+    return (true);
 }
 
 // provide a function for handling initial wielding of 'special'
@@ -550,6 +615,33 @@ void wear_armour(void)
     do_wear_armour( armour_wear_2, false );
 }
 
+int armour_equip_slot(const item_def &item)
+{
+    int wh_equip = EQ_BODY_ARMOUR;
+
+    switch (item.sub_type)
+    {
+    case ARM_BUCKLER:
+    case ARM_LARGE_SHIELD:
+    case ARM_SHIELD:
+        wh_equip = EQ_SHIELD;
+        break;
+    case ARM_CLOAK:
+        wh_equip = EQ_CLOAK;
+        break;
+    case ARM_HELMET:
+        wh_equip = EQ_HELMET;
+        break;
+    case ARM_GLOVES:
+        wh_equip = EQ_GLOVES;
+        break;
+    case ARM_BOOTS:
+        wh_equip = EQ_BOOTS;
+        break;
+    }
+    return (wh_equip);
+}
+
 bool do_wear_armour( int item, bool quiet )
 {
     char wh_equip = 0;
@@ -632,28 +724,7 @@ bool do_wear_armour( int item, bool quiet )
         }
     }
 
-    wh_equip = EQ_BODY_ARMOUR;
-
-    switch (you.inv[item].sub_type)
-    {
-    case ARM_BUCKLER:
-    case ARM_LARGE_SHIELD:
-    case ARM_SHIELD:
-        wh_equip = EQ_SHIELD;
-        break;
-    case ARM_CLOAK:
-        wh_equip = EQ_CLOAK;
-        break;
-    case ARM_HELMET:
-        wh_equip = EQ_HELMET;
-        break;
-    case ARM_GLOVES:
-        wh_equip = EQ_GLOVES;
-        break;
-    case ARM_BOOTS:
-        wh_equip = EQ_BOOTS;
-        break;
-    }
+    wh_equip = armour_equip_slot(you.inv[item]);
 
     if (you.species == SP_NAGA && you.inv[item].sub_type == ARM_BOOTS
         && you.inv[item].plus2 == TBOOT_NAGA_BARDING
@@ -1129,6 +1200,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     // Making a copy of the item: changed only for venom launchers
     item_def item = you.inv[throw_2];  
     item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+    origin_set_unknown(item);
 
     char str_pass[ ITEMNAME_SIZE ];
 
@@ -1663,6 +1736,11 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     pbolt.isBeam = false;
     pbolt.isTracer = false;
 
+    // mark this item as thrown if it's a missile, so that we'll pick it up
+    // when we walk over it.
+    if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
+        item.flags |= ISFLAG_THROWN;
+
     // using copy, since the launched item might be differect (venom blowgun)
     fire_beam( pbolt, &item );
 
@@ -1678,45 +1756,20 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     you.turn_is_over = 1;
 }                               // end throw_it()
 
-void puton_ring(void)
+bool puton_item(int item_slot, bool prompt_finger)
 {
-    bool is_amulet = false;
-    int item_slot;
-    char str_pass[ ITEMNAME_SIZE ];
-
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        return;
-    }
-
-    if (you.berserker)
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    item_slot = prompt_invent_item( "Put on which piece of jewellery?",
-                                    OBJ_JEWELLERY );
-
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
-        return;
-    }
-
     if (item_slot == you.equip[EQ_LEFT_RING]
         || item_slot == you.equip[EQ_RIGHT_RING]
         || item_slot == you.equip[EQ_AMULET])
     {
         mpr("You've already put that on!");
-        return;
+        return (true);
     }
 
     if (item_slot == you.equip[EQ_WEAPON])
     {
         mpr("You are wielding that object.");
-        return;
+        return (false);
     }
 
     if (you.inv[item_slot].base_type != OBJ_JEWELLERY)
@@ -1724,10 +1777,10 @@ void puton_ring(void)
         //jmf: let's not take our inferiority complex out on players, eh? :-p
         //mpr("You're sadly mistaken if you consider that jewellery.")
         mpr("You can only put on jewellery.");
-        return;
+        return (false);
     }
 
-    is_amulet = (you.inv[item_slot].sub_type >= AMU_RAGE);
+    bool is_amulet = (you.inv[item_slot].sub_type >= AMU_RAGE);
 
     if (!is_amulet)     // ie it's a ring
     {
@@ -1735,7 +1788,7 @@ void puton_ring(void)
             && item_cursed( you.inv[you.equip[EQ_GLOVES]] ))
         {
             mpr("You can't take your gloves off to put on a ring!");
-            return;
+            return (false);
         }
 
         if (you.inv[item_slot].base_type == OBJ_JEWELLERY
@@ -1744,7 +1797,7 @@ void puton_ring(void)
         {
             // and you are trying to wear body you.equip.
             mpr("You've already put a ring on each hand.");
-            return;
+            return (false);
         }
     }
     else if (you.equip[EQ_AMULET] != -1)
@@ -1757,7 +1810,7 @@ void puton_ring(void)
         }
 
         mpr(info);
-        return;
+        return (false);
     }
 
     int hand_used = 0;
@@ -1772,20 +1825,28 @@ void puton_ring(void)
         hand_used = 2;
     else if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1)
     {
-        mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
+        if (prompt_finger)
+        {
+            mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
 
-        int keyin = get_ch();
+            int keyin = get_ch();
 
-        if (keyin == 'l')
-            hand_used = 0;
-        else if (keyin == 'r')
-            hand_used = 1;
-        else if (keyin == ESCAPE)
-            return;
+            if (keyin == 'l')
+                hand_used = 0;
+            else if (keyin == 'r')
+                hand_used = 1;
+            else if (keyin == ESCAPE)
+                return (false);
+            else
+            {
+                mpr("You don't have such a hand!");
+                return (false);
+            }
+        }
         else
         {
-            mpr("You don't have such a hand!");
-            return;
+            // First ring goes on left hand if we're choosing automatically.
+            hand_used = 0;
         }
     }
 
@@ -1897,11 +1958,45 @@ void puton_ring(void)
     // cursed or not, we know that since we've put the ring on
     set_ident_flags( you.inv[item_slot], ISFLAG_KNOW_CURSE );
 
+    char str_pass[ ITEMNAME_SIZE ];
     in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
     mpr( str_pass );
+
+    return (true);
+}
+
+bool puton_ring(int slot, bool prompt_finger)
+{
+    int item_slot;
+
+    if (inv_count() < 1)
+    {
+        canned_msg(MSG_NOTHING_CARRIED);
+        return (false);
+    }
+
+    if (you.berserker)
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return (false);
+    }
+
+    if (slot != -1)
+        item_slot = slot;
+    else
+        item_slot = prompt_invent_item( "Put on which piece of jewellery?",
+                                    OBJ_JEWELLERY );
+
+    if (item_slot == PROMPT_ABORT)
+    {
+        canned_msg( MSG_OK );
+        return (false);
+    }
+
+    return puton_item(item_slot, prompt_finger);
 }                               // end puton_ring()
 
-void remove_ring(void)
+bool remove_ring(int slot)
 {
     int hand_used = 10;
     int ring_wear_2;
@@ -1911,13 +2006,13 @@ void remove_ring(void)
         && you.equip[EQ_AMULET] == -1)
     {
         mpr("You aren't wearing any rings or amulets.");
-        return;
+        return (false);
     }
 
     if (you.berserker)
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
+        return (false);
     }
 
     if (you.equip[EQ_GLOVES] != -1 
@@ -1925,7 +2020,7 @@ void remove_ring(void)
         && you.equip[EQ_AMULET] == -1)
     {
         mpr("You can't take your gloves off to remove any rings!");
-        return;
+        return (false);
     }
 
     if (you.equip[EQ_LEFT_RING] != -1 && you.equip[EQ_RIGHT_RING] == -1
@@ -1948,19 +2043,21 @@ void remove_ring(void)
 
     if (hand_used == 10)
     {
-        int equipn = prompt_invent_item( "Remove which piece of jewellery?",
-                                         OBJ_JEWELLERY ); 
+        int equipn = 
+            slot == -1? prompt_invent_item( "Remove which piece of jewellery?",
+                                         OBJ_JEWELLERY )
+                      : slot;
 
         if (equipn == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
-            return;
+            return (false);
         }
 
         if (you.inv[equipn].base_type != OBJ_JEWELLERY)
         {
             mpr("That isn't a piece of jewellery.");
-            return;
+            return (false);
         }
 
         if (you.equip[EQ_LEFT_RING] == equipn)
@@ -1972,7 +2069,7 @@ void remove_ring(void)
         else
         {
             mpr("You aren't wearing that.");
-            return;
+            return (false);
         }
     }
 
@@ -1981,13 +2078,13 @@ void remove_ring(void)
         && (hand_used == 0 || hand_used == 1))
     {
         mpr("You can't take your gloves off to remove any rings!");
-        return;
+        return (false);
     }
 
     if (you.equip[hand_used + 7] == -1)
     {
         mpr("I don't think you really meant that.");
-        return;
+        return (false);
     }
 
     if (item_cursed( you.inv[you.equip[hand_used + 7]] ))
@@ -1995,7 +2092,7 @@ void remove_ring(void)
         mpr("It's stuck to you!");
 
         set_ident_flags( you.inv[you.equip[hand_used + 7]], ISFLAG_KNOW_CURSE );
-        return;
+        return (false);
     }
 
     strcpy(info, "You remove ");
@@ -2077,6 +2174,8 @@ void remove_ring(void)
     calc_mp();
 
     you.turn_is_over = 1;
+
+    return (true);
 }                               // end remove_ring()
 
 void zap_wand(void)
@@ -2639,12 +2738,12 @@ static bool enchant_armour( void )
     {
         if (item_cursed( item ))
         {
-            in_name(you.equip[affected], DESC_CAP_YOUR, str_pass);
+            item_name(item, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
             strcat(info, " glows silver for a moment.");
             mpr(info);
 
-            do_uncurse_item( you.inv[you.equip[affected]] );
+            do_uncurse_item( item );
             return (true);
         }
         else
@@ -2793,6 +2892,7 @@ void read_scroll(void)
         if (you.conf)
         {
             random_uselessness(random2(9), item_slot);
+            dec_inv_item_quantity( item_slot, 1 );
             return;
         }
 
@@ -2835,7 +2935,7 @@ void read_scroll(void)
         break;
 
     case SCR_ACQUIREMENT:
-        acquirement(OBJ_RANDOM);
+        acquirement(OBJ_RANDOM, AQ_SCROLL);
         break;
 
     case SCR_FEAR:

@@ -611,7 +611,9 @@ const char *rand_armour_names[] = {
 #if defined(MAC) || defined(__IBMCPP__) || defined(__BCPLUSPLUS__)
 #define PACKED
 #else
+#ifndef PACKED
 #define PACKED __attribute__ ((packed))
+#endif
 #endif
 
 //int unranddatasize;
@@ -652,18 +654,12 @@ static struct unrandart_entry unranddata[] = {
 char *art_n;
 static FixedVector < char, NO_UNRANDARTS > unrandart_exist;
 
-static int random5( int randmax );
+// static int random5( int randmax );
 static struct unrandart_entry *seekunrandart( const item_def &item );
 
-static int random5( int randmax )
+static inline int random5( int randmax )
 {
-    if (randmax <= 0)
-        return (0);
-
-    //return rand() % randmax;
-    return ((int) rand() / (RAND_MAX / randmax + 1));
-    // must use random (not rand) for the predictable-results-from-known
-    //  -srandom-seeds thing to work.
+    return random2(randmax);
 }
 
 void set_unrandart_exist(int whun, char is_exist)
@@ -769,8 +765,8 @@ void randart_wpn_properties( const item_def &item,
 
     // long seed = aclass * adam + atype * (aplus % 100) + aplus2 * 100;
     long seed = calc_seed( item );
-    long randstore = rand();
-    srand( seed );
+    push_rng_state();
+    seed_rng( seed );
 
     if (aclass == OBJ_ARMOUR)
         power_level = item.plus / 2 + 2;
@@ -1205,7 +1201,7 @@ finished_curses:
     if ((power_level < 2 && random5(5) == 0) || random5(30) == 0)
         proprt[RAP_CURSED] = 1;
 
-    srand(randstore);
+    pop_rng_state();
 
 }
 
@@ -1240,8 +1236,8 @@ const char *randart_name( const item_def &item )
 
     // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     long seed = calc_seed( item );
-    long randstore = rand();
-    srand( seed );
+    push_rng_state();
+    seed_rng( seed );
 
     if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
     {
@@ -1274,7 +1270,7 @@ const char *randart_name( const item_def &item )
 
         standard_name_weap( item.sub_type, st_p3 );
         strcat(art_n, st_p3);
-        srand(randstore);
+        pop_rng_state();
         return (art_n);
     }
 
@@ -1307,7 +1303,7 @@ const char *randart_name( const item_def &item )
         }
     }
 
-    srand(randstore);
+    pop_rng_state();
 
     return (art_n);
 }
@@ -1336,8 +1332,9 @@ const char *randart_armour_name( const item_def &item )
 
     // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     long seed = calc_seed( item );
-    long randstore = rand();
-    srand( seed );
+    
+    push_rng_state();
+    seed_rng( seed );
 
     if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
     {
@@ -1369,7 +1366,7 @@ const char *randart_armour_name( const item_def &item )
 
         standard_name_armour(item, st_p3);
         strcat(art_n, st_p3);
-        srand(randstore);
+        pop_rng_state();
         return (art_n);
     }
 
@@ -1401,7 +1398,7 @@ const char *randart_armour_name( const item_def &item )
         }
     }
 
-    srand(randstore);
+    pop_rng_state();
 
     return (art_n);
 }
@@ -1432,8 +1429,8 @@ const char *randart_ring_name( const item_def &item )
 
     // long seed = aclass + adam * (aplus % 100) + atype * aplus2;
     long seed = calc_seed( item );
-    long randstore = rand();
-    srand( seed );
+    push_rng_state();
+    seed_rng( seed );
 
     if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
     {
@@ -1464,7 +1461,7 @@ const char *randart_ring_name( const item_def &item )
         strcat(art_n, " ");
         strcat(art_n, (item.sub_type < AMU_RAGE) ? "ring" : "amulet");
 
-        srand(randstore);
+        pop_rng_state();
 
         return (art_n);
     }
@@ -1493,7 +1490,7 @@ const char *randart_ring_name( const item_def &item )
         }
     }
 
-    srand(randstore);
+    pop_rng_state();
 
     return (art_n);
 }                               // end randart_ring_name()
@@ -1720,7 +1717,7 @@ bool make_item_randart( item_def &item )
     }
 
     item.flags |= ISFLAG_RANDART;
-    item.special = (random() & RANDART_SEED_MASK);
+    item.special = (random_int() & RANDART_SEED_MASK);
 
     return (true);
 }

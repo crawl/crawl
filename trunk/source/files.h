@@ -13,7 +13,8 @@
 #define FILES_H
 
 #include "FixAry.h"
-
+#include <stdio.h>
+#include <string>
 
 // referenced in files - newgame - ouch - overmap:
 #define MAX_LEVELS 50
@@ -33,6 +34,13 @@ void load( unsigned char stair_taken, bool moving_level,
            bool was_a_labyrinth, char old_level, bool want_followers,
            bool is_new_game, char where_were_you2 );
 #endif
+
+bool travel_load_map( char branch, int absdepth );
+
+std::string get_savedir_filename(const char *pre, const char *suf,
+                                 const char *ext);
+
+std::string get_prefs_filename();
 
 void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth, 
            char old_level, char where_were_you2 );
@@ -63,5 +71,22 @@ void save_ghost( bool force = false );
  * *********************************************************************** */
 void make_filename( char *buf, const char *prefix, int level, int where,
                     bool isLabyrinth, bool isGhost );
+
+
+void writeShort(FILE *file, short s);
+
+short readShort(FILE *file);
+
+void writeByte(FILE *file, unsigned char byte);
+
+unsigned char readByte(FILE *file);
+
+void writeString(FILE* file, const std::string &s);
+
+std::string readString(FILE *file);
+
+void writeLong(FILE* file, long num);
+
+long readLong(FILE *file);
 
 #endif

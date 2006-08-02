@@ -17,6 +17,7 @@
 #include "AppHdr.h"
 #include "direct.h"
 
+#include <cstdarg>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -36,24 +37,65 @@
 #include "shopping.h"
 #include "stuff.h"
 #include "spells4.h"
+#include "stash.h"
+#include "travel.h"
 #include "view.h"
 
 #ifdef USE_MACROS
 #include "macro.h"
 #endif
 
+enum LOSSelect
+{
+    LOS_ANY      = 0x00,
+
+    // Check only visible squares
+    LOS_VISIBLE  = 0x01,
+
+    // Check only hidden squares
+    LOS_HIDDEN   = 0x02,
+
+    LOS_VISMASK  = 0x03,
+
+    // Flip from visible to hidden when going forward,
+    // or hidden to visible when going backwards.
+    LOS_FLIPVH   = 0x20,
+
+    // Flip from hidden to visible when going forward,
+    // or visible to hidden when going backwards.
+    LOS_FLIPHV   = 0x40,
+
+    LOS_NONE     = 0xFFFF,
+};
+
 // x and y offsets in the following order:
 // SW, S, SE, W, E, NW, N, NE
 static const char xcomp[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
 static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
-static const char dirchars[19] = { "b1j2n3h4.5l6y7k8u9" };
+
+// [dshaligram] Removed . and 5 from dirchars so it's easier to
+// special case them.
+static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
 static const char DOSidiocy[10] = { "OPQKSMGHI" };
 static const char *aim_prompt = "Aim (move cursor or -/+/=, change mode with CTRL-F, select with . or >)";
 
+static void describe_feature(int mx, int my, bool oos);
 static void describe_cell(int mx, int my);
-static char mons_find( unsigned char xps, unsigned char yps, 
-                       FixedVector<char, 2> &mfp, char direction, 
-                       int mode = TARG_ANY );
+
+static bool find_object( int x, int y, int mode );
+static bool find_monster( int x, int y, int mode );
+static bool find_feature( int x, int y, int mode );
+static char find_square( unsigned char xps, unsigned char yps, 
+                       FixedVector<char, 2> &mfp, char direction,
+                       bool (*targ)(int, int, int),
+                       int mode = TARG_ANY,
+                       bool wrap = false,
+                       int los = LOS_ANY);
+
+static bool is_mapped(int x, int y)
+{
+    return (is_player_mapped(x, y));
+}
 
 //---------------------------------------------------------------
 //
@@ -103,11 +145,11 @@ void direction( struct dist &moves, int restrict, int mode )
     // nonetheless!  --GDL
     gotoxy( 18, 9 );
 
-    int keyin = getch();
+    int keyin = getchm(KC_TARGETING);
 
     if (keyin == 0)             // DOS idiocy (emulated by win32 console)
     {
-        keyin = getch();        // grrr.
+        keyin = getchm(KC_TARGETING);        // grrr.
         if (keyin == '*')
         {
             targChosen = true;
@@ -156,6 +198,16 @@ void direction( struct dist &moves, int restrict, int mode )
                     dir = 0;
                     break;
 
+                case ';':
+                    targChosen = true;
+                    dir        = -3;
+                    break;
+
+                case '\'':
+                    targChosen = true;
+                    dir        = -2;
+                    break;
+                    
                 case '+':
                 case '=':
                     targChosen = true;
@@ -166,6 +218,12 @@ void direction( struct dist &moves, int restrict, int mode )
                 case 'p':
                     targChosen = true;
                     dir = 2;
+                    break;
+
+                case '.':
+                case '5':
+                    dirChosen = true;
+                    dir = 4;
                     break;
 
                 case ESCAPE:
@@ -262,6 +320,21 @@ void direction( struct dist &moves, int restrict, int mode )
     moves.ty = you.y_pos + moves.dy * my;
 }
 
+// Attempts to describe a square that's not in line-of-sight. If
+// there's a stash on the square, announces the top item and number
+// of items, otherwise, if there's a stair that's in the travel
+// cache and noted in the Dungeon (O)verview, names the stair.
+static void describe_oos_square(int x, int y)
+{
+    if (!is_mapped(x, y))
+        return;
+
+#ifdef STASH_TRACKING
+    describe_stash(x, y);
+#endif
+    describe_feature(x, y, true);
+}
+
 //---------------------------------------------------------------
 //
 // look_around
@@ -298,9 +371,10 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
     int mx, my;         // actual map x,y (scratch)
     int mid;            // monster id (scratch)
     FixedVector < char, 2 > monsfind_pos;
+    FixedVector < char, 2 > objfind_pos;
 
-    monsfind_pos[0] = you.x_pos;
-    monsfind_pos[1] = you.y_pos;
+    monsfind_pos[0] = objfind_pos[0] = you.x_pos;
+    monsfind_pos[1] = objfind_pos[1] = you.y_pos;
 
     message_current_target();
 
@@ -311,6 +385,10 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         keyin = '-';
     if (moves.prev_target == 1)
         keyin = '+';
+    if (moves.prev_target == -2)
+        keyin = '\'';
+    if (moves.prev_target == -3)
+        keyin = ';';
     // reset
     moves.prev_target = 0;
 
@@ -326,13 +404,21 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         gotoxy(cx+1, cy);
 
         if (keyin == 0)
-            keyin = getch();
+            keyin = getchm(KC_TARGETING);
+
+        // [dshaligram] Classic Crawl behaviour was to use space to select
+        // targets when targeting. The patch changed the meaning of space
+        // from 'confirm' to 'cancel', which surprised some folks. I'm now
+        // arbitrarily defining space as 'cancel' for look-around, and 
+        // 'confirm' for targeting.
+        if (!justLooking && keyin == ' ')
+            keyin = '\r';
 
         // DOS idiocy
         if (keyin == 0)
         {
             // get the extended key
-            keyin = getch();
+            keyin = getchm(KC_TARGETING);
 
             // look for CR - change to '5' to indicate selection
             if (keyin == 13)
@@ -367,28 +453,64 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         targChosen = true;
                         break;
 
-                    case '-':
-                        if (mons_find( cx, cy, monsfind_pos, -1, mode ) == 0)
-                            flush_input_buffer( FLUSH_ON_FAILURE );
-                        else
+                    case '^':
+                    case '\t':
+                    case '\\':
+                    case '_':
+                    case '<':
+                    case '>':
+                    {
+                        if (find_square( cx, cy, objfind_pos, 1,
+                                     find_feature, keyin, true,
+                                     Options.target_los_first
+                                        ? LOS_FLIPVH : LOS_ANY))
                         {
-                            newcx = monsfind_pos[0];
-                            newcy = monsfind_pos[1];
+                            newcx = objfind_pos[0];
+                            newcy = objfind_pos[1];
                         }
+                        else
+                            flush_input_buffer( FLUSH_ON_FAILURE );
                         targChosen = true;
                         break;
+                    }
+                    case ';':
+                    case '/':
+                    case '\'':
+                    case '*':
+                        {
+                            int dir = keyin == ';' || keyin == '/'? -1 : 1;
+                            if (find_square( cx, cy, objfind_pos, dir,
+                                     find_object, 0, true,
+                                     Options.target_los_first
+                                        ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
+                                        : LOS_ANY))
 
+                            {
+                                newcx = objfind_pos[0];
+                                newcy = objfind_pos[1];
+                            }
+                            else
+                                flush_input_buffer( FLUSH_ON_FAILURE );
+                            targChosen = true;
+                            break;
+                        }
+
+                    case '-':
                     case '+':
                     case '=':
-                        if (mons_find( cx, cy, monsfind_pos, 1, mode ) == 0)
-                            flush_input_buffer( FLUSH_ON_FAILURE );
-                        else
                         {
-                            newcx = monsfind_pos[0];
-                            newcy = monsfind_pos[1];
+                            int dir = keyin == '-'? -1 : 1;
+                            if (find_square( cx, cy, monsfind_pos, dir, 
+                                     find_monster, mode, Options.target_wrap ))
+                            {
+                                newcx = monsfind_pos[0];
+                                newcy = monsfind_pos[1];
+                            }
+                            else
+                                flush_input_buffer( FLUSH_ON_FAILURE );
+                            targChosen = true;
+                            break;
                         }
-                        targChosen = true;
-                        break;
 
                     case 't':
                     case 'p':
@@ -418,13 +540,33 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
                     case '\r':
                     case '\n':
-                    case '>':
-                    case ' ':
                     case '.':
-                        dirChosen = true;
-                        dir = 4;
+                    case '5':
+                        // If we're in look-around mode, and the cursor is on
+                        // the character and there's a valid travel target 
+                        // within the viewport, jump to that target.
+                        if (justLooking && cx == 17 && cy == 9)
+                        {
+                            if (you.travel_x > 0 && you.travel_y > 0)
+                            {
+                                int nx = you.travel_x - you.x_pos + 17;
+                                int ny = you.travel_y - you.y_pos + 9;
+                                if (in_viewport_bounds(nx, ny))
+                                {
+                                    newcx = nx;
+                                    newcy = ny;
+                                    targChosen = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            dirChosen = true;
+                            dir = 4;
+                        }
                         break;
 
+                    case ' ':
                     case ESCAPE:
                         moves.isCancel = true;
                         mesclr( true );
@@ -444,12 +586,18 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         // check for SELECTION
         if (dirChosen && dir == 4)
         {
-            // RULE: cannot target what you cannot see
-            if (env.show[cx - 8][cy] == 0 && !(cx == 17 && cy == 9))
+            // [dshaligram] We no longer vet the square coordinates if
+            // we're justLooking. By not vetting the coordinates, we make 'x'
+            // look_around() nicer for travel purposes.
+            if (!justLooking)
             {
-                if (!justLooking)
+                // RULE: cannot target what you cannot see
+                if (!in_vlos(cx, cy))
+                {
+                    // if (!justLooking)
                     mpr("Sorry, you can't target what you can't see.");
-                return;
+                    return;
+                }
             }
 
             moves.isValid = true;
@@ -485,8 +633,8 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         }
 
         // bounds check for newcx, newcy
-        if (newcx < 9)  newcx = 9;
-        if (newcx > 25) newcx = 25;
+        if (newcx < 1)  newcx = 1;
+        if (newcx > 33) newcx = 33;
         if (newcy < 1)  newcy = 1;
         if (newcy > 17) newcy = 17;
 
@@ -498,9 +646,11 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         cx = newcx;
         cy = newcy;
         mesclr( true );
-        if (env.show[cx - 8][cy] == 0 && !(cx == 17 && cy == 9))
+        if (!in_vlos(cx, cy))
         {
             mpr("You can't see that place.");
+            describe_oos_square(you.x_pos + cx - 17, 
+                                you.y_pos + cy - 9);
             continue;
         }
         describe_cell(you.x_pos + cx - 17, you.y_pos + cy - 9);
@@ -509,61 +659,220 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
     mesclr( true );
 }                               // end look_around()
 
-//---------------------------------------------------------------
-//
-// mons_find
-//
-// Finds the next monster (moving in a spiral outwards from the
-// player, so closer monsters are chosen first; starts to player's
-// left) and puts its coordinates in mfp. Returns 1 if it found
-// a monster, zero otherwise. If direction is -1, goes backwards.
-//
-//---------------------------------------------------------------
-static char mons_find( unsigned char xps, unsigned char yps,
-                       FixedVector<char, 2> &mfp, char direction, int mode )
+bool in_vlos(int x, int y)
 {
-    unsigned char temp_xps = xps;
-    unsigned char temp_yps = yps;
+    return in_los_bounds(x, y) && (env.show[x - 8][y] || (x == 17 && y == 9));
+}
+
+bool in_los(int x, int y)
+{
+    const int tx = x + 9 - you.x_pos,
+              ty = y + 9 - you.y_pos;
+    
+    if (!in_los_bounds(tx + 8, ty))
+        return (false);
+
+    return (x == you.x_pos && y == you.y_pos) || env.show[tx][ty];
+}
+
+static bool find_monster( int x, int y, int mode )
+{
+    const int targ_mon = mgrd[ x ][ y ];
+    return (targ_mon != NON_MONSTER 
+        && in_los(x, y)
+        && player_monster_visible( &(menv[targ_mon]) )
+        && !mons_is_mimic( menv[targ_mon].type )
+        && (mode == TARG_ANY
+            || (mode == TARG_FRIEND && mons_friendly( &menv[targ_mon] ))
+            || (mode == TARG_ENEMY 
+                && !mons_friendly( &menv[targ_mon] )
+                && 
+                (Options.target_zero_exp || 
+                    !mons_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) )));
+}
+
+static bool find_feature( int x, int y, int mode )
+{
+    // The stair need not be in LOS if the square is mapped.
+    if (!in_los(x, y) && (!Options.target_oos || !is_mapped(x, y)))
+        return (false);
+
+    return is_feature(mode, x, y);
+}
+
+static bool find_object(int x, int y, int mode)
+{
+    const int item = igrd[x][y];
+    // The square need not be in LOS if the stash tracker knows this item.
+    return (item != NON_ITEM
+                && (in_los(x, y)
+#ifdef STASH_TRACKING
+                || (Options.target_oos && is_mapped(x, y) && is_stash(x, y))
+#endif
+                    ));
+}
+
+static int next_los(int dir, int los, bool wrap)
+{
+    if (los == LOS_ANY)
+        return (wrap? los : LOS_NONE);
+
+    bool vis    = los & LOS_VISIBLE;
+    bool hidden = los & LOS_HIDDEN;
+    bool flipvh = los & LOS_FLIPVH;
+    bool fliphv = los & LOS_FLIPHV;
+
+    if (!vis && !hidden)
+        vis = true;
+
+    if (wrap)
+    {
+        if (!flipvh && !fliphv)
+            return (los);
+
+        // We have to invert flipvh and fliphv if we're wrapping. Here's
+        // why:
+        //
+        //  * Say the cursor is on the last item in LOS, there are no
+        //    items outside LOS, and wrap == true. flipvh is true.
+        //  * We set wrap false and flip from visible to hidden, but there 
+        //    are no hidden items. So now we need to flip back to visible
+        //    so we can go back to the first item in LOS. Unless we set 
+        //    fliphv, we can't flip from hidden to visible.
+        //
+        los = flipvh? LOS_FLIPHV : LOS_FLIPVH;
+    }
+    else
+    {
+        if (!flipvh && !fliphv)
+            return (LOS_NONE);
+        
+        if (flipvh && vis != (dir == 1))
+            return (LOS_NONE);
+
+        if (fliphv && vis == (dir == 1))
+            return (LOS_NONE);
+    }
+
+    los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
+    return (los);
+}
+
+bool in_viewport_bounds(int x, int y)
+{
+    return (x >= 1 && x <= 33 && y >= 1 && y <= 17);
+}
+
+bool in_los_bounds(int x, int y)
+{
+    return !(x > 25 || x < 8 || y > 17 || y < 1);
+}
+
+//---------------------------------------------------------------
+//
+// find_square
+//
+// Finds the next monster/object/whatever (moving in a spiral 
+// outwards from the player, so closer targets are chosen first; 
+// starts to player's left) and puts its coordinates in mfp. 
+// Returns 1 if it found something, zero otherwise. If direction 
+// is -1, goes backwards.
+//
+// If the game option target_zero_exp is true, zero experience
+// monsters will be targeted.
+//
+//---------------------------------------------------------------
+static char find_square( unsigned char xps, unsigned char yps,
+                  FixedVector<char, 2> &mfp, char direction,
+                  bool (*find_targ)( int x, int y, int mode ),
+                  int mode, bool wrap, int los )
+{
+    int temp_xps = xps;
+    int temp_yps = yps;
     char x_change = 0;
     char y_change = 0;
 
+    bool onlyVis = false, onlyHidden = false;
+
     int i, j;
 
-    if (direction == 1 && temp_xps == 9 && temp_yps == 17)
-        return (0);               // end of spiral
+    if (los == LOS_NONE)
+        return (0);
 
-    while (temp_xps >= 8 && temp_xps <= 25 && temp_yps <= 17) // yps always >= 0
+    if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
-        if (direction == -1 && temp_xps == 17 && temp_yps == 9)
-            return (0);           // can't go backwards from you
+        if (in_los_bounds(xps, yps))
+        {
+            // We've been told to flip between visible/hidden, so we
+            // need to find what we're currently on.
+            bool vis = (env.show[xps - 8][yps] || (xps == 17 && yps == 9));
+            
+            if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
+            {
+                // We've already flipped over into the other direction,
+                // so correct the flip direction if we're wrapping.
+                los = los == LOS_FLIPHV? LOS_FLIPVH : LOS_FLIPHV;
+            }
+
+            los = (los & ~LOS_VISMASK) | (vis? LOS_VISIBLE : LOS_HIDDEN);
+        }
+        else
+        {
+            if (wrap)
+                los = LOS_HIDDEN | (direction == 1? LOS_FLIPHV : LOS_FLIPVH);
+            else
+                los |= LOS_HIDDEN;
+        }
+    }
+
+    onlyVis     = (los & LOS_VISIBLE);
+    onlyHidden  = (los & LOS_HIDDEN);
+
+    const int minx = 1,  maxx = 33,
+              miny = -7, maxy = 25,
+              ctrx = 17, ctry = 9;
+
+    while (temp_xps >= minx - 1 && temp_xps <= maxx
+                && temp_yps <= maxy && temp_yps >= miny - 1)
+    {
+        if (direction == 1 && temp_xps == minx && temp_yps == maxy)
+        {
+            return find_square(ctrx, ctry, mfp, direction, find_targ, mode, 
+                    false, next_los(direction, los, wrap));
+        }
+        if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
+        {
+            return find_square(minx, maxy, mfp, direction, find_targ, mode, 
+                    false, next_los(direction, los, wrap));
+        }
 
         if (direction == 1)
         {
-            if (temp_xps == 8)
+            if (temp_xps == minx - 1)
             {
                 x_change = 0;
                 y_change = -1;
             }
-            else if (temp_xps - 17 == 0 && temp_yps - 9 == 0)
+            else if (temp_xps == ctrx && temp_yps == ctry)
             {
                 x_change = -1;
                 y_change = 0;
             }
-            else if (abs(temp_xps - 17) <= abs(temp_yps - 9))
+            else if (abs(temp_xps - ctrx) <= abs(temp_yps - ctry))
             {
-                if (temp_xps - 17 >= 0 && temp_yps - 9 <= 0)
+                if (temp_xps - ctrx >= 0 && temp_yps - ctry <= 0)
                 {
-                    if (abs(temp_xps - 17) > abs(temp_yps - 9 + 1))
+                    if (abs(temp_xps - ctrx) > abs(temp_yps - ctry + 1))
                     {
                         x_change = 0;
                         y_change = -1;
-                        if (temp_xps - 17 > 0)
+                        if (temp_xps - ctrx > 0)
                             y_change = 1;
                         goto finished_spiralling;
                     }
                 }
                 x_change = -1;
-                if (temp_yps - 9 < 0)
+                if (temp_yps - ctry < 0)
                     x_change = 1;
                 y_change = 0;
             }
@@ -571,7 +880,7 @@ static char mons_find( unsigned char xps, unsigned char yps,
             {
                 x_change = 0;
                 y_change = -1;
-                if (temp_xps - 17 > 0)
+                if (temp_xps - ctrx > 0)
                     y_change = 1;
             }
         }                       // end if (direction == 1)
@@ -588,20 +897,20 @@ static char mons_find( unsigned char xps, unsigned char yps,
                     if (i == 0 && j == 0)
                         continue;
 
-                    if (temp_xps + i == 8)
+                    if (temp_xps + i == minx - 1)
                     {
                         x_change = 0;
                         y_change = -1;
                     }
-                    else if (temp_xps + i - 17 == 0 && temp_yps + j - 9 == 0)
+                    else if (temp_xps + i - ctrx == 0 && temp_yps + j - ctry == 0)
                     {
                         x_change = -1;
                         y_change = 0;
                     }
-                    else if (abs(temp_xps + i - 17) <= abs(temp_yps + j - 9))
+                    else if (abs(temp_xps + i - ctrx) <= abs(temp_yps + j - ctry))
                     {
-                        const int xi = temp_xps + i - 17;
-                        const int yj = temp_yps + j - 9;
+                        const int xi = temp_xps + i - ctrx;
+                        const int yj = temp_yps + j - ctry;
 
                         if (xi >= 0 && yj <= 0)
                         {
@@ -624,7 +933,7 @@ static char mons_find( unsigned char xps, unsigned char yps,
                     {
                         x_change = 0;
                         y_change = -1;
-                        if (temp_xps + i - 17 > 0)
+                        if (temp_xps + i - ctrx > 0)
                             y_change = 1;
                     }
 
@@ -643,43 +952,318 @@ static char mons_find( unsigned char xps, unsigned char yps,
         y_change *= direction;
 
         temp_xps += x_change;
-        if (temp_yps + y_change <= 17)  // it can wrap, unfortunately
+        if (temp_yps + y_change <= maxy)  // it can wrap, unfortunately
             temp_yps += y_change;
 
-        const int targ_x = you.x_pos + temp_xps - 17;
-        const int targ_y = you.y_pos + temp_yps - 9;
+        const int targ_x = you.x_pos + temp_xps - ctrx;
+        const int targ_y = you.y_pos + temp_yps - ctry;
 
         // We don't want to be looking outside the bounds of the arrays:
-        if (temp_xps > 25 || temp_xps < 8 || temp_yps > 17 || temp_yps < 1)
+        //if (!in_los_bounds(temp_xps, temp_yps))
+        //    continue;
+
+        if (temp_xps < minx - 1 || temp_xps > maxx
+                || temp_yps < 1 || temp_yps > 17)
             continue;
 
-        if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+        if (targ_x < 1 || targ_x >= GXM || targ_y < 1 || targ_y >= GYM)
             continue;
 
-        const int targ_mon = mgrd[ targ_x ][ targ_y ];
+        if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
+            continue;
 
-        if (targ_mon != NON_MONSTER 
-            && env.show[temp_xps - 8][temp_yps] != 0
-            && player_monster_visible( &(menv[targ_mon]) )
-            && !mons_is_mimic( menv[targ_mon].type )
-            && (mode == TARG_ANY
-                || (mode == TARG_FRIEND && mons_friendly( &menv[targ_mon] ))
-                || (mode == TARG_ENEMY && !mons_friendly( &menv[targ_mon] ))))
-        {
-            //mpr("Found something!");
-            //more();
+        if (find_targ(targ_x, targ_y, mode)) {
             mfp[0] = temp_xps;
             mfp[1] = temp_yps;
             return (1);
         }
     }
 
-    return (0);
+    return (direction == 1?
+        find_square(ctrx, ctry, mfp, direction, find_targ, mode, false, 
+                    next_los(direction, los, wrap))
+      : find_square(minx, maxy, mfp, direction, find_targ, mode, false,
+                    next_los(direction, los, wrap)));
+}
+
+static bool is_shopstair(int x, int y)
+{
+    return (is_stair(grd[x][y]) || grd[x][y] == DNGN_ENTER_SHOP);
+}
+
+extern unsigned char (*mapch2) (unsigned char);
+static bool is_full_mapped(int x, int y)
+{
+    unsigned grid = grd[x][y];
+    int envch = env.map[x - 1][y - 1];
+    return (envch && envch == mapch2(grid));
+}
+
+static int surround_nonshopstair_count(int x, int y)
+{
+    int count = 0;
+    for (int ix = -1; ix < 2; ++ix)
+    {
+        for (int iy = -1; iy < 2; ++iy)
+        {
+            int nx = x + ix, ny = y + iy;
+            if (nx <= 0 || nx >= GXM || ny <= 0 || ny >= GYM)
+                continue;
+            if (is_full_mapped(nx, ny) && !is_shopstair(nx, ny))
+                count++;
+        }
+    }
+    return (count);
+}
+
+// For want of a better name...
+static bool clear_mapped(int x, int y)
+{
+    if (!is_full_mapped(x, y))
+        return (false);
+
+    if (is_shopstair(x, y))
+        return (surround_nonshopstair_count(x, y) > 0);
+
+    return (true);
+}
+
+static void describe_feature(int mx, int my, bool oos)
+{
+    if (oos && !clear_mapped(mx, my))
+        return;
+
+    unsigned oldfeat = grd[mx][my];
+    if (oos && env.map[mx - 1][my - 1] == mapch2(DNGN_SECRET_DOOR))
+        grd[mx][my] = DNGN_ROCK_WALL;
+
+    std::string desc = feature_description(mx, my);
+
+    grd[mx][my] = oldfeat;
+
+    if (desc.length())
+    {
+        if (oos)
+            desc = "[" + desc + "]";
+        mpr(desc.c_str());
+    }
+}
+
+std::string feature_description(int mx, int my)
+{
+    int   trf;            // used for trap type??
+    switch (grd[mx][my])
+    {
+    case DNGN_STONE_WALL:
+        return ("A stone wall.");
+    case DNGN_ROCK_WALL:
+    case DNGN_SECRET_DOOR:
+        if (you.level_type == LEVEL_PANDEMONIUM)
+            return ("A wall of the weird stuff which makes up Pandemonium.");
+        else
+            return ("A rock wall.");
+    case DNGN_PERMAROCK_WALL:
+        return ("An unnaturally hard rock wall.");    
+    case DNGN_CLOSED_DOOR:
+        return ("A closed door.");
+    case DNGN_METAL_WALL:
+        return ("A metal wall.");
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return ("A wall of green crystal.");
+    case DNGN_ORCISH_IDOL:
+        return ("An orcish idol.");
+    case DNGN_WAX_WALL:
+        return ("A wall of solid wax.");
+    case DNGN_SILVER_STATUE:
+        return ("A silver statue.");
+    case DNGN_GRANITE_STATUE:
+        return ("A granite statue.");
+    case DNGN_ORANGE_CRYSTAL_STATUE:
+        return ("An orange crystal statue.");
+    case DNGN_LAVA:
+        return ("Some lava.");
+    case DNGN_DEEP_WATER:
+        return ("Some deep water.");
+    case DNGN_SHALLOW_WATER:
+        return ("Some shallow water.");
+    case DNGN_UNDISCOVERED_TRAP:
+    case DNGN_FLOOR:
+        return ("Floor.");
+    case DNGN_OPEN_DOOR:
+        return ("An open door.");
+    case DNGN_ROCK_STAIRS_DOWN:
+        return ("A rock staircase leading down.");
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+        return ("A stone staircase leading down.");
+    case DNGN_ROCK_STAIRS_UP:
+        return ("A rock staircase leading upwards.");
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+        return ("A stone staircase leading up.");
+    case DNGN_ENTER_HELL:
+        return ("A gateway to hell.");
+    case DNGN_BRANCH_STAIRS:
+        return ("A staircase to a branch level.");
+    case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_III:
+        for (trf = 0; trf < MAX_TRAPS; trf++)
+        {
+            if (env.trap[trf].x == mx
+                && env.trap[trf].y == my)
+            {
+                break;
+            }
+
+            if (trf == MAX_TRAPS - 1)
+            {
+                mpr("Error - couldn't find that trap.");
+                error_message_to_player();
+                break;
+            }
+        }
+
+        switch (env.trap[trf].type)
+        {
+        case TRAP_DART:
+            return ("A dart trap.");
+        case TRAP_ARROW:
+            return ("An arrow trap.");
+        case TRAP_SPEAR:
+            return ("A spear trap.");
+        case TRAP_AXE:
+            return ("An axe trap.");
+        case TRAP_TELEPORT:
+            return ("A teleportation trap.");
+        case TRAP_AMNESIA:
+            return ("An amnesia trap.");
+        case TRAP_BLADE:
+            return ("A blade trap.");
+        case TRAP_BOLT:
+            return ("A bolt trap.");
+        case TRAP_ZOT:
+            return ("A Zot trap.");
+        case TRAP_NEEDLE:
+            return ("A needle trap.");
+        default:
+            mpr("An undefined trap. Huh?");
+            error_message_to_player();
+            break;
+        }
+        break;
+    case DNGN_ENTER_SHOP:
+        return (shop_name(mx, my));
+    case DNGN_ENTER_LABYRINTH:
+        return ("A labyrinth entrance.");
+    case DNGN_ENTER_DIS:
+        return ("A gateway to the Iron City of Dis.");
+    case DNGN_ENTER_GEHENNA:
+        return ("A gateway to Gehenna.");
+    case DNGN_ENTER_COCYTUS:
+        return ("A gateway to the freezing wastes of Cocytus.");
+    case DNGN_ENTER_TARTARUS:
+        return ("A gateway to the decaying netherworld of Tartarus.");
+    case DNGN_ENTER_ABYSS:
+        return ("A gateway to the infinite Abyss.");
+    case DNGN_EXIT_ABYSS:
+        return ("A gateway leading out of the Abyss.");
+    case DNGN_STONE_ARCH:
+        return ("An empty arch of ancient stone.");
+    case DNGN_ENTER_PANDEMONIUM:
+        return ("A gate leading to the halls of Pandemonium.");
+    case DNGN_EXIT_PANDEMONIUM:
+        return ("A gate leading out of Pandemonium.");
+    case DNGN_TRANSIT_PANDEMONIUM:
+        return ("A gate leading to another region of Pandemonium.");
+    case DNGN_ENTER_ORCISH_MINES:
+        return ("A staircase to the Orcish Mines.");
+    case DNGN_ENTER_HIVE:
+        return ("A staircase to the Hive.");
+    case DNGN_ENTER_LAIR:
+        return ("A staircase to the Lair.");
+    case DNGN_ENTER_SLIME_PITS:
+        return ("A staircase to the Slime Pits.");
+    case DNGN_ENTER_VAULTS:
+        return ("A staircase to the Vaults.");
+    case DNGN_ENTER_CRYPT:
+        return ("A staircase to the Crypt.");
+    case DNGN_ENTER_HALL_OF_BLADES:
+        return ("A staircase to the Hall of Blades.");
+    case DNGN_ENTER_ZOT:
+        return ("A gate to the Realm of Zot.");
+    case DNGN_ENTER_TEMPLE:
+        return ("A staircase to the Ecumenical Temple.");
+    case DNGN_ENTER_SNAKE_PIT:
+        return ("A staircase to the Snake Pit.");
+    case DNGN_ENTER_ELVEN_HALLS:
+        return ("A staircase to the Elven Halls.");
+    case DNGN_ENTER_TOMB:
+        return ("A staircase to the Tomb.");
+    case DNGN_ENTER_SWAMP:
+        return ("A staircase to the Swamp.");
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_TEMPLE:
+        return ("A staircase back to the Dungeon.");
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_SWAMP:
+        return ("A staircase back to the Lair.");
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+        return ("A staircase back to the Vaults.");
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+        return ("A staircase back to the Mines.");
+    case DNGN_RETURN_FROM_TOMB:
+        return ("A staircase back to the Crypt.");
+    case DNGN_RETURN_FROM_ZOT:
+        return ("A gate leading back out of this place.");
+    case DNGN_ALTAR_ZIN:
+        return ("A glowing white marble altar of Zin.");
+    case DNGN_ALTAR_SHINING_ONE:
+        return ("A glowing golden altar of the Shining One.");
+    case DNGN_ALTAR_KIKUBAAQUDGHA:
+        return ("An ancient bone altar of Kikubaaqudgha.");
+    case DNGN_ALTAR_YREDELEMNUL:
+        return ("A basalt altar of Yredelemnul.");
+    case DNGN_ALTAR_XOM:
+        return ("A shimmering altar of Xom.");
+    case DNGN_ALTAR_VEHUMET:
+        return ("A shining altar of Vehumet.");
+    case DNGN_ALTAR_OKAWARU:
+        return ("An iron altar of Okawaru.");
+    case DNGN_ALTAR_MAKHLEB:
+        return ("A burning altar of Makhleb.");
+    case DNGN_ALTAR_SIF_MUNA:
+        return ("A deep blue altar of Sif Muna.");
+    case DNGN_ALTAR_TROG:
+        return ("A bloodstained altar of Trog.");
+    case DNGN_ALTAR_NEMELEX_XOBEH:
+        return ("A sparkling altar of Nemelex Xobeh.");
+    case DNGN_ALTAR_ELYVILON:
+        return ("A silver altar of Elyvilon.");
+    case DNGN_BLUE_FOUNTAIN:
+        return ("A fountain of clear blue water.");
+    case DNGN_SPARKLING_FOUNTAIN:
+        return ("A fountain of sparkling water.");
+    case DNGN_DRY_FOUNTAIN_I:
+    case DNGN_DRY_FOUNTAIN_II:
+    case DNGN_DRY_FOUNTAIN_IV:
+    case DNGN_DRY_FOUNTAIN_VI:
+    case DNGN_DRY_FOUNTAIN_VIII:
+    case DNGN_PERMADRY_FOUNTAIN:
+        return ("A dry fountain.");
+    }
+    return ("");
 }
 
 static void describe_cell(int mx, int my)
 {
-    int   trf;            // used for trap type??
     char  str_pass[ ITEMNAME_SIZE ];
     bool  mimic_item = false;
 
@@ -738,7 +1322,7 @@ static void describe_cell(int mx, int my)
 
         if (mon_arm != NON_ITEM)
         {
-            it_name( mon_arm, DESC_PLAIN, str_pass );
+            it_name( mon_arm, DESC_NOCAP_A, str_pass );
             snprintf( info, INFO_SIZE, "%s is wearing %s.", 
                       mons_pronoun( menv[i].type, PRONOUN_CAP ),
                       str_pass );
@@ -749,7 +1333,8 @@ static void describe_cell(int mx, int my)
 
         if (menv[i].type == MONS_HYDRA)
         {
-            snprintf( info, INFO_SIZE, "It has %d heads.", menv[i].number );
+            snprintf( info, INFO_SIZE, "It has %d head%s.", 
+                    menv[i].number, (menv[i].number > 1? "s" : "") );
             mpr( info );
         }
 
@@ -766,9 +1351,15 @@ static void describe_cell(int mx, int my)
                 strcat(info, " doesn't appear to have noticed you.");
                 mpr(info);
             }
-            // wandering hostile with no target in LOS
-            else if (menv[i].behaviour == BEH_WANDER && !mons_friendly(&menv[i])
-                    && menv[i].foe == MHITNOT)
+            // Applies to both friendlies and hostiles
+            else if (menv[i].behaviour == BEH_FLEE)
+            {
+                strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
+                strcat(info, " is fleeing in terror.");
+                mpr(info);
+            }
+            // hostile with target != you
+            else if (!mons_friendly(&menv[i]) && menv[i].foe != MHITYOU)
             {
                 // special case: batty monsters get set to BEH_WANDER as
                 // part of their special behaviour.
@@ -907,289 +1498,6 @@ static void describe_cell(int mx, int my)
         }
     }
 
-    switch (grd[mx][my])
-    {
-    case DNGN_STONE_WALL:
-        mpr("A stone wall.");
-        break;
-    case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-            mpr("A wall of the weird stuff which makes up Pandemonium.");
-        else
-            mpr("A rock wall.");
-        break;
-    case DNGN_PERMAROCK_WALL:
-        mpr("An unnaturally hard rock wall.");
-        break;    
-    case DNGN_CLOSED_DOOR:
-        mpr("A closed door.");
-        break;
-    case DNGN_METAL_WALL:
-        mpr("A metal wall.");
-        break;
-    case DNGN_GREEN_CRYSTAL_WALL:
-        mpr("A wall of green crystal.");
-        break;
-    case DNGN_ORCISH_IDOL:
-        mpr("An orcish idol.");
-        break;
-    case DNGN_WAX_WALL:
-        mpr("A wall of solid wax.");
-        break;
-    case DNGN_SILVER_STATUE:
-        mpr("A silver statue.");
-        break;
-    case DNGN_GRANITE_STATUE:
-        mpr("A granite statue.");
-        break;
-    case DNGN_ORANGE_CRYSTAL_STATUE:
-        mpr("An orange crystal statue.");
-        break;
-    case DNGN_LAVA:
-        mpr("Some lava.");
-        break;
-    case DNGN_DEEP_WATER:
-        mpr("Some deep water.");
-        break;
-    case DNGN_SHALLOW_WATER:
-        mpr("Some shallow water.");
-        break;
-    case DNGN_UNDISCOVERED_TRAP:
-    case DNGN_FLOOR:
-        mpr("Floor.");
-        break;
-    case DNGN_OPEN_DOOR:
-        mpr("An open door.");
-        break;
-    case DNGN_ROCK_STAIRS_DOWN:
-        mpr("A rock staircase leading down.");
-        break;
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-        mpr("A stone staircase leading down.");
-        break;
-    case DNGN_ROCK_STAIRS_UP:
-        mpr("A rock staircase leading upwards.");
-        break;
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-        mpr("A stone staircase leading up.");
-        break;
-    case DNGN_ENTER_HELL:
-        mpr("A gateway to hell.");
-        break;
-    case DNGN_BRANCH_STAIRS:
-        mpr("A staircase to a branch level.");
-        break;
-    case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_MAGICAL:
-    case DNGN_TRAP_III:
-        for (trf = 0; trf < MAX_TRAPS; trf++)
-        {
-            if (env.trap[trf].x == mx
-                && env.trap[trf].y == my)
-            {
-                break;
-            }
-
-            if (trf == MAX_TRAPS - 1)
-            {
-                mpr("Error - couldn't find that trap.");
-                error_message_to_player();
-                break;
-            }
-        }
-
-        switch (env.trap[trf].type)
-        {
-        case TRAP_DART:
-            mpr("A dart trap.");
-            break;
-        case TRAP_ARROW:
-            mpr("An arrow trap.");
-            break;
-        case TRAP_SPEAR:
-            mpr("A spear trap.");
-            break;
-        case TRAP_AXE:
-            mpr("An axe trap.");
-            break;
-        case TRAP_TELEPORT:
-            mpr("A teleportation trap.");
-            break;
-        case TRAP_AMNESIA:
-            mpr("An amnesia trap.");
-            break;
-        case TRAP_BLADE:
-            mpr("A blade trap.");
-            break;
-        case TRAP_BOLT:
-            mpr("A bolt trap.");
-            break;
-        case TRAP_ZOT:
-            mpr("A Zot trap.");
-            break;
-        case TRAP_NEEDLE:
-            mpr("A needle trap.");
-            break;
-        default:
-            mpr("An undefined trap. Huh?");
-            error_message_to_player();
-            break;
-        }
-        break;
-    case DNGN_ENTER_SHOP:
-        mpr(shop_name(mx, my));
-        break;
-    case DNGN_ENTER_LABYRINTH:
-        mpr("A labyrinth entrance.");
-        break;
-    case DNGN_ENTER_DIS:
-        mpr("A gateway to the Iron City of Dis.");
-        break;
-    case DNGN_ENTER_GEHENNA:
-        mpr("A gateway to Gehenna.");
-        break;
-    case DNGN_ENTER_COCYTUS:
-        mpr("A gateway to the freezing wastes of Cocytus.");
-        break;
-    case DNGN_ENTER_TARTARUS:
-        mpr("A gateway to the decaying netherworld of Tartarus.");
-        break;
-    case DNGN_ENTER_ABYSS:
-        mpr("A gateway to the infinite Abyss.");
-        break;
-    case DNGN_EXIT_ABYSS:
-        mpr("A gateway leading out of the Abyss.");
-        break;
-    case DNGN_STONE_ARCH:
-        mpr("An empty arch of ancient stone.");
-        break;
-    case DNGN_ENTER_PANDEMONIUM:
-        mpr("A gate leading to the halls of Pandemonium.");
-        break;
-    case DNGN_EXIT_PANDEMONIUM:
-        mpr("A gate leading out of Pandemonium.");
-        break;
-    case DNGN_TRANSIT_PANDEMONIUM:
-        mpr("A gate leading to another region of Pandemonium.");
-        break;
-    case DNGN_ENTER_ORCISH_MINES:
-        mpr("A staircase to the Orcish Mines.");
-        break;
-    case DNGN_ENTER_HIVE:
-        mpr("A staircase to the Hive.");
-        break;
-    case DNGN_ENTER_LAIR:
-        mpr("A staircase to the Lair.");
-        break;
-    case DNGN_ENTER_SLIME_PITS:
-        mpr("A staircase to the Slime Pits.");
-        break;
-    case DNGN_ENTER_VAULTS:
-        mpr("A staircase to the Vaults.");
-        break;
-    case DNGN_ENTER_CRYPT:
-        mpr("A staircase to the Crypt.");
-        break;
-    case DNGN_ENTER_HALL_OF_BLADES:
-        mpr("A staircase to the Hall of Blades.");
-        break;
-    case DNGN_ENTER_ZOT:
-        mpr("A gate to the Realm of Zot.");
-        break;
-    case DNGN_ENTER_TEMPLE:
-        mpr("A staircase to the Ecumenical Temple.");
-        break;
-    case DNGN_ENTER_SNAKE_PIT:
-        mpr("A staircase to the Snake Pit.");
-        break;
-    case DNGN_ENTER_ELVEN_HALLS:
-        mpr("A staircase to the Elven Halls.");
-        break;
-    case DNGN_ENTER_TOMB:
-        mpr("A staircase to the Tomb.");
-        break;
-    case DNGN_ENTER_SWAMP:
-        mpr("A staircase to the Swamp.");
-        break;
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_TEMPLE:
-        mpr("A staircase back to the Dungeon.");
-        break;
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_SWAMP:
-        mpr("A staircase back to the Lair.");
-        break;
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
-        mpr("A staircase back to the Vaults.");
-        break;
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-        mpr("A staircase back to the Mines.");
-        break;
-    case DNGN_RETURN_FROM_TOMB:
-        mpr("A staircase back to the Crypt.");
-        break;
-    case DNGN_RETURN_FROM_ZOT:
-        mpr("A gate leading back out of this place.");
-        break;
-    case DNGN_ALTAR_ZIN:
-        mpr("A glowing white marble altar of Zin.");
-        break;
-    case DNGN_ALTAR_SHINING_ONE:
-        mpr("A glowing golden altar of the Shining One.");
-        break;
-    case DNGN_ALTAR_KIKUBAAQUDGHA:
-        mpr("An ancient bone altar of Kikubaaqudgha.");
-        break;
-    case DNGN_ALTAR_YREDELEMNUL:
-        mpr("A basalt altar of Yredelemnul.");
-        break;
-    case DNGN_ALTAR_XOM:
-        mpr("A shimmering altar of Xom.");
-        break;
-    case DNGN_ALTAR_VEHUMET:
-        mpr("A shining altar of Vehumet.");
-        break;
-    case DNGN_ALTAR_OKAWARU:
-        mpr("An iron altar of Okawaru.");
-        break;
-    case DNGN_ALTAR_MAKHLEB:
-        mpr("A burning altar of Makhleb.");
-        break;
-    case DNGN_ALTAR_SIF_MUNA:
-        mpr("A deep blue altar of Sif Muna.");
-        break;
-    case DNGN_ALTAR_TROG:
-        mpr("A bloodstained altar of Trog.");
-        break;
-    case DNGN_ALTAR_NEMELEX_XOBEH:
-        mpr("A sparkling altar of Nemelex Xobeh.");
-        break;
-    case DNGN_ALTAR_ELYVILON:
-        mpr("A silver altar of Elyvilon.");
-        break;
-    case DNGN_BLUE_FOUNTAIN:
-        mpr("A fountain of clear blue water.");
-        break;
-    case DNGN_SPARKLING_FOUNTAIN:
-        mpr("A fountain of sparkling water.");
-        break;
-    case DNGN_DRY_FOUNTAIN_I:
-    case DNGN_DRY_FOUNTAIN_II:
-    case DNGN_DRY_FOUNTAIN_IV:
-    case DNGN_DRY_FOUNTAIN_VI:
-    case DNGN_DRY_FOUNTAIN_VIII:
-    case DNGN_PERMADRY_FOUNTAIN:
-        mpr("A dry fountain.");
-        break;
-    }
+    std::string feature_desc = feature_description(mx, my);
+    mpr(feature_desc.c_str());
 }

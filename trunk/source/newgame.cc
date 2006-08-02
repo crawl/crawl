@@ -84,6 +84,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "fight.h"
+#include "initfile.h"
 #include "itemname.h"
 #include "items.h"
 #include "macro.h"
@@ -124,6 +125,85 @@ static void create_wanderer(void);
 static void give_items_skills(void);
 static bool choose_race(void);
 static bool choose_class(void);
+static char letter_to_species(int keyn);
+static char letter_to_class(int keyn);
+
+////////////////////////////////////////////////////////////////////////
+// Remember player's startup options
+//
+
+static char ng_race, ng_cls;
+static bool ng_random;
+static int ng_ck, ng_dk, ng_pr;
+static int ng_weapon;
+
+static void reset_newgame_options(void)
+{
+    ng_race = ng_cls = 0;
+    ng_random = false;
+    ng_ck = GOD_NO_GOD;
+    ng_dk = DK_NO_SELECTION;
+    ng_pr = GOD_NO_GOD;
+    ng_weapon = WPN_UNKNOWN;
+}
+
+static void save_newgame_options(void)
+{
+    // Note that we store race and class directly here, whereas up until
+    // now we've been storing the hotkey.
+    Options.prev_race       = ng_race;
+    Options.prev_cls        = ng_cls;
+    Options.prev_randpick   = ng_random;
+    Options.prev_ck         = ng_ck;
+    Options.prev_dk         = ng_dk;
+    Options.prev_pr         = ng_pr;
+    Options.prev_weapon     = ng_weapon;
+
+    write_newgame_options_file();
+}
+
+static void set_startup_options(void)
+{
+    Options.race    = Options.prev_race;
+    Options.cls     = Options.prev_cls;
+    Options.weapon  = Options.prev_weapon;
+    Options.death_knight = Options.prev_dk;
+    Options.chaos_knight = Options.prev_ck;
+    Options.priest       = Options.prev_pr;
+}
+
+static bool prev_startup_options_set(void)
+{
+    // Are these two enough? They should be, in theory, since we'll
+    // remember the player's weapon and god choices.
+    return Options.prev_race && Options.prev_cls;
+}
+
+static std::string get_opt_race_name(char race)
+{
+    int prace = letter_to_species(race);
+    return prace? species_name(prace, 1) : "Random";
+}
+
+static std::string get_opt_class_name(char oclass)
+{
+    int pcls  = letter_to_class(oclass);
+    return pcls != JOB_UNKNOWN? get_class_name(pcls) : "Random";
+}
+
+static std::string prev_startup_description(void)
+{
+    if (Options.prev_race == '?' && Options.prev_cls == '?')
+        Options.prev_randpick = true;
+
+    if (Options.prev_randpick)
+        return "Random character";
+
+    if (Options.prev_cls == '?')
+        return "Random " + get_opt_race_name(Options.prev_race);
+    return get_opt_race_name(Options.prev_race) + " " +
+           get_opt_class_name(Options.prev_cls);
+}
 
 int give_first_conjuration_book()
 {
@@ -309,24 +389,20 @@ bool new_game(void)
             cprintf( "!" );
             textcolor( LIGHTGREY );
 
+            save_player_name();
             return (false);
         }
     }
 
+    reset_newgame_options();
     if (Options.random_pick)
     {
         pick_random_species_and_class();
+        ng_random = true;
     }
     else
     {
-        bool keep_going = true;
-        while (keep_going)
-        {
-            if (choose_race())
-                keep_going = !choose_class();
-            else
-                keep_going = false;
-        }
+        while (choose_race() && !choose_class());
     }
 
     strcpy( you.class_name, get_class_name( you.char_class ) );
@@ -688,7 +764,14 @@ bool new_game(void)
         {
             item_colour( you.inv[i] );  // set correct special and colour
         }
+
+        if (is_valid_item(you.inv[i]))
+        {
+            you.inv[i].slot = index_to_letter(you.inv[i].link);
+        }
     }
+    // Brand items as original equipment.
+    origin_set_inventory(origin_set_startequip);
 
     // we calculate hp and mp here;  all relevant factors should be
     // finalized by now (GDL)
@@ -750,6 +833,7 @@ bool new_game(void)
 
     you.branch_stairs[STAIRS_HALL_OF_ZOT] = 26; // always 26
 
+    save_newgame_options();
     return (true);
 }                               // end of new_game()
 
@@ -1375,6 +1459,7 @@ void choose_weapon( void )
         && (Options.weapon != WPN_TRIDENT || num_choices == 5))
     {
         you.inv[0].sub_type = Options.weapon;
+        ng_weapon = Options.weapon;
         return;
     }
 
@@ -1386,6 +1471,7 @@ void choose_weapon( void )
         cprintf(EOL " You have a choice of weapons:" EOL);
         textcolor( LIGHTGREY );
 
+        bool prevmatch = false;
         for(int i=0; i<num_choices; i++)
         {
             int x = effective_stat_bonus(startwep[i]);
@@ -1395,10 +1481,26 @@ void choose_weapon( void )
                       (x <= -4) ? " (not ideal)" : "" );
 
             cprintf(info);
+
+            if (Options.prev_weapon == startwep[i])
+                prevmatch = true;
         }
+        if (!prevmatch && Options.prev_weapon != WPN_RANDOM)
+            Options.prev_weapon = WPN_UNKNOWN;
 
-        cprintf(EOL "? - Random" EOL);
-
+        textcolor(BROWN);
+        cprintf(EOL "? - Random" );
+        if (Options.prev_weapon != WPN_UNKNOWN)
+        {
+            char weapbuf[ITEMNAME_SIZE];
+            if (Options.prev_weapon != WPN_RANDOM)
+                standard_name_weap(Options.prev_weapon, weapbuf);
+            cprintf("; Enter - %s",
+                    Options.prev_weapon == WPN_RANDOM? "Random" :
+                                                       weapbuf);
+        }
+        cprintf(EOL);
+            
         do
         {
             textcolor( CYAN );
@@ -1407,7 +1509,22 @@ void choose_weapon( void )
 
             keyin = get_ch();
         }
-        while (keyin != '?' && (keyin < 'a' || keyin > ('a' + num_choices)));
+        while (keyin != '?' && 
+                ((keyin != '\r' && keyin != '\n') 
+                    || Options.prev_weapon == WPN_UNKNOWN) &&
+                (keyin < 'a' || keyin > ('a' + num_choices)));
+
+        if (keyin == '\r' || keyin == '\n')
+        {
+            if (Options.prev_weapon == WPN_RANDOM)
+                keyin = '?';
+            else
+            {
+                for (int i = 0; i < num_choices; ++i)
+                    if (startwep[i] == Options.prev_weapon)
+                        keyin = 'a' + i;
+            }
+        }
 
         if (keyin != '?' && effective_stat_bonus(startwep[keyin-'a']) > -4)
             cprintf(EOL "A fine choice. " EOL);
@@ -1415,6 +1532,7 @@ void choose_weapon( void )
 
     if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '?')
     {
+        Options.weapon = WPN_RANDOM;
         // try to choose a decent weapon
         for(int times=0; times<50; times++)
         {
@@ -1427,6 +1545,10 @@ void choose_weapon( void )
     }
 
     you.inv[0].sub_type = startwep[keyin-'a'];
+    ng_weapon = (Options.random_pick || 
+                Options.weapon == WPN_RANDOM || 
+                keyin == '?')
+        ? WPN_RANDOM : you.inv[0].sub_type;
 }
 
 void init_player(void)
@@ -1443,6 +1565,7 @@ void init_player(void)
     you.wizard = false;
 #endif
 
+    you.activity = ACT_NONE;
     you.berserk_penalty = 0;
     you.berserker = 0;
     you.conf = 0;
@@ -1479,7 +1602,7 @@ void init_player(void)
     you.experience = 0;
     you.experience_level = 1;
     you.max_level = 1;
-    you.char_class = JOB_FIGHTER;
+    you.char_class = JOB_UNKNOWN;
 
     you.hunger = 6000;
     you.hunger_state = HS_SATIATED;
@@ -1506,6 +1629,9 @@ void init_player(void)
     you.running = 0;
     you.run_x = 0;
     you.run_y = 0;
+    you.travel_x = 0;
+    you.travel_y = 0;
+
     for (i = 0; i < 3; i++)
     {
         you.run_check[i].grid = 0;
@@ -1913,7 +2039,15 @@ void enterPlayerName(bool blankOK)
         {
             textcolor( CYAN );
             if (blankOK && first_time)
-                cprintf(EOL "Press <Enter> to answer this after race and class are chosen."EOL);
+            {
+                if (Options.prev_name.length() && Options.remember_name)
+                    cprintf(EOL "Press <Enter> for \"%s\"." EOL,
+                            Options.prev_name.c_str());
+                else
+                    cprintf(EOL 
+                            "Press <Enter> to answer this after race and "
+                            "class are chosen." EOL);
+            }
 
             first_time = false;
 
@@ -1925,6 +2059,21 @@ void enterPlayerName(bool blankOK)
             you.your_name[ kNameLen - 1 ] = '\0';
         }
 
+        if (!*you.your_name && blankOK && Options.prev_name.length() &&
+                Options.remember_name)
+        {
+            strncpy(you.your_name, Options.prev_name.c_str(), kNameLen);
+            you.your_name[kNameLen - 1] = 0;
+        }
+
+        // '.', '?' and '*' are blanked.
+        if (!you.your_name[1] && (*you.your_name == '.' ||
+                                  *you.your_name == '*' ||
+                                  *you.your_name == '?'))
+        {
+            *you.your_name = 0;
+        }
+                
         // verification begins here {dlb}:
         if (you.your_name[0] == '\0')
         {
@@ -2571,6 +2720,137 @@ static void create_wanderer( void )
     you.equip[EQ_BODY_ARMOUR] = 2;
 }
 
+static char letter_to_class(int keyn)
+{
+    if (keyn == 'a')
+        return JOB_FIGHTER;
+    else if (keyn == 'b')
+        return JOB_WIZARD;
+    else if (keyn == 'c')
+        return JOB_PRIEST;
+    else if (keyn == 'd')
+        return JOB_THIEF;
+    else if (keyn == 'e')
+        return JOB_GLADIATOR;
+    else if (keyn == 'f')
+        return JOB_NECROMANCER;
+    else if (keyn == 'g')
+        return JOB_PALADIN;
+    else if (keyn == 'h')
+        return JOB_ASSASSIN;
+    else if (keyn == 'i')
+        return JOB_BERSERKER;
+    else if (keyn == 'j')
+        return JOB_HUNTER;
+    else if (keyn == 'k')
+        return JOB_CONJURER;
+    else if (keyn == 'l')
+        return JOB_ENCHANTER;
+    else if (keyn == 'm')
+        return JOB_FIRE_ELEMENTALIST;
+    else if (keyn == 'n')
+        return JOB_ICE_ELEMENTALIST;
+    else if (keyn == 'o')
+        return JOB_SUMMONER;
+    else if (keyn == 'p')
+        return JOB_AIR_ELEMENTALIST;
+    else if (keyn == 'q')
+        return JOB_EARTH_ELEMENTALIST;
+    else if (keyn == 'r')
+        return JOB_CRUSADER;
+    else if (keyn == 's')
+        return JOB_DEATH_KNIGHT;
+    else if (keyn == 't')
+        return JOB_VENOM_MAGE;
+    else if (keyn == 'u')
+        return JOB_CHAOS_KNIGHT;
+    else if (keyn == 'v')
+        return JOB_TRANSMUTER;
+    else if (keyn == 'w')
+        return JOB_HEALER;
+    else if (keyn == 'y')
+        return JOB_REAVER;
+    else if (keyn == 'z')
+        return JOB_STALKER;
+    else if (keyn == 'A')
+        return JOB_MONK;
+    else if (keyn == 'B')
+        return JOB_WARPER;
+    else if (keyn == 'C')
+        return JOB_WANDERER;
+    return JOB_UNKNOWN;
+}
+
+static char letter_to_species(int keyn)
+{
+    switch (keyn)
+    {
+    case 'a':
+        return SP_HUMAN;
+    case 'b':
+        return SP_ELF;
+    case 'c':
+        return SP_HIGH_ELF;
+    case 'd':
+        return SP_GREY_ELF;
+    case 'e':
+        return SP_DEEP_ELF;
+    case 'f':
+        return SP_SLUDGE_ELF;
+    case 'g':
+        return SP_HILL_DWARF;
+    case 'h':
+        return SP_MOUNTAIN_DWARF;
+    case 'i':
+        return SP_HALFLING;
+    case 'j':
+        return SP_HILL_ORC;
+    case 'k':
+        return SP_KOBOLD;
+    case 'l':
+        return SP_MUMMY;
+    case 'm':
+        return SP_NAGA;
+    case 'n':
+        return SP_GNOME;
+    case 'o':
+        return SP_OGRE;
+    case 'p':
+        return SP_TROLL;
+    case 'q':
+        return SP_OGRE_MAGE;
+    case 'r':                   // draconian
+        return SP_RED_DRACONIAN + random2(9);    // random drac
+    case 's':
+        return SP_CENTAUR;
+    case 't':
+        return SP_DEMIGOD;
+    case 'u':
+        return SP_SPRIGGAN;
+    case 'v':
+        return SP_MINOTAUR;
+    case 'w':
+        return SP_DEMONSPAWN;
+    case 'x':
+        return SP_GHOUL;
+    case 'y':
+        return SP_KENKU;
+    case 'z':
+        return SP_MERFOLK;
+    default:
+        return 0;
+    }
+}
+
+static char species_to_letter(int spec)
+{
+    if (spec > SP_RED_DRACONIAN && spec <= SP_UNK2_DRACONIAN)
+        spec = SP_RED_DRACONIAN;
+    else if (spec > SP_UNK2_DRACONIAN)
+        spec -= SP_UNK2_DRACONIAN - SP_RED_DRACONIAN;
+    return 'a' + spec - 1;
+}
+
 // choose_race returns true if the player should also pick a class.
 // This is done because of the '*' option which will pick a random
 // character, obviating the necessity of choosing a class.
@@ -2580,38 +2860,110 @@ bool choose_race()
     char keyn;
 
     bool printed = false;
+
+    if (Options.cls)
+    {
+        you.char_class = letter_to_class(Options.cls);
+        ng_cls = Options.cls;
+    }
+        
     if (Options.race != 0)
         printed = true;
 
 spec_query:
+    bool prevraceok = Options.prev_race == '?';
     if (!printed)
     {
         clrscr();
 
-        textcolor( WHITE );
-        cprintf("You must be new here!" EOL EOL);
+        if (you.char_class != JOB_UNKNOWN)
+        {
+            textcolor( BROWN );
+            bool shortgreet = false;
+            if (strlen(you.your_name) || you.char_class != JOB_UNKNOWN)
+                cprintf("Welcome, ");
+            else
+            {
+                cprintf("Welcome.");
+                shortgreet = true;
+            }
 
+            textcolor( YELLOW );
+            if (strlen(you.your_name) > 0)
+            {
+                cprintf(you.your_name);
+                if (you.char_class != JOB_UNKNOWN)
+                    cprintf(" the ");
+            }
+            if (you.char_class != JOB_UNKNOWN)
+                cprintf(get_class_name(you.char_class));
+
+            if (!shortgreet)
+                cprintf(".");
+        }
+        else
+        {
+            textcolor( WHITE );
+            cprintf("You must be new here!");
+        }
+        cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be:" EOL EOL);
+        cprintf("You can be:");
+        cprintf(EOL EOL);
+
         textcolor( LIGHTGREY );
 
-        cprintf("a - Human                     b - Elf" EOL);
-        cprintf("c - High Elf                  d - Grey Elf" EOL);
-        cprintf("e - Deep Elf                  f - Sludge Elf" EOL);
-        cprintf("g - Hill Dwarf                h - Mountain Dwarf" EOL);
-        cprintf("i - Halfling                  j - Hill Orc" EOL);
-        cprintf("k - Kobold                    l - Mummy" EOL);
-        cprintf("m - Naga                      n - Gnome" EOL);
-        cprintf("o - Ogre                      p - Troll" EOL);
-        cprintf("q - Ogre-Mage                 r - Draconian" EOL);
-        cprintf("s - Centaur                   t - Demigod" EOL);
-        cprintf("u - Spriggan                  v - Minotaur" EOL);
-        cprintf("w - Demonspawn                x - Ghoul" EOL);
-        cprintf("y - Kenku                     z - Merfolk" EOL);
+        int linec = 0;
+        char linebuf[200];
+        *linebuf = 0;
+        for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
+        {
+            if (i > SP_RED_DRACONIAN && i <= SP_UNK2_DRACONIAN)
+                continue;
+
+            if (you.char_class != JOB_UNKNOWN && 
+                    !class_allowed(i, you.char_class))
+                continue;
+
+            char buf[100];
+            char sletter = species_to_letter(i);
+            snprintf(buf, sizeof buf, "%c - %-26s",
+                        sletter,
+                        species_name(i, 1));
+            if (sletter == Options.prev_race)
+                prevraceok = true;
+            strncat(linebuf, buf, sizeof linebuf);
+            if (++linec >= 2)
+            {
+                cprintf("%s" EOL, linebuf);
+                *linebuf = 0;
+                linec = 0;
+            }
+        }
+        
+        if (linec)
+            cprintf("%s" EOL, linebuf);
 
         textcolor( BROWN );
-        cprintf(EOL "? - Random Species            * - Random Character" EOL);
-        cprintf(    "X - Quit" EOL);
+        
+        if (you.char_class == JOB_UNKNOWN)
+            cprintf(EOL "SPACE - Choose class first; "
+                        "? - Random Species; * - Random Character; X - Quit" 
+                    EOL);
+        else
+            cprintf(EOL "? - Random; Bksp - Back to class selection; X - Quit" 
+                    EOL);
+
+        if (Options.prev_race)
+        {
+            if (prevraceok)
+                cprintf("Enter - %s", get_opt_race_name(Options.prev_race).c_str());
+            if (prev_startup_options_set())
+                cprintf("%sTAB - %s", 
+                        prevraceok? "; " : "",
+                        prev_startup_description().c_str());
+            cprintf(EOL);
+        }
 
         textcolor( CYAN );
         cprintf(EOL "Which one? ");
@@ -2626,119 +2978,75 @@ spec_query:
     }
     else
     {
-        keyn = getch();
-        if (keyn == 0)
-        {
-            getch();
-            goto spec_query;
-        }
+        keyn = c_getch();
     }
 
+    if ((keyn == '\r' || keyn == '\n') && Options.prev_race && prevraceok)
+        keyn = Options.prev_race;
+
+    if (keyn == '\t' && prev_startup_options_set())
+    {
+        if (Options.prev_randpick || 
+                (Options.prev_race == '?' && Options.prev_cls == '?'))
+        {
+            Options.random_pick = true;
+            ng_random = true;
+            pick_random_species_and_class();
+            return false;
+        }
+        set_startup_options();
+        you.species = 0;
+        you.char_class = JOB_UNKNOWN;
+        return true;
+    }
+
+    if (keyn == CK_BKSP || keyn == ' ')
+    {
+        you.species = 0;
+        Options.race = 0;
+        return true;
+    }
+
+    bool randrace = (keyn == '?');
     if (keyn == '?')
-        keyn = 'a' + random2(26);
+    {
+        do
+            keyn = 'a' + random2(26);
+        while (you.char_class != JOB_UNKNOWN &&
+                !class_allowed(letter_to_species(keyn), you.char_class));
+    }
     else if (keyn == '*')
     {
         pick_random_species_and_class();
         Options.random_pick = true; // used to give random weapon/god as well
+        ng_random = true;
         return false;
     }
 
-
-    switch (keyn)
+    if (!(you.species = letter_to_species(keyn)))
     {
-    case 'a':
-        you.species = SP_HUMAN;
-        break;
-    case 'b':
-        you.species = SP_ELF;
-        break;
-    case 'c':
-        you.species = SP_HIGH_ELF;
-        break;
-    case 'd':
-        you.species = SP_GREY_ELF;
-        break;
-    case 'e':
-        you.species = SP_DEEP_ELF;
-        break;
-    case 'f':
-        you.species = SP_SLUDGE_ELF;
-        break;
-    case 'g':
-        you.species = SP_HILL_DWARF;
-        break;
-    case 'h':
-        you.species = SP_MOUNTAIN_DWARF;
-        break;
-    case 'i':
-        you.species = SP_HALFLING;
-        break;
-    case 'j':
-        you.species = SP_HILL_ORC;
-        break;
-    case 'k':
-        you.species = SP_KOBOLD;
-        break;
-    case 'l':
-        you.species = SP_MUMMY;
-        break;
-    case 'm':
-        you.species = SP_NAGA;
-        break;
-    case 'n':
-        you.species = SP_GNOME;
-        break;
-    case 'o':
-        you.species = SP_OGRE;
-        break;
-    case 'p':
-        you.species = SP_TROLL;
-        break;
-    case 'q':
-        you.species = SP_OGRE_MAGE;
-        break;
-    case 'r':                   // draconian
-        you.species = SP_RED_DRACONIAN + random2(9);    // random drac
-        break;
-    case 's':
-        you.species = SP_CENTAUR;
-        break;
-    case 't':
-        you.species = SP_DEMIGOD;
-        break;
-    case 'u':
-        you.species = SP_SPRIGGAN;
-        break;
-    case 'v':
-        you.species = SP_MINOTAUR;
-        break;
-    case 'w':
-        you.species = SP_DEMONSPAWN;
-        break;
-    case 'x':
-        you.species = SP_GHOUL;
-        break;
-    case 'y':
-        you.species = SP_KENKU;
-        break;
-    case 'z':
-        you.species = SP_MERFOLK;
-        break;
-    case 'X':
-        cprintf(EOL "Goodbye!");
-        end(0);
-        break;
-    default:
-        if (Options.race != 0)
+        switch (keyn)
         {
-            Options.race = 0;
-            printed = false;
+        case 'X':
+            cprintf(EOL "Goodbye!");
+            end(0);
+            break;
+        default:
+            if (Options.race != 0)
+            {
+                Options.race = 0;
+                printed = false;
+            }
+            goto spec_query;
         }
-        goto spec_query;
     }
+    if (you.species && you.char_class != JOB_UNKNOWN
+            && !class_allowed(you.species, you.char_class))
+        goto spec_query;
 
     // set to 0 in case we come back from choose_class()
     Options.race = 0;
+    ng_race = randrace? '?' : keyn;
 
     return true;
 }
@@ -2754,54 +3062,105 @@ bool choose_class(void)
     bool printed = false;
     if (Options.cls != 0)
         printed = true;
+
+    if (you.species && you.char_class != JOB_UNKNOWN)
+        return true;
+
+    ng_cls = 0;
+    
 job_query:
+    bool prevclassok = Options.prev_cls == '?';
     if (!printed)
     {
         clrscr();
 
-        textcolor( BROWN );
-        cprintf(EOL EOL);
-        cprintf("Welcome, ");
-        textcolor( YELLOW );
-        if (strlen(you.your_name) > 0)
+        if (you.species)
         {
-            cprintf(you.your_name);
-            cprintf(" the ");
-        }
-        cprintf(species_name(you.species,you.experience_level));
-        cprintf("." EOL EOL);
+            textcolor( BROWN );
+            bool shortgreet = false;
+            if (strlen(you.your_name) || you.species)
+                cprintf("Welcome, ");
+            else
+            {
+                cprintf("Welcome.");
+                shortgreet = true;
+            }
 
+            textcolor( YELLOW );
+            if (strlen(you.your_name) > 0)
+            {
+                cprintf(you.your_name);
+                if (you.species)
+                    cprintf(" the ");
+            }
+            if (you.species)
+                cprintf(species_name(you.species,you.experience_level));
+
+            if (!shortgreet)
+                cprintf(".");
+        }
+        else
+        {
+            textcolor( WHITE );
+            cprintf("You must be new here!");
+        }
+
+        cprintf(EOL EOL);
         textcolor( CYAN );
-        cprintf("You can be any of the following :" EOL);
+        cprintf("You can be:");
+        cprintf(EOL EOL);
+
         textcolor( LIGHTGREY );
 
         j = 0;               // used within for loop to determine newline {dlb}
 
         for (i = 0; i < NUM_JOBS; i++)
         {
-            if (!class_allowed(you.species, i))
+            if (you.species? !class_allowed(you.species, i) : i == JOB_QUITTER)
                 continue;
 
-            putch( index_to_letter(i) );
+            char letter = index_to_letter(i);
+
+            if (letter == Options.prev_cls)
+                prevclassok = true;
+            
+            putch( letter );
             cprintf( " - " );
             cprintf( get_class_name(i) );
 
             if (j % 2)
                 cprintf(EOL);
             else
-                gotoxy(40, wherey());
+                gotoxy(31, wherey());
 
             j++;
         }
 
-        if (wherex() >= 40)
+        if (j % 2)
             cprintf(EOL);
 
         textcolor( BROWN );
-        cprintf(EOL "? - Random; x - Back to species selection; X - Quit" EOL);
+        if (!you.species)
+            cprintf(EOL "SPACE - Choose species first; "
+                        "? - Random Class; * - Random Character; X - Quit" 
+                    EOL);
+        else
+            cprintf(EOL "? - Random; Bksp - Back to species selection; X - Quit" 
+                    EOL);
 
+        if (Options.prev_cls)
+        {
+            if (prevclassok)
+                cprintf("Enter - %s", get_opt_class_name(Options.prev_cls).c_str());
+            if (prev_startup_options_set())
+                cprintf("%sTAB - %s", 
+                        prevclassok? "; " : "",
+                        prev_startup_description().c_str());
+            cprintf(EOL);
+        }
+        
         textcolor( CYAN );
-        cprintf(EOL "What kind of character are you? ");
+        cprintf(EOL "Which one? ");
         textcolor( LIGHTGREY );
 
         printed = true;
@@ -2813,100 +3172,86 @@ job_query:
     }
     else
     {
-        keyn = getch();
-        if (keyn == 0)
+        keyn = c_getch();
+    }
+
+    if ((keyn == '\r' || keyn == '\n') && Options.prev_cls && prevclassok)
+        keyn = Options.prev_cls;
+
+    if (keyn == '\t' && prev_startup_options_set())
+    {
+        if (Options.prev_randpick || 
+                (Options.prev_race == '?' && Options.prev_cls == '?'))
         {
-            getch();
+            Options.random_pick = true;
+            ng_random = true;
+            pick_random_species_and_class();
+            return true;
+        }
+        set_startup_options();
+
+        // Toss out old species selection, if any.
+        you.species = 0;
+        you.char_class = JOB_UNKNOWN;
+
+        return false;
+    }
+
+    if ((you.char_class = letter_to_class(keyn)) == JOB_UNKNOWN) 
+    {
+        if (keyn == '?')
+        {
+            // pick a job at random... see god retribution for proof this
+            // is uniform. -- bwr
+            int job_count = 0;
+            int job = -1;
+
+            for (int i = 0; i < NUM_JOBS; i++)
+            {
+                if (!you.species || class_allowed(you.species, i))
+                {
+                    job_count++;
+                    if (one_chance_in( job_count ))
+                        job = i;
+                }
+            }
+
+            ASSERT( job != -1 );  // at least one class should have been allowed
+            you.char_class = job;
+
+            ng_cls = '?';
+        }
+        else if (keyn == '*')
+        {
+            pick_random_species_and_class();
+            // used to give random weapon/god as well
+            Options.random_pick = true;
+            ng_random = true;
+            return true;
+        }
+        else if ((keyn == ' ' && !you.species) ||
+                    keyn == 'x' || keyn == ESCAPE || keyn == CK_BKSP)
+        {
+            you.char_class = JOB_UNKNOWN;
+            return false;
+        }
+        else if (keyn == 'X')
+        {
+            cprintf(EOL "Goodbye!");
+            end(0);
+        }
+        else
+        {
+            if (Options.cls != 0)
+            {
+                Options.cls = 0;
+                printed = false;
+            }
             goto job_query;
         }
     }
 
-    if (keyn == 'a')
-        you.char_class = JOB_FIGHTER;
-    else if (keyn == 'b')
-        you.char_class = JOB_WIZARD;
-    else if (keyn == 'c')
-        you.char_class = JOB_PRIEST;
-    else if (keyn == 'd')
-        you.char_class = JOB_THIEF;
-    else if (keyn == 'e')
-        you.char_class = JOB_GLADIATOR;
-    else if (keyn == 'f')
-        you.char_class = JOB_NECROMANCER;
-    else if (keyn == 'g')
-        you.char_class = JOB_PALADIN;
-    else if (keyn == 'h')
-        you.char_class = JOB_ASSASSIN;
-    else if (keyn == 'i')
-        you.char_class = JOB_BERSERKER;
-    else if (keyn == 'j')
-        you.char_class = JOB_HUNTER;
-    else if (keyn == 'k')
-        you.char_class = JOB_CONJURER;
-    else if (keyn == 'l')
-        you.char_class = JOB_ENCHANTER;
-    else if (keyn == 'm')
-        you.char_class = JOB_FIRE_ELEMENTALIST;
-    else if (keyn == 'n')
-        you.char_class = JOB_ICE_ELEMENTALIST;
-    else if (keyn == 'o')
-        you.char_class = JOB_SUMMONER;
-    else if (keyn == 'p')
-        you.char_class = JOB_AIR_ELEMENTALIST;
-    else if (keyn == 'q')
-        you.char_class = JOB_EARTH_ELEMENTALIST;
-    else if (keyn == 'r')
-        you.char_class = JOB_CRUSADER;
-    else if (keyn == 's')
-        you.char_class = JOB_DEATH_KNIGHT;
-    else if (keyn == 't')
-        you.char_class = JOB_VENOM_MAGE;
-    else if (keyn == 'u')
-        you.char_class = JOB_CHAOS_KNIGHT;
-    else if (keyn == 'v')
-        you.char_class = JOB_TRANSMUTER;
-    else if (keyn == 'w')
-        you.char_class = JOB_HEALER;
-    else if (keyn == 'y')
-        you.char_class = JOB_REAVER;
-    else if (keyn == 'z')
-        you.char_class = JOB_STALKER;
-    else if (keyn == 'A')
-        you.char_class = JOB_MONK;
-    else if (keyn == 'B')
-        you.char_class = JOB_WARPER;
-    else if (keyn == 'C')
-        you.char_class = JOB_WANDERER;
-    else if (keyn == '?')
-    {
-        // pick a job at random... see god retribution for proof this
-        // is uniform. -- bwr
-        int job_count = 0;
-        int job = -1;
-
-        for (int i = 0; i < NUM_JOBS; i++)
-        {
-            if (class_allowed(you.species, i))
-            {
-                job_count++;
-                if (one_chance_in( job_count ))
-                    job = i;
-            }
-        }
-
-        ASSERT( job != -1 );   // at least one class should have been allowed
-        you.char_class = job;
-    }
-    else if (keyn == 'x' || keyn == ESCAPE)
-    {
-        return false;
-    }
-    else if (keyn == 'X')
-    {
-        cprintf(EOL "Goodbye!");
-        end(0);
-    }
-    else
+    if (you.species && !class_allowed(you.species, you.char_class))
     {
         if (Options.cls != 0)
         {
@@ -2916,17 +3261,10 @@ job_query:
         goto job_query;
     }
 
-    if (!class_allowed(you.species, you.char_class))
-    {
-        if (Options.cls != 0)
-        {
-            Options.cls = 0;
-            printed = false;
-        }
-        goto job_query;
-    }
+    if (ng_cls != '?')
+        ng_cls = keyn;
 
-    return true;
+    return you.char_class != JOB_UNKNOWN && you.species;
 }
 
 
@@ -3207,9 +3545,12 @@ void give_items_skills()
         you.skills[SK_INVOCATIONS] = 4;
 
         if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-            you.religion = Options.priest;
+            ng_pr = you.religion = Options.priest;
         else if (Options.random_pick || Options.priest == GOD_RANDOM)
+        {
             you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
+            ng_pr = GOD_RANDOM;
+        }
         else
         {
             clrscr();
@@ -3221,11 +3562,32 @@ void give_items_skills()
             cprintf("a - Zin (for traditional priests)" EOL);
             cprintf("b - Yredelemnul (for priests of death)" EOL);
 
+            if (Options.prev_pr != GOD_NO_GOD)
+            {
+                textcolor(BROWN);
+                cprintf(EOL "Enter - %s" EOL,
+                        Options.prev_pr == GOD_ZIN? "Zin" :
+                        Options.prev_pr == GOD_YREDELEMNUL? "Yredelemnul" :
+                                            "Random");
+            }
+
           getkey:
             keyn = get_ch();
 
+            if ((keyn == '\r' || keyn == '\n') 
+                    && Options.prev_pr != GOD_NO_GOD)
+            {
+                keyn =  Options.prev_pr == GOD_ZIN? 'a' :
+                        Options.prev_pr == GOD_YREDELEMNUL? 'b' :
+                                            '?';
+
+            }
+            
             switch (keyn)
             {
+            case '?':
+                you.religion = coinflip()? GOD_ZIN : GOD_YREDELEMNUL;
+                break;
             case 'a':
                 you.religion = GOD_ZIN;
                 break;
@@ -3235,6 +3597,8 @@ void give_items_skills()
             default:
                 goto getkey;
             }
+
+            ng_pr = keyn == '?'? GOD_RANDOM : you.religion;
         }
         break;
 
@@ -3514,7 +3878,7 @@ void give_items_skills()
             you.inv[0].plus = 0;
             you.inv[0].plus2 = 0;
             you.inv[0].special = 0;
-            you.inv[0].colour = LIGHTCYAN;
+            you.inv[0].colour = BROWN;
             you.equip[EQ_WEAPON] = 0;
         }
         else if (you.species == SP_TROLL)
@@ -4138,10 +4502,13 @@ void give_items_skills()
         else if (Options.death_knight != DK_NO_SELECTION
                 && Options.death_knight != DK_RANDOM)
         {
-            choice = Options.death_knight;
+            ng_dk = choice = Options.death_knight;
         }
         else if (Options.random_pick || Options.death_knight == DK_RANDOM)
+        {
             choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
+            ng_dk  = DK_RANDOM;
+        }
         else
         {
             clrscr();
@@ -4153,11 +4520,31 @@ void give_items_skills()
             cprintf("a - Necromantic magic" EOL);
             cprintf("b - the god Yredelemnul" EOL);
 
+            if (Options.prev_dk != DK_NO_SELECTION)
+            {
+                textcolor(BROWN);
+                cprintf(EOL "Enter - %s" EOL, 
+                        Options.prev_dk == DK_NECROMANCY? "Necromancy" :
+                        Options.prev_dk == DK_YREDELEMNUL? "Yredelemnul" :
+                                                           "Random");
+            }
+
           getkey1:
             keyn = get_ch();
 
+            if ((keyn == '\r' || keyn == '\n')
+                    && Options.prev_dk != DK_NO_SELECTION)
+            {
+                keyn = Options.prev_dk == DK_NECROMANCY? 'a' :
+                       Options.prev_dk == DK_YREDELEMNUL? 'b' :
+                                                          '?';
+            }
+            
             switch (keyn)
             {
+            case '?':
+                choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
+                break;
             case 'a':
                 cprintf(EOL "Very well.");
                 choice = DK_NECROMANCY;
@@ -4168,6 +4555,8 @@ void give_items_skills()
             default:
                 goto getkey1;
             }
+
+            ng_dk = keyn == '?'? DK_RANDOM : choice;
         }
 
         switch (choice)
@@ -4232,10 +4621,13 @@ void give_items_skills()
         if (Options.chaos_knight != GOD_NO_GOD
             && Options.chaos_knight != GOD_RANDOM)
         {
-            you.religion = Options.chaos_knight;
+            ng_ck = you.religion = Options.chaos_knight;
         }
         else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
+        {
             you.religion = coinflip() ? GOD_XOM : GOD_MAKHLEB;
+            ng_ck = GOD_RANDOM;
+        }
         else
         {
             clrscr();
@@ -4247,12 +4639,33 @@ void give_items_skills()
             cprintf("a - Xom of Chaos" EOL);
             cprintf("b - Makhleb the Destroyer" EOL);
 
+            if (Options.prev_ck != GOD_NO_GOD)
+            {
+                textcolor(BROWN);
+                cprintf(EOL "Enter - %s" EOL,
+                        Options.prev_ck == GOD_XOM? "Xom" :
+                        Options.prev_ck == GOD_MAKHLEB? "Makhleb" :
+                                                    "Random");
+                textcolor(LIGHTGREY);
+            }
+
           getkey2:
 
             keyn = get_ch();
 
+            if ((keyn == '\r' || keyn == '\n') 
+                    && Options.prev_ck != GOD_NO_GOD)
+            {
+                keyn = Options.prev_ck == GOD_XOM? 'a' :
+                       Options.prev_ck == GOD_MAKHLEB? 'b' :
+                                                    '?';
+            }
+
             switch (keyn)
             {
+            case '?':
+                you.religion = coinflip()? GOD_XOM : GOD_MAKHLEB;
+                break;
             case 'a':
                 you.religion = GOD_XOM;
                 break;
@@ -4262,6 +4675,8 @@ void give_items_skills()
             default:
                 goto getkey2;
             }
+
+            ng_ck = keyn == '?'? GOD_RANDOM : you.religion;
         }
 
         if (you.religion == GOD_XOM)

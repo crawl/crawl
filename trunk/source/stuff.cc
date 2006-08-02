@@ -21,6 +21,22 @@
 #include <string.h>
 #include <ctype.h>
 
+#include <time.h>
+
+#include <stack>
+
+#ifdef USE_MORE_SECURE_SEED
+
+// for times()
+#include <sys/times.h>
+
+// for getpid()
+#include <sys/types.h>
+#include <unistd.h>
+
+#endif
+
+
 // may need this later for something else {dlb}:
 // required for table_lookup() {dlb}
 //#include <stdarg.h>
@@ -40,6 +56,8 @@
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "mt19937ar.h"
+#include "player.h"
 #include "output.h"
 #include "skills2.h"
 #include "view.h"
@@ -52,7 +70,8 @@ unsigned long cfseed;
 extern unsigned char (*mapch) (unsigned char);
 
 // Crude, but functional.
-char *const make_time_string( time_t abs_time, char *const buff, int buff_size )
+char *const make_time_string( time_t abs_time, char *const buff, int buff_size,
+                              bool terse )
 {
     const int days  = abs_time / 86400;
     const int hours = (abs_time % 86400) / 3600;
@@ -63,7 +82,10 @@ char *const make_time_string( time_t abs_time, char *const buff, int buff_size )
 
     if (days > 0)
     {
-        snprintf( day_buff, sizeof(day_buff), "%d day%s, ", 
+        if (terse)
+            snprintf(day_buff, sizeof day_buff, "%d, ", days);
+        else
+            snprintf( day_buff, sizeof(day_buff), "%d day%s, ", 
                   days, (days > 1) ? "s" : "" );
     }
 
@@ -156,6 +178,31 @@ unsigned char get_ch(void)
     return gotched;
 }                               // end get_ch()
 
+void seed_rng(long seed)
+{
+#ifdef USE_SYSTEM_RAND
+    srand(seed);
+#else
+    // MT19937 -- see mt19937ar.cc for details/licence
+    init_genrand(seed);
+#endif
+}
+
+void seed_rng()
+{
+    unsigned long seed = time( NULL );
+#ifdef USE_MORE_SECURE_SEED
+    struct tms  buf;
+    seed += times( &buf ) + getpid();
+#endif
+
+    seed_rng(seed);
+#ifdef USE_SYSTEM_RAND
+    cf_setseed();
+#endif
+}
+
+#ifdef USE_SYSTEM_RAND
 int random2(int max)
 {
 #ifdef USE_NEW_RANDOM
@@ -177,6 +224,136 @@ int random2(int max)
     return rand() % max;
 #endif
 }
+
+// required for stuff::coinflip()
+#define IB1 1
+#define IB2 2
+#define IB5 16
+#define IB18 131072
+#define MASK (IB1 + IB2 + IB5)
+// required for stuff::coinflip()
+
+// I got to thinking a bit more about how much people talk
+// about RNGs and RLs and also about the issue of performance
+// when it comes to Crawl's RNG ... turning to *Numerical
+// Recipies in C* (Chapter 7-4, page 298), I hit upon what
+// struck me as a fine solution.
+
+// You can read all the details about this function (pretty
+// much stolen shamelessly from NRinC) elsewhere, but having
+// tested it out myself I think it satisfies Crawl's incessant
+// need to decide things on a 50-50 flip of the coin. No call
+// to random2() required -- along with all that wonderful math
+// and type casting -- and only a single variable its pointer,
+// and some bitwise operations to randomly generate 1s and 0s!
+// No parameter passing, nothing. Too good to be true, but it
+// works as long as cfseed is not set to absolute zero when it
+// is initialized ... good for 2**n-1 random bits before the
+// pattern repeats (n = long's bitlength on your platform).
+// It also avoids problems with poor implementations of rand()
+// on some platforms in regards to low-order bits ... a big
+// problem if one is only looking for a 1 or a 0 with random2()!
+
+// Talk about a hard sell! Anyway, it returns bool, so please
+// use appropriately -- I set it to bool to prevent such
+// tomfoolery, as I think that pure RNG and quickly grabbing
+// either a value of 1 or 0 should be separated where possible
+// to lower overhead in Crawl ... at least until it assembles
+// itself into something a bit more orderly :P 16jan2000 {dlb}
+
+// NB(1): cfseed is defined atop stuff.cc
+// NB(2): IB(foo) and MASK are defined somewhere in defines.h
+// NB(3): the function assumes that cf_setseed() has been called
+//        beforehand - the call is presently made in acr::initialise()
+//        right after srandom() and srand() are called (note also
+//        that cf_setseed() requires rand() - random2 returns int
+//        but a long can't hurt there).
+bool coinflip(void)
+{
+    extern unsigned long cfseed;        // defined atop stuff.cc
+    unsigned long *ptr_cfseed = &cfseed;
+
+    if (*ptr_cfseed & IB18)
+    {
+        *ptr_cfseed = ((*ptr_cfseed ^ MASK) << 1) | IB1;
+        return true;
+    }
+    else
+    {
+        *ptr_cfseed <<= 1;
+        return false;
+    }
+}                               // end coinflip()
+
+// cf_setseed should only be called but once in all of Crawl!!! {dlb}
+void cf_setseed(void)
+{
+    extern unsigned long cfseed;        // defined atop stuff.cc
+    unsigned long *ptr_cfseed = &cfseed;
+
+    do
+    {
+        // using rand() here makes these predictable -- bwr
+        *ptr_cfseed = rand();
+    }
+    while (*ptr_cfseed == 0);
+}
+
+static std::stack<long> rng_states;
+void push_rng_state()
+{
+    // XXX: Does this even work? randart.cc uses it, but I can't find anything
+    // that says this will restore the RNG to its original state. Anyway, we're
+    // now using MT with a deterministic push/pop.
+    rng_states.push(rand());
+}
+
+void pop_rng_state()
+{
+    if (!rng_states.empty())
+    {
+        seed_rng(rng_states.top());
+        rng_states.pop();
+    }
+}
+
+unsigned long random_int( void )
+{
+    return rand();
+}
+
+#else   // USE_SYSTEM_RAND
+
+// MT19937 -- see mt19937ar.cc for details
+unsigned long random_int( void )
+{
+    return (genrand_int32());
+}
+
+int random2( int max )
+{
+    if (max <= 1)
+        return (0);
+
+    return (static_cast<int>( genrand_int32() / (0xFFFFFFFFUL / max + 1) ));
+}
+
+bool coinflip( void )
+{
+    return (static_cast<bool>( random2(2) ));
+}
+
+void push_rng_state()
+{
+    push_mt_state();
+}
+
+void pop_rng_state()
+{
+    pop_mt_state();
+}
+
+#endif  // USE_SYSTEM_RAND
 
 // random2avg() returns same mean value as random2() but with a  lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
@@ -375,71 +552,6 @@ bool one_chance_in(int a_million)
     return (random2(a_million) == 0);
 }                               // end one_chance_in() - that's it? :P {dlb}
 
-// I got to thinking a bit more about how much people talk
-// about RNGs and RLs and also about the issue of performance
-// when it comes to Crawl's RNG ... turning to *Numerical
-// Recipies in C* (Chapter 7-4, page 298), I hit upon what
-// struck me as a fine solution.
-
-// You can read all the details about this function (pretty
-// much stolen shamelessly from NRinC) elsewhere, but having
-// tested it out myself I think it satisfies Crawl's incessant
-// need to decide things on a 50-50 flip of the coin. No call
-// to random2() required -- along with all that wonderful math
-// and type casting -- and only a single variable its pointer,
-// and some bitwise operations to randomly generate 1s and 0s!
-// No parameter passing, nothing. Too good to be true, but it
-// works as long as cfseed is not set to absolute zero when it
-// is initialized ... good for 2**n-1 random bits before the
-// pattern repeats (n = long's bitlength on your platform).
-// It also avoids problems with poor implementations of rand()
-// on some platforms in regards to low-order bits ... a big
-// problem if one is only looking for a 1 or a 0 with random2()!
-
-// Talk about a hard sell! Anyway, it returns bool, so please
-// use appropriately -- I set it to bool to prevent such
-// tomfoolery, as I think that pure RNG and quickly grabbing
-// either a value of 1 or 0 should be separated where possible
-// to lower overhead in Crawl ... at least until it assembles
-// itself into something a bit more orderly :P 16jan2000 {dlb}
-
-// NB(1): cfseed is defined atop stuff.cc
-// NB(2): IB(foo) and MASK are defined somewhere in defines.h
-// NB(3): the function assumes that cf_setseed() has been called
-//        beforehand - the call is presently made in acr::initialise()
-//        right after srandom() and srand() are called (note also
-//        that cf_setseed() requires rand() - random2 returns int
-//        but a long can't hurt there).
-bool coinflip(void)
-{
-    extern unsigned long cfseed;        // defined atop stuff.cc
-    unsigned long *ptr_cfseed = &cfseed;
-
-    if (*ptr_cfseed & IB18)
-    {
-        *ptr_cfseed = ((*ptr_cfseed ^ MASK) << 1) | IB1;
-        return true;
-    }
-    else
-    {
-        *ptr_cfseed <<= 1;
-        return false;
-    }
-}                               // end coinflip()
-
-// cf_setseed should only be called but once in all of Crawl!!! {dlb}
-void cf_setseed(void)
-{
-    extern unsigned long cfseed;        // defined atop stuff.cc
-    unsigned long *ptr_cfseed = &cfseed;
-
-    do
-    {
-        // using rand() here makes these predictable -- bwr
-        *ptr_cfseed = rand();
-    }
-    while (*ptr_cfseed == 0);
-}
 
 // simple little function to quickly modify all three stats
 // at once - does check for '0' modifiers to prevent needless
@@ -521,17 +633,23 @@ void canned_msg(unsigned char which_message)
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno( const char *str, bool safe, bool clear_after )
+bool yesno( const char *str, bool safe, int safeanswer, bool clear_after )
 {
     unsigned char tmp;
 
+    interrupt_activity( AI_FORCE_INTERRUPT );
     for (;;)
     {
         mpr(str, MSGCH_PROMPT);
 
         tmp = (unsigned char) getch();
 
+        if ((tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n') 
+                && safeanswer)
+            tmp = safeanswer;
+
         if (Options.easy_confirm == CONFIRM_ALL_EASY
+            || tmp == safeanswer
             || (Options.easy_confirm == CONFIRM_SAFE_EASY && safe))
         {
             tmp = toupper( tmp );

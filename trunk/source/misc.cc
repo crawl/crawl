@@ -18,6 +18,11 @@
 #if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
 #include <unistd.h>
 #endif
+
+#ifdef __MINGW32__
+#include <io.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -49,6 +54,7 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "travel.h"
 #include "view.h"
 
 
@@ -298,7 +304,7 @@ void in_a_cloud(void)
             return;
         }
 
-        if (!player_equip( EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR ))
+        if (player_equip( EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR ))
         {
             mpr("It doesn't seem to affect you.");
             return;
@@ -415,13 +421,24 @@ void up_stairs(void)
     }
 
     if (you.your_level == 0
-            && !yesno("Are you sure you want to leave the Dungeon?", false))
+          && !yesno("Are you sure you want to leave the Dungeon?", false, 'n'))
     {
         mpr("Alright, then stay!");
         return;
     }
 
-    unsigned char old_level = you.your_level;
+    unsigned char old_level  = you.your_level;
+
+    // Interlevel travel data:
+    bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
+        	    && you.level_type != LEVEL_ABYSS 
+                && you.level_type != LEVEL_PANDEMONIUM;
+
+    level_id  old_level_id    = level_id::get_current_level_id();
+    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
+    int stair_x = you.x_pos, stair_y = you.y_pos;
+    if (collect_travel_data)
+        old_level_info.update();
 
     // Make sure we return to our main dungeon level... labyrinth entrances
     // in the abyss or pandemonium a bit trouble (well the labyrinth does
@@ -524,12 +541,70 @@ void up_stairs(void)
 
     viewwindow(1, true);
 
-
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+
+    // Tell the travel code that we're now on a new level
+    travel_init_new_level();
+    if (collect_travel_data)
+    {
+        // Update stair information for the stairs we just ascended, and the
+        // down stairs we're currently on.
+        level_id  new_level_id    = level_id::get_current_level_id();
+
+        if (you.level_type != LEVEL_PANDEMONIUM &&
+                you.level_type != LEVEL_ABYSS &&
+                you.level_type != LEVEL_LABYRINTH)
+        {
+            LevelInfo &new_level_info = 
+                        travel_cache.get_level_info(new_level_id);
+            new_level_info.update();
+
+            // First we update the old level's stair.
+            level_pos lp;
+            lp.id  = new_level_id;
+            lp.pos.x = you.x_pos; 
+            lp.pos.y = you.y_pos;
+
+            bool guess = false;
+            // Ugly hack warning:
+            // The stairs in the Vestibule of Hell exhibit special behaviour:
+            // they always lead back to the dungeon level that the player
+            // entered the Vestibule from. This means that we need to pretend
+            // we don't know where the upstairs from the Vestibule go each time
+            // we take it. If we don't, interlevel travel may try to use portals
+            // to Hell as shortcuts between dungeon levels, which won't work,
+            // and will confuse the dickens out of the player (well, it confused
+            // the dickens out of me when it happened).
+            if (new_level_id.branch == BRANCH_MAIN_DUNGEON &&
+                    old_level_id.branch == BRANCH_VESTIBULE_OF_HELL)
+            {
+                lp.id.depth = -1;
+                lp.pos.x = lp.pos.y = -1;
+                guess = true;
+            }
+
+            old_level_info.update_stair(stair_x, stair_y, lp, guess);
+
+            // We *guess* that going up a staircase lands us on a downstair,
+            // and that we can descend that downstair and get back to where we
+            // came from. This assumption is guaranteed false when climbing out
+            // of one of the branches of Hell.
+            if (new_level_id.branch != BRANCH_VESTIBULE_OF_HELL)
+            {
+                // Set the new level's stair, assuming arbitrarily that going
+                // downstairs will land you on the same upstairs you took to
+                // begin with (not necessarily true).
+                lp.id = old_level_id;
+                lp.pos.x = stair_x;
+                lp.pos.y = stair_y;
+                new_level_info.update_stair(you.x_pos, you.y_pos, lp, true);
+            }
+        }
+    }
 }                               // end up_stairs()
 
-void down_stairs( bool remove_stairs, int old_level )
+void down_stairs( bool remove_stairs, int old_level, bool force )
 {
     int i;
     char old_level_type = you.level_type;
@@ -577,7 +652,8 @@ void down_stairs( bool remove_stairs, int old_level )
         return;
     }
 
-    if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+    if (!force && player_is_levitating() 
+            && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
         mpr("You're floating high up above the floor!");
         return;
@@ -616,6 +692,18 @@ void down_stairs( bool remove_stairs, int old_level )
         }
     }
 
+    // Interlevel travel data:
+    bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
+        	    && you.level_type != LEVEL_ABYSS
+                && you.level_type != LEVEL_PANDEMONIUM;
+
+    level_id  old_level_id    = level_id::get_current_level_id();
+    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
+    int stair_x = you.x_pos, stair_y = you.y_pos;
+    if (collect_travel_data)
+        old_level_info.update();
+
+
     if (you.level_type == LEVEL_PANDEMONIUM
             && stair_find == DNGN_TRANSIT_PANDEMONIUM)
     {
@@ -641,7 +729,9 @@ void down_stairs( bool remove_stairs, int old_level )
         mpr("Welcome to Hell!");
         mpr("Please enjoy your stay.");
 
-        more();
+        // Kill -more- prompt if we're traveling.
+        if (!you.running)
+            more();
 
         you.your_level = 26;    // = 59;
     }
@@ -913,6 +1003,39 @@ void down_stairs( bool remove_stairs, int old_level )
 
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
+
+    travel_init_new_level();
+    if (collect_travel_data)
+    {
+        // Update stair information for the stairs we just descended, and the
+        // upstairs we're currently on.
+        level_id  new_level_id    = level_id::get_current_level_id();
+
+        if (you.level_type != LEVEL_PANDEMONIUM &&
+                you.level_type != LEVEL_ABYSS &&
+                you.level_type != LEVEL_LABYRINTH)
+        {
+            LevelInfo &new_level_info = 
+                            travel_cache.get_level_info(new_level_id);
+            new_level_info.update();
+
+            // First we update the old level's stair.
+            level_pos lp;
+            lp.id  = new_level_id;
+            lp.pos.x = you.x_pos; 
+            lp.pos.y = you.y_pos;
+
+            old_level_info.update_stair(stair_x, stair_y, lp);
+
+            // Then the new level's stair, assuming arbitrarily that going
+            // upstairs will land you on the same downstairs you took to begin 
+            // with (not necessarily true).
+            lp.id = old_level_id;
+            lp.pos.x = stair_x;
+            lp.pos.y = stair_y;
+            new_level_info.update_stair(you.x_pos, you.y_pos, lp, true);
+        }
+    }
 }                               // end down_stairs()
 
 void new_level(void)

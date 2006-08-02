@@ -613,6 +613,8 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
     if (current_delay_action() == DELAY_BUTCHER)
         stop_delay();
 
+    interrupt_activity( AI_TELEPORT );
+
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
     {
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
@@ -1059,7 +1061,7 @@ void portal(void)
         you.your_level = target_level - 1;
         grd[you.x_pos][you.y_pos] = DNGN_STONE_STAIRS_DOWN_I;
 
-        down_stairs( true, old_level );
+        down_stairs( true, old_level, true );
         untag_followers();
     }
 

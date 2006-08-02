@@ -47,7 +47,9 @@
 #define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
 #define NOKANJI           /* Kanji support stuff. */
 #define NOMCX             /* Modem Configuration Extensions */
+#ifndef _X86_
 #define _X86_			  /* target architecture */
+#endif
 
 #include <excpt.h>
 #include <stdarg.h>
@@ -68,6 +70,7 @@
 #include "version.h"
 #include "defines.h"
 #include "view.h"
+#include "libutil.h"
 
 char oldTitle[80];
 
@@ -87,14 +90,18 @@ static CHAR_INFO screen[80 * WIN_NUMBER_OF_LINES];
 static COORD screensize;
 #define SCREENINDEX(x,y) (x)+80*(y)
 static bool buffering = false;
-static const char *windowTitle = "Crawl " VERSION;
+// static const char *windowTitle = "Crawl " VERSION;
+static unsigned InputCP, OutputCP;
+static const unsigned PREFERRED_CODEPAGE = 437;
 
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char c);
 static void bFlush(void);
 static void _setcursortype_internal(int curstype);
-static void init_colors(void);
+
+// [ds] Unused for portability reasons
+/*
 static DWORD crawlColorData[16] =
 // BGR data, easier to put in registry
 {
@@ -115,6 +122,7 @@ static DWORD crawlColorData[16] =
    0x0000ffff,  // YELLOW
    0x00ffffff   // WHITE
 };
+ */
 
 //#define TIMING_INFO
 #ifdef TIMING_INFO
@@ -215,7 +223,7 @@ void writeChar(char c)
    // is this a no-op?
    if (pci->Char.AsciiChar != c)
       noop = false;
-   else if (pci->Attributes != tc && c != ' ')
+   else if (pci->Attributes != tc)
       noop = false;
 
    if (!noop)
@@ -287,7 +295,7 @@ void setStringInput(bool value)
    }
    else
    {
-      inmodes = NULL;
+      inmodes = 0;
       outmodes = 0;
    }
 
@@ -307,10 +315,9 @@ void setStringInput(bool value)
 
 // this apparently only works for Win2K+ and ME+
 
-void init_colors(char *windowTitle)
+static void init_colors(char *windowTitle)
 {
    UNUSED( windowTitle );
-   int i;
 
    // look up the Crawl shortcut
 
@@ -357,6 +364,21 @@ void init_libw32c(void)
 
    //DEBUG
    //foo = fopen("debug.txt", "w");
+
+
+   // JWM, 06/12/2004: Code page setting, as XP does not use ANSI 437 by
+   // default.
+   InputCP = GetConsoleCP();
+   OutputCP = GetConsoleOutputCP();
+
+   // DS: Don't kill Crawl if we can't set the codepage. Windows 95/98/ME don't
+   // have support for setting the input and output codepage.  I'm also not
+   // convinced we need to set the input codepage at all.
+   if (InputCP != PREFERRED_CODEPAGE)
+      SetConsoleCP(PREFERRED_CODEPAGE);
+
+   if (OutputCP != PREFERRED_CODEPAGE)
+      SetConsoleOutputCP(PREFERRED_CODEPAGE);
 }
 
 void deinit_libw32c(void)
@@ -365,6 +387,14 @@ void deinit_libw32c(void)
    if (inbuf == NULL || outbuf == NULL)
       return;
 
+   // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it 
+   // doesn't need restoring.  Shouldn't be an error and too bad if there is.
+   if (InputCP && InputCP != PREFERRED_CODEPAGE)
+      SetConsoleCP(InputCP);
+
+   if (OutputCP && OutputCP != PREFERRED_CODEPAGE)
+      SetConsoleOutputCP(OutputCP);
+    
    // restore console attributes for normal function
    setStringInput(true);
 
@@ -553,24 +583,47 @@ void putch(char c)
 
 // translate virtual keys
 
-static int vk_tr[4][9] = // virtual key, unmodified, shifted,  control
+#define VKEY_MAPPINGS 10
+static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted,  control
    {
-   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR },
-   { 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u' },
-   { '1', '2', '3', '4', '5', '6', '7', '8', '9' },
-   { 2, 10, 14, 8, 0, 12, 25, 11, 21 },
+   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT },
+   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT },
+   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT, CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT },
+   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT, CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT },
    };
+
+static int ck_tr[] = {
+    'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n',
+    // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u' ,
+    '8', '2', '4', '6', '0', '7', '1', '5', '9', '3',
+    // '1', '2', '3', '4', '5', '6', '7', '8', '9' ,
+    11, 10, 8, 12, '0', 25, 2, 0, 21, 14
+    // 2, 10, 14, 8, 0, 12, 25, 11, 21 ,
+};
+
+int key_to_command( int keyin ) {
+    if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
+        return ck_tr[ keyin - CK_UP ];
+    
+    if (keyin == CK_DELETE)
+        return '.';
+
+    return keyin;
+}
 
 int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
 {
    bool shftDown = false;
    bool ctrlDown = false;
+   bool altDown  = !!(cKeys & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED));
 
    // DEBUG
    //fprintf(foo, "Received code %d (%c) with modifiers: %d\n", VirtCode, c, cKeys);
 
    // step 1 - we don't care about shift or control
-   if (VirtCode == VK_SHIFT || VirtCode == VK_CONTROL)
+   if (VirtCode == VK_SHIFT || VirtCode == VK_CONTROL ||
+           VirtCode == VK_MENU || VirtCode == VK_CAPITAL ||
+           VirtCode == VK_NUMLOCK)
       return 0;
 
    // step 2 - translate the <Esc> key to 0x1b
@@ -581,37 +634,52 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
    if (cKeys & SHIFT_PRESSED)
       shftDown = true;
    if (cKeys & (RIGHT_CTRL_PRESSED | LEFT_CTRL_PRESSED))
-   {
       ctrlDown = true;           // control takes precedence over shift
-      shftDown = false;
-   }
 
    // hack - translate ^P and ^Q since 16 and 17 are taken by CTRL and SHIFT
    if ((VirtCode == 80 || VirtCode == 81) && ctrlDown)
       return VirtCode & 0x003f;     // shift back down
 
    if (VirtCode == VK_DELETE && !ctrlDown)         // assume keypad '.'
-      return '.';
+      return CK_DELETE;
 
    // see if we're a vkey
    int mkey;
-   for(mkey = 0; mkey<9; mkey++)
+   for(mkey = 0; mkey<VKEY_MAPPINGS; mkey++)
       if (VirtCode == vk_tr[0][mkey]) break;
 
    // step 4 - just return the damn key.
-   if (mkey == 9)
-      return (int)c;
+   if (mkey == VKEY_MAPPINGS) {
+      if (c)
+          return c;
+      
+      // ds -- Icky hacks to allow keymaps with funky keys.
+      if (ctrlDown)
+          VirtCode |= 512;
+      if (shftDown)
+          VirtCode |= 1024;
+      if (altDown)
+          VirtCode |= 2048;
+
+      // ds -- Cheat and returns 256 + VK if the char is zero. This allows us
+      // to use the VK for macros and is on par for evil with the rest of
+      // this function anyway.
+      return VirtCode | 256;
+   }
 
    // now translate the key.  Dammit.  This is !@#$(*& garbage.
-   if (shftDown)
-      return vk_tr[2][mkey];
+
    // control key?
    if (ctrlDown)
       return vk_tr[3][mkey];
+   
+   // shifted?
+   if (shftDown)
+      return vk_tr[2][mkey];
    return vk_tr[1][mkey];
 }
 
-int getch(void)
+int getch_ck(void)
 {
     INPUT_RECORD ir;
     DWORD nread;
@@ -665,6 +733,12 @@ int getch(void)
     return key;
 }
 
+int getch(void)
+{
+    int c = getch_ck();
+    return key_to_command( c );
+}
+
 int getche(void)
 {
    // turn buffering off temporarily
@@ -684,8 +758,20 @@ int getche(void)
 
 int kbhit()
 {
-   // do nothing.  We could use PeekConsoleInput,  I suppose..
-   return 0;
+    INPUT_RECORD ir[10];
+    DWORD read_count = 0;
+    PeekConsoleInput(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    if (read_count > 0) {
+        for (unsigned i = 0; i < read_count; ++i)
+            if (ir[i].EventType == KEY_EVENT) {
+                KEY_EVENT_RECORD *kr;
+                kr = &(ir[i].Event.KeyEvent);
+
+                if (kr->bKeyDown)
+                    return 1;
+            }
+    }
+    return 0;
 }
 
 void delay(int ms)
@@ -717,8 +803,7 @@ int getConsoleString(char *buf, int maxlen)
 
    // terminate string,  then strip CRLF, replace with \0
    buf[maxlen-1] = '\0';
-   int i;
-   for (i=(nread<3 ? 0 : nread-3); i<nread; i++)
+   for (unsigned i=(nread<3 ? 0 : nread-3); i<nread; i++)
    {
       if (buf[i] == 0x0A || buf[i] == 0x0D)
       {

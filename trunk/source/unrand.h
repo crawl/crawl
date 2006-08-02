@@ -463,7 +463,7 @@
         0, 0
     }
     ,
-        "Many years ago it was property of powerful mage called "
+        "Many years ago it was the property of a powerful mage called "
         "Boris. He got lost in the Dungeon while seeking the Orb. ",
         "An ugly rusty dagger. ",
         ""
@@ -520,8 +520,8 @@
         0, 0
     }
     ,
-        "It once belonged to one foreign god. It works best with some kind "
-        "of special arrows which are not generally available.",
+        "It once belonged to a foreign god. It works best with "
+        "special arrows which are not generally available.",
         "A wonderful golden bow. ",
         ""
 }
@@ -593,7 +593,7 @@
         0, 0
     }
     ,
-        "This weapon once belonged to Gar Dogh, the guard of king's treasures. "
+        "This weapon once belonged to Gar Dogh, the guard of a king's treasures. "
         "According to legend he was lost somewhere in the Dungeon.",
         "",
         ""
@@ -649,7 +649,7 @@
     }
     ,
         "",
-        "A skin of some strange animal.",
+        "The skin of some strange animal.",
         ""
 }
 ,
@@ -864,7 +864,7 @@
         0, -30                  // stealth
     }
     ,
-        "It's really dark and malign artifact and no wise man would even touch it.",
+        "It's a really dark and malign artifact and no wise man would even touch it.",
         "",
         ""
 }
@@ -882,9 +882,9 @@
         0, 0
     }
     ,
-        "This trident was stolen many years ago from the Octopus's garden "
-        "by one really unimportant and already dead man. But beware of "
-        "Octopus's king's wrath!",
+        "This trident was stolen many years ago from the Octopus king's garden "
+        "by a really unimportant and already dead man. But beware of "
+        "the Octopus king's wrath!",
         "",
         ""
 }
@@ -938,7 +938,7 @@
         0, 0
     }
     ,
-        "This powerful staff used to belong to leader of"
+        "This powerful staff used to belong to the leader of"
         " the Guild of Five Elements.",
         "A black glyphic staff.",
         ""
@@ -993,8 +993,8 @@
         0, 50                   // stealth
     }
     ,
-        "According to legend this robe was gift of Ratri the Goddess of the Night "
-        "to one her follower.",
+        "According to legend this robe was the gift of Ratri the Goddess of the Night "
+        "to one of her followers.",
         "A long black robe made of strange flossy material.",
         ""
 }
@@ -1085,7 +1085,7 @@
     }
     ,
         "",
-        "A gloves made of white silk.",
+        "A pair of gloves made of white silk.",
         ""
 }
 ,

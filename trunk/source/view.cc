@@ -34,6 +34,7 @@
 
 #include "externs.h"
 
+#include "clua.h"
 #include "debug.h"
 #include "insult.h"
 #include "macro.h"
@@ -44,7 +45,14 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "spells4.h"
+#include "stash.h"
+#include "travel.h"
 
+#if defined(DOS_TERM)
+typedef char screen_buffer_t;
+#else
+typedef unsigned short screen_buffer_t;
+#endif
 
 unsigned char your_sign;        // accessed as extern in transfor.cc and acr.cc
 unsigned char your_colour;      // accessed as extern in transfor.cc and acr.cc
@@ -56,8 +64,10 @@ extern int stealth;             // defined in acr.cc
 extern FixedVector<char, 10>  Visible_Statue;        // defined in acr.cc
 
 // char colour_code_map(unsigned char map_value);
-char colour_code_map( int x, int y );
+screen_buffer_t colour_code_map( int x, int y, bool item_colour = false,
+                                    bool travel_colour = false );
 
+extern void (*viewwindow) (char, bool);
 unsigned char (*mapch) (unsigned char);
 unsigned char (*mapch2) (unsigned char);
 unsigned char mapchar(unsigned char ldfk);
@@ -66,6 +76,9 @@ unsigned char mapchar3(unsigned char ldfk);
 unsigned char mapchar4(unsigned char ldfk);
 void cloud_grid(void);
 void monster_grid(bool do_updates);
+
+static int display_glyph(int env_glyph);
+static int item_env_glyph(const item_def &item);
 
 //---------------------------------------------------------------
 //
@@ -538,6 +551,7 @@ static void get_ibm_symbol(unsigned int object, unsigned short *ch,
 
     case 272:
         *ch = '$';
+        *color = YELLOW;
         break;                  // $ gold
 
     case 273:
@@ -549,7 +563,6 @@ static void get_ibm_symbol(unsigned int object, unsigned short *ch,
         break;
     }
 }                               // end get_ibm_symbol()
-
 
 //---------------------------------------------------------------
 //
@@ -648,10 +661,21 @@ void viewwindow2(char draw_it, bool do_updates)
                 {
                     ASSERT(bufcount < BUFFER_SIZE);
 
-                    if (buffy[bufcount] != 0)
+                    int mapx = count_x + you.x_pos - 9;
+                    int mapy = count_y + you.y_pos - 9;
+                    if (buffy[bufcount] != 0 && mapx >= 0 && mapx + 1 < GXM
+                            && mapy >= 0 && mapy + 1 < GYM)
                     {
-                        env.map[ count_x + you.x_pos - 9 ]
-                               [ count_y + you.y_pos - 9 ] = buffy[bufcount];
+                        unsigned short bch = buffy[bufcount];
+                        if (mgrd[mapx + 1][mapy + 1] != NON_MONSTER) {
+                            const monsters &m = menv[mgrd[mapx + 1][mapy + 1]];
+                            if (!mons_is_mimic(m.type)
+                                    && mons_char(m.type) == bch)
+                            {
+                                bch |= mons_colour(m.type) << 12;
+                            }
+                        }
+                        env.map[mapx][mapy] = bch;
                     }
 
                     if (Options.clean_map == 1
@@ -659,7 +683,9 @@ void viewwindow2(char draw_it, bool do_updates)
                     {
                         get_ibm_symbol(show_backup[count_x + 1][count_y + 1],
                                        &ch, &color);
-                        env.map[ count_x + you.x_pos - 9 ]
+                        if (mapx >= 0 && mapx < GXM 
+                                && mapy >= 0 && mapy < GYM)
+                            env.map[ count_x + you.x_pos - 9 ]
                                [ count_y + you.y_pos - 9 ] = ch;
                     }
                     bufcount += 2;
@@ -695,18 +721,20 @@ void viewwindow2(char draw_it, bool do_updates)
 
                 ASSERT(bufcount + 1 < BUFFER_SIZE);
 
-                buffy[bufcount] = env.map[ count_x + you.x_pos - 17 ]
+                buffy[bufcount] = (unsigned char) 
+                                  env.map[ count_x + you.x_pos - 17 ]
                                          [ count_y + you.y_pos - 9 ];
 
                 buffy[bufcount + 1] = DARKGREY;
                 if (Options.colour_map)
                 {
-                    if (env.map[ count_x + you.x_pos - 16 ]
-                               [ count_y + you.y_pos - 8 ] != 0)
+                    if (env.map[ count_x + you.x_pos - 17 ]
+                               [ count_y + you.y_pos - 9 ] != 0)
                     {
                         buffy[bufcount + 1] 
                                 = colour_code_map( count_x + you.x_pos - 17, 
-                                                   count_y + you.y_pos - 9 );
+                                                   count_y + you.y_pos - 9,
+                                                   Options.item_colour );
                     }
                 }
                 bufcount += 2;
@@ -747,7 +775,7 @@ void viewwindow2(char draw_it, bool do_updates)
         // following lines are purely optional.
         // if used,  players will 'jump' move.
         // Resting will be a LOT faster too.
-        if (you.running == 0)
+        if (you.running == 0 || (you.running < 0 && Options.travel_delay > -1))
         {
             for (count_x = 0; count_x < 1120; count_x += 2)
             {                   // 1056
@@ -769,18 +797,166 @@ void viewwindow2(char draw_it, bool do_updates)
     }
 }                               // end viewwindow2()
 
-char colour_code_map( int x, int y )
+static char get_travel_colour( int x, int y )
+{
+    if (is_waypoint(x + 1, y + 1))
+        return LIGHTGREEN;
+
+    short dist = point_distance[x + 1]
+                               [y + 1];
+    return dist > 0                     ?   BLUE :
+           dist == PD_EXCLUDED          ?   LIGHTMAGENTA :
+           dist == PD_EXCLUDED_RADIUS   ?   RED :
+           dist < 0                     ?   CYAN :
+                                            DARKGREY;
+}
+            
+#if defined(WIN32CONSOLE) || defined(DOS)
+static unsigned short dos_reverse_brand(unsigned short colour)
+{
+    if (Options.dos_use_background_intensity)
+    {
+        // If the console treats the intensity bit on background colours
+        // correctly, we can do a very simple colour invert.
+
+        // Special casery for shadows. Note this must be matched by the fix
+        // to libw32c.cc (the unpatched libw32c.cc does not draw spaces of any 
+        // colour).
+        if (colour == BLACK)
+            colour = (DARKGREY << 4);
+        else
+            colour = (colour & 0xF) << 4;
+    }
+    else
+    {
+        // If we're on a console that takes its DOSness very seriously the
+        // background high-intensity bit is actually a blink bit. Blinking is
+        // evil, so we strip the background high-intensity bit. This, sadly,
+        // limits us to 7 background colours.
+        
+        // Strip off high-intensity bit.  Special case DARKGREY, since it's the
+        // high-intensity counterpart of black, and we don't want black on
+        // black.
+        //
+        // We *could* set the foreground colour to WHITE if the background
+        // intensity bit is set, but I think we've carried the
+        // angry-fruit-salad theme far enough already.
+
+        if (colour == DARKGREY)
+            colour |= (LIGHTGREY << 4);
+        else if (colour == BLACK)
+            colour = LIGHTGREY << 4;
+        else
+        {
+            // Zap out any existing background colour, and the high
+            // intensity bit.
+            colour  &= 7;
+
+            // And swap the foreground colour over to the background
+            // colour, leaving the foreground black.
+            colour <<= 4;
+        }
+    }
+
+    return (colour);
+}
+
+static unsigned short dos_hilite_brand(unsigned short colour,
+                                       unsigned short hilite)
+{
+    if (!hilite)
+        return (colour);
+
+    if (colour == hilite)
+        colour = 0;
+
+    colour |= (hilite << 4);
+    return (colour);
+}
+
+static unsigned short dos_brand( unsigned short colour,
+                                 unsigned brand = CHATTR_REVERSE ) 
+{
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
+        return (colour);
+
+    colour &= 0xFF;
+    
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        return dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+    else
+        return dos_reverse_brand(colour);
+    
+}
+#endif
+
+screen_buffer_t colour_code_map( int x, int y, bool item_colour, 
+                                 bool travel_colour )
 {
     // XXX: Yes, the map array and the grid array are off by one. -- bwr
-    const int map_value = env.map[x][y];
+    const int map_value = (unsigned char) env.map[x][y];
+    const unsigned short map_flags = env.map[x][y] & ENVF_FLAGS;
     const int grid_value = grd[x + 1][y + 1];
+
+    char tc = travel_colour? get_travel_colour(x, y) : DARKGREY;
+
+    if (map_flags & ENVF_DETECT_ITEM)
+        tc = Options.detected_item_colour;
+    
+    if (map_flags & ENVF_DETECT_MONS) {
+        tc = Options.detected_monster_colour;
+        return (tc);
+    }
+
+    unsigned char ecol = ENVF_COLOR(map_flags);
+    if (ecol) {
+        unsigned rmc = Options.remembered_monster_colour & 0xFFFF;
+        if (rmc == 0xFFFF)   // Use real colour
+            tc = ecol;
+        else if (rmc == 0)   // Don't colour
+            ;
+        else
+            tc = rmc;
+    }
+    
+    // XXX: [ds] If we've an important colour, override other feature
+    // colouring. Yes, this is hacky. Story of my life.
+    if (tc == LIGHTGREEN || tc == LIGHTMAGENTA)
+        return tc;
 
     // XXX: Yeah, this is ugly, but until we have stored layers in the
     // map we can't tell if we've seen a square, detected it, or just
     // detected the item or monster on top... giving colour here will
     // result in detect creature/item detecting features like stairs. -- bwr
-    if (map_value != mapch2( grid_value ))
-        return (DARKGREY);
+    if (map_value != mapch2( grid_value )) {
+        // If there's an item on this square, change colour to indicate
+        // that, iff the item's glyph matches map_value. XXX: Potentially
+        // abusable? -- ds 
+        int item = igrd[x + 1][y + 1];
+        if (item_colour && item != NON_ITEM 
+                && map_value == display_glyph(item_env_glyph(mitm[item])))
+        {
+            screen_buffer_t ic = mitm[item].colour;
+
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+            if (mitm[item].link != NON_ITEM 
+                    && Options.heap_brand != CHATTR_NORMAL)
+            {
+                ic = dos_brand(ic, Options.heap_brand);
+            }
+#elif defined(USE_COLOUR_OPTS)
+            if (mitm[item].link != NON_ITEM )
+            {
+                ic |= COLFLAG_ITEM_HEAP;
+            }
+#endif
+            // If the item colour is the background colour, tweak it to WHITE
+            // instead to catch the player's eye.
+            return ic == tc? WHITE : ic;
+        }
+
+        return tc;
+    }
 
     switch (grid_value)
     {
@@ -838,7 +1014,7 @@ char colour_code_map( int x, int y )
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ROCK_STAIRS_UP:
-        return (BLUE);
+        return (GREEN);
 
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_HIVE:
@@ -880,9 +1056,36 @@ char colour_code_map( int x, int y )
         break;
     }
 
-    return (DARKGREY);
+    return tc;
 }
 
+void clear_map()
+{
+    for (int y = 0; y < GYM - 1; ++y)
+    {
+        for (int x = 0; x < GXM - 1; ++x)
+        {
+            unsigned short envc = env.map[x][y];
+            if (!envc)
+                continue;
+
+            bool unmapped = (envc & ENVF_DETECTED) != 0;
+            // Discard flags at this point.
+            envc = (unsigned char) envc;
+
+            const unsigned char &grdc = grd[x + 1][y + 1];
+            if (envc == mapch(grdc) || envc == mapch2(grdc))
+                continue;
+
+            int item = igrd[x + 1][y + 1];
+            if (item != NON_ITEM 
+                    && envc == display_glyph(item_env_glyph(mitm[item])))
+                continue;
+
+            env.map[x][y] = unmapped? 0 : mapch2(grdc);
+        }
+    }
+}
 
 void monster_grid(bool do_updates)
 {
@@ -1008,21 +1211,31 @@ void monster_grid(bool do_updates)
             }
             else if (!mons_friendly( monster )
                      && !mons_is_mimic( monster->type )
-                     && !mons_flag( monster->type, M_NO_EXP_GAIN )
-                     && you.running > 0)
+                     && !mons_flag( monster->type, M_NO_EXP_GAIN ))
             {
-                // Friendly monsters, mimics, or harmless monsters 
-                // don't disturb the player's running/resting.
-                // 
-                // Doing it this way causes players in run mode 2
-                // to move one square, and in mode 1 to stop.  This
-                // means that the character will run one square if
-                // a monster is in sight... we automatically jump
-                // to zero if we're resting.  -- bwr
-                if (you.run_x == 0 && you.run_y == 0)
-                    you.running = 0;
-                else 
-                    you.running--;
+                interrupt_activity( AI_SEE_MONSTER );
+                if (you.running != 0
+#ifdef CLUA_BINDINGS
+                    && clua.callbooleanfn(true, "ch_stop_run",
+                                          "M", monster)
+#endif
+                        )
+                {
+                    // Friendly monsters, mimics, or harmless monsters 
+                    // don't disturb the player's running/resting.
+                    // 
+                    // Doing it this way causes players in run mode 2
+                    // to move one square, and in mode 1 to stop.  This
+                    // means that the character will run one square if
+                    // a monster is in sight... we automatically jump
+                    // to zero if we're resting.  -- bwr
+                    if (you.run_x == 0 && you.run_y == 0)
+                        stop_running();
+                    else if (you.running > 1)
+                        you.running--;
+                    else
+                        stop_running();
+                }
             }
 
             // mimics are always left on map
@@ -1047,6 +1260,59 @@ void monster_grid(bool do_updates)
                 env.show_col[monster->x - you.x_pos + 9]
                             [monster->y - you.y_pos + 9]
                     |= COLFLAG_FRIENDLY_MONSTER;
+            }
+            else if (Options.stab_brand != CHATTR_NORMAL
+                    && !mons_is_mimic(monster->type)
+                    && monster->type != MONS_OKLOB_PLANT
+                    && mons_is_stabbable(monster))
+            {
+                env.show_col[monster->x - you.x_pos + 9]
+                            [monster->y - you.y_pos + 9]
+                    |= COLFLAG_WILLSTAB;
+            }
+            else if (Options.may_stab_brand != CHATTR_NORMAL
+                    && !mons_is_mimic(monster->type)
+                    && monster->type != MONS_OKLOB_PLANT
+                    && mons_maybe_stabbable(monster))
+            {
+                env.show_col[monster->x - you.x_pos + 9]
+                            [monster->y - you.y_pos + 9]
+                    |= COLFLAG_MAYSTAB;
+            }
+
+#elif defined(WIN32CONSOLE) || defined(DOS)
+            if (Options.friend_brand != CHATTR_NORMAL 
+                    && mons_friendly(monster))
+            {
+                // We munge the colours right here for DOS and Windows, because
+                // we know exactly how the colours will be handled, and we don't
+                // want to change both DOS and Windows port code to handle
+                // friend branding.
+                unsigned short &colour =
+                        env.show_col[monster->x - you.x_pos + 9]
+                                    [monster->y - you.y_pos + 9];
+                colour = dos_brand(colour, Options.friend_brand);
+            }
+            
+            if (Options.stab_brand != CHATTR_NORMAL
+                    && !mons_is_mimic(monster->type)
+                    && monster->type != MONS_OKLOB_PLANT
+                    && mons_is_stabbable(monster))
+            {
+                unsigned short &colour =
+                        env.show_col[monster->x - you.x_pos + 9]
+                                    [monster->y - you.y_pos + 9];
+                colour = dos_brand(colour, Options.stab_brand);
+            }
+            else if (Options.may_stab_brand != CHATTR_NORMAL
+                    && !mons_is_mimic(monster->type)
+                    && monster->type != MONS_OKLOB_PLANT
+                    && mons_maybe_stabbable(monster))
+            {
+                unsigned short &colour =
+                        env.show_col[monster->x - you.x_pos + 9]
+                                    [monster->y - you.y_pos + 9];
+                colour = dos_brand(colour, Options.may_stab_brand);
             }
 #endif
         }                       // end "if (monster->type != -1 && mons_ner)"
@@ -1114,6 +1380,56 @@ bool check_awaken(int mons_aw)
     return (random2(stealth) <= mons_perc);
 }                               // end check_awaken()
 
+static int display_glyph(int env_glyph)
+{
+    unsigned short ch, color;
+    if (viewwindow == viewwindow2)
+        get_ibm_symbol(env_glyph, &ch, &color);
+    else
+        get_non_ibm_symbol(env_glyph, &ch, &color);
+    return ch;
+}
+
+static int item_env_glyph(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_ORBS:
+        return 256;
+        // need + 6 because show is 0 - 12, not -6 - +6
+    case OBJ_WEAPONS:
+    case OBJ_MISSILES:
+        return 258;
+    case OBJ_ARMOUR:
+        return 259;
+    case OBJ_WANDS:
+        return 260;
+    case OBJ_FOOD:
+        return 261;
+    case OBJ_UNKNOWN_I:
+        return 262;
+    case OBJ_SCROLLS:
+        return 263;
+    case OBJ_JEWELLERY:
+        return item.sub_type >= AMU_RAGE? 273 : 264;
+    case OBJ_POTIONS:
+        return 265;
+    case OBJ_UNKNOWN_II:
+        return 266;
+    case OBJ_BOOKS:
+        return 267;
+    case OBJ_STAVES:
+        return 269;
+    case OBJ_MISCELLANY:
+        return 270;
+    case OBJ_CORPSES:
+        return 271;
+    case OBJ_GOLD:
+        return 272;
+    default:
+        return '8';
+   }
+}
 
 void item()
 {
@@ -1130,102 +1446,31 @@ void item()
                     if (env.show[count_x - you.x_pos + 9]
                                 [count_y - you.y_pos + 9] != 0)
                     {
-                        if (grd[count_x][count_y] == DNGN_SHALLOW_WATER)
-                        {
+                        const item_def &eitem = mitm[igrd[count_x][count_y]];
+                        unsigned short &ecol = 
                             env.show_col[count_x - you.x_pos + 9]
-                                        [count_y - you.y_pos + 9] = CYAN;
-                        }
-                        else
+                                        [count_y - you.y_pos + 9];
+                        
+                        ecol = (grd[count_x][count_y] == DNGN_SHALLOW_WATER)?
+                                        CYAN
+                                      : eitem.colour;
+
+#ifdef USE_COLOUR_OPTS
+                        if (eitem.link != NON_ITEM)
                         {
-                            env.show_col[count_x - you.x_pos + 9]
-                                        [count_y - you.y_pos + 9]
-                                    = mitm[igrd[count_x][count_y]].colour;
+                            ecol |= COLFLAG_ITEM_HEAP;
                         }
-
-                        switch (mitm[igrd[count_x][count_y]].base_type)
+#elif defined(WIN32CONSOLE) || defined(DOS)
+                        if (eitem.link != NON_ITEM 
+                                && Options.heap_brand != CHATTR_NORMAL)
                         {
-                        case OBJ_ORBS:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 256;
-                            break;
-                            // need + 6 because show is 0 - 12, not -6 - +6
-                        case OBJ_WEAPONS:
-                        case OBJ_MISSILES:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 258;
-                            break;
-                        case OBJ_ARMOUR:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 259;
-                            break;
-                        case OBJ_WANDS:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 260;
-                            break;
-                        case OBJ_FOOD:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 261;
-                            break;
-                        case OBJ_UNKNOWN_I:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 262;
-                            break;
-                        case OBJ_SCROLLS:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 263;
-                            break;
-
-                        case OBJ_JEWELLERY:
-                            if (mitm[igrd[count_x][count_y]].sub_type >= AMU_RAGE)
-                            {
-                                env.show[count_x - you.x_pos + 9]
-                                        [count_y - you.y_pos + 9] = 273;
-                            }
-                            else
-                            {
-                                env.show[count_x - you.x_pos + 9]
-                                        [count_y - you.y_pos + 9] = 264;
-                            }
-                            break;
-
-                        case OBJ_POTIONS:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 265;
-                            break;
-                        case OBJ_UNKNOWN_II:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 266;
-                            break;
-                        case OBJ_BOOKS:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 267;
-                            break;
-                        case OBJ_STAVES:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 269;
-                            break;
-                        case OBJ_MISCELLANY:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 270;
-                            break;
-                        case OBJ_CORPSES:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 271;
-                            break;
-
-                        case OBJ_GOLD:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = 272;
-
-                            env.show_col[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = YELLOW;
-                            break;
-
-                        default:
-                            env.show[count_x - you.x_pos + 9]
-                                    [count_y - you.y_pos + 9] = '8';
-                            break;
+                            // Yes, exact same code as friend-branding.
+                            ecol = dos_brand(ecol, Options.heap_brand);
                         }
+#endif
+                        env.show[count_x - you.x_pos + 9]
+                                [count_y - you.y_pos + 9] =
+                                        item_env_glyph( eitem );
                     }
                 }
             }
@@ -1741,6 +1986,226 @@ void draw_border(void)
     gotoxy(40, 12); cprintf("Level");
 }                               // end draw_border()
 
+// Determines if the given feature is present at (x, y) in _grid_ coordinates.
+// If you have map coords, add (1, 1) to get grid coords.
+// Use one of
+// 1. '<' and '>' to look for stairs
+// 2. '\t' or '\\' for shops, portals.
+// 3. '^' for traps
+// 4. '_' for altars
+// 5. Anything else will look for the exact same character in the level map.
+bool is_feature(int feature, int x, int y) {
+    unsigned char envfeat = (unsigned char) env.map[x - 1][y - 1];
+    if (!envfeat)
+        return false;
+
+    // 'grid' can fit in an unsigned char, but making this a short shuts up
+    // warnings about out-of-range case values.
+    short grid = grd[x][y];
+
+    switch (feature) {
+    case 'X':
+        return (point_distance[x][y] == PD_EXCLUDED);
+    case 'F':
+    case 'W':
+        return is_waypoint(x, y);
+#ifdef STASH_TRACKING
+    case 'I':
+        return is_stash(x, y);
+#endif
+    case '_':
+        switch (grid) {
+        case DNGN_ALTAR_ZIN:
+        case DNGN_ALTAR_SHINING_ONE:
+        case DNGN_ALTAR_KIKUBAAQUDGHA:
+        case DNGN_ALTAR_YREDELEMNUL:
+        case DNGN_ALTAR_XOM:
+        case DNGN_ALTAR_VEHUMET:
+        case DNGN_ALTAR_OKAWARU:
+        case DNGN_ALTAR_MAKHLEB:
+        case DNGN_ALTAR_SIF_MUNA:
+        case DNGN_ALTAR_TROG:
+        case DNGN_ALTAR_NEMELEX_XOBEH:
+        case DNGN_ALTAR_ELYVILON:
+            return true;
+        default:
+            return false;
+        }
+    case '\t':
+    case '\\':
+        switch (grid) {
+        case DNGN_ENTER_HELL:
+        case DNGN_ENTER_LABYRINTH:
+        case DNGN_ENTER_SHOP:
+        case DNGN_ENTER_DIS:
+        case DNGN_ENTER_GEHENNA:
+        case DNGN_ENTER_COCYTUS:
+        case DNGN_ENTER_TARTARUS:
+        case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_ABYSS:
+        case DNGN_STONE_ARCH:
+        case DNGN_ENTER_PANDEMONIUM:
+        case DNGN_EXIT_PANDEMONIUM:
+        case DNGN_TRANSIT_PANDEMONIUM:
+        case DNGN_ENTER_ZOT:
+        case DNGN_RETURN_FROM_ZOT:
+            return true;
+        default:
+            return false;
+        }
+    case '<':
+        switch (grid) {
+        case DNGN_ROCK_STAIRS_UP:
+        case DNGN_STONE_STAIRS_UP_I:
+        case DNGN_STONE_STAIRS_UP_II:
+        case DNGN_STONE_STAIRS_UP_III:
+        case DNGN_RETURN_FROM_ORCISH_MINES:
+        case DNGN_RETURN_FROM_HIVE:
+        case DNGN_RETURN_FROM_LAIR:
+        case DNGN_RETURN_FROM_SLIME_PITS:
+        case DNGN_RETURN_FROM_VAULTS:
+        case DNGN_RETURN_FROM_CRYPT:
+        case DNGN_RETURN_FROM_HALL_OF_BLADES:
+        case DNGN_RETURN_FROM_TEMPLE:
+        case DNGN_RETURN_FROM_SNAKE_PIT:
+        case DNGN_RETURN_FROM_ELVEN_HALLS:
+        case DNGN_RETURN_FROM_TOMB:
+        case DNGN_RETURN_FROM_SWAMP:
+            return true;
+        default:
+            return false;
+        }
+    case '>':
+        switch (grid) {
+        case DNGN_ROCK_STAIRS_DOWN:
+        case DNGN_STONE_STAIRS_DOWN_I:
+        case DNGN_STONE_STAIRS_DOWN_II:
+        case DNGN_STONE_STAIRS_DOWN_III:
+        case DNGN_ENTER_ORCISH_MINES:
+        case DNGN_ENTER_HIVE:
+        case DNGN_ENTER_LAIR:
+        case DNGN_ENTER_SLIME_PITS:
+        case DNGN_ENTER_VAULTS:
+        case DNGN_ENTER_CRYPT:
+        case DNGN_ENTER_HALL_OF_BLADES:
+        case DNGN_ENTER_TEMPLE:
+        case DNGN_ENTER_SNAKE_PIT:
+        case DNGN_ENTER_ELVEN_HALLS:
+        case DNGN_ENTER_TOMB:
+        case DNGN_ENTER_SWAMP:
+            return true;
+        default:
+            return false;
+        }
+    case '^':
+        switch (grid) {
+        case DNGN_TRAP_MECHANICAL:
+        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_III:
+            return true;
+        default:
+            return false;
+        }
+    default: 
+        return envfeat == feature;
+    }
+}
+
+static int find_feature(unsigned char feature, int curs_x, int curs_y, 
+                         int start_x, int start_y, int anchor_x, int anchor_y,
+                         int ignore_count, char *move_x, char *move_y) {
+    int cx = anchor_x,
+        cy = anchor_y;
+
+    int firstx = -1, firsty = -1;
+    int matchcount = 0;
+
+    // Find the first occurrence of feature 'feature', spiralling around (x,y)
+    int maxradius = GXM > GYM? GXM : GYM;
+    for (int radius = 1; radius < maxradius; ++radius) {
+        for (int axis = -2; axis < 2; ++axis) {
+            int rad = radius - (axis < 0);
+            for (int var = -rad; var <= rad; ++var) {
+                int dx = radius, dy = var;
+                if (axis % 2)
+                    dx = -dx;
+                if (axis < 0) {
+                    int temp = dx;
+                    dx = dy;
+                    dy = temp;
+                }
+
+                int x = cx + dx, y = cy + dy;
+                if (x < 0 || y < 0 || x >= GXM || y >= GYM) continue;
+                if (is_feature(feature, x + 1, y + 1)) {
+                    ++matchcount;
+                    if (!ignore_count--) {
+                        // We want to cursor to (x,y)
+                        *move_x = x - (start_x + curs_x - 1);
+                        *move_y = y - (start_y + curs_y - 1);
+                        return matchcount;
+                    }
+                    else if (firstx == -1) {
+                        firstx = x;
+                        firsty = y;
+                    }
+                }
+            }
+        }
+    }
+
+    // We found something, but ignored it because of an ignorecount
+    if (firstx != -1) {
+        *move_x = firstx - (start_x + curs_x - 1);
+        *move_y = firsty - (start_y + curs_y - 1);
+        return 1;
+    }
+    return 0;
+}
+
+void find_features(const std::vector<coord_def>& features,
+        unsigned char feature, std::vector<coord_def> *found) {
+    for (unsigned feat = 0; feat < features.size(); ++feat) {
+        const coord_def& coord = features[feat];
+        if (is_feature(feature, coord.x, coord.y))
+            found->push_back(coord);
+    }
+}
+
+static int find_feature( const std::vector<coord_def>& features,
+                         unsigned char feature, int curs_x, int curs_y, 
+                         int start_x, int start_y, 
+                         int ignore_count, char *move_x, char *move_y) {
+    int firstx = -1, firsty = -1;
+    int matchcount = 0;
+
+    for (unsigned feat = 0; feat < features.size(); ++feat) {
+        const coord_def& coord = features[feat];
+
+        if (is_feature(feature, coord.x, coord.y)) {
+            ++matchcount;
+            if (!ignore_count--) {
+                // We want to cursor to (x,y)
+                *move_x = coord.x - (start_x + curs_x);
+                *move_y = coord.y - (start_y + curs_y);
+                return matchcount;
+            }
+            else if (firstx == -1) {
+                firstx = coord.x;
+                firsty = coord.y;
+            }
+        }
+    }
+
+    // We found something, but ignored it because of an ignorecount
+    if (firstx != -1) {
+        *move_x = firstx - (start_x + curs_x);
+        *move_y = firsty - (start_y + curs_y);
+        return 1;
+    }
+    return 0;
+}
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
@@ -1759,8 +2224,18 @@ void show_map( FixedVector<int, 2> &spec_place )
     char buffer[4800];
 #endif
 
+    // Vector to track all features we can travel to, in order of distance.
+    std::vector<coord_def> features;
+    if (!spec_place[0]) {
+        travel_cache.update();
+
+        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+        // Sort features into the order the player is likely to prefer.
+        arrange_features(features);
+    }
+
     // buffer2[GYM * GXM * 2] segfaults my box {dlb}
-    char buffer2[GYM * GXM * 2];        
+    screen_buffer_t buffer2[GYM * GXM * 2];        
 
     char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
     bool found_y = false;
@@ -1794,6 +2269,7 @@ void show_map( FixedVector<int, 2> &spec_place )
     const int map_lines = max_y - min_y + 1;
 
     const int start_x = min_x + (max_x - min_x + 1) / 2 - 40; // no x scrolling
+    const int block_step = Options.level_map_cursor_step;
     int start_y;                                              // y does scroll
 
     int screen_y = you.y_pos;
@@ -1815,6 +2291,7 @@ void show_map( FixedVector<int, 2> &spec_place )
 
     int curs_x = you.x_pos - start_x;
     int curs_y = you.y_pos - screen_y + half_screen;
+    int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
 
 #ifdef DOS_TERM
     gettext(1, 1, 80, 25, buffer);
@@ -1839,6 +2316,7 @@ void show_map( FixedVector<int, 2> &spec_place )
     {
         for (i = 0; i < 80; i++)
         {
+            screen_buffer_t colour = DARKGREY;
             if (start_y + j >= 65 || start_y + j <= 3 
                 || start_x + i < 0 || start_x + i >= GXM - 1)
             {
@@ -1856,12 +2334,32 @@ void show_map( FixedVector<int, 2> &spec_place )
 
             }
 
-            buffer2[bufcount2 + 1] = colour_code_map(start_x + i, start_y + j);
+            colour = colour_code_map(start_x + i, start_y + j,
+                            Options.item_colour, 
+                            !spec_place[0] && Options.travel_colour);
+
+            buffer2[bufcount2 + 1] = colour;
 
             if (start_x + i + 1 == you.x_pos && start_y + j + 1 == you.y_pos)
                 buffer2[bufcount2 + 1] = WHITE;
 
-            buffer2[bufcount2] = env.map[start_x + i][start_y + j];
+            buffer2[bufcount2] = 
+                        (unsigned char) env.map[start_x + i][start_y + j];
+            
+            // If we've a waypoint on the current square, *and* the square is
+            // a normal floor square with nothing on it, show the waypoint
+            // number.
+            if (Options.show_waypoints)
+            {
+                // XXX: This is a horrible hack.
+                screen_buffer_t &bc = buffer2[bufcount2];
+                int gridx = start_x + i + 1, gridy = start_y + j + 1;
+                unsigned char ch = is_waypoint(gridx, gridy);
+                if (ch && (bc == mapch2(DNGN_FLOOR) ||
+                           bc == mapch(DNGN_FLOOR)))
+                    bc = ch;
+            }
+            
             bufcount2 += 2;
 
 #ifdef PLAIN_TERM
@@ -1889,16 +2387,26 @@ void show_map( FixedVector<int, 2> &spec_place )
     gotoxy(curs_x, curs_y);
 
   gettything:
-    getty = getch();
+    getty = getchm(KC_LEVELMAP);
 
     if (spec_place[0] == 0 && getty != 0 && getty != '+' && getty != '-'
         && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
         && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-#ifdef UNIX
         && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
         && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
-#endif
-        && (getty < '0' || getty > '9'))
+        // Keystrokes to initiate travel
+        && getty != ',' && getty != '.' && getty != '\r' && getty != ';'
+
+        // Keystrokes for jumping to features
+        && getty != '<' && getty != '>' && getty != '@' && getty != '\t'
+        && getty != '^' && getty != '_'
+        && (getty < '0' || getty > '9')
+        && getty != CONTROL('X')
+        && getty != CONTROL('E')
+        && getty != CONTROL('F')
+        && getty != CONTROL('W')
+        && getty != CONTROL('C')
+        && getty != 'X' && getty != 'F' && getty != 'I' && getty != 'W')
     {
         goto putty;
     }
@@ -1906,20 +2414,67 @@ void show_map( FixedVector<int, 2> &spec_place )
     if (spec_place[0] == 1 && getty != 0 && getty != '+' && getty != '-'
         && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
         && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-#ifdef UNIX
         && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
         && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
-#endif
-        && getty != '.' && getty != 'S' && (getty < '0' || getty > '9'))
+        && getty != '.' && getty != 'S' && (getty < '0' || getty > '9')
+        // Keystrokes for jumping to features
+        && getty != '<' && getty != '>' && getty != '@' && getty != '\t'
+        && getty != '^' && getty != '_')
     {
         goto gettything;
     }
 
     if (getty == 0)
-        getty = getch();
+        getty = getchm(KC_LEVELMAP);
+
+#ifdef WIN32CONSOLE
+    // Translate shifted numpad to shifted vi keys. Yes,
+    // this is horribly hacky.
+    {
+        static int win_keypad[] = { 'B', 'J', 'N', 
+                                    'H', '5', 'L',
+                                    'Y', 'K', 'U' };
+        if (getty >= '1' && getty <= '9')
+            getty = win_keypad[ getty - '1' ];
+    }
+#endif
 
     switch (getty)
     {
+    case CONTROL('C'):
+        clear_map();
+        break;
+
+    case CONTROL('F'):
+    case CONTROL('W'):
+        travel_cache.add_waypoint(start_x + curs_x, start_y + curs_y);
+        // We need to do this all over again so that the user can jump
+        // to the waypoint he just created.
+        features.clear();
+        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+        // Sort features into the order the player is likely to prefer.
+        arrange_features(features);
+        move_x = move_y = 0;
+        break;
+    case CONTROL('E'):
+    case CONTROL('X'):
+        {
+            int x = start_x + curs_x, y = start_y + curs_y;
+            if (getty == CONTROL('X'))
+                toggle_exclude(x, y);
+            else
+                clear_excludes();
+
+            // We now need to redo travel colours
+            features.clear();
+            find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+            // Sort features into the order the player is likely to prefer.
+            arrange_features(features);
+
+            move_x = move_y = 0;
+        }
+        break;
+        
     case 'b':
     case '1':
         move_x = -1;
@@ -1968,84 +2523,45 @@ void show_map( FixedVector<int, 2> &spec_place )
         move_y = 0;
         break;
 
-#ifndef UNIX
-        // This is old DOS keypad support
-    case 'H':
-        move_y = -1;
-        move_x = 0;
-        break;
-    case 'P':
-        move_y = 1;
-        move_x = 0;
-        break;
-    case 'K':
-        move_x = -1;
-        move_y = 0;
-        break;
-    case 'M':
-        move_x = 1;
-        move_y = 0;
-        break;
-    case 'O':
-        move_x = -1;
-        move_y = 1;
-        break;
-    case 'I':
-        move_x = 1;
-        move_y = -1;
-        break;
-    case 'G':
-        move_y = -1;
-        move_x = -1;
-        break;
-    case 'Q':
-        move_y = 1;
-        move_x = 1;
-        break;
-
-#else
-
     case 'B':
-        move_x = -10;
-        move_y = 10;
+        move_x = -block_step;
+        move_y = block_step;
         break;
 
     case 'J':
-        move_y = 10;
+        move_y = block_step;
         move_x = 0;
         break;
 
     case 'U':
-        move_x = 10;
-        move_y = -10;
+        move_x = block_step;
+        move_y = -block_step;
         break;
 
     case 'K':
-        move_y = -10;
+        move_y = -block_step;
         move_x = 0;
         break;
 
     case 'Y':
-        move_y = -10;
-        move_x = -10;
+        move_y = -block_step;
+        move_x = -block_step;
         break;
 
     case 'H':
-        move_x = -10;
+        move_x = -block_step;
         move_y = 0;
         break;
 
     case 'N':
-        move_y = 10;
-        move_x = 10;
+        move_y = block_step;
+        move_x = block_step;
         break;
 
     case 'L':
-        move_x = 10;
+        move_x = block_step;
         move_y = 0;
         break;
-
-#endif
 
     case '+':
         move_y = 20;
@@ -2055,13 +2571,57 @@ void show_map( FixedVector<int, 2> &spec_place )
         move_y = -20;
         move_x = 0;
         break;
+    case '<':
+    case '>':
+    case '@':
+    case '\t':
+    case '^':
+    case '_':
+    case 'X':
+    case 'F':
+    case 'W':
+    case 'I':
+        move_x = 0;
+        move_y = 0;
+        if (anchor_x == -1) {
+            anchor_x = start_x + curs_x - 1;
+            anchor_y = start_y + curs_y - 1;
+        }
+        if (search_feat != getty) {
+            search_feat         = getty;
+            search_found        = 0;
+        }
+        if (!spec_place[0])
+            search_found = find_feature(features, getty, curs_x, curs_y, 
+                                        start_x, start_y,
+                                        search_found, &move_x, &move_y);
+        else
+            search_found = find_feature(getty, curs_x, curs_y,
+                                        start_x, start_y,
+                                        anchor_x, anchor_y,
+                                        search_found, &move_x, &move_y);
+        break;
     case '.':
     case '\r':
     case 'S':
-        spec_place[0] = start_x + curs_x;
-        spec_place[1] = start_y + curs_y;
-        goto putty;
-
+    case ',':
+    case ';':
+    {
+        int x = start_x + curs_x, y = start_y + curs_y;
+        if (!spec_place[0] && x == you.x_pos && y == you.y_pos)
+        {
+            if (you.travel_x > 0 && you.travel_y > 0) {
+                move_x = you.travel_x - x;
+                move_y = you.travel_y - y;
+            }
+            break;
+        }
+        else {
+            spec_place[0] = x;
+            spec_place[1] = y;
+            goto putty;
+        }
+    }
     default:
         move_x = 0;
         move_y = 0;
@@ -2099,10 +2659,12 @@ void show_map( FixedVector<int, 2> &spec_place )
             // screen_y += (curs_y + move_y) - 1;
             screen_y += move_y;
 
-            if (screen_y < min_y + half_screen)
+            if (screen_y < min_y + half_screen) {
+                move_y   = screen_y - (min_y + half_screen);
                 screen_y = min_y + half_screen;
-
-            move_y = 0;
+            }
+            else
+                move_y = 0;
         }
 
         if (curs_y + move_y > num_lines - 1)
@@ -2110,10 +2672,12 @@ void show_map( FixedVector<int, 2> &spec_place )
             // screen_y += (curs_y + move_y) - num_lines + 1;
             screen_y += move_y;
 
-            if (screen_y > max_y - half_screen) 
+            if (screen_y > max_y - half_screen) {
+                move_y   = screen_y - (max_y - half_screen);
                 screen_y = max_y - half_screen;
-
-            move_y = 0;
+            }
+            else
+                move_y = 0;
         }
     }
 
@@ -2150,7 +2714,9 @@ void magic_mapping(int map_radius, int proportion)
             if (i < 5 || j < 5 || i > (GXM - 5) || j > (GYM - 5))
                 continue;
 
-            if (env.map[i][j] == mapch2(grd[i + 1][j + 1]))
+            //if (env.map[i][j] == mapch2(grd[i + 1][j + 1]))
+            //    continue;
+            if (env.map[i][j])
                 continue;
 
             empty_count = 8;
@@ -2551,7 +3117,7 @@ bool mons_near(struct monsters *monster, unsigned int foe)
 // without the IBM graphics option.
 //
 //---------------------------------------------------------------
-static void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
+void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
                                unsigned short *color)
 {
     ASSERT(color != NULL);
@@ -2981,6 +3547,7 @@ static void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
 
     case 272:
         *ch = '$';
+        *color = YELLOW;
         break;                  // $ gold
 
     case 273:
@@ -3076,24 +3643,32 @@ void viewwindow3(char draw_it, bool do_updates)
                 bufcount += 16;
                 for (count_x = 0; count_x < 17; count_x++)
                 {
-                    if (buffy[bufcount] != 0
-                        && (count_x + you.x_pos - 9) >= 0
-                        && (count_y + you.y_pos - 9) >= 0)
+                    int enx = count_x + you.x_pos - 9,
+                        eny = count_y + you.y_pos - 9;
+                    if (buffy[bufcount] != 0 && enx >= 0 && eny >= 0
+                            && enx + 1 < GXM && eny + 1 < GYM)
                     {
-                        env.map[count_x + you.x_pos - 9]
-                               [count_y + you.y_pos - 9] = buffy[bufcount];
+                        unsigned short bch = buffy[bufcount];
+                        if (mgrd[enx + 1][eny + 1] != NON_MONSTER) {
+                            const monsters &m = menv[ mgrd[enx + 1][eny + 1] ];
+                            if (!mons_is_mimic(m.type)
+                                    && mons_char(m.type) == bch)
+                            {
+                                bch |= mons_colour(m.type) << 12;
+                            }
+                        }
+                        env.map[enx][eny] = bch;
                     }
 
                     if (Options.clean_map == 1
                         && show_backup[count_x + 1][count_y + 1] != 0
-                        && (count_x + you.x_pos - 9) >= 0
-                        && (count_y + you.y_pos - 9) >= 0)
+                        && enx >= 0
+                        && eny >= 0)
                     {
                         get_non_ibm_symbol( show_backup[count_x + 1]
                                                        [count_y + 1],
                                             &ch, &color );
-                        env.map[count_x + you.x_pos - 9]
-                               [count_y + you.y_pos - 9] = ch;
+                        env.map[enx][eny] = ch;
                     }
                     bufcount += 2;
                 }
@@ -3126,19 +3701,21 @@ void viewwindow3(char draw_it, bool do_updates)
                     continue;
                 }
 
-                buffy[bufcount] = env.map[count_x + you.x_pos - 17]
+                buffy[bufcount] = (unsigned char) 
+                                  env.map[count_x + you.x_pos - 17]
                                          [count_y + you.y_pos - 9];
 
                 buffy[bufcount + 1] = DARKGREY;
 
                 if (Options.colour_map)
                 {
-                    if (env.map[count_x + you.x_pos - 16]
-                               [count_y + you.y_pos - 8] != 0)
+                    if (env.map[count_x + you.x_pos - 17]
+                               [count_y + you.y_pos - 9] != 0)
                     {
                         buffy[bufcount + 1]
                                 = colour_code_map( count_x + you.x_pos - 17,
-                                                   count_y + you.y_pos - 9 );
+                                                   count_y + you.y_pos - 9,
+                                                   Options.item_colour );
                     }
                 }
 
@@ -3175,7 +3752,8 @@ void viewwindow3(char draw_it, bool do_updates)
         gotoxy(2, 1);
         bufcount = 0;
 
-        if (you.running == 0)       // this line is purely optional
+        // this line is purely optional
+        if (you.running == 0 || (you.running < 0 && Options.travel_delay > -1))
         {
             for (count_x = 0; count_x < 1120; count_x += 2)     // 1056
             {

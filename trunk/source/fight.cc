@@ -1676,7 +1676,9 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
                 /* no punching with a shield or 2-handed wpn, except staves */
                 if (bearing_shield || coinflip()
-                    || (ur_armed && hands_reqd == HANDS_TWO_HANDED))
+                    || (ur_armed && hands_reqd == HANDS_TWO_HANDED 
+                        && you.inv[weapon].base_type != OBJ_STAVES 
+                        && you.inv[weapon].sub_type  != WPN_QUARTERSTAFF) )
                 {
                     continue;
                 }
@@ -2866,7 +2868,7 @@ commented out for now
                     break;
                 }
 
-                if (coinflip())
+                if (coinflip() && you.level_type != LEVEL_ABYSS)
                 {
                     banished(DNGN_ENTER_ABYSS);
                     break;
@@ -3705,6 +3707,8 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
                     strcpy( noise, "slash" );
                 else if (damage < HIT_STRONG)
                     strcpy( noise, "slice" );
+                else
+                    strcpy( noise, "shred" );
                 break;
             case TRAN_ICE_BEAST:
             case TRAN_STATUE:

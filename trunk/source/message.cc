@@ -24,8 +24,11 @@
 
 #include "externs.h"
 
+#include "initfile.h"
 #include "macro.h"
+#include "player.h"
 #include "stuff.h"
+#include "travel.h"
 #include "view.h"
 
 
@@ -171,7 +174,7 @@ static char channel_to_colour( int channel, int param )
         case MSGCH_ROTTEN_MEAT:
         case MSGCH_EQUIPMENT:
         default:
-            ret = LIGHTGREY;
+            ret = param > 0? param : LIGHTGREY;
             break;
         }
         break;
@@ -220,7 +223,38 @@ void mpr(const char *inf, int channel, int param)
     if (colour == MSGCOL_MUTED)
         return;
 
-    you.running = 0;
+    interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
+
+    // If you're travelling, only certain user-specified messages can break 
+    // travel
+    if (you.running < 0)
+    {
+        std::string message = inf;
+        for (unsigned i = 0; i < Options.stop_travel.size(); ++i)
+        {
+            if (Options.stop_travel[i].is_filtered( channel, message ))
+            {
+                stop_running();
+                break;
+            }
+        }
+    }
+
+    if (Options.sound_mappings.size() > 0) 
+    {
+        std::string message = inf;
+        for (unsigned i = 0; i < Options.sound_mappings.size(); i++) 
+        {
+            // Maybe we should allow message channel matching as for 
+            // stop_travel?
+            if (Options.sound_mappings[i].pattern.matches(message))
+            {
+                play_sound(Options.sound_mappings[i].soundfile.c_str());
+                break;
+            }
+        }
+    }
+
     flush_input_buffer( FLUSH_ON_MESSAGE );
 
 #ifdef DOS_TERM
@@ -305,9 +339,14 @@ void mesclr( bool force )
 #else
 
     int numLines = get_number_of_lines() - startLine + 1;
+
+    char blankline[81];
+    memset(blankline, ' ', sizeof blankline);
+    blankline[80] = 0;
+
     for (int i = 0; i < numLines; i++)
     {
-        cprintf( "                                                                               " );
+        cprintf( blankline );
 
         if (i < numLines - 1)
         {
@@ -351,6 +390,37 @@ void more(void)
 
     mesclr( (Message_Line >= get_number_of_lines() - 18) );
 }                               // end more()
+
+std::string get_last_messages(int mcount)
+{
+    if (mcount <= 0) return std::string();
+    if (mcount > NUM_STORED_MESSAGES) mcount = NUM_STORED_MESSAGES;
+
+    bool full_buffer = Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0;
+    int initial = Next_Message - mcount;
+    if (initial < 0 || initial > NUM_STORED_MESSAGES)
+        initial = full_buffer? initial + NUM_STORED_MESSAGES : 0;
+
+    std::string text;
+    int count = 0;
+    for (int i = initial; i != Next_Message; )
+    {
+        if (Store_Message[i].text.length())
+        {
+            text += Store_Message[i].text;
+            text += EOL;
+            count++;
+        }
+
+        if (++i >= NUM_STORED_MESSAGES)
+            i -= NUM_STORED_MESSAGES;
+    }
+
+    // An extra line of clearance.
+    if (count) text += EOL;
+
+    return text;
+}
 
 void replay_messages(void)
 {

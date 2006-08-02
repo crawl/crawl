@@ -1949,6 +1949,22 @@ void exercise_spell( int spell, bool spc, bool success )
 
 }                               // end exercise_spell()
 
+static bool send_abyss()
+{
+    if (you.level_type != LEVEL_ABYSS)
+    {
+        mpr("You are cast into the Abyss!");
+        more();
+        banished(DNGN_ENTER_ABYSS);     // sends you to the abyss
+        return (true);
+    }
+    else
+    {
+        mpr("The world appears momentarily distorted.");
+        return (false);
+    }
+}
+
 /* This determines how likely it is that more powerful wild magic effects
  * will occur. Set to 100 for the old probabilities (although the individual
  * effects have been made much nastier since then).
@@ -2332,9 +2348,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 }
                 break;
             case 6:
-                mpr("You are cast into the Abyss!");
-                more();
-                banished(DNGN_ENTER_ABYSS);     // sends you to the abyss
+                send_abyss();
                 break;
             }
             break;
@@ -2355,9 +2369,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 potion_effect(POT_CONFUSION, 60);
                 break;
             case 2:
-                mpr("You are cast into the Abyss!");
-                more();
-                banished(DNGN_ENTER_ABYSS);     // sends you to the abyss
+                send_abyss();
                 break;
             case 3:
                 mpr("You feel saturated with unharnessed energies!");
@@ -2530,8 +2542,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 3:
-                mpr("You are cast into the Abyss!");
-                banished(DNGN_ENTER_ABYSS);
+                send_abyss();
                 break;
             }
             break;

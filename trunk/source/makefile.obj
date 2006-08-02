@@ -29,6 +29,7 @@ lev-pand.o \
 libutil.o \
 macro.o \
 maps.o \
+menu.o \
 message.o \
 misc.o \
 monplace.o \
@@ -55,8 +56,13 @@ spells4.o \
 spl-book.o \
 spl-cast.o \
 spl-util.o \
+stash.o \
 stuff.o \
 tags.o \
 transfor.o \
+travel.o \
 view.o \
-wpn-misc.o
+wpn-misc.o \
+Kills.o \
+mt19937ar.o \
+clua.o

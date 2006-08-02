@@ -36,11 +36,12 @@
 static int band_member(int band, int power);
 static int choose_band( int mon_type, int power, int &band_size );
 static int place_monster_aux(int mon_type, char behaviour, int target,
-    int px, int py, int power, int extra, bool first_band_member);
+    int px, int py, int power, int extra, bool first_band_member,
+    int dur = 0);
 
 bool place_monster(int &id, int mon_type, int power, char behaviour,
     int target, bool summoned, int px, int py, bool allow_bands,
-    int proximity, int extra)
+    int proximity, int extra, int dur)
 {
     int band_size = 0;
     int band_monsters[BIG_BAND];        // band monster types
@@ -334,7 +335,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     for(i = 1; i < band_size; i++)
     {
         place_monster_aux( band_monsters[i], behaviour, target, px, py, 
-                           lev_mons, extra, false );
+                           lev_mons, extra, false, dur );
     }
 
     // placement of first monster, at least, was a success.
@@ -343,7 +344,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
 
 static int place_monster_aux( int mon_type, char behaviour, int target,
                               int px, int py, int power, int extra,
-                              bool first_band_member )
+                              bool first_band_member, int dur )
 {
     int id, i;
     char grid_wanted;
@@ -530,6 +531,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
 
         menv[id].behaviour = BEH_WANDER;
     }
+
+    // dur should always be ENCH_ABJ_xx
+    if (dur >= ENCH_ABJ_I && dur <= ENCH_ABJ_VI)
+        mons_add_ench(&menv[id], dur );
 
     menv[id].foe = target;
 
@@ -1005,7 +1010,8 @@ static int band_member(int band, int power)
 // PUBLIC FUNCTION -- mons_place().
 
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
-                int px, int py, int level_type, int proximity, int extra )
+                int px, int py, int level_type, int proximity, int extra,
+                int dur )
 {
     int mon_count = 0;
     int temp_rand;          // probabilty determination {dlb}
@@ -1068,7 +1074,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
     }
 
     if (place_monster( mid, mon_type, power, behaviour, target, summoned,
-                       px, py, permit_bands, proximity, extra ) == false)
+                       px, py, permit_bands, proximity, extra, dur ) == false)
     {
         return (-1);
     }
@@ -1120,7 +1126,7 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
     if (empty_surrounds( cr_x, cr_y, spcw, true, empty ))
     {
         summd = mons_place( cls, beha, hitting, true, empty[0], empty[1],
-                            you.level_type, 0, zsec );
+                            you.level_type, 0, zsec, dur );
     }
 
     // determine whether creating a monster is successful (summd != -1) {dlb}:

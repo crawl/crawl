@@ -4008,7 +4008,7 @@ void explosion( struct bolt &beam, bool hole_in_the_middle )
 
     // turn buffering off
 #ifdef WIN32CONSOLE
-    bool oldValue;
+    bool oldValue = true;
     if (!beam.isTracer)
         oldValue = setBuffering(false);
 #endif

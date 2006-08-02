@@ -30,7 +30,9 @@
 
 #include "externs.h"
 
+#include "clua.h"
 #include "itemname.h"
+#include "items.h"
 #include "macro.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -42,6 +44,7 @@
 #include "spl-util.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "travel.h"
 #include "view.h"
 #include "wpn-misc.h"
 
@@ -177,7 +180,7 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 
 // Looks in equipment "slot" to see if there is an equiped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
-int player_equip( int slot, int sub_type )
+int player_equip( int slot, int sub_type, bool calc_unid )
 {
     int ret = 0;
 
@@ -197,7 +200,9 @@ int player_equip( int slot, int sub_type )
         // Like above, but must be magical stave.
         if (you.equip[EQ_WEAPON] != -1
             && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-            && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type)
+            && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type
+            && (calc_unid || 
+                item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE)))
         {
             ret++;
         }
@@ -205,13 +210,17 @@ int player_equip( int slot, int sub_type )
 
     case EQ_RINGS:
         if (you.equip[EQ_LEFT_RING] != -1 
-            && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type)
+            && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type
+            && (calc_unid || 
+                item_type_known(you.inv[you.equip[EQ_LEFT_RING]])))
         {
             ret++;
         }
 
         if (you.equip[EQ_RIGHT_RING] != -1 
-            && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type)
+            && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type
+            && (calc_unid || 
+               item_type_known(you.inv[you.equip[EQ_RIGHT_RING]])))
         {
             ret++;
         }
@@ -251,7 +260,9 @@ int player_equip( int slot, int sub_type )
 
     default:
         if (you.equip[slot] != -1 
-            && you.inv[you.equip[slot]].sub_type == sub_type)
+            && you.inv[you.equip[slot]].sub_type == sub_type
+            && (calc_unid || 
+                item_ident(you.inv[you.equip[slot]], ISFLAG_KNOW_TYPE)))
         {
             ret++;
         }
@@ -376,12 +387,12 @@ int player_damage_brand( void )
     return (ret);
 }
 
-int player_teleport(void)
+int player_teleport(bool calc_unid)
 {
     int tp = 0;
 
     /* rings */
-    tp += 8 * player_equip( EQ_RINGS, RING_TELEPORTATION );
+    tp += 8 * player_equip( EQ_RINGS, RING_TELEPORTATION, calc_unid );
 
     /* mutations */
     tp += you.mutation[MUT_TELEPORT] * 3;
@@ -391,7 +402,7 @@ int player_teleport(void)
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
         && is_random_artefact( you.inv[you.equip[EQ_WEAPON]] ))
     {
-        tp += scan_randarts(RAP_CAUSE_TELEPORTATION);
+        tp += scan_randarts(RAP_CAUSE_TELEPORTATION, calc_unid);
     }
 
     return tp;
@@ -598,19 +609,19 @@ int player_res_magic(void)
     return rm;
 }
 
-int player_res_fire(void)
+int player_res_fire(bool calc_unid)
 {
     int rf = 0;
 
     /* rings of fire resistance/fire */
-    rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE );
-    rf += player_equip( EQ_RINGS, RING_FIRE );
+    rf += player_equip( EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid );
+    rf += player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
     /* rings of ice */
-    rf -= player_equip( EQ_RINGS, RING_ICE );
+    rf -= player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
     /* Staves */
-    rf += player_equip( EQ_STAFF, STAFF_FIRE );
+    rf += player_equip( EQ_STAFF, STAFF_FIRE, calc_unid );
 
     // body armour:
     rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
@@ -622,7 +633,7 @@ int player_res_fire(void)
     rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
     // randart weapons:
-    rf += scan_randarts(RAP_FIRE);
+    rf += scan_randarts(RAP_FIRE, calc_unid);
 
     // species:
     if (you.species == SP_MUMMY)
@@ -661,19 +672,19 @@ int player_res_fire(void)
     return (rf);
 }
 
-int player_res_cold(void)
+int player_res_cold(bool calc_unid)
 {
     int rc = 0;
 
     /* rings of fire resistance/fire */
-    rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD );
-    rc += player_equip( EQ_RINGS, RING_ICE );
+    rc += player_equip( EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid );
+    rc += player_equip( EQ_RINGS, RING_ICE, calc_unid );
 
     /* rings of ice */
-    rc -= player_equip( EQ_RINGS, RING_FIRE );
+    rc -= player_equip( EQ_RINGS, RING_FIRE, calc_unid );
 
     /* Staves */
-    rc += player_equip( EQ_STAFF, STAFF_COLD );
+    rc += player_equip( EQ_STAFF, STAFF_COLD, calc_unid );
 
     // body armour:
     rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
@@ -685,7 +696,7 @@ int player_res_cold(void)
     rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_RESISTANCE );
 
     // randart weapons:
-    rc += scan_randarts(RAP_COLD);
+    rc += scan_randarts(RAP_COLD, calc_unid);
 
     // species:
     if (you.species == SP_MUMMY || you.species == SP_GHOUL)
@@ -724,7 +735,7 @@ int player_res_cold(void)
     return (rc);
 }
 
-int player_res_electricity(void)
+int player_res_electricity(bool calc_unid)
 {
     int re = 0;
 
@@ -732,13 +743,13 @@ int player_res_electricity(void)
         re++;
 
     // staff
-    re += player_equip( EQ_STAFF, STAFF_AIR );
+    re += player_equip( EQ_STAFF, STAFF_AIR, calc_unid );
 
     // body armour:
     re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
 
     // randart weapons:
-    re += scan_randarts(RAP_ELECTRICITY);
+    re += scan_randarts(RAP_ELECTRICITY, calc_unid);
 
     // species:
     if (you.species == SP_BLACK_DRACONIAN && you.experience_level > 17)
@@ -764,15 +775,15 @@ int player_res_electricity(void)
 }                               // end player_res_electricity()
 
 // funny that no races are susceptible to poisons {dlb}
-int player_res_poison(void)
+int player_res_poison(bool calc_unid)
 {
     int rp = 0;
 
     /* rings of poison resistance */
-    rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE );
+    rp += player_equip( EQ_RINGS, RING_POISON_RESISTANCE, calc_unid );
 
     /* Staves */
-    rp += player_equip( EQ_STAFF, STAFF_POISON );
+    rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
 
     /* the staff of Olgreb: */
     if (you.equip[EQ_WEAPON] != -1
@@ -794,7 +805,7 @@ int player_res_poison(void)
         rp++;
 
     // randart weapons:
-    rp += scan_randarts(RAP_POISON);
+    rp += scan_randarts(RAP_POISON, calc_unid);
 
     // species:
     if (you.species == SP_MUMMY || you.species == SP_NAGA
@@ -984,12 +995,12 @@ unsigned char player_energy(void)
     return pe;
 }
 
-int player_prot_life(void)
+int player_prot_life(bool calc_unid)
 {
     int pl = 0;
 
     // rings
-    pl += player_equip( EQ_RINGS, RING_LIFE_PROTECTION );
+    pl += player_equip( EQ_RINGS, RING_LIFE_PROTECTION, calc_unid );
 
     // armour: (checks body armour only)
     pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
@@ -1016,7 +1027,7 @@ int player_prot_life(void)
     }
 
     // randart wpns
-    pl += scan_randarts(RAP_NEGATIVE_ENERGY);
+    pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
 
     // demonic power
     pl += you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE];
@@ -1576,11 +1587,11 @@ int player_shield_class(void)   //jmf: changes for new spell
     return (base_shield);
 }                               // end player_shield_class()
 
-unsigned char player_see_invis(void)
+unsigned char player_see_invis(bool calc_unid)
 {
     unsigned char si = 0;
 
-    si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE );
+    si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
 
     /* armour: (checks head armour only) */
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
@@ -1597,7 +1608,7 @@ unsigned char player_see_invis(void)
         si++;
 
     /* randart wpns */
-    int artefacts = scan_randarts(RAP_EYESIGHT);
+    int artefacts = scan_randarts(RAP_EYESIGHT, calc_unid);
 
     if (artefacts > 0)
         si += artefacts;
@@ -1619,11 +1630,11 @@ bool player_monster_visible( struct monsters *mon )
     return (true);
 }
 
-unsigned char player_sust_abil(void)
+unsigned char player_sust_abil(bool calc_unid)
 {
     unsigned char sa = 0;
 
-    sa += player_equip( EQ_RINGS, RING_SUSTAIN_ABILITIES );
+    sa += player_equip( EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid );
 
     return sa;
 }                               // end player_sust_abil()
@@ -1691,6 +1702,11 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
             mpr("You are being crushed by all of your possessions.");
     }
+
+    // Stop travel if we get burdened (as from potions of might/levitation
+    // wearing off).
+    if (you.burden_state > old_burdenstate)
+        interrupt_activity( AI_BURDEN_CHANGE );
 
     return you.burden;
 }                               // end burden_change()
@@ -2875,7 +2891,7 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
     return (species_buff);
 }                               // end species_name()
 
-bool wearing_amulet(char amulet)
+bool wearing_amulet(char amulet, bool calc_unid)
 {
     if (amulet == AMU_CONTROLLED_FLIGHT
         && (you.duration[DUR_CONTROLLED_FLIGHT]
@@ -2898,7 +2914,9 @@ bool wearing_amulet(char amulet)
     if (you.equip[EQ_AMULET] == -1)
         return false;
 
-    if (you.inv[you.equip[EQ_AMULET]].sub_type == amulet)
+    if (you.inv[you.equip[EQ_AMULET]].sub_type == amulet
+            && (calc_unid || 
+                item_type_known(you.inv[you.equip[EQ_AMULET]])))
         return true;
 
     return false;
@@ -3096,7 +3114,7 @@ int slaying_bonus(char which_affected)
 
 /* Checks each equip slot for a randart, and adds up all of those with
    a given property. Slow if any randarts are worn, so avoid where possible. */
-int scan_randarts(char which_property)
+int scan_randarts(char which_property, bool calc_unid)
 {
     int i = 0;
     int retval = 0;
@@ -3115,6 +3133,11 @@ int scan_randarts(char which_property)
         if (!is_random_artefact( you.inv[ eq ] ))
             continue;
 
+        // Ignore unidentified items [TileCrawl dump enhancements].
+        if (!item_ident(you.inv[ eq ], ISFLAG_KNOW_PROPERTIES) && 
+                !calc_unid)
+            continue;
+
         retval += randart_wpn_property( you.inv[ eq ], which_property );
     }
 
@@ -3130,6 +3153,10 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     // sanity - is non-zero amount?
     if (amount == 0)
         return;
+
+    // Stop running/travel if a stat drops.
+    if (amount < 0)
+        interrupt_activity( AI_STAT_CHANGE );
 
     if (!suppress_msg)
         strcpy(info, "You feel ");
@@ -3882,4 +3909,163 @@ void rot_player( int amount )
 
         you.rotting += amount;
     }
+}
+
+void run_macro(const char *macroname)
+{
+    if (you.activity != ACT_NONE && you.activity != ACT_MACRO)
+        return;
+
+#ifdef CLUA_BINDINGS
+    if (!clua)
+    {
+        mpr("Lua not initialized", MSGCH_DIAGNOSTICS);
+        you.activity = ACT_NONE;
+        return;
+    }
+
+    if (!clua.callbooleanfn(false, "c_macro", "s", macroname))
+    {
+        if (clua.error.length())
+            mpr(clua.error.c_str());
+        you.activity = ACT_NONE;
+    }
+    else
+    {
+        you.activity = ACT_MACRO;
+    }
+#else
+    you.activity = ACT_NONE;
+#endif
+}
+
+void perform_activity()
+{
+    switch (you.activity)
+    {
+    case ACT_MULTIDROP:
+        drop();
+        break;
+    case ACT_MACRO:
+        run_macro();
+        break;
+    default:
+        break;
+    }
+}
+
+#ifdef CLUA_BINDINGS
+static const char *activity_interrupt_name(ACT_INTERRUPT ai)
+{
+    switch (ai)
+    {
+    case AI_FORCE_INTERRUPT:    return "force";
+    case AI_KEYPRESS:           return "keypress";
+    case AI_FULL_HP:            return "full_hp";
+    case AI_FULL_MP:            return "full_mp";
+    case AI_STATUE:             return "statue";
+    case AI_HUNGRY:             return "hungry";
+    case AI_MESSAGE:            return "message";
+    case AI_HP_LOSS:            return "hp_loss";
+    case AI_BURDEN_CHANGE:      return "burden";
+    case AI_STAT_CHANGE:        return "stat";
+    case AI_SEE_MONSTER:        return "monster";
+    case AI_TELEPORT:           return "teleport";
+    default:                    return "unknown";
+    }
+}
+
+static const char *activity_names[] = {
+    "",
+    "multidrop",
+    "run",
+    "travel",
+    "macro"
+};
+
+static const char *activity_name(int act)
+{
+    if (act < ACT_NONE || act >= ACT_ACTIVITY_COUNT)
+        return NULL;
+    return activity_names[act];
+}
+#endif
+
+static void kill_activity()
+{
+    if (you.running)
+        stop_running();
+    you.activity = ACT_NONE;
+}
+
+static bool userdef_interrupt_activity( ACT_INTERRUPT ai, 
+                                        const activity_interrupt_t &at )
+{
+#ifdef CLUA_BINDINGS
+    lua_State *ls = clua.state();
+    if (!ls || ai == AI_FORCE_INTERRUPT)
+    {
+        if (ai == AI_FORCE_INTERRUPT || you.activity == ACT_MACRO)
+            kill_activity();
+        return true;
+    }
+    
+    const char *interrupt_name = activity_interrupt_name(ai);
+    const char *act_name = activity_name(you.activity);
+
+    bool ran = clua.callfn("c_interrupt_activity", "1:ssA",
+                    act_name, interrupt_name, &at);
+    if (ran)
+    {
+        // If the function returned nil, we want to cease processing.
+        if (lua_isnil(ls, -1))
+        {
+            lua_pop(ls, 1);
+            return false;
+        }
+
+        bool stopact = lua_toboolean(ls, -1);
+        lua_pop(ls, 1);
+        if (stopact)
+        {
+            kill_activity();
+            return true;
+        }
+    }
+
+    if (you.activity == ACT_MACRO &&
+                clua.callbooleanfn(true, "c_interrupt_macro",
+                    "sA", interrupt_name, &at))
+    {
+        kill_activity();
+    }
+
+#else
+    if (you.activity == ACT_MACRO)
+        kill_activity();
+#endif
+    return true;
+}
+
+void interrupt_activity( ACT_INTERRUPT ai, const activity_interrupt_t &at )
+{
+    if (you.running && !you.activity)
+        you.activity = you.running > 0? ACT_RUNNING : ACT_TRAVELING;
+
+    if (!you.activity)
+        return;
+
+    if (!userdef_interrupt_activity(ai, at) || !you.activity)
+    {
+        if (you.activity == ACT_RUNNING || you.activity == ACT_TRAVELING)
+            you.activity = ACT_NONE;
+        return;
+    }
+    
+    if (!ai || (Options.activity_interrupts[ you.activity ] & ai)) {
+        kill_activity();
+    }
+
+    if (you.activity == ACT_RUNNING || you.activity == ACT_TRAVELING)
+        you.activity = ACT_NONE;
 }

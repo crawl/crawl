@@ -37,5 +37,11 @@ void direction( struct dist &moves, int restricts = DIR_NONE,
 void look_around( struct dist &moves, bool justLooking, int first_move = -1,
                   int mode = TARG_ANY );
 
+bool in_los_bounds(int x, int y);
+bool in_viewport_bounds(int x, int y);
+bool in_los(int x, int y);
+bool in_vlos(int x, int y);
+
+std::string feature_description(int mx, int my);
 
 #endif

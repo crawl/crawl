@@ -155,6 +155,9 @@ void exercise(char exsk, int deg)
             if (!you.practise_skill[exsk] && !one_chance_in(4))
                 break;
 
+            if (you.skills[exsk] >= 27)
+                break;
+
             exercise2( exsk );
             deg--;
         }

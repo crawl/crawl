@@ -11,7 +11,7 @@
 char *strlwr(char *str);
 char getche(void);
 
-
+int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);
 int gotoxy(int x, int y);

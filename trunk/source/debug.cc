@@ -906,8 +906,15 @@ void create_spec_object(void)
 
             if (type_wanted == -1)
             {
-                mpr( "No such item." );
-                return;
+                // ds -- if specs is a valid int, try using that.
+                //       Since zero is atoi's copout, the wizard
+                //       must enter (subtype + 1).
+                if (!(type_wanted = atoi(specs)))
+                {
+                    mpr( "No such item." );
+                    return;
+                }
+                type_wanted--;
             }
             
             mitm[thing_created].sub_type = type_wanted;
@@ -986,8 +993,10 @@ void create_spec_object(void)
     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
     if (thing_created != NON_ITEM)
+    {
+        origin_acquired( mitm[thing_created], AQ_WIZMODE );
         canned_msg( MSG_SOMETHING_APPEARS );
-
+    }
 }
 #endif
 

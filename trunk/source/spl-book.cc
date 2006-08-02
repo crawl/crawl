@@ -764,11 +764,15 @@ int which_spell_in_book(int sbook_type, int spl)
     return (wsib_pass[ spl + 1 ]);
 }                               // end which_spell_in_book()
 
-static unsigned char spellbook_contents( item_def &book, int action )
+// If fs is not NULL, updates will be to the formatted_string instead of
+// the display.
+unsigned char spellbook_contents( item_def &book, int action,
+                                  formatted_string *fs )
 {
     FixedVector<int, SPELLBOOK_SIZE> spell_types;    // was 10 {dlb}
     int spelcount = 0;
     int i, j;
+    bool update_screen = !fs;
 
     const int spell_levels = player_spell_levels();
 
@@ -789,29 +793,23 @@ static unsigned char spellbook_contents( item_def &book, int action )
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
-#ifdef DOS_TERM
-    char buffer[4800];
-    gettext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
-
     spellbook_template( type, spell_types );
 
-    clrscr();
-    textcolor(LIGHTGREY);
+    formatted_string out;
+    out.textcolor(LIGHTGREY);
 
     char str_pass[ ITEMNAME_SIZE ];
     item_name( book, DESC_CAP_THE, str_pass );
-    cprintf( str_pass );
+    out.cprintf( str_pass );
 
-    cprintf( EOL EOL " Spells                             Type                      Level" EOL );
+    out.cprintf( EOL EOL " Spells                             Type                      Level" EOL );
 
     for (j = 1; j < SPELLBOOK_SIZE; j++)
     {
         if (spell_types[j] == SPELL_NO_SPELL)
             continue;
 
-        cprintf(" ");
+        out.cprintf(" ");
 
         bool knowsSpell = false;
         for (i = 0; i < 25 && !knowsSpell; i++)
@@ -843,7 +841,7 @@ static unsigned char spellbook_contents( item_def &book, int action )
             }
         }
 
-        textcolor( colour );
+        out.textcolor( colour );
 
         // Old:
         // textcolor(knowsSpell ? DARKGREY : LIGHTGREY);
@@ -854,15 +852,15 @@ static unsigned char spellbook_contents( item_def &book, int action )
         strng[0] = index_to_letter(spelcount);
         strng[1] = '\0';
 
-        cprintf(strng);
-        cprintf(" - ");
+        out.cprintf(strng);
+        out.cprintf(" - ");
 
-        cprintf( spell_title(spell_types[j]) );
-        gotoxy( 35, wherey() );
+        out.cprintf( spell_title(spell_types[j]) );
+        out.gotoxy( 35, -1 );
 
         
         if (action == RBOOK_USE_STAFF)
-            cprintf( "Evocations" );
+            out.cprintf( "Evocations" );
         else
         {
             bool already = false;
@@ -872,55 +870,70 @@ static unsigned char spellbook_contents( item_def &book, int action )
                 if (spell_typematch( spell_types[j], 1 << i ))
                 {
                     if (already)
-                        cprintf( "/" );
+                        out.cprintf( "/" );
 
-                    cprintf( spelltype_name( 1 << i ) );
+                    out.cprintf( spelltype_name( 1 << i ) );
                     already = true;
                 }
             }
         }
 
-        gotoxy( 65, wherey() );
+        out.gotoxy( 65, -1 );
 
         char sval[3];
 
         itoa( level_diff, sval, 10 );
-        cprintf( sval );
-        cprintf( EOL );
+        out.cprintf( sval );
+        out.cprintf( EOL );
         spelcount++;
     }
 
-    textcolor(LIGHTGREY);
-    cprintf(EOL);
+    out.textcolor(LIGHTGREY);
+    out.cprintf(EOL);
 
     switch (action)
     {
     case RBOOK_USE_STAFF:
-        cprintf( "Select a spell to cast." EOL );
+        out.cprintf( "Select a spell to cast." EOL );
         break;
 
     case RBOOK_MEMORIZE:
-        cprintf( "Select a spell to memorise (%d level%s available)." EOL,
+        out.cprintf( "Select a spell to memorise (%d level%s available)." EOL,
                  spell_levels, (spell_levels == 1) ? "" : "s" );
         break;
 
     case RBOOK_READ_SPELL:
-        cprintf( "Select a spell to read its description." EOL );
+        out.cprintf( "Select a spell to read its description." EOL );
         break;
 
     default:
         break;
     }
 
-    unsigned char keyn = getch();
+    if (fs)
+        *fs = out;
 
-    if (keyn == 0)
-        getch();
+    unsigned char keyn = 0;
+    if (update_screen)
+    {
+#ifdef DOS_TERM
+        char buffer[4800];
+        gettext(1, 1, 80, 25, buffer);
+        window(1, 1, 80, 25);
+#endif
+        clrscr();
+
+        out.display();
+
+        keyn = getch();
+        if (keyn == 0)
+            getch();
 
 #ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-    window(1, 18, 80, 25);
+        puttext(1, 1, 80, 25, buffer);
+        window(1, 18, 80, 25);
 #endif
+    }
 
     return (keyn);     // try to figure out that for which this is used {dlb}
 }
@@ -1244,7 +1257,7 @@ bool learn_spell(void)
 
     index = letter_to_index( spell );
 
-    if (index > SPELLBOOK_SIZE)
+    if (index >= SPELLBOOK_SIZE)
         goto whatt;
 
     if (!is_valid_spell_in_book( book, index ))
@@ -1415,6 +1428,31 @@ bool learn_spell(void)
     return (true);
 }                               // end which_spell()
 
+int count_staff_spells(const item_def &item, bool need_id)
+{
+    if (item.base_type != OBJ_STAVES)
+        return (-1);
+    
+    if (need_id && item_not_ident( item, ISFLAG_KNOW_TYPE ))
+        return (0);
+
+    const int stype = item.sub_type;
+    const int type = stype + 40;
+    if (stype < STAFF_SMITING || stype >= STAFF_AIR)
+        return (0);
+
+    FixedVector< int, SPELLBOOK_SIZE >  spell_list;
+    spellbook_template( type, spell_list );
+
+    int num_spells = 0;
+    for (num_spells = 0; num_spells < SPELLBOOK_SIZE - 1; num_spells++) 
+    {
+        if (spell_list[ num_spells + 1 ] == SPELL_NO_SPELL)
+            break;
+    }
+    return (num_spells);
+}
+
 int staff_spell( int staff )
 {
     int spell;
@@ -1480,7 +1518,7 @@ int staff_spell( int staff )
 
     spell = letter_to_index( spell );
 
-    if (spell > SPELLBOOK_SIZE)
+    if (spell >= SPELLBOOK_SIZE)
         goto whattt;
 
     if (!is_valid_spell_in_book( staff, spell ))

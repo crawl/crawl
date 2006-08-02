@@ -74,7 +74,7 @@ static int key_to_command_table[KEY_MAX];
 
 static unsigned int convert_to_curses_attr( int chattr )
 {
-    switch (chattr)
+    switch (chattr & CHATTR_ATTRMASK)
     {
     case CHATTR_STANDOUT:       return (A_STANDOUT);
     case CHATTR_BOLD:           return (A_BOLD);
@@ -189,6 +189,23 @@ static void termio_init()
 }
 
 
+int getch_ck() {
+    int c = getch();
+    switch (c) {
+    case KEY_BACKSPACE: return CK_BKSP;
+    case KEY_DC:    return CK_DELETE;                      
+    case KEY_HOME:  return CK_HOME;
+    case KEY_PPAGE: return CK_PGUP;
+    case KEY_END:   return CK_END;
+    case KEY_NPAGE: return CK_PGDN;
+    case KEY_UP:    return CK_UP;
+    case KEY_DOWN:  return CK_DOWN;
+    case KEY_LEFT:  return CK_LEFT;
+    case KEY_RIGHT: return CK_RIGHT;
+    default:        return c;
+    }
+}
+
 void init_key_to_command()
 {
     int i;
@@ -258,7 +275,7 @@ void init_key_to_command()
     // control
     key_to_command_table[ (int) CONTROL('A') ] = CMD_TOGGLE_AUTOPICKUP;
     key_to_command_table[ (int) CONTROL('B') ] = CMD_OPEN_DOOR_DOWN_LEFT;
-    key_to_command_table[ (int) CONTROL('C') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('C') ] = CMD_CLEAR_MAP;
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND
     key_to_command_table[ (int) CONTROL('D') ] = CMD_DESTROY_ITEM;
@@ -266,9 +283,9 @@ void init_key_to_command()
     key_to_command_table[ (int) CONTROL('D') ] = CMD_NO_CMD;
 #endif
 
-    key_to_command_table[ (int) CONTROL('E') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('F') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('G') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('E') ] = CMD_FORGET_STASH;
+    key_to_command_table[ (int) CONTROL('F') ] = CMD_SEARCH_STASHES;
+    key_to_command_table[ (int) CONTROL('G') ] = CMD_INTERLEVEL_TRAVEL;
     key_to_command_table[ (int) CONTROL('H') ] = CMD_OPEN_DOOR_LEFT;
     key_to_command_table[ (int) CONTROL('I') ] = CMD_NO_CMD;
     key_to_command_table[ (int) CONTROL('J') ] = CMD_OPEN_DOOR_DOWN;
@@ -276,15 +293,15 @@ void init_key_to_command()
     key_to_command_table[ (int) CONTROL('L') ] = CMD_OPEN_DOOR_RIGHT;
     key_to_command_table[ (int) CONTROL('M') ] = CMD_NO_CMD;
     key_to_command_table[ (int) CONTROL('N') ] = CMD_OPEN_DOOR_DOWN_RIGHT;
-    key_to_command_table[ (int) CONTROL('O') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('O') ] = CMD_EXPLORE;
     key_to_command_table[ (int) CONTROL('P') ] = CMD_REPLAY_MESSAGES;
     key_to_command_table[ (int) CONTROL('Q') ] = CMD_NO_CMD;
     key_to_command_table[ (int) CONTROL('R') ] = CMD_REDRAW_SCREEN;
-    key_to_command_table[ (int) CONTROL('S') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('S') ] = CMD_MARK_STASH;
     key_to_command_table[ (int) CONTROL('T') ] = CMD_NO_CMD;
     key_to_command_table[ (int) CONTROL('U') ] = CMD_OPEN_DOOR_UP_LEFT;
     key_to_command_table[ (int) CONTROL('V') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('W') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('W') ] = CMD_FIX_WAYPOINT;
     key_to_command_table[ (int) CONTROL('X') ] = CMD_SAVE_GAME_NOW;
     key_to_command_table[ (int) CONTROL('Y') ] = CMD_OPEN_DOOR_UP_RIGHT;
     key_to_command_table[ (int) CONTROL('Z') ] = CMD_SUSPEND_GAME;
@@ -295,6 +312,7 @@ void init_key_to_command()
     key_to_command_table[(int) '>'] = CMD_GO_DOWNSTAIRS;
     key_to_command_table[(int) '@'] = CMD_DISPLAY_CHARACTER_STATUS;
     key_to_command_table[(int) ','] = CMD_PICKUP;
+    key_to_command_table[(int) ':'] = CMD_NO_CMD;
     key_to_command_table[(int) ';'] = CMD_INSPECT_FLOOR;
     key_to_command_table[(int) '!'] = CMD_SHOUT;
     key_to_command_table[(int) '^'] = CMD_DISPLAY_RELIGION;
@@ -322,6 +340,7 @@ void init_key_to_command()
     key_to_command_table[(int) '\''] = CMD_WEAPON_SWAP;
 
     // digits
+    key_to_command_table[(int) '0'] = CMD_NO_CMD;
     key_to_command_table[(int) '1'] = CMD_MOVE_DOWN_LEFT;
     key_to_command_table[(int) '2'] = CMD_MOVE_DOWN;
     key_to_command_table[(int) '3'] = CMD_MOVE_DOWN_RIGHT;
@@ -358,11 +377,14 @@ void init_key_to_command()
     // pass them through unmolested
     key_to_command_table[128] = 128;
     key_to_command_table[(int) '*'] = '*';
-    key_to_command_table[(int) '/'] = '/';
 }
 
 int key_to_command(int keyin)
 {
+    bool is_userfunction(int key);
+
+    if (is_userfunction(keyin))
+        return keyin;
     return (key_to_command_table[keyin]);
 }
 
@@ -383,11 +405,19 @@ void unixcurses_startup( void )
     //savetty();
 
     initscr();
-    cbreak();
+    // cbreak();
+    raw();
     noecho();
 
     nonl();
     intrflush(stdscr, FALSE);
+#ifdef CURSES_USE_KEYPAD
+    keypad(stdscr, TRUE);
+
+#if CURSES_SET_ESCDELAY
+    ESCDELAY = CURSES_SET_ESCDELAY;
+#endif
+#endif
     //cbreak();
 
     meta(stdscr, TRUE);
@@ -569,6 +599,14 @@ void _setcursortype(int curstype)
     curs_set(curstype);
 }
 
+inline unsigned get_brand(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER)?    Options.friend_brand :
+           (col & COLFLAG_ITEM_HEAP)?           Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)?            Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)?             Options.may_stab_brand :
+                                                CHATTR_NORMAL;    
+}
 
 void textcolor(int col)
 {
@@ -582,10 +620,17 @@ void textcolor(int col)
     unsigned int flags = 0;
 
 #ifdef USE_COLOUR_OPTS
-    if ((col & COLFLAG_FRIENDLY_MONSTER) 
-        && Options.friend_brand != CHATTR_NORMAL)
+    unsigned brand = get_brand(col);
+    if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_attr( Options.friend_brand );
+        flags |= convert_to_curses_attr( brand );
+
+        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        {
+            bg = (brand & CHATTR_COLMASK) >> 8;
+            if (fg == bg)
+                fg = COLOR_BLACK;
+        }
 
         // If we can't do a dark grey friend brand, then we'll 
         // switch the colour to light grey.
@@ -630,11 +675,18 @@ void textbackground(int col)
     unsigned int flags = 0;
 
 #ifdef USE_COLOUR_OPTS
-    if ((col & COLFLAG_FRIENDLY_MONSTER) 
-        && Options.friend_brand != CHATTR_NORMAL)
+    unsigned brand = get_brand(col);
+    if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_attr( Options.friend_brand );
+        flags |= convert_to_curses_attr( brand );
 
+        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        {
+            bg = (brand & CHATTR_COLMASK) >> 8;
+            if (fg == bg)
+                fg = COLOR_BLACK;
+        }
+        
         // If we can't do a dark grey friend brand, then we'll 
         // switch the colour to light grey.
         if (Options.no_dark_brand

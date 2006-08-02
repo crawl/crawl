@@ -55,6 +55,7 @@
 #include <stdio.h>
 
 #ifdef DOS
+#include <dos.h>
 #include <conio.h>
 #include <file.h>
 #endif
@@ -78,6 +79,7 @@
 #include "abl-show.h"
 #include "abyss.h"
 #include "chardump.h"
+#include "clua.h"
 #include "command.h"
 #include "debug.h"
 #include "delay.h"
@@ -122,8 +124,10 @@
 #include "stuff.h"
 #include "tags.h"
 #include "transfor.h"
+#include "travel.h"
 #include "view.h"
 #include "wpn-misc.h"
+#include "stash.h"
 
 struct crawl_environment env;
 struct player you;
@@ -383,7 +387,8 @@ static void handle_wizard_command( void )
         mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
 #endif
 
-        if (!yesno( "Do you really want to enter wizard mode?", false ))
+        if (!yesno( "Do you really want to enter wizard mode?", 
+                    false, 'n' ))
             return;
 
         you.wizard = true;
@@ -428,7 +433,7 @@ static void handle_wizard_command( void )
         break;
 
     case 'a':
-        acquirement( OBJ_RANDOM );
+        acquirement( OBJ_RANDOM, AQ_WIZMODE );
         break;
 
     case 'v':
@@ -519,7 +524,7 @@ static void handle_wizard_command( void )
         else
         {
             grd[you.x_pos][you.y_pos] = DNGN_EXIT_ABYSS;
-            down_stairs(true, you.your_level);
+            down_stairs(true, you.your_level, true);
             untag_followers();
         }
         break;
@@ -878,14 +883,29 @@ static void input(void)
     }
     else
     {
+#ifdef STASH_TRACKING
+        if (Options.stash_tracking)
+            stashes.update_visible_stashes(
+                    Options.stash_tracking == STM_ALL? 
+                            StashTracker::ST_AGGRESSIVE :
+                            StashTracker::ST_PASSIVE);
+#endif
         handle_delay(); 
 
         gotoxy(18, 9);
 
         if (you_are_delayed())
             keyin = '.';
+        else if (you.activity)
+        {
+            keyin = 128;
+            you.turn_is_over = 0;
+            perform_activity();
+        }
         else
         {
+            if (you.running < 0)        // Travel and explore
+                travel(&keyin, &move_x, &move_y);
 
             if (you.running > 0)
             {
@@ -896,7 +916,7 @@ static void input(void)
 
                 if (kbhit())
                 {
-                    you.running = 0;
+                    stop_running();
                     goto gutch;
                 }
 
@@ -906,7 +926,7 @@ static void input(void)
                     keyin = '.';
                 }
             }
-            else
+            else if (!you.running)
             {
 
 #if DEBUG_DIAGNOSTICS
@@ -994,8 +1014,12 @@ static void input(void)
   get_keyin_again:
 #endif //jmf: just stops an annoying gcc warning
 
-
-
+    if (is_userfunction(keyin))
+    {
+        run_macro(get_userfunction(keyin));
+        keyin = 128;
+    }
+    
     switch (keyin)
     {
     case CONTROL('Y'):
@@ -1106,6 +1130,15 @@ static void input(void)
         mpr(info);
         break;
 
+    case CONTROL('C'):
+    case CMD_CLEAR_MAP:
+        if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
+        {
+            mpr("Clearing level map.");
+            clear_map();
+        }
+        break;
+        
     case '<':
     case CMD_GO_UPSTAIRS:
         if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
@@ -1165,7 +1198,30 @@ static void input(void)
     case 'd':
     case CMD_DROP:
         drop();
+#ifdef STASH_TRACKING
+        if (Options.stash_tracking >= STM_DROPPED)
+            stashes.add_stash();
+#endif
         break;
+        
+#ifdef STASH_TRACKING
+    case CONTROL('F'):
+    case CMD_SEARCH_STASHES:
+        stashes.search_stashes();
+        break;
+
+    case CONTROL('S'):
+    case CMD_MARK_STASH:
+        if (Options.stash_tracking >= STM_EXPLICIT)
+            stashes.add_stash(-1, -1, true);
+        break;
+
+    case CONTROL('E'):
+    case CMD_FORGET_STASH:
+        if (Options.stash_tracking >= STM_EXPLICIT)
+            stashes.no_stash();
+        break;
+#endif
 
     case 'D':
     case CMD_BUTCHER:
@@ -1314,7 +1370,10 @@ static void input(void)
         mpr("Press '?' for a monster description.", MSGCH_PROMPT);
 
         struct dist lmove;
+        lmove.isValid = lmove.isTarget = lmove.isCancel = false;
         look_around( lmove, true );
+        if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
+            start_travel( lmove.tx, lmove.ty );
         break;
 
     case 's':
@@ -1342,6 +1401,38 @@ static void input(void)
         wield_weapon(true);
         break;
 
+    // [ds] Waypoints can be added from the level-map, and we need Ctrl+F for
+    // nobler things. Who uses waypoints, anyway?
+    // Update: Appears people do use waypoints. Reinstating, on CONTROL('W').
+    //         This means Ctrl+W is no longer a wizmode trigger, but there's
+    //         always '&'. :-)
+    case CMD_FIX_WAYPOINT:
+    case CONTROL('W'):
+        travel_cache.add_waypoint();
+        break;
+        
+    case CMD_INTERLEVEL_TRAVEL:
+    case CONTROL('G'):
+        if (!can_travel_interlevel())
+        {
+            mpr("Sorry, you can't auto-travel out of here.");
+            break;
+        }
+        start_translevel_travel();
+        redraw_screen();
+        break;
+
+    case CONTROL('O'):
+    case CMD_EXPLORE:
+        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+        {
+            mpr("It would help if you knew where you were, first.");
+            break;
+        }
+        // Start exploring
+        start_explore();
+        break;
+
     case 'X':
     case CMD_DISPLAY_MAP:
 #if (!DEBUG_DIAGNOSTICS)
@@ -1354,6 +1445,8 @@ static void input(void)
         plox[0] = 0;
         show_map(plox);
         redraw_screen();
+        if (plox[0] > 0) 
+            start_travel(plox[0], plox[1]);
         break;
 
     case '\\':
@@ -1500,7 +1593,6 @@ static void input(void)
         return;
 
 #ifdef WIZARD
-    case CONTROL('W'):
     case CMD_WIZARD:
     case '&':
         handle_wizard_command();
@@ -1509,7 +1601,7 @@ static void input(void)
 
     case 'S':
     case CMD_SAVE_GAME:
-        if (yesno("Save game and exit?", false))
+        if (yesno("Save game and exit?", false, 'n'))
             save_game(true);
         break;
 
@@ -2258,7 +2350,7 @@ static void input(void)
         if (you.hp >= you.hp_max - 1 
             && you.running && you.run_x == 0 && you.run_y == 0)
         {
-            you.running = 0;
+            stop_running();
         }
 
         inc_hp(1, false);
@@ -2280,7 +2372,7 @@ static void input(void)
         if (you.magic_points >= you.max_magic_points - 1 
             && you.running && you.run_x == 0 && you.run_y == 0)
         {
-            you.running = 0;
+            stop_running();
         }
 
         inc_mp(1, false);
@@ -2320,6 +2412,8 @@ static void input(void)
     // basics for now.  -- bwr
     if (Visible_Statue[ STATUE_SILVER ])
     {
+        interrupt_activity( AI_STATUE );
+
         if ((!you.invis && one_chance_in(3)) || one_chance_in(5))
         {
             char wc[30];
@@ -2340,6 +2434,8 @@ static void input(void)
 
     if (Visible_Statue[ STATUE_ORANGE_CRYSTAL ])
     {
+        interrupt_activity( AI_STATUE );
+
         if ((!you.invis && coinflip()) || one_chance_in(4))
         {
             mpr("A hostile presence attacks your mind!", MSGCH_WARN);
@@ -2602,9 +2698,7 @@ static bool initialise(void)
     init_emx();
 #endif
 
-    srandom(time(NULL));
-    srand(time(NULL));
-    cf_setseed();               // required for stuff::coinflip()
+    seed_rng();
 
     mons_init(mcolour);          // this needs to be way up top {dlb}
     init_playerspells();        // this needs to be way up top {dlb}
@@ -2697,10 +2791,22 @@ static bool initialise(void)
     draw_border();
     new_level();
 
+    travel_init_new_level();
+    // Mark items in inventory as of unknown origin.
+    origin_set_inventory(origin_set_unknown);
+
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );
     viewwindow(1, false);   // This just puts the view up for the first turn.
     item();
+
+#ifdef CLUA_BINDINGS
+    clua.runhook("chk_startgame", "%b", ret);
+    std::string yname = you.your_name;
+    read_init_file(true);
+    strncpy(you.your_name, yname.c_str(), kNameLen);
+    you.your_name[kNameLen - 1] = 0;
+#endif
 
     return (ret);
 }
@@ -2819,7 +2925,7 @@ static void move_player(char move_x, char move_y)
 
     if (you.running > 0 && you.running != 2 && check_stop_running())
     {
-        you.running = 0;
+        stop_running();
         move_x = 0;
         move_y = 0;
         you.turn_is_over = 0;
@@ -2887,7 +2993,7 @@ static void move_player(char move_x, char move_y)
         }
         else if (targ_grid != DNGN_SHALLOW_WATER)
         {
-            bool enter = yesno("Do you really want to step there?", false);
+            bool enter = yesno("Do you really want to step there?", false, 'n');
 
             if (enter)
             {
@@ -2995,11 +3101,11 @@ static void move_player(char move_x, char move_y)
 
   out_of_traps:
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
+    if (targ_grid == DNGN_CLOSED_DOOR && (Options.easy_open || you.running < 0))
         open_door(move_x, move_y);
     else if (targ_grid <= MINMOVE)
     {
-        you.running = 0;
+        stop_running();
         move_x = 0;
         move_y = 0;
         you.turn_is_over = 0;

@@ -16,12 +16,20 @@
 
 #include "externs.h"
 
-char *const make_time_string(time_t abs_time, char *const buff, int buff_size);
+char *const make_time_string(time_t abs_time, char *const buff, int buff_size, bool terse = false);
 
 void set_redraw_status( unsigned long flags );
 
 void tag_followers( void );
 void untag_followers( void );
+
+void seed_rng(void);
+
+void seed_rng(long seed);
+
+void push_rng_state();
+
+void pop_rng_state();
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -47,6 +55,7 @@ bool one_chance_in(int a_million);
  * *********************************************************************** */
 int random2(int randmax);
 
+unsigned long random_int(void);
 
 /* ***********************************************************************
  * called from: xxx
@@ -125,7 +134,9 @@ void canned_msg(unsigned char which_message);
  * called from: ability - acr - command - it_use3 - item_use - items -
  *              misc - ouch - religion - spl-book - spells4
  * *********************************************************************** */
-bool yesno( const char * str, bool safe = true, bool clear_after = true );
+// If safeanswer is nonzero, it should be a lowercase letter.
+bool yesno( const char * str, bool safe = true, int safeanswer = 0, 
+            bool clear_after = true );
 
 
 // last updated 21may2000 {dlb}

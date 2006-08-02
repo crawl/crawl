@@ -230,7 +230,8 @@ bool curse_an_item( char which, char power )
     return (true);
 }
 
-static void monster_drop_ething(struct monsters *monster)
+static void monster_drop_ething(struct monsters *monster, 
+                                bool mark_item_origins = false)
 {
     /* drop weapons & missiles last (ie on top) so others pick up */
     int i;                  // loop variable {dlb}
@@ -257,6 +258,10 @@ static void monster_drop_ething(struct monsters *monster)
             else
             {
                 move_item_to_grid( &item, monster->x, monster->y );
+                if (mark_item_origins && is_valid_item(mitm[item]))
+                {
+                    origin_set_monster(mitm[item], monster);
+                }
             }
 
             monster->inv[i] = NON_ITEM;
@@ -405,6 +410,10 @@ void monster_die(struct monsters *monster, char killer, int i)
         {
         case KILL_YOU:          /* You kill in combat. */
         case KILL_YOU_MISSILE:  /* You kill by missile or beam. */
+        {
+            bool created_friendly = 
+                        testbits(monster->flags, MF_CREATED_FRIENDLY);
+
             strcpy(info, "You ");
             strcat(info, (wounded_damaged(monster->type)) ? "destroy" : "kill");
             strcat(info, " ");
@@ -414,7 +423,7 @@ void monster_die(struct monsters *monster, char killer, int i)
             if (death_message)
                 mpr(info, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
 
-            if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
+            if (!created_friendly)
             {
                 gain_exp(exper_value( monster ));
             }
@@ -434,7 +443,7 @@ void monster_die(struct monsters *monster, char killer, int i)
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being being done_good kills,
             // Only affects monsters friendly when created.
-            if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
+            if (!created_friendly)
             {
                 if (you.duration[DUR_PRAYER])
                 {
@@ -464,9 +473,12 @@ void monster_die(struct monsters *monster, char killer, int i)
                 }
             }
 
+            // Divine health and mp restoration doesn't happen when killing
+            // born-friendly monsters. The mutation still applies, however.
             if (you.mutation[MUT_DEATH_STRENGTH]
-                || (you.religion == GOD_MAKHLEB && you.duration[DUR_PRAYER]
-                    && (!player_under_penance() && random2(you.piety) >= 30)))
+                || (!created_friendly && 
+                    you.religion == GOD_MAKHLEB && you.duration[DUR_PRAYER] &&
+                    (!player_under_penance() && random2(you.piety) >= 30)))
             {
                 if (you.hp < you.hp_max)
                 {
@@ -476,7 +488,8 @@ void monster_die(struct monsters *monster, char killer, int i)
                 }
             }
 
-            if ((you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET)
+            if (!created_friendly 
+                && (you.religion == GOD_MAKHLEB || you.religion == GOD_VEHUMET)
                 && you.duration[DUR_PRAYER]
                 && (!player_under_penance() && random2(you.piety) >= 30))
             {
@@ -500,6 +513,7 @@ void monster_die(struct monsters *monster, char killer, int i)
                 }
             }
             break;
+        }
 
         case KILL_MON:          /* Monster kills in combat */
         case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
@@ -624,6 +638,8 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET)
     {
+        you.kills.record_kill(monster, killer, pet_kill);
+
         if (mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI))
         {
             if (mons_weight(mons_charclass(monster->type)))
@@ -653,7 +669,10 @@ void monster_die(struct monsters *monster, char killer, int i)
         }
     }
 
-    monster_drop_ething(monster);
+    monster_drop_ething(monster, 
+                        killer == KILL_YOU_MISSILE 
+                            || killer == KILL_YOU
+                            || pet_kill);
     monster_cleanup(monster);
 }                                                   // end monster_die
 
@@ -856,6 +875,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     char str_polymon[INFO_SIZE] = "";      // cannot use info[] here {dlb}
     bool player_messaged = false;
     int source_power, target_power, relax;
+    int tries = 1000;
 
     UNUSED( power );
 
@@ -883,9 +903,15 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
             if (relax > 50)
                 return (simple_monster_message( monster, " shudders." ));
         }
-        while (!valid_morph( monster, targetc )
+        while (tries-- && (!valid_morph( monster, targetc )
                 || target_power < source_power - relax
-                || target_power > source_power + (relax * 3) / 2);
+                || target_power > source_power + (relax * 3) / 2));
+    }
+
+    if(!valid_morph( monster, targetc )) {
+        strcat( str_polymon, " looks momentarily different.");
+        player_messaged = simple_monster_message( monster, str_polymon );
+        return (player_messaged);
     }
 
     // messaging: {dlb}
@@ -1530,7 +1556,7 @@ static void handle_behaviour(struct monsters *mon)
                 }
 
                 // hack: smarter monsters will
-                // tend to persue the player longer.
+                // tend to pursue the player longer.
                 int memory;
                 switch(mons_intel(monster_index(mon)))
                 {
@@ -3715,6 +3741,9 @@ static bool handle_pickup(struct monsters *monster)
     if (mons_has_ench( monster, ENCH_SUBMERGED ))
         return (false);
 
+    if (monster->behaviour == BEH_SLEEP)
+        return (false);
+
     if (monster->type == MONS_JELLY
         || monster->type == MONS_BROWN_OOZE
         || monster->type == MONS_ACID_BLOB
@@ -4577,6 +4606,7 @@ static void mons_in_cloud(struct monsters *monster)
     struct bolt beam;
 
     const int speed = ((monster->speed > 0) ? monster->speed : 10);
+    bool wake = false;
 
     if (mons_is_mimic( monster->type ))
     {
@@ -4654,6 +4684,8 @@ static void mons_in_cloud(struct monsters *monster)
             return;
 
         poison_monster(monster, (env.cloud[wc].type == CLOUD_POISON));
+        // If the monster got poisoned, wake it up.
+        wake = true;
 
         hurted += (random2(8) * 10) / speed;
 
@@ -4706,6 +4738,14 @@ static void mons_in_cloud(struct monsters *monster)
         return;
     }
 
+    // A sleeping monster that sustains damage will wake up.
+    if ((wake || hurted > 0) && monster->behaviour == BEH_SLEEP)
+    {
+        // We have no good coords to give the monster as the source of the
+        // disturbance other than the cloud itself.
+        behaviour_event(monster, ME_DISTURB, MHITNOT, monster->x, monster->y);
+    }
+    
     if (hurted < 0)
         hurted = 0;
     else if (hurted > 0)

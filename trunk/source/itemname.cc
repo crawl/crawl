@@ -27,6 +27,7 @@
 
 #include "externs.h"
 
+#include "invent.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "randart.h"
@@ -88,6 +89,13 @@ bool fully_identified( const item_def &item )
 bool item_ident( const item_def &item, unsigned long flags )
 {
     return (item.flags & flags);
+}
+
+bool item_type_known( const item_def &item )
+{
+    return item_ident(item, ISFLAG_KNOW_TYPE)
+        || (item.base_type == OBJ_JEWELLERY
+                && id[IDTYPE_JEWELLERY][item.sub_type] == ID_KNOWN_TYPE);
 }
 
 bool item_not_ident( const item_def &item, unsigned long flags )
@@ -391,7 +399,7 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
-        if (item.x == -1 && item.y == -1) // actually in inventory
+        if (in_inventory(item)) // actually in inventory
             snprintf( buff,  ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
                       index_to_letter( item.link ) );
         else 
@@ -669,7 +677,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                        (item.special == SPWPN_KNIFE_OF_ACCURACY) ? "thin dagger" :
                        (item.special == SPWPN_STAFF_OF_OLGREB) ? "green glowing staff" :
                        (item.special == SPWPN_VAMPIRES_TOOTH) ? "ivory dagger" :
-                       (item.special == SPWPN_STAFF_OF_WUCAD_MU) ? "quarterstaff"
+                       (item.special == SPWPN_STAFF_OF_WUCAD_MU) ? "ephemeral quarterstaff"
                                                            : "buggy bola", 
                                                            ITEMNAME_SIZE );
             }
@@ -2042,6 +2050,52 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         strncat(buff, "!", ITEMNAME_SIZE );
     }                           // end of switch?
 
+    // Disambiguation
+    if (!terse && item_ident(item, ISFLAG_KNOW_TYPE))
+    {
+#define name_append(x) strncat(buff, x, ITEMNAME_SIZE)
+        switch (item_clas)
+        {
+        case OBJ_STAVES:
+            switch (item_typ)
+            {
+            case STAFF_DESTRUCTION_I:
+                name_append(" [fire]");
+                break;
+            case STAFF_DESTRUCTION_II:
+                name_append(" [ice]");
+                break;
+            case STAFF_DESTRUCTION_III:
+                name_append(" [iron,fireball,lightning]");
+                break;
+            case STAFF_DESTRUCTION_IV:
+                name_append(" [inacc,magma,cold]");
+                break;
+            }
+            break;
+        case OBJ_BOOKS:
+            switch (item_typ)
+            {
+            case BOOK_MINOR_MAGIC_I:
+                name_append(" [flame]");
+                break;
+            case BOOK_MINOR_MAGIC_II:
+                name_append(" [frost]");
+                break;
+            case BOOK_MINOR_MAGIC_III:
+                name_append(" [summ]");
+                break;
+            case BOOK_CONJURATIONS_I:
+                name_append(" [fire]");
+                break;
+            case BOOK_CONJURATIONS_II:
+                name_append(" [ice]");
+                break;
+            }
+        }
+#undef name_append
+    }
+
     // debugging output -- oops, I probably block it above ... dang! {dlb}
     if (strlen(buff) < 3)
     {
@@ -2787,7 +2841,11 @@ unsigned char check_item_knowledge(void)
                 yps = wherey();
 
                 // item_name now requires a "real" item, so we'll create a tmp
-                item_def tmp = { ft, j, 0, 0, 0, 1, 0, 0, 0, 0, 0 };
+                item_def tmp;// = { ft, j, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
+                tmp.base_type = ft;
+                tmp.sub_type  = j;
+                tmp.colour    = 1;
+
                 item_name( tmp, DESC_PLAIN, st_pass );
 
                 cprintf(st_pass);

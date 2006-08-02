@@ -1160,6 +1160,9 @@ FILE *hs_open( const char *mode )
 {
 #ifdef SAVE_DIR_PATH
     FILE *handle = fopen(SAVE_DIR_PATH "scores", mode);
+#ifdef SHARED_FILES_CHMOD_PUBLIC
+    chmod(SAVE_DIR_PATH "scores", SHARED_FILES_CHMOD_PUBLIC);
+#endif
 #else
     FILE *handle = fopen("scores", mode);
 #endif

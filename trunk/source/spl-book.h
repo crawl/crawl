@@ -60,4 +60,9 @@ int staff_spell( int zap_device_2 );
 
 bool undead_cannot_memorise(unsigned char spell, unsigned char being);
 
+unsigned char spellbook_contents( item_def &book, int action,
+                                  formatted_string *fs = NULL );
+
+int count_staff_spells(const item_def &item, bool need_id);
+
 #endif

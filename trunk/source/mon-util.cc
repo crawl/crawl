@@ -1297,6 +1297,27 @@ bool mons_friendly(struct monsters *m)
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
 }
 
+bool mons_is_stabbable(struct monsters *m)
+{
+    // Make sure oklob plants are never highlighted. That'll defeat the
+    // point of making them look like normal plants.
+    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+                && m->type != MONS_OKLOB_PLANT
+                && !mons_friendly(m)
+                && m->behaviour == BEH_SLEEP);
+}
+
+bool mons_maybe_stabbable(struct monsters *m)
+{
+    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+                && m->type != MONS_OKLOB_PLANT
+                && !mons_friendly(m)
+                && ((m->foe != MHITYOU && !testbits(m->flags, MF_BATTY))
+                    || (mons_has_ench(m, ENCH_CONFUSION) &&
+                            !mons_flag(m->type, M_CONFUSED))
+                    || m->behaviour == BEH_FLEE));
+}
+
 /* ******************************************************************
 
 // In the name of England, I declare this function wasteful! {dlb}

@@ -17,7 +17,7 @@
 bool player_in_branch( int branch );
 bool player_in_hell( void );
 
-int player_equip( int slot, int sub_type );
+int player_equip( int slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 int player_damage_type( void );
 int player_damage_brand( void );
@@ -53,7 +53,7 @@ bool player_under_penance(void);
  * called from: ability - acr - fight - food - it_use2 - item_use - items -
  *              misc - mutation - ouch
  * *********************************************************************** */
-bool wearing_amulet(char which_am);
+bool wearing_amulet(char which_am, bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -134,7 +134,7 @@ int player_magical_power( void );
 /* ***********************************************************************
  * called from: fight - misc - ouch - spells
  * *********************************************************************** */
-int player_prot_life(void);
+int player_prot_life(bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -146,26 +146,26 @@ int player_regen(void);
 /* ***********************************************************************
  * called from: fight - files - it_use2 - misc - ouch - spells - spells2
  * *********************************************************************** */
-int player_res_cold(void);
+int player_res_cold(bool calc_unid = true);
 
 
 /* ***********************************************************************
  * called from: fight - files - ouch
  * *********************************************************************** */
-int player_res_electricity(void);
+int player_res_electricity(bool calc_unid = true);
 
 
 /* ***********************************************************************
  * called from: acr - fight - misc - ouch - spells
  * *********************************************************************** */
-int player_res_fire(void);
+int player_res_fire(bool calc_unid = true);
 
 
 /* ***********************************************************************
  * called from: beam - decks - fight - fod - it_use2 - misc - ouch -
  *              spells - spells2
  * *********************************************************************** */
-int player_res_poison(void);
+int player_res_poison(bool calc_unid = true);
 
 int player_res_magic(void);
 
@@ -251,19 +251,19 @@ int player_spell_levels(void);
 /* ***********************************************************************
  * called from: effects
  * *********************************************************************** */
-unsigned char player_sust_abil(void);
+unsigned char player_sust_abil(bool calc_unid = true);
 
 
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-int player_teleport(void);
+int player_teleport(bool calc_unid = true);
 
 
 /* ***********************************************************************
  * called from: ability - acr - items - misc - spells1 - spells3
  * *********************************************************************** */
-int scan_randarts(char which_property);
+int scan_randarts(char which_property, bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -277,7 +277,7 @@ int slaying_bonus(char which_affected);
  *              items - monstuff - mon-util - mstuff2 - spells1 - spells2 -
  *              spells3
  * *********************************************************************** */
-unsigned char player_see_invis(void);
+unsigned char player_see_invis(bool calc_unid = true);
 bool player_monster_visible( struct monsters *mon );
 
 
@@ -436,11 +436,17 @@ void dec_disease_player();
 
 void rot_player( int amount );
 
+void perform_activity();
+
+void interrupt_activity( ACT_INTERRUPT ai, 
+                     const activity_interrupt_t &a = activity_interrupt_t() );
+
 // last updated 15sep2001 {bwr}
 /* ***********************************************************************
  * called from:
  * *********************************************************************** */
 bool player_has_spell( int spell );
 
+void run_macro(const char *macroname = NULL);
 
 #endif

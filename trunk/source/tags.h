@@ -18,7 +18,7 @@
 /* ***********************************************************************
  * called from: files tags
  * *********************************************************************** */
-int write2(FILE * file, char *buffer, unsigned int count);
+int write2(FILE * file, const char *buffer, unsigned int count);
 
 
 // last updated 22jan2001 {gdl}

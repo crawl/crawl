@@ -24,7 +24,7 @@ bool butchery(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void eat_food(void);
+bool eat_food(bool run_hook = true);
 
 
 // last updated 19jun2000 {dlb}
@@ -53,5 +53,16 @@ void set_hunger(int new_hunger_level, bool suppress_msg);
  * called from: delay.cc
  * *********************************************************************** */
 void weapon_switch( int targ );
+
+bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, 
+                bool reqid = false, bool check_hunger = true);
+
+void eat_floor_item(int item_link);
+
+bool eat_from_floor(void);
+
+void eat_from_inventory(int which_inventory_slot);
+
+bool prompt_eat_from_inventory(void);
 
 #endif

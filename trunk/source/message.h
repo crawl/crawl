@@ -74,4 +74,10 @@ void set_colour(char set_message_colour);
  * *********************************************************************** */
 bool any_messages(void);
 
+// last updated 13oct2003 {dlb}
+/* ***********************************************************************
+ * called from: chardump
+ * *********************************************************************** */
+std::string get_last_messages(int mcount);
+
 #endif

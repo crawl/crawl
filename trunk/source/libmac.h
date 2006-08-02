@@ -41,11 +41,6 @@ char* strlwr(char* str);
 void itoa(int n, char* buffer, int radix);
 
 #if !OSX
-	inline int random()
-	{
-	    return rand();
-	}
-
 	inline void srandom(unsigned int seed)
 	{
 	    srand(seed);

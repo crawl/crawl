@@ -48,16 +48,22 @@
 #include "items.h"
 #include "macro.h"
 #include "mutation.h"
+#include "output.h"
 #include "player.h"
+#include "randart.h"
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "stuff.h"
 #include "version.h"
+#include "view.h"
 
+// Defined in view.cc
+extern unsigned char (*mapch2) (unsigned char);
 
  // ========================================================================
  //      Internal Functions
@@ -86,7 +92,7 @@ static std::string fillstring(size_t strlen, char filler)
  //  macro, which is of uncertain length (well, that and I didn't know how
  //  to do it any better at the time) (LH)
  //---------------------------------------------------------------
-static std::string munge_description(const std::string & inStr)
+std::string munge_description(const std::string & inStr)
 {
     std::string outStr;
 
@@ -156,6 +162,138 @@ static std::string munge_description(const std::string & inStr)
 
     return (outStr);
 }                               // end munge_description()
+
+ //---------------------------------------------------------------
+ //
+ // dump_screenshot
+ //
+ // Grabs a screenshot and appends the text into the given std::string,
+ // using several ugly hacks in the process.
+ //---------------------------------------------------------------
+static void dump_screenshot( std::string &text )
+{
+    // A little message history:
+    if (Options.dump_message_count > 0)
+    {
+        text += "  Last Messages" EOL EOL;
+        text += get_last_messages(Options.dump_message_count);
+    }
+
+    FixedVector < char, 1500 > buffy;  //[800]; //392];
+    int bufcount = 0;
+    unsigned short ch, color;
+    int count_x, count_y;
+
+    // Urg, ugly screen capture. CVS Crawl may have a better way of doing this,
+    // but until the next release...
+    for (count_y = (you.y_pos - 8); (count_y < you.y_pos + 9); count_y++)
+    {
+        bufcount += 8;
+        for (count_x = (you.x_pos - 8); (count_x < you.x_pos + 9); count_x++)
+        {
+            if (count_x == you.x_pos && count_y == you.y_pos) 
+            {
+                extern unsigned char your_sign;
+                ch = your_sign;
+            } 
+            else
+            {
+                unsigned int object = env.show[count_x - you.x_pos + 9]
+                    [count_y - you.y_pos + 9];
+                get_non_ibm_symbol(object, &ch, &color);
+            }
+
+            buffy[bufcount++] = (char) ch;
+        }
+        bufcount += 8;
+    }
+
+    int maxbuf = bufcount;
+    bufcount = 0;
+
+    for (count_y = 0; count_y < 17; count_y++)
+    {
+        for (count_x = 0; count_x < 33; count_x++)
+        {
+            if (count_x + you.x_pos - 17 < 3
+                    || count_y + you.y_pos - 9 < 3
+                    || count_x + you.x_pos - 14 > (GXM - 3)
+                    || count_y + you.y_pos - 9 > (GYM - 3))
+            {
+                buffy[bufcount++] = ' ';
+                continue;
+            }
+
+            if (count_x >= 8 && count_x <= 24 && count_y >= 0
+                    && count_y <= 16 && buffy[bufcount] != 0)
+            {
+                bufcount++;
+                continue;
+            }
+
+            unsigned char envc = (unsigned char) 
+                                 env.map[count_x + you.x_pos - 17]
+                                        [count_y + you.y_pos - 9];
+            if (envc)
+            {
+                // If it's printable, use it directly.
+                if (envc < 127 && envc >= 32)
+                    ch = envc;
+                else
+                {
+                    // Otherwise get what's on the grid and get an ASCII
+                    // character for that.
+                    unsigned int object = grd[count_x + you.x_pos - 16]
+                        [count_y + you.y_pos - 8];
+
+                    // Special case secret doors so that monsters that open
+                    // doors out of hero's LOS don't reveal the secret door in
+                    // the dump
+                    if (envc == mapch2(DNGN_SECRET_DOOR))
+                        object = DNGN_SECRET_DOOR;
+
+                    get_non_ibm_symbol(object, &ch, &color);
+                }
+
+                buffy[bufcount++] = (char) ch;
+            }
+            else
+            {
+                buffy[bufcount++] = ' ';
+            }
+        }
+    }
+
+    if (bufcount > maxbuf) maxbuf = bufcount;
+
+    while (maxbuf > 0 && (!buffy[maxbuf - 1] || buffy[maxbuf - 1] == ' '))
+        --maxbuf;
+
+    // 33 columns and a null terminator. More hardcoding. :-(
+    char buf[34];
+    char *s = buf;
+    bool leadblanks = true;
+    for (int i = 0; i < maxbuf; )
+    {
+        *s++ = buffy[i]? buffy[i] : ' ';
+
+        ++i;
+        if (!(i % 33) || i >= maxbuf)
+        {
+            *s = 0;
+            while (s > buf && *--s == ' ')
+                *s = 0;
+            
+            if (s == buf && !*s && leadblanks)
+                continue;
+            
+            leadblanks = false;
+            text += buf;
+            text += EOL;
+            s = buf;
+        }
+    }
+}
 
  //---------------------------------------------------------------
  //
@@ -298,6 +436,47 @@ static void dump_stats( std::string & text )
 
  //---------------------------------------------------------------
  //
+ // dump_stats2
+ //
+ //---------------------------------------------------------------
+static void dump_stats2( std::string & text, bool calc_unid)
+{
+    char buffer[25*3][45];
+    char str_pass[80];
+    char* ptr_n;
+
+    get_full_detail(&buffer[0][0], calc_unid);
+
+    for (int i = 0; i < 25; i++)
+    {
+        ptr_n = &buffer[i][0];
+        if (buffer[i+25][0] == '\0' && buffer[i+50][0] == '\0')
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+        else
+            snprintf(&str_pass[0], 45, "%-32s", ptr_n);
+        text += str_pass;
+
+        ptr_n = &buffer[i+25][0];
+        if (buffer[i+50][0] == '\0')
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+        else
+            snprintf(&str_pass[0], 45, "%-20s", ptr_n);
+        text += str_pass;
+
+        ptr_n = &buffer[i+50][0];
+        if (buffer[i+50][0] != '\0')
+        {
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+            text += str_pass;
+        }
+        text += EOL;
+    }
+
+    text += EOL EOL;
+}
+
+ //---------------------------------------------------------------
+ //
  // dump_location
  //
  //---------------------------------------------------------------
@@ -410,6 +589,57 @@ static void dump_religion( std::string & text )
     }
 }                               // end dump_religion()
 
+extern char id[4][50];  // itemname.cc
+static bool dump_item_origin(const item_def &item, int value)
+{
+#define fs(x) (flags & (x))
+    const int flags = Options.dump_item_origins;
+    if (flags == IODS_EVERYTHING)
+        return (true);
+
+    if (fs(IODS_ARTIFACTS)
+            && (is_random_artefact(item) || is_fixed_artefact(item))
+            && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        return (true);
+
+    if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
+            && item_ident( item, ISFLAG_KNOW_TYPE ))
+    {
+        const int spec_ench = get_armour_ego_type( item );
+        return (spec_ench != SPARM_NORMAL);
+    }
+
+    if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
+            && item_ident( item, ISFLAG_KNOW_TYPE ))
+        return (get_weapon_brand(item) != SPWPN_NORMAL);
+
+    if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
+        return (true);
+
+    if (fs(IODS_RUNES) && item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT)
+        return (true);
+
+    if (fs(IODS_RODS) && item.base_type == OBJ_STAVES
+            && item_is_rod(item))
+        return (true);
+
+    if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES
+            && !item_is_rod(item))
+        return (true);
+
+    if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
+        return (true);
+
+    const int refpr = Options.dump_item_origin_price;
+    if (refpr == -1)
+        return (false);
+    if (value == -1)
+        value = item_value( item, id, false );
+    return (value >= refpr);
+#undef fs
+}
+
  //---------------------------------------------------------------
  //
  // dump_inventory
@@ -496,15 +726,23 @@ static void dump_inventory( std::string & text, bool show_prices )
 
                         inv_count--;
 
+                        int ival = -1;
                         if (show_prices)
                         {
                             text += " (";
 
-                            itoa( item_value( you.inv[j], temp_id, true ), 
+                            itoa( ival = 
+                                      item_value( you.inv[j], temp_id, true ), 
                                   tmp_quant, 10 );
 
                             text += tmp_quant;
                             text += " gold)";
+                        }
+
+                        if (origin_describable(you.inv[j])
+                                && dump_item_origin(you.inv[j], ival))
+                        {
+                            text += EOL "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
                         if (is_dumpable_artifact( you.inv[j], 
@@ -590,7 +828,8 @@ static void dump_spells( std::string & text )
 
 // This array helps output the spell types in the traditional order.
 // this can be tossed as soon as I reorder the enum to the traditional order {dlb}
-    const int spell_type_index[] = {
+    const int spell_type_index[] =
+    {
         SPTYP_HOLY,
         SPTYP_POISON,
         SPTYP_FIRE,
@@ -670,6 +909,8 @@ static void dump_spells( std::string & text )
                     }
                 }
 
+                if (spell_line.length() > 57)
+                    spell_line = spell_line.substr(0, 57);
                 for (int i = spell_line.length(); i < 58; i++)
                 {
                     spell_line += ' ';
@@ -702,6 +943,17 @@ static void dump_spells( std::string & text )
         }
     }
 }                               // end dump_spells()
+
+
+//---------------------------------------------------------------
+//
+// dump_kills
+//
+//---------------------------------------------------------------
+static void dump_kills( std::string & text )
+{
+    text += you.kills.kill_info();
+}
 
 //---------------------------------------------------------------
 //
@@ -748,6 +1000,14 @@ static void dump_mutations( std::string & text )
 //      Public Functions
 // ========================================================================
 
+const char *hunger_level(void)
+{
+    return ((you.hunger <= 1000) ? "starving" :
+             (you.hunger <= 2600) ? "hungry" :
+             (you.hunger < 7000) ? "not hungry" :
+             (you.hunger < 11000) ? "full" : "completely stuffed");
+}
+
 //---------------------------------------------------------------
 //
 // dump_char
@@ -769,7 +1029,11 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     text += EOL;
     text += EOL;
 
-    dump_stats(text);
+    if (Options.detailed_stat_dump)
+        dump_stats2(text, show_prices);
+    else
+        dump_stats(text);
+
     dump_location(text);
     dump_religion(text);
 
@@ -787,10 +1051,7 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
 
     text += "You are ";
 
-    text += ((you.hunger <= 1000) ? "starving" :
-             (you.hunger <= 2600) ? "hungry" :
-             (you.hunger < 7000) ? "not hungry" :
-             (you.hunger < 11000) ? "full" : "completely stuffed");
+    text += hunger_level();
 
     text += ".";
     text += EOL;
@@ -845,6 +1106,14 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     dump_spells(text);
     dump_mutations(text);
 
+    text += EOL;
+    text += EOL;
+    
+    dump_screenshot(text);
+    text += EOL EOL;
+
+    dump_kills(text);
+
     char file_name[kPathLen] = "\0";
 
     if (SysEnv.crawl_dir)
@@ -852,8 +1121,29 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
 
     strncat(file_name, fname, kPathLen);
 
+#ifdef STASH_TRACKING
+    char stash_file_name[kPathLen] = "";
+    strncpy(stash_file_name, file_name, kPathLen);
+#endif
     if (strcmp(fname, "morgue.txt") != 0)
+    {
         strncat(file_name, ".txt", kPathLen);
+#ifdef STASH_TRACKING
+        strncat(stash_file_name, ".lst", kPathLen);
+        stashes.dump(stash_file_name);
+#endif
+    }
+#ifdef STASH_TRACKING
+    else
+    {
+        // Grr. Filename is morgue.txt, it needs to be morgue.lst
+        int len = strlen(stash_file_name);
+        stash_file_name[len - 3] = 'l';
+        stash_file_name[len - 2] = 's';
+        // Fully identified stash dump.
+        stashes.dump(stash_file_name, true);
+    }
+#endif
 
     FILE *handle = fopen(file_name, "wb");
 
@@ -873,9 +1163,6 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
             end += strlen(EOL);
 
             size_t len = end - begin;
-
-            if (len > 80)
-                len = 80;
 
             fwrite(text.c_str() + begin, len, 1, handle);
 

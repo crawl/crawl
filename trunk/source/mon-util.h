@@ -23,7 +23,9 @@
 #if defined(macintosh) || defined(__IBMCPP__) || defined(SOLARIS) || defined(__BCPLUSPLUS__)
 #define PACKED
 #else
+#ifndef PACKED
 #define PACKED __attribute__ ((packed))
+#endif
 #endif
 
 // leaves no skeleton? ("blob" monsters?)
@@ -100,29 +102,31 @@
 #define I_REPTILE 6
 
 
+// [dshaligram] PACKED is *not* relevant; the amount of padding space it
+// saves is not enough to merit it.
 struct monsterentry
 {
-    short mc PACKED;            // monster number
+    short mc;            // monster number
 
-    unsigned char showchar PACKED, colour PACKED;
-    const char *name /*[32]*/PACKED; //longest is 23 till now (31 is max alowed here)
+    unsigned char showchar, colour;
+    const char *name /*[32]*/; //longest is 23 till now (31 is max alowed here)
 
-    int bitfields PACKED;
-    short weight PACKED;
+    int bitfields;
+    short weight;
     // experience is calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
     //   Note that this may make draining attacks less attractive (LRH)
-    char exp_mod PACKED;
+    char exp_mod;
 
-    unsigned short charclass PACKED;     //
+    unsigned short charclass;     //
 
-    char holiness PACKED;       // -1=holy,0=normal,1=undead,2=very very evil
+    char holiness;       // -1=holy,0=normal,1=undead,2=very very evil
 
-    short resist_magic PACKED;  // (positive is ??)
+    short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
 
-    unsigned char damage[4] PACKED;
+    unsigned char damage[4];
 
 // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
 // min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
@@ -131,26 +135,26 @@ struct monsterentry
 //       105 < hp < 165
 // hp will be around 135 each time. (assuming an good random number generator)
 // !!!!!!! The system is exactly the same as before, only the way of writing changed !!!!
-    unsigned char hpdice[4] PACKED;     // until we have monsters with 32767 hp,this is easily possible
+    unsigned char hpdice[4];     // until we have monsters with 32767 hp,this is easily possible
 
-    char AC PACKED;             // armour class
+    char AC;             // armour class
 
-    char ev PACKED;             // evasion
+    char ev;             // evasion
 
-    char speed PACKED, speed_inc PACKED;        // duh!
+    char speed, speed_inc;        // duh!
 
-    short sec PACKED;           // not used (250) most o/t time
+    short sec;           // not used (250) most o/t time
 
     // eating the corpse: 1=clean,2=might be contaminated,3=poison,4=very bad
-    char corpse_thingy PACKED;
+    char corpse_thingy;
     // 0=no zombie, 1=small zombie (z) 107, 2=_BIG_ zombie (Z) 108
-    char zombie_size PACKED;
+    char zombie_size;
   // 0-12: see above, -1=random one of (0-7)
-    char shouts PACKED;
+    char shouts;
   // AI things?
-    char intel PACKED;          // 0=none, 1=worst...4=best
+    char intel;          // 0=none, 1=worst...4=best
 
-    char gmon_use PACKED;
+    char gmon_use;
 };    // mondata[] - again, no idea why this was externed {dlb}
 
 
@@ -456,6 +460,9 @@ int mons_del_ench( struct monsters *mon, unsigned int ench,
 
 bool mons_add_ench( struct monsters *mon, unsigned int ench );
 
+bool mons_is_stabbable(struct monsters *m);
+
+bool mons_maybe_stabbable(struct monsters *m);
 
 bool check_mons_resist_magic( struct monsters *monster, int pow );
 

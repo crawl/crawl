@@ -1,0 +1,51 @@
+# Make file for Dungeon Crawl (dos)
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+# need .exe so make will find the right file
+APPNAME = crawl.exe
+CXX = g++
+DELETE = rm
+COPY = copy
+OS_TYPE = WIN32CONSOLE
+CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
+            -Wmissing-prototypes -Wmissing-declarations \
+			-D$(OS_TYPE) $(EXTRA_FLAGS)
+LDFLAGS = 
+INSTALLDIR = .
+#LIB = -lcurso -lpano
+LIB = -lwinmm -static -lpcre -lluacore -lluastd
+
+all:            $(APPNAME)
+
+install:        $(APPNAME)
+		$(COPY) $(APPNAME) ${INSTALLDIR}
+
+clean:
+		$(DELETE) *.o
+
+distclean:
+		$(DELETE) *.o 
+		$(DELETE) bones.*
+		$(DELETE) morgue.txt
+		$(DELETE) scores 
+		$(DELETE) $(APPNAME) 
+		$(DELETE) *.sav
+		$(DELETE) core
+		$(DELETE) *.0*
+		$(DELETE) *.lab
+
+$(APPNAME):	$(OBJECTS) libw32c.o
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) libw32c.o -o $(APPNAME) $(LIB)
+		strip $(APPNAME)
+
+debug:		$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+profile:	$(OBJECTS)
+		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+.cc.o:
+		${CXX} ${CFLAGS} -c $< ${INCLUDE}

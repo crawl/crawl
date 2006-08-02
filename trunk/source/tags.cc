@@ -129,7 +129,7 @@ static void tag_construct_ghost(struct tagHeader &th);
 static void tag_read_ghost(struct tagHeader &th, char minorVersion);
 
 // provide a wrapper for file writing, just in case.
-int write2(FILE * file, char *buffer, unsigned int count)
+int write2(FILE * file, const char *buffer, unsigned int count)
 {
     return fwrite(buffer, 1, count, file);
 }
@@ -715,6 +715,9 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallLong( th, you.real_time );
     marshallLong( th, you.num_turns );
+
+    // you.magic_contamination 05/03/05
+    marshallShort(th, you.magic_contamination);
 }
 
 static void tag_construct_you_items(struct tagHeader &th)
@@ -733,6 +736,8 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallLong(th,you.inv[i].flags);
         marshallShort(th,you.inv[i].quantity);
         marshallShort(th,you.inv[i].plus2);
+        marshallShort(th, you.inv[i].orig_place);
+        marshallShort(th, you.inv[i].orig_monnum);
     }
 
     // item descrip for each type & subtype
@@ -1014,6 +1019,12 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
         you.real_time = -1;
         you.num_turns = -1;
     }
+
+    // you.magic_contamination 05/03/05
+    if (minorVersion >= 3)
+    {
+        you.magic_contamination = unmarshallShort(th);
+    }
 }
 
 static void tag_convert_to_4_3_item( item_def &item )
@@ -1254,6 +1265,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
     {
+        you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
         if (minorVersion < 1)
         {
             you.inv[i].base_type = (unsigned char) unmarshallByte(th);
@@ -1277,12 +1289,19 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
             you.inv[i].flags = (unsigned long) unmarshallLong(th);
             you.inv[i].quantity = unmarshallShort(th);
             you.inv[i].plus2 = unmarshallShort(th);
+
+            if (minorVersion >= 4)
+            {
+                you.inv[i].orig_place  = unmarshallShort(th);
+                you.inv[i].orig_monnum = unmarshallShort(th);
+            }
         }
 
         // these never need to be saved for items in the inventory -- bwr
         you.inv[i].x = -1;
         you.inv[i].y = -1;
         you.inv[i].link = i;
+        you.inv[i].slot = index_to_letter(i);
     }
 
     // item descrip for each type & subtype
@@ -1398,7 +1417,7 @@ static void tag_construct_level(struct tagHeader &th)
         for (count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallByte(th, env.map[count_x][count_y]);
+            marshallShort(th, env.map[count_x][count_y]);
             marshallByte(th, env.cgrid[count_x][count_y]);
         }
     }
@@ -1461,6 +1480,11 @@ static void tag_construct_level_items(struct tagHeader &th)
 
         marshallShort(th, mitm[i].link);                //  unused
         marshallShort(th, igrd[mitm[i].x][mitm[i].y]);  //  unused
+
+        marshallByte(th, mitm[i].slot);
+
+        marshallShort(th, mitm[i].orig_place);
+        marshallShort(th, mitm[i].orig_monnum);
     }
 }
 
@@ -1539,9 +1563,14 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         for (j = 0; j < gy; j++)
         {
             grd[i][j] = unmarshallByte(th);
-            env.map[i][j] = unmarshallByte(th);
-            if (env.map[i][j] == 201)       // what is this??
-                env.map[i][j] = 239;
+            
+            if (minorVersion < 8)
+                env.map[i][j] = (unsigned char) unmarshallByte(th);
+            else
+                env.map[i][j] = (unsigned short) unmarshallShort(th);
+            
+            if ((env.map[i][j] & 0xFF) == 201)       // what is this??
+                env.map[i][j] = (env.map[i][j] & 0xFF00U) | 239;
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = unmarshallByte(th);
@@ -1638,6 +1667,22 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
 
         unmarshallShort(th);  // mitm[].link -- unused
         unmarshallShort(th);  // igrd[mitm[i].x][mitm[i].y] -- unused
+
+        if (minorVersion >= 6)
+        {
+            mitm[i].slot = unmarshallByte(th);
+        }
+
+        if (minorVersion >= 7)
+        {
+            mitm[i].orig_place  = unmarshallShort(th);
+            mitm[i].orig_monnum = unmarshallShort(th);
+        }
+        else
+        {
+            mitm[i].orig_place  = 0;
+            mitm[i].orig_monnum = 0;
+        }
     }
 }
 
@@ -1664,7 +1709,8 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].evasion = unmarshallByte(th);
         menv[i].hit_dice = unmarshallByte(th);
         menv[i].speed = unmarshallByte(th);
-        menv[i].speed_increment = unmarshallByte(th);
+        // Avoid sign extension when loading files (Elethiomel's hang)
+        menv[i].speed_increment = (unsigned char) unmarshallByte(th);
         menv[i].behaviour = unmarshallByte(th);
         menv[i].x = unmarshallByte(th);
         menv[i].y = unmarshallByte(th);

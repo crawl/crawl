@@ -273,7 +273,8 @@ void pray(void)
             if (thing_created != NON_ITEM)
             {
                 move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-
+                origin_acquired(mitm[thing_created], you.religion);
+                
                 simple_god_message(" grants you a gift!");
                 more();
                 canned_msg(MSG_SOMETHING_APPEARS);
@@ -293,11 +294,11 @@ void pray(void)
             if (you.religion == GOD_TROG 
                 || (you.religion == GOD_OKAWARU && coinflip()))
             {
-                success = acquirement(OBJ_WEAPONS);
+                success = acquirement(OBJ_WEAPONS, you.religion);
             }
             else
             {
-                success = acquirement(OBJ_ARMOUR);
+                success = acquirement(OBJ_ARMOUR, you.religion);
             }
 
             if (success)
@@ -386,7 +387,7 @@ void pray(void)
                     && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER))
             {
                 if (gift == OBJ_RANDOM)
-                    success = acquirement(OBJ_BOOKS);
+                    success = acquirement(OBJ_BOOKS, you.religion);
                 else
                 {
                     int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 250);
@@ -396,7 +397,10 @@ void pray(void)
                     move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
 
                     if (thing_created != NON_ITEM)
+                    {
                         success = true;
+                        origin_acquired(mitm[thing_created], you.religion);
+                    }
                 }
 
                 if (success)
@@ -834,6 +838,7 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
 
                 if (thing_created != NON_ITEM)
                 {
+                    origin_acquired(mitm[thing_created], GOD_XOM);
                     canned_msg(MSG_SOMETHING_APPEARS);
                     more();
                 }
@@ -870,7 +875,7 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 (temp_rand == 2) ? "Xom grants you an implement of death."
                                  : "Xom smiles on you.");
 
-            if (acquirement(OBJ_WEAPONS))
+            if (acquirement(OBJ_WEAPONS, GOD_XOM))
                 more();
 
             done_good = true;
@@ -1138,7 +1143,7 @@ void gain_piety(char pgn)
                     (you.religion == GOD_MAKHLEB)
                             ? "gain power from killing in Makhleb's name" :
                     (you.religion == GOD_OKAWARU)
-                            ? "give your great, but temporary, body strength" :
+                            ? "give your body great, but temporary strength" :
                     (you.religion == GOD_TROG)
                             ? "go berserk at will" :
                     (you.religion == GOD_ELYVILON)

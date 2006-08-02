@@ -55,4 +55,10 @@ void describe_monsters(int class_described, unsigned char which_mons);
  * *********************************************************************** */
 void describe_spell(int spelled);
 
+// last updated 13oct2003 {darshan}
+/* ***********************************************************************
+ * called from: describe_monsters - describe, kill_ghost - Kills
+ * *********************************************************************** */
+std::string ghost_description(bool concise = false);
+
 #endif

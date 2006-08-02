@@ -24,6 +24,7 @@
 
 #include "externs.h"
 
+#include "clua.h"
 #include "debug.h"
 #include "delay.h"
 #include "invent.h"
@@ -42,11 +43,8 @@
 #include "stuff.h"
 #include "wpn-misc.h"
 
-static bool  can_ingest(int what_isit, int kindof_thing, bool suppress_msg);
-static bool  eat_from_floor(void);
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );
-static void  eat_from_inventory(int which_inventory_slot);
 static void  eating(unsigned char item_class, int item_type);
 static void  ghoul_eat_flesh( int chunk_effect );
 static void  describe_food_change(int hunger_increment);
@@ -199,10 +197,6 @@ bool butchery(void)
         // be annoyed with the excess prompt).
         if (Options.easy_butcher && !can_butcher)
         {
-            const int a_slot = letter_to_index('a');
-            const int b_slot = letter_to_index('b');
-            int swap_slot = a_slot;
-
             //mv: check for berserk first
             if (you.berserker)
             {
@@ -210,27 +204,25 @@ bool butchery(void)
                 return (false);
             }
 
-            // Find out which slot is our auto-swap slot
-            if (you.equip[EQ_WEAPON] == a_slot)
-                swap_slot = b_slot;
-
-
-            // check if the swap slot is appropriate first
-            if (you.equip[EQ_WEAPON] != swap_slot)
+            // We'll now proceed to look through the entire inventory for
+            // choppers/slicers.  We'll skip special weapons because
+            // wielding/unwielding a foo of distortion would be disastrous.
+            for (int i = 0; i < ENDOFPACK; ++i)
             {
-                if (is_valid_item( you.inv[ swap_slot ] ) // must have one
-
-                    // must be able to cut with it
-                    && can_cut_meat( you.inv[ swap_slot ].base_type,
-                                     you.inv[ swap_slot ].sub_type )
-
-                    // must be known to be uncursed weapon
-                    && you.inv[ swap_slot ].base_type == OBJ_WEAPONS
-                    && item_known_uncursed( you.inv[ swap_slot ] ))
+                if (is_valid_item( you.inv[i] )
+                        && can_cut_meat( you.inv[i].base_type,
+                            you.inv[i].sub_type )
+                        && you.inv[i].base_type == OBJ_WEAPONS
+                        && item_known_uncursed(you.inv[i])
+                        && item_ident( you.inv[i], ISFLAG_KNOW_TYPE )
+                        && get_weapon_brand(you.inv[i])
+                                != SPWPN_DISTORTION
+                        && can_wield( you.inv[i] ))
                 {
-                    mpr( "Switching to your swap slot weapon." );
+                    mpr("Switching to a butchering implement.");
                     wpn_switch = true;
-                    wield_weapon( true );
+                    wield_weapon( true, i, false );
+                    break;
                 }
             }
 
@@ -492,42 +484,68 @@ bool butchery(void)
     return (false);
 }                               // end butchery()
 
-void eat_food(void)
+#ifdef CLUA_BINDINGS
+void lua_push_items(lua_State *ls, int link)
 {
-    int which_inventory_slot;
-
-    if (you.is_undead == US_UNDEAD)
+    lua_newtable(ls);
+    int index = 0;
+    for ( ; link != NON_ITEM; link = mitm[link].link)
     {
-        mpr("You can't eat.");
-        return;
+        lua_pushlightuserdata(ls, &mitm[link]);
+        lua_rawseti(ls, -2, ++index);
     }
+}
 
-    if (you.hunger >= 11000)
-    {
-        mpr("You're too full to eat anything.");
-        return;
-    }
+void lua_push_floor_items(lua_State *ls)
+{
+    lua_push_items(ls, igrd[you.x_pos][you.y_pos]);
+}
 
-    if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
+void lua_push_inv_items(lua_State *ls = NULL)
+{
+    if (!ls)
+        ls = clua.state();
+    lua_newtable(ls);
+    int index = 0;
+    for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
     {
-        if (eat_from_floor())
+        if (is_valid_item(you.inv[slot]))
         {
-            burden_change();    // ghouls regain strength from rotten food
-            return;
+            lua_pushlightuserdata(ls, &you.inv[slot]);
+            lua_rawseti(ls, -2, ++index);
         }
     }
+}
+#endif
 
+static bool userdef_eat_food()
+{
+#ifdef CLUA_BINDINGS
+    lua_push_floor_items(clua.state());
+    lua_push_inv_items();
+    bool ret = clua.callfn("c_eat", 2, 0);
+    if (!ret && clua.error.length())
+        mpr(clua.error.c_str());
+    return ret;
+#else
+    return false;
+#endif
+}
+
+bool prompt_eat_from_inventory(void)
+{
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return;
+        return (false);
     }
 
-    which_inventory_slot = prompt_invent_item( "Eat which item?", OBJ_FOOD );
+    int which_inventory_slot = 
+            prompt_invent_item( "Eat which item?", OBJ_FOOD );
     if (which_inventory_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
-        return;
+        return (false);
     }
 
     // this conditional can later be merged into food::can_ingest() when
@@ -535,19 +553,53 @@ void eat_food(void)
     if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
     {
         mpr("You can't eat that!");
-        return;
+        return (false);
     }
 
     if (!can_ingest( you.inv[which_inventory_slot].base_type,
                         you.inv[which_inventory_slot].sub_type, false ))
     {
-        return;
+        return (false);
     }
 
     eat_from_inventory(which_inventory_slot);
 
     burden_change();
     you.turn_is_over = 1;
+
+    return (true);
+}
+
+// [ds] Returns true if something was eaten
+bool eat_food(bool run_hook)
+{
+    if (you.is_undead == US_UNDEAD)
+    {
+        mpr("You can't eat.");
+        return (false);
+    }
+
+    if (you.hunger >= 11000)
+    {
+        mpr("You're too full to eat anything.");
+        return (false);
+    }
+
+    // If user hook ran, we don't know whether something
+    // was eaten or not...
+    if (run_hook && userdef_eat_food())
+        return (false);
+
+    if (igrd[you.x_pos][you.y_pos] != NON_ITEM)
+    {
+        if (eat_from_floor())
+        {
+            burden_change();    // ghouls regain strength from rotten food
+            return (true);
+        }
+    }
+
+    return (prompt_eat_from_inventory());
 }                               // end eat_food()
 
 /*
@@ -586,6 +638,10 @@ static bool food_change(bool suppress_message)
         state_changed = true;
         you.hunger_state = newstate;
         set_redraw_status( REDRAW_HUNGER );
+
+        // Stop the travel command, if it's in progress and we just got hungry
+        if (newstate < HS_SATIATED)
+            interrupt_activity( AI_HUNGRY );
 
         if (suppress_message == false)
         {
@@ -630,7 +686,7 @@ static void describe_food_change(int food_increment)
     mpr(info);
 }                               // end describe_food_change()
 
-static void eat_from_inventory(int which_inventory_slot)
+void eat_from_inventory(int which_inventory_slot)
 {
     if (you.inv[which_inventory_slot].sub_type == FOOD_CHUNK)
     {
@@ -651,8 +707,26 @@ static void eat_from_inventory(int which_inventory_slot)
     dec_inv_item_quantity( which_inventory_slot, 1 );
 }                               // end eat_from_inventory()
 
+void eat_floor_item(int item_link)
+{
+    if (mitm[item_link].sub_type == FOOD_CHUNK)
+    {
+        const int chunk_type = mons_corpse_thingy( mitm[item_link].plus );
+        const bool rotten = (mitm[item_link].special < 100);
 
-static bool eat_from_floor(void)
+        eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
+    }
+    else
+    {
+        eating( mitm[item_link].base_type, mitm[item_link].sub_type );
+    }
+
+    you.turn_is_over = 1;
+
+    dec_mitm_item_quantity( item_link, 1 );
+}
+
+bool eat_from_floor(void)
 {
     char str_pass[ ITEMNAME_SIZE ];
 
@@ -685,22 +759,7 @@ static bool eat_from_floor(void)
             if (!can_ingest( mitm[o].base_type, mitm[o].sub_type, false ))
                 return (false);
 
-            if (mitm[o].sub_type == FOOD_CHUNK)
-            {
-                const int chunk_type = mons_corpse_thingy( mitm[o].plus );
-                const bool rotten = (mitm[o].special < 100);
-
-                eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
-            }
-            else
-            {
-                eating( mitm[o].base_type, mitm[o].sub_type );
-            }
-
-            you.turn_is_over = 1;
-
-            dec_mitm_item_quantity( o, 1 );
-
+            eat_floor_item(o);
             return (true);
         }
     }
@@ -1021,16 +1080,14 @@ static void eating(unsigned char item_class, int item_type)
             restore_stat(STAT_ALL, false);
             break;
         case FOOD_PIZZA:
-            strcpy(info, "Mmm... ");
-
             if (SysEnv.crawl_pizza && !one_chance_in(3))
-                strcat(info, SysEnv.crawl_pizza);
+                snprintf(info, INFO_SIZE, "Mmm... %s", SysEnv.crawl_pizza);
             else
             {
                 temp_rand = random2(9);
 
-                strcat(info, (temp_rand == 0) ? "Ham and pineapple." :
-                             (temp_rand == 1) ? "Extra thick crust." :
+                snprintf(info, INFO_SIZE, "Mmm... %s",
+                             (temp_rand == 0) ? "Ham and pineapple." :
                              (temp_rand == 2) ? "Vegetable." :
                              (temp_rand == 3) ? "Pepperoni." :
                              (temp_rand == 4) ? "Yeuchh - Anchovies!" :
@@ -1090,9 +1147,26 @@ static void eating(unsigned char item_class, int item_type)
     return;
 }                               // end eating()
 
-static bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg)
+bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
+                bool check_hunger)
 {
     bool survey_says = false;
+
+    // [ds] These redundant checks are now necessary - Lua might be calling us.
+    if (you.is_undead == US_UNDEAD)
+    {
+        if (!suppress_msg)
+            mpr("You can't eat.");
+        return (false);
+    }
+
+    if (check_hunger && you.hunger >= 11000)
+    {
+        if (!suppress_msg)
+            mpr("You're too full to eat anything.");
+        return (false);
+    }
+
 
     bool ur_carnivorous = (you.species == SP_GHOUL
                            || you.species == SP_KOBOLD
@@ -1102,8 +1176,9 @@ static bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg)
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
-    bool ur_chunkslover = (you.hunger_state <= HS_HUNGRY
-                           || wearing_amulet(AMU_THE_GOURMAND)
+    bool ur_chunkslover = ( 
+                (check_hunger? you.hunger_state <= HS_HUNGRY : true)
+                           || wearing_amulet(AMU_THE_GOURMAND, !reqid)
                            || you.species == SP_KOBOLD
                            || you.species == SP_OGRE
                            || you.species == SP_TROLL

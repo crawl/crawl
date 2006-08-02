@@ -11,6 +11,7 @@
  */
 
 #include "AppHdr.h"
+#include "chardump.h"
 #include "shopping.h"
 
 #include <stdio.h>
@@ -31,24 +32,24 @@
 #include "player.h"
 #include "randart.h"
 #include "spl-book.h"
+#include "stash.h"
 #include "stuff.h"
 
-
-static char in_a_shop(char shoppy, char id[4][50]);
+static char in_a_shop(char shoppy, id_arr id);
 static char more3(void);
 static void purchase( int shop, int item_got, int cost );
-static void shop_init_id(int i, FixedArray < int, 4, 50 > &shop_id);
+static void shop_init_id(int i, id_fix_arr &shop_id);
 static void shop_print(const char *shoppy, char sh_line);
-static void shop_set_ident_type(int i, FixedArray < int, 4, 50 > &shop_id,
+static void shop_set_ident_type(int i, id_fix_arr &shop_id,
                                 unsigned char base_type, unsigned char sub_type);
-static void shop_uninit_id(int i, FixedArray < int, 4, 50 > &shop_id);
+static void shop_uninit_id(int i, const id_fix_arr &shop_id);
 
-char in_a_shop( char shoppy, char id[4][50] )
+char in_a_shop( char shoppy, id_arr id )
 {
     // easier to work with {dlb}
     unsigned int greedy = env.shop[shoppy].greed;
 
-    FixedArray < int, 4, 50 > shop_id;
+    id_fix_arr shop_id;
     FixedVector < int, 20 > shop_items;
 
     char st_pass[ ITEMNAME_SIZE ] = "";
@@ -71,6 +72,10 @@ char in_a_shop( char shoppy, char id[4][50] )
     snprintf( info, INFO_SIZE, "Welcome to %s!", 
              shop_name(env.shop[shoppy].x, env.shop[shoppy].y) );
 
+#ifdef STASH_TRACKING
+    ShopInfo &si = stashes.get_shop(env.shop[shoppy].x, env.shop[shoppy].y);
+#endif
+
     shop_print(info, 20);
 
     more3();
@@ -89,6 +94,9 @@ char in_a_shop( char shoppy, char id[4][50] )
     clrscr();
     itty = igrd[0][5 + shoppy];
 
+#ifdef STASH_TRACKING
+    si.reset();
+#endif
     if (itty == NON_ITEM)
     {
         shop_print("I'm sorry, my shop is empty now.", 20);
@@ -126,6 +134,15 @@ char in_a_shop( char shoppy, char id[4][50] )
         gp_value /= 10;
         if (gp_value <= 1)
             gp_value = 1;
+
+        std::string desc;
+        if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
+            desc = munge_description(get_item_description(mitm[itty], 
+                                                          Options.verbose_dump,
+                                                          true ));
+#   ifdef STASH_TRACKING
+        si.add_item(mitm[itty], gp_value);
+#   endif
 
         gotoxy(60, i);
         // cdl - itoa(gp_value, st_pass, 10);
@@ -248,15 +265,13 @@ char in_a_shop( char shoppy, char id[4][50] )
     return 0;
 }
 
-void shop_init_id(int i, FixedArray < int, 4, 50 > &shop_id)
+void shop_init_id_type(int shoptype, id_fix_arr &shop_id)
 {
-    unsigned char j = 0;
-
-    if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-        && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-        && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
+    if (shoptype != SHOP_WEAPON_ANTIQUE
+        && shoptype != SHOP_ARMOUR_ANTIQUE
+        && shoptype != SHOP_GENERAL_ANTIQUE)
     {
-        for (j = 0; j < 50; j++)
+        for (int j = 0; j < 50; j++)
         {
             shop_id[ IDTYPE_WANDS ][j] = get_ident_type(OBJ_WANDS, j);
             set_ident_type(OBJ_WANDS, j, ID_KNOWN_TYPE);
@@ -273,25 +288,37 @@ void shop_init_id(int i, FixedArray < int, 4, 50 > &shop_id)
     }
 }
 
-void shop_uninit_id(int i, FixedArray < int, 4, 50 > &shop_id)
+static void shop_init_id(int i, id_fix_arr &shop_id)
 {
-    unsigned char j = 0;
+    shop_init_id_type( env.shop[i].type, shop_id );
+}
 
-    if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-        && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-        && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
+void shop_uninit_id_type(int shoptype, const id_fix_arr &shop_id)
+{
+    if (shoptype != SHOP_WEAPON_ANTIQUE
+        && shoptype != SHOP_ARMOUR_ANTIQUE
+        && shoptype != SHOP_GENERAL_ANTIQUE)
     {
-        for (j = 0; j < 50; j++)
+        for (int j = 0; j < 50; j++)
         {
-            set_ident_type( OBJ_WANDS, j, shop_id[ IDTYPE_WANDS ][j], true );
-            set_ident_type( OBJ_SCROLLS, j, shop_id[ IDTYPE_SCROLLS ][j], true );
-            set_ident_type( OBJ_JEWELLERY, j, shop_id[ IDTYPE_JEWELLERY ][j], true );
-            set_ident_type( OBJ_POTIONS, j, shop_id[ IDTYPE_POTIONS ][j], true );
+            set_ident_type( OBJ_WANDS, j, 
+                    shop_id[ IDTYPE_WANDS ][j], true );
+            set_ident_type( OBJ_SCROLLS, j, 
+                    shop_id[ IDTYPE_SCROLLS ][j], true );
+            set_ident_type( OBJ_JEWELLERY, j, 
+                    shop_id[ IDTYPE_JEWELLERY ][j], true );
+            set_ident_type( OBJ_POTIONS, j, 
+                    shop_id[ IDTYPE_POTIONS ][j], true );
         }
     }
 }
 
-void shop_set_ident_type( int i, FixedArray < int, 4, 50 > &shop_id,
+static void shop_uninit_id(int i, const id_fix_arr &shop_id)
+{
+    shop_uninit_id_type(env.shop[i].type, shop_id);
+}
+
+void shop_set_ident_type( int i, id_fix_arr &shop_id,
                           unsigned char base_type, unsigned char sub_type )
 {
     if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
@@ -343,6 +370,7 @@ static void purchase( int shop, int item_got, int cost )
 {
     you.gold -= cost;
 
+    origin_purchased(mitm[item_got]);
     int num = move_item_to_player( item_got, mitm[item_got].quantity, true );
 
     // Shopkeepers will now place goods you can't carry outside the shop.
@@ -462,7 +490,7 @@ int randart_value( const item_def &item )
     return ((ret > 0) ? ret : 0);
 }
 
-unsigned int item_value( item_def item, char id[4][50], bool ident )
+unsigned int item_value( item_def item, id_arr id, bool ident )
 {
     // Note that we pass item in by value, since we want a local
     // copy to mangle as neccessary... maybe that should be fixed,
@@ -1517,7 +1545,7 @@ void shop(void)
         return;
     }
 
-    char identy[4][50];
+    id_arr identy;
 
     save_id(identy);
 
@@ -1528,38 +1556,45 @@ void shop(void)
     redraw_screen();
 }                               // end shop()
 
-const char *shop_name(int sx, int sy)
+const shop_struct *get_shop(int sx, int sy)
 {
-    static char sh_name[80];
-    int shoppy;
-
-    // paranoia
     if (grd[sx][sy] != DNGN_ENTER_SHOP)
-        return ("");
+        return (NULL);
 
     // find shop
-    for(shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
+    for (int shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
     {
         // find shop index plus a little bit of paranoia
         if (env.shop[shoppy].x == sx && env.shop[shoppy].y == sy &&
             env.shop[shoppy].type != SHOP_UNASSIGNED)
         {
-            break;
+            return (&env.shop[shoppy]);
         }
     }
+    return (NULL);
+}
 
-    if (shoppy == MAX_SHOPS)
+const char *shop_name(int sx, int sy)
+{
+    static char sh_name[80];
+    const shop_struct *cshop = get_shop(sx, sy);
+
+    // paranoia
+    if (grd[sx][sy] != DNGN_ENTER_SHOP)
+        return ("");
+
+    if (!cshop)
     {
         mpr("Help! Non-existent shop.");
         return ("Buggy Shop");
     }
 
-    int shop_type = env.shop[shoppy].type;
+    int shop_type = cshop->type;
 
     char st_p[ITEMNAME_SIZE];
 
-    make_name( env.shop[shoppy].keeper_name[0], env.shop[shoppy].keeper_name[1],
-               env.shop[shoppy].keeper_name[2], 3, st_p );
+    make_name( cshop->keeper_name[0], cshop->keeper_name[1],
+               cshop->keeper_name[2], 3, st_p );
 
     strcpy(sh_name, st_p);
     strcat(sh_name, "'s ");

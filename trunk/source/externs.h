@@ -17,12 +17,19 @@
 #define EXTERNS_H
 
 #include <queue>
+#include <vector>
+#include <list>
+#include <string>
+
+#include <map>
 
 #include <time.h>
 
 #include "defines.h"
 #include "enum.h"
 #include "FixAry.h"
+#include "Kills.h"
+#include "libutil.h"
 #include "message.h"
 
 #define INFO_SIZE       200          // size of message buffers
@@ -64,12 +71,65 @@ const int kPathLen = 256;
 // penalty (Xom's granted or from a deck of cards).
 #define NO_BERSERK_PENALTY    -1
 
+struct monsters;
+struct ait_hp_loss;
+
+struct activity_interrupt_t
+{
+    AI_PAYLOAD apt;
+    const void *data;
+
+    activity_interrupt_t()
+        : apt(AIP_NONE), data(NULL)
+    {
+    }
+    activity_interrupt_t(const int *i)
+        : apt(AIP_INT), data(i)
+    {
+    }
+    activity_interrupt_t(const char *s)
+        : apt(AIP_STRING), data(s)
+    {
+    }
+    activity_interrupt_t(const std::string &s) 
+        : apt(AIP_STRING), data(s.c_str())
+    {
+    }
+    activity_interrupt_t(const monsters *m)
+        : apt(AIP_MONSTER), data(m)
+    {
+    }
+    activity_interrupt_t(const ait_hp_loss *ahl)
+        : apt(AIP_HP_LOSS), data(ahl)
+    {
+    }
+    activity_interrupt_t(const activity_interrupt_t &a)
+        : apt(a.apt), data(a.data)
+    {
+    }
+};
+
+struct ait_hp_loss
+{
+    int hp;
+    int hurt_type;  // KILLED_BY_POISON, etc.
+
+    ait_hp_loss(int _hp, int _ht) : hp(_hp), hurt_type(_ht) { }
+};
+
 struct coord_def
 {
     int         x;
     int         y;
 
     // coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) {};
+    bool operator == (const coord_def &other) const {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator != (const coord_def &other) const {
+        return x != other.x || y != other.y;
+    }
 };
 
 struct dice_def
@@ -163,11 +223,42 @@ struct item_def
     short  x;          // x-location;         for inventory items = -1 
     short  y;          // y-location;         for inventory items = -1
     short  link;       // link to next item;  for inventory items = slot
+    short  slot;       // Inventory letter
+
+    unsigned short orig_place;
+    short          orig_monnum;
+    
+    item_def() : base_type(0), sub_type(0), plus(0), plus2(0),
+                 special(0L), colour(0), flags(0L), quantity(0),
+                 x(0), y(0), link(0), slot(0), orig_place(0),
+                 orig_monnum(0)
+    {
+    }
 };
 
+class input_history
+{
+public:
+    input_history(size_t size);
+
+    void new_input(const std::string &s);
+    void clear();
+    
+    const std::string *prev();
+    const std::string *next();
+
+    void go_end();
+private:
+    typedef std::list<std::string> string_list;
+    
+    string_list             history;
+    string_list::iterator   pos;
+    size_t maxsize;
+};
 
 struct player
 {
+  ACTIVITY activity;    // The current multiturn activity, usually set to ACT_NONE
   char turn_is_over; // flag signaling that player has performed a timed action
 
   unsigned char prev_targ;
@@ -177,8 +268,13 @@ struct player
 
   char run_x;
   char run_y;
+
+  // Coordinates of last travel target; note that this is never used by
+  // travel itself, only by the level-map to remember the last travel target.
+  short travel_x, travel_y;
+
   FixedVector< run_check_dir, 3 > run_check; // array of grids to check
-  char running;
+  signed char running;                       // Nonzero if running/traveling.
 
   char special_wield;
   char deaths_door;
@@ -293,6 +389,9 @@ struct player
   FixedArray<unsigned char, 5, 50> item_description;
   FixedVector<unsigned char, 50> unique_items;
   FixedVector<unsigned char, 50> unique_creatures;
+
+  KillMaster kills;
+
   char level_type;
 
   char where_are_you;
@@ -409,7 +508,7 @@ struct crawl_environment
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
 
-    FixedArray< unsigned char, GXM, GYM >    map;   // discovered terrain
+    FixedArray< unsigned short, GXM, GYM >    map;   // discovered terrain
 
     FixedArray< unsigned int, 19, 19>        show;      // view window char 
     FixedArray< unsigned short, 19, 19>      show_col;  // view window colour
@@ -453,10 +552,98 @@ struct system_environment
 
 extern system_environment SysEnv;
 
+struct message_filter
+{
+    int             channel;        // Use -1 to match any channel.
+    text_pattern    pattern;        // Empty pattern matches any message
+
+    message_filter( int ch, const std::string &s ) 
+        : channel(ch), pattern(s) 
+    {
+    }
+
+    message_filter( const std::string &s ) : channel(-1), pattern(s) { }
+
+    bool is_filtered( int ch, const std::string &s ) const {
+        bool channel_match = ch == channel || channel == -1;
+        if (!channel_match || pattern.empty())
+            return channel_match;
+        return pattern.matches(s);
+    }
+
+};
+
+struct sound_mapping
+{
+    text_pattern pattern;
+    std::string  soundfile;
+};
+
+struct colour_mapping
+{
+    text_pattern pattern;
+    int colour;
+};
+
+class formatted_string
+{
+public:
+    formatted_string() : ops() { }
+    formatted_string(const std::string &s);
+
+    operator std::string() const;
+    void display(int start = 0, int end = -1) const;
+    std::string tostring(int start = 0, int end = -1) const;
+
+    void cprintf(const char *s, ...);
+    void cprintf(const std::string &s);
+    void gotoxy(int x, int y);
+    void textcolor(int color);
+
+private:
+    enum fs_op_type
+    {
+        FSOP_COLOUR,
+        FSOP_CURSOR,
+        FSOP_TEXT,
+    };
+
+    struct fs_op
+    {
+        fs_op_type type;
+        int x, y;
+        std::string text;
+        
+        fs_op(int color)
+            : type(FSOP_COLOUR), x(color), y(-1), text()
+        {
+        }
+        
+        fs_op(int cx, int cy)
+            : type(FSOP_CURSOR), x(cx), y(cy), text()
+        {
+        }
+        
+        fs_op(const std::string &s)
+            : type(FSOP_TEXT), x(-1), y(-1), text(s)
+        {
+        }
+
+        operator fs_op_type () const
+        {
+            return type;
+        }
+        void display() const;
+    };
+
+    std::vector<fs_op> ops;
+};
+
 struct game_options 
 {
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
+    bool        detailed_stat_dump; // add detailed stat and resist dump
     bool        colour_map;     // add colour to the map
     bool        clean_map;      // remove unseen clouds/monsters
     bool        show_uncursed;  // label known uncursed items as "uncursed"
@@ -480,8 +667,10 @@ struct game_options
     char        cls;            // preselected class
     bool        terse_hand;     // use terse description for wielded item
     bool        delay_message_clear; // avoid clearing messages each turn
-    unsigned int friend_brand;  // Attribute for branding friendly monsters
+    unsigned    friend_brand;   // Attribute for branding friendly monsters
     bool        no_dark_brand;  // Attribute for branding friendly monsters
+    bool        macro_meta_entry; // Allow user to use \{foo} sequences when
+                                  // creating macros
 
     int         fire_items_start; // index of first item for fire command
     FixedVector<int, NUM_FIRE_TYPES>  fire_order; // order for 'f' command
@@ -500,6 +689,89 @@ struct game_options
     // internal use only:
     int         sc_entries;     // # of score entries
     int         sc_format;      // Format for score entries
+
+    std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
+    bool        pickup_thrown;  // Pickup thrown missiles
+    bool        pickup_dropped; // Pickup dropped objects
+    int         travel_delay;   // How long to pause between travel moves
+
+    std::vector<message_filter> stop_travel;  // Messages that stop travel
+
+    int         stash_tracking; // How stashes are tracked
+
+    bool        travel_colour;  // Colour levelmap using travel information?
+    int         travel_stair_cost;
+
+    int         travel_exclude_radius2; // Square of the travel exclude radius
+    bool        show_waypoints;
+
+    bool        item_colour;    // Colour items on level map
+
+    unsigned    detected_monster_colour;    // Colour of detected monsters
+    unsigned    detected_item_colour;       // Colour of detected items
+    unsigned    remembered_monster_colour;  // Colour for monsters remembered
+                                            // on the map.   
+
+    unsigned    heap_brand;     // Highlight heaps of items in the playing area
+    unsigned    stab_brand;     // Highlight monsters that are stabbable
+    unsigned    may_stab_brand; // Highlight potential stab candidates
+
+    int         explore_stop;      // Stop exploring if a previously unseen
+                                   // item comes into view
+
+    std::vector<sound_mapping> sound_mappings;
+    std::vector<colour_mapping> menu_colour_mappings;
+
+    int         dump_kill_places; // How to dump place information for kills.
+    int         dump_message_count; // How many old messages to dump
+
+    int         dump_item_origins;  // Show where items came from?
+    int         dump_item_origin_price;
+
+    bool        target_zero_exp;    // If true, targeting targets zero-exp
+                                    // monsters.
+    bool        target_wrap;        // Wrap around from last to first target
+    bool        target_oos;         // 'x' look around can target out-of-LOS
+    bool        target_los_first;   // 'x' look around first goes to visible
+                                    // objects/features, then goes to stuff
+                                    // outside LOS.
+
+    int         drop_mode;          // Controls whether single or multidrop
+                                    // is the default.
+
+    bool        easy_exit_menu;     // Menus are easier to get out of
+
+    int         assign_item_slot;   // How free slots are assigned
+
+    std::vector<text_pattern> drop_filter;
+    
+    FixedVector< unsigned, ACT_ACTIVITY_COUNT > activity_interrupts;
+
+    // Previous startup options
+    bool        remember_name;      // Remember and reprompt with last name
+
+    bool        dos_use_background_intensity;
+
+    int         level_map_cursor_step;  // The cursor increment in the level
+                                        // map.
+
+    // If the player prefers to merge kill records, this option can do that.
+    int         kill_map[KC_NCATEGORIES];
+    
+    typedef std::map<std::string, std::string> opt_map;
+    opt_map     named_options;          // All options not caught above are
+                                        // recorded here.
+        
+    ///////////////////////////////////////////////////////////////////////
+    // These options cannot be directly set by the user. Instead they're
+    // set indirectly to the choices the user made for the last character
+    // created. XXX: Isn't there a better place for these?
+    std::string prev_name;
+    char        prev_race;
+    char        prev_cls;
+    int         prev_ck, prev_dk, prev_pr;
+    int         prev_weapon;
+    bool        prev_randpick;
 };
 
 extern game_options  Options;

@@ -27,6 +27,7 @@
 #include "AppHdr.h"
 
 #include <string.h>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -56,6 +57,10 @@
 #endif
 
 #include "ouch.h"
+
+#ifdef __MINGW32__
+#include <io.h>
+#endif
 
 #include "externs.h"
 
@@ -546,6 +551,9 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     int d = 0;
     int e = 0;
 
+    ait_hp_loss hpl(dam, death_type);
+    interrupt_activity( AI_HP_LOSS, &hpl );
+
     if (you.deaths_door && death_type != KILLED_BY_LAVA
                                     && death_type != KILLED_BY_WATER)
     {
@@ -625,7 +633,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
             mpr( info, MSGCH_DIAGNOSTICS );
 #endif // DEBUG_DIAGNOSTICS
 
-            if (!yesno("Die?", false))
+            if (!yesno("Die?", false, 'n'))
             {
                 set_hp(you.hp_max, false);
                 return;
@@ -933,8 +941,19 @@ void end_game( struct scorefile_entry &se )
 
     // last, but not least, delete player .sav file
     strcpy(del_file, info);
+
+    std::string basefile = del_file;
+
     strcat(del_file, ".sav");
     unlink(del_file);
+
+    // Delete record of stashes, kills, travel cache and lua save.
+    unlink( (basefile + ".st").c_str() );
+    unlink( (basefile + ".kil").c_str() );
+    unlink( (basefile + ".tc").c_str() );
+#ifdef CLUA_BINDINGS
+    unlink( (basefile + ".lua").c_str() );
+#endif
 
     // death message
     if (dead)
@@ -956,7 +975,7 @@ void end_game( struct scorefile_entry &se )
         }
     }
 
-    invent( -1, !dead );
+    invent( -1, dead );
     clrscr();
 
     if (!dump_char( "morgue.txt", !dead ))

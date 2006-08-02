@@ -45,6 +45,18 @@
 #pragma message("Compiling AppHeader.h (this message should only appear once)")
 #endif
 
+#if defined(GCC)
+#   define HASH_CONTAINER_NS __gnu_cxx
+#   define HASH_CONTAINERS
+#endif
+
+// Enables stash-tracking: keeps track of items in the dungeon as a convenience
+// for the player.
+#define STASH_TRACKING
+
+// Uncomment to enable the Crawl Lua bindings.
+//
+// #define CLUA_BINDINGS
 
 // =========================================================================
 //  System Defines
@@ -88,6 +100,37 @@
     // term used... under X Windows try "rxvt".
     #define USE_COLOUR_OPTS
 
+    // More sophisticated character handling
+    #define CURSES_USE_KEYPAD
+
+    // How long (milliseconds) curses should wait for additional characters
+    // after seeing an Escape (0x1b) keypress. May not be available on all
+    // curses implementations.
+    #define CURSES_SET_ESCDELAY 20
+
+    // Use this to seed the PRNG with a bit more than just time()... turning 
+    // this off is perfectly okay, the game just becomes more exploitable 
+    // with a bit of hacking (ie only by people who know how).
+    //
+    // For now, we'll make it default to on for Linux (who should have 
+    // no problems with compiling this).
+    #define USE_MORE_SECURE_SEED
+
+    // Use POSIX regular expressions
+    #define REGEX_POSIX
+
+    // If you have libpcre, you can use that instead of POSIX regexes -
+    // uncomment the line below and add -lpcre to your makefile.
+    // #define REGEX_PCRE
+
+    // Uncomment (and edit as appropriate) to play sounds.
+    //
+    // WARNING: Enabling sounds may compromise security if Crawl is installed
+    //          setuid or setgid. Filenames passed to this command *are not
+    //          validated in any way*.
+    //
+    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 %s 2>/dev/null &"
+
     // For cases when the game will be played on terms that don't support the
     // curses "bold == lighter" 16 colour mode. -- bwr
     //
@@ -128,7 +171,7 @@
 #elif defined(DOS)
     #define DOS_TERM
     #define SHORT_FILE_NAMES
-    #define EOL "\n\r"
+    #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
 
     #include <string>
@@ -137,13 +180,20 @@
         #define NEED_SNPRINTF
     #endif
 
-#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
+#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__BCPLUSPLUS__) || defined(__MINGW32__))
     #include "libw32c.h"
     #define PLAIN_TERM
     #define SHORT_FILE_NAMES
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         getConsoleString(X,Y)
+
+    // Uncomment to play sounds. winmm must be linked in if this is uncommented.
+    // #define WINMM_PLAY_SOUNDS
+
+    // Use Perl-compatible regular expressions. libpcre must be available and
+    // linked in.
+    // #define REGEX_PCRE
 #else
     #error unsupported compiler
 #endif

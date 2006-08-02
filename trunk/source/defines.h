@@ -84,6 +84,14 @@
 #define mgrd   env.mgrid
 #define igrd   env.igrid
 
+#define ENVF_FLAGS          0xFF00U
+#define ENVF_DETECT_MONS    0x0100U
+#define ENVF_DETECT_ITEM    0x0200U
+
+// This square is known because of detect-creatures/detect-items
+#define ENVF_DETECTED       0x0800U
+
+#define ENVF_COLOR(x)       (((x) >> 12) & 0xF)
 
 // (MNG) -- for a reason! see usage {dlb}:
 #define MHITNOT 201
@@ -124,30 +132,30 @@
 // try to get a brighter version using recommisioned attribute flags.
 #define COLFLAG_CURSES_BRIGHTEN          0x0080
 
-#ifdef USE_COLOUR_OPTS
+//#ifdef USE_COLOUR_OPTS
 
     #define COLFLAG_FRIENDLY_MONSTER         0x0100
+    #define COLFLAG_ITEM_HEAP                0x0200
+    #define COLFLAG_WILLSTAB                 0x0400
+    #define COLFLAG_MAYSTAB                  0x0800
 
     enum CHAR_ATTRIBUTES
     {
-        CHATTR_NORMAL,
+        CHATTR_NORMAL,          /* 0 */
         CHATTR_STANDOUT,
         CHATTR_BOLD,
         CHATTR_BLINK,
         CHATTR_UNDERLINE,
-        CHATTR_REVERSE,
-        CHATTR_DIM
+        CHATTR_REVERSE,         /* 5 */
+        CHATTR_DIM,
+        CHATTR_HILITE,
+        
+        CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
+
+        CHATTR_COLMASK = 0xF00, // Mask with this to get extra colour info.
     };
 
-#endif
-
-// required for stuff::coinflip()
-#define IB1 1
-#define IB2 2
-#define IB5 16
-#define IB18 131072
-#define MASK (IB1 + IB2 + IB5)
-// required for stuff::coinflip()
+//#endif
 
 #define MINIMUM( xxx, yyy )     (((xxx) < (yyy)) ? (xxx) : (yyy))
 #define MAXIMUM( xxx, yyy )     (((xxx) > (yyy)) ? (xxx) : (yyy))

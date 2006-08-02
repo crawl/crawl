@@ -87,6 +87,7 @@ bool item_known_uncursed( const item_def &item );
 // bool fully_indentified( const item_def &item );
 
 bool item_ident( const item_def &item, unsigned long flags );
+bool item_type_known( const item_def &item );
 bool item_not_ident( const item_def &item, unsigned long flags );
 
 void do_curse_item(  item_def &item );

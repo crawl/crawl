@@ -18,5 +18,15 @@
  * *********************************************************************** */
 void print_stats(void);
 
+/* ***********************************************************************
+ * called from: chardump
+ * *********************************************************************** */
+void get_full_detail(char* buffer, bool calc_unid);
+
+const char *equip_slot_to_name(int equip);
+
+int equip_name_to_slot(const char *s);
+
+const char *equip_slot_to_name(int equip);
 
 #endif

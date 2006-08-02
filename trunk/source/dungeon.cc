@@ -162,7 +162,7 @@ void builder(int level_number, char level_type)
     int i;          // generic loop variable
     int x,y;        // generic map loop variables
 
-    srandom(time(NULL));
+    // srandom(time(NULL));
 
     // blank level with DNGN_ROCK_WALL
     make_box(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,DNGN_ROCK_WALL);
@@ -450,6 +450,9 @@ int items( int allow_uniques,       // not just true-false,
     mitm[p].x = 0;
     mitm[p].y = 0;
     mitm[p].link = NON_ITEM;
+    mitm[p].slot = 0;
+    mitm[p].orig_monnum = 0;
+    mitm[p].orig_place = 0;
 
     // cap item_level unless an acquirement-level item {dlb}:
     if (item_level > 50 && item_level != MAKE_GOOD_ITEM)
@@ -2509,6 +2512,8 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     mitm[bp].plus = 0;
     mitm[bp].plus2 = 0;
     mitm[bp].special = 0;
+    mitm[bp].orig_place = 0;
+    mitm[bp].orig_monnum = 0;
 
     // this flags things to "goto give_armour" below ... {dlb}
     mitm[bp].base_type = 101;
@@ -3139,6 +3144,8 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     mitm[bp].x = 0;
     mitm[bp].y = 0;
     mitm[bp].link = NON_ITEM;
+    mitm[bp].orig_place = 0;
+    mitm[bp].orig_monnum = 0;
 
     item_race = MAKE_ITEM_RANDOM_RACE;
     give_level = 1 + (level_number / 2);
@@ -7539,6 +7546,14 @@ static int box_room_doors( int bx1, int bx2, int by1, int by2, int new_doors)
 
         return doors_placed;
     }
+
+    // Avoid an infinite loop if there are not enough good spots. --KON
+    j = 0;
+    for (i=0; i<spot_count; i++)
+        if (good_doors[i] == 1)
+            j++;
+    if (new_doors > j)
+        new_doors = j;
 
     while(new_doors > 0 && spot_count > 0)
     {

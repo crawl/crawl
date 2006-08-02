@@ -25,6 +25,7 @@
 #include "itemname.h"
 #include "item_use.h"
 #include "items.h"
+#include "menu.h"
 #include "ouch.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -38,13 +39,41 @@ static void adjust_ability(void);
 
 void quit_game(void)
 {
-    if (yesno("Really quit?", false))
+    if (yesno("Really quit?", false, 'n'))
         ouch(-9999, 0, KILLED_BY_QUITTING);
 }                               // end quit_game()
+
+static const char *features[] = {
+    "",
+#ifdef STASH_TRACKING
+    "Stash-tracking",
+#endif
+
+#ifdef CLUA_BINDINGS
+    "Lua",
+#endif
+
+#if defined(REGEX_POSIX)
+    "POSIX regexps",
+#elif defined(REGEX_PCRE)
+    "PCRE regexps",
+#else
+    "Glob patterns",
+#endif
+};
 
 void version(void)
 {
     mpr( "This is Dungeon Crawl " VERSION " (Last build " BUILD_DATE ")." );
+    
+    std::string feats = "Features: ";
+    for (int i = 1, size = sizeof features / sizeof *features; i < size; ++i)
+    {
+        if (i > 1)
+            feats += ", ";
+        feats += features[i];
+    }
+    mpr(feats.c_str());
 }                               // end version()
 
 void adjust(void)
@@ -64,6 +93,41 @@ void adjust(void)
     else
         canned_msg( MSG_HUH );
 }                               // end adjust()
+
+void swap_inv_slots(int from_slot, int to_slot, bool verbose)
+{
+    // swap items
+    item_def tmp = you.inv[to_slot];
+    you.inv[to_slot] = you.inv[from_slot];
+    you.inv[from_slot] = tmp;
+
+    you.inv[from_slot].link = from_slot;
+    you.inv[to_slot].link = to_slot;
+
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        if (you.equip[i] == from_slot)
+            you.equip[i] = to_slot;
+        else if (you.equip[i] == to_slot)
+            you.equip[i] = from_slot;
+    }
+
+    if (verbose)
+    {
+        char str_pass[ ITEMNAME_SIZE ];
+        in_name( to_slot, DESC_INVENTORY_EQUIP, str_pass );
+        mpr( str_pass );
+
+        if (is_valid_item( you.inv[from_slot] ))
+        {
+            in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
+            mpr( str_pass );
+        }
+    }
+
+    if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
+        you.wield_change = true;
+}
 
 static void adjust_item(void)
 {
@@ -93,33 +157,7 @@ static void adjust_item(void)
         return;
     }
 
-    // swap items
-    item_def tmp = you.inv[to_slot];
-    you.inv[to_slot] = you.inv[from_slot];
-    you.inv[from_slot] = tmp;
-
-    you.inv[from_slot].link = from_slot;
-    you.inv[to_slot].link = to_slot;
-
-    for (int i = 0; i < NUM_EQUIP; i++)
-    {
-        if (you.equip[i] == from_slot)
-            you.equip[i] = to_slot;
-        else if (you.equip[i] == to_slot)
-            you.equip[i] = from_slot;
-    }
-
-    in_name( to_slot, DESC_INVENTORY_EQUIP, str_pass );
-    mpr( str_pass );
-
-    if (is_valid_item( you.inv[from_slot] ))
-    {
-        in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
-        mpr( str_pass );
-    }
-
-    if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
-        you.wield_change = true;
+    swap_inv_slots(from_slot, to_slot, true);
 }                               // end adjust_item()
 
 static void adjust_spells_cleanup(bool needs_redraw)
@@ -417,7 +455,7 @@ void list_armour(void)
             strcat(info, "    none");
         }
 
-        mpr( info, MSGCH_EQUIPMENT );
+        mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
     }
 }                               // end list_armour()
 
@@ -445,7 +483,7 @@ void list_jewellery(void)
             strcat(info, "    none");
         }
 
-        mpr( info, MSGCH_EQUIPMENT );
+        mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
     }
 }                               // end list_jewellery()
 
@@ -473,7 +511,7 @@ void list_weapons(void)
             strcat(info, "    empty hands");
     }
 
-    mpr(info);
+    mpr(info, MSGCH_EQUIPMENT, menu_colour(info));
 
     // Print out the swap slots
     for (int i = 0; i <= 1; i++)
@@ -494,7 +532,7 @@ void list_weapons(void)
         else
             strcat(info, "    none");
 
-        mpr(info);              // Output slot
+        mpr(info, MSGCH_EQUIPMENT, menu_colour(info));   // Output slot
     }
 
     // Now we print out the current default fire weapon
@@ -511,5 +549,5 @@ void list_weapons(void)
         strcat( info, str_pass );
     }
 
-    mpr( info, MSGCH_EQUIPMENT );
+    mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()

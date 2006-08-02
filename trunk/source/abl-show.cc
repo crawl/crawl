@@ -329,6 +329,19 @@ const std::string make_cost_description( const struct ability_def &abil )
     return (ret);
 }
 
+std::vector<const char *> get_ability_names()
+{
+    std::vector<const char *> abils;
+    if (generate_abilities())
+    {
+        for (int i = 0; i < 52; ++i)
+        {
+            if (Curr_abil[i].which != ABIL_NON_ABILITY)
+                abils.push_back( get_ability_name_by_index(i) );
+        }
+    }
+    return (abils);
+}
 
 /*
    Activates a menu which gives player access to all of their non-spell

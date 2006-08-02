@@ -49,7 +49,7 @@ void original_name(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void puton_ring(void);
+bool puton_ring(int slot = -1, bool prompt_finger = true);
 
 
 // last updated 12may2000 {dlb}
@@ -63,7 +63,7 @@ void read_scroll(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void remove_ring(void);
+bool remove_ring(int slot = -1);
 
 
 // last updated 12may2000 {dlb}
@@ -93,12 +93,18 @@ void wear_armour( void );
  * *********************************************************************** */
 bool do_wear_armour( int item, bool quiet );
 
+struct item_def;
+// last updated 30May2003 {ds}
+/* ***********************************************************************
+ * called from: food
+ * *********************************************************************** */
+bool can_wield(const item_def& weapon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void wield_weapon(bool auto_wield);
+bool wield_weapon(bool auto_wield, int slot = -1, bool show_we_messages = true);
 
 
 // last updated 12may2000 {dlb}
@@ -119,5 +125,9 @@ void wield_effects(int item_wield_2, bool showMsgs);
  * called from: delay.cc item_use.cc it_use2.cc
  * *********************************************************************** */
 void use_randart( unsigned char item_wield_2 );
+
+bool puton_item(int slot, bool prompt_finger = true);
+
+int armour_equip_slot(const item_def &item);
 
 #endif

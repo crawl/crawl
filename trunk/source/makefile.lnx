@@ -17,12 +17,14 @@ DELETE = rm -f
 COPY = cp
 OS_TYPE = LINUX
 
-CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
-            -Wmissing-prototypes -Wmissing-declarations \
+CFLAGS = -Wall -Wwrite-strings -fsigned-char \
             -g -D$(OS_TYPE) $(EXTRA_FLAGS)
 
 MCHMOD = 2755
-INSTALLDIR = /opt/crawl/bin
+
+# [dshaligram] More common location than /opt/crawl/bin - this is from the
+# Debian patch.
+INSTALLDIR = /usr/games
 LIB = -lncurses
 
 # Include for Linux

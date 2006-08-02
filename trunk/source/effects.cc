@@ -95,7 +95,7 @@ void banished(unsigned char gate_type)
     // this is to ensure that you're standing on a suitable space (67)
     grd[you.x_pos][you.y_pos] = gate_type;
 
-    down_stairs(true, you.your_level);  // heh heh
+    down_stairs(true, you.your_level, true);  // heh heh
     untag_followers(); // safety
 }                               // end banished()
 
@@ -434,7 +434,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     return;
 }                               // end random_uselessness()
 
-bool acquirement(unsigned char force_class)
+bool acquirement(unsigned char force_class, int agent)
 {
     int thing_created = 0;
     int iteration = 0;
@@ -620,6 +620,18 @@ bool acquirement(unsigned char force_class)
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
+        case SP_RED_DRACONIAN:
+        case SP_WHITE_DRACONIAN:
+        case SP_GREEN_DRACONIAN:
+        case SP_GOLDEN_DRACONIAN:
+        case SP_GREY_DRACONIAN:
+        case SP_BLACK_DRACONIAN:
+        case SP_PURPLE_DRACONIAN:
+        case SP_MOTTLED_DRACONIAN:
+        case SP_PALE_DRACONIAN:
+        case SP_UNK0_DRACONIAN:
+        case SP_UNK1_DRACONIAN:
+        case SP_UNK2_DRACONIAN:
         case SP_SPRIGGAN:
             if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS)
             {
@@ -1235,7 +1247,10 @@ bool acquirement(unsigned char force_class)
         // move_item_to_grid works (doesn't create a new item ever), 
         // but we're checking it anyways. -- bwr
         if (thing_created != NON_ITEM)
+        {
             canned_msg(MSG_SOMETHING_APPEARS);
+            origin_acquired(mitm[thing_created], agent);
+        }
     }
 
     // Well, the item may have fallen in the drink, but the intent is 

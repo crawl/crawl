@@ -26,6 +26,7 @@
 #include "files.h"
 
 #include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -54,9 +55,14 @@
 #include <sys/stat.h>
 #endif
 
+#ifdef __MINGW32__
+#include <io.h>
+#endif
+
 #include "externs.h"
 
 #include "cloud.h"
+#include "clua.h"
 #include "debug.h"
 #include "dungeon.h"
 #include "itemname.h"
@@ -69,8 +75,10 @@
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
+#include "stash.h"
 #include "stuff.h"
 #include "tags.h"
+#include "travel.h"
 #include "wpn-misc.h"
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
@@ -197,6 +205,28 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
 
 static void load_ghost();
 
+std::string get_savedir_filename(const char *prefix, const char *suffix, 
+                                 const char *extension)
+{
+    char filename[1200];
+#ifdef SAVE_DIR_PATH
+    snprintf(filename, sizeof filename, SAVE_DIR_PATH "%s%d%s.%s",
+             prefix, (int) getuid(), suffix, extension);
+#else
+    snprintf(filename, sizeof filename, "%s%s.%s", 
+             prefix, suffix, extension);
+#ifdef DOS
+    strupr(filename);
+#endif
+#endif
+    return std::string(filename);
+}
+
+std::string get_prefs_filename()
+{
+    return get_savedir_filename("start", "ns", "prf");
+}
+
 void make_filename( char *buf, const char *prefix, int level, int where,
                     bool isLabyrinth, bool isGhost )
 {
@@ -266,6 +296,41 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
             tag_write(th, dataFile);
         }
     }
+}
+
+bool travel_load_map( char branch, int absdepth )
+{
+    char cha_fil[kFileNameSize];
+
+    make_filename( cha_fil, you.your_name, absdepth, branch,
+                   false, false );
+#ifdef DOS
+    strupr(cha_fil);
+#endif
+
+    // Try to open level savefile.
+    FILE *levelFile = fopen(cha_fil, "rb");
+    if (!levelFile)
+        return false;
+
+    // BEGIN -- must load the old level : pre-load tasks
+
+    // LOAD various tags
+    char majorVersion;
+    char minorVersion;
+
+    if (!determine_level_version( levelFile, majorVersion, minorVersion )
+            || majorVersion != 4)
+    {
+        fclose(levelFile);
+        return false;
+    }
+    
+    tag_read(levelFile, minorVersion);
+
+    fclose( levelFile );
+    
+    return true;
 }
 
 void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
@@ -679,10 +744,10 @@ found_stair:
     // This should fix the "monster occuring under the player" bug?
     if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true);
-
+    /*
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-
+    */
     following = 0;
     fmenv = -1;
 
@@ -899,8 +964,11 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // 4.3 changes to make the item structure more sane  
     // 4.4 changes to the ghost save section
     // 4.5 spell and ability letter arrays
+    // 4.6 inventory slots of items
+    // 4.7 origin tracking for items
+    // 4.8 widened env.map to 2 bytes
 
-    write_tagged_file( saveFile, 4, 5, TAGTYPE_LEVEL );
+    write_tagged_file( saveFile, 4, 8, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 
@@ -912,6 +980,14 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 void save_game(bool leave_game)
 {
     char charFile[kFileNameSize];
+#ifdef STASH_TRACKING
+    char stashFile[kFileNameSize + 4];
+#endif
+    char killFile[kFileNameSize + 4];
+    char travelCacheFile[kFileNameSize + 4];
+#ifdef CLUA_BINDINGS
+    char luaFile[kFileNameSize + 4];
+#endif
 
 #ifdef SAVE_PACKAGE_CMD
     char cmd_buff[1024];
@@ -923,18 +999,97 @@ void save_game(bool leave_game)
     snprintf( cmd_buff, sizeof(cmd_buff), 
               SAVE_PACKAGE_CMD, name_buff, name_buff );
 
+#ifdef STASH_TRACKING
+    strcpy(stashFile, name_buff);
+#endif
+#ifdef CLUA_BINDINGS
+    strcpy(luaFile, name_buff);
+#endif
+    strcpy(killFile, name_buff);
+    strcpy(travelCacheFile, name_buff);
     snprintf( charFile, sizeof(charFile), 
               "%s.sav", name_buff );
 
 #else
     strncpy(charFile, you.your_name, kFileNameLen);
     charFile[kFileNameLen] = 0;
+
+#ifdef STASH_TRACKING
+    strcpy(stashFile, charFile);
+#endif
+#ifdef CLUA_BINDINGS
+    strcpy(luaFile, charFile);
+#endif
+    strcpy(killFile, charFile);
+    strcpy(travelCacheFile, charFile);
     strcat(charFile, ".sav");
 
 #ifdef DOS
     strupr(charFile);
+#ifdef STASH_TRACKING
+    strupr(stashFile);
+#endif
+#ifdef CLUA_BINDINGS
+    strupr(luaFile);
+#endif
+    strupr(killFile);
+    strupr(travelCacheFile);
 #endif
 #endif
+
+#ifdef STASH_TRACKING
+    strcat(stashFile, ".st");
+#endif
+#ifdef CLUA_BINDINGS
+    strcat(luaFile, ".lua");
+#endif
+    strcat(killFile, ".kil");
+    strcat(travelCacheFile, ".tc");
+
+#ifdef STASH_TRACKING
+    FILE *stashf = fopen(stashFile, "wb");
+    if (stashf)
+    {
+        stashes.save(stashf);
+        fclose(stashf);
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+        // change mode (unices)
+        chmod(stashFile, SHARED_FILES_CHMOD_PRIVATE);
+#endif
+    }
+#endif // STASH_TRACKING
+
+#ifdef CLUA_BINDINGS
+    clua.save(luaFile);
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+    // change mode; note that luaFile may not exist
+    chmod(luaFile, SHARED_FILES_CHMOD_PRIVATE);
+#endif
+#endif // CLUA_BINDINGS
+
+    FILE *travelf = fopen(travelCacheFile, "wb");
+    if (travelf)
+    {
+        travel_cache.save(travelf);
+        fclose(travelf);
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+        // change mode (unices)
+        chmod(travelCacheFile, SHARED_FILES_CHMOD_PRIVATE);
+#endif
+    }
+
+    FILE *killf = fopen(killFile, "wb");
+    if (killf)
+    {
+        you.kills.save(killf);
+        fclose(killf);
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+        // change mode (unices)
+        chmod(killFile, SHARED_FILES_CHMOD_PRIVATE);
+#endif
+    }
 
     FILE *saveFile = fopen(charFile, "wb");
 
@@ -950,8 +1105,10 @@ void save_game(bool leave_game)
     // 4.0 initial genesis of saved format
     // 4.1 changes to make the item structure more sane  
     // 4.2 spell and ability tables
+    // 4.3 added you.magic_contamination (05/03/05)
+    // 4.4 added item origins
 
-    write_tagged_file( saveFile, 4, 2, TAGTYPE_PLAYER );
+    write_tagged_file( saveFile, 4, 4, TAGTYPE_PLAYER );
 
     fclose(saveFile);
 
@@ -1098,7 +1255,16 @@ void load_ghost(void)
 void restore_game(void)
 {
     char char_f[kFileNameSize];
+    char kill_f[kFileNameSize];
+    char travel_f[kFileNameSize];
+#ifdef STASH_TRACKING
+    char stash_f[kFileNameSize];
+#endif
 
+#ifdef CLUA_BINDINGS
+    char lua_f[kFileNameSize];
+#endif
+    
 #ifdef SAVE_DIR_PATH
     snprintf( char_f, sizeof(char_f), 
               SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
@@ -1107,10 +1273,30 @@ void restore_game(void)
     char_f[kFileNameLen] = 0;
 #endif
 
+    strcpy(kill_f, char_f);
+    strcpy(travel_f, char_f);
+#ifdef CLUA_BINDINGS
+    strcpy(lua_f, char_f);
+    strcat(lua_f, ".lua");
+#endif
+#ifdef STASH_TRACKING
+    strcpy(stash_f, char_f);
+    strcat(stash_f, ".st");
+#endif
+    strcat(kill_f, ".kil");
+    strcat(travel_f, ".tc");
     strcat(char_f, ".sav");
 
 #ifdef DOS
     strupr(char_f);
+#ifdef STASH_TRACKING
+    strupr(stash_f);
+#endif
+    strupr(kill_f);
+    strupr(travel_f);
+#ifdef CLUA_BINDINGS
+    strupr(lua_f);
+#endif
 #endif
 
     FILE *restoreFile = fopen(char_f, "rb");
@@ -1144,6 +1330,33 @@ void restore_game(void)
     }
 
     fclose(restoreFile);
+
+#ifdef STASH_TRACKING
+    FILE *stashFile = fopen(stash_f, "rb");
+    if (stashFile)
+    {
+        stashes.load(stashFile);
+        fclose(stashFile);
+    }
+#endif
+
+#ifdef CLUA_BINDINGS
+    clua.execfile( lua_f );
+#endif // CLUA_BINDINGS
+
+    FILE *travelFile = fopen(travel_f, "rb");
+    if (travelFile)
+    {
+        travel_cache.load(travelFile);
+        fclose(travelFile);
+    }
+
+    FILE *killFile = fopen(kill_f, "rb");
+    if (killFile)
+    {
+        you.kills.load(killFile);
+        fclose(killFile);
+    }
 }
 
 static bool determine_version( FILE *restoreFile, 
@@ -1863,3 +2076,73 @@ void generate_random_demon(void)
             ghost.values[GVAL_SPELL_5] = MS_DIG;
     }
 }                               // end generate_random_demon()
+
+// Largest string we'll save
+#define STR_CAP 1000
+
+using std::string;
+
+void writeShort(FILE *file, short s)
+{
+    char data[2];
+    // High byte first - network order
+    data[0] = (char)((s >> 8) & 0xFF);
+    data[1] = (char)(s & 0xFF);
+
+    write2(file, data, sizeof(data));
+}
+
+short readShort(FILE *file)
+{
+    unsigned char data[2];
+    read2(file, (char *) data, 2);
+
+    // High byte first
+    return (((short) data[0]) << 8) | (short) data[1];
+}
+
+void writeByte(FILE *file, unsigned char byte)
+{
+    write2(file, (char *) &byte, sizeof byte);
+}
+
+unsigned char readByte(FILE *file)
+{
+    unsigned char byte;
+    read2(file, (char *) &byte, sizeof byte);
+    return byte;
+}
+
+void writeString(FILE* file, const string &s)
+{
+    int length = s.length();
+    if (length > STR_CAP) length = STR_CAP;
+    writeShort(file, length);
+    write2(file, s.c_str(), length);
+}
+
+string readString(FILE *file)
+{
+    char buf[STR_CAP + 1];
+    short length = readShort(file);
+    if (length)
+        read2(file, buf, length);
+    buf[length] = '\0';
+    return string(buf);
+}
+
+void writeLong(FILE* file, long num)
+{
+    // High word first, network order
+    writeShort(file, (short) ((num >> 16) & 0xFFFFL));
+    writeShort(file, (short) (num & 0xFFFFL));
+}
+
+long readLong(FILE *file)
+{
+    // We need the unsigned short cast even for the high word because we
+    // might be on a system where long is more than 4 bytes, and we don't want
+    // to sign extend the high short.
+    return ((long) (unsigned short) readShort(file)) << 16 | 
+        (long) (unsigned short) readShort(file);
+}

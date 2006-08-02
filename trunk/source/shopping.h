@@ -14,6 +14,12 @@
 
 #include "externs.h"
 
+typedef FixedArray < int, 4, 50 > id_fix_arr;
+typedef char id_arr[4][50];
+
+void shop_init_id_type(int shoptype, id_fix_arr &shop_id);
+void shop_uninit_id_type(int shoptype, const id_fix_arr &shop_id);
+
 int randart_value( const item_def &item );
 
 // last updated 12may2000 {dlb}
@@ -23,7 +29,7 @@ int randart_value( const item_def &item );
 
 // ident == true overrides the item ident level and gives the price
 // as if the item was fully id'd
-unsigned int item_value( item_def item, char id[4][50], bool ident = false );
+unsigned int item_value( item_def item, id_arr id, bool ident = false );
 
 
 // last updated 12may2000 {dlb}
@@ -32,7 +38,7 @@ unsigned int item_value( item_def item, char id[4][50], bool ident = false );
  * *********************************************************************** */
 void shop(void);
 
-
+const shop_struct *get_shop(int sx, int sy);
 
 // last updated 06mar2001 {gdl}
 /* ***********************************************************************

@@ -2056,7 +2056,7 @@ void cast_fulsome_distillation( int powc )
             it_name( curr_item, DESC_NOCAP_THE, str_pass );
             snprintf( info, INFO_SIZE, "Distill a potion from %s?", str_pass );
 
-            if (yesno( info, true, false ))
+            if (yesno( info, true, 0, false ))
             {
                 corpse = curr_item;
                 break;

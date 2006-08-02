@@ -529,7 +529,7 @@ static void cards(unsigned char which_card)
     case CARD_ACQUISITION:
         mpr( "You have drawn Acquisition!" );
         mpr( "The card unfolds to form a scroll of paper." );
-        acquirement( OBJ_RANDOM );
+        acquirement( OBJ_RANDOM, AQ_CARD_ACQUISITION );
         break;
 
     case CARD_HASTEN:
@@ -858,17 +858,17 @@ static void cards(unsigned char which_card)
 
     case CARD_VIOLENCE:
         mpr("You have drawn Violence.");
-        acquirement( OBJ_WEAPONS );
+        acquirement( OBJ_WEAPONS, AQ_CARD_VIOLENCE );
         break;
 
     case CARD_PROTECTION:
         mpr("You have drawn Protection.");
-        acquirement( OBJ_ARMOUR );
+        acquirement( OBJ_ARMOUR, AQ_CARD_PROTECTION );
         break;
 
     case CARD_KNOWLEDGE:
         mpr("You have drawn Knowledge.");
-        acquirement( OBJ_BOOKS );
+        acquirement( OBJ_BOOKS, AQ_CARD_KNOWLEDGE );
         break;
 
     case CARD_MAZE:

@@ -126,11 +126,62 @@ enum ABILITY_FLAGS
     ABFLAG_PERMANENT_MP = 0x00000040  // costs permanent MPs
 };
 
+enum ACTIVITY
+{
+    ACT_NONE        = 0,
+    ACT_MULTIDROP,
+    ACT_RUNNING,
+    ACT_TRAVELING,
+    ACT_MACRO,
+
+    ACT_ACTIVITY_COUNT
+};
+
+enum ACT_INTERRUPT
+{
+    AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity
+    AI_KEYPRESS = 0x01,
+    AI_FULL_HP  = 0x02,             // Player is fully healed
+    AI_FULL_MP  = 0x04,             // Player has recovered all mp
+    AI_STATUE   = 0x08,             // Bad statue has come into view
+    AI_HUNGRY   = 0x10,             // Hunger increased
+    AI_MESSAGE  = 0x20,             // Message was displayed
+    AI_HP_LOSS  = 0x40,
+    AI_BURDEN_CHANGE = 0x80,
+    AI_STAT_CHANGE = 0x100,
+    AI_SEE_MONSTER = 0x200,
+    AI_TELEPORT    = 0x400,
+};
+
+enum AI_PAYLOAD
+{
+    AIP_NONE,
+    AIP_INT,
+    AIP_STRING,
+    AIP_MONSTER,
+    AIP_HP_LOSS,
+};
+
 enum AMMUNITION_DESCRIPTIONS
 {
     DAMMO_ORCISH = 3,                  //    3
     DAMMO_ELVEN,
     DAMMO_DWARVEN                      //    5
+};
+
+// Various ways to get the acquirement effect.
+enum AQ_AGENTS
+{
+    AQ_SCROLL   = 0,
+    
+    // Empty space for the gods
+    
+    AQ_CARD_ACQUISITION = 100,
+    AQ_CARD_VIOLENCE,
+    AQ_CARD_PROTECTION,
+    AQ_CARD_KNOWLEDGE,
+
+    AQ_WIZMODE          = 200,
 };
 
 enum ARMOUR
@@ -545,7 +596,16 @@ enum COMMANDS
     CMD_QUIT,
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
-    CMD_OBSOLETE_INVOKE
+    CMD_OBSOLETE_INVOKE,
+
+    CMD_MARK_STASH,
+    CMD_FORGET_STASH,
+    CMD_SEARCH_STASHES,
+    CMD_EXPLORE,
+    CMD_INTERLEVEL_TRAVEL,
+    CMD_FIX_WAYPOINT,
+
+    CMD_CLEAR_MAP,
 };
 
 enum CONFIRM_LEVEL
@@ -643,6 +703,12 @@ enum DIRECTION                         // (unsigned char) you.char_direction
 {
     DIR_DESCENDING = 0, //    0 - change and lose savefile compatibility (!!!)
     DIR_ASCENDING = 1   //    1 - change and lose savefile compatibility (!!!)
+};
+
+enum DROP_MODE
+{
+    DM_SINGLE,
+    DM_MULTI
 };
 
 enum DUNGEON_FEATURES                  // (unsigned char) grd[][]
@@ -904,6 +970,7 @@ enum FLUSH_REASONS
     FLUSH_ON_FAILURE,                  // spell/ability failed to cast
     FLUSH_BEFORE_COMMAND,              // flush before getting a command
     FLUSH_ON_MESSAGE,                  // flush when printing a message
+    FLUSH_LUA,                         // flush when Lua wants us to
     NUM_FLUSH_REASONS
 };
 
@@ -1116,6 +1183,8 @@ enum ITEM_STATUS_FLAGS      // per item flags: ie. ident status, cursed status
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
     ISFLAG_UNRANDART         = 0x00002000,  // is an unrandart
     ISFLAG_ARTEFACT_MASK     = 0x00003000,  // randart or unrandart
+    ISFLAG_DROPPED           = 0x00004000,  // dropped item (no autopickup)
+    ISFLAG_THROWN            = 0x00008000,  // thrown missile weapon
 
     ISFLAG_NO_DESC           = 0x00000000,  // used for clearing these flags
     ISFLAG_GLOWING           = 0x00010000,  // weapons or armour
@@ -1149,6 +1218,20 @@ enum ITEM_MAKE_SPECIES                  // used only for race during creation
 
     MAKE_ITEM_NO_RACE     = 100,
     MAKE_ITEM_RANDOM_RACE = 250
+};
+
+enum ITEM_ORIGIN_DUMP_SELECT
+{
+    IODS_PRICE            = 0,      // Extra info is provided based on price
+    IODS_ARTIFACTS        = 1,      // Extra information on artifacts
+    IODS_EGO_ARMOUR       = 2,
+    IODS_EGO_WEAPON       = 4,
+    IODS_JEWELLERY        = 8,
+    IODS_RUNES            = 16,
+    IODS_RODS             = 32,
+    IODS_STAVES           = 64,
+    IODS_BOOKS            = 128,
+    IODS_EVERYTHING       = 0xFF
 };
 
 enum ITEM_TYPE_ID       // used for first index of id[4][50]
@@ -1274,6 +1357,14 @@ enum KILLBY
     KILLED_BY_FALLING_DOWN_STAIRS,
     KILLED_BY_ACID,
     NUM_KILLBY
+};
+
+enum KillCategory
+{
+    KC_YOU,
+    KC_FRIENDLY,
+    KC_OTHER,
+    KC_NCATEGORIES
 };
 
 enum KILLER                            // monster_die(), thing_thrown
@@ -2153,6 +2244,12 @@ enum OBJECT_CLASSES                    // (unsigned char) mitm[].base_type
                      // for blanket random sub_type .. see dungeon::items()
 };
 
+enum OBJECT_SELECTORS
+{
+    OSEL_ANY   = -1,
+    OSEL_WIELD = -2,
+};
+
 enum ORBS
 {
     ORB_ZOT                            //    0
@@ -2760,6 +2857,12 @@ enum SPELL_TYPES //jmf: 24jul2000: changed from integer-list to bitfield
   SPTYP_LAST_EXPONENT  = 12,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
   NUM_SPELL_TYPES      = 14,
   SPTYP_RANDOM         = 1<<14
+};
+
+enum SLOT_SELECT_MODES
+{
+    SS_FORWARD      = 0,
+    SS_BACKWARD     = 1,
 };
 
 enum STATS

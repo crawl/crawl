@@ -47,7 +47,7 @@ void disarm_trap(struct dist &disa);
 /* ***********************************************************************
  * called from: acr - effects - spells3
  * *********************************************************************** */
-void down_stairs(bool remove_stairs, int old_level);
+void down_stairs(bool remove_stairs, int old_level, bool force = false);
 
 
 // last updated 12may2000 {dlb}
