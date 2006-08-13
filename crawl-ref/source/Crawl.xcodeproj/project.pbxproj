@@ -1,0 +1,840 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7B237E6C0A8EC9D000580F30 /* maps.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE50A8EC9D000580F30 /* maps.h */; };
+		7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE60A8EC9D000580F30 /* maps.cc */; };
+		7B237E6E0A8EC9D000580F30 /* mon-pick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE70A8EC9D000580F30 /* mon-pick.h */; };
+		7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DE80A8EC9D000580F30 /* mon-pick.cc */; };
+		7B237E700A8EC9D000580F30 /* misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DE90A8EC9D000580F30 /* misc.h */; };
+		7B237E710A8EC9D000580F30 /* insult.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEA0A8EC9D000580F30 /* insult.h */; };
+		7B237E720A8EC9D000580F30 /* insult.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEB0A8EC9D000580F30 /* insult.cc */; };
+		7B237E730A8EC9D000580F30 /* initfile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEC0A8EC9D000580F30 /* initfile.h */; };
+		7B237E740A8EC9D000580F30 /* overmap.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DED0A8EC9D000580F30 /* overmap.h */; };
+		7B237E750A8EC9D000580F30 /* overmap.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DEE0A8EC9D000580F30 /* overmap.cc */; };
+		7B237E760A8EC9D000580F30 /* output.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DEF0A8EC9D000580F30 /* output.h */; };
+		7B237E770A8EC9D000580F30 /* item_use.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF00A8EC9D000580F30 /* item_use.h */; };
+		7B237E780A8EC9D000580F30 /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF10A8EC9D000580F30 /* initfile.cc */; };
+		7B237E790A8EC9D000580F30 /* hiscores.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF20A8EC9D000580F30 /* hiscores.h */; };
+		7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF30A8EC9D000580F30 /* hiscores.cc */; };
+		7B237E7B0A8EC9D000580F30 /* travel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF40A8EC9D000580F30 /* travel.h */; };
+		7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF50A8EC9D000580F30 /* travel.cc */; };
+		7B237E7D0A8EC9D000580F30 /* lev-pand.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF60A8EC9D000580F30 /* lev-pand.h */; };
+		7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF70A8EC9D000580F30 /* lev-pand.cc */; };
+		7B237E7F0A8EC9D000580F30 /* items.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DF80A8EC9D000580F30 /* items.h */; };
+		7B237E800A8EC9D000580F30 /* newgame.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DF90A8EC9D000580F30 /* newgame.cc */; };
+		7B237E810A8EC9D000580F30 /* mutation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFA0A8EC9D000580F30 /* mutation.h */; };
+		7B237E820A8EC9D000580F30 /* mutation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFB0A8EC9D000580F30 /* mutation.cc */; };
+		7B237E830A8EC9D000580F30 /* misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFC0A8EC9D000580F30 /* misc.cc */; };
+		7B237E840A8EC9D000580F30 /* message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFD0A8EC9D000580F30 /* message.h */; };
+		7B237E850A8EC9D000580F30 /* mon-util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237DFE0A8EC9D000580F30 /* mon-util.h */; };
+		7B237E860A8EC9D000580F30 /* mon-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237DFF0A8EC9D000580F30 /* mon-util.cc */; };
+		7B237E870A8EC9D000580F30 /* it_use3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E000A8EC9D000580F30 /* it_use3.h */; };
+		7B237E880A8EC9D000580F30 /* it_use3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E010A8EC9D000580F30 /* it_use3.cc */; };
+		7B237E890A8EC9D000580F30 /* it_use2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E020A8EC9D000580F30 /* it_use2.h */; };
+		7B237E8A0A8EC9D000580F30 /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E030A8EC9D000580F30 /* itemname.cc */; };
+		7B237E8B0A8EC9D000580F30 /* command.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E040A8EC9D000580F30 /* command.cc */; };
+		7B237E8C0A8EC9D000580F30 /* describe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E050A8EC9D000580F30 /* describe.h */; };
+		7B237E8D0A8EC9D000580F30 /* spl-util.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E060A8EC9D000580F30 /* spl-util.h */; };
+		7B237E8E0A8EC9D000580F30 /* spl-util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E070A8EC9D000580F30 /* spl-util.cc */; };
+		7B237E8F0A8EC9D000580F30 /* randart.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E080A8EC9D000580F30 /* randart.h */; };
+		7B237E900A8EC9D000580F30 /* randart.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E090A8EC9D000580F30 /* randart.cc */; };
+		7B237E910A8EC9D000580F30 /* player.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E0A0A8EC9D000580F30 /* player.h */; };
+		7B237E920A8EC9D000580F30 /* player.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0B0A8EC9D000580F30 /* player.cc */; };
+		7B237E930A8EC9D000580F30 /* effects.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E0C0A8EC9D000580F30 /* effects.h */; };
+		7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0D0A8EC9D000580F30 /* abl-show.cc */; };
+		7B237E950A8EC9D000580F30 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
+		7B237E960A8EC9D000580F30 /* direct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* direct.cc */; };
+		7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E100A8EC9D000580F30 /* dungeon.h */; };
+		7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E110A8EC9D000580F30 /* wpn-misc.h */; };
+		7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E120A8EC9D000580F30 /* wpn-misc.cc */; };
+		7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E130A8EC9D000580F30 /* view.h */; };
+		7B237E9B0A8EC9D000580F30 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
+		7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E150A8EC9D000580F30 /* spl-book.cc */; };
+		7B237E9D0A8EC9D000580F30 /* spells4.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E160A8EC9D000580F30 /* spells4.h */; };
+		7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E170A8EC9D000580F30 /* spells4.cc */; };
+		7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E180A8EC9D000580F30 /* spells3.h */; };
+		7B237EA00A8EC9D000580F30 /* macro.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E190A8EC9D000580F30 /* macro.h */; };
+		7B237EA10A8EC9D000580F30 /* debug.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1A0A8EC9D000580F30 /* debug.h */; };
+		7B237EA20A8EC9D000580F30 /* direct.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1B0A8EC9D000580F30 /* direct.h */; };
+		7B237EA30A8EC9D000580F30 /* decks.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1C0A8EC9D000580F30 /* decks.h */; };
+		7B237EA40A8EC9D000580F30 /* stuff.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1D0A8EC9D000580F30 /* stuff.h */; };
+		7B237EA50A8EC9D000580F30 /* stuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E1E0A8EC9D000580F30 /* stuff.cc */; };
+		7B237EA60A8EC9D000580F30 /* stash.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E1F0A8EC9D000580F30 /* stash.h */; };
+		7B237EA70A8EC9D000580F30 /* stash.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E200A8EC9D000580F30 /* stash.cc */; };
+		7B237EA80A8EC9D000580F30 /* transfor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E210A8EC9D000580F30 /* transfor.h */; };
+		7B237EA90A8EC9D000580F30 /* transfor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E220A8EC9D000580F30 /* transfor.cc */; };
+		7B237EAA0A8EC9D000580F30 /* tags.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E230A8EC9D000580F30 /* tags.h */; };
+		7B237EAB0A8EC9D000580F30 /* tags.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E240A8EC9D000580F30 /* tags.cc */; };
+		7B237EAC0A8EC9D000580F30 /* libutil.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E250A8EC9D000580F30 /* libutil.h */; };
+		7B237EAD0A8EC9D000580F30 /* item_use.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E260A8EC9D000580F30 /* item_use.cc */; };
+		7B237EAE0A8EC9D000580F30 /* acr.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E270A8EC9D000580F30 /* acr.cc */; };
+		7B237EAF0A8EC9D000580F30 /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E280A8EC9D000580F30 /* abyss.cc */; };
+		7B237EB00A8EC9D000580F30 /* abl-show.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E290A8EC9D000580F30 /* abl-show.h */; };
+		7B237EB10A8EC9D000580F30 /* chardump.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2A0A8EC9D000580F30 /* chardump.cc */; };
+		7B237EB20A8EC9D000580F30 /* chardump.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2B0A8EC9D000580F30 /* chardump.h */; };
+		7B237EB30A8EC9D000580F30 /* beam.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2C0A8EC9D000580F30 /* beam.cc */; };
+		7B237EB40A8EC9D000580F30 /* beam.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2D0A8EC9D000580F30 /* beam.h */; };
+		7B237EB50A8EC9D000580F30 /* spl-cast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E2E0A8EC9D000580F30 /* spl-cast.h */; };
+		7B237EB60A8EC9D000580F30 /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E2F0A8EC9D000580F30 /* spl-cast.cc */; };
+		7B237EB70A8EC9D000580F30 /* spl-book.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E300A8EC9D000580F30 /* spl-book.h */; };
+		7B237EB80A8EC9D000580F30 /* output.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E310A8EC9D000580F30 /* output.cc */; };
+		7B237EB90A8EC9D000580F30 /* ouch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E320A8EC9D000580F30 /* ouch.h */; };
+		7B237EBA0A8EC9D000580F30 /* ouch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E330A8EC9D000580F30 /* ouch.cc */; };
+		7B237EBB0A8EC9D000580F30 /* newgame.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E340A8EC9D000580F30 /* newgame.h */; };
+		7B237EBC0A8EC9D000580F30 /* message.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E350A8EC9D000580F30 /* message.cc */; };
+		7B237EBD0A8EC9D000580F30 /* menu.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E360A8EC9D000580F30 /* menu.h */; };
+		7B237EBE0A8EC9D000580F30 /* menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E370A8EC9D000580F30 /* menu.cc */; };
+		7B237EBF0A8EC9D000580F30 /* macro.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E380A8EC9D000580F30 /* macro.cc */; };
+		7B237EC00A8EC9D000580F30 /* shopping.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E390A8EC9D000580F30 /* shopping.cc */; };
+		7B237EC10A8EC9D000580F30 /* religion.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E3A0A8EC9D000580F30 /* religion.h */; };
+		7B237EC20A8EC9D000580F30 /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3B0A8EC9D000580F30 /* religion.cc */; };
+		7B237EC30A8EC9D000580F30 /* spells3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3C0A8EC9D000580F30 /* spells3.cc */; };
+		7B237EC40A8EC9D000580F30 /* spells2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E3D0A8EC9D000580F30 /* spells2.h */; };
+		7B237EC50A8EC9D000580F30 /* spells2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3E0A8EC9D000580F30 /* spells2.cc */; };
+		7B237EC60A8EC9D000580F30 /* mstuff2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E3F0A8EC9D000580F30 /* mstuff2.cc */; };
+		7B237EC70A8EC9D000580F30 /* monstuff.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E400A8EC9D000580F30 /* monstuff.h */; };
+		7B237EC80A8EC9D000580F30 /* monstuff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E410A8EC9D000580F30 /* monstuff.cc */; };
+		7B237EC90A8EC9D000580F30 /* monspeak.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E420A8EC9D000580F30 /* monspeak.h */; };
+		7B237ECA0A8EC9D000580F30 /* delay.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E430A8EC9D000580F30 /* delay.h */; };
+		7B237ECB0A8EC9D000580F30 /* command.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E440A8EC9D000580F30 /* command.h */; };
+		7B237ECC0A8EC9D000580F30 /* spells1.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E450A8EC9D000580F30 /* spells1.h */; };
+		7B237ECD0A8EC9D000580F30 /* spells1.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E460A8EC9D000580F30 /* spells1.cc */; };
+		7B237ECE0A8EC9D000580F30 /* skills2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E470A8EC9D000580F30 /* skills2.h */; };
+		7B237ECF0A8EC9D000580F30 /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E480A8EC9D000580F30 /* skills2.cc */; };
+		7B237ED00A8EC9D000580F30 /* decks.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E490A8EC9D000580F30 /* decks.cc */; };
+		7B237ED10A8EC9D000580F30 /* describe.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4A0A8EC9D000580F30 /* describe.cc */; };
+		7B237ED20A8EC9D000580F30 /* monspeak.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4B0A8EC9D000580F30 /* monspeak.cc */; };
+		7B237ED30A8EC9D000580F30 /* monplace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4C0A8EC9D000580F30 /* monplace.h */; };
+		7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4D0A8EC9D000580F30 /* monplace.cc */; };
+		7B237ED50A8EC9D000580F30 /* Kills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E4E0A8EC9D000580F30 /* Kills.h */; };
+		7B237ED60A8EC9D000580F30 /* Kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E4F0A8EC9D000580F30 /* Kills.cc */; };
+		7B237ED70A8EC9D000580F30 /* files.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E500A8EC9D000580F30 /* files.h */; };
+		7B237ED80A8EC9D000580F30 /* fight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E510A8EC9D000580F30 /* fight.h */; };
+		7B237ED90A8EC9D000580F30 /* effects.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E520A8EC9D000580F30 /* effects.cc */; };
+		7B237EDA0A8EC9D000580F30 /* fight.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E530A8EC9D000580F30 /* fight.cc */; };
+		7B237EDB0A8EC9D000580F30 /* food.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E540A8EC9D000580F30 /* food.cc */; };
+		7B237EDC0A8EC9D000580F30 /* food.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E550A8EC9D000580F30 /* food.h */; };
+		7B237EDD0A8EC9D000580F30 /* clua.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E560A8EC9D000580F30 /* clua.h */; };
+		7B237EDE0A8EC9D000580F30 /* clua.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E570A8EC9D000580F30 /* clua.cc */; };
+		7B237EDF0A8EC9D000580F30 /* cloud.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E580A8EC9D000580F30 /* cloud.h */; };
+		7B237EE00A8EC9D000580F30 /* cloud.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E590A8EC9D000580F30 /* cloud.cc */; };
+		7B237EE10A8EC9D000580F30 /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5A0A8EC9D000580F30 /* items.cc */; };
+		7B237EE20A8EC9D000580F30 /* itemname.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5B0A8EC9D000580F30 /* itemname.h */; };
+		7B237EE30A8EC9D000580F30 /* skills.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5C0A8EC9D000580F30 /* skills.h */; };
+		7B237EE40A8EC9D000580F30 /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5D0A8EC9D000580F30 /* skills.cc */; };
+		7B237EE50A8EC9D000580F30 /* shopping.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E5E0A8EC9D000580F30 /* shopping.h */; };
+		7B237EE60A8EC9D000580F30 /* it_use2.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E5F0A8EC9D000580F30 /* it_use2.cc */; };
+		7B237EE70A8EC9D000580F30 /* invent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E600A8EC9D000580F30 /* invent.h */; };
+		7B237EE80A8EC9D000580F30 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E610A8EC9D000580F30 /* invent.cc */; };
+		7B237EE90A8EC9D000580F30 /* libutil.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E620A8EC9D000580F30 /* libutil.cc */; };
+		7B237EEA0A8EC9D000580F30 /* libunix.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E630A8EC9D000580F30 /* libunix.h */; };
+		7B237EEB0A8EC9D000580F30 /* libunix.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E640A8EC9D000580F30 /* libunix.cc */; };
+		7B237EEC0A8EC9D000580F30 /* abyss.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E650A8EC9D000580F30 /* abyss.h */; };
+		7B237EED0A8EC9D000580F30 /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E660A8EC9D000580F30 /* delay.cc */; };
+		7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E670A8EC9D000580F30 /* dungeon.cc */; };
+		7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E680A8EC9D000580F30 /* debug.cc */; };
+		7B237EF00A8EC9D000580F30 /* mt19937ar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E690A8EC9D000580F30 /* mt19937ar.h */; };
+		7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */; };
+		7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E6B0A8EC9D000580F30 /* mstuff2.h */; };
+		7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				7B237E6C0A8EC9D000580F30 /* maps.h in CopyFiles */,
+				7B237E6E0A8EC9D000580F30 /* mon-pick.h in CopyFiles */,
+				7B237E700A8EC9D000580F30 /* misc.h in CopyFiles */,
+				7B237E710A8EC9D000580F30 /* insult.h in CopyFiles */,
+				7B237E730A8EC9D000580F30 /* initfile.h in CopyFiles */,
+				7B237E740A8EC9D000580F30 /* overmap.h in CopyFiles */,
+				7B237E760A8EC9D000580F30 /* output.h in CopyFiles */,
+				7B237E770A8EC9D000580F30 /* item_use.h in CopyFiles */,
+				7B237E790A8EC9D000580F30 /* hiscores.h in CopyFiles */,
+				7B237E7B0A8EC9D000580F30 /* travel.h in CopyFiles */,
+				7B237E7D0A8EC9D000580F30 /* lev-pand.h in CopyFiles */,
+				7B237E7F0A8EC9D000580F30 /* items.h in CopyFiles */,
+				7B237E810A8EC9D000580F30 /* mutation.h in CopyFiles */,
+				7B237E840A8EC9D000580F30 /* message.h in CopyFiles */,
+				7B237E850A8EC9D000580F30 /* mon-util.h in CopyFiles */,
+				7B237E870A8EC9D000580F30 /* it_use3.h in CopyFiles */,
+				7B237E890A8EC9D000580F30 /* it_use2.h in CopyFiles */,
+				7B237E8C0A8EC9D000580F30 /* describe.h in CopyFiles */,
+				7B237E8D0A8EC9D000580F30 /* spl-util.h in CopyFiles */,
+				7B237E8F0A8EC9D000580F30 /* randart.h in CopyFiles */,
+				7B237E910A8EC9D000580F30 /* player.h in CopyFiles */,
+				7B237E930A8EC9D000580F30 /* effects.h in CopyFiles */,
+				7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */,
+				7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */,
+				7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */,
+				7B237E9D0A8EC9D000580F30 /* spells4.h in CopyFiles */,
+				7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */,
+				7B237EA00A8EC9D000580F30 /* macro.h in CopyFiles */,
+				7B237EA10A8EC9D000580F30 /* debug.h in CopyFiles */,
+				7B237EA20A8EC9D000580F30 /* direct.h in CopyFiles */,
+				7B237EA30A8EC9D000580F30 /* decks.h in CopyFiles */,
+				7B237EA40A8EC9D000580F30 /* stuff.h in CopyFiles */,
+				7B237EA60A8EC9D000580F30 /* stash.h in CopyFiles */,
+				7B237EA80A8EC9D000580F30 /* transfor.h in CopyFiles */,
+				7B237EAA0A8EC9D000580F30 /* tags.h in CopyFiles */,
+				7B237EAC0A8EC9D000580F30 /* libutil.h in CopyFiles */,
+				7B237EB00A8EC9D000580F30 /* abl-show.h in CopyFiles */,
+				7B237EB20A8EC9D000580F30 /* chardump.h in CopyFiles */,
+				7B237EB40A8EC9D000580F30 /* beam.h in CopyFiles */,
+				7B237EB50A8EC9D000580F30 /* spl-cast.h in CopyFiles */,
+				7B237EB70A8EC9D000580F30 /* spl-book.h in CopyFiles */,
+				7B237EB90A8EC9D000580F30 /* ouch.h in CopyFiles */,
+				7B237EBB0A8EC9D000580F30 /* newgame.h in CopyFiles */,
+				7B237EBD0A8EC9D000580F30 /* menu.h in CopyFiles */,
+				7B237EC10A8EC9D000580F30 /* religion.h in CopyFiles */,
+				7B237EC40A8EC9D000580F30 /* spells2.h in CopyFiles */,
+				7B237EC70A8EC9D000580F30 /* monstuff.h in CopyFiles */,
+				7B237EC90A8EC9D000580F30 /* monspeak.h in CopyFiles */,
+				7B237ECA0A8EC9D000580F30 /* delay.h in CopyFiles */,
+				7B237ECB0A8EC9D000580F30 /* command.h in CopyFiles */,
+				7B237ECC0A8EC9D000580F30 /* spells1.h in CopyFiles */,
+				7B237ECE0A8EC9D000580F30 /* skills2.h in CopyFiles */,
+				7B237ED30A8EC9D000580F30 /* monplace.h in CopyFiles */,
+				7B237ED50A8EC9D000580F30 /* Kills.h in CopyFiles */,
+				7B237ED70A8EC9D000580F30 /* files.h in CopyFiles */,
+				7B237ED80A8EC9D000580F30 /* fight.h in CopyFiles */,
+				7B237EDC0A8EC9D000580F30 /* food.h in CopyFiles */,
+				7B237EDD0A8EC9D000580F30 /* clua.h in CopyFiles */,
+				7B237EDF0A8EC9D000580F30 /* cloud.h in CopyFiles */,
+				7B237EE20A8EC9D000580F30 /* itemname.h in CopyFiles */,
+				7B237EE30A8EC9D000580F30 /* skills.h in CopyFiles */,
+				7B237EE50A8EC9D000580F30 /* shopping.h in CopyFiles */,
+				7B237EE70A8EC9D000580F30 /* invent.h in CopyFiles */,
+				7B237EEA0A8EC9D000580F30 /* libunix.h in CopyFiles */,
+				7B237EEC0A8EC9D000580F30 /* abyss.h in CopyFiles */,
+				7B237EF00A8EC9D000580F30 /* mt19937ar.h in CopyFiles */,
+				7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7B237DE50A8EC9D000580F30 /* maps.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = maps.h; sourceTree = "<group>"; };
+		7B237DE60A8EC9D000580F30 /* maps.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = maps.cc; sourceTree = "<group>"; };
+		7B237DE70A8EC9D000580F30 /* mon-pick.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "mon-pick.h"; sourceTree = "<group>"; };
+		7B237DE80A8EC9D000580F30 /* mon-pick.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-pick.cc"; sourceTree = "<group>"; };
+		7B237DE90A8EC9D000580F30 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
+		7B237DEA0A8EC9D000580F30 /* insult.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = insult.h; sourceTree = "<group>"; };
+		7B237DEB0A8EC9D000580F30 /* insult.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = insult.cc; sourceTree = "<group>"; };
+		7B237DEC0A8EC9D000580F30 /* initfile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = initfile.h; sourceTree = "<group>"; };
+		7B237DED0A8EC9D000580F30 /* overmap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = overmap.h; sourceTree = "<group>"; };
+		7B237DEE0A8EC9D000580F30 /* overmap.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = overmap.cc; sourceTree = "<group>"; };
+		7B237DEF0A8EC9D000580F30 /* output.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
+		7B237DF00A8EC9D000580F30 /* item_use.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = item_use.h; sourceTree = "<group>"; };
+		7B237DF10A8EC9D000580F30 /* initfile.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = initfile.cc; sourceTree = "<group>"; };
+		7B237DF20A8EC9D000580F30 /* hiscores.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = hiscores.h; sourceTree = "<group>"; };
+		7B237DF30A8EC9D000580F30 /* hiscores.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = hiscores.cc; sourceTree = "<group>"; };
+		7B237DF40A8EC9D000580F30 /* travel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = travel.h; sourceTree = "<group>"; };
+		7B237DF50A8EC9D000580F30 /* travel.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = travel.cc; sourceTree = "<group>"; };
+		7B237DF60A8EC9D000580F30 /* lev-pand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "lev-pand.h"; sourceTree = "<group>"; };
+		7B237DF70A8EC9D000580F30 /* lev-pand.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "lev-pand.cc"; sourceTree = "<group>"; };
+		7B237DF80A8EC9D000580F30 /* items.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = items.h; sourceTree = "<group>"; };
+		7B237DF90A8EC9D000580F30 /* newgame.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = newgame.cc; sourceTree = "<group>"; };
+		7B237DFA0A8EC9D000580F30 /* mutation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mutation.h; sourceTree = "<group>"; };
+		7B237DFB0A8EC9D000580F30 /* mutation.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mutation.cc; sourceTree = "<group>"; };
+		7B237DFC0A8EC9D000580F30 /* misc.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cc; sourceTree = "<group>"; };
+		7B237DFD0A8EC9D000580F30 /* message.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
+		7B237DFE0A8EC9D000580F30 /* mon-util.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "mon-util.h"; sourceTree = "<group>"; };
+		7B237DFF0A8EC9D000580F30 /* mon-util.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-util.cc"; sourceTree = "<group>"; };
+		7B237E000A8EC9D000580F30 /* it_use3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = it_use3.h; sourceTree = "<group>"; };
+		7B237E010A8EC9D000580F30 /* it_use3.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = it_use3.cc; sourceTree = "<group>"; };
+		7B237E020A8EC9D000580F30 /* it_use2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = it_use2.h; sourceTree = "<group>"; };
+		7B237E030A8EC9D000580F30 /* itemname.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemname.cc; sourceTree = "<group>"; };
+		7B237E040A8EC9D000580F30 /* command.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = command.cc; sourceTree = "<group>"; };
+		7B237E050A8EC9D000580F30 /* describe.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = describe.h; sourceTree = "<group>"; };
+		7B237E060A8EC9D000580F30 /* spl-util.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "spl-util.h"; sourceTree = "<group>"; };
+		7B237E070A8EC9D000580F30 /* spl-util.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-util.cc"; sourceTree = "<group>"; };
+		7B237E080A8EC9D000580F30 /* randart.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = randart.h; sourceTree = "<group>"; };
+		7B237E090A8EC9D000580F30 /* randart.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = randart.cc; sourceTree = "<group>"; };
+		7B237E0A0A8EC9D000580F30 /* player.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
+		7B237E0B0A8EC9D000580F30 /* player.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = player.cc; sourceTree = "<group>"; };
+		7B237E0C0A8EC9D000580F30 /* effects.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = effects.h; sourceTree = "<group>"; };
+		7B237E0D0A8EC9D000580F30 /* abl-show.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "abl-show.cc"; sourceTree = "<group>"; };
+		7B237E0E0A8EC9D000580F30 /* files.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = files.cc; sourceTree = "<group>"; };
+		7B237E0F0A8EC9D000580F30 /* direct.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = direct.cc; sourceTree = "<group>"; };
+		7B237E100A8EC9D000580F30 /* dungeon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dungeon.h; sourceTree = "<group>"; };
+		7B237E110A8EC9D000580F30 /* wpn-misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "wpn-misc.h"; sourceTree = "<group>"; };
+		7B237E120A8EC9D000580F30 /* wpn-misc.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "wpn-misc.cc"; sourceTree = "<group>"; };
+		7B237E130A8EC9D000580F30 /* view.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
+		7B237E140A8EC9D000580F30 /* view.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = view.cc; sourceTree = "<group>"; };
+		7B237E150A8EC9D000580F30 /* spl-book.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-book.cc"; sourceTree = "<group>"; };
+		7B237E160A8EC9D000580F30 /* spells4.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = spells4.h; sourceTree = "<group>"; };
+		7B237E170A8EC9D000580F30 /* spells4.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spells4.cc; sourceTree = "<group>"; };
+		7B237E180A8EC9D000580F30 /* spells3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = spells3.h; sourceTree = "<group>"; };
+		7B237E190A8EC9D000580F30 /* macro.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
+		7B237E1A0A8EC9D000580F30 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		7B237E1B0A8EC9D000580F30 /* direct.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = direct.h; sourceTree = "<group>"; };
+		7B237E1C0A8EC9D000580F30 /* decks.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = decks.h; sourceTree = "<group>"; };
+		7B237E1D0A8EC9D000580F30 /* stuff.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stuff.h; sourceTree = "<group>"; };
+		7B237E1E0A8EC9D000580F30 /* stuff.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = stuff.cc; sourceTree = "<group>"; };
+		7B237E1F0A8EC9D000580F30 /* stash.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stash.h; sourceTree = "<group>"; };
+		7B237E200A8EC9D000580F30 /* stash.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = stash.cc; sourceTree = "<group>"; };
+		7B237E210A8EC9D000580F30 /* transfor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = transfor.h; sourceTree = "<group>"; };
+		7B237E220A8EC9D000580F30 /* transfor.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = transfor.cc; sourceTree = "<group>"; };
+		7B237E230A8EC9D000580F30 /* tags.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tags.h; sourceTree = "<group>"; };
+		7B237E240A8EC9D000580F30 /* tags.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = tags.cc; sourceTree = "<group>"; };
+		7B237E250A8EC9D000580F30 /* libutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = libutil.h; sourceTree = "<group>"; };
+		7B237E260A8EC9D000580F30 /* item_use.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = item_use.cc; sourceTree = "<group>"; };
+		7B237E270A8EC9D000580F30 /* acr.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = acr.cc; sourceTree = "<group>"; };
+		7B237E280A8EC9D000580F30 /* abyss.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = abyss.cc; sourceTree = "<group>"; };
+		7B237E290A8EC9D000580F30 /* abl-show.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "abl-show.h"; sourceTree = "<group>"; };
+		7B237E2A0A8EC9D000580F30 /* chardump.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = chardump.cc; sourceTree = "<group>"; };
+		7B237E2B0A8EC9D000580F30 /* chardump.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = chardump.h; sourceTree = "<group>"; };
+		7B237E2C0A8EC9D000580F30 /* beam.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = beam.cc; sourceTree = "<group>"; };
+		7B237E2D0A8EC9D000580F30 /* beam.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = beam.h; sourceTree = "<group>"; };
+		7B237E2E0A8EC9D000580F30 /* spl-cast.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "spl-cast.h"; sourceTree = "<group>"; };
+		7B237E2F0A8EC9D000580F30 /* spl-cast.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-cast.cc"; sourceTree = "<group>"; };
+		7B237E300A8EC9D000580F30 /* spl-book.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "spl-book.h"; sourceTree = "<group>"; };
+		7B237E310A8EC9D000580F30 /* output.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = output.cc; sourceTree = "<group>"; };
+		7B237E320A8EC9D000580F30 /* ouch.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ouch.h; sourceTree = "<group>"; };
+		7B237E330A8EC9D000580F30 /* ouch.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ouch.cc; sourceTree = "<group>"; };
+		7B237E340A8EC9D000580F30 /* newgame.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = newgame.h; sourceTree = "<group>"; };
+		7B237E350A8EC9D000580F30 /* message.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = message.cc; sourceTree = "<group>"; };
+		7B237E360A8EC9D000580F30 /* menu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
+		7B237E370A8EC9D000580F30 /* menu.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = menu.cc; sourceTree = "<group>"; };
+		7B237E380A8EC9D000580F30 /* macro.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = macro.cc; sourceTree = "<group>"; };
+		7B237E390A8EC9D000580F30 /* shopping.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = shopping.cc; sourceTree = "<group>"; };
+		7B237E3A0A8EC9D000580F30 /* religion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = religion.h; sourceTree = "<group>"; };
+		7B237E3B0A8EC9D000580F30 /* religion.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = religion.cc; sourceTree = "<group>"; };
+		7B237E3C0A8EC9D000580F30 /* spells3.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spells3.cc; sourceTree = "<group>"; };
+		7B237E3D0A8EC9D000580F30 /* spells2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = spells2.h; sourceTree = "<group>"; };
+		7B237E3E0A8EC9D000580F30 /* spells2.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spells2.cc; sourceTree = "<group>"; };
+		7B237E3F0A8EC9D000580F30 /* mstuff2.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mstuff2.cc; sourceTree = "<group>"; };
+		7B237E400A8EC9D000580F30 /* monstuff.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monstuff.h; sourceTree = "<group>"; };
+		7B237E410A8EC9D000580F30 /* monstuff.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = monstuff.cc; sourceTree = "<group>"; };
+		7B237E420A8EC9D000580F30 /* monspeak.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monspeak.h; sourceTree = "<group>"; };
+		7B237E430A8EC9D000580F30 /* delay.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = delay.h; sourceTree = "<group>"; };
+		7B237E440A8EC9D000580F30 /* command.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = command.h; sourceTree = "<group>"; };
+		7B237E450A8EC9D000580F30 /* spells1.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = spells1.h; sourceTree = "<group>"; };
+		7B237E460A8EC9D000580F30 /* spells1.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = spells1.cc; sourceTree = "<group>"; };
+		7B237E470A8EC9D000580F30 /* skills2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = skills2.h; sourceTree = "<group>"; };
+		7B237E480A8EC9D000580F30 /* skills2.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = skills2.cc; sourceTree = "<group>"; };
+		7B237E490A8EC9D000580F30 /* decks.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = decks.cc; sourceTree = "<group>"; };
+		7B237E4A0A8EC9D000580F30 /* describe.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = describe.cc; sourceTree = "<group>"; };
+		7B237E4B0A8EC9D000580F30 /* monspeak.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = monspeak.cc; sourceTree = "<group>"; };
+		7B237E4C0A8EC9D000580F30 /* monplace.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = monplace.h; sourceTree = "<group>"; };
+		7B237E4D0A8EC9D000580F30 /* monplace.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = monplace.cc; sourceTree = "<group>"; };
+		7B237E4E0A8EC9D000580F30 /* Kills.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Kills.h; sourceTree = "<group>"; };
+		7B237E4F0A8EC9D000580F30 /* Kills.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Kills.cc; sourceTree = "<group>"; };
+		7B237E500A8EC9D000580F30 /* files.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = files.h; sourceTree = "<group>"; };
+		7B237E510A8EC9D000580F30 /* fight.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = fight.h; sourceTree = "<group>"; };
+		7B237E520A8EC9D000580F30 /* effects.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = effects.cc; sourceTree = "<group>"; };
+		7B237E530A8EC9D000580F30 /* fight.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = fight.cc; sourceTree = "<group>"; };
+		7B237E540A8EC9D000580F30 /* food.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = food.cc; sourceTree = "<group>"; };
+		7B237E550A8EC9D000580F30 /* food.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = food.h; sourceTree = "<group>"; };
+		7B237E560A8EC9D000580F30 /* clua.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = clua.h; sourceTree = "<group>"; };
+		7B237E570A8EC9D000580F30 /* clua.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = clua.cc; sourceTree = "<group>"; };
+		7B237E580A8EC9D000580F30 /* cloud.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = cloud.h; sourceTree = "<group>"; };
+		7B237E590A8EC9D000580F30 /* cloud.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = cloud.cc; sourceTree = "<group>"; };
+		7B237E5A0A8EC9D000580F30 /* items.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = items.cc; sourceTree = "<group>"; };
+		7B237E5B0A8EC9D000580F30 /* itemname.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemname.h; sourceTree = "<group>"; };
+		7B237E5C0A8EC9D000580F30 /* skills.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = skills.h; sourceTree = "<group>"; };
+		7B237E5D0A8EC9D000580F30 /* skills.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = skills.cc; sourceTree = "<group>"; };
+		7B237E5E0A8EC9D000580F30 /* shopping.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = shopping.h; sourceTree = "<group>"; };
+		7B237E5F0A8EC9D000580F30 /* it_use2.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = it_use2.cc; sourceTree = "<group>"; };
+		7B237E600A8EC9D000580F30 /* invent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = invent.h; sourceTree = "<group>"; };
+		7B237E610A8EC9D000580F30 /* invent.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = invent.cc; sourceTree = "<group>"; };
+		7B237E620A8EC9D000580F30 /* libutil.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = libutil.cc; sourceTree = "<group>"; };
+		7B237E630A8EC9D000580F30 /* libunix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = libunix.h; sourceTree = "<group>"; };
+		7B237E640A8EC9D000580F30 /* libunix.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = libunix.cc; sourceTree = "<group>"; };
+		7B237E650A8EC9D000580F30 /* abyss.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = abyss.h; sourceTree = "<group>"; };
+		7B237E660A8EC9D000580F30 /* delay.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = delay.cc; sourceTree = "<group>"; };
+		7B237E670A8EC9D000580F30 /* dungeon.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = dungeon.cc; sourceTree = "<group>"; };
+		7B237E680A8EC9D000580F30 /* debug.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cc; sourceTree = "<group>"; };
+		7B237E690A8EC9D000580F30 /* mt19937ar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mt19937ar.h; sourceTree = "<group>"; };
+		7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mt19937ar.cc; sourceTree = "<group>"; };
+		7B237E6B0A8EC9D000580F30 /* mstuff2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mstuff2.h; sourceTree = "<group>"; };
+		7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.5.dylib; path = /usr/lib/libncurses.5.dylib; sourceTree = "<absolute>"; };
+		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* Crawl */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				7B237F120A8ECCDE00580F30 /* Libraries */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = Crawl;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				7B237DE50A8EC9D000580F30 /* maps.h */,
+				7B237DE60A8EC9D000580F30 /* maps.cc */,
+				7B237DE70A8EC9D000580F30 /* mon-pick.h */,
+				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
+				7B237DE90A8EC9D000580F30 /* misc.h */,
+				7B237DEA0A8EC9D000580F30 /* insult.h */,
+				7B237DEB0A8EC9D000580F30 /* insult.cc */,
+				7B237DEC0A8EC9D000580F30 /* initfile.h */,
+				7B237DED0A8EC9D000580F30 /* overmap.h */,
+				7B237DEE0A8EC9D000580F30 /* overmap.cc */,
+				7B237DEF0A8EC9D000580F30 /* output.h */,
+				7B237DF00A8EC9D000580F30 /* item_use.h */,
+				7B237DF10A8EC9D000580F30 /* initfile.cc */,
+				7B237DF20A8EC9D000580F30 /* hiscores.h */,
+				7B237DF30A8EC9D000580F30 /* hiscores.cc */,
+				7B237DF40A8EC9D000580F30 /* travel.h */,
+				7B237DF50A8EC9D000580F30 /* travel.cc */,
+				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
+				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
+				7B237DF80A8EC9D000580F30 /* items.h */,
+				7B237DF90A8EC9D000580F30 /* newgame.cc */,
+				7B237DFA0A8EC9D000580F30 /* mutation.h */,
+				7B237DFB0A8EC9D000580F30 /* mutation.cc */,
+				7B237DFC0A8EC9D000580F30 /* misc.cc */,
+				7B237DFD0A8EC9D000580F30 /* message.h */,
+				7B237DFE0A8EC9D000580F30 /* mon-util.h */,
+				7B237DFF0A8EC9D000580F30 /* mon-util.cc */,
+				7B237E000A8EC9D000580F30 /* it_use3.h */,
+				7B237E010A8EC9D000580F30 /* it_use3.cc */,
+				7B237E020A8EC9D000580F30 /* it_use2.h */,
+				7B237E030A8EC9D000580F30 /* itemname.cc */,
+				7B237E040A8EC9D000580F30 /* command.cc */,
+				7B237E050A8EC9D000580F30 /* describe.h */,
+				7B237E060A8EC9D000580F30 /* spl-util.h */,
+				7B237E070A8EC9D000580F30 /* spl-util.cc */,
+				7B237E080A8EC9D000580F30 /* randart.h */,
+				7B237E090A8EC9D000580F30 /* randart.cc */,
+				7B237E0A0A8EC9D000580F30 /* player.h */,
+				7B237E0B0A8EC9D000580F30 /* player.cc */,
+				7B237E0C0A8EC9D000580F30 /* effects.h */,
+				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
+				7B237E0E0A8EC9D000580F30 /* files.cc */,
+				7B237E0F0A8EC9D000580F30 /* direct.cc */,
+				7B237E100A8EC9D000580F30 /* dungeon.h */,
+				7B237E110A8EC9D000580F30 /* wpn-misc.h */,
+				7B237E120A8EC9D000580F30 /* wpn-misc.cc */,
+				7B237E130A8EC9D000580F30 /* view.h */,
+				7B237E140A8EC9D000580F30 /* view.cc */,
+				7B237E150A8EC9D000580F30 /* spl-book.cc */,
+				7B237E160A8EC9D000580F30 /* spells4.h */,
+				7B237E170A8EC9D000580F30 /* spells4.cc */,
+				7B237E180A8EC9D000580F30 /* spells3.h */,
+				7B237E190A8EC9D000580F30 /* macro.h */,
+				7B237E1A0A8EC9D000580F30 /* debug.h */,
+				7B237E1B0A8EC9D000580F30 /* direct.h */,
+				7B237E1C0A8EC9D000580F30 /* decks.h */,
+				7B237E1D0A8EC9D000580F30 /* stuff.h */,
+				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
+				7B237E1F0A8EC9D000580F30 /* stash.h */,
+				7B237E200A8EC9D000580F30 /* stash.cc */,
+				7B237E210A8EC9D000580F30 /* transfor.h */,
+				7B237E220A8EC9D000580F30 /* transfor.cc */,
+				7B237E230A8EC9D000580F30 /* tags.h */,
+				7B237E240A8EC9D000580F30 /* tags.cc */,
+				7B237E250A8EC9D000580F30 /* libutil.h */,
+				7B237E260A8EC9D000580F30 /* item_use.cc */,
+				7B237E270A8EC9D000580F30 /* acr.cc */,
+				7B237E280A8EC9D000580F30 /* abyss.cc */,
+				7B237E290A8EC9D000580F30 /* abl-show.h */,
+				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
+				7B237E2B0A8EC9D000580F30 /* chardump.h */,
+				7B237E2C0A8EC9D000580F30 /* beam.cc */,
+				7B237E2D0A8EC9D000580F30 /* beam.h */,
+				7B237E2E0A8EC9D000580F30 /* spl-cast.h */,
+				7B237E2F0A8EC9D000580F30 /* spl-cast.cc */,
+				7B237E300A8EC9D000580F30 /* spl-book.h */,
+				7B237E310A8EC9D000580F30 /* output.cc */,
+				7B237E320A8EC9D000580F30 /* ouch.h */,
+				7B237E330A8EC9D000580F30 /* ouch.cc */,
+				7B237E340A8EC9D000580F30 /* newgame.h */,
+				7B237E350A8EC9D000580F30 /* message.cc */,
+				7B237E360A8EC9D000580F30 /* menu.h */,
+				7B237E370A8EC9D000580F30 /* menu.cc */,
+				7B237E380A8EC9D000580F30 /* macro.cc */,
+				7B237E390A8EC9D000580F30 /* shopping.cc */,
+				7B237E3A0A8EC9D000580F30 /* religion.h */,
+				7B237E3B0A8EC9D000580F30 /* religion.cc */,
+				7B237E3C0A8EC9D000580F30 /* spells3.cc */,
+				7B237E3D0A8EC9D000580F30 /* spells2.h */,
+				7B237E3E0A8EC9D000580F30 /* spells2.cc */,
+				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
+				7B237E400A8EC9D000580F30 /* monstuff.h */,
+				7B237E410A8EC9D000580F30 /* monstuff.cc */,
+				7B237E420A8EC9D000580F30 /* monspeak.h */,
+				7B237E430A8EC9D000580F30 /* delay.h */,
+				7B237E440A8EC9D000580F30 /* command.h */,
+				7B237E450A8EC9D000580F30 /* spells1.h */,
+				7B237E460A8EC9D000580F30 /* spells1.cc */,
+				7B237E470A8EC9D000580F30 /* skills2.h */,
+				7B237E480A8EC9D000580F30 /* skills2.cc */,
+				7B237E490A8EC9D000580F30 /* decks.cc */,
+				7B237E4A0A8EC9D000580F30 /* describe.cc */,
+				7B237E4B0A8EC9D000580F30 /* monspeak.cc */,
+				7B237E4C0A8EC9D000580F30 /* monplace.h */,
+				7B237E4D0A8EC9D000580F30 /* monplace.cc */,
+				7B237E4E0A8EC9D000580F30 /* Kills.h */,
+				7B237E4F0A8EC9D000580F30 /* Kills.cc */,
+				7B237E500A8EC9D000580F30 /* files.h */,
+				7B237E510A8EC9D000580F30 /* fight.h */,
+				7B237E520A8EC9D000580F30 /* effects.cc */,
+				7B237E530A8EC9D000580F30 /* fight.cc */,
+				7B237E540A8EC9D000580F30 /* food.cc */,
+				7B237E550A8EC9D000580F30 /* food.h */,
+				7B237E560A8EC9D000580F30 /* clua.h */,
+				7B237E570A8EC9D000580F30 /* clua.cc */,
+				7B237E580A8EC9D000580F30 /* cloud.h */,
+				7B237E590A8EC9D000580F30 /* cloud.cc */,
+				7B237E5A0A8EC9D000580F30 /* items.cc */,
+				7B237E5B0A8EC9D000580F30 /* itemname.h */,
+				7B237E5C0A8EC9D000580F30 /* skills.h */,
+				7B237E5D0A8EC9D000580F30 /* skills.cc */,
+				7B237E5E0A8EC9D000580F30 /* shopping.h */,
+				7B237E5F0A8EC9D000580F30 /* it_use2.cc */,
+				7B237E600A8EC9D000580F30 /* invent.h */,
+				7B237E610A8EC9D000580F30 /* invent.cc */,
+				7B237E620A8EC9D000580F30 /* libutil.cc */,
+				7B237E630A8EC9D000580F30 /* libunix.h */,
+				7B237E640A8EC9D000580F30 /* libunix.cc */,
+				7B237E650A8EC9D000580F30 /* abyss.h */,
+				7B237E660A8EC9D000580F30 /* delay.cc */,
+				7B237E670A8EC9D000580F30 /* dungeon.cc */,
+				7B237E680A8EC9D000580F30 /* debug.cc */,
+				7B237E690A8EC9D000580F30 /* mt19937ar.h */,
+				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
+				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FB20486AB0100D96B5E /* crawl */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7B237F120A8ECCDE00580F30 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76FA90486AB0100D96B5E /* Crawl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl" */;
+			buildPhases = (
+				8DD76FAB0486AB0100D96B5E /* Sources */,
+				8DD76FAD0486AB0100D96B5E /* Frameworks */,
+				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Crawl;
+			productInstallPath = "$(HOME)/bin";
+			productName = Crawl;
+			productReference = 8DD76FB20486AB0100D96B5E /* crawl */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Crawl" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* Crawl */;
+			projectDirPath = "";
+			targets = (
+				8DD76FA90486AB0100D96B5E /* Crawl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76FAB0486AB0100D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
+				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
+				7B237E720A8EC9D000580F30 /* insult.cc in Sources */,
+				7B237E750A8EC9D000580F30 /* overmap.cc in Sources */,
+				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
+				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
+				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
+				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
+				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
+				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
+				7B237E830A8EC9D000580F30 /* misc.cc in Sources */,
+				7B237E860A8EC9D000580F30 /* mon-util.cc in Sources */,
+				7B237E880A8EC9D000580F30 /* it_use3.cc in Sources */,
+				7B237E8A0A8EC9D000580F30 /* itemname.cc in Sources */,
+				7B237E8B0A8EC9D000580F30 /* command.cc in Sources */,
+				7B237E8E0A8EC9D000580F30 /* spl-util.cc in Sources */,
+				7B237E900A8EC9D000580F30 /* randart.cc in Sources */,
+				7B237E920A8EC9D000580F30 /* player.cc in Sources */,
+				7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */,
+				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
+				7B237E960A8EC9D000580F30 /* direct.cc in Sources */,
+				7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */,
+				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
+				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
+				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,
+				7B237EA50A8EC9D000580F30 /* stuff.cc in Sources */,
+				7B237EA70A8EC9D000580F30 /* stash.cc in Sources */,
+				7B237EA90A8EC9D000580F30 /* transfor.cc in Sources */,
+				7B237EAB0A8EC9D000580F30 /* tags.cc in Sources */,
+				7B237EAD0A8EC9D000580F30 /* item_use.cc in Sources */,
+				7B237EAE0A8EC9D000580F30 /* acr.cc in Sources */,
+				7B237EAF0A8EC9D000580F30 /* abyss.cc in Sources */,
+				7B237EB10A8EC9D000580F30 /* chardump.cc in Sources */,
+				7B237EB30A8EC9D000580F30 /* beam.cc in Sources */,
+				7B237EB60A8EC9D000580F30 /* spl-cast.cc in Sources */,
+				7B237EB80A8EC9D000580F30 /* output.cc in Sources */,
+				7B237EBA0A8EC9D000580F30 /* ouch.cc in Sources */,
+				7B237EBC0A8EC9D000580F30 /* message.cc in Sources */,
+				7B237EBE0A8EC9D000580F30 /* menu.cc in Sources */,
+				7B237EBF0A8EC9D000580F30 /* macro.cc in Sources */,
+				7B237EC00A8EC9D000580F30 /* shopping.cc in Sources */,
+				7B237EC20A8EC9D000580F30 /* religion.cc in Sources */,
+				7B237EC30A8EC9D000580F30 /* spells3.cc in Sources */,
+				7B237EC50A8EC9D000580F30 /* spells2.cc in Sources */,
+				7B237EC60A8EC9D000580F30 /* mstuff2.cc in Sources */,
+				7B237EC80A8EC9D000580F30 /* monstuff.cc in Sources */,
+				7B237ECD0A8EC9D000580F30 /* spells1.cc in Sources */,
+				7B237ECF0A8EC9D000580F30 /* skills2.cc in Sources */,
+				7B237ED00A8EC9D000580F30 /* decks.cc in Sources */,
+				7B237ED10A8EC9D000580F30 /* describe.cc in Sources */,
+				7B237ED20A8EC9D000580F30 /* monspeak.cc in Sources */,
+				7B237ED40A8EC9D000580F30 /* monplace.cc in Sources */,
+				7B237ED60A8EC9D000580F30 /* Kills.cc in Sources */,
+				7B237ED90A8EC9D000580F30 /* effects.cc in Sources */,
+				7B237EDA0A8EC9D000580F30 /* fight.cc in Sources */,
+				7B237EDB0A8EC9D000580F30 /* food.cc in Sources */,
+				7B237EDE0A8EC9D000580F30 /* clua.cc in Sources */,
+				7B237EE00A8EC9D000580F30 /* cloud.cc in Sources */,
+				7B237EE10A8EC9D000580F30 /* items.cc in Sources */,
+				7B237EE40A8EC9D000580F30 /* skills.cc in Sources */,
+				7B237EE60A8EC9D000580F30 /* it_use2.cc in Sources */,
+				7B237EE80A8EC9D000580F30 /* invent.cc in Sources */,
+				7B237EE90A8EC9D000580F30 /* libutil.cc in Sources */,
+				7B237EEB0A8EC9D000580F30 /* libunix.cc in Sources */,
+				7B237EED0A8EC9D000580F30 /* delay.cc in Sources */,
+				7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */,
+				7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */,
+				7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB928608733DD80010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				PRODUCT_NAME = crawl;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1DEB928A08733DD80010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Development;
+		};
+		7B97C01F0A8ECFD700CE8936 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					WIZARD,
+					DEBUG,
+					DEBUG_ITEM_SCAN,
+					FULLDEBUG,
+				);
+				PRODUCT_NAME = crawl;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		7B97C0200A8ECFD700CE8936 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					DEBUG,
+					FULLDEBUG,
+					DEBUG_ITEM_SCAN,
+					WIZARD,
+				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		7B97C0240A8ED2AB00CE8936 /* Wizard */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					WIZARD,
+					DEBUG,
+					DEBUG_ITEM_SCAN,
+				);
+				PRODUCT_NAME = crawl;
+				ZERO_LINK = YES;
+			};
+			name = Wizard;
+		};
+		7B97C0250A8ED2AB00CE8936 /* Wizard */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					WIZARD,
+					DEBUG,
+					DEBUG_ITEM_SCAN,
+				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Wizard;
+		};
+		7B97C0260A8ED34400CE8936 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				PRODUCT_NAME = crawl;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		7B97C0270A8ED34400CE8936 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928608733DD80010E9CD /* Development */,
+				7B97C0260A8ED34400CE8936 /* Release */,
+				7B97C01F0A8ECFD700CE8936 /* Debug */,
+				7B97C0240A8ED2AB00CE8936 /* Wizard */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "Crawl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB928A08733DD80010E9CD /* Development */,
+				7B97C0270A8ED34400CE8936 /* Release */,
+				7B97C0200A8ECFD700CE8936 /* Debug */,
+				7B97C0250A8ED2AB00CE8936 /* Wizard */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
