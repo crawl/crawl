@@ -390,7 +390,6 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
     you.prev_targ = MHITNOT;
 
     int following = -1;
-    int fmenv = 0;     // not used again until after found_stair label {dlb}
     int minvc = 0;
 
     // Don't delete clouds just because the player saved and restarted.
@@ -749,7 +748,7 @@ found_stair:
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     */
     following = 0;
-    fmenv = -1;
+    int fmenv = -1;
 
     // actually "move" the followers if applicable
     if ((you.level_type == LEVEL_DUNGEON

@@ -118,7 +118,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
 
             for (i = 0; i < 10000; i++)
             {
-                int count = 0;
+                count = 0;
 
                 do
                 {

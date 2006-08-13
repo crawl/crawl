@@ -150,7 +150,7 @@ enum ACT_INTERRUPT
     AI_BURDEN_CHANGE = 0x80,
     AI_STAT_CHANGE = 0x100,
     AI_SEE_MONSTER = 0x200,
-    AI_TELEPORT    = 0x400,
+    AI_TELEPORT    = 0x400
 };
 
 enum AI_PAYLOAD
@@ -159,7 +159,7 @@ enum AI_PAYLOAD
     AIP_INT,
     AIP_STRING,
     AIP_MONSTER,
-    AIP_HP_LOSS,
+    AIP_HP_LOSS
 };
 
 enum AMMUNITION_DESCRIPTIONS
@@ -181,7 +181,7 @@ enum AQ_AGENTS
     AQ_CARD_PROTECTION,
     AQ_CARD_KNOWLEDGE,
 
-    AQ_WIZMODE          = 200,
+    AQ_WIZMODE          = 200
 };
 
 enum ARMOUR
@@ -605,7 +605,7 @@ enum COMMANDS
     CMD_INTERLEVEL_TRAVEL,
     CMD_FIX_WAYPOINT,
 
-    CMD_CLEAR_MAP,
+    CMD_CLEAR_MAP
 };
 
 enum CONFIRM_LEVEL
@@ -2247,7 +2247,7 @@ enum OBJECT_CLASSES                    // (unsigned char) mitm[].base_type
 enum OBJECT_SELECTORS
 {
     OSEL_ANY   = -1,
-    OSEL_WIELD = -2,
+    OSEL_WIELD = -2
 };
 
 enum ORBS
@@ -2510,7 +2510,7 @@ enum SPECIAL_MISSILES // to separate from weapons in general {dlb}
     SPMSL_FLAME,                       //    1
     SPMSL_ICE,                         //    2
     SPMSL_POISONED, //    3 - from poison_ammo() enchantment {dlb}
-    SPMSL_POISONED_II,                 //    4
+    SPMSL_POISONED_II                  //    4
 };
 
 enum SPECIAL_ROOMS
@@ -2862,7 +2862,7 @@ enum SPELL_TYPES //jmf: 24jul2000: changed from integer-list to bitfield
 enum SLOT_SELECT_MODES
 {
     SS_FORWARD      = 0,
-    SS_BACKWARD     = 1,
+    SS_BACKWARD     = 1
 };
 
 enum STATS

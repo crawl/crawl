@@ -74,7 +74,7 @@ void init_playerspells(void)
     }
 
     return;                     // return value should not matter here {dlb}
-};                              // end init_playerspells()
+}                               // end init_playerspells()
 
 int get_spell_slot_by_letter( char letter )
 {

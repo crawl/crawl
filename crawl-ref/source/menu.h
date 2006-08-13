@@ -126,7 +126,7 @@ enum MenuFlag
                                 // closes the menu.
     MF_SELECT_ANY_PAGE = 16,    // Allow selections to occur on any page.
 
-    MF_EASY_EXIT    = 64,
+    MF_EASY_EXIT    = 64
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ public:
     Menu( int flags = MF_MULTISELECT );
     virtual ~Menu();
 
-    void set_flags( int flags )   { this->flags = flags; }
+    void set_flags( int new_flags )   { this->flags = new_flags; }
     int  get_flags() const        { return flags; }
     bool is_set( int flag ) const;
     

@@ -605,7 +605,7 @@ private:
     {
         FSOP_COLOUR,
         FSOP_CURSOR,
-        FSOP_TEXT,
+        FSOP_TEXT
     };
 
     struct fs_op

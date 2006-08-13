@@ -94,7 +94,7 @@ enum KEYS
     CK_CTRL_CLEAR,
 
     CK_CTRL_PGUP,
-    CK_CTRL_PGDN,
+    CK_CTRL_PGDN
 };
 
 class base_pattern

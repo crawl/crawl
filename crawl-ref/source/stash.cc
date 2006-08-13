@@ -412,7 +412,7 @@ std::string Stash::description() const
     if (sz > 1)
     {
         char additionals[50];
-        snprintf(additionals, sizeof additionals, " (+%u)", sz - 1);
+        snprintf(additionals, sizeof additionals, " (+%lu)", (unsigned long) (sz - 1));
         desc += additionals;
     }
     return (desc);
@@ -467,6 +467,8 @@ void Stash::write(std::ostream &os,
                   bool identify) 
     const
 {
+    int i;
+    
     if (!enabled || (items.size() == 0 && verified)) return;
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")
@@ -474,7 +476,7 @@ void Stash::write(std::ostream &os,
        << std::endl;
     
     char buf[ITEMNAME_SIZE];
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (i = 0; i < (int) items.size(); ++i)
     {
         item_def item = items[i];
 
@@ -510,7 +512,7 @@ void Stash::write(std::ostream &os,
             if (desc.length())
             {
                 // Walk backwards and prepend indenting spaces to \n characters
-                for (int i = desc.length() - 1; i >= 0; --i)
+                for (i = desc.length() - 1; i >= 0; --i)
                     if (desc[i] == '\n')
                         desc.insert(i + 1, " ");
                 os << "    " << desc << std::endl;

@@ -65,7 +65,7 @@ enum LOSSelect
     // or visible to hidden when going backwards.
     LOS_FLIPHV   = 0x40,
 
-    LOS_NONE     = 0xFFFF,
+    LOS_NONE     = 0xFFFF
 };
 
 // x and y offsets in the following order:
@@ -478,7 +478,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                     case '\'':
                     case '*':
                         {
-                            int dir = keyin == ';' || keyin == '/'? -1 : 1;
+                            dir = keyin == ';' || keyin == '/'? -1 : 1;
                             if (find_square( cx, cy, objfind_pos, dir,
                                      find_object, 0, true,
                                      Options.target_los_first
@@ -499,7 +499,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                     case '+':
                     case '=':
                         {
-                            int dir = keyin == '-'? -1 : 1;
+                            dir = keyin == '-'? -1 : 1;
                             if (find_square( cx, cy, monsfind_pos, dir, 
                                      find_monster, mode, Options.target_wrap ))
                             {

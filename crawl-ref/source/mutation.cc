@@ -1438,7 +1438,7 @@ bool mutate(int which_mutation, bool failMsg)
         {
             FixedVector < char, 8 > removed;
 
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }
@@ -1456,7 +1456,7 @@ bool mutate(int which_mutation, bool failMsg)
         {
             FixedVector < char, 8 > removed;
 
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }
@@ -1478,7 +1478,7 @@ bool mutate(int which_mutation, bool failMsg)
 
             FixedVector < char, 8 > removed;
 
-            for (int i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
+            for (i = EQ_WEAPON; i < EQ_RIGHT_RING; i++)
             {
                 removed[i] = 0;
             }

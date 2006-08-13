@@ -1837,7 +1837,7 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
         }
     }
     
-    snprintf( buf, sizeof buf, "  (%u%s turn%s)", s->size(),
+    snprintf( buf, sizeof buf, "  (%lu%s turn%s)", (unsigned long) (s->size()),
               extraturns? "+" : "",
               s->size() > 1? "s" : "" );
     return buf;

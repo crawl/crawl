@@ -114,7 +114,7 @@ enum RUN_MODES
 {
     RUN_TRAVEL      = -1,   // Classic or Plain Old travel
     RUN_EXPLORE     = -2,   // Exploring (Ctrl+O)
-    RUN_INTERLEVEL  = -3,   // Interlevel travel (Ctrl+G)
+    RUN_INTERLEVEL  = -3    // Interlevel travel (Ctrl+G)
 };
 
 enum EXPLORE_STOP
@@ -123,7 +123,7 @@ enum EXPLORE_STOP
     ES_ITEM     = 1,
     ES_STAIR    = 2,
     ES_SHOP     = 4,
-    ES_ALTAR    = 8,
+    ES_ALTAR    = 8
 };
 
 ////////////////////////////////////////////////////////////////////////////

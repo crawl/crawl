@@ -152,7 +152,7 @@
         
         CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
 
-        CHATTR_COLMASK = 0xF00, // Mask with this to get extra colour info.
+        CHATTR_COLMASK = 0xF00 // Mask with this to get extra colour info.
     };
 
 //#endif

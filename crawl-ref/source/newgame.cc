@@ -3206,7 +3206,7 @@ job_query:
             int job_count = 0;
             int job = -1;
 
-            for (int i = 0; i < NUM_JOBS; i++)
+            for (i = 0; i < NUM_JOBS; i++)
             {
                 if (!you.species || class_allowed(you.species, i))
                 {

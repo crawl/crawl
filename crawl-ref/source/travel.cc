@@ -40,7 +40,7 @@ enum IntertravelDestination
     ID_REPEAT   = -101,
 
     // Cancel interlevel travel
-    ID_CANCEL   = -1000,
+    ID_CANCEL   = -1000
 };
 
 TravelCache travel_cache;
@@ -899,6 +899,7 @@ void find_travel_pos(int youx, int youy,
     int start_x = you.run_x, start_y = you.run_y;
     int dest_x  = youx, dest_y  = youy;
     bool floodout = false;
+    unsigned char feature;
 #ifdef STASH_TRACKING
     LevelStashes *lev = features? stashes.find_current_level() : NULL;
 #endif
@@ -978,7 +979,7 @@ void find_travel_pos(int youx, int youy,
             // (x,y) is a known (explored) location - we never put unknown 
             // points in the circumference vector, so we don't need to examine 
             // the map array, just the grid array.
-            unsigned char feature = grd[x][y];
+            feature = grd[x][y];
 
             // If this is a feature that'll take time to travel past, we
             // simulate that extra turn by taking this feature next turn,
@@ -1077,7 +1078,7 @@ void find_travel_pos(int youx, int youy,
                             point_distance[dx][dy] = PD_EXCLUDED_RADIUS;
                     }
 
-                    unsigned char feature = grd[dx][dy];
+                    feature = grd[dx][dy];
                     if (features && !ignore_hostile 
                             && ((feature != DNGN_FLOOR 
                                 && feature != DNGN_SHALLOW_WATER
