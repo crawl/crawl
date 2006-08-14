@@ -363,7 +363,9 @@ enum BEAMS                        // beam[].flavour
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_BLUE_SMOKE,
     BEAM_POTION_PURP_SMOKE,
-    BEAM_POTION_RANDOM
+    BEAM_POTION_RANDOM,
+
+    BEAM_LINE_OF_SIGHT,         // only to check monster LOS
 };
 
 enum BOOKS
@@ -613,6 +615,45 @@ enum CONFIRM_LEVEL
     CONFIRM_NONE_EASY,
     CONFIRM_SAFE_EASY,
     CONFIRM_ALL_EASY
+};
+
+// [dshaligram] 4.1 merge GOOD_ and NAUGHTY_ into generic conducts.
+enum CONDUCTS
+{
+    DID_NECROMANCY = 1,                 // vamp/drain/pain wpns, Zong/Curses
+    DID_UNHOLY,                         // demon wpns, demon spells
+    DID_ATTACK_HOLY,
+    DID_ATTACK_FRIEND,
+    DID_FRIEND_DIES,
+    DID_STABBING,
+    DID_POISON,
+    DID_DEDICATED_BUTCHERY,
+    DID_DEDICATED_KILL_LIVING,
+    DID_DEDICATED_KILL_UNDEAD,
+    DID_DEDICATED_KILL_DEMON,
+    DID_DEDICATED_KILL_NATURAL_EVIL,    // unused
+    DID_DEDICATED_KILL_WIZARD,
+    DID_DEDICATED_KILL_PRIEST,          // unused
+
+    // [dshaligram] No distinction between killing Angels during prayer or
+    //              otherwise, borrowed from bwr 4.1.
+    DID_KILL_ANGEL,
+    DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+    DID_LIVING_KILLED_BY_SERVANT,
+    DID_UNDEAD_KILLED_BY_SERVANT,
+    DID_DEMON_KILLED_BY_SERVANT,
+    DID_NATURAL_EVIL_KILLED_BY_SERVANT, // unused
+    DID_ANGEL_KILLED_BY_SERVANT,
+    DID_SPELL_MEMORISE,
+    DID_SPELL_CASTING,
+    DID_SPELL_PRACTISE,
+    DID_SPELL_NONUTILITY,               // unused
+    DID_CARDS,
+    DID_STIMULANTS,                     // unused
+    DID_EAT_MEAT,                       // unused
+    DID_CREATED_LIFE,                   // unused
+
+    NUM_CONDUCTS
 };
 
 enum CORPSE_EFFECTS
@@ -1067,27 +1108,6 @@ enum GODS                              //  you.religion
     GOD_RANDOM  = 100
 };
 
-enum GOOD_THINGS
-{
-    GOOD_KILLED_LIVING = 1, //    1 - killed a living monster in god's name
-    GOOD_KILLED_UNDEAD,     //    2 - killed an undead in god's name
-    GOOD_KILLED_DEMON,      //    3 - killed a demon in god's name
-    GOOD_KILLED_ANGEL_I,    //    4 - killed an angel (any time)
-    GOOD_KILLED_ANGEL_II,   //    5 - killed an angel in god's name
-    // (all above pass HD of monster as pgain)
-    GOOD_HACKED_CORPSE,     //    6 - hacked up a corpse in god's name
-    GOOD_OFFER_STUFF,       //    7 - offered inanimate stuff at an altar
-    GOOD_OFFER_CORPSE,      // as above,including at least one corpse
-    GOOD_SLAVES_KILL_LIVING,//    9 - undead slaves killed a living thing
-    GOOD_SERVANTS_KILL,     //   10 - any servants kill anything
-    GOOD_CARDS,             //   11 - cards (Nemelex)
-    GOOD_KILLED_WIZARD,
-    GOOD_KILLED_PRIEST,
-    GOOD_POISON,
-    GOOD_ATTACKED_FRIEND,
-    NUM_GOOD_THINGS
-};
-
 enum HANDS_REQUIRED
 {
     HANDS_ONE_HANDED = 1,              //    1
@@ -1417,6 +1437,7 @@ enum MESSAGE_CHANNEL
     MSGCH_WARN,           // much less serious threats
     MSGCH_FOOD,           // hunger notices
     MSGCH_RECOVERY,       // recovery from disease/stat/poison condition
+    MSGCH_SOUND,          // messages about things the player hears
     MSGCH_TALK,           // monster talk (param is monster type)
     MSGCH_INTRINSIC_GAIN, // player level/stat/species-power gains
     MSGCH_MUTATION,       // player gain/lose mutations
@@ -1485,6 +1506,77 @@ enum MISSILES                          // (unsigned char)
     MI_LARGE_ROCK, //jmf: it'd be nice to move MI_LARGE_ROCK to DEBRIS_ROCK
     NUM_MISSILES,
     MI_EGGPLANT
+};
+
+enum MONS_CLASS_FLAGS
+{
+    M_NO_FLAGS          = 0,
+
+    M_SPELLCASTER       = (1<< 0),        // any non-physical-attack powers,
+    M_ACTUAL_SPELLS     = (1<< 1),        // monster is a wizard,
+    M_PRIEST            = (1<< 2),        // monster is a priest
+    M_FIGHTER           = (1<< 3),        // monster is skilled fighter
+
+    M_FLIES             = (1<< 4),        // will crash to ground if paralysed?
+    M_LEVITATE          = (1<< 5),        // ... but not if this is set
+    M_INVIS             = (1<< 6),        // is created invis
+    M_SEE_INVIS         = (1<< 7),        // can see invis
+    M_SPEAKS            = (1<< 8),        // uses talking code
+    M_CONFUSED          = (1<< 9),        // monster is perma-confused,
+    M_BATTY             = (1<<10),        // monster is batty
+    M_SPLITS            = (1<<11),        // monster can split
+    M_AMPHIBIOUS        = (1<<12),        // monster can swim in water,
+    M_THICK_SKIN        = (1<<13),        // monster has more effective AC,
+    M_HUMANOID          = (1<<14),        // for Glamour 
+    M_COLD_BLOOD        = (1<<15),        // susceptible to cold
+    M_WARM_BLOOD        = (1<<16),        // no effect currently
+    M_REGEN             = (1<<17),        // regenerates quickly
+    M_BURROWS           = (1<<18),        // monster digs through rock
+    M_EVIL              = (1<<19),        // monster vulnerable to holy spells
+
+    M_ON_FIRE           = (1<<20),        // XXX: Potentially ditchable
+    M_FROZEN            = (1<<21),        // XXX: Potentially ditchable
+    
+
+    M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
+    M_COLOUR_SHIFT      = (1<<27),        // flag for element colour shifters
+    M_DCHAR_SYMBOL      = (1<<28),        // monster looks like a DCHAR terrain
+
+    M_NO_SKELETON       = (1<<29),        // boneless corpses
+    M_NO_WOUNDS         = (1<<30),        // doesn't show would level
+    M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
+};
+
+enum mon_resist_flags
+{
+    MR_NO_FLAGS          = 0,
+
+    // resistances 
+    // Notes: 
+    // - negative energy is mostly handled via mons_has_life_force()
+    // - acid is handled mostly by genus (jellies) plus non-living
+    MR_RES_ELEC          = (1<< 0),
+    MR_RES_POISON        = (1<< 1),
+    MR_RES_FIRE          = (1<< 2),
+    MR_RES_HELLFIRE      = (1<< 3),
+    MR_RES_COLD          = (1<< 4),
+    MR_RES_HELLFROST     = (1<< 5),
+
+    // vulnerabilities
+    MR_VUL_ELEC          = (1<< 6),
+    MR_VUL_POISON        = (1<< 7),
+    MR_VUL_FIRE          = (1<< 8),
+    MR_VUL_COLD          = (1<< 9),
+
+    // melee armour resists/vulnerabilities 
+    // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
+    MR_RES_PIERCE        = (1<<10),
+    MR_RES_SLICE         = (1<<11),
+    MR_RES_BLUDGEON      = (1<<12),
+
+    MR_VUL_PIERCE        = (1<<13),
+    MR_VUL_SLICE         = (1<<14),
+    MR_VUL_BLUDGEON      = (1<<15)
 };
 
 enum MON_TARG_MODE
@@ -2201,24 +2293,6 @@ enum MUTATIONS
     NUM_MUTATIONS
 };
 
-enum NAUGHTY_THINGS
-{
-    NAUGHTY_NECROMANCY = 1, //    1 - using necromancy (spell or device)
-    NAUGHTY_UNHOLY, //    2 - using unholy stuff (call imp, summon things)
-    NAUGHTY_KILLING, //    3 - killing in the name of a peaceful deity
-    NAUGHTY_ATTACK_HOLY,               //    4 - attacking holy things
-    NAUGHTY_ATTACK_FRIEND,             //    5 - attacking friendly things
-    NAUGHTY_FRIEND_DIES, //    6 - allowing friendly things to die
-    NAUGHTY_BUTCHER, //    7 - butchering in the name of a peaceful deity
-    NAUGHTY_STABBING,                  //    8 - stabbing
-    NAUGHTY_SPELLCASTING,              //    9 - spellcasting
-    NAUGHTY_POISON,                    //   10 - poisoning
-    NAUGHTY_STIMULANTS, //jmf: next three new, some not yet used
-    NAUGHTY_ATE_MEAT,
-    NAUGHTY_CREATED_LIFE,
-    NUM_NAUGHTY_THINGS
-};
-
 enum OBJECT_CLASSES                    // (unsigned char) mitm[].base_type
 {
     OBJ_WEAPONS,                       //    0
@@ -2833,9 +2907,23 @@ enum SPELLS
     SPELL_SEMI_CONTROLLED_BLINK,       //jmf: to test effect              200
     SPELL_STONESKIN,
     SPELL_SIMULACRUM,
-    SPELL_CONJURE_BALL_LIGHTNING,     // 203 (be wary of 210, see below)
+    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_CHAIN_LIGHTNING,            // 204 (be wary of 209/210, see below)
     NUM_SPELLS,
     SPELL_NO_SPELL = 210              //  210 - added 22jan2000 {dlb}
+};
+
+enum SPELL_FLAGS
+{
+    SPFLAG_NONE                 = 0x0000,
+    SPFLAG_DIR_OR_TARGET        = 0x0001,       // use DIR_NONE targeting
+    SPFLAG_TARGET               = 0x0002,       // use DIR_TARGET targeting
+    SPFLAG_GRID                 = 0x0004,       // use DIR_GRID targeting
+    SPFLAG_DIR                  = 0x0008,       // use DIR_DIR targeting
+    SPFLAG_TARGETING_MASK       = 0x000f,       // used to test for targeting
+    SPFLAG_HELPFUL              = 0x0010,       // TARG_FRIENDS used
+    SPFLAG_NOT_SELF             = 0x0020,       // aborts on isMe
+    SPFLAG_UNHOLY               = 0x0040        // counts at "unholy"
 };
 
 enum SPELL_TYPES //jmf: 24jul2000: changed from integer-list to bitfield
@@ -3115,7 +3203,8 @@ enum WEAPONS
     WPN_KNIFE,
     WPN_BLOWGUN,
     WPN_FALCHION,
-    NUM_WEAPONS,                       //   44 - must remain last regular member {dlb}
+    WPN_BLESSED_BLADE,                 //   44
+    NUM_WEAPONS,                       //   45 - must be last regular member {dlb}
 // special cases
     WPN_UNARMED = 500,                 //  500
     WPN_UNKNOWN = 1000,                // 1000

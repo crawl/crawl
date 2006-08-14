@@ -737,32 +737,42 @@ void viewwindow2(char draw_it, bool do_updates)
                                                    Options.item_colour );
                     }
                 }
+
+                if (you.flash_colour != BLACK 
+                        && buffy[bufcount + 1] != DARKGREY)
+                    buffy[bufcount + 1] = you.flash_colour;
+
                 bufcount += 2;
             }
         }
 
-        if (you.berserker)
+        if (you.flash_colour == BLACK)
         {
-            for (count_x = 1; count_x < 1400; count_x += 2)
+            if (you.berserker)
             {
-                if (buffy[count_x] != DARKGREY)
-                    buffy[count_x] = RED;
+                for (count_x = 1; count_x < 1400; count_x += 2)
+                {
+                    if (buffy[count_x] != DARKGREY)
+                        buffy[count_x] = RED;
+                }
+            }
+
+            if (show_green != BLACK)
+            {
+                for (count_x = 1; count_x < 1400; count_x += 2)
+                {
+                    if (buffy[count_x] != DARKGREY)
+                        buffy[count_x] = show_green;
+                }
+
+                show_green = BLACK;
+
+                if (you.special_wield == SPWLD_SHADOW)
+                    show_green = DARKGREY;
             }
         }
 
-        if (show_green != BLACK)
-        {
-            for (count_x = 1; count_x < 1400; count_x += 2)
-            {
-                if (buffy[count_x] != DARKGREY)
-                    buffy[count_x] = show_green;
-            }
-
-            show_green = BLACK;
-
-            if (you.special_wield == SPWLD_SHADOW)
-                show_green = DARKGREY;
-        }
+        you.flash_colour = BLACK;
 
 #ifdef DOS_TERM
         puttext(2, 1, 34, 17, buffy.buffer());
@@ -1211,7 +1221,7 @@ void monster_grid(bool do_updates)
             }
             else if (!mons_friendly( monster )
                      && !mons_is_mimic( monster->type )
-                     && !mons_flag( monster->type, M_NO_EXP_GAIN ))
+                     && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
             {
                 interrupt_activity( AI_SEE_MONSTER );
                 if (you.running != 0
@@ -1576,17 +1586,32 @@ void cloud_grid(void)
     }                           // end 'for s' loop
 }                               // end cloud_grid()
 
-
-void noisy( int loudness, int nois_x, int nois_y )
+// Noisy now has a messenging service for giving messages to the 
+// player is appropriate.
+//
+// Returns true if the PC heard the noise.
+bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 {
     int p;
     struct monsters *monster = 0;       // NULL {dlb}
+    bool ret = false;
 
+    // If the origin is silenced there is no noise.
     if (silenced( nois_x, nois_y ))
-        return;
+        return (false);
 
-    int dist = loudness * loudness;
+    const int dist = loudness * loudness;
 
+    // message the player
+    if (distance( you.x_pos, you.y_pos, nois_x, nois_y ) <= dist
+        && player_can_hear( nois_x, nois_y ))
+    {
+        if (msg)
+            mpr( msg, MSGCH_SOUND );
+
+        ret = true;
+    }
+    
     for (p = 0; p < MAX_MONSTERS; p++)
     {
         monster = &menv[p];
@@ -1605,6 +1630,8 @@ void noisy( int loudness, int nois_x, int nois_y )
                 behaviour_event( monster, ME_DISTURB, MHITNOT, nois_x, nois_y );
         }
     }
+
+    return (ret);
 }                               // end noisy()
 
 /* ========================================================================

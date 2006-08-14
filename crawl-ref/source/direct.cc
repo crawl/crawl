@@ -688,7 +688,7 @@ static bool find_monster( int x, int y, int mode )
                 && !mons_friendly( &menv[targ_mon] )
                 && 
                 (Options.target_zero_exp || 
-                    !mons_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) )));
+                    !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) )));
 }
 
 static bool find_feature( int x, int y, int mode )
@@ -1343,7 +1343,7 @@ static void describe_cell(int mx, int my)
 
         if (mons_is_mimic( menv[i].type ))
             mimic_item = true;
-        else if (!mons_flag(menv[i].type, M_NO_EXP_GAIN))
+        else if (!mons_class_flag(menv[i].type, M_NO_EXP_GAIN))
         {
             if (menv[i].behaviour == BEH_SLEEP)
             {

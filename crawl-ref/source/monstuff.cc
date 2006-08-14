@@ -271,9 +271,9 @@ static void monster_drop_ething(struct monsters *monster,
     if (destroyed)
     {
         if (grd[monster->x][monster->y] == DNGN_LAVA)
-            mpr("You hear a hissing sound.");
+            mpr("You hear a hissing sound.", MSGCH_SOUND);
         else
-            mpr("You hear a splashing sound.");
+            mpr("You hear a splashing sound.", MSGCH_SOUND);
     }
 }                               // end monster_drop_ething()
 
@@ -448,29 +448,30 @@ void monster_die(struct monsters *monster, char killer, int i)
                 if (you.duration[DUR_PRAYER])
                 {
                     if (mons_holiness(monster->type) == MH_NATURAL)
-                        done_good(GOOD_KILLED_LIVING, monster->hit_dice);
+                        did_god_conduct(DID_DEDICATED_KILL_LIVING, 
+                                        monster->hit_dice);
 
                     if (mons_holiness(monster->type) == MH_UNDEAD)
-                        done_good(GOOD_KILLED_UNDEAD, monster->hit_dice);
+                        did_god_conduct(DID_DEDICATED_KILL_UNDEAD, 
+                                        monster->hit_dice);
 
                     if (mons_holiness(monster->type) == MH_DEMONIC)
-                        done_good(GOOD_KILLED_DEMON, monster->hit_dice);
-
-                    if (mons_holiness(monster->type) == MH_HOLY)
-                        done_good(GOOD_KILLED_ANGEL_II, monster->hit_dice);
+                        did_god_conduct(DID_DEDICATED_KILL_DEMON, 
+                                        monster->hit_dice);
 
                     //jmf: Trog hates wizards
-                    if (mons_flag(monster->type, M_ACTUAL_SPELLS))
-                        done_good(GOOD_KILLED_WIZARD, monster->hit_dice);
+                    if (mons_class_flag(monster->type, M_ACTUAL_SPELLS))
+                        did_god_conduct(DID_DEDICATED_KILL_WIZARD,
+                                        monster->hit_dice);
 
                     //jmf: maybe someone hates priests?
-                    if (mons_flag(monster->type, M_PRIEST))
-                        done_good(GOOD_KILLED_PRIEST, monster->hit_dice);
+                    if (mons_class_flag(monster->type, M_PRIEST))
+                        did_god_conduct(DID_DEDICATED_KILL_PRIEST, 
+                                        monster->hit_dice);
                 }
-                else if (mons_holiness(monster->type) == MH_HOLY)
-                {
-                    done_good(GOOD_KILLED_ANGEL_I, monster->hit_dice);
-                }
+
+                if (mons_holiness(monster->type) == MH_HOLY)
+                    did_god_conduct(DID_KILL_ANGEL, monster->hit_dice);
             }
 
             // Divine health and mp restoration doesn't happen when killing
@@ -522,39 +523,82 @@ void monster_die(struct monsters *monster, char killer, int i)
 
             // no piety loss if god gifts killed by other monsters
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
-                naughty(NAUGHTY_FRIEND_DIES, 1 + (monster->hit_dice / 2));
+                did_god_conduct(DID_FRIEND_DIES, 1 + (monster->hit_dice / 2));
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being being done_good kills.
             // Only affects creatures which were friendly when summoned.
             if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && pet_kill)
             {
+                bool notice = false;
+
                 gain_exp(exper_value( monster ) / 2 + 1);
 
-                if (mons_holiness(menv[i].type) == MH_UNDEAD)
-                {
-                    if (mons_holiness(monster->type) == MH_NATURAL)
-                        done_good(GOOD_SLAVES_KILL_LIVING, monster->hit_dice);
-                    else
-                        done_good(GOOD_SERVANTS_KILL, monster->hit_dice);
-                }
-                else
-                {
-                    done_good(GOOD_SERVANTS_KILL, monster->hit_dice);
+                int targ_holy   = mons_holiness(monster->type),
+                    attacker_holy = mons_holiness(menv[i].type);
 
-                    if (you.religion == GOD_VEHUMET
-                        && (!player_under_penance()
-                            && random2(you.piety) >= 30))
+                if (attacker_holy == MH_UNDEAD)
+                {
+                    if (targ_holy == MH_NATURAL)
+                        notice |= 
+                            did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                                        monster->hit_dice);
+                }
+                else if (you.religion == GOD_VEHUMET
+                        || testbits( menv[i].flags, MF_GOD_GIFT ))
+                {
+                    // Yes, we are splitting undead pets from the others
+                    // as a way to focus Necomancy vs Summoning (ignoring
+                    // Summon Wraith here)... at least we're being nice and
+                    // putting the natural creature Summons together with 
+                    // the Demon ones.  Note that Vehumet gets a free 
+                    // pass here since those followers are assumed to
+                    // come from Summoning spells...  the others are 
+                    // from invocations (Zin, TSO, Makh, Kiku). -- bwr
+
+                    if (targ_holy == MH_NATURAL)
                     {
-                        /* Vehumet - only for non-undead servants (coding
-                           convenience, no real reason except that Vehumet
-                           prefers demons) */
-                        if (you.magic_points < you.max_magic_points)
+                        notice |= did_god_conduct( DID_LIVING_KILLED_BY_SERVANT,
+                                                   monster->hit_dice );
+
+                        if (mons_class_flag( monster->type, M_EVIL ))
                         {
-                            mpr("You feel your power returning.");
-                            inc_mp(1 + random2(random2(monster->hit_dice)),
-                                   false);
+                            notice |= 
+                                did_god_conduct( 
+                                        DID_NATURAL_EVIL_KILLED_BY_SERVANT,
+                                        monster->hit_dice );
                         }
+                    }
+                    else if (targ_holy == MH_DEMONIC)
+                    {
+                        notice |= did_god_conduct( DID_DEMON_KILLED_BY_SERVANT, 
+                                                   monster->hit_dice );
+                    }
+                    else if (targ_holy == MH_UNDEAD)
+                    {
+                        notice |= did_god_conduct( DID_UNDEAD_KILLED_BY_SERVANT,
+                                                   monster->hit_dice );
+                    }
+                }
+
+                // Angel kills are always noticed.
+                if (targ_holy == MH_HOLY)
+                {
+                    notice |= did_god_conduct( DID_ANGEL_KILLED_BY_SERVANT, 
+                                               monster->hit_dice );
+                }
+
+                if (you.religion == GOD_VEHUMET 
+                    && notice
+                    && (!player_under_penance() && random2(you.piety) >= 30))
+                {
+                    /* Vehumet - only for non-undead servants (coding
+                       convenience, no real reason except that Vehumet
+                       prefers demons) */
+                    if (you.magic_points < you.max_magic_points)
+                    {
+                        mpr("You feel your power returning.");
+                        inc_mp( 1 + random2(monster->hit_dice / 2), false );
                     }
                 }
             }
@@ -720,7 +764,7 @@ static bool jelly_divide(struct monsters * parent)
     bool foundSpot = false;     // to rid code of hideous goto {dlb}
     struct monsters *child = 0; // NULL - value determined with loop {dlb}
 
-    if (!mons_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
+    if (!mons_class_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
         return (false);
 
     // first, find a suitable spot for the child {dlb}:
@@ -788,7 +832,7 @@ static bool jelly_divide(struct monsters * parent)
     if (!simple_monster_message(parent, " splits in two!"))
     {
         if (!silenced(parent->x, parent->y) || !silenced(child->x, child->y))
-            mpr("You hear a squelching noise.");
+            mpr("You hear a squelching noise.", MSGCH_SOUND);
     }
 
     return (true);
@@ -826,7 +870,7 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
 
     /* various inappropriate polymorph targets */
     if (mons_holiness( new_mclass ) != mons_holiness( monster->type )
-        || mons_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
+        || mons_class_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
         || new_mclass == mons_charclass( monster->type ) // must be different
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
@@ -915,7 +959,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     }
 
     // messaging: {dlb}
-    bool invis = mons_flag( targetc, M_INVIS ) 
+    bool invis = mons_class_flag( targetc, M_INVIS ) 
                     || mons_has_ench( monster, ENCH_INVIS );
 
     if (mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER ))
@@ -961,7 +1005,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     if (shifter != ENCH_NONE)
         mons_add_ench( monster, shifter );
 
-    if (mons_flag( monster->type, M_INVIS ))
+    if (mons_class_flag( monster->type, M_INVIS ))
         mons_add_ench( monster, ENCH_INVIS );
 
     monster->hit_points = monster->max_hit_points
@@ -1033,7 +1077,7 @@ static bool habitat_okay( struct monsters *monster, int targ )
         // flying monsters don't care
         ret = true;
     }
-    else if (mons_flag( monster->type, M_AMPHIBIOUS ) 
+    else if (mons_class_flag( monster->type, M_AMPHIBIOUS ) 
             && (targ == DNGN_DEEP_WATER || targ == DNGN_SHALLOW_WATER))
     {
         // Amphibious creatures are "land" by default in mon-data, 
@@ -1787,7 +1831,7 @@ static bool handle_enchantment(struct monsters *monster)
             if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
             {
                 // don't delete perma-confusion
-                if (!mons_flag(monster->type, M_CONFUSED))
+                if (!mons_class_flag(monster->type, M_CONFUSED))
                     mons_del_ench(monster, ENCH_CONFUSION);
             }
             break;
@@ -1796,7 +1840,7 @@ static bool handle_enchantment(struct monsters *monster)
             if (random2(1000) < mod_speed( 25, speed ))
             {
                 // don't delete perma-invis
-                if (!mons_flag( monster->type, M_INVIS ))
+                if (!mons_class_flag( monster->type, M_INVIS ))
                     mons_del_ench(monster, ENCH_INVIS);
             }
             break;
@@ -2172,7 +2216,7 @@ static void handle_nearby_ability(struct monsters *monster)
         return;
     }
 
-    if (mons_flag(monster->type, M_SPEAKS) && one_chance_in(21)
+    if (mons_class_flag(monster->type, M_SPEAKS) && one_chance_in(21)
         && monster->behaviour != BEH_WANDER)
     {
         mons_speaks(monster);
@@ -2905,7 +2949,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
             if (!simple_monster_message(monster, " zaps a wand."))
             {
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a zap.");
+                    mpr("You hear a zap.", MSGCH_SOUND);
             }
 
             // charge expenditure {dlb}
@@ -2935,21 +2979,21 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
 
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP
-        || !mons_flag( monster->type, M_SPELLCASTER )
+        || !mons_class_flag( monster->type, M_SPELLCASTER )
         || mons_has_ench( monster, ENCH_SUBMERGED ))
     {
         return (false);
     }
 
-    if ((mons_flag(monster->type, M_ACTUAL_SPELLS)
-            || mons_flag(monster->type, M_PRIEST))
+    if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
+            || mons_class_flag(monster->type, M_PRIEST))
         && (mons_has_ench(monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
     {
         return (false);           //jmf: shapeshiftes don't get spells, just
                                   //     physical powers.
     }
     else if (mons_has_ench(monster, ENCH_CONFUSION) 
-            && !mons_flag(monster->type, M_CONFUSED))
+            && !mons_class_flag(monster->type, M_CONFUSED))
     {
         return (false);
     }
@@ -3163,7 +3207,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                     if (silenced(monster->x, monster->y))
                         return (false);
 
-                    if (mons_flag(monster->type, M_PRIEST))
+                    if (mons_class_flag(monster->type, M_PRIEST))
                     {
                         switch (random2(3))
                         {
@@ -3233,7 +3277,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                         if (!silenced(monster->x, monster->y)
                             && !silenced(you.x_pos, you.y_pos))
                         {
-                            mpr("You hear a roar.", MSGCH_MONSTER_SPELL);
+                            mpr("You hear a roar.", MSGCH_SOUND);
                         }
                     }
                     break;
@@ -3271,7 +3315,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             if (monster->type == MONS_GERYON
                 && !silenced(you.x_pos, you.y_pos))
             {
-                mpr("You hear a weird and mournful sound.");
+                mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
             }
         }
 
@@ -3288,7 +3332,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             mmov_x = 0;
             mmov_y = 0;
         }
-    } // end "if mons_flag(monster->type, M_SPELLCASTER) ...
+    } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
 
     return (true);
 }                               // end handle_spell()
@@ -3591,7 +3635,7 @@ void handle_monsters(void)
                         // shapeshifters don't get spells
                         if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
                                                      ENCH_SHAPESHIFTER )
-                            || !mons_flag( monster->type, M_ACTUAL_SPELLS ))
+                            || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
                         {
                             if (handle_spell(monster, beem))
                                 continue;
@@ -3822,10 +3866,10 @@ static bool handle_pickup(struct monsters *monster)
                 if (!monsterNearby)
                     strcat(info, " distant");
                 strcat(info, " slurping noise.");
-                mpr(info);
+                mpr(info, MSGCH_SOUND);
             }
 
-            if (mons_flag( monster->type, M_SPLITS )) 
+            if (mons_class_flag( monster->type, M_SPLITS )) 
             {
                 const int reqd = (monster->hit_dice <= 6) 
                                             ? 50 : monster->hit_dice * 8;
@@ -4078,7 +4122,7 @@ static void monster_move(struct monsters *monster)
 
     if (mons_flies(monster) > 0 
         || habitat != DNGN_FLOOR
-        || mons_flag( monster->type, M_AMPHIBIOUS ))
+        || mons_class_flag( monster->type, M_AMPHIBIOUS ))
     {
         okmove = MINMOVE;
     }
@@ -4320,7 +4364,7 @@ static void monster_move(struct monsters *monster)
             if (!mons_near(monster))
                 strcat(info, " distant");
             strcat(info, " slurping noise.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
 
         monster->hit_points += 5;
@@ -4329,7 +4373,7 @@ static void monster_move(struct monsters *monster)
         if (monster->hit_points > monster->max_hit_points)
             monster->max_hit_points = monster->hit_points;
 
-        if (mons_flag( monster->type, M_SPLITS ))
+        if (mons_class_flag( monster->type, M_SPLITS ))
         {
             // and here is where the jelly might divide {dlb}
             const int reqd = (monster->hit_dice < 6) ? 50 
@@ -4488,7 +4532,7 @@ forget_it:
             grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
 
             if (!silenced(you.x_pos, you.y_pos))
-                mpr("You hear a grinding noise.");
+                mpr("You hear a grinding noise.", MSGCH_SOUND);
         }
     }
 

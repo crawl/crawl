@@ -471,23 +471,23 @@ bool acquirement(unsigned char force_class, int agent)
         //mpr("[r|R] - Just give me something good.");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
-        keyin = get_ch();
+        keyin = tolower( get_ch() );
 
-        if (keyin == 'a' || keyin == 'A')
+        if (keyin == 'a')
             class_wanted = OBJ_WEAPONS;
-        else if (keyin == 'b' || keyin == 'B')
+        else if (keyin == 'b')
             class_wanted = OBJ_ARMOUR;
-        else if (keyin == 'c' || keyin == 'C')
+        else if (keyin == 'c')
             class_wanted = OBJ_JEWELLERY;
-        else if (keyin == 'd' || keyin == 'D')
+        else if (keyin == 'd')
             class_wanted = OBJ_BOOKS;
-        else if (keyin == 'e' || keyin == 'E')
+        else if (keyin == 'e')
             class_wanted = OBJ_STAVES;
-        else if (keyin == 'f' || keyin == 'F')
+        else if (keyin == 'f')
             class_wanted = OBJ_FOOD;
-        else if (keyin == 'g' || keyin == 'G')
+        else if (keyin == 'g')
             class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'h' || keyin == 'H')
+        else if (keyin == 'h')
             class_wanted = OBJ_GOLD;
     }
     else
@@ -584,6 +584,10 @@ bool acquirement(unsigned char force_class, int agent)
                 if (i == WPN_KNIFE)
                     i = WPN_FALCHION;
 
+                // blessed blades can only be created by the player, never found
+                if (i == WPN_BLESSED_BLADE)
+                    continue;
+
                 // "rare" weapons are only considered some of the time...
                 // still, the chance is higher than actual random creation
                 if (weapon_skill( OBJ_WEAPONS, i ) == skill
@@ -597,6 +601,72 @@ bool acquirement(unsigned char force_class, int agent)
                 }
             }
         }
+    }
+    else if (class_wanted == OBJ_MISSILES)
+    {
+        int count = 0;
+        int skill = SK_THROWING;
+
+        for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+        {
+            if (you.skills[i])
+            {
+                count += you.skills[i];
+                if (random2(count) < you.skills[i])
+                    skill = i;
+            }
+        }
+
+        switch (skill)
+        {
+        case SK_SLINGS:
+            type_wanted = MI_STONE;
+            break;
+
+        case SK_BOWS:
+            type_wanted = MI_ARROW;
+            break;
+
+        case SK_CROSSBOWS:
+            type_wanted = MI_DART;
+            for (int i = 0; i < ENDOFPACK; i++) 
+            {
+                // Assuming that crossbow in inventory means that they
+                // want bolts for it (not darts for a hand crossbow)...
+                // perhaps we should check for both and compare ammo
+                // amounts on hand?
+                if (is_valid_item( you.inv[i] )
+                    && you.inv[i].base_type == OBJ_WEAPONS
+                    && you.inv[i].sub_type == WPN_CROSSBOW)
+                {
+                    type_wanted = MI_BOLT;
+                    break;
+                }
+            }
+            break;
+
+        case SK_DARTS:
+            type_wanted = MI_DART;
+            for (int i = 0; i < ENDOFPACK; i++) 
+            {
+                if (is_valid_item( you.inv[i] )
+                    && you.inv[i].base_type == OBJ_WEAPONS
+                    && you.inv[i].sub_type == WPN_BLOWGUN)
+                {
+                    // Assuming that blowgun in inventory means that they
+                    // may want needles for it (but darts might also be
+                    // wanted).  Maybe expand this... see above comment.
+                    if (coinflip())
+                        type_wanted = MI_NEEDLE;
+                    break;
+                }
+            }
+            break;
+
+        default:
+            type_wanted = MI_DART;
+            break;
+        }        
     }
     else if (class_wanted == OBJ_ARMOUR)
     {
@@ -1050,10 +1120,11 @@ bool acquirement(unsigned char force_class, int agent)
         while (already_has[type_wanted] && !one_chance_in(200));
     }
 
-    if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-                        || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER)
+    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
-        mpr("You hear a splash.");      // how sad (and stupid)
+        // how sad (and stupid)
+        mprf(MSGCH_SOUND, 
+                grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
     }
     else
     {
@@ -1260,48 +1331,77 @@ bool acquirement(unsigned char force_class, int agent)
 
 bool recharge_wand(void)
 {
-    if (you.equip[EQ_WEAPON] == -1
-            || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_WANDS)
-    {
+    if (you.equip[EQ_WEAPON] == -1)
         return (false);
-    }
 
-    unsigned char charge_gain = 0;
+    item_def &wand = you.inv[ you.equip[EQ_WEAPON] ];
 
-    switch (you.inv[you.equip[EQ_WEAPON]].sub_type)
+    if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
+        return (false);
+
+    int charge_gain = 0;
+    if (wand.base_type == OBJ_WANDS)
     {
-    case WAND_INVISIBILITY:
-    case WAND_FIREBALL:
-    case WAND_HEALING:
-        charge_gain = 3;
-        break;
+        switch (wand.sub_type)
+        {
+        case WAND_INVISIBILITY:
+        case WAND_FIREBALL:
+        case WAND_HEALING:
+            charge_gain = 3;
+            break;
 
-    case WAND_LIGHTNING:
-    case WAND_DRAINING:
-        charge_gain = 4;
-        break;
+        case WAND_LIGHTNING:
+        case WAND_DRAINING:
+            charge_gain = 4;
+            break;
 
-    case WAND_FIRE:
-    case WAND_COLD:
-        charge_gain = 5;
-        break;
+        case WAND_FIRE:
+        case WAND_COLD:
+            charge_gain = 5;
+            break;
 
-    default:
-        charge_gain = 8;
-        break;
+        default:
+            charge_gain = 8;
+            break;
+        }
+
+        char str_pass[ ITEMNAME_SIZE ];
+        item_name(wand, DESC_CAP_YOUR, str_pass);
+        mprf("%s glows for a moment.", str_pass);
+
+        wand.plus += 1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
+
+        if (wand.plus > charge_gain * 3)
+            wand.plus = charge_gain * 3;
     }
+    else 
+    {
+        // This is a rod.
+        bool work = false;
 
-    char str_pass[ ITEMNAME_SIZE ];
-    in_name(you.equip[EQ_WEAPON], DESC_CAP_YOUR, str_pass);
-    strcpy(info, str_pass);
-    strcat(info, " glows for a moment.");
-    mpr(info);
+        if (wand.plus2 <= MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+        {
+            wand.plus2 += ROD_CHARGE_MULT;
 
-    you.inv[you.equip[EQ_WEAPON]].plus +=
-                            1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
+            if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+                wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
 
-    if (you.inv[you.equip[EQ_WEAPON]].plus > charge_gain * 3)
-        you.inv[you.equip[EQ_WEAPON]].plus = charge_gain * 3;
+            work = true;
+        }
+
+        if (wand.plus < wand.plus2)
+        {
+            wand.plus = wand.plus2;
+            work = true;
+        }
+
+        if (!work) 
+            return (false);
+
+        char str_pass[ITEMNAME_SIZE];
+        item_name( wand, DESC_CAP_YOUR, str_pass );
+        mprf("%s glows for a moment.", str_pass);
+    }
 
     you.wield_change = true;
     return (true);
@@ -1346,7 +1446,7 @@ void yell(void)
     switch (keyn)
     {
     case '!':
-        mpr("You yell for attention!");
+        mpr("You yell for attention!", MSGCH_SOUND);
         you.turn_is_over = 1;
         noisy( 12, you.x_pos, you.y_pos );
         return;

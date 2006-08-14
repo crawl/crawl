@@ -449,10 +449,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     if (extra != 250)
         menv[id].number = extra;
 
-    if (mons_flag(mon_type, M_INVIS))
+    if (mons_class_flag(mon_type, M_INVIS))
         mons_add_ench(&menv[id], ENCH_INVIS);
 
-    if (mons_flag(mon_type, M_CONFUSED))
+    if (mons_class_flag(mon_type, M_CONFUSED))
         mons_add_ench(&menv[id], ENCH_CONFUSION);
 
     if (mon_type == MONS_SHAPESHIFTER)

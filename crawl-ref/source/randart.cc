@@ -1790,6 +1790,7 @@ void standard_name_weap(unsigned char item_typ, char glorg[ITEMNAME_SIZE])
                    (item_typ == WPN_WHIP) ? "whip" :
                    (item_typ == WPN_SABRE) ? "sabre" :
                    (item_typ == WPN_DEMON_BLADE) ? "demon blade" :
+                   (item_typ == WPN_BLESSED_BLADE)? "blessed blade" :
                    (item_typ == WPN_DEMON_WHIP) ? "demon whip" :
                    (item_typ == WPN_DEMON_TRIDENT) ? "demon trident" :
                    (item_typ == WPN_BROAD_AXE) ? "broad axe" :

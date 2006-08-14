@@ -178,6 +178,42 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     return (false);
 }                               // end player_genus()
 
+bool player_weapon_wielded()
+{
+    const int wpn = you.equip[EQ_WEAPON];
+
+    if (wpn == -1)
+        return (false);
+
+    if (you.inv[wpn].base_type != OBJ_WEAPONS 
+        && you.inv[wpn].base_type != OBJ_STAVES)
+    {
+        return (false);
+    }
+
+    // FIXME: This needs to go in eventually. 
+    /*
+    // should never have a bad "shape" weapon in hand
+    ASSERT( check_weapon_shape( you.inv[wpn], false ) );
+
+    if (!check_weapon_wieldable_size( you.inv[wpn], player_size() ))
+        return (false);
+     */
+
+    return (true);
+}
+
+// Returns the you.inv[] index of our wielded weapon or -1 (no item, not wield)
+int get_player_wielded_item()
+{
+    return (you.equip[EQ_WEAPON]);
+}
+
+int get_player_wielded_weapon()
+{
+    return (player_weapon_wielded()? get_player_wielded_item() : -1);
+}
+
 // Looks in equipment "slot" to see if there is an equiped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
 int player_equip( int slot, int sub_type, bool calc_unid )
@@ -201,7 +237,7 @@ int player_equip( int slot, int sub_type, bool calc_unid )
         if (you.equip[EQ_WEAPON] != -1
             && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
             && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type
-            && (calc_unid || 
+            && (calc_unid ||
                 item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE)))
         {
             ret++;
@@ -3839,7 +3875,7 @@ void haste_player( int amount )
     if (you.haste > 80 + 20 * amu_eff)
         you.haste = 80 + 20 * amu_eff;
 
-    naughty( NAUGHTY_STIMULANTS, 4 + random2(4) );
+    did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
 }
 
 void dec_haste_player( void )

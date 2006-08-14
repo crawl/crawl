@@ -539,6 +539,17 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }                               // end stepdown_value()
 
+int skill_bump( int skill )
+{   
+    return ((you.skills[skill] < 3) ? you.skills[skill] * 2
+                                    : you.skills[skill] + 3);
+}
+
+// Calculates num/den and randomly adds one based on the remainder.
+int div_rand_round( int num, int den )
+{
+    return (num / den + (random2(den) < num % den));
+}
 
 // I got so tired of seeing: ".. && random2(foo) == 0 && .." in the code
 // that I broke down and wrote this little -- very little -- function.

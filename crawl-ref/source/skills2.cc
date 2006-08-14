@@ -1947,7 +1947,7 @@ void show_skills(void)
 }
 
 
-const char *skill_name(unsigned char which_skill)
+const char *skill_name(int which_skill)
 {
     return (skills[which_skill][0]);
 }                               // end skill_name()
@@ -2038,10 +2038,9 @@ const char *player_title( void )
     return (skill_title( best, you.skills[ best ] ));
 }                               // end player_title()
 
-unsigned char best_skill( unsigned char min_skill, unsigned char max_skill,
-                          unsigned char excl_skill )
+int best_skill( int min_skill, int max_skill, int excl_skill )
 {
-    unsigned char ret = SK_FIGHTING;
+    int ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
     unsigned int best_position = 1000;
 

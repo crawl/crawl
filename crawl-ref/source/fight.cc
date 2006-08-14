@@ -258,10 +258,10 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
  *                                                                        *
  **************************************************************************
  */
-    bool helpless = mons_flag(defender->type, M_NO_EXP_GAIN);
+    bool helpless = mons_class_flag(defender->type, M_NO_EXP_GAIN);
 
     if (mons_friendly(defender))
-        naughty(NAUGHTY_ATTACK_FRIEND, 5);
+        did_god_conduct(DID_ATTACK_FRIEND, 5);
 
     if (you.pet_target == MHITNOT) 
         you.pet_target = monster_attacked;
@@ -280,7 +280,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     if (player_is_swimming()
         // monster not a water creature
         && monster_habitat( defender->type ) != DNGN_DEEP_WATER
-        && !mons_flag( defender->type, M_AMPHIBIOUS )
+        && !mons_class_flag( defender->type, M_AMPHIBIOUS )
         // monster in water
         && (grd[defender->x][defender->y] == DNGN_SHALLOW_WATER
             || grd[defender->x][defender->y] == DNGN_DEEP_WATER)
@@ -556,11 +556,14 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     {
         switch (you.inv[you.equip[EQ_SHIELD]].sub_type)
         {
-        case ARM_SHIELD:
-            weapon_speed2++;
-            break;
         case ARM_LARGE_SHIELD:
-            weapon_speed2 += 2;
+            if (you.skills[SK_SHIELDS] <= 10 + random2(17))
+                weapon_speed2++;
+            // [dshaligram] Fall-through
+            
+        case ARM_SHIELD:
+            if (you.skills[SK_SHIELDS] <= 3 + random2(17))
+                weapon_speed2++;
             break;
         }
     }
@@ -599,7 +602,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
     // confused (but not perma-confused)
     if (mons_has_ench(defender, ENCH_CONFUSION) 
-        && !mons_flag(defender->type, M_CONFUSED))
+        && !mons_class_flag(defender->type, M_CONFUSED))
     {
         stabAttempt = true;
         stab_bonus = 2;
@@ -784,7 +787,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             if (mons_holiness(defender->type) == MH_NATURAL
                 || mons_holiness(defender->type) == MH_HOLY)
             {
-                naughty(NAUGHTY_STABBING, 4);
+                did_god_conduct(DID_STABBING, 4);
             }
         }
         else
@@ -929,7 +932,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                     if (you.hunger_state != HS_ENGORGED)
                         lessen_hunger(30 + random2avg(59, 2), true);
 
-                    naughty(NAUGHTY_NECROMANCY, 2);
+                    did_god_conduct(DID_NECROMANCY, 2);
                 }
             }
 
@@ -1003,18 +1006,18 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
         mpr(info);
 
         if (mons_holiness(defender->type) == MH_HOLY)
-            done_good(GOOD_KILLED_ANGEL_I, 1);
+            did_god_conduct(DID_KILL_ANGEL, 1);
 
         if (you.special_wield == SPWLD_TORMENT)
         {
             torment(you.x_pos, you.y_pos);
-            naughty(NAUGHTY_UNHOLY, 5);
+            did_god_conduct(DID_UNHOLY, 5);
         }
 
         if (you.special_wield == SPWLD_ZONGULDROK
             || you.special_wield == SPWLD_CURSE)
         {
-            naughty(NAUGHTY_NECROMANCY, 3);
+            did_god_conduct(DID_NECROMANCY, 3);
         }
     }
 
@@ -1035,11 +1038,11 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             && you.inv[ weapon ].base_type == OBJ_WEAPONS
             && is_demonic( you.inv[ weapon ].sub_type ))
         {
-            naughty(NAUGHTY_UNHOLY, 1);
+            did_god_conduct(DID_UNHOLY, 1);
         }
 
         if (mons_holiness(defender->type) == MH_HOLY)
-            naughty(NAUGHTY_ATTACK_HOLY, defender->hit_dice);
+            did_god_conduct(DID_ATTACK_HOLY, defender->hit_dice);
 
         if (defender->type == MONS_HYDRA)
         {
@@ -1204,7 +1207,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                                       ptr_monam(defender, DESC_CAP_THE) );
                             mpr(info);
 
-                            naughty(NAUGHTY_NECROMANCY, 4);
+                            did_god_conduct(DID_NECROMANCY, 4);
                         }
                     }
                     break;
@@ -1375,7 +1378,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                     defender->hit_points = 0;
 
                 specdam = 1 + (random2(damage_done) / 2);
-                naughty( NAUGHTY_NECROMANCY, 2 );
+                did_god_conduct( DID_NECROMANCY, 2 );
                 break;
 
                 /* 9 = speed - done before */
@@ -1411,7 +1414,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 if (you.hunger_state != HS_ENGORGED)
                     lessen_hunger(random2avg(59, 2), true);
 
-                naughty( NAUGHTY_NECROMANCY, 2 );
+                did_god_conduct( DID_NECROMANCY, 2 );
                 break;
 
             case SPWPN_DISRUPTION:
@@ -1431,7 +1434,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                     simple_monster_message(defender, " convulses in agony.");
                     specdam += random2( 1 + you.skills[SK_NECROMANCY] );
                 }
-                naughty(NAUGHTY_NECROMANCY, 4);
+                did_god_conduct(DID_NECROMANCY, 4);
                 break;
 
             case SPWPN_DISTORTION:
@@ -1794,7 +1797,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                         poison_monster( defender, true );
 
                     if (mons_holiness(defender->type) == MH_HOLY)
-                        done_good(GOOD_KILLED_ANGEL_I, 1);
+                        did_god_conduct(DID_KILL_ANGEL, 1);
 
                     hit = true;
                 }
@@ -1932,7 +1935,7 @@ void monster_attack(int monster_attacking)
 
     if (grd[attacker->x][attacker->y] == DNGN_SHALLOW_WATER
         && !mons_flies( attacker )
-        && !mons_flag( attacker->type, M_AMPHIBIOUS )
+        && !mons_class_flag( attacker->type, M_AMPHIBIOUS )
         && monster_habitat( attacker->type ) == DNGN_FLOOR 
         && one_chance_in(4))
     {
@@ -2015,8 +2018,10 @@ void monster_attack(int monster_attacking)
         }
 
         // Factors against blocking
-        const int con_block = 15 + attacker->hit_dice
-                               + (10 * you.shield_blocks * you.shield_blocks);
+        // [dshaligram] Scaled back HD effect to 50% of previous, reduced
+        // shield_blocks multiplier to 5.
+        const int con_block = 15 + attacker->hit_dice / 2
+                               + (5 * you.shield_blocks * you.shield_blocks);
 
         // Factors for blocking
         const int pro_block = player_shield_class() + (random2(you.dex) / 5);
@@ -2941,7 +2946,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
     if (grd[attacker->x][attacker->y] == DNGN_SHALLOW_WATER
         && !mons_flies( attacker )
-        && !mons_flag( attacker->type, M_AMPHIBIOUS )
+        && !mons_class_flag( attacker->type, M_AMPHIBIOUS )
         && habitat == DNGN_FLOOR 
         && one_chance_in(4))
     {
@@ -3781,6 +3786,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
     case WPN_TRIPLE_SWORD:
     case WPN_SABRE:
     case WPN_DEMON_BLADE:
+    case WPN_BLESSED_BLADE:
         if (damage < HIT_MED)
             strcpy( noise, "slash" );
         else if (damage < HIT_STRONG)

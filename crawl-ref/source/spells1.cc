@@ -229,6 +229,146 @@ void cast_fire_storm(int powc)
     viewwindow(1, false);
 }                               // end cast_fire_storm()
 
+
+void cast_chain_lightning( int powc )
+{
+    struct bolt beam;
+
+    // initialize beam structure
+    strcpy( beam.beam_name, "lightning arc" );
+    beam.aux_source = "chain lightning";
+    beam.beam_source = MHITYOU;
+    beam.thrower = KILL_YOU_MISSILE;
+    beam.range = 8;
+    beam.rangeMax = 8;
+    beam.hit = AUTOMATIC_HIT;
+    beam.type = SYM_ZAP;
+    beam.flavour = BEAM_ELECTRICITY;
+    beam.obviousEffect = true;
+    beam.isBeam = false;            // since we want to stop at our target
+    beam.isExplosion = false;
+    beam.isTracer = false;
+    beam.isExplosion = false;
+
+    int sx, sy;
+    int tx, ty;
+    int i;
+
+    for (sx = you.x_pos, sy = you.y_pos; 
+         powc > 0; 
+         powc -= 8 + random2(13), sx = tx, sy = ty)
+    {
+        // infinity as far as this spell is concerned
+        // (Range - 1) is used because the distance is randomized and
+        // may be shifted by one.
+        int min_dist = MONSTER_LOS_RANGE - 1;
+
+        int dist;
+        int count = 0;
+
+        tx = -1;
+        ty = -1;
+
+        for (i = 0; i < MAX_MONSTERS; i++)
+        {
+            struct monsters *monster = &menv[i];
+
+            if (monster->type == -1)
+                continue;
+
+            dist = grid_distance( sx, sy, monster->x, monster->y );
+
+            // check for the source of this arc
+            if (!dist) 
+                continue;
+                
+            // randomize distance (arcs don't care about a couple of feet)
+            dist += (random2(3) - 1);
+
+            // always ignore targets further than current one 
+            if (dist > min_dist)
+                continue;
+
+            if (!check_line_of_sight( sx, sy, monster->x, monster->y ))
+                continue;
+
+            count++;
+
+            if (dist < min_dist)
+            {
+                // switch to looking for closer targets (but not always)
+                if (!one_chance_in(10))
+                {
+                    min_dist = dist;
+                    tx = monster->x;
+                    ty = monster->y;
+                    count = 0;
+                }
+            }
+            else if (tx == -1 || one_chance_in( count ))
+            {
+                // either first target, or new selected target at min_dist
+                tx = monster->x;
+                ty = monster->y;
+                
+                // need to set min_dist for first target case
+                if (dist < min_dist)
+                    min_dist = dist;
+            }
+        }
+
+        // now check if the player is a target:
+        dist = grid_distance( sx, sy, you.x_pos, you.y_pos );
+
+        if (dist)       // ie player was not the source
+        {
+            // distance randomized (as above)
+            dist += (random2(3) - 1);
+
+            // select player if only, closest, or randomly selected
+            if ((tx == -1 
+                    || dist < min_dist
+                    || (dist == min_dist && one_chance_in( count + 1 )))
+                && check_line_of_sight( sx, sy, you.x_pos, you.y_pos ))
+            {
+                tx = you.x_pos;
+                ty = you.y_pos;
+            }
+        }
+
+        const bool see_source = see_grid( sx, sy );
+        const bool see_targ   = see_grid( tx, ty );
+
+        if (tx == -1)
+        {
+            if (see_source)
+                mpr( "The lightning grounds out." );
+
+            break;
+        }
+
+        // Trying to limit message spamming here so we'll only mention
+        // the thunder when it's out of LoS.
+        if (noisy( 25, sx, sy ) && !see_source)
+            mpr( "You hear a mighty clap of thunder!", MSGCH_SOUND );
+
+        if (see_source && !see_targ)
+            mpr( "The lightning arcs out of your line of sight!" );
+        else if (!see_source && see_targ)
+            mpr( "The lightning arc suddenly appears!" );
+
+        beam.source_x = sx;
+        beam.source_y = sy;
+        beam.target_x = tx;
+        beam.target_y = ty;
+        beam.colour = LIGHTBLUE;
+        beam.damage = calc_dice( 2, 10 + powc / 2 );        // from beam.cc
+        fire_beam( beam );
+    }
+
+    more();
+}
+
 void identify(int power)
 {
     int id_used = 1;

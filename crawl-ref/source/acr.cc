@@ -841,6 +841,61 @@ static bool check_stop_running( void )
     return (false);
 }
 
+static bool recharge_rod( item_def &rod, bool wielded )
+{
+    if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
+        return (false);
+
+    const int charge = rod.plus / ROD_CHARGE_MULT;
+
+    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
+            
+    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate = div_rand_round( rate, 100 );
+
+    if (rate < 5)
+        rate = 5;
+    else if (rate > ROD_CHARGE_MULT / 2)
+        rate = ROD_CHARGE_MULT / 2;
+
+    // If not wielded, the rod charges far more slowly.
+    if (!wielded)
+        rate /= 3;
+
+    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
+    {
+        dec_mp(1);
+        if (wielded)
+            you.wield_change = true;
+    }
+
+    rod.plus += rate;
+    if (rod.plus > rod.plus2)
+        rod.plus = rod.plus2;
+
+    if (wielded && rod.plus == rod.plus2 && is_resting())
+        stop_running();
+
+    return (true);
+}
+
+static void recharge_rods()
+{
+    const int wielded = you.equip[EQ_WEAPON];
+    if (wielded != -1)
+    {
+        if (recharge_rod( you.inv[wielded], true ))
+            return ;
+    }
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (i != wielded && is_valid_item(you.inv[i])
+                && one_chance_in(3)
+                && recharge_rod( you.inv[i], false ))
+            return;
+    }
+}
 
 /*
    This function handles the player's input. It's called from main(), from
@@ -2139,7 +2194,7 @@ static void input(void)
         you.berserker = 0;
 
         //jmf: guilty for berserking /after/ berserk
-        naughty( NAUGHTY_STIMULANTS, 6 + random2(6) );
+        did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
 
         //
         // Sometimes berserk leaves us physically drained
@@ -2381,6 +2436,9 @@ static void input(void)
 
     ASSERT( tmp >= 0 && tmp < 100 );
     you.magic_points_regeneration = static_cast< unsigned char >( tmp );
+
+    // If you're wielding a rod, it'll gradually recharge.
+    recharge_rods();
 
     viewwindow(1, true);
 

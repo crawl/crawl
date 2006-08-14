@@ -972,6 +972,14 @@ void create_spec_object(void)
             mitm[thing_created].plus = 24;
             break;
 
+        case OBJ_STAVES:
+            if (item_is_rod( mitm[thing_created] ))
+            {
+                mitm[thing_created].plus = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+                mitm[thing_created].plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            }
+            break;
+
         case OBJ_MISCELLANY:
             // Runes to "demonic", decks have 50 cards, ignored elsewhere?
             mitm[thing_created].plus = 50;

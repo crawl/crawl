@@ -69,7 +69,6 @@
 bool drink_fountain(void);
 static void throw_it(struct bolt &pbolt, int throw_2);
 void use_randart(unsigned char item_wield_2);
-static bool enchant_weapon( int which_stat, bool quiet = false );
 static bool enchant_armour( void );
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
@@ -114,12 +113,13 @@ bool can_wield(const item_def& weapon)
             && you.equip[EQ_SHIELD] != -1)
         return false;
 
-        int weap_brand = get_weapon_brand( weapon );
-
+    int weap_brand = get_weapon_brand( weapon );
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
             && (!is_fixed_artefact( weapon )
                 && (weap_brand == SPWPN_HOLY_WRATH 
-                    || weap_brand == SPWPN_DISRUPTION)))
+                    || weap_brand == SPWPN_DISRUPTION
+                    || (weapon.base_type == OBJ_WEAPONS
+                         && weapon.sub_type == WPN_BLESSED_BLADE))))
         return false;
 
     // We can wield this weapon. Phew!
@@ -286,7 +286,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         if ((you.is_undead || you.species == SP_DEMONSPAWN)
             && (!is_fixed_artefact( you.inv[item_slot] )
                 && (weap_brand == SPWPN_HOLY_WRATH 
-                    || weap_brand == SPWPN_DISRUPTION)))
+                    || weap_brand == SPWPN_DISRUPTION
+                    || (you.inv[item_slot].base_type == OBJ_WEAPONS
+                         && you.inv[item_slot].sub_type == WPN_BLESSED_BLADE))))
         {
             mpr("This weapon will not allow you to wield it.");
             you.turn_is_over = 1;
@@ -2559,7 +2561,7 @@ static bool affix_weapon_enchantment( void )
     return (success);
 }
 
-static bool enchant_weapon( int which_stat, bool quiet )
+bool enchant_weapon( int which_stat, bool quiet )
 {
     const int wpn = you.equip[ EQ_WEAPON ];
     bool affected = true;
@@ -2982,7 +2984,7 @@ void read_scroll(void)
         // is only naughty if you know you're doing it
         if (get_ident_type( OBJ_SCROLLS, SCR_TORMENT ) == ID_KNOWN_TYPE)
         {
-            naughty(NAUGHTY_UNHOLY, 10);
+            did_god_conduct(DID_UNHOLY, 10);
         }
         break;
 

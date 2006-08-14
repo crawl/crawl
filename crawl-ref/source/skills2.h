@@ -23,7 +23,7 @@
 /* ***********************************************************************
  * called from: chardump - it_use3 - itemname - skills
  * *********************************************************************** */
-const char *skill_name(unsigned char which_skill);
+const char *skill_name(int which_skill);
 
 
 // last_updated 24may2000 {dlb}
@@ -46,7 +46,7 @@ const char *player_title( void );
  * called from: acr - chardump - effects - files - player - skills -
  *              skills2 - stuff
  * *********************************************************************** */
-unsigned char best_skill(unsigned char min_skill, unsigned char max_skill, unsigned char excl_skill);
+int best_skill(int min_skill, int max_skill, int excl_skill = -1);
 
 void init_skill_order( void );
 

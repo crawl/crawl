@@ -26,6 +26,7 @@
 
 #include "debug.h"
 #include "delay.h"
+#include "food.h"
 #include "invent.h"
 #include "itemname.h"
 #include "items.h"
@@ -434,7 +435,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     {0,
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
-     SPELL_ORB_OF_ELECTROCUTION,        // XXX: chain lightning?
+     SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
      SPELL_FIRE_STORM,
@@ -513,7 +514,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 
     // 40 - Book of Earth
     {0,
-     SPELL_MAXWELLS_SILVER_HAMMER,
+     // SPELL_MAXWELLS_SILVER_HAMMER,
      SPELL_MAGIC_MAPPING,
      SPELL_DIG,
      SPELL_STATUE_FORM,
@@ -1423,7 +1424,7 @@ bool learn_spell(void)
     you.turn_is_over = 1;
     redraw_screen();
 
-    naughty( NAUGHTY_SPELLCASTING, 2 + random2(5) );
+    did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
 
     return (true);
 }                               // end which_spell()
@@ -1457,7 +1458,7 @@ int staff_spell( int staff )
 {
     int spell;
     unsigned char specspell;
-    int mana, diff;
+    int mana, diff, food, energy;
     FixedVector< int, SPELLBOOK_SIZE >  spell_list;
 
     // converting sub_type into book index type
@@ -1468,8 +1469,8 @@ int staff_spell( int staff )
     const int powc = 5 + you.skills[SK_EVOCATIONS] 
                        + roll_dice( 2, you.skills[SK_EVOCATIONS] ); 
 
-    if (you.inv[staff].sub_type < STAFF_SMITING
-        || you.inv[staff].sub_type >= STAFF_AIR)
+    const int staff_type = you.inv[staff].sub_type;
+    if (staff_type < STAFF_SMITING || staff_type >= STAFF_AIR)
     {
         //mpr("That staff has no spells in it.");
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1529,13 +1530,36 @@ int staff_spell( int staff )
     if (specspell == SPELL_NO_SPELL)
         goto whattt;
 
-    mana = spell_mana( specspell );
+    mana = spell_mana( specspell ) * ROD_CHARGE_MULT;
     diff = spell_difficulty( specspell );
+    food = spell_hunger( specspell );
 
-    if (you.magic_points < mana || you.experience_level < diff)
+    if (food && (you.is_undead != US_UNDEAD
+            && (you.hunger_state < HS_HUNGRY || you.hunger <= food)))
     {
-        mpr("Your brain hurts!");
-        confuse_player( 2 + random2(4) );
+        mpr("You don't have the energy to cast that spell.");
+        return (0);
+    }
+
+    if (staff_type == STAFF_STRIKING)
+        mana /= ROD_CHARGE_MULT;
+
+    if ((staff_type == STAFF_STRIKING? 
+                you.magic_points < mana
+              : you.inv[staff].plus < mana)
+            || you.experience_level < diff)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf("Mana needed: %d, Staff plus: %d, Difficulty: %d, XP: %d",
+                mana, you.inv[staff].plus, diff, you.experience_level);
+#endif
+        if (you.experience_level < diff)
+            mprf("You need to be at least level %d to use that.", diff);
+        else
+            mprf("%s have enough magic points.", 
+                staff_type == STAFF_STRIKING? "You don't" : "The rod doesn't");
+
+        // confuse_player( 2 + random2(4) );
         you.turn_is_over = 1;
         return (0);
     }
@@ -1548,8 +1572,28 @@ int staff_spell( int staff )
     // exercise_spell(specspell, true, true);
 
     your_spells(specspell, powc, false);
+    
 
-    dec_mp(spell_mana(specspell));
+    // [dshaligram] 
+    // dec_mp(spell_mana(specspell));
+    if (staff_type != STAFF_STRIKING)
+        you.inv[staff].plus -= mana;
+    else {
+        you.magic_points -= mana;
+        you.redraw_magic_points = true;
+    }
+
+    energy = player_energy();
+    if (energy <= 0 && you.is_undead != US_UNDEAD)
+    {
+        food -= 10 * you.skills[SK_EVOCATIONS];
+        if (food < diff * 5)
+            food = diff * 5;
+
+        make_hungry( food, true );
+    }
+
+    you.wield_change = true;
 
     you.turn_is_over = 1;
 

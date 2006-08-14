@@ -131,5 +131,8 @@ void weird_writing(char stringy[40]);
  * *********************************************************************** */
 unsigned char trap_category(unsigned char trap_type);
 
+bool grid_destroys_items( unsigned char grid );
+
+const char *grid_item_destruction_message( unsigned char grid );
 
 #endif

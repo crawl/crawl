@@ -130,4 +130,6 @@ bool puton_item(int slot, bool prompt_finger = true);
 
 int armour_equip_slot(const item_def &item);
 
+bool enchant_weapon( int which_stat, bool quiet = false );
+
 #endif

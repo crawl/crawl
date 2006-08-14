@@ -29,6 +29,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "itemname.h"
 #include "items.h"
@@ -112,13 +113,78 @@ unsigned char detect_items( int pow )
     return (items_found);
 }                               // end detect_items()
 
+static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf("dc_fuzz: Power is %d", pow);
+#endif
+
+    if (pow < 1)
+        pow = 1;
+
+    *fuzz_radius = pow >= 50? 1 : 2;
+
+    // Fuzz chance starts off at 100% and declines to a low of 10% for obscenely
+    // powerful castings (pow caps around the 60 mark).
+    *fuzz_chance = 100 - 90 * (pow - 1) / 59;
+    if (*fuzz_chance < 10)
+        *fuzz_chance = 10;
+}
+
+static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
+        int fuzz_chance, int fuzz_radius)
+{
+    if (fuzz_radius && fuzz_chance > random2(100))
+    {
+        const int fuzz_diam = 2 * fuzz_radius + 1;
+
+        int gx, gy;
+        bool found_good = false;
+        for (int itry = 0; itry < 5; ++itry)
+        {
+            gx = gridx + random2(fuzz_diam) - fuzz_radius;
+            gy = gridy + random2(fuzz_diam) - fuzz_radius;
+
+            if (in_map_grid(gx, gy) && !feat_blocks_movement(grd[gx][gy]))
+            {
+                found_good = true;
+                break;
+            }
+        }
+
+        if (found_good)
+        {
+            gridx = gx;
+            gridy = gy;
+        }
+    }
+
+    const int envx = gridx - 1,
+              envy = gridy - 1;
+
+    unsigned short flags = env.map[envx][envy];
+    flags = !flags || (flags & ENVF_DETECTED)?
+                ENVF_DETECTED
+              : 0;
+
+    env.map[envx][envy] = 
+        mons_char( mon->type ) | ENVF_DETECT_MONS | flags;
+}
+
 unsigned char detect_creatures( int pow )
 {
+    int fuzz_radius = 0, fuzz_chance = 0;
+    fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
+
     if (pow > 50)
         pow = 50;
 
     unsigned char creatures_found = 0;
     const int     map_radius = 8 + random2(8) + pow;
+
+    // Clear the map so detect creatures is more useful and the detection
+    // fuzz is harder to analyse by averaging.
+    clear_map();
 
     mpr("You detect creatures!");
 
@@ -132,19 +198,12 @@ unsigned char detect_creatures( int pow )
             if (mgrd[i][j] != NON_MONSTER)
             {
                 struct monsters *mon = &menv[ mgrd[i][j] ];
-
-                unsigned short flags = env.map[i - 1][j - 1];
-                flags = !flags || (flags & ENVF_DETECTED)?
-                            ENVF_DETECTED
-                          : 0;
-
-                env.map[i - 1][j - 1] = 
-                    mons_char( mon->type ) | ENVF_DETECT_MONS | flags;
+                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
                 // Assuming that highly intelligent spellcasters can
                 // detect scyring. -- bwr
                 if (mons_intel( mon->type ) == I_HIGH
-                    && mons_flag( mon->type, M_SPELLCASTER ))
+                    && mons_class_flag( mon->type, M_SPELLCASTER ))
                 {
                     behaviour_event( mon, ME_DISTURB, MHITYOU, 
                                      you.x_pos, you.y_pos );
@@ -707,11 +766,12 @@ void turn_undead(int pow)
     }                           // end "for tu"
 }                               // end turn_undead()
 
-void holy_word(int pow)
+void holy_word(int pow, bool silent)
 {
     struct monsters *monster;
 
-    mpr("You speak a Word of immense power!");
+    if (!silent)
+        mpr("You speak a Word of immense power!");
 
     // doubt this will ever happen, but it's here as a safety -- bwr
     if (pow > 300)
@@ -859,7 +919,7 @@ void cast_refrigeration(int pow)
                     print_wounds(monster);
 
                     //jmf: "slow snakes" finally available
-                    if (mons_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                    if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
                         mons_add_ench(monster, ENCH_SLOW);
                 }
             }
@@ -1082,7 +1142,7 @@ char burn_freeze(int pow, char flavour)
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
                     mons_add_ench(monster, ENCH_SLOW);
 
                 const int cold_res = mons_res_cold( monster );
@@ -1314,10 +1374,10 @@ void summon_scorpions(int pow)
     }
 }                               // end summon_scorpions()
 
-void summon_ice_beast_etc(int pow, int ibc)
+void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = ENCH_ABJ_II + (random2(pow) / 4);
-    int beha = BEH_FRIENDLY;
+    int beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
 
     if (numsc > ENCH_ABJ_VI)
         numsc = ENCH_ABJ_VI;

@@ -102,7 +102,7 @@ void special_wielded(void)
                      (temp_rand == 29) ? "speaks gibberish." :
                      (temp_rand == 30) ? "raves incoherently."
                                        : "yells in some weird language.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;
 
@@ -143,7 +143,7 @@ void special_wielded(void)
         if (one_chance_in(200))
         {
             torment( you.x_pos, you.y_pos );
-            naughty( NAUGHTY_UNHOLY, 1 );
+            did_god_conduct( DID_UNHOLY, 1 );
         }
         break;
 
@@ -153,7 +153,7 @@ void special_wielded(void)
         if (one_chance_in(5))
         {
             animate_dead( 1 + random2(3), BEH_HOSTILE, MHITYOU, 1 );
-            naughty( NAUGHTY_NECROMANCY, 1 );
+            did_god_conduct( DID_NECROMANCY, 1 );
         }
         break;
 
@@ -185,7 +185,7 @@ void special_wielded(void)
 
         if (random2(8) <= player_spec_death())
         {
-            naughty( NAUGHTY_NECROMANCY, 1 );
+            did_god_conduct( DID_NECROMANCY, 1 );
             create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
         }
@@ -199,7 +199,7 @@ void special_wielded(void)
             in_name(wpn, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
             strcat(info, " lets out a weird humming sound.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;                  // to noisy() call at foot 2apr2000 {dlb}
 
@@ -209,18 +209,18 @@ void special_wielded(void)
             in_name(wpn, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
             strcat(info, " chimes like a gong.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;
 
     case SPWLD_BECKON:
         if (makes_noise)
-            mpr("You hear a voice call your name.");
+            mpr("You hear a voice call your name.", MSGCH_SOUND);
         break;
 
     case SPWLD_SHOUT:
         if (makes_noise)
-            mpr("You hear a shout.");
+            mpr("You hear a shout.", MSGCH_SOUND);
         break;
 
     //case SPWLD_PRUNE:

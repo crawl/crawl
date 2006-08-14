@@ -1648,6 +1648,7 @@ void init_player(void)
     {
         you.penance[i] = 0;
         you.worshipped[i] = 0;
+        you.num_gifts[i] = 0;
     }
 
     ghost.name[0] = '\0';

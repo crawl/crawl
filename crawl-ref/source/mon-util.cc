@@ -143,11 +143,20 @@ void mons_init(FixedVector < unsigned short, 1000 > &colour)
     //return (monsterentry *) 0; // return value should not matter here {dlb}
 }                               // end mons_init()
 
+unsigned long mons_class_resist(int mc)
+{
+    return (smc->resists);
+}
 
-int mons_flag(int mc, int bf)
+unsigned long mons_class_resist(int mc, unsigned long flags)
+{
+    return (smc->resists & flags);
+}
+
+bool mons_class_flag(int mc, int bf)
 {
     return ((smc->bitfields & bf) != 0);
-}                               // end mons_flag()
+}                               // end mons_class_flag()
 
 static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
 {
@@ -181,6 +190,10 @@ static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
     return (ret);
 }
 
+int mons_holiness(const monsters *mons)
+{
+    return (mons_holiness(mons->type));
+}
 
 int mons_holiness(int mc)
 {
@@ -430,11 +443,10 @@ int mons_res_elec( struct monsters *mon )
         return (ghost.values[ GVAL_RES_ELEC ]);
 
     /* this is a variable, not a player_xx() function, so can be above 1 */
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0;
 
-    // of course it makes no sense setting them both :)
-    if (f & M_RES_ELEC)
-        u++;                    //if(f&M_ED_ELEC) u--;
+    if (mons_class_resist(MR_RES_ELEC))
+        u++;
 
     // don't bother checking equipment if the monster can't use it
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -458,12 +470,12 @@ int mons_res_poison( struct monsters *mon )
 {
     int mc = mon->type;
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = mons_class_resist(mc);
 
-    if (f & M_RES_POISON)
+    if (f & MR_RES_POISON)
         u++;
 
-    if (f & M_ED_POISON)
+    if (f & MR_VUL_POISON)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -498,18 +510,18 @@ int mons_res_fire( struct monsters *mon )
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_FIRE ]);
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = mons_class_resist(mc);
 
     // no Big Prize (tm) here either if you set all three flags. It's a pity uh?
     //
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour
     // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & M_RES_HELLFIRE)
+    if (f & MR_RES_HELLFIRE)
         u += 3;
-    else if (f & M_RES_FIRE)
+    else if (f & MR_RES_FIRE)
         u += 2;
-    else if (f & M_ED_FIRE)
+    else if (f & MR_VUL_FIRE)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -546,14 +558,14 @@ int mons_res_cold( struct monsters *mon )
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_COLD ]);
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = mons_class_resist(mc);
 
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour
     // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & M_RES_COLD)
+    if (f & MR_RES_COLD)
         u += 2;
-    else if (f & M_ED_COLD)
+    else if (f & MR_VUL_COLD)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -690,10 +702,10 @@ int exper_value( struct monsters *monster )
     const int  item_usage  = mons_itemuse(mclass);
 
     // XXX: shapeshifters can qualify here, even though they can't cast:
-    const bool spellcaster = mons_flag( mclass, M_SPELLCASTER );
+    const bool spellcaster = mons_class_flag( mclass, M_SPELLCASTER );
 
     // early out for no XP monsters
-    if (mons_flag(mclass, M_NO_EXP_GAIN))
+    if (mons_class_flag(mclass, M_NO_EXP_GAIN))
         return (0);
 
     // These undead take damage to maxhp, so we use only HD. -- bwr
@@ -1301,7 +1313,7 @@ bool mons_is_stabbable(struct monsters *m)
 {
     // Make sure oklob plants are never highlighted. That'll defeat the
     // point of making them look like normal plants.
-    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
                 && !mons_friendly(m)
                 && m->behaviour == BEH_SLEEP);
@@ -1309,12 +1321,12 @@ bool mons_is_stabbable(struct monsters *m)
 
 bool mons_maybe_stabbable(struct monsters *m)
 {
-    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
                 && !mons_friendly(m)
                 && ((m->foe != MHITYOU && !testbits(m->flags, MF_BATTY))
                     || (mons_has_ench(m, ENCH_CONFUSION) &&
-                            !mons_flag(m->type, M_CONFUSED))
+                            !mons_class_flag(m->type, M_CONFUSED))
                     || m->behaviour == BEH_FLEE));
 }
 
@@ -1474,7 +1486,7 @@ int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
     if (ench == ENCH_INVIS)
     {
         // invisible monsters stay invisible
-        if (mons_flag(mon->type, M_INVIS))
+        if (mons_class_flag(mon->type, M_INVIS))
         {
             mon->enchantment[p] = ENCH_INVIS;
         }
@@ -1902,7 +1914,7 @@ bool mons_has_ranged_spell( struct monsters *mon )
 {
     const int  mclass = mon->type;
 
-    if (mons_flag( mclass, M_SPELLCASTER ))
+    if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
         const int  msecc = ((mclass == MONS_HELLION) ? MST_BURNING_DEVIL :
                   (mclass == MONS_PANDEMONIUM_DEMON) ? MST_GHOST

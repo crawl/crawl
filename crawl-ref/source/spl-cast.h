@@ -14,7 +14,7 @@
 
 char list_spells( void );
 int spell_fail( int spell );
-int calc_spell_power( int spell, bool apply_intel );
+int calc_spell_power( int spell, bool apply_intel, bool fail_rate_chk = false );
 int spell_enhancement( unsigned int typeflags );
 
 // last updaetd 12may2000 {dlb}

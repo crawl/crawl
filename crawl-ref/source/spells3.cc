@@ -877,12 +877,12 @@ bool project_noise(void)
         if (!silenced( you.x_pos, you.y_pos ))
         {
             if (!success)
-                mpr("You hear a dull thud.");
+                mpr("You hear a dull thud.", MSGCH_SOUND);
             else
             {
                 snprintf( info, INFO_SIZE, "You hear a %svoice call your name.",
                           (see_grid( plox[0], plox[1] ) ? "distant " : "") );
-                mpr( info );
+                mpr( info , MSGCH_SOUND );
             }
         }
     }

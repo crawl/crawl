@@ -962,6 +962,10 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "A terrible weapon, forged in the fires of Hell. ";
                 break;
 
+            case WPN_BLESSED_BLADE:
+                description += "A blade blessed by the Shining One. ";
+                break;
+
             case WPN_DEMON_WHIP:
                 description += "A terrible weapon, woven "
                     "in the depths of the inferno. ";
@@ -2845,11 +2849,12 @@ static std::string describe_staff( const item_def &item )
             description +=
                 "allows its wielder to smite foes from afar. The wielder "
                 "must be at least level four to safely use this ability, "
-                "which costs 4 magic points. ";
+                "which drains four charges. ";
             break;
 
         case STAFF_STRIKING:
-            description += "allows its wielder to strike foes from afar. ";
+            description += "allows its wielder to strike foes from afar "
+                "with force bolts. ";
             break;
 
         case STAFF_SPELL_SUMMONING:
@@ -2893,8 +2898,11 @@ static std::string describe_staff( const item_def &item )
 
         if (item_is_rod( item ))
         {
-            description +=
-                "Casting a spell from it consumes no food, and will not fail.$";
+            if (item.sub_type != STAFF_STRIKING)
+                description += 
+                    "$$It uses its own mana reservoir for casting spells, and "
+                    "recharges automatically by channeling mana from its "
+                    "wielder.";
         }
         else
         {
@@ -4369,6 +4377,11 @@ void describe_spell(int spelled)
         description += "allows the conjurer to create ball lightning.  "
                         "Using the spell is not without risk - ball lighting "
                         "can be difficult to control. ";
+        break;
+
+    case SPELL_CHAIN_LIGHTNING:
+        description += "releases a massive electrical discharge that "
+                       "arcs from target to target until it grounds out.";
         break;
 
     case SPELL_TWIST:
@@ -6062,7 +6075,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
 #if DEBUG_DIAGNOSTICS
 
-    if (mons_flag( menv[ which_mons ].type, M_SPELLCASTER ))
+    if (mons_class_flag( menv[ which_mons ].type, M_SPELLCASTER ))
     {
         int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
                                MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };

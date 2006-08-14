@@ -200,6 +200,11 @@ int spell_levels_required( int which_spell )
     return (levels);
 }
 
+unsigned int get_spell_flags( int which_spell )
+{
+    return (seekspell(which_spell)->flags);
+}
+
 bool spell_typematch(int which_spell, unsigned int which_discipline)
 {
     return (seekspell(which_spell)->disciplines & which_discipline);

@@ -39,6 +39,7 @@
 #include "food.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "item_use.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -46,6 +47,7 @@
 #include "newgame.h"
 #include "ouch.h"
 #include "player.h"
+#include "randart.h"
 #include "shopping.h"
 #include "skills2.h"
 #include "spells1.h"
@@ -53,6 +55,7 @@
 #include "spells3.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "wpn-misc.h"
 
 const char *sacrifice[] = {
     " glows silver and disappears.",
@@ -115,9 +118,25 @@ static void inc_gift_timeout(int val)
         you.gift_timeout += val;
 }                               // end inc_gift_timeout()
 
+static int random_undead_servant(int religion)
+{
+    // error trapping {dlb}
+    int thing_called = MONS_PROGRAM_BUG;
+    int temp_rand = random2(100);
+    thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
+                    (temp_rand > 52) ? MONS_WIGHT :             // 12%
+                    (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
+                    (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
+                    (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
+                    (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
+                    (temp_rand > 10) ? MONS_GHOUL :             //  6%
+                    (temp_rand >  4) ? MONS_MUMMY               //  6%
+                                     : MONS_FLAYED_GHOST);      //  5%
+    return (thing_called);
+}
+
 void pray(void)
 {
-    int            temp_rand = 0;
     unsigned char  was_praying = you.duration[DUR_PRAYER];
     bool           success = false;
 
@@ -226,181 +245,104 @@ void pray(void)
     if (!you.penance[you.religion] && !you.gift_timeout && !was_praying)
     {
         //   Remember to check for water/lava
-        //jmf: "good" god will sometimes feed you (a la Nethack)
-        if (you.religion == GOD_ZIN 
-            && you.hunger_state == HS_STARVING
-            && random2(250) <= you.piety)
+        switch (you.religion)
         {
-            god_speaks(you.religion, "Your stomach feels content.");
-            set_hunger(6000, true);
-            lose_piety(5 + random2avg(10, 2));
-            inc_gift_timeout(30 + random2avg(10, 2));
-            return;
-        }
+        default:
+            break;
 
-        if (you.religion == GOD_NEMELEX_XOBEH
-            && random2(200) <= you.piety
-            && (!you.attribute[ATTR_CARD_TABLE] || one_chance_in(3))
-            && !you.attribute[ATTR_CARD_COUNTDOWN]
-            && grd[you.x_pos][you.y_pos] != DNGN_LAVA
-            && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER)
-        {
-            int thing_created = NON_ITEM;
-            unsigned char gift_type = MISC_DECK_OF_TRICKS;
-
-            if (!you.attribute[ATTR_CARD_TABLE])
+        case GOD_ZIN:
+            //jmf: "good" god will sometimes feed you (a la Nethack)
+            if (you.hunger_state == HS_STARVING
+                && random2(250) <= you.piety)
             {
-                thing_created = items( 1, OBJ_MISCELLANY,
-                                       MISC_PORTABLE_ALTAR_OF_NEMELEX, 
-                                       true, 1, 250 );
+                god_speaks(you.religion, "Your stomach feels content.");
+                set_hunger(6000, true);
+                lose_piety(5 + random2avg(10, 2));
+                inc_gift_timeout(30 + random2avg(10, 2));
+            }
+            break;
+
+        case GOD_NEMELEX_XOBEH:
+            if (random2(200) <= you.piety
+                && (!you.attribute[ATTR_CARD_TABLE] || one_chance_in(3))
+                && !you.attribute[ATTR_CARD_COUNTDOWN]
+                && !grid_destroys_items(grd[you.x_pos][you.y_pos]))
+            {
+                int thing_created = NON_ITEM;
+                unsigned char gift_type = MISC_DECK_OF_TRICKS;
+
+                if (!you.attribute[ATTR_CARD_TABLE])
+                {
+                    thing_created = items( 1, OBJ_MISCELLANY,
+                                           MISC_PORTABLE_ALTAR_OF_NEMELEX, 
+                                           true, 1, 250 );
+
+                    if (thing_created != NON_ITEM)
+                        you.attribute[ATTR_CARD_TABLE] = 1;
+                }
+                else
+                {
+                    if (random2(200) <= you.piety && one_chance_in(4))
+                        gift_type = MISC_DECK_OF_SUMMONINGS;
+                    if (random2(200) <= you.piety && coinflip())
+                        gift_type = MISC_DECK_OF_WONDERS;
+                    if (random2(200) <= you.piety && one_chance_in(4))
+                        gift_type = MISC_DECK_OF_POWER;
+
+                    thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
+                                           true, 1, 250 );
+                }
 
                 if (thing_created != NON_ITEM)
-                    you.attribute[ATTR_CARD_TABLE] = 1;
-            }
-            else
-            {
-                if (random2(200) <= you.piety && one_chance_in(4))
-                    gift_type = MISC_DECK_OF_SUMMONINGS;
-                if (random2(200) <= you.piety && coinflip())
-                    gift_type = MISC_DECK_OF_WONDERS;
-                if (random2(200) <= you.piety && one_chance_in(4))
-                    gift_type = MISC_DECK_OF_POWER;
-
-                thing_created = items( 1, OBJ_MISCELLANY, gift_type, 
-                                       true, 1, 250 );
-            }
-
-            if (thing_created != NON_ITEM)
-            {
-                move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-                origin_acquired(mitm[thing_created], you.religion);
-                
-                simple_god_message(" grants you a gift!");
-                more();
-                canned_msg(MSG_SOMETHING_APPEARS);
-
-                you.attribute[ATTR_CARD_COUNTDOWN] = 10;
-                inc_gift_timeout(5 + random2avg(9, 2));
-            }
-        }
-
-        if ((you.religion == GOD_OKAWARU || you.religion == GOD_TROG)
-            && you.piety > 130
-            && random2(you.piety) > 120
-            && grd[you.x_pos][you.y_pos] != DNGN_LAVA
-            && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER
-            && one_chance_in(4))
-        {
-            if (you.religion == GOD_TROG 
-                || (you.religion == GOD_OKAWARU && coinflip()))
-            {
-                success = acquirement(OBJ_WEAPONS, you.religion);
-            }
-            else
-            {
-                success = acquirement(OBJ_ARMOUR, you.religion);
-            }
-
-            if (success)
-            {
-                simple_god_message(" has granted you a gift!");
-                more();
-
-                inc_gift_timeout(30 + random2avg(19, 2));
-            }
-        }
-
-        if (you.religion == GOD_YREDELEMNUL
-            && random2(you.piety) > 80 && one_chance_in(5))
-        {
-            int thing_called = MONS_PROGRAM_BUG;  // error trapping {dlb}
-
-            temp_rand = random2(100);
-            thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                            (temp_rand > 52) ? MONS_WIGHT :             // 12%
-                            (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 16%
-                            (temp_rand > 31) ? MONS_ROTTING_HULK :      //  9%
-                            (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  8%
-                            (temp_rand > 16) ? MONS_VAMPIRE :           //  7%
-                            (temp_rand > 10) ? MONS_GHOUL :             //  6%
-                            (temp_rand >  4) ? MONS_MUMMY               //  6%
-                                             : MONS_FLAYED_GHOST);      //  5%
-
-            if (create_monster( thing_called, 0, BEH_FRIENDLY, 
-                                you.x_pos, you.y_pos, 
-                                you.pet_target, 250 ) != -1)
-            {
-                simple_god_message(" grants you an undead servant!");
-                more();
-                inc_gift_timeout(4 + random2avg(7, 2));
-            }
-        }
-
-        if ((you.religion == GOD_KIKUBAAQUDGHA
-                || you.religion == GOD_SIF_MUNA
-                || you.religion == GOD_VEHUMET)
-            && you.piety > 160 && random2(you.piety) > 100)
-        {
-            unsigned int gift = NUM_BOOKS;
-
-            switch (you.religion)
-            {
-            case GOD_KIKUBAAQUDGHA:     // gives death books
-                if (!you.had_book[BOOK_NECROMANCY])
-                    gift = BOOK_NECROMANCY;
-                else if (!you.had_book[BOOK_DEATH])
-                    gift = BOOK_DEATH;
-                else if (!you.had_book[BOOK_UNLIFE])
-                    gift = BOOK_UNLIFE;
-                else if (!you.had_book[BOOK_NECRONOMICON])
-                    gift = BOOK_NECRONOMICON;
-                break;
-
-            case GOD_SIF_MUNA:
-                gift = OBJ_RANDOM;      // Sif Muna - gives any
-                break;
-
-            // Vehumet - gives conj/summ. books (higher skill first)
-            case GOD_VEHUMET:
-                if (!you.had_book[BOOK_CONJURATIONS_I])
-                    gift = give_first_conjuration_book();
-                else if (!you.had_book[BOOK_POWER])
-                    gift = BOOK_POWER;
-                else if (!you.had_book[BOOK_ANNIHILATIONS])
-                    gift = BOOK_ANNIHILATIONS;  // conj books
-
-                if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
-                    || gift == NUM_BOOKS)
                 {
-                    if (!you.had_book[BOOK_CALLINGS])
-                        gift = BOOK_CALLINGS;
-                    else if (!you.had_book[BOOK_SUMMONINGS])
-                        gift = BOOK_SUMMONINGS;
-                    else if (!you.had_book[BOOK_DEMONOLOGY])
-                        gift = BOOK_DEMONOLOGY; // summoning bks
+                    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+                    origin_acquired(mitm[thing_created], you.religion);
+                    
+                    simple_god_message(" grants you a gift!");
+                    more();
+                    canned_msg(MSG_SOMETHING_APPEARS);
+
+                    you.attribute[ATTR_CARD_COUNTDOWN] = 10;
+                    inc_gift_timeout(5 + random2avg(9, 2));
+                    you.num_gifts[you.religion]++;
+                }
+            }
+            break;
+        
+        case GOD_OKAWARU:
+            if (you.piety > 80
+                && random2( you.piety ) > 70
+                && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
+                && one_chance_in(4)
+                && you.skills[ best_skill(SK_SLINGS, SK_THROWING) ] >= 3)
+            {
+                success = acquirement( OBJ_MISSILES, you.religion );
+                if (success)
+                {
+                    simple_god_message( " has granted you a gift!" );
+                    more();
+
+                    inc_gift_timeout( 4 + roll_dice(2,4) );
+                    you.num_gifts[ you.religion ]++;
                 }
                 break;
             }
-
-            if (gift != NUM_BOOKS
-                && (grd[you.x_pos][you.y_pos] != DNGN_LAVA
-                    && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER))
+            // intentional fall through
+            
+        case GOD_TROG:
+            if (you.piety > 130
+                && random2(you.piety) > 120
+                && !grid_destroys_items(grd[you.x_pos][you.y_pos])
+                && one_chance_in(4))
             {
-                if (gift == OBJ_RANDOM)
-                    success = acquirement(OBJ_BOOKS, you.religion);
+                if (you.religion == GOD_TROG 
+                    || (you.religion == GOD_OKAWARU && coinflip()))
+                {
+                    success = acquirement(OBJ_WEAPONS, you.religion);
+                }
                 else
                 {
-                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 250);
-                    if (thing_created == NON_ITEM)
-                        return;
-
-                    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-
-                    if (thing_created != NON_ITEM)
-                    {
-                        success = true;
-                        origin_acquired(mitm[thing_created], you.religion);
-                    }
+                    success = acquirement(OBJ_ARMOUR, you.religion);
                 }
 
                 if (success)
@@ -408,15 +350,112 @@ void pray(void)
                     simple_god_message(" has granted you a gift!");
                     more();
 
-                    inc_gift_timeout(40 + random2avg(19, 2));
+                    inc_gift_timeout(30 + random2avg(19, 2));
+                    you.num_gifts[ you.religion ]++;
+                }
+            }
+            break;
+
+        case GOD_YREDELEMNUL:
+            if (random2(you.piety) > 80 && one_chance_in(5))
+            {
+                int thing_called = random_undead_servant(GOD_YREDELEMNUL);
+                if (create_monster( thing_called, 0, BEH_FRIENDLY, 
+                                    you.x_pos, you.y_pos, 
+                                    you.pet_target, 250 ) != -1)
+                {
+                    simple_god_message(" grants you an undead servant!");
+                    more();
+                    inc_gift_timeout(4 + random2avg(7, 2));
+                    you.num_gifts[you.religion]++;
+                }
+            }
+            break;
+
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_SIF_MUNA:
+        case GOD_VEHUMET:
+            if (you.piety > 160 && random2(you.piety) > 100)
+            {
+                unsigned int gift = NUM_BOOKS;
+
+                switch (you.religion)
+                {
+                case GOD_KIKUBAAQUDGHA:     // gives death books
+                    if (!you.had_book[BOOK_NECROMANCY])
+                        gift = BOOK_NECROMANCY;
+                    else if (!you.had_book[BOOK_DEATH])
+                        gift = BOOK_DEATH;
+                    else if (!you.had_book[BOOK_UNLIFE])
+                        gift = BOOK_UNLIFE;
+                    else if (!you.had_book[BOOK_NECRONOMICON])
+                        gift = BOOK_NECRONOMICON;
+                    break;
+
+                case GOD_SIF_MUNA:
+                    gift = OBJ_RANDOM;      // Sif Muna - gives any
+                    break;
+
+                // Vehumet - gives conj/summ. books (higher skill first)
+                case GOD_VEHUMET:
+                    if (!you.had_book[BOOK_CONJURATIONS_I])
+                        gift = give_first_conjuration_book();
+                    else if (!you.had_book[BOOK_POWER])
+                        gift = BOOK_POWER;
+                    else if (!you.had_book[BOOK_ANNIHILATIONS])
+                        gift = BOOK_ANNIHILATIONS;  // conj books
+
+                    if (you.skills[SK_CONJURATIONS] < 
+                                    you.skills[SK_SUMMONINGS]
+                        || gift == NUM_BOOKS)
+                    {
+                        if (!you.had_book[BOOK_CALLINGS])
+                            gift = BOOK_CALLINGS;
+                        else if (!you.had_book[BOOK_SUMMONINGS])
+                            gift = BOOK_SUMMONINGS;
+                        else if (!you.had_book[BOOK_DEMONOLOGY])
+                            gift = BOOK_DEMONOLOGY; // summoning bks
+                    }
+                    break;
                 }
 
+                if (gift != NUM_BOOKS
+                    && (grd[you.x_pos][you.y_pos] != DNGN_LAVA
+                        && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER))
+                {
+                    if (gift == OBJ_RANDOM)
+                        success = acquirement(OBJ_BOOKS, you.religion);
+                    else
+                    {
+                        int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 250);
+                        if (thing_created == NON_ITEM)
+                            return;
 
-                // Vehumet gives books less readily
-                if (you.religion == GOD_VEHUMET && success)
-                    inc_gift_timeout(10 + random2(10));
-            }                   // end of giving book
-        }                       // end of book gods
+                        move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+
+                        if (thing_created != NON_ITEM)
+                        {
+                            success = true;
+                            origin_acquired(mitm[thing_created], you.religion);
+                        }
+                    }
+
+                    if (success)
+                    {
+                        simple_god_message(" has granted you a gift!");
+                        more();
+
+                        inc_gift_timeout(40 + random2avg(19, 2));
+                        you.num_gifts[ you.religion ]++;
+                    }
+
+                    // Vehumet gives books less readily
+                    if (you.religion == GOD_VEHUMET && success)
+                        inc_gift_timeout(10 + random2(10));
+                }                   // end of giving book
+            }                       // end of book gods
+            break;
+        } 
     }                           // end of gift giving
 }                               // end pray()
 
@@ -939,154 +978,367 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
         goto okay_try_again;
 }                               // end Xom_acts()
 
-void done_good(char thing_done, int pgain)
+// This function is the merger of done_good() and naughty().
+// Returns true if god was interested (good or bad) in conduct.
+bool did_god_conduct( int thing_done, int level )
 {
-    if (you.religion == GOD_NO_GOD)
-        return;
+    bool ret = false;
+    int piety_change = 0;
+    int penance = 0;
+
+    if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
+        return (false);
 
     switch (thing_done)
     {
-    case GOOD_KILLED_LIVING:
-        switch (you.religion)
-        {
-        case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
-            naughty(NAUGHTY_KILLING, 10);
-            break;
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_VEHUMET:
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-            simple_god_message(" accepts your kill.");
-            if (random2(18 + pgain) > 5)
-                gain_piety(1);
-            break;
-        }
-        break;
-
-    case GOOD_KILLED_UNDEAD:
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_OKAWARU:
-            simple_god_message(" accepts your kill.");
-            if (random2(18 + pgain) > 4)
-                gain_piety(1);
-            break;
-        }
-        break;
-
-    case GOOD_KILLED_DEMON:
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_OKAWARU:
-            simple_god_message(" accepts your kill.");
-            if (random2(18 + pgain) > 3)
-                gain_piety(1);
-            break;
-        }
-        break;
-
-    case GOOD_KILLED_ANGEL_I:
-    case GOOD_KILLED_ANGEL_II:
+    case DID_NECROMANCY:
+    case DID_UNHOLY:
+    case DID_ATTACK_HOLY:
         switch (you.religion)
         {
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
-            naughty(NAUGHTY_ATTACK_HOLY, (you.conf ? 3 : pgain * 3));
+            piety_change = -level;
+            penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
+            ret = true;
             break;
         }
         break;
 
-    case GOOD_KILLED_WIZARD:
-        // hooking this up, but is it too good?  
-        // enjoy it while you can -- bwr
-        if (you.religion == GOD_TROG) 
+    case DID_STABBING:
+    case DID_POISON:
+        if (you.religion == GOD_SHINING_ONE)
         {
-            simple_god_message( " appreciates your killing of a magic user." );
-
-            if (random2( 5 + pgain ) > 5)
-                gain_piety(1);
+            ret = true;
+            piety_change = -level;
+            penance = level * 2;
         }
         break;
 
-    case GOOD_HACKED_CORPSE:    // NB - pgain is you.experience_level (maybe)
+    case DID_ATTACK_FRIEND:
         switch (you.religion)
         {
-        // case GOD_KIKUBAAQUDGHA:
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+        case GOD_OKAWARU:
+            piety_change = -level;
+            penance = level * 3;
+            ret = true;
+            break;
+        }
+        break;
+
+    case DID_FRIEND_DIES:
+        switch (you.religion)
+        {
+        case GOD_ELYVILON:
+            penance = level;    // healer god cares more about this
+            // fall through
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_OKAWARU:
+            piety_change = -level;
+            ret = true;
+            break;
+        }
+        break;
+
+    case DID_DEDICATED_BUTCHERY:  // aka field sacrifice
+        switch (you.religion)
+        {
+        case GOD_ELYVILON:
+            simple_god_message(" did not appreciate that!");
+            ret = true;
+            piety_change = -10;
+            penance = 10;
+            break;
+
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_TROG:
             simple_god_message(" accepts your offering.");
-            if (random2(10 + pgain) > 5)
-                gain_piety(1);
-            break;
-
-        // case GOD_ZIN:
-        // case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            simple_god_message(" did not appreciate that!");
-
-            naughty(NAUGHTY_BUTCHER, 8);
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
             break;
         }
         break;
 
-    case GOOD_OFFER_STUFF:
-        simple_god_message(" is pleased with your offering.");
+    case DID_DEDICATED_KILL_LIVING:
+        switch (you.religion)
+        {
+        case GOD_ELYVILON:
+            simple_god_message(" did not appreciate that!");
+            ret = true;
+            piety_change = -level;
+            penance = level * 2;
+            break;
 
-        gain_piety(1);
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_YREDELEMNUL:
+        case GOD_OKAWARU:
+        case GOD_VEHUMET:
+        case GOD_MAKHLEB:
+        case GOD_TROG:
+            simple_god_message(" accepts your kill.");
+            ret = true;
+            if (random2(level + 18) > 5)
+                piety_change = 1;
+            break;
+        }
         break;
 
-    case GOOD_SLAVES_KILL_LIVING:
+    case DID_DEDICATED_KILL_UNDEAD:
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_OKAWARU:
+        case GOD_VEHUMET:
+        case GOD_MAKHLEB:
+            simple_god_message(" accepts your kill.");
+            ret = true;
+            if (random2(level + 18) > 4)
+                piety_change = 1;
+            break;
+        }
+        break;
+
+    case DID_DEDICATED_KILL_DEMON:  
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_OKAWARU:
+            simple_god_message(" accepts your kill.");
+            ret = true;
+            if (random2(level + 18) > 3)
+                piety_change = 1;
+            break;
+        }
+        break;
+
+    case DID_DEDICATED_KILL_WIZARD:
+        if (you.religion == GOD_TROG) 
+        {
+            // hooking this up, but is it too good?  
+            // enjoy it while you can -- bwr
+            simple_god_message(" appreciates your killing of a magic user.");
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
+        }
+        break;
+
+    // Note that Angel deaths are special, they are always noticed... 
+    // if you or any friendly kills one you'll get the credit or the blame.
+    case DID_ANGEL_KILLED_BY_SERVANT:
+    case DID_KILL_ANGEL:
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_ELYVILON:
+            level *= 3;
+            piety_change = -level;
+            penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
+            ret = true;
+            break;
+
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_YREDELEMNUL:
+        case GOD_MAKHLEB:
+            snprintf( info, INFO_SIZE, " accepts your %skill.",
+                      (thing_done == DID_KILL_ANGEL) ? "" : "collateral " );
+
+            simple_god_message( info );
+
+            ret = true;
+            if (random2(level + 18) > 2)
+                piety_change = 1;
+            break;
+        }
+        break;
+
+    // Undead slave is any friendly undead... Kiku and Yred pay attention 
+    // to the undead and both like the death of living things.
+    case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
         switch (you.religion)
         {
         case GOD_KIKUBAAQUDGHA:
         case GOD_YREDELEMNUL:
-        case GOD_VEHUMET:
             simple_god_message(" accepts your slave's kill.");
-
-            if (random2(pgain + 18) > 5)
-                gain_piety(1);
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
             break;
         }
         break;
 
-    case GOOD_SERVANTS_KILL:
+    // Servants are currently any friendly monster under Vehumet, or
+    // any god given pet for everyone else (excluding undead which are
+    // handled above).
+    case DID_LIVING_KILLED_BY_SERVANT:
         switch (you.religion)
         {
+        case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
             simple_god_message(" accepts your collateral kill.");
-
-            if (random2(pgain + 18) > 5)
-                gain_piety(1);
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
             break;
         }
         break;
 
-    case GOOD_CARDS:
+    case DID_UNDEAD_KILLED_BY_SERVANT:
         switch (you.religion)
         {
-        case GOD_NEMELEX_XOBEH:
-            gain_piety(pgain);
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+        case GOD_VEHUMET:
+        case GOD_MAKHLEB:
+            simple_god_message(" accepts your collateral kill.");
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
             break;
         }
         break;
-    // Offering at altars is covered in another function.
+
+    case DID_DEMON_KILLED_BY_SERVANT: 
+        switch (you.religion)
+        {
+        case GOD_ZIN:
+        case GOD_SHINING_ONE:
+            simple_god_message(" accepts your collateral kill.");
+            ret = true;
+            if (random2(level + 10) > 5)
+                piety_change = 1;
+            break;
+        }
+        break;
+
+    case DID_SPELL_MEMORISE:
+        if (you.religion == GOD_TROG)
+        {
+            penance = level * 10;
+            piety_change = -penance;
+            ret = true;
+        }
+        break;
+
+    case DID_SPELL_CASTING:
+        if (you.religion == GOD_TROG)
+        {
+            piety_change = -level;
+            penance = level * 5;
+            ret = true;
+        }
+        break;
+
+    case DID_SPELL_PRACTISE:    
+        // Like CAST, but for skill advancement.
+        // Level is number of skill points gained... typically 10 * exerise, 
+        // but may be more/less if the skill is at 0 (INT adjustment), or
+        // if the PC's pool is low and makes change.
+        if (you.religion == GOD_SIF_MUNA)
+        {
+            // Old curve: random2(12) <= spell-level, this is similar, 
+            // but faster at low levels (to help ease things for low level 
+            // Power averages about (level * 20 / 3) + 10 / 3 now.  Also
+            // note that spell skill practise comes just after XP gain, so
+            // magical kills tend to do both at the same time (unlike melee).
+            // This means high level spells probably work pretty much like
+            // they used to (use spell, get piety).
+            piety_change = div_rand_round( level + 10, 90 );
+            ret = true;
+        }
+        break;
+
+    case DID_CARDS:
+        if (you.religion == GOD_NEMELEX_XOBEH)
+        {
+            piety_change = level;
+            ret = true;
+        }
+        break;
+
+    case DID_STIMULANTS:                        // unused
+    case DID_EAT_MEAT:                          // unused
+    case DID_CREATED_LIFE:                      // unused
+    case DID_DEDICATED_KILL_NATURAL_EVIL:       // unused
+    case DID_NATURAL_EVIL_KILLED_BY_SERVANT:    // unused
+    case DID_SPELL_NONUTILITY:                  // unused
+    default:
+        break;
     }
-}                               // end done_good()
+
+    if (piety_change > 0)
+    {
+        // positive conduct only interesting out in the real world
+        if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
+            gain_piety( piety_change );
+        else if (one_chance_in(10))
+        {
+            simple_god_message( " says: \"Go forth into the world to show your devotion to me!\"" );
+        }
+    }
+    else 
+    {
+        const int piety_loss = -piety_change;
+
+        if (piety_loss)
+        {
+            // output guilt message:
+            mprf( "You feel%sguilty.",
+                    (piety_loss == 1) ? " a little " :
+                    (piety_loss <  5) ? " " :
+                    (piety_loss < 10) ? " very "
+                                      : " extremely " );
+
+            lose_piety( piety_loss );
+        }
+
+        if (you.piety < 1)
+            excommunication();
+        else if (penance)       // only if still in religion
+        {
+            god_speaks( you.religion, 
+                        "\"You will pay for your transgression, mortal!\"" );
+
+            inc_penance( penance );
+        }
+    }
+
+#if DEBUG_DIAGNOSTICS
+    if (ret)
+    {
+        static const char *conducts[] = 
+        {
+          "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
+          "Friend Died", "Stab", "Poison", "Field Sacrifice",
+          "Kill Living", "Kill Undead", "Kill Demon", "Kill Wizard",
+          "Kill Priest", "Kill Angel", "Undead Slave Kill Living", 
+          "Servant Kill Living", "Servant Kill Undead", 
+          "Servant Kill Demon", "Servant Kill Angel",
+          "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
+          "Cards", "Stimulants", "Eat Meat", "Create Life" 
+        };
+
+        mprf( MSGCH_DIAGNOSTICS, 
+             "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
+             conducts[thing_done], 
+             you.piety, piety_change, you.penance[you.religion], penance );
+
+    }
+#endif
+
+    return (ret);
+}
 
 void gain_piety(char pgn)
 {
@@ -1320,158 +1572,6 @@ void gain_piety(char pgn)
         }
     }
 }                               // end gain_piety()
-
-void naughty(char type_naughty, int naughtiness)
-{
-    int penance = 0;
-    int piety_loss = 0;
-
-    // if you currently worship no deity in particular, exit function {dlb}
-    if (you.religion == GOD_NO_GOD)
-        return;
-
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        switch (type_naughty)
-        {
-        case NAUGHTY_NECROMANCY:
-        case NAUGHTY_UNHOLY:
-        case NAUGHTY_ATTACK_HOLY:
-            piety_loss = naughtiness;
-            penance = piety_loss * 2;
-            break;
-        case NAUGHTY_ATTACK_FRIEND:
-            piety_loss = naughtiness;
-            penance = piety_loss * 3;
-            break;
-        case NAUGHTY_FRIEND_DIES:
-            piety_loss = naughtiness;
-            break;
-        case NAUGHTY_BUTCHER:
-            piety_loss = naughtiness;
-            if (one_chance_in(3))
-                penance = piety_loss;
-            break;
-        }
-        break;
-
-    case GOD_SHINING_ONE:
-        switch (type_naughty)
-        {
-        case NAUGHTY_NECROMANCY:
-        case NAUGHTY_UNHOLY:
-        case NAUGHTY_ATTACK_HOLY:
-            piety_loss = naughtiness;
-            penance = piety_loss;
-            break;
-        case NAUGHTY_ATTACK_FRIEND:
-            piety_loss = naughtiness;
-            penance = piety_loss * 3;
-            break;
-        case NAUGHTY_FRIEND_DIES:
-            piety_loss = naughtiness;
-            break;
-        case NAUGHTY_BUTCHER:
-            piety_loss = naughtiness;
-            if (one_chance_in(3))
-                penance = piety_loss;
-            break;
-        case NAUGHTY_STABBING:
-            piety_loss = naughtiness;
-            if (one_chance_in(5))       // can be accidental so we're nice here
-                penance = piety_loss;
-            break;
-        case NAUGHTY_POISON:
-            piety_loss = naughtiness;
-            penance = piety_loss * 2;
-            break;
-        }
-        break;
-
-    case GOD_ELYVILON:
-        switch (type_naughty)
-        {
-        case NAUGHTY_NECROMANCY:
-        case NAUGHTY_UNHOLY:
-        case NAUGHTY_ATTACK_HOLY:
-            piety_loss = naughtiness;
-            penance = piety_loss;
-            break;
-        case NAUGHTY_KILLING:
-            piety_loss = naughtiness;
-            penance = piety_loss * 2;
-            break;
-        case NAUGHTY_ATTACK_FRIEND:
-            piety_loss = naughtiness;
-            penance = piety_loss * 3;
-            break;
-        // Healer god gets a bit more upset since you should have
-        // used your healing powers to save them.
-        case NAUGHTY_FRIEND_DIES:
-            piety_loss = naughtiness;
-            penance = piety_loss;
-            break;
-        case NAUGHTY_BUTCHER:
-            piety_loss = naughtiness;
-            if (one_chance_in(3))
-                penance = piety_loss;
-            break;
-        }
-        break;
-
-    case GOD_OKAWARU:
-        switch (type_naughty)
-        {
-        case NAUGHTY_ATTACK_FRIEND:
-            piety_loss = naughtiness;
-            penance = piety_loss * 3;
-            break;
-        case NAUGHTY_FRIEND_DIES:
-            piety_loss = naughtiness;
-            break;
-        }
-        break;
-
-    case GOD_TROG:
-        switch (type_naughty)
-        {
-        case NAUGHTY_SPELLCASTING:
-            piety_loss = naughtiness;
-            // This penance isn't so bad since its much easier to
-            // gain piety with Trog than the other gods in this function.
-            penance = piety_loss * 10;
-            break;
-        }
-        break;
-    }
-
-    // exit function early iff piety loss is zero:
-    if (piety_loss < 1)
-        return;
-
-    // output guilt message:
-    strcpy(info, "You feel");
-
-    strcat(info, (piety_loss == 1) ? " a little " :
-                 (piety_loss <  5) ? " " :
-                 (piety_loss < 10) ? " very "
-                                   : " extremely ");
-
-    strcat(info, "guilty.");
-    mpr(info);
-
-    lose_piety(piety_loss);
-
-    if (you.piety < 1)
-        excommunication();
-    else if (penance)       // Don't bother unless we're not kicking them out
-    {
-        //jmf: FIXME: add randomness to following message:
-        god_speaks(you.religion, "\"You will pay for your transgression, mortal!\"");
-        inc_penance(penance);
-    }
-}                               // end naughty()
 
 void lose_piety(char pgn)
 {
@@ -2222,6 +2322,45 @@ void excommunication(void)
     }
 }                               // end excommunication()
 
+static bool bless_weapon( int god, int brand, int colour )
+{
+    const int wpn = get_player_wielded_weapon();
+
+    // Assuming the type of weapon is correct, we only need to check
+    // to see if it's an artefact we can successfully clobber:
+    if (!is_fixed_artefact( you.inv[wpn] )
+        && !is_random_artefact( you.inv[wpn] ))
+    {
+        you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+
+        set_equip_desc( you.inv[wpn], ISFLAG_GLOWING );
+        set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, brand );
+        you.inv[wpn].colour = colour;
+
+        do_uncurse_item( you.inv[wpn] );
+        enchant_weapon( ENCHANT_TO_HIT, true );
+        enchant_weapon( ENCHANT_TO_DAM, true );
+
+        you.wield_change = true;
+        you.num_gifts[god]++;
+
+        you.flash_colour = colour;
+        viewwindow( true, false );
+
+        mprf( MSGCH_GOD, "Your weapon shines brightly!" );
+        simple_god_message( " booms: Use this gift wisely!" );
+
+        // as currently only Zin and TSO do this is our permabrand effect:
+        holy_word( 100, true );
+
+        more();
+        mesclr();
+
+        return (true);
+    }
+
+    return (false);
+}
 
 void altar_prayer(void)
 {
@@ -2239,8 +2378,47 @@ void altar_prayer(void)
 
     mpr( "You kneel at the altar and pray." );
 
-    if (you.religion == GOD_SHINING_ONE || you.religion == GOD_XOM)
+    if (you.religion == GOD_XOM)
         return;
+
+    // TSO blesses long swords with holy wrath
+    if (you.religion == GOD_SHINING_ONE
+        && !you.num_gifts[GOD_SHINING_ONE]
+        && !player_under_penance()
+        && you.piety > 160)
+    {
+        const int wpn = get_player_wielded_weapon();
+
+        if (wpn != -1 
+            && weapon_skill( you.inv[wpn] ) == SK_LONG_SWORDS
+            && get_weapon_brand( you.inv[wpn] ) != SPWPN_HOLY_WRATH)
+        {
+            if (bless_weapon( GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW ))
+            {
+                // convert those demon blades if blessed:
+                if (you.inv[wpn].sub_type == WPN_DEMON_BLADE)
+                    you.inv[wpn].sub_type = WPN_BLESSED_BLADE;
+            }
+        }
+    }
+
+    // Zin blesses maces with disruption
+    if (you.religion == GOD_ZIN
+        && !you.num_gifts[GOD_ZIN]
+        && !player_under_penance()
+        && you.piety > 160)
+    {
+        const int wpn = get_player_wielded_weapon();
+
+        if (wpn != -1 
+            && (you.inv[wpn].base_type == OBJ_WEAPONS
+                && (you.inv[wpn].sub_type == WPN_MACE
+                    || you.inv[wpn].sub_type == WPN_GREAT_MACE))
+            && get_weapon_brand( you.inv[wpn] ) != SPWPN_DISRUPTION)
+        {
+            bless_weapon( GOD_ZIN, SPWPN_DISRUPTION, WHITE );
+        }
+    }
 
     i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
@@ -2410,7 +2588,7 @@ void offer_corpse(int corpse)
     strcat(info, sacrifice[you.religion - 1]);
     mpr(info);
 
-    done_good(GOOD_HACKED_CORPSE, 10);
+    did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 }                               // end offer_corpse()
 
 //jmf: moved stuff from items::handle_time()

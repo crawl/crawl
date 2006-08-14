@@ -906,7 +906,8 @@ bool activate_ability(void)
         break;
 
     case ABIL_KIKU_INVOKE_DEATH:
-        summon_ice_beast_etc(20 + you.skills[SK_INVOCATIONS] * 3, MONS_REAPER);
+        summon_ice_beast_etc(
+                20 + you.skills[SK_INVOCATIONS] * 3, MONS_REAPER, true);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 

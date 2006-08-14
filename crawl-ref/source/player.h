@@ -17,6 +17,7 @@
 bool player_in_branch( int branch );
 bool player_in_hell( void );
 
+int get_player_wielded_weapon();
 int player_equip( int slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 int player_damage_type( void );
@@ -48,6 +49,7 @@ bool player_is_levitating(void);
  * *********************************************************************** */
 bool player_under_penance(void);
 
+int player_wielded_item();
 
 /* ***********************************************************************
  * called from: ability - acr - fight - food - it_use2 - item_use - items -

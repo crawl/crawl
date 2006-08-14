@@ -1989,6 +1989,19 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                    (item_typ == STAFF_CHANNELING) ? "channeling"
                    : "bugginess", ITEMNAME_SIZE );
         }
+
+        if (item_is_rod( item ) && item.sub_type != STAFF_STRIKING 
+                && item_ident( item, ISFLAG_KNOW_TYPE ))
+        {
+            strncat( buff, " (", ITEMNAME_SIZE );
+            itoa( item.plus / ROD_CHARGE_MULT, tmp_quant, 10 );
+            strncat( buff, tmp_quant, ITEMNAME_SIZE );
+            strncat( buff, "/", ITEMNAME_SIZE );
+            itoa( item.plus2 / ROD_CHARGE_MULT, tmp_quant, 10 );
+            strncat( buff, tmp_quant, ITEMNAME_SIZE );
+            strncat( buff, ")", ITEMNAME_SIZE );
+        }
+
         break;
 
 

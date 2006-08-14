@@ -16,7 +16,8 @@
 #include "message.h"
 #include "religion.h"
 
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 #ifdef DOS
 #include <conio.h>
@@ -214,6 +215,32 @@ static char channel_to_colour( int channel, int param )
 }
 
 #endif
+
+static void do_message_print( int channel, int param, 
+                              const char *format, va_list argp )
+{
+    char buff[80];
+    vsnprintf( buff, sizeof( buff ), format, argp ); 
+    buff[79] = '\0';
+
+    mpr(buff, channel, param);
+}
+
+void mprf( int channel, const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( channel, 0, format, argp );
+    va_end( argp );
+}
+
+void mprf( const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( MSGCH_PLAIN, 0, format, argp );
+    va_end( argp );
+}
 
 void mpr(const char *inf, int channel, int param)
 {

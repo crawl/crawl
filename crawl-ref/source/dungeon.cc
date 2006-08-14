@@ -157,6 +157,22 @@ static void place_altar(void);
  **************************************************
 */
 
+// Determines if this feature blocks movement.
+bool feat_blocks_movement(int feature)
+{
+    return (feature == DNGN_ROCK_WALL ||
+            feature == DNGN_STONE_WALL ||
+            feature == DNGN_METAL_WALL ||
+            feature == DNGN_SECRET_DOOR ||
+            feature == DNGN_GREEN_CRYSTAL_WALL ||
+            feature == DNGN_ORCISH_IDOL ||
+            feature == DNGN_WAX_WALL ||
+            feature == DNGN_PERMAROCK_WALL ||
+            feature == DNGN_SILVER_STATUE ||
+            feature == DNGN_GRANITE_STATUE ||
+            feature == DNGN_ORANGE_CRYSTAL_STATUE);
+}
+
 void builder(int level_number, char level_type)
 {
     int i;          // generic loop variable
@@ -1173,6 +1189,10 @@ int items( int allow_uniques,       // not just true-false,
                             set_weapon_special(p, SPWPN_VENOM);
                         break;
 
+                    case WPN_BLESSED_BLADE:     // special gift of TSO
+                        set_weapon_special( p, SPWPN_HOLY_WRATH );
+                        break;
+
                     // unlisted weapons have no associated, standard ego-types {dlb}
                     default:
                         break;
@@ -1629,10 +1649,19 @@ int items( int allow_uniques,       // not just true-false,
                 case ARM_SHIELD:   // shield - must do special things for this!
                 case ARM_LARGE_SHIELD:
                 case ARM_BUCKLER:
-                    set_item_ego_type( mitm[p], OBJ_ARMOUR, SPARM_PROTECTION );
+                {
+                    const int tmp = random2(1000);
+
+                    set_item_ego_type( mitm[p], OBJ_ARMOUR,
+                                       (tmp <  40) ? SPARM_RESISTANCE :
+                                       (tmp < 160) ? SPARM_FIRE_RESISTANCE :
+                                       (tmp < 280) ? SPARM_COLD_RESISTANCE :
+                                       (tmp < 400) ? SPARM_POISON_RESISTANCE :
+                                       (tmp < 520) ? SPARM_POSITIVE_ENERGY 
+                                                   : SPARM_PROTECTION );
                     break;  // prot
                     //break;
-
+                }
                 case ARM_CLOAK:
                     if (cmp_equip_race( mitm[p], ISFLAG_DWARVEN ))
                         break;
@@ -2339,7 +2368,14 @@ int items( int allow_uniques,       // not just true-false,
             }
         }
 
-        mitm[p].special = random2(9);
+        mitm[p].special = random2(NUM_STAVE_ADJ);
+
+        if (item_is_rod( mitm[p] ))
+        {
+            mitm[p].plus2 = (9 + random2( MAX_ROD_CHARGE - 8 )) 
+                                * ROD_CHARGE_MULT;
+            mitm[p].plus  = mitm[p].plus2;
+        }
 
         quant = 1;
         break;
@@ -2893,7 +2929,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         mitm[bp].base_type = OBJ_WEAPONS;
         mitm[bp].colour = WHITE;        // forced by force_item above {dlb}
 
-        mitm[bp].sub_type = (one_chance_in(4) ? WPN_GREAT_SWORD
+        mitm[bp].sub_type = (one_chance_in(4) ? WPN_BLESSED_BLADE
                                               : WPN_LONG_SWORD);
 
         set_equip_desc( mitm[bp], ISFLAG_GLOWING );
@@ -6357,6 +6393,7 @@ static char rare_weapon(unsigned char w_type)
     case WPN_KNIFE:
     case WPN_QUICK_BLADE:
     case WPN_TRIPLE_SWORD:
+    case WPN_BLESSED_BLADE:
         return 0;
 
     default:

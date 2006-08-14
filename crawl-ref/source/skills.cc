@@ -38,7 +38,7 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static void exercise2( char exsk );
+static int exercise2( int exsk );
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
@@ -146,27 +146,37 @@ static int calc_skill_cost( int skill_cost_level, int skill_level )
     return (ret);
 }
 
-void exercise(char exsk, int deg)
+// returns total number of skill points gained
+int exercise(int exsk, int deg)
 {
-    if (you.exp_available > 0 && you.skills[exsk] < 27)
+    int ret = 0;
+
+    while (deg > 0)
     {
-        while (deg > 0)
-        {
-            if (!you.practise_skill[exsk] && !one_chance_in(4))
-                break;
+        if (you.exp_available <= 0 || you.skills[exsk] >= 27)
+            break;
 
-            if (you.skills[exsk] >= 27)
-                break;
+        if (you.practise_skill[exsk] || one_chance_in(4))
+            ret += exercise2( exsk );
 
-            exercise2( exsk );
-            deg--;
-        }
+        deg--;
     }
 
-    return;
+#ifdef DEBUG_DIAGNOSTICS
+    if (ret)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+                "Exercised %s (deg: %d) by %d",
+                skill_name(exsk),
+                deg,
+                ret);
+    }
+#endif
+
+    return (ret);
 }                               // end exercise()
 
-static void exercise2( char exsk )
+static int exercise2( int exsk )
 {
     int deg = 1;
     int bonus = 0;
@@ -237,7 +247,7 @@ static void exercise2( char exsk )
                 || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
         {
             if (one_chance_in(3))
-                return;
+                return (0);
         }
 
         // some are direct opposites
@@ -247,7 +257,7 @@ static void exercise2( char exsk )
         {
             // of course, this is cumulative with the one above.
             if (!one_chance_in(3))
-                return;
+                return (0);
         }
 
         if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
@@ -255,7 +265,7 @@ static void exercise2( char exsk )
                 || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
         {
             if (!one_chance_in(3))
-                return;
+                return (0);
         }
 
         // experimental restriction (too many spell schools) -- bwr
@@ -270,7 +280,7 @@ static void exercise2( char exsk )
         // Things get progressively harder, but not harder than
         // the Fire-Air or Ice-Earth level.
         if (skill_rank > 3 && one_chance_in(10 - skill_rank))
-            return;
+            return (0);
     }
 
     int fraction = 0;
@@ -350,6 +360,9 @@ static void exercise2( char exsk )
             skill_inc /= 10;
         }
     }
+
+    if (skill_inc <= 0)
+        return (0);
 
     you.skill_points[exsk] += skill_inc;
     you.exp_available -= skill_change;
@@ -438,4 +451,5 @@ static void exercise2( char exsk )
             redraw_skill( you.your_name, player_title() );
         }
     }
+    return (skill_inc);
 }                               // end exercise2()

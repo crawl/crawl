@@ -122,7 +122,7 @@ static int str_to_channel_colour( const std::string &str )
 static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
 {
     "plain", "prompt", "god", "duration", "danger", "warning", "food",
-    "recovery", "talk", "intrinsic_gain", "mutation", "monster_spell",
+    "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
     "monster_enchant", "monster_damage", "rotten_meat", "equipment",
     "diagnostic",
 };

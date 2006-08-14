@@ -82,6 +82,7 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x, unsigned char c
  * *********************************************************************** */
 void fire_tracer( struct monsters *monster, struct bolt &pbolt );
 
+bool check_line_of_sight( int sx, int sy, int tx, int ty );
 
 /* ***********************************************************************
  * called from: monstuff

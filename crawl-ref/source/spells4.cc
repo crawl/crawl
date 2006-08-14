@@ -298,7 +298,7 @@ static int shatter_items(int x, int y, int pow, int garbage)
     if (broke_stuff)
     {
         if (!silenced(x, y) && !silenced(you.x_pos, you.y_pos))
-            mpr("You hear glass break.");
+            mpr("You hear glass break.", MSGCH_SOUND);
 
         return 1;
     }
@@ -394,7 +394,7 @@ void cast_shatter(int pow)
         noisy( 30, you.x_pos, you.y_pos );
 
     snprintf(info, INFO_SIZE, "The dungeon %s!", (sil ? "shakes" : "rumbles"));
-    mpr(info);
+    mpr(info, (sil? MSGCH_PLAIN : MSGCH_SOUND));
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -434,7 +434,7 @@ void cast_shatter(int pow)
                                          pow, rad, 0 );
 
     if (dest && !sil)
-        mpr("Ka-crash!");
+        mpr("Ka-crash!", MSGCH_SOUND);
 }                               // end cast_shatter()
 
 // cast_forescry: raises evasion (by 8 currently) via divination
@@ -864,7 +864,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     menv[mnstr].behaviour = BEH_SLEEP;
     mons_add_ench( &menv[mnstr], ENCH_SLEEP_WARY );
 
-    if (mons_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
+    if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
         mons_add_ench( &menv[mnstr], ENCH_SLOW );
 
     return 1;
@@ -3014,7 +3014,7 @@ static bool mons_can_host_shuggoth(int type)    //jmf: simplified
 {
     if (mons_holiness(type) != MH_NATURAL)
         return false;
-    if (mons_flag(type, M_WARM_BLOOD))
+    if (mons_class_flag(type, M_WARM_BLOOD))
         return true;
 
     return false;

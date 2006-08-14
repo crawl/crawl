@@ -20,7 +20,8 @@ struct playerspell
 {
   int id;
   const char *title;
-  unsigned int disciplines; //jmf: a bitfield
+  unsigned int disciplines; // bitfield
+  unsigned int flags;       // bitfield
   unsigned int level;
 };
 
@@ -45,6 +46,8 @@ int spell_mana(int which_spell);
 int spell_difficulty(int which_spell);
 
 int spell_levels_required(int which_spell);
+
+unsigned int get_spell_flags( int which_spell );
 
 // * called from: chardump - spell - spl-book - spells0
 bool spell_typematch(int which_spell, unsigned int which_discipline);

@@ -20,7 +20,7 @@ void calc_total_skill_points( void );
  * called from: ability - bang - beam - debug - fight - it_use3 - item_use -
  *              items - misc - spell
  * *********************************************************************** */
-void exercise(char exsk, int deg);
+int exercise(int exsk, int deg);
 
 
 #endif

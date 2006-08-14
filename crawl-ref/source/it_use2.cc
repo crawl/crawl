@@ -105,7 +105,7 @@ bool potion_effect( char pot_eff, int pow )
             if (you.might > 80)
                 you.might = 80;
 
-            naughty( NAUGHTY_STIMULANTS, 4 + random2(4) );
+            did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
         }
         break;
 
@@ -279,7 +279,7 @@ bool potion_effect( char pot_eff, int pow )
             mutate(100, false);
         }
 
-        naughty(NAUGHTY_STIMULANTS, 4 + random2(4));
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4));
         break;
     }
 

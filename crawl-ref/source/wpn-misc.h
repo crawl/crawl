@@ -61,7 +61,9 @@ bool launches_things( unsigned char weapon_subtype );
 /* ***********************************************************************
  * called from: describe - fight - files - it_use3 - newgame - spells1
  * *********************************************************************** */
-char weapon_skill(unsigned char wclass, unsigned char wtype);
+int weapon_skill(int wclass, int wtype);
+
+int weapon_skill(const item_def &item);
 
 
 #endif

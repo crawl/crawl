@@ -498,7 +498,6 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
     int valued = 0;
-    int charge_value = 0;
 
     switch (item.base_type)
     {
@@ -660,22 +659,23 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case WPN_DOUBLE_SWORD:
-            valued += 200;
+            valued += 100;
             break;
 
         case WPN_DEMON_WHIP:
-            valued += 230;
+            valued += 130;
             break;
 
         case WPN_QUICK_BLADE:
         case WPN_DEMON_TRIDENT:
-            valued += 250;
+            valued += 150;
             break;
 
         case WPN_KATANA:
         case WPN_TRIPLE_SWORD:
         case WPN_DEMON_BLADE:
-            valued += 300;
+        case WPN_BLESSED_BLADE:
+            valued += 200;
             break;
         }
 
@@ -1059,100 +1059,66 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_WANDS:
-        charge_value = 0;
-        if (id[0][item.sub_type])
+        if (!id[ IDTYPE_WANDS ][item.sub_type])
+            valued += 200;
+        else
         {
             switch (item.sub_type)
             {
             case WAND_FIREBALL:
-            case WAND_LIGHTNING:
-                valued += 20;
-                charge_value += 5;
-                break;
-
-            case WAND_DRAINING:
-                valued += 20;
-                charge_value += 4;
-                break;
-
-            case WAND_DISINTEGRATION:
-                valued += 17;
-                charge_value += 4;
-                break;
-
-            case WAND_POLYMORPH_OTHER:
-                valued += 15;
-                charge_value += 4;
-                break;
-
-            case WAND_COLD:
-            case WAND_ENSLAVEMENT:
-            case WAND_FIRE:
             case WAND_HASTING:
-                valued += 15;
-                charge_value += 3;
-                break;
-
-            case WAND_INVISIBILITY:
-                valued += 15;
-                charge_value += 2;
-                break;
-
-            case WAND_RANDOM_EFFECTS:
-                valued += 13;
-                charge_value += 3;
-                break;
-
-            case WAND_PARALYSIS:
-                valued += 12;
-                charge_value += 3;
-                break;
-
-            case WAND_SLOWING:
-                valued += 10;
-                charge_value += 3;
-                break;
-
-            case WAND_CONFUSION:
-            case WAND_DIGGING:
-            case WAND_TELEPORTATION:
-                valued += 10;
-                charge_value += 2;
+                valued += 600;
                 break;
 
             case WAND_HEALING:
-                valued += 7;
-                charge_value += 3;
+            case WAND_TELEPORTATION:
+                valued += 500;
+                break;
+
+            case WAND_INVISIBILITY:
+            case WAND_DISINTEGRATION:
+            case WAND_LIGHTNING:
+                valued += 400;
+                break;
+
+            case WAND_COLD:
+            case WAND_FIRE:
+                valued += 350;
+                break;
+
+            case WAND_DIGGING:
+                valued += 200;
                 break;
 
             case WAND_FLAME:
             case WAND_FROST:
-                valued += 5;
-                charge_value += 2;
+            case WAND_DRAINING:
+            case WAND_PARALYSIS:
+                valued += 150;
                 break;
 
+            case WAND_ENSLAVEMENT:
+            case WAND_POLYMORPH_OTHER:
+            case WAND_SLOWING:
+                valued += 100;
+                break;
+
+            case WAND_CONFUSION:
             case WAND_MAGIC_DARTS:
-                valued += 3;
-                charge_value++;
-                break;
-
-            default:            // no default charge_value ??? 15jan2000 {dlb}
-                valued += 10;
+            case WAND_RANDOM_EFFECTS:
+            default:
+                valued += 75;
                 break;
             }
 
             if (item_ident( item, ISFLAG_KNOW_PLUSES ))
             {
-                valued += item.plus * charge_value;
+                if (item.plus == 0)
+                    valued -= 50;
+                else
+                    valued = (valued * (item.plus + 45)) / 50;
             }
-
-            valued *= 3;
-
-            if (item.plus == 0)
-                valued = 3;     // change if wands are rechargeable!
         }
-        else
-            valued = 35;        // = 10;
         break;
 
     case OBJ_POTIONS:
@@ -1514,6 +1480,10 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         }
         else
             valued = 250;
+
+        if (item_is_rod( item ) && item_ident( item, ISFLAG_KNOW_PLUSES ))
+            valued += 50 * (item.plus2 / ROD_CHARGE_MULT); 
+
         break;
 
     case OBJ_ORBS:

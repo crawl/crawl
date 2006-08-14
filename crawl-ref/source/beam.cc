@@ -1164,15 +1164,17 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     bool sideBlocked, topBlocked, random_beam;
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d",
-             (pbolt.isBeam) ? "beam" : "missile", 
-             (pbolt.isTracer) ? " tracer" : "",
-             pbolt.source_x, pbolt.source_y, 
-             pbolt.target_x, pbolt.target_y, 
-             pbolt.type, pbolt.colour, pbolt.flavour, 
-             pbolt.hit, pbolt.damage.num, pbolt.damage.size );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
+    {
+        mprf( MSGCH_DIAGNOSTICS,
+             "%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d",
+                 (pbolt.isBeam) ? "beam" : "missile", 
+                 (pbolt.isTracer) ? " tracer" : "",
+                 pbolt.source_x, pbolt.source_y, 
+                 pbolt.target_x, pbolt.target_y, 
+                 pbolt.type, pbolt.colour, pbolt.flavour, 
+                 pbolt.hit, pbolt.damage.num, pbolt.damage.size );
+    }
 #endif
 
     // init
@@ -2031,10 +2033,7 @@ void poison_monster( struct monsters *monster, bool fromPlayer, int levels,
 
     // finally, take care of deity preferences
     if (fromPlayer)
-    {
-        naughty(NAUGHTY_POISON, 5 + random2(3)); //jmf: TSO now hates poison
-        done_good(GOOD_POISON, 5);      //jmf: had test god who liked poison
-    }
+        did_god_conduct( DID_POISON, 5 + random2(3) );
 }                               // end poison_monster()
 
 // actually napalms a monster (w/ message)
@@ -2144,6 +2143,56 @@ void fire_tracer(struct monsters *monster, struct bolt &pbolt)
     pbolt.isTracer = false;
 }                               // end tracer_f()
 
+bool check_line_of_sight( int sx, int sy, int tx, int ty )
+{
+    struct bolt  pbolt;
+
+    const int dist = grid_distance( sx, sy, tx, ty );
+
+    // can always see one square away
+    if (dist <= 1)
+        return (true);
+
+    // currently we limit the range to 8
+    if (dist > MONSTER_LOS_RANGE)
+        return (false);
+
+    // Redirect player centered LoS to the old method (using display table)...
+    // note that this assumes that viewwindow() has been called if needed 
+    // before we get here (ie this won't work very well if this function gets
+    // called between moving the player and updating the display).
+    if (sx == you.x_pos && sy == you.y_pos)
+        return (see_grid( tx, ty ));
+    else if (tx == you.x_pos && ty == you.y_pos)
+        return (see_grid( sx, sy ));
+
+    // Okay, no easy way... set up a LoS beam between the points
+    pbolt.flavour = BEAM_LINE_OF_SIGHT;
+    pbolt.isTracer = true;
+    pbolt.source_x = sx;
+    pbolt.source_y = sy;
+    pbolt.target_x = tx;
+    pbolt.target_y = ty;
+    pbolt.range = MONSTER_LOS_RANGE;
+    pbolt.rangeMax = MONSTER_LOS_RANGE;
+
+    // setting these just to be safe:
+    pbolt.hit = 0;
+    pbolt.type = 0;
+    pbolt.damage = dice_def( 0, 1 );
+    pbolt.colour = BLACK;
+    pbolt.isBeam = true;
+
+    // init tracer variables (used to tell if we "hit" the target)
+    pbolt.foe_count = pbolt.fr_count = 0;
+    pbolt.foe_power = pbolt.fr_power = 0;
+
+    // fire!
+    fire_beam( pbolt );
+
+    // got to target?
+    return (pbolt.foe_count == 1);
+}
 
 /*
    When a mimic is hit by a ranged attack, it teleports away (the slow way)
@@ -2269,6 +2318,11 @@ static void beam_explodes(struct bolt &beam, int x, int y)
 
 static bool beam_term_on_target(struct bolt &beam)
 {
+    if (beam.flavour == BEAM_LINE_OF_SIGHT)
+    {
+        beam.foe_count++;
+        return (true);
+    }
 
     // generic - all explosion-type beams can be targetted at empty space,
     // and will explode there.  This semantic also means that a creature
@@ -2485,6 +2539,10 @@ static int affect(struct bolt &beam, int x, int y)
     // extra range used by hitting something
     int rangeUsed = 0;
 
+    // line of sight never affects anything
+    if (beam.flavour == BEAM_LINE_OF_SIGHT)
+        return (0);
+
     if (grd[x][y] < MINMOVE)
     {
         if (beam.isTracer)          // tracers always stop on walls.
@@ -2578,7 +2636,7 @@ static int affect_wall(struct bolt &beam, int x, int y)
             {
                 if (!silenced(you.x_pos, you.y_pos))
                 {
-                    mpr("You hear a grinding noise.");
+                    mpr("You hear a grinding noise.", MSGCH_SOUND);
                     beam.obviousEffect = true;
                 }
 
@@ -2601,7 +2659,7 @@ static int affect_wall(struct bolt &beam, int x, int y)
             grd[ x ][ y ] = DNGN_FLOOR;
             if (!silenced(you.x_pos, you.y_pos))
             {
-                mpr("You hear a grinding noise.");
+                mpr("You hear a grinding noise.", MSGCH_SOUND);
                 beam.obviousEffect = true;
             }
         }
@@ -2614,9 +2672,10 @@ static int affect_wall(struct bolt &beam, int x, int y)
             if (!silenced(you.x_pos, you.y_pos))
             {
                 if (!see_grid( x, y ))
-                    mpr("You hear a hideous screaming!");
+                    mpr("You hear a hideous screaming!", MSGCH_SOUND);
                 else
-                    mpr("The statue screams as its substance crumbles away!");
+                    mpr("The statue screams as its substance crumbles away!",
+                            MSGCH_SOUND);
             }
             else
             {
@@ -2673,7 +2732,7 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
             if (!silenced(x, y)
                 && !silenced(you.x_pos, you.y_pos))
             {
-                mpr("You hear a sizzling sound!");
+                mpr("You hear a sizzling sound!", MSGCH_SOUND);
             }
 
             delete_cloud( clouty );
@@ -2982,11 +3041,14 @@ static int affect_player( struct bolt &beam )
                         && player_shield_class() > 0)
                 {
                     int exer = one_chance_in(3) ? 1 : 0;
-                    const int hit = random2( beam.hit * 5 
-                                        + 10 * you.shield_blocks * you.shield_blocks );
+                    // [dshaligram] beam.hit multiplier lowererd to 3 - was 5.
+                    // In favour of blocking, dex multiplier changed to .5 
+                    // (was .2).
+                    const int hit = random2( beam.hit * 3 
+                                + 10 * you.shield_blocks * you.shield_blocks );
 
                     const int block = random2(player_shield_class()) 
-                                        + (random2(you.dex) / 5) - 1;
+                                        + (random2(you.dex) / 2) - 1;
 
                     if (hit < block)
                     {
@@ -3256,6 +3318,13 @@ static int affect_player( struct bolt &beam )
     return (range_used_on_hit( beam ));
 }
 
+static int beam_source(const bolt &beam)
+{
+    return MON_KILL(beam.thrower)       ? beam.beam_source : 
+           beam.thrower == KILL_MISC    ? MHITNOT          :
+                                          MHITYOU;
+}
+
 // return amount of range used up by affectation of this monster
 static int  affect_monster(struct bolt &beam, struct monsters *mon)
 {
@@ -3310,16 +3379,20 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
         // naughty (even if a monster might resist)
         if (nasty_beam(mon, beam))
         {
-            if (mons_friendly(mon) && YOU_KILL(beam.thrower))
-                naughty(NAUGHTY_ATTACK_FRIEND, 5);
+            if (YOU_KILL( beam.thrower ))
+            {
+                if (mons_friendly( mon ))
+                    did_god_conduct( DID_ATTACK_FRIEND, 5 );
 
-            behaviour_event( mon, ME_ANNOY, 
-                        MON_KILL(beam.thrower) ? beam.beam_source : MHITYOU );
+                if (mons_holiness( mon ) == MH_HOLY)
+                    did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
+            }
+
+            behaviour_event( mon, ME_ANNOY, beam_source(beam) );
         }
         else
         {
-            behaviour_event( mon, ME_ALERT, 
-                        MON_KILL(beam.thrower) ? beam.beam_source : MHITYOU );
+            behaviour_event( mon, ME_ALERT, beam_source(beam) );
         }
 
         // !@#*( affect_monster_enchantment() has side-effects on
@@ -3432,20 +3505,28 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
 
     if (nasty_beam(mon, beam))
     {
-        // could be naughty if it's your beam & the montster is friendly
-        if (mons_friendly(mon) && YOU_KILL(beam.thrower))
+        bool annoyed = false;
+
+        if (YOU_KILL(beam.thrower))
         {
-            // but did you do enough damage to piss them off?
-            if (hurt_final > mon->hit_dice / 3)
+            if (mons_friendly(mon))
             {
-                naughty(NAUGHTY_ATTACK_FRIEND, 5);
-                behaviour_event( mon, ME_ANNOY, MHITYOU );
+                did_god_conduct( DID_ATTACK_FRIEND, 5 );
+                if (hurt_final > mon->hit_dice / 3)
+                    annoyed = true;
             }
+            else
+            {
+                annoyed = true;
+            }
+
+            if (mons_holiness( mon ) == MH_HOLY)
+                did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
         }
-        else
+
+        if (annoyed)
         {
-            behaviour_event(mon, ME_ANNOY, 
-                    MON_KILL(beam.thrower) ? beam.beam_source : MHITYOU );
+            behaviour_event(mon, ME_ANNOY, beam_source(beam) );
         }
     }
 
@@ -3490,7 +3571,7 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
             strcpy(info, "The ");
             strcat(info, beam.beam_name);
             strcat(info, " hits something.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
     }
 
@@ -3943,7 +4024,7 @@ static void explosion1(struct bolt &pbolt)
         else
         {
             if (!(silenced(x,y) || silenced(you.x_pos, you.y_pos)))
-                mpr(hearMsg);
+                mpr(hearMsg, MSGCH_SOUND);
             else
                 pbolt.msgGenerated = false;
         }

@@ -400,7 +400,7 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
         //                 the information we're giving the player for free.
         // Navigate around plants and fungi. Yet another tasty hack.
         if (player_monster_visible(&menv[mon]) && 
-                mons_flag( menv[mon].type, M_NO_EXP_GAIN ))
+                mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
         {
             extern short point_distance[GXM][GYM];
 
@@ -447,7 +447,7 @@ static bool is_safe(int x, int y)
         }
 
         // Stop before wasting energy on plants and fungi.
-        if (mons_flag( menv[mon].type, M_NO_EXP_GAIN ))
+        if (mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
             return false;
 
         // If this is any *other* monster, it'll be visible and
@@ -734,6 +734,11 @@ void stop_running(void)
 {
     userdef_run_stoprunning_hook();
     you.running = 0;
+}
+
+bool is_resting( void )
+{
+    return (you.running > 0 && !you.run_x && !you.run_y);
 }
 
 void start_running(void)

@@ -224,7 +224,7 @@ void deck_of_cards(unsigned char which_deck)
     unsigned char *card = deck_of_wonders;
     unsigned char max_card = 0;
     int i = 0;
-    int brownie_points = 0;     // for passing to done_good() {dlb}
+    int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
 
     mpr("You draw a card...");
 
@@ -292,7 +292,7 @@ void deck_of_cards(unsigned char which_deck)
         if (which_deck == DECK_OF_WONDERS || one_chance_in(3))
             brownie_points++;
 
-        done_good(GOOD_CARDS, brownie_points);
+        did_god_conduct(DID_CARDS, brownie_points);
     }
 
     return;

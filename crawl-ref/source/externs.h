@@ -327,6 +327,8 @@ struct player
   char redraw_gold;
   char redraw_evasion;
 
+  unsigned char flash_colour;
+
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;
 
@@ -403,6 +405,7 @@ struct player
   unsigned char gift_timeout;
   FixedVector<unsigned char, MAX_NUM_GODS>  penance;
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
+  FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
 
   FixedVector<unsigned char, 100> mutation;

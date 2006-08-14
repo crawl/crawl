@@ -1106,8 +1106,9 @@ void save_game(bool leave_game)
     // 4.2 spell and ability tables
     // 4.3 added you.magic_contamination (05/03/05)
     // 4.4 added item origins
+    // 4.5 added num_gifts
 
-    write_tagged_file( saveFile, 4, 4, TAGTYPE_PLAYER );
+    write_tagged_file( saveFile, 4, 5, TAGTYPE_PLAYER );
 
     fclose(saveFile);
 

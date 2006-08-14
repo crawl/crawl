@@ -69,7 +69,7 @@ void magic_mapping(int map_radius, int proportion);
  * called from: acr - effects - it_use2 - it_use3 - item_use - spell -
  *              spells - spells3 - spells4
  * *********************************************************************** */
-void noisy( int loudness, int nois_x, int nois_y );
+bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
 
 
 // last updated 12may2000 {dlb}
@@ -107,5 +107,10 @@ bool check_awaken(int mons_aw);
 void clear_map();
 
 bool is_feature(int feature, int x, int y);
+
+inline bool in_map_grid(int x, int y)
+{
+    return !(x < 1 || x >= GXM || y < 1 || y >= GYM);
+}
 
 #endif

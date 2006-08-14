@@ -132,6 +132,18 @@ void turn_corpse_into_chunks( item_def &item )
     }
 }                               // end place_chunks()
 
+bool grid_destroys_items( unsigned char grid )
+{
+    return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
+}
+
+const char *grid_item_destruction_message( unsigned char grid )
+{
+    return grid == DNGN_DEEP_WATER? "You hear a splash."
+         : grid == DNGN_LAVA      ? "You hear a sizzling splash."
+         :                          "You hear an empty echo.";
+}
+
 void search_around(void)
 {
     char srx = 0;

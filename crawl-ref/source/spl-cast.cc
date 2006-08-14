@@ -230,7 +230,7 @@ int spell_fail(int spell)
     int chance = 60;
     int chance2 = 0, armour = 0;
 
-    chance -= 6 * calc_spell_power( spell, false );
+    chance -= 6 * calc_spell_power( spell, false, true );
     chance -= (you.intel * 2);
 
     //chance -= (you.intel - 10) * abs(you.intel - 10);
@@ -423,7 +423,7 @@ int spell_fail(int spell)
 }                               // end spell_fail()
 
 
-int calc_spell_power( int spell, bool apply_intel )
+int calc_spell_power( int spell, bool apply_intel, bool fail_rate_check )
 {
     unsigned int bit;
     int ndx;
@@ -453,7 +453,10 @@ int calc_spell_power( int spell, bool apply_intel )
     if (apply_intel)
         power = (power * you.intel) / 10;
 
-    enhanced = spell_enhancement( disciplines );
+    // [dshaligram] Enhancers don't affect fail rates any more, only spell 
+    // power. Note that this does not affect Vehumet's boost in castability.
+    if (!fail_rate_check)
+        enhanced = spell_enhancement( disciplines );
 
     if (enhanced > 0)
     {
@@ -634,11 +637,24 @@ bool cast_a_spell(void)
     else
     {
         exercise_spell( spell, true, your_spells( spell ) );
-        naughty( NAUGHTY_SPELLCASTING, 1 + random2(5) );
+        did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
     }
     
     return (true);
 }                               // end cast_a_spell()
+
+// "Utility" spells for the sake of simplicity are currently ones with 
+// enchantments, translocations, or divinations. 
+bool spell_is_utility_spell( int spell_id )
+{
+    return (spell_typematch( spell_id, 
+                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION ));
+}
+
+bool spell_is_unholy( int spell_id )
+{
+    return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
+}
 
 // returns true if spell if spell is successfully cast for purposes of
 // exercising and false otherwise (note: false == less exercise, not none).
@@ -740,17 +756,17 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         int spfl = random2avg(100, 3);
 
         if (you.religion != GOD_SIF_MUNA
-            && you.penance[GOD_SIF_MUNA] && one_chance_in(40))
+            && you.penance[GOD_SIF_MUNA] && one_chance_in(20))
         {
             god_speaks(GOD_SIF_MUNA, "You feel a surge of divine spite.");
 
             // This will cause failure and increase the miscast effect.
             spfl = -you.penance[GOD_SIF_MUNA];
 
-            // Reduced penenance reduction here because casting spells
+            // Reduced penance reduction here because casting spells
             // is a player controllable act.  -- bwr
-            if (one_chance_in(7))
-                dec_penance(1);
+            if (one_chance_in(12))
+                dec_penance(GOD_SIF_MUNA, 1);
         }
 
         if (spfl < spell_fail(spc2))
@@ -813,41 +829,45 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         return (false);         // XXX: still gets trained!
     }
 
+    if (!spell_is_utility_spell(spc2))
+        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spc2) );
+
+    if (spell_is_unholy( spc2 ))
+        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spc2) );        
+
     // Linley says: Condensation Shield needs some disadvantages to keep 
     // it from being a no-brainer... this isn't much, but its a start -- bwr
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0 
         && spell_typematch( spc2, SPTYP_FIRE ))
     {
+        // TODO: Pull in Brent's expose_player_to_element fn.
         mpr( "Your icy shield dissipates!", MSGCH_DURATION );
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
         you.redraw_armour_class = 1;
     }
 
-    if (spc2 == SPELL_SUMMON_HORRIBLE_THINGS
-        || spc2 == SPELL_CALL_IMP
-        || spc2 == SPELL_SUMMON_DEMON
-        || spc2 == SPELL_DEMONIC_HORDE
-        || spc2 == SPELL_SUMMON_GREATER_DEMON || spc2 == SPELL_HELLFIRE)
-    {
-        naughty(NAUGHTY_UNHOLY, 10 + spell_difficulty(spc2));
-    }
-
     if (spell_typematch( spc2, SPTYP_NECROMANCY ))
-        naughty( NAUGHTY_NECROMANCY, 10 + spell_difficulty(spc2) );
-
-    if (spc2 == SPELL_NECROMUTATION
-        && (you.religion == GOD_ELYVILON 
-            || you.religion == GOD_SHINING_ONE 
-            || you.religion == GOD_ZIN))
     {
-        excommunication();
+        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spc2) );
+
+        if (spc2 == SPELL_NECROMUTATION
+            && (you.religion == GOD_ELYVILON 
+                || you.religion == GOD_SHINING_ONE 
+                || you.religion == GOD_ZIN))
+        {
+            excommunication();
+        }
     }
 
+    // [dshaligram] Sif Muna piety now increases only when training spell skills
+    // as per bwr 4.1.
+    /*
     if (you.religion == GOD_SIF_MUNA
         && you.piety < 200 && random2(12) <= spell_difficulty(spc2))
     {
         gain_piety(1);
     }
+    */
 
 #if DEBUG_DIAGNOSTICS
     snprintf( info, INFO_SIZE, "Spell #%d, power=%d", spc2, powc );
@@ -871,7 +891,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
     case SPELL_CREATE_NOISE:  // unused, the player can shout to do this - bwr
         if (!silenced(you.x_pos, you.y_pos))
         {
-            mpr("You hear a voice call your name!");
+            mpr("You hear a voice call your name!", MSGCH_SOUND);
             noisy( 25, you.x_pos, you.y_pos );
         }
         break;
@@ -1863,6 +1883,10 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         cast_conjure_ball_lightning(powc);
         break;
 
+    case SPELL_CHAIN_LIGHTNING:
+        cast_chain_lightning(powc);
+        break;
+
     case SPELL_TWIST:
         cast_twist(powc);
         break;
@@ -1892,6 +1916,7 @@ void exercise_spell( int spell, bool spc, bool success )
     // (!success) reduces skill increase for miscast spells
     int ndx = 0;
     int skill;
+    int exer = 0;
     int workout = 0;
 
     unsigned int disciplines = spell_type(spell);
@@ -1904,18 +1929,19 @@ void exercise_spell( int spell, bool spc, bool success )
     if (!success)
         skillcount += 4 + random2(10);
 
+    const int diff = spell_difficulty(spell);
     for (ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch( spell, 1 << ndx ))
             continue;
 
         skill = spell_type2skill( 1 << ndx );
-        workout = (random2(1 + spell_difficulty(spell)) / skillcount);
+        workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))
             workout++;       // most recently, this was an automatic add {dlb}
 
-        exercise( skill, workout );
+        exer += exercise( skill, workout );
     }
 
     /* ******************************************************************
@@ -1932,21 +1958,12 @@ void exercise_spell( int spell, bool spc, bool success )
 
     if (spc)
     {
-        exercise(SK_SPELLCASTING, one_chance_in(3) ? 1 
-                            : random2(1 + random2(spell_difficulty(spell))));
+        exer += exercise(SK_SPELLCASTING, one_chance_in(3) ? 1 
+                            : random2(1 + random2(diff)));
     }
 
-    //+ (coinflip() ? 1 : 0) + (skillcount ? 1 : 0));
-
-/* ******************************************************************
-   3.02 was:
-
-    if ( spc && spellsy )
-      exercise(SK_SPELLCASTING, random2(random2(spell_difficulty(spell_ex) + 1) / spellsy)); // + 1);
-    else if ( spc )
-      exercise(SK_SPELLCASTING, random2(random2(spell_difficulty(spell_ex)))); // + 1);
-****************************************************************** */
-
+    if (exer)
+        did_god_conduct( DID_SPELL_PRACTISE, exer );
 }                               // end exercise_spell()
 
 static bool send_abyss()
@@ -2185,7 +2202,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 9:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear something strange.");
+                    mpr("You hear something strange.", MSGCH_SOUND);
                 else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
                     mpr("Your skull vibrates slightly.");
 		 		else
@@ -2391,7 +2408,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear strange voices.");
+                    mpr("You hear strange voices.", MSGCH_SOUND);
                 else
                     mpr("You feel momentarily dizzy.");
                 break;
@@ -2560,7 +2577,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear strange voices.");
+                    mpr("You hear strange voices.", MSGCH_SOUND);
                 else
                     mpr("Your nose twitches.");
                 break;
@@ -2671,7 +2688,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear strange and distant voices.");
+                    mpr("You hear strange and distant voices.", MSGCH_SOUND);
                 else
                     mpr("You feel homesick.");
                 break;
@@ -2974,7 +2991,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 9:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a sizzling sound.");
+                    mpr("You hear a sizzling sound.", MSGCH_SOUND);
                 else
                     mpr("You feel like you have heartburn.");
                 break;
@@ -3114,7 +3131,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 9:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a crackling sound.");
+                    mpr("You hear a crackling sound.", MSGCH_SOUND);
                 else
                     mpr("A snowflake lands on your nose.");
                 break;
@@ -3216,7 +3233,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 4:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a distant rumble.");
+                    mpr("You hear a distant rumble.", MSGCH_SOUND);
                 else
                     mpr("You sympathise with the stones.");
                 break;
@@ -3333,7 +3350,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 7:
                 // mummies cannot smell
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a whooshing sound.");
+                    mpr("You hear a whooshing sound.", MSGCH_SOUND);
                 else if (you.species != SP_MUMMY)
                     mpr("You smell ozone.");
                 break;
@@ -3343,7 +3360,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 9:
                 // mummies cannot smell
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a crackling sound.");
+                    mpr("You hear a crackling sound.", MSGCH_SOUND);
                 else if (you.species != SP_MUMMY)
                     mpr("You smell something musty.");
                 break;
@@ -3453,7 +3470,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 9:
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a slurping sound.");
+                    mpr("You hear a slurping sound.", MSGCH_SOUND);
                 else if (you.species != SP_MUMMY)
                     mpr("You taste almonds.");
                 break;

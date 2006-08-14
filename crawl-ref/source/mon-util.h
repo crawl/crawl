@@ -15,56 +15,9 @@
 #define MONUTIL_H
 
 #include "externs.h"
+#include "enum.h"
 
 // ($pellbinder) (c) D.G.S.E. 1998
-
-// ****remember***** must make an hardcopy of this sometime
-
-#if defined(macintosh) || defined(__IBMCPP__) || defined(SOLARIS) || defined(__BCPLUSPLUS__)
-#define PACKED
-#else
-#ifndef PACKED
-#define PACKED __attribute__ ((packed))
-#endif
-#endif
-
-// leaves no skeleton? ("blob" monsters?)
-// if weight=0 or zombie_size=0, this is always true
-#define M_NO_FLAGS 0            // clear
-#define M_NO_SKELETON (1<<0)
-// resistances
-#define M_RES_ELEC (1<<1)
-#define M_RES_POISON (1<<2)
-#define M_RES_FIRE (1<<3)
-#define M_RES_HELLFIRE (1<<4)
-#define M_RES_COLD (1<<5)
-// invisible
-#define M_INVIS (1<<6)          // is created with invis enchantment set, and never runs out
-// vulnerabilities
-//#define M_ED_ELEC (1<<6) // never used
-#define M_ED_POISON (1<<7)      // ???  - - This flag is now (2.50) set for insects (LRH)
-#define M_ED_FIRE (1<<8)
-#define M_ED_COLD (1<<9)
-#define M_SPELLCASTER (1<<10)    // any non-physical-attack powers
-#define M_FLIES (1<<11)          // will crash to ground if paralysed (wings)
-#define M_LEVITATE (1<<12)       // not if this is set
-#define M_SEE_INVIS (1<<13)
-// killing this beast only gives 10 experience (makes sense for plants/fungi)
-#define M_NO_EXP_GAIN (1<<14)    // must do this manually
-#define M_SPEAKS (1<<15)
-//jmf: M_SPELLCASTER was taken ... :-b
-#define M_ACTUAL_SPELLS (1<<16)  // monster is a wizard
-#define M_PRIEST (1<<17)         // monster is a priest of Brian's Orc God (BOG)
-#define M_COLD_BLOOD (1<<18)
-#define M_WARM_BLOOD (1<<19)
-#define M_CONFUSED (1<<20)       // monster is perma-confused
-#define M_SPLITS (1<<21)         // monster is perma-confused
-#define M_AMPHIBIOUS (1<<22)     // monster can swim in water
-
-//jmf: it'd be nice if these next two were implimented ...
-#define M_ON_FIRE (1<<29)        // flag for Hellion-like colour shift
-#define M_FROZEN (1<<30)         // flag for ice-like colour shift
-
 
 // zombie size
 #define Z_NOZOMBIE 0            // no zombie (and no skeleton)
@@ -111,7 +64,9 @@ struct monsterentry
     unsigned char showchar, colour;
     const char *name /*[32]*/; //longest is 23 till now (31 is max alowed here)
 
-    int bitfields;
+    unsigned long bitfields;
+    unsigned long resists;
+
     short weight;
     // experience is calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
@@ -263,7 +218,7 @@ int mons_corpse_thingy(int mclass);
 /* ***********************************************************************
  * called from: dungeon - fight - monstuff - mon-util
  * *********************************************************************** */
-int mons_flag(int mc, int bf);
+bool mons_class_flag(int mc, int bf);
 
 
 // last updated 12may2000 {dlb}
@@ -272,6 +227,7 @@ int mons_flag(int mc, int bf);
  *              spells3 - spells4
  * *********************************************************************** */
 int mons_holiness(int mclass);
+int mons_holiness(const monsters *);
 
 bool mons_is_mimic( int mc ); 
 bool mons_is_demon( int mc ); 

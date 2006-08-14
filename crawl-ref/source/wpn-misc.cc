@@ -178,10 +178,15 @@ unsigned char launched_by(unsigned char weapon_subtype)
     }
 }                               // end launched_by()
 
-// this function returns the skill that the weapon would use in melee
-char weapon_skill(unsigned char wclass, unsigned char wtype)
+int weapon_skill(const item_def &item)
 {
-    char skill2use = SK_FIGHTING;
+    return weapon_skill(item.base_type, item.sub_type);
+}
+
+// this function returns the skill that the weapon would use in melee
+int weapon_skill(int wclass, int wtype)
+{
+    int skill2use = SK_FIGHTING;
 
     if (wclass == OBJ_STAVES
         && (wtype < STAFF_SMITING || wtype >= STAFF_AIR))

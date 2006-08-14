@@ -19,6 +19,8 @@
 
 void item_colour( item_def &item );
 
+bool feat_blocks_movement(int feature);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: files
@@ -45,5 +47,7 @@ void give_item(int mid, int level_number);
  * called from: dungeon monplace
  * *********************************************************************** */
 void define_zombie(int mid, int ztype, int cs, int power);
+
+bool is_wall(int feature);
 
 #endif

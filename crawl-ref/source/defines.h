@@ -76,6 +76,17 @@
 // lowest grid value which can be seen through
 #define MINSEE 11
 
+// This value is used to make test_hit checks always succeed
+#define AUTOMATIC_HIT           1500
+
+// grids that monsters can see
+#define MONSTER_LOS_RANGE       8
+
+// Maximum charge level for rods
+#define MAX_ROD_CHARGE                  17
+#define ROD_CHARGE_MULT                 100
+
+#define NUM_STAVE_ADJ                   9
 
 // some shortcuts:
 #define menv   env.mons

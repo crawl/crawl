@@ -687,6 +687,10 @@ static void tag_construct_you(struct tagHeader &th)
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallByte(th, you.worshipped[i]);
 
+    // what is the extent of divine generosity?
+    for (i = 0; i < MAX_NUM_GODS; i++)
+        marshallShort(th, you.num_gifts[i]);
+
     marshallByte(th, you.gift_timeout);
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
@@ -981,6 +985,11 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
         count_c = unmarshallByte(th);
         for (i = 0; i < count_c; i++)
             you.worshipped[i] = unmarshallByte(th);
+
+        if (minorVersion >= 5)
+            for (i = 0; i < count_c; i++)
+                you.num_gifts[i] = unmarshallShort(th);
+
     }
     else
     {
