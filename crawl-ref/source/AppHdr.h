@@ -271,9 +271,6 @@
 //jmf: New defines for a bunch of optional features.
 // ================================================= --------------------------
 
-// New silence code -- seems to actually work! Use it!
-#define USE_SILENCE_CODE
-
 // Use special colours for various channels of messages
 #define USE_COLOUR_MESSAGES
 

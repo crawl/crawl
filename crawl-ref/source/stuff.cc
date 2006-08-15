@@ -705,8 +705,6 @@ bool adjacent( int x, int y, int x2, int y2 )
 
 bool silenced(char x, char y)
 {
-#ifdef USE_SILENCE_CODE
-
     if (you.duration[DUR_SILENCE] > 0
         && distance(x, y, you.x_pos, you.y_pos) <= 36)  // (6 * 6)
     {
@@ -722,19 +720,11 @@ bool silenced(char x, char y)
         //  }
         return false;
     }
-
-#else
-    return false;
-#endif
 }                               // end silenced()
 
 bool player_can_hear(char x, char y)
 {
-#ifdef USE_SILENCE_CODE
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
-#else
-    return true;
-#endif
 }                               // end player_can_hear()
 
 unsigned char random_colour(void)
