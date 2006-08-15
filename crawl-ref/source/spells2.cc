@@ -620,6 +620,9 @@ bool brand_weapon(int which_brand, int power)
         strcat( info, coinflip() ? " oddly." : " strangely." );
         duration_affected = 5;
 
+        // [dshaligram] Clamping power to 2.
+        power = 2;
+
         // This brand is insanely powerful, this isn't even really
         // a start to balancing it, but it needs something. -- bwr
         // [dshaligram] At level 7 it's costly enough to experiment

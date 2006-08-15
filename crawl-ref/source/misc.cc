@@ -355,6 +355,27 @@ void in_a_cloud(void)
     return;
 }                               // end in_a_cloud()
 
+void curare_hits_player(int agent, int degree)
+{
+    const bool res_poison = player_res_poison();
+
+    poison_player(degree);
+
+    if (!player_res_asphyx())
+    {
+        int hurted = roll_dice(2, 6);
+        // Note that the hurtage is halved by poison resistance.
+        if (res_poison)
+            hurted /= 2;
+
+        if (hurted)
+        {
+            mpr("You feel difficulty breathing.");
+            ouch( hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea" );
+        }
+        potion_effect(POT_SLOWING, 2 + random2(4 + degree));
+    }
+}
 
 void merfolk_start_swimming(void)
 {

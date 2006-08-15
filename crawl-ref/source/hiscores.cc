@@ -325,6 +325,10 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
         break;
 */
 
+    case KILLED_BY_CURARE:
+        strcat( buf, " asphyxiated");
+        break;
+
     case KILLED_BY_LAVA:
         if (se.race == SP_MUMMY)
             strcat( buf, " turned to ash by lava" );
@@ -711,6 +715,10 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
             if (se.auxkilldata[0] != '\0')
                 needs_beam_cause_line = true;
         }
+        break;
+
+    case KILLED_BY_CURARE:
+        strcat(buf, "Asphyxiated");
         break;
 
     case KILLED_BY_LAVA:
@@ -1670,6 +1678,8 @@ static void hs_search_death(char *inbuf, struct scorefile_entry &se)
         se.death_type = KILLED_BY_BEAM;
     else if (strstr(inbuf, "took a swim in molten lava") != NULL)
         se.death_type = KILLED_BY_LAVA;
+    else if (strstr(inbuf, "asphyxiated"))
+        se.death_type = KILLED_BY_CURARE;
     else if (strstr(inbuf, "soaked and fell apart") != NULL)
     {
         se.death_type = KILLED_BY_WATER;

@@ -277,6 +277,8 @@ int mons_res_poison( struct monsters *mon );
 
 int mons_res_negative_energy( struct monsters *mon );
 
+bool mons_res_asphyx( const monsters *mon );
+
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

@@ -1920,7 +1920,8 @@ static void input(void)
             break;
         case SPWPN_DISTORTION:
             strcat( info, " seems straighter." );
-            miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+            // [dshaligram] Makes the brand unusable
+            // miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
             break;
         default:
             strcat(info, " seems inexplicably less special.");

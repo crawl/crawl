@@ -819,6 +819,11 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         {
             strncat( buff, (terse) ? "poison " : "poisoned ", ITEMNAME_SIZE );
         }
+        
+        if (brand == SPMSL_CURARE)
+        {
+            strncat( buff, (terse) ? "curare " : "curare-tipped ", ITEMNAME_SIZE);
+        }
 
         if (item_ident( item, ISFLAG_KNOW_PLUSES ))
         {
@@ -862,7 +867,9 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
               (brand == SPMSL_ICE)     ? ((terse) ? " (ice)" : " of ice") :
               (brand == SPMSL_NORMAL)      ? "" :
               (brand == SPMSL_POISONED)    ? "" :
-              (brand == SPMSL_POISONED_II) ? "" : " (buggy)", ITEMNAME_SIZE );
+              (brand == SPMSL_POISONED_II) ? "" :
+              (brand == SPMSL_CURARE)      ? "" :
+                                             " (buggy)", ITEMNAME_SIZE );
         }
         break;
 

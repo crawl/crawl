@@ -1975,6 +1975,56 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     return (MON_AFFECTED);
 }                               // end mons_ench_f2()
 
+// degree is ignored.
+static void slow_monster(monsters *mon, int degree)
+{
+    bolt beam;
+    beam.flavour = BEAM_SLOW;
+    mons_ench_f2(mon, beam);
+}
+
+// Returns true if the curare killed the monster.
+bool curare_hits_monster( const bolt &beam,
+                          monsters *monster, 
+                          bool fromPlayer, 
+                          int levels )
+{
+    const bool res_poison = mons_res_poison(monster);
+    bool mondied = false;
+
+    poison_monster(monster, fromPlayer, levels, false);
+
+    if (!mons_res_asphyx(monster))
+    {
+        int hurted = roll_dice(2, 6);
+
+        // Note that the hurtage is halved by poison resistance.
+        if (res_poison)
+            hurted /= 2;
+
+        if (hurted)
+        {
+            simple_monster_message(monster, " appears to choke.");
+            if ((monster->hit_points -= hurted) < 1)
+            {
+                const int thrower = YOU_KILL(beam.thrower) ? 
+                                    KILL_YOU_MISSILE : KILL_MON_MISSILE;
+                monster_die(monster, thrower, beam.beam_source);
+                mondied = true;
+            }
+        }
+
+        if (!mondied)
+            slow_monster(monster, levels);
+    }
+
+    // Deities take notice.
+    if (fromPlayer)
+        did_god_conduct( DID_POISON, 5 + random2(3) );
+
+    return (mondied);
+}
+
 // actually poisons a monster (w/ message)
 void poison_monster( struct monsters *monster, bool fromPlayer, int levels,
                      bool force )
@@ -2938,6 +2988,11 @@ static void affect_items(struct bolt &beam, int x, int y)
     }
 }
 
+static int beam_ouch_agent(const bolt &beam)
+{
+    return YOU_KILL(beam.thrower)? 0 : beam.beam_source;
+}
+
 // A little helper function to handle the calling of ouch()...
 static void beam_ouch( int dam, struct bolt &beam )
 {
@@ -3283,6 +3338,14 @@ static int affect_player( struct bolt &beam )
         }
     }
 
+    if (strstr(beam.beam_name, "curare"))
+    {
+        if (random2(100) < 90 - (3 * player_AC()))
+        {
+            curare_hits_player( beam_ouch_agent(beam), 1 + random2(3) );
+        }
+    }
+
     // sticky flame
     if (strcmp(beam.beam_name, "sticky flame") == 0
         && (you.species != SP_MOTTLED_DRACONIAN
@@ -3508,29 +3571,16 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
 
     if (nasty_beam(mon, beam))
     {
-        bool annoyed = false;
-
         if (YOU_KILL(beam.thrower))
         {
             if (mons_friendly(mon))
-            {
                 did_god_conduct( DID_ATTACK_FRIEND, 5 );
-                if (hurt_final > mon->hit_dice / 3)
-                    annoyed = true;
-            }
-            else
-            {
-                annoyed = true;
-            }
 
             if (mons_holiness( mon ) == MH_HOLY)
                 did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
         }
 
-        if (annoyed)
-        {
-            behaviour_event(mon, ME_ANNOY, beam_source(beam) );
-        }
+        behaviour_event(mon, ME_ANNOY, beam_source(beam) );
     }
 
     // explosions always 'hit'
@@ -3625,7 +3675,14 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
             }
         }
 
-        if (mons_is_mimic( mon->type ))
+        bool wake_mimic = true;
+        if (strstr(beam.beam_name, "curare"))
+        {
+            if (curare_hits_monster( beam, mon, YOU_KILL(beam.thrower), 2 ))
+                wake_mimic = false;
+        }
+
+        if (wake_mimic && mons_is_mimic( mon->type ))
             mimic_alert(mon);
     }
 

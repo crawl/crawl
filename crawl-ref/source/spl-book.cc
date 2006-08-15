@@ -145,8 +145,8 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_CONDENSATION_SHIELD,
      SPELL_BOLT_OF_COLD,
      SPELL_OZOCUBUS_REFRIGERATION,
-     SPELL_MASS_SLEEP,
      SPELL_SIMULACRUM,
+     SPELL_MASS_SLEEP,
      SPELL_NO_SPELL,
      },
 
@@ -332,15 +332,10 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_BACKLIGHT,
      SPELL_REPEL_MISSILES,
      SPELL_SLEEP,
-#ifdef USE_SILENCE_CODE
-     SPELL_SILENCE,
-#endif
      SPELL_CONFUSE,
      SPELL_ENSLAVEMENT,
+     SPELL_SILENCE,
      SPELL_INVISIBILITY,
-#ifndef USE_SILENCE_CODE
-     SPELL_NO_SPELL,
-#endif
      SPELL_NO_SPELL,
      },
     // 27 - Book of Demonology  -- Vehumet special
@@ -383,19 +378,14 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 
     // 29 - Book of the Sky
     {0,
-#ifdef USE_SILENCE_CODE
-     SPELL_SILENCE,
-#endif
      SPELL_SUMMON_ELEMENTAL,
      SPELL_INSULATION,
      SPELL_AIRSTRIKE,
      SPELL_FLY,
+     SPELL_SILENCE,
      SPELL_DEFLECT_MISSILES,
      SPELL_LIGHTNING_BOLT,
      SPELL_CONJURE_BALL_LIGHTNING, 
-#ifndef USE_SILENCE_CODE
-     SPELL_NO_SPELL,
-#endif
      },
 
     // 30 - Book of Divinations
@@ -411,11 +401,11 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 31 - Book of the Warp
     {0,
-     SPELL_CONTROLLED_BLINK,
      SPELL_BANISHMENT,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
+     SPELL_CONTROLLED_BLINK,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

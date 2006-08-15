@@ -148,6 +148,12 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
 static int pick_an_altar(void);
 static void place_altar(void);
 
+static bool got_curare_roll(const int item_level)
+{
+    return one_chance_in(item_level > 27? 2  : 
+                         item_level < 2 ? 8  :
+                         (45 - item_level) / 9);
+}
 
 /*
  **************************************************
@@ -1366,7 +1372,11 @@ int items( int allow_uniques,       // not just true-false,
         if (mitm[p].sub_type == MI_NEEDLE 
             && (item_level == MAKE_GOOD_ITEM || !one_chance_in(5)))
         {
-            set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED_II );
+            const int pois = 
+                item_level == MAKE_GOOD_ITEM || 
+                    got_curare_roll(item_level)
+              ? SPMSL_CURARE : SPMSL_POISONED_II;
+            set_item_ego_type( mitm[p], OBJ_MISSILES, pois );
         }
         else
         {
@@ -2569,7 +2579,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     {
     case MONS_KOBOLD:
         // a few of the smarter kobolds have blowguns.
-        if (one_chance_in(15) && level_number > 1)
+        if (one_chance_in(10) && level_number > 1)
         {
             mitm[bp].base_type = OBJ_WEAPONS;
             mitm[bp].sub_type = WPN_BLOWGUN;
@@ -3163,7 +3173,10 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         // monsters will always have poisoned needles -- otherwise
         // they are just going to behave badly --GDL
         if (xitt == MI_NEEDLE)
-            set_item_ego_type(mitm[thing_created], OBJ_MISSILES, SPMSL_POISONED);
+            set_item_ego_type(mitm[thing_created], OBJ_MISSILES, 
+                    got_curare_roll(give_level)? 
+                            SPMSL_CURARE 
+                          : SPMSL_POISONED);
 
         mitm[thing_created].x = 0;
         mitm[thing_created].y = 0;

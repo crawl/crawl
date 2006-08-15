@@ -1422,6 +1422,7 @@ bool class_allowed( unsigned char speci, int char_class )
         case SP_HUMAN:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
+        case SP_GHOUL:
             return true;
         }
         return false;

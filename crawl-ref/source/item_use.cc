@@ -1199,18 +1199,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
 
-    // Making a copy of the item: changed only for venom launchers
-    item_def item = you.inv[throw_2];  
-    item.quantity = 1;
-    item.slot     = index_to_letter(item.link);
-    origin_set_unknown(item);
-
-    char str_pass[ ITEMNAME_SIZE ];
-
     mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
-
     message_current_target();
-
     direction( thr, DIR_NONE, TARG_ENEMY );
 
     if (!thr.isValid)
@@ -1220,6 +1210,23 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
         return;
     }
+
+    // Must unwield before fire_beam() makes a copy in order to remove things
+    // like temporary branding. -- bwr
+    if (throw_2 == you.equip[EQ_WEAPON] && you.inv[throw_2].quantity == 1)
+    {
+        unwield_item( throw_2 );
+        you.equip[EQ_WEAPON] = -1;
+        canned_msg( MSG_EMPTY_HANDED );
+    }
+
+    // Making a copy of the item: changed only for venom launchers
+    item_def item = you.inv[throw_2];  
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+    origin_set_unknown(item);
+
+    char str_pass[ ITEMNAME_SIZE ];
 
     if (you.conf)
     {
@@ -1712,15 +1719,6 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
-
-    // Must unwield before fire_beam() makes a copy in order to remove things
-    // like temporary branding. -- bwr
-    if (throw_2 == you.equip[EQ_WEAPON] && you.inv[throw_2].quantity == 1)
-    {
-        unwield_item( throw_2 );
-        you.equip[EQ_WEAPON] = -1;
-        canned_msg( MSG_EMPTY_HANDED );
-    }
 
     // create message
     if (launched)

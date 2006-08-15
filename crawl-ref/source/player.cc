@@ -810,6 +810,24 @@ int player_res_electricity(bool calc_unid)
     return (re);
 }                               // end player_res_electricity()
 
+// Does the player resist asphyxiation?
+bool player_res_asphyx()
+{
+    // The undead are immune to asphyxiation, or so we'll assume.
+    if (you.is_undead)
+        return (true);
+
+    switch (you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_LICH:
+    case TRAN_STATUE:
+    case TRAN_SERPENT_OF_HELL:
+    case TRAN_AIR:
+        return (true);
+    }
+    return (false);
+}
+
 // funny that no races are susceptible to poisons {dlb}
 int player_res_poison(bool calc_unid)
 {

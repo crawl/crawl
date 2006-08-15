@@ -135,4 +135,6 @@ bool grid_destroys_items( unsigned char grid );
 
 const char *grid_item_destruction_message( unsigned char grid );
 
+void curare_hits_player(int agent, int degree);
+
 #endif

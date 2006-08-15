@@ -143,7 +143,7 @@ void mons_init(FixedVector < unsigned short, 1000 > &colour)
     //return (monsterentry *) 0; // return value should not matter here {dlb}
 }                               // end mons_init()
 
-unsigned long mons_class_resist(int mc)
+unsigned long get_mons_class_resists(int mc)
 {
     return (smc->resists);
 }
@@ -445,7 +445,7 @@ int mons_res_elec( struct monsters *mon )
     /* this is a variable, not a player_xx() function, so can be above 1 */
     int u = 0;
 
-    if (mons_class_resist(MR_RES_ELEC))
+    if (mons_class_resist( mon->type, MR_RES_ELEC))
         u++;
 
     // don't bother checking equipment if the monster can't use it
@@ -465,12 +465,19 @@ int mons_res_elec( struct monsters *mon )
     return (u);
 }                               // end mons_res_elec()
 
+bool mons_res_asphyx( const monsters *mon )
+{
+    const int holiness = mons_holiness( mon->type );
+    return (holiness == MH_UNDEAD 
+                || holiness == MH_DEMONIC
+                || holiness == MH_NONLIVING);
+}
 
 int mons_res_poison( struct monsters *mon )
 {
     int mc = mon->type;
 
-    int u = 0, f = mons_class_resist(mc);
+    int u = 0, f = get_mons_class_resists(mc);
 
     if (f & MR_RES_POISON)
         u++;
@@ -510,7 +517,7 @@ int mons_res_fire( struct monsters *mon )
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_FIRE ]);
 
-    int u = 0, f = mons_class_resist(mc);
+    int u = 0, f = get_mons_class_resists(mc);
 
     // no Big Prize (tm) here either if you set all three flags. It's a pity uh?
     //
@@ -558,7 +565,7 @@ int mons_res_cold( struct monsters *mon )
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_COLD ]);
 
-    int u = 0, f = mons_class_resist(mc);
+    int u = 0, f = get_mons_class_resists(mc);
 
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour

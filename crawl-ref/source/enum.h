@@ -1376,6 +1376,8 @@ enum KILLBY
     KILLED_BY_SOMETHING,
     KILLED_BY_FALLING_DOWN_STAIRS,
     KILLED_BY_ACID,
+    KILLED_BY_CURARE,                  
+
     NUM_KILLBY
 };
 
@@ -2584,7 +2586,8 @@ enum SPECIAL_MISSILES // to separate from weapons in general {dlb}
     SPMSL_FLAME,                       //    1
     SPMSL_ICE,                         //    2
     SPMSL_POISONED, //    3 - from poison_ammo() enchantment {dlb}
-    SPMSL_POISONED_II                  //    4
+    SPMSL_POISONED_II,                 //    4
+    SPMSL_CURARE                       //    5
 };
 
 enum SPECIAL_ROOMS
