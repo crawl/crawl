@@ -402,7 +402,9 @@ int spell_fail(int spell)
         && (spell_typematch(spell, SPTYP_CONJURATION)
             || spell_typematch(spell, SPTYP_SUMMONING)))
     {
-        chance2 /= 2;
+        // [dshaligram] Fail rate multiplier used to be .5, scaled
+        // back to 2/3.
+        chance2 = chance2 * 2 / 3;
     }
 
     if (you.duration[DUR_TRANSFORMATION] > 0)

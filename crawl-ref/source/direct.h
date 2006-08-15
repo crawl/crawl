@@ -44,4 +44,24 @@ bool in_vlos(int x, int y);
 
 std::string feature_description(int mx, int my);
 
+inline int view2gridX(int vx)
+{
+    return (you.x_pos + vx - VIEW_CX);
+}
+
+inline int view2gridY(int vy)
+{
+    return (you.y_pos + vy - VIEW_CY);
+}
+
+inline int grid2viewX(int gx)
+{
+    return (gx - you.x_pos + VIEW_CX);
+}
+
+inline int grid2viewY(int gy)
+{
+    return (gy - you.y_pos + VIEW_CY);
+}
+
 #endif

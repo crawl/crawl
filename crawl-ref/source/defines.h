@@ -64,6 +64,24 @@
 // max y-bound for level generation {dlb}
 #define GYM 70
 
+#define LOS_SX     8
+#define LOS_EX    25
+#define LOS_SY     1
+#define LOS_EY    17
+
+#define VIEW_SX    1
+#define VIEW_EX   33
+#define VIEW_SY    1
+#define VIEW_EY   17
+
+#define VIEW_Y_DIFF  (((VIEW_EX - VIEW_SX + 1) - (VIEW_EY - VIEW_SY + 1)) / 2) 
+
+// View centre must be the same as LOS centre.
+// VIEW_CX == 17
+#define VIEW_CX   ((VIEW_SX + VIEW_EX) / 2)
+// VIEW_CY == 9
+#define VIEW_CY   ((VIEW_SY + VIEW_EY) / 2)
+
 // max traps per level
 #define MAX_TRAPS 30
 

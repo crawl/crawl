@@ -1272,18 +1272,14 @@ void monster_grid(bool do_updates)
                     |= COLFLAG_FRIENDLY_MONSTER;
             }
             else if (Options.stab_brand != CHATTR_NORMAL
-                    && !mons_is_mimic(monster->type)
-                    && monster->type != MONS_OKLOB_PLANT
-                    && mons_is_stabbable(monster))
+                    && mons_looks_stabbable(monster))
             {
                 env.show_col[monster->x - you.x_pos + 9]
                             [monster->y - you.y_pos + 9]
                     |= COLFLAG_WILLSTAB;
             }
             else if (Options.may_stab_brand != CHATTR_NORMAL
-                    && !mons_is_mimic(monster->type)
-                    && monster->type != MONS_OKLOB_PLANT
-                    && mons_maybe_stabbable(monster))
+                    && mons_looks_distracted(monster))
             {
                 env.show_col[monster->x - you.x_pos + 9]
                             [monster->y - you.y_pos + 9]
@@ -1305,9 +1301,7 @@ void monster_grid(bool do_updates)
             }
             
             if (Options.stab_brand != CHATTR_NORMAL
-                    && !mons_is_mimic(monster->type)
-                    && monster->type != MONS_OKLOB_PLANT
-                    && mons_is_stabbable(monster))
+                    && mons_looks_stabbable(monster))
             {
                 unsigned short &colour =
                         env.show_col[monster->x - you.x_pos + 9]
@@ -1315,9 +1309,7 @@ void monster_grid(bool do_updates)
                 colour = dos_brand(colour, Options.stab_brand);
             }
             else if (Options.may_stab_brand != CHATTR_NORMAL
-                    && !mons_is_mimic(monster->type)
-                    && monster->type != MONS_OKLOB_PLANT
-                    && mons_maybe_stabbable(monster))
+                    && mons_looks_stabbable(monster))
             {
                 unsigned short &colour =
                         env.show_col[monster->x - you.x_pos + 9]

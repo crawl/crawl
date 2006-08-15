@@ -111,10 +111,10 @@ static const char *monster_spell_name[] = {
 #endif
 
 static int mons_exp_mod(int mclass);
-static monsterentry *seekmonster(int *p_monsterid);
+static monsterentry *seekmonster(int p_monsterid);
 
 // macro that saves some typing, nothing more
-#define smc seekmonster(&mc)
+#define smc seekmonster(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 void mons_init(FixedVector < unsigned short, 1000 > &colour)
@@ -199,6 +199,21 @@ int mons_holiness(int mc)
 {
     return (smc->holiness);
 }                               // end mons_holiness()
+
+bool mons_is_stationary(const monsters *mons)
+{
+    return (mons->type == MONS_OKLOB_PLANT
+                    || mons->type == MONS_PLANT
+                    || mons->type == MONS_FUNGUS
+                    || mons->type == MONS_CURSE_SKULL
+                    || (mons->type >= MONS_CURSE_TOE
+                        && mons->type <= MONS_POTION_MIMIC));
+}
+
+bool invalid_monster(const monsters *mons)
+{
+    return (!mons || mons->type == -1);
+}
 
 bool mons_is_mimic( int mc )
 {
@@ -301,7 +316,7 @@ char mons_see_invis( struct monsters *mon )
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_SEE_INVIS ]);
-    else if (((seekmonster(&mon->type))->bitfields & M_SEE_INVIS) != 0)
+    else if (((seekmonster(mon->type))->bitfields & M_SEE_INVIS) != 0)
         return (1);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
         return (1);
@@ -374,7 +389,7 @@ int mons_damage(int mc, int rt)
 
 int mons_resist_magic( struct monsters *mon )
 {
-    int u = (seekmonster(&mon->type))->resist_magic;
+    int u = (seekmonster(mon->type))->resist_magic;
 
     // negative values get multiplied with mhd
     if (u < 0)
@@ -685,7 +700,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 // of monster, not a pacticular monsters current hit dice. -- bwr
 int mons_type_hit_dice( int type )
 {
-    struct monsterentry *mon_class = seekmonster( &type );
+    struct monsterentry *mon_class = seekmonster( type );
 
     if (mon_class)
         return (mon_class->hpdice[0]);
@@ -897,7 +912,7 @@ void define_monster(int k)
     int m2_class = menv[k].type;
     int m2_HD, m2_hp, m2_hp_max, m2_AC, m2_ev, m2_speed;
     int m2_sec = menv[k].number;
-    struct monsterentry *m = seekmonster(&m2_class);
+    struct monsterentry *m = seekmonster(m2_class);
 
     m2_HD = m->hpdice[0];
 
@@ -1160,7 +1175,7 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
     glog[0] = '\0';
 
     char gmon_name[ ITEMNAME_SIZE ] = "";
-    strcpy( gmon_name, seekmonster( &mons_num )->name );
+    strcpy( gmon_name, seekmonster( mons_num )->name );
 
     if (!vis)
     {
@@ -1227,14 +1242,12 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
 /* ********************* END PUBLIC FUNCTIONS ********************* */
 
 // see mons_init for initialization of mon_entry array.
-static struct monsterentry *seekmonster(int *p_monsterid)
+static monsterentry *seekmonster(int p_monsterid)
 {
-    ASSERT(p_monsterid != 0);
-
-    int me = mon_entry[(*p_monsterid)];
+    int me = mon_entry[p_monsterid];
 
     if (me >= 0)                // PARANOIA
-        return (&mondata[mon_entry[(*p_monsterid)]]);
+        return (&mondata[me]);
     else
         return (NULL);
 }                               // end seekmonster()
@@ -1311,30 +1324,52 @@ bool mons_aligned(int m1, int m2)
     return (fr1 == fr2);
 }
 
-bool mons_friendly(struct monsters *m)
+bool mons_friendly(const monsters *m)
 {
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
 }
 
-bool mons_is_stabbable(struct monsters *m)
+bool mons_is_confused(const monsters *m)
+{
+    return (mons_has_ench(m, ENCH_CONFUSION) &&
+                            !mons_class_flag(m->type, M_CONFUSED));
+}
+
+bool mons_is_fleeing(const monsters *m)
+{
+    return (m->behaviour == BEH_FLEE);
+}
+
+bool mons_is_sleeping(const monsters *m)
+{
+    return (m->behaviour == BEH_SLEEP);
+}
+
+bool mons_is_batty(const monsters *m)
+{
+    return testbits(m->flags, MF_BATTY);
+}
+
+bool mons_looks_stabbable(const monsters *m)
 {
     // Make sure oklob plants are never highlighted. That'll defeat the
     // point of making them look like normal plants.
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
+                && !mons_is_mimic(m->type)
                 && !mons_friendly(m)
-                && m->behaviour == BEH_SLEEP);
+                && mons_is_sleeping(m));
 }
 
-bool mons_maybe_stabbable(struct monsters *m)
+bool mons_looks_distracted(const monsters *m)
 {
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
+                && !mons_is_mimic(m->type)
                 && !mons_friendly(m)
-                && ((m->foe != MHITYOU && !testbits(m->flags, MF_BATTY))
-                    || (mons_has_ench(m, ENCH_CONFUSION) &&
-                            !mons_class_flag(m->type, M_CONFUSED))
-                    || m->behaviour == BEH_FLEE));
+                && ((m->foe != MHITYOU && !mons_is_batty(m))
+                    || mons_is_confused(m)
+                    || mons_is_fleeing(m)));
 }
 
 /* ******************************************************************
@@ -1411,7 +1446,7 @@ bool mons_should_fire(struct bolt &beam)
     return (false);
 }
 
-int mons_has_ench(struct monsters *mon, unsigned int ench, unsigned int ench2)
+int mons_has_ench(const monsters *mon, unsigned int ench, unsigned int ench2)
 {
     // silliness
     if (ench == ENCH_NONE)
@@ -2022,4 +2057,66 @@ const char *mons_pronoun(int mon_type, int variant)
     }
 
     return ("");
+}
+
+bool monster_can_swap(const monsters *m)
+{
+    const monsterentry *me = seekmonster(m->type);
+    if (!me)
+        return (false);
+
+    // Efreet and fire elementals are disqualified because they leave behind
+    // clouds of flame.
+    if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL)
+        return (false);
+    
+    int mchar = me->showchar;
+    // Somewhat arbitrary: giants and dragons are too big to get past anything,
+    // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
+    // aren't pushers and shovers, zombies are zombies. Worms and elementals
+    // are on the list because all 'w' are currently unrelated.
+    return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
+            && mchar != 'G' && mchar != 'Z' && mchar != 'w' && mchar != '#');
+}
+
+// Returns true if m1 and m2 are related, and m1 is higher up the totem pole
+// than m2. The criteria for being related are somewhat loose, as you can see
+// below.
+bool monster_senior(const monsters *m1, const monsters *m2)
+{
+    const monsterentry *me1 = seekmonster(m1->type),
+                       *me2 = seekmonster(m2->type);
+    
+    if (!me1 || !me2)
+        return (false);
+
+    int mchar1 = me1->showchar,
+        mchar2 = me2->showchar;
+
+    // If both are demons, the smaller number is the nastier demon.
+    if (isdigit(mchar1) && isdigit(mchar2))
+        return (mchar1 < mchar2);
+
+    // &s are the evillest demons of all, well apart from Geryon, who really
+    // profits from *not* pushing past beasts.
+    if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
+        return (m1->hit_dice > m2->hit_dice);
+
+    // Skeletal warriors can push past zombies large and small.
+    if (m1->type == MONS_SKELETAL_WARRIOR && (mchar2 == 'z' || mchar2 == 'Z'))
+        return (m1->hit_dice > m2->hit_dice);
+
+    if (m1->type == MONS_QUEEN_BEE 
+            && (m2->type == MONS_KILLER_BEE 
+                    || m2->type == MONS_KILLER_BEE_LARVA))
+        return (true);
+
+    if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
+        return (true);
+
+    // Special-case gnolls so they can't get past (hob)goblins
+    if (m1->type == MONS_GNOLL && m2->type != MONS_GNOLL)
+        return (false);
+
+    return (mchar1 == mchar2 && m1->hit_dice > m2->hit_dice);
 }

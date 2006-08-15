@@ -49,6 +49,9 @@ static unsigned char monster_abjuration(int pow, bool test);
 //     to be some sort of trap prior to function call: {dlb}
 void mons_trap(struct monsters *monster)
 {
+    if (!is_trap_square(monster->x, monster->y))
+        return;
+    
     int temp_rand = 0;          // probability determination {dlb}
 
     // single calculation permissible {dlb}

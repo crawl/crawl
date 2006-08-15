@@ -14,7 +14,9 @@
  */
 
 #include "AppHdr.h"
+#include "direct.h"
 #include "stuff.h"
+#include "view.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -779,4 +781,49 @@ int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx)
     }
 
     return false;
+}
+
+bool is_trap_square(int x, int y)
+{
+    return (grd[x][y] >= DNGN_TRAP_MECHANICAL
+        && grd[x][y] <= DNGN_UNDISCOVERED_TRAP);
+}
+
+// Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
+// applied to new games.
+void zap_los_monsters()
+{
+    losight(env.show, grd, you.x_pos, you.y_pos);
+
+    for (int y = LOS_SY; y <= LOS_EY; ++y)
+    {
+        for (int x = LOS_SX; x <= LOS_EX; ++x)
+        {
+            if (!in_vlos(x, y))
+                continue;
+
+            const int gx = view2gridX(x),
+                      gy = view2gridY(y);
+
+            if (!in_map_grid(gx, gy))
+                continue;
+
+            if (gx == you.x_pos && gy == you.y_pos)
+                continue;
+
+            int imon = mgrd[gx][gy];
+            if (imon == NON_MONSTER || imon == MHITYOU)
+                continue;
+
+            // If we ever allow starting with a friendly monster,
+            // we'll have to check here.
+            monsters *mon = &menv[imon];
+#ifdef DEBUG_DIAGNOSTICS
+            char mname[ITEMNAME_SIZE];
+            moname(mon->type, true, DESC_PLAIN, mname);
+            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s", mname);
+#endif
+            monster_die(mon, KILL_DISMISSED, 0);
+        }
+    }
 }

@@ -407,10 +407,14 @@ bool mons_aligned(int m1, int m2);
 /* ***********************************************************************
  * called from: monstuff acr
  * *********************************************************************** */
-bool mons_friendly(struct monsters *m);
+bool mons_friendly(const monsters *m);
 
+bool mons_is_confused(const monsters *m);
+bool mons_is_fleeing(const monsters *m);
+bool mons_is_sleeping(const monsters *m);
+bool mons_is_batty(const monsters *m);
 
-int mons_has_ench( struct monsters *mon, unsigned int ench, 
+int mons_has_ench( const monsters *mon, unsigned int ench, 
                    unsigned int ench2 = ENCH_NONE );
 
 int mons_del_ench( struct monsters *mon, unsigned int ench, 
@@ -418,10 +422,18 @@ int mons_del_ench( struct monsters *mon, unsigned int ench,
 
 bool mons_add_ench( struct monsters *mon, unsigned int ench );
 
-bool mons_is_stabbable(struct monsters *m);
+bool mons_looks_stabbable(const monsters *m);
 
-bool mons_maybe_stabbable(struct monsters *m);
+bool mons_looks_distracted(const monsters *m);
 
 bool check_mons_resist_magic( struct monsters *monster, int pow );
+
+bool mons_is_stationary(const monsters *mons);
+
+bool invalid_monster(const monsters *mons);
+
+bool monster_can_swap(const monsters *m);
+
+bool monster_senior(const monsters *first, const monsters *second);
 
 #endif

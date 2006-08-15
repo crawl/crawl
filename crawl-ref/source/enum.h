@@ -1396,7 +1396,8 @@ enum KILLER                            // monster_die(), thing_thrown
     KILL_YOU_MISSILE,
     KILL_MON_MISSILE,
     KILL_MISC,                         //    5
-    KILL_RESET                         // abjuration, etc.
+    KILL_RESET,                        // abjuration, etc.
+    KILL_DISMISSED                     // only on new game startup
 };
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE)

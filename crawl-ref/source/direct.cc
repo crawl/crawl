@@ -143,7 +143,7 @@ void direction( struct dist &moves, int restrict, int mode )
 
     // XXX.  this is ALWAYS in relation to the player. But a bit of a hack
     // nonetheless!  --GDL
-    gotoxy( 18, 9 );
+    gotoxy( VIEW_CX + 1, VIEW_CY );
 
     int keyin = getchm(KC_TARGETING);
 
@@ -365,8 +365,8 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
     bool dirChosen = false;
     bool targChosen = false;
     int dir = 0;
-    int cx = 17;
-    int cy = 9;
+    int cx = VIEW_CX;
+    int cy = VIEW_CY;
     int newcx, newcy;
     int mx, my;         // actual map x,y (scratch)
     int mid;            // monster id (scratch)
@@ -519,8 +519,8 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
                     case '?':
                         targChosen = true;
-                        mx = you.x_pos + cx - 17;
-                        my = you.y_pos + cy - 9;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
                         mid = mgrd[mx][my];
 
                         if (mid == NON_MONSTER)
@@ -535,7 +535,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         redraw_screen();
                         mesclr( true );
                         // describe the cell again.
-                        describe_cell(you.x_pos + cx - 17, you.y_pos + cy - 9);
+                        describe_cell(view2gridX(cx), view2gridY(cy));
                         break;
 
                     case '\r':
@@ -545,12 +545,12 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         // If we're in look-around mode, and the cursor is on
                         // the character and there's a valid travel target 
                         // within the viewport, jump to that target.
-                        if (justLooking && cx == 17 && cy == 9)
+                        if (justLooking && cx == VIEW_CX && cy == VIEW_CY)
                         {
                             if (you.travel_x > 0 && you.travel_y > 0)
                             {
-                                int nx = you.travel_x - you.x_pos + 17;
-                                int ny = you.travel_y - you.y_pos + 9;
+                                int nx = grid2viewX(you.travel_x);
+                                int ny = grid2viewY(you.travel_y);
                                 if (in_viewport_bounds(nx, ny))
                                 {
                                     newcx = nx;
@@ -602,16 +602,16 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
             moves.isValid = true;
             moves.isTarget = true;
-            moves.tx = you.x_pos + cx - 17;
-            moves.ty = you.y_pos + cy - 9;
+            moves.tx = you.x_pos + cx - VIEW_CX;
+            moves.ty = you.y_pos + cy - VIEW_CY;
 
             if (moves.tx == you.x_pos && moves.ty == you.y_pos)
                 moves.isMe = true;
             else
             {
                 // try to set you.previous target
-                mx = you.x_pos + cx - 17;
-                my = you.y_pos + cy - 9;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
                 mid = mgrd[mx][my];
 
                 if (mid == NON_MONSTER)
@@ -633,10 +633,10 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         }
 
         // bounds check for newcx, newcy
-        if (newcx < 1)  newcx = 1;
-        if (newcx > 33) newcx = 33;
-        if (newcy < 1)  newcy = 1;
-        if (newcy > 17) newcy = 17;
+        if (newcx < VIEW_SX) newcx = VIEW_SX;
+        if (newcx > VIEW_EX) newcx = VIEW_EX;
+        if (newcy < VIEW_SY) newcy = VIEW_SY;
+        if (newcy > VIEW_EY) newcy = VIEW_EY;
 
         // no-op if the cursor doesn't move.
         if (newcx == cx && newcy == cy)
@@ -649,11 +649,11 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         if (!in_vlos(cx, cy))
         {
             mpr("You can't see that place.");
-            describe_oos_square(you.x_pos + cx - 17, 
-                                you.y_pos + cy - 9);
+            describe_oos_square(you.x_pos + cx - VIEW_CX, 
+                                you.y_pos + cy - VIEW_CY);
             continue;
         }
-        describe_cell(you.x_pos + cx - 17, you.y_pos + cy - 9);
+        describe_cell(you.x_pos + cx - VIEW_CX, you.y_pos + cy - VIEW_CY);
     } // end WHILE
 
     mesclr( true );
@@ -661,18 +661,19 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
 bool in_vlos(int x, int y)
 {
-    return in_los_bounds(x, y) && (env.show[x - 8][y] || (x == 17 && y == 9));
+    return in_los_bounds(x, y) 
+            && (env.show[x - LOS_SX][y] || (x == VIEW_CX && y == VIEW_CY));
 }
 
 bool in_los(int x, int y)
 {
-    const int tx = x + 9 - you.x_pos,
-              ty = y + 9 - you.y_pos;
+    const int tx = x + VIEW_CX - you.x_pos,
+              ty = y + VIEW_CY - you.y_pos;
     
-    if (!in_los_bounds(tx + 8, ty))
+    if (!in_los_bounds(tx, ty))
         return (false);
 
-    return (x == you.x_pos && y == you.y_pos) || env.show[tx][ty];
+    return (x == you.x_pos && y == you.y_pos) || env.show[tx - LOS_SX][ty];
 }
 
 static bool find_monster( int x, int y, int mode )
@@ -760,12 +761,12 @@ static int next_los(int dir, int los, bool wrap)
 
 bool in_viewport_bounds(int x, int y)
 {
-    return (x >= 1 && x <= 33 && y >= 1 && y <= 17);
+    return (x >= VIEW_SX && x <= VIEW_EX && y >= VIEW_SY && y <= VIEW_EY);
 }
 
 bool in_los_bounds(int x, int y)
 {
-    return !(x > 25 || x < 8 || y > 17 || y < 1);
+    return !(x > LOS_EX || x < LOS_SX || y > LOS_EY || y < LOS_SY);
 }
 
 //---------------------------------------------------------------
@@ -805,7 +806,8 @@ static char find_square( unsigned char xps, unsigned char yps,
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            bool vis = (env.show[xps - 8][yps] || (xps == 17 && yps == 9));
+            bool vis = (env.show[xps - 8][yps] 
+                            || (xps == VIEW_CX && yps == VIEW_CY));
             
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
@@ -828,9 +830,9 @@ static char find_square( unsigned char xps, unsigned char yps,
     onlyVis     = (los & LOS_VISIBLE);
     onlyHidden  = (los & LOS_HIDDEN);
 
-    const int minx = 1,  maxx = 33,
-              miny = -7, maxy = 25,
-              ctrx = 17, ctry = 9;
+    const int minx = VIEW_SX,  maxx = VIEW_EX,
+              miny = VIEW_SY - VIEW_Y_DIFF, maxy = VIEW_EY + VIEW_Y_DIFF,
+              ctrx = VIEW_CX, ctry = VIEW_CY;
 
     while (temp_xps >= minx - 1 && temp_xps <= maxx
                 && temp_yps <= maxy && temp_yps >= miny - 1)
@@ -963,7 +965,7 @@ static char find_square( unsigned char xps, unsigned char yps,
         //    continue;
 
         if (temp_xps < minx - 1 || temp_xps > maxx
-                || temp_yps < 1 || temp_yps > 17)
+                || temp_yps < VIEW_SY || temp_yps > VIEW_EY)
             continue;
 
         if (targ_x < 1 || targ_x >= GXM || targ_y < 1 || targ_y >= GYM)

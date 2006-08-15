@@ -76,5 +76,9 @@ inline bool testbits(unsigned int flags, unsigned int test)
     return ((flags & test) == test);
 }
 
+bool is_trap_square(int x, int y);
+
+void zap_los_monsters();
+
 #endif
 
