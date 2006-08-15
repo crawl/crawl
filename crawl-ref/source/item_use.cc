@@ -2543,11 +2543,15 @@ static bool affix_weapon_enchantment( void )
         break;
 
     case SPWPN_DISTORTION:
+        // [dshaligram] Attempting to fix a distortion brand gets you a free
+        // distortion effect, and no permabranding. Sorry, them's the breaks.
         strcat(info, " twongs alarmingly.");
         mpr(info);
 
         // from unwield_item
-        miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+        miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, 
+                        "a distortion effect" );
+        success = false;
         break;
 
     default:

@@ -64,7 +64,7 @@ static const char *features[] = {
 
 void version(void)
 {
-    mpr( "This is Dungeon Crawl " VERSION " (Last build " BUILD_DATE ")." );
+    mpr( "This is Dungeon Crawl Stone Soup " VERSION " (Last build " BUILD_DATE ")." );
     
     std::string feats = "Features: ";
     for (int i = 1, size = sizeof features / sizeof *features; i < size; ++i)

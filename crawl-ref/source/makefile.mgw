@@ -13,10 +13,12 @@ OS_TYPE = WIN32CONSOLE
 CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
             -Wmissing-prototypes -Wmissing-declarations \
 			-D$(OS_TYPE) $(EXTRA_FLAGS)
+OBJECTS := $(OBJECTS) libw32c.o
+
 LDFLAGS = 
 INSTALLDIR = .
 #LIB = -lcurso -lpano
-LIB = -lwinmm -static -lpcre -lluacore -lluastd
+LIB = -lwinmm -static -lpcre -llua -llualib
 
 all:            $(APPNAME)
 
@@ -37,8 +39,8 @@ distclean:
 		$(DELETE) *.0*
 		$(DELETE) *.lab
 
-$(APPNAME):	$(OBJECTS) libw32c.o
-		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) libw32c.o -o $(APPNAME) $(LIB)
+$(APPNAME):	$(OBJECTS)
+		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
 debug:		$(OBJECTS)

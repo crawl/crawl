@@ -622,7 +622,11 @@ bool brand_weapon(int which_brand, int power)
 
         // This brand is insanely powerful, this isn't even really
         // a start to balancing it, but it needs something. -- bwr
-        miscast_effect(SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect");
+        // [dshaligram] At level 7 it's costly enough to experiment
+        // with removing the miscast effect. We may need to revise the spell
+        // to level 8 or 9. XXX.
+        // miscast_effect(SPTYP_TRANSLOCATION, 
+        //                9, 90, 100, "a distortion effect");
         break;
 
     case SPWPN_DUMMY_CRUSHING:  //jmf: added for Maxwell's Silver Hammer

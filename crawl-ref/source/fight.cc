@@ -2020,16 +2020,23 @@ void monster_attack(int monster_attacking)
         // Factors against blocking
         // [dshaligram] Scaled back HD effect to 50% of previous, reduced
         // shield_blocks multiplier to 5.
-        const int con_block = 15 + attacker->hit_dice / 2
-                               + (5 * you.shield_blocks * you.shield_blocks);
+        const int con_block = 
+                random2(15 + attacker->hit_dice / 2
+                               + (5 * you.shield_blocks * you.shield_blocks));
 
-        // Factors for blocking
+        // Factors for blocking:
+        // [dshaligram] Increased dex weight from .2 to .3333, added weighting
+        // for shields skill.
         const int pro_block = player_shield_class() + (random2(you.dex) / 5);
+                random2(player_shield_class()) 
+                                        + (random2(you.dex) / 3) 
+                                        + (random2(skill_bump(SK_SHIELDS)) / 3)
+                                        - 1;
 
         if (!you.paralysis && !you_are_delayed() && !you.conf 
             && player_monster_visible( attacker )
             && player_shield_class() > 0
-            && random2(con_block) <= random2(pro_block))
+            && con_block <= pro_block)
         {
             you.shield_blocks++;
 
