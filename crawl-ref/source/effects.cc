@@ -564,11 +564,7 @@ bool acquirement(unsigned char force_class, int agent)
 
             int weight = 0;
 
-            if (i < SK_SLINGS)
-                weight = you.skills[i] + 3;
-            else
-                weight = (you.skills[i] + 2) * 2 / 3;
-
+            weight = you.skills[i] + 3;
             if (weight)
             {
                 count += weight;
@@ -605,7 +601,10 @@ bool acquirement(unsigned char force_class, int agent)
 
                 // "rare" weapons are only considered some of the time...
                 // still, the chance is higher than actual random creation
-                if (weapon_skill( OBJ_WEAPONS, i ) == skill
+                int wskill = range_skill(OBJ_WEAPONS, i);
+                if (wskill == SK_RANGED_COMBAT)
+                    wskill = weapon_skill(OBJ_WEAPONS, i);
+                if (wskill == skill
                     && (i < WPN_EVENINGSTAR || i > WPN_BROAD_AXE 
                         || (i >= WPN_HAMMER && i <= WPN_SABRE) 
                         || one_chance_in(4)))
@@ -1250,6 +1249,10 @@ bool acquirement(unsigned char force_class, int agent)
             case SP_SPRIGGAN:
                 switch (mitm[thing_created].sub_type)
                 {
+                case WPN_LONGBOW:
+                    mitm[thing_created].sub_type = WPN_BOW;
+                    break;
+
                 case WPN_GREAT_SWORD:
                 case WPN_TRIPLE_SWORD:
                     mitm[thing_created].sub_type = 

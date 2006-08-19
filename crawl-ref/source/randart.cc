@@ -826,7 +826,9 @@ void randart_wpn_properties( const item_def &item,
                 proprt[RAP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
                                     (tmp >= 14) ? SPWPN_PROTECTION :
                                     (tmp >= 10) ? SPWPN_VENOM                   
-                                                : SPWPN_FLAME + (tmp % 2);
+                                                : SPWPN_VORPAL + random2(3);
+                if (proprt[RAP_BRAND] == SPWPN_VORPAL && atype == WPN_BLOWGUN)
+                    proprt[RAP_BRAND] = SPWPN_VENOM;
             }
         }
 

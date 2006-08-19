@@ -559,9 +559,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = 2 + monster->hit_dice / 5;
-        if (duration > 6)
-            duration = 6;
+        duration  = ENCH_ABJ_II + monster->hit_dice / 10;
+        if (duration > ENCH_ABJ_VI)
+            duration = ENCH_ABJ_VI;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -1634,7 +1634,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
         beam.hit = 7 + random2(power) / 80;
-        beam.is_beam = false;
+        beam.is_beam = true;
         beam.is_big_cloud = true;
         break;
 
@@ -1646,7 +1646,8 @@ bolt mons_spells( int spell_cast, int power )
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MIASMA;
         beam.hit = 80 + power / 20;
-        beam.is_beam = false;
+        beam.is_beam = true;
+        beam.is_big_cloud = true;
         beam.range = beam.rangeMax = 8;
         break;
         

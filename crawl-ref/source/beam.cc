@@ -2442,6 +2442,9 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     if (strcmp(beam.beam_name, "foul vapour") == 0)
     {
         cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STINK : CLOUD_STINK_MON;
+        if (beam.flavour == BEAM_MIASMA)
+            cloud_type = YOU_KILL(beam.thrower) ? 
+                                CLOUD_MIASMA : CLOUD_MIASMA_MON;
         big_cloud( cloud_type, x, y, 0, 9 );
         return;
     }

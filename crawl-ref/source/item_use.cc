@@ -106,6 +106,7 @@ bool can_wield(const item_def& weapon)
                 || weapon.sub_type == WPN_GLAIVE
                 || weapon.sub_type == WPN_GIANT_CLUB
                 || weapon.sub_type == WPN_GIANT_SPIKED_CLUB
+                || weapon.sub_type == WPN_LONGBOW
                 || weapon.sub_type == WPN_SCYTHE))
         return false;
 
@@ -267,6 +268,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                 || you.inv[item_slot].sub_type == WPN_GLAIVE
                 || you.inv[item_slot].sub_type == WPN_GIANT_CLUB
                 || you.inv[item_slot].sub_type == WPN_GIANT_SPIKED_CLUB
+                || you.inv[item_slot].sub_type == WPN_LONGBOW
                 || you.inv[item_slot].sub_type == WPN_SCYTHE))
         {
             mpr("That's too large for you to wield.");

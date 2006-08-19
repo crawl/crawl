@@ -4967,7 +4967,8 @@ static void mons_in_cloud(struct monsters *monster)
     case CLOUD_MIASMA_MON:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_holiness(monster) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL 
+                || monster->type == MONS_DEATH_DRAKE)
             return;
 
         poison_monster(monster, (env.cloud[wc].type == CLOUD_MIASMA));
