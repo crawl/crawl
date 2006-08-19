@@ -1437,7 +1437,6 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             // comes from dexterity.  (Dex bonus here as well as below)
         case SK_DARTS:
             exercise(SK_DARTS, (coinflip()? 2 : 1));
-            baseHit -= 2;
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
             // no extra damage for blowguns
@@ -1453,7 +1452,6 @@ static void throw_it(struct bolt &pbolt, int throw_2)
         case SK_BOWS:
         {
             exercise(SK_BOWS, (coinflip()? 2 : 1));
-            baseHit -= 4;
             exHitBonus += (effSkill * 2);
 
             // strength is good if you're using a nice bow
@@ -1479,7 +1477,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
         case SK_CROSSBOWS:
             exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
-            baseHit += lnchType == WPN_CROSSBOW? 2 : 1;
+            baseHit += 2;
             exHitBonus += (3 * effSkill) / 2 + 6;
             exDamBonus += effSkill * 2 / 3 + 4;
             if (lnchType == WPN_HAND_CROSSBOW)
@@ -3127,7 +3125,7 @@ void read_scroll(void)
             || (you.inv[ nthing ].base_type == OBJ_WEAPONS
                 && (is_fixed_artefact( you.inv[ nthing ] )
                     || is_random_artefact( you.inv[ nthing ] )
-                    || launches_things( you.inv[ nthing ].sub_type ))))
+                    || you.inv[nthing].sub_type == WPN_BLOWGUN)))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             break;

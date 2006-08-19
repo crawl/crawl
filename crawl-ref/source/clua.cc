@@ -1268,12 +1268,15 @@ static int l_item_weap_skill(lua_State *ls)
     if (!item || !is_valid_item(*item))
         return (0);
 
-    int skill = weapon_skill( item->base_type, item->sub_type );
+    int skill = range_skill(*item);
+    if (skill == SK_RANGED_COMBAT)
+        skill = weapon_skill(*item);
     if (skill == SK_FIGHTING)
         return (0);
 
     lua_pushstring(ls, skill_name(skill));
-    return (1);
+    lua_pushnumber(ls, skill);
+    return (2);
 }
 
 static int l_item_artifact(lua_State *ls)

@@ -5,15 +5,13 @@
 include makefile.obj
 
 ifeq ($(DEBUG_CRAWL),)
-OPATH := rel/
+OPATH := rel
 else
-OPATH := dbg/
+OPATH := dbg
 endif
 
-OBPATH = $(subst /,\,$(OPATH))
-
 # need .exe so make will find the right file
-APPNAME = $(OPATH)crawl.exe
+APPNAME = $(OPATH)\crawl.exe
 CXX = g++
 DELETE = del
 COPY = copy
@@ -23,8 +21,8 @@ CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
 			-D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS \
 			-DWINMM_PLAY_SOUNDS -DREGEX_PCRE
 
-OBJNAMES := $(OBJECTS) $(OPATH)libw32c.o
-OBJECTS = $(foreach file,$(OBJNAMES),$(OPATH)$(file))
+OBJECTS := $(OBJECTS) libw32c.o
+OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
 LDFLAGS = 
 INSTALLDIR = .
@@ -34,33 +32,33 @@ LIB = -lwinmm -static -lpcre -llua -llualib
 all:            $(APPNAME)
 
 prepare:
-		if not exist $(OPATH) mkdir $(OBPATH)
+		if not exist $(OPATH) mkdir $(OPATH)
 
 install:        $(APPNAME)
 		$(COPY) $(APPNAME) ${INSTALLDIR}
 
 clean:
-		$(DELETE) $(OBPATH)*.o
+		$(DELETE) $(OPATH)\*.o
 
 distclean:
-		$(DELETE) $(OBPATH)*.o 
+		$(DELETE) $(OPATH)\*.o 
 		$(DELETE) *.o
 		$(DELETE) bones.*
-		$(DELETE) $(OBPATH)bones.*
+		$(DELETE) $(OPATH)\bones.*
 		$(DELETE) morgue.txt
-		$(DELETE) $(OBPATH)morgue.txt
+		$(DELETE) $(OPATH)\morgue.txt
 		$(DELETE) scores 
-		$(DELETE) $(OBPATH)scores 
+		$(DELETE) $(OPATH)\scores 
 		$(DELETE) crawl.exe
 		$(DELETE) $(subst /,\,$(APPNAME))
 		$(DELETE) *.sav
-		$(DELETE) $(OBPATH)*.sav
+		$(DELETE) $(OPATH)\*.sav
 		$(DELETE) core
-		$(DELETE) $(OBPATH)core
+		$(DELETE) $(OPATH)\core
 		$(DELETE) *.0*
-		$(DELETE) $(OBPATH)*.0*
+		$(DELETE) $(OPATH)\*.0*
 		$(DELETE) *.lab
-		$(DELETE) $(OBPATH)*.lab
+		$(DELETE) $(OPATH)\*.lab
 
 $(APPNAME):	prepare $(OBJECTS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
@@ -72,5 +70,5 @@ debug: prepare $(OBJECTS)
 profile:	$(OBJECTS)
 		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-$(OPATH)%.o: %.cc
+$(OPATH)/%.o: %.cc
 		${CXX} ${CFLAGS} ${INCLUDES} -o $@ -c $< 
