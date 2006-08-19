@@ -33,6 +33,7 @@
 #include "debug.h"
 #include "fight.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "player.h"
@@ -872,6 +873,12 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "and a skilled user can use it to great effect. ";
                 break;
 
+            case WPN_LONGBOW:
+                description += "A long, strong bow made of yew. "
+                    "It does excellent damage in combat "
+                    "and a skilled archer can use it to great effect. ";
+                break;
+
             case WPN_BLOWGUN:
                 description += "A long, light tube, open at both ends.  Doing "
                     "very little damage,  its main use is to fire poisoned "
@@ -924,6 +931,17 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 description += "A very rare and extremely effective "
                     "imported weapon, featuring a long "
                     "single-edged blade. ";
+                break;
+
+            case WPN_LAJATANG:
+                description += "A very rare and extremely effective "
+                    "imported weapon, featuring a pole with half-moon blades "
+                    "at both ends. ";
+                break;
+
+            case WPN_LOCHABER_AXE:
+                description += "An enormous combination of a pike "
+                               "and a battle axe.";
                 break;
 
             case WPN_EXECUTIONERS_AXE:
@@ -993,8 +1011,8 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 description += "A large and heavy mace. ";
                 break;
 
-            case WPN_GREAT_FLAIL:
-                description += "A large and heavy flail. ";
+            case WPN_DIRE_FLAIL:
+                description += "A flail with spiked lumps on both ends.";
                 break;
 
             case WPN_FALCHION:
@@ -1091,7 +1109,16 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 }
                 break;
             case SPWPN_VORPAL:
-                description += "It inflicts extra damage upon your enemies. ";
+                if (launches_things(item.sub_type))
+                {
+                    description += "Any ";
+                    description += ammo_name( item );
+                    description += " fired from it inflicts extra damage."; 
+                }
+                else
+                {
+                    description += "It inflicts extra damage upon your enemies. ";
+                }
                 break;
             case SPWPN_FLAME:
                 description += "It turns projectiles fired from it into "
@@ -1168,14 +1195,14 @@ static std::string describe_weapon( const item_def &item, char verbose)
 
         switch (hands_reqd_for_weapon(item.base_type, item.sub_type))
         {
-        case HANDS_ONE_HANDED:
+        case HANDS_ONE:
             description += "$It is a one handed weapon.";
             break;
-        case HANDS_ONE_OR_TWO_HANDED:
+        case HANDS_HALF:
             description += "$It can be used with one hand, or more "
                     "effectively with two (i.e. when not using a shield).";
             break;
-        case HANDS_TWO_HANDED:
+        case HANDS_TWO:
             description += "$It is a two handed weapon.";
             break;
         }
@@ -1220,6 +1247,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
             description += " 'slings' category. ";
             break;
         case WPN_BOW:
+        case WPN_LONGBOW:
             description += " 'bows' category. ";
             break;
         case WPN_HAND_CROSSBOW:
@@ -1294,7 +1322,7 @@ static std::string describe_ammo( const item_def &item )
     case MI_LARGE_ROCK:
         description += "A rock, used by giants as a missile. ";
         break;
-    case MI_EGGPLANT:
+    case MI_NONE:   // was eggplant
         description += "A purple vegetable. "
             "The presence of this object in the game "
             "indicates a bug (or some kind of cheating on your part). ";
@@ -1407,16 +1435,21 @@ static std::string describe_armour( const item_def &item, char verbose )
             case ARM_GLOVES:
                 description += "A pair of gloves. ";
                 break;
-            case ARM_BOOTS:
-                if (item.plus2 == TBOOT_NAGA_BARDING)
-                    description += "A special armour made for Nagas, "
-                        "to wear over their tails. ";
-                else if (item.plus2 == TBOOT_CENTAUR_BARDING)
-                    description += "An armour made for centaurs, "
-                        "to wear over their equine half. ";
-                else
-                    description += "A pair of sturdy boots. ";
+
+            case ARM_CENTAUR_BARDING:
+                description += "An armour made for centaurs, "
+                               "to wear over their equine half.";
                 break;
+
+            case ARM_NAGA_BARDING:
+                description += "A special armour made for nagas, "
+                               "to wear over their tails.";
+                break;
+
+            case ARM_BOOTS:
+                description += "A pair of boots.";
+                break;
+
             case ARM_BUCKLER:
                 description += "A small shield. ";
                 break;
@@ -1561,7 +1594,8 @@ static std::string describe_armour( const item_def &item, char verbose )
             // caps and wizard hats don't have a base AC
             append_value(description, 0, false);
         }
-        else if (item.sub_type == ARM_BOOTS && item.plus2 != TBOOT_BOOTS)
+        else if (item.sub_type == ARM_NAGA_BARDING 
+                || item.sub_type == ARM_CENTAUR_BARDING)
         {
             // Barding has AC value 4.
             append_value(description, 4, false);
@@ -2441,7 +2475,7 @@ static std::string describe_jewellery( const item_def &item, char verbose)
     else if ((!is_random_artefact( item ) 
             && get_ident_type( OBJ_JEWELLERY, item.sub_type ) != ID_KNOWN_TYPE)
         || (is_random_artefact( item ) 
-            && item_not_ident( item, ISFLAG_KNOW_TYPE )))
+            && !item_ident( item, ISFLAG_KNOW_TYPE )))
     {
         description += "A piece of jewellery.";
     }
@@ -3248,7 +3282,7 @@ std::string get_item_description( const item_def &item, char verbose, bool dump 
     {
         description += "$It weighs around ";
 
-        const int mass = mass_item( item );
+        const int mass = item_mass( item );
 
         char item_mass[16];
         itoa( mass / 10, item_mass, 10 ); 
@@ -4331,14 +4365,6 @@ void describe_spell(int spelled)
         description += "causes the flesh of all those near the caster to "
             "rot. It will affect the living and many of the "
             "corporeal undead. ";
-        break;
-
-    case SPELL_SHUGGOTH_SEED:
-        description += "implants a shuggoth seed, the larval parasitic form "
-            "of the fearsome shuggoth, in a living host. The "
-            "shuggoth seed will draw life from its host and then "
-            "hatch, whereupon a fully grown shuggoth will burst "
-            "from the unfortunate host's chest. ";
         break;
 
     case SPELL_MAXWELLS_SILVER_HAMMER:
@@ -5819,6 +5845,44 @@ void describe_monsters(int class_described, unsigned char which_mons)
             "A small and slimy eel, crackling with electrical discharge.";
         break;
 
+    case MONS_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_KNIGHT:
+    {
+        description += "A ";
+
+        const int subsp = draco_subspecies( &menv[which_mons] );
+        switch (subsp)
+        {
+        case MONS_DRACONIAN:            description += "brown ";   break;
+        case MONS_BLACK_DRACONIAN:      description += "black ";   break;
+        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
+        case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
+        case MONS_GREEN_DRACONIAN:      description += "green ";   break;
+        case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
+        case MONS_RED_DRACONIAN:        description += "red ";     break;
+        case MONS_WHITE_DRACONIAN:      description += "white ";   break;
+        case MONS_PALE_DRACONIAN:       description += "pale ";    break;
+        default:
+            break;
+        }
+
+        description += "scaled humanoid with wings.";
+        break;        
+    }
     case MONS_PLAYER_GHOST:
         description += "The apparition of ";
         description += ghost_description();
@@ -6576,7 +6640,7 @@ void describe_god( int which_god, bool give_title )
                     print_god_abil_desc( ABIL_TSO_ANNIHILATE_UNDEAD );
 
                 if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_TSO_THUNDERBOLT );
+                    print_god_abil_desc( ABIL_TSO_CLEANSING_FLAME );
 
                 if (you.piety >= 120)
                     print_god_abil_desc( ABIL_TSO_SUMMON_DAEVA );

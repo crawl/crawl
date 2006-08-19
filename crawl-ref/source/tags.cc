@@ -84,6 +84,7 @@
 #include "externs.h"
 #include "files.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "randart.h"

@@ -357,6 +357,12 @@ void reset_options(bool clear_name)
     Options.prev_randpick = false;
     Options.remember_name = false;
 
+#ifdef USE_ASCII_CHARACTERS
+    Options.ascii_display          = true;
+#else
+    Options.ascii_display          = false;
+#endif
+
     Options.autopickups            = 0x0000;
     Options.verbose_dump           = false;
     Options.detailed_stat_dump     = true;
@@ -631,6 +637,32 @@ void read_options(const std::string &s, bool runscript)
     read_options(st, runscript);
 }
 
+extern void (*viewwindow) (char, bool);
+/* these are all defined in view.cc: */
+extern unsigned char (*mapch) (unsigned char);
+extern unsigned char (*mapch2) (unsigned char);
+unsigned char mapchar(unsigned char ldfk);
+unsigned char mapchar2(unsigned char ldfk);
+unsigned char mapchar3(unsigned char ldfk);
+unsigned char mapchar4(unsigned char ldfk);
+void apply_ascii_display(bool ascii)
+{
+    if (ascii)
+    {
+        // Default to the non-ibm set when it makes sense.
+        viewwindow = &viewwindow3;
+        mapch = &mapchar3;
+        mapch2 = &mapchar4;
+    }
+    else
+    {
+        // Use the standard ibm default
+        viewwindow = &viewwindow2;
+        mapch = &mapchar;
+        mapch2 = &mapchar2;
+    }
+}
+
 static void read_options(InitLineInput &il, bool runscript)
 {
     unsigned int line = 0;
@@ -774,6 +806,8 @@ static void read_options(InitLineInput &il, bool runscript)
         }
     }
 #endif
+
+    apply_ascii_display(Options.ascii_display);
 }
 
 static int str_to_killcategory(const std::string &s)
@@ -898,6 +932,10 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         // gives verbose info in char dumps
         Options.verbose_dump = read_bool( field, Options.verbose_dump );
+    }
+    else if (key == "ascii_display")
+    {
+        Options.ascii_display = read_bool( field, Options.ascii_display );
     }
     else if (key == "detailed_stat_dump")
     {

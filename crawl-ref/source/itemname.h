@@ -32,13 +32,6 @@ char item_name( const item_def &item, char descrip, char buff[ITEMNAME_SIZE],
 
 
 /* ***********************************************************************
- * called from: beam - describe - fight - item_use - items - monstuff -
- *              player
- * *********************************************************************** */
-int mass_item( const item_def &item );
-
-
-/* ***********************************************************************
  * called from: debug - describe - dungeon - fight - files - item_use -
  *              monstuff - mstuff2 - players - spells0
  * *********************************************************************** */
@@ -80,40 +73,11 @@ void quant_name( const item_def &item, int quant, char des,
  * bit operations called from a large number of files
  * *********************************************************************** */
 bool item_cursed( const item_def &item );
-bool item_uncursed( const item_def &item );
-
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
 // bool fully_indentified( const item_def &item );
 
-bool item_ident( const item_def &item, unsigned long flags );
 bool item_type_known( const item_def &item );
-bool item_not_ident( const item_def &item, unsigned long flags );
-
-void do_curse_item(  item_def &item );
-void do_uncurse_item(  item_def &item );
-
-void set_ident_flags( item_def &item, unsigned long flags );
-void unset_ident_flags( item_def &item, unsigned long flags );
-
-void set_equip_race( item_def &item, unsigned long flags );
-void set_equip_desc( item_def &item, unsigned long flags );
-
-unsigned long get_equip_race( const item_def &item );
-unsigned long get_equip_desc( const item_def &item );
-
-bool cmp_equip_race( const item_def &item, unsigned long val );
-bool cmp_equip_desc( const item_def &item, unsigned long val );
-
-void set_helmet_type( item_def &item, short flags );
-void set_helmet_desc( item_def &item, short flags );
-void set_helmet_random_desc( item_def &item );
-
-short get_helmet_type( const item_def &item );
-short get_helmet_desc( const item_def &item );
-
-bool cmp_helmet_type( const item_def &item, short val );
-bool cmp_helmet_desc( const item_def &item, short val );
 
 bool set_item_ego_type( item_def &item, int item_type, int ego_type ); 
 
@@ -121,20 +85,12 @@ int get_weapon_brand( const item_def &item );
 int get_ammo_brand( const item_def &item );
 int get_armour_ego_type( const item_def &item );
 
-bool item_is_rod( const item_def &item );
-bool item_is_staff( const item_def &item );
-
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
 void init_properties(void);
 
-/* ***********************************************************************
- * called from: files - randart - shopping
- * *********************************************************************** */
-void make_name( unsigned char var1, unsigned char var2, unsigned char var3,
-                char ncase, char buff[ITEMNAME_SIZE] );
-
+int make_name( unsigned long seed, bool all_caps, char buff[ ITEMNAME_SIZE ] );
 
 /* ***********************************************************************
  * called from: files - shopping

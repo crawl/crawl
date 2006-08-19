@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "it_use2.h"
 #include "misc.h"
@@ -164,7 +165,7 @@ bool detect_curse(bool suppress_msg)
                 || you.inv[loopy].base_type == OBJ_ARMOUR
                 || you.inv[loopy].base_type == OBJ_JEWELLERY))
         {
-            if (item_not_ident( you.inv[loopy], ISFLAG_KNOW_CURSE ))
+            if (!item_ident( you.inv[loopy], ISFLAG_KNOW_CURSE ))
                 success = true;
 
             set_ident_flags( you.inv[loopy], ISFLAG_KNOW_CURSE );
@@ -868,7 +869,7 @@ bool project_noise(void)
         // player can use this spell to "sound out" the dungeon -- bwr
         if (plox[0] > 1 && plox[0] < (GXM - 2) 
             && plox[1] > 1 && plox[1] < (GYM - 2)
-            && grd[ plox[0] ][ plox[1] ] > DNGN_LAST_SOLID_TILE)
+            && !grid_is_solid(grd[ plox[0] ][ plox[1] ]))
         {
             noisy( 30, plox[0], plox[1] );
             success = true;
@@ -939,7 +940,7 @@ bool recall(char type_recalled)
                             || monster->number == LIGHTRED)) )
             {
                 if (monster->type != MONS_REAPER
-                        && mons_holiness(monster->type) != MH_UNDEAD)
+                        && mons_holiness(monster) != MH_UNDEAD)
                 {
                     continue;
                 }

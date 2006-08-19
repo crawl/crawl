@@ -40,6 +40,7 @@
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -1299,8 +1300,8 @@ bool items_stack( const item_def &item1, const item_def &item2 )
         // if either isn't identified and they look different.  -- bwr
         if (item1.base_type == OBJ_POTIONS 
             && item1.special != item2.special
-            && (item_not_ident( item1, ISFLAG_KNOW_TYPE )
-                || item_not_ident( item2, ISFLAG_KNOW_TYPE )))
+            && (!item_ident( item1, ISFLAG_KNOW_TYPE )
+                || !item_ident( item2, ISFLAG_KNOW_TYPE )))
         {
             return (false);
         }
@@ -1386,7 +1387,7 @@ int find_free_slot(const item_def &i)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
-    int item_mass = 0;
+    int imass = 0;
     int unit_mass = 0;
     int retval = quant_got;
     char brek = 0;
@@ -1413,17 +1414,17 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         return (retval);
     }
 
-    unit_mass = mass_item( mitm[obj] );
+    unit_mass = item_mass( mitm[obj] );
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
     
-    item_mass = unit_mass * quant_got;
+    imass = unit_mass * quant_got;
     
     brek = 0;
 
     // multiply both constants * 10
 
-    if ((int) you.burden + item_mass > carrying_capacity())
+    if ((int) you.burden + imass > carrying_capacity())
     {
         // calculate quantity we can actually pick up
         int part = (carrying_capacity() - (int)you.burden) / unit_mass;
@@ -2657,8 +2658,9 @@ void handle_time( long time_delta )
                 boom.thrower = KILL_MISC;
                 boom.aux_source = "a magical explosion";
                 boom.beam_source = NON_MONSTER;
-                boom.isBeam = false;
-                boom.isTracer = false;
+                boom.is_beam = false;
+                boom.is_tracer = false;
+                boom.is_explosion = true;
                 strcpy(boom.beam_name, "magical storm");
 
                 boom.ench_power = (you.magic_contamination * 5);
@@ -2686,7 +2688,7 @@ void handle_time( long time_delta )
     // and an appropriate other spell skill... is 1/20 too fast?
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-        && item_not_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE )
+        && !item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE )
         && one_chance_in(20))
     {
         int total_skill = you.skills[SK_SPELLCASTING];
@@ -2880,7 +2882,7 @@ void handle_time( long time_delta )
     // exercise armour *xor* stealth skill: {dlb}
     if (!player_light_armour())
     {
-        if (random2(1000) <= mass_item( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
+        if (random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
         {
             return;
         }
@@ -2897,7 +2899,7 @@ void handle_time( long time_delta )
             return;
 
         if (you.equip[EQ_BODY_ARMOUR] != -1
-            && random2( mass_item( you.inv[you.equip[EQ_BODY_ARMOUR]] )) >= 100)
+            && random2( item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] )) >= 100)
         {
             return;
         }

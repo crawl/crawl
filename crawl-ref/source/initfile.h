@@ -29,6 +29,8 @@ void read_options(const std::string &s, bool runscript = false);
 
 void parse_option_line(const std::string &line, bool runscript = false);
 
+void apply_ascii_display(bool ascii);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr

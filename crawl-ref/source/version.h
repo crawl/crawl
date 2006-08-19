@@ -47,5 +47,6 @@
  * *********************************************************************** */
 #define BUILD_DATE __DATE__
 
+#define SAVE_MAJOR_VERSION 0
 
 #endif

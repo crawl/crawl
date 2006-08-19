@@ -24,6 +24,7 @@ it_use2.o \
 it_use3.o \
 item_use.o \
 itemname.o \
+itemprop.o \
 items.o \
 lev-pand.o \
 libutil.o \

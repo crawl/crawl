@@ -70,6 +70,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "mon-util.h"
@@ -98,8 +99,7 @@ int check_your_resists(int hurted, int flavour)
 #endif
 
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA 
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_EXPLOSION
-        || flavour == BEAM_FRAG)
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
         {
@@ -169,6 +169,9 @@ int check_your_resists(int hurted, int flavour)
         break;
 
     case BEAM_POISON_ARROW:
+        // [dshaligram] NOT importing uber-poison arrow from 4.1. Giving no
+        // bonus to poison resistant players seems strange and unnecessarily
+        // arbitrary.
         resist = player_res_poison();
 
         if (!resist)
@@ -179,7 +182,7 @@ int check_your_resists(int hurted, int flavour)
             hurted /= 2;
 
             if (!you.is_undead)
-                poison_player( coinflip() ? 2 : 3, true ); 
+                poison_player( 2 + random2(3), true ); 
         }
         break;
 
@@ -223,6 +226,30 @@ int check_your_resists(int hurted, int flavour)
             mpr("It burns terribly!");
             hurted *= 15;
             hurted /= 10;
+        }
+        break;
+
+    case BEAM_ACID:
+        if (player_res_acid())
+        {
+            canned_msg( MSG_YOU_RESIST );
+            hurted /= 3;
+        }
+        break;
+
+    case BEAM_MIASMA:
+        if (player_prot_life() > random2(3))
+        {
+            canned_msg( MSG_YOU_RESIST );
+            hurted = 0;
+        }
+        break;
+
+    case BEAM_HOLY:
+        if (!you.is_undead && you.species != SP_DEMONSPAWN)
+        {
+            canned_msg( MSG_YOU_RESIST );
+            hurted = 0;
         }
         break;
     }                           /* end switch */
@@ -313,7 +340,7 @@ void item_corrode( char itco )
             suppress_msg = true;
         }
         else if ((you.inv[itco].sub_type == ARM_CRYSTAL_PLATE_MAIL
-                    || cmp_equip_race( you.inv[itco], ISFLAG_DWARVEN ))
+                    || get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN)
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -328,7 +355,7 @@ void item_corrode( char itco )
             it_resists = true;
             suppress_msg = true;
         }
-        else if (cmp_equip_race( you.inv[itco], ISFLAG_DWARVEN ) 
+        else if (get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -337,7 +364,8 @@ void item_corrode( char itco )
         break;
 
     case OBJ_MISSILES:
-        if (cmp_equip_race( you.inv[itco], ISFLAG_DWARVEN ) && !one_chance_in(5))
+        if (get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN 
+                && !one_chance_in(5))
         {
             it_resists = true;
             suppress_msg = false;

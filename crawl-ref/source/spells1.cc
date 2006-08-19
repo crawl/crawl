@@ -29,6 +29,7 @@
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -82,7 +83,7 @@ void blink(void)
             }
         }
 
-        if (grd[beam.tx][beam.ty] <= DNGN_LAST_SOLID_TILE
+        if (grid_is_solid(grd[beam.tx][beam.ty])
             || mgrd[beam.tx][beam.ty] != NON_MONSTER)
         {
             mpr("Oops! Maybe something was there already.");
@@ -215,9 +216,10 @@ void cast_fire_storm(int powc)
     beam.beam_source = MHITYOU;
     beam.thrower = KILL_YOU_MISSILE;
     beam.aux_source = NULL;
-    beam.obviousEffect = false;
-    beam.isBeam = false;
-    beam.isTracer = false;
+    beam.obvious_effect = false;
+    beam.is_beam = false;
+    beam.is_tracer = false;
+    beam.is_explosion = true;
     beam.ench_power = powc;     // used for radius
     strcpy( beam.beam_name, "great blast of fire" );
     beam.hit = 20 + powc / 10;
@@ -244,11 +246,10 @@ void cast_chain_lightning( int powc )
     beam.hit = AUTOMATIC_HIT;
     beam.type = SYM_ZAP;
     beam.flavour = BEAM_ELECTRICITY;
-    beam.obviousEffect = true;
-    beam.isBeam = false;            // since we want to stop at our target
-    beam.isExplosion = false;
-    beam.isTracer = false;
-    beam.isExplosion = false;
+    beam.obvious_effect = true;
+    beam.is_beam = false;            // since we want to stop at our target
+    beam.is_explosion = false;
+    beam.is_tracer = false;
 
     int sx, sy;
     int tx, ty;
@@ -436,7 +437,7 @@ void conjure_flame(int pow)
             continue;
         }
 
-        if (grd[ spelld.tx ][ spelld.ty ] <= DNGN_LAST_SOLID_TILE 
+        if (grid_is_solid(grd[ spelld.tx ][ spelld.ty ])
             || mgrd[ spelld.tx ][ spelld.ty ] != NON_MONSTER 
             || env.cgrid[ spelld.tx ][ spelld.ty ] != EMPTY_CLOUD)
         {
@@ -490,8 +491,8 @@ void stinking_cloud( int pow )
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU;
     beem.aux_source = NULL;
-    beem.isBeam = false;
-    beem.isTracer = false;
+    beem.is_beam = false;
+    beem.is_tracer = false;
 
     fire_beam(beem);
 }                               // end stinking_cloud()
@@ -1187,7 +1188,7 @@ void manage_fire_shield(void)
 
             //if ( one_chance_in(3) ) beam.range ++;
 
-            if (grd[you.x_pos + stx][you.y_pos + sty] > DNGN_LAST_SOLID_TILE
+            if (!grid_is_solid(grd[you.x_pos + stx][you.y_pos + sty])
                 && env.cgrid[you.x_pos + stx][you.y_pos + sty] == EMPTY_CLOUD)
             {
                 place_cloud( CLOUD_FIRE, you.x_pos + stx, you.y_pos + sty,

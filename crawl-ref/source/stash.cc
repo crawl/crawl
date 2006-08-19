@@ -9,6 +9,7 @@
 #include "clua.h"
 #include "describe.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "files.h"
 #include "invent.h"
 #include "items.h"

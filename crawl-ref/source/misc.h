@@ -131,7 +131,10 @@ void weird_writing(char stringy[40]);
  * *********************************************************************** */
 unsigned char trap_category(unsigned char trap_type);
 
-bool grid_destroys_items( unsigned char grid );
+bool grid_is_opaque(int grid);
+bool grid_is_solid(int grid);
+bool grid_is_water(int grid);
+bool grid_destroys_items( int grid );
 
 const char *grid_item_destruction_message( unsigned char grid );
 

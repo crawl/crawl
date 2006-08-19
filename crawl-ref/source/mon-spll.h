@@ -355,7 +355,7 @@
        MS_SUMMON_DEMON  },
 
     {  MST_GREEN_DEATH,
-       MS_POISON_BLAST,
+       MS_POISON_ARROW,
        MS_POISON_BLAST,
        MS_NO_SPELL,
        MS_VENOM_BOLT,
@@ -443,7 +443,7 @@
        MS_NO_SPELL  },
 
     {  MST_GLOORX_VLOQ,
-       MS_POISON_BLAST,
+       MS_POISON_ARROW,
        MS_SLOW,
        MS_SUMMON_DEMON,
        MS_NEGATIVE_BOLT,
@@ -519,7 +519,7 @@
        MS_CRYSTAL_SPEAR,
        MS_BLINK,
        MS_IRON_BOLT,
-       MS_POISON_BLAST,
+       MS_POISON_ARROW,
        MS_TELEPORT  },
 
     {  MST_DEEP_ELF_SORCERER,
@@ -558,7 +558,7 @@
        MS_VENOM_BOLT,
        MS_ORB_ENERGY,
        MS_HASTE,
-       MS_VENOM_BOLT,
+       MS_POISON_ARROW,
        MS_TELEPORT_OTHER,
        MS_TELEPORT  },
 
@@ -730,5 +730,44 @@
        MS_NO_SPELL,
        MS_NO_SPELL  },
 
+    {  MST_MYSTIC,
+       MS_BRAIN_FEED,
+       MS_SMITE,
+       MS_INVIS,
+       MS_CONFUSE,
+       MS_PARALYSIS,
+       MS_HEAL  },
+
+    {  MST_DEATH_DRAKE,
+       MS_MIASMA,
+       MS_MIASMA,
+       MS_NO_SPELL,
+       MS_MIASMA,
+       MS_MIASMA,
+       MS_NO_SPELL  },
+
+    {  MST_DRAC_SCORCHER,
+       MS_FIRE_BOLT,
+       MS_STICKY_FLAME,
+       MS_NO_SPELL,
+       MS_FIREBALL,
+       MS_HELLFIRE,
+       MS_HELLFIRE_BURST },
+
+    {  MST_DRAC_CALLER,
+       MS_NO_SPELL,
+       MS_SUMMON_LIZARDS,
+       MS_SUMMON_LIZARDS,
+       MS_NO_SPELL,
+       MS_NO_SPELL,
+       MS_SUMMON_LIZARDS },
+
+    {  MST_DRAC_SHIFTER,
+       MS_NO_SPELL,
+       MS_BLINK_OTHER,
+       MS_BLINK,
+       MS_NO_SPELL,
+       MS_BLINK_OTHER,
+       MS_CONTROLLED_BLINK },
 
 #endif

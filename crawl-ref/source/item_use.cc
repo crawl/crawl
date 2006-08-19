@@ -45,6 +45,7 @@
 #include "it_use3.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -90,7 +91,7 @@ bool can_wield(const item_def& weapon)
         return false;
 
     if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && mass_item( weapon ) >= 500)
+            && item_mass( weapon ) >= 500)
         return false;
 
     if ((you.species == SP_HALFLING || you.species == SP_GNOME
@@ -98,7 +99,7 @@ bool can_wield(const item_def& weapon)
             && (weapon.sub_type == WPN_GREAT_SWORD
                 || weapon.sub_type == WPN_TRIPLE_SWORD
                 || weapon.sub_type == WPN_GREAT_MACE
-                || weapon.sub_type == WPN_GREAT_FLAIL
+                || weapon.sub_type == WPN_DIRE_FLAIL
                 || weapon.sub_type == WPN_BATTLEAXE
                 || weapon.sub_type == WPN_EXECUTIONERS_AXE
                 || weapon.sub_type == WPN_HALBERD
@@ -109,7 +110,7 @@ bool can_wield(const item_def& weapon)
         return false;
 
     if (hands_reqd_for_weapon( weapon.base_type,
-                              weapon.sub_type ) == HANDS_TWO_HANDED
+                              weapon.sub_type ) == HANDS_TWO
             && you.equip[EQ_SHIELD] != -1)
         return false;
 
@@ -247,7 +248,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     else
     {
         if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && mass_item( you.inv[item_slot] ) >= 500)
+            && item_mass( you.inv[item_slot] ) >= 500)
         {
             mpr("That's too large and heavy for you to wield.");
             return (false);
@@ -259,7 +260,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
             && (you.inv[item_slot].sub_type == WPN_GREAT_SWORD
                 || you.inv[item_slot].sub_type == WPN_TRIPLE_SWORD
                 || you.inv[item_slot].sub_type == WPN_GREAT_MACE
-                || you.inv[item_slot].sub_type == WPN_GREAT_FLAIL
+                || you.inv[item_slot].sub_type == WPN_DIRE_FLAIL
                 || you.inv[item_slot].sub_type == WPN_BATTLEAXE
                 || you.inv[item_slot].sub_type == WPN_EXECUTIONERS_AXE
                 || you.inv[item_slot].sub_type == WPN_HALBERD
@@ -274,7 +275,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         }
 
         if (hands_reqd_for_weapon( you.inv[item_slot].base_type,
-                              you.inv[item_slot].sub_type ) == HANDS_TWO_HANDED
+                              you.inv[item_slot].sub_type ) == HANDS_TWO
             && you.equip[EQ_SHIELD] != -1)
         {
             mpr("You can't wield that with a shield.");
@@ -617,37 +618,8 @@ void wear_armour(void)
     do_wear_armour( armour_wear_2, false );
 }
 
-int armour_equip_slot(const item_def &item)
-{
-    int wh_equip = EQ_BODY_ARMOUR;
-
-    switch (item.sub_type)
-    {
-    case ARM_BUCKLER:
-    case ARM_LARGE_SHIELD:
-    case ARM_SHIELD:
-        wh_equip = EQ_SHIELD;
-        break;
-    case ARM_CLOAK:
-        wh_equip = EQ_CLOAK;
-        break;
-    case ARM_HELMET:
-        wh_equip = EQ_HELMET;
-        break;
-    case ARM_GLOVES:
-        wh_equip = EQ_GLOVES;
-        break;
-    case ARM_BOOTS:
-        wh_equip = EQ_BOOTS;
-        break;
-    }
-    return (wh_equip);
-}
-
 bool do_wear_armour( int item, bool quiet )
 {
-    char wh_equip = 0;
-
     if (!is_valid_item( you.inv[item] ))
     {
         if (!quiet)
@@ -656,13 +628,18 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    if (you.inv[item].base_type != OBJ_ARMOUR)
+    const int base_type = you.inv[item].base_type;
+    if (base_type != OBJ_ARMOUR)
     {
         if (!quiet)
            mpr("You can't wear that.");
 
         return (false);
     }
+
+    const int sub_type  = you.inv[item].sub_type;
+    const item_def &invitem = you.inv[item];
+    const equipment_type slot = get_armour_slot(invitem);
 
     if (item == you.equip[EQ_WEAPON])
     {
@@ -691,7 +668,7 @@ bool do_wear_armour( int item, bool quiet )
             || you.inv[item].sub_type == ARM_LARGE_SHIELD)
         // weapon is two-handed
         && hands_reqd_for_weapon(you.inv[you.equip[EQ_WEAPON]].base_type,
-                      you.inv[you.equip[EQ_WEAPON]].sub_type) == HANDS_TWO_HANDED)
+                      you.inv[you.equip[EQ_WEAPON]].sub_type) == HANDS_TWO)
     {
         if (!quiet)
            mpr("You'd need three hands to do that!");
@@ -699,21 +676,26 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
+    bool can_wear = true;
+    if (sub_type == ARM_NAGA_BARDING)
+        can_wear = (you.species == SP_NAGA);
+
+    if (sub_type == ARM_CENTAUR_BARDING)
+        can_wear = (you.species == SP_CENTAUR);
+
+    if (!can_wear)
+    {
+        if (!quiet)
+            mpr("You can't wear that!");
+        return (false);
+    }
+
     if (you.inv[item].sub_type == ARM_BOOTS)
     {
-        if (you.species != SP_NAGA && you.inv[item].plus2 == TBOOT_NAGA_BARDING)
+        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
         {
             if (!quiet)
-               mpr("You can't wear that!");
-
-            return (false);
-        }
-
-        if (you.species != SP_CENTAUR && you.inv[item].plus2 == TBOOT_CENTAUR_BARDING)
-        {
-            if (!quiet)
-               mpr("You can't wear that!");
-
+                mpr("You can't wear that!");
             return (false);
         }
 
@@ -726,28 +708,24 @@ bool do_wear_armour( int item, bool quiet )
         }
     }
 
-    wh_equip = armour_equip_slot(you.inv[item]);
-
-    if (you.species == SP_NAGA && you.inv[item].sub_type == ARM_BOOTS
-        && you.inv[item].plus2 == TBOOT_NAGA_BARDING
+    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
         && !player_is_shapechanged())
     {
         // it fits
     }
     else if (you.species == SP_CENTAUR
-             && you.inv[item].sub_type == ARM_BOOTS
-             && you.inv[item].plus2 == TBOOT_CENTAUR_BARDING
+             && sub_type == ARM_CENTAUR_BARDING
              && !player_is_shapechanged())
     {
         // it fits
     }
-    else if (you.inv[item].sub_type == ARM_HELMET
-             && (cmp_helmet_type( you.inv[item], THELM_CAP )
-                 || cmp_helmet_type( you.inv[item], THELM_WIZARD_HAT )))
+    else if (sub_type == ARM_HELMET
+             && (get_helmet_type(invitem) == THELM_CAP
+                 || get_helmet_type(invitem) == THELM_WIZARD_HAT))
     {
         // caps & wiz hats always fit, unless your head's too big (ogres &c)
     }
-    else if (!can_equip( wh_equip ))
+    else if (!can_equip( slot ))
     {
         if (!quiet)
            mpr("You can't wear that in your present form.");
@@ -757,8 +735,8 @@ bool do_wear_armour( int item, bool quiet )
 
     // Cannot swim in heavy armour
     if (player_is_swimming()
-        && wh_equip == EQ_BODY_ARMOUR
-        && !is_light_armour( you.inv[item] ))
+        && slot == EQ_BODY_ARMOUR
+        && !is_light_armour( invitem ))
     {
         if (!quiet)
            mpr("You can't swim in that!");
@@ -770,14 +748,14 @@ bool do_wear_armour( int item, bool quiet )
     if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
         || player_genus(GENPC_DRACONIAN))
     {
-        if ((you.inv[item].sub_type >= ARM_LEATHER_ARMOUR
-                && you.inv[item].sub_type <= ARM_PLATE_MAIL)
-            || (you.inv[item].sub_type >= ARM_GLOVES
-                && you.inv[item].sub_type <= ARM_BUCKLER)
-            || you.inv[item].sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (you.inv[item].sub_type == ARM_HELMET
-                && (cmp_helmet_type( you.inv[item], THELM_HELM )
-                    || cmp_helmet_type( you.inv[item], THELM_HELMET ))))
+        if ((sub_type >= ARM_LEATHER_ARMOUR
+                && sub_type <= ARM_PLATE_MAIL)
+            || (sub_type >= ARM_GLOVES
+                && sub_type <= ARM_BUCKLER)
+            || sub_type == ARM_CRYSTAL_PLATE_MAIL
+            || (sub_type == ARM_HELMET
+                && (get_helmet_type(invitem) == THELM_HELM
+                    || get_helmet_type(invitem) == THELM_HELMET)))
         {
             if (!quiet)
                mpr("This armour doesn't fit on your body.");
@@ -789,16 +767,16 @@ bool do_wear_armour( int item, bool quiet )
     // Tiny races
     if (you.species == SP_SPRIGGAN)
     {
-        if ((you.inv[item].sub_type >= ARM_LEATHER_ARMOUR
-                && you.inv[item].sub_type <= ARM_PLATE_MAIL)
-            || you.inv[item].sub_type == ARM_GLOVES
-            || you.inv[item].sub_type == ARM_BOOTS
-            || you.inv[item].sub_type == ARM_SHIELD
-            || you.inv[item].sub_type == ARM_LARGE_SHIELD
-            || you.inv[item].sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || (you.inv[item].sub_type == ARM_HELMET
-                && (cmp_helmet_type( you.inv[item], THELM_HELM )
-                    || cmp_helmet_type( you.inv[item], THELM_HELMET ))))
+        if ((sub_type >= ARM_LEATHER_ARMOUR
+                && sub_type <= ARM_PLATE_MAIL)
+            || sub_type == ARM_GLOVES
+            || sub_type == ARM_BOOTS
+            || sub_type == ARM_SHIELD
+            || sub_type == ARM_LARGE_SHIELD
+            || sub_type == ARM_CRYSTAL_PLATE_MAIL
+            || (sub_type == ARM_HELMET
+                && (get_helmet_type(invitem) == THELM_HELM
+                    || get_helmet_type(invitem) == THELM_HELMET)))
         {
             if (!quiet)
                mpr("This armour doesn't fit on your body.");
@@ -810,11 +788,10 @@ bool do_wear_armour( int item, bool quiet )
     bool removedCloak = false;
     int  cloak = -1;
 
-    if ((you.inv[item].sub_type < ARM_SHIELD
-            || you.inv[item].sub_type > ARM_LARGE_SHIELD)
-        && (you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed()))
+    if (slot == EQ_BODY_ARMOUR
+        && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
-        if (item_uncursed( you.inv[you.equip[EQ_CLOAK]] ))
+        if (!item_cursed( you.inv[you.equip[EQ_CLOAK]] ))
         {
             cloak = you.equip[ EQ_CLOAK ];
             if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -831,42 +808,37 @@ bool do_wear_armour( int item, bool quiet )
         }
     }
 
-    if (you.inv[item].sub_type == ARM_CLOAK && you.equip[EQ_CLOAK] != -1)
+    if (slot == EQ_CLOAK && you.equip[EQ_CLOAK] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_CLOAK]))
             return (false);
     }
 
-    if (you.inv[item].sub_type == ARM_HELMET && you.equip[EQ_HELMET] != -1)
+    if (slot == EQ_HELMET && you.equip[EQ_HELMET] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_HELMET]))
             return (false);
     }
 
-    if (you.inv[item].sub_type == ARM_GLOVES && you.equip[EQ_GLOVES] != -1)
+    if (slot == EQ_GLOVES && you.equip[EQ_GLOVES] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_GLOVES]))
             return (false);
     }
 
-    if (you.inv[item].sub_type == ARM_BOOTS && you.equip[EQ_BOOTS] != -1)
+    if (slot == EQ_BOOTS && you.equip[EQ_BOOTS] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_BOOTS]))
             return (false);
     }
 
-    if ((you.inv[item].sub_type == ARM_SHIELD
-            || you.inv[item].sub_type == ARM_LARGE_SHIELD
-            || you.inv[item].sub_type == ARM_BUCKLER)
-        && you.equip[EQ_SHIELD] != -1)
+    if (slot == EQ_SHIELD && you.equip[EQ_SHIELD] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_SHIELD]))
             return (false);
     }
 
-    if ((you.inv[item].sub_type < ARM_SHIELD
-            || you.inv[item].sub_type > ARM_LARGE_SHIELD)
-        && you.equip[EQ_BODY_ARMOUR] != -1)
+    if (slot == EQ_BODY_ARMOUR && you.equip[EQ_BODY_ARMOUR] != -1)
     {
         if (!takeoff_armour(you.equip[EQ_BODY_ARMOUR]))
             return (false);
@@ -912,13 +884,13 @@ bool takeoff_armour(int item)
 
     bool removedCloak = false;
     int cloak = -1;
+    const equipment_type slot = get_armour_slot(you.inv[item]);
 
-    if (you.inv[item].sub_type < ARM_SHIELD
-        || you.inv[item].sub_type > ARM_LARGE_SHIELD)
+    if (slot == EQ_BODY_ARMOUR)
     {
         if (you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
         {
-            if (item_uncursed( you.inv[you.equip[EQ_CLOAK]] ))
+            if (!item_cursed( you.inv[you.equip[EQ_CLOAK]] ))
             {
                 cloak = you.equip[ EQ_CLOAK ];
                 if (!takeoff_armour(you.equip[EQ_CLOAK]))
@@ -943,11 +915,9 @@ bool takeoff_armour(int item)
     }
     else
     {
-        switch (you.inv[item].sub_type)
+        switch (slot)
         {
-        case ARM_BUCKLER:
-        case ARM_LARGE_SHIELD:
-        case ARM_SHIELD:
+        case EQ_SHIELD:
             if (item != you.equip[EQ_SHIELD])
             {
                 mpr("You aren't wearing that!");
@@ -955,7 +925,7 @@ bool takeoff_armour(int item)
             }
             break;
 
-        case ARM_CLOAK:
+        case EQ_CLOAK:
             if (item != you.equip[EQ_CLOAK])
             {
                 mpr("You aren't wearing that!");
@@ -963,7 +933,7 @@ bool takeoff_armour(int item)
             }
             break;
 
-        case ARM_HELMET:
+        case EQ_HELMET:
             if (item != you.equip[EQ_HELMET])
             {
                 mpr("You aren't wearing that!");
@@ -971,8 +941,7 @@ bool takeoff_armour(int item)
             }
             break;
 
-
-        case ARM_GLOVES:
+        case EQ_GLOVES:
             if (item != you.equip[EQ_GLOVES])
             {
                 mpr("You aren't wearing that!");
@@ -980,12 +949,15 @@ bool takeoff_armour(int item)
             }
             break;
 
-        case ARM_BOOTS:
+        case EQ_BOOTS:
             if (item != you.equip[EQ_BOOTS])
             {
                 mpr("You aren't wearing that!");
                 return false;
             }
+            break;
+
+        default:
             break;
         }
     }
@@ -1196,6 +1168,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
     int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
     int effSkill = 0;           // effective launcher skill
+    int damageMult = 100;
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
 
@@ -1290,11 +1263,11 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     }
 
     // baseHit and damage for generic objects
-    baseHit = you.strength - mass_item(item) / 10;
+    baseHit = you.strength - item_mass(item) / 10;
     if (baseHit > 0)
         baseHit = 0;
 
-    baseDam = mass_item(item) / 100;
+    baseDam = item_mass(item) / 100;
 
     // special: might be throwing generic weapon;
     // use base wep. damage, w/ penalty
@@ -1322,21 +1295,47 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (launched)
     {
-        const int bow_brand = get_weapon_brand( you.inv[you.equip[EQ_WEAPON]] );
+        const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
+        const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
+        const bool two_handed   = (you.equip[EQ_SHIELD] == -1);
         bool poisoned = (ammo_brand == SPMSL_POISONED
                             || ammo_brand == SPMSL_POISONED_II);
+        const int rc_skill = you.skills[SK_RANGED_COMBAT];
 
-        // this is deliberately confusing: the 'hit' value for
-        // ammo is the _damage_ when used with a launcher.  Geez.
-        baseHit = 0;
-        baseDam = property( item, PWPN_HIT );
+        const int item_base_dam = property( item, PWPN_DAMAGE );
+        const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
+
+        const skill_type launcher_skill = range_skill( launcher );
+        const int  str_weight   = weapon_str_weight( launcher );
+        const int  dex_weight   = 10 - str_weight;
+
+        int speed_base = 10 * property( launcher, PWPN_SPEED );
+        int speed_min = 50;
+        int speed_stat = str_weight * you.strength + dex_weight * you.dex;
+        int speed = 100;
+
+        baseHit = property( launcher, PWPN_HIT );
+        baseDam = item_base_dam + random2(1 + lnch_base_dam);
+
+        if (launcher_skill == SK_BOWS)
+            speed_min = 40;
+        else if (launcher_skill == SK_CROSSBOWS)
+            speed_min = 60;
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+                "Base hit == %d; Base damage == %d "
+                "(item %d + launcher %d)", 
+                        baseHit, baseDam,
+                        item_base_dam, lnch_base_dam);
+#endif
 
         // fix ammo damage bonus, since missiles only use inv_plus
         ammoDamBonus = ammoHitBonus;
 
         // check for matches;  dwarven,elven,orcish
-        if (!cmp_equip_race( you.inv[you.equip[EQ_WEAPON]], 0 ))
+        if (!get_equip_race(you.inv[you.equip[EQ_WEAPON]]) == 0)
         {
             if (get_equip_race( you.inv[you.equip[EQ_WEAPON]] ) 
                         == get_equip_race( item ))
@@ -1345,7 +1344,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
                 baseDam += 1;
 
                 // elves with elven bows
-                if (cmp_equip_race(you.inv[you.equip[EQ_WEAPON]], ISFLAG_ELVEN)
+                if (get_equip_race(you.inv[you.equip[EQ_WEAPON]]) 
+                        == ISFLAG_ELVEN
                     && player_genus(GENPC_ELVEN))
                 {
                     baseHit += 1;
@@ -1353,69 +1353,78 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             }
         }
 
-        if (you.inv[you.equip[EQ_WEAPON]].sub_type == WPN_CROSSBOW)
-        {
-            // extra time taken, as a percentage.  range from 30 -> 12
-            int extraTime = 30 - ((you.skills[SK_CROSSBOWS] * 2) / 3);
-
-            you.time_taken = (100 + extraTime) * you.time_taken;
-            you.time_taken /= 100;
-        }
-
-        if (bow_brand == SPWPN_SPEED)
-        {
-            you.time_taken *= 5;
-            you.time_taken /= 10;
-        }
-
         // for all launched weapons,  maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
         // how 'good' you are with a bow,  if you know nothing about
         // trajectories you're going to be a damn poor bowman.  Ditto
         // for crossbows and slings.
-        switch (lnchType)
+
+        // [dshaligram] Throwing now two parts launcher skill, one part
+        // ranged combat. Removed the old model which is... silly.
+        
+        shoot_skill = you.skills[launcher_skill];
+        effSkill = (shoot_skill * 2 + skill_bump(SK_RANGED_COMBAT)) / 3;
+
+        // FIXME: Use actual body size
+        if (!two_handed && hands_reqd(launcher, SIZE_MEDIUM) == HANDS_HALF)
         {
-        case WPN_SLING:
-            shoot_skill = you.skills[SK_SLINGS];
-            break;
-        case WPN_BOW:
-            shoot_skill = you.skills[SK_BOWS];
-            break;
-        case WPN_BLOWGUN:
-            shoot_skill = you.skills[SK_DARTS];
-            break;
-        case WPN_CROSSBOW:
-        case WPN_HAND_CROSSBOW:
-            shoot_skill = you.skills[SK_CROSSBOWS];
-            break;
-        default:
-            shoot_skill = 0;
-            break;
+            speed_base = (speed_base * 3 + 1) / 2;
+            speed_min = (speed_min * 3 + 1) / 2;
         }
 
-        effSkill = you.skills[SK_THROWING] * 2 + 1;
-        effSkill = (shoot_skill > effSkill) ? effSkill : shoot_skill;
+        speed = speed_base - shoot_skill * speed_stat / 50;
+        if (speed < speed_min)
+            speed = speed_min;
 
+        if (bow_brand == SPWPN_SPEED)
+        {
+            // Speed nerf as per 4.1
+            speed = 2 * speed / 3;
+        }
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
+#endif
+
+        you.time_taken = speed * you.time_taken / 100;
+
+        // effSkill = you.skills[SK_RANGED_COMBAT] * 2 + 1;
+        // effSkill = (shoot_skill > effSkill) ? effSkill : shoot_skill;
+
+        // [dshaligram] Improving missile weapons:
+        //  - Remove the strength/enchantment cap where you need to be strong
+        //    to exploit a launcher bonus.
+        //  - Add on launcher and missile pluses to extra damage.
+
+        // [dshaligram] This can get large...
+        exDamBonus = lnchDamBonus + ammoDamBonus;
+        exHitBonus = lnchHitBonus;
+
+        // Raw ranged combat skill also helps with damage.
+        if (lnchType != WPN_BLOWGUN)
+            exDamBonus += rc_skill / 4;
+        
         // removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
-        switch (lnchType)
+        switch (launcher_skill)
         {
-        case WPN_SLING:
+        case SK_SLINGS:
+        {
             // Slings are really easy to learn because they're not
             // really all that good, and its harder to get ammo anyways.
             exercise(SK_SLINGS, 1 + random2avg(3, 2));
             baseHit += 0;
-            exHitBonus = (effSkill * 3) / 2;
+            exHitBonus += (effSkill * 3) / 2;
 
             // strength is good if you're using a nice sling.
-            exDamBonus = (10 * (you.strength - 10)) / 9;
-            exDamBonus = (exDamBonus * (2 * baseDam + ammoDamBonus)) / 20;
+            int strbonus = (10 * (you.strength - 10)) / 9;
+            strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
             // cap
-            if (exDamBonus > lnchDamBonus + 1)
-                exDamBonus = lnchDamBonus + 1;
+            if (strbonus > lnchDamBonus + 1)
+                strbonus = lnchDamBonus + 1;
 
+            exDamBonus += strbonus;
             // add skill for slings.. helps to find those vulnerable spots
             exDamBonus += effSkill / 2;
 
@@ -1423,16 +1432,16 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             if (lnchDamBonus > 0)
                 lnchDamBonus = 0;
             break;
-
+        }
             // blowguns take a _very_ steady hand;  a lot of the bonus
             // comes from dexterity.  (Dex bonus here as well as below)
-        case WPN_BLOWGUN:
+        case SK_DARTS:
             exercise(SK_DARTS, (coinflip()? 2 : 1));
             baseHit -= 2;
-            exHitBonus = (effSkill * 3) / 2 + you.dex / 2;
+            exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
             // no extra damage for blowguns
-            exDamBonus = 0;
+            // exDamBonus = 0;
 
             // now kill the launcher damage and ammo bonuses
             if (lnchDamBonus > 0)
@@ -1441,52 +1450,62 @@ static void throw_it(struct bolt &pbolt, int throw_2)
                 ammoDamBonus = 0;
             break;
 
-
-        case WPN_BOW:
+        case SK_BOWS:
+        {
             exercise(SK_BOWS, (coinflip()? 2 : 1));
             baseHit -= 4;
-            exHitBonus = (effSkill * 2);
+            exHitBonus += (effSkill * 2);
 
             // strength is good if you're using a nice bow
-            exDamBonus = (10 * (you.strength - 10)) / 4;
-            exDamBonus = (exDamBonus * (2 * baseDam + ammoDamBonus)) / 20;
+            int strbonus = (10 * (you.strength - 10)) / 4;
+            strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
-            // cap
-            if (exDamBonus > (lnchDamBonus + 1) * 3)
-                exDamBonus = (lnchDamBonus + 1) * 3;
+            // cap; reduced this cap, because we don't want to allow
+            // the extremely-strong to quadruple the enchantment bonus.
+            if (strbonus > lnchDamBonus + 1)
+                strbonus = lnchDamBonus + 1;
+
+            exDamBonus += strbonus;
 
             // add in skill for bows.. help you to find those vulnerable spots.
-            exDamBonus += effSkill;
+            exDamBonus += effSkill * 5 / 4;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
                 lnchDamBonus = 0;
             break;
-
+        }
             // Crossbows are easy for unskilled people.
 
-        case WPN_CROSSBOW:
+        case SK_CROSSBOWS:
             exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
-            baseHit += 2;
-            exHitBonus = (3 * effSkill) / 2 + 6;
-            exDamBonus = effSkill / 2 + 4;
+            baseHit += lnchType == WPN_CROSSBOW? 2 : 1;
+            exHitBonus += (3 * effSkill) / 2 + 6;
+            exDamBonus += effSkill * 2 / 3 + 4;
+            if (lnchType == WPN_HAND_CROSSBOW)
+            {
+                exHitBonus -= 2;
+                exDamBonus -= 2;
+            }
             break;
 
-        case WPN_HAND_CROSSBOW:
-            exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
-            baseHit += 1;
-            exHitBonus = (3 * effSkill) / 2 + 4;
-            exDamBonus = effSkill / 2 + 2;
+        default:
             break;
         }
 
         // all launched weapons have a slight chance of improving
         // throwing skill
         if (coinflip())
-            exercise(SK_THROWING, 1);
+            exercise(SK_RANGED_COMBAT, 1);
 
         // all launched weapons get a tohit boost from throwing skill.
-        exHitBonus += (3 * you.skills[SK_THROWING]) / 4;
+        exHitBonus += (3 * you.skills[SK_RANGED_COMBAT]) / 4;
+
+        if (bow_brand == SPWPN_VORPAL)
+        {
+            // Vorpal brand adds 35% damage bonus.
+            exDamBonus = exDamBonus * 135 / 100;
+        }
 
         // special cases for flame, frost, poison, etc.
         // check for venom brand (usually only available for blowguns)
@@ -1502,7 +1521,9 @@ static void throw_it(struct bolt &pbolt, int throw_2)
         if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
         {
-            baseDam += 1 + random2(5);
+            // [dshaligram] Branded arrows are much stronger.
+            damageMult = 150;
+
             pbolt.flavour = BEAM_FIRE;
             strcpy(pbolt.beam_name, "bolt of ");
 
@@ -1526,7 +1547,9 @@ static void throw_it(struct bolt &pbolt, int throw_2)
         if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
         {
-            baseDam += 1 + random2(5);
+            // [dshaligram] Branded arrows are much stronger.
+            damageMult = 150;
+
             pbolt.flavour = BEAM_COLD;
             strcpy(pbolt.beam_name, "bolt of ");
 
@@ -1563,7 +1586,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
          * and vice versa */
 
         // ID check
-        if (item_not_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES )
+        if (!item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES )
             && random2(100) < shoot_skill)
         {
             set_ident_flags(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES);
@@ -1593,7 +1616,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             || (wepClass == OBJ_MISSILES && wepType == MI_STONE))
         {
             // elves with elven weapons
-            if (cmp_equip_race(item, ISFLAG_ELVEN) && player_genus(GENPC_ELVEN))
+            if (get_equip_race(item) == ISFLAG_ELVEN 
+                    && player_genus(GENPC_ELVEN))
                 baseHit += 1;
 
             // give an appropriate 'tohit' -
@@ -1617,11 +1641,11 @@ static void throw_it(struct bolt &pbolt, int throw_2)
                 }
             }
 
-            exHitBonus = you.skills[SK_THROWING] * 2;
+            exHitBonus = you.skills[SK_RANGED_COMBAT] * 2;
 
             baseDam = property( item, PWPN_DAMAGE );
             exDamBonus =
-                (10 * (you.skills[SK_THROWING] / 2 + you.strength - 10)) / 12;
+                (10 * (you.skills[SK_RANGED_COMBAT] / 2 + you.strength - 10)) / 12;
 
             // now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage,  but only a third is applied
@@ -1636,16 +1660,30 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             baseDam = property( item, PWPN_DAMAGE );
 
             exHitBonus = you.skills[SK_DARTS] * 2;
-            exHitBonus += (you.skills[SK_THROWING] * 2) / 3;
-            exDamBonus = you.skills[SK_DARTS] / 4;
+            exHitBonus += (you.skills[SK_RANGED_COMBAT] * 2) / 3;
+            exDamBonus = you.skills[SK_DARTS] / 3;
+            exDamBonus += you.skills[SK_RANGED_COMBAT] / 5;
 
             // exercise skills
             exercise(SK_DARTS, 1 + random2avg(3, 2));
         }
 
+        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
+        {
+            // Throwing needles is now seriously frowned upon; it's difficult
+            // to grip a fiddly little needle, and not penalising it cheapens
+            // blowguns.
+            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
+            baseHit    -= (30 - you.skills[SK_DARTS]) / 4;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
+                    baseHit, exHitBonus);
+#endif
+        }
+
         // exercise skill
         if (coinflip())
-            exercise(SK_THROWING, 1);
+            exercise(SK_RANGED_COMBAT, 1);
     }
 
     // range, dexterity bonus, possible skill increase for silly throwing
@@ -1676,7 +1714,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     else
     {
         // range based on mass & strength, between 1 and 9
-        pbolt.range = you.strength - mass_item(item) / 10 + 3;
+        pbolt.range = you.strength - item_mass(item) / 10 + 3;
         if (pbolt.range < 1)
             pbolt.range = 1;
 
@@ -1687,7 +1725,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
         pbolt.rangeMax = pbolt.range;
 
         if (one_chance_in(20))
-            exercise(SK_THROWING, 1);
+            exercise(SK_RANGED_COMBAT, 1);
 
         exHitBonus = you.dex / 4;
     }
@@ -1703,6 +1741,9 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     else
         pbolt.damage = dice_def( 1, baseDam - random2(0 - (exDamBonus - 1)) );
 
+    pbolt.damage.size = damageMult * pbolt.damage.size / 100;
+    scale_dice( pbolt.damage );
+
     // only add bonuses if we're throwing something sensible
     if (thrown || launched || wepClass == OBJ_WEAPONS)
     {
@@ -1711,13 +1752,11 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, 
-              "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
+    mprf( MSGCH_DIAGNOSTICS,
+            "H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
               baseHit, exHitBonus, ammoHitBonus, lnchHitBonus,
               baseDam, exDamBonus, ammoDamBonus, lnchDamBonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
     // create message
@@ -1733,8 +1772,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     mpr(info);
 
     // ensure we're firing a 'missile'-type beam
-    pbolt.isBeam = false;
-    pbolt.isTracer = false;
+    pbolt.is_beam = false;
+    pbolt.is_tracer = false;
 
     // mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
@@ -2189,7 +2228,7 @@ void zap_wand(void)
     // system will default to cycling through all monsters. -- bwr
     int targ_mode = TARG_ANY;
 
-    beam.obviousEffect = false;
+    beam.obvious_effect = false;
 
     if (inv_count() < 1)
     {
@@ -2280,7 +2319,7 @@ void zap_wand(void)
 
     zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
-    if (beam.obviousEffect == 1 || you.inv[item_slot].sub_type == WAND_FIREBALL)
+    if (beam.obvious_effect == 1 || you.inv[item_slot].sub_type == WAND_FIREBALL)
     {
         if (get_ident_type( you.inv[item_slot].base_type, 
                             you.inv[item_slot].sub_type ) != ID_KNOWN_TYPE)
@@ -2309,7 +2348,7 @@ void zap_wand(void)
         && (item_ident( you.inv[item_slot], ISFLAG_KNOW_PLUSES )
             || you.skills[SK_EVOCATIONS] > 5 + random2(15)))
     {
-        if (item_not_ident( you.inv[item_slot], ISFLAG_KNOW_PLUSES ))
+        if (!item_ident( you.inv[item_slot], ISFLAG_KNOW_PLUSES ))
         {
             mpr("Your skill with magical items lets you calculate the power of this device...");
         }
@@ -2491,8 +2530,7 @@ static bool affix_weapon_enchantment( void )
     switch (get_weapon_brand( you.inv[wpn] ))
     {
     case SPWPN_VORPAL:
-        if (damage_type( you.inv[wpn].base_type,
-                         you.inv[wpn].sub_type ) != DVORP_CRUSHING)
+        if (get_vorpal_type( you.inv[wpn] ) != DVORP_CRUSHING)
         {
             strcat(info, "'s sharpness seems more permanent.");
         }
@@ -2517,7 +2555,8 @@ static bool affix_weapon_enchantment( void )
         beam.thrower = KILL_YOU;
         beam.aux_source = "a fiery explosion";
         beam.ex_size = 2;
-        beam.isTracer = false;
+        beam.is_tracer = false;
+        beam.is_explosion = true;
 
         explosion(beam);
         break;
@@ -2697,7 +2736,7 @@ static bool enchant_armour( void )
 
         you.redraw_armour_class = 1;
 
-        hide2armour( &(you.inv[nthing].sub_type) );
+        hide2armour(you.inv[nthing]);
         return (true);
     }
 
@@ -2828,7 +2867,7 @@ void read_scroll(void)
     char str_pass[ ITEMNAME_SIZE ];
 
     // added: scroll effects are never tracers.
-    beam.isTracer = false;
+    beam.is_tracer = false;
 
     if (you.berserker)
     {
@@ -3005,6 +3044,7 @@ void read_scroll(void)
         beam.thrower = KILL_YOU;
         beam.aux_source = "reading a scroll of immolation";
         beam.ex_size = 2;
+        beam.is_explosion = true;
 
         explosion(beam);
         break;
@@ -3140,7 +3180,7 @@ void read_scroll(void)
         affected = EQ_WEAPON;
         for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
-            if (you.equip[i] != -1 && item_uncursed( you.inv[you.equip[i]] ))
+            if (you.equip[i] != -1 && !item_cursed( you.inv[you.equip[i]] ))
             {
                 count++;
                 if (one_chance_in( count ))

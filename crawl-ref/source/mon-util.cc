@@ -30,6 +30,7 @@
 
 #include "debug.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "mstuff2.h"
 #include "player.h"
 #include "randart.h"
@@ -117,7 +118,7 @@ static monsterentry *seekmonster(int p_monsterid);
 #define smc seekmonster(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
-void mons_init(FixedVector < unsigned short, 1000 > &colour)
+void init_monsters(FixedVector < unsigned short, 1000 > &colour)
 {
     unsigned int x;             // must be unsigned to match size_t {dlb}
 
@@ -190,12 +191,12 @@ static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
     return (ret);
 }
 
-int mons_holiness(const monsters *mons)
+mon_holy_type mons_holiness(const monsters *mon)
 {
-    return (mons_holiness(mons->type));
+    return (mons_class_holiness(mon->type));
 }
 
-int mons_holiness(int mc)
+mon_holy_type mons_class_holiness(int mc)
 {
     return (smc->holiness);
 }                               // end mons_holiness()
@@ -217,7 +218,7 @@ bool invalid_monster(const monsters *mons)
 
 bool mons_is_mimic( int mc )
 {
-    return (mons_charclass( mc ) == MONS_GOLD_MIMIC);
+    return (mons_species( mc ) == MONS_GOLD_MIMIC);
 }
 
 bool mons_is_demon( int mc )
@@ -225,7 +226,7 @@ bool mons_is_demon( int mc )
     const int show_char = mons_char( mc );
 
     // Not every demonic monster is a demon (ie hell hog, hell hound)
-    if (mons_holiness( mc ) == MH_DEMONIC
+    if (mons_class_holiness( mc ) == MH_DEMONIC
         && (isdigit( show_char ) || show_char == '&'))
     {
         return (true);
@@ -276,18 +277,33 @@ int mons_weight(int mc)
     return (smc->weight);
 }                               // end mons_weight()
 
-
-int mons_corpse_thingy(int mc)
+corpse_effect_type mons_corpse_effect(int mc)
 {
     return (smc->corpse_thingy);
-}                               // end mons_corpse_thingy()
+}                               // end mons_corpse_effect()
 
 
-int mons_charclass(int mc)
+monster_type mons_species( int mc )
 {
-    return (smc->charclass);
-}                               // end mons_charclass()
+    return (smc->species);
+}                               // end mons_species()
 
+monster_type mons_genus( int mc )
+{
+    return (smc->genus);
+}
+
+monster_type draco_subspecies( const monsters *mon )
+{
+    ASSERT( mons_genus( mon->type ) == MONS_DRACONIAN );
+
+    monster_type ret = mons_species( mon->type );
+
+    if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
+        ret = static_cast<monster_type>( mon->number );
+
+    return (ret);
+}
 
 int mons_shouts(int mc)
 {
@@ -303,6 +319,7 @@ bool mons_is_unique( int mc )
 {
     if (mc <= MONS_PROGRAM_BUG 
         || (mc >= MONS_NAGA_MAGE && mc <= MONS_ROYAL_JELLY)
+        || (mc >= MONS_DRACONIAN && mc <= MONS_DRACONIAN_SCORCHER)
         || (mc >= MONS_ANCIENT_LICH 
             && (mc != MONS_PLAYER_GHOST && mc != MONS_PANDEMONIUM_DEMON)))
     {
@@ -482,7 +499,7 @@ int mons_res_elec( struct monsters *mon )
 
 bool mons_res_asphyx( const monsters *mon )
 {
-    const int holiness = mons_holiness( mon->type );
+    const int holiness = mons_holiness( mon );
     return (holiness == MH_UNDEAD 
                 || holiness == MH_DEMONIC
                 || holiness == MH_NONLIVING);
@@ -620,11 +637,12 @@ int mons_res_negative_energy( struct monsters *mon )
 {
     int mc = mon->type;
 
-    if (mons_holiness( mon->type ) == MH_UNDEAD 
-        || mons_holiness( mon->type ) == MH_DEMONIC
-        || mons_holiness( mon->type ) == MH_NONLIVING
-        || mons_holiness( mon->type ) == MH_PLANT
-        || mon->type == MONS_SHADOW_DRAGON)
+    if (mons_holiness(mon) == MH_UNDEAD 
+        || mons_holiness(mon) == MH_DEMONIC
+        || mons_holiness(mon) == MH_NONLIVING
+        || mons_holiness(mon) == MH_PLANT
+        || mon->type == MONS_SHADOW_DRAGON
+        || mon->type == MONS_DEATH_DRAKE)
     {
         return (3);  // to match the value for players
     }
@@ -646,6 +664,26 @@ int mons_res_negative_energy( struct monsters *mon )
 
     return (u);
 }                               // end mons_res_negative_energy()
+
+bool mons_is_evil( const monsters *mon )
+{
+    return (mons_class_flag( mon->type, M_EVIL ));
+}
+
+bool mons_is_unholy( const monsters *mon )
+{
+    const mon_holy_type holy = mons_holiness( mon );
+
+    return (holy == MH_UNDEAD || holy == MH_DEMONIC);
+}
+
+bool mons_has_lifeforce( const monsters *mon )
+{
+    const int holy = mons_holiness( mon );
+
+    return (holy == MH_NATURAL || holy == MH_PLANT);
+             // && !mons_has_ench( mon, ENCH_PETRIFY ));
+}
 
 int mons_skeleton(int mc)
 {
@@ -1170,7 +1208,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
     return (gmo_n);
 }                               // end monam()
 
-void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
+const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
 {
     glog[0] = '\0';
 
@@ -1193,7 +1231,7 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
         }
 
         strcpy(gmon_name, glog);
-        return;
+        return (glog);
     }
 
     if (!mons_is_unique( mons_num )) 
@@ -1237,6 +1275,8 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
     }
 
     strcat(glog, gmon_name);
+
+    return (glog);
 }                               // end moname()
 
 /* ********************* END PUBLIC FUNCTIONS ********************* */
@@ -1327,6 +1367,11 @@ bool mons_aligned(int m1, int m2)
 bool mons_friendly(const monsters *m)
 {
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
+}
+
+bool mons_is_paralysed(const monsters *m)
+{
+    return (m->speed_increment == 0);
 }
 
 bool mons_is_confused(const monsters *m)
@@ -1434,13 +1479,13 @@ bool mons_should_fire(struct bolt &beam)
         return (false);
 
     // if we either hit no friends, or monster too dumb to care
-    if (beam.fr_count == 0 || !beam.smartMonster)
+    if (beam.fr_count == 0 || !beam.smart_monster)
         return (true);
 
     // only fire if they do acceptably low collateral damage
     // the default for this is 50%;  in other words, don't
     // hit a foe unless you hit 2 or fewer friends.
-    if (beam.foe_power >= (beam.foeRatio * beam.fr_power) / 100)
+    if (beam.foe_power >= (beam.foe_ratio * beam.fr_power) / 100)
         return (true);
 
     return (false);
@@ -1652,6 +1697,7 @@ bool ms_requires_tracer(int monspell)
         case MS_IRON_BOLT:
         case MS_LIGHTNING_BOLT:
         case MS_MARSH_GAS:
+        case MS_MIASMA:
         case MS_METAL_SPLINTERS:
         case MS_MMISSILE:
         case MS_NEGATIVE_BOLT:
@@ -1659,6 +1705,7 @@ bool ms_requires_tracer(int monspell)
         case MS_PAIN:
         case MS_PARALYSIS:
         case MS_POISON_BLAST:
+        case MS_POISON_ARROW:
         case MS_POISON_SPLASH:
         case MS_QUICKSILVER_BOLT:
         case MS_SLOW:
@@ -2067,7 +2114,8 @@ bool monster_can_swap(const monsters *m)
 
     // Efreet and fire elementals are disqualified because they leave behind
     // clouds of flame.
-    if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL)
+    if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
+            || m->type == MONS_ROTTING_DEVIL)
         return (false);
     
     int mchar = me->showchar;

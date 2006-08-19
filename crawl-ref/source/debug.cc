@@ -31,6 +31,7 @@
 #include "dungeon.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -856,13 +857,11 @@ void create_spec_object(void)
         {
             if (strstr( "naga barding", specs ))
             {
-                mitm[thing_created].sub_type = ARM_BOOTS;
-                mitm[thing_created].plus2 = TBOOT_NAGA_BARDING;
+                mitm[thing_created].sub_type = ARM_NAGA_BARDING;
             }
             else if (strstr( "centaur barding", specs ))
             {
-                mitm[thing_created].sub_type = ARM_BOOTS;
-                mitm[thing_created].plus2 = TBOOT_CENTAUR_BARDING;
+                mitm[thing_created].sub_type = ARM_CENTAUR_BARDING;
             }
             else if (strstr( "wizard's hat", specs ))
             {

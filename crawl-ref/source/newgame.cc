@@ -86,6 +86,7 @@
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "player.h"
@@ -251,7 +252,7 @@ static void pick_random_species_and_class( void )
     {
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
-        if (sp >= SP_WHITE_DRACONIAN && sp <= SP_UNK2_DRACONIAN)
+        if (sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
@@ -356,9 +357,8 @@ bool new_game(void)
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     ASSERT(NUM_SPELLS < SPELL_NO_SPELL);
-    ASSERT(NUM_DURATIONS > DUR_LAST_DUR);
     ASSERT(NUM_JOBS < JOB_UNKNOWN);
-    ASSERT(NUM_ATTRIBUTES < 30);
+    ASSERT(NUM_ATTRIBUTES >= 30);
 
     init_player();
 
@@ -627,7 +627,7 @@ bool new_game(void)
 
             // don't change object type modifier unless it starts plain
             if (you.inv[i].base_type <= OBJ_ARMOUR
-                && cmp_equip_race( you.inv[i], 0 ))   // == DARM_PLAIN
+                && get_equip_race(you.inv[i]) == 0 )   // == DARM_PLAIN
             {
                 // now add appropriate species type mod:
                 switch (you.species)
@@ -1805,7 +1805,7 @@ void species_stat_init(unsigned char which_species)
     case SP_PALE_DRACONIAN:
     case SP_UNK0_DRACONIAN:
     case SP_UNK1_DRACONIAN:
-    case SP_UNK2_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+    case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
     modify_all_stats( sb, ib, db );
@@ -2381,7 +2381,7 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
 static void create_wanderer( void )
 {
     const int util_skills[] =
-        { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+        { SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_util_skills = sizeof(util_skills) / sizeof(int);
@@ -2393,7 +2393,7 @@ static void create_wanderer( void )
     const int fight_util_skills[] =
         { SK_FIGHTING, SK_SHORT_BLADES, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_fight_util_skills = sizeof(fight_util_skills) / sizeof(int);
@@ -2404,7 +2404,7 @@ static void create_wanderer( void )
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
           SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_not_rare_skills = sizeof(not_rare_skills) / sizeof(int);
@@ -2417,7 +2417,7 @@ static void create_wanderer( void )
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
           SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_all_skills = sizeof(all_skills) / sizeof(int);
@@ -2640,7 +2640,7 @@ static void create_wanderer( void )
             add_spell_to_memory( spell_list[ school ] );
         }
     }
-    else if (you.skills[ SK_THROWING ] && one_chance_in(3)) // these are rare
+    else if (you.skills[ SK_RANGED_COMBAT ] && one_chance_in(3)) // these are rare
     {
         // Ranger style wanderer
         // Rare since starting with a throwing weapon is very good
@@ -2846,10 +2846,10 @@ static char letter_to_species(int keyn)
 
 static char species_to_letter(int spec)
 {
-    if (spec > SP_RED_DRACONIAN && spec <= SP_UNK2_DRACONIAN)
+    if (spec > SP_RED_DRACONIAN && spec <= SP_BASE_DRACONIAN)
         spec = SP_RED_DRACONIAN;
-    else if (spec > SP_UNK2_DRACONIAN)
-        spec -= SP_UNK2_DRACONIAN - SP_RED_DRACONIAN;
+    else if (spec > SP_BASE_DRACONIAN)
+        spec -= SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
     return 'a' + spec - 1;
 }
 
@@ -2920,7 +2920,7 @@ spec_query:
         *linebuf = 0;
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
-            if (i > SP_RED_DRACONIAN && i <= SP_UNK2_DRACONIAN)
+            if (i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
@@ -3401,7 +3401,7 @@ void give_items_skills()
 
         if (you.species == SP_KOBOLD)
         {
-            you.skills[SK_THROWING] = 1;
+            you.skills[SK_RANGED_COMBAT] = 1;
             you.skills[SK_DARTS] = 1;
             you.skills[SK_DODGING] = 1;
             you.skills[SK_STEALTH] = 1;
@@ -3427,7 +3427,7 @@ void give_items_skills()
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             you.skills[SK_SHIELDS] = 2;
-            you.skills[SK_THROWING] = 2;
+            you.skills[SK_RANGED_COMBAT] = 2;
             you.skills[(coinflip() ? SK_STABBING : SK_SHIELDS)]++;
         }
         break;
@@ -3654,7 +3654,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 2;
         you.skills[SK_STABBING] = 1;
         you.skills[SK_DODGING + random2(3)]++;
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 1;
         you.skills[SK_TRAPS_DOORS] = 2;
         break;
@@ -3858,12 +3858,12 @@ void give_items_skills()
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 3;
         you.skills[SK_STABBING] = 2;
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 1;
         if (you.species == SP_DEEP_ELF)
             you.skills[SK_CROSSBOWS] = 1;
         else
-            you.skills[SK_THROWING] += 1;
+            you.skills[SK_RANGED_COMBAT] += 1;
 
         break;
 
@@ -3956,7 +3956,7 @@ void give_items_skills()
             you.skills[SK_POLEARMS] = 1;
             you.skills[SK_ARMOUR] = 2;
             you.skills[SK_DODGING] = 2;
-            you.skills[SK_THROWING] = 2;
+            you.skills[SK_RANGED_COMBAT] = 2;
         }
         break;
 
@@ -4019,7 +4019,7 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 4;
 
         you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_THROWING] = 3;
+        you.skills[SK_RANGED_COMBAT] = 3;
 
         // Removing spellcasting -- bwr
         // you.skills[SK_SPELLCASTING] = 1;
@@ -4066,7 +4066,7 @@ void give_items_skills()
 
             you.skills[SK_POLEARMS] = 2;
             you.skills[SK_DODGING] = 2;
-            you.skills[SK_THROWING] += 1;
+            you.skills[SK_RANGED_COMBAT] += 1;
             break;
 
         default:
@@ -4285,7 +4285,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 1;
 
         if (you.species == SP_GNOME && you.char_class == JOB_EARTH_ELEMENTALIST)
-            you.skills[SK_THROWING]++;
+            you.skills[SK_RANGED_COMBAT]++;
         else
             you.skills[ coinflip() ? SK_DODGING : SK_STEALTH ]++;
         break;
@@ -4334,7 +4334,7 @@ void give_items_skills()
 
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
-        you.skills[SK_THROWING] = 2;
+        you.skills[SK_RANGED_COMBAT] = 2;
         you.skills[SK_DODGING] = 2;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_TRANSMIGRATION] = 2;
@@ -4421,7 +4421,7 @@ void give_items_skills()
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
 
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 2;
         you.skills[SK_DODGING] = 2;
         you.skills[SK_STEALTH] = 1;
@@ -4724,7 +4724,7 @@ void give_items_skills()
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
         you.skills[SK_SHIELDS] = 1;
-        you.skills[SK_THROWING] = 2;
+        you.skills[SK_RANGED_COMBAT] = 2;
         you.skills[SK_STAVES] = 3;
         you.skills[SK_INVOCATIONS] = 2;
         break;
@@ -4808,7 +4808,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 2;
         you.skills[SK_STABBING] = 2;
         you.skills[SK_DODGING + random2(3)]++;
-        //you.skills[SK_THROWING] = 1; //jmf: removed these, added magic below
+        //you.skills[SK_RANGED_COMBAT] = 1; //jmf: removed these, added magic below
         //you.skills[SK_DARTS] = 1;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;

@@ -11,6 +11,7 @@
 #include "invent.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -297,7 +298,7 @@ void CLua::vfnreturns(const char *format, va_list args)
 }
 
 static void push_monster(lua_State *ls, monsters *mons);
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_t *t);
+static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
 {
@@ -346,7 +347,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             break;
         case 'A':
             argc += push_activity_interrupt(
-                        ls, va_arg(args, activity_interrupt_t *));
+                        ls, va_arg(args, activity_interrupt_data *));
             break;
         default:
             --argc;
@@ -1239,22 +1240,25 @@ static int l_item_equip_type(lua_State *ls)
     if (!item || !is_valid_item(*item))
         return (0);
 
-    int eq = -1;
+    equipment_type eq = EQ_NONE;
+
     if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES)
         eq = EQ_WEAPON;
     else if (item->base_type == OBJ_ARMOUR)
-        eq = armour_equip_slot(*item);
+        eq = get_armour_slot(*item);
     else if (item->base_type == OBJ_JEWELLERY)
         eq = item->sub_type >= AMU_RAGE? EQ_AMULET : EQ_RINGS;
 
-    if (eq != -1)
+    if (eq != EQ_NONE)
+    {
         lua_pushnumber(ls, eq);
-    else
-        lua_pushnil(ls);
-    if (eq != -1)
         lua_pushstring(ls, equip_slot_to_name(eq));
+    }
     else
+    {
         lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
     return (2);
 }
 
@@ -1443,42 +1447,6 @@ static int food_eat(lua_State *ls)
     lua_pushboolean(ls, eaten);
     return (1);
 }
-
-// Giving away chunk type information is spoily.
-/*
-static int food_chunktype(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-    if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
-    {
-        int mons_type = item->plus;
-        int chunk_type = mons_corpse_thingy(mons_type);
-        const char *schunktype = "unknown";
-        switch (chunk_type)
-        {
-        case CE_HCL:
-        case CE_MUTAGEN_GOOD:
-        case CE_MUTAGEN_BAD:
-        case CE_MUTAGEN_RANDOM:
-            schunktype = "mutagenic";
-            break;
-        case CE_POISONOUS:
-            schunktype = "poisonous";
-            break;
-        case CE_CONTAMINATED:
-            schunktype = "contaminated";
-            break;
-        case CE_CLEAN:
-            schunktype = "clean";
-            break;
-        }
-        lua_pushstring(ls, schunktype);
-    }
-    else
-        lua_pushnil(ls);
-    return (1);
-}
-*/
 
 static int food_rotting(lua_State *ls)
 {
@@ -2066,7 +2034,7 @@ static int monster_set(lua_State *ls)
     return (0);
 }
 
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_t *t) 
+static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t) 
 {
     if (!t->data)
     {

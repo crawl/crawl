@@ -114,7 +114,7 @@ bool mons_speaks(struct monsters *monster)
 
     if (mons_has_ench(monster, ENCH_CONFUSION))
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);
@@ -259,7 +259,7 @@ bool mons_speaks(struct monsters *monster)
     }
     else if (monster->behaviour == BEH_FLEE)
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);
@@ -378,7 +378,7 @@ bool mons_speaks(struct monsters *monster)
     }
     else if (mons_friendly(monster))
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);

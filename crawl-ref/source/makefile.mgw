@@ -12,7 +12,9 @@ COPY = copy
 OS_TYPE = WIN32CONSOLE
 CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
             -Wmissing-prototypes -Wmissing-declarations \
-			-D$(OS_TYPE) $(EXTRA_FLAGS)
+			-D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS \
+			-DWINMM_PLAY_SOUNDS -DREGEX_PCRE
+
 OBJECTS := $(OBJECTS) libw32c.o
 
 LDFLAGS = 

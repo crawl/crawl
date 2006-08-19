@@ -19,22 +19,6 @@
 #include "externs.h"
 
 
-struct SBeam
-{
-    std::string name;
-    int         colour;
-    int         range;
-    int         rangeMax;
-    int         hit;
-    dice_def    damage;
-    int         ench_power;
-    int         type;
-    int         flavour;
-    int         thrown;
-    bool        isBeam;
-};
-
-
 /*
    beam_colour = _pass[0];
    beam_range = _pass[1];
@@ -50,7 +34,7 @@ struct SBeam
 /* ***********************************************************************
  * called from: monstuff - mstuff2
  * *********************************************************************** */
-struct SBeam mons_spells(int spell_cast, int power);
+bolt mons_spells(int spell_cast, int power);
 
 
 // last updated 12may2000 {dlb}

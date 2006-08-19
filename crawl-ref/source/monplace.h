@@ -78,4 +78,6 @@ bool place_monster( int &id, int mon_type, int power, char behaviour,
                     int proximity = PROX_ANYWHERE, int extra = 250,
                     int dur = 0 );
 
+monster_type rand_dragon( dragon_class_type type );
+
 #endif  // MONPLACE_H

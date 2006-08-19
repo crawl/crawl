@@ -41,12 +41,17 @@
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
+// minimum value for strength required on armour and weapons
+#define STR_REQ_THRESHOLD       10
+
 // max size of monter array {dlb}:
 #define MAX_MONSTERS 200
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
 #define NON_MONSTER 201
+
+#define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
 #define MAX_ITEMS 500
@@ -103,6 +108,12 @@
 // Maximum charge level for rods
 #define MAX_ROD_CHARGE                  17
 #define ROD_CHARGE_MULT                 100
+
+// Maximum enchantment on weapons/armour/secondary armours
+// Note: use armour_max_enchant(item) to get the correct limit for item
+#define MAX_WPN_ENCHANT                 5
+#define MAX_ARM_ENCHANT                 5
+#define MAX_SEC_ENCHANT                 2
 
 #define NUM_STAVE_ADJ                   9
 

@@ -525,7 +525,6 @@ void initialise_travel()
     traversable_terrain[DNGN_FLOOR] =
     traversable_terrain[DNGN_ENTER_HELL] =
     traversable_terrain[DNGN_OPEN_DOOR] =
-    traversable_terrain[DNGN_BRANCH_STAIRS] =
     traversable_terrain[DNGN_UNDISCOVERED_TRAP] =
     traversable_terrain[DNGN_ENTER_SHOP] =
     traversable_terrain[DNGN_ENTER_LABYRINTH] =

@@ -97,6 +97,7 @@
 #include "it_use2.h"
 #include "it_use3.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "macro.h"
@@ -168,14 +169,6 @@ static const struct coord_def Compass[8] =
 
 void (*viewwindow) (char, bool);
 
-/* these are all defined in view.cc: */
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-unsigned char mapchar(unsigned char ldfk);
-unsigned char mapchar2(unsigned char ldfk);
-unsigned char mapchar3(unsigned char ldfk);
-unsigned char mapchar4(unsigned char ldfk);
-
 /*
    Function pointers are used to make switching between Unix and DOS char sets
    possible as a runtime option (command-line -c)
@@ -201,15 +194,9 @@ static void open_door(char move_x, char move_y);
 int main( int argc, char *argv[] )
 {
 #ifdef USE_ASCII_CHARACTERS
-    // Default to the non-ibm set when it makes sense.
-    viewwindow = &viewwindow3;
-    mapch = &mapchar3;
-    mapch2 = &mapchar4;
+    apply_ascii_display(true);
 #else
-    // Use the standard ibm default
-    viewwindow = &viewwindow2;
-    mapch = &mapchar;
-    mapch2 = &mapchar2;
+    apply_ascii_display(false);
 #endif
 
     // Load in the system environment variables
@@ -1894,16 +1881,11 @@ static void input(void)
         switch (temp_effect)
         {
         case SPWPN_VORPAL:
-            if (damage_type(you.inv[you.equip[EQ_WEAPON]].base_type,
-                     you.inv[you.equip[EQ_WEAPON]].sub_type) != DVORP_CRUSHING)
-            {
+            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]])
+                    == DVORP_SLICING)
                 strcat(info, " seems blunter.");
-            }
             else
-            {
-                //jmf: for Maxwell's Silver Hammer
                 strcat(info, " feels lighter.");
-            }
             break;
 
         case SPWPN_FLAMING:
@@ -1994,7 +1976,7 @@ static void input(void)
         you.duration[DUR_STONEMAIL]--;
         if (you.duration[DUR_STONEMAIL] == 6)
         {
-            mpr("Your scaley stone armour is starting to flake away.", MSGCH_DURATION);
+            mpr("Your scaly stone armour is starting to flake away.", MSGCH_DURATION);
             you.redraw_armour_class = 1;
             if (coinflip())
                 you.duration[DUR_STONEMAIL]--;
@@ -2002,7 +1984,7 @@ static void input(void)
     }
     else if (you.duration[DUR_STONEMAIL] == 1)
     {
-        mpr("Your scaley stone armour disappears.", MSGCH_DURATION);
+        mpr("Your scaly stone armour disappears.", MSGCH_DURATION);
         you.duration[DUR_STONEMAIL] = 0;
         you.redraw_armour_class = 1;
         burden_change();
@@ -2034,7 +2016,8 @@ static void input(void)
     {
         you.duration[DUR_CONDENSATION_SHIELD]--;
 
-        scrolls_burn( 1, OBJ_POTIONS );
+        // [dshaligram] Makes this spell useless
+        // scrolls_burn( 1, OBJ_POTIONS );
         
         if (player_res_cold() < 0)
         {
@@ -2123,20 +2106,6 @@ static void input(void)
     {
         mpr("Your unholy channel expires.", MSGCH_DURATION);    // Death channel wore off
         you.duration[DUR_DEATH_CHANNEL] = 0;
-    }
-
-    if (you.duration[DUR_SHUGGOTH_SEED_RELOAD] > 0)     //jmf: added
-        you.duration[DUR_SHUGGOTH_SEED_RELOAD]--;
-
-    if (you.duration[DUR_INFECTED_SHUGGOTH_SEED] > 1)
-        you.duration[DUR_INFECTED_SHUGGOTH_SEED]--;
-    else if (you.duration[DUR_INFECTED_SHUGGOTH_SEED] == 1)
-    {
-        //jmf: use you.max_hp instead? or would that be too evil?
-        you.duration[DUR_INFECTED_SHUGGOTH_SEED] = 0;
-        mpr("A horrible thing bursts from your chest!", MSGCH_WARN);
-        ouch(1 + you.hp / 2, 0, KILLED_BY_SHUGGOTH);
-        make_shuggoth(you.x_pos, you.y_pos, 1 + you.hp / 2);
     }
 
     if (you.invis > 1)
@@ -2759,7 +2728,8 @@ static bool initialise(void)
 
     seed_rng();
 
-    mons_init(mcolour);          // this needs to be way up top {dlb}
+    init_properties();
+    init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_playerspells();        // this needs to be way up top {dlb}
 
     clrscr();

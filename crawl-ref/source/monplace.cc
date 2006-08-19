@@ -771,6 +771,34 @@ static int choose_band( int mon_type, int power, int &band_size )
         band = BAND_SKELETAL_WARRIORS;      // skeletal warrior
         band_size = 2 + random2(3);
         break;
+    // Journey -- Added Draconian Packs  
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+        if (power > 18 && one_chance_in(3)) 
+        {
+           band = BAND_DRACONIAN;
+           band_size = 2 + random2(3);
+        }                                                       
+        break;                                                  
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+        if (power > 20) 
+        {
+           band = BAND_DRACONIAN;
+           band_size = 3 + random2(4);
+        }
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -1002,6 +1030,27 @@ static int band_member(int band, int power)
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;
         break;
+    case BAND_DRACONIAN:
+    {
+        const int temp_rand = random2( (power < 24) ? 24 : 37 );
+        mon_type =                  
+                ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
+                 (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34
+                 (temp_rand > 31) ? MONS_DRACONIAN_MONK :       // 2 in 34
+                 (temp_rand > 29) ? MONS_DRACONIAN_SHIFTER :    // 2 in 34
+                 (temp_rand > 27) ? MONS_DRACONIAN_ANNIHILATOR :// 2 in 34
+                 (temp_rand > 25) ? MONS_DRACONIAN_SCORCHER :   // 2 in 34
+                 (temp_rand > 23) ? MONS_DRACONIAN_ZEALOT :     // 2 in 34
+                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3 in 34
+                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3 in 34
+                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3 in 34
+                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3 in 34
+                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3 in 34
+                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3 in 34
+                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3 in 34
+                                    MONS_RED_DRACONIAN );       // 3 in 34
+        break;
+    }
     }
 
     return (mon_type);
@@ -1304,3 +1353,53 @@ int summon_any_demon(char demon_class)
 
     return summoned;
 }                               // end summon_any_demon()
+
+monster_type rand_dragon( dragon_class_type type )
+{
+    monster_type  summoned = MONS_PROGRAM_BUG;
+    int temp_rand;
+
+    switch (type)
+    {
+    case DRAGON_LIZARD:
+        temp_rand = random2(100);
+        summoned = ((temp_rand > 85) ? MONS_GIANT_GECKO :
+                    (temp_rand > 59) ? MONS_GIANT_LIZARD : 
+                    (temp_rand > 34) ? MONS_GIANT_IGUANA :
+                    (temp_rand > 22) ? MONS_GILA_MONSTER :
+                    (temp_rand > 11) ? MONS_KOMODO_DRAGON :
+                    (temp_rand >  8) ? MONS_FIREDRAKE : 
+                    (temp_rand >  2) ? MONS_SWAMP_DRAKE
+                                     : MONS_DEATH_DRAKE );
+        break;
+
+    case DRAGON_DRACONIAN:
+        temp_rand = random2(70);
+        summoned = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
+                    (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
+                    (temp_rand > 40) ? MONS_PALE_DRACONIAN :
+                    (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
+                    (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
+                    (temp_rand > 10) ? MONS_RED_DRACONIAN
+                                     : MONS_WHITE_DRACONIAN);
+        break;
+
+    case DRAGON_DRAGON:
+        temp_rand = random2(90);
+        summoned = ((temp_rand > 80) ? MONS_MOTTLED_DRAGON :
+                    (temp_rand > 70) ? MONS_LINDWURM :
+                    (temp_rand > 60) ? MONS_STORM_DRAGON :
+                    (temp_rand > 50) ? MONS_MOTTLED_DRAGON :
+                    (temp_rand > 40) ? MONS_STEAM_DRAGON :
+                    (temp_rand > 30) ? MONS_DRAGON :
+                    (temp_rand > 20) ? MONS_ICE_DRAGON :
+                    (temp_rand > 10) ? MONS_SWAMP_DRAGON
+                                     : MONS_SHADOW_DRAGON);
+        break;
+
+    default:
+        break;
+    }
+
+    return (summoned);
+}

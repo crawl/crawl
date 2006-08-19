@@ -1107,8 +1107,6 @@ std::string feature_description(int mx, int my)
         return ("A stone staircase leading up.");
     case DNGN_ENTER_HELL:
         return ("A gateway to hell.");
-    case DNGN_BRANCH_STAIRS:
-        return ("A staircase to a branch level.");
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_III:

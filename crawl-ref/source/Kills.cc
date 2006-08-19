@@ -52,7 +52,7 @@ const char *kill_category_names[] =
     "others",
 };
 
-const char *KillMaster::category_name(KillCategory kc) const
+const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
         return (kill_category_names[kc]);
@@ -95,7 +95,7 @@ void KillMaster::load(FILE *file)
 
 void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
 {
-    KillCategory kc = 
+    kill_category kc = 
         (killer == KILL_YOU || killer == KILL_YOU_MISSILE)? KC_YOU :
         (ispet)?                                            KC_FRIENDLY :
                                                             KC_OTHER;
@@ -134,7 +134,7 @@ std::string KillMaster::kill_info() const
                        kills, 
                        count,
                        i == KC_YOU? NULL :
-                                    category_name((KillCategory) i),
+                                    category_name((kill_category) i),
                        needseparator );
         needseparator = true;
     }
@@ -907,7 +907,7 @@ static int kill_lualc_holiness(lua_State *ls)
         }
         else
         {
-            switch (mons_holiness(ke->monnum))
+            switch (mons_class_holiness(ke->monnum))
             {
             case MH_HOLY:       verdict = "holy"; break;
             case MH_NATURAL:    verdict = "natural"; break;

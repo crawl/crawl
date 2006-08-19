@@ -24,6 +24,7 @@
 
 #include "AppHdr.h"
 #include "files.h"
+#include "version.h"
 
 #include <string.h>
 #include <string>
@@ -66,6 +67,7 @@
 #include "debug.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "message.h"
 #include "misc.h"
@@ -320,7 +322,7 @@ bool travel_load_map( char branch, int absdepth )
     char minorVersion;
 
     if (!determine_level_version( levelFile, majorVersion, minorVersion )
-            || majorVersion != 4)
+            || majorVersion != SAVE_MAJOR_VERSION)
     {
         fclose(levelFile);
         return false;
@@ -967,7 +969,8 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // 4.7 origin tracking for items
     // 4.8 widened env.map to 2 bytes
 
-    write_tagged_file( saveFile, 4, 8, TAGTYPE_LEVEL );
+    // [dshaligram] Winding major version back all the way to 0.
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 8, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 
@@ -1108,7 +1111,7 @@ void save_game(bool leave_game)
     // 4.4 added item origins
     // 4.5 added num_gifts
 
-    write_tagged_file( saveFile, 4, 5, TAGTYPE_PLAYER );
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 5, TAGTYPE_PLAYER );
 
     fclose(saveFile);
 
@@ -1367,23 +1370,14 @@ static bool determine_version( FILE *restoreFile,
     if (read2(restoreFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // check for 3.30
-    if (buf[0] == you.your_name[0] && buf[1] == you.your_name[1])
-    {
-        majorVersion = 0;
-        minorVersion = 0;
-        rewind(restoreFile);
-        return true;
-    }
-
     // otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 1 || majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 1 or 4, no idea!
+    return false;   // if its not 0, no idea
 }
 
 static void restore_version( FILE *restoreFile, 
@@ -1391,7 +1385,7 @@ static void restore_version( FILE *restoreFile,
 {
     // assuming the following check can be removed once we can read all
     // savefile versions.
-    if (majorVersion < 4)
+    if (majorVersion != SAVE_MAJOR_VERSION)
     {
         snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d savefile.\n",
             majorVersion, minorVersion);
@@ -1401,7 +1395,7 @@ static void restore_version( FILE *restoreFile,
 
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(restoreFile, TAGTYPE_PLAYER, minorVersion);
             break;
         default:
@@ -1442,23 +1436,14 @@ static bool determine_level_version( FILE *levelFile,
     if (read2(levelFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // check for 3.30 -- simply started right in with player name.
-    if (isprint(buf[0]) && buf[0] > 4)      // who knows?
-    {
-        majorVersion = 0;
-        minorVersion = 0;
-        rewind(levelFile);
-        return true;
-    }
-
     // otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 1 || majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 1 or 4, no idea!
+    return false;   // if its not SAVE_MAJOR_VERSION, no idea
 }
 
 static void restore_level_version( FILE *levelFile, 
@@ -1466,7 +1451,7 @@ static void restore_level_version( FILE *levelFile,
 {
     // assuming the following check can be removed once we can read all
     // savefile versions.
-    if (majorVersion < 4)
+    if (majorVersion != SAVE_MAJOR_VERSION)
     {
         snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d level file.\n",
             majorVersion, minorVersion);
@@ -1476,7 +1461,7 @@ static void restore_level_version( FILE *levelFile,
 
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
             break;
         default:
@@ -1505,42 +1490,19 @@ static bool determine_ghost_version( FILE *ghostFile,
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 4, no idea!
-}
-
-static void restore_old_ghost( FILE *ghostFile )
-{
-    char buf[41];
-
-    read2(ghostFile, buf, 41);  // 41 causes EOF. 40 will not.
-
-    // translate
-    memcpy( ghost.name, buf, 20 );
-
-    for (int i = 0; i < 20; i++)
-        ghost.values[i] = static_cast< unsigned short >( buf[i+20] );
-
-    if (ghost.values[ GVAL_RES_FIRE ] >= 97)
-        ghost.values[ GVAL_RES_FIRE ] -= 100;
-
-    if (ghost.values[ GVAL_RES_COLD ] >= 97)
-        ghost.values[ GVAL_RES_COLD ] -= 100;
+    return false;   // if its not SAVE_MAJOR_VERSION, no idea!
 }
 
 static void restore_ghost_version( FILE *ghostFile, 
                                    char majorVersion, char minorVersion )
 {
-    // currently, we can read all known ghost versions.
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
-            break;
-        case 0:
-            restore_old_ghost(ghostFile);
             break;
         default:
             break;
@@ -1642,7 +1604,7 @@ void save_ghost( bool force )
 
     // 4.0-4.3  old tagged savefile (values as unsigned char)
     // 4.4      new tagged savefile (values as signed short)
-    write_tagged_file( gfile, 4, 4, TAGTYPE_GHOST );
+    write_tagged_file( gfile, SAVE_MAJOR_VERSION, 4, TAGTYPE_GHOST );
 
     fclose(gfile);
 
@@ -1794,6 +1756,8 @@ unsigned char translate_spell(unsigned char spel)
    case MEPHITIC_CLOUD: return ; */
     case SPELL_VENOM_BOLT:
         return (MS_VENOM_BOLT);
+    case SPELL_POISON_ARROW:
+        return (MS_POISON_ARROW);
     case SPELL_TELEPORT_OTHER:
         return (MS_TELEPORT_OTHER);
     case SPELL_SUMMON_SMALL_MAMMAL:
@@ -1862,7 +1826,7 @@ void generate_random_demon(void)
 
     char st_p[ITEMNAME_SIZE];
 
-    make_name(random2(250), random2(250), random2(250), 3, st_p);
+    make_name(random_int(), false, st_p);
     strcpy(ghost.name, st_p);
 
     // hp - could be defined below (as could ev, AC etc). Oh well, too late:

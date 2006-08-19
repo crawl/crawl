@@ -20,19 +20,20 @@
 /* ***********************************************************************
  * called from: food.h 
  * *********************************************************************** */
-bool can_cut_meat(unsigned char wclass, unsigned char wtype);
+bool can_cut_meat(int wclass, int wtype);
 
 /* ***********************************************************************
  * called from: acr - fight - food - item_use - itemname - spells2
  * *********************************************************************** */
-char damage_type(unsigned char wclass, unsigned char wtype);
+int damage_type(int wclass, int wtype);
+int damage_type(const item_def &item);
 
 
 // last updated: 10jun2000 {dlb}
 /* ***********************************************************************
  * called from: describe - fight - item_use
  * *********************************************************************** */
-int hands_reqd_for_weapon(unsigned char wclass, unsigned char wtype);
+int hands_reqd_for_weapon(int wclass, int wtype);
 
 
 // last updated: 10jun2000 {dlb}
@@ -55,15 +56,6 @@ unsigned char launched_by(unsigned char weapon_subtype);
  *              spells2 - spells3
  * *********************************************************************** */
 bool launches_things( unsigned char weapon_subtype );
-
-
-// last updated: 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: describe - fight - files - it_use3 - newgame - spells1
- * *********************************************************************** */
-int weapon_skill(int wclass, int wtype);
-
-int weapon_skill(const item_def &item);
 
 
 #endif

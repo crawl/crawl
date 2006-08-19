@@ -46,6 +46,8 @@ static int mons_tartarus_level(int mcls);
 static int mons_tartarus_rare(int mcls);
 static int mons_tomb_level(int mcls);
 static int mons_tomb_rare(int mcls);
+static int mons_caverns_level(int mcls);                       
+static int mons_caverns_rare(int mcls);
 
 /* ******************* BEGIN EXTERNAL FUNCTIONS ******************* */
 int branch_depth(int branch)
@@ -116,7 +118,8 @@ int mons_level(int mcls)
              (you.where_are_you == BRANCH_ELVEN_HALLS)  ? mons_hallelf_level :
              (you.where_are_you == BRANCH_TOMB)         ? mons_tomb_level :
              (you.where_are_you == BRANCH_SWAMP)        ? mons_swamp_level :
-             (you.where_are_you == BRANCH_VAULTS)       ? mons_standard_level
+             (you.where_are_you == BRANCH_VAULTS)       ? mons_standard_level :
+             (you.where_are_you == BRANCH_CAVERNS)      ? mons_caverns_level 
                                                         : mons_standard_level);
 
         monster_level = fnc_level(mcls);
@@ -153,7 +156,8 @@ int mons_rarity(int mcls)
               (you.where_are_you == BRANCH_ELVEN_HALLS)   ? mons_hallelf_rare :
               (you.where_are_you == BRANCH_TOMB)          ? mons_tomb_rare :
               (you.where_are_you == BRANCH_SWAMP)         ? mons_swamp_rare :
-              (you.where_are_you == BRANCH_VAULTS)        ? mons_standard_rare
+              (you.where_are_you == BRANCH_VAULTS)        ? mons_standard_rare :
+              (you.where_are_you == BRANCH_CAVERNS)       ? mons_caverns_rare
                                                           : mons_standard_rare);
 
         monster_rarity = fnc_rarity(mcls);
@@ -188,6 +192,7 @@ bool mons_abyss(int mcls)
     case MONS_FLAYED_GHOST:
     case MONS_FLYING_SKULL:
     case MONS_FREEZING_WRAITH:
+    case MONS_DEATH_DRAKE:
     case MONS_FUNGUS:
     case MONS_GIANT_EYEBALL:
     case MONS_GIANT_ORANGE_BRAIN:
@@ -539,11 +544,12 @@ static int mons_dis_level(int mcls)
 
     case MONS_FLAYED_GHOST:
     case MONS_FREEZING_WRAITH:
+    case MONS_DEATH_DRAKE:
     case MONS_HAIRY_DEVIL:
     case MONS_IRON_DEVIL:
     case MONS_VAMPIRE:
     case MONS_WRAITH:
-        mlev += 4;
+        mlev += 3;
         break;
 
     case MONS_BLUE_DEVIL:
@@ -1092,6 +1098,7 @@ static int mons_tartarus_rare(int mcls)
 
     case MONS_IMP:
     case MONS_SHADOW_DRAGON:
+    case MONS_DEATH_DRAKE:
         return 20;
 
     case MONS_RED_DEVIL:
@@ -2186,6 +2193,7 @@ static int mons_hallzot_rare(int mcls)
     case MONS_SKELETAL_DRAGON:
         return 40;
     case MONS_SHADOW_DRAGON:
+    case MONS_DEATH_DRAKE:
         return 30;
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:
@@ -2203,6 +2211,68 @@ static int mons_hallzot_rare(int mcls)
         return 0;
     }
 }                               // end mons_hallzot_rare()
+
+static int mons_caverns_level( int mcls )
+{
+
+    int mlev = you.branch_stairs[STAIRS_CAVERNS] + 1;
+
+    switch (mcls)
+    {
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+        mlev++;
+        break;
+
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+        mlev += 3;
+        break;
+
+    default:
+        mlev += 99;
+        break;
+    }
+
+    return (mlev);
+}
+
+static int mons_caverns_rare( int mcls )
+{
+    switch (mcls)
+    {
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+        return (500);
+
+    default:
+        return (0);
+    }
+}
 
 static int mons_standard_level(int mcls)
 {
@@ -2345,6 +2415,14 @@ static int mons_standard_level(int mcls)
     case MONS_GARGOYLE:
     case MONS_GIANT_AMOEBA:
     case MONS_KOBOLD_DEMONOLOGIST:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
         return 18;
 
     case MONS_GIANT_SLUG:
@@ -2391,6 +2469,13 @@ static int mons_standard_level(int mcls)
     case MONS_REDBACK:
     case MONS_SPHINX:
     case MONS_VAPOUR:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
         return 22;
 
     case MONS_ORC_SORCERER:
@@ -2631,6 +2716,13 @@ static int mons_standard_rare(int mcls)
     case MONS_RED_WASP:
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
         return 25;
 
     case MONS_BUTTERFLY:
@@ -2647,6 +2739,14 @@ static int mons_standard_rare(int mcls)
     case MONS_STORM_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_WIZARD:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_MOTTLED_DRACONIAN:
         return 20;
 
     case MONS_BORING_BEETLE:

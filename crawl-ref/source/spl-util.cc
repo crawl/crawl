@@ -26,6 +26,7 @@
 #include "stuff.h"
 #include "itemname.h"
 #include "macro.h"
+#include "misc.h"
 #include "monstuff.h"
 #include "player.h"
 #include "spl-book.h"
@@ -781,7 +782,7 @@ static struct playerspell *seekspell(int spell)
 static bool cloud_helper( int (*func) (int, int, int, int), int x, int y, 
                           int pow, int ctype )
 {
-    if (grd[x][y] > DNGN_LAST_SOLID_TILE && env.cgrid[x][y] == EMPTY_CLOUD)
+    if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {
         func(x, y, pow, ctype);
         return true;

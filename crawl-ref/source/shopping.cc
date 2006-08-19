@@ -28,6 +28,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "player.h"
 #include "randart.h"
@@ -617,6 +618,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case WPN_LONG_SWORD:
+        case WPN_LONGBOW:
         case WPN_SCIMITAR:
             valued += 45;
             break;
@@ -646,8 +648,9 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             valued += 65;
             break;
 
-        case WPN_GREAT_FLAIL:
-            valued += 75;
+        case WPN_DIRE_FLAIL:
+        case WPN_LOCHABER_AXE:
+            valued += 90;
             break;
 
         case WPN_EVENINGSTAR:
@@ -675,6 +678,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         case WPN_TRIPLE_SWORD:
         case WPN_DEMON_BLADE:
         case WPN_BLESSED_BLADE:
+        case WPN_LAJATANG:
             valued += 200;
             break;
         }
@@ -737,15 +741,15 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         }
 
         // elf/dwarf
-        if (cmp_equip_race( item, ISFLAG_ELVEN ) 
-                || cmp_equip_race( item, ISFLAG_DWARVEN ))
+        if (get_equip_race(item) == ISFLAG_ELVEN
+                || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;
         }
 
         // value was "6" but comment read "orc", so I went with comment {dlb}
-        if (cmp_equip_race( item, ISFLAG_ORCISH ))
+        if (get_equip_race(item) == ISFLAG_ORCISH)
         {
             valued *= 8;
             valued /= 10;
@@ -795,7 +799,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 valued += 50;
         }
         else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
-                && !cmp_equip_desc( item, 0 ))
+                && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -823,7 +827,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         case MI_DART:
         case MI_LARGE_ROCK:
         case MI_STONE:
-        case MI_EGGPLANT:
+        case MI_NONE:
             valued++;
             break;
         case MI_ARROW:
@@ -892,6 +896,8 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case ARM_BANDED_MAIL:
+        case ARM_CENTAUR_BARDING:
+        case ARM_NAGA_BARDING:
             valued += 150;
             break;
 
@@ -1006,14 +1012,14 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             valued /= 10;
         }
 
-        if (cmp_equip_race( item, ISFLAG_ELVEN ) 
-                || cmp_equip_race( item, ISFLAG_DWARVEN ))
+        if (get_equip_race(item) == ISFLAG_ELVEN
+                || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;
         }
 
-        if (cmp_equip_race( item, ISFLAG_ORCISH ))
+        if (get_equip_race(item) == ISFLAG_ORCISH)
         {
             valued *= 8;
             valued /= 10;
@@ -1046,7 +1052,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 valued += 50;
         }
         else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
-                && !cmp_equip_desc( item, 0 ))
+                && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -1469,7 +1475,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_STAVES:
-        if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
             valued = 120;
         else if (item.sub_type == STAFF_SMITING 
                 || item.sub_type == STAFF_STRIKING
@@ -1563,8 +1569,10 @@ const char *shop_name(int sx, int sy)
 
     char st_p[ITEMNAME_SIZE];
 
-    make_name( cshop->keeper_name[0], cshop->keeper_name[1],
-               cshop->keeper_name[2], 3, st_p );
+    unsigned long seed = static_cast<unsigned long>( cshop->keeper_name[0] )
+                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
+                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
+    make_name( seed, false, st_p );
 
     strcpy(sh_name, st_p);
     strcat(sh_name, "'s ");

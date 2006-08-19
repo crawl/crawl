@@ -36,8 +36,10 @@
 #include "externs.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "maps.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mon-pick.h"
 #include "monplace.h"
@@ -46,6 +48,13 @@
 #include "spl-book.h"
 #include "stuff.h"
 #include "wpn-misc.h"
+
+#define MAX_PIT_MONSTERS   10
+
+struct pit_mons_def {
+    int type;
+    int rare;
+};
 
 struct spec_t {
     bool created;
@@ -121,7 +130,7 @@ static unsigned char item_in_shop(unsigned char shop_type);
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
                           unsigned char ta2_y);
-static char rare_weapon(unsigned char w_type);
+static int rare_weapon(int w_type);
 static bool is_weapon_special(int the_weapon);
 static void set_weapon_special(int the_weapon, int spwpn);
 static void big_room(int level_number);
@@ -134,6 +143,7 @@ static void morgue(spec_room &sr);
 static void special_room(int level_number, spec_room &sr);
 static void specr_2(spec_room &sr);
 static void beehive(spec_room &sr);
+static void jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
 static void build_vaults(int level_number, int force_vault);
@@ -550,9 +560,10 @@ int items( int allow_uniques,       // not just true-false,
                 // this replaced the infinite loop (wasteful) -- may need
                 // to make into its own function to allow ease of tweaking
                 // distribution {dlb}:
-                temp_rand = random2(9);
+                temp_rand = random2(10);
 
-                mitm[p].sub_type = ((temp_rand == 8) ? WPN_DEMON_BLADE :
+                mitm[p].sub_type = ((temp_rand == 9) ? WPN_LAJATANG :
+                                    (temp_rand == 8) ? WPN_DEMON_BLADE :
                                     (temp_rand == 7) ? WPN_DEMON_TRIDENT :
                                     (temp_rand == 6) ? WPN_DEMON_WHIP :
                                     (temp_rand == 5) ? WPN_DOUBLE_SWORD :
@@ -669,7 +680,7 @@ int items( int allow_uniques,       // not just true-false,
             case WPN_FLAIL:
             case WPN_SPIKED_FLAIL:
             case WPN_GREAT_MACE:
-            case WPN_GREAT_FLAIL:
+            case WPN_DIRE_FLAIL:
                 if (one_chance_in(6))
                     set_equip_race( mitm[p], ISFLAG_ELVEN );
                 if (one_chance_in(4))
@@ -751,6 +762,7 @@ int items( int allow_uniques,       // not just true-false,
             case WPN_HALBERD:
             case WPN_GLAIVE:
             case WPN_EXECUTIONERS_AXE:
+            case WPN_LOCHABER_AXE:
                 if (one_chance_in(5))
                     set_equip_race( mitm[p], ISFLAG_ORCISH );
                 break;
@@ -761,6 +773,7 @@ int items( int allow_uniques,       // not just true-false,
                 break;
 
             case WPN_KATANA:
+            case WPN_LAJATANG:
             case WPN_KNIFE:
             case WPN_SLING:
                 set_equip_race( mitm[p], ISFLAG_NO_RACE );
@@ -772,6 +785,11 @@ int items( int allow_uniques,       // not just true-false,
                     set_equip_race( mitm[p], ISFLAG_ORCISH );
                 if (coinflip())
                     set_equip_race( mitm[p], ISFLAG_ELVEN );
+                break;
+
+            case WPN_LONGBOW:
+                set_equip_race( mitm[p], one_chance_in(3)  ? ISFLAG_ELVEN 
+                                                           : ISFLAG_NO_RACE );
                 break;
 
             case WPN_CROSSBOW:
@@ -815,7 +833,7 @@ int items( int allow_uniques,       // not just true-false,
         // there's a good chance that we'll just strip them of 
         // their ego type at the bottom of this function. -- bwr
         if (item_level == MAKE_GOOD_ITEM 
-            && cmp_equip_race( mitm[p], ISFLAG_ORCISH ))
+            && get_equip_race( mitm[p] ) == ISFLAG_ORCISH)
         {
             set_equip_race( mitm[p], ISFLAG_NO_RACE );
         }
@@ -891,7 +909,7 @@ int items( int allow_uniques,       // not just true-false,
                         // **** intentional fall through here ****
                     case WPN_FLAIL:
                     case WPN_SPIKED_FLAIL:
-                    case WPN_GREAT_FLAIL:
+                    case WPN_DIRE_FLAIL:
                     case WPN_HAMMER:
                         if (one_chance_in(25))
                             set_weapon_special(p, SPWPN_PAIN);
@@ -1076,14 +1094,15 @@ int items( int allow_uniques,       // not just true-false,
 
                     case WPN_HALBERD:
                     case WPN_GLAIVE:
+                    case WPN_SCYTHE:
+                    case WPN_TRIDENT:
+                    case WPN_LOCHABER_AXE:
                         if (one_chance_in(30))
                             set_weapon_special(p, SPWPN_HOLY_WRATH);
 
                         if (one_chance_in(4))
                             set_weapon_special(p, SPWPN_PROTECTION);
                         // **** intentional fall through here ****
-                    case WPN_SCYTHE:
-                    case WPN_TRIDENT:
                         if (one_chance_in(5))
                             set_weapon_special(p, SPWPN_SPEED);
                         // **** intentional fall through here ****
@@ -1124,18 +1143,18 @@ int items( int allow_uniques,       // not just true-false,
                             break;
                         // **** possible intentional fall through here ****
                     case WPN_BOW:
+                    case WPN_LONGBOW:
                     case WPN_CROSSBOW:
-                        if (one_chance_in(30))
-                            set_weapon_special( p, SPWPN_SPEED );
+                    {
+                        const int tmp = random2(1000);
 
-                        if (one_chance_in(5))
-                            set_weapon_special( p, SPWPN_PROTECTION );
-
-                        if (coinflip())
-                            set_weapon_special(p, (coinflip() ? SPWPN_FLAME
-                                                              : SPWPN_FROST));
+                        set_weapon_special( p, (tmp < 375) ? SPWPN_FLAMING :
+                                               (tmp < 750) ? SPWPN_FREEZING :
+                                               (tmp < 920) ? SPWPN_PROTECTION :
+                                               (tmp < 980) ? SPWPN_VORPAL 
+                                                           : SPWPN_SPEED );
                         break;
-
+                    }
                     case WPN_BLOWGUN:
                         if (one_chance_in(7))
                             set_weapon_special(p, SPWPN_VENOM);
@@ -1253,7 +1272,7 @@ int items( int allow_uniques,       // not just true-false,
         }
 
         // value was "0" comment said "orc" so I went with comment {dlb}
-        if (cmp_equip_race( mitm[p], ISFLAG_ORCISH ))
+        if (get_equip_race(mitm[p]) == ISFLAG_ORCISH)
         {
             // no holy wrath or slay orc and 1/2 the time no-ego
             const int brand = get_weapon_brand( mitm[p] );
@@ -1279,8 +1298,8 @@ int items( int allow_uniques,       // not just true-false,
             && mitm[p].sub_type != WPN_CLUB
             && mitm[p].sub_type != WPN_GIANT_CLUB
             && mitm[p].sub_type != WPN_GIANT_SPIKED_CLUB
-            && cmp_equip_desc( mitm[p], 0 )
-            && cmp_equip_race( mitm[p], 0 ))
+            && get_equip_desc(mitm[p]) == 0
+            && get_equip_race(mitm[p]) == 0)
         {
             set_equip_desc( mitm[p], (coinflip() ? ISFLAG_GLOWING 
                                                  : ISFLAG_RUNED) );
@@ -1395,7 +1414,7 @@ int items( int allow_uniques,       // not just true-false,
 
         // orcish ammo gets poisoned a lot more often -- in the original
         // code it was poisoned every time!?
-        if (cmp_equip_race( mitm[p], ISFLAG_ORCISH ) && one_chance_in(3))
+        if (get_equip_race(mitm[p]) == ISFLAG_ORCISH && one_chance_in(3))
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED_II );
 
         // reduced quantity if special
@@ -1408,9 +1427,9 @@ int items( int allow_uniques,       // not just true-false,
             mitm[p].plus += random2(5);
 
         // elven arrows and dwarven bolts are quality items
-        if ((cmp_equip_race( mitm[p], ISFLAG_ELVEN )
+        if ((get_equip_race(mitm[p]) == ISFLAG_ELVEN
                 && mitm[p].sub_type == MI_ARROW)
-            || (cmp_equip_race( mitm[p], ISFLAG_DWARVEN )
+            || (get_equip_race(mitm[p]) == ISFLAG_DWARVEN
                 && mitm[p].sub_type == MI_BOLT))
         {
             mitm[p].plus += random2(3);
@@ -1496,17 +1515,18 @@ int items( int allow_uniques,       // not just true-false,
                 }
             }
 
-            hide2armour( &(mitm[p].sub_type) );
+            hide2armour(mitm[p]);
 
             // mitm[p].special = SPARM_RANDART_II + random2(4);
             make_item_randart( mitm[p] );
             mitm[p].plus = 0;
 
-            if (mitm[p].sub_type == ARM_BOOTS)
+            if (mitm[p].sub_type == ARM_BOOTS
+                    && one_chance_in(10))
             {
-                mitm[p].plus2 = TBOOT_BOOTS;
-                if (one_chance_in(10))
-                    mitm[p].plus2 = random2( NUM_BOOT_TYPES );
+                mitm[p].sub_type = 
+                        coinflip()? ARM_NAGA_BARDING
+                                  : ARM_CENTAUR_BARDING;
             }
 
             mitm[p].plus += random2(4);
@@ -1560,17 +1580,22 @@ int items( int allow_uniques,       // not just true-false,
                     set_equip_race( mitm[p], ISFLAG_ELVEN );
                 break;
 
+            case ARM_NAGA_BARDING:
+            case ARM_CENTAUR_BARDING:
             case ARM_BOOTS:
-                if (one_chance_in(4))
+                if (mitm[p].sub_type == ARM_BOOTS)
                 {
-                    mitm[p].plus2 = TBOOT_NAGA_BARDING;
-                    break;      
-                }
+                    if (one_chance_in(4))
+                    {
+                        mitm[p].sub_type = ARM_NAGA_BARDING;
+                        break;      
+                    }
 
-                if (one_chance_in(4))
-                {
-                    mitm[p].plus2 = TBOOT_CENTAUR_BARDING;
-                    break; 
+                    if (one_chance_in(4))
+                    {
+                        mitm[p].sub_type = ARM_CENTAUR_BARDING;
+                        break; 
+                    }
                 }
 
                 if (one_chance_in(4))
@@ -1582,8 +1607,8 @@ int items( int allow_uniques,       // not just true-false,
                 break;
 
             case ARM_HELMET:
-                if (cmp_helmet_type( mitm[p], THELM_CAP )
-                    || cmp_helmet_type( mitm[p], THELM_WIZARD_HAT ))
+                if (get_helmet_type(mitm[p]) == THELM_CAP
+                    || get_helmet_type(mitm[p]) == THELM_WIZARD_HAT)
                 {
                     if (one_chance_in(6))
                         set_equip_race( mitm[p], ISFLAG_ELVEN );
@@ -1642,7 +1667,7 @@ int items( int allow_uniques,       // not just true-false,
         if (50 + item_level >= random2(250)
             || item_level == MAKE_GOOD_ITEM
             || (mitm[p].sub_type == ARM_HELMET 
-                && cmp_helmet_type( mitm[p], THELM_WIZARD_HAT )))
+                && get_helmet_type(mitm[p]) == THELM_WIZARD_HAT))
         {
             mitm[p].plus += random2(3);
 
@@ -1651,7 +1676,7 @@ int items( int allow_uniques,       // not just true-false,
 
             if (30 + item_level >= random2(350)
                 && (item_level == MAKE_GOOD_ITEM
-                    || (!cmp_equip_race( mitm[p], ISFLAG_ORCISH )
+                    || (!get_equip_race(mitm[p]) == ISFLAG_ORCISH
                         || (mitm[p].sub_type <= ARM_PLATE_MAIL && coinflip()))))
             {
                 switch (mitm[p].sub_type)
@@ -1673,7 +1698,7 @@ int items( int allow_uniques,       // not just true-false,
                     //break;
                 }
                 case ARM_CLOAK:
-                    if (cmp_equip_race( mitm[p], ISFLAG_DWARVEN ))
+                    if (get_equip_race(mitm[p]) == ISFLAG_DWARVEN)
                         break;
 
                     switch (random2(4))
@@ -1699,7 +1724,7 @@ int items( int allow_uniques,       // not just true-false,
                     break;
 
                 case ARM_HELMET:
-                    if (cmp_helmet_type(mitm[p],THELM_WIZARD_HAT) && coinflip())
+                    if (get_helmet_type(mitm[p]) == THELM_WIZARD_HAT && coinflip())
                     {
                         if (one_chance_in(3))
                         {
@@ -1727,20 +1752,20 @@ int items( int allow_uniques,       // not just true-false,
                     break;
 
                 case ARM_BOOTS:
-                    switch (random2(3))
-                    {
-                    case 0:
-                        if (mitm[p].plus2 == TBOOT_BOOTS)
-                            set_item_ego_type(mitm[p], OBJ_ARMOUR, SPARM_RUNNING);
-                        break;
-                    case 1:
-                        set_item_ego_type(mitm[p], OBJ_ARMOUR, SPARM_LEVITATION);
-                        break;
-                    case 2:
-                        set_item_ego_type(mitm[p], OBJ_ARMOUR, SPARM_STEALTH);
-                        break;
-                    }
+                case ARM_NAGA_BARDING:
+                case ARM_CENTAUR_BARDING:
+                {
+                    const int tmp = random2(600) 
+                                    + 200 * (mitm[p].sub_type != ARM_BOOTS);
+
+                    set_item_ego_type( mitm[p], OBJ_ARMOUR,
+                                       (tmp < 200) ? SPARM_RUNNING :
+                                       (tmp < 400) ? SPARM_LEVITATION :
+                                       (tmp < 600) ? SPARM_STEALTH :
+                                       (tmp < 700) ? SPARM_COLD_RESISTANCE
+                                                   : SPARM_FIRE_RESISTANCE );
                     break;
+                }
 
                 case ARM_ROBE:
                     switch (random2(4))
@@ -1821,8 +1846,8 @@ int items( int allow_uniques,       // not just true-false,
         }
 
         // if not given a racial type, and special, give shiny/runed/etc desc.
-        if (cmp_equip_race( mitm[p], 0 )
-            && cmp_equip_desc( mitm[p], 0 )
+        if (get_equip_race(mitm[p]) == 0
+            && get_equip_desc(mitm[p]) == 0
             && (((is_random_artefact(mitm[p]) 
                         || get_armour_ego_type( mitm[p] ) != SPARM_NORMAL)
                     && !one_chance_in(10))
@@ -1849,7 +1874,7 @@ int items( int allow_uniques,       // not just true-false,
         // would be an enchanted item which somehow didn't get converted
         // into armour).
         if (item_level == MAKE_GOOD_ITEM)
-            hide2armour( &(mitm[p].sub_type) ); // what of animal hides? {dlb}
+            hide2armour(mitm[p]); // what of animal hides? {dlb}
 
         // skin armours + Crystal PM don't get special enchantments
         //   or species, but can be randarts
@@ -1942,7 +1967,7 @@ int items( int allow_uniques,       // not just true-false,
             for (count = 0; count < 1000; count++) 
             {
                 temp_rand = random2( NUM_MONSTERS );     // random monster
-                temp_rand = mons_charclass( temp_rand ); // corpse base type
+                temp_rand = mons_species( temp_rand ); // corpse base type
 
                 if (mons_weight( temp_rand ) > 0)        // drops a corpse
                     break;
@@ -2692,9 +2717,9 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         }
         // deliberate fall through {gdl}
     case MONS_ORC_PRIEST:
-        item_race = MAKE_ITEM_ORCISH;
-        // deliberate fall through {dlb}
     case MONS_TERENCE:
+    case MONS_DRACONIAN:
+    case MONS_DRACONIAN_ZEALOT:
         if (!one_chance_in(5))
         {
             mitm[bp].base_type = OBJ_WEAPONS;
@@ -2727,13 +2752,14 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         item_race = MAKE_ITEM_ELVEN;
         mitm[bp].base_type = OBJ_WEAPONS;
 
-        temp_rand = random2(8);
-        mitm[bp].sub_type = ((temp_rand > 5) ? WPN_LONG_SWORD :    // 2 in 8
-                             (temp_rand > 3) ? WPN_SHORT_SWORD :   // 2 in 8
-                             (temp_rand > 2) ? WPN_SCIMITAR :      // 1 in 8
-                             (temp_rand > 1) ? WPN_MACE :          // 1 in 8
-                             (temp_rand > 0) ? WPN_BOW             // 1 in 8
-                                             : WPN_HAND_CROSSBOW); // 1 in 8
+        temp_rand = random2(100);
+        mitm[bp].sub_type = ((temp_rand > 80) ? WPN_LONG_SWORD :    // 20%
+                             (temp_rand > 60) ? WPN_SHORT_SWORD :   // 20%
+                             (temp_rand > 48) ? WPN_SCIMITAR :      // 12%
+                             (temp_rand > 36) ? WPN_MACE :          // 12%
+                             (temp_rand > 24) ? WPN_BOW :           // 12%
+                             (temp_rand > 12) ? WPN_LONGBOW         // 12%
+                                              : WPN_HAND_CROSSBOW); // 12%
         break;
 
     case MONS_DEEP_ELF_ANNIHILATOR:
@@ -2743,6 +2769,10 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_SUMMONER:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_CALLER:
         item_race = MAKE_ITEM_ELVEN;
         mitm[bp].base_type = OBJ_WEAPONS;
 
@@ -2771,6 +2801,14 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     case MONS_RUPERT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_WAYNE:
+    case MONS_PALE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
         mitm[bp].base_type = OBJ_WEAPONS;
 
         temp_rand = random2(120);
@@ -2803,18 +2841,20 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     case MONS_URUG:
     case MONS_VAULT_GUARD:
     case MONS_VAMPIRE_KNIGHT:
+    case MONS_DRACONIAN_KNIGHT:
         mitm[bp].base_type = OBJ_WEAPONS;
 
-        temp_rand = random2(24);
-        mitm[bp].sub_type = ((temp_rand > 19) ? WPN_GREAT_SWORD :// 16.67%
-                             (temp_rand > 15) ? WPN_LONG_SWORD : // 16.67%
-                             (temp_rand > 11) ? WPN_BATTLEAXE :  // 16.67%
-                             (temp_rand >  7) ? WPN_WAR_AXE :        // 16.67%
-                             (temp_rand >  5) ? WPN_GREAT_MACE : //  8.33%
-                             (temp_rand >  3) ? WPN_GREAT_FLAIL ://  8.33%
-                             (temp_rand >  1) ? WPN_GLAIVE :     //  8.33%
-                             (temp_rand >  0) ? WPN_BROAD_AXE    //  4.17%
-                                              : WPN_HALBERD);    //  4.17%
+        temp_rand = random2(25);
+        mitm[bp].sub_type = ((temp_rand > 20) ? WPN_GREAT_SWORD :   // 16%
+                             (temp_rand > 16) ? WPN_LONG_SWORD :    // 16%
+                             (temp_rand > 12) ? WPN_BATTLEAXE :     // 16%
+                             (temp_rand >  8) ? WPN_WAR_AXE :       // 16%
+                             (temp_rand >  5) ? WPN_GREAT_MACE :    // 12%
+                             (temp_rand >  3) ? WPN_DIRE_FLAIL :    //  8%
+                             (temp_rand >  2) ? WPN_LOCHABER_AXE :  //  4%
+                             (temp_rand >  1) ? WPN_GLAIVE :        //  4%
+                             (temp_rand >  0) ? WPN_BROAD_AXE       //  4%
+                                              : WPN_HALBERD);       //  4%
 
         if (one_chance_in(4))
             mitm[bp].plus += 1 + random2(3);
@@ -2841,7 +2881,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
 
         if (one_chance_in(10) || menv[mid].type == MONS_ETTIN)
         {
-            mitm[bp].sub_type = ((one_chance_in(10)) ? WPN_GREAT_FLAIL
+            mitm[bp].sub_type = ((one_chance_in(10)) ? WPN_DIRE_FLAIL
                                                      : WPN_GREAT_MACE);
         }
         break;
@@ -2883,7 +2923,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
 
         if (one_chance_in(10))
         {
-            mitm[bp].sub_type = (one_chance_in(10) ? WPN_GREAT_FLAIL
+            mitm[bp].sub_type = (one_chance_in(10) ? WPN_DIRE_FLAIL
                                                    : WPN_GREAT_MACE);
         }
         break;
@@ -2893,6 +2933,9 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         item_race = MAKE_ITEM_NO_RACE;
         mitm[bp].base_type = OBJ_WEAPONS;
         mitm[bp].sub_type = WPN_BOW;
+        if (menv[mid].type == MONS_CENTAUR_WARRIOR
+                && one_chance_in(5))
+            mitm[bp].sub_type = WPN_LONGBOW;
         break;
 
     case MONS_YAKTAUR:
@@ -3314,6 +3357,22 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     case MONS_JESSICA:
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
+    case MONS_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_KNIGHT:
     case MONS_ORC_WIZARD:
     case MONS_WIZARD:
         item_race = MAKE_ITEM_NO_RACE;
@@ -3414,16 +3473,16 @@ static void check_doors(void)
             solid_count = 0;
 
             // first half of each conditional represents bounds checking {dlb}:
-            if (grd[x - 1][y] < DNGN_LAST_SOLID_TILE)
+            if (grid_is_solid( grd[x - 1][y] ))
                 solid_count++;
 
-            if (grd[x + 1][y] < DNGN_LAST_SOLID_TILE)
+            if (grid_is_solid( grd[x + 1][y] ))
                 solid_count++;
 
-            if (grd[x][y - 1] < DNGN_LAST_SOLID_TILE)
+            if (grid_is_solid( grd[x][y - 1] ))
                 solid_count++;
 
-            if (grd[x][y + 1] < DNGN_LAST_SOLID_TILE)
+            if (grid_is_solid( grd[x][y + 1] ))
                 solid_count++;
 
             grd[x][y] = ((solid_count < 2) ? DNGN_FLOOR : DNGN_CLOSED_DOOR);
@@ -4086,31 +4145,38 @@ static void place_traps(int level_number)
         }
         while (grd[env.trap[i].x][env.trap[i].y] != DNGN_FLOOR);
 
-        env.trap[i].type = TRAP_DART;
+        unsigned char &trap_type = env.trap[i].type;
+        trap_type = TRAP_DART;
 
         if ((random2(1 + level_number) > 1) && one_chance_in(4))
-            env.trap[i].type = TRAP_NEEDLE;
-        if (random2(1 + level_number) > 2)
-            env.trap[i].type = TRAP_ARROW;
+            trap_type = TRAP_NEEDLE;
         if (random2(1 + level_number) > 3)
-            env.trap[i].type = TRAP_SPEAR;
+            trap_type = TRAP_SPEAR;
         if (random2(1 + level_number) > 5)
-            env.trap[i].type = TRAP_AXE;
+            trap_type = TRAP_AXE;
+
+        // Note we're boosting arrow trap numbers by moving it
+        // down the list, and making spear and axe traps rarer.
+        if (trap_type == TRAP_DART?
+                random2(1 + level_number) > 2
+              : one_chance_in(7))
+            trap_type = TRAP_ARROW;
+
         if (random2(1 + level_number) > 7)
-            env.trap[i].type = TRAP_BOLT;
+            trap_type = TRAP_BOLT;
         if (random2(1 + level_number) > 11)
-            env.trap[i].type = TRAP_BLADE;
+            trap_type = TRAP_BLADE;
 
         if ((random2(1 + level_number) > 14 && one_chance_in(3))
             || (player_in_branch( BRANCH_HALL_OF_ZOT ) && coinflip()))
         {
-            env.trap[i].type = TRAP_ZOT;
+            trap_type = TRAP_ZOT;
         }
 
         if (one_chance_in(20))
-            env.trap[i].type = TRAP_TELEPORT;
+            trap_type = TRAP_TELEPORT;
         if (one_chance_in(40))
-            env.trap[i].type = TRAP_AMNESIA;
+            trap_type = TRAP_AMNESIA;
 
         grd[env.trap[i].x][env.trap[i].y] = DNGN_UNDISCOVERED_TRAP;
     }                           // end "for i"
@@ -4383,7 +4449,7 @@ static void make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
 static int good_door_spot(int x, int y)
 {
-    if ((grd[x][y] > DNGN_WATER_X && grd[x][y] < DNGN_ENTER_PANDEMONIUM)
+    if ((!grid_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM)
         || grd[x][y] == DNGN_CLOSED_DOOR)
     {
         return 1;
@@ -4444,8 +4510,8 @@ static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     {
         // left side
         if (grd[sx-1][ry] == DNGN_FLOOR
-            && grd[sx-1][ry-1] < DNGN_LAST_SOLID_TILE
-            && grd[sx-1][ry+1] < DNGN_LAST_SOLID_TILE)
+            && grid_is_solid(grd[sx-1][ry-1])
+            && grid_is_solid(grd[sx-1][ry+1]))
         {
             if (random2(10) < doorlevel)
                 grd[sx-1][ry] = DNGN_CLOSED_DOOR;
@@ -4453,8 +4519,8 @@ static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
         // right side
         if (grd[ex+1][ry] == DNGN_FLOOR
-            && grd[ex+1][ry-1] < DNGN_LAST_SOLID_TILE
-            && grd[ex+1][ry+1] < DNGN_LAST_SOLID_TILE)
+            && grid_is_solid(grd[ex+1][ry-1])
+            && grid_is_solid(grd[ex+1][ry+1]))
         {
             if (random2(10) < doorlevel)
                 grd[ex+1][ry] = DNGN_CLOSED_DOOR;
@@ -4466,8 +4532,8 @@ static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     {
         // top
         if (grd[rx][sy-1] == DNGN_FLOOR
-            && grd[rx-1][sy-1] < DNGN_LAST_SOLID_TILE
-            && grd[rx+1][sy-1] < DNGN_LAST_SOLID_TILE)
+            && grid_is_solid(grd[rx-1][sy-1])
+            && grid_is_solid(grd[rx+1][sy-1]))
         {
             if (random2(10) < doorlevel)
                 grd[rx][sy-1] = DNGN_CLOSED_DOOR;
@@ -4475,8 +4541,8 @@ static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
         // bottom
         if (grd[rx][ey+1] == DNGN_FLOOR
-            && grd[rx-1][ey+1] < DNGN_LAST_SOLID_TILE
-            && grd[rx+1][ey+1] < DNGN_LAST_SOLID_TILE)
+            && grid_is_solid(grd[rx-1][ey+1])
+            && grid_is_solid(grd[rx+1][ey+1]))
         {
             if (random2(10) < doorlevel)
                 grd[rx][ey+1] = DNGN_CLOSED_DOOR;
@@ -4808,6 +4874,79 @@ static void specr_2(spec_room &sr)
     sr.hooked_up = true;
 }                               // end specr_2()
 
+// Fill special room sr with monsters from the pit_list at density%...
+// then place a "lord of the pit" of lord_type at (lordx, lordy).
+static void fill_monster_pit( spec_room &sr, 
+                          FixedVector<pit_mons_def, MAX_PIT_MONSTERS> &pit_list,
+                          int density, int lord_type, int lordx, int lordy )
+{
+    int i, x, y;
+
+    // make distribution cumulative
+    for (i = 1; i < MAX_PIT_MONSTERS; i++)
+    {
+        // assuming that the first zero rarity is the end of the list:
+        if (!pit_list[i].rare)
+            break;
+
+        pit_list[i].rare = pit_list[i].rare + pit_list[i - 1].rare;
+    }
+
+    const int num_types = i;
+    const int rare_sum = pit_list[num_types - 1].rare;
+
+    // calculate die_size, factoring in the density% of the pit
+    const int die_size = (rare_sum * 100) / density;
+
+#if DEBUG_DIAGNOSTICS
+    for (i = 0; i < num_types; i++)
+    {
+        char buff[ ITEMNAME_SIZE ];
+
+        const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare 
+                                   : pit_list[i].rare);
+
+        const float perc = (static_cast<float>( delta ) * 100.0) 
+                                / static_cast<float>( rare_sum );
+
+        mprf( MSGCH_DIAGNOSTICS, "%6.2f%%: %s", perc,
+              moname( pit_list[i].type, true, DESC_PLAIN, buff ) );
+    }
+#endif
+
+    // put the boss monster down
+    if (lord_type != MONS_PROGRAM_BUG)
+        mons_place( lord_type, BEH_SLEEP, MHITNOT, true, lordx, lordy );
+
+    // place monsters and give them items {dlb}:
+    for (x = sr.x1; x <= sr.x2; x++)
+    {
+        for (y = sr.y1; y <= sr.y2; y++)
+        {
+            // avoid the boss (or anyone else we may have dropped already)
+            if (mgrd[x][y] != NON_MONSTER)
+                continue;
+
+            const int roll = random2( die_size );
+
+            // density skip (no need to iterate)
+            if (roll >= rare_sum)
+                continue;
+
+            // run throught the cumulative chances and place a monster
+            for (i = 0; i < num_types; i++)
+            {
+                if (roll < pit_list[i].rare)
+                {
+                    mons_place( pit_list[i].type, BEH_SLEEP, MHITNOT,
+                                true, x, y );
+                    break;
+                }
+            }
+        }
+    }
+}
+
 static void special_room(int level_number, spec_room &sr)
 {
     char spec_room_type = SROOM_LAIR_KOBOLD;
@@ -4860,8 +4999,12 @@ static void special_room(int level_number, spec_room &sr)
 
         if (level_number > 19 && coinflip())
             spec_room_type = SROOM_MORGUE;
-    }
 
+        if (level_number > 13 
+                && one_chance_in(level_number > 23? 4 : 
+                                 level_number > 18? 5 : 6))
+            spec_room_type = SROOM_JELLY_PIT;
+    }
 
     switch (spec_room_type)
     {
@@ -5007,6 +5150,10 @@ static void special_room(int level_number, spec_room &sr)
 
     case SROOM_MORGUE:
         morgue(sr);
+        break;
+
+    case SROOM_JELLY_PIT:
+        jelly_pit(level_number, sr);
         break;
     }
 }                               // end special_room()
@@ -5859,7 +6006,7 @@ void item_colour( item_def &item )
                 break;
             default:
                 item.colour = LIGHTCYAN;
-                if (cmp_equip_race( item, ISFLAG_DWARVEN ))
+                if (get_equip_race(item) == ISFLAG_DWARVEN)
                     item.colour = CYAN;
                 break;
             }
@@ -5883,7 +6030,7 @@ void item_colour( item_def &item )
             break;
         default:
             item.colour = LIGHTCYAN;
-            if (cmp_equip_race( item, ISFLAG_DWARVEN ))
+            if (get_equip_race(item) == ISFLAG_DWARVEN)
                 item.colour = CYAN;
             break;
         }
@@ -5897,13 +6044,16 @@ void item_colour( item_def &item )
         {
         case ARM_CLOAK:
         case ARM_ROBE:
+        case ARM_NAGA_BARDING:
+        case ARM_CENTAUR_BARDING:
+        case ARM_CAP:
             item.colour = random_colour();
             break;
 
         case ARM_HELMET:
             //caps and wizard's hats are random coloured
-            if (cmp_helmet_type( item, THELM_CAP )
-                    || cmp_helmet_type( item, THELM_WIZARD_HAT ))
+            if (get_helmet_type(item) == THELM_CAP
+                    || get_helmet_type(item) == THELM_WIZARD_HAT)
             {
                 item.colour = random_colour();
             } 
@@ -5956,7 +6106,7 @@ void item_colour( item_def &item )
             break;
         default:
             item.colour = LIGHTCYAN;
-            if (cmp_equip_race( item, ISFLAG_DWARVEN ))
+            if (get_equip_race(item) == ISFLAG_DWARVEN)
                 item.colour = CYAN;
             break;
         }
@@ -6345,74 +6495,13 @@ void item_colour( item_def &item )
 
 // Checks how rare a weapon is. Many of these have special routines for
 // placement, especially those with a rarity of zero. Chance is out of 10.
-static char rare_weapon(unsigned char w_type)
+static int rare_weapon(int w_type)
 {
-
     // zero value weapons must be placed specially -- see items() {dlb}
     if (is_demonic(w_type))
         return 0;
 
-    switch (w_type)
-    {
-    case WPN_CLUB:
-    case WPN_DAGGER:
-        return 10;
-    case WPN_HAND_AXE:
-    case WPN_FALCHION:
-    case WPN_MACE:
-    case WPN_QUARTERSTAFF:
-        return 9;
-    case WPN_BOW:
-    case WPN_FLAIL:
-    case WPN_HAMMER:
-    case WPN_SABRE:
-    case WPN_SHORT_SWORD:
-    case WPN_SLING:
-    case WPN_SPEAR:
-        return 8;
-    case WPN_LONG_SWORD:
-    case WPN_MORNINGSTAR:
-    case WPN_WAR_AXE:
-        return 7;
-    case WPN_BATTLEAXE:
-    case WPN_CROSSBOW:
-    case WPN_GREAT_SWORD:
-    case WPN_SCIMITAR:
-    case WPN_TRIDENT:
-        return 6;
-    case WPN_GLAIVE:
-    case WPN_HALBERD:
-    case WPN_BLOWGUN:
-        return 5;
-    case WPN_BROAD_AXE:
-    case WPN_HAND_CROSSBOW:
-    case WPN_SPIKED_FLAIL:
-    case WPN_WHIP:
-        return 4;
-    case WPN_GREAT_MACE:
-        return 3;
-    case WPN_ANCUS:
-    case WPN_GREAT_FLAIL:
-    case WPN_SCYTHE:
-        return 2;
-    case WPN_GIANT_CLUB:
-    case WPN_GIANT_SPIKED_CLUB:
-        return 1;
-        // zero value weapons must be placed specially -- see items() {dlb}
-    case WPN_DOUBLE_SWORD:
-    case WPN_EVENINGSTAR:
-    case WPN_EXECUTIONERS_AXE:
-    case WPN_KATANA:
-    case WPN_KNIFE:
-    case WPN_QUICK_BLADE:
-    case WPN_TRIPLE_SWORD:
-    case WPN_BLESSED_BLADE:
-        return 0;
-
-    default:
-        // should not happen now that calls are bounded by NUM_WEAPONS {dlb}
-        return -1;
-    }
+    return (weapon_rarity(w_type));
 }                               // end rare_weapon()
 
 //jmf: generate altar based on where you are, or possibly randomly
@@ -7320,11 +7409,8 @@ static bool octa_room(spec_room &sr, int oblique_max, unsigned char type_floor)
             if (grd[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
                 grd[x][y] = DNGN_SHALLOW_WATER;
 
-            if (type_floor >= DNGN_LAST_SOLID_TILE
-                && grd[x][y] == DNGN_CLOSED_DOOR)
-            {
+            if (grd[x][y] == DNGN_CLOSED_DOOR && type_floor >= MINMOVE)
                 grd[x][y] = DNGN_FLOOR;       // ick
-            }
         }
 
         if (oblique > 0)
@@ -8179,6 +8265,48 @@ static void morgue(spec_room &sr)
     }
 }                               // end morgue()
 
+static void jelly_pit(int level_number, spec_room &sr)
+{
+    FixedVector< pit_mons_def, MAX_PIT_MONSTERS >  pit_list;
+    const int lordx = sr.x1 + random2(sr.x2 - sr.x1);
+    const int lordy = sr.y1 + random2(sr.y2 - sr.y1);
+
+    for (int i = 0; i < MAX_PIT_MONSTERS; i++)
+    {
+        pit_list[i].type = MONS_PROGRAM_BUG;
+        pit_list[i].rare = 0;
+    }
+    
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "Build: Jelly Pit" );
+#endif
+    pit_list[0].type = MONS_OOZE;
+    pit_list[0].rare = 27 - level_number / 5;
+
+    pit_list[1].type = MONS_JELLY;
+    pit_list[1].rare = 20;
+
+    pit_list[2].type = MONS_BROWN_OOZE;
+    pit_list[2].rare = 3 + level_number;
+
+    pit_list[3].type = MONS_DEATH_OOZE;
+    pit_list[3].rare = 2 + (2 * level_number) / 3;
+
+    if (level_number >= 12)
+    {
+        pit_list[4].type = MONS_AZURE_JELLY;
+        pit_list[4].rare = 1 + (level_number - 12) / 3;
+    }
+
+    if (level_number >= 15)
+    {
+        pit_list[5].type = MONS_ACID_BLOB;
+        pit_list[5].rare = 1 + (level_number - 15) / 4;
+    }
+
+    fill_monster_pit( sr, pit_list, 90, MONS_PROGRAM_BUG, lordx, lordy );
+}
+
 static bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
                                 unsigned char spec_type)
 {
@@ -8252,7 +8380,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
         {
             // this limit can be updated if mons->number goes >8 bits..
             test = random2(182);            // not guaranteed to be valid, so..
-            cls = mons_charclass(test);
+            cls = mons_species(test);
             if (cls == MONS_PROGRAM_BUG)
                 continue;
 
@@ -8329,7 +8457,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
     }
     else
     {
-        menv[mid].number = mons_charclass(ztype);
+        menv[mid].number = mons_species(ztype);
         mons_sec2 = menv[mid].number;
     }
 

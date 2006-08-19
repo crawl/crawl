@@ -132,7 +132,22 @@ void turn_corpse_into_chunks( item_def &item )
     }
 }                               // end place_chunks()
 
-bool grid_destroys_items( unsigned char grid )
+bool grid_is_opaque( int grid )
+{
+    return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
+}
+
+bool grid_is_solid( int grid )
+{
+    return (grid < MINMOVE);
+}
+
+bool grid_is_water( int grid )
+{
+    return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
+}
+
+bool grid_destroys_items( int grid )
 {
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
 }
@@ -1921,3 +1936,24 @@ int trap_at_xy(int which_x, int which_y)
     // no idea how well this will be handled elsewhere: {dlb}
     return (-1);
 }                               // end trap_at_xy()
+
+// A constructor for bolt to help guarantee that we start clean (this has
+// caused way too many bugs).  Putting it here since there's no good place to
+// put it, and it doesn't do anything other than initialize it's members.
+// 
+// TODO: Eventually it'd be nice to have a proper factory for these things
+// (extended from setup_mons_cast() and zapping() which act as limited ones).
+bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
+               flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
+               ench_power(0), hit(0), target_x(0), target_y(0),
+               thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), 
+               beam_name(),
+               is_beam(false), is_explosion(false), is_big_cloud(false),
+               is_enchant(false), is_energy(false), 
+               is_launched(false), is_thrown(false), target_first(false), 
+               aux_source(NULL), obvious_effect(false), 
+               fr_count(0), foe_count(0), fr_power(0), foe_power(0), 
+               is_tracer(false), aimed_at_feet(false), msg_generated(false), 
+               in_explosion_phase(false), smart_monster(false), 
+               can_see_invis(false), is_friendly(false), foe_ratio(0) 
+{ }

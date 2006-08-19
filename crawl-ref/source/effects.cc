@@ -20,6 +20,7 @@
 #include "direct.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -217,13 +218,14 @@ void direct_effect(struct bolt &pbolt)
         mpr( "You are engulfed in a burst of hellfire!" );
         strcpy( pbolt.beam_name, "hellfire" );
         pbolt.ex_size = 1;
-        pbolt.flavour = BEAM_EXPLOSION;
+        pbolt.flavour = BEAM_HELLFIRE;
+        pbolt.is_explosion = true;
         pbolt.type = SYM_ZAP;
         pbolt.colour = RED;
         pbolt.thrower = KILL_MON_MISSILE;
         pbolt.aux_source = NULL;
-        pbolt.isBeam = false;
-        pbolt.isTracer = false;
+        pbolt.is_beam = false;
+        pbolt.is_tracer = false;
         pbolt.hit = 20;
         pbolt.damage = dice_def( 3, 20 );
         pbolt.aux_source = "burst of hellfire";
@@ -295,7 +297,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         break;
 
     case DMNBM_MUTATION:
-        if (mons_holiness( monster->type ) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL)
             simple_monster_message(monster, " is unaffected.");
         else if (check_mons_resist_magic( monster, pbolt.ench_power ))
             simple_monster_message(monster, " resists.");
@@ -550,17 +552,30 @@ bool acquirement(unsigned char force_class, int agent)
         int skill = SK_FIGHTING;
 
         // Can't do much with launchers, so we'll avoid them for now -- bwr
-        for (int i = SK_SHORT_BLADES; i <= SK_STAVES; i++)
+        for (int i = SK_SHORT_BLADES; i < SK_DARTS; i++)
         {
             if (i == SK_UNUSED_1)
                 continue;
 
             // Adding a small constant allows for the occasional
-            // weapon in an untrained skill.
-            count += (you.skills[i] + 1);
+            // weapon in an untrained skill.  Since the game 
+            // doesn't allow for much in the way of good launchers, 
+            // we'll lower their weight.
 
-            if (random2(count) < you.skills[i] + 1)
-                skill = i;
+            int weight = 0;
+
+            if (i < SK_SLINGS)
+                weight = you.skills[i] + 3;
+            else
+                weight = (you.skills[i] + 2) * 2 / 3;
+
+            if (weight)
+            {
+                count += weight;
+
+                if (random2(count) < weight)
+                    skill = i;
+            }
         }
 
         if (skill == SK_STAVES)
@@ -605,7 +620,7 @@ bool acquirement(unsigned char force_class, int agent)
     else if (class_wanted == OBJ_MISSILES)
     {
         int count = 0;
-        int skill = SK_THROWING;
+        int skill = SK_RANGED_COMBAT;
 
         for (int i = SK_SLINGS; i <= SK_DARTS; i++)
         {
@@ -701,7 +716,7 @@ bool acquirement(unsigned char force_class, int agent)
         case SP_PALE_DRACONIAN:
         case SP_UNK0_DRACONIAN:
         case SP_UNK1_DRACONIAN:
-        case SP_UNK2_DRACONIAN:
+        case SP_BASE_DRACONIAN:
         case SP_SPRIGGAN:
             if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS)
             {
@@ -1242,7 +1257,7 @@ bool acquirement(unsigned char force_class, int agent)
                     break;
 
                 case WPN_GREAT_MACE:
-                case WPN_GREAT_FLAIL:
+                case WPN_DIRE_FLAIL:
                     mitm[thing_created].sub_type = 
                             (coinflip() ? WPN_MACE : WPN_FLAIL);
                     break;
@@ -1274,8 +1289,8 @@ bool acquirement(unsigned char force_class, int agent)
             switch (mitm[thing_created].sub_type)
             {
             case ARM_HELMET:
-                if ((cmp_helmet_type( mitm[thing_created], THELM_HELM )
-                        || cmp_helmet_type( mitm[thing_created], THELM_HELMET ))
+                if ((get_helmet_type(mitm[thing_created]) == THELM_HELM
+                        || get_helmet_type(mitm[thing_created]) == THELM_HELMET)
                     && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
                         || player_genus(GENPC_DRACONIAN)
                         || you.species == SP_MINOTAUR
@@ -1293,17 +1308,17 @@ bool acquirement(unsigned char force_class, int agent)
 
             case ARM_BOOTS:
                 if (you.species == SP_NAGA)
-                    mitm[thing_created].plus2 = TBOOT_NAGA_BARDING;
+                    mitm[thing_created].sub_type = ARM_NAGA_BARDING;
                 else if (you.species == SP_CENTAUR)
-                    mitm[thing_created].plus2 = TBOOT_CENTAUR_BARDING;
-                else 
-                    mitm[thing_created].plus2 = TBOOT_BOOTS;
+                    mitm[thing_created].sub_type = ARM_CENTAUR_BARDING;
 
                 // fix illegal barding ego types caused by above hack
-                if (mitm[thing_created].plus2 != TBOOT_BOOTS
-                    && get_armour_ego_type( mitm[thing_created] ) == SPARM_RUNNING)
+                if (mitm[thing_created].sub_type != ARM_BOOTS
+                        && get_armour_ego_type( mitm[thing_created] ) 
+                                                            == SPARM_RUNNING)
                 {
-                    set_item_ego_type( mitm[thing_created], OBJ_ARMOUR, SPARM_NORMAL );
+                    set_item_ego_type( 
+                            mitm[thing_created], OBJ_ARMOUR, SPARM_NORMAL );
                 }
                 break;
 

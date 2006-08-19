@@ -74,9 +74,10 @@ struct monsterentry
     //   Note that this may make draining attacks less attractive (LRH)
     char exp_mod;
 
-    unsigned short charclass;     //
+    monster_type genus,         // "team" the monster plays for
+                 species;       // corpse type of the monster
 
-    char holiness;       // -1=holy,0=normal,1=undead,2=very very evil
+    mon_holy_type holiness;       // -1=holy,0=normal,1=undead,2=very very evil
 
     short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
@@ -101,7 +102,7 @@ struct monsterentry
     short sec;           // not used (250) most o/t time
 
     // eating the corpse: 1=clean,2=might be contaminated,3=poison,4=very bad
-    char corpse_thingy;
+    corpse_effect_type corpse_thingy;
     // 0=no zombie, 1=small zombie (z) 107, 2=_BIG_ zombie (Z) 108
     char zombie_size;
   // 0-12: see above, -1=random one of (0-7)
@@ -120,7 +121,7 @@ struct monsterentry
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void mons_init( FixedVector<unsigned short, 1000>& colour );
+void init_monsters( FixedVector<unsigned short, 1000>& colour );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -202,17 +203,9 @@ int mons_damage(int mc, int rt);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: dungeon - fight - monstuff - spells4
- * *********************************************************************** */
-int mons_charclass(int mcls);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
  * called from: food - spells4
  * *********************************************************************** */
-int mons_corpse_thingy(int mclass);
-
+corpse_effect_type mons_corpse_effect(int mc);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -226,8 +219,8 @@ bool mons_class_flag(int mc, int bf);
  * called from: beam - effects - fight - monstuff - mstuff2 - spells2 -
  *              spells3 - spells4
  * *********************************************************************** */
-int mons_holiness(int mclass);
-int mons_holiness(const monsters *);
+mon_holy_type mons_class_holiness(int mclass);
+mon_holy_type mons_holiness(const monsters *);
 
 bool mons_is_mimic( int mc ); 
 bool mons_is_demon( int mc ); 
@@ -348,7 +341,7 @@ void define_monster(int mid);
 /* ***********************************************************************
  * called from: debug - itemname - mon-util
  * *********************************************************************** */
-void moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
+const char *moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
 
 
 // last updated 12may2000 {dlb}
@@ -413,6 +406,11 @@ bool mons_is_confused(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
 bool mons_is_sleeping(const monsters *m);
 bool mons_is_batty(const monsters *m);
+bool mons_is_evil( const monsters *mon );
+bool mons_is_unholy( const monsters *mon );
+bool mons_has_lifeforce( const monsters *mon );
+monster_type mons_genus( int mc );
+monster_type mons_species( int mc );
 
 int mons_has_ench( const monsters *mon, unsigned int ench, 
                    unsigned int ench2 = ENCH_NONE );
@@ -433,7 +431,9 @@ bool mons_is_stationary(const monsters *mons);
 bool invalid_monster(const monsters *mons);
 
 bool monster_can_swap(const monsters *m);
+bool mons_is_paralysed(const monsters *m);
 
 bool monster_senior(const monsters *first, const monsters *second);
+monster_type draco_subspecies( const monsters *mon );
 
 #endif

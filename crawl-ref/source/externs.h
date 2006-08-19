@@ -74,36 +74,36 @@ const int kPathLen = 256;
 struct monsters;
 struct ait_hp_loss;
 
-struct activity_interrupt_t
+struct activity_interrupt_data
 {
-    AI_PAYLOAD apt;
+    activity_interrupt_payload_type apt;
     const void *data;
 
-    activity_interrupt_t()
+    activity_interrupt_data()
         : apt(AIP_NONE), data(NULL)
     {
     }
-    activity_interrupt_t(const int *i)
+    activity_interrupt_data(const int *i)
         : apt(AIP_INT), data(i)
     {
     }
-    activity_interrupt_t(const char *s)
+    activity_interrupt_data(const char *s)
         : apt(AIP_STRING), data(s)
     {
     }
-    activity_interrupt_t(const std::string &s) 
+    activity_interrupt_data(const std::string &s) 
         : apt(AIP_STRING), data(s.c_str())
     {
     }
-    activity_interrupt_t(const monsters *m)
+    activity_interrupt_data(const monsters *m)
         : apt(AIP_MONSTER), data(m)
     {
     }
-    activity_interrupt_t(const ait_hp_loss *ahl)
+    activity_interrupt_data(const ait_hp_loss *ahl)
         : apt(AIP_HP_LOSS), data(ahl)
     {
     }
-    activity_interrupt_t(const activity_interrupt_t &a)
+    activity_interrupt_data(const activity_interrupt_data &a)
         : apt(a.apt), data(a.data)
     {
     }
@@ -172,23 +172,36 @@ struct bolt
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
     char        beam_name[40];
-    bool        isBeam;                // beams? (can hits multiple targets?)
+    bool        is_beam;                // beams? (can hits multiple targets?)
+    bool        is_explosion;
+    bool        is_big_cloud;          // expands into big_cloud at endpoint
+    bool        is_enchant;            // no block/dodge, but mag resist
+    bool        is_energy;             // mostly energy/non-physical attack
+    bool        is_launched;           // was fired from launcher?
+    bool        is_thrown;             // was thrown from hand?
+    bool        target_first;          // targeting by direction 
     const char *aux_source;            // source of KILL_MISC beams
 
     // OUTPUT parameters (tracing, ID)
-    bool        obviousEffect;         // did an 'obvious' effect happen?
+    bool        obvious_effect;         // did an 'obvious' effect happen?
     int         fr_count, foe_count;   // # of times a friend/foe is "hit"
     int         fr_power, foe_power;   // total levels/hit dice affected
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    bool        isTracer;      // is this a tracer?
-    bool        aimedAtFeet;   // this was aimed at self!
-    bool        msgGenerated;  // an appropriate msg was already mpr'd
-    bool        isExplosion;   // explosion phase (as opposed to beam phase)
-    bool        smartMonster;  // tracer firer can guess at other mons. resists?
-    bool        canSeeInvis;   // tracer firer can see invisible?
-    bool        isFriendly;    // tracer firer is enslaved or pet
-    int         foeRatio;      // 100* foe ratio (see mons_should_fire())
+    bool        is_tracer;      // is this a tracer?
+    bool        aimed_at_feet;   // this was aimed at self!
+    bool        msg_generated;  // an appropriate msg was already mpr'd
+    bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
+    bool        smart_monster;  // tracer firer can guess at other mons. resists?
+    bool        can_see_invis;   // tracer firer can see invisible?
+    bool        is_friendly;    // tracer firer is enslaved or pet
+    int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
+
+    // A contstructor to try and fix some of the bugs that occur because
+    // this struct never seems to be properly initialized.  Definition
+    // is over in misc.cc for lack of a better place (short of inlining
+    // it here).
+    bolt();
 };
 
 
@@ -258,7 +271,8 @@ private:
 
 struct player
 {
-  ACTIVITY activity;    // The current multiturn activity, usually set to ACT_NONE
+  activity_type activity;   // The current multiturn activity, usually set 
+                            // to ACT_NONE
   char turn_is_over; // flag signaling that player has performed a timed action
 
   unsigned char prev_targ;
@@ -644,6 +658,7 @@ private:
 
 struct game_options 
 {
+    bool        ascii_display;  // Defaults to true ifdef USE_ASCII_CHARACTERS
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump

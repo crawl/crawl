@@ -32,6 +32,7 @@
 
 #include "clua.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "misc.h"
@@ -44,6 +45,7 @@
 #include "spl-util.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "travel.h"
 #include "view.h"
 #include "wpn-misc.h"
@@ -157,7 +159,7 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     case SP_PALE_DRACONIAN:
     case SP_UNK0_DRACONIAN:
     case SP_UNK1_DRACONIAN:
-    case SP_UNK2_DRACONIAN:
+    case SP_BASE_DRACONIAN:
         return (which_genus == GENPC_DRACONIAN);
 
     case SP_ELF:
@@ -373,7 +375,7 @@ int player_damage_type( void )
 
     if (wpn != -1)
     {
-        return (damage_type( you.inv[wpn].base_type, you.inv[wpn].sub_type ));
+        return (damage_type(you.inv[wpn]));
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
@@ -769,6 +771,14 @@ int player_res_cold(bool calc_unid)
         rc = 3;
 
     return (rc);
+}
+
+int player_res_acid( void )
+{
+    return (!transform_changed_physiology()
+            && ((you.species == SP_GOLDEN_DRACONIAN 
+                    && you.experience_level >= 7)
+                || you.mutation[MUT_YELLOW_SCALES] == 3));
 }
 
 int player_res_electricity(bool calc_unid)
@@ -1221,18 +1231,11 @@ int player_AC(void)
         // which uses "plus2"... since not all members have the same
         // AC value, we use special cases. -- bwr
         if (i == EQ_HELMET 
-            && (cmp_helmet_type( you.inv[ item ], THELM_CAP )
-                || cmp_helmet_type( you.inv[ item ], THELM_WIZARD_HAT )
-                || cmp_helmet_type( you.inv[ item ], THELM_SPECIAL )))
+            && (get_helmet_type(you.inv[ item ]) == THELM_CAP
+                || get_helmet_type(you.inv[ item ]) == THELM_WIZARD_HAT
+                || get_helmet_type(you.inv[ item ]) == THELM_SPECIAL))
         {
             continue;
-        }
-
-        if (i == EQ_BOOTS 
-            && (you.inv[ item ].plus2 == TBOOT_NAGA_BARDING
-                || you.inv[ item ].plus2 == TBOOT_CENTAUR_BARDING))
-        {
-            AC += 3;
         }
 
         int racial_bonus = 0;  // additional levels of armour skill
@@ -1440,7 +1443,7 @@ int player_AC(void)
 
 bool is_light_armour( const item_def &item )
 {
-    if (cmp_equip_race( item, ISFLAG_ELVEN ))
+    if (get_equip_race(item) == ISFLAG_ELVEN)
         return (true);
 
     switch (item.sub_type)
@@ -1673,7 +1676,7 @@ unsigned char player_see_invis(bool calc_unid)
 // This does NOT do line of sight!  It checks the monster's visibility 
 // with repect to the players perception, but doesn't do walls or range...
 // to find if the square the monster is in is visible see mons_near().
-bool player_monster_visible( struct monsters *mon )
+bool player_monster_visible( const monsters *mon )
 {
     if (mons_has_ench( mon, ENCH_SUBMERGED )
         || (mons_has_ench( mon, ENCH_INVIS ) && !player_see_invis()))
@@ -1724,7 +1727,7 @@ int burden_change(void)
         }
         else
         {
-            you.burden += mass_item( you.inv[bu] ) * you.inv[bu].quantity;
+            you.burden += item_mass( you.inv[bu] ) * you.inv[bu].quantity;
         }
     }
 
@@ -2126,7 +2129,7 @@ void level_change(void)
             case SP_PALE_DRACONIAN:
             case SP_UNK0_DRACONIAN:
             case SP_UNK1_DRACONIAN:
-            case SP_UNK2_DRACONIAN:
+            case SP_BASE_DRACONIAN:
                 if (you.experience_level == 7)
                 {
                     switch (you.species)
@@ -2162,7 +2165,7 @@ void level_change(void)
                         break;
                     case SP_UNK0_DRACONIAN:
                     case SP_UNK1_DRACONIAN:
-                    case SP_UNK2_DRACONIAN:
+                    case SP_BASE_DRACONIAN:
                         mpr("");
                         break;
                     }
@@ -2462,9 +2465,9 @@ int check_stealth(void)
     const int boots = you.equip[EQ_BOOTS];
 
     if (arm != -1 && !player_light_armour())
-        stealth -= (mass_item( you.inv[arm] ) / 10);
+        stealth -= (item_mass( you.inv[arm] ) / 10);
 
-    if (cloak != -1 && cmp_equip_race( you.inv[cloak], ISFLAG_ELVEN ))
+    if (cloak != -1 && get_equip_race(you.inv[cloak]) == ISFLAG_ELVEN)
         stealth += 20;
 
     if (boots != -1)
@@ -2472,7 +2475,7 @@ int check_stealth(void)
         if (get_armour_ego_type( you.inv[boots] ) == SPARM_STEALTH)
             stealth += 50;
 
-        if (cmp_equip_race( you.inv[boots], ISFLAG_ELVEN ))
+        if (get_equip_race(you.inv[boots]) == ISFLAG_ELVEN)
             stealth += 20;
     }
 
@@ -2633,9 +2636,6 @@ void display_char_status(void)
 
     if (you.duration[DUR_SILENCE])      //jmf: added 27mar2000
         mpr( "You radiate silence." );
-
-    if (you.duration[DUR_INFECTED_SHUGGOTH_SEED])       //jmf: added 19mar2000
-        mpr( "You are infected with a shuggoth parasite." );
 
     if (you.duration[DUR_STONESKIN])
         mpr( "Your skin is tough as stone." );
@@ -2812,7 +2812,7 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
                     break;
                 case SP_UNK0_DRACONIAN:
                 case SP_UNK1_DRACONIAN:
-                case SP_UNK2_DRACONIAN:
+                case SP_BASE_DRACONIAN:
                 default:
                     strcpy( species_buff, "Draconian" );
                     break;
@@ -4009,7 +4009,7 @@ void perform_activity()
 }
 
 #ifdef CLUA_BINDINGS
-static const char *activity_interrupt_name(ACT_INTERRUPT ai)
+static const char *activity_interrupt_name(activity_interrupt_type ai)
 {
     switch (ai)
     {
@@ -4052,8 +4052,8 @@ static void kill_activity()
     you.activity = ACT_NONE;
 }
 
-static bool userdef_interrupt_activity( ACT_INTERRUPT ai, 
-                                        const activity_interrupt_t &at )
+static bool userdef_interrupt_activity( activity_interrupt_type ai, 
+                                        const activity_interrupt_data &at )
 {
 #ifdef CLUA_BINDINGS
     lua_State *ls = clua.state();
@@ -4101,7 +4101,8 @@ static bool userdef_interrupt_activity( ACT_INTERRUPT ai,
     return true;
 }
 
-void interrupt_activity( ACT_INTERRUPT ai, const activity_interrupt_t &at )
+void interrupt_activity( activity_interrupt_type ai, 
+                         const activity_interrupt_data &at )
 {
     if (you.running && !you.activity)
         you.activity = you.running > 0? ACT_RUNNING : ACT_TRAVELING;

@@ -33,9 +33,11 @@ bool one_chance_in(int a_million);
 int random2(int randmax);
 unsigned long random_int(void);
 int random2avg( int max, int rolls );
+int bestroll(int max, int rolls);
 
 int roll_dice( int num, int size );
 int roll_dice( const struct dice_def &dice );
+void scale_dice( dice_def &dice, int threshold = 24 );
 
 
 int random2limit(int max, int limit);
@@ -64,6 +66,8 @@ bool silenced(char x, char y);
 bool player_can_hear(char x, char y);
 
 unsigned char random_colour(void);
+bool is_element_colour( int col );
+int  element_colour( int element, bool no_random = false );
 
 char index_to_letter (int the_index);
 

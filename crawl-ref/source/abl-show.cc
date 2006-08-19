@@ -110,7 +110,7 @@ static const struct ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 3, 3, 75, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_DEMON, "Summon Demon", 5, 5, 150, 0, ABFLAG_NONE },
+    { ABIL_SUMMON_DEMONS, "Summon Demons", 5, 5, 150, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 8, 8, 200, 0, ABFLAG_NONE },
     { ABIL_TORMENT, "Torment", 9, 0, 250, 0, ABFLAG_PAIN },
     { ABIL_RAISE_DEAD, "Raise Dead", 5, 5, 150, 0, ABFLAG_NONE },
@@ -160,7 +160,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_TSO_SMITING, "Smiting", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_ANNIHILATE_UNDEAD, "Annihilate Undead", 3, 0, 50, 2, ABFLAG_NONE },
-    { ABIL_TSO_THUNDERBOLT, "Thunderbolt", 5, 0, 100, 2, ABFLAG_NONE },
+    { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
     { ABIL_TSO_SUMMON_DAEVA, "Summon Daeva", 8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
@@ -211,7 +211,6 @@ static const struct ability_def Ability_List[] =
 
     { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
     { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
-    { ABIL_SHUGGOTH_SEED, "Sow Shuggoth Seed", 12, 8, 0, 6, ABFLAG_NONE },
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
@@ -710,7 +709,7 @@ bool activate_ability(void)
                                      summon_any_demon(DEMON_LESSER) );
         break;
 
-    case ABIL_SUMMON_DEMON:
+    case ABIL_SUMMON_DEMONS:
         summon_ice_beast_etc( you.experience_level * 4,
                                      summon_any_demon(DEMON_COMMON) );
         break;
@@ -873,14 +872,14 @@ bool activate_ability(void)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
-    case ABIL_TSO_THUNDERBOLT:
+    case ABIL_TSO_CLEANSING_FLAME:
         if (spell_direction(spd, beam) == -1)
         {
             canned_msg(MSG_OK);
             return (false);
         }
 
-        zapping(ZAP_LIGHTNING, you.skills[SK_INVOCATIONS] * 6, beam);
+        zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6, beam);
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 
@@ -1035,7 +1034,7 @@ bool activate_ability(void)
             beam.thrower = KILL_YOU;
             beam.aux_source = "Makhleb's lightning strike";
             beam.ex_size = 1 + you.skills[SK_INVOCATIONS] / 8;
-            beam.isTracer = false;
+            beam.is_tracer = false;
 
             // ... and fire!
             explosion(beam);
@@ -1155,20 +1154,6 @@ bool activate_ability(void)
         }
 
         torment(you.x_pos, you.y_pos);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
-        break;
-
-    case ABIL_SHUGGOTH_SEED:
-        if (you.duration[DUR_SHUGGOTH_SEED_RELOAD])
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
-            return (false);
-        }
-
-        cast_shuggoth_seed( you.experience_level * 2
-                                + you.skills[SK_INVOCATIONS] * 3 );
-
-        you.duration[DUR_SHUGGOTH_SEED_RELOAD] = 10 + random2avg(39, 2);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1469,7 +1454,7 @@ bool generate_abilities( void )
         insert_ability( ABIL_SUMMON_MINOR_DEMON );
 
     if (you.mutation[MUT_SUMMON_DEMONS])
-        insert_ability( ABIL_SUMMON_DEMON );
+        insert_ability( ABIL_SUMMON_DEMONS );
 
     if (you.mutation[MUT_HURL_HELLFIRE])
         insert_ability( ABIL_HELLFIRE );
@@ -1533,7 +1518,7 @@ bool generate_abilities( void )
             if (you.piety >= 75)
                 insert_ability( ABIL_TSO_ANNIHILATE_UNDEAD );
             if (you.piety >= 100)
-                insert_ability( ABIL_TSO_THUNDERBOLT );
+                insert_ability( ABIL_TSO_CLEANSING_FLAME );
             if (you.piety >= 120)
                 insert_ability( ABIL_TSO_SUMMON_DAEVA );
             break;
@@ -1974,7 +1959,7 @@ static bool insert_ability( int which_ability )
         failure = 35 - you.experience_level;
         break;
 
-    case ABIL_SUMMON_DEMON:
+    case ABIL_SUMMON_DEMONS:
         failure = 40 - you.experience_level;
         break;
 
@@ -2114,7 +2099,7 @@ static bool insert_ability( int which_ability )
         break;
 
     case ABIL_ZIN_HOLY_WORD:
-    case ABIL_TSO_THUNDERBOLT:
+    case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_ELYVILON_RESTORATION:
     case ABIL_YRED_CONTROL_UNDEAD:
     case ABIL_OKAWARU_HASTE:
@@ -2150,11 +2135,6 @@ static bool insert_ability( int which_ability )
     case ABIL_TORMENT_II:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_SHUGGOTH_SEED:
-        invoc = true;
-        failure = 85 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 3);
         break;
 
     case ABIL_RENOUNCE_RELIGION:

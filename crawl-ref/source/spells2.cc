@@ -32,6 +32,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -116,7 +117,7 @@ unsigned char detect_items( int pow )
 static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("dc_fuzz: Power is %d", pow);
+    mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
 #endif
 
     if (pow < 1)
@@ -570,8 +571,7 @@ bool brand_weapon(int which_brand, int power)
     in_name( wpn, DESC_CAP_YOUR, str_pass );
     strcpy( info, str_pass );
 
-    const int wpn_type = damage_type( you.inv[wpn].base_type,
-                                      you.inv[wpn].sub_type );
+    const int wpn_type = damage_type(you.inv[wpn]);
 
     switch (which_brand)        // use SPECIAL_WEAPONS here?
     {
@@ -748,7 +748,7 @@ void turn_undead(int pow)
 
         // used to inflict random2(5) + (random2(pow) / 20) damage,
         // in addition {dlb}
-        if (mons_holiness(monster->type) == MH_UNDEAD)
+        if (mons_holiness(monster) == MH_UNDEAD)
         {
             if (check_mons_resist_magic( monster, pow ))
             {
@@ -791,8 +791,8 @@ void holy_word(int pow, bool silent)
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        if (mons_holiness(monster->type) == MH_UNDEAD
-                || mons_holiness(monster->type) == MH_DEMONIC)
+        if (mons_holiness(monster) == MH_UNDEAD
+                || mons_holiness(monster) == MH_DEMONIC)
         {
             simple_monster_message(monster, " convulses!");
 
@@ -959,7 +959,7 @@ void drain_life(int pow)
         if (monster->type == -1)
             continue;
 
-        if (mons_holiness( monster->type ) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL)
             continue;
 
         if (mons_res_negative_energy( monster ))
@@ -1030,7 +1030,7 @@ int vampiric_drain(int pow)
 
     monster = &menv[mgr];
 
-    const int holy = mons_holiness(monster->type);
+    const int holy = mons_holiness(monster);
 
     if (holy == MH_UNDEAD || holy == MH_DEMONIC)
     {

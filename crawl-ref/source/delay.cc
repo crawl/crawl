@@ -18,6 +18,7 @@
 #include "food.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "item_use.h"
 #include "it_use2.h"
 #include "message.h"
@@ -70,7 +71,7 @@ void stop_delay( void )
         you.delay_queue.pop();
         break;
 
-    case DELAY_MEMORIZE:        
+    case DELAY_MEMORISE:
         // Losing work here is okay... having to start from 
         // scratch is a reasonable behaviour. -- bwr
         mpr( "Your memorization is interrupted." );
@@ -196,14 +197,19 @@ void handle_delay( void )
                 break;
 
             case DELAY_ARMOUR_ON:
-                set_ident_flags( you.inv[ delay.parm1 ], ISFLAG_EQ_ARMOUR_MASK );
+            {
+                set_ident_flags( you.inv[ delay.parm1 ], 
+                                 ISFLAG_EQ_ARMOUR_MASK );
 
                 in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
-                snprintf( info, INFO_SIZE, "You finish putting on %s.", str_pass );
+                snprintf( info, INFO_SIZE, 
+                        "You finish putting on %s.", str_pass );
                 mpr(info);
 
-                if (you.inv[ delay.parm1 ].sub_type < ARM_SHIELD
-                    || you.inv[ delay.parm1 ].sub_type > ARM_LARGE_SHIELD)
+                const equipment_type slot =
+                        get_armour_slot( you.inv[delay.parm1] );
+
+                if (slot == EQ_BODY_ARMOUR)
                 {
                     you.equip[EQ_BODY_ARMOUR] = delay.parm1;
 
@@ -216,11 +222,9 @@ void handle_delay( void )
                 }
                 else
                 {
-                    switch (you.inv[ delay.parm1 ].sub_type)
+                    switch (slot)
                     {
-                    case ARM_BUCKLER:
-                    case ARM_LARGE_SHIELD:
-                    case ARM_SHIELD:
+                    case EQ_SHIELD:
                         if (you.duration[DUR_CONDENSATION_SHIELD])
                         {
                             mpr( "Your icy shield evaporates.", MSGCH_DURATION );
@@ -228,17 +232,19 @@ void handle_delay( void )
                         }
                         you.equip[EQ_SHIELD] = delay.parm1;
                         break;
-                    case ARM_CLOAK:
+                    case EQ_CLOAK:
                         you.equip[EQ_CLOAK] = delay.parm1;
                         break;
-                    case ARM_HELMET:
+                    case EQ_HELMET:
                         you.equip[EQ_HELMET] = delay.parm1;
                         break;
-                    case ARM_GLOVES:
+                    case EQ_GLOVES:
                         you.equip[EQ_GLOVES] = delay.parm1;
                         break;
-                    case ARM_BOOTS:
+                    case EQ_BOOTS:
                         you.equip[EQ_BOOTS] = delay.parm1;
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -336,47 +342,51 @@ void handle_delay( void )
                 you.redraw_armour_class = 1;
                 you.redraw_evasion = 1;
                 break;
-
+            }
             case DELAY_ARMOUR_OFF:
+            {
                 in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
                 snprintf( info, INFO_SIZE, "You finish taking off %s.", str_pass );
                 mpr(info);
 
-                if (you.inv[ delay.parm1 ].sub_type < ARM_SHIELD
-                    || you.inv[ delay.parm1 ].sub_type > ARM_LARGE_SHIELD)
+                const equipment_type slot = 
+                        get_armour_slot( you.inv[delay.parm1] );
+
+                if (slot == EQ_BODY_ARMOUR)
                 {
                     you.equip[EQ_BODY_ARMOUR] = -1;
                 }
                 else
                 {
-                    switch (you.inv[ delay.parm1 ].sub_type)
+                    switch (slot)
                     {
-                    case ARM_BUCKLER:
-                    case ARM_LARGE_SHIELD:
-                    case ARM_SHIELD:
+                    case EQ_SHIELD:
                         if (delay.parm1 == you.equip[EQ_SHIELD])
                             you.equip[EQ_SHIELD] = -1;
                         break;
 
-                    case ARM_CLOAK:
+                    case EQ_CLOAK:
                         if (delay.parm1 == you.equip[EQ_CLOAK])
                             you.equip[EQ_CLOAK] = -1;
                         break;
 
-                    case ARM_HELMET:
+                    case EQ_HELMET:
                         if (delay.parm1 == you.equip[EQ_HELMET])
                             you.equip[EQ_HELMET] = -1;
                         break;
 
 
-                    case ARM_GLOVES:
+                    case EQ_GLOVES:
                         if (delay.parm1 == you.equip[EQ_GLOVES])
                             you.equip[EQ_GLOVES] = -1;
                         break;
 
-                    case ARM_BOOTS:
+                    case EQ_BOOTS:
                         if (delay.parm1 == you.equip[EQ_BOOTS])
                             you.equip[EQ_BOOTS] = -1;
+                        break;
+
+                    default:
                         break;
                     }
                 }
@@ -386,12 +396,12 @@ void handle_delay( void )
                 you.redraw_armour_class = 1;
                 you.redraw_evasion = 1;
                 break;
-
+            }
             case DELAY_EAT:
                 mpr( "You finish eating." );
                 break; 
 
-            case DELAY_MEMORIZE:
+            case DELAY_MEMORISE:
                 mpr( "You finish memorising." );
                 add_spell_to_memory( delay.parm1 );
                 break; 

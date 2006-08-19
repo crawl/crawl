@@ -31,6 +31,7 @@
 #include "food.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -676,7 +677,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
 
     if (you.equip[EQ_WEAPON] != -1
         && item_is_staff( you.inv[you.equip[EQ_WEAPON]] )
-        && item_not_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE ))
+        && !item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE ))
     {
         switch (you.inv[you.equip[EQ_WEAPON]].sub_type)
         {
@@ -1861,10 +1862,6 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         cast_rotting(powc);
         break;
 
-    case SPELL_SHUGGOTH_SEED:
-        cast_shuggoth_seed(powc);
-        break;
-
     case SPELL_CONDENSATION_SHIELD:
         cast_condensation_shield(powc);
         break;
@@ -2018,7 +2015,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
     }
 
     // setup beam
-    beam.isTracer = false;
+    beam.is_tracer = false;
 
     spec_effect = spec_effect / 100;
 

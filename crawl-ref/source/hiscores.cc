@@ -439,8 +439,12 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
         strcat( buf, " turned to stone" );
         break;
 
-    case KILLED_BY_SHUGGOTH:
-        strcat( buf, " eviscerated by a hatching shuggoth" );
+    case KILLED_BY_MELTING:
+        strcat( buf, " melted into a puddle" );
+        break;
+
+    case KILLED_BY_BLEEDING:
+        strcat( buf, " bled to death" );
         break;
 
     case KILLED_BY_SOMETHING:
@@ -838,9 +842,12 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
         strcat( buf, "Turned to stone" );
         break;
 
-    case KILLED_BY_SHUGGOTH:
-        strcat( buf, "Eviscerated by a hatching shuggoth" );
-        needs_damage = true;
+    case KILLED_BY_MELTING:
+        strcat( buf, " melted into a puddle" );
+        break;
+
+    case KILLED_BY_BLEEDING:
+        strcat( buf, " bled to death" );
         break;
 
     case KILLED_BY_SOMETHING:
@@ -1725,8 +1732,10 @@ static void hs_search_death(char *inbuf, struct scorefile_entry &se)
         se.death_type = KILLED_BY_TSO_SMITING;
     else if (strstr(inbuf, "turned to stone") != NULL)
         se.death_type = KILLED_BY_PETRIFICATION;
-    else if (strstr(inbuf, "eviscerated by a hatching") != NULL)
-        se.death_type = KILLED_BY_SHUGGOTH;
+    else if (strstr(inbuf, "melted into a puddle") != NULL)
+        se.death_type = KILLED_BY_MELTING;
+    else if (strstr(inbuf, "bled to death") != NULL)
+        se.death_type = KILLED_BY_BLEEDING;
 
     // whew!
 

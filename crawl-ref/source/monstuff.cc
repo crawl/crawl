@@ -36,6 +36,7 @@
 #include "fight.h"
 #include "itemname.h"
 #include "items.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
@@ -282,7 +283,7 @@ static void monster_drop_ething(struct monsters *monster,
 
 static void place_monster_corpse(struct monsters *monster)
 {
-    int corpse_class = mons_charclass(monster->type);
+    int corpse_class = mons_species(monster->type);
 
     if (mons_has_ench(monster, ENCH_SHAPESHIFTER))
         corpse_class = MONS_SHAPESHIFTER;
@@ -450,15 +451,15 @@ void monster_die(struct monsters *monster, char killer, int i)
             {
                 if (you.duration[DUR_PRAYER])
                 {
-                    if (mons_holiness(monster->type) == MH_NATURAL)
+                    if (mons_holiness(monster) == MH_NATURAL)
                         did_god_conduct(DID_DEDICATED_KILL_LIVING, 
                                         monster->hit_dice);
 
-                    if (mons_holiness(monster->type) == MH_UNDEAD)
+                    if (mons_holiness(monster) == MH_UNDEAD)
                         did_god_conduct(DID_DEDICATED_KILL_UNDEAD, 
                                         monster->hit_dice);
 
-                    if (mons_holiness(monster->type) == MH_DEMONIC)
+                    if (mons_holiness(monster) == MH_DEMONIC)
                         did_god_conduct(DID_DEDICATED_KILL_DEMON, 
                                         monster->hit_dice);
 
@@ -473,7 +474,7 @@ void monster_die(struct monsters *monster, char killer, int i)
                                         monster->hit_dice);
                 }
 
-                if (mons_holiness(monster->type) == MH_HOLY)
+                if (mons_holiness(monster) == MH_HOLY)
                     did_god_conduct(DID_KILL_ANGEL, monster->hit_dice);
             }
 
@@ -505,12 +506,12 @@ void monster_die(struct monsters *monster, char killer, int i)
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons_holiness(monster->type) == MH_NATURAL
-                && mons_weight(mons_charclass(monster->type)))
+                && mons_holiness(monster) == MH_NATURAL
+                && mons_weight(mons_species(monster->type)))
             {
                 if (create_monster( MONS_SPECTRAL_THING, 0, BEH_FRIENDLY,
                                     monster->x, monster->y, you.pet_target,
-                                    mons_charclass(monster->type)) != -1)
+                                    mons_species(monster->type)) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
@@ -537,8 +538,8 @@ void monster_die(struct monsters *monster, char killer, int i)
 
                 gain_exp(exper_value( monster ) / 2 + 1);
 
-                int targ_holy   = mons_holiness(monster->type),
-                    attacker_holy = mons_holiness(menv[i].type);
+                int targ_holy   = mons_holiness(monster),
+                    attacker_holy = mons_holiness(&menv[i]);
 
                 if (attacker_holy == MH_UNDEAD)
                 {
@@ -692,7 +693,7 @@ void monster_die(struct monsters *monster, char killer, int i)
 
         if (mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI))
         {
-            if (mons_weight(mons_charclass(monster->type)))
+            if (mons_weight(mons_species(monster->type)))
             {
                 if (monster->type == MONS_SIMULACRUM_SMALL
                     || monster->type == MONS_SIMULACRUM_LARGE)
@@ -784,7 +785,7 @@ static bool jelly_divide(struct monsters * parent)
         {
             // 10-50 for now - must take clouds into account:
             if (mgrd[parent->x + jex][parent->y + jey] == NON_MONSTER
-                && grd[parent->x + jex][parent->y + jey] > DNGN_LAST_SOLID_TILE 
+                && !grid_is_solid(grd[parent->x + jex][parent->y + jey])
                 && (parent->x + jex != you.x_pos || parent->y + jey != you.y_pos))
             {
                 foundSpot = true;
@@ -872,12 +873,12 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
     unsigned char current_tile = grd[monster->x][monster->y];
 
     // morph targets are _always_ "base" classes,  not derived ones.
-    new_mclass = mons_charclass(new_mclass);
+    new_mclass = mons_species(new_mclass);
 
     /* various inappropriate polymorph targets */
-    if (mons_holiness( new_mclass ) != mons_holiness( monster->type )
+    if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
-        || new_mclass == mons_charclass( monster->type ) // must be different
+        || new_mclass == mons_species( monster->type ) // must be different
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
@@ -943,7 +944,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
             targetc = random2( NUM_MONSTERS );
 
             // valid targets are always base classes
-            targetc = mons_charclass( targetc );
+            targetc = mons_species( targetc );
 
             target_power = mons_power( targetc );
 
@@ -1266,7 +1267,7 @@ void print_wounds(struct monsters *monster)
 bool wounded_damaged(int wound_class)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const int holy = mons_holiness(wound_class);
+    const int holy = mons_class_holiness(wound_class);
     if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
         return (true);
 
@@ -2325,6 +2326,10 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     FixedArray < unsigned int, 19, 19 > show;
 
+    const monster_type mclass = (mons_genus( monster->type ) == MONS_DRACONIAN) 
+                                  ? draco_subspecies( monster ) 
+                                  : static_cast<monster_type>( monster->type );
+
     if (!mons_near( monster )
         || monster->behaviour == BEH_SLEEP
         || mons_has_ench( monster, ENCH_SUBMERGED ))
@@ -2334,7 +2339,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
 //    losight(show, grd, you.x_pos, you.y_pos);
 
-    switch (monster->type)
+    switch (mclass)
     {
     case MONS_BALL_LIGHTNING:
         if (monster->attitude == ATT_HOSTILE
@@ -2373,7 +2378,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             if (tx < 0 || tx > GXM || ty < 0 || ty > GYM)
                 continue;
 
-            if (grd[tx][ty] > DNGN_LAST_SOLID_TILE) 
+            if (!grid_is_solid(grd[tx][ty]))
             {
                 monster->hit_points = -1;
                 used = true;
@@ -2439,7 +2444,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         beem.aux_source = "bolt of electricity";
         beem.range = 4;
         beem.rangeMax = 13;
-        beem.isBeam = true;
+        beem.is_beam = true;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -2455,6 +2460,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
+    case MONS_YELLOW_DRACONIAN:
         if (mons_has_ench(monster, ENCH_CONFUSION))
             break;
 
@@ -2560,7 +2566,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         beem.flavour = BEAM_MISSILE;
         beem.thrower = KILL_MON;
         beem.aux_source = "volley of spikes";
-        beem.isBeam = false;
+        beem.is_beam = false;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -2583,6 +2589,8 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
     case MONS_LINDWURM:
     case MONS_FIREDRAKE:
     case MONS_XTAHUA:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
         if (!mons_player_visible( monster ))
             break;
 
@@ -2600,13 +2608,17 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             // good idea?
             if (mons_should_fire(beem))
             {
-                simple_monster_message(monster, " breathes.");
+                simple_monster_message(monster, " breathes.",
+                        MSGCH_MONSTER_SPELL);
                 fire_beam(beem);
                 mmov_x = 0;
                 mmov_y = 0;
                 used = true;
             }
         }
+        break;
+
+    default:
         break;
     }
 
@@ -2640,9 +2652,9 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
             if (monster->hit_points <= monster->max_hit_points / 2
-                && mons_holiness(monster->type) != MH_UNDEAD
-                && mons_holiness(monster->type) != MH_NONLIVING
-                && mons_holiness(monster->type) != MH_PLANT)
+                && mons_holiness(monster) != MH_UNDEAD
+                && mons_holiness(monster) != MH_NONLIVING
+                && mons_holiness(monster) != MH_PLANT)
             {
                 simple_monster_message(monster, " drinks a potion.");
 
@@ -2847,12 +2859,12 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
         // set up the beam
         int power = 30 + monster->hit_dice;
-        struct SBeam theBeam = mons_spells(mzap, power);
+        bolt theBeam = mons_spells(mzap, power);
 
         // XXX: ugly hack this:
         static char wand_buff[ ITEMNAME_SIZE ];
 
-        strcpy( beem.beam_name, theBeam.name.c_str() );
+        strcpy( beem.beam_name, theBeam.beam_name );
         beem.beam_source = monster_index(monster);
         beem.source_x = monster->x;
         beem.source_y = monster->y;
@@ -2864,8 +2876,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         beem.hit = theBeam.hit;
         beem.type = theBeam.type;
         beem.flavour = theBeam.flavour;
-        beem.thrower = theBeam.thrown;
-        beem.isBeam = theBeam.isBeam;
+        beem.thrower = theBeam.thrower;
+        beem.is_beam = theBeam.is_beam;
 
         item_def item = mitm[ monster->inv[MSLOT_WAND] ];
 
@@ -2960,7 +2972,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
             // charge expenditure {dlb}
             mitm[monster->inv[MSLOT_WAND]].plus--;
-            beem.isTracer = false;
+            beem.is_tracer = false;
             fire_beam( beem );
 
             return (true);
@@ -2969,6 +2981,46 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
     return (false);
 }                               // end handle_wand()
+
+static int get_draconian_breath_spell( struct monsters *monster )
+{
+    int draco_breath = MS_NO_SPELL;
+
+    if (mons_genus( monster->type ) == MONS_DRACONIAN)
+    {
+        switch (draco_subspecies( monster ))
+        {
+        case MONS_BLACK_DRACONIAN:
+            draco_breath = MS_LIGHTNING_BOLT;
+            break;
+
+        case MONS_PALE_DRACONIAN:
+            draco_breath = MS_STEAM_BALL;
+            break;
+
+        case MONS_GREEN_DRACONIAN:
+            draco_breath = MS_POISON_BLAST;
+            break;
+
+        case MONS_PURPLE_DRACONIAN:
+            draco_breath = MS_ORB_ENERGY;
+            break;
+
+        case MONS_MOTTLED_DRACONIAN:
+            draco_breath = MS_STICKY_FLAME;
+            break;
+
+        case MONS_DRACONIAN:
+        case MONS_YELLOW_DRACONIAN:     // already handled as ability
+        case MONS_RED_DRACONIAN:        // already handled as ability
+        case MONS_WHITE_DRACONIAN:      // already handled as ability
+        default:
+            break;
+        }
+    }
+
+    return (draco_breath);
+}
 
 //---------------------------------------------------------------
 //
@@ -2982,10 +3034,12 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
 {
     bool monsterNearby = mons_near(monster);
     bool finalAnswer = false;   // as in: "Is that your...?" {dlb}
+    const int draco_breath = get_draconian_breath_spell(monster);
 
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP
-        || !mons_class_flag( monster->type, M_SPELLCASTER )
+        || (!mons_class_flag(monster->type, M_SPELLCASTER)
+                && draco_breath == MS_NO_SPELL)
         || mons_has_ench( monster, ENCH_SUBMERGED ))
     {
         return (false);
@@ -3105,7 +3159,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             }
 
             // If no useful spells... cast no spell.
-            if (num_no_spell == 6)
+            if (num_no_spell == 6 && draco_breath == MS_NO_SPELL)
                 return (false);
 
             // up to four tries to pick a spell.
@@ -3179,6 +3233,12 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             }
         }
 
+        if (spell_cast == MS_NO_SPELL && draco_breath != MS_NO_SPELL)
+        {
+            spell_cast = draco_breath;
+            finalAnswer = true;
+        }
+
         // should the monster *still* not have a spell, well, too bad {dlb}:
         if (spell_cast == MS_NO_SPELL)
             return (false);
@@ -3210,6 +3270,20 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                 switch (monster->type)
                 {
                 default:
+                    if (spell_cast == draco_breath)
+                    {
+                        if (!simple_monster_message(monster, " breathes.",
+                                                    MSGCH_MONSTER_SPELL))
+                        {
+                            if (!silenced(monster->x, monster->y)
+                                && !silenced(you.x_pos, you.y_pos))
+                            {
+                                mpr("You hear a roar.", MSGCH_SOUND);
+                            }
+                        }
+                        break;
+                    }
+
                     if (silenced(monster->x, monster->y))
                         return (false);
 
@@ -3273,6 +3347,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                 case MONS_SHADOW_DRAGON:
                 case MONS_SWAMP_DRAGON:
                 case MONS_SWAMP_DRAKE:
+                case MONS_DEATH_DRAKE:
                 case MONS_HELL_HOG:
                 case MONS_SERPENT_OF_HELL:
                 case MONS_QUICKSILVER_DRAGON:
@@ -3840,7 +3915,7 @@ static bool handle_pickup(struct monsters *monster)
                 if (quant > max_eat - eaten)
                     quant = max_eat - eaten;
 
-                hps_gained += (quant * mass_item( mitm[item] )) / 20 + quant;
+                hps_gained += (quant * item_mass( mitm[item] )) / 20 + quant;
                 eaten += quant;
             }
             else
@@ -3910,8 +3985,8 @@ static bool handle_pickup(struct monsters *monster)
 
         // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
         // of course, this also block knives {dlb}:
-        if ((mons_charclass(monster->type) == MONS_KOBOLD
-                || mons_charclass(monster->type) == MONS_GOBLIN)
+        if ((mons_species(monster->type) == MONS_KOBOLD
+                || mons_species(monster->type) == MONS_GOBLIN)
             && property( mitm[item], PWPN_HIT ) <= 0)
         {
             return (false);
@@ -4159,6 +4234,7 @@ static bool mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
+            || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
             || mons_is_sleeping(mpusher))
         return (false);
 
@@ -4704,6 +4780,12 @@ forget_it:
                          2 + random2(4) );
         }
 
+        if (monster->type == MONS_ROTTING_DEVIL)
+        {
+            place_cloud( CLOUD_MIASMA_MON, monster->x, monster->y, 
+                         2 + random2(3) );
+        }
+
         /* this appears to be the real one, ie where the movement occurs: */
         monster->x += mmov_x;
         monster->y += mmov_y;
@@ -4885,7 +4967,7 @@ static void mons_in_cloud(struct monsters *monster)
     case CLOUD_MIASMA_MON:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_holiness(monster->type) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL)
             return;
 
         poison_monster(monster, (env.cloud[wc].type == CLOUD_MIASMA));

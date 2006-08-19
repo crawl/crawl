@@ -29,6 +29,7 @@
 #include "food.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "it_use3.h"
 #include "player.h"
@@ -888,7 +889,7 @@ unsigned char spellbook_contents( item_def &book, int action,
         out.cprintf( "Select a spell to cast." EOL );
         break;
 
-    case RBOOK_MEMORIZE:
+    case RBOOK_MEMORISE:
         out.cprintf( "Select a spell to memorise (%d level%s available)." EOL,
                  spell_levels, (spell_levels == 1) ? "" : "s" );
         break;
@@ -1074,7 +1075,7 @@ static bool which_spellbook( int &book, int &spell )
         return (false);
     }
 
-    spell = read_book( you.inv[book], RBOOK_MEMORIZE );
+    spell = read_book( you.inv[book], RBOOK_MEMORISE );
     clrscr();
 
     return (true);
@@ -1409,7 +1410,7 @@ bool learn_spell(void)
 #endif
     }
 
-    start_delay( DELAY_MEMORIZE, spell_difficulty( specspell ), specspell );
+    start_delay( DELAY_MEMORISE, spell_difficulty( specspell ), specspell );
 
     you.turn_is_over = 1;
     redraw_screen();
@@ -1424,7 +1425,7 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (item.base_type != OBJ_STAVES)
         return (-1);
     
-    if (need_id && item_not_ident( item, ISFLAG_KNOW_TYPE ))
+    if (need_id && !item_ident( item, ISFLAG_KNOW_TYPE ))
         return (0);
 
     const int stype = item.sub_type;
@@ -1467,7 +1468,7 @@ int staff_spell( int staff )
         return (0);
     }
 
-    if (item_not_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
+    if (!item_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
     {
         set_ident_flags( you.inv[staff], ISFLAG_KNOW_TYPE );
         you.wield_change = true;

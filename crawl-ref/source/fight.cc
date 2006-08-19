@@ -48,6 +48,7 @@
 #include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "misc.h"
 #include "monplace.h"
@@ -229,7 +230,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     bool use_hand_and_a_half_bonus = false;
 
     int wpn_skill = SK_UNARMED_COMBAT;
-    int hands_reqd = HANDS_ONE_HANDED;
+    int hands_reqd = HANDS_ONE;
 
     if (weapon != -1)
     {
@@ -243,8 +244,8 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     if (unarmed_attacks
         && !can_do_unarmed_combat
         && !bearing_shield && ur_armed
-        && item_uncursed( you.inv[ weapon ] )
-        && hands_reqd == HANDS_ONE_OR_TWO_HANDED)
+        && !item_cursed( you.inv[ weapon ] )
+        && hands_reqd == HANDS_HALF)
     {
         // currently: +1 dam, +1 hit, -1 spd (loosly)
         use_hand_and_a_half_bonus = true;
@@ -368,7 +369,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             your_to_hit += you.inv[ weapon ].plus;
             your_to_hit += property( you.inv[ weapon ], PWPN_HIT );
 
-            if (cmp_equip_race( you.inv[ weapon ], ISFLAG_ELVEN )
+            if (get_equip_race(you.inv[ weapon ]) == ISFLAG_ELVEN
                 && player_genus(GENPC_ELVEN))
             {
                 your_to_hit += (coinflip() ? 2 : 1);
@@ -513,7 +514,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 min_speed = 5;
 
             // Using both hands can get a weapon up to speed 7
-            if ((hands_reqd == HANDS_TWO_HANDED || use_hand_and_a_half_bonus)
+            if ((hands_reqd == HANDS_TWO || use_hand_and_a_half_bonus)
                 && min_speed > 7)
             {
                 min_speed = 7;
@@ -745,13 +746,13 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             if (use_hand_and_a_half_bonus)
                 damage_done += random2(3);
 
-            if (cmp_equip_race( you.inv[ weapon ], ISFLAG_DWARVEN )
+            if (get_equip_race(you.inv[ weapon ]) == ISFLAG_DWARVEN
                 && player_genus(GENPC_DWARVEN))
             {
                 damage_done += random2(3);
             }
 
-            if (cmp_equip_race( you.inv[ weapon ], ISFLAG_ORCISH )
+            if (get_equip_race(you.inv[ weapon ]) == ISFLAG_ORCISH
                 && you.species == SP_HILL_ORC && coinflip())
             {
                 damage_done++;
@@ -762,7 +763,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 #endif
 
             if (!launches_things( you.inv[ weapon ].sub_type )
-                && item_not_ident( you.inv[ weapon ], ISFLAG_KNOW_PLUSES )
+                && !item_ident( you.inv[ weapon ], ISFLAG_KNOW_PLUSES )
                 && random2(100) < you.skills[ wpn_skill ])
             {
                 set_ident_flags( you.inv[ weapon ], ISFLAG_KNOW_PLUSES );
@@ -784,8 +785,8 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
             exercise(SK_STABBING, 1 + random2avg(5, 4));
 
-            if (mons_holiness(defender->type) == MH_NATURAL
-                || mons_holiness(defender->type) == MH_HOLY)
+            if (mons_holiness(defender) == MH_NATURAL
+                || mons_holiness(defender) == MH_HOLY)
             {
                 did_god_conduct(DID_STABBING, 4);
             }
@@ -920,7 +921,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 #endif
             if (ur_armed && melee_brand == SPWPN_VAMPIRICISM)
             {
-                if (mons_holiness(defender->type) == MH_NATURAL
+                if (mons_holiness(defender) == MH_NATURAL
                     && damage_done > 0 && you.hp < you.hp_max
                     && !one_chance_in(5))
                 {
@@ -1005,7 +1006,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
         mpr(info);
 
-        if (mons_holiness(defender->type) == MH_HOLY)
+        if (mons_holiness(defender) == MH_HOLY)
             did_god_conduct(DID_KILL_ANGEL, 1);
 
         if (you.special_wield == SPWLD_TORMENT)
@@ -1041,7 +1042,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             did_god_conduct(DID_UNHOLY, 1);
         }
 
-        if (mons_holiness(defender->type) == MH_HOLY)
+        if (mons_holiness(defender) == MH_HOLY)
             did_god_conduct(DID_ATTACK_HOLY, defender->hit_dice);
 
         if (defender->type == MONS_HYDRA)
@@ -1231,7 +1232,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             {
                 dec_mp(STAFF_COST);
 
-                if (item_not_ident( you.inv[weapon], ISFLAG_KNOW_TYPE ))
+                if (!item_ident( you.inv[weapon], ISFLAG_KNOW_TYPE ))
                 {
                     set_ident_flags( you.inv[weapon], ISFLAG_KNOW_TYPE );
                     strcpy(info, "You are wielding ");
@@ -1319,7 +1320,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 // there should be a case in here for holy monsters,
                 // see elsewhere in fight.cc {dlb}
                 specdam = 0;
-                switch (mons_holiness(defender->type))
+                switch (mons_holiness(defender))
                 {
                 case MH_UNDEAD:
                     specdam = 1 + random2(damage_done);
@@ -1327,6 +1328,9 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
                 case MH_DEMONIC:
                     specdam = 1 + (random2(damage_done * 15) / 10);
+                    break;
+
+                default:
                     break;
                 }
                 break;
@@ -1347,7 +1351,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 break;
 
             case SPWPN_ORC_SLAYING:
-                if (mons_charclass(defender->type) == MONS_ORC)
+                if (mons_species(defender->type) == MONS_ORC)
                     hurt_monster(defender, 1 + random2(damage_done));
                 break;
 
@@ -1390,7 +1394,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
             case SPWPN_VAMPIRICISM:
                 specdam = 0;        // NB: does no extra damage
 
-                if (mons_holiness(defender->type) != MH_NATURAL)
+                if (mons_holiness(defender) != MH_NATURAL)
                     break;
                 else if (mons_res_negative_energy(defender) > 0)
                     break;
@@ -1419,7 +1423,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
             case SPWPN_DISRUPTION:
                 specdam = 0;
-                if (mons_holiness(defender->type) == MH_UNDEAD && !one_chance_in(3))
+                if (mons_holiness(defender) == MH_UNDEAD && !one_chance_in(3))
                 {
                     simple_monster_message(defender, " shudders.");
                     specdam += random2avg((1 + (damage_done * 3)), 3);
@@ -1611,13 +1615,13 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                     sc_dam += 5;
 
                 if (you.equip[EQ_HELMET] != -1
-                    && (cmp_helmet_type( you.inv[you.equip[EQ_HELMET]], THELM_HELMET )
-                        || cmp_helmet_type( you.inv[you.equip[EQ_HELMET]], THELM_HELM )))
+                    && (get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_HELMET
+                        || get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_HELM))
                 {
                     sc_dam += 2;
 
-                    if (cmp_helmet_desc( you.inv[you.equip[EQ_HELMET]], THELM_DESC_SPIKED )
-                        || cmp_helmet_desc( you.inv[you.equip[EQ_HELMET]], THELM_DESC_HORNED ))
+                    if (get_helmet_desc(you.inv[you.equip[EQ_HELMET]]) == THELM_DESC_SPIKED
+                        || get_helmet_desc(you.inv[you.equip[EQ_HELMET]]) == THELM_DESC_HORNED)
                     {
                         sc_dam += 3;
                     }
@@ -1679,7 +1683,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
 
                 /* no punching with a shield or 2-handed wpn, except staves */
                 if (bearing_shield || coinflip()
-                    || (ur_armed && hands_reqd == HANDS_TWO_HANDED 
+                    || (ur_armed && hands_reqd == HANDS_TWO
                         && you.inv[weapon].base_type != OBJ_STAVES 
                         && you.inv[weapon].sub_type  != WPN_QUARTERSTAFF) )
                 {
@@ -1796,7 +1800,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                     if (brand == SPWPN_VENOM && coinflip())
                         poison_monster( defender, true );
 
-                    if (mons_holiness(defender->type) == MH_HOLY)
+                    if (mons_holiness(defender) == MH_HOLY)
                         did_god_conduct(DID_KILL_ANGEL, 1);
 
                     hit = true;
@@ -1909,7 +1913,7 @@ void monster_attack(int monster_attacking)
         return;
 
     if (you.duration[DUR_REPEL_UNDEAD] 
-        && mons_holiness( attacker->type ) == MH_UNDEAD
+        && mons_holiness( attacker ) == MH_UNDEAD
         && !check_mons_resist_magic( attacker, you.piety ))
     {
         simple_monster_message(attacker,
@@ -2025,12 +2029,12 @@ void monster_attack(int monster_attacking)
                                + (5 * you.shield_blocks * you.shield_blocks));
 
         // Factors for blocking:
-        // [dshaligram] Increased dex weight from .2 to .3333, added weighting
-        // for shields skill.
-        const int pro_block = player_shield_class() + (random2(you.dex) / 5);
+        // [dshaligram] Added weighting for shields skill, increased dex bonus
+        // from .2 to .25
+        const int pro_block =
                 random2(player_shield_class()) 
-                                        + (random2(you.dex) / 3) 
-                                        + (random2(skill_bump(SK_SHIELDS)) / 3)
+                                        + (random2(you.dex) / 4) 
+                                        + (random2(skill_bump(SK_SHIELDS)) / 4)
                                         - 1;
 
         if (!you.paralysis && !you_are_delayed() && !you.conf 
@@ -2078,8 +2082,8 @@ void monster_attack(int monster_attacking)
 
                 damage_taken = random2(damage_size);
 
-                if (cmp_equip_race(mitm[attacker->inv[hand_used]],ISFLAG_ORCISH)
-                    && mons_charclass(attacker->type) == MONS_ORC
+                if (get_equip_race(mitm[attacker->inv[hand_used]]) == ISFLAG_ORCISH
+                    && mons_species(attacker->type) == MONS_ORC
                     && coinflip())
                 {
                     damage_taken++;
@@ -2182,7 +2186,7 @@ void monster_attack(int monster_attacking)
             {
                 if (you.equip[EQ_BODY_ARMOUR] != -1)
                 {
-                    const int body_arm_mass = mass_item( you.inv[you.equip[EQ_BODY_ARMOUR]] );
+                    const int body_arm_mass = item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] );
 
                     if (!player_light_armour() && coinflip()
                         && random2(1000) <= body_arm_mass)
@@ -3047,8 +3051,8 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 damage_taken = random2(property( mitm[attacker->inv[hand_used]],
                                                  PWPN_DAMAGE ));
 
-                if (cmp_equip_race(mitm[attacker->inv[hand_used]],ISFLAG_ORCISH)
-                    && mons_charclass(attacker->type) == MONS_ORC
+                if (get_equip_race(mitm[attacker->inv[hand_used]]) == ISFLAG_ORCISH
+                    && mons_species(attacker->type) == MONS_ORC
                     && coinflip())
                 {
                     damage_taken++;
@@ -3463,7 +3467,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     if (attacker->type == MONS_PLAYER_GHOST)
                         break;
                     specdam = 0;
-                    switch (mons_holiness(defender->type))
+                    switch (mons_holiness(defender))
                     {
                     case MH_HOLY:
                         // I would think that it would do zero damage {dlb}
@@ -3476,6 +3480,9 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
                     case MH_DEMONIC:
                         specdam += 1 + (random2(damage_taken) * 15) / 10;
+                        break;
+
+                    default:
                         break;
                     }
                     break;
@@ -3508,7 +3515,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     break;
 
                 case SPWPN_ORC_SLAYING:
-                    if (mons_charclass(defender->type) == MONS_ORC)
+                    if (mons_species(defender->type) == MONS_ORC)
                         hurt_monster(defender, 1 + random2(damage_taken));
                     break;
 
@@ -3575,7 +3582,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
                     specdam = 0;
 
-                    if (mons_holiness(defender->type) == MH_UNDEAD
+                    if (mons_holiness(defender) == MH_UNDEAD
                         && !one_chance_in(3))
                     {
                         simple_monster_message(defender, " shudders.");
@@ -3767,6 +3774,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
         return (damage);
 
     case WPN_BOW:
+    case WPN_LONGBOW:
     case WPN_CROSSBOW:
     case WPN_HAND_CROSSBOW:
         if (damage < HIT_STRONG)
@@ -3788,6 +3796,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
     case WPN_SCYTHE:
     case WPN_QUICK_BLADE:
     case WPN_KATANA:
+    case WPN_LAJATANG:
     case WPN_EXECUTIONERS_AXE:
     case WPN_DOUBLE_SWORD:
     case WPN_TRIPLE_SWORD:
@@ -3810,7 +3819,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
     case WPN_MACE:
     case WPN_FLAIL:
     case WPN_GREAT_MACE:
-    case WPN_GREAT_FLAIL:
+    case WPN_DIRE_FLAIL:
     case WPN_QUARTERSTAFF:
     case WPN_GIANT_CLUB:
     case WPN_HAMMER:
@@ -3911,7 +3920,7 @@ int weapon_str_weight( int wpn_class, int wpn_type )
     else if (wpn_type == WPN_QUICK_BLADE) // high dex is very good for these
         ret = 1;
 
-    if (hands_reqd == HANDS_TWO_HANDED)
+    if (hands_reqd == HANDS_TWO)
         ret += 2;
 
     // most weapons are capped at 8
@@ -3945,7 +3954,7 @@ static inline int player_weapon_str_weight( void )
     const int  hands_reqd = hands_reqd_for_weapon( you.inv[weapon].base_type,
                                                    you.inv[weapon].sub_type );
 
-    if (hands_reqd == HANDS_ONE_OR_TWO_HANDED && !shield)
+    if (hands_reqd == HANDS_HALF && !shield)
         ret += 1;
 
     return (ret);

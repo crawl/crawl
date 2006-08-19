@@ -27,6 +27,7 @@
 #include "items.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -497,8 +498,8 @@ bool evoke_wielded( void )
                 pract = (one_chance_in(5) ? 1 : 0);
                 did_work = true;
 
-                if (item_not_ident( you.inv[you.equip[EQ_WEAPON]], 
-                                    ISFLAG_KNOW_TYPE ))
+                if (!item_ident( you.inv[you.equip[EQ_WEAPON]], 
+                                 ISFLAG_KNOW_TYPE ))
                 {
                     set_ident_flags( you.inv[you.equip[EQ_WEAPON]], 
                                      ISFLAG_KNOW_TYPE );
@@ -877,7 +878,8 @@ void tome_of_power(char sc_read_2)
         beam.thrower = KILL_YOU;
         beam.aux_source = "an exploding Tome of Power";
         beam.ex_size = 2;
-        beam.isTracer = false;
+        beam.is_tracer = false;
+        beam.is_explosion = true;
 
         explosion(beam);
         return;

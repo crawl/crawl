@@ -30,6 +30,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "item_use.h"
 #include "it_use2.h"
 #include "macro.h"
@@ -693,7 +694,7 @@ void eat_from_inventory(int which_inventory_slot)
         // this is a bit easier to read... most compilers should
         // handle this the same -- bwr
         const int mons_type = you.inv[ which_inventory_slot ].plus;
-        const int chunk_type = mons_corpse_thingy( mons_type );
+        const int chunk_type = mons_corpse_effect( mons_type );
         const bool rotten = (you.inv[which_inventory_slot].special < 100);
 
         eat_chunk( determine_chunk_effect( chunk_type, rotten ) );
@@ -711,7 +712,7 @@ void eat_floor_item(int item_link)
 {
     if (mitm[item_link].sub_type == FOOD_CHUNK)
     {
-        const int chunk_type = mons_corpse_thingy( mitm[item_link].plus );
+        const int chunk_type = mons_corpse_effect( mitm[item_link].plus );
         const bool rotten = (mitm[item_link].special < 100);
 
         eat_chunk( determine_chunk_effect( chunk_type, rotten ) );

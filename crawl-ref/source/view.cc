@@ -224,11 +224,6 @@ static void get_ibm_symbol(unsigned int object, unsigned short *ch,
         *ch = 39;
         break;
 
-    case DNGN_BRANCH_STAIRS:
-        *ch = 240;
-        *color = BROWN;
-        break;
-
     case DNGN_TRAP_MECHANICAL:
         *color = LIGHTCYAN;
         *ch = 94;
@@ -738,35 +733,27 @@ void viewwindow2(char draw_it, bool do_updates)
                     }
                 }
 
-                if (you.flash_colour != BLACK 
-                        && buffy[bufcount + 1] != DARKGREY)
-                    buffy[bufcount + 1] = you.flash_colour;
-
                 bufcount += 2;
             }
         }
 
-        if (you.flash_colour == BLACK)
+        const int flash_colour =
+                you.flash_colour != BLACK? you.flash_colour :
+                you.berserker            ? RED              :
+                show_green != BLACK      ? show_green       :
+                you.special_wield == SPWLD_SHADOW? DARKGREY :
+                                                   BLACK;
+        if (flash_colour != BLACK)
         {
-            if (you.berserker)
+            for (count_x = 1; count_x < 1400; count_x += 2)
             {
-                for (count_x = 1; count_x < 1400; count_x += 2)
-                {
-                    if (buffy[count_x] != DARKGREY)
-                        buffy[count_x] = RED;
-                }
+                if (buffy[count_x] != DARKGREY)
+                    buffy[count_x] = flash_colour;
             }
 
             if (show_green != BLACK)
             {
-                for (count_x = 1; count_x < 1400; count_x += 2)
-                {
-                    if (buffy[count_x] != DARKGREY)
-                        buffy[count_x] = show_green;
-                }
-
                 show_green = BLACK;
-
                 if (you.special_wield == SPWLD_SHADOW)
                     show_green = DARKGREY;
             }
@@ -1326,7 +1313,7 @@ bool check_awaken(int mons_aw)
 {
     int mons_perc = 0;
     struct monsters *monster = &menv[mons_aw];
-    const int mon_holy = mons_holiness( monster->type );
+    const int mon_holy = mons_holiness(monster);
 
     // berserkers aren't really concerned about stealth
     if (you.berserker)
@@ -2799,8 +2786,6 @@ unsigned char mapchar(unsigned char ldfk)
         showed = '8';
         break;
 
-    case DNGN_LAVA_X:
-    case DNGN_WATER_X:
     case DNGN_LAVA:
     case DNGN_DEEP_WATER:
     case DNGN_SHALLOW_WATER:
@@ -2951,9 +2936,6 @@ unsigned char mapchar2(unsigned char ldfk)
     case DNGN_CLOSED_DOOR:
         showed = 254;
         break;
-
-    //case DNGN_LAVA_X: showed = 247; break;     // deprecated? {dlb}
-    //case DNGN_WATER_X: showed = 247; break;    // deprecated? {dlb}
 
     case 20:                    // orcish idol
     case 24:                    // ???
@@ -3240,11 +3222,6 @@ void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
 
     case DNGN_OPEN_DOOR:
         *ch = '\'';
-        break;
-
-    case DNGN_BRANCH_STAIRS:
-        *color = BROWN;
-        *ch = '>';
         break;
 
     case DNGN_TRAP_MECHANICAL:
@@ -3742,26 +3719,28 @@ void viewwindow3(char draw_it, bool do_updates)
             }
         }
 
-        if (you.berserker)
+        const int flash_colour =
+                you.flash_colour != BLACK? you.flash_colour :
+                you.berserker            ? RED              :
+                show_green != BLACK      ? show_green       :
+                you.special_wield == SPWLD_SHADOW? DARKGREY :
+                                                   BLACK;
+        if (flash_colour != BLACK)
         {
             for (count_x = 1; count_x < 1400; count_x += 2)
             {
                 if (buffy[count_x] != DARKGREY)
-                    buffy[count_x] = RED;
+                    buffy[count_x] = flash_colour;
             }
-        }
 
-        if (show_green != BLACK)
-        {
-            for (count_x = 1; count_x < 1400; count_x += 2)
+            if (show_green != BLACK)
             {
-                if (buffy[count_x] != DARKGREY)
-                    buffy[count_x] = show_green;
+                show_green = BLACK;
+                if (you.special_wield == SPWLD_SHADOW)
+                    show_green = DARKGREY;
             }
-
-            show_green = ((you.special_wield == SPWLD_SHADOW) ? DARKGREY
-                                                              : BLACK);
         }
+        you.flash_colour = BLACK;
 
 #ifdef DOS_TERM
         puttext(2, 1, 34, 17, buffy.buffer());
@@ -3828,8 +3807,6 @@ unsigned char mapchar3(unsigned char ldfk)
         showed = '8';
         break;
 
-    case DNGN_LAVA_X:
-    case DNGN_WATER_X:
     case DNGN_LAVA:
     case DNGN_DEEP_WATER:
     case DNGN_SHALLOW_WATER:
@@ -3990,8 +3967,6 @@ unsigned char mapchar4(unsigned char ldfk)
         showed = '8';
         break;
 
-    case DNGN_LAVA_X:
-    case DNGN_WATER_X:
     case DNGN_LAVA:
     case DNGN_DEEP_WATER:
     case DNGN_SHALLOW_WATER:

@@ -39,6 +39,7 @@
 #include "food.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
 #include "misc.h"
@@ -314,7 +315,7 @@ void pray(void)
                 && random2( you.piety ) > 70
                 && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
                 && one_chance_in(4)
-                && you.skills[ best_skill(SK_SLINGS, SK_THROWING) ] >= 3)
+                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 3)
             {
                 success = acquirement( OBJ_MISSILES, you.religion );
                 if (success)
@@ -955,10 +956,11 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
             beam.target_y = you.y_pos;
             strcpy(beam.beam_name, "blast of lightning");
             beam.colour = LIGHTCYAN;
-            beam.thrower = KILL_YOU;    // your explosion
+            beam.thrower = KILL_MISC;
             beam.aux_source = "Xom's lightning strike";
             beam.ex_size = 2;
-            beam.isTracer = false;
+            beam.is_tracer = false;
+            beam.is_explosion = true;
 
             explosion(beam);
 
@@ -2352,9 +2354,7 @@ static bool bless_weapon( int god, int brand, int colour )
 
         // as currently only Zin and TSO do this is our permabrand effect:
         holy_word( 100, true );
-
-        more();
-        mesclr();
+        delay(500);
 
         return (true);
     }

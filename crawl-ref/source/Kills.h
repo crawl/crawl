@@ -160,7 +160,7 @@ public:
 
     std::string kill_info() const;
 private:
-    const char *category_name(KillCategory kc) const;
+    const char *category_name(kill_category kc) const;
 
     Kills categorized_kills[KC_NCATEGORIES];
 private:

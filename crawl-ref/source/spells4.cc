@@ -28,6 +28,7 @@
 #include "effects.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "invent.h"
 #include "misc.h"
@@ -57,7 +58,6 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-static bool mons_can_host_shuggoth(int type);
 // static int make_a_random_cloud(int x, int y, int pow, int ctype);
 static int make_a_rot_cloud(int x, int y, int pow, int ctype);
 static int quadrant_blink(int x, int y, int pow, int garbage);
@@ -708,6 +708,7 @@ void cast_sticks_to_snakes(int pow)
             || you.inv[ weapon ].sub_type == WPN_GIANT_CLUB
             || you.inv[ weapon ].sub_type == WPN_GIANT_SPIKED_CLUB
             || you.inv[ weapon ].sub_type == WPN_BOW
+            || you.inv[ weapon ].sub_type == WPN_LONGBOW
             || you.inv[ weapon ].sub_type == WPN_ANCUS
             || you.inv[ weapon ].sub_type == WPN_HALBERD
             || you.inv[ weapon ].sub_type == WPN_GLAIVE
@@ -720,7 +721,7 @@ void cast_sticks_to_snakes(int pow)
         // ogres, and most importantly ogre magi).  Still it's unlikely
         // any character is strong enough to bother lugging a few of
         // these around.  -- bwr
-        if (mass_item( you.inv[ weapon ] ) < 500)
+        if (item_mass( you.inv[ weapon ] ) < 500)
             mon = MONS_SNAKE;
         else
             mon = MONS_BROWN_SNAKE;
@@ -851,7 +852,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     int mnstr = mgrd[x][y];
 
     if (mnstr == NON_MONSTER)                                   return 0;
-    if (mons_holiness( menv[mnstr].type ) != MH_NATURAL)        return 0;
+    if (mons_holiness(&menv[mnstr]) != MH_NATURAL)        return 0;
     if (check_mons_resist_magic( &menv[mnstr], pow ))           return 0;
 
     // Why shouldn't we be able to sleep friendly monsters? -- bwr
@@ -884,7 +885,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
     struct monsters *monster = &menv[which_mons];
 
-    if (mons_holiness(monster->type) != MH_NATURAL)            return 0;
+    if (mons_holiness(monster) != MH_NATURAL)            return 0;
     if (mons_intel_type(monster->type) != I_ANIMAL)            return 0;
     if (mons_friendly(monster))                                return 0;
 
@@ -1012,7 +1013,7 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
     struct monsters *const mon = &menv[ mon_index ];
 
     // Monsters which have poison corpses or poisonous attacks:
-    if (mons_corpse_thingy( mon->type ) == CE_POISONOUS
+    if (mons_corpse_effect( mon->type ) == CE_POISONOUS
         || mon->type == MONS_GIANT_ANT
         || mon->type == MONS_SMALL_SNAKE
         || mon->type == MONS_SNAKE
@@ -1707,7 +1708,7 @@ static int intoxicate_monsters(int x, int y, int pow, int garbage)
         return 0;
     if (mons_intel(menv[mon].type) < I_NORMAL)
         return 0;
-    if (mons_holiness(menv[mon].type) != MH_NATURAL)
+    if (mons_holiness(&menv[mon]) != MH_NATURAL)
         return 0;
     if (mons_res_poison(&menv[mon]) > 0)
         return 0;
@@ -1746,7 +1747,7 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
     if (mons_intel(menv[mon].type) < I_NORMAL)
         return (0);
 
-    if (mons_holiness(mon) != MH_NATURAL)
+    if (mons_class_holiness(mon) != MH_NATURAL)
         return (0);
 
     if (!mons_is_humanoid( menv[mon].type ))
@@ -1936,10 +1937,10 @@ void cast_evaporate(int pow)
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU_MISSILE;
     beem.aux_source = NULL;
-    beem.isBeam = false;
-    beem.isTracer = false;
+    beem.is_beam = false;
+    beem.is_tracer = false;
 
-    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
+    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_RANGED_COMBAT] / 2 + 1 );
     beem.damage = dice_def( 1, 0 );  // no damage, just producing clouds
     beem.ench_power = pow;           // used for duration only?
 
@@ -2016,7 +2017,7 @@ void cast_evaporate(int pow)
     }
 
     if (coinflip())
-        exercise( SK_THROWING, 1 );
+        exercise( SK_RANGED_COMBAT, 1 );
 
     fire_beam(beem);
 
@@ -2103,7 +2104,7 @@ void cast_fulsome_distillation( int powc )
         break;
 
     default:
-        switch (mons_corpse_thingy( mitm[corpse].plus ))
+        switch (mons_corpse_effect( mitm[corpse].plus ))
         {
         case CE_CLEAN:
             potion_type = (power_up ? POT_CONFUSION : POT_WATER);
@@ -2208,7 +2209,7 @@ static int rot_living(int x, int y, int pow, int message)
     if (mon == NON_MONSTER)
         return 0;
 
-    if (mons_holiness(menv[mon].type) != MH_NATURAL)
+    if (mons_holiness(&menv[mon]) != MH_NATURAL)
         return 0;
 
     if (check_mons_resist_magic(&menv[mon], pow))
@@ -2240,7 +2241,7 @@ static int rot_undead(int x, int y, int pow, int garbage)
     if (mon == NON_MONSTER)
         return 0;
 
-    if (mons_holiness(menv[mon].type) != MH_UNDEAD)
+    if (mons_holiness(&menv[mon]) != MH_UNDEAD)
         return 0;
 
     if (check_mons_resist_magic(&menv[mon], pow))
@@ -2315,7 +2316,7 @@ void do_monster_rot(int mon)
 {
     int damage = 1 + random2(3);
 
-    if (mons_holiness(menv[mon].type) == MH_UNDEAD && random2(5))
+    if (mons_holiness(&menv[mon]) == MH_UNDEAD && random2(5))
     {
         apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
                          10, 1, CLOUD_MIASMA);
@@ -2378,7 +2379,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     blast.colour = 0;
     blast.target_x = beam.tx;
     blast.target_y = beam.ty;
-    blast.isTracer = false;
+    blast.is_tracer = false;
     blast.flavour = BEAM_FRAG;
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
@@ -2930,7 +2931,7 @@ void cast_apportation(int pow)
     }
 
     // mass of one unit
-    const int unit_mass = mass_item( mitm[ item ] );
+    const int unit_mass = item_mass( mitm[ item ] );
     // assume we can pull everything
     int max_units = mitm[ item ].quantity;
 
@@ -3009,63 +3010,6 @@ void cast_sandblast(int pow)
         zapping(ZAP_SMALL_SANDBLAST, pow, beam);
     }
 }                               // end cast_sandblast()
-
-static bool mons_can_host_shuggoth(int type)    //jmf: simplified
-{
-    if (mons_holiness(type) != MH_NATURAL)
-        return false;
-    if (mons_class_flag(type, M_WARM_BLOOD))
-        return true;
-
-    return false;
-}
-
-void cast_shuggoth_seed(int powc)
-{
-    struct dist beam;
-    int i;
-
-    mpr("Sow seed in whom?", MSGCH_PROMPT);
-
-    direction( beam, DIR_TARGET, TARG_ENEMY );
-
-    if (!beam.isValid)
-    {
-        mpr("You feel a distant frustration.");
-        return;
-    }
-
-    if (beam.isMe)
-    {
-        if (!you.is_undead)
-        {
-            you.duration[DUR_INFECTED_SHUGGOTH_SEED] = 10;
-            mpr("A deathly dread twitches in your chest.");
-        }
-        else
-            mpr("You feel a distant frustration.");
-    }
-
-    i = mgrd[beam.tx][beam.ty];
-
-    if (i == NON_MONSTER)
-    {
-        mpr("You feel a distant frustration.");
-        return;
-    }
-
-    if (mons_can_host_shuggoth(menv[i].type))
-    {
-        if (random2(powc) > 100)
-            mons_add_ench(&menv[i], ENCH_YOUR_SHUGGOTH_III);
-        else
-            mons_add_ench(&menv[i], ENCH_YOUR_SHUGGOTH_IV);
-
-        simple_monster_message(&menv[i], " twitches.");
-    }
-
-    return;
-}
 
 void cast_condensation_shield(int pow)
 {

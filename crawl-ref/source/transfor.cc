@@ -440,7 +440,7 @@ void untransform(void)
     // probably need something better to cover all possibilities.  -bwr
     if ((you.species == SP_NAGA || you.species == SP_CENTAUR)
             && you.equip[ EQ_BOOTS ] != -1
-            && you.inv[ you.equip[EQ_BOOTS] ].plus2 != TBOOT_NAGA_BARDING)
+            && you.inv[ you.equip[EQ_BOOTS] ].sub_type != ARM_NAGA_BARDING)
     {
         rem_stuff[EQ_BOOTS] = 1;
         remove_equipment(rem_stuff);
@@ -451,7 +451,7 @@ void untransform(void)
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip( char use_which )
+bool can_equip( equipment_type use_which )
 {
 
     // if more cases are added to this if must also change in
@@ -519,6 +519,16 @@ bool can_equip( char use_which )
     return (true);
 }                               // end can_equip()
 
+// raw comparison of an item, must use check_armour_shape for full version 
+bool transform_can_equip_type( int eq_slot )
+{
+    // FIXME FIXME FIXME
+    return (false);
+
+    // const int form = you.attribute[ATTR_TRANSFORMATION];
+    // return (!must_remove( Trans[form].rem_stuff, eq_slot ));
+}
+
 void extra_hp(int amount_extra) // must also set in calc_hp
 {
     calc_hp();
@@ -549,3 +559,16 @@ void drop_everything(void)
 
     return;
 }                               // end drop_everything()
+
+// Used to mark transformations which override species/mutation intrinsics.
+// If phys_scales is true then we're checking to see if the form keeps 
+// the physical (AC/EV) properties from scales... the special intrinsic 
+// features (resistances, etc) are lost in those forms however.
+bool transform_changed_physiology( bool phys_scales )
+{
+    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && (!phys_scales 
+                || (you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
+                    && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)));
+}

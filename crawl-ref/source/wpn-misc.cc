@@ -25,9 +25,16 @@
  **************************************************
 */
 
-char damage_type(unsigned char wclass, unsigned char wtype)
+// FIXME: Remove these eventually
+
+int damage_type(const item_def &item)
 {
-    char type_damage = DVORP_CRUSHING;  // this is the default, btw {dlb}
+    return (damage_type(item.base_type, item.sub_type));
+}
+
+int damage_type(int wclass, int wtype)
+{
+    int type_damage = DVORP_CRUSHING;  // this is the default, btw {dlb}
 
     if (wclass == OBJ_WEAPONS)
     {
@@ -47,6 +54,8 @@ char damage_type(unsigned char wclass, unsigned char wtype)
         case WPN_SCYTHE:
         case WPN_SHORT_SWORD:
         case WPN_TRIPLE_SWORD:
+        case WPN_BLESSED_BLADE:
+        case WPN_LAJATANG:
             type_damage = DVORP_SLICING;
             break;
 
@@ -67,6 +76,7 @@ char damage_type(unsigned char wclass, unsigned char wtype)
         case WPN_GLAIVE:
         case WPN_HALBERD:
         case WPN_HAND_AXE:
+        case WPN_LOCHABER_AXE:
             type_damage = DVORP_CHOPPING;
             break;
         }
@@ -75,7 +85,7 @@ char damage_type(unsigned char wclass, unsigned char wtype)
     return (type_damage);
 }                               // end damage_type()
 
-bool can_cut_meat(unsigned char wclass, unsigned char wtype)
+bool can_cut_meat(int wclass, int wtype)
 {
     int type = damage_type( wclass, wtype );
 
@@ -85,9 +95,9 @@ bool can_cut_meat(unsigned char wclass, unsigned char wtype)
     return (false);
 }
 
-int hands_reqd_for_weapon(unsigned char wclass, unsigned char wtype)
+int hands_reqd_for_weapon(int wclass, int wtype)
 {
-    int reqd_hands = HANDS_ONE_HANDED;
+    int reqd_hands = HANDS_ONE;
 
     switch (wclass)
     {
@@ -103,10 +113,14 @@ int hands_reqd_for_weapon(unsigned char wclass, unsigned char wtype)
         case WPN_GREAT_SWORD:
         case WPN_TRIPLE_SWORD:
         case WPN_GREAT_MACE:
-        case WPN_GREAT_FLAIL:
+        case WPN_DIRE_FLAIL:
         case WPN_GIANT_CLUB:
         case WPN_GIANT_SPIKED_CLUB:
-            reqd_hands = HANDS_TWO_HANDED;
+        case WPN_LOCHABER_AXE:
+        case WPN_BOW:
+        case WPN_LONGBOW:
+        case WPN_CROSSBOW:
+            reqd_hands = HANDS_TWO;
             break;
 
         case WPN_SPEAR:
@@ -116,13 +130,17 @@ int hands_reqd_for_weapon(unsigned char wclass, unsigned char wtype)
         case WPN_BROAD_AXE:
         case WPN_KATANA:
         case WPN_DOUBLE_SWORD:
-            reqd_hands = HANDS_ONE_OR_TWO_HANDED;
+        case WPN_LAJATANG:
+        case WPN_HAND_CROSSBOW:
+        case WPN_BLOWGUN:
+        case WPN_SLING:
+            reqd_hands = HANDS_HALF;
             break;
         }
         break;
 
     case OBJ_STAVES:
-        reqd_hands = HANDS_TWO_HANDED;
+        reqd_hands = HANDS_TWO;
         break;
     }
 
@@ -149,6 +167,7 @@ bool launches_things( unsigned char weapon_subtype )
     {
     case WPN_SLING:
     case WPN_BOW:
+    case WPN_LONGBOW:
     case WPN_CROSSBOW:
     case WPN_HAND_CROSSBOW:
     case WPN_BLOWGUN:
@@ -168,106 +187,13 @@ unsigned char launched_by(unsigned char weapon_subtype)
     case WPN_SLING:
         return MI_STONE;
     case WPN_BOW:
+    case WPN_LONGBOW:
         return MI_ARROW;
     case WPN_CROSSBOW:
         return MI_BOLT;
     case WPN_HAND_CROSSBOW:
         return MI_DART;
     default:
-        return MI_EGGPLANT;     // lame debugging code :P {dlb}
+        return MI_NONE;     // lame debugging code :P {dlb}
     }
 }                               // end launched_by()
-
-int weapon_skill(const item_def &item)
-{
-    return weapon_skill(item.base_type, item.sub_type);
-}
-
-// this function returns the skill that the weapon would use in melee
-int weapon_skill(int wclass, int wtype)
-{
-    int skill2use = SK_FIGHTING;
-
-    if (wclass == OBJ_STAVES
-        && (wtype < STAFF_SMITING || wtype >= STAFF_AIR))
-    {
-        skill2use = SK_STAVES;
-    }
-    else if (wclass != OBJ_WEAPONS)
-        skill2use = SK_FIGHTING;
-    else
-    {
-        switch (wtype)
-        {
-        case WPN_CLUB:
-        case WPN_MACE:
-        case WPN_HAMMER:
-        case WPN_ANCUS:
-        case WPN_WHIP:
-        case WPN_FLAIL:
-        case WPN_MORNINGSTAR:
-        case WPN_GIANT_CLUB:
-        case WPN_GIANT_SPIKED_CLUB:
-        case WPN_EVENINGSTAR:
-        case WPN_DEMON_WHIP:
-        case WPN_SPIKED_FLAIL:
-        case WPN_GREAT_FLAIL:
-        case WPN_GREAT_MACE:
-        case WPN_BOW:
-        case WPN_BLOWGUN:
-        case WPN_CROSSBOW:
-        case WPN_HAND_CROSSBOW:
-            skill2use = SK_MACES_FLAILS;
-            break;
-
-        case WPN_KNIFE:
-        case WPN_DAGGER:
-        case WPN_SHORT_SWORD:
-        case WPN_QUICK_BLADE:
-        case WPN_SABRE:
-            skill2use = SK_SHORT_BLADES;
-            break;
-
-        case WPN_FALCHION:
-        case WPN_LONG_SWORD:
-        case WPN_SCIMITAR:
-        case WPN_KATANA:
-        case WPN_DOUBLE_SWORD:
-        case WPN_DEMON_BLADE:
-        case WPN_GREAT_SWORD:
-        case WPN_TRIPLE_SWORD:
-            skill2use = SK_LONG_SWORDS;
-            break;
-
-        case WPN_HAND_AXE:
-        case WPN_WAR_AXE:
-        case WPN_BROAD_AXE:
-        case WPN_BATTLEAXE:
-        case WPN_EXECUTIONERS_AXE:
-            skill2use = SK_AXES;
-            break;
-
-        case WPN_SPEAR:
-        case WPN_HALBERD:
-        case WPN_GLAIVE:
-        case WPN_SCYTHE:
-        case WPN_TRIDENT:
-        case WPN_DEMON_TRIDENT:
-            skill2use = SK_POLEARMS;
-            break;
-
-        case WPN_QUARTERSTAFF:
-            skill2use = SK_STAVES;
-            break;
-        }
-    }
-
-    return (skill2use);
-}                               // end weapon_skill()
-/*
- **************************************************
- *                                                *
- *              END PUBLIC FUNCTIONS              *
- *                                                *
- **************************************************
-*/

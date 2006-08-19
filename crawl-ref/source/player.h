@@ -149,7 +149,7 @@ int player_regen(void);
  * called from: fight - files - it_use2 - misc - ouch - spells - spells2
  * *********************************************************************** */
 int player_res_cold(bool calc_unid = true);
-
+int player_res_acid(void);
 
 /* ***********************************************************************
  * called from: fight - files - ouch
@@ -282,7 +282,7 @@ int slaying_bonus(char which_affected);
  *              spells3
  * *********************************************************************** */
 unsigned char player_see_invis(bool calc_unid = true);
-bool player_monster_visible( struct monsters *mon );
+bool player_monster_visible( const monsters *mon );
 
 
 /* ***********************************************************************
@@ -442,14 +442,17 @@ void rot_player( int amount );
 
 void perform_activity();
 
-void interrupt_activity( ACT_INTERRUPT ai, 
-                     const activity_interrupt_t &a = activity_interrupt_t() );
+void interrupt_activity( activity_interrupt_type ai, 
+                     const activity_interrupt_data &a 
+                            = activity_interrupt_data() );
 
 // last updated 15sep2001 {bwr}
 /* ***********************************************************************
  * called from:
  * *********************************************************************** */
 bool player_has_spell( int spell );
+
+bool player_weapon_wielded();
 
 void run_macro(const char *macroname = NULL);
 
