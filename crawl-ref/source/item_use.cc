@@ -102,6 +102,7 @@ bool can_wield(const item_def& weapon)
                 || weapon.sub_type == WPN_DIRE_FLAIL
                 || weapon.sub_type == WPN_BATTLEAXE
                 || weapon.sub_type == WPN_EXECUTIONERS_AXE
+                || weapon.sub_type == WPN_LOCHABER_AXE
                 || weapon.sub_type == WPN_HALBERD
                 || weapon.sub_type == WPN_GLAIVE
                 || weapon.sub_type == WPN_GIANT_CLUB
@@ -264,6 +265,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                 || you.inv[item_slot].sub_type == WPN_DIRE_FLAIL
                 || you.inv[item_slot].sub_type == WPN_BATTLEAXE
                 || you.inv[item_slot].sub_type == WPN_EXECUTIONERS_AXE
+                || you.inv[item_slot].sub_type == WPN_LOCHABER_AXE
                 || you.inv[item_slot].sub_type == WPN_HALBERD
                 || you.inv[item_slot].sub_type == WPN_GLAIVE
                 || you.inv[item_slot].sub_type == WPN_GIANT_CLUB

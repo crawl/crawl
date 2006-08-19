@@ -1274,6 +1274,7 @@ bool acquirement(unsigned char force_class, int agent)
                 case WPN_HALBERD:
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
+                case WPN_LOCHABER_AXE:
                     mitm[thing_created].sub_type = 
                             (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;
