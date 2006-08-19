@@ -1,13 +1,21 @@
-# Make file for Dungeon Crawl (dos)
+# Make file for Dungeon Crawl (Win32, MinGW)
 
 # this file contains a list of the libraries.
 # it will make a variable called OBJECTS that contains all the libraries
 include makefile.obj
 
+ifeq ($(DEBUG_CRAWL),)
+OPATH := rel/
+else
+OPATH := dbg/
+endif
+
+OBPATH = $(subst /,\,$(OPATH))
+
 # need .exe so make will find the right file
-APPNAME = crawl.exe
+APPNAME = $(OPATH)crawl.exe
 CXX = g++
-DELETE = rm
+DELETE = del
 COPY = copy
 OS_TYPE = WIN32CONSOLE
 CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
@@ -15,7 +23,8 @@ CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
 			-D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS \
 			-DWINMM_PLAY_SOUNDS -DREGEX_PCRE
 
-OBJECTS := $(OBJECTS) libw32c.o
+OBJNAMES := $(OBJECTS) $(OPATH)libw32c.o
+OBJECTS = $(foreach file,$(OBJNAMES),$(OPATH)$(file))
 
 LDFLAGS = 
 INSTALLDIR = .
@@ -24,32 +33,44 @@ LIB = -lwinmm -static -lpcre -llua -llualib
 
 all:            $(APPNAME)
 
+prepare:
+		if not exist $(OPATH) mkdir $(OBPATH)
+
 install:        $(APPNAME)
 		$(COPY) $(APPNAME) ${INSTALLDIR}
 
 clean:
-		$(DELETE) *.o
+		$(DELETE) $(OBPATH)*.o
 
 distclean:
-		$(DELETE) *.o 
+		$(DELETE) $(OBPATH)*.o 
+		$(DELETE) *.o
 		$(DELETE) bones.*
+		$(DELETE) $(OBPATH)bones.*
 		$(DELETE) morgue.txt
+		$(DELETE) $(OBPATH)morgue.txt
 		$(DELETE) scores 
-		$(DELETE) $(APPNAME) 
+		$(DELETE) $(OBPATH)scores 
+		$(DELETE) crawl.exe
+		$(DELETE) $(subst /,\,$(APPNAME))
 		$(DELETE) *.sav
+		$(DELETE) $(OBPATH)*.sav
 		$(DELETE) core
+		$(DELETE) $(OBPATH)core
 		$(DELETE) *.0*
+		$(DELETE) $(OBPATH)*.0*
 		$(DELETE) *.lab
+		$(DELETE) $(OBPATH)*.lab
 
-$(APPNAME):	$(OBJECTS)
+$(APPNAME):	prepare $(OBJECTS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
-debug:		$(OBJECTS)
+debug: prepare $(OBJECTS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
 profile:	$(OBJECTS)
 		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-.cc.o:
-		${CXX} ${CFLAGS} -c $< ${INCLUDE}
+$(OPATH)%.o: %.cc
+		${CXX} ${CFLAGS} ${INCLUDES} -o $@ -c $< 
