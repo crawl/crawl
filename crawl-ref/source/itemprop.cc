@@ -586,8 +586,10 @@ void set_helmet_type( item_def &item, short type )
     // make sure we have the right sub_type (to get properties correctly)
     if (type == THELM_HELMET || type == THELM_HELM)
         item.sub_type = ARM_HELMET;
-    else
-        item.sub_type = ARM_CAP;
+
+    // [dshaligram] FIXME: This is for when we import caps
+    // else
+    //    item.sub_type = ARM_CAP;
 
     item.plus2 &= ~THELM_TYPE_MASK; 
     item.plus2 |= type;
@@ -599,11 +601,21 @@ void set_helmet_desc( item_def &item, short type )
     ASSERT( item.base_type == OBJ_ARMOUR 
             && get_armour_slot( item ) == EQ_HELMET );
 
-    if (item.sub_type == ARM_CAP && type > THELM_DESC_PLUMED)
+    const int helmtype = get_helmet_type(item);
+    if ((helmtype == THELM_CAP || helmtype == THELM_WIZARD_HAT) 
+            && type > THELM_DESC_PLUMED)
         type = THELM_DESC_PLAIN;
 
     item.plus2 &= ~THELM_DESC_MASK; 
     item.plus2 |= type;
+}
+
+bool is_hard_helmet(const item_def &item)
+{
+    return (item.base_type == OBJ_ARMOUR
+            && item.sub_type == ARM_HELMET
+            && (get_helmet_type(item) == THELM_HELM
+                || get_helmet_type(item) == THELM_HELMET));
 }
 
 void set_helmet_random_desc( item_def &item )
@@ -613,7 +625,7 @@ void set_helmet_random_desc( item_def &item )
 
     item.plus2 &= ~THELM_DESC_MASK; 
 
-    if (item.sub_type == ARM_HELMET)
+    if (is_hard_helmet(item))
         item.plus2 |= (random2(8) << 8);
     else 
         item.plus2 |= (random2(5) << 8);
@@ -816,6 +828,11 @@ bool armour_not_shiny( const item_def &item )
     case ARM_TROLL_LEATHER_ARMOUR:
         return (true);
 
+    case ARM_HELMET:
+    {
+        const int helmtype = get_helmet_type(item);
+        return (helmtype == THELM_CAP || helmtype == THELM_WIZARD_HAT);
+    }
     default:
         break;
     }
@@ -984,7 +1001,9 @@ bool check_armour_shape( const item_def &item, bool quiet )
             break;
 
         case EQ_HELMET:
-            if (item.sub_type == ARM_CAP)
+            if (item.sub_type == ARM_CAP
+                    || get_helmet_type(item) == THELM_CAP
+                    || get_helmet_type(item) == THELM_WIZARD_HAT)
                 break;
 
             if (you.species == SP_KENKU)
