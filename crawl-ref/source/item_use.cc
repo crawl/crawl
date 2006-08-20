@@ -1367,7 +1367,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
         // ranged combat. Removed the old model which is... silly.
         
         shoot_skill = you.skills[launcher_skill];
-        effSkill = (shoot_skill * 2 + skill_bump(SK_RANGED_COMBAT)) / 3;
+        effSkill = (shoot_skill * 2 + rc_skill) / 3;
 
         // FIXME: Use actual body size
         if (!two_handed && hands_reqd(launcher, SIZE_MEDIUM) == HANDS_HALF)
@@ -1401,12 +1401,11 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
         // [dshaligram] This can get large...
         exDamBonus = lnchDamBonus + ammoDamBonus;
-        exHitBonus = lnchHitBonus;
+        exDamBonus = exDamBonus > 0? random2avg(exDamBonus + 1, 2)
+                                   : exDamBonus;
+        exHitBonus = lnchHitBonus > 0? random2avg(lnchHitBonus + 1, 2)
+                                     : lnchHitBonus;
 
-        // Raw ranged combat skill also helps with damage.
-        if (lnchType != WPN_BLOWGUN)
-            exDamBonus += rc_skill / 4;
-        
         // removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
@@ -1440,6 +1439,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             // blowguns take a _very_ steady hand;  a lot of the bonus
             // comes from dexterity.  (Dex bonus here as well as below)
         case SK_DARTS:
+            baseHit -= 2;
             exercise(SK_DARTS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
 
@@ -1455,6 +1455,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
         case SK_BOWS:
         {
+            baseHit -= 3;
             exercise(SK_BOWS, (coinflip()? 2 : 1));
             exHitBonus += (effSkill * 2);
 
@@ -1470,7 +1471,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
             exDamBonus += strbonus;
 
             // add in skill for bows.. help you to find those vulnerable spots.
-            exDamBonus += effSkill * 5 / 4;
+            exDamBonus += effSkill;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
@@ -1481,7 +1482,7 @@ static void throw_it(struct bolt &pbolt, int throw_2)
 
         case SK_CROSSBOWS:
             exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
-            baseHit += 2;
+            baseHit++;
             exHitBonus += (3 * effSkill) / 2 + 6;
             exDamBonus += effSkill * 2 / 3 + 4;
             if (lnchType == WPN_HAND_CROSSBOW)

@@ -2008,7 +2008,7 @@ void openingScreen(void)
 ********************************************** */
 
     textcolor( YELLOW );
-    cprintf("Hello, welcome to Dungeon Crawl " VERSION "!");
+    cprintf("Hello, welcome to Dungeon Crawl Stone Soup " VERSION "!");
     textcolor( BROWN );
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
     cprintf(EOL "Please consult crawl.txt for instructions and legal details."

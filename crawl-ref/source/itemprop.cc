@@ -319,7 +319,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT, false,
         DAMV_NON_MELEE },
-    { WPN_BOW,               "bow",                 4,  2, 11,  90,  2,
+    { WPN_BOW,               "bow",                 4,  1, 11,  90,  2,
         SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW, false,
         DAMV_NON_MELEE },
     { WPN_LONGBOW,           "longbow",             5,  0, 12, 120,  3,
