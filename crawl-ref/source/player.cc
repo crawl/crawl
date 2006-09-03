@@ -377,11 +377,12 @@ int player_damage_type( void )
     {
         return (damage_type(you.inv[wpn]));
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
+    else if (you.equip[EQ_GLOVES] == -1 &&
+        (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
             || you.mutation[MUT_CLAWS] 
             || you.species == SP_TROLL
-            || you.species == SP_GHOUL)
+            || you.species == SP_GHOUL))
     {
         return (DVORP_SLICING);
     }
