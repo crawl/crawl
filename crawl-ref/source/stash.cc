@@ -468,8 +468,6 @@ void Stash::write(std::ostream &os,
                   bool identify) 
     const
 {
-    int i;
-    
     if (!enabled || (items.size() == 0 && verified)) return;
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")
@@ -477,7 +475,7 @@ void Stash::write(std::ostream &os,
        << std::endl;
     
     char buf[ITEMNAME_SIZE];
-    for (i = 0; i < (int) items.size(); ++i)
+    for (int i = 0; i < (int) items.size(); ++i)
     {
         item_def item = items[i];
 
@@ -513,9 +511,9 @@ void Stash::write(std::ostream &os,
             if (desc.length())
             {
                 // Walk backwards and prepend indenting spaces to \n characters
-                for (i = desc.length() - 1; i >= 0; --i)
-                    if (desc[i] == '\n')
-                        desc.insert(i + 1, " ");
+                for (int j = desc.length() - 1; j >= 0; --j)
+                    if (desc[j] == '\n')
+                        desc.insert(j + 1, " ");
                 os << "    " << desc << std::endl;
             }
         }
