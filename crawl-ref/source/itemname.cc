@@ -484,6 +484,12 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                 case DVORP_CHOPPING:
                     strncat(buff, (terse) ? " (chop)" : " of chopping", ITEMNAME_SIZE );
                     break;
+                case DVORP_SLASHING:
+                    strncat(buff, (terse) ? " (slash)" : " of slashing", ITEMNAME_SIZE );
+                    break;
+                case DVORP_STABBING:
+                    strncat(buff, (terse) ? " (stab)" : " of stabbing", ITEMNAME_SIZE );
+                    break;
                 }
                 break;
 

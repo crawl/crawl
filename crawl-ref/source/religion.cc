@@ -1321,12 +1321,15 @@ bool did_god_conduct( int thing_done, int level )
     {
         static const char *conducts[] = 
         {
+          "",
           "Necromancy", "Unholy", "Attack Holy", "Attack Friend",
           "Friend Died", "Stab", "Poison", "Field Sacrifice",
-          "Kill Living", "Kill Undead", "Kill Demon", "Kill Wizard",
+          "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
+          "Kill Wizard",
           "Kill Priest", "Kill Angel", "Undead Slave Kill Living", 
           "Servant Kill Living", "Servant Kill Undead", 
-          "Servant Kill Demon", "Servant Kill Angel",
+          "Servant Kill Demon", "Servant Kill Natural Evil", 
+          "Servant Kill Angel",
           "Spell Memorise", "Spell Cast", "Spell Practise", "Spell Nonutility",
           "Cards", "Stimulants", "Eat Meat", "Create Life" 
         };

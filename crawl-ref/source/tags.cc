@@ -1668,6 +1668,11 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
             mitm[i].flags = (unsigned long) unmarshallLong(th);
         }
 
+        // [dshaligram] FIXME, remove this kludge when ARM_CAP is fully
+        // integrated.
+        if (mitm[i].base_type == OBJ_ARMOUR && mitm[i].sub_type == ARM_CAP)
+            mitm[i].sub_type = ARM_HELMET;
+
         // pre 4.2 files had monster items stacked at (2,2) -- moved to (0,0)
         if (minorVersion < 2 && mitm[i].x == 2 && mitm[i].y == 2)
         {
