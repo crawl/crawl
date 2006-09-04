@@ -2753,13 +2753,13 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         mitm[bp].base_type = OBJ_WEAPONS;
 
         temp_rand = random2(100);
-        mitm[bp].sub_type = ((temp_rand > 80) ? WPN_LONG_SWORD :    // 20%
-                             (temp_rand > 60) ? WPN_SHORT_SWORD :   // 20%
-                             (temp_rand > 48) ? WPN_SCIMITAR :      // 12%
-                             (temp_rand > 36) ? WPN_MACE :          // 12%
-                             (temp_rand > 24) ? WPN_BOW :           // 12%
-                             (temp_rand > 12) ? WPN_LONGBOW         // 12%
-                                              : WPN_HAND_CROSSBOW); // 12%
+        mitm[bp].sub_type = ((temp_rand > 79) ? WPN_LONG_SWORD :    // 20%
+                             (temp_rand > 59) ? WPN_SHORT_SWORD :   // 20%
+                             (temp_rand > 45) ? WPN_SCIMITAR :      // 14%
+                             (temp_rand > 31) ? WPN_MACE :          // 14%
+                             (temp_rand > 18) ? WPN_BOW :           // 13%
+                             (temp_rand >  5) ? WPN_HAND_CROSSBOW   // 13%
+                                              : WPN_LONGBOW);       //  6%
         break;
 
     case MONS_DEEP_ELF_ANNIHILATOR:
@@ -2934,7 +2934,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         mitm[bp].base_type = OBJ_WEAPONS;
         mitm[bp].sub_type = WPN_BOW;
         if (menv[mid].type == MONS_CENTAUR_WARRIOR
-                && one_chance_in(5))
+                && one_chance_in(3))
             mitm[bp].sub_type = WPN_LONGBOW;
         break;
 
