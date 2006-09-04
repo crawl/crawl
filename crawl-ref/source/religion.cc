@@ -1681,7 +1681,7 @@ void lose_piety(char pgn)
             case GOD_TROG:
                 break;
             case GOD_VEHUMET:
-                simple_god_message(" will longer shield you from summoned creatures.");
+                simple_god_message(" will no longer shield you from summoned creatures.");
                 break;
             default:
                 strcpy(info, "You can no longer ");
@@ -2688,7 +2688,10 @@ void handle_god_time(void)
             break;
 
         case GOD_SIF_MUNA:
-            if (one_chance_in(20))
+            // [dshaligram] Sif Muna is now very patient - has to be
+            // to make up with the new spell training requirements, else
+            // it's practically impossible to get Master of Arcane status.
+            if (one_chance_in(45))
                 lose_piety(1);
             if (you.piety < 1)
                 excommunication();

@@ -2514,10 +2514,10 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
         switch (item->sub_type)
         {
         case MI_NEEDLE: chance = 6 + you.skills[SK_RANGED_COMBAT] / 6; break;
-        case MI_STONE:  chance = 3 + you.skills[SK_RANGED_COMBAT] / 4; break;
-        case MI_DART:   chance = 2 + you.skills[SK_RANGED_COMBAT] / 6; break;
-        case MI_ARROW:  chance = 2 + you.skills[SK_RANGED_COMBAT] / 4; break;
-        case MI_BOLT:   chance = 2 + you.skills[SK_RANGED_COMBAT] / 5; break;
+        case MI_STONE:  chance = 5 + you.skills[SK_RANGED_COMBAT] / 4; break;
+        case MI_DART:   chance = 3 + you.skills[SK_RANGED_COMBAT] / 3; break;
+        case MI_ARROW:  chance = 3 + you.skills[SK_RANGED_COMBAT] / 2; break;
+        case MI_BOLT:   chance = 4 + you.skills[SK_RANGED_COMBAT] / 4; break;
 
         case MI_LARGE_ROCK:
         default:
