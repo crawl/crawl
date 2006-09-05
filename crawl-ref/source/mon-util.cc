@@ -903,9 +903,16 @@ int exper_value( struct monsters *monster )
     return (x_val);
 }                               // end exper_value()
 
+void mons_spell_list(const monsters *monster, int splist[6])
+{
+    int msecc = ((monster->type == MONS_HELLION)       ? MST_BURNING_DEVIL :
+             (monster->type == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
+                                                       : monster->number);
+    return mons_spell_list(msecc, splist);
+}
 
 // this needs to be rewritten a la the monsterseek rewrite {dlb}:
-void mons_spell_list( unsigned char sec, int splist[6] )
+void mons_spell_list( int sec, int splist[6] )
 {
     unsigned int x;
 
@@ -2106,7 +2113,35 @@ const char *mons_pronoun(int mon_type, int variant)
     return ("");
 }
 
-bool monster_can_swap(const monsters *m)
+/*
+ * Checks if the monster can use smiting/torment to attack without unimpeded
+ * LOS to the player.
+ */
+static bool mons_can_smite(const monsters *monster)
+{
+    if (monster->type == MONS_FIEND)
+        return (true);
+
+    int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
+                           MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
+    mons_spell_list(monster, hspell_pass);
+    for (unsigned i = 0; i < sizeof(hspell_pass) / sizeof(hspell_pass[0]); ++i)
+        if (hspell_pass[i] == MS_TORMENT || hspell_pass[i] == MS_SMITE)
+            return (true);
+
+    return (false);
+}
+
+/*
+ * Determines if a monster is smart and pushy enough to displace other monsters.
+ * A shover should not cause damage to the shovee by displacing it, so monsters
+ * that trail clouds of badness are ineligible. The shover should also benefit
+ * from shoving, so monsters that can smite/torment are ineligible.
+ *
+ * (Smiters would be eligible for shoving when fleeing if the AI allowed for 
+ * smart monsters to flee.)
+ */
+bool monster_shover(const monsters *m)
 {
     const monsterentry *me = seekmonster(m->type);
     if (!me)
@@ -2117,6 +2152,9 @@ bool monster_can_swap(const monsters *m)
     if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
             || m->type == MONS_ROTTING_DEVIL)
         return (false);
+
+    if (mons_can_smite(m))
+        return (false);
     
     int mchar = me->showchar;
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
@@ -2124,7 +2162,8 @@ bool monster_can_swap(const monsters *m)
     // aren't pushers and shovers, zombies are zombies. Worms and elementals
     // are on the list because all 'w' are currently unrelated.
     return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
-            && mchar != 'G' && mchar != 'Z' && mchar != 'w' && mchar != '#');
+            && mchar != 'G' && mchar != 'Z' && mchar != 'z'
+            && mchar != 'w' && mchar != '#');
 }
 
 // Returns true if m1 and m2 are related, and m1 is higher up the totem pole

@@ -1873,8 +1873,9 @@ void divine_retribution( int god )
                     dec_penance( GOD_SHINING_ONE, 1 );
                 }
             }
+            break;
         }
-        break;
+        return;
 
     case GOD_ZIN:
         // angels/creeping doom theme:
@@ -1907,8 +1908,9 @@ void divine_retribution( int god )
                 summon_swarm( you.experience_level * 20, true, false );
                 simple_god_message(" sends a plague down upon you!", god);
             }
+            break;
         }
-        break;
+        return;
 
     case GOD_MAKHLEB:
         // demonic servant theme

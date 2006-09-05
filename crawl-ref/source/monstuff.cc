@@ -3073,11 +3073,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
         int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
                                MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
 
-        int msecc = ((monster->type == MONS_HELLION)       ? MST_BURNING_DEVIL :
-                 (monster->type == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                           : monster->number);
-
-        mons_spell_list( msecc, hspell_pass );
+        mons_spell_list(monster, hspell_pass);
 
         // forces the casting of dig when player not visible - this is EVIL!
         if (!monsterNearby)
@@ -4242,7 +4238,7 @@ static bool mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
         return (false);
 
-    if (!monster_can_swap(mpusher))
+    if (!monster_shover(mpusher))
         return (false);
 
     if (!monster_senior(mpusher, mpushee))

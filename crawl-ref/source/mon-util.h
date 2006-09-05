@@ -348,7 +348,8 @@ const char *moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void mons_spell_list(unsigned char sec, int splist[6]);
+void mons_spell_list(int sec, int splist[6]);
+void mons_spell_list(const monsters *monster, int splist[6]);
 
 #if DEBUG_DIAGNOSTICS
 // last updated 25sep2001 {dlb}
@@ -430,7 +431,7 @@ bool mons_is_stationary(const monsters *mons);
 
 bool invalid_monster(const monsters *mons);
 
-bool monster_can_swap(const monsters *m);
+bool monster_shover(const monsters *m);
 bool mons_is_paralysed(const monsters *m);
 
 bool monster_senior(const monsters *first, const monsters *second);
