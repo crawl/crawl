@@ -1761,34 +1761,23 @@ static void dfs_set_ranged_skill(int skill, const item_def *item)
     you.skills[SK_RANGED_COMBAT]   = skill * 15 / 27;
 }
 
-static void dfs_ranged_item(FILE *out, const item_def *launcher,
+static void dfs_item(FILE *out, 
+                            bool melee,
+                            const item_def *weap,
                             int wskill, unsigned long damage,
                             long iterations, long hits,
-                            int maxdam)
+                            int maxdam, unsigned long time)
 {
     double hitdam = hits? double(damage) / hits : 0.0;
-    fprintf(out, "Ranged: %s %d. Accuracy: %ld%%, av damage: %.2f, av hitdam: %.2f, max: %d\n",
-            skill_name( range_skill(*launcher) ),
+    int avspeed = (int) (time / iterations);
+    fprintf(out, " %2d   |  %3ld%%    |  %5.2f |    %5.2f  |   %5.2f |   %3d   |   %2ld\n",
             wskill,
             100 * hits / iterations,
             double(damage) / iterations,
             hitdam,
-            maxdam);
-}
-
-static void dfs_melee_item(FILE *out, const item_def *item,
-                           int wskill, unsigned long damage,
-                           long iterations, long hits,
-                           int maxdam)
-{
-    double hitdam = hits? double(damage) / hits : 0.0;
-    fprintf(out, "Melee: %s %d. Accuracy: %ld%%, av damage: %.2f, av hitdam: %.2f, max: %d\n",
-            skill_name( dfs_melee_skill(item) ),
-            wskill,
-            100 * hits / iterations,
-            double(damage) / iterations,
-            hitdam,
-            maxdam);
+            double(damage) * player_speed() / avspeed / iterations,
+            maxdam,
+            time / iterations);
 }
 
 static bool dfs_ranged_combat(FILE *out, int wskill, int mi, 
@@ -1796,6 +1785,7 @@ static bool dfs_ranged_combat(FILE *out, int wskill, int mi,
 {
     monsters &mon = menv[mi];
     unsigned long cumulative_damage = 0L;
+    unsigned long time_taken = 0L;
     long hits = 0L;
     int maxdam = 0;
 
@@ -1815,17 +1805,19 @@ static bool dfs_ranged_combat(FILE *out, int wskill, int mi,
     {
         mon.hit_points = mon.max_hit_points;
         bolt beam;
+        you.time_taken = player_speed();
         if (throw_it(beam, thrown, &mon))
             hits++;
         you.hunger = hunger;
+        time_taken += you.time_taken;
 
         int damage = (mon.max_hit_points - mon.hit_points);
         cumulative_damage += damage;
         if (damage > maxdam)
             maxdam = damage;
     }
-    dfs_ranged_item(out, item, wskill, cumulative_damage, 
-                    iter_limit, hits, maxdam);
+    dfs_item(out, false, item, wskill, cumulative_damage, 
+                    iter_limit, hits, maxdam, time_taken);
 
     return (true);
 }
@@ -1835,6 +1827,7 @@ static bool dfs_melee_combat(FILE *out, int wskill, int mi,
 {
     monsters &mon = menv[mi];
     unsigned long cumulative_damage = 0L;
+    unsigned long time_taken = 0L;
     long hits = 0L;    
     int maxdam = 0;
 
@@ -1846,17 +1839,20 @@ static bool dfs_melee_combat(FILE *out, int wskill, int mi,
     for (long i = 0; i < iter_limit; ++i)
     {
         mon.hit_points = mon.max_hit_points;
+        you.time_taken = player_speed();
         if (you_attack(mi, true))
             hits++;
+
         you.hunger = hunger;
+        time_taken += you.time_taken;
 
         int damage = (mon.max_hit_points - mon.hit_points);
         cumulative_damage += damage;
         if (damage > maxdam)
             maxdam = damage;
     }
-    dfs_melee_item(out, item, wskill, cumulative_damage, iter_limit, hits,
-                   maxdam);
+    dfs_item(out, true, item, wskill, cumulative_damage, iter_limit, hits,
+                   maxdam, time_taken);
 
     return (true);
 }
@@ -1871,6 +1867,25 @@ static bool debug_fight_simulate(FILE *out, int wskill, int mi)
         return dfs_ranged_combat(out, wskill, mi, iweap);
     else
         return dfs_melee_combat(out, wskill, mi, iweap);
+}
+
+static const item_def *dfs_weap_item()
+{
+    const int weap = you.equip[EQ_WEAPON];
+    if (weap == -1)
+        return NULL;
+
+    return &you.inv[weap];
+}
+
+static std::string dfs_wskill()
+{
+    const item_def *iweap = dfs_weap_item();
+    return iweap && iweap->base_type == OBJ_WEAPONS 
+             && is_range_weapon(*iweap)?
+                        skill_name( range_skill(*iweap) ) :
+            iweap?      skill_name( dfs_melee_skill(iweap) ) :
+                        skill_name( SK_UNARMED_COMBAT );
 }
 
 static std::string dfs_weapon()
@@ -1911,9 +1926,12 @@ static void dfs_title(FILE *o, int mon)
     fprintf(o, "Experience: %d\n", you.experience_level);
     fprintf(o, "Strength  : %d\n", you.strength);
     fprintf(o, "Intel.    : %d\n", you.intel);
-    fprintf(o, "Dexterity : %d\n", you.dex);
-    fprintf(o, "\nWeapon    : %s\n", dfs_weapon().c_str());
+    fprintf(o, "Dexterity : %d\n\n", you.dex);
+    fprintf(o, "Weapon    : %s\n", dfs_weapon().c_str());
+    fprintf(o, "Skill     : %s\n", dfs_wskill().c_str());
+    fprintf(o, "Base speed: %d\n", player_speed());
     fprintf(o, "\n");
+    fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
 static int fsim_stat(int stat)
