@@ -580,6 +580,10 @@ static void handle_wizard_command( void )
         tweak_object();
         break;
 
+    case 'F':
+        debug_fight_statistics();
+        break;
+
     case 'm':
         create_spec_monster();
         break;

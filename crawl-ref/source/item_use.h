@@ -15,6 +15,7 @@
 
 
 #include <string>
+#include "externs.h"
 
 
 // last updated 12may2000 {dlb}
@@ -129,5 +130,7 @@ void use_randart( unsigned char item_wield_2 );
 bool puton_item(int slot, bool prompt_finger = true);
 
 bool enchant_weapon( int which_stat, bool quiet = false );
+
+bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
 
 #endif

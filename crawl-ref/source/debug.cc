@@ -29,9 +29,11 @@
 
 #include "direct.h"
 #include "dungeon.h"
+#include "fight.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -393,30 +395,24 @@ void TRACE(const char *format, ...)
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-static int debug_prompt_for_monster( void )
-{
-    char  specs[80];
-    char  obj_name[ ITEMNAME_SIZE ];
-    char *ptr;
 
-    mpr( "(Hint: 'generated' names, eg 'orc zombie', won't work)", MSGCH_PROMPT );
-    mpr( "Which monster by name? ", MSGCH_PROMPT );
-    get_input_line( specs, sizeof( specs ) );
-    
-    if (specs[0] == '\0')
-        return (-1);
+static int get_monnum(const char *name)
+{
+    char search[ITEMNAME_SIZE],
+         mname[ITEMNAME_SIZE];
+    strncpy(search, name, sizeof search);
+    search[ITEMNAME_SIZE - 1] = 0;
+    strlwr(search);
 
     int mon = -1;
-
     for (int i = 0; i < NUM_MONSTERS; i++)
     {
-        moname( i, true, DESC_PLAIN, obj_name );
+        moname( i, true, DESC_PLAIN, mname );
 
-        ptr = strstr( strlwr(obj_name), strlwr(specs) );
+        const char *ptr = strstr( strlwr(mname), search );
         if (ptr != NULL)
         {
-            mpr( obj_name );
-            if (ptr == obj_name)
+            if (ptr == mname)
             {
                 // we prefer prefixes over partial matches
                 mon = i;
@@ -426,8 +422,21 @@ static int debug_prompt_for_monster( void )
                 mon = i;
         }
     }
-
     return (mon);
+}
+
+static int debug_prompt_for_monster( void )
+{
+    char  specs[80];
+
+    mpr( "(Hint: 'generated' names, eg 'orc zombie', won't work)", MSGCH_PROMPT );
+    mpr( "Which monster by name? ", MSGCH_PROMPT );
+    get_input_line( specs, sizeof( specs ) );
+    
+    if (specs[0] == '\0')
+        return (-1);
+
+    return (get_monnum(specs));
 }
 #endif
 
@@ -1715,3 +1724,276 @@ void error_message_to_player(void)
     mpr("I suggest you leave this level then save as soon as possible.");
 
 }                               // end error_message_to_player()
+
+#ifdef WIZARD
+
+static int create_dfs_monster(int mtype, int hp)
+{
+    const int mi = 
+        create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos, 
+                        MHITNOT, 250 );
+
+    if (mi == -1)
+        return (mi);
+
+    monsters *mon = &menv[mi];
+    mon->hit_points = mon->max_hit_points = hp;
+    return (mi);
+}
+
+static skill_type dfs_melee_skill(const item_def *item)
+{
+    skill_type sk = SK_UNARMED_COMBAT;
+    if (item)
+        sk = weapon_skill(*item);
+    return (sk);
+}
+
+static void dfs_set_melee_skill(int skill, const item_def *item)
+{
+    you.skills[dfs_melee_skill(item)] = skill;
+    you.skills[SK_FIGHTING]           = skill * 15 / 27;
+}
+
+static void dfs_set_ranged_skill(int skill, const item_def *item)
+{
+    you.skills[range_skill(*item)] = skill;
+    you.skills[SK_RANGED_COMBAT]   = skill * 15 / 27;
+}
+
+static void dfs_ranged_item(FILE *out, const item_def *launcher,
+                            int wskill, unsigned long damage,
+                            long iterations, long hits,
+                            int maxdam)
+{
+    double hitdam = hits? double(damage) / hits : 0.0;
+    fprintf(out, "Ranged: %s %d. Accuracy: %ld%%, av damage: %.2f, av hitdam: %.2f, max: %d\n",
+            skill_name( range_skill(*launcher) ),
+            wskill,
+            100 * hits / iterations,
+            double(damage) / iterations,
+            hitdam,
+            maxdam);
+}
+
+static void dfs_melee_item(FILE *out, const item_def *item,
+                           int wskill, unsigned long damage,
+                           long iterations, long hits,
+                           int maxdam)
+{
+    double hitdam = hits? double(damage) / hits : 0.0;
+    fprintf(out, "Melee: %s %d. Accuracy: %ld%%, av damage: %.2f, av hitdam: %.2f, max: %d\n",
+            skill_name( dfs_melee_skill(item) ),
+            wskill,
+            100 * hits / iterations,
+            double(damage) / iterations,
+            hitdam,
+            maxdam);
+}
+
+static bool dfs_ranged_combat(FILE *out, int wskill, int mi, 
+                             const item_def *item)
+{
+    monsters &mon = menv[mi];
+    unsigned long cumulative_damage = 0L;
+    long hits = 0L;
+    int maxdam = 0;
+
+    const int thrown = get_fire_item_index();
+    if (thrown == ENDOFPACK)
+    {
+        mprf("No suitable missiles for combat simulation.");
+        return (false);
+    }
+
+    dfs_set_ranged_skill(wskill, item);
+
+    no_messages mx;
+    const long iter_limit = Options.fsim_rounds;
+    const int hunger = you.hunger;
+    for (long i = 0; i < iter_limit; ++i)
+    {
+        mon.hit_points = mon.max_hit_points;
+        bolt beam;
+        if (throw_it(beam, thrown, &mon))
+            hits++;
+        you.hunger = hunger;
+
+        int damage = (mon.max_hit_points - mon.hit_points);
+        cumulative_damage += damage;
+        if (damage > maxdam)
+            maxdam = damage;
+    }
+    dfs_ranged_item(out, item, wskill, cumulative_damage, 
+                    iter_limit, hits, maxdam);
+
+    return (true);
+}
+
+static bool dfs_melee_combat(FILE *out, int wskill, int mi, 
+                             const item_def *item)
+{
+    monsters &mon = menv[mi];
+    unsigned long cumulative_damage = 0L;
+    long hits = 0L;    
+    int maxdam = 0;
+
+    dfs_set_melee_skill(wskill, item);
+
+    no_messages mx;
+    const long iter_limit = Options.fsim_rounds;
+    const int hunger = you.hunger;
+    for (long i = 0; i < iter_limit; ++i)
+    {
+        mon.hit_points = mon.max_hit_points;
+        if (you_attack(mi, true))
+            hits++;
+        you.hunger = hunger;
+
+        int damage = (mon.max_hit_points - mon.hit_points);
+        cumulative_damage += damage;
+        if (damage > maxdam)
+            maxdam = damage;
+    }
+    dfs_melee_item(out, item, wskill, cumulative_damage, iter_limit, hits,
+                   maxdam);
+
+    return (true);
+}
+
+static bool debug_fight_simulate(FILE *out, int wskill, int mi)
+{
+    int weapon = you.equip[EQ_WEAPON];
+    const item_def *iweap = weapon != -1? &you.inv[weapon] : NULL;
+
+    if (iweap && iweap->base_type == OBJ_WEAPONS 
+            && is_range_weapon(*iweap))
+        return dfs_ranged_combat(out, wskill, mi, iweap);
+    else
+        return dfs_melee_combat(out, wskill, mi, iweap);
+}
+
+static std::string dfs_weapon()
+{
+    char item_buf[ITEMNAME_SIZE];
+    if (you.equip[EQ_WEAPON] != -1)
+    {
+        const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
+        item_name(weapon, DESC_PLAIN, item_buf, true);
+
+        if (is_range_weapon(weapon))
+        {
+            const int missile = get_fire_item_index();
+            if (missile < ENDOFPACK)
+            {
+                std::string base = item_buf;
+                base += " with ";
+                in_name(missile, DESC_PLAIN, item_buf, true);
+                return (base + item_buf);
+            }
+        }
+    }
+    else
+    {
+        strncpy(item_buf, "unarmed", sizeof item_buf);
+    }
+    return (item_buf);
+}
+
+static void dfs_title(FILE *o, int mon)
+{
+    char buf[ITEMNAME_SIZE];
+    fprintf(o, "Combat simulation: %s %s vs. %s (%ld turns)\n",
+            species_name(you.species, you.experience_level),
+            you.class_name,
+            moname(menv[mon].type, true, DESC_PLAIN, buf),
+            Options.fsim_rounds);
+    fprintf(o, "Experience: %d\n", you.experience_level);
+    fprintf(o, "Strength  : %d\n", you.strength);
+    fprintf(o, "Intel.    : %d\n", you.intel);
+    fprintf(o, "Dexterity : %d\n", you.dex);
+    fprintf(o, "\nWeapon    : %s\n", dfs_weapon().c_str());
+    fprintf(o, "\n");
+}
+
+static int fsim_stat(int stat)
+{
+    return (stat <  1 ? 1  :
+            stat > 60 ? 60 :
+                        stat);
+}
+
+// Writes statistics about a fight to fight.stat in the current directory.
+// For fight purposes, a punching bag is summoned and given lots of hp, and the
+// average damage the player does to the p. bag over 10000 hits is noted, 
+// advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
+// of current weapon skill.
+void debug_fight_statistics()
+{
+    int punching_bag = get_monnum(Options.fsim_mons.c_str());
+    if (punching_bag == -1)
+        punching_bag = MONS_WORM;
+
+    int mindex = create_dfs_monster(punching_bag, 500);
+    if (mindex == -1)
+    {
+        mprf("Failed to create punching bag");
+        return;
+    }
+
+    FILE *ostat = fopen("fight.stat", "a");
+    if (!ostat)
+    {
+        mprf("Can't write fight.stat: %s", strerror(errno));
+        return;
+    }
+
+    FixedVector<unsigned char, 50> skill_backup = you.skills;
+    int ystr = you.strength,
+        yint = you.intel,
+        ydex = you.dex;
+    int yxp  = you.experience_level;
+
+    you.experience_level = Options.fsim_xl;
+    if (you.experience_level < 1)
+        you.experience_level = 1;
+    if (you.experience_level > 27)
+        you.experience_level = 27;
+
+    you.strength = fsim_stat(Options.fsim_str);
+    you.intel    = fsim_stat(Options.fsim_int);
+    you.dex      = fsim_stat(Options.fsim_dex);
+
+    dfs_title(ostat, mindex);
+    for (int wskill = 0; wskill <= 27; ++wskill)
+    {
+        mesclr();
+        mprf("Calculating average damage for %s at skill %d",
+                dfs_weapon().c_str(), wskill);
+        if (!debug_fight_simulate(ostat, wskill, mindex))
+            goto done_combat_sim;
+        
+        fflush(ostat);
+        // Not checking in the combat loop itself; that would be more responsive
+        // for the user, but slow down the sim with all the calls to kbhit().
+        if (kbhit() && getch() == 27)
+        {
+            mprf("Canceling simulation\n");
+            goto done_combat_sim;
+        }
+    }
+    you.skills = skill_backup;
+    you.strength = ystr;
+    you.intel    = yint;
+    you.dex      = ydex;
+    you.experience_level = yxp;
+
+    mprf("Done fight simulation with %s", dfs_weapon().c_str());
+
+done_combat_sim:
+    fprintf(ostat, "-----------------------------------\n\n");
+
+    fclose(ostat);
+    monster_die(&menv[mindex], KILL_DISMISSED, 0);
+}
+#endif

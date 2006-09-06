@@ -775,6 +775,12 @@ struct game_options
 
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
+
+    // Parameters for fight simulations.
+    long        fsim_rounds;
+    int         fsim_str, fsim_int, fsim_dex;
+    int         fsim_xl;
+    std::string fsim_mons;
     
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are

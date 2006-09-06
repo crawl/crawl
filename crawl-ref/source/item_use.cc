@@ -68,7 +68,6 @@
 #include "wpn-misc.h"
 
 bool drink_fountain(void);
-static void throw_it(struct bolt &pbolt, int throw_2);
 void use_randart(unsigned char item_wield_2);
 static bool enchant_armour( void );
 
@@ -1159,7 +1158,12 @@ void shoot_thing(void)
 
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
-static void throw_it(struct bolt &pbolt, int throw_2)
+// Note: If dummy_target is non-NULL, throw_it fakes a bolt and calls
+// affect() on the monster's square.
+//
+// Return value is only relevant if dummy_target is non-NULL, and returns
+// true if dummy_target is hit.
+bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 {
     struct dist thr;
     char shoot_skill = 0;
@@ -1176,16 +1180,26 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
 
-    mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
-    message_current_target();
-    direction( thr, DIR_NONE, TARG_ENEMY );
+    if (dummy_target)
+    {
+        thr.isValid = true;
+        thr.isCancel = false;
+        thr.tx = dummy_target->x;
+        thr.ty = dummy_target->y;
+    }
+    else
+    {
+        mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
+        message_current_target();
+        direction( thr, DIR_NONE, TARG_ENEMY );
+    }
 
     if (!thr.isValid)
     {
         if (thr.isCancel)
             canned_msg(MSG_OK);
 
-        return;
+        return (false);
     }
 
     // Must unwield before fire_beam() makes a copy in order to remove things
@@ -1783,10 +1797,16 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
 
+    bool hit = false;
     // using copy, since the launched item might be differect (venom blowgun)
-    fire_beam( pbolt, &item );
+    if (dummy_target)
+        hit = (affect( pbolt, dummy_target->x, dummy_target->y ) != 0);
+    else
+    {
+        fire_beam( pbolt, &item );
 
-    dec_inv_item_quantity( throw_2, 1 );
+        dec_inv_item_quantity( throw_2, 1 );
+    }
 
     // throwing and blowguns are silent
     if (launched && lnchType != WPN_BLOWGUN)
@@ -1796,6 +1816,8 @@ static void throw_it(struct bolt &pbolt, int throw_2)
     alert_nearby_monsters();
 
     you.turn_is_over = 1;
+
+    return (hit);
 }                               // end throw_it()
 
 bool puton_item(int item_slot, bool prompt_finger)

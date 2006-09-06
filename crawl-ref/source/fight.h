@@ -32,7 +32,7 @@ int weapon_str_weight( int wpn_class, int wpn_type );
 /* ***********************************************************************
  * called from: acr - it_use3
  * *********************************************************************** */
-void you_attack(int monster_attacked, bool unarmed_attacks);
+bool you_attack(int monster_attacked, bool unarmed_attacks);
 
 
 // last updated: 08jun2000 {dlb}

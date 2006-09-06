@@ -433,6 +433,11 @@ void reset_options(bool clear_name)
     for (int i = 2; i < NUM_FIRE_TYPES; i++)
         Options.fire_order[i] = FIRE_NONE;
 
+    Options.fsim_rounds = 40000L;
+    Options.fsim_mons   = "worm";
+    Options.fsim_str = Options.fsim_int = Options.fsim_dex = 15;
+    Options.fsim_xl  = 10;
+
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
     Options.sc_entries             = 0;
@@ -1280,6 +1285,34 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "show_waypoints")
     {
         Options.show_waypoints = read_bool(field, Options.show_waypoints);
+    }
+    else if (key == "fsim_rounds")
+    {
+        Options.fsim_rounds = atol(field.c_str());
+        if (Options.fsim_rounds < 1000)
+            Options.fsim_rounds = 1000;
+        if (Options.fsim_rounds > 500000L)
+            Options.fsim_rounds = 500000L;
+    }
+    else if (key == "fsim_mons")
+    {
+        Options.fsim_mons = field;
+    }
+    else if (key == "fsim_str")
+    {
+        Options.fsim_str = atoi(field.c_str());
+    }
+    else if (key == "fsim_int")
+    {
+        Options.fsim_int = atoi(field.c_str());
+    }
+    else if (key == "fsim_dex")
+    {
+        Options.fsim_dex = atoi(field.c_str());
+    }
+    else if (key == "fsim_xl")
+    {
+        Options.fsim_xl = atoi(field.c_str());
     }
     else if (key == "travel_delay")
     {

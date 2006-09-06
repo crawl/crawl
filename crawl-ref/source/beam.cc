@@ -71,7 +71,6 @@ static FixedArray < bool, 19, 19 > explode_map;
 // be public):
 static void sticky_flame_monster( int mn, bool source, int hurt_final );
 static bool affectsWalls(struct bolt &beam);
-static int affect(struct bolt &beam, int x, int y);
 static bool isBouncy(struct bolt &beam);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(struct bolt &beam);
@@ -2684,7 +2683,7 @@ static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
 // 4. if cell holds monster, affect monster     affect_monster()
 // 5. return range used affectation.
 
-static int affect(struct bolt &beam, int x, int y)
+int affect(struct bolt &beam, int x, int y)
 {
     // extra range used by hitting something
     int rangeUsed = 0;

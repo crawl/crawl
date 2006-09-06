@@ -57,6 +57,15 @@ void mpr(const char *inf, int channel = MSGCH_PLAIN, int param = 0);
 void mprf( int channel, const char *format, ... );
 void mprf( const char *format, ... );
 
+class no_messages
+{
+public:
+    no_messages();
+    ~no_messages();
+private:
+    bool msuppressed;
+};
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr

@@ -39,6 +39,18 @@ int Next_Message = 0;                                 // end of messages
 
 char Message_Line = 0;                // line of next (previous?) message
 
+static bool suppress_messages = false;
+
+no_messages::no_messages() : msuppressed(suppress_messages)
+{
+    suppress_messages = true;
+}
+
+no_messages::~no_messages()
+{
+    suppress_messages = msuppressed;
+}
+
 static char god_message_altar_colour( char god )
 {
     int  rnd;
@@ -244,6 +256,9 @@ void mprf( const char *format, ... )
 
 void mpr(const char *inf, int channel, int param)
 {
+    if (suppress_messages)
+        return;
+
     char info2[80];
 
     int colour = channel_to_colour( channel, param );

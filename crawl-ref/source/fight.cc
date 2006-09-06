@@ -127,7 +127,8 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
-void you_attack(int monster_attacked, bool unarmed_attacks)
+// Returns true if you hit the monster.
+bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
     struct monsters *defender = &menv[monster_attacked];
 
@@ -273,7 +274,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
         if (random2(you.dex) < 4 || one_chance_in(5))
         {
             mpr("Unstable footing causes you to fumble your attack.");
-            return;
+            return (false);
         }
     }
 
@@ -949,7 +950,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 snprintf( info, INFO_SIZE, "You %s the ball lightning.", damage_noise);
                 mpr(info);
             }
-            return;
+            return (true);
         }
 
         if (damage_done < 1 && player_monster_visible( defender ))
@@ -1491,7 +1492,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                 if (coinflip())
                 {
                     monster_die(defender, KILL_RESET, 0);
-                    return;
+                    return (true);
                 }
                 break;
 
@@ -1526,7 +1527,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     if (defender->hit_points < 1)
     {
         monster_die(defender, KILL_YOU, 0);
-        return;
+        return (hit);
     }
 
     if (unarmed_attacks)
@@ -1840,7 +1841,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
                         strcat(info, "the ball lightning.");
                         mpr(info);
                     }
-                    return;
+                    return (true);
                 }
             }
             else
@@ -1858,7 +1859,7 @@ void you_attack(int monster_attacked, bool unarmed_attacks)
     if (hit)
         print_wounds(defender);
 
-    return;
+    return (hit);
 }                               // end you_attack()
 
 void monster_attack(int monster_attacking)
