@@ -48,6 +48,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "version.h"
 
 #ifndef WIZARD
 #define WIZARD
@@ -1918,6 +1919,7 @@ static std::string dfs_weapon()
 static void dfs_title(FILE *o, int mon)
 {
     char buf[ITEMNAME_SIZE];
+    fprintf(o, "Dungeon Crawl Stone Soup version " VERSION "\n\n");
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld turns)\n",
             species_name(you.species, you.experience_level),
             you.class_name,

@@ -108,6 +108,7 @@ int hands_reqd_for_weapon(int wclass, int wtype)
         case WPN_SCYTHE:
         case WPN_GLAIVE:
         case WPN_QUARTERSTAFF:
+        case WPN_LAJATANG:
         case WPN_BATTLEAXE:
         case WPN_EXECUTIONERS_AXE:
         case WPN_GREAT_SWORD:
@@ -130,7 +131,6 @@ int hands_reqd_for_weapon(int wclass, int wtype)
         case WPN_BROAD_AXE:
         case WPN_KATANA:
         case WPN_DOUBLE_SWORD:
-        case WPN_LAJATANG:
         case WPN_HAND_CROSSBOW:
         case WPN_BLOWGUN:
         case WPN_SLING:

@@ -1176,9 +1176,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
     int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
     int effSkill = 0;           // effective launcher skill
-    int damageMult = 100;
+    int dice_mult = 100;
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
+    int slayDam = 0;
 
     if (dummy_target)
     {
@@ -1334,7 +1335,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         int speed = 100;
 
         baseHit = property( launcher, PWPN_HIT );
-        baseDam = item_base_dam + random2(1 + lnch_base_dam);
+        baseDam = item_base_dam + lnch_base_dam;
 
         if (launcher_skill == SK_BOWS)
             speed_min = 40;
@@ -1443,7 +1444,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
             exDamBonus += strbonus;
             // add skill for slings.. helps to find those vulnerable spots
-            exDamBonus += effSkill / 2;
+            dice_mult = dice_mult * (15 + random2(1 + effSkill)) / 15;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
@@ -1485,7 +1486,9 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             exDamBonus += strbonus;
 
             // add in skill for bows.. help you to find those vulnerable spots.
-            exDamBonus += effSkill;
+            // exDamBonus += effSkill;
+            
+            dice_mult = dice_mult * (25 + random2(1 + effSkill)) / 25;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
@@ -1498,11 +1501,14 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             exercise(SK_CROSSBOWS, (coinflip()? 2 : 1));
             baseHit++;
             exHitBonus += (3 * effSkill) / 2 + 6;
-            exDamBonus += effSkill * 2 / 3 + 4;
+            // exDamBonus += effSkill * 2 / 3 + 4;
+
+            dice_mult = dice_mult * (33 + random2(1 + effSkill)) / 33;
+
             if (lnchType == WPN_HAND_CROSSBOW)
             {
                 exHitBonus -= 2;
-                exDamBonus -= 2;
+                dice_mult = dice_mult * 28 / 30;
             }
             break;
 
@@ -1520,8 +1526,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
         if (bow_brand == SPWPN_VORPAL)
         {
-            // Vorpal brand adds 35% damage bonus.
-            exDamBonus = exDamBonus * 135 / 100;
+            // Vorpal brand adds 25% damage bonus.
+            dice_mult = dice_mult * 125 / 100;
         }
 
         // special cases for flame, frost, poison, etc.
@@ -1539,7 +1545,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
         {
             // [dshaligram] Branded arrows are much stronger.
-            damageMult = 150;
+            dice_mult = dice_mult * 150 / 100;
 
             pbolt.flavour = BEAM_FIRE;
             strcpy(pbolt.beam_name, "bolt of ");
@@ -1565,7 +1571,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
         {
             // [dshaligram] Branded arrows are much stronger.
-            damageMult = 150;
+            dice_mult = dice_mult * 150 / 100;
 
             pbolt.flavour = BEAM_COLD;
             strcpy(pbolt.beam_name, "bolt of ");
@@ -1723,7 +1729,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
             // slaying bonuses
             if (!(launched && wepType == MI_NEEDLE))
-                exDamBonus += slaying_bonus(PWPN_DAMAGE);
+            {
+                slayDam = slaying_bonus(PWPN_DAMAGE);
+                slayDam = slayDam < 0? -random2(1 - slayDam)
+                                     : random2(1 + slayDam);
+            }
 
             exHitBonus += slaying_bonus(PWPN_HIT);
         }
@@ -1758,7 +1768,9 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     else
         pbolt.damage = dice_def( 1, baseDam - random2(0 - (exDamBonus - 1)) );
 
-    pbolt.damage.size = damageMult * pbolt.damage.size / 100;
+    pbolt.damage.size  = dice_mult * pbolt.damage.size / 100;
+    pbolt.damage.size += slayDam;
+
     scale_dice( pbolt.damage );
 
     // only add bonuses if we're throwing something sensible
