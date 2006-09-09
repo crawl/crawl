@@ -1298,7 +1298,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
 
     snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.beam_name );
 
-    if (random2( 50 + 10 * you.shield_blocks * you.shield_blocks ) 
+    if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
                                                 < player_shield_class())
     {
         you.shield_blocks++;
@@ -1871,6 +1871,9 @@ bool trap_item(char base_type, char sub_type, char beam_x, char beam_y)
         else
         {
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
+
+            if (sub_type == MI_ARROW)
+                item.colour = BROWN;
         }
     }
     else
