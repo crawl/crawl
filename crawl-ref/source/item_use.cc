@@ -1335,7 +1335,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         int speed = 100;
 
         baseHit = property( launcher, PWPN_HIT );
-        baseDam = item_base_dam + lnch_base_dam;
+        baseDam = lnch_base_dam + random2(1 + item_base_dam);
+
+        // Slings are terribly weakened otherwise
+        if (lnch_base_dam == 0)
+            baseDam = item_base_dam;
 
         if (launcher_skill == SK_BOWS)
             speed_min = 40;
@@ -1415,11 +1419,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         //  - Add on launcher and missile pluses to extra damage.
 
         // [dshaligram] This can get large...
-        exDamBonus = lnchDamBonus + ammoDamBonus;
-        exDamBonus = exDamBonus > 0? random2avg(exDamBonus + 1, 2)
-                                   : exDamBonus;
-        exHitBonus = lnchHitBonus > 0? random2avg(lnchHitBonus + 1, 2)
-                                     : lnchHitBonus;
+        exDamBonus = lnchDamBonus + random2(1 + ammoDamBonus);
+        exDamBonus = exDamBonus > 0? random2(exDamBonus + 1)
+                                   : -random2(-exDamBonus + 1);
+        exHitBonus = lnchHitBonus > 0? random2(lnchHitBonus + 1)
+                                     : -random2(-lnchHitBonus + 1);
 
         // removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
@@ -1444,7 +1448,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
             exDamBonus += strbonus;
             // add skill for slings.. helps to find those vulnerable spots
-            dice_mult = dice_mult * (15 + random2(1 + effSkill)) / 15;
+            dice_mult = dice_mult * (14 + random2(1 + effSkill)) / 14;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
@@ -1488,7 +1492,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             // add in skill for bows.. help you to find those vulnerable spots.
             // exDamBonus += effSkill;
             
-            dice_mult = dice_mult * (25 + random2(1 + effSkill)) / 25;
+            dice_mult = dice_mult * (17 + random2(1 + effSkill)) / 17;
 
             // now kill the launcher damage bonus
             if (lnchDamBonus > 0)
@@ -1503,12 +1507,12 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             exHitBonus += (3 * effSkill) / 2 + 6;
             // exDamBonus += effSkill * 2 / 3 + 4;
 
-            dice_mult = dice_mult * (33 + random2(1 + effSkill)) / 33;
+            dice_mult = dice_mult * (22 + random2(1 + effSkill)) / 22;
 
             if (lnchType == WPN_HAND_CROSSBOW)
             {
                 exHitBonus -= 2;
-                dice_mult = dice_mult * 28 / 30;
+                dice_mult = dice_mult * 26 / 30;
             }
             break;
 
@@ -1521,8 +1525,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         if (coinflip())
             exercise(SK_RANGED_COMBAT, 1);
 
-        // all launched weapons get a tohit boost from throwing skill.
-        exHitBonus += (3 * you.skills[SK_RANGED_COMBAT]) / 4;
+        // all launched weapons get a minor tohit boost from throwing skill.
+        exHitBonus += you.skills[SK_RANGED_COMBAT] / 5;
 
         if (bow_brand == SPWPN_VORPAL)
         {

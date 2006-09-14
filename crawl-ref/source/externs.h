@@ -781,6 +781,7 @@ struct game_options
     int         fsim_str, fsim_int, fsim_dex;
     int         fsim_xl;
     std::string fsim_mons;
+    std::vector<std::string> fsim_kit;
     
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are

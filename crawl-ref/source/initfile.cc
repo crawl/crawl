@@ -437,6 +437,7 @@ void reset_options(bool clear_name)
     Options.fsim_mons   = "worm";
     Options.fsim_str = Options.fsim_int = Options.fsim_dex = 15;
     Options.fsim_xl  = 10;
+    Options.fsim_kit.clear();
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1286,6 +1287,10 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         Options.show_waypoints = read_bool(field, Options.show_waypoints);
     }
+    else if (key == "fsim_kit")
+    {
+        append_vector(Options.fsim_kit, split_string(",", field));
+    }
     else if (key == "fsim_rounds")
     {
         Options.fsim_rounds = atol(field.c_str());
@@ -1354,15 +1359,18 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "stop_travel")
     {
         std::vector<std::string> fragments = split_string(",", field);
-        for (int i = 0, count = fragments.size(); i < count; ++i) {
+        for (int i = 0, count = fragments.size(); i < count; ++i)
+        {
             if (fragments[i].length() == 0)
                 continue;
 
             std::string::size_type pos = fragments[i].find(":");
-            if (pos && pos != std::string::npos) {
+            if (pos && pos != std::string::npos)
+            {
                 std::string prefix = fragments[i].substr(0, pos);
                 int channel = str_to_channel( prefix );
-                if (channel != -1 || prefix == "any") {
+                if (channel != -1 || prefix == "any")
+                {
                     std::string s = fragments[i].substr( pos + 1 );
                     trim_string( s );
                     Options.stop_travel.push_back(

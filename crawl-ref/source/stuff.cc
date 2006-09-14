@@ -366,7 +366,7 @@ void scale_dice( dice_def &dice, int threshold )
         dice.num *= 2;
         // If it's an odd number, lose one; this is more than
         // compensated by the increase in number of dice.
-        dice.size = dice.size / 2;
+        dice.size /= 2;
     }
 }
 

@@ -580,8 +580,12 @@ static void handle_wizard_command( void )
         tweak_object();
         break;
 
+    case 'f':
+        debug_fight_statistics(false);
+        break;
+
     case 'F':
-        debug_fight_statistics();
+        debug_fight_statistics(true);
         break;
 
     case 'm':

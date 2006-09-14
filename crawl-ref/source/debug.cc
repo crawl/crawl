@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <time.h>
 #include <ctype.h>
 
 #ifdef DOS
@@ -1728,7 +1729,7 @@ void error_message_to_player(void)
 
 #ifdef WIZARD
 
-static int create_dfs_monster(int mtype, int hp)
+static int create_fsim_monster(int mtype, int hp)
 {
     const int mi = 
         create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos, 
@@ -1742,7 +1743,7 @@ static int create_dfs_monster(int mtype, int hp)
     return (mi);
 }
 
-static skill_type dfs_melee_skill(const item_def *item)
+static skill_type fsim_melee_skill(const item_def *item)
 {
     skill_type sk = SK_UNARMED_COMBAT;
     if (item)
@@ -1750,19 +1751,19 @@ static skill_type dfs_melee_skill(const item_def *item)
     return (sk);
 }
 
-static void dfs_set_melee_skill(int skill, const item_def *item)
+static void fsim_set_melee_skill(int skill, const item_def *item)
 {
-    you.skills[dfs_melee_skill(item)] = skill;
+    you.skills[fsim_melee_skill(item)] = skill;
     you.skills[SK_FIGHTING]           = skill * 15 / 27;
 }
 
-static void dfs_set_ranged_skill(int skill, const item_def *item)
+static void fsim_set_ranged_skill(int skill, const item_def *item)
 {
     you.skills[range_skill(*item)] = skill;
     you.skills[SK_RANGED_COMBAT]   = skill * 15 / 27;
 }
 
-static void dfs_item(FILE *out, 
+static void fsim_item(FILE *out, 
                             bool melee,
                             const item_def *weap,
                             int wskill, unsigned long damage,
@@ -1781,8 +1782,8 @@ static void dfs_item(FILE *out,
             time / iterations);
 }
 
-static bool dfs_ranged_combat(FILE *out, int wskill, int mi, 
-                             const item_def *item)
+static bool fsim_ranged_combat(FILE *out, int wskill, int mi, 
+                             const item_def *item, int missile_slot)
 {
     monsters &mon = menv[mi];
     unsigned long cumulative_damage = 0L;
@@ -1790,14 +1791,14 @@ static bool dfs_ranged_combat(FILE *out, int wskill, int mi,
     long hits = 0L;
     int maxdam = 0;
 
-    const int thrown = get_fire_item_index();
-    if (thrown == ENDOFPACK)
+    const int thrown = missile_slot == -1? get_fire_item_index() : missile_slot;
+    if (thrown == ENDOFPACK || thrown == -1)
     {
         mprf("No suitable missiles for combat simulation.");
         return (false);
     }
 
-    dfs_set_ranged_skill(wskill, item);
+    fsim_set_ranged_skill(wskill, item);
 
     no_messages mx;
     const long iter_limit = Options.fsim_rounds;
@@ -1817,13 +1818,13 @@ static bool dfs_ranged_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    dfs_item(out, false, item, wskill, cumulative_damage, 
+    fsim_item(out, false, item, wskill, cumulative_damage, 
                     iter_limit, hits, maxdam, time_taken);
 
     return (true);
 }
 
-static bool dfs_melee_combat(FILE *out, int wskill, int mi, 
+static bool fsim_melee_combat(FILE *out, int wskill, int mi, 
                              const item_def *item)
 {
     monsters &mon = menv[mi];
@@ -1832,7 +1833,7 @@ static bool dfs_melee_combat(FILE *out, int wskill, int mi,
     long hits = 0L;    
     int maxdam = 0;
 
-    dfs_set_melee_skill(wskill, item);
+    fsim_set_melee_skill(wskill, item);
 
     no_messages mx;
     const long iter_limit = Options.fsim_rounds;
@@ -1852,25 +1853,25 @@ static bool dfs_melee_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    dfs_item(out, true, item, wskill, cumulative_damage, iter_limit, hits,
+    fsim_item(out, true, item, wskill, cumulative_damage, iter_limit, hits,
                    maxdam, time_taken);
 
     return (true);
 }
 
-static bool debug_fight_simulate(FILE *out, int wskill, int mi)
+static bool debug_fight_simulate(FILE *out, int wskill, int mi, int miss_slot)
 {
     int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1? &you.inv[weapon] : NULL;
 
     if (iweap && iweap->base_type == OBJ_WEAPONS 
             && is_range_weapon(*iweap))
-        return dfs_ranged_combat(out, wskill, mi, iweap);
+        return fsim_ranged_combat(out, wskill, mi, iweap, miss_slot);
     else
-        return dfs_melee_combat(out, wskill, mi, iweap);
+        return fsim_melee_combat(out, wskill, mi, iweap);
 }
 
-static const item_def *dfs_weap_item()
+static const item_def *fsim_weap_item()
 {
     const int weap = you.equip[EQ_WEAPON];
     if (weap == -1)
@@ -1879,17 +1880,17 @@ static const item_def *dfs_weap_item()
     return &you.inv[weap];
 }
 
-static std::string dfs_wskill()
+static std::string fsim_wskill()
 {
-    const item_def *iweap = dfs_weap_item();
+    const item_def *iweap = fsim_weap_item();
     return iweap && iweap->base_type == OBJ_WEAPONS 
              && is_range_weapon(*iweap)?
                         skill_name( range_skill(*iweap) ) :
-            iweap?      skill_name( dfs_melee_skill(iweap) ) :
+            iweap?      skill_name( fsim_melee_skill(iweap) ) :
                         skill_name( SK_UNARMED_COMBAT );
 }
 
-static std::string dfs_weapon()
+static std::string fsim_weapon(int missile_slot)
 {
     char item_buf[ITEMNAME_SIZE];
     if (you.equip[EQ_WEAPON] != -1)
@@ -1899,7 +1900,9 @@ static std::string dfs_weapon()
 
         if (is_range_weapon(weapon))
         {
-            const int missile = get_fire_item_index();
+            const int missile = 
+                missile_slot == -1? get_fire_item_index() :
+                                    missile_slot;
             if (missile < ENDOFPACK)
             {
                 std::string base = item_buf;
@@ -1916,22 +1919,55 @@ static std::string dfs_weapon()
     return (item_buf);
 }
 
-static void dfs_title(FILE *o, int mon)
+static std::string fsim_time_string()
+{
+    time_t curr_time = time(NULL);
+    struct tm *ltime = localtime(&curr_time);
+    if (ltime)
+    {
+        char buf[100];
+        snprintf(buf, sizeof buf, "%4d%02d%02d/%2d:%02d:%02d",
+                ltime->tm_year + 1900,
+                ltime->tm_mon  + 1,
+                ltime->tm_mday,
+                ltime->tm_hour,
+                ltime->tm_min,
+                ltime->tm_sec);
+        return (buf);
+    }
+    return ("");
+}
+
+static void fsim_mon_stats(FILE *o, const monsters &mon)
+{
+    char buf[ITEMNAME_SIZE];
+    fprintf(o, "Monster   : %s\n",
+            moname(mon.type, true, DESC_PLAIN, buf));
+    fprintf(o, "HD        : %d\n", mon.hit_dice);
+    fprintf(o, "AC        : %d\n", mon.armour_class);
+    fprintf(o, "EV        : %d\n", mon.evasion);
+}
+
+static void fsim_title(FILE *o, int mon, int ms)
 {
     char buf[ITEMNAME_SIZE];
     fprintf(o, "Dungeon Crawl Stone Soup version " VERSION "\n\n");
-    fprintf(o, "Combat simulation: %s %s vs. %s (%ld turns)\n",
+    fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
             species_name(you.species, you.experience_level),
             you.class_name,
             moname(menv[mon].type, true, DESC_PLAIN, buf),
-            Options.fsim_rounds);
+            Options.fsim_rounds,
+            fsim_time_string().c_str());
     fprintf(o, "Experience: %d\n", you.experience_level);
     fprintf(o, "Strength  : %d\n", you.strength);
     fprintf(o, "Intel.    : %d\n", you.intel);
-    fprintf(o, "Dexterity : %d\n\n", you.dex);
-    fprintf(o, "Weapon    : %s\n", dfs_weapon().c_str());
-    fprintf(o, "Skill     : %s\n", dfs_wskill().c_str());
+    fprintf(o, "Dexterity : %d\n", you.dex);
     fprintf(o, "Base speed: %d\n", player_speed());
+    fprintf(o, "\n");
+    fsim_mon_stats(o, menv[mon]);
+    fprintf(o, "\n");
+    fprintf(o, "Weapon    : %s\n", fsim_weapon(ms).c_str());
+    fprintf(o, "Skill     : %s\n", fsim_wskill().c_str());
     fprintf(o, "\n");
     fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
@@ -1943,36 +1979,24 @@ static int fsim_stat(int stat)
                         stat);
 }
 
-// Writes statistics about a fight to fight.stat in the current directory.
-// For fight purposes, a punching bag is summoned and given lots of hp, and the
-// average damage the player does to the p. bag over 10000 hits is noted, 
-// advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
-// of current weapon skill.
-void debug_fight_statistics()
+static bool debug_fight_sim(int mindex, int missile_slot)
 {
-    int punching_bag = get_monnum(Options.fsim_mons.c_str());
-    if (punching_bag == -1)
-        punching_bag = MONS_WORM;
-
-    int mindex = create_dfs_monster(punching_bag, 500);
-    if (mindex == -1)
-    {
-        mprf("Failed to create punching bag");
-        return;
-    }
-
     FILE *ostat = fopen("fight.stat", "a");
     if (!ostat)
     {
         mprf("Can't write fight.stat: %s", strerror(errno));
-        return;
+        return (false);
     }
 
+    bool success = true;
     FixedVector<unsigned char, 50> skill_backup = you.skills;
     int ystr = you.strength,
         yint = you.intel,
         ydex = you.dex;
     int yxp  = you.experience_level;
+
+    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        you.skills[i] = 0;
 
     you.experience_level = Options.fsim_xl;
     if (you.experience_level < 1)
@@ -1984,13 +2008,13 @@ void debug_fight_statistics()
     you.intel    = fsim_stat(Options.fsim_int);
     you.dex      = fsim_stat(Options.fsim_dex);
 
-    dfs_title(ostat, mindex);
+    fsim_title(ostat, mindex, missile_slot);
     for (int wskill = 0; wskill <= 27; ++wskill)
     {
         mesclr();
         mprf("Calculating average damage for %s at skill %d",
-                dfs_weapon().c_str(), wskill);
-        if (!debug_fight_simulate(ostat, wskill, mindex))
+                fsim_weapon(missile_slot).c_str(), wskill);
+        if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
             goto done_combat_sim;
         
         fflush(ostat);
@@ -1998,6 +2022,7 @@ void debug_fight_statistics()
         // for the user, but slow down the sim with all the calls to kbhit().
         if (kbhit() && getch() == 27)
         {
+            success = false;
             mprf("Canceling simulation\n");
             goto done_combat_sim;
         }
@@ -2008,12 +2033,104 @@ void debug_fight_statistics()
     you.dex      = ydex;
     you.experience_level = yxp;
 
-    mprf("Done fight simulation with %s", dfs_weapon().c_str());
+    mprf("Done fight simulation with %s", fsim_weapon(missile_slot).c_str());
 
 done_combat_sim:
     fprintf(ostat, "-----------------------------------\n\n");
-
     fclose(ostat);
-    monster_die(&menv[mindex], KILL_DISMISSED, 0);
+
+    return (success);
+}
+
+int fsim_kit_equip(const std::string &kit)
+{
+    int missile_slot = -1;
+    char item_buf[ITEMNAME_SIZE];
+
+    std::string::size_type ammo_div = kit.find("/");
+    std::string weapon = kit;
+    std::string missile;
+    if (ammo_div != std::string::npos)
+    {
+        weapon = kit.substr(0, ammo_div);
+        missile = kit.substr(ammo_div + 1);
+        trim_string(weapon);
+        trim_string(missile);
+    }
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!is_valid_item(you.inv[i]))
+            continue;
+
+        in_name(i, DESC_PLAIN, item_buf, true);
+        if (std::string(item_buf).find(weapon) != std::string::npos)
+        {
+            if (i != you.equip[EQ_WEAPON])
+            {
+                wield_weapon(true, i, false);
+                if (i != you.equip[EQ_WEAPON])
+                    return -100;
+            }
+            break;
+        }
+    }
+
+    if (!missile.empty())
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (!is_valid_item(you.inv[i]))
+                continue;
+            
+            in_name(i, DESC_PLAIN, item_buf, true);
+            if (std::string(item_buf).find(missile) != std::string::npos)
+            {
+                missile_slot = i;
+                break;
+            }
+        }
+    }
+
+    return (missile_slot);
+}
+
+// Writes statistics about a fight to fight.stat in the current directory.
+// For fight purposes, a punching bag is summoned and given lots of hp, and the
+// average damage the player does to the p. bag over 10000 hits is noted, 
+// advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
+// of current weapon skill.
+void debug_fight_statistics(bool use_defaults)
+{
+    int punching_bag = get_monnum(Options.fsim_mons.c_str());
+    if (punching_bag == -1)
+        punching_bag = MONS_WORM;
+
+    int mindex = create_fsim_monster(punching_bag, 500);
+    if (mindex == -1)
+    {
+        mprf("Failed to create punching bag");
+        return;
+    }
+    
+    if (!use_defaults)
+    {
+        debug_fight_sim(mindex, -1);
+        goto fsim_mcleanup;
+    }
+
+    for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+    {
+        int missile = fsim_kit_equip(Options.fsim_kit[i]);
+        if (missile == -100)
+        {
+            mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+            goto fsim_mcleanup;
+        }
+        if (!debug_fight_sim(mindex, missile))
+            break;
+    }
+fsim_mcleanup:
+    monster_die(&menv[mindex], KILL_DISMISSED, 0);    
 }
 #endif
