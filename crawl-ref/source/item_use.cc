@@ -1820,7 +1820,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     else
     {
         fire_beam( pbolt, &item );
-
         dec_inv_item_quantity( throw_2, 1 );
     }
 

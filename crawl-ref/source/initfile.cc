@@ -429,7 +429,7 @@ void reset_options(bool clear_name)
     Options.fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
     Options.fire_order[1] = FIRE_DART;          // then only consider darts
 
-    // clear the reast of the list
+    // clear the rest of the list
     for (int i = 2; i < NUM_FIRE_TYPES; i++)
         Options.fire_order[i] = FIRE_NONE;
 
