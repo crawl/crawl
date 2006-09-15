@@ -1296,7 +1296,7 @@ void monster_grid(bool do_updates)
                 colour = dos_brand(colour, Options.stab_brand);
             }
             else if (Options.may_stab_brand != CHATTR_NORMAL
-                    && mons_looks_stabbable(monster))
+                    && mons_looks_distracted(monster))
             {
                 unsigned short &colour =
                         env.show_col[monster->x - you.x_pos + 9]

@@ -1342,9 +1342,9 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             baseDam = item_base_dam;
 
         if (launcher_skill == SK_BOWS)
-            speed_min = 40;
+            speed_min = 50;
         else if (launcher_skill == SK_CROSSBOWS)
-            speed_min = 60;
+            speed_min = 65;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
@@ -1395,7 +1395,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             speed_min = (speed_min * 3 + 1) / 2;
         }
 
-        speed = speed_base - shoot_skill * speed_stat / 50;
+        speed = speed_base - 4 * shoot_skill * speed_stat / 250;
         if (speed < speed_min)
             speed = speed_min;
 
