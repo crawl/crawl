@@ -160,9 +160,9 @@ static void place_altar(void);
 
 static bool got_curare_roll(const int item_level)
 {
-    return one_chance_in(item_level > 27? 2  : 
-                         item_level < 2 ? 8  :
-                         (45 - item_level) / 9);
+    return one_chance_in(item_level > 27? 6   : 
+                         item_level < 2 ? 15  :
+                         (364 - 7 * item_level) / 25);
 }
 
 /*
