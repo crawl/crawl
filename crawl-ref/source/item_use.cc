@@ -1330,7 +1330,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         const int  dex_weight   = 10 - str_weight;
 
         int speed_base = 10 * property( launcher, PWPN_SPEED );
-        int speed_min = 50;
+        int speed_min = 70;
         int speed_stat = str_weight * you.strength + dex_weight * you.dex;
         int speed = 100;
 
@@ -1342,9 +1342,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             baseDam = item_base_dam;
 
         if (launcher_skill == SK_BOWS)
-            speed_min = 50;
-        else if (launcher_skill == SK_CROSSBOWS)
-            speed_min = 65;
+            speed_min = 60;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
