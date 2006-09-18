@@ -2691,9 +2691,9 @@ void handle_god_time(void)
 
         case GOD_SIF_MUNA:
             // [dshaligram] Sif Muna is now very patient - has to be
-            // to make up with the new spell training requirements, else
+            // to make up for the new spell training requirements, else
             // it's practically impossible to get Master of Arcane status.
-            if (one_chance_in(45))
+            if (one_chance_in(60))
                 lose_piety(1);
             if (you.piety < 1)
                 excommunication();

@@ -1314,7 +1314,7 @@ bolt mons_spells( int spell_cast, int power )
 
     case MS_POISON_ARROW:
         strcpy( beam.beam_name, "poison arrow" );
-        beam.damage = dice_def( 4, 5 + power / 4 );
+        beam.damage = dice_def( 4, 5 + power / 12 );
         beam.colour = LIGHTGREEN;
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
