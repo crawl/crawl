@@ -2178,14 +2178,11 @@ int calc_mp(void)
 
     int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
-    int evoc_extra  = (you.experience_level * you.skills[SK_EVOCATIONS]) / 6;
 
-    if (spell_extra > invoc_extra && spell_extra > evoc_extra) 
+    if (spell_extra > invoc_extra) 
         enp += spell_extra;
-    else if (invoc_extra > evoc_extra)
-        enp += invoc_extra;
     else
-        enp += evoc_extra;
+        enp += invoc_extra;
 
     you.max_magic_points = stepdown_value( enp, 9, 18, 45, 100 ); 
 

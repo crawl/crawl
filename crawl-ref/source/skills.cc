@@ -418,8 +418,7 @@ static int exercise2( int exsk )
         if (exsk == SK_FIGHTING)
             calc_hp();
 
-        if (exsk == SK_INVOCATIONS || exsk == SK_EVOCATIONS 
-            || exsk == SK_SPELLCASTING)
+        if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         {
             calc_mp();
         }
