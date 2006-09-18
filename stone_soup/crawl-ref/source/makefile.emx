@@ -1,0 +1,53 @@
+# Makefile for Dungeon Crawl (OS/2 EMX port)
+# 1998 (C) Alexey Guzeev, aga@russia.crosswinds.net
+# EMX is covered by GNU GPL
+# Dungeon Crawl is covered by Crawl GPL
+# OS/2 is a trademark of IBM Corp.
+# IBM  is a trademark of IBM Corp.
+# :)
+
+# 1. make some directory, like \crawl
+# 2. make subdirectory for sources, \crawl\src
+# 3. put crawl sources in \crawl\src directory
+# 4. make directory \crawl\src current
+# 5. execute command 'dmake -B -r -f makefile.emx install'
+# 6. remove \crawl\src subdirectory with all contents
+# 7. delete \crawl\scoretable.exe - I don't know what it does :)
+# 8. run \crawl\crawl.exe & enjoy!
+
+
+CC	= gcc
+CFLAGS	= -Wall -O3 -MMD -Zmt -DUSE_EMX 
+LIBS	= -lvideo -lbsd
+AR	= ar
+
+include makefile.obj
+
+OBJ 	= $(OBJECTS)
+
+
+all:            crawl.exe scoretable.exe
+
+install:	..\crawl.exe ..\scoretable.exe
+
+crawl.a: $(OBJS)
+	$(AR) r crawl.a $(OBJS)
+
+..\crawl.exe:	crawl.exe
+		+copy crawl.exe ..
+                emxbind -s ..\crawl.exe
+
+..\scoretable.exe:	scoretable.exe
+		+copy scoretable.exe ..
+                emxbind -s ..\scoretable.exe
+clean:
+		+del *.o
+
+crawl.exe:      crawl.a libemx.o
+		$(CC) -o crawl.exe crawl.a libemx.o $(LIBS)
+
+scoretable.exe: scoretab.o libemx.o
+		$(CC) -o scoretable.exe scoretab.o libemx.o $(LIBS)
+
+.cc.o:
+		$(CC) $(CFLAGS) -c $*.cc

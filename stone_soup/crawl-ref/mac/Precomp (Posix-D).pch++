@@ -1,0 +1,17 @@
+/*
+ *  File:       Precomp (Posix-D).pch++
+ *  Summary:   	Precompiled header for Posix debug builds.
+ *  Written by: Jesse Jones
+ *
+ *  Change History (most recent first):	
+ *
+ *    <1>     5/25/02     JDJ     Created
+ */
+ 
+#pragma precompile_target "Precomp (Posix-D)"	
+
+#define UNIX			1
+#define BSD				1
+#define _DEBUG						// this is how we know a build is a debug build on Windows so we'll use the same mechanism on the Mac
+
+#include "Precomp (Common).h"

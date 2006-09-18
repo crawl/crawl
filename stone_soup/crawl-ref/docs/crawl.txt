@@ -1,0 +1,1250 @@
+                     Dungeon Crawl version 3.40
+            (Copyright 1997, 1998, 1999 Linley Henzell)
+
+Crawl is a fun game in the grand tradition of games like Rogue, Hack and
+Moria. Your objective is to travel deep into a subterranean cave complex and
+retrieve the Orb of Zot, which is guarded by many horrible and hideous
+creatures.
+
+Detailed instructions for playing Crawl follow. If you want to get into the
+game quickly, read the quick-start guide (README.TXT) and learn as you play.
+Otherwise, it may be worth your while to read at least part of this file
+(although it will probably confuse you somewhat). Read at least the disclaimer
+at the end of this document and the LICENCE.TXT file, though.
+
+----------------------------------------------------------------------------
+                            CHARACTER SPECIES
+----------------------------------------------------------------------------
+
+You have a number of different species to choose from. This affects several
+characteristics:
+
+     o  Your choice of classes
+     o  Your initial attributes
+     o  Occasional bonus points added to some abilities
+     o  The amount of hit points you get each level
+     o  The amount of magic points you get each level
+     o  Your initial equipment
+     o  Your rate of level advancement
+     o  Your rate of skill advancement
+     o  Various special abilities and powers
+
+Note: Some species are slower than humans in most/all skills.  For some
+classes these races may seem to have very few skills because they haven't
+quite earned the first level of several of their skills (Centaurs are
+notable in this regard... although non-human Wanderers can appear to
+start with no apparent skills at all).  This isn't a bug or an oversight,
+these species are just particularly weaker than humans at these classes.
+
+If you practise the skills you think or know are missing early on, they
+should pick up the remaining skills very quickly (and their training will be
+more complete).
+
+
+The species:
+
+Human:
+
+  Humans tend to be hardworking and industrious, and learn new things quickly.
+  The human race is the most versatile of all the species available to
+  players. Humans advance quickly in levels and have equal abilities in all
+  skills. Humans can also be of any class.
+
+Elves:
+
+  There are a number of distinct races of elf in the world. Elves are all
+  physically slight but long-lived people, quicker-witted than humans but
+  sometimes slower to learn new things. Elves are especially good at using
+  those skills which require a degree of finesse, such as stealth, sword-
+  fighting and archery, but tend to be poor at using brute force and inelegant
+  forms of combat. They find heavy armour uncomfortable, and make the finest,
+  lightest armours to be found anywhere. Elves are particularly good at using
+  elven weapons.
+
+  Due to their fey natures, all elves are good at using enchantments and air
+  elemental magic and most are poor at invoking the powers of earth and death
+  (necromancy).
+
+  Those of the most common strain are referred to simply as elves or, when
+  they're not listening, as common elves. Common elves have good intelligence
+  and dexterity, but suffer a bit in strength. They have slightly fewer HP and
+  slightly more magic than humans, and advance in experience a bit more
+  slowly.
+
+  High elves are a tall and powerful elven race who advance in levels very
+  slowly, requiring half again as much experience as do humans. They share the
+  same attributes as common elves in most respects, but their strengths and
+  weaknesses tend to be more pronounced.
+
+  Grey elves also advance slowly, but not as slowly as high elves. They excel
+  at using short and long swords and bows, but are poor at other fighting
+  skills. They are excellent at all forms of magic except for necromancy.
+
+  The deep elves are an elven race who long ago fled the overworld to live in
+  darkness underground. There they developed their mental powers, evolving a
+  natural gift for all forms of magic (including necromancy and earth magic),
+  and adapted physically to their new environment, becoming shorter and weaker
+  than other elves and losing all colouration. They are poor at hand-to-hand
+  combat but excellent at fighting from a distance.
+
+  Sludge elves are a somewhat degenerate race of elves. They are mirror images
+  of normal elves in some respects: they have no special proficiency with bows
+  or swords (long or short), nor do they have any aptitude in the traditional
+  areas of high elven magic (enchantments, conjurations and divinations). On
+  the other hand, they are superlative transmuters, and are comfortable
+  dabbling in necromantic, poison and elemental magic. As fighters they are
+  often more dangerous unarmed than armed. They advance in level slightly
+  faster than their common brethren.
+
+Dwarves:
+
+  Dwarves are short, hardy people. They love to fight, and often venture forth
+  from their subterranean cities to seek fame and fortune through battle.
+  Their armour and weapons are very well-crafted and much more durable than
+  the products of lesser artisans. Dwarves are particularly dangerous when
+  using dwarven weaponry.
+
+  Hill dwarves are extremely robust but are poor at using magic. They are
+  excellent at hand combat, especially favouring axes or bludgeoning weapons,
+  and are good at using armour and shields, but are poor at missile combat or
+  at using polearms (which are usually too big for them to wield comfortably).
+  The only forms of magic which they can use with even a minimal degree of
+  aptitude are earth, fire and conjurations. They advance in levels at a
+  similar rate to common elves.
+
+  Mountain dwarves come from the larger, more civilised communities of the
+  mountains. They advance slightly more quickly than hill dwarves and are
+  almost as robust while having similar aptitudes, but are slightly worse at
+  fighting while being slightly better at more civilised pursuits.
+
+Halflings:
+
+  Halflings, who are named for being about half the size of a human, live in
+  small villages. They live simple lives, and have simple interests. Some
+  times a particularly restless halfling will leave his or her village in
+  search of adventure.
+
+  Halflings are very small and are among the least robust of any character
+  species. Although only average at most fighting skills, they can use short
+  blades well and are good at all forms of missile combat. They are also very
+  stealthy and good at dodging and stabbing, but are poor at magic (except
+  enchantments and, for some reason, translocations). They advance in levels
+  as rapidly as humans. Halflings cannot wield large weapons.
+
+Gnomes:
+
+  Gnomes are an underground-dwelling race of creatures, related to the
+  dwarves but even more closely in touch with the earth.
+
+  They are quite small, and share many of their characteristics with
+  halflings (except for the great agility), although they advance slightly
+  more slowly in experience levels. They are okay at most skills, but
+  excellent at earth elemental magic and very poor at air magic.
+
+  Occasionally they can use their empathy with the earth to sense their
+  surroundings; this ability increases in power as they gain experience
+  levels.
+
+Orcs:
+
+  Hill orcs are orcs from the upper world who, jealous of the riches which
+  their cousins the cave orcs possess below the ground, descend in search of
+  plunder and adventure.
+
+  Hill orcs are as robust as the hill dwarves, but have very low reserves of
+  magical energy. Their forte is brute-force fighting, and they are skilled at
+  using most hand weapons (with the exception of short blades, at which they
+  are only fair), although they are not particularly good at using missile
+  weapons. They prefer to use their own weapons. Orcs are poor at using most
+  types of magic with the exception of conjurations, necromancy, and earth and
+  fire elemental magic. They advance as quickly as humans.
+
+Kobolds:
+
+  Kobolds are small, ugly creatures with few redeeming features. They are not
+  the sort of people you would want to spend much time with, unless you happen
+  to be a kobold yourself.
+
+  They have poor abilities and have similar aptitudes to halflings, without
+  the excellent agility. However, they are better than halflings at using
+  some types of magic, particularly summonings and necromancy. They often
+  live as scavengers, surviving on carrion, but are carnivorous and can
+  only eat meat. They advance in levels as quickly as humans.
+
+The Undead:
+
+  As creatures brought back from beyond the grave they are naturally immune to
+  poisons and negative energy, have little warmth left to be affected by cold,
+  and are not susceptible to reductions in their physical or mental abilities.
+
+  There are two type of undead available to players: Mummies and Ghouls.
+
+Mummies:
+
+  Mummies are undead creatures who travel into the depths in search of
+  revenge, redemption, or just because they want to.
+
+  Mummies progress very slowly in level, half again as slow as humans, and in
+  all skills except fighting, spellcasting and necromancy. As they increase in
+  level they become increasingly in touch with the powers of death, but cannot
+  use some types of necromancy which only affect living creatures. The side
+  effects of necromantic magic tend to be relatively harmless to mummies.
+  However, their dessicated bodies are highly flammable. They also do not need
+  to eat or drink, and in any case are incapable of doing so.
+
+Ghouls:
+
+  Ghouls are horrible undead creatures, slowly rotting away. Although ghouls
+  can sleep in their graves for years on end, when they rise to walk among the
+  living they must eat flesh to survive. Raw flesh is preferred, especially
+  rotting or tainted meat, and ghouls gain strength from consuming it.
+
+  They aren't very good at doing most things, although they make decent
+  fighters and, due to their contact with the grave, can use ice, earth and
+  death magic without too many difficulties.
+
+Naga:
+
+  The Naga are a race of hybrids: humanoid from the waist up, with a large
+  snake tail instead of legs.
+
+  They are reasonably good at most things and advance in experience levels at
+  a decent rate. They are naturally immune to poisons, can see invisible
+  creatures, and have tough skin, but their tails are relatively slow and
+  cannot move them around as quickly as can other creatures' legs (this only
+  affects their movement rate; all other actions are at normal speed). Their
+  body shape also prevents them from gaining full protection from most armour.
+
+  Every now and then, a naga can spit poison; the range, accuracy and damage
+  of this poison increases with the naga's experience level.
+
+Ogres and Ogre Mages:
+
+  Ogres are huge, chunky creatures related to orcs. They are terrible monsters
+  who usually live to do nothing more than smash, smash, smash, and destroy.
+
+  They have great physical strength, but are bad at almost everything except
+  fighting and learn quite slowly. Because of their large size they can only
+  wear loose robes, cloaks and animal skins. Although ogres can eat almost
+  anything, their size means that they need to do so more frequently than
+  smaller folk.
+
+  Ogre-mages are a separate race of ogres who are unique among the beefier
+  species in their ability to use magic, especially enchantments. Although
+  slighter than their common ogre relatives they nevertheless have great
+  strength and can survive a lot of punishment. They advance in level as
+  slowly as high elves.
+
+Trolls:
+
+  Trolls are like ogres, but even nastier. They have thick, knobbly skins of
+  any colour from putrid green to mucky brown and their mouths are full of
+  ichor-dripping fangs.
+
+  They can rip creatures apart with their claws, and regenerate very quickly
+  from even the most terrible wounds. They learn very slowly indeed - even
+  more slowly than high elves - and need a great amount of food to survive.
+
+Draconians:
+
+  Draconians are a race of human-dragon hybrids: humanoid in form and
+  approximately human-sized, with wings, tails and scaly skins. Draconians
+  start out in an immature form with brown scales, but as they grow in
+  power they take on a variety of colours.
+
+  Some types of draconians have breath weapons. Draconians advance very slowly
+  in level, but are reasonably good at all skills but armour (most types of
+  which they cannot wear) and missile weapons.
+
+Centaurs:
+
+  The Centaurs are another race of hybrid creatures: horses with a human
+  torso. They usually live in forests, surviving by hunting.
+
+  Centaurs can move very quickly on their four legs, and are excellent
+  with bows and other missile weapons; they are also reasonable at the
+  Fighting skill while being slow learners at specific weapon skills. They
+  advance quite slowly in experience level and are rather sub-average at
+  using magic. Due to their large bulk, they need a little extra food to
+  survive.
+
+Demigods:
+
+  Demigods are mortals (humans, orcs or elves, for example) with some divine
+  or angelic ancestry, however distant; they can be created by a number of
+  processes including magical experiments and the time-honoured practice of
+  interplanar miscegenation.
+
+  Demigods look more or less like members of their mortal part's race, but
+  have excellent abilities (strength, int, dex) and are extremely robust; they
+  can also draw on great supplies of magical energy. On the downside they
+  advance very slowly in experience, gain skills slightly less quickly than
+  humans, and due to their status cannot worship the various Gods and Powers
+  available to other classes of being.
+
+Spriggans:
+
+  Spriggans are small magical creatures distantly related to elves. They
+  love to frolic and cast mischevious spells.
+
+  They are poor fighters, have little physical resilience, and are terrible at
+  destructive magic - conjurations, summonings, necromancy and elemental
+  spells. On the other hand, they are excellent at other forms of magic and
+  are very good at moving silently and quickly. So great is their speed that a
+  spriggan can keep pace with a centaur.
+
+Minotaurs:
+
+  The minotaur is yet another hybrid - a human body with a bovine head. It
+  delves into the Dungeon because of its instinctive love of twisting
+  passageways.
+
+  Minotaurs are extremely good at all forms of physical combat, but are
+  awful at using any type of magic. They can wear all armour except for
+  some headgear.
+
+Demonspawn:
+
+  Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
+  of the Demigods. Demonspawn can be created in any number of ways: magical
+  experiments, breeding, unholy pacts, etc. Although many demonspawn may be
+  indistinguishable from those of pure mortal stock, they often grow horns,
+  scales or other unusual features. Powerful members of this class of beings
+  also develop a range of unholy abilities, which are listed as mutations (and
+  can sometimes be activated with the 'a' command).
+
+  Demonspawn advance quite slowly in experience and learn most skills at about
+  the same rate as do Demigods. However, they are a little better at fighting
+  and much better at conjurations, summonings, necromancy and invocations.
+
+Kenku:
+
+  The Kenku are an ancient and feared race of bird-people with a legendary
+  propensity for violence. Basically humanoid with bird-like heads and clawed
+  feet, the kenku can wear all types of armour except helmets and boots.
+  Despite their lack of wings, powerful kenku can fly and very powerful
+  members of this race can stay in the air for as long as they wish to do so.
+
+  They are experts at all forms of fighting, including the magical arts of
+  combat (conjurations, summonings and, to a lesser extent, necromancy). They
+  are good at air and fire elemental magic, but poor at ice and earth magic.
+  Kenku do not appreciate any form of servitude, and so are poor at using
+  invocations. Their light avian bodies cannot sustain a great deal of injury.
+
+Merfolk:
+
+  The Merfolk are a hybrid race of half-human, half-fish that typically
+  live in the oceans and rivers and seldom come onto the land.  The merfolk
+  aren't as limited on land as some myths suggest, their tails will quickly
+  reform into legs once they leave the water (and, likewise, their legs
+  will quickly reform into a tail should they ever enter water).  Their
+  agility is often misjudged, and they tend to be surprising nimble on
+  land as well as in the water.  Experts at swimming they need not fear
+  drowning as they can quickly slip out of any encumbering armour during
+  the transformation into their half-fish form.
+
+  The Merfolk have developed their martial arts strongly on thrusting
+  and grappling, since those are the most efficient ways to fight
+  underwater.  They, therefore, prefer polearms and short swords above
+  all other weapons, although they can also use longer swords quite well.
+
+  As spellcasters, they tend to be quite good in specific areas.  Their
+  mystical relationship with water makes it easier for them to use
+  divination, poison, and ice magics... which use water occasionally
+  as a material component.  The legendary water magic of the merfolk
+  was lost in ancient times, but some of that affinity still remains.
+  The instability of their own morphogenic matrix has made them very
+  accomplished transmuters, but most other magics seem foreign to them.
+
+Note:
+
+  Some species have special abilities which can be accessed by the 'a'
+  abilities menu. Some also have physical characteristics which allow them
+  to make extra attacks using the Unarmed Combat skill.
+
+----------------------------------------------------------------------------
+                            CHARACTER CLASSES
+----------------------------------------------------------------------------
+
+In your quest, you play as one of a number of different types of characters.
+Although each has its own strengths and weaknesses, some are definitely
+easier than others, at least to begin with. The best classes for a beginner
+are probably Gladiators, fighters and Berserkers; if you really want to play
+a magician, try a Conjurer. Each class starts out with a different set of
+skills and items, but from there you can shape them as you will.
+
+Fighters:
+
+  Fighters start with a decent weapon, a suit of armour and a shield. They
+  have a good general grounding in the arts of fighting.
+
+Gladiators:
+
+  The Gladiator is trained to fight in the ring, and so is an expert in the
+  art of fighting but is not so good at anything else. In fact, Gladiators are
+  pretty terrible at anything except bashing monsters with heavy things. They
+  start with a nasty weapon, a small shield, and armour.
+
+Berserkers:
+
+  Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
+  get the power to go berserk (as well as a number of other powers should they
+  prove worthy) but who forbids the use of spell magic. They enter the dungeon
+  with an axe and a set of leather armour.
+
+Hunters:
+
+  The Hunter is a type of fighter who specialises in missile weapons. A Hunter
+  starts with a bow and some arrows, as well as a hunting knife and a set of
+  leathers.
+
+Monks:
+
+  The Monk is a member of an ascetic order dedicated to the perfection of
+  one's body and soul through the discipline of the martial arts. Monks start
+  with very little equipment, but can survive without the weighty weapons and
+  spellbooks needed by other classes.
+
+Thieves:
+
+  The Thief is one of the trickiest classes to play. Thieves start out with a
+  large variety of useful skills, and need to use all of them to survive.
+  Thieves start with a short sword, some throwing darts, and light armour.
+
+Assassin:
+
+  An Assassin is a thief who is especially good at killing. Assassins are like
+  thieves in most respects, but are more dangerous in combat.
+
+Stalkers:
+
+  The stalker is an assassin who has trained in the use of poison magic.
+
+Crusaders:
+
+  The Crusader is a decent fighter who can use the magical art of enchantment
+  to become more dangerous in battle. Crusaders start out lightly armed and
+  armoured, but equipped with a book of martial spells.
+
+Reavers:
+
+  Reavers are warriors who learn the magics of destruction in order to
+  complement their deadliness in hand combat.
+
+Death Knights:
+
+  The Death Knight is a fighter who aligns him or herself with the powers of
+  death. There are two types of Death Knights: those who worship and draw
+  their abilities from the Demon-God Yredelemnul, and those who study the
+  fearsome arts of necromancy.
+
+Chaos Knights:
+
+  The Chaos Knight is a fighter who chooses to serve one of the fearsome and
+  unpredictable Gods of Chaos. He or she has two choices: Xom or Makhleb.
+  Xom is a very unpredictable (and possibly psychotic) entity who rewards
+  or punishes according to whim. Makhleb the Destroyer is a more purposeful
+  God, who appreciates destruction and offers a variety of very violent
+  powers to the faithful.
+
+Paladins:
+
+  The Paladin is a servant of the Shining One, and has many of the abilities
+  of the Fighter and the Priest. He or she enters the dungeon with a sword,
+  a shield, a robe, and a healing potion.
+
+Priests:
+
+   Priests serve either Zin, the ancient and revered God of Law, or the
+   rather less pleasant Death-God Yredelemnul. Although priests enter the
+   dungeon with a mace (as well as a priestly robe and a few healing
+   potions), this is purely the result of an archaic tradition the reason
+   for which has been lost in the mists of time; Priests are not in any way
+   restricted in their choice of weapon skills.
+
+Healers:
+
+  The Healer is a priest of Elyvilon. Healers begin with minor healing
+  powers, but can gain far greater abilities in the long run.
+
+Magicians:
+
+  The magician is not a class, but a type of class. A magician is the best
+  at using magic. Magicians start with a dagger, a robe, and a book of
+  spells which should see them through the first several levels. There are
+  various kinds of magicians:
+
+  A Wizard is a magician who does not specialise in any area of magic.
+  Wizards start with a variety of magical skills and the magic dart spell in
+  memory.
+
+  The Conjurer specialises in the violent and destructive magic of
+  conjuration spells. Like the Wizard, the Conjurer starts with the magic
+  dart spell.
+
+  The Enchanter specialises in the more subtle area of enchantment magic.
+  Although not as directly powerful as conjurations, high-level enchantments
+  offer a wide range of very handy effects. The Enchanter begins with
+  lightly enchanted weapons and armour, but no direct damage spell (since
+  enchantments does not deal with direct attacks).  Instead they begin
+  with the "confusing touch" spell and some enchanted darts, which should
+  help them out until they can use the higher level enchantment spells.
+
+  The Summoner specialises in calling creatures from this and other worlds
+  to give assistance. Although they can at first summon only very wimpy
+  creatures, the more advanced summoning spells allow summoners to call on
+  such powers as elementals and demons.
+
+  The Necromancer is a magician who specialises in the less pleasant side of
+  magic. Necromantic spells are a varied bunch, but many involve some degree
+  of risk or harm to the caster.
+
+  Elementalists are magicians who specialise in one of the four types of
+  elemental magic: air, fire, earth, or ice.
+
+    Fire Magic tends towards destructive conjurations.
+
+    Ice Magic offers a balance between destructive conjurations and
+    protective enchantments.
+
+    Air Magic provides many useful enchantments in addition to some
+    unique destructive capabilities.
+
+    Earth Magic is a mixed bag, with destructive, defensive and utility
+    spells available.
+
+  Venom mages specialise in poison magic, which is extremely useful in the
+  shallower levels of the dungeon where few creatures are immune to it. Poison
+  is especially effective when used against insects.
+
+  Transmuters specialise in transmigrations, and can cause strange changes
+  in themselves and others.
+
+  Warpers specialise in translocations, and are experts in travelling long
+  distances and positioning themselves precisely.
+
+Wanderers:
+
+  Wanderers are people who have not learned a specific trade.  Instead,
+  they've travelled around becoming "Jacks-of-all-trades, master of none".
+  They start the game with a large assortment of skills and maybe some
+  small items they picked up along the way, but other than that they're
+  pretty much on their own.  Non-human wanderers might not even know which
+  skills they have (since they haven't quite learned enough for one full
+  level), and therefore make for an additional challenge.  You shouldn't
+  expect human wanderers to be easy either, as this class is typically
+  harder to play than the other classes.
+
+----------------------------------------------------------------------------
+                                EXPERIENCE
+----------------------------------------------------------------------------
+
+When you kill monsters, you gain experience points (xp) (you also receive
+one half experience for monsters killed by friendly creatures). When you
+get enough xp, you gain an experience level, making your character more
+powerful. As they gain levels, characters gain more hit points, magic
+points, and spell levels.
+
+Additionally, the experience you gain is used for your experience pool.
+This pool of points is used up whenever you practice a skill.
+
+----------------------------------------------------------------------------
+                                  SKILLS
+----------------------------------------------------------------------------
+
+Your character has a number of skills which affect his or her ability to
+perform certain tasks. You can see your character's skills by pressing the 'm'
+key; the higher the level of a skill, the better you are at it. Every time
+your character gains experience points, those points become available to
+increase skills. You convert experience points into skill levels by practising
+the skill in question (eg fight with a certain type of weapon, cast a certain
+type of spell, or walk around wearing light armour to practise stealth). The
+amount of unassigned experience points is shown next to your experience total
+on the main screen as well as on the skills screen, and the number in blue
+next to each skill counts down from 9 to 0 as you get closer to gaining a
+level in that skill.
+
+You can elect not to practise a particular skill by selecting it in the skill
+screen (making it turn dark grey). This means that you will be less likely to
+increase that skill when you practise it (and will also not spend as many
+experience points on it). This can be useful for skills like stealth which use
+up points whenever you move. It can also be used on a specific weapon skill if
+you want to spend more points on Fighting, and similarly with magic skills and
+Spellcasting.
+
+The species you have chosen for your character has a significant effect on
+your rate of advancement in each skill. Some races are very good at some
+skills and poor at others. If your character is naturally quick to learn a
+skill, they will require less experience and take less time to advance in it;
+being bad at a skill has the opposite result.
+
+Here is a description of the skills you may have:
+
+
+Fighting skills:
+
+  Fighting is the basic skill used in hand-to-hand combat, and applies no
+  matter which weapon your character is wielding (if any). It is also the
+  skill which determines the number of hit points your character gets as
+  they increase in level (note that this is calculated so that you don't get
+  a long run advantage by starting out with a high fighting skill).
+
+  Weapon skills affect your ability to fight with specific melee weapons.
+  Weapon skills include:
+
+     o  Short Blades
+     o  Long Blades
+     o  Maces & Flails
+     o  Axes
+     o  Staves
+     o  Polearms
+
+  If you are already good at a weapon, say a long sword, and you practise
+  for a while with similar weapon such as a short sword, your practise will
+  be speeded up (and will require less experience) until both skills are
+  equal. Similar types of weapons include:
+
+     o  Short Blades and Long Blades
+     o  Maces & Flails and Axes
+     o  Polearms and Axes
+     o  Staves and Polearms
+
+  Being good at a specific weapon improves the speed with which you can use
+  it by about 10% every two skill levels. Although lighter weapons are
+  easier to use initially, as they strike quickly and accurately, heavier
+  weapons increase in damage potential very quickly as you improve your
+  skill with them.
+
+  Unarmed Combat is a special fighting skill. It allows your character to
+  make a powerful attack when unarmed and also to make special secondary
+  attacks (and increases the power of those attacks for characters who get
+  them anyway). You can practise Unarmed Combat by attacking empty-handed,
+  and it is also exercised when you make a secondary attack (a kick, punch
+  etc). Unarmed combat is particularly difficult to use in combination with
+  heavy armour, and characters wearing a shield or wielding a two-handed
+  weapon other than a staff lose the powerful punch attack.
+
+Throwing skills:
+
+  Throwing is the basic skill used when throwing things, and there are a
+  number of individual weapon skills for missile weapons as well:
+
+     o  Darts
+     o  Bows
+     o  Crossbows
+     o  Slings
+
+Magic skills:
+
+  Spellcasting is the basic skill for magic use, and affects your reserves of
+  magical energy in the same way that Fighting affects your hit points. Every
+  time you increase your spellcasting skill you gain some magic points and
+  spell levels. Spellcasting is a very difficult skill to learn, and requires
+  a large amount of practice and experience.
+
+  Only those characters with at least one magic skill at level one or above
+  can learn magical spells. If your character has no magic skills, he or she
+  can learn the basic principles of the hermetic arts by reading and reciting
+  the spells inscribed on magical scrolls (this stops being useful once you
+  reach level one in Spellcasting).
+
+  There are also individual skills for each different type of magic; the
+  higher the skill, the more powerful the spell. Multidisciplinary spells use
+  an average of the two or three skills.
+
+  Elemental magic is a special case. When you practise an elemental magic
+  skill (fire, ice, air or earth magic) you will improve much less quickly
+  than normal if you already have one or more elemental magic skills higher
+  than the one you are practising. This is especially true if those skills are
+  'opposed' to the one you're practising: fire and ice are mutually opposed,
+  as are earth and air.
+
+  Say you have level 2 fire magic, level 4 ice magic, and level 1 air magic.
+  Practising ice magic won't be a problem. Practising air magic will be a bit
+  slow, as you have other elemental skills at higher levels. Practising fire
+  magic will be very slow, as you have a higher level in ice magic. Right?
+
+Miscellaneous skills:
+
+Armour:
+
+  Having a high Armour skill means that you are used to wearing heavy armour,
+  allowing you to move more freely and gain more protection.
+
+Dodging:
+
+  When you are wearing light armour, a high dodging skill helps you evade
+  attacks.
+
+Stealth:
+
+  Helps you avoid being noticed. Try not to wear heavy armour or be encumbered
+  if you want to be stealthy. Big creatures (like trolls and ogres) are bad at
+  stealth.
+
+Stabbing:
+
+  Lets you make a very powerful first strike against a sleeping/resting
+  monster who hasn't noticed you yet. This is most effective with a dagger,
+  slightly less effective with a short sword, and less useful (although by
+  no means of negligible effect) with any other weapon.
+
+Shields:
+
+  Affects the amount of protection you gain by using a shield, and the degree
+  to which it hinders you.
+
+Traps & Doors:
+
+  Affects your ability to notice hidden traps and doors and to disarm traps
+  when you find them. With this skill at a high level you will often find
+  hidden things without actively looking for them.
+
+Invocations:
+
+  An easy-to-learn skill which affects your ability to call on your God for
+  aid. Those skilled at invoking have reduced fail rates and produce more
+  powerful effects. The Invocations skill affects your supply of magic in a
+  similar way to the Spellcasting skill and to a greater extent, but the two
+  are not cumulative - whichever gives the greater increase is used. Some
+  Gods (such as Trog) do not require followers to learn this skill.
+
+If your character does not have a particular skill, s/he can gain it by
+practising as above.
+
+----------------------------------------------------------------------------
+                               ABILITIES
+----------------------------------------------------------------------------
+
+Your character is further defined by his or her abilities, which initially
+vary according to class and species.
+
+Strength:
+
+  Affects the amount of damage you do in combat, as well as how much stuff
+  you can carry.
+
+Intelligence:
+
+  Affects how well you can cast spells as well as your ability to use some
+  magical items.
+
+Dexterity:
+
+  Affects your accuracy in combat, your general effectiveness with missile
+  weapons, your ability to dodge attacks aimed at you, and your ability to use
+  thiefly skills such as backstabbing and disarming traps. Although your
+  dexterity does not affect your evasion score (EV) directly, any calculation
+  involving your EV score also takes account of your dexterity.
+
+Armour Class:
+
+  Also called AC, when something injures you, your AC reduces the amount of
+  damage you suffer. The number next to your AC is a measure of how good your
+  shield (if any) is at blocking attacks. In both cases, more is better.
+
+Evasion:
+
+  Also called EV, this helps you to avoid being hit by unpleasant things.
+
+Gold:
+
+  This is how much money you're carrying. Money adds to your final score,
+  and can be used to purchase items in shops.
+
+Magic Resistance:
+
+  Affects your ability to resist the effects of enchantments and similar
+  magic directed at you. Although your magic resistance increases with your
+  level to an extent determined by your character's species, the creatures you
+  will meet deeper in the dungeon are better at casting spells and are more
+  likely to be able to affect you. MR is an internal variable, so you can't
+  see what yours is.
+
+Special Abilities:
+
+  Sometimes characters will be able to use special abilities, for example
+  the Naga's ability to spit poison or the magical power to turn invisible
+  granted by a ring. These are accessed through the 'a' command.
+
+----------------------------------------------------------------------------
+                               ITEMS
+----------------------------------------------------------------------------
+
+
+In the dungeons of Crawl there are many different kinds of normal and magical
+artefacts to be found and used. Some of them are useful, some are nasty, and
+some give great power, but at a price. Some items are unique; these have
+interesting properties which can make your life rather bizarre for a while.
+They all fall into several classes of items, each of which is used in a
+different way. Here is a general list of what you might find in the course of
+your adventures:
+
+Weapons:
+
+  These are rather important. You will find a variety of weapons in the
+  dungeon, ranging from small and quick daggers to huge, cumbersome
+  battleaxes and pole-arms. Each type of weapon does a differing amount of
+  damage, has a different chance of hitting its target, and takes a
+  different amount of time to swing. You should choose your weapons
+  carefully; trying to hit a bat with a greatsword is about as clever as
+  bashing a dragon with a club. For this reason it is wise to have a good
+  mixture of weapon skills. Skills affect damage, accuracy and speed.
+
+  Weapons can be enchanted; when they are identified, they have values which
+  tell you how much more effective they are than an unenchanted version. The
+  first number is the enchantment to-hit, which affects the weapon's
+  accuracy, and the second is its damage enchantment; weapons which are not
+  enchanted are simply '+0'. Some weapons also have special magical effects
+  which make them very effective in certain situations. Some types of hand
+  weapons (especially daggers, spears and hand axes) are quite effective
+  when thrown.
+
+  You can wield weapons with the 'w' command, which is a very quick action.
+  If for some reason you want to go bare-handed, type 'w' followed by a
+  hyphen ('-'). Note that weapons are not the only class of item which you
+  can wield.
+
+  The ' (apostrophe) key is a shortcut which automatically wields item a. If
+  item a is being wielded, it causes you to wield item b instead, if possible.
+  Try assigning the letter a to your primary weapon, and b to your bow or
+  something else you need to wield only sometimes. Note that this is just a
+  typing shortcut and is not functionally different to wielding these items
+  normally.
+
+Ammunition:
+
+  If you would rather pick off monsters from a safe distance, you will need
+  ammunition for your sling or bow. Darts are effective when simply thrown;
+  other kinds of ammunition require you to wield an appropriate device to
+  inflict worthwhile damage. Ammunition has only one "plus" value, which
+  affects both accuracy and damage. If you have ammunition suitable for
+  what you are wielding, the 'f' command will choose the first lot in your
+  inventory, or you can use the 't' command to throw anything. If you are
+  using the right kind of hand weapon, you will "shoot" the ammunition,
+  otherwise you "throw" it.
+
+  When throwing something, you are asked for a direction. You can either
+  enter one of the directions on your keypad, or type '*' and move the
+  cursor over your target if they are not in a direct line with you. When
+  the cursor is on them, press '.' (period) or delete to target them (you
+  can also target an empty space if you want). If you press '>' instead of
+  '.', the missile will stop at that space even if it misses, and if the
+  target space is water, it may hit anything which might be lurking beneath
+  the surface (which would otherwise be missed completely). If you type '.'
+  (or del) instead of a direction or '*', or if you target yourself as
+  described above, you throw whatever it is at yourself (this can be useful
+  when zapping some wands; see later). Also, if you type 'p' instead of a
+  direction or '*', you will target your previous target (if still
+  possible).
+
+Armour:
+
+  This is also rather important. When worn, most armour improves your Armour
+  Class, which decreases the amount of damage you take when something
+  injures you. Unfortunately the heavier types of armour also hamper your
+  movement, making it easier for monsters to hit you (ie reducing your
+  evasion score) and making it harder for you to hit monsters. These effect
+  can be mitigated by a high Armour skill. Wearing heavy armour also
+  increases your chances of miscasting spells, an effect which is not
+  reduced by your Armour skill.
+
+  A Shield normally affects neither your AC or your evasion, but it lets you
+  block some of the attacks aimed at you and absorbs some of the damage you
+  would otherwise receive from things like dragon breath and lightning
+  bolts. Wearing a shield (especially a large shield) makes you less
+  effective in hand combat. Shields are more effective when you're fighting a
+  small number of foes than when you're surrounded.
+
+  Some magical armours have special powers. These powers are sometimes
+  automatic, affecting you whenever you wear the armour, and sometimes must
+  be activated with the 'a' command.
+
+  You can wear armour with the 'W' command, and take it off with the 'T'
+  command.
+
+Food:
+
+  This is extremely important. You can find many different kinds of food in
+  the dungeon. If you don't eat when you get hungry, you will eventually
+  die of starvation. Fighting, carrying heavy loads, casting spells, and
+  using some magical items will make you hungry. When you are starving you
+  fight less effectively as well. You can eat food with the 'e' command.
+
+Magical Scrolls:
+
+  Scrolls have many different magical spells enscribed on them, some good
+  and some bad. One of the most useful scrolls is the scroll of identify,
+  which will tell you the function of any item you have in your inventory;
+  save these up for the more powerful and inscrutable magic items, like
+  rings. You can read scrolls (and by doing so invoke their magic) with the
+  'r' command.
+
+Magical Potions:
+
+  While scrolls tend to affect your equipment or your environment, most
+  potions affect your character in some way. The most common type is the
+  simple healing potion, which restores some hit points, but there are many
+  other varieties of potions to be found. Potions can be quaffed (drunk)
+  with the 'q' command. Try to avoid drinking poisonous potions!
+
+Wands:
+
+  Sometimes you will be lucky enough to find a stick which contains stored
+  magical energies. Wands each have a certain amount of charges, and a wand
+  will cease to function when its charges run out. You must identify a wand
+  to find out how many uses it has left. Wands are aimed in the same way as
+  missile weapons, and you can invoke the power of a wand by 'z'apping it.
+
+Rings:
+
+  Magical rings are among the most useful of the items you will find in the
+  dungeon, but can also be some of the most hazardous. They transfer various
+  magical abilities onto their wearer, but powerful rings like rings of
+  regeneration or invisibility make you hunger very quickly when activated.
+  You can put on rings with the 'P' command, and remove them by typing 'R'.
+  You can wear up to two rings simultaneously, one on each hand; which hand
+  you put a ring on is immaterial to its function. Some rings function
+  automatically, while others require activation (the 'a' command).
+
+  Amulets are similar to rings, but have a different range of effects (which
+  tend to be more subtle). Amulets are worn around the neck, and you can
+  wear only one at a time.
+
+Staves:
+
+  There are a number of types of magical staves. Some enhance your general
+  spellcasting ability, while some greatly increase the power of a certain
+  class of spells (and possibly reduce your effectiveness with others).
+  Some are spell staves, and hold spells which you can cast without having
+  to memorise them first, and also without consuming food. You must wield a
+  staff like a weapon in order to gain from its power, and magical staves
+  are as effective as +0 quarterstaves in combat. Spell staves can be
+  Invoked with the 'I' command while you are wielding them.
+
+Books:
+
+  Most books contain magical spells which your character may be able to learn.
+  You can read a book with the 'r' command, which lets you access a
+  description of each spell, or memorise spells from it with the 'M' command.
+  Some books have other special effects, and powerful spellbooks have been
+  known to punish the attentions of incompetent magicians.
+
+Carrion:
+
+  If you manage to kill a monster delicately enough to avoid scattering bits
+  of it around the room, it may leave a corpse behind for you to play with.
+  Despite the fact that corpses are represented by the same '%' sign as
+  food, you can't eat them without first cutting them into pieces with the
+  'D' command, and being extremely hungry helps as well. Even then, you
+  should choose your homemade food with great care.
+
+Miscellaneous:
+
+  These are items which don't fall into any other category. You can use many
+  of them by wielding and 'I'nvoking them. You can also use some other
+  special items (such as some weapons) by invoking them in this way.
+
+Racial Items:
+
+  Some items have been crafted by members of a gifted race, and have special
+  properties. In addition, items made by a specific race work better in the
+  hands of people of that race.
+
+  Dwarven weapons and armours are very durable, and do not rust or corrode
+  easily.
+
+  Orcish bows/crossbows are particularly effective in combination with orcish
+  arrows/bolts.
+
+  Elven armour is unusually light, and does not affect the dodging or stealth
+  of its wearer to the extent that other armours do. Elven cloaks and boots
+  are particularly useful to those who wish to be stealthy, and elven bows are
+  particularly effective in conjunction with elven arrows.
+
+Getting Items:
+
+  You pick items up with the ',' (comma) command and drop them with the 'd'rop
+  command. When you are given a prompt like "drop which item?" or "pick up
+  <x>?", if you type a number before either the letter of the item, or 'y' or
+  'n' for yes or no, you will drop or get that quantity of the item.
+
+  Typing 'i' gives you an inventory of what you are carrying. When you are
+  given a prompt like "Throw [or wield, wear, etc] which item?", you can type
+  the letter of the item, or you can type '?' or '*' to get an inventory list.
+  '?' lists all appropriate items, while '*' lists all items, appropriate or
+  not. When the inventory screen is showing "-more-", to show you that there
+  is another page of items, you can type the letter of the item you want
+  instead of space or enter.
+
+  You can use the adjust command (the '=' key) to change the letters to which
+  your possessions are assigned. This command can be used to change spell
+  letters as well.
+
+  Some items can be stickycursed, in which case they weld themselves to your
+  body when you use them. Such items usually carry some kind of disadvantage:
+  a weapon or armour may be damaged or negatively enchanted, while rings can
+  have all manner of unpleasant effects on you. If you are lucky, you might
+  find magic which can rid you of cursed items.
+
+  Items like scrolls, potions and some other types each have a characteristic,
+  like a label or a colour, which will let you tell them apart on the basis of
+  their function. However, these characteristics change between each game, so
+  while in one game every potion of healing may be yellow, in another game
+  they might all be purple and bubbly. Once you have discovered the function
+  of such an item, you will remember it for the rest of the current game. You
+  can access your item discoveries with the '\' key.
+
+  A very useful command is the 'v' key, which gives you a description of what
+  an item does. This is particularly useful when comparing different types of
+  weapons, but don't expect too much information from examining unidentified
+  items.
+
+----------------------------------------------------------------------------
+                                  RELIGION
+----------------------------------------------------------------------------
+
+There are a number of Gods, Demons and other assorted Powers who will accept
+your character's worship, and sometimes give out favours in exchange. You can
+use the '^' command to check the requirements of whoever it is that you
+worship, and if you find religion to be an inconvenience you can always
+renounce your faith (use the 'a' command - but some Gods resent being
+scorned!).
+
+The 'p' command lets you pray to your God. Anything you do while praying, you
+do in your God's name - this is how you dedicate your kills or corpse-
+sacrifices ('D' command) to your God, for example. Praying also gives you a
+sense of what your God thinks of you, and can be used to sacrifice things at
+altars.
+
+To use any powers which your God deems you fit for, access the abilities menu
+with the 'a' command; God-given abilities are listed as invocations.
+
+Some classes start out religious; others have to pray at an altar to dedicate
+themselves to a life of servitude. There are altars scattered all over the
+dungeon, and your character has heard rumours of a special temple somewhere
+near the surface.
+
+----------------------------------------------------------------------------
+                                 MUTATIONS
+----------------------------------------------------------------------------
+
+Although it would doubtless be a nice thing if you could remain genetically
+pure, there are too many toxic wastes and mutagenic radiations in the Dungeon
+for that to be possible. If your character is so affected by these that he or
+she undergoes physiological change, you can use the 'A' command to see how
+much of a freak they've become and the 'a' command to activate any mutations
+which can be controlled.
+
+You can also become mutated by overusing certain powerful enchantments,
+particularly Haste (not the kind you get from being berserk) and Invisibility,
+as your system absorbs too much magical energy - but you would have to spend
+almost all of your time hasted or invisible to be affected. However, some
+powerful items radiate dangerous levels of magical energy. More often than
+not, the mutations caused by magical radiations express harmfully.
+
+Any demonic powers your character may have are listed in red; these are
+permanent and can never be removed. If one of your powers has been augmented
+by a mutation, it is displayed in a lighter red colour.
+
+
+----------------------------------------------------------------------------
+                            SPELLCASTING
+----------------------------------------------------------------------------
+
+Magical spells are a very important part of surviving in the dungeon. Every
+character class can make use of magical spells, although those who enter the
+dungeon without magical skills must practise by reading scrolls before they
+can attempt spellcasting.
+
+Spells are stored in books, which you will occasionally find in the dungeon.
+Each spell has a Level, which denotes the amount of skill required to use it
+as well as indicating how powerful it may be. You can only memorise a certain
+number of levels of spells; type 'M' to find out how many. When you gain
+experience levels, you can memorise more, and you will need to save up for
+several levels to memorise the more powerful spells. When you cast a spell,
+you temporarily expend some of your magical energy as well as becoming
+hungrier (although more powerful spellcasters hunger less quickly from using
+magic).
+
+High level spells are difficult to cast, and you may miscast them every once
+in a while (resulting in a waste of magic and possibly dangerous side-
+effects). Your chance of failing to cast a spell properly depends on your
+skills, your intelligence, the level of the spell and whether you are wearing
+heavy armour. Failing to cast a spell exercises your spell skills, but not by
+as much as casting it successfully.
+
+Many of the more powerful spells carry disadvantages or risks; you should read
+the spell description (obtained by reading the spellbook in which you found
+the spell) before casting anything.
+
+Be careful of magic-using enemies! Some of them can use magic just as well as
+you, if not better, and often use it intelligently.
+
+
+----------------------------------------------------------------------------
+                          EXPLORING THE DUNGEON
+----------------------------------------------------------------------------
+
+You can make your character walk around with the numeric keypad (turn numlock
+off) or the "Rogue" keys (hjklbnyu). If this is too slow, you can make your
+character walk repeatedly by typing shift and a direction. They will walk in
+that direction until any of a number of things happen: a hostile monster is
+visible on the screen, a message is sent to the message window for any reason,
+you type a key, or you are about to step on anything other than normal floor
+or an undiscovered trap and it is not your first move of the long walk. Note
+that this is functionally equivalent to just pressing the direction key
+several times.
+
+If you press shift and '5' on the numeric keypad (or just the number '5' on
+the keyboard) you rest for 100 turns or until your hit points or magic return
+to full, whichever is sooner. You can rest for just one turn by pressing '.',
+delete, 's', or '5' on the keypad. Whenever you are resting, you are assumed
+to be observing your surroundings, so you have a chance of detecting any traps
+or secret doors adjacent to you.
+
+The section of the viewing window which is coloured (with the '@' representing
+you at the centre) is what you can see around you. The dark grey around it is
+the parts of the level which you have visited, but cannot currently see. The
+'x' command lets you move the cursor around to get a description of the
+various dungeon features, and typing '?' when the cursor is over a monster
+brings up a short description of that monster. You can get a map of the whole
+level (which shows where you've already been) by typing the 'X' key. This map
+specially colour-codes stairs and known traps, even if something is on top of
+them.
+
+You can make your way between levels by using staircases, which appear as '>'
+(down) and '<' (up), by pressing the '>' or '<' keys. If you ascend an up
+staircase on level one, you will leave the dungeon forever; if you are
+carrying the magical Orb of Zot, you win the game by doing this.
+
+Occasionally you will find an archway; these lead to special places like
+shops, magical labyrinths, and Hell. Depending on which type of archway it is,
+you can enter it by typing '<' or '>'.
+
+Doors can be opened with the 'o' command and closed with the 'c' command.
+Pressing control plus a direction also opens doors. If there is no closed door
+in the indicated space, you will attempt to attack any monster which may be
+standing there (this is the only way to attack a friendly creature hand-to-
+hand). If there is no creature there, you will attempt to disarm any trap in
+the target square. If there is apparently nothing there you will still attack
+it, just in case there's something invisible lurking around.
+
+A variety of dangerous and irritating traps are hidden around the dungeon.
+Traps look like normal floor until discovered. Some traps can be disarmed with
+the control-direction commands
+
+When you are in a shop, you are given a list of the shopkeeper's stock from
+which to choose, and a list of instructions. Unfortunately the shopkeepers all
+have an enterprise bargaining agreement with the dungeon teamsters union which
+prevents them using non-union labour to obtain stock, so you can't sell
+anything in a shop (but what shopkeeper would trust a scummy adventurer like
+you, anyway?).
+
+You goal is to locate the Orb of Zot, which is held somewhere deep beneath the
+world's surface. The Orb is an ancient and incredibly powerful artefact, and
+the legends promise great things for anyone brave enough to extract it from
+the fearsome Dungeon. Some say it will grant immortality or even godhood to
+the one who carries it into the sunlight; many undead creatures seek it in the
+hope that it will restore them to life. But then, some people will believe
+anything. Good luck!
+
+A full list of the commands available to you can be accessed by typing '?'
+(question mark). If you don't like them, they can be changed by the use of:
+
+----------------------------------------------------------------------------
+                            MACROS/KEYMAPS
+----------------------------------------------------------------------------
+
+You can change the keys used to perform specific functions by editing the
+macro.txt file (or creating a new one). The K: line indicates a key, and the
+A: line assigns another key to that key's function.
+
+You can also redefine keys in-game with the ` key, and save them with the ~
+key.
+
+(Thanks to Juho Snellman for this patch)
+
+----------------------------------------------------------------------------
+                                MONSTERS
+----------------------------------------------------------------------------
+
+In the caverns of Crawl, you will find a great variety of creatures, many of
+whom would very much like to eat you. To stop them doing this, you will need
+to fight. To attack a monster, stand next to it and move in its direction;
+this makes you attack it with your wielded weapon. Of course, some monsters
+are just too nasty to beat, and you will find that discretion is often the
+better part of valour.
+
+Some monsters can be friendly; friendly monsters will follow you around and
+fight on your behalf (you gain 1/2 the normal experience points for any kills
+they make). You can command your allies using the '!' key, which lets you
+either shout to attract them or tell them who to attack.
+
+----------------------------------------------------------------------------
+                         MISCELLANEOUS STUFF
+----------------------------------------------------------------------------
+
+The scores file does not have to be present (as of v2.02), and is not included
+in the distribution. You can unpack the zip file into your old crawl directory
+and the new version will keep using the old scores file (scores files from any
+version are usable by any later version).
+
+The initfile, INIT.TXT, lets you set various options affecting the game's user
+interface, like the conditions for Autopickup and a default name for your
+character. You can alter it with any reputable text editor.
+
+As of 2.60, a -c command line switch activates the alternative character set
+for non-IBM graphics displays. A -nc switch activates the non-IBM char set
+and, for Linux systems, disables colour.
+
+Crawl is available for a number of different systems, including Linux, DOS,
+the Mac, etc.
+
+One strange thing you may notice about Crawl is that it does not keep your
+saved games if you die. This is not a bug, it is a feature! If you could
+restore your game after dying, you would probably finish the game rather
+quickly and lose interest, because most of the fun in Crawl is in the
+discovery of its bizarre secrets while taking risks with your characters. It
+is possible to cheat by messing around with the save files, but you're only
+cheating yourself out of experiencing this game as it was supposed to be
+played. If you think Crawl is too difficult, tell me!
+
+Crawl was compiled using the djgpp compiler, and comes with the files
+CWSDPMI.EXE and CWSDPMI.DOC. You can contact the author of CWSDPMI.EXE at
+sandmann@clio.rice.edu. Read CWSDPMI.DOC for more details.
+
+Although version 3 of Crawl is a complete and finished game, it probably
+contains a few unwanted features which crept in without me noticing (all of
+the earlier versions did). So, if you find anything which you think may be a
+bug, please send details of it to me, including version number, details of
+your system, what you were doing (in the game) when it happened, and just what
+exactly did happen. Hopefully this will never be necessary, but if it is you
+can (as of 26/3/99) reach me at:
+linley.henzell@student.adelaide.edu.au
+
+You can also discuss this game on the newsgroup rec.games.roguelike.misc.
+
+The object of your quest in Crawl (the Orb of Zot) was taken from Wizard's
+Castle, a text adventure written in BASIC.
+
+A lot of people have been sending me feedback and bug reports, which is
+extremely encouraging. I really appreciate that people have been taking the
+time to play my game. Keep it up!
+
+Licence:
+Read Licence.txt for information about the Crawl licence (which is practically
+identical to the nethack GPL).
+
+Source Code:
+The source code for the current version of Crawl is, at the time of writing
+(30/12/97) available from the Crawl web site:
+http://olis.net.au/~zel/index.html
+Source for some earlier versions can be obtained from me, although
+unfortunately I've lost most of it.
+
+Disclaimer:
+
+This software is provided as is, with absolutely no warranty express or
+implied. Use of it is at the sole risk of the user. No liability is accepted
+for any damage to the user or to any of the user's possessions.

@@ -1,0 +1,68 @@
+# -*- Makefile -*- for Dungeon Crawl (linux)
+
+#
+# Modified for Crawl Reference by $Author$ on $Date$
+#
+
+GAME = crawl
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+OBJECTS += libunix.o
+
+CXX = g++
+DELETE = rm -f
+COPY = cp
+OS_TYPE = LINUX
+
+CFLAGS = -Wall -Wwrite-strings -fsigned-char \
+            -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+
+MCHMOD = 2755
+
+# [dshaligram] More common location than /opt/crawl/bin - this is from the
+# Debian patch.
+INSTALLDIR = /usr/games
+LIB = -lncurses
+
+# Include for Linux
+INCLUDES = -I/usr/include/ncurses
+
+all: $(GAME)
+
+install: $(GAME)
+	$(COPY) $(GAME) ${INSTALLDIR}
+	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
+
+clean:
+	$(DELETE) *.o
+
+distclean:
+	$(DELETE) *.o
+	$(DELETE) bones.*
+	$(DELETE) morgue.txt
+	$(DELETE) scores
+	$(DELETE) $(GAME)
+	$(DELETE) *.sav
+	$(DELETE) core
+	$(DELETE) *.0*
+	$(DELETE) *.lab
+
+
+$(GAME): $(OBJECTS)
+	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	chmod ${MCHMOD} $(GAME)
+
+debug: $(OBJECTS)
+	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+profile:	$(OBJECTS)
+	${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $< ${INCLUDE}
+
+.h.cc:
+	touch $@

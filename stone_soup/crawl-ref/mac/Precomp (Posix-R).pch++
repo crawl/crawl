@@ -1,0 +1,18 @@
+/*
+ *  File:       Precomp (Posix-R).pch++
+ *  Summary:   	Precompiled header for Posix release builds.
+ *  Written by: Jesse Jones
+ *
+ *  Copyright © 2002 Jesse Jones. 
+ *
+ *  Change History (most recent first):	
+ *
+ *    <1>     5/25/02     JDJ     Created
+ */
+ 
+#pragma precompile_target "Precomp (Posix-R)"	
+
+#define UNIX			1
+#define BSD				1
+
+#include "Precomp (Common).h"

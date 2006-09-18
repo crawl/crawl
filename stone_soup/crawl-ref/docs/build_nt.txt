@@ -1,0 +1,56 @@
+Notes for building crawl with VACPP
+-----------------------------------
+* when including source,  make sure source type is
+  defined to be 'cpp'  - VACPP doesn't know how to
+  handle .cc extensions.
+* include libw32c.cc as a source object;
+  ignore the other lib*.cc files
+* define the macro WIN32CONSOLE
+* MUST build with signedchars = yes
+* MUST build with enumsize = 4
+* target architecture should probably be 486 machines. 
+
+  According to jmf,  targetting Pentium class machines
+  implies Pentium-specific instructions which are 
+  actually slower on PPro/PII/PIII machines.
+
+Other than this,  it's pretty straightforward.
+
+
+Notes for building crawl with Borland C++ 5.01
+----------------------------------------------
+* must alter the Tool information for CppCompile to 
+  'understand' .cc extensions (in Advanced Tools Settings)
+* include libw32c.cc as source; ignore other lib*.cc files
+* define macro WIN32CONSOLE
+* MUST build with "Unsigned Characters" OFF
+* MUST build with "Allocate Enums as Ints" ON
+* MUST set search directories so that the Crawl Source directory
+  is searched before the BC5\INCLUDE directory.
+* target architecture should probably be 486 machines
+  (see note for VACPP)
+* helps to set Warnings to "Selected Subset only" or you
+  get ZILLIONS of warnings.   I usually turn off all the
+  "Code Efficiency" warnings.  :)
+* for best results,  specify following in target expert:
+  - Win32 Console Application (.exe)
+  - _Everything_ unchecked
+  - Static linking
+
+Notes for building crawl with mingw
+------------------------------------------
+* In makefile specify makefile.w32. Other notes:
+  - make sure your path includes mingw binaries
+  - set LIB to your mingw lib directory
+  - set INCLUDE to your mingw include directory
+  - the makefile defines WIN32CONSOLE like above
+  - -Wall will generate a fair number of warnings
+* Tested on Win98 and Win2000.
+* Current build is not statically linked.
+* See notes above for target arch code gen switches
+* This is currently tested only with 2.95.2
+  I anticipate no problems with mingw 3.0.1 but 
+  haven't had time to update yet.
+* This also currently doesn't statically link
+
+

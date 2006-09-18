@@ -1,0 +1,41 @@
+Notes for building crawl with VACPP
+-----------------------------------
+* when including source,  make sure source type is
+  defined to be 'cpp'  - VACPP doesn't know how to
+  handle .cc extensions.
+* include libw32c.cc as a source object;
+  ignore the other lib*.cc files
+* define the macro WIN32CONSOLE
+* MUST build with signedchars = yes
+* MUST build with emumsize = 4
+* target architecture should probably be 486 machines.
+
+  According to jmf,  targetting Pentium class machines
+  implies Pentium-specific instructions which are
+  actually slower on PPro/PII/PIII machines.
+
+Other than this,  it's pretty straightforward.
+
+
+Notes for building crawl with Borland C++ 5.01
+----------------------------------------------
+Don't bother.  Borland C++ 5.01 has a broken
+STL library that requires manual patching to get
+around.  Use the free commandline tools from Borland
+instead.
+
+Notes for building crawl with Borland C++ 5.5 free commandline tools
+--------------------------------------------------------------------
+* make sure your ilink32.cfg contains entries for at least lib and lib\psdk,
+  for example:
+  -L"g:\bcc55\lib;g:\bcc55\lib\psdk"
+  (This may already be done if you've set up Borland for use with VIDE)
+
+* cd to the source directory and edit 'makefile' 
+    * set MAKEFILE=makefile.bor
+    * comment out the OTHER=-j2 line 
+    * remove EXTRA_FLAGS=... from command (set flags in makefile.bor instead)
+
+* finally,  type 'make all' ('make' may default to 'make debug' which isn't
+  quite supported yet using the free tools)
+
