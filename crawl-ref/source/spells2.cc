@@ -1006,7 +1006,7 @@ int vampiric_drain(int pow)
 
   dirc:
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( vmove, DIR_DIR, TARG_ENEMY );
+    direction( vmove, DIR_DIR, TARG_ENEMY, true );
 
     if (!vmove.isValid)
     {
@@ -1090,7 +1090,7 @@ char burn_freeze(int pow, char flavour)
     while (mgr == NON_MONSTER)
     {
         mpr("Which direction?", MSGCH_PROMPT);
-        direction( bmove, DIR_DIR, TARG_ENEMY );
+        direction( bmove, DIR_DIR, TARG_ENEMY, true );
 
         if (!bmove.isValid)
         {
@@ -1190,7 +1190,7 @@ int summon_elemental(int pow, int restricted_type,
     {
         mpr("Summon from material in which direction?", MSGCH_PROMPT);
 
-        direction( smove, DIR_DIR );
+        direction( smove, DIR_DIR, TARG_ANY, true );
 
         if (!smove.isValid)
         {

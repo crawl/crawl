@@ -28,7 +28,7 @@
 #define DIR_DIR     2
 
 void direction( struct dist &moves, int restricts = DIR_NONE, 
-                int mode = TARG_ANY );
+                int mode = TARG_ANY, bool confirm_fizzle = false );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

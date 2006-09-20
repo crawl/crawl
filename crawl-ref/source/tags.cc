@@ -225,7 +225,7 @@ float unmarshallFloat(struct tagHeader &th)
 }
 
 // string -- marshall length & string data
-void marshallString(struct tagHeader &th, char *data, int maxSize)
+void marshallString(struct tagHeader &th, const char *data, int maxSize)
 {
     // allow for very long strings.
     short len = strlen(data);
@@ -743,6 +743,8 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallShort(th,you.inv[i].plus2);
         marshallShort(th, you.inv[i].orig_place);
         marshallShort(th, you.inv[i].orig_monnum);
+	/*** HP CHANGE ***/
+	marshallString(th, you.inv[i].inscription.c_str(), 80);
     }
 
     // item descrip for each type & subtype
@@ -1276,6 +1278,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
     {
         you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
+	you.inv[i].inscription = std::string();
         if (minorVersion < 1)
         {
             you.inv[i].base_type = (unsigned char) unmarshallByte(th);
@@ -1304,6 +1307,10 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
             {
                 you.inv[i].orig_place  = unmarshallShort(th);
                 you.inv[i].orig_monnum = unmarshallShort(th);
+		/*** HP CHANGE ***/
+		char insstring[80];
+		unmarshallString(th, insstring, 80);
+		you.inv[i].inscription = std::string(insstring);
             }
         }
 
@@ -1495,6 +1502,8 @@ static void tag_construct_level_items(struct tagHeader &th)
 
         marshallShort(th, mitm[i].orig_place);
         marshallShort(th, mitm[i].orig_monnum);
+	/*** HP CHANGE ***/
+	marshallString(th, mitm[i].inscription.c_str(), 80);
     }
 }
 
@@ -1692,11 +1701,16 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
         {
             mitm[i].orig_place  = unmarshallShort(th);
             mitm[i].orig_monnum = unmarshallShort(th);
+	    /*** HP CHANGE ***/
+	    char insstring[80];
+	    unmarshallString(th, insstring, 80);
+	    mitm[i].inscription = std::string(insstring);
         }
         else
         {
             mitm[i].orig_place  = 0;
             mitm[i].orig_monnum = 0;
+	    mitm[i].inscription = std::string();
         }
     }
 }

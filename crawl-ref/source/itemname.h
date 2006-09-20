@@ -75,7 +75,7 @@ void quant_name( const item_def &item, int quant, char des,
 bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
-// bool fully_indentified( const item_def &item );
+bool fully_identified( const item_def &item );
 
 bool item_type_known( const item_def &item );
 
@@ -109,5 +109,6 @@ void set_ident_type( char cla, int ty, char setting, bool force = false );
  * *********************************************************************** */
 bool hide2armour( unsigned char *which_subtype );
 
+bool is_interesting_item( const item_def& item );
 
 #endif

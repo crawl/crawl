@@ -28,6 +28,7 @@
 #include "macro.h"
 #include "misc.h"
 #include "monstuff.h"
+#include "notes.h"
 #include "player.h"
 #include "spl-book.h"
 #include "view.h"
@@ -121,6 +122,8 @@ bool add_spell_to_memory( int spell )
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
+
+    take_note(Note(NOTE_LEARN_SPELL, spell));
 
     return (true);
 }
@@ -462,7 +465,7 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
     struct dist bmove;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_ENEMY );
+    direction( bmove, DIR_DIR, TARG_ENEMY, true );
 
     if (!bmove.isValid)
     {
@@ -679,7 +682,7 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
 
     message_current_target();
 
-    direction( spelld, restrict, mode );
+    direction( spelld, restrict, mode, true );
 
     if (!spelld.isValid)
     {

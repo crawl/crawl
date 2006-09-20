@@ -40,8 +40,10 @@
 #include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
+#include "mon-pick.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -69,7 +71,7 @@ static bool immobile_monster[MAX_MONSTERS];
 
 #define FAR_AWAY    1000000         // used in monster_move()
 
-// This function creates an arteficial item to represent a mimic's appearance.
+// This function creates an artificial item to represent a mimic's appearance.
 // Eventually, mimics could be redone to be more like Dancing wepaons...
 // there'd only be one type and it would look like the item it carries. -- bwr
 void get_mimic_item( const struct monsters *mimic, item_def &item )
@@ -316,6 +318,20 @@ static void place_monster_corpse(struct monsters *monster)
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
 }                               // end place_monster_corpse()
+
+static int ood_limit() {
+    return Options.ood_interesting;
+}
+
+static bool is_interesting_monster( const struct monsters *monster ) {
+    if ( mons_is_unique(monster->type) )
+	return true;
+    if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
+	 mons_level(monster->type) >= you.your_level + ood_limit() &&
+	 mons_level(monster->type) < 99 )
+	return true;
+    return false;
+}
 
 void monster_die(struct monsters *monster, char killer, int i)
 {
@@ -676,7 +692,7 @@ void monster_die(struct monsters *monster, char killer, int i)
                     (tmp == 1) ? " says, \"I'll get you next time!\"" :
                     (tmp == 2) ? " says, \"This isn't over yet!\"" :
                     (tmp == 3) ? " says, \"I'll be back!\"" :
-                    (tmp == 4) ? " says, \"This isn't the end, its only just beginning!\"" :
+                    (tmp == 4) ? " says, \"This isn't the end, it's only just beginning!\"" :
                     (tmp == 5) ? " says, \"Kill me?  I think not!\"" 
                                : " says, \"You cannot defeat me so easily!\"",
                                     MSGCH_TALK );
@@ -689,6 +705,13 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
+
+	if ( is_interesting_monster(monster) ) {
+	    char namebuf[ITEMNAME_SIZE];
+	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
+	}
+
         you.kills.record_kill(monster, killer, pet_kill);
 
         if (mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI))
@@ -830,6 +853,7 @@ static bool jelly_divide(struct monsters * parent)
     child->behaviour = parent->behaviour; /* Look at this! */
     child->foe = parent->foe;
     child->attitude = parent->attitude;
+    /* FIXME - hp: copy enchantments? */
 
     child->x = parent->x + jex;
     child->y = parent->y + jey;

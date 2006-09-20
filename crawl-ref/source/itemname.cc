@@ -31,6 +31,7 @@
 #include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -263,6 +264,13 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
         {
             strncat( buff, " (around neck)", ITEMNAME_SIZE );
         }
+    }
+    /*** HP CHANGE -- warning -- possible stack overflow error ***/
+    if ( item.inscription.size() > 0 ) // has an inscription
+    {
+	strncat( buff, " {", 2 );
+	strncat( buff, item.inscription.c_str(), ITEMNAME_SIZE );
+	strncat( buff, "}", 1 );
     }
 
     return (1);
@@ -2418,4 +2426,23 @@ static char retlet( int sed )
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return (consonants[ sed % (sizeof(consonants) - 1) ]);
+}
+
+bool is_interesting_item( const item_def& item ) {
+    if ( is_random_artefact(item) ||
+	 is_unrandom_artefact(item) ||
+	 is_fixed_artefact(item) )
+	return true;
+
+    char name[ITEMNAME_SIZE];
+    item_name(item, DESC_PLAIN, name, false);
+    std::string iname(name);
+    for (unsigned i = 0; i < Options.note_items.size(); ++i)
+        if (Options.note_items[i].matches(iname))
+            return true;
+    return false;
+}
+
+bool fully_identified( const item_def& item ) {
+    return item_ident( item, ISFLAG_IDENT_MASK );
 }

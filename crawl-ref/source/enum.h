@@ -643,7 +643,83 @@ enum command_type
     CMD_INTERLEVEL_TRAVEL,
     CMD_FIX_WAYPOINT,
 
-    CMD_CLEAR_MAP
+    CMD_CLEAR_MAP,
+    CMD_INSCRIBE_ITEM,
+    CMD_TOGGLE_NOFIZZLE,
+    CMD_TOGGLE_AUTOPRAYER,
+    CMD_MAKE_NOTE,
+
+    CMD_PERFORM_ACTIVITY,
+
+    /* overmap commands */
+    CMD_MAP_CLEAR_MAP,
+    CMD_MAP_ADD_WAYPOINT,
+    CMD_MAP_EXCLUDE_AREA,
+    CMD_MAP_CLEAR_EXCLUDES,
+
+    CMD_MAP_MOVE_LEFT,
+    CMD_MAP_MOVE_DOWN,
+    CMD_MAP_MOVE_UP,
+    CMD_MAP_MOVE_RIGHT,
+    CMD_MAP_MOVE_UP_LEFT,
+    CMD_MAP_MOVE_DOWN_LEFT,
+    CMD_MAP_MOVE_UP_RIGHT,
+    CMD_MAP_MOVE_DOWN_RIGHT,
+
+    CMD_MAP_JUMP_LEFT,
+    CMD_MAP_JUMP_DOWN,
+    CMD_MAP_JUMP_UP,
+    CMD_MAP_JUMP_RIGHT,
+    CMD_MAP_JUMP_UP_LEFT,
+    CMD_MAP_JUMP_DOWN_LEFT,
+    CMD_MAP_JUMP_UP_RIGHT,
+    CMD_MAP_JUMP_DOWN_RIGHT,
+
+    CMD_MAP_SCROLL_DOWN,
+    CMD_MAP_SCROLL_UP,
+
+    CMD_MAP_FIND_UPSTAIR,
+    CMD_MAP_FIND_DOWNSTAIR,
+    CMD_MAP_FIND_YOU,
+    CMD_MAP_FIND_PORTAL,
+    CMD_MAP_FIND_TRAP,
+    CMD_MAP_FIND_ALTAR,
+    CMD_MAP_FIND_EXCLUDED,
+    CMD_MAP_FIND_F,
+    CMD_MAP_FIND_WAYPOINT,
+    CMD_MAP_FIND_STASH,
+
+    CMD_MAP_GOTO_TARGET,
+
+    CMD_MAP_EXIT_MAP,
+
+    /* targeting commands */
+    CMD_TARGET_DOWN_LEFT,
+    CMD_TARGET_DOWN,
+    CMD_TARGET_DOWN_RIGHT,
+    CMD_TARGET_LEFT,
+    CMD_TARGET_RIGHT,
+    CMD_TARGET_UP_LEFT,
+    CMD_TARGET_UP,
+    CMD_TARGET_UP_RIGHT,
+    CMD_TARGET_CYCLE_TARGET_MODE,
+    CMD_TARGET_PREV_TARGET,
+    CMD_TARGET_SELECT,
+    CMD_TARGET_OBJ_CYCLE_BACK,
+    CMD_TARGET_OBJ_CYCLE_FORWARD,
+    CMD_TARGET_CYCLE_FORWARD,
+    CMD_TARGET_CYCLE_BACK,
+    CMD_TARGET_CENTER,
+    CMD_TARGET_CANCEL,
+    CMD_TARGET_OLD_SPACE,
+    CMD_TARGET_FIND_TRAP,
+    CMD_TARGET_FIND_PORTAL,
+    CMD_TARGET_FIND_ALTAR,
+    CMD_TARGET_FIND_UPSTAIR,
+    CMD_TARGET_FIND_DOWNSTAIR,
+    CMD_TARGET_FIND_YOU,
+    CMD_TARGET_DESCRIBE
+
 };
 
 enum confirm_level_type
@@ -1598,6 +1674,7 @@ enum msg_channel_type
     MSGCH_PLAIN,          // regular text
     MSGCH_PROMPT,         // various prompts
     MSGCH_GOD,            // god/religion (param is god)
+    MSGCH_PRAY,		  // praying messages (param is god)
     MSGCH_DURATION,       // effect down/warnings
     MSGCH_DANGER,         // serious life threats (ie very large HP attacks)
     MSGCH_WARN,           // much less serious threats
@@ -2532,6 +2609,24 @@ enum object_selector
 {
     OSEL_ANY   = -1,
     OSEL_WIELD = -2
+};
+
+enum operation_types
+{
+    OPER_WIELD = 'w',
+    OPER_QUAFF = 'q',
+    OPER_DROP = 'd',
+    OPER_EAT = 'e',
+    OPER_TAKEOFF = 'T',
+    OPER_WEAR = 'W',
+    OPER_PUTON = 'P',
+    OPER_REMOVE = 'R',
+    OPER_READ = 'r',
+    OPER_MEMORISE = 'M',
+    OPER_ZAP = 'z',
+    OPER_THROW = 't',
+    OPER_EXAMINE = 'v',
+    OPER_ANY = 0
 };
 
 enum orb_type

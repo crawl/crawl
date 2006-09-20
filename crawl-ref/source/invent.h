@@ -15,6 +15,7 @@
 #include <stddef.h>
 #include <vector>
 #include "menu.h"
+#include "enum.h"
 
 #define PROMPT_ABORT        -1
 #define PROMPT_GOT_SPECIAL  -2
@@ -38,7 +39,8 @@ int prompt_invent_item( const char *prompt, int type_expect,
                         bool allow_auto_list = true, 
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
-                        int *const count = NULL );
+                        int *const count = NULL,
+			operation_types oper = OPER_ANY );
 
 std::vector<SelItem> select_items( std::vector<item_def*> &items, 
                                    const char *title );

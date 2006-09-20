@@ -59,6 +59,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mt19937ar.h"
+#include "notes.h"
 #include "player.h"
 #include "output.h"
 #include "skills2.h"
@@ -501,7 +502,10 @@ void redraw_screen(void)
     if (Options.delay_message_clear)
         mesclr( true );
 
+    bool note_status = notes_are_active();
+    activate_notes(false);
     new_level();
+    activate_notes(note_status);
 
     viewwindow(1, false);
 #endif

@@ -507,7 +507,7 @@ bool acquirement(unsigned char force_class, int agent)
 
     if (class_wanted == OBJ_FOOD)
     {
-        // food is a little less predicatable now -- bwr
+        // food is a little less predictable now -- bwr
 
         if (you.species == SP_GHOUL)
         {
@@ -516,7 +516,7 @@ bool acquirement(unsigned char force_class, int agent)
         }
         else 
         {
-            // Meat is better than bread (except for herbivors), and
+            // Meat is better than bread (except for herbivores), and
             // by choosing it as the default we don't have to worry
             // about special cases for carnivorous races (ie kobold)
             type_wanted = FOOD_MEAT_RATION;
@@ -525,7 +525,7 @@ bool acquirement(unsigned char force_class, int agent)
                 type_wanted = FOOD_BREAD_RATION; 
 
             // If we have some regular rations, then we're probably be more
-            // interested in faster foods (escpecially royal jelly)... 
+            // interested in faster foods (especially royal jelly)... 
             // otherwise the regular rations should be a good enough offer.
             if (already_has[FOOD_MEAT_RATION] 
                     + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
@@ -903,7 +903,7 @@ bool acquirement(unsigned char force_class, int agent)
                     if (best_any >= SK_FIGHTING
                                 && best_any <= SK_STAVES)
                     {
-                        // Fighter mage's get the fighting enchantment books
+                        // Fighter mages get the fighting enchantment books
                         if (!you.had_book[BOOK_WAR_CHANTS])
                             type_wanted = BOOK_WAR_CHANTS;
                         else if (!you.had_book[BOOK_TUKIMA])
@@ -1231,7 +1231,7 @@ bool acquirement(unsigned char force_class, int agent)
                         }
                         else
                         {
-                            // keep reseting seed until it's good:
+                            // keep resetting seed until it's good:
                             for (; brand == SPWPN_HOLY_WRATH 
                                       || brand == SPWPN_DISRUPTION; 
                                   brand = get_weapon_brand(mitm[thing_created]))

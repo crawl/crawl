@@ -37,7 +37,7 @@ void marshallShort(struct tagHeader &th, short data);
 void marshallLong(struct tagHeader &th, long data);
 void marshallFloat(struct tagHeader &th, float data);
 void marshallBoolean(struct tagHeader &th, bool data);
-void marshallString(struct tagHeader &th, char *data, int maxSize = 0);
+void marshallString(struct tagHeader &th, const char *data, int maxSize = 0);
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************

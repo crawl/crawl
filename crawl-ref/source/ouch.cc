@@ -74,6 +74,7 @@
 #include "items.h"
 #include "macro.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -266,7 +267,7 @@ void splash_with_acid( char acid_strength )
     char splc = 0;
     int  dam = 0;
 
-    const bool wearing_cloak = (you.equip[EQ_CLOAK] == -1);     
+    const bool wearing_cloak = (you.equip[EQ_CLOAK] != -1);     
 
     for (splc = EQ_CLOAK; splc <= EQ_BODY_ARMOUR; splc++)
     {
@@ -509,6 +510,11 @@ void lose_level(void)
     calc_hp();
     calc_mp();
 
+    char buf[200];
+    sprintf(buf, "HP: %d/%d MP: %d/%d",
+	    you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+
     you.redraw_experience = 1;
 }                               // end lose_level()
 
@@ -642,6 +648,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         {
             mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
         }
+	take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
 
         if (you.hp > 0)
             return;
@@ -979,6 +986,7 @@ void end_game( struct scorefile_entry &se )
     unlink( (basefile + ".st").c_str() );
     unlink( (basefile + ".kil").c_str() );
     unlink( (basefile + ".tc").c_str() );
+    unlink( (basefile + ".nts").c_str() );
 #ifdef CLUA_BINDINGS
     unlink( (basefile + ".lua").c_str() );
 #endif

@@ -2386,7 +2386,7 @@ static void create_wanderer( void )
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_util_skills = sizeof(util_skills) / sizeof(int);
 
-    // Long swords is missing to increae it's rarity because we
+    // Long swords is missing to increase its rarity because we
     // can't give out a long sword to a starting character (they're
     // all too good)... Staves is also removed because it's not
     // one of the fighter options.-- bwr
@@ -2488,9 +2488,9 @@ static void create_wanderer( void )
         you.skills[ skill ] = 1;
     }
 
-    int wpn_skill = SK_FIGHTING;  // prefered weapon type
-    int wpn_skill_size = 0;       // level of skill in prefered weapon type
-    int num_wpn_skills = 0;       // used to choose prefered weapon
+    int wpn_skill = SK_FIGHTING;  // preferred weapon type
+    int wpn_skill_size = 0;       // level of skill in preferred weapon type
+    int num_wpn_skills = 0;       // used to choose preferred weapon
     int total_wpn_skills = 0;     // used to choose template
 
     // This algorithm is the same as the one used to pick a random
@@ -2647,7 +2647,7 @@ static void create_wanderer( void )
 
         // Create a default launcher template, but the
         // quantity may be reset to 0 if we don't want one -- bwr
-        // thorwing weapons are lowered to -1 to make them
+        // throwing weapons are lowered to -1 to make them
         // not as good as the one's hunters get, ammo is
         // also much smaller -- bwr
         you.inv[1].quantity = 1;
@@ -3421,7 +3421,7 @@ void give_items_skills()
         else
         {
             // Players get dodging or armour skill depending on their
-            // starting armour now (note: the armour has to be quiped
+            // starting armour now (note: the armour has to be equipped
             // for this function to work)
 
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;

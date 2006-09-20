@@ -16,13 +16,15 @@
 
 #include <string>
 #include "externs.h"
+#include "enum.h"
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - item_use
  * *********************************************************************** */
-bool armour_prompt(const std::string & mesg, int *index);
+bool armour_prompt(const std::string & mesg, int *index,
+		   operation_types oper);
 
 
 // last updated 12may2000 {dlb}
@@ -132,5 +134,7 @@ bool puton_item(int slot, bool prompt_finger = true);
 bool enchant_weapon( int which_stat, bool quiet = false );
 
 bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
+
+void inscribe_item();
 
 #endif

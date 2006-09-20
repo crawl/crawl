@@ -107,6 +107,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "notes.h"
 #include "ouch.h"
 #include "output.h"
 #include "overmap.h"
@@ -138,6 +139,10 @@ char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
 int stealth;                    // externed in view.h     // no it is not {dlb}
 char use_colour = 1;
+
+int autoprayer_on = 0;
+int just_autoprayed = 0;
+int about_to_autopray = 0;
 
 FixedVector< char, NUM_STATUE_TYPES >  Visible_Statue;
 
@@ -952,8 +957,27 @@ static void input(void)
             you.turn_is_over = 0;
             perform_activity();
         }
-        else
-        {
+        else if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
+		 just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
+		 i_feel_safe()) {
+	    keyin = 'p';
+	    just_autoprayed = 1;
+	    about_to_autopray = 0;
+	}
+        else {
+	    if ( just_autoprayed == 1 && you.duration[DUR_PRAYER] == 0 ) {
+		/* oops */
+		mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
+		autoprayer_on = 0;
+	    }
+	    just_autoprayed = 0;
+	    if ( autoprayer_on && about_to_autopray &&
+		 you.religion != GOD_NO_GOD &&
+		 you.duration[DUR_PRAYER] == 0 ) {
+		mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
+		about_to_autopray = 0;
+	    }
+
             if (you.running < 0)        // Travel and explore
                 travel(&keyin, &move_x, &move_y);
 
@@ -1180,6 +1204,31 @@ static void input(void)
         mpr(info);
         break;
 
+    case CMD_TOGGLE_AUTOPRAYER:
+    case CONTROL('V'):
+        autoprayer_on = !autoprayer_on;
+        strcpy(info, "Autoprayer is now ");
+        strcat(info, (autoprayer_on) ? "on" : "off");
+        strcat(info, ".");
+        mpr(info);
+        break;
+
+    case CONTROL('T'):
+    case CMD_TOGGLE_NOFIZZLE:
+	if ( Options.confirm_spell_fizzle ) {
+	    fizzlecheck_on = !fizzlecheck_on;
+	    strcpy(info, "Fizzle confirmation is now ");
+	    strcat(info, (fizzlecheck_on) ? "on" : "off");
+	    strcat(info, ".");
+	    mpr(info);
+	}
+	break;
+
+    case ':':
+    case CMD_MAKE_NOTE:
+	make_user_note();
+	break;
+
     case CONTROL('C'):
     case CMD_CLEAR_MAP:
         if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
@@ -1333,7 +1382,7 @@ static void input(void)
         {
             int index=0;
 
-            if (armour_prompt("Take off which item?", &index))
+            if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
                 takeoff_armour(index);
         }
         break;
@@ -1632,6 +1681,11 @@ static void input(void)
         list_weapons();
         return;
 
+    case '{':
+    case CMD_INSCRIBE_ITEM:
+        inscribe_item();
+        break;
+	
     case ']':
     case CMD_LIST_ARMOUR:
         list_armour();
@@ -1865,7 +1919,8 @@ static void input(void)
         you.duration[DUR_PRAYER]--;
     else if (you.duration[DUR_PRAYER] == 1)
     {
-        god_speaks(you.religion, "Your prayer is over.");
+	mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
+	about_to_autopray = 1;
         you.duration[DUR_PRAYER] = 0;
     }
 
@@ -2852,13 +2907,14 @@ static bool initialise(void)
     you.your_name[kNameLen - 1] = 0;
 #endif
 
+    activate_notes(true);
     return (ret);
 }
 
 // An attempt to tone down berserk a little bit. -- bwross
 //
 // This function does the accounting for not attacking while berserk
-// This gives a triangluar number function for the additional penalty
+// This gives a triangular number function for the additional penalty
 // Turn:    1  2  3   4   5   6   7   8
 // Penalty: 1  3  6  10  15  21  28  36
 //

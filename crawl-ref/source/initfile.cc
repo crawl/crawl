@@ -35,6 +35,8 @@
 
 game_options    Options;
 
+extern int autopickup_on;
+
 extern void (*viewwindow) (char, bool);
 extern unsigned char (*mapch) (unsigned char);
 extern unsigned char (*mapch2) (unsigned char);
@@ -121,7 +123,7 @@ static int str_to_channel_colour( const std::string &str )
 
 static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
 {
-    "plain", "prompt", "god", "duration", "danger", "warning", "food",
+    "plain", "prompt", "god", "pray", "duration", "danger", "warning", "food",
     "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
     "monster_enchant", "monster_damage", "rotten_meat", "equipment",
     "diagnostic",
@@ -377,6 +379,13 @@ void reset_options(bool clear_name)
     Options.easy_quit_item_prompts = false;
     Options.hp_warning             = 10;
     Options.hp_attention           = 25;
+    Options.confirm_self_target    = false;
+    Options.confirm_spell_fizzle   = false;
+    Options.safe_autopickup        = false;
+    Options.use_notes              = false;
+    Options.note_skill_max         = false;
+    Options.note_hp_percent        = 0;
+    Options.ood_interesting        = 8;
     Options.terse_hand             = true;
     Options.auto_list              = false;
     Options.delay_message_clear    = false;
@@ -405,6 +414,7 @@ void reset_options(bool clear_name)
     Options.stash_tracking         = STM_NONE;
 #endif
     Options.explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
+    Options.safe_zero_exp          = true;
     Options.target_zero_exp        = true;
     Options.target_wrap            = false;
     Options.target_oos             = true;
@@ -473,10 +483,15 @@ void reset_options(bool clear_name)
 
     // Clear vector options.
     Options.banned_objects.clear();
+    Options.autoinscriptions.clear();
+    Options.note_items.clear();
+    Options.note_skill_levels.clear();
     Options.stop_travel.clear();
     Options.sound_mappings.clear();
     Options.menu_colour_mappings.clear();
     Options.drop_filter.clear();
+
+    Options.map_file_name.clear();
 
     Options.named_options.clear();
 
@@ -879,7 +894,9 @@ void parse_option_line(const std::string &str, bool runscript)
     if (key != "name" && key != "crawl_dir" 
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "stop_travel" && key != "sound" 
-        && key != "drop_filter" && key != "lua_file")
+        && key != "drop_filter" && key != "lua_file"
+	&& key != "note_items" && key != "autoinscribe"
+	&& key != "map_file_name" )
     {
         tolower_string( field );
     }
@@ -942,6 +959,21 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "ascii_display")
     {
         Options.ascii_display = read_bool( field, Options.ascii_display );
+    }
+    else if (key == "default_autopickup")
+    {
+	// should autopickup default to on or off?
+	autopickup_on = read_bool( field, autopickup_on );
+    }
+    else if (key == "default_autoprayer")
+    {
+	// should autoprayer default to on or off?
+	autoprayer_on = read_bool( field, autoprayer_on );
+    }
+    else if (key == "default_fizzlecheck")
+    {
+	// should fizzlecheck default to on or off?
+	fizzlecheck_on = read_bool( field, fizzlecheck_on );
     }
     else if (key == "detailed_stat_dump")
     {
@@ -1180,6 +1212,20 @@ void parse_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
+    else if (key == "ood_interesting")
+    {
+	Options.ood_interesting = atoi( field.c_str() );
+    }
+    else if (key == "note_hp_percent")
+    {
+	Options.note_hp_percent = atoi( field.c_str() );
+        if (Options.note_hp_percent < 0 || Options.note_hp_percent > 100)
+        {
+            Options.note_hp_percent = 0;
+            fprintf( stderr, "Bad HP note percentage -- %s\n",
+                     field.c_str() );
+        }
+    }
     else if (key == "hp_attention")
     {
         Options.hp_attention = atoi( field.c_str() );
@@ -1220,6 +1266,26 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "auto_list")
     {
         Options.auto_list = read_bool( field, Options.auto_list );
+    }
+    else if (key == "confirm_self_target")
+    {
+	Options.confirm_self_target = read_bool( field, Options.confirm_self_target );
+    }
+    else if (key == "confirm_spell_fizzle")
+    {
+	Options.confirm_spell_fizzle = read_bool( field, Options.confirm_spell_fizzle );
+    }
+    else if (key == "safe_autopickup")
+    {
+	Options.safe_autopickup = read_bool( field, Options.safe_autopickup );
+    }
+    else if (key == "use_notes")
+    {
+        Options.use_notes = read_bool( field, Options.use_notes );
+    }
+    else if (key == "note_skill_max")
+    {
+        Options.note_skill_max = read_bool( field, Options.note_skill_max );
     }
     else if (key == "delay_message_clear")
     {
@@ -1274,6 +1340,37 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "ban_pickup")
     {
         append_vector(Options.banned_objects, split_string(",", field));
+    }
+    else if (key == "note_items")
+    {
+	append_vector(Options.note_items, split_string(",", field));
+    }
+    else if (key == "autoinscribe")
+    {
+	std::vector<std::string> thesplit =
+	    split_string(":", field);
+	Options.autoinscriptions.push_back(
+	    std::pair<text_pattern,std::string>(thesplit[0],
+						thesplit[1]));
+    }
+    else if (key == "map_file_name")
+    {
+	Options.map_file_name = field;
+    }
+    else if (key == "note_skill_levels")
+    {
+	std::vector<std::string> thesplit = split_string(",", field);
+	for ( unsigned i = 0; i < thesplit.size(); ++i ) {
+	    int num = atoi(thesplit[i].c_str());
+	    if ( num > 0 && num <= 27 ) {
+		Options.note_skill_levels.push_back(num);
+	    }
+	    else {
+		fprintf(stderr, "Bad skill level to note -- %s\n",
+			thesplit[i].c_str());
+		continue;
+	    }
+	}
     }
     else if (key == "pickup_thrown")
     {
@@ -1533,6 +1630,10 @@ void parse_option_line(const std::string &str, bool runscript)
         Options.dump_item_origin_price = atoi( field.c_str() );
         if (Options.dump_item_origin_price < -1)
             Options.dump_item_origin_price = -1;
+    }
+    else if (key == "safe_zero_exp")
+    {
+	Options.safe_zero_exp = read_bool(field, Options.safe_zero_exp);
     }
     else if (key == "target_zero_exp")
     {

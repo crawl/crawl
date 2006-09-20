@@ -30,6 +30,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "spl-book.h"
@@ -80,6 +81,8 @@ char in_a_shop( char shoppy, id_arr id )
     shop_print(info, 20);
 
     more3();
+    
+    activate_notes(false);	/* should do a better job here */
     shop_init_id(shoppy, shop_id);
 
     /* *************************************
@@ -263,6 +266,7 @@ char in_a_shop( char shoppy, id_arr id )
 #endif
 
     shop_uninit_id( shoppy, shop_id );
+    activate_notes(true);
     return 0;
 }
 
@@ -372,6 +376,19 @@ static void purchase( int shop, int item_got, int cost )
     you.gold -= cost;
 
     origin_purchased(mitm[item_got]);
+
+    if ( fully_identified(mitm[item_got]) &&
+	 is_interesting_item(mitm[item_got]) ) {
+
+	activate_notes(true);
+
+	char buf[ITEMNAME_SIZE];
+	item_name( mitm[item_got], DESC_NOCAP_A, buf );
+	take_note(Note(NOTE_ID_ITEM, 0, 0, buf));
+
+	activate_notes(false);
+    }
+
     int num = move_item_to_player( item_got, mitm[item_got].quantity, true );
 
     // Shopkeepers will now place goods you can't carry outside the shop.

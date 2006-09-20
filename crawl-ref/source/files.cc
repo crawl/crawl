@@ -74,6 +74,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
@@ -987,6 +988,7 @@ void save_game(bool leave_game)
 #endif
     char killFile[kFileNameSize + 4];
     char travelCacheFile[kFileNameSize + 4];
+    char notesFile[kFileNameSize + 4];
 #ifdef CLUA_BINDINGS
     char luaFile[kFileNameSize + 4];
 #endif
@@ -1008,6 +1010,7 @@ void save_game(bool leave_game)
     strcpy(luaFile, name_buff);
 #endif
     strcpy(killFile, name_buff);
+    strcpy(notesFile, name_buff);
     strcpy(travelCacheFile, name_buff);
     snprintf( charFile, sizeof(charFile), 
               "%s.sav", name_buff );
@@ -1024,6 +1027,7 @@ void save_game(bool leave_game)
 #endif
     strcpy(killFile, charFile);
     strcpy(travelCacheFile, charFile);
+    strcpy(notesFile, charFile);
     strcat(charFile, ".sav");
 
 #ifdef DOS
@@ -1036,6 +1040,7 @@ void save_game(bool leave_game)
 #endif
     strupr(killFile);
     strupr(travelCacheFile);
+    strupr(notesFile);
 #endif
 #endif
 
@@ -1047,6 +1052,7 @@ void save_game(bool leave_game)
 #endif
     strcat(killFile, ".kil");
     strcat(travelCacheFile, ".tc");
+    strcat(notesFile, ".nts");
 
 #ifdef STASH_TRACKING
     FILE *stashf = fopen(stashFile, "wb");
@@ -1090,6 +1096,18 @@ void save_game(bool leave_game)
 #ifdef SHARED_FILES_CHMOD_PRIVATE
         // change mode (unices)
         chmod(killFile, SHARED_FILES_CHMOD_PRIVATE);
+#endif
+    }
+
+    FILE *notesf = fopen(notesFile, "wb");
+    if (notesf)
+    {
+	save_notes(notesf);
+        fclose(notesf);
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+        // change mode (unices)
+        chmod(notesFile, SHARED_FILES_CHMOD_PRIVATE);
 #endif
     }
 
@@ -1260,6 +1278,7 @@ void restore_game(void)
     char char_f[kFileNameSize];
     char kill_f[kFileNameSize];
     char travel_f[kFileNameSize];
+    char notes_f[kFileNameSize];
 #ifdef STASH_TRACKING
     char stash_f[kFileNameSize];
 #endif
@@ -1268,7 +1287,8 @@ void restore_game(void)
     char lua_f[kFileNameSize];
 #endif
     
-#ifdef SAVE_DIR_PATH
+    //#ifdef SAVE_DIR_PATH -- haranp change -- this is weird
+#ifdef SAVE_PACKAGE_CMD
     snprintf( char_f, sizeof(char_f), 
               SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
 #else
@@ -1278,6 +1298,7 @@ void restore_game(void)
 
     strcpy(kill_f, char_f);
     strcpy(travel_f, char_f);
+    strcpy(notes_f, char_f);
 #ifdef CLUA_BINDINGS
     strcpy(lua_f, char_f);
     strcat(lua_f, ".lua");
@@ -1289,6 +1310,7 @@ void restore_game(void)
     strcat(kill_f, ".kil");
     strcat(travel_f, ".tc");
     strcat(char_f, ".sav");
+    strcat(notes_f, ".nts");
 
 #ifdef DOS
     strupr(char_f);
@@ -1297,6 +1319,7 @@ void restore_game(void)
 #endif
     strupr(kill_f);
     strupr(travel_f);
+    strupr(notes_f);
 #ifdef CLUA_BINDINGS
     strupr(lua_f);
 #endif
@@ -1359,6 +1382,13 @@ void restore_game(void)
     {
         you.kills.load(killFile);
         fclose(killFile);
+    }
+    
+    FILE *notesFile = fopen(notes_f, "rb");
+    if (notesFile)
+    {
+	load_notes(notesFile);
+	fclose(notesFile);
     }
 }
 

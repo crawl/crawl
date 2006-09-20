@@ -116,9 +116,9 @@ static char channel_to_colour( int channel, int param )
     {
     case MSGCOL_PLAIN:
         // note that if the plain channel is muted, then we're protecting
-        // the player from having that spead to other other channels here.
+        // the player from having that spread to other channels here.
         // The intent of plain is to give non-coloured messages, not to
-        // supress them.
+        // suppress them.
         if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
             ret = LIGHTGREY;
         else
@@ -130,6 +130,7 @@ static char channel_to_colour( int channel, int param )
         switch (channel)
         {
         case MSGCH_GOD:
+	case MSGCH_PRAY:
             ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
                                     ? god_colour( param )
                                     : god_message_altar_colour( param );
@@ -180,7 +181,7 @@ static char channel_to_colour( int channel, int param )
             break;
 
         case MSGCH_DIAGNOSTICS:
-            ret = DARKGREY;     // makes is easier to ignore at times -- bwr
+            ret = DARKGREY;     // makes it easier to ignore at times -- bwr
             break;
 
         case MSGCH_PLAIN:

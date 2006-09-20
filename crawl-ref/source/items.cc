@@ -58,6 +58,8 @@
 
 static void autopickup(void);
 static bool is_stackable_item( const item_def &item );
+static void autoinscribe_item( item_def& item );
+static void autoinscribe_items( void );
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -472,6 +474,7 @@ static void item_cleanup(item_def &item)
     item.quantity       = 0;
     item.orig_place     = 0;
     item.orig_monnum    = 0;
+    item.inscription    = std::string();
 }
 
 void destroy_item( int dest )
@@ -717,7 +720,8 @@ void item_check(char keyin)
         mpr("There are no items here.");
         return;
     }
-
+    
+    autoinscribe_items();
     autopickup();
 
     origin_set(you.x_pos, you.y_pos);
@@ -1486,6 +1490,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.x      = -1;
     item.y      = -1;
     item.link   = freeslot;
+
+    /*** HP CHANGE: do autoinscribe ***/
+    autoinscribe_item( item );
+    
 
     origin_freeze(item, you.x_pos, you.y_pos);
 
@@ -2913,6 +2921,24 @@ void handle_time( long time_delta )
 
 int autopickup_on = 1;
 
+static void autoinscribe_item( item_def& item )
+{
+    char name[ITEMNAME_SIZE];
+    item_name(item, DESC_INVENTORY, name, false);
+
+    std::string iname = name;
+    
+    /* if there's an inscription already do nothing */
+    if ( item.inscription.size() > 0 )
+	return;
+
+    for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i ) {
+	if ( Options.autoinscriptions[i].first.matches(iname) ) {
+	    item.inscription += Options.autoinscriptions[i].second;
+	}
+    }
+}
+
 static bool is_banned(const item_def &item) {
     static char name[ITEMNAME_SIZE];
     item_name(item, DESC_INVENTORY, name, false);
@@ -2924,6 +2950,19 @@ static bool is_banned(const item_def &item) {
     }
     return false;
 }
+
+static void autoinscribe_items()
+{
+    int o, next;
+    o = igrd[you.x_pos][you.y_pos];
+
+    while (o != NON_ITEM)
+    {
+        next = mitm[o].link;
+	autoinscribe_item( mitm[o] );
+        o = next;
+    }
+}    
 
 static void autopickup(void)
 {
@@ -2943,20 +2982,26 @@ static void autopickup(void)
     if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
         return;
 
+    if ( Options.safe_autopickup && !i_feel_safe() )
+      return;
+
     o = igrd[you.x_pos][you.y_pos];
 
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
 
-        if ( ((mitm[o].flags & ISFLAG_THROWN) && Options.pickup_thrown) ||
+        if (
+	    (strstr(mitm[o].inscription.c_str(), "=g") != 0) || (
+ 
+	    ((mitm[o].flags & ISFLAG_THROWN) && Options.pickup_thrown) ||
             ( (Options.autopickups & (1L << mitm[o].base_type) 
 #ifdef CLUA_BINDINGS
                || clua.callbooleanfn(false, "ch_autopickup", "u", &mitm[o])
 #endif
               )
               && (Options.pickup_dropped || !(mitm[o].flags & ISFLAG_DROPPED))
-              && !is_banned(mitm[o])))
+              && !is_banned(mitm[o]))))
         {
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 

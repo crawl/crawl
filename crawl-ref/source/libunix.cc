@@ -300,7 +300,7 @@ void init_key_to_command()
     key_to_command_table[ (int) CONTROL('S') ] = CMD_MARK_STASH;
     key_to_command_table[ (int) CONTROL('T') ] = CMD_NO_CMD;
     key_to_command_table[ (int) CONTROL('U') ] = CMD_OPEN_DOOR_UP_LEFT;
-    key_to_command_table[ (int) CONTROL('V') ] = CMD_NO_CMD;
+    key_to_command_table[ (int) CONTROL('V') ] = CMD_TOGGLE_AUTOPRAYER;
     key_to_command_table[ (int) CONTROL('W') ] = CMD_FIX_WAYPOINT;
     key_to_command_table[ (int) CONTROL('X') ] = CMD_SAVE_GAME_NOW;
     key_to_command_table[ (int) CONTROL('Y') ] = CMD_OPEN_DOOR_UP_RIGHT;
@@ -312,7 +312,7 @@ void init_key_to_command()
     key_to_command_table[(int) '>'] = CMD_GO_DOWNSTAIRS;
     key_to_command_table[(int) '@'] = CMD_DISPLAY_CHARACTER_STATUS;
     key_to_command_table[(int) ','] = CMD_PICKUP;
-    key_to_command_table[(int) ':'] = CMD_NO_CMD;
+    key_to_command_table[(int) ':'] = CMD_MAKE_NOTE;
     key_to_command_table[(int) ';'] = CMD_INSPECT_FLOOR;
     key_to_command_table[(int) '!'] = CMD_SHOUT;
     key_to_command_table[(int) '^'] = CMD_DISPLAY_RELIGION;

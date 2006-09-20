@@ -291,6 +291,13 @@ std::string item_class_name( int type, bool terse )
     return ("");
 }
 
+class MenuEntryPtrComparer {
+public:
+    bool operator() (const MenuEntry* a, const MenuEntry* b ) const {
+	return *a < *b;
+    }
+};
+
 void populate_item_menu( Menu *menu, const std::vector<item_def> &items,
                          void (*callback)(MenuEntry *me) )
 {
@@ -301,22 +308,35 @@ void populate_item_menu( Menu *menu, const std::vector<item_def> &items,
         inv_class[ items[i].base_type ]++;
 
     menu_letter ckey;
+    std::vector<InvEntry*> items_in_class;
+
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (!inv_class[i]) continue;
 
         menu->add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
 
+	items_in_class.clear();
+
         for (int j = 0, count = items.size(); j < count; ++j)
         {
             if (items[j].base_type != i) continue;
+	    items_in_class.push_back( new InvEntry(items[j]) );
+	}
 
-            InvEntry *ie = new InvEntry( items[j] );
+	std::sort( items_in_class.begin(), items_in_class.end(),
+		   MenuEntryPtrComparer() );
+
+        for (unsigned int j = 0; j < items_in_class.size(); ++j)
+	{
+            InvEntry *ie = items_in_class[j];
             ie->hotkeys[0] = ckey++;
-            callback(ie);
+	    callback(ie);
 
             menu->add_entry( ie );
+
         }
+
     }
 }
 
@@ -338,17 +358,29 @@ std::vector<SelItem> select_items( std::vector<item_def*> &items,
     menu.set_title( new MenuEntry(title) );
 
     char ckey = 'a';
+
+    std::vector<InvEntry*> items_in_class;
+
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (!inv_class[i]) continue;
 
         menu.add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
+	
+	items_in_class.clear();
 
         for (int j = 0, count = items.size(); j < count; ++j)
         {
             if (items[j]->base_type != i) continue;
+	    items_in_class.push_back( new InvEntry( *items[j]) );
+	}
+	/* sort the items inside a class */
+	std::sort( items_in_class.begin(), items_in_class.end(),
+		   MenuEntryPtrComparer() );
 
-            InvEntry *ie = new InvEntry( *items[j] );
+        for (unsigned int j = 0; j < items_in_class.size(); ++j)
+	{
+            InvEntry *ie = items_in_class[j];
             ie->hotkeys[0] = ckey;
 
             menu.add_entry( ie );
@@ -701,6 +733,53 @@ std::vector<SelItem> prompt_invent_items(
     return items;
 }
 
+/*** HP CHANGE ***/
+int digit_to_index( char digit, int type, operation_types oper ) {
+    
+    int i;
+    unsigned int j;
+    char iletter = (char)(oper);
+
+    for ( i = 0; i < ENDOFPACK; ++i ) {
+        if (is_valid_item(you.inv[i])) {
+	    const std::string& r(you.inv[i].inscription);
+	    /* note that r.size() is unsigned */
+	    for ( j = 0; j + 2 < r.size(); ++j ) {
+		if ( r[j] == '@' &&
+		     (r[j+1] == iletter || r[j+1] == '*') &&
+		     r[j+2] == digit ) {
+		    return i;
+		}
+	    }
+	}
+    }
+    return -1;
+}
+
+/* return true if user OK'd it (or no warning), false otherwise */ 
+static bool check_warning_inscriptions( const item_def& item,
+					operation_types oper )
+{
+    unsigned int i;
+    char iletter = (char)(oper);
+    char name[ITEMNAME_SIZE];
+    char prompt[ITEMNAME_SIZE + 100];
+    item_name(item, DESC_INVENTORY, name, false);
+    strcpy( prompt, "Really choose ");
+    strncat( prompt, name, ITEMNAME_SIZE );
+    strcat( prompt, "?");
+    
+    const std::string& r(item.inscription);
+    for ( i = 0; i + 1 < r.size(); ++i ) {
+	if ( r[i] == '!' &&
+	     (r[i+1] == iletter || r[i+1] == '*') ) {
+	    
+	    return yesno(prompt, false, 'n');
+	}
+    }
+    return true;
+}
+
 // This function prompts the user for an item, handles the '?' and '*'
 // listings, and returns the inventory slot to the caller (which if
 // must_exist is true (the default) will be an assigned item, with
@@ -714,7 +793,8 @@ int prompt_invent_item( const char *prompt, int type_expect,
                         bool must_exist, bool allow_auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,
-                        int *const count )
+                        int *const count,
+			operation_types oper )
 {
     unsigned char  keyin = 0;
     int            ret = -1;
@@ -811,6 +891,17 @@ int prompt_invent_item( const char *prompt, int type_expect,
             need_prompt = false;
             need_getch  = false;
         }
+	/*** HP CHANGE ***/
+	else if ( count == NULL && isdigit( keyin ) )
+	{
+	    /* scan for our item */
+	    int res = digit_to_index( keyin, type_expect, oper );
+	    if ( res != -1 ) {
+		ret = res;
+		if ( check_warning_inscriptions( you.inv[ret], oper ) )
+		    break;
+	    }
+	}
         else if (keyin == ESCAPE
                 || (Options.easy_quit_item_prompts
                     && allow_easy_quit
@@ -825,8 +916,11 @@ int prompt_invent_item( const char *prompt, int type_expect,
 
             if (must_exist && !is_valid_item( you.inv[ret] ))
                 mpr( "You do not have any such object." );
-            else
-                break;
+            else {
+		if ( check_warning_inscriptions( you.inv[ret], oper ) ) {
+		    break;
+		}
+	    }
         }
         else if (!isspace( keyin ))
         {
@@ -993,17 +1087,21 @@ const char *command_string( int i )
            (i == 340) ? "#    : dump character to file"           :
            (i == 350) ? "=    : reassign inventory/spell letters" :
            (i == 360) ? "\'    : wield item a, or switch to b"    :
+	   (i == 370) ? ":    : make a note"                      :
 #ifdef USE_MACROS
            (i == 380) ? "`    : add macro"                        :
            (i == 390) ? "~    : save macros"                      :
 #endif
            (i == 400) ? "]    : display worn armour"              :
            (i == 410) ? "\"    : display worn jewellery"          :
+	   (i == 415) ? "{    : inscribe an item"                 :
            (i == 420) ? "Ctrl-P : see old messages"               :
 #ifdef PLAIN_TERM
            (i == 430) ? "Ctrl-R : Redraw screen"                  :
 #endif
            (i == 440) ? "Ctrl-A : toggle autopickup"              :
+	   (i == 445) ? "Ctrl-M : toggle autoprayer"              :
+	   (i == 447) ? "Ctrl-T : toggle fizzle"                  :
            (i == 450) ? "Ctrl-X : Save game without query"        :
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND

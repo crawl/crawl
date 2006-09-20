@@ -13,6 +13,7 @@
 
 #include "AppHdr.h"
 #include "misc.h"
+#include "notes.h"
 
 #include <string.h>
 #if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
@@ -45,6 +46,7 @@
 #include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "shopping.h"
@@ -57,6 +59,7 @@
 #include "travel.h"
 #include "view.h"
 
+extern FixedVector<char, 10>  Visible_Statue;        // defined in acr.cc
 
 bool scramble(void);
 bool trap_item(char base_type, char sub_type, char beam_x, char beam_y);
@@ -1122,6 +1125,7 @@ void new_level(void)
 
         env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
                                     ? LIGHTGREY : mcolour[env.mons_alloc[8]];
+	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_PANDEMONIUM, 0xFF));
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
@@ -1132,14 +1136,19 @@ void new_level(void)
 
         env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
                                     ? LIGHTGREY : mcolour[env.mons_alloc[8]];
+	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_ABYSS, 0xFF));
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {
         cprintf("- a Labyrinth           ");
+	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_LABYRINTH, 0xFF));
     }
     else
     {
         // level_type == LEVEL_DUNGEON
+	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE,
+		       you.where_are_you, curr_subdungeon_level));
+
         if (!player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
             cprintf( "%d", curr_subdungeon_level );
 
@@ -1960,3 +1969,42 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                in_explosion_phase(false), smart_monster(false), 
                can_see_invis(false), is_friendly(false), foe_ratio(0) 
 { }
+
+bool i_feel_safe()
+{
+    /* This is probably unnecessary, but I'm not sure that
+       you're always at least 9 away from a wall */
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = 0;
+    if ( ystart >= GYM ) yend = 0;
+
+    /* statue check */
+    if ( Visible_Statue[STATUE_SILVER] ||
+	 Visible_Statue[STATUE_ORANGE_CRYSTAL] )
+	return false;
+
+    /* monster check */
+    for ( int y = ystart; y < yend; ++y ) {
+	for ( int x = xstart; x < xend; ++x ) {
+	    /* if you can see a nonfriendly monster then you feel
+	       unsafe */
+	    if ( see_grid(x,y) ) {
+		const unsigned char targ_monst = mgrd[x][y];
+		if ( targ_monst != NON_MONSTER ) {
+		    struct monsters *mon = &menv[targ_monst];
+		    if ( !mons_friendly(mon) &&
+			 player_monster_visible(mon) &&
+			 !mons_is_mimic(mon->type) &&
+			 (!Options.safe_zero_exp ||
+			  !mons_class_flag( mon->type, M_NO_EXP_GAIN ))) {
+		      return false;
+		    }
+		}
+	    }
+	}
+    }
+    return true;
+}

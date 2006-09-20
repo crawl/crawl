@@ -192,7 +192,7 @@ bool cast_smiting(int power)
 
     mpr("Smite whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
     if (!beam.isValid
         || mgrd[beam.tx][beam.ty] == NON_MONSTER
@@ -231,7 +231,7 @@ bool airstrike(int power)
 
     mpr("Strike whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
     if (!beam.isValid
         || mgrd[beam.tx][beam.ty] == NON_MONSTER

@@ -492,7 +492,7 @@ static void cast_detect_magic(int pow)
     }
 
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR );
+    direction( bmove, DIR_DIR, TARG_ANY, true );
 
     if (!bmove.isValid)
     {
@@ -1915,7 +1915,7 @@ void cast_evaporate(int pow)
 
     message_current_target();
 
-    direction( spelld, DIR_NONE, TARG_ENEMY );
+    direction( spelld, DIR_NONE, TARG_ENEMY, true );
 
     if (!spelld.isValid)
     {
@@ -2362,7 +2362,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     const char *what = NULL;
 
     mpr("Fragment what (e.g. a wall)?", MSGCH_PROMPT);
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
     if (!beam.isValid)
     {
@@ -2870,7 +2870,7 @@ void cast_apportation(int pow)
 
     mpr("Pull items from where?");
 
-    direction( beam, DIR_TARGET );
+    direction( beam, DIR_TARGET, TARG_ANY, true );
 
     if (!beam.isValid)
     {

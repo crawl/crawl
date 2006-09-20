@@ -41,6 +41,7 @@ mon-util.o \
 mstuff2.o \
 mutation.o \
 newgame.o \
+notes.o \
 ouch.o \
 output.o \
 overmap.o \

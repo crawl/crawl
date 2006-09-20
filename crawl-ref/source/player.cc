@@ -38,6 +38,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "notes.h"
 #include "output.h"
 #include "randart.h"
 #include "religion.h"
@@ -2404,6 +2405,11 @@ void level_change(void)
 
         if (you.experience_level > you.max_level)
             you.max_level = you.experience_level;
+	
+	char buf[200];
+	sprintf(buf, "HP: %d/%d MP: %d/%d",
+		you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+	take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         if (you.religion == GOD_XOM)
             Xom_acts(true, you.experience_level, true);
@@ -2493,7 +2499,7 @@ int check_stealth(void)
             stealth /= 2;       // splashy-splashy
     }
 
-    // Radiating silence is the negative compliment of shouting all the
+    // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
     // to clue anything in to the fact that something is very wrong...
     // a personal silence spell would naturally be different, but this
@@ -3269,6 +3275,7 @@ void dec_hp(int hp_loss, bool fatal)
     if (!fatal && you.hp < 1)
         you.hp = 1;
 
+    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
     you.redraw_hit_points = 1;
 
     return;
@@ -3284,6 +3291,7 @@ void dec_mp(int mp_loss)
     if (you.magic_points < 0)
         you.magic_points = 0;
 
+    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = 1;
 
     return;
@@ -3331,6 +3339,7 @@ void inc_mp(int mp_gain, bool max_too)
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
+    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = 1;
 
     return;
@@ -3350,6 +3359,9 @@ void inc_hp(int hp_gain, bool max_too)
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
+
+    // to avoid message spam, no information when HP increases
+    // take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
 
     you.redraw_hit_points = 1;
 }                               // end inc_hp()
@@ -3392,6 +3404,7 @@ void inc_max_hp( int hp_gain )
     you.base_hp2 += hp_gain;
     calc_hp();
 
+    take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     you.redraw_hit_points = 1;
 }
 
@@ -3400,6 +3413,7 @@ void dec_max_hp( int hp_loss )
     you.base_hp2 -= hp_loss;
     calc_hp();
 
+    take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     you.redraw_hit_points = 1;
 }
 
@@ -3408,6 +3422,7 @@ void inc_max_mp( int mp_gain )
     you.base_magic_points2 += mp_gain;
     calc_mp();
 
+    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
     you.redraw_magic_points = 1;
 }
 
@@ -3416,6 +3431,7 @@ void dec_max_mp( int mp_loss )
     you.base_magic_points2 -= mp_loss;
     calc_mp();
 
+    take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
     you.redraw_magic_points = 1;
 }
 
@@ -3427,6 +3443,7 @@ void deflate_hp(int new_level, bool floor)
     else if (!floor && you.hp > new_level)
         you.hp = new_level;
 
+    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
     // must remain outside conditional, given code usage {dlb}
     you.redraw_hit_points = 1;
 
@@ -3449,6 +3466,9 @@ void set_hp(int new_amount, bool max_too)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
+    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
+    if ( max_too )
+      take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
     // must remain outside conditional, given code usage {dlb}
     you.redraw_hit_points = 1;
 
@@ -3471,7 +3491,10 @@ void set_mp(int new_amount, bool max_too)
 
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
-
+    
+    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
+    if ( max_too )
+      take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
     // must remain outside conditional, given code usage {dlb}
     you.redraw_magic_points = 1;
 

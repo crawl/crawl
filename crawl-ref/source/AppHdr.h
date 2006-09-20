@@ -297,7 +297,7 @@
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 
-// bwr: allow player to destroy items in inventory (but not equiped items)
+// bwr: allow player to destroy items in inventory (but not equipped items)
 // See comment at items.cc::cmd_destroy_item() for details/issues.
 // #define ALLOW_DESTROY_ITEM_COMMAND
 
@@ -320,7 +320,7 @@
     // be dumped in the current directory.
     //
     // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
-    #define SAVE_DIR_PATH       ""
+    // #define SAVE_DIR_PATH       ""
 
     // will make this little thing go away.  Define SAVE_PACKAGE_CMD
     // to a command to compress and bundle the save game files into a

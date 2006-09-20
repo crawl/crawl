@@ -45,6 +45,8 @@
 #include "macro.h"
 #endif
 
+int fizzlecheck_on = 1;
+
 enum LOSSelect
 {
     LOS_ANY      = 0x00,
@@ -127,7 +129,8 @@ static bool is_mapped(int x, int y)
 //
 // targetting mode is handled by look_around()
 //---------------------------------------------------------------
-void direction( struct dist &moves, int restrict, int mode )
+
+void direction2( struct dist &moves, int restrict, int mode )
 {
     bool dirChosen = false;
     bool targChosen = false;
@@ -319,6 +322,35 @@ void direction( struct dist &moves, int restrict, int mode )
     moves.tx = you.x_pos + moves.dx * mx;
     moves.ty = you.y_pos + moves.dy * my;
 }
+
+/* safe version of direction */
+void direction( struct dist &moves, int restrict, int mode,
+		bool confirm_fizzle )
+{
+    while ( 1 ) {
+	direction2( moves, restrict, mode );
+	if ( moves.isMe && Options.confirm_self_target == true &&
+	     mode != TARG_FRIEND ) {
+	    if ( yesno("Really target yourself? ", false, 'n') )
+		return;
+	    else
+		mpr("Choose a better target.", MSGCH_PROMPT);
+	}
+	else if ( confirm_fizzle && !moves.isValid && fizzlecheck_on &&
+		  Options.confirm_spell_fizzle )
+	{
+	    if ( yesno("Really fizzle? ", false, 'n') )
+		return;
+	    else
+		mpr("Try again.", MSGCH_PROMPT);
+	}
+	else
+	{
+	    return;
+	}
+    }
+}
+
 
 // Attempts to describe a square that's not in line-of-sight. If
 // there's a stash on the square, announces the top item and number

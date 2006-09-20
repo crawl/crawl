@@ -43,6 +43,7 @@
 #include "mon-util.h"
 #include "mon-pick.h"
 #include "monplace.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "spl-book.h"
@@ -485,6 +486,7 @@ int items( int allow_uniques,       // not just true-false,
     mitm[p].slot = 0;
     mitm[p].orig_monnum = 0;
     mitm[p].orig_place = 0;
+    mitm[p].inscription = std::string();
 
     // cap item_level unless an acquirement-level item {dlb}:
     if (item_level > 50 && item_level != MAKE_GOOD_ITEM)
@@ -2585,6 +2587,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     mitm[bp].special = 0;
     mitm[bp].orig_place = 0;
     mitm[bp].orig_monnum = 0;
+    mitm[bp].inscription = std::string();
 
     // this flags things to "goto give_armour" below ... {dlb}
     mitm[bp].base_type = 101;
@@ -3238,6 +3241,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     mitm[bp].link = NON_ITEM;
     mitm[bp].orig_place = 0;
     mitm[bp].orig_monnum = 0;
+    mitm[bp].inscription = std::string();
 
     item_race = MAKE_ITEM_RANDOM_RACE;
     give_level = 1 + (level_number / 2);
@@ -6697,6 +6701,9 @@ static void place_spec_shop( int level_number,
     int j = 0;                  // loop variable
     int item_level;
 
+    bool note_status = notes_are_active();
+    activate_notes(false);
+
     for (i = 0; i < MAX_SHOPS; i++)
     {
         if (env.shop[i].type == SHOP_UNASSIGNED)
@@ -6792,6 +6799,8 @@ static void place_spec_shop( int level_number,
     env.shop[i].y = shop_y;
 
     grd[shop_x][shop_y] = DNGN_ENTER_SHOP;
+
+    activate_notes(note_status);
 }                               // end place_spec_shop()
 
 static unsigned char item_in_shop(unsigned char shop_type)

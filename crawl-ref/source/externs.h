@@ -240,6 +240,8 @@ struct item_def
 
     unsigned short orig_place;
     short          orig_monnum;
+
+    std::string inscription;
     
     item_def() : base_type(0), sub_type(0), plus(0), plus2(0),
                  special(0L), colour(0), flags(0L), quantity(0),
@@ -669,6 +671,13 @@ struct game_options
     bool        easy_open;      // open doors with movement
     bool        easy_armour;    // allow auto-removing of armour
     bool        easy_butcher;   // open doors with movement
+    bool        confirm_self_target; // require confirmation before selftarget
+    bool        confirm_spell_fizzle; // require confirm before cancel
+    bool        safe_autopickup; // don't autopickup when monsters visible
+    bool        note_skill_max; // take note when skills reach new max
+    bool        use_notes;	// take (and dump) notes
+    int         note_hp_percent; // percentage hp for notetaking
+    int         ood_interesting; // how many levels OOD is noteworthy?
     int         easy_confirm;   // make yesno() confirming easier
     int         easy_quit_item_prompts; // make item prompts quitable on space
     int         colour[16];     // macro fg colours to other colours
@@ -708,7 +717,13 @@ struct game_options
     int         sc_entries;     // # of score entries
     int         sc_format;      // Format for score entries
 
+
+    std::string map_file_name;	// name of mapping file to use
     std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
+    std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
+    std::vector<text_pattern> note_items; // Objects to note
+    std::vector<int> note_skill_levels; // Skill levels to note
+
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
@@ -746,6 +761,7 @@ struct game_options
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
 
+    bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.
     bool        target_wrap;        // Wrap around from last to first target
@@ -846,5 +862,8 @@ struct scorefile_entry
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
 };
+
+extern int autoprayer_on;	// defined in acr.cc
+extern int fizzlecheck_on;	// defined in direct.cc
 
 #endif // EXTERNS_H

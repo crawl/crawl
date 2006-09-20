@@ -1023,17 +1023,17 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         }
     }
 
-    if (defender->type == MONS_JELLY
-        || defender->type == MONS_BROWN_OOZE
-        || defender->type == MONS_ACID_BLOB
-        || defender->type == MONS_ROYAL_JELLY)
-    {
-        weapon_acid(5);
-    }
-
     /* remember, damage_done is still useful! */
     if (hit)
     {
+	if (defender->type == MONS_JELLY
+	    || defender->type == MONS_BROWN_OOZE
+	    || defender->type == MONS_ACID_BLOB
+	    || defender->type == MONS_ROYAL_JELLY)
+	{
+	    weapon_acid(5);
+	}
+
         int specdam = 0;
 
         if (ur_armed 

@@ -66,6 +66,10 @@ struct MenuEntry
     }
     virtual ~MenuEntry() { }
 
+    bool operator<( const MenuEntry& rhs ) const {
+	return text < rhs.text;
+    }
+
     void add_hotkey( int key )
     {
         if (key && !is_hotkey(key))

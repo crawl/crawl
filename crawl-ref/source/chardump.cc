@@ -49,6 +49,7 @@
 #include "items.h"
 #include "macro.h"
 #include "mutation.h"
+#include "notes.h"
 #include "output.h"
 #include "player.h"
 #include "randart.h"
@@ -474,6 +475,19 @@ static void dump_stats2( std::string & text, bool calc_unid)
     }
 
     text += EOL EOL;
+}
+
+static void dump_notes( std::string& text )
+{
+    if ( note_list.size() == 0 || Options.use_notes == false )
+	return;
+
+    text += EOL "-----" EOL "Notes" EOL "-----" EOL;
+    for ( unsigned i = 0; i < note_list.size(); ++i ) {
+	text += describe_note(note_list[i]);
+	text += EOL;
+    }
+    text += EOL;
 }
 
  //---------------------------------------------------------------
@@ -1037,6 +1051,8 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
 
     dump_location(text);
     dump_religion(text);
+
+    dump_notes(text);
 
     switch (you.burden_state)
     {

@@ -251,7 +251,7 @@ static void reaching_weapon_attack(void)
 
     mpr("Attack whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
     if (!beam.isValid)
         return;
 

@@ -21,6 +21,7 @@
 #include "externs.h"
 
 #include "macro.h"
+#include "notes.h"
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -401,6 +402,7 @@ static int exercise2( int exsk )
         mpr(info, MSGCH_INTRINSIC_GAIN);
 
         you.skills[exsk]++;
+	take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
 
         // Recalculate this skill's order for tie breaking skills 
         // at its new level.   See skills2.cc::init_skill_order()

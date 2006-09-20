@@ -36,6 +36,7 @@
 #include "defines.h"
 #include "effects.h"
 #include "macro.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "skills2.h"
@@ -896,6 +897,11 @@ void display_mutations(void)
         j++;
         break;
 
+    case SP_SPRIGGAN:
+	cprintf("You can see invisible." EOL);
+	j++;
+	break;
+
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
@@ -1519,6 +1525,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1530,6 +1538,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
@@ -1567,6 +1577,7 @@ bool mutate(int which_mutation, bool failMsg)
 
     you.mutation[mutat]++;
 
+    take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
     /* remember, some mutations don't get this far (eg frail) */
     return true;
 }                               // end mutation()
@@ -1699,6 +1710,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1706,6 +1719,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
@@ -1766,6 +1781,7 @@ bool delete_mutation(int which_mutation)
     if (you.mutation[mutat] > 0)
         you.mutation[mutat]--;
 
+    take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return true;
 }                               // end delete_mutation()
 

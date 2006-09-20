@@ -738,7 +738,8 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         {
             char str_pass[ ITEMNAME_SIZE ];
 
-            set_ident_flags( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE );
+	    // changed from ISFLAG_KNOW_TYPE
+            set_ident_flags( you.inv[you.equip[EQ_WEAPON]], ISFLAG_IDENT_MASK);
 
             strcpy(info, "You are wielding ");
             in_name(you.equip[EQ_WEAPON], DESC_NOCAP_A, str_pass);
