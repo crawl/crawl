@@ -1394,9 +1394,8 @@ int items( int allow_uniques,       // not just true-false,
             && (item_level == MAKE_GOOD_ITEM || !one_chance_in(5)))
         {
             const int pois = 
-                item_level == MAKE_GOOD_ITEM || 
-                    got_curare_roll(item_level)
-              ? SPMSL_CURARE : SPMSL_POISONED_II;
+                got_curare_roll(item_level)
+                ? SPMSL_CURARE : SPMSL_POISONED_II;
             set_item_ego_type( mitm[p], OBJ_MISSILES, pois );
         }
         else
