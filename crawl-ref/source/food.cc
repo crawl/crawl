@@ -338,7 +338,7 @@ bool butchery(void)
         strcat(info, "\?");
         mpr(info, MSGCH_PROMPT);
 
-        unsigned char keyin = getch();
+        keyin = getch();
 
         if (keyin == 0)
         {
@@ -354,7 +354,7 @@ bool butchery(void)
             return (false);
         }
 
-        int item_got = igrd[you.x_pos][you.y_pos];
+        item_got = igrd[you.x_pos][you.y_pos];
 
         last_item = NON_ITEM;
 

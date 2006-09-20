@@ -181,9 +181,9 @@ int cull_items(void)
                     else if (is_unrandom_artefact( mitm[item] ))
                     {
                         // 9. unmark unrandart
-                        int x = find_unrandart_index(item);
-                        if (x >= 0)
-                            set_unrandart_exist(x, 0);
+                        int z = find_unrandart_index(item);
+                        if (z >= 0)
+                            set_unrandart_exist(z, 0);
                     }
 
                     // POOF!

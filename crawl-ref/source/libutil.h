@@ -117,12 +117,13 @@ public:
 
     text_pattern()
         : pattern(), compiled_pattern(NULL),
-          isvalid(false), ignore_case(false)
+         isvalid(false), ignore_case(false)
     {
     }
 
     text_pattern(const text_pattern &tp)
-        : pattern(tp.pattern),
+        : 	base_pattern(tp),
+	pattern(tp.pattern),
           compiled_pattern(NULL),
           isvalid(tp.isvalid),
           ignore_case(tp.ignore_case)

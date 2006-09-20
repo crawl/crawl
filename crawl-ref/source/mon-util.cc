@@ -747,7 +747,7 @@ int mons_type_hit_dice( int type )
 }
 
 
-int exper_value( struct monsters *monster )
+int exper_value( const struct monsters *monster )
 {
     long x_val = 0;
 

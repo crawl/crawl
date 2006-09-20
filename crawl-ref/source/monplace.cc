@@ -1032,7 +1032,7 @@ static int band_member(int band, int power)
         break;
     case BAND_DRACONIAN:
     {
-        const int temp_rand = random2( (power < 24) ? 24 : 37 );
+        temp_rand = random2( (power < 24) ? 24 : 37 );
         mon_type =                  
                 ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
                  (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34

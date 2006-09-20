@@ -50,6 +50,7 @@
 #include "monplace.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
@@ -179,7 +180,7 @@ void pray(void)
             strcat(info, "un");
 
         strcat(info, "life.");
-        mpr(info);
+        mpr(info, MSGCH_PRAY);
         return;
     }
     else if (you.religion == GOD_XOM)
@@ -211,7 +212,7 @@ void pray(void)
     strcpy( info, "You offer a prayer to " );
     strcat( info, god_name( you.religion ) );
     strcat( info, "." );
-    mpr(info);
+    mpr(info, MSGCH_PRAY);
 
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
                                             + (random2(you.piety) / 20);
@@ -232,7 +233,7 @@ void pray(void)
                                        : "displeased");
 
         strcat(info, ".");
-        god_speaks(you.religion, info);
+        mpr( info, MSGCH_PRAY, you.religion );
 
         if (you.piety > 130)
             you.duration[DUR_PRAYER] *= 3;
@@ -310,6 +311,7 @@ void pray(void)
                     you.attribute[ATTR_CARD_COUNTDOWN] = 10;
                     inc_gift_timeout(5 + random2avg(9, 2));
                     you.num_gifts[you.religion]++;
+		    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }
             break;
@@ -329,6 +331,7 @@ void pray(void)
 
                     inc_gift_timeout( 4 + roll_dice(2,4) );
                     you.num_gifts[ you.religion ]++;
+		    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 break;
             }
@@ -357,6 +360,7 @@ void pray(void)
 
                     inc_gift_timeout(30 + random2avg(19, 2));
                     you.num_gifts[ you.religion ]++;
+		    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }
             break;
@@ -373,6 +377,7 @@ void pray(void)
                     more();
                     inc_gift_timeout(4 + random2avg(7, 2));
                     you.num_gifts[you.religion]++;
+		    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }
             break;
@@ -452,6 +457,7 @@ void pray(void)
 
                         inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_gifts[ you.religion ]++;
+			take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
 
                     // Vehumet gives books less readily
@@ -906,6 +912,10 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                     (temp_rand == 1) ? "Xom grants you a demonic servitor."
                                      : "Xom opens a gate.");
             }
+	    else
+	    {
+		god_speaks(GOD_XOM, "You hear Xom cackling.");
+	    }
 
             done_good = true;   // well, for Xom, trying == doing {dlb}
         }
@@ -978,10 +988,13 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
         }
     }                           // end "Good Things"
 
-    if (done_bad || done_good || one_chance_in(4))
-        return;
-    else
-        goto okay_try_again;
+    if (done_bad || done_good )
+	return;
+    if ( one_chance_in(4) ) {
+	god_speaks(GOD_XOM, "Xom's attention is distracted from you.");
+	return;
+    }
+    goto okay_try_again;
 }                               // end Xom_acts()
 
 // This function is the merger of done_good() and naughty().
@@ -1382,6 +1395,7 @@ void gain_piety(char pgn)
 
     if (you.piety >= 30 && old_piety < 30)
     {
+	take_note(Note(NOTE_GOD_POWER, you.religion, 0));
         switch (you.religion)
         {
         case GOD_NO_GOD:
@@ -1420,6 +1434,7 @@ void gain_piety(char pgn)
 
     if (you.piety >= 50 && old_piety < 50)
     {
+	take_note(Note(NOTE_GOD_POWER, you.religion, 1));
         switch (you.religion)
         {
         case GOD_NO_GOD:
@@ -1465,6 +1480,7 @@ void gain_piety(char pgn)
 
     if (you.piety >= 75 && old_piety < 75)
     {
+	take_note(Note(NOTE_GOD_POWER, you.religion, 2));
         switch (you.religion)
         {
         case GOD_NO_GOD:
@@ -1503,6 +1519,7 @@ void gain_piety(char pgn)
 
     if (you.piety >= 100 && old_piety < 100)
     {
+	take_note(Note(NOTE_GOD_POWER, you.religion, 3));
         switch (you.religion)
         {
         case GOD_NO_GOD:
@@ -1545,6 +1562,7 @@ void gain_piety(char pgn)
 
     if (you.piety >= 120 && old_piety < 120)
     {
+	take_note(Note(NOTE_GOD_POWER, you.religion, 4));
         switch (you.religion)
         {
         case GOD_NO_GOD:
@@ -1856,6 +1874,10 @@ void divine_retribution( int god )
                 {
                     simple_god_message( " sends the divine host to punish you for your evil ways!", god );
                 }
+		else
+		{
+		    simple_god_message("'s divine host fails to appear.", god);
+		}
             }
             else
             {
@@ -1905,6 +1927,10 @@ void divine_retribution( int god )
                 {
                     simple_god_message(" sends the divine host to punish you for your evil ways!", god);
                 }
+		else
+		{
+		    simple_god_message("'s divine host fails to appear.", god);
+		}
             }
             else
             {
@@ -1927,6 +1953,10 @@ void divine_retribution( int god )
                 simple_god_message(" sends a greater servant after you!",
                                    god);
             }
+	    else
+	    {
+		simple_god_message("'s greater servant is unavoidably detained.", god);
+	    }
         }
         else
         {
@@ -1944,6 +1974,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends minions to punish you.", god);
+	    else
+		simple_god_message("'s minions fail to arrive.", god);
         }
         break;
 
@@ -1965,6 +1997,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" unleashes Death upon you!", god);
+	    else
+		god_speaks(god, "Death has been delayed...for now.");
         }
         else
         {
@@ -2006,6 +2040,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends a servant to punish you.", god);
+	    else
+		simple_god_message("'s servant fails to arrive.", god);
         }
         else
         {
@@ -2089,6 +2125,8 @@ void divine_retribution( int god )
 
                 if (success)
                     simple_god_message(" sends monsters to punish you.", god);
+		else
+		    simple_god_message(" has no time to punish you...now.", god);
             }
             break;
 
@@ -2175,20 +2213,22 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends forces against you!", god);
+	    else
+		simple_god_message("'s forces are busy with other wars.", god);
         }
         break;
 
     case GOD_VEHUMET:
         // conjuration and summoning theme
-        simple_god_message("'s vengence finds you.", god);
+        simple_god_message("'s vengeance finds you.", god);
         miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                         8 + you.experience_level, random2avg(98, 3), 100,
                         "the wrath of Vehumet" );
         break;
 
     case GOD_NEMELEX_XOBEH:
-        // like Xom, this might actually help the player -- bwr`
-        simple_god_message(" makes you to draw from the Deck of Punishment.",
+        // like Xom, this might actually help the player -- bwr
+        simple_god_message(" makes you draw from the Deck of Punishment.",
                            god);
         deck_of_cards(DECK_OF_PUNISHMENT);
         break;
@@ -2213,7 +2253,7 @@ void divine_retribution( int god )
 
         case 5:
         case 6:
-            miscast_effect(SK_DIVINATIONS, 9, 90, 100, "the will of Sif Muna");
+            miscast_effect(SPTYP_DIVINATION, 9, 90, 100, "the will of Sif Muna");
             break;
 
         case 7:
@@ -2241,11 +2281,13 @@ void divine_retribution( int god )
         return;
     }
 
-    // Sometimes divine experiences are overwelming...
+    // Sometimes divine experiences are overwhelming...
     if (one_chance_in(5) && you.experience_level < random2(37))
     {
-        if (coinflip()) 
+	if (coinflip()) {
+	    mpr( "The divine experience confuses you!", MSGCH_WARN);
             confuse_player( 3 + random2(10) );
+	}
         else
         {
             if (you.slow < 90)
@@ -2264,6 +2306,8 @@ void divine_retribution( int god )
 void excommunication(void)
 {
     const int old_god = you.religion;
+
+    take_note(Note(NOTE_LOSE_GOD, old_god));
 
     you.duration[DUR_PRAYER] = 0;
     you.religion = GOD_NO_GOD;
@@ -2354,6 +2398,7 @@ static bool bless_weapon( int god, int brand, int colour )
 
         you.wield_change = true;
         you.num_gifts[god]++;
+	take_note(Note(NOTE_GOD_GIFT, you.religion));
 
         you.flash_colour = colour;
         viewwindow( true, false );
@@ -2571,6 +2616,8 @@ void god_pitch(unsigned char which_god)
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
+
+    take_note(Note(NOTE_GET_GOD, you.religion));
 
     // Currently penance is just zeroed, this could be much more interesting.
     you.penance[you.religion] = 0;

@@ -506,7 +506,7 @@ void debug_change_species( void )
 
     int sp = -1;
 
-    for (int i = SP_HUMAN; i < NUM_SPECIES; i++)
+    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
         char sp_name[80];
         strncpy( sp_name, species_name(i, you.experience_level), sizeof( sp_name ) );

@@ -1729,7 +1729,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
             if (your_to_hit >= defender->evasion || one_chance_in(30))
             {
-                bool hit = true;
+                hit = true;
                 int dammod = 10;
 
                 const int dam_stat_val = calc_stat_to_dam_base();
@@ -2929,7 +2929,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
     int weapon = -1;            // monster weapon, if any
     int damage_taken = 0;
     bool hit = false;
-    int mmov_x = 0;
+    //    int mmov_x = 0;
     bool water_attack = false;
     int specdam = 0;
     int hand_used = 0;
@@ -3446,7 +3446,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     {
                         if (sees)
                         {
-                            mmov_x = attacker->inv[hand_used];
+			  //                            mmov_x = attacker->inv[hand_used];
 
                             strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                             strcat(info, " freezes ");

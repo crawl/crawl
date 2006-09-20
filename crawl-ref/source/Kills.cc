@@ -413,7 +413,7 @@ void Kills::record_ghost_kill(const struct monsters *mon)
 
 kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)
 {
-    exp = exper_value( (struct monsters *) mon);
+    exp = exper_value(mon);
     add_kill(mon, get_packed_place());
 }
 
@@ -704,7 +704,7 @@ void kill_def::load(FILE *file)
 
 kill_ghost::kill_ghost(const struct monsters *mon)
 {
-    exp = exper_value( (struct monsters *) mon);
+    exp = exper_value(mon);
     place = get_packed_place();
     ghost_name = ghost.name;
 
@@ -758,8 +758,8 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
     }
     if (modifier != M_NORMAL) monnum = mon->number;
 
-    if (mons_has_ench((struct monsters *) mon, ENCH_SHAPESHIFTER) || 
-            mons_has_ench((struct monsters *) mon, ENCH_GLOWING_SHAPESHIFTER))
+    if (mons_has_ench(mon, ENCH_SHAPESHIFTER) || 
+	mons_has_ench(mon, ENCH_GLOWING_SHAPESHIFTER))
         modifier = M_SHAPESHIFTER;
 
     // XXX: Ugly hack - merge all mimics into one mimic record.
