@@ -1062,11 +1062,8 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         {
             if (item_cursed( item ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
-            else if (Options.show_uncursed 
-                    && !item_ident( item, ISFLAG_KNOW_PLUSES ))
-            {
+            else if (Options.show_uncursed)
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
-            }
         }
 
         if (is_random_artefact( item ))
