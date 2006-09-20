@@ -106,44 +106,44 @@ autopickup = $?!:"/0
 # before you source any Lua script that relies on this. For safety, always
 # source this first.
 # 
-# lua_file = lua\base.lua
+# lua_file = lua/base.lua
 
 #
 # Control what messages stop shift+running and resting.
 #
-# lua_file = lua\runrest.lua
+# lua_file = lua/runrest.lua
 
 #
 # If you want more detailed kill statistics, you can use a LUA script to do
 # that. See kills.lua for more ideas.
 # 
-# lua_file = lua\kills.lua
+# lua_file = lua/kills.lua
 
 #
 # If you'd like to switch quickly between sets of gear, you can use this. See
 # gearset.lua for more information.
 #
-# lua_file = lua\gearset.lua
+# lua_file = lua/gearset.lua
 
 #
 # This lua script prompts you to eat chunks in inventory (after prompting for
 # eating off the floor).
 #
-# lua_file = lua\eat.lua
+# lua_file = lua/eat.lua
 
 #
 # stash.lua annotates items to make for easier stash-searches. Weapons are
 # prefixed by the name of the weapon skill, so you can search for "long blades"
 # and find everything that exercises that skill. See stash.lua for more details.
 #
-# lua_file = lua\stash.lua
+# lua_file = lua/stash.lua
 
 #
 # wield.lua selects items to show in the wield menu based on the spells your
 # character knows. For instance, if you know Sublimation of Blood, chunks
 # will be added to your wield menu.
 #
-# lua_file = lua\wield.lua
+# lua_file = lua/wield.lua
 
 # The number of messages to be displayed in character dump files. Defaults to 4
 dump_message_count = 4
@@ -260,7 +260,7 @@ explore_stop = items,stairs,shops,altars
 # Playing sounds:
 # Option is set as sound = <regex>:<path to sound file>. Your regex should not
 # include commas or colons.
-# sound = LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+# sound = LOW HITPOINT WARNING:sound/sounds2/danger3.wav
 
 # Tracking stashes. Valid options are 'all', 'dropped' and 'explicit'. Anything
 # else disables stash tracking
