@@ -6,19 +6,16 @@ include makefile.obj
 
 # need .exe so make will find the right file
 APPNAME = crawl.exe
-CXX = gxx
+CXX = gpp
 DELETE = del
 COPY = copy
 OS_TYPE = DOS
-CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
-LDFLAGS = -Bc:/djgpp/contrib/pdcurs22/lib 
-INSTALLDIR = c:\games\crawl
+CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) -DREGEX_PCRE -DCLUA_BINDINGS
+LDFLAGS =
+LIB = -lpcre -llua
 # LIB = -lcurso -lpano
 
 all:            $(APPNAME)
-
-install:        $(APPNAME)
-		$(COPY) $(APPNAME) ${INSTALLDIR}
 
 clean:
 		$(DELETE) *.o

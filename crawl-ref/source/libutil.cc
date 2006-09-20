@@ -144,7 +144,8 @@ int wrapcprintf( int wrapcol, const char *s, ... )
     va_start(args, s);
 
     // XXX: If snprintf isn't available, vsnprintf probably isn't, either.
-    int len = vsnprintf(buf, sizeof buf, s, args), olen = len;
+    int len = vsnprintf(buf, sizeof buf, s, args);
+    int olen = len;
     va_end(args);
 
     char *run = buf;

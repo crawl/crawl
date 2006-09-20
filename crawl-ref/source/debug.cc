@@ -1984,7 +1984,12 @@ static bool debug_fight_sim(int mindex, int missile_slot)
     FILE *ostat = fopen("fight.stat", "a");
     if (!ostat)
     {
+        // I'm not sure what header provides errno on djgpp,
+        // and it's insufficiently important for a wizmode-only
+        // feature.
+#ifndef DOS
         mprf("Can't write fight.stat: %s", strerror(errno));
+#endif
         return (false);
     }
 

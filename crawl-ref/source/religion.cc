@@ -27,6 +27,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef DOS
+#include <dos.h>
+#endif
+
 #include "externs.h"
 
 #include "abl-show.h"

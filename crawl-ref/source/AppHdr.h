@@ -178,6 +178,10 @@
 
     #ifdef __DJGPP__
         #define NEED_SNPRINTF
+
+        // [dshaligram] This is distressing, but djgpp lacks (v)snprintf, and
+        // we have to support DOS. Ow. FIXME
+        #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
     #endif
 
 #elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__BCPLUSPLUS__) || defined(__MINGW32__))
