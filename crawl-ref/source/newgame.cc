@@ -2143,14 +2143,6 @@ bool verifyPlayerName(void)
     const size_t len = strlen( you.your_name );
     for (unsigned int i = 0; i < len; i++)
     {
-#if MAC
-        // the only bad character on Macs is the path seperator
-        if (you.your_name[i] == ':')
-        {
-            cprintf(EOL "No colons, please." EOL);
-            return (false);
-        }
-#else
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple 
         // and doesn't take the time to escape every characters that
@@ -2161,7 +2153,6 @@ bool verifyPlayerName(void)
             cprintf( EOL "Alpha-numerics and underscores only, please." EOL );
             return (false);
         }
-#endif
     }
 
 #ifdef SAVE_DIR_PATH

@@ -3136,10 +3136,6 @@ static std::string describe_misc_item( const item_def &item )
     return (description);
 }
 
-#if MAC
-#pragma mark -
-#endif
-
 // ========================================================================
 //      Public Functions
 // ========================================================================

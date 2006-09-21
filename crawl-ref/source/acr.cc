@@ -39,7 +39,7 @@
 #include <string>
 
 // I don't seem to need values.h for VACPP..
-#if !defined(__IBMCPP__) && !defined(MAC)
+#if !defined(__IBMCPP__)
 #include <limits.h>
 #endif
 
@@ -247,10 +247,6 @@ int main( int argc, char *argv[] )
     unixcurses_startup();
 #endif
 
-#ifdef MAC
-    init_mac();
-#endif
-
 #ifdef WIN32CONSOLE
     init_libw32c();
 #endif
@@ -347,10 +343,6 @@ int main( int argc, char *argv[] )
 
 #ifdef UNIX
     unixcurses_shutdown();
-#endif
-
-#ifdef MAC
-    deinit_mac();
 #endif
 
 #ifdef USE_EMX

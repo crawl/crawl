@@ -105,8 +105,6 @@ int get_number_of_lines(void)
 {
 #ifdef UNIX
     return (get_number_of_lines_from_curses());
-#elif MAC
-    return (MAC_NUMBER_OF_LINES);
 #else
     return (25);
 #endif

@@ -75,8 +75,8 @@ void get_input_line( char *const buff, int len )
 
 #if defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
-#elif defined(MAC) || defined(WIN32CONSOLE)
-    getstr( buff, len );        // implemented in libmac.cc
+#elif defined(WIN32CONSOLE)
+    getstr( buff, len );
 #else
     fgets( buff, len, stdin );  // much safer than gets()
 #endif

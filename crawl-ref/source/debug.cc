@@ -84,18 +84,6 @@ static void BreakStrToDebugger(const char *mesg)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
-#elif MAC
-     unsigned char s[50];
-
-     int len = strlen(mesg);
-
-     if (len > 255)
-         len = 255;
-
-     s[0] = (Byte) len;
-     BlockMoveData(mesg, s + 1, len);
-
-     DebugStr(s);
 
 #elif WIN
     MSG msg;    // remove pending quit messages so the message box displays
@@ -314,10 +302,6 @@ static void TraceString(const char *mesg)
 }
 #endif
 
-#if MAC
-#pragma mark -
-#endif
-
 // ========================================================================
 //      Global Functions
 // ========================================================================
@@ -332,10 +316,6 @@ void AssertFailed(const char *expr, const char *file, int line)
 {
     char mesg[512];
 
-#if MAC
-    sprintf(mesg, "ASSERT(%s) in %s at line %d failed.", expr, file, line);
-
-#else
     const char *fileName = file + strlen(file); // strip off path
 
     while (fileName > file && fileName[-1] != '\\')
@@ -343,7 +323,6 @@ void AssertFailed(const char *expr, const char *file, int line)
 
     sprintf(mesg, "ASSERT(%s) in '%s' at line %d failed.", expr, fileName,
             line);
-#endif
 
     BreakStrToDebugger(mesg);
 }

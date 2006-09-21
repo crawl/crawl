@@ -466,10 +466,6 @@ void end(int end_arg)
     unixcurses_shutdown();
 #endif
 
-#ifdef MAC
-    deinit_mac();
-#endif
-
 #ifdef WIN32CONSOLE
     deinit_libw32c();
 #endif

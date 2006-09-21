@@ -47,7 +47,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: acr - libmac - misc
+ * called from: acr - misc
  * *********************************************************************** */
 void save_game(bool leave_game);
 

@@ -25,8 +25,7 @@
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...
-#ifdef _LIBUNIX_IMPLEMENTATION
-#elif macintosh
+#ifndef _LIBUNIX_IMPLEMENTATION
 #else
     #ifndef TRUE
      #define TRUE 1

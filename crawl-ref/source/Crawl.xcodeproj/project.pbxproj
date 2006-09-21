@@ -145,6 +145,8 @@
 		7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */; };
 		7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
 		7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
+		7BD75A350AC214A200B74F6E /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
+		7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -222,6 +224,7 @@
 				7B237EF00A8EC9D000580F30 /* mt19937ar.h in CopyFiles */,
 				7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */,
 				7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */,
+				7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -366,7 +369,9 @@
 		7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.5.dylib; path = /usr/lib/libncurses.5.dylib; sourceTree = "<absolute>"; };
 		7BC222E50ABBB286003A7D9A /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
 		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
-		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
+		7BD75A340AC214A200B74F6E /* notes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = notes.h; sourceTree = "<group>"; };
+		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -486,6 +491,8 @@
 				7B237DFA0A8EC9D000580F30 /* mutation.h */,
 				7B237DF90A8EC9D000580F30 /* newgame.cc */,
 				7B237E340A8EC9D000580F30 /* newgame.h */,
+				7BD75A330AC214A200B74F6E /* notes.cc */,
+				7BD75A340AC214A200B74F6E /* notes.h */,
 				7B237E330A8EC9D000580F30 /* ouch.cc */,
 				7B237E320A8EC9D000580F30 /* ouch.h */,
 				7B237E310A8EC9D000580F30 /* output.cc */,
@@ -669,6 +676,7 @@
 				7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */,
 				7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */,
 				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
+				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

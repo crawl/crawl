@@ -159,15 +159,6 @@
     #error MSVC is not supported yet
     #define CHARACTER_SET           A_ALTCHARSET
 
-// macintosh is predefined on all the common Mac compilers
-#elif defined(macintosh)
-    #define PLAIN_TERM
-    #define HAS_NAMESPACES  1
-    #define EOL "\r"
-    #define CHARACTER_SET           A_ALTCHARSET
-    #include <string>
-    #include "libmac.h"
-
 #elif defined(DOS)
     #define DOS_TERM
     #define SHORT_FILE_NAMES

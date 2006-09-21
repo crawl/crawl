@@ -1007,10 +1007,6 @@ static void dump_mutations( std::string & text )
     }
 }                               // end dump_mutations()
 
-#if MAC
-#pragma mark -
-#endif
-
 // ========================================================================
 //      Public Functions
 // ========================================================================
