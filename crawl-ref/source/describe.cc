@@ -6341,17 +6341,19 @@ void describe_god( int which_god, bool give_title )
     case GOD_ZIN:
         description = "Zin is an ancient and revered God, dedicated to the establishment of order" EOL
                       "and the destruction of the forces of chaos and night. Valued worshippers " EOL
-                      "can gain a variety of powers useful in the fight against the evil, but must" EOL
-                      "abstain from the use of necromancy and other forms of unholy magic." EOL
-                      "Zin appreciates long-standing faith as well as sacrifices of valued objects." EOL;
+                      "can gain blessings on their weapons and a variety of powers useful in the" EOL
+                      "fight against the evil, but must abstain from the use of necromancy and other" EOL
+                      "forms of unholy magic. Zin appreciates long-standing faith as well as " EOL
+                      "sacrifices of valued objects.";
         break;
 
     case GOD_SHINING_ONE:
         description = "The Shining One is a powerful crusading deity, allied with Zin in the fight" EOL
-                      "against evil. Followers may be granted with the ability to summarily dispense" EOL
-                      "the wrath of heaven, but must never use any form of evil magic and should" EOL
-                      "fight honourably. The Shining One appreciates long-standing persistence in " EOL
-                      "the endless crusade, as well as the dedicated destruction of unholy creatures.";
+                      "against evil. Followers may be granted blessings on their weapons and the " EOL
+                      "ability to summarily dispense the wrath of heaven, but must never use any " EOL
+                      "form of evil magic and should fight honourably. The Shining One appreciates" EOL
+                      "long-standing persistence in the endless crusade, as well as the dedicated " EOL
+                      "destruction of unholy creatures.";
         break;
 
     case GOD_KIKUBAAQUDGHA:
