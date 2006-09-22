@@ -1393,6 +1393,10 @@ static void do_action( command_type cmd ) {
     case CMD_DISPLAY_CHARACTER_STATUS:
 	display_char_status();
 	break;
+	
+    case CMD_RESISTS_SCREEN:
+	resists_screen();
+	break;
 
     case CMD_DISPLAY_SKILLS:
 	show_skills();
@@ -2459,6 +2463,7 @@ command_type keycode_to_command( keycode_type key ) {
     case '<': return CMD_GO_UPSTAIRS;
     case '>': return CMD_GO_DOWNSTAIRS;
     case '@': return CMD_DISPLAY_CHARACTER_STATUS;
+    case '%': return CMD_RESISTS_SCREEN;
     case ',': return CMD_PICKUP;
     case ':': return CMD_MAKE_NOTE;
     case ';': return CMD_INSPECT_FLOOR;

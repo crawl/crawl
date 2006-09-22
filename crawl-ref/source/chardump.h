@@ -21,6 +21,8 @@
  * *********************************************************************** */
 bool dump_char( const char fname[30], bool show_prices );
 
+void resists_screen();
+
 std::string munge_description(const std::string &inStr);
 
 const char *hunger_level(void);

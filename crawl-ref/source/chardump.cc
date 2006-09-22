@@ -1191,3 +1191,55 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     
     return (succeeded);
 }                               // end dump_char()
+
+void resists_screen() {
+#ifdef DOS_TERM
+    char dosbuffer[4000];
+    gettext( 1, 1, 80, 25, dosbuffer );
+    window( 1, 1, 80, 25 );
+#endif
+    clrscr();
+    textcolor( LIGHTGREY );
+    char buffer[25*3][45];
+    char text[4000];
+    char str_pass[80];
+    char* ptr_n;
+    
+    text[0] = 0;
+    get_full_detail(&buffer[0][0], false);
+
+    for (int i = 0; i < 25; i++)
+    {
+        ptr_n = &buffer[i][0];
+        if (buffer[i+25][0] == '\0' && buffer[i+50][0] == '\0')
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+        else
+            snprintf(&str_pass[0], 45, "%-32s", ptr_n);
+        strcat(text, str_pass);
+
+        ptr_n = &buffer[i+25][0];
+        if (buffer[i+50][0] == '\0')
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+        else
+            snprintf(&str_pass[0], 45, "%-20s", ptr_n);
+	strcat(text, str_pass);
+
+        ptr_n = &buffer[i+50][0];
+        if (buffer[i+50][0] != '\0')
+        {
+            snprintf(&str_pass[0], 45, "%s", ptr_n);
+            strcat(text, str_pass);
+        }
+        strcat(text, EOL);
+    }
+
+    cprintf(text);
+
+    getch();
+#ifdef DOS_TERM
+    puttext(1, 1, 80, 25, dosbuffer);
+    window(1, 1, 80, 25);
+#endif
+
+    redraw_screen();
+}
