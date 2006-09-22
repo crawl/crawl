@@ -11,6 +11,7 @@
 #include "files.h"
 #include "FixAry.h"
 #include "clua.h"
+#include "describe.h"
 #include "mon-util.h"
 #include "player.h"
 #include "stash.h"
@@ -194,13 +195,6 @@ static void init_traps()
     traps_inited = true;
 }
 
-static const char *trap_names[] =
-{
-    "dart", "arrow", "spear", "axe",
-    "teleport", "amnesia", "blade",
-    "bolt", "zot", "needle",
-};
-
 static const char *trap_name(int x, int y)
 {
     if (!traps_inited)
@@ -211,7 +205,7 @@ static const char *trap_name(int x, int y)
     {
         int type = env.trap[ti].type;
         if (type >= 0 && type < NUM_TRAPS)
-            return (trap_names[type]);
+            return (trap_name(trap_type(type)));
     }
     return ("");
 }

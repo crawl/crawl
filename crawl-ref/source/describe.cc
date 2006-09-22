@@ -332,6 +332,19 @@ static void randart_descpr( std::string &description, const item_def &item )
     }
 }
 
+static const char *trap_names[] =
+{
+    "dart", "arrow", "spear", "axe",
+    "teleport", "amnesia", "blade",
+    "bolt", "zot", "needle",
+};
+
+const char *trap_name(trap_type trap)
+{
+    if (trap >= TRAP_DART && trap < NUM_TRAPS)
+        return trap_names[ static_cast<int>( trap ) ];
+    return (NULL);
+}
 
 //---------------------------------------------------------------
 //

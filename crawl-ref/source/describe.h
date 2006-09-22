@@ -15,6 +15,7 @@
 
 #include <string>
 #include "externs.h"
+#include "enum.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -60,5 +61,7 @@ void describe_spell(int spelled);
  * called from: describe_monsters - describe, kill_ghost - Kills
  * *********************************************************************** */
 std::string ghost_description(bool concise = false);
+
+const char *trap_name(trap_type trap);
 
 #endif

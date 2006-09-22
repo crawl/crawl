@@ -577,6 +577,10 @@ static void handle_wizard_command( void )
         tweak_object();
         break;
 
+    case 'T':
+        debug_make_trap();
+        break;
+
     case 'f':
         debug_fight_statistics(false);
         break;

@@ -144,5 +144,6 @@ void debug_item_scan( void );
 void debug_get_religion( void );
 void debug_change_species( void );
 void debug_fight_statistics( bool use_init_defaults );
+void debug_make_trap( void );
 
 #endif

@@ -29,6 +29,7 @@
 #include "externs.h"
 
 #include "direct.h"
+#include "describe.h"
 #include "dungeon.h"
 #include "fight.h"
 #include "invent.h"
@@ -49,6 +50,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "travel.h"
 #include "version.h"
 
 #ifndef WIZARD
@@ -2116,5 +2118,68 @@ void debug_fight_statistics(bool use_defaults)
     }
 fsim_mcleanup:
     monster_die(&menv[mindex], KILL_DISMISSED, 0);    
+}
+
+static int find_trap_slot()
+{
+    for (int i = 0; i < MAX_TRAPS; ++i)
+    {
+        if (env.trap[i].type == TRAP_UNASSIGNED)
+            return (i);
+    }
+    return (-1);
+}
+
+void debug_make_trap()
+{
+    char requested_trap[80];
+    int trap_slot = find_trap_slot();
+    trap_type trap = TRAP_UNASSIGNED;
+    int gridch = grd[you.x_pos][you.y_pos];
+
+    if (trap_slot == -1)
+    {
+        mpr("Sorry, this level can't take any more traps.");
+        return;
+    }
+
+    if (gridch != DNGN_FLOOR)
+    {
+        mpr("You need to be on a floor square to make a trap.");
+        return;
+    }
+
+    mprf(MSGCH_PROMPT, "What kind of trap? ");
+    get_input_line( requested_trap, sizeof( requested_trap ) );
+    if (!*requested_trap)
+        return;
+
+    strlwr(requested_trap);
+    for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
+    {
+        if (strstr(requested_trap, 
+                   trap_name(trap_type(t))))
+        {
+            trap = trap_type(t);
+            break;
+        }
+    }
+
+    if (trap == TRAP_UNASSIGNED)
+    {
+        mprf("I know no traps named \"%s\"", requested_trap);
+        return;
+    }
+
+    env.trap[trap_slot].type  = trap;
+    env.trap[trap_slot].x     = you.x_pos;
+    env.trap[trap_slot].y     = you.y_pos;
+    grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+
+    mprf("Created a %s trap, marked it undiscovered",
+            trap_name(trap));
+
+    // Also tell travel that its world-view must change.
+    travel_init_new_level();
 }
 #endif
