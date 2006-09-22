@@ -1192,6 +1192,41 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     return (succeeded);
 }                               // end dump_char()
 
+static void set_resist_dump_color( const char* data ) {
+    while ( *data && *data != ':' )
+	++data;
+    if ( *data == 0 )
+	return;
+    ++data;
+    int pluscount = 0;
+    while ( *data ) {
+	if ( *data == '+' )
+	    ++pluscount;
+	if ( *data == 'x' )
+	    --pluscount;
+	++data;
+    }
+    switch ( pluscount ) {
+    case 3:
+    case 2:
+	textcolor(LIGHTGREEN);
+	break;
+    case 1:
+	textcolor(GREEN);
+	break;
+    case -1:
+	textcolor(RED);
+	break;
+    case -2:
+    case -3:
+	textcolor(LIGHTRED);
+	break;
+    default:
+	textcolor(LIGHTGREY);
+	break;
+    }
+}
+
 void resists_screen() {
 #ifdef DOS_TERM
     char dosbuffer[4000];
@@ -1199,41 +1234,24 @@ void resists_screen() {
     window( 1, 1, 80, 25 );
 #endif
     clrscr();
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
     char buffer[25*3][45];
-    char text[4000];
-    char str_pass[80];
-    char* ptr_n;
     
-    text[0] = 0;
     get_full_detail(&buffer[0][0], false);
 
-    for (int i = 0; i < 25; i++)
-    {
-        ptr_n = &buffer[i][0];
-        if (buffer[i+25][0] == '\0' && buffer[i+50][0] == '\0')
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-        else
-            snprintf(&str_pass[0], 45, "%-32s", ptr_n);
-        strcat(text, str_pass);
-
-        ptr_n = &buffer[i+25][0];
-        if (buffer[i+50][0] == '\0')
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-        else
-            snprintf(&str_pass[0], 45, "%-20s", ptr_n);
-	strcat(text, str_pass);
-
-        ptr_n = &buffer[i+50][0];
-        if (buffer[i+50][0] != '\0')
-        {
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-            strcat(text, str_pass);
-        }
-        strcat(text, EOL);
+    for (int line = 0; line < 25; ++line ) {
+	for ( int block = 0; block < 3; ++block ) {
+	    int idx = block * 25 + line;
+	    if ( buffer[idx][0] ) {
+		gotoxy( block == 2 ? 53 : block * 32 + 1, line+1 );
+		/* FIXME - hack - magic number 14 */
+		if ( block != 0 && line < 14 )
+		    set_resist_dump_color(buffer[idx]);		    
+		cprintf("%s", buffer[idx] );
+		textcolor(LIGHTGREY);
+	    }
+	}
     }
-
-    cprintf(text);
 
     getch();
 #ifdef DOS_TERM

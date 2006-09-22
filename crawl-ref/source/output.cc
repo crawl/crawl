@@ -559,10 +559,12 @@ unsigned char* itosym1(int stat)
 unsigned char* itosym3(int stat)
 {
     return (unsigned char*)( (stat >= 3) ? "+ + +" :
-             (stat == 2) ? "+ + ." :
-             (stat == 1) ? "+ . ." :
-             (stat == 0) ? ". . ." :
-                           "x . .");
+             (stat ==  2) ? "+ + ." :
+             (stat ==  1) ? "+ . ." :
+             (stat ==  0) ? ". . ." :
+	     (stat == -1) ? "x . ." :
+	     (stat == -2) ? "x x ." :
+                            "x x x");
 }
 
 static const char *s_equip_slot_names[] = 
