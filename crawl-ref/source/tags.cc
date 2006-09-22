@@ -1278,7 +1278,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
     {
         you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
-	you.inv[i].inscription = std::string();
+        you.inv[i].inscription.clear();
         if (minorVersion < 1)
         {
             you.inv[i].base_type = (unsigned char) unmarshallByte(th);
@@ -1307,10 +1307,14 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
             {
                 you.inv[i].orig_place  = unmarshallShort(th);
                 you.inv[i].orig_monnum = unmarshallShort(th);
-		/*** HP CHANGE ***/
-		char insstring[80];
-		unmarshallString(th, insstring, 80);
-		you.inv[i].inscription = std::string(insstring);
+
+                if (minorVersion >= 6)
+                {
+                    /*** HP CHANGE ***/
+                    char insstring[80];
+                    unmarshallString(th, insstring, 80);
+                    you.inv[i].inscription = std::string(insstring);
+                }
             }
         }
 
@@ -1697,20 +1701,25 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
             mitm[i].slot = unmarshallByte(th);
         }
 
+        mitm[i].inscription.clear();
+
         if (minorVersion >= 7)
         {
             mitm[i].orig_place  = unmarshallShort(th);
             mitm[i].orig_monnum = unmarshallShort(th);
-	    /*** HP CHANGE ***/
-	    char insstring[80];
-	    unmarshallString(th, insstring, 80);
-	    mitm[i].inscription = std::string(insstring);
+
+            if (minorVersion >= 9)
+            {
+                /*** HP CHANGE ***/
+                char insstring[80];
+                unmarshallString(th, insstring, 80);
+                mitm[i].inscription = std::string(insstring);
+            }
         }
         else
         {
             mitm[i].orig_place  = 0;
             mitm[i].orig_monnum = 0;
-	    mitm[i].inscription = std::string();
         }
     }
 }
