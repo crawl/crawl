@@ -783,9 +783,9 @@ static int choose_band( int mon_type, int power, int &band_size )
         if (power > 18 && one_chance_in(3)) 
         {
            band = BAND_DRACONIAN;
-           // [dshaligram] band_size == 1 implies just the original monster
+           // [dshaligram] band_size == 0 implies just the original monster
            // without a band.
-           band_size = random_range(1, 3);
+           band_size = random_range(0, 2);
         }                                                       
         break;                                                  
     case MONS_DRACONIAN_CALLER:
@@ -798,7 +798,7 @@ static int choose_band( int mon_type, int power, int &band_size )
         if (power > 20) 
         {
            band = BAND_DRACONIAN;
-           band_size = random_range(2, 4);
+           band_size = random_range(1, 3);
         }
         break;
     } // end switch
