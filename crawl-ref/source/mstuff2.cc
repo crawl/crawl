@@ -698,6 +698,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     pbolt.source_x = monster->x;
     pbolt.source_y = monster->y;
     pbolt.is_tracer = false; 
+    pbolt.is_explosion = theBeam.is_explosion;
 
     if (pbolt.beam_name[0] && pbolt.beam_name[0] != '0')
         pbolt.aux_source = pbolt.beam_name;

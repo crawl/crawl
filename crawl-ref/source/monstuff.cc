@@ -2902,6 +2902,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         beem.flavour = theBeam.flavour;
         beem.thrower = theBeam.thrower;
         beem.is_beam = theBeam.is_beam;
+	beem.is_explosion = theBeam.is_explosion;
 
         item_def item = mitm[ monster->inv[MSLOT_WAND] ];
 
