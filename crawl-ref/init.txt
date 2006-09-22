@@ -114,7 +114,7 @@ autopickup = $?!:"/0
 # lua_file = lua/runrest.lua
 
 #
-# If you want more detailed kill statistics, you can use a LUA script to do
+# If you want more detailed kill statistics, you can use a Lua script to do
 # that. See kills.lua for more ideas.
 # 
 # lua_file = lua/kills.lua
@@ -225,6 +225,20 @@ remembered_monster_colour = darkgrey
 # How long travel waits after each move (milliseconds).
 #
 travel_delay = 20
+
+#
+# travel_stair_cost determines how costly interlevel travel considers stairs.
+# With a high travel_stair_cost (such as the default of 500), interlevel travel
+# will always choose routes with the minimum number of level changes possible.
+# If you set travel_stair_cost to a low value (such as the minimum of 1),
+# interlevel travel will treat a staircase just like a normal move, and it may
+# consequently choose routes that involve extra level transitions. This can be
+# disconcerting in branches with elevator-type stair arrangements, particularly
+# in the Lair, where there are typically long chains of elevator stairs, because
+# travel will go out of its way to use the elevator and minimise total travel
+# distance.
+#
+# travel_stair_cost = 500
 
 # Prevent travel from routing through shallow water.
 # travel_avoid_terrain = shallow water
@@ -477,21 +491,25 @@ friend_brand = reverse
 # stab_brand = hi:blue
 
 #
-# Stabbing may be possible even if the monster is not asleep (if it's confused,
-# for instance). This option brands monsters that you *might* be able to stab,
-# provided the monster is adjacent to you. Primarily useful for worshippers of
-# The Su^WShining One. Purists may consider this unnecessarily spoily and a 
-# cheat. Direct such opinions to <scintilla@gmail.com>
+# Stabbing may be possible even if the monster is not asleep (if it's confused
+# or distracted, for instance). This option brands monsters that you *might* be
+# able to stab. Primarily useful for worshippers of The Shining One. Purists
+# may consider this unnecessarily spoily.
+#
+# If your console doesn't support high-intensity background colours, you may
+# have to change darkgrey to something else.
 #
 # may_stab_brand = hi:darkgrey
 #
 
 #
 # On DOS and Windows, if you're using a console that can do high-intensity
-# background colours, set this option to true for superior friend-branding.
-# If your console doesn't like this option, some friendly monsters will appear
-# as blinking characters (and setting this option to false may be advisable
-# to preserve your sanity in such cases).
+# background colours, set this option to true for superior reverse-colour-
+# branding.
+#
+# If your console doesn't like this option, some high-intensity backgrounds 
+# will appear as blinking characters (and setting this option to false may be
+# advisable to preserve your sanity in such cases).
 #
 # dos_use_background_intensity = true
 
