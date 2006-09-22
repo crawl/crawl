@@ -3102,6 +3102,8 @@ void read_scroll(void)
 
     case SCR_IMMOLATION:
         mpr("The scroll explodes in your hands!");
+	// we do this here to prevent it from blowing itself up
+        dec_inv_item_quantity( item_slot, 1 );
 
         beam.type = SYM_BURST;
         beam.damage = dice_def( 3, 10 );
@@ -3277,7 +3279,8 @@ void read_scroll(void)
     }                           // end switch
 
     // finally, destroy and identify the scroll
-    if (scroll_type != SCR_PAPER)
+    // scrolls of immolation were already destroyed earlier
+    if (scroll_type != SCR_PAPER && scroll_type != SCR_IMMOLATION)
     {
         dec_inv_item_quantity( item_slot, 1 );
     }
