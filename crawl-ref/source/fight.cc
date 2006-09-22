@@ -547,10 +547,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         if (you.burden_state == BS_UNENCUMBERED
             && one_chance_in(heavy_armour + 1))
         {
-            weapon_speed2 = 10 - you.skills[SK_UNARMED_COMBAT] / 3;
-
-            if (weapon_speed2 < 4)
-                weapon_speed2 = 4;
+            weapon_speed2 = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
+	    
+	    /* this shouldn't happen anyway...sanity */
+            if (weapon_speed2 < 5)
+                weapon_speed2 = 5;
         }
     }
 
