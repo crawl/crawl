@@ -50,4 +50,10 @@ void define_zombie(int mid, int ztype, int cs, int power);
 
 bool is_wall(int feature);
 
+bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
+                         unsigned char spec_type);
+
+void place_spec_shop(int level_number, unsigned char shop_x,
+                         unsigned char shop_y, unsigned char force_s_type);
+
 #endif

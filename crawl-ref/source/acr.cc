@@ -595,6 +595,10 @@ static void handle_wizard_command( void )
         debug_make_trap();
         break;
 
+    case '\\':
+        debug_make_shop();
+        break;
+
     case 'f':
         debug_fight_statistics(false);
         break;

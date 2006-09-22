@@ -83,8 +83,6 @@ static void builder_items(int level_number, char level_type, int items_wanted);
 static void builder_monsters(int level_number, char level_type, int mon_wanted);
 static void place_specific_stair(unsigned char stair);
 static void place_branch_entrances(int dlevel, char level_type);
-static bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
-    unsigned char spec_type);
 static void place_traps( int level_number );
 static void prepare_swamp(void);
 static void prepare_water( int level_number );
@@ -125,8 +123,6 @@ static void diamond_rooms(int level_number);
 
 // ITEM & SHOP FUNCTIONS
 static void place_shops(int level_number);
-static void place_spec_shop(int level_number, unsigned char shop_x,
-    unsigned char shop_y, unsigned char force_s_type);
 static unsigned char item_in_shop(unsigned char shop_type);
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
@@ -6690,9 +6686,9 @@ static void place_shops(int level_number)
     }
 }                               // end place_shops()
 
-static void place_spec_shop( int level_number, 
-                             unsigned char shop_x, unsigned char shop_y,
-                             unsigned char force_s_type )
+void place_spec_shop( int level_number, 
+                      unsigned char shop_x, unsigned char shop_y,
+                      unsigned char force_s_type )
 {
     int orb = 0;
     int i = 0;
@@ -8314,8 +8310,8 @@ static void jelly_pit(int level_number, spec_room &sr)
     fill_monster_pit( sr, pit_list, 90, MONS_PROGRAM_BUG, lordx, lordy );
 }
 
-static bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
-                                unsigned char spec_type)
+bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
+                         unsigned char spec_type)
 {
     if (spec_type == TRAP_RANDOM)
         spec_type = random2(NUM_TRAPS);

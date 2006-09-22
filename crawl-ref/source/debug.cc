@@ -2173,15 +2173,81 @@ void debug_make_trap()
         return;
     }
 
-    env.trap[trap_slot].type  = trap;
-    env.trap[trap_slot].x     = you.x_pos;
-    env.trap[trap_slot].y     = you.y_pos;
-    grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+    place_specific_trap(you.x_pos, you.y_pos, trap);
 
     mprf("Created a %s trap, marked it undiscovered",
             trap_name(trap));
 
     // Also tell travel that its world-view must change.
     travel_init_new_level();
+}
+
+static const char *shop_types[] = {
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "wand",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general"
+};
+
+void debug_make_shop()
+{
+    char requested_shop[80];
+    int gridch = grd[you.x_pos][you.y_pos];
+    bool have_shop_slots = false;
+    int new_shop_type = SHOP_UNASSIGNED;
+
+    if (gridch != DNGN_FLOOR)
+    {
+        mpr("Insufficient floor-space for new Wal-Mart.");
+        return;
+    }
+
+    for (int i = 0; i < MAX_SHOPS; ++i)
+    {
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+        {
+            have_shop_slots = true;
+            break;
+        }
+    }
+
+    if (!have_shop_slots)
+    {
+        mpr("There are too many shops on this level.");
+        return;
+    }
+
+    mprf(MSGCH_PROMPT, "What kind of shop? ");
+    get_input_line( requested_shop, sizeof( requested_shop ) );
+    if (!*requested_shop)
+        return;
+
+    strlwr(requested_shop);
+    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
+    {
+        if (strstr(requested_shop, shop_types[i]))
+        {
+            new_shop_type = i;
+            break;
+        }
+    }
+
+    if (new_shop_type == SHOP_UNASSIGNED)
+    {
+        mprf("Bad shop type: \"%s\"", requested_shop);
+        return;
+    }
+
+    place_spec_shop(you.your_level, you.x_pos, you.y_pos, new_shop_type);
+    link_items();
+    mprf("Done.");
 }
 #endif

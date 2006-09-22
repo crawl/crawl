@@ -1088,49 +1088,49 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         {
             switch (item.sub_type)
             {
-            case WAND_FIREBALL:
             case WAND_HASTING:
-                valued += 600;
-                break;
-
             case WAND_HEALING:
-            case WAND_TELEPORTATION:
-                valued += 500;
+                valued += 300;
                 break;
 
-            case WAND_INVISIBILITY:
-            case WAND_DISINTEGRATION:
-            case WAND_LIGHTNING:
-                valued += 400;
+            case WAND_TELEPORTATION:
+                valued += 250;
                 break;
 
             case WAND_COLD:
             case WAND_FIRE:
-                valued += 350;
+            case WAND_FIREBALL:
+                valued += 200;
+                break;
+
+            case WAND_INVISIBILITY:
+            case WAND_DISINTEGRATION:
+            case WAND_DRAINING:
+            case WAND_LIGHTNING:
+                valued += 175;
                 break;
 
             case WAND_DIGGING:
-                valued += 200;
+                valued += 100;
                 break;
 
             case WAND_FLAME:
             case WAND_FROST:
-            case WAND_DRAINING:
             case WAND_PARALYSIS:
-                valued += 150;
+                valued += 75;
                 break;
 
             case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH_OTHER:
             case WAND_SLOWING:
-                valued += 100;
+                valued += 50;
                 break;
 
             case WAND_CONFUSION:
             case WAND_MAGIC_DARTS:
             case WAND_RANDOM_EFFECTS:
             default:
-                valued += 75;
+                valued += 45;
                 break;
             }
 
