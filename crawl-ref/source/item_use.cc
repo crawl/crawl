@@ -1702,9 +1702,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         {
             // Throwing needles is now seriously frowned upon; it's difficult
             // to grip a fiddly little needle, and not penalising it cheapens
-            // blowguns.
-            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
-            baseHit    -= (30 - you.skills[SK_DARTS]) / 4;
+            // blowguns. [ds] Increased the penalty further after rgrmisc 
+            // reports of being able to use thrown needles.
+            exHitBonus -= (30 - you.skills[SK_DARTS]);
+            baseHit    -= (45 - you.skills[SK_DARTS]) / 2;
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
                     baseHit, exHitBonus);
