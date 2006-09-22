@@ -2139,6 +2139,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = 1;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -2166,7 +2167,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
-
+		beam.is_explosion = true;
+    
                 explosion(beam);
                 break;
             }
@@ -3057,6 +3059,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = 1;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3088,6 +3091,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3189,6 +3193,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = 1;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3317,6 +3322,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = 1;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3426,6 +3432,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
                 beam.aux_source = cause;
                 beam.ex_size = one_chance_in(4)?1:2;
+		beam.is_explosion = true;
 
                 explosion(beam);
                 break;
