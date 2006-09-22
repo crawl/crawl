@@ -107,7 +107,7 @@ static const struct coord_def Compass[8] =
 // Map of terrain types that are traversable.
 static signed char traversable_terrain[256];
 
-static int trans_negotiate_stairs();
+static command_type trans_negotiate_stairs();
 static int find_transtravel_square(const level_pos &pos, bool verbose = true);
 
 static bool loadlev_populate_stair_distances(const level_pos &target);
@@ -748,18 +748,22 @@ void start_running(void)
  *
  * Don't call travel() if you.running >= 0.
  */
-void travel(int *keyin, char *move_x, char *move_y)
+command_type travel()
 {
-    *keyin = 128;
+    char x,y;
+    char *move_x = &x;
+    char *move_y = &y;
+    x = y = 0;
+    
+    command_type result = CMD_NO_CMD;
 
     // Abort travel/explore if you're confused or a key was pressed.
     if (kbhit() || you.conf)
     {
         stop_running();
-        *keyin      = 0;
         if (Options.travel_delay == -1)
             redraw_screen();
-        return ;
+        return CMD_NO_CMD;
     }
 
     if (Options.explore_stop && you.running == RUN_EXPLORE)
@@ -845,10 +849,10 @@ void travel(int *keyin, char *move_x, char *move_y)
                         // notify Lua hooks if you.running == 0.
                         you.running = runmode;
                         stop_running();
-                        return;
+                        return CMD_NO_CMD;
                     }
                     you.running = RUN_INTERLEVEL;
-                    *keyin = trans_negotiate_stairs();
+                    result = trans_negotiate_stairs();
 
                     // If, for some reason, we fail to use the stairs, we
                     // need to make sure we don't go into an infinite loop
@@ -882,6 +886,29 @@ void travel(int *keyin, char *move_x, char *move_y)
 
     if (!you.running && Options.travel_delay == -1)
         redraw_screen();
+
+    if (!you.running)
+	return CMD_NO_CMD;
+
+    if ( result != CMD_NO_CMD )
+	return result;
+
+    return direction_to_command( *move_x, *move_y );
+}
+
+command_type direction_to_command( char x, char y ) {
+    if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
+    if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
+    if ( x == -1 && y ==  1 ) return CMD_MOVE_DOWN_LEFT;
+    if ( x ==  0 && y == -1 ) return CMD_MOVE_UP;
+    if ( x ==  0 && y ==  0 ) return CMD_NO_CMD;
+    if ( x ==  0 && y ==  1 ) return CMD_MOVE_DOWN;
+    if ( x ==  1 && y == -1 ) return CMD_MOVE_UP_RIGHT;
+    if ( x ==  1 && y ==  0 ) return CMD_MOVE_RIGHT;
+    if ( x ==  1 && y ==  1 ) return CMD_MOVE_DOWN_RIGHT;
+
+    ASSERT(0);
+    return CMD_NO_CMD;
 }
 
 /*
@@ -1742,16 +1769,16 @@ void start_translevel_travel(bool prompt_for_destination)
     }
 }
 
-int stair_direction(int stair)
+command_type stair_direction(int stair)
 {
     return ((stair < DNGN_STONE_STAIRS_UP_I
                 || stair > DNGN_ROCK_STAIRS_UP)
                 && (stair < DNGN_RETURN_FROM_ORCISH_MINES 
                 || stair > DNGN_RETURN_FROM_SWAMP))
-        ? '>' : '<';
+        ? CMD_GO_DOWNSTAIRS : CMD_GO_UPSTAIRS;
 }
 
-int trans_negotiate_stairs()
+command_type trans_negotiate_stairs()
 {
     return stair_direction(grd[you.x_pos][you.y_pos]);
 }

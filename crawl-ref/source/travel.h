@@ -31,8 +31,9 @@ unsigned char is_waypoint(int x, int y);
 void update_excludes();
 bool is_stair(unsigned gridc);
 bool is_travelable_stair(unsigned gridc);
-int stair_direction(int stair_feat);
+command_type stair_direction(int stair_feat);
 bool is_player_mapped(unsigned char envch);
+command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
 
@@ -61,7 +62,7 @@ void start_translevel_travel(bool prompt_for_destination = true);
 
 void start_travel(int x, int y);
 
-void travel(int *keyin, char *move_x, char *move_y);
+command_type travel();
 
 int travel_direction(unsigned char branch, int subdungeondepth);
 
@@ -350,6 +351,8 @@ private:
 };
 
 int level_distance(level_id first, level_id second);
+
+bool can_travel_interlevel();
 
 extern TravelCache travel_cache;
 

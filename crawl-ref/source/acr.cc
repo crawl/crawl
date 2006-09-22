@@ -137,7 +137,7 @@ struct system_environment SysEnv;
 
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
-int stealth;                    // externed in view.h     // no it is not {dlb}
+int stealth;                    // externed in view.cc
 char use_colour = 1;
 
 int autoprayer_on = 0;
@@ -191,6 +191,20 @@ static bool initialise(void);
 static void input(void);
 static void move_player(int move_x, int move_y);
 static void open_door(int move_x, int move_y, bool check_confused = true);
+static void start_running( int dir, int mode );
+static void close_door(int move_x, int move_y);
+static bool check_stop_running();
+
+static void prep_input();
+static void input();
+static void middle_input();
+static void do_action( command_type cmd );
+static void world_reacts();
+static command_type get_next_cmd();
+static command_type get_running_command();
+typedef int keycode_type;
+static keycode_type get_next_keycode();
+static command_type keycode_to_command( keycode_type key );
 
 /*
    It all starts here. Some initialisations are run first, then straight to
@@ -789,7 +803,7 @@ static void set_run_check( int index, int dir )
 }
 
 // Set up the running variables for the current run.
-static void start_running( int dir, char mode )
+static void start_running( int dir, int mode )
 {
     if (dir == RDIR_REST)
     {
@@ -876,6 +890,7 @@ static bool recharge_rod( item_def &rod, bool wielded )
     return (true);
 }
 
+
 static void recharge_rods()
 {
     const int wielded = you.equip[EQ_WEAPON];
@@ -894,30 +909,565 @@ static void recharge_rods()
     }
 }
 
+/* used to determine whether to apply the berserk penalty at end
+   of round */
+bool apply_berserk_penalty = false;
+
+/* There is now a distinction between keycodes and commands.
+   A keycode_type gets mapped through keycode_to_command to
+   become a command_type.
+   So a keycode_type could be something like 'H';
+   a command_type would be something like COMMAND_RUN_LEFT.
+*/
+
 /*
    This function handles the player's input. It's called from main(), from
    inside an endless loop.
+
+   It's now undergone major refactoring. The code path is now:
+   1. Get next player input item (key)
+   2. Translate key to command
+   3. Execute the command
+   4. Update rest of world if necessary
  */
-static void input(void)
-{
+static void input() {
 
-    bool its_quiet;             //jmf: for silence messages
+    you.turn_is_over = 0;
+    prep_input();
+
+    /* you.paralysis check */
+    if ( you.paralysis ) {
+	world_reacts();
+	return;
+    }
+    
+    middle_input();
+
+    handle_delay();
+
+    gotoxy(18,9);
+
+    if ( you_are_delayed() ) {
+	world_reacts();
+	return;
+    }
+
+    /* Change from previous code! */
+    if ( you.turn_is_over ) {
+	world_reacts();
+	return;
+    }
+
+    command_type cmd = get_next_cmd();
+    do_action( cmd );
+
+    if ( you.turn_is_over ) {
+
+	if ( apply_berserk_penalty )
+	    do_berserk_no_combat_penalty();
+
+	world_reacts();
+    }
+    else
+	viewwindow(1, false);
+}
+
+static int toggle_flag( int* flag, const char* flagname ) {
+    char buf[INFO_SIZE];
+    *flag = !(*flag);
+    sprintf( buf, "%s is now %s.", flagname,
+	     (*flag) ? "on" : "off" );
+    mpr(buf);
+    return *flag;
+}
+
+static void go_upstairs() {
+    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP) {   
+	shop();
+	return;
+    }
+    else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
+	      || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
+	     && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
+		 || grd[you.x_pos][you.y_pos] >= 150)) {   
+	mpr( "You can't go up here!" );
+	return;
+    }
+
+    tag_followers();  // only those beside us right now can follow
+    start_delay( DELAY_ASCENDING_STAIRS, 
+		 1 + (you.burden_state > BS_UNENCUMBERED) );
+}
+
+static void go_downstairs() {
+
+    if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
+	 || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
+	&& grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
+	&& ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_DIS
+	     || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
+	    && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
+	&& !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
+	     && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES)) {
+	mpr( "You can't go down here!" );
+	return;
+    }
+
+    tag_followers();  // only those beside us right now can follow
+    start_delay( DELAY_DESCENDING_STAIRS,
+		 1 + (you.burden_state > BS_UNENCUMBERED),
+		 you.your_level );
+}
+
+static void experience_check() {
+    snprintf( info, INFO_SIZE, "You are a level %d %s %s.",
+	      you.experience_level,
+	      species_name(you.species,you.experience_level),
+	      you.class_name);
+    mpr(info);
+
+    if (you.experience_level < 27) {
+	int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
+	snprintf( info, INFO_SIZE,
+		  "Level %d requires %ld experience (%d point%s to go!)",
+		  you.experience_level + 1, 
+		  exp_needed(you.experience_level + 2) + 1,
+		  xp_needed, 
+		  (xp_needed > 1) ? "s" : "");
+	mpr(info);
+    }
+    else {
+	mpr( "I'm sorry, level 27 is as high as you can go." );
+	mpr( "With the way you've been playing, I'm surprised you got this far." );
+    }
+
+    if (you.real_time != -1) {
+	const time_t curr = you.real_time + (time(NULL) - you.start_time);
+	char buff[200];
+
+	make_time_string( curr, buff, sizeof(buff) );
+
+	snprintf( info, INFO_SIZE, "Play time: %s (%ld turns)", 
+		  buff, you.num_turns );
+
+	mpr( info );
+    }
+}
+
+/* note that in some actions, you don't want to clear afterwards.
+   e.g. list_jewellery, etc. */
+
+static void do_action( command_type cmd ) {
+
     FixedVector < int, 2 > plox;
-    char move_x = 0;
-    char move_y = 0;
+    apply_berserk_penalty = true;
 
-    int keyin = 0;
+    switch ( cmd ) {
 
-#ifdef UNIX
-    // Stuff for the Unix keypad kludge
-    bool running = false;
-    bool opening = false;
+    case CMD_PERFORM_ACTIVITY:
+	you.turn_is_over = 0;
+	perform_activity();
+	break;
+	
+    case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
+    case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
+    case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
+    case CMD_OPEN_DOOR_RIGHT:      open_door( 1,  0); break;
+    case CMD_OPEN_DOOR_DOWN_RIGHT: open_door( 1,  1); break;
+    case CMD_OPEN_DOOR_DOWN:       open_door( 0,  1); break;
+    case CMD_OPEN_DOOR_DOWN_LEFT:  open_door(-1,  1); break;
+    case CMD_OPEN_DOOR_LEFT:       open_door(-1,  0); break;
+
+    case CMD_MOVE_DOWN_LEFT:  move_player(-1,  1); break;
+    case CMD_MOVE_DOWN:       move_player( 0,  1); break;
+    case CMD_MOVE_UP_RIGHT:   move_player( 1, -1); break;
+    case CMD_MOVE_UP:         move_player( 0, -1); break;
+    case CMD_MOVE_UP_LEFT:    move_player(-1, -1); break;
+    case CMD_MOVE_LEFT:       move_player(-1,  0); break;
+    case CMD_MOVE_DOWN_RIGHT: move_player( 1,  1); break;
+    case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
+
+    case CMD_REST:            start_running( RDIR_REST, 100 ); break;
+
+    case CMD_RUN_DOWN_LEFT:   start_running( RDIR_DOWN_LEFT,  2 ); break;
+    case CMD_RUN_DOWN:        start_running( RDIR_DOWN,       2 ); break;
+    case CMD_RUN_UP_RIGHT:    start_running( RDIR_UP_RIGHT,   2 ); break;
+    case CMD_RUN_UP:          start_running( RDIR_UP,         2 ); break;
+    case CMD_RUN_UP_LEFT:     start_running( RDIR_UP_LEFT,    2 ); break;
+    case CMD_RUN_LEFT:        start_running( RDIR_LEFT,       2 ); break;
+    case CMD_RUN_DOWN_RIGHT:  start_running( RDIR_DOWN_RIGHT, 2 ); break;
+    case CMD_RUN_RIGHT:       start_running( RDIR_RIGHT,      2 ); break;
+
+    case CMD_TOGGLE_AUTOPICKUP:
+	toggle_flag( &autopickup_on, "Autopickup");
+        break;
+
+    case CMD_TOGGLE_AUTOPRAYER:
+	toggle_flag( &autoprayer_on, "Autoprayer" );
+	break;
+
+    case CMD_TOGGLE_NOFIZZLE:
+	if ( Options.confirm_spell_fizzle )
+	    toggle_flag( &fizzlecheck_on, "Fizzle confirmation" );
+	break;
+    
+    case CMD_MAKE_NOTE:
+	make_user_note();
+	break;
+
+    case CMD_CLEAR_MAP:
+	if (you.level_type != LEVEL_LABYRINTH &&
+	    you.level_type != LEVEL_ABYSS) {
+	    mpr("Clearing level map.");
+	    clear_map();
+	}
+	break;
+
+    case CMD_GO_UPSTAIRS: go_upstairs(); break;
+    case CMD_GO_DOWNSTAIRS: go_downstairs(); break;
+    case CMD_DISPLAY_OVERMAP: display_overmap(); break;
+    case CMD_OPEN_DOOR:	open_door(0, 0); break;
+    case CMD_CLOSE_DOOR: close_door(0, 0); break;
+
+    case CMD_DROP:
+	drop();
+#ifdef STASH_TRACKING
+	if (Options.stash_tracking >= STM_DROPPED)
+	    stashes.add_stash();
+#endif
+	break;
+        
+#ifdef STASH_TRACKING
+    case CMD_SEARCH_STASHES:
+	stashes.search_stashes();
+	break;
+
+    case CMD_MARK_STASH:
+	if (Options.stash_tracking >= STM_EXPLICIT)
+	    stashes.add_stash(-1, -1, true);
+	break;
+
+    case CMD_FORGET_STASH:
+	if (Options.stash_tracking >= STM_EXPLICIT)
+	    stashes.no_stash();
+	break;
 #endif
 
-    you.shield_blocks = 0;              // no blocks this round
+    case CMD_BUTCHER:
+	butchery();
+	break;
 
+    case CMD_DISPLAY_INVENTORY:
+	get_invent(-1);
+	break;
+
+    case CMD_OBSOLETE_INVOKE:
+	// We'll leave this message in for a while.  Eventually, this
+	// might be some special for of inventory command, or perhaps
+	// actual god invocations will be split to here from abilities. -- bwr
+	mpr( "This command is now 'E'voke wielded item.", MSGCH_WARN );
+	break;
+
+    case CMD_EVOKE:
+	if (!evoke_wielded())
+	    flush_input_buffer( FLUSH_ON_FAILURE );
+	break;
+
+    case CMD_PICKUP:
+	pickup();
+	break;
+
+    case CMD_INSPECT_FLOOR: item_check(';');
+	break;
+
+    case CMD_WIELD_WEAPON:
+	wield_weapon(false);
+	break;
+
+    case CMD_THROW:
+	throw_anything();
+	break;
+
+    case CMD_FIRE:
+	shoot_thing();
+	break;
+
+    case CMD_WEAR_ARMOUR:
+	wear_armour();
+	break;
+
+    case CMD_REMOVE_ARMOUR:
+    {
+	int index=0;
+
+	if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
+	    takeoff_armour(index);
+    }
+    break;
+
+    case CMD_REMOVE_JEWELLERY:
+	remove_ring();
+	break;
+
+    case CMD_WEAR_JEWELLERY:
+	puton_ring();
+	break;
+
+    case CMD_ADJUST_INVENTORY:
+	adjust();
+	break;
+
+    case CMD_MEMORISE_SPELL:
+	if (!learn_spell())
+	    flush_input_buffer( FLUSH_ON_FAILURE );
+	break;
+
+    case CMD_ZAP_WAND:
+	zap_wand();
+	break;
+
+    case CMD_EAT:
+	eat_food();
+	break;
+
+    case CMD_USE_ABILITY:
+	if (!activate_ability())
+	    flush_input_buffer( FLUSH_ON_FAILURE );
+	break;
+
+    case CMD_DISPLAY_MUTATIONS:
+	display_mutations();
+	redraw_screen();
+	break;
+
+    case CMD_EXAMINE_OBJECT:
+	original_name();
+	break;
+
+    case CMD_PRAY:
+	pray();
+	break;
+
+    case CMD_DISPLAY_RELIGION:
+	describe_god( you.religion, true );
+	redraw_screen();
+	break;
+
+    case CMD_MOVE_NOWHERE:
+    case CMD_SEARCH:
+	search_around();
+	you.turn_is_over = 1;
+	break;
+
+    case CMD_QUAFF:
+	drink();
+	break;
+
+    case CMD_READ:
+	read_scroll();
+	break;
+
+    case CMD_LOOK_AROUND:
+	mpr("Move the cursor around to observe a square.", MSGCH_PROMPT);
+	mpr("Press '?' for a monster description.", MSGCH_PROMPT);
+
+	struct dist lmove;
+	lmove.isValid = lmove.isTarget = lmove.isCancel = false;
+	look_around( lmove, true );
+	if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
+	    start_travel( lmove.tx, lmove.ty );
+	break;
+
+    case CMD_CAST_SPELL:
+	/* randart wpns */
+	if (scan_randarts(RAP_PREVENT_SPELLCASTING))
+	{
+	    mpr("Something interferes with your magic!");
+	    flush_input_buffer( FLUSH_ON_FAILURE );
+	    break;
+	}
+
+	if (!cast_a_spell())
+	    flush_input_buffer( FLUSH_ON_FAILURE );
+	break;
+
+    case CMD_WEAPON_SWAP:
+	wield_weapon(true);
+	break;
+
+	// [ds] Waypoints can be added from the level-map, and we need
+	// Ctrl+F for nobler things. Who uses waypoints, anyway?
+	// Update: Appears people do use waypoints. Reinstating, on
+	// CONTROL('W'). This means Ctrl+W is no longer a wizmode
+	// trigger, but there's always '&'. :-)
+    case CMD_FIX_WAYPOINT:
+	travel_cache.add_waypoint();
+	break;
+        
+    case CMD_INTERLEVEL_TRAVEL:
+	if (!can_travel_interlevel())
+	{
+	    mpr("Sorry, you can't auto-travel out of here.");
+	    break;
+	}
+	start_translevel_travel();
+	redraw_screen();
+	break;
+
+    case CMD_EXPLORE:
+	if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+	{
+	    mpr("It would help if you knew where you were, first.");
+	    break;
+	}
+	// Start exploring
+	start_explore();
+	break;
+
+    case CMD_DISPLAY_MAP:
+#if (!DEBUG_DIAGNOSTICS)
+	if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+	{
+	    mpr("It would help if you knew where you were, first.");
+	    break;
+	}
+#endif
+	plox[0] = 0;
+	show_map(plox);
+	redraw_screen();
+	if (plox[0] > 0) 
+	    start_travel(plox[0], plox[1]);
+	break;
+
+    case CMD_DISPLAY_KNOWN_OBJECTS:
+	check_item_knowledge(); //nothing = check_item_knowledge();
+	redraw_screen();
+	break;
+
+#ifdef ALLOW_DESTROY_ITEM_COMMAND
+    case CMD_DESTROY_ITEM:
+	cmd_destroy_item();
+	break;
+#endif
+
+    case CMD_REPLAY_MESSAGES:
+	replay_messages();
+	redraw_screen();
+	break;
+
+    case CMD_REDRAW_SCREEN:
+	redraw_screen();
+	break;
+
+    case CMD_SAVE_GAME_NOW:
+	mpr("Saving game... please wait.");
+	save_game(true);
+	break;
+
+#ifdef USE_UNIX_SIGNALS
+    case CMD_SUSPEND_GAME:
+	// CTRL-Z suspend behaviour is implemented here,
+	// because we want to have CTRL-Y available...
+	// and unfortuantely they tend to be stuck together. 
+	clrscr();
+	unixcurses_shutdown();
+	kill(0, SIGTSTP);
+	unixcurses_startup();
+	redraw_screen();
+	break;
+#endif
+
+    case CMD_DISPLAY_COMMANDS:
+	list_commands(false);
+	redraw_screen();
+	break;
+
+    case CMD_EXPERIENCE_CHECK:
+	experience_check();
+	break;
+
+    case CMD_SHOUT:
+	yell();                 /* in effects.cc */
+	break;
+
+    case CMD_DISPLAY_CHARACTER_STATUS:
+	display_char_status();
+	break;
+
+    case CMD_DISPLAY_SKILLS:
+	show_skills();
+	redraw_screen();
+	break;
+
+    case CMD_CHARACTER_DUMP:
+	char name_your[kNameLen+1];
+
+	strncpy(name_your, you.your_name, kNameLen);
+	name_your[kNameLen] = '\0';
+	if (dump_char( name_your, false ))
+	    strcpy(info, "Char dumped successfully.");
+	else
+	    strcat(info, "Char dump unsuccessful! Sorry about that.");
+	mpr(info);
+	break;
+
+#ifdef USE_MACROS
+    case CMD_MACRO_ADD:
+	macro_add_query();
+	break;
+
+    case CMD_MACRO_SAVE:
+	mpr("Saving macros.");
+	macro_save();
+	break;
+#endif
+
+    case CMD_LIST_WEAPONS:
+	list_weapons();
+	break;
+
+    case CMD_INSCRIBE_ITEM:
+	inscribe_item();
+	break;
+	
+    case CMD_LIST_ARMOUR:
+	list_armour();
+	break;
+
+    case CMD_LIST_JEWELLERY:
+	list_jewellery();
+	break;
+
+#ifdef WIZARD
+    case CMD_WIZARD:
+	handle_wizard_command();
+	break;
+#endif
+
+    case CMD_SAVE_GAME:
+	if (yesno("Save game and exit?", false, 'n'))
+	    save_game(true);
+	break;
+
+    case CMD_QUIT:
+	quit_game();
+	break;
+
+    case CMD_GET_VERSION:
+	version();
+	break;
+
+    case CMD_NO_CMD:
+    default:
+	mpr("Unknown command.");
+	break;
+
+    }
+}
+
+static void prep_input() {
     you.time_taken = player_speed();
-
+    you.shield_blocks = 0;              // no blocks this round
 #ifdef UNIX
     update_screen();
 #else
@@ -928,845 +1478,17 @@ static void input(void)
 
     set_redraw_status( REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
     print_stats();
+}
 
-    if (you.paralysis)
-    {
-        keyin = '.';            // end of if you.paralysis == 0
-    }
-    else
-    {
-#ifdef STASH_TRACKING
-        if (Options.stash_tracking)
-            stashes.update_visible_stashes(
-                    Options.stash_tracking == STM_ALL? 
-                            StashTracker::ST_AGGRESSIVE :
-                            StashTracker::ST_PASSIVE);
-#endif
-        handle_delay(); 
+/* Perhaps we should write functions like: update_repel_undead(),
+   update_liquid_flames(), and so on. Even better, we could have a
+   vector of callback functions (or objects) which get installed
+   at some point.
+*/
 
-        gotoxy(18, 9);
+static void world_reacts() {
 
-        if (you_are_delayed())
-            keyin = '.';
-        else if (you.activity)
-        {
-            keyin = 128;
-            you.turn_is_over = 0;
-            perform_activity();
-        }
-        else if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
-		 just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
-		 i_feel_safe()) {
-	    keyin = 'p';
-	    just_autoprayed = 1;
-	    about_to_autopray = 0;
-	}
-        else {
-	    if ( just_autoprayed == 1 && you.duration[DUR_PRAYER] == 0 ) {
-		/* oops */
-		mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
-		autoprayer_on = 0;
-	    }
-	    just_autoprayed = 0;
-	    if ( autoprayer_on && about_to_autopray &&
-		 you.religion != GOD_NO_GOD &&
-		 you.duration[DUR_PRAYER] == 0 ) {
-		mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
-		about_to_autopray = 0;
-	    }
-
-            if (you.running < 0)        // Travel and explore
-                travel(&keyin, &move_x, &move_y);
-
-            if (you.running > 0)
-            {
-                keyin = 128;
-
-                move_x = you.run_x;
-                move_y = you.run_y;
-
-                if (kbhit())
-                {
-                    stop_running();
-                    goto gutch;
-                }
-
-                if (you.run_x == 0 && you.run_y == 0)
-                {
-                    you.running--;
-                    keyin = '.';
-                }
-            }
-            else if (!you.running)
-            {
-
-#if DEBUG_DIAGNOSTICS
-                // save hunger at start of round
-                // for use with hunger "delta-meter" in  output.cc
-                you.old_hunger = you.hunger;        
-#endif
-
-#if DEBUG_ITEM_SCAN
-                debug_item_scan();
-#endif
-
-              gutch:
-                flush_input_buffer( FLUSH_BEFORE_COMMAND );
-                keyin = getch_with_command_macros();
-            }
-
-            mesclr();
-
-#ifdef UNIX
-            // Kludging running and opening as two character sequences
-            // for Unix systems.  This is an easy way out... all the
-            // player has to do is find a termcap and numlock setting
-            // that will get curses the numbers from the keypad.  This
-            // will hopefully be easy.
-
-            if (keyin == '*')
-            {
-                opening = true;
-                keyin = getch();
-            }
-            else if (keyin == '/')
-            {
-                running = true;
-                keyin = getch();
-            }
-
-            // Translate keypad codes into command enums
-            keyin = key_to_command(keyin);
-#else
-            // Old DOS keypad support
-            if (keyin == 0)     // ALT also works - see ..\KEYTEST.CPP
-            {
-                keyin = getch();
-                switch (keyin)
-                {
-                case 'O': move_x = -1; move_y =  1; break;
-                case 'P': move_x =  0; move_y =  1; break;
-                case 'I': move_x =  1; move_y = -1; break;
-                case 'H': move_x =  0; move_y = -1; break;
-                case 'G': move_x = -1; move_y = -1; break;
-                case 'K': move_x = -1; move_y =  0; break;
-                case 'Q': move_x =  1; move_y =  1; break;
-                case 'M': move_x =  1; move_y =  0; break;
-
-                case 119: open_door(-1, -1); move_x = 0; move_y = 0; break;
-                case 141: open_door( 0, -1); move_x = 0; move_y = 0; break;
-                case 132: open_door( 1, -1); move_x = 0; move_y = 0; break;
-                case 116: open_door( 1,  0); move_x = 0; move_y = 0; break;
-                case 118: open_door( 1,  1); move_x = 0; move_y = 0; break;
-                case 145: open_door( 0,  1); move_x = 0; move_y = 0; break;
-                case 117: open_door(-1,  1); move_x = 0; move_y = 0; break;
-                case 115: open_door(-1,  0); move_x = 0; move_y = 0; break;
-
-                case 76:
-                case 'S':
-                    keyin = '.';
-                    goto get_keyin_again;
-                }
-
-                keyin = 128;
-            }
-#endif
-        }
-    }
-
-    if (keyin != 128)
-    {
-        move_x = 0;
-        move_y = 0;
-        you.turn_is_over = 0;
-    }
-
-#ifndef UNIX
-  get_keyin_again:
-#endif //jmf: just stops an annoying gcc warning
-
-    if (is_userfunction(keyin))
-    {
-        run_macro(get_userfunction(keyin));
-        keyin = 128;
-    }
-    
-    switch (keyin)
-    {
-    case CONTROL('Y'):
-    case CMD_OPEN_DOOR_UP_RIGHT:
-        open_door(-1, -1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('K'):
-    case CMD_OPEN_DOOR_UP:
-        open_door( 0, -1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('U'):
-    case CMD_OPEN_DOOR_UP_LEFT:
-        open_door( 1, -1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('L'):
-    case CMD_OPEN_DOOR_RIGHT:
-        open_door( 1,  0); move_x = 0; move_y = 0; break;
-
-    case CONTROL('N'):
-    case CMD_OPEN_DOOR_DOWN_RIGHT:
-        open_door( 1,  1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('J'):
-    case CMD_OPEN_DOOR_DOWN:
-        open_door( 0,  1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('B'):
-    case CMD_OPEN_DOOR_DOWN_LEFT:
-        open_door(-1,  1); move_x = 0; move_y = 0; break;
-
-    case CONTROL('H'):
-    case CMD_OPEN_DOOR_LEFT:
-        open_door(-1,  0); move_x = 0; move_y = 0; break;
-
-    case 'b': case CMD_MOVE_DOWN_LEFT:  move_x = -1; move_y =  1; break;
-    case 'j': case CMD_MOVE_DOWN:       move_y =  1; move_x =  0; break;
-    case 'u': case CMD_MOVE_UP_RIGHT:   move_x =  1; move_y = -1; break;
-    case 'k': case CMD_MOVE_UP:         move_y = -1; move_x =  0; break;
-    case 'y': case CMD_MOVE_UP_LEFT:    move_y = -1; move_x = -1; break;
-    case 'h': case CMD_MOVE_LEFT:       move_x = -1; move_y =  0; break;
-    case 'n': case CMD_MOVE_DOWN_RIGHT: move_y =  1; move_x =  1; break;
-    case 'l': case CMD_MOVE_RIGHT:      move_x =  1; move_y =  0; break;
-
-    case CMD_REST:
-        // Yes this is backwards, but everyone here is used to using
-        // straight 5s for long rests... might need to define a roguelike
-        // rest key and get people switched over. -- bwr
-
-#ifdef UNIX
-        if (!running && !opening)
-            start_running( RDIR_REST, 100 );
-        else
-        {
-            search_around();
-            move_x = 0;
-            move_y = 0;
-            you.turn_is_over = 1;
-        }
-#endif
-        break;
-
-    case 'B': case CMD_RUN_DOWN_LEFT:   
-        start_running( RDIR_DOWN_LEFT, 2 ); break;
-
-    case 'J': case CMD_RUN_DOWN:        
-        start_running( RDIR_DOWN, 2 ); break;
-
-    case 'U': case CMD_RUN_UP_RIGHT:    
-        start_running( RDIR_UP_RIGHT, 2 ); break;
-
-    case 'K': case CMD_RUN_UP:          
-        start_running( RDIR_UP, 2 ); break;
-
-    case 'Y': case CMD_RUN_UP_LEFT:     
-        start_running( RDIR_UP_LEFT, 2 ); break;
-
-    case 'H': case CMD_RUN_LEFT:        
-        start_running( RDIR_LEFT, 2 ); break;
-
-    case 'N': case CMD_RUN_DOWN_RIGHT:  
-        start_running( RDIR_DOWN_RIGHT, 2 ); break;
-
-    case 'L': case CMD_RUN_RIGHT:       
-        start_running( RDIR_RIGHT, 2 ); break;
-
-#ifdef UNIX
-        // taken care of via key -> command mapping
-#else
-        // Old DOS keypad support
-    case '1': start_running( RDIR_DOWN_LEFT, 2 ); break;
-    case '2': start_running( RDIR_DOWN, 2 ); break;
-    case '9': start_running( RDIR_UP_RIGHT, 2 ); break;
-    case '8': start_running( RDIR_UP, 2 ); break;
-    case '7': start_running( RDIR_UP_LEFT, 2 ); break;
-    case '4': start_running( RDIR_LEFT, 2 ); break;
-    case '3': start_running( RDIR_DOWN_RIGHT, 2 ); break;
-    case '6': start_running( RDIR_RIGHT, 2 ); break;
-    case '5': start_running( RDIR_REST, 100 ); break;
-
-#endif
-
-    case CONTROL('A'):
-    case CMD_TOGGLE_AUTOPICKUP:
-        autopickup_on = !autopickup_on;
-        strcpy(info, "Autopickup is now ");
-        strcat(info, (autopickup_on) ? "on" : "off");
-        strcat(info, ".");
-        mpr(info);
-        break;
-
-    case CMD_TOGGLE_AUTOPRAYER:
-    case CONTROL('V'):
-        autoprayer_on = !autoprayer_on;
-        strcpy(info, "Autoprayer is now ");
-        strcat(info, (autoprayer_on) ? "on" : "off");
-        strcat(info, ".");
-        mpr(info);
-        break;
-
-    case CONTROL('T'):
-    case CMD_TOGGLE_NOFIZZLE:
-	if ( Options.confirm_spell_fizzle ) {
-	    fizzlecheck_on = !fizzlecheck_on;
-	    strcpy(info, "Fizzle confirmation is now ");
-	    strcat(info, (fizzlecheck_on) ? "on" : "off");
-	    strcat(info, ".");
-	    mpr(info);
-	}
-	break;
-
-    case ':':
-    case CMD_MAKE_NOTE:
-	make_user_note();
-	break;
-
-    case CONTROL('C'):
-    case CMD_CLEAR_MAP:
-        if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
-        {
-            mpr("Clearing level map.");
-            clear_map();
-        }
-        break;
-        
-    case '<':
-    case CMD_GO_UPSTAIRS:
-        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
-        {   
-            shop();
-            break;
-        }
-        else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
-                    || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
-                && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
-                    || grd[you.x_pos][you.y_pos] >= 150))
-        {   
-            mpr( "You can't go up here!" );
-            break;
-        }
-
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_ASCENDING_STAIRS, 
-                     1 + (you.burden_state > BS_UNENCUMBERED) );
-        break;
-
-    case '>':
-    case CMD_GO_DOWNSTAIRS:
-        if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
-                || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
-            && grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
-            && ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_DIS
-                    || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
-                && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
-            && !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
-                && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES))
-        {
-            mpr( "You can't go down here!" );
-            break;
-        }
-
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_DESCENDING_STAIRS,
-                     1 + (you.burden_state > BS_UNENCUMBERED),
-                     you.your_level );
-        break;
-
-    case 'O':
-    case CMD_DISPLAY_OVERMAP:
-        display_overmap();
-        break;
-
-    case 'o':
-    case CMD_OPEN_DOOR:
-        open_door(0, 0);
-        break;
-    case 'c':
-    case CMD_CLOSE_DOOR:
-        close_door(0, 0);
-        break;
-
-    case 'd':
-    case CMD_DROP:
-        drop();
-#ifdef STASH_TRACKING
-        if (Options.stash_tracking >= STM_DROPPED)
-            stashes.add_stash();
-#endif
-        break;
-        
-#ifdef STASH_TRACKING
-    case CONTROL('F'):
-    case CMD_SEARCH_STASHES:
-        stashes.search_stashes();
-        break;
-
-    case CONTROL('S'):
-    case CMD_MARK_STASH:
-        if (Options.stash_tracking >= STM_EXPLICIT)
-            stashes.add_stash(-1, -1, true);
-        break;
-
-    case CONTROL('E'):
-    case CMD_FORGET_STASH:
-        if (Options.stash_tracking >= STM_EXPLICIT)
-            stashes.no_stash();
-        break;
-#endif
-
-    case 'D':
-    case CMD_BUTCHER:
-        butchery();
-        break;
-
-    case 'i':
-    case CMD_DISPLAY_INVENTORY:
-        get_invent(-1);
-        break;
-
-    case 'I':
-    case CMD_OBSOLETE_INVOKE:
-        // We'll leave this message in for a while.  Eventually, this
-        // might be some special for of inventory command, or perhaps
-        // actual god invocations will be split to here from abilities. -- bwr
-        mpr( "This command is now 'E'voke wielded item.", MSGCH_WARN );
-        break;
-    
-    case 'E':
-    case CMD_EVOKE:
-        if (!evoke_wielded())
-            flush_input_buffer( FLUSH_ON_FAILURE );
-        break;
-
-    case 'g':
-    case ',':
-    case CMD_PICKUP:
-        pickup();
-        break;
-
-    case ';':
-    case CMD_INSPECT_FLOOR:
-        item_check(';');
-        break;
-
-    case 'w':
-    case CMD_WIELD_WEAPON:
-        wield_weapon(false);
-        break;
-
-    case 't':
-    case CMD_THROW:
-        throw_anything();
-        break;
-
-    case 'f':
-    case CMD_FIRE:
-        shoot_thing();
-        break;
-
-    case 'W':
-    case CMD_WEAR_ARMOUR:
-        wear_armour();
-        break;
-
-    case 'T':
-    case CMD_REMOVE_ARMOUR:
-        {
-            int index=0;
-
-            if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
-                takeoff_armour(index);
-        }
-        break;
-
-    case 'R':
-    case CMD_REMOVE_JEWELLERY:
-        remove_ring();
-        break;
-    case 'P':
-    case CMD_WEAR_JEWELLERY:
-        puton_ring();
-        break;
-
-    case '=':
-    case CMD_ADJUST_INVENTORY:
-        adjust();
-        return;
-
-    case 'M':
-    case CMD_MEMORISE_SPELL:
-        if (!learn_spell())
-            flush_input_buffer( FLUSH_ON_FAILURE );
-        break;
-
-    case 'z':
-    case CMD_ZAP_WAND:
-        zap_wand();
-        break;
-
-    case 'e':
-    case CMD_EAT:
-        eat_food();
-        break;
-
-    case 'a':
-    case CMD_USE_ABILITY:
-        if (!activate_ability())
-            flush_input_buffer( FLUSH_ON_FAILURE );
-        break;
-
-    case 'A':
-    case CMD_DISPLAY_MUTATIONS:
-        display_mutations();
-        redraw_screen();
-        break;
-
-    case 'v':
-    case CMD_EXAMINE_OBJECT:
-        original_name();
-        break;
-
-    case 'p':
-    case CMD_PRAY:
-        pray();
-        break;
-
-    case '^':
-    case CMD_DISPLAY_RELIGION:
-        describe_god( you.religion, true );
-        redraw_screen();
-        break;
-
-    case '.':
-    case CMD_MOVE_NOWHERE:
-        search_around();
-        move_x = 0;
-        move_y = 0;
-        you.turn_is_over = 1;
-        break;
-
-    case 'q':
-    case CMD_QUAFF:
-        drink();
-        break;
-
-    case 'r':
-    case CMD_READ:
-        read_scroll();
-        break;
-
-    case 'x':
-    case CMD_LOOK_AROUND:
-        mpr("Move the cursor around to observe a square.", MSGCH_PROMPT);
-        mpr("Press '?' for a monster description.", MSGCH_PROMPT);
-
-        struct dist lmove;
-        lmove.isValid = lmove.isTarget = lmove.isCancel = false;
-        look_around( lmove, true );
-        if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
-            start_travel( lmove.tx, lmove.ty );
-        break;
-
-    case 's':
-    case CMD_SEARCH:
-        search_around();
-        you.turn_is_over = 1;
-        break;
-
-    case 'Z':
-    case CMD_CAST_SPELL:
-        /* randart wpns */
-        if (scan_randarts(RAP_PREVENT_SPELLCASTING))
-        {
-            mpr("Something interferes with your magic!");
-            flush_input_buffer( FLUSH_ON_FAILURE );
-            break;
-        }
-
-        if (!cast_a_spell())
-            flush_input_buffer( FLUSH_ON_FAILURE );
-        break;
-
-    case '\'':
-    case CMD_WEAPON_SWAP:
-        wield_weapon(true);
-        break;
-
-    // [ds] Waypoints can be added from the level-map, and we need Ctrl+F for
-    // nobler things. Who uses waypoints, anyway?
-    // Update: Appears people do use waypoints. Reinstating, on CONTROL('W').
-    //         This means Ctrl+W is no longer a wizmode trigger, but there's
-    //         always '&'. :-)
-    case CMD_FIX_WAYPOINT:
-    case CONTROL('W'):
-        travel_cache.add_waypoint();
-        break;
-        
-    case CMD_INTERLEVEL_TRAVEL:
-    case CONTROL('G'):
-        if (!can_travel_interlevel())
-        {
-            mpr("Sorry, you can't auto-travel out of here.");
-            break;
-        }
-        start_translevel_travel();
-        redraw_screen();
-        break;
-
-    case CONTROL('O'):
-    case CMD_EXPLORE:
-        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        {
-            mpr("It would help if you knew where you were, first.");
-            break;
-        }
-        // Start exploring
-        start_explore();
-        break;
-
-    case 'X':
-    case CMD_DISPLAY_MAP:
-#if (!DEBUG_DIAGNOSTICS)
-        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        {
-            mpr("It would help if you knew where you were, first.");
-            break;
-        }
-#endif
-        plox[0] = 0;
-        show_map(plox);
-        redraw_screen();
-        if (plox[0] > 0) 
-            start_travel(plox[0], plox[1]);
-        break;
-
-    case '\\':
-    case CMD_DISPLAY_KNOWN_OBJECTS:
-        check_item_knowledge(); //nothing = check_item_knowledge();
-        redraw_screen();
-        break;
-
-#ifdef ALLOW_DESTROY_ITEM_COMMAND
-    case CONTROL('D'):
-    case CMD_DESTROY_ITEM:
-        cmd_destroy_item();
-        break;
-#endif
-
-    case CONTROL('P'):
-    case CMD_REPLAY_MESSAGES:
-        replay_messages();
-        redraw_screen();
-        break;
-
-    case CONTROL('R'):
-    case CMD_REDRAW_SCREEN:
-        redraw_screen();
-        break;
-
-    case CONTROL('X'):
-    case CMD_SAVE_GAME_NOW:
-        mpr("Saving game... please wait.");
-        save_game(true);
-        break;
-
-#ifdef USE_UNIX_SIGNALS
-    case CONTROL('Z'):
-    case CMD_SUSPEND_GAME:
-        // CTRL-Z suspend behaviour is implemented here,
-        // because we want to have CTRL-Y available...
-        // and unfortuantely they tend to be stuck together. 
-        clrscr();
-        unixcurses_shutdown();
-        kill(0, SIGTSTP);
-        unixcurses_startup();
-        redraw_screen();
-        break;
-#endif
-
-    case '?':
-    case CMD_DISPLAY_COMMANDS:
-        list_commands(false);
-        redraw_screen();
-        break;
-
-    case 'C':
-    case CMD_EXPERIENCE_CHECK:
-        snprintf( info, INFO_SIZE, "You are a level %d %s %s.", you.experience_level,
-                species_name(you.species,you.experience_level), you.class_name);
-        mpr(info);
-
-        if (you.experience_level < 27)
-        {
-            int xp_needed = (exp_needed(you.experience_level+2) - you.experience) + 1;
-            snprintf( info, INFO_SIZE, "Level %d requires %ld experience (%d point%s to go!)",
-                    you.experience_level + 1, 
-                    exp_needed(you.experience_level + 2) + 1,
-                    xp_needed, 
-                    (xp_needed > 1) ? "s" : "");
-            mpr(info);
-        }
-        else
-        {
-            mpr( "I'm sorry, level 27 is as high as you can go." );
-            mpr( "With the way you've been playing, I'm surprised you got this far." );
-        }
-
-        if (you.real_time != -1)
-        {
-            const time_t curr = you.real_time + (time(NULL) - you.start_time);
-            char buff[200];
-
-            make_time_string( curr, buff, sizeof(buff) );
-
-            snprintf( info, INFO_SIZE, "Play time: %s (%ld turns)", 
-                      buff, you.num_turns );
-
-            mpr( info );
-        }
-        break;
-
-
-    case '!':
-    case CMD_SHOUT:
-        yell();                 /* in effects.cc */
-        break;
-
-    case '@':
-    case CMD_DISPLAY_CHARACTER_STATUS:
-        display_char_status();
-        break;
-
-    case 'm':
-    case CMD_DISPLAY_SKILLS:
-        show_skills();
-        redraw_screen();
-        break;
-
-    case '#':
-    case CMD_CHARACTER_DUMP:
-        char name_your[kNameLen+1];
-
-        strncpy(name_your, you.your_name, kNameLen);
-        name_your[kNameLen] = '\0';
-        if (dump_char( name_your, false ))
-            strcpy(info, "Char dumped successfully.");
-        else
-            strcat(info, "Char dump unsuccessful! Sorry about that.");
-        mpr(info);
-        break;
-
-#ifdef USE_MACROS
-    case '`':
-    case CMD_MACRO_ADD:
-        macro_add_query();
-        break;
-    case '~':
-    case CMD_MACRO_SAVE:
-        mpr("Saving macros.");
-        macro_save();
-        break;
-#endif
-
-    case ')':
-    case CMD_LIST_WEAPONS:
-        list_weapons();
-        return;
-
-    case '{':
-    case CMD_INSCRIBE_ITEM:
-        inscribe_item();
-        break;
-	
-    case ']':
-    case CMD_LIST_ARMOUR:
-        list_armour();
-        return;
-
-    case '"':
-    case CMD_LIST_JEWELLERY:
-        list_jewellery();
-        return;
-
-#ifdef WIZARD
-    case CMD_WIZARD:
-    case '&':
-        handle_wizard_command();
-        break;
-#endif
-
-    case 'S':
-    case CMD_SAVE_GAME:
-        if (yesno("Save game and exit?", false, 'n'))
-            save_game(true);
-        break;
-
-    case 'Q':
-    case CMD_QUIT:
-        quit_game();
-        break;
-
-    case 'V':
-    case CMD_GET_VERSION:
-        version();
-        break;
-
-    case 128:   // Can't use this char -- it's the special value 128
-        break;
-
-    default:
-    case CMD_NO_CMD:
-        mpr("Unknown command.");
-        break;
-
-    }
-
-#ifdef UNIX
-    // New Unix keypad stuff
-    if (running)
-    {
-        int dir = -1;
-        
-        // XXX: ugly hack to interface this with the new running code. -- bwr
-        for (int i = 0; i < 8; i++)
-        {
-            if (Compass[i].x == move_x && Compass[i].y == move_y)
-            {
-                dir = i;
-                break;
-            }
-        }
-
-        if (dir != -1)
-        {
-            start_running( dir, 2 );
-            move_x = 0;
-            move_y = 0;
-        }
-    }
-    else if (opening)
-    {
-        open_door(move_x, move_y);
-        move_x = 0;
-        move_y = 0;
-    }
-#endif
-
-    if (move_x != 0 || move_y != 0)
-        move_player(move_x, move_y);
-    else if (you.turn_is_over)      // we did something other than move/attack
-        do_berserk_no_combat_penalty();
-
-    if (!you.turn_is_over)
-    {
-        viewwindow(1, false);
-        return;
-    }
+    bool its_quiet;             //jmf: for silence messages
 
     if (you.num_turns != -1)
         you.num_turns++;
@@ -1834,13 +1556,13 @@ static void input(void)
         if (res_fire <= 0)
         {
             ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                                                KILLED_BY_BURNING);
+		 KILLED_BY_BURNING);
         }
 
         if (res_fire < 0)
         {
             ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                                                KILLED_BY_BURNING);
+		 KILLED_BY_BURNING);
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -1920,7 +1642,6 @@ static void input(void)
 	about_to_autopray = 1;
         you.duration[DUR_PRAYER] = 0;
     }
-
 
     //jmf: more flexible weapon branding code
     if (you.duration[DUR_WEAPON_BRAND] > 1)
@@ -2606,8 +2327,257 @@ static void input(void)
     if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
         pandemonium_mons();
 
-    // No monsters in the Labyrinth,  or Ecumenical Temple
+    // No monsters in the Labyrinth, or the Ecumenical Temple
     return;
+}
+
+static command_type get_running_command() {
+    if ( kbhit() ) {
+	stop_running();
+	return CMD_NO_CMD;
+    }
+    if ( you.run_x == 0 && you.run_y == 0 ) {
+	you.running--;
+	return CMD_MOVE_NOWHERE;
+    }
+    return direction_to_command( you.run_x, you.run_y );
+}
+
+static command_type get_next_cmd() {
+    /* handle macros!!!! XXX */
+    if ( you.activity )
+	return CMD_PERFORM_ACTIVITY;
+    if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
+	just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
+	i_feel_safe()) {
+	just_autoprayed = 1;
+	about_to_autopray = 0;
+	return CMD_PRAY;
+    }
+    if ( just_autoprayed == 1 && you.duration[DUR_PRAYER] == 0 ) {
+	/* oops */
+	mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
+	autoprayer_on = 0;
+    }
+    just_autoprayed = 0;
+    if ( autoprayer_on && about_to_autopray &&
+	 you.religion != GOD_NO_GOD &&
+	 you.duration[DUR_PRAYER] == 0 ) {
+	mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
+	about_to_autopray = 0;
+    }
+    if (you.running < 0) {       // Travel and explore
+	command_type result = travel();
+	if ( result != CMD_NO_CMD )
+	    return result;
+    }
+    if (you.running > 0) {
+	command_type result = get_running_command();
+	if ( result != CMD_NO_CMD )
+	    return result;
+    }
+
+#if DEBUG_DIAGNOSTICS
+    // save hunger at start of round
+    // for use with hunger "delta-meter" in  output.cc
+    you.old_hunger = you.hunger;        
+#endif
+    
+#if DEBUG_ITEM_SCAN
+    debug_item_scan();
+#endif
+    keycode_type keyin = get_next_keycode();
+
+    if (is_userfunction(keyin)) {
+        run_macro(get_userfunction(keyin));
+	//return get_next_cmd();
+    }
+
+    return keycode_to_command(keyin);
+}
+
+/* for now, this is an extremely yucky hack */
+command_type keycode_to_command( keycode_type key ) {
+    switch ( key ) {
+    case 'b': return CMD_MOVE_DOWN_LEFT;
+    case 'h': return CMD_MOVE_LEFT;
+    case 'j': return CMD_MOVE_DOWN;
+    case 'k': return CMD_MOVE_UP;
+    case 'l': return CMD_MOVE_RIGHT;
+    case 'n': return CMD_MOVE_DOWN_RIGHT;
+    case 'u': return CMD_MOVE_UP_RIGHT;
+    case 'y': return CMD_MOVE_UP_LEFT;
+
+    case 'a': return CMD_USE_ABILITY;
+    case 'c': return CMD_CLOSE_DOOR;
+    case 'd': return CMD_DROP;
+    case 'e': return CMD_EAT;
+    case 'f': return CMD_FIRE;
+    case 'g': return CMD_PICKUP;
+    case 'i': return CMD_DISPLAY_INVENTORY;
+    case 'm': return CMD_DISPLAY_SKILLS;
+    case 'o': return CMD_OPEN_DOOR;
+    case 'p': return CMD_PRAY;
+    case 'q': return CMD_QUAFF;
+    case 'r': return CMD_READ;
+    case 's': return CMD_SEARCH;
+    case 't': return CMD_THROW;
+    case 'v': return CMD_EXAMINE_OBJECT;
+    case 'w': return CMD_WIELD_WEAPON;
+    case 'x': return CMD_LOOK_AROUND;
+    case 'z': return CMD_ZAP_WAND;
+
+    case 'B': return CMD_RUN_DOWN_LEFT;
+    case 'H': return CMD_RUN_LEFT;
+    case 'J': return CMD_RUN_DOWN;
+    case 'K': return CMD_RUN_UP;
+    case 'L': return CMD_RUN_RIGHT;
+    case 'N': return CMD_RUN_DOWN_RIGHT;
+    case 'U': return CMD_RUN_UP_RIGHT;
+    case 'Y': return CMD_RUN_UP_LEFT;
+
+    case 'A': return CMD_DISPLAY_MUTATIONS;
+    case 'C': return CMD_EXPERIENCE_CHECK;
+    case 'D': return CMD_BUTCHER;
+    case 'E': return CMD_EVOKE;
+    case 'F': return CMD_NO_CMD;
+    case 'G': return CMD_NO_CMD;
+    case 'I': return CMD_OBSOLETE_INVOKE;
+    case 'M': return CMD_MEMORISE_SPELL;
+    case 'O': return CMD_DISPLAY_OVERMAP;
+    case 'P': return CMD_WEAR_JEWELLERY;
+    case 'Q': return CMD_QUIT;
+    case 'R': return CMD_REMOVE_JEWELLERY;
+    case 'S': return CMD_SAVE_GAME;
+    case 'T': return CMD_REMOVE_ARMOUR;
+    case 'V': return CMD_GET_VERSION;
+    case 'W': return CMD_WEAR_ARMOUR;
+    case 'X': return CMD_DISPLAY_MAP;
+    case 'Z': return CMD_CAST_SPELL;
+
+    case '.': return CMD_MOVE_NOWHERE;
+    case '<': return CMD_GO_UPSTAIRS;
+    case '>': return CMD_GO_DOWNSTAIRS;
+    case '@': return CMD_DISPLAY_CHARACTER_STATUS;
+    case ',': return CMD_PICKUP;
+    case ':': return CMD_MAKE_NOTE;
+    case ';': return CMD_INSPECT_FLOOR;
+    case '!': return CMD_SHOUT;
+    case '^': return CMD_DISPLAY_RELIGION;
+    case '#': return CMD_CHARACTER_DUMP;
+    case '=': return CMD_ADJUST_INVENTORY;
+    case '?': return CMD_DISPLAY_COMMANDS;
+    case '`': return CMD_MACRO_ADD;
+    case '~': return CMD_MACRO_SAVE;
+    case '&': return CMD_WIZARD;
+    case '"': return CMD_LIST_JEWELLERY;
+    case '{': return CMD_INSCRIBE_ITEM;
+    case '[': return CMD_LIST_ARMOUR;
+    case ']': return CMD_LIST_ARMOUR;
+    case ')': return CMD_LIST_WEAPONS;
+    case '(': return CMD_LIST_WEAPONS;
+    case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;
+    case '\'': return CMD_WEAPON_SWAP;
+
+    case '0': return CMD_NO_CMD;
+    case '1': return CMD_MOVE_DOWN_LEFT;
+    case '2': return CMD_MOVE_DOWN;
+    case '3': return CMD_MOVE_DOWN_RIGHT;
+    case '4': return CMD_MOVE_LEFT;
+    case '5': return CMD_REST;
+    case '6': return CMD_MOVE_RIGHT;
+    case '7': return CMD_MOVE_UP_LEFT;
+    case '8': return CMD_MOVE_UP;
+    case '9': return CMD_MOVE_UP_RIGHT;
+
+    case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
+    case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;
+    case CONTROL('J'): return CMD_OPEN_DOOR_DOWN;
+    case CONTROL('K'): return CMD_OPEN_DOOR_UP;
+    case CONTROL('L'): return CMD_OPEN_DOOR_RIGHT;
+    case CONTROL('N'): return CMD_OPEN_DOOR_DOWN_RIGHT;
+    case CONTROL('U'): return CMD_OPEN_DOOR_UP_LEFT;
+    case CONTROL('Y'): return CMD_OPEN_DOOR_UP_RIGHT;
+
+    case CONTROL('A'): return CMD_TOGGLE_AUTOPICKUP;
+    case CONTROL('C'): return CMD_CLEAR_MAP;
+    case CONTROL('D'): return CMD_NO_CMD;
+    case CONTROL('E'): return CMD_FORGET_STASH;
+    case CONTROL('F'): return CMD_SEARCH_STASHES;
+    case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
+    case CONTROL('I'): return CMD_NO_CMD;
+    case CONTROL('M'): return CMD_NO_CMD;
+    case CONTROL('O'): return CMD_EXPLORE;
+    case CONTROL('P'): return CMD_REPLAY_MESSAGES;
+    case CONTROL('Q'): return CMD_NO_CMD;
+    case CONTROL('R'): return CMD_REDRAW_SCREEN;
+    case CONTROL('S'): return CMD_MARK_STASH;
+    case CONTROL('T'): return CMD_TOGGLE_NOFIZZLE;
+    case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
+    case CONTROL('W'): return CMD_FIX_WAYPOINT;
+    case CONTROL('X'): return CMD_SAVE_GAME_NOW;
+    case CONTROL('Z'): return CMD_SUSPEND_GAME;
+    default: return CMD_NO_CMD;
+    }
+}
+
+keycode_type get_next_keycode() {
+
+    keycode_type keyin;
+
+    flush_input_buffer( FLUSH_BEFORE_COMMAND );
+    keyin = getch_with_command_macros();
+
+#ifdef UNIX
+    // Kludging running and opening as two character sequences
+    // for Unix systems.  This is an easy way out... all the
+    // player has to do is find a termcap and numlock setting
+    // that will get curses the numbers from the keypad.  This
+    // will hopefully be easy.
+
+    /* can we say yuck? -- haranp */
+    if (keyin == '*') {
+	keyin = getch();
+	// return control-key
+	return CONTROL(toupper(keyin));
+    }
+    else if (keyin == '/') {
+	keyin = getch();
+	// return shift-key
+	return toupper(keyin);
+    }
+#else
+    // Old DOS keypad support
+    if (keyin == 0)
+    {
+	/* FIXME haranp - hackiness */
+	const char DOSidiocy[10]     = { "OPQKSMGHI" };
+	const char DOSunidiocy[10]   = { "bjnh.lyku" };
+	const int DOScontrolidiocy[9] = {
+	    117, 145, 118, 115, 76, 116, 119, 141, 132
+	}
+	keyin = getch();
+	for (int j = 0; j < 9; ++j ) {
+	    if ( keyin == DOSidiocy[j] )
+		return DOSunidiocy[j];
+	    if ( keyin == DOScontrolidiocy[j] )
+		return CONTROL(toupper(DOSunidiocy[j]));
+	}
+	    
+	return 0;
+    }
+#endif
+    mesclr();
+
+    return keyin;
+}
+
+static void middle_input() {
+    if (Options.stash_tracking)
+	stashes.update_visible_stashes(
+	    Options.stash_tracking == STM_ALL? 
+	    StashTracker::ST_AGGRESSIVE :
+	    StashTracker::ST_PASSIVE);
 }
 
 /*
@@ -2995,6 +2965,7 @@ static void move_player(int move_x, int move_y)
         {
             you.turn_is_over = 1;
             mpr("Ouch!");
+	    apply_berserk_penalty = true;
             return;
         }
 
@@ -3021,7 +2992,7 @@ static void move_player(int move_x, int move_y)
                 fall_into_a_pool( false, new_targ_grid );
 
             you.turn_is_over = 1;
-            do_berserk_no_combat_penalty();
+	    apply_berserk_penalty = true;
             return;
         }
     }                           // end of if you.conf
@@ -3102,7 +3073,7 @@ static void move_player(int move_x, int move_y)
             {
                 fall_into_a_pool( false, targ_grid );
                 you.turn_is_over = 1;
-                do_berserk_no_combat_penalty();
+		apply_berserk_penalty = true;
                 return;
             }
             else
@@ -3253,8 +3224,5 @@ static void move_player(int move_x, int move_y)
 #endif
     }
 
-    if (!attacking)
-    {
-        do_berserk_no_combat_penalty();
-    }
+    apply_berserk_penalty = !attacking;
 }                               // end move_player()
