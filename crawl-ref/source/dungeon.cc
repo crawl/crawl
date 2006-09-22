@@ -1150,8 +1150,8 @@ int items( int allow_uniques,       // not just true-false,
                     {
                         const int tmp = random2(1000);
 
-                        set_weapon_special( p, (tmp < 375) ? SPWPN_FLAMING :
-                                               (tmp < 750) ? SPWPN_FREEZING :
+                        set_weapon_special( p, (tmp < 375) ? SPWPN_FLAME :
+                                               (tmp < 750) ? SPWPN_FROST :
                                                (tmp < 920) ? SPWPN_PROTECTION :
                                                (tmp < 980) ? SPWPN_VORPAL 
                                                            : SPWPN_SPEED );
