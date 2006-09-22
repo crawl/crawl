@@ -4994,6 +4994,7 @@ static void special_room(int level_number, spec_room &sr)
 
         if ((level_number > 13 && spec_room_type == SROOM_LAIR_KOBOLD)
             || (level_number < 16 && spec_room_type == SROOM_MORGUE)
+	    || (level_number < 12 && spec_room_type == SROOM_JELLY_PIT)
             || (level_number < 17 && one_chance_in(4)))
         {
             spec_room_type = SROOM_LAIR_ORC;
@@ -5002,10 +5003,9 @@ static void special_room(int level_number, spec_room &sr)
         if (level_number > 19 && coinflip())
             spec_room_type = SROOM_MORGUE;
 
-        if (level_number > 13 
-                && one_chance_in(level_number > 23? 4 : 
-                                 level_number > 18? 5 : 6))
-            spec_room_type = SROOM_JELLY_PIT;
+        if (level_number > 13 &&
+	    one_chance_in(6 - (level_number > 23) - (level_number > 18)))
+	    spec_room_type = SROOM_JELLY_PIT;
     }
 
     switch (spec_room_type)
