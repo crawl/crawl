@@ -43,7 +43,7 @@ int prompt_invent_item( const char *prompt, int type_expect,
 			operation_types oper = OPER_ANY );
 
 std::vector<SelItem> select_items( std::vector<item_def*> &items, 
-                                   const char *title );
+                                   const char *title, bool noselect = false );
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,

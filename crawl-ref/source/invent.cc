@@ -341,7 +341,7 @@ void populate_item_menu( Menu *menu, const std::vector<item_def> &items,
 }
 
 std::vector<SelItem> select_items( std::vector<item_def*> &items, 
-                                   const char *title )
+                                   const char *title, bool noselect )
 {
     std::vector<SelItem> selected;
 
@@ -390,7 +390,8 @@ std::vector<SelItem> select_items( std::vector<item_def*> &items,
                                 ckey + 1;
         }
     }
-    menu.set_flags( MF_MULTISELECT | MF_SELECT_ANY_PAGE );
+    menu.set_flags( noselect ? MF_NOSELECT :
+		    (MF_MULTISELECT | MF_SELECT_ANY_PAGE) );
     std::vector< MenuEntry * > sel = menu.show();
     for (int i = 0, count = sel.size(); i < count; ++i)
     {

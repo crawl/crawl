@@ -521,18 +521,7 @@ void destroy_item_stack( int x, int y )
     }
 }
 
-
-/*
- * Takes keyin as an argument because it will only display a long list of items
- * if ; is pressed.
- */
-void item_check(char keyin)
-{
-    char item_show[50][50];
-    char temp_quant[10];
-
-    int counter = 0;
-    int counter_max = 0;
+static void describe_floor() {
 
     const int grid = grd[you.x_pos][you.y_pos];
 
@@ -714,6 +703,23 @@ void item_check(char keyin)
             }
         }
     }
+}
+
+/*
+ * Takes keyin as an argument because it will only display a long list of items
+ * if ; is pressed.
+ * Not anymore - but leaving in the old code for a bit, will clean up
+ * later -- haranp
+ */
+void item_check(char keyin)
+{
+    char item_show[50][50];
+    char temp_quant[10];
+
+    int counter = 0;
+    int counter_max = 0;
+
+    describe_floor();
 
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM && keyin == ';')
     {
@@ -790,6 +796,25 @@ void item_check(char keyin)
         mpr("There are several objects here.");
 }
 
+void show_items()
+{
+    const int o = igrd[you.x_pos][you.y_pos];
+
+    if (o == NON_ITEM) {
+        mpr("There are no items here.");
+    }
+    else {
+	std::vector<item_def*> items;
+
+	for (int i = o; i != NON_ITEM; i = mitm[i].link)
+	    items.push_back( &mitm[i] );
+	
+	select_items( items, "Things that are here:", true );
+	redraw_screen();
+    }
+    
+    describe_floor();
+}
 
 void pickup_menu(int item_link)
 {

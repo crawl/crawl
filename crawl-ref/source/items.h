@@ -121,6 +121,8 @@ void handle_time( long time_delta );
  * *********************************************************************** */
 int inv_count(void);
 
+void show_items();
+
 void cmd_destroy_item( void );
 
 bool pickup_single_item(int link, int qty);

@@ -1177,7 +1177,8 @@ static void do_action( command_type cmd ) {
 	pickup();
 	break;
 
-    case CMD_INSPECT_FLOOR: item_check(';');
+    case CMD_INSPECT_FLOOR:
+	show_items();
 	break;
 
     case CMD_WIELD_WEAPON:
