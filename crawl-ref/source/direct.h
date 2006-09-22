@@ -42,6 +42,8 @@ bool in_viewport_bounds(int x, int y);
 bool in_los(int x, int y);
 bool in_vlos(int x, int y);
 
+int dos_direction_unmunge(int doskey);
+
 std::string feature_description(int mx, int my);
 
 inline int view2gridX(int vx)

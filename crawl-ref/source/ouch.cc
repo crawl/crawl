@@ -624,7 +624,6 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-        case GOD_OKAWARU:
         case GOD_YREDELEMNUL:
             if (dam >= you.hp && you.duration[DUR_PRAYER]
                                                 && random2(you.piety) >= 30)

@@ -1036,7 +1036,7 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     // start with enough room for 100 80 character lines
     text.reserve(100 * 80);
 
-    text += " Dungeon Crawl Stone Soup version " VERSION " character file.";
+    text += " " CRAWL " version " VERSION " character file.";
     text += EOL;
     text += EOL;
 

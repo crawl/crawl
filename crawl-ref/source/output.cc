@@ -730,7 +730,7 @@ void get_full_detail(char* buffer, bool calc_unid)
             if ( you.equip[ e_order[i] ] != -1)
             {
                 in_name( you.equip[ e_order[i] ], DESC_PLAIN, 
-                         str_pass, Options.terse_hand );
+                         str_pass, true );
                 snprintf(CUR_AD, "%-7s: %s", slot, str_pass);
             }
             else

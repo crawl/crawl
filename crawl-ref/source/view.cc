@@ -36,6 +36,7 @@
 
 #include "clua.h"
 #include "debug.h"
+#include "direct.h"
 #include "insult.h"
 #include "macro.h"
 #include "monstuff.h"
@@ -2429,9 +2430,13 @@ void show_map( FixedVector<int, 2> &spec_place )
     }
 
     if (getty == 0)
+    {
         getty = getchm(KC_LEVELMAP);
+        // [dshaligram] DOS madness.
+        getty = dos_direction_unmunge(getty);
+    }
 
-#ifdef WIN32CONSOLE
+#if defined(WIN32CONSOLE) || defined(DOS)
     // Translate shifted numpad to shifted vi keys. Yes,
     // this is horribly hacky.
     {

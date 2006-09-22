@@ -78,7 +78,8 @@ static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
 // [dshaligram] Removed . and 5 from dirchars so it's easier to
 // special case them.
 static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
-static const char DOSidiocy[10] = { "OPQKSMGHI" };
+static const char DOSidiocy[10]     = { "OPQKSMGHI" };
+static const char DOSunidiocy[10]   = { "bjnh.lyku" };
 static const char *aim_prompt = "Aim (move cursor or -/+/=, change mode with CTRL-F, select with . or >)";
 
 static void describe_feature(int mx, int my, bool oos);
@@ -97,6 +98,12 @@ static char find_square( unsigned char xps, unsigned char yps,
 static bool is_mapped(int x, int y)
 {
     return (is_player_mapped(x, y));
+}
+
+int dos_direction_unmunge(int doskey)
+{
+    const char *pos = strchr(DOSidiocy, doskey);
+    return (pos? DOSunidiocy[ pos - DOSidiocy ] : doskey);
 }
 
 //---------------------------------------------------------------

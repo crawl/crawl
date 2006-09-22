@@ -2408,8 +2408,7 @@ int items( int allow_uniques,       // not just true-false,
 
         if (item_is_rod( mitm[p] ))
         {
-            mitm[p].plus2 = (9 + random2( MAX_ROD_CHARGE - 8 )) 
-                                * ROD_CHARGE_MULT;
+            mitm[p].plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
             mitm[p].plus  = mitm[p].plus2;
         }
 

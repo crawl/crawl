@@ -333,6 +333,12 @@ unsigned long random_int( void )
     return (genrand_int32());
 }
 
+int random_range(int low, int high)
+{
+    ASSERT(low <= high);
+    return (low + random2(high - low + 1));
+}
+
 int random2( int max )
 {
     if (max <= 1)

@@ -460,7 +460,8 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
 ////////////////////////////////////////////////////////////////////
 // Perl Compatible Regular Expressions
 
-void *compile_pattern(const char *pattern, bool icase) {
+void *compile_pattern(const char *pattern, bool icase)
+{
     const char *error;
     int erroffset;
     int flags = icase? PCRE_CASELESS : 0;
@@ -471,7 +472,8 @@ void *compile_pattern(const char *pattern, bool icase) {
                         NULL);
 }
 
-void free_compiled_pattern(void *cp) {
+void free_compiled_pattern(void *cp)
+{
     if (cp)
         pcre_free(cp);
 }
@@ -495,7 +497,8 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 ////////////////////////////////////////////////////////////////////
 // POSIX regular expressions
 
-void *compile_pattern(const char *pattern, bool icase) {
+void *compile_pattern(const char *pattern, bool icase)
+{
     regex_t *re = new regex_t;
     if (!re)
         return NULL;
@@ -505,15 +508,18 @@ void *compile_pattern(const char *pattern, bool icase) {
         flags |= REG_ICASE;
     int rc = regcomp(re, pattern, flags);
     // Nonzero return code == failure
-    if (rc) {
+    if (rc)
+    {
         delete re;
         return NULL;
     }
     return re;
 }
 
-void free_compiled_pattern(void *cp) {
-    if (cp) {
+void free_compiled_pattern(void *cp)
+{
+    if (cp)
+    {
         regex_t *re = static_cast<regex_t *>( cp );
         regfree(re);
         delete re;
@@ -542,7 +548,8 @@ void *compile_pattern(const char *pattern, bool icase)
     // If we're using simple globs, we need to box the pattern with '*'
     std::string s = std::string("*") + pattern + "*";
     glob_info *gi = new glob_info;
-    if (gi) {
+    if (gi)
+    {
         gi->s = s;
         gi->ignore_case = icase;
     }

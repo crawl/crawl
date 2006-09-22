@@ -1930,7 +1930,7 @@ static void fsim_mon_stats(FILE *o, const monsters &mon)
 static void fsim_title(FILE *o, int mon, int ms)
 {
     char buf[ITEMNAME_SIZE];
-    fprintf(o, "Dungeon Crawl Stone Soup version " VERSION "\n\n");
+    fprintf(o, CRAWL " version " VERSION "\n\n");
     fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
             species_name(you.species, you.experience_level),
             you.class_name,

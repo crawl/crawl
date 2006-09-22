@@ -338,7 +338,7 @@ void init_libw32c(void)
    }
 
    GetConsoleTitle( oldTitle, 78 );
-   SetConsoleTitle( "Crawl Stone Soup " VERSION );
+   SetConsoleTitle( CRAWL " " VERSION );
 
    init_colors(oldTitle);
 

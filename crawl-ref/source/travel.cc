@@ -1914,8 +1914,8 @@ static int find_transtravel_stair(  const level_id &cur,
         {
             si.distance = dist2stair;
 
+            // Account for the cost of taking the stairs
             dist2stair += Options.travel_stair_cost;
-            ++dist2stair;   // Account for the cost of taking the stairs
 
             // Already too expensive? Short-circuit.
             if (local_distance != -1 && dist2stair >= local_distance)
@@ -1939,7 +1939,8 @@ static int find_transtravel_stair(  const level_id &cur,
                 continue;
             }
 
-            if (dest.id.depth > -1) { // We have a valid level descriptor.
+            if (dest.id.depth > -1) // We have a valid level descriptor.
+            {
                 int dist = level_distance(dest.id, target.id);
                 if (dist != -1 &&
                         (dist < best_level_distance || 
@@ -2640,7 +2641,6 @@ void LevelInfo::save(FILE *file) const
     }
 }
 
-#define EXCLUDE_LOAD_LIMIT 20
 void LevelInfo::load(FILE *file)
 {
     stairs.clear();

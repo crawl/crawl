@@ -185,12 +185,12 @@ extern unsigned char your_sign;
 extern unsigned char your_colour;
 
 // Functions in main module
-static void close_door(char move_x, char move_y);
+static void close_door(int move_x, int move_y);
 static void do_berserk_no_combat_penalty(void);
 static bool initialise(void);
 static void input(void);
-static void move_player(char move_x, char move_y);
-static void open_door(char move_x, char move_y);
+static void move_player(int move_x, int move_y);
+static void open_door(int move_x, int move_y, bool check_confused = true);
 
 /*
    It all starts here. Some initialisations are run first, then straight to
@@ -851,8 +851,9 @@ static bool recharge_rod( item_def &rod, bool wielded )
         rate = ROD_CHARGE_MULT / 2;
 
     // If not wielded, the rod charges far more slowly.
+    // [dshaligram] Reduced charge rate of non-wielded rods further.
     if (!wielded)
-        rate /= 3;
+        rate /= 5;
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
@@ -2610,10 +2611,16 @@ static void input(void)
    move_y are non-zero,  the pair carries a specific direction for the door
    to be opened (eg if you type ctrl - dir).
  */
-static void open_door(char move_x, char move_y)
+static void open_door(int move_x, int move_y, bool check_confused)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
+
+    if (check_confused && you.conf && !one_chance_in(3))
+    {
+        move_x = random2(3) - 1;
+        move_y = random2(3) - 1;
+    }
 
     door_move.dx = move_x;
     door_move.dy = move_y;
@@ -2691,7 +2698,7 @@ static void open_door(char move_x, char move_y)
 /*
    Similar to open_door. Can you spot the difference?
  */
-static void close_door(char door_x, char door_y)
+static void close_door(int door_x, int door_y)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
@@ -2960,7 +2967,7 @@ static void do_berserk_no_combat_penalty(void)
 
 // Called when the player moves by walking/running. Also calls
 // attack function and trap function etc when necessary.
-static void move_player(char move_x, char move_y)
+static void move_player(int move_x, int move_y)
 {
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
@@ -3194,7 +3201,7 @@ static void move_player(char move_x, char move_y)
   out_of_traps:
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && (Options.easy_open || you.running < 0))
-        open_door(move_x, move_y);
+        open_door(move_x, move_y, false);
     else if (targ_grid <= MINMOVE)
     {
         stop_running();

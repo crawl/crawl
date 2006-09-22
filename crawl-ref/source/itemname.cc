@@ -1063,6 +1063,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             if (item_cursed( item ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed
+                    && !terse
                     && (!ring_has_pluses(item)
                         || !item_ident(item, ISFLAG_KNOW_PLUSES)))
             {

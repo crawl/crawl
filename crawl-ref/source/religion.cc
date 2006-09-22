@@ -317,26 +317,6 @@ void pray(void)
             break;
         
         case GOD_OKAWARU:
-            if (you.piety > 80
-                && random2( you.piety ) > 70
-                && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
-                && one_chance_in(4)
-                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 3)
-            {
-                success = acquirement( OBJ_MISSILES, you.religion );
-                if (success)
-                {
-                    simple_god_message( " has granted you a gift!" );
-                    more();
-
-                    inc_gift_timeout( 4 + roll_dice(2,4) );
-                    you.num_gifts[ you.religion ]++;
-		    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-                break;
-            }
-            // intentional fall through
-            
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
@@ -360,8 +340,29 @@ void pray(void)
 
                     inc_gift_timeout(30 + random2avg(19, 2));
                     you.num_gifts[ you.religion ]++;
-		    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
+                break;
+            }
+
+            if (you.religion == GOD_OKAWARU
+                && you.piety > 80
+                && random2( you.piety ) > 70
+                && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
+                && one_chance_in(4)
+                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 7)
+            {
+                success = acquirement( OBJ_MISSILES, you.religion );
+                if (success)
+                {
+                    simple_god_message( " has granted you a gift!" );
+                    more();
+
+                    inc_gift_timeout( 4 + roll_dice(2,4) );
+                    you.num_gifts[ you.religion ]++;
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                }
+                break;
             }
             break;
 
@@ -1273,7 +1274,11 @@ bool did_god_conduct( int thing_done, int level )
             // magical kills tend to do both at the same time (unlike melee).
             // This means high level spells probably work pretty much like
             // they used to (use spell, get piety).
-            piety_change = div_rand_round( level + 10, 90 );
+            piety_change = div_rand_round( level + 10, 60 );
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
+                    level, piety_change);
+#endif
             ret = true;
         }
         break;

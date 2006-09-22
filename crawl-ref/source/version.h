@@ -33,13 +33,13 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define CRAWL "Dungeon Crawl Stone Soup"
 
 // last updated 07august2001 {mv}
 /* ***********************************************************************
  * called from: chardump - command - newgame
  * *********************************************************************** */
-#define VERSION "0.1 beta 1 (crawl-ref)"
-
+#define VERSION "0.1.1 (crawl-ref)"
 
 // last updated 20feb2001 {GDL}
 /* ***********************************************************************

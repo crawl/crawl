@@ -6579,7 +6579,6 @@ void describe_god( int which_god, bool give_title )
         if ((which_god == GOD_ZIN
                 || which_god == GOD_SHINING_ONE
                 || which_god == GOD_ELYVILON
-                || which_god == GOD_OKAWARU
                 || which_god == GOD_YREDELEMNUL)
             && you.piety >= 30)
         {

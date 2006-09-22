@@ -40,6 +40,7 @@
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
+#include "skills2.h"
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
@@ -1917,6 +1918,7 @@ void exercise_spell( int spell, bool spc, bool success )
     int ndx = 0;
     int skill;
     int exer = 0;
+    int exer_norm = 0;
     int workout = 0;
 
     unsigned int disciplines = spell_type(spell);
@@ -1941,7 +1943,10 @@ void exercise_spell( int spell, bool spc, bool success )
         if (!one_chance_in(5))
             workout++;       // most recently, this was an automatic add {dlb}
 
-        exer += exercise( skill, workout );
+        const int exercise_amount = exercise( skill, workout );
+        exer      += exercise_amount;
+        exer_norm += 
+            exercise_amount * species_skills(skill, you.species) / 50;
     }
 
     /* ******************************************************************
@@ -1958,12 +1963,16 @@ void exercise_spell( int spell, bool spc, bool success )
 
     if (spc)
     {
-        exer += exercise(SK_SPELLCASTING, one_chance_in(3) ? 1 
+        const int exercise_amount = 
+            exercise(SK_SPELLCASTING, one_chance_in(3) ? 1 
                             : random2(1 + random2(diff)));
+        exer      += exercise_amount;
+        exer_norm += exercise_amount * 
+            species_skills(SK_SPELLCASTING, you.species) / 50;
     }
 
-    if (exer)
-        did_god_conduct( DID_SPELL_PRACTISE, exer );
+    if (exer_norm)
+        did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
 }                               // end exercise_spell()
 
 static bool send_abyss()

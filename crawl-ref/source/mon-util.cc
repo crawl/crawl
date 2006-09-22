@@ -502,7 +502,9 @@ bool mons_res_asphyx( const monsters *mon )
     const int holiness = mons_holiness( mon );
     return (holiness == MH_UNDEAD 
                 || holiness == MH_DEMONIC
-                || holiness == MH_NONLIVING);
+                || holiness == MH_NONLIVING
+                || holiness == MH_PLANT
+                || mons_class_resist(mon->type, MR_RES_ASPHYX));
 }
 
 int mons_res_poison( struct monsters *mon )
