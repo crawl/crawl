@@ -1667,6 +1667,9 @@ bool move_top_item( int src_x, int src_y, int dest_x, int dest_y )
 //---------------------------------------------------------------
 static void drop_gold(unsigned int amount)
 {
+    const unsigned long BIGGEST_QUANT_VALUE =
+	((1L << (sizeof(mitm[0].quantity)*8 - 1)) - 1000);
+ 
     if (you.gold > 0)
     {
         if (amount > you.gold)
@@ -1683,6 +1686,13 @@ static void drop_gold(unsigned int amount)
         {
             if (mitm[i].base_type == OBJ_GOLD)
             {
+		if ( mitm[i].quantity + amount > BIGGEST_QUANT_VALUE ) {
+		    amount = BIGGEST_QUANT_VALUE - mitm[i].quantity;
+		    snprintf(info, INFO_SIZE,
+			     "But there's only room for %d.", amount);
+		    mpr(info);
+		    
+		}
                 inc_mitm_item_quantity( i, amount );
                 you.gold -= amount;
                 you.redraw_gold = 1;
@@ -1701,6 +1711,12 @@ static void drop_gold(unsigned int amount)
             mpr( "Too many items on this level, not dropping the gold." );
             return;
         }
+	if (amount > BIGGEST_QUANT_VALUE) {
+	    amount = BIGGEST_QUANT_VALUE;
+	    snprintf(info, INFO_SIZE,
+		     "But there's only room for %d.", amount);
+	    mpr(info);
+	}
 
         mitm[i].base_type = OBJ_GOLD;
         mitm[i].quantity = amount;
