@@ -1,7 +1,0 @@
-2006-09-20  Darshan Shaligram <dshaligram@users.sourceforge.net>
-
-	* ChangeLog: New file. It's about time we had one. :-)
-
-	* init.txt: Replaced all backslashes in paths with forward slashes, which
-	work on all supported platforms. (I'm not sure if we care to call DOS a 
-	supported platform).
