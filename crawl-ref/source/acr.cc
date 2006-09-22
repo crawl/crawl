@@ -2560,7 +2560,7 @@ keycode_type get_next_keycode() {
 	const char DOSunidiocy[10]   = { "bjnh.lyku" };
 	const int DOScontrolidiocy[9] = {
 	    117, 145, 118, 115, 76, 116, 119, 141, 132
-	}
+	};
 	keyin = getch();
 	for (int j = 0; j < 9; ++j ) {
 	    if ( keyin == DOSidiocy[j] )

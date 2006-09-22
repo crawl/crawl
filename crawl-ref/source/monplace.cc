@@ -1062,11 +1062,10 @@ static int band_member(int band, int power)
 
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int px, int py, int level_type, int proximity, int extra,
-                int dur )
+                int dur, bool permit_bands )
 {
     int mon_count = 0;
     int temp_rand;          // probabilty determination {dlb}
-    bool permit_bands = false;
 
     for (int il = 0; il < MAX_MONSTERS; il++)
     {
@@ -1102,7 +1101,9 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
                                    : MONS_PIT_FIEND);                //  5.07%
     }
 
-    if (mon_type == RANDOM_MONSTER || level_type == LEVEL_PANDEMONIUM)
+    if (permit_bands 
+            || mon_type == RANDOM_MONSTER 
+            || level_type == LEVEL_PANDEMONIUM)
         permit_bands = true;
 
     int mid = -1;
@@ -1160,7 +1161,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
 
 
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
-                    int hitting, int zsec )
+                    int hitting, int zsec, bool permit_bands )
 {
     int summd = -1;
     FixedVector < char, 2 > empty;
@@ -1177,7 +1178,7 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
     if (empty_surrounds( cr_x, cr_y, spcw, true, empty ))
     {
         summd = mons_place( cls, beha, hitting, true, empty[0], empty[1],
-                            you.level_type, 0, zsec, dur );
+                            you.level_type, 0, zsec, dur, permit_bands );
     }
 
     // determine whether creating a monster is successful (summd != -1) {dlb}:

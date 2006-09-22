@@ -37,7 +37,8 @@
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int px, int py, int level_type = LEVEL_DUNGEON, 
                 int proximity = PROX_ANYWHERE, int extra = 250,
-                int dur = 0 );
+                int dur = 0,
+                bool permit_bands = false );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -46,7 +47,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y, 
-                    int hitting, int zsec );
+                    int hitting, int zsec, bool permit_bands = false );
 
 
 // last updated 12may2000 {dlb}

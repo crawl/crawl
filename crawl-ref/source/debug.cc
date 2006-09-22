@@ -619,7 +619,8 @@ void create_spec_monster(void)
     if (mon == -1)
         canned_msg( MSG_OK );
     else
-        create_monster( mon, 0, BEH_SLEEP, you.x_pos, you.y_pos, MHITNOT, 250 );
+        create_monster( mon, 0, BEH_SLEEP, 
+                you.x_pos, you.y_pos, MHITNOT, 250, true );
 }                               // end create_spec_monster()
 #endif
 
@@ -643,7 +644,8 @@ void create_spec_monster_name(void)
     }
     else
     {
-        create_monster(mon, 0, BEH_SLEEP, you.x_pos, you.y_pos, MHITNOT, 250);
+        create_monster(mon, 0, BEH_SLEEP, 
+                you.x_pos, you.y_pos, MHITNOT, 250, true);
     }
 }                               // end create_spec_monster_name()
 #endif
