@@ -1803,6 +1803,8 @@ unsigned char translate_spell(unsigned char spel)
         return (MS_ORB_ENERGY);
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return (MS_LEVEL_SUMMON); /* approximate */
+    case SPELL_SHADOW_CREATURES:
+	return (MS_LEVEL_SUMMON); /* approximate */
     case SPELL_ANIMATE_DEAD:
         return (MS_ANIMATE_DEAD);
     case SPELL_PAIN:
