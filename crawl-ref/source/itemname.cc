@@ -1419,7 +1419,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         switch (item_typ)
         {
         case MISC_RUNE_OF_ZOT:
-            strncat( buff, (it_plus == RUNE_DIS)          ? "iron" :
+            strncat(buff, (it_plus == RUNE_DIS)          ? "iron" :
                           (it_plus == RUNE_GEHENNA)      ? "obsidian" :
                           (it_plus == RUNE_COCYTUS)      ? "icy" :
                           (it_plus == RUNE_TARTARUS)     ? "bone" :
@@ -2446,16 +2446,33 @@ bool is_interesting_item( const item_def& item ) {
 }
 
 bool fully_identified( const item_def& item ) {
-    item_status_flag_type flagset = ISFLAG_IDENT_MASK;
+    long flagset = ISFLAG_IDENT_MASK;
     switch ( item.base_type ) {
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
     case OBJ_ORBS:
     case OBJ_SCROLLS:
+    case OBJ_POTIONS:
 	flagset = ISFLAG_KNOW_TYPE;
+	break;
+    case OBJ_FOOD:
+	flagset = 0;
+	break;
+    case OBJ_WANDS:
+	flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
+	break;
+    case OBJ_JEWELLERY:
+	flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
+	if ( ring_has_pluses(item) )
+	    flagset |= ISFLAG_KNOW_PLUSES;
 	break;
     default:
 	break;
     }
+    if ( is_random_artefact(item) ||
+	 is_fixed_artefact(item) ||
+	 is_unrandom_artefact(item) )
+	flagset |= ISFLAG_KNOW_PROPERTIES;
+    
     return item_ident( item, flagset );
 }

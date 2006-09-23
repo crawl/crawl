@@ -383,8 +383,10 @@ static void purchase( int shop, int item_got, int cost )
 	activate_notes(true);
 
 	char buf[ITEMNAME_SIZE];
+	char buf2[ITEMNAME_SIZE];
 	item_name( mitm[item_got], DESC_NOCAP_A, buf );
-	take_note(Note(NOTE_ID_ITEM, 0, 0, buf));
+	strcpy(buf2, origin_desc(mitm[item_got]).c_str());
+	take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
 
 	activate_notes(false);
     }
