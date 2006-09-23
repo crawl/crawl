@@ -52,6 +52,7 @@
 #include "spells4.h"
 #include "stuff.h"
 #include "view.h"
+#include "stash.h"
 
 static bool handle_special_ability(struct monsters *monster, bolt & beem);
 static bool handle_pickup(struct monsters *monster);
@@ -323,20 +324,6 @@ static void place_monster_corpse(struct monsters *monster)
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
 }                               // end place_monster_corpse()
-
-static int ood_limit() {
-    return Options.ood_interesting;
-}
-
-static bool is_interesting_monster( const struct monsters *monster ) {
-    if ( mons_is_unique(monster->type) )
-	return true;
-    if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
-	 mons_level(monster->type) >= you.your_level + ood_limit() &&
-	 mons_level(monster->type) < 99 )
-	return true;
-    return false;
-}
 
 void monster_die(struct monsters *monster, char killer, int i)
 {
@@ -710,11 +697,15 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-
-	if ( is_interesting_monster(monster) ) {
+		if ( MONST_INTERESTING(monster) ) {
 	    char namebuf[ITEMNAME_SIZE];
+			char wherebuf[INFO_SIZE];
+
 	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
+			strcpy(wherebuf, prep_branch_level_name().c_str());
+
+			take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf,
+                           wherebuf));
 	}
 
         you.kills.record_kill(monster, killer, pet_kill);
@@ -996,6 +987,22 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
         return (player_messaged);
     }
 
+	// If old monster is visible to the player, and is interesting,
+	// then note why the interesting monster went away.
+	if (player_monster_visible(monster) && mons_near(monster)
+		&& MONST_INTERESTING(monster))
+	{
+		char namebuf[ITEMNAME_SIZE];
+		char wherebuf[INFO_SIZE];
+
+		moname(monster->type, true, DESC_NOCAP_A, namebuf);
+
+		strcpy(wherebuf, prep_branch_level_name().c_str());
+
+		take_note(Note(NOTE_POLY_MONSTER, monster->type, 0, namebuf,
+					   wherebuf));
+	}
+
     // messaging: {dlb}
     bool invis = mons_class_flag( targetc, M_INVIS ) 
                     || mons_has_ench( monster, ENCH_INVIS );
@@ -1057,6 +1064,13 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 
     monster_drop_ething(monster);
 
+	// New monster type might be interesting
+	mark_interesting_monst(monster);
+
+	// If new monster is visible to player, then we've seen it
+	if (player_monster_visible(monster) && mons_near(monster))
+		seen_monster(monster);
+
     return (player_messaged);
 }                                        // end monster_polymorph()
 
@@ -1074,6 +1088,9 @@ void monster_blink(struct monsters *monster)
     monster->y = ny;
 
     mgrd[nx][ny] = monster_index(monster);
+
+    if (player_monster_visible(monster) && mons_near(monster))
+        seen_monster(monster);
 }                               // end monster_blink()
 
 // allow_adjacent:  allow target to be adjacent to origin
@@ -5264,4 +5281,26 @@ static int map_wand_to_mspell(int wand_type)
     }
 
     return (mzap);
+}
+
+void seen_monster(struct monsters *monster)
+{
+	if ( monster->flags & MF_SEEN )
+		return;
+
+	// First time we've seen this particular monster
+
+	monster->flags |= MF_SEEN;
+
+	if ( MONST_INTERESTING(monster) ) {
+		char namebuf[ITEMNAME_SIZE];
+		char wherebuf[INFO_SIZE];
+
+		moname(monster->type, true, DESC_NOCAP_A, namebuf);
+
+		strcpy(wherebuf, prep_branch_level_name().c_str());
+
+		take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf,
+					   wherebuf));
+	}
 }

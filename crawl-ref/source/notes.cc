@@ -89,8 +89,11 @@ static bool is_noteworthy( const Note& note ) {
 	 note.type == NOTE_GOD_GIFT ||
 	 note.type == NOTE_GET_MUTATION ||
 	 note.type == NOTE_LOSE_MUTATION ||
+         note.type == NOTE_SEEN_MONSTER ||
 	 note.type == NOTE_KILL_MONSTER ||
+         note.type == NOTE_POLY_MONSTER ||
 	 note.type == NOTE_USER_NOTE ||
+         note.type == NOTE_MESSAGE ||
 	 note.type == NOTE_LOSE_GOD )
 	return true;
 
@@ -126,6 +129,12 @@ static bool is_noteworthy( const Note& note ) {
 	 note.first == BRANCH_MAIN_DUNGEON && note.second == 1 )
       return false;
 
+	/* Learning a spell is always noteworthy if note_all_spells is set */
+
+	if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
+		return true;
+
+
     unsigned i;
     for ( i = 0; i < note_list.size(); ++i ) {
 	if ( note_list[i].type != note.type )
@@ -159,10 +168,12 @@ static bool is_noteworthy( const Note& note ) {
 		return false;
 	    break;
 	default:
-	    mpr("Buggy note passed");
-	    break;
-	}
+			mpr("Buggy note passed: unknown note type");
+			// Return now, rather than give a "Buggy note passed" message
+			// for each note of the matching type in the note list.
+			return true;
     }
+    } // for ( i = 0; i < note_list.size(); ++i )
     return true;
 }
 
@@ -178,6 +189,7 @@ const char* number_to_ordinal( int number ) {
 
 std::string describe_note( const Note& note ) {
     char buf[200], buf2[50];
+
     switch ( note.type ) {
     case NOTE_HP_CHANGE:
 	sprintf(buf, "Had %d/%d hit points", note.first, note.second);
@@ -215,6 +227,10 @@ std::string describe_note( const Note& note ) {
 		god_name(note.first));
 	break;
     case NOTE_ID_ITEM:
+        if (note.desc.length() > 0)
+            sprintf(buf, "Identified %s (%s)", note.name.c_str(),
+                    note.desc.c_str());
+        else
 	sprintf(buf, "Identified %s", note.name.c_str());
 	break;
     case NOTE_GET_ITEM:
@@ -224,8 +240,20 @@ std::string describe_note( const Note& note ) {
 	sprintf(buf, "Reached skill %d in %s",
 		note.second, skill_name(note.first));
 	break;
+    case NOTE_SEEN_MONSTER:
+        sprintf(buf, "Became aware of %s while %s", note.name.c_str(),
+                note.desc.c_str()
+          );
+	break;
     case NOTE_KILL_MONSTER:
-	sprintf(buf, "Defeated %s", note.name.c_str());
+        sprintf(buf, "Defeated %s while %s", note.name.c_str(),
+                note.desc.c_str()
+          );
+	break;
+    case NOTE_POLY_MONSTER:
+        sprintf(buf, "%s changed form while %s", note.name.c_str(),
+                note.desc.c_str()
+          );
 	break;
     case NOTE_GOD_POWER:
 	sprintf(buf, "Acquired %s's %s power", god_name(note.first),
@@ -243,8 +271,11 @@ std::string describe_note( const Note& note ) {
     case NOTE_USER_NOTE:
 	sprintf(buf, "%s", note.name.c_str());
 	break;
+    case NOTE_MESSAGE:
+    sprintf(buf, "%s (while %s)", note.name.c_str(),note.desc.c_str());
+	break;
     default:
-	sprintf(buf, "Buggy note description");
+	sprintf(buf, "Buggy note description: unknown note type");
 	break;
     }
     sprintf(buf2, "Turn %ld: ", note.turn );
@@ -255,10 +286,12 @@ Note::Note() {
     turn = you.num_turns;
 }
 
-Note::Note( NOTE_TYPES t, int f, int s, const char* n ) :
+Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
     type(t), first(f), second(s) {
     if (n)
 	name = std::string(n);
+    if (d)
+        desc = std::string(d);
     turn = you.num_turns;
 }
 
@@ -268,6 +301,7 @@ void Note::save( FILE* fp ) const {
     writeLong( fp, first );
     writeLong( fp, second );
     writeString( fp, name );
+    writeString( fp, desc );
 }
 
 void Note::load( FILE* fp ) {
@@ -276,6 +310,7 @@ void Note::load( FILE* fp ) {
     first = readLong( fp );
     second = readLong( fp );
     name = readString( fp );
+    desc = readString( fp );
 }
 
 bool notes_active = false;

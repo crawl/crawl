@@ -1595,6 +1595,7 @@ int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
                 strcat( info, " appears!" );
                 mpr( info );
             }
+            seen_monster(mon);
         }
     }
 

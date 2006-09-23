@@ -26,6 +26,7 @@
 #include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
@@ -454,7 +455,18 @@ bool item_ident( const item_def &item, unsigned long flags )
 
 void set_ident_flags( item_def &item, unsigned long flags )
 {
+    bool known_before = fully_identified(item);
     item.flags |= flags;
+    if ( !known_before && fully_identified(item) ) {
+	/* make a note of it */
+	if ( is_interesting_item(item) ) {
+	    char buf[ITEMNAME_SIZE];
+ 	    char buf2[ITEMNAME_SIZE];
+	    item_name( item, DESC_NOCAP_A, buf );
+	    strcpy(buf2, origin_desc(item).c_str());
+ 	    take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
+	}
+    }
 }
 
 void unset_ident_flags( item_def &item, unsigned long flags )

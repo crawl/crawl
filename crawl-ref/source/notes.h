@@ -32,19 +32,24 @@ enum NOTE_TYPES {
     /* NOT HOOKED YET */
     NOTE_GET_ITEM,		/* needs: item name (string) */
     NOTE_GAIN_SKILL,		/* needs: skill id, level */
+    NOTE_SEEN_MONSTER,		/* needs: monster name (string) */
     NOTE_KILL_MONSTER,		/* needs: monster name (string) */
+    NOTE_POLY_MONSTER,		/* needs: monster name (string) */
     NOTE_USER_NOTE,		/* needs: description string */
+    NOTE_MESSAGE,       /* needs: message string */
     NOTE_LOSE_GOD,		/* needs: god id */
     NOTE_NUM_TYPES
 };
 
 struct Note {
     Note();
-    Note( NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0 );
+    Note( NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
+		  const char* d = 0);
     NOTE_TYPES type;
     int first, second;
     long turn;
     std::string name;
+    std::string desc;
     void load( FILE* fp );
     void save( FILE* fp ) const;
 };

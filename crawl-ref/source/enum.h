@@ -2267,9 +2267,9 @@ enum monster_flag_type
     MF_JUST_SUMMONED      = 0x08,  // monster skips next available action
     MF_TAKING_STAIRS      = 0x10,  // is following player through stairs
 
-    MF_UNUSED_I           = 0x20,
-    MF_UNUSED_II          = 0x40,
-    MF_UNUSED_III         = 0x80
+    MF_INTERESTING        = 0x20,  // Player finds monster interesting
+    MF_SEEN               = 0x40,  // Player already seen monster
+    MF_UNUSED_I           = 0x80
 };
 
 enum mon_dam_level_type

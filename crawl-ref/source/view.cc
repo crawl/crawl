@@ -1210,6 +1210,8 @@ void monster_grid(bool do_updates)
                      && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
             {
                 interrupt_activity( AI_SEE_MONSTER );
+				seen_monster( monster );
+
                 if (you.running != 0
 #ifdef CLUA_BINDINGS
                     && clua.callbooleanfn(true, "ch_stop_run",

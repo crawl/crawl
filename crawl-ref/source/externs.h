@@ -675,6 +675,7 @@ struct game_options
     bool        confirm_spell_fizzle; // require confirm before cancel
     bool        safe_autopickup; // don't autopickup when monsters visible
     bool        note_skill_max; // take note when skills reach new max
+    bool        note_all_spells; // take note when learning any spell
     bool        use_notes;	// take (and dump) notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
@@ -720,6 +721,8 @@ struct game_options
 
     std::string map_file_name;	// name of mapping file to use
     std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
+    std::vector<text_pattern> note_monsters;  // Interesting monsters
+    std::vector<text_pattern> note_messages;  // Interesting messages
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
     std::vector<text_pattern> note_items; // Objects to note
     std::vector<int> note_skill_levels; // Skill levels to note

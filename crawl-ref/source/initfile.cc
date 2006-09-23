@@ -384,6 +384,7 @@ void reset_options(bool clear_name)
     Options.safe_autopickup        = false;
     Options.use_notes              = false;
     Options.note_skill_max         = false;
+    Options.note_all_spells        = false;
     Options.note_hp_percent        = 0;
     Options.ood_interesting        = 8;
     Options.terse_hand             = true;
@@ -483,6 +484,8 @@ void reset_options(bool clear_name)
 
     // Clear vector options.
     Options.banned_objects.clear();
+    Options.note_monsters.clear(); 
+    Options.note_messages.clear(); 
     Options.autoinscriptions.clear();
     Options.note_items.clear();
     Options.note_skill_levels.clear();
@@ -896,7 +899,7 @@ void parse_option_line(const std::string &str, bool runscript)
         && key != "stop_travel" && key != "sound" 
         && key != "drop_filter" && key != "lua_file"
 	&& key != "note_items" && key != "autoinscribe"
-	&& key != "map_file_name" )
+	&& key != "note_monsters" && key != "note_messages")
     {
         tolower_string( field );
     }
@@ -1216,6 +1219,14 @@ void parse_option_line(const std::string &str, bool runscript)
     {
 	Options.ood_interesting = atoi( field.c_str() );
     }
+    else if (key == "note_monsters")
+    {
+        append_vector(Options.note_monsters, split_string(",", field));
+    }
+    else if (key == "note_messages")
+    {
+        append_vector(Options.note_messages, split_string(",", field));
+    }
     else if (key == "note_hp_percent")
     {
 	Options.note_hp_percent = atoi( field.c_str() );
@@ -1286,6 +1297,10 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "note_skill_max")
     {
         Options.note_skill_max = read_bool( field, Options.note_skill_max );
+    }
+    else if (key == "note_all_spells")
+    {
+        Options.note_all_spells = read_bool( field, Options.note_all_spells );
     }
     else if (key == "delay_message_clear")
     {

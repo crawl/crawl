@@ -16,6 +16,8 @@
 // useful macro
 #define SAME_ATTITUDE(x) (mons_friendly(x)?BEH_FRIENDLY:BEH_HOSTILE)
 
+#define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
+
 // for definition of type monsters {dlb}
 #include "externs.h"
 // for definition of type monsters {dlb}
@@ -146,6 +148,11 @@ bool hurt_monster(struct monsters *victim, int damage_dealt);
  * called from: beam - fight - files - monstuff - spells1
  * *********************************************************************** */
 bool heal_monster(struct monsters *patient, int health_boost, bool permit_growth);
+
+/* ***********************************************************************
+ * called from: monplace - spells2 - view
+ * *********************************************************************** */
+void seen_monster(struct monsters *monster);
 
 
 #endif

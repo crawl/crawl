@@ -321,6 +321,14 @@ std::string branch_level_name(unsigned char branch, int sub_depth);
 
 std::string branch_level_name(unsigned short packed_place);
 
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned char branch, int sub_depth);
+
+std::string prep_branch_level_name(unsigned short packed_place);
+
+std::string prep_branch_level_name();
+
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);
 

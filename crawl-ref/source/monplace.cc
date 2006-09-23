@@ -20,6 +20,7 @@
 #include "player.h"
 #include "stuff.h"
 #include "spells4.h"
+#include "view.h"
 
 // NEW place_monster -- note that power should be set to:
 // 51 for abyss
@@ -308,7 +309,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     }
 
     id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons, 
-                            extra, true );
+                            extra, true);
 
     // now, forget about banding if the first placement failed,  or there's too
     // many monsters already,  or we successfully placed by stairs
@@ -353,7 +354,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     for(i = 1; i < band_size; i++)
     {
         place_monster_aux( band_monsters[i], behaviour, target, px, py, 
-                           lev_mons, extra, false, dur );
+                           lev_mons, extra, false, dur);
     }
 
     // placement of first monster, at least, was a success.
@@ -555,6 +556,11 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         mons_add_ench(&menv[id], dur );
 
     menv[id].foe = target;
+
+	mark_interesting_monst(&menv[id], behaviour);
+
+	if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
+		seen_monster(&menv[id]);
 
     return (id);
 }                               // end place_monster_aux()
@@ -1093,6 +1099,45 @@ static int band_member(int band, int power)
     }
 
     return (mon_type);
+}
+
+static int ood_limit() {
+    return Options.ood_interesting;
+}
+
+void mark_interesting_monst(struct monsters* monster, char behaviour)
+{
+	bool interesting = false;
+
+	// Unique monsters are always intersting
+    if ( mons_is_unique(monster->type) )
+		interesting = true;
+	// If it's never going to attack us, then not interesting
+	else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
+		interesting = false;
+	// Don't waste time on moname() if user isn't using this option
+	else if ( Options.note_monsters.size() > 0 )
+	{
+        char namebuf[ITEMNAME_SIZE];
+		moname(monster->type, true, DESC_NOCAP_A, namebuf);
+
+		std::string iname = namebuf;
+
+		for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
+			if (Options.note_monsters[i].matches(iname)) {
+				interesting = true;
+				break;
+			}
+				
+		}
+	}
+    else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
+		 mons_level(monster->type) >= you.your_level + ood_limit() &&
+		 mons_level(monster->type) < 99 ) 
+		interesting = true;
+
+	if ( interesting )
+		monster->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().

@@ -729,6 +729,8 @@ void monster_teleport(struct monsters *monster, bool instan)
         return;
     }
 
+    bool was_seen = player_monster_visible(monster) && mons_near(monster);
+
     simple_monster_message(monster, " disappears!");
 
     // pick the monster up
@@ -766,6 +768,14 @@ void monster_teleport(struct monsters *monster, bool instan)
         monster->type = MONS_GOLD_MIMIC + random2(5);
         monster->number = get_mimic_colour( monster );
     }
+
+    if (was_seen)
+        simple_monster_message(monster, " reappears nearby!");
+    else
+        simple_monster_message(monster, " appears out of thin air!");
+
+    if (player_monster_visible(monster) && mons_near(monster))
+        seen_monster(monster);
 }                               // end monster_teleport()
 
 void setup_dragon(struct monsters *monster, struct bolt &pbolt)

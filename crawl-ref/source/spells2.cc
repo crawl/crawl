@@ -201,6 +201,8 @@ unsigned char detect_creatures( int pow )
                 struct monsters *mon = &menv[ mgrd[i][j] ];
                 mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
+                seen_monster(mon);
+
                 // Assuming that highly intelligent spellcasters can
                 // detect scyring. -- bwr
                 if (mons_intel( mon->type ) == I_HIGH

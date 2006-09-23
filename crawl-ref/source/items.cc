@@ -975,12 +975,7 @@ static std::string origin_monster_desc(const item_def &item)
 
 static std::string origin_place_desc(const item_def &item)
 {
-    std::string place = branch_level_name(item.orig_place);
-    if (place.length() && place != "Pandemonium")
-        place[0] = tolower(place[0]);
-    return (place.find("level") == 0?
-            "on " + place
-          : "in " + place);
+	return prep_branch_level_name(item.orig_place);
 }
 
 bool is_rune(const item_def &item)

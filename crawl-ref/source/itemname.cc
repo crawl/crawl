@@ -37,7 +37,7 @@
 #include "stuff.h"
 #include "wpn-misc.h"
 #include "view.h"
-
+#include "items.h"
 
 char id[NUM_IDTYPE][MAX_SUBTYPES];
 
@@ -63,7 +63,7 @@ bool item_type_known( const item_def &item )
 }
 
 // it_name() and in_name() are now somewhat obsolete now that itemname
-// takes item_def, so consider them depricated.
+// takes item_def, so consider them deprecated.
 void it_name( int itn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
 {
     item_name( mitm[itn], des, buff, terse );
@@ -2446,5 +2446,16 @@ bool is_interesting_item( const item_def& item ) {
 }
 
 bool fully_identified( const item_def& item ) {
-    return item_ident( item, ISFLAG_IDENT_MASK );
+    item_status_flag_type flagset = ISFLAG_IDENT_MASK;
+    switch ( item.base_type ) {
+    case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+    case OBJ_ORBS:
+    case OBJ_SCROLLS:
+	flagset = ISFLAG_KNOW_TYPE;
+	break;
+    default:
+	break;
+    }
+    return item_ident( item, flagset );
 }

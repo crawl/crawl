@@ -31,7 +31,8 @@
 #include "stuff.h"
 #include "travel.h"
 #include "view.h"
-
+#include "notes.h"
+#include "stash.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
@@ -265,6 +266,16 @@ void mpr(const char *inf, int channel, int param)
     int colour = channel_to_colour( channel, param );
     if (colour == MSGCOL_MUTED)
         return;
+
+    std::string imsg = inf;
+    
+    for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
+	if (Options.note_messages[i].matches(imsg)) {
+	    take_note(Note(NOTE_MESSAGE, channel, param, inf,
+			   prep_branch_level_name().c_str()));
+	    break;
+	}
+    }
 
     interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
 

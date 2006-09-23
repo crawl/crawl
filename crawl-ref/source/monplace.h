@@ -81,4 +81,10 @@ bool place_monster( int &id, int mon_type, int power, char behaviour,
 
 monster_type rand_dragon( dragon_class_type type );
 
+/* ***********************************************************************
+ * called from: monplace monstuff
+ * *********************************************************************** */
+void mark_interesting_monst(struct monsters* monster,
+							char behaviour = BEH_SLEEP);
+
 #endif  // MONPLACE_H

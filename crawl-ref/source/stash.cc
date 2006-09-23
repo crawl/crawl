@@ -1605,3 +1605,30 @@ std::string branch_level_name(unsigned short packed_place)
 {
     return branch_level_name(packed_place >> 8, packed_place & 0xFF);
 }
+
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned char branch, int sub_depth)
+{
+    std::string place = branch_level_name(branch, sub_depth);
+    if (place.length() && place != "Pandemonium")
+        place[0] = tolower(place[0]);
+    return (place.find("level") == 0?
+            "on " + place
+          : "in " + place);
+}
+
+std::string prep_branch_level_name(unsigned short packed_place)
+{
+    return prep_branch_level_name(packed_place >> 8, packed_place & 0xFF);
+}
+
+// Use current branch and depth
+std::string prep_branch_level_name()
+{
+    int branch = you.where_are_you;
+    int sub_depth = subdungeon_depth( branch, you.your_level );
+
+	return prep_branch_level_name(branch, sub_depth);
+}
+
