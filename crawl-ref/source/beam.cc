@@ -2505,7 +2505,7 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
         return;
 
     if (YOU_KILL(beam.thrower) // ie if you threw it.
-        && (grd[x][y] != DNGN_LAVA && grd[x][y] != DNGN_DEEP_WATER))
+        && (!grid_destroys_items(grd[x][y])))
     {
         int chance;
 
@@ -2529,8 +2529,7 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
             copy_item_to_grid( *item, x, y, 1 );
     }
     else if (MON_KILL(beam.thrower) // monster threw it.
-            && (grd[x][y] != DNGN_LAVA && grd[x][y] != DNGN_DEEP_WATER)
-            && coinflip())
+	     && !grid_destroys_items(grd[x][y]) && coinflip())
     {
         copy_item_to_grid( *item, x, y, 1 );
     }                           // if (thing_throw == 2) ...

@@ -431,8 +431,7 @@ void pray(void)
                 }
 
                 if (gift != NUM_BOOKS
-                    && (grd[you.x_pos][you.y_pos] != DNGN_LAVA
-                        && grd[you.x_pos][you.y_pos] != DNGN_DEEP_WATER))
+                    && !(grid_destroys_items(grd[you.x_pos][you.y_pos])))
                 {
                     if (gift == OBJ_RANDOM)
                         success = acquirement(OBJ_BOOKS, you.religion);
@@ -874,11 +873,10 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 (temp_rand == 1) ? "Xom grants you a gift!"
                                  : "Xom's generous nature manifests itself.");
 
-            if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-                || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER)
-            {
+            if (grid_destroys_items(grd[you.x_pos][you.y_pos])) {
                 // How unfortunate. I'll bet Xom feels sorry for you.
-                mpr("You hear a splash.");
+		mprf(MSGCH_SOUND,
+		     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
             }
             else
             {

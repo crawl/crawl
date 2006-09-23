@@ -2888,7 +2888,7 @@ void cast_apportation(int pow)
     // Protect the player from destroying the item
     const int grid = grd[ you.x_pos ][ you.y_pos ];
 
-    if (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
+    if (grid_destroys_items(grid))
     {
         mpr( "That would be silly while over this terrain!" );
         return;

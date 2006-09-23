@@ -250,9 +250,7 @@ static void monster_drop_ething(struct monsters *monster,
     bool destroyed = false;
     bool hostile_grid = false;
 
-    if (grd[monster->x][monster->y] == DNGN_LAVA ||
-        grd[monster->x][monster->y] == DNGN_DEEP_WATER)
-    {
+    if ( grid_destroys_items(grd[monster->x][monster->y]) ) {
         hostile_grid = true;
     }
 
@@ -280,12 +278,9 @@ static void monster_drop_ething(struct monsters *monster,
         }
     }
 
-    if (destroyed)
-    {
-        if (grd[monster->x][monster->y] == DNGN_LAVA)
-            mpr("You hear a hissing sound.", MSGCH_SOUND);
-        else
-            mpr("You hear a splashing sound.", MSGCH_SOUND);
+    if (destroyed) {
+	mprf(MSGCH_SOUND,
+	     grid_item_destruction_message(grd[monster->x][monster->y]));
     }
 }                               // end monster_drop_ething()
 
@@ -299,8 +294,8 @@ static void place_monster_corpse(struct monsters *monster)
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
     if (mons_weight(corpse_class) == 0
-        || grd[monster->x][monster->y] == DNGN_LAVA
-        || grd[monster->x][monster->y] == DNGN_DEEP_WATER || coinflip())
+        || grid_destroys_items(grd[monster->x][monster->y])
+        || coinflip())
     {
         return;
     }

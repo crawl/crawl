@@ -1138,7 +1138,7 @@ bool acquirement(unsigned char force_class, int agent)
     {
         // how sad (and stupid)
         mprf(MSGCH_SOUND, 
-                grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+	     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
     }
     else
     {
