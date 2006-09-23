@@ -372,6 +372,10 @@ void item_corrode( char itco )
             suppress_msg = false;
         }
         break;
+    default:
+	/* items which aren't missiles, etc...Could happen
+	   if we're wielding a deck, say */
+	return;
     }
 
     // determine chance of corrosion {dlb}:
