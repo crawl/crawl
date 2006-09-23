@@ -1821,7 +1821,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
 
     const unsigned char my_grid = grd[you.x_pos][you.y_pos];
 
-    if ( my_grid != DNGN_DEEP_WATER && my_grid != DNGN_LAVA &&
+    if ( !grid_destroys_items(my_grid) &&
 	 !copy_item_to_grid( you.inv[item_dropped], 
 			     you.x_pos, you.y_pos, quant_drop, true )) {
         mpr( "Too many items on this level, not dropping the item." );
@@ -1833,10 +1833,9 @@ bool drop_item( int item_dropped, int quant_drop ) {
     snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
     mpr(info);
     
-    if ( my_grid == DNGN_DEEP_WATER )
-	mpr("It sinks quickly.");
-    else if ( my_grid == DNGN_DEEP_WATER )
-	mpr("It burns up!");
+    if ( grid_destroys_items(my_grid) ) {
+        mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+    }
    
     dec_inv_item_quantity( item_dropped, quant_drop );
     you.turn_is_over = 1;
