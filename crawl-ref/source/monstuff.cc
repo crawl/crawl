@@ -909,30 +909,8 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
         return (false);
     }
 
-    /* Not fair to instakill a monster like this --
-     order of evaluation of inner conditional important */
-    if (current_tile == DNGN_LAVA || current_tile == DNGN_DEEP_WATER)
-    {
-        if (!mons_class_flies(new_mclass)
-            || monster_habitat(new_mclass) != current_tile)
-        {
-            return (false);
-        }
-    }
-
-    // not fair to strand a water monster on dry land, either.  :)
-    if (monster_habitat(new_mclass) == DNGN_DEEP_WATER 
-        && current_tile != DNGN_DEEP_WATER 
-        && current_tile != DNGN_SHALLOW_WATER)
-    {
-        return (false);
-    }
-
-    // and putting lava monsters on non-lava sqaures is a no-no, too
-    if (monster_habitat(new_mclass) == DNGN_LAVA && current_tile != DNGN_LAVA)
-        return (false);
-
-    return (true);
+    // Determine if the monster is happy on current tile
+    return (monster_habitable_grid(new_mclass, current_tile));
 }        // end valid_morph()
 
 // note that power is (as of yet) unused within this function -
@@ -958,9 +936,11 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     {
         do
         {
-            targetc = random2( NUM_MONSTERS );
+            // Pick a monster that's guaranteed happy at this grid
+            targetc = random_monster_at_grid(monster->x, monster->y);
 
-            // valid targets are always base classes
+            // valid targets are always base classes ([ds] which is unfortunate
+            // in that well-populated monster classes will dominate polymorphs)
             targetc = mons_species( targetc );
 
             target_power = mons_power( targetc );
@@ -1119,45 +1099,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
 
 static bool habitat_okay( struct monsters *monster, int targ )
 {
-    bool ret = false;
-    const int habitat = monster_habitat( monster->type );
-
-    if (mons_flies( monster ))
-    {
-        // flying monsters don't care
-        ret = true;
-    }
-    else if (mons_class_flag( monster->type, M_AMPHIBIOUS ) 
-            && (targ == DNGN_DEEP_WATER || targ == DNGN_SHALLOW_WATER))
-    {
-        // Amphibious creatures are "land" by default in mon-data, 
-        // we allow them to swim here. -- bwr
-        ret = true;
-    }
-    else if (monster->type == MONS_WATER_ELEMENTAL && targ >= DNGN_DEEP_WATER)
-    {
-        // water elementals can crawl out over the land
-        ret = true;
-    }
-    else if (habitat == DNGN_FLOOR 
-            && (targ >= DNGN_FLOOR || targ == DNGN_SHALLOW_WATER))
-    {
-        // FLOOR habitat monster going to a non-bad place
-        ret = true;
-    }
-    else if (habitat == DNGN_DEEP_WATER
-            && (targ == DNGN_DEEP_WATER || targ == DNGN_SHALLOW_WATER))
-    {
-        // Water monster to water
-        ret = true;
-    }
-    else if (habitat == DNGN_LAVA && targ == DNGN_LAVA)
-    {
-        // Lava monster to lava
-        ret = true;
-    }
-
-    return (ret);
+    return (monster_habitable_grid(monster, targ));
 }
 
 // This doesn't really swap places, it just sets the monster's
@@ -4387,12 +4329,11 @@ static void monster_move(struct monsters *monster)
         for (count_y = 0; count_y < 3; count_y++)
         {
             good_move[count_x][count_y] = true;
+            
             const int targ_x = monster->x + count_x - 1;
             const int targ_y = monster->y + count_y - 1;
-            int target_grid = grd[targ_x][targ_y];
-
-            const int targ_cloud = env.cgrid[ targ_x ][ targ_y ];
-            const int curr_cloud = env.cgrid[ monster->x ][ monster->y ];
+            // [ds] Bounds check was after grd[targ_x][targ_y] which would
+            // trigger an ASSERT. Moved it up.
 
             // bounds check - don't consider moving out of grid!
             if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
@@ -4400,6 +4341,18 @@ static void monster_move(struct monsters *monster)
                 good_move[count_x][count_y] = false;
                 continue;
             }
+
+            int target_grid = grd[targ_x][targ_y];
+
+            const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
+            const int targ_cloud_type = 
+                targ_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                             : env.cloud[targ_cloud_num].type;
+
+            const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
+            const int curr_cloud_type =
+                curr_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                             : env.cloud[curr_cloud_num].type;
 
             if (target_grid == DNGN_DEEP_WATER)
                 deep_water_available = true;
@@ -4443,10 +4396,10 @@ static void monster_move(struct monsters *monster)
             // Water elementals avoid fire and heat
             if (monster->type == MONS_WATER_ELEMENTAL
                 && (target_grid == DNGN_LAVA
-                    || targ_cloud == CLOUD_FIRE 
-                    || targ_cloud == CLOUD_FIRE_MON
-                    || targ_cloud == CLOUD_STEAM 
-                    || targ_cloud == CLOUD_STEAM_MON))
+                    || targ_cloud_type == CLOUD_FIRE 
+                    || targ_cloud_type == CLOUD_FIRE_MON
+                    || targ_cloud_type == CLOUD_STEAM 
+                    || targ_cloud_type == CLOUD_STEAM_MON))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4457,8 +4410,8 @@ static void monster_move(struct monsters *monster)
                 && (target_grid == DNGN_DEEP_WATER
                     || target_grid == DNGN_SHALLOW_WATER
                     || target_grid == DNGN_BLUE_FOUNTAIN
-                    || targ_cloud == CLOUD_COLD
-                    || targ_cloud == CLOUD_COLD_MON))
+                    || targ_cloud_type == CLOUD_COLD
+                    || targ_cloud_type == CLOUD_COLD_MON))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4466,12 +4419,14 @@ static void monster_move(struct monsters *monster)
 
             // Submerged water creatures avoid the shallows where
             // they would be forced to surface. -- bwr
+            // [dshaligram] Monsters now prefer to head for deep water only if
+            // they're low on hitpoints. No point in hiding if they want a
+            // fight.
             if (habitat == DNGN_DEEP_WATER
                 && (targ_x != you.x_pos || targ_y != you.y_pos)
                 && target_grid != DNGN_DEEP_WATER
                 && grd[monster->x][monster->y] == DNGN_DEEP_WATER
-                && (mons_has_ench( monster, ENCH_SUBMERGED )
-                    || monster->hit_points < (monster->max_hit_points * 3) / 4))
+                && monster->hit_points < (monster->max_hit_points * 3) / 4)
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4509,15 +4464,15 @@ static void monster_move(struct monsters *monster)
                 }
             }
 
-            if (targ_cloud != EMPTY_CLOUD)
+            if (targ_cloud_num != EMPTY_CLOUD)
             {
-                if (curr_cloud != EMPTY_CLOUD
-                    && env.cloud[targ_cloud].type == env.cloud[curr_cloud].type)
+                if (curr_cloud_num != EMPTY_CLOUD
+                    && targ_cloud_type == curr_cloud_type)
                 {
                     continue;
                 }
 
-                switch (env.cloud[ targ_cloud ].type)
+                switch (targ_cloud_type)
                 {
                 case CLOUD_FIRE:
                 case CLOUD_FIRE_MON:
@@ -4621,14 +4576,16 @@ static void monster_move(struct monsters *monster)
     } // done door-eating jellies
 
 
-    // water creatures have a preferance for water they can hide in -- bwr
+    // water creatures have a preference for water they can hide in -- bwr
+    // [ds] Weakened the powerful attraction to deep water if the monster
+    // is in good health.
     if (habitat == DNGN_DEEP_WATER 
         && deep_water_available
         && grd[monster->x][monster->y] != DNGN_DEEP_WATER
         && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER
         && (monster->x + mmov_x != you.x_pos 
             || monster->y + mmov_y != you.y_pos)
-        && (coinflip() 
+        && (one_chance_in(3)
             || monster->hit_points <= (monster->max_hit_points * 3) / 4))
     {
         count = 0;

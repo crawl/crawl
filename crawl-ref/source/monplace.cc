@@ -41,6 +41,101 @@ static int place_monster_aux(int mon_type, char behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
     int dur = 0);
 
+// Returns whether actual_grid is compatible with grid_wanted for monster 
+// movement (or for monster generation, if generation is true).
+bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
+{
+    // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
+    // device to slow down fiery monsters flying over water.
+    if (grid_wanted == DNGN_FLOOR)
+        return actual_grid >= DNGN_FLOOR 
+            || (!generation 
+                    && actual_grid == DNGN_SHALLOW_WATER);
+
+    return (grid_wanted == actual_grid
+            || (grid_wanted == DNGN_DEEP_WATER
+                && (actual_grid == DNGN_SHALLOW_WATER
+                    || actual_grid == DNGN_BLUE_FOUNTAIN)));
+}
+
+// Can this monster happily on actual_grid?
+//
+// If you have an actual monster, use this instead of the overloaded function
+// that uses only the monster class to make decisions.
+bool monster_habitable_grid(const monsters *m, int actual_grid)
+{
+    return (monster_habitable_grid(m->type, actual_grid, mons_flies(m)));
+}
+
+// Can monsters of class monster_class live happily on actual_grid? Use flies
+// == true to pretend the monster can fly.
+//
+// [dshaligram] We're trying to harmonise the checks from various places into
+// one check, so we no longer care if a water elemental springs into existence
+// on dry land, because they're supposed to be able to move onto dry land 
+// anyway.
+bool monster_habitable_grid(int monster_class, int actual_grid, bool flies)
+{
+    const int preferred_habitat = monster_habitat(monster_class);
+    return (grid_compatible(preferred_habitat, actual_grid)
+            // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
+            // only have to check for the additional valid grids of deep
+            // water and lava.
+            || ((flies || mons_class_flies(monster_class))
+                && (actual_grid == DNGN_LAVA 
+                    || actual_grid == DNGN_DEEP_WATER))
+
+            // Amphibious critters are happy in the water.
+            || (mons_class_flag(monster_class, M_AMPHIBIOUS)
+                && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+
+            // And water elementals are native to the water but happy on land
+            // as well.
+            || (monster_class == MONS_WATER_ELEMENTAL
+                && grid_compatible(DNGN_FLOOR, actual_grid)));
+}
+
+// Returns true if the monster is floundering in water and susceptible to 
+// extra damage from water-natives.
+bool monster_floundering(const monsters *m)
+{
+    const int grid = grd[m->x][m->y];
+    return ((grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER)
+            // Can't use monster_habitable_grid because that'll return true
+            // for non-water monsters in shallow water.
+            && monster_habitat(m->type) != DNGN_DEEP_WATER
+            && !mons_class_flag(m->type, M_AMPHIBIOUS)
+            && !mons_flies(m));
+}
+
+// Returns the grid type that a monster can submerge in, or -1 if the monster
+// is incapable of submerging.
+int monster_submersible_grid(int monster_class)
+{
+    switch (monster_class)
+    {
+    case MONS_BIG_FISH:
+    case MONS_GIANT_GOLDFISH:
+    case MONS_ELECTRICAL_EEL:
+    case MONS_JELLYFISH:
+    case MONS_WATER_ELEMENTAL:
+    case MONS_SWAMP_WORM:
+        return (DNGN_DEEP_WATER);
+
+    case MONS_LAVA_WORM:
+    case MONS_LAVA_FISH:
+    case MONS_LAVA_SNAKE:
+    case MONS_SALAMANDER:
+        return (DNGN_LAVA);
+
+    default:
+        // [dshaligram] Not exactly a safe sentinel with all the int -> char
+        // -> unsigned char mayhem going around, but it should be sufficient
+        // for now.
+        return (-1);
+    }
+}
+
 bool place_monster(int &id, int mon_type, int power, char behaviour,
     int target, bool summoned, int px, int py, bool allow_bands,
     int proximity, int extra, int dur)
@@ -224,17 +319,9 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                 continue;
             }
 
-            // compatible - floor?
-            if (grid_wanted == DNGN_FLOOR && grd[px][py] < DNGN_FLOOR)
+            // Is the monster happy where we want to put it?
+            if (!grid_compatible(grid_wanted, grd[px][py], true))
                 continue;
-
-            // compatible - others (must match, except for deep water monsters
-            // generated in shallow water)
-            if ((grid_wanted != DNGN_FLOOR && grd[px][py] != grid_wanted)
-                && (grid_wanted != DNGN_DEEP_WATER || grd[px][py] != DNGN_SHALLOW_WATER))
-            {
-                continue;
-            }
 
             // don't generate monsters on top of teleport traps
             // (how did they get there?)
@@ -366,7 +453,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
                               bool first_band_member, int dur )
 {
     int id, i;
-    char grid_wanted;
+    unsigned char grid_wanted;
     int fx=0, fy=0;     // final x,y
 
     // gotta be able to pick an ID
@@ -407,14 +494,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
             if (mgrd[fx][fy] != NON_MONSTER)
                 continue;
 
-            // compatible - floor?
-            if (grid_wanted == DNGN_FLOOR && grd[fx][fy] < DNGN_FLOOR)
-                continue;
-
-            // compatible - others (must match, except for deep water monsters
-            // generated in shallow water)
-            if ((grid_wanted != DNGN_FLOOR && grd[fx][fy] != grid_wanted)
-                && (grid_wanted != DNGN_DEEP_WATER || grd[fx][fy] != DNGN_SHALLOW_WATER))
+            if (!grid_compatible(grid_wanted, grd[fx][fy], true))
                 continue;
 
             // don't generate monsters on top of teleport traps
@@ -486,28 +566,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         menv[id].flags |= MF_BATTY;
     }
 
-    if ((mon_type == MONS_BIG_FISH
-            || mon_type == MONS_GIANT_GOLDFISH
-            || mon_type == MONS_ELECTRICAL_EEL
-            || mon_type == MONS_JELLYFISH
-            || mon_type == MONS_WATER_ELEMENTAL
-            || mon_type == MONS_SWAMP_WORM)
-        && grd[fx][fy] == DNGN_DEEP_WATER
-        && !one_chance_in(5))
-    {
+    if (monster_submersible_grid(mon_type) == grd[fx][fy]
+            && !one_chance_in(5))
         mons_add_ench( &menv[id], ENCH_SUBMERGED );
-    }
-
-    if ((mon_type == MONS_LAVA_WORM
-            || mon_type == MONS_LAVA_FISH
-            || mon_type == MONS_LAVA_SNAKE
-            || mon_type == MONS_SALAMANDER)
-        && grd[fx][fy] == DNGN_LAVA
-        && !one_chance_in(5))
-    {
-        mons_add_ench( &menv[id], ENCH_SUBMERGED );
-    }
-
+    
     menv[id].flags |= MF_JUST_SUMMONED;
 
     if (mon_type == MONS_DANCING_WEAPON && extra != 1) // ie not from spell
@@ -1241,25 +1303,41 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
     return (mid);
 }                               // end mons_place()
 
+coord_def find_newmons_square(int mons_class, int x, int y)
+{
+    FixedVector < char, 2 > empty;
+    coord_def pos = { -1, -1 };
+
+    empty[0] = 0;
+    empty[1] = 0;
+
+    if (mons_class == WANDERING_MONSTER)
+        mons_class = RANDOM_MONSTER;
+
+    int spcw = ((mons_class == RANDOM_MONSTER)? DNGN_FLOOR 
+                                              : monster_habitat( mons_class ));
+
+    // Might be better if we chose a space and tried to match the monster
+    // to it in the case of RANDOM_MONSTER, that way if the target square
+    // is surrounded by water of lava this function would work.  -- bwr 
+    if (empty_surrounds( x, y, spcw, true, empty ))
+    {
+        pos.x = empty[0];
+        pos.y = empty[1];
+    }
+    
+    return (pos);
+}
 
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands )
 {
     int summd = -1;
-    FixedVector < char, 2 > empty;
+    coord_def pos = find_newmons_square(cls, cr_x, cr_y);
 
-    unsigned char spcw = ((cls == RANDOM_MONSTER) ? DNGN_FLOOR 
-                                                  : monster_habitat( cls ));
-
-    empty[0] = 0;
-    empty[1] = 0;
-
-    // Might be better if we chose a space and tried to match the monster
-    // to it in the case of RANDOM_MONSTER, that way if the target square
-    // is surrounded by water of lava this function would work.  -- bwr 
-    if (empty_surrounds( cr_x, cr_y, spcw, true, empty ))
+    if (pos.x != -1 && pos.y != -1)
     {
-        summd = mons_place( cls, beha, hitting, true, empty[0], empty[1],
+        summd = mons_place( cls, beha, hitting, true, pos.x, pos.y,
                             you.level_type, 0, zsec, dur, permit_bands );
     }
 
@@ -1350,12 +1428,7 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
             if (grd[tx][ty] == spc_wanted)
                 success = true;
 
-            // those seeking ground can stand in shallow water or better
-            if (spc_wanted == DNGN_FLOOR && grd[tx][ty] >= DNGN_SHALLOW_WATER)
-                success = true;
-
-            // water monsters can be created in shallow as well as deep water
-            if (spc_wanted == DNGN_DEEP_WATER && grd[tx][ty] == DNGN_SHALLOW_WATER)
+            if (grid_compatible(spc_wanted, grd[tx][ty]))
                 success = true;
 
             if (success)

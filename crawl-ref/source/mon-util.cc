@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "monplace.h"
 #include "mstuff2.h"
 #include "player.h"
 #include "randart.h"
@@ -42,6 +43,20 @@ static FixedVector < int, NUM_MONSTERS > mon_entry;
 
 // really important extern -- screen redraws suck w/o it {dlb}
 FixedVector < unsigned short, 1000 > mcolour;
+
+enum habitat_type
+{
+    // Flying monsters will appear in all categories
+    HT_NORMAL,          // Normal critters
+    HT_SHALLOW_WATER,   // Union of normal + water
+    HT_DEEP_WATER,      // Water critters
+    HT_LAVA,            // Lava critters
+
+    NUM_HABITATS
+};
+
+static bool initialized_randmons = false;
+static std::vector<int> monsters_by_habitat[NUM_HABITATS];
 
 static struct monsterentry mondata[] = {
 #include "mon-data.h"
@@ -118,6 +133,72 @@ static monsterentry *seekmonster(int p_monsterid);
 #define smc seekmonster(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
+
+habitat_type grid2habitat(int grid)
+{
+    switch (grid)
+    {
+    case DNGN_DEEP_WATER:
+        return (HT_DEEP_WATER);
+    case DNGN_SHALLOW_WATER:
+        return (HT_SHALLOW_WATER);
+    case DNGN_LAVA:
+        return (HT_LAVA);
+    default:
+        return (HT_NORMAL);
+    }
+}
+
+int habitat2grid(habitat_type ht)
+{
+    switch (ht)
+    {
+    case HT_DEEP_WATER:
+        return (DNGN_DEEP_WATER);
+    case HT_SHALLOW_WATER:
+        return (DNGN_SHALLOW_WATER);
+    case HT_LAVA:
+        return (DNGN_LAVA);
+    case HT_NORMAL:
+    default:
+        return (DNGN_FLOOR);
+    }
+}
+
+static void initialize_randmons()
+{
+    for (int i = 0; i < NUM_HABITATS; ++i)
+    {
+        int grid = habitat2grid( habitat_type(i) );
+
+        for (int m = 0; m < NUM_MONSTERS; ++m)
+        {
+            if (invalid_monster_class(m))
+                continue;
+            if (monster_habitable_grid(m, grid))
+                monsters_by_habitat[i].push_back(m);
+        }
+    }
+    initialized_randmons = true;
+}
+
+monster_type random_monster_at_grid(int x, int y)
+{
+    return (random_monster_at_grid(grd[x][y]));
+}
+
+monster_type random_monster_at_grid(int grid)
+{
+    if (!initialized_randmons)
+        initialize_randmons();
+
+    const habitat_type ht = grid2habitat(grid);
+    const std::vector<int> &valid_mons = monsters_by_habitat[ht];
+    ASSERT(!valid_mons.empty());
+    return valid_mons.empty()? MONS_PROGRAM_BUG
+                 : monster_type(valid_mons[ random2(valid_mons.size()) ]);
+}
+
 void init_monsters(FixedVector < unsigned short, 1000 > &colour)
 {
     unsigned int x;             // must be unsigned to match size_t {dlb}
@@ -159,7 +240,7 @@ bool mons_class_flag(int mc, int bf)
     return ((smc->bitfields & bf) != 0);
 }                               // end mons_class_flag()
 
-static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
+static int scan_mon_inv_randarts( const monsters *mon, int ra_prop )
 {
     int ret = 0;
 
@@ -214,6 +295,14 @@ bool mons_is_stationary(const monsters *mons)
 bool invalid_monster(const monsters *mons)
 {
     return (!mons || mons->type == -1);
+}
+
+bool invalid_monster_class(int mclass)
+{
+    return (mclass < 0 
+            || mclass >= NUM_MONSTERS 
+            || mon_entry[mclass] == -1
+            || mon_entry[mclass] == MONS_PROGRAM_BUG);
 }
 
 bool mons_is_mimic( int mc )
@@ -285,7 +374,8 @@ corpse_effect_type mons_corpse_effect(int mc)
 
 monster_type mons_species( int mc )
 {
-    return (smc->species);
+    const monsterentry *me = seekmonster(mc);
+    return (me? me->species : MONS_PROGRAM_BUG);
 }                               // end mons_species()
 
 monster_type mons_genus( int mc )
@@ -698,7 +788,7 @@ int mons_skeleton(int mc)
     return (1);
 }                               // end mons_skeleton()
 
-char mons_class_flies(int mc)
+int mons_class_flies(int mc)
 {
     if (mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_DEMONLORD_FLY ]);
@@ -714,10 +804,9 @@ char mons_class_flies(int mc)
     return (0);
 }
 
-char mons_flies( struct monsters *mon )
+int mons_flies( const monsters *mon )
 {
-    char ret = mons_class_flies( mon->type );
-
+    int ret = mons_class_flies( mon->type );
     return (ret ? ret : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? 2 : 0);
 }                               // end mons_flies()
 

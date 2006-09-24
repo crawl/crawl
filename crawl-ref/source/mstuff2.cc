@@ -736,8 +736,6 @@ void monster_teleport(struct monsters *monster, bool instan)
     // pick the monster up
     mgrd[monster->x][monster->y] = NON_MONSTER;
 
-    char ogrid = monster_habitat(monster->type);
-
     int newx, newy;
     while(true)
     {
@@ -748,12 +746,7 @@ void monster_teleport(struct monsters *monster, bool instan)
         if (mgrd[newx][newy] != NON_MONSTER)
             continue;
 
-        // monsters going to the same habitat
-        if (ogrid == grd[newx][newy])
-            break;
-
-        // DEEP_WATER monsters can be teleported to SHALLOW_WATER
-        if (ogrid == DNGN_DEEP_WATER && grd[newx][newy] == DNGN_SHALLOW_WATER)
+        if (monster_habitable_grid(monster, grd[newx][newy]))
             break;
     }
 

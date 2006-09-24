@@ -280,14 +280,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     // wet merfolk
     if (player_is_swimming()
-        // monster not a water creature
-        && monster_habitat( defender->type ) != DNGN_DEEP_WATER
-        && !mons_class_flag( defender->type, M_AMPHIBIOUS )
-        // monster in water
-        && (grd[defender->x][defender->y] == DNGN_SHALLOW_WATER
-            || grd[defender->x][defender->y] == DNGN_DEEP_WATER)
-        // monster not flying
-        && !mons_flies( defender ))
+        // monster not a water creature, but is in water
+        && monster_floundering(defender))
     {
         water_attack = true;
     }
@@ -2957,19 +2951,14 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
         return false;
     }
 
-    if (grd[attacker->x][attacker->y] == DNGN_SHALLOW_WATER
-        && !mons_flies( attacker )
-        && !mons_class_flag( attacker->type, M_AMPHIBIOUS )
-        && habitat == DNGN_FLOOR 
-        && one_chance_in(4))
+    if (monster_floundering(attacker) && one_chance_in(4))
     {
         mpr("You hear a splashing noise.");
         return true;
     }
 
-    if (grd[defender->x][defender->y] == DNGN_SHALLOW_WATER
-        && !mons_flies(defender)
-        && habitat == DNGN_DEEP_WATER)
+    // habitat is the favoured habitat of the attacker
+    if (monster_floundering(defender) && habitat == DNGN_DEEP_WATER)
     {
         water_attack = true;
     }

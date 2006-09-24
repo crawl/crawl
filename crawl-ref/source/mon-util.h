@@ -140,8 +140,8 @@ const char *ptr_monam( struct monsters *mon, char desc );
 /* ***********************************************************************
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
  * *********************************************************************** */
-char mons_class_flies( int mc );
-char mons_flies( struct monsters *mon );
+int mons_class_flies( int mc );
+int mons_flies( const monsters *mon );
 
 
 // last updated XXmay2000 {dlb}
@@ -430,11 +430,15 @@ bool check_mons_resist_magic( struct monsters *monster, int pow );
 bool mons_is_stationary(const monsters *mons);
 
 bool invalid_monster(const monsters *mons);
+bool invalid_monster_class(int mclass);
 
 bool monster_shover(const monsters *m);
 bool mons_is_paralysed(const monsters *m);
 
 bool monster_senior(const monsters *first, const monsters *second);
 monster_type draco_subspecies( const monsters *mon );
+
+monster_type random_monster_at_grid(int x, int y);
+monster_type random_monster_at_grid(int grid);
 
 #endif

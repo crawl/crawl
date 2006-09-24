@@ -15,6 +15,7 @@
 
 #include "AppHdr.h"
 #include "direct.h"
+#include "monplace.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -136,7 +137,7 @@ void tag_followers( void )
                 continue;
             }
 
-            if (monster_habitat(fmenv->type) != DNGN_FLOOR)
+            if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
                 continue;
 
             if (fmenv->speed_increment < 50)

@@ -927,7 +927,7 @@ bool recall(char type_recalled)
         if (!mons_friendly(monster))
             continue;
 
-        if (monster_habitat(monster->type) != DNGN_FLOOR)
+        if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;
 
         if (type_recalled == 1)
