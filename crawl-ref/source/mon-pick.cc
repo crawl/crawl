@@ -2689,6 +2689,7 @@ static int mons_standard_rare(int mcls)
     case MONS_NECROPHAGE:
     case MONS_POTION_MIMIC:
     case MONS_SCROLL_MIMIC:
+    case MONS_QUASIT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_SMALL_SNAKE:
     case MONS_SOUL_EATER:
