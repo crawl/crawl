@@ -1698,20 +1698,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             exercise(SK_DARTS, 1 + random2avg(3, 2));
         }
 
-        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
-        {
-            // Throwing needles is now seriously frowned upon; it's difficult
-            // to grip a fiddly little needle, and not penalising it cheapens
-            // blowguns. [ds] Increased the penalty further after rgrmisc 
-            // reports of being able to use thrown needles.
-            exHitBonus -= (30 - you.skills[SK_DARTS]);
-            baseHit    -= (45 - you.skills[SK_DARTS]) / 2;
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
-                    baseHit, exHitBonus);
-#endif
-        }
-
         // exercise skill
         if (coinflip())
             exercise(SK_RANGED_COMBAT, 1);
@@ -1763,6 +1749,19 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             exercise(SK_RANGED_COMBAT, 1);
 
         exHitBonus = you.dex / 4;
+
+        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
+        {
+            // Throwing needles is now seriously frowned upon; it's difficult
+            // to grip a fiddly little needle, and not penalising it cheapens
+            // blowguns.
+            exHitBonus -= (30 - you.skills[SK_DARTS]) / 3;
+            baseHit    -= (30 - you.skills[SK_DARTS]) / 3;
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Needle base hit = %d, exHitBonus = %d",
+                    baseHit, exHitBonus);
+#endif
+        }
     }
 
     // FINALIZE tohit and damage

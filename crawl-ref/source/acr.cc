@@ -963,7 +963,11 @@ static void input() {
     }
 
     command_type cmd = get_next_cmd();
-    do_action( cmd );
+
+    // [dshaligram] If get_next_cmd encountered a Lua macro binding, your turn
+    // may be ended by the first invoke of the macro.
+    if (!you.turn_is_over)
+        do_action( cmd );
 
     if ( you.turn_is_over ) {
 
@@ -2378,7 +2382,12 @@ static command_type get_next_cmd() {
     if (you.running < 0) {       // Travel and explore
 	command_type result = travel();
 	if ( result != CMD_NO_CMD )
+        {
+            // Clear messages before each round of travel so that more prompts
+            // don't interrupt.
+            mesclr();
 	    return result;
+        }
     }
     if (you.running > 0) {
 	command_type result = get_running_command();
@@ -2399,7 +2408,7 @@ static command_type get_next_cmd() {
 
     if (is_userfunction(keyin)) {
         run_macro(get_userfunction(keyin));
-	//return get_next_cmd();
+        return (CMD_REST);
     }
 
     return keycode_to_command(keyin);
