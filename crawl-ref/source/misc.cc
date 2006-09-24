@@ -894,19 +894,20 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         char del_file[kFileNameSize];
         int sysg;
 
-#ifdef SAVE_DIR_PATH
         snprintf( glorpstr, sizeof(glorpstr), 
-                  SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-#else
-        strncpy(glorpstr, you.your_name, kFileNameLen);
-
-        // glorpstr [strlen(glorpstr)] = 0;
-        // This is broken. Length is not valid yet! We have to check if we got
-        // a trailing NULL; if not, write one:
-        /* is name 6 chars or more? */
-        if (strlen(you.your_name) > kFileNameLen - 1)
-            glorpstr[kFileNameLen] = '\0';
+#ifdef SAVE_DIR_PATH
+                  SAVE_DIR_PATH
 #endif
+#ifdef MULTIUSER
+		  "%s%d"
+#else
+		  "%s"
+#endif
+		  , you.your_name
+#ifdef MULTIUSER
+		  , (int) getuid()
+#endif
+		  );
 
         strcpy(del_file, glorpstr);
         strcat(del_file, ".lab");

@@ -26,6 +26,7 @@
 #include "files.h"
 #include "version.h"
 
+#include <algorithm>
 #include <string.h>
 #include <string>
 #include <stdlib.h>
@@ -83,6 +84,12 @@
 #include "tags.h"
 #include "travel.h"
 #include "wpn-misc.h"
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+#define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
+#else
+#define DO_CHMOD_PRIVATE(x) // empty command
+#endif
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
@@ -211,18 +218,34 @@ static void load_ghost();
 std::string get_savedir_filename(const char *prefix, const char *suffix, 
                                  const char *extension)
 {
-    char filename[1200];
+    std::string result;
+
 #ifdef SAVE_DIR_PATH
-    snprintf(filename, sizeof filename, SAVE_DIR_PATH "%s%d%s.%s",
-             prefix, (int) getuid(), suffix, extension);
-#else
-    snprintf(filename, sizeof filename, "%s%s.%s", 
-             prefix, suffix, extension);
+    result = SAVE_DIR_PATH;
+#endif
+
+    result.append(prefix);
+
+#ifdef MULTIUSER
+    char struid[100];
+    snprintf( struid, sizeof struid, "%d", (int)getuid() );
+    result.append(struid);
+#endif
+
+    result.append(suffix);
+
+    if ( *extension ) {
+	result.append(".");
+	result.append(extension);
+    }
+
 #ifdef DOS
-    strupr(filename);
+    /* yes, this is bad, but std::transform() has its own problems */
+    for ( unsigned int i = 0; i < result.size(); ++i ) {
+	result[i] = toupper(result[i]);
+    }
 #endif
-#endif
-    return std::string(filename);
+    return result;
 }
 
 std::string get_prefs_filename()
@@ -256,7 +279,7 @@ void make_filename( char *buf, const char *prefix, int level, int where,
 
     strcat(buf, finalprefix);
 
-#ifdef SAVE_DIR_PATH
+#ifdef MULTIUSER
     // everyone sees everyone else's ghosts. :)
     char uid[10];
     if (!isGhost)
@@ -975,151 +998,66 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 
     fclose(saveFile);
 
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    chmod(cha_fil, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+    DO_CHMOD_PRIVATE(cha_fil);
 }                               // end save_level()
+
 
 void save_game(bool leave_game)
 {
-    char charFile[kFileNameSize];
-#ifdef STASH_TRACKING
-    char stashFile[kFileNameSize + 4];
-#endif
-    char killFile[kFileNameSize + 4];
-    char travelCacheFile[kFileNameSize + 4];
-    char notesFile[kFileNameSize + 4];
-#ifdef CLUA_BINDINGS
-    char luaFile[kFileNameSize + 4];
-#endif
-
-#ifdef SAVE_PACKAGE_CMD
-    char cmd_buff[1024];
-    char name_buff[kFileNameSize];
-
-    snprintf( name_buff, sizeof(name_buff), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-
-    snprintf( cmd_buff, sizeof(cmd_buff), 
-              SAVE_PACKAGE_CMD, name_buff, name_buff );
 
 #ifdef STASH_TRACKING
-    strcpy(stashFile, name_buff);
-#endif
-#ifdef CLUA_BINDINGS
-    strcpy(luaFile, name_buff);
-#endif
-    strcpy(killFile, name_buff);
-    strcpy(notesFile, name_buff);
-    strcpy(travelCacheFile, name_buff);
-    snprintf( charFile, sizeof(charFile), 
-              "%s.sav", name_buff );
-
-#else
-    strncpy(charFile, you.your_name, kFileNameLen);
-    charFile[kFileNameLen] = 0;
-
-#ifdef STASH_TRACKING
-    strcpy(stashFile, charFile);
-#endif
-#ifdef CLUA_BINDINGS
-    strcpy(luaFile, charFile);
-#endif
-    strcpy(killFile, charFile);
-    strcpy(travelCacheFile, charFile);
-    strcpy(notesFile, charFile);
-    strcat(charFile, ".sav");
-
-#ifdef DOS
-    strupr(charFile);
-#ifdef STASH_TRACKING
-    strupr(stashFile);
-#endif
-#ifdef CLUA_BINDINGS
-    strupr(luaFile);
-#endif
-    strupr(killFile);
-    strupr(travelCacheFile);
-    strupr(notesFile);
-#endif
-#endif
-
-#ifdef STASH_TRACKING
-    strcat(stashFile, ".st");
-#endif
-#ifdef CLUA_BINDINGS
-    strcat(luaFile, ".lua");
-#endif
-    strcat(killFile, ".kil");
-    strcat(travelCacheFile, ".tc");
-    strcat(notesFile, ".nts");
-
-#ifdef STASH_TRACKING
-    FILE *stashf = fopen(stashFile, "wb");
-    if (stashf)
-    {
+    /* Stashes */
+    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    FILE *stashf = fopen(stashFile.c_str(), "wb");
+    if (stashf) {
         stashes.save(stashf);
         fclose(stashf);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(stashFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+	DO_CHMOD_PRIVATE(stashFile.c_str());
     }
-#endif // STASH_TRACKING
+#endif
 
 #ifdef CLUA_BINDINGS
-    clua.save(luaFile);
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    // change mode; note that luaFile may not exist
-    chmod(luaFile, SHARED_FILES_CHMOD_PRIVATE);
+    /* lua */
+    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
+    clua.save(luaFile.c_str());
+    // note that luaFile may not exist
+    DO_CHMOD_PRIVATE(luaFile.c_str());
 #endif
-#endif // CLUA_BINDINGS
 
-    FILE *travelf = fopen(travelCacheFile, "wb");
-    if (travelf)
-    {
-        travel_cache.save(travelf);
-        fclose(travelf);
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(travelCacheFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
-    }
-
-    FILE *killf = fopen(killFile, "wb");
-    if (killf)
-    {
+    /* kills */
+    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    FILE *killf = fopen(killFile.c_str(), "wb");
+    if (killf) {
         you.kills.save(killf);
         fclose(killf);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(killFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+	DO_CHMOD_PRIVATE(killFile.c_str());
     }
 
-    FILE *notesf = fopen(notesFile, "wb");
-    if (notesf)
-    {
+    /* travel cache */
+    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
+    FILE *travelf = fopen(travelCacheFile.c_str(), "wb");
+    if (travelf) {
+        travel_cache.save(travelf);
+        fclose(travelf);
+	DO_CHMOD_PRIVATE(travelCacheFile.c_str());
+    }
+    
+    /* notes */
+    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
+    FILE *notesf = fopen(notesFile.c_str(), "wb");
+    if (notesf) {
 	save_notes(notesf);
         fclose(notesf);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(notesFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+	DO_CHMOD_PRIVATE(notesFile.c_str());
     }
 
-    FILE *saveFile = fopen(charFile, "wb");
-
-    if (saveFile == NULL)
-    {
-        strcpy(info, "Unable to open \"");
-        strcat(info, charFile );
-        strcat(info, "\" for writing!");
-        perror(info);
-        end(-1);
+    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    FILE *charf = fopen(charFile.c_str(), "wb");
+    if (!charf) {
+	sprintf(info, "Unable to open \"%s\" for writing!\n",
+		charFile.c_str());
+	perror(info);
+	end(-1);
     }
 
     // 0.0 initial genesis of saved format
@@ -1128,16 +1066,11 @@ void save_game(bool leave_game)
     // 0.3 added you.magic_contamination (05/03/05)
     // 0.4 added item origins
     // 0.5 added num_gifts
-    // 0.6 inscriptions (hp)
+    // 0.6 inscriptions
+    write_tagged_file( charf, SAVE_MAJOR_VERSION, 6, TAGTYPE_PLAYER );
 
-    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 6, TAGTYPE_PLAYER );
-
-    fclose(saveFile);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    // change mode (unices)
-    chmod(charFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+    fclose(charf);
+    DO_CHMOD_PRIVATE(charFile.c_str());
 
     // if just save, early out
     if (!leave_game)
@@ -1154,21 +1087,20 @@ void save_game(bool leave_game)
     clrscr();
 
 #ifdef SAVE_PACKAGE_CMD
-    if (system( cmd_buff ) != 0)
-    {
+    std::string basename = get_savedir_filename(you.your_name, "", "");
+    char cmd_buff[1024];
+
+    snprintf( cmd_buff, sizeof(cmd_buff), 
+              SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
+
+
+    if (system( cmd_buff ) != 0) {
         cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned non-zero value!" EOL );
     }
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    strcat( name_buff, PACKAGE_SUFFIX );
-    // change mode (unices)
-    chmod( name_buff, SHARED_FILES_CHMOD_PRIVATE );
-#endif
-
+    DO_CHMOD_PRIVATE ( (basename + std::string(PACKAGE_SUFFIX)).c_str() );
 #endif
 
     cprintf( "See you soon, %s!" EOL , you.your_name );
-
     end(0);
 }                               // end save_game()
 
@@ -1276,63 +1208,12 @@ void load_ghost(void)
 
 void restore_game(void)
 {
-    char char_f[kFileNameSize];
-    char kill_f[kFileNameSize];
-    char travel_f[kFileNameSize];
-    char notes_f[kFileNameSize];
-#ifdef STASH_TRACKING
-    char stash_f[kFileNameSize];
-#endif
-
-#ifdef CLUA_BINDINGS
-    char lua_f[kFileNameSize];
-#endif
-    
-    //#ifdef SAVE_DIR_PATH -- haranp change -- this is weird
-#ifdef SAVE_PACKAGE_CMD
-    snprintf( char_f, sizeof(char_f), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-#else
-    strncpy(char_f, you.your_name, kFileNameLen);
-    char_f[kFileNameLen] = 0;
-#endif
-
-    strcpy(kill_f, char_f);
-    strcpy(travel_f, char_f);
-    strcpy(notes_f, char_f);
-#ifdef CLUA_BINDINGS
-    strcpy(lua_f, char_f);
-    strcat(lua_f, ".lua");
-#endif
-#ifdef STASH_TRACKING
-    strcpy(stash_f, char_f);
-    strcat(stash_f, ".st");
-#endif
-    strcat(kill_f, ".kil");
-    strcat(travel_f, ".tc");
-    strcat(char_f, ".sav");
-    strcat(notes_f, ".nts");
-
-#ifdef DOS
-    strupr(char_f);
-#ifdef STASH_TRACKING
-    strupr(stash_f);
-#endif
-    strupr(kill_f);
-    strupr(travel_f);
-    strupr(notes_f);
-#ifdef CLUA_BINDINGS
-    strupr(lua_f);
-#endif
-#endif
-
-    FILE *restoreFile = fopen(char_f, "rb");
-
-    if (restoreFile == NULL)
+    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    FILE *charf = fopen(charFile.c_str(), "rb");
+    if (!charf )
     {
-        strcpy(info, "Unable to open \"");
-        strcat(info, char_f );
-        strcat(info, "\" for reading!");
+	snprintf(info, INFO_SIZE, "Unable to open %s for reading!\n",
+		 charFile.c_str() );
         perror(info);
         end(-1);
     }
@@ -1340,56 +1221,58 @@ void restore_game(void)
     char majorVersion = 0;
     char minorVersion = 0;
 
-    if (!determine_version(restoreFile, majorVersion, minorVersion))
+    if (!determine_version(charf, majorVersion, minorVersion))
     {
         perror("\nSavefile appears to be invalid.\n");
         end(-1);
     }
 
-    restore_version(restoreFile, majorVersion, minorVersion);
+    restore_version(charf, majorVersion, minorVersion);
 
     // sanity check - EOF
-    if (!feof(restoreFile))
+    if (!feof(charf))
     {
-        snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n", char_f);
+        snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n",
+		  charFile.c_str());
         perror(info);
         end(-1);
     }
 
-    fclose(restoreFile);
+    fclose(charf);
 
 #ifdef STASH_TRACKING
-    FILE *stashFile = fopen(stash_f, "rb");
-    if (stashFile)
-    {
-        stashes.load(stashFile);
-        fclose(stashFile);
+    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    FILE *stashf = fopen(stashFile.c_str(), "rb");
+    if (stashf) {
+        stashes.load(stashf);
+        fclose(stashf);
     }
 #endif
 
 #ifdef CLUA_BINDINGS
-    clua.execfile( lua_f );
-#endif // CLUA_BINDINGS
+    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
+    clua.execfile( luaFile.c_str() );
+#endif
 
-    FILE *travelFile = fopen(travel_f, "rb");
-    if (travelFile)
-    {
-        travel_cache.load(travelFile);
-        fclose(travelFile);
+    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    FILE *killf = fopen(killFile.c_str(), "rb");
+    if (killf) {
+        you.kills.load(killf);
+        fclose(killf);
     }
 
-    FILE *killFile = fopen(kill_f, "rb");
-    if (killFile)
-    {
-        you.kills.load(killFile);
-        fclose(killFile);
+    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
+    FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
+    if (travelf) {
+        travel_cache.load(travelf);
+        fclose(travelf);
     }
-    
-    FILE *notesFile = fopen(notes_f, "rb");
-    if (notesFile)
-    {
-	load_notes(notesFile);
-	fclose(notesFile);
+
+    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
+    FILE *notesf = fopen(notesFile.c_str(), "rb");
+    if (notesf) {
+	load_notes(notesf);
+	fclose(notesf);
     }
 }
 
@@ -1643,9 +1526,7 @@ void save_ghost( bool force )
     mpr( "Saved ghost.", MSGCH_DIAGNOSTICS );
 #endif
 
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    chmod(cha_fil, SHARED_FILES_CHMOD_PUBLIC);
-#endif
+    DO_CHMOD_PRIVATE(cha_fil);
 }                               // end save_ghost()
 
 /*
@@ -2077,8 +1958,6 @@ void generate_random_demon(void)
 // Largest string we'll save
 #define STR_CAP 1000
 
-using std::string;
-
 void writeShort(FILE *file, short s)
 {
     char data[2];
@@ -2110,7 +1989,7 @@ unsigned char readByte(FILE *file)
     return byte;
 }
 
-void writeString(FILE* file, const string &s)
+void writeString(FILE* file, const std::string &s)
 {
     int length = s.length();
     if (length > STR_CAP) length = STR_CAP;
@@ -2118,14 +1997,14 @@ void writeString(FILE* file, const string &s)
     write2(file, s.c_str(), length);
 }
 
-string readString(FILE *file)
+std::string readString(FILE *file)
 {
     char buf[STR_CAP + 1];
     short length = readShort(file);
     if (length)
         read2(file, buf, length);
     buf[length] = '\0';
-    return string(buf);
+    return std::string(buf);
 }
 
 void writeLong(FILE* file, long num)

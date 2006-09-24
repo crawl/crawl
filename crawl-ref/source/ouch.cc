@@ -963,12 +963,20 @@ void end_game( struct scorefile_entry &se )
     unlink(info);
 
     // create base file name
+    snprintf( info, INFO_SIZE,
 #ifdef SAVE_DIR_PATH
-    snprintf( info, INFO_SIZE, SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid());
-#else
-    strncpy(info, you.your_name, kFileNameLen);
-    info[kFileNameLen] = '\0';
+	      SAVE_DIR_PATH
 #endif
+#ifdef MULTIUSER
+	      "%s%d",
+#else
+	      "%s",
+#endif
+	      you.your_name
+#ifdef MULTIUSER
+	      , (int) getuid()
+#endif
+	      );
 
     // this is to catch the game package if it still exists.
 #ifdef PACKAGE_SUFFIX

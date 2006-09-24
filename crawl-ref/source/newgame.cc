@@ -291,7 +291,19 @@ static bool check_saved_game(void)
     char name_buff[kFileNameLen];
 
     snprintf( name_buff, sizeof(name_buff), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
+#ifdef SAVE_DIR_PATH
+              SAVE_DIR_PATH
+#endif
+#ifdef MULTIUSER
+	      "%s%d",
+#else
+	      "%s",
+#endif
+	      you.your_name
+#ifdef MULTIUSER
+	      , (int) getuid()
+#endif
+	      );
 
     char zip_buff[kFileNameLen];
 
@@ -2086,9 +2098,9 @@ void enterPlayerName(bool blankOK)
             acceptable_name = false;
         }
 
-        // if SAVE_DIR_PATH is defined, userid will be tacked onto the end
+        // if MULTIUSER is defined, userid will be tacked onto the end
         // of each character's files, making bones a valid player name.
-#ifndef SAVE_DIR_PATH
+#ifndef MULTIUSER
         // this would cause big probs with ghosts
         // what would? {dlb}
         // ... having the name "bones" of course! The problem comes from
