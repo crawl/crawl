@@ -935,7 +935,6 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
 void end_game( struct scorefile_entry &se )
 {
     int i;
-    char del_file[300];         // massive overkill!
     bool dead = true;
 
     if (se.death_type == KILLED_BY_LEAVING ||
@@ -963,44 +962,24 @@ void end_game( struct scorefile_entry &se )
     unlink(info);
 
     // create base file name
-    snprintf( info, INFO_SIZE,
-#ifdef SAVE_DIR_PATH
-	      SAVE_DIR_PATH
-#endif
-#ifdef MULTIUSER
-	      "%s%d",
-#else
-	      "%s",
-#endif
-	      you.your_name
-#ifdef MULTIUSER
-	      , (int) getuid()
-#endif
-	      );
+    std::string basename = get_savedir_filename( you.your_name, "", "" );
 
-    // this is to catch the game package if it still exists.
-#ifdef PACKAGE_SUFFIX
-    strcpy(del_file, info);
-    strcat(del_file, "." PACKAGE_SUFFIX);
-    unlink(del_file);
-#endif
-
-    // last, but not least, delete player .sav file
-    strcpy(del_file, info);
-
-    std::string basefile = del_file;
-
-    strcat(del_file, ".sav");
-    unlink(del_file);
-
-    // Delete record of stashes, kills, travel cache and lua save.
-    unlink( (basefile + ".st").c_str() );
-    unlink( (basefile + ".kil").c_str() );
-    unlink( (basefile + ".tc").c_str() );
-    unlink( (basefile + ".nts").c_str() );
+    const char* suffixes[] = {
 #ifdef CLUA_BINDINGS
-    unlink( (basefile + ".lua").c_str() );
+	".lua",
 #endif
+#ifdef PACKAGE_SUFFIX
+	PACKAGE_SUFFIX ,
+#endif
+	".st", ".kil", ".tc", ".nts", ".sav"
+    };
+
+    const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
+
+    for ( int i = 0; i < num_suffixes; ++i ) {
+	std::string tmpname = basename + suffixes[i];
+	unlink( tmpname.c_str() );
+    }
 
     // death message
     if (dead)

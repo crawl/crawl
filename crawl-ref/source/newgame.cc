@@ -284,76 +284,35 @@ static void pick_random_species_and_class( void )
 static bool check_saved_game(void)
 {
     FILE *handle;
-    char char_fil[kFileNameSize];
+
+    std::string basename = get_savedir_filename( you.your_name, "", "");
+    std::string savename = basename + ".sav";
 
 #ifdef LOAD_UNPACKAGE_CMD
-    // Create the file name base
-    char name_buff[kFileNameLen];
-
-    snprintf( name_buff, sizeof(name_buff), 
-#ifdef SAVE_DIR_PATH
-              SAVE_DIR_PATH
-#endif
-#ifdef MULTIUSER
-	      "%s%d",
-#else
-	      "%s",
-#endif
-	      you.your_name
-#ifdef MULTIUSER
-	      , (int) getuid()
-#endif
-	      );
-
-    char zip_buff[kFileNameLen];
-
-    strcpy(zip_buff, name_buff);
-    strcat(zip_buff, PACKAGE_SUFFIX);
-
-    // Create save dir name
-    strcpy(char_fil, name_buff);
-    strcat(char_fil, ".sav");
-
-    handle = fopen(zip_buff, "rb+");
+    std::string zipname = basename + PACKAGE_SUFFIX;
+    handle = fopen(zipname.c_str(), "rb+");
     if (handle != NULL)
     {
+	fclose(handle);
         cprintf(EOL "Loading game..." EOL);
 
         // Create command
         char cmd_buff[1024];
 
-        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD, name_buff );
+        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
+		  basename.c_str() );
 
         if (system( cmd_buff ) != 0)
         {
             cprintf( EOL "Warning: Zip command (LOAD_UNPACKAGE_CMD) returned non-zero value!" EOL );
         }
 
-        fclose(handle);
-
         // Remove save game package
-        unlink(zip_buff);
+        unlink(zipname.c_str());
     }
-    else
-    {
-#ifdef DO_ANTICHEAT_CHECKS
-        // Simple security patch -- must have zip file otherwise invalidate
-        // the character.  Right now this just renames the .sav file to
-        // .bak, allowing anyone with the appropriate permissions to
-        // fix a character in the case of a bug.  This could be changed
-        // to unlinking the file(s) which would remove the character.
-        strcat(name_buff, ".bak");
-        rename(char_fil, name_buff);
-#endif
-    }
-
-#else
-    strcpy(char_fil, "");
-    strncat(char_fil, you.your_name, kFileNameLen);
-    strcat(char_fil, ".sav");
 #endif
 
-    handle = fopen(char_fil, "rb+");
+    handle = fopen(savename.c_str(), "rb+");
 
     if (handle != NULL)
     {

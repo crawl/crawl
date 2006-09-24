@@ -890,36 +890,11 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
         || you.level_type == LEVEL_PANDEMONIUM)
     {
-        char glorpstr[kFileNameSize];
-        char del_file[kFileNameSize];
+	std::string del_file = get_savedir_filename(you.your_name, "", "lab");
         int sysg;
-
-        snprintf( glorpstr, sizeof(glorpstr), 
-#ifdef SAVE_DIR_PATH
-                  SAVE_DIR_PATH
-#endif
-#ifdef MULTIUSER
-		  "%s%d"
-#else
-		  "%s"
-#endif
-		  , you.your_name
-#ifdef MULTIUSER
-		  , (int) getuid()
-#endif
-		  );
-
-        strcpy(del_file, glorpstr);
-        strcat(del_file, ".lab");
-
-#ifdef DOS
-        strupr(del_file);
-#endif
-        sysg = unlink(del_file);
-
+        sysg = unlink(del_file.c_str());
 #if DEBUG_DIAGNOSTICS
-        strcpy( info, "Deleting: " );
-        strcat( info, del_file );
+	snprintf( info, INFO_SIZE, "Deleting: %s", del_file.c_str() );
         mpr( info, MSGCH_DIAGNOSTICS );
         more();
 #endif

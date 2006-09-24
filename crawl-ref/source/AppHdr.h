@@ -334,10 +334,6 @@
 #endif
     #define PACKAGE_SUFFIX      ".zip"
 
-    // This provides some rudimentary protection against people using
-    // save file cheats on multi-user systems.
-    #define DO_ANTICHEAT_CHECKS
-
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664
     #define SHARED_FILES_CHMOD_PUBLIC   0664
