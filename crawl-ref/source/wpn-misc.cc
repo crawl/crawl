@@ -25,76 +25,6 @@
  **************************************************
 */
 
-// FIXME: Remove these eventually
-
-int damage_type(const item_def &item)
-{
-    return (damage_type(item.base_type, item.sub_type));
-}
-
-int damage_type(int wclass, int wtype)
-{
-    int type_damage = DVORP_CRUSHING;  // this is the default, btw {dlb}
-
-    if (wclass == OBJ_WEAPONS)
-    {
-        switch (wtype)
-        {
-        case WPN_DAGGER:
-        case WPN_DEMON_BLADE:
-        case WPN_DOUBLE_SWORD:
-        case WPN_GREAT_SWORD:
-        case WPN_KATANA:
-        case WPN_KNIFE:
-        case WPN_LONG_SWORD:
-        case WPN_QUICK_BLADE:
-        case WPN_SABRE:
-        case WPN_FALCHION:
-        case WPN_SCIMITAR:
-        case WPN_SCYTHE:
-        case WPN_SHORT_SWORD:
-        case WPN_TRIPLE_SWORD:
-        case WPN_BLESSED_BLADE:
-        case WPN_LAJATANG:
-            type_damage = DVORP_SLICING;
-            break;
-
-        case WPN_DEMON_TRIDENT:
-        case WPN_EVENINGSTAR:
-        case WPN_GIANT_SPIKED_CLUB:
-        case WPN_MORNINGSTAR:
-        case WPN_SPEAR:
-        case WPN_SPIKED_FLAIL:
-        case WPN_TRIDENT:
-            type_damage = DVORP_PIERCING;
-            break;
-
-        case WPN_WAR_AXE:
-        case WPN_BATTLEAXE:
-        case WPN_BROAD_AXE:
-        case WPN_EXECUTIONERS_AXE:
-        case WPN_GLAIVE:
-        case WPN_HALBERD:
-        case WPN_HAND_AXE:
-        case WPN_LOCHABER_AXE:
-            type_damage = DVORP_CHOPPING;
-            break;
-        }
-    }
-
-    return (type_damage);
-}                               // end damage_type()
-
-bool can_cut_meat(int wclass, int wtype)
-{
-    int type = damage_type( wclass, wtype );
-
-    if (type == DVORP_CHOPPING || type == DVORP_SLICING)
-        return (true);
-
-    return (false);
-}
-
 int hands_reqd_for_weapon(int wclass, int wtype)
 {
     int reqd_hands = HANDS_ONE;
@@ -147,19 +77,6 @@ int hands_reqd_for_weapon(int wclass, int wtype)
     return (reqd_hands);
 }                               // end hands_reqd_for_weapon()
 
-bool is_demonic(unsigned char weapon_subtype)
-{
-    switch (weapon_subtype)
-    {
-    case WPN_DEMON_BLADE:
-    case WPN_DEMON_WHIP:
-    case WPN_DEMON_TRIDENT:
-        return true;
-
-    default:
-        return false;
-    }
-}                               // end is_demonic()
 
 bool launches_things( unsigned char weapon_subtype )
 {

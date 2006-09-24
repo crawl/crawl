@@ -557,7 +557,7 @@ bool brand_weapon(int which_brand, int power)
         return false;
 
     if (you.inv[wpn].base_type != OBJ_WEAPONS
-        || launches_things(you.inv[wpn].sub_type))
+        || is_range_weapon(you.inv[wpn]))
     {
         return false;
     }
@@ -573,7 +573,7 @@ bool brand_weapon(int which_brand, int power)
     in_name( wpn, DESC_CAP_YOUR, str_pass );
     strcpy( info, str_pass );
 
-    const int wpn_type = damage_type(you.inv[wpn]);
+    const int wpn_type = get_vorpal_type(you.inv[wpn]);
 
     switch (which_brand)        // use SPECIAL_WEAPONS here?
     {

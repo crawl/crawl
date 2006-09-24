@@ -815,7 +815,7 @@ void randart_wpn_properties( const item_def &item,
         if (proprt[RAP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
-        if (launches_things(atype))
+        if (is_range_weapon(item))
         {
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
@@ -833,7 +833,7 @@ void randart_wpn_properties( const item_def &item,
         }
 
 
-        if (is_demonic(atype))
+        if (is_demonic(item))
         {
             switch (random5(9))
             {

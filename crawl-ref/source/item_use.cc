@@ -363,7 +363,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
     if (you.inv[item_wield_2].base_type == OBJ_WEAPONS)
     {
-        if (is_demonic(you.inv[item_wield_2].sub_type)
+        if (is_demonic(you.inv[item_wield_2])
             && (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE
                 || you.religion == GOD_ELYVILON))
         {
@@ -1090,9 +1090,9 @@ int get_fire_item_index( void )
             // check if we have ammo for a wielded launcher:
             if (weapon != -1 
                 && you.inv[ weapon ].base_type == OBJ_WEAPONS
-                && launches_things( you.inv[ weapon ].sub_type ))
+                && is_range_weapon( you.inv[ weapon ] ))
             {
-                int type_wanted = launched_by( you.inv[ weapon ].sub_type );
+                int type_wanted = fires_ammo_type( you.inv[ weapon ] );
                 item = try_finding_missile( type_wanted );
             }
             break;

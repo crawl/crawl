@@ -1227,7 +1227,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
     {
     case OBJ_STAVES:
     case OBJ_WEAPONS:
-        // Merging staff with magical staves for consistancy... doing
+        // Merging staff with magical staves for consistency... doing
         // as a special case because we want to be very flexible with
         // these useful objects (we want spriggans and ogre magi to 
         // be able to use them).
@@ -1794,7 +1794,7 @@ bool can_cut_meat( const item_def &item )
     return (does_damage_type( item, DAM_SLICE ));
 }
 
-// returns true if item counts as a tool for tool size comaparisons and msgs
+// returns true if item counts as a tool for tool size comparisons and msgs
 bool is_tool( const item_def &item )
 {
     // Currently using OBJ_WEAPONS instead of can_cut_meat() as almost 

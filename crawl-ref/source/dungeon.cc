@@ -127,7 +127,6 @@ static unsigned char item_in_shop(unsigned char shop_type);
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
                           unsigned char ta2_y);
-static int rare_weapon(int w_type);
 static bool is_weapon_special(int the_weapon);
 static void set_weapon_special(int the_weapon, int spwpn);
 static void big_room(int level_number);
@@ -578,7 +577,7 @@ int items( int allow_uniques,       // not just true-false,
                 {
                     temp_value = (unsigned char) random2(NUM_WEAPONS);
 
-                    if (rare_weapon(temp_value) >= random2(10) + 1)
+                    if (weapon_rarity(temp_value) >= random2(10) + 1)
                     {
                         mitm[p].sub_type = temp_value;
                         break;
@@ -862,7 +861,7 @@ int items( int allow_uniques,       // not just true-false,
 
         if ((random2(200) <= 50 + item_level
                 || item_level == MAKE_GOOD_ITEM
-                || is_demonic(mitm[p].sub_type))
+                || is_demonic(mitm[p]))
             // nobody would bother enchanting a club
             && mitm[p].sub_type != WPN_CLUB
             && mitm[p].sub_type != WPN_GIANT_CLUB
@@ -874,7 +873,7 @@ int items( int allow_uniques,       // not just true-false,
             {
                 if (random2(300) <= 100 + item_level
                     || item_level == MAKE_GOOD_ITEM
-                    || is_demonic( mitm[p].sub_type ))
+                    || is_demonic( mitm[p] ))
                 {
                     // note: this doesn't guarantee special enchantment
                     switch (mitm[p].sub_type)
@@ -3201,10 +3200,10 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     // mv: gives ammunition
     // note that item_race is not reset for this section
     if (menv[mid].inv[MSLOT_WEAPON] != NON_ITEM
-        && launches_things( mitm[menv[mid].inv[MSLOT_WEAPON]].sub_type ))
+        && is_range_weapon( mitm[menv[mid].inv[MSLOT_WEAPON]] ))
     {
         xitc = OBJ_MISSILES;
-        xitt = launched_by(mitm[menv[mid].inv[MSLOT_WEAPON]].sub_type);
+        xitt = fires_ammo_type(mitm[menv[mid].inv[MSLOT_WEAPON]]);
 
         thing_created = items( 0, xitc, xitt, true, give_level, item_race );
         if (thing_created == NON_ITEM)
@@ -5982,9 +5981,9 @@ void item_colour( item_def &item )
             break;
         }
 
-        if (is_demonic( item.sub_type ))
+        if (is_demonic( item ))
             item.colour = random_colour();
-        else if (launches_things( item.sub_type ))
+        else if (is_range_weapon( item ))
             item.colour = BROWN;
         else
         {
@@ -6492,17 +6491,6 @@ void item_colour( item_def &item )
         break;
     }
 }                               // end item_colour()
-
-// Checks how rare a weapon is. Many of these have special routines for
-// placement, especially those with a rarity of zero. Chance is out of 10.
-static int rare_weapon(int w_type)
-{
-    // zero value weapons must be placed specially -- see items() {dlb}
-    if (is_demonic(w_type))
-        return 0;
-
-    return (weapon_rarity(w_type));
-}                               // end rare_weapon()
 
 //jmf: generate altar based on where you are, or possibly randomly
 static int pick_an_altar(void)

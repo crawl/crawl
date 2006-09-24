@@ -853,14 +853,15 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 }
 
 // decide if something is launched or thrown
-// pass -1 for launcher class & 0 for type if no weapon is weilded
+// pass -1 for launcher class & 0 for type if no weapon is wielded
 
 void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
                  bool &launched, bool &thrown )
 {
     if (wepClass == OBJ_MISSILES
         && lnchClass == OBJ_WEAPONS
-        && launches_things(lnchType) && wepType == launched_by(lnchType))
+        && launches_things(lnchType)
+	&& wepType == launched_by(lnchType))
     {
         launched = true;
     }

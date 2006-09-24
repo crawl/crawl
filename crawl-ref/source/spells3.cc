@@ -431,10 +431,10 @@ void dancing_weapon(int pow, bool force_hostile)
 
     const int wpn = you.equip[EQ_WEAPON];
 
-    // See if weilded item is appropriate:
+    // See if wielded item is appropriate:
     if (wpn == -1
         || you.inv[wpn].base_type != OBJ_WEAPONS
-        || launches_things( you.inv[wpn].sub_type )
+        || is_range_weapon( you.inv[wpn] )
         || is_fixed_artefact( you.inv[wpn] ))
     {
         goto failed_spell;

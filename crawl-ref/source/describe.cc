@@ -1040,7 +1040,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         }
     }
 
-    if (verbose == 1 && !launches_things( item.sub_type ))
+    if (verbose == 1 && !is_range_weapon( item ))
     {
         description += "$Damage rating: ";
         append_value(description, property( item, PWPN_DAMAGE ), false);
@@ -1096,7 +1096,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "all of orcish descent. ";
                 break;
             case SPWPN_VENOM:
-                if (launches_things( item.sub_type ))
+                if (is_range_weapon(item))
                     description += "It poisons the unbranded ammo it fires. ";
                 else
                     description += "It poisons the flesh of those it strikes. ";
@@ -1110,7 +1110,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "it drains the life of those it strikes. ";
                 break;
             case SPWPN_SPEED:
-                if (launches_things( item.sub_type ))
+                if (is_range_weapon(item))
                 {
                     description += "It allows its wielder to fire twice when "
                            "they would otherwise have fired only once. ";
@@ -1122,7 +1122,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 }
                 break;
             case SPWPN_VORPAL:
-                if (launches_things(item.sub_type))
+                if (is_range_weapon(item))
                 {
                     description += "Any ";
                     description += ammo_name( item );
@@ -1191,7 +1191,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         description += "$It has a curse placed upon it.";
     }
 
-    if (verbose == 1 && !launches_things( item.sub_type ))
+    if (verbose == 1 && !is_range_weapon(item))
     {
 #ifdef USE_NEW_COMBAT_STATS
         const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
@@ -1230,7 +1230,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
             break;
         }
 
-        if (launches_things( item.sub_type ))
+        if (is_range_weapon(item))
         {
             switch (get_equip_race( item ))
             {

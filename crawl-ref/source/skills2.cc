@@ -30,6 +30,7 @@
 
 #include "externs.h"
 #include "fight.h"
+#include "itemprop.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -2294,7 +2295,7 @@ void wield_warning(bool newWeapon)
     strcat(wepstr, wepstr2);
 
     // only warn about str/dex for non-launcher weapons
-    if (!launches_things(wepType))
+    if (!is_range_weapon( you.inv[you.equip[EQ_WEAPON]] ))
     {
 #ifdef USE_NEW_COMBAT_STATS
         const int stat_bonus = effective_stat_bonus();

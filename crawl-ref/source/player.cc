@@ -376,7 +376,7 @@ int player_damage_type( void )
 
     if (wpn != -1)
     {
-        return (damage_type(you.inv[wpn]));
+        return (get_vorpal_type(you.inv[wpn]));
     }
     else if (you.equip[EQ_GLOVES] == -1 &&
         (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS

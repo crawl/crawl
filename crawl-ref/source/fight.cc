@@ -758,7 +758,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             bonus_damage = damage_done;
 #endif
 
-            if (!launches_things( you.inv[ weapon ].sub_type )
+            if (!is_range_weapon( you.inv[weapon] )
                 && !item_ident( you.inv[ weapon ], ISFLAG_KNOW_PLUSES )
                 && random2(100) < you.skills[ wpn_skill ])
             {
@@ -1033,7 +1033,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
         if (ur_armed 
             && you.inv[ weapon ].base_type == OBJ_WEAPONS
-            && is_demonic( you.inv[ weapon ].sub_type ))
+            && is_demonic( you.inv[ weapon ] ))
         {
             did_god_conduct(DID_UNHOLY, 1);
         }
@@ -2167,7 +2167,7 @@ void monster_attack(int monster_attacking)
 
             if (attacker->type != MONS_DANCING_WEAPON && mmov_x != NON_ITEM
                 && mitm[mmov_x].base_type == OBJ_WEAPONS
-                && !launches_things( mitm[mmov_x].sub_type ))
+                && !is_range_weapon( mitm[mmov_x] ))
             {
                 strcat(info, " with ");
                 it_name(mmov_x, DESC_NOCAP_A, str_pass);   // was 7
@@ -3037,7 +3037,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
             if (attacker->inv[hand_used] != NON_ITEM
                 && mitm[attacker->inv[hand_used]].base_type == OBJ_WEAPONS
-                && !launches_things( mitm[attacker->inv[hand_used]].sub_type ))
+                && !is_range_weapon( mitm[attacker->inv[hand_used]] ))
             {
                 damage_taken = random2(property( mitm[attacker->inv[hand_used]],
                                                  PWPN_DAMAGE ));
@@ -3122,7 +3122,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 if (attacker->type != MONS_DANCING_WEAPON
                     && attacker->inv[hand_used] != NON_ITEM
                     && mitm[attacker->inv[hand_used]].base_type == OBJ_WEAPONS
-                    && !launches_things( mitm[attacker->inv[hand_used]].sub_type ))
+                    && !is_range_weapon( mitm[attacker->inv[hand_used]] ))
                 {
                     strcat(info, " with ");
                     it_name(mmov_x, DESC_NOCAP_A, str_pass);       // was 7

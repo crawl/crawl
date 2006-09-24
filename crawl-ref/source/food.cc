@@ -187,10 +187,7 @@ bool butchery(void)
     else
     {
         if (you.equip[EQ_WEAPON] != -1)
-        {
-            can_butcher = can_cut_meat( you.inv[you.equip[EQ_WEAPON]].base_type,
-                                        you.inv[you.equip[EQ_WEAPON]].sub_type );
-        }
+	    can_butcher = can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
 
         // Should probably check for cursed-weapons, bare hands and
         // non-weapons in hand here, but wield_weapon will be used for
@@ -211,8 +208,7 @@ bool butchery(void)
             for (int i = 0; i < ENDOFPACK; ++i)
             {
                 if (is_valid_item( you.inv[i] )
-                        && can_cut_meat( you.inv[i].base_type,
-                            you.inv[i].sub_type )
+                        && can_cut_meat( you.inv[i] )
                         && you.inv[i].base_type == OBJ_WEAPONS
                         && item_known_uncursed(you.inv[i])
                         && item_ident( you.inv[i], ISFLAG_KNOW_TYPE )
@@ -245,10 +241,7 @@ bool butchery(void)
         // update the can_butcher status accordingly (note: if we could
         // butcher with our bare hands we wouldn't be here) -- bwr
         if (wpn_switch && you.equip[EQ_WEAPON] != -1)
-        {
-            can_butcher = can_cut_meat( you.inv[you.equip[EQ_WEAPON]].base_type,
-                                        you.inv[you.equip[EQ_WEAPON]].sub_type );
-        }
+            can_butcher = can_cut_meat( you.inv[you.equip[EQ_WEAPON]] );
     }
 
     // Account for the weapon switch above if it happened... we're 

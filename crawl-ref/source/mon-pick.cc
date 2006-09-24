@@ -2146,6 +2146,7 @@ static int mons_hallzot_level(int mcls)
     case MONS_SHADOW_DRAGON:
     case MONS_SKELETAL_DRAGON:
     case MONS_STORM_DRAGON:
+    case MONS_CURSE_TOE:
         mlev += 5;
         break;
     case MONS_DEATH_COB:
@@ -2194,6 +2195,7 @@ static int mons_hallzot_rare(int mcls)
         return 40;
     case MONS_SHADOW_DRAGON:
     case MONS_DEATH_DRAKE:
+    case MONS_CURSE_TOE:
         return 30;
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:

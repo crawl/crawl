@@ -16,39 +16,11 @@
 
 #include "externs.h"
 
-
-/* ***********************************************************************
- * called from: food.h 
- * *********************************************************************** */
-bool can_cut_meat(int wclass, int wtype);
-
-/* ***********************************************************************
- * called from: acr - fight - food - item_use - itemname - spells2
- * *********************************************************************** */
-int damage_type(int wclass, int wtype);
-int damage_type(const item_def &item);
-
-
 // last updated: 10jun2000 {dlb}
 /* ***********************************************************************
  * called from: describe - fight - item_use
  * *********************************************************************** */
 int hands_reqd_for_weapon(int wclass, int wtype);
-
-
-// last updated: 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - fight - item_use - randart
- * *********************************************************************** */
-bool is_demonic(unsigned char weapon_subtype);
-
-
-// last updated: 10jun2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon - item_use - mstuff2
- * *********************************************************************** */
-unsigned char launched_by(unsigned char weapon_subtype);
-
 
 // last updated: 10jun2000 {dlb}
 /* ***********************************************************************
@@ -57,5 +29,10 @@ unsigned char launched_by(unsigned char weapon_subtype);
  * *********************************************************************** */
 bool launches_things( unsigned char weapon_subtype );
 
+// last updated: 10jun2000 {dlb}
+/* ***********************************************************************
+ * called from: dungeon - item_use - mstuff2
+ * *********************************************************************** */
+unsigned char launched_by(unsigned char weapon_subtype);
 
 #endif
