@@ -2362,6 +2362,9 @@ static command_type get_next_cmd() {
 	return CMD_PERFORM_ACTIVITY;
     if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
 	just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
+	/* must fix this if we add more gods! */
+	! (grd[you.x_pos][you.y_pos] >= DNGN_ALTAR_ZIN &&
+	   grd[you.x_pos][you.y_pos] <= DNGN_ALTAR_ELYVILON) &&
 	i_feel_safe()) {
 	just_autoprayed = 1;
 	about_to_autopray = 0;
