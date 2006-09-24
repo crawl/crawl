@@ -1106,10 +1106,13 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 break;
 
             case WAND_INVISIBILITY:
-            case WAND_DISINTEGRATION:
             case WAND_DRAINING:
             case WAND_LIGHTNING:
                 valued += 175;
+                break;
+
+            case WAND_DISINTEGRATION:
+                valued += 120;
                 break;
 
             case WAND_DIGGING:
@@ -1124,6 +1127,9 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
 
             case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH_OTHER:
+                valued += 63;
+                break;
+
             case WAND_SLOWING:
                 valued += 50;
                 break;

@@ -2203,6 +2203,7 @@ void debug_make_shop()
     int gridch = grd[you.x_pos][you.y_pos];
     bool have_shop_slots = false;
     int new_shop_type = SHOP_UNASSIGNED;
+    bool representative = false;
 
     if (gridch != DNGN_FLOOR)
     {
@@ -2246,7 +2247,10 @@ void debug_make_shop()
         return;
     }
 
-    place_spec_shop(you.your_level, you.x_pos, you.y_pos, new_shop_type);
+    representative = !!strchr(requested_shop, '*');
+
+    place_spec_shop(you.your_level, you.x_pos, you.y_pos, 
+                    new_shop_type, representative);
     link_items();
     mprf("Done.");
 }

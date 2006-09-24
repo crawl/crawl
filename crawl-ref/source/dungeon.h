@@ -54,6 +54,7 @@ bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
                          unsigned char spec_type);
 
 void place_spec_shop(int level_number, unsigned char shop_x,
-                         unsigned char shop_y, unsigned char force_s_type);
+                         unsigned char shop_y, unsigned char force_s_type,
+                         bool representative = false );
 
 #endif

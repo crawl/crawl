@@ -6688,7 +6688,7 @@ static void place_shops(int level_number)
 
 void place_spec_shop( int level_number, 
                       unsigned char shop_x, unsigned char shop_y,
-                      unsigned char force_s_type )
+                      unsigned char force_s_type, bool representative )
 {
     int orb = 0;
     int i = 0;
@@ -6733,6 +6733,8 @@ void place_spec_shop( int level_number,
     }
 
     int plojy = 5 + random2avg(12, 3);
+    if (representative)
+        plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
 
     for (j = 0; j < plojy; j++)
     {
@@ -6754,7 +6756,8 @@ void place_spec_shop( int level_number,
         // General Stores (see item_in_shop() below)   (GDL)
         while(true)
         {
-            orb = items( 1, item_in_shop(env.shop[i].type), OBJ_RANDOM, true,
+            const int subtype = representative? j : OBJ_RANDOM;
+            orb = items( 1, item_in_shop(env.shop[i].type), subtype, true,
                          item_level, 250 );
 
             if (orb != NON_ITEM 
@@ -6776,6 +6779,9 @@ void place_spec_shop( int level_number,
 
         if (orb == NON_ITEM)
             break;
+
+        if (representative && mitm[orb].base_type == OBJ_WANDS)
+            mitm[orb].plus = 7;
 
         // set object 'position' (gah!) & ID status
         mitm[orb].x = 0;
