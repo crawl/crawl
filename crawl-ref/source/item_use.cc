@@ -1533,8 +1533,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
         if (bow_brand == SPWPN_VORPAL)
         {
-            // Vorpal brand adds 25% damage bonus.
-            dice_mult = dice_mult * 125 / 100;
+            // Vorpal brand adds 30% damage bonus. Increased from 25%
+            // because at 25%, vorpal brand is completely inferior to
+            // speed. At 30% it's marginally better than speed when
+            // fighting monsters with very heavy armour.
+            dice_mult = dice_mult * 130 / 100;
         }
 
         // special cases for flame, frost, poison, etc.
