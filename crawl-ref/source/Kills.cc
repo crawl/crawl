@@ -196,8 +196,8 @@ void KillMaster::add_kill_info(std::string &killtext,
 #ifdef CLUA_BINDINGS
         if (clua.error.length())
         {
-            killtext += "Lua error:\n";
-            killtext += clua.error + "\n\n";
+            killtext += "Lua error:" EOL;
+            killtext += clua.error + EOL EOL;
         }
 #endif
         if (separator)
@@ -984,8 +984,8 @@ static int kill_lualc_rawwrite(lua_State *ls)
     lua_settop(ls, -2);
 
     *skill += s;
-    *skill += "\n";
-    
+    *skill += EOL;
+
     return 0;
 }
 
@@ -1015,7 +1015,7 @@ static int kill_lualc_write(lua_State *ls)
         lua_settop(ls, -2);
 
         // Write kill description and a newline.
-        *skill += ke->desc + "\n";
+        *skill += ke->desc + EOL;
     }
     return 0;
 }
