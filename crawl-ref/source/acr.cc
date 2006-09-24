@@ -1186,7 +1186,7 @@ static void do_action( command_type cmd ) {
 	break;
 
     case CMD_INSPECT_FLOOR:
-	show_items();
+	item_check(';');
 	break;
 
     case CMD_WIELD_WEAPON:
