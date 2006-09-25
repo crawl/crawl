@@ -979,8 +979,9 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 	}
 
     // messaging: {dlb}
-    bool invis = mons_class_flag( targetc, M_INVIS ) 
-                    || mons_has_ench( monster, ENCH_INVIS );
+    bool invis = (mons_class_flag( targetc, M_INVIS ) 
+		  || mons_has_ench( monster, ENCH_INVIS )) &&
+	(!player_see_invis());
 
     if (mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER ))
         strcat( str_polymon, " changes into " );
@@ -989,11 +990,11 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     else
         strcat( str_polymon, " evaporates and reforms as " );
 
-    if (invis && !player_see_invis())
+    if (invis)
         strcat( str_polymon, "something you cannot see!" );
     else
     {
-        strcat( str_polymon, monam( 250, targetc, !invis, DESC_NOCAP_A ) );
+        strcat( str_polymon, monam( 250, targetc, true, DESC_NOCAP_A ) );
 
         if (targetc == MONS_PULSATING_LUMP)
             strcat( str_polymon, " of flesh" );
