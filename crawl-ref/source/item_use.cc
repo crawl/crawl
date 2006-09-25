@@ -3025,6 +3025,8 @@ void read_scroll(void)
     case SCR_PAPER:
         // remember paper scrolls handled as special case above, too:
         mpr("This scroll appears to be blank.");
+	if (you.mutation[MUT_BLURRY_VISION] == 3)
+	    id_the_scroll = false;
         break;
 
     case SCR_RANDOM_USELESSNESS:
