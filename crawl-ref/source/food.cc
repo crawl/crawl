@@ -163,13 +163,13 @@ bool butchery(void)
     int old_weapon = you.equip[EQ_WEAPON];
 
     bool barehand_butcher = (you.equip[ EQ_GLOVES ] == -1)
-                && (you.species == SP_TROLL 
-                    || you.species == SP_GHOUL
-                    || you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
-                    || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                    || you.mutation[MUT_CLAWS]);
-
-
+      && (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ||
+	  you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
+	  (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE &&
+	   (you.species == SP_TROLL ||
+	    you.species == SP_GHOUL ||
+	    you.mutation[MUT_CLAWS])));
+    
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
         mpr("There isn't anything here!");
