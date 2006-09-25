@@ -511,7 +511,7 @@ void print_stats(void)
             cprintf( "Rot " );
         }
 
-        if (you.magic_contamination > 5)
+        if (you.magic_contamination >= 5)
         {
             textcolor( bad_ench_colour( you.magic_contamination, 15, 25 ) );
             cprintf( "Glow " );
