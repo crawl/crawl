@@ -568,7 +568,7 @@ bool cast_a_spell(void)
             if (unthing == 2)
                 return (false);
 
-            if (unthing >= 'a' && unthing <= 'y')
+            if ( isalpha(unthing) )
             {
                 keyin = unthing;
                 break;
