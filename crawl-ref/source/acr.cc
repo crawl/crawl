@@ -1219,7 +1219,7 @@ static void do_action( command_type cmd ) {
 	break;
 
     case CMD_WEAR_JEWELLERY:
-	puton_ring();
+	puton_ring(-1, false);
 	break;
 
     case CMD_ADJUST_INVENTORY:
