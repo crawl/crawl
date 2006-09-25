@@ -1152,6 +1152,10 @@ bool acquirement(unsigned char force_class, int agent)
             return (false);
         }
 
+	// give some more gold
+	if ( class_wanted == OBJ_GOLD )
+	    mitm[thing_created].quantity += 150;
+
         // remove curse flag from item
         do_uncurse_item( mitm[thing_created] );
 
