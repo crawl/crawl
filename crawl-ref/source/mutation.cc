@@ -1126,10 +1126,10 @@ bool mutate(int which_mutation, bool failMsg)
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    if (you.is_undead) 
+    // except for demonspawn in lichform -- haranp
+    if (you.is_undead && !force_mutation) 
     {
-        if (force_mutation 
-            || (wearing_amulet(AMU_RESIST_MUTATION) && coinflip()))
+	if (wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
         {
             mpr( "Your body decomposes!" );
 
@@ -1972,7 +1972,7 @@ void demonspawn(void)
             }
         }
 
-        // check here so we can see if we need to extent our options:
+        // check here so we can see if we need to extend our options:
         if (whichm != -1 && you.mutation[whichm] != 0)
             whichm = -1;
 
