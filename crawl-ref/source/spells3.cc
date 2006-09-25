@@ -251,6 +251,10 @@ bool airstrike(int power)
         hurted = random2( random2(12) + (random2(power) / 6)
                                       + (random2(power) / 7) );
         hurted -= random2(1 + monster->armour_class);
+	if ( mons_flies(monster) ) {
+	    hurted *= 3;
+	    hurted /= 2;
+	}
 
         if (hurted < 0)
             hurted = 0;

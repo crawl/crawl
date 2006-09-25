@@ -4161,7 +4161,8 @@ void describe_spell(int spelled)
     case SPELL_AIRSTRIKE:       // jet planes in Crawl ??? {dlb}
         description +=
             "causes the air around a creature to twist itself into "
-            "a whirling vortex of meteorological fury. ";
+            "a whirling vortex of meteorological fury. This spell "
+	    "is especially effective against flying enemies.";
         break;
 
     case SPELL_SHADOW_CREATURES:
