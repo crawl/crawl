@@ -58,6 +58,7 @@
 
 static void autopickup(void);
 static bool is_stackable_item( const item_def &item );
+static bool invisible_to_player( const item_def& item );
 static void autoinscribe_item( item_def& item );
 static void autoinscribe_items( void );
 
@@ -705,11 +706,13 @@ static void describe_floor() {
     }
 }
 
+static bool invisible_to_player( const item_def& item ) {
+    return strstr(item.inscription.c_str(), "=k") != 0;
+}
+
 /*
  * Takes keyin as an argument because it will only display a long list of items
  * if ; is pressed.
- * Not anymore - but leaving in the old code for a bit, will clean up
- * later -- haranp
  */
 void item_check(char keyin)
 {
@@ -732,10 +735,13 @@ void item_check(char keyin)
 
     origin_set(you.x_pos, you.y_pos);
 
-    int objl = igrd[you.x_pos][you.y_pos];
 
-    while (objl != NON_ITEM)
+    for ( int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
+	  objl = mitm[objl].link )
     {
+	if ( invisible_to_player(mitm[objl]) )
+	    continue;
+
         counter++;
 
         if (counter > 45)
@@ -760,7 +766,6 @@ void item_check(char keyin)
             strcpy(item_show[counter], str_pass);
         }
 
-        objl = mitm[objl].link;
     }
 
     counter_max = counter;
@@ -807,7 +812,8 @@ void show_items()
 	std::vector<item_def*> items;
 
 	for (int i = o; i != NON_ITEM; i = mitm[i].link)
-	    items.push_back( &mitm[i] );
+	    if ( !invisible_to_player(mitm[i]) )
+		items.push_back( &mitm[i] );
 	
 	select_items( items, "Things that are here:", true );
 	redraw_screen();
@@ -821,7 +827,8 @@ void pickup_menu(int item_link)
     std::vector<item_def*> items;
 
     for (int i = item_link; i != NON_ITEM; i = mitm[i].link)
-        items.push_back( &mitm[i] );
+	if (!invisible_to_player(mitm[i]))
+	    items.push_back( &mitm[i] );
 
     std::vector<SelItem> selected = 
         select_items( items, "Select items to pick up" );
@@ -1198,6 +1205,8 @@ void pickup(void)
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
+	// deliberately allowing the player to pick up
+	// a killed item here
         pickup_single_item(o, mitm[o].quantity);
     }                           // end of if items_here
     else
@@ -1207,6 +1216,10 @@ void pickup(void)
         while (o != NON_ITEM)
         {
             next = mitm[o].link;
+	    if ( invisible_to_player( mitm[o] ) ) {
+		o = next;
+		continue;
+	    }
 
             if (keyin != 'a')
             {
