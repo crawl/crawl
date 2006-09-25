@@ -696,7 +696,7 @@ static std::string describe_demon(void)
 // describe_weapon
 //
 //---------------------------------------------------------------
-static std::string describe_weapon( const item_def &item, char verbose)
+static std::string describe_weapon( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -799,7 +799,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
     }
     else
     {
-        if (verbose == 1)
+        if (verbose)
         {
             switch (item.sub_type)
             {
@@ -1040,9 +1040,9 @@ static std::string describe_weapon( const item_def &item, char verbose)
         }
     }
 
-    if (verbose == 1 && !is_range_weapon( item ))
+    if (verbose)
     {
-        description += "$Damage rating: ";
+	description += "$Damage rating: ";
         append_value(description, property( item, PWPN_DAMAGE ), false);
 
         description += "$Accuracy rating: ";
@@ -1058,7 +1058,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
     {
         int spec_ench = get_weapon_brand( item );
 
-        if (!is_random_artefact( item ) && verbose == 0)
+        if (!is_random_artefact( item ) && !verbose)
             spec_ench = SPWPN_NORMAL;
 
         // special weapon descrip
@@ -1191,7 +1191,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         description += "$It has a curse placed upon it.";
     }
 
-    if (verbose == 1 && !is_range_weapon(item))
+    if (verbose && !is_range_weapon(item))
     {
 #ifdef USE_NEW_COMBAT_STATS
         const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
@@ -1250,7 +1250,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         }
     }
 
-    if (verbose == 1)
+    if (verbose)
     {
         description += "$It falls into the";
 
@@ -1375,7 +1375,7 @@ static std::string describe_ammo( const item_def &item )
 // describe_armour
 //
 //---------------------------------------------------------------
-static std::string describe_armour( const item_def &item, char verbose )
+static std::string describe_armour( const item_def &item, bool verbose )
 {
     std::string description;
 
@@ -1390,7 +1390,7 @@ static std::string describe_armour( const item_def &item, char verbose )
     }
     else
     {
-        if (verbose == 1)
+        if (verbose)
         {
             switch (item.sub_type)
             {
@@ -1593,7 +1593,7 @@ static std::string describe_armour( const item_def &item, char verbose )
         }
     }
 
-    if (verbose == 1 
+    if (verbose 
             && item.sub_type != ARM_SHIELD 
             && item.sub_type != ARM_BUCKLER
             && item.sub_type != ARM_LARGE_SHIELD)
@@ -1626,7 +1626,7 @@ static std::string describe_armour( const item_def &item, char verbose )
     int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL 
         && item_ident( item, ISFLAG_KNOW_TYPE ) 
-        && verbose == 1)
+        && verbose)
     {
         description += "$";
 
@@ -2473,7 +2473,7 @@ static std::string describe_scroll( const item_def &item )
 // describe_jewellery
 //
 //---------------------------------------------------------------
-static std::string describe_jewellery( const item_def &item, char verbose)
+static std::string describe_jewellery( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -2492,7 +2492,7 @@ static std::string describe_jewellery( const item_def &item, char verbose)
     {
         description += "A piece of jewellery.";
     }
-    else if (verbose == 1 || is_random_artefact( item ))
+    else if (verbose || is_random_artefact( item ))
     {
         switch (item.sub_type)
         {
@@ -2727,7 +2727,7 @@ static std::string describe_jewellery( const item_def &item, char verbose)
         description += "$";
     }
 
-    if ((verbose == 1 || is_random_artefact( item ))
+    if ((verbose || is_random_artefact( item ))
         && item_ident( item, ISFLAG_KNOW_PLUSES ))
     {
         // Explicit description of ring power (useful for randarts)
@@ -3153,7 +3153,7 @@ static std::string describe_misc_item( const item_def &item )
 //      Public Functions
 // ========================================================================
 
-bool is_dumpable_artifact( const item_def &item, char verbose)
+bool is_dumpable_artifact( const item_def &item, bool verbose)
 {
     bool ret = false;
 
@@ -3162,13 +3162,13 @@ bool is_dumpable_artifact( const item_def &item, char verbose)
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
     else if (item.base_type == OBJ_ARMOUR
-        && (verbose == 1 && item_ident( item, ISFLAG_KNOW_TYPE )))
+        && (verbose && item_ident( item, ISFLAG_KNOW_TYPE )))
     {
         const int spec_ench = get_armour_ego_type( item );
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);
     }
     else if (item.base_type == OBJ_JEWELLERY 
-        && (verbose == 1 
+        && (verbose 
             && get_ident_type(OBJ_JEWELLERY, item.sub_type) == ID_KNOWN_TYPE))
     {
         ret = true;
@@ -3186,7 +3186,7 @@ bool is_dumpable_artifact( const item_def &item, char verbose)
 // be interpreted as carriage returns.
 //
 //---------------------------------------------------------------
-std::string get_item_description( const item_def &item, char verbose, bool dump )
+std::string get_item_description( const item_def &item, bool verbose, bool dump )
 {
     std::string description;
     description.reserve(500);
@@ -3287,7 +3287,7 @@ std::string get_item_description( const item_def &item, char verbose, bool dump 
         description += "This item should not exist. Mayday! Mayday! ";
     }
 
-    if (verbose == 1)
+    if (verbose)
     {
         description += "$It weighs around ";
 

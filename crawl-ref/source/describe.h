@@ -21,13 +21,13 @@
 /* ***********************************************************************
  * called from: chardump - spells4
  * *********************************************************************** */
-bool is_dumpable_artifact( const item_def &item, char verbose );
+bool is_dumpable_artifact( const item_def &item, bool verbose );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: chardump - describe
  * *********************************************************************** */
-std::string get_item_description( const item_def &item, char verbose,
+std::string get_item_description( const item_def &item, bool verbose,
                                   bool dump = false );
 
 // last updated 12may2000 {dlb}

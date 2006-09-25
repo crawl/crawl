@@ -230,7 +230,7 @@ struct item_def
     short          plus2;      // +to dam, sub-sub type for boots and helms
     long           special;    // special stuff
     unsigned char  colour;     // item colour
-    unsigned long  flags;      // item statuc flags
+    unsigned long  flags;      // item status flags
     short          quantity;   // number of items
 
     short  x;          // x-location;         for inventory items = -1 
