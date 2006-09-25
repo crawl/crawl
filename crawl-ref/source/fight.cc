@@ -2414,8 +2414,8 @@ void monster_attack(int monster_attacking)
                         mpr("You still can't move!", MSGCH_WARN);
                     else
                         mpr("You suddenly lose the ability to move!", MSGCH_WARN);
-
-                    you.paralysis += 1 + random2(3);
+		    if ( you.paralysis == 0 || mclas == MONS_RED_WASP )
+			you.paralysis += 1 + random2(3);
                 }
                 break;
 
