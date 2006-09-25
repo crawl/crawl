@@ -127,17 +127,19 @@ char in_a_shop( char shoppy, id_arr id )
     {
         gotoxy(1, i);
 
-        textcolor((i % 2) ? WHITE : LIGHTGREY);
-
-        it_name(itty, DESC_NOCAP_A, st_pass);
-        putch(i + 96);
-        cprintf(" - ");
-        cprintf(st_pass);
-
         gp_value = greedy * item_value( mitm[itty], id );
         gp_value /= 10;
         if (gp_value <= 1)
             gp_value = 1;
+
+	bool can_afford = (you.gold >= gp_value);
+	textcolor( can_afford ? GREEN : RED );
+	cprintf("%c - ", i+96);
+
+        textcolor((i % 2) ? WHITE : LIGHTGREY);
+
+        it_name(itty, DESC_NOCAP_A, st_pass);
+        cprintf(st_pass);
 
         std::string desc;
         if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
@@ -149,7 +151,7 @@ char in_a_shop( char shoppy, id_arr id )
 #   endif
 
         gotoxy(60, i);
-        // cdl - itoa(gp_value, st_pass, 10);
+	textcolor( can_afford ? GREEN : RED );
         snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
         cprintf(st_pass);
         cprintf(" gold");
