@@ -252,7 +252,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     else
     {
         if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && item_mass( you.inv[item_slot] ) >= 500)
+            && item_mass( you.inv[item_slot] ) >= 300)
         {
             mpr("That's too large and heavy for you to wield.");
             return (false);
