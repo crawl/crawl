@@ -18,6 +18,9 @@ COPY = copy
 OS_TYPE = WIN32CONSOLE
 CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
             -Wmissing-prototypes -Wmissing-declarations \
+			-Wshadow \
+			-fsigned-char \
+			-pedantic \
 			-D$(OS_TYPE) $(EXTRA_FLAGS) \
 			-DWINMM_PLAY_SOUNDS
 
