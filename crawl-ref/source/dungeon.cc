@@ -4992,7 +4992,7 @@ static void special_room(int level_number, spec_room &sr)
 	    || (level_number < 14 && spec_room_type == SROOM_JELLY_PIT)
             || (level_number < 17 && one_chance_in(4)))
         {
-            spec_room_type = coinflip()? SROOM_LAIR_ORC : SROOM_LAIR_KOBOLD;
+            spec_room_type = SROOM_LAIR_ORC;
         }
 
         if (level_number > 19 && coinflip())
