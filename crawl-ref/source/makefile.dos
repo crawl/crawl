@@ -8,7 +8,7 @@ include makefile.obj
 
 # need .exe so make will find the right file
 APPNAME = crawl.exe
-CXX = gpp
+CXX = gxx
 DELETE = del
 COPY = copy
 OS_TYPE = DOS
