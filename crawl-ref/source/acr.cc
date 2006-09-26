@@ -1351,8 +1351,7 @@ static void do_action( command_type cmd ) {
 	break;
 
     case CMD_DISPLAY_KNOWN_OBJECTS:
-	check_item_knowledge(); //nothing = check_item_knowledge();
-	redraw_screen();
+	check_item_knowledge();
 	break;
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND

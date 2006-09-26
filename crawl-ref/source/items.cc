@@ -477,7 +477,7 @@ static void item_cleanup(item_def &item)
     item.quantity       = 0;
     item.orig_place     = 0;
     item.orig_monnum    = 0;
-    item.inscription    = std::string();
+    item.inscription.clear();
 }
 
 void destroy_item( int dest )

@@ -43,7 +43,7 @@ int property( const item_def &item, int prop_type );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-unsigned char check_item_knowledge(void);
+void check_item_knowledge(void);
 
 
 /* ***********************************************************************

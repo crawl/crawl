@@ -1968,168 +1968,53 @@ char get_ident_type(char cla, int ty)
     }
 }                               // end get_ident_type()
 
-unsigned char check_item_knowledge(void)
+void check_item_knowledge()
 {
-    char st_pass[ITEMNAME_SIZE] = "";
-    int i, j;
-    char lines = 0;
-    unsigned char anything = 0;
-    int ft = 0;
-    int max = 0;
-    int yps = 0;
-    int inv_count = 0;
-    unsigned char ki = 0;
+    int i,j;
 
-    const int num_lines = get_number_of_lines();
+    std::vector<item_def*> items;
 
-#ifdef DOS_TERM
-    char buffer[2400];
+    int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
+			      OBJ_JEWELLERY, OBJ_POTIONS };
+    int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
+			      NUM_JEWELLERY, NUM_POTIONS };
 
-    gettext(35, 1, 80, 25, buffer);
-#endif
-
-#ifdef DOS_TERM
-    window(35, 1, 80, 25);
-#endif
-
-    clrscr();
-
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 30; j++)
-        {
-            if (id[i][j] == ID_KNOWN_TYPE)
-                inv_count++;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < idx_to_maxtype[i]; j++) {
+	    if (id[i][j] == ID_KNOWN_TYPE) {
+                item_def* ptmp = new item_def;
+		if ( ptmp != 0 ) {
+		    ptmp->base_type = idx_to_objtype[i];
+		    ptmp->sub_type  = j;
+		    ptmp->colour    = 1;
+		    items.push_back(ptmp);
+		}
+	    }
         }
     }
 
-    if (inv_count == 0)
-    {
-        cprintf("You don't recognise anything yet!");
-        if (getch() == 0)
-            getch();
-        goto putty;
+    if (items.empty())
+	mpr("You don't recognise anything yet!");
+    else {    
+
+#ifdef DOS_TERM
+	char buffer[4800];
+	gettext(1, 1, 80, 25, buffer);
+	window(1, 1, 80, 25);
+#endif
+
+	clrscr();
+	select_items( items, "You recognise:", true );
+	for ( std::vector<item_def*>::iterator iter = items.begin();
+	      iter != items.end(); ++iter )
+	    delete *iter;	    
+
+#ifdef DOS_TERM
+	puttext(1, 1, 80, 25, buffer);
+#endif
+
+	redraw_screen();
     }
-
-    textcolor(BLUE);
-    cprintf("  You recognise:");
-    textcolor(LIGHTGREY);
-    lines++;
-
-    for (i = 0; i < 4; i++)
-    {
-        switch (i)
-        {
-        case IDTYPE_WANDS:
-            ft = OBJ_WANDS;
-            max = NUM_WANDS;
-            break;
-        case IDTYPE_SCROLLS:
-            ft = OBJ_SCROLLS;
-            max = NUM_SCROLLS;
-            break;
-        case IDTYPE_JEWELLERY:
-            ft = OBJ_JEWELLERY;
-            max = NUM_JEWELLERY;
-            break;
-        case IDTYPE_POTIONS:
-            ft = OBJ_POTIONS;
-            max = NUM_POTIONS;
-            break;
-        }
-
-        for (j = 0; j < max; j++)
-        {
-            if (lines > num_lines - 2 && inv_count > 0)
-            {
-                gotoxy(1, num_lines);
-                cprintf("-more-");
-
-                ki = getch();
-
-                if (ki == ESCAPE)
-                {
-#ifdef DOS_TERM
-                    puttext(35, 1, 80, 25, buffer);
-#endif
-                    return ESCAPE;
-                }
-                if (ki >= 'A' && ki <= 'z')
-                {
-#ifdef DOS_TERM
-                    puttext(35, 1, 80, 25, buffer);
-#endif
-                    return ki;
-                }
-
-                if (ki == 0)
-                    ki = getch();
-
-                lines = 0;
-                clrscr();
-                gotoxy(1, 1);
-                anything = 0;
-            }
-
-            int ident_level = get_ident_type( ft, j );
-
-            if (ident_level == ID_KNOWN_TYPE)
-            {
-                anything++;
-
-                if (lines > 0)
-                    cprintf(EOL);
-                lines++;
-                cprintf(" ");
-
-                yps = wherey();
-
-                // item_name now requires a "real" item, so we'll create a tmp
-                item_def tmp;// = { ft, j, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
-                tmp.base_type = ft;
-                tmp.sub_type  = j;
-                tmp.colour    = 1;
-
-                item_name( tmp, DESC_PLAIN, st_pass );
-
-                cprintf(st_pass);
-
-                inv_count--;
-
-                if (wherey() != yps)
-                    lines++;
-            }
-        }                       // end of j loop
-    }
-
-    if (anything > 0)
-    {
-        ki = getch();
-        //ki = getch();
-        //ki = anything;
-
-        if (ki >= 'A' && ki <= 'z')
-        {
-#ifdef DOS_TERM
-            puttext(35, 1, 80, 25, buffer);
-#endif
-            return ki;
-        }
-
-        if (ki == 0)
-            ki = getch();
-#ifdef DOS_TERM
-        puttext(35, 1, 80, 25, buffer);
-#endif
-        return anything;
-    }
-
-  putty:
-#ifdef DOS_TERM
-    puttext(35, 1, 80, 25, buffer);
-#endif
-
-    return ki;
 }                               // end check_item_knowledge()
 
 
