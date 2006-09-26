@@ -2,6 +2,8 @@
  *  File:       Kills.cc
  *  Summary:    Player kill tracking
  *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 #include "AppHdr.h"
 #include "chardump.h"

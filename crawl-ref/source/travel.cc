@@ -3,6 +3,8 @@
  *  Summary:    Travel stuff
  *  Written by: Darshan Shaligram
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Known issues:
  *   Hardcoded dungeon features all over the place - this thing is a devil to
  *   refactor.

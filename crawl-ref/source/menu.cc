@@ -1,3 +1,7 @@
+/*
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
 #include <cctype>
 #include "menu.h"
 #include "macro.h"

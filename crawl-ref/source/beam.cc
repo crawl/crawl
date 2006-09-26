@@ -3,6 +3,8 @@
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <7>    21mar2001    GDL    Replaced all FP arithmetic with integer*100 math

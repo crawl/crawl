@@ -3,6 +3,8 @@
  *  Summary:    Functions for windows32 console mode support
  *  Written by: Gordon Lipford
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>      8 Mar 2001        GDL       Rewrite to use low level IO

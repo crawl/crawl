@@ -3,6 +3,8 @@
  *  Summary:    data handlers for player spell list
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Changelog(most recent first):
  *
  *           24jun2000     jmf     simplified structures

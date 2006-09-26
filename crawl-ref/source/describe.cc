@@ -3,6 +3,8 @@
  *  Summary:    Functions used to print information about various game objects.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      10/14/99     BCR     enummed describe_god()

@@ -14,6 +14,8 @@
  *
  *  Copyright © 1999 Jesse Jones.
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *       <9>    9 Aug 2001   MV     Added USE_RIVERS,USE_NEW_UNRANDS

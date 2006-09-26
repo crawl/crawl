@@ -3,6 +3,8 @@
  *  Summary:    Random and unrandom artifact functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <8>     19 Jun 99   GDL    added IBMCPP support

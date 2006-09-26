@@ -3,6 +3,8 @@
  *  Summary:    Yet More Spell Function Declarations
  *  Written by: Josh Fishman
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  * <2> 12jul2000  jmf  Fixed random (undocumented) damage
  * <1> 07jan2000  jmf  Created

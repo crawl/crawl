@@ -3,6 +3,8 @@
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <9> 7/08/01   MV   Added messages for chunks/corpses rotting

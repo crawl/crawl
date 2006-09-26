@@ -3,6 +3,8 @@
  *  Summary:    Main entry point, event loop, and some initialization functions
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <18> 7/29/00         JDJ             values.h isn't included on Macs

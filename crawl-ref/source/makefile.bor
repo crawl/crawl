@@ -1,6 +1,7 @@
 #
 # Makefile for Borland C++ 5.5 free commandline tools
 #
+# Modified for Crawl Reference by $Author$ on $Date$
 
 !include makefile.obj
 

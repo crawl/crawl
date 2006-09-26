@@ -3,6 +3,8 @@
  *  Summary: Contains version information
  *  Written by: ??
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <2>     10/12/99    BCR     Added BUILD_DATE #define

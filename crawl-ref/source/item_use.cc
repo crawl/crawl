@@ -3,6 +3,8 @@
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <8>     28July2000  GDL    Revised player throwing

@@ -3,6 +3,8 @@
  *  Summary:    Functions used during combat.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *  <11>   07-jul-2000   JDJ    Fixed some of the code in you_attack so it doesn't

@@ -3,6 +3,8 @@
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <2>     9/29/99     BCR     Added the BORDER_COLOR define

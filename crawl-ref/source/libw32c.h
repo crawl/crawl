@@ -1,3 +1,7 @@
+/*
+*  Modified for Crawl Reference by $Author$ on $Date$
+*/
+
 #ifndef LIBW32C_H
 #define LIBW32C_H
 

@@ -3,6 +3,8 @@
  *  Summary:    Global (ick) enums.
  *  Written by: Daniel Ligon
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <11>   7 Aug 01  MV     Changed MSLOT_UNASSIGNED_I to MSLOT_MISCELLANY

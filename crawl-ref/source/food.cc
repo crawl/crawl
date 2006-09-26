@@ -3,6 +3,8 @@
  *  Summary:    Functions for eating and butchering.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>      5/20/99        BWR           Added CRAWL_PIZZA.

@@ -3,6 +3,8 @@
  *  Summary:    Functions for using wands, potions, and weapon/armour removal.4\3
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      26jun2000   jmf   added ZAP_MAGMA

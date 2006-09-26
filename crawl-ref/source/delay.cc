@@ -2,6 +2,8 @@
  *  File:     delay.cc
  *  Summary:  Functions for handling multi-turn actions.    
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <1> Sept 09, 2001     BWR             Created

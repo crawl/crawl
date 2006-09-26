@@ -3,6 +3,8 @@
  *  Summary:    Debug and wizard related functions.
  *  Written by: Linley Henzell and Jesse Jones
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <4>     14/12/99       LRH             Added cast_spec_spell_name()

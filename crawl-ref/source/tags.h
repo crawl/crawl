@@ -3,6 +3,8 @@
  *  Summary:    Auxilary functions to make savefile versioning simpler.
  *  Written by: Gordon Lipford
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <1>   27 Jan 2001      GDL    Created

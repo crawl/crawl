@@ -3,6 +3,8 @@
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <3>    11/14/99     cdl    added random40

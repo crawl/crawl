@@ -3,6 +3,8 @@
  *  Summary:    Shop keeper functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>     Jul 30 00      JDJ      in_a_shop uses shoppy instead of i when calling shop_set_id.

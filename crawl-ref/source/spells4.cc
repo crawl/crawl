@@ -4,6 +4,8 @@
  *              other neglected areas of Crawl magic ;^)
  *  Written by: Copyleft Josh Fishman 1999-2000, All Rights Preserved
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <2> 29jul2000  jdj  Made a zillion functions static.

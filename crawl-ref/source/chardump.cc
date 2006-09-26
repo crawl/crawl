@@ -3,6 +3,8 @@
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *

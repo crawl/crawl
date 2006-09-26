@@ -3,6 +3,8 @@
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>     10/12/99        BCR             BUILD_DATE is now used in version()

@@ -4,6 +4,8 @@
  *  Summary:    temporary home for weapon f(x) until struct'ed       *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
+ *  Modified for Crawl Reference by $Author$ on $Date$               *
+ *                                                                   *
  *  Changelog(most recent first):                                    *
  *                                                                   *
  *  <00>     12jun2000     dlb     created after little thought      *

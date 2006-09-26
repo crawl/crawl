@@ -1,4 +1,8 @@
 /*
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
+/*
    In case anyone ever wants to add new spells, or just understand my reasons
    for putting a particular spell into a particular type, read on:
 

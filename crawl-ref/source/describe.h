@@ -4,6 +4,8 @@
  *  Summary:    Functions used to print information about various game objects.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>      5/21/99        BWR             Changed from is_artifact to is_dumpable_artifact

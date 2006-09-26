@@ -3,6 +3,8 @@
  *  Summary:    Functions for using some of the wackier inventory items.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>     6/13/99         BWR             Auto ID Channel staff

@@ -3,6 +3,8 @@
  *  Summary:    data handlers for player-avilable spell list         *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Changelog(most recent first):                                    *
  *
  *  <3>     04oct2001     bwr     absorbed spells0.cc

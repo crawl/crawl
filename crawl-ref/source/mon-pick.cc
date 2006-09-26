@@ -3,6 +3,8 @@
  *  Summary:    Functions used to help determine which monsters should appear.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <2>   08-Mar-2000      DLB             enumeration & clean-up

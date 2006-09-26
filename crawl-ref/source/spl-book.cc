@@ -3,6 +3,8 @@
  *  Summary:    Spellbook/Staff contents array and management functions
  *  Written by: Josh Fishman
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      24jun2000  jmf  Changes to many books; addition of Assassinations;

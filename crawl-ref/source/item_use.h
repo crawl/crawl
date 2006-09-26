@@ -3,6 +3,8 @@
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *              <2>             5/26/99         JDJ             Exposed armour_prompt. takeoff_armour takes an index argument.

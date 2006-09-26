@@ -3,6 +3,8 @@
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *       <3>     8/08/99        BWR             Increased skill cost in midgame

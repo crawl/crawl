@@ -3,6 +3,8 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      06-mar-2000    bwr             confusing_touch, sure_blade

@@ -3,6 +3,8 @@
  *  Summary: deal with reading and writing of highscore file
  *  Written by: Gordon Lipford
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <1>   16feb2001      gdl    Created

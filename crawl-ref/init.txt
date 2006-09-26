@@ -1,6 +1,8 @@
 #
 # Crawl Init file
 #
+# (Modified for Crawl Reference by $Author$ on $Date$)
+#
 # Lines begining with '#' are comments.  The basic syntax is:
 #
 # field = value         or      field.subfield = value

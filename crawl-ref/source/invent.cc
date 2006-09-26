@@ -3,6 +3,8 @@
  *  Summary:    Functions for inventory related commands.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <5>     10/9/99     BCR     Added wizard help screen

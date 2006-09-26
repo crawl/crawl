@@ -1,3 +1,7 @@
+/*
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
 #include "AppHdr.h"
 
 #ifdef CLUA_BINDINGS
