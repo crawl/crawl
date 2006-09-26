@@ -1396,7 +1396,7 @@ static void describe_cell(int mx, int my)
             else if (menv[i].behaviour == BEH_FLEE)
             {
                 strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-                strcat(info, " is fleeing in terror.");
+                strcat(info, " is retreating.");
                 mpr(info);
             }
             // hostile with target != you
