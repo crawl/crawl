@@ -4886,6 +4886,10 @@ void describe_monsters(int class_described, unsigned char which_mons)
             description += "It smells horrible.";
         break;
 
+    case MONS_DEATH_DRAKE:
+	description += "A small dragon, radiating evil.";
+	break;
+
     case MONS_FIREDRAKE:
         description += "A small dragon, puffing clouds of smoke.";
         break;
