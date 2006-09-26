@@ -1,0 +1,171 @@
+Install instructions for Dungeon Crawl Stone Soup (DCSS)
+--------------------------------------------------------
+(Last updated on 20060926 for Dungeon Crawl Stone Soup 0.1.1.)
+
+Building Dungeon Crawl Stone Soup
+---------------------------------
+Crawl Stone Soup is known to compile successfully on the following platforms as
+of version 0.1.1:
+
+- Any Unix with a recent gcc (and g++), GNU make and libncurses, including
+  Linux and Mac OS X.
+- MS-DOS (with at least 32M RAM).
+- Microsoft Windows NT/2000/XP. The game will also run on Windows 9X and ME.
+
+The only supported compiler is gcc (available on almost all Unixes, and as djgpp
+for DOS, and MinGW for Windows).
+
+Other platforms are unsupported, but you should be able to build Crawl on
+pretty much any operating system with a modern C++ compiler and the curses 
+library.
+
+
+Optional libraries
+------------------
+Crawl can be built with some optional features:
+* Sounds
+* Regular expressions
+* Lua support
+
+Sounds must be enabled by editing AppHdr.h (uncomment SOUND_PLAY_COMMAND on
+Unixes or WINMM_PLAY_SOUNDS on Windows).
+
+Regular expressions require libpcre on non-Unix operating systems. On Unixes,
+the standard POSIX regular expression support is adequate for Crawl's needs.
+
+Lua support requires liblua, which you can build by downloading the sources from
+www.lua.org. On most Unixes, you can also use the native package management
+system to easily install lua.
+
+
+Makefile system
+---------------
+Crawl uses a selector makefile (under source/makefile) to control what platform
+it's building for. Your first step in building Crawl should be to edit
+source/makefile and point it at the correct platform makefile. For instance, if
+you're building for Windows, you'd use MAKEFILE=makefile.mgw to build with MinGW
+for Windows (# is used for comments in makefiles).
+
+Consult the operating-system specific sections for detailed information on
+building Crawl.
+
+
+Building on Linux (or other Unixes)
+-----------------------------------
+* Make sure you have gcc and GNU make. This is especially important on non-Linux
+  Unixes such as Solaris (Solaris cc might work, but it's not been tested).
+
+* Make sure you have libcurses or libncurses. If you're using libcurses, edit
+  makefile.lnx to match.
+
+* cd to the source directory (you can safely ignore the dolinks.sh and 
+  domake.sh scripts).
+
+* Edit makefile and make sure that MAKEFILE=makefile.lnx is uncommented and all
+  other MAKEFILE= lines are commented out.
+
+* Run make to build the normal (non-wizard) Crawl.
+
+* If you have Lua, you can edit AppHdr.h and uncomment
+        // #define CLUA_BINDINGS
+  before building.
+
+
+Building on Mac OS X
+--------------------
+You can follow the Linux instructions to build Crawl (but note you still need to
+install Xcode to get gcc and make), or alternatively you can use Xcode.
+
+* Make sure Xcode is installed. Xcode should be available on the OS X install
+  DVD if you haven't already installed it.
+
+* Open the Xcode project under the "source" directory.
+
+* Hit Build in Xcode.
+
+
+Building on Windows
+-------------------
+
+NOTE: Building for Windows+MinGW on Windows 9x/ME may work, but we've not tested
+it. You may be better off using the DOS build instructions if you're on 9x/ME.
+
+We've also not tested or updated the makefile for Borland C++. We strongly
+recommend using MinGW if possible.
+
+* Install MinGW from www.mingw.org. The MinGW 5.0.2 installer is best so
+  you don't have to fiddle with individual packages (you can mess with the
+  individual packages if you like to, of course).
+
+* Make sure you have g++ and mingw32-make in your path.
+
+* cd to the the Crawl source directory.
+
+* Build Crawl by running
+        mingw32-make MAKEFILE=makefile.mgw
+
+* If you have Lua and/or libpcre, you can edit AppHdr.h and uncomment 
+  these lines:
+        // #define CLUA_BINDINGS
+  and
+        // #define REGEX_PCRE
+  before building to include Lua and regular-expression support. Note that
+  there are multiple // #define REGEX_PCRE lines in AppHdr.h - find the one in
+  the Windows-specific section.
+
+* When you're done, you should have crawl.exe under a "rel" subdirectory.
+
+
+Building on DOS
+---------------
+
+* Install djgpp from http://www.delorie.com/djgpp/. Don't forget to include C++
+  support when the Zip picker asks for what you want. You may also have to
+  download GNU make as a separate package. It's important to follow the install
+  instructions carefully, because bad installs can produce rather confusing
+  error messages.
+
+* Make sure gxx and make are in your PATH.
+
+* cd to the Crawl source directory.
+
+* Build Crawl by running
+        make MAKEFILE=makefile.dos
+
+* If you have Lua and/or PCRE, edit makefile.dos and change this line:
+        CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
+  to
+        CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS -DREGEX_PCRE
+  and build Crawl.
+
+* When the build is done, crawl.exe should be in the source directory.
+
+*****************************************************************************
+Optional Libraries
+------------------
+
+Lua
+---
+On Unixes your package management system is the best way to get Lua. Make
+sure to install the development headers and not just the naked library.
+
+On Windows, Lua binaries are available on luaforge.net. You should find links to
+get binaries from www.lua.org.
+
+On DOS, you get the joy of compiling Lua yourself. It's not hard, and you can
+use the existing Windows support in the Lua makefiles with some minor
+modifications, but you may be better served using the official Crawl Stone Soup
+binaries if you want Lua with your Crawl and don't want to compile Lua.
+
+
+PCRE
+----
+On Unixes, you're better served by the existing POSIX regular expression
+support. If you want PCRE, your package management system is again your best
+bet. Remember to install development headers, not just the plain library.
+
+On Windows, PCRE binaries are available from 
+http://gnuwin32.sourceforge.net/packages/pcre.htm
+
+On DOS you get the joy of building PCRE yourself. It's a little more annoying
+than building Lua (you have to roll your own makefile), but not by much.
