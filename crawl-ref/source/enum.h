@@ -2391,6 +2391,7 @@ enum mon_spell_type
     MS_DISPEL_UNDEAD,
     MS_HELLFROST,
     MS_POISON_ARROW,                    //   60
+    MS_SUMMON_SMALL_MAMMALS,
     // XXX: before adding more monster versions of player spells we should
     // consider merging the two lists into one and just having monsters 
     // fail to implement the ones that are impractical.

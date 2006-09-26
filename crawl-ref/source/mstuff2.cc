@@ -368,8 +368,12 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
     switch (spell_cast)
     {
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
-        sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
+	if ( spell_cast == MS_SUMMON_SMALL_MAMMALS )
+	    sumcount2 = 1 + random2(4);
+	else
+	    sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -662,6 +666,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     // fire_tracer, or beam.
     switch (spell_cast)
     {
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
     case MS_LEVEL_SUMMON:       // summon anything appropriate for level
     case MS_FAKE_RAKSHASA_SUMMON:

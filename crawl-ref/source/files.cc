@@ -1673,7 +1673,7 @@ unsigned char translate_spell(unsigned char spel)
     case SPELL_TELEPORT_OTHER:
         return (MS_TELEPORT_OTHER);
     case SPELL_SUMMON_SMALL_MAMMAL:
-        return (MS_VAMPIRE_SUMMON);       /* approximate */
+        return (MS_SUMMON_SMALL_MAMMALS);
     case SPELL_BOLT_OF_DRAINING:
         return (MS_NEGATIVE_BOLT);
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:

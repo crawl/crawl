@@ -1837,6 +1837,7 @@ bool ms_requires_tracer(int monspell)
         case MS_SUMMON_UFETUBUS:
         case MS_TELEPORT:
         case MS_TORMENT:
+        case MS_SUMMON_SMALL_MAMMALS:
         case MS_VAMPIRE_SUMMON:
         case MS_CANTRIP:
 
@@ -1877,6 +1878,7 @@ bool ms_direct_nasty(int monspell)
         case MS_SUMMON_DEMON_GREATER:
         case MS_SUMMON_UFETUBUS:
         case MS_TELEPORT:
+        case MS_SUMMON_SMALL_MAMMALS:
         case MS_VAMPIRE_SUMMON:
             nasty = false;
             break;
@@ -1914,6 +1916,7 @@ bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell )
     case MS_ANIMATE_DEAD:
         return (true);
 
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
     case MS_SUMMON_UFETUBUS:
     case MS_FAKE_RAKSHASA_SUMMON:
@@ -1963,6 +1966,7 @@ bool ms_low_hitpoint_cast( struct monsters *mon, int monspell )
             ret = true;
         break;
 
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
     case MS_SUMMON_UFETUBUS:
     case MS_FAKE_RAKSHASA_SUMMON:
