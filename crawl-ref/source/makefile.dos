@@ -14,7 +14,7 @@ COPY = copy
 OS_TYPE = DOS
 CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
 LDFLAGS =
-LIB = -lpcre -llua
+LIB = 
 # LIB = -lcurso -lpano
 
 all:            $(APPNAME)

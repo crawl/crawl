@@ -27,7 +27,7 @@ OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 LDFLAGS = 
 INSTALLDIR = .
 #LIB = -lcurso -lpano
-LIB = -lwinmm -static -lpcre -llua -llualib
+LIB = -lwinmm -static
 
 all:            $(APPNAME)
 
