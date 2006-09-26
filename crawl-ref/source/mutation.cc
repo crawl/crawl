@@ -902,6 +902,14 @@ void display_mutations(void)
 	j++;
 	break;
 
+    case SP_CENTAUR:
+	if (!you.mutation[MUT_FAST])
+	    cprintf("You cover the ground quickly." EOL);
+	else
+	    cprintf("You cover the ground extremely quickly." EOL);
+	j++;
+	break;
+
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
@@ -911,7 +919,8 @@ void display_mutations(void)
 
         cprintf("Your system is immune to poisons." EOL);
         cprintf("You can see invisible." EOL);
-        j += 3;
+	cprintf("You move rather slowly." EOL);
+        j += 4;
         break;
 
     case SP_GNOME:
@@ -1057,6 +1066,8 @@ void display_mutations(void)
             // this is already handled above:
             if (you.species == SP_NAGA && i == MUT_BREATHE_POISON)
                 continue;
+	    if (you.species == SP_CENTAUR && i == MUT_FAST)
+		continue;
 
             j++;
             textcolor(LIGHTGREY);
