@@ -68,7 +68,8 @@ Building on Linux (or other Unixes)
 
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
-  before building.
+  then add -llua to your LIB = line in makefile.lnx, and rebuild to compile with
+  Lua support.
 
 
 Building on Mac OS X
@@ -109,9 +110,12 @@ recommend using MinGW if possible.
         // #define CLUA_BINDINGS
   and
         // #define REGEX_PCRE
-  before building to include Lua and regular-expression support. Note that
-  there are multiple // #define REGEX_PCRE lines in AppHdr.h - find the one in
-  the Windows-specific section.
+  Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h - find
+  the one in the Windows-specific section.
+
+* Add -llua and -lpcre to the LIB line in makefile.mgw as:
+        LIB = -lwinmm -static -llua -lpcre
+  and build Crawl to include Lua and regex support.
 
 * When you're done, you should have crawl.exe under a "rel" subdirectory.
 
@@ -136,7 +140,9 @@ Building on DOS
         CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
   to
         CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS -DREGEX_PCRE
-  and build Crawl.
+  Add -llua and -lpcre to the LIB line in makefile.dos, like so:
+        LIB = -llua -lpcre
+  then build Crawl.
 
 * When the build is done, crawl.exe should be in the source directory.
 
@@ -146,6 +152,18 @@ Optional Libraries
 
 Lua
 ---
+NOTE: When linking in Lua, the makefile LIB line usually looks like this:
+
+LIB = -llua
+
+If you're using Lua older than 5.1, though, the Lua library comprises of *two*
+libraries: liblua and liblualib (yes, confusing), so you need
+
+LIB = -llua -llualib
+
+
+Getting Lua:
+
 On Unixes your package management system is the best way to get Lua. Make
 sure to install the development headers and not just the naked library.
 
