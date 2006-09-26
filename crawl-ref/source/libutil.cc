@@ -400,7 +400,12 @@ int snprintf( char *str, size_t size, const char *format, ... )
     va_list argp;
     va_start( argp, format );
 
-    char buff[ 10 * size ];  // hopefully enough 
+    char *buff = new char [ 10 * size ];  // hopefully enough 
+    if (!buff)
+    {
+        fprintf(stderr, "Out of memory\n");
+        exit(1);
+    }
 
     vsprintf( buff, format, argp );
     strncpy( str, buff, size );
@@ -409,6 +414,8 @@ int snprintf( char *str, size_t size, const char *format, ... )
     int ret = strlen( str );  
     if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)
         ret = -1;
+
+    delete [] buff;
 
     va_end( argp );
 
