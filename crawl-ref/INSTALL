@@ -77,12 +77,26 @@ Building on Mac OS X
 You can follow the Linux instructions to build Crawl (but note you still need to
 install Xcode to get gcc and make), or alternatively you can use Xcode.
 
+* Crawl has been tested with Xcode 2.4 under OS X 10.4.7 on both PPC and Intel
+  machines, but is likely to be buildable with earlier versions.
+
 * Make sure Xcode is installed. Xcode should be available on the OS X install
   DVD if you haven't already installed it.
 
-* Open the Xcode project under the "source" directory.
+* Open the Xcode project (Crawl.xcodeproj) under the "source" directory.
 
 * Hit Build in Xcode.
+
+* The default build configuration, Release, will build a ppc/i386 Universal
+  binary suitable for play on all OS X 10.3.9 or newer systems. The other build
+  configurations are intended for development and may not result in a binary
+  that can be distributed to others.
+
+* You can also use makefile.osx, which will run xcodebuild from the command line.
+
+* If you have Lua installed, you can add your lua headers and liblua library to
+  the 'Crawl' target in the Xcode project, uncomment the '#define CLUA_BINDINGS'
+  line in AppHdr.h, and rebuild to compile with Lua support.
 
 
 Building on Windows
