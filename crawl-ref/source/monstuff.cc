@@ -3386,11 +3386,16 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
         }
 
         // FINALLY! determine primary spell effects {dlb}:
-        if (spell_cast == MS_BLINK && monsterNearby)
-            // why only cast blink if nearby? {dlb}
+        if (spell_cast == MS_BLINK)
         {
-            simple_monster_message(monster, " blinks!");
-            monster_blink(monster);
+            // why only cast blink if nearby? {dlb}
+            if (monsterNearby)
+            {
+                simple_monster_message(monster, " blinks!");
+                monster_blink(monster);
+            }
+            else
+                return (false);
         }
         else
         {
