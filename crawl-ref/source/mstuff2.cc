@@ -901,9 +901,11 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
     int lnchHitBonus = 0, lnchDamBonus = 0;     // special add from launcher
     int exHitBonus = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
+    int lnchBaseDam = 0;
 
     int hitMult = 0;
     int damMult = 0;
+    int diceMult = 100;
 
     bool launched = false;      // item is launched
     bool thrown = false;        // item is sensible thrown item
@@ -937,6 +939,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     {
         lnchHitBonus = mitm[ weapon ].plus;
         lnchDamBonus = mitm[ weapon ].plus2;
+        lnchBaseDam  = property(mitm[weapon], PWPN_DAMAGE);
     }
 
     // extract weapon/ammo bonuses due to magic
@@ -1010,7 +1013,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             break;
         }
 
-        baseDam = property( item, PWPN_DAMAGE );
+        // Launcher is now more important than ammo for base damage.
+        baseDam = property(item, PWPN_DAMAGE);
+        if (lnchBaseDam)
+            baseDam = lnchBaseDam + random2(1 + baseDam);
 
         // missiles don't have pluses2;  use hit bonus
         ammoDamBonus = ammoHitBonus;
@@ -1043,6 +1049,9 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
 
+        // Vorpal brand increases damage dice size.
+        if (bow_brand == SPWPN_VORPAL)
+            diceMult = diceMult * 130 / 100;
 
         // WEAPON or AMMO of FIRE
         if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
@@ -1140,6 +1149,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         pbolt.damage.size += lnchDamBonus;
         pbolt.hit += lnchHitBonus;
     }
+
+    pbolt.damage.size = diceMult * pbolt.damage.size / 100;
     scale_dice(pbolt.damage);
 
     // decrease inventory

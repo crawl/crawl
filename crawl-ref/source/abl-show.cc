@@ -175,9 +175,6 @@ static const struct ability_def Ability_List[] =
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
     { ABIL_YRED_CONTROL_UNDEAD, "Control Undead", 5, 0, 150, 2, ABFLAG_NONE },
 
-    // Vehumet
-    { ABIL_VEHUMET_CHANNEL_ENERGY, "Channel Energy", 0, 0, 50, 0, ABFLAG_NONE },
-
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
     { ABIL_OKAWARU_HEALING, "Healing", 2, 0, 75, 1, ABFLAG_NONE },
@@ -190,6 +187,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb", 6, 0, 100, 3, ABFLAG_NONE },
 
     // Sif Muna
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy", 0, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell", 5, 0, 0, 8, ABFLAG_NONE },
 
     // Trog
@@ -943,7 +941,7 @@ bool activate_ability(void)
         exercise(SK_INVOCATIONS, 3 + random2(4));
         break;
 
-    case ABIL_VEHUMET_CHANNEL_ENERGY:
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         mpr("You channel some magical energy.");
 
         inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
@@ -1588,13 +1586,10 @@ bool generate_abilities( void )
             break;
 
         case GOD_SIF_MUNA:
+            if (you.piety >= 30)
+                insert_ability( ABIL_SIF_MUNA_CHANNEL_ENERGY );
             if (you.piety >= 50)
                 insert_ability( ABIL_SIF_MUNA_FORGET_SPELL );
-            break;
-
-        case GOD_VEHUMET:
-            if (you.piety >= 100)
-                insert_ability( ABIL_VEHUMET_CHANNEL_ENERGY );
             break;
 
         default:
@@ -1740,11 +1735,6 @@ void set_god_ability_slots( void )
         num_abil = 5; 
         break;
 
-    case GOD_VEHUMET:
-        abil_start = ABIL_VEHUMET_CHANNEL_ENERGY;
-        num_abil = 1; 
-        break;
-
     case GOD_OKAWARU:
         abil_start = ABIL_OKAWARU_MIGHT;
         num_abil = 3; 
@@ -1756,8 +1746,8 @@ void set_god_ability_slots( void )
         break;
 
     case GOD_SIF_MUNA:
-        abil_start = ABIL_SIF_MUNA_FORGET_SPELL;
-        num_abil = 1; 
+        abil_start = ABIL_SIF_MUNA_CHANNEL_ENERGY;
+        num_abil = 2; 
         break;
 
     case GOD_TROG:
@@ -1770,6 +1760,7 @@ void set_god_ability_slots( void )
         num_abil = 5; 
         break;
 
+    case GOD_VEHUMET:
     case GOD_NEMELEX_XOBEH:
     case GOD_XOM:
     default:
@@ -2076,7 +2067,7 @@ static bool insert_ability( int which_ability )
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_VEHUMET_CHANNEL_ENERGY:
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         invoc = true;
         failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
         break;

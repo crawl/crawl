@@ -6709,9 +6709,6 @@ void describe_god( int which_god, bool give_title )
 
                 if (you.piety >= 75)  
                     cprintf( "During prayer you have some protection from summoned creatures." EOL );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_VEHUMET_CHANNEL_ENERGY );
                 break;
 
 
@@ -6751,10 +6748,13 @@ void describe_god( int which_god, bool give_title )
                 break;
 
             case GOD_SIF_MUNA:
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_SIF_MUNA_FORGET_SPELL );
+                if (you.piety >= 30)
+                    print_god_abil_desc( ABIL_SIF_MUNA_CHANNEL_ENERGY );
                 else 
                     cprintf( "None." EOL );
+
+                if (you.piety >= 50)
+                    print_god_abil_desc( ABIL_SIF_MUNA_FORGET_SPELL );
 
                 if (you.piety >= 100) 
                     cprintf( "You are protected from some side-effects of spellcasting." EOL );

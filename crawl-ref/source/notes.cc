@@ -37,7 +37,7 @@ static int real_god_power( int religion, int idx ) {
 	    return -1;
 	return idx-1;	
     case GOD_VEHUMET:
-	return ( idx == 4 ? -1 : idx );
+	return ( idx > 3 ? -1 : idx );
     case GOD_OKAWARU:
 	if ( idx < 2 )
 	    return idx;
@@ -45,9 +45,9 @@ static int real_god_power( int religion, int idx ) {
 	    return -1;
 	return idx - 2;
     case GOD_SIF_MUNA:
-	if ( idx == 0 || idx == 2 || idx == 4 ) return -1;
-	if ( idx == 1 ) return 0;
-	if ( idx == 3 ) return 1;
+	if ( idx == 2 || idx == 4 ) return -1;
+	if ( idx < 2 ) return idx;
+	if ( idx == 3 ) return 2;
     case GOD_TROG:
 	if ( idx == 2 || idx == 4 ) return -1;
 	if ( idx < 2 ) return idx;

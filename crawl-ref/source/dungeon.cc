@@ -3124,7 +3124,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
                              (temp_rand == 1) ? WPN_BOW
                                               : WPN_HALBERD);
 
-        if (mitm[bp].sub_type == WPN_BOW) 
+        if (is_range_weapon(mitm[bp]))
             set_item_ego_type( mitm[bp], OBJ_WEAPONS, SPWPN_FLAME );
         else
             set_item_ego_type( mitm[bp], OBJ_WEAPONS, SPWPN_FLAMING );

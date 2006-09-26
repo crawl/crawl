@@ -2515,11 +2515,11 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
         {
-        case MI_NEEDLE: chance = 7; break;
-        case MI_STONE:  chance = 6; break;
-        case MI_DART:   chance = 4; break;
+        case MI_NEEDLE: chance = 6; break;
+        case MI_STONE:  chance = 4; break;
+        case MI_DART:   chance = 3; break;
         case MI_ARROW:  chance = 4; break;
-        case MI_BOLT:   chance = 5; break;
+        case MI_BOLT:   chance = 4; break;
 
         case MI_LARGE_ROCK:
         default:

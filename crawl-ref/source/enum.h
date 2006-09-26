@@ -91,7 +91,7 @@ enum ability_type
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_CONTROL_UNDEAD,               //  144
-    ABIL_VEHUMET_CHANNEL_ENERGY = 160,         //  160
+    // 160 - reserved for Vehumet
     ABIL_OKAWARU_MIGHT = 170,                //  170
     ABIL_OKAWARU_HEALING,
     ABIL_OKAWARU_HASTE,                        //  172
@@ -99,7 +99,8 @@ enum ability_type
     ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
     ABIL_MAKHLEB_MAJOR_DESTRUCTION,
     ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB,   //  183
-    ABIL_SIF_MUNA_FORGET_SPELL = 190,           //  190
+    ABIL_SIF_MUNA_CHANNEL_ENERGY = 190,        //  190
+    ABIL_SIF_MUNA_FORGET_SPELL,
     ABIL_TROG_BERSERK = 200,          //  200
     ABIL_TROG_MIGHT,
     ABIL_TROG_HASTE_SELF,                   //  202

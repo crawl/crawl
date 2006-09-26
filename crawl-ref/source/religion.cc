@@ -349,7 +349,7 @@ void pray(void)
                 && you.piety > 80
                 && random2( you.piety ) > 70
                 && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
-                && one_chance_in(4)
+                && one_chance_in(8)
                 && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 7)
             {
                 success = acquirement( OBJ_MISSILES, you.religion );
@@ -1272,7 +1272,7 @@ bool did_god_conduct( int thing_done, int level )
             // magical kills tend to do both at the same time (unlike melee).
             // This means high level spells probably work pretty much like
             // they used to (use spell, get piety).
-            piety_change = div_rand_round( level + 10, 60 );
+            piety_change = div_rand_round( level + 10, 80 );
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
                     level, piety_change);
@@ -1404,14 +1404,14 @@ void gain_piety(char pgn)
         case GOD_NO_GOD:
         case GOD_XOM:
         case GOD_NEMELEX_XOBEH:
-        case GOD_SIF_MUNA:
             break;
         default:
             strcpy(info, "You can now ");
             strcat(info,
                     (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
                             ? "repel the undead" :
-
+                    (you.religion == GOD_SIF_MUNA)
+                            ? "tap ambient magical fields" :
                     (you.religion == GOD_KIKUBAAQUDGHA)
                             ? "recall your undead slaves" :
                     (you.religion == GOD_YREDELEMNUL)
@@ -1530,6 +1530,7 @@ void gain_piety(char pgn)
         case GOD_OKAWARU:
         case GOD_NEMELEX_XOBEH:
         case GOD_KIKUBAAQUDGHA:
+        case GOD_VEHUMET:
             break;
         case GOD_SIF_MUNA:
             simple_god_message
@@ -1546,8 +1547,6 @@ void gain_piety(char pgn)
                                 ? "hurl bolts of divine anger" :
                         (you.religion == GOD_YREDELEMNUL)
                                 ? "drain ambient lifeforce" :
-                        (you.religion == GOD_VEHUMET)
-                                ? "tap ambient magical fields" :
                         (you.religion == GOD_MAKHLEB)
                                 ? "hurl Makhleb's greater destruction" :
                         (you.religion == GOD_TROG)
@@ -1664,6 +1663,7 @@ void lose_piety(char pgn)
             case GOD_OKAWARU:
             case GOD_NEMELEX_XOBEH:
             case GOD_KIKUBAAQUDGHA:
+            case GOD_VEHUMET:
                 break;
             case GOD_SIF_MUNA:
                 god_speaks(you.religion,"Sif Muna is no longer protecting you from miscast magic.");
@@ -1679,8 +1679,6 @@ void lose_piety(char pgn)
                             ? "hurl bolts of divine anger" :
                         (you.religion == GOD_YREDELEMNUL)
                             ? "drain ambient life force" :
-                        (you.religion == GOD_VEHUMET)
-                            ? "tap ambient magical fields" :
                         (you.religion == GOD_MAKHLEB)
                             ? "direct Makhleb's greater destructive powers" :
                         (you.religion == GOD_TROG)
@@ -1784,7 +1782,6 @@ void lose_piety(char pgn)
             case GOD_NO_GOD:
             case GOD_XOM:
             case GOD_NEMELEX_XOBEH:
-            case GOD_SIF_MUNA:
                 break;
             default:
                 strcpy(info, "You can no longer ");
@@ -1796,6 +1793,8 @@ void lose_piety(char pgn)
                             ? "recall your undead slaves" :
                     (you.religion == GOD_YREDELEMNUL)
                             ? "animate corpses" :
+                    (you.religion == GOD_SIF_MUNA)
+                            ? "tap ambient magical fields" :
                     (you.religion == GOD_VEHUMET)
                             ? "gain power from killing in Vehumet's name" :
                     (you.religion == GOD_MAKHLEB)
@@ -2747,7 +2746,7 @@ void handle_god_time(void)
             // [dshaligram] Sif Muna is now very patient - has to be
             // to make up for the new spell training requirements, else
             // it's practically impossible to get Master of Arcane status.
-            if (one_chance_in(60))
+            if (one_chance_in(50))
                 lose_piety(1);
             if (you.piety < 1)
                 excommunication();
