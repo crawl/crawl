@@ -35,6 +35,7 @@
 
 #include "defines.h"
 #include "effects.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "notes.h"
 #include "ouch.h"
@@ -1487,8 +1488,9 @@ bool mutate(int which_mutation, bool failMsg)
         {
             mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
-            if (you.equip[EQ_HELMET] != -1
-                && you.inv[you.equip[EQ_HELMET]].plus2 > 1)
+            if (you.equip[EQ_HELMET] != -1 &&
+		(get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_CAP ||
+		 get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_WIZARD_HAT))
             {
                 break;          // horns don't push caps/wizard hats off
             }
