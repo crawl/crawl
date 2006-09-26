@@ -752,10 +752,10 @@ void start_running(void)
  */
 command_type travel()
 {
-    char x,y;
-    char *move_x = &x;
-    char *move_y = &y;
-    x = y = 0;
+    char holdx, holdy;
+    char *move_x = &holdx;
+    char *move_y = &holdy;
+    holdx = holdy = 0;
     
     command_type result = CMD_NO_CMD;
 
@@ -1486,14 +1486,14 @@ static std::vector<unsigned char> get_known_branches()
         BRANCH_HALL_OF_ZOT
     };
 
-    std::vector<unsigned char> branches;
+    std::vector<unsigned char> result;
     for (unsigned i = 0; i < sizeof list_order / sizeof(*list_order); ++i)
     {
         if (is_known_branch(list_order[i]))
-            branches.push_back(list_order[i]);
+            result.push_back(list_order[i]);
     }
 
-    return branches;
+    return result;
 }
 
 static int prompt_travel_branch()

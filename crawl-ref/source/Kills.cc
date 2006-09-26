@@ -242,10 +242,10 @@ void Kills::merge(const Kills &k)
             i != k.kills.end(); ++i)
     {
         const kill_monster_desc &kmd = i->first;
-        kill_def &k = kills[kmd];
+        kill_def &ki = kills[kmd];
         const kill_def &ko = i->second;
         bool uniq = mons_is_unique(kmd.monnum);
-        k.merge(ko, uniq);
+        ki.merge(ko, uniq);
     }
 }
 
@@ -369,8 +369,8 @@ void Kills::save(FILE *file) const
     // How many kill records do we have?
     writeLong(file, kills.size());
 
-    kill_map::const_iterator iter = kills.begin();
-    for ( ; iter != kills.end(); ++iter)
+    for ( kill_map::const_iterator iter = kills.begin();
+	  iter != kills.end(); ++iter)
     {
         iter->first.save(file);
         iter->second.save(file);
@@ -379,7 +379,7 @@ void Kills::save(FILE *file) const
     // How many ghosts do we have?
     writeShort(file, ghosts.size());
     for (ghost_vec::const_iterator iter = ghosts.begin(); 
-            iter != ghosts.end(); ++iter)
+	 iter != ghosts.end(); ++iter)
     {
         iter->save(file);
     }
@@ -409,8 +409,8 @@ void Kills::load(FILE *file)
 
 void Kills::record_ghost_kill(const struct monsters *mon)
 {
-    kill_ghost ghost(mon);
-    ghosts.push_back(ghost);
+    kill_ghost ghostk(mon);
+    ghosts.push_back(ghostk);
 }
 
 kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)

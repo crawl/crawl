@@ -713,12 +713,12 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        std::string name = shop_item_name(items[i]);
+        std::string sname = shop_item_name(items[i]);
         std::string ann = stash_annotate_item(
                     LUA_SEARCH_ANNOTATE, &items[i].item, true);
         
         bool thismatch = false;
-        if (search.matches(prefix + " " + ann + name))
+        if (search.matches(prefix + " " + ann + sname))
             thismatch = true;
         else
         {
@@ -730,7 +730,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
         if (thismatch)
         {
             if (!res.count++)
-                res.match = name;
+                res.match = sname;
             res.matches++;
         }
     }
@@ -1038,11 +1038,11 @@ void LevelStashes::write(std::ostream &os, bool identify) const
     {
         const Stash &s = stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
-        std::string level_name = short_level_name();
+        std::string levname = short_level_name();
         for (c_stashes::const_iterator iter = stashes.begin(); 
                 iter != stashes.end(); iter++)
         {
-            iter->second.write(os, refx, refy, level_name, identify);
+            iter->second.write(os, refx, refy, levname, identify);
         }
     }
     os << std::endl;

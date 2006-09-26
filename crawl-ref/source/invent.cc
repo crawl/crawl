@@ -204,7 +204,7 @@ public:
 class InvMenu : public Menu
 {
 public:
-    InvMenu(int flags = MF_MULTISELECT) : Menu(flags) { }
+    InvMenu(int mflags = MF_MULTISELECT) : Menu(mflags) { }
 protected:
     bool process_key(int key);
 };
@@ -690,7 +690,7 @@ std::vector<SelItem> prompt_invent_items(
                 redraw_screen();
                 mesclr( true );
 
-                for (int i = 0, count = items.size(); i < count; ++i)
+                for (unsigned int i = 0; i < items.size(); ++i)
                     items[i].slot = letter_to_index( items[i].slot );
                 return items;
             }
@@ -736,8 +736,7 @@ std::vector<SelItem> prompt_invent_items(
     return items;
 }
 
-/*** HP CHANGE ***/
-int digit_to_index( char digit, int type, operation_types oper ) {
+static int digit_to_index( char digit, operation_types oper ) {
     
     int i;
     unsigned int j;
@@ -898,7 +897,7 @@ int prompt_invent_item( const char *prompt, int type_expect,
 	else if ( count == NULL && isdigit( keyin ) )
 	{
 	    /* scan for our item */
-	    int res = digit_to_index( keyin, type_expect, oper );
+	    int res = digit_to_index( keyin, oper );
 	    if ( res != -1 ) {
 		ret = res;
 		if ( check_warning_inscriptions( you.inv[ret], oper ) )

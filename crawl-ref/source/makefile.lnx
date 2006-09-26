@@ -18,6 +18,7 @@ COPY = cp
 OS_TYPE = LINUX
 
 CFLAGS = -Wall -Wwrite-strings -fsigned-char \
+	-Wshadow -pedantic \
             -g -D$(OS_TYPE) $(EXTRA_FLAGS)
 
 MCHMOD = 2755

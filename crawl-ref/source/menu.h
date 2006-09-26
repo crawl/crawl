@@ -33,7 +33,8 @@ struct menu_letter
         return *this;
     }
 
-    menu_letter operator ++ (int postfix)
+    // dummy postfix argument unnamed to stop gcc from complaining
+    menu_letter operator ++ (int)
     {
         menu_letter copy = *this;
         this->operator++();

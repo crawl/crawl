@@ -17,7 +17,6 @@ int cprintf(const char *format,...);
 int gotoxy(int x, int y);
 int itoa(int value, char *strptr, int radix);
 int kbhit(void);
-int key_to_command(int);
 int putch(unsigned char chr);
 int stricmp(const char *str1, const char *str2);
 int translate_keypad(int keyin);
@@ -32,7 +31,6 @@ void get_input_line_from_curses( char *const buff, int len );
 
 void _setcursortype(int curstype);
 void delay(unsigned long time);
-void init_key_to_command();
 void unixcurses_shutdown(void);
 void unixcurses_startup(void);
 void textbackground(int bg);
