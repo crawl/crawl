@@ -1,0 +1,94 @@
+Stone Soup 0.1.1 (20060926)
+---------------------------
+* The Inscriptions patch joins the party (minus keybindings changes).
+* Applied Matthew Cline's additions to the Inscriptions patch: more notes on 
+  monsters, auto-notes based on messages, etc.
+* Jewellery names now note uncursed status correctly (if rather verbosely)
+* Curare-tipped needles are rarer.
+* The appropriate monsters resist curare effects.
+* Okawaru no longer protects you from harm.
+* Rods are generated with smaller mana reservoirs (max 14MP).
+* Draconians are slightly weaker. Groups of draconians are smaller and more
+  homogeneous.
+* Sif Muna piety training is easier.
+* Sif Muna now has Channel Energy; Vehumet does not.
+* Okawaru is less aggressive about spamming missile gifts.
+* Fixed Ctrl+move ignoring confusion.
+* Fixed broken keypad handling in level-map on DOS.
+* Fixed jelly pits appearing at low levels.
+* Added % command to show resists and other useful statistics.
+* Fixed bad flaming/freezing brands on missile launchers (reported by 
+  Rubinstein).
+* Miscast effect explosions now always hit
+* Fixed fireballs (and other explosions) being blocked by shields.
+* Thrown needles are very inaccurate.
+* Plain old elves are now of the correct intelligence.
+* Scrolls of immolation can't burn themselves up.
+* Player ghosts get MS_LEVEL_SUMMON if the player had Shadow Creatures.
+* Fixed jelly-splitting bugs.
+* Fixed splashed acid corroding items that shouldn't corrode.
+* Revised wand pricing in shops.
+* Fixed Book of Earth containing spells it shouldn't.
+* Stuff dropped in lava/deep water will now sleep with the fishes. Er, be
+  destroyed.
+* Autoprayer will not pray at altars.
+* Water elementals can now move around as intended and can be summoned on blue 
+  fountains.
+* Vorpal launchers do a little more damage.
+* Fixed monsters not benefiting from vorpal launchers.
+* Fixed kill listing bugs on DOS.
+* Quasits can now be generated.
+* "Glow" status is now shown correctly.
+* Demonspawn can get mutations while transformed.
+* Monsters polymorphing into invisible monsters will be seen correctly by
+  players with see invisible.
+* You now cannot read-identify scrolls of paper if you have three levels of
+  blurry vision.
+* Acquirement grants more gold.
+* Airstrike does more damage to flying monsters
+* Shop items are coloured to indicate affordability.
+* You can now cast spells in capital-lettered slots.
+* Flying/levitating characters take half-damage from static discharge.
+* Yellow wasps are less lethal.
+* Items can be inscribed with =k to ignore them. Ignorance is rather powerful.
+* Trolls cannot use claws for butchery when transformed.
+* Putting on rings no longer prompts for left/right finger, rings always go 
+  onto left finger first if both fingers are available.
+* 'v' now also displays launcher stats.
+* Fixed bug with monsters trying to use blink as a beam spell when out of player
+  LOS.
+* 'A' screen now notes speed of centaurs and nagas.
+* \ command display is now much tidier.
+
+Stone Soup 0.1 (20060918)
+-------------------------
+* Enhancer staves boost spell power only, not success rates
+* Chain lightning (level 8) replaces Orb of electrocution.
+* Miscellaneous spell level changes (Borgnor's, Silence, Simulacrum, Controlled
+  Blink).
+* Sif Muna piety increases only when training spell skills
+* Okawaru gives gifts of ammunition.
+* Detect creatures is somewhat inaccurate; level-map is cleared before DC.
+* The Shining One doesn't protest his Daevas dying.
+* The Shining One gives Cleansing Flame instead of Thunderbolt.
+* Rods (apart from striking) have mana reservoirs and gradually recharge mana
+  when wielded/carried.
+* Shields are better.
+* Warp brand is available once more.
+* Curare-tipped needles are available in addition to generic poisoned needles.
+* Monsters are never generated in LOS when a new game begins.
+* Monsters can swap positions with other monsters of the same class.
+* Missile launchers can be acquired/gifted by Okawaru.
+* Fire/frost missiles are more powerful.
+* Launchers support the vorpal brand.
+* Throwing skill renamed to Ranged Combat.
+* Ranged Combat now has no impact on ammo preservation.
+* Added monster draconians and death drakes. Drakes are now all on 'l' instead
+  of 'd'.
+* Added lajatang, lochaber axe and longbow.
+* Save/bones version number is now 0.x so stone_soup cannot load 4.0 saves.
+* Monsters can cast poison arrow
+* Naga melee damage upped slightly.
+* Jelly pits
+* Missile weapons are stronger.
+* Evocations no longer increases max MP.
