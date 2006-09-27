@@ -1,3 +1,12 @@
+Stone Soup 0.1.2 (20060927)
+---------------------------
+* Fixed shift-running and /-running on Windows and Unix.
+* Giant (spiked) clubs were wieldable by almost everybody, fixed.
+* Fixed giant clubs not producing brown snakes with sticks-to-snakes.
+* Refixed Sif Muna piety gain - was much too fast.
+* Weapon properties are closer to 4.0.
+* Included Elethiomel's key help page on ?
+
 Stone Soup 0.1.1 (20060926)
 ---------------------------
 * The Inscriptions patch joins the party (minus keybindings changes).
@@ -59,6 +68,10 @@ Stone Soup 0.1.1 (20060926)
   LOS.
 * 'A' screen now notes speed of centaurs and nagas.
 * \ command display is now much tidier.
+* Fixed horns mutation interaction with headgear.
+* Summoner ghosts get regular summon small mammals, not vampire small mammal 
+  summon.
+* Added death drake description.
 
 Stone Soup 0.1 (20060918)
 -------------------------
