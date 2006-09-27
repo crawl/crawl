@@ -2503,6 +2503,8 @@ command_type keycode_to_command( keycode_type key ) {
     case '\'': return CMD_WEAPON_SWAP;
 
     case '0': return CMD_NO_CMD;
+
+#ifdef UNIX
     case '1': return CMD_MOVE_DOWN_LEFT;
     case '2': return CMD_MOVE_DOWN;
     case '3': return CMD_MOVE_DOWN_RIGHT;
@@ -2512,6 +2514,17 @@ command_type keycode_to_command( keycode_type key ) {
     case '7': return CMD_MOVE_UP_LEFT;
     case '8': return CMD_MOVE_UP;
     case '9': return CMD_MOVE_UP_RIGHT;
+#else
+    case '1': return CMD_RUN_DOWN_LEFT;
+    case '2': return CMD_RUN_DOWN;
+    case '3': return CMD_RUN_DOWN_RIGHT;
+    case '4': return CMD_RUN_LEFT;
+    case '5': return CMD_REST;
+    case '6': return CMD_RUN_RIGHT;
+    case '7': return CMD_RUN_UP_LEFT;
+    case '8': return CMD_RUN_UP;
+    case '9': return CMD_RUN_UP_RIGHT;
+#endif
 
     case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
     case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;
