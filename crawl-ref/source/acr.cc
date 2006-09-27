@@ -2557,6 +2557,18 @@ command_type keycode_to_command( keycode_type key ) {
     }
 }
 
+#ifdef UNIX
+static keycode_type numpad2vi(keycode_type key)
+{
+    if (key >= '1' && key <= '9')
+    {
+        const char *vikeys = "bjnh.lyku";
+        return keycode_type(vikeys[key - '1']);
+    }
+    return (key);
+}
+#endif
+
 keycode_type get_next_keycode() {
 
     keycode_type keyin;
@@ -2575,12 +2587,12 @@ keycode_type get_next_keycode() {
     if (keyin == '*') {
 	keyin = getch();
 	// return control-key
-	return CONTROL(toupper(keyin));
+	return CONTROL(toupper(numpad2vi(keyin)));
     }
     else if (keyin == '/') {
 	keyin = getch();
 	// return shift-key
-	return toupper(keyin);
+	return toupper(numpad2vi(keyin));
     }
 #else
     // Old DOS keypad support
