@@ -8,12 +8,15 @@
 #include "view.h"
 
 Menu::Menu( int _flags )
- :  selitem_text(NULL),
+ :  f_selitem(NULL),
+    f_drawitem(NULL),
+    f_keyfilter(NULL),
     title(NULL),
     flags(_flags),
     first_entry(0),
     y_offset(0),
     pagesize(0),
+    more("-more-", true),
     items(),
     sel(NULL),
     select_filter(),
@@ -22,6 +25,7 @@ Menu::Menu( int _flags )
     lastch(0),
     alive(false)
 {
+    set_flags(flags);
 }
 
 Menu::~Menu()
@@ -30,6 +34,21 @@ Menu::~Menu()
         delete items[i];
     delete title;
     delete highlighter;
+}
+
+void Menu::set_flags(int new_flags, bool use_options)
+{
+    flags = new_flags;
+    if (use_options)
+    {
+        if (Options.easy_exit_menu)
+            flags |= MF_EASY_EXIT;
+    }
+}
+
+void Menu::set_more(const formatted_string &fs)
+{
+    more = fs;
 }
 
 void Menu::set_highlighter( MenuHighlighter *mh )
@@ -65,7 +84,7 @@ std::vector<MenuEntry *> Menu::show()
     deselect_all(false);
 
     // Lose lines for the title + room for more.
-    pagesize = get_number_of_lines() - 2;
+    pagesize = get_number_of_lines() - !!title - 1;
 
 #ifdef DOS_TERM
     char buffer[4600];
@@ -100,8 +119,6 @@ void Menu::do_menu( std::vector<MenuEntry*> *selected )
 
 bool Menu::is_set(int flag) const
 {
-    if (flag == MF_EASY_EXIT && Options.easy_exit_menu)
-        return true;
     return (flags & flag) == flag;
 }
 
@@ -111,60 +128,66 @@ bool Menu::process_key( int keyin )
         return false;
 
     bool nav = false, repaint = false;
+
+    if (f_keyfilter)
+        keyin = (*f_keyfilter)(keyin);
+
     switch (keyin)
     {
-        case CK_ENTER:
+    case 0:
+        return true;
+    case CK_ENTER:
+        return false;
+    case CK_ESCAPE:
+        sel->clear();
+        lastch = keyin;
+        return false;
+    case ' ': case CK_PGDN: case '>': case '\'':
+        nav = true;
+        repaint = page_down();
+        if (!repaint && !is_set(MF_EASY_EXIT) && !is_set(MF_NOWRAP))
+        {
+            repaint = first_entry != 0;
+            first_entry = 0;
+        }
+        break;
+    case CK_PGUP: case '<': case ';':
+        nav = true;
+        repaint = page_up();
+        break;
+    case CK_UP:
+        nav = true;
+        repaint = line_up();
+        break;
+    case CK_DOWN:
+        nav = true;
+        repaint = line_down();
+        break;
+    default:
+        lastch = keyin;
+
+        // If no selection at all is allowed, exit now.
+        if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
-        case CK_ESCAPE:
-            sel->clear();
-            lastch = keyin;
+
+        if (!is_set(MF_NO_SELECT_QTY) && isdigit( keyin ))
+        {
+            if (num > 999)
+                num = -1;
+            num = (num == -1)? keyin - '0' :
+                               num * 10 + keyin - '0';
+        }
+        
+        select_items( keyin, num );
+        get_selected( sel );
+        if (sel->size() == 1 && (flags & MF_SINGLESELECT))
             return false;
-        case ' ': case CK_PGDN: case '>': case '\'':
-            nav = true;
-            repaint = page_down();
-            if (!repaint && flags && !is_set(MF_EASY_EXIT))
-            {
-                repaint = first_entry != 0;
-                first_entry = 0;
-            }
-            break;
-        case CK_PGUP: case '<': case ';':
-            nav = true;
-            repaint = page_up();
-            break;
-        case CK_UP:
-            nav = true;
-            repaint = line_up();
-            break;
-        case CK_DOWN:
-            nav = true;
-            repaint = line_down();
-            break;
-        default:
-            lastch = keyin;
+        draw_select_count( sel->size() );
 
-            // If no selection at all is allowed, exit now.
-            if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-                return false;
+        if (flags & MF_ANYPRINTABLE && !isdigit( keyin ))
+            return false;
 
-            if (!is_set(MF_NO_SELECT_QTY) && isdigit( keyin ))
-            {
-                if (num > 999)
-                    num = -1;
-                num = (num == -1)? keyin - '0' :
-                                   num * 10 + keyin - '0';
-            }
-            
-            select_items( keyin, num );
-            get_selected( sel );
-            if (sel->size() == 1 && (flags & MF_SINGLESELECT))
-                return false;
-            draw_select_count( sel->size() );
-
-            if (flags & MF_ANYPRINTABLE && !isdigit( keyin ))
-                return false;
-
-            break;
+        break;
     }
 
     if (!isdigit( keyin ))
@@ -175,7 +198,7 @@ bool Menu::process_key( int keyin )
         if (repaint)
             draw_menu( sel );
         // Easy exit should not kill the menu if there are selected items.
-        else if (sel->empty() && (!flags || is_set(MF_EASY_EXIT)))
+        else if (sel->empty() && is_set(MF_EASY_EXIT))
         {
             sel->clear();
             return false;
@@ -215,9 +238,9 @@ void Menu::draw_select_count( int count )
     if (!is_set(MF_MULTISELECT))
         return;
 
-    if (selitem_text)
+    if (f_selitem)
     {
-        draw_title_suffix( selitem_text( sel ) );
+        draw_title_suffix( f_selitem( sel ) );
     }
     else
     {
@@ -381,7 +404,7 @@ void Menu::draw_menu( std::vector< MenuEntry* > *selected )
 
     draw_title();
     draw_select_count( selected->size() );
-    y_offset = 2;
+    y_offset = 1 + !!title;
 
     int end = first_entry + pagesize;
     if (end > (int) items.size()) end = items.size();
@@ -390,11 +413,10 @@ void Menu::draw_menu( std::vector< MenuEntry* > *selected )
     {
         draw_item( i );
     }
-    if (end < (int) items.size())
+    if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
     {
         gotoxy( 1, y_offset + pagesize );
-        textcolor( LIGHTGREY );
-        cprintf("-more-");
+        more.display();
     }
 }
 
@@ -424,14 +446,29 @@ void Menu::draw_title()
     }
 }
 
+bool Menu::in_page(int index) const
+{
+    return (index >= first_entry && index < first_entry + pagesize);
+}
+
 void Menu::draw_item( int index ) const
 {
-    if (index < first_entry || index >= first_entry + pagesize)
+    if (!in_page(index))
         return;
-
     gotoxy( 1, y_offset + index - first_entry );
-    textcolor( item_colour(items[index]) );
-    cprintf( "%s", items[index]->get_text().c_str() );
+
+    draw_item(index, items[index]);
+}
+
+void Menu::draw_item(int index, const MenuEntry *me) const
+{
+    if (f_drawitem)
+        (*f_drawitem)(index, me);
+    else
+    {
+        textcolor( item_colour(items[index]) );
+        cprintf( "%s", items[index]->get_text().c_str() );
+    }
 }
 
 bool Menu::page_down()

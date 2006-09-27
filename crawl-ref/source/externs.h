@@ -608,7 +608,7 @@ class formatted_string
 {
 public:
     formatted_string() : ops() { }
-    formatted_string(const std::string &s);
+    formatted_string(const std::string &s, bool init_style = false);
 
     operator std::string() const;
     void display(int start = 0, int end = -1) const;
@@ -619,6 +619,12 @@ public:
     void gotoxy(int x, int y);
     void textcolor(int color);
 
+public:
+    static formatted_string parse_string(
+            const std::string &s,
+            bool  eol_ends_format = true,
+            bool (*process_tag)(const std::string &tag) = NULL );
+
 private:
     enum fs_op_type
     {
@@ -627,6 +633,9 @@ private:
         FSOP_TEXT
     };
 
+    static int get_colour(const std::string &tag);
+
+private:
     struct fs_op
     {
         fs_op_type type;

@@ -27,17 +27,24 @@
 #include "itemname.h"
 #include "item_use.h"
 #include "items.h"
+#include "libutil.h"
 #include "menu.h"
 #include "ouch.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "version.h"
+#include "view.h"
 #include "wpn-misc.h"
 
 static void adjust_item(void);
 static void adjust_spells(void);
 static void adjust_ability(void);
+static void list_wizard_commands();
+#ifdef OBSOLETE_COMMAND_HELP
+static const char *command_string( int i );
+#endif
+static const char *wizard_string( int i );
 
 void quit_game(void)
 {
@@ -553,3 +560,325 @@ void list_weapons(void)
 
     mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()
+
+static void cmdhelp_showline(int index, const MenuEntry *me)
+{
+    static_cast<formatted_string *>(me->data)->display();
+}
+
+static int cmdhelp_keyfilter(int keyin)
+{
+    switch (keyin)
+    {
+    case CK_DOWN:
+    case '+':
+    case '=':
+        return ('>');
+    case CK_UP:
+    case '-':
+    case '_':
+        return ('<');
+    case 'x':
+        return (CK_ESCAPE);
+    default:
+        return (keyin);
+    }
+}
+
+static bool cmdhelp_textfilter(const std::string &tag)
+{
+#ifdef STASH_TRACKING
+    if (tag == "s")
+        return (true);
+#endif
+#ifdef WIZARD
+    if (tag == "wiz")
+        return (true);
+#endif
+    return (false);
+}
+
+void list_commands(bool wizard)
+{
+    if (wizard)
+    {
+        list_wizard_commands();
+        return;
+    }
+        
+    static const char *command_template =
+    "<h>Movement:                              Extended Movement:\n"
+    "To move in a direction, use either     Ctrl-G    : Interlevel travel\n"
+    "of these control schema:               Ctrl-O    : Auto-explore\n"
+    "7 8 9  y k u                           Ctrl-W    : Mark waypoint\n"
+    " \\|/    \\|/                            Shift-Dir.: Long walk\n"
+    "4-5-6  h-.-l                           / Dir.    : Long walk\n"
+    " /|\\    /|\\                            Shift-5   : Rest 100 turns\n"
+    "7 8 9  b j n\n"
+    "                                       <?s><h>Stash Management Commands:\n"
+    "\"Center\" buttons (5/./Del) will        <?s>Ctrl-S    : Mark stash\n"
+    "rest one turn.                         <?s>Ctrl-E    : Forget stash\n"
+    "                                       <?s>Ctrl-F    : Search stashes\n"
+    "\n"
+    "<h>Dungeon Interaction and Information:   Player Character Information:\n"
+    "o/c: Open/Close Door                   @  : Display character Status\n"
+    "Ctrl-Dir.  : Door o/c, Untrap, Attack  ]  : Display worn armour\n"
+    "* Direction: Door o/c, Untrap, Attack  \"  : Display worn jewellery\n"
+    "</>: Ascend/Descend a staircase        C  : Display experience info\n"
+    "s  : Search adjacent tiles             ^  : Show religion screen\n"
+    ";  : Examine occupied tile             A  : Show abilities/mutations\n"
+    "x  : Examine visible surroundings      \\  : Show item knowlede\n"
+    "X  : Examine level map                 m  : Show skill screen\n"
+    "+/-: Scroll up/down on level map       i  : Show inventory list\n"
+    "O  : Show dungeon overview             %  : Show resistances\n"
+    "\n"
+    "<h>Item Interaction (inventory):          Other Actions:\n"
+    "v  : View item description             a  : Use special ability\n"
+    "z  : Zap a wand                        p  : Pray\n"
+    "t  : throw/shoot an item               Z  : Cast a spell\n"
+    "f  : fire first available missile      !  : Shout or command allies\n"
+    "q  : Quaff a potion                    Ctrl-A: Toggle autopickup\n"
+    "e  : eat food (also see below)\n"
+    "r  : Read a scroll or book             <h>Game saving and exiting:\n"
+    "M  : Memorise a spell from a book      S  : Save game and exit\n"
+    "w  : Wield an item ( - for none)       Ctrl-X:Save game without query\n"
+    "'  : Wield item a, or switch to b      Q  : Quit without saving\n"
+    "E  : Evoke power of wielded item\n"
+    "W  : Wear armour                       <h>Non-gameplay Commands / Info\n"
+    "T  : Take off armour                   V  : Version Information\n"
+    "P  : Put on jewellery                  Ctrl-P: See old messages\n"
+    "R  : Remove jewellery                  Ctrl-R: Redraw screen\n"
+    "d(#): Drop (exact quantity of) items   #  : Dump character to file\n"
+    "=  : Reassign inventory/spell letters  `  : Add macro\n"
+    "                                       ~  : Save macros\n"
+    "<h>Item Interaction (floor):</h>              <?wiz>&  : Wizard-mode commands\n"
+    "D  : Dissect a corpse\n"
+    "e  : eat food (also see above)\n"
+    ",/g: pick up items\n";
+    std::vector<std::string> lines = 
+            split_string("\n", command_template, false, true);
+
+    Menu cmd_help;
+    
+    // Set flags, and don't use easy exit.
+    cmd_help.set_flags(
+            MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP,
+            false);
+    cmd_help.set_more(
+            formatted_string::parse_string(
+                "<cyan>[ + : Page down.   - : Page up."
+                "                         Esc/x exits.]"));
+    cmd_help.f_drawitem  = cmdhelp_showline;
+    cmd_help.f_keyfilter = cmdhelp_keyfilter;
+
+    std::vector<MenuEntry*> entries;
+
+    for (unsigned i = 0, size = lines.size(); i < size; ++i)
+    {
+        MenuEntry *me = new MenuEntry;
+        me->data = new formatted_string( 
+                formatted_string::parse_string(
+                    lines[i],
+                    true,
+                    cmdhelp_textfilter) );
+        entries.push_back(me);
+
+        cmd_help.add_entry(me);
+    }
+
+    cmd_help.show();
+
+    for (unsigned i = 0, size = entries.size(); i < size; ++i)
+        delete static_cast<formatted_string*>( entries[i]->data );
+}
+
+static void list_wizard_commands()
+{
+    const char *line;
+    int j = 0;
+
+#ifdef DOS_TERM
+    char buffer[4800];
+
+    window(1, 1, 80, 25);
+    gettext(1, 1, 80, 25, buffer);
+#endif
+
+    clrscr();
+
+    // BCR - Set to screen length - 1 to display the "more" string
+    int moreLength = (get_number_of_lines() - 1) * 2;
+
+    for (int i = 0; i < 500; i++)
+    {
+        line = wizard_string( i );
+
+        if (strlen( line ) != 0)
+        {
+            // BCR - If we've reached the end of the screen, clear
+            if (j == moreLength)
+            {
+                gotoxy(2, j / 2 + 1);
+                cprintf("More...");
+                getch();
+                clrscr();
+                j = 0;
+            }
+
+            gotoxy( ((j % 2) ? 40 : 2), ((j / 2) + 1) );
+            cprintf( line );
+
+            j++;
+        }
+    }
+
+    getch();
+
+#ifdef DOS_TERM
+    puttext(1, 1, 80, 25, buffer);
+#endif
+
+    return;
+}                               // end list_commands()
+
+static const char *wizard_string( int i )
+{
+    UNUSED( i );
+
+#ifdef WIZARD
+    return((i ==  10) ? "a    : acquirement"                  :
+           (i ==  13) ? "A    : set all skills to level"      :
+           (i ==  15) ? "b    : controlled blink"             :
+           (i ==  20) ? "B    : banish yourself to the Abyss" :
+           (i ==  30) ? "g    : add a skill"                  :
+           (i ==  35) ? "G    : remove all monsters"          :
+           (i ==  40) ? "h/H  : heal yourself (super-Heal)"   :
+           (i ==  50) ? "i/I  : identify/unidentify inventory":
+           (i ==  70) ? "l    : make entrance to labyrinth"   :
+           (i ==  80) ? "m/M  : create monster by number/name":
+           (i ==  90) ? "o/%%  : create an object"            :
+           (i == 100) ? "p    : make entrance to pandemonium" :
+           (i == 110) ? "x    : gain an experience level"     :
+           (i == 115) ? "r    : change character's species"   :
+           (i == 120) ? "s    : gain 20000 skill points"      :
+           (i == 130) ? "S    : set skill to level"           :
+           (i == 140) ? "t    : tweak object properties"      :
+           (i == 150) ? "X    : Receive a gift from Xom"      :
+           (i == 160) ? "z/Z  : cast any spell by number/name":
+           (i == 200) ? "$    : get 1000 gold"                :
+           (i == 210) ? "</>  : create up/down staircase"     :
+           (i == 220) ? "u/d  : shift up/down one level"      :
+           (i == 230) ? "~/\"  : goto a level"                :
+           (i == 240) ? "(    : create a feature"             :
+           (i == 250) ? "]    : get a mutation"               :
+           (i == 260) ? "[    : get a demonspawn mutation"    :
+           (i == 270) ? ":    : find branch"                  :
+           (i == 280) ? "{    : magic mapping"                :
+           (i == 290) ? "^    : gain piety"                   :
+           (i == 300) ? "_    : gain religion"                :
+           (i == 310) ? "\'    : list items"                  :
+           (i == 320) ? "?    : list wizard commands"         :
+           (i == 330) ? "|    : acquire all unrand artefacts" :
+           (i == 340) ? "+    : turn item into random artefact" :
+           (i == 350) ? "=    : sum skill points"
+                      : "");
+
+#else
+    return ("");
+#endif
+}                               // end wizard_string()
+
+#ifdef OBSOLETE_COMMAND_HELP
+static const char *command_string( int i )
+{
+    /*
+     * BCR - Command printing, case statement
+     * Note: The numbers in this case indicate the order in which the
+     *       commands will be printed out.  Make sure none of these
+     *       numbers is greater than 500, because that is the limit.
+     *
+     * Arranged alpha lower, alpha upper, punctuation, ctrl.
+     *
+     */
+
+    return((i ==  10) ? "a    : use special ability"              :
+           (i ==  20) ? "d(#) : drop (exact quantity of) items"   :
+           (i ==  30) ? "e    : eat food"                         :
+           (i ==  40) ? "f    : fire first available missile"     :
+           (i ==  50) ? "i    : inventory listing"                :
+           (i ==  55) ? "m    : check skills"                     :
+           (i ==  60) ? "o/c  : open / close a door"              :
+           (i ==  65) ? "p    : pray"                             :
+           (i ==  70) ? "q    : quaff a potion"                   :
+           (i ==  80) ? "r    : read a scroll or book"            :
+           (i ==  90) ? "s    : search adjacent tiles"            :
+           (i == 100) ? "t    : throw/shoot an item"              :
+           (i == 110) ? "v    : view item description"            :
+           (i == 120) ? "w    : wield an item"                    :
+           (i == 130) ? "x    : examine visible surroundings"     :
+           (i == 135) ? "z    : zap a wand"                       :
+           (i == 140) ? "A    : list abilities/mutations"         :
+           (i == 141) ? "C    : check experience"                 :
+           (i == 142) ? "D    : dissect a corpse"                 :
+           (i == 145) ? "E    : evoke power of wielded item"      :
+           (i == 150) ? "M    : memorise a spell"                 :
+           (i == 155) ? "O    : overview of the dungeon"          :
+           (i == 160) ? "P/R  : put on / remove jewellery"        :
+           (i == 165) ? "Q    : quit without saving"              :
+           (i == 168) ? "S    : save game and exit"               :
+           (i == 179) ? "V    : version information"              :
+           (i == 200) ? "W/T  : wear / take off armour"           :
+           (i == 210) ? "X    : examine level map"                :
+           (i == 220) ? "Z    : cast a spell"                     :
+           (i == 240) ? ",/g  : pick up items"                    :
+           (i == 242) ? "./del: rest one turn"                    :
+           (i == 250) ? "</>  : ascend / descend a staircase"     :
+           (i == 270) ? ";    : examine occupied tile"            :
+           (i == 280) ? "\\    : check item knowledge"            :
+#ifdef WIZARD
+           (i == 290) ? "&    : invoke your Wizardly powers"      :
+#endif
+           (i == 300) ? "+/-  : scroll up/down [level map only]"  :
+           (i == 310) ? "!    : shout or command allies"          :
+           (i == 325) ? "^    : describe religion"                :
+           (i == 337) ? "@    : status"                           :
+           (i == 340) ? "#    : dump character to file"           :
+           (i == 350) ? "=    : reassign inventory/spell letters" :
+           (i == 360) ? "\'    : wield item a, or switch to b"    :
+	   (i == 370) ? ":    : make a note"                      :
+#ifdef USE_MACROS
+           (i == 380) ? "`    : add macro"                        :
+           (i == 390) ? "~    : save macros"                      :
+#endif
+           (i == 400) ? "]    : display worn armour"              :
+           (i == 410) ? "\"    : display worn jewellery"          :
+	   (i == 415) ? "{    : inscribe an item"                 :
+           (i == 420) ? "Ctrl-P : see old messages"               :
+#ifdef PLAIN_TERM
+           (i == 430) ? "Ctrl-R : Redraw screen"                  :
+#endif
+           (i == 440) ? "Ctrl-A : toggle autopickup"              :
+	   (i == 445) ? "Ctrl-M : toggle autoprayer"              :
+	   (i == 447) ? "Ctrl-T : toggle fizzle"                  :
+           (i == 450) ? "Ctrl-X : Save game without query"        :
+
+#ifdef ALLOW_DESTROY_ITEM_COMMAND
+           (i == 451) ? "Ctrl-D : Destroy inventory item"         :
+#endif
+           (i == 453) ? "Ctrl-G : interlevel travel"              :
+           (i == 455) ? "Ctrl-O : explore"                        :
+
+#ifdef STASH_TRACKING
+           (i == 456) ? "Ctrl-S : mark stash"                     :
+           (i == 457) ? "Ctrl-E : forget stash"                   :
+           (i == 458) ? "Ctrl-F : search stashes"                 :
+#endif
+
+           (i == 460) ? "Shift & DIR : long walk"                 :
+           (i == 465) ? "/ DIR : long walk"                       :
+           (i == 470) ? "Ctrl  & DIR : door; untrap; attack"      :
+           (i == 475) ? "* DIR : door; untrap; attack"            :
+           (i == 478) ? "Shift & 5 on keypad : rest 100 turns"
+                      : "");
+}                               // end command_string()
+#endif  // OBSOLETE_COMMAND_HELP

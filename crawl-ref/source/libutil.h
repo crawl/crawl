@@ -35,7 +35,11 @@ bool cancelable_get_line( char *buf, int len, int wrapcol = 80,
                           input_history *mh = NULL );
 
 std::string & trim_string( std::string &str );
-std::vector<std::string> split_string(const char *sep, std::string s);
+std::vector<std::string> split_string(
+        const char *sep, 
+        std::string s, 
+        bool trim = true, 
+        bool accept_empties = false);
 
 #ifdef NEED_USLEEP
 void usleep( unsigned long time );

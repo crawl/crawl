@@ -62,7 +62,7 @@ template<class A, class B> void append_vector(
 }
 
 // returns -1 if unmatched else returns 0-15
-static short str_to_colour( const std::string &str )
+short str_to_colour( const std::string &str )
 {
     int ret;
 

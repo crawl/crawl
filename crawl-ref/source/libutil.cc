@@ -13,6 +13,7 @@
 
 #include "AppHdr.h"
 #include "defines.h"
+#include "initfile.h"
 #include "libutil.h"
 #include "externs.h"
 #include <stdio.h>
@@ -348,21 +349,29 @@ std::string & trim_string( std::string &str )
     return (str);
 }
 
-std::vector<std::string> split_string(const char *sep, std::string s)
+std::vector<std::string> split_string(
+        const char *sep, 
+        std::string s,
+        bool trim_segments,
+        bool accept_empty_segments)
 {
     std::vector<std::string> segments;
+    int separator_length = strlen(sep);
 
     std::string::size_type pos;
     while ((pos = s.find(sep, 0)) != std::string::npos) {
-        if (pos > 0)
+        if (pos > 0 || accept_empty_segments)
             segments.push_back(s.substr(0, pos));
-        s.erase(0, pos + 1);
+        s.erase(0, pos + separator_length);
     }
     if (s.length() > 0)
         segments.push_back(s);
     
-    for (int i = 0, count = segments.size(); i < count; ++i)
-        trim_string(segments[i]);
+    if (trim_segments)
+    {
+        for (int i = 0, count = segments.size(); i < count; ++i)
+            trim_string(segments[i]);
+    }
     return segments;
 }
 
@@ -583,10 +592,110 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 // formatted_string
 //
 
-formatted_string::formatted_string(const std::string &s)
+formatted_string::formatted_string(const std::string &s, bool init_style)
     : ops()
 {
-    ops.push_back( s );
+    if (init_style)
+        ops.push_back(LIGHTGREY);
+    ops.push_back(s);
+}
+
+int formatted_string::get_colour(const std::string &tag)
+{
+    if (tag == "h")
+        return (YELLOW);
+
+    const int colour = str_to_colour(tag);
+    return (colour != -1? colour : LIGHTGREY);
+}
+
+formatted_string formatted_string::parse_string(
+        const std::string &s,
+        bool  eol_ends_format,
+        bool (*process)(const std::string &tag))
+{
+    // FIXME This is a lame mess, just good enough for the task on hand
+    // (keyboard help).
+    formatted_string fs;
+    std::string::size_type tag    = std::string::npos;
+    std::string::size_type length = s.length();
+
+    std::string currs;
+    int curr_colour = LIGHTGREY;
+    bool masked = false;
+    
+    for (tag = 0; tag < length; ++tag)
+    {
+        bool invert_colour = false;
+        std::string::size_type endpos = std::string::npos;
+
+        if (s[tag] != '<' || tag >= length - 2)
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        // Is this a << escape?
+        if (s[tag + 1] == '<')
+        {
+            if (!masked)
+                currs += s[tag];
+            tag++;
+            continue;
+        }
+
+        endpos = s.find('>', tag + 1);
+        // No closing >?
+        if (endpos == std::string::npos)
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        std::string tagtext = s.substr(tag + 1, endpos - tag - 1);
+        if (tagtext.empty() || tagtext == "/")
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        if (tagtext[0] == '/')
+        {
+            invert_colour = true;
+            tagtext = tagtext.substr(1);
+            tag++;
+        }
+
+        if (tagtext[0] == '?')
+        {
+            if (tagtext.length() == 1)
+                masked = false;
+            else if (process && !process(tagtext.substr(1)))
+                masked = true;
+
+            tag += tagtext.length() + 1; 
+            continue;
+        }
+
+        const int new_colour = invert_colour? LIGHTGREY : get_colour(tagtext);
+        if (new_colour != curr_colour)
+        {
+            fs.cprintf(currs);
+            currs.clear();
+            fs.textcolor( curr_colour = new_colour );
+        }
+        tag += tagtext.length() + 1;
+    }
+    if (currs.length())
+        fs.cprintf(currs);
+
+    if (eol_ends_format && curr_colour != LIGHTGREY)
+        fs.textcolor(LIGHTGREY);
+
+    return (fs);
 }
 
 formatted_string::operator std::string() const
