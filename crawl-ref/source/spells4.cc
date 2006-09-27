@@ -723,7 +723,7 @@ void cast_sticks_to_snakes(int pow)
         // ogres, and most importantly ogre magi).  Still it's unlikely
         // any character is strong enough to bother lugging a few of
         // these around.  -- bwr
-        if (item_mass( you.inv[ weapon ] ) < 500)
+        if (item_mass( you.inv[ weapon ] ) < 300)
             mon = MONS_SNAKE;
         else
             mon = MONS_BROWN_SNAKE;
