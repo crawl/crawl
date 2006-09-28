@@ -2747,7 +2747,13 @@ void handle_god_time(void)
             // to make up for the new spell training requirements, else
             // it's practically impossible to get Master of Arcane status.
             if (one_chance_in(50))
+            {
                 lose_piety(1);
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, 
+                        "Sif Muna piety decay (new piety = %d)", you.piety);
+#endif
+            }
             if (you.piety < 1)
                 excommunication();
             break;

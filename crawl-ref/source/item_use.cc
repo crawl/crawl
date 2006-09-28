@@ -3289,7 +3289,7 @@ void read_scroll(void)
                     (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
 }                               // end read_scroll()
 
-void original_name(void)
+void examine_object(void)
 {
     int item_slot = prompt_invent_item( "Examine which item?", -1,
 					true, true, true, '\0', NULL,
@@ -3302,6 +3302,7 @@ void original_name(void)
 
     describe_item( you.inv[item_slot] );
     redraw_screen();
+    mesclr(true);
 }                               // end original_name()
 
 void use_randart(unsigned char item_wield_2)

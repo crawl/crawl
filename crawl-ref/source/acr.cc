@@ -1252,7 +1252,7 @@ static void do_action( command_type cmd ) {
 	break;
 
     case CMD_EXAMINE_OBJECT:
-	original_name();
+	examine_object();
 	break;
 
     case CMD_PRAY:

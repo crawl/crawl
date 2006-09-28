@@ -47,7 +47,7 @@ void drink(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void original_name(void);
+void examine_object(void);
 
 
 // last updated 12may2000 {dlb}

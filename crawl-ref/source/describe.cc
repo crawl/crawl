@@ -3327,11 +3327,9 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
 void describe_item( const item_def &item )
 {
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
@@ -3359,8 +3357,7 @@ void describe_item( const item_def &item )
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
+    puttext(1, 1, 80, 25, buffer);
 #endif
 }                               // end describe_item()
 
@@ -3379,10 +3376,9 @@ void describe_spell(int spelled)
     description.reserve(500);
 
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
@@ -4472,7 +4468,7 @@ void describe_spell(int spelled)
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
+    puttext(1, 1, 80, 25, buffer);
     window(1, 1, 80, 25);
 #endif
 }                               // end describe_spell()
@@ -4492,10 +4488,9 @@ void describe_monsters(int class_described, unsigned char which_mons)
     description.reserve(200);
 
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
@@ -6216,7 +6211,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
+    puttext(1, 1, 80, 25, buffer);
     window(1, 1, 80, 25);
 #endif
 }                               // end describe_monsters
