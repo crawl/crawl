@@ -3152,34 +3152,26 @@ static void move_player(int move_x, int move_y)
         you.x_pos += move_x;
         you.y_pos += move_y;
 
-        if (targ_grid == DNGN_SHALLOW_WATER && !player_is_levitating())
+        if (targ_grid == DNGN_SHALLOW_WATER && !player_is_levitating() &&
+	    you.species != SP_MERFOLK) // merfolk already handled above
         {
-            if (you.species != SP_MERFOLK)
-            {
-                if (one_chance_in(3) && !silenced(you.x_pos, you.y_pos))
-                {
-                    mpr("Splash!");
-                    noisy( 10, you.x_pos, you.y_pos );
-                }
-
-                you.time_taken *= 13 + random2(8);
-                you.time_taken /= 10;
-
-                if (old_grid != DNGN_SHALLOW_WATER)
-                {
-                    mpr( "You enter the shallow water. "
-                         "Moving in this stuff is going to be slow." );
-
-                    if (you.invis)
-                        mpr( "And don't expect to remain undetected." );
-                }
-            }
-            else if (old_grid != DNGN_SHALLOW_WATER
-                    && old_grid != DNGN_DEEP_WATER)
-            {
-                mpr("You return to your normal form as you enter the water.");
-                merfolk_start_swimming();
-            }
+	    if (one_chance_in(3) && !silenced(you.x_pos, you.y_pos))
+	    {
+		mpr("Splash!");
+		noisy( 10, you.x_pos, you.y_pos );
+	    }
+	    
+	    you.time_taken *= 13 + random2(8);
+	    you.time_taken /= 10;
+	    
+	    if (old_grid != DNGN_SHALLOW_WATER)
+	    {
+		mpr( "You enter the shallow water. "
+		     "Moving in this stuff is going to be slow." );
+		
+		if (you.invis)
+		    mpr( "And don't expect to remain undetected." );
+	    }
         }
 
         move_x = 0;
