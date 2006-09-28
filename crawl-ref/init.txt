@@ -56,6 +56,93 @@
 autopickup = $?!:"/0
 
 #
+# safe_autopickup
+#
+# If set, autopickup will not pick anything up if monsters are visible.
+# Note that risky terrain (e.g. statues) does not count as a monster.
+safe_autopickup = true
+
+#
+# autoinscribe
+#
+# autoinscribe lines of the form REGEX:STRING inscribe any item
+# matching REGEX with STRING. Multiple matches will have the
+# inscriptions concatenated in the order they appear.
+#autoinscribe=royal jell:=g 
+
+#
+# default_autopickup
+# default_autoprayer
+# default_fizzlecheck
+#
+# These determine whether autopickup, autoprayer and fizzlecheck are on
+# or off when the game starts (including reloading.) Default: true,
+# false, and true, respectively. Note that fizzlecheck has
+# no effect unless confirm_spell_fizzle is set.
+#
+#default_autopickup = false
+#default_autoprayer = true
+#default_fizzlecheck = false
+
+#
+# confirm_self_target
+#
+# If set, you will be prompted for confirmation when targeting a spell
+# at yourself. This does not apply to friendly-targeted spells (e.g.,
+# healing.) Default is false.
+confirm_self_target = true
+
+#
+# confirm_spell_fizzle
+#
+# If set, you will be prompted for confirmation before fizzling a spell
+# by mistargeting. Default is false.
+#confirm_spell_fizzle = true
+
+#
+# use_notes
+#
+# If set, notes will be taken and dumped with the chardump.
+use_notes = true
+
+#
+# ood_interesting
+#
+# How many levels OOD a monster should be to have its death be
+# noteworthy. The default is 8. To disable this, use 500 or more.
+#ood_interesting=500
+
+#
+# note_hp_percent
+#
+# note_hp_percent takes a note when the player takes damage and their
+# hitpoints are less than this percentage of their maximum (use 0 to
+# turn off these messages.) Notes in quick sequence are suppressed.
+note_hp_percent=5
+
+#
+# note_skill_levels
+#
+# Whenever a skill reaches a level in this comma-separated list,
+# a note is generated. You can have multiple note_skill_levels lines.
+note_skill_levels=5,10,15,20,27
+
+#
+# note_skill_max
+#
+# Whenever a skill reaches a level which no skill has reached before
+# (i.e., it is now your only top skill), a note will be taken if
+# note_skill_max is true. Default is false.
+#note_skill_max = true
+
+#
+# safe_zero_exp
+#
+# Set to false to make zero-exp monsters considered risky (for autoprayer
+# and safe_autopickup.) The default is true.
+#safe_zero_exp = false
+
+#
 # assign_item_slot
 #
 # When picking up items, the inventory slot into which the item goes is 
