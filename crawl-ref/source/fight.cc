@@ -644,10 +644,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-    if ((your_to_hit >= defender->evasion || one_chance_in(30))
-        || ((defender->speed_increment <= 60
-             || defender->behaviour == BEH_SLEEP)
-            && !one_chance_in(10 + you.skills[SK_STABBING])))
+    if ((your_to_hit >= defender->evasion || one_chance_in(30)) ||
+	((mons_is_paralysed(defender) || defender->behaviour == BEH_SLEEP)
+	 && !one_chance_in(10 + you.skills[SK_STABBING])))
     {
         hit = true;
         int dammod = 78;
@@ -3031,9 +3030,9 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
         mons_to_hit = random2(mons_to_hit);
 
-        if (mons_to_hit >= defender->evasion
-            || ((defender->speed_increment <= 60
-                 || defender->behaviour == BEH_SLEEP) && !one_chance_in(20)))
+        if (mons_to_hit >= defender->evasion ||
+	    ((mons_is_paralysed(defender) || defender->behaviour == BEH_SLEEP)
+	     && !one_chance_in(20)))
         {
             hit = true;
 

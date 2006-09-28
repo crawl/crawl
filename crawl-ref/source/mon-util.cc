@@ -1469,7 +1469,8 @@ bool mons_friendly(const monsters *m)
 
 bool mons_is_paralysed(const monsters *m)
 {
-    return (m->speed_increment == 0);
+    // maybe this should be 70
+    return (m->speed_increment <= 60);
 }
 
 bool mons_is_confused(const monsters *m)
