@@ -1383,6 +1383,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 break;
             case RING_SUSTAIN_ABILITIES:
             case RING_SUSTENANCE:
+            case RING_TELEPORTATION: // usually cursed
                 valued += 25;
                 break;
             case RING_SEE_INVISIBLE:
@@ -1394,9 +1395,6 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             case RING_PROTECTION:
             case RING_STRENGTH:
                 valued += 10;
-                break;
-            case RING_TELEPORTATION:
-                valued -= 10;
                 break;
             case RING_HUNGER:
                 valued -= 50;
