@@ -822,17 +822,17 @@ static void dump_skills( std::string & text )
 // Return string of the i-th spell type, with slash if required
 //
 //---------------------------------------------------------------
-static std::string spell_type_name(int spell_class, bool slash)
+static std::string spell_type_shortname(int spell_class, bool slash)
 {
     std::string ret;
 
     if (slash)
         ret = "/";
 
-    ret += spelltype_name(spell_class);
+    ret += spelltype_short_name(spell_class);
 
     return (ret);
-}                               // end spell_type_name()
+}                               // end spell_type_shortname()
 
 //---------------------------------------------------------------
 //
@@ -890,7 +890,7 @@ static void dump_spells( std::string & text )
         text += "You know the following spells:" EOL;
         text += EOL;
 
-        text += "  Your Spells                       Type                  Success   Level" EOL;
+	text += " Your Spells              Type           Power          Success   Level" EOL;
 
         for (int j = 0; j < 52; j++)
         {
@@ -899,20 +899,17 @@ static void dump_spells( std::string & text )
 
             if (spell != SPELL_NO_SPELL)
             {
-                std::string spell_line = " ";
+                std::string spell_line;
 
-                char strng[2];
-                strng[0] = letter;
-                strng[1] = '\0';
-
-                spell_line += strng;
+                spell_line += letter;
                 spell_line += " - ";
                 spell_line += spell_title( spell );
 
-                for (int i = spell_line.length(); i < 34; i++)
-                {
-                    spell_line += ' ';
-                }
+		if ( spell_line.length() > 24 )
+		    spell_line = spell_line.substr(0, 24);
+		
+		for (int i = spell_line.length(); i < 26; i++) 
+		    spell_line += ' ';
 
                 bool already = false;
 
@@ -920,18 +917,30 @@ static void dump_spells( std::string & text )
                 {
                     if (spell_typematch( spell, spell_type_index[i] ))
                     {
-                        spell_line += 
-                                spell_type_name(spell_type_index[i], already);
+                        spell_line += spell_type_shortname(spell_type_index[i],
+							   already);
                         already = true;
                     }
                 }
 
-                if (spell_line.length() > 57)
-                    spell_line = spell_line.substr(0, 57);
-                for (int i = spell_line.length(); i < 58; i++)
-                {
-                    spell_line += ' ';
-                }
+		for (int i = spell_line.length(); i < 41; ++i )
+		    spell_line += ' ';
+
+		int spell_p = calc_spell_power( spell, true );
+		spell_line += ( (spell_p > 100) ? "Enormous"   :
+				(spell_p >  90) ? "Huge"       :
+				(spell_p >  80) ? "Massive"    :
+				(spell_p >  70) ? "Major"      :
+				(spell_p >  60) ? "Impressive" :
+				(spell_p >  50) ? "Reasonable" :
+				(spell_p >  40) ? "Moderate"   :
+				(spell_p >  30) ? "Adequate"   :
+				(spell_p >  20) ? "Mediocre"   :
+				(spell_p >  10) ? "Minor"
+				: "Negligible");
+
+		for (int i = spell_line.length(); i < 56; ++i )
+		    spell_line += ' ';
 
                 int fail_rate = spell_fail( spell );
 
@@ -948,7 +957,7 @@ static void dump_spells( std::string & text )
                               (fail_rate >   0)  ? "Excellent" 
                                                  : "Perfect";
 
-                for (int i = spell_line.length(); i < 70; i++)
+                for (int i = spell_line.length(); i < 68; i++)
                     spell_line += ' ';
 
                 itoa((int) spell_difficulty( spell ), tmp_quant, 10 );

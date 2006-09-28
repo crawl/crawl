@@ -103,7 +103,7 @@ char list_spells(void)
 
     clrscr();
 
-    cprintf( " Your Spells                      Type                          Success   Level" );
+    cprintf( " Your Spells                      Type            Power         Success   Level" );
     lines++;
 
     for (j = 0; j < 52; j++)
@@ -164,13 +164,29 @@ char list_spells(void)
                     if (already)
                         cprintf( "/" );
 
-                    cprintf( spelltype_name( 1 << i ) );
+                    cprintf( spelltype_short_name( 1 << i ) );
                     already = true;
                 }
             }
 
             char sval[16];
 
+	    // 35--48 is the spell schools
+	    
+	    gotoxy(51, wherey());
+	    int spell_p = calc_spell_power( spell, true );
+	    cprintf( (spell_p > 100) ? "Enormous"   :
+		     (spell_p >  90) ? "Huge"       :
+		     (spell_p >  80) ? "Massive"    :
+		     (spell_p >  70) ? "Major"      :
+		     (spell_p >  60) ? "Impressive" :
+		     (spell_p >  50) ? "Reasonable" :
+		     (spell_p >  40) ? "Moderate"   :
+		     (spell_p >  30) ? "Adequate"   :
+		     (spell_p >  20) ? "Mediocre"   :
+		     (spell_p >  10) ? "Minor"
+		     : "Negligible");
+		     
             //gotoxy(58, wherey());
             gotoxy(65, wherey());
 

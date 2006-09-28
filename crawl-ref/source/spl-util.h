@@ -59,6 +59,8 @@ int count_bits( unsigned int bits );
 // * called from: chardump - command - debug - spl-book - spells0
 const char *spell_title(int which_spell);
 
+const char* spelltype_short_name( int which_spelltype );
+
 //int spell_restriction(int which_spell, int which_restriction);
 
 int apply_area_visible(int (*func) (int, int, int, int), int power);

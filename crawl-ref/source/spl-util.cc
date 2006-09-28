@@ -701,6 +701,40 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
     return 1;
 }                               // end spell_direction()
 
+const char* spelltype_short_name( int which_spelltype ) {
+    switch (which_spelltype)
+    {
+    case SPTYP_CONJURATION:
+        return ("Conj");
+    case SPTYP_ENCHANTMENT:
+        return ("Ench");
+    case SPTYP_FIRE:
+        return ("Fire");
+    case SPTYP_ICE:
+        return ("Ice");
+    case SPTYP_TRANSMIGRATION:
+        return ("Tmgr");
+    case SPTYP_NECROMANCY:
+        return ("Necr");
+    case SPTYP_HOLY:
+        return ("Holy");
+    case SPTYP_SUMMONING:
+        return ("Summ");
+    case SPTYP_DIVINATION:
+        return ("Divn");
+    case SPTYP_TRANSLOCATION:
+        return ("Tloc");
+    case SPTYP_POISON:
+        return ("Pois");
+    case SPTYP_EARTH:
+        return ("Erth");
+    case SPTYP_AIR:
+        return ("Air");
+    default:
+	return "Bug";
+    }
+}
+
 const char *spelltype_name(unsigned int which_spelltype)
 {
     static char bug_string[80];
