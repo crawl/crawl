@@ -171,6 +171,8 @@ int player_res_fire(bool calc_unid = true);
  * *********************************************************************** */
 int player_res_poison(bool calc_unid = true);
 
+bool player_control_teleport(bool calc_unid = true);
+
 int player_res_magic(void);
 
 bool player_res_asphyx();

@@ -842,6 +842,12 @@ bool player_res_asphyx()
     return (false);
 }
 
+bool player_control_teleport(bool calc_unid) {
+    return ( you.duration[DUR_CONTROL_TELEPORT] ||
+	     player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid) ||
+	     you.mutation[MUT_TELEPORT_CONTROL] );
+}
+
 // funny that no races are susceptible to poisons {dlb}
 int player_res_poison(bool calc_unid)
 {

@@ -257,7 +257,7 @@ enum attribute_type
     ATTR_DIVINE_LIGHTNING_PROTECTION,  //    0
     // ATTR_SPEC_AIR,                  // don't use this!
     // ATTR_SPEC_EARTH,
-    ATTR_CONTROL_TELEPORT = 3,     
+    ATTR_CONTROL_TELEPORT = 3,         // obsolete
     ATTR_WALK_SLOWLY,
     ATTR_TRANSFORMATION,               //    5
     ATTR_CARD_COUNTDOWN,

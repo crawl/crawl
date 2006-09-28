@@ -1445,7 +1445,6 @@ bool mutate(int which_mutation, bool failMsg)
         break;
 
     case MUT_TELEPORT_CONTROL:
-        you.attribute[ATTR_CONTROL_TELEPORT]++;
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
@@ -1702,7 +1701,6 @@ bool delete_mutation(int which_mutation)
         break;
 
     case MUT_TELEPORT_CONTROL:
-        you.attribute[ATTR_CONTROL_TELEPORT]--;
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
 

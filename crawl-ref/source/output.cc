@@ -810,7 +810,7 @@ void get_full_detail(char* buffer, bool calc_unid)
         snprintf(CUR_AD, "Rnd.Telep. : %s", 
             itosym1( player_teleport(calc_unid) ) );
     snprintf(CUR_AD, "Ctrl.Telep.: %s", 
-            itosym1( you.attribute[ATTR_CONTROL_TELEPORT] ) );
+	     itosym1( player_control_teleport(calc_unid) ) );
     snprintf(CUR_AD, "Levitation : %s", itosym1( player_is_levitating() ) );
     snprintf(CUR_AD, "Ctrl.Flight: %s", 
             itosym1( wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid) ) ); 

@@ -572,7 +572,7 @@ bool allow_control_teleport( bool silent )
     }
 
     // Tell the player why if they have teleport control.
-    if (!ret && you.attribute[ATTR_CONTROL_TELEPORT] && !silent)
+    if (!ret && player_control_teleport() && !silent)
         mpr("A powerful magic prevents control of your teleportation.");
 
     return ret;
@@ -606,8 +606,8 @@ void you_teleport(void)
 void you_teleport2( bool allow_control, bool new_abyss_area )
 {
     bool is_controlled = (allow_control && !you.conf
-                              && you.attribute[ATTR_CONTROL_TELEPORT]
-                              && allow_control_teleport());
+			  && player_control_teleport()
+			  && allow_control_teleport());
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
     {

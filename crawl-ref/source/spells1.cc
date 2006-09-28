@@ -133,7 +133,7 @@ void random_blink(bool allow_partial_control)
 
 #ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: add back control, but effect is cast_semi_controlled_blink(pow)
-    else if (you.attribute[ATTR_CONTROL_TELEPORT] && !you.conf
+    else if (player_control_teleport() && !you.conf
              && allow_partial_control && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
@@ -1105,9 +1105,6 @@ void cast_resist_poison(int power)
 void cast_teleport_control(int power)
 {
     int dur_incr = 10 + random2(power);
-
-    if (you.duration[DUR_CONTROL_TELEPORT] == 0)
-        you.attribute[ATTR_CONTROL_TELEPORT]++;
 
     mpr("You feel in control.");
 

@@ -1958,6 +1958,7 @@ bool puton_item(int item_slot, bool prompt_finger)
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
     case RING_REGENERATION:
+    case RING_TELEPORT_CONTROL:
         break;
 
     case RING_PROTECTION:
@@ -2006,11 +2007,6 @@ bool puton_item(int item_slot, bool prompt_finger)
     case RING_LEVITATION:
         mpr("You feel buoyant.");
         ident = ID_KNOWN_TYPE;
-        break;
-
-    case RING_TELEPORT_CONTROL:
-        // XXX: is this safe or should we make it a function -- bwr
-        you.attribute[ATTR_CONTROL_TELEPORT]++;
         break;
 
     case AMU_RAGE:
@@ -2210,6 +2206,7 @@ bool remove_ring(int slot)
     case RING_SUSTENANCE:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
+    case RING_TELEPORT_CONTROL:
         break;
 
     case RING_PROTECTION:
@@ -2248,9 +2245,6 @@ bool remove_ring(int slot)
         // dec_max_mp(9);
         break;
 
-    case RING_TELEPORT_CONTROL:
-        you.attribute[ATTR_CONTROL_TELEPORT]--;
-        break;
     }
 
     if (is_random_artefact( you.inv[ring_wear_2] ))

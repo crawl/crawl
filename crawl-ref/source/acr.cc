@@ -1868,7 +1868,6 @@ static void world_reacts() {
     {
         mpr("You feel uncertain.", MSGCH_DURATION);
         you.duration[DUR_CONTROL_TELEPORT] = 0;
-        you.attribute[ATTR_CONTROL_TELEPORT]--;
     }
 
     if (you.duration[DUR_RESIST_POISON] > 1)
