@@ -158,13 +158,20 @@ void handle_delay( void )
             // monster could die and create a corpse with the same ID number...
             // However, it would not be at the player's square like the 
             // original and that's why we do it this way.  Note that 
-            // we ignore the conversion to skeleton possiblity just to 
+            // we ignore the conversion to skeleton possibility just to 
             // be nice. -- bwr
             if (is_valid_item( mitm[ delay.parm1 ] )
                 && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
                 && mitm[ delay.parm1 ].x == you.x_pos
-                && mitm[ delay.parm1 ].y == you.y_pos)
+                && mitm[ delay.parm1 ].y == you.y_pos )
             {
+		// special < 100 is the rottenness check
+		if ( (mitm[delay.parm1].special < 100) &&
+		     (delay.parm2 >= 100) ) {
+		    mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+		    delay.parm2 = 99; // don't give the message twice
+		}
+
                 // mark work done on the corpse in case we stop -- bwr
                 mitm[ delay.parm1 ].plus2++;
             }

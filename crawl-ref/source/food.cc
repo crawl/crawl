@@ -372,7 +372,8 @@ bool butchery(void)
             if (work_req < 0)
                 work_req = 0;
 
-            start_delay( DELAY_BUTCHER, work_req, item_got );
+            start_delay( DELAY_BUTCHER, work_req, item_got,
+			 mitm[item_got].special );
         }
 
         // cue up switching weapon back
@@ -442,7 +443,8 @@ bool butchery(void)
                     if (work_req < 0)
                         work_req = 0;
 
-                    start_delay( DELAY_BUTCHER, work_req, item_got );
+                    start_delay( DELAY_BUTCHER, work_req, item_got,
+				 mitm[item_got].special );
                 }
 
                 if (wpn_switch && !new_cursed)
