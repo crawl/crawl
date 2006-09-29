@@ -150,14 +150,49 @@ void weapon_switch( int targ )
         wield_effects( targ, false );
 }
 
+// look for a butchering implement, prompting user if no obvious
+// options exist. Returns whether a weapon was switched.
+static bool find_butchering_implement() {
+
+    // look for a butchering implement in your pack
+    for (int i = 0; i < ENDOFPACK; ++i) {
+	if (is_valid_item( you.inv[i] )
+	    && can_cut_meat( you.inv[i] )
+	    && you.inv[i].base_type == OBJ_WEAPONS
+	    && item_known_uncursed(you.inv[i])
+	    && item_ident( you.inv[i], ISFLAG_KNOW_TYPE )
+	    && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
+	    && can_wield( you.inv[i] ))
+	{
+	    mpr("Switching to a butchering implement.");
+	    wield_weapon( true, i, false );
+
+	    // Account for the weapon switch...we're doing this here
+	    // since the above switch may reveal information about the
+	    // weapon (curse status, ego type).  So even if the
+	    // character fails to or decides not to butcher past this
+	    // point, they have achieved something and there should be
+	    // a cost.
+	    start_delay( DELAY_UNINTERUPTABLE, 1 );
+	    return true;
+	}
+    }
+    
+    // if we didn't swap above, then we still can't cut...let's call
+    // wield_weapon() in the "prompt the user" way...
+    
+    // prompt for new weapon
+    int old_weapon = you.equip[EQ_WEAPON];
+    mpr( "What would you like to use?", MSGCH_PROMPT );
+    wield_weapon( false );
+    
+    // let's see if the user did something...
+    return (you.equip[EQ_WEAPON] != old_weapon);
+}
+
 bool butchery(void)
 {
     char str_pass[ ITEMNAME_SIZE ];
-    int items_here = 0;
-    int o = igrd[you.x_pos][you.y_pos];
-    int k = 0;
-    int item_got;
-    unsigned char keyin;
 
     bool can_butcher = false;
     bool wpn_switch = false;
@@ -184,302 +219,113 @@ bool butchery(void)
         return (false);
     }
 
-    if (barehand_butcher)
-        can_butcher = true;
-    else
-    {
-        if (you.equip[EQ_WEAPON] != -1)
-	    can_butcher = can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
-
-        // Should probably check for cursed-weapons, bare hands and
-        // non-weapons in hand here, but wield_weapon will be used for
-        // this swap and it will do all that (although the player might
-        // be annoyed with the excess prompt).
-        if (Options.easy_butcher && !can_butcher)
-        {
-            //mv: check for berserk first
-            if (you.berserker)
-            {
-                mpr ("You are too berserk to search for a butchering knife!");
-                return (false);
-            }
-
-            // We'll now proceed to look through the entire inventory for
-            // choppers/slicers.  We'll skip special weapons because
-            // wielding/unwielding a foo of distortion would be disastrous.
-            for (int i = 0; i < ENDOFPACK; ++i)
-            {
-                if (is_valid_item( you.inv[i] )
-                        && can_cut_meat( you.inv[i] )
-                        && you.inv[i].base_type == OBJ_WEAPONS
-                        && item_known_uncursed(you.inv[i])
-                        && item_ident( you.inv[i], ISFLAG_KNOW_TYPE )
-                        && get_weapon_brand(you.inv[i])
-                                != SPWPN_DISTORTION
-                        && can_wield( you.inv[i] ))
-                {
-                    mpr("Switching to a butchering implement.");
-                    wpn_switch = true;
-                    wield_weapon( true, i, false );
-                    break;
-                }
-            }
-
-            // if we didn't swap above, then we still can't cut... let's
-            // call wield_weapon() in the "prompt the user" way...
-            if (!wpn_switch)
-            {
-                // prompt for new weapon
-                mpr( "What would you like to use?", MSGCH_PROMPT );
-                wield_weapon( false );
-
-                // let's see if the user did something...
-                if (you.equip[EQ_WEAPON] != old_weapon)
-                    wpn_switch = true;
-            }
-        }
-
-        // weapon might have changed (to bare hands as well), we'll
-        // update the can_butcher status accordingly (note: if we could
-        // butcher with our bare hands we wouldn't be here) -- bwr
-        if (wpn_switch && you.equip[EQ_WEAPON] != -1)
-            can_butcher = can_cut_meat( you.inv[you.equip[EQ_WEAPON]] );
+    // It makes more sense that you first find out if there's anything
+    // to butcher, *then* decide to actually butcher it.
+    // The old code did it the other way.
+    if ( !barehand_butcher && you.berserker ) {
+	mpr ("You are too berserk to search for a butchering knife!");
+	return (false);
     }
 
-    // Account for the weapon switch above if it happened... we're 
-    // doing this here since the above switch may reveal information
-    // about the weapon (curse status, ego type).  So even if the 
-    // character fails to or decides not to butcher past this point,
-    // they have achieved something and there should be a cost.
-    if (wpn_switch)
-        start_delay( DELAY_UNINTERUPTABLE, 1, old_weapon );
+    int objl;
 
-    // check to see if the new implement is cursed - if so,  set a
-    // flag indicating this.  If a player actually butchers anything,
-    // this flag can be checked before switching back.
-    int wpn = you.equip[EQ_WEAPON];
+    for (objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
+	 objl = mitm[objl].link) {
 
-    if (wpn != -1 
-        && you.inv[wpn].base_type == OBJ_WEAPONS
-        && item_cursed( you.inv[wpn] ))
-    {
-        new_cursed = true;
-    }
+	if ( (mitm[objl].base_type != OBJ_CORPSES) ||
+	     (mitm[objl].sub_type != CORPSE_BODY) )
+	    continue;
 
-    // Final checks and clue-giving...
-    if (!barehand_butcher && you.equip[EQ_WEAPON] == -1)
-    {
-        if (you.equip[ EQ_GLOVES ] == -1)
-            mpr("What, with your bare hands?");
-        else
-            mpr("You can't use your claws with your gloves on!");
+	// offer the possibility of butchering
+	it_name(objl, DESC_NOCAP_A, str_pass);
+	snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
+	int answer = yesnoquit( info, true, 0, false );
+	if ( answer == -1 )
+	    break;
+	if ( answer == 0 )
+	    continue;
+	
+	can_butcher = barehand_butcher ||
+	    (you.equip[EQ_WEAPON] != -1 &&
+	     can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
+	
+	if ( Options.easy_butcher && !can_butcher ) {
 
-        // Switching back to avoid possible bug where player can use
-        // this to switch weapons in zero time.
-        if (wpn_switch)
-            weapon_switch( old_weapon );
+	    // try to find a butchering implement
+	    wpn_switch = find_butchering_implement();
+	    const int wpn = you.equip[EQ_WEAPON];
+	    if ( wpn_switch ) {
+		new_cursed =
+		    (wpn != -1) &&
+		    (you.inv[wpn].base_type == OBJ_WEAPONS) &&
+		    item_cursed( you.inv[wpn]);
+	    }
+	    
+	    // note that barehanded butchery would not reach this
+	    // stage, so if wpn == -1 the user selected '-' when
+	    // switching weapons
+	    
+	    if (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn])) {
+		
+		// still can't butcher. Early out
+		if ( wpn == -1 ) {
+		    if (you.equip[EQ_GLOVES] == -1)
+			mpr("What, with your bare hands?");
+		    else
+			mpr("You can't use your claws with your gloves on!");
+		}
+		else
+		    mpr("Maybe you should try using a sharper implement.");
+		
+		if ( !new_cursed && wpn_switch )
+		    start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
+		
+		return false;			
+	    }
+	    
+	    // switched to a good butchering knife
+	    can_butcher = true;
+	}
 
-        return (false);
-    }
-    else if (!can_butcher)
-    {
-        mpr("Maybe you should try using a sharper implement.");
+	if ( can_butcher ) {
 
-        // Switching back to avoid possible bug where player can use
-        // this to switch weapons in zero time.
-        if (wpn_switch && !new_cursed)
-            weapon_switch( old_weapon );
+	    // we actually butcher now
+	    if ( barehand_butcher )
+		mpr("You start tearing the corpse apart.");
+	    else
+		mpr("You start hacking away.");
 
-        return (false);
-    }
+	    if (you.duration[DUR_PRAYER] &&
+		(you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
+		 you.religion == GOD_TROG)) {
+		offer_corpse(objl);
+		destroy_item(objl);
+	    }
+	    else {
+		int work_req = 3 - mitm[objl].plus2;
+		if (work_req < 0)
+		    work_req = 0;
 
-    // No turning back at this point, we better be qualified.
-    ASSERT( can_butcher );
-
-    int last_item = NON_ITEM;
-
-    int objl = igrd[you.x_pos][you.y_pos];
-    int hrg = 0;
-    int counter = 0;
-
-    while (objl != NON_ITEM)
-    {
-        counter++;
-
-        last_item = objl;
-
-        hrg = mitm[objl].link;
-        objl = hrg;
-        items_here++;
-
-        if (counter > 1000)
-        {
-            error_message_to_player();
-
-            if (wpn_switch && !new_cursed)
-                weapon_switch( old_weapon );
-
-            return (false);
-        }
-    }
-
-    if (items_here == 1
-            && (mitm[igrd[you.x_pos][you.y_pos]].base_type == OBJ_CORPSES &&
-                mitm[igrd[you.x_pos][you.y_pos]].sub_type == CORPSE_BODY))
-    {
-        strcpy(info, "Butcher ");
-        it_name(igrd[you.x_pos][you.y_pos], DESC_NOCAP_A, str_pass);
-        strcat(info, str_pass);
-        strcat(info, "\?");
-        mpr(info, MSGCH_PROMPT);
-
-        keyin = getch();
-
-        if (keyin == 0)
-        {
-            getch();
-            keyin = 0;
+		start_delay(DELAY_BUTCHER, work_req, objl, mitm[objl].special);
+	    }
         }
 
-        if (keyin != 'y' && keyin != 'Y')
-        {
-            if (wpn_switch && !new_cursed)
-                weapon_switch( old_weapon );
-
-            return (false);
-        }
-
-        item_got = igrd[you.x_pos][you.y_pos];
-
-        last_item = NON_ITEM;
-
-        if (barehand_butcher)
-            mpr("You start tearing the corpse apart.");
-        else
-            mpr("You start hacking away.");
-
-        if (you.duration[DUR_PRAYER]
-            && (you.religion == GOD_OKAWARU
-                || you.religion == GOD_MAKHLEB || you.religion == GOD_TROG))
-        {
-            offer_corpse(item_got);
-            destroy_item(item_got);
-            // XXX: need an extra turn here for weapon swapping?
-        }
-        else
-        {
-            int work_req = 3 - mitm[item_got].plus2;
-            if (work_req < 0)
-                work_req = 0;
-
-            start_delay( DELAY_BUTCHER, work_req, item_got,
-			 mitm[item_got].special );
-        }
-
-        // cue up switching weapon back
-        if (wpn_switch && !new_cursed)
+        // switch weapon back
+        if (!new_cursed && wpn_switch)
             start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
 
         you.turn_is_over = 1;
 
-        return (true);
-
-    }                           // end "if items_here == 1"
-    else if (items_here > 1)
-    {
-        last_item = NON_ITEM;
-        o = igrd[you.x_pos][you.y_pos];
-
-        for (k = 0; k < items_here; k++)
-        {
-            if (mitm[o].base_type != OBJ_CORPSES
-                    || mitm[o].sub_type != CORPSE_BODY)
-            {
-                goto out_of_eating;
-            }
-
-            strcpy(info, "Butcher ");
-            it_name(o, DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, "\?");
-            mpr(info, MSGCH_PROMPT);
-
-            keyin = getch();
-            if (keyin == 0)
-            {
-                getch();
-                keyin = 0;
-            }
-
-            if (keyin == 'q')
-            {
-                if (wpn_switch && !new_cursed)
-                    weapon_switch( old_weapon );
-
-                return (false);
-            }
-
-            if (keyin == 'y')
-            {
-                item_got = o;
-
-                if (barehand_butcher)
-                    mpr("You start tearing the corpse apart.");
-                else
-                    mpr("You start hacking away.");
-
-                if (you.duration[DUR_PRAYER]
-                    && (you.religion == GOD_OKAWARU
-                        || you.religion == GOD_MAKHLEB
-                        || you.religion == GOD_TROG))
-                {
-                    offer_corpse(item_got);
-                    destroy_item(item_got);
-                    // XXX: need an extra turn here for weapon swapping?
-                }
-                else
-                {
-                    int work_req = 3 - mitm[item_got].plus2;
-                    if (work_req < 0)
-                        work_req = 0;
-
-                    start_delay( DELAY_BUTCHER, work_req, item_got,
-				 mitm[item_got].special );
-                }
-
-                if (wpn_switch && !new_cursed)
-                {
-                    // weapon_switch( old_weapon );
-                    // need to count the swap delay in this case
-                    start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
-                }
-
-                you.turn_is_over = 1;
-                return (true);
-            }
-
-          out_of_eating:
-
-            if (is_valid_item( mitm[o] ))
-                last_item = o;
-
-            hrg = mitm[o].link;
-            o = hrg;
-
-            if (o == NON_ITEM)
-                break;
-
-            if (items_here == 0)
-                break;
-        }                       // end "for k" loop
+        return true;
     }
 
     mpr("There isn't anything to dissect here.");
 
-    if (wpn_switch && !new_cursed)
+    if (!new_cursed && wpn_switch) { // should never happen
         weapon_switch( old_weapon );
-
-    return (false);
+    }
+    
+    return false;
 }                               // end butchery()
 
 #ifdef CLUA_BINDINGS

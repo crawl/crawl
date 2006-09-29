@@ -60,6 +60,10 @@ void canned_msg(unsigned char which_message);
 bool yesno( const char * str, bool safe = true, int safeanswer = 0, 
             bool clear_after = true );
 
+int yesnoquit( const char* str, bool safe = true,
+	       int safeanswer = 0, bool clear_after = true );
+
+
 int grid_distance( int x, int y, int x2, int y2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( int x, int y, int x2, int y2 );

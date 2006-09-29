@@ -712,6 +712,43 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after )
     }
 }                               // end yesno()
 
+// like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
+int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
+{
+    unsigned char tmp;
+
+    interrupt_activity( AI_FORCE_INTERRUPT );
+    while (1)
+    {
+        mpr(str, MSGCH_PROMPT);
+
+        tmp = (unsigned char) getch();
+
+	if ( tmp == 27 || tmp == 'q' || tmp == 'Q' )
+	    return -1;
+	
+        if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
+            tmp = safeanswer;
+
+        if (Options.easy_confirm == CONFIRM_ALL_EASY
+            || tmp == safeanswer
+            || (Options.easy_confirm == CONFIRM_SAFE_EASY && safe))
+        {
+            tmp = toupper( tmp );
+        }
+
+        if (clear_after)
+            mesclr();
+
+        if (tmp == 'N')
+            return 0;
+        else if (tmp == 'Y')
+            return 1;
+        else
+            mpr("[Y]es or [N]o only, please.");
+    }
+}    
+
 // More accurate than distance() given the actual movement geonmetry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
 {

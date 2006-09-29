@@ -120,7 +120,7 @@ void stop_delay( void )
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
-    case DELAY_UNINTERUPTABLE:    // never stopable 
+    case DELAY_UNINTERUPTABLE:    // never stoppable 
     default:
         break;
     }
