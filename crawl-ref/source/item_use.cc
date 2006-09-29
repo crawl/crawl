@@ -2301,12 +2301,29 @@ void zap_wand(void)
         return;
     }
 
-    if (you.inv[item_slot].base_type != OBJ_WANDS
-        || you.inv[item_slot].plus < 1)
+    if (you.inv[item_slot].base_type != OBJ_WANDS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         you.turn_is_over = 1;
         return;
+    }
+
+    if ( you.inv[item_slot].plus < 1 ) {
+	// it's an empty wand, inscribe it that way
+        canned_msg(MSG_NOTHING_HAPPENS);
+        you.turn_is_over = 1;
+	if ( !item_ident(you.inv[item_slot], ISFLAG_KNOW_PLUSES) ) {
+
+	    if ( you.inv[item_slot].inscription.find("empty") ==
+		 std::string::npos ) {
+
+		if ( !you.inv[item_slot].inscription.empty() )
+		    you.inv[item_slot].inscription += ' ';
+		you.inv[item_slot].inscription += "[empty]";
+		
+	    }
+	}
+	return;
     }
 
     if (item_ident( you.inv[item_slot], ISFLAG_KNOW_TYPE ))
