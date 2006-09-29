@@ -484,7 +484,8 @@ static void dump_notes( std::string& text )
     if ( note_list.size() == 0 || Options.use_notes == false )
 	return;
 
-    text += EOL "-----" EOL "Notes" EOL "-----" EOL;
+    text += EOL "Notes" EOL "| Turn  |Location | Note" EOL;
+    text += "--------------------------------------------------------------" EOL;
     for ( unsigned i = 0; i < note_list.size(); ++i ) {
 	text += describe_note(note_list[i]);
 	text += EOL;

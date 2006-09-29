@@ -694,15 +694,12 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-		if ( MONST_INTERESTING(monster) ) {
+	if ( MONST_INTERESTING(monster) ) {
+	    /* make a note of it */
 	    char namebuf[ITEMNAME_SIZE];
-			char wherebuf[INFO_SIZE];
-
+	    
 	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
-			strcpy(wherebuf, prep_branch_level_name().c_str());
-
-			take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf,
-                           wherebuf));
+	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
 	}
 
         you.kills.record_kill(monster, killer, pet_kill);
@@ -967,17 +964,12 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 	// If old monster is visible to the player, and is interesting,
 	// then note why the interesting monster went away.
 	if (player_monster_visible(monster) && mons_near(monster)
-		&& MONST_INTERESTING(monster))
-	{
-		char namebuf[ITEMNAME_SIZE];
-		char wherebuf[INFO_SIZE];
+	    && MONST_INTERESTING(monster)) {
 
-		moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    char namebuf[ITEMNAME_SIZE];	    
+	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0, namebuf));
 
-		strcpy(wherebuf, prep_branch_level_name().c_str());
-
-		take_note(Note(NOTE_POLY_MONSTER, monster->type, 0, namebuf,
-					   wherebuf));
 	}
 
     // messaging: {dlb}
@@ -5246,21 +5238,15 @@ static int map_wand_to_mspell(int wand_type)
 void seen_monster(struct monsters *monster)
 {
 	if ( monster->flags & MF_SEEN )
-		return;
+	    return;
 
 	// First time we've seen this particular monster
 
 	monster->flags |= MF_SEEN;
 
 	if ( MONST_INTERESTING(monster) ) {
-		char namebuf[ITEMNAME_SIZE];
-		char wherebuf[INFO_SIZE];
-
-		moname(monster->type, true, DESC_NOCAP_A, namebuf);
-
-		strcpy(wherebuf, prep_branch_level_name().c_str());
-
-		take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf,
-					   wherebuf));
+	    char namebuf[ITEMNAME_SIZE];
+	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
 	}
 }

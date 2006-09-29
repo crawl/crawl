@@ -48,6 +48,7 @@ struct Note {
     NOTE_TYPES type;
     int first, second;
     long turn;
+    unsigned short packed_place;
     std::string name;
     std::string desc;
     void load( FILE* fp );

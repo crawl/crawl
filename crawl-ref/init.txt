@@ -136,6 +136,20 @@ note_skill_levels=5,10,15,20,27
 #note_skill_max = true
 
 #
+# note_monsters
+#
+# Monsters whose name matches an item in this comma-separated list
+# are considered interesting. You can have multiple note_monsters lines.
+#note_monsters = Klown,orb of fire
+
+#
+# note_messages
+#
+# Messages which match an item in this comma-separated list
+# are considered interesting. You can have multiple note_messages lines.
+#note_messages = Something interferes
+
+#
 # safe_zero_exp
 #
 # Set to false to make zero-exp monsters considered risky (for autoprayer

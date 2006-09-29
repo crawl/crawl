@@ -8,7 +8,9 @@
 #include "notes.h"
 
 #include "files.h"
+#include "Kills.h"
 #include "message.h"
+#include "mon-pick.h"
 #include "mutation.h"
 #include "religion.h"
 #include "skills2.h"
@@ -80,12 +82,48 @@ static bool is_noteworthy_hp( int hp, int maxhp ) {
 	    hp <= (maxhp * Options.note_hp_percent) / 100);
 }
 
+static int dungeon_branch_depth( unsigned char branch ) {
+    if ( branch > BRANCH_CAVERNS ) // last branch
+	return -1;
+    switch ( branch ) {
+    case BRANCH_MAIN_DUNGEON:
+	return 27;
+    case BRANCH_DIS:
+    case BRANCH_GEHENNA:
+    case BRANCH_COCYTUS:
+    case BRANCH_TARTARUS:
+	return 7;
+    case BRANCH_VESTIBULE_OF_HELL:
+	return 1;
+    case BRANCH_INFERNO:
+    case BRANCH_THE_PIT:
+	return -1;
+    default:
+	return branch_depth( branch - 10 );
+    }
+}
+
+static bool is_noteworthy_dlevel( unsigned short place ) {
+    unsigned const char branch = (unsigned char) ((place >> 8) & 0xFF);
+    const int lev = (place & 0xFF);
+
+    /* Special levels (Abyss, etc.) are always interesting */
+    if ( lev == 0xFF )
+	return true;
+    
+    if ( lev == dungeon_branch_depth(branch) ||
+	 (branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0) ||
+	 (branch != BRANCH_MAIN_DUNGEON && lev == 1) )
+	return true;
+
+    return false;
+}
+
 /* Is a note worth taking?
    This function assumes that game state has not changed since
    the note was taken, e.g. you.* is valid.
  */
 static bool is_noteworthy( const Note& note ) {
-    /* should really make this more user-configurable */
 
     /* always noteworthy */
     if ( note.type == NOTE_XP_LEVEL_CHANGE ||
@@ -128,15 +166,13 @@ static bool is_noteworthy( const Note& note ) {
 	return false;
     }
     
-    /* entering dlevel 1 is not noteworthy */
     if ( note.type == NOTE_DUNGEON_LEVEL_CHANGE &&
-	 note.first == BRANCH_MAIN_DUNGEON && note.second == 1 )
-      return false;
-
-	/* Learning a spell is always noteworthy if note_all_spells is set */
-
-	if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
-		return true;
+	 !is_noteworthy_dlevel(note.packed_place) )
+	return false;
+    
+    /* Learning a spell is always noteworthy if note_all_spells is set */
+    if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
+	return true;
 
 
     unsigned i;
@@ -146,8 +182,7 @@ static bool is_noteworthy( const Note& note ) {
 	const Note& rnote( note_list[i] );
 	switch ( note.type ) {
 	case NOTE_DUNGEON_LEVEL_CHANGE:
-	    if ( rnote.first == note.first && rnote.second == note.second &&
-		 !(note.first == LEVEL_LABYRINTH && note.second == 0xFF) )
+	    if ( rnote.packed_place == note.packed_place )
 		return false;
 	    break;
 	case NOTE_LEARN_SPELL:
@@ -212,7 +247,7 @@ std::string describe_note( const Note& note ) {
 	break;
     case NOTE_DUNGEON_LEVEL_CHANGE:
 	sprintf(buf, "Entered %s",
-		branch_level_name(note.first, note.second).c_str());
+		branch_level_name(note.packed_place).c_str());
 	break;
     case NOTE_LEARN_SPELL:
 	sprintf(buf, "Learned a level %d spell: %s",
@@ -235,7 +270,7 @@ std::string describe_note( const Note& note ) {
             sprintf(buf, "Identified %s (%s)", note.name.c_str(),
                     note.desc.c_str());
         else
-	sprintf(buf, "Identified %s", note.name.c_str());
+	    sprintf(buf, "Identified %s", note.name.c_str());
 	break;
     case NOTE_GET_ITEM:
 	sprintf(buf, "Got %s", note.name.c_str());
@@ -245,19 +280,13 @@ std::string describe_note( const Note& note ) {
 		note.second, skill_name(note.first));
 	break;
     case NOTE_SEEN_MONSTER:
-        sprintf(buf, "Became aware of %s while %s", note.name.c_str(),
-                note.desc.c_str()
-          );
+        sprintf(buf, "Noticed %s", note.name.c_str() );
 	break;
     case NOTE_KILL_MONSTER:
-        sprintf(buf, "Defeated %s while %s", note.name.c_str(),
-                note.desc.c_str()
-          );
+        sprintf(buf, "Defeated %s", note.name.c_str());
 	break;
     case NOTE_POLY_MONSTER:
-        sprintf(buf, "%s changed form while %s", note.name.c_str(),
-                note.desc.c_str()
-          );
+        sprintf(buf, "%s changed form", note.name.c_str() );
 	break;
     case NOTE_GOD_POWER:
 	sprintf(buf, "Acquired %s's %s power", god_name(note.first),
@@ -276,18 +305,23 @@ std::string describe_note( const Note& note ) {
 	sprintf(buf, "%s", note.name.c_str());
 	break;
     case NOTE_MESSAGE:
-    sprintf(buf, "%s (while %s)", note.name.c_str(),note.desc.c_str());
+	sprintf(buf, "%s", note.name.c_str());
 	break;
     default:
 	sprintf(buf, "Buggy note description: unknown note type");
 	break;
     }
-    sprintf(buf2, "Turn %ld: ", note.turn );
-    return std::string(buf2) + std::string(buf);
+    sprintf(buf2, "| %5ld | ", note.turn );
+    std::string placename = short_place_name(note.packed_place);
+    while ( placename.length() < 7 )
+	placename += ' ';
+    return std::string(buf2) + placename + std::string(" | ") +
+	std::string(buf);
 }
 
 Note::Note() {
     turn = you.num_turns;
+    packed_place = get_packed_place();
 }
 
 Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
@@ -297,11 +331,13 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
     if (d)
         desc = std::string(d);
     turn = you.num_turns;
+    packed_place = get_packed_place();
 }
 
 void Note::save( FILE* fp ) const {
     writeLong( fp, type );
     writeLong( fp, turn );
+    writeShort( fp, packed_place );
     writeLong( fp, first );
     writeLong( fp, second );
     writeString( fp, name );
@@ -311,6 +347,7 @@ void Note::save( FILE* fp ) const {
 void Note::load( FILE* fp ) {
     type = (NOTE_TYPES)(readLong( fp ));
     turn = readLong( fp );
+    packed_place = readShort( fp );
     first = readLong( fp );
     second = readLong( fp );
     name = readString( fp );

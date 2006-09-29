@@ -1094,6 +1094,7 @@ void new_level(void)
     env.floor_colour = LIGHTGREY;
     env.rock_colour  = BROWN;
 
+    take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     if (you.level_type == LEVEL_PANDEMONIUM)
     {
         cprintf("- Pandemonium            ");
@@ -1103,7 +1104,6 @@ void new_level(void)
 
         env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
                                     ? LIGHTGREY : mcolour[env.mons_alloc[8]];
-	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_PANDEMONIUM, 0xFF));
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
@@ -1114,19 +1114,14 @@ void new_level(void)
 
         env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
                                     ? LIGHTGREY : mcolour[env.mons_alloc[8]];
-	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_ABYSS, 0xFF));
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {
         cprintf("- a Labyrinth           ");
-	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, LEVEL_LABYRINTH, 0xFF));
     }
     else
     {
         // level_type == LEVEL_DUNGEON
-	take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE,
-		       you.where_are_you, curr_subdungeon_level));
-
         if (!player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
             cprintf( "%d", curr_subdungeon_level );
 

@@ -271,8 +271,7 @@ void mpr(const char *inf, int channel, int param)
     
     for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
 	if (Options.note_messages[i].matches(imsg)) {
-	    take_note(Note(NOTE_MESSAGE, channel, param, inf,
-			   prep_branch_level_name().c_str()));
+	    take_note(Note(NOTE_MESSAGE, channel, param, inf));
 	    break;
 	}
     }

@@ -1171,37 +1171,37 @@ static int ood_limit() {
 
 void mark_interesting_monst(struct monsters* monster, char behaviour)
 {
-	bool interesting = false;
-
-	// Unique monsters are always intersting
+    bool interesting = false;
+    
+    // Unique monsters are always intersting
     if ( mons_is_unique(monster->type) )
-		interesting = true;
-	// If it's never going to attack us, then not interesting
-	else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
-		interesting = false;
-	// Don't waste time on moname() if user isn't using this option
-	else if ( Options.note_monsters.size() > 0 )
-	{
+	interesting = true;
+    // If it's never going to attack us, then not interesting
+    else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
+	interesting = false;
+    // Don't waste time on moname() if user isn't using this option
+    else if ( Options.note_monsters.size() > 0 )
+    {
         char namebuf[ITEMNAME_SIZE];
-		moname(monster->type, true, DESC_NOCAP_A, namebuf);
-
-		std::string iname = namebuf;
-
-		for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
-			if (Options.note_monsters[i].matches(iname)) {
-				interesting = true;
-				break;
-			}
-				
-		}
-	}
-    else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
-		 mons_level(monster->type) >= you.your_level + ood_limit() &&
-		 mons_level(monster->type) < 99 ) 
+	moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	
+	std::string iname = namebuf;
+	
+	for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
+	    if (Options.note_monsters[i].matches(iname)) {
 		interesting = true;
+		break;
+	    }    
+	}
+    }
+    else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
+	      you.level_type == LEVEL_DUNGEON &&
+	      mons_level(monster->type) >= you.your_level + ood_limit() &&
+	      mons_level(monster->type) < 99 ) 
+	interesting = true;
 
-	if ( interesting )
-		monster->flags |= MF_INTERESTING;
+    if ( interesting )
+	monster->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().
@@ -1211,7 +1211,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int dur, bool permit_bands )
 {
     int mon_count = 0;
-    int temp_rand;          // probabilty determination {dlb}
+    int temp_rand;          // probability determination {dlb}
 
     for (int il = 0; il < MAX_MONSTERS; il++)
     {
