@@ -637,7 +637,6 @@ enum command_type
     CMD_QUIT,
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
-    CMD_OBSOLETE_INVOKE,
 
     CMD_MARK_STASH,
     CMD_FORGET_STASH,

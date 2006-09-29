@@ -1171,13 +1171,6 @@ static void do_action( command_type cmd ) {
 	get_invent(-1);
 	break;
 
-    case CMD_OBSOLETE_INVOKE:
-	// We'll leave this message in for a while.  Eventually, this
-	// might be some special for of inventory command, or perhaps
-	// actual god invocations will be split to here from abilities. -- bwr
-	mpr( "This command is now 'E'voke wielded item.", MSGCH_WARN );
-	break;
-
     case CMD_EVOKE:
 	if (!evoke_wielded())
 	    flush_input_buffer( FLUSH_ON_FAILURE );
@@ -2463,7 +2456,7 @@ command_type keycode_to_command( keycode_type key ) {
     case 'E': return CMD_EVOKE;
     case 'F': return CMD_NO_CMD;
     case 'G': return CMD_NO_CMD;
-    case 'I': return CMD_OBSOLETE_INVOKE;
+    case 'I': return CMD_NO_CMD;
     case 'M': return CMD_MEMORISE_SPELL;
     case 'O': return CMD_DISPLAY_OVERMAP;
     case 'P': return CMD_WEAR_JEWELLERY;
