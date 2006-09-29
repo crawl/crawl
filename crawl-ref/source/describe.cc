@@ -1847,7 +1847,8 @@ static std::string describe_stick( const item_def &item )
 
         case WAND_DISINTEGRATION:
             description += "disrupts the physical structure of "
-                "an object, especially a creature's body. ";
+		"anything but the hardest walls -- even rigid "
+		"statues, to say nothing of flesh. ";
             break;
 
         default:
