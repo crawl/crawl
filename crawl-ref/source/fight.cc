@@ -2592,8 +2592,18 @@ void monster_attack(int monster_attacking)
                         give_bad_mutation();
                 }
                 break;
+
+	    case MONS_MOTH_OF_WRATH:
+		if (one_chance_in(3)) {
+		    simple_monster_message(attacker, " infuriates you!");
+		    go_berserk(false);
+		}
+		break;
+		    
+	    default:
+		break;
             }                   // end of switch for special attacks.
-            /* use brek for level drain, maybe with beam variables,
+            /* use break for level drain, maybe with beam variables,
                because so many creatures use it. */
         }
 
