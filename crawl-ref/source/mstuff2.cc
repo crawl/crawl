@@ -970,9 +970,14 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         baseDam = property( item, PWPN_DAMAGE );
 
         if (wepClass == OBJ_MISSILES)   // throw missile
+        {
             // ammo damage needs adjusting here - OBJ_MISSILES
             // don't get separate tohit/damage bonuses!
             ammoDamBonus = ammoHitBonus;
+            // [dshaligram] Thrown stones/darts do only half the damage of
+            // launched stones/darts. This matches 4.0 behaviour.
+            baseDam      = div_rand_round(baseDam, 2);
+        }
 
         // give monster "skill" bonuses based on HD
         exHitBonus = (hitMult * monster->hit_dice) / 10 + 1;

@@ -79,6 +79,12 @@ void get_input_line( char *const buff, int len )
 #elif defined(WIN32CONSOLE)
     getstr( buff, len );
 #else
+
+    // [dshaligram] Turn on the cursor for DOS.
+#ifdef DOS
+    _setcursortype(_NORMALCURSOR);
+#endif
+
     fgets( buff, len, stdin );  // much safer than gets()
 #endif
 

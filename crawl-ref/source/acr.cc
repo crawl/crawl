@@ -197,6 +197,7 @@ static void start_running( int dir, int mode );
 static void close_door(int move_x, int move_y);
 static bool check_stop_running();
 
+static void init_io();
 static void prep_input();
 static void input();
 static void middle_input();
@@ -259,13 +260,7 @@ int main( int argc, char *argv[] )
         exit(0);
     }
 
-#ifdef UNIX
-    unixcurses_startup();
-#endif
-
-#ifdef WIN32CONSOLE
-    init_libw32c();
-#endif
+    init_io();
 
 #ifdef USE_MACROS
     // Load macros
@@ -367,6 +362,21 @@ int main( int argc, char *argv[] )
 
     return 0;
 }                               // end main()
+
+static void init_io()
+{
+#ifdef UNIX
+    unixcurses_startup();
+#endif
+
+#ifdef WIN32CONSOLE
+    init_libw32c();
+#endif
+
+#ifdef DOS
+    init_libdos();
+#endif
+}
 
 #ifdef WIZARD
 static void handle_wizard_command( void )

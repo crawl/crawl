@@ -12,9 +12,14 @@ CXX = gxx
 DELETE = del
 COPY = copy
 OS_TYPE = DOS
-CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) -Wshadow -Werror -fsigned-char -pedantic
+CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) \
+		 -Wall -Wwrite-strings -Wstrict-prototypes \
+         -Wmissing-prototypes -Wmissing-declarations \
+		 -fsigned-char -pedantic
+OBJECTS += libdos.o
+
 LDFLAGS =
-LIB = 
+LIB =
 # LIB = -lcurso -lpano
 
 all:            $(APPNAME)

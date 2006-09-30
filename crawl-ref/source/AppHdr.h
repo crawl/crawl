@@ -168,6 +168,7 @@
     #define CHARACTER_SET           A_ALTCHARSET
 
     #include <string>
+    #include "libdos.h"
 
     #ifdef __DJGPP__
         #define NEED_SNPRINTF

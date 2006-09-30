@@ -64,10 +64,12 @@
 
 // END -- WINDOWS INCLUDES
 
-#include <string.h>
-#ifdef __BCPLUSPLUS__
-#include <stdio.h>
+#ifdef __MINGW32__
+#include <signal.h>
 #endif
+
+#include <string.h>
+#include <stdio.h>
 #include "AppHdr.h"
 #include "version.h"
 #include "defines.h"
@@ -329,6 +331,13 @@ static void init_colors(char *windowTitle)
    // if not found, quit.
 }
 
+#ifdef __MINGW32__
+static void install_sighandlers()
+{
+    signal(SIGINT, SIG_IGN);
+}
+#endif
+
 void init_libw32c(void)
 {
    inbuf = GetStdHandle( STD_INPUT_HANDLE );
@@ -341,6 +350,10 @@ void init_libw32c(void)
 
    GetConsoleTitle( oldTitle, 78 );
    SetConsoleTitle( CRAWL " " VERSION );
+
+#ifdef __MINGW32__
+   install_sighandlers();
+#endif
 
    init_colors(oldTitle);
 
