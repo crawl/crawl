@@ -395,16 +395,27 @@ static int exercise2( int exsk )
 */
 
     if (you.skill_points[exsk] >
-                    (skill_exp_needed(you.skills[exsk] + 2) 
-                            * species_skills(exsk, you.species) / 100))
+	(skill_exp_needed(you.skills[exsk] + 2) 
+	 * species_skills(exsk, you.species) / 100))
     {
-        strcpy(info, "Your ");
-        strcat(info, skill_name(exsk));
-        strcat(info, " skill increases!");
-        mpr(info, MSGCH_INTRINSIC_GAIN);
-
+	
         you.skills[exsk]++;
 	take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+
+        if (you.skills[exsk] == 27) {
+            snprintf( info, INFO_SIZE, "You have mastered %s!", 
+                      skill_name( exsk ) );
+        }
+        else if (you.skills[exsk] == 1) {
+            snprintf( info, INFO_SIZE, "You have gained %s skill!", 
+                      skill_name( exsk ) );
+        }
+        else {
+            snprintf( info, INFO_SIZE, "Your %s skill increases to level %d!", 
+                      skill_name( exsk ), you.skills[exsk] );
+        }
+
+        mpr( info, MSGCH_INTRINSIC_GAIN );
 
         // Recalculate this skill's order for tie breaking skills 
         // at its new level.   See skills2.cc::init_skill_order()

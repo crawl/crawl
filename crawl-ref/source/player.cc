@@ -2673,9 +2673,9 @@ void display_char_status(void)
     if (you.slow && you.haste)
         mpr( "You are under both slowing and hasting effects." );
     else if (you.slow)
-        mpr( "You are moving very slowly." );
+        mpr( "You actions are slowed." );
     else if (you.haste)
-        mpr( "You are moving very quickly." );
+        mpr( "You actions are hasted." );
 
     if (you.might)
         mpr( "You are mighty." );
@@ -2737,6 +2737,62 @@ void display_char_status(void)
                                         : "weak " );
         mpr(info);
     }
+
+    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    if ( you.slow )
+	move_cost *= 2;
+
+    const bool water  = player_in_water();
+    const bool swim   = player_is_swimming();
+
+    const bool lev    = player_is_levitating();
+    const bool fly    = (lev && you.duration[DUR_CONTROLLED_FLIGHT]);
+    const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
+    snprintf( info, INFO_SIZE,
+	      "Your %s speed is %s%s%s.",
+              // order is important for these:
+              (swim)    ? "swimming" :
+              (water)   ? "wading" :
+              (fly)     ? "flying" :
+              (lev)     ? "levitating" 
+                        : "movement", 
+
+              (water && !swim)  ? "uncertain and " :
+              (!water && swift) ? "aided by the wind" : "",
+
+              (!water && swift) ? ((move_cost >= 10) ? ", but still "
+                                                     :  " and ") 
+                                : "",
+
+              (move_cost <   8) ? "very quick" :
+              (move_cost <  10) ? "quick" :
+              (move_cost == 10) ? "average" :
+              (move_cost <  13) ? "slow" 
+                                : "very slow" );
+    mpr(info);
+
+    // character evaluates their ability to sneak around: 
+    const int ustealth = check_stealth();
+
+    // XXX: made these values up, probably could be better.
+    snprintf( info, INFO_SIZE, "You feel %sstealthy.",
+	      (ustealth <  10) ? "extremely un" :
+	      (ustealth <  20) ? "very un" :
+	      (ustealth <  30) ? "un" :
+	      (ustealth <  50) ? "fairly " :
+	      (ustealth <  80) ? "" :
+	      (ustealth < 120) ? "quite " :
+	      (ustealth < 160) ? "very " : 
+	      (ustealth < 200) ? "extremely " 
+	      : "incredibly " );
+
+#if DEBUG_DIAGNOSTICS
+    char str_pass[INFO_SIZE];
+    snprintf( str_pass, INFO_SIZE, " (%d)", stealth );
+    strncat( info, str_pass, INFO_SIZE );
+#endif
+
+    mpr( info );    
 }                               // end display_char_status()
 
 void redraw_skill(const char your_name[kNameLen], const char class_name[80])
