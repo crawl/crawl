@@ -36,3 +36,9 @@ debug:
 
 wizard:
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Wizard build
+
+devel:
+	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Development build
+
+devclean:
+	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Development clean
