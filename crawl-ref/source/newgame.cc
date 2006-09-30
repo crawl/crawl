@@ -3265,7 +3265,7 @@ void give_items_skills()
             {
                 you.inv[0].quantity = 1;
                 you.inv[0].base_type = OBJ_WEAPONS;
-                you.inv[0].sub_type = WPN_CLUB;
+                you.inv[0].sub_type = WPN_ANCUS;
                 you.inv[0].plus = 0;
                 you.inv[0].special = 0;
                 you.inv[0].colour = BROWN;
@@ -3838,7 +3838,7 @@ void give_items_skills()
         {
             you.inv[0].quantity = 1;
             you.inv[0].base_type = OBJ_WEAPONS;
-            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].sub_type = WPN_ANCUS;
             you.inv[0].plus = 0;
             you.inv[0].plus2 = 0;
             you.inv[0].special = 0;
