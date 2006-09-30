@@ -2432,7 +2432,7 @@ void level_change(void)
 // - 12mar2000 {dlb}
 int check_stealth(void)
 {
-    if (you.special_wield == SPWLD_SHADOW)
+    if (you.special_wield == SPWLD_SHADOW || you.berserker)
         return (0);
 
     int stealth = you.dex * 3;

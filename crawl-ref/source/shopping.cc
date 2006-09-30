@@ -135,7 +135,7 @@ char in_a_shop( char shoppy, id_arr id )
             gp_value = 1;
 
 	bool can_afford = (you.gold >= gp_value);
-	textcolor( can_afford ? GREEN : RED );
+	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
 	cprintf("%c - ", i+96);
 
         textcolor((i % 2) ? WHITE : LIGHTGREY);
@@ -153,7 +153,7 @@ char in_a_shop( char shoppy, id_arr id )
 #   endif
 
         gotoxy(60, i);
-	textcolor( can_afford ? GREEN : RED );
+	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
         snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
         cprintf(st_pass);
         cprintf(" gold");
