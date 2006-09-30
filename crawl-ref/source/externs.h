@@ -604,69 +604,6 @@ struct colour_mapping
     int colour;
 };
 
-class formatted_string
-{
-public:
-    formatted_string() : ops() { }
-    formatted_string(const std::string &s, bool init_style = false);
-
-    operator std::string() const;
-    void display(int start = 0, int end = -1) const;
-    std::string tostring(int start = 0, int end = -1) const;
-
-    void cprintf(const char *s, ...);
-    void cprintf(const std::string &s);
-    void gotoxy(int x, int y);
-    void textcolor(int color);
-
-public:
-    static formatted_string parse_string(
-            const std::string &s,
-            bool  eol_ends_format = true,
-            bool (*process_tag)(const std::string &tag) = NULL );
-
-private:
-    enum fs_op_type
-    {
-        FSOP_COLOUR,
-        FSOP_CURSOR,
-        FSOP_TEXT
-    };
-
-    static int get_colour(const std::string &tag);
-
-private:
-    struct fs_op
-    {
-        fs_op_type type;
-        int x, y;
-        std::string text;
-        
-        fs_op(int color)
-            : type(FSOP_COLOUR), x(color), y(-1), text()
-        {
-        }
-        
-        fs_op(int cx, int cy)
-            : type(FSOP_CURSOR), x(cx), y(cy), text()
-        {
-        }
-        
-        fs_op(const std::string &s)
-            : type(FSOP_TEXT), x(-1), y(-1), text(s)
-        {
-        }
-
-        operator fs_op_type () const
-        {
-            return type;
-        }
-        void display() const;
-    };
-
-    std::vector<fs_op> ops;
-};
-
 struct game_options 
 {
     bool        ascii_display;  // Defaults to true ifdef USE_ASCII_CHARACTERS

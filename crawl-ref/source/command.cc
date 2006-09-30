@@ -606,57 +606,127 @@ void list_commands(bool wizard)
         return;
     }
         
-    static const char *command_template =
-    "<h>Movement:                              Extended Movement:\n"
-    "To move in a direction, use either     Ctrl-G    : Interlevel travel\n"
-    "of these control schema:               Ctrl-O    : Auto-explore\n"
-    "7 8 9  y k u                           Ctrl-W    : Mark waypoint\n"
-    " \\|/    \\|/                            Shift-Dir.: Long walk\n"
-    "4-5-6  h-.-l                           / Dir.    : Long walk\n"
-    " /|\\    /|\\                            Shift-5   : Rest 100 turns\n"
-    "7 8 9  b j n\n"
-    "                                       <?s><h>Stash Management Commands:\n"
-    "\"Center\" buttons (5/./Del) will        <?s>Ctrl-S    : Mark stash\n"
-    "rest one turn.                         <?s>Ctrl-E    : Forget stash\n"
-    "                                       <?s>Ctrl-F    : Search stashes\n"
-    "\n"
-    "<h>Dungeon Interaction and Information:   Player Character Information:\n"
-    "o/c: Open/Close Door                   @  : Display character Status\n"
-    "Ctrl-Dir.  : Door o/c, Untrap, Attack  ]  : Display worn armour\n"
-    "* Direction: Door o/c, Untrap, Attack  \"  : Display worn jewellery\n"
-    "</>: Ascend/Descend a staircase        C  : Display experience info\n"
-    "s  : Search adjacent tiles             ^  : Show religion screen\n"
-    ";  : Examine occupied tile             A  : Show abilities/mutations\n"
-    "x  : Examine visible surroundings      \\  : Show item knowlede\n"
-    "X  : Examine level map                 m  : Show skill screen\n"
-    "+/-: Scroll up/down on level map       i  : Show inventory list\n"
-    "O  : Show dungeon overview             %  : Show resistances\n"
-    "\n"
-    "<h>Item Interaction (inventory):          Other Actions:\n"
-    "v  : View item description             a  : Use special ability\n"
-    "z  : Zap a wand                        p  : Pray\n"
-    "t  : throw/shoot an item               Z  : Cast a spell\n"
-    "f  : fire first available missile      !  : Shout or command allies\n"
-    "q  : Quaff a potion                    Ctrl-A: Toggle autopickup\n"
-    "e  : eat food (also see below)\n"
-    "r  : Read a scroll or book             <h>Game saving and exiting:\n"
-    "M  : Memorise a spell from a book      S  : Save game and exit\n"
-    "w  : Wield an item ( - for none)       Ctrl-X:Save game without query\n"
-    "'  : Wield item a, or switch to b      Q  : Quit without saving\n"
-    "E  : Evoke power of wielded item\n"
-    "W  : Wear armour                       <h>Non-gameplay Commands / Info\n"
-    "T  : Take off armour                   V  : Version Information\n"
-    "P  : Put on jewellery                  Ctrl-P: See old messages\n"
-    "R  : Remove jewellery                  Ctrl-R: Redraw screen\n"
-    "d(#): Drop (exact quantity of) items   #  : Dump character to file\n"
-    "=  : Reassign inventory/spell letters  `  : Add macro\n"
-    "                                       ~  : Save macros\n"
-    "<h>Item Interaction (floor):</h>              <?wiz>&  : Wizard-mode commands\n"
-    "D  : Dissect a corpse\n"
-    "e  : eat food (also see above)\n"
-    ",/g: pick up items\n";
-    std::vector<std::string> lines = 
-            split_string("\n", command_template, false, true);
+    const char *move_desc =
+        "<h>Movement:\n"
+        "To move in a direction, use either\n"
+        "of these control schemes:\n"
+        "7 8 9  y k u\n"
+        " \\|/    \\|/\n"
+        "4-5-6  h-.-l\n"
+        " /|\\    /|\\\n"
+        "7 8 9  b j n\n"
+        "\n"
+        "\"Center\" buttons (5/./Del) will\n"
+        "rest one turn.\n \n";
+
+    const char *exmove_desc =
+        "<h>Extended Movement:\n"
+        "Ctrl-G    : Interlevel travel\n"
+        "Ctrl-O    : Auto-explore\n"
+        "Ctrl-W    : Mark waypoint\n"
+        "Shift-Dir.: Long walk\n"
+        "/ Dir.    : Long walk\n"
+        "Shift-5   : Rest 100 turns\n";
+
+    const char *stash_desc =
+        "<?s><h>Stash Management Commands:\n"
+        "<?s>Ctrl-S    : Mark stash\n"
+        "<?s>Ctrl-E    : Forget stash\n"
+        "<?s>Ctrl-F    : Search stashes\n";
+
+    const char *dngn_desc =
+        "<h>Dungeon Interaction and Information:\n"
+        "o/c: Open/Close Door\n"
+        "Ctrl-Dir.  : Door o/c, Untrap, Attack\n"
+        "* Direction: Door o/c, Untrap, Attack\n"
+        "</>: Ascend/Descend a staircase\n"
+        "s  : Search adjacent tiles\n"
+        ";  : Examine occupied tile\n"
+        "x  : Examine visible surroundings\n"
+        "X  : Examine level map\n"
+        "+/-: Scroll up/down on level map\n"
+        "O  : Show dungeon overview\n";
+
+    const char *player_desc =
+        "<h>Player Character Information:\n"
+        "@  : Display character Status\n"
+        "]  : Display worn armour\n"
+        "\"  : Display worn jewellery\n"
+        "C  : Display experience info\n"
+        "^  : Show religion screen\n"
+        "A  : Show abilities/mutations\n"
+        "\\  : Show item knowledge\n"
+        "m  : Show skill screen\n"
+        "i  : Show inventory list\n"
+        "%  : Show resistances\n";
+
+    const char *item_desc =
+        "<h>Item Interaction (inventory):\n"
+        "v  : View item description\n"
+        "z  : Zap a wand\n"
+        "t  : throw/shoot an item\n"
+        "f  : fire first available missile \n"
+        "q  : Quaff a potion\n"
+        "e  : eat food (also see below)\n"
+        "r  : Read a scroll or book\n"
+        "M  : Memorise a spell from a book\n"
+        "w  : Wield an item ( - for none)\n"
+        "'  : Wield item a, or switch to b\n"
+        "E  : Evoke power of wielded item\n"
+        "W  : Wear armour\n"
+        "T  : Take off armour\n"
+        "P  : Put on jewellery\n"
+        "R  : Remove jewellery\n"
+        "d(#): Drop (exact quantity of) items\n"
+        "=  : Reassign inventory/spell letters\n"
+        "{  : Inscribe item\n";
+
+    const char *other_desc =
+        "<h>Other Actions:\n"
+        "a  : Use special ability\n"
+        "p  : Pray\n"
+        "Z  : Cast a spell\n"
+        "!  : Shout or command allies\n"
+        "Ctrl-A: Toggle autopickup\n"
+        "Ctrl-V: Toggle autoprayer\n"
+        "Ctrl-T: Toggle spell fizzle confirm\n";
+
+    const char *save_desc =
+        "<h>Game saving and exiting:\n"
+        "S  : Save game and exit\n"
+        "Ctrl-X:Save game without query\n"
+        "Q  : Quit without saving\n";
+
+    const char *info_desc =
+        "<h>Non-gameplay Commands / Info\n"
+        "V  : Version Information\n"
+        "Ctrl-P: See old messages\n"
+        "Ctrl-R: Redraw screen\n"
+        ":  : Add a note\n"
+        "#  : Dump character to file\n"
+        "`  : Add macro\n"
+        "~  : Save macros\n"
+        "<?wiz>&  : Wizard-mode commands\n";
+
+    const char *flooritem_desc =
+        "<h>Item Interaction (floor):</h>\n"
+        "D  : Dissect a corpse\n"
+        "e  : eat food (also see above)\n"
+        ",/g: pick up items\n";
+
+    // 2 columns, split at column 40.
+    column_composer cols(2, 40);
+    cols.set_pagesize(get_number_of_lines() - 1);
+    cols.add_formatted(0, move_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(0, dngn_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(0, item_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(0, flooritem_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, exmove_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, stash_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, player_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, other_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, save_desc, true, true ,cmdhelp_textfilter);
+    cols.add_formatted(1, info_desc, true, true ,cmdhelp_textfilter);
 
     Menu cmd_help;
     
@@ -673,14 +743,11 @@ void list_commands(bool wizard)
 
     std::vector<MenuEntry*> entries;
 
+    std::vector<formatted_string> lines = cols.compose_formatted();
     for (unsigned i = 0, size = lines.size(); i < size; ++i)
     {
         MenuEntry *me = new MenuEntry;
-        me->data = new formatted_string( 
-                formatted_string::parse_string(
-                    lines[i],
-                    true,
-                    cmdhelp_textfilter) );
+        me->data = new formatted_string(lines[i]);
         entries.push_back(me);
 
         cmd_help.add_entry(me);

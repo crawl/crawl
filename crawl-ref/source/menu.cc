@@ -1,11 +1,16 @@
 /*
+ *  File:       menu.cc
+ *  Summary:    Menus and associated malarkey.
+ *  Written by: Darshan Shaligram
+ *
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
-
 #include <cctype>
+#include "AppHdr.h"
 #include "menu.h"
 #include "macro.h"
 #include "view.h"
+#include "initfile.h"
 
 Menu::Menu( int _flags )
  :  f_selitem(NULL),
@@ -16,6 +21,7 @@ Menu::Menu( int _flags )
     first_entry(0),
     y_offset(0),
     pagesize(0),
+    max_pagesize(0),
     more("-more-", true),
     items(),
     sel(NULL),
@@ -34,6 +40,11 @@ Menu::~Menu()
         delete items[i];
     delete title;
     delete highlighter;
+}
+
+void Menu::set_maxpagesize(int max)
+{
+    max_pagesize = max;
 }
 
 void Menu::set_flags(int new_flags, bool use_options)
@@ -85,6 +96,8 @@ std::vector<MenuEntry *> Menu::show()
 
     // Lose lines for the title + room for more.
     pagesize = get_number_of_lines() - !!title - 1;
+    if (max_pagesize > 0 && pagesize > max_pagesize)
+        pagesize = max_pagesize;
 
 #ifdef DOS_TERM
     char buffer[4600];
@@ -539,4 +552,345 @@ int menu_colour(const std::string &text)
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 {
     return (::menu_colour(entry->get_text()));
+}
+
+
+////////////////////////////////////////////////////////////////////
+// formatted_string
+//
+
+formatted_string::formatted_string(const std::string &s, bool init_style)
+    : ops()
+{
+    if (init_style)
+        ops.push_back(LIGHTGREY);
+    ops.push_back(s);
+}
+
+int formatted_string::get_colour(const std::string &tag)
+{
+    if (tag == "h")
+        return (YELLOW);
+
+    const int colour = str_to_colour(tag);
+    return (colour != -1? colour : LIGHTGREY);
+}
+
+formatted_string formatted_string::parse_string(
+        const std::string &s,
+        bool  eol_ends_format,
+        bool (*process)(const std::string &tag))
+{
+    // FIXME This is a lame mess, just good enough for the task on hand
+    // (keyboard help).
+    formatted_string fs;
+    std::string::size_type tag    = std::string::npos;
+    std::string::size_type length = s.length();
+
+    std::string currs;
+    int curr_colour = LIGHTGREY;
+    bool masked = false;
+    
+    for (tag = 0; tag < length; ++tag)
+    {
+        bool invert_colour = false;
+        std::string::size_type endpos = std::string::npos;
+
+        if (s[tag] != '<' || tag >= length - 2)
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        // Is this a << escape?
+        if (s[tag + 1] == '<')
+        {
+            if (!masked)
+                currs += s[tag];
+            tag++;
+            continue;
+        }
+
+        endpos = s.find('>', tag + 1);
+        // No closing >?
+        if (endpos == std::string::npos)
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        std::string tagtext = s.substr(tag + 1, endpos - tag - 1);
+        if (tagtext.empty() || tagtext == "/")
+        {
+            if (!masked)
+                currs += s[tag];
+            continue;
+        }
+
+        if (tagtext[0] == '/')
+        {
+            invert_colour = true;
+            tagtext = tagtext.substr(1);
+            tag++;
+        }
+
+        if (tagtext[0] == '?')
+        {
+            if (tagtext.length() == 1)
+                masked = false;
+            else if (process && !process(tagtext.substr(1)))
+                masked = true;
+
+            tag += tagtext.length() + 1; 
+            continue;
+        }
+
+        const int new_colour = invert_colour? LIGHTGREY : get_colour(tagtext);
+        if (new_colour != curr_colour)
+        {
+            fs.cprintf(currs);
+            currs.clear();
+            fs.textcolor( curr_colour = new_colour );
+        }
+        tag += tagtext.length() + 1;
+    }
+    if (currs.length())
+        fs.cprintf(currs);
+
+    if (eol_ends_format && curr_colour != LIGHTGREY)
+        fs.textcolor(LIGHTGREY);
+
+    return (fs);
+}
+
+formatted_string::operator std::string() const
+{
+    std::string s;
+    for (unsigned i = 0, size = ops.size(); i < size; ++i)
+    {
+        if (ops[i] == FSOP_TEXT)
+            s += ops[i].text;
+    }
+    return (s);
+}
+
+const formatted_string &
+formatted_string::operator += (const formatted_string &other)
+{
+    ops.insert(ops.end(), other.ops.begin(), other.ops.end());
+    return (*this);
+}
+
+std::string::size_type formatted_string::length() const
+{
+    // Just add up the individual string lengths.
+    std::string::size_type len = 0;
+    for (unsigned i = 0, size = ops.size(); i < size; ++i)
+        if (ops[i] == FSOP_TEXT)
+            len += ops[i].text.length();
+    return (len);
+}
+
+inline void cap(int &i, int max)
+{
+    if (i < 0 && -i <= max)
+        i += max;
+    if (i >= max)
+        i = max - 1;
+    if (i < 0)
+        i = 0;
+}
+
+std::string formatted_string::tostring(int s, int e) const
+{
+    std::string st;
+    
+    int size = ops.size();
+    cap(s, size);    
+    cap(e, size);
+    
+    for (int i = s; i <= e && i < size; ++i)
+    {
+        if (ops[i] == FSOP_TEXT)
+            st += ops[i].text;
+    }
+    return st;
+}
+
+void formatted_string::display(int s, int e) const
+{
+    int size = ops.size();
+    if (!size)
+        return ;
+
+    cap(s, size);    
+    cap(e, size);
+    
+    for (int i = s; i <= e && i < size; ++i)
+        ops[i].display();
+}
+
+void formatted_string::gotoxy(int x, int y)
+{
+    ops.push_back( fs_op(x, y) );
+}
+
+void formatted_string::movexy(int x, int y)
+{
+    ops.push_back( fs_op(x, y, true) );
+}
+
+void formatted_string::textcolor(int color)
+{
+    ops.push_back(color);
+}
+
+void formatted_string::cprintf(const char *s, ...)
+{
+    char buf[1000];
+    va_list args;
+    va_start(args, s);
+    vsnprintf(buf, sizeof buf, s, args);
+    va_end(args);
+
+    cprintf(std::string(buf));
+}
+
+void formatted_string::cprintf(const std::string &s)
+{
+    ops.push_back(s);
+}
+
+void formatted_string::fs_op::display() const
+{
+    switch (type)
+    {
+    case FSOP_CURSOR:
+    {
+        int cx = x, cy = y;
+        if (relative)
+        {
+            cx += wherex();
+            cy += wherey();
+        }
+        else
+        {
+            if (cx == -1)
+                cx = wherex();
+            if (cy == -1)
+                cy = wherey();
+        }
+        ::gotoxy(cx, cy);
+        break;
+    }
+    case FSOP_COLOUR:
+        ::textcolor(x);
+        break;
+    case FSOP_TEXT:
+        ::cprintf("%s", text.c_str());
+        break;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
+// column_composer
+
+column_composer::column_composer(int cols, ...)
+    : ncols(cols), pagesize(0), columns()
+{
+    ASSERT(cols > 0);
+
+    va_list args;
+    va_start(args, cols);
+
+    columns.push_back( column(1) );
+    int lastcol = 1;
+    for (int i = 1; i < cols; ++i)
+    {
+        int nextcol = va_arg(args, int);
+        ASSERT(nextcol > lastcol);
+
+        lastcol = nextcol;
+        columns.push_back( column(nextcol) );
+    }
+
+    va_end(args);
+}
+
+void column_composer::set_pagesize(int ps)
+{
+    pagesize = ps;
+}
+
+void column_composer::add_formatted(
+        int ncol, 
+        const std::string &s,
+        bool add_separator,
+        bool eol_ends_format,
+        bool (*tfilt)(const std::string &))
+{
+    ASSERT(ncol >= 0 && ncol < columns.size());
+
+    column &col = columns[ncol];
+    std::vector<std::string> segs = split_string("\n", s, false, true);
+
+    // Add a blank line if necessary
+    if (add_separator && !col.text.empty() && !segs.empty()
+            && (!pagesize || col.text.size() % pagesize))
+        col.text.push_back(formatted_string());
+
+    for (unsigned i = 0, size = segs.size(); i < size; ++i)
+    {
+        col.text.push_back( 
+                formatted_string::parse_string(
+                    segs[i],
+                    eol_ends_format,
+                    tfilt));
+    }
+    strip_blank_lines(col.text);
+}
+
+std::vector<formatted_string> column_composer::compose_formatted() const
+{
+    std::vector<formatted_string> fs;
+    for (int i = 0; i < ncols; ++i)
+        compose_formatted_column(fs, columns[i]);
+
+    strip_blank_lines(fs);
+
+    return (fs);
+}
+
+void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
+{
+    for (int i = fs.size() - 1; i >= 0; --i)
+    {
+        if (fs[i].length() == 0)
+            fs.erase( fs.begin() + i );
+        else
+            break;
+    }
+}
+
+void column_composer::compose_formatted_column(
+        std::vector<formatted_string> &fs,
+        const column &col) const
+{
+    if (fs.size() < col.text.size())
+    {
+        fs.resize(col.text.size());
+    }
+
+    for (unsigned i = 0, size = col.text.size(); i < size; ++i)
+    {
+        if (col.margin > 1)
+        {
+            int xdelta = col.margin - fs[i].length() - 1;
+            if (xdelta > 0)
+                fs[i].cprintf("%-*s", xdelta, "");
+        }
+        fs[i] += col.text[i];
+    }
 }

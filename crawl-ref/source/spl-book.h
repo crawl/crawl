@@ -15,6 +15,7 @@
 #define SPL_BOOK_H
 
 #include "externs.h"
+#include "menu.h"
 #include "FixVec.h"
 
 

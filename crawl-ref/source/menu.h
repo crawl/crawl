@@ -43,6 +43,75 @@ struct menu_letter
     }
 };
 
+class formatted_string
+{
+public:
+    formatted_string() : ops() { }
+    formatted_string(const std::string &s, bool init_style = false);
+
+    operator std::string() const;
+    void display(int start = 0, int end = -1) const;
+    std::string tostring(int start = 0, int end = -1) const;
+
+    void cprintf(const char *s, ...);
+    void cprintf(const std::string &s);
+    void gotoxy(int x, int y);
+    void movexy(int delta_x, int delta_y);
+    void textcolor(int color);
+
+    std::string::size_type length() const;
+
+    const formatted_string &operator += (const formatted_string &other);
+
+public:
+    static formatted_string parse_string(
+            const std::string &s,
+            bool  eol_ends_format = true,
+            bool (*process_tag)(const std::string &tag) = NULL );
+
+private:
+    enum fs_op_type
+    {
+        FSOP_COLOUR,
+        FSOP_CURSOR,
+        FSOP_TEXT
+    };
+
+    static int get_colour(const std::string &tag);
+
+private:
+    struct fs_op
+    {
+        fs_op_type type;
+        int x, y;
+        bool relative;
+        std::string text;
+        
+        fs_op(int color)
+            : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
+        {
+        }
+        
+        fs_op(int cx, int cy, bool rel = false)
+            : type(FSOP_CURSOR), x(cx), y(cy), relative(rel), text()
+        {
+        }
+        
+        fs_op(const std::string &s)
+            : type(FSOP_TEXT), x(-1), y(-1), relative(false), text(s)
+        {
+        }
+
+        operator fs_op_type () const
+        {
+            return type;
+        }
+        void display() const;
+    };
+
+    std::vector<fs_op> ops;
+};
+
 struct item_def;
 struct MenuEntry
 {
@@ -168,6 +237,8 @@ public:
     void add_entry( MenuEntry *entry );
     void get_selected( std::vector<MenuEntry*> *sel ) const;
 
+    void set_maxpagesize(int max);
+
     void set_select_filter( std::vector<text_pattern> filter )
     {
         select_filter = filter;
@@ -192,7 +263,7 @@ protected:
     int flags;
     
     int first_entry, y_offset;
-    int pagesize;
+    int pagesize, max_pagesize;
 
     formatted_string more;
 
@@ -233,6 +304,44 @@ protected:
     int item_colour(const MenuEntry *me) const;
     
     virtual bool process_key( int keyin );
+};
+
+// This is only tangentially related to menus, but what the heck.
+// Note, column margins start on 1, not 0.
+class column_composer
+{
+public:
+    // Number of columns and left margins for 2nd, 3rd, ... nth column.
+    column_composer(int ncols, ...);
+
+    void add_formatted(int ncol, 
+            const std::string &tagged_text,
+            bool  add_separator = true,
+            bool  eol_ends_format = true,
+            bool (*text_filter)(const std::string &tag) = NULL);
+
+    std::vector<formatted_string> compose_formatted() const;
+
+    void set_pagesize(int pagesize);
+
+private:
+    struct column;
+    void compose_formatted_column(
+            std::vector<formatted_string> &lines,
+            const column &col) const;
+    void strip_blank_lines(std::vector<formatted_string> &) const;
+
+private:
+    struct column
+    {
+        int margin;
+        std::vector<formatted_string> text;
+
+        column(int marg = 1) : margin(marg), text() { }
+    };
+
+    int ncols, pagesize;
+    std::vector<column> columns;
 };
 
 int menu_colour(const std::string &itemtext);
