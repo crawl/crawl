@@ -129,6 +129,241 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
+// returns random2(x) is random_factor is true, otherwise
+// the mean.
+static int maybe_random2( int x, bool random_factor ) {
+    if ( random_factor )
+	return random2(x);
+    else
+	return x / 2;
+}
+
+// Returns the to-hit for your extra unarmed.attacks.
+// DOES NOT do the final roll (i.e., random2(your_to_hit)).
+static int calc_your_to_hit_unarmed() {
+
+    int your_to_hit;
+
+    your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
+	+ you.skills[SK_FIGHTING] / 5;
+    
+    if (wearing_amulet(AMU_INACCURACY))
+	your_to_hit -= 5;
+    
+    if (you.hunger_state == HS_STARVING)
+	your_to_hit -= 3;
+    
+    your_to_hit += slaying_bonus(PWPN_HIT);
+
+    return your_to_hit;
+}
+    
+// Calculates your to-hit roll. If random_factor is true, be
+// stochastic; if false, determinstic (e.g. for chardumps.)
+int calc_your_to_hit( int heavy_armour,
+		      bool hand_and_a_half_bonus,
+		      bool water_attack,
+		      bool random_factor ) {
+
+    const int weapon = you.equip[EQ_WEAPON];
+    const bool ur_armed = (weapon != -1);   // compacts code a bit {dlb}
+
+    int wpn_skill = SK_UNARMED_COMBAT;
+
+    if (weapon != -1) {
+        wpn_skill = weapon_skill( you.inv[weapon].base_type, 
+                                  you.inv[weapon].sub_type );
+    }
+
+    int your_to_hit;
+
+    // preliminary to_hit modifications:
+    your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
+
+    if (water_attack)
+	your_to_hit += 5;
+
+    if (wearing_amulet(AMU_INACCURACY))
+        your_to_hit -= 5;
+
+    // if you can't see yourself, you're a little less acurate.
+    if (you.invis && !player_see_invis())
+        your_to_hit -= 5;
+
+    // fighting contribution
+    your_to_hit += maybe_random2(1 + you.skills[SK_FIGHTING], random_factor);
+
+    // weapon skill contribution
+    if (ur_armed) {
+        if (wpn_skill != SK_FIGHTING) {
+            your_to_hit += maybe_random2(you.skills[wpn_skill] + 1,
+					 random_factor);
+	}
+    }
+    else {                       // ...you must be unarmed
+        your_to_hit +=
+	    (you.species == SP_TROLL || you.species == SP_GHOUL) ? 4 : 2;
+
+        your_to_hit += maybe_random2(1 + you.skills[SK_UNARMED_COMBAT],
+				     random_factor);
+    }
+
+    // weapon bonus contribution
+    if (ur_armed)
+    {
+        if (you.inv[ weapon ].base_type == OBJ_WEAPONS)
+        {
+            your_to_hit += you.inv[ weapon ].plus;
+            your_to_hit += property( you.inv[ weapon ], PWPN_HIT );
+
+            if (get_equip_race(you.inv[ weapon ]) == ISFLAG_ELVEN
+                && player_genus(GENPC_ELVEN))
+            {
+                your_to_hit += (random_factor && coinflip() ? 2 : 1);
+            }
+        }
+        else if (item_is_staff( you.inv[ weapon ] ))
+        {
+            // magical staff
+            your_to_hit += property( you.inv[ weapon ], PWPN_HIT );
+        }
+    }
+
+    // slaying bonus
+    your_to_hit += slaying_bonus(PWPN_HIT);
+
+    // hunger penalty
+    if (you.hunger_state == HS_STARVING)
+        your_to_hit -= 3;
+
+    // armour penalty
+    your_to_hit -= heavy_armour;
+
+#if DEBUG_DIAGNOSTICS
+    int roll_hit = your_to_hit;
+#endif
+
+    // hit roll
+    your_to_hit = maybe_random2(your_to_hit, random_factor);
+
+#if DEBUG_DIAGNOSTICS
+    snprintf( info, INFO_SIZE, "to hit die: %d; rolled value: %d",
+              roll_hit, your_to_hit );
+
+    mpr( info, MSGCH_DIAGNOSTICS );
+#endif
+
+    if (hand_and_a_half_bonus)
+        your_to_hit += maybe_random2(3, random_factor);
+
+    if (ur_armed && wpn_skill == SK_SHORT_BLADES && you.sure_blade)
+        your_to_hit += 5 +
+	    (random_factor ? random2limit( you.sure_blade, 10 ) :
+	     you.sure_blade / 2);
+
+    // other stuff
+    if (!ur_armed) {
+	if ( you.confusing_touch )
+            // just trying to touch is easier that trying to damage
+	    your_to_hit += maybe_random2(you.dex, random_factor);
+
+	switch ( you.attribute[ATTR_TRANSFORMATION] ) {
+	case TRAN_NONE:
+	    break;
+	case TRAN_SPIDER:
+	    your_to_hit += maybe_random2(10, random_factor);
+	    break;
+	case TRAN_ICE_BEAST:
+	    your_to_hit += maybe_random2(10, random_factor);
+	    break;
+	case TRAN_BLADE_HANDS:
+	    your_to_hit += maybe_random2(12, random_factor);
+	    break;
+	case TRAN_STATUE:
+	    your_to_hit += maybe_random2(9, random_factor);
+	    break;
+	case TRAN_SERPENT_OF_HELL:
+	case TRAN_DRAGON:
+	    your_to_hit += maybe_random2(10, random_factor);
+	    break;
+	case TRAN_LICH:
+	    your_to_hit += maybe_random2(10, random_factor);
+	    break;
+	case TRAN_AIR:
+	    your_to_hit = 0;
+	    break;
+	default:
+	    break;
+	}
+    }
+
+    return your_to_hit;
+}
+
+// Calculates your heavy armour penalty. If random_factor is true,
+// be stochastic; if false, deterministic (e.g. for chardumps.)
+int calc_heavy_armour_penalty( bool random_factor ) {
+
+    const bool ur_armed = (you.equip[EQ_WEAPON] != -1);
+    int heavy_armour = 0;
+
+    // heavy armour modifiers for shield borne
+    if (you.equip[EQ_SHIELD] != -1)
+    {
+        switch (you.inv[you.equip[EQ_SHIELD]].sub_type)
+        {
+        case ARM_SHIELD:
+            if (you.skills[SK_SHIELDS] < maybe_random2(7, random_factor))
+                heavy_armour++;
+            break;
+        case ARM_LARGE_SHIELD:
+            if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
+                || player_genus(GENPC_DRACONIAN))
+            {
+                if (you.skills[SK_SHIELDS] < maybe_random2(13, random_factor))
+                    heavy_armour++;     // was potentially "+= 3" {dlb}
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (you.skills[SK_SHIELDS] < maybe_random2(13,
+							       random_factor))
+                        heavy_armour += maybe_random2(3, random_factor);
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    // heavy armour modifiers for PARM_EVASION
+    if (you.equip[EQ_BODY_ARMOUR] != -1)
+    {
+        const int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
+                                     PARM_EVASION );
+
+        if (ev_pen < 0 &&
+	    maybe_random2(you.skills[SK_ARMOUR], random_factor) < abs(ev_pen))
+            heavy_armour += maybe_random2( abs(ev_pen), random_factor );
+    }
+
+    // ??? what is the reasoning behind this ??? {dlb}
+    // My guess is that its supposed to encourage monk-style play -- bwr
+    if (!ur_armed) {
+	if ( random_factor ) {
+	    heavy_armour *= (coinflip() ? 3 : 2);
+	}
+	// (2+3)/2
+	else {
+	    heavy_armour *= 5;
+	    heavy_armour /= 2;
+	}
+    }
+    return heavy_armour;
+}
+
 // Returns true if you hit the monster.
 bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
@@ -150,7 +385,6 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     char damage_noise[80], damage_noise2[80];
 
-    int heavy_armour = 0;
     char str_pass[ ITEMNAME_SIZE ];
 
 #if DEBUG_DIAGNOSTICS
@@ -172,50 +406,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             art_proprt[i] = 0;
     }
 
-    // heavy armour modifiers for shield borne
-    if (bearing_shield)
-    {
-        switch (you.inv[you.equip[EQ_SHIELD]].sub_type)
-        {
-        case ARM_SHIELD:
-            if (you.skills[SK_SHIELDS] < random2(7))
-                heavy_armour++;
-            break;
-        case ARM_LARGE_SHIELD:
-            if ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
-                || player_genus(GENPC_DRACONIAN))
-            {
-                if (you.skills[SK_SHIELDS] < random2(13))
-                    heavy_armour++;     // was potentially "+= 3" {dlb}
-            }
-            else
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (you.skills[SK_SHIELDS] < random2(13))
-                        heavy_armour += random2(3);
-                }
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    // heavy armour modifiers for PARM_EVASION
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        const int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
-                                     PARM_EVASION );
-
-        if (ev_pen < 0 && random2(you.skills[SK_ARMOUR]) < abs( ev_pen ))
-            heavy_armour += random2( abs(ev_pen) );
-    }
-
-    // ??? what is the reasoning behind this ??? {dlb}
-    // My guess is that its supposed to encourage monk-style play -- bwr
-    if (!ur_armed)
-        heavy_armour *= (coinflip() ? 3 : 2);
+    const int heavy_armour = calc_heavy_armour_penalty(true);
 
     // Calculate the following two flags in advance
     // to know what player does this combat turn:
@@ -250,7 +441,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         && !item_cursed( you.inv[ weapon ] )
         && hands_reqd == HANDS_HALF)
     {
-        // currently: +1 dam, +1 hit, -1 spd (loosly)
+        // currently: +1 dam, +1 hit, -1 spd (loosely)
         use_hand_and_a_half_bonus = true;
     }
 
@@ -288,48 +479,24 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         water_attack = true;
     }
 
-    // preliminary to_hit modifications:
-    your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
+    // new unified to-hit calculation
+    your_to_hit = calc_your_to_hit( heavy_armour, use_hand_and_a_half_bonus,
+				    water_attack, true );
 
-    if (water_attack)
-        your_to_hit += 5;
-
-    if (wearing_amulet(AMU_INACCURACY))
-        your_to_hit -= 5;
-
-    // if you can't see yourself, you're a little less acurate.
-    if (you.invis && !player_see_invis())
-        your_to_hit -= 5;
-
-    your_to_hit += random2(1 + you.skills[SK_FIGHTING]);
-
-    if (ur_armed)
-    {
-        if (wpn_skill)
-            your_to_hit += random2(you.skills[wpn_skill] + 1);
-    }
-    else                        // ...you must be unarmed
-    {
-        your_to_hit += (you.species == SP_TROLL
-                        || you.species == SP_GHOUL) ? 4 : 2;
-
-        your_to_hit += random2(1 + you.skills[SK_UNARMED_COMBAT]);
-    }
+    //jmf: check for backlight enchantment
+    if (mons_has_ench(defender, ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_IV))
+	your_to_hit += 2 + random2(8);
 
     // energy expenditure in terms of food:
     make_hungry(3, true);
 
-    if (ur_armed
-        && you.inv[ weapon ].base_type == OBJ_WEAPONS
-        && is_random_artefact( you.inv[ weapon ] ))
+    if (ur_armed &&
+        you.inv[ weapon ].base_type == OBJ_WEAPONS &&
+        is_random_artefact( you.inv[ weapon ] ) &&
+	art_proprt[RAP_ANGRY] >= 1 &&
+	random2(1 + art_proprt[RAP_ANGRY]))
     {
-        if (art_proprt[RAP_ANGRY] >= 1)
-        {
-            if (random2(1 + art_proprt[RAP_ANGRY]))
-            {
-                go_berserk(false);
-            }
-        }
+	go_berserk(false);
     }
 
     switch (you.special_wield)
@@ -350,63 +517,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         break;
     }
 
-    if (you.mutation[MUT_BERSERK])
-    {
-        if (random2(100) < (you.mutation[MUT_BERSERK] * 10) - 5)
-            go_berserk(false);
-    }
+    if (you.mutation[MUT_BERSERK] &&
+        (random2(100) < (you.mutation[MUT_BERSERK] * 10) - 5))
+	go_berserk(false);
 
-    if (ur_armed)
-    {
-        if (you.inv[ weapon ].base_type == OBJ_WEAPONS)
-        {
-            // there was some stupid conditional here that applied this
-            // "if (plus >= 0)" and "else" that .. which is all
-            // cases (d'oh!) {dlb}
-            your_to_hit += you.inv[ weapon ].plus;
-            your_to_hit += property( you.inv[ weapon ], PWPN_HIT );
-
-            if (get_equip_race(you.inv[ weapon ]) == ISFLAG_ELVEN
-                && player_genus(GENPC_ELVEN))
-            {
-                your_to_hit += (coinflip() ? 2 : 1);
-            }
-        }
-        else if (item_is_staff( you.inv[ weapon ] ))
-        {
-            /* magical staff */ 
-            your_to_hit += property( you.inv[ weapon ], PWPN_HIT );
-        }
-    }
-
-    your_to_hit += slaying_bonus(PWPN_HIT);     // see: player.cc
-
-    if (you.hunger_state == HS_STARVING)
-        your_to_hit -= 3;
-
-    your_to_hit -= heavy_armour;
-
-#if DEBUG_DIAGNOSTICS
-    int roll_hit = your_to_hit;
-#endif
-
-    // why does this come here and not later? {dlb}
-    // apparently to give the following pluses more significance -- bwr
-    your_to_hit = random2(your_to_hit);
-
-#if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "to hit die: %d; rolled value: %d",
-              roll_hit, your_to_hit );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
-    if (use_hand_and_a_half_bonus)
-        your_to_hit += random2(3);
-
-    if (ur_armed && wpn_skill == SK_SHORT_BLADES && you.sure_blade)
-        your_to_hit += 5 + random2limit( you.sure_blade, 10 );
-
+    // calculate damage
     int damage = 1;
 
     if (!ur_armed)              // empty-handed
@@ -415,9 +530,6 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
         if (you.confusing_touch)
         {
-            // just trying to touch is easier that trying to damage
-            // special_brand = SPWPN_CONFUSE;
-            your_to_hit += random2(you.dex);
             // no base hand damage while using this spell
             damage = 0;
         }
@@ -432,34 +544,27 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             case TRAN_SPIDER:
                 damage = 5;
                 // special_brand = SPWPN_VENOM;
-                your_to_hit += random2(10);
                 break;
             case TRAN_ICE_BEAST:
                 damage = 12;
                 // special_brand = SPWPN_FREEZING;
-                your_to_hit += random2(10);
                 break;
             case TRAN_BLADE_HANDS:
                 damage = 12 + (you.strength / 4) + (you.dex / 4);
-                your_to_hit += random2(12);
                 break;
             case TRAN_STATUE:
                 damage = 12 + you.strength;
-                your_to_hit += random2(9);
                 break;
             case TRAN_SERPENT_OF_HELL:
             case TRAN_DRAGON:
                 damage = 20 + you.strength;
-                your_to_hit += random2(10);
                 break;
             case TRAN_LICH:
                 damage = 5;
                 // special_brand = SPWPN_DRAINING;
-                your_to_hit += random2(10);
                 break;
             case TRAN_AIR:
-                damage = 0;
-                your_to_hit = 0;
+		damage = 0;
                 break;
             }
         }
@@ -488,10 +593,6 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 #if DEBUG_DIAGNOSTICS
     const int base_damage = damage;
 #endif
-
-    //jmf: check for backlight enchantment
-    if (mons_has_ench(defender, ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_IV))
-       your_to_hit += 2 + random2(8);
 
     int weapon_speed2 = 10;
     int min_speed = 3;
@@ -1705,19 +1806,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
             }
 
-            your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
-                                           + you.skills[SK_FIGHTING] / 5;
+	    // unified to-hit calculation
+	    your_to_hit = calc_your_to_hit_unarmed();
+	    your_to_hit = random2(your_to_hit);
 
-            if (wearing_amulet(AMU_INACCURACY))
-                your_to_hit -= 5;
-
-            make_hungry(2, true);
-
-            if (you.hunger_state == HS_STARVING)
-                your_to_hit -= 3;
-
-            your_to_hit += slaying_bonus(PWPN_HIT);
-            your_to_hit = random2(your_to_hit);
+	    make_hungry(2, true);
 
             damage = sc_dam;    //4 + you.experience_level / 3;
 

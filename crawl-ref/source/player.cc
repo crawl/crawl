@@ -33,6 +33,7 @@
 #include "externs.h"
 
 #include "clua.h"
+#include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -2771,6 +2772,37 @@ void display_char_status(void)
                                 : "very slow" );
     mpr(info);
 
+    // XXX Assumes no hand-and-a-half bonus. Oh well.
+    const int to_hit = calc_your_to_hit( calc_heavy_armour_penalty(false),
+					 false, false, false ) * 2;
+    // Messages based largely on percentage chance of missing the 
+    // average EV 10 humanoid, and very agile EV 30 (pretty much
+    // max EV for monsters currently).
+    //
+    // "awkward"    - need lucky hit (less than EV)
+    // "difficult"  - worse than 2 in 3
+    // "hard"       - worse than fair chance
+    snprintf( info, INFO_SIZE, 
+	      "%s in your current equipment.",
+	      (to_hit <   1) ? "You are completely incapable of fighting" :
+	      (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
+	      (to_hit <  10) ? "Hitting average monsters is awkward" :
+	      (to_hit <  15) ? "Hitting average monsters is difficult" :
+	      (to_hit <  20) ? "Hitting average monsters is hard" :
+	      (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
+	      (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
+	      (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
+	      (to_hit < 100) ? "You feel comfortable with your ability to fight" 
+	      : "You feel confident with your ability to fight" );
+    
+#if DEBUG_DIAGNOSTICS
+    char str_pass[INFO_SIZE];
+    snprintf( str_pass, INFO_SIZE, " (%d)", to_hit );
+    strncat( info, str_pass, INFO_SIZE );
+#endif
+    mpr(info);
+    
+
     // character evaluates their ability to sneak around: 
     const int ustealth = check_stealth();
 
@@ -2787,8 +2819,7 @@ void display_char_status(void)
 	      : "incredibly " );
 
 #if DEBUG_DIAGNOSTICS
-    char str_pass[INFO_SIZE];
-    snprintf( str_pass, INFO_SIZE, " (%d)", stealth );
+    snprintf( str_pass, INFO_SIZE, " (%d)", ustealth );
     strncat( info, str_pass, INFO_SIZE );
 #endif
 

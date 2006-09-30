@@ -50,5 +50,9 @@ void monster_attack(int monster_attacking);
  * *********************************************************************** */
 bool monsters_fight(int monster_attacking, int monster_attacked);
 
+int calc_your_to_hit( int heavy_armour, bool hand_and_a_half_bonus,
+		      bool water_attack, bool random_factor );
+
+int calc_heavy_armour_penalty( bool random_factor );
 
 #endif
