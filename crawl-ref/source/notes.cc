@@ -17,6 +17,8 @@
 #include "spl-util.h"
 #include "stash.h"
 
+#define NOTES_VERSION_NUMBER 1001
+
 std::vector<Note> note_list;
 
 /* I can't believe I'm writing code this bad */
@@ -370,13 +372,17 @@ void activate_notes( bool active ) {
 }
 
 void save_notes( FILE* fp ) {
+    writeLong( fp, NOTES_VERSION_NUMBER );
     writeLong( fp, note_list.size() );
     for ( unsigned i = 0; i < note_list.size(); ++i )
 	note_list[i].save(fp);
 }
 
 void load_notes( FILE* fp ) {
-    long num_notes = readLong(fp);
+    if ( readLong(fp) != NOTES_VERSION_NUMBER )
+	return;
+
+    const long num_notes = readLong(fp);
     for ( long i = 0; i < num_notes; ++i ) {
 	Note new_note;
 	new_note.load(fp);
