@@ -16,11 +16,11 @@ CXX = g++
 DELETE = del
 COPY = copy
 OS_TYPE = WIN32CONSOLE
-CFLAGS = -Wall -Wwrite-strings -Wstrict-prototypes \
-            -Wmissing-prototypes -Wmissing-declarations \
+CFLAGS = -Wall -Wwrite-strings \
 			-Wshadow \
 			-Werror \
 			-fsigned-char \
+			-fstrict-aliasing \
 			-pedantic \
 			-D$(OS_TYPE) $(EXTRA_FLAGS) \
 			-DWINMM_PLAY_SOUNDS

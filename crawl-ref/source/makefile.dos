@@ -13,9 +13,11 @@ DELETE = del
 COPY = copy
 OS_TYPE = DOS
 CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS) \
-		 -Wall -Wwrite-strings -Wstrict-prototypes \
-         -Wmissing-prototypes -Wmissing-declarations \
-		 -fsigned-char -pedantic
+		 -Wall -Wwrite-strings \
+		 -fsigned-char \
+		 -fstrict-aliasing \
+		 -Wshadow -Werror -pedantic
+
 OBJECTS += libdos.o
 
 LDFLAGS =

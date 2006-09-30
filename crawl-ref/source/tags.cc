@@ -209,19 +209,27 @@ long unmarshallLong(struct tagHeader &th)
     return data;
 }
 
+union float_marshall_kludge
+{
+    // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
+    float f_num;
+    long  l_num;
+};
+
 // single precision float -- marshall in network order.
 void marshallFloat(struct tagHeader &th, float data)
 {
-    long intBits = *((long *)(&data));
-    marshallLong(th, intBits);
+    float_marshall_kludge k;
+    k.f_num = data;
+    marshallLong(th, k.l_num);
 }
 
 // single precision float -- unmarshall in network order.
 float unmarshallFloat(struct tagHeader &th)
 {
-    long intBits = unmarshallLong(th);
-
-    return *((float *)(&intBits));
+    float_marshall_kludge k;
+    k.l_num = unmarshallLong(th);
+    return k.f_num;
 }
 
 // string -- marshall length & string data

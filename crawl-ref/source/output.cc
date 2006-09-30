@@ -245,11 +245,11 @@ void print_stats(void)
         gotoxy(52, 11);
 
 #if DEBUG_DIAGNOSTICS
-        cprintf( "%d/%d  (%d/%d)", 
+        cprintf( "%d/%lu  (%d/%d)", 
                  you.experience_level, you.experience, 
                  you.skill_cost_level, you.exp_available );
 #else
-        cprintf( "%d/%d  (%d)", 
+        cprintf( "%d/%lu  (%d)", 
                  you.experience_level, you.experience, you.exp_available );
 #endif
 
