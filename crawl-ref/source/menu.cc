@@ -831,7 +831,7 @@ void column_composer::add_formatted(
         bool eol_ends_format,
         bool (*tfilt)(const std::string &))
 {
-    ASSERT(ncol >= 0 && ncol < columns.size());
+    ASSERT(ncol >= 0 && ncol < (int) columns.size());
 
     column &col = columns[ncol];
     std::vector<std::string> segs = split_string("\n", s, false, true);

@@ -381,7 +381,7 @@ int CLua::return_count(lua_State *ls, const char *format)
         // blowing the stack.
         if (ci < 0)
             ci = 0;
-        else if (ci > 5)
+        else if (ci > 10)
             ci = 10;
         return (ci);
     }
