@@ -59,7 +59,6 @@ autopickup = $?!:"/0
 # safe_autopickup
 #
 # If set, autopickup will not pick anything up if monsters are visible.
-# Note that risky terrain (e.g. statues) does not count as a monster.
 safe_autopickup = true
 
 #
