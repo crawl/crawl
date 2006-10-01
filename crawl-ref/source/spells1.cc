@@ -1023,11 +1023,7 @@ void cast_swiftness(int power)
 
     if (player_in_water())
     {
-        if (you.species == SP_MERFOLK)
-            mpr("This spell will not benefit you while you're swimming!");
-        else 
-            mpr("This spell will not benefit you while you're in water!");
-
+        mpr("The water foams!");
         return;
     }
 
@@ -1041,11 +1037,9 @@ void cast_swiftness(int power)
     // dur_incr = random2(power) + random2(power) + 20;
     dur_incr = 20 + random2( power );
 
-    // Centaurs do have feet and shouldn't get here anyways -- bwr
-    snprintf( info, INFO_SIZE, "You feel quick%s",  
-              (you.species == SP_NAGA) ? "." : " on your feet." );
-
-    mpr(info);
+    // [dshaligram] Removed the on-your-feet bit. Sounds odd when you're
+    // levitating, for instance.
+    mpr("You feel quick.");
 
     if (dur_incr + you.duration[DUR_SWIFTNESS] > 100)
         you.duration[DUR_SWIFTNESS] = 100;
