@@ -3011,11 +3011,11 @@ static void move_player(int move_x, int move_y)
         const int new_targ_y = you.y_pos + move_y;
         const unsigned char new_targ_grid = grd[ new_targ_x ][ new_targ_y ];
 
-        if (new_targ_grid < MINMOVE)
+        if (grid_is_solid(new_targ_grid))
         {
             you.turn_is_over = 1;
             mpr("Ouch!");
-	    apply_berserk_penalty = true;
+            apply_berserk_penalty = true;
             return;
         }
 
@@ -3134,7 +3134,7 @@ static void move_player(int move_x, int move_y)
         }
     }
 
-    if (!attacking && targ_grid >= MINMOVE && moving)
+    if (!attacking && !grid_is_solid(targ_grid) && moving)
     {
         if (targ_grid == DNGN_UNDISCOVERED_TRAP
                 && random2(you.skills[SK_TRAPS_DOORS] + 1) > 3)
@@ -3217,9 +3217,9 @@ static void move_player(int move_x, int move_y)
 
   out_of_traps:
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && (Options.easy_open || you.running < 0))
+    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
         open_door(move_x, move_y, false);
-    else if (targ_grid <= MINMOVE)
+    else if (grid_is_solid(targ_grid))
     {
         stop_running();
         move_x = 0;

@@ -7408,7 +7408,7 @@ static bool octa_room(spec_room &sr, int oblique_max, unsigned char type_floor)
             if (grd[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
                 grd[x][y] = DNGN_SHALLOW_WATER;
 
-            if (grd[x][y] == DNGN_CLOSED_DOOR && type_floor >= MINMOVE)
+            if (grd[x][y] == DNGN_CLOSED_DOOR && !grid_is_solid(type_floor))
                 grd[x][y] = DNGN_FLOOR;       // ick
         }
 

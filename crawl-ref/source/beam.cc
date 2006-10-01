@@ -1336,7 +1336,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         }
 
         // see if tx, ty is blocked by something
-        if (grd[tx][ty] < MINMOVE)
+        if (grid_is_solid(grd[tx][ty]))
         {
             // first, check to see if this beam affects walls.
             if (affectsWalls(pbolt))
@@ -1347,10 +1347,8 @@ void fire_beam( struct bolt &pbolt, item_def *item )
                     rangeRemaining -= affect(pbolt, tx, ty);
 
                 // if it's still a wall, quit.
-                if (grd[tx][ty] < MINMOVE)
-                {
+                if (grid_is_solid(grd[tx][ty]))
                     break;      // breaks from line tracing
-                }
             }
             else
             {
@@ -1372,12 +1370,12 @@ void fire_beam( struct bolt &pbolt, item_def *item )
                     // if it doesn't, we'll quit in the next if stmt anyway.
                     if (roundY)
                     {
-                        if ( grd[lx + stepx / 100][ly] < MINMOVE)
+                        if (grid_is_solid(grd[lx + stepx / 100][ly]))
                             sideBlocked = true;
 
                         if (dy != 0)
                         {
-                            if ( grd[lx][ly + (stepy>0?1:-1)] < MINMOVE)
+                            if (grid_is_solid(grd[lx][ly + (stepy>0?1:-1)]))
                                 topBlocked = true;
                         }
 
@@ -1386,12 +1384,12 @@ void fire_beam( struct bolt &pbolt, item_def *item )
                     }
                     else
                     {
-                        if ( grd[lx][ly + stepy / 100] < MINMOVE)
+                        if (grid_is_solid(grd[lx][ly + stepy / 100]))
                             sideBlocked = true;
 
                         if (dx != 0)
                         {
-                            if ( grd[lx + (stepx>0?1:-1)][ly] < MINMOVE)
+                            if (grid_is_solid(grd[lx + (stepx>0?1:-1)][ly]))
                                 topBlocked = true;
                         }
 
@@ -1411,7 +1409,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
 
         // at this point, if grd[tx][ty] is still a wall, we
         // couldn't find any path: bouncy, fuzzy, or not - so break.
-        if (grd[tx][ty] < MINMOVE)
+        if (grid_is_solid(grd[tx][ty]))
         {
             tx = lx;
             ty = ly;
@@ -2625,7 +2623,7 @@ static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
             || (stepy<0 && fy <= ly)))
             fuzzyOK = true;
         // see if up try is blocked
-        if (fuzzyOK && grd[tx][fy] < MINMOVE)
+        if (fuzzyOK && grid_is_solid(grd[tx][fy]))
             fuzzyOK = false;
 
         // try down
@@ -2635,7 +2633,7 @@ static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
         if (fy != ty && ((stepy>0 && fy >= ly)
             || (stepy<0 && fy <= ly)))
             fuzzyOK = true;
-        if (fuzzyOK && grd[tx][fy] < MINMOVE)
+        if (fuzzyOK && grid_is_solid(grd[tx][fy]))
             fuzzyOK = false;
     }
     if (roundX)
@@ -2647,7 +2645,7 @@ static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
             || (stepx<0 && fx <= lx)))
             fuzzyOK = true;
         // see if up try is blocked
-        if (fuzzyOK && grd[fx][ty] < MINMOVE)
+        if (fuzzyOK && grid_is_solid(grd[fx][ty]))
             fuzzyOK = false;
 
         // try down
@@ -2657,7 +2655,7 @@ static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
         if (fx != tx && ((stepx>0 && fx >= lx)
             || (stepx<0 && fx <= lx)))
             fuzzyOK = true;
-        if (fuzzyOK && grd[fx][ty] < MINMOVE)
+        if (fuzzyOK && grid_is_solid(grd[fx][ty]))
             fuzzyOK = false;
     }
     // END fuzzy line algorithm
@@ -2694,7 +2692,7 @@ int affect(struct bolt &beam, int x, int y)
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
         return (0);
 
-    if (grd[x][y] < MINMOVE)
+    if (grid_is_solid(grd[x][y]))
     {
         if (beam.is_tracer)          // tracers always stop on walls.
             return (BEAM_STOP);
@@ -2705,7 +2703,7 @@ int affect(struct bolt &beam, int x, int y)
         }
         // if it's still a wall,  quit - we can't do anything else to
         // a wall.  Otherwise effects (like clouds, etc) are still possible.
-        if (grd[x][y] < MINMOVE)
+        if (grid_is_solid(grd[x][y]))
             return (rangeUsed);
     }
 

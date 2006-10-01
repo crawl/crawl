@@ -1631,6 +1631,6 @@ std::string prep_branch_level_name()
     int branch = you.where_are_you;
     int sub_depth = subdungeon_depth( branch, you.your_level );
 
-	return prep_branch_level_name(branch, sub_depth);
+    return prep_branch_level_name(branch, sub_depth);
 }
 
