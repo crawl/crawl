@@ -410,13 +410,13 @@ bool mons_is_unique( int mc )
     if (mc <= MONS_PROGRAM_BUG 
         || (mc >= MONS_NAGA_MAGE && mc <= MONS_ROYAL_JELLY)
         || (mc >= MONS_DRACONIAN && mc <= MONS_DRACONIAN_SCORCHER)
-        || (mc >= MONS_ANCIENT_LICH 
+        || (mc >= MONS_ANCIENT_LICH
             && (mc != MONS_PLAYER_GHOST && mc != MONS_PANDEMONIUM_DEMON)))
     {
-        return (false);    
+        return (false);
     }
 
-    return (true);    
+    return (true);
 }
 
 char mons_see_invis( struct monsters *mon )

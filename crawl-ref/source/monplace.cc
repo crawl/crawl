@@ -621,10 +621,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
 
     menv[id].foe = target;
 
-	mark_interesting_monst(&menv[id], behaviour);
-
-	if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
-		seen_monster(&menv[id]);
+    mark_interesting_monst(&menv[id], behaviour);
+    
+    if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
+	seen_monster(&menv[id]);
 
     return (id);
 }                               // end place_monster_aux()

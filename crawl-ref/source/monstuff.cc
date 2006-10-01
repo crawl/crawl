@@ -694,11 +694,21 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-	if ( MONST_INTERESTING(monster) ) {
+	if ( MONST_INTERESTING(monster) ||
+	     // XXX yucky hack
+	     monster->type == MONS_PLAYER_GHOST ||
+	     monster->type == MONS_PANDEMONIUM_DEMON ) {
 	    /* make a note of it */
 	    char namebuf[ITEMNAME_SIZE];
-	    
-	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    if ( monster->type == MONS_PLAYER_GHOST ) {
+		snprintf( namebuf, sizeof(namebuf), "the ghost of %s",
+			  ghost.name );
+	    }
+	    else if ( monster->type == MONS_PANDEMONIUM_DEMON ) {
+		strncpy( namebuf, ghost.name, sizeof(namebuf) );
+	    }
+	    else
+		moname(monster->type, true, DESC_NOCAP_A, namebuf);
 	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
 	}
 
@@ -5237,16 +5247,18 @@ static int map_wand_to_mspell(int wand_type)
 
 void seen_monster(struct monsters *monster)
 {
-	if ( monster->flags & MF_SEEN )
-	    return;
-
-	// First time we've seen this particular monster
-
-	monster->flags |= MF_SEEN;
-
-	if ( MONST_INTERESTING(monster) ) {
-	    char namebuf[ITEMNAME_SIZE];
-	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	    take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
-	}
+    if ( monster->flags & MF_SEEN )
+	return;
+    
+    // First time we've seen this particular monster
+    
+    monster->flags |= MF_SEEN;
+    
+    if ( MONST_INTERESTING(monster) &&
+	 monster->type != MONS_PANDEMONIUM_DEMON &&
+	 monster->type != MONS_PLAYER_GHOST ) {
+	char namebuf[ITEMNAME_SIZE];
+	moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
+    }
 }
