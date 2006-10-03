@@ -151,6 +151,19 @@ std::string channel_to_str( int channel )
     return message_channel_names[channel];
 }
 
+static int str_to_book( const std::string& str )
+{
+    if ( str == "fire" || str == "flame" )
+	return SBT_FIRE;
+    if ( str == "cold" || str == "ice" )
+	return SBT_COLD;
+    if ( str == "summ" || str == "summoning" )
+	return SBT_SUMM;
+    if ( str == "random" )
+	return SBT_RANDOM;
+    return SBT_NO_SELECTION;
+}
+
 static int str_to_weapon( const std::string &str )
 {
     if (str == "shortsword" || str == "short sword")
@@ -333,6 +346,7 @@ static void reset_startup_options(bool clear_name = true)
     Options.race                   = '\0';
     Options.cls                    = '\0';
     Options.weapon                 = WPN_UNKNOWN;
+    Options.book                   = SBT_NO_SELECTION;
     Options.random_pick            = false;
     Options.chaos_knight           = GOD_NO_GOD;
     Options.death_knight           = DK_NO_SELECTION;
@@ -356,6 +370,7 @@ void reset_options(bool clear_name)
     Options.prev_dk   = DK_NO_SELECTION;
     Options.prev_pr   = GOD_NO_GOD;
     Options.prev_weapon = WPN_UNKNOWN;
+    Options.prev_book = SBT_NO_SELECTION;
     Options.prev_randpick = false;
     Options.remember_name = false;
 
@@ -576,6 +591,7 @@ static void read_startup_prefs()
     Options.prev_ck       = Options.chaos_knight;
     Options.prev_cls      = Options.cls;
     Options.prev_race     = Options.race;
+    Options.prev_book     = Options.book;
     Options.prev_name     = you.your_name;
 
     reset_startup_options();
@@ -618,6 +634,15 @@ static void write_newgame_options(FILE *f)
                 Options.prev_pr == GOD_ZIN? "zin" :
                 Options.prev_pr == GOD_YREDELEMNUL? "yredelemnul" :
                                             "random");
+    }
+
+    if (Options.prev_book != SBT_NO_SELECTION )
+    {
+	fprintf(f, "book = %s\n",
+		Options.prev_book == SBT_FIRE ? "fire" :
+		Options.prev_book == SBT_COLD ? "cold" :
+		Options.prev_book == SBT_SUMM ? "summ" :
+		"random");
     }
 }
 
@@ -1145,6 +1170,11 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         // choose this weapon for classes that get choice
         Options.weapon = str_to_weapon( field );
+    }
+    else if (key == "book")
+    {
+	// choose this book for classes that get choice
+	Options.book = str_to_book( field );
     }
     else if (key == "chaos_knight")
     {

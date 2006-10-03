@@ -631,6 +631,7 @@ struct game_options
     int         background;     // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     int         weapon;         // auto-choose weapon for character
+    int         book;		// auto-choose book for character
     int         chaos_knight;   // choice of god for Chaos Knights (Xom/Makleb)
     int         death_knight;   // choice of god/necromancy for Death Knights
     int         priest;         // choice of god for priests (Zin/Yred)
@@ -761,6 +762,7 @@ struct game_options
     char        prev_cls;
     int         prev_ck, prev_dk, prev_pr;
     int         prev_weapon;
+    int         prev_book;
     bool        prev_randpick;
 };
 

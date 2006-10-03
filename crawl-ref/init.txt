@@ -490,6 +490,14 @@ show_uncursed = true
 
 # weapon = hand axe
 
+#
+# The book option allows defaulting on the book selection screen
+# Valid books are "fire" or "flame", "cold" or "ice", and
+# "summ" or "summoning" - although the last does not apply to
+# conjurers, so you'll get a query there.
+#
+
+# book = fire
 
 #
 # These allow auto-selection of other third-screen options.

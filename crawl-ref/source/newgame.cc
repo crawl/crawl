@@ -137,6 +137,7 @@ static char ng_race, ng_cls;
 static bool ng_random;
 static int ng_ck, ng_dk, ng_pr;
 static int ng_weapon;
+static int ng_book;
 
 static void reset_newgame_options(void)
 {
@@ -146,6 +147,7 @@ static void reset_newgame_options(void)
     ng_dk = DK_NO_SELECTION;
     ng_pr = GOD_NO_GOD;
     ng_weapon = WPN_UNKNOWN;
+    ng_book = SBT_NO_SELECTION;
 }
 
 static void save_newgame_options(void)
@@ -159,6 +161,7 @@ static void save_newgame_options(void)
     Options.prev_dk         = ng_dk;
     Options.prev_pr         = ng_pr;
     Options.prev_weapon     = ng_weapon;
+    Options.prev_book       = ng_book;
 
     write_newgame_options_file();
 }
@@ -171,6 +174,7 @@ static void set_startup_options(void)
     Options.death_knight = Options.prev_dk;
     Options.chaos_knight = Options.prev_ck;
     Options.priest       = Options.prev_pr;
+    Options.book = Options.prev_book;
 }
 
 static bool prev_startup_options_set(void)
@@ -1403,6 +1407,90 @@ bool class_allowed( unsigned char speci, int char_class )
         return false;
     }
 }                               // end class_allowed()
+
+
+static void choose_book( item_def& book, int firstbook, int numbooks )
+{
+    int keyin;
+    clrscr();
+    book.base_type = OBJ_BOOKS;
+    book.quantity = 1;
+    book.plus = 0;
+    book.special = 1;
+    book.colour = CYAN;
+
+    // using the fact that CONJ_I and MINOR_MAGIC_I are both
+    // fire books, CONJ_II and MINOR_MAGIC_II are both ice books
+    if ( Options.book && Options.book <= numbooks )
+    {
+	book.sub_type = firstbook + Options.book - 1;
+	ng_book = Options.book;
+	return;
+    }
+
+    if ( Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM )
+	Options.prev_book = SBT_NO_SELECTION;
+
+    if ( !Options.random_pick )
+    {
+	textcolor( CYAN );
+	cprintf(EOL " You have a choice of books:" EOL);
+	textcolor( LIGHTGREY );
+
+	for (int i=0; i < numbooks; ++i)
+	{
+	    char buf[ITEMNAME_SIZE];
+	    book.sub_type = firstbook + i;
+	    item_name( book, DESC_PLAIN, buf );
+	    snprintf( info, INFO_SIZE, "%c - %s" EOL, 'a' + i, buf);
+	    cprintf(info);
+
+	}
+
+	textcolor(BROWN);
+	cprintf(EOL "? - Random" );
+	if ( Options.prev_book != SBT_NO_SELECTION ) {
+            cprintf("; Enter - %s",
+		    Options.prev_book == SBT_FIRE   ? "Fire"      :
+		    Options.prev_book == SBT_COLD   ? "Cold"      :
+		    Options.prev_book == SBT_SUMM   ? "Summoning" :
+                    Options.prev_book == SBT_RANDOM ? "Random"    :
+		    "Buggy Book");
+	}
+	cprintf(EOL);
+            
+	do
+	{
+	    textcolor( CYAN );
+	    cprintf(EOL "Which book? ");
+	    textcolor( LIGHTGREY );
+
+	    keyin = get_ch();
+	} while (keyin != '?' && 
+		 ((keyin != '\r' && keyin != '\n') ||
+		  Options.prev_book == SBT_NO_SELECTION ) &&
+		 (keyin < 'a' || keyin > ('a' + numbooks)));
+
+	if ( keyin == '\r' || keyin == '\n' )
+	{
+	    if ( Options.prev_book == SBT_RANDOM )
+		keyin = '?';
+	    else
+		keyin = ('a' +  Options.prev_book - 1);
+	}
+    }
+
+    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '?')
+	ng_book = SBT_RANDOM;
+    else
+	ng_book = keyin - 'a' + 1;
+    
+    if ( Options.random_pick || keyin == '?' )
+	keyin = random2(numbooks) + 'a';
+
+    book.sub_type = firstbook + keyin - 'a';
+}
+    
 
 static char startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
     WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
@@ -3449,12 +3537,7 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         // extra items being tested:
-        you.inv[2].base_type = OBJ_BOOKS;
-        you.inv[2].sub_type = BOOK_MINOR_MAGIC_I + random2(3);
-        you.inv[2].quantity = 1;
-        you.inv[2].plus = 0;    // = 127
-        you.inv[2].special = 1;
-        you.inv[2].colour = CYAN;
+	choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 );
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -4072,9 +4155,15 @@ void give_items_skills()
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
-        you.inv[2].base_type = OBJ_BOOKS;
-        you.inv[2].sub_type = give_first_conjuration_book();
-        you.inv[2].plus = 0;
+
+	if ( you.char_class == JOB_CONJURER )
+	    choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 );
+	else
+	{
+	    you.inv[2].base_type = OBJ_BOOKS;
+	    // subtype will always be overridden
+	    you.inv[2].plus = 0;
+	}
 
         switch (you.char_class)
         {

@@ -798,6 +798,15 @@ enum death_knight_type
     DK_RANDOM
 };
 
+enum startup_book_type
+{
+    SBT_NO_SELECTION = 0,
+    SBT_FIRE,
+    SBT_COLD,
+    SBT_SUMM,
+    SBT_RANDOM
+};
+
 enum deck_type
 {
     DECK_OF_WONDERS,                   //    0
