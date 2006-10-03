@@ -2552,6 +2552,20 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         if (thing_created == NON_ITEM)
             return;
 
+	// don't give top-tier wands before 5 HD
+	if ( menv[mid].hit_dice < 5 )
+	{
+	    // technically these wands will be undercharged, but it
+	    // doesn't really matter
+	    if ( mitm[thing_created].sub_type == WAND_FIRE )
+		mitm[thing_created].sub_type = WAND_FLAME;
+	    if ( mitm[thing_created].sub_type == WAND_COLD )
+		mitm[thing_created].sub_type = WAND_FROST;
+	    if ( mitm[thing_created].sub_type == WAND_LIGHTNING )
+		mitm[thing_created].sub_type = (coinflip() ?
+						WAND_FLAME : WAND_FROST);
+	}
+
         mitm[thing_created].flags = 0;
         menv[mid].inv[MSLOT_WAND] = thing_created;
     }
