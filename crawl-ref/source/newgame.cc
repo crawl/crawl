@@ -1411,7 +1411,7 @@ bool class_allowed( unsigned char speci, int char_class )
 
 static void choose_book( item_def& book, int firstbook, int numbooks )
 {
-    int keyin;
+    int keyin = 0;
     clrscr();
     book.base_type = OBJ_BOOKS;
     book.quantity = 1;
