@@ -900,7 +900,8 @@ void display_mutations(void)
 
     case SP_SPRIGGAN:
 	cprintf("You can see invisible." EOL);
-	j++;
+	cprintf("You cover the ground extremely quickly." EOL);
+	j += 2;
 	break;
 
     case SP_CENTAUR:
