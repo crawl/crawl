@@ -1197,7 +1197,9 @@ void mark_interesting_monst(struct monsters* monster, char behaviour)
     else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
 	      you.level_type == LEVEL_DUNGEON &&
 	      mons_level(monster->type) >= you.your_level + ood_limit() &&
-	      mons_level(monster->type) < 99 ) 
+	      mons_level(monster->type) < 99 &&
+	      !(monster->type >= MONS_EARTH_ELEMENTAL &&
+		monster->type <= MONS_AIR_ELEMENTAL) )
 	interesting = true;
 
     if ( interesting )
