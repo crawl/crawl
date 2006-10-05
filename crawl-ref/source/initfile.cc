@@ -294,10 +294,10 @@ static bool read_bool( const std::string &field, bool def_value )
 {
     bool ret = def_value;
 
-    if (field == "true" || field == "1")
+    if (field == "true" || field == "1" || field == "yes")
         ret = true;
 
-    if (field == "false" || field == "0")
+    if (field == "false" || field == "0" || field == "no")
         ret = false;
 
     return (ret);
@@ -958,20 +958,31 @@ void parse_option_line(const std::string &str, bool runscript)
         // gives verbose info in char dumps
         Options.verbose_dump = read_bool( field, Options.verbose_dump );
     }
-    else if (key == "char_set")
+    else if (key == "char_set" || key == "ascii_display")
     {
         bool valid = true;
 
-        if (field == "ascii")
-            Options.char_set = CSET_ASCII;
-        else if (field == "ibm")
-            Options.char_set = CSET_IBM;
-        else if (field == "dec")
-            Options.char_set = CSET_DEC;
-        else 
+        if (key == "ascii_display")
         {
-            fprintf( stderr, "Bad character set: %s\n", field.c_str() );
-            valid = false;
+            Options.char_set = 
+                read_bool(field, Options.char_set == CSET_ASCII)?
+                    CSET_ASCII
+                  : CSET_IBM;
+            valid = true;
+        }
+        else
+        {
+            if (field == "ascii")
+                Options.char_set = CSET_ASCII;
+            else if (field == "ibm")
+                Options.char_set = CSET_IBM;
+            else if (field == "dec")
+                Options.char_set = CSET_DEC;
+            else 
+            {
+                fprintf( stderr, "Bad character set: %s\n", field.c_str() );
+                valid = false;
+            }
         }
         if (valid)
             init_char_table(Options.char_set);
