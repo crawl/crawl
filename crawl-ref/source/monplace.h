@@ -56,7 +56,7 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 /* ***********************************************************************
  * called from: misc - monplace - spells3
  * *********************************************************************** */
-bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, 
+bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, int radius,
                       bool allow_centre, FixedVector<char, 2>& empty );
 
 

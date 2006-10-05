@@ -430,65 +430,145 @@ void item_corrode( char itco )
     return;
 }                               // end item_corrode()
 
-void scrolls_burn(char burn_strength, char target_class)
+// Helper function for the expose functions below.
+// This currently works because elements only target a single type each.
+static int get_target_class( beam_type flavour )
 {
+    int target_class = OBJ_UNASSIGNED;
 
-    unsigned char burnc;
-    unsigned char burn2;
-    unsigned char burn_no = 0;
-
-    if (wearing_amulet(AMU_CONSERVATION) && !one_chance_in(10))
+    switch (flavour)
     {
-#if DEBUG_DIAGNOSTICS
-        mpr( "Amulet conserves.", MSGCH_DIAGNOSTICS );
-#endif
-        return;
+    case BEAM_FIRE:
+    case BEAM_LAVA:
+    case BEAM_NAPALM:
+    case BEAM_HELLFIRE:
+        target_class = OBJ_SCROLLS;
+        break;
+
+    case BEAM_COLD:
+    case BEAM_FRAG:
+        target_class = OBJ_POTIONS;
+        break;
+
+    case BEAM_SPORE:
+        target_class = OBJ_FOOD;
+        break;
+
+    default:
+        break;
     }
 
-    for (burnc = 0; burnc < ENDOFPACK; burnc++)
+    return (target_class);
+}
+
+// XXX: These expose functions could use being reworked into a real system...
+// the usage and implementation is currently very hacky.
+// Handles the destruction of inventory items from the elements.
+static void expose_invent_to_element( beam_type flavour, int strength )
+{
+    int i, j;
+    int num_dest = 0;
+
+    const int target_class = get_target_class( flavour );
+    if (target_class == OBJ_UNASSIGNED)
+        return;
+
+    // Currently we test against each stack (and item in the stack)
+    // independantly at strength%... perhaps we don't want that either
+    // because it makes the system very fair and removes the protection
+    // factor of junk (which might be more desirable for game play).
+    for (i = 0; i < ENDOFPACK; i++)
     {
-        if (!you.inv[burnc].quantity)
-            continue;
-        if (you.inv[burnc].base_type != target_class)
+        if (!is_valid_item( you.inv[i] ))
             continue;
 
-        for (burn2 = 0; burn2 < you.inv[burnc].quantity; burn2++)
+        if (is_valid_item( you.inv[i] )
+            && (you.inv[i].base_type == target_class
+                || (target_class == OBJ_FOOD 
+                    && you.inv[i].base_type == OBJ_CORPSES)))
         {
-            if (random2(70) < burn_strength)
+            if (player_item_conserve() && !one_chance_in(10))
+                continue;
+
+            for (j = 0; j < you.inv[i].quantity; j++)
             {
-                burn_no++;
+                if (random2(100) < strength)
+                {
+                    num_dest++;
 
-                if (burnc == you.equip[EQ_WEAPON])
-                    you.wield_change = true;
+                    if (i == you.equip[EQ_WEAPON])
+                        you.wield_change = true;
 
-                if (dec_inv_item_quantity( burnc, 1 ))
-                    break;
+                    if (dec_inv_item_quantity( i, 1 ))
+                        break;
+                }
             }
         }
     }
 
-    if (burn_no == 1)
+    if (num_dest > 0)
     {
-        if (target_class == OBJ_SCROLLS)
-            mpr("A scroll you are carrying catches fire!");
-        else if (target_class == OBJ_POTIONS)
-            mpr("A potion you are carrying freezes and shatters!");
-        else if (target_class == OBJ_FOOD)
-            mpr("Some of your food is covered with spores!");
+        switch (target_class)
+        {
+        case OBJ_SCROLLS:
+            snprintf( info, INFO_SIZE, "%s you are carrying %s fire!",
+                      (num_dest > 1) ? "Some of the scrolls" : "A scroll",
+                      (num_dest > 1) ? "catch" : "catches" );
+            break;
+
+        case OBJ_POTIONS:
+            snprintf( info, INFO_SIZE, "%s you are carrying %s and %s!",
+                      (num_dest > 1) ? "Some of the potions" : "A potion",
+                      (num_dest > 1) ? "freeze" : "freezes",
+                      (num_dest > 1) ? "shatter" : "shatters" );
+            break;
+
+        case OBJ_FOOD:
+            snprintf( info, INFO_SIZE, "Some of your food is covered with spores!" );
+            break;
+
+        default:
+            snprintf( info, INFO_SIZE, "%s you are carrying %s destroyed!",
+                      (num_dest > 1) ? "Some items" : "An item",
+                      (num_dest > 1) ? "were" : "was" );
+            break;
+        }
+
+        mpr( info );    // XXX: should this be in a channel?
     }
-    else if (burn_no > 1)
-    {
-        if (target_class == OBJ_SCROLLS)
-            mpr("Some of the scrolls you are carrying catch fire!");
-        else if (target_class == OBJ_POTIONS)
-            mpr("Some of the potions you are carrying freeze and shatter!");
-        else if (target_class == OBJ_FOOD)
-            mpr("Some of your food is covered with spores!");
-    }
-    /* burn_no could be 0 */
 }
 
-                            // end scrolls_burn()
+
+// Handle side-effects for exposure to element other than damage.
+// This function exists because some code calculates its own damage 
+// instead of using check_resists and we want to isolate all the special
+// code they keep having to do... namely condensation shield checks, 
+// you really can't expect this function to even be called for much else.
+//
+// This function now calls expose_invent_to_element if strength > 0.
+//
+// XXX: this function is far from perfect and a work in progress.
+void expose_player_to_element( beam_type flavour, int strength )
+{ 
+    // Note that BEAM_TELEPORT is sent here when the player 
+    // blinks or teleports.
+    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA 
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG 
+        || flavour == BEAM_TELEPORT || flavour == BEAM_NAPALM 
+        || flavour == BEAM_STEAM)
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        {
+            mprf(MSGCH_DURATION, "Your icy shield dissipates!");
+            you.duration[DUR_CONDENSATION_SHIELD] = 0;
+            you.redraw_armour_class = true;
+        }
+    }
+
+    if (strength)
+        expose_invent_to_element( flavour, strength );
+}
+
 void lose_level(void)
 {
     // because you.experience is unsigned long, if it's going to be -ve

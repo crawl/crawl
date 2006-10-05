@@ -722,13 +722,14 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
 }                               // end setup_mons_cast()
 
 
-void monster_teleport(struct monsters *monster, bool instan)
+void monster_teleport(struct monsters *monster, bool instan, bool silent)
 {
     if (!instan)
     {
         if (mons_del_ench(monster, ENCH_TP_I, ENCH_TP_IV))
         {
-            simple_monster_message(monster, " seems more stable.");
+            if (!silent)
+                simple_monster_message(monster, " seems more stable.");
         }
         else
             mons_add_ench(monster, (coinflip() ? ENCH_TP_III : ENCH_TP_IV ));
@@ -738,7 +739,8 @@ void monster_teleport(struct monsters *monster, bool instan)
 
     bool was_seen = player_monster_visible(monster) && mons_near(monster);
 
-    simple_monster_message(monster, " disappears!");
+    if (!silent)
+        simple_monster_message(monster, " disappears!");
 
     // pick the monster up
     mgrd[monster->x][monster->y] = NON_MONSTER;
@@ -769,10 +771,13 @@ void monster_teleport(struct monsters *monster, bool instan)
         monster->number = get_mimic_colour( monster );
     }
 
-    if (was_seen)
-        simple_monster_message(monster, " reappears nearby!");
-    else
-        simple_monster_message(monster, " appears out of thin air!");
+    if (!silent)
+    {
+        if (was_seen)
+            simple_monster_message(monster, " reappears nearby!");
+        else
+            simple_monster_message(monster, " appears out of thin air!");
+    }
 
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);

@@ -70,6 +70,34 @@
 // max y-bound for level generation {dlb}
 #define GYM 70
 
+// this is the size of the border around the playing area (see in_bounds())
+#define BOUNDARY_BORDER         1
+
+// Now some defines about the actual play area:
+// Note: these boundaries are exclusive for the zone the player can move/dig,
+// and are inclusive for the area that we display on the map.
+// Note: that the right (bottom) boundary is one smaller here.
+#define X_BOUND_1               BOUNDARY_BORDER
+#define X_BOUND_2               (GXM - BOUNDARY_BORDER)
+#define X_WIDTH                 (X_BOUND_2 - X_BOUND_1 + 1)
+
+#define Y_BOUND_1               BOUNDARY_BORDER
+#define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
+#define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
+
+// these mark the center zone where the player moves without shifting
+#define ABYSS_SHIFT_RADIUS      10
+
+#define X_ABYSS_1               (X_BOUND_1 + ABYSS_SHIFT_RADIUS)
+#define X_ABYSS_2               (GXM - X_ABYSS_1)
+#define X_ABYSS_WIDTH           (X_ABYSS_2 - X_ABYSS_1 + 1)
+#define X_ABYSS_CENTER          (X_ABYSS_1 + X_ABYSS_WIDTH / 2)
+
+#define Y_ABYSS_1               (Y_BOUND_1 + ABYSS_SHIFT_RADIUS)
+#define Y_ABYSS_2               (GYM - Y_ABYSS_1)
+#define Y_ABYSS_WIDTH           (Y_ABYSS_2 - Y_ABYSS_1 + 1)
+#define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
+
 #define LOS_SX     8
 #define LOS_EX    25
 #define LOS_SY     1
@@ -79,6 +107,9 @@
 #define VIEW_EX   33
 #define VIEW_SY    1
 #define VIEW_EY   17
+
+#define VIEW_WIDTH  (VIEW_EX - VIEW_SX + 1)
+#define VIEW_HEIGHT (VIEW_EY - VIEW_SY + 1)
 
 #define VIEW_Y_DIFF  (((VIEW_EX - VIEW_SX + 1) - (VIEW_EY - VIEW_SY + 1)) / 2) 
 
@@ -110,6 +141,46 @@
 #define MAX_ROD_CHARGE                  17
 #define ROD_CHARGE_MULT                 100
 
+// This value is used to mark immune levels of MR
+#define MAG_IMMUNE                      5000
+
+// This is the damage amount used to signal insta-death
+#define INSTANT_DEATH                   -9999
+
+// grids that monsters can see
+#define MONSTER_LOS_RANGE               8
+
+// most items allowed in a shop
+#define MAX_SHOP_ITEMS                  16
+
+// sound level standards
+// mininum is the base, we add mult * radius to it:
+#define SL_EXPLODE_MIN                  10
+#define SL_EXPLODE_MULT                 10
+
+// #define SL_BOW                          3
+#define SL_TRAP_CLICK                   3
+#define SL_HISS                         6
+#define SL_BUZZ                         6
+#define SL_GROWL                        8
+#define SL_MOAN                         8
+#define SL_SPLASH                       8 
+#define SL_CREAK                        8
+#define SL_CROAK                        8
+#define SL_BARK                         10
+#define SL_YELL                         10
+#define SL_TRAP_JAM                     12
+#define SL_SHRIEK                       12
+#define SL_ROAR                         15
+#define SL_DIG                          15
+#define SL_NOISY_WEAPON                 20
+#define SL_HORN                         25
+#define SL_NOISE_SCROLL                 30
+#define SL_THUNDER                      30
+#define SL_PROJECTED_NOISE              30
+#define SL_EARTHQUAKE                   30
+#define SL_TRAP_ZOT                     30
+
 // Maximum enchantment on weapons/armour/secondary armours
 // Note: use armour_max_enchant(item) to get the correct limit for item
 #define MAX_WPN_ENCHANT                 5
@@ -124,15 +195,6 @@
 #define grd    env.grid
 #define mgrd   env.mgrid
 #define igrd   env.igrid
-
-#define ENVF_FLAGS          0xFF00U
-#define ENVF_DETECT_MONS    0x0100U
-#define ENVF_DETECT_ITEM    0x0200U
-
-// This square is known because of detect-creatures/detect-items
-#define ENVF_DETECTED       0x0800U
-
-#define ENVF_COLOR(x)       (((x) >> 12) & 0xF)
 
 // (MNG) -- for a reason! see usage {dlb}:
 #define MHITNOT 201

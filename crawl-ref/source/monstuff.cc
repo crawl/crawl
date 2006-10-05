@@ -1054,13 +1054,13 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     return (player_messaged);
 }                                        // end monster_polymorph()
 
-void monster_blink(struct monsters *monster)
+bool monster_blink(monsters *monster)
 {
     int nx, ny;
 
     if (!random_near_space(monster->x, monster->y, nx, ny,
-        false, false))
-        return;
+            false, false))
+        return (false);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
 
@@ -1071,6 +1071,8 @@ void monster_blink(struct monsters *monster)
 
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
+
+    return (true);
 }                               // end monster_blink()
 
 // allow_adjacent:  allow target to be adjacent to origin
@@ -5251,14 +5253,91 @@ void seen_monster(struct monsters *monster)
 	return;
     
     // First time we've seen this particular monster
-    
     monster->flags |= MF_SEEN;
     
     if ( MONST_INTERESTING(monster) &&
-	 monster->type != MONS_PANDEMONIUM_DEMON &&
-	 monster->type != MONS_PLAYER_GHOST ) {
-	char namebuf[ITEMNAME_SIZE];
-	moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
+         monster->type != MONS_PANDEMONIUM_DEMON &&
+         monster->type != MONS_PLAYER_GHOST )
+    {
+        char namebuf[ITEMNAME_SIZE];
+        moname(monster->type, true, DESC_NOCAP_A, namebuf);
+        take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
     }
+}
+
+//---------------------------------------------------------------
+//
+// shift_monster
+//
+// Moves a monster to approximately (x,y) and returns true 
+// if monster was moved.
+//
+//---------------------------------------------------------------
+bool shift_monster( struct monsters *mon, int x, int y )
+{
+    bool found_move = false;
+
+    int i, j;
+    int tx, ty;
+    int nx = 0, ny = 0;
+
+    int count = 0;
+
+    if (x == 0 && y == 0)
+    {
+        // try and find a random floor space some distance away
+        for (i = 0; i < 50; i++)
+        {
+            tx = 5 + random2( GXM - 10 );
+            ty = 5 + random2( GYM - 10 );
+
+            int dist = grid_distance(x, y, tx, ty);
+            if (grd[tx][ty] == DNGN_FLOOR && dist > 10)
+                break;
+        }
+
+        if (i == 50)
+            return (false);
+    }
+
+    for (i = -1; i <= 1; i++)
+    {
+        for (j = -1; j <= 1; j++)
+        {
+            tx = x + i;
+            ty = y + j;
+
+            if (tx < 5 || tx > GXM - 5 || ty < 5 || ty > GXM - 5)
+                continue;
+
+            // won't drop on anything but vanilla floor right now
+            if (grd[tx][ty] != DNGN_FLOOR)
+                continue;
+
+            if (mgrd[tx][ty] != NON_MONSTER)
+                continue;
+
+            if (tx == you.x_pos && ty == you.y_pos)
+                continue;
+
+            count++;
+            if (one_chance_in(count))
+            {
+                nx = tx;
+                ny = ty;
+                found_move = true;
+            }
+        }
+    }
+
+    if (found_move)
+    {
+        const int mon_index = mgrd[mon->x][mon->y];
+        mgrd[mon->x][mon->y] = NON_MONSTER;
+        mgrd[nx][ny] = mon_index;
+        mon->x = nx;
+        mon->y = ny;
+    }
+
+    return (found_move);
 }

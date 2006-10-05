@@ -57,7 +57,8 @@ std::vector<SelItem> prompt_invent_items(
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
                         std::vector<text_pattern> *filter = NULL,
-                        Menu::selitem_tfn fn = NULL );
+                        Menu::selitem_tfn fn = NULL,
+                        const std::vector<SelItem> *pre_select = NULL );
 
 
 // last updated 12may2000 {dlb}
@@ -73,7 +74,8 @@ unsigned char invent_select(int item_class_inv,
                         = NULL,
                    std::vector<SelItem> *sels = NULL,
                    std::vector<text_pattern> *filter = NULL,
-                   Menu::selitem_tfn fn = NULL );
+                   Menu::selitem_tfn fn = NULL,
+                   const std::vector<SelItem> *pre_select = NULL );
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

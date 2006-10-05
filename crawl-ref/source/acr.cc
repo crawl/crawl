@@ -146,8 +146,6 @@ int autoprayer_on = 0;
 int just_autoprayed = 0;
 int about_to_autopray = 0;
 
-FixedVector< char, NUM_STATUE_TYPES >  Visible_Statue;
-
 // set to true once a new game starts or an old game loads
 bool game_has_started = false;
 
@@ -174,17 +172,10 @@ static const struct coord_def Compass[8] =
 
 */
 
-void (*viewwindow) (char, bool);
-
 /*
    Function pointers are used to make switching between Unix and DOS char sets
    possible as a runtime option (command-line -c)
 */
-
-// these two are defined in view.cc. What does the player look like?
-// (changed for shapechanging)
-extern unsigned char your_sign;
-extern unsigned char your_colour;
 
 // Functions in main module
 static void close_door(int move_x, int move_y);
@@ -215,12 +206,6 @@ static command_type keycode_to_command( keycode_type key );
 */
 int main( int argc, char *argv[] )
 {
-#ifdef USE_ASCII_CHARACTERS
-    apply_ascii_display(true);
-#else
-    apply_ascii_display(false);
-#endif
-
     // Load in the system environment variables
     get_system_environment();
 
@@ -266,9 +251,6 @@ int main( int argc, char *argv[] )
     // Load macros
     macro_init();
 #endif
-
-    init_overmap();             // in overmap.cc (duh?)
-    clear_ids();                // in itemname.cc
 
     bool game_start = initialise();
 
@@ -1347,7 +1329,7 @@ static void do_action( command_type cmd ) {
 	}
 #endif
 	plox[0] = 0;
-	show_map(plox);
+	show_map(plox, true);
 	redraw_screen();
 	if (plox[0] > 0) 
 	    start_travel(plox[0], plox[1]);
@@ -1562,7 +1544,7 @@ static void world_reacts() {
         const int res_fire = player_res_fire();
 
         mpr( "You are covered in liquid flames!", MSGCH_WARN );
-        scrolls_burn(8, OBJ_SCROLLS);
+        expose_player_to_element(BEAM_NAPALM, 12);
 
         if (res_fire > 0)
         {
@@ -2051,20 +2033,8 @@ static void world_reacts() {
         burden_change();
         you.duration[DUR_CONTROLLED_FLIGHT] = 0;
 
-        if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-            || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-            || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
-        {
-            if (you.species == SP_MERFOLK 
-                && grd[you.x_pos][you.y_pos] != DNGN_LAVA)
-            {
-                mpr("You dive into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-
-            if (grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
-                fall_into_a_pool(true, grd[you.x_pos][you.y_pos]);
-        }
+        // re-enter the terrain:
+        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
     }
 
     if (you.rotting > 0)
@@ -2235,7 +2205,7 @@ static void world_reacts() {
     // There used to be signs of intent to have statues as some sort
     // of more complex state machine... I'm boiling them down to bare
     // basics for now.  -- bwr
-    if (Visible_Statue[ STATUE_SILVER ])
+    if (you.visible_statue[ STATUE_SILVER ])
     {
         interrupt_activity( AI_STATUE );
 
@@ -2254,10 +2224,10 @@ static void world_reacts() {
                                      MHITYOU, 250 );
         }
 
-        Visible_Statue[ STATUE_SILVER ] = 0;
+        you.visible_statue[ STATUE_SILVER ] = 0;
     }
 
-    if (Visible_Statue[ STATUE_ORANGE_CRYSTAL ])
+    if (you.visible_statue[ STATUE_ORANGE_CRYSTAL ])
     {
         interrupt_activity( AI_STATUE );
 
@@ -2269,7 +2239,7 @@ static void world_reacts() {
                             "an orange crystal statue" );
         }
 
-        Visible_Statue[ STATUE_ORANGE_CRYSTAL ] = 0;
+        you.visible_statue[ STATUE_ORANGE_CRYSTAL ] = 0;
     }
 
     // food death check:
@@ -2798,8 +2768,8 @@ static bool initialise(void)
 
     int i = 0, j = 0;           // counter variables {dlb}
 
-    your_sign = '@';
-    your_colour = LIGHTGREY;
+    you.symbol = '@';
+    you.colour = LIGHTGREY;
 
     // system initialisation stuff:
     textbackground(0);
@@ -2813,6 +2783,9 @@ static bool initialise(void)
 #endif
 
     seed_rng();
+    init_overmap();             // in overmap.cc (duh?)
+    clear_ids();                // in itemname.cc
+    init_feature_table();
 
     init_properties();
     init_monsters(mcolour);     // this needs to be way up top {dlb}
@@ -2863,7 +2836,7 @@ static bool initialise(void)
     }
 
     for (i = 0; i < NUM_STATUE_TYPES; i++)
-        Visible_Statue[i] = 0;
+        you.visible_statue[i] = 0;
 
     // initialize tag system before we try loading anything!
     tag_init();
@@ -2919,16 +2892,17 @@ static bool initialise(void)
         zap_los_monsters();
     }
 
-    viewwindow(1, false);   // This just puts the view up for the first turn.
-    item();
-
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "%b", ret);
     std::string yname = you.your_name;
     read_init_file(true);
     strncpy(you.your_name, yname.c_str(), kNameLen);
     you.your_name[kNameLen - 1] = 0;
+
+    // In case Lua changed the character set.
+    init_feature_table();
 #endif
+    viewwindow(1, false);   // This just puts the view up for the first turn.
 
     activate_notes(true);
     return (ret);
@@ -2995,9 +2969,7 @@ static void move_player(int move_x, int move_y)
 {
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
-
-    int i;
-    bool trap_known;
+    bool swap = false;
 
     if (you.conf)
     {
@@ -3009,217 +2981,84 @@ static void move_player(int move_x, int move_y)
 
         const int new_targ_x = you.x_pos + move_x;
         const int new_targ_y = you.y_pos + move_y;
-        const unsigned char new_targ_grid = grd[ new_targ_x ][ new_targ_y ];
-
-        if (grid_is_solid(new_targ_grid))
+        if (!in_bounds(new_targ_x, new_targ_y)
+                || grid_is_solid(grd[new_targ_x][new_targ_y]))
         {
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             mpr("Ouch!");
             apply_berserk_penalty = true;
             return;
         }
-
-        if (new_targ_grid == DNGN_LAVA 
-            && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr("Your icy shield dissipates!", MSGCH_DURATION);
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
-        }
-
-        if ((new_targ_grid == DNGN_LAVA 
-                || new_targ_grid == DNGN_DEEP_WATER
-                || new_targ_grid == DNGN_SHALLOW_WATER)
-             && !player_is_levitating())
-        {
-            if (you.species == SP_MERFOLK && new_targ_grid != DNGN_LAVA)
-            {
-                mpr("You stumble into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-
-            if (new_targ_grid != DNGN_SHALLOW_WATER)
-                fall_into_a_pool( false, new_targ_grid );
-
-            you.turn_is_over = 1;
-	    apply_berserk_penalty = true;
-            return;
-        }
-    }                           // end of if you.conf
+    } // end of if you.conf
 
     if (you.running > 0 && you.running != 2 && check_stop_running())
     {
         stop_running();
         move_x = 0;
         move_y = 0;
-        you.turn_is_over = 0;
+        you.turn_is_over = false;
         return;
     }
 
     const int targ_x = you.x_pos + move_x;
     const int targ_y = you.y_pos + move_y;
-    const unsigned char old_grid   =  grd[ you.x_pos ][ you.y_pos ];
     const unsigned char targ_grid  =  grd[ targ_x ][ targ_y ];
     const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
+    const bool          targ_solid = grid_is_solid(targ_grid);
 
-    if (targ_monst != NON_MONSTER)
+    if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {
         struct monsters *mon = &menv[targ_monst];
-
-        if (mons_has_ench( mon, ENCH_SUBMERGED ))
-            goto break_out;
 
         // you can swap places with a friendly monster if you
         // can see it and you're not confused
         if (mons_friendly( mon ) && player_monster_visible( mon ) && !you.conf)
         {
-            if (!swap_places( mon ))
-                moving = false;
-
-            goto break_out;
-        }
-
-        you_attack( targ_monst, true );
-        you.turn_is_over = 1;
-
-        // we don't want to create a penalty if there isn't
-        // supposed to be one
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
-            you.berserk_penalty = 0;
-
-        attacking = true;
-    }
-
-  break_out:
-    if (targ_grid == DNGN_LAVA && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-    {
-        mpr("Your icy shield dissipates!", MSGCH_DURATION);
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
-    }
-
-    // Handle dangerous tiles
-    if ((targ_grid == DNGN_LAVA 
-            || targ_grid == DNGN_DEEP_WATER
-            || targ_grid == DNGN_SHALLOW_WATER)
-        && !attacking && !player_is_levitating() && moving)
-    {
-        // Merfold automatically enter deep water... every other case
-        // we ask for confirmation.
-        if (you.species == SP_MERFOLK && targ_grid != DNGN_LAVA)
-        {
-            // Only mention diving if we just entering the water.
-            if (!player_in_water())
-            {
-                mpr("You dive into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-        }
-        else if (targ_grid != DNGN_SHALLOW_WATER)
-        {
-            bool enter = yesno("Do you really want to step there?", false, 'n');
-
-            if (enter)
-            {
-                fall_into_a_pool( false, targ_grid );
-                you.turn_is_over = 1;
-		apply_berserk_penalty = true;
-                return;
-            }
+            if (swap_places( mon ))
+                swap = true;
             else
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
+                moving = false;
+        }
+        else // attack!
+        {
+            you_attack( targ_monst, true );
+            you.turn_is_over = true;
+
+            // we don't want to create a penalty if there isn't
+            // supposed to be one
+            if (you.berserk_penalty != NO_BERSERK_PENALTY)
+                you.berserk_penalty = 0;
+
+            attacking = true;
         }
     }
 
-    if (!attacking && !grid_is_solid(targ_grid) && moving)
+    if (!attacking && !targ_solid && moving)
     {
-        if (targ_grid == DNGN_UNDISCOVERED_TRAP
-                && random2(you.skills[SK_TRAPS_DOORS] + 1) > 3)
+        you.time_taken *= player_movement_speed();
+        you.time_taken /= 10;
+        move_player_to_grid(targ_x, targ_y, true, false, swap);
+
+        // Returning the random trap scans as a way to get more use from the
+        // skill and acute mutations.
+        if (you.mutation[MUT_ACUTE_VISION] >= 2
+            || (!you.mutation[MUT_BLURRY_VISION]
+                && random2(100) < 
+                        stat_mult(you.intel, skill_bump(SK_TRAPS_DOORS))))
         {
-            strcpy(info, "Wait a moment, ");
-            strcat(info, you.your_name);
-            strcat(info, "! Do you really want to step there?");
-            mpr(info, MSGCH_WARN);
-            more();
-            you.turn_is_over = 0;
-
-            i = trap_at_xy( targ_x, targ_y );
-            if (i != -1)  
-                grd[ targ_x ][ targ_y ] = trap_category(env.trap[i].type);
-            return;
+            search_around();
         }
-
-        you.x_pos += move_x;
-        you.y_pos += move_y;
-
-        if (targ_grid == DNGN_SHALLOW_WATER && !player_is_levitating() &&
-	    you.species != SP_MERFOLK) // merfolk already handled above
-        {
-	    if (one_chance_in(3) && !silenced(you.x_pos, you.y_pos))
-	    {
-		mpr("Splash!");
-		noisy( 10, you.x_pos, you.y_pos );
-	    }
-	    
-	    you.time_taken *= 13 + random2(8);
-	    you.time_taken /= 10;
-	    
-	    if (old_grid != DNGN_SHALLOW_WATER)
-	    {
-		mpr( "You enter the shallow water. "
-		     "Moving in this stuff is going to be slow." );
-		
-		if (you.invis)
-		    mpr( "And don't expect to remain undetected." );
-	    }
-        }
-
         move_x = 0;
         move_y = 0;
 
-        you.time_taken *= player_movement_speed();
-        you.time_taken /= 10;
-
-        you.turn_is_over = 1;
-        item_check(0);
-
-        if (targ_grid >= DNGN_TRAP_MECHANICAL
-                                && targ_grid <= DNGN_UNDISCOVERED_TRAP)
-        {
-            if (targ_grid == DNGN_UNDISCOVERED_TRAP)
-            {
-                i = trap_at_xy(you.x_pos, you.y_pos);
-                if (i != -1)
-                    grd[ you.x_pos ][ you.y_pos ] = trap_category(env.trap[i].type);
-                trap_known = false;
-            }
-            else
-            {
-                trap_known = true;
-            }
-
-            i = trap_at_xy( you.x_pos, you.y_pos );
-            if (i != -1)
-            {
-                if (player_is_levitating()
-                    && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
-                {
-                    goto out_of_traps;      // can fly over mechanical traps
-                }
-
-                handle_traps(env.trap[i].type, i, trap_known);
-            }
-        }                       // end of if another grd == trap
+        you.turn_is_over = true;
+        item_check( false );
     }
 
-  out_of_traps:
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
         open_door(move_x, move_y, false);
-    else if (grid_is_solid(targ_grid))
+    else if (targ_solid)
     {
         stop_running();
         move_x = 0;
@@ -3227,8 +3066,8 @@ static void move_player(int move_x, int move_y)
         you.turn_is_over = 0;
     }
 
-    if (you.running == 2)
-        you.running = 1;
+    if (you.running == RMODE_START)
+        you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
             && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)

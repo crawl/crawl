@@ -62,8 +62,6 @@
 #define MON_UNAFFECTED  1           // monster unaffected
 #define MON_AFFECTED    2           // monster was unaffected
 
-extern FixedVector< char, NUM_STATUE_TYPES >  Visible_Statue;  // in acr.cc
-
 static int spreadx[] = { 0, 0, 1, -1 };
 static int spready[] = { -1, 1, 0, 0 };
 static int opdir[]   = { 2, 1, 4, 3 };
@@ -2846,9 +2844,9 @@ static int affect_wall(struct bolt &beam, int x, int y)
             }
 
             if (targ_grid == DNGN_SILVER_STATUE)
-                Visible_Statue[ STATUE_SILVER ] = 0;
+                you.visible_statue[ STATUE_SILVER ] = 0;
             else if (targ_grid == DNGN_ORANGE_CRYSTAL_STATUE)
-                Visible_Statue[ STATUE_ORANGE_CRYSTAL ] = 0;
+                you.visible_statue[ STATUE_ORANGE_CRYSTAL ] = 0;
 
             beam.obvious_effect = 1;
         }
@@ -3488,24 +3486,24 @@ static int affect_player( struct bolt &beam )
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
     }
 
-    // simple cases for scroll burns
+    // simple cases for scroll burns FIXME
     if (beam.flavour == BEAM_LAVA || stricmp(beam.beam_name, "hellfire") == 0)
-        scrolls_burn( burn_power, OBJ_SCROLLS );
+        expose_player_to_element(BEAM_LAVA, burn_power);
 
     // more complex (geez..)
     if (beam.flavour == BEAM_FIRE && strcmp(beam.beam_name, "ball of steam") != 0)
-        scrolls_burn( burn_power, OBJ_SCROLLS );
+        expose_player_to_element(BEAM_FIRE, burn_power);
 
     // potions exploding
     if (beam.flavour == BEAM_COLD)
-        scrolls_burn( burn_power, OBJ_POTIONS );
+        expose_player_to_element(BEAM_COLD, burn_power);
 
     if (beam.flavour == BEAM_ACID)
         splash_with_acid(5);
 
     // spore pops
     if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
-        scrolls_burn( 2, OBJ_FOOD );
+        expose_player_to_element(BEAM_SPORE, burn_power);
 
 #if DEBUG_DIAGNOSTICS
     snprintf( info, INFO_SIZE, "Damage: %d", hurted );

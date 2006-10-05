@@ -18,8 +18,10 @@
 
 #include "externs.h"
 
-
 #define BORDER_COLOR BROWN
+
+void init_char_table(char_set_type set);
+void init_feature_table( void );
 
 int get_number_of_lines(void);
 
@@ -78,7 +80,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
 /* ***********************************************************************
  * called from: acr - spells3
  * *********************************************************************** */
-void show_map( FixedVector<int, 2>& spec_place );
+void show_map( FixedVector<int, 2>& spec_place, bool travel_mode );
 
 
 // last updated 12may2000 {dlb}
@@ -110,9 +112,24 @@ void clear_map();
 
 bool is_feature(int feature, int x, int y);
 
-inline bool in_map_grid(int x, int y)
-{
-    return !(x < 1 || x >= GXM || y < 1 || y >= GYM);
-}
+void set_envmap_char( int x, int y, unsigned char chr );
+void set_envmap_detected_item(int x, int y, bool detected = true);
+void set_envmap_detected_mons(int x, int y, bool detected = true);
+bool is_envmap_detected_item(int x, int y);
+bool is_envmap_detected_mons(int x, int y);
+void set_terrain_mapped( int x, int y );
+void set_terrain_seen( int x, int y );
+bool is_terrain_known( int x, int y );
+bool is_terrain_seen( int x, int y );
+
+
+bool see_grid( int grx, int gry );
+
+std::string screenshot(bool fullscreen = false);
+
+unsigned char get_sightmap_char(int feature);
+unsigned char get_magicmap_char(int feature);
+
+void viewwindow(bool draw_it, bool do_updates);
 
 #endif

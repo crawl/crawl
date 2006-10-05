@@ -18,7 +18,7 @@
 #include <cstdio>
 
 std::string & trim_string( std::string &str );
-short str_to_colour( const std::string &str );
+int str_to_colour( const std::string &str, int default_colour = -1 );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

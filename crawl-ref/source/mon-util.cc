@@ -1467,6 +1467,12 @@ bool mons_friendly(const monsters *m)
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
 }
 
+bool mons_is_submerged( struct monsters *mon )
+{
+    // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
+    return (mons_has_ench( mon, ENCH_SUBMERGED ));
+}
+
 bool mons_is_paralysed(const monsters *m)
 {
     // maybe this should be 70
@@ -2245,11 +2251,12 @@ bool monster_shover(const monsters *m)
         return (false);
 
     // Efreet and fire elementals are disqualified because they leave behind
-    // clouds of flame.
+    // clouds of flame. Rotting devils trail clouds of miasma.
     if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
             || m->type == MONS_ROTTING_DEVIL)
         return (false);
 
+    // Smiters profit from staying back and smiting.
     if (mons_can_smite(m))
         return (false);
     

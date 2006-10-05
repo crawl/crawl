@@ -337,20 +337,8 @@ bool cancelable_get_line( char *buf, int len, int maxcol,
 // also used with macros
 std::string & trim_string( std::string &str )
 {
-    // OK,  this is really annoying.  Borland C++ seems to define
-    // basic_string::erase to take iterators,  and basic_string::remove
-    // to take size_t or integer.  This is ass-backwards compared to
-    // nearly all other C++ compilers.  Crap.             (GDL)
-    //
-    // Borland 5.5 does this correctly now... leaving the old code
-    // around for now in case anyone needs it.  -- bwr
-// #ifdef __BCPLUSPLUS__
-//     str.remove( 0, str.find_first_not_of( " \t\n\r" ) );
-//     str.remove( str.find_last_not_of( " \t\n\r" ) + 1 );
-// #else
     str.erase( 0, str.find_first_not_of( " \t\n\r" ) );
     str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );
-// #endif
 
     return (str);
 }

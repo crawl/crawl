@@ -26,6 +26,7 @@
 #include "message.h"
 #include "misc.h"
 #include "monstuff.h"
+#include "mstuff2.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
@@ -447,41 +448,20 @@ void handle_delay( void )
                             break;
                         }
 
-                //jmf: hmm, what to do. kill the monster? (seems too powerful)
-                //     displace the monster? randomly teleport the monster?
-                //     This seems fair: try to move the monster, but if not
-                //     able to, then kill it.
+                        // move any monsters out of the way:
                         int mon = mgrd[ pass_x ][ pass_y ];
                         if (mon != NON_MONSTER)
                         {
-                            monster_blink( &menv[ mon ] );
-
-                            // recheck square for monster
-                            mon = mgrd[ pass_x ][ pass_y ];
-                            if (mon != NON_MONSTER)
-                                monster_die( &menv[ mon ], KILL_YOU, 0 );
+                            // one square, a few squares, anywhere...
+                            if (!shift_monster(&menv[mon]) 
+                                && !monster_blink(&menv[mon]))
+                            {
+                                monster_teleport( &menv[mon], true, true );
+                            }
                         }
 
-                        you.x_pos = pass_x;
-                        you.y_pos = pass_y;
+                        move_player_to_grid(pass_x, pass_y, false, true, true);
                         redraw_screen();
-
-                        const unsigned char grid = grd[ you.x_pos ][ you.y_pos ];
-                        if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
-                            && !player_is_levitating())
-                        {
-                            if (you.species == SP_MERFOLK && grid == DNGN_DEEP_WATER)
-                            {
-                                mpr("You fall into the water and return "
-                                    "to your normal form.");
-                                merfolk_start_swimming();
-                            }
-                            else
-                            {
-                                fall_into_a_pool( true, grid );
-                                redraw_screen();
-                            }
-                        }
                     }
                 }
                 break; 

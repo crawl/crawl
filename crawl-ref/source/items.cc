@@ -1861,7 +1861,8 @@ bool drop_item( int item_dropped, int quant_drop ) {
 }
 
 
-static std::string drop_menu_title( int menuflags, const std::string &oldt ) {
+static std::string drop_menu_title(int menuflags, const std::string &oldt)
+{
     std::string res = oldt;
     res.erase(0, res.find_first_not_of(" \n\t"));
     if (menuflags & MF_MULTISELECT)
@@ -1891,7 +1892,7 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
     char buf[130];
     bool extraturns = false;
 
-    if (!s->size())
+    if (s->empty())
         return "";
 
     for (int i = 0, size = s->size(); i < size; ++i)
@@ -1934,7 +1935,8 @@ void drop(void)
                                         drop_menu_title,
                                         true, true, '$',
                                         &Options.drop_filter,
-                                        drop_selitem_text );
+                                        drop_selitem_text,
+                                        &selected );
 
     if (selected.empty())
     {
@@ -1963,83 +1965,6 @@ void drop(void)
     // activity
     you.activity = selected.empty()? ACT_NONE : ACT_MULTIDROP;
 }                               // end drop()
-
-//---------------------------------------------------------------
-//
-// shift_monster
-//
-// Moves a monster to approximately (x,y) and returns true 
-// if monster was moved.
-//
-//---------------------------------------------------------------
-static bool shift_monster( struct monsters *mon, int x, int y )
-{
-    bool found_move = false;
-
-    int i, j;
-    int tx, ty;
-    int nx = 0, ny = 0;
-
-    int count = 0;
-
-    if (x == 0 && y == 0)
-    {
-        // try and find a random floor space some distance away
-        for (i = 0; i < 50; i++)
-        {
-            tx = 5 + random2( GXM - 10 );
-            ty = 5 + random2( GYM - 10 );
-
-            int dist = grid_distance(x, y, tx, ty);
-            if (grd[tx][ty] == DNGN_FLOOR && dist > 10)
-                break;
-        }
-
-        if (i == 50)
-            return (false);
-    }
-
-    for (i = -1; i <= 1; i++)
-    {
-        for (j = -1; j <= 1; j++)
-        {
-            tx = x + i;
-            ty = y + j;
-
-            if (tx < 5 || tx > GXM - 5 || ty < 5 || ty > GXM - 5)
-                continue;
-
-            // won't drop on anything but vanilla floor right now
-            if (grd[tx][ty] != DNGN_FLOOR)
-                continue;
-
-            if (mgrd[tx][ty] != NON_MONSTER)
-                continue;
-
-            if (tx == you.x_pos && ty == you.y_pos)
-                continue;
-
-            count++;
-            if (one_chance_in(count))
-            {
-                nx = tx;
-                ny = ty;
-                found_move = true;
-            }
-        }
-    }
-
-    if (found_move)
-    {
-        const int mon_index = mgrd[mon->x][mon->y];
-        mgrd[mon->x][mon->y] = NON_MONSTER;
-        mgrd[nx][ny] = mon_index;
-        mon->x = nx;
-        mon->y = ny;
-    }
-
-    return (found_move);
-}
 
 //---------------------------------------------------------------
 //

@@ -2756,6 +2756,17 @@ enum run_dir_type
     RDIR_REST
 };
 
+enum run_mode_type
+{
+    RMODE_INTERLEVEL  = -3,   // Interlevel travel (Ctrl+G)
+    RMODE_EXPLORE     = -2,   // Exploring (Ctrl+O)
+    RMODE_TRAVEL      = -1,   // Classic or Plain Old travel
+    RMODE_NOT_RUNNING = 0,    // must remain equal to 0
+    RMODE_CONTINUE,
+    RMODE_START,
+    RMODE_REST_DURATION = 100
+};
+
 enum rune_type
 {
     // Note: that runes DIS-SWAMP have the same numberic value as the branch

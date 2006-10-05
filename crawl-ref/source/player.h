@@ -16,6 +16,10 @@
 
 #include "externs.h"
 
+bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
+                          bool force );
+
+bool player_in_mappable_area(void);
 bool player_in_branch( int branch );
 bool player_in_hell( void );
 
@@ -152,6 +156,11 @@ int player_regen(void);
  * *********************************************************************** */
 int player_res_cold(bool calc_unid = true);
 int player_res_acid(void);
+
+bool player_res_corrosion(bool calc_unid = true);
+bool player_item_conserve(bool calc_unid = true);
+int player_mental_clarity(bool calc_unid = true);
+
 
 /* ***********************************************************************
  * called from: fight - files - ouch

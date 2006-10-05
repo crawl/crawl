@@ -275,7 +275,7 @@ struct player
 {
   activity_type activity;   // The current multiturn activity, usually set 
                             // to ACT_NONE
-  char turn_is_over; // flag signaling that player has performed a timed action
+  bool turn_is_over; // flag signaling that player has performed a timed action
 
   unsigned char prev_targ;
   char your_name[kNameLen];
@@ -332,6 +332,13 @@ struct player
   bool wield_change;          // redraw weapon
 
   unsigned long redraw_status_flags;
+
+  // PC's symbol (usually @) and colour.
+  int symbol;
+  int colour;
+
+  FixedVector< char, NUM_STATUE_TYPES >  visible_statue;
+
   char redraw_hit_points;
   char redraw_magic_points;
   char redraw_strength;
@@ -555,10 +562,6 @@ struct ghost_struct
 
 extern struct ghost_struct ghost;
 
-
-extern void (*viewwindow) (char, bool);
-
-
 struct system_environment
 {
     char *crawl_name;
@@ -606,7 +609,6 @@ struct colour_mapping
 
 struct game_options 
 {
-    bool        ascii_display;  // Defaults to true ifdef USE_ASCII_CHARACTERS
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump
@@ -655,6 +657,9 @@ struct game_options
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
     bool        lowercase_invocations;          // prefer lowercase invocations
 
+    char_set_type  char_set;
+    FixedVector<unsigned char, NUM_DCHAR_TYPES> char_table;
+
     int         num_colours;    // used for setting up curses colour table (8 or 16)
     
 #ifdef WIZARD
@@ -683,6 +688,12 @@ struct game_options
     int         stash_tracking; // How stashes are tracked
 
     bool        travel_colour;  // Colour levelmap using travel information?
+    int         tc_reachable;   // Colour for squares that are reachable
+    int         tc_excluded;    // Colour for excluded squares.
+    int         tc_exclude_circle; // Colour for squares in the exclusion radius
+    int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
+    int         tc_disconnected;// Areas that are completely disconnected.
+
     int         travel_stair_cost;
 
     int         travel_exclude_radius2; // Square of the travel exclude radius
@@ -764,6 +775,14 @@ struct game_options
     int         prev_weapon;
     int         prev_book;
     bool        prev_randpick;
+
+public:
+    // Convenience accessors for the second-class options in named_options.
+    int         o_int(const char *name, int def = 0) const;
+    long        o_long(const char *name, long def = 0L) const;
+    bool        o_bool(const char *name, bool def = false) const;
+    std::string o_str(const char *name, const char *def = NULL) const;
+    int         o_colour(const char *name, int def = LIGHTGREY) const;
 };
 
 extern game_options  Options;

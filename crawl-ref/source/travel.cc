@@ -74,14 +74,6 @@ inline int sgn(int x)
     return x < 0? -1 : (x > 0);
 }
 
-/* These are defined in view.cc. BWR says these may become obsolete in next
- * release? */
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-extern unsigned char mapchar(unsigned char ldfk);
-extern unsigned char mapchar2(unsigned char ldfk);
-
-
 // Array of points on the map, each value being the distance the character
 // would have to travel to get there. Negative distances imply that the point
 // is a) a trap or hostile terrain or b) only reachable by crossing a trap or
@@ -122,13 +114,14 @@ static void populate_stair_distances(const level_pos &target);
 // a. The square is mapped (the env map char is not zero)
 // b. The square was *not* magic-mapped.
 //
+// FIXME: There's better ways of doing this with the new view.cc.
 bool is_player_mapped(unsigned char envch)
 {
     // Note that we're relying here on mapch(DNGN_FLOOR) != mapch2(DNGN_FLOOR)
     // and that no *other* dungeon feature renders as mapch(DNGN_FLOOR).
     // The check for a ~ is to ensure explore stops for items turned up by
     // detect items.
-    return envch && envch != mapch(DNGN_FLOOR) && envch != '~';
+    return envch && envch != get_magicmap_char(DNGN_FLOOR) && envch != '~';
 }
 
 inline bool is_trap(unsigned char grid)
@@ -383,7 +376,8 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
     // code paths through the secret door because it looks at the actual grid,
     // rather than the env overmap. Hopefully there won't be any more such
     // cases.
-    if (envc == mapch2(DNGN_SECRET_DOOR)) return false;
+    // FIXME: is_terrain_changed ought to do this with the view.cc changes.
+    if (envc == get_sightmap_char(DNGN_SECRET_DOOR)) return false;
 
     unsigned char mon = mgrd[x][y];
     if (mon != NON_MONSTER)
@@ -2946,6 +2940,5 @@ void TravelCache::fixup_levels()
 
 bool can_travel_interlevel()
 {
-    return !(you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-                || you.level_type == LEVEL_PANDEMONIUM);
+    return (player_in_mappable_area() && you.level_type != LEVEL_PANDEMONIUM);
 }

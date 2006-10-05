@@ -467,7 +467,8 @@ unsigned char invent_select(
                                               const std::string &oldt ),
                       std::vector<SelItem> *items,
                       std::vector<text_pattern> *filter,
-                      Menu::selitem_tfn selitemfn )
+                      Menu::selitem_tfn selitemfn,
+                      const std::vector<SelItem> *pre_select )
 {
     InvMenu menu;
     
@@ -525,7 +526,21 @@ unsigned char invent_select(
                 {
                     if (tobeshown[j]->base_type == i)
                     {
-                        menu.add_entry( new InvEntry( *tobeshown[j] ) );
+                        InvEntry *ientry = new InvEntry(*tobeshown[j]);
+                        if (pre_select && !pre_select->empty())
+                        {
+                            for (int ps = 0, pssize = pre_select->size(); 
+                                    ps < pssize; ++ps)
+                            {
+                                if ((*pre_select)[ps].item == tobeshown[j])
+                                {
+                                    ientry->selected_qty =
+                                        (*pre_select)[ps].quantity;
+                                    break;
+                                }
+                            }
+                        }
+                        menu.add_entry(ientry);
                     }
                 }               // end of j loop
             }                   // end of if inv_class2
@@ -549,12 +564,16 @@ unsigned char invent_select(
     }
 
     menu.set_flags( flags );
-    std::vector< MenuEntry * > sel = menu.show();
+    std::vector< MenuEntry * > sel = menu.show(true);
     if (items)
     {
         for (int i = 0, count = sel.size(); i < count; ++i)
-            items->push_back( SelItem( sel[i]->hotkeys[0], 
-                                       sel[i]->selected_qty ) );
+        {
+            InvEntry *inv = dynamic_cast<InvEntry*>( sel[i] );
+            items->push_back( SelItem( inv->hotkeys[0], 
+                                       inv->selected_qty,
+                                       inv->item ) );
+        }
     }
 
     unsigned char mkey = menu.getkey();
@@ -616,7 +635,8 @@ std::vector<SelItem> prompt_invent_items(
                         bool allow_easy_quit,
                         const char other_valid_char,
                         std::vector<text_pattern> *select_filter,
-                        Menu::selitem_tfn fn )
+                        Menu::selitem_tfn fn,
+                        const std::vector<SelItem> *pre_select )
 {
     unsigned char  keyin = 0;
     int            ret = -1;
@@ -662,14 +682,17 @@ std::vector<SelItem> prompt_invent_items(
         }
         else if (keyin == '?' || keyin == '*' || keyin == ',')
         {
-            int selmode = Options.drop_mode == DM_SINGLE?
-                MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
-                MF_MULTISELECT;
+            int selmode =
+                Options.drop_mode == DM_SINGLE 
+                    && (!pre_select || pre_select->empty())?
+                        MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
+                        MF_MULTISELECT;
             // The "view inventory listing" mode.
             int ch = invent_select(
                     keyin == '*'? -1 : type_expect,
                     selmode | MF_SELECT_ANY_PAGE,
-                    titlefn, &items, select_filter, fn );
+                    titlefn, &items, select_filter, fn,
+                    pre_select );
 
             if (selmode & MF_SINGLESELECT)
             {

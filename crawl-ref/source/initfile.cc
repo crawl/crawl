@@ -37,12 +37,6 @@ game_options    Options;
 
 extern int autopickup_on;
 
-extern void (*viewwindow) (char, bool);
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-extern unsigned char mapchar3(unsigned char ldfk);
-extern unsigned char mapchar4(unsigned char ldfk);
-
 #ifdef UNIX
 extern int character_set;       // unices only
 #endif
@@ -62,7 +56,7 @@ template<class A, class B> void append_vector(
 }
 
 // returns -1 if unmatched else returns 0-15
-short str_to_colour( const std::string &str )
+int str_to_colour( const std::string &str, int default_colour )
 {
     int ret;
 
@@ -98,7 +92,7 @@ short str_to_colour( const std::string &str )
             ret = ci;
     }
 
-    return ((ret == 16) ? -1 : ret);
+    return ((ret == 16) ? default_colour : ret);
 }
 
 // returns -1 if unmatched else returns 0-15
@@ -375,10 +369,11 @@ void reset_options(bool clear_name)
     Options.remember_name = false;
 
 #ifdef USE_ASCII_CHARACTERS
-    Options.ascii_display          = true;
+    Options.char_set               = CSET_ASCII;
 #else
-    Options.ascii_display          = false;
+    Options.char_set               = CSET_IBM;
 #endif
+    init_char_table(Options.char_set);
 
     Options.autopickups            = 0x0000;
     Options.verbose_dump           = false;
@@ -410,6 +405,13 @@ void reset_options(bool clear_name)
     Options.travel_delay           = -1;
     Options.travel_stair_cost      = 500;
     Options.travel_exclude_radius2 =  68;
+
+    Options.tc_reachable           = BLUE;
+    Options.tc_excluded            = LIGHTMAGENTA;
+    Options.tc_exclude_circle      = RED;
+    Options.tc_dangerous           = CYAN;
+    Options.tc_disconnected        = DARKGREY;
+
     Options.show_waypoints         = true;
     Options.item_colour            = false;
 
@@ -686,32 +688,6 @@ void read_options(const std::string &s, bool runscript)
     read_options(st, runscript);
 }
 
-extern void (*viewwindow) (char, bool);
-/* these are all defined in view.cc: */
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-unsigned char mapchar(unsigned char ldfk);
-unsigned char mapchar2(unsigned char ldfk);
-unsigned char mapchar3(unsigned char ldfk);
-unsigned char mapchar4(unsigned char ldfk);
-void apply_ascii_display(bool ascii)
-{
-    if (ascii)
-    {
-        // Default to the non-ibm set when it makes sense.
-        viewwindow = &viewwindow3;
-        mapch = &mapchar3;
-        mapch2 = &mapchar4;
-    }
-    else
-    {
-        // Use the standard ibm default
-        viewwindow = &viewwindow2;
-        mapch = &mapchar;
-        mapch2 = &mapchar2;
-    }
-}
-
 static void read_options(InitLineInput &il, bool runscript)
 {
     unsigned int line = 0;
@@ -855,8 +831,6 @@ static void read_options(InitLineInput &il, bool runscript)
         }
     }
 #endif
-
-    apply_ascii_display(Options.ascii_display);
 }
 
 static int str_to_killcategory(const std::string &s)
@@ -984,9 +958,23 @@ void parse_option_line(const std::string &str, bool runscript)
         // gives verbose info in char dumps
         Options.verbose_dump = read_bool( field, Options.verbose_dump );
     }
-    else if (key == "ascii_display")
+    else if (key == "char_set")
     {
-        Options.ascii_display = read_bool( field, Options.ascii_display );
+        bool valid = true;
+
+        if (field == "ascii")
+            Options.char_set = CSET_ASCII;
+        else if (field == "ibm")
+            Options.char_set = CSET_IBM;
+        else if (field == "dec")
+            Options.char_set = CSET_DEC;
+        else 
+        {
+            fprintf( stderr, "Bad character set: %s\n", field.c_str() );
+            valid = false;
+        }
+        if (valid)
+            init_char_table(Options.char_set);
     }
     else if (key == "default_autopickup")
     {
@@ -1539,6 +1527,27 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         Options.travel_colour = read_bool(field, Options.travel_colour);
     }
+    else if (key == "tc_reachable")
+    {
+        Options.tc_reachable = str_to_colour(field, Options.tc_reachable);
+    }
+    else if (key == "tc_excluded")
+    {
+        Options.tc_excluded = str_to_colour(field, Options.tc_excluded);
+    }
+    else if (key == "tc_exclude_circle")
+    {
+        Options.tc_exclude_circle =
+            str_to_colour(field, Options.tc_exclude_circle);
+    }
+    else if (key == "tc_dangerous")
+    {
+        Options.tc_dangerous = str_to_colour(field, Options.tc_dangerous);
+    }
+    else if (key == "tc_disconnected")
+    {
+        Options.tc_disconnected = str_to_colour(field, Options.tc_disconnected);
+    }
     else if (key == "item_colour")
     {
         Options.item_colour = read_bool(field, Options.item_colour);
@@ -1898,12 +1907,8 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
             if (!rc_only)
             {
-                viewwindow = &viewwindow3;
-                mapch = &mapchar3;
-                mapch2 = &mapchar4;
-#ifdef UNIX
-                character_set = 0;
-#endif
+                Options.char_set = CSET_ASCII;
+                init_char_table(Options.char_set);
             }
             break;
 
@@ -1933,4 +1938,62 @@ bool parse_args( int argc, char **argv, bool rc_only )
     }
 
     return (true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// game_options
+
+int game_options::o_int(const char *name, int def) const
+{
+    int val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+    {
+        val = atoi(i->second.c_str());
+    }
+    return (val);
+}
+
+long game_options::o_long(const char *name, long def) const
+{
+    long val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+    {
+        const char *s = i->second.c_str();
+        char *es = NULL;
+        long num = strtol(s, &es, 10);
+        if (s != (const char *) es && es)
+            val = num;
+    }
+    return (val);
+}
+
+bool game_options::o_bool(const char *name, bool def) const
+{
+    bool val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+        val = read_bool(i->second, val);
+    return (val);
+}
+
+std::string game_options::o_str(const char *name, const char *def) const
+{
+    std::string val;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+        val = i->second;
+    else if (def)
+        val = def;
+    return (val);
+}
+
+int game_options::o_colour(const char *name, int def) const
+{
+    std::string val = o_str(name);
+    trim_string(val);
+    tolower_string(val);
+    int col = str_to_colour(val);
+    return (col == -1? def : col);
 }

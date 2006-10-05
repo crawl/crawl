@@ -69,7 +69,7 @@ bool curse_an_item(char which, char power);
 /* ***********************************************************************
  * called from: fight
  * *********************************************************************** */
-void monster_blink(struct monsters *monster);
+bool monster_blink(struct monsters *monster);
 
 
 /* ***********************************************************************
@@ -156,5 +156,6 @@ bool heal_monster(struct monsters *patient, int health_boost, bool permit_growth
  * *********************************************************************** */
 void seen_monster(struct monsters *monster);
 
+bool shift_monster( struct monsters *mon, int x = 0, int y = 0 );
 
 #endif

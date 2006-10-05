@@ -42,9 +42,11 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
+#include "ouch.h"
 #include "output.h"
 #include "randart.h"
 #include "religion.h"
+#include "skills.h"
 #include "skills2.h"
 #include "spl-util.h"
 #include "spells4.h"
@@ -110,6 +112,194 @@
 
 int species_exp_mod(char species);
 void ability_increase(void);
+
+// Use this function whenever the player enters (or lands and thus re-enters)
+// a grid.  
+//
+// stepped - normal walking moves
+// allow_shift - allowed to scramble in any direction out of lava/water
+// force - ignore safety checks, move must happen (traps, lava/water).
+bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
+                          bool force )
+{
+    ASSERT( in_bounds( x, y ) );
+
+    int id;
+    // assuming that entering the same square means coming from above (levitate)
+    const bool from_above = (you.x_pos == x && you.y_pos == y);
+    const int old_grid = (from_above) ? static_cast<int>(DNGN_FLOOR) 
+                                      : grd[you.x_pos][you.y_pos];
+    const int new_grid = grd[x][y];
+
+    // really must be clear
+    ASSERT( !grid_is_solid( new_grid ) );
+
+    // if (grid_is_solid( new_grid ))
+    //     return (false);
+
+    // better not be an unsubmerged monster either:
+    ASSERT( mgrd[x][y] == NON_MONSTER 
+            || mons_is_submerged( &menv[ mgrd[x][y] ] ));
+
+    // if (mgrd[x][y] != NON_MONSTER && !mons_is_submerged( &menv[ mgrd[x][y] ] ))
+    //     return (false);
+
+    // if we're walking along, give a chance to avoid trap
+    if (stepped 
+        && !force
+        && new_grid == DNGN_UNDISCOVERED_TRAP)
+    {
+        const int skill = 4 + you.skills[SK_TRAPS_DOORS] 
+                            + you.mutation[MUT_ACUTE_VISION]
+                            - 2 * you.mutation[MUT_BLURRY_VISION];
+
+        if (random2( skill ) > 6)
+        {
+            mprf( MSGCH_WARN,
+                  "Wait a moment, %s!  Do you really want to step there?",
+                  you.your_name );
+
+            more();
+
+            exercise( SK_TRAPS_DOORS, 3 );
+
+            you.turn_is_over = false;
+
+            id = trap_at_xy( x, y );
+            if (id != -1)
+                grd[x][y] = trap_category( env.trap[id].type );
+
+            return (false);
+        }
+    }
+
+    // only consider terrain if player is not levitating
+    if (!player_is_levitating())
+    {
+        // XXX: at some point we're going to need to fix the swimming 
+        // code to handle burden states.
+        if (new_grid == DNGN_LAVA 
+            || (new_grid == DNGN_DEEP_WATER && you.species != SP_MERFOLK))
+        {
+            // lava and dangerous deep water (ie not merfolk)
+            int entry_x = (stepped) ? you.x_pos : x;
+            int entry_y = (stepped) ? you.y_pos : y;
+
+            if (stepped && !force && !you.conf)
+            {
+                bool okay = yesno( "Do you really want to step there?", 
+                                   false, 'n' );
+
+                if (!okay)
+                {   
+                    canned_msg(MSG_OK);
+                    return (false);
+                }
+            }
+
+            // have to move now so fall_into_a_pool will work
+            you.x_pos = x;
+            you.y_pos = y;
+
+            viewwindow( true, false );
+
+            // if true, we were shifted and so we're done.
+            if (fall_into_a_pool( entry_x, entry_y, allow_shift, new_grid ))
+                return (true);
+        }
+        else if (new_grid == DNGN_SHALLOW_WATER || new_grid == DNGN_DEEP_WATER)
+        {
+            // safer water effects
+            if (you.species == SP_MERFOLK)
+            {
+                if (old_grid != DNGN_SHALLOW_WATER 
+                    && old_grid != DNGN_DEEP_WATER)
+                {
+                    if (stepped)
+                        mpr("Your legs become a tail as you enter the water.");
+                    else
+                        mpr("Your legs become a tail as you dive into the water.");
+
+                    merfolk_start_swimming();
+                }
+            }
+            else 
+            {
+                ASSERT( new_grid != DNGN_DEEP_WATER );
+
+                if (!stepped)
+                    noisy(SL_SPLASH, you.x_pos, you.y_pos, "Splash!");
+
+                you.time_taken *= 13 + random2(8);
+                you.time_taken /= 10;
+
+                if (old_grid != DNGN_SHALLOW_WATER)
+                {
+                    mprf( "You %s the shallow water.",
+                          (stepped ? "enter" : "fall into") );
+
+                    mpr("Moving in this stuff is going to be slow.");
+
+                    if (you.invis)
+                        mpr( "... and don't expect to remain undetected." );
+                }
+            }
+        }
+    }
+
+    // move the player to location
+    you.x_pos = x;
+    you.y_pos = y;
+
+    viewwindow( true, false );
+
+    // Other Effects:
+    // clouds -- do we need this? (always seems to double up with acr.cc call)
+    // if (is_cloud( you.x_pos, you.y_pos ))
+    //     in_a_cloud();
+
+    // icy shield goes down over lava
+    if (new_grid == DNGN_LAVA)
+        expose_player_to_element( BEAM_LAVA );
+
+    // traps go off:
+    if (new_grid >= DNGN_TRAP_MECHANICAL && new_grid <= DNGN_UNDISCOVERED_TRAP)
+    {
+        id = trap_at_xy( you.x_pos, you.y_pos );
+
+        if (id != -1)
+        {
+            bool trap_known = true;
+
+            if (new_grid == DNGN_UNDISCOVERED_TRAP)
+            {
+                trap_known = false;
+
+                const int type = trap_category( env.trap[id].type );
+
+                grd[you.x_pos][you.y_pos] = type;
+                set_envmap_char(you.x_pos, you.y_pos, get_sightmap_char(type));
+            }
+
+            // not easy to blink onto a trap without setting it off:
+            if (!stepped)
+                trap_known = false;
+
+            if (!player_is_levitating()
+                || trap_category( env.trap[id].type ) != DNGN_TRAP_MECHANICAL)
+            {
+                handle_traps(env.trap[id].type, id, trap_known);
+            }
+        }
+    }
+
+    return (true);
+}
+
+bool player_in_mappable_area( void )
+{
+    return (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS);
+}
 
 //void priest_spells(int priest_pass[10], char religious);    // see actual function for reasoning here {dlb}
 bool player_in_branch( int branch )
@@ -317,6 +507,8 @@ int player_equip( int slot, int sub_type, bool calc_unid )
 
 // Looks in equipment "slot" to see if equiped item has "special" ego-type
 // Returns number of matches (jewellery returns zero -- no ego type).
+// [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
+// and armour type-id on wield/wear.
 int player_equip_ego_type( int slot, int special )
 {
     int ret = 0;
@@ -3046,6 +3238,26 @@ char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
 
     return (species_buff);
 }                               // end species_name()
+
+bool player_res_corrosion(bool calc_unid)
+{
+    return (player_equip(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
+            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
+}
+
+bool player_item_conserve(bool calc_unid)
+{
+    return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
+            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
+}
+
+int player_mental_clarity(bool calc_unid)
+{
+    const int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) 
+                        + you.mutation[ MUT_CLARITY ];
+
+    return ((ret > 3) ? 3 : ret);
+}
 
 bool wearing_amulet(char amulet, bool calc_unid)
 {

@@ -28,6 +28,7 @@
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
+#include "misc.h"
 #include "religion.h"
 #include "stuff.h"
 #include "view.h"
@@ -65,6 +66,22 @@ void print_one_highlighted_line( const char *pre, const char *text,
 
 static void print_level_name( int branch, int depth, 
                               bool &printed_branch, bool &printed_level );
+
+void seen_notable_thing( int which_thing )
+{
+    // Don't record in temporary terrain
+    if (you.level_type != LEVEL_DUNGEON)
+        return;
+
+    const god_type god = grid_altar_god(which_thing);
+
+    if (god != GOD_NO_GOD)
+        seen_altar( god );
+    else if (grid_is_branch_stairs( which_thing ))
+        seen_staircase( which_thing );
+    else
+        seen_other_thing( which_thing );
+}
 
 void init_overmap( void )
 {

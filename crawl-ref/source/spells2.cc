@@ -75,7 +75,8 @@ unsigned char detect_traps( int pow )
                 traps_found++;
 
                 grd[ etx ][ ety ] = trap_category( env.trap[count_x].type );
-                env.map[etx - 1][ety - 1] = '^';
+                set_envmap_char(etx, ety, get_magicmap_char(grd[etx][ety]));
+                set_terrain_mapped(etx, ety);
             }
         }
     }
@@ -102,11 +103,8 @@ unsigned char detect_items( int pow )
 
             if (igrd[i][j] != NON_ITEM)
             {
-                unsigned short flags = env.map[i - 1][j - 1];
-                flags = !flags || (flags & ENVF_DETECTED)?
-                            ENVF_DETECTED
-                          : 0;
-                env.map[i - 1][j - 1] = '~' | ENVF_DETECT_ITEM | flags;
+                set_envmap_char(i, j, get_magicmap_char(DNGN_ITEM_DETECTED));
+                set_envmap_detected_item(i, j);
             }
         }
     }
@@ -146,7 +144,7 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
             gx = gridx + random2(fuzz_diam) - fuzz_radius;
             gy = gridy + random2(fuzz_diam) - fuzz_radius;
 
-            if (in_map_grid(gx, gy) && !feat_blocks_movement(grd[gx][gy]))
+            if (map_bounds(gx, gy) && !grid_is_solid(grd[gx][gy]))
             {
                 found_good = true;
                 break;
@@ -160,16 +158,8 @@ static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
         }
     }
 
-    const int envx = gridx - 1,
-              envy = gridy - 1;
-
-    unsigned short flags = env.map[envx][envy];
-    flags = !flags || (flags & ENVF_DETECTED)?
-                ENVF_DETECTED
-              : 0;
-
-    env.map[envx][envy] = 
-        mons_char( mon->type ) | ENVF_DETECT_MONS | flags;
+    set_envmap_char(gridx, gridy, mons_char(mon->type));
+    set_envmap_detected_mons(gridx, gridy);
 }
 
 unsigned char detect_creatures( int pow )
@@ -201,10 +191,12 @@ unsigned char detect_creatures( int pow )
                 struct monsters *mon = &menv[ mgrd[i][j] ];
                 mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
+                // [ds] Should we be doing this here? DC doesn't give away
+                // full monster identity, after all. XXX
                 seen_monster(mon);
 
                 // Assuming that highly intelligent spellcasters can
-                // detect scyring. -- bwr
+                // detect scrying. -- bwr
                 if (mons_intel( mon->type ) == I_HIGH
                     && mons_class_flag( mon->type, M_SPELLCASTER ))
                 {
@@ -896,7 +888,7 @@ void cast_refrigeration(int pow)
         // Note: this used to be 12!... and it was also applied even if 
         // the player didn't take damage from the cold, so we're being 
         // a lot nicer now.  -- bwr
-        scrolls_burn( 5, OBJ_POTIONS );
+        expose_player_to_element(BEAM_COLD, 5);
     }
 
     // Now do the monsters:

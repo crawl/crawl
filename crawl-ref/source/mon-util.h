@@ -428,6 +428,7 @@ bool mons_looks_distracted(const monsters *m);
 bool check_mons_resist_magic( struct monsters *monster, int pow );
 
 bool mons_is_stationary(const monsters *mons);
+bool mons_is_submerged( struct monsters *mon );
 
 bool invalid_monster(const monsters *mons);
 bool invalid_monster_class(int mclass);

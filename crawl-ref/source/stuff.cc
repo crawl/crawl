@@ -579,6 +579,26 @@ int skill_bump( int skill )
                                     : you.skills[skill] + 3);
 }
 
+// This gives (default div = 20, shift = 3):
+// - shift/div% @ stat_level = 0; (default 3/20 = 15%, or 20% at stat 1)
+// - even (100%) @ stat_level = div - shift; (default 17)
+// - 1/div% per stat_level (default 1/20 = 5%)
+int stat_mult( int stat_level, int value, int div, int shift )
+{
+    return (((stat_level + shift) * value) / ((div > 1) ? div : 1));
+}
+
+// As above but inverted (ie 5x penalty at stat 1)
+int stat_div( int stat_level, int value, int mult, int shift )
+{
+    int div = stat_level + shift;
+
+    if (div < 1)
+        div = 1;
+
+    return ((mult * value) / div);
+}
+
 // Calculates num/den and randomly adds one based on the remainder.
 int div_rand_round( int num, int den )
 {
@@ -797,6 +817,103 @@ bool player_can_hear(char x, char y)
 {
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
 }                               // end player_can_hear()
+
+// Returns true if inside the area the player can move and dig (ie exclusive)
+bool in_bounds( int x, int y )
+{
+    return (x > X_BOUND_1 && x < X_BOUND_2 
+            && y > Y_BOUND_1 && y < Y_BOUND_2);
+}
+
+// Returns true if inside the area the player can map (ie inclusive).
+// Note that terrain features should be in_bounds() leaving an outer
+// ring of rock to frame the level.
+bool map_bounds( int x, int y )
+{
+    return (x >= X_BOUND_1 && x <= X_BOUND_2
+            && y >= Y_BOUND_1 && y <= Y_BOUND_2);
+}
+
+// Returns a random location in (x_pos, y_pos)... the grid will be
+// DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
+// if we're using in_bounds() or map_bounds() restriction.
+void random_in_bounds( int &x_pos, int &y_pos, int terr, bool empty, bool excl )
+{
+    bool done = false;
+
+    do
+    {
+        x_pos = X_BOUND_1 + random2( X_WIDTH - 2 * excl ) + 1 * excl;
+        y_pos = Y_BOUND_1 + random2( Y_WIDTH - 2 * excl ) + 1 * excl;
+
+        if (terr == DNGN_RANDOM)
+            done = true;
+        else if (terr == grd[x_pos][y_pos])
+            done = true;
+        else if (terr == DNGN_DEEP_WATER && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
+            done = true;
+        else if (empty 
+                && mgrd[x_pos][y_pos] != NON_MONSTER 
+                && (x_pos != you.x_pos || y_pos != you.y_pos))
+        {
+            done = true;
+        }
+    }
+    while (!done);
+}
+
+// takes rectangle (x1,y1)-(x2,y2) and shifts it somewhere randomly in bounds
+void random_place_rectangle( int &x1, int &y1, int &x2, int &y2, bool excl )
+{
+    const unsigned int dx = abs( x2 - x1 );
+    const unsigned int dy = abs( y2 - y1 );
+
+    x1 = X_BOUND_1 + random2( X_WIDTH - dx - 2 * excl ) + excl;
+    y1 = Y_BOUND_1 + random2( Y_WIDTH - dy - 2 * excl ) + excl;
+
+    x2 = x1 + dx;
+    y2 = y1 + dy;
+}
+
+// returns true if point (px,py) is in rectangle (rx1, ry1) - (rx2, ry2)
+bool in_rectangle( int px, int py, int rx1, int ry1, int rx2, int ry2, 
+                   bool excl )
+{
+    ASSERT( rx1 < rx2 - 1 && ry1 < ry2 - 1 );
+
+    if (excl)
+    {
+        rx1++;
+        rx2--;
+        ry1++;
+        ry2--;
+    }
+
+    return (px >= rx1 && px <= rx2 && py >= ry1 && py <= ry2);
+}
+
+// XXX: this can be done better
+// returns true if rectables a and b overlap
+bool rectangles_overlap( int ax1, int ay1, int ax2, int ay2,
+                         int bx1, int by1, int bx2, int by2,
+                         bool excl )
+{
+    ASSERT( ax1 < ax2 - 1 && ay1 < ay2 - 1 );
+    ASSERT( bx1 < bx2 - 1 && by1 < by2 - 1 );
+
+    if (excl)
+    {
+        ax1++;
+        ax2--;
+        ay1++;
+        ay2--;
+    }
+
+    return (in_rectangle( ax1, ay1, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax1, ay2, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax2, ay1, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax2, ay2, bx1, by1, bx2, by2, excl ));
+}
 
 unsigned char random_colour(void)
 {
@@ -1036,7 +1153,7 @@ int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx)
                 && grd[x][y] <= DNGN_RETURN_FROM_SWAMP
                 && grd[x][y] != DNGN_ENTER_SHOP)        // silly
             {
-                stair_gfx = mapch(grd[x][y]);
+                stair_gfx = get_sightmap_char(grd[x][y]);
                 return ((x == you.x_pos && y == you.y_pos) ? 2 : 1);
             }
         }
@@ -1067,7 +1184,7 @@ void zap_los_monsters()
             const int gx = view2gridX(x),
                       gy = view2gridY(y);
 
-            if (!in_map_grid(gx, gy))
+            if (!map_bounds(gx, gy))
                 continue;
 
             if (gx == you.x_pos && gy == you.y_pos)

@@ -1029,61 +1029,12 @@ static char find_square( unsigned char xps, unsigned char yps,
                     next_los(direction, los, wrap)));
 }
 
-static bool is_shopstair(int x, int y)
-{
-    return (is_stair(grd[x][y]) || grd[x][y] == DNGN_ENTER_SHOP);
-}
-
-extern unsigned char (*mapch2) (unsigned char);
-static bool is_full_mapped(int x, int y)
-{
-    unsigned grid = grd[x][y];
-    int envch = env.map[x - 1][y - 1];
-    return (envch && envch == mapch2(grid));
-}
-
-static int surround_nonshopstair_count(int x, int y)
-{
-    int count = 0;
-    for (int ix = -1; ix < 2; ++ix)
-    {
-        for (int iy = -1; iy < 2; ++iy)
-        {
-            int nx = x + ix, ny = y + iy;
-            if (nx <= 0 || nx >= GXM || ny <= 0 || ny >= GYM)
-                continue;
-            if (is_full_mapped(nx, ny) && !is_shopstair(nx, ny))
-                count++;
-        }
-    }
-    return (count);
-}
-
-// For want of a better name...
-static bool clear_mapped(int x, int y)
-{
-    if (!is_full_mapped(x, y))
-        return (false);
-
-    if (is_shopstair(x, y))
-        return (surround_nonshopstair_count(x, y) > 0);
-
-    return (true);
-}
-
 static void describe_feature(int mx, int my, bool oos)
 {
-    if (oos && !clear_mapped(mx, my))
+    if (oos && !is_terrain_seen(mx, my))
         return;
 
-    unsigned oldfeat = grd[mx][my];
-    if (oos && env.map[mx - 1][my - 1] == mapch2(DNGN_SECRET_DOOR))
-        grd[mx][my] = DNGN_ROCK_WALL;
-
     std::string desc = feature_description(mx, my);
-
-    grd[mx][my] = oldfeat;
-
     if (desc.length())
     {
         if (oos)

@@ -137,6 +137,16 @@ void turn_corpse_into_chunks( item_def &item )
     }
 }                               // end place_chunks()
 
+bool grid_is_wall( int grid )
+{
+    return (grid == DNGN_ROCK_WALL
+            || grid == DNGN_STONE_WALL
+            || grid == DNGN_METAL_WALL
+            || grid == DNGN_GREEN_CRYSTAL_WALL
+            || grid == DNGN_WAX_WALL
+            || grid == DNGN_PERMAROCK_WALL);
+}
+
 bool grid_is_opaque( int grid )
 {
     return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
@@ -155,6 +165,49 @@ bool grid_is_water( int grid )
 bool grid_destroys_items( int grid )
 {
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
+}
+
+// returns 0 is grid is not an altar, else it returns the GOD_* type
+god_type grid_altar_god( unsigned char grid )
+{
+    if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_ELYVILON)
+        return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
+
+    return (GOD_NO_GOD);
+}
+
+bool grid_is_branch_stairs( unsigned char grid )
+{
+    return ((grid >= DNGN_ENTER_ORCISH_MINES && grid <= DNGN_ENTER_RESERVED_4)
+            || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
+}
+
+int grid_secret_door_appearance( int gx, int gy )
+{
+    int ret = DNGN_FLOOR;
+
+    for (int dx = -1; dx <= 1; dx++)
+    {
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            // only considering orthogonal grids
+            if ((abs(dx) + abs(dy)) % 2 == 0)
+                continue;
+
+            const int targ = grd[gx + dx][gy + dy];
+
+            if (!grid_is_wall( targ ))
+                continue;
+
+            if (ret == DNGN_FLOOR)
+                ret = targ;
+            else if (ret != targ)
+                ret = ((ret < targ) ? ret : targ);
+        }
+    }
+
+    return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL 
+                                : ret);
 }
 
 const char *grid_item_destruction_message( unsigned char grid )
@@ -250,7 +303,7 @@ void in_a_cloud(void)
             hurted /= (1 + resist * resist);
             ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
         }
-        scrolls_burn(7, OBJ_SCROLLS);
+        expose_player_to_element(BEAM_FIRE, 7);
         break;
 
     case CLOUD_STINK:
@@ -301,7 +354,7 @@ void in_a_cloud(void)
             hurted /= (1 + resist * resist);
             ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
         }
-        scrolls_burn(7, OBJ_POTIONS);
+        expose_player_to_element(BEAM_COLD, 7);
         break;
 
     case CLOUD_POISON:
@@ -1634,7 +1687,9 @@ void weird_writing(char stringy[40])
 }                               // end weird_writing()
 
 // must be a better name than 'place' for the first parameter {dlb}
-void fall_into_a_pool(bool place, unsigned char terrain)
+// returns true if we manage to scramble free.
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+                       unsigned char terrain )
 {
     bool escape = false;
     FixedVector< char, 2 > empty;
@@ -1643,7 +1698,7 @@ void fall_into_a_pool(bool place, unsigned char terrain)
     {
         // These can happen when we enter deep water directly -- bwr
         merfolk_start_swimming();
-        return;
+        return (false);
     }
 
     strcpy(info, "You fall into the ");
@@ -1665,67 +1720,73 @@ void fall_into_a_pool(bool place, unsigned char terrain)
         if (resist <= 0)
         {
             mpr( "The lava burns you to a cinder!" );
-            ouch( -9999, 0, KILLED_BY_LAVA );
+            ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
         }
         else
         {
             // should boost # of bangs per damage in the future {dlb}
             mpr( "The lava burns you!" );
-            ouch( (10 + random2avg(100, 2)) / resist, 0, KILLED_BY_LAVA );
+            ouch( (10 + roll_dice(2,50)) / resist, 0, KILLED_BY_LAVA );
         }
 
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr("Your icy shield dissipates!", MSGCH_DURATION);
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
-        }
+        expose_player_to_element( BEAM_LAVA, 14 );
     }
 
     // a distinction between stepping and falling from you.levitation
     // prevents stepping into a thin stream of lava to get to the other side.
     if (scramble())
     {
-        if (place)
+        if (allow_shift)
         {
-            if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, false, empty))
+            if (empty_surrounds( you.x_pos, you.y_pos, DNGN_FLOOR, 1, 
+                                 false, empty ))
             {
-                you.x_pos = empty[0];
-                you.y_pos = empty[1];
                 escape = true;
             }
             else
+            {
                 escape = false;
+            }
         }
         else
-            escape = true;
+        {
+            // back out the way we came in, if possible
+            if (grid_distance( you.x_pos, you.y_pos, entry_x, entry_y ) == 1
+                && (entry_x != empty[0] || entry_y != empty[1]))
+            {
+                escape = true;
+                empty[0] = entry_x;
+                empty[1] = entry_y;
+            }
+            else  // zero or two or more squares away, with no way back
+            {
+                escape = false;
+            }
+        }
     }
     else
     {
-        // that is, don't display following when fall from levitating
-        if (!place)
-            mpr("You try to escape, but your burden drags you down!");
+        mpr("You try to escape, but your burden drags you down!");
     }
 
-    if (escape)
+    if (escape && move_player_to_grid( empty[0], empty[1], false, false, true ))
     {
         mpr("You manage to scramble free!");
 
         if (terrain == DNGN_LAVA)
-            scrolls_burn(10, OBJ_SCROLLS);
+            expose_player_to_element( BEAM_LAVA, 14 );
 
-        return;
+        return (true);
     }
 
     mpr("You drown...");
 
     if (terrain == DNGN_LAVA)
-        ouch(-9999, 0, KILLED_BY_LAVA);
+        ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
     else if (terrain == DNGN_DEEP_WATER)
-        ouch(-9999, 0, KILLED_BY_WATER);
+        ouch( INSTANT_DEATH, 0, KILLED_BY_WATER );
 
-    // Okay, so you don't trigger a trap when you scramble onto it.
-    //I really can't be bothered right now.
+    return (false);
 }                               // end fall_into_a_pool()
 
 bool scramble(void)
@@ -1955,8 +2016,8 @@ bool i_feel_safe()
     if ( ystart >= GYM ) yend = 0;
 
     /* statue check */
-    if ( Visible_Statue[STATUE_SILVER] ||
-	 Visible_Statue[STATUE_ORANGE_CRYSTAL] )
+    if (you.visible_statue[STATUE_SILVER] ||
+             you.visible_statue[STATUE_ORANGE_CRYSTAL] )
 	return false;
 
     /* monster check */

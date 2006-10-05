@@ -247,7 +247,7 @@ public:
     unsigned char getkey() const { return lastch; }
 
     void reset();
-    std::vector<MenuEntry *> show();
+    std::vector<MenuEntry *> show(bool reuse_selections = false);
 
 public:
     typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );
@@ -280,6 +280,7 @@ protected:
 
     bool alive;
 
+protected:
     void do_menu( std::vector<MenuEntry*> *selected );
     virtual void draw_select_count( int count );
     virtual void draw_item( int index ) const;

@@ -646,7 +646,7 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
         mpr("Expect minor deviation.");
         more();
 
-        show_map(plox);
+        show_map(plox, false);
 
         redraw_screen();
 
@@ -861,7 +861,7 @@ bool project_noise(void)
 
     mpr( "Choose the noise's source (press '.' or delete to select)." );
     more();
-    show_map(plox);
+    show_map(plox, false);
 
     redraw_screen();
 
@@ -953,7 +953,7 @@ bool recall(char type_recalled)
             }
         }
 
-        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, false, empty))
+        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty))
         {
             // clear old cell pointer -- why isn't there a function for moving a monster?
             mgrd[monster->x][monster->y] = NON_MONSTER;

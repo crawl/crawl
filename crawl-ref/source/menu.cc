@@ -88,13 +88,16 @@ void Menu::reset()
     first_entry = 0;
 }
 
-std::vector<MenuEntry *> Menu::show()
+std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
     std::vector< MenuEntry * > selected;
 
-    deselect_all(false);
+    if (reuse_selections)
+        get_selected(&selected);
+    else
+        deselect_all(false);
 
-    // Lose lines for the title + room for more.
+    // Lose lines for the title + room for -more- line.
     pagesize = get_number_of_lines() - !!title - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;

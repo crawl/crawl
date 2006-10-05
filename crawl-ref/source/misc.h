@@ -56,7 +56,8 @@ void down_stairs(bool remove_stairs, int old_level, bool force = false);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void fall_into_a_pool(bool place, unsigned char grype);
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+                       unsigned char terrain );
 
 
 // last updated 12may2000 {dlb}
@@ -133,9 +134,13 @@ void weird_writing(char stringy[40]);
  * *********************************************************************** */
 unsigned char trap_category(unsigned char trap_type);
 
+bool grid_is_wall(int grid);
 bool grid_is_opaque(int grid);
 bool grid_is_solid(int grid);
 bool grid_is_water(int grid);
+god_type grid_altar_god( unsigned char grid );
+bool grid_is_branch_stairs( unsigned char grid );
+int grid_secret_door_appearance( int gx, int gy );
 bool grid_destroys_items( int grid );
 
 const char *grid_item_destruction_message( unsigned char grid );

@@ -46,6 +46,8 @@ void scale_dice( dice_def &dice, int threshold = 24 );
 int random2limit(int max, int limit);
 bool see_grid(unsigned char grx, unsigned char gry);
 int stepdown_value(int base_value, int stepping, int first_step, int last_step, int ceiling_value);
+int stat_mult( int stat_level, int value, int div = 20, int shift = 3 );
+int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
 int skill_bump( int skill );
 unsigned char get_ch(void);
 
@@ -63,6 +65,9 @@ bool yesno( const char * str, bool safe = true, int safeanswer = 0,
 int yesnoquit( const char* str, bool safe = true,
 	       int safeanswer = 0, bool clear_after = true );
 
+
+bool in_bounds( int x, int y );
+bool map_bounds( int x, int y );
 
 int grid_distance( int x, int y, int x2, int y2 );
 int distance( int x, int y, int x2, int y2);

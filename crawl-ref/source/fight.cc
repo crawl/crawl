@@ -2414,7 +2414,7 @@ void monster_attack(int monster_attacking)
                 }
 
                 damage_taken += extraDamage;
-                scrolls_burn(1, OBJ_SCROLLS);
+                expose_player_to_element(BEAM_FIRE, 1);
                 break;
 
             case MONS_SMALL_SNAKE:
@@ -2551,7 +2551,7 @@ void monster_attack(int monster_attacking)
                 
                 mpr(info);
                 damage_taken += extraDamage;
-                scrolls_burn( 1, OBJ_POTIONS );
+                expose_player_to_element(BEAM_COLD, 1);
                 break;
 
             case MONS_ICE_DEVIL:
@@ -2589,7 +2589,7 @@ void monster_attack(int monster_attacking)
 
                 damage_taken += extraDamage;
 
-                scrolls_burn(1, OBJ_POTIONS);
+                expose_player_to_element(BEAM_COLD, 1);
                 break;
 
             case MONS_ELECTRIC_GOLEM:

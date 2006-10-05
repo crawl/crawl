@@ -1324,7 +1324,7 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water of lava this function would work.  -- bwr 
-    if (empty_surrounds( x, y, spcw, true, empty ))
+    if (empty_surrounds( x, y, spcw, 2, true, empty ))
     {
         pos.x = empty[0];
         pos.y = empty[1];
@@ -1391,25 +1391,19 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 
 
 bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
-                     bool allow_centre, FixedVector < char, 2 > &empty)
+                     int radius, bool allow_centre, 
+                     FixedVector < char, 2 > &empty)
 {
     bool success;
     // assume all player summoning originates from player x,y
     bool playerSummon = (emx == you.x_pos && emy == you.y_pos);
 
-    int xpos[25];   // good x pos
-    int ypos[25];   // good y pos
     int good_count = 0;
     int count_x, count_y;
 
-    char minx = -2;
-    char maxx = 2;
-    char miny = -2;
-    char maxy = 2;
-
-    for (count_x = minx; count_x <= maxx; count_x++)
+    for (count_x = -radius; count_x <= radius; count_x++)
     {
-        for (count_y = miny; count_y <= maxy; count_y++)
+        for (count_y = -radius; count_y <= radius; count_y++)
         {
             success = false;
 
@@ -1435,22 +1429,14 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
             if (grid_compatible(spc_wanted, grd[tx][ty]))
                 success = true;
 
-            if (success)
+            if (success && one_chance_in(++good_count))
             {
                 // add point to list of good points
-                xpos[good_count] = tx;
-                ypos[good_count] = ty;
-                good_count ++;
+                empty[0] = tx;
+                empty[1] = ty;
             }
         }                       // end "for count_y"
     }                           // end "for count_x"
-
-    if (good_count > 0)
-    {
-        int pick = random2(good_count);
-        empty[0] = xpos[pick];
-        empty[1] = ypos[pick];
-    }
 
     return (good_count > 0);
 }                               // end empty_surrounds()

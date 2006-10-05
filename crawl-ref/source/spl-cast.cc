@@ -3045,7 +3045,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
             case 1:
                 mpr("Flames sear your flesh.");
-                scrolls_burn(3, OBJ_SCROLLS);
+                expose_player_to_element(BEAM_FIRE, 3);
 
                 if (player_res_fire() < 0)
                 {
@@ -3064,7 +3064,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 ouch( check_your_resists( 5 + random2avg(29, 2), 2 ), 0,
                       KILLED_BY_WILD_MAGIC, cause );
 
-                scrolls_burn( 5, OBJ_SCROLLS );
+                expose_player_to_element(BEAM_FIRE, 5);
                 break;
 
             case 1:
@@ -3097,7 +3097,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 ouch( check_your_resists( 9 + random2avg(33, 2), 2 ), 0,
                       KILLED_BY_WILD_MAGIC, cause );
 
-                scrolls_burn( 10, OBJ_SCROLLS );
+                expose_player_to_element(BEAM_FIRE, 10);
                 break;
             case 1:
                 mpr("There is a sudden and violent explosion of flames!");
@@ -3181,7 +3181,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 mpr("You are covered in a thin layer of ice");
-                scrolls_burn(2, OBJ_POTIONS);
+                expose_player_to_element(BEAM_COLD, 2);
 
                 if (player_res_cold() < 0)
                     ouch(4 + random2avg(5, 2), 0, KILLED_BY_WILD_MAGIC, cause);
@@ -3198,7 +3198,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 ouch(check_your_resists(5 + random2(6) + random2(7), 3), 0,
                      KILLED_BY_WILD_MAGIC, cause);
 
-                scrolls_burn(4, OBJ_POTIONS);
+                expose_player_to_element(BEAM_COLD, 4);
                 break;
 
             case 1:
@@ -3231,7 +3231,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 ouch(check_your_resists(9 + random2avg(23, 2), 3), 0,
                      KILLED_BY_WILD_MAGIC, cause);
 
-                scrolls_burn(9, OBJ_POTIONS);
+                expose_player_to_element(BEAM_COLD, 9);
                 break;
             case 1:
                 snprintf( info, INFO_SIZE,"Freezing gasses pour from your %s!",

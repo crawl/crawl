@@ -61,6 +61,7 @@
 #include "spells3.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "view.h"
 #include "wpn-misc.h"
 
 const char *sacrifice[] = {
@@ -2746,7 +2747,7 @@ void handle_god_time(void)
             // [dshaligram] Sif Muna is now very patient - has to be
             // to make up for the new spell training requirements, else
             // it's practically impossible to get Master of Arcane status.
-            if (one_chance_in(50))
+            if (one_chance_in(100))
             {
                 lose_piety(1);
 #ifdef DEBUG_DIAGNOSTICS
