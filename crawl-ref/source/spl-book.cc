@@ -507,14 +507,13 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 
     // 40 - Book of Earth
     {0,
-     // SPELL_MAXWELLS_SILVER_HAMMER,
+     SPELL_MAXWELLS_SILVER_HAMMER,
      SPELL_MAGIC_MAPPING,
      SPELL_DIG,
      SPELL_STATUE_FORM,
      SPELL_BOLT_OF_IRON,
      SPELL_TOMB_OF_DOROKLOHE,
      SPELL_SHATTER,
-     SPELL_NO_SPELL,
      SPELL_NO_SPELL
      },
     // 41 - manuals of all kinds
