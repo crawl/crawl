@@ -314,6 +314,9 @@ static void place_monster_corpse(struct monsters *monster)
     mitm[o].special = 210;                      // rot time
     mitm[o].colour = mons_colour(corpse_class);
     mitm[o].quantity = 1;
+    mitm[o].inscription.clear();
+    mitm[o].orig_place = 0;
+    mitm[o].orig_monnum = 0;
 
     if (mitm[o].colour == BLACK)
         mitm[o].colour = monster->number;
