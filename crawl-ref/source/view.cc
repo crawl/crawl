@@ -2934,7 +2934,7 @@ std::string screenshot( bool fullscreen )
                 curr++;
 
             ss += curr;
-            ss += "\n";
+            ss += EOL;
         }
     }
 
