@@ -24,6 +24,10 @@
 #include <time.h>
 #include <ctype.h>
 
+#ifdef UNIX
+#include <errno.h>
+#endif
+
 #ifdef DOS
 #include <conio.h>
 #endif

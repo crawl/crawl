@@ -1038,7 +1038,7 @@ void parse_option_line(const std::string &str, bool runscript)
         // automatic door opening with movement
         Options.easy_open = read_bool( field, Options.easy_open );
     }
-    else if (key == "easy_armour" || key == "easy_armour")
+    else if (key == "easy_armor" || key == "easy_armour")
     {
         // automatic removal of armour when dropping
         Options.easy_armour = read_bool( field, Options.easy_armour );
