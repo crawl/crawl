@@ -36,6 +36,9 @@ void unixcurses_startup(void);
 void textbackground(int bg);
 void textcolor(int col);
 
+void set_altcharset(bool alt_on);
+bool get_altcharset();
+
 #ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"

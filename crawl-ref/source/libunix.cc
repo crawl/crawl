@@ -63,7 +63,7 @@ static struct termios game_term;
 #endif
 
 // Character set variable
-int character_set = CHARACTER_SET;
+int Character_Set = CHARACTER_SET;
 
 // Globals holding current text/backg. colors
 short FG_COL = WHITE;
@@ -147,10 +147,18 @@ static short translate_colour( short col )
     }
 }
 
+void set_altcharset( bool alt_on )
+{
+    Character_Set = ((alt_on) ? A_ALTCHARSET : 0);
+}
+
+bool get_altcharset( void )
+{
+    return (Character_Set != 0);
+}
 
 static void setup_colour_pairs( void )
 {
-
     short i, j;
 
     for (i = 0; i < 8; i++)
@@ -473,7 +481,7 @@ void textcolor(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | character_set );
+    attrset( COLOR_PAIR(pair) | flags | Character_Set );
 }
 
 
@@ -528,7 +536,7 @@ void textbackground(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | character_set );
+    attrset( COLOR_PAIR(pair) | flags | Character_Set );
 }
 
 
