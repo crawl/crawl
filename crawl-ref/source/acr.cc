@@ -172,11 +172,6 @@ static const struct coord_def Compass[8] =
 
 */
 
-/*
-   Function pointers are used to make switching between Unix and DOS char sets
-   possible as a runtime option (command-line -c)
-*/
-
 // Functions in main module
 static void close_door(int move_x, int move_y);
 static void do_berserk_no_combat_penalty(void);
@@ -930,7 +925,7 @@ bool apply_berserk_penalty = false;
  */
 static void input() {
 
-    you.turn_is_over = 0;
+    you.turn_is_over = false;
     prep_input();
 
     /* you.paralysis check */
@@ -1067,7 +1062,7 @@ static void do_action( command_type cmd ) {
     switch ( cmd ) {
 
     case CMD_PERFORM_ACTIVITY:
-	you.turn_is_over = 0;
+	you.turn_is_over = false;
 	perform_activity();
 	break;
 	
@@ -1252,7 +1247,7 @@ static void do_action( command_type cmd ) {
     case CMD_MOVE_NOWHERE:
     case CMD_SEARCH:
 	search_around();
-	you.turn_is_over = 1;
+	you.turn_is_over = true;
 	break;
 
     case CMD_QUAFF:
@@ -2630,7 +2625,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
         if (mon != NON_MONSTER && !mons_has_ench( &menv[mon], ENCH_SUBMERGED ))
         {
             you_attack(mgrd[dx][dy], true);
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
@@ -2679,13 +2674,13 @@ static void open_door(int move_x, int move_y, bool check_confused)
         }
 
         grd[dx][dy] = DNGN_OPEN_DOOR;
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {
         mpr("You swing at nothing.");
         make_hungry(3, true);
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
 }                               // end open_door()
 
@@ -2722,7 +2717,8 @@ static void close_door(int door_x, int door_y)
     {
         if (mgrd[dx][dy] != NON_MONSTER)
         {
-            // Need to make sure that turn_is_over = 1 if creature is invisible
+            // Need to make sure that turn_is_over is set if creature is 
+            // invisible
             mpr("There's a creature in the doorway!");
             door_move.dx = 0;
             door_move.dy = 0;
@@ -2751,7 +2747,7 @@ static void close_door(int door_x, int door_y)
         }
 
         grd[dx][dy] = DNGN_CLOSED_DOOR;
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {

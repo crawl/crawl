@@ -649,7 +649,7 @@ bool cast_a_spell(void)
             make_hungry(spellh, true);
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
     alert_nearby_monsters();
 
     if (you.conf)

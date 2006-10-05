@@ -154,7 +154,7 @@ void pray(void)
     }
 
     // all prayers take time
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     if (you.religion != GOD_NO_GOD
             && grd[you.x_pos][you.y_pos] == 179 + you.religion)

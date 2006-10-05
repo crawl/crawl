@@ -568,7 +568,7 @@ void monster_grid(bool do_updates)
             {
                 behaviour_event( monster, ME_ALERT, MHITYOU );
 
-                if (you.turn_is_over == 1
+                if (you.turn_is_over
                     && mons_shouts(monster->type) > 0
                     && random2(30) >= you.skills[SK_STEALTH])
                 {

@@ -1150,7 +1150,7 @@ unsigned char read_book( item_def &book, int action )
 
     // reading spell descriptions doesn't take time:
     if (action != RBOOK_READ_SPELL)
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
@@ -1290,7 +1290,7 @@ bool learn_spell(void)
         {
             redraw_screen();
             mpr("You already know that spell!");
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             return (false);
         }
     }
@@ -1301,7 +1301,7 @@ bool learn_spell(void)
     {
         redraw_screen();
         mpr("You can't memorise that many levels of magic yet!");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
@@ -1309,7 +1309,7 @@ bool learn_spell(void)
     {
         redraw_screen();
         mpr("You're too inexperienced to learn that spell!");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
@@ -1373,7 +1373,7 @@ bool learn_spell(void)
                 && random2(4) < you.mutation[MUT_BLURRY_VISION])
     {
         mpr("The writing blurs into unreadable gibberish.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
@@ -1381,7 +1381,7 @@ bool learn_spell(void)
     {
         redraw_screen();
         mpr("You fail to memorise the spell.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
         {
@@ -1414,7 +1414,7 @@ bool learn_spell(void)
 
     start_delay( DELAY_MEMORISE, spell_difficulty( specspell ), specspell );
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
     redraw_screen();
 
     did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
@@ -1553,7 +1553,7 @@ int staff_spell( int staff )
                 staff_type == STAFF_STRIKING? "You don't" : "The rod doesn't");
 
         // confuse_player( 2 + random2(4) );
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (0);
     }
 
@@ -1588,7 +1588,7 @@ int staff_spell( int staff )
 
     you.wield_change = true;
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (roll_dice( 1, 1 + spell_difficulty(specspell) / 2 ));
 

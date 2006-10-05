@@ -541,7 +541,7 @@ void handle_delay( void )
 
             you.wield_change = true;
             print_stats();  // force redraw of the stats
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             you.delay_queue.pop();
         }
     }

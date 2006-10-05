@@ -465,7 +465,7 @@ bool activate_ability(void)
     const struct ability_def abil = get_ability_def(Curr_abil[abil_used].which);
 
     // currently only delayed fireball is instantaneous -- bwr
-    you.turn_is_over = ((abil.flags & ABFLAG_INSTANT) ? 0 : 1);
+    you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     if (random2avg(100, 3) < Curr_abil[abil_used].fail)
     {

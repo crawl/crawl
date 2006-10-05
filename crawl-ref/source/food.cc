@@ -314,7 +314,7 @@ bool butchery(void)
         if (!new_cursed && wpn_switch)
             start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         return true;
     }
@@ -411,7 +411,7 @@ bool prompt_eat_from_inventory(void)
     eat_from_inventory(which_inventory_slot);
 
     burden_change();
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (true);
 }
@@ -567,7 +567,7 @@ void eat_floor_item(int item_link)
         eating( mitm[item_link].base_type, mitm[item_link].sub_type );
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     dec_mitm_item_quantity( item_link, 1 );
 }

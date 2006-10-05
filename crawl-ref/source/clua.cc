@@ -1418,7 +1418,7 @@ static bool eat_item(const item_def &item)
     {
         eat_from_inventory(item.link);
         burden_change();
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         return (true);
     }

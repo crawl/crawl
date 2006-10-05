@@ -1451,7 +1451,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
             mpr(info);
         }
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (retval);
     }
 
@@ -1499,7 +1499,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     mpr(info);
                 }
 
-                you.turn_is_over = 1;
+                you.turn_is_over = true;
 
                 return (retval);
             }
@@ -1552,7 +1552,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         you.char_direction = DIR_ASCENDING;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (retval);
 }                               // end move_item_to_player()
@@ -1733,7 +1733,7 @@ static void drop_gold(unsigned int amount)
                 inc_mitm_item_quantity( i, amount );
                 you.gold -= amount;
                 you.redraw_gold = 1;
-                you.turn_is_over = 1;
+                you.turn_is_over = true;
                 return;
             }
 
@@ -1764,7 +1764,7 @@ static void drop_gold(unsigned int amount)
         you.gold -= amount;
         you.redraw_gold = 1;
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {
@@ -1816,7 +1816,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
                 if (takeoff_armour( item_dropped ))
                 {
                     start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
-                    you.turn_is_over = 0; // turn happens later
+                    you.turn_is_over = false; // turn happens later
                 }
             }
 
@@ -1855,7 +1855,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
     }
    
     dec_inv_item_quantity( item_dropped, quant_drop );
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (true);
 }
@@ -3013,7 +3013,7 @@ static void autopickup(void)
 
     if (did_pickup)
     {
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         start_delay( DELAY_AUTOPICKUP, 1 );
     }
 }

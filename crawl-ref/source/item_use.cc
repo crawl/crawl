@@ -205,7 +205,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
             if (you.equip[EQ_WEAPON] != -1)
             {
                 unwield_item(you.equip[EQ_WEAPON]);
-                you.turn_is_over = 1;
+                you.turn_is_over = true;
 
                 you.equip[EQ_WEAPON] = -1;
                 canned_msg( MSG_EMPTY_HANDED );
@@ -298,7 +298,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                          && you.inv[item_slot].sub_type == WPN_BLESSED_BLADE))))
         {
             mpr("This weapon will not allow you to wield it.");
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             return (false);
         }
 
@@ -322,7 +322,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     you.time_taken /= 10;
 
     you.wield_change = true;
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (true);
 }
@@ -852,7 +852,7 @@ bool do_wear_armour( int item, bool quiet )
             return (false);
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     int delay = property( you.inv[item], PARM_AC );
 
@@ -970,7 +970,7 @@ bool takeoff_armour(int item)
         }
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     int delay = property( you.inv[item], PARM_AC );
 
@@ -1845,7 +1845,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     // but any monster nearby can see that something has been thrown:
     alert_nearby_monsters();
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (hit);
 }                               // end throw_it()
@@ -2022,7 +2022,7 @@ bool puton_item(int item_slot, bool prompt_finger)
         break;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known
@@ -2262,7 +2262,7 @@ bool remove_ring(int slot)
     // must occur after ring is removed -- bwr
     calc_mp();
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (true);
 }                               // end remove_ring()
@@ -2304,14 +2304,14 @@ void zap_wand(void)
     if (you.inv[item_slot].base_type != OBJ_WANDS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return;
     }
 
     if ( you.inv[item_slot].plus < 1 ) {
 	// it's an empty wand, inscribe it that way
         canned_msg(MSG_NOTHING_HAPPENS);
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 	if ( !item_ident(you.inv[item_slot], ISFLAG_KNOW_PLUSES) ) {
 
 	    if ( you.inv[item_slot].inscription.find("empty") ==
@@ -2433,7 +2433,7 @@ void zap_wand(void)
     exercise( SK_EVOCATIONS, 1 );
     alert_nearby_monsters();
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 }                               // end zap_wand()
 
 /*** HP CHANGE ***/
@@ -2516,7 +2516,7 @@ void drink(void)
     }
 
     dec_inv_item_quantity( item_slot, 1 );
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     lessen_hunger(40, true);
 }                               // end drink()
@@ -2606,7 +2606,7 @@ bool drink_fountain(void)
             grd[you.x_pos][you.y_pos] = DNGN_DRY_FOUNTAIN_II;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
     return true;
 }                               // end drink_fountain()
 
@@ -3002,7 +3002,7 @@ void read_scroll(void)
     }
 
     // ok - now we FINALLY get to read a scroll !!! {dlb}
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     // imperfect vision prevents players from reading actual content {dlb}:
     if (you.mutation[MUT_BLURRY_VISION]

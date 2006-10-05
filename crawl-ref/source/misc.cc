@@ -515,14 +515,14 @@ void up_stairs(void)
         ouch( roll_dice( 3 + you.burden_state, 5 ), 0, 
               KILLED_BY_FALLING_DOWN_STAIRS );
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return;
     }
 
     if (you.burden_state == BS_OVERLOADED)
     {
         mpr("You are carrying too much to climb upwards.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return;
     }
 
@@ -639,7 +639,7 @@ void up_stairs(void)
 
     load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     save_game(false);
 
@@ -1075,7 +1075,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         break;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     save_game(false);
 
@@ -1545,7 +1545,7 @@ void disarm_trap( struct dist &disa )
     {
         mpr("You failed to disarm the trap.");
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         if (random2(you.dex) > 5 + random2(5 + you.your_level))
             exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
@@ -1582,7 +1582,7 @@ void disarm_trap( struct dist &disa )
 
     grd[you.x_pos + disa.dx][you.y_pos + disa.dy] = DNGN_FLOOR;
     env.trap[i].type = TRAP_UNASSIGNED;
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     // reduced from 5 + random2(5)
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));

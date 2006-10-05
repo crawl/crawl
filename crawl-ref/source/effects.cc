@@ -1473,7 +1473,7 @@ void yell(void)
     {
     case '!':
         mpr("You yell for attention!", MSGCH_SOUND);
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         noisy( 12, you.x_pos, you.y_pos );
         return;
 

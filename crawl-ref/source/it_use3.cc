@@ -684,7 +684,7 @@ bool evoke_wielded( void )
     else if (pract > 0)
         exercise( SK_EVOCATIONS, pract );
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (did_work);
 }                               // end evoke_wielded()
@@ -814,7 +814,7 @@ void tome_of_power(char sc_read_2)
     strcat( info, "." );
     mpr( info );
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;
@@ -937,7 +937,7 @@ void skill_manual(char sc_read_2)
     strcat(info, "!");
     mpr(info);
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;
