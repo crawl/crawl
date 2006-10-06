@@ -802,36 +802,20 @@ static void cards(unsigned char which_card)
     case CARD_ALTAR:
         mpr("You have drawn the Altar.");
 
-        if (you.religion == GOD_NO_GOD)
+        if (you.religion == GOD_NO_GOD ||
+            grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
         }
         else
         {
             dvar1 = 179 + you.religion;
-
-            if (grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
-            {
-                strcpy(info, "An altar grows from the floor ");
-                strcat(info,
-                        (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                                            ? "before you!" : "at your feet!");
-                mpr(info);
-                grd[you.x_pos][you.y_pos] = dvar1;
-            }
-            else
-            {
-                do
-                {
-                    dvar[0] = 10 + random2(GXM - 20);
-                    dvar[1] = 10 + random2(GYM - 20);
-                }
-                while (grd[dvar[0]][dvar[1]] != DNGN_FLOOR);
-
-                grd[dvar[0]][dvar[1]] = dvar1;
-
-                mpr( "You sense divine power!" );
-            }
+            
+            snprintf( info, INFO_SIZE, "An altar grows from the floor %s!",
+                      (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                      ? "before you" : "at your feet");
+            mpr(info);
+            grd[you.x_pos][you.y_pos] = dvar1;
         }
         break;
 
