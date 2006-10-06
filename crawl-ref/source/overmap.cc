@@ -443,9 +443,23 @@ void seen_staircase( unsigned char which_staircase )
     case DNGN_ENTER_SWAMP:
         which_branch = BRANCH_SWAMP;
         break;
+    case DNGN_ENTER_DIS:
+        which_branch = BRANCH_DIS;
+        break;
+    case DNGN_ENTER_GEHENNA:
+        which_branch = BRANCH_GEHENNA;
+        break;
+    case DNGN_ENTER_COCYTUS:
+        which_branch = BRANCH_COCYTUS;
+        break;
+    case DNGN_ENTER_TARTARUS:
+        which_branch = BRANCH_TARTARUS;
+        break;
     default:
-        exit(-1);               // shouldn't happen
+        break;
     }
+
+    ASSERT(which_branch != BRANCH_MAIN_DUNGEON);
 
     stair_level[which_branch] = you.your_level;
 }          // end seen_staircase()

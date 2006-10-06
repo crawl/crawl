@@ -1783,12 +1783,18 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
             buffer2[bufcount2 + 1] = colour;
 
-            if (start_x + i + 1 == you.x_pos && start_y + j + 1 == you.y_pos)
-                buffer2[bufcount2 + 1] = WHITE;
-
             buffer2[bufcount2] = 
                         (unsigned char) env.map[start_x + i][start_y + j];
             
+            if (start_x + i + 1 == you.x_pos && start_y + j + 1 == you.y_pos)
+            {
+                // [dshaligram] Draw the @ symbol on the level-map. It's no
+                // longer saved into the env.map, so we need to draw it 
+                // directly.
+                buffer2[bufcount2 + 1] = WHITE;
+                buffer2[bufcount2]     = you.symbol;
+            }
+
             // If we've a waypoint on the current square, *and* the square is
             // a normal floor square with nothing on it, show the waypoint
             // number.
