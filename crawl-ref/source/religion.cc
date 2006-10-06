@@ -1601,6 +1601,12 @@ void gain_piety(char pgn)
             break;
         }
     }
+
+    if ( you.piety > 160 && old_piety <= 160 &&
+         (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN) &&
+         you.num_gifts[you.religion] == 0 )
+        simple_god_message( " will now bless your weapon at an altar...once.");
+
 }                               // end gain_piety()
 
 void lose_piety(char pgn)
@@ -1617,6 +1623,11 @@ void lose_piety(char pgn)
     // are withheld.
     if (!player_under_penance() && you.piety != old_piety)
     {
+        if (you.piety <= 160 && old_piety > 160 &&
+            (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN) &&
+            you.num_gifts[you.religion] == 0)
+            simple_god_message(" is no longer ready to bless your weapon.");
+
         if (you.piety < 120 && old_piety >= 120)
         {
             switch (you.religion)
