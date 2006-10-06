@@ -1972,7 +1972,7 @@ void check_item_knowledge()
 {
     int i,j;
 
-    std::vector<item_def*> items;
+    std::vector<const item_def*> items;
 
     int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
 			      OBJ_JEWELLERY, OBJ_POTIONS };
@@ -2005,7 +2005,7 @@ void check_item_knowledge()
 
 	clrscr();
 	select_items( items, "You recognise:", true );
-	for ( std::vector<item_def*>::iterator iter = items.begin();
+	for ( std::vector<const item_def*>::iterator iter = items.begin();
 	      iter != items.end(); ++iter )
 	    delete *iter;	    
 

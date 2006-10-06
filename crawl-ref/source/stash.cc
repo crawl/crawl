@@ -327,10 +327,10 @@ std::string Stash::stash_item_name(const item_def &item)
     return buf;
 }
 
-class StashMenu : public Menu
+class StashMenu : public InvMenu
 {
 public:
-    StashMenu() : Menu(MF_SINGLESELECT), can_travel(false) { }
+    StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false) { }
 public:
     bool can_travel;
 protected:
@@ -379,13 +379,12 @@ bool Stash::show_menu(const std::string &prefix, bool can_travel) const
 {
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry("  Stash (" + prefix);
+    MenuEntry *mtitle = new MenuEntry("Stash (" + prefix, MEL_TITLE);
     menu.can_travel = can_travel;
-    mtitle->colour   = WHITE;
     mtitle->quantity = items.size();
     menu.set_title(mtitle);
 
-    populate_item_menu(&menu, items, stash_menu_fixup);
+    menu.load_items( InvMenu::xlat_itemvect(items), stash_menu_fixup);
     std::vector<MenuEntry*> sel;
     while (true)
     {
@@ -415,7 +414,9 @@ std::string Stash::description() const
     if (sz > 1)
     {
         char additionals[50];
-        snprintf(additionals, sizeof additionals, " (+%lu)", (unsigned long) (sz - 1));
+        snprintf(additionals, sizeof additionals, 
+                " (+%lu)", 
+                (unsigned long) (sz - 1));
         desc += additionals;
     }
     return (desc);
@@ -650,9 +651,8 @@ bool ShopInfo::show_menu(const std::string &place,
     ShopId id(shoptype);
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry("  " + name + " (" + place);
+    MenuEntry *mtitle = new MenuEntry(name + " (" + place, MEL_TITLE);
     menu.can_travel = can_travel;
-    mtitle->colour   = WHITE;
     mtitle->quantity = items.size();
     menu.set_title(mtitle);
 
@@ -1382,7 +1382,7 @@ void StashSearchMenu::draw_title()
     {
         gotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("  %d %s%s", title->quantity, title->text.c_str(), 
+        cprintf("%d %s%s", title->quantity, title->text.c_str(), 
                            title->quantity > 1? "es" : "");
 
         if (meta_key)
@@ -1396,8 +1396,7 @@ bool StashSearchMenu::process_key(int key)
 {
     if (key == '?')
     {
-        if (sel)
-            sel->clear();
+        sel.clear();
         meta_key  = !meta_key;
         update_title();
         return true;
@@ -1418,8 +1417,7 @@ void StashTracker::display_search_results(
     stashmenu.can_travel = travelable;
     std::string title = "matching stash";
 
-    MenuEntry *mtitle = new MenuEntry(title);
-    mtitle->colour   = WHITE;
+    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
     mtitle->quantity = results.size();
     stashmenu.set_title(mtitle);

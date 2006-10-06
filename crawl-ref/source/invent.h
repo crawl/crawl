@@ -35,20 +35,108 @@ struct SelItem
     }
 };
 
+struct InvTitle : public MenuEntry
+{
+    Menu *m;
+    std::string (*titlefn)( int menuflags, const std::string &oldt );
+    
+    InvTitle( Menu *mn, const std::string &title,
+              std::string (*tfn)( int menuflags, const std::string &oldt ) );
 
-int prompt_invent_item( const char *prompt, int type_expect,
+    std::string get_text() const;
+};
+
+class InvShowPrices;
+class InvEntry : public MenuEntry
+{
+private:
+    static bool show_prices;
+    static char temp_id[4][50];
+    static void set_show_prices(bool doshow);
+
+    friend class InvShowPrices;
+
+public:
+    const item_def *item;
+
+    InvEntry( const item_def &i );
+    std::string get_text() const;
+
+private:
+    void add_class_hotkeys(const item_def &i);
+};
+
+class InvShowPrices {
+public:
+    InvShowPrices(bool doshow = true);
+    ~InvShowPrices();
+};
+
+class InvMenu : public Menu
+{
+public:
+    InvMenu(int mflags = MF_MULTISELECT) 
+        : Menu(mflags), type(MT_INVSELECT), title_annotate(NULL)
+    {
+    }
+
+    unsigned char getkey() const;
+
+    void set_type(menu_type t);
+
+    // Sets function to annotate the title with meta-information if needed.
+    // If you set this, do so *before* calling set_title, or it won't take
+    // effect.
+    void set_title_annotator(std::string (*fn)(int, const std::string &));
+
+    void set_title(MenuEntry *title);
+    void set_title(const std::string &s);
+
+    // Loads items into the menu. If "procfn" is provided, it'll be called
+    // for each MenuEntry added.
+    // NOTE: Does not set menu title, ever! You *must* set the title explicitly
+    void load_items(const std::vector<const item_def*> &items,
+                    void (*procfn)(MenuEntry *me) = NULL);
+
+    // Loads items from the player's inventory into the menu, and sets the
+    // title to the stock title. If "procfn" is provided, it'll be called for
+    // each MenuEntry added, *excluding the title*.
+    void load_inv_items(int item_selector = OSEL_ANY,
+                        void (*procfn)(MenuEntry *me) = NULL);
+
+    std::vector<SelItem> get_selitems() const;
+
+    // Returns vector of item_def pointers to each item_def in the given
+    // vector. Note: make sure the original vector stays around for the lifetime
+    // of the use of the item pointers, or mayhem results!
+    static std::vector<const item_def*> xlat_itemvect(
+            const std::vector<item_def> &);
+protected:
+    bool process_key(int key);
+
+protected:
+    menu_type type;
+    std::string (*title_annotate)(int mflags, const std::string &oldtitle);
+};
+
+
+int prompt_invent_item( const char *prompt,
+                        menu_type type,
+                        int type_expect,
                         bool must_exist = true, 
                         bool allow_auto_list = true, 
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
                         int *const count = NULL,
-			operation_types oper = OPER_ANY );
+                        operation_types oper = OPER_ANY );
 
-std::vector<SelItem> select_items( std::vector<item_def*> &items, 
-                                   const char *title, bool noselect = false );
+std::vector<SelItem> select_items(
+                        const std::vector<const item_def*> &items, 
+                        const char *title, bool noselect = false );
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
+                        menu_type type,
                         int type_expect,
                         std::string (*titlefn)( int menuflags, 
                                                 const std::string &oldt ) 
@@ -67,7 +155,9 @@ std::vector<SelItem> prompt_invent_items(
  * *********************************************************************** */
 unsigned char invent( int item_class_inv, bool show_price );
 
-unsigned char invent_select(int item_class_inv,
+unsigned char invent_select(
+                   menu_type type,
+                   int item_class_inv,
                    int select_flags = MF_NOSELECT,
                    std::string (*titlefn)( int menuflags, 
                                            const std::string &oldt ) 
@@ -92,8 +182,5 @@ bool in_inventory(const item_def &i);
 void list_commands(bool wizard);
 
 std::string item_class_name(int type, bool terse = false);
-
-void populate_item_menu( Menu *menu, const std::vector<item_def> &items,
-                         void (*callback)(MenuEntry *me) );
 
 #endif

@@ -122,7 +122,7 @@ struct MenuEntry
     MenuEntryLevel level;
     void *data;
 
-    MenuEntry( const std::string &txt = std::string(""),
+    MenuEntry( const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty = 0,
                int hotk = 0 ) :
@@ -166,8 +166,7 @@ struct MenuEntry
                     "%c - %s", hotkeys[0], text.c_str());
             return std::string(buf);
         }
-        return std::string(level == MEL_SUBTITLE? " " :
-                level == MEL_ITEM? "" : "  ") + text;
+        return std::string(level == MEL_SUBTITLE? " " : "") + text;
     }
 
     virtual bool selected() const
@@ -220,6 +219,9 @@ public:
     Menu( int flags = MF_MULTISELECT );
     virtual ~Menu();
 
+    // Remove all items from the Menu, leave title intact.
+    void clear();
+
     // Sets menu flags to new_flags. If use_options is true, game options may
     // override options.
     void set_flags(int new_flags, bool use_options = true);
@@ -248,6 +250,9 @@ public:
 
     void reset();
     std::vector<MenuEntry *> show(bool reuse_selections = false);
+    std::vector<MenuEntry *> selected_entries() const;
+
+    size_t item_count() const    { return items.size(); }
 
 public:
     typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );
@@ -268,7 +273,7 @@ protected:
     formatted_string more;
 
     std::vector<MenuEntry*>  items;
-    std::vector<MenuEntry*>  *sel;
+    std::vector<MenuEntry*>  sel;
     std::vector<text_pattern> select_filter;
 
     // Class that is queried to colour menu entries.
@@ -281,13 +286,13 @@ protected:
     bool alive;
 
 protected:
-    void do_menu( std::vector<MenuEntry*> *selected );
-    virtual void draw_select_count( int count );
+    void do_menu();
+    virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;
     virtual void draw_item(int index, const MenuEntry *me) const;
 
     virtual void draw_title();
-    void draw_menu( std::vector<MenuEntry*> *selected );
+    void draw_menu();
     bool page_down();
     bool line_down();
     bool page_up();

@@ -149,7 +149,7 @@ static void adjust_item(void)
         return;
     }
 
-    from_slot = prompt_invent_item( "Adjust which item?", -1 ); 
+    from_slot = prompt_invent_item( "Adjust which item?", MT_INVSELECT, -1 );
     if (from_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -159,7 +159,12 @@ static void adjust_item(void)
     in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
     mpr( str_pass );
 
-    to_slot = prompt_invent_item( "Adjust to which letter?", -1, false, false );
+    to_slot = prompt_invent_item(
+                    "Adjust to which letter?", 
+                    MT_INVSELECT, 
+                    -1, 
+                    false, 
+                    false );
     if (to_slot ==  PROMPT_ABORT)
     {
         canned_msg( MSG_OK );

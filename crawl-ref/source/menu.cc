@@ -24,7 +24,7 @@ Menu::Menu( int _flags )
     max_pagesize(0),
     more("-more-", true),
     items(),
-    sel(NULL),
+    sel(),
     select_filter(),
     highlighter(new MenuHighlighter),
     num(-1),
@@ -40,6 +40,13 @@ Menu::~Menu()
         delete items[i];
     delete title;
     delete highlighter;
+}
+
+void Menu::clear()
+{
+    for (int i = 0, count = items.size(); i < count; ++i)
+        delete items[i];
+    items.clear();
 }
 
 void Menu::set_maxpagesize(int max)
@@ -90,10 +97,8 @@ void Menu::reset()
 
 std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
-    std::vector< MenuEntry * > selected;
-
     if (reuse_selections)
-        get_selected(&selected);
+        get_selected(&sel);
     else
         deselect_all(false);
 
@@ -109,19 +114,18 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     window(1, 1, 80, 25);
 #endif
 
-    do_menu( &selected );
+    do_menu();
     
 #ifdef DOS_TERM    
     puttext(1, 1, 80, 25, buffer);
 #endif
 
-    return selected;
+    return (sel);
 }
 
-void Menu::do_menu( std::vector<MenuEntry*> *selected )
+void Menu::do_menu()
 {
-    sel = selected;
-    draw_menu( selected );
+    draw_menu();
 
     alive = true;
     while (alive)
@@ -155,7 +159,7 @@ bool Menu::process_key( int keyin )
     case CK_ENTER:
         return false;
     case CK_ESCAPE:
-        sel->clear();
+        sel.clear();
         lastch = keyin;
         return false;
     case ' ': case CK_PGDN: case '>': case '\'':
@@ -195,10 +199,10 @@ bool Menu::process_key( int keyin )
         }
         
         select_items( keyin, num );
-        get_selected( sel );
-        if (sel->size() == 1 && (flags & MF_SINGLESELECT))
+        get_selected( &sel );
+        if (sel.size() == 1 && (flags & MF_SINGLESELECT))
             return false;
-        draw_select_count( sel->size() );
+        draw_select_count( sel.size() );
 
         if (flags & MF_ANYPRINTABLE && !isdigit( keyin ))
             return false;
@@ -212,11 +216,11 @@ bool Menu::process_key( int keyin )
     if (nav)
     {
         if (repaint)
-            draw_menu( sel );
+            draw_menu();
         // Easy exit should not kill the menu if there are selected items.
-        else if (sel->empty() && is_set(MF_EASY_EXIT))
+        else if (sel.empty() && is_set(MF_EASY_EXIT))
         {
-            sel->clear();
+            sel.clear();
             return false;
         }
     }
@@ -249,14 +253,14 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
     return true;
 }
     
-void Menu::draw_select_count( int count )
+void Menu::draw_select_count( int count, bool force )
 {
-    if (!is_set(MF_MULTISELECT))
+    if (!force && !is_set(MF_MULTISELECT))
         return;
 
     if (f_selitem)
     {
-        draw_title_suffix( f_selitem( sel ) );
+        draw_title_suffix( f_selitem( &sel ) );
     }
     else
     {
@@ -267,6 +271,13 @@ void Menu::draw_select_count( int count )
 
         draw_title_suffix( buf );
     }
+}
+
+std::vector<MenuEntry*> Menu::selected_entries() const
+{
+    std::vector<MenuEntry*> selection;
+    get_selected(&selection);
+    return (selection);
 }
 
 void Menu::get_selected( std::vector<MenuEntry*> *selected ) const
@@ -414,12 +425,12 @@ void Menu::select_index( int index, int qty )
     }
 }
 
-void Menu::draw_menu( std::vector< MenuEntry* > *selected )
+void Menu::draw_menu()
 {
     clrscr();
 
     draw_title();
-    draw_select_count( selected->size() );
+    draw_select_count( sel.size() );
     y_offset = 1 + !!title;
 
     int end = first_entry + pagesize;
@@ -458,7 +469,11 @@ void Menu::draw_title()
     {
         gotoxy(1, 1);
         textcolor( item_colour(title) );
-        cprintf( "%s", title->get_text().c_str() );
+        cprintf("%s", title->get_text().c_str());
+
+        const int x = wherex(), y = wherey();
+        cprintf("%-*s", 80 - x, "");
+        gotoxy(x, y);
     }
 }
 

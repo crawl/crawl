@@ -425,7 +425,7 @@ static void handle_wizard_command( void )
 
     case 'v':
         // this command isn't very exciting... feel free to replace
-        i = prompt_invent_item( "Value of which item?", -1 );
+        i = prompt_invent_item( "Value of which item?", MT_INVSELECT, -1 );
         if (i == PROMPT_ABORT || !is_random_artefact( you.inv[i] ))
         {
             canned_msg( MSG_OK );
@@ -439,7 +439,8 @@ static void handle_wizard_command( void )
         break;
 
     case '+':
-        i = prompt_invent_item( "Make an artefact out of which item?", -1 );
+        i = prompt_invent_item(
+                "Make an artefact out of which item?", MT_INVSELECT, -1 );
         if (i == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );

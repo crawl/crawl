@@ -1680,6 +1680,13 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
     MAP_NORTH_DIS
 };
 
+enum menu_type
+{
+    MT_INVSELECT,                      // General - select single item
+    MT_INVLIST,                        // List inventory
+    MT_DROP
+};
+
 // if you mess with this list, you'll need to make changes in initfile.cc
 enum msg_channel_type
 {

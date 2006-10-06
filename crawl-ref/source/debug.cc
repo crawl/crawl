@@ -1019,7 +1019,7 @@ void tweak_object(void)
     char specs[50];
     char keyin;
 
-    int item = prompt_invent_item( "Tweak which item? ", -1 );
+    int item = prompt_invent_item("Tweak which item? ", MT_INVSELECT, -1);
     if (item == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );

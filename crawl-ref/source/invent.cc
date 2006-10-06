@@ -37,143 +37,127 @@
 #include "view.h"
 #include "menu.h"
 
-struct InvTitle : public MenuEntry
+///////////////////////////////////////////////////////////////////////////////
+// Inventory menu shenanigans
+
+static void get_inv_items_to_show(
+        std::vector<const item_def*> &v, int selector);
+
+InvTitle::InvTitle( Menu *mn, const std::string &title,
+          std::string (*tfn)( int menuflags, const std::string &oldt ) ) 
+    : MenuEntry( title, MEL_TITLE )
 {
-    Menu *m;
-    std::string (*titlefn)( int menuflags, const std::string &oldt );
-    
-    InvTitle( Menu *mn, const char *title,
-              std::string (*tfn)( int menuflags, const std::string &oldt ) ) 
-        : MenuEntry( title )
-    {
-        m       = mn;
-        titlefn = tfn;
-    }
+    m       = mn;
+    titlefn = tfn;
+}
 
-    std::string get_text() const
-    {
-        return titlefn? titlefn( m->get_flags(), MenuEntry::get_text() ) :
-                        MenuEntry::get_text();
-    }
-};
-
-class InvShowPrices;
-class InvEntry : public MenuEntry
+std::string InvTitle::get_text() const
 {
-private:
-    static bool show_prices;
-    static char temp_id[4][50];
-    static void set_show_prices(bool doshow);
+    return titlefn? titlefn( m->get_flags(), MenuEntry::get_text() ) :
+                    MenuEntry::get_text();
+}
 
-    friend class InvShowPrices;
-public:
-    const item_def *item;
+InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
+{
+    data = const_cast<item_def *>( item );
+        
+    char buf[ITEMNAME_SIZE];
+    if (i.base_type == OBJ_GOLD)
+        snprintf(buf, sizeof buf, "%d gold piece%s", i.quantity, 
+                (i.quantity > 1? "s" : ""));
+    else
+        item_name(i, 
+                in_inventory(i)? 
+                    DESC_INVENTORY_EQUIP : DESC_NOCAP_A, buf, false);    
+    text = buf;
 
-    InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
+    if (i.base_type != OBJ_GOLD && in_inventory(i))
     {
-        data = const_cast<item_def *>( item );
-            
-        char buf[ITEMNAME_SIZE];
-        if (i.base_type == OBJ_GOLD)
-            snprintf(buf, sizeof buf, "%d gold piece%s", i.quantity, 
-                    (i.quantity > 1? "s" : ""));
-        else
-            item_name(i, 
-                    in_inventory(i)? 
-                        DESC_INVENTORY_EQUIP : DESC_NOCAP_A, buf, false);    
-        text = buf;
-
-        if (i.base_type != OBJ_GOLD)
-        {
-            if (in_inventory(i))
-            {
-                text = text.substr( 4 );        // Skip the inventory letter.
-                add_hotkey(index_to_letter( i.link ));
-            }
-            else
-                add_hotkey(' ');                // Dummy hotkey
-        }
-        else
-        {
-            // Dummy hotkey for gold.
-            add_hotkey(' ');
-        }
-        add_class_hotkeys(i);
-
-        quantity = i.quantity;
+        // FIXME: This is HORRIBLE! We're skipping the inventory letter prefix 
+        // which looks like this: "a - ".
+        text = text.substr( 4 );
+        add_hotkey(index_to_letter( i.link ));
     }
-
-    std::string get_text() const
+    else
     {
-        char buf[ITEMNAME_SIZE];
-        char suffix[ITEMNAME_SIZE] = "";
+        // Dummy hotkey for gold or non-inventory items.
+        add_hotkey(' ');
+    }
+    add_class_hotkeys(i);
 
-        if (InvEntry::show_prices)
-        {
-            int value = item_value(*item, temp_id, true);
-            if (value > 0)
-                snprintf(suffix, sizeof suffix,
-                    " (%d gold)", value);
-        }
-        snprintf( buf, sizeof buf,
-                "%c %c %s%s",
-                hotkeys[0],
-                (!selected_qty? '-' : selected_qty < quantity? '#' : '+'),
-                text.c_str(),
-                suffix );
-        return (buf);
-    }
-private:
-    void add_class_hotkeys(const item_def &i)
+    quantity = i.quantity;
+}
+
+std::string InvEntry::get_text() const
+{
+    char buf[ITEMNAME_SIZE];
+    char suffix[ITEMNAME_SIZE] = "";
+
+    if (InvEntry::show_prices)
     {
-        switch (i.base_type)
-        {
-        case OBJ_GOLD:
-            add_hotkey('$');
-            break;
-        case OBJ_MISSILES:
-            add_hotkey('(');
-            break;
-        case OBJ_WEAPONS:
-            add_hotkey(')');
-            break;
-        case OBJ_ARMOUR:
-            add_hotkey('[');
-            break;
-        case OBJ_WANDS:
-            add_hotkey('/');
-            break;
-        case OBJ_FOOD:
-            add_hotkey('%');
-            break;
-        case OBJ_BOOKS:
-            add_hotkey('+');
-            add_hotkey(':');
-            break;
-        case OBJ_SCROLLS:
-            add_hotkey('?');
-            break;
-        case OBJ_JEWELLERY:
-            add_hotkey(i.sub_type >= AMU_RAGE? '"' : '='); 
-            break;
-        case OBJ_POTIONS:
-            add_hotkey('!');
-            break;
-        case OBJ_STAVES:
-            add_hotkey('\\');
-            add_hotkey('|');
-            break;
-        case OBJ_MISCELLANY:
-            add_hotkey('}');
-            break;
-        case OBJ_CORPSES:
-            add_hotkey('&');
-            break;
-        default:
-            break;
-        }
+        int value = item_value(*item, temp_id, true);
+        if (value > 0)
+            snprintf(suffix, sizeof suffix,
+                " (%d gold)", value);
     }
-};
+    snprintf( buf, sizeof buf,
+            "%c %c %s%s",
+            hotkeys[0],
+            (!selected_qty? '-' : selected_qty < quantity? '#' : '+'),
+            text.c_str(),
+            suffix );
+    return (buf);
+}
+
+void InvEntry::add_class_hotkeys(const item_def &i)
+{
+    switch (i.base_type)
+    {
+    case OBJ_GOLD:
+        add_hotkey('$');
+        break;
+    case OBJ_MISSILES:
+        add_hotkey('(');
+        break;
+    case OBJ_WEAPONS:
+        add_hotkey(')');
+        break;
+    case OBJ_ARMOUR:
+        add_hotkey('[');
+        break;
+    case OBJ_WANDS:
+        add_hotkey('/');
+        break;
+    case OBJ_FOOD:
+        add_hotkey('%');
+        break;
+    case OBJ_BOOKS:
+        add_hotkey('+');
+        add_hotkey(':');
+        break;
+    case OBJ_SCROLLS:
+        add_hotkey('?');
+        break;
+    case OBJ_JEWELLERY:
+        add_hotkey(i.sub_type >= AMU_RAGE? '"' : '='); 
+        break;
+    case OBJ_POTIONS:
+        add_hotkey('!');
+        break;
+    case OBJ_STAVES:
+        add_hotkey('\\');
+        add_hotkey('|');
+        break;
+    case OBJ_MISCELLANY:
+        add_hotkey('}');
+        break;
+    case OBJ_CORPSES:
+        add_hotkey('&');
+        break;
+    default:
+        break;
+    }
+}
 
 bool InvEntry::show_prices = false;
 char InvEntry::temp_id[4][50];
@@ -186,31 +170,160 @@ void InvEntry::set_show_prices(bool doshow)
     }
 }
 
-class InvShowPrices {
-public:
-    InvShowPrices(bool doshow = true)
-    {
-        InvEntry::set_show_prices(doshow);
-    }
-    ~InvShowPrices()
-    {
-        InvEntry::set_show_prices(false);
-    }
-};
-
-class InvMenu : public Menu
+InvShowPrices::InvShowPrices(bool doshow)
 {
-public:
-    InvMenu(int mflags = MF_MULTISELECT) : Menu(mflags) { }
-protected:
-    bool process_key(int key);
-};
+    InvEntry::set_show_prices(doshow);
+}
+
+InvShowPrices::~InvShowPrices()
+{
+    InvEntry::set_show_prices(false);
+}
+
+// Returns vector of item_def pointers to each item_def in the given
+// vector. Note: make sure the original vector stays around for the lifetime
+// of the use of the item pointers, or mayhem results!
+std::vector<const item_def*>
+InvMenu::xlat_itemvect(const std::vector<item_def> &v)
+{
+    std::vector<const item_def*> xlatitems;
+    for (unsigned i = 0, size = v.size(); i < size; ++i)
+        xlatitems.push_back( &v[i] );
+    return (xlatitems);
+}
+
+void InvMenu::set_type(menu_type t)
+{
+    type = t;
+}
+
+void InvMenu::set_title_annotator(std::string (*afn)(int, const std::string &))
+{
+    title_annotate = afn;
+}
+
+void InvMenu::set_title(MenuEntry *t)
+{
+    Menu::set_title(t);
+}
+
+void InvMenu::set_title(const std::string &s)
+{
+    std::string stitle = s;
+    if (stitle.empty())
+    {
+        const int cap = carrying_capacity();
+
+        char title_buf[200];
+        snprintf( title_buf, sizeof title_buf,
+                  "Inventory: %d.%d/%d.%d aum (%d%%, %d/52 slots)",
+                    you.burden / 10, you.burden % 10, 
+                    cap / 10, cap % 10,
+                    (you.burden * 100) / cap, 
+                    inv_count() );
+        stitle = title_buf;
+    }
+    
+    set_title(new InvTitle(this, stitle, title_annotate));
+}
+
+void InvMenu::load_inv_items(int item_selector, void (*procfn)(MenuEntry *me))
+{
+    std::vector<const item_def *> tobeshown;
+    get_inv_items_to_show(tobeshown, item_selector);
+
+    load_items(tobeshown, procfn);
+    if (!item_count())
+    {
+        std::string s;
+        switch (item_selector)
+        {
+        case OSEL_ANY:
+            s = "You aren't carrying anything.";
+            break;
+        case OSEL_WIELD:
+        case OBJ_WEAPONS:
+            s = "You aren't carrying any weapons.";
+            break;
+        default:
+            s = "You aren't carrying any such object.";
+            break;
+        }
+        set_title(s);
+    }
+    else
+    {
+        set_title("");
+    }
+}
+
+static bool compare_menu_entries(const MenuEntry* a, const MenuEntry* b)
+{
+    return (*a < *b);
+}
+
+void InvMenu::load_items(const std::vector<const item_def*> &mitems,
+                         void (*procfn)(MenuEntry *me))
+{
+    FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
+    for (int i = 0, count = mitems.size(); i < count; ++i)
+        inv_class[ mitems[i]->base_type ]++;
+
+    menu_letter ckey;
+    std::vector<InvEntry*> items_in_class;
+
+    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    {
+        if (!inv_class[i]) continue;
+
+        add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
+        items_in_class.clear();
+
+        for (int j = 0, count = mitems.size(); j < count; ++j)
+        {
+            if (mitems[j]->base_type != i) continue;
+            items_in_class.push_back( new InvEntry(*mitems[j]) );
+        }
+
+        // Do we need an option to control sorting?
+        std::sort( items_in_class.begin(), items_in_class.end(),
+                   compare_menu_entries );
+
+        for (unsigned int j = 0; j < items_in_class.size(); ++j)
+        {
+            InvEntry *ie = items_in_class[j];
+            // If there's no hotkey, provide one.
+            if (ie->hotkeys[0] == ' ')
+                ie->hotkeys[0] = ckey++;
+            if (procfn)
+                (*procfn)(ie);
+            add_entry( ie );
+        }
+    }
+}
+
+std::vector<SelItem> InvMenu::get_selitems() const
+{
+    std::vector<SelItem> selected_items;
+    for (int i = 0, count = sel.size(); i < count; ++i)
+    {
+        InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
+        selected_items.push_back(
+                SelItem(
+                    inv->hotkeys[0], 
+                    inv->selected_qty,
+                    inv->item ) );
+    }
+    return (selected_items);
+}
 
 bool InvMenu::process_key( int key )
 {
-    if (items.size() && (key == CONTROL('D') || key == '@'))
+    if (items.size() 
+            && type == MT_DROP
+            && (key == CONTROL('D') || key == '@'))
     {
-        int newflag = 
+        int newflag =
             is_set(MF_MULTISELECT)? 
                 MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE 
               : MF_MULTISELECT;
@@ -220,12 +333,23 @@ bool InvMenu::process_key( int key )
         flags |= newflag;
 
         deselect_all();
-        sel->clear();
-        draw_select_count(0);
+        sel.clear();
+        draw_select_count(0, true);
         return true;
     }
     return Menu::process_key( key );
 }
+
+unsigned char InvMenu::getkey() const
+{
+    unsigned char mkey = lastch;
+    if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?' 
+            && mkey != '*')
+        mkey = ' ';
+    return (mkey);
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 bool in_inventory( const item_def &i )
 {
@@ -234,7 +358,7 @@ bool in_inventory( const item_def &i )
 
 unsigned char get_invent( int invent_type )
 {
-    unsigned char nothing = invent_select( invent_type );
+    unsigned char nothing = invent_select( MT_INVLIST, invent_type );
 
     redraw_screen();
 
@@ -290,117 +414,21 @@ std::string item_class_name( int type, bool terse )
     return ("");
 }
 
-class MenuEntryPtrComparer {
-public:
-    bool operator() (const MenuEntry* a, const MenuEntry* b ) const {
-	return *a < *b;
-    }
-};
-
-void populate_item_menu( Menu *menu, const std::vector<item_def> &items,
-                         void (*callback)(MenuEntry *me) )
-{
-    FixedVector< int, NUM_OBJECT_CLASSES >  inv_class;
-    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
-        inv_class[i] = 0;
-    for (int i = 0, count = items.size(); i < count; ++i)
-        inv_class[ items[i].base_type ]++;
-
-    menu_letter ckey;
-    std::vector<InvEntry*> items_in_class;
-
-    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
-    {
-        if (!inv_class[i]) continue;
-
-        menu->add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
-
-	items_in_class.clear();
-
-        for (int j = 0, count = items.size(); j < count; ++j)
-        {
-            if (items[j].base_type != i) continue;
-	    items_in_class.push_back( new InvEntry(items[j]) );
-	}
-
-	std::sort( items_in_class.begin(), items_in_class.end(),
-		   MenuEntryPtrComparer() );
-
-        for (unsigned int j = 0; j < items_in_class.size(); ++j)
-	{
-            InvEntry *ie = items_in_class[j];
-            ie->hotkeys[0] = ckey++;
-	    callback(ie);
-
-            menu->add_entry( ie );
-
-        }
-
-    }
-}
-
-std::vector<SelItem> select_items( std::vector<item_def*> &items, 
+std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
                                    const char *title, bool noselect )
 {
     std::vector<SelItem> selected;
-
-    if (items.empty())
-        return selected;
-
-    FixedVector< int, NUM_OBJECT_CLASSES >  inv_class;
-    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
-        inv_class[i] = 0;
-    for (int i = 0, count = items.size(); i < count; ++i)
-        inv_class[ items[i]->base_type ]++;
-
-    Menu menu;
-    menu.set_title( new MenuEntry(title) );
-
-    char ckey = 'a';
-
-    std::vector<InvEntry*> items_in_class;
-
-    for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    if (!items.empty())
     {
-        if (!inv_class[i]) continue;
-
-        menu.add_entry( new MenuEntry( item_class_name(i), MEL_SUBTITLE ) );
-	
-	items_in_class.clear();
-
-        for (int j = 0, count = items.size(); j < count; ++j)
-        {
-            if (items[j]->base_type != i) continue;
-	    items_in_class.push_back( new InvEntry( *items[j]) );
-	}
-	/* sort the items inside a class */
-	std::sort( items_in_class.begin(), items_in_class.end(),
-		   MenuEntryPtrComparer() );
-
-        for (unsigned int j = 0; j < items_in_class.size(); ++j)
-	{
-            InvEntry *ie = items_in_class[j];
-            ie->hotkeys[0] = ckey;
-
-            menu.add_entry( ie );
-
-            ckey = ckey == 'z'? 'A' :
-                   ckey == 'Z'? 'a' :
-                                ckey + 1;
-        }
+        InvMenu menu;
+        menu.set_title(title);
+        menu.load_items(items);
+        menu.set_flags( noselect ? MF_NOSELECT :
+                (MF_MULTISELECT | MF_SELECT_ANY_PAGE) );
+        menu.show();
+        selected = menu.get_selitems();
     }
-    menu.set_flags( noselect ? MF_NOSELECT :
-		    (MF_MULTISELECT | MF_SELECT_ANY_PAGE) );
-    std::vector< MenuEntry * > sel = menu.show();
-    for (int i = 0, count = sel.size(); i < count; ++i)
-    {
-        InvEntry *inv = (InvEntry *) sel[i];
-        selected.push_back( SelItem( inv->hotkeys[0], 
-                                     inv->selected_qty,
-                                     inv->item ) );
-    }
-
-    return selected;
+    return (selected);
 }
 
 static bool item_class_selected(const item_def &i, int selector)
@@ -441,7 +469,7 @@ static bool is_item_selected(const item_def &i, int selector)
         || userdef_item_selected(i, selector);
 }
 
-static void get_inv_items_to_show(std::vector<item_def*> &v, int selector)
+static void get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -450,17 +478,8 @@ static void get_inv_items_to_show(std::vector<item_def*> &v, int selector)
     }
 }
 
-static void set_vectitem_classes(const std::vector<item_def*> &v,
-                                 FixedVector<int, NUM_OBJECT_CLASSES> &fv)
-{
-    for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
-        fv[i] = 0;
-    
-    for (int i = 0, size = v.size(); i < size; i++)
-        fv[ v[i]->base_type ]++;
-}
-
 unsigned char invent_select( 
+                      menu_type type,
                       int item_selector,
                       int flags,
                       std::string (*titlefn)( int menuflags, 
@@ -470,125 +489,27 @@ unsigned char invent_select(
                       Menu::selitem_tfn selitemfn,
                       const std::vector<SelItem> *pre_select )
 {
-    InvMenu menu;
+    InvMenu menu(flags);
     
+    menu.set_title_annotator(titlefn);
     menu.f_selitem = selitemfn;
     if (filter)
         menu.set_select_filter( *filter );
+    menu.load_inv_items(item_selector);
+    menu.set_type(type);
+    menu.show(true);
 
-    FixedVector< int, NUM_OBJECT_CLASSES >  inv_class2;
-    for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
-        inv_class2[i] = 0;
-
-    int inv_count = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].quantity)
-        {
-            inv_class2[ you.inv[i].base_type ]++;
-            inv_count++;
-        }
-    }
-
-    if (!inv_count)
-    {
-        menu.set_title( new MenuEntry( "You aren't carrying anything." ) );
-        menu.show();
-        return 0;
-    }
-
-    std::vector<item_def*> tobeshown;
-    get_inv_items_to_show( tobeshown, item_selector );
-    set_vectitem_classes( tobeshown, inv_class2 );
-
-    if (tobeshown.size())
-    {
-        const int cap = carrying_capacity();
-
-        char title_buf[200];
-        snprintf( title_buf, sizeof title_buf,
-                  "Inventory: %d.%d/%d.%d aum (%d%%, %d/52 slots)",
-                    you.burden / 10, you.burden % 10, 
-                    cap / 10, cap % 10,
-                    (you.burden * 100) / cap, 
-                    inv_count );
-        menu.set_title( new InvTitle( &menu, title_buf, titlefn ) );
-
-        for (int i = 0; i < 15; i++)
-        {
-            if (inv_class2[i] != 0)
-            {
-                std::string s = item_class_name(i);
-                menu.add_entry( new MenuEntry( s, MEL_SUBTITLE ) );
-
-                for (int j = 0, size = tobeshown.size(); j < size; ++j)
-                {
-                    if (tobeshown[j]->base_type == i)
-                    {
-                        InvEntry *ientry = new InvEntry(*tobeshown[j]);
-                        if (pre_select && !pre_select->empty())
-                        {
-                            for (int ps = 0, pssize = pre_select->size(); 
-                                    ps < pssize; ++ps)
-                            {
-                                if ((*pre_select)[ps].item == tobeshown[j])
-                                {
-                                    ientry->selected_qty =
-                                        (*pre_select)[ps].quantity;
-                                    break;
-                                }
-                            }
-                        }
-                        menu.add_entry(ientry);
-                    }
-                }               // end of j loop
-            }                   // end of if inv_class2
-        }                       // end of i loop.
-    }
-    else
-    {
-        std::string s;
-        if (item_selector == -1)
-            s = "You aren't carrying anything.";
-        else
-        {
-            if (item_selector == OBJ_WEAPONS || item_selector == OSEL_WIELD)
-                s = "You aren't carrying any weapons.";
-            else if (item_selector == OBJ_MISSILES)
-                s = "You aren't carrying any ammunition.";
-            else
-                s = "You aren't carrying any such object.";
-        }
-        menu.set_title( new MenuEntry( s ) );
-    }
-
-    menu.set_flags( flags );
-    std::vector< MenuEntry * > sel = menu.show(true);
     if (items)
-    {
-        for (int i = 0, count = sel.size(); i < count; ++i)
-        {
-            InvEntry *inv = dynamic_cast<InvEntry*>( sel[i] );
-            items->push_back( SelItem( inv->hotkeys[0], 
-                                       inv->selected_qty,
-                                       inv->item ) );
-        }
-    }
+        *items = menu.get_selitems();
 
-    unsigned char mkey = menu.getkey();
-    if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?' 
-            && mkey != '*')
-        mkey = ' ';
-    return mkey;
+    return (menu.getkey());
 }
 
 unsigned char invent( int item_class_inv, bool show_price )
 {
     InvShowPrices show_item_prices(show_price);
-    return (invent_select(item_class_inv));
+    return (invent_select(MT_INVLIST, item_class_inv));
 }                               // end invent()
-
 
 // Reads in digits for a count and apprends then to val, the
 // return value is the character that stopped the reading.
@@ -628,6 +549,7 @@ static unsigned char get_invent_quant( unsigned char keyin, int &quant )
 // Note: This function never checks if the item is appropriate.
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
+                        menu_type mtype,
                         int type_expect,
                         std::string (*titlefn)( int menuflags, 
                                                 const std::string &oldt ),
@@ -689,10 +611,11 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT;
             // The "view inventory listing" mode.
             int ch = invent_select(
-                    keyin == '*'? -1 : type_expect,
-                    selmode | MF_SELECT_ANY_PAGE,
-                    titlefn, &items, select_filter, fn,
-                    pre_select );
+                        mtype,
+                        keyin == '*'? -1 : type_expect,
+                        selmode | MF_SELECT_ANY_PAGE,
+                        titlefn, &items, select_filter, fn,
+                        pre_select );
 
             if (selmode & MF_SINGLESELECT)
             {
@@ -811,7 +734,8 @@ static bool check_warning_inscriptions( const item_def& item,
 // It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
 //
 // Note: This function never checks if the item is appropriate.
-int prompt_invent_item( const char *prompt, int type_expect, 
+int prompt_invent_item( const char *prompt, 
+                        menu_type mtype, int type_expect, 
                         bool must_exist, bool allow_auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,
@@ -830,10 +754,12 @@ int prompt_invent_item( const char *prompt, int type_expect,
         std::vector< SelItem > items;
 
         // pretend the player has hit '?' and setup state.
-        keyin = invent_select( type_expect, 
-                                MF_SINGLESELECT | MF_ANYPRINTABLE
-                                    | MF_EASY_EXIT,
-                                NULL, &items );
+        keyin = invent_select(
+                    mtype, 
+                    type_expect, 
+                    MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_EASY_EXIT,
+                    NULL, &items );
 
         if (items.size())
         {
@@ -882,11 +808,13 @@ int prompt_invent_item( const char *prompt, int type_expect,
         {
             // The "view inventory listing" mode.
             std::vector< SelItem > items;
-            keyin = invent_select( keyin == '*'? OSEL_ANY : type_expect, 
-                                MF_SINGLESELECT | MF_ANYPRINTABLE
-                                    | MF_EASY_EXIT, 
-                                NULL, 
-                                &items );
+            keyin = invent_select(
+                        mtype,
+                        keyin == '*'? OSEL_ANY : type_expect, 
+                        MF_SINGLESELECT | MF_ANYPRINTABLE
+                            | MF_EASY_EXIT, 
+                        NULL, 
+                        &items );
 
             if (items.size())
             {

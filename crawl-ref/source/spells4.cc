@@ -1898,7 +1898,8 @@ void cast_evaporate(int pow)
     struct dist spelld;
     struct bolt beem;
 
-    const int potion = prompt_invent_item( "Throw which potion?", OBJ_POTIONS );
+    const int potion =
+        prompt_invent_item( "Throw which potion?", MT_INVSELECT, OBJ_POTIONS );
 
     if (potion == -1)
     {

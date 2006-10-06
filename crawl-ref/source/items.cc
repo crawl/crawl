@@ -794,7 +794,7 @@ void show_items()
         mpr("There are no items here.");
     }
     else {
-	std::vector<item_def*> items;
+	std::vector<const item_def*> items;
 
 	for (int i = o; i != NON_ITEM; i = mitm[i].link)
 	    if ( !invisible_to_player(mitm[i]) )
@@ -809,7 +809,7 @@ void show_items()
 
 void pickup_menu(int item_link)
 {
-    std::vector<item_def*> items;
+    std::vector<const item_def*> items;
 
     for (int i = item_link; i != NON_ITEM; i = mitm[i].link)
 	if (!invisible_to_player(mitm[i]))
@@ -1845,10 +1845,9 @@ bool drop_item( int item_dropped, int quant_drop ) {
 static std::string drop_menu_title(int menuflags, const std::string &oldt)
 {
     std::string res = oldt;
-    res.erase(0, res.find_first_not_of(" \n\t"));
     if (menuflags & MF_MULTISELECT)
         res = "[Multidrop] " + res;
-    return "  " + res;
+    return (res);
 }
 
 int get_equip_slot(const item_def *item)
@@ -1912,7 +1911,9 @@ void drop(void)
     static std::vector<SelItem> selected;
 
     if (!you.activity || selected.empty())
-        selected = prompt_invent_items( "Drop which item?", -1, 
+        selected = prompt_invent_items( "Drop which item?",
+                                        MT_DROP,
+                                        -1, 
                                         drop_menu_title,
                                         true, true, '$',
                                         &Options.drop_filter,

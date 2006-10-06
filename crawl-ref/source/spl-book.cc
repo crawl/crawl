@@ -1057,7 +1057,8 @@ static bool which_spellbook( int &book, int &spell )
 
     mpr( info );
 
-    book = prompt_invent_item( "Memorise from which spellbook?", OBJ_BOOKS );
+    book = prompt_invent_item("Memorise from which spellbook?", MT_INVSELECT,
+                              OBJ_BOOKS );
     if (book == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
