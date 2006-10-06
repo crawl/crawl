@@ -288,18 +288,7 @@ void init_item( int item )
     if (item == NON_ITEM)
         return;
 
-    mitm[item].base_type = OBJ_UNASSIGNED;
-    mitm[item].sub_type  = 0;
-    mitm[item].plus  = 0;
-    mitm[item].plus2  = 0;
-    mitm[item].special  = 0;
-    mitm[item].quantity  = 0;
-    mitm[item].colour  = 0;
-    mitm[item].flags  = 0;
-
-    mitm[item].x  = 0;
-    mitm[item].y  = 0;
-    mitm[item].link  = NON_ITEM;
+    mitm[item].clear();
 }
 
 // Returns an unused mitm slot, or NON_ITEM if none available.
@@ -471,15 +460,6 @@ void unlink_item( int dest )
 #endif
 }                               // end unlink_item()
 
-static void item_cleanup(item_def &item)
-{
-    item.base_type      = OBJ_UNASSIGNED;
-    item.quantity       = 0;
-    item.orig_place     = 0;
-    item.orig_monnum    = 0;
-    item.inscription.clear();
-}
-
 void destroy_item( int dest )
 {
     // Don't destroy non-items, but this function may be called upon 
@@ -490,7 +470,8 @@ void destroy_item( int dest )
 
     unlink_item( dest );
 
-    item_cleanup(mitm[dest]);
+    // paranoia, shouldn't be needed
+    mitm[dest].clear();
 }
 
 void destroy_item_stack( int x, int y )

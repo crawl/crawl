@@ -2790,7 +2790,7 @@ static bool initialise(void)
     clrscr();
 
     // init item array:
-    for (i = 1; i < MAX_ITEMS; i++)
+    for (i = 0; i < MAX_ITEMS; i++)
         init_item( i );
 
     // empty messaging string

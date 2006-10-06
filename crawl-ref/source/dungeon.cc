@@ -469,20 +469,6 @@ int items( int allow_uniques,       // not just true-false,
     if (p == NON_ITEM)
         return (NON_ITEM);
 
-    // clear all properties except mitm.base_type <used in switch below> {dlb}:
-    mitm[p].sub_type = 0;
-    mitm[p].flags = 0;
-    mitm[p].special = 0;
-    mitm[p].plus = 0;
-    mitm[p].plus2 = 0;
-    mitm[p].x = 0;
-    mitm[p].y = 0;
-    mitm[p].link = NON_ITEM;
-    mitm[p].slot = 0;
-    mitm[p].orig_monnum = 0;
-    mitm[p].orig_place = 0;
-    mitm[p].inscription = std::string();
-
     // cap item_level unless an acquirement-level item {dlb}:
     if (item_level > 50 && item_level != MAKE_GOOD_ITEM)
         item_level = 50;
@@ -2588,14 +2574,6 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     if (bp == NON_ITEM)
         return;
 
-    mitm[bp].quantity = 0; // set below if force_item, else we toss this item!
-    mitm[bp].plus = 0;
-    mitm[bp].plus2 = 0;
-    mitm[bp].special = 0;
-    mitm[bp].orig_place = 0;
-    mitm[bp].orig_monnum = 0;
-    mitm[bp].inscription = std::string();
-
     // this flags things to "goto give_armour" below ... {dlb}
     mitm[bp].base_type = 101;
 
@@ -3242,13 +3220,6 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     bp = get_item_slot();
     if (bp == NON_ITEM)
         return;
-
-    mitm[bp].x = 0;
-    mitm[bp].y = 0;
-    mitm[bp].link = NON_ITEM;
-    mitm[bp].orig_place = 0;
-    mitm[bp].orig_monnum = 0;
-    mitm[bp].inscription = std::string();
 
     item_race = MAKE_ITEM_RANDOM_RACE;
     give_level = 1 + (level_number / 2);
