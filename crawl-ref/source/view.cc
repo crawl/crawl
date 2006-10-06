@@ -359,6 +359,7 @@ static unsigned short dos_brand( unsigned short colour,
 #endif
 
 // FIXME: Rework this function to use the new terrain known/seen checks
+// These are still env.map coordinates, NOT grid coordinates!
 screen_buffer_t colour_code_map( int x, int y, bool item_colour, 
                                  bool travel_colour )
 {
@@ -1667,7 +1668,8 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
-    if (travel_mode) {
+    if (travel_mode)
+    {
         travel_cache.update();
 
         find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
@@ -3009,7 +3011,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
-                        buffy[bufcount + 1] = colour_code_map( gx, gy );
+                        buffy[bufcount + 1] = colour_code_map(gx - 1, gy - 1);
                 }
                 else if (gx == you.x_pos && gy == you.y_pos)
                 {
@@ -3099,7 +3101,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             buffy[bufcount + 1] = DARKGREY;
 
                             if (Options.colour_map)
-                                buffy[bufcount + 1] = colour_code_map( gx, gy );
+                                buffy[bufcount + 1] = 
+                                    colour_code_map(gx - 1, gy - 1);
                         }
                     }
                 }
