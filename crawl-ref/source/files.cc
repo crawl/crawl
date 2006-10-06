@@ -26,7 +26,6 @@
 #include "files.h"
 #include "version.h"
 
-#include <algorithm>
 #include <string.h>
 #include <string>
 #include <stdlib.h>

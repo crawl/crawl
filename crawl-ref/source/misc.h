@@ -147,10 +147,8 @@ const char *grid_item_destruction_message( unsigned char grid );
 
 void curare_hits_player(int agent, int degree);
 
-// last updated 24aug2006 {hp}
-/* ***********************************************************************
- * called from: items
- * *********************************************************************** */
 bool i_feel_safe();
 
+std::string place_name( unsigned short place, bool long_name,
+                        bool include_number );
 #endif

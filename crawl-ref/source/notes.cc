@@ -176,9 +176,7 @@ static bool is_noteworthy( const Note& note ) {
     if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
 	return true;
 
-
-    unsigned i;
-    for ( i = 0; i < note_list.size(); ++i ) {
+    for ( unsigned i = 0; i < note_list.size(); ++i ) {
 	if ( note_list[i].type != note.type )
 	    continue;
 	const Note& rnote( note_list[i] );
@@ -209,12 +207,12 @@ static bool is_noteworthy( const Note& note ) {
 		return false;
 	    break;
 	default:
-			mpr("Buggy note passed: unknown note type");
-			// Return now, rather than give a "Buggy note passed" message
-			// for each note of the matching type in the note list.
-			return true;
+          mpr("Buggy note passed: unknown note type");
+          // Return now, rather than give a "Buggy note passed" message
+          // for each note of the matching type in the note list.
+          return true;
+        }
     }
-    } // for ( i = 0; i < note_list.size(); ++i )
     return true;
 }
 

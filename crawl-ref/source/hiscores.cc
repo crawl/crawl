@@ -37,6 +37,7 @@
 
 #include "hiscores.h"
 #include "itemname.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
@@ -468,54 +469,9 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
 
     if (se.death_type != KILLED_BY_LEAVING && se.death_type != KILLED_BY_WINNING)
     {
-        if (se.level_type == LEVEL_ABYSS)
-        {
-            strcat(buf, " (Abyss)");
-            return;
-        }
-        else if (se.level_type == LEVEL_PANDEMONIUM)
-        {
-            strcat(buf, " (Pan)");
-            return;
-        }
-        else if (se.level_type == LEVEL_LABYRINTH)
-        {
-            strcat(buf, " (Lab)");
-            return;
-        }
-        else if (se.branch == BRANCH_VESTIBULE_OF_HELL)
-        {
-            strcat(buf, " (Hell)");  // Gate? Vest?
-            return;
-        }
-        else if (se.branch == BRANCH_HALL_OF_BLADES)
-        {
-            strcat(buf, " (Blade)");
-            return;
-        }
-        else if (se.branch == BRANCH_ECUMENICAL_TEMPLE)
-        {
-            strcat(buf, " (Temple)");
-            return;
-        }
-
-        snprintf( scratch, sizeof(scratch), " (%s%d)",
-                    (se.branch == BRANCH_DIS)          ? "Dis " :
-                    (se.branch == BRANCH_GEHENNA)      ? "Geh " :
-                    (se.branch == BRANCH_COCYTUS)      ? "Coc " :
-                    (se.branch == BRANCH_TARTARUS)     ? "Tar " :
-                    (se.branch == BRANCH_ORCISH_MINES) ? "Orc " :
-                    (se.branch == BRANCH_HIVE)         ? "Hive " :
-                    (se.branch == BRANCH_LAIR)         ? "Lair " :
-                    (se.branch == BRANCH_SLIME_PITS)   ? "Slime " :
-                    (se.branch == BRANCH_VAULTS)       ? "Vault " :
-                    (se.branch == BRANCH_CRYPT)        ? "Crypt " :
-                    (se.branch == BRANCH_HALL_OF_ZOT)  ? "Zot " :
-                    (se.branch == BRANCH_SNAKE_PIT)    ? "Snake " :
-                    (se.branch == BRANCH_ELVEN_HALLS)  ? "Elf " :
-                    (se.branch == BRANCH_TOMB)         ? "Tomb " :
-                    (se.branch == BRANCH_SWAMP)        ? "Swamp " : "DLv ", 
-                    se.dlvl );
+        snprintf( scratch, sizeof scratch,  " (%s)",
+                  place_name(get_packed_place(se.branch,se.dlvl,se.level_type),
+                             false, true).c_str());
 
         strcat( buf, scratch );
     } // endif - killed by winning
@@ -967,84 +923,18 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
         if (verbose && se.death_type != KILLED_BY_QUITTING)
             strcat( buf, "..." );
 
-        if (se.level_type == LEVEL_ABYSS)
-            strcat( buf, " in the Abyss" );
-        else if (se.level_type == LEVEL_PANDEMONIUM)
-            strcat( buf, " in Pandemonium" );
-        else if (se.level_type == LEVEL_LABYRINTH)
-            strcat( buf, " in a labyrinth" );
-        else 
-        {
-            switch (se.branch)
-            {
-            case BRANCH_ECUMENICAL_TEMPLE:
-                strcat( buf, " in the Ecumenical Temple" );
-                break;
-            case BRANCH_HALL_OF_BLADES:
-                strcat( buf, " in the Hall of Blades" );
-                break;
-            case BRANCH_VESTIBULE_OF_HELL:
-                strcat( buf, " in the Vestibule" );
-                break;
+        // where did we die?
+        std::string placename =
+            place_name(get_packed_place(se.branch, se.dlvl, se.level_type),
+                       true, true);
 
-            case BRANCH_DIS:
-                strcat( buf, " on Dis" );
-                break;
-            case BRANCH_GEHENNA:
-                strcat( buf, " on Gehenna" );
-                break;
-            case BRANCH_COCYTUS:
-                strcat( buf, " on Cocytus" );
-                break;
-            case BRANCH_TARTARUS:
-                strcat( buf, " on Tartarus" );
-                break;
-            case BRANCH_ORCISH_MINES:
-                strcat( buf, " on Orcish Mines" );
-                break;
-            case BRANCH_HIVE:
-                strcat( buf, " on Hive" );
-                break;
-            case BRANCH_LAIR:
-                strcat( buf, " on Lair" );
-                break;
-            case BRANCH_SLIME_PITS:
-                strcat( buf, " on Slime Pits" );
-                break;
-            case BRANCH_VAULTS:
-                strcat( buf, " on Vault" );
-                break;
-            case BRANCH_CRYPT:
-                strcat( buf, " on Crypt" );
-                break;
-            case BRANCH_HALL_OF_ZOT:
-                strcat( buf, " on Hall of Zot" );
-                break;
-            case BRANCH_SNAKE_PIT:
-                strcat( buf, " on Snake Pit" );
-                break;
-            case BRANCH_ELVEN_HALLS:
-                strcat( buf, " on Elven Halls" );
-                break;
-            case BRANCH_TOMB:
-                strcat( buf, " on Tomb" );
-                break;
-            case BRANCH_SWAMP:
-                strcat( buf, " on Swamp" );
-                break;
-            case BRANCH_MAIN_DUNGEON:
-                strcat( buf, " on Dungeon" );
-                break;
-            }
+        // add appropriate prefix
+        if (placename.find("Level") == 0)
+            strcat( buf, " on ");
+        else
+            strcat( buf, " in ");
 
-            if (se.branch != BRANCH_VESTIBULE_OF_HELL
-                && se.branch != BRANCH_ECUMENICAL_TEMPLE
-                && se.branch != BRANCH_HALL_OF_BLADES)
-            {
-                snprintf( scratch, sizeof(scratch), " Level %d", se.dlvl );
-                strcat( buf, scratch );
-            }
-        }
+        strcat(buf, placename.c_str() );
 
         if (verbose && se.death_time 
             && !hiscore_same_day( se.birth_time, se.death_time ))

@@ -6,16 +6,19 @@
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "chardump.h"
 #include "describe.h"
 #include "mon-util.h"
 #include "files.h"
 #include "itemname.h"
+#include "misc.h"
 #include "travel.h"
 #include "tags.h"
 #include "Kills.h"
 #include "clua.h"
-#include <algorithm>
 
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1
@@ -26,7 +29,7 @@ static void kill_lua_filltable(std::vector<kill_exp> &v);
 
 
 unsigned short get_packed_place( unsigned char branch, int subdepth,
-                          char level_type )
+                                 char level_type )
 {
     unsigned short place = (unsigned short)
         ( (branch << 8) | subdepth );
@@ -297,71 +300,7 @@ long Kills::get_kills(std::vector<kill_exp> &all_kills) const
 //      describe places would be nice.
 std::string short_place_name(unsigned short place)
 {
-    unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
-    int lev = place & 0xFF;
-
-    const char *s;
-    bool level_num = false;
-    if (lev == 0xFF)
-    {
-        switch (branch)
-        {
-        case LEVEL_ABYSS:
-            s = "Abyss";
-            break;
-        case LEVEL_PANDEMONIUM:
-            s = "Pan";
-            break;
-        case LEVEL_LABYRINTH:
-            s = "Lab";
-            break;
-        default:
-            s = "Buggy Badlands";
-            break;
-        }
-    }
-    else
-    {
-        switch (branch)
-        {
-        case BRANCH_VESTIBULE_OF_HELL:
-          s = "Hell";
-          break;
-        case BRANCH_HALL_OF_BLADES:
-          s = "Blade";
-          break;
-        case BRANCH_ECUMENICAL_TEMPLE:
-          s = "Temple";
-          break;
-        default:
-          level_num = true;
-          s = (branch == BRANCH_DIS)          ? "Dis:" :
-              (branch == BRANCH_GEHENNA)      ? "Geh:" :
-              (branch == BRANCH_COCYTUS)      ? "Coc:" :
-              (branch == BRANCH_TARTARUS)     ? "Tar:" :
-              (branch == BRANCH_ORCISH_MINES) ? "Orc:" :
-              (branch == BRANCH_HIVE)         ? "Hive:" :
-              (branch == BRANCH_LAIR)         ? "Lair:" :
-              (branch == BRANCH_SLIME_PITS)   ? "Slime:" :
-              (branch == BRANCH_VAULTS)       ? "Vault:" :
-              (branch == BRANCH_CRYPT)        ? "Crypt:" :
-              (branch == BRANCH_HALL_OF_ZOT)  ? "Zot:" :
-              (branch == BRANCH_SNAKE_PIT)    ? "Snake:" :
-              (branch == BRANCH_ELVEN_HALLS)  ? "Elf:" :
-              (branch == BRANCH_TOMB)         ? "Tomb:" :
-              (branch == BRANCH_SWAMP)        ? "Swamp:" : "D:";
-          break;
-        }
-    }
-
-    std::string pl = s;
-    if (level_num)
-    {
-        char buf[20];
-        snprintf(buf, sizeof buf, "%d", lev);
-        pl += buf;
-    }
-    return pl;
+    return place_name( place, false, true );
 }
 
 void Kills::save(FILE *file) const

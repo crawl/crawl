@@ -2042,3 +2042,103 @@ bool i_feel_safe()
     }
     return true;
 }
+
+std::string place_name( unsigned short place, bool long_name,
+                        bool include_number ) {
+
+    unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
+    int lev = place & 0xFF;
+
+    std::string result;
+    if (lev == 0xFF)
+    {
+        switch (branch)
+        {
+        case LEVEL_ABYSS:
+            return ( long_name ? "The Abyss" : "Abyss" );
+        case LEVEL_PANDEMONIUM:
+            return ( long_name ? "Pandemonium" : "Pan" );
+        case LEVEL_LABYRINTH:
+            return ( long_name ? "a Labyrinth" : "Lab" );
+        default:
+            return ( long_name ? "Buggy Badlands" : "Bug" );
+        }
+    }
+    else
+    {
+        switch (branch)
+        {
+        case BRANCH_VESTIBULE_OF_HELL:
+            return ( long_name ? "The Vestibule of Hell" : "Hell" );
+        case BRANCH_HALL_OF_BLADES:
+            return ( long_name ? "The Hall of Blades" : "Blade" );
+        case BRANCH_ECUMENICAL_TEMPLE:
+            return ( long_name ? "The Ecumenical Temple" : "Temple" );
+        case BRANCH_DIS:
+            result = ( long_name ? "The Iron City of Dis" : "Dis");
+            break;
+        case BRANCH_GEHENNA:
+            result = ( long_name ? "Gehenna" : "Geh" );
+            break;            
+        case BRANCH_COCYTUS:
+            result = ( long_name ? "Cocytus" : "Coc" );
+            break;
+        case BRANCH_TARTARUS:
+            result = ( long_name ? "Tartarus" : "Tar" );
+            break;
+        case BRANCH_ORCISH_MINES:
+            result = ( long_name ? "The Orcish Mines" : "Orc" );
+            break;
+        case BRANCH_HIVE:
+            result = ( long_name ? "The Hive" : "Hive" );
+            break;
+        case BRANCH_LAIR:
+            result = ( long_name ? "The Lair" : "Lair" );
+            break;
+        case BRANCH_SLIME_PITS:
+            result = ( long_name ? "The Slime Pits" : "Slime" );
+            break;
+        case BRANCH_VAULTS:
+            result = ( long_name ? "The Vaults" : "Vault" );
+            break;
+        case BRANCH_CRYPT:
+            result = ( long_name ? "The Crypt" : "Crypt" );
+            break;
+        case BRANCH_HALL_OF_ZOT:
+            result = ( long_name ? "The Hall of Zot" : "Zot" );
+            break;
+        case BRANCH_SNAKE_PIT:
+            result = ( long_name ? "The Snake Pit" : "Snake" );
+            break;
+        case BRANCH_ELVEN_HALLS:
+            result = ( long_name ? "The Elven Halls" : "Elf" );
+            break;
+        case BRANCH_TOMB:
+            result = ( long_name ? "The Tomb" : "Tomb" );
+            break;            
+        case BRANCH_SWAMP:
+            result = ( long_name ? "The Swamp" : "Swamp" );
+            break;            
+        default:
+            result = ( long_name ? "The Dungeon" : "D" );
+            break;
+        }
+    }
+
+    if ( include_number ) {
+        char buf[200];
+        if ( long_name ) {
+            // decapitalize 'the'
+            if ( result.find("The") == 0 )
+                result[0] = 't';
+            snprintf( buf, sizeof buf, "Level %d of %s",
+                      lev, result.c_str() );
+        }
+        else {
+            snprintf( buf, sizeof buf, "%s:%d",
+                      result.c_str(), lev );
+        }
+        result = buf;
+    }
+    return result;
+}
