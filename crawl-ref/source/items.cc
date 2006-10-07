@@ -1846,7 +1846,7 @@ static std::string drop_menu_title(int menuflags, const std::string &oldt)
 {
     std::string res = oldt;
     if (menuflags & MF_MULTISELECT)
-        res = "[Multidrop] " + res;
+        res = "[Multidrop] Drop which items?";
     return (res);
 }
 

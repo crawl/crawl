@@ -198,7 +198,8 @@ enum MenuFlag
     MF_NO_SELECT_QTY    = 0x0004,   // Disallow partial selections
     MF_ANYPRINTABLE     = 0x0008,   // Any printable character is valid, and 
                                     // closes the menu.
-    MF_SELECT_ANY_PAGE  = 0x0010,   // Allow selections to occur on any page.
+    MF_SELECT_BY_PAGE   = 0x0010,   // Allow selections to occur only on
+                                    // currently visible page.
 
     MF_ALWAYS_SHOW_MORE = 0x0020,   // Always show the -more- footer
     MF_NOWRAP           = 0x0040,   // Paging past the end will not wrap back.

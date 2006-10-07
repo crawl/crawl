@@ -325,11 +325,10 @@ bool InvMenu::process_key( int key )
     {
         int newflag =
             is_set(MF_MULTISELECT)? 
-                MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE 
+                MF_SINGLESELECT | MF_ANYPRINTABLE 
               : MF_MULTISELECT;
 
-        flags &= ~(MF_SINGLESELECT | MF_MULTISELECT | 
-                   MF_EASY_EXIT | MF_ANYPRINTABLE);
+        flags &= ~(MF_SINGLESELECT | MF_MULTISELECT | MF_ANYPRINTABLE);
         flags |= newflag;
 
         deselect_all();
@@ -358,10 +357,8 @@ bool in_inventory( const item_def &i )
 
 unsigned char get_invent( int invent_type )
 {
-    unsigned char nothing = invent_select( MT_INVLIST, invent_type );
-
+    unsigned char nothing = invent_select(NULL, MT_INVLIST, invent_type);
     redraw_screen();
-
     return (nothing);
 }                               // end get_invent()
 
@@ -423,8 +420,7 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
         InvMenu menu;
         menu.set_title(title);
         menu.load_items(items);
-        menu.set_flags( noselect ? MF_NOSELECT :
-                (MF_MULTISELECT | MF_SELECT_ANY_PAGE) );
+        menu.set_flags(noselect ? MF_NOSELECT : MF_MULTISELECT);
         menu.show();
         selected = menu.get_selitems();
     }
@@ -479,6 +475,7 @@ static void get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
 }
 
 unsigned char invent_select( 
+                      const char *title,
                       menu_type type,
                       int item_selector,
                       int flags,
@@ -497,6 +494,9 @@ unsigned char invent_select(
         menu.set_select_filter( *filter );
     menu.load_inv_items(item_selector);
     menu.set_type(type);
+    if (title)
+        menu.set_title(title);
+
     menu.show(true);
 
     if (items)
@@ -508,7 +508,7 @@ unsigned char invent_select(
 unsigned char invent( int item_class_inv, bool show_price )
 {
     InvShowPrices show_item_prices(show_price);
-    return (invent_select(MT_INVLIST, item_class_inv));
+    return (invent_select(NULL, MT_INVLIST, item_class_inv));
 }                               // end invent()
 
 // Reads in digits for a count and apprends then to val, the
@@ -611,9 +611,10 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT;
             // The "view inventory listing" mode.
             int ch = invent_select(
+                        prompt,
                         mtype,
                         keyin == '*'? -1 : type_expect,
-                        selmode | MF_SELECT_ANY_PAGE,
+                        selmode,
                         titlefn, &items, select_filter, fn,
                         pre_select );
 
@@ -755,6 +756,7 @@ int prompt_invent_item( const char *prompt,
 
         // pretend the player has hit '?' and setup state.
         keyin = invent_select(
+                    prompt,
                     mtype, 
                     type_expect, 
                     MF_SINGLESELECT | MF_ANYPRINTABLE
@@ -809,6 +811,7 @@ int prompt_invent_item( const char *prompt,
             // The "view inventory listing" mode.
             std::vector< SelItem > items;
             keyin = invent_select(
+                        prompt,
                         mtype,
                         keyin == '*'? OSEL_ANY : type_expect, 
                         MF_SINGLESELECT | MF_ANYPRINTABLE

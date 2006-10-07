@@ -110,9 +110,8 @@ bool monster_floundering(const monsters *m)
             && !mons_flies(m));
 }
 
-// Returns the grid type that a monster can submerge in, or -1 if the monster
-// is incapable of submerging.
-int monster_submersible_grid(int monster_class)
+// Returns true if the monster can submerge in the given grid
+bool monster_can_submerge(int monster_class, int grid)
 {
     switch (monster_class)
     {
@@ -122,19 +121,16 @@ int monster_submersible_grid(int monster_class)
     case MONS_JELLYFISH:
     case MONS_WATER_ELEMENTAL:
     case MONS_SWAMP_WORM:
-        return (DNGN_DEEP_WATER);
+        return (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN);
 
     case MONS_LAVA_WORM:
     case MONS_LAVA_FISH:
     case MONS_LAVA_SNAKE:
     case MONS_SALAMANDER:
-        return (DNGN_LAVA);
+        return (grid == DNGN_LAVA);
 
     default:
-        // [dshaligram] Not exactly a safe sentinel with all the int -> char
-        // -> unsigned char mayhem going around, but it should be sufficient
-        // for now.
-        return (-1);
+        return (false);
     }
 }
 
@@ -568,7 +564,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         menv[id].flags |= MF_BATTY;
     }
 
-    if (monster_submersible_grid(mon_type) == grd[fx][fy]
+    if (monster_can_submerge(mon_type, grd[fx][fy])
             && !one_chance_in(5))
         mons_add_ench( &menv[id], ENCH_SUBMERGED );
     

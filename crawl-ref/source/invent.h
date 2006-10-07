@@ -156,12 +156,13 @@ std::vector<SelItem> prompt_invent_items(
 unsigned char invent( int item_class_inv, bool show_price );
 
 unsigned char invent_select(
-                   menu_type type,
-                   int item_class_inv,
-                   int select_flags = MF_NOSELECT,
-                   std::string (*titlefn)( int menuflags, 
-                                           const std::string &oldt ) 
-                        = NULL,
+                   // Use NULL for stock Inventory title
+                   const char *title = NULL,
+                   // MT_DROP allows the multidrop toggle
+                   menu_type type = MT_INVLIST,
+                   int item_selector = OSEL_ANY,
+                   int menu_select_flags = MF_NOSELECT,
+                   std::string (*titlefn)(int, const std::string &) = NULL,
                    std::vector<SelItem> *sels = NULL,
                    std::vector<text_pattern> *filter = NULL,
                    Menu::selitem_tfn fn = NULL,

@@ -311,7 +311,7 @@ bool Menu::is_hotkey(int i, int key)
                         items[i]->is_primary_hotkey(key)
                       : items[i]->is_hotkey(key);
 
-    return is_set(MF_SELECT_ANY_PAGE)? ishotkey
+    return !is_set(MF_SELECT_BY_PAGE)? ishotkey
         : ishotkey && i >= first_entry && i < end;
 }
 
