@@ -3804,7 +3804,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
         return (damage);
     }
 
-    // take transformations into account, if no weapon is weilded
+    // take transformations into account, if no weapon is wielded
     if (weap_type == WPN_UNARMED 
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
     {
@@ -3892,6 +3892,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
     case WPN_QUICK_BLADE:
     case WPN_KATANA:
     case WPN_LAJATANG:
+    case WPN_LOCHABER_AXE:
     case WPN_EXECUTIONERS_AXE:
     case WPN_DOUBLE_SWORD:
     case WPN_TRIPLE_SWORD:
