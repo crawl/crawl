@@ -342,8 +342,11 @@ bool InvMenu::process_key( int key )
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
+    // Fake an ESCAPE if the menu is empty.
+    if (!item_count())
+        mkey = ESCAPE;
     if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?' 
-            && mkey != '*')
+            && mkey != '*' && mkey != ESCAPE)
         mkey = ' ';
     return (mkey);
 }
@@ -494,7 +497,9 @@ unsigned char invent_select(
         menu.set_select_filter( *filter );
     menu.load_inv_items(item_selector);
     menu.set_type(type);
-    if (title)
+
+    // Don't override title if there are no items.
+    if (title && menu.item_count())
         menu.set_title(title);
 
     menu.show(true);
@@ -561,21 +566,20 @@ std::vector<SelItem> prompt_invent_items(
                         const std::vector<SelItem> *pre_select )
 {
     unsigned char  keyin = 0;
-    int            ret = -1;
+    int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
     bool           need_prompt = true;
     bool           need_getch  = true;
+    bool           auto_list   = Options.auto_list && allow_auto_list;
 
-    if (Options.auto_list && allow_auto_list)
+    if (auto_list)
     {
-        need_getch  = false;
-        need_redraw = false;
-        need_prompt = false;
+        need_prompt = need_getch = false;
         keyin       = '?';
     }
 
-    std::vector< SelItem > items;
+    std::vector<SelItem> items;
     int count = -1;
     for (;;)
     {
@@ -613,12 +617,12 @@ std::vector<SelItem> prompt_invent_items(
             int ch = invent_select(
                         prompt,
                         mtype,
-                        keyin == '*'? -1 : type_expect,
+                        keyin == '*'? OSEL_ANY : type_expect,
                         selmode,
                         titlefn, &items, select_filter, fn,
                         pre_select );
 
-            if (selmode & MF_SINGLESELECT)
+            if ((selmode & MF_SINGLESELECT) || ch == ESCAPE)
             {
                 keyin       = ch;
                 need_getch  = false;
@@ -632,11 +636,11 @@ std::vector<SelItem> prompt_invent_items(
             if (items.size())
             {
                 redraw_screen();
-                mesclr( true );
+                mesclr(true);
 
                 for (unsigned int i = 0; i < items.size(); ++i)
                     items[i].slot = letter_to_index( items[i].slot );
-                return items;
+                return (items);
             }
 
             need_redraw = !(keyin == '?' || keyin == '*' 
@@ -672,6 +676,11 @@ std::vector<SelItem> prompt_invent_items(
         {
             // we've got a character we don't understand...
             canned_msg( MSG_HUH );
+        }
+        else
+        {
+            // We're going to loop back up, so don't draw another prompt.
+            need_prompt = false;
         }
     }
 
@@ -741,44 +750,20 @@ int prompt_invent_item( const char *prompt,
                         bool allow_easy_quit,
                         const char other_valid_char,
                         int *const count,
-			operation_types oper )
+                        operation_types oper )
 {
     unsigned char  keyin = 0;
-    int            ret = -1;
+    int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
     bool           need_prompt = true;
     bool           need_getch  = true;
+    bool           auto_list   = Options.auto_list && allow_auto_list;
 
-    if (Options.auto_list && allow_auto_list)
+    if (auto_list)
     {
-        std::vector< SelItem > items;
-
-        // pretend the player has hit '?' and setup state.
-        keyin = invent_select(
-                    prompt,
-                    mtype, 
-                    type_expect, 
-                    MF_SINGLESELECT | MF_ANYPRINTABLE
-                        | MF_EASY_EXIT,
-                    NULL, &items );
-
-        if (items.size())
-        {
-            if (count)
-                *count = items[0].quantity;
-            redraw_screen();
-            mesclr( true );
-            return letter_to_index( keyin );
-        }
-
-        need_getch = false;
-
-        // Don't redraw if we're just going to display another listing
-        need_redraw = (keyin != '?' && keyin != '*');
-
-        // A prompt is nice for when we're moving to "count" mode.
-        need_prompt = (count != NULL && isdigit( keyin ));
+        need_prompt = need_getch = false;
+        keyin       = '?';
     }
 
     for (;;)
@@ -832,9 +817,7 @@ int prompt_invent_item( const char *prompt,
 
             // Don't redraw if we're just going to display another listing
             need_redraw = (keyin != '?' && keyin != '*');
-
-            // A prompt is nice for when we're moving to "count" mode.
-            need_prompt = (count != NULL && isdigit( keyin ));
+            need_prompt = need_redraw;
         }
         else if (count != NULL && isdigit( keyin ))
         {
@@ -844,17 +827,17 @@ int prompt_invent_item( const char *prompt,
             need_prompt = false;
             need_getch  = false;
         }
-	/*** HP CHANGE ***/
-	else if ( count == NULL && isdigit( keyin ) )
-	{
-	    /* scan for our item */
-	    int res = digit_to_index( keyin, oper );
-	    if ( res != -1 ) {
-		ret = res;
-		if ( check_warning_inscriptions( you.inv[ret], oper ) )
-		    break;
-	    }
-	}
+        /*** HP CHANGE ***/
+        else if ( count == NULL && isdigit( keyin ) )
+        {
+            /* scan for our item */
+            int res = digit_to_index( keyin, oper );
+            if ( res != -1 ) {
+                ret = res;
+                if ( check_warning_inscriptions( you.inv[ret], oper ) )
+                    break;
+            }
+        }
         else if (keyin == ESCAPE
                 || (Options.easy_quit_item_prompts
                     && allow_easy_quit
@@ -870,15 +853,20 @@ int prompt_invent_item( const char *prompt,
             if (must_exist && !is_valid_item( you.inv[ret] ))
                 mpr( "You do not have any such object." );
             else {
-		if ( check_warning_inscriptions( you.inv[ret], oper ) ) {
-		    break;
-		}
-	    }
+                if ( check_warning_inscriptions( you.inv[ret], oper ) ) {
+                    break;
+                }
+            }
         }
         else if (!isspace( keyin ))
         {
             // we've got a character we don't understand...
             canned_msg( MSG_HUH );
+        }
+        else
+        {
+            // We're going to loop back up, so don't draw another prompt.
+            need_prompt = false;
         }
     }
 

@@ -13,6 +13,7 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
+#include "defines.h"
 #include <string>
 #include <vector>
 
@@ -54,7 +55,7 @@ enum KEYS
 {
     CK_ENTER  = '\r',
     CK_BKSP   = 8,
-    CK_ESCAPE = '\x1b',
+    CK_ESCAPE = ESCAPE,
 
     // 128 is off-limits because it's the code that's used when running
     CK_DELETE = 129,
