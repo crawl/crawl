@@ -450,7 +450,7 @@ void monster_die(struct monsters *monster, char killer, int i)
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being being done_good kills,
+            // prevent summoned creatures from being done_good kills,
             // Only affects monsters friendly when created.
             if (!created_friendly)
             {

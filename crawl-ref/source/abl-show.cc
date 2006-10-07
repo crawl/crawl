@@ -667,8 +667,9 @@ bool activate_ability(void)
             return (false);
         }
 
-        go_berserk(true);
-        exercise( SK_EVOCATIONS, 1 );
+        // only exercise if berserk succeeds
+        if ( go_berserk(true) )
+            exercise( SK_EVOCATIONS, 1 );
         break;
 
     // fly (kenku) -- eventually becomes permanent (see acr.cc)

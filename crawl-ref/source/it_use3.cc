@@ -607,9 +607,13 @@ bool evoke_wielded( void )
             else
             {
                 mpr("You produce a hideous howling noise!");
-                pract = (one_chance_in(3) ? 1 : 0);
-                create_monster( MONS_BEAST, ENCH_ABJ_IV, BEH_HOSTILE, 
-                                you.x_pos, you.y_pos, MHITYOU, 250 );
+                int midx = create_monster( MONS_BEAST, ENCH_ABJ_IV,
+                                           BEH_HOSTILE, you.x_pos, you.y_pos,
+                                           MHITYOU, 250 );
+                // avoid scumming; also prevents it from showing up on notes
+                if ( midx != -1 )
+                    menv[midx].flags |= MF_CREATED_FRIENDLY;
+                // no practice
             }
             break;
 
