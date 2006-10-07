@@ -223,7 +223,7 @@ void search_around(void)
     char sry = 0;
     int i;
 
-    // Never if doing something else... this prevents a slight asymetry 
+    // Never if doing something else... this prevents a slight asymmetry
     // where using autopickup was giving free searches in comparison to
     // not using autopickup.  -- bwr
     if (you_are_delayed())

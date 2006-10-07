@@ -1892,6 +1892,7 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
     return buf;
 }
 
+std::vector<SelItem> items_for_multidrop;
 //---------------------------------------------------------------
 //
 // drop
@@ -1904,49 +1905,33 @@ void drop(void)
     if (inv_count() < 1 && you.gold == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        you.activity = ACT_NONE;
         return;
     }
 
-    static std::vector<SelItem> selected;
+    items_for_multidrop = prompt_invent_items( "Drop which item?",
+                                               MT_DROP,
+                                               -1, 
+                                               drop_menu_title,
+                                               true, true, '$',
+                                               &Options.drop_filter,
+                                               drop_selitem_text,
+                                               NULL );
 
-    if (!you.activity || selected.empty())
-        selected = prompt_invent_items( "Drop which item?",
-                                        MT_DROP,
-                                        -1, 
-                                        drop_menu_title,
-                                        true, true, '$',
-                                        &Options.drop_filter,
-                                        drop_selitem_text,
-                                        &selected );
-
-    if (selected.empty())
+    if (items_for_multidrop.empty())
     {
         canned_msg( MSG_OK );
-        you.activity = ACT_NONE;
         return;
     }
 
-    // Throw away invalid items; items usually go invalid because
-    // of chunks rotting away.
-    while (!selected.empty() 
-            // Don't look for gold in inventory
-            && selected[0].slot != PROMPT_GOT_SPECIAL
-            && !is_valid_item(you.inv[ selected[0].slot ]))
-        selected.erase( selected.begin() );
-
-    // Did the defunct item filter above deprive us of a drop target?
-    if (!selected.empty())
+    if ( items_for_multidrop.size() == 1 ) // only one item
     {
-        drop_item( selected[0].slot, selected[0].quantity );
-        // Forget the item we just dropped
-        selected.erase( selected.begin() );
+        drop_item( items_for_multidrop[0].slot,
+                   items_for_multidrop[0].quantity );
+        you.turn_is_over = true;
     }
-
-    // If we still have items that want to be dropped, start the multiturn 
-    // activity
-    you.activity = selected.empty()? ACT_NONE : ACT_MULTIDROP;
-}                               // end drop()
+    else
+        start_delay( DELAY_MULTIDROP, items_for_multidrop.size() );
+}
 
 //---------------------------------------------------------------
 //

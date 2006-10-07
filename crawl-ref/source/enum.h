@@ -136,7 +136,6 @@ enum ability_flag_type
 enum activity_type
 {
     ACT_NONE        = 0,
-    ACT_MULTIDROP,
     ACT_RUNNING,
     ACT_TRAVELING,
     ACT_MACRO,
@@ -828,10 +827,11 @@ enum delay_type
     DELAY_WEAPON_SWAP,                 // for easy_butcher
     DELAY_PASSWALL,
     DELAY_DROP_ITEM,
+    DELAY_MULTIDROP,
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
-    DELAY_INTERUPTABLE        = 100,   // simple interuptable delay
-    DELAY_UNINTERUPTABLE               // simple uninteruptable delay
+    DELAY_INTERRUPTIBLE        = 100,   // simple interruptible delay
+    DELAY_UNINTERRUPTIBLE               // simple uninterruptible delay
 };
 
 enum demon_beam_type

@@ -2329,6 +2329,7 @@ static command_type get_next_cmd() {
     /* handle macros!!!! XXX */
     if ( you.activity )
 	return CMD_PERFORM_ACTIVITY;
+
     if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
 	just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
 	/* must fix this if we add more gods! */

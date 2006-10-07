@@ -350,8 +350,6 @@ static void reset_startup_options(bool clear_name = true)
 void reset_options(bool clear_name)
 {
     // Option initialization
-    Options.activity_interrupts[ ACT_MULTIDROP ] =
-            AI_HP_LOSS | AI_STAT_CHANGE | AI_TELEPORT;
     Options.activity_interrupts[ ACT_RUNNING ] =
             0xFFFF ^ AI_SEE_MONSTER;
     Options.activity_interrupts[ ACT_TRAVELING ] =

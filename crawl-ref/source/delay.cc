@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "enum.h"
 #include "food.h"
+#include "invent.h"
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -34,10 +35,12 @@
 #include "spl-util.h"
 #include "stuff.h"
 
+extern std::vector<SelItem> items_for_multidrop;
+
 void start_delay( int type, int turns, int parm1, int parm2 )
 /***********************************************************/
 {
-    delay_queue_item  delay;
+    delay_queue_item delay;
     
     delay.type = type;
     delay.duration = turns;
@@ -50,7 +53,10 @@ void start_delay( int type, int turns, int parm1, int parm2 )
 void stop_delay( void )
 /*********************/
 {
-    delay_queue_item  delay = you.delay_queue.front(); 
+    if ( you.delay_queue.empty() )
+        return;
+
+    delay_queue_item delay = you.delay_queue.front(); 
 
     // At the very least we can remove any queued delays, right 
     // now there is no problem with doing this... note that
@@ -83,15 +89,21 @@ void stop_delay( void )
 
     case DELAY_PASSWALL:        
         // The lost work here is okay since this spell requires 
-        // the player to "attune to the rock".  If changed, the
+        // the player to "attune to the rock".  If changed, then
         // the delay should be increased to reduce the power of
         // this spell. -- bwr
         mpr( "Your meditation is interrupted." );
         you.delay_queue.pop();
         break;
 
-    case DELAY_INTERUPTABLE:  
-        // always stopable by definition... 
+    case DELAY_MULTIDROP:
+        // No work lost
+        mpr( "You stop dropping." );
+        you.delay_queue.pop();
+        break;
+
+    case DELAY_INTERRUPTIBLE:  
+        // always stoppable by definition... 
         // try using a more specific type anyways. -- bwr
         you.delay_queue.pop();
         break;
@@ -105,7 +117,7 @@ void stop_delay( void )
 
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
-        // These two have the default action of not being interuptable,
+        // These two have the default action of not being interruptible,
         // although they will often be chained (remove cloak, remove 
         // armour, wear new armour, replace cloak), all of which can
         // be stopped when complete.  This is a fairly reasonable 
@@ -121,7 +133,7 @@ void stop_delay( void )
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
-    case DELAY_UNINTERUPTABLE:    // never stoppable 
+    case DELAY_UNINTERRUPTIBLE:   // never stoppable 
     default:
         break;
     }
@@ -183,6 +195,24 @@ void handle_delay( void )
                 return;
             }
         }
+        if ( delay.type == DELAY_MULTIDROP )
+        {
+
+            // Throw away invalid items; items usually go invalid because
+            // of chunks rotting away.
+            while (!items_for_multidrop.empty() 
+                   // Don't look for gold in inventory
+                   && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
+                   && !is_valid_item(you.inv[ items_for_multidrop[0].slot ]))
+                items_for_multidrop.erase( items_for_multidrop.begin() );
+
+            if ( items_for_multidrop.empty() )
+            {
+                // ran out of things to drop
+                you.delay_queue.pop();
+                return;
+            }
+        }
 
         // Handle delay:
         if (delay.duration > 0)
@@ -217,6 +247,11 @@ void handle_delay( void )
             case DELAY_PASSWALL:
                 mpr("You continue meditating on the rock.",
                     MSGCH_MULTITURN_ACTION);
+                break;
+            case DELAY_MULTIDROP:
+                drop_item( items_for_multidrop[0].slot,
+                           items_for_multidrop[0].quantity );
+                items_for_multidrop.erase( items_for_multidrop.begin() );
                 break;
             default:
                 break;
@@ -557,8 +592,8 @@ void handle_delay( void )
                 untag_followers();
                 break;
 
-            case DELAY_INTERUPTABLE:
-            case DELAY_UNINTERUPTABLE:
+            case DELAY_INTERRUPTIBLE:
+            case DELAY_UNINTERRUPTIBLE:
                 // these are simple delays that have no effect when complete
                 break;
 

@@ -617,7 +617,8 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
 
     // after this point, we're guaranteed to teleport. Turn off auto-butcher.
     // corpses still get butchered,  but at least we don't get a silly message.
-    if (current_delay_action() == DELAY_BUTCHER)
+    if (current_delay_action() == DELAY_BUTCHER ||
+        current_delay_action() == DELAY_MULTIDROP)
         stop_delay();
 
     interrupt_activity( AI_TELEPORT );

@@ -33,6 +33,7 @@
 #include "externs.h"
 
 #include "clua.h"
+#include "delay.h"
 #include "fight.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -301,7 +302,6 @@ bool player_in_mappable_area( void )
     return (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS);
 }
 
-//void priest_spells(int priest_pass[10], char religious);    // see actual function for reasoning here {dlb}
 bool player_in_branch( int branch )
 {
     return (you.level_type == LEVEL_DUNGEON && you.where_are_you == branch);
@@ -3523,8 +3523,11 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
         return;
 
     // Stop running/travel if a stat drops.
-    if (amount < 0)
+    if (amount < 0) {
         interrupt_activity( AI_STAT_CHANGE );
+        // also stop delay actions if possible
+        stop_delay();
+    }
 
     if (!suppress_msg)
         strcpy(info, "You feel ");
@@ -3942,65 +3945,6 @@ const char *get_class_name( int which_job )
     return (Class_Name_List[ which_job ]);
 }
 
-/* ******************************************************************
-
-// this function is solely called by a commented out portion of
-// player::level_change() and is a bit outta whack with the
-// current codebase - probably should be struck as well 19may2000 {dlb}
-
-void priest_spells( int priest_pass[10], char religious )
-{
-
-    switch ( religious )
-    {
-      case GOD_ZIN:
-        priest_pass[1] = SPELL_LESSER_HEALING;
-        priest_pass[2] = SPELL_REPEL_UNDEAD;
-        priest_pass[3] = SPELL_HEAL_OTHER;
-        priest_pass[4] = SPELL_PURIFICATION;
-        priest_pass[5] = SPELL_GREATER_HEALING;
-        priest_pass[6] = SPELL_SMITING;
-        priest_pass[7] = SPELL_HOLY_WORD;
-        priest_pass[8] = SPELL_REMOVE_CURSE;
-        priest_pass[9] = SPELL_GUARDIAN;
-        break;
-
-     case GOD_SHINING_ONE:
-       priest_pass[1] = SPELL_REPEL_UNDEAD;
-       priest_pass[2] = SPELL_LESSER_HEALING;
-       priest_pass[3] = SPELL_HEAL_OTHER;
-       priest_pass[4] = SPELL_PURIFICATION;
-       priest_pass[5] = SPELL_ABJURATION_II;
-       priest_pass[6] = SPELL_THUNDERBOLT;
-       priest_pass[7] = SPELL_SHINING_LIGHT;
-       priest_pass[8] = SPELL_SUMMON_DAEVA;
-       priest_pass[9] = SPELL_FLAME_OF_CLEANSING;
-       break;
-
-     case GOD_ELYVILON:
-       priest_pass[1] = SPELL_LESSER_HEALING;
-       priest_pass[2] = SPELL_HEAL_OTHER;
-       priest_pass[3] = SPELL_PURIFICATION;
-       priest_pass[4] = 93; // restore abilities
-       priest_pass[5] = SPELL_GREATER_HEALING;
-       priest_pass[6] = 94; // another healing spell
-       priest_pass[7] = 95; // something else
-       priest_pass[8] = -1; //
-       priest_pass[9] = -1; //
-       break;
-    }
-
-}
-
-// Spells to be added: (+ renamed!)
-//   holy berserker
-//   87 Pestilence
-//   93 Restore Abilities
-//   94 something else healing
-//   95 something else
-
-****************************************************************** */
-
 void contaminate_player(int change, bool statusOnly)
 {
     // get current contamination level
@@ -4328,9 +4272,6 @@ void perform_activity()
 {
     switch (you.activity)
     {
-    case ACT_MULTIDROP:
-        drop();
-        break;
     case ACT_MACRO:
         run_macro();
         break;
@@ -4360,9 +4301,8 @@ static const char *activity_interrupt_name(activity_interrupt_type ai)
     }
 }
 
-static const char *activity_names[] = {
+static const char *activity_names[ACT_ACTIVITY_COUNT] = {
     "",
-    "multidrop",
     "run",
     "travel",
     "macro"

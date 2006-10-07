@@ -173,7 +173,7 @@ static bool find_butchering_implement() {
 	    // character fails to or decides not to butcher past this
 	    // point, they have achieved something and there should be
 	    // a cost.
-	    start_delay( DELAY_UNINTERUPTABLE, 1 );
+	    start_delay( DELAY_UNINTERRUPTIBLE, 1 );
 	    return true;
 	}
     }
