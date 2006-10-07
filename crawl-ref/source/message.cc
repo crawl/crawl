@@ -182,6 +182,7 @@ static char channel_to_colour( int channel, int param )
             break;
 
         case MSGCH_DIAGNOSTICS:
+        case MSGCH_MULTITURN_ACTION:
             ret = DARKGREY;     // makes it easier to ignore at times -- bwr
             break;
 

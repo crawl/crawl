@@ -193,6 +193,34 @@ void handle_delay( void )
 
             mpr( info, MSGCH_DIAGNOSTICS );
 #endif
+            switch ( delay.type )
+            {
+            case DELAY_ARMOUR_ON:
+                in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass );
+                snprintf( info, INFO_SIZE,
+                          "You continue putting on %s.", str_pass );
+                mpr(info, MSGCH_MULTITURN_ACTION);
+                break;
+            case DELAY_ARMOUR_OFF:
+                in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass );
+                snprintf( info, INFO_SIZE,
+                          "You continue taking off %s.", str_pass );
+                mpr(info, MSGCH_MULTITURN_ACTION);
+                break;
+            case DELAY_BUTCHER:
+                mpr("You continue butchering the corpse.",
+                    MSGCH_MULTITURN_ACTION);
+                break;
+            case DELAY_MEMORISE:
+                mpr("You continue memorising.", MSGCH_MULTITURN_ACTION);
+                break;
+            case DELAY_PASSWALL:
+                mpr("You continue meditating on the rock.",
+                    MSGCH_MULTITURN_ACTION);
+                break;
+            default:
+                break;
+            }
             delay.duration--;
         }
         else 

@@ -119,14 +119,14 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
 {
     "plain", "prompt", "god", "pray", "duration", "danger", "warning", "food",
     "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
-    "monster_enchant", "monster_damage", "rotten_meat", "equipment",
-    "diagnostic",
+    "monster_enchant", "monster_damage", "monster_target", 
+    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic",
 };
 
-// returns -1 if unmatched else returns 0-15
+// returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
 int str_to_channel( const std::string &str )
 {
-    short       ret;
+    int ret;
 
     for (ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
     {
