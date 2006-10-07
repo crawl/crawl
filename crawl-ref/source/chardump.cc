@@ -332,30 +332,30 @@ static void dump_stats( std::string & text )
  //---------------------------------------------------------------
 static void dump_stats2( std::string & text, bool calc_unid)
 {
-    char buffer[25*3][45];
+    char buffer[24*3][45];
     char str_pass[80];
     char* ptr_n;
 
     get_full_detail(&buffer[0][0], calc_unid);
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < 24; i++)
     {
         ptr_n = &buffer[i][0];
-        if (buffer[i+25][0] == '\0' && buffer[i+50][0] == '\0')
+        if (buffer[i+24][0] == '\0' && buffer[i+24*2][0] == '\0')
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-32s", ptr_n);
         text += str_pass;
 
-        ptr_n = &buffer[i+25][0];
-        if (buffer[i+50][0] == '\0')
+        ptr_n = &buffer[i+24][0];
+        if (buffer[i+24*2][0] == '\0')
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-20s", ptr_n);
         text += str_pass;
 
-        ptr_n = &buffer[i+50][0];
-        if (buffer[i+50][0] != '\0')
+        ptr_n = &buffer[i+24*2][0];
+        if (buffer[i+24*2][0] != '\0')
         {
             snprintf(&str_pass[0], 45, "%s", ptr_n);
             text += str_pass;
@@ -1134,13 +1134,13 @@ void resists_screen() {
 #endif
     clrscr();
     textcolor(LIGHTGREY);
-    char buffer[25*3][45];
+    char buffer[24*3][45];
     
     get_full_detail(&buffer[0][0], false);
 
-    for (int line = 0; line < 25; ++line ) {
+    for (int line = 0; line < 24; ++line ) {
 	for ( int block = 0; block < 3; ++block ) {
-	    int idx = block * 25 + line;
+	    const int idx = block * 24 + line;
 	    if ( buffer[idx][0] ) {
 		gotoxy( block == 2 ? 53 : block * 32 + 1, line+1 );
 		/* FIXME - hack - magic number 14 */
