@@ -6466,14 +6466,14 @@ void describe_god( int which_god, bool give_title )
             cprintf((which_god == GOD_SHINING_ONE) ? "Champion of Law" :
                     (which_god == GOD_ZIN) ? "Divine Warrior" :
                     (which_god == GOD_ELYVILON) ? "Champion of Light" :
-                    (which_god == GOD_OKAWARU) ? "Master of Thousand Battles" :
+                    (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
                     (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
                     (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
                     (which_god == GOD_MAKHLEB) ? "Champion of Chaos" :
                     (which_god == GOD_VEHUMET) ? "Lord of Destruction" :
                     (which_god == GOD_TROG) ? "Great Slayer" :
                     (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
-                    (which_god == GOD_SIF_MUNA) ? "Master of Arcane" :
+                    (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
                     (which_god == GOD_XOM) ? "Teddy Bear" : 
                         "Bogy the Lord of the Bugs"); // Xom and no god is handled before
         }
