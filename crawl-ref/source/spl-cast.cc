@@ -1176,7 +1176,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SUMMON_SMALL_MAMMAL:
-        summon_small_mammals(powc); //jmf: hmm, that's definately *plural* ;-)
+        summon_small_mammals(powc); //jmf: hmm, that's definitely *plural* ;-)
         break;
 
     case SPELL_ABJURATION_I:    //jmf: why not group with SPELL_ABJURATION_II?

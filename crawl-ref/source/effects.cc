@@ -721,7 +721,7 @@ bool acquirement(unsigned char force_class, int agent)
         case SP_SPRIGGAN:
             if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS)
             {
-                type_wanted = OBJ_RANDOM;
+                type_wanted = ARM_ROBE;  // no heavy armour
             }
             else if (type_wanted == ARM_SHIELD)
             {
@@ -1154,43 +1154,46 @@ bool acquirement(unsigned char force_class, int agent)
             return (false);
         }
 
+        // easier to read this way
+        item_def& thing(mitm[thing_created]);
+
 	// give some more gold
 	if ( class_wanted == OBJ_GOLD )
-	    mitm[thing_created].quantity += 150;
+	    thing.quantity += 150;
 
         // remove curse flag from item
-        do_uncurse_item( mitm[thing_created] );
+        do_uncurse_item( thing );
 
-        if (mitm[thing_created].base_type == OBJ_BOOKS)
+        if (thing.base_type == OBJ_BOOKS)
         {
-            if (mitm[thing_created].base_type == BOOK_MINOR_MAGIC_I
-                || mitm[thing_created].base_type == BOOK_MINOR_MAGIC_II
-                || mitm[thing_created].base_type == BOOK_MINOR_MAGIC_III)
+            if (thing.base_type == BOOK_MINOR_MAGIC_I
+                || thing.base_type == BOOK_MINOR_MAGIC_II
+                || thing.base_type == BOOK_MINOR_MAGIC_III)
             {
                 you.had_book[ BOOK_MINOR_MAGIC_I ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_II ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_III ] = 1;    
             }
-            else if (mitm[thing_created].base_type == BOOK_CONJURATIONS_I
-                || mitm[thing_created].base_type == BOOK_CONJURATIONS_II)
+            else if (thing.base_type == BOOK_CONJURATIONS_I
+                || thing.base_type == BOOK_CONJURATIONS_II)
             {
                 you.had_book[ BOOK_CONJURATIONS_I ] = 1;    
                 you.had_book[ BOOK_CONJURATIONS_II ] = 1;    
             }
             else
             {
-                you.had_book[ mitm[thing_created].sub_type ] = 1;    
+                you.had_book[ thing.sub_type ] = 1;    
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_JEWELLERY)
+        else if (thing.base_type == OBJ_JEWELLERY)
         {
-            switch (mitm[thing_created].sub_type)
+            switch (thing.sub_type)
             {
             case RING_SLAYING:
                 // make sure plus to damage is >= 1
-                mitm[thing_created].plus2 = abs( mitm[thing_created].plus2 );
-                if (mitm[thing_created].plus2 == 0)
-                    mitm[thing_created].plus2 = 1;
+                thing.plus2 = abs( thing.plus2 );
+                if (thing.plus2 == 0)
+                    thing.plus2 = 1;
                 // fall through... 
 
             case RING_PROTECTION:
@@ -1199,24 +1202,24 @@ bool acquirement(unsigned char force_class, int agent)
             case RING_DEXTERITY:
             case RING_EVASION:
                 // make sure plus is >= 1
-                mitm[thing_created].plus = abs( mitm[thing_created].plus );
-                if (mitm[thing_created].plus == 0)
-                    mitm[thing_created].plus = 1;
+                thing.plus = abs( thing.plus );
+                if (thing.plus == 0)
+                    thing.plus = 1;
                 break;
 
             case RING_HUNGER:
             case AMU_INACCURACY:
                 // these are the only truly bad pieces of jewellery
                 if (!one_chance_in(9))
-                    make_item_randart( mitm[thing_created] );
+                    make_item_randart( thing );
                 break;
 
             default:
                 break;
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_WEAPONS
-                    && !is_fixed_artefact( mitm[thing_created] ))
+        else if (thing.base_type == OBJ_WEAPONS
+                    && !is_fixed_artefact( thing ))
         {
             // HACK: make unwieldable weapons wieldable 
             // Note: messing with fixed artefacts is probably very bad.
@@ -1226,13 +1229,13 @@ bool acquirement(unsigned char force_class, int agent)
             case SP_MUMMY:
             case SP_GHOUL:
                 {
-                    int brand = get_weapon_brand( mitm[thing_created] );
+                    int brand = get_weapon_brand( thing );
                     if (brand == SPWPN_HOLY_WRATH 
                             || brand == SPWPN_DISRUPTION)
                     {
-                        if (!is_random_artefact( mitm[thing_created] ))
+                        if (!is_random_artefact( thing ))
                         {
-                            set_item_ego_type( mitm[thing_created], 
+                            set_item_ego_type( thing, 
                                                OBJ_WEAPONS, SPWPN_VORPAL );
                         }
                         else
@@ -1240,9 +1243,9 @@ bool acquirement(unsigned char force_class, int agent)
                             // keep resetting seed until it's good:
                             for (; brand == SPWPN_HOLY_WRATH 
                                       || brand == SPWPN_DISRUPTION; 
-                                  brand = get_weapon_brand(mitm[thing_created]))
+                                  brand = get_weapon_brand(thing))
                             {
-                                make_item_randart( mitm[thing_created] );    
+                                make_item_randart( thing );    
                             }
                         }
                     }
@@ -1253,27 +1256,27 @@ bool acquirement(unsigned char force_class, int agent)
             case SP_GNOME:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
-                switch (mitm[thing_created].sub_type)
+                switch (thing.sub_type)
                 {
                 case WPN_LONGBOW:
-                    mitm[thing_created].sub_type = WPN_BOW;
+                    thing.sub_type = WPN_BOW;
                     break;
 
                 case WPN_GREAT_SWORD:
                 case WPN_TRIPLE_SWORD:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
                     break;
 
                 case WPN_GREAT_MACE:
                 case WPN_DIRE_FLAIL:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_MACE : WPN_FLAIL);
                     break;
 
                 case WPN_BATTLEAXE:
                 case WPN_EXECUTIONERS_AXE:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
                     break;
 
@@ -1281,7 +1284,7 @@ bool acquirement(unsigned char force_class, int agent)
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
                 case WPN_LOCHABER_AXE:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;
                 }
@@ -1291,16 +1294,16 @@ bool acquirement(unsigned char force_class, int agent)
                 break;
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_ARMOUR
-                    && !is_fixed_artefact( mitm[thing_created] ))
+        else if (thing.base_type == OBJ_ARMOUR
+                    && !is_fixed_artefact( thing ))
         {
             // HACK: make unwearable hats and boots wearable
             // Note: messing with fixed artefacts is probably very bad.
-            switch (mitm[thing_created].sub_type)
+            switch (thing.sub_type)
             {
             case ARM_HELMET:
-                if ((get_helmet_type(mitm[thing_created]) == THELM_HELM
-                        || get_helmet_type(mitm[thing_created]) == THELM_HELMET)
+                if ((get_helmet_type(thing) == THELM_HELM
+                        || get_helmet_type(thing) == THELM_HELMET)
                     && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
                         || player_genus(GENPC_DRACONIAN)
                         || you.species == SP_MINOTAUR
@@ -1309,26 +1312,40 @@ bool acquirement(unsigned char force_class, int agent)
                         || you.mutation[MUT_HORNS]))
                 {
                     // turn it into a cap or wizard hat
-                    set_helmet_type( mitm[thing_created], 
-                                    coinflip() ? THELM_CAP : THELM_WIZARD_HAT );
+                    set_helmet_type(thing, 
+                                    coinflip() ? THELM_CAP : THELM_WIZARD_HAT);
 
-                    mitm[thing_created].colour = random_colour();
+                    thing.colour = random_colour();
                 }
                 break;
 
             case ARM_BOOTS:
                 if (you.species == SP_NAGA)
-                    mitm[thing_created].sub_type = ARM_NAGA_BARDING;
+                    thing.sub_type = ARM_NAGA_BARDING;
                 else if (you.species == SP_CENTAUR)
-                    mitm[thing_created].sub_type = ARM_CENTAUR_BARDING;
+                    thing.sub_type = ARM_CENTAUR_BARDING;
 
                 // fix illegal barding ego types caused by above hack
-                if (mitm[thing_created].sub_type != ARM_BOOTS
-                        && get_armour_ego_type( mitm[thing_created] ) 
-                                                            == SPARM_RUNNING)
+                if (thing.sub_type != ARM_BOOTS &&
+                    get_armour_ego_type(thing) == SPARM_RUNNING)
                 {
-                    set_item_ego_type( 
-                            mitm[thing_created], OBJ_ARMOUR, SPARM_NORMAL );
+                    set_item_ego_type( thing, OBJ_ARMOUR, SPARM_NORMAL );
+                }
+                break;
+
+            case ARM_NAGA_BARDING:
+            case ARM_CENTAUR_BARDING:
+                // make barding appropriate
+                if (you.species == SP_NAGA )
+                    thing.sub_type = ARM_NAGA_BARDING;
+                else if ( you.species == SP_CENTAUR )
+                    thing.sub_type = ARM_CENTAUR_BARDING;
+                else {
+                    thing.sub_type = ARM_BOOTS;
+                    // Fix illegal ego types
+                    if (get_armour_ego_type(thing) == SPARM_COLD_RESISTANCE ||
+                        get_armour_ego_type(thing) == SPARM_FIRE_RESISTANCE)
+                        set_item_ego_type(thing, OBJ_ARMOUR, SPARM_NORMAL);
                 }
                 break;
 

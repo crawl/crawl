@@ -654,10 +654,9 @@ void canned_msg(unsigned char which_message)
     switch (which_message)
     {
     case MSG_SOMETHING_APPEARS:
-        strcpy(info, "Something appears ");
-        strcat(info, (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                                            ? "before you" : "at your feet");
-        strcat(info, "!");
+        snprintf(info, INFO_SIZE, "Something appears %s!",
+                 (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                 ? "before you" : "at your feet");
         mpr(info);
         break;
 
@@ -769,7 +768,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
     }
 }    
 
-// More accurate than distance() given the actual movement geonmetry -- bwr
+// More accurate than distance() given the actual movement geometry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
 {
     const int dx = abs( x - x2 );
@@ -781,7 +780,7 @@ int grid_distance( int x, int y, int x2, int y2 )
 
 int distance( int x, int y, int x2, int y2 )
 {
-    //jmf: now accurate, but remember to only compare vs. pre-squared distances.
+    //jmf: now accurate, but remember to only compare vs. pre-squared distances
     //     thus, next to == (distance(m1.x,m1.y, m2.x,m2.y) <= 2)
     const int dx = x - x2;
     const int dy = y - y2;
