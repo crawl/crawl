@@ -1226,13 +1226,13 @@ void pickup(void)
                     strcat(info, str_pass);
                 }
 
-                strcat(info, "\? (y,n,a,*,q)");
+                strcat(info, "\? (y/n/a/*?g,/q)");
                 mpr( info, MSGCH_PROMPT );
 
                 keyin = get_ch();
             }
 
-            if (keyin == '*' || keyin == '?' || keyin == ',')
+            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g')
             {
                 pickup_menu(o);
                 break;
