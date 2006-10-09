@@ -47,6 +47,22 @@ void start_delay( int type, int turns, int parm1, int parm2 )
     delay.parm1 = parm1;
     delay.parm2 = parm2;
 
+    switch ( delay.type ) {
+    case DELAY_ARMOUR_ON:
+        mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_ARMOUR_OFF:
+        mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_MEMORISE:
+        mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
+        break;
+    case DELAY_PASSWALL:
+        mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
+        break;
+    default:
+        break;
+    }
     you.delay_queue.push( delay ); 
 }
 

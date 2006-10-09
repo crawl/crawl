@@ -1220,7 +1220,6 @@ bool learn_spell(void)
 {
     int chance = 0;
     int levels_needed = 0;
-    unsigned char keyin;
     int book, spell;
     int index;
 
@@ -1242,45 +1241,47 @@ bool learn_spell(void)
     if (!which_spellbook( book, spell ))
         return (false);
 
+    mesclr(true);
+    redraw_screen();
+
     if (spell < 'A' || (spell > 'Z' && spell < 'a') || spell > 'z')
     {
-      whatt:
-        redraw_screen();
-        mpr("What?");
+        canned_msg( MSG_HUH );
         return (false);
     }
 
     index = letter_to_index( spell );
 
-    if (index >= SPELLBOOK_SIZE)
-        goto whatt;
-
-    if (!is_valid_spell_in_book( book, index ))
-        goto whatt;
+    if (index >= SPELLBOOK_SIZE ||
+        !is_valid_spell_in_book( book, index ))
+    {
+        canned_msg( MSG_HUH );
+        return (false);
+    }
 
     unsigned int specspell = which_spell_in_book(you.inv[book].sub_type,index);
 
     if (specspell == SPELL_NO_SPELL)
-        goto whatt;
+    {
+        canned_msg( MSG_HUH );
+        return (false);
+    }
 
     // You can always memorise selective amnesia:
     if (you.spell_no == 21 && specspell != SPELL_SELECTIVE_AMNESIA)
     {
-        redraw_screen();
         mpr("Your head is already too full of spells!");
         return (false);
     }
 
     if (you.is_undead && spell_typematch(specspell, SPTYP_HOLY))
     {
-        redraw_screen();
         mpr("You cannot use this type of magic!");
         return (false);
     }
 
     if (undead_cannot_memorise(specspell, you.is_undead))
     {
-        redraw_screen();
         mpr("You cannot use this spell.");
         return (false);
     }
@@ -1289,7 +1290,6 @@ bool learn_spell(void)
     {
         if (you.spells[i] == specspell)
         {
-            redraw_screen();
             mpr("You already know that spell!");
             you.turn_is_over = true;
             return (false);
@@ -1300,7 +1300,6 @@ bool learn_spell(void)
 
     if (player_spell_levels() < levels_needed)
     {
-        redraw_screen();
         mpr("You can't memorise that many levels of magic yet!");
         you.turn_is_over = true;
         return (false);
@@ -1308,70 +1307,39 @@ bool learn_spell(void)
 
     if (you.experience_level < spell_difficulty(specspell))
     {
-        redraw_screen();
         mpr("You're too inexperienced to learn that spell!");
         you.turn_is_over = true;
         return (false);
     }
 
-    redraw_screen();
-
     chance = spell_fail(specspell);
+    int temp_rand1 = random2(3);
+    int temp_rand2 = random2(4);
 
-    strcpy(info, "This spell is ");
-
-    strcat(info, (chance >= 80) ? "very" :
-                 (chance >= 60) ? "quite" :
-                 (chance >= 45) ? "rather" :
-                 (chance >= 30) ? "somewhat"
-                                : "not that");
-
-    strcat(info, " ");
-
-    int temp_rand = random2(3);
-
-    strcat(info, (temp_rand == 0) ? "difficult" :
-                 (temp_rand == 1) ? "tricky" :
-                 (temp_rand == 2) ? "challenging"
-                                  : "");
-
-    strcat(info, " to ");
-
-    temp_rand = random2(4);
-
-    strcat(info, (temp_rand == 0) ? "memorise" :
-                 (temp_rand == 1) ? "commit to memory" :
-                 (temp_rand == 2) ? "learn" :
-                 (temp_rand == 3) ? "absorb"
-                                  : "");
-
-    strcat(info, ".");
-
+    snprintf(info, INFO_SIZE, "This spell is %s %s to %s.",
+             ((chance >= 80) ? "very" :
+              (chance >= 60) ? "quite" :
+              (chance >= 45) ? "rather" :
+              (chance >= 30) ? "somewhat"
+              : "not that"),
+             ((temp_rand1 == 0) ? "difficult" :
+              (temp_rand1 == 1) ? "tricky" :
+              "challenging"),
+             ((temp_rand2 == 0) ? "memorise" :
+              (temp_rand2 == 1) ? "commit to memory" :
+              (temp_rand2 == 2) ? "learn" :
+              "absorb"));
     mpr(info);
 
-    strcpy(info, "Memorise ");
-    strcat(info, spell_title(specspell));
-    strcat(info, "?");
-    mpr(info);
-
-    for (;;)
+    snprintf(info, INFO_SIZE, "Memorise %s?", spell_title(specspell));
+    if ( !yesno(info, true, 0, false) )
     {
-        keyin = getch();
-
-        if (keyin == 'n' || keyin == 'N')
-        {
-            redraw_screen();
-            return (false);
-        }
-
-        if (keyin == 'y' || keyin == 'Y')
-            break;
+        canned_msg( MSG_OK );
+        return (false);
     }
 
-    mesclr( true );
-
     if (you.mutation[MUT_BLURRY_VISION] > 0
-                && random2(4) < you.mutation[MUT_BLURRY_VISION])
+        && random2(4) < you.mutation[MUT_BLURRY_VISION])
     {
         mpr("The writing blurs into unreadable gibberish.");
         you.turn_is_over = true;
@@ -1380,7 +1348,6 @@ bool learn_spell(void)
 
     if (random2(40) + random2(40) + random2(40) < chance)
     {
-        redraw_screen();
         mpr("You fail to memorise the spell.");
         you.turn_is_over = true;
 
@@ -1406,7 +1373,7 @@ bool learn_spell(void)
 #if WIZARD
         if (!you.wizard)
             return (false);
-        else if (!yesno("Memorize anyway?"))
+        else if (!yesno("Memorise anyway?"))
             return (false);
 #else 
         return (false);
@@ -1414,9 +1381,7 @@ bool learn_spell(void)
     }
 
     start_delay( DELAY_MEMORISE, spell_difficulty( specspell ), specspell );
-
     you.turn_is_over = true;
-    redraw_screen();
 
     did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
 
