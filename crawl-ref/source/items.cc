@@ -2809,7 +2809,7 @@ void handle_time( long time_delta )
         case SP_GHOUL: //likes it
             temp_rand = random2(8);
             mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "Smell of rotting flesh makes you more hungry." :
+                  (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
                   (temp_rand == 6) ? "You smell decay. Yum-yum."
                                    : "Wow! There is something tasty in your inventory."),
                 MSGCH_ROTTEN_MEAT );
@@ -2830,7 +2830,7 @@ void handle_time( long time_delta )
         default:
             temp_rand = random2(8);
             mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "Smell of rotting flesh makes you sick." :
+                  (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
                   (temp_rand == 6) ? "You smell decay. Yuk..."
                                    : "Ugh! There is something really disgusting in your inventory."), 
                 MSGCH_ROTTEN_MEAT );
