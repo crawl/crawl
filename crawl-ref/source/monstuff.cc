@@ -1770,7 +1770,6 @@ static inline int mod_speed( int val, int speed )
 
 static bool handle_enchantment(struct monsters *monster)
 {
-    const int habitat = monster_habitat( monster->type );
     bool died = false;
     int grid;
     int poisonval;
@@ -1778,7 +1777,7 @@ static bool handle_enchantment(struct monsters *monster)
     int tmp;
 
     // Yes, this is the speed we want.  This function will be called in
-    // two curcumstances: (1) the monster can move and have enough energy, 
+    // two circumstances: (1) the monster can move and has enough energy, 
     // and (2) the monster cannot move (speed == 0) and the monster loop 
     // is running.
     //
@@ -1867,7 +1866,7 @@ static bool handle_enchantment(struct monsters *monster)
             // Badly injured monsters prefer to stay submerged...
             // electrical eels and lava snakes have ranged attacks
             // and are more likely to surface.  -- bwr
-            if (habitat == DNGN_FLOOR || habitat != grid) 
+            if (!monster_can_submerge(monster->type, grid))
                 mons_del_ench( monster, ENCH_SUBMERGED ); // forced to surface
             else if (monster->hit_points <= monster->max_hit_points / 2)
                 break;
@@ -1877,7 +1876,10 @@ static bool handle_enchantment(struct monsters *monster)
                         || (mons_near(monster) 
                             && monster->hit_points == monster->max_hit_points
                             && !one_chance_in(10))))
-                    || random2(5000) < mod_speed( 10, speed ))
+                    || random2(2000) < mod_speed(10, speed)
+                    || (mons_near(monster)
+                            && monster->hit_points == monster->max_hit_points
+                            && !one_chance_in(5)))
             {
                 mons_del_ench( monster, ENCH_SUBMERGED );
             }
@@ -2279,10 +2281,13 @@ static void handle_nearby_ability(struct monsters *monster)
                 mons_del_ench( monster, ENCH_SUBMERGED );
             }
         }
-        else if (monster_habitat(monster->type) == grd[monster->x][monster->y]
+        else if (monster_can_submerge(monster->type,
+                                      grd[monster->x][monster->y])
                  && (one_chance_in(5) 
                      || (grid_distance( monster->x, monster->y, 
                                         you.x_pos, you.y_pos ) > 1
+                            // FIXME This is better expressed as a function
+                            // such as monster_has_ranged_attack:
                             && monster->type != MONS_ELECTRICAL_EEL
                             && monster->type != MONS_LAVA_SNAKE
                             && !one_chance_in(20))
@@ -3574,9 +3579,7 @@ static void handle_monster_move(int i, monsters *monster)
             continue;
 
         // submerging monsters will hide from clouds
-        const int habitat = monster_habitat( monster->type );
-        if (habitat != DNGN_FLOOR 
-            && habitat == grd[monster->x][monster->y]
+        if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             mons_add_ench( monster, ENCH_SUBMERGED );

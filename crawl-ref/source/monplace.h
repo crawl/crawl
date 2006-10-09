@@ -94,6 +94,6 @@ bool monster_habitable_grid(int monster_class, int actual_grid,
                             bool flies = false);
 bool monster_habitable_grid(const monsters *m, int actual_grid);
 bool monster_floundering(const monsters *m);
-int monster_submersible_grid(int monster_class);
+bool monster_can_submerge(int monster_class, int grid);
 
 #endif  // MONPLACE_H
