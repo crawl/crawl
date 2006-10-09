@@ -427,7 +427,7 @@ void reset_options(bool clear_name)
     Options.level_map_cursor_step  = 10;
 
 #ifdef STASH_TRACKING
-    Options.stash_tracking         = STM_NONE;
+    Options.stash_tracking         = STM_EXPLICIT;
 #endif
     Options.explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
     Options.safe_zero_exp          = true;
@@ -1591,10 +1591,9 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "stash_tracking")
     {
         Options.stash_tracking =
-             field == "explicit"? STM_EXPLICIT :
              field == "dropped" ? STM_DROPPED  :
              field == "all"     ? STM_ALL      :
-                                  STM_NONE;
+                                  STM_EXPLICIT;
     }
     else if (key == "stash_filter")
     {
