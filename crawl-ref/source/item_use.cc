@@ -3158,6 +3158,11 @@ void read_scroll(void)
         break;
 
     case SCR_IDENTIFY:
+        if ( get_ident_type( OBJ_SCROLLS, scroll_type ) != ID_KNOWN_TYPE ) {
+            mpr("This is a scroll of identify!");
+            more();
+        }
+
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
 
         // important {dlb}
