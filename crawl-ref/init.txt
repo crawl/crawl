@@ -76,12 +76,11 @@ safe_autopickup = true
 #
 # These determine whether autopickup, autoprayer and fizzlecheck are on
 # or off when the game starts (including reloading.) Default: true,
-# false, and true, respectively. Note that fizzlecheck has
-# no effect unless confirm_spell_fizzle is set.
+# false, and false, respectively.
 #
 #default_autopickup = false
 #default_autoprayer = true
-#default_fizzlecheck = false
+#default_fizzlecheck = true
 
 #
 # confirm_self_target
@@ -90,13 +89,6 @@ safe_autopickup = true
 # at yourself. This does not apply to friendly-targeted spells (e.g.,
 # healing.) Default is false.
 confirm_self_target = true
-
-#
-# confirm_spell_fizzle
-#
-# If set, you will be prompted for confirmation before fizzling a spell
-# by mistargeting. Default is false.
-#confirm_spell_fizzle = true
 
 #
 # use_notes

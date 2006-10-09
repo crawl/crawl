@@ -47,7 +47,7 @@
 #include "macro.h"
 #endif
 
-int fizzlecheck_on = 1;
+bool fizzlecheck_on = false;
 
 enum LOSSelect
 {
@@ -345,9 +345,7 @@ void direction( struct dist &moves, int restrict, int mode,
 	    else
 		mpr("Choose a better target.", MSGCH_PROMPT);
 	}
-	else if ( confirm_fizzle && !moves.isValid && fizzlecheck_on &&
-		  Options.confirm_spell_fizzle )
-	{
+	else if ( confirm_fizzle && !moves.isValid && fizzlecheck_on ) {
 	    if ( yesno("Really fizzle? ", false, 'n') )
 		return;
 	    else

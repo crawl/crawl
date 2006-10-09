@@ -18,7 +18,7 @@
 #include "externs.h"
 
 // used in acr.cc {dlb}:
-extern int autopickup_on;
+extern bool autopickup_on;
 
 // used in initfile.cc {dlb}:
 extern long autopickups;

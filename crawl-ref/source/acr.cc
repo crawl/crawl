@@ -142,9 +142,9 @@ char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 int stealth;                    // externed in view.cc
 char use_colour = 1;
 
-int autoprayer_on = 0;
-int just_autoprayed = 0;
-int about_to_autopray = 0;
+bool autoprayer_on = false;
+bool just_autoprayed = false;
+bool about_to_autopray = false;
 
 // set to true once a new game starts or an old game loads
 bool game_has_started = false;
@@ -970,7 +970,7 @@ static void input() {
 	viewwindow(1, false);
 }
 
-static int toggle_flag( int* flag, const char* flagname ) {
+static int toggle_flag( bool* flag, const char* flagname ) {
     char buf[INFO_SIZE];
     *flag = !(*flag);
     sprintf( buf, "%s is now %s.", flagname,
@@ -1105,8 +1105,7 @@ static void do_action( command_type cmd ) {
 	break;
 
     case CMD_TOGGLE_NOFIZZLE:
-	if ( Options.confirm_spell_fizzle )
-	    toggle_flag( &fizzlecheck_on, "Fizzle confirmation" );
+        toggle_flag( &fizzlecheck_on, "Fizzle confirmation" );
 	break;
     
     case CMD_MAKE_NOTE:
@@ -1634,7 +1633,7 @@ static void world_reacts() {
     else if (you.duration[DUR_PRAYER] == 1)
     {
 	mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
-	about_to_autopray = 1;
+	about_to_autopray = true;
         you.duration[DUR_PRAYER] = 0;
     }
 
@@ -2331,26 +2330,26 @@ static command_type get_next_cmd() {
 	return CMD_PERFORM_ACTIVITY;
 
     if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
-	just_autoprayed == 0 && you.religion != GOD_NO_GOD &&
+	just_autoprayed == false && you.religion != GOD_NO_GOD &&
 	/* must fix this if we add more gods! */
 	! (grd[you.x_pos][you.y_pos] >= DNGN_ALTAR_ZIN &&
 	   grd[you.x_pos][you.y_pos] <= DNGN_ALTAR_ELYVILON) &&
 	i_feel_safe()) {
-	just_autoprayed = 1;
-	about_to_autopray = 0;
+	just_autoprayed = true;
+	about_to_autopray = false;
 	return CMD_PRAY;
     }
-    if ( just_autoprayed == 1 && you.duration[DUR_PRAYER] == 0 ) {
+    if ( just_autoprayed && you.duration[DUR_PRAYER] == 0 ) {
 	/* oops */
 	mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
-	autoprayer_on = 0;
+	autoprayer_on = false;
     }
-    just_autoprayed = 0;
+    just_autoprayed = false;
     if ( autoprayer_on && about_to_autopray &&
 	 you.religion != GOD_NO_GOD &&
 	 you.duration[DUR_PRAYER] == 0 ) {
 	mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
-	about_to_autopray = 0;
+	about_to_autopray = true;
     }
     if (you.running < 0) {       // Travel and explore
 	command_type result = travel();

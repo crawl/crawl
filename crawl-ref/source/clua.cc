@@ -1882,7 +1882,6 @@ static option_handler handlers[] =
     { "easy_butcher", &Options.easy_butcher, option_hboolean },
     { "terse_hand", &Options.terse_hand, option_hboolean },
     { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
-    { "confirm_spell_fizzle", &Options.confirm_spell_fizzle, option_hboolean },
     { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
     { "note_skill_max", &Options.note_skill_max, option_hboolean },
     { "use_notes", &Options.use_notes, option_hboolean },

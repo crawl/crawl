@@ -35,7 +35,7 @@
 
 game_options    Options;
 
-extern int autopickup_on;
+extern bool autopickup_on;
 
 #ifdef UNIX
 extern int character_set;       // unices only
@@ -388,7 +388,6 @@ void reset_options(bool clear_name)
     Options.hp_warning             = 10;
     Options.hp_attention           = 25;
     Options.confirm_self_target    = false;
-    Options.confirm_spell_fizzle   = false;
     Options.safe_autopickup        = false;
     Options.use_notes              = false;
     Options.note_skill_max         = false;
@@ -1308,10 +1307,6 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "confirm_self_target")
     {
 	Options.confirm_self_target = read_bool( field, Options.confirm_self_target );
-    }
-    else if (key == "confirm_spell_fizzle")
-    {
-	Options.confirm_spell_fizzle = read_bool( field, Options.confirm_spell_fizzle );
     }
     else if (key == "safe_autopickup")
     {

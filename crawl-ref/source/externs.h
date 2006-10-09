@@ -626,7 +626,6 @@ struct game_options
     bool        easy_armour;    // allow auto-removing of armour
     bool        easy_butcher;   // open doors with movement
     bool        confirm_self_target; // require confirmation before selftarget
-    bool        confirm_spell_fizzle; // require confirm before cancel
     bool        safe_autopickup; // don't autopickup when monsters visible
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
@@ -839,7 +838,7 @@ struct scorefile_entry
     int         num_runes;          // total number of runes in inventory
 };
 
-extern int autoprayer_on;	// defined in acr.cc
-extern int fizzlecheck_on;	// defined in direct.cc
+extern bool autoprayer_on;	// defined in acr.cc
+extern bool fizzlecheck_on;	// defined in direct.cc
 
 #endif // EXTERNS_H
