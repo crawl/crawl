@@ -1301,15 +1301,7 @@ bool did_god_conduct( int thing_done, int level )
     }
 
     if (piety_change > 0)
-    {
-        // positive conduct only interesting out in the real world
-        if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
-            gain_piety( piety_change );
-        else if (one_chance_in(10))
-        {
-            simple_god_message( " says: \"Go forth into the world to show your devotion to me!\"" );
-        }
-    }
+        gain_piety( piety_change );
     else 
     {
         const int piety_loss = -piety_change;
