@@ -97,6 +97,14 @@ void monster_grid(bool do_updates);
 static int get_item_dngn_code(const item_def &item);
 static void set_show_backup( int ex, int ey );
 
+// Applies EC_ colour substitutions and brands.
+static unsigned fix_colour(unsigned raw_colour);
+
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+static unsigned short dos_brand( unsigned short colour,
+                                 unsigned brand = CHATTR_REVERSE);
+#endif
+
 //---------------------------------------------------------------
 //
 // get_number_of_lines
@@ -214,6 +222,50 @@ void clear_envmap( void )
     }
 }
 
+static unsigned colflag2brand(int colflag)
+{
+    switch (colflag)
+    {
+    case COLFLAG_ITEM_HEAP:
+        return (Options.heap_brand);
+    case COLFLAG_FRIENDLY_MONSTER:
+        return (Options.friend_brand);
+    case COLFLAG_WILLSTAB:
+        return (Options.stab_brand);
+    case COLFLAG_MAYSTAB:
+        return (Options.may_stab_brand);
+    default:
+        return (CHATTR_NORMAL);
+    }
+}
+
+static unsigned fix_colour(unsigned raw_colour)
+{
+    // This order is important - is_element_colour() doesn't want to see the
+    // munged colours returned by dos_brand, so it should always be done 
+    // before applying DOS brands.
+    const int colflags = raw_colour & 0xFF00;
+
+    // Evaluate any elemental colours to guarantee vanilla colour is returned
+    if (is_element_colour( raw_colour ))
+        raw_colour = element_colour( raw_colour );
+
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+    if (colflags)
+    {
+        unsigned brand = colflag2brand(raw_colour & 0xFF00);
+        raw_colour = dos_brand(raw_colour & 0xFF, brand);
+    }
+#endif
+
+#ifndef USE_COLOUR_OPTS
+    // Strip COLFLAGs for systems that can't do anything meaningful with them.
+    raw_colour &= 0xFF;
+#endif
+
+    return (raw_colour);
+}
+
 static void get_symbol( unsigned int object, unsigned short *ch, 
                         unsigned short *colour )
 {
@@ -247,9 +299,7 @@ static void get_symbol( unsigned int object, unsigned short *ch,
         *ch = mons_char( object - DNGN_START_OF_MONSTERS );
     }
 
-    // Evaluate any elemental colours to guarantee vanilla colour is returned
-    if (is_element_colour( *colour ))
-        *colour = element_colour( *colour );
+    *colour = fix_colour(*colour);
 }
 
 unsigned char get_sightmap_char( int feature )
@@ -343,7 +393,7 @@ static unsigned short dos_hilite_brand(unsigned short colour,
 }
 
 static unsigned short dos_brand( unsigned short colour,
-                                 unsigned brand = CHATTR_REVERSE ) 
+                                 unsigned brand) 
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);
@@ -368,7 +418,9 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     const unsigned short map_flags = env.map[x][y];
     const int grid_value = grd[x + 1][y + 1];
 
-    char tc = travel_colour? get_travel_colour(x, y) : DARKGREY;
+    unsigned tc = travel_colour? 
+                        get_travel_colour(x, y)
+                      : Feature[grid_value].map_colour;
 
     if (map_flags & MAP_DETECTED_ITEM)
         tc = Options.detected_item_colour;
@@ -376,13 +428,13 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     if (map_flags & MAP_DETECTED_MONSTER)
     {
         tc = Options.detected_monster_colour;
-        return (tc);
+        return fix_colour(tc);
     }
 
     // XXX: [ds] If we've an important colour, override other feature
     // colouring. Yes, this is hacky. Story of my life.
     if (tc == LIGHTGREEN || tc == LIGHTMAGENTA)
-        return tc;
+        return fix_colour(tc);
 
     // XXX: Yeah, this is ugly, but until we have stored layers in the
     // map we can't tell if we've seen a square, detected it, or just
@@ -398,127 +450,18 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
                 && map_value == 
                         get_sightmap_char(get_item_dngn_code(mitm[item])))
         {
-            screen_buffer_t ic = mitm[item].colour;
+            unsigned ic = mitm[item].colour;
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
-            if (mitm[item].link != NON_ITEM 
-                    && Options.heap_brand != CHATTR_NORMAL)
-            {
-                ic = dos_brand(ic, Options.heap_brand);
-            }
-#elif defined(USE_COLOUR_OPTS)
             if (mitm[item].link != NON_ITEM )
-            {
                 ic |= COLFLAG_ITEM_HEAP;
-            }
-#endif
+
             // If the item colour is the background colour, tweak it to WHITE
             // instead to catch the player's eye.
-            return ic == tc? WHITE : ic;
+            return fix_colour( ic == tc? WHITE : ic );
         }
-
-        return tc;
     }
 
-    switch (grid_value)
-    {
-    case DNGN_TRAP_MECHANICAL:
-        return (LIGHTCYAN);
-
-    case DNGN_TRAP_MAGICAL:
-    case DNGN_TRAP_III:
-        return (MAGENTA);
-
-    case DNGN_ENTER_SHOP:
-        return (YELLOW);
-
-    case DNGN_ENTER_DIS:
-        return (CYAN);
-
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_GEHENNA:
-        return (RED);
-
-    case DNGN_ENTER_COCYTUS:
-        return (LIGHTCYAN);
-
-    case DNGN_ENTER_ABYSS:
-        return random2(16);     // so it can be black - is this right? {dlb}
-
-    case DNGN_ENTER_LABYRINTH:
-    case DNGN_STONE_ARCH:
-        return (LIGHTGREY);
-
-    case DNGN_ENTER_PANDEMONIUM:
-        return (LIGHTBLUE);
-
-    case DNGN_EXIT_PANDEMONIUM:
-        // Exit pandemonium gates won't show up on the map as light blue
-        // unless the character has the "gate to pandemonium" demonspawn 
-        // mutation.  This is so that the player can't quickly use a 
-        // crystal ball to find their way out.  -- bwr
-        return (you.mutation[MUT_PANDEMONIUM] ? LIGHTBLUE : LIGHTGREEN);
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        return (LIGHTGREEN);
-
-    case DNGN_ENTER_ZOT:
-    case DNGN_RETURN_FROM_ZOT:
-        return (MAGENTA);
-
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ROCK_STAIRS_DOWN:
-        return (RED);
-
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ROCK_STAIRS_UP:
-        return (GREEN);
-
-    case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
-    case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME_PITS:
-    case DNGN_ENTER_VAULTS:
-    case DNGN_ENTER_CRYPT:
-    case DNGN_ENTER_HALL_OF_BLADES:
-    case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_SNAKE_PIT:
-    case DNGN_ENTER_ELVEN_HALLS:
-    case DNGN_ENTER_TOMB:
-    case DNGN_ENTER_SWAMP:
-    case 123:
-    case 124:
-    case 125:
-    case 126:
-        return (LIGHTRED);
-
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case 143:
-    case 144:
-    case 145:
-    case 146:
-        return (LIGHTBLUE);
-
-    default:
-        break;
-    }
-
-    return tc;
+    return fix_colour(tc);
 }
 
 void clear_map()
@@ -548,6 +491,7 @@ void clear_map()
                     is_terrain_seen(x, y)? get_sightmap_char(grd[x][y]) :
                     is_terrain_known(x, y)? get_magicmap_char(grd[x][y]) :
                                             0);
+            set_envmap_detected_mons(x, y, false);
         }
     }
 }
@@ -712,7 +656,6 @@ void monster_grid(bool do_updates)
                 = ((mcolour[monster->type] == BLACK)
                         ? monster->number : mcolour[monster->type]);
 
-#ifdef USE_COLOUR_OPTS
             if (mons_friendly(monster))
             {
                 env.show_col[ex][ey] |= COLFLAG_FRIENDLY_MONSTER;
@@ -727,32 +670,6 @@ void monster_grid(bool do_updates)
             {
                 env.show_col[ex][ey] |= COLFLAG_MAYSTAB;
             }
-
-#elif defined(WIN32CONSOLE) || defined(DOS)
-            if (Options.friend_brand != CHATTR_NORMAL 
-                    && mons_friendly(monster))
-            {
-                // We munge the colours right here for DOS and Windows, because
-                // we know exactly how the colours will be handled, and we don't
-                // want to change both DOS and Windows port code to handle
-                // friend branding.
-                unsigned short &colour = env.show_col[ex][ey];
-                colour = dos_brand(colour, Options.friend_brand);
-            }
-            
-            if (Options.stab_brand != CHATTR_NORMAL
-                    && mons_looks_stabbable(monster))
-            {
-                unsigned short &colour = env.show_col[ex][ey];
-                colour = dos_brand(colour, Options.stab_brand);
-            }
-            else if (Options.may_stab_brand != CHATTR_NORMAL
-                    && mons_looks_distracted(monster))
-            {
-                unsigned short &colour = env.show_col[ex][ey];
-                colour = dos_brand(colour, Options.may_stab_brand);
-            }
-#endif
         }                       // end "if (monster->type != -1 && mons_ner)"
     }                           // end "for s"
 }                               // end monster_grid()
@@ -886,19 +803,10 @@ void item_grid()
                                         CYAN
                                       : eitem.colour;
 
-#ifdef USE_COLOUR_OPTS
                         if (eitem.link != NON_ITEM)
                         {
                             ecol |= COLFLAG_ITEM_HEAP;
                         }
-#elif defined(WIN32CONSOLE) || defined(DOS)
-                        if (eitem.link != NON_ITEM 
-                                && Options.heap_brand != CHATTR_NORMAL)
-                        {
-                            // Yes, exact same code as friend-branding.
-                            ecol = dos_brand(ecol, Options.heap_brand);
-                        }
-#endif
                         env.show[ix][iy] = get_item_dngn_code( eitem );
                     }
                 }
@@ -1782,7 +1690,6 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
                             travel_mode && Options.travel_colour);
 
             buffer2[bufcount2 + 1] = colour;
-
             buffer2[bufcount2] = 
                         (unsigned char) env.map[start_x + i][start_y + j];
             
@@ -3017,7 +2924,9 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount + 1] = DARKGREY;
 
                     if (Options.colour_map)
-                        buffy[bufcount + 1] = colour_code_map(gx - 1, gy - 1);
+                        buffy[bufcount + 1] = 
+                            colour_code_map(gx - 1, gy - 1, 
+                                            Options.item_colour);
                 }
                 else if (gx == you.x_pos && gy == you.y_pos)
                 {
@@ -3049,11 +2958,6 @@ void viewwindow(bool draw_it, bool do_updates)
 
                     get_symbol( object, &ch, &colour );
 
-#if defined(WIN32CONSOLE) || defined(DOS)
-                    if (colour & COLFLAG_FRIENDLY_MONSTER)
-                        colour = dos_brand(colour, Options.friend_brand);
-#endif
-                    
                     buffy[bufcount] = ch;
                     buffy[bufcount + 1] = colour;
 
@@ -3069,6 +2973,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             // ... map that we've seen this
                             set_envmap_char( gx, gy, buffy[bufcount] );
                             set_terrain_seen( gx, gy );
+                            set_envmap_detected_mons(gx, gy, false);
+                            set_envmap_detected_item(gx, gy, false);
                         }
 
                         // Check if we're looking to clean_map...
@@ -3108,7 +3014,8 @@ void viewwindow(bool draw_it, bool do_updates)
 
                             if (Options.colour_map)
                                 buffy[bufcount + 1] = 
-                                    colour_code_map(gx - 1, gy - 1);
+                                    colour_code_map(gx - 1, gy - 1,
+                                                    Options.item_colour);
                         }
                     }
                 }
