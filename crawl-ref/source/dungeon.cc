@@ -2705,6 +2705,9 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         }
         // deliberate fall through {gdl}
     case MONS_ORC_PRIEST:
+        item_race = MAKE_ITEM_ORCISH;
+        // deliberate fall through {gdl}
+
     case MONS_TERENCE:
     case MONS_DRACONIAN:
     case MONS_DRACONIAN_ZEALOT:
