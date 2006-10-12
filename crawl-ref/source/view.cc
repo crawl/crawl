@@ -424,7 +424,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     unsigned tc = travel_colour? 
                         get_travel_colour(x, y)
-                      : Feature[grid_value].map_colour;
+                      : DARKGREY;
 
     if (map_flags & MAP_DETECTED_ITEM)
         tc = Options.detected_item_colour;
@@ -464,6 +464,9 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
             return fix_colour( ic == tc? WHITE : ic );
         }
     }
+
+    if (Feature[grid_value].map_colour != DARKGREY)
+        tc = Feature[grid_value].map_colour;
 
     return fix_colour(tc);
 }

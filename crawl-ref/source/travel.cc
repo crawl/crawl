@@ -20,9 +20,11 @@
 #include "stuff.h"
 #include "travel.h"
 #include "view.h"
-#include <stdarg.h>
-#include <ctype.h>
-#include <stdio.h>
+
+#include <algorithm>
+#include <cstdarg>
+#include <cctype>
+#include <cstdio>
 
 #ifdef DOS
 #include <dos.h>
@@ -907,6 +909,28 @@ command_type direction_to_command( char x, char y ) {
     return CMD_NO_CMD;
 }
 
+static void fill_exclude_radius(const coord_def &c)
+{
+    int radius = 0;
+    while (radius * radius < Options.travel_exclude_radius2)
+        radius++;
+
+    for (int y = c.y - radius; y <= c.y + radius; ++y)
+    {
+        for (int x = c.x - radius; x <= c.x + radius; ++x)
+        {
+            if (!map_bounds(x, y) || !is_terrain_known(x, y)
+                    || point_distance[x][y])
+                continue;
+
+            if (is_exclude_root(x, y))
+                point_distance[x][y] = PD_EXCLUDED;
+            else if (is_excluded(x, y))
+                point_distance[x][y] = PD_EXCLUDED_RADIUS;
+        }
+    }
+}
+
 /*
  * The travel algorithm is based on the NetHack travel code written by Warwick
  * Allison - used with his permission.
@@ -1136,6 +1160,20 @@ void find_travel_pos(int youx, int youy,
             ignore_hostile = true;
         }
     } // for ( ; points > 0 ...
+
+    if (features && floodout)
+    {
+        for (int i = 0, size = curr_excludes.size(); i < size; ++i)
+        {
+            const coord_def &exc = curr_excludes[i];
+            // An exclude - wherever it is - is always a feature.
+            if (std::find(features->begin(), features->end(), exc) 
+                    == features->end())
+                features->push_back(exc);
+
+            fill_exclude_radius(exc);
+        }
+    }
 }
 
 // Mappings of which branches spring from which other branches, essential to
