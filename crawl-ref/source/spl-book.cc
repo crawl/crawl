@@ -818,7 +818,9 @@ unsigned char spellbook_contents( item_def &book, int action,
         if (action == RBOOK_USE_STAFF)
         {
             if (you.experience_level >= level_diff 
-                && you.magic_points >= level_diff)
+                && (book.base_type == OBJ_BOOKS?
+                        you.magic_points >= level_diff
+                      : book.plus >= level_diff * ROD_CHARGE_MULT))
             {
                 colour = LIGHTGREY;
             }

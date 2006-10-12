@@ -222,6 +222,7 @@ void clear_envmap( void )
     }
 }
 
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
 static unsigned colflag2brand(int colflag)
 {
     switch (colflag)
@@ -238,13 +239,16 @@ static unsigned colflag2brand(int colflag)
         return (CHATTR_NORMAL);
     }
 }
+#endif
 
 static unsigned fix_colour(unsigned raw_colour)
 {
     // This order is important - is_element_colour() doesn't want to see the
     // munged colours returned by dos_brand, so it should always be done 
     // before applying DOS brands.
+#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
     const int colflags = raw_colour & 0xFF00;
+#endif
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
     if (is_element_colour( raw_colour ))
@@ -253,7 +257,7 @@ static unsigned fix_colour(unsigned raw_colour)
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
     if (colflags)
     {
-        unsigned brand = colflag2brand(raw_colour & 0xFF00);
+        unsigned brand = colflag2brand(colflags);
         raw_colour = dos_brand(raw_colour & 0xFF, brand);
     }
 #endif
