@@ -37,6 +37,7 @@
 #include "clua.h"
 #include "debug.h"
 #include "direct.h"
+#include "initfile.h"
 #include "insult.h"
 #include "itemprop.h"
 #include "macro.h"
@@ -64,15 +65,22 @@
 struct feature_def
 {
     unsigned short      symbol;          // symbol used for seen terrain
-    unsigned short      colour;          // normal in LoS colour
     unsigned short      magic_symbol;    // symbol used for magic-mapped terrain
+    unsigned short      colour;          // normal in LoS colour
     unsigned short      map_colour;      // colour when out of LoS on display
     unsigned short      seen_colour;     // map_colour when is_terrain_seen()
     bool                notable;         // gets noted when seen
     bool                seen_effect;     // requires special handling when seen
 };
 
+struct feature_override
+{
+    dungeon_feature_type    feat;
+    feature_def             override;
+};
+
 static FixedVector< struct feature_def, NUM_FEATURES >  Feature;
+static std::vector<feature_override> Feature_Overrides;
 
 #if defined(DOS_TERM)
 // DOS functions like gettext() and puttext() can only
@@ -2195,37 +2203,181 @@ bool see_grid( int grx, int gry )
     return (false);
 }  // end see_grid() 
 
+static const unsigned char table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
+{
+    // CSET_ASCII
+    {
+        '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall, stairs up
+        '_', '\\', '}', '{', '8', '~', '~',            // altar, item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
+        ':', '|', '}', '%', '$', '"', '#',             // book, cloud
+    },
+
+    // CSET_IBM - this is ANSI 437
+    {
+        177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall, stairs up
+        220, 239, 244, 247, '8', '~', '~',             // altar, item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
+        '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
+    },
+
+    // CSET_DEC - remember: 224-255 are mapped to shifted 96-127
+    {
+        225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall, stairs up
+        251, 182, 167, 187, '8', 171, 168,             // altar, item detect
+        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
+        '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
+    },
+};
+
+static unsigned char cset_override[NUM_CSET][NUM_DCHAR_TYPES];
+
+dungeon_char_type dchar_by_name(const std::string &name)
+{
+    const char *dchar_names[] =
+    {
+        "wall", "wall_magic", "floor", "floor_magic", "door_open",
+        "door_closed", "trap", "stairs_down", "stairs_up", "altar", "arch",
+        "fountain", "wavy", "statue", "invis_exposed", "item_detected",
+        "item_orb", "item_weapon", "item_armour", "item_wand", "item_food",
+        "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
+        "item_stave", "item_miscellany", "item_corpse", "item_gold",
+        "item_amulet", "cloud"
+    };
+    for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
+    {
+        if (dchar_names[i] == name)
+            return dungeon_char_type(i);
+    }
+    return (NUM_DCHAR_TYPES);
+}
+
+void clear_cset_overrides()
+{
+    memset(cset_override, 0, sizeof cset_override);
+}
+
+static unsigned short read_symbol(std::string s)
+{
+    if (s.empty())
+        return (0);
+    if (s.length() == 1)
+        return s[0];
+
+    if (s[0] == '\\')
+        s = s.substr(1);
+    
+    int feat = atoi(s.c_str());
+    if (feat < 0)
+        feat = 0;
+    return static_cast<unsigned short>(feat);
+}
+
+void add_cset_override(char_set_type set, dungeon_char_type dc,
+                       unsigned char symbol)
+{
+    cset_override[set][dc] = symbol;
+}
+
+void add_cset_override(char_set_type set, const std::string &overrides)
+{
+    std::vector<std::string> overs = split_string(",", overrides);
+    for (int i = 0, size = overs.size(); i < size; ++i)
+    {
+        std::vector<std::string> mapping = split_string(":", overs[i]);
+        if (mapping.size() != 2)
+            continue;
+        
+        dungeon_char_type dc = dchar_by_name(mapping[0]);
+        if (dc == NUM_DCHAR_TYPES)
+            continue;
+        
+        unsigned char symbol = 
+            static_cast<unsigned char>(read_symbol(mapping[1]));
+
+        if (set == NUM_CSET)
+            for (int c = 0; c < NUM_CSET; ++c)
+                add_cset_override(char_set_type(c), dc, symbol);
+        else
+            add_cset_override(set, dc, symbol);
+    }
+}
+
 void init_char_table( char_set_type set )
 {
-    const unsigned char table[ NUM_CSET ][ NUM_DCHAR_TYPES ] = 
-    {
-        // CSET_ASCII
-        {
-            '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall, stairs up
-            '_', '\\', '}', '{', '8', '~', '~',            // altar, item detect
-            '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-            ':', '|', '}', '%', '$', '"', '#',             // book, cloud
-        },
-
-        // CSET_IBM - this is ANSI 437
-        {
-            177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall, stairs up
-            220, 239, 244, 247, '8', '~', '~',             // altar, item detect
-            '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-            '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
-        },
-
-        // CSET_DEC - remember: 224-255 are mapped to shifted 96-127
-        {
-            225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall, stairs up
-            251, 182, 167, 187, '8', 171, 168,             // altar, item detect
-            '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb, missile
-            '+', '\\', '}', '%', '$', '"', '#',            // book, cloud
-        },
-    };
-
     for (int i = 0; i < NUM_DCHAR_TYPES; i++)
-        Options.char_table[i] = table[set][i];
+    {
+        if (cset_override[set][i])
+            Options.char_table[i] = cset_override[set][i];
+        else
+            Options.char_table[i] = table[set][i];
+    }
+}
+
+void clear_feature_overrides()
+{
+    Feature_Overrides.clear();
+}
+
+void add_feature_override(const std::string &text)
+{
+    std::string::size_type epos = text.rfind("}");
+    if (epos == std::string::npos)
+        return;
+
+    std::string::size_type spos = text.rfind("{", epos);
+    if (spos == std::string::npos)
+        return;
+    
+    std::string fname = text.substr(0, spos);
+    std::string props = text.substr(spos + 1, epos - spos - 1);
+    std::vector<std::string> iprops = split_string(",", props, true, true);
+
+    if (iprops.size() < 1 || iprops.size() > 5)
+        return;
+
+    if (iprops.size() < 5)
+        iprops.resize(5);
+
+    trim_string(fname);
+    std::vector<dungeon_feature_type> feats = features_by_desc(fname);
+    if (feats.empty())
+        return;
+
+    for (int i = 0, size = feats.size(); i < size; ++i)
+    {
+        feature_override fov;
+        fov.feat = feats[i];
+        
+        fov.override.symbol         = read_symbol(iprops[0]);
+        fov.override.magic_symbol   = read_symbol(iprops[1]);
+        fov.override.colour         = str_to_colour(iprops[2], BLACK);
+        fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
+        fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
+
+        Feature_Overrides.push_back(fov);
+    }
+}
+
+void apply_feature_overrides()
+{
+    for (int i = 0, size = Feature_Overrides.size(); i < size; ++i)
+    {
+        const feature_override      &fov    = Feature_Overrides[i];
+        const feature_def           &ofeat  = fov.override;
+        feature_def                 &feat   = Feature[fov.feat];
+
+        if (ofeat.symbol)
+            feat.symbol = ofeat.symbol;
+        if (ofeat.magic_symbol)
+            feat.magic_symbol = ofeat.magic_symbol;
+        if (ofeat.colour)
+            feat.colour = ofeat.colour;
+        if (ofeat.map_colour)
+            feat.map_colour = ofeat.map_colour;
+        if (ofeat.seen_colour)
+            feat.seen_colour = ofeat.seen_colour;
+    }
 }
 
 void init_feature_table( void )
@@ -2733,7 +2885,12 @@ void init_feature_table( void )
             Feature[i].symbol = Options.char_table[ DCHAR_CLOUD ];
             break;
         }
+    }
 
+    apply_feature_overrides();
+
+    for (int i = 0; i < NUM_FEATURES; ++i)
+    {
         if (!Feature[i].magic_symbol)
             Feature[i].magic_symbol = Feature[i].symbol;
 

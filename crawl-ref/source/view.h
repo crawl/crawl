@@ -122,6 +122,10 @@ void set_terrain_seen( int x, int y );
 bool is_terrain_known( int x, int y );
 bool is_terrain_seen( int x, int y );
 
+void clear_feature_overrides();
+void add_feature_override(const std::string &text);
+void clear_cset_overrides();
+void add_cset_override(char_set_type set, const std::string &overrides);
 
 bool see_grid( int grx, int gry );
 

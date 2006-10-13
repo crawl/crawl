@@ -1041,10 +1041,29 @@ static void describe_feature(int mx, int my, bool oos)
     }
 }
 
-std::string feature_description(int mx, int my)
+// Returns a vector of features matching the given pattern.
+std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)
 {
-    int   trf;            // used for trap type??
-    switch (grd[mx][my])
+    std::vector<dungeon_feature_type> features;
+
+    if (pattern.valid())
+    {
+        for (int i = 0; i < NUM_FEATURES; ++i)
+        {
+            std::string fdesc = feature_description(i);
+            if (fdesc.empty())
+                continue;
+
+            if (pattern.matches( fdesc ))
+                features.push_back( dungeon_feature_type(i) );
+        }
+    }
+    return (features);
+}
+
+std::string feature_description(int grid)
+{
+    switch (grid)
     {
     case DNGN_STONE_WALL:
         return ("A stone wall.");
@@ -1098,54 +1117,13 @@ std::string feature_description(int mx, int my)
     case DNGN_ENTER_HELL:
         return ("A gateway to hell.");
     case DNGN_TRAP_MECHANICAL:
+        return ("A mechanical trap.");
     case DNGN_TRAP_MAGICAL:
+        return ("A magical trap.");
     case DNGN_TRAP_III:
-        for (trf = 0; trf < MAX_TRAPS; trf++)
-        {
-            if (env.trap[trf].x == mx
-                && env.trap[trf].y == my)
-            {
-                break;
-            }
-
-            if (trf == MAX_TRAPS - 1)
-            {
-                mpr("Error - couldn't find that trap.");
-                error_message_to_player();
-                break;
-            }
-        }
-
-        switch (env.trap[trf].type)
-        {
-        case TRAP_DART:
-            return ("A dart trap.");
-        case TRAP_ARROW:
-            return ("An arrow trap.");
-        case TRAP_SPEAR:
-            return ("A spear trap.");
-        case TRAP_AXE:
-            return ("An axe trap.");
-        case TRAP_TELEPORT:
-            return ("A teleportation trap.");
-        case TRAP_AMNESIA:
-            return ("An amnesia trap.");
-        case TRAP_BLADE:
-            return ("A blade trap.");
-        case TRAP_BOLT:
-            return ("A bolt trap.");
-        case TRAP_ZOT:
-            return ("A Zot trap.");
-        case TRAP_NEEDLE:
-            return ("A needle trap.");
-        default:
-            mpr("An undefined trap. Huh?");
-            error_message_to_player();
-            break;
-        }
-        break;
+        return ("A trap.");
     case DNGN_ENTER_SHOP:
-        return (shop_name(mx, my));
+        return ("A shop.");
     case DNGN_ENTER_LABYRINTH:
         return ("A labyrinth entrance.");
     case DNGN_ENTER_DIS:
@@ -1248,8 +1226,72 @@ std::string feature_description(int mx, int my)
     case DNGN_DRY_FOUNTAIN_VIII:
     case DNGN_PERMADRY_FOUNTAIN:
         return ("A dry fountain.");
+    default:
+        return ("");
     }
-    return ("");
+}
+
+std::string feature_description(int mx, int my)
+{
+    int   trf;            // used for trap type??
+    
+    const int grid = grd[mx][my];
+    std::string desc = feature_description(grid);
+    switch (grid)
+    {
+    case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_III:
+        for (trf = 0; trf < MAX_TRAPS; trf++)
+        {
+            if (env.trap[trf].x == mx
+                && env.trap[trf].y == my)
+            {
+                break;
+            }
+
+            if (trf == MAX_TRAPS - 1)
+            {
+                mpr("Error - couldn't find that trap.");
+                error_message_to_player();
+                break;
+            }
+        }
+
+        switch (env.trap[trf].type)
+        {
+        case TRAP_DART:
+            return ("A dart trap.");
+        case TRAP_ARROW:
+            return ("An arrow trap.");
+        case TRAP_SPEAR:
+            return ("A spear trap.");
+        case TRAP_AXE:
+            return ("An axe trap.");
+        case TRAP_TELEPORT:
+            return ("A teleportation trap.");
+        case TRAP_AMNESIA:
+            return ("An amnesia trap.");
+        case TRAP_BLADE:
+            return ("A blade trap.");
+        case TRAP_BOLT:
+            return ("A bolt trap.");
+        case TRAP_ZOT:
+            return ("A Zot trap.");
+        case TRAP_NEEDLE:
+            return ("A needle trap.");
+        default:
+            mpr("An undefined trap. Huh?");
+            error_message_to_player();
+            break;
+        }
+        break;
+    case DNGN_ENTER_SHOP:
+        return (shop_name(mx, my));
+    default:
+        break;
+    }
+    return (desc);
 }
 
 static void describe_cell(int mx, int my)

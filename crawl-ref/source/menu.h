@@ -321,34 +321,38 @@ public:
     // Number of columns and left margins for 2nd, 3rd, ... nth column.
     column_composer(int ncols, ...);
 
+    void clear();
     void add_formatted(int ncol, 
             const std::string &tagged_text,
             bool  add_separator = true,
             bool  eol_ends_format = true,
-            bool (*text_filter)(const std::string &tag) = NULL);
+            bool (*text_filter)(const std::string &tag) = NULL,
+            int   margin = -1);
 
-    std::vector<formatted_string> compose_formatted() const;
+    std::vector<formatted_string> formatted_lines() const;
 
     void set_pagesize(int pagesize);
 
 private:
     struct column;
     void compose_formatted_column(
-            std::vector<formatted_string> &lines,
-            const column &col) const;
+            const std::vector<formatted_string> &lines,
+            int start_col,
+            int margin);
     void strip_blank_lines(std::vector<formatted_string> &) const;
 
 private:
     struct column
     {
         int margin;
-        std::vector<formatted_string> text;
+        int lines;
 
-        column(int marg = 1) : margin(marg), text() { }
+        column(int marg = 1) : margin(marg), lines(0) { }
     };
 
     int ncols, pagesize;
     std::vector<column> columns;
+    std::vector<formatted_string> flines;
 };
 
 int menu_colour(const std::string &itemtext);

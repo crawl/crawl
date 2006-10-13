@@ -67,6 +67,15 @@ int str_to_colour( const std::string &str, int default_colour )
         "lightred", "lightmagenta", "yellow", "white"
     };
 
+    const std::string element_cols[] =
+    {
+        "fire", "ice", "earth", "electricity", "air", "poison", "water",
+        "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
+        "necro", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
+        "slime", "jewel", "elven", "dwarven", "orcish", "gila", "floor",
+        "rock", "stone", "random"
+    };
+
     for (ret = 0; ret < 16; ret++)
     {
         if (str == cols[ret])
@@ -80,6 +89,21 @@ int str_to_colour( const std::string &str, int default_colour )
             ret = 7;
         else if (str == "darkgray")
             ret = 8;
+    }
+
+    if (ret == 16)
+    {
+        // Maybe we have an element colour attribute.
+        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols); 
+                ++i)
+        {
+            if (str == element_cols[i])
+            {
+                // Ugh.
+                ret = element_type(EC_FIRE + i);
+                break;
+            }
+        }
     }
 
     if (ret == 16)
@@ -507,10 +531,11 @@ void reset_options(bool clear_name)
     Options.sound_mappings.clear();
     Options.menu_colour_mappings.clear();
     Options.drop_filter.clear();
-
     Options.map_file_name.clear();
-
     Options.named_options.clear();
+
+    clear_cset_overrides();
+    clear_feature_overrides();
 
     // Map each category to itself. The user can override in init.txt
     Options.kill_map[KC_YOU] = KC_YOU;
@@ -1123,6 +1148,29 @@ void parse_option_line(const std::string &str, bool runscript)
                 fprintf( stderr, "Bad remembered_monster_colour -- %s\n",
                          field.c_str());
         }
+    }
+    else if (key.find("cset") == 0)
+    {
+        std::string cset = key.substr(4);
+        if (cset[0] == '_')
+            cset = cset.substr(1);
+
+        char_set_type cs = NUM_CSET;
+        if (cset == "ascii")
+            cs = CSET_ASCII;
+        else if (cset == "ibm")
+            cs = CSET_IBM;
+        else if (cset == "dec")
+            cs = CSET_DEC;
+
+        add_cset_override(cs, field);
+    }
+    else if (key == "feature" || key == "dungeon")
+    {
+        std::vector<std::string> defs = split_string(";", field);
+        
+        for (int i = 0, size = defs.size(); i < size; ++i)
+            add_feature_override( defs[i] );
     }
     else if (key == "friend_brand")
     {

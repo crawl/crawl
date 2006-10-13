@@ -590,6 +590,9 @@ int formatted_string::get_colour(const std::string &tag)
     if (tag == "h")
         return (YELLOW);
 
+    if (tag == "w")
+        return (WHITE);
+
     const int colour = str_to_colour(tag);
     return (colour != -1? colour : LIGHTGREY);
 }
@@ -842,43 +845,55 @@ void column_composer::set_pagesize(int ps)
     pagesize = ps;
 }
 
+void column_composer::clear()
+{
+    flines.clear();
+}
+
 void column_composer::add_formatted(
-        int ncol, 
+        int ncol,
         const std::string &s,
         bool add_separator,
         bool eol_ends_format,
-        bool (*tfilt)(const std::string &))
+        bool (*tfilt)(const std::string &),
+        int  margin)
 {
     ASSERT(ncol >= 0 && ncol < (int) columns.size());
 
     column &col = columns[ncol];
     std::vector<std::string> segs = split_string("\n", s, false, true);
 
-    // Add a blank line if necessary
-    if (add_separator && !col.text.empty() && !segs.empty()
-            && (!pagesize || col.text.size() % pagesize))
-        col.text.push_back(formatted_string());
+    std::vector<formatted_string> newlines;
+    // Add a blank line if necessary. Blank lines will not
+    // be added at page boundaries.
+    if (add_separator && col.lines && !segs.empty()
+            && (!pagesize || col.lines % pagesize))
+        newlines.push_back(formatted_string());
 
     for (unsigned i = 0, size = segs.size(); i < size; ++i)
     {
-        col.text.push_back( 
+        newlines.push_back(
                 formatted_string::parse_string(
                     segs[i],
                     eol_ends_format,
                     tfilt));
     }
-    strip_blank_lines(col.text);
+
+    strip_blank_lines(newlines);
+
+    compose_formatted_column(
+            newlines, 
+            col.lines, 
+            margin == -1? col.margin : margin);
+
+    col.lines += newlines.size();
+
+    strip_blank_lines(flines);
 }
 
-std::vector<formatted_string> column_composer::compose_formatted() const
+std::vector<formatted_string> column_composer::formatted_lines() const
 {
-    std::vector<formatted_string> fs;
-    for (int i = 0; i < ncols; ++i)
-        compose_formatted_column(fs, columns[i]);
-
-    strip_blank_lines(fs);
-
-    return (fs);
+    return (flines);
 }
 
 void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
@@ -893,22 +908,22 @@ void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
 }
 
 void column_composer::compose_formatted_column(
-        std::vector<formatted_string> &fs,
-        const column &col) const
+        const std::vector<formatted_string> &lines,
+        int startline,
+        int margin)
 {
-    if (fs.size() < col.text.size())
-    {
-        fs.resize(col.text.size());
-    }
+    if (flines.size() < startline + lines.size())
+        flines.resize(startline + lines.size());
 
-    for (unsigned i = 0, size = col.text.size(); i < size; ++i)
+    for (unsigned i = 0, size = lines.size(); i < size; ++i)
     {
-        if (col.margin > 1)
+        int f = i + startline;
+        if (margin > 1)
         {
-            int xdelta = col.margin - fs[i].length() - 1;
+            int xdelta = margin - flines[f].length() - 1;
             if (xdelta > 0)
-                fs[i].cprintf("%-*s", xdelta, "");
+                flines[f].cprintf("%-*s", xdelta, "");
         }
-        fs[i] += col.text[i];
+        flines[f] += lines[i];
     }
 }

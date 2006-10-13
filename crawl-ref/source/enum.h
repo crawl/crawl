@@ -878,6 +878,7 @@ enum game_direction_type
 };
 
 // NOTE: The order of these is very important to their usage!
+// [dshaligram] If adding/removing from this list, also update view.cc!
 enum dungeon_char_type
 {
     DCHAR_WALL,                 //  0
@@ -1114,6 +1115,7 @@ enum duration_type
 };
 
 // various elemental colour schemes... used for abstracting random short lists
+// MUST match the order in initfile.cc or breakage results.
 enum element_type
 {
     EC_FIRE = 32,       // fiery colours (must be first and > higest colour)
