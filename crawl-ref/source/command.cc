@@ -787,14 +787,14 @@ void list_commands(bool wizard)
 
     cols.add_formatted(
             1,
-            "<h>Targeting, Surroundings '('<w>x</w><h>' in main):\n"
-            "<w>x</w> : stop targetting (also <w>Esc</w> and <w>Space</w>)\n"
-            "<w>+</w> : cycle monsters forward\n"
-            "<w>-</w> : cycle monsters backward\n"
-            "<w>*</w> : cycle objects forward (also ')\n"
-            "<w>/</w> : cycle objects backward (also ;)\n"
-            " <w>.</w> : choose target/move (also Enter)\n"
-            " <w>?</w> : describe monster under cursor\n"
+            "<h>Targeting, Surroundings ('<w>x</w><h>' in main):\n"
+            " <w>x</w>  : stop targeting (also <w>Esc</w> and <w>Space</w>)\n"
+            " <w>+</w>  : cycle monsters forward\n"
+            " <w>-</w>  : cycle monsters backward\n"
+            " <w>*</w>  : cycle objects forward (also ')\n"
+            " <w>/</w>  : cycle objects backward (also ;)\n"
+            " <w>.</w>  : choose target/move (also Enter)\n"
+            " <w>?</w>  : describe monster under cursor\n"
             "<w><<</w>/<w>></w> : cycle through up/down stairs\n",
             true, true, cmdhelp_textfilter);
 
