@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- stash.lua
--- Annotates items for the stash-tracker.
+-- Annotates items for the stash-tracker's search.
 --
 -- To use this, add this line to your init.txt:
 --   lua_file = lua/stash.lua

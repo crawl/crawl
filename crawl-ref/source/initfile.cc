@@ -37,10 +37,6 @@ game_options    Options;
 
 extern bool autopickup_on;
 
-#ifdef UNIX
-extern int character_set;       // unices only
-#endif
-
 static std::string & tolower_string( std::string &str );
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
@@ -49,8 +45,7 @@ const static int   obj_syms_len = 16;
 static void read_startup_prefs();
 static void read_options(InitLineInput &il, bool runscript);
 
-template<class A, class B> void append_vector(
-        std::vector<A> &dest, const std::vector<B> &src)
+template<class A, class B> void append_vector(A &dest, const B &src)
 {
     dest.insert( dest.end(), src.begin(), src.end() );
 }
@@ -434,10 +429,11 @@ void reset_options(bool clear_name)
     Options.tc_disconnected        = DARKGREY;
 
     Options.show_waypoints         = true;
-    Options.item_colour            = false;
+    Options.item_colour            = true;
 
-    Options.detected_item_colour   = DARKGREY;
-    Options.detected_monster_colour= DARKGREY;
+    // [ds] Default to jazzy colours.
+    Options.detected_item_colour   = LIGHTGREEN;
+    Options.detected_monster_colour= LIGHTRED;
     Options.remembered_monster_colour = 0;
 
     Options.easy_exit_menu         = true;
@@ -527,7 +523,7 @@ void reset_options(bool clear_name)
     Options.autoinscriptions.clear();
     Options.note_items.clear();
     Options.note_skill_levels.clear();
-    Options.stop_travel.clear();
+    Options.travel_stop_message.clear();
     Options.sound_mappings.clear();
     Options.menu_colour_mappings.clear();
     Options.drop_filter.clear();
@@ -918,9 +914,12 @@ void parse_option_line(const std::string &str, bool runscript)
     if (key != "name" && key != "crawl_dir" 
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "stop_travel" && key != "sound" 
+        && key != "travel_stop_message"
         && key != "drop_filter" && key != "lua_file"
 	&& key != "note_items" && key != "autoinscribe"
-	&& key != "note_monsters" && key != "note_messages")
+	&& key != "note_monsters" && key != "note_messages"
+        && key.find("cset") != 0 && key != "dungeon"
+        && key != "feature")
     {
         tolower_string( field );
     }
@@ -1538,7 +1537,7 @@ void parse_option_line(const std::string &str, bool runscript)
         else if (Options.travel_exclude_radius2 > 400)
             Options.travel_exclude_radius2 = 400;
     }
-    else if (key == "stop_travel")
+    else if (key == "stop_travel" || key == "travel_stop_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
         for (int i = 0, count = fragments.size(); i < count; ++i)
@@ -1555,13 +1554,13 @@ void parse_option_line(const std::string &str, bool runscript)
                 {
                     std::string s = fragments[i].substr( pos + 1 );
                     trim_string( s );
-                    Options.stop_travel.push_back(
+                    Options.travel_stop_message.push_back(
                        message_filter( channel, s ) );
                     continue;
                 }
             }
 
-            Options.stop_travel.push_back(
+            Options.travel_stop_message.push_back(
                     message_filter( fragments[i] ) );
         }
     }

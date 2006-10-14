@@ -284,9 +284,9 @@ void mpr(const char *inf, int channel, int param)
     if (you.running < 0)
     {
         std::string message = inf;
-        for (unsigned i = 0; i < Options.stop_travel.size(); ++i)
+        for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)
         {
-            if (Options.stop_travel[i].is_filtered( channel, message ))
+            if (Options.travel_stop_message[i].is_filtered( channel, message ))
             {
                 stop_running();
                 break;
@@ -300,7 +300,7 @@ void mpr(const char *inf, int channel, int param)
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++) 
         {
             // Maybe we should allow message channel matching as for 
-            // stop_travel?
+            // travel_stop_message?
             if (Options.sound_mappings[i].pattern.matches(message))
             {
                 play_sound(Options.sound_mappings[i].soundfile.c_str());

@@ -1,7 +1,4 @@
-#
 # Crawl Init file
-#
-# (Modified for Crawl Reference by $Author$ on $Date$)
 #
 # Lines begining with '#' are comments.  The basic syntax is:
 #
@@ -14,783 +11,195 @@
 # on a system that has case-sensitive filenames).
 #
 # White space is stripped from the begining and end of the line, as
-# well as imediately before and after the '='.  All other whitespace
-# is left alone.
+# well as imediately before and after the '='. If the option allows multiple
+# comma/semicolon-separated terms (such as ban_pickup), all whitespace around
+# the separator is also trimmed. All other whitespace is left intact.
 #
-
-
+# For descriptions concerning the option consult the file 
+#    crawl_options.txt 
+# in your crawl/doc directory. Also note that the ordering of the 
+# options is taken from that file; this is for presentational reasons 
+# only.
 #
-# Player name
-#
+# Note that all boolean options (i.e. values of 'true' or 'false') have
+# their non-default value commented out. You can toggle these by just
+# uncommenting.
 
-# name=kernel
-
+##### 1- Starting Screen ############################################
 #
-# If remember_name set, the game remembers the last name you used.
-#
-
+# name = Delilah
 # remember_name = true
-
-# Directory for reading macro.txt and init.txt, and dumping characters.
-# It should end with the path delimiter.
-# crawl_dir=/home/bwross/crawl/
-
-
-# Here's a list of autopickup types:
-#
-#    )		Weapons
-#    (		Missiles
-#    [		Armour
-#    /		Wands
-#    %		Food
-#    ?		Scrolls
-#    " or =     jewellery
-#    !		Potions
-#    + or :	Books
-#    \ or |	Staves
-#    0		Orbs
-#    }		Misc items
-#    X		Corpses
-#    $		Gold
-
-autopickup = $?!:"/0
-
-#
-# safe_autopickup
-#
-# If set, autopickup will not pick anything up if monsters are visible.
-safe_autopickup = true
-
-#
-# autoinscribe
-#
-# autoinscribe lines of the form REGEX:STRING inscribe any item
-# matching REGEX with STRING. Multiple matches will have the
-# inscriptions concatenated in the order they appear.
-#autoinscribe=royal jell:=g 
-
-#
-# default_autopickup
-# default_autoprayer
-# default_fizzlecheck
-#
-# These determine whether autopickup, autoprayer and fizzlecheck are on
-# or off when the game starts (including reloading.) Default: true,
-# false, and false, respectively.
-#
-#default_autopickup = false
-#default_autoprayer = true
-#default_fizzlecheck = true
-
-#
-# confirm_self_target
-#
-# If set, you will be prompted for confirmation when targeting a spell
-# at yourself. This does not apply to friendly-targeted spells (e.g.,
-# healing.) Default is false.
-confirm_self_target = true
-
-#
-# use_notes
-#
-# If set, notes will be taken and dumped with the chardump.
-use_notes = true
-
-#
-# ood_interesting
-#
-# How many levels OOD a monster should be to have its death be
-# noteworthy. The default is 8. To disable this, use 500 or more.
-#ood_interesting=500
-
-#
-# note_hp_percent
-#
-# note_hp_percent takes a note when the player takes damage and their
-# hitpoints are less than this percentage of their maximum (use 0 to
-# turn off these messages.) Notes in quick sequence are suppressed.
-note_hp_percent=5
-
-#
-# note_skill_levels
-#
-# Whenever a skill reaches a level in this comma-separated list,
-# a note is generated. You can have multiple note_skill_levels lines.
-note_skill_levels=5,10,15,20,27
-
-#
-# note_skill_max
-#
-# Whenever a skill reaches a level which no skill has reached before
-# (i.e., it is now your only top skill), a note will be taken if
-# note_skill_max is true. Default is false.
-#note_skill_max = true
-
-#
-# note_monsters
-#
-# Monsters whose name matches an item in this comma-separated list
-# are considered interesting. You can have multiple note_monsters lines.
-#note_monsters = Klown,orb of fire
-
-#
-# note_messages
-#
-# Messages which match an item in this comma-separated list
-# are considered interesting. You can have multiple note_messages lines.
-#note_messages = Something interferes
-
-#
-# safe_zero_exp
-#
-# Set to false to make zero-exp monsters considered risky (for autoprayer
-# and safe_autopickup.) The default is true.
-#safe_zero_exp = false
-
-#
-# assign_item_slot
-#
-# When picking up items, the inventory slot into which the item goes is 
-# normally the first free slot from a-zA-Z. Setting assign_item_slot to
-# "backward" changes the slot assignment to work backwards. For instance, if
-# you have items on 'a' and 'c', and assign_item_slot = forward, the next item
-# will go into 'b'. If assign_item_slot = backward, the next item will go to
-# 'd' instead.
-# 
-# assign_item_slot = backward
-
-#
-# dump_kill_places
-#
-# In the Vanquished Creatures list, this option controls how the locations of
-# each kill are displayed. Use 'none' to suppress place display altogether,
-# 'all' to display all known kill places, anything else to default to showing
-# the kill place only for single kills
-# 
-# dump_kill_places = all
-
-#
-# dump_item_origins
-#
-# The game remembers where you find items. If you want this item origin memory
-# listed in your dumps, use this option to select which items get annotated. The
-# default behaviour is for artifacts and rods to get annotated.
-# 
-# Available selectors: artifacts, ego_arm, ego_weap, jewellery, runes, rods,
-# staves, books, all.
-#
-# If you use multiple dump_item_origins lines, the last line takes effect; all
-# preceding lines are ignored.
-# 
-# If you don't want any items to be annotated, set dump_item_origins to "none",
-# and set dump_item_origin_price to -1.
-#
-# dump_item_origins = artifacts, ego_weap, ego_arm, rods, staves, runes
-
-# 
-# dump_item_origin_price
-#
-# Item origins are dumped if the price of the item is greater than or equal
-# to this amount. Set this to -1 to prevent selection by price.
-#
-# dump_item_origin_price = 100
-
-#
-# Base Lua file that's needed by other Lua scripts. You must source this
-# before you source any Lua script that relies on this. For safety, always
-# source this first.
-# 
-# lua_file = lua/base.lua
-
-#
-# Control what messages stop shift+running and resting.
-#
-# lua_file = lua/runrest.lua
-
-#
-# If you want more detailed kill statistics, you can use a Lua script to do
-# that. See kills.lua for more ideas.
-# 
-# lua_file = lua/kills.lua
-
-#
-# If you'd like to switch quickly between sets of gear, you can use this. See
-# gearset.lua for more information.
-#
-# lua_file = lua/gearset.lua
-
-#
-# This lua script prompts you to eat chunks in inventory (after prompting for
-# eating off the floor).
-#
-# lua_file = lua/eat.lua
-
-#
-# stash.lua annotates items to make for easier stash-searches. Weapons are
-# prefixed by the name of the weapon skill, so you can search for "long blades"
-# and find everything that exercises that skill. See stash.lua for more details.
-#
-# lua_file = lua/stash.lua
-
-#
-# wield.lua selects items to show in the wield menu based on the spells your
-# character knows. For instance, if you know Sublimation of Blood, chunks
-# will be added to your wield menu.
-#
-# lua_file = lua/wield.lua
-
-# The number of messages to be displayed in character dump files. Defaults to 4
-dump_message_count = 4
-
-# Set to false to disable targeting zero exp monsters in hostile targeting mode
-# target_zero_exp = false
-
-#
-# Set to true if targeting should wrap around from last to first and vice versa
-#
-# target_wrap = true
-
-#
-# When cycling through items/features with 'x' look-around, setting target_oos
-# to true allows you to jump the cursor to items and features that are outside
-# line-of-sight but in the main view. Defaults to true. See also
-# target_los_first.
-#
-target_oos = true
-
-#
-# When cycling through items/features with the 'x' look-around command, setting 
-# target_los_first to true will force the cursor to squares in line-of-sight
-# before going to squares outside LOS. Defaults to true.
-#
-target_los_first = true
-
-#
-# Allows you to specify special characters as \{nn} when creating macros or
-# keymaps. For instance, you can macro a key to Enter by specifying a mapping
-# of \{13} when this is set to true. If you want to map a key to a backslash
-# with macro_meta_entry set true, escape the backslash as \\.
-#
-# Defaults to true.
-#
-macro_meta_entry = true
-
-# pickup_thrown causes autopickup to grab thrown/fired missiles
-#
-pickup_thrown = true
-
-# pickup_dropped lets autopickup affect objects you've dropped. Set to false to
-# block autopickup for dropped objects
-#
-pickup_dropped = false
-
-# assign_item_slot = backward
-
-# List of item name regexes for items which autopickup will never touch. You
-# can use multiple ban_pickup lines.
-#
-# ban_pickup = degeneration,decay,confusion
-# ban_pickup = inaccuracy
-# ban_pickup = scrolls? of paper
-
-# Option to turn off colouring the level-map with travel information
-# travel_colour = false
-
-#
-# Monsters found by detect creatures will be coloured this colour (defaults
-# to darkgrey):
-#
-detected_monster_colour = lightred
-
-
-#
-# Items found by detect items will be given this colour (defaults to darkgrey)
-#
-detected_item_colour    = green
-
-#
-# Remembered monsters can be shown with their actual colours (real), or 
-# assigned an arbitrary colour by name.
-#
-# remembered_monster_colour = real
-remembered_monster_colour = darkgrey
-
-
-# How long travel waits after each move (milliseconds).
-#
-travel_delay = 20
-
-#
-# travel_stair_cost determines how costly interlevel travel considers stairs.
-# With a high travel_stair_cost (such as the default of 500), interlevel travel
-# will always choose routes with the minimum number of level changes possible.
-# If you set travel_stair_cost to a low value (such as the minimum of 1),
-# interlevel travel will treat a staircase just like a normal move, and it may
-# consequently choose routes that involve extra level transitions. This can be
-# disconcerting in branches with elevator-type stair arrangements, particularly
-# in the Lair, where there are typically long chains of elevator stairs, because
-# travel will go out of its way to use the elevator and minimise total travel
-# distance.
-#
-# travel_stair_cost = 500
-
-# Prevent travel from routing through shallow water.
-# travel_avoid_terrain = shallow water
-
-# For merfolk and/or characters with permanent levitation, prevent travel from
-# routing through shallow _or_ deep water
-#
-# travel_avoid_terrain = shallow water, deep water
-
-# The square of the radius around travel-excluded squares where travel will
-# refuse to go. Set to zero if you want to exclude single squares.
-#
-# travel_exclude_radius2 = 68
-
-# If set to true (the default), waypoints will be numbered on the level map,
-# assuming that they're on a floor square with nothing on it.
-#
-# show_waypoints = false
-
-# Explore will stop for one of these conditions. Whatever you set this option
-# to, anything that stops travel will also stop explore.
-#
-# Multiple explore_stop lines are *not* cumulative! The last explore_stop
-# line will override all previous explore_stop lines.
-# 
-explore_stop = items,stairs,shops,altars
-
-# How many squares the cursor moves on the level map when using Shift+direction.
-# Defaults to 10.
-# 
-# level_map_cursor_step = 10
-
-# Playing sounds:
-# Option is set as sound = <regex>:<path to sound file>. Your regex should not
-# include commas or colons.
-# sound = LOW HITPOINT WARNING:sound/sounds2/danger3.wav
-
-# Tracking stashes. Valid options are 'all', 'dropped' and 'explicit'. Anything
-# else disables stash tracking
-stash_tracking = all
-
-# Filter corpses (14) and chunks of meat (4:21) out of the stash-tracker.
-# The filter syntax is object class:object subtype. So, to filter, say, potions
-# of degeneration, you'd use 8:14 (where 8 is for OBJ_POTIONS and 14 is
-# POT_DEGENERATION). See enum.h for all the magic numbers involved.
-stash_filter = 14, 4:21
-
-# Substrings that will stop travel if they're present in any message the game
-# displays. Substrings can be comma separated, and multiple stop_travel lines 
-# are accepted.
-
-# Stop travel if Xom grants us a gift suddenly.
-stop_travel = Something appears 
-
-# To limit a substring match to a message channel, prefix the substring with the
-# channel name and a colon. For instance, if you want travel to stop when you're
-# hit by divine retribution, you could use:
-# stop_travel = god:wrath finds you
-
-# If you'd like to stop travel for any message sent to a particular channel, use
-# a stop_travel line with that message channel name and a colon alone.  For
-# example, if you've an amulet of the gourmand, and are hankering after rotten
-# meat, or you're playing a ghoul: 
-# stop_travel = rotten_meat:
-
-# Stop travel for any god messages (including prayer)
-stop_travel = god:
-
-# verbose dump causes less important item details to appear in character dumps
-# verbose_dump  = false
-
-
-# Colours out of sight map features on the playing screen
-colour_map    = true
-
-
-# Cleans up out of sight monsters and clouds on the map
-clean_map     = false
-
-# To be able to drop multiple items from the drop menu in one go, enable
-# multidrop (you can also switch to multidrop from the classic drop menu using
-# the @ key).
-#
-# drop_mode = multi
-
-# When selecting items using the global select key (, or -) in a multidrop
-# listing, you can choose to apply a filter - only items whose names match
-# the filter will be selected. The filter strings are regexes. 
-#
-# For instance, to quickly select carrion and rotting chunks of meat, you 
-# could use:
-#
-# drop_filter = skeleton, rotting, corpse
-
-# Open doors by moving on to them
-# easy_open     = false
-
-
-# Auto-switch to uncursed short blade for butchery (EXPERIMENTAL!)
-easy_butcher  = true
-
-
-# Allows auto removal of armour when dropping it
-# easy_armour   = false
-
-
-# Make confirmation queations easier to answer:
-#       none = force capitals on Y/N questions
-#       safe = force only on questions that will end game
-#       all  = never force capitals
-
-# WARNING TO KEYPAD USERS: The number 7 is mapped to the letter 'y',
-# which can result in accidentally answering yes to questions; it is
-# suggested that you use a value of 'none' or 'safe'
-
-easy_confirm  = safe
-
-
-# Setting this option to true allows the quitting of item listing with
-# space as well as escape.  These lists are essentially all of those 
-# that are requesting an inventory item and accept '?' and '*'.
-#
-# The identify list will never easy quit.  The default is false.
-
-# easy_quit_item_lists = true
-
-# In multidrop (and pickup) menus, paging past the end will exit the menu if
-# you set the easy_exit_menu option
-#
-# easy_exit_menu = true
-
-# This option adds the text "uncursed" to items where the
-# curse status is relevent and known.  Does not bother to
-# show "uncursed" on items that are fully identified (showing pluses),
-# since that wound be redundant and waste space.
-
-show_uncursed = true
-
-
-#
-# The weapon option allows defaulting on the weapon selection screen
-#
-# Valid weapons are short sword, hand axe, spear, mace, and trident...
-# although tridents are restricted to only merfolk and gladiators, so
-# you'll get queries for the illegal cases.
-#
-
-# weapon = hand axe
-
-#
-# The book option allows defaulting on the book selection screen
-# Valid books are "fire" or "flame", "cold" or "ice", and
-# "summ" or "summoning" - although the last does not apply to
-# conjurers, so you'll get a query there.
-#
-
-# book = fire
-
-#
-# These allow auto-selection of other third-screen options.
-#
-# Select "random" for random choice.
-#
-# chaos_knight => Xom or Makleb
-# death_knight => necromancy or Yredelemnul
-# priest       => Zin or Yredelemnul
-#
-
-# chaos_knight = xom
-# death_knight = necromancy
-# priest       = random
-
-
-#
-# The random_pick option will randomly generate a character.
-# The above options (weapons and class options) will override where
-# appropriate.
-#
-
+# weapon = (random | short sword | hand axe | spear | mace | trident)
+# chaos_knight = (Xom | Makhleb | random)
+# death_knight = (necromancy | Yredelemnul | random)
+# priest       = (Zin | Yredelemnul | random)
+# race = (Human |...| Merfolk | random)
+# class = (Fighter |...| Wanderer | random)
 # random_pick = true
 
+##### 2-  File System ###############################################
+#
+# crawl_dir= <path>
+# sound = <regex>:<path to sound file>
 
-# Macro colours to other colours
+##### 3-  Lua Files #################################################
 #
-# Useful for terminals where some colours are hards to read (and cannot
-# be adjusted), as well as for creating a custom scheme, especially
-# when used with the background option on a terminal with a non-black
-# background.
-#
-# Format is colour.OLDCOLOUR = NEWCOLOUR, later rules take preference and
-# the NEWCOLOUR is always literal (ie. it won't re-evaluate to a different
-# colour).
-#
-# The colours are:
-#
-# black, blue, green, cyan, red, magenta, brown, lightgrey, darkgrey,
-# lightblue, lightgreen, lightcyan, lightred, lightmagenta, yellow, white
-#
-# lightgray = lightgrey, darkgray = darkgrey
+lua_file = lua/base.lua
+lua_file = lua/stash.lua
+lua_file = lua/wield.lua
+lua_file = lua/kills.lua
+lua_file = lua/runrest.lua
+lua_file = lua/gearset.lua
+lua_file = lua/eat.lua	
 
-# colour.lightgray = black
-# colour.white     = black
-# colour.lightcyan = cyan
-# colour.yellow    = brown
+##### 4-  Interface #################################################
+#
+##### 4-a	Picking up and Dropping ###############
+#	
+autopickup = $?!:"/%
+# default_autopickup = false
+# safe_autopickup = true
+# safe_zero_exp = false
+# pickup_thrown = true
+# pickup_dropped = false
+# assign_item_slot = backward
+#
+ban_pickup = degeneration,decay,confusion,potions? of slowing
+ban_pickup = potions? of strong poison,potions? of poison
+ban_pickup = inaccuracy
+ban_pickup = scrolls? of paper,immolation,curse armor,curse weapon
+ban_pickup = forgetfulness,uselessness,noise,torment
+#
+drop_mode = multi
+# drop_filter = skeleton, rotting, corpse
 
+##### 4-b	Targetting ############################
+#
+# target_zero_exp = false
+# target_wrap = false
+# target_oos = false
+# target_los_first = false
+# confirm_self_target = true
+# default_fizzlecheck = true
 
+##### 4-c	Passive Sightings #####################
 #
-# always_greet will give the race/class and god messages everytime the
-# game is started.
-#
+detected_monster_colour = lightred
+detected_item_colour = green
+remembered_monster_colour = darkgrey
+# colour_map = true
+# clean_map = true
 
-always_greet = true
+##### 4-d	Branding ##############################
+#
+heap_brand = reverse
+friend_brand = hi:green
+stab_brand = hi:blue
+# may_stab_brand = hi:yellow
 
+##### 4-e	Level Map Functions ###################
+#
+level_map_cursor_step = 10
+item_colour = true
+# show_waypoints = false
 
-# Set the default background colour of your window
-# Warning: setting this to a value different than the window's background
-#          colour, will probably result in some very ugly results.
+##### 4-f	Travel and Exploration #################
+#
+# travel_colour = false
+travel_delay = 20
+travel_stair_cost = 500
+# travel_avoid_terrain = shallow water
+travel_exclude_radius2 = 68
+#
+# stop_travel = Something appears
+# stop_travel = god:wrath finds you
+#
+# explore_stop = items,stairs,shops,altars
+#
+# runrest_ignore_message = prayer ends
+#
+# runrest_ignore_message = You feel.*sick
+# runrest_ignore_poison = 4:100
 
-# background = white
+##### 4-g	Stashes ###############################
+#
+# stash_tracking = (explicit | dropped | all)
+# stash_filter = 14, 4:21
 
-
+##### 4-h	Command Enhancements ##################
 #
-# Brand friendly monsters with a curses attribute... these might not
-# do what you think, it depends on the terminal being used (and won't
-# work with non-curses compiles).
-#
-# Available options, with typical results:
-#
-# standout      -- often the same as reverse, might be underline or dim
-# bold          -- used by colour curses for brightening foreground colours
-# blink         -- used by colour curses for brightening background colours
-# reverse       -- this will probably work
-# dim           -- probably no effect
-# underline     -- this will probably work
-# highlight:col -- set background colour of highlighted monsters to "col"
-#
-# This is somewhat interesting (blink here is used to give friends a
-# dark grey background, and then we change dark grey so we can see bats):
-#
-# friend_brand = blink
-# colour.darkgrey = magenta
-#
-# Brand friends with a green background. If the friend is itself green, it'll
-# show up as black on green.
-#
-# friend_brand = hi:green
-
-friend_brand = reverse
-
-#
-# Stab warning.
-# 
-# Some deities object to you stabbing monsters. Certain classes specialise
-# in stabbing monsters. For both these cases, it helps to identify monsters 
-# that are susceptible to being stabbed without using the 'x' command. This
-# option brands sleeping monsters. All the normal 'brand' options apply.
-#
-# stab_brand = hi:blue
-
-#
-# Stabbing may be possible even if the monster is not asleep (if it's confused
-# or distracted, for instance). This option brands monsters that you *might* be
-# able to stab. Primarily useful for worshippers of The Shining One. Purists
-# may consider this unnecessarily spoily.
-#
-# If your console doesn't support high-intensity background colours, you may
-# have to change darkgrey to something else.
-#
-# may_stab_brand = hi:darkgrey
-#
-
-#
-# On DOS and Windows, if you're using a console that can do high-intensity
-# background colours, set this option to true for superior reverse-colour-
-# branding.
-#
-# If your console doesn't like this option, some high-intensity backgrounds 
-# will appear as blinking characters (and setting this option to false may be
-# advisable to preserve your sanity in such cases).
-#
-# dos_use_background_intensity = true
-
-# Colour items on level-map
-#
-# item_colour = true
-
-# Brand heaps of items (more than one item or stack). Options apply as for
-# friend_brand.
-# 
-# heap_brand = reverse
-
-
-# Message channel options:
-#
-# Format is channel.CHANNEL_NAME = (COLOUR|mute|default|on|off|plain)
-#
-# CHANNEL_NAME can currently be one of these:
-#   plain           = regular text (and things "uncoloured")
-#   prompt          = input prompts to the player
-#   god             = messages from the gods
-#   duration        = messages about character spells/effects wearing off
-#   danger          = serious threats to the characters existence
-#   food            = warnings about food
-#   warning         = various other warnings
-#   recovery        = recovery from disease/stat loss/poison conditions
-#   talk            = monsters talking (acting)
-#   intrinsic_gain  = level/stat/species power gains
-#   mutation        = gain/lose mutations
-#   monster_spell   = messages about monsters gesturing and casting spells
-#   monster_enchant = messages pertaining to monster enchantments (up or down)
-#   monster_damage  = messages telling how damaged a monster is
-#   rotten_meat     = messages about chunks/corpses becoming rotten
-#
-# COLOUR can be any of the colours in the colour section above.
-#
-# Other channel options:
-#
-#   mute      = show no messages from channel (dangerous, be careful!)
-#   default   = turn channel on to it's default scheme
-#   alternate = turn channel on to it's alternate "colourful" scheme
-#   on        = same as default
-#   plain     = make channel the same colour as the "plain" channel
-#               (won't do anything silly like "mute" if plain == mute, though)
-#   off       = same as plain
-#
-# Note: The only multi-colour channels currently are monster_damage and
-#       god.  Setting god to a COLOUR will make all god messages that
-#       colour.  Setting monster_damage to a colour will make the
-#       "monster dies" messages that colour, and the "injured" messages
-#       will be plain coloured.  More control of these and other channels
-#       will be coming later.
-#
-
-# channel.plain = green
-# channel.talk = mute
-# channel.warning = plain
-# channel.diagnostic = mute
-# channel.rotten_meat = yellow
-# channel.god = alternate 
-# channel.mutation = green
-
-
-#
-# hp_warning gives "* * * LOW HITPOINT WARNING * * *" on the danger channel
-# when the player takens damage and their hitpoints are less than this
-# percentage of their maximum (use 0 to turn off these messages).
-
-hp_warning = 25
-
-
-# race 
-#
-# Use to preselect race.  Argument can be:
-#
-# - letter used in the character creation process
-# - two letter abbreviation used on the high score board
-# - a string to match against the full name
-
-# race = human
-
-
-# class 
-#
-# Used to preselect class.  Same format as race option above.
-
-# class = fighter
-
-
-#
-# Wizard mode options (available only in WIZARD compiles):
-#
-#     yes   = start games in wizard mode (game might not be scored)
-#     no    = still allows player to enter wizard mode after start of game
-#     never = never allow a wizard command to be used
-#
-
-wiz_mode = no
-
-
-#
-# Fire command options
-#
-# fire_items_start - sets the first inventory item to consider (default is a)
-#
-# fire_order       - controls when to consider types of items
-#
-#     launcher, dart, stone, dagger, spear, handaxe, club
-#
-# The list should be on one line, with commas between items.
-#
-# Launcher refers to firing the appropriate missile for the wielded 
-# weapon (ie crossbow, bow, sling)... you'll probably want it first, as 
-# it'll be ignored when you're not wielding a ranged weapon.  The default
-# is "launcher, dart" which matches the old behaviour.
-#
-
-fire_items_start = c
-fire_order = launcher, dart, stone
-
-
-#
-# auto_list
-#
-# Setting this to true if you want to automatically list appropriate 
-# inventory items for commands like quaff and read.  This is like 
-# immediately hitting '?', and can be confusing to beginners because 
-# they won't get to see the prompts.
-#
-# This option does not apply to spell casting... Conjurers would probably 
-# find that really annoying.
-# 
-
 # auto_list = true
+# lowercase_invocations = true
+# easy_open = true
+# easy_butcher = true
+# easy_armour = false
+# easy_confirm = (none | safe | all)
+# easy_quit_item_lists = true
+# easy_exit_menu = true
+# default_autoprayer = true
 
+##### 4-i	Messages and Display Enhancements #####
+#
+# show_uncursed = false
+hp_warning = 25
+# terse_hand = false
+# delay_message_clear = true
+# always_greet = true
+#
+# menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
+# menu_colour = green:(worn|neck|hand|weapon)\)
+# menu_colour = red: cursed
 
+##### 4-j	Firing Commands #######################
 #
-# Input buffer flushing options (flush.*)
+fire_items_start = a
+fire_order = launcher, dart, stone, dagger, spear, handaxe, club
+
+##### 4-k	Channels ##############################
 #
-# These are useful when using macros.  Setting one of these 
-# sub-options to true will cause the entire input buffer to 
-# be dumped and thus effectively stop the macro.
+channel.multiturn = plain
+
+##### 4-l	Inscriptions ##########################
 #
-# The sub-options currently are (and their defaults):
-#
-# failure -- when spells/abilities get miscast (true)
-# command -- whenever the game is aboutn to get the next command (false)
-# message -- whenever the game outputs a non-mute message (false)
+# autoinscribe = royal jell:=g
+
+##### 4-m	Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
 
+##### 5-  Dump File #################################################
 #
-# lowercase_invocations
+##### 5-a	Items and Kill List ###################
 #
-# Set this option to true if you prefer to have invocations on 'a'-'e'
-# instead of the traditional 'A'-'E' (which is the default).
+# kill_map = friend:you, other:you
+# dump_kill_places = (single | all | none)
+# dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
+dump_item_origin_price = 100
+dump_message_count = 4
+# verbose_dump = true
+
+##### 5-b	Notes #################################
 #
+# use_notes = false
+note_items = rod,book,rune
+ood_interesting = 8
+# note_hp_percent = 5
+# note_skill_levels = 1,5,10,15,27
+# note_skill_max = true
 
-lowercase_invocations = true
-
-
+##### 6-  Miscellaneous #################################################
 #
-# terse_hand
+##### 6-a	All OS ################################
 #
-# Set this to false to have the "in hand" description on the main screen
-# the same as the inventory.  The default setting of true will give the
-# newer more terse description that should fit the limited space better
-# (but will be harder for newbies to understand).
-
-# terse_hand = false
-
-
+# colour.lightgray = black
+# colour.lightcyan = cyan
+# colour.yellow    = brown
 #
-# delay_message_clear - experimental (may be ugly at points)
-#
-# Setting this option to true will delay the clearing of messages until 
-# the message space is full (default is false which results in clearing
-# between player actions).
+# use_ascii = ascii
+wiz_mode = no
 
-# delay_message_clear = true
+##### 6-b	DOS and Windows #######################
+#
+# dos_use_background_intensity = true

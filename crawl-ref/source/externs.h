@@ -688,7 +688,8 @@ struct game_options
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
 
-    std::vector<message_filter> stop_travel;  // Messages that stop travel
+    // Messages that stop travel
+    std::vector<message_filter> travel_stop_message;
 
     int         stash_tracking; // How stashes are tracked
 
