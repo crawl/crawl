@@ -178,6 +178,8 @@ channel.multiturn = plain
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 dump_item_origin_price = 100
 dump_message_count = 4
+# dump_order  = header,stats,misc,notes,inventory,skills
+# dump_order += spells,mutations,messages,screenshot,kills
 # verbose_dump = true
 
 ##### 5-b	Notes #################################

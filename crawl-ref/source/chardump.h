@@ -17,11 +17,9 @@
 
 #include <string>
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - ouch
- * *********************************************************************** */
-bool dump_char( const char fname[30], bool show_prices );
+bool dump_char(const std::string &fname, 
+               bool show_prices, 
+               bool full_id = false);
 
 void resists_screen();
 

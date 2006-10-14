@@ -728,6 +728,9 @@ struct game_options
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
 
+    // Order of sections in the character dump.
+    std::vector<std::string> dump_order;
+
     bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.

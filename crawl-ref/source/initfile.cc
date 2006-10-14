@@ -351,6 +351,11 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
+static void add_dump_fields(const std::string &text)
+{
+    // Easy; chardump.cc has most of the intelligence.
+    append_vector(Options.dump_order, split_string(",", text));
+}
 
 static void reset_startup_options(bool clear_name = true)
 {
@@ -517,6 +522,10 @@ void reset_options(bool clear_name)
         Options.channels[i] = MSGCOL_DEFAULT;
 
     // Clear vector options.
+    Options.dump_order.clear();
+    add_dump_fields("header,stats,misc,notes,inventory,skills,"
+                   "spells,mutations,messages,screenshot,kills");
+
     Options.banned_objects.clear();
     Options.note_monsters.clear(); 
     Options.note_messages.clear(); 
@@ -883,6 +892,8 @@ void parse_option_line(const std::string &str, bool runscript)
     int first_equals = str.find('=');
     int first_dot = str.find('.');
 
+    bool plus_equal = false;
+
     // all lines with no equal-signs we ignore
     if (first_equals < 0)
         return;
@@ -903,6 +914,15 @@ void parse_option_line(const std::string &str, bool runscript)
 
     // Clean up our data...
     tolower_string( trim_string( key ) );
+
+    // Is this a case of key += val?
+    if (key.length() && key[key.length() - 1] == '+')
+    {
+        plus_equal = true;
+        key = key.substr(0, key.length() - 1);
+        trim_string(key);
+    }
+
     tolower_string( trim_string( subkey ) );
 
     // some fields want capitals... none care about external spaces
@@ -1672,6 +1692,13 @@ void parse_option_line(const std::string &str, bool runscript)
                     Options.menu_colour_mappings.push_back(mapping);
             }
         }
+    }
+    else if (key == "dump_order")
+    {
+        if (!plus_equal)
+            Options.dump_order.clear();
+
+        add_dump_fields(field);
     }
     else if (key == "dump_kill_places") 
     {

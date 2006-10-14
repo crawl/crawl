@@ -823,6 +823,11 @@ dump_item_origin_price = 100
 dump_message_count = 4
 	The number of last messages to be displayed in character dump files. 
 
+dump_order  = header,stats,misc,notes,inventory,skills
+dump_order += spells,mutations,messages,screenshot,kills
+        Controls the order of sections in the dump. You can use multiple
+        dump_order lines - all lines but the first must use dump_order +=
+
 verbose_dump = false
 	verbose dump causes less important item details to appear in character 
 	dumps.

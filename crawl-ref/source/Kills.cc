@@ -160,13 +160,11 @@ std::string KillMaster::kill_info() const
 #endif
     {
         // We can sum up ourselves, if Lua doesn't want to.
-        // FIXME: I'm not happy with the looks/wording of the grand total
-        // count.
         if (categories > 1)
         {
             // Give ourselves a newline first
-            killtext += EOL;
-            killtext += grandt + EOL;
+            killtext += "\n";
+            killtext += grandt + "\n";
         }
     }
 
@@ -201,28 +199,28 @@ void KillMaster::add_kill_info(std::string &killtext,
 #ifdef CLUA_BINDINGS
         if (clua.error.length())
         {
-            killtext += "Lua error:" EOL;
-            killtext += clua.error + EOL EOL;
+            killtext += "Lua error:\n";
+            killtext += clua.error + "\n\n";
         }
 #endif
         if (separator)
-            killtext += EOL;
+            killtext += "\n";
 
         killtext += "Vanquished Creatures";
         if (category)
             killtext += std::string(" (") + category + ")";
 
-        killtext += EOL;
+        killtext += "\n";
 
         for (int i = 0, sz = kills.size(); i < sz; ++i)
         {
             killtext += "  " + kills[i].desc;
-            killtext += EOL;
+            killtext += "\n";
         }
         {
             char numbuf[100];
             snprintf(numbuf, sizeof numbuf, 
-                    "%ld creature%s vanquished." EOL, count,
+                    "%ld creature%s vanquished." "\n", count,
                     count > 1? "s" : "");
             killtext += numbuf;
         }
@@ -925,7 +923,7 @@ static int kill_lualc_rawwrite(lua_State *ls)
     lua_settop(ls, -2);
 
     *skill += s;
-    *skill += EOL;
+    *skill += "\n";
 
     return 0;
 }
@@ -956,7 +954,7 @@ static int kill_lualc_write(lua_State *ls)
         lua_settop(ls, -2);
 
         // Write kill description and a newline.
-        *skill += ke->desc + EOL;
+        *skill += ke->desc + "\n";
     }
     return 0;
 }

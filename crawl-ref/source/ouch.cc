@@ -1084,7 +1084,7 @@ void end_game( struct scorefile_entry &se )
     invent( -1, dead );
     clrscr();
 
-    if (!dump_char( "morgue.txt", !dead ))
+    if (!dump_char( "morgue", !dead, true ))
         mpr("Char dump unsuccessful! Sorry about that.");
 #if DEBUG_DIAGNOSTICS
     //jmf: switched logic and moved "success" message to debug-only
