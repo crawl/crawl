@@ -88,7 +88,9 @@ static void sdump_screenshot(const std::string &section, std::string &text);
 static void sdump_kills(const std::string &section, std::string &text);
 static void sdump_newline(const std::string &section, std::string &text);
 static void sdump_separator(const std::string &section, std::string &text);
+#ifdef CLUA_BINDINGS
 static void sdump_lua(const std::string &section, std::string &text);
+#endif
 static bool write_dump(const std::string &fname, const std::string &text, 
                        bool full_id);
 static void dump_stats2( std::string & text, bool calc_unid);
