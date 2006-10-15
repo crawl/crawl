@@ -255,8 +255,6 @@ std::string get_prefs_filename()
 void make_filename( char *buf, const char *prefix, int level, int where,
                     bool isLabyrinth, bool isGhost )
 {
-    UNUSED( isGhost );
-
     char suffix[4], lvl[5];
     char finalprefix[kFileNameLen];
 

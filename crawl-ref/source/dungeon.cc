@@ -7412,8 +7412,6 @@ static bool octa_room(spec_room &sr, int oblique_max, unsigned char type_floor)
 
 static void labyrinth_level(int level_number)
 {
-    int temp_rand;              // probability determination {dlb}
-
     int keep_lx = 0, keep_ly = 0;
     int keep_lx2 = 0, keep_ly2 = 0;
     char start_point_x = 10;
@@ -7544,14 +7542,12 @@ static void labyrinth_level(int level_number)
   finishing:
     start_point_x = 10 + random2(GXM - 20);
 
-    int treasure_item = 0;
-
-    unsigned char glopop = OBJ_RANDOM;  // used in calling items() {dlb}
+    int glopop = OBJ_RANDOM;  // used in calling items() {dlb}
 
     int num_items = 8 + random2avg(9, 2);
     for (int i = 0; i < num_items; i++)
     {
-        temp_rand = random2(11);
+        int temp_rand = random2(11);
 
         glopop = ((temp_rand == 0 || temp_rand == 9)  ? OBJ_WEAPONS :
                   (temp_rand == 1 || temp_rand == 10) ? OBJ_ARMOUR :
@@ -7563,8 +7559,8 @@ static void labyrinth_level(int level_number)
                   (temp_rand == 7)                    ? OBJ_BOOKS
                   /* (temp_rand == 8) */              : OBJ_STAVES);
 
-        treasure_item = items( 1, glopop, OBJ_RANDOM, true, 
-                               level_number * 3, 250 );
+        const int treasure_item = items( 1, glopop, OBJ_RANDOM, true, 
+                                         level_number * 3, 250 );
 
         if (treasure_item != NON_ITEM)
         {
@@ -7580,10 +7576,8 @@ static void labyrinth_level(int level_number)
     link_items();
 
     // turn rock walls into undiggable stone or metal:
-    temp_rand = random2(50);
-
-    unsigned char wall_xform = ((temp_rand > 10) ? DNGN_STONE_WALL   // 78.0%
-                                                 : DNGN_METAL_WALL); // 22.0%
+    unsigned char wall_xform = ((random2(50) > 10) ? DNGN_STONE_WALL   // 78.0%
+                                                   : DNGN_METAL_WALL); // 22.0%
 
     replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,wall_xform);
 
