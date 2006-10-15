@@ -61,6 +61,8 @@
 static void autopickup(void);
 static bool is_stackable_item( const item_def &item );
 static bool invisible_to_player( const item_def& item );
+static void item_list_on_square( std::vector<const item_def*>& items,
+                                 int obj, bool force_squelch = false );
 static void autoinscribe_item( item_def& item );
 static void autoinscribe_items( void );
 
@@ -695,6 +697,36 @@ static bool invisible_to_player( const item_def& item ) {
     return strstr(item.inscription.c_str(), "=k") != 0;
 }
 
+static bool has_nonsquelched_items( int obj ) {
+    while ( obj != NON_ITEM ) {
+        if ( !invisible_to_player(mitm[obj]) )
+            return true;
+        obj = mitm[obj].link;
+    }
+    return false;
+}
+
+/* Fill items with the items on a square.
+   Squelched items (marked with =k) are ignored, unless
+   the square contains *only* squelched items, in which case they
+   are included. If force_squelch is true, squelched items are
+   never displayed.
+ */
+static void item_list_on_square( std::vector<const item_def*>& items,
+                                 int obj, bool force_squelch ) {
+
+    const bool have_nonsquelched = (force_squelch ||
+                                    has_nonsquelched_items(obj));
+
+    /* loop through the items */
+    while ( obj != NON_ITEM ) {
+        /* add them to the items list if they qualify */
+        if ( !have_nonsquelched || !invisible_to_player(mitm[obj]) )
+            items.push_back( &mitm[obj] );
+        obj = mitm[obj].link;
+    }
+}
+
 /*
  * Takes keyin as an argument because it will only display a long list of items
  * if ; is pressed.
@@ -788,18 +820,12 @@ void item_check(char keyin)
 
 void show_items()
 {
-    const int o = igrd[you.x_pos][you.y_pos];
+    std::vector<const item_def*> items;
+    item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
 
-    if (o == NON_ITEM) {
+    if ( items.empty() )
         mpr("There are no items here.");
-    }
     else {
-	std::vector<const item_def*> items;
-
-	for (int i = o; i != NON_ITEM; i = mitm[i].link)
-	    if ( !invisible_to_player(mitm[i]) )
-		items.push_back( &mitm[i] );
-	
 	select_items( items, "Things that are here:", true );
 	redraw_screen();
     }
@@ -810,10 +836,7 @@ void show_items()
 void pickup_menu(int item_link)
 {
     std::vector<const item_def*> items;
-
-    for (int i = item_link; i != NON_ITEM; i = mitm[i].link)
-	if (!invisible_to_player(mitm[i]))
-	    items.push_back( &mitm[i] );
+    item_list_on_square( items, item_link, false );
 
     std::vector<SelItem> selected = 
         select_items( items, "Select items to pick up" );
@@ -1118,12 +1141,10 @@ bool pickup_single_item(int link, int qty)
     return (true);
 }
 
-void pickup(void)
+void pickup()
 {
-    int o = 0;
     int m = 0;
-    unsigned char keyin = 0;
-    int next;
+    int keyin = 'x';
     char str_pass[ ITEMNAME_SIZE ];
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
@@ -1182,7 +1203,7 @@ void pickup(void)
         }
     }
 
-    o = igrd[you.x_pos][you.y_pos];
+    int o = igrd[you.x_pos][you.y_pos];
 
     if (o == NON_ITEM)
     {
@@ -1195,40 +1216,26 @@ void pickup(void)
         pickup_single_item(o, mitm[o].quantity);
     }                           // end of if items_here
     else
-    { 
+    {
+        int next;
         mpr("There are several objects here.");
-
-        while (o != NON_ITEM)
+        const bool hide_squelched = has_nonsquelched_items(o);
+        while ( o != NON_ITEM )
         {
+            // must save this because pickup can destroy the item
             next = mitm[o].link;
-	    if ( invisible_to_player( mitm[o] ) ) {
-		o = next;
+
+	    if ( hide_squelched && invisible_to_player(mitm[o]) ) {
+                o = next;
 		continue;
-	    }
+            }
 
             if (keyin != 'a')
             {
-                strcpy(info, "Pick up ");
-
-                if (mitm[o].base_type == OBJ_GOLD)
-                {
-                    char st_prn[20];
-                    itoa(mitm[o].quantity, st_prn, 10);
-                    strcat(info, st_prn);
-                    strcat(info, " gold piece");
-
-                    if (mitm[o].quantity > 1)
-                        strcat(info, "s");
-                }
-                else
-                {
-                    it_name(o, DESC_NOCAP_A, str_pass);
-                    strcat(info, str_pass);
-                }
-
-                strcat(info, "\? (y/n/a/*?g,/q)");
+                char buf[ITEMNAME_SIZE];
+                item_name( mitm[o], DESC_NOCAP_A, buf );
+                snprintf( info, INFO_SIZE, "Pick up %s? (y/n/a/*?g,/q)", buf );
                 mpr( info, MSGCH_PROMPT );
-
                 keyin = get_ch();
             }
 
@@ -1257,7 +1264,7 @@ void pickup(void)
                     break;
                 }
             }
-
+            
             o = next;
         }
     }
