@@ -399,9 +399,7 @@ static std::string pluralize(const std::string &name,
     // whole name is not suffixed by a modifier, such as 'zombie' or 'skeleton'
     if ( (pos = name.find(" of ")) != std::string::npos 
             && !ends_with(name, no_of) )
-            {
         return pluralize(name.substr(0, pos)) + name.substr(pos);
-    }
     else if (ends_with(name, "us"))
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
@@ -677,7 +675,6 @@ void kill_ghost::load(FILE *file)
 kill_monster_desc::kill_monster_desc(const monsters *mon)
 {
 
-    // TODO: We need to understand how shapeshifters are handled.
     monnum = mon->type;
     modifier = M_NORMAL;
     switch (mon->type)
@@ -698,7 +695,7 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
     if (modifier != M_NORMAL) monnum = mon->number;
 
     if (mons_has_ench(mon, ENCH_SHAPESHIFTER) || 
-	mons_has_ench(mon, ENCH_GLOWING_SHAPESHIFTER))
+            mons_has_ench(mon, ENCH_GLOWING_SHAPESHIFTER))
         modifier = M_SHAPESHIFTER;
 
     // XXX: Ugly hack - merge all mimics into one mimic record.

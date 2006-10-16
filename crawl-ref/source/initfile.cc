@@ -354,7 +354,7 @@ static unsigned curses_attribute(const std::string &field)
 static void add_dump_fields(const std::string &text)
 {
     // Easy; chardump.cc has most of the intelligence.
-    append_vector(Options.dump_order, split_string(",", text));
+    append_vector(Options.dump_order, split_string(",", text, true, true));
 }
 
 static void reset_startup_options(bool clear_name = true)
