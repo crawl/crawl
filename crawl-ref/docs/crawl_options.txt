@@ -62,7 +62,8 @@ The contents of this text are:
 5-  Character Dump.
 5-a	Items and Kills.
 		kill_map, dump_kill_places, dump_item_origins, 
-		dump_item_origin_price, dump_message_count, verbose_dump 
+		dump_item_origin_price, dump_message_count, dump_order,
+                verbose_dump 
 5-b	Notes.
 		use_notes, note_items, ood_interesting, note_hp_percent, 
 		note_skill_levels, note_skill_max, note_monsters, 
