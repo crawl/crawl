@@ -67,7 +67,6 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 bool drink_fountain(void);
 void use_randart(unsigned char item_wield_2);

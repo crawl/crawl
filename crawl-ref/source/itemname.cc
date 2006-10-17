@@ -35,7 +35,6 @@
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 #include "view.h"
 #include "items.h"
 

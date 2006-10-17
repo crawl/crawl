@@ -44,7 +44,6 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );

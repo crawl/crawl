@@ -82,7 +82,6 @@
 #include "stuff.h"
 #include "tags.h"
 #include "travel.h"
-#include "wpn-misc.h"
 
 #ifdef SHARED_FILES_CHMOD_PRIVATE
 #define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )

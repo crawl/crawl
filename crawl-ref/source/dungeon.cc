@@ -48,7 +48,6 @@
 #include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 #define MAX_PIT_MONSTERS   10
 

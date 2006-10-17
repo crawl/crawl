@@ -1218,6 +1218,14 @@ bool does_damage_type( const item_def &item, int dam_type )
 }                               // end does_damage_type()
 
 
+hands_reqd_type hands_reqd(int base_type, int sub_type, size_type size)
+{
+    item_def item;
+    item.base_type = base_type;
+    item.sub_type  = sub_type;
+    return hands_reqd(item, size);
+}
+
 // give hands required to wield weapon for a torso of "size"
 hands_reqd_type hands_reqd( const item_def &item, size_type size )
 {
@@ -1613,6 +1621,15 @@ missile_type fires_ammo_type( const item_def &item )
         return (MI_NONE);
 
     return (Weapon_prop[ Weapon_index[item.sub_type] ].ammo);
+}
+
+missile_type fires_ammo_type( weapon_type wtype )
+{
+    item_def wpn;
+    wpn.base_type = OBJ_WEAPONS;
+    wpn.sub_type = wtype;
+
+    return (fires_ammo_type(wpn));
 }
 
 bool is_range_weapon( const item_def &item )

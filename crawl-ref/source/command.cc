@@ -35,7 +35,6 @@
 #include "stuff.h"
 #include "version.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 static void adjust_item(void);
 static void adjust_spells(void);

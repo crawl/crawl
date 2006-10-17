@@ -45,7 +45,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 static bool ball_of_energy(void);
 static bool ball_of_fixation(void);

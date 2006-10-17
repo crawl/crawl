@@ -66,7 +66,6 @@ tags.o \
 transfor.o \
 travel.o \
 view.o \
-wpn-misc.o \
 Kills.o \
 mt19937ar.o \
 clua.o

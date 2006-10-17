@@ -130,7 +130,6 @@
 #include "transfor.h"
 #include "travel.h"
 #include "view.h"
-#include "wpn-misc.h"
 #include "stash.h"
 
 struct crawl_environment env;

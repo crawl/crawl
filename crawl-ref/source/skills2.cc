@@ -35,7 +35,6 @@
 #include "randart.h"
 #include "religion.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 #include "view.h"
 
 /* jmf: some references for words I used below:

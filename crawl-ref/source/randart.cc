@@ -24,7 +24,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 /*
    The initial generation of a randart is very simple - it occurs

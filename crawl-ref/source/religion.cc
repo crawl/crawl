@@ -62,7 +62,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 const char *sacrifice[] = {
     " glows silver and disappears.",

@@ -70,7 +70,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 #define HIT_WEAK 7
 #define HIT_MED 18
@@ -424,22 +423,21 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     bool use_hand_and_a_half_bonus = false;
 
     int wpn_skill = SK_UNARMED_COMBAT;
-    int hands_reqd = HANDS_ONE;
+    int hands = HANDS_ONE;
 
     if (weapon != -1)
     {
         wpn_skill = weapon_skill( you.inv[weapon].base_type, 
                                   you.inv[weapon].sub_type );
 
-        hands_reqd = hands_reqd_for_weapon( you.inv[weapon].base_type,
-                                            you.inv[weapon].sub_type );
+        hands = hands_reqd( you.inv[weapon], player_size() );
     }
 
     if (unarmed_attacks
         && !can_do_unarmed_combat
         && !bearing_shield && ur_armed
         && !item_cursed( you.inv[ weapon ] )
-        && hands_reqd == HANDS_HALF)
+        && hands == HANDS_HALF)
     {
         // currently: +1 dam, +1 hit, -1 spd (loosely)
         use_hand_and_a_half_bonus = true;
@@ -612,7 +610,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                 min_speed = 5;
 
             // Using both hands can get a weapon up to speed 7
-            if ((hands_reqd == HANDS_TWO || use_hand_and_a_half_bonus)
+            if ((hands == HANDS_TWO || use_hand_and_a_half_bonus)
                 && min_speed > 7)
             {
                 min_speed = 7;
@@ -1781,7 +1779,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                 /* no punching with a shield or 2-handed wpn, except staves */
                 if (bearing_shield || coinflip()
-                    || (ur_armed && hands_reqd == HANDS_TWO
+                    || (ur_armed && hands == HANDS_TWO
                         && you.inv[weapon].base_type != OBJ_STAVES 
                         && you.inv[weapon].sub_type  != WPN_QUARTERSTAFF) )
                 {
@@ -3975,7 +3973,7 @@ int weapon_str_weight( int wpn_class, int wpn_type )
     int  ret;
 
     const int  wpn_skill  = weapon_skill( wpn_class, wpn_type );
-    const int  hands_reqd = hands_reqd_for_weapon( wpn_class, wpn_type );
+    const int  hands = hands_reqd( wpn_class, wpn_type, player_size() );
 
     // These are low values, because we'll be adding some bonus to the
     // larger weapons later.  Remember also that 1-1/2-hand weapons get
@@ -4016,7 +4014,7 @@ int weapon_str_weight( int wpn_class, int wpn_type )
     else if (wpn_type == WPN_QUICK_BLADE) // high dex is very good for these
         ret = 1;
 
-    if (hands_reqd == HANDS_TWO)
+    if (hands == HANDS_TWO)
         ret += 2;
 
     // most weapons are capped at 8
@@ -4047,10 +4045,9 @@ static inline int player_weapon_str_weight( void )
     int ret = weapon_str_weight( you.inv[weapon].base_type, you.inv[weapon].sub_type );
 
     const bool shield     = (you.equip[EQ_SHIELD] != -1);
-    const int  hands_reqd = hands_reqd_for_weapon( you.inv[weapon].base_type,
-                                                   you.inv[weapon].sub_type );
+    const int  hands = hands_reqd(you.inv[weapon], player_size());
 
-    if (hands_reqd == HANDS_HALF && !shield)
+    if (hands == HANDS_HALF && !shield)
         ret += 1;
 
     return (ret);

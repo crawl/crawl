@@ -43,7 +43,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 void blink(void)
 {

@@ -28,7 +28,6 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 #include <cstring>
 

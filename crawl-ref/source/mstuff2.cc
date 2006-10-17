@@ -41,7 +41,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 static unsigned char monster_abjuration(int pow, bool test);
 
@@ -872,8 +871,8 @@ void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
 {
     if (wepClass == OBJ_MISSILES
         && lnchClass == OBJ_WEAPONS
-        && launches_things(lnchType)
-	&& wepType == launched_by(lnchType))
+        && is_range_weapon_type((weapon_type) lnchType)
+	&& wepType == fires_ammo_type((weapon_type) lnchType))
     {
         launched = true;
     }

@@ -44,7 +44,6 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 #include "spl-util.h"
 
 
@@ -1208,7 +1207,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             description += "$This weapon is better for the dexterous.";
 #endif
 
-        switch (hands_reqd_for_weapon(item.base_type, item.sub_type))
+        switch (hands_reqd(item, player_size()))
         {
         case HANDS_ONE:
             description += "$It is a one handed weapon.";
@@ -1219,6 +1218,9 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             break;
         case HANDS_TWO:
             description += "$It is a two handed weapon.";
+            break;
+        default:
+            description += "$It is a buggy weapon.";
             break;
         }
     }

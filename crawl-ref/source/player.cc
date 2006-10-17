@@ -55,8 +55,6 @@
 #include "transfor.h"
 #include "travel.h"
 #include "view.h"
-#include "wpn-misc.h"
-
 
 /*
    you.duration []: //jmf: obsolete, see enum.h instead

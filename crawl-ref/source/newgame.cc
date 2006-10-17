@@ -96,8 +96,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "version.h"
-#include "wpn-misc.h"
-
 
 #define MIN_START_STAT       1
 

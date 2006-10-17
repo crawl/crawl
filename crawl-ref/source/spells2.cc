@@ -45,7 +45,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 int raise_corpse( int corps, int corx, int cory, int corps_beh,
                   int corps_hit, int actual );
