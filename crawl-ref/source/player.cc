@@ -1694,6 +1694,56 @@ bool player_is_shapechanged(void)
     return (true);
 }
 
+// psize defaults to PSIZE_TORSO, which checks the part of the body 
+// that wears armour and wields weapons (which is different for some hybrids).
+// base defaults to "false", meaning consider our current size, not our
+// natural one.
+size_type player_size( int psize, bool base )
+{
+    size_type  ret = (base) ? SIZE_CHARACTER : transform_size( psize );
+
+    if (ret == SIZE_CHARACTER)
+    {
+        // transformation has size of character's species:
+        switch (you.species)
+        {
+        case SP_OGRE:
+        case SP_OGRE_MAGE:
+        case SP_TROLL:
+            ret = SIZE_LARGE;
+            break;
+
+        case SP_NAGA:
+            // Most of their body is on the ground giving them a low profile.
+            if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
+                ret = SIZE_MEDIUM;
+            else
+                ret = SIZE_BIG;
+            break;
+
+        case SP_CENTAUR:
+            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_BIG;
+            break;
+
+        case SP_SPRIGGAN:
+            ret = SIZE_LITTLE;
+            break;
+
+        case SP_HALFLING:
+        case SP_GNOME:
+        case SP_KOBOLD:
+            ret = SIZE_SMALL;
+            break;
+
+        default:
+            ret = SIZE_MEDIUM;
+            break;
+        }
+    }
+
+    return (ret);
+}
+
 int player_evasion(void)
 {
     int ev = 10;
@@ -1809,6 +1859,13 @@ int player_mag_abil(bool is_weighted)
 
     return ((is_weighted) ? ((ma * you.intel) / 10) : ma);
 }                               // end player_mag_abil()
+
+// Returns the shield the player is wearing, or NULL if none.
+item_def *player_shield()
+{
+    const int shield = you.equip[EQ_SHIELD];
+    return (shield == -1? NULL : &you.inv[shield]);
+}
 
 int player_shield_class(void)   //jmf: changes for new spell
 {

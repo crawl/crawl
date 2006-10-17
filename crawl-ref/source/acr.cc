@@ -863,9 +863,11 @@ static bool recharge_rod( item_def &rod, bool wielded )
         rate = ROD_CHARGE_MULT / 2;
 
     // If not wielded, the rod charges far more slowly.
-    // [dshaligram] Reduced charge rate of non-wielded rods further.
     if (!wielded)
         rate /= 5;
+    // Shields hamper recharging for wielded rods.
+    else if (player_shield())
+        rate /= 2;
 
     if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
@@ -883,7 +885,6 @@ static bool recharge_rod( item_def &rod, bool wielded )
 
     return (true);
 }
-
 
 static void recharge_rods()
 {

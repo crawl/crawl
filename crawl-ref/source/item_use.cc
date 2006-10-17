@@ -75,56 +75,87 @@ static bool enchant_armour( void );
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
-bool can_wield(const item_def& weapon)
+bool can_wield(const item_def *weapon, bool say_reason)
 {
-    if (you.berserker)   return false;
+#define SAY(x) if (say_reason) { x; } else 
+
+    if (you.berserker)
+    {
+        SAY(canned_msg(MSG_TOO_BERSERK));
+        return false;
+    }
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE 
             && !can_equip( EQ_WEAPON ))
+    {
+        SAY(mpr("You can't wield anything in your present form."));
         return false;
+    }
 
     if (you.equip[EQ_WEAPON] != -1
             && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
             && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
+    {
+        SAY(mpr("You can't unwield your weapon to draw a new one!"));
         return false;
+    }
 
-    if (weapon.base_type != OBJ_WEAPONS && weapon.base_type == OBJ_STAVES
-            && you.equip[EQ_SHIELD] != -1)
-        return false;
+    // If we don't have an actual weapon to check, return now.
+    if (!weapon)
+        return (true);
+
+    for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
+    {
+        if (you.equip[i] != -1 && &you.inv[you.equip[i]] == weapon)
+        {
+            SAY(mpr("You are wearing that object!"));
+            return (false);
+        }
+    }
+
+    if (is_shield_incompatible(*weapon))
+    {
+        SAY(mpr("You can't wield that with a shield."));
+        return (false);
+    }
 
     if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && item_mass( weapon ) >= 500)
+            && item_mass( *weapon ) >= 300)
+    {
+        SAY(mpr("That's too large and heavy for you to wield."));
         return false;
+    }
 
     if ((you.species == SP_HALFLING || you.species == SP_GNOME
             || you.species == SP_KOBOLD || you.species == SP_SPRIGGAN)
-            && (weapon.sub_type == WPN_GREAT_SWORD
-                || weapon.sub_type == WPN_TRIPLE_SWORD
-                || weapon.sub_type == WPN_GREAT_MACE
-                || weapon.sub_type == WPN_DIRE_FLAIL
-                || weapon.sub_type == WPN_BATTLEAXE
-                || weapon.sub_type == WPN_EXECUTIONERS_AXE
-                || weapon.sub_type == WPN_LOCHABER_AXE
-                || weapon.sub_type == WPN_HALBERD
-                || weapon.sub_type == WPN_GLAIVE
-                || weapon.sub_type == WPN_GIANT_CLUB
-                || weapon.sub_type == WPN_GIANT_SPIKED_CLUB
-                || weapon.sub_type == WPN_LONGBOW
-                || weapon.sub_type == WPN_SCYTHE))
+            && (weapon->sub_type == WPN_GREAT_SWORD
+                || weapon->sub_type == WPN_TRIPLE_SWORD
+                || weapon->sub_type == WPN_GREAT_MACE
+                || weapon->sub_type == WPN_DIRE_FLAIL
+                || weapon->sub_type == WPN_BATTLEAXE
+                || weapon->sub_type == WPN_EXECUTIONERS_AXE
+                || weapon->sub_type == WPN_LOCHABER_AXE
+                || weapon->sub_type == WPN_HALBERD
+                || weapon->sub_type == WPN_GLAIVE
+                || weapon->sub_type == WPN_GIANT_CLUB
+                || weapon->sub_type == WPN_GIANT_SPIKED_CLUB
+                || weapon->sub_type == WPN_LONGBOW
+                || weapon->sub_type == WPN_SCYTHE))
+    {
+        SAY(mpr("That's too large for you to wield."));
         return false;
+    }
 
-    if (hands_reqd_for_weapon( weapon.base_type,
-                              weapon.sub_type ) == HANDS_TWO
-            && you.equip[EQ_SHIELD] != -1)
-        return false;
-
-    int weap_brand = get_weapon_brand( weapon );
+    int weap_brand = get_weapon_brand( *weapon );
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
-            && (!is_fixed_artefact( weapon )
+            && (!is_fixed_artefact( *weapon )
                 && (weap_brand == SPWPN_HOLY_WRATH 
                     || weap_brand == SPWPN_DISRUPTION
-                    || (weapon.base_type == OBJ_WEAPONS
-                         && weapon.sub_type == WPN_BLESSED_BLADE))))
+                    || (weapon->base_type == OBJ_WEAPONS
+                         && weapon->sub_type == WPN_BLESSED_BLADE))))
+    {
+        SAY(mpr("This weapon will not allow you to wield it."));
         return false;
+    }
 
     // We can wield this weapon. Phew!
     return true;
@@ -141,28 +172,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (false);
     }
 
-    if (you.berserker)
-    {
-        canned_msg(MSG_TOO_BERSERK);
+    // Any general reasons why we can't wield a new object?
+    if (!can_wield(NULL, true))
         return (false);
-    }
-
-    if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
-    {
-        if (!can_equip( EQ_WEAPON ))
-        {
-            mpr("You can't wield anything in your present form.");
-            return (false);
-        }
-    }
-
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-        && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
-    {
-        mpr("You can't unwield your weapon to draw a new one!");
-        return (false);
-    }
 
     if (you.sure_blade)
     {
@@ -227,87 +239,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (true);
     }
 
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
-    {
-        if (item_slot == you.equip[i])
-        {
-            mpr("You are wearing that object!");
-            return (false);
-        }
-    }
+    if (!can_wield(&you.inv[item_slot], true))
+        return (false);
 
-    if (you.inv[item_slot].base_type != OBJ_WEAPONS)
-    {
-        if (you.inv[item_slot].base_type == OBJ_STAVES
-            && you.equip[EQ_SHIELD] != -1)
-        {
-            mpr("You can't wield that with a shield.");
-            return (false);
-        }
+    // Go ahead and wield the weapon.
+    if (you.equip[EQ_WEAPON] != -1)
+        unwield_item(you.equip[EQ_WEAPON]);
 
-        if (you.equip[EQ_WEAPON] != -1)
-            unwield_item(you.equip[EQ_WEAPON]);
-
-        you.equip[EQ_WEAPON] = item_slot;
-    }
-    else
-    {
-        if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && item_mass( you.inv[item_slot] ) >= 300)
-        {
-            mpr("That's too large and heavy for you to wield.");
-            return (false);
-        }
-
-        if ((you.species == SP_HALFLING || you.species == SP_GNOME
-             || you.species == SP_KOBOLD || you.species == SP_SPRIGGAN)
-
-            && (you.inv[item_slot].sub_type == WPN_GREAT_SWORD
-                || you.inv[item_slot].sub_type == WPN_TRIPLE_SWORD
-                || you.inv[item_slot].sub_type == WPN_GREAT_MACE
-                || you.inv[item_slot].sub_type == WPN_DIRE_FLAIL
-                || you.inv[item_slot].sub_type == WPN_BATTLEAXE
-                || you.inv[item_slot].sub_type == WPN_EXECUTIONERS_AXE
-                || you.inv[item_slot].sub_type == WPN_LOCHABER_AXE
-                || you.inv[item_slot].sub_type == WPN_HALBERD
-                || you.inv[item_slot].sub_type == WPN_GLAIVE
-                || you.inv[item_slot].sub_type == WPN_GIANT_CLUB
-                || you.inv[item_slot].sub_type == WPN_GIANT_SPIKED_CLUB
-                || you.inv[item_slot].sub_type == WPN_LONGBOW
-                || you.inv[item_slot].sub_type == WPN_SCYTHE))
-        {
-            mpr("That's too large for you to wield.");
-            return (false);
-
-        }
-
-        if (hands_reqd_for_weapon( you.inv[item_slot].base_type,
-                              you.inv[item_slot].sub_type ) == HANDS_TWO
-            && you.equip[EQ_SHIELD] != -1)
-        {
-            mpr("You can't wield that with a shield.");
-            return (false);
-        }
-
-        int weap_brand = get_weapon_brand( you.inv[item_slot] );
-
-        if ((you.is_undead || you.species == SP_DEMONSPAWN)
-            && (!is_fixed_artefact( you.inv[item_slot] )
-                && (weap_brand == SPWPN_HOLY_WRATH 
-                    || weap_brand == SPWPN_DISRUPTION
-                    || (you.inv[item_slot].base_type == OBJ_WEAPONS
-                         && you.inv[item_slot].sub_type == WPN_BLESSED_BLADE))))
-        {
-            mpr("This weapon will not allow you to wield it.");
-            you.turn_is_over = true;
-            return (false);
-        }
-
-        if (you.equip[EQ_WEAPON] != -1)
-            unwield_item(you.equip[EQ_WEAPON]);
-
-        you.equip[EQ_WEAPON] = item_slot;
-    }
+    you.equip[EQ_WEAPON] = item_slot;
 
     // any oddness on wielding taken care of here
     wield_effects(item_slot, show_weff_messages);
@@ -326,6 +265,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     you.turn_is_over = true;
 
     return (true);
+}
+
+// Warn if your shield is greatly impacting the effectiveness of your weapon?
+void warn_shield_penalties()
+{
+    // FIXME: We could use subtle warnings here.
 }
 
 // provide a function for handling initial wielding of 'special'
@@ -564,6 +509,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
         if (item_cursed( you.inv[item_wield_2] ))
             mpr("It sticks to your hand!");
     }
+
+    if (showMsgs)
+        warn_shield_penalties();
 }                               // end wield_weapon()
 
 //---------------------------------------------------------------
@@ -672,12 +620,10 @@ bool do_wear_armour( int item, bool quiet )
     // if you're wielding something,
     if (you.equip[EQ_WEAPON] != -1
         // attempting to wear a shield,
-        && (you.inv[item].sub_type == ARM_SHIELD
-            || you.inv[item].sub_type == ARM_BUCKLER
-            || you.inv[item].sub_type == ARM_LARGE_SHIELD)
-        // weapon is two-handed
-        && hands_reqd_for_weapon(you.inv[you.equip[EQ_WEAPON]].base_type,
-                      you.inv[you.equip[EQ_WEAPON]].sub_type) == HANDS_TWO)
+        && is_shield(you.inv[item])
+        && is_shield_incompatible(
+                    you.inv[you.equip[EQ_WEAPON]],
+                    &you.inv[item]))
     {
         if (!quiet)
            mpr("You'd need three hands to do that!");
@@ -1164,6 +1110,45 @@ void shoot_thing(void)
     throw_it( beam, item );
 }                               // end shoot_thing()
 
+// Returns delay multiplier numerator (denominator should be 100) for the
+// launcher with the currently equipped shield.
+int launcher_shield_slowdown(const item_def &launcher)
+{
+    int speed_adjust       = 100;
+
+    const item_def *shield = player_shield();
+
+    if (!shield)
+        return (speed_adjust);
+
+    const int shield_type = shield->sub_type;
+    hands_reqd_type hands = hands_reqd(launcher, player_size());
+
+    switch (hands)
+    {
+    default:
+    case HANDS_ONE:
+    case HANDS_HALF:
+        speed_adjust = shield_type == ARM_BUCKLER  ? 105 :
+                       shield_type == ARM_SHIELD   ? 125 :
+                                                     150;
+        break;
+
+    case HANDS_TWO:
+        speed_adjust = shield_type == ARM_BUCKLER  ? 125 :
+                       shield_type == ARM_SHIELD   ? 150 :
+                                                     200;
+        break;
+    }
+
+    // Adjust for shields skill.
+    if (speed_adjust > 100)
+        speed_adjust -= ((speed_adjust - 100) * 5 / 10) 
+                            * you.skills[SK_SHIELDS] / 27;
+
+    return (speed_adjust);
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If dummy_target is non-NULL, throw_it fakes a bolt and calls
@@ -1325,7 +1310,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
-        const bool two_handed   = (you.equip[EQ_SHIELD] == -1);
+        const bool two_handed = (you.equip[EQ_SHIELD] == -1);
         bool poisoned = (ammo_brand == SPMSL_POISONED
                             || ammo_brand == SPMSL_POISONED_II);
         const int rc_skill = you.skills[SK_RANGED_COMBAT];
@@ -1394,11 +1379,12 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         shoot_skill = you.skills[launcher_skill];
         effSkill = (shoot_skill * 2 + rc_skill) / 3;
 
-        // FIXME: Use actual body size
-        if (!two_handed && hands_reqd(launcher, SIZE_MEDIUM) == HANDS_HALF)
+        if (!two_handed)
         {
-            speed_base = (speed_base * 3 + 1) / 2;
-            speed_min = (speed_min * 3 + 1) / 2;
+            int speed_adjust = launcher_shield_slowdown(launcher);
+
+            speed_base = speed_base * speed_adjust / 100;
+            speed_min =  speed_min  * speed_adjust / 100;
         }
 
         speed = speed_base - 4 * shoot_skill * speed_stat / 250;

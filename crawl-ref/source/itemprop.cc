@@ -1518,7 +1518,7 @@ bool check_weapon_tool_size( const item_def &item, size_type size )
     return (fit >= -3 && fit <= 1);
 }
 
-// Returns true if weapon is uasable as a weapon
+// Returns true if weapon is usable as a weapon
 bool check_weapon_wieldable_size( const item_def &item, size_type size )
 {
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
@@ -2043,4 +2043,26 @@ bool is_colourful_item( const item_def &item )
     }
 
     return (ret);
+}
+
+bool is_shield(const item_def &item)
+{
+    return item.base_type == OBJ_ARMOUR
+        && (item.sub_type == ARM_SHIELD
+            || item.sub_type == ARM_BUCKLER
+            || item.sub_type == ARM_LARGE_SHIELD);
+}
+
+// Returns true if the given item cannot be wielded with the given shield.
+// The currently equipped shield is used if no shield is passed in.
+bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
+{
+    // If there's no shield, there's no problem.
+    if (!shield && !(shield = player_shield()))
+        return (false);
+
+    hands_reqd_type hand = hands_reqd(weapon, player_size());
+    return  hand == HANDS_TWO 
+            && !item_is_rod(weapon) 
+            && !is_range_weapon(weapon);
 }

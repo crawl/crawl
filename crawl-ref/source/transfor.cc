@@ -89,6 +89,26 @@ static bool check_for_cursed_equipment( FixedVector < char, 8 > &remove_stuff )
     return (false);
 }                               // end check_for_cursed_equipment()
 
+// FIXME: Switch to 4.1 transforms handling.
+size_type transform_size(int)
+{
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
+    switch (transform)
+    {
+    case TRAN_SPIDER:
+        return SIZE_TINY;
+    case TRAN_ICE_BEAST:
+        return SIZE_LARGE;
+    case TRAN_DRAGON:
+    case TRAN_SERPENT_OF_HELL:
+        return SIZE_HUGE;
+    case TRAN_AIR:
+        return SIZE_MEDIUM;
+    default:
+        return SIZE_CHARACTER;
+    }
+}
+
 bool transform(int pow, char which_trans)
 {
     if (you.species == SP_MERFOLK && player_is_swimming()

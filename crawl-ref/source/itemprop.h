@@ -139,4 +139,8 @@ size_type item_size( const item_def &item );
 
 bool is_colourful_item( const item_def &item );
 
+bool is_shield(const item_def &item);
+bool is_shield_incompatible(const item_def &weapon, 
+                            const item_def *shield = NULL);
+
 #endif

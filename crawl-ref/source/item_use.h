@@ -103,7 +103,7 @@ struct item_def;
 /* ***********************************************************************
  * called from: food
  * *********************************************************************** */
-bool can_wield(const item_def& weapon);
+bool can_wield(const item_def *weapon, bool say_why = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -138,5 +138,6 @@ bool enchant_weapon( int which_stat, bool quiet = false );
 bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
 
 void inscribe_item();
+int launcher_shield_slowdown(const item_def &launcher);
 
 #endif
