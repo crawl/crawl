@@ -396,8 +396,15 @@ void reset_options(bool clear_name)
     Options.char_set               = CSET_IBM;
 #endif
     init_char_table(Options.char_set);
-
-    Options.autopickups            = 0x0000;
+    
+    // set it to the .crawlrc default
+    Options.autopickups = ((1L << 15) | // gold
+                           (1L <<  6) | // scrolls
+                           (1L <<  8) | // potions
+                           (1L << 10) | // books
+                           (1L <<  7) | // jewellery
+                           (1L <<  3) | // wands
+                           (1L <<  4)); // food
     Options.verbose_dump           = false;
     Options.detailed_stat_dump     = true;
     Options.colour_map             = false;
@@ -947,6 +954,9 @@ void parse_option_line(const std::string &str, bool runscript)
     // everything not a valid line is treated as a comment
     if (key == "autopickup")
     {
+        // clear out autopickup
+        Options.autopickups = 0L;
+
         for (size_t i = 0; i < field.length(); i++)
         {
             char type = field[i];
