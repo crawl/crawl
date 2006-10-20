@@ -42,10 +42,14 @@ char id[NUM_IDTYPE][MAX_SUBTYPES];
 
 static bool is_random_name_space( char let );
 static bool is_random_name_vowel( char let);
-static char item_name_2( const item_def &item, char buff[ ITEMNAME_SIZE ], bool terse );
+static const char *item_name_2(
+        const item_def &item, char buff[ ITEMNAME_SIZE ], bool terse );
 
 static char retvow(int sed);
 static char  retlet(int sed );
+
+// [dshaligram] For calls to item_name without a pre-allocated buffer.
+static char default_itembuf[ITEMNAME_SIZE];
 
 bool is_vowel( const char chr )
 {
@@ -63,31 +67,33 @@ bool item_type_known( const item_def &item )
 
 // it_name() and in_name() are now somewhat obsolete now that itemname
 // takes item_def, so consider them deprecated.
-void it_name( int itn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+const char *it_name( int itn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
 {
-    item_name( mitm[itn], des, buff, terse );
+    return item_name( mitm[itn], des, buff, terse );
 }                               // end it_name()
 
 
-void in_name( int inn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+const char *in_name( int inn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
 {
-    item_name( you.inv[inn], des, buff, terse );
+    return item_name( you.inv[inn], des, buff, terse );
 }                               // end in_name()
 
 // quant_name is usful since it prints out a different number of items
 // than the item actually contains.
-void quant_name( const item_def &item, int quant, char des,
+const char *quant_name( const item_def &item, int quant, char des,
                  char buff[ ITEMNAME_SIZE ], bool terse )
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
     tmp.quantity = quant;
 
-    item_name( tmp, des, buff, terse );
+    return item_name( tmp, des, buff, terse );
 }                               // end quant_name()
 
-char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
-                bool terse )
+// buff must be at least ITEMNAME_SIZE if non-NULL. If NULL, a static
+// item buffer will be used.
+const char *item_name( const item_def &item, char descrip, 
+                       char *buff, bool terse )
 {
     const int item_clas = item.base_type;
     const int item_typ = item.sub_type;
@@ -95,6 +101,9 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
     
     char tmp_quant[20];
     char itm_name[  ITEMNAME_SIZE  ] = "";
+
+    if (!buff)
+        buff = default_itembuf;
 
     item_name_2( item, itm_name, terse );
 
@@ -272,14 +281,16 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
 	strncat( buff, "}", 1 );
     }
 
-    return (1);
+    return (buff);
 }                               // end item_name()
 
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
-                         bool terse )
+static const char *item_name_2(
+        const item_def &item, 
+        char buff[ITEMNAME_SIZE],
+        bool terse )
 {
     const int item_clas = item.base_type;
     const int item_typ = item.sub_type;
@@ -1881,7 +1892,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         strncat(buff, "s", ITEMNAME_SIZE );
     }
 
-    return 1;
+    return (buff);
 }                               // end item_name_2()
 
 void save_id(char identy[4][50])

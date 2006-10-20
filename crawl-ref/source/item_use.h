@@ -140,4 +140,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
 void inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher);
 
+void warn_shield_penalties();
+
 #endif

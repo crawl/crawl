@@ -37,6 +37,8 @@
 
 extern std::vector<SelItem> items_for_multidrop;
 
+static void armour_wear_effects(const int item_inv_slot);
+
 void start_delay( int type, int turns, int parm1, int parm2 )
 /***********************************************************/
 {
@@ -171,7 +173,6 @@ int current_delay_action( void )
 void handle_delay( void )
 /***********************/
 {
-    int   ego;
     char  str_pass[ ITEMNAME_SIZE ];
 
     if (you_are_delayed()) 
@@ -286,152 +287,8 @@ void handle_delay( void )
                 break;
 
             case DELAY_ARMOUR_ON:
-            {
-                set_ident_flags( you.inv[ delay.parm1 ], 
-                                 ISFLAG_EQ_ARMOUR_MASK );
-
-                in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
-                snprintf( info, INFO_SIZE, 
-                        "You finish putting on %s.", str_pass );
-                mpr(info);
-
-                const equipment_type slot =
-                        get_armour_slot( you.inv[delay.parm1] );
-
-                if (slot == EQ_BODY_ARMOUR)
-                {
-                    you.equip[EQ_BODY_ARMOUR] = delay.parm1;
-
-                    if (you.duration[DUR_ICY_ARMOUR] != 0)
-                    {
-                        mpr( "Your icy armour melts away.", MSGCH_DURATION );
-                        you.redraw_armour_class = 1;
-                        you.duration[DUR_ICY_ARMOUR] = 0;
-                    }
-                }
-                else
-                {
-                    switch (slot)
-                    {
-                    case EQ_SHIELD:
-                        if (you.duration[DUR_CONDENSATION_SHIELD])
-                        {
-                            mpr( "Your icy shield evaporates.", MSGCH_DURATION );
-                            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-                        }
-                        you.equip[EQ_SHIELD] = delay.parm1;
-                        break;
-                    case EQ_CLOAK:
-                        you.equip[EQ_CLOAK] = delay.parm1;
-                        break;
-                    case EQ_HELMET:
-                        you.equip[EQ_HELMET] = delay.parm1;
-                        break;
-                    case EQ_GLOVES:
-                        you.equip[EQ_GLOVES] = delay.parm1;
-                        break;
-                    case EQ_BOOTS:
-                        you.equip[EQ_BOOTS] = delay.parm1;
-                        break;
-                    default:
-                        break;
-                    }
-                }
-
-                ego = get_armour_ego_type( you.inv[ delay.parm1 ] );
-                if (ego != SPARM_NORMAL)
-                {   
-                    switch (ego)
-                    {
-                    case SPARM_RUNNING:
-                        strcpy(info, "You feel quick");
-                        strcat(info, (you.species == SP_NAGA
-                                || you.species == SP_CENTAUR) ? "." : " on your feet.");
-                        mpr(info);
-                        break;
-
-                    case SPARM_FIRE_RESISTANCE:
-                        mpr("You feel resistant to fire.");
-                        break;
-
-                    case SPARM_COLD_RESISTANCE:
-                        mpr("You feel resistant to cold.");
-                        break;
-
-                    case SPARM_POISON_RESISTANCE:
-                        mpr("You feel healthy.");
-                        break;
-
-                    case SPARM_SEE_INVISIBLE:
-                        mpr("You feel perceptive.");
-                        break;
-
-                    case SPARM_DARKNESS:
-                        if (!you.invis)
-                            mpr("You become transparent for a moment.");
-                        break;
-
-                    case SPARM_STRENGTH:
-                        modify_stat(STAT_STRENGTH, 3, false);
-                        break;
-
-                    case SPARM_DEXTERITY:
-                        modify_stat(STAT_DEXTERITY, 3, false);
-                        break;
-
-                    case SPARM_INTELLIGENCE:
-                        modify_stat(STAT_INTELLIGENCE, 3, false);
-                        break;
-
-                    case SPARM_PONDEROUSNESS:
-                        mpr("You feel rather ponderous.");
-                        // you.speed += 2; 
-                        you.redraw_evasion = 1;
-                        break;
-
-                    case SPARM_LEVITATION:
-                        mpr("You feel rather light.");
-                        break;
-
-                    case SPARM_MAGIC_RESISTANCE:
-                        mpr("You feel resistant to magic.");
-                        break;
-
-                    case SPARM_PROTECTION:
-                        mpr("You feel protected.");
-                        break;
-
-                    case SPARM_STEALTH:
-                        mpr("You feel stealthy.");
-                        break;
-
-                    case SPARM_RESISTANCE:
-                        mpr("You feel resistant to extremes of temperature.");
-                        break;
-
-                    case SPARM_POSITIVE_ENERGY:
-                        mpr("Your life-force is being protected.");
-                        break;
-
-                    case SPARM_ARCHMAGI:
-                        if (!you.skills[SK_SPELLCASTING])
-                            mpr("You feel strangely numb.");
-                        else
-                            mpr("You feel extremely powerful.");
-                        break;
-                    }
-                }
-
-                if (is_random_artefact( you.inv[ delay.parm1 ] ))
-                    use_randart( delay.parm1 );
-
-                if (item_cursed( you.inv[ delay.parm1 ] ))
-                    mpr( "Oops, that feels deathly cold." );
-
-                you.redraw_armour_class = 1;
-                you.redraw_evasion = 1;
+                armour_wear_effects( delay.parm1 );
                 break;
-            }
             case DELAY_ARMOUR_OFF:
             {
                 in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
@@ -624,4 +481,148 @@ void handle_delay( void )
             you.delay_queue.pop();
         }
     }
+}
+
+static void armour_wear_effects(const int item_slot)
+{
+    item_def &arm = you.inv[item_slot];
+
+    set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
+    mprf("You finish putting on %s.", item_name(arm, DESC_NOCAP_YOUR));
+
+    const equipment_type eq_slot = get_armour_slot(arm);
+
+    if (eq_slot == EQ_BODY_ARMOUR)
+    {
+        you.equip[EQ_BODY_ARMOUR] = item_slot;
+
+        if (you.duration[DUR_ICY_ARMOUR] != 0)
+        {
+            mpr( "Your icy armour melts away.", MSGCH_DURATION );
+            you.redraw_armour_class = 1;
+            you.duration[DUR_ICY_ARMOUR] = 0;
+        }
+    }
+    else
+    {
+        switch (eq_slot)
+        {
+        case EQ_SHIELD:
+            if (you.duration[DUR_CONDENSATION_SHIELD])
+            {
+                mpr( "Your icy shield evaporates.", MSGCH_DURATION );
+                you.duration[DUR_CONDENSATION_SHIELD] = 0;
+            }
+            you.equip[EQ_SHIELD] = item_slot;
+            break;
+        case EQ_CLOAK:
+            you.equip[EQ_CLOAK] = item_slot;
+            break;
+        case EQ_HELMET:
+            you.equip[EQ_HELMET] = item_slot;
+            break;
+        case EQ_GLOVES:
+            you.equip[EQ_GLOVES] = item_slot;
+            break;
+        case EQ_BOOTS:
+            you.equip[EQ_BOOTS] = item_slot;
+            break;
+        default:
+            break;
+        }
+    }
+
+    int ego = get_armour_ego_type( arm );
+    if (ego != SPARM_NORMAL)
+    {   
+        switch (ego)
+        {
+        case SPARM_RUNNING:
+            mprf("You feel quick%s.",
+                    (you.species == SP_NAGA || you.species == SP_CENTAUR) 
+                    ? "" : " on your feet");
+            break;
+
+        case SPARM_FIRE_RESISTANCE:
+            mpr("You feel resistant to fire.");
+            break;
+
+        case SPARM_COLD_RESISTANCE:
+            mpr("You feel resistant to cold.");
+            break;
+
+        case SPARM_POISON_RESISTANCE:
+            mpr("You feel healthy.");
+            break;
+
+        case SPARM_SEE_INVISIBLE:
+            mpr("You feel perceptive.");
+            break;
+
+        case SPARM_DARKNESS:
+            if (!you.invis)
+                mpr("You become transparent for a moment.");
+            break;
+
+        case SPARM_STRENGTH:
+            modify_stat(STAT_STRENGTH, 3, false);
+            break;
+
+        case SPARM_DEXTERITY:
+            modify_stat(STAT_DEXTERITY, 3, false);
+            break;
+
+        case SPARM_INTELLIGENCE:
+            modify_stat(STAT_INTELLIGENCE, 3, false);
+            break;
+
+        case SPARM_PONDEROUSNESS:
+            mpr("You feel rather ponderous.");
+            // you.speed += 2; 
+            you.redraw_evasion = 1;
+            break;
+
+        case SPARM_LEVITATION:
+            mpr("You feel rather light.");
+            break;
+
+        case SPARM_MAGIC_RESISTANCE:
+            mpr("You feel resistant to magic.");
+            break;
+
+        case SPARM_PROTECTION:
+            mpr("You feel protected.");
+            break;
+
+        case SPARM_STEALTH:
+            mpr("You feel stealthy.");
+            break;
+
+        case SPARM_RESISTANCE:
+            mpr("You feel resistant to extremes of temperature.");
+            break;
+
+        case SPARM_POSITIVE_ENERGY:
+            mpr("Your life-force is being protected.");
+            break;
+
+        case SPARM_ARCHMAGI:
+            if (!you.skills[SK_SPELLCASTING])
+                mpr("You feel strangely numb.");
+            else
+                mpr("You feel extremely powerful.");
+            break;
+        }
+    }
+
+    if (is_random_artefact( arm ))
+        use_randart( item_slot );
+
+    if (item_cursed( arm ))
+        mpr( "Oops, that feels deathly cold." );
+
+    warn_shield_penalties();
+
+    you.redraw_armour_class = 1;
+    you.redraw_evasion = 1;
 }

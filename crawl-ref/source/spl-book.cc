@@ -1531,7 +1531,8 @@ int staff_spell( int staff )
             || you.experience_level < diff)
     {
 #ifdef DEBUG_DIAGNOSTICS
-        mprf("Mana needed: %d, Staff plus: %d, Difficulty: %d, XP: %d",
+        mprf(MSGCH_DIAGNOSTICS,
+                "Mana needed: %d, Staff plus: %d, Difficulty: %d, XP: %d",
                 mana, you.inv[staff].plus, diff, you.experience_level);
 #endif
         if (you.experience_level < diff)

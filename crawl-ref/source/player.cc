@@ -372,6 +372,22 @@ bool player_genus(unsigned char which_genus, unsigned char species)
     return (false);
 }                               // end player_genus()
 
+// Returns the item in the given equipment slot, NULL if the slot is empty.
+// eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
+item_def *player_slot_item(equipment_type eq)
+{
+    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+
+    const int item = you.equip[eq];
+    return (item == -1? NULL : &you.inv[item]);
+}
+
+// Returns the item in the player's weapon slot.
+item_def *player_weapon()
+{
+    return player_slot_item(EQ_WEAPON);
+}
+
 bool player_weapon_wielded()
 {
     const int wpn = you.equip[EQ_WEAPON];
@@ -1861,8 +1877,7 @@ int player_mag_abil(bool is_weighted)
 // Returns the shield the player is wearing, or NULL if none.
 item_def *player_shield()
 {
-    const int shield = you.equip[EQ_SHIELD];
-    return (shield == -1? NULL : &you.inv[shield]);
+    return player_slot_item(EQ_SHIELD);
 }
 
 int player_shield_class(void)   //jmf: changes for new spell

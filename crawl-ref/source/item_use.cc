@@ -158,6 +158,8 @@ bool can_wield(const item_def *weapon, bool say_reason)
 
     // We can wield this weapon. Phew!
     return true;
+
+#undef SAY
 }
 
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
@@ -266,10 +268,60 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     return (true);
 }
 
+static const char *shield_base_name(const item_def *shield)
+{
+    return (shield->sub_type == ARM_BUCKLER? "buckler"
+                                           : "shield");
+}
+
+static const char *shield_impact_degree(int impact)
+{
+    return (impact > 160? "severely "       :
+            impact > 130? "significantly "  :
+            impact > 110? ""                :
+                          NULL);
+}
+
+static void warn_rod_shield_interference(const item_def &)
+{
+    const int leakage = rod_shield_leakage();
+    const char *leak_degree = shield_impact_degree(leakage);
+
+    // Any way to avoid the double entendre? :-)
+    if (leak_degree)
+        mprf(MSGCH_WARN, 
+                "Your %s %sreduces the effectiveness of your rod.",
+                shield_base_name(player_shield()),
+                leak_degree);
+}
+
+static void warn_launcher_shield_slowdown(const item_def &launcher)
+{
+    const int slowdown = launcher_shield_slowdown(launcher);
+    const char *slow_degree = shield_impact_degree(slowdown);
+
+    if (slow_degree)
+        mprf(MSGCH_WARN, 
+                "Your %s %sslows your rate of fire.", 
+                shield_base_name(player_shield()),
+                slow_degree);
+}
+
 // Warn if your shield is greatly impacting the effectiveness of your weapon?
 void warn_shield_penalties()
 {
-    // FIXME: We could use subtle warnings here.
+    if (!player_shield())
+        return;
+
+    // Warnings are limited to rods and bows at the moment.
+    const item_def *weapon = player_weapon();
+    if (!weapon)
+        return;
+
+    if (item_is_rod(*weapon))
+        warn_rod_shield_interference(*weapon);
+    else if (is_range_weapon(*weapon))
+        warn_launcher_shield_slowdown(*weapon);
 }
 
 // provide a function for handling initial wielding of 'special'

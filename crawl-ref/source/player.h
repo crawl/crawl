@@ -456,6 +456,7 @@ bool player_has_spell( int spell );
 size_type player_size( int psize = PSIZE_TORSO, bool base = false );
 
 bool player_weapon_wielded();
+item_def *player_weapon();
 item_def *player_shield();
 
 void run_macro(const char *macroname = NULL);
