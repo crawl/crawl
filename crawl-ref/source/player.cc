@@ -3104,11 +3104,11 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
         char name_buff[kNameLen];
         strncpy( name_buff, your_name, kNameLen );
 
-        // squeeze name if required, the "- 8" is too not squueze too much
+        // squeeze name if required, the "- 8" is too not squeeze too much
         if (in_len > 40 && (name_len - 8) > (in_len - 40))
-            name_buff[ name_len - (in_len - 40) - 1 ] = '\0';
+            name_buff[ name_len - (in_len - 40) - 1 ] = 0;
         else 
-            name_buff[ kNameLen - 1 ] = '\0';
+            name_buff[ kNameLen - 1 ] = 0;
 
         snprintf( print_it, sizeof(print_it), "%s, %s", name_buff, class_name );
     }
@@ -3116,7 +3116,7 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
     for (int i = strlen(print_it); i < 41; i++)
         print_it[i] = ' ';
 
-    print_it[40] = '\0';
+    print_it[40] = 0;
 
 #ifdef DOS_TERM
     window(1, 1, 80, 25);

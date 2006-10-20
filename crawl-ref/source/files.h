@@ -40,7 +40,7 @@ void load( unsigned char stair_taken, bool moving_level,
 bool travel_load_map( char branch, int absdepth );
 
 std::string get_savedir_filename(const char *pre, const char *suf,
-                                 const char *ext);
+                                 const char *ext, bool suppress_uid = false);
 
 std::string get_prefs_filename();
 
@@ -71,9 +71,8 @@ void save_ghost( bool force = false );
 /* ***********************************************************************
  * called from: files hiscores
  * *********************************************************************** */
-void make_filename( char *buf, const char *prefix, int level, int where,
-                    bool isLabyrinth, bool isGhost );
-
+std::string make_filename( const char *prefix, int level, int where,
+                           bool isLabyrinth, bool isGhost );
 
 void writeShort(FILE *file, short s);
 

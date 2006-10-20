@@ -277,7 +277,7 @@ static char str_to_race( const std::string &str )
         index -= (SP_CENTAUR - SP_RED_DRACONIAN - 1);
 
     // SP_HUMAN is at 1, therefore we must subtract one.
-    return ((index != -1) ? index_to_letter( index - 1 ) : '\0'); 
+    return ((index != -1) ? index_to_letter( index - 1 ) : 0); 
 }
 
 static char str_to_class( const std::string &str )
@@ -293,7 +293,7 @@ static char str_to_class( const std::string &str )
     if (index == -1)
         index = get_class_index_by_name( str.c_str() );
 
-    return ((index != -1) ? index_to_letter( index ) : '\0'); 
+    return ((index != -1) ? index_to_letter( index ) : 0); 
 }
 
 static std::string & tolower_string( std::string &str )
@@ -360,9 +360,9 @@ static void add_dump_fields(const std::string &text)
 static void reset_startup_options(bool clear_name = true)
 {
     if (clear_name)
-        you.your_name[0] = '\0';
-    Options.race                   = '\0';
-    Options.cls                    = '\0';
+        you.your_name[0] = 0;
+    Options.race                   = 0;
+    Options.cls                    = 0;
     Options.weapon                 = WPN_UNKNOWN;
     Options.book                   = SBT_NO_SELECTION;
     Options.random_pick            = false;
@@ -566,40 +566,33 @@ void read_init_file(bool runscript)
     reset_options(!runscript);
 
     if (!runscript)
-        you.your_name[0] = '\0';
+        you.your_name[0] = 0;
 
     if (SysEnv.crawl_rc)
     {
-        f = fopen(SysEnv.crawl_rc, "r");
+        // use snprintf instead of strncpy for the null terminator
+        snprintf( name_buff, sizeof name_buff, "%s", SysEnv.crawl_rc );
     }
     else if (SysEnv.crawl_dir)
     {
-        strncpy(name_buff, SysEnv.crawl_dir, kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-        strncat(name_buff, "init.txt", kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        f = fopen(name_buff, "r");
+        snprintf( name_buff, sizeof name_buff, "%s%s",
+                  SysEnv.crawl_dir, "init.txt" );
     }
 #ifdef MULTIUSER
     else if (SysEnv.home)
     {
         // init.txt isn't such a good choice if we're looking in
         // the user's home directory, we'll use Un*x standard
-        strncpy(name_buff, SysEnv.home, kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        // likely not to have a closing slash so we'll insert one...
-        strncat(name_buff, "/.crawlrc", kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        f = fopen(name_buff, "r");
+        snprintf( name_buff, sizeof name_buff, "%s%s",
+                  SysEnv.home, "/.crawlrc");
     }
 #endif
     else
     {
-        f = fopen("init.txt", "r");
+        strcpy( name_buff, "init.txt" );
     }
+    
+    f = fopen(name_buff, "r");
 
     if (f == NULL)
         return;
@@ -1002,7 +995,7 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         // field is already cleaned up from trim_string()
         strncpy(you.your_name, field.c_str(), kNameLen);
-        you.your_name[ kNameLen - 1 ] = '\0';
+        you.your_name[ kNameLen - 1 ] = 0;
     }
     else if (key == "verbose_dump")
     {
@@ -1360,21 +1353,21 @@ void parse_option_line(const std::string &str, bool runscript)
         if (SysEnv.crawl_dir)
         {
             strncpy(SysEnv.crawl_dir, field.c_str(), kNameLen - 1);
-            SysEnv.crawl_dir[ kNameLen - 1 ] = '\0';
+            SysEnv.crawl_dir[ kNameLen - 1 ] = 0;
         }
     }
     else if (key == "race")
     {
         Options.race = str_to_race( field );
 
-        if (Options.race == '\0')
+        if (Options.race == 0)
             fprintf( stderr, "Unknown race choice: %s\n", field.c_str() );
     }
     else if (key == "class")
     {
         Options.cls = str_to_class( field );
 
-        if (Options.cls == '\0')
+        if (Options.cls == 0)
             fprintf( stderr, "Unknown class choice: %s\n", field.c_str() );
     }
     else if (key == "auto_list")
@@ -1953,7 +1946,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!rc_only)
             {
                 strncpy(you.your_name, next_arg, kNameLen);
-                you.your_name[ kNameLen - 1 ] = '\0';
+                you.your_name[ kNameLen - 1 ] = 0;
             }
 
             nextUsed = true;

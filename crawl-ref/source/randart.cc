@@ -1822,7 +1822,7 @@ void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] )
 {
     short helm_type; 
 
-    glorg[0] = '\0';
+    glorg[0] = 0;
 
     switch (item.sub_type)
     {

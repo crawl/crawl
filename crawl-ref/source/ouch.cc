@@ -800,7 +800,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     se.release = 2;
 
     strncpy( se.name, you.your_name, kNameLen );
-    se.name[ kNameLen - 1 ] = '\0';
+    se.name[ kNameLen - 1 ] = 0;
 #ifdef MULTIUSER
     se.uid = (int) getuid();
 #else
@@ -852,7 +852,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     se.cls = you.char_class;
 
     // strcpy(se.race_class_name, "");
-    se.race_class_name[0] = '\0';
+    se.race_class_name[0] = 0;
 
     se.lvl = you.experience_level;
     se.best_skill = best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
@@ -864,11 +864,11 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     // Set the default aux data value... 
     // If aux is passed in (ie for a trap), we'll default to that.
     if (aux == NULL)
-        se.auxkilldata[0] = '\0';
+        se.auxkilldata[0] = 0;
     else
     {
         strncpy( se.auxkilldata, aux, ITEMNAME_SIZE );
-        se.auxkilldata[ ITEMNAME_SIZE - 1 ] = '\0';
+        se.auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
     }
 
     if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)  
@@ -911,7 +911,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
                 {
                     it_name( monster->inv[MSLOT_WEAPON], DESC_NOCAP_A, info );
                     strncpy( se.auxkilldata, info, ITEMNAME_SIZE );
-                    se.auxkilldata[ ITEMNAME_SIZE - 1 ] = '\0';
+                    se.auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
                 }
             }
             
@@ -920,14 +920,14 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
                            monster->inv[MSLOT_WEAPON] ) );
 
             strncpy( se.death_source_name, info, 40 );
-            se.death_source_name[39] = '\0';
+            se.death_source_name[39] = 0;
         }
     }
     else
     {
         se.death_source = death_source;
         se.mon_num = 0;
-        se.death_source_name[0] = '\0';
+        se.death_source_name[0] = 0;
     }
 
     se.damage = dam;
@@ -1033,16 +1033,14 @@ void end_game( struct scorefile_entry &se )
         {
             if (tmp_file_pairs[level][dungeon])
             {
-                make_filename( info, you.your_name, level, dungeon,
-                               false, false );
-                unlink(info);
+                unlink(make_filename( you.your_name, level, dungeon,
+                                      false, false ).c_str());
             }
         }
     }
 
     // temp level, if any
-    make_filename( info, you.your_name, 0, 0, true, false );
-    unlink(info);
+    unlink( make_filename( you.your_name, 0, 0, true, false ).c_str() );
 
     // create base file name
     std::string basename = get_savedir_filename( you.your_name, "", "" );
@@ -1113,7 +1111,7 @@ void end_game( struct scorefile_entry &se )
     const int lines = hiscores_format_single_long( scorebuff, se, true );
 
     // truncate
-    scorebuff[ HIGHSCORE_SIZE - 1 ] = '\0';
+    scorebuff[ HIGHSCORE_SIZE - 1 ] = 0;
     cprintf( scorebuff );
 
     cprintf( EOL "Best Crawlers -" EOL );

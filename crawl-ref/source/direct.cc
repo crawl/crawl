@@ -1454,7 +1454,7 @@ static void describe_cell(int mx, int my)
                 strcat(info, " is covered in liquid flames.");
                 break;
             default:
-                info[0] = '\0';
+                info[0] = 0;
                 break;
             } // end switch
             if (info[0])

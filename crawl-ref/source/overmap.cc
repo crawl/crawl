@@ -215,7 +215,7 @@ void display_overmap( void )
             {
                 pr_lev = false;
                 // strcpy(info, "    - a staircase leading to ");
-                info[0] = '\0';
+                info[0] = 0;
 
                 if (stair_level[k] == j)
                 {
@@ -378,7 +378,7 @@ static void print_level_name( int branch, int depth,
         }
 
         // we need our own buffer in here (info is used):
-        char buff[ INFO_SIZE ] = "\0";;
+        char buff[INFO_SIZE];
 
         if (branch == BRANCH_MAIN_DUNGEON)
             depth += 1;
@@ -551,7 +551,7 @@ void print_one_highlighted_line( const char *pre, const char *text,
         map_lines = 0;
     }
 
-    if (pre[0] != '\0')
+    if (pre[0] != 0)
     {
         textcolor( LIGHTGREY );
         cprintf( pre );
@@ -560,7 +560,7 @@ void print_one_highlighted_line( const char *pre, const char *text,
     textcolor( colour );
     cprintf( text );
 
-    if (post[0] != '\0')
+    if (post[0] != 0)
     {
         textcolor( LIGHTGREY );
         cprintf( post );

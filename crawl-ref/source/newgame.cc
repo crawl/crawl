@@ -345,13 +345,13 @@ bool new_game(void)
     if (SysEnv.crawl_name)
     {
         strncpy( you.your_name, SysEnv.crawl_name, kNameLen );
-        you.your_name[ kNameLen - 1 ] = '\0';
+        you.your_name[ kNameLen - 1 ] = 0;
     }
 
     openingScreen();
     enterPlayerName(true);
 
-    if (you.your_name[0] != '\0')
+    if (you.your_name[0] != 0)
     {
         if (check_saved_game())
         {
@@ -381,7 +381,7 @@ bool new_game(void)
     strcpy( you.class_name, get_class_name( you.char_class ) );
 
     // new: pick name _after_ race and class choices
-    if (you.your_name[0] == '\0')
+    if (you.your_name[0] == 0)
     {
         clrscr();
 
@@ -1700,7 +1700,7 @@ void init_player(void)
         you.num_gifts[i] = 0;
     }
 
-    ghost.name[0] = '\0';
+    ghost.name[0] = 0;
 
     for (i = 0; i < NUM_GHOST_VALUES; i++)
         ghost.values[i] = 0;
@@ -2047,7 +2047,7 @@ void openingScreen(void)
 // this does not work just yet ... {dlb}:
     cprintf(EOL "Hello, ");
 
-    if ( you.your_name[0] != '\0' )
+    if ( you.your_name[0] != 0 )
     {
        cprintf(you.your_name); // better be less than 31 characters :P {dlb}
                                // of course, invalid names will appear {dlb}
@@ -2079,7 +2079,7 @@ void enterPlayerName(bool blankOK)
     bool first_time = true;
 
     // first time -- names set through init.txt/environment assumed ok {dlb}
-    if (you.your_name[0] != '\0')
+    if (you.your_name[0] != 0)
         acceptable_name = true;
 
     do
@@ -2106,7 +2106,7 @@ void enterPlayerName(bool blankOK)
             get_input_line( name_entered, sizeof( name_entered ) );
             
             strncpy( you.your_name, name_entered, kNameLen );
-            you.your_name[ kNameLen - 1 ] = '\0';
+            you.your_name[ kNameLen - 1 ] = 0;
         }
 
         if (!*you.your_name && blankOK && Options.prev_name.length() &&
@@ -2125,7 +2125,7 @@ void enterPlayerName(bool blankOK)
         }
                 
         // verification begins here {dlb}:
-        if (you.your_name[0] == '\0')
+        if (you.your_name[0] == 0)
         {
             if (blankOK)
                 return;

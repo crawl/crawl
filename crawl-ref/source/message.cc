@@ -236,7 +236,7 @@ static void do_message_print( int channel, int param,
 {
     char buff[80];
     vsnprintf( buff, sizeof( buff ), format, argp ); 
-    buff[79] = '\0';
+    buff[79] = 0;
 
     mpr(buff, channel, param);
 }

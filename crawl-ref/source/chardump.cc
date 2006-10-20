@@ -508,21 +508,21 @@ static void dump_stats2( std::string & text, bool calc_unid)
     for (int i = 0; i < 24; i++)
     {
         ptr_n = &buffer[i][0];
-        if (buffer[i+24][0] == '\0' && buffer[i+24*2][0] == '\0')
+        if (buffer[i+24][0] == 0 && buffer[i+24*2][0] == 0)
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-32s", ptr_n);
         text += str_pass;
 
         ptr_n = &buffer[i+24][0];
-        if (buffer[i+24*2][0] == '\0')
+        if (buffer[i+24*2][0] == 0)
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-20s", ptr_n);
         text += str_pass;
 
         ptr_n = &buffer[i+24*2][0];
-        if (buffer[i+24*2][0] != '\0')
+        if (buffer[i+24*2][0] != 0)
         {
             snprintf(&str_pass[0], 45, "%s", ptr_n);
             text += str_pass;

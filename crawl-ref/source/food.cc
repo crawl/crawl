@@ -388,7 +388,7 @@ bool prompt_eat_from_inventory(void)
                     "Eat which item?",
                     MT_INVSELECT,
                     OBJ_FOOD,
-                    true, true, true, '\0', NULL,
+                    true, true, true, 0, NULL,
                     OPER_EAT );
     if (which_inventory_slot == PROMPT_ABORT)
     {

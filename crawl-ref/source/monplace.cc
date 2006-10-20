@@ -404,7 +404,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     // message to player from stairwell/gate appearance?
     if (see_grid(px, py) && proximity == PROX_NEAR_STAIRS)
     {
-        info[0] = '\0';
+        info[0] = 0;
 
         if (player_monster_visible( &menv[id] ))
             strcpy(info, ptr_monam( &menv[id], DESC_CAP_A ));

@@ -45,26 +45,14 @@ extern unsigned char show_green;     // defined in view.cc {dlb}
 // defined in mon-util.cc -- w/o this screen redraws *really* slow {dlb}
 extern FixedVector<unsigned short, 1000> mcolour;  
 
+const int kNameLen = 30;
 #ifdef SHORT_FILE_NAMES
-    const int kNameLen = 30;
     const int kFileNameLen = 6;
-    const int kFileNameSize = 5 + kFileNameLen;
-
 #else
-    #ifdef SAVE_DIR_PATH
-        // file name length has to be able to cover full paths -- bwross
-        const int kNameLen = 30;
-        const int kFileNameLen = 250;
-        const int kFileNameSize = 5 + kFileNameLen;
-    #else
-        const int kNameLen = 30;
-        const int kFileNameLen = 28;
-        const int kFileNameSize = 5 + kFileNameLen;
-    #endif
+    const int kFileNameLen = 250;
 #endif
 
-
-// Length of Path + File Name
+// Used only to bound the init file name length
 const int kPathLen = 256;
 
 // This value is used to mark that the current berserk is free from

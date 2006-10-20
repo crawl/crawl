@@ -846,7 +846,7 @@ unsigned char spellbook_contents( item_def &book, int action,
         char strng[2];
 
         strng[0] = index_to_letter(spelcount);
-        strng[1] = '\0';
+        strng[1] = 0;
 
         out.cprintf(strng);
         out.cprintf(" - ");

@@ -256,7 +256,7 @@ void unmarshallString(struct tagHeader &th, char *data, int maxSize)
 
     // read the actual string and null terminate
     memcpy(data, &tagBuffer[th.offset], copylen);
-    data[copylen] = '\0';
+    data[copylen] = 0;
 
     th.offset += len;
 }
@@ -291,7 +291,7 @@ void make_date_string( time_t in_date, char buff[20] )
 {
     if (in_date <= 0)
     {
-        buff[0] = '\0';
+        buff[0] = 0;
         return;
     }
 

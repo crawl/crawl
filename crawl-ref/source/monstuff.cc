@@ -3484,7 +3484,7 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     // good idea?
     if (mons_should_fire( beem ))
     {
-        beem.beam_name[0] = '\0';
+        beem.beam_name[0] = 0;
         return (mons_throw( monster, beem, mon_item ));
     }
 

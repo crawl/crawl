@@ -1218,7 +1218,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
     static char gmo_n[ ITEMNAME_SIZE ];
     char gmo_n2[ ITEMNAME_SIZE ] = "";
 
-    gmo_n[0] = '\0';
+    gmo_n[0] = 0;
 
     // If you can't see the critter, let moname() print [Ii]t.
     if (!vis)
@@ -1308,7 +1308,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
 
 const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
 {
-    glog[0] = '\0';
+    glog[0] = 0;
 
     char gmon_name[ ITEMNAME_SIZE ] = "";
     strcpy( gmon_name, seekmonster( mons_num )->name );

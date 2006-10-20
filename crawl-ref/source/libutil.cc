@@ -60,7 +60,7 @@ void play_sound( const char *file )
         sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
-    command[0] = '\0';
+    command[0] = 0;
     if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
             && shell_safe(file))
     {
@@ -72,7 +72,7 @@ void play_sound( const char *file )
 
 void get_input_line( char *const buff, int len )
 {
-    buff[0] = '\0';         // just in case
+    buff[0] = 0;         // just in case
 
 #if defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
@@ -88,7 +88,7 @@ void get_input_line( char *const buff, int len )
     fgets( buff, len, stdin );  // much safer than gets()
 #endif
 
-    buff[ len - 1 ] = '\0';  // just in case 
+    buff[ len - 1 ] = 0;  // just in case 
 
     // Removing white space from the end in order to get rid of any
     // newlines or carriage returns that any of the above might have 
@@ -99,7 +99,7 @@ void get_input_line( char *const buff, int len )
     for (i = end - 1; i >= 0; i++) 
     {
         if (isspace( buff[i] ))
-            buff[i] = '\0';
+            buff[i] = 0;
         else
             break;
     }
@@ -412,7 +412,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
 
     vsprintf( buff, format, argp );
     strncpy( str, buff, size );
-    str[ size - 1 ] = '\0';
+    str[ size - 1 ] = 0;
 
     int ret = strlen( str );  
     if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)

@@ -944,18 +944,19 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
 
     // When going downstairs into a special level, delete any previous
     // instances of it
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-        || you.level_type == LEVEL_PANDEMONIUM)
+    if (you.level_type == LEVEL_LABYRINTH ||
+        you.level_type == LEVEL_ABYSS ||
+        you.level_type == LEVEL_PANDEMONIUM)
     {
-        char buf[300];
-        make_filename( buf, you.your_name, you.your_level, you.where_are_you,
-                       true, false );
+        std::string lname = make_filename(you.your_name, you.your_level,
+                                          you.where_are_you,
+                                          true, false );
 #if DEBUG_DIAGNOSTICS
-	snprintf( info, INFO_SIZE, "Deleting: %s", buf );
+	snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
         mpr( info, MSGCH_DIAGNOSTICS );
         more();
 #endif
-        unlink(buf);
+        unlink(lname.c_str());
     }
 
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)

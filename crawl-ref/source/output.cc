@@ -283,7 +283,7 @@ void print_stats(void)
 
             in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass, 
                      Options.terse_hand );
-            str_pass[39] = '\0';
+            str_pass[39] = 0;
 
             cprintf(str_pass);
             textcolor(LIGHTGREY);

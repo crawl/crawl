@@ -3788,7 +3788,7 @@ static int weapon_type_modify( int weapnum, char noise[80], char noise2[80],
     else if (you.inv[weapnum].base_type == OBJ_WEAPONS)
         weap_type = you.inv[weapnum].sub_type;
 
-    noise2[0] = '\0';
+    noise2[0] = 0;
 
     // All weak hits look the same, except for when the player 
     // has a non-weapon in hand.  -- bwr

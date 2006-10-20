@@ -211,7 +211,7 @@ void hiscores_print_list( int display_count, int format )
         {
             hiscores_format_single( info, hs_list[i] );
             // truncate if we want short format
-            info[75] = '\0';
+            info[75] = 0;
         }
         else
         {
@@ -236,7 +236,7 @@ static const char *const range_type_verb( const char *const aux )
 {
     if (strncmp( aux, "Shot ", 5 ) == 0)                // launched
         return ("shot");
-    else if (aux[0] == '\0'                             // unknown
+    else if (aux[0] == 0                                // unknown
             || strncmp( aux, "Hit ", 4 ) == 0           // thrown
             || strncmp( aux, "volley ", 7 ) == 0)       // manticore spikes
     {
@@ -254,7 +254,7 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
     // more terse, in hopes that it will better fit. -- bwr
 
     // race_class_name overrides race & class
-    if (se.race_class_name[0] == '\0')
+    if (se.race_class_name[0] == 0)
     {
         snprintf( scratch, sizeof(scratch), "%s%s", 
                   get_species_abbrev( se.race ), get_class_abbrev( se.cls ) );
@@ -264,7 +264,7 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
         strcpy( scratch, se.race_class_name );
     }
 
-    se.name[10]='\0';
+    se.name[10] = 0;
     sprintf( buf, "%8ld %-10s %s-%02d%s", se.points, se.name,
              scratch, se.lvl, (se.wiz_mode == 1) ? "W" : "" );
 
@@ -278,9 +278,9 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
     case KILLED_BY_MONSTER:
         strcat( buf, " slain by " );
 
-        // if death_source_name is non-null,  override lookup (names might have
+        // if death_source_name is non-null, override lookup (names might have
         // changed!)
-        if (se.death_source_name[0] != '\0')
+        if (se.death_source_name[0] != 0)
             strcat( buf, se.death_source_name );
         else
             strcat( buf, monam( mon_number, mon_type, true, DESC_PLAIN ) );
@@ -293,7 +293,7 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
         break;
 
     case KILLED_BY_CLOUD:
-        if (se.auxkilldata[0] == '\0')
+        if (se.auxkilldata[0] == 0)
             strcat( buf, " engulfed by a cloud" );
         else
         {
@@ -314,8 +314,8 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
                   range_type_verb( se.auxkilldata ) );  
         strcat( buf, scratch );
 
-        // if death_source_name is non-null,  override this
-        if (se.death_source_name[0] != '\0')
+        // if death_source_name is non-null, override this
+        if (se.death_source_name[0] != 0)
             strcat( buf, se.death_source_name );
         else
             strcat( buf, monam( mon_number, mon_type, true, DESC_PLAIN ) );
@@ -364,7 +364,7 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
 
     case KILLED_BY_TRAP:
         snprintf( scratch, sizeof(scratch), " triggered a%s trap", 
-                 (se.auxkilldata[0] != '\0') ? se.auxkilldata : "" );
+                 (se.auxkilldata[0] != 0) ? se.auxkilldata : "" );
         strcat( buf, scratch );
         break;
 
@@ -397,7 +397,7 @@ void hiscores_format_single(char *buf, struct scorefile_entry &se)
         break;
 
     case KILLED_BY_WILD_MAGIC:
-        if (se.auxkilldata[0] == '\0')
+        if (se.auxkilldata[0] == 0)
             strcat( buf, " killed by wild magic" );
         else
         {
@@ -620,14 +620,14 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
                     (se.final_hp > -22) ? "Demolished by" 
                                         : "Annihilated by",
 
-                    (se.death_source_name[0] != '\0')
+                    (se.death_source_name[0] != 0)
                             ? se.death_source_name
                             : monam( mon_number, mon_type, true, DESC_PLAIN ) );
 
         strncat( buf, scratch, HIGHSCORE_SIZE );
 
         // put the damage on the weapon line if there is one
-        if (se.auxkilldata[0] == '\0')
+        if (se.auxkilldata[0] == 0)
             needs_damage = true;
         break;
 
@@ -637,7 +637,7 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
         break;
 
     case KILLED_BY_CLOUD:
-        if (se.auxkilldata[0] == '\0')
+        if (se.auxkilldata[0] == 0)
             strcat( buf, "Engulfed by a cloud" );
         else
         {
@@ -669,12 +669,12 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
             strcat( buf, "Killed from afar by " );
 
             // if death_source_name is non-null,  override this
-            if (se.death_source_name[0] != '\0')
+            if (se.death_source_name[0] != 0)
                 strcat(buf, se.death_source_name);
             else
                 strcat(buf, monam( mon_number, mon_type, true, DESC_PLAIN ));
 
-            if (se.auxkilldata[0] != '\0')
+            if (se.auxkilldata[0] != 0)
                 needs_beam_cause_line = true;
         }
         break;
@@ -711,7 +711,7 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
 
     case KILLED_BY_TRAP:
         snprintf( scratch, sizeof(scratch), "Killed by triggering a%s trap", 
-                 (se.auxkilldata[0] != '\0') ? se.auxkilldata : "" );
+                 (se.auxkilldata[0] != 0) ? se.auxkilldata : "" );
         strcat( buf, scratch );
         needs_damage = true;
         break;
@@ -752,7 +752,7 @@ int hiscores_format_single_long( char *buf, struct scorefile_entry &se,
         break;
 
     case KILLED_BY_WILD_MAGIC:
-        if (se.auxkilldata[0] == '\0')
+        if (se.auxkilldata[0] == 0)
             strcat( buf, "Killed by wild magic" );
         else
         {
@@ -1121,19 +1121,19 @@ static void hs_init( struct scorefile_entry &dest )
     dest.version = 0;
     dest.release = 0;
     dest.points = -1;
-    dest.name[0] = '\0';
+    dest.name[0] = 0;
     dest.uid = 0;
     dest.race = 0; 
     dest.cls = 0;
     dest.lvl = 0;
-    dest.race_class_name[0] = '\0';
+    dest.race_class_name[0] = 0;
     dest.best_skill = 0;
     dest.best_skill_lvl = 0;
     dest.death_type = KILLED_BY_SOMETHING;
     dest.death_source = 0;
     dest.mon_num = 0;
-    dest.death_source_name[0] = '\0';
-    dest.auxkilldata[0] = '\0';
+    dest.death_source_name[0] = 0;
+    dest.auxkilldata[0] = 0;
     dest.dlvl = 0;
     dest.level_type = 0;
     dest.branch = 0;
@@ -1238,18 +1238,18 @@ static void hs_nextstring(char *&inbuf, char *dest)
 {
     char *p = dest;
 
-    if (*inbuf == '\0')
+    if (*inbuf == 0)
     {
-        *p = '\0';
+        *p = 0;
         return;
     }
 
     // assume we're on a ':'
     inbuf ++;
-    while(*inbuf != ':' && *inbuf != '\0')
+    while(*inbuf != ':' && *inbuf != 0)
         *p++ = *inbuf++;
 
-    *p = '\0';
+    *p = 0;
 }
 
 static int hs_nextint(char *&inbuf)
@@ -1257,7 +1257,7 @@ static int hs_nextint(char *&inbuf)
     char num[20];
     hs_nextstring(inbuf, num);
 
-    return (num[0] == '\0' ? 0 : atoi(num));
+    return (num[0] == 0 ? 0 : atoi(num));
 }
 
 static long hs_nextlong(char *&inbuf)
@@ -1265,7 +1265,7 @@ static long hs_nextlong(char *&inbuf)
     char num[20];
     hs_nextstring(inbuf, num);
 
-    return (num[0] == '\0' ? 0 : atol(num));
+    return (num[0] == 0 ? 0 : atol(num));
 }
 
 static int val_char( char digit )
@@ -1333,7 +1333,7 @@ static void hs_parse_numeric(char *inbuf, struct scorefile_entry &se)
     if (se.version == 4 && se.release >= 1)
         hs_nextstring( inbuf, se.auxkilldata );
     else
-        se.auxkilldata[0] = '\0';
+        se.auxkilldata[0] = 0;
 
     se.dlvl = hs_nextint(inbuf);
     se.level_type = hs_nextint(inbuf);
@@ -1520,27 +1520,27 @@ static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
     se.num_turns = -1;
     se.num_runes = 0; 
     se.num_diff_runes = 0; 
-    se.auxkilldata[0] = '\0';
+    se.auxkilldata[0] = 0;
 }
 
 static void hs_parse_generic_1(char *&inbuf, char *outbuf, const char *stopvalues)
 {
     char *p = outbuf;
 
-    while(strchr(stopvalues, *inbuf) == NULL && *inbuf != '\0')
+    while(strchr(stopvalues, *inbuf) == NULL && *inbuf != 0)
         *p++ = *inbuf++;
 
-    *p = '\0';
+    *p = 0;
 }
 
 static void hs_parse_generic_2(char *&inbuf, char *outbuf, const char *continuevalues)
 {
     char *p = outbuf;
 
-    while(strchr(continuevalues, *inbuf) != NULL && *inbuf != '\0')
+    while(strchr(continuevalues, *inbuf) != NULL && *inbuf != 0)
         *p++ = *inbuf++;
 
-    *p = '\0';
+    *p = 0;
 }
 
 static void hs_stripblanks(char *buf)
@@ -1551,14 +1551,14 @@ static void hs_stripblanks(char *buf)
     // strip leading
     while(*p == ' ')
         p++;
-    while(*p != '\0')
+    while(*p != 0)
         *q++ = *p++;
 
-    *q-- = '\0';
+    *q-- = 0;
     // strip trailing
     while(*q == ' ')
     {
-        *q = '\0';
+        *q = 0;
         q--;
     }
 }
@@ -1656,7 +1656,7 @@ static void hs_search_death(char *inbuf, struct scorefile_entry &se)
         while(p != q)
             *d++ = *p++;
 
-        *d = '\0';
+        *d = 0;
     }
 }
 

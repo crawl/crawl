@@ -1326,7 +1326,7 @@ static void do_action( command_type cmd ) {
 	char name_your[kNameLen+1];
 
 	strncpy(name_your, you.your_name, kNameLen);
-	name_your[kNameLen] = '\0';
+	name_your[kNameLen] = 0;
 	if (dump_char( name_your, false ))
 	    strcpy(info, "Char dumped successfully.");
 	else

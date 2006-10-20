@@ -1853,7 +1853,7 @@ const char *mutation_name(int which_mutat, int level )
 
     // Some mutations only have one "level", and it's better
     // to show the first level description than a blank description.
-    if (mutation_descrip[ which_mutat ][ level - 1 ][0] == '\0')
+    if (mutation_descrip[ which_mutat ][ level - 1 ][0] == 0)
         return (mutation_descrip[ which_mutat ][ 0 ]);
     else 
         return (mutation_descrip[ which_mutat ][ level - 1 ]);

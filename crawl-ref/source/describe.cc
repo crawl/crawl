@@ -3303,11 +3303,11 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
         
         for (int i = 0; i < 14; i++) 
         {
-            if (item_mass[i] == '\0')
+            if (item_mass[i] == 0)
             {
                 item_mass[i] = '.';
                 item_mass[i+1] = (mass % 10) + '0';
-                item_mass[i+2] = '\0';
+                item_mass[i+2] = 0;
                 break;
             }
         }
