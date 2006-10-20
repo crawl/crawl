@@ -1410,7 +1410,7 @@ void save_ghost( bool force )
         return;
     }
 
-    memcpy(ghost.name, you.your_name, 20);
+    snprintf(ghost.name, sizeof ghost.name, "%s", you.your_name);
 
     ghost.values[ GVAL_MAX_HP ]    = ((you.hp_max >= 150) ? 150 : you.hp_max);
     ghost.values[ GVAL_EV ]        = player_evasion();
