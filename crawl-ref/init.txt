@@ -121,6 +121,8 @@ travel_exclude_radius2 = 68
 # runrest_ignore_message = You feel.*sick
 # runrest_ignore_poison = 4:100
 
+# trapwalk_safe_hp = dart:15, needle:25, spear:50
+
 ##### 4-g	Stashes ###############################
 #
 # stash_tracking = (explicit | dropped | all)
