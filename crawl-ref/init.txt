@@ -50,7 +50,8 @@ lua_file = lua/wield.lua
 lua_file = lua/kills.lua
 lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
-lua_file = lua/eat.lua	
+lua_file = lua/eat.lua
+lua_file = lua/trapwalk.lua
 
 ##### 4-  Interface #################################################
 #
