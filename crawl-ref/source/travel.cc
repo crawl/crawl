@@ -88,14 +88,6 @@ signed char curr_traps[GXM][GYM];
 
 static FixedArray< unsigned short, GXM, GYM >  mapshadow;
 
-// Clockwise, around the compass from north (same order as enum RUN_DIR)
-// Copied from acr.cc
-static const struct coord_def Compass[8] = 
-{ 
-    {  0, -1 }, {  1, -1 }, {  1,  0 }, {  1,  1 },
-    {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
-};
-
 #define TRAVERSABLE  1
 #define IMPASSABLE   0
 #define FORBIDDEN   -1
@@ -108,6 +100,11 @@ static int find_transtravel_square(const level_pos &pos, bool verbose = true);
 
 static bool loadlev_populate_stair_distances(const level_pos &target);
 static void populate_stair_distances(const level_pos &target);
+
+bool is_player_mapped(int grid_x, int grid_y)
+{
+    return (is_player_mapped( env.map[grid_x - 1][grid_y - 1] ));
+}
 
 // Determines whether the player has seen this square, given the user-visible
 // character. 
@@ -242,9 +239,9 @@ static bool is_exclude_root(int x, int y)
 
 const char *run_mode_name(int runmode)
 {
-    return runmode == RUN_TRAVEL?       "travel" :
-           runmode == RUN_INTERLEVEL?   "intertravel" :
-           runmode == RUN_EXPLORE?      "explore" :
+    return runmode == RMODE_TRAVEL?       "travel" :
+           runmode == RMODE_INTERLEVEL?   "intertravel" :
+           runmode == RMODE_EXPLORE?      "explore" :
            runmode > 0?                 "run" :
                                         "";
 }
@@ -498,9 +495,9 @@ static void init_terrain_check()
 
 void travel_init_new_level()
 {
+    you.running.clear();
     // Zero out last travel coords
-    you.run_x       = you.run_y     = 0;
-    you.travel_x    = you.travel_y  = 0;
+    you.travel_x = you.travel_y  = 0;
 
     traps_inited    = false;
     curr_excludes.clear();
@@ -718,23 +715,22 @@ static void userdef_run_startrunning_hook(void)
 #endif
 }
 
-/*
- * Stops shift+running and all forms of travel.
- */
-void stop_running(void)
-{
-    userdef_run_stoprunning_hook();
-    you.running = 0;
-}
-
 bool is_resting( void )
 {
-    return (you.running > 0 && !you.run_x && !you.run_y);
+    return you.running.is_rest();
 }
 
 void start_running(void)
 {
     userdef_run_startrunning_hook();
+}
+
+/*
+ * Stops shift+running and all forms of travel.
+ */
+void stop_running(void)
+{
+    you.running.stop();
 }
 
 /*
@@ -764,7 +760,7 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (Options.explore_stop && you.running == RUN_EXPLORE)
+    if (Options.explore_stop && you.running == RMODE_EXPLORE)
     {
         // Scan through the shadow map, compare it with the actual map, and if
         // there are any squares of the shadow map that have just been
@@ -787,22 +783,22 @@ command_type travel()
         copy(env.map, mapshadow);
     }
 
-    if (you.running == RUN_EXPLORE)
+    if (you.running == RMODE_EXPLORE)
     {
         // Exploring
-        you.run_x = 0;
+        you.running.x = 0;
         find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
         // No place to go?
-        if (!you.run_x)
+        if (!you.running.x)
             stop_running();
     }
 
-    if (you.running == RUN_INTERLEVEL && !you.run_x)
+    if (you.running == RMODE_INTERLEVEL && !you.running.x)
     {
-        // Interlevel travel. Since you.run_x is zero, we've either just
+        // Interlevel travel. Since you.running.x is zero, we've either just
         // initiated travel, or we've just climbed or descended a staircase,
         // and we need to figure out where to travel to next.
-        if (!find_transtravel_square(travel_target) || !you.run_x)
+        if (!find_transtravel_square(travel_target) || !you.running.x)
             stop_running();
     }
 
@@ -823,15 +819,15 @@ command_type travel()
             // should continue doing so (explore has its own end condition
             // upstairs); if we're traveling between levels and we've reached
             // our travel target, we're on a staircase and should take it.
-            if (you.x_pos == you.run_x && you.y_pos == you.run_y)
+            if (you.x_pos == you.running.x && you.y_pos == you.running.y)
             {
-                if (runmode == RUN_EXPLORE)
-                    you.running = RUN_EXPLORE;       // Turn explore back on
+                if (runmode == RMODE_EXPLORE)
+                    you.running = RMODE_EXPLORE;       // Turn explore back on
 
                 // For interlevel travel, we'll want to take the stairs unless
                 // the interlevel travel specified a destination square and 
                 // we've reached that destination square.
-                else if (runmode == RUN_INTERLEVEL
+                else if (runmode == RMODE_INTERLEVEL
                         && (travel_target.pos.x != you.x_pos
                             || travel_target.pos.y != you.y_pos
                             || travel_target.id != 
@@ -849,7 +845,7 @@ command_type travel()
                         stop_running();
                         return CMD_NO_CMD;
                     }
-                    you.running = RUN_INTERLEVEL;
+                    you.running = RMODE_INTERLEVEL;
                     result = trans_negotiate_stairs();
 
                     // If, for some reason, we fail to use the stairs, we
@@ -860,11 +856,11 @@ command_type travel()
 
                     // This is important, else we'll probably stop traveling
                     // the moment we clear the stairs. That's because the 
-                    // (run_x, run_y) destination will no longer be valid on 
-                    // the new level. Setting run_x to zero forces us to
-                    // recalculate our travel target next turn (see previous
-                    // if block).
-                    you.run_x = you.run_y = 0;
+                    // (running.x, running.y) destination will no longer be
+                    // valid on the new level. Setting running.x to zero forces
+                    // us to recalculate our travel target next turn (see
+                    // previous if block).
+                    you.running.x = you.running.y = 0;
                 }
                 else
                 {
@@ -941,7 +937,7 @@ void find_travel_pos(int youx, int youy,
 {
     init_terrain_check();
 
-    int start_x = you.run_x, start_y = you.run_y;
+    int start_x = you.running.x, start_y = you.running.y;
     int dest_x  = youx, dest_y  = youy;
     bool floodout = false;
     unsigned char feature;
@@ -1054,13 +1050,13 @@ void find_travel_pos(int youx, int youy,
 
                 unsigned char envf = env.map[dx - 1][dy - 1];
 
-                if (floodout && you.running == RUN_EXPLORE 
+                if (floodout && you.running == RMODE_EXPLORE 
                         && !is_player_mapped(envf)) 
                 {
-                    // Setting run_x and run_y here is evil - this function
-                    // should ideally not modify game state in any way.
-                    you.run_x = x;
-                    you.run_y = y;
+                    // Setting running.x and running.y here is evil - this
+                    // function should ideally not modify game state in any way.
+                    you.running.x = x;
+                    you.running.y = y;
 
                     return;
                 }
@@ -1796,8 +1792,8 @@ void start_translevel_travel(bool prompt_for_destination)
 
     if (travel_target.id.depth > -1)
     {
-        you.running = RUN_INTERLEVEL;
-        you.run_x = you.run_y = 0;
+        you.running = RMODE_INTERLEVEL;
+        you.running.x = you.running.y = 0;
         last_stair.depth = -1;
         start_running();
     }
@@ -2102,8 +2098,8 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
-        you.run_x = best_stair.x;
-        you.run_y = best_stair.y;
+        you.running.x = best_stair.x;
+        you.running.y = best_stair.y;
         return 1;
     }
     else if (best_level_distance != -1 && closest_level != current
@@ -2127,9 +2123,9 @@ void start_travel(int x, int y)
     if (x == you.x_pos && y == you.y_pos) return ;
 
     // Start running
-    you.running = RUN_TRAVEL;
-    you.run_x   = x;
-    you.run_y   = y;
+    you.running = RMODE_TRAVEL;
+    you.running.x   = x;
+    you.running.y   = y;
 
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = x;
@@ -2139,7 +2135,7 @@ void start_travel(int x, int y)
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
     
     if (point_distance[x][y] == 0 &&
-            (x != you.x_pos || you.run_y != you.y_pos) &&
+            (x != you.x_pos || you.running.y != you.y_pos) &&
             is_travel_ok(x, y, false))
     {
         // We'll need interlevel travel to get here.
@@ -2147,8 +2143,8 @@ void start_travel(int x, int y)
         travel_target.pos.x = x;
         travel_target.pos.y = y;
 
-        you.running = RUN_INTERLEVEL;
-        you.run_x = you.run_y = 0;
+        you.running = RMODE_INTERLEVEL;
+        you.running.x = you.running.y = 0;
         last_stair.depth = -1;
 
         // We need the distance of the target from the various stairs around.
@@ -2163,7 +2159,7 @@ void start_travel(int x, int y)
 
 void start_explore()
 {
-    you.running   = RUN_EXPLORE;
+    you.running   = RMODE_EXPLORE;
     if (Options.explore_stop)
     {
         // Clone shadow array off map
@@ -2979,4 +2975,155 @@ void TravelCache::fixup_levels()
 bool can_travel_interlevel()
 {
     return (player_in_mappable_area() && you.level_type != LEVEL_PANDEMONIUM);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Shift-running and resting.
+
+runrest::runrest()
+    : runmode(0), mp(0), hp(0), x(0), y(0)
+{
+}
+
+// Initialize is only called for resting/shift-running. We should eventually
+// include travel and wrap it all in.
+void runrest::initialize(int dir, int mode)
+{
+    // Note HP and MP for reference.
+    hp = you.hp;
+    mp = you.magic_points;
+
+    if (dir == RDIR_REST)
+    {
+        x = 0;
+        y = 0;
+        runmode = mode;
+        return;
+    }
+
+    ASSERT( dir >= 0 && dir <= 7 );
+
+    x = Compass[dir].x;
+    y = Compass[dir].y;
+    runmode = mode;
+
+    // Get the compass point to the left/right of intended travel:
+    const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
+    const int right = (dir + 1 > 7) ? 0 : (dir + 1);
+
+    // Record the direction and starting tile type for later reference:
+    set_run_check( 0, left );
+    set_run_check( 1, dir );
+    set_run_check( 2, right );    
+}
+
+runrest::operator int () const
+{
+    return (runmode);
+}
+
+const runrest &runrest::operator = (int newrunmode)
+{
+    runmode = newrunmode;
+    return (*this);
+}
+
+static char base_grid_type( char grid )
+{
+    // Don't stop for undiscovered traps:
+    if (grid == DNGN_UNDISCOVERED_TRAP)
+        return (DNGN_FLOOR);
+
+    // Or secret doors (which currently always look like rock walls):
+    if (grid == DNGN_SECRET_DOOR)
+        return (DNGN_ROCK_WALL);
+
+    return (grid);
+}
+
+void runrest::set_run_check(int index, int dir)
+{
+    run_check[index].dx = Compass[dir].x;
+    run_check[index].dy = Compass[dir].y;
+
+    const int targ_x = you.x_pos + Compass[dir].x;
+    const int targ_y = you.y_pos + Compass[dir].y;
+
+    run_check[index].grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+}
+
+bool runrest::check_stop_running()
+{
+    if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
+    {
+        stop();
+        return (true);
+    }
+    return (false);
+}
+
+// This function creates "equivalence classes" so that undiscovered
+// traps and secret doors aren't running stopping points.
+bool runrest::run_grids_changed() const
+{
+    if (env.cgrid[you.x_pos + x][you.y_pos + y] != EMPTY_CLOUD)
+        return (true);
+
+    if (mgrd[you.x_pos + x][you.y_pos + y] != NON_MONSTER)
+        return (true);
+
+    for (int i = 0; i < 3; i++)
+    {
+        const int targ_x = you.x_pos + run_check[i].dx;
+        const int targ_y = you.y_pos + run_check[i].dy;
+        const int targ_grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+
+        if (run_check[i].grid != targ_grid)
+            return (true);
+    }
+
+    return (false);
+}
+
+void runrest::stop()
+{
+    userdef_run_stoprunning_hook();
+    runmode = RMODE_NOT_RUNNING;
+}
+
+bool runrest::is_rest() const
+{
+    return (runmode > 0 && !x && !y);    
+}
+
+void runrest::rundown()
+{
+    rest();
+}
+
+void runrest::rest()
+{
+    // stop_running() Lua hooks will never see rest stops.
+    if (runmode > 0)
+        --runmode;
+}
+
+void runrest::clear()
+{
+    runmode = RMODE_NOT_RUNNING;
+    x = y = 0;
+    mp = hp = 0;
+}
+
+void runrest::check_hp()
+{
+    if (is_rest() && you.hp == you.hp_max && you.hp > hp)
+        stop();
+}
+
+void runrest::check_mp()
+{
+    if (is_rest() && you.magic_points == you.max_magic_points
+            && you.magic_points > mp)
+        stop();
 }

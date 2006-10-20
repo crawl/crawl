@@ -1684,18 +1684,9 @@ void init_player(void)
     you.x_pos = 0;
     you.y_pos = 0;
 
-    you.running = 0;
-    you.run_x = 0;
-    you.run_y = 0;
+    you.running.clear();
     you.travel_x = 0;
     you.travel_y = 0;
-
-    for (i = 0; i < 3; i++)
-    {
-        you.run_check[i].grid = 0;
-        you.run_check[i].dx = 0;
-        you.run_check[i].dy = 0;
-    }
 
     you.religion = GOD_NO_GOD;
     you.piety = 0;

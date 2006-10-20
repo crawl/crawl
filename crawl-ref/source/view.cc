@@ -652,10 +652,10 @@ void monster_grid(bool do_updates)
                     // means that the character will run one square if
                     // a monster is in sight... we automatically jump
                     // to zero if we're resting.  -- bwr
-                    if (you.run_x == 0 && you.run_y == 0)
+                    if (you.running.is_rest())
                         stop_running();
                     else if (you.running > 1)
-                        you.running--;
+                        you.running.rundown();
                     else
                         stop_running();
                 }

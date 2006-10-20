@@ -149,7 +149,7 @@ bool about_to_autopray = false;
 bool game_has_started = false;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
-static const struct coord_def Compass[8] = 
+const struct coord_def Compass[8] = 
 { 
     {  0, -1 }, {  1, -1 }, {  1,  0 }, {  1,  1 },
     {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
@@ -180,7 +180,6 @@ static void move_player(int move_x, int move_y);
 static void open_door(int move_x, int move_y, bool check_confused = true);
 static void start_running( int dir, int mode );
 static void close_door(int move_x, int move_y);
-static bool check_stop_running();
 
 static void init_io();
 static void prep_input();
@@ -768,80 +767,10 @@ static void handle_wizard_command( void )
 }
 #endif
 
-// This function creates "equivalence classes" so that undiscovered
-// traps and secret doors aren't running stopping points.
-static char base_grid_type( char grid )
-{
-    // Don't stop for undiscovered traps:
-    if (grid == DNGN_UNDISCOVERED_TRAP)
-        return (DNGN_FLOOR);
-
-    // Or secret doors (which currently always look like rock walls):
-    if (grid == DNGN_SECRET_DOOR)
-        return (DNGN_ROCK_WALL);
-
-    return (grid);
-}
-
-// Set up the front facing array for detecting terrain based stops
-static void set_run_check( int index, int dir )
-{
-    you.run_check[index].dx = Compass[dir].x;   
-    you.run_check[index].dy = Compass[dir].y;   
-
-    const int targ_x = you.x_pos + Compass[dir].x;
-    const int targ_y = you.y_pos + Compass[dir].y;
-
-    you.run_check[index].grid = base_grid_type( grd[ targ_x ][ targ_y ] );
-}
-
 // Set up the running variables for the current run.
 static void start_running( int dir, int mode )
 {
-    if (dir == RDIR_REST)
-    {
-        you.run_x = 0;
-        you.run_y = 0;
-        you.running = mode;
-        return;
-    }
-
-    ASSERT( dir >= 0 && dir <= 7 );
-
-    you.run_x = Compass[dir].x;
-    you.run_y = Compass[dir].y;
-    you.running = mode;
-
-    // Get the compass point to the left/right of intended travel:
-    const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
-    const int right = (dir + 1 > 7) ? 0 : (dir + 1);
-
-    // Record the direction and starting tile type for later reference:
-    set_run_check( 0, left );
-    set_run_check( 1, dir );
-    set_run_check( 2, right );
-}
-
-// Returns true if one of the front three grids has changed.
-static bool check_stop_running( void )
-{
-    if (env.cgrid[you.x_pos + you.run_x][you.y_pos + you.run_y] != EMPTY_CLOUD)
-        return (true);
-
-    if (mgrd[you.x_pos + you.run_x][you.y_pos + you.run_y] != NON_MONSTER)
-        return (true);
-
-    for (int i = 0; i < 3; i++)
-    {
-        const int targ_x = you.x_pos + you.run_check[i].dx;
-        const int targ_y = you.y_pos + you.run_check[i].dy;
-        const int targ_grid = base_grid_type( grd[ targ_x ][ targ_y ] );
-
-        if (you.run_check[i].grid != targ_grid)
-            return (true);
-    }
-
-    return (false);
+    you.running.initialize(dir, mode);
 }
 
 static bool recharge_rod( item_def &rod, bool wielded )
@@ -2134,14 +2063,10 @@ static void world_reacts() {
 
     while (tmp >= 100)
     {
-        if (you.hp >= you.hp_max - 1 
-            && you.running && you.run_x == 0 && you.run_y == 0)
-        {
-            stop_running();
-        }
-
         inc_hp(1, false);
         tmp -= 100;
+
+        you.running.check_hp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );
@@ -2156,14 +2081,10 @@ static void world_reacts() {
 
     while (tmp >= 100)
     {
-        if (you.magic_points >= you.max_magic_points - 1 
-            && you.running && you.run_x == 0 && you.run_y == 0)
-        {
-            stop_running();
-        }
-
         inc_mp(1, false);
         tmp -= 100;
+
+        you.running.check_mp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );
@@ -2317,11 +2238,11 @@ static command_type get_running_command() {
 	stop_running();
 	return CMD_NO_CMD;
     }
-    if ( you.run_x == 0 && you.run_y == 0 ) {
-	you.running--;
+    if ( is_resting() ) {
+	you.running.rest();
 	return CMD_MOVE_NOWHERE;
     }
-    return direction_to_command( you.run_x, you.run_y );
+    return direction_to_command( you.running.x, you.running.y );
 }
 
 static command_type get_next_cmd() {
@@ -2988,11 +2909,11 @@ static void move_player(int move_x, int move_y)
         }
     } // end of if you.conf
 
-    if (you.running > 0 && you.running != 2 && check_stop_running())
+    if (you.running.check_stop_running())
     {
-        stop_running();
         move_x = 0;
         move_y = 0;
+        // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
         return;
     }

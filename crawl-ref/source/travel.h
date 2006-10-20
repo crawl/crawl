@@ -37,10 +37,7 @@ command_type direction_to_command( char x, char y );
 bool is_resting( void );
 bool can_travel_interlevel();
 
-inline bool is_player_mapped(int grid_x, int grid_y)
-{
-    return (is_player_mapped( env.map[grid_x - 1][grid_y - 1] ));
-}
+bool is_player_mapped(int grid_x, int grid_y);
 
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);
@@ -98,14 +95,6 @@ void arrange_features(std::vector<coord_def> &features);
  * referenced in: travel - view
  * *********************************************************************** */
 extern short point_distance[GXM][GYM];
-
-// Possible values of you.running
-enum RUN_MODES
-{
-    RUN_TRAVEL      = -1,   // Classic or Plain Old travel
-    RUN_EXPLORE     = -2,   // Exploring (Ctrl+O)
-    RUN_INTERLEVEL  = -3    // Interlevel travel (Ctrl+G)
-};
 
 enum EXPLORE_STOP
 {

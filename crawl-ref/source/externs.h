@@ -277,6 +277,51 @@ private:
     size_t maxsize;
 };
 
+class runrest
+{
+public:
+    int runmode;
+    int mp;
+    int hp;
+    int x, y;
+
+    FixedVector<run_check_dir,3> run_check; // array of grids to check
+
+public:
+    runrest();
+    void initialize(int rdir, int mode);
+
+    operator int () const;
+    const runrest &operator = (int newrunmode);
+
+    // Returns true if we're currently resting.
+    bool is_rest() const;
+
+    // Clears run state.
+    void clear();
+
+    // Stops running.
+    void stop();
+
+    // Take one off the rest counter.
+    void rest();
+
+    // Decrements the run counter. Identical to rest.
+    void rundown();
+
+    // Checks if shift-run should be aborted and aborts the run if necessary.
+    // Returns true if you were running and are now no longer running.
+    bool check_stop_running();
+
+    // Check if we've reached the HP/MP stop-rest condition
+    void check_hp();
+    void check_mp();
+
+private:
+    void set_run_check(int index, int compass_dir);
+    bool run_grids_changed() const;
+};
+
 struct player
 {
   activity_type activity;   // The current multiturn activity, usually set 
@@ -288,15 +333,11 @@ struct player
 
   unsigned char species;
 
-  char run_x;
-  char run_y;
-
   // Coordinates of last travel target; note that this is never used by
   // travel itself, only by the level-map to remember the last travel target.
   short travel_x, travel_y;
 
-  FixedVector< run_check_dir, 3 > run_check; // array of grids to check
-  signed char running;                       // Nonzero if running/traveling.
+  runrest running;            // Nonzero if running/traveling.
 
   char special_wield;
   char deaths_door;
@@ -844,5 +885,6 @@ struct scorefile_entry
 
 extern bool autoprayer_on;	// defined in acr.cc
 extern bool fizzlecheck_on;	// defined in direct.cc
+extern const struct coord_def Compass[8];
 
 #endif // EXTERNS_H
