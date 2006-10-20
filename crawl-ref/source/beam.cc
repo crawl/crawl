@@ -3156,7 +3156,7 @@ static int affect_player( struct bolt &beam )
             }
             else
             {
-                beam.foe_count += 1;
+                beam.foe_count++;
                 beam.foe_power += you.experience_level;
             }
         }

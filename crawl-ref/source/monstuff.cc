@@ -1405,12 +1405,7 @@ static void handle_behaviour(struct monsters *mon)
     bool isHealthy = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
     bool isScared = mons_has_ench(mon, ENCH_FEAR);
-
-    // immobility logic stolen from later on in handle_monster().. argh!  --gdl
-    bool isMobile = !(mon->type == MONS_OKLOB_PLANT 
-                        || mon->type == MONS_CURSE_SKULL
-                        || (mon->type >= MONS_CURSE_TOE 
-                            && mon->type <= MONS_POTION_MIMIC));
+    bool isMobile = !mons_is_stationary(mon);
 
     // check for confusion -- early out.
     if (mons_has_ench(mon, ENCH_CONFUSION))
@@ -2980,6 +2975,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
     return (false);
 }                               // end handle_wand()
 
+// Returns a suitable breath weapon for the draconian; does not handle all
+// draconians, does fire a tracer.
 static int get_draconian_breath_spell( struct monsters *monster )
 {
     int draco_breath = MS_NO_SPELL;
@@ -3015,6 +3012,17 @@ static int get_draconian_breath_spell( struct monsters *monster )
         default:
             break;
         }
+
+        if (draco_breath != MS_NO_SPELL)
+        {
+            // [ds] Check line-of-fire here. It won't happen elsewhere.
+            bolt beem;
+            setup_mons_cast(monster, beem, draco_breath);
+            fire_tracer(monster, beem);
+            if (!mons_should_fire(beem))
+                draco_breath = MS_NO_SPELL;
+        }
+
     }
 
     return (draco_breath);

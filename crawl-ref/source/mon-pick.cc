@@ -2156,11 +2156,21 @@ static int mons_hallzot_level(int mcls)
     case MONS_ICE_DRAGON:
         mlev += 4;
         break;
-    case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_DEATH_MAGE:
-    case MONS_DEEP_ELF_DEMONOLOGIST:
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-    case MONS_DEEP_ELF_SORCERER:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
     case MONS_TENTACLED_MONSTROSITY:
         mlev += 3;
         break;
@@ -2197,16 +2207,27 @@ static int mons_hallzot_rare(int mcls)
         return 40;
     case MONS_SHADOW_DRAGON:
     case MONS_DEATH_DRAKE:
-    case MONS_CURSE_TOE:
         return 30;
-    case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_DEATH_MAGE:
-    case MONS_DEEP_ELF_DEMONOLOGIST:
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-    case MONS_DEEP_ELF_SORCERER:
-        return 29;
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+        return 28;
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+        return 21;
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:
+    case MONS_CURSE_TOE:
         return 20;
     case MONS_KILLER_KLOWN:
     case MONS_ORB_OF_FIRE:
@@ -2419,14 +2440,6 @@ static int mons_standard_level(int mcls)
     case MONS_GARGOYLE:
     case MONS_GIANT_AMOEBA:
     case MONS_KOBOLD_DEMONOLOGIST:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
         return 18;
 
     case MONS_GIANT_SLUG:
@@ -2473,13 +2486,6 @@ static int mons_standard_level(int mcls)
     case MONS_REDBACK:
     case MONS_SPHINX:
     case MONS_VAPOUR:
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_KNIGHT:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
         return 22;
 
     case MONS_ORC_SORCERER:
@@ -2721,13 +2727,6 @@ static int mons_standard_rare(int mcls)
     case MONS_RED_WASP:
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
         return 25;
 
     case MONS_BUTTERFLY:
@@ -2744,14 +2743,6 @@ static int mons_standard_rare(int mcls)
     case MONS_STORM_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_WIZARD:
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_KNIGHT:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
-    case MONS_MOTTLED_DRACONIAN:
         return 20;
 
     case MONS_BORING_BEETLE:

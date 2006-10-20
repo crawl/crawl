@@ -718,6 +718,14 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
         pbolt.target_x = monster->x;
         pbolt.target_y = monster->y;
     }
+
+    // Convenience for the hapless innocent who assumes that this
+    // damn function does all possible setup. [ds]
+    if (!pbolt.target_x && !pbolt.target_y)
+    {
+        pbolt.target_x = monster->target_x;
+        pbolt.target_y = monster->target_y;
+    }
 }                               // end setup_mons_cast()
 
 

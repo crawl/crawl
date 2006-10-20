@@ -220,7 +220,7 @@ static std::string uid_as_string()
     snprintf( struid, sizeof struid, "%d", (int)getuid() );
     return std::string(struid);
 #else
-    return std::string;
+    return std::string();
 #endif
 }
 
@@ -1104,9 +1104,8 @@ void load_ghost(void)
     {
         fclose(gfile);
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Incomplete read of \"%s\".",
-                  cha_fil).c_str();
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
+                  cha_fil.c_str() );
         more();
 #endif
         return;

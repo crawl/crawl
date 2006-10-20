@@ -37,7 +37,6 @@
 #define BIG_BAND        20
 
 static int band_member(int band, int power);
-static bool base_coloured_draconian(monster_type mon);
 static int choose_band( int mon_type, int power, int &band_size );
 static int place_monster_aux(int mon_type, char behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
@@ -247,28 +246,11 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
 
     if (allow_bands)
     {
-        // [dshaligram] Draconian bands are homogeneous with respect to
-        // draconian colour. The first coloured draconian forces all others to
-        // be of the same colour. Idea courtesy Erik Piper.
-
         int band = choose_band(mon_type, power, band_size);
-        int draconian_colour = 
-            base_coloured_draconian(monster_type(mon_type))
-                        ? mon_type : MONS_PROGRAM_BUG;
         band_size ++;
 
         for (i = 1; i < band_size; i++)
-        {
-            int new_band_mons = band_member( band, power );
-            if (draconian_colour != MONS_PROGRAM_BUG 
-                    && base_coloured_draconian(monster_type(new_band_mons)))
-                new_band_mons = draconian_colour;
-
-            band_monsters[i] = new_band_mons;
-
-            if (base_coloured_draconian(monster_type(new_band_mons)))
-                draconian_colour = new_band_mons;
-        }
+            band_monsters[i] = band_member( band, power );
     }
 
     // Monsters that can't move shouldn't be taking the stairs -- bwr
@@ -867,7 +849,7 @@ static int choose_band( int mon_type, int power, int &band_size )
         if (power > 18 && one_chance_in(3)) 
         {
            band = BAND_DRACONIAN;
-           band_size = random_range(1, 2 + (power > 24));
+           band_size = random_range(2, 4);
         }
         break;
     case MONS_DRACONIAN_CALLER:
@@ -880,7 +862,7 @@ static int choose_band( int mon_type, int power, int &band_size )
         if (power > 20) 
         {
            band = BAND_DRACONIAN;
-           band_size = random_range(2, 3 + (power > 26));
+           band_size = random_range(3, 6);
         }
         break;
     } // end switch
@@ -892,27 +874,6 @@ static int choose_band( int mon_type, int power, int &band_size )
         band_size = BIG_BAND-1;
 
     return (band);
-}
-
-// Returns true if the monster is a draconian of any colour (not the base
-// unspecified draconian or a draconian with a job description). Used to keep
-// bands of draconians coherent.
-static bool base_coloured_draconian(monster_type mon)
-{
-    switch (mon)
-    {
-    case MONS_BLACK_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-        return (true);
-    default:
-        return (false);
-    }
 }
 
 static int band_member(int band, int power)
