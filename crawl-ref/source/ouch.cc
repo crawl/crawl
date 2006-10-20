@@ -769,6 +769,9 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
 
     //okay, so you're dead:
 
+    // prevent bogus notes
+    activate_notes(false);
+
     // do points first.
     long points = you.gold;
     points += (you.experience * 7) / 10;
