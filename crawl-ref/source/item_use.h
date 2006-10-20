@@ -138,7 +138,10 @@ bool enchant_weapon( int which_stat, bool quiet = false );
 bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
 
 void inscribe_item();
-int launcher_shield_slowdown(const item_def &launcher);
+int launcher_shield_slowdown(const item_def &launcher, 
+                             const item_def *shield);
+int launcher_final_speed(const item_def &launcher, 
+                         const item_def *shield);
 
 void warn_shield_penalties();
 

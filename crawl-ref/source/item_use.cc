@@ -297,14 +297,22 @@ static void warn_rod_shield_interference(const item_def &)
 
 static void warn_launcher_shield_slowdown(const item_def &launcher)
 {
-    const int slowdown = launcher_shield_slowdown(launcher);
-    const char *slow_degree = shield_impact_degree(slowdown);
+    const int slowspeed = 
+        launcher_final_speed(launcher, player_shield()) * player_speed() / 100;
+    const int normspeed = 
+        launcher_final_speed(launcher, NULL) * player_speed() / 100;
 
-    if (slow_degree)
-        mprf(MSGCH_WARN, 
-                "Your %s %sslows your rate of fire.", 
-                shield_base_name(player_shield()),
-                slow_degree);
+    // Don't warn the player unless the slowdown is real.
+    if (slowspeed > normspeed)
+    {
+        const char *slow_degree = 
+            shield_impact_degree(slowspeed * 100 / normspeed);
+        if (slow_degree)
+            mprf(MSGCH_WARN, 
+                    "Your %s %sslows your rate of fire.", 
+                    shield_base_name(player_shield()),
+                    slow_degree);
+    }
 }
 
 // Warn if your shield is greatly impacting the effectiveness of your weapon?
@@ -1163,12 +1171,9 @@ void shoot_thing(void)
 
 // Returns delay multiplier numerator (denominator should be 100) for the
 // launcher with the currently equipped shield.
-int launcher_shield_slowdown(const item_def &launcher)
+int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
 {
-    int speed_adjust       = 100;
-
-    const item_def *shield = player_shield();
-
+    int speed_adjust = 100;
     if (!shield)
         return (speed_adjust);
 
@@ -1198,6 +1203,48 @@ int launcher_shield_slowdown(const item_def &launcher)
                             * you.skills[SK_SHIELDS] / 27;
 
     return (speed_adjust);
+}
+
+// Returns the attack cost of using the launcher, taking skill and shields
+// into consideration. NOTE: You must pass in the shield; if you send in
+// NULL, this function assumes no shield is in use.
+int launcher_final_speed(const item_def &launcher, const item_def *shield)
+{
+    const int  str_weight   = weapon_str_weight( launcher );
+    const int  dex_weight   = 10 - str_weight;
+    const skill_type launcher_skill = range_skill( launcher );
+    const int shoot_skill = you.skills[launcher_skill];
+    const int bow_brand = get_weapon_brand( launcher );
+
+    int speed_base = 10 * property( launcher, PWPN_SPEED );
+    int speed_min = 70;
+    int speed_stat = str_weight * you.strength + dex_weight * you.dex;
+
+    // Reduce runaway bow overpoweredness.
+    if (launcher_skill == SK_BOWS)
+        speed_min = 60;
+
+    if (shield)
+    {
+        const int speed_adjust = launcher_shield_slowdown(launcher, shield);
+
+        // Shields also reduce the speed cap.
+        speed_base = speed_base * speed_adjust / 100;
+        speed_min =  speed_min  * speed_adjust / 100;
+    }
+
+    int speed = speed_base - 4 * shoot_skill * speed_stat / 250;
+    if (speed < speed_min)
+        speed = speed_min;
+
+    if (bow_brand == SPWPN_SPEED)
+    {
+        // Speed nerf as per 4.1. Even with the nerf, bows of speed are the
+        // best bows, bar none.
+        speed = 2 * speed / 3;
+    }
+
+    return (speed);
 }
 
 // throw_it - currently handles player throwing only.  Monster
@@ -1361,7 +1408,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
-        const bool two_handed = (you.equip[EQ_SHIELD] == -1);
         bool poisoned = (ammo_brand == SPMSL_POISONED
                             || ammo_brand == SPMSL_POISONED_II);
         const int rc_skill = you.skills[SK_RANGED_COMBAT];
@@ -1370,13 +1416,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
 
         const skill_type launcher_skill = range_skill( launcher );
-        const int  str_weight   = weapon_str_weight( launcher );
-        const int  dex_weight   = 10 - str_weight;
-
-        int speed_base = 10 * property( launcher, PWPN_SPEED );
-        int speed_min = 70;
-        int speed_stat = str_weight * you.strength + dex_weight * you.dex;
-        int speed = 100;
 
         baseHit = property( launcher, PWPN_HIT );
         baseDam = lnch_base_dam + random2(1 + item_base_dam);
@@ -1384,9 +1423,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         // Slings are terribly weakened otherwise
         if (lnch_base_dam == 0)
             baseDam = item_base_dam;
-
-        if (launcher_skill == SK_BOWS)
-            speed_min = 60;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
@@ -1430,27 +1466,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         shoot_skill = you.skills[launcher_skill];
         effSkill = (shoot_skill * 2 + rc_skill) / 3;
 
-        if (!two_handed)
-        {
-            int speed_adjust = launcher_shield_slowdown(launcher);
-
-            speed_base = speed_base * speed_adjust / 100;
-            speed_min =  speed_min  * speed_adjust / 100;
-        }
-
-        speed = speed_base - 4 * shoot_skill * speed_stat / 250;
-        if (speed < speed_min)
-            speed = speed_min;
-
-        if (bow_brand == SPWPN_SPEED)
-        {
-            // Speed nerf as per 4.1
-            speed = 2 * speed / 3;
-        }
+        const int speed = launcher_final_speed(launcher, player_shield());
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Final launcher speed: %d", speed);
 #endif
-
         you.time_taken = speed * you.time_taken / 100;
 
         // effSkill = you.skills[SK_RANGED_COMBAT] * 2 + 1;
