@@ -3020,6 +3020,16 @@ std::string screenshot( bool fullscreen )
     return (ss);
 }
 
+static int viewmap_flash_colour()
+{
+    if (you.special_wield == SPWLD_SHADOW)
+        return (DARKGREY);
+    else if (you.berserker)
+        return (RED);
+
+    return (BLACK);
+}
+
 //---------------------------------------------------------------
 //
 // viewwindow -- now unified and rolled into a single pass
@@ -3065,6 +3075,10 @@ void viewwindow(bool draw_it, bool do_updates)
 
         const bool map = player_in_mappable_area();
         int bufcount = 0;
+
+        int flash_colour = you.flash_colour;
+        if (flash_colour == BLACK)
+            flash_colour = viewmap_flash_colour();
 
         for (count_y = 0; count_y < Y_SIZE; count_y++)
         {
@@ -3185,10 +3199,10 @@ void viewwindow(bool draw_it, bool do_updates)
                 }
                 
                 // alter colour if flashing the characters vision
-                if (you.flash_colour != BLACK 
+                if (flash_colour != BLACK 
                     && buffy[bufcount + 1] != DARKGREY)
                 {
-                    buffy[bufcount + 1] = you.flash_colour;
+                    buffy[bufcount + 1] = flash_colour;
                 }
 
                 bufcount += 2;
@@ -3197,15 +3211,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
         // Leaving it this way because short flashes can occur in long ones,
         // and this simply works without requiring a stack.
-        if (you.flash_colour != BLACK)
-        {
-            if (you.special_wield == SPWLD_SHADOW)
-                you.flash_colour = DARKGREY;
-            else if (you.berserker)
-                you.flash_colour = RED;
-            else
-                you.flash_colour = BLACK;
-        }
+        you.flash_colour = BLACK;
 
 #ifdef DOS_TERM
         puttext( 2, 1, X_SIZE + 1, Y_SIZE, buffy.buffer() );

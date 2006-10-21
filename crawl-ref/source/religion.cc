@@ -2413,7 +2413,7 @@ static bool bless_weapon( int god, int brand, int colour )
 
         // as currently only Zin and TSO do this is our permabrand effect:
         holy_word( 100, true );
-        delay(500);
+        delay(1000);
 
         return (true);
     }
