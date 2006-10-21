@@ -190,8 +190,8 @@ int mons_type_hit_dice( int type );
 /* ***********************************************************************
  * called from: beam - effects
  * *********************************************************************** */
-int mons_resist_magic( struct monsters *mon );
-int mons_resist_turn_undead( struct monsters *mon );
+int mons_resist_magic( const monsters *mon );
+int mons_resist_turn_undead( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
@@ -245,30 +245,30 @@ int mons_intel_type(int mclass); //jmf: added 20mar2000
 /* ***********************************************************************
  * called from: beam - fight - monstuff
  * *********************************************************************** */
-int mons_res_cold( struct monsters *mon );
+int mons_res_cold( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - spells4
  * *********************************************************************** */
-int mons_res_elec( struct monsters *mon );
+int mons_res_elec( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - monstuff
  * *********************************************************************** */
-int mons_res_fire( struct monsters *mon );
+int mons_res_fire( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - monstuff - spells4
  * *********************************************************************** */
-int mons_res_poison( struct monsters *mon );
+int mons_res_poison( const monsters *mon );
 
-int mons_res_negative_energy( struct monsters *mon );
+int mons_res_negative_energy( const monsters *mon );
 
 bool mons_res_asphyx( const monsters *mon );
 
@@ -327,8 +327,13 @@ unsigned char mons_char(int mc);
 /* ***********************************************************************
  * called from: dungeon - fight - misc
  * *********************************************************************** */
-unsigned char mons_colour(int mc);
+int mons_class_colour(int mc);
+int mons_colour(const monsters *m);
 
+// Only for save-compatibility.
+int obsolete_mons_spell_template_index(const monsters *mon);
+
+void mons_load_spells( monsters *mon, int book );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -343,13 +348,6 @@ void define_monster(int mid);
  * *********************************************************************** */
 const char *moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
-void mons_spell_list(int sec, int splist[6]);
-void mons_spell_list(const monsters *monster, int splist[6]);
 
 #if DEBUG_DIAGNOSTICS
 // last updated 25sep2001 {dlb}
@@ -425,7 +423,7 @@ bool mons_looks_stabbable(const monsters *m);
 
 bool mons_looks_distracted(const monsters *m);
 
-bool check_mons_resist_magic( struct monsters *monster, int pow );
+bool check_mons_resist_magic( const monsters *monster, int pow );
 
 bool mons_is_stationary(const monsters *mons);
 bool mons_is_submerged( struct monsters *mon );

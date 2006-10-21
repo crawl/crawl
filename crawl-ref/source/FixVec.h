@@ -49,13 +49,10 @@ public:
     FixedVector()                            {}
 
     FixedVector(TYPE def) : mData() {
-        // memset would be good, but there's no guarantee this is a vector of
-        // primitives.
-        for (int i = 0; i < SIZE; ++i)
-            mData[i] = def;
+        init(def);
     }
 
-     FixedVector(TYPE value0, TYPE value1, ...);
+    FixedVector(TYPE value0, TYPE value1, ...);
     // Allows for something resembling C array initialization, eg
     // instead of "int a[3] = {0, 1, 2}" you'd use "FixedVector<int, 3>
     // a(0, 1, 2)". Note that there must be SIZE arguments.
@@ -71,7 +68,7 @@ public:
 public:
 // ----- Size -----
     bool        empty() const                          {return SIZE == 0;}
-    int         size() const                           {return SIZE;}
+    size_t      size() const                           {return SIZE;}
 
 // ----- Access -----
     TYPE&       operator[](unsigned long index)        {ASSERT(index < SIZE); return mData[index];}
@@ -93,6 +90,8 @@ public:
     iterator                 end()                     {return this->begin() + this->size();}
     const_iterator           end() const               {return this->begin() + this->size();}
 
+    void                     init(TYPE def);
+
 //-----------------------------------
 //    Member Data
 //
@@ -107,19 +106,26 @@ protected:
 template <class TYPE, int SIZE>
 FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 {
-        mData[0] = value0;
-        mData[1] = value1;
+    mData[0] = value0;
+    mData[1] = value1;
 
-        va_list ap;
-        va_start(ap, value1);   // second argument is last fixed parameter
+    va_list ap;
+    va_start(ap, value1);   // second argument is last fixed parameter
 
-        for (int index = 2; index < SIZE; index++) {
-                TYPE value = va_arg(ap, TYPE);
+    for (int index = 2; index < SIZE; index++) {
+            TYPE value = va_arg(ap, TYPE);
 
-                mData[index] = value;
-        }
+            mData[index] = value;
+    }
 
-        va_end(ap);
+    va_end(ap);
+}
+
+template <class TYPE, int SIZE>
+void FixedVector<TYPE, SIZE>::init(TYPE def)
+{
+    for (int i = 0; i < SIZE; ++i)
+        mData[i] = def;
 }
 
 #endif    // FIXVEC_H

@@ -1534,28 +1534,34 @@ static void tag_construct_level_monsters(struct tagHeader &th)
 
     for (i = 0; i < MAX_MONSTERS; i++)
     {
-        marshallByte(th, menv[i].armour_class);
-        marshallByte(th, menv[i].evasion);
-        marshallByte(th, menv[i].hit_dice);
-        marshallByte(th, menv[i].speed);
-        marshallByte(th, menv[i].speed_increment);
-        marshallByte(th, menv[i].behaviour);
-        marshallByte(th, menv[i].x);
-        marshallByte(th, menv[i].y);
-        marshallByte(th, menv[i].target_x);
-        marshallByte(th, menv[i].target_y);
-        marshallByte(th, menv[i].flags);
+        const monsters &m = menv[i];
+
+        marshallByte(th, m.armour_class);
+        marshallByte(th, m.evasion);
+        marshallByte(th, m.hit_dice);
+        marshallByte(th, m.speed);
+        marshallByte(th, m.speed_increment);
+        marshallByte(th, m.behaviour);
+        marshallByte(th, m.x);
+        marshallByte(th, m.y);
+        marshallByte(th, m.target_x);
+        marshallByte(th, m.target_y);
+        marshallByte(th, m.flags);
 
         for (j = 0; j < NUM_MON_ENCHANTS; j++)
-            marshallByte(th, menv[i].enchantment[j]);
+            marshallByte(th, m.enchantment[j]);
 
-        marshallShort(th, menv[i].type);
-        marshallShort(th, menv[i].hit_points);
-        marshallShort(th, menv[i].max_hit_points);
-        marshallShort(th, menv[i].number);
+        marshallShort(th, m.type);
+        marshallShort(th, m.hit_points);
+        marshallShort(th, m.max_hit_points);
+        marshallShort(th, m.number);
+        marshallShort(th, m.colour);
 
         for (j = 0; j < NUM_MONSTER_SLOTS; j++)
-            marshallShort(th, menv[i].inv[j]);
+            marshallShort(th, m.inv[j]);
+
+        for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+            marshallShort(th, m.spells[j]);
     }
 }
 
@@ -1798,8 +1804,25 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].max_hit_points = unmarshallShort(th);
         menv[i].number = unmarshallShort(th);
 
+        if (minorVersion >= 10)
+            menv[i].colour = unmarshallShort(th);
+        else
+            // This will be the wrong colour for many cases, we don't care.
+            menv[i].colour = mons_class_colour( menv[i].type );
+
         for (j = 0; j < icount; j++)
             menv[i].inv[j] = unmarshallShort(th);
+
+        if (minorVersion >= 10)
+        {
+            for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+                menv[i].spells[j] = unmarshallShort(th);
+        }
+        else if (menv[i].type != -1)
+        {
+            const int book = obsolete_mons_spell_template_index( &menv[i] );
+            mons_load_spells( &menv[i], book );
+        }
 
         // place monster
         if (menv[i].type != -1)

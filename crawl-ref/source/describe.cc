@@ -4497,7 +4497,8 @@ void describe_monsters(int class_described, unsigned char which_mons)
 #endif
 
     clrscr();
-    description = std::string( ptr_monam( &(menv[ which_mons ]), DESC_CAP_A ) );
+
+    description = ptr_monam( &(menv[ which_mons ]), DESC_CAP_A );
     description += "$$";
 
     switch (class_described)
@@ -6155,15 +6156,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     if (mons_class_flag( menv[ which_mons ].type, M_SPELLCASTER ))
     {
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        int msecc = ((class_described == MONS_HELLION)    ? MST_BURNING_DEVIL :
-                     (class_described == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                 : menv[ which_mons ].number);
-
-        mons_spell_list(msecc, hspell_pass);
-
+        const monster_spells &hspell_pass = menv[which_mons].spells;
         bool found_spell = false;
 
         for (int i = 0; i < 6; i++)

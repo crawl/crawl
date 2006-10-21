@@ -98,7 +98,7 @@ void turn_corpse_into_chunks( item_def &item )
         mitm[o].plus2 = 0;
         mitm[o].special = 0;
         mitm[o].flags = 0;
-        mitm[o].colour = mons_colour( mons_class );
+        mitm[o].colour = mons_class_colour( mons_class );
 
         // these values cannot be set by a reasonable formula: {dlb}
         switch (mons_class)
@@ -383,13 +383,7 @@ void in_a_cloud(void)
     case CLOUD_STEAM:
     case CLOUD_STEAM_MON:
         mpr("You are engulfed in a cloud of scalding steam!");
-        if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
-        {
-            mpr("It doesn't seem to affect you.");
-            return;
-        }
-
-        if (player_equip( EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR ))
+        if (player_res_steam())
         {
             mpr("It doesn't seem to affect you.");
             return;

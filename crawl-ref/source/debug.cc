@@ -87,7 +87,7 @@ static HANDLE sConsole = NULL;
 static void BreakStrToDebugger(const char *mesg)
 {
 
-#if OSX
+#if OSX || defined(__MINGW32__)
     fprintf(stderr, mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
@@ -826,7 +826,7 @@ void create_spec_object(void)
         mitm[thing_created].plus      = mon;
         mitm[thing_created].plus2     = 0;
         mitm[thing_created].special   = 210;
-        mitm[thing_created].colour    = mons_colour(mon);;
+        mitm[thing_created].colour    = mons_class_colour(mon);;
         mitm[thing_created].quantity  = 1;
         mitm[thing_created].flags     = 0;
     }

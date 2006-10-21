@@ -230,9 +230,22 @@ unsigned long get_mons_class_resists(int mc)
     return (smc->resists);
 }
 
-unsigned long mons_class_resist(int mc, unsigned long flags)
+unsigned long get_mons_resists(const monsters *mon)
 {
-    return (smc->resists & flags);
+    unsigned long resists = get_mons_class_resists(mon->type);
+    if (mons_genus(mon->type) == MONS_DRACONIAN 
+            && mon->type != MONS_DRACONIAN)
+    {
+        monster_type draco_species = draco_subspecies(mon);
+        if (draco_species != mon->type)
+            resists |= get_mons_class_resists(draco_species);
+    }
+    return (resists);
+}
+
+unsigned long mons_resist(const monsters *mon, unsigned long flags)
+{
+    return (get_mons_resists(mon) & flags);
 }
 
 bool mons_class_flag(int mc, int bf)
@@ -474,11 +487,20 @@ char mons_itemuse(int mc)
     return (smc->gmon_use);
 }                               // end mons_itemuse()
 
-unsigned char mons_colour(int mc)
+int mons_class_colour(int mc)
 {
-    return (smc->colour);
+    const monsterentry *m = smc;
+    if (!m)
+        return (BLACK);
+
+    const int class_colour = smc->colour;
+    return (class_colour == BLACK? LIGHTGREY : class_colour);
 }                               // end mons_colour()
 
+int mons_colour(const monsters *monster)
+{
+    return (monster->colour);
+}
 
 int mons_damage(int mc, int rt)
 {
@@ -494,7 +516,7 @@ int mons_damage(int mc, int rt)
     return (smc->damage[rt]);
 }                               // end mons_damage()
 
-int mons_resist_magic( struct monsters *mon )
+int mons_resist_magic( const monsters *mon )
 {
     int u = (seekmonster(mon->type))->resist_magic;
 
@@ -519,7 +541,7 @@ int mons_resist_magic( struct monsters *mon )
 
 // Returns true if the monster made its save against hostile
 // enchantments/some other magics.
-bool check_mons_resist_magic( struct monsters *monster, int pow )
+bool check_mons_resist_magic( const monsters *monster, int pow )
 {
     int mrs = mons_resist_magic(monster);
 
@@ -557,7 +579,7 @@ bool check_mons_resist_magic( struct monsters *monster, int pow )
 }                               // end check_mons_resist_magic()
 
 
-int mons_res_elec( struct monsters *mon )
+int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
 
@@ -567,7 +589,7 @@ int mons_res_elec( struct monsters *mon )
     /* this is a variable, not a player_xx() function, so can be above 1 */
     int u = 0;
 
-    if (mons_class_resist( mon->type, MR_RES_ELEC))
+    if (mons_resist(mon, MR_RES_ELEC))
         u++;
 
     // don't bother checking equipment if the monster can't use it
@@ -594,14 +616,14 @@ bool mons_res_asphyx( const monsters *mon )
                 || holiness == MH_DEMONIC
                 || holiness == MH_NONLIVING
                 || holiness == MH_PLANT
-                || mons_class_resist(mon->type, MR_RES_ASPHYX));
+                || mons_resist(mon, MR_RES_ASPHYX));
 }
 
-int mons_res_poison( struct monsters *mon )
+int mons_res_poison( const monsters *mon )
 {
     int mc = mon->type;
 
-    int u = 0, f = get_mons_class_resists(mc);
+    int u = 0, f = get_mons_resists(mon);
 
     if (f & MR_RES_POISON)
         u++;
@@ -634,14 +656,14 @@ int mons_res_poison( struct monsters *mon )
 }                               // end mons_res_poison()
 
 
-int mons_res_fire( struct monsters *mon )
+int mons_res_fire( const monsters *mon )
 {
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_FIRE ]);
 
-    int u = 0, f = get_mons_class_resists(mc);
+    int u = 0, f = get_mons_resists(mon);
 
     // no Big Prize (tm) here either if you set all three flags. It's a pity uh?
     //
@@ -682,14 +704,14 @@ int mons_res_fire( struct monsters *mon )
 }                               // end mons_res_fire()
 
 
-int mons_res_cold( struct monsters *mon )
+int mons_res_cold( const monsters *mon )
 {
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_COLD ]);
 
-    int u = 0, f = get_mons_class_resists(mc);
+    int u = 0, f = get_mons_resists(mon);
 
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour
@@ -725,7 +747,7 @@ int mons_res_cold( struct monsters *mon )
     return (u);
 }                               // end mons_res_cold()
 
-int mons_res_negative_energy( struct monsters *mon )
+int mons_res_negative_energy( const monsters *mon )
 {
     int mc = mon->type;
 
@@ -881,14 +903,7 @@ int exper_value( const struct monsters *monster )
     // Let's look for big spells:
     if (spellcaster)
     {
-        const int msecc = ((mclass == MONS_HELLION) ? MST_BURNING_DEVIL :
-                 (mclass == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                    : monster->number);
-
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        mons_spell_list( msecc, hspell_pass );
+        const monster_spells &hspell_pass = monster->spells;
 
         for (int i = 0; i < 6; i++)
         {
@@ -994,42 +1009,58 @@ int exper_value( const struct monsters *monster )
     return (x_val);
 }                               // end exper_value()
 
-void mons_spell_list(const monsters *monster, int splist[6])
+int obsolete_mons_spell_template_index(const monsters *mon)
 {
-    int msecc = ((monster->type == MONS_HELLION)       ? MST_BURNING_DEVIL :
-             (monster->type == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                       : monster->number);
-    return mons_spell_list(msecc, splist);
+    return (mons_class_flag(mon->type, M_SPELLCASTER)? 
+                mon->number
+            :   MST_NO_SPELLS);
 }
 
-// this needs to be rewritten a la the monsterseek rewrite {dlb}:
-void mons_spell_list( int sec, int splist[6] )
+void mons_load_spells( monsters *mon, int book )
 {
-    unsigned int x;
+    int x, y;
 
-    for (x = 0; x < NUM_MSTYPES; x++)
+    if (book == MST_NO_SPELLS)
     {
-        if (mspell_list[x][0] == sec)
-            break;
-    }
-
-    if (x >= NUM_MSTYPES)
+        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
+            mon->spells[y] = MS_NO_SPELL;
         return;
-
-    // I *KNOW* this can easily be done in a loop
-    splist[0] = mspell_list[x][1];      // bolt spell
-    splist[1] = mspell_list[x][2];      // enchantment
-    splist[2] = mspell_list[x][3];      // self_ench
-    splist[3] = mspell_list[x][4];      // misc
-    splist[4] = mspell_list[x][5];      // misc2
-    splist[5] = mspell_list[x][6];      // emergency
-
-    if (sec == MST_GHOST)             /* ghost */
-    {
-        for (x = 0; x < 6; x++)
-            splist[x] = ghost.values[ GVAL_SPELL_1 + x ];
     }
-}                               // end mons_spell_list()
+
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
+            ptr_monam( mon, DESC_PLAIN ), book );
+#endif
+
+    for (x = 0; x < 6; x++)
+        mon->spells[x] = MS_NO_SPELL;
+
+    if (book == MST_GHOST)
+    {
+        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
+        {
+            mon->spells[y] = ghost.values[ GVAL_SPELL_1 + y ];
+#if DEBUG_DIAGNOSTICS
+            mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", y, mon->spells[y] );
+#endif
+        }
+    }
+    else 
+    {
+        // this needs to be rewritten a la the monsterseek rewrite {dlb}:
+        for (x = 0; x < NUM_MSTYPES; x++)
+        {
+            if (mspell_list[x][0] == book)
+                break;
+        }
+
+        if (x < NUM_MSTYPES)
+        {
+            for (y = 0; y < 6; y++)
+                mon->spells[y] = mspell_list[x][y + 1];
+        }
+    }
+}
 
 #if DEBUG_DIAGNOSTICS
 const char *mons_spell_name( int spell )
@@ -1042,152 +1073,203 @@ const char *mons_spell_name( int spell )
 #endif
 
 // generate a shiny new and unscarred monster
-void define_monster(int k)
+void define_monster(int index)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-    int m2_class = menv[k].type;
-    int m2_HD, m2_hp, m2_hp_max, m2_AC, m2_ev, m2_speed;
-    int m2_sec = menv[k].number;
-    struct monsterentry *m = seekmonster(m2_class);
+    monsters &mons = menv[index];
 
-    m2_HD = m->hpdice[0];
+    int temp_rand = 0;          // probability determination {dlb}
+    int mcls = mons.type;
+    int hd, hp, hp_max, ac, ev, speed;
+    int monnumber = mons.number;
+    const monsterentry *m = seekmonster(mcls);
+    int col = mons_class_colour(mons.type);
+    int spells = MST_NO_SPELLS;
+
+    hd = m->hpdice[0];
 
     // misc
-    m2_AC = m->AC;
-    m2_ev = m->ev;
+    ac = m->AC;
+    ev = m->ev;
 
     // speed
-    m2_speed = m->speed;
+    speed = m->speed;
 
     // some monsters are randomized:
     // did I get them all?    // I don't think so {dlb}
-    if (mons_is_mimic( m2_class ))
-        m2_sec = get_mimic_colour( &menv[k] );
-    else
+    switch (mcls)
     {
-        switch (m2_class)
+    case MONS_ABOMINATION_SMALL:
+        hd = 4 + random2(4);
+        ac = 3 + random2(7);
+        ev = 7 + random2(6);
+        speed = 7 + random2avg(9, 2);
+
+        if (monnumber == 250)
+            col = random_colour();
+        break;
+
+    case MONS_ZOMBIE_SMALL:
+        hd = (coinflip() ? 1 : 2);
+        break;
+
+    case MONS_ZOMBIE_LARGE:
+        hd = 3 + random2(5);
+        break;
+
+    case MONS_ABOMINATION_LARGE:
+        hd = 8 + random2(4);
+        ac = 5 + random2avg(9, 2);
+        ev = 3 + random2(5);
+        speed = 6 + random2avg(7, 2);
+
+        if (monnumber == 250)
+            col = random_colour();
+        break;
+
+    case MONS_BEAST:
+        hd = 4 + random2(4);
+        ac = 2 + random2(5);
+        ev = 7 + random2(5);
+        speed = 8 + random2(5);
+        break;
+
+    case MONS_HYDRA:
+        monnumber = random_range(4, 8);
+        break;
+
+    case MONS_DEEP_ELF_FIGHTER:
+    case MONS_DEEP_ELF_KNIGHT:
+    case MONS_DEEP_ELF_SOLDIER:
+    case MONS_ORC_WIZARD:
+        spells = MST_ORC_WIZARD_I + random2(3);
+        break;
+
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+        spells = MST_LICH_I + random2(4);
+        break;
+
+    case MONS_HELL_KNIGHT:
+        spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
+        break;
+
+    case MONS_NECROMANCER:
+        spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
+        break;
+
+    case MONS_WIZARD:
+    case MONS_OGRE_MAGE:
+    case MONS_EROLCHA:
+    case MONS_DEEP_ELF_MAGE:
+        spells = MST_WIZARD_I + random2(5);
+        break;
+
+    case MONS_DEEP_ELF_CONJURER:
+        spells = 
+            (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
+        break;
+
+    case MONS_BUTTERFLY:
+    case MONS_SPATIAL_VORTEX:
+    case MONS_KILLER_KLOWN:
+        col = random_colour();
+        break;
+
+    case MONS_GILA_MONSTER:
+        temp_rand = random2(7);
+
+        col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
+               temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
+               temp_rand == 2 ? RED :                        // 1/7
+               temp_rand == 1 ? MAGENTA                      // 1/7
+                              : YELLOW);                     // 1/7
+        break;
+
+    case MONS_DRACONIAN:
+        // these are supposed to only be created by polymorph
+        hd += random2(10);
+        ac += random2(5);
+        ev += random2(5);
+
+        if (hd >= 7)
         {
-        case MONS_ABOMINATION_SMALL:
-            m2_HD = 4 + random2(4);
-            m2_AC = 3 + random2(7);
-            m2_ev = 7 + random2(6);
-            m2_speed = 7 + random2avg(9, 2);
-
-            if (m2_sec == 250)
-                m2_sec = random_colour();
-            break;
-
-        case MONS_ZOMBIE_SMALL:
-            m2_HD = (coinflip() ? 1 : 2);
-            break;
-
-        case MONS_ZOMBIE_LARGE:
-            m2_HD = 3 + random2(5);
-            break;
-
-        case MONS_ABOMINATION_LARGE:
-            m2_HD = 8 + random2(4);
-            m2_AC = 5 + random2avg(9, 2);
-            m2_ev = 3 + random2(5);
-            m2_speed = 6 + random2avg(7, 2);
-
-            if (m2_sec == 250)
-                m2_sec = random_colour();
-            break;
-
-        case MONS_BEAST:
-            m2_HD = 4 + random2(4);
-            m2_AC = 2 + random2(5);
-            m2_ev = 7 + random2(5);
-            m2_speed = 8 + random2(5);
-            break;
-
-        case MONS_HYDRA:
-            m2_sec = 4 + random2(5);
-            break;
-
-        case MONS_DEEP_ELF_FIGHTER:
-        case MONS_DEEP_ELF_KNIGHT:
-        case MONS_DEEP_ELF_SOLDIER:
-        case MONS_ORC_WIZARD:
-            m2_sec = MST_ORC_WIZARD_I + random2(3);
-            break;
-
-        case MONS_LICH:
-        case MONS_ANCIENT_LICH:
-            m2_sec = MST_LICH_I + random2(4);
-            break;
-
-        case MONS_HELL_KNIGHT:
-            m2_sec = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
-            break;
-
-        case MONS_NECROMANCER:
-            m2_sec = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
-            break;
-
-        case MONS_WIZARD:
-        case MONS_OGRE_MAGE:
-        case MONS_EROLCHA:
-        case MONS_DEEP_ELF_MAGE:
-            m2_sec = MST_WIZARD_I + random2(5);
-            break;
-
-        case MONS_DEEP_ELF_CONJURER:
-            m2_sec = (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
-            break;
-
-        case MONS_BUTTERFLY:
-        case MONS_SPATIAL_VORTEX:
-        case MONS_KILLER_KLOWN:
-            m2_sec = random_colour();
-            break;
-
-        case MONS_GILA_MONSTER:
-            temp_rand = random2(7);
-
-            m2_sec = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
-                      temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
-                      temp_rand == 2 ? RED :                        // 1/7
-                      temp_rand == 1 ? MAGENTA                      // 1/7
-                                     : YELLOW);                     // 1/7
-            break;
-
-        case MONS_HUMAN:
-        case MONS_ELF:
-            // these are supposed to only be created by polymorph 
-            m2_HD += random2(10);
-            m2_AC += random2(5);
-            m2_ev += random2(5);
-            break;
-
-        default:
-            break;
+            mons.type = MONS_BLACK_DRACONIAN + random2(8);
+            col = mons_class_colour( mons.type );
         }
+        break;
+
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_SCORCHER:
+    {
+        // Professional draconians still have a base draconian type.
+        // White draconians will never be draconian scorchers, but
+        // apart from that, anything goes.
+        do
+            monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        while (monnumber == MONS_WHITE_DRACONIAN
+                && mcls == MONS_DRACONIAN_SCORCHER);
+        break;
+    }
+    case MONS_DRACONIAN_KNIGHT:
+    {
+        temp_rand = random2(10);
+        // hell knight, death knight, chaos knight...
+        if (temp_rand < 6)
+            spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
+        else if (temp_rand < 9)
+            spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
+        else 
+            spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I 
+                                 : MST_DEEP_ELF_CONJURER_II);
+        
+        monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        break;
+    }
+    case MONS_HUMAN:
+    case MONS_ELF:
+        // these are supposed to only be created by polymorph 
+        hd += random2(10);
+        ac += random2(5);
+        ev += random2(5);
+        break;
+
+    default:
+        if (mons_is_mimic( mcls ))
+            col = get_mimic_colour( &mons );
+        break;
     }
 
-    // some calculations
-    m2_hp = hit_points(m2_HD, m->hpdice[1], m->hpdice[2]);
-    m2_hp += m->hpdice[3];
-    m2_hp_max = m2_hp;
+    if (spells == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
+        spells = m->sec;
 
-    if (m2_sec == 250)
-        m2_sec = m->sec;
+    // some calculations
+    hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+    hp += m->hpdice[3];
+    hp_max = hp;
+
+    if (monnumber == 250)
+        monnumber = m->sec;
 
     // so let it be written, so let it be done
-    menv[k].hit_dice = m2_HD;
-    menv[k].hit_points = m2_hp;
-    menv[k].max_hit_points = m2_hp_max;
-    menv[k].armour_class = m2_AC;
-    menv[k].evasion = m2_ev;
-    menv[k].speed = m2_speed;
-    menv[k].speed_increment = 70;
-    menv[k].number = m2_sec;
-    menv[k].flags = 0;
+    mons.hit_dice = hd;
+    mons.hit_points = hp;
+    mons.max_hit_points = hp_max;
+    mons.armour_class = ac;
+    mons.evasion = ev;
+    mons.speed = speed;
+    mons.speed_increment = 70;
+    mons.number = monnumber;
+    mons.flags = 0;
+    mons.colour = col;
+    mons_load_spells( &mons, spells );
 
     // reset monster enchantments
     for (int i = 0; i < NUM_MON_ENCHANTS; i++)
-        menv[k].enchantment[i] = ENCH_NONE;
+        mons.enchantment[i] = ENCH_NONE;
 }                               // end define_monster()
 
 
@@ -1229,7 +1311,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
 
     // These need their description level handled here instead of
     // in monam().
-    if (mons == MONS_SPECTRAL_THING)
+    if (mons == MONS_SPECTRAL_THING || mons_genus(mons) == MONS_DRACONIAN)
     {
         switch (desc)
         {
@@ -1275,6 +1357,33 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
         strcat(gmo_n, " spectral ");
         moname(mons_num, vis, DESC_PLAIN, gmo_n2);
         strcat(gmo_n, gmo_n2);
+        break;
+
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_SCORCHER:
+        if (desc != DESC_PLAIN)
+            strcat( gmo_n, " " );
+
+        switch (mons_num)
+        {
+        default: break;
+        case MONS_BLACK_DRACONIAN:   strcat(gmo_n, "black ");   break;
+        case MONS_MOTTLED_DRACONIAN: strcat(gmo_n, "mottled "); break;
+        case MONS_YELLOW_DRACONIAN:  strcat(gmo_n, "yellow ");  break;
+        case MONS_GREEN_DRACONIAN:   strcat(gmo_n, "green ");   break;
+        case MONS_PURPLE_DRACONIAN:  strcat(gmo_n, "purple ");  break;
+        case MONS_RED_DRACONIAN:     strcat(gmo_n, "red ");     break;
+        case MONS_WHITE_DRACONIAN:   strcat(gmo_n, "white ");   break;
+        case MONS_PALE_DRACONIAN:    strcat(gmo_n, "pale ");    break;
+        }
+
+        moname( mons, vis, DESC_PLAIN, gmo_n2 );
+        strcat( gmo_n, gmo_n2 );
         break;
 
     case MONS_DANCING_WEAPON:
@@ -1382,7 +1491,7 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
 // see mons_init for initialization of mon_entry array.
 static monsterentry *seekmonster(int p_monsterid)
 {
-    int me = mon_entry[p_monsterid];
+    int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
 
     if (me >= 0)                // PARANOIA
         return (&mondata[me]);
@@ -2115,18 +2224,9 @@ bool mons_has_ranged_spell( struct monsters *mon )
 
     if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
-        const int  msecc = ((mclass == MONS_HELLION) ? MST_BURNING_DEVIL :
-                  (mclass == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                     : mon->number);
-
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        mons_spell_list( msecc, hspell_pass );
-
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
-            if (ms_ranged_spell( hspell_pass[i] ))
+            if (ms_ranged_spell( mon->spells[i] ))
                 return (true);
         }
     }
@@ -2225,10 +2325,8 @@ static bool mons_can_smite(const monsters *monster)
     if (monster->type == MONS_FIEND)
         return (true);
 
-    int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                           MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-    mons_spell_list(monster, hspell_pass);
-    for (unsigned i = 0; i < sizeof(hspell_pass) / sizeof(hspell_pass[0]); ++i)
+    const monster_spells &hspell_pass = monster->spells;
+    for (unsigned i = 0; i < hspell_pass.size(); ++i)
         if (hspell_pass[i] == MS_TORMENT || hspell_pass[i] == MS_SMITE)
             return (true);
 

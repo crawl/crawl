@@ -6054,41 +6054,41 @@ void item_colour( item_def &item )
             break;
         case ARM_DRAGON_HIDE:
         case ARM_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_DRAGON );
+            item.colour = mons_class_colour( MONS_DRAGON );
             break;
         case ARM_TROLL_HIDE:
         case ARM_TROLL_LEATHER_ARMOUR:
-            item.colour = mons_colour( MONS_TROLL );
+            item.colour = mons_class_colour( MONS_TROLL );
             break;
         case ARM_CRYSTAL_PLATE_MAIL:
             item.colour = LIGHTGREY;
             break;
         case ARM_ICE_DRAGON_HIDE:
         case ARM_ICE_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_ICE_DRAGON );
+            item.colour = mons_class_colour( MONS_ICE_DRAGON );
             break;
         case ARM_STEAM_DRAGON_HIDE:
         case ARM_STEAM_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_STEAM_DRAGON );
+            item.colour = mons_class_colour( MONS_STEAM_DRAGON );
             break;
         case ARM_MOTTLED_DRAGON_HIDE:
         case ARM_MOTTLED_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_MOTTLED_DRAGON );
+            item.colour = mons_class_colour( MONS_MOTTLED_DRAGON );
             break;
         case ARM_STORM_DRAGON_HIDE:
         case ARM_STORM_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_STORM_DRAGON );
+            item.colour = mons_class_colour( MONS_STORM_DRAGON );
             break;
         case ARM_GOLD_DRAGON_HIDE:
         case ARM_GOLD_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_GOLDEN_DRAGON );
+            item.colour = mons_class_colour( MONS_GOLDEN_DRAGON );
             break;
         case ARM_ANIMAL_SKIN:
             item.colour = BROWN;
             break;
         case ARM_SWAMP_DRAGON_HIDE:
         case ARM_SWAMP_DRAGON_ARMOUR:
-            item.colour = mons_colour( MONS_SWAMP_DRAGON );
+            item.colour = mons_class_colour( MONS_SWAMP_DRAGON );
             break;
         default:
             item.colour = LIGHTCYAN;
@@ -6230,7 +6230,7 @@ void item_colour( item_def &item )
             break;
         case FOOD_CHUNK:
             // set the appropriate colour of the meat: 
-            temp_value = mons_colour( item.plus );
+            temp_value = mons_class_colour( item.plus );
             item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
             break;
         default:
@@ -6469,7 +6469,7 @@ void item_colour( item_def &item )
 
     case OBJ_CORPSES:
         // set the appropriate colour of the body: 
-        temp_value = mons_colour( item.plus );
+        temp_value = mons_class_colour( item.plus );
         item.colour = (temp_value == BLACK) ? LIGHTRED : temp_value;
         break;
 

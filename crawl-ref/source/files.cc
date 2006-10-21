@@ -957,8 +957,9 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // 0.7 origin tracking for items
     // 0.8 widened env.map to 2 bytes
     // 0.9 inscriptions (hp)
+    // 0.10 Monster colour and spells separated from mons->number.
 
-    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 9, TAGTYPE_LEVEL );
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 10, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 

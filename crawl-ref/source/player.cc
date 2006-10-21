@@ -858,6 +858,20 @@ int player_res_magic(void)
     return rm;
 }
 
+int player_res_steam(bool calc_unid)
+{
+    int res = 0;
+
+    if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
+        res += 2;
+
+    if (player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+        res += 2;
+
+    return (res + player_res_fire(calc_unid) / 2);
+}
+
+
 int player_res_fire(bool calc_unid)
 {
     int rf = 0;

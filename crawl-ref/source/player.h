@@ -165,6 +165,7 @@ int player_res_electricity(bool calc_unid = true);
  * called from: acr - fight - misc - ouch - spells
  * *********************************************************************** */
 int player_res_fire(bool calc_unid = true);
+int player_res_steam(bool calc_unid = true);
 
 
 /* ***********************************************************************

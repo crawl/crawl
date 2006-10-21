@@ -112,6 +112,21 @@ int check_your_resists(int hurted, int flavour)
 
     switch (flavour)
     {
+    case BEAM_STEAM:
+        resist = player_res_steam();
+        if (resist > 0)
+        {
+            canned_msg(MSG_YOU_RESIST);
+            hurted /= (1 + (resist * resist));
+        }
+        else if (resist < 0)
+        {
+            // We could use a superior message.
+            mpr("It burns terribly!");
+            hurted = hurted * 15 / 10;
+        }
+        break;
+
     case BEAM_FIRE:
         resist = player_res_fire();
         if (resist > 0)

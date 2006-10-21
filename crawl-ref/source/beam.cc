@@ -1031,7 +1031,7 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
         pbolt.damage = dice_def( 3, 4 + power / 5 );    // max dam: 27
         pbolt.hit = 10 + random2( 1 + power / 5 );
         pbolt.type = SYM_ZAP;
-        pbolt.flavour = BEAM_FIRE;
+        pbolt.flavour = BEAM_STEAM;
 
         pbolt.obvious_effect = true;
         pbolt.is_beam = true;
@@ -1551,6 +1551,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
     switch (pbolt.flavour)
     {
     case BEAM_FIRE:
+    case BEAM_STEAM:
         resist = mons_res_fire(monster);
         if (resist > 1)
         {

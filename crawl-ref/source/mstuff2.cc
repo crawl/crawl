@@ -1470,7 +1470,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MMISSILE;
-        beam.hit = 6;           // + random2(power) / 10;
+        beam.hit = 7 + power / 25;
         beam.is_beam = false;
         break;
 
@@ -1519,11 +1519,11 @@ bolt mons_spells( int spell_cast, int power )
         strcpy(beam.beam_name, "ball of steam");
         beam.range = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 6 );
-        beam.hit = 11;
+        beam.damage = dice_def( 3, 7 + (power / 14) );
+        beam.hit = 11 + power / 10;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_FIRE;       // fire - I think this is appropriate
+        beam.flavour = BEAM_STEAM;
         beam.is_beam = false;
         break;
 

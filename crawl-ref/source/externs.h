@@ -505,6 +505,15 @@ struct player
 
 extern struct player you;
 
+class monster_spells : public FixedVector<int, NUM_MONSTER_SPELL_SLOTS>
+{
+public:
+    monster_spells() 
+        : FixedVector<int, NUM_MONSTER_SPELL_SLOTS>(MS_NO_SPELL)
+    { }
+    void clear() { init(MS_NO_SPELL); }
+};
+
 struct monsters
 {
     int type;
@@ -520,12 +529,16 @@ struct monsters
     unsigned char target_x;
     unsigned char target_y;
     FixedVector<int, 8> inv;
+    monster_spells spells;
     unsigned char attitude;            // from MONS_ATTITUDE
     unsigned int behaviour;
     unsigned int foe;
     FixedVector<unsigned int, NUM_MON_ENCHANTS> enchantment;
     unsigned char flags;               // bitfield of boolean flags
+
     unsigned int number;               // #heads (hydra), etc.
+    int          colour;
+
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight
 };

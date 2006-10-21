@@ -666,10 +666,7 @@ void monster_grid(bool do_updates)
                 set_show_backup(ex, ey);
 
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
-            // FIXME - use monster->colour instead
-            env.show_col[ex][ey]
-                = ((mcolour[monster->type] == BLACK)
-                        ? monster->number : mcolour[monster->type]);
+            env.show_col[ex][ey] = monster->colour;
 
             if (mons_friendly(monster))
             {

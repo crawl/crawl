@@ -312,7 +312,7 @@ static void place_monster_corpse(struct monsters *monster)
     mitm[o].plus2 = 0;                          // butcher work done
     mitm[o].sub_type = CORPSE_BODY;
     mitm[o].special = 210;                      // rot time
-    mitm[o].colour = mons_colour(corpse_class);
+    mitm[o].colour = mons_class_colour(corpse_class);
     mitm[o].quantity = 1;
 
     if (mitm[o].colour == BLACK)
@@ -3028,6 +3028,16 @@ static int get_draconian_breath_spell( struct monsters *monster )
     return (draco_breath);
 }
 
+static bool is_emergency_spell(const monster_spells &msp, int spell)
+{
+    // If the emergency spell appears early, it's probably not a dedicated
+    // escape spell.
+    for (int i = 0; i < 5; ++i)
+        if (msp[i] == spell)
+            return (false);
+    return (msp[5] == spell);
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -3036,7 +3046,7 @@ static int get_draconian_breath_spell( struct monsters *monster )
 // a spell was cast.
 //
 //---------------------------------------------------------------
-static bool handle_spell( struct monsters *monster, bolt & beem )
+static bool handle_spell( monsters *monster, bolt & beem )
 {
     bool monsterNearby = mons_near(monster);
     bool finalAnswer = false;   // as in: "Is that your...?" {dlb}
@@ -3076,10 +3086,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
     else
     {
         int spell_cast = MS_NO_SPELL;
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        mons_spell_list(monster, hspell_pass);
+        monster_spells hspell_pass = monster->spells;
 
         // forces the casting of dig when player not visible - this is EVIL!
         if (!monsterNearby)
@@ -3235,7 +3242,12 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             }
         }
 
-        if (spell_cast == MS_NO_SPELL && draco_breath != MS_NO_SPELL)
+        // If there's otherwise no ranged attack use the breath weapon.
+        // The breath weapon is also occasionally used.
+        if (draco_breath != MS_NO_SPELL 
+                && (spell_cast == MS_NO_SPELL 
+                    || (!is_emergency_spell(hspell_pass, spell_cast)
+                        && one_chance_in(4))))
         {
             spell_cast = draco_breath;
             finalAnswer = true;

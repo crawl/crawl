@@ -24,6 +24,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define NUM_MONSTER_SPELL_SLOTS  6
+
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...
