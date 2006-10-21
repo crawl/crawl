@@ -1587,7 +1587,10 @@ void choose_weapon( void )
         }
 
         if (keyin != '?' && effective_stat_bonus(startwep[keyin-'a']) > -4)
+        {
             cprintf(EOL "A fine choice. " EOL);
+            delay(1000);
+        }
     }
 
     if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '?')
