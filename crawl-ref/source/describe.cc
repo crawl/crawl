@@ -6596,12 +6596,14 @@ void describe_god( int which_god, bool give_title )
         // because god isn't really protecting player - he only sometimes
         // saves his life (probably it shouldn't be displayed at all).
         // What about this ?
+        bool penance_ability = false;
         if ((which_god == GOD_ZIN
                 || which_god == GOD_SHINING_ONE
                 || which_god == GOD_ELYVILON
                 || which_god == GOD_YREDELEMNUL)
             && you.piety >= 30)
         {
+            penance_ability = true; // suppress "none" later
             snprintf( info, INFO_SIZE, 
                       "%s %s watches over you during prayer." EOL,
                       god_name(which_god),
@@ -6616,12 +6618,13 @@ void describe_god( int which_god, bool give_title )
         // mv: No abilities (except divine protection)
         // under penance (fix me if I'm wrong)
         if (player_under_penance()) 
-        { 
-            cprintf( "None." EOL );
+        {
+            if ( !penance_ability )
+                cprintf( "None." EOL );
         }
         else
         {
-            switch (which_god) //mv: finaly let's print abilities
+            switch (which_god) //mv: finally let's print abilities
             {
             case GOD_ZIN:
                 if (you.piety >= 30)

@@ -1326,6 +1326,20 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 
             if (beha == BEH_GOD_GIFT)
                 creation->flags |= MF_GOD_GIFT;
+            
+            // get the drawbacks, not the benefits...
+            // (to prevent demon-scumming)
+            if ( (you.religion == GOD_ZIN ||
+                  you.religion == GOD_SHINING_ONE ||
+                  you.religion == GOD_ELYVILON) &&
+                 mons_is_unholy(creation) )
+            {
+                creation->attitude = ATT_HOSTILE;
+                creation->behaviour = BEH_HOSTILE;
+                beha = BEH_HOSTILE;
+                if ( see_grid(cr_x, cr_y) )
+                    mpr("The monster is enraged by your holy aura!");
+            }
 
             if (beha == BEH_CHARMED)
             {
