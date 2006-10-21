@@ -3274,7 +3274,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     {
                         strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                         strcat(info, " stings ");
-                        strcpy(info, ptr_monam(defender, DESC_NOCAP_THE));
+                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                         strcat(info, ".");
                         mpr(info);
                     }

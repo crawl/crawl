@@ -1174,7 +1174,7 @@ static void los_octant(int o, FixedArray < unsigned int, 19, 19 > &sh,
 
             // get grid value.. see if it blocks LOS
             gv = gr[x_p + tx][y_p + ty];
-            blocker = (gv < MINSEE);
+            blocker = grid_is_opaque(gv);
 
             // init some other variables
             up_inc = 10;
