@@ -602,6 +602,73 @@ static bool cmdhelp_textfilter(const std::string &tag)
     return (false);
 }
 
+static const char *level_map_help = 
+        "<h>Level Map ('<w>X</w><h>' in main screen):\n"
+        "<w>Esc</w> : leave level map (also Space)\n"
+        "<w>Dir.</w>: move cursor\n"
+        "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
+        "<w>+</w>/<w>-</w> : scroll level map up/down\n"
+        "<w>.</w>   : travel (also Enter and , and ;)\n"
+        "       (moves cursor to last travel\n"
+        "       destination if still on @)\n"
+        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+        "<w>^</w>   : cycle through traps\n"
+        "<w>Tab</w> : cycle through shops and portals\n"
+        "<w>X</w>   : cycle through travel eXclusions\n"
+        "<w>W</w>   : cycle through waypoints\n"
+        "<w>I</w>   : cycle through stashes\n"
+        "<w>Ctrl-X</w> : set travel eXclusion\n"
+        "<w>Ctrl-E</w> : Erase all travel exclusions\n"
+        "<w>Ctrl-W</w> : set Waypoint\n"
+        "<w>Ctrl-C</w> : Clear level and main maps\n";
+
+static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
+{
+    Menu cmd_help;
+    
+    // Set flags, and don't use easy exit.
+    cmd_help.set_flags(
+            MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP,
+            false);
+
+    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
+    // for page up at start of listing.
+    cmd_help.set_more(
+            formatted_string::parse_string(
+                "<cyan>[ + : Page down.   - : Page up."
+                "                         Esc/x exits.]"));
+    cmd_help.f_drawitem  = cmdhelp_showline;
+    cmd_help.f_keyfilter = cmdhelp_keyfilter;
+
+    std::vector<MenuEntry*> entries;
+
+    for (unsigned i = 0, size = lines.size(); i < size; ++i)
+    {
+        MenuEntry *me = new MenuEntry;
+        me->data = new formatted_string(lines[i]);
+        entries.push_back(me);
+
+        cmd_help.add_entry(me);
+    }
+
+    cmd_help.show();
+
+    for (unsigned i = 0, size = entries.size(); i < size; ++i)
+        delete static_cast<formatted_string*>( entries[i]->data );
+}
+
+void show_levelmap_help()
+{
+    std::vector<std::string> lines =
+        split_string("\n", level_map_help, false, true);
+    std::vector<formatted_string> formatted_lines;
+    for (int i = 0, size = lines.size(); i < size; ++i)
+        formatted_lines.push_back(
+                formatted_string::parse_string(
+                    lines[i], true, cmdhelp_textfilter));
+    show_keyhelp_menu(formatted_lines);
+}
+
 void list_commands(bool wizard)
 {
     if (wizard)
@@ -690,24 +757,7 @@ void list_commands(bool wizard)
 
     cols.add_formatted(
             0,
-            "<h>Level Map ('<w>X</w><h>' in main screen):\n"
-            "<w>Esc</w> : leave level map (also Space)\n"
-            "<w>Dir.</w>: move cursor\n"
-            "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
-            "<w>+</w>/<w>-</w> : scroll level map up/down\n"
-            "<w>.</w>   : travel (also Enter and , and ;)\n"
-            "       (moves cursor to last travel\n"
-            "       destination if still on @)\n"
-            "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-            "<w>^</w>   : cycle through traps\n"
-            "<w>Tab</w> : cycle through shops and portals\n"
-            "<w>X</w>   : cycle through travel eXclusions\n"
-            "<w>W</w>   : cycle through waypoints\n"
-            "<w>I</w>   : cycle through stashes\n"
-            "<w>Ctrl-X</w> : set travel eXclusion\n"
-            "<w>Ctrl-E</w> : Erase all travel exclusions\n"
-            "<w>Ctrl-W</w> : set Waypoint\n"
-            "<w>Ctrl-C</w> : Clear level and main maps\n",
+            level_map_help,
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -810,35 +860,7 @@ void list_commands(bool wizard)
             "<w>*</w>   : invert selection\n",
             true, true, cmdhelp_textfilter);
 
-    Menu cmd_help;
-    
-    // Set flags, and don't use easy exit.
-    cmd_help.set_flags(
-            MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP,
-            false);
-    cmd_help.set_more(
-            formatted_string::parse_string(
-                "<cyan>[ + : Page down.   - : Page up."
-                "                         Esc/x exits.]"));
-    cmd_help.f_drawitem  = cmdhelp_showline;
-    cmd_help.f_keyfilter = cmdhelp_keyfilter;
-
-    std::vector<MenuEntry*> entries;
-
-    std::vector<formatted_string> lines = cols.formatted_lines();
-    for (unsigned i = 0, size = lines.size(); i < size; ++i)
-    {
-        MenuEntry *me = new MenuEntry;
-        me->data = new formatted_string(lines[i]);
-        entries.push_back(me);
-
-        cmd_help.add_entry(me);
-    }
-
-    cmd_help.show();
-
-    for (unsigned i = 0, size = entries.size(); i < size; ++i)
-        delete static_cast<formatted_string*>( entries[i]->data );
+    show_keyhelp_menu(cols.formatted_lines());
 }
 
 static void list_wizard_commands()

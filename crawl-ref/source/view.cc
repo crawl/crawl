@@ -34,6 +34,7 @@
 
 #include "externs.h"
 
+#include "command.h"
 #include "clua.h"
 #include "debug.h"
 #include "direct.h"
@@ -1774,6 +1775,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         && getty != CONTROL('F')
         && getty != CONTROL('W')
         && getty != CONTROL('C')
+        && getty != '?'
         && getty != 'X' && getty != 'F' && getty != 'I' && getty != 'W')
     {
         goto putty;
@@ -1813,6 +1815,10 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
     switch (getty)
     {
+    case '?':
+        show_levelmap_help();
+        break;
+
     case CONTROL('C'):
         clear_map();
         break;

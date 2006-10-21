@@ -59,4 +59,6 @@ void list_jewellery(void);
 
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
+void show_levelmap_help();
+
 #endif
