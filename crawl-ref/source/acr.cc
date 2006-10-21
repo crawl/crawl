@@ -136,6 +136,8 @@ struct crawl_environment env;
 struct player you;
 struct system_environment SysEnv;
 
+std::string init_file_location; // externed in newgame.cc
+
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
 int stealth;                    // externed in view.cc
@@ -226,7 +228,7 @@ int main( int argc, char *argv[] )
     }
 
     // Read the init file
-    read_init_file();
+    init_file_location = read_init_file();
 
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );

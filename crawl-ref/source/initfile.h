@@ -24,7 +24,7 @@ int str_to_colour( const std::string &str, int default_colour = -1 );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void read_init_file(bool runscript = false);
+std::string read_init_file(bool runscript = false);
 
 void read_options(FILE *f, bool runscript = false);
 

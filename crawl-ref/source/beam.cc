@@ -134,7 +134,7 @@ void zap_animation( int colour, const monsters *mon, bool force )
         gotoxy( drawx, drawy );
         putch( SYM_ZAP );
 
-#ifdef LINUX
+#ifdef UNIX
         update_screen();
 #endif
 

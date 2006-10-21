@@ -558,50 +558,50 @@ void reset_options(bool clear_name)
     initialise_travel();
 }
 
-void read_init_file(bool runscript)
+// returns where the init file was read from
+std::string read_init_file(bool runscript)
 {
-    FILE *f;
-    char name_buff[kPathLen];
+    const char* locations_data[][2] = {
+        { SysEnv.crawl_rc, "" },
+        { SysEnv.crawl_dir, "init.txt" },
+#ifdef MULTIUSER
+        { SysEnv.home, "/.crawlrc" },
+        { SysEnv.home, "init.txt" },
+#endif
+        { "", "init.txt" },
+#ifdef WIN32CONSOLE
+        { "", ".crawlrc" },
+        { "", "_crawlrc" },
+#endif
+        { NULL, NULL }                // placeholder to mark end
+    };
 
     reset_options(!runscript);
 
     if (!runscript)
         you.your_name[0] = 0;
 
-    if (SysEnv.crawl_rc)
-    {
-        // use snprintf instead of strncpy for the null terminator
-        snprintf( name_buff, sizeof name_buff, "%s", SysEnv.crawl_rc );
+    FILE* f = NULL;
+    char name_buff[kPathLen];
+    // Check all possibilities for init.txt
+    for ( int i = 0; f == NULL && locations_data[i][1] != NULL; ++i ) {
+        // Don't look at unset options
+        if ( locations_data[i][0] != NULL ) {
+            snprintf( name_buff, sizeof name_buff, "%s%s",
+                      locations_data[i][0], locations_data[i][1] );
+            f = fopen( name_buff, "r" );
+        }
     }
-    else if (SysEnv.crawl_dir)
-    {
-        snprintf( name_buff, sizeof name_buff, "%s%s",
-                  SysEnv.crawl_dir, "init.txt" );
-    }
-#ifdef MULTIUSER
-    else if (SysEnv.home)
-    {
-        // init.txt isn't such a good choice if we're looking in
-        // the user's home directory, we'll use Un*x standard
-        snprintf( name_buff, sizeof name_buff, "%s%s",
-                  SysEnv.home, "/.crawlrc");
-    }
-#endif
-    else
-    {
-        strcpy( name_buff, "init.txt" );
-    }
-    
-    f = fopen(name_buff, "r");
 
-    if (f == NULL)
-        return;
+    if ( f == NULL )
+        return "nowhere (not found)";
 
     if (!runscript)
         read_startup_prefs();
 
     read_options(f, runscript);
     fclose(f);
+    return std::string(name_buff);
 }                               // end read_init_file()
 
 static void read_startup_prefs()

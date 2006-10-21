@@ -97,6 +97,8 @@
 #include "stuff.h"
 #include "version.h"
 
+extern std::string init_file_location;
+
 #define MIN_START_STAT       1
 
 bool class_allowed(unsigned char speci, int char_class);
@@ -2061,6 +2063,8 @@ void openingScreen(void)
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
     cprintf(EOL "Please consult crawl.txt for instructions and legal details."
             EOL);
+    textcolor( LIGHTRED );
+    cprintf("Init file read from: %s" EOL, init_file_location.c_str());
     textcolor( LIGHTGREY );
 
     return;
