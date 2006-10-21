@@ -495,6 +495,28 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
                         monster->x, monster->y, monster->foe, 250 );
         return;
 
+    case MS_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
+        if (!mons_friendly(monster) && monsterNearby
+            && monster_abjuration(1, true) > 0 && coinflip())
+        {
+            monster_abjuration( monster->hit_dice * 10, false );
+            return;
+        }
+
+        sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
+
+        duration  = ENCH_ABJ_II + monster->hit_dice / 5;
+        if (duration > ENCH_ABJ_VI)
+            duration = ENCH_ABJ_VI;
+
+        for (int i = 0; i < sumcount2; ++i)
+            create_monster(MONS_WANDERING_MUSHROOM, duration, 
+                    SAME_ATTITUDE(monster),
+                    monster->x, monster->y,
+                    monster->foe,
+                    250);
+        return;
+
     case MS_SUMMON_UNDEAD:      // summon undead around player
         if (!mons_friendly(monster) && monsterNearby
             && monster_abjuration(1, true) > 0 && coinflip())
@@ -675,6 +697,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     case MS_SUMMON_UFETUBUS:
     case MS_SUMMON_BEAST:       // Geryon
     case MS_SUMMON_UNDEAD:      // summon undead around player
+    case MS_SUMMON_MUSHROOMS:
     case MS_SUMMON_LIZARDS:
     case MS_TORMENT:
     case MS_SUMMON_DEMON_GREATER:

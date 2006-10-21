@@ -8506,6 +8506,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
     }
 
     menv[mid].number = mons_sec2;
+    menv[mid].colour = mons_class_colour(cs);
 }                               // end define_zombie()
 
 #ifdef USE_RIVERS

@@ -123,6 +123,16 @@ static const char *monster_spell_name[] = {
     "Metal Splinters",  
     "Summon Demon Greater",
     "Banishment",
+    "Controlled Blink",
+    "Control Undead",
+    "Miasma",
+    "Summon Lizards",
+    "Blink Other",
+    "Dispel Undead",
+    "Hellfrost",
+    "Poison Arrow",
+    "Summon Small Mammals",
+    "Summon Mushrooms",
 };
 #endif
 
@@ -301,8 +311,7 @@ bool mons_is_stationary(const monsters *mons)
                     || mons->type == MONS_PLANT
                     || mons->type == MONS_FUNGUS
                     || mons->type == MONS_CURSE_SKULL
-                    || (mons->type >= MONS_CURSE_TOE
-                        && mons->type <= MONS_POTION_MIMIC));
+                    || mons_is_mimic(mons->type));
 }
 
 bool invalid_monster(const monsters *mons)
@@ -1091,11 +1100,8 @@ void define_monster(int index)
     ac = m->AC;
     ev = m->ev;
 
-    // speed
     speed = m->speed;
 
-    // some monsters are randomized:
-    // did I get them all?    // I don't think so {dlb}
     switch (mcls)
     {
     case MONS_ABOMINATION_SMALL:
@@ -2041,6 +2047,7 @@ bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell )
     case MS_SUMMON_DEMON_LESSER:
     case MS_SUMMON_BEAST:
     case MS_SUMMON_UNDEAD:
+    case MS_SUMMON_MUSHROOMS:
     case MS_SUMMON_DEMON_GREATER:
         if (one_chance_in(10))    // only summon friends some of the time
             return (true);
@@ -2351,7 +2358,8 @@ bool monster_shover(const monsters *m)
     // Efreet and fire elementals are disqualified because they leave behind
     // clouds of flame. Rotting devils trail clouds of miasma.
     if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
-            || m->type == MONS_ROTTING_DEVIL)
+            || m->type == MONS_ROTTING_DEVIL
+            || m->type == MONS_CURSE_TOE)
         return (false);
 
     // Smiters profit from staying back and smiting.

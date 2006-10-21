@@ -774,4 +774,14 @@
        MS_BLINK_OTHER,
        MS_CONTROLLED_BLINK },
 
+    // Curse toe menu should be kept full, because otherwise the toe spends
+    // too much time crawling around.
+    {  MST_CURSE_TOE,
+       MS_SUMMON_UNDEAD,
+       MS_SUMMON_MUSHROOMS, // fungal theme
+       MS_SUMMON_MUSHROOMS,
+       MS_TORMENT,
+       MS_SUMMON_UNDEAD,
+       MS_TORMENT  },
+
 #endif

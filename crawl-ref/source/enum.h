@@ -2347,6 +2347,7 @@ enum mon_itemuse_type
 };
 
 // XXX: someday merge these into SPELL_
+// If changing this list, keep mon-util.cc spell names in sync.
 enum mon_spell_type
 {
     MS_MMISSILE,                       //    0
@@ -2411,6 +2412,7 @@ enum mon_spell_type
     MS_HELLFROST,
     MS_POISON_ARROW,                    //   60
     MS_SUMMON_SMALL_MAMMALS,
+    MS_SUMMON_MUSHROOMS,
     // XXX: before adding more monster versions of player spells we should
     // consider merging the two lists into one and just having monsters 
     // fail to implement the ones that are impractical.
@@ -2515,6 +2517,7 @@ enum mon_spellbook_type
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
     MST_DRAC_SHIFTER,
+    MST_CURSE_TOE,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };

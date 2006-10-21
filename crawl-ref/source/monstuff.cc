@@ -4812,7 +4812,8 @@ forget_it:
                          2 + random2(4) );
         }
 
-        if (monster->type == MONS_ROTTING_DEVIL)
+        if (monster->type == MONS_ROTTING_DEVIL 
+                || monster->type == MONS_CURSE_TOE)
         {
             place_cloud( CLOUD_MIASMA_MON, monster->x, monster->y, 
                          2 + random2(3) );
@@ -4821,6 +4822,14 @@ forget_it:
         /* this appears to be the real one, ie where the movement occurs: */
         monster->x += mmov_x;
         monster->y += mmov_y;
+
+        if (monster->type == MONS_CURSE_TOE)
+        {
+            // Curse toes are a special case; they can only move at half their
+            // attack rate. To simulate that, the toe loses another action's
+            // worth of energy when moving.
+            monster->speed_increment -= 10;
+        }
     }
     else
     {
