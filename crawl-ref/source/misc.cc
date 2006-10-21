@@ -383,7 +383,7 @@ void in_a_cloud(void)
     case CLOUD_STEAM:
     case CLOUD_STEAM_MON:
         mpr("You are engulfed in a cloud of scalding steam!");
-        if (player_res_steam())
+        if (player_res_steam() > 0)
         {
             mpr("It doesn't seem to affect you.");
             return;
