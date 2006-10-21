@@ -502,7 +502,7 @@ int mons_class_colour(int mc)
     if (!m)
         return (BLACK);
 
-    const int class_colour = smc->colour;
+    const int class_colour = m->colour;
     return (class_colour == BLACK? LIGHTGREY : class_colour);
 }                               // end mons_colour()
 
