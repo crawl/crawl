@@ -1678,8 +1678,19 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
          * and vice versa */
 
         // ID check
-        if (!item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES )
-            && random2(100) < shoot_skill)
+        if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
+        {
+            if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
+                 random2(100) < rc_skill )
+            { 
+                set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+                set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+                in_name( throw_2, DESC_NOCAP_A, str_pass);
+                snprintf(info, INFO_SIZE, "You are firing %s.", str_pass);
+                mpr(info);
+            }
+        }
+        else if (random2(100) < shoot_skill)
         {
             set_ident_flags(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES);
 
@@ -1692,6 +1703,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             more();
             you.wield_change = true;
         }
+
     }
 
     // CALCULATIONS FOR THROWN WEAPONS
@@ -1770,6 +1782,17 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         // exercise skill
         if (coinflip())
             exercise(SK_RANGED_COMBAT, 1);
+        
+        // ID check
+        if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
+             random2(100) < you.skills[SK_RANGED_COMBAT] )
+        { 
+            set_ident_flags( item, ISFLAG_KNOW_PLUSES );
+            set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+            in_name( throw_2, DESC_NOCAP_A, str_pass);
+            snprintf(info, INFO_SIZE, "You are throwing %s.", str_pass);
+            mpr(info);
+        }
     }
 
     // range, dexterity bonus, possible skill increase for silly throwing
