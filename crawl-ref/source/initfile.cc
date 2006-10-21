@@ -594,7 +594,13 @@ std::string read_init_file(bool runscript)
     }
 
     if ( f == NULL )
-        return "nowhere (not found)";
+    {
+#ifdef MULTIUSER
+        return "not found (~/.crawlrc missing)";
+#else
+        return "not found (init.txt missing from current directory)";
+#endif
+    }
 
     if (!runscript)
         read_startup_prefs();

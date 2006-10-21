@@ -2048,25 +2048,18 @@ void give_basic_spells(int which_job)
 // eventually, this should be something more grand {dlb}
 void openingScreen(void)
 {
-/* **********************************************
-// this does not work just yet ... {dlb}:
-    cprintf(EOL "Hello, ");
-
-    if ( you.your_name[0] != 0 )
-    {
-       cprintf(you.your_name); // better be less than 31 characters :P {dlb}
-                               // of course, invalid names will appear {dlb}
-       cprintf(", ");
-    }
-********************************************** */
-
     textcolor( YELLOW );
     cprintf("Hello, welcome to " CRAWL " " VERSION "!");
     textcolor( BROWN );
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
     cprintf(EOL "Please consult crawl.txt for instructions and legal details."
-            EOL);
-    textcolor( LIGHTRED );
+            EOL EOL);
+
+    if ( init_file_location.find("not found") == 0 )
+        textcolor( LIGHTRED );
+    else
+        textcolor( LIGHTGREY );
+
     cprintf("Init file read from: %s" EOL, init_file_location.c_str());
     textcolor( LIGHTGREY );
 
