@@ -185,7 +185,7 @@ struct bolt
     bool        is_friendly;    // tracer firer is enslaved or pet
     int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
 
-    // A contstructor to try and fix some of the bugs that occur because
+    // A constructor to try and fix some of the bugs that occur because
     // this struct never seems to be properly initialized.  Definition
     // is over in misc.cc for lack of a better place (short of inlining
     // it here).

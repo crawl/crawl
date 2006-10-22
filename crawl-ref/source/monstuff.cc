@@ -1312,7 +1312,9 @@ void behaviour_event( struct monsters *mon, int event, int src,
         // will turn monster against <src>,  unless they
         // are BOTH friendly and stupid.   Hitting someone
         // over the head, of course, always triggers this code.
-        if (isFriendly != sourceFriendly || isSmart || event == ME_WHACK)
+        if ( event == ME_WHACK ||
+             ((isFriendly != sourceFriendly || isSmart) &&
+              (mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC)))
         {
             mon->foe = src;
 
