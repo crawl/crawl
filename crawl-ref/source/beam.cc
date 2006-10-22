@@ -3175,7 +3175,9 @@ static int affect_player( struct bolt &beam )
         if (!beam.is_explosion && !beam.aimed_at_feet)
         {
             // BEGIN BEAM/MISSILE
-            int dodge = random2limit( player_evasion(), 40 ) 
+            // [ds] To compensate for the new monster beam hit numbers, allow 
+            // for slightly more benefit from evasion (limit was 40)
+            int dodge = random2limit( player_evasion(), 45 ) 
                         + random2( you.dex ) / 3 - 2;
 
             if (beam.is_beam)
