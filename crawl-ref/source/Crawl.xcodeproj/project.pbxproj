@@ -51,8 +51,6 @@
 		7B237E950A8EC9D000580F30 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
 		7B237E960A8EC9D000580F30 /* direct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* direct.cc */; };
 		7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E100A8EC9D000580F30 /* dungeon.h */; };
-		7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E110A8EC9D000580F30 /* wpn-misc.h */; };
-		7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E120A8EC9D000580F30 /* wpn-misc.cc */; };
 		7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E130A8EC9D000580F30 /* view.h */; };
 		7B237E9B0A8EC9D000580F30 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
 		7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E150A8EC9D000580F30 /* spl-book.cc */; };
@@ -179,7 +177,6 @@
 				7B237E910A8EC9D000580F30 /* player.h in CopyFiles */,
 				7B237E930A8EC9D000580F30 /* effects.h in CopyFiles */,
 				7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */,
-				7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */,
 				7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */,
 				7B237E9D0A8EC9D000580F30 /* spells4.h in CopyFiles */,
 				7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */,
@@ -275,8 +272,6 @@
 		7B237E0E0A8EC9D000580F30 /* files.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = files.cc; sourceTree = "<group>"; };
 		7B237E0F0A8EC9D000580F30 /* direct.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = direct.cc; sourceTree = "<group>"; };
 		7B237E100A8EC9D000580F30 /* dungeon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dungeon.h; sourceTree = "<group>"; };
-		7B237E110A8EC9D000580F30 /* wpn-misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "wpn-misc.h"; sourceTree = "<group>"; };
-		7B237E120A8EC9D000580F30 /* wpn-misc.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "wpn-misc.cc"; sourceTree = "<group>"; };
 		7B237E130A8EC9D000580F30 /* view.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		7B237E140A8EC9D000580F30 /* view.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = view.cc; sourceTree = "<group>"; };
 		7B237E150A8EC9D000580F30 /* spl-book.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-book.cc"; sourceTree = "<group>"; };
@@ -537,8 +532,6 @@
 				7B237DF40A8EC9D000580F30 /* travel.h */,
 				7B237E140A8EC9D000580F30 /* view.cc */,
 				7B237E130A8EC9D000580F30 /* view.h */,
-				7B237E120A8EC9D000580F30 /* wpn-misc.cc */,
-				7B237E110A8EC9D000580F30 /* wpn-misc.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -628,7 +621,6 @@
 				7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */,
 				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
 				7B237E960A8EC9D000580F30 /* direct.cc in Sources */,
-				7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */,
 				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
 				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
 				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,
