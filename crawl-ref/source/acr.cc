@@ -2478,12 +2478,12 @@ keycode_type get_next_keycode() {
     if (keyin == '*') {
 	keyin = getch();
 	// return control-key
-	return CONTROL(toupper(numpad2vi(keyin)));
+	keyin = CONTROL(toupper(numpad2vi(keyin)));
     }
     else if (keyin == '/') {
 	keyin = getch();
 	// return shift-key
-	return toupper(numpad2vi(keyin));
+	keyin = toupper(numpad2vi(keyin));
     }
 #else
     // Old DOS keypad support
@@ -2497,13 +2497,15 @@ keycode_type get_next_keycode() {
 	};
 	keyin = getch();
 	for (int j = 0; j < 9; ++j ) {
-	    if ( keyin == DOSidiocy[j] )
-		return DOSunidiocy[j];
-	    if ( keyin == DOScontrolidiocy[j] )
-		return CONTROL(toupper(DOSunidiocy[j]));
+	    if (keyin == DOSidiocy[j]) {
+		keyin = DOSunidiocy[j];
+                break;
+            }
+	    if (keyin == DOScontrolidiocy[j]) {
+		keyin = CONTROL(toupper(DOSunidiocy[j]));
+                break;
+            }
 	}
-	    
-	return 0;
     }
 #endif
     mesclr();

@@ -58,6 +58,7 @@
 
 #ifdef DOS
 #include <conio.h>
+#include <dos.h>
 #endif
 
 #ifdef UNIX
