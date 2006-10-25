@@ -37,7 +37,7 @@ The contents of this text are:
 		travel_colour, travel_delay, travel_stair_cost, 
                 travel_avoid_terrain, travel_exclude_radius2,
                 travel_stop_message, explore_stop, runrest_ignore_message,
-                runrest_ignore_poison;
+                runrest_ignore_poison, trapwalk_safe_hp;
 		lua: ch_cross_trap (ignoring traps), 
 		lua: ch_stop_run (ignoring monsters)
 4-g	Stashes.
@@ -509,12 +509,16 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
 	  runrest_ignore_poison = 4:100 
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
-        If you've included trapwalk.lua, this allows travel to cross traps if
-        you have sufficient HP. For example:
-            trapwalk_safe_hp = dart:15, needle:25, spear:50
-        will allow travel to cross dart traps if you have at least 15hp, needle
-        traps if you have at least 25hp, and spear traps if you have at least
-        15hp.
+        This only works if trapwalk.lua has been sourced already in init.txt.
+        Any square containing one of the listed trap types will be considered
+        safe for travel if your hp is greater than or equal to the number
+        connected to the trap in question.
+
+        All the existing trap types can be used, but in practice only the
+        mechanical traps (dart, bolt, arrow, needle, spear, axe, blade) make
+        sense. Note that travel tries to avoid traps if this is easily possible.
+        Defaults to none. For example,
+              trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 Using small scripts in init.txt, travel can get even more convenient.
 
