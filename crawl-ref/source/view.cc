@@ -977,9 +977,14 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
  * plus an esthetic tweak for more pleasing corner illumination.  More
  * detail can be had by contacting its author,  Gordon Lipford.          */
 
-#define MAX_LIGHT_RADIUS    20
-#define CIRC_MAX            32000
-#define BIG_SHADOW          32000
+#define LONGSIZE (sizeof(unsigned long)*8)
+// the following number can be dropped to 2831!
+#define MAX_NUM_RAYS 5220
+#define RAY_ARRAY_SIZE ((MAX_NUM_RAYS + LONGSIZE - 1)/LONGSIZE)
+#define LOS_MAX_RANGE_X 9
+#define LOS_MAX_RANGE_Y 9
+#define RAY_ANGLE_RESOLUTION 20
+#define RAY_STARTPOINT_STEP 10
 
 // the following two constants represent the 'middle' of the sh array.
 // since the current shown area is 19x19,  centering the view at (9,9)
@@ -990,340 +995,230 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 
-// the Cell class,  used in the shadow-casting LOS algorithm
-class Cell
+// Data used for the LOS algorithm
+int num_rays_cast = 0;
+int num_ray_words = 0;
+int los_radius_squared = 8*8;
+
+void setLOSRadius(int newLR)
 {
-
-public:
-    int up_count;
-    int up_max;
-    int low_count;
-    int low_max;
-    bool lit;
-    bool lit_delay;
-    bool visible;               // for blockers only
-    void init();
-    bool reachedLower();
-    bool reachedUpper();
-
-    Cell()
-    {
-        init();
-    };
-};
-
-void Cell::init()
-{
-    up_count = 0;
-    up_max = 0;
-    low_count = 0;
-    low_max = 0;
-    lit = true;
-    visible = true;
-    lit_delay = false;
+    los_radius_squared = newLR * newLR;
 }
 
-bool Cell::reachedLower()
-{
-    // integer math: a 'step' has a value of 10
-    // see if we're within a half step of the max.  VERY important
-    // to use 'half step' or else things look really stupid.
-    if (low_max != 0 && low_count + 5 >= low_max && low_count - 5 < low_max)
-        return true;
+// overallocation, but what the heck
+unsigned long los_blockrays[LOS_MAX_RANGE_X+1][LOS_MAX_RANGE_Y+1][RAY_ARRAY_SIZE];
+short ray_to_coord_x[MAX_NUM_RAYS];
+short ray_to_coord_y[MAX_NUM_RAYS];
 
-    return false;
+static void set_bit_in_long_array( unsigned long* data, int where ) {
+    int wordloc = where / LONGSIZE;
+    int bitloc = where % LONGSIZE;
+    data[wordloc] |= (1UL << bitloc);
 }
 
-bool Cell::reachedUpper()
-{
-    // see if we're within a half step of the max.  VERY important
-    // to use 'half step' or else things look really stupid.
-    if (up_max != 0 && up_count + 5 >= up_max && up_count - 5 < up_max)
-        return true;
-
-    return false;
+// angle can be 0..20
+// 0 means exact diagonal
+// 1..10 means above diagonal (xstep < ystep)
+// specifically 1 means y axis
+// 11..20 means below diagonal (xstep > ystep)
+// specifically 11 means x axis
+static int angle_to_step_x(int angle) {
+    if ( angle == 0 )
+        return 20;
+    if ( angle > RAY_ANGLE_RESOLUTION/2 )
+        return 20;
+    return (angle-1) * 2;       // 0, 2, ..., 18
 }
 
-// the cell array
-static FixedVector < Cell, MAX_LIGHT_RADIUS + 1 > cells;
+static int angle_to_step_y(int angle) {
+    if ( angle == 0 )
+        return 20;
+    if ( angle <= RAY_ANGLE_RESOLUTION/2 )
+        return 20;
+    return (angle-1) * 2 - RAY_ANGLE_RESOLUTION;
+}
 
-// the 'circle' array.  For any given row,  we won't check higher than
-// this given cell.
-static FixedVector < int, MAX_LIGHT_RADIUS + 1 > circle;
-
-// current light radius
-static int LR = 0;
-
-// View constant
-const int view = 2;             // 1=widest LOS .. 5=narrowest
-
-// initialize LOS code for a given light radius
-extern void setLOSRadius(int newLR)
-{
-    int i, j;
-
-    // sanity check - also allows multiple calls w/out performance loss
-    if (LR == newLR)
-        return;
-
-    LR = newLR;
-    // cells should already be initted.  calculate the circle array.
-
-    // note that rows 0 and 1 will always go to infinity.
-    circle[0] = circle[1] = CIRC_MAX;
-
-    // for the rest,  simply calculate max height based on light rad.
-    for (i = 2; i <= LR; i++)
-    {
-        // check top
-        if (2 * i * i <= LR * LR)
-        {
-            circle[i] = CIRC_MAX;
+static int shoot_ray( const int rayidx_start, int bigx, int bigy, int angle ) {
+    int rayidx = rayidx_start;
+    int oldx = bigx / 100, oldy = bigy / 100;
+    int curx = oldx, cury = oldy;
+    const int ystep = angle_to_step_y(angle);
+    const int xstep = angle_to_step_x(angle);
+    while ( 1 ) {
+        bigx += xstep;
+        bigy += ystep;
+        curx = bigx / 100;
+        cury = bigy / 100;
+        if ( curx > LOS_MAX_RANGE_X || cury > LOS_MAX_RANGE_Y )
+            break;
+        if ( curx == oldx && cury == oldy )
             continue;
+        // we've hit a new square
+        ray_to_coord_x[rayidx] = curx;
+        ray_to_coord_y[rayidx] = cury;
+        // all previous squares we've encountered block this ray
+        for ( int i = rayidx_start; i < rayidx; ++i ) {
+            set_bit_in_long_array(los_blockrays[ray_to_coord_x[i]][ray_to_coord_y[i]], rayidx);
         }
+        oldx = curx;
+        oldy = cury;
+        ++rayidx;
+    }
+    return rayidx;
+}
 
-        for (j = i - 1; j >= 0; j--)
+static bool is_duplicate_ray( int realraycount, int raystarts[], int rayidx )
+{
+    int i, j, cj;
+    for ( i = 0; i < realraycount; ++i ) {
+        if ( raystarts[i+1] - raystarts[i] != rayidx - raystarts[realraycount])
+            continue;
+        for ( j = raystarts[i], cj = raystarts[realraycount];
+              j < raystarts[i+1]; ++j, ++cj )
         {
-            // check that Distance (I^2 + J^2) is no more than (R+0.5)^2
-            // this rounding allows for *much* better looking circles.
-            if (i * i + j * j <= LR * LR + LR)
-            {
-                circle[i] = j;
+            if ( ray_to_coord_x[j] != ray_to_coord_x[cj] ||
+                 ray_to_coord_y[j] != ray_to_coord_y[cj] )
                 break;
-            }
+        }
+        // duplicate
+        if ( j == raystarts[i+1] )
+            return true;
+    }
+    return false;
+}
+
+// Cast all rays
+void raycast()
+{
+    static bool done_raycast = false;
+    // Creating all rays for first quadrant
+    // We have a considerable amount of overkill.   
+    if ( done_raycast )
+        return;
+    
+    done_raycast = true;
+    int xpos, ypos, angle;
+    int rayidx = 0;
+    int raystarts[MAX_NUM_RAYS];
+    int realraycount = 0;
+
+    // First do the rays which leave from the right of our cell
+    for ( ypos = 0; ypos < 100; ypos += RAY_STARTPOINT_STEP ) {
+        for ( angle = 0; angle <= RAY_ANGLE_RESOLUTION; ++angle ) {
+            raystarts[realraycount] = rayidx;
+            rayidx = shoot_ray( rayidx, 99, ypos, angle );
+
+            // remove duplicate rays for improved efficiency later
+            if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
+                rayidx = raystarts[realraycount]; // forget this ray
+            else
+                ++realraycount;
         }
     }
-}
 
-static int calcUpper(int bX, int bY)
-{
-    // got a blocker at row bX,  cell bY.  do all values
-    // and scale by a factor of 10 for the integer math.
-    int upper;
-
-    upper = (10 * (10 * bX - view)) / (10 * bY + view);
-    if (upper < 10)             // upper bound for blocker on diagonal
-        upper = 10;
-
-    return upper;
-}
-
-static int calcLower(int bX, int bY)
-{
-    // got a blocker at row bX,  cell bY.  do all values
-    // and scale by a factor of 10 for the integer math.
-
-    if (bY == 0)
-        return BIG_SHADOW;
-
-    return (10 * (10 * bX + view)) / (10 * bY - view);
-}
-
-// for easy x,y octant translation
-static int xxcomp[8] = { 1, 0, 0, -1, -1, 0, 0, 1 };
-static int xycomp[8] = { 0, 1, -1, 0, 0, -1, 1, 0 };
-static int yxcomp[8] = { 0, 1, 1, 0, 0, -1, -1, 0 };
-static int yycomp[8] = { 1, 0, 0, 1, -1, 0, 0, -1 };
-
-static void los_octant(int o, FixedArray < unsigned int, 19, 19 > &sh,
-                       FixedArray < unsigned char, 80, 70 > &gr, int x_p,
-                       int y_p)
-{
-    int row, cell, top, south;
-    int tx, ty;                 // translated x, y deltas for this octant
-    unsigned char gv;           // grid value
-    bool row_dark, all_dark;
-    bool blocker, vis_corner;
-    int up_inc, low_inc;
-
-    // leave [0,0] alone,  because the old LOS code seems to.
-
-    // init cell[0].  this is the only one that needs clearing.
-    cells[0].init();
-    all_dark = false;
-    vis_corner = false;
-
-    // loop through each row
-    for (row = 1; row <= LR; row++)
-    {
-        row_dark = true;
-
-        // loop through each cell,  up to the max allowed by circle[]
-        top = circle[row];
-        if (top > row)
-            top = row;
-
-        for (cell = 0; cell <= top; cell++)
-        {
-            // translate X,Y co'ord + bounds check
-            tx = row * xxcomp[o] + cell * xycomp[o];
-            ty = row * yxcomp[o] + cell * yycomp[o];
-
-            if (x_p + tx < 0 || x_p + tx > 79 || y_p + ty < 0 || y_p + ty > 69)
-                continue;
-
-            // check for all_dark - we've finished the octant but
-            // have yet to fill in '0' for the rest of the sight grid
-            if (all_dark == true)
-            {
-                sh[sh_xo + tx][sh_yo + ty] = 0;
-                continue;
-            }
-
-            // get grid value.. see if it blocks LOS
-            gv = gr[x_p + tx][y_p + ty];
-            blocker = grid_is_opaque(gv);
-
-            // init some other variables
-            up_inc = 10;
-            low_inc = 10;
-            south = cell - 1;
-
-            // STEP 1 - inherit values from immediate West, if possible
-            if (cell < row)
-            {
-                // check for delayed lighting
-                if (cells[cell].lit_delay)
-                {
-                    if (!blocker)
-                    {           // blockers don't light up with lit_delay.
-                        if (cells[south].lit)
-                        {
-                            if (cells[south].low_max != 0)
-                            {
-                                cells[cell].lit = false;
-                                // steal lower values
-                                cells[cell].low_max = cells[south].low_max;
-                                cells[cell].low_count = cells[south].low_count;
-                                cells[south].low_count = 0;
-                                cells[south].low_max = 0;
-                                low_inc = 0;    // avoid double-inc.
-                            }
-                            else
-                                cells[cell].lit = true;
-                        }
-                    }
-                    cells[cell].lit_delay = false;
-                }
-            }
+    // Now do the rays which leave from the top of our cell
+    for ( xpos = 0; xpos < 100; xpos += RAY_STARTPOINT_STEP ) {
+        for ( angle = 0; angle <= RAY_ANGLE_RESOLUTION; ++angle ) {
+            raystarts[realraycount] = rayidx;
+            rayidx = shoot_ray( rayidx, xpos, 99, angle );
+            
+            if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
+                rayidx = raystarts[realraycount]; // forget this ray
             else
-            {
-                // initialize new cell.
-                cells[cell].init();
-            }
-
-            // STEP 2 - check for blocker
-            // a dark blocker in shadow's edge will be visible
-            if (blocker)
-            {
-                if (cells[cell].lit || (cell != 0 && cells[south].lit)
-                    || vis_corner)
-                {
-                    // hack: make 'corners' visible
-                    vis_corner = cells[cell].lit;
-
-                    cells[cell].lit = false;
-                    cells[cell].visible = true;
-
-                    int upper = calcUpper(row, cell);
-                    int lower = calcLower(row, cell);
-
-                    if (upper < cells[cell].up_max || cells[cell].up_max == 0)
-                    {
-                        // new upper shadow
-                        cells[cell].up_max = upper;
-                        cells[cell].up_count = 0;
-                        up_inc = 0;
-                    }
-
-                    if (lower > cells[cell].low_max || cells[cell].low_max == 0)
-                    {
-                        // new lower shadow
-                        cells[cell].low_max = lower;
-                        cells[cell].low_count = -10;
-                        low_inc = 0;
-                        if (lower <= 30)        // somewhat arbitrary
-                            cells[cell].lit_delay = true;
-                        // set dark_delay if lower > 20?? how to decide?
-                    }
-                }
-                else
-                {
-                    cells[cell].visible = false;
-                }
-            }
-            else
-            {
-                cells[cell].visible = false;    // special flags for blockers
-            }
-
-            // STEP 3 - add increments to upper, lower counts
-            cells[cell].up_count += up_inc;
-            cells[cell].low_count += low_inc;
-
-            // STEP 4 - check south for dark
-            if (south >= 0)
-                if (cells[south].reachedUpper() == true)
-                {
-                    if (cells[cell].reachedUpper() == false)
-                    {
-                        cells[cell].up_max = cells[south].up_max;
-                        cells[cell].up_count = cells[south].up_count;
-                        cells[cell].up_count -= cells[south].up_max;
-                    }
-                    cells[cell].lit = false;
-                    cells[cell].visible = false;
-                }
-
-            // STEP 5 - nuke lower if south lower
-            if (south >= 0)
-            {
-                if (cells[south].reachedLower())
-                {
-                    cells[cell].low_max = cells[south].low_max;
-                    cells[cell].low_count = cells[south].low_count;
-                    cells[cell].low_count -= cells[south].low_max;
-                    cells[south].low_count = cells[south].low_max = 0;
-                }
-
-                if (cells[south].low_max != 0
-                    || (cells[south].lit == false
-                        && cells[south].low_max == 0))
-                {
-                    cells[cell].low_count = cells[cell].low_max + 10;
-                }
-            }
-
-            // STEP 6 - light up if we've reached lower bound
-            if (cells[cell].reachedLower() == true)
-                cells[cell].lit = true;
-
-            // now place appropriate value in sh
-            if (cells[cell].lit == true
-                || (blocker == true && cells[cell].visible == true))
-            {
-                sh[sh_xo + tx][sh_yo + ty] = gv;
-            }
-            else
-                sh[sh_xo + tx][sh_yo + ty] = 0;
-
-            if (cells[cell].lit == true)
-                row_dark = false;
-        }                       // end for - cells
-
-        vis_corner = false;     // don't carry over to next row. :)
-        if (row_dark == true)
-            all_dark = true;
-    }                           // end for - rows
+                ++realraycount;
+        }
+    }
+    num_rays_cast = rayidx;
+    num_ray_words = (rayidx + LONGSIZE - 1) / LONGSIZE;
 }
 
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
              FixedArray < unsigned char, 80, 70 > &gr, int x_p, int y_p)
 {
-    int o;
 
-    for (o = 0; o < 8; o++)
-        los_octant(o, sh, gr, x_p, y_p);
+    // The rule behind LOS is:
+    // Two cells can see each other if there is any line
+    // from some point of the first to some point of the second.
+    // ("generous" LOS)
+    // We use raycasting. The algorithm:
+    // PRECOMPUTATION:
+    // Create a large bundle of rays and cast them.
+    // Mark, for each one, which cells kill it (and where.)
+    // Also, for each one, note which cells it passes.
+    // ACTUAL LOS:
+    // Unite the ray-killers for the given map; this tells
+    // you which rays are dead. 
+    // Look up which cells the surviving rays have, and
+    // that's your LOS!
+    // OPTIMIZATIONS:
+    // WLOG, we can assume that we're in a specific quadrant - say
+    // the first quadrant - and just mirror everything after that.
+    // We can likely get away with a single octant, but we don't
+    // do that. (It's a bit less trivial than it seems.)
+    // Rays are actually split by each cell they pass. So each "ray"
+    // only identifies a single cell, and we can do logical ORs.
+    // Once a cell kills a cellray, it will kill all remaining cellrays
+    // of that ray.
+    // Also, rays are checked to see if they are duplicates of each
+    // other. If they are, they're eliminated.
+    // With reasonable values we have around 3000 cellrays, meaning
+    // around 300Kb of data ~ 40-80 KB during startup.
+
+    raycast();
+    // go quadrant by quadrant
+    int quadrant_x[4] = {  1, -1, -1,  1 };
+    int quadrant_y[4] = {  1,  1, -1, -1 };
+    unsigned long dead_rays[RAY_ARRAY_SIZE];
+    // clear out sh
+    for ( int i = 0; i < 19; ++i )
+        for ( int j = 0; j < 19; ++j )
+            sh[i][j] = 0;
+
+    for ( int quadrant = 0; quadrant < 4; ++quadrant ) {
+        const int xmult = quadrant_x[quadrant];
+        const int ymult = quadrant_y[quadrant];
+
+        // clear out the dead rays array
+        memset( (void*)dead_rays, 0, sizeof(dead_rays) );
+        for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff ) {
+            for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y; ++ydiff ) {
+                const int realx = x_p + xdiff * xmult;
+                const int realy = y_p + ydiff * ymult;
+                if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
+                    continue;
+                // if this cell is opaque...
+                if ( grid_is_opaque(gr[realx][realy])) {
+                    // then block the appropriate rays
+                    for ( int i = 0; i < num_ray_words; ++i ) {
+                        dead_rays[i] |= los_blockrays[xdiff][ydiff][i];
+                    }
+                }
+            }
+        }
+        // ray calculation done, now work out which cells in this
+        // quadrant are visible
+        int rayidx = 0;
+        for ( int wordloc = 0; wordloc < num_ray_words; ++wordloc ) {
+            const unsigned long curword = dead_rays[wordloc];
+            // Note: the last word may be incomplete
+            for ( unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc) {
+                // make the cells seen by this ray at this point visible
+                if ( ((curword >> bitloc) & 1UL) == 0 ) {
+                    // this ray is alive!
+                    const int realx = xmult * ray_to_coord_x[rayidx];
+                    const int realy = ymult * ray_to_coord_y[rayidx];
+                    // update shadow map
+                    if (x_p + realx >= 0 && x_p + realx < 80 &&
+                        y_p + realy >= 0 && y_p + realy < 70 &&
+                        realx * realx + realy * realy <= los_radius_squared )
+                        sh[sh_xo+realx][sh_yo+realy]=gr[x_p+realx][y_p+realy];
+                }
+                ++rayidx;
+                if ( rayidx == num_rays_cast )
+                    break;
+            }
+        }
+    }
 }
 
 
