@@ -970,12 +970,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
     return (ret);
 }                               // end noisy()
 
-/* ========================================================================
- *                           brand new LOS code
- * ========================================================================
- * The new LOS works via a new (I think) shadow casting algorithm,
- * plus an esthetic tweak for more pleasing corner illumination.  More
- * detail can be had by contacting its author,  Gordon Lipford.          */
+/* The LOS code now uses raycasting -- haranp */
 
 #define LONGSIZE (sizeof(unsigned long)*8)
 // the following number can be dropped to 2831!
@@ -983,8 +978,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 #define RAY_ARRAY_SIZE ((MAX_NUM_RAYS + LONGSIZE - 1)/LONGSIZE)
 #define LOS_MAX_RANGE_X 9
 #define LOS_MAX_RANGE_Y 9
-#define RAY_ANGLE_RESOLUTION 20
-#define RAY_STARTPOINT_STEP 10
+#define RAY_STARTPOINT_STEP 0.05
 
 // the following two constants represent the 'middle' of the sh array.
 // since the current shown area is 19x19,  centering the view at (9,9)
@@ -1000,15 +994,34 @@ int num_rays_cast = 0;
 int num_ray_words = 0;
 int los_radius_squared = 8*8;
 
-void setLOSRadius(int newLR)
-{
-    los_radius_squared = newLR * newLR;
-}
-
 // overallocation, but what the heck
 unsigned long los_blockrays[LOS_MAX_RANGE_X+1][LOS_MAX_RANGE_Y+1][RAY_ARRAY_SIZE];
 short ray_to_coord_x[MAX_NUM_RAYS];
 short ray_to_coord_y[MAX_NUM_RAYS];
+
+const double slopes[] = {
+    0., 10000., 1.,
+    1.0 / 2.0, 2.0,
+    1.0 / 3.0, 3.0,
+    1.0 / 4.0, 4.0,
+    1.0 / 1.5, 1.5,
+    1.0 / 1.25, 1.25,
+    1.0 / 1.75, 1.75,
+    1.0 / 2.25, 2.25,
+    1.0 / 2.75, 2.75,
+    1.0 / 2.5, 2.5,
+    1.0 / 3.5, 3.5,
+    1.0 / 5.0, 5.0,
+    1.0 / 6.0, 6.0
+};
+
+#define RAY_ANGLE_RESOLUTION (sizeof(slopes) / sizeof(double))
+
+
+void setLOSRadius(int newLR)
+{
+    los_radius_squared = newLR * newLR;
+}
 
 static void set_bit_in_long_array( unsigned long* data, int where ) {
     int wordloc = where / LONGSIZE;
@@ -1016,52 +1029,86 @@ static void set_bit_in_long_array( unsigned long* data, int where ) {
     data[wordloc] |= (1UL << bitloc);
 }
 
-// angle can be 0..20
-// 0 means exact diagonal
-// 1..10 means above diagonal (xstep < ystep)
-// specifically 1 means y axis
-// 11..20 means below diagonal (xstep > ystep)
-// specifically 11 means x axis
-static int angle_to_step_x(int angle) {
-    if ( angle == 0 )
-        return 20;
-    if ( angle > RAY_ANGLE_RESOLUTION/2 )
-        return 20;
-    return (angle-1) * 2;       // 0, 2, ..., 18
+#define EPSILON_VALUE 0.00001
+bool double_is_zero( const double x )
+{
+    return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
 
-static int angle_to_step_y(int angle) {
-    if ( angle == 0 )
-        return 20;
-    if ( angle <= RAY_ANGLE_RESOLUTION/2 )
-        return 20;
-    return (angle-1) * 2 - RAY_ANGLE_RESOLUTION;
+static void find_next_intercept(double* accx, double* accy, const double slope)
+{
+    // handle perpendiculars
+    if ( double_is_zero(slope) )
+    {
+        *accx += 1.0;
+        return;
+    }
+    if ( slope > 100.0 )
+    {
+        *accy += 1.0;
+        return;
+    }
+
+    const double xtarget = (double)((int)(*accx) + 1);
+    const double ytarget = (double)((int)(*accy) + 1);
+    const double xdistance = xtarget - *accx;
+    const double ydistance = ytarget - *accy;
+    const double distdiff = (xdistance * slope - ydistance);
+
+    // exact corner
+    if ( double_is_zero( distdiff ) ) {
+        // move somewhat away from the corner
+        if ( slope > 1.0 ) {
+            *accx = xtarget + 0.5 / slope;
+            *accy = ytarget + 0.5;
+        }
+        else {
+            *accx = xtarget + 0.5;
+            *accy = ytarget + 0.5 * slope;
+        }
+        return;
+    }
+
+    double traveldist;
+    if ( distdiff > 0.0 )
+        traveldist = ydistance / slope;
+    else
+        traveldist = xdistance;
+
+    traveldist += EPSILON_VALUE * 10.0;
+
+    *accx += traveldist;
+    *accy += traveldist * slope;
 }
 
-static int shoot_ray( const int rayidx_start, int bigx, int bigy, int angle ) {
+int bits_to_set[400][3];
+
+static int shoot_ray( const int rayidx_start, double accx, double accy,
+                      const double slope, int* bitset_count ) {
     int rayidx = rayidx_start;
-    int oldx = bigx / 100, oldy = bigy / 100;
-    int curx = oldx, cury = oldy;
-    const int ystep = angle_to_step_y(angle);
-    const int xstep = angle_to_step_x(angle);
+    int curx, cury;
+    *bitset_count = 0;
     while ( 1 ) {
-        bigx += xstep;
-        bigy += ystep;
-        curx = bigx / 100;
-        cury = bigy / 100;
+        find_next_intercept( &accx, &accy, slope );
+        curx = (int)(accx);
+        cury = (int)(accy);
         if ( curx > LOS_MAX_RANGE_X || cury > LOS_MAX_RANGE_Y )
             break;
-        if ( curx == oldx && cury == oldy )
-            continue;
-        // we've hit a new square
+
+        // work with the new square
         ray_to_coord_x[rayidx] = curx;
         ray_to_coord_y[rayidx] = cury;
+
         // all previous squares we've encountered block this ray
         for ( int i = rayidx_start; i < rayidx; ++i ) {
-            set_bit_in_long_array(los_blockrays[ray_to_coord_x[i]][ray_to_coord_y[i]], rayidx);
+            // Note that we don't actually set the bits; we just
+            // mark them to be set, because the ray might be a
+            // duplicate.
+            bits_to_set[*bitset_count][0] = ray_to_coord_x[i];
+            bits_to_set[*bitset_count][1] = ray_to_coord_y[i];
+            bits_to_set[*bitset_count][2] = rayidx;
+            ++(*bitset_count);
         }
-        oldx = curx;
-        oldy = cury;
         ++rayidx;
     }
     return rayidx;
@@ -1097,37 +1144,67 @@ void raycast()
         return;
     
     done_raycast = true;
-    int xpos, ypos, angle;
+    memset( (void*)los_blockrays, 0, sizeof(los_blockrays) );
+
+    double xpos, ypos;
     int rayidx = 0;
+    int i;
     int raystarts[MAX_NUM_RAYS];
     int realraycount = 0;
+    unsigned int angle;
+    int bitset_count;
 
     // First do the rays which leave from the right of our cell
-    for ( ypos = 0; ypos < 100; ypos += RAY_STARTPOINT_STEP ) {
-        for ( angle = 0; angle <= RAY_ANGLE_RESOLUTION; ++angle ) {
+    for ( ypos = 0.0; ypos < 1.0; ypos += RAY_STARTPOINT_STEP ) {
+        for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
+            const double slope = slopes[angle];
             raystarts[realraycount] = rayidx;
-            rayidx = shoot_ray( rayidx, 99, ypos, angle );
+            rayidx = shoot_ray( rayidx, 0.999, ypos, slope, &bitset_count );
 
             // remove duplicate rays for improved efficiency later
             if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
                 rayidx = raystarts[realraycount]; // forget this ray
             else
+            {
+                for ( i = 0; i < bitset_count; ++i )
+                    set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
                 ++realraycount;
+            }
         }
     }
 
     // Now do the rays which leave from the top of our cell
-    for ( xpos = 0; xpos < 100; xpos += RAY_STARTPOINT_STEP ) {
-        for ( angle = 0; angle <= RAY_ANGLE_RESOLUTION; ++angle ) {
+    for ( xpos = 0; xpos < 1.0; xpos += RAY_STARTPOINT_STEP ) {
+        for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
+            const double slope = slopes[angle];
             raystarts[realraycount] = rayidx;
-            rayidx = shoot_ray( rayidx, xpos, 99, angle );
+            rayidx = shoot_ray( rayidx, xpos, 0.999, slope, &bitset_count );
             
             if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
                 rayidx = raystarts[realraycount]; // forget this ray
-            else
+            else {
+                for ( i = 0; i < bitset_count; ++i )
+                    set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
                 ++realraycount;
+            }
         }
     }
+
+    // Now do rays from the center
+    for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
+        const double slope = slopes[angle];
+        raystarts[realraycount] = rayidx;
+        rayidx = shoot_ray( rayidx, 0.5, 0.5, slope, &bitset_count );
+        
+        if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
+            rayidx = raystarts[realraycount]; // forget this ray
+        else {
+            for ( i = 0; i < bitset_count; ++i )
+                set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
+            ++realraycount;
+        }
+    }
+
     num_rays_cast = rayidx;
     num_ray_words = (rayidx + LONGSIZE - 1) / LONGSIZE;
 }
