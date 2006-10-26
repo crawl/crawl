@@ -622,7 +622,6 @@ void monster_grid(bool do_updates)
             const int ex = monster->x - you.x_pos + 9;
             const int ey = monster->y - you.y_pos + 9;
 
-            int colour = monster->colour;
             if (!player_monster_visible( monster ))
             {
                 // ripple effect?
@@ -631,7 +630,7 @@ void monster_grid(bool do_updates)
                 {
                     set_show_backup(ex, ey);
                     env.show[ex][ey] = DNGN_INVIS_EXPOSED;
-                    colour = BLUE;
+                    env.show_col[ex][ey] = BLUE; 
                 }
                 continue;
             }
@@ -670,7 +669,7 @@ void monster_grid(bool do_updates)
                 set_show_backup(ex, ey);
 
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
-            env.show_col[ex][ey] = colour;
+            env.show_col[ex][ey] = monster->colour;
 
             if (mons_friendly(monster))
             {
