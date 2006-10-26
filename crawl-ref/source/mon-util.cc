@@ -503,7 +503,7 @@ int mons_class_colour(int mc)
         return (BLACK);
 
     const int class_colour = m->colour;
-    return (class_colour == BLACK? LIGHTGREY : class_colour);
+    return (class_colour);
 }                               // end mons_colour()
 
 int mons_colour(const monsters *monster)

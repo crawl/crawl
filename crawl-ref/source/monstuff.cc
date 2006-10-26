@@ -286,9 +286,12 @@ static void monster_drop_ething(struct monsters *monster,
     }
 }                               // end monster_drop_ething()
 
-static void place_monster_corpse(struct monsters *monster)
+static void place_monster_corpse(const monsters *monster)
 {
     int corpse_class = mons_species(monster->type);
+
+    if (corpse_class == MONS_DRACONIAN)
+        corpse_class = draco_subspecies(monster);
 
     if (mons_has_ench(monster, ENCH_SHAPESHIFTER))
         corpse_class = MONS_SHAPESHIFTER;
@@ -316,7 +319,7 @@ static void place_monster_corpse(struct monsters *monster)
     mitm[o].quantity = 1;
 
     if (mitm[o].colour == BLACK)
-        mitm[o].colour = monster->number;
+        mitm[o].colour = monster->colour;
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
