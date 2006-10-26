@@ -623,14 +623,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
         desc = munge_description(get_item_description(si.item, 
                     Options.verbose_dump,
                     true));
-
-        // trim leading whitespace
-        std::string::size_type notwhite = desc.find_first_not_of(" \t\n");
-        desc.erase(0, notwhite);
-
-        // trim trailing whitespace
-        notwhite = desc.find_last_not_of(" \t\n"); 
-        desc.erase(notwhite + 1);
+        trim_string(desc);
         
         // Walk backwards and prepend indenting spaces to \n characters
         for (int i = desc.length() - 1; i >= 0; --i)
