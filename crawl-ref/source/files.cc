@@ -332,36 +332,22 @@ bool travel_load_map( char branch, int absdepth )
     return true;
 }
 
+struct follower {
+    monsters mons;
+    std::vector<item_def> items;
+
+    follower() : mons(), items() { }
+    follower(const monsters &m) : mons(m), items() { }
+};
+
 void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
            char old_level, char where_were_you2 )
 {
     int j = 0;
     int i = 0, count_x = 0, count_y = 0;
 
-    int foll_class[8];
-    int foll_hp[8];
-    int foll_hp_max[8];
-    unsigned char foll_HD[8];
-    int foll_AC[8];
-    char foll_ev[8];
-    unsigned char foll_speed[8];
-    unsigned char foll_speed_inc[8];
+    std::vector<follower> followers;
 
-    unsigned char foll_targ_1_x[8];
-    unsigned char foll_targ_1_y[8];
-    unsigned char foll_beh[8];
-    unsigned char foll_att[8];
-    int foll_sec[8];
-    unsigned char foll_hit[8];
-
-    unsigned char foll_ench[8][NUM_MON_ENCHANTS];
-    unsigned char foll_flags[8];
-
-    item_def foll_item[8][8];
-
-    int itmf = 0;
-    int ic = 0;
-    int imn = 0;
     int val;
 
     bool just_created_level = false;
@@ -389,9 +375,6 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
     you.prev_targ = MHITNOT;
 
-    int following = -1;
-    int minvc = 0;
-
     // Don't delete clouds just because the player saved and restarted.
     if (load_mode != LOAD_RESTART_GAME)
     {
@@ -412,13 +395,10 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                 if (count_x == you.x_pos && count_y == you.y_pos)
                     continue;
 
-                following++;
-                foll_class[following] = -1;
-
                 if (mgrd[count_x][count_y] == NON_MONSTER)
                     continue;
 
-                struct monsters *fmenv = &menv[mgrd[count_x][count_y]];
+                monsters *fmenv = &menv[mgrd[count_x][count_y]];
 
                 if (fmenv->type == MONS_PLAYER_GHOST
                     && fmenv->hit_points < fmenv->max_hit_points / 2)
@@ -438,52 +418,20 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                 mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-                foll_class[following] = fmenv->type;
-                foll_hp[following] = fmenv->hit_points;
-                foll_hp_max[following] = fmenv->max_hit_points;
-                foll_HD[following] = fmenv->hit_dice;
-                foll_AC[following] = fmenv->armour_class;
-                foll_ev[following] = fmenv->evasion;
-                foll_speed[following] = fmenv->speed;
-                foll_speed_inc[following] = fmenv->speed_increment;
-                foll_targ_1_x[following] = fmenv->target_x;
-                foll_targ_1_y[following] = fmenv->target_y;
+                follower f(*fmenv);
 
-                for (minvc = 0; minvc < NUM_MONSTER_SLOTS; ++minvc)
+                for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; ++minvc)
                 {
                     const int item = fmenv->inv[minvc];
                     if (item == NON_ITEM)
-                    {
-                        foll_item[following][minvc].quantity = 0;
                         continue;
-                    }
 
-                    foll_item[following][minvc] = mitm[item];
+                    f.items.push_back(mitm[item]);
                     destroy_item( item );
                 }
 
-                foll_beh[following] = fmenv->behaviour;
-                foll_att[following] = fmenv->attitude;
-                foll_sec[following] = fmenv->number;
-                foll_hit[following] = fmenv->foe;
-
-                for (j = 0; j < NUM_MON_ENCHANTS; j++)
-                {
-                    foll_ench[following][j] = fmenv->enchantment[j];
-                    fmenv->enchantment[j] = ENCH_NONE;
-                }
-
-                foll_flags[following] = fmenv->flags;
-
-                fmenv->flags = 0;
-                fmenv->type = -1;
-                fmenv->hit_points = 0;
-                fmenv->max_hit_points = 0;
-                fmenv->hit_dice = 0;
-                fmenv->armour_class = 0;
-                fmenv->evasion = 0;
-
-                mgrd[count_x][count_y] = NON_MONSTER;
+                followers.push_back(f);
+                monster_cleanup(fmenv);
             }
         }                        // end of grabbing followers
 
@@ -495,7 +443,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
     // clear out ghost/demon lord information:
     strcpy( ghost.name, "" );
-    for (ic = 0; ic < NUM_GHOST_VALUES; ++ic)
+    for (int ic = 0; ic < NUM_GHOST_VALUES; ++ic)
         ghost.values[ic] = 0;
 
     // Try to open level savefile.
@@ -506,7 +454,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
     {                           
         strcpy(ghost.name, "");
 
-        for (imn = 0; imn < NUM_GHOST_VALUES; ++imn)
+        for (int imn = 0; imn < NUM_GHOST_VALUES; ++imn)
             ghost.values[imn] = 0;
 
         builder( you.your_level, you.level_type );
@@ -743,15 +691,14 @@ found_stair:
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     */
-    following = 0;
-    int fmenv = -1;
+    int following = 0;
 
     // actually "move" the followers if applicable
     if ((you.level_type == LEVEL_DUNGEON
             || you.level_type == LEVEL_PANDEMONIUM)
         && load_mode == LOAD_ENTER_LEVEL)
     {
-        for (ic = 0; ic < 2; ic++)
+        for (int ic = 0; ic < 2; ic++)
         {
             for (count_x = you.x_pos - 6; count_x < you.x_pos + 7;
                  count_x++)
@@ -785,64 +732,42 @@ found_stair:
                             goto out_of_foll;
                     }
 
-                    while (fmenv < 7)
+                    if (followers.size())
                     {
-                        fmenv++;
+                        follower f = followers.front();
+                        followers.erase(followers.begin());
 
-                        if (foll_class[fmenv] == -1)
-                            continue;
-
-                        menv[following].type = foll_class[fmenv];
-                        menv[following].hit_points = foll_hp[fmenv];
-                        menv[following].max_hit_points = foll_hp_max[fmenv];
-                        menv[following].hit_dice = foll_HD[fmenv];
-                        menv[following].armour_class = foll_AC[fmenv];
-                        menv[following].evasion = foll_ev[fmenv];
-                        menv[following].speed = foll_speed[fmenv];
+                        menv[following] = f.mons;
                         menv[following].x = count_x;
                         menv[following].y = count_y;
                         menv[following].target_x = 0;
                         menv[following].target_y = 0;
-                        menv[following].speed_increment = foll_speed_inc[fmenv];
-
-                        for (minvc = 0; minvc < NUM_MONSTER_SLOTS; minvc++)
-                        {
-
-                            if (!is_valid_item(foll_item[fmenv][minvc]))
-                            {
-                                menv[following].inv[minvc] = NON_ITEM;
-                                continue;
-                            }
-
-                            itmf = get_item_slot(0);
-                            if (itmf == NON_ITEM)
-                            {
-                                menv[following].inv[minvc] = NON_ITEM;
-                                continue;
-                            }
-
-                            mitm[itmf] = foll_item[fmenv][minvc];
-                            mitm[itmf].x = 0;
-                            mitm[itmf].y = 0;
-                            mitm[itmf].link = NON_ITEM;
-
-                            menv[following].inv[minvc] = itmf;
-                        }
-
-                        menv[following].behaviour = foll_beh[fmenv];
-                        menv[following].attitude = foll_att[fmenv];
-                        menv[following].number = foll_sec[fmenv];
-                        menv[following].foe = foll_hit[fmenv];
-
-                        for (j = 0; j < NUM_MON_ENCHANTS; j++)
-                            menv[following].enchantment[j]=foll_ench[fmenv][j];
-
-                        menv[following].flags = foll_flags[fmenv];
                         menv[following].flags |= MF_JUST_SUMMONED;
 
+                        for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; minvc++)
+                        {
+                            menv[following].inv[minvc] = NON_ITEM;
+
+                            if (f.items.size())
+                            {
+                                int itmf = get_item_slot(0);
+                                if (itmf == NON_ITEM)
+                                {
+                                    menv[following].inv[minvc] = NON_ITEM;
+                                    continue;
+                                }
+
+                                mitm[itmf] = f.items.front();
+                                mitm[itmf].x = 0;
+                                mitm[itmf].y = 0;
+                                mitm[itmf].link = NON_ITEM;
+                                menv[following].inv[minvc] = itmf;
+
+                                f.items.erase(f.items.begin());
+                            }
+                        }
                         mgrd[count_x][count_y] = following;
-                        break;
-                    }
+                    } // followers.size()
                 }
             }
         }

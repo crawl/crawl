@@ -753,7 +753,7 @@ void monster_die(struct monsters *monster, char killer, int i)
     monster_cleanup(monster);
 }                                                   // end monster_die
 
-void monster_cleanup(struct monsters *monster)
+void monster_cleanup(monsters *monster)
 {
     unsigned int monster_killed = monster_index(monster);
     int dmi = 0;
@@ -773,7 +773,8 @@ void monster_cleanup(struct monsters *monster)
     monster->behaviour = BEH_SLEEP;
     monster->foe = MHITNOT;
 
-    mgrd[monster->x][monster->y] = NON_MONSTER;
+    if (in_bounds(monster->x, monster->y))
+        mgrd[monster->x][monster->y] = NON_MONSTER;
 
     for (dmi = MSLOT_GOLD; dmi >= MSLOT_WEAPON; dmi--)
     {
