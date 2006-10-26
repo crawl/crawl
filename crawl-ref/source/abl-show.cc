@@ -1028,7 +1028,7 @@ bool activate_ability(void)
             beam.flavour = BEAM_ELECTRICITY;
             beam.target_x = you.x_pos;
             beam.target_y = you.y_pos;
-            strcpy(beam.beam_name, "blast of lightning");
+            beam.name = "blast of lightning";
             beam.colour = LIGHTCYAN;
             beam.thrower = KILL_YOU;
             beam.aux_source = "Makhleb's lightning strike";

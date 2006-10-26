@@ -1934,14 +1934,14 @@ void cast_evaporate(int pow)
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;
 
-    strcpy( beem.beam_name, "potion" );
+    beem.name = "potion";
     beem.colour = you.inv[potion].colour;
     beem.range = 9;
     beem.rangeMax = 9;
     beem.type = SYM_FLASK;
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU_MISSILE;
-    beem.aux_source = NULL;
+    beem.aux_source.clear();
     beem.is_beam = false;
     beem.is_tracer = false;
 
@@ -2378,7 +2378,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     //FIXME: if (player typed '>' to attack floor) goto do_terrain;
     blast.beam_source = MHITYOU;
     blast.thrower = KILL_YOU;
-    blast.aux_source = NULL;
+    blast.aux_source.clear();
     blast.ex_size = 1;              // default
     blast.type = '#';
     blast.colour = 0;
@@ -2411,7 +2411,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_SIMULACRUM_SMALL:
         case MONS_SIMULACRUM_LARGE:
             explode = true;
-            strcpy(blast.beam_name, "icy blast");
+            blast.name = "icy blast";
             blast.colour = WHITE;
             blast.damage.num = 2;
             blast.flavour = BEAM_ICE;
@@ -2427,7 +2427,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             snprintf( info, INFO_SIZE, "The sk%s explodes into sharp fragments of bone!",
                     (menv[mon].type == MONS_FLYING_SKULL) ? "ull" : "eleton");
 
-            strcpy(blast.beam_name, "blast of bone shards");
+            blast.name = "blast of bone shards";
 
             blast.colour = LIGHTGREY;
 
@@ -2458,7 +2458,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_IRON_GOLEM:
         case MONS_METAL_GARGOYLE:
             explode = true;
-            strcpy( blast.beam_name, "blast of metal fragments" );
+            blast.name = "blast of metal fragments";
             blast.colour = CYAN;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
@@ -2471,7 +2471,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_GARGOYLE:
             explode = true;
             blast.ex_size = 2;
-            strcpy(blast.beam_name, "blast of rock fragments");
+            blast.name = "blast of rock fragments";
             blast.colour = BROWN;
             blast.damage.num = 3;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
@@ -2481,7 +2481,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_CRYSTAL_GOLEM:
             explode = true;
             blast.ex_size = 2;
-            strcpy(blast.beam_name, "blast of crystal shards");
+            blast.name = "blast of crystal shards";
             blast.colour = WHITE;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
@@ -2530,7 +2530,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
 
-        strcpy(blast.beam_name, "blast of rock fragments");
+        blast.name = "blast of rock fragments";
         blast.damage.num = 3;
         if (blast.colour == 0)
             blast.colour = LIGHTGREY;
@@ -2564,7 +2564,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         }
 
         explode = true;
-        strcpy( blast.beam_name, "blast of metal fragments" );
+        blast.name = "blast of metal fragments";
         blast.damage.num = 4;
 
         if (okay_to_dest && pow >= 80 && random2(500) < pow / 5)
@@ -2592,7 +2592,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
         blast.ex_size = 2;
-        strcpy(blast.beam_name, "blast of crystal shards");
+        blast.name = "blast of crystal shards";
         blast.damage.num = 5;
 
         if (okay_to_dest
@@ -2625,7 +2625,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
         hole = false;           // to hit monsters standing on traps
-        strcpy( blast.beam_name, "blast of fragments" );
+        blast.name = "blast of fragments";
         blast.colour = env.floor_colour;  // in order to blend in
         blast.damage.num = 2;
 
@@ -2651,7 +2651,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_STONE_ARCH:       // floor -- small explosion
         explode = true;
         hole = false;           // to hit monsters standing on doors
-        strcpy( blast.beam_name, "blast of rock fragments" );
+        blast.name = "blast of rock fragments";
         blast.colour = LIGHTGREY;
         blast.damage.num = 2;
         break;

@@ -2396,7 +2396,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        strcpy(beem.beam_name, "glob of lava");
+        beem.name = "glob of lava";
         beem.range = 4;
         beem.rangeMax = 13;
         beem.damage = dice_def( 3, 10 );
@@ -2431,7 +2431,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        strcpy(beem.beam_name, "bolt of electricity");
+        beem.name = "bolt of electricity";
         beem.damage = dice_def( 3, 6 );
         beem.colour = LIGHTCYAN;
         beem.type = SYM_ZAP;
@@ -2553,7 +2553,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         // easy to set up and doesn't involve inventory.
 
         // set up the beam
-        strcpy(beem.beam_name, "volley of spikes");
+        beem.name = "volley of spikes";
         beem.range = 9;
         beem.rangeMax = 9;
         beem.hit = 14;
@@ -2862,7 +2862,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         // XXX: ugly hack this:
         static char wand_buff[ ITEMNAME_SIZE ];
 
-        strcpy( beem.beam_name, theBeam.beam_name );
+        beem.name = theBeam.name;
         beem.beam_source = monster_index(monster);
         beem.source_x = monster->x;
         beem.source_y = monster->y;
@@ -3510,7 +3510,7 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     // good idea?
     if (mons_should_fire( beem ))
     {
-        beem.beam_name[0] = 0;
+        beem.name.clear();
         return (mons_throw( monster, beem, mon_item ));
     }
 
@@ -4864,7 +4864,7 @@ static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
     char spit_string[INFO_SIZE];
 
     // setup plant spit
-    strcpy( pbolt.beam_name, "acid" );
+    pbolt.name = "acid";
     pbolt.type = SYM_ZAP;
     pbolt.range = 9;
     pbolt.rangeMax = 9;
@@ -4874,7 +4874,7 @@ static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
     pbolt.damage = dice_def( 3, 7 );
     pbolt.hit = 20 + (3 * monster->hit_dice);
     pbolt.thrower = KILL_MON_MISSILE;
-    pbolt.aux_source = NULL;
+    pbolt.aux_source.clear();
 
     // fire tracer
     fire_tracer(monster, pbolt);

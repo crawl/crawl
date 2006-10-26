@@ -216,13 +216,13 @@ void cast_fire_storm(int powc)
     beam.colour = RED;
     beam.beam_source = MHITYOU;
     beam.thrower = KILL_YOU_MISSILE;
-    beam.aux_source = NULL;
+    beam.aux_source.clear();
     beam.obvious_effect = false;
     beam.is_beam = false;
     beam.is_tracer = false;
     beam.is_explosion = true;
     beam.ench_power = powc;     // used for radius
-    strcpy( beam.beam_name, "great blast of fire" );
+    beam.name = "great blast of fire";
     beam.hit = 20 + powc / 10;
     beam.damage = calc_dice( 6, 15 + powc );
 
@@ -238,7 +238,7 @@ void cast_chain_lightning( int powc )
     struct bolt beam;
 
     // initialize beam structure
-    strcpy( beam.beam_name, "lightning arc" );
+    beam.name = "lightning arc";
     beam.aux_source = "chain lightning";
     beam.beam_source = MHITYOU;
     beam.thrower = KILL_YOU_MISSILE;
@@ -480,7 +480,7 @@ void stinking_cloud( int pow )
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;
 
-    strcpy(beem.beam_name, "ball of vapour");
+    beem.name = "ball of vapour";
     beem.colour = GREEN;
     beem.range = 6;
     beem.rangeMax = 6;
@@ -491,7 +491,7 @@ void stinking_cloud( int pow )
     beem.ench_power = pow;
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU;
-    beem.aux_source = NULL;
+    beem.aux_source.clear();
     beem.is_beam = false;
     beem.is_tracer = false;
 

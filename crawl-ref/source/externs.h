@@ -159,7 +159,7 @@ struct bolt
     char        thrower;               // what kind of thing threw this?
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
-    char        beam_name[40];
+    std::string name;
     bool        is_beam;                // beams? (can hits multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
@@ -168,7 +168,7 @@ struct bolt
     bool        is_launched;           // was fired from launcher?
     bool        is_thrown;             // was thrown from hand?
     bool        target_first;          // targeting by direction 
-    const char *aux_source;            // source of KILL_MISC beams
+    std::string aux_source;            // source of KILL_MISC beams
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;         // did an 'obvious' effect happen?

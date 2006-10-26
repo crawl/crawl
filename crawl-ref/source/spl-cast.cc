@@ -2155,7 +2155,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = random_colour();
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
@@ -2183,7 +2183,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 // BEAM_EXPLOSION instead? {dlb}
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = random_colour();
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
@@ -3075,7 +3075,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.flavour = BEAM_FIRE;
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = RED;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
@@ -3107,7 +3107,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.flavour = BEAM_FIRE;
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy( beam.beam_name, "fireball" );
+                beam.name = "fireball";
                 beam.colour = RED;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
@@ -3209,7 +3209,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.flavour = BEAM_COLD;
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = WHITE;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
@@ -3332,7 +3332,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.flavour = BEAM_FRAG;
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = CYAN;
 
                 if (one_chance_in(5))
@@ -3448,7 +3448,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.flavour = BEAM_ELECTRICITY;
                 beam.target_x = you.x_pos;
                 beam.target_y = you.y_pos;
-                strcpy(beam.beam_name, "explosion");
+                beam.name = "explosion";
                 beam.colour = LIGHTBLUE;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;

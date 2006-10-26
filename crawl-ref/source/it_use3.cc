@@ -876,7 +876,7 @@ void tome_of_power(char sc_read_2)
         beam.flavour = BEAM_FIRE;
         beam.target_x = you.x_pos;
         beam.target_y = you.y_pos;
-        strcpy( beam.beam_name, "fiery explosion" );
+        beam.name = "fiery explosion";
         beam.colour = RED;
         // your explosion, (not someone else's explosion)
         beam.beam_source = NON_MONSTER;

@@ -967,7 +967,7 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
             beam.flavour = BEAM_ELECTRICITY;
             beam.target_x = you.x_pos;
             beam.target_y = you.y_pos;
-            strcpy(beam.beam_name, "blast of lightning");
+            beam.name = "blast of lightning";
             beam.colour = LIGHTCYAN;
             beam.thrower = KILL_MISC;
             beam.aux_source = "Xom's lightning strike";

@@ -217,14 +217,14 @@ void direct_effect(struct bolt &pbolt)
     {
     case DMNBM_HELLFIRE:
         mpr( "You are engulfed in a burst of hellfire!" );
-        strcpy( pbolt.beam_name, "hellfire" );
+        pbolt.name = "hellfire";
         pbolt.ex_size = 1;
         pbolt.flavour = BEAM_HELLFIRE;
         pbolt.is_explosion = true;
         pbolt.type = SYM_ZAP;
         pbolt.colour = RED;
         pbolt.thrower = KILL_MON_MISSILE;
-        pbolt.aux_source = NULL;
+        pbolt.aux_source.clear();
         pbolt.is_beam = false;
         pbolt.is_tracer = false;
         pbolt.hit = 20;
@@ -235,7 +235,7 @@ void direct_effect(struct bolt &pbolt)
 
     case DMNBM_SMITING:
         mpr( "Something smites you!" );
-        strcpy( pbolt.beam_name, "smiting" );    // for ouch
+        pbolt.name = "smiting";
         pbolt.aux_source = "by divine providence";
         damage_taken = 7 + random2avg(11, 2);
         break;
@@ -259,7 +259,8 @@ void direct_effect(struct bolt &pbolt)
 
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
-        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM, pbolt.aux_source);
+        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM, 
+             pbolt.aux_source.c_str());
 
     return;
 }                               // end direct_effect()
@@ -279,7 +280,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
     {
     case DMNBM_HELLFIRE:
         simple_monster_message(monster, " is engulfed in hellfire.");
-        strcpy(pbolt.beam_name, "hellfire");
+        pbolt.name = "hellfire";
         pbolt.flavour = BEAM_LAVA;
 
         damage_taken = 5 + random2(10) + random2(5);
@@ -288,7 +289,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
 
     case DMNBM_SMITING:
         simple_monster_message(monster, " is smitten.");
-        strcpy(pbolt.beam_name, "smiting");
+        pbolt.name = "smiting";
         pbolt.flavour = BEAM_MISSILE;
 
         damage_taken += 7 + random2avg(11, 2);

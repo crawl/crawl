@@ -1321,7 +1321,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (random2(10) < 2 || (trap_known && !one_chance_in(4)))
     {
         snprintf( info, INFO_SIZE, "You avoid triggering a%s trap.",
-                                    pbolt.beam_name );
+                                    pbolt.name.c_str() );
         mpr(info);
         return;
     }
@@ -1329,7 +1329,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (you.equip[EQ_SHIELD] != -1 && one_chance_in(3))
         exercise( SK_SHIELDS, 1 );
 
-    snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.beam_name );
+    snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.name.c_str() );
 
     if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
                                                 < player_shield_class())
@@ -1361,7 +1361,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
         damage_taken -= random2( player_AC() + 1 );
 
         if (damage_taken > 0)
-            ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.beam_name );
+            ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
     }
     else
     {
@@ -1432,37 +1432,37 @@ void handle_traps(char trt, int i, bool trap_known)
     switch (trt)
     {
     case TRAP_DART:
-        strcpy(beam.beam_name, " dart");
+        beam.name = " dart";
         beam.damage = dice_def( 1, 4 + (you.your_level / 2) );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_NEEDLE:
-        strcpy(beam.beam_name, " needle");
+        beam.name = " needle";
         beam.damage = dice_def( 1, 0 );
         dart_trap(trap_known, i, beam, true);
         break;
 
     case TRAP_ARROW:
-        strcpy(beam.beam_name, "n arrow");
+        beam.name = "n arrow";
         beam.damage = dice_def( 1, 7 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_BOLT:
-        strcpy(beam.beam_name, " bolt");
+        beam.name = " bolt";
         beam.damage = dice_def( 1, 13 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_SPEAR:
-        strcpy(beam.beam_name, " spear");
+        beam.name = " spear";
         beam.damage = dice_def( 1, 10 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_AXE:
-        strcpy(beam.beam_name, "n axe");
+        beam.name = "n axe";
         beam.damage = dice_def( 1, 15 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
@@ -1991,7 +1991,7 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
                ench_power(0), hit(0), target_x(0), target_y(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), 
-               beam_name(),
+               name(),
                is_beam(false), is_explosion(false), is_big_cloud(false),
                is_enchant(false), is_energy(false), 
                is_launched(false), is_thrown(false), target_first(false), 

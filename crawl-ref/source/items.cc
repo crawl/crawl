@@ -2627,7 +2627,7 @@ void handle_time( long time_delta )
                 boom.is_beam = false;
                 boom.is_tracer = false;
                 boom.is_explosion = true;
-                strcpy(boom.beam_name, "magical storm");
+                boom.name = "magical storm";
 
                 boom.ench_power = (you.magic_contamination * 5);
                 boom.ex_size = (you.magic_contamination / 15);

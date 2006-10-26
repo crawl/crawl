@@ -1349,10 +1349,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     pbolt.colour = item.colour;
 
     item_name( item, DESC_PLAIN, str_pass );
-    strcpy( pbolt.beam_name, str_pass );
+    pbolt.name = str_pass;
 
     pbolt.thrower = KILL_YOU_MISSILE;
-    pbolt.aux_source = NULL;
+    pbolt.aux_source.clear();
 
     // get the ammo/weapon type.  Convenience.
     wepClass = item.base_type;
@@ -1606,7 +1606,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             // poison brand the ammo
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
             item_name( item, DESC_PLAIN, str_pass );
-            strcpy( pbolt.beam_name, str_pass );
+            pbolt.name = str_pass;
         }
         
         // Note that bow_brand is known since the bow is equiped.
@@ -1617,16 +1617,16 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             dice_mult = dice_mult * 150 / 100;
 
             pbolt.flavour = BEAM_FIRE;
-            strcpy(pbolt.beam_name, "bolt of ");
+            pbolt.name = "bolt of ";
 
             if (poisoned)
-                strcat(pbolt.beam_name, "poison ");
+                pbolt.name += "poison ";
 
-            strcat(pbolt.beam_name, "flame");
+            pbolt.name += "flame";
             pbolt.colour = RED;
             pbolt.type = SYM_BOLT;
             pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source = NULL;
+            pbolt.aux_source.clear();
 
             // ammo known if we can't attribute it to the bow
             if (bow_brand != SPWPN_FLAME)
@@ -1643,16 +1643,16 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             dice_mult = dice_mult * 150 / 100;
 
             pbolt.flavour = BEAM_COLD;
-            strcpy(pbolt.beam_name, "bolt of ");
+            pbolt.name = "bolt of ";
 
             if (poisoned)
-                strcat(pbolt.beam_name, "poison ");
+                pbolt.name += "poison ";
 
-            strcat(pbolt.beam_name, "frost");
+            pbolt.name += "frost";
             pbolt.colour = WHITE;
             pbolt.type = SYM_BOLT;
             pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source = NULL;
+            pbolt.aux_source.clear();
 
             // ammo known if we can't attribute it to the bow
             if (bow_brand != SPWPN_FROST)
@@ -2730,7 +2730,7 @@ static bool affix_weapon_enchantment( void )
         beam.flavour = 2;
         beam.target_x = you.x_pos;
         beam.target_y = you.y_pos;
-        strcpy(beam.beam_name, "fiery explosion");
+        beam.name = "fiery explosion";
         beam.colour = RED;
         beam.thrower = KILL_YOU;
         beam.aux_source = "a fiery explosion";
@@ -3225,7 +3225,7 @@ void read_scroll(void)
         beam.flavour = BEAM_FIRE;
         beam.target_x = you.x_pos;
         beam.target_y = you.y_pos;
-        strcpy(beam.beam_name, "fiery explosion");
+        beam.name = "fiery explosion";
         beam.colour = RED;
         // your explosion, (not someone else's explosion)
         beam.thrower = KILL_YOU;
