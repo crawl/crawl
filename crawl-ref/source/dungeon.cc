@@ -666,10 +666,16 @@ int items( int allow_uniques,       // not just true-false,
             }
 
             if (item_level > 6
-                && random2(3000) <= 30 + (item_level * 3) && one_chance_in(12))
+                && random2(3000) <= 30 + (item_level * 3) && one_chance_in(4))
             {
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Making fixed artifact.");
+#endif
                 if (make_item_fixed_artefact( mitm[p], (item_level == 51) ))
+                {
+                    quant = 1;
                     break;
+                }
             }
         }
 

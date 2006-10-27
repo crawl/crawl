@@ -2068,7 +2068,7 @@ void enterPlayerName(bool blankOK)
         char_menu.set_title( title );
         for (int i = 0, size = existing_chars.size(); i < size; ++i)
         {
-            std::string desc = existing_chars[i].short_desc();
+            std::string desc = " " + existing_chars[i].short_desc();
             if ((int) desc.length() >= get_number_of_cols())
                 desc = desc.substr(0, get_number_of_cols() - 1);
 
