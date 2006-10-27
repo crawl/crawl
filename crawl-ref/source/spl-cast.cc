@@ -243,6 +243,39 @@ char list_spells(void)
     return (ki);
 }                               // end list_spells()
 
+static int apply_vehumet_wizardry_boost(int spell, int chance)
+{
+    int wizardry = player_mag_abil(true);
+    int fail_reduce = 100;
+    int wiz_factor = 90;
+
+    if (you.religion == GOD_VEHUMET 
+        && you.duration[DUR_PRAYER]
+        && (!player_under_penance() && you.piety >= 50)
+        && (spell_typematch(spell, SPTYP_CONJURATION)
+            || spell_typematch(spell, SPTYP_SUMMONING)))
+    {
+        // [dshaligram] Fail rate multiplier used to be .5, scaled
+        // back to 2/3. It's still a huge boost.
+        fail_reduce = fail_reduce * 2 / 3;
+    }
+
+    // [dshaligram] Apply wizardry factor here, rather than mixed into the
+    // pre-scaling spell power.
+    while (wizardry-- > 0)
+    {
+        fail_reduce  = fail_reduce * wiz_factor / 100;
+        wiz_factor  += (100 - wiz_factor) / 3;
+    }
+
+    // Hard cap on fail rate reduction. This is still less than the insane
+    // boost that Vehumet alone provided in 4.0.
+    if (fail_reduce < 58)
+        fail_reduce = 58;
+
+    return (chance * fail_reduce / 100);
+}
+
 int spell_fail(int spell)
 {
     int chance = 60;
@@ -414,16 +447,8 @@ int spell_fail(int spell)
     if (chance < -180)
         chance2 = 0;
 
-    if (you.religion == GOD_VEHUMET 
-        && you.duration[DUR_PRAYER]
-        && (!player_under_penance() && you.piety >= 50)
-        && (spell_typematch(spell, SPTYP_CONJURATION)
-            || spell_typematch(spell, SPTYP_SUMMONING)))
-    {
-        // [dshaligram] Fail rate multiplier used to be .5, scaled
-        // back to 2/3.
-        chance2 = chance2 * 2 / 3;
-    }
+    // Apply the effects of Vehumet prayer and items of wizardry.
+    chance2 = apply_vehumet_wizardry_boost(spell, chance2);
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
@@ -447,7 +472,12 @@ int calc_spell_power( int spell, bool apply_intel, bool fail_rate_check )
 {
     unsigned int bit;
     int ndx;
-    int power = (you.skills[SK_SPELLCASTING] / 2) + player_mag_abil(false);
+
+    // When checking failure rates, wizardry is handled after the various
+    // stepping calulations.
+    int power = 
+            (you.skills[SK_SPELLCASTING] / 2) 
+            + (fail_rate_check? 0 : player_mag_abil(false));
     int enhanced = 0;
 
     unsigned int disciplines = spell_type( spell );
