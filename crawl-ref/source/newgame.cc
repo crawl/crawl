@@ -1919,7 +1919,7 @@ void openingScreen(void)
 }                               // end openingScreen()
 
 static void show_name_prompt(int where, bool blankOK, 
-        const std::vector<player> existing_chars,
+        const std::vector<player> &existing_chars,
         slider_menu &menu)
 {
     gotoxy(1, where);
