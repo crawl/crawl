@@ -205,6 +205,10 @@ bool butchery(void)
 	   (you.species == SP_TROLL ||
 	    you.species == SP_GHOUL ||
 	    you.mutation[MUT_CLAWS])));
+
+    can_butcher = barehand_butcher ||
+        (you.equip[EQ_WEAPON] != -1 &&
+         can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
     
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
     {
@@ -221,7 +225,7 @@ bool butchery(void)
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
-    if ( !barehand_butcher && you.berserker ) {
+    if ( !can_butcher && you.berserker ) {
 	mpr ("You are too berserk to search for a butchering knife!");
 	return (false);
     }
@@ -243,10 +247,6 @@ bool butchery(void)
 	    break;
 	if ( answer == 0 )
 	    continue;
-	
-	can_butcher = barehand_butcher ||
-	    (you.equip[EQ_WEAPON] != -1 &&
-	     can_cut_meat(you.inv[you.equip[EQ_WEAPON]]));
 	
 	if ( Options.easy_butcher && !can_butcher ) {
 
