@@ -340,7 +340,7 @@ std::string get_savedir_path(const std::string &shortpath)
 
 /*
  * Returns a list of the names of characters that are already saved for the
- * current user. This will not work if SAVE_PKG_CMD is defined.
+ * current user.
  */
 std::vector<player> find_saved_characters()
 {
