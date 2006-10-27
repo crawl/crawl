@@ -245,7 +245,7 @@ char list_spells(void)
 
 static int apply_vehumet_wizardry_boost(int spell, int chance)
 {
-    int wizardry = player_mag_abil(true);
+    int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
     int wiz_factor = 90;
 
