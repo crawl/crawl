@@ -76,12 +76,14 @@ class InvMenu : public Menu
 {
 public:
     InvMenu(int mflags = MF_MULTISELECT) 
-        : Menu(mflags), type(MT_INVSELECT), title_annotate(NULL)
+        : Menu(mflags), type(MT_INVSELECT), pre_select(NULL),
+          title_annotate(NULL)
     {
     }
 
     unsigned char getkey() const;
 
+    void set_preselect(const std::vector<SelItem> *pre);
     void set_type(menu_type t);
 
     // Sets function to annotate the title with meta-information if needed.
@@ -113,9 +115,11 @@ public:
             const std::vector<item_def> &);
 protected:
     bool process_key(int key);
+    void do_preselect(InvEntry *ie);
 
 protected:
     menu_type type;
+    const std::vector<SelItem> *pre_select;
     std::string (*title_annotate)(int mflags, const std::string &oldtitle);
 };
 

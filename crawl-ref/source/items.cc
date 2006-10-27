@@ -1922,7 +1922,7 @@ void drop(void)
                                                true, true, '$',
                                                &Options.drop_filter,
                                                drop_selitem_text,
-                                               NULL );
+                                               &items_for_multidrop );
 
     if (items_for_multidrop.empty())
     {

@@ -116,7 +116,7 @@ void stop_delay( void )
 
     case DELAY_MULTIDROP:
         // No work lost
-        mpr( "You stop dropping." );
+        mpr( "You stop dropping stuff." );
         you.delay_queue.pop();
         break;
 

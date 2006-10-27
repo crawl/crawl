@@ -207,6 +207,11 @@ void InvMenu::set_title(MenuEntry *t)
     Menu::set_title(t);
 }
 
+void InvMenu::set_preselect(const std::vector<SelItem> *pre)
+{
+    pre_select = pre;
+}
+
 void InvMenu::set_title(const std::string &s)
 {
     std::string stitle = s;
@@ -297,9 +302,24 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
                 ie->hotkeys[0] = ckey++;
             if (procfn)
                 (*procfn)(ie);
+
+            do_preselect(ie);
             add_entry( ie );
         }
     }
+}
+
+void InvMenu::do_preselect(InvEntry *ie)
+{
+    if (!pre_select || pre_select->empty())
+        return;
+
+    for (int i = 0, size = pre_select->size(); i < size; ++i)
+        if (ie->item && ie->item == (*pre_select)[i].item)
+        {
+            ie->selected_qty = (*pre_select)[i].quantity;
+            break;
+        }
 }
 
 std::vector<SelItem> InvMenu::get_selitems() const
@@ -491,6 +511,7 @@ unsigned char invent_select(
 {
     InvMenu menu(flags);
     
+    menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
     menu.f_selitem = selitemfn;
     if (filter)
