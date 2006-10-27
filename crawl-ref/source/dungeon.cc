@@ -168,20 +168,60 @@ static bool got_curare_roll(const int item_level)
  **************************************************
 */
 
-// Determines if this feature blocks movement.
-bool feat_blocks_movement(int feature)
+static void place_altars()
 {
-    return (feature == DNGN_ROCK_WALL ||
-            feature == DNGN_STONE_WALL ||
-            feature == DNGN_METAL_WALL ||
-            feature == DNGN_SECRET_DOOR ||
-            feature == DNGN_GREEN_CRYSTAL_WALL ||
-            feature == DNGN_ORCISH_IDOL ||
-            feature == DNGN_WAX_WALL ||
-            feature == DNGN_PERMAROCK_WALL ||
-            feature == DNGN_SILVER_STATUE ||
-            feature == DNGN_GRANITE_STATUE ||
-            feature == DNGN_ORANGE_CRYSTAL_STATUE);
+    int altar_chances[][2] = {
+        // These are percentages
+        { BRANCH_MAIN_DUNGEON,      8 },
+        { BRANCH_DIS,               0 },
+        { BRANCH_GEHENNA,           0 },
+        { BRANCH_VESTIBULE_OF_HELL, 0 },
+        { BRANCH_COCYTUS,           0 },
+        { BRANCH_TARTARUS,          0 },
+        { BRANCH_INFERNO,           0 },
+        { BRANCH_THE_PIT,           0 },
+        { BRANCH_ORCISH_MINES,     20 },
+        { BRANCH_HIVE,              0 },
+        { BRANCH_LAIR,              5 },
+        { BRANCH_SLIME_PITS,        5 },
+        { BRANCH_VAULTS,            5 },
+        { BRANCH_CRYPT,             5 },
+        { BRANCH_HALL_OF_BLADES,    0 },
+        { BRANCH_HALL_OF_ZOT,       1 },
+        { BRANCH_ECUMENICAL_TEMPLE, 0 },
+        { BRANCH_SNAKE_PIT,        10 },
+        { BRANCH_ELVEN_HALLS,       8 },
+        { BRANCH_TOMB,              0 },
+        { BRANCH_SWAMP,             0 },
+        { BRANCH_CAVERNS,           0 },
+        { -1, -1 }
+    };
+
+    // No altars before level 5.
+    if (you.your_level < 4)
+        return;
+
+    for (int i = 0; altar_chances[i][0] != -1; ++i)
+    {
+        if (player_in_branch( altar_chances[i][0] ))
+        {
+            int prob = altar_chances[i][1];
+            while (prob)
+            {
+                if (random2(100) >= prob)
+                    break;
+
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
+#endif
+                place_altar();
+
+                // Reduce the chance and try to place another.
+                prob /= 5;
+            }
+            break;
+        }
+    }
 }
 
 void builder(int level_number, char level_type)
@@ -412,8 +452,7 @@ void builder(int level_number, char level_type)
             mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
     }
 
-    if (player_in_branch( BRANCH_ORCISH_MINES ) && one_chance_in(5))
-        place_altar();
+    place_altars();
 
     // hall of blades (1 level deal) - no down staircases, thanks!
     if (player_in_branch( BRANCH_HALL_OF_BLADES ))
@@ -5225,7 +5264,16 @@ static void build_minivaults(int level_number, int force_vault)
 
     if (force_vault == 200)
     {
-        force_vault = 200 + random2(37);
+        if (player_in_branch(BRANCH_MAIN_DUNGEON)
+                && one_chance_in(13))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Creating mini-temple");
+#endif
+            force_vault = 202;
+        }
+        else
+            force_vault = 200 + random2(37);
     }
 
     vault_main(vgrid, mons_array, force_vault, level_number);
