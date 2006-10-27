@@ -350,7 +350,7 @@ void pray(void)
                 && random2( you.piety ) > 70
                 && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
                 && one_chance_in(8)
-                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 7)
+                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 9)
             {
                 success = acquirement( OBJ_MISSILES, you.religion );
                 if (success)
