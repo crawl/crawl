@@ -25,6 +25,7 @@ void _setcursortype(int curstype);
 void clrscr(void);
 void gotoxy(int x, int y);
 void textcolor(int c);
+void textattr(int c);
 void cprintf( const char *format, ... );
 // void cprintf(const char *s);
 void setStringInput(bool value);

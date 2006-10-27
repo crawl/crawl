@@ -282,8 +282,7 @@ void bFlush(void)
       xy.X = cx;
       xy.Y = cy;
       CLOCKIN
-      if (SetConsoleCursorPosition(outbuf, xy) == 0)
-         fputs("SetConsoleCursorPosition() failed!", stderr);
+      SetConsoleCursorPosition(outbuf, xy);
       CLOCKOUT(2)
    }
 }
@@ -425,8 +424,7 @@ void deinit_libw32c(void)
 // only on input.
 void _setcursortype(int curstype)
 {
-    UNUSED( curstype );
-    ;
+    _setcursortype_internal(curstype);
 }
 
 
@@ -438,7 +436,7 @@ void _setcursortype_internal(int curstype)
       return;
 
    cci.dwSize = 5;
-   cci.bVisible = (bool)curstype;
+   cci.bVisible = curstype? TRUE : FALSE;
    current_cursor = curstype;
    CLOCKIN
    SetConsoleCursorInfo( outbuf, &cci );
@@ -515,6 +513,11 @@ void gotoxy(int x, int y)
          fputs("SetConsoleCursorPosition() failed!", stderr);
       CLOCKOUT(2)
    }
+}
+
+void textattr(int c)
+{
+    textcolor(c);
 }
 
 void textcolor(int c)
@@ -711,9 +714,6 @@ int getch_ck(void)
        return repeat_key;
     }
 
-    bool oldValue = current_cursor;
-    _setcursortype_internal(_NORMALCURSOR);
-
     while(1)
     {
        CLOCKIN
@@ -742,8 +742,6 @@ int getch_ck(void)
     }
     // DEBUG
     //fprintf(foo, "getch() returning %02x (%c)\n", key, key);
-
-    _setcursortype_internal(oldValue);
 
     return key;
 }

@@ -3477,7 +3477,9 @@ enum tag_file_type   // file types supported by tag system
 {
     TAGTYPE_PLAYER=0,           // Foo.sav
     TAGTYPE_LEVEL,              // Foo.00a, .01a, etc.
-    TAGTYPE_GHOST               // bones.xxx
+    TAGTYPE_GHOST,              // bones.xxx
+
+    TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
 

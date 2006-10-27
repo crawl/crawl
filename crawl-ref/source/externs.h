@@ -501,6 +501,16 @@ struct player
   // table contains soft links.
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
   FixedVector<int, 52>  ability_letter_table; // ref to ability by enum
+
+public:
+  player();
+  void init();
+
+  bool is_valid() const;
+  std::string short_desc() const;
+
+  // For sorting
+  bool operator < (const player &p) const;
 };
 
 extern struct player you;

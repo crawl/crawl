@@ -80,6 +80,10 @@ void textcolor(int c)
 }
 
 
+void textattr(int c)
+{
+    textcolor(c);
+}
 
 
 static void cprintf_aux(const char *s)

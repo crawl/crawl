@@ -310,7 +310,7 @@
 
 #ifdef MULTIUSER
     // Define SAVE_DIR to the directory where saves, bones, and score file
-    // will go... end it with a '\'.  Since all player files will be in the
+    // will go... end it with a '/'.  Since all player files will be in the
     // same directory, the players UID will be appended when this option
     // is set.
     //
@@ -335,6 +335,12 @@
 #else
     #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip"
 #endif
+
+#ifdef SAVE_PACKAGE_CMD
+    // This is used to unpack specific files from the archive.
+    #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
+#endif
+
     #define PACKAGE_SUFFIX      ".zip"
 
     // This defines the chmod permissions for score and bones files.

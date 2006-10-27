@@ -235,14 +235,14 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
         draw_title();
 
     int x = wherex();
-    if (x > GXM || x < 1)
+    if (x > get_number_of_cols() || x < 1)
     {
         gotoxy(oldx, oldy);
         return false;
     }
 
-    // Note: 1 <= x <= GXM; we have no fear of overflow.
-    unsigned avail_width = GXM - x + 1;
+    // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
+    unsigned avail_width = get_number_of_cols() - x + 1;
     std::string towrite = s.length() > avail_width? s.substr(0, avail_width) :
                           s.length() == avail_width? s :
                                 s + std::string(avail_width - s.length(), ' ');
@@ -454,7 +454,7 @@ void Menu::update_title()
     gotoxy(x, y);
 }
 
-int Menu::item_colour(const MenuEntry *entry) const
+int Menu::item_colour(int, const MenuEntry *entry) const
 {
     int icol = -1;
     if (highlighter)
@@ -468,13 +468,18 @@ void Menu::draw_title()
     if (title)
     {
         gotoxy(1, 1);
-        textcolor( item_colour(title) );
-        cprintf("%s", title->get_text().c_str());
-
-        const int x = wherex(), y = wherey();
-        cprintf("%-*s", 80 - x, "");
-        gotoxy(x, y);
+        write_title();
     }
+}
+
+void Menu::write_title()
+{
+    textattr( item_colour(-1, title) );
+    cprintf("%s", title->get_text().c_str());
+
+    const int x = wherex(), y = wherey();
+    cprintf("%-*s", get_number_of_cols() - x, "");
+    gotoxy(x, y);
 }
 
 bool Menu::in_page(int index) const
@@ -496,10 +501,13 @@ void Menu::draw_item(int index, const MenuEntry *me) const
     if (f_drawitem)
         (*f_drawitem)(index, me);
     else
-    {
-        textcolor( item_colour(items[index]) );
-        cprintf( "%s", items[index]->get_text().c_str() );
-    }
+        draw_stock_item(index, me);
+}
+
+void Menu::draw_stock_item(int index, const MenuEntry *me) const
+{
+    textattr( item_colour(index, items[index]) );
+    cprintf( "%s", items[index]->get_text().c_str() );
 }
 
 bool Menu::page_down()
@@ -550,6 +558,218 @@ bool Menu::line_up()
         return true;
     }
     return false;
+}
+
+/////////////////////////////////////////////////////////////////
+// slider_menu
+
+slider_menu::slider_menu(int fl)
+    : Menu(fl), less(), starty(1), endy(get_number_of_lines()),
+      selected(0)
+{
+    less.textcolor(DARKGREY);
+    less.cprintf("<---- More");
+    more.clear();
+    more.textcolor(DARKGREY);
+    more.cprintf("More ---->");
+}
+
+void slider_menu::set_limits(int y1, int y2)
+{
+    starty = y1;
+    endy   = y2;
+}
+
+bool slider_menu::process_key(int key)
+{
+    // Some of this key processing should really be in a user-passed-in function
+    // If we ever need to use slider_menu elsewhere, we should factor it out.
+    if (key == CK_ESCAPE || key == '\t')
+    {
+        int old = selected;
+        selected = -1;
+        draw_item(old);
+        sel.clear();
+        lastch = key;
+        return (false);
+    }
+
+    if (selected == 0 && 
+            (key == CK_UP || key == CK_PGUP || key == '<' || key == ';') &&
+            Menu::is_set(MF_EASY_EXIT))
+    {
+        int old = selected;
+        selected = -1;
+        draw_item(old);
+        return (false);
+    }
+
+    return Menu::process_key(key);
+}
+
+void slider_menu::display()
+{
+    // We lose two lines for each of the --More prompts
+    pagesize = endy - starty - 1 - !!title;
+    selected = -1;
+    draw_menu();
+}
+
+std::vector<MenuEntry *> slider_menu::show()
+{
+    cursor_control coff(false);
+
+    sel.clear();
+
+    // We lose two lines for each of the --More prompts
+    pagesize = endy - starty - 1 - !!title;
+
+    if (selected == -1)
+        selected = 0;
+
+    do_menu();
+
+    if (selected >= 0 && selected <= (int) items.size())
+        sel.push_back(items[selected]);
+    return (sel);
+}
+
+const MenuEntry *slider_menu::selected_entry() const
+{
+    if (selected >= 0 && selected <= (int) items.size())
+        return (items[selected]);
+
+    return (NULL);
+}
+
+void slider_menu::draw_stock_item(int index, const MenuEntry *me) const
+{
+    Menu::draw_stock_item(index, me);
+    cprintf("%-*s", get_number_of_cols() - wherex() + 1, "");
+}
+
+int slider_menu::item_colour(int index, const MenuEntry *me) const
+{
+    int colour = Menu::item_colour(index, me);
+    if (index == selected && selected != -1)
+    {
+#if defined(WIN32CONSOLE) || defined(DOS)
+        colour = dos_brand(colour, CHATTR_REVERSE);
+#else
+        colour |= COLFLAG_REVERSE;
+#endif
+    }
+    return (colour);
+}
+
+void slider_menu::draw_menu()
+{
+    gotoxy(1, starty);
+    write_title();
+    y_offset = starty + !!title + 1;
+
+    int end = first_entry + pagesize;
+    if (end > (int) items.size()) end = items.size();
+
+    // We're using get_number_of_cols() - 1 because we want to avoid line wrap
+    // on DOS (the conio.h functions go batshit if that happens).
+    gotoxy(1, y_offset - 1);
+    if (first_entry > 0)
+        less.display();
+    else
+    {
+        textattr(LIGHTGREY);
+        cprintf("%-*s", get_number_of_cols() - 1, "");
+    }
+    
+    for (int i = first_entry; i < end; ++i)
+        draw_item( i );
+
+    textattr(LIGHTGREY);
+    for (int i = end; i < first_entry + pagesize; ++i)
+    {
+        gotoxy(1, y_offset + i - first_entry);
+        cprintf("%-*s", get_number_of_cols() - 1, "");
+    }   
+
+    gotoxy( 1, y_offset + pagesize );
+    if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
+        more.display();
+    else
+    {
+        textattr(LIGHTGREY);
+        cprintf("%-*s", get_number_of_cols() - 1, "");
+    }
+}
+
+void slider_menu::select_items(int, int)
+{
+    // Ignored.
+}
+
+bool slider_menu::is_set(int flag) const
+{
+    if (flag == MF_EASY_EXIT)
+        return (false);
+    return Menu::is_set(flag);
+}
+
+bool slider_menu::fix_entry()
+{
+    if (selected < 0 || selected >= (int) items.size())
+        return (false);
+
+    const int oldfirst = first_entry;
+    if (selected < first_entry)
+        first_entry = selected;
+    else if (selected >= first_entry + pagesize)
+    {
+        first_entry = selected - pagesize + 1;
+        if (first_entry < 0)
+            first_entry = 0;
+    }
+
+    return (first_entry != oldfirst);
+}
+
+void slider_menu::new_selection(int nsel)
+{
+    if (nsel < 0)
+        nsel = 0;
+    if (nsel >= (int) items.size())
+        nsel = items.size() - 1;
+
+    const int old = selected;
+    selected = nsel;
+    if (old != selected && nsel >= first_entry && nsel < first_entry + pagesize)
+    {
+        draw_item(old);
+        draw_item(selected);
+    }
+}
+
+bool slider_menu::page_down()
+{
+    new_selection( selected + pagesize );
+    return fix_entry();
+}
+
+bool slider_menu::page_up()
+{
+    new_selection( selected - pagesize );
+    return fix_entry();
+}
+
+bool slider_menu::line_down()
+{
+    new_selection( selected + 1 );
+    return fix_entry();
+}
+
+bool slider_menu::line_up()
+{
+    new_selection( selected - 1 );
+    return fix_entry();
 }
 
 /////////////////////////////////////////////////////////////////
@@ -768,6 +988,11 @@ void formatted_string::textcolor(int color)
     ops.push_back(color);
 }
 
+void formatted_string::clear()
+{
+    ops.clear();
+}
+
 void formatted_string::cprintf(const char *s, ...)
 {
     char buf[1000];
@@ -807,7 +1032,7 @@ void formatted_string::fs_op::display() const
         break;
     }
     case FSOP_COLOUR:
-        ::textcolor(x);
+        ::textattr(x);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());

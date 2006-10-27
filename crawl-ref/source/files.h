@@ -14,9 +14,11 @@
 #ifndef FILES_H
 #define FILES_H
 
+#include "externs.h"
 #include "FixAry.h"
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 // referenced in files - newgame - ouch - overmap:
 #define MAX_LEVELS 50
@@ -38,6 +40,8 @@ void load( unsigned char stair_taken, bool moving_level,
 #endif
 
 bool travel_load_map( char branch, int absdepth );
+
+std::vector<player> find_saved_characters();
 
 std::string get_savedir_filename(const char *pre, const char *suf,
                                  const char *ext, bool suppress_uid = false);

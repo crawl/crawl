@@ -391,7 +391,7 @@ void load_notes( FILE* fp ) {
 void make_user_note() {
     mpr("Enter note: ", MSGCH_PROMPT);
     char buf[400];
-    bool validline = cancelable_get_line(buf, sizeof(buf));
+    bool validline = !cancelable_get_line(buf, sizeof(buf));
     if ( !validline || (!*buf) )
 	return;
     Note unote(NOTE_USER_NOTE);

@@ -27,6 +27,7 @@ void update_screen(void);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
 int get_number_of_lines_from_curses(void);
+int get_number_of_cols_from_curses(void);
 void get_input_line_from_curses( char *const buff, int len );
 
 void _setcursortype(int curstype);
@@ -35,6 +36,7 @@ void unixcurses_shutdown(void);
 void unixcurses_startup(void);
 void textbackground(int bg);
 void textcolor(int col);
+void textattr(int col);
 
 void set_altcharset(bool alt_on);
 bool get_altcharset();

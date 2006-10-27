@@ -90,6 +90,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "menu.h"
 #include "player.h"
 #include "randart.h"
 #include "skills.h"
@@ -97,6 +98,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "version.h"
+#include "view.h"
 
 extern std::string init_file_location;
 
@@ -337,8 +339,6 @@ bool new_game(void)
     ASSERT(NUM_ATTRIBUTES >= 30);
 
     init_player();
-
-    you.exp_available = 25;     // now why is this all the way up here? {dlb}
 
     textcolor(LIGHTGREY);
 
@@ -1617,159 +1617,7 @@ void choose_weapon( void )
 
 void init_player(void)
 {
-    unsigned char i = 0;        // loop variable
-
-    you.birth_time = time( NULL );
-    you.real_time = 0;
-    you.num_turns = 0;
-
-#ifdef WIZARD
-    you.wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
-#else
-    you.wizard = false;
-#endif
-
-    you.activity = ACT_NONE;
-    you.berserk_penalty = 0;
-    you.berserker = 0;
-    you.conf = 0;
-    you.confusing_touch = 0;
-    you.deaths_door = 0;
-    you.disease = 0;
-    you.elapsed_time = 0;
-    you.exhausted = 0;
-    you.haste = 0;
-    you.invis = 0;
-    you.levitation = 0;
-    you.might = 0;
-    you.paralysis = 0;
-    you.poison = 0;
-    you.rotting = 0;
-    you.fire_shield = 0;
-    you.slow = 0;
-    you.special_wield = SPWLD_NONE;
-    you.sure_blade = 0;
-    you.synch_time = 0;
-
-    you.base_hp = 5000;
-    you.base_hp2 = 5000;
-    you.base_magic_points = 5000;
-    you.base_magic_points2 = 5000;
-
-    you.magic_points_regeneration = 0;
-    you.strength = 0;
-    you.max_strength = 0;
-    you.intel = 0;
-    you.max_intel = 0;
-    you.dex = 0;
-    you.max_dex = 0;
-    you.experience = 0;
-    you.experience_level = 1;
-    you.max_level = 1;
-    you.char_class = JOB_UNKNOWN;
-
-    you.hunger = 6000;
-    you.hunger_state = HS_SATIATED;
-
-    you.gold = 0;
-    // you.speed = 10;             // 0.75;  // unused
-
-    you.burden = 0;
-    you.burden_state = BS_UNENCUMBERED;
-
-    you.spell_no = 0;
-
-    you.your_level = 0;
-    you.level_type = LEVEL_DUNGEON;
-    you.where_are_you = BRANCH_MAIN_DUNGEON;
-    you.char_direction = DIR_DESCENDING;
-
-    you.prev_targ = MHITNOT;
-    you.pet_target = MHITNOT;
-
-    you.x_pos = 0;
-    you.y_pos = 0;
-
-    you.running.clear();
-    you.travel_x = 0;
-    you.travel_y = 0;
-
-    you.religion = GOD_NO_GOD;
-    you.piety = 0;
-
-    you.gift_timeout = 0;
-
-    for (i = 0; i < MAX_NUM_GODS; i++)
-    {
-        you.penance[i] = 0;
-        you.worshipped[i] = 0;
-        you.num_gifts[i] = 0;
-    }
-
-    ghost.name[0] = 0;
-
-    for (i = 0; i < NUM_GHOST_VALUES; i++)
-        ghost.values[i] = 0;
-
-    for (i = EQ_WEAPON; i < NUM_EQUIP; i++)
-        you.equip[i] = -1;
-
-    for (i = 0; i < 25; i++)
-        you.spells[i] = SPELL_NO_SPELL;
-
-    for (i = 0; i < 52; i++)
-    {
-        you.spell_letter_table[i] = -1;
-        you.ability_letter_table[i] = ABIL_NON_ABILITY;
-    }
-
-    for (i = 0; i < 100; i++)
-        you.mutation[i] = 0;
-
-    for (i = 0; i < 100; i++)
-        you.demon_pow[i] = 0;
-
-    for (i = 0; i < 50; i++)
-        you.had_book[i] = 0;
-
-    for (i = 0; i < 50; i++)
-        you.unique_items[i] = UNIQ_NOT_EXISTS;
-
-    for (i = 0; i < NO_UNRANDARTS; i++)
-        set_unrandart_exist(i, 0);
-
-    for (i = 0; i < 50; i++)
-    {
-        you.skills[i] = 0;
-        you.skill_points[i] = 0;
-        you.skill_order[i] = MAX_SKILL_ORDER;
-        you.practise_skill[i] = 1;
-    }
-
-    you.skill_cost_level = 1;
-    you.total_skill_points = 0;
-
-    for (i = 0; i < 30; i++)
-        you.attribute[i] = 0;
-
-    for (i = 0; i < ENDOFPACK; i++)
-    {
-        you.inv[i].quantity = 0;
-        you.inv[i].base_type = OBJ_WEAPONS;
-        you.inv[i].sub_type = WPN_CLUB;
-        you.inv[i].plus = 0;
-        you.inv[i].plus2 = 0;
-        you.inv[i].special = 0;
-        you.inv[i].colour = 0;
-        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-
-        you.inv[i].x = -1;
-        you.inv[i].y = -1;
-        you.inv[i].link = i;
-    }
-
-    for (i = 0; i < NUM_DURATIONS; i++)
-        you.duration[i] = 0;
+    you.init();
 }
 
 void give_last_paycheck(int which_job)
@@ -2054,106 +1902,196 @@ void openingScreen(void)
     textcolor( BROWN );
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
     cprintf(EOL "Please consult crawl.txt for instructions and legal details."
-            EOL EOL);
+            EOL);
 
-    if ( init_file_location.find("not found") == 0 )
+    bool init_found = init_file_location.find("not found") == std::string::npos;
+    if (!init_found)
         textcolor( LIGHTRED );
     else
         textcolor( LIGHTGREY );
 
-    cprintf("Init file read from: %s" EOL, init_file_location.c_str());
+    cprintf("Init file %s%s" EOL,
+            init_found? "read: " : "",
+            init_file_location.c_str());
     textcolor( LIGHTGREY );
 
     return;
 }                               // end openingScreen()
 
+static void show_name_prompt(int where, bool blankOK, 
+        const std::vector<player> existing_chars,
+        slider_menu &menu)
+{
+    gotoxy(1, where);
+    textcolor( CYAN );
+    if (blankOK)
+    {
+        if (Options.prev_name.length() && Options.remember_name)
+            cprintf(EOL "Press <Enter> for \"%s\"." EOL,
+                    Options.prev_name.c_str());
+        else
+            cprintf(EOL 
+                    "Press <Enter> to answer this after race and "
+                    "class are chosen." EOL);
+    }
+
+    cprintf(EOL "What is your name today? ");
+
+    if (!existing_chars.empty())
+    {
+        const int name_x = wherex(), name_y = wherey();
+        menu.set_limits(name_y + 3, get_number_of_lines());
+        menu.display();
+        gotoxy(name_x, name_y);
+    }
+
+    textcolor( LIGHTGREY );
+}
+
+static void preprocess_character_name(char *name, bool blankOK)
+{
+    if (!*name && blankOK && Options.prev_name.length() &&
+            Options.remember_name)
+    {
+        strncpy(name, Options.prev_name.c_str(), kNameLen);
+        name[kNameLen - 1] = 0;
+    }
+
+    // '.', '?' and '*' are blanked.
+    if (!name[1] && (*name == '.' ||
+                      *name == '*' ||
+                      *name == '?'))
+        *name = 0;
+}
+
+static bool is_good_name(char *name, bool blankOK)
+{
+    preprocess_character_name(name, blankOK);
+
+    // verification begins here {dlb}:
+    if (you.your_name[0] == 0)
+    {
+        if (blankOK)
+            return (true);
+
+        cprintf(EOL "That's a silly name!" EOL);
+        return (false);
+    }
+
+    // if MULTIUSER is defined, userid will be tacked onto the end
+    // of each character's files, making bones a valid player name.
+#ifndef MULTIUSER
+    // this would cause big probs with ghosts
+    // what would? {dlb}
+    // ... having the name "bones" of course! The problem comes from
+    // the fact that bones files would have the exact same filename
+    // as level files for a character named "bones".  -- bwr
+    if (stricmp(you.your_name, "bones") == 0)
+    {
+        cprintf(EOL "That's a silly name!" EOL);
+        return (false);
+    }
+#endif
+    return (verifyPlayerName());
+}
+
+static int newname_keyfilter(int &ch)
+{
+    if (ch == CK_DOWN || ch == CK_PGDN || ch == '\t')
+        return -1;
+    return 1;
+}
+
+static bool read_player_name(
+        char *name, 
+        int len,
+        const std::vector<player> &existing,
+        slider_menu &menu)
+{
+    const int name_x = wherex(), name_y = wherey();
+    int (*keyfilter)(int &) = newname_keyfilter;
+    if (existing.empty())
+        keyfilter = NULL;
+
+    for (;;)
+    {
+        gotoxy(name_x, name_y);
+        if (name_x <= 80)
+            cprintf("%-*s", 80 - name_x + 1, "");
+        gotoxy(name_x, name_y);
+        int ret = cancelable_get_line(
+                        name, 
+                        len, 
+                        GXM, 
+                        NULL,
+                        keyfilter);
+        if (!ret)
+            return (true);
+
+        if (ret == CK_ESCAPE)
+            return (false);
+
+        if (ret != CK_ESCAPE && existing.size())
+        {
+            menu.show();
+            const MenuEntry *sel = menu.selected_entry();
+            if (sel)
+            {
+                const player &p = *static_cast<player*>( sel->data );
+                strncpy(name, p.your_name, kNameLen);
+                name[kNameLen - 1] = 0;
+                return (true);
+            }
+        }
+
+        // Go back and prompt the user.
+    }
+}
 
 void enterPlayerName(bool blankOK)
 {
-    // temporary 'til copyover to you.your_name {dlb}
-    // made this rediculously long so that the game doesn't
-    // crash if a really really long name is entered (argh).  {gdl}
-    char name_entered[200];
+    int prompt_start = wherey();
+    bool ask_name = true;
+    char *name = you.your_name;
+    std::vector<player> existing_chars;
+    slider_menu char_menu;
 
-    // anything to avoid goto statements {dlb}
-    bool acceptable_name = false;
-    bool first_time = true;
-
-    // first time -- names set through init.txt/environment assumed ok {dlb}
     if (you.your_name[0] != 0)
-        acceptable_name = true;
+        ask_name = false;
+
+    if (blankOK)
+    {
+        existing_chars = find_saved_characters();
+
+        MenuEntry *title = new MenuEntry("Or choose an existing character:");
+        title->colour = LIGHTCYAN;
+        char_menu.set_title( title );
+        for (int i = 0, size = existing_chars.size(); i < size; ++i)
+        {
+            std::string desc = existing_chars[i].short_desc();
+            if ((int) desc.length() >= get_number_of_cols())
+                desc = desc.substr(0, get_number_of_cols() - 1);
+
+            MenuEntry *me = new MenuEntry(desc);
+            me->data = &existing_chars[i];
+            char_menu.add_entry(me);
+        }
+        char_menu.set_flags(MF_EASY_EXIT | MF_SINGLESELECT);
+    }
 
     do
     {
         // prompt for a new name if current one unsatisfactory {dlb}:
-        if (!acceptable_name)
+        if (ask_name)
         {
-            textcolor( CYAN );
-            if (blankOK && first_time)
-            {
-                if (Options.prev_name.length() && Options.remember_name)
-                    cprintf(EOL "Press <Enter> for \"%s\"." EOL,
-                            Options.prev_name.c_str());
-                else
-                    cprintf(EOL 
-                            "Press <Enter> to answer this after race and "
-                            "class are chosen." EOL);
-            }
+            show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
 
-            first_time = false;
-
-            cprintf(EOL "What is your name today? ");
-            textcolor( LIGHTGREY );
-            get_input_line( name_entered, sizeof( name_entered ) );
-            
-            strncpy( you.your_name, name_entered, kNameLen );
-            you.your_name[ kNameLen - 1 ] = 0;
+            // If the player wants out, we bail out.
+            if (!read_player_name(name, kNameLen, existing_chars, char_menu))
+                end(0);
         }
-
-        if (!*you.your_name && blankOK && Options.prev_name.length() &&
-                Options.remember_name)
-        {
-            strncpy(you.your_name, Options.prev_name.c_str(), kNameLen);
-            you.your_name[kNameLen - 1] = 0;
-        }
-
-        // '.', '?' and '*' are blanked.
-        if (!you.your_name[1] && (*you.your_name == '.' ||
-                                  *you.your_name == '*' ||
-                                  *you.your_name == '?'))
-        {
-            *you.your_name = 0;
-        }
-                
-        // verification begins here {dlb}:
-        if (you.your_name[0] == 0)
-        {
-            if (blankOK)
-                return;
-
-            cprintf(EOL "That's a silly name!" EOL);
-            acceptable_name = false;
-        }
-
-        // if MULTIUSER is defined, userid will be tacked onto the end
-        // of each character's files, making bones a valid player name.
-#ifndef MULTIUSER
-        // this would cause big probs with ghosts
-        // what would? {dlb}
-        // ... having the name "bones" of course! The problem comes from
-        // the fact that bones files would have the exact same filename
-        // as level files for a character named "bones".  -- bwr
-        else if (stricmp(you.your_name, "bones") == 0)
-        {
-            cprintf(EOL "That's a silly name!" EOL);
-            acceptable_name = false;
-        }
-#endif
-        else
-            acceptable_name = verifyPlayerName();
-
     }
-    while (!acceptable_name);
+    while (ask_name = !is_good_name(you.your_name, blankOK));
 }                               // end enterPlayerName()
 
 bool verifyPlayerName(void)

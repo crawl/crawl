@@ -4479,3 +4479,197 @@ void interrupt_activity( activity_interrupt_type ai,
     if (you.activity == ACT_RUNNING || you.activity == ACT_TRAVELING)
         you.activity = ACT_NONE;
 }
+
+player::player()
+{
+    init();
+}
+
+// player struct initialization
+void player::init()
+{
+    birth_time = time( NULL );
+    real_time = 0;
+    num_turns = 0;
+
+#ifdef WIZARD
+    wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
+#else
+    wizard = false;
+#endif
+
+    your_name[0] = 0;
+
+    activity = ACT_NONE;
+    berserk_penalty = 0;
+    berserker = 0;
+    conf = 0;
+    confusing_touch = 0;
+    deaths_door = 0;
+    disease = 0;
+    elapsed_time = 0;
+    exhausted = 0;
+    haste = 0;
+    invis = 0;
+    levitation = 0;
+    might = 0;
+    paralysis = 0;
+    poison = 0;
+    rotting = 0;
+    fire_shield = 0;
+    slow = 0;
+    special_wield = SPWLD_NONE;
+    sure_blade = 0;
+    synch_time = 0;
+
+    base_hp = 5000;
+    base_hp2 = 5000;
+    base_magic_points = 5000;
+    base_magic_points2 = 5000;
+
+    magic_points_regeneration = 0;
+    strength = 0;
+    max_strength = 0;
+    intel = 0;
+    max_intel = 0;
+    dex = 0;
+    max_dex = 0;
+    experience = 0;
+    experience_level = 1;
+    max_level = 1;
+    char_class = JOB_UNKNOWN;
+
+    hunger = 6000;
+    hunger_state = HS_SATIATED;
+
+    gold = 0;
+    // speed = 10;             // 0.75;  // unused
+
+    burden = 0;
+    burden_state = BS_UNENCUMBERED;
+
+    spell_no = 0;
+
+    your_level = 0;
+    level_type = LEVEL_DUNGEON;
+    where_are_you = BRANCH_MAIN_DUNGEON;
+    char_direction = DIR_DESCENDING;
+
+    prev_targ = MHITNOT;
+    pet_target = MHITNOT;
+
+    x_pos = 0;
+    y_pos = 0;
+
+    running.clear();
+    travel_x = 0;
+    travel_y = 0;
+
+    religion = GOD_NO_GOD;
+    piety = 0;
+
+    gift_timeout = 0;
+
+    for (int i = 0; i < MAX_NUM_GODS; i++)
+    {
+        penance[i] = 0;
+        worshipped[i] = 0;
+        num_gifts[i] = 0;
+    }
+
+    ghost.name[0] = 0;
+
+    for (int i = 0; i < NUM_GHOST_VALUES; i++)
+        ghost.values[i] = 0;
+
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
+        equip[i] = -1;
+
+    for (int i = 0; i < 25; i++)
+        spells[i] = SPELL_NO_SPELL;
+
+    for (int i = 0; i < 52; i++)
+    {
+        spell_letter_table[i] = -1;
+        ability_letter_table[i] = ABIL_NON_ABILITY;
+    }
+
+    for (int i = 0; i < 100; i++)
+        mutation[i] = 0;
+
+    for (int i = 0; i < 100; i++)
+        demon_pow[i] = 0;
+
+    for (int i = 0; i < 50; i++)
+        had_book[i] = 0;
+
+    for (int i = 0; i < 50; i++)
+        unique_items[i] = UNIQ_NOT_EXISTS;
+
+    for (int i = 0; i < NO_UNRANDARTS; i++)
+        set_unrandart_exist(i, 0);
+
+    for (int i = 0; i < 50; i++)
+    {
+        skills[i] = 0;
+        skill_points[i] = 0;
+        skill_order[i] = MAX_SKILL_ORDER;
+        practise_skill[i] = 1;
+    }
+
+    skill_cost_level = 1;
+    total_skill_points = 0;
+
+    for (int i = 0; i < 30; i++)
+        attribute[i] = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        inv[i].quantity = 0;
+        inv[i].base_type = OBJ_WEAPONS;
+        inv[i].sub_type = WPN_CLUB;
+        inv[i].plus = 0;
+        inv[i].plus2 = 0;
+        inv[i].special = 0;
+        inv[i].colour = 0;
+        set_ident_flags( inv[i], ISFLAG_IDENT_MASK );
+
+        inv[i].x = -1;
+        inv[i].y = -1;
+        inv[i].link = i;
+    }
+
+    for (int i = 0; i < NUM_DURATIONS; i++)
+        duration[i] = 0;
+
+    exp_available = 25;
+}
+
+bool player::is_valid() const
+{
+    // Check if there's a name.
+    return (your_name[0] != 0);
+}
+
+std::string player::short_desc() const
+{
+    std::string desc;
+    desc += your_name;
+    desc += ", a level ";
+
+    char st_prn[20];
+    itoa(experience_level, st_prn, 10);
+    desc += st_prn;
+
+    desc += " ";
+    desc += species_name(species, experience_level);
+    desc += " ";
+    desc += class_name;
+
+    return (desc);
+}
+
+bool player::operator < (const player &p) const
+{
+    return (strcmp(your_name, p.your_name) < 0);
+}

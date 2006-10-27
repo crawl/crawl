@@ -59,6 +59,8 @@ public:
     void movexy(int delta_x, int delta_y);
     void textcolor(int color);
 
+    void clear();
+
     std::string::size_type length() const;
 
     const formatted_string &operator += (const formatted_string &other);
@@ -227,7 +229,7 @@ public:
     // override options.
     void set_flags(int new_flags, bool use_options = true);
     int  get_flags() const        { return flags; }
-    bool is_set( int flag ) const;
+    virtual bool is_set( int flag ) const;
     
     bool draw_title_suffix( const std::string &s, bool titlefirst = true );
     void update_title();
@@ -291,26 +293,63 @@ protected:
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;
     virtual void draw_item(int index, const MenuEntry *me) const;
+    virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
     virtual void draw_title();
-    void draw_menu();
-    bool page_down();
-    bool line_down();
-    bool page_up();
-    bool line_up();
+    virtual void write_title();
+    virtual void draw_menu();
+    virtual bool page_down();
+    virtual bool line_down();
+    virtual bool page_up();
+    virtual bool line_up();
 
     bool in_page(int index) const;
 
     void deselect_all(bool update_view = true);
-    void select_items( int key, int qty = -1 );
+    virtual void select_items( int key, int qty = -1 );
     void select_index( int index, int qty = -1 );
 
     bool is_hotkey(int index, int key );
     bool is_selectable(int index) const;
 
-    int item_colour(const MenuEntry *me) const;
+    virtual int item_colour(int index, const MenuEntry *me) const;
     
     virtual bool process_key( int keyin );
+};
+
+// Uses a sliding selector rather than hotkeyed selection.
+class slider_menu : public Menu
+{
+public:
+    // Multiselect would be awkward to implement.
+    slider_menu(int flags = MF_SINGLESELECT);
+    void display();
+    std::vector<MenuEntry *> show();
+
+    void set_limits(int starty, int endy);
+    const MenuEntry *selected_entry() const;
+
+protected:
+    int item_colour(int index, const MenuEntry *me) const;
+    void draw_stock_item(int index, const MenuEntry *me) const;
+    void draw_menu();
+
+    void new_selection(int nsel);
+
+    bool page_down();
+    bool line_down();
+    bool page_up();
+    bool line_up();
+
+    bool is_set(int flag) const;
+    void select_items( int key, int qty );
+    bool fix_entry();
+    bool process_key( int keyin );
+
+protected:
+    formatted_string less;
+    int starty, endy;
+    int selected;
 };
 
 // This is only tangentially related to menus, but what the heck.

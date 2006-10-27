@@ -1531,7 +1531,7 @@ static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
     
-    bool valid = cancelable_get_line(linebuf, sizeof linebuf);
+    bool valid = !cancelable_get_line(linebuf, sizeof linebuf);
     if (valid)
         lua_pushstring(ls, linebuf);
     else

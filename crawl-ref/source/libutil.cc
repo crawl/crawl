@@ -185,11 +185,12 @@ int wrapcprintf( int wrapcol, const char *s, ... )
 #define WY(x,y) ( (y) + ((x) - 1) / maxcol )
 #define WC(x,y) WX(x), WY(x,y)
 #define GOTOXY(x,y) gotoxy( WC(x,y) )
-bool cancelable_get_line( char *buf, int len, int maxcol,
-                          input_history *mh )
+int cancelable_get_line( char *buf, int len, int maxcol,
+                         input_history *mh, int (*keyproc)(int &ch) )
 {
     if (len <= 0) return false;
 
+    cursor_control coff(true);
     buf[0] = 0;
 
     char *cur = buf;
@@ -202,9 +203,26 @@ bool cancelable_get_line( char *buf, int len, int maxcol,
     for ( ; ; ) {
         int ch = c_getch();
 
+        if (keyproc)
+        {
+            int whattodo = (*keyproc)(ch);
+            if (whattodo == 0)
+            {
+                buf[length] = 0;
+                if (mh && length)
+                    mh->new_input(buf);
+                return (0);
+            }
+            else if (whattodo == -1)
+            {
+                buf[length] = 0;                
+                return (ch);
+            }
+        }
+
         switch (ch) {
         case CK_ESCAPE:
-            return false;
+            return (ch);
         case CK_UP:
         case CK_DOWN:
         {
@@ -234,7 +252,7 @@ bool cancelable_get_line( char *buf, int len, int maxcol,
             buf[length] = 0;
             if (mh && length)
                 mh->new_input(buf);
-            return true;
+            return (0);
         case CONTROL('K'):
         {
             // Kill to end of line

@@ -521,6 +521,10 @@ void tag_set_expected(char tags[], int fileType)
                 if (i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
                     tags[i] = 1;
                 break;
+            case TAGTYPE_PLAYER_NAME:
+                if (i == TAG_YOU)
+                    tags[i] = 1;
+                break;
             case TAGTYPE_LEVEL:
                 if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE)
                     tags[i] = 1;

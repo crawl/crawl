@@ -244,6 +244,8 @@
     #define COLFLAG_WILLSTAB                 0x0400
     #define COLFLAG_MAYSTAB                  0x0800
 
+    #define COLFLAG_REVERSE                  0x1000
+
     enum CHAR_ATTRIBUTES
     {
         CHATTR_NORMAL,          /* 0 */

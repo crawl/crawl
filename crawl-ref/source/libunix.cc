@@ -396,6 +396,11 @@ int get_number_of_lines_from_curses(void)
     return (LINES);
 }
 
+int get_number_of_cols_from_curses(void)
+{
+    return (COLS);
+}
+
 void get_input_line_from_curses( char *const buff, int len )
 {
     echo();
@@ -426,7 +431,13 @@ inline unsigned get_brand(int col)
            (col & COLFLAG_ITEM_HEAP)?           Options.heap_brand :
            (col & COLFLAG_WILLSTAB)?            Options.stab_brand :
            (col & COLFLAG_MAYSTAB)?             Options.may_stab_brand :
+           (col & COLFLAG_REVERSE)?             CHATTR_REVERSE :
                                                 CHATTR_NORMAL;    
+}
+
+void textattr(int col)
+{
+    textcolor(col);
 }
 
 void textcolor(int col)

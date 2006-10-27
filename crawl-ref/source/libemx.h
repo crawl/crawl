@@ -19,6 +19,7 @@ void _setcursortype(int curstype);
 void clrscr();
 void gotoxy(int x, int y);
 void textcolor(int c);
+void textattr(int c);
 void cprintf (const char *format, ...);
 
 void puttext(int x, int y, int lx, int ly, const char *buf);

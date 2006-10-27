@@ -1285,7 +1285,8 @@ void StashTracker::search_stashes()
     mpr("", MSGCH_PROMPT);
 
     char buf[400];
-    bool validline = cancelable_get_line(buf, sizeof buf, 80, &search_history);
+    bool validline = 
+        !cancelable_get_line(buf, sizeof buf, 80, &search_history);
     mesclr();
     if (!validline || (!*buf && !lastsearch.length()))
         return;

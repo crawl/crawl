@@ -31,9 +31,20 @@ void get_input_line( char *const buff, int len );
 
 class input_history;
 
-// Returns true if user pressed Enter, false if user hit Escape.
-bool cancelable_get_line( char *buf, int len, int wrapcol = 80,
-                          input_history *mh = NULL );
+// In view.cc, declared here for default argument to cancelable_get_line()
+int get_number_of_cols(void);
+
+// Returns zero if user entered text and pressed Enter, otherwise returns the 
+// key pressed that caused the exit, usually Escape.
+//
+// If keyproc is provided, it must return 1 for normal processing, 0 to exit
+// normally (pretend the user pressed Enter), or -1 to exit as if the user
+// pressed Escape
+int cancelable_get_line( char *buf, 
+                         int len, 
+                         int wrapcol = get_number_of_cols(),
+                         input_history *mh = NULL,
+                         int (*keyproc)(int &c) = NULL );
 
 std::string & trim_string( std::string &str );
 std::vector<std::string> split_string(
@@ -102,6 +113,19 @@ enum KEYS
 
     CK_CTRL_PGUP,
     CK_CTRL_PGDN
+};
+
+class cursor_control
+{
+public:
+    cursor_control(bool cs) : cstate(cs) { 
+        _setcursortype(cs? _NORMALCURSOR : _NOCURSOR);
+    }
+    ~cursor_control() {
+        _setcursortype(cstate? _NOCURSOR : _NORMALCURSOR);
+    }
+private:
+    bool cstate;
 };
 
 class base_pattern

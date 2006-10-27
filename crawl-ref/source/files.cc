@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include <algorithm>
+
 #ifdef DOS
 #include <conio.h>
 #include <file.h>
@@ -58,7 +60,10 @@
 
 #ifdef __MINGW32__
 #include <io.h>
+#include <sys/types.h>
 #endif
+
+#include <dirent.h>
 
 #include "externs.h"
 
@@ -213,6 +218,16 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
 
 static void load_ghost();
 
+#ifdef DOS
+static void uppercase(std::string &s)
+{
+    /* yes, this is bad, but std::transform() has its own problems */
+    for ( unsigned int i = 0; i < s.size(); ++i ) {
+	s[i] = toupper(s[i]);
+    }
+}
+#endif
+
 static std::string uid_as_string()
 {
 #ifdef MULTIUSER
@@ -222,6 +237,163 @@ static std::string uid_as_string()
 #else
     return std::string();
 #endif
+}
+
+static bool is_uid_file(const std::string &name, const std::string &ext)
+{
+    std::string save_suffix = get_savedir_filename("", "", "");
+    save_suffix += ext;
+#ifdef DOS
+    // Grumble grumble. Hang all retarded operating systems.
+    uppercase(save_suffix);
+#endif
+
+#ifdef SAVE_DIR_PATH
+    save_suffix = save_suffix.substr(strlen(SAVE_DIR_PATH));
+#endif
+
+    std::string::size_type suffix_pos = name.find(save_suffix);
+    return (suffix_pos != std::string::npos 
+            && suffix_pos == name.length() - save_suffix.length()
+            && suffix_pos != 0
+#ifdef SAVE_DIR_PATH
+            // See verifyPlayerName() in newgame.cc
+            && !isdigit(name[suffix_pos - 1])
+#endif
+            );
+
+}
+
+static bool is_save_file_name(const std::string &name)
+{
+    return is_uid_file(name, ".sav");
+}
+
+#ifdef LOAD_UNPACKAGE_CMD
+static bool is_packed_save(const std::string &name)
+{
+    return is_uid_file(name, PACKAGE_SUFFIX);
+}
+#endif
+
+// Returns a full player struct read from the save.
+static player read_character_info(const std::string &savefile)
+{
+    player fromfile;
+    player backup = you;
+
+    FILE *charf = fopen(savefile.c_str(), "rb");
+    if (!charf)
+        return fromfile;
+
+    char majorVersion = 0;
+    char minorVersion = 0;
+
+    if (!determine_version(charf, majorVersion, minorVersion))
+        goto done_reading_character;
+
+    if (majorVersion != SAVE_MAJOR_VERSION)
+        goto done_reading_character;
+
+    restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
+    fromfile = you;
+    you      = backup;
+
+done_reading_character:
+    fclose(charf);
+    return fromfile;
+}
+
+// Returns the names of all files in the given directory. Note that the
+// filenames returned are relative to the directory.
+static std::vector<std::string> get_dir_files(const std::string &dirname)
+{
+    std::vector<std::string> files;
+
+    DIR *dir = opendir(dirname.c_str());
+    if (!dir)
+        return (files);
+
+    while (dirent *entry = readdir(dir))
+    {
+        std::string name = entry->d_name;
+        if (name == "." || name == "..")
+            continue;
+
+        files.push_back(name);
+    }
+    closedir(dir);
+
+    return (files);
+}
+
+// Given a simple (relative) name of a save file, returns the full path of 
+// the file in the Crawl saves directory.
+std::string get_savedir_path(const std::string &shortpath)
+{
+    std::string path = shortpath;
+#ifdef SAVE_DIR_PATH
+    path = SAVE_DIR_PATH + path;
+#endif
+    return (path);
+}
+
+/*
+ * Returns a list of the names of characters that are already saved for the
+ * current user. This will not work if SAVE_PKG_CMD is defined.
+ */
+std::vector<player> find_saved_characters()
+{
+    std::string searchpath;
+#ifdef SAVE_DIR_PATH
+    searchpath = SAVE_DIR_PATH;
+#endif
+
+    if (searchpath.empty())
+        searchpath = ".";
+
+    std::vector<std::string> allfiles = get_dir_files(searchpath);
+    std::vector<player> chars;
+    for (int i = 0, size = allfiles.size(); i < size; ++i)
+    {
+        std::string filename = allfiles[i];
+#ifdef LOAD_UNPACKAGE_CMD
+        if (!is_packed_save(filename))
+            continue;
+
+        std::string basename = 
+            filename.substr(
+                    0,
+                    filename.length() - strlen(PACKAGE_SUFFIX));
+
+        std::string zipname = get_savedir_path(basename);
+
+        // This is the filename we actually read ourselves.
+        filename = basename + ".sav";
+
+        char cmd_buff[1024];
+        snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
+                  zipname.c_str(),
+                  filename.c_str() );
+
+        if (system(cmd_buff) != 0)
+            continue;
+#endif
+        if (is_save_file_name(filename))
+        {
+            player p = read_character_info(get_savedir_path(filename));
+            if (p.is_valid())
+                chars.push_back(p);
+        }
+
+#ifdef LOAD_UNPACKAGE_CMD
+        // If we unpacked the .sav file, throw it away now.
+        unlink( get_savedir_path(filename).c_str() );
+#endif
+    }
+
+    std::sort(chars.begin(), chars.end());
+    return (chars);
 }
 
 std::string get_savedir_filename(const char *prefix, const char *suffix, 
@@ -250,10 +422,7 @@ std::string get_savedir_filename(const char *prefix, const char *suffix,
     }
 
 #ifdef DOS
-    /* yes, this is bad, but std::transform() has its own problems */
-    for ( unsigned int i = 0; i < result.size(); ++i ) {
-	result[i] = toupper(result[i]);
-    }
+    uppercase(result);
 #endif
     return result;
 }
@@ -1223,6 +1392,8 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
         if (i == 0)                 // no tag!
             break;
         tags[i] = 0;                // tag read
+        if (fileType == TAGTYPE_PLAYER_NAME)
+            break;
     }
 
     // go through and init missing tags

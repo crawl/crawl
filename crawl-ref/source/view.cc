@@ -109,11 +109,6 @@ static void set_show_backup( int ex, int ey );
 // Applies EC_ colour substitutions and brands.
 static unsigned fix_colour(unsigned raw_colour);
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
-static unsigned short dos_brand( unsigned short colour,
-                                 unsigned brand = CHATTR_REVERSE);
-#endif
-
 //---------------------------------------------------------------
 //
 // get_number_of_lines
@@ -141,6 +136,15 @@ int get_number_of_lines(void)
     return (get_number_of_lines_from_curses());
 #else
     return (25);
+#endif
+}
+
+int get_number_of_cols(void)
+{
+#ifdef UNIX
+    return (get_number_of_cols_from_curses());
+#else
+    return (80);
 #endif
 }
 
@@ -405,8 +409,8 @@ static unsigned short dos_hilite_brand(unsigned short colour,
     return (colour);
 }
 
-static unsigned short dos_brand( unsigned short colour,
-                                 unsigned brand) 
+unsigned short dos_brand( unsigned short colour,
+                          unsigned brand) 
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
         return (colour);

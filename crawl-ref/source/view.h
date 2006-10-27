@@ -24,6 +24,7 @@ void init_char_table(char_set_type set);
 void init_feature_table( void );
 
 int get_number_of_lines(void);
+int get_number_of_cols(void);
 
 /* ***********************************************************************
  * called from: dump_screenshot - chardump
@@ -135,5 +136,10 @@ unsigned char get_sightmap_char(int feature);
 unsigned char get_magicmap_char(int feature);
 
 void viewwindow(bool draw_it, bool do_updates);
+
+#if defined(WIN32CONSOLE) || defined(DOS)
+unsigned short dos_brand( unsigned short colour,
+                          unsigned brand = CHATTR_REVERSE);
+#endif
 
 #endif

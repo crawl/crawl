@@ -1635,7 +1635,7 @@ static int prompt_travel_depth(unsigned char branch)
     mesclr();
     mpr(buf, MSGCH_PROMPT);
 
-    if (!cancelable_get_line( buf, sizeof buf ))
+    if (cancelable_get_line( buf, sizeof buf ))
         return 0;
 
     if (*buf)
