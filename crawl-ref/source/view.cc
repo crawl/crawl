@@ -979,12 +979,9 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 /* The LOS code now uses raycasting -- haranp */
 
 #define LONGSIZE (sizeof(unsigned long)*8)
-// the following number can be dropped to 2831!
-#define MAX_NUM_RAYS 5220
-#define RAY_ARRAY_SIZE ((MAX_NUM_RAYS + LONGSIZE - 1)/LONGSIZE)
 #define LOS_MAX_RANGE_X 9
 #define LOS_MAX_RANGE_Y 9
-#define RAY_STARTPOINT_STEP 0.05
+#define LOS_MAX_RANGE 9
 
 // the following two constants represent the 'middle' of the sh array.
 // since the current shown area is 19x19,  centering the view at (9,9)
@@ -996,37 +993,17 @@ const int sh_xo = 9;            // X and Y origins for the sh array
 const int sh_yo = 9;
 
 // Data used for the LOS algorithm
-int num_rays_cast = 0;
-int num_ray_words = 0;
-int los_radius_squared = 8*8;
+int los_radius_squared = 8*8 + 1;
 
-// overallocation, but what the heck
-unsigned long los_blockrays[LOS_MAX_RANGE_X+1][LOS_MAX_RANGE_Y+1][RAY_ARRAY_SIZE];
-short ray_to_coord_x[MAX_NUM_RAYS];
-short ray_to_coord_y[MAX_NUM_RAYS];
-
-const double slopes[] = {
-    0., 10000., 1.,
-    1.0 / 2.0, 2.0,
-    1.0 / 3.0, 3.0,
-    1.0 / 4.0, 4.0,
-    1.0 / 1.5, 1.5,
-    1.0 / 1.25, 1.25,
-    1.0 / 1.75, 1.75,
-    1.0 / 2.25, 2.25,
-    1.0 / 2.75, 2.75,
-    1.0 / 2.5, 2.5,
-    1.0 / 3.5, 3.5,
-    1.0 / 5.0, 5.0,
-    1.0 / 6.0, 6.0
-};
-
-#define RAY_ANGLE_RESOLUTION (sizeof(slopes) / sizeof(double))
-
+unsigned long* los_blockrays = NULL;
+unsigned long* dead_rays = NULL;
+std::vector<short> ray_coord_x;
+std::vector<short> ray_coord_y;
+std::vector<int> raylengths;
 
 void setLOSRadius(int newLR)
 {
-    los_radius_squared = newLR * newLR;
+    los_radius_squared = newLR * newLR + 1*1;
 }
 
 static void set_bit_in_long_array( unsigned long* data, int where ) {
@@ -1087,209 +1064,330 @@ static void find_next_intercept(double* accx, double* accy, const double slope)
     *accy += traveldist * slope;
 }
 
-int bits_to_set[400][3];
-
-static int shoot_ray( const int rayidx_start, double accx, double accy,
-                      const double slope, int* bitset_count ) {
-    int rayidx = rayidx_start;
+// Shoot a ray from the given start point (accx, accy) with the given
+// slope, with a maximum distance (in either x or y coordinate) of
+// maxrange. Store the visited cells in xpos[] and ypos[], and
+// return the number of cells visited.
+static int shoot_ray( double accx, double accy, const double slope,
+                      int maxrange, int xpos[], int ypos[] )
+{
     int curx, cury;
-    *bitset_count = 0;
-    while ( 1 ) {
+    int cellnum;
+    for ( cellnum = 0; true; ++cellnum )
+    {
         find_next_intercept( &accx, &accy, slope );
         curx = (int)(accx);
         cury = (int)(accy);
-        if ( curx > LOS_MAX_RANGE_X || cury > LOS_MAX_RANGE_Y )
+        if ( curx > maxrange || cury > maxrange )
             break;
 
         // work with the new square
-        ray_to_coord_x[rayidx] = curx;
-        ray_to_coord_y[rayidx] = cury;
-
-        // all previous squares we've encountered block this ray
-        for ( int i = rayidx_start; i < rayidx; ++i ) {
-            // Note that we don't actually set the bits; we just
-            // mark them to be set, because the ray might be a
-            // duplicate.
-            bits_to_set[*bitset_count][0] = ray_to_coord_x[i];
-            bits_to_set[*bitset_count][1] = ray_to_coord_y[i];
-            bits_to_set[*bitset_count][2] = rayidx;
-            ++(*bitset_count);
-        }
-        ++rayidx;
+        xpos[cellnum] = curx;
+        ypos[cellnum] = cury;
     }
-    return rayidx;
+    return cellnum;
 }
 
-static bool is_duplicate_ray( int realraycount, int raystarts[], int rayidx )
+// check if the passed ray has already been created
+static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
 {
-    int i, j, cj;
-    for ( i = 0; i < realraycount; ++i ) {
-        if ( raystarts[i+1] - raystarts[i] != rayidx - raystarts[realraycount])
-            continue;
-        for ( j = raystarts[i], cj = raystarts[realraycount];
-              j < raystarts[i+1]; ++j, ++cj )
+    int cur_offset = 0;
+    for ( unsigned int i = 0; i < raylengths.size(); ++i )
+    {
+        // only compare equal-length rays
+        if ( raylengths[i] != len )
         {
-            if ( ray_to_coord_x[j] != ray_to_coord_x[cj] ||
-                 ray_to_coord_y[j] != ray_to_coord_y[cj] )
+            cur_offset += raylengths[i];
+            continue;
+        }
+
+        int j;
+        for ( j = 0; j < len; ++j )
+        {
+            if ( ray_coord_x[j + cur_offset] != xpos[j] ||
+                 ray_coord_y[j + cur_offset] != ypos[j] )
                 break;
         }
-        // duplicate
-        if ( j == raystarts[i+1] )
+
+        // exact duplicate?
+        if ( j == len )
             return true;
+
+        // move to beginning of next ray
+        cur_offset += raylengths[i];
     }
     return false;
+}
+
+// Create and register the ray defined by the arguments.
+// Return true if the ray was actually registered (i.e., not a duplicate.)
+static bool register_ray( double accx, double accy, double slope )
+{
+    int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
+    int raylen = shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
+
+    // early out if ray already exists
+    if ( is_duplicate_ray(raylen, xpos, ypos) )
+        return false;
+
+    // not duplicate, register
+    for ( int i = 0; i < raylen; ++i )
+    {
+        // create the cellrays
+        ray_coord_x.push_back(xpos[i]);
+        ray_coord_y.push_back(ypos[i]);
+    }
+    // register the fullray
+    raylengths.push_back(raylen);
+
+    return true;
+}
+
+static unsigned long* blockray_offset( const int x, const int y )
+{
+    return los_blockrays +
+        ((ray_coord_x.size() + LONGSIZE - 1) / LONGSIZE) *
+        (x * (LOS_MAX_RANGE_Y+1) + y);
+}
+
+static void create_blockrays()
+{
+    const unsigned int num_cellrays = ray_coord_x.size();
+    const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
+    // allocate and clear memory
+    los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
+                                      (LOS_MAX_RANGE_Y+1)];
+    dead_rays = new unsigned long[num_words];
+
+    memset((void*)los_blockrays, 0, sizeof(unsigned long) * num_words *
+           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
+
+    int cur_offset = 0;
+
+    for ( unsigned int ray = 0; ray < raylengths.size(); ++ray )
+    {
+        for ( int i = 0; i < raylengths[ray]; ++i )
+        {
+            // every cell blocks...
+            unsigned long* const inptr =
+                blockray_offset( ray_coord_x[i + cur_offset],
+                                 ray_coord_y[i + cur_offset] );
+
+            // ...all following cellrays
+            for ( int j = i+1; j < raylengths[ray]; ++j )
+                set_bit_in_long_array( inptr, j + cur_offset );
+
+        }
+        cur_offset += raylengths[ray];
+    }
+#ifdef DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u",
+          cur_offset, raylengths.size() );
+#endif
+}
+
+static int gcd( int x, int y )
+{
+    int tmp;
+    while ( y != 0 )
+    {
+        x %= y;
+        tmp = x;
+        x = y;
+        y = tmp;
+    }
+    return x;
 }
 
 // Cast all rays
 void raycast()
 {
     static bool done_raycast = false;
-    // Creating all rays for first quadrant
-    // We have a considerable amount of overkill.   
     if ( done_raycast )
         return;
     
+    // Creating all rays for first quadrant
+    // We have a considerable amount of overkill.   
     done_raycast = true;
-    memset( (void*)los_blockrays, 0, sizeof(los_blockrays) );
 
-    double xpos, ypos;
-    int rayidx = 0;
-    int i;
-    int raystarts[MAX_NUM_RAYS];
-    int realraycount = 0;
-    unsigned int angle;
-    int bitset_count;
+    int xangle, yangle;
 
-    // First do the rays which leave from the right of our cell
-    for ( ypos = 0.0; ypos < 1.0; ypos += RAY_STARTPOINT_STEP ) {
-        for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
-            const double slope = slopes[angle];
-            raystarts[realraycount] = rayidx;
-            rayidx = shoot_ray( rayidx, 0.999, ypos, slope, &bitset_count );
+    // For a slope of M = y/x, every x we move on the X axis means
+    // that we move y on the y axis. We want to look at the resolution
+    // of x/y: in that case, every step on the X axis means an increase
+    // of 1 in the Y axis at the intercept point. We can assume gcd(x,y)=1,
+    // so we look at steps of 1/y.
+    for ( xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle ) {
+        for ( yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle ) {
 
-            // remove duplicate rays for improved efficiency later
-            if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
-                rayidx = raystarts[realraycount]; // forget this ray
-            else
-            {
-                for ( i = 0; i < bitset_count; ++i )
-                    set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
-                ++realraycount;
+            if ( gcd(xangle, yangle) != 1 )
+                continue;
+
+            const double slope = ((double)(yangle)) / xangle;
+            const double rslope = ((double)(xangle)) / yangle;
+            for ( int intercept = 0; intercept <= yangle; ++intercept ) {
+                double xstart = ((double)(intercept)) / yangle;
+                if ( intercept == 0 )
+                    xstart += EPSILON_VALUE / 10.0;
+                if ( intercept == yangle )
+                    xstart -= EPSILON_VALUE / 10.0;
+                // y should be "about to change"            
+                register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
+                // also draw the identical ray in octant 2
+                register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
             }
         }
     }
 
-    // Now do the rays which leave from the top of our cell
-    for ( xpos = 0; xpos < 1.0; xpos += RAY_STARTPOINT_STEP ) {
-        for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
-            const double slope = slopes[angle];
-            raystarts[realraycount] = rayidx;
-            rayidx = shoot_ray( rayidx, xpos, 0.999, slope, &bitset_count );
-            
-            if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
-                rayidx = raystarts[realraycount]; // forget this ray
-            else {
-                for ( i = 0; i < bitset_count; ++i )
-                    set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
-                ++realraycount;
-            }
-        }
-    }
+    // register perpendiculars
+    register_ray( 0.5, 0.5, 1000.0 );
+    register_ray( 0.5, 0.5, 0.0 );
 
-    // Now do rays from the center
-    for ( angle = 0; angle < RAY_ANGLE_RESOLUTION; ++angle ) {
-        const double slope = slopes[angle];
-        raystarts[realraycount] = rayidx;
-        rayidx = shoot_ray( rayidx, 0.5, 0.5, slope, &bitset_count );
-        
-        if ( is_duplicate_ray( realraycount, raystarts, rayidx ) )
-            rayidx = raystarts[realraycount]; // forget this ray
-        else {
-            for ( i = 0; i < bitset_count; ++i )
-                set_bit_in_long_array(los_blockrays[bits_to_set[i][0]][bits_to_set[i][1]], bits_to_set[i][2]);
-            ++realraycount;
-        }
-    }
-
-    num_rays_cast = rayidx;
-    num_ray_words = (rayidx + LONGSIZE - 1) / LONGSIZE;
+    // Now create the appropriate blockrays array
+    create_blockrays();   
 }
 
+// Find a ray from sourcex, sourcey to targetx, targety.
+//
+// Return the maximum length of the ray (until it leaves LOS), and the
+// locations themselves in xpos[] and ypos[]. Note that the ray probably
+// continues; the caller is responsible for finding out, by looking at
+// xpos[] and ypos[], when the target cell is reached.
+//
+// The assumption is that targetx, targety is within LOS of sourcex, sourcey.
+// Therefore, we simply look at all the rays until we hit one which
+// passes through targetx, targety and is nonblocked.
+int find_ray_path( int sourcex, int sourcey,
+                   int targetx, int targety,
+                   int xpos[], int ypos[] )
+{
+    int cellray, inray;
+    const int signx = (targetx >= 0 ? 1 : -1);
+    const int signy = (targety >= 0 ? 1 : -1);
+    const int absx = signx * targetx;
+    const int absy = signy * targety;
+    int cur_offset = 0;
+    for ( unsigned int fullray = 0; fullray < raylengths.size();
+          cur_offset += raylengths[fullray++] ) {
+
+        for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
+        {
+            if ( ray_coord_x[cellray + cur_offset] == absx &&
+                 ray_coord_y[cellray + cur_offset] == absy ) {
+
+                // check if we're blocked so far
+                bool blocked = false;
+                for ( inray = 0; inray < cellray; ++inray ) {
+                    if (grid_is_solid(grd[sourcex + signx * ray_coord_x[inray + cur_offset]][sourcey + signy * ray_coord_y[inray + cur_offset]]))
+                    {
+                        blocked = true;                    
+                        break;
+                    }
+                }
+
+                if ( !blocked )
+                {
+                    // success!
+                    for ( inray = 0; inray <= cellray; ++inray )
+                    {
+                        xpos[inray] = sourcex +
+                            signx * ray_coord_x[inray + cur_offset];
+                        ypos[inray] = sourcey +
+                            signy * ray_coord_y[inray + cur_offset];
+                    }
+                    return cellray + 1;
+                }
+            }
+        }
+    }
+//#ifdef DEBUG_DIAGNOSTICS
+    mpr("Oops! Couldn't find a ray!", MSGCH_DIAGNOSTICS);
+//#endif
+    return 0;
+}
+
+// The rule behind LOS is:
+// Two cells can see each other if there is any line from some point
+// of the first to some point of the second ("generous" LOS.)
+//
+// We use raycasting. The algorithm:
+// PRECOMPUTATION:
+// Create a large bundle of rays and cast them.
+// Mark, for each one, which cells kill it (and where.)
+// Also, for each one, note which cells it passes.
+// ACTUAL LOS:
+// Unite the ray-killers for the given map; this tells you which rays
+// are dead.
+// Look up which cells the surviving rays have, and that's your LOS!
+// OPTIMIZATIONS:
+// WLOG, we can assume that we're in a specific quadrant - say the
+// first quadrant - and just mirror everything after that.  We can
+// likely get away with a single octant, but we don't do that. (To
+// do...)
+// Rays are actually split by each cell they pass. So each "ray" only
+// identifies a single cell, and we can do logical ORs.  Once a cell
+// kills a cellray, it will kill all remaining cellrays of that ray.
+// Also, rays are checked to see if they are duplicates of each
+// other. If they are, they're eliminated.
+// PERFORMANCE:
+// With reasonable values we have around 6000 cellrays, meaning
+// around 600Kb (75 KB) of data. That means that we need to do
+// around 200*100*4 ~ 80,000 memory reads + writes per LOS call.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
              FixedArray < unsigned char, 80, 70 > &gr, int x_p, int y_p)
 {
-
-    // The rule behind LOS is:
-    // Two cells can see each other if there is any line
-    // from some point of the first to some point of the second.
-    // ("generous" LOS)
-    // We use raycasting. The algorithm:
-    // PRECOMPUTATION:
-    // Create a large bundle of rays and cast them.
-    // Mark, for each one, which cells kill it (and where.)
-    // Also, for each one, note which cells it passes.
-    // ACTUAL LOS:
-    // Unite the ray-killers for the given map; this tells
-    // you which rays are dead. 
-    // Look up which cells the surviving rays have, and
-    // that's your LOS!
-    // OPTIMIZATIONS:
-    // WLOG, we can assume that we're in a specific quadrant - say
-    // the first quadrant - and just mirror everything after that.
-    // We can likely get away with a single octant, but we don't
-    // do that. (It's a bit less trivial than it seems.)
-    // Rays are actually split by each cell they pass. So each "ray"
-    // only identifies a single cell, and we can do logical ORs.
-    // Once a cell kills a cellray, it will kill all remaining cellrays
-    // of that ray.
-    // Also, rays are checked to see if they are duplicates of each
-    // other. If they are, they're eliminated.
-    // With reasonable values we have around 3000 cellrays, meaning
-    // around 300Kb of data ~ 40-80 KB during startup.
-
     raycast();
     // go quadrant by quadrant
     int quadrant_x[4] = {  1, -1, -1,  1 };
     int quadrant_y[4] = {  1,  1, -1, -1 };
-    unsigned long dead_rays[RAY_ARRAY_SIZE];
+
     // clear out sh
     for ( int i = 0; i < 19; ++i )
         for ( int j = 0; j < 19; ++j )
             sh[i][j] = 0;
+
+    const unsigned int num_cellrays = ray_coord_x.size();
+    const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
     for ( int quadrant = 0; quadrant < 4; ++quadrant ) {
         const int xmult = quadrant_x[quadrant];
         const int ymult = quadrant_y[quadrant];
 
         // clear out the dead rays array
-        memset( (void*)dead_rays, 0, sizeof(dead_rays) );
+        memset( (void*)dead_rays, 0, sizeof(unsigned long) * num_words);
+
+        // kill all blocked rays
         for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff ) {
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y; ++ydiff ) {
+
                 const int realx = x_p + xdiff * xmult;
                 const int realy = y_p + ydiff * ymult;
+
                 if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
                     continue;
+
                 // if this cell is opaque...
                 if ( grid_is_opaque(gr[realx][realy])) {
                     // then block the appropriate rays
-                    for ( int i = 0; i < num_ray_words; ++i ) {
-                        dead_rays[i] |= los_blockrays[xdiff][ydiff][i];
-                    }
+                    const unsigned long* inptr = blockray_offset(xdiff,ydiff);
+                    for ( unsigned int i = 0; i < num_words; ++i )
+                        dead_rays[i] |= inptr[i];
                 }
             }
         }
+
         // ray calculation done, now work out which cells in this
         // quadrant are visible
-        int rayidx = 0;
-        for ( int wordloc = 0; wordloc < num_ray_words; ++wordloc ) {
+        unsigned int rayidx = 0;
+        for ( unsigned int wordloc = 0; wordloc < num_words; ++wordloc ) {
             const unsigned long curword = dead_rays[wordloc];
             // Note: the last word may be incomplete
             for ( unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc) {
                 // make the cells seen by this ray at this point visible
                 if ( ((curword >> bitloc) & 1UL) == 0 ) {
                     // this ray is alive!
-                    const int realx = xmult * ray_to_coord_x[rayidx];
-                    const int realy = ymult * ray_to_coord_y[rayidx];
+                    const int realx = xmult * ray_coord_x[rayidx];
+                    const int realy = ymult * ray_coord_y[rayidx];
                     // update shadow map
                     if (x_p + realx >= 0 && x_p + realx < 80 &&
                         y_p + realy >= 0 && y_p + realy < 70 &&
@@ -1297,7 +1395,7 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                         sh[sh_xo+realx][sh_yo+realy]=gr[x_p+realx][y_p+realy];
                 }
                 ++rayidx;
-                if ( rayidx == num_rays_cast )
+                if ( rayidx == num_cellrays )
                     break;
             }
         }

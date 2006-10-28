@@ -135,6 +135,10 @@ std::string screenshot(bool fullscreen = false);
 unsigned char get_sightmap_char(int feature);
 unsigned char get_magicmap_char(int feature);
 
+int find_ray_path( int sourcex, int sourcey,
+                   int targetx, int targety,
+                   int xpos[], int ypos[] );
+
 void viewwindow(bool draw_it, bool do_updates);
 
 #if defined(WIN32CONSOLE) || defined(DOS)
