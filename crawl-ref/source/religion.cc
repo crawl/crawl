@@ -2500,8 +2500,12 @@ void altar_prayer(void)
             strcat(info, sacrifice[you.religion - 1]);
             mpr(info);
 
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
+#endif
             if (mitm[i].base_type == OBJ_CORPSES 
                 || random2(value) >= 50
+                || (you.religion == GOD_NEMELEX_XOBEH && one_chance_in(50))
                 || player_under_penance())
             {
                 gain_piety(1);

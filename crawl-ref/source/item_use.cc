@@ -117,6 +117,11 @@ bool can_wield(const item_def *weapon, bool say_reason)
         return (false);
     }
 
+    // We don't have to check explicitly for staves - all staves are wieldable
+    // by everyone.
+    if (weapon->base_type != OBJ_WEAPONS)
+        return (true);
+
     if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
             && item_mass( *weapon ) >= 300)
     {
