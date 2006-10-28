@@ -4,13 +4,13 @@
 
 #Makefile chooser.  Choose one:
 
-#MAKEFILE = makefile.lnx
+MAKEFILE = makefile.lnx
 #MAKEFILE = makefile.sgi
 #MAKEFILE = makefile.dos
 #MAKEFILE = makefile.emx
 #MAKEFILE = makefile.sol
 #MAKEFILE = makefile.osx
-MAKEFILE = makefile.mgw
+#MAKEFILE = makefile.mgw
 
 #jmf: number of concurrent jobs -- good value is (#_of_CPUs * 2) + 1
 #     cuts build time a lot on multi-cpu machines
