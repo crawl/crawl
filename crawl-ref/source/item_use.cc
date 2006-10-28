@@ -639,6 +639,20 @@ void wear_armour(void)
     do_wear_armour( armour_wear_2, false );
 }
 
+static int armour_equip_delay(const item_def &item)
+{
+    int delay = property( item, PARM_AC );
+
+    // Shields are comparatively easy to wear.
+    if (is_shield( item ))
+        delay = delay / 2 + 1;
+
+    if (delay < 1)
+        delay = 1;
+
+    return (delay);
+}
+
 bool do_wear_armour( int item, bool quiet )
 {
     if (!is_valid_item( you.inv[item] ))
@@ -865,15 +879,7 @@ bool do_wear_armour( int item, bool quiet )
 
     you.turn_is_over = true;
 
-    int delay = property( you.inv[item], PARM_AC );
-
-    // Shields are comparatively easy to wear.
-    if (is_shield( you.inv[item] ))
-        delay /= 2;
-
-    if (delay < 1)
-        delay = 1;
-
+    int delay = armour_equip_delay( you.inv[item] );
     if (delay)
         start_delay( DELAY_ARMOUR_ON, delay, item );
 
@@ -987,11 +993,7 @@ bool takeoff_armour(int item)
 
     you.turn_is_over = true;
 
-    int delay = property( you.inv[item], PARM_AC );
-
-    if (delay < 1)
-        delay = 1;
-
+    int delay = armour_equip_delay( you.inv[item] );
     start_delay( DELAY_ARMOUR_OFF, delay, item );
 
     if (removedCloak)
