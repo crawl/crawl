@@ -106,7 +106,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
 
     // Handled with breath weapons, but doesn't cause a breathing delay
-    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
+    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_BREATH },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 3, 3, 75, 0, ABFLAG_NONE },
@@ -573,8 +573,7 @@ bool activate_ability(void)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        if (you.duration[DUR_BREATH_WEAPON]
-            && Curr_abil[abil_used].which != ABIL_SPIT_ACID)
+        if (you.duration[DUR_BREATH_WEAPON])
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
@@ -640,16 +639,11 @@ bool activate_ability(void)
 
         }
 
-        if (Curr_abil[abil_used].which != ABIL_SPIT_ACID)
-        {
-            you.duration[DUR_BREATH_WEAPON] = 3 + random2(5)
-                                                + random2(30 - you.experience_level);
-        }
+        you.duration[DUR_BREATH_WEAPON] =
+            3 + random2(4) + random2(30 - you.experience_level) / 2;
 
         if (Curr_abil[abil_used].which == ABIL_BREATHE_STEAM)
-        {
             you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
