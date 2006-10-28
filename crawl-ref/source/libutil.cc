@@ -181,176 +181,15 @@ int wrapcprintf( int wrapcol, const char *s, ... )
     return (olen);
 }
 
-#define WX(x)   ( ((x) - 1) % maxcol + 1 )
-#define WY(x,y) ( (y) + ((x) - 1) / maxcol )
-#define WC(x,y) WX(x), WY(x,y)
-#define GOTOXY(x,y) gotoxy( WC(x,y) )
 int cancelable_get_line( char *buf, int len, int maxcol,
                          input_history *mh, int (*keyproc)(int &ch) )
 {
-    if (len <= 0) return false;
+    line_reader reader(buf, len, maxcol);
+    reader.set_input_history(mh);
+    reader.set_keyproc(keyproc);
 
-    cursor_control coff(true);
-    buf[0] = 0;
-
-    char *cur = buf;
-    int start = wherex(), line = wherey();
-    int length = 0, pos = 0;
-
-    if (mh)
-        mh->go_end();
-
-    for ( ; ; ) {
-        int ch = c_getch();
-
-        if (keyproc)
-        {
-            int whattodo = (*keyproc)(ch);
-            if (whattodo == 0)
-            {
-                buf[length] = 0;
-                if (mh && length)
-                    mh->new_input(buf);
-                return (0);
-            }
-            else if (whattodo == -1)
-            {
-                buf[length] = 0;                
-                return (ch);
-            }
-        }
-
-        switch (ch) {
-        case CK_ESCAPE:
-            return (ch);
-        case CK_UP:
-        case CK_DOWN:
-        {
-            if (!mh)
-                break;
-            const std::string *text = ch == CK_UP? mh->prev() : mh->next();
-            if (text)
-            {
-                int olen = length;
-                length = text->length();
-                if (length >= len)
-                    length = len - 1;
-                memcpy(buf, text->c_str(), length);
-                buf[length] = 0;
-                GOTOXY(start, line);
-
-                int clear = length < olen? olen - length : 0;
-                wrapcprintf(maxcol, "%s%*s", buf, clear, "");
-
-                pos = length;
-                cur = buf + pos;
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-        case CK_ENTER:
-            buf[length] = 0;
-            if (mh && length)
-                mh->new_input(buf);
-            return (0);
-        case CONTROL('K'):
-        {
-            // Kill to end of line
-            int erase = length - pos;
-            if (erase)
-            {
-                length = pos;
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%*s", erase, "" );
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-        case CK_DELETE:
-            if (pos < length) {
-                char *c = cur;
-                while (c - buf < length) {
-                    *c = c[1];
-                    c++;
-                }
-                --length;
-
-                GOTOXY( start + pos, line );
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%s ", cur );
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_BKSP:
-            if (pos) {
-                --cur;
-                char *c = cur;
-                while (*c) {
-                    *c = c[1];
-                    c++;
-                }
-                --pos;
-                --length;
-
-                GOTOXY( start + pos, line );
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%s ", cur );
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_LEFT:
-            if (pos) {
-                --pos;
-                cur = buf + pos;
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_RIGHT:
-            if (pos < length) {
-                ++pos;
-                cur = buf + pos;
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_HOME:
-        case CONTROL('A'):
-            pos = 0;
-            cur = buf + pos;
-            GOTOXY( start + pos, line );
-            break;
-        case CK_END:
-        case CONTROL('E'):
-            pos = length;
-            cur = buf + pos;
-            GOTOXY( start + pos, line );
-            break;
-        default:
-            if (isprint(ch) && length < len - 1) {
-                if (pos < length) {
-                    char *c = buf + length - 1;
-                    while (c >= cur) {
-                        c[1] = *c;
-                        c--;
-                    }
-                }
-                *cur++ = (char) ch;
-                ++length;
-                ++pos;
-                putch(ch);
-                if (pos < length) {
-                    buf[length] = 0;
-                    wrapcprintf( maxcol, "%s", cur );
-                }
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-    }
+    return reader.read_line();
 }
-#undef GOTOXY
-#undef WC
-#undef WX
-#undef WY
 
 // also used with macros
 std::string & trim_string( std::string &str )
@@ -656,4 +495,261 @@ void input_history::clear()
 {
     history.clear();
     go_end();
+}
+
+/////////////////////////////////////////////////////////////////////////
+// line_reader
+
+line_reader::line_reader(char *buf, size_t sz, int wrap)
+    : buffer(buf), bufsz(sz), history(NULL), start_x(0),
+      start_y(0), keyfn(NULL), wrapcol(wrap), cur(NULL),
+      length(0), pos(-1)
+{
+}
+
+std::string line_reader::get_text() const
+{
+    return (buffer);
+}
+
+void line_reader::set_input_history(input_history *i)
+{
+    history = i;
+}
+
+void line_reader::set_keyproc(keyproc fn)
+{
+    keyfn = fn;
+}
+
+void line_reader::cursorto(int ncx)
+{
+    int x = (start_x + ncx - 1) % wrapcol + 1;
+    int y = start_y + (start_x + ncx - 1) / wrapcol;
+    ::gotoxy(x, y);
+}
+
+int line_reader::read_line(bool clear_previous)
+{
+    if (bufsz <= 0) return false;
+
+    cursor_control coff(true);
+
+    if (clear_previous)
+        *buffer = 0;
+
+    start_x = wherex();
+    start_y = wherey();
+
+    length = strlen(buffer);
+
+    // Remember the previous cursor position, if valid.
+    if (pos < 0 || pos > length)
+        pos = length;
+
+    cur = buffer + pos;
+
+    if (length)
+        wrapcprintf(wrapcol, "%s", buffer);
+
+    if (pos != length)
+        cursorto(pos);
+
+    if (history)
+        history->go_end();
+
+    for ( ; ; )
+    {
+        int ch = c_getch();
+
+        if (keyfn)
+        {
+            int whattodo = (*keyfn)(ch);
+            if (whattodo == 0)
+            {
+                buffer[length] = 0;
+                if (history && length)
+                    history->new_input(buffer);
+                return (0);
+            }
+            else if (whattodo == -1)
+            {
+                buffer[length] = 0;                
+                return (ch);
+            }
+        }
+
+        int ret = process_key(ch);
+        if (ret != -1)
+            return (ret);
+    }
+}
+
+void line_reader::backspace()
+{
+    if (pos)
+    {
+        --cur;
+        char *c = cur;
+        while (*c) {
+            *c = c[1];
+            c++;
+        }
+        --pos;
+        --length;
+
+        cursorto(pos);
+        buffer[length] = 0;
+        wrapcprintf( wrapcol, "%s ", cur );
+        cursorto(pos);
+    }
+}
+
+bool line_reader::is_wordchar(int c)
+{
+    return isalnum(c) || c == '_' || c == '-';
+}
+
+void line_reader::killword()
+{
+    if (!pos || cur == buffer)
+        return;
+
+    bool foundwc = false;
+    while (pos)
+    {
+        if (is_wordchar(cur[-1]))
+            foundwc = true;
+        else if (foundwc)
+            break;
+
+        backspace();
+    }
+}
+
+int line_reader::process_key(int ch)
+{
+    switch (ch) {
+    case CK_ESCAPE:
+        return (ch);
+    case CK_UP:
+    case CK_DOWN:
+    {
+        if (!history)
+            break;
+
+        const std::string *text = 
+                    ch == CK_UP? history->prev() : history->next();
+
+        if (text)
+        {
+            int olen = length;
+            length = text->length();
+            if (length >= (int) bufsz)
+                length = bufsz - 1;
+            memcpy(buffer, text->c_str(), length);
+            buffer[length] = 0;
+            cursorto(0);
+
+            int clear = length < olen? olen - length : 0;
+            wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
+
+            pos = length;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    }
+    case CK_ENTER:
+        buffer[length] = 0;
+        if (history && length)
+            history->new_input(buffer);
+        return (0);
+
+    case CONTROL('K'):
+    {
+        // Kill to end of line
+        int erase = length - pos;
+        if (erase)
+        {
+            length = pos;
+            buffer[length] = 0;
+            wrapcprintf( wrapcol, "%*s", erase, "" );
+            cursorto(pos);
+        }
+        break;
+    }
+    case CK_DELETE:
+        if (pos < length) {
+            char *c = cur;
+            while (c - buffer < length) {
+                *c = c[1];
+                c++;
+            }
+            --length;
+
+            cursorto(pos);
+            buffer[length] = 0;
+            wrapcprintf( wrapcol, "%s ", cur );
+            cursorto(pos);
+        }
+        break;
+
+    case CK_BKSP:
+        backspace();
+        break;
+
+    case CONTROL('W'):
+        killword();
+        break;
+
+    case CK_LEFT:
+        if (pos) {
+            --pos;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    case CK_RIGHT:
+        if (pos < length) {
+            ++pos;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    case CK_HOME:
+    case CONTROL('A'):
+        pos = 0;
+        cur = buffer + pos;
+        cursorto(pos);
+        break;
+    case CK_END:
+    case CONTROL('E'):
+        pos = length;
+        cur = buffer + pos;
+        cursorto(pos);
+        break;
+    default:
+        if (isprint(ch) && length < (int) bufsz - 1) {
+            if (pos < length) {
+                char *c = buffer + length - 1;
+                while (c >= cur) {
+                    c[1] = *c;
+                    c--;
+                }
+            }
+            *cur++ = (char) ch;
+            ++length;
+            ++pos;
+            putch(ch);
+            if (pos < length) {
+                buffer[length] = 0;
+                wrapcprintf( wrapcol, "%s", cur );
+            }
+            cursorto(pos);
+        }
+        break;
+    }
+
+    return (-1);
 }

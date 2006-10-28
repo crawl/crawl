@@ -303,6 +303,9 @@ protected:
     virtual bool page_up();
     virtual bool line_up();
 
+    virtual int pre_process(int key);
+    virtual int post_process(int key);
+
     bool in_page(int index) const;
 
     void deselect_all(bool update_view = true);
@@ -326,6 +329,7 @@ public:
     void display();
     std::vector<MenuEntry *> show();
 
+    void set_search(const std::string &search);
     void set_limits(int starty, int endy);
     const MenuEntry *selected_entry() const;
 
@@ -335,6 +339,7 @@ protected:
     void draw_menu();
 
     void new_selection(int nsel);
+    bool move_selection(int nsel);
 
     bool page_down();
     bool line_down();
@@ -346,10 +351,15 @@ protected:
     bool fix_entry();
     bool process_key( int keyin );
 
+    int post_process(int key);
+
+    void select_search(const std::string &search);
+
 protected:
     formatted_string less;
     int starty, endy;
     int selected;
+    std::string search;
 };
 
 // This is only tangentially related to menus, but what the heck.

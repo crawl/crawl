@@ -142,6 +142,16 @@ bool Menu::is_set(int flag) const
     return (flags & flag) == flag;
 }
 
+int Menu::pre_process(int k)
+{
+    return (k);
+}
+
+int Menu::post_process(int k)
+{
+    return (k);
+}
+
 bool Menu::process_key( int keyin )
 {
     if (items.size() == 0)
@@ -151,6 +161,8 @@ bool Menu::process_key( int keyin )
 
     if (f_keyfilter)
         keyin = (*f_keyfilter)(keyin);
+
+    keyin = pre_process(keyin);
 
     switch (keyin)
     {
@@ -184,6 +196,7 @@ bool Menu::process_key( int keyin )
         repaint = line_down();
         break;
     default:
+        keyin = post_process(keyin);
         lastch = keyin;
 
         // If no selection at all is allowed, exit now.
@@ -565,7 +578,7 @@ bool Menu::line_up()
 
 slider_menu::slider_menu(int fl)
     : Menu(fl), less(), starty(1), endy(get_number_of_lines()),
-      selected(0)
+      selected(0), search()
 {
     less.textcolor(DARKGREY);
     less.cprintf("<---- More");
@@ -574,10 +587,41 @@ slider_menu::slider_menu(int fl)
     more.cprintf("More ---->");
 }
 
+void slider_menu::set_search(const std::string &s)
+{
+    search = s;
+}
+
 void slider_menu::set_limits(int y1, int y2)
 {
     starty = y1;
     endy   = y2;
+}
+
+void slider_menu::select_search(const std::string &s)
+{
+    std::string srch = s;
+    tolower_string(srch);
+
+    for (int i = 0, size = items.size(); i < size; ++i)
+    {
+        std::string text = items[i]->get_text();
+        tolower_string(text);
+
+        std::string::size_type found = text.find(srch);
+        if (found != std::string::npos 
+                && found == text.find_first_not_of(" "))
+        {
+            move_selection(i);
+            break;
+        }
+    }
+}
+
+int slider_menu::post_process(int key)
+{
+    select_search( search += key );
+    return (key);
 }
 
 bool slider_menu::process_key(int key)
@@ -590,6 +634,7 @@ bool slider_menu::process_key(int key)
         selected = -1;
         draw_item(old);
         sel.clear();
+        search.clear();
         lastch = key;
         return (false);
     }
@@ -601,6 +646,7 @@ bool slider_menu::process_key(int key)
         int old = selected;
         selected = -1;
         draw_item(old);
+        search.clear();
         return (false);
     }
 
@@ -627,6 +673,7 @@ std::vector<MenuEntry *> slider_menu::show()
     if (selected == -1)
         selected = 0;
 
+    select_search(search);
     do_menu();
 
     if (selected >= 0 && selected <= (int) items.size())
@@ -748,28 +795,34 @@ void slider_menu::new_selection(int nsel)
     }
 }
 
+bool slider_menu::move_selection(int nsel)
+{
+    new_selection(nsel);
+    return fix_entry();
+}
+
 bool slider_menu::page_down()
 {
-    new_selection( selected + pagesize );
-    return fix_entry();
+    search.clear();
+    return move_selection( selected + pagesize );
 }
 
 bool slider_menu::page_up()
 {
-    new_selection( selected - pagesize );
-    return fix_entry();
+    search.clear();
+    return move_selection( selected - pagesize );
 }
 
 bool slider_menu::line_down()
 {
-    new_selection( selected + 1 );
-    return fix_entry();
+    search.clear();
+    return move_selection( selected + 1 );
 }
 
 bool slider_menu::line_up()
 {
-    new_selection( selected - 1 );
-    return fix_entry();
+    search.clear();
+    return move_selection( selected - 1 );
 }
 
 /////////////////////////////////////////////////////////////////

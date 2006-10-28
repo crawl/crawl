@@ -2013,18 +2013,17 @@ static bool read_player_name(
     if (existing.empty())
         keyfilter = NULL;
 
+    line_reader reader(name, len);
+    reader.set_keyproc(keyfilter);
+
     for (;;)
     {
         gotoxy(name_x, name_y);
         if (name_x <= 80)
             cprintf("%-*s", 80 - name_x + 1, "");
+
         gotoxy(name_x, name_y);
-        int ret = cancelable_get_line(
-                        name, 
-                        len, 
-                        GXM, 
-                        NULL,
-                        keyfilter);
+        int ret = reader.read_line(false);
         if (!ret)
             return (true);
 
@@ -2033,6 +2032,7 @@ static bool read_player_name(
 
         if (ret != CK_ESCAPE && existing.size())
         {
+            menu.set_search(name);
             menu.show();
             const MenuEntry *sel = menu.selected_entry();
             if (sel)

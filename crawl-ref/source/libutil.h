@@ -128,6 +128,44 @@ private:
     bool cstate;
 };
 
+// Reads lines of text; used internally by cancelable_get_line.
+class line_reader
+{
+public:
+    line_reader(char *buffer, size_t bufsz, 
+                int wrap_col = get_number_of_cols());
+
+    typedef int (*keyproc)(int &key);
+
+    int read_line(bool clear_previous = true);
+
+    std::string get_text() const;
+
+    void set_input_history(input_history *ih);
+    void set_keyproc(keyproc fn);
+
+protected:
+    void cursorto(int newcpos);
+    int process_key(int ch);
+    void backspace();
+    void killword();
+
+    bool is_wordchar(int c);
+
+private:
+    char            *buffer;
+    size_t          bufsz;
+    input_history   *history;
+    int             start_x, start_y;
+    keyproc         keyfn;
+    int             wrapcol;
+
+    // These are subject to change during editing.
+    char            *cur;
+    int             length;
+    int             pos;
+};
+
 class base_pattern
 {
 public:

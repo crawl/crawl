@@ -37,7 +37,7 @@ game_options    Options;
 
 extern bool autopickup_on;
 
-static std::string & tolower_string( std::string &str );
+std::string &tolower_string( std::string &str );
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
@@ -296,7 +296,7 @@ static char str_to_class( const std::string &str )
     return ((index != -1) ? index_to_letter( index ) : 0); 
 }
 
-static std::string & tolower_string( std::string &str )
+std::string & tolower_string( std::string &str )
 {
     if (str.length()) 
     {
