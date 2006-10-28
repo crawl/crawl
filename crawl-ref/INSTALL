@@ -64,6 +64,11 @@ Building on Linux (or other Unixes)
 * Edit makefile and make sure that MAKEFILE=makefile.lnx is uncommented and all
   other MAKEFILE= lines are commented out.
 
+* Edit AppHdr.h and check that SAVE_DIR_PATH, SAVE_PACKAGE_CMD and 
+  LOAD_UNPACKAGE_CMD are set correctly for your system. If you do not want your
+  saves packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD and
+  LOAD_UNPACKAGE_CMD.
+
 * Run make to build the normal (non-wizard) Crawl.
 
 * If you have Lua, you can edit AppHdr.h and uncomment

@@ -23,7 +23,9 @@ CFLAGS = -Wall -Wwrite-strings \
 			-fstrict-aliasing \
 			-pedantic \
 			-D$(OS_TYPE) $(EXTRA_FLAGS) \
-			-DWINMM_PLAY_SOUNDS
+			-DWINMM_PLAY_SOUNDS \
+			-DCLUA_BINDINGS \
+			-DREGEX_PCRE
 
 OBJECTS := $(OBJECTS) libw32c.o
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
@@ -31,7 +33,7 @@ OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 LDFLAGS = 
 INSTALLDIR = .
 #LIB = -lcurso -lpano
-LIB = -lwinmm -static
+LIB = -lwinmm -static -llua -llualib -lpcre
 
 all:            $(APPNAME)
 
