@@ -258,7 +258,7 @@ void cast_chain_lightning( int powc )
 
     for (sx = you.x_pos, sy = you.y_pos; 
          powc > 0; 
-         powc -= 7 + random2(8), sx = tx, sy = ty)
+         powc -= 8 + random2(13), sx = tx, sy = ty)
     {
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomized and
@@ -370,7 +370,7 @@ void cast_chain_lightning( int powc )
         beam.target_x = tx;
         beam.target_y = ty;
         beam.colour = LIGHTBLUE;
-        beam.damage = calc_dice( 5, 15 + powc * 2 / 3 );
+        beam.damage = calc_dice( 5, 12 + powc * 2 / 3 );
 
         // Be kinder to the player
         if (tx == you.x_pos && ty == you.y_pos)
