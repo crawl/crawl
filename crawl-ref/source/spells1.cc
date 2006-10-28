@@ -359,6 +359,12 @@ void cast_chain_lightning( int powc )
         else if (!see_source && see_targ)
             mpr( "The lightning arc suddenly appears!" );
 
+        if (!see_targ)
+        {
+            // It's no longer in the caster's LOS and influence.
+            powc = powc / 2 + 1;
+        }
+
         beam.source_x = sx;
         beam.source_y = sy;
         beam.target_x = tx;

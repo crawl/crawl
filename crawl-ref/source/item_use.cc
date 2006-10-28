@@ -867,6 +867,10 @@ bool do_wear_armour( int item, bool quiet )
 
     int delay = property( you.inv[item], PARM_AC );
 
+    // Shields are comparatively easy to wear.
+    if (is_shield( you.inv[item] ))
+        delay /= 2;
+
     if (delay < 1)
         delay = 1;
 
