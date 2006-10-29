@@ -748,11 +748,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
                     NOTE_HP_CHANGE, 
                     you.hp, 
                     you.hp_max, 
-                    scorefile_entry(
-                        dam, 
-                        death_source, 
-                        death_type, 
-                        aux )
+                    scorefile_entry(dam, death_source, death_type, aux, true)
                         .death_description(scorefile_entry::DDV_TERSE)
                         .c_str()) );
 
