@@ -3611,12 +3611,9 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     if (amount == 0)
         return;
 
-    // Stop running/travel if a stat drops.
-    if (amount < 0) {
+    // Stop delays if a stat drops.
+    if (amount < 0)
         interrupt_activity( AI_STAT_CHANGE );
-        // also stop delay actions if possible
-        stop_delay();
-    }
 
     if (!suppress_msg)
         strcpy(info, "You feel ");
@@ -4337,161 +4334,8 @@ void rot_player( int amount )
     }
 }
 
-void run_macro(const char *macroname)
-{
-    if (you.activity != ACT_NONE && you.activity != ACT_MACRO)
-        return;
-
-#ifdef CLUA_BINDINGS
-    if (!clua)
-    {
-        mpr("Lua not initialized", MSGCH_DIAGNOSTICS);
-        you.activity = ACT_NONE;
-        return;
-    }
-
-    if (!clua.callbooleanfn(false, "c_macro", "s", macroname))
-    {
-        if (clua.error.length())
-            mpr(clua.error.c_str());
-        you.activity = ACT_NONE;
-    }
-    else
-    {
-        you.activity = ACT_MACRO;
-    }
-#else
-    you.activity = ACT_NONE;
-#endif
-}
-
-void perform_activity()
-{
-    switch (you.activity)
-    {
-    case ACT_MACRO:
-        run_macro();
-        break;
-    default:
-        break;
-    }
-}
-
-#ifdef CLUA_BINDINGS
-static const char *activity_interrupt_name(activity_interrupt_type ai)
-{
-    switch (ai)
-    {
-    case AI_FORCE_INTERRUPT:    return "force";
-    case AI_KEYPRESS:           return "keypress";
-    case AI_FULL_HP:            return "full_hp";
-    case AI_FULL_MP:            return "full_mp";
-    case AI_STATUE:             return "statue";
-    case AI_HUNGRY:             return "hungry";
-    case AI_MESSAGE:            return "message";
-    case AI_HP_LOSS:            return "hp_loss";
-    case AI_BURDEN_CHANGE:      return "burden";
-    case AI_STAT_CHANGE:        return "stat";
-    case AI_SEE_MONSTER:        return "monster";
-    case AI_TELEPORT:           return "teleport";
-    default:                    return "unknown";
-    }
-}
-
-static const char *activity_names[ACT_ACTIVITY_COUNT] = {
-    "",
-    "run",
-    "travel",
-    "macro"
-};
-
-static const char *activity_name(int act)
-{
-    if (act < ACT_NONE || act >= ACT_ACTIVITY_COUNT)
-        return NULL;
-    return activity_names[act];
-}
-#endif
-
-static void kill_activity()
-{
-    if (you.running)
-        stop_running();
-    you.activity = ACT_NONE;
-}
-
-static bool userdef_interrupt_activity( activity_interrupt_type ai, 
-                                        const activity_interrupt_data &at )
-{
-#ifdef CLUA_BINDINGS
-    lua_State *ls = clua.state();
-    if (!ls || ai == AI_FORCE_INTERRUPT)
-    {
-        if (ai == AI_FORCE_INTERRUPT || you.activity == ACT_MACRO)
-            kill_activity();
-        return true;
-    }
-    
-    const char *interrupt_name = activity_interrupt_name(ai);
-    const char *act_name = activity_name(you.activity);
-
-    bool ran = clua.callfn("c_interrupt_activity", "1:ssA",
-                    act_name, interrupt_name, &at);
-    if (ran)
-    {
-        // If the function returned nil, we want to cease processing.
-        if (lua_isnil(ls, -1))
-        {
-            lua_pop(ls, 1);
-            return false;
-        }
-
-        bool stopact = lua_toboolean(ls, -1);
-        lua_pop(ls, 1);
-        if (stopact)
-        {
-            kill_activity();
-            return true;
-        }
-    }
-
-    if (you.activity == ACT_MACRO &&
-                clua.callbooleanfn(true, "c_interrupt_macro",
-                    "sA", interrupt_name, &at))
-    {
-        kill_activity();
-    }
-
-#else
-    if (you.activity == ACT_MACRO)
-        kill_activity();
-#endif
-    return true;
-}
-
-void interrupt_activity( activity_interrupt_type ai, 
-                         const activity_interrupt_data &at )
-{
-    if (you.running && !you.activity)
-        you.activity = you.running > 0? ACT_RUNNING : ACT_TRAVELING;
-
-    if (!you.activity)
-        return;
-
-    if (!userdef_interrupt_activity(ai, at) || !you.activity)
-    {
-        if (you.activity == ACT_RUNNING || you.activity == ACT_TRAVELING)
-            you.activity = ACT_NONE;
-        return;
-    }
-    
-    if (!ai || (Options.activity_interrupts[ you.activity ] & ai)) {
-        kill_activity();
-    }
-
-    if (you.activity == ACT_RUNNING || you.activity == ACT_TRAVELING)
-        you.activity = ACT_NONE;
-}
+//////////////////////////////////////////////////////////////////////////////
+// player
 
 player::player()
 {
@@ -4513,7 +4357,6 @@ void player::init()
 
     your_name[0] = 0;
 
-    activity = ACT_NONE;
     berserk_penalty = 0;
     berserker = 0;
     conf = 0;

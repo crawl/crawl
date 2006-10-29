@@ -1983,8 +1983,7 @@ void monster_attack(int monster_attacking)
 
     // This should happen after the mons_friendly check so we're 
     // only disturbed by hostiles. -- bwr
-    if (you_are_delayed())
-        stop_delay();
+    interrupt_activity( AI_MONSTER_ATTACKS, attacker );
 
     if (attacker->type == MONS_GIANT_SPORE
         || attacker->type == MONS_BALL_LIGHTNING)

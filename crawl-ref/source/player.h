@@ -449,12 +449,6 @@ void dec_disease_player();
 
 void rot_player( int amount );
 
-void perform_activity();
-
-void interrupt_activity( activity_interrupt_type ai, 
-                     const activity_interrupt_data &a 
-                            = activity_interrupt_data() );
-
 bool player_has_spell( int spell );
 size_type player_size( int psize = PSIZE_TORSO, bool base = false );
 

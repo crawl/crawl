@@ -13,7 +13,9 @@
 #include "files.h"
 #include "FixAry.h"
 #include "clua.h"
+#include "delay.h"
 #include "describe.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "stash.h"
@@ -145,12 +147,12 @@ inline int feature_traverse_cost(unsigned char feature)
 }
 
 // Returns true if the dungeon feature supplied is an altar.
-inline bool is_altar(unsigned char grid)
+bool is_altar(unsigned char grid)
 {
-    return grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_ELYVILON;
+    return grid_altar_god(grid) != GOD_NO_GOD;
 }
 
-inline bool is_altar(const coord_def &c)
+bool is_altar(const coord_def &c)
 {
     return is_altar(grd[c.x][c.y]);
 }
@@ -431,7 +433,7 @@ static bool is_safe(int x, int y)
         if (!player_monster_visible(&menv[mon]) || 
                 mons_is_mimic( menv[mon].type ))
         {
-            you.running = 0;
+            you.running.stop();
             return true;
         }
 
@@ -495,7 +497,12 @@ static void init_terrain_check()
 
 void travel_init_new_level()
 {
+    // Clear run details, but preserve the runmode, because we might be in
+    // the middle of interlevel travel.
+    int runmode = you.running;
     you.running.clear();
+    you.running = runmode;
+
     // Zero out last travel coords
     you.travel_x = you.travel_y  = 0;
 
@@ -723,6 +730,11 @@ bool is_resting( void )
 void start_running(void)
 {
     userdef_run_startrunning_hook();
+
+    if (you.running == RMODE_TRAVEL
+            || you.running == RMODE_EXPLORE
+            || you.running == RMODE_INTERLEVEL)
+        start_delay( DELAY_TRAVEL, 1 );
 }
 
 /*
@@ -755,8 +767,6 @@ command_type travel()
     if (kbhit() || you.conf)
     {
         stop_running();
-        if (Options.travel_delay == -1)
-            redraw_screen();
         return CMD_NO_CMD;
     }
 
@@ -963,14 +973,14 @@ void find_travel_pos(int youx, int youy,
     if (dest_x != -1 && !is_travel_ok(start_x, start_y, false) &&
             !is_trap(start_x, start_y))
     {
-        you.running = 0;
+        you.running = RMODE_NOT_RUNNING;
         return ;
     }
 
     // Abort run if we're going nowhere.
     if (start_x == dest_x && start_y == dest_y)
     {
-        you.running = 0;
+        you.running = RMODE_NOT_RUNNING;
         return ;
     }
 
@@ -2987,7 +2997,7 @@ runrest::runrest()
 
 // Initialize is only called for resting/shift-running. We should eventually
 // include travel and wrap it all in.
-void runrest::initialize(int dir, int mode)
+void runrest::initialise(int dir, int mode)
 {
     // Note HP and MP for reference.
     hp = you.hp;
@@ -2998,23 +3008,29 @@ void runrest::initialize(int dir, int mode)
         x = 0;
         y = 0;
         runmode = mode;
-        return;
+    }
+    else
+    {
+        ASSERT( dir >= 0 && dir <= 7 );
+
+        x = Compass[dir].x;
+        y = Compass[dir].y;
+        runmode = mode;
+
+        // Get the compass point to the left/right of intended travel:
+        const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
+        const int right = (dir + 1 > 7) ? 0 : (dir + 1);
+
+        // Record the direction and starting tile type for later reference:
+        set_run_check( 0, left );
+        set_run_check( 1, dir );
+        set_run_check( 2, right );    
     }
 
-    ASSERT( dir >= 0 && dir <= 7 );
-
-    x = Compass[dir].x;
-    y = Compass[dir].y;
-    runmode = mode;
-
-    // Get the compass point to the left/right of intended travel:
-    const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
-    const int right = (dir + 1 > 7) ? 0 : (dir + 1);
-
-    // Record the direction and starting tile type for later reference:
-    set_run_check( 0, left );
-    set_run_check( 1, dir );
-    set_run_check( 2, right );    
+    if (runmode == RMODE_REST_DURATION)
+        start_delay(DELAY_REST, 1);
+    else
+        start_delay(DELAY_RUN, 1);
 }
 
 runrest::operator int () const
@@ -3087,8 +3103,17 @@ bool runrest::run_grids_changed() const
 
 void runrest::stop()
 {
+    bool need_redraw = 
+        runmode > 0 || (runmode < 0 && Options.travel_delay == -1);
     userdef_run_stoprunning_hook();
     runmode = RMODE_NOT_RUNNING;
+
+    // Kill the delay; this is fine because it's not possible to stack 
+    // run/rest/travel on top of other delays.
+    stop_delay();
+
+    if (need_redraw)
+        viewwindow(true, false);
 }
 
 bool runrest::is_rest() const

@@ -27,7 +27,7 @@
 
 #include "initfile.h"
 #include "macro.h"
-#include "player.h"
+#include "delay.h"
 #include "stuff.h"
 #include "travel.h"
 #include "view.h"

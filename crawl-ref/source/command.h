@@ -14,6 +14,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "enum.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -60,5 +61,8 @@ void list_jewellery(void);
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 void show_levelmap_help();
+
+// Actually defined in acr.cc; we may want to move this to command.cc
+void process_command(command_type cmd);
 
 #endif

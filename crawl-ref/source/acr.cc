@@ -187,10 +187,8 @@ static void init_io();
 static void prep_input();
 static void input();
 static void middle_input();
-static void do_action( command_type cmd );
 static void world_reacts();
 static command_type get_next_cmd();
-static command_type get_running_command();
 typedef int keycode_type;
 static keycode_type get_next_keycode();
 static command_type keycode_to_command( keycode_type key );
@@ -772,7 +770,7 @@ static void handle_wizard_command( void )
 // Set up the running variables for the current run.
 static void start_running( int dir, int mode )
 {
-    you.running.initialize(dir, mode);
+    you.running.initialise(dir, mode);
 }
 
 static bool recharge_rod( item_def &rod, bool wielded )
@@ -887,8 +885,8 @@ static void input() {
 
     // [dshaligram] If get_next_cmd encountered a Lua macro binding, your turn
     // may be ended by the first invoke of the macro.
-    if (!you.turn_is_over)
-        do_action( cmd );
+    if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
+        process_command( cmd );
 
     if ( you.turn_is_over ) {
 
@@ -898,7 +896,7 @@ static void input() {
 	world_reacts();
     }
     else
-	viewwindow(1, false);
+        viewwindow(true, false);
 }
 
 static int toggle_flag( bool* flag, const char* flagname ) {
@@ -986,18 +984,13 @@ static void experience_check() {
 /* note that in some actions, you don't want to clear afterwards.
    e.g. list_jewellery, etc. */
 
-static void do_action( command_type cmd ) {
+void process_command( command_type cmd ) {
 
     FixedVector < int, 2 > plox;
     apply_berserk_penalty = true;
 
     switch ( cmd ) {
 
-    case CMD_PERFORM_ACTIVITY:
-	you.turn_is_over = false;
-	perform_activity();
-	break;
-	
     case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
     case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
@@ -1016,16 +1009,34 @@ static void do_action( command_type cmd ) {
     case CMD_MOVE_DOWN_RIGHT: move_player( 1,  1); break;
     case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
 
-    case CMD_REST:            start_running( RDIR_REST, 100 ); break;
+    case CMD_REST:
+        start_running( RDIR_REST, RMODE_REST_DURATION );
+        break;
 
-    case CMD_RUN_DOWN_LEFT:   start_running( RDIR_DOWN_LEFT,  2 ); break;
-    case CMD_RUN_DOWN:        start_running( RDIR_DOWN,       2 ); break;
-    case CMD_RUN_UP_RIGHT:    start_running( RDIR_UP_RIGHT,   2 ); break;
-    case CMD_RUN_UP:          start_running( RDIR_UP,         2 ); break;
-    case CMD_RUN_UP_LEFT:     start_running( RDIR_UP_LEFT,    2 ); break;
-    case CMD_RUN_LEFT:        start_running( RDIR_LEFT,       2 ); break;
-    case CMD_RUN_DOWN_RIGHT:  start_running( RDIR_DOWN_RIGHT, 2 ); break;
-    case CMD_RUN_RIGHT:       start_running( RDIR_RIGHT,      2 ); break;
+    case CMD_RUN_DOWN_LEFT:
+        start_running( RDIR_DOWN_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_DOWN:
+        start_running( RDIR_DOWN, RMODE_START );
+        break;
+    case CMD_RUN_UP_RIGHT:
+        start_running( RDIR_UP_RIGHT, RMODE_START );
+        break;
+    case CMD_RUN_UP:
+        start_running( RDIR_UP, RMODE_START );
+        break;
+    case CMD_RUN_UP_LEFT:
+        start_running( RDIR_UP_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_LEFT:
+        start_running( RDIR_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_DOWN_RIGHT:
+        start_running( RDIR_DOWN_RIGHT, RMODE_START );
+        break;
+    case CMD_RUN_RIGHT:
+        start_running( RDIR_RIGHT, RMODE_START );
+        break;
 
     case CMD_TOGGLE_AUTOPICKUP:
 	toggle_flag( &autopickup_on, "Autopickup");
@@ -2235,29 +2246,12 @@ static void world_reacts() {
     return;
 }
 
-static command_type get_running_command() {
-    if ( kbhit() ) {
-	stop_running();
-	return CMD_NO_CMD;
-    }
-    if ( is_resting() ) {
-	you.running.rest();
-	return CMD_MOVE_NOWHERE;
-    }
-    return direction_to_command( you.running.x, you.running.y );
-}
-
 static command_type get_next_cmd() {
-    /* handle macros!!!! XXX */
-    if ( you.activity )
-	return CMD_PERFORM_ACTIVITY;
-
     if (autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
 	just_autoprayed == false && you.religion != GOD_NO_GOD &&
-	/* must fix this if we add more gods! */
-	! (grd[you.x_pos][you.y_pos] >= DNGN_ALTAR_ZIN &&
-	   grd[you.x_pos][you.y_pos] <= DNGN_ALTAR_ELYVILON) &&
-	i_feel_safe()) {
+        grid_altar_god( grd[you.x_pos][you.y_pos] ) == GOD_NO_GOD &&
+	i_feel_safe())
+    {
 	just_autoprayed = true;
 	about_to_autopray = false;
 	return CMD_PRAY;
@@ -2274,21 +2268,6 @@ static command_type get_next_cmd() {
 	mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
 	about_to_autopray = true;
     }
-    if (you.running < 0) {       // Travel and explore
-	command_type result = travel();
-	if ( result != CMD_NO_CMD )
-        {
-            // Clear messages before each round of travel so that more prompts
-            // don't interrupt.
-            mesclr();
-	    return result;
-        }
-    }
-    if (you.running > 0) {
-	command_type result = get_running_command();
-	if ( result != CMD_NO_CMD )
-	    return result;
-    }
 
 #if DEBUG_DIAGNOSTICS
     // save hunger at start of round
@@ -2303,7 +2282,7 @@ static command_type get_next_cmd() {
 
     if (is_userfunction(keyin)) {
         run_macro(get_userfunction(keyin));
-        return (CMD_REST);
+        return (CMD_NEXT_CMD);
     }
 
     return keycode_to_command(keyin);

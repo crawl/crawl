@@ -32,6 +32,9 @@ chk_interrupt_activity.run = function (iname, cause, extra)
     return false
 end
 
+-- run no longer automatically implies rest as of 0.1.3.
+chk_interrupt_activity.rest = chk_interrupt_activity.run
+
 function rr_handle_message(cause, extra)
     local ch, mess = rr_split_channel(cause)
     for _, m in ipairs(g_rr_ignored) do

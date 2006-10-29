@@ -53,6 +53,7 @@
 #include "libunix.h"
 #endif
 
+#include "delay.h"
 #include "externs.h"
 
 #include "macro.h"
@@ -61,8 +62,8 @@
 #include "mon-util.h"
 #include "mt19937ar.h"
 #include "notes.h"
-#include "player.h"
 #include "output.h"
+#include "player.h"
 #include "skills2.h"
 #include "view.h"
 

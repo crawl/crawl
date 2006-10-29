@@ -37,6 +37,7 @@
 #include "command.h"
 #include "clua.h"
 #include "debug.h"
+#include "delay.h"
 #include "direct.h"
 #include "initfile.h"
 #include "insult.h"
@@ -642,30 +643,8 @@ void monster_grid(bool do_updates)
                      && !mons_is_mimic( monster->type )
                      && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
             {
-                interrupt_activity( AI_SEE_MONSTER );
-				seen_monster( monster );
-
-                if (you.running != 0
-#ifdef CLUA_BINDINGS
-                    && clua.callbooleanfn(true, "ch_stop_run", "M", monster)
-#endif
-                   )
-                {
-                    // Friendly monsters, mimics, or harmless monsters 
-                    // don't disturb the player's running/resting.
-                    // 
-                    // Doing it this way causes players in run mode 2
-                    // to move one square, and in mode 1 to stop.  This
-                    // means that the character will run one square if
-                    // a monster is in sight... we automatically jump
-                    // to zero if we're resting.  -- bwr
-                    if (you.running.is_rest())
-                        stop_running();
-                    else if (you.running > 1)
-                        you.running.rundown();
-                    else
-                        stop_running();
-                }
+                interrupt_activity( AI_SEE_MONSTER, monster );
+                seen_monster( monster );
             }
 
             // mimics are always left on map

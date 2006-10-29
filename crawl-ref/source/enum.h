@@ -133,30 +133,25 @@ enum ability_flag_type
     ABFLAG_PERMANENT_MP = 0x00000040  // costs permanent MPs
 };
 
-enum activity_type
-{
-    ACT_NONE        = 0,
-    ACT_RUNNING,
-    ACT_TRAVELING,
-    ACT_MACRO,
-
-    ACT_ACTIVITY_COUNT
-};
-
 enum activity_interrupt_type
 {
-    AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity
-    AI_KEYPRESS = 0x01,
-    AI_FULL_HP  = 0x02,             // Player is fully healed
-    AI_FULL_MP  = 0x04,             // Player has recovered all mp
-    AI_STATUE   = 0x08,             // Bad statue has come into view
-    AI_HUNGRY   = 0x10,             // Hunger increased
-    AI_MESSAGE  = 0x20,             // Message was displayed
-    AI_HP_LOSS  = 0x40,
-    AI_BURDEN_CHANGE = 0x80,
-    AI_STAT_CHANGE = 0x100,
-    AI_SEE_MONSTER = 0x200,
-    AI_TELEPORT    = 0x400
+    AI_FORCE_INTERRUPT  = 0,        // Forcibly kills any activity that can be
+                                    // interrupted.
+    AI_KEYPRESS,
+    AI_FULL_HP,                     // Player is fully healed
+    AI_FULL_MP,                     // Player has recovered all mp
+    AI_STATUE,                      // Bad statue has come into view
+    AI_HUNGRY,                      // Hunger increased
+    AI_MESSAGE,                     // Message was displayed
+    AI_HP_LOSS,
+    AI_BURDEN_CHANGE,
+    AI_STAT_CHANGE,
+    AI_SEE_MONSTER,
+    AI_MONSTER_ATTACKS,
+    AI_TELEPORT,
+
+    // Always the last.
+    NUM_AINTERRUPTS
 };
 
 enum activity_interrupt_payload_type
@@ -651,8 +646,6 @@ enum command_type
     CMD_MAKE_NOTE,
     CMD_RESISTS_SCREEN,
 
-    CMD_PERFORM_ACTIVITY,
-
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,
     CMD_MAP_ADD_WAYPOINT,
@@ -720,7 +713,10 @@ enum command_type
     CMD_TARGET_FIND_UPSTAIR,
     CMD_TARGET_FIND_DOWNSTAIR,
     CMD_TARGET_FIND_YOU,
-    CMD_TARGET_DESCRIBE
+    CMD_TARGET_DESCRIBE,
+
+    // [ds] Silently ignored, requests another round of input.
+    CMD_NEXT_CMD
 
 };
 
@@ -815,6 +811,8 @@ enum deck_type
     DECK_OF_PUNISHMENT
 };
 
+// When adding new delays, update their names in delay.cc, or bad things will
+// happen.
 enum delay_type
 {
     DELAY_NOT_DELAYED,                  
@@ -830,8 +828,19 @@ enum delay_type
     DELAY_MULTIDROP,
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
-    DELAY_INTERRUPTIBLE        = 100,   // simple interruptible delay
-    DELAY_UNINTERRUPTIBLE               // simple uninterruptible delay
+
+    // [dshaligram] Shift-running, resting, travel and macros are now
+    // also handled as delays.
+    DELAY_RUN,
+    DELAY_REST,
+    DELAY_TRAVEL,
+
+    DELAY_MACRO,
+
+    DELAY_INTERRUPTIBLE,                // simple interruptible delay
+    DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
+
+    NUM_DELAYS
 };
 
 enum demon_beam_type

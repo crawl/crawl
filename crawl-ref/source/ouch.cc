@@ -699,11 +699,6 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         return;                 
     }
 
-    if (you_are_delayed())
-    {
-        stop_delay();
-    }
-
     if (dam > -9000)            // that is, a "death" caused by hp loss {dlb}
     {
         switch (you.religion)

@@ -16,7 +16,6 @@
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
-#include <queue>
 #include <vector>
 #include <list>
 #include <string>
@@ -277,7 +276,7 @@ public:
 
 public:
     runrest();
-    void initialize(int rdir, int mode);
+    void initialise(int rdir, int mode);
 
     operator int () const;
     const runrest &operator = (int newrunmode);
@@ -310,10 +309,10 @@ private:
     bool run_grids_changed() const;
 };
 
+typedef std::vector<delay_queue_item> delay_queue_type;
+
 struct player
 {
-  activity_type activity;   // The current multiturn activity, usually set 
-                            // to ACT_NONE
   bool turn_is_over; // flag signaling that player has performed a timed action
 
   unsigned char prev_targ;
@@ -436,7 +435,7 @@ struct player
 
   char is_undead;                     // see UNDEAD_STATES in enum.h
 
-  std::queue< delay_queue_item >  delay_queue;  // pending actions
+  delay_queue_type delay_queue;       // pending actions
 
   FixedVector<unsigned char, 50>  skills;
   FixedVector<unsigned char, 50>  practise_skill;
@@ -801,7 +800,7 @@ struct game_options
 
     std::vector<text_pattern> drop_filter;
     
-    FixedVector< unsigned, ACT_ACTIVITY_COUNT > activity_interrupts;
+    FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
 
     // Previous startup options
     bool        remember_name;      // Remember and reprompt with last name

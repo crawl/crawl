@@ -11,6 +11,7 @@
 #include "abl-show.h"
 #include "command.h"
 #include "chardump.h"
+#include "delay.h"
 #include "food.h"
 #include "invent.h"
 #include "initfile.h"

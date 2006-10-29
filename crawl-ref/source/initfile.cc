@@ -21,6 +21,7 @@
 #include <ctype.h>
 
 #include "clua.h"
+#include "delay.h"
 #include "Kills.h"
 #include "files.h"
 #include "externs.h"
@@ -371,13 +372,104 @@ static void reset_startup_options(bool clear_name = true)
     Options.priest                 = GOD_NO_GOD;
 }
 
+static void set_default_activity_interrupts()
+{
+    for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
+        for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
+            Options.activity_interrupts[adelay][aint] = true;
+
+    const char *default_activity_interrupts[] = {
+        "interrupt_armour_on = hp_loss, stat, monster_attack",
+        "interrupt_armour_off = interrupt_armour_on",
+        "interrupt_memorise = interrupt_armour_on",
+        "interrupt_butcher = interrupt_armour_on, teleport",
+        "interrupt_passwall = interrupt_butcher",
+        "interrupt_multidrop = interrupt_butcher",
+        "interrupt_macro = interrupt_multidrop",
+        "interrupt_travel = interrupt_butcher, statue, hungry, burden, monster",
+        "interrupt_run = interrupt_travel, message",
+        "interrupt_rest = interrupt_run",
+
+        // Stair ascents/descents cannot be interrupted, attempts to interrupt
+        // the delay will just trash all queued delays, including travel.
+        "interrupt_ascending_stairs =",
+        "interrupt_descending_stairs =",
+        NULL
+    };
+
+    for (int i = 0; default_activity_interrupts[i]; ++i)
+        parse_option_line( default_activity_interrupts[i], false );
+}
+
+static void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints)
+{
+    for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+        eints[i] = false;
+}
+
+static const std::string interrupt_prefix = "interrupt_";
+static void set_activity_interrupt(
+        FixedVector<bool, NUM_AINTERRUPTS> &eints,
+        const std::string &interrupt)
+{
+    if (interrupt.find(interrupt_prefix) == 0)
+    {
+        std::string delay_name = interrupt.substr( interrupt_prefix.length() );
+        delay_type delay = get_delay(delay_name);
+        if (delay == NUM_DELAYS)
+        {
+            fprintf(stderr, "Unknown delay: %s\n", delay_name.c_str());
+            return;
+        }
+        
+        FixedVector<bool, NUM_AINTERRUPTS> &refints =
+            Options.activity_interrupts[delay];
+
+        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+            if (refints[i])
+                eints[i] = true;
+
+        return;
+    }
+
+    activity_interrupt_type ai = get_activity_interrupt(interrupt);
+    if (ai == NUM_AINTERRUPTS)
+    {
+        fprintf(stderr, "Delay interrupt name \"%s\" not recognised.\n",
+                interrupt.c_str());
+        return;
+    }
+
+    eints[ai] = true;
+}
+ 
+static void set_activity_interrupt(const std::string &activity_name,
+                                   const std::string &interrupt_names,
+                                   bool append_interrupts)
+{
+    delay_type delay = get_delay(activity_name);
+    if (delay == NUM_DELAYS)
+    {
+        fprintf(stderr, "Unknown delay: %s\n", activity_name.c_str());
+        return;
+    }
+
+    FixedVector<bool, NUM_AINTERRUPTS> &eints =
+            Options.activity_interrupts[ delay ];
+
+    if (!append_interrupts)
+        clear_activity_interrupts(eints);
+
+    std::vector<std::string> interrupts = split_string(",", interrupt_names);
+    for (int i = 0, size = interrupts.size(); i < size; ++i)
+        set_activity_interrupt(eints, interrupts[i]);
+
+    eints[AI_FORCE_INTERRUPT] = true;
+}
+
 void reset_options(bool clear_name)
 {
-    // Option initialization
-    Options.activity_interrupts[ ACT_RUNNING ] =
-            0xFFFF ^ AI_SEE_MONSTER;
-    Options.activity_interrupts[ ACT_TRAVELING ] =
-            0xFFFF ^ (AI_MESSAGE | AI_SEE_MONSTER);
+    set_default_activity_interrupts();
 
     reset_startup_options(clear_name);
     Options.prev_race = 0;
@@ -1176,6 +1268,12 @@ void parse_option_line(const std::string &str, bool runscript)
                 fprintf( stderr, "Bad remembered_monster_colour -- %s\n",
                          field.c_str());
         }
+    }
+    else if (key.find(interrupt_prefix) == 0)
+    {
+        set_activity_interrupt(key.substr(interrupt_prefix.length()), 
+                               field,
+                               plus_equal);
     }
     else if (key.find("cset") == 0)
     {
