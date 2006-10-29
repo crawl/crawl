@@ -62,6 +62,8 @@ int torment_monsters(int x, int y, int pow, int caster)
             hploss = you.hp / 2 - 1;
             if (hploss >= you.hp)
                 hploss = you.hp - 1;
+            if (hploss < 0)
+                hploss = 0;
         }
 
         if (!hploss)
