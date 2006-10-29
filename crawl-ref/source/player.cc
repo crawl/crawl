@@ -1069,6 +1069,11 @@ bool player_control_teleport(bool calc_unid) {
 	     you.mutation[MUT_TELEPORT_CONTROL] );
 }
 
+int player_res_torment(bool)
+{
+    return (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE]);
+}
+
 // funny that no races are susceptible to poisons {dlb}
 int player_res_poison(bool calc_unid)
 {
@@ -3659,17 +3664,25 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     return;
 }                               // end modify_stat()
 
-void dec_hp(int hp_loss, bool fatal)
+void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
-    if (hp_loss < 1)
-        return;
-
-    you.hp -= hp_loss;
-
     if (!fatal && you.hp < 1)
         you.hp = 1;
 
-    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
+    if (!fatal && hp_loss >= you.hp)
+        hp_loss = you.hp - 1;
+
+    if (hp_loss < 1)
+        return;
+
+    // If it's not fatal, use ouch() so that notes can be taken. If it IS
+    // fatal, somebody else is doing the bookkeeping, and we don't want to mess
+    // with that.
+    if (!fatal && aux)
+        ouch(hp_loss, -1, KILLED_BY_SOMETHING, aux);
+    else
+        you.hp -= hp_loss;
+
     you.redraw_hit_points = 1;
 
     return;

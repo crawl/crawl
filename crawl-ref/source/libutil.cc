@@ -48,7 +48,7 @@
 // the shell can do damage with.
 bool shell_safe(const char *file)
 {
-    int match = strcspn(file, "`$*?|><");
+    int match = strcspn(file, "`$*?|><&\n");
     return !(match >= 0 && file[match]);
 }
 
@@ -68,6 +68,20 @@ void play_sound( const char *file )
         system(command);
     }
 #endif
+}
+
+int count_occurrences(const std::string &text, const std::string &s)
+{
+    int nfound = 0;
+    std::string::size_type pos = 0;
+
+    while (text.find(s, pos) != std::string::npos)
+    {
+        ++nfound;
+        pos += s.length();
+    }
+
+    return (nfound);
 }
 
 void get_input_line( char *const buff, int len )

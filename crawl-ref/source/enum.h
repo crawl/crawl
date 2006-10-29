@@ -3482,6 +3482,14 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
 };
 
+enum torment_source_type
+{
+    TORMENT_GENERIC = -1,
+    TORMENT_CARDS = -2,         // Symbol of torment
+    TORMENT_SPWLD = -3,         // Special wield torment
+    TORMENT_SCROLL = -4,
+    TORMENT_SPELL = -5          // SPELL_SYMBOL_OF_TORMENT
+};
 
 enum transformation_type
 {

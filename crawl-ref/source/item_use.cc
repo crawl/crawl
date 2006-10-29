@@ -3216,7 +3216,7 @@ void read_scroll(void)
         break;
 
     case SCR_TORMENT:
-        torment( you.x_pos, you.y_pos );
+        torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
 
         // is only naughty if you know you're doing it
         if (get_ident_type( OBJ_SCROLLS, SCR_TORMENT ) == ID_KNOWN_TYPE)

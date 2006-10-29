@@ -88,7 +88,8 @@ void yell(void);
  * called from: ability - decks - fight - it_use3 - item_use - mstuff2 -
  *              spell
  * *********************************************************************** */
-void torment( int tx, int ty );
+void torment( int caster, int tx, int ty );
 
+int torment_monsters(int x, int y, int pow, int caster);
 
 #endif

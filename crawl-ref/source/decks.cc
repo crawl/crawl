@@ -776,7 +776,7 @@ static void cards(unsigned char which_card)
 
     case CARD_TORMENT:
         mpr("You have drawn the Symbol of Torment.");
-        torment( you.x_pos, you.y_pos );
+        torment( TORMENT_CARDS, you.x_pos, you.y_pos );
         break;
 
 // what about checking whether there are items there, too? {dlb}

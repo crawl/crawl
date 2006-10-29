@@ -1107,7 +1107,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
         if (you.special_wield == SPWLD_TORMENT)
         {
-            torment(you.x_pos, you.y_pos);
+            torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
             did_god_conduct(DID_UNHOLY, 5);
         }
 

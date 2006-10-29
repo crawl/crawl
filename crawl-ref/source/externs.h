@@ -856,6 +856,7 @@ struct tagHeader
 
 struct scorefile_entry 
 {
+public:
     char        version;
     char        release;
     long        points;
@@ -892,6 +893,43 @@ struct scorefile_entry
     long        num_turns;          // number of turns taken 
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
+
+public:
+    scorefile_entry();
+    scorefile_entry(int damage, int death_source, int death_type,
+                    const char *aux, bool death_cause_only = false);
+
+    void init_death_cause(int damage, int death_source, int death_type,
+                          const char *aux);
+    void init();
+
+    enum death_desc_verbosity {
+        DDV_TERSE,
+        DDV_ONELINE,
+        DDV_NORMAL,
+        DDV_VERBOSE
+    };
+
+    std::string hiscore_line(death_desc_verbosity verbosity) const;
+
+    std::string character_description(death_desc_verbosity) const;
+    // Full description of death: Killed by an xyz wielding foo
+    std::string death_description(death_desc_verbosity) const;
+
+    std::string death_place(death_desc_verbosity) const;
+
+    std::string game_time(death_desc_verbosity) const;
+
+private:
+    std::string single_cdesc() const;
+    std::string strip_article_a(const std::string &s) const;
+    std::string terse_missile_cause() const;
+    std::string terse_beam_cause() const;
+    std::string terse_wild_magic() const;
+    std::string terse_trap() const;
+    const char *damage_verb() const;
+    const char *death_source_desc() const;
+    std::string damage_string(bool terse = false) const;
 };
 
 extern bool autoprayer_on;	// defined in acr.cc

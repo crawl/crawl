@@ -46,20 +46,54 @@
 // resistance!   Even if we used maximum power of 1000,  high
 // level monsters and characters would save too often.  (GDL)
 
-static int torment_monsters(int x, int y, int pow, int garbage)
+int torment_monsters(int x, int y, int pow, int caster)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     // is player?
     if (x == you.x_pos && y == you.y_pos)
     {
-        if (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE])
+        // [dshaligram] Switched to using ouch() instead of dec_hp so that
+        // notes can also track torment and activities can be interrupted
+        // correctly.
+        int hploss = 0;
+        if (!player_res_torment())
+        {
+            hploss = you.hp / 2 - 1;
+            if (hploss >= you.hp)
+                hploss = you.hp - 1;
+        }
+
+        if (!hploss)
             mpr("You feel a surge of unholy energy.");
         else
         {
             mpr("Your body is wracked with pain!");
-            dec_hp((you.hp / 2) - 1, false);
+
+            const char *aux = "torment";
+            if (caster < 0)
+            {
+                switch (caster)
+                {
+                case TORMENT_CARDS:
+                case TORMENT_SPELL:
+                    aux = "Symbol of Torment";
+                    break;
+                case TORMENT_SPWLD:
+                    // FIXME: If we ever make any other weapon / randart
+                    // eligible to torment, this will be incorrect.
+                    aux = "Sceptre of Torment";
+                    break;
+                case TORMENT_SCROLL:
+                    aux = "scroll of torment";
+                    break;
+                }
+                caster = TORMENT_GENERIC;
+            }
+            ouch(hploss, caster, 
+                    caster != TORMENT_GENERIC? KILLED_BY_MONSTER 
+                                             : KILLED_BY_SOMETHING, 
+                    aux);
         }
 
         return 1;
@@ -85,9 +119,9 @@ static int torment_monsters(int x, int y, int pow, int garbage)
     return 1;
 }
 
-void torment(int tx, int ty)
+void torment(int caster, int tx, int ty)
 {
-    apply_area_within_radius(torment_monsters, tx, ty, 0, 8, 0);
+    apply_area_within_radius(torment_monsters, tx, ty, 0, 8, caster);
 }                               // end torment()
 
 void banished(unsigned char gate_type)

@@ -717,7 +717,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        torment(you.x_pos, you.y_pos);
+        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
         break;
 
     case ABIL_RAISE_DEAD:
@@ -1145,7 +1145,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        torment(you.x_pos, you.y_pos);
+        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 

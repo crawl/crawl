@@ -378,11 +378,6 @@ void TRACE(const char *format, ...)
 }
 #endif // DEBUG
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_monster
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
 
 static int get_monnum(const char *name)
@@ -651,7 +646,7 @@ void create_spec_monster_name(void)
     else
     {
         create_monster(mon, 0, BEH_SLEEP, 
-                you.x_pos, you.y_pos, MHITNOT, 250, true);
+                you.x_pos, you.y_pos, MHITNOT, 250, false);
     }
 }                               // end create_spec_monster_name()
 #endif

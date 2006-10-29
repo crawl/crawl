@@ -681,9 +681,6 @@ void drain_exp(void)
 // death_source should be set to zero for non-monsters {dlb}
 void ouch( int dam, int death_source, char death_type, const char *aux )
 {
-    int d = 0;
-    int e = 0;
-
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
 
@@ -746,7 +743,18 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         {
             mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
         }
-	take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
+	take_note(
+                Note(
+                    NOTE_HP_CHANGE, 
+                    you.hp, 
+                    you.hp_max, 
+                    scorefile_entry(
+                        dam, 
+                        death_source, 
+                        death_type, 
+                        aux )
+                        .death_description(scorefile_entry::DDV_TERSE)
+                        .c_str()) );
 
         if (you.hp > 0)
             return;
@@ -787,228 +795,8 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     // prevent bogus notes
     activate_notes(false);
 
-    // do points first.
-    long points = you.gold;
-    points += (you.experience * 7) / 10;
-
-    //if (death_type == KILLED_BY_WINNING) points += points / 2;
-    //if (death_type == KILLED_BY_LEAVING) points += points / 10;
-    // these now handled by giving player the value of their inventory
-    char temp_id[4][50];
-
-    for (d = 0; d < 4; d++)
-    {
-        for (e = 0; e < 50; e++)
-            temp_id[d][e] = 1;
-    }
-
     // CONSTRUCT SCOREFILE ENTRY
-    struct scorefile_entry se;
-
-    // Score file entry version:
-    //
-    // 4.0      - original versioned entry
-    // 4.1      - added real_time and num_turn fields
-    // 4.2      - stats and god info
-
-    se.version = 4;
-    se.release = 2;
-
-    strncpy( se.name, you.your_name, kNameLen );
-    se.name[ kNameLen - 1 ] = 0;
-#ifdef MULTIUSER
-    se.uid = (int) getuid();
-#else
-    se.uid = 0;
-#endif
-
-    FixedVector< int, NUM_RUNE_TYPES >  rune_array;
-
-    se.num_runes = 0;
-    se.num_diff_runes = 0;
-
-    for (int i = 0; i < NUM_RUNE_TYPES; i++)
-        rune_array[i] = 0;
-
-    // Calculate value of pack and runes when character leaves dungeon
-    if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
-    {
-        for (d = 0; d < ENDOFPACK; d++)
-        {
-            if (is_valid_item( you.inv[d] ))
-            {
-                points += item_value( you.inv[d], temp_id, true );
-
-                if (you.inv[d].base_type == OBJ_MISCELLANY
-                    && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
-                {
-                    if (rune_array[ you.inv[d].plus ] == 0)
-                        se.num_diff_runes++;
-
-                    se.num_runes += you.inv[d].quantity;
-                    rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
-                }
-            }
-        }
-
-        // Bonus for exploring different areas, not for collecting a 
-        // huge stack of demonic runes in Pandemonium (gold value 
-        // is enough for those). -- bwr
-        if (se.num_diff_runes >= 3)
-            points += ((se.num_diff_runes + 2) * (se.num_diff_runes + 2) * 1000);
-    }
-
-    // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (points > 99999999)
-        points = 99999999;
-
-    se.points = points;
-    se.race = you.species;
-    se.cls = you.char_class;
-
-    // strcpy(se.race_class_name, "");
-    se.race_class_name[0] = 0;
-
-    se.lvl = you.experience_level;
-    se.best_skill = best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
-    se.best_skill_lvl = you.skills[ se.best_skill ];
-    se.death_type = death_type;
-
-    // for death by monster
-
-    // Set the default aux data value... 
-    // If aux is passed in (ie for a trap), we'll default to that.
-    if (aux == NULL)
-        se.auxkilldata[0] = 0;
-    else
-    {
-        strncpy( se.auxkilldata, aux, ITEMNAME_SIZE );
-        se.auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
-    }
-
-    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)  
-        && death_source >= 0 && death_source < MAX_MONSTERS)
-    {
-        struct monsters *monster = &menv[death_source];
-
-        if (monster->type > 0 || monster->type <= NUM_MONSTERS) 
-        { 
-            se.death_source = monster->type;
-            se.mon_num = monster->number;
-
-            // Previously the weapon was only used for dancing weapons,
-            // but now we pass it in as a string through the scorefile
-            // entry to be appended in hiscores_format_single in long or
-            // medium scorefile formats.
-            // It still isn't used in monam for anything but flying weapons
-            // though
-            if (death_type == KILLED_BY_MONSTER 
-                && monster->inv[MSLOT_WEAPON] != NON_ITEM)
-            {
-#if HISCORE_WEAPON_DETAIL
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
-                                 ISFLAG_IDENT_MASK );
-#else
-                // changing this to ignore the pluses to keep it short
-                unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
-                                   ISFLAG_IDENT_MASK );
-
-                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]], 
-                                 ISFLAG_KNOW_TYPE );
-
-                // clear "runed" description text to make shorter yet
-                set_equip_desc( mitm[monster->inv[MSLOT_WEAPON]], 0 );
-#endif
-
-                // Setting this is redundant for dancing weapons, however
-                // we do care about the above indentification. -- bwr
-                if (monster->type != MONS_DANCING_WEAPON) 
-                {
-                    it_name( monster->inv[MSLOT_WEAPON], DESC_NOCAP_A, info );
-                    strncpy( se.auxkilldata, info, ITEMNAME_SIZE );
-                    se.auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
-                }
-            }
-            
-            strcpy( info, 
-                    monam( monster->number, monster->type, true, DESC_NOCAP_A, 
-                           monster->inv[MSLOT_WEAPON] ) );
-
-            strncpy( se.death_source_name, info, 40 );
-            se.death_source_name[39] = 0;
-        }
-    }
-    else
-    {
-        se.death_source = death_source;
-        se.mon_num = 0;
-        se.death_source_name[0] = 0;
-    }
-
-    se.damage = dam;
-    se.final_hp = you.hp;
-    se.final_max_hp = you.hp_max;
-    se.final_max_max_hp = you.hp_max + player_rotted();
-    se.str = you.strength;
-    se.intel = you.intel;
-    se.dex = you.dex;
-
-    se.god = you.religion;
-    if (you.religion != GOD_NO_GOD)
-    {
-        se.piety = you.piety;
-        se.penance = you.penance[you.religion];
-    }
-
-    // main dungeon: level is simply level
-    se.dlvl = you.your_level + 1;
-    switch (you.where_are_you)
-    {
-        case BRANCH_ORCISH_MINES:
-        case BRANCH_HIVE:
-        case BRANCH_LAIR:
-        case BRANCH_SLIME_PITS:
-        case BRANCH_VAULTS:
-        case BRANCH_CRYPT:
-        case BRANCH_HALL_OF_BLADES:
-        case BRANCH_HALL_OF_ZOT:
-        case BRANCH_ECUMENICAL_TEMPLE:
-        case BRANCH_SNAKE_PIT:
-        case BRANCH_ELVEN_HALLS:
-        case BRANCH_TOMB:
-        case BRANCH_SWAMP:
-            se.dlvl = you.your_level - you.branch_stairs[you.where_are_you - 10];
-            break;
-
-        case BRANCH_DIS:
-        case BRANCH_GEHENNA:
-        case BRANCH_VESTIBULE_OF_HELL:
-        case BRANCH_COCYTUS:
-        case BRANCH_TARTARUS:
-        case BRANCH_INFERNO:
-        case BRANCH_THE_PIT:
-            se.dlvl = you.your_level - 26;
-            break;
-    }
-
-    se.branch = you.where_are_you;      // no adjustments necessary.
-    se.level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
-
-    se.birth_time = you.birth_time;     // start time of game
-    se.death_time = time( NULL );         // end time of game
-
-    if (you.real_time != -1)
-        se.real_time = you.real_time + (se.death_time - you.start_time);
-    else 
-        se.real_time = -1;
-
-    se.num_turns = you.num_turns;
-
-#ifdef WIZARD
-    se.wiz_mode = (you.wizard ? 1 : 0);
-#else
-    se.wiz_mode = 0;
-#endif
+    scorefile_entry se(dam, death_source, death_type, aux);
 
 #ifdef SCORE_WIZARD_CHARACTERS
     // add this highscore to the score file.
@@ -1123,10 +911,12 @@ void end_game( struct scorefile_entry &se )
 
     char scorebuff[ HIGHSCORE_SIZE ];
 
-    const int lines = hiscores_format_single_long( scorebuff, se, true );
-
+    hiscores_format_single_long( scorebuff, se, true );
     // truncate
     scorebuff[ HIGHSCORE_SIZE - 1 ] = 0;
+
+    const int lines = count_occurrences(scorebuff, EOL) + 1;
+
     cprintf( scorebuff );
 
     cprintf( EOL "Best Crawlers -" EOL );

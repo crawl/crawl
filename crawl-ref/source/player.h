@@ -150,6 +150,8 @@ int player_regen(void);
 int player_res_cold(bool calc_unid = true);
 int player_res_acid(void);
 
+int player_res_torment(bool calc_unid = true);
+
 bool player_res_corrosion(bool calc_unid = true);
 bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true);
@@ -350,7 +352,7 @@ bool player_genus( unsigned char which_genus,
  * called from: ability - effects - fight - it_use3 - ouch - spell -
  *              spells - spells2 - spells3 - spells4
  * *********************************************************************** */
-void dec_hp(int hp_loss, bool fatal);
+void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 
 
 /* ***********************************************************************

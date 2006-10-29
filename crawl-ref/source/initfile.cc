@@ -430,7 +430,7 @@ void reset_options(bool clear_name)
     Options.delay_message_clear    = false;
     Options.pickup_dropped         = true;
     Options.travel_colour          = true;
-    Options.travel_delay           = -1;
+    Options.travel_delay           = 10;
     Options.travel_stair_cost      = 500;
     Options.travel_exclude_radius2 =  68;
 

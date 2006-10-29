@@ -144,7 +144,7 @@ void special_wielded(void)
 
         if (one_chance_in(200))
         {
-            torment( you.x_pos, you.y_pos );
+            torment( TORMENT_SPWLD, you.x_pos, you.y_pos );
             did_god_conduct( DID_UNHOLY, 1 );
         }
         break;
@@ -374,7 +374,7 @@ bool evoke_wielded( void )
 
                 mpr("You feel the staff feeding on your energy!");
 
-                dec_hp( 5 + random2avg(19, 2), false );
+                dec_hp( 5 + random2avg(19, 2), false, "Staff of Dispater" );
                 dec_mp( 2 + random2avg(5, 2) );
                 make_hungry( 100, false );
 

@@ -203,8 +203,8 @@ static bool is_noteworthy( const Note& note ) {
 	    /* not if we have a recent warning */
 	    if ( (note.turn - rnote.turn < 5) &&
 		 /* unless we've lost half our HP since then */
-		 (note.first * 2 >= rnote.first) )
-		return false;
+	    	 (note.first * 2 >= rnote.first) )
+	    	return false;
 	    break;
 	default:
           mpr("Buggy note passed: unknown note type");
@@ -231,87 +231,92 @@ std::string describe_note( const Note& note ) {
 
     switch ( note.type ) {
     case NOTE_HP_CHANGE:
-	sprintf(buf, "Had %d/%d hit points", note.first, note.second);
+        // [ds] Shortened HP change note from "Had X hitpoints" to accommodate
+        // the cause for the loss of hitpoints.
+	snprintf(buf, sizeof buf, "HP: %d/%d [%s]", 
+                note.first, note.second, note.name.c_str());
 	break;
     case NOTE_MP_CHANGE:
-	sprintf(buf, "Had %d/%d mana", note.first, note.second);
+	snprintf(buf, sizeof buf, "Mana: %d/%d", note.first, note.second);
 	break;
     case NOTE_MAXHP_CHANGE:
-	sprintf(buf, "Reached %d max hit points", note.first);
+	snprintf(buf, sizeof buf, "Reached %d max hit points", note.first);
 	break;
     case NOTE_MAXMP_CHANGE:
-	sprintf(buf, "Reached %d max mana", note.first);
+	snprintf(buf, sizeof buf, "Reached %d max mana", note.first);
 	break;
     case NOTE_XP_LEVEL_CHANGE:
-	sprintf(buf, "Reached XP level %d. %s", note.first, note.name.c_str());
+	snprintf(buf, sizeof buf, "Reached XP level %d. %s", note.first, 
+                 note.name.c_str());
 	break;
     case NOTE_DUNGEON_LEVEL_CHANGE:
-	sprintf(buf, "Entered %s",
+	snprintf(buf, sizeof buf, "Entered %s",
 		branch_level_name(note.packed_place).c_str());
 	break;
     case NOTE_LEARN_SPELL:
-	sprintf(buf, "Learned a level %d spell: %s",
+	snprintf(buf, sizeof buf, "Learned a level %d spell: %s",
 		spell_difficulty(note.first), spell_title(note.first));
 	break;
     case NOTE_GET_GOD:
-	sprintf(buf, "Became a worshipper of %s",
+	snprintf(buf, sizeof buf, "Became a worshipper of %s",
 		god_name(note.first, true));
 	break;
     case NOTE_LOSE_GOD:
-	sprintf(buf, "Fell from the grace of %s",
+	snprintf(buf, sizeof buf, "Fell from the grace of %s",
 		god_name(note.first));
 	break;
     case NOTE_GOD_GIFT:
-	sprintf(buf, "Received a gift from %s",
+	snprintf(buf, sizeof buf, "Received a gift from %s",
 		god_name(note.first));
 	break;
     case NOTE_ID_ITEM:
         if (note.desc.length() > 0)
-            sprintf(buf, "Identified %s (%s)", note.name.c_str(),
+            snprintf(buf, sizeof buf, "Identified %s (%s)", note.name.c_str(),
                     note.desc.c_str());
         else
-	    sprintf(buf, "Identified %s", note.name.c_str());
+	    snprintf(buf, sizeof buf, "Identified %s", note.name.c_str());
 	break;
     case NOTE_GET_ITEM:
-	sprintf(buf, "Got %s", note.name.c_str());
+	snprintf(buf, sizeof buf, "Got %s", note.name.c_str());
 	break;
     case NOTE_GAIN_SKILL:
-	sprintf(buf, "Reached skill %d in %s",
+	snprintf(buf, sizeof buf, "Reached skill %d in %s",
 		note.second, skill_name(note.first));
 	break;
     case NOTE_SEEN_MONSTER:
-        sprintf(buf, "Noticed %s", note.name.c_str() );
+        snprintf(buf, sizeof buf, "Noticed %s", note.name.c_str() );
 	break;
     case NOTE_KILL_MONSTER:
-        sprintf(buf, "Defeated %s", note.name.c_str());
+        snprintf(buf, sizeof buf, "Defeated %s", note.name.c_str());
 	break;
     case NOTE_POLY_MONSTER:
-        sprintf(buf, "%s changed form", note.name.c_str() );
+        snprintf(buf, sizeof buf, "%s changed form", note.name.c_str() );
 	break;
     case NOTE_GOD_POWER:
-	sprintf(buf, "Acquired %s's %s power", god_name(note.first),
+	snprintf(buf, sizeof buf, "Acquired %s's %s power", 
+                god_name(note.first),
 		number_to_ordinal(real_god_power(note.first, note.second)+1));
 	break;
     case NOTE_GET_MUTATION:
-	sprintf(buf, "Gained mutation: %s",
+	snprintf(buf, sizeof buf, "Gained mutation: %s",
 		mutation_name(note.first, note.second == 0 ? 1 : note.second));
 	break;
     case NOTE_LOSE_MUTATION:
-	sprintf(buf, "Lost mutation: %s",
+	snprintf(buf, sizeof buf, "Lost mutation: %s",
 		mutation_name(note.first,
 			      note.second == 3 ? 3 : note.second+1));
 	break;
     case NOTE_USER_NOTE:
-	sprintf(buf, "%s", note.name.c_str());
+	snprintf(buf, sizeof buf, "%s", note.name.c_str());
 	break;
     case NOTE_MESSAGE:
-	sprintf(buf, "%s", note.name.c_str());
+	snprintf(buf, sizeof buf, "%s", note.name.c_str());
 	break;
     default:
-	sprintf(buf, "Buggy note description: unknown note type");
+	snprintf(buf, sizeof buf, "Buggy note description: unknown note type");
 	break;
     }
-    sprintf(buf2, "| %5ld | ", note.turn );
+    snprintf(buf2, sizeof buf2, "| %5ld | ", note.turn );
     std::string placename = short_place_name(note.packed_place);
     while ( placename.length() < 7 )
 	placename += ' ';

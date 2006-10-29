@@ -548,7 +548,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         simple_monster_message(monster, " calls on the powers of Hell!");
 
-        torment(monster->x, monster->y);
+        torment(monster_index(monster), monster->x, monster->y);
         return;
 
     case MS_SUMMON_DEMON_GREATER:
@@ -1165,7 +1165,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     strcat(info, ".");
     mpr(info);
 
-
+    // [dshaligram] When changing bolt names here, you must edit 
+    // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (launched) 
     {
         snprintf( throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",

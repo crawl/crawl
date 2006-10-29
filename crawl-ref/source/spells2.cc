@@ -1028,7 +1028,7 @@ int vampiric_drain(int pow)
     if (holy == MH_UNDEAD || holy == MH_DEMONIC)
     {
         mpr("Aaaarggghhhhh!");
-        dec_hp(random2avg(39, 2) + 10, false);
+        dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return -1;
     }
 

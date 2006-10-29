@@ -17,6 +17,8 @@
 #include <string>
 #include <vector>
 
+int count_occurrences(const std::string &text, const std::string &searchfor);
+
 // getch() that returns a consistent set of values for all platforms.
 int c_getch();
 

@@ -1722,7 +1722,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
             mpr("To torment others, one must first know what torment means. ");
             return (false);
         }
-        torment(you.x_pos, you.y_pos);
+        torment(TORMENT_SPELL, you.x_pos, you.y_pos);
         break;
 
     case SPELL_DEFLECT_MISSILES:
@@ -2859,9 +2859,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                     mpr("Something just walked over your grave. No, really!");
                     break;
                 }
-                mpr("Your body is wracked with pain!");
 
-                dec_hp((you.hp / 2) - 1, false);
+                torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
                 break;
 
             case 1:
