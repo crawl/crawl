@@ -2151,7 +2151,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = random_colour();
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = 1;
 		beam.is_explosion = true;
 
@@ -2179,7 +2181,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = random_colour();
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
 		beam.is_explosion = true;
     
@@ -3070,7 +3074,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = RED;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = 1;
 		beam.is_explosion = true;
 
@@ -3102,7 +3108,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = RED;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
 		beam.is_explosion = true;
 
@@ -3204,7 +3212,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = WHITE;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = 1;
 		beam.is_explosion = true;
 
@@ -3333,7 +3343,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = 1;
 		beam.is_explosion = true;
 
@@ -3443,7 +3455,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 beam.colour = LIGHTBLUE;
                 beam.beam_source = NON_MONSTER;
                 beam.thrower = (cause) ? KILL_MISC : KILL_YOU;
-                beam.aux_source = cause;
+                beam.aux_source.clear();
+                if (cause)
+                    beam.aux_source = cause;
                 beam.ex_size = one_chance_in(4)?1:2;
 		beam.is_explosion = true;
 
