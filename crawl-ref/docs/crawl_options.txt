@@ -1,10 +1,8 @@
 This document explains all of the options in the latest version of Dungeon 
 Crawl Stone Soup. These options are set in the init.txt file located in the 
-main Crawl directory.
-
-Crawl has explanations of the options in init.txt itself; however, with an 
-ever-growing number of options (90 and counting) this file becomes rather 
-unmanagable. 
+Crawl directory (the directory containing crawl.exe on Windows and DOS). On Unix
+systems, you need to set options in the ~/.crawlrc file (a file named .crawlrc 
+in your home directory).
 
 The contents of this text are:
 
@@ -38,7 +36,6 @@ The contents of this text are:
                 travel_avoid_terrain, travel_exclude_radius2,
                 travel_stop_message, explore_stop, runrest_ignore_message,
                 runrest_ignore_poison, trapwalk_safe_hp;
-		lua: ch_cross_trap (ignoring traps), 
 		lua: ch_stop_run (ignoring monsters)
 4-g	Stashes.
 		stash_tracking, stash_filter

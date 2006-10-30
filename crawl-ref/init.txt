@@ -1,5 +1,9 @@
 # Crawl Init file
 #
+# On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy init.txt
+# to ~/.crawlrc as:
+#   cp init.txt ~/.crawlrc
+#
 # Lines begining with '#' are comments.  The basic syntax is:
 #
 # field = value         or      field.subfield = value
