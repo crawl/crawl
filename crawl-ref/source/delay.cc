@@ -853,7 +853,7 @@ static bool userdef_interrupt_activity( activity_interrupt_type ai,
         stop_delay();
 
 #else
-    if (you.activity == ACT_MACRO)
+    if (delay == DELAY_MACRO)
         stop_delay();
 #endif
     return true;

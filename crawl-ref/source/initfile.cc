@@ -13,6 +13,8 @@
  */
 
 #include "AppHdr.h"
+#include "externs.h"
+
 #include "initfile.h"
 
 #include <stdio.h>
@@ -24,7 +26,6 @@
 #include "delay.h"
 #include "Kills.h"
 #include "files.h"
-#include "externs.h"
 #include "defines.h"
 #include "libutil.h"
 #include "player.h"
