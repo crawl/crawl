@@ -1778,7 +1778,15 @@ bool drop_item( int item_dropped, int quant_drop ) {
         || item_dropped == you.equip[EQ_RIGHT_RING]
         || item_dropped == you.equip[EQ_AMULET])
     {
-        mpr("You will have to take that off first.");
+        if (!Options.easy_unequip)
+        {
+            mpr("You will have to take that off first.");
+            return (false);
+        }
+
+        if (remove_ring( item_dropped, true ))
+            start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
+
         return (false);
     }
 
@@ -1794,7 +1802,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
-            if (!Options.easy_armour)
+            if (!Options.easy_unequip)
             {
                 mpr("You will have to take that off first.");
             }
@@ -1815,6 +1823,8 @@ bool drop_item( int item_dropped, int quant_drop ) {
         }
     }
 
+    // [ds] easy_unequip does not apply to weapons.
+    //
     // Unwield needs to be done before copy in order to clear things
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON])

@@ -674,7 +674,7 @@ struct game_options
     bool        show_uncursed;  // label known uncursed items as "uncursed"
     bool        always_greet;   // display greeting message when reloading
     bool        easy_open;      // open doors with movement
-    bool        easy_armour;    // allow auto-removing of armour
+    bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
     bool        confirm_self_target; // require confirmation before selftarget
     bool        safe_autopickup; // don't autopickup when monsters visible

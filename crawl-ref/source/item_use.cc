@@ -69,7 +69,6 @@
 #include "view.h"
 
 bool drink_fountain(void);
-void use_randart(unsigned char item_wield_2);
 static bool enchant_armour( void );
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
@@ -1941,105 +1940,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     return (hit);
 }                               // end throw_it()
 
-bool puton_item(int item_slot, bool prompt_finger)
+void jewellery_wear_effects(item_def &item)
 {
-    if (item_slot == you.equip[EQ_LEFT_RING]
-        || item_slot == you.equip[EQ_RIGHT_RING]
-        || item_slot == you.equip[EQ_AMULET])
-    {
-        mpr("You've already put that on!");
-        return (true);
-    }
-
-    if (item_slot == you.equip[EQ_WEAPON])
-    {
-        mpr("You are wielding that object.");
-        return (false);
-    }
-
-    if (you.inv[item_slot].base_type != OBJ_JEWELLERY)
-    {
-        //jmf: let's not take our inferiority complex out on players, eh? :-p
-        //mpr("You're sadly mistaken if you consider that jewellery.")
-        mpr("You can only put on jewellery.");
-        return (false);
-    }
-
-    bool is_amulet = (you.inv[item_slot].sub_type >= AMU_RAGE);
-
-    if (!is_amulet)     // ie it's a ring
-    {
-        if (you.equip[EQ_GLOVES] != -1
-            && item_cursed( you.inv[you.equip[EQ_GLOVES]] ))
-        {
-            mpr("You can't take your gloves off to put on a ring!");
-            return (false);
-        }
-
-        if (you.inv[item_slot].base_type == OBJ_JEWELLERY
-            && you.equip[EQ_LEFT_RING] != -1
-            && you.equip[EQ_RIGHT_RING] != -1)
-        {
-            // and you are trying to wear body you.equip.
-            mpr("You've already put a ring on each hand.");
-            return (false);
-        }
-    }
-    else if (you.equip[EQ_AMULET] != -1)
-    {
-        strcpy(info, "You are already wearing an amulet.");
-
-        if (one_chance_in(20))
-        {
-            strcat(info, " And I must say it looks quite fetching.");
-        }
-
-        mpr(info);
-        return (false);
-    }
-
-    int hand_used = 0;
-
-    if (you.equip[EQ_LEFT_RING] != -1)
-        hand_used = 1;
-
-    if (you.equip[EQ_RIGHT_RING] != -1)
-        hand_used = 0;
-
-    if (is_amulet)
-        hand_used = 2;
-    else if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1)
-    {
-        if (prompt_finger)
-        {
-            mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
-
-            int keyin = get_ch();
-
-            if (keyin == 'l')
-                hand_used = 0;
-            else if (keyin == 'r')
-                hand_used = 1;
-            else if (keyin == ESCAPE)
-                return (false);
-            else
-            {
-                mpr("You don't have such a hand!");
-                return (false);
-            }
-        }
-        else
-        {
-            // First ring goes on left hand if we're choosing automatically.
-            hand_used = 0;
-        }
-    }
-
-    you.equip[ EQ_LEFT_RING + hand_used ] = item_slot;
-
     int ident = ID_TRIED_TYPE;
 
-    switch (you.inv[item_slot].sub_type)
+    switch (item.sub_type)
     {
     case RING_FIRE:
     case RING_HUNGER:
@@ -2061,7 +1966,7 @@ bool puton_item(int item_slot, bool prompt_finger)
 
     case RING_PROTECTION:
         you.redraw_armour_class = 1;
-        if (you.inv[item_slot].plus != 0)
+        if (item.plus != 0)
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -2075,25 +1980,25 @@ bool puton_item(int item_slot, bool prompt_finger)
 
     case RING_EVASION:
         you.redraw_evasion = 1;
-        if (you.inv[item_slot].plus != 0)
+        if (item.plus != 0)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, you.inv[item_slot].plus, true);
-        if (you.inv[item_slot].plus != 0)
+        modify_stat(STAT_STRENGTH, item.plus, true);
+        if (item.plus != 0)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, you.inv[item_slot].plus, true);
-        if (you.inv[item_slot].plus != 0)
+        modify_stat(STAT_DEXTERITY, item.plus, true);
+        if (item.plus != 0)
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, you.inv[item_slot].plus, true);
-        if (you.inv[item_slot].plus != 0)
+        modify_stat(STAT_INTELLIGENCE, item.plus, true);
+        if (item.plus != 0)
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -2113,35 +2018,170 @@ bool puton_item(int item_slot, bool prompt_finger)
         break;
     }
 
-    you.turn_is_over = true;
-
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known
-    if (is_random_artefact( you.inv[item_slot] ))
-        use_randart(item_slot);
+    if (is_random_artefact( item ))
+        use_randart(item);
     else
-    {
-        set_ident_type( you.inv[item_slot].base_type, 
-                        you.inv[item_slot].sub_type, ident );
-    }
+        set_ident_type( item.base_type, item.sub_type, ident );
 
     if (ident == ID_KNOWN_TYPE)
-        set_ident_flags( you.inv[item_slot], ISFLAG_EQ_JEWELLERY_MASK );
+        set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
 
-    if (item_cursed( you.inv[item_slot] ))
-    {
-        snprintf( info, INFO_SIZE, 
-                  "Oops, that %s feels deathly cold.", (is_amulet) ? "amulet" 
-                                                                   : "ring" );
-        mpr(info);
-    }
+    if (item_cursed( item ))
+        mprf("Oops, that %s feels deathly cold.", 
+                jewellery_is_amulet(item)? "amulet" : "ring");
 
     // cursed or not, we know that since we've put the ring on
-    set_ident_flags( you.inv[item_slot], ISFLAG_KNOW_CURSE );
+    set_ident_flags( item, ISFLAG_KNOW_CURSE );
 
-    char str_pass[ ITEMNAME_SIZE ];
-    in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
-    mpr( str_pass );
+    mpr( item_name( item, DESC_INVENTORY_EQUIP ) );
+}
+
+static int prompt_ring_to_remove(int new_ring)
+{
+    const item_def &left  = you.inv[ you.equip[EQ_LEFT_RING] ];
+    const item_def &right = you.inv[ you.equip[EQ_RIGHT_RING] ];
+
+    if (item_cursed(left) && item_cursed(right))
+    {
+        mprf("You're already wearing two cursed rings!");
+        return (-1);
+    }
+    else if (item_cursed(left))
+        return you.equip[EQ_RIGHT_RING];
+    else if (item_cursed(right))
+        return you.equip[EQ_LEFT_RING];
+
+    mesclr();
+    mprf("Wearing %s.", in_name(new_ring, DESC_NOCAP_A));
+    mprf(MSGCH_PROMPT,
+            "You're wearing two rings. Remove which one? (L/R/Esc)");
+    mprf(" L - %s", item_name( left, DESC_NOCAP_A ));
+    mprf(" R - %s", item_name( right, DESC_NOCAP_A ));
+
+    int c;
+    do
+        c = tolower(getch());
+    while (c != 'l' && c != 'r' && c != ESCAPE && c != ' ');
+
+    mesclr();
+
+    if (c == ESCAPE || c == ' ')
+        return (-1);
+
+    int eqslot = c == 'l'? EQ_LEFT_RING : EQ_RIGHT_RING;
+    return (you.equip[eqslot]);
+}
+
+// Assumptions:
+// you.inv[ring_slot] is a valid ring.
+// EQ_LEFT_RING and EQ_RIGHT_RING are both occupied, and ring_slot is not
+// one of the worn rings.
+//
+// Does not do amulets.
+static bool swap_rings(int ring_slot)
+{
+    // Ask the player which existing ring is persona non grata.
+    int unwanted = prompt_ring_to_remove(ring_slot);
+    if (unwanted == -1)
+        return (false);
+
+    if (!remove_ring(unwanted, false))
+        return (false);
+
+    start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
+
+    return (true);
+}
+
+bool puton_item(int item_slot, bool prompt_finger)
+{
+    if (item_slot == you.equip[EQ_LEFT_RING]
+        || item_slot == you.equip[EQ_RIGHT_RING]
+        || item_slot == you.equip[EQ_AMULET])
+    {
+        mpr("You've already put that on!");
+        return (true);
+    }
+
+    if (item_slot == you.equip[EQ_WEAPON])
+    {
+        mpr("You are wielding that object.");
+        return (false);
+    }
+
+    if (you.inv[item_slot].base_type != OBJ_JEWELLERY)
+    {
+        mpr("You can only put on jewellery.");
+        return (false);
+    }
+
+    bool is_amulet = jewellery_is_amulet( you.inv[item_slot] );
+
+    if (!is_amulet)     // ie it's a ring
+    {
+        if (you.equip[EQ_GLOVES] != -1
+            && item_cursed( you.inv[you.equip[EQ_GLOVES]] ))
+        {
+            mpr("You can't take your gloves off to put on a ring!");
+            return (false);
+        }
+
+        if (you.equip[EQ_LEFT_RING] != -1
+                && you.equip[EQ_RIGHT_RING] != -1)
+            return swap_rings(item_slot);
+    }
+    else if (you.equip[EQ_AMULET] != -1)
+    {
+        if (!remove_ring( you.equip[EQ_AMULET], true ))
+            return (false);
+
+        start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+
+        // Assume it's going to succeed.
+        return (true);
+    }
+
+    // First ring goes on left hand if we're choosing automatically.
+    int hand_used = 0;
+
+    if (you.equip[EQ_LEFT_RING] != -1)
+        hand_used = 1;
+
+    if (you.equip[EQ_RIGHT_RING] != -1)
+        hand_used = 0;
+
+    if (is_amulet)
+        hand_used = 2;
+    else if (prompt_finger 
+                && you.equip[EQ_LEFT_RING] == -1 
+                && you.equip[EQ_RIGHT_RING] == -1)
+    {
+        mpr("Put on which hand (l or r)?", MSGCH_PROMPT);
+
+        int keyin = get_ch();
+
+        if (keyin == 'l')
+            hand_used = 0;
+        else if (keyin == 'r')
+            hand_used = 1;
+        else if (keyin == ESCAPE)
+            return (false);
+        else
+        {
+            mpr("You don't have such a hand!");
+            return (false);
+        }
+    }
+
+    you.equip[ EQ_LEFT_RING + hand_used ] = item_slot;
+
+    jewellery_wear_effects( you.inv[item_slot] );
+
+    // Putting on jewellery is as fast as wielding weapons.
+    you.time_taken = you.time_taken * 5 / 10;
+    you.turn_is_over = true;
 
     return (true);
 }
@@ -2177,11 +2217,88 @@ bool puton_ring(int slot, bool prompt_finger)
     return puton_item(item_slot, prompt_finger);
 }                               // end puton_ring()
 
-bool remove_ring(int slot)
+void jewellery_remove_effects(item_def &item)
+{
+    // The ring/amulet must already be removed from you.equip at this point.
+    
+    // Turn off show_uncursed before getting the item name, because this item
+    // was just removed, and the player knows it's uncursed.
+    bool old_showuncursed = Options.show_uncursed;
+    Options.show_uncursed = false;
+
+    mprf("You remove %s.", item_name(item, DESC_NOCAP_YOUR));
+
+    Options.show_uncursed = old_showuncursed;
+
+    switch (item.sub_type)
+    {
+    case RING_FIRE:
+    case RING_HUNGER:
+    case RING_ICE:
+    case RING_LIFE_PROTECTION:
+    case RING_POISON_RESISTANCE:
+    case RING_PROTECTION_FROM_COLD:
+    case RING_PROTECTION_FROM_FIRE:
+    case RING_PROTECTION_FROM_MAGIC:
+    case RING_REGENERATION:
+    case RING_SEE_INVISIBLE:
+    case RING_SLAYING:
+    case RING_SUSTAIN_ABILITIES:
+    case RING_SUSTENANCE:
+    case RING_TELEPORTATION:
+    case RING_WIZARDRY:
+    case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_PROTECTION:
+        you.redraw_armour_class = 1;
+        break;
+
+    case RING_EVASION:
+        you.redraw_evasion = 1;
+        break;
+
+    case RING_STRENGTH:
+        modify_stat(STAT_STRENGTH, -item.plus, true);
+        break;
+
+    case RING_DEXTERITY:
+        modify_stat(STAT_DEXTERITY, -item.plus, true);
+        break;
+
+    case RING_INTELLIGENCE:
+        modify_stat(STAT_INTELLIGENCE, -item.plus, true);
+        break;
+
+    case RING_INVISIBILITY:
+        // removing this ring effectively cancels all invisibility {dlb}
+        if (you.invis)
+            you.invis = 1;
+        break;
+
+    case RING_LEVITATION:
+        // removing this ring effectively cancels all levitation {dlb}
+        if (you.levitation)
+            you.levitation = 1;
+        break;
+
+    case RING_MAGICAL_POWER:
+        // dec_max_mp(9);
+        break;
+
+    }
+
+    if (is_random_artefact(item))
+        unuse_randart(item);
+
+    // must occur after ring is removed -- bwr
+    calc_mp();
+}
+
+bool remove_ring(int slot, bool announce)
 {
     int hand_used = 10;
     int ring_wear_2;
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1
         && you.equip[EQ_AMULET] == -1)
@@ -2264,96 +2381,32 @@ bool remove_ring(int slot)
         return (false);
     }
 
-    if (you.equip[hand_used + 7] == -1)
+    if (you.equip[hand_used + EQ_LEFT_RING] == -1)
     {
         mpr("I don't think you really meant that.");
         return (false);
     }
 
-    if (item_cursed( you.inv[you.equip[hand_used + 7]] ))
+    if (item_cursed( you.inv[you.equip[hand_used + EQ_LEFT_RING]] ))
     {
-        mpr("It's stuck to you!");
+        if (announce)
+            mprf("%s is stuck to you!",
+                in_name(you.equip[hand_used + EQ_LEFT_RING], 
+                        DESC_CAP_YOUR));
+        else
+            mpr("It's stuck to you!");
 
-        set_ident_flags( you.inv[you.equip[hand_used + 7]], ISFLAG_KNOW_CURSE );
+        set_ident_flags( you.inv[you.equip[hand_used + EQ_LEFT_RING]], 
+                         ISFLAG_KNOW_CURSE );
         return (false);
     }
 
-    strcpy(info, "You remove ");
-    in_name(you.equip[hand_used + 7], DESC_NOCAP_YOUR, str_pass);
+    ring_wear_2 = you.equip[hand_used + EQ_LEFT_RING];
+    you.equip[hand_used + EQ_LEFT_RING] = -1;
 
-    strcat(info, str_pass);
-    strcat(info, ".");
-    mpr(info);
+    jewellery_remove_effects(you.inv[ring_wear_2]);
 
-    // I'll still use ring_wear_2 here.
-    ring_wear_2 = you.equip[hand_used + 7];
-
-    switch (you.inv[ring_wear_2].sub_type)
-    {
-    case RING_FIRE:
-    case RING_HUNGER:
-    case RING_ICE:
-    case RING_LIFE_PROTECTION:
-    case RING_POISON_RESISTANCE:
-    case RING_PROTECTION_FROM_COLD:
-    case RING_PROTECTION_FROM_FIRE:
-    case RING_PROTECTION_FROM_MAGIC:
-    case RING_REGENERATION:
-    case RING_SEE_INVISIBLE:
-    case RING_SLAYING:
-    case RING_SUSTAIN_ABILITIES:
-    case RING_SUSTENANCE:
-    case RING_TELEPORTATION:
-    case RING_WIZARDRY:
-    case RING_TELEPORT_CONTROL:
-        break;
-
-    case RING_PROTECTION:
-        you.redraw_armour_class = 1;
-        break;
-
-    case RING_EVASION:
-        you.redraw_evasion = 1;
-        break;
-
-    case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, -you.inv[ring_wear_2].plus, true);
-        break;
-
-    case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -you.inv[ring_wear_2].plus, true);
-        break;
-
-    case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -you.inv[ring_wear_2].plus, true);
-        break;
-
-    case RING_INVISIBILITY:
-        // removing this ring effectively cancels all invisibility {dlb}
-        if (you.invis)
-            you.invis = 1;
-        break;
-
-    case RING_LEVITATION:
-        // removing this ring effectively cancels all levitation {dlb}
-        if (you.levitation)
-            you.levitation = 1;
-        break;
-
-    case RING_MAGICAL_POWER:
-        // dec_max_mp(9);
-        break;
-
-    }
-
-    if (is_random_artefact( you.inv[ring_wear_2] ))
-        unuse_randart(ring_wear_2);
-
-    you.equip[hand_used + 7] = -1;
-
-    // must occur after ring is removed -- bwr
-    calc_mp();
-
+    you.time_taken = you.time_taken * 5 / 10;
     you.turn_is_over = true;
 
     return (true);
@@ -3438,10 +3491,15 @@ void examine_object(void)
 
 void use_randart(unsigned char item_wield_2)
 {
-    ASSERT( is_random_artefact( you.inv[ item_wield_2 ] ) );
+    use_randart( you.inv[ item_wield_2 ] );
+}
+
+void use_randart(const item_def &item)
+{
+    ASSERT( is_random_artefact( item ) );
 
     FixedVector< char, RA_PROPERTIES >  proprt;
-    randart_wpn_properties( you.inv[item_wield_2], proprt );
+    randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])
         you.redraw_armour_class = 1;

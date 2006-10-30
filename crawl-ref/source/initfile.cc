@@ -381,6 +381,8 @@ static void set_default_activity_interrupts()
     const char *default_activity_interrupts[] = {
         "interrupt_armour_on = hp_loss, stat, monster_attack",
         "interrupt_armour_off = interrupt_armour_on",
+        "interrupt_drop_item = interrupt_armour_on",
+        "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = interrupt_armour_on",
         "interrupt_butcher = interrupt_armour_on, teleport",
         "interrupt_passwall = interrupt_butcher",
@@ -504,7 +506,7 @@ void reset_options(bool clear_name)
     Options.show_uncursed          = true;
     Options.always_greet           = false;
     Options.easy_open              = true;
-    Options.easy_armour            = true;
+    Options.easy_unequip           = true;
     Options.easy_butcher           = false;
     Options.easy_confirm           = CONFIRM_SAFE_EASY;
     Options.easy_quit_item_prompts = false;
@@ -1180,10 +1182,12 @@ void parse_option_line(const std::string &str, bool runscript)
         // automatic door opening with movement
         Options.easy_open = read_bool( field, Options.easy_open );
     }
-    else if (key == "easy_armor" || key == "easy_armour")
+    else if (key == "easy_armor" 
+            || key == "easy_armour" 
+            || key == "easy_unequip")
     {
         // automatic removal of armour when dropping
-        Options.easy_armour = read_bool( field, Options.easy_armour );
+        Options.easy_unequip = read_bool( field, Options.easy_unequip );
     }
     else if (key == "easy_butcher")
     {

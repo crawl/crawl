@@ -504,10 +504,15 @@ void unwear_armour(char unw)
 
 void unuse_randart(unsigned char unw)
 {
-    ASSERT( is_random_artefact( you.inv[unw] ) );
+    unuse_randart( you.inv[unw] );
+}
+
+void unuse_randart(const item_def &item)
+{
+    ASSERT( is_random_artefact( item ) );
 
     FixedVector< char, RA_PROPERTIES > proprt;
-    randart_wpn_properties( you.inv[unw], proprt );
+    randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])
         you.redraw_armour_class = 1;

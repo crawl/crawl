@@ -57,14 +57,14 @@ void clear_ids(void);
  * called from: direct - fight - food - items - monstuff - religion -
  *              shopping
  * *********************************************************************** */
-const char *it_name(int itn, char des, char buff[ITEMNAME_SIZE], bool terse = false);
+const char *it_name(int itn, char des, char *buff = NULL, bool terse = false);
 
 /* ***********************************************************************
  * called from: acr - chardump - command - effects - fight - invent -
  *              it_use2 - it_use3 - item_use - items - ouch - output -
  *              spell - spells1 - spells2 - spells3 - spells4 - transfor
  * *********************************************************************** */
-const char *in_name(int inn, char des, char buff[ITEMNAME_SIZE], bool terse = false);
+const char *in_name(int inn, char des, char *buff = NULL, bool terse = false);
 
 /* ***********************************************************************
  * called from: itemname.cc items.cc item_use.cc mstuff2.cc

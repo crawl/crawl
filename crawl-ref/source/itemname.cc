@@ -67,13 +67,13 @@ bool item_type_known( const item_def &item )
 
 // it_name() and in_name() are now somewhat obsolete now that itemname
 // takes item_def, so consider them deprecated.
-const char *it_name( int itn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+const char *it_name( int itn, char des, char *buff, bool terse )
 {
     return item_name( mitm[itn], des, buff, terse );
 }                               // end it_name()
 
 
-const char *in_name( int inn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+const char *in_name( int inn, char des, char *buff, bool terse )
 {
     return item_name( you.inv[inn], des, buff, terse );
 }                               // end in_name()
@@ -1075,7 +1075,11 @@ static const char *item_name_2(
             else if (Options.show_uncursed
                     && !terse
                     && (!ring_has_pluses(item)
-                        || !item_ident(item, ISFLAG_KNOW_PLUSES)))
+                        || !item_ident(item, ISFLAG_KNOW_PLUSES))
+
+                    // If the item is worn, its curse status is known,
+                    // no need to belabour the obvious.
+                    && get_equip_slot( &item ) == -1)
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }

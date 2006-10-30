@@ -819,6 +819,7 @@ enum delay_type
     DELAY_EAT,                         
     DELAY_ARMOUR_ON,
     DELAY_ARMOUR_OFF,
+    DELAY_JEWELLERY_ON,
     DELAY_MEMORISE,
     DELAY_BUTCHER,
     DELAY_AUTOPICKUP,

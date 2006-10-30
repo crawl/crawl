@@ -1033,7 +1033,7 @@ void tweak_object(void)
             item_name( you.inv[item], DESC_INVENTORY_EQUIP, info );
             mpr( info );
 
-            mpr( "a - plus  b - plus2  c - special  d - quantity  ESC - exit",
+            mpr( "a - plus  b - plus2  c - special  d - quantity  e - flags  ESC - exit",
                  MSGCH_PROMPT );
             mpr( "Which field? ", MSGCH_PROMPT );
 
@@ -1047,6 +1047,8 @@ void tweak_object(void)
                 field_ptr = &(you.inv[item].special);
             else if (keyin == 'd')
                 field_ptr = &(you.inv[item].quantity);
+            else if (keyin == 'e')
+                field_ptr = &(you.inv[item].flags);
             else if (keyin == ESCAPE || keyin == ' ' 
                     || keyin == '\r' || keyin == '\n')
             {
@@ -1054,11 +1056,11 @@ void tweak_object(void)
                 return;
             }
 
-            if (keyin >= 'a' && keyin <= 'd')
+            if (keyin >= 'a' && keyin <= 'e')
                 break;
         }
 
-        if (keyin != 'c')
+        if (keyin != 'c' && keyin != 'e')
         {
             const short *const ptr = static_cast< short * >( field_ptr );
             snprintf( info, INFO_SIZE, "Old value: %d (0x%04x)", *ptr, *ptr );
@@ -1083,7 +1085,7 @@ void tweak_object(void)
         if (new_value == 0 && end == specs)
             return;
 
-        if (keyin != 'c')
+        if (keyin != 'c' && keyin != 'e')
         {
             short *ptr = static_cast< short * >( field_ptr );
             *ptr = new_value;

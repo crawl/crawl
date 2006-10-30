@@ -209,6 +209,7 @@ void stop_delay( void )
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
     case DELAY_UNINTERRUPTIBLE:   // never stoppable 
+    case DELAY_JEWELLERY_ON:      // one turn
     default:
         break;
     }
@@ -312,8 +313,8 @@ void handle_delay( void )
     if (delay.duration > 0)
     {
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Delay type: %d   duration: %d", 
-                  delay.type, delay.duration ); 
+        snprintf( info, INFO_SIZE, "Delay type: %d (%s), duration: %d", 
+                  delay.type, delay_name(delay.type), delay.duration ); 
 
         mpr( info, MSGCH_DIAGNOSTICS );
 #endif
@@ -363,9 +364,14 @@ void handle_delay( void )
             weapon_switch( delay.parm1 );
             break;
 
+        case DELAY_JEWELLERY_ON:
+            puton_ring( delay.parm1, false );
+            break;
+
         case DELAY_ARMOUR_ON:
             armour_wear_effects( delay.parm1 );
             break;
+
         case DELAY_ARMOUR_OFF:
         {
             in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
@@ -900,10 +906,10 @@ activity_interrupt_type get_activity_interrupt(const std::string &name)
 
 static const char *delay_names[] =
 {
-    "not_delayed", "eat", "armour_on", "armour_off", "memorise", "butcher",
-    "autopickup", "weapon_swap", "passwall", "drop_item", "multidrop",
-    "ascending_stairs", "descending_stairs", "run", "rest", "travel", "macro",
-    "interruptible", "uninterruptible",
+    "not_delayed", "eat", "armour_on", "armour_off", "jewellery_on",
+    "memorise", "butcher", "autopickup", "weapon_swap", "passwall",
+    "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "run",
+    "rest", "travel", "macro", "interruptible", "uninterruptible",
 };
 
 // Gets a delay given its name.
@@ -927,6 +933,9 @@ delay_type get_delay(const std::string &name)
 
     if (name == "memorize")
         return (DELAY_MEMORISE);
+
+    if (name == "jewelry_on")
+        return (DELAY_JEWELLERY_ON);
 
     return (NUM_DELAYS);
 }

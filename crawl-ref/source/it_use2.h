@@ -28,6 +28,7 @@ bool potion_effect(char pot_eff, int pow);
  * *********************************************************************** */
 void unuse_randart(unsigned char unw);
 
+void unuse_randart(const item_def &item);
 
 /* ***********************************************************************
  * called from: item_use - transfor
