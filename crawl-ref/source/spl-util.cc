@@ -471,8 +471,8 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
 
     if (!bmove.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (0);
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     int rv = func(you.x_pos + bmove.dx, you.y_pos + bmove.dy, power, 1);
@@ -689,7 +689,7 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
     if (!spelld.isValid)
     {
         // check for user cancel
-        canned_msg(MSG_SPELL_FIZZLES);
+        canned_msg(MSG_OK);
         return -1;
     }
 

@@ -2869,7 +2869,7 @@ void cast_far_strike(int pow)
     return;
 }                               // end cast_far_strike()
 
-void cast_apportation(int pow)
+int cast_apportation(int pow)
 {
     struct dist beam;
 
@@ -2879,15 +2879,15 @@ void cast_apportation(int pow)
 
     if (!beam.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     // it's already here!
     if (beam.isMe)
     {
         mpr( "That's just silly." );
-        return;
+        return (-1);
     }
 
     // Protect the player from destroying the item
@@ -2896,7 +2896,7 @@ void cast_apportation(int pow)
     if (grid_destroys_items(grid))
     {
         mpr( "That would be silly while over this terrain!" );
-        return;
+        return (0);
     }
 
     // If this is ever changed to allow moving objects that can't
@@ -2912,7 +2912,7 @@ void cast_apportation(int pow)
     if (!see_grid( beam.tx, beam.ty ))
     {
         mpr( "You cannot see there!" );
-        return;
+        return (0);
     }
 
     // Let's look at the top item in that square...
@@ -2932,7 +2932,7 @@ void cast_apportation(int pow)
         else 
             mpr( "This spell does not work on creatures." );
 
-        return;
+        return (0);
     }
 
     // mass of one unit
@@ -2952,8 +2952,10 @@ void cast_apportation(int pow)
     if (max_units <= 0)
     {
         mpr( "The mass is resisting your pull." );
-        return;
+        return (0);
     }
+
+    int done = 0;
 
     // Failure should never really happen after all the above checking,
     // but we'll handle it anyways...
@@ -2971,9 +2973,12 @@ void cast_apportation(int pow)
                                  (mitm[ item ].quantity > 1) ? "s" : "" );
             mpr( info );
         }
+        done = 1;
     }
     else
         mpr( "The spell fails." );
+
+    return (done);
 }
 
 void cast_sandblast(int pow)
@@ -3113,10 +3118,9 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     return (1);
 }
 
-void cast_semi_controlled_blink(int pow)
+int cast_semi_controlled_blink(int pow)
 {
-    apply_one_neighbouring_square(quadrant_blink, pow);
-    return;
+    return apply_one_neighbouring_square(quadrant_blink, pow);
 }
 
 void cast_stoneskin(int pow)

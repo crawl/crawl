@@ -46,7 +46,7 @@
 
 static bool monster_on_level(int monster);
 
-void cast_selective_amnesia(bool force)
+bool cast_selective_amnesia(bool force)
 {
     char ep_gain = 0;
     unsigned char keyin = 0;
@@ -63,7 +63,7 @@ void cast_selective_amnesia(bool force)
             keyin = (unsigned char) get_ch();
 
             if (keyin == ESCAPE)
-                return;         // early return {dlb}
+                return (false);        // early return {dlb}
 
             if (keyin == '?' || keyin == '*')
             {
@@ -110,7 +110,7 @@ void cast_selective_amnesia(bool force)
         }
     }
 
-    return;
+    return (true);
 }                               // end cast_selective_amnesia()
 
 bool remove_curse(bool suppress_msg)
@@ -185,7 +185,7 @@ bool detect_curse(bool suppress_msg)
     return (success);
 }                               // end detect_curse()
 
-bool cast_smiting(int power)
+int cast_smiting(int power)
 {
     bool success = false;
     struct dist beam;
@@ -195,8 +195,13 @@ bool cast_smiting(int power)
 
     direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
-    if (!beam.isValid
-        || mgrd[beam.tx][beam.ty] == NON_MONSTER
+    if (!beam.isValid)
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
+
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)
     {
         canned_msg(MSG_SPELL_FIZZLES);
@@ -223,7 +228,7 @@ bool cast_smiting(int power)
     return (success);
 }                               // end cast_smiting()
 
-bool airstrike(int power)
+int airstrike(int power)
 {
     bool success = false;
     struct dist beam;
@@ -234,8 +239,13 @@ bool airstrike(int power)
 
     direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
-    if (!beam.isValid
-        || mgrd[beam.tx][beam.ty] == NON_MONSTER
+    if (!beam.isValid)
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
+
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)
     {
         canned_msg(MSG_SPELL_FIZZLES);
@@ -275,7 +285,7 @@ bool airstrike(int power)
     return (success);
 }                               // end airstrike()
 
-bool cast_bone_shards(int power)
+int cast_bone_shards(int power)
 {
     bool success = false;
     struct bolt beam;
@@ -288,8 +298,11 @@ bool cast_bone_shards(int power)
     }
     else if (you.inv[you.equip[EQ_WEAPON]].sub_type != CORPSE_SKELETON)
         mpr("The corpse collapses into a mass of pulpy flesh.");
-    else if (spell_direction(spelld, beam) != -1)
+    else
     {
+        if (spell_direction(spelld, beam) == -1)
+            return (-1);
+
         // practical max of 100 * 15 + 3000 = 4500
         // actual max of    200 * 15 + 3000 = 6000
         power *= 15;
@@ -975,7 +988,7 @@ bool recall(char type_recalled)
     return (success);
 }                               // end recall()
 
-void portal(void)
+int portal(void)
 {
     char dir_sign = 0;
     unsigned char keyi;
@@ -985,10 +998,12 @@ void portal(void)
     if (!player_in_branch( BRANCH_MAIN_DUNGEON ))
     {
         mpr("This spell doesn't work here.");
+        return (-1);
     }
     else if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
     {
         mpr("You must find a clear area in which to cast this spell.");
+        return (-1);
     }
     else
     {
@@ -1024,7 +1039,7 @@ void portal(void)
             if (keyi == 'x')
             {
                 canned_msg(MSG_OK);
-                return;         // an early return {dlb}
+                return (-1);         // an early return {dlb}
             }
         }
 
@@ -1038,7 +1053,7 @@ void portal(void)
             if (keyi == 'x')
             {
                 canned_msg(MSG_OK);
-                return;         // another early return {dlb}
+                return (-1);         // another early return {dlb}
             }
 
             if (!(keyi < '1' || keyi > '9'))
@@ -1068,7 +1083,7 @@ void portal(void)
         untag_followers();
     }
 
-    return;
+    return (1);
 }                               // end portal()
 
 bool cast_death_channel(int power)

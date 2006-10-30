@@ -44,7 +44,7 @@
 #include "stuff.h"
 #include "view.h"
 
-void blink(void)
+int blink(void)
 {
     struct dist beam;
 
@@ -71,8 +71,8 @@ void blink(void)
 
             if (!beam.isValid)
             {
-                canned_msg(MSG_SPELL_FIZZLES);
-                return;         // early return {dlb}
+                canned_msg(MSG_OK);
+                return (-1);         // early return {dlb}
             }
 
             if (see_grid(beam.tx, beam.ty))
@@ -111,7 +111,7 @@ void blink(void)
         }
     }
 
-    return;
+    return (1);
 }                               // end blink()
 
 void random_blink(bool allow_partial_control)
@@ -165,7 +165,7 @@ void random_blink(bool allow_partial_control)
     return;
 }                               // end random_blink()
 
-void fireball(int power)
+int fireball(int power)
 {
     struct dist fire_ball;
 
@@ -176,7 +176,10 @@ void fireball(int power)
     direction( fire_ball, DIR_NONE, TARG_ENEMY, true );
 
     if (!fire_ball.isValid)
-        canned_msg(MSG_SPELL_FIZZLES);
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
     else
     {
         struct bolt beam;
@@ -189,10 +192,10 @@ void fireball(int power)
         zapping(ZAP_FIREBALL, power, beam);
     }
 
-    return;
+    return (1);
 }                               // end fireball()
 
-void cast_fire_storm(int powc)
+int cast_fire_storm(int powc)
 {
     struct bolt beam;
     struct dist targ;
@@ -206,8 +209,8 @@ void cast_fire_storm(int powc)
 
     if (!targ.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     beam.ex_size = 2 + (random2(powc) > 75);
@@ -230,6 +233,8 @@ void cast_fire_storm(int powc)
     mpr("A raging storm of fire appears!");
 
     viewwindow(1, false);
+
+    return (1);
 }                               // end cast_fire_storm()
 
 
@@ -423,7 +428,7 @@ void identify(int power)
     while (id_used > 0);
 }                               // end identify()
 
-void conjure_flame(int pow)
+int conjure_flame(int pow)
 {
     struct dist spelld;
 
@@ -443,8 +448,8 @@ void conjure_flame(int pow)
 
         if (!spelld.isValid)
         {
-            canned_msg(MSG_SPELL_FIZZLES);
-            return;
+            canned_msg(MSG_OK);
+            return (-1);
         }
 
         if (!see_grid(spelld.tx, spelld.ty))
@@ -470,9 +475,10 @@ void conjure_flame(int pow)
         durat = 23;
 
     place_cloud( CLOUD_FIRE, spelld.tx, spelld.ty, durat );
+    return (1);
 }                               // end cast_conjure_flame()
 
-void stinking_cloud( int pow )
+int stinking_cloud( int pow )
 {
     struct dist spelld;
     struct bolt beem;
@@ -485,8 +491,8 @@ void stinking_cloud( int pow )
 
     if (!spelld.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     beem.target_x = spelld.tx;
@@ -511,9 +517,11 @@ void stinking_cloud( int pow )
     beem.is_tracer = false;
 
     fire_beam(beem);
+
+    return (1);
 }                               // end stinking_cloud()
 
-void cast_big_c(int pow, char cty)
+int cast_big_c(int pow, char cty)
 {
     struct dist cdis;
 
@@ -522,11 +530,12 @@ void cast_big_c(int pow, char cty)
 
     if (!cdis.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     big_cloud( cty, cdis.tx, cdis.ty, pow, 8 + random2(3) );
+    return (1);
 }                               // end cast_big_c()
 
 void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size)
@@ -534,7 +543,7 @@ void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size)
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size, clouds);
 }                               // end big_cloud()
 
-static char healing_spell( int healed )
+static int healing_spell( int healed )
 {
     int mgr = 0;
     struct monsters *monster = 0;       // NULL {dlb}
@@ -545,7 +554,7 @@ static char healing_spell( int healed )
 
     if (!bmove.isValid)
     {
-        canned_msg( MSG_HUH );
+        canned_msg( MSG_OK );
         return 0;
     }
 
@@ -603,7 +612,7 @@ char cast_greatest_healing( int pow )
 }                               // end cast_greatest_healing()
 #endif 
 
-char cast_healing( int pow )
+int cast_healing( int pow )
 {
     if (pow > 50)
         pow = 50;

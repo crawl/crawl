@@ -1087,7 +1087,7 @@ char burn_freeze(int pow, char flavour)
 
         if (!bmove.isValid)
         {
-            canned_msg(MSG_SPELL_FIZZLES);
+            canned_msg(MSG_OK);
             return -1;
         }
 
@@ -1103,7 +1103,7 @@ char burn_freeze(int pow, char flavour)
         if (mgr == NON_MONSTER)
         {
             mpr("There isn't anything close enough!");
-            return -1;
+            return 0;
         }
     }
 
@@ -1187,7 +1187,7 @@ int summon_elemental(int pow, int restricted_type,
 
         if (!smove.isValid)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            canned_msg(MSG_OK);
             return (-1);
         }
 
@@ -1243,7 +1243,7 @@ int summon_elemental(int pow, int restricted_type,
     if (type_summoned == MONS_PROGRAM_BUG)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (-1);
+        return (0);
     }
 
     // silly - ice for water? 15jan2000 {dlb}

@@ -24,14 +24,14 @@ bool allow_control_teleport( bool silent = false );
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-bool airstrike(int power);
+int airstrike(int power);
 
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-bool cast_bone_shards(int power);
+int cast_bone_shards(int power);
 
 
 // updated 24may2000 {dlb}
@@ -52,14 +52,14 @@ void cast_poison_ammo(void);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-void cast_selective_amnesia(bool force);
+bool cast_selective_amnesia(bool force);
 
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool cast_smiting(int power);
+int cast_smiting(int power);
 
 
 // updated 24may2000 {dlb}
@@ -94,7 +94,7 @@ bool entomb(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void portal(void);
+int portal(void);
 
 
 // updated 24may2000 {dlb}

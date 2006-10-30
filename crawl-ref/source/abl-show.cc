@@ -463,12 +463,10 @@ bool activate_ability(void)
     // no turning back now... {dlb}
     const struct ability_def abil = get_ability_def(Curr_abil[abil_used].which);
 
-    // currently only delayed fireball is instantaneous -- bwr
-    you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
-
     if (random2avg(100, 3) < Curr_abil[abil_used].fail)
     {
         mpr("You fail to use your ability.");
+        you.turn_is_over = true;
         return (false);
     }
 
@@ -707,7 +705,9 @@ bool activate_ability(void)
         break;
 
     case ABIL_HELLFIRE:
-        your_spells(SPELL_HELLFIRE, 20 + you.experience_level, false);
+        if (your_spells(SPELL_HELLFIRE, 
+                        20 + you.experience_level, false) == -1)
+            return (false);
         break;
 
     case ABIL_TORMENT:
@@ -1127,7 +1127,9 @@ bool activate_ability(void)
             return (false);
         }
 
-        your_spells( SPELL_HELLFIRE, 20 + you.experience_level, false );
+        if (your_spells( SPELL_HELLFIRE, 
+                        20 + you.experience_level, false ) == -1)
+            return (false);
 
         you.duration[DUR_BREATH_WEAPON] +=
                         3 + random2(5) + random2(30 - you.experience_level);
@@ -1165,6 +1167,9 @@ bool activate_ability(void)
         mpr("Sorry, you can't do that.");
         break;
     }
+
+    // currently only delayed fireball is instantaneous -- bwr
+    you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     // All failures should have returned by this point, so we'll 
     // apply the costs -- its not too neat, but it works for now. -- bwr

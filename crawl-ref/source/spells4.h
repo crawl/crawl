@@ -32,7 +32,7 @@ void cast_fragmentation(int powc);
 void cast_twist(int powc);
 void cast_far_strike(int powc);
 void cast_swap(int powc);
-void cast_apportation(int powc);
+int cast_apportation(int powc);
 void cast_glamour(int pow);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
@@ -58,7 +58,7 @@ void cast_stoneskin(int pow);
 void cast_shuggoth_seed(int powc);
 void make_shuggoth(int x, int y, int hp);
 
-void cast_semi_controlled_blink(int pow);
+int cast_semi_controlled_blink(int pow);
 
 
 #endif

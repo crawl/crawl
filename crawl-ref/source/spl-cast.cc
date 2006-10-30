@@ -664,6 +664,18 @@ bool cast_a_spell(void)
         return (false);
     }
 
+    if (you.conf)
+        random_uselessness( 2 + random2(7), 0 );
+    else
+    {
+        int cast_result = your_spells( spell );
+        if (cast_result == -1)
+            return (false);
+
+        exercise_spell( spell, true, cast_result );
+        did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
+    }
+    
     dec_mp( spell_mana(spell) );
 
     if (!player_energy() && you.is_undead != US_UNDEAD)
@@ -682,14 +694,6 @@ bool cast_a_spell(void)
     you.turn_is_over = true;
     alert_nearby_monsters();
 
-    if (you.conf)
-        random_uselessness( 2 + random2(7), 0 );
-    else
-    {
-        exercise_spell( spell, true, your_spells( spell ) );
-        did_god_conduct( DID_SPELL_CASTING, 1 + random2(5) );
-    }
-    
     return (true);
 }                               // end cast_a_spell()
 
@@ -706,21 +710,9 @@ bool spell_is_unholy( int spell_id )
     return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
 }
 
-// returns true if spell if spell is successfully cast for purposes of
-// exercising and false otherwise (note: false == less exercise, not none).
-bool your_spells( int spc2, int powc, bool allow_fail )
+void spellcasting_side_effects(int spc2, bool idonly = false)
 {
-    int dem_hor = 0;
-    int dem_hor2 = 0;
     int total_skill = 0;
-    struct dist spd;
-    struct bolt beam;
-
-    alert_nearby_monsters();
-
-    // Added this so that the passed in powc can have meaning -- bwr
-    if (powc == 0)
-        powc = calc_spell_power( spc2, true );
 
     if (you.equip[EQ_WEAPON] != -1
         && item_is_staff( you.inv[you.equip[EQ_WEAPON]] )
@@ -800,6 +792,53 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         }
     }
 
+    if (idonly)
+        return;
+
+    if (!spell_is_utility_spell(spc2))
+        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spc2) );
+
+    if (spell_is_unholy( spc2 ))
+        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spc2) );        
+
+    // Linley says: Condensation Shield needs some disadvantages to keep 
+    // it from being a no-brainer... this isn't much, but its a start -- bwr
+    if (spell_typematch(spc2, SPTYP_FIRE))
+        expose_player_to_element(BEAM_FIRE, 0);
+
+    if (spell_typematch( spc2, SPTYP_NECROMANCY ))
+    {
+        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spc2) );
+
+        if (spc2 == SPELL_NECROMUTATION
+            && (you.religion == GOD_ELYVILON 
+                || you.religion == GOD_SHINING_ONE 
+                || you.religion == GOD_ZIN))
+        {
+            excommunication();
+        }
+    }
+
+    alert_nearby_monsters();
+}
+
+// returns 1 if spell is successfully cast for purposes of exercising and 0
+// otherwise (note: false == less exercise, not none). If the player aborts the
+// spell, returns -1.
+int your_spells( int spc2, int powc, bool allow_fail )
+{
+    int dem_hor = 0;
+    int dem_hor2 = 0;
+    struct dist spd;
+    struct bolt beam;
+
+    // [dshaligram] Any action that depends on the spellcasting attempt to have
+    // succeeded must be performed after the switch()
+
+    // Added this so that the passed in powc can have meaning -- bwr
+    if (powc == 0)
+        powc = calc_spell_power( spc2, true );
+
     surge_power(spc2);
 
     if (allow_fail)
@@ -822,6 +861,8 @@ bool your_spells( int spc2, int powc, bool allow_fail )
 
         if (spfl < spell_fail(spc2))
         {
+            spellcasting_side_effects(spc2, true);
+
             mpr( "You miscast the spell." );
             flush_input_buffer( FLUSH_ON_FAILURE );
 
@@ -830,7 +871,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
                     && you.piety >= 100 && random2(150) <= you.piety))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
-                return (false);
+                return (0);
             }
 
             unsigned int sptype = 0;
@@ -860,14 +901,14 @@ bool your_spells( int spc2, int powc, bool allow_fail )
             if (you.religion == GOD_XOM && random2(75) < spell_mana(spc2))
                 Xom_acts(coinflip(), spell_mana(spc2), false);
 
-            return (false);
+            return (0);
         }
     }
 
     if (you.is_undead && spell_typematch( spc2, SPTYP_HOLY ))
     {
         mpr( "You can't use this type of magic!" );
-        return (false);         // XXX: still gets trained!
+        return (-1);
     }
 
     // Normally undead can't memorize these spells, so this check is
@@ -877,53 +918,16 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         && undead_cannot_memorise( spc2, you.is_undead ))
     {
         mpr( "You cannot cast that spell in your current form!" );
-        return (false);         // XXX: still gets trained!
+        return (-1);
     }
-
-    if (!spell_is_utility_spell(spc2))
-        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spc2) );
-
-    if (spell_is_unholy( spc2 ))
-        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spc2) );        
-
-    // Linley says: Condensation Shield needs some disadvantages to keep 
-    // it from being a no-brainer... this isn't much, but its a start -- bwr
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0 
-        && spell_typematch( spc2, SPTYP_FIRE ))
-    {
-        // TODO: Pull in Brent's expose_player_to_element fn.
-        mpr( "Your icy shield dissipates!", MSGCH_DURATION );
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
-    }
-
-    if (spell_typematch( spc2, SPTYP_NECROMANCY ))
-    {
-        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spc2) );
-
-        if (spc2 == SPELL_NECROMUTATION
-            && (you.religion == GOD_ELYVILON 
-                || you.religion == GOD_SHINING_ONE 
-                || you.religion == GOD_ZIN))
-        {
-            excommunication();
-        }
-    }
-
-    // [dshaligram] Sif Muna piety now increases only when training spell skills
-    // as per bwr 4.1.
-    /*
-    if (you.religion == GOD_SIF_MUNA
-        && you.piety < 200 && random2(12) <= spell_difficulty(spc2))
-    {
-        gain_piety(1);
-    }
-    */
 
 #if DEBUG_DIAGNOSTICS
     snprintf( info, INFO_SIZE, "Spell #%d, power=%d", spc2, powc );
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
+
+#define SPELL_DIR(s, b) if (spell_direction(spd, beam) == -1) return -1; \
+                        else 
 
     switch (spc2)
     {
@@ -952,14 +956,14 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_MAGIC_DART:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
 
         zapping(ZAP_MAGIC_DARTS, powc, beam);
         break;
 
     case SPELL_FIREBALL:
-        fireball(powc);
+        if (fireball(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_DELAYED_FIREBALL:
@@ -1002,20 +1006,17 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_STRIKING:
-        if (spell_direction( spd, beam ) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         zapping( ZAP_STRIKING, powc, beam );
         break;
 
     case SPELL_CONJURE_FLAME:
-        conjure_flame(powc);
+        if (conjure_flame(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_DIG:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
@@ -1025,62 +1026,53 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BOLT_OF_FIRE:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_FIRE, powc, beam);
         break;
 
     case SPELL_BOLT_OF_COLD:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_COLD, powc, beam);
         break;
 
     case SPELL_LIGHTNING_BOLT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_LIGHTNING, powc, beam);
         break;
 
     case SPELL_BOLT_OF_MAGMA:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_MAGMA, powc, beam);
         break;
 
     case SPELL_POLYMORPH_OTHER:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             mpr("Sorry, it doesn't work like that.");
-            return (false);
+            return (-1);
         }
         zapping(ZAP_POLYMORPH_OTHER, powc, beam);
         break;
 
     case SPELL_SLOW:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_SLOWING, powc, beam);
         break;
 
     case SPELL_HASTE:
         if (spell_direction(spd, beam, DIR_NONE, TARG_FRIEND) == -1)
-            return (false);
+            return (-1);
         zapping(ZAP_HASTING, powc, beam);
         break;
 
     case SPELL_PARALYZE:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_PARALYSIS, powc, beam);
         break;
 
     case SPELL_CONFUSE:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_CONFUSION, powc, beam);
         break;
 
@@ -1094,32 +1086,33 @@ bool your_spells( int spc2, int powc, bool allow_fail )
 
     case SPELL_INVISIBILITY:
         if (spell_direction(spd, beam, DIR_NONE, TARG_FRIEND) == -1)
-            return (false);
+            return (-1);
         zapping(ZAP_INVISIBILITY, powc, beam);
         break;
 
     case SPELL_THROW_FLAME:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_FLAME, powc, beam);
         break;
 
     case SPELL_THROW_FROST:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_FROST, powc, beam);
         break;
 
     case SPELL_CONTROLLED_BLINK:
-        blink();
+        if (blink() == -1)
+            return (-1);
         break;
 
     case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD);
+        if (cast_big_c(powc, CLOUD_COLD) == -1)
+            return (-1);
         break;
 
     case SPELL_MEPHITIC_CLOUD:
-        stinking_cloud(powc);
+        if (stinking_cloud(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_RING_OF_FLAMES:
@@ -1139,8 +1132,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_VENOM_BOLT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_VENOM_BOLT, powc, beam);
         break;
 
@@ -1149,24 +1141,25 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_TELEPORT_OTHER:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
 
         if (spd.isMe)
         {
             mpr("Sorry, it doesn't work like that.");
-            return (false);
+            return (-1);
         }
         // teleport creature (I think)
         zapping(ZAP_TELEPORTATION, powc, beam);
         break;
 
     case SPELL_LESSER_HEALING:
-        cast_healing(5);
+        if (!cast_healing(5))
+            return (-1);
         break;
 
     case SPELL_GREATER_HEALING:
-        cast_healing(25);
+        if (!cast_healing(25))
+            return (-1);
         break;
 
     case SPELL_CURE_POISON_I:   //jmf: `healing' version? group w/ S_C_P_II?
@@ -1182,7 +1175,8 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SELECTIVE_AMNESIA:
-        cast_selective_amnesia(false);
+        if (!cast_selective_amnesia(false))
+            return (-1);
         break;                  //     Sif Muna power calls with true
 
     case SPELL_MASS_CONFUSION:
@@ -1190,7 +1184,8 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SMITING:
-        cast_smiting(powc);
+        if (cast_smiting(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_REPEL_UNDEAD:
@@ -1222,36 +1217,34 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BOLT_OF_DRAINING:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_NEGATIVE_ENERGY, powc, beam);
         break;
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_CRYSTAL_SPEAR, powc, beam);
         break;
 
     case SPELL_BOLT_OF_INACCURACY:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_BEAM_OF_ENERGY, powc, beam);
         break;
 
     case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON);
+        if (cast_big_c(powc, CLOUD_POISON) == -1)
+            return (-1);
         break;
 
     case SPELL_POISON_ARROW:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
 
         zapping( ZAP_POISON_ARROW, powc, beam );
         break;
 
     case SPELL_FIRE_STORM:
-        cast_fire_storm(powc);
+        if (cast_fire_storm(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_DETECT_TRAPS:
@@ -1265,9 +1258,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         zapping( ZAP_MYSTIC_BLAST, powc, beam );
         break;
 
@@ -1280,12 +1271,11 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_ENSLAVEMENT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
         zapping(ZAP_ENSLAVEMENT, powc, beam);
         break;
@@ -1305,12 +1295,12 @@ bool your_spells( int spc2, int powc, bool allow_fail )
 
     case SPELL_HEAL_OTHER:
         if (spell_direction(spd, beam, DIR_NONE, TARG_FRIEND) == -1)
-            return (false);
+            return (-1);
 
         if (spd.isMe)
         {
             mpr("Sorry, it doesn't work like that.");
-            return (false);
+            return (-1);
         }
         zapping(ZAP_HEALING, powc, beam);
         break;
@@ -1321,8 +1311,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_PAIN:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         dec_hp(1, false);
         zapping(ZAP_PAIN, powc, beam);
         break;
@@ -1358,15 +1347,18 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BURN:
-        burn_freeze(powc, BEAM_FIRE);
+        if (burn_freeze(powc, BEAM_FIRE) == -1)
+            return (-1);
         break;
 
     case SPELL_FREEZE:
-        burn_freeze(powc, BEAM_COLD);
+        if (burn_freeze(powc, BEAM_COLD) == -1)
+            return (-1);
         break;
 
     case SPELL_SUMMON_ELEMENTAL:
-        summon_elemental(powc, 0, 2);
+        if (summon_elemental(powc, 0, 2) == -1)
+            return (-1);
         break;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
@@ -1374,8 +1366,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_STICKY_FLAME:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_STICKY_FLAME, powc, beam);
         break;
 
@@ -1405,8 +1396,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_DISPEL_UNDEAD:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_DISPEL_UNDEAD, powc, beam);
         break;
 
@@ -1414,21 +1404,15 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         summon_ice_beast_etc(powc, MONS_ANGEL);
         break;
 
-    //jmf: FIXME: SPELL_PESTILENCE?
-
     case SPELL_THUNDERBOLT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_LIGHTNING, powc, beam);
         break;
 
     case SPELL_FLAME_OF_CLEANSING:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_CLEANSING_FLAME, powc, beam);
         break;
-
-    //jmf: FIXME: SPELL_SHINING_LIGHT?
 
     case SPELL_SUMMON_DAEVA:
         summon_ice_beast_etc(powc, MONS_DAEVA);
@@ -1449,18 +1433,17 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BONE_SHARDS:
-        cast_bone_shards(powc);
+        if (cast_bone_shards(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_BANISHMENT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_BANISHMENT, powc, beam);
         break;
 
     case SPELL_CIGOTUVIS_DEGENERATION:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
 
         if (spd.isMe)
         {
@@ -1471,8 +1454,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_STING:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_STING, powc, beam);
         break;
 
@@ -1487,9 +1469,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
     case SPELL_HELLFIRE:        
         // should only be available from:
         // staff of Dispater & Sceptre of Asmodeus
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         zapping(ZAP_HELLFIRE, powc, beam);
         break;
 
@@ -1559,14 +1539,12 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BOLT_OF_IRON:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_IRON_BOLT, powc, beam);
         break;
 
     case SPELL_STONE_ARROW:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_STONE_ARROW, powc, beam);
         break;
 
@@ -1579,8 +1557,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SHOCK:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_ELECTRICITY, powc, beam);
         break;
 
@@ -1597,8 +1574,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_ORB_OF_ELECTROCUTION:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_ORB_OF_ELECTRICITY, powc, beam);
         break;
 
@@ -1654,17 +1630,16 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_PORTAL:
-        portal();
+        if (portal() == -1)
+            return (-1);
         break;
 
     case SPELL_AGONY:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
         zapping(ZAP_AGONY, powc, beam);
         break;
@@ -1674,20 +1649,16 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_DISRUPT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         zapping(ZAP_DISRUPTION, powc, beam);
         break;
 
     case SPELL_DISINTEGRATE:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
         zapping(ZAP_DISINTEGRATION, powc, beam);
         break;
@@ -1720,7 +1691,7 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         if (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE])
         {
             mpr("To torment others, one must first know what torment means. ");
-            return (false);
+            return (-1);
         }
         torment(TORMENT_SPELL, you.x_pos, you.y_pos);
         break;
@@ -1730,28 +1701,27 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_ORB_OF_FRAGMENTATION:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_ORB_OF_FRAGMENTATION, powc, beam);
         break;
 
     case SPELL_ICE_BOLT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_ICE_BOLT, powc, beam);
         break;
 
     case SPELL_ARC:
-        burn_freeze(powc, BEAM_ELECTRICITY);
+        if (burn_freeze(powc, BEAM_ELECTRICITY) == -1)
+            return (-1);
         break;
 
     case SPELL_AIRSTRIKE:
-        airstrike(powc);
+        if (airstrike(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_ICE_STORM:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         zapping(ZAP_ICE_STORM, powc, beam);
         break;
 
@@ -1763,22 +1733,13 @@ bool your_spells( int spc2, int powc, bool allow_fail )
 
     //jmf: new spells 19mar2000
     case SPELL_FLAME_TONGUE:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
         zapping(ZAP_FLAME_TONGUE, powc, beam);
-
-        /*
-        // This is not the place for this sort of power adjustment,
-        // it just makes it harder to balance -- bwr
-        zapping(ZAP_FLAME_TONGUE, 2 + random2(4) + random2(4)
-                                            + random2(powc) / 25, beam);
-        */
         break;
 
     case SPELL_PASSWALL:
@@ -1806,15 +1767,12 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SLEEP:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
-
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
-
         zapping(ZAP_SLEEP, powc, beam);
         break;
 
@@ -1868,12 +1826,11 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BACKLIGHT:
-        if (spell_direction(spd, beam) == -1)
-            return (false);
+        SPELL_DIR(spd, beam);
         if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return (false);
+            return (-1);
         }
         zapping(ZAP_BACKLIGHT, powc + 10, beam);
         break;
@@ -1915,7 +1872,9 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SEMI_CONTROLLED_BLINK:
-        cast_semi_controlled_blink(powc);       //jmf: powc is ignored
+        //jmf: powc is ignored
+        if (cast_semi_controlled_blink(powc) == -1)
+            return (-1);
         break;
 
     case SPELL_STONESKIN:
@@ -1947,13 +1906,16 @@ bool your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_APPORTATION:
-        cast_apportation(powc);
+        if (cast_apportation(powc) == -1)
+            return (-1);
         break;
 
     default:
         mpr("Invalid spell!");
         break;
     }                           // end switch
+
+    spellcasting_side_effects(spc2);
 
     return (true);
 }                               // end you_spells()

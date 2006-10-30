@@ -486,8 +486,12 @@ bool evoke_wielded( void )
         if (item_is_rod( you.inv[wield] ))
         {
             pract = staff_spell( wield );
+            // [ds] Early exit, no turns are lost.
+            if (pract == -1)
+                return (false);
+
             did_work = true;  // staff_spell() will handle messages
-        } 
+        }
         else if (you.inv[wield].sub_type == STAFF_CHANNELING)
         {
             if (you.magic_points < you.max_magic_points 

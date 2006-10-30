@@ -50,7 +50,7 @@ char cast_lesser_healing(void);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-char cast_healing(int power);
+int cast_healing(int power);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -63,25 +63,25 @@ void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size);
 /* ***********************************************************************
  * called from: acr (WIZARD only) - item_use - spell
  * *********************************************************************** */
-void blink(void);
+int blink(void);
 
 
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-void cast_big_c(int pow, char cty);
+int cast_big_c(int pow, char cty);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
 int  allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
-void cast_fire_storm(int powc);
+int cast_fire_storm(int powc);
 bool cast_revivification(int power);
 void cast_berserk(void);
 void cast_ring_of_flames(int power);
-void conjure_flame(int pow);
+int conjure_flame(int pow);
 void extension(int pow);
-void fireball(int power);
-void stinking_cloud(int pow);
+int fireball(int power);
+int stinking_cloud(int pow);
 void abjuration(int pow);
 
 // last updated 24may2000 {dlb}

@@ -37,7 +37,7 @@ bool cast_a_spell( void );
 /* ***********************************************************************
  * called from: ability - debug - it_use3 - spell
  * *********************************************************************** */
-bool your_spells( int spc2, int powc = 0, bool allow_fail = true );
+int your_spells( int spc2, int powc = 0, bool allow_fail = true );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

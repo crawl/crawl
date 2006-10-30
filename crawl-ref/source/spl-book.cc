@@ -1453,9 +1453,8 @@ int staff_spell( int staff )
     const int staff_type = you.inv[staff].sub_type;
     if (staff_type < STAFF_SMITING || staff_type >= STAFF_AIR)
     {
-        //mpr("That staff has no spells in it.");
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (0);
+        return (-1);
     }
 
     if (!item_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
@@ -1490,7 +1489,11 @@ int staff_spell( int staff )
         spell = get_ch();
         
         if (spell == '?' || spell == '*')
+        {
             spell = read_book( you.inv[staff], RBOOK_USE_STAFF );
+            // [ds] read_book sets turn_is_over.
+            you.turn_is_over = false;
+        }
     }
 
     if (spell < 'A' || (spell > 'Z' && spell < 'a') || spell > 'z')
@@ -1519,7 +1522,7 @@ int staff_spell( int staff )
             && (you.hunger_state < HS_HUNGRY || you.hunger <= food)))
     {
         mpr("You don't have the energy to cast that spell.");
-        return (0);
+        return (-1);
     }
 
     if (staff_type == STAFF_STRIKING)
@@ -1541,22 +1544,14 @@ int staff_spell( int staff )
             mprf("%s have enough magic points.", 
                 staff_type == STAFF_STRIKING? "You don't" : "The rod doesn't");
 
-        // confuse_player( 2 + random2(4) );
-        you.turn_is_over = true;
-        return (0);
+        // Don't lose a turn for trying to evoke without enough MP - that's
+        // needlessly cruel for an honest error.
+        return (-1);
     }
 
-    // Exercising the spell skills doesn't make very much sense given 
-    // that spell staves are largely intended to supply spells to 
-    // non-spellcasters, and they don't use spell skills to determine
-    // power in the same way that spellcasting does. -- bwr
-    //
-    // exercise_spell(specspell, true, true);
+    if (your_spells(specspell, powc, false) == -1)
+        return (-1);
 
-    your_spells(specspell, powc, false);
-    
-
-    // [dshaligram] 
     // dec_mp(spell_mana(specspell));
     if (staff_type != STAFF_STRIKING)
         you.inv[staff].plus -= mana;
@@ -1576,7 +1571,6 @@ int staff_spell( int staff )
     }
 
     you.wield_change = true;
-
     you.turn_is_over = true;
 
     return (roll_dice( 1, 1 + spell_difficulty(specspell) / 2 ));
@@ -1584,5 +1578,5 @@ int staff_spell( int staff )
   whattt:
     mpr("What?");
 
-    return (0);
+    return (-1);
 }                               // end staff_spell()
