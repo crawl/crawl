@@ -602,7 +602,7 @@ bool acquirement(unsigned char force_class, int agent)
 
             int weight = 0;
 
-            weight = you.skills[i] + 3;
+            weight = you.skills[i] + 1;
             if (weight)
             {
                 count += weight;
@@ -621,17 +621,14 @@ bool acquirement(unsigned char force_class, int agent)
             // skipping clubs, knives, blowguns
             for (int i = WPN_MACE; i < NUM_WEAPONS; i++)
             {
-                // skipping launchers
-                if (i == WPN_SLING)
-                    i = WPN_GLAIVE;
-
+                // FIXME: Add a flag to itemprop.cc to do these exclusions
                 // skipping giant clubs
-                if (i == WPN_GIANT_CLUB)
-                    i = WPN_EVENINGSTAR;
+                if (i == WPN_GIANT_CLUB || i == WPN_GIANT_SPIKED_CLUB)
+                    continue;
 
                 // skipping knife and blowgun
-                if (i == WPN_KNIFE)
-                    i = WPN_FALCHION;
+                if (i == WPN_KNIFE || i == WPN_BLOWGUN)
+                    continue;
 
                 // blessed blades can only be created by the player, never found
                 if (i == WPN_BLESSED_BLADE)
