@@ -1214,7 +1214,7 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
 void fire_beam( struct bolt &pbolt, item_def *item )
 {
     bool beamTerminate;     // has beam been 'stopped' by something?
-    int tx, ty;             // test(new) x,y - integer
+    int tx = 0, ty = 0;     // test(new) x,y - integer
     int rangeRemaining;
 
 #if DEBUG_DIAGNOSTICS

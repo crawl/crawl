@@ -419,11 +419,13 @@ void identify(int power)
         // output identified item
         in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
         mpr( str_pass );
-
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
         id_used--;
+
+        if (Options.auto_list && id_used > 0)
+            more();
     }
     while (id_used > 0);
 }                               // end identify()
