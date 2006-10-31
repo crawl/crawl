@@ -979,6 +979,7 @@ unsigned long* dead_rays = NULL;
 std::vector<short> ray_coord_x;
 std::vector<short> ray_coord_y;
 std::vector<int> raylengths;
+std::vector<ray_def> fullrays;
 
 void setLOSRadius(int newLR)
 {
@@ -997,18 +998,22 @@ bool double_is_zero( const double x )
     return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
 }
 
-static void find_next_intercept(double* accx, double* accy, const double slope)
+// note that slope must be nonnegative!
+// returns 0 if the advance was in x, 1 if it was in y, 2 if it was
+// the diagonal
+static int find_next_intercept(double* accx, double* accy, const double slope)
 {
+
     // handle perpendiculars
     if ( double_is_zero(slope) )
     {
         *accx += 1.0;
-        return;
+        return 0;
     }
     if ( slope > 100.0 )
     {
         *accy += 1.0;
-        return;
+        return 1;
     }
 
     const double xtarget = (double)((int)(*accx) + 1);
@@ -1021,26 +1026,103 @@ static void find_next_intercept(double* accx, double* accy, const double slope)
     if ( double_is_zero( distdiff ) ) {
         // move somewhat away from the corner
         if ( slope > 1.0 ) {
-            *accx = xtarget + 0.5 / slope;
-            *accy = ytarget + 0.5;
+            *accx = xtarget + EPSILON_VALUE * 2;
+            *accy = ytarget + EPSILON_VALUE * 2 * slope;
         }
         else {
-            *accx = xtarget + 0.5;
-            *accy = ytarget + 0.5 * slope;
+            *accx = xtarget + EPSILON_VALUE * 2 / slope;
+            *accy = ytarget + EPSILON_VALUE * 2;
         }
-        return;
+        return 2;
     }
 
     double traveldist;
-    if ( distdiff > 0.0 )
+    int rc = -1;
+    if ( distdiff > 0.0 ) {
         traveldist = ydistance / slope;
-    else
+        rc = 1;
+    }
+    else {
         traveldist = xdistance;
+        rc = 0;
+    }
 
     traveldist += EPSILON_VALUE * 10.0;
 
     *accx += traveldist;
     *accy += traveldist * slope;
+    return rc;
+}
+
+void ray_def::advance_and_bounce()
+{
+    // 0 = down-right, 1 = down-left, 2 = up-left, 3 = up-right
+    int bouncequad[4][3] = {
+        { 1, 3, 2 }, { 0, 2, 3 }, { 3, 1, 0 }, { 2, 0, 1 }
+    };
+    int oldx = x(), oldy = y();
+    int rc = advance();
+    int newx = x(), newy = y();
+    ASSERT( grid_is_solid(grd[newx][newy]) );
+    if ( double_is_zero(slope) || slope > 100.0 )
+        quadrant = bouncequad[quadrant][2];
+    else if ( rc != 2 )
+        quadrant = bouncequad[quadrant][rc];
+    else
+    {
+        ASSERT( (oldx != newx) && (oldy != newy) );
+        bool blocked_x = grid_is_solid(grd[oldx][newy]);
+        bool blocked_y = grid_is_solid(grd[newx][oldy]);
+        if ( blocked_x && blocked_y )
+            quadrant = bouncequad[quadrant][rc];
+        else if ( blocked_x )
+            quadrant = bouncequad[quadrant][1];
+        else
+            quadrant = bouncequad[quadrant][0];
+    }
+    advance();
+}
+
+void ray_def::regress()
+{
+    int opp_quadrant[4] = { 2, 3, 0, 1 };
+    quadrant = opp_quadrant[quadrant];
+    advance();
+    quadrant = opp_quadrant[quadrant];
+}
+
+int ray_def::advance()
+{
+    int rc;
+    switch ( quadrant )
+    {
+    case 0:
+        // going down-right
+        rc = find_next_intercept( &accx, &accy, slope );
+        return rc;
+    case 1:
+        // going down-left
+        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        rc = find_next_intercept( &accx, &accy, slope );
+        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        return rc;
+    case 2:
+        // going up-left
+        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        rc = find_next_intercept( &accx, &accy, slope );
+        accx = 100.0 - EPSILON_VALUE/10.0 - accx;
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
+        return rc;
+    case 3:
+        // going up-right
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;
+        rc = find_next_intercept( &accx, &accy, slope );
+        accy = 100.0 - EPSILON_VALUE/10.0 - accy;        
+        return rc;
+    default:
+        return -1;
+    }
 }
 
 // Shoot a ray from the given start point (accx, accy) with the given
@@ -1116,8 +1198,15 @@ static bool register_ray( double accx, double accy, double slope )
         ray_coord_x.push_back(xpos[i]);
         ray_coord_y.push_back(ypos[i]);
     }
+
     // register the fullray
     raylengths.push_back(raylen);
+    ray_def ray;
+    ray.accx = accx;
+    ray.accy = accy;
+    ray.slope = slope;
+    ray.quadrant = 0;
+    fullrays.push_back(ray);
 
     return true;
 }
@@ -1191,6 +1280,11 @@ void raycast()
 
     int xangle, yangle;
 
+    // register perpendiculars FIRST, to make them top choice
+    // when selecting beams
+    register_ray( 0.5, 0.5, 1000.0 );
+    register_ray( 0.5, 0.5, 0.0 );
+
     // For a slope of M = y/x, every x we move on the X axis means
     // that we move y on the y axis. We want to look at the resolution
     // of x/y: in that case, every step on the X axis means an increase
@@ -1218,12 +1312,89 @@ void raycast()
         }
     }
 
-    // register perpendiculars
-    register_ray( 0.5, 0.5, 1000.0 );
-    register_ray( 0.5, 0.5, 0.0 );
-
     // Now create the appropriate blockrays array
     create_blockrays();   
+}
+
+static void set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
+{
+    if ( tx >= sx && ty >= sy )
+        ray.quadrant = 0;
+    else if ( tx < sx && ty >= sy )
+        ray.quadrant = 1;
+    else if ( tx < sx && ty < sy )
+        ray.quadrant = 2;
+    else if ( tx >= sx && ty < sy )
+        ray.quadrant = 3;
+    else
+        mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
+}
+
+
+// Find a nonblocked ray from sx, sy to tx, ty. Return false if no
+// such ray could be found, otherwise return true and fill ray
+// appropriately.
+// If allow_fallback is true, fall back to a center-to-center ray
+// if range is too great or all rays are blocked.
+bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+               bool allow_fallback, ray_def& ray )
+{
+    
+    int cellray, inray;
+    const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
+    const int signy = ((targety - sourcey >= 0) ? 1 : -1);
+    const int absx = signx * (targetx - sourcex);
+    const int absy = signy * (targety - sourcey);
+    int cur_offset = 0;
+    for ( unsigned int fullray = 0; fullray < fullrays.size();
+          cur_offset += raylengths[fullray++] ) {
+
+        for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
+        {
+            if ( ray_coord_x[cellray + cur_offset] == absx &&
+                 ray_coord_y[cellray + cur_offset] == absy ) {
+
+                // check if we're blocked so far
+                bool blocked = false;
+                for ( inray = 0; inray < cellray; ++inray ) {
+                    if (grid_is_solid(grd[sourcex + signx * ray_coord_x[inray + cur_offset]][sourcey + signy * ray_coord_y[inray + cur_offset]]))
+                    {
+                        blocked = true;                   
+                        break;
+                    }
+                }
+
+                if ( !blocked )
+                {
+                    // success!
+                    ray = fullrays[fullray];
+                    if ( sourcex > targetx )
+                        ray.accx = 1.0 - ray.accx;
+                    if ( sourcey > targety )
+                        ray.accy = 1.0 - ray.accy;
+                    ray.accx += sourcex;
+                    ray.accy += sourcey;
+                    set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+                    return true;
+                }
+            }
+        }
+    }
+    if ( allow_fallback ) {
+        ray.accx = sourcex + 0.5;
+        ray.accy = sourcey + 0.5;
+        if ( targetx == sourcex )
+            ray.slope = 10000.0;
+        else {
+            ray.slope = targety - sourcey;
+            ray.slope /= targetx - sourcex;
+            if ( ray.slope < 0 )
+                ray.slope = -ray.slope;
+        }
+        set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+        return true;
+    }
+    return false;
 }
 
 // Find a ray from sourcex, sourcey to targetx, targety.
@@ -1236,15 +1407,17 @@ void raycast()
 // The assumption is that targetx, targety is within LOS of sourcex, sourcey.
 // Therefore, we simply look at all the rays until we hit one which
 // passes through targetx, targety and is nonblocked.
+//
+// If we can't find any path, we return 0.
 int find_ray_path( int sourcex, int sourcey,
                    int targetx, int targety,
-                   int xpos[], int ypos[] )
+                   int* xpos, int* ypos, bool just_check )
 {
     int cellray, inray;
-    const int signx = (targetx >= 0 ? 1 : -1);
-    const int signy = (targety >= 0 ? 1 : -1);
-    const int absx = signx * targetx;
-    const int absy = signy * targety;
+    const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
+    const int signy = ((targety - sourcey >= 0) ? 1 : -1);
+    const int absx = signx * (targetx - sourcex);
+    const int absy = signy * (targety - sourcey);
     int cur_offset = 0;
     for ( unsigned int fullray = 0; fullray < raylengths.size();
           cur_offset += raylengths[fullray++] ) {
@@ -1267,21 +1440,22 @@ int find_ray_path( int sourcex, int sourcey,
                 if ( !blocked )
                 {
                     // success!
-                    for ( inray = 0; inray <= cellray; ++inray )
+                    if (!just_check)
                     {
-                        xpos[inray] = sourcex +
-                            signx * ray_coord_x[inray + cur_offset];
-                        ypos[inray] = sourcey +
-                            signy * ray_coord_y[inray + cur_offset];
+                        // write out the ray
+                        for ( inray = 0; inray <= cellray; ++inray )
+                        {
+                            xpos[inray] = sourcex +
+                                signx * ray_coord_x[inray + cur_offset];
+                            ypos[inray] = sourcey +
+                                signy * ray_coord_y[inray + cur_offset];
+                        }
                     }
                     return cellray + 1;
                 }
             }
         }
     }
-//#ifdef DEBUG_DIAGNOSTICS
-    mpr("Oops! Couldn't find a ray!", MSGCH_DIAGNOSTICS);
-//#endif
     return 0;
 }
 

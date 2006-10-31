@@ -135,11 +135,13 @@ std::string screenshot(bool fullscreen = false);
 unsigned char get_sightmap_char(int feature);
 unsigned char get_magicmap_char(int feature);
 
-int find_ray_path( int sourcex, int sourcey,
-                   int targetx, int targety,
-                   int xpos[], int ypos[] );
+int find_ray_path(int sourcex, int sourcey, int targetx, int targety,
+                  int* xpos = NULL, int* ypos = NULL, bool just_check = true);
 
 void viewwindow(bool draw_it, bool do_updates);
+
+bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+               bool allow_fallback, ray_def& ray );
 
 #if defined(WIN32CONSOLE) || defined(DOS)
 unsigned short dos_brand( unsigned short colour,

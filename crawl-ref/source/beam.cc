@@ -75,10 +75,6 @@ static bool isBouncy(struct bolt &beam);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(struct bolt &beam);
 static void beam_explodes(struct bolt &beam, int x, int y);
-static int bounce(int &step1, int &step2, int w1, int w2, int &n1, int &n2,
-    int l1, int l2, int &t1, int &t2, bool topBlocked, bool sideBlocked);
-static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
-    int stepx, int stepy, bool roundX, bool roundY);
 static int  affect_wall(struct bolt &beam, int x, int y);
 static int  affect_place_clouds(struct bolt &beam, int x, int y);
 static void affect_place_explosion_clouds(struct bolt &beam, int x, int y);
@@ -1217,17 +1213,9 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
 
 void fire_beam( struct bolt &pbolt, item_def *item )
 {
-    int dx, dy;             // total delta between source & target
-    int lx, ly;             // last affected x,y
-    int stepx, stepy;       // x,y increment - FP
-    int wx, wy;             // 'working' x,y - FP
     bool beamTerminate;     // has beam been 'stopped' by something?
-    int nx, ny;             // test(new) x,y - FP
     int tx, ty;             // test(new) x,y - integer
-    bool roundX, roundY;    // which to round?
     int rangeRemaining;
-    bool fuzzyOK;           // fuzzification resulted in OK move
-    bool sideBlocked, topBlocked, random_beam;
 
 #if DEBUG_DIAGNOSTICS
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
@@ -1246,47 +1234,22 @@ void fire_beam( struct bolt &pbolt, item_def *item )
 #endif
 
     // init
-    pbolt.aimed_at_feet = false;
+    pbolt.aimed_at_feet =
+        (pbolt.target_x == pbolt.source_x) &&
+        (pbolt.target_y == pbolt.source_y);
     pbolt.msg_generated = false;
-    roundY = false;
-    roundX = false;
 
-    // first, calculate beam step
-    dx = pbolt.target_x - pbolt.source_x;
-    dy = pbolt.target_y - pbolt.source_y;
+    ray_def ray;
 
-    // check for aim at feet
-    if (dx == 0 && dy == 0)
-    {
-        pbolt.aimed_at_feet = true;
-        stepx = 0;
-        stepy = 0;
-        tx = pbolt.source_x;
-        ty = pbolt.source_y;
-    }
-    else
-    {
-        if (abs(dx) >= abs(dy))
-        {
-            stepx = (dx > 0) ? 100 : -100;
-            stepy = 100 * dy / (abs(dx));
-            roundY = true;
-        }
-        else
-        {
-            stepy = (dy > 0) ? 100 : -100;
-            stepx = 100 * dx / (abs(dy));
-            roundX = true;
-        }
-    }
+    find_ray( pbolt.source_x, pbolt.source_y, pbolt.target_x, pbolt.target_y,
+              true, ray);
+
+    if ( !pbolt.aimed_at_feet )
+        ray.advance();
 
     // give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
-    // setup working coords
-    lx = pbolt.source_x;
-    wx = 100 * lx;
-    ly = pbolt.source_y;
-    wy = 100 * ly;
+
     // setup range
     rangeRemaining = pbolt.range;
     if (pbolt.rangeMax > pbolt.range)
@@ -1304,34 +1267,10 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         oldValue = setBuffering(false);
 #endif
 
-    // cannot use source_x, source_y, target_x, target_y during
-    // step algorithm due to bouncing.
-
-    // now, one step at a time, try to move towards target.
     while(!beamTerminate)
     {
-        nx = wx + stepx;
-        ny = wy + stepy;
-
-        if (roundY)
-        {
-            tx = nx / 100;
-            ty = (ny + 50) / 100;
-        }
-        if (roundX)
-        {
-            ty = ny / 100;
-            tx = (nx + 50) / 100;
-        }
-
-        // check that tx, ty are valid.  If not,  set to last
-        // x,y and break.
-        if (tx < 0 || tx >= GXM || ty < 0 || ty >= GYM)
-        {
-            tx = lx;
-            ty = ly;
-            break;
-        }
+        tx = ray.x();
+        ty = ray.y();
 
         // see if tx, ty is blocked by something
         if (grid_is_solid(grd[tx][ty]))
@@ -1350,78 +1289,43 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             }
             else
             {
-                // BEGIN fuzzy line algorithm
-                fuzzyOK = fuzzyLine(nx,ny,tx,ty,lx,ly,stepx,stepy,roundX,roundY);
-                if (!fuzzyOK)
-                {
-                    // BEGIN bounce case
-                    if (!isBouncy(pbolt))
-                    {
-                        tx = lx;
-                        ty = ly;
-                        break;          // breaks from line tracing
-                    }
-
-                    sideBlocked = false;
-                    topBlocked = false;
-                    // BOUNCE -- guaranteed to return reasonable tx, ty.
-                    // if it doesn't, we'll quit in the next if stmt anyway.
-                    if (roundY)
-                    {
-                        if (grid_is_solid(grd[lx + stepx / 100][ly]))
-                            sideBlocked = true;
-
-                        if (dy != 0)
-                        {
-                            if (grid_is_solid(grd[lx][ly + (stepy>0?1:-1)]))
-                                topBlocked = true;
-                        }
-
-                        rangeRemaining -= bounce(stepx, stepy, wx, wy, nx, ny,
-                            lx, ly, tx, ty, topBlocked, sideBlocked);
-                    }
-                    else
-                    {
-                        if (grid_is_solid(grd[lx][ly + stepy / 100]))
-                            sideBlocked = true;
-
-                        if (dx != 0)
-                        {
-                            if (grid_is_solid(grd[lx + (stepx>0?1:-1)][ly]))
-                                topBlocked = true;
-                        }
-
-                        rangeRemaining -= bounce(stepy, stepx, wy, wx, ny, nx,
-                            ly, lx, ty, tx, topBlocked, sideBlocked);
-                    }
-                    // END bounce case - range check
-                    if (rangeRemaining < 1)
-                    {
-                        tx = lx;
-                        ty = ly;
-                        break;
-                    }
+                // BEGIN bounce case
+                if (!isBouncy(pbolt)) {
+                    ray.regress();
+                    tx = ray.x();
+                    ty = ray.y();
+                    break;          // breaks from line tracing
                 }
+
+                // bounce
+                do {
+                    ray.regress();
+                    ray.advance_and_bounce();
+                    --rangeRemaining;
+                } while ( rangeRemaining > 0 &&
+                          grid_is_solid(grd[ray.x()][ray.y()]) );
+
+                if (rangeRemaining < 1)
+                    break;
+                tx = ray.x();
+                ty = ray.y();
+
             } // end else - beam doesn't affect walls
         } // endif - is tx, ty wall?
 
         // at this point, if grd[tx][ty] is still a wall, we
         // couldn't find any path: bouncy, fuzzy, or not - so break.
         if (grid_is_solid(grd[tx][ty]))
-        {
-            tx = lx;
-            ty = ly;
             break;
-        }
-
+        
         // check for "target termination"
         // occurs when beam can be targetted at empty
         // cell (e.g. a mage wants an explosion to happen
         // between two monsters)
 
-        // in this case,  don't affect the cell - players
-        // /monsters have no chance to dodge or block such
-        // a beam,  and we want to avoid silly messages.
+        // in this case,  don't affect the cell - players and
+        // monsters have no chance to dodge or block such
+        // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
             beamTerminate = beam_term_on_target(pbolt);
 
@@ -1431,7 +1335,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         if (!beamTerminate || !pbolt.is_explosion)
         {
             // random beams: randomize before affect
-            random_beam = false;
+            bool random_beam = false;
             if (pbolt.flavour == BEAM_RANDOM)
             {
                 random_beam = true;
@@ -1493,14 +1397,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             }
 
         }
-
-        // set some stuff up for the next iteration
-        lx = tx;
-        ly = ty;
-
-        wx = nx;
-        wy = ny;
-
+        ray.advance();
     } // end- while !beamTerminate
 
     // the beam has finished,  and terminated at tx, ty
@@ -2290,8 +2187,6 @@ void fire_tracer(struct monsters *monster, struct bolt &pbolt)
 
 bool check_line_of_sight( int sx, int sy, int tx, int ty )
 {
-    struct bolt  pbolt;
-
     const int dist = grid_distance( sx, sy, tx, ty );
 
     // can always see one square away
@@ -2301,42 +2196,11 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
     // currently we limit the range to 8
     if (dist > MONSTER_LOS_RANGE)
         return (false);
-
-    // Redirect player centered LoS to the old method (using display table)...
-    // note that this assumes that viewwindow() has been called if needed 
-    // before we get here (ie this won't work very well if this function gets
-    // called between moving the player and updating the display).
-    if (sx == you.x_pos && sy == you.y_pos)
-        return (see_grid( tx, ty ));
-    else if (tx == you.x_pos && ty == you.y_pos)
-        return (see_grid( sx, sy ));
-
-    // Okay, no easy way... set up a LoS beam between the points
-    pbolt.flavour = BEAM_LINE_OF_SIGHT;
-    pbolt.is_tracer = true;
-    pbolt.source_x = sx;
-    pbolt.source_y = sy;
-    pbolt.target_x = tx;
-    pbolt.target_y = ty;
-    pbolt.range = MONSTER_LOS_RANGE;
-    pbolt.rangeMax = MONSTER_LOS_RANGE;
-
-    // setting these just to be safe:
-    pbolt.hit = 0;
-    pbolt.type = 0;
-    pbolt.damage = dice_def( 0, 1 );
-    pbolt.colour = BLACK;
-    pbolt.is_beam = true;
-
-    // init tracer variables (used to tell if we "hit" the target)
-    pbolt.foe_count = pbolt.fr_count = 0;
-    pbolt.foe_power = pbolt.fr_power = 0;
-
-    // fire!
-    fire_beam( pbolt );
-
-    // got to target?
-    return (pbolt.foe_count == 1);
+    
+    // Note that we are guaranteed to be within the player LOS range.
+    // Thus find_ray_path() is enough. If this ever changes, we can
+    // create the appropriate beam and advance it manually.
+    return ( find_ray_path(sx, sy, tx, ty) != 0 );
 }
 
 /*
@@ -2354,7 +2218,7 @@ void mimic_alert(struct monsters *mimic)
 
 static bool isBouncy(struct bolt &beam)
 {
-    // at present, only non-enchantment eletrcical beams bounce.
+    // at present, only non-enchantment electrical beams bounce.
     if (beam.name[0] != '0' && beam.flavour == BEAM_ELECTRICITY)
         return (true);
 
@@ -2542,131 +2406,6 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
 #define B_VERT      2
 #define B_BOTH      3
 
-static int bounce(int &step1, int &step2, int w1, int w2, int &n1, int &n2,
-    int l1, int l2, int &t1, int &t2, bool topBlocked, bool sideBlocked)
-{
-    int bounceType = 0;
-    int bounceCount = 1;
-
-    if (topBlocked) bounceType = B_HORZ;
-    if (sideBlocked) bounceType = B_VERT;
-    if (topBlocked && sideBlocked)
-    {
-        // check for veritcal bounce only
-        if ((w2 + step2 - 50)/100 == (w2 - 50)/100)
-            bounceType = B_VERT;
-        else
-            bounceType = B_BOTH;
-    }
-
-    switch (bounceType)
-    {
-        case B_VERT:            // easiest
-            n1 = w1;
-            n2 = w2 + step2;
-            step1 = -step1;
-            t1 = n1 / 100;
-            t2 = (n2 + 50)/100;
-            // check top
-            if (t2 != n2/100 && topBlocked)
-                t2 = n2/100;
-            break;
-        case B_HORZ:            // a little tricky
-            if (step2 > 0)
-                n2 = (100 + 200*(w2/100)) - (w2 + step2);
-            else
-                n2 = (100 + 200*((w2 - 50)/100)) - (w2 + step2);
-            n1 = w1 + step1;
-            t1 = n1 /100;
-            t2 = (n2 + 50) / 100;
-            step2 = -step2;
-            break;
-        case B_BOTH:
-            // vertical:
-            n1 = w1;
-            t1 = l1;
-            t2 = l2;
-            // horizontal:
-            if (step2 > 0)
-                n2 = (100 + 200*(w2/100)) - (w2 + step2);
-            else
-                n2 = (100 + 200*((w2 - 50)/100)) - (w2 + step2);
-            // reverse both directions
-            step1 =- step1;
-            step2 =- step2;
-            bounceCount = 2;
-            break;
-        default:
-            bounceCount = 0;
-            break;
-    }
-
-    return (bounceCount);
-}
-
-static bool fuzzyLine(int nx, int ny, int &tx, int &ty, int lx, int ly,
-    int stepx, int stepy, bool roundX, bool roundY)
-{
-    bool fuzzyOK = false;
-    int fx, fy;                 // fuzzy x,y
-
-    // BEGIN fuzzy line algorithm
-    fx = tx;
-    fy = ty;
-    if (roundY)
-    {
-        // try up
-        fy = (ny + 100) / 100;
-        // check for monotonic
-        if (fy != ty && ((stepy>0 && fy >= ly)
-            || (stepy<0 && fy <= ly)))
-            fuzzyOK = true;
-        // see if up try is blocked
-        if (fuzzyOK && grid_is_solid(grd[tx][fy]))
-            fuzzyOK = false;
-
-        // try down
-        if (!fuzzyOK)
-            fy = ny / 100;
-        // check for monotonic
-        if (fy != ty && ((stepy>0 && fy >= ly)
-            || (stepy<0 && fy <= ly)))
-            fuzzyOK = true;
-        if (fuzzyOK && grid_is_solid(grd[tx][fy]))
-            fuzzyOK = false;
-    }
-    if (roundX)
-    {
-        // try up
-        fx = (nx + 100) / 100;
-        // check for monotonic
-        if (fx != tx && ((stepx>0 && fx >= lx)
-            || (stepx<0 && fx <= lx)))
-            fuzzyOK = true;
-        // see if up try is blocked
-        if (fuzzyOK && grid_is_solid(grd[fx][ty]))
-            fuzzyOK = false;
-
-        // try down
-        if (!fuzzyOK)
-            fx = nx / 100;
-        // check for monotonic
-        if (fx != tx && ((stepx>0 && fx >= lx)
-            || (stepx<0 && fx <= lx)))
-            fuzzyOK = true;
-        if (fuzzyOK && grid_is_solid(grd[fx][ty]))
-            fuzzyOK = false;
-    }
-    // END fuzzy line algorithm
-
-    if (fuzzyOK)
-    {
-        tx = fx;
-        ty = fy;
-    }
-
-    return (fuzzyOK);
-}
 
 // affects a single cell.
 // returns the amount of extra range 'used up' by this beam

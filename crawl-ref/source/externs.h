@@ -191,6 +191,23 @@ struct bolt
     bolt();
 };
 
+struct ray_def
+{
+    double accx;
+    double accy;
+    double slope;
+    // Quadrant 1: down-right
+    // Quadrant 2: down-left
+    // Quadrant 3: up-left
+    // Quadrant 4: up-right
+    int quadrant;
+    
+    int x() const { return (int)(accx); }
+    int y() const { return (int)(accy); }
+    int advance();              // returns the direction taken (0,1,2)
+    void advance_and_bounce();
+    void regress();
+};
 
 struct run_check_dir
 {
