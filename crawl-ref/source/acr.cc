@@ -1420,7 +1420,7 @@ static void decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
-        if (you.duration[DUR_GOURMAND] < 200)
+        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX)
             you.duration[DUR_GOURMAND]++;
     }
     else
