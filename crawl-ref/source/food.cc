@@ -242,7 +242,7 @@ bool butchery(void)
 	// offer the possibility of butchering
 	it_name(objl, DESC_NOCAP_A, str_pass);
 	snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
-	int answer = yesnoquit( info, true, 0, false );
+	int answer = yesnoquit( info, true, 'n', false );
 	if ( answer == -1 )
 	    break;
 	if ( answer == 0 )
