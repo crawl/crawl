@@ -1121,6 +1121,7 @@ enum duration_type
     DUR_REPEL_UNDEAD,                   //   25
     DUR_STUN,
     DUR_CUT,                            //   27
+    DUR_GOURMAND,                       //   28
     NUM_DURATIONS = 30                  //   must be at least 30
 };
 

@@ -2016,6 +2016,10 @@ void jewellery_wear_effects(item_def &item)
         mpr("You feel a brief urge to hack something to bits.");
         ident = ID_KNOWN_TYPE;
         break;
+
+    case AMU_THE_GOURMAND:
+        you.duration[DUR_GOURMAND] = 0;
+        break;
     }
 
     // Artefacts have completely different appearance than base types
@@ -2286,6 +2290,9 @@ void jewellery_remove_effects(item_def &item)
         // dec_max_mp(9);
         break;
 
+    case AMU_THE_GOURMAND:
+        you.duration[DUR_GOURMAND] = 0;
+        break;
     }
 
     if (is_random_artefact(item))

@@ -1416,43 +1416,15 @@ static void prep_input() {
     print_stats();
 }
 
-/* Perhaps we should write functions like: update_repel_undead(),
-   update_liquid_flames(), and so on. Even better, we could have a
-   vector of callback functions (or objects) which get installed
-   at some point.
-*/
-
-static void world_reacts() {
-
-    bool its_quiet;             //jmf: for silence messages
-
-    if (you.num_turns != -1)
-        you.num_turns++;
-
-    //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
-
-    stealth = check_stealth();
-
-#if 0
-    // too annoying for regular diagnostics
-    snprintf( info, INFO_SIZE, "stealth: %d", stealth );
-    mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
-    if (you.special_wield != SPWLD_NONE)
-        special_wielded();
-
-    if (one_chance_in(10))
-    {   
-        // this is instantaneous
-        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
-            you_teleport2( true ); 
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
-            you_teleport2( false, true ); // to new area of the Abyss
+static void decrement_durations()
+{
+    if (wearing_amulet(AMU_THE_GOURMAND))
+    {
+        if (you.duration[DUR_GOURMAND] < 200)
+            you.duration[DUR_GOURMAND]++;
     }
-
-    if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
-        in_a_cloud();
+    else
+        you.duration[DUR_GOURMAND] = 0;
 
     if (you.duration[DUR_REPEL_UNDEAD] > 1)
         you.duration[DUR_REPEL_UNDEAD]--;
@@ -2061,6 +2033,47 @@ static void world_reacts() {
             more();
         }
     }
+}
+
+/* Perhaps we should write functions like: update_repel_undead(),
+   update_liquid_flames(), and so on. Even better, we could have a
+   vector of callback functions (or objects) which get installed
+   at some point.
+*/
+
+static void world_reacts() {
+
+    bool its_quiet;             //jmf: for silence messages
+
+    if (you.num_turns != -1)
+        you.num_turns++;
+
+    //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
+
+    stealth = check_stealth();
+
+#if 0
+    // too annoying for regular diagnostics
+    snprintf( info, INFO_SIZE, "stealth: %d", stealth );
+    mpr( info, MSGCH_DIAGNOSTICS );
+#endif
+
+    if (you.special_wield != SPWLD_NONE)
+        special_wielded();
+
+    if (one_chance_in(10))
+    {   
+        // this is instantaneous
+        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
+            you_teleport2( true ); 
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
+            you_teleport2( false, true ); // to new area of the Abyss
+    }
+
+    if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+        in_a_cloud();
+
+    decrement_durations();
 
     const int food_use = player_hunger_rate();
 

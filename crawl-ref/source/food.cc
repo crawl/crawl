@@ -615,6 +615,58 @@ bool eat_from_floor(void)
     return (false);
 }
 
+static const char *chunk_flavour_phrase(bool likes_chunks)
+{
+    const char *phrase =
+        likes_chunks? "tastes great." : "tastes terrible.";
+
+    const int gourmand = you.duration[DUR_GOURMAND];
+    if (gourmand >= GOURMAND_MAX)
+        phrase = 
+            one_chance_in(8)? "tastes like chicken!"
+                            : "tastes great.";
+    else if (gourmand > GOURMAND_MAX * 75 / 100)
+        phrase = "tastes very good.";
+    else if (gourmand > GOURMAND_MAX * 50 / 100)
+        phrase = "tastes good.";
+    else if (gourmand > GOURMAND_MAX * 25 / 100)
+        phrase = "is not very appetising.";
+
+    return (phrase);
+}
+
+static int chunk_nutrition(bool likes_chunks)
+{
+    int nutrition = 1000;
+    if (likes_chunks || you.hunger_state < HS_SATIATED)
+        return (nutrition);
+
+    const int gourmand = 
+        wearing_amulet(AMU_THE_GOURMAND)? 
+            you.duration[DUR_GOURMAND]
+          : 0;
+
+    int effective_nutrition = 
+        nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
+                  / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
+
+    const int epercent = effective_nutrition * 100 / nutrition;
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, 
+            "Gourmand factor: %d, chunk base: %d, effective: %d, %%: %d",
+                    gourmand,
+                    nutrition,
+                    effective_nutrition,
+                    epercent);
+#endif
+
+    return (effective_nutrition);
+}
+
+static void say_chunk_flavour(bool likes_chunks)
+{
+    mprf("This raw flesh %s", chunk_flavour_phrase(likes_chunks));
+}
 
 // never called directly - chunk_effect values must pass
 // through food::determine_chunk_effect() first {dlb}:
@@ -663,14 +715,9 @@ static void eat_chunk( int chunk_effect )
 
         // note that this is the only case that takes time and forces redraw
         case CE_CLEAN:
-            strcpy(info, "This raw flesh ");
-
-            strcat(info, (likes_chunks) ? "tastes good."
-                                        : "is not very appetising.");
-            mpr(info);
-
+            say_chunk_flavour(likes_chunks);
             start_delay( DELAY_EAT, 2 );
-            lessen_hunger( 1000, true );
+            lessen_hunger( chunk_nutrition(likes_chunks), true );
             break;
         }
     }
@@ -1212,12 +1259,15 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     {
         if (you.species == SP_GHOUL)
         {
+            // [dshaligram] Leaving rotting chunk effect intact for ghouls.
             if (this_chunk_effect == CE_CLEAN)
                 this_chunk_effect = CE_ROTTEN;
         }
         else
         {
-            if (this_chunk_effect == CE_ROTTEN)
+            // [dshaligram] New AotG behaviour - contaminated chunks become
+            // clean, but rotten chunks remain rotten.
+            if (this_chunk_effect == CE_CONTAMINATED)
                 this_chunk_effect = CE_CLEAN;
         }
     }

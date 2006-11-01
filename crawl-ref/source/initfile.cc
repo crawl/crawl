@@ -397,6 +397,7 @@ static void set_default_activity_interrupts()
         // the delay will just trash all queued delays, including travel.
         "interrupt_ascending_stairs =",
         "interrupt_descending_stairs =",
+        "interrupt_uninterruptible =",
         NULL
     };
 

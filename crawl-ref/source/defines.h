@@ -143,6 +143,10 @@
 #define MAX_ROD_CHARGE                  17
 #define ROD_CHARGE_MULT                 100
 
+// Should never exceed 255 - durations are saved as single bytes.
+#define GOURMAND_MAX                    200
+#define GOURMAND_NUTRITION_BASE         20
+
 // This value is used to mark immune levels of MR
 #define MAG_IMMUNE                      5000
 

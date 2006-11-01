@@ -972,7 +972,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     // how many durations?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.duration[j] = unmarshallByte(th);
+        you.duration[j] = (unsigned char) unmarshallByte(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
