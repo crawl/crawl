@@ -650,8 +650,8 @@ static int chunk_nutrition(bool likes_chunks)
         nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
                   / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
 
-    const int epercent = effective_nutrition * 100 / nutrition;
 #ifdef DEBUG_DIAGNOSTICS
+    const int epercent = effective_nutrition * 100 / nutrition;
     mprf(MSGCH_DIAGNOSTICS, 
             "Gourmand factor: %d, chunk base: %d, effective: %d, %%: %d",
                     gourmand,
