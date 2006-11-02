@@ -1893,6 +1893,7 @@ static option_handler handlers[] =
                     option_hboolean },
     { "pickup_thrown", &Options.pickup_thrown, option_hboolean },
     { "pickup_dropped", &Options.pickup_dropped, option_hboolean },
+    { "sort_menus", &Options.sort_menus, option_hboolean },
     { "show_waypoints", &Options.show_waypoints, option_hboolean },
     { "item_colour", &Options.item_colour, option_hboolean },
     { "target_zero_exp", &Options.target_zero_exp, option_hboolean },

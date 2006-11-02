@@ -790,6 +790,8 @@ struct game_options
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
 
+    bool        sort_menus;
+
     int         dump_kill_places; // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 

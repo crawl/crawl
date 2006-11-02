@@ -530,6 +530,8 @@ void reset_options(bool clear_name)
     Options.travel_stair_cost      = 500;
     Options.travel_exclude_radius2 =  68;
 
+    Options.sort_menus             = false;
+
     Options.tc_reachable           = BLUE;
     Options.tc_excluded            = LIGHTMAGENTA;
     Options.tc_exclude_circle      = RED;
@@ -1632,6 +1634,10 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "fsim_xl")
     {
         Options.fsim_xl = atoi(field.c_str());
+    }
+    else if (key == "sort_menus")
+    {
+        Options.sort_menus = read_bool(field, Options.sort_menus);
     }
     else if (key == "travel_delay")
     {

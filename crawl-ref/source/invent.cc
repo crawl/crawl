@@ -290,9 +290,9 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             items_in_class.push_back( new InvEntry(*mitems[j]) );
         }
 
-        // Do we need an option to control sorting?
-        std::sort( items_in_class.begin(), items_in_class.end(),
-                   compare_menu_entries );
+        if (Options.sort_menus)
+            std::sort( items_in_class.begin(), items_in_class.end(),
+                       compare_menu_entries );
 
         for (unsigned int j = 0; j < items_in_class.size(); ++j)
         {
