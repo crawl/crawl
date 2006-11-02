@@ -889,7 +889,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_TRANSMIGRATION
      100,                       // SK_DIVINATIONS
      70,                        // SK_FIRE_MAGIC
-     150,                       // SK_ICE_MAGIC
+     135,                       // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
@@ -931,7 +931,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_TRANSLOCATIONS
      100,                       // SK_TRANSMIGRATION
      100,                       // SK_DIVINATIONS
-     150,                       // SK_FIRE_MAGIC
+     135,                       // SK_FIRE_MAGIC
      70,                        // SK_ICE_MAGIC
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
@@ -1106,7 +1106,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_FIRE_MAGIC
      100,                       // SK_ICE_MAGIC
      70,                        // SK_AIR_MAGIC
-     150,                       // SK_EARTH_MAGIC
+     135,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
      100,                       // SK_INVOCATIONS
      100,                       // SK_EVOCATIONS
