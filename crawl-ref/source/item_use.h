@@ -42,6 +42,7 @@ bool takeoff_armour(int index);
  * *********************************************************************** */
 void drink(void);
 
+bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

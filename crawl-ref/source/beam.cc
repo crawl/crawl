@@ -3199,7 +3199,7 @@ static int affect_player( struct bolt &beam )
         && beam.flavour != BEAM_POISON_ARROW
         && !player_res_poison())
     {
-        if (hurted || (beam.name.find("needle") != std::string::npos
+        if (hurted || (beam.ench_power == AUTOMATIC_HIT
                         && random2(100) < 90 - (3 * player_AC())))
         {
             poison_player( 1 + random2(3) );
@@ -3525,7 +3525,8 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
             && beam.flavour != BEAM_POISON
             && beam.flavour != BEAM_POISON_ARROW)
         {
-            if (beam.name.find("needle") != std::string::npos
+            // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
+            if (beam.ench_power == AUTOMATIC_HIT
                 && random2(100) < 90 - (3 * mon->armour_class))
             {
                 poison_monster( mon, YOU_KILL(beam.thrower), 2 );

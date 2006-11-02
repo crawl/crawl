@@ -28,6 +28,7 @@
 #include "beam.h"
 #include "debug.h"
 #include "effects.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1065,6 +1066,21 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exHitBonus = (hitMult * monster->hit_dice) / 10 + 1;
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
 
+        // monsters no longer gain unfair advantages with weapons of fire/ice 
+        // and incorrect ammo.  They now have same restriction as players.
+
+        const int bow_brand = 
+                get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
+        const int ammo_brand = get_ammo_brand( item );
+
+        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
+            baseDam = 4;
+
+        // [dshaligram] This is a horrible hack - we force beam.cc to consider
+        // this beam "needle-like".
+        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
+            pbolt.ench_power = AUTOMATIC_HIT;
+
         // elven bow w/ elven arrow, also orcish
         if (get_equip_race( mitm[monster->inv[MSLOT_WEAPON]] )
                 == get_equip_race( mitm[monster->inv[MSLOT_MISSILE]] ))
@@ -1075,13 +1091,6 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             if (get_equip_race(mitm[monster->inv[MSLOT_WEAPON]]) == ISFLAG_ELVEN)
                 pbolt.hit++;
         }
-
-        // monsters no longer gain unfair advantages with weapons of fire/ice 
-        // and incorrect ammo.  They now have same restriction as players.
-
-        const int bow_brand = get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
-
-        const int ammo_brand = get_ammo_brand( item );
 
         bool poison = (ammo_brand == SPMSL_POISONED 
                         || ammo_brand == SPMSL_POISONED_II);
@@ -1100,6 +1109,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         {
             baseHit += 2;
             exDamBonus += 6;
+
             pbolt.flavour = BEAM_FIRE;
             pbolt.name = "bolt of ";
 
@@ -1117,6 +1127,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         {
             baseHit += 2;
             exDamBonus += 6;
+
             pbolt.flavour = BEAM_COLD;
             pbolt.name = "bolt of ";
 

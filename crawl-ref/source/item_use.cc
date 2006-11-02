@@ -1257,6 +1257,17 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
     return (speed);
 }
 
+// Determines if the end result of the combined launcher + ammo brands a
+// fire/frost beam.
+bool elemental_missile_beam(int launcher_brand, int ammo_brand)
+{
+    int element = (launcher_brand == SPWPN_FROST)
+                + (ammo_brand == SPMSL_ICE)
+                - (launcher_brand == SPWPN_FLAME)
+                - (ammo_brand == SPMSL_FLAME);
+    return (element);
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If dummy_target is non-NULL, throw_it fakes a bolt and calls
@@ -1433,6 +1444,17 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         // Slings are terribly weakened otherwise
         if (lnch_base_dam == 0)
             baseDam = item_base_dam;
+
+        // If we've a zero base damage + an elemental brand, up the damage
+        // slightly so the brand has something to work with. This should
+        // only apply to needles.
+        if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
+            baseDam = 4;
+
+        // [dshaligram] This is a horrible hack - we force beam.cc to consider
+        // this beam "needle-like".
+        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
+            pbolt.ench_power = AUTOMATIC_HIT;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
