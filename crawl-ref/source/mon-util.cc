@@ -305,13 +305,18 @@ mon_holy_type mons_class_holiness(int mc)
     return (smc->holiness);
 }                               // end mons_holiness()
 
+bool mons_class_is_stationary(int type)
+{
+    return (type == MONS_OKLOB_PLANT
+                || type == MONS_PLANT
+                || type == MONS_FUNGUS
+                || type == MONS_CURSE_SKULL
+                || mons_is_mimic(type));
+}
+
 bool mons_is_stationary(const monsters *mons)
 {
-    return (mons->type == MONS_OKLOB_PLANT
-                    || mons->type == MONS_PLANT
-                    || mons->type == MONS_FUNGUS
-                    || mons->type == MONS_CURSE_SKULL
-                    || mons_is_mimic(mons->type));
+    return (mons_class_is_stationary(mons->type));
 }
 
 bool invalid_monster(const monsters *mons)

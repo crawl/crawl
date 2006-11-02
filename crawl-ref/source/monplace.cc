@@ -254,7 +254,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     }
 
     // Monsters that can't move shouldn't be taking the stairs -- bwr
-    if (proximity == PROX_NEAR_STAIRS && mons_speed( mon_type ) == 0)
+    if (proximity == PROX_NEAR_STAIRS && mons_class_is_stationary( mon_type ))
         proximity = PROX_AWAY_FROM_PLAYER;
 
     // (4) for first monster, choose location.  This is pretty intensive.
