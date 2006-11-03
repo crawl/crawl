@@ -1986,14 +1986,11 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 needs_damage = true;
             }
 
-            if (needs_damage && !done_damage) 
-            {
-                if (damage > 0)
-                {
-                    desc += " " + damage_string();
-                    desc += hiscore_newline_string();
-                }
-            }
+            if (needs_damage && !done_damage && damage > 0) 
+                desc += " " + damage_string();
+
+            if (needs_damage)
+                desc += hiscore_newline_string();
         }
     }
 

@@ -497,7 +497,7 @@ void dancing_weapon(int pow, bool force_hostile)
     you.equip[EQ_WEAPON] = -1;
 
     menv[summs].inv[MSLOT_WEAPON] = i;
-    menv[summs].number = mitm[i].colour;
+    menv[summs].colour = mitm[i].colour;
 
     return;
 
@@ -950,9 +950,9 @@ bool recall(char type_recalled)
             /* abomin created by twisted res, although it gets others too */
             if ( !((monster->type == MONS_ABOMINATION_SMALL
                             || monster->type == MONS_ABOMINATION_LARGE)
-                        && (monster->number == BROWN
-                            || monster->number == RED
-                            || monster->number == LIGHTRED)) )
+                        && (monster->colour == BROWN
+                            || monster->colour == RED
+                            || monster->colour == LIGHTRED)) )
             {
                 if (monster->type != MONS_REAPER
                         && mons_holiness(monster) != MH_UNDEAD)

@@ -2229,7 +2229,7 @@ static void handle_nearby_ability(struct monsters *monster)
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // used for colour (butterflies too, but they don't change)
-        monster->number = random_colour();
+        monster->colour = random_colour();
         break;
 
     case MONS_GIANT_EYEBALL:
@@ -2306,7 +2306,7 @@ static void handle_nearby_ability(struct monsters *monster)
 
     case MONS_PANDEMONIUM_DEMON:
         if (ghost.values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
-            monster->number = random_colour();
+            monster->colour = random_colour();
         break;
     }
 }                               // end handle_nearby_ability()

@@ -1234,17 +1234,9 @@ void load_ghost(void)
         menv[imn].flags = 0;
         menv[imn].foe = MHITNOT;
         menv[imn].foe_memory = 0;
-
+        menv[imn].colour = mons_class_colour(MONS_PLAYER_GHOST);
         menv[imn].number = 250;
-
-        for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-        {
-            if (ghost.values[i] != MS_NO_SPELL)
-            {
-                menv[imn].number = MST_GHOST;
-                break;
-            }
-        }
+        mons_load_spells(&menv[imn], MST_GHOST);
 
         for (i = 0; i < NUM_MONSTER_SLOTS; i++)
             menv[imn].inv[i] = NON_ITEM;
@@ -1886,7 +1878,7 @@ void generate_random_demon(void)
     menv[rdem].evasion = ghost.values[ GVAL_EV ];
     menv[rdem].speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
     menv[rdem].speed_increment = 70;
-    menv[rdem].number = random_colour();        // demon's colour
+    menv[rdem].colour = random_colour();        // demon's colour
 
     for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
         ghost.values[i] = SPELL_NO_SPELL;

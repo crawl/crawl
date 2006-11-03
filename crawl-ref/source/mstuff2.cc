@@ -797,7 +797,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     if (mons_is_mimic( monster->type ))
     {
         monster->type = MONS_GOLD_MIMIC + random2(5);
-        monster->number = get_mimic_colour( monster );
+        monster->colour = get_mimic_colour( monster );
     }
 
     if (!silent)
