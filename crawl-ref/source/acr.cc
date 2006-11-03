@@ -1868,23 +1868,55 @@ static void decrement_durations()
         //       this should make it a bit more interesting for
         //       Crusaders again.
         //     - similarly for the amulet
-        int chance = 10 + you.mutation[MUT_BERSERK] * 25 
-                        + (wearing_amulet( AMU_RAGE ) ? 10 : 0)
-                        + (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
+        int chances[4];
+        chances[0] = 10;
+        chances[1] = you.mutation[MUT_BERSERK] * 25;
+        chances[2] = (wearing_amulet( AMU_RAGE ) ? 10 : 0);
+        chances[3] = (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
+        const char* reasons[4] = {
+            "You struggle, and manage to stay standing.",
+            "Your mutated body refuses to collapse.",
+            "You feel your neck pulse as blood rushes through your body.",
+            "Your mind masters your body."
+        };
+        const int chance = chances[0] + chances[1] + chances[2] + chances[3];
 
+        if (you.berserk_penalty == NO_BERSERK_PENALTY)
+            mpr("Your unnatural rage keeps you on your feet.");
         // Note the beauty of Trog!  They get an extra save that's at
         // the very least 20% and goes up to 100%.
-        if (you.berserk_penalty == NO_BERSERK_PENALTY
-            || (you.religion == GOD_TROG && you.piety > random2(150))
-            || !one_chance_in( chance ))
+        else if ( you.religion == GOD_TROG && you.piety > random2(150) &&
+                  !player_under_penance() )
+            mpr("Trog's vigour flows through your veins.");
+        else if ( !one_chance_in(chance) )
         {
-            mpr("You are exhausted.");
+            // Survived the probabilistic check.
+            // Figure out why.
+
+            int cause = random2(chance); // philosophically speaking...
+            int i;
+            for ( i = 0; i < 4; ++i )
+            {
+                if ( cause < chances[i] )
+                {
+                    // only print a reason if it actually exists
+                    if ( reasons[i][0] != 0 )
+                        mpr(reasons[i]);
+                    break;
+                }
+                else
+                    cause -= chances[i];
+            }
+            if (i == 4)
+                mpr("Oops. Couldn't find a reason. Well, lucky you.");
         }
         else
         {
             mpr("You pass out from exhaustion.", MSGCH_WARN);
             you.paralysis += roll_dice( 1, 4 );
         }
+        if ( you.paralysis == 0 )
+            mpr("You are exhausted.", MSGCH_WARN);
 
         // this resets from an actual penalty or from NO_BERSERK_PENALTY
         you.berserk_penalty = 0;
