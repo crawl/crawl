@@ -479,8 +479,13 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         }
     }
 
-    if (Feature[grid_value].map_colour != DARKGREY)
-        tc = Feature[grid_value].map_colour;
+    int feature_colour = DARKGREY;
+    feature_colour = 
+        is_terrain_seen(x + 1, y + 1)? Feature[grid_value].seen_colour 
+                                     : Feature[grid_value].map_colour;
+
+    if (feature_colour != DARKGREY)
+        tc = feature_colour;
 
     return fix_colour(tc);
 }

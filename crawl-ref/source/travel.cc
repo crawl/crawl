@@ -623,6 +623,16 @@ void prevent_travel_to(const std::string &feature)
         traversable_terrain[feature_type] = FORBIDDEN;
 }
 
+bool is_branch_stair(int gridx, int gridy)
+{
+    coord_def pos = { gridx, gridy };
+
+    const level_id curr = level_id::get_current_level_id();
+    const level_id next = level_id::get_next_level_id(pos);
+
+    return (next.branch != curr.branch);
+}
+
 bool is_stair(unsigned gridc)
 {
     return (is_travelable_stair(gridc)
@@ -2627,7 +2637,10 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
             unsigned char grid = grd[x + 1][y + 1];
             unsigned char envc = (unsigned char) env.map[x][y];
 
-            if (envc && is_travelable_stair(grid))
+            if (envc 
+                    && is_travelable_stair(grid) 
+                    && (is_terrain_seen(x + 1, y + 1)
+                        || !is_branch_stair(x + 1, y + 1)))
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
