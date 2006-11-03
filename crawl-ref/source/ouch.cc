@@ -294,16 +294,19 @@ void splash_with_acid( char acid_strength )
             item_corrode( you.equip[splc] );
     }
 
-    if (dam)
+    if (dam > 0)
     {
-        mpr( "The acid burns!" );
-
         const int post_res_dam = dam * player_acid_resist_factor() / 100;
 
-        if (post_res_dam < dam)
-            canned_msg(MSG_YOU_RESIST);
+        if (post_res_dam > 0)
+        {
+            mpr( "The acid burns!" );
 
-        ouch( post_res_dam, 0, KILLED_BY_ACID );
+            if (post_res_dam < dam)
+                canned_msg(MSG_YOU_RESIST);
+
+            ouch( post_res_dam, 0, KILLED_BY_ACID );
+        }
     }
 }                               // end splash_with_acid()
 

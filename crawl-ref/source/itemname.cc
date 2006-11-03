@@ -875,16 +875,16 @@ static const char *item_name_2(
             strncat(buff,
                    (primary ==  0) ? "" :
                    (primary ==  1) ? "bubbling " :
-                   (primary ==  2) ? "lumpy " :
-                   (primary ==  3) ? "fuming " :
-                   (primary ==  4) ? "smoky " :
-                   (primary ==  5) ? "fizzy " :
-                   (primary ==  6) ? "glowing " :
-                   (primary ==  7) ? "sedimented " :
-                   (primary ==  8) ? "metallic " :
-                   (primary ==  9) ? "murky " :
-                   (primary == 10) ? "gluggy " :
-                   (primary == 11) ? "viscous " :
+                   (primary ==  2) ? "fuming " :
+                   (primary ==  3) ? "fizzy " :
+                   (primary ==  4) ? "viscous " :
+                   (primary ==  5) ? "lumpy " :
+                   (primary ==  6) ? "smoky " :
+                   (primary ==  7) ? "glowing " :
+                   (primary ==  8) ? "sedimented " :
+                   (primary ==  9) ? "metallic " :
+                   (primary == 10) ? "murky " :
+                   (primary == 11) ? "gluggy " :
                    (primary == 12) ? "oily " :
                    (primary == 13) ? "slimy " :
                    (primary == 14) ? "emulsified " : "buggy ", ITEMNAME_SIZE);

@@ -329,6 +329,27 @@ static bool check_saved_game(void)
     return false;
 }
 
+static unsigned char random_potion_description()
+{
+    int desc, nature, colour;
+
+    do {
+        desc = random2( 15 * 14 );
+
+        if (coinflip())
+            desc %= 14;
+
+        nature = desc / 14;
+        colour = desc % 14;
+
+        // nature and colour correspond to primary and secondary
+        // in itemname.cc; this check ensures clear potions don't
+        // get odd qualifiers.
+    } while (!colour && nature > 4);
+
+    return (unsigned char) desc;
+}
+
 bool new_game(void)
 {
     int i, j;                   // loop variables {dlb}
@@ -665,9 +686,7 @@ bool new_game(void)
                     break;
 
                 case IDESC_POTIONS: // potions
-                    you.item_description[i][j] = random2( 15 * 14 );
-                    if (coinflip())
-                        you.item_description[i][j] %= 14;
+                    you.item_description[i][j] = random_potion_description();
                     break;
 
                 case IDESC_SCROLLS: // scrolls
