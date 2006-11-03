@@ -148,7 +148,8 @@ int player_regen(void);
  * called from: fight - files - it_use2 - misc - ouch - spells - spells2
  * *********************************************************************** */
 int player_res_cold(bool calc_unid = true);
-int player_res_acid(void);
+int player_res_acid(bool consider_unidentified_gear = true);
+int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true);
 

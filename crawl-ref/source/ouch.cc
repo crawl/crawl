@@ -249,7 +249,7 @@ int check_your_resists(int hurted, int flavour)
         if (player_res_acid())
         {
             canned_msg( MSG_YOU_RESIST );
-            hurted /= 3;
+            hurted = hurted * player_acid_resist_factor() / 100;
         }
         break;
 
@@ -275,10 +275,6 @@ int check_your_resists(int hurted, int flavour)
 
 void splash_with_acid( char acid_strength )
 {
-    /* affects equip only?
-       assume that a message has already been sent, also that damage has
-       already been done
-     */
     char splc = 0;
     int  dam = 0;
 
@@ -301,7 +297,13 @@ void splash_with_acid( char acid_strength )
     if (dam)
     {
         mpr( "The acid burns!" );
-        ouch( dam, 0, KILLED_BY_ACID );
+
+        const int post_res_dam = dam * player_acid_resist_factor() / 100;
+
+        if (post_res_dam < dam)
+            canned_msg(MSG_YOU_RESIST);
+
+        ouch( post_res_dam, 0, KILLED_BY_ACID );
     }
 }                               // end splash_with_acid()
 

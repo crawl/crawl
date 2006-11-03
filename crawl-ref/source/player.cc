@@ -998,12 +998,44 @@ int player_res_cold(bool calc_unid)
     return (rc);
 }
 
-int player_res_acid( void )
+int player_res_acid(bool consider_unidentified_gear)
 {
-    return (!transform_changed_physiology()
-            && ((you.species == SP_GOLDEN_DRACONIAN 
+    int res = 0;
+    if (!transform_changed_physiology())
+    {
+        if (you.species == SP_GOLDEN_DRACONIAN 
                     && you.experience_level >= 7)
-                || you.mutation[MUT_YELLOW_SCALES] == 3));
+            res += 2;
+
+        res += you.mutation[MUT_YELLOW_SCALES] * 2 / 3;
+    }
+
+    if (wearing_amulet(AMU_RESIST_CORROSION, consider_unidentified_gear))
+        res++;
+
+    return (res);
+}
+
+// Returns a factor X such that post-resistance acid damage can be calculated
+// as pre_resist_damage * X / 100.
+int player_acid_resist_factor()
+{
+    int res = player_res_acid();
+
+    int factor = 100;
+
+    if (res == 1)
+        factor = 50;
+    else if (res == 2)
+        factor = 34;
+    else if (res > 2)
+    {
+        factor = 30;
+        while (res-- > 2 && factor >= 20)
+            factor = factor * 90 / 100;
+    }
+
+    return (factor);
 }
 
 int player_res_electricity(bool calc_unid)
