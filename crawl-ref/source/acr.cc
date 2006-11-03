@@ -1381,7 +1381,7 @@ void process_command( command_type cmd ) {
 #endif
 
     case CMD_SAVE_GAME:
-	if (yesno("Save game and exit?", false, 'n'))
+	if (yesno("Save game and exit?", true, 'n'))
 	    save_game(true);
 	break;
 
