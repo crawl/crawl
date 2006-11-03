@@ -164,7 +164,7 @@ char list_spells(void)
                     if (already)
                         cprintf( "/" );
 
-                    cprintf( spelltype_short_name( 1 << i ) );
+                    cprintf( "%s", spelltype_short_name( 1 << i ) );
                     already = true;
                 }
             }

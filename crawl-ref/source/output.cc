@@ -285,7 +285,7 @@ void print_stats(void)
                      Options.terse_hand );
             str_pass[39] = 0;
 
-            cprintf(str_pass);
+            cprintf("%s", str_pass);
             textcolor(LIGHTGREY);
         }
         else

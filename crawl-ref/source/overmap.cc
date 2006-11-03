@@ -519,7 +519,7 @@ void seen_other_thing( unsigned char which_thing )
  * prints "More..." message, read key, clear screen and after that prints new
  * line
  */
-void print_one_simple_line( const char *line , int colour)
+void print_one_simple_line( const char *line, int colour)
 {
     if (map_lines == (get_number_of_lines() - 2))
     {
@@ -532,9 +532,7 @@ void print_one_simple_line( const char *line , int colour)
     }
 
     textcolor( colour );
-    cprintf( line );
-    cprintf( EOL );
-
+    cprintf( "%s" EOL, line );
     map_lines++;
 }
 
@@ -554,16 +552,16 @@ void print_one_highlighted_line( const char *pre, const char *text,
     if (pre[0] != 0)
     {
         textcolor( LIGHTGREY );
-        cprintf( pre );
+        cprintf( "%s", pre );
     }
 
     textcolor( colour );
-    cprintf( text );
+    cprintf( "%s", text );
 
     if (post[0] != 0)
     {
         textcolor( LIGHTGREY );
-        cprintf( post );
+        cprintf( "%s", post );
     }
 
     cprintf( EOL );

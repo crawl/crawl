@@ -260,7 +260,7 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
                           s.length() == avail_width? s :
                                 s + std::string(avail_width - s.length(), ' ');
 
-    cprintf(towrite.c_str());
+    cprintf("%s", towrite.c_str());
     
     gotoxy( oldx, oldy );
     return true;

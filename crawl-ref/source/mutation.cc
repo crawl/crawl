@@ -1119,9 +1119,6 @@ void display_mutations(void)
     puttext(1, 1, 80, 25, buffer);
 #endif
 
-    //cprintf("xxxxxxxxxxxxx");
-    //last_requested = 0;
-
     return;
 }                               // end display_mutations()
 

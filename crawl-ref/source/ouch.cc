@@ -900,9 +900,7 @@ void end_game( struct scorefile_entry &se )
 #endif
 
     clrscr();
-    cprintf( "Goodbye, " );
-    cprintf( you.your_name );
-    cprintf( "." );
+    cprintf( "Goodbye, %s.", you.your_name );
     cprintf( EOL EOL "    " ); // Space padding where # would go in list format
 
     char scorebuff[ HIGHSCORE_SIZE ];

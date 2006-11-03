@@ -382,8 +382,7 @@ bool new_game(void)
             textcolor( BROWN );
             cprintf( EOL "Welcome back, " );
             textcolor( YELLOW );
-            cprintf( you.your_name );
-            cprintf( "!" );
+            cprintf( "%s!", you.your_name );
             textcolor( LIGHTGREY );
 
             save_player_name();
@@ -429,8 +428,7 @@ bool new_game(void)
                 textcolor( BROWN );
                 cprintf(EOL EOL "Welcome back, ");
                 textcolor( YELLOW );
-                cprintf(you.your_name);
-                cprintf("!");
+                cprintf("%s!", you.your_name);
                 textcolor( LIGHTGREY );
 
                 return (false);
@@ -1462,9 +1460,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
 	    char buf[ITEMNAME_SIZE];
 	    book.sub_type = firstbook + i;
 	    item_name( book, DESC_PLAIN, buf );
-	    snprintf( info, INFO_SIZE, "%c - %s" EOL, 'a' + i, buf);
-	    cprintf(info);
-
+	    cprintf("%c - %s" EOL, 'a' + i, buf);
 	}
 
 	textcolor(BROWN);
@@ -1557,10 +1553,8 @@ void choose_weapon( void )
             int x = effective_stat_bonus(startwep[i]);
             standard_name_weap(startwep[i], wepName);
 
-            snprintf( info, INFO_SIZE, "%c - %s%s" EOL, 'a' + i, wepName,
-                      (x <= -4) ? " (not ideal)" : "" );
-
-            cprintf(info);
+            cprintf("%c - %s%s" EOL, 'a' + i, wepName,
+                    (x <= -4) ? " (not ideal)" : "" );
 
             if (Options.prev_weapon == startwep[i])
                 prevmatch = true;
@@ -2125,7 +2119,7 @@ bool verifyPlayerName(void)
         return (false);
     }
 
-    // quick check for LPTx -- thank you,  Mr. Tanksley!   ;-)
+    // quick check for LPTx -- thank you, Mr. Tanksley! ;-)
     if (strnicmp(you.your_name, "LPT", 3) == 0)
     {
         switch (william_tanksley_asked_for_this)
@@ -2141,7 +2135,7 @@ bool verifyPlayerName(void)
                 return (true);
         } // end switch
 
-        william_tanksley_asked_for_this --;
+        william_tanksley_asked_for_this--;
         return (false);
     }
 #endif
@@ -2890,12 +2884,12 @@ spec_query:
             textcolor( YELLOW );
             if (strlen(you.your_name) > 0)
             {
-                cprintf(you.your_name);
+                cprintf("%s", you.your_name);
                 if (you.char_class != JOB_UNKNOWN)
                     cprintf(" the ");
             }
             if (you.char_class != JOB_UNKNOWN)
-                cprintf(get_class_name(you.char_class));
+                cprintf("%s", get_class_name(you.char_class));
 
             if (!shortgreet)
                 cprintf(".");
@@ -3088,12 +3082,12 @@ job_query:
             textcolor( YELLOW );
             if (strlen(you.your_name) > 0)
             {
-                cprintf(you.your_name);
+                cprintf("%s", you.your_name);
                 if (you.species)
                     cprintf(" the ");
             }
             if (you.species)
-                cprintf(species_name(you.species,you.experience_level));
+                cprintf("%s", species_name(you.species,you.experience_level));
 
             if (!shortgreet)
                 cprintf(".");
@@ -3125,7 +3119,7 @@ job_query:
             
             putch( letter );
             cprintf( " - " );
-            cprintf( get_class_name(i) );
+            cprintf( "%s", get_class_name(i) );
 
             if (j % 2)
                 cprintf(EOL);

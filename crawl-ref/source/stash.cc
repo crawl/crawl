@@ -344,7 +344,7 @@ void StashMenu::draw_title()
     {
         gotoxy(1, 1);
         textcolor(title->colour);
-        cprintf(title->text.c_str());
+        cprintf( "%s", title->text.c_str());
         if (title->quantity)
             cprintf(", %d item%s", title->quantity, 
                                    title->quantity == 1? "" : "s");

@@ -1307,7 +1307,7 @@ char show_abilities( void )
                 if (cost_str.length() > 24)
                     cost_str = cost_str.substr( 0, 24 );
 
-                cprintf( cost_str.c_str() );
+                cprintf( "%s", cost_str.c_str() );
 
                 gotoxy(60, wherey());
 

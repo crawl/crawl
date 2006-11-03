@@ -732,7 +732,7 @@ void create_spec_object(void)
              MSGCH_PROMPT);
         mpr("= - jewellery   ! - potions   : - books   | - staves   0  - The Orb",
              MSGCH_PROMPT);
-        mpr("} - miscellany  X - corpses   %% - food    $ - gold    ESC - exit", 
+        mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit", 
              MSGCH_PROMPT);
 
         mpr("What class of item? ", MSGCH_PROMPT);

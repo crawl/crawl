@@ -897,7 +897,7 @@ static void list_wizard_commands()
             }
 
             gotoxy( ((j % 2) ? 40 : 2), ((j / 2) + 1) );
-            cprintf( line );
+            cprintf( "%s", line );
 
             j++;
         }
@@ -927,7 +927,7 @@ static const char *wizard_string( int i )
            (i ==  50) ? "i/I  : identify/unidentify inventory":
            (i ==  70) ? "l    : make entrance to labyrinth"   :
            (i ==  80) ? "m/M  : create monster by number/name":
-           (i ==  90) ? "o/%%  : create an object"            :
+           (i ==  90) ? "o/%  : create an object"             :
            (i == 100) ? "p    : make entrance to pandemonium" :
            (i == 110) ? "x    : gain an experience level"     :
            (i == 115) ? "r    : change character's species"   :

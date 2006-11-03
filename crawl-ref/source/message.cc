@@ -41,6 +41,7 @@ int Next_Message = 0;                                 // end of messages
 char Message_Line = 0;                // line of next (previous?) message
 
 static bool suppress_messages = false;
+static void base_mpr(const char *inf, int channel, int param);
 
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
@@ -234,9 +235,9 @@ static char channel_to_colour( int channel, int param )
 static void do_message_print( int channel, int param, 
                               const char *format, va_list argp )
 {
-    char buff[80];
+    char buff[200];
     vsnprintf( buff, sizeof( buff ), format, argp ); 
-    buff[79] = 0;
+    buff[199] = 0;
 
     mpr(buff, channel, param);
 }
@@ -259,10 +260,24 @@ void mprf( const char *format, ... )
 
 void mpr(const char *inf, int channel, int param)
 {
+    char mbuf[400];
+    unsigned int i = 0;
+    const int stepsize = get_number_of_cols() - 1;
+    while ( i <= strlen(inf) )
+    {
+        // maybe we should put in some intelligence here, to
+        // try to break after a space or something. For the future.
+        strncpy( mbuf, inf + i, stepsize );
+        mbuf[stepsize] = 0;
+        base_mpr( mbuf, channel, param );
+        i += stepsize;
+    }
+}
+
+static void base_mpr(const char *inf, int channel, int param)
+{
     if (suppress_messages)
         return;
-
-    char info2[80];
 
     int colour = channel_to_colour( channel, param );
     if (colour == MSGCOL_MUTED)
@@ -323,11 +338,8 @@ void mpr(const char *inf, int channel, int param)
         more();
 
     gotoxy( (Options.delay_message_clear) ? 2 : 1, Message_Line + 18 );
-    strncpy(info2, inf, 78);
-    info2[78] = 0;
-
     textcolor( colour );
-    cprintf(info2);
+    cprintf("%s", inf);
     //
     // reset colour
     textcolor(LIGHTGREY);
@@ -545,7 +557,7 @@ void replay_messages(void)
 #if DEBUG_DIAGNOSTICS
             cprintf( "%d: %s", line, Store_Message[ line ].text.c_str() );
 #else
-            cprintf( Store_Message[ line ].text.c_str() );
+            cprintf( "%s", Store_Message[ line ].text.c_str() );
 #endif
 
             cprintf(EOL);

@@ -141,7 +141,7 @@ char in_a_shop( char shoppy, id_arr id )
         textcolor((i % 2) ? WHITE : LIGHTGREY);
 
         it_name(itty, DESC_NOCAP_A, st_pass);
-        cprintf(st_pass);
+        cprintf("%s", st_pass);
 
         std::string desc;
         if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
@@ -155,8 +155,7 @@ char in_a_shop( char shoppy, id_arr id )
         gotoxy(60, i);
 	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
         snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
-        cprintf(st_pass);
-        cprintf(" gold");
+        cprintf("%s gold", st_pass);
         if (mitm[itty].link == NON_ITEM)
             break;
 
@@ -356,7 +355,7 @@ void shop_print( const char *shoppy, char sh_lines )
 {
     gotoxy(1, sh_lines);
 
-    cprintf(shoppy);
+    cprintf("%s", shoppy);
 
     for (int i = strlen(shoppy); i < 80; i++)
         cprintf(" ");

@@ -1152,7 +1152,6 @@ void save_game(bool leave_game)
     snprintf( cmd_buff, sizeof(cmd_buff), 
               SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
 
-
     if (system( cmd_buff ) != 0) {
         cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned non-zero value!" EOL );
     }

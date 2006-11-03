@@ -206,9 +206,9 @@ void hiscores_print_list( int display_count, int format )
         // print position (tracked implicitly by order score file)
         snprintf( info, INFO_SIZE, "%3d.", i + 1 );
         if (use_printf)
-            printf(info);
+            printf("%s", info);
         else
-            cprintf(info);
+            cprintf("%s", info);
 
         // format the entry
         if (format == SCORE_TERSE)
@@ -226,9 +226,9 @@ void hiscores_print_list( int display_count, int format )
         // print entry
         strcat(info, EOL);
         if(use_printf)
-            printf(info);
+            printf("%s", info);
         else
-            cprintf(info);
+            cprintf("%s", info);
 
         if (i == newest_entry && !use_printf)
             textcolor(LIGHTGREY);

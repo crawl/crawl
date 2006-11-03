@@ -114,7 +114,8 @@ static void print_description( const std::string &d )
 
             if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
             {
-                cprintf((d.substr(currentPos, nextLine - currentPos)).c_str());
+                cprintf("%s",
+                        (d.substr(currentPos, nextLine - currentPos)).c_str());
                 currentPos = nextLine + 1;
                 continue;
             }
@@ -1051,7 +1052,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
         description += "$Base attack delay: ";
         append_value(description, property( item, PWPN_SPEED ) * 10, false);
-        description += "%%";
+        description += "%";
     }
     description += "$";
 
@@ -2964,7 +2965,7 @@ static std::string describe_staff( const item_def &item )
         else
         {
             description +=
-                "$$Damage rating: 7 $Accuracy rating: +6 $Attack delay: 120%%";
+                "$$Damage rating: 7 $Accuracy rating: +6 $Attack delay: 120%";
 
             description += "$$It falls into the 'staves' category. ";
         }
@@ -6301,7 +6302,7 @@ static void print_god_abil_desc( int abil )
     std::string str( abil_info.name );
     str += std::string( 79 - str.length() - cost.length(), ' ' ) + cost + EOL;
 
-    cprintf( str.c_str() );
+    cprintf( "%s", str.c_str() );
 }
 
 
@@ -6346,7 +6347,7 @@ void describe_god( int which_god, bool give_title )
     //mv: print god's name and title - if you can think up better titles
     //I have nothing against
     textcolor(colour);
-    cprintf (god_name(which_god,true)); //print long god's name
+    cprintf( "%s", god_name(which_god,true)); //print long god's name
     cprintf (EOL EOL);
 
     //mv: print god's description
@@ -6449,7 +6450,7 @@ void describe_god( int which_god, bool give_title )
                       "be reported to dev-team.";
     }
 
-    cprintf(description);
+    cprintf("%s", description);
     //end of printing description
 
     // title only shown for our own god
@@ -6463,7 +6464,7 @@ void describe_god( int which_god, bool give_title )
         // based on your god
         if (you.piety > 160) 
         { 
-            cprintf((which_god == GOD_SHINING_ONE) ? "Champion of Law" :
+            cprintf("%s", (which_god == GOD_SHINING_ONE) ? "Champion of Law" :
                     (which_god == GOD_ZIN) ? "Divine Warrior" :
                     (which_god == GOD_ELYVILON) ? "Champion of Light" :
                     (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
@@ -6534,16 +6535,13 @@ void describe_god( int which_god, bool give_title )
     if (you.religion != which_god)
     {
         textcolor (colour);
-        snprintf( info, INFO_SIZE, 
-                 (you.penance[which_god] >= 50) ? "%s's wrath is upon you!" :
+        cprintf( (you.penance[which_god] >= 50) ? "%s's wrath is upon you!" :
                  (you.penance[which_god] >= 20) ? "%s is annoyed with you." :
                  (you.penance[which_god] >=  5) ? "%s well remembers your sins." :
                  (you.penance[which_god] >   0) ? "%s is ready to forgive your sins." :
                  (you.worshipped[which_god])    ? "%s is ambivalent towards you." 
                                                 : "%s is neutral towards you.",
                  god_name(which_god) );
-
-        cprintf(info);
     } 
     else
     {
@@ -6561,31 +6559,22 @@ void describe_god( int which_god, bool give_title )
                 cprintf("You are ignored.");
             else
             {
-                snprintf( info, INFO_SIZE, 
-
-                         (you.piety > 130) ? "A prized avatar of %s.":
+                cprintf( (you.piety > 130) ? "A prized avatar of %s.":
                          (you.piety > 100) ? "A shining star in the eyes of %s." :
                          (you.piety >  70) ? "A rising star in the eyes of %s." :
                          (you.piety >  40) ? "%s is most pleased with you." :
                          (you.piety >  20) ? "%s has noted your presence." :
                          (you.piety >   5) ? "%s is noncommittal."
-                                           : "You are beneath notice.",
-
-                         god_name(which_god)
-                       );
-
-                cprintf(info);
+                                           : "You are beneath %s's notice.",
+                         god_name(which_god));
             }
         }
         //end of favour
 
         //mv: following code shows abilities given from god (if any)
-
-
         textcolor(LIGHTGRAY);
         cprintf(EOL EOL "Granted powers :                                                         (Cost)" EOL);
         textcolor(colour);
-
 
         // mv: these gods protects you during your prayer (not mentioning XOM)
         // chance for doing so is (random2(you.piety) >= 30)
@@ -6602,15 +6591,11 @@ void describe_god( int which_god, bool give_title )
             && you.piety >= 30)
         {
             penance_ability = true; // suppress "none" later
-            snprintf( info, INFO_SIZE, 
-                      "%s %s watches over you during prayer." EOL,
-                      god_name(which_god),
-                      (you.piety >= 150) ? "carefully":   // > 4/5
-                      (you.piety >=  90) ? "often" :      // > 2/3
-                                           "sometimes"    // less than 2:3
-                    );
-
-            cprintf(info);
+            cprintf( "%s %s watches over you during prayer." EOL,
+                     god_name(which_god),
+                     (you.piety >= 150) ? "carefully":   // > 4/5
+                     (you.piety >=  90) ? "often" :      // > 2/3
+                                          "sometimes");  // less than 2:3
         }
 
         // mv: No abilities (except divine protection)

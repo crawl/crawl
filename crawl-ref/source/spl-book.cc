@@ -794,7 +794,7 @@ unsigned char spellbook_contents( item_def &book, int action,
 
     char str_pass[ ITEMNAME_SIZE ];
     item_name( book, DESC_CAP_THE, str_pass );
-    out.cprintf( str_pass );
+    out.cprintf( "%s", str_pass );
 
     out.cprintf( EOL EOL " Spells                             Type                      Level" EOL );
 
@@ -851,7 +851,7 @@ unsigned char spellbook_contents( item_def &book, int action,
         out.cprintf(strng);
         out.cprintf(" - ");
 
-        out.cprintf( spell_title(spell_types[j]) );
+        out.cprintf( "%s", spell_title(spell_types[j]) );
         out.gotoxy( 35, -1 );
 
         
@@ -868,7 +868,7 @@ unsigned char spellbook_contents( item_def &book, int action,
                     if (already)
                         out.cprintf( "/" );
 
-                    out.cprintf( spelltype_name( 1 << i ) );
+                    out.cprintf( "%s", spelltype_name( 1 << i ) );
                     already = true;
                 }
             }

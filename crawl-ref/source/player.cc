@@ -3175,7 +3175,7 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
     gotoxy(40, 1);
 
     textcolor( LIGHTGREY );
-    cprintf( print_it );
+    cprintf( "%s", print_it );
 }                               // end redraw_skill()
 
 // Note that this function only has the one static buffer, so if you

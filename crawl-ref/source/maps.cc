@@ -142,8 +142,8 @@ char vault_main( char vgrid[81][81], FixedVector<int, 7>& mons_array, int vault_
         for (vy = 0; vy < 80; vy++)
           vgrid[vx][vy] = 'x';
 
-        vgrid[80][vx] = '\0';
-        vgrid[vx][80] = '\0';
+        vgrid[80][vx] = 0;
+        vgrid[vx][80] = 0;
     }
 
     // next, select an appropriate vault to place {dlb}:
