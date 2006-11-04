@@ -58,7 +58,7 @@
 #endif
 
 // enough memory allocated to snarf in the scorefile entries
-static struct scorefile_entry hs_list[SCORE_FILE_ENTRIES];
+static scorefile_entry hs_list[SCORE_FILE_ENTRIES];
 
 // hackish: scorefile position of newest entry.  Will be highlit during
 // highscore printing (always -1 when run from command line).
@@ -66,18 +66,19 @@ static int newest_entry = -1;
 
 static FILE *hs_open(const char *mode);
 static void hs_close(FILE *handle, const char *mode);
-static bool hs_read(FILE *scores, struct scorefile_entry &dest);
-static void hs_parse_numeric(char *inbuf, struct scorefile_entry &dest);
-static void hs_parse_string(char *inbuf, struct scorefile_entry &dest);
-static void hs_copy(struct scorefile_entry &dest, struct scorefile_entry &src);
-static void hs_write(FILE *scores, struct scorefile_entry &entry);
-static void hs_nextstring(char *&inbuf, char *dest);
+static bool hs_read(FILE *scores, scorefile_entry &dest);
+static void hs_parse_numeric(char *inbuf, scorefile_entry &dest);
+static void hs_parse_string(char *inbuf, scorefile_entry &dest);
+static void hs_write(FILE *scores, scorefile_entry &entry);
+static void hs_nextstring(char *&inbuf, char *dest, size_t bufsize);
 static int hs_nextint(char *&inbuf);
 static long hs_nextlong(char *&inbuf);
 
 // functions dealing with old scorefile entries
-static void hs_parse_generic_1(char *&inbuf, char *outbuf, const char *stopvalues);
-static void hs_parse_generic_2(char *&inbuf, char *outbuf, const char *continuevalues);
+static void hs_parse_generic_1(char *&inbuf, char *outbuf, size_t outsz,
+                               const char *stopvalues);
+static void hs_parse_generic_2(char *&inbuf, char *outbuf, size_t outsz, 
+                               const char *continuevalues);
 static void hs_stripblanks(char *buf);
 static void hs_search_death(char *inbuf, struct scorefile_entry &se);
 static void hs_search_where(char *inbuf, struct scorefile_entry &se);
@@ -88,7 +89,7 @@ static bool lock_file_handle( FILE *handle, int type );
 static bool unlock_file_handle( FILE *handle );
 #endif // USE_FILE_LOCKING
 
-void hiscores_new_entry( struct scorefile_entry &ne )
+void hiscores_new_entry( const scorefile_entry &ne )
 {
     FILE *scores;
     int i, total_entries;
@@ -96,6 +97,9 @@ void hiscores_new_entry( struct scorefile_entry &ne )
 
     // open highscore file (reading) -- note that NULL is not fatal!
     scores = hs_open("r");
+
+    for (i = 0; i < SCORE_FILE_ENTRIES; ++i)
+        hs_list[i].reset();
 
     // read highscore file, inserting new entry at appropriate point,
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
@@ -112,12 +116,12 @@ void hiscores_new_entry( struct scorefile_entry &ne )
             // Fixed a nasty overflow bug here -- Sharp
             if (i+1 < SCORE_FILE_ENTRIES)
             {
-                hs_copy(hs_list[i+1], hs_list[i]);
-                hs_copy(hs_list[i], ne);
+                hs_list[i + 1] = hs_list[i];
+                hs_list[i] = ne;
                 i++;
             } else {
-            // copy new entry to current position
-                hs_copy(hs_list[i], ne);
+                // copy new entry to current position
+                hs_list[i] = ne;
             }
         }
     }
@@ -128,7 +132,7 @@ void hiscores_new_entry( struct scorefile_entry &ne )
         newest_entry = i;
         inserted = true;
         // copy new entry
-        hs_copy(hs_list[i], ne);
+        hs_list[i] = ne;
         i++;
     }
 
@@ -434,95 +438,13 @@ void hs_close( FILE *handle, const char *mode )
 #endif
 }
 
-static void hs_init( struct scorefile_entry &dest )
-{
-    // simple init
-    dest.version = 0;
-    dest.release = 0;
-    dest.points = -1;
-    dest.name[0] = 0;
-    dest.uid = 0;
-    dest.race = 0; 
-    dest.cls = 0;
-    dest.lvl = 0;
-    dest.race_class_name[0] = 0;
-    dest.best_skill = 0;
-    dest.best_skill_lvl = 0;
-    dest.death_type = KILLED_BY_SOMETHING;
-    dest.death_source = 0;
-    dest.mon_num = 0;
-    dest.death_source_name[0] = 0;
-    dest.auxkilldata[0] = 0;
-    dest.dlvl = 0;
-    dest.level_type = 0;
-    dest.branch = 0;
-    dest.final_hp = -1;
-    dest.final_max_hp = -1;
-    dest.final_max_max_hp = -1;
-    dest.str = -1;
-    dest.intel = -1;
-    dest.dex = -1;
-    dest.damage = -1;
-    dest.god = -1;
-    dest.piety = -1;
-    dest.penance = -1;
-    dest.wiz_mode = 0;
-    dest.birth_time = 0;
-    dest.death_time = 0;
-    dest.real_time = -1;
-    dest.num_turns = -1;
-    dest.num_diff_runes = 0;
-    dest.num_runes = 0;
-}
-
-void hs_copy(struct scorefile_entry &dest, struct scorefile_entry &src)
-{
-    // simple field copy -- assume src is well constructed.
-
-    dest.version = src.version;
-    dest.release = src.release;
-    dest.points = src.points;
-    strcpy(dest.name, src.name);
-    dest.uid = src.uid;
-    dest.race = src.race;
-    dest.cls = src.cls;
-    dest.lvl = src.lvl;
-    strcpy(dest.race_class_name, src.race_class_name);
-    dest.best_skill = src.best_skill;
-    dest.best_skill_lvl = src.best_skill_lvl;
-    dest.death_type = src.death_type;
-    dest.death_source = src.death_source;
-    dest.mon_num = src.mon_num;
-    strcpy( dest.death_source_name, src.death_source_name );
-    strcpy( dest.auxkilldata, src.auxkilldata );
-    dest.dlvl = src.dlvl;
-    dest.level_type = src.level_type;
-    dest.branch = src.branch;
-    dest.final_hp = src.final_hp;
-    dest.final_max_hp = src.final_max_hp;
-    dest.final_max_max_hp = src.final_max_max_hp;
-    dest.str = src.str;
-    dest.intel = src.intel;
-    dest.dex = src.dex;
-    dest.damage = src.damage;
-    dest.god = src.god;
-    dest.piety = src.piety;
-    dest.penance = src.penance;
-    dest.wiz_mode = src.wiz_mode;
-    dest.birth_time = src.birth_time;
-    dest.death_time = src.death_time;
-    dest.real_time = src.real_time;
-    dest.num_turns = src.num_turns;
-    dest.num_diff_runes = src.num_diff_runes;
-    dest.num_runes = src.num_runes;
-}
-
-bool hs_read( FILE *scores, struct scorefile_entry &dest )
+bool hs_read( FILE *scores, scorefile_entry &dest )
 {
     char inbuf[200];
     int c = EOF;
 
-    hs_init( dest );
+    memset(inbuf, 0, sizeof inbuf);
+    dest.reset();
 
     // get a character..
     if (scores != NULL)
@@ -553,8 +475,10 @@ bool hs_read( FILE *scores, struct scorefile_entry &dest )
     return true;
 }
 
-static void hs_nextstring(char *&inbuf, char *dest)
+static void hs_nextstring(char *&inbuf, char *dest, size_t destsize)
 {
+    ASSERT(destsize > 0);
+
     char *p = dest;
 
     if (*inbuf == 0)
@@ -564,9 +488,15 @@ static void hs_nextstring(char *&inbuf, char *dest)
     }
 
     // assume we're on a ':'
-    inbuf ++;
-    while(*inbuf != ':' && *inbuf != 0)
+    if (*inbuf == ':')
+        inbuf++;
+
+    while (*inbuf && *inbuf != ':' && (p - dest) < (int) destsize - 1)
         *p++ = *inbuf++;
+
+    // If we ran out of buffer, discard the rest of the field.
+    while (*inbuf && *inbuf != ':')
+        inbuf++;
 
     *p = 0;
 }
@@ -574,7 +504,7 @@ static void hs_nextstring(char *&inbuf, char *dest)
 static int hs_nextint(char *&inbuf)
 {
     char num[20];
-    hs_nextstring(inbuf, num);
+    hs_nextstring(inbuf, num, sizeof num);
 
     return (num[0] == 0 ? 0 : atoi(num));
 }
@@ -582,7 +512,7 @@ static int hs_nextint(char *&inbuf)
 static long hs_nextlong(char *&inbuf)
 {
     char num[20];
-    hs_nextstring(inbuf, num);
+    hs_nextstring(inbuf, num, sizeof num);
 
     return (num[0] == 0 ? 0 : atol(num));
 }
@@ -597,7 +527,7 @@ static time_t hs_nextdate(char *&inbuf)
     char       buff[20];
     struct tm  date;
 
-    hs_nextstring( inbuf, buff );
+    hs_nextstring(inbuf, buff, sizeof buff);
 
     if (strlen( buff ) < 15)
         return (static_cast<time_t>(0));
@@ -629,13 +559,13 @@ static void hs_parse_numeric(char *inbuf, struct scorefile_entry &se)
 
     se.points = hs_nextlong(inbuf);
 
-    hs_nextstring(inbuf, se.name);
+    hs_nextstring(inbuf, se.name, sizeof se.name);
 
     se.uid = hs_nextlong(inbuf);
     se.race = hs_nextint(inbuf);
     se.cls = hs_nextint(inbuf);
 
-    hs_nextstring(inbuf, se.race_class_name);
+    hs_nextstring(inbuf, se.race_class_name, sizeof se.race_class_name);
 
     se.lvl = hs_nextint(inbuf);
     se.best_skill = hs_nextint(inbuf);
@@ -644,13 +574,13 @@ static void hs_parse_numeric(char *inbuf, struct scorefile_entry &se)
     se.death_source = hs_nextint(inbuf);
     se.mon_num = hs_nextint(inbuf);
 
-    hs_nextstring(inbuf, se.death_source_name);
+    hs_nextstring(inbuf, se.death_source_name, sizeof se.death_source_name);
 
     // To try and keep the scorefile backwards compatible,
     // we'll branch on version > 4.0 to read the auxkilldata
     // text field.  
     if (se.version == 4 && se.release >= 1)
-        hs_nextstring( inbuf, se.auxkilldata );
+        hs_nextstring( inbuf, se.auxkilldata, sizeof se.auxkilldata );
     else
         se.auxkilldata[0] = 0;
 
@@ -718,7 +648,7 @@ static void hs_parse_numeric(char *inbuf, struct scorefile_entry &se)
     se.num_runes = hs_nextint(inbuf);
 }
 
-static void hs_write( FILE *scores, struct scorefile_entry &se )
+static void hs_write( FILE *scores, scorefile_entry &se )
 {
     char buff[80];  // should be more than enough for date stamps
 
@@ -780,40 +710,50 @@ static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
     */
 
     char scratch[80];
+    const int inlen = strlen(inbuf);
+    char *start = inbuf;
 
     // 1. get score
-    hs_parse_generic_2(inbuf, scratch, "0123456789");
+    hs_parse_generic_2(inbuf, scratch, sizeof scratch, "0123456789");
 
     se.version = 0;         // version # of converted score
     se.release = 0;
     se.points = atoi(scratch);
 
     // 2. get name
-    hs_parse_generic_1(inbuf, scratch, "-");
+    hs_parse_generic_1(inbuf, scratch, sizeof scratch, "-");
     hs_stripblanks(scratch);
-    strcpy(se.name, scratch);
+    strncpy(se.name, scratch, sizeof se.name);
+    se.name[ sizeof(se.name) - 1 ] = 0;
 
     // 3. get race, class
-    inbuf++;    // skip '-'
-    hs_parse_generic_1(inbuf, scratch, "0123456789");
+    // skip '-'
+    if (++inbuf - start >= inlen)
+        return;
+
+    hs_parse_generic_1(inbuf, scratch, sizeof scratch, "0123456789");
     hs_stripblanks(scratch);
-    strcpy(se.race_class_name, scratch);
+    strncpy(se.race_class_name, scratch, sizeof se.race_class_name);
+    se.race_class_name[ sizeof(se.race_class_name) - 1 ] = 0;
     se.race = 0;
     se.cls = 0;
 
     // 4. get clevel
-    hs_parse_generic_2(inbuf, scratch, "0123456789");
+    hs_parse_generic_2(inbuf, scratch, sizeof scratch, "0123456789");
     se.lvl = atoi(scratch);
 
     // 4a. get wizard mode
-    hs_parse_generic_1(inbuf, scratch, ",");
+    hs_parse_generic_1(inbuf, scratch, sizeof scratch, ",");
     if (strstr(scratch, "Wiz") != NULL)
         se.wiz_mode = 1;
     else
         se.wiz_mode = 0;
 
+    // Skip comma
+    if (++inbuf - start >= inlen)
+        return;
+
     // 5. get death type
-    inbuf++;    // skip comma
     hs_search_death(inbuf, se);
 
     // 6. get branch, level
@@ -842,22 +782,51 @@ static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
     se.auxkilldata[0] = 0;
 }
 
-static void hs_parse_generic_1(char *&inbuf, char *outbuf, const char *stopvalues)
+static void hs_parse_generic_1(char *&inbuf, char *outbuf, size_t outsz, const char *stopvalues)
 {
+    ASSERT(outsz > 0);
+
     char *p = outbuf;
 
-    while(strchr(stopvalues, *inbuf) == NULL && *inbuf != 0)
+    if (!*inbuf)
+    {
+        *p = 0;
+        return;
+    }
+
+    while (strchr(stopvalues, *inbuf) == NULL 
+                && *inbuf != 0
+                && (p - outbuf) < (int) outsz - 1)
         *p++ = *inbuf++;
+
+    while (strchr(stopvalues, *inbuf) == NULL 
+                && *inbuf != 0)
+        inbuf++;
 
     *p = 0;
 }
 
-static void hs_parse_generic_2(char *&inbuf, char *outbuf, const char *continuevalues)
+static void hs_parse_generic_2(
+        char *&inbuf, char *outbuf, size_t outsz, const char *continuevalues)
 {
+    ASSERT(outsz > 0);
+
     char *p = outbuf;
 
-    while(strchr(continuevalues, *inbuf) != NULL && *inbuf != 0)
+    if (!*inbuf)
+    {
+        *p = 0;
+        return;
+    }
+
+    while (strchr(continuevalues, *inbuf) != NULL 
+            && *inbuf
+            && (p - outbuf) < (int) outsz - 1)
         *p++ = *inbuf++;
+
+    while (strchr(continuevalues, *inbuf) != NULL 
+            && *inbuf)
+        inbuf++;
 
     *p = 0;
 }
@@ -870,16 +839,14 @@ static void hs_stripblanks(char *buf)
     // strip leading
     while(*p == ' ')
         p++;
-    while(*p != 0)
+
+    while(*p != 0 && p != q)
         *q++ = *p++;
 
     *q-- = 0;
     // strip trailing
-    while(*q == ' ')
-    {
-        *q = 0;
-        q--;
-    }
+    while (q >= buf && *q == ' ')
+        *q-- = 0;
 }
 
 static void hs_search_death(char *inbuf, struct scorefile_entry &se)
@@ -961,21 +928,31 @@ static void hs_search_death(char *inbuf, struct scorefile_entry &se)
     // set some fields
     se.death_source = 0;
     se.mon_num = 0;
-    strcpy(se.death_source_name, "");
+    *se.death_source_name = 0;
 
     // now try to pull the monster out.
+    // [dshaligram] Holy brain damage, Batman.
     if (se.death_type == KILLED_BY_MONSTER || se.death_type == KILLED_BY_BEAM)
     {
         char *p = strstr(inbuf, " by ");
-        p += 4;
-        char *q = strstr(inbuf, " on ");
-        if (q == NULL)
-            q = strstr(inbuf, " in ");
-        char *d = se.death_source_name;
-        while(p != q)
-            *d++ = *p++;
+        if (p)
+        {
+            p += 4;
+            char *q = strstr(inbuf, " on ");
+            if (q == NULL)
+                q = strstr(inbuf, " in ");
 
-        *d = 0;
+            if (q && q > p)
+            {
+                char *d = se.death_source_name;
+                const int maxread = sizeof(se.death_source_name) - 1;
+
+                while (p < q && (d - se.death_source_name) < maxread)
+                    *d++ = *p++;
+
+                *d = 0;
+            }
+        }
     }
 }
 
@@ -988,7 +965,8 @@ static void hs_search_where(char *inbuf, struct scorefile_entry &se)
     se.dlvl = 0;
 
     // early out
-    if (se.death_type == KILLED_BY_LEAVING || se.death_type == KILLED_BY_WINNING)
+    if (se.death_type == KILLED_BY_LEAVING 
+            || se.death_type == KILLED_BY_WINNING)
         return;
 
     // here we go again.
@@ -1015,7 +993,7 @@ static void hs_search_where(char *inbuf, struct scorefile_entry &se)
     if (p != NULL)
     {
         p += 4;
-        hs_parse_generic_2(p, scratch, "0123456789");
+        hs_parse_generic_2(p, scratch, sizeof scratch, "0123456789");
         se.dlvl = atoi( scratch );
     }
 
@@ -1062,6 +1040,8 @@ static void hs_search_where(char *inbuf, struct scorefile_entry &se)
 scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
                                  const char *aux, bool death_cause_only)
 {
+    reset();
+
     init_death_cause(dam, dsource, dtype, aux);
     if (!death_cause_only)
         init();
@@ -1070,6 +1050,7 @@ scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
 scorefile_entry::scorefile_entry()
 {
     // Completely uninitialized, caveat user.
+    reset();
 }
 
 void scorefile_entry::init_death_cause(int dam, int dsrc, 
@@ -1158,6 +1139,47 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     }
 }
 
+void scorefile_entry::reset()
+{
+    // simple init
+    version = 0;
+    release = 0;
+    points = -1;
+    name[0] = 0;
+    uid = 0;
+    race = 0; 
+    cls = 0;
+    lvl = 0;
+    race_class_name[0] = 0;
+    best_skill = 0;
+    best_skill_lvl = 0;
+    death_type = KILLED_BY_SOMETHING;
+    death_source = 0;
+    mon_num = 0;
+    death_source_name[0] = 0;
+    auxkilldata[0] = 0;
+    dlvl = 0;
+    level_type = 0;
+    branch = 0;
+    final_hp = -1;
+    final_max_hp = -1;
+    final_max_max_hp = -1;
+    str = -1;
+    intel = -1;
+    dex = -1;
+    damage = -1;
+    god = -1;
+    piety = -1;
+    penance = -1;
+    wiz_mode = 0;
+    birth_time = 0;
+    death_time = 0;
+    real_time = -1;
+    num_turns = -1;
+    num_diff_runes = 0;
+    num_runes = 0;
+}
+
 void scorefile_entry::init()
 {
     // Score file entry version:
@@ -1168,9 +1190,10 @@ void scorefile_entry::init()
 
     version = 4;
     release = 2;
-    strncpy( name, you.your_name, kNameLen );
-    
-    name[ kNameLen - 1 ] = 0;
+
+    strncpy( name, you.your_name, sizeof name );
+    name[ sizeof(name) - 1 ] = 0;
+
 #ifdef MULTIUSER
     uid = (int) getuid();
 #else
@@ -1471,7 +1494,6 @@ std::string scorefile_entry::single_cdesc() const
         strncpy( scratch, race_class_name, sizeof scratch );
         scratch[ sizeof(scratch) - 1 ] = 0;
     }
-
 
     std::string scname = name;
     if (scname.length() > 10)

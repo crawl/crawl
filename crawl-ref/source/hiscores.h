@@ -16,7 +16,7 @@
 /* ***********************************************************************
  * called from: ouch
  * *********************************************************************** */
-void hiscores_new_entry( struct scorefile_entry &se );
+void hiscores_new_entry( const scorefile_entry &se );
 
 // last updated 16feb2001 {gdl}
 /* ***********************************************************************

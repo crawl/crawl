@@ -920,6 +920,7 @@ public:
     void init_death_cause(int damage, int death_source, int death_type,
                           const char *aux);
     void init();
+    void reset();
 
     enum death_desc_verbosity {
         DDV_TERSE,
