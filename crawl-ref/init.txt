@@ -144,6 +144,7 @@ travel_exclude_radius2 = 68
 # easy_quit_item_lists = true
 # easy_exit_menu = true
 # default_autoprayer = true
+# sort_menus = true
 
 ##### 4-i	Messages and Display Enhancements #####
 #

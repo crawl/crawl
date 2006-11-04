@@ -42,7 +42,7 @@ The contents of this text are:
 4-h	Command Enhancements.
 		auto_list, lowercase_invocations, easy_open, easy_butcher, 
 		easy_armour, easy_confirm, easy_quit_item_lists, easy_exit_menu,
-		default_autoprayer
+		default_autoprayer, sort_menus
 4-i	Message and Display Improvements.
 		show_uncursed, hp_warning, always_greet, terse_hand, 
 		delay_message_clear, menu_colour
@@ -622,6 +622,11 @@ default_autoprayer = false
 	Note that even when you're praying, you can renew prayer anytime.
 	Also note the option safe_zero_exp (see 4-a) decides whether zero 
 	experience monsters (like plants) are considered hostile.
+
+sort_menus = false
+        When set to true, items are sorted by description in inventory and
+        pickup menus. When set to false (default), items are ordered by
+        equipment slot.
 	
 
 4-i	Messages and Display Enhancements.
