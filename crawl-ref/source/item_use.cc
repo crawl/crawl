@@ -1341,8 +1341,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
     // even though direction is allowed,  we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
-    pbolt.target_x = thr.tx;
-    pbolt.target_y = thr.ty;
+    pbolt.set_target(thr);
 
     pbolt.flavour = BEAM_MISSILE;
     // pbolt.range is set below
@@ -2559,8 +2558,7 @@ void zap_wand(void)
 
     beam.source_x = you.x_pos;
     beam.source_y = you.y_pos;
-    beam.target_x = zap_wand.tx;
-    beam.target_y = zap_wand.ty;
+    beam.set_target(zap_wand);
 
     zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 

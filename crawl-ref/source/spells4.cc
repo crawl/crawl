@@ -1928,8 +1928,7 @@ void cast_evaporate(int pow)
         return;
     }
 
-    beem.target_x = spelld.tx;
-    beem.target_y = spelld.ty;
+    beem.set_target(spelld);
 
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;
@@ -2382,8 +2381,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     blast.ex_size = 1;              // default
     blast.type = '#';
     blast.colour = 0;
-    blast.target_x = beam.tx;
-    blast.target_y = beam.ty;
+    blast.set_target(beam);
     blast.is_tracer = false;
     blast.flavour = BEAM_FRAG;
 

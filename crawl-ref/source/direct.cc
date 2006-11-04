@@ -453,6 +453,11 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         if (!justLooking && keyin == ' ')
             keyin = '\r';
 
+        // [dshaligram] Fudge: in targeting mode, '>' says shoot a missile
+        // that lands here.
+        if (!justLooking && keyin == '>')
+            keyin = 'X';
+
         // DOS idiocy
         if (keyin == 0)
         {
@@ -581,6 +586,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                     case '\n':
                     case '.':
                     case '5':
+                    case 'X':
                         // If we're in look-around mode, and the cursor is on
                         // the character and there's a valid travel target 
                         // within the viewport, jump to that target.
@@ -601,7 +607,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         else
                         {
                             dirChosen = true;
-                            dir = 4;
+                            dir = keyin == 'X'? -1 : 4;
                         }
                         break;
 
@@ -623,7 +629,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
             break;
 
         // check for SELECTION
-        if (dirChosen && dir == 4)
+        if (dirChosen && (dir == 4 || dir == -1))
         {
             // [dshaligram] We no longer vet the square coordinates if
             // we're justLooking. By not vetting the coordinates, we make 'x'
@@ -641,6 +647,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
             moves.isValid = true;
             moves.isTarget = true;
+            moves.isEndpoint = (dir == -1);
             moves.tx = you.x_pos + cx - VIEW_CX;
             moves.ty = you.y_pos + cy - VIEW_CY;
 

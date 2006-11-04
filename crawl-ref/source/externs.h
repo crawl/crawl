@@ -134,6 +134,7 @@ struct dist
     bool isTarget;      // target (true), or direction (false)?
     bool isMe;          // selected self (convenience: tx == you.x_pos,
                         // ty == you.y_pos)
+    bool isEndpoint;    // Does the player want the attack to stop at (tx,ty)?
     bool isCancel;      // user cancelled (usually <ESC> key)
     int  tx,ty;         // target x,y or logical extension of beam to map edge
     int  dx,dy;         // delta x and y if direction - always -1,0,1
@@ -167,6 +168,7 @@ struct bolt
     bool        is_launched;           // was fired from launcher?
     bool        is_thrown;             // was thrown from hand?
     bool        target_first;          // targeting by direction 
+    bool        aimed_at_spot;         // aimed at (x,y), should not cross
     std::string aux_source;            // source of KILL_MISC beams
 
     // OUTPUT parameters (tracing, ID)
@@ -184,11 +186,13 @@ struct bolt
     bool        is_friendly;    // tracer firer is enslaved or pet
     int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
 
+public:
     // A constructor to try and fix some of the bugs that occur because
     // this struct never seems to be properly initialized.  Definition
-    // is over in misc.cc for lack of a better place (short of inlining
-    // it here).
+    // is over in beam.cc.
     bolt();
+
+    void set_target(const dist &);
 };
 
 struct ray_def

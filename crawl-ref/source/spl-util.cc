@@ -693,8 +693,7 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
         return -1;
     }
 
-    pbolt.target_x = spelld.tx;
-    pbolt.target_y = spelld.ty;
+    pbolt.set_target(spelld);
     pbolt.source_x = you.x_pos;
     pbolt.source_y = you.y_pos;
 

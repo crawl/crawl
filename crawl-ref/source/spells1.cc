@@ -186,8 +186,7 @@ int fireball(int power)
 
         beam.source_x = you.x_pos;
         beam.source_y = you.y_pos;
-        beam.target_x = fire_ball.tx;
-        beam.target_y = fire_ball.ty;
+        beam.set_target(fire_ball);
 
         zapping(ZAP_FIREBALL, power, beam);
     }
@@ -204,8 +203,7 @@ int cast_fire_storm(int powc)
 
     direction( targ, DIR_TARGET, TARG_ENEMY, true );
 
-    beam.target_x = targ.tx;
-    beam.target_y = targ.ty;
+    beam.set_target(targ);
 
     if (!targ.isValid)
     {
@@ -497,8 +495,7 @@ int stinking_cloud( int pow )
         return (-1);
     }
 
-    beem.target_x = spelld.tx;
-    beem.target_y = spelld.ty;
+    beem.set_target(spelld);
 
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;

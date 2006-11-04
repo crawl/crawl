@@ -1981,27 +1981,6 @@ int trap_at_xy(int which_x, int which_y)
     return (-1);
 }                               // end trap_at_xy()
 
-// A constructor for bolt to help guarantee that we start clean (this has
-// caused way too many bugs).  Putting it here since there's no good place to
-// put it, and it doesn't do anything other than initialize it's members.
-// 
-// TODO: Eventually it'd be nice to have a proper factory for these things
-// (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
-               flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
-               ench_power(0), hit(0), target_x(0), target_y(0),
-               thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), 
-               name(),
-               is_beam(false), is_explosion(false), is_big_cloud(false),
-               is_enchant(false), is_energy(false), 
-               is_launched(false), is_thrown(false), target_first(false), 
-               aux_source(), obvious_effect(false), 
-               fr_count(0), foe_count(0), fr_power(0), foe_power(0), 
-               is_tracer(false), aimed_at_feet(false), msg_generated(false), 
-               in_explosion_phase(false), smart_monster(false), 
-               can_see_invis(false), is_friendly(false), foe_ratio(0) 
-{ }
-
 bool i_feel_safe()
 {
     /* This is probably unnecessary, but I'm not sure that

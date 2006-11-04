@@ -73,7 +73,7 @@ static void sticky_flame_monster( int mn, bool source, int hurt_final );
 static bool affectsWalls(struct bolt &beam);
 static bool isBouncy(struct bolt &beam);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
-static bool beam_term_on_target(struct bolt &beam);
+static bool beam_term_on_target(struct bolt &beam, int x, int y);
 static void beam_explodes(struct bolt &beam, int x, int y);
 static int  affect_wall(struct bolt &beam, int x, int y);
 static int  affect_place_clouds(struct bolt &beam, int x, int y);
@@ -1327,7 +1327,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
-            beamTerminate = beam_term_on_target(pbolt);
+            beamTerminate = beam_term_on_target(pbolt, tx, ty);
 
         // affect the cell,  except in the special case noted
         // above -- affect() will early out if something gets
@@ -2328,7 +2328,7 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     }
 }
 
-static bool beam_term_on_target(struct bolt &beam)
+static bool beam_term_on_target(struct bolt &beam, int x, int y)
 {
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
     {
@@ -2355,6 +2355,13 @@ static bool beam_term_on_target(struct bolt &beam)
     // STINKING CLOUD
     if (beam.name == "ball of vapour")
         return (true);
+
+    // [dshaligram] We have to decide what beams are eligible for stopping on
+    // target.
+    /*
+    if (beam.aimed_at_spot && x == beam.target_x && y == beam.target_y)
+        return (true);
+        */
 
     return (false);
 }
@@ -2464,7 +2471,7 @@ int affect(struct bolt &beam, int x, int y)
             rangeUsed += affect_player( beam );
         }
         
-        if (beam_term_on_target(beam))
+        if (beam_term_on_target(beam, x, y))
             return (BEAM_STOP);
     }
 
@@ -2479,7 +2486,7 @@ int affect(struct bolt &beam, int x, int y)
             rangeUsed += affect_monster( beam, &menv[mid] );
         }
         
-        if (beam_term_on_target(beam))
+        if (beam_term_on_target(beam, x, y))
             return (BEAM_STOP);
     }
 
@@ -4239,4 +4246,39 @@ bool nasty_beam(struct monsters *mon, struct bolt &beam)
 
     // everything else is considered nasty by everyone
     return (true);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// bolt
+
+// A constructor for bolt to help guarantee that we start clean (this has
+// caused way too many bugs).  Putting it here since there's no good place to
+// put it, and it doesn't do anything other than initialize it's members.
+// 
+// TODO: Eventually it'd be nice to have a proper factory for these things
+// (extended from setup_mons_cast() and zapping() which act as limited ones).
+bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
+               flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
+               ench_power(0), hit(0), target_x(0), target_y(0),
+               thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
+               is_beam(false), is_explosion(false), is_big_cloud(false),
+               is_enchant(false), is_energy(false), is_launched(false),
+               is_thrown(false), target_first(false), aimed_at_spot(false),
+               aux_source(), obvious_effect(false), fr_count(0), foe_count(0),
+               fr_power(0), foe_power(0), is_tracer(false),
+               aimed_at_feet(false), msg_generated(false),
+               in_explosion_phase(false), smart_monster(false),
+               can_see_invis(false), is_friendly(false), foe_ratio(0) 
+{ }
+
+void bolt::set_target(const dist &d)
+{
+    if (!d.isValid)
+        return;
+
+    target_x = d.tx;
+    target_y = d.ty;
+
+    if (d.isEndpoint)
+        aimed_at_spot = true;
 }
