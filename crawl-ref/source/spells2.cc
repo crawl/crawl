@@ -374,7 +374,7 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
     return number_raised;
 }                               // end animate_dead()
 
-int animate_a_corpse( int axps,  int ayps, int corps_beh, int corps_hit,
+int animate_a_corpse( int axps, int ayps, int corps_beh, int corps_hit,
                       int class_allowed )
 {
     if (igrd[axps][ayps] == NON_ITEM)

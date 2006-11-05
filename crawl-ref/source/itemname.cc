@@ -112,7 +112,7 @@ const char *item_name( const item_def &item, char descrip,
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
         if (in_inventory(item)) // actually in inventory
-            snprintf( buff,  ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
+            snprintf( buff, ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
                       index_to_letter( item.link ) );
         else 
             descrip = DESC_CAP_A;

@@ -876,7 +876,7 @@ static char find_square( unsigned char xps, unsigned char yps,
     onlyVis     = (los & LOS_VISIBLE);
     onlyHidden  = (los & LOS_HIDDEN);
 
-    const int minx = VIEW_SX,  maxx = VIEW_EX,
+    const int minx = VIEW_SX, maxx = VIEW_EX,
               miny = VIEW_SY - VIEW_Y_DIFF, maxy = VIEW_EY + VIEW_Y_DIFF,
               ctrx = VIEW_CX, ctry = VIEW_CY;
 

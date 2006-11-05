@@ -75,8 +75,8 @@ static const char *monster_spell_name[] = {
     "Throw Frost",
     "Paralysis",
     "Slow",
-    "Haste",  
-    "Confuse",  
+    "Haste",
+    "Confuse",
     "Venom Bolt",
     "Fire Bolt",
     "Cold Bolt",
@@ -95,32 +95,32 @@ static const char *monster_spell_name[] = {
     "Orb Energy",
     "Brain Feed",
     "Level Summon",
-    "Fake Rakshasa Summon",  
+    "Fake Rakshasa Summon",
     "Steam Ball",
     "Summon Demon",
     "Animate Dead",
     "Pain",
-    "Smite",                
+    "Smite",
     "Sticky Flame",
     "Poison Blast",
     "Summon Demon Lesser",
     "Summon Ufetubus",
-    "Purple Blast",        
+    "Purple Blast",
     "Summon Beast",
     "Energy Bolt",
     "Sting",
     "Iron Bolt",
-    "Stone Arrow",        
+    "Stone Arrow",
     "Poison Splash",
     "Summon Undead",
-    "Mutation",          
+    "Mutation",
     "Cantrip",
     "Disintegrate", 
     "Marsh Gas",
     "Quicksilver Bolt",
     "Torment",
     "Hellfire",
-    "Metal Splinters",  
+    "Metal Splinters",
     "Summon Demon Greater",
     "Banishment",
     "Controlled Blink",
@@ -1551,7 +1551,7 @@ int mons_intel_type(int mc)     //jmf: new, used by my spells
 
 int mons_power(int mc)
 {
-    // for now,  just return monster hit dice.
+    // for now, just return monster hit dice.
     return (smc->hpdice[0]);
 }
 

@@ -695,7 +695,7 @@ std::string ShopInfo::description() const
     return (name);
 }
 
-bool ShopInfo::matches_search(const std::string &prefix,  
+bool ShopInfo::matches_search(const std::string &prefix,
                               const base_pattern &search, 
                               stash_search_result &res) const
 {

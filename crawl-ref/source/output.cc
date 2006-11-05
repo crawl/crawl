@@ -643,7 +643,7 @@ void get_full_detail(char* buffer, bool calc_unid)
     }
     else
     {
-        snprintf(CUR_AD,  "HP         : %3d/%d (%d)", 
+        snprintf(CUR_AD, "HP         : %3d/%d (%d)", 
                 you.hp, you.hp_max, you.hp_max + player_rotted() );
     }
 

@@ -702,9 +702,9 @@ bool check_awaken(int mons_aw)
                    + mons_see_invis(monster) * 5;
 
     // critters that are wandering still have MHITYOU as their foe are
-    // still actively on guard for the player,  even if they can't see
+    // still actively on guard for the player, even if they can't see
     // him.  Give them a large bonus (handle_behaviour() will nuke 'foe'
-    // after a while,  removing this bonus.
+    // after a while, removing this bonus.
     if (monster->behaviour == BEH_WANDER && monster->foe == MHITYOU)
         mons_perc += 15;
 
@@ -968,7 +968,7 @@ bool noisy( int loudness, int nois_x, int nois_y, const char *msg )
 #define LOS_MAX_RANGE 9
 
 // the following two constants represent the 'middle' of the sh array.
-// since the current shown area is 19x19,  centering the view at (9,9)
+// since the current shown area is 19x19, centering the view at (9,9)
 // means it will be exactly centered.
 // This is done to accomodate possible future changes in viewable screen
 // area - simply change sh_xo and sh_yo to the new view center.

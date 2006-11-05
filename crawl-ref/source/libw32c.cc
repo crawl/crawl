@@ -302,12 +302,12 @@ void setStringInput(bool value)
       outmodes = 0;
    }
 
-   if ( SetConsoleMode( inbuf,  inmodes ) == 0) {
+   if ( SetConsoleMode( inbuf, inmodes ) == 0) {
       fputs("Error initialising console input mode.", stderr);
       exit(0);
    }
 
-   if ( SetConsoleMode( outbuf,  outmodes ) == 0) {
+   if ( SetConsoleMode( outbuf, outmodes ) == 0) {
       fputs("Error initialising console output mode.", stderr);
       exit(0);
    }
@@ -356,7 +356,7 @@ void init_libw32c(void)
 
    init_colors(oldTitle);
 
-   // by default,  set string input to false:  use char-input only
+   // by default, set string input to false:  use char-input only
    setStringInput( false );
    if (SetConsoleMode( outbuf, 0 ) == 0) {
       fputs("Error initialising console output mode.", stderr);
@@ -442,7 +442,7 @@ void _setcursortype_internal(int curstype)
    SetConsoleCursorInfo( outbuf, &cci );
    CLOCKOUT(1)
 
-   // now,  if we just changed from NOCURSOR to CURSOR,
+   // now, if we just changed from NOCURSOR to CURSOR,
    // actually move screen cursor
    if (current_cursor != _NOCURSOR)
       gotoxy(cx+1, cy+1);
@@ -602,7 +602,7 @@ void putch(char c)
 // translate virtual keys
 
 #define VKEY_MAPPINGS 10
-static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted,  control
+static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, control
    {
    { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT },
    { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT },
@@ -814,8 +814,8 @@ int getConsoleString(char *buf, int maxlen)
    if (ReadConsole( inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
       fputs("Error in ReadConsole()!", stderr);
 
-   // terminate string,  then strip CRLF, replace with \0
-   buf[maxlen-1] = '\0';
+   // terminate string, then strip CRLF, replace with \0
+   buf[maxlen-1] = 0;
    for (unsigned i=(nread<3 ? 0 : nread-3); i<nread; i++)
    {
       if (buf[i] == 0x0A || buf[i] == 0x0D)

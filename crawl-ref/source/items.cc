@@ -108,7 +108,7 @@ void link_items(void)
     {
         if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
         {
-            // item is not assigned,  or is monster item.  ignore.
+            // item is not assigned, or is monster item.  ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -2593,9 +2593,9 @@ void handle_time( long time_delta )
     int added_contamination = 0;
 
     // Account for mutagenic radiation.  Invis and haste will give the
-    // player about .1 points per turn,  mutagenic randarts will give
-    // about 1.5 points on average,  so they can corrupt the player
-    // quite quickly.  Wielding one for a short battle is OK,  which is
+    // player about .1 points per turn, mutagenic randarts will give
+    // about 1.5 points on average, so they can corrupt the player
+    // quite quickly.  Wielding one for a short battle is OK, which is
     // as things should be.   -- GDL
     if (you.invis && random2(10) < 6)
         added_contamination++;
@@ -2621,7 +2621,7 @@ void handle_time( long time_delta )
         {
             mpr("Your body shudders with the violent release of wild energies!", MSGCH_WARN);
 
-            // for particularly violent releases,  make a little boom
+            // for particularly violent releases, make a little boom
             if (you.magic_contamination > 25 && one_chance_in(3))
             {
                 struct bolt boom;
@@ -2647,13 +2647,13 @@ void handle_time( long time_delta )
                 explosion(boom);
             }
 
-            // we want to warp the player,  not do good stuff!
+            // we want to warp the player, not do good stuff!
             if (one_chance_in(5))
                 mutate(100);
             else
                 give_bad_mutation(coinflip());
 
-            // we're meaner now,  what with explosions and whatnot,  but
+            // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
             // mutating you.  -- GDL
             contaminate_player( -(random2(you.magic_contamination / 4) + 1) );

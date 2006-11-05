@@ -511,7 +511,7 @@ static bool food_change(bool suppress_message)
 }                               // end food_change()
 
 
-// food_increment is positive for eating,  negative for hungering
+// food_increment is positive for eating, negative for hungering
 static void describe_food_change(int food_increment)
 {
     int magnitude = (food_increment > 0)?food_increment:(-food_increment);

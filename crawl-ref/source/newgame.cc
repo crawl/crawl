@@ -444,8 +444,8 @@ bool new_game(void)
     you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
                      (you.species == SP_GHOUL) ? US_HUNGRY_DEAD : US_ALIVE);
 
-    // before we get into the inventory init,  set light radius based
-    // on species vision. currently,  all species see out to 8 squares.
+    // before we get into the inventory init, set light radius based
+    // on species vision. currently, all species see out to 8 squares.
     you.normal_vision = 8;
     you.current_vision = 8;
 
@@ -3044,7 +3044,7 @@ spec_query:
     return true;
 }
 
-// returns true if a class was chosen,  false if we should go back to
+// returns true if a class was chosen, false if we should go back to
 // race selection.
 
 bool choose_class(void)

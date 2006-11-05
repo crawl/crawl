@@ -129,8 +129,8 @@ static bool treasure_area(int level_number, unsigned char ta1_x,
 static bool is_weapon_special(int the_weapon);
 static void set_weapon_special(int the_weapon, int spwpn);
 static void big_room(int level_number);
-static void chequerboard(spec_room &sr, unsigned char
-    target,  unsigned char floor1, unsigned char floor2);
+static void chequerboard(spec_room &sr, unsigned char target,
+                         unsigned char floor1, unsigned char floor2);
 static void roguey_level(int level_number, spec_room &sr);
 static void morgue(spec_room &sr);
 
@@ -292,7 +292,7 @@ void builder(int level_number, char level_type)
         }
     }
 
-    // hook up the special room (if there is one,  and it hasn't
+    // hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level()
     if (sr.created && !sr.hooked_up)
         specr_2(sr);
@@ -341,7 +341,7 @@ void builder(int level_number, char level_type)
     if (level_number > 5 && one_chance_in(500 - 5 * level_number))
         items_wanted = 10 + random2avg( 90, 2 );  // rich level!
 
-    // change pre-rock (105) to rock,  and pre-floor (106) to floor
+    // change pre-rock (105) to rock, and pre-floor (106) to floor
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_WALL, DNGN_ROCK_WALL );
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR );
 
@@ -351,7 +351,7 @@ void builder(int level_number, char level_type)
     // place monsters
     builder_monsters(level_number, level_type, mon_wanted);
 
-    // place shops,  if appropriate
+    // place shops, if appropriate
     if (player_in_branch( BRANCH_MAIN_DUNGEON )
          || player_in_branch( BRANCH_ORCISH_MINES )
          || player_in_branch( BRANCH_ELVEN_HALLS )
@@ -3644,7 +3644,7 @@ static bool find_in_area(int sx, int sy, int ex, int ey, unsigned char feature)
     return (false);
 }
 
-// stamp a box.  can avoid a possible type,  and walls and floors can
+// stamp a box.  can avoid a possible type, and walls and floors can
 // be different (or not stamped at all)
 // Note that the box boundaries are INclusive.
 static bool make_box(int room_x1, int room_y1, int room_x2, int room_y2,
@@ -3684,7 +3684,7 @@ static bool make_box(int room_x1, int room_y1, int room_x2, int room_y2,
 
 // take care of labyrinth, abyss, pandemonium
 // returns 1 if we should skip further generation,
-// -1 if we should immediately quit,  and 0 otherwise.
+// -1 if we should immediately quit, and 0 otherwise.
 static int builder_by_type(int level_number, char level_type)
 {
     if (level_type == LEVEL_LABYRINTH)
@@ -3740,7 +3740,7 @@ static int builder_by_type(int level_number, char level_type)
 }
 
 // returns 1 if we should skip further generation,
-// -1 if we should immediately quit,  and 0 otherwise.
+// -1 if we should immediately quit, and 0 otherwise.
 static int builder_by_branch(int level_number)
 {
     switch (you.where_are_you)
@@ -3987,7 +3987,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
         }
     }
 
-    // maybe create a special room,  if roguey_level hasn't done it
+    // maybe create a special room, if roguey_level hasn't done it
     // already.
     if (!sr.created && level_number > 5 && !done_city && one_chance_in(5))
         special_room(level_number, sr);
@@ -3995,7 +3995,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     return 0;
 }
 
-// returns 1 if we should skip extras(),  otherwise 0
+// returns 1 if we should skip extras(), otherwise 0
 static int builder_basic(int level_number)
 {
     int temp_rand;
@@ -4621,7 +4621,7 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
 
             while(which_unique < 0 || you.unique_creatures[which_unique])
             {
-                // sometimes,  we just quit if a unique is already placed.
+                // sometimes, we just quit if a unique is already placed.
                 if (which_unique >= 0 && !one_chance_in(3))
                 {
                     which_unique = -1;
@@ -4800,7 +4800,7 @@ static void builder_items(int level_number, char level_type, int items_wanted)
 // the entire intent of this function is to find a
 // hallway from a special room to a floor space somewhere,
 // changing the special room wall (DNGN_BUILDER_SPECIAL_WALL)
-// to a closed door,  and normal rock wall to pre-floor.
+// to a closed door, and normal rock wall to pre-floor.
 // Anything that might otherwise block the hallway is changed
 // to pre-floor.
 static void specr_2(spec_room &sr)
@@ -5234,7 +5234,7 @@ static void beehive(spec_room &sr)
 
             mons_place( one_chance_in(7) ? MONS_KILLER_BEE_LARVA 
                                          : MONS_KILLER_BEE,
-                        BEH_SLEEP, MHITNOT,  true, x, y );
+                        BEH_SLEEP, MHITNOT, true, x, y );
         }
     }
 
@@ -7681,7 +7681,7 @@ static int box_room_door_spot(int x, int y)
 
 static int box_room_doors( int bx1, int bx2, int by1, int by2, int new_doors)
 {
-    int good_doors[200];        // 1 == good spot,  2 == door placed!
+    int good_doors[200];        // 1 == good spot, 2 == door placed!
     int spot;
     int i,j;
     int doors_placed = new_doors;
@@ -7690,7 +7690,7 @@ static int box_room_doors( int bx1, int bx2, int by1, int by2, int new_doors)
     if ( 2 * ( (bx2 - bx1) + (by2-by1) ) > 200)
         return 0;
 
-    // go through, building list of good door spots,  and replacing wall
+    // go through, building list of good door spots, and replacing wall
     // with door if we're about to block off another door.
     int spot_count = 0;
 
@@ -8077,7 +8077,7 @@ static void big_room(int level_number)
 
 // helper function for chequerboard rooms
 // note that box boundaries are INclusive
-static void chequerboard( spec_room &sr, unsigned char target,  
+static void chequerboard( spec_room &sr, unsigned char target,
                           unsigned char floor1, unsigned char floor2 )
 {
     int i, j;
@@ -8418,8 +8418,8 @@ void define_zombie( int mid, int ztype, int cs, int power )
             if (cls == MONS_PROGRAM_BUG)
                 continue;
 
-            // on certain branches,  zombie creation will fail if we use
-            // the mons_rarity() functions,  because (for example) there
+            // on certain branches, zombie creation will fail if we use
+            // the mons_rarity() functions, because (for example) there
             // are NO zombifiable "native" abyss creatures. Other branches
             // where this is a problem are hell levels and the crypt.
             // we have to watch for summoned zombies on other levels, too,
@@ -8478,8 +8478,8 @@ void define_zombie( int mid, int ztype, int cs, int power )
                 break;
             }
 
-            // every so often,  we'll relax the OOD restrictions.  Avoids
-            // infinite loops (if we don't do this,  things like creating
+            // every so often, we'll relax the OOD restrictions.  Avoids
+            // infinite loops (if we don't do this, things like creating
             // a large skeleton on level 1 may hang the game!
             if (one_chance_in(5))
                 relax++;

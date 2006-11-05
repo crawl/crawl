@@ -17,7 +17,7 @@
    than anything else, it is not actually saved as a tag) to TAG_XXX. NUM_TAGS
    is equal to the actual number of defined tags.
 
-2. Tags are created with tag_construct(),  which forwards the construction
+2. Tags are created with tag_construct(), which forwards the construction
    request appropriately.   tag_write() is then used to write the tag to an
    output stream.
 
@@ -25,15 +25,15 @@
    forwards the request appropriately, returning the ID of the tag it found,
    or zero if no tag was found.
 
-4. In order to know which tags are used by a particular file type,  a client
+4. In order to know which tags are used by a particular file type, a client
    calls tag_set_expected( fileType ), which sets up an array of chars.
    Within the array, a value of 1 means the tag is expected; -1 means that
    the tag is not expected.  A client can then set values in this array to
    anything other than 1 to indicate a successful tag_read() of that tag.
 
 5. A case should be provided in tag_missing() for any tag which might be
-   missing from a tagged save file.  For example,  if a developer adds
-   TAG_YOU_NEW_STUFF to the player save file,  he would have to provide a
+   missing from a tagged save file.  For example, if a developer adds
+   TAG_YOU_NEW_STUFF to the player save file, he would have to provide a
    case in tag_missing() for this tag since it might not be there in
    earlier savefiles.   The tags defined with the original tag system (and
    so not needing cases in tag_missing()) are as follows:
@@ -487,7 +487,7 @@ int tag_read(FILE *fp, char minorVersion)
 // For now, none are supported.
 
 // This function will be called AFTER all other tags for
-// the savefile are read,  so everything that can be
+// the savefile are read, so everything that can be
 // initialized should have been by now.
 
 // minorVersion is available for any child functions that need
@@ -539,12 +539,12 @@ void tag_set_expected(char tags[], int fileType)
     }
 }
 
-// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS,  EVER.  THAT IS THE WHOLE POINT
+// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS, EVER.  THAT IS THE WHOLE POINT
 // OF USING TAGS.  Apologies for the screaming.
 
 // Note anyway that the formats are somewhat flexible;  you could change map
-// size,  the # of slots in player inventory,  etc.  Constants like GXM,
-// NUM_EQUIP, and NUM_DURATIONS are saved,  so the appropriate amount will
+// size, the # of slots in player inventory, etc.  Constants like GXM,
+// NUM_EQUIP, and NUM_DURATIONS are saved, so the appropriate amount will
 // be restored even if a later version increases these constants.
 
 // --------------------------- player tags (foo.sav) -------------------- //
@@ -774,7 +774,7 @@ static void tag_construct_you_items(struct tagHeader &th)
     marshallByte(th, 50);
 
     // this is really dumb. We copy the id[] array from itemname
-    // to the stack,  for no good reason that I can see.
+    // to the stack, for no good reason that I can see.
     char identy[4][50];
 
     save_id(identy);
@@ -1771,8 +1771,8 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].target_y = unmarshallByte(th);
         menv[i].flags = unmarshallByte(th);
 
-        // VERSION NOTICE:  for pre 4.2 files,  flags was either 0
-        // or 1.  Now,  we can transfer ENCH_CREATED_FRIENDLY over
+        // VERSION NOTICE:  for pre 4.2 files, flags was either 0
+        // or 1.  Now, we can transfer ENCH_CREATED_FRIENDLY over
         // from the enchantments array to flags.
         // Also need to take care of ENCH_FRIEND_ABJ_xx flags
 
@@ -1855,7 +1855,7 @@ void tag_missing_level_attitude()
     // a foe first time through handle_monster() if
     // there's one around.
 
-    // as for attitude,  a couple simple checks
+    // as for attitude, a couple simple checks
     // can be used to determine friendly/neutral/
     // hostile.
     int i;

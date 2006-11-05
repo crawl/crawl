@@ -1291,7 +1291,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
             case 11:
                 strcat(info,
-                       " says, \"I love to fight,  but killing is better.\"");
+                       " says, \"I love to fight, but killing is better.\"");
                 break;
             }
             break;          // end Erica
@@ -2117,7 +2117,7 @@ bool mons_speaks(struct monsters *monster)
             switch (random2(13))
             {
             case 0:
-                strcat(info, " roars, \"DIE,  PUNY ONE!\"");
+                strcat(info, " roars, \"DIE, PUNY ONE!\"");
                 break;
             case 1:
                 strcat(info, " growls, \"YOU BORE ME SO.\"");

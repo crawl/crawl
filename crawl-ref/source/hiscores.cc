@@ -126,7 +126,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
         }
     }
 
-    // special case: lowest score,  with room
+    // special case: lowest score, with room
     if (!inserted && i < SCORE_FILE_ENTRIES)
     {
         newest_entry = i;
@@ -685,7 +685,7 @@ static void hs_write( FILE *scores, scorefile_entry &se )
 static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
 {
     /* old entries are of the following format (Brent introduced some
-       spacing at one point,  we have to take this into account):
+       spacing at one point, we have to take this into account):
 
    // Actually, I believe it might have been Brian who added the spaces, 
    // I was quite happy with the condensed version, given the 80 column
@@ -701,7 +701,7 @@ static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
     4. All numerics up to the comma are the clevel
     5. From the comma, search for known fixed substrings and
        translate to death_type.  Leave death source = 0 for old
-       scores,  and just copy in the monster name.
+       scores, and just copy in the monster name.
     6. Look for the branch type (again, substring search for
        fixed strings) and level.
 
@@ -917,8 +917,8 @@ static void hs_search_death(char *inbuf, struct scorefile_entry &se)
 
     // whew!
 
-    // now, if we're still KILLED_BY_MONSTER,  make sure that there is
-    // a "killed by" somewhere,  or else we're setting it to UNKNOWN.
+    // now, if we're still KILLED_BY_MONSTER, make sure that there is
+    // a "killed by" somewhere, or else we're setting it to UNKNOWN.
     if (se.death_type == KILLED_BY_MONSTER)
     {
         if (strstr(inbuf, "killed by") == NULL)
@@ -988,7 +988,7 @@ static void hs_search_where(char *inbuf, struct scorefile_entry &se)
         return;
     }
 
-    // from here,  we have branch and level.
+    // from here, we have branch and level.
     char *p = strstr(inbuf, "on L");
     if (p != NULL)
     {
@@ -1620,7 +1620,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
-        snprintf( scratch, sizeof scratch,  " (%s)",
+        snprintf( scratch, sizeof scratch, " (%s)",
                   place_name(get_packed_place(branch, dlvl, level_type),
                              false, true).c_str());
         return (scratch);

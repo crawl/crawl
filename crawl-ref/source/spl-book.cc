@@ -1509,7 +1509,7 @@ int staff_spell( int staff )
     if (!is_valid_spell_in_book( staff, spell ))
         goto whattt;
 
-    specspell = which_spell_in_book( type,  spell );
+    specspell = which_spell_in_book( type, spell );
 
     if (specspell == SPELL_NO_SPELL)
         goto whattt;

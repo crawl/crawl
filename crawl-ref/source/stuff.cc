@@ -144,8 +144,8 @@ void tag_followers( void )
             if (fmenv->speed_increment < 50)
                 continue;
 
-            // only friendly monsters,  or those actively seeking the
-            // player,  will follow up/down stairs.
+            // only friendly monsters, or those actively seeking the
+            // player, will follow up/down stairs.
             if (!(mons_friendly(fmenv) ||
                 (fmenv->behaviour == BEH_SEEK && fmenv->foe == MHITYOU)))
             {   

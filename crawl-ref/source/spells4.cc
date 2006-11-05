@@ -2702,7 +2702,7 @@ void cast_twist(int pow)
     if (pow > 25)
         pow = 25;
 
-    // Get target,  using DIR_TARGET for targetting only,
+    // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
     if (spell_direction(targ, tmp, DIR_TARGET) == -1)
         return;
@@ -2754,7 +2754,7 @@ void cast_far_strike(int pow)
     struct dist targ;
     struct bolt tmp;    // used, but ignored
 
-    // Get target,  using DIR_TARGET for targetting only,
+    // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
     if (spell_direction(targ, tmp, DIR_TARGET) == -1)
         return;
@@ -3061,8 +3061,8 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
 
     // setup: Brent's new algorithm
     // we are interested in two things: distance of a test point from
-    // the ideal 'line',  and the distance of a test point from two
-    // actual points,  one in the 'correct' direction and one in the
+    // the ideal 'line', and the distance of a test point from two
+    // actual points, one in the 'correct' direction and one in the
     // 'incorrect' direction.
 
     // scale distance by 10 for more interesting numbers.

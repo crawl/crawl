@@ -65,7 +65,7 @@ void init_playerspells(void)
     for (x = 0; x < NUM_SPELLS; x++)
         plyrspell_list[x] = -1;
 
-    // can only use up to PLYRSPELLDATASIZE _MINUS ONE_,  or the 
+    // can only use up to PLYRSPELLDATASIZE _MINUS ONE_, or the
     // last entry tries to set plyrspell_list[SPELL_NO_SPELL] 
     // which corrupts the heap.
     for (x = 0; x < PLYRSPELLDATASIZE - 1; x++)

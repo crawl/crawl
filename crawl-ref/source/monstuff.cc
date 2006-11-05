@@ -902,7 +902,7 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
 {
     unsigned char current_tile = grd[monster->x][monster->y];
 
-    // morph targets are _always_ "base" classes,  not derived ones.
+    // morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
 
     /* various inappropriate polymorph targets */
@@ -1313,7 +1313,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     case ME_WHACK:
     case ME_ANNOY:
-        // will turn monster against <src>,  unless they
+        // will turn monster against <src>, unless they
         // are BOTH friendly and stupid.   Hitting someone
         // over the head, of course, always triggers this code.
         if ( event == ME_WHACK ||
@@ -1340,7 +1340,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     case ME_ALERT:
         // will alert monster to <src> and turn them
-        // against them,  unless they have a current foe.
+        // against them, unless they have a current foe.
         // it won't turn friends hostile either.
         if (mon->behaviour != BEH_CORNERED)
             mon->behaviour = BEH_SEEK;
@@ -1468,7 +1468,7 @@ static void handle_behaviour(struct monsters *mon)
     }
 
     // unfriendly monsters fighting other monsters will usually
-    // target the player,  if they're healthy
+    // target the player, if they're healthy
     if (!isFriendly && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !one_chance_in(3) && isHealthy)
     {
@@ -1559,7 +1559,7 @@ static void handle_behaviour(struct monsters *mon)
                 {
                     // if we've arrived at our target x,y
                     // do a stealth check.  If the foe
-                    // fails,  monster will then start
+                    // fails, monster will then start
                     // tracking foe's CURRENT position,
                     // but only for a few moves (smell and
                     // intuition only go so far)
@@ -1627,7 +1627,7 @@ static void handle_behaviour(struct monsters *mon)
             // by updating target x,y
             if (mon->foe == MHITYOU)
             {
-                // sometimes,  your friends will wander a bit.
+                // sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
                     mon->target_x = 10 + random2(GXM - 10);
@@ -1679,9 +1679,9 @@ static void handle_behaviour(struct monsters *mon)
                 mon->target_y = 10 + random2(GYM - 10);
             }
 
-            // during their wanderings,  monsters will
+            // during their wanderings, monsters will
             // eventually relax their guard (stupid
-            // ones will do so faster,  smart monsters
+            // ones will do so faster, smart monsters
             // have longer memories
             if (!proxFoe && mon->foe != MHITNOT)
             {
@@ -1696,7 +1696,7 @@ static void handle_behaviour(struct monsters *mon)
                 new_beh = BEH_SEEK;
             // smart monsters flee until they can
             // flee no more...  possible to get a
-            // 'CORNERED' event,  at which point
+            // 'CORNERED' event, at which point
             // we can jump back to WANDER if the foe
             // isn't present.
 
@@ -2179,7 +2179,7 @@ static void handle_movement(struct monsters *monster)
 
     // reproduced here is some semi-legacy code that makes monsters
     // move somewhat randomly along oblique paths.  It is an exceedingly
-    // good idea,  given crawl's unique line of sight properties.
+    // good idea, given crawl's unique line of sight properties.
     //
     // Added a check so that oblique movement paths aren't used when
     // close to the target square. -- bwr
@@ -2478,7 +2478,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (mons_has_ench(monster, ENCH_CONFUSION))
             break;
 
-        // friendly fiends won't use torment,  preferring hellfire
+        // friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
         // badly they'll damage the player with torment) -- GDL
         if (one_chance_in(4))
@@ -2544,12 +2544,12 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (!mons_near(monster))
             break;
 
-        // the fewer spikes the manticore has left,  the less
+        // the fewer spikes the manticore has left, the less
         // likely it will use them.
         if (random2(16) >= static_cast<int>(monster->number))
             break;
 
-        // do the throwing right here,  since the beam is so
+        // do the throwing right here, since the beam is so
         // easy to set up and doesn't involve inventory.
 
         // set up the beam
@@ -3477,7 +3477,7 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
         return (false);
 
     // recent addition {GDL} - monsters won't throw if they can do melee.
-    // wastes valuable ammo,  and most monsters are better at melee anyway.
+    // wastes valuable ammo, and most monsters are better at melee anyway.
     if (adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
         return (false);
 
@@ -4477,7 +4477,7 @@ static void monster_move(struct monsters *monster)
             // we're hostile (even if we're heading somewhere
             // else)
 
-            // smacking another monster is good,  if the monsters
+            // smacking another monster is good, if the monsters
             // are aligned differently
             if (mgrd[targ_x][targ_y] != NON_MONSTER)
             {
@@ -4552,7 +4552,7 @@ static void monster_move(struct monsters *monster)
                         continue;
                     break;
 
-                // this isn't harmful,  but dumb critters might think so.
+                // this isn't harmful, but dumb critters might think so.
                 case CLOUD_GREY_SMOKE:
                 case CLOUD_GREY_SMOKE_MON:
                     if (mons_intel(monster->type) > I_ANIMAL || coinflip())
@@ -4652,10 +4652,10 @@ static void monster_move(struct monsters *monster)
     }
 
 
-    // now,  if a monster can't move in its intended direction,  try
-    // either side.  If they're both good,  move in whichever dir
+    // now, if a monster can't move in its intended direction, try
+    // either side.  If they're both good, move in whichever dir
     // gets it closer(farther for fleeing monsters) to its target.
-    // If neither does,  do nothing.
+    // If neither does, do nothing.
     if (good_move[mmov_x + 1][mmov_y + 1] == false)
     {
         int current_distance = grid_distance( monster->x, monster->y,
@@ -4679,7 +4679,7 @@ static void monster_move(struct monsters *monster)
 
         int dist[2];
 
-        // first 1 away,  then 2 (3 is silly)
+        // first 1 away, then 2 (3 is silly)
         for (int j = 1; j <= 2; j++)
         {
             int sdir, inc;

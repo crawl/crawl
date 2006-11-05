@@ -337,7 +337,7 @@ void warn_shield_penalties()
 }
 
 // provide a function for handling initial wielding of 'special'
-// weapons,  or those whose function is annoying to reproduce in
+// weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*    {gdl}
 
 void wield_effects(int item_wield_2, bool showMsgs)
@@ -1339,7 +1339,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         thr.ty = you.y_pos + random2(13) - 6;
     }
 
-    // even though direction is allowed,  we're throwing so we
+    // even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     pbolt.set_target(thr);
 
@@ -1485,9 +1485,9 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             }
         }
 
-        // for all launched weapons,  maximum effective specific skill
+        // for all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
-        // how 'good' you are with a bow,  if you know nothing about
+        // how 'good' you are with a bow, if you know nothing about
         // trajectories you're going to be a damn poor bowman.  Ditto
         // for crossbows and slings.
 
@@ -1783,7 +1783,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
                 (10 * (you.skills[SK_RANGED_COMBAT] / 2 + you.strength - 10)) / 12;
 
             // now, exDamBonus is a multiplier.  The full multiplier
-            // is applied to base damage,  but only a third is applied
+            // is applied to base damage, but only a third is applied
             // to the magical modifier.
             exDamBonus = (exDamBonus * (3 * baseDam + ammoDamBonus)) / 30;
         }
@@ -1924,7 +1924,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     else
         strcpy(info, "You throw ");
 
-    item_name( item,  DESC_NOCAP_A, str_pass );
+    item_name( item, DESC_NOCAP_A, str_pass );
 
     strcat(info, str_pass);
     strcat(info, ".");

@@ -1150,8 +1150,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (mons_intel(monster->type) == I_HIGH)
         exHitBonus += 10;
 
-    // now,  if a monster is, for some reason,  throwing something really
-    // stupid,  it will have baseHit of 0 and damage of 0.  Ah well.
+    // now, if a monster is, for some reason, throwing something really
+    // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
     strcpy(info, ptr_monam( monster, DESC_CAP_THE) );
 
     strcat(info, (launched) ? " shoots " : " throws ");

@@ -67,11 +67,11 @@ static int spready[] = { -1, 1, 0, 0 };
 static int opdir[]   = { 2, 1, 4, 3 };
 static FixedArray < bool, 19, 19 > explode_map;
 
-// helper functions (some of these, esp. affect(),  should probably
+// helper functions (some of these, esp. affect(), should probably
 // be public):
 static void sticky_flame_monster( int mn, bool source, int hurt_final );
 static bool affectsWalls(struct bolt &beam);
-static bool isBouncy(struct bolt &beam);
+static bool isBouncy(struct bolt &beam, unsigned char gridtype);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(struct bolt &beam, int x, int y);
 static void beam_explodes(struct bolt &beam, int x, int y);
@@ -161,7 +161,7 @@ void zapping(char ztype, int power, struct bolt &pbolt)
 #endif
 
     // GDL: note that rangeMax is set to 0, which means that max range is
-    // equal to range.  This is OK,  since rangeMax really only matters for
+    // equal to range.  This is OK, since rangeMax really only matters for
     // stuff monsters throw/zap.
 
     // all of the following might be changed by zappy():
@@ -1179,10 +1179,10 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
 }                               // end zappy()
 
 /*  NEW (GDL):
- *  Now handles all beamed/thrown items and spells,  tracers, and their effects.
+ *  Now handles all beamed/thrown items and spells, tracers, and their effects.
  *  item is used for items actually thrown/launched
  *
- *  if item is NULL,  there is no physical object being thrown that could
+ *  if item is NULL, there is no physical object being thrown that could
  *  land on the ground.
  */
 
@@ -1279,7 +1279,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             if (affectsWalls(pbolt))
             {
                 // should we ever get a tracer with a wall-affecting
-                // beam (possible I suppose),  we'll quit tracing now.
+                // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
                     rangeRemaining -= affect(pbolt, tx, ty);
 
@@ -1290,7 +1290,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             else
             {
                 // BEGIN bounce case
-                if (!isBouncy(pbolt)) {
+                if (!isBouncy(pbolt, grd[tx][ty])) {
                     ray.regress();
                     tx = ray.x();
                     ty = ray.y();
@@ -1323,13 +1323,13 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         // cell (e.g. a mage wants an explosion to happen
         // between two monsters)
 
-        // in this case,  don't affect the cell - players and
+        // in this case, don't affect the cell - players and
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
         if (tx == pbolt.target_x && ty == pbolt.target_y)
             beamTerminate = beam_term_on_target(pbolt, tx, ty);
 
-        // affect the cell,  except in the special case noted
+        // affect the cell, except in the special case noted
         // above -- affect() will early out if something gets
         // hit and the beam is type 'term on target'.
         if (!beamTerminate || !pbolt.is_explosion)
@@ -1400,7 +1400,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         ray.advance();
     } // end- while !beamTerminate
 
-    // the beam has finished,  and terminated at tx, ty
+    // the beam has finished, and terminated at tx, ty
 
     // leave an object, if applicable
     if (item)
@@ -1440,7 +1440,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
 int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
                            int hurted, bool doFlavouredEffects )
 {
-    // if we're not doing flavored effects,  must be preliminary
+    // if we're not doing flavored effects, must be preliminary
     // damage check only;  do not print messages or apply any side
     // effects!
     int resist;
@@ -1826,7 +1826,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     switch (pbolt.flavour)      /* put in magic resistance */
     {
     case BEAM_SLOW:         /* 0 = slow monster */
-        // try to remove haste,  if monster is hasted
+        // try to remove haste, if monster is hasted
         if (mons_del_ench(monster, ENCH_HASTE))
         {
             if (simple_monster_message(monster, " is no longer moving quickly."))
@@ -1835,7 +1835,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
             return (MON_AFFECTED);
         }
 
-        // not hasted,  slow it
+        // not hasted, slow it
         if (mons_add_ench(monster, ENCH_SLOW))
         {
             // put in an exception for fungi, plants and other things you won't
@@ -2121,7 +2121,7 @@ void sticky_flame_monster( int mn, bool fromPlayer, int levels )
     mons_del_ench( monster, ENCH_YOUR_STICKY_FLAME_I, ENCH_YOUR_STICKY_FLAME_IV,
                    true );
 
-    // increase sticky flame strength,  cap at 3 (level is 0..3)
+    // increase sticky flame strength, cap at 3 (level is 0..3)
     currentStrength += levels;
 
     if (currentStrength > 3)
@@ -2149,10 +2149,10 @@ void sticky_flame_monster( int mn, bool fromPlayer, int levels )
  * fr_count, foe_count: a count of how many friends and foes will (probably)
  * be hit by this beam
  * fr_power, foe_power: a measure of how many 'friendly' hit dice it will
- *   affect,  and how many 'unfriendly' hit dice.
+ * affect, and how many 'unfriendly' hit dice.
  *
- * note that beam properties must be set,  as the tracer will take them
- * into account,  as well as the monster's intelligence.
+ * note that beam properties must be set, as the tracer will take them
+ * into account, as well as the monster's intelligence.
  *
  */
 void fire_tracer(struct monsters *monster, struct bolt &pbolt)
@@ -2216,12 +2216,15 @@ void mimic_alert(struct monsters *mimic)
     monster_teleport( mimic, !one_chance_in(3) );
 }                               // end mimic_alert()
 
-static bool isBouncy(struct bolt &beam)
+static bool isBouncy(struct bolt &beam, unsigned char gridtype)
 {
-    // at present, only non-enchantment electrical beams bounce.
-    if (beam.name[0] != '0' && beam.flavour == BEAM_ELECTRICITY)
-        return (true);
-
+    if (beam.name[0] == '0')
+        return false;
+    if (beam.flavour == BEAM_ELECTRICITY && gridtype != DNGN_METAL_WALL)
+        return true;
+    if ( (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD) &&
+         (gridtype == DNGN_GREEN_CRYSTAL_WALL) )
+        return true;
     return (false);
 }
 
@@ -2338,7 +2341,7 @@ static bool beam_term_on_target(struct bolt &beam, int x, int y)
 
     // generic - all explosion-type beams can be targetted at empty space,
     // and will explode there.  This semantic also means that a creature
-    // in the target cell will have no chance to dodge or block,  so we
+    // in the target cell will have no chance to dodge or block, so we
     // DON'T affect() the cell if this function returns true!
 
     if (beam.is_explosion || beam.is_big_cloud)
@@ -2405,29 +2408,6 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
     }                           // if (thing_throw == 2) ...
 }
 
-// somewhat complicated BOUNCE function
-// returns # of times beam bounces during routine (usually 1)
-//
-// step 1 is always the step value from the stepping direction.
-#define B_HORZ      1
-#define B_VERT      2
-#define B_BOTH      3
-
-
-// affects a single cell.
-// returns the amount of extra range 'used up' by this beam
-// during the affectation.
-//
-// pseudo-code:
-//
-// 1. If wall, and wall affecting non-tracer, affect the wall.
-//  1b.  If for some reason the wall-affect didn't make it into
-//      a non-wall, return                      affect_wall()
-// 2. for non-tracers, produce cloud effects    affect_place_clouds()
-// 3. if cell holds player, affect player       affect_player()
-// 4. if cell holds monster, affect monster     affect_monster()
-// 5. return range used affectation.
-
 int affect(struct bolt &beam, int x, int y)
 {
     // extra range used by hitting something
@@ -2446,7 +2426,7 @@ int affect(struct bolt &beam, int x, int y)
         {
             rangeUsed += affect_wall(beam, x, y);
         }
-        // if it's still a wall,  quit - we can't do anything else to
+        // if it's still a wall, quit - we can't do anything else to
         // a wall.  Otherwise effects (like clouds, etc) are still possible.
         if (grid_is_solid(grd[x][y]))
             return (rangeUsed);
@@ -2458,7 +2438,7 @@ int affect(struct bolt &beam, int x, int y)
     if (!beam.is_tracer)
         rangeUsed += affect_place_clouds(beam, x, y);
 
-    // if player is at this location,  try to affect unless term_on_target
+    // if player is at this location, try to affect unless term_on_target
     if (x == you.x_pos && y == you.y_pos)
     {
         // Done this way so that poison blasts affect the target once (via
@@ -2475,7 +2455,7 @@ int affect(struct bolt &beam, int x, int y)
             return (BEAM_STOP);
     }
 
-    // if there is a monster at this location,  affect it
+    // if there is a monster at this location, affect it
     // submerged monsters aren't really there -- bwr
     int mid = mgrd[x][y];
     if (mid != NON_MONSTER && !mons_has_ench( &menv[mid], ENCH_SUBMERGED ))
@@ -2509,7 +2489,7 @@ static bool affectsWalls(struct bolt &beam)
     if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
         return (true);
 
-    // eye of devestation?
+    // eye of devastation?
     if (beam.flavour == BEAM_NUKE)
         return (true);
 
@@ -2915,7 +2895,7 @@ static int affect_player( struct bolt &beam )
     // BEGIN real beam code
     beam.msg_generated = true;
 
-    // use beamHit,  NOT beam.hit,  for modification of tohit.. geez!
+    // use beamHit, NOT beam.hit, for modification of tohit.. geez!
     beamHit = beam.hit;
 
     if (beam.name[0] != '0') 
@@ -3267,7 +3247,7 @@ static int beam_source(const bolt &beam)
 }
 
 // return amount of range used up by affectation of this monster
-static int  affect_monster(struct bolt &beam, struct monsters *mon)
+static int affect_monster(struct bolt &beam, struct monsters *mon)
 {
     int tid = mgrd[mon->x][mon->y];
     int hurt;
@@ -3370,7 +3350,7 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
     if (mons_has_ench( mon, ENCH_SUBMERGED ) && !beam.aimed_at_feet)
         return (0);                   // missed me!
 
-    // we need to know how much the monster _would_ be hurt by this,  before
+    // we need to know how much the monster _would_ be hurt by this, before
     // we decide if it actually hits.
 
     // Roll the damage:
@@ -3398,7 +3378,7 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
     const int old_hurt = hurt_final;
 #endif 
 
-    // check monster resists,  _without_ side effects (since the
+    // check monster resists, _without_ side effects (since the
     // beam/missile might yet miss!)
     hurt_final = mons_adjust_flavoured( mon, beam, hurt_final, false );
 
@@ -3413,17 +3393,17 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
     }
 #endif
 
-    // now,  we know how much this monster would (probably) be
+    // now, we know how much this monster would (probably) be
     // hurt by this beam.
     if (beam.is_tracer)
     {
         if (hurt_final != 0)
         {
-            // monster could be hurt somewhat,  but only apply the
+            // monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
-            // For example,  if a fire giant (power 16) threw a
-            // fireball at another fire giant,  and it only took
-            // 1/3 damage,  then power of 5 would be applied to
+            // For example, if a fire giant (power 16) threw a
+            // fireball at another fire giant, and it only took
+            // 1/3 damage, then power of 5 would be applied to
             // foe_power or fr_power.
             if (beam.is_friendly ^ mons_friendly(mon))
             {
@@ -3446,7 +3426,7 @@ static int  affect_monster(struct bolt &beam, struct monsters *mon)
     // player beams which hit friendly MIGHT annoy them and be considered
     // naughty if they do much damage (this is so as not to penalize
     // players that fling fireballs into a melee with fire elementals
-    // on their side - the elementals won't give a sh*t,  after all)
+    // on their side - the elementals won't give a sh*t, after all)
 
     if (nasty_beam(mon, beam))
     {
@@ -3994,7 +3974,7 @@ static void explosion1(struct bolt &pbolt)
 
 // explosion is considered to emanate from beam->target_x, target_y
 // and has a radius equal to ex_size.  The explosion will respect
-// boundaries like walls,  but go through/around statues/idols/etc.
+// boundaries like walls, but go through/around statues/idols/etc.
 
 // for each cell affected by the explosion, affect() is called.
 
@@ -4036,9 +4016,9 @@ void explosion( struct bolt &beam, bool hole_in_the_middle )
     // as the recursion runs approximately as R^2
     explosion_map(beam, 0, 0, 0, 0, r);
 
-    // go through affected cells,  drawing effect and
+    // go through affected cells, drawing effect and
     // calling affect() and affect_items() for each.
-    // now, we get a bit fancy,  drawing all radius 0
+    // now, we get a bit fancy, drawing all radius 0
     // effects, then radius 1, radius 2, etc.  It looks
     // a bit better that way.
 
@@ -4172,7 +4152,7 @@ static void explosion_map( struct bolt &beam, int x, int y,
         return;
 
     // 3. check to see if we're blocked by something
-    //    specifically,  we're blocked by WALLS.  Not
+    //    specifically, we're blocked by WALLS.  Not
     //    statues, idols, etc.
     int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
 
@@ -4206,8 +4186,8 @@ static void explosion_map( struct bolt &beam, int x, int y,
 
 // returns true if the beam is harmful (ignoring monster
 // resists) -- mon is given for 'special' cases where,
-// for example,  "Heal" might actually hurt undead, or
-// "Holy Word" being ignored by holy monsters,  etc.
+// for example, "Heal" might actually hurt undead, or
+// "Holy Word" being ignored by holy monsters, etc.
 //
 // only enchantments should need the actual monster type
 // to determine this;  non-enchantments are pretty

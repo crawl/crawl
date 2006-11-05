@@ -1992,7 +1992,7 @@ void monster_attack(int monster_attacking)
         return;
     }
 
-    // if a friend wants to help,  they can attack <monster_attacking>
+    // if a friend wants to help, they can attack <monster_attacking>
     if (you.pet_target == MHITNOT)
         you.pet_target = monster_attacking;
 

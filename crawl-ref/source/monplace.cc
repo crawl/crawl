@@ -345,7 +345,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                             proxOK = false;
                             break;
                         }
-                        // swap the monster and the player spots,  unless the
+                        // swap the monster and the player spots, unless the
                         // monster was generated in lava or deep water.
                         if (grd[px][py] == DNGN_LAVA || grd[px][py] == DNGN_DEEP_WATER)
                         {
@@ -378,8 +378,8 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons, 
                             extra, true);
 
-    // now, forget about banding if the first placement failed,  or there's too
-    // many monsters already,  or we successfully placed by stairs
+    // now, forget about banding if the first placement failed, or there's too
+    // many monsters already, or we successfully placed by stairs
     if (id < 0 || id+30 > MAX_MONSTERS)
         return false;
 
@@ -583,7 +583,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
 
     // setting attitude will always make the
     // monster wander.. if you want sleeping
-    // hostiles,  use BEH_SLEEP since the default
+    // hostiles, use BEH_SLEEP since the default
     // attitude is hostile.
     if (behaviour > NUM_BEHAVIOURS)
     {
