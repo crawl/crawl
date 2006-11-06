@@ -277,7 +277,7 @@ bool butchery(void)
 		    if (you.equip[EQ_GLOVES] == -1)
 			mpr("What, with your bare hands?");
 		    else
-			mpr("You can't use your claws with your gloves on!");
+			mpr("Your gloves aren't that sharp!");
 		}
 		else
 		    mpr("Maybe you should try using a sharper implement.");
