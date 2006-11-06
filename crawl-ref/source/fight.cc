@@ -3190,7 +3190,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
             {
                 strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                 strcat(info, " misses ");
-                strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                if (attacker == defender)
+                    strcat(info,
+                           mons_pronoun(attacker->type, PRONOUN_REFLEXIVE));
+                else
+                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                 strcat(info, ".");
                 mpr(info);
             }
@@ -3202,8 +3206,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
             {
                 strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                 strcat(info, " hits ");
-                strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-
+                if ( attacker == defender )
+                    strcat(info,
+                           mons_pronoun(attacker->type, PRONOUN_REFLEXIVE));
+                else                    
+                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
 #if DEBUG_DIAGNOSTICS
                 strcat(info, " for ");
                 // note: doesn't take account of special weapons etc
@@ -3223,7 +3230,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
             {
                 strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                 strcat(info, " hits ");
-                strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                if (attacker == defender)
+                    strcat(info,
+                           mons_pronoun(attacker->type, PRONOUN_REFLEXIVE));
+                else
+                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
 
                 if (attacker->type != MONS_DANCING_WEAPON
                     && attacker->inv[hand_used] != NON_ITEM
@@ -3261,7 +3272,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     {
                         strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                         strcat(info, " stings ");
-                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                        if (attacker == defender)
+                            strcat(info, mons_pronoun(attacker->type,
+                                                      PRONOUN_REFLEXIVE));
+                        else
+                            strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                         strcat(info, ".");
                         mpr(info);
                     }
@@ -3278,7 +3293,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                     {
                         strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                         strcat(info, " stings ");
-                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                        if (attacker == defender)
+                            strcat(info, mons_pronoun(attacker->type,
+                                                      PRONOUN_REFLEXIVE));
+                        else
+                            strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                         strcat(info, ".");
                         mpr(info);
                     }
@@ -3331,7 +3350,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 {
                     strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                     strcat(info, " stings ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    if (attacker == defender)
+                        strcat(info, mons_pronoun(attacker->type,
+                                                  PRONOUN_REFLEXIVE));
+                    else
+                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                     strcat(info, ".");
                     mpr(info);
                 }
@@ -3408,7 +3431,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 {
                     strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                     strcat(info, " freezes ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    if (attacker == defender)
+                        strcat(info, mons_pronoun(attacker->type,
+                                                  PRONOUN_REFLEXIVE));
+                    else
+                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                     strcat(info, ".");
                     mpr(info);
                 }
@@ -3437,7 +3464,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 {
                     strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                     strcat(info, " freezes ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    if (attacker == defender)
+                        strcat(info, mons_pronoun(attacker->type,
+                                                  PRONOUN_REFLEXIVE));
+                    else
+                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                     strcat(info, ".");
                     mpr(info);
                 }
@@ -3454,7 +3485,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                 {
                     strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                     strcat(info, " shocks ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    if (attacker == defender)
+                        strcat(info, mons_pronoun(attacker->type,
+                                                  PRONOUN_REFLEXIVE));
+                    else
+                        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
                     strcat(info, ".");
                     mpr(info);
                 }
@@ -3518,7 +3553,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
                         {
                             strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                             strcat(info, " burns ");
-                            strcat(info, ptr_monam(defender, DESC_NOCAP_THE ));
+                            if (attacker == defender)
+                                strcat(info, mons_pronoun(attacker->type,
+                                                          PRONOUN_REFLEXIVE));
+                            else
+                                strcat(info, ptr_monam(defender, DESC_NOCAP_THE ));
 
                             if (specdam < 3)
                                 strcat(info, ".");
@@ -3546,7 +3585,11 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
                             strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
                             strcat(info, " freezes ");
-                            strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                            if (attacker == defender)
+                                strcat(info, mons_pronoun(attacker->type,
+                                                          PRONOUN_REFLEXIVE));
+                            else
+                                strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
 
                             if (specdam < 3)
                                 strcat(info, ".");
