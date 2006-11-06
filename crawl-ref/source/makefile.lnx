@@ -52,6 +52,17 @@ DOYACC :=
 endif
 
 GAME_DEPENDS := compile-levels $(OBJECTS)
+SRC_PKG_BASE := stone_soup
+SRC_VERSION  := $(shell egrep 'VERSION ".*"' version.h | \
+			egrep -o '[0-9]\.[0-9](\.[0-9])?')
+PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
+SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
+SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
+
+LEVCOMP      := $(UTIL)levcomp
+
+PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o
+PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 ##########################################################################
 
@@ -60,13 +71,13 @@ all: $(GAME)
 ##########################################################################
 # The level compiler
 #
-compile-levels: $(UTIL)levcomp mapdefs.ixx
+compile-levels: $(LEVCOMP) mapdefs.ixx
 
-mapdefs.ixx:	dat/vaults.des dat/splev.des $(UTIL)levcomp
-		$(UTIL)levcomp $@ < dat/vaults.des
-		$(UTIL)levcomp -a $@ < dat/splev.des
+mapdefs.ixx:	dat/vaults.des dat/splev.des $(LEVCOMP)
+		$(LEVCOMP) $@ < dat/vaults.des
+		$(LEVCOMP) -a $@ < dat/splev.des
 
-$(UTIL)levcomp: $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o mapdef.o
+$(LEVCOMP): $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o mapdef.o
 		$(CXX) -o $@ $^
 
 ifeq ($(DOYACC),y)
@@ -84,6 +95,10 @@ endif
 ##########################################################################
 
 
+##########################################################################
+# The actual build targets
+#
+
 install: $(GAME)
 	$(COPY) $(GAME) ${INSTALLDIR}
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
@@ -91,7 +106,7 @@ install: $(GAME)
 clean:
 	$(DELETE) *.o
 	$(DELETE) $(UTIL)*.o
-	$(DELETE) $(UTIL)levcomp
+	$(DELETE) $(LEVCOMP)
 
 distclean:
 	$(DELETE) *.o
@@ -105,6 +120,7 @@ distclean:
 	$(DELETE) *.lab
 ifeq ($(DOYACC),y)
 	$(DELETE) $(UTIL)*.cc $(UTIL)*.c $(UTIL)*.h
+	$(DELETE) *.ixx
 endif
 
 
@@ -132,3 +148,33 @@ $(UTIL)%.o: $(UTIL)%.cc
 
 .h.cc:
 	touch $@
+
+#############################################################################
+# Packaging a source tarball for release
+#
+
+# To package, you *must* have lex and yacc to generate the intermediates.
+ifeq ($(DOYACC),y)
+package-source: distclean mapdefs.ixx pkgtidy removeold vlink pkgtarbz2 pkgzip
+
+pkgtidy:
+	$(DELETE) $(PKG_TIDY_LIST)
+
+removeold:
+	if [ -f ../../$(SRC_PKG_TAR) ]; then $(DELETE) ../../$(SRC_PKG_TAR); fi
+	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(DELETE) ../../$(SRC_PKG_ZIP); fi
+
+# [ds] Existing directory names could produce a bad package!
+vlink:
+	cd .. && WHERE=$$PWD && cd .. && \
+		( [ -e $(PKG_SRC_DIR) ] || ln -sf $$WHERE $(PKG_SRC_DIR) )
+
+pkgtarbz2:
+	cd ../.. && tar -ch --bzip2 -f $(SRC_PKG_TAR) \
+		-X $(PKG_EXCLUDES) $(PKG_SRC_DIR)
+
+pkgzip:
+	cd ../.. && zip -rq $(SRC_PKG_ZIP) $(PKG_SRC_DIR) \
+		-x@$(PKG_EXCLUDES)
+
+endif
