@@ -3337,9 +3337,10 @@ static bool handle_spell( monsters *monster, bolt & beem )
                             // XXX: could be better, chosen to match the
                             // ones in monspeak.cc... has the problem 
                             // that it doesn't suggest a vocal component. -- bwr
-                            simple_monster_message( monster, 
-                                                    " gestures wildly.",
-                                                    MSGCH_MONSTER_SPELL );
+                            if (player_monster_visible(monster))
+                                simple_monster_message( monster, 
+                                                        " gestures wildly.",
+                                                        MSGCH_MONSTER_SPELL );
                             break;
                         case 1:
                             simple_monster_message( monster, 
