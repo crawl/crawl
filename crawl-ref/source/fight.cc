@@ -1052,10 +1052,12 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         {
             hit = true;
 
-            snprintf( info, INFO_SIZE, "You %s ", damage_noise);
-            strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-            strcat(info, ", but do no damage.");
-            mpr(info);
+            if ( !ur_armed || melee_brand != SPWPN_VORPAL )
+            {
+                snprintf(info, INFO_SIZE, "You %s %s, but do no damage.",
+                         damage_noise, ptr_monam(defender, DESC_NOCAP_THE));
+                mpr(info);
+            }
         }
     }
     else
@@ -1485,6 +1487,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
             case SPWPN_VORPAL:
                 specdam = 1 + random2(damage_done) / 2;
+                if (damage_done < 1)
+                    mprf(MSGCH_PLAIN, "You strike %s.",
+                         ptr_monam(defender, DESC_NOCAP_THE));
                 break;
 
             case SPWPN_VAMPIRICISM:
