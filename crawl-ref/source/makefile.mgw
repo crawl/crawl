@@ -77,16 +77,31 @@ $(UTIL)levcomp.exe: $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o $(OPATH)/mapdef.o
 
 ifeq ($(DOYACC),y)
 
+# [ds] A plague on the broken copy command on Windoze.
+prebuildyacc:	mapdefs.ixx $(UTIL)levcomp_lex.cc $(UTIL)levcomp_yacc.cc \
+    			$(UTIL)levcomp.h
+		$(subst /,\,for %%f in ($^) do $(COPY) %%f prebuilt)
+
 $(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
 		$(subst /,\, cd $(UTIL)) && $(YACC) -d levcomp.y
-		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp_yacc.cc
 		$(subst /,\, cd $(UTIL)) && move $(YTABH) levcomp.h
+		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp_yacc.cc
 
 $(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
 		$(subst /,\, cd $(UTIL) && $(LEX) levcomp.l)
 		$(subst /,\, cd $(UTIL) && move $(LEXYYC) levcomp_lex.cc)
 
+else
+
+$(UTIL)levcomp_yacc.cc: prebuilt/levcomp_yacc.cc
+		$(subst /,\,$(COPY) prebuilt/*.h .)
+		$(subst /,\,$(COPY) $< $@)
+
+$(UTIL)levcomp_lex.cc: prebuilt/levcomp_lex.cc
+		$(subst /,\,$(COPY) $< $@)
+
 endif
+
 ##########################################################################
 
 install:        $(APPNAME)
@@ -96,6 +111,10 @@ clean:
 		$(DELETE) $(OPATH)\*.o
 		$(subst /,\,$(DELETE) $(UTIL)*.o)
 		$(subst /,\,$(DELETE) $(UTIL)*.exe)
+		$(subst /,\,$(DELETE) $(UTIL)*.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.h)
+		$(subst /,\,$(DELETE) $(UTIL)*.c)
+		$(subst /,\,$(DELETE) *.ixx)
 
 distclean:
 		$(DELETE) $(OPATH)\*.o 
@@ -116,11 +135,6 @@ distclean:
 		$(DELETE) $(OPATH)\*.0*
 		$(DELETE) *.lab
 		$(DELETE) $(OPATH)\*.lab
-ifeq ($(DOYACC),y)
-		$(subst /,\,$(DELETE) $(UTIL)*.cc)
-		$(subst /,\,$(DELETE) $(UTIL)*.h)
-		$(subst /,\,$(DELETE) $(UTIL)*.c)
-endif
 
 $(APPNAME):	$(GAME_DEPENDS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)

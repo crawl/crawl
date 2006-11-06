@@ -44,6 +44,9 @@ debug:
 package-source:
 	$(MAKE) -f $(MAKEFILE) package-source
 
+prebuildyacc:
+	$(MAKE) -f $(MAKEFILE) prebuildyacc
+
 # DO NOT DELETE THIS LINE -- $(MAKE) depend depends on it.
 
 

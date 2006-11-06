@@ -61,7 +61,7 @@ SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
 LEVCOMP      := $(UTIL)levcomp
 
-PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o
+PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o $(LEVCOMP)*.cc $(LEVCOMP)*.h *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 ##########################################################################
@@ -82,16 +82,33 @@ $(LEVCOMP): $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o mapdef.o
 
 ifeq ($(DOYACC),y)
 
+prebuildyacc:	mapdefs.ixx $(UTIL)levcomp_yacc.cc $(UTIL)levcomp_lex.cc \
+			$(UTIL)levcomp.h
+		cp $^ prebuilt/
+
 $(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
 		cd $(UTIL) && $(YACC) -d levcomp.y \
-			   && mv $(YTABC) levcomp_yacc.cc \
-			   && mv $(YTABH) levcomp.h
+			   && mv $(YTABH) levcomp.h \
+			   && mv $(YTABC) levcomp_yacc.cc
 
 $(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
 		cd $(UTIL) && $(LEX) levcomp.l \
 			   && mv $(LEXYYC) levcomp_lex.cc
 
+else
+
+# Pull the level-compiler stuff up from prebuilt/
+
+$(UTIL)levcomp_yacc.cc: prebuilt/levcomp_yacc.cc
+		cp prebuilt/*.h .
+		cp $< $@
+
+
+$(UTIL)levcomp_lex.cc: prebuilt/levcomp_lex.cc
+		cp $< $@
+
 endif
+
 ##########################################################################
 
 
@@ -107,6 +124,8 @@ clean:
 	$(DELETE) *.o
 	$(DELETE) $(UTIL)*.o
 	$(DELETE) $(LEVCOMP)
+	$(DELETE) $(UTIL)*.cc $(UTIL)*.c $(UTIL)*.h
+	$(DELETE) *.ixx
 
 distclean:
 	$(DELETE) *.o
@@ -118,11 +137,6 @@ distclean:
 	$(DELETE) core
 	$(DELETE) *.0*
 	$(DELETE) *.lab
-ifeq ($(DOYACC),y)
-	$(DELETE) $(UTIL)*.cc $(UTIL)*.c $(UTIL)*.h
-	$(DELETE) *.ixx
-endif
-
 
 $(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
@@ -155,7 +169,7 @@ $(UTIL)%.o: $(UTIL)%.cc
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 ifeq ($(DOYACC),y)
-package-source: distclean mapdefs.ixx pkgtidy removeold vlink pkgtarbz2 pkgzip
+package-source: distclean prebuildyacc pkgtidy removeold vlink pkgtarbz2 pkgzip
 
 pkgtidy:
 	$(DELETE) $(PKG_TIDY_LIST)
