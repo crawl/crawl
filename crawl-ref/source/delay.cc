@@ -428,6 +428,10 @@ void handle_delay( void )
         }
         case DELAY_EAT:
             mpr( "You finish eating." );
+            // For chunks, warn the player if they're not getting much 
+            // nutrition.
+            if (delay.parm1)
+                chunk_nutrition_message(delay.parm1);
             break; 
 
         case DELAY_MEMORISE:

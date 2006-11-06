@@ -979,6 +979,11 @@ static void experience_check() {
 
 	mpr( info );
     }
+#ifdef DEBUG_DIAGNOSTICS
+    if (wearing_amulet(AMU_THE_GOURMAND))
+        mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d", 
+             you.duration[DUR_GOURMAND]);
+#endif
 }
 
 /* note that in some actions, you don't want to clear afterwards.
@@ -1420,7 +1425,7 @@ static void decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
-        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX)
+        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND]++;
     }
     else

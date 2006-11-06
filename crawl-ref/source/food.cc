@@ -635,9 +635,18 @@ static const char *chunk_flavour_phrase(bool likes_chunks)
     return (phrase);
 }
 
+void chunk_nutrition_message(int nutrition)
+{
+    int perc_nutrition = nutrition * 100 / CHUNK_BASE_NUTRITION;
+    if (perc_nutrition < 15)
+        mpr("That was extremely unsatisfying.");
+    else if (perc_nutrition < 35)
+        mpr("That was not very filling.");
+}
+
 static int chunk_nutrition(bool likes_chunks)
 {
-    int nutrition = 1000;
+    int nutrition = CHUNK_BASE_NUTRITION;
     if (likes_chunks || you.hunger_state < HS_SATIATED)
         return (nutrition);
 
@@ -681,7 +690,7 @@ static void eat_chunk( int chunk_effect )
     {
         ghoul_eat_flesh( chunk_effect );
         start_delay( DELAY_EAT, 2 );
-        lessen_hunger( 1000, true );
+        lessen_hunger( CHUNK_BASE_NUTRITION, true );
     }
     else
     {
@@ -715,10 +724,13 @@ static void eat_chunk( int chunk_effect )
 
         // note that this is the only case that takes time and forces redraw
         case CE_CLEAN:
+        {
             say_chunk_flavour(likes_chunks);
-            start_delay( DELAY_EAT, 2 );
-            lessen_hunger( chunk_nutrition(likes_chunks), true );
+            const int nutrition = chunk_nutrition(likes_chunks);
+            start_delay( DELAY_EAT, 2, nutrition );
+            lessen_hunger( nutrition, true );
             break;
+        }
         }
     }
 

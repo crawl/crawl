@@ -67,4 +67,6 @@ void eat_from_inventory(int which_inventory_slot);
 
 bool prompt_eat_from_inventory(void);
 
+void chunk_nutrition_message(int nutrition);
+
 #endif

@@ -147,6 +147,8 @@
 #define GOURMAND_MAX                    200
 #define GOURMAND_NUTRITION_BASE         20
 
+#define CHUNK_BASE_NUTRITION            1000
+
 // This value is used to mark immune levels of MR
 #define MAG_IMMUNE                      5000
 
