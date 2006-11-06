@@ -517,7 +517,7 @@ void reset_options(bool clear_name)
     Options.hp_attention           = 25;
     Options.confirm_self_target    = false;
     Options.safe_autopickup        = false;
-    Options.use_notes              = false;
+    Options.use_notes              = true;
     Options.note_skill_max         = false;
     Options.note_all_spells        = false;
     Options.note_hp_percent        = 0;

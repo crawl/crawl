@@ -67,9 +67,11 @@ The contents of this text are:
 		note_messages, note_all_spells
 6-  Miscellaneous.
 6-a	All OS.
-		macro_meta_entry, wiz_mode, colours, char_set, background
+		macro_meta_entry, wiz_mode, colours, char_set
 6-b	DOS and Windows.
 		dos_use_background_intensity
+6-c     Unix
+                background
 
 --------------------------------------------------------------------------------
 
@@ -952,3 +954,12 @@ dos_use_background_intensity = false
         friend-branding. If your console doesn't like this option, some friendly
         monsters will appear as blinking characters (and setting this option to
         false may be advisable to preserve your sanity in such cases).
+
+6-c     Unix
+------------
+
+background = <colour>
+        Sets the default background colour by name (defaults to BLACK). This
+        may be useful if you're using a terminal with a background colour other
+        than black (such as an xterm), but this option is still experimental
+        and the results may not be very good.
