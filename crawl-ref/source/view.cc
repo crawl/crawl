@@ -2313,7 +2313,7 @@ void magic_mapping(int map_radius, int proportion)
 {
     int i, j, k, l, empty_count;
 
-    if (map_radius > 50)
+    if (map_radius > 50 && map_radius != 1000)
         map_radius = 50;
     else if (map_radius < 5)
         map_radius = 5;
@@ -2377,8 +2377,10 @@ void magic_mapping(int map_radius, int proportion)
 
                 // Hack to give demonspawn Pandemonium mutation the ability
                 // to detect exits magically.
-                if (you.mutation[MUT_PANDEMONIUM] > 1
+                if ((you.mutation[MUT_PANDEMONIUM] > 1
                         && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
+                        // Wizmode
+                        || map_radius == 1000)
                     set_terrain_seen( i, j );
                 else
                     set_terrain_mapped( i, j );

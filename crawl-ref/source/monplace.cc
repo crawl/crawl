@@ -557,7 +557,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         give_item( id, power );
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
-            menv[id].number = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
+            menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
     }
     else if (mons_itemuse(mon_type) >= MONUSE_STARTING_EQUIPMENT)
     {

@@ -65,10 +65,6 @@ int travel_direction(unsigned char branch, int subdungeondepth);
 
 void prevent_travel_to(const std::string &dungeon_feature_name);
 
-int subdungeon_depth(unsigned char branch, int depth);
-
-int absdungeon_depth(unsigned char branch, int subdepth);
-
 // Sort dungeon features as appropriate.
 void arrange_features(std::vector<coord_def> &features);
 

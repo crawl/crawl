@@ -1682,15 +1682,22 @@ enum load_mode_type
     LOAD_ENTER_LEVEL
 };
 
+// [dshaligram] Maps can be mirrored; for every orientation, there must be
+// a suitable mirror.
 enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
 {
+    MAP_NONE  = -1,
     MAP_NORTH = 1,                     //    1
+    MAP_SOUTH,
+    MAP_EAST,
+    MAP_WEST,
     MAP_NORTHWEST,
     MAP_NORTHEAST,
     MAP_SOUTHWEST,
     MAP_SOUTHEAST,                     //    5
     MAP_ENCOMPASS,
-    MAP_NORTH_DIS
+    MAP_NORTH_DIS,
+    MAP_SOUTH_DIS
 };
 
 enum menu_type

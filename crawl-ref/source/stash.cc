@@ -18,6 +18,7 @@
 #include "Kills.h"
 #include "libutil.h"
 #include "menu.h"
+#include "misc.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"

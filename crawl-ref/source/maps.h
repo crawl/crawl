@@ -13,13 +13,29 @@
 #define MAPS_H
 
 #include "FixVec.h"
+#include "dungeon.h"
 
+struct vault_placement
+{
+    int x, y;
+    int width, height;
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: dungeon
- * *********************************************************************** */
-char vault_main(char vgrid[81][81], FixedVector<int, 7>& mons_array, int vault_force, int many_many);
+    vault_placement()
+        : x(-1), y(-1), width(0), height(0)
+    {
+    }
+};
+
+int vault_main(map_type vgrid, 
+                FixedVector<int, 7>& mons_array, 
+                vault_placement &vp,
+                int vault_force, 
+                int many_many);
+
+int find_map_for(const std::string &place);
+int find_map_named(const std::string &name);
+int random_map_for_depth(int depth, bool want_minivault = false);
+int random_map_for_tag(std::string tag);
 
 
 #endif

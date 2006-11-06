@@ -398,6 +398,7 @@ static void set_default_activity_interrupts()
         "interrupt_ascending_stairs =",
         "interrupt_descending_stairs =",
         "interrupt_uninterruptible =",
+        "interrupt_autopickup =",
         NULL
     };
 

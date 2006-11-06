@@ -2111,11 +2111,42 @@ std::string place_name( unsigned short place, bool long_name,
             snprintf( buf, sizeof buf, "Level %d of %s",
                       lev, result.c_str() );
         }
-        else {
+        else if (lev) {
             snprintf( buf, sizeof buf, "%s:%d",
                       result.c_str(), lev );
+        }
+        else {
+            snprintf( buf, sizeof buf, "%s:$",
+                      result.c_str() );
         }
         result = buf;
     }
     return result;
+}
+
+int absdungeon_depth(unsigned char branch, int subdepth)
+{
+    int realdepth = subdepth - 1;
+
+    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
+        realdepth = subdepth + you.branch_stairs[branch - 10];
+
+    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
+        realdepth = subdepth + 26;
+
+    return realdepth;
+}
+
+int subdungeon_depth(unsigned char branch, int depth)
+{
+    int curr_subdungeon_level = depth + 1;
+
+    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
+        curr_subdungeon_level = depth - 26;
+
+    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
+        curr_subdungeon_level = depth
+                                - you.branch_stairs[branch - 10];
+
+    return curr_subdungeon_level;
 }

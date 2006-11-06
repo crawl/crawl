@@ -1833,35 +1833,6 @@ command_type trans_negotiate_stairs()
     return stair_direction(grd[you.x_pos][you.y_pos]);
 }
 
-int absdungeon_depth(unsigned char branch, int subdepth)
-{
-    int realdepth = subdepth - 1;
-
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        realdepth = subdepth + you.branch_stairs[branch - 10];
-
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        realdepth = subdepth + 26;
-
-    return realdepth;
-}
-
-int subdungeon_depth(unsigned char branch, int depth)
-{
-    int curr_subdungeon_level = depth + 1;
-
-    // maybe last part better expresssed as <= PIT {dlb}
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        curr_subdungeon_level = depth - 26;
-
-    /* Remember, must add this to the death_string in ouch */
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        curr_subdungeon_level = depth
-                                - you.branch_stairs[branch - 10];
-
-    return curr_subdungeon_level;
-}
-
 static int target_distance_from(const coord_def &pos)
 {
     for (int i = 0, count = curr_stairs.size(); i < count; ++i)

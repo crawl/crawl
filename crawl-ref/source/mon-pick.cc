@@ -90,6 +90,28 @@ int branch_depth(int branch)
     }
 }                               // end branch_depth()
 
+int branch_stair(int branch)
+{
+    switch (branch)
+    {
+    case BRANCH_ORCISH_MINES: return STAIRS_ORCISH_MINES;
+    case BRANCH_HIVE:         return STAIRS_HIVE;
+    case BRANCH_LAIR:         return STAIRS_LAIR;
+    case BRANCH_SLIME_PITS:   return STAIRS_SLIME_PITS;
+    case BRANCH_VAULTS:       return STAIRS_VAULTS;
+    case BRANCH_CRYPT:        return STAIRS_CRYPT;
+    case BRANCH_HALL_OF_BLADES: return STAIRS_HALL_OF_BLADES;
+    case BRANCH_HALL_OF_ZOT:  return STAIRS_HALL_OF_ZOT;
+    case BRANCH_ECUMENICAL_TEMPLE: return STAIRS_ECUMENICAL_TEMPLE;
+    case BRANCH_SNAKE_PIT:    return STAIRS_SNAKE_PIT;
+    case BRANCH_ELVEN_HALLS:  return STAIRS_ELVEN_HALLS;
+    case BRANCH_TOMB:         return STAIRS_TOMB;
+    case BRANCH_SWAMP:        return STAIRS_SWAMP;
+    default:
+        return -1;
+    }
+}
+
 // NB - When adding new branches or levels above 50, you must
 // change pre-game deletion routine in new_game in newgame.cc
 

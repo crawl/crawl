@@ -33,16 +33,69 @@ INSTALLDIR = .
 #LIB = -lcurso -lpano
 LIB = -lwinmm -static
 
+UTIL = util/
+
+# If you don't have flex or bison, set DOYACC to N or empty.
+DOYACC := n
+
+LEX  := flex
+YACC := bison -y
+
+YTABC  := y.tab.c
+YTABH  := y.tab.h
+LEXYYC := lex.yy.c
+
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+GAME_DEPENDS := prepare compile-levels $(OBJECTS)
+
+##########################################################################
+
 all:            $(APPNAME)
 
 prepare:
 		if not exist $(OPATH) mkdir $(OPATH)
+
+##########################################################################
+# The level compiler
+#
+compile-levels: $(UTIL)levcomp.exe mapdefs.ixx
+
+mapdefs.ixx:	dat/vaults.des dat/splev.des $(UTIL)levcomp.exe
+		$(subst /,\, $(UTIL)levcomp.exe $@ < dat/vaults.des)
+		$(subst /,\, $(UTIL)levcomp.exe -a $@ < dat/splev.des)
+
+$(UTIL)levcomp.exe: $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o $(OPATH)/mapdef.o
+		$(CXX) -o $@ $^
+
+ifeq ($(DOYACC),y)
+
+$(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
+		$(subst /,\, cd $(UTIL)) && $(YACC) -d levcomp.y
+		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp_yacc.cc
+		$(subst /,\, cd $(UTIL)) && move $(YTABH) levcomp.h
+
+$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
+		$(subst /,\, cd $(UTIL) && $(LEX) levcomp.l)
+		$(subst /,\, cd $(UTIL) && move $(LEXYYC) levcomp_lex.cc)
+
+endif
+##########################################################################
 
 install:        $(APPNAME)
 		$(COPY) $(APPNAME) ${INSTALLDIR}
 
 clean:
 		$(DELETE) $(OPATH)\*.o
+		$(subst /,\,$(DELETE) $(UTIL)*.o)
+		$(subst /,\,$(DELETE) $(UTIL)*.exe)
 
 distclean:
 		$(DELETE) $(OPATH)\*.o 
@@ -63,16 +116,26 @@ distclean:
 		$(DELETE) $(OPATH)\*.0*
 		$(DELETE) *.lab
 		$(DELETE) $(OPATH)\*.lab
+ifeq ($(DOYACC),y)
+		$(subst /,\,$(DELETE) $(UTIL)*.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.h)
+		$(subst /,\,$(DELETE) $(UTIL)*.c)
+endif
 
-$(APPNAME):	prepare $(OBJECTS)
+$(APPNAME):	$(GAME_DEPENDS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
-debug: prepare $(OBJECTS)
+debug:		$(GAME_DEPENDS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-profile:	$(OBJECTS)
+profile:	$(GAME_DEPENDS)
 		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+$(OPATH)/maps.o: mapdefs.ixx
 
 $(OPATH)/%.o: %.cc
 		${CXX} ${CFLAGS} ${INCLUDES} -o $@ -c $< 
+
+$(UTIL)%.o: $(UTIL)%.cc
+		$(CXX) -I$(UTIL) -I. -o $@ -c $<

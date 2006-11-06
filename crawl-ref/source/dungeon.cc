@@ -141,7 +141,8 @@ static void beehive(spec_room &sr);
 static void jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
-static void build_vaults(int level_number, int force_vault);
+static void build_vaults(int level_number, int vault_number);
+static void build_vaults(int level_number, const std::string &vname);
 static void build_minivaults(int level_number, int force_vault);
 static int vault_grid( int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
@@ -153,20 +154,19 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
 static int pick_an_altar(void);
 static void place_altar(void);
 
+static std::string level_name(int subdepth)
+{
+    return place_name(
+                get_packed_place(
+                    you.where_are_you, subdepth, you.level_type ) );
+}
+
 static bool got_curare_roll(const int item_level)
 {
     return one_chance_in(item_level > 27? 6   : 
                          item_level < 2 ? 15  :
                          (364 - 7 * item_level) / 25);
 }
-
-/*
- **************************************************
- *                                                *
- *             BEGIN PUBLIC FUNCTIONS             *
- *                                                *
- **************************************************
-*/
 
 static void place_altars()
 {
@@ -224,12 +224,13 @@ static void place_altars()
     }
 }
 
+/**********************************************************************
+ * builder() - kickoff for the dungeon generator.
+ *********************************************************************/
 void builder(int level_number, char level_type)
 {
     int i;          // generic loop variable
     int x,y;        // generic map loop variables
-
-    // srandom(time(NULL));
 
     // blank level with DNGN_ROCK_WALL
     make_box(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,DNGN_ROCK_WALL);
@@ -3723,13 +3724,23 @@ static int builder_by_type(int level_number, char level_type)
 
         if (which_demon >= 0)
         {
+            const char *pandemon_level_names[] = {
+                "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
+            };
             you.unique_creatures[40 + which_demon] = 1;
-            build_vaults(level_number, which_demon + 60);
+            build_vaults(level_number, pandemon_level_names[(int) which_demon]);
         }
         else
         {
             plan_main(level_number, 0);
-            build_minivaults(level_number, 300 + random2(9));
+            int vault = random_map_for_tag("pan");
+            ASSERT( vault != -1 );
+            if (vault == -1) 
+            {
+                fprintf(stderr, "Failed to build Pandemonium minivault!\n");
+                exit(1);
+            }
+            build_minivaults(level_number, vault);
         }
 
         return 1;
@@ -3743,106 +3754,34 @@ static int builder_by_type(int level_number, char level_type)
 // -1 if we should immediately quit, and 0 otherwise.
 static int builder_by_branch(int level_number)
 {
+    int subdepth = subdungeon_depth(you.where_are_you, level_number);
+    const std::string name = level_name(subdepth);
+    std::string altname;
+
+    if (subdepth == branch_depth( branch_stair(you.where_are_you) ))
+        altname = level_name(0);
+
+    int vault = find_map_for(name);
+    if (vault == -1)
+        vault = find_map_for(altname);
+
+    if (vault != -1)
+    {
+        build_vaults(level_number, vault);
+        // [dshaligram] XXX: Is link_items() needed for all vaults?
+        link_items();
+        return 1;
+    }
+
     switch (you.where_are_you)
     {
     case BRANCH_HIVE:
-        if (level_number == you.branch_stairs[STAIRS_HIVE]
-            + branch_depth(STAIRS_HIVE))
-            build_vaults(level_number, 80);
-        else
-            spotty_level(false, 100 + random2(500), false);
+        spotty_level(false, 100 + random2(500), false);
         return 1;
 
     case BRANCH_SLIME_PITS:
-        if (level_number == you.branch_stairs[STAIRS_SLIME_PITS]
-                                + branch_depth(STAIRS_SLIME_PITS))
-        {
-            build_vaults(level_number, 81);
-        }
-        else
-            spotty_level(false, 100 + random2(500), false);
+        spotty_level(false, 100 + random2(500), false);
         return 1;
-
-    case BRANCH_VAULTS:
-        if (level_number == you.branch_stairs[STAIRS_VAULTS]
-            + branch_depth(STAIRS_VAULTS))
-        {
-            build_vaults(level_number, 82);
-            return 1;
-        }
-        break;
-
-    case BRANCH_HALL_OF_BLADES:
-        if (level_number == you.branch_stairs[STAIRS_HALL_OF_BLADES]
-            + branch_depth(STAIRS_HALL_OF_BLADES))
-        {
-            build_vaults(level_number, 83);
-            return 1;
-        }
-        break;
-
-    case BRANCH_HALL_OF_ZOT:
-        if (level_number == you.branch_stairs[STAIRS_HALL_OF_ZOT]
-            + branch_depth(STAIRS_HALL_OF_ZOT))
-        {
-            build_vaults(level_number, 84);
-            return 1;
-        }
-        break;
-
-    case BRANCH_ECUMENICAL_TEMPLE:
-        if (level_number == you.branch_stairs[STAIRS_ECUMENICAL_TEMPLE]
-                                    + branch_depth(STAIRS_ECUMENICAL_TEMPLE))
-        {
-            build_vaults(level_number, 85);
-            return 1;
-        }
-        break;
-
-    case BRANCH_SNAKE_PIT:
-        if (level_number == you.branch_stairs[STAIRS_SNAKE_PIT]
-                                    + branch_depth(STAIRS_SNAKE_PIT))
-        {
-            build_vaults(level_number, 86);
-            return 1;
-        }
-        break;
-
-    case BRANCH_ELVEN_HALLS:
-        if (level_number == you.branch_stairs[STAIRS_ELVEN_HALLS]
-                                    + branch_depth(STAIRS_ELVEN_HALLS))
-        {
-            build_vaults(level_number, 87);
-            return 1;
-        }
-        break;
-
-    case BRANCH_TOMB:
-        if (level_number == you.branch_stairs[STAIRS_TOMB] + 1)
-        {
-            build_vaults(level_number, 88);
-            return 1;
-        }
-        else if (level_number == you.branch_stairs[STAIRS_TOMB] + 2)
-        {
-            build_vaults(level_number, 89);
-            return 1;
-        }
-        else if (level_number == you.branch_stairs[STAIRS_TOMB] + 3)
-        {
-            build_vaults(level_number, 90);
-            return 1;
-        }
-        break;
-
-    case BRANCH_SWAMP:
-        if (level_number == you.branch_stairs[STAIRS_SWAMP]
-                                            + branch_depth(STAIRS_SWAMP))
-        {
-            build_vaults(level_number, 91);
-            return 1;
-        }
-        break;
 
     case BRANCH_ORCISH_MINES:
         spotty_level(false, 100 + random2(500), false);
@@ -3852,43 +3791,6 @@ static int builder_by_branch(int level_number)
         if (!one_chance_in(3))
         {
             spotty_level(false, 100 + random2(500), false);
-            return 1;
-        }
-        break;
-
-    case BRANCH_VESTIBULE_OF_HELL:
-        build_vaults( level_number, 50 );
-        link_items();
-        return -1;
-
-    case BRANCH_DIS:
-        if (level_number == 33)
-        {
-            build_vaults(level_number, 51);
-            return 1;
-        }
-        break;
-
-    case BRANCH_GEHENNA:
-        if (level_number == 33)
-        {
-            build_vaults(level_number, 52);
-            return 1;
-        }
-        break;
-
-    case BRANCH_COCYTUS:
-        if (level_number == 33)
-        {
-            build_vaults(level_number, 53);
-            return 1;
-        }
-        break;
-
-    case BRANCH_TARTARUS:
-        if (level_number == 33)
-        {
-            build_vaults(level_number, 54);
             return 1;
         }
         break;
@@ -3910,17 +3812,25 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     bool skipped = false;
     bool done_city = false;
 
-    if (player_in_branch( BRANCH_DIS ))
+    int vault = find_map_for( 
+                    level_name( 
+                        subdungeon_depth(you.where_are_you, level_number)));
+
+    if (vault == -1
+            && player_in_branch( BRANCH_MAIN_DUNGEON ) 
+            && level_number > 10 && level_number < 23 && one_chance_in(9))
+        vault = random_map_for_depth(level_number);
+
+    if (vault != -1)
     {
-        city_level(level_number);
+        // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
+        build_vaults(level_number, vault);
         return 1;
     }
 
-    if (player_in_branch( BRANCH_MAIN_DUNGEON ) 
-        && level_number > 10 && level_number < 23 && one_chance_in(9))
+    if (player_in_branch( BRANCH_DIS ))
     {
-        // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
-        build_vaults(level_number, 100);
+        city_level(level_number);
         return 1;
     }
 
@@ -3953,7 +3863,11 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
         plan_main(level_number, 0);
 
         if (one_chance_in(3) && level_number > 6)
-            build_minivaults(level_number, 200);
+        {
+            int mvault = random_map_for_depth(level_number, true);
+            if (mvault != -1)
+                build_minivaults(level_number, mvault);
+        }
 
         return 1;
     }
@@ -3971,8 +3885,12 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
             && player_in_branch( BRANCH_MAIN_DUNGEON )
             && one_chance_in(4))
         {
-            build_minivaults(level_number, 200);
-            return 1;
+            int mvault = random_map_for_depth(level_number, true);
+            if (mvault != -1)
+            {
+                build_minivaults(level_number, mvault);
+                return 1;
+            }
         }
     }
     else
@@ -4104,8 +4022,12 @@ static void builder_extras( int level_number, int level_type )
         && player_in_branch( BRANCH_MAIN_DUNGEON )
         && one_chance_in(3))
     {
-        build_minivaults(level_number, 200);
-        return;
+        int mvault = random_map_for_depth(level_number, true);
+        if (mvault != -1)
+        {
+            build_minivaults(level_number, mvault);
+            return;
+        }
     }
 
     if (level_number > 5 && one_chance_in(10))
@@ -5266,38 +5188,29 @@ static void build_minivaults(int level_number, int force_vault)
                                       RANDOM_MONSTER,
                                       RANDOM_MONSTER);
 
-    char vgrid[81][81];
-
-    if (force_vault == 200)
-    {
-        if (player_in_branch(BRANCH_MAIN_DUNGEON)
-                && one_chance_in(13))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Creating mini-temple");
-#endif
-            force_vault = 202;
-        }
-        else
-            force_vault = 200 + random2(37);
-    }
-
-    vault_main(vgrid, mons_array, force_vault, level_number);
+    map_type vgrid;
+    vault_placement place;
+    vault_main(vgrid, mons_array, place, force_vault, level_number);
 
     int vx, vy;
     int v1x, v1y;
 
+    // [ds] The margin around the edges of the map where the minivault won't be
+    // placed. Purely arbitrary as far as I can see.
+    const int margin = 12;
+
     /* find a target area which can be safely overwritten: */
     while(1)
     {
-        //if ( one_chance_in(1000) ) return;
-        v1x = 12 + random2(45);
-        v1y = 12 + random2(35);
+        v1x = random_range( margin, GXM - margin - place.width );
+        v1y = random_range( margin, GYM - margin - place.height );
 
-        for (vx = v1x; vx < v1x + 12; vx++)
+        for (vx = v1x; vx < v1x + place.width; vx++)
         {
-            for (vy = v1y; vy < v1y + 12; vy++)
+            for (vy = v1y; vy < v1y + place.height; vy++)
             {
+                // [ds] An escape hatch to keep from hanging forever looking
+                // for a good place.
                 if (one_chance_in(2000))
                     return;
 
@@ -5314,12 +5227,11 @@ static void build_minivaults(int level_number, int force_vault)
         }
 
         /* must not be completely isolated: */
-        for (vx = v1x; vx < v1x + 12; vx++)
+        for (vx = v1x; vx < v1x + place.width; vx++)
         {
             //  if (vx != v1x && vx != v1x + 12) continue;
-            for (vy = v1y; vy < v1y + 12; vy++)
+            for (vy = v1y; vy < v1y + place.height; vy++)
             {
-                //   if (vy != v1y && vy != v1y + 12) continue;
                 if (grd[vx][vy] == DNGN_FLOOR
                     || grd[vx][vy] == DNGN_CLOSED_DOOR
                     || grd[vx][vy] == DNGN_SECRET_DOOR)
@@ -5334,11 +5246,13 @@ static void build_minivaults(int level_number, int force_vault)
         break;
     }
 
-    for (vx = v1x; vx < v1x + 12; vx++)
+    for (vx = v1x; vx < v1x + place.width; vx++)
     {
-        for (vy = v1y; vy < v1y + 12; vy++)
+        for (vy = v1y; vy < v1y + place.height; vy++)
         {
-            grd[vx][vy] = vgrid[vx - v1x][vy - v1y];
+            // [dshaligram] vault_main always populates vgrid[y][x] instead of
+            // vgrid[x][y] now.
+            grd[vx][vy] = vgrid[vy - v1y][vx - v1x];
         }
     }
 
@@ -5347,9 +5261,9 @@ static void build_minivaults(int level_number, int force_vault)
     int num_runes = 0;
 
     // paint the minivault onto the grid
-    for (vx = v1x; vx < v1x + 12; vx++)
+    for (vx = v1x; vx < v1x + place.width; vx++)
     {
-        for (vy = v1y; vy < v1y + 12; vy++)
+        for (vy = v1y; vy < v1y + place.height; vy++)
         {
             altar_count = vault_grid( level_number, vx, vy, altar_count, 
                                       acq_item_class, mons_array, 
@@ -5358,6 +5272,20 @@ static void build_minivaults(int level_number, int force_vault)
         }
     }
 }                               // end build_minivaults()
+
+static void build_vaults(int level_number, const std::string &name)
+{
+    int vault = find_map_named(name);
+    ASSERT(vault != -1);
+
+    if (vault == -1)
+    {
+        fprintf(stderr, "Unable to find map named %s\n", name.c_str());
+        exit(1);
+    }
+
+    build_vaults(level_number, vault);
+}
 
 static void build_vaults(int level_number, int force_vault)
 {
@@ -5395,9 +5323,11 @@ static void build_vaults(int level_number, int force_vault)
 
     //bool exclusive2 = coinflip();    // usage commented out below {dlb}
 
-    char vgrid[81][81];
+    map_type vgrid;
+    vault_placement place;
 
-    char gluggy = vault_main(vgrid, mons_array, force_vault, level_number);
+    int gluggy = 
+        vault_main(vgrid, mons_array, place, force_vault, level_number);
 
     int vx, vy;
     int v1x = 0, v1y = 0, v2x = 0, v2y = 0;
@@ -5423,33 +5353,65 @@ static void build_vaults(int level_number, int force_vault)
         }
     }
 
+    // [dshaligram] I've filled in the missing cases so that mirrored maps
+    // work; previously MAP_NORTH had no mirrored or rotated counterparts.
     switch (gluggy)
     {
     case MAP_NORTH:
         v1x = 1;
         v2x = GXM;
         v1y = 1;
-        v2y = 35;
+        v2y = place.height;
         initial_y++;
         dig_dir_x = 0;
         dig_dir_y = 1;
         break;
 
+    case MAP_SOUTH:
+        v1x = 1;
+        v2x = GXM;
+        v1y = GYM - place.height + 1;
+        v2y = GYM;
+        initial_y--;
+        dig_dir_x = 0;
+        dig_dir_y = -1;
+        break;
+
+    case MAP_EAST:
+        v1x = GXM - place.width + 1;
+        v2x = GXM;
+        v1y = 1;
+        v2y = GYM;
+        initial_x--;
+        dig_dir_x = -1;
+        dig_dir_y = 0;
+        break;
+
+    case MAP_WEST:
+        v1x = 1;
+        v2x = place.width;
+        v1y = 1;
+        v2y = GYM;
+        initial_x++;
+        dig_dir_x = 1;
+        dig_dir_y = 0;
+        break;
+
     case MAP_NORTHWEST:
         v1x = 1;
-        v2x = 40;
+        v2x = place.width;
         v1y = 1;
-        v2y = 35;
+        v2y = place.height;
         initial_y++;
         dig_dir_x = 1;
         dig_dir_y = 0;
         break;
 
     case MAP_NORTHEAST:
-        v1x = 40;
+        v1x = GXM - place.width + 1;
         v2x = GXM;
         v1y = 1;
-        v2y = 35;
+        v2y = place.height;
         initial_y++;
         dig_dir_x = -1;
         dig_dir_y = 0;
@@ -5457,8 +5419,8 @@ static void build_vaults(int level_number, int force_vault)
 
     case MAP_SOUTHWEST:
         v1x = 1;
-        v2x = 40;
-        v1y = 35;
+        v2x = place.width;
+        v1y = GYM - place.height + 1;
         v2y = GYM;
         initial_y--;
         dig_dir_x = 0;
@@ -5466,9 +5428,9 @@ static void build_vaults(int level_number, int force_vault)
         break;
 
     case MAP_SOUTHEAST:
-        v1x = 40;
+        v1x = GXM - place.width + 1;
         v2x = GXM;
-        v1y = 35;
+        v1y = GYM - place.height + 1;
         v2y = GYM;
         initial_y--;
         dig_dir_x = 0;
@@ -5482,8 +5444,16 @@ static void build_vaults(int level_number, int force_vault)
         v1x = 1;
         v2x = GXM;
         v1y = 1;
-        v2y = 35;
-        plan_4(1, 1, 80, 35, DNGN_METAL_WALL);
+        v2y = place.height;
+        plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
+        goto vstair;
+
+    case MAP_SOUTH_DIS:
+        v1x = 1;
+        v2x = GXM;
+        v1y = GYM - place.height + 1;
+        v2y = GYM;
+        plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
         goto vstair;
     }
 

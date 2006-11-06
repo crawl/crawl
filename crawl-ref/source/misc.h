@@ -149,6 +149,10 @@ void curare_hits_player(int agent, int degree);
 
 bool i_feel_safe();
 
-std::string place_name( unsigned short place, bool long_name,
-                        bool include_number );
+std::string place_name( unsigned short place, bool long_name = false,
+                        bool include_number = true );
+
+int subdungeon_depth(unsigned char branch, int depth);
+int absdungeon_depth(unsigned char branch, int subdepth);
+
 #endif

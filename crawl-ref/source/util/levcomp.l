@@ -1,0 +1,123 @@
+%{
+
+// levcomp.l:
+//      Level compiler lexer for Dungeon Crawl Stone Soup.
+// 
+// Based loosely on NetHack's lev_comp.l
+
+#include "levcomp.h"
+#include <cstring>
+
+static bool alloced = false;
+
+static void clean()
+{
+    if (yylval.text && alloced)
+        free( (void*) yylval.text);
+    yylval.text = NULL;
+}
+
+static void settext()
+{
+    clean();
+    if ((yylval.text = strdup(yytext)))
+        alloced = true;
+}
+
+%}
+
+%s MAPDEF
+%s ARGUMENT
+%s MNAME
+%s KEYWORDS
+
+%option yylineno
+%option never-interactive
+
+NSPACE [^\ \t\r\n]
+
+%%
+
+<MAPDEF>ENDMAP      { BEGIN(INITIAL); }
+
+<MAPDEF>^#.*\r?\n   ;
+
+<MAPDEF>[a-zA-Z_&0-9|$+.@^#()\[\]=<>{}%*\-?]* {
+                        settext();
+                        return MAP_LINE;
+                    }
+
+^MAP                { BEGIN(MAPDEF); }
+
+^\s*#.*             ;
+
+NAME:               { BEGIN(ARGUMENT); return NAME; }
+default-depth:      return DEFAULT_DEPTH;
+DEPTH:              return DEPTH;
+ORIENT:             return ORIENT;
+PLACE:              { BEGIN(ARGUMENT); return PLACE; }
+CHANCE:             return CHANCE;
+FLAGS:              return FLAGS;
+TAGS:               { BEGIN(KEYWORDS); return TAGS; }
+SYMBOL:             { BEGIN(ARGUMENT); return SYMBOL; }
+MONS:               { BEGIN(MNAME); return MONS; }
+
+<KEYWORDS>[A-Za-z_0-9\-]+   { 
+                        settext();
+                        return STRING;
+                    }
+
+<KEYWORDS>[ \t]+    ;
+<KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<MNAME>[^, \t\r\n][^,\r\n]+[^, \t\r\n] { 
+                        settext();
+                        return MONSTER_NAME; 
+                    }
+
+<MNAME>,            return COMMA;
+<MNAME>[ \t]*\r?\n   { BEGIN(INITIAL); }
+<MNAME>[ \t]        ;
+
+pandemonic          return PANDEMONIC;
+no_hmirror          return NO_HMIRROR;
+no_vmirror          return NO_VMIRROR;
+
+encompass           return ENCOMPASS;
+north               return NORTH;
+south               return SOUTH;
+east                return EAST;
+west                return WEST;
+northeast           return NORTHEAST;
+northwest           return NORTHWEST;
+southeast           return SOUTHEAST;
+southwest           return SOUTHWEST;
+north_dis           return NORTH_DIS;
+
+-                   return DASH;
+,                   return COMMA;
+
+[0-9]+              {
+                        yylval.i = atoi(yytext);
+                        return INTEGER;
+                    }
+
+<ARGUMENT>{NSPACE}.*{NSPACE} { 
+                        BEGIN(INITIAL);
+                        settext();
+                        return STRING; 
+                    }
+
+<ARGUMENT>\r?\n     { BEGIN(INITIAL); }
+
+[\ \t\r\n]+         ;
+
+.                   return BAD_CHARACTER;
+
+%%
+
+int yywrap()
+{
+    clean();
+    return 1;
+}

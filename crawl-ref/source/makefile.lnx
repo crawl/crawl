@@ -31,7 +31,58 @@ LIB = -lncurses
 # Include for Linux
 INCLUDES = -I/usr/include/ncurses
 
+# If you have lex and yacc, set DOYACC to y (lowercase y).
+DOYACC := n
+
+UTIL = util/
+
+LEX  := lex
+YACC := yacc
+
+YTABC  := y.tab.c
+YTABH  := y.tab.h
+LEXYYC := lex.yy.c
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+GAME_DEPENDS := compile-levels $(OBJECTS)
+
+##########################################################################
+
 all: $(GAME)
+
+##########################################################################
+# The level compiler
+#
+compile-levels: $(UTIL)levcomp mapdefs.ixx
+
+mapdefs.ixx:	dat/vaults.des dat/splev.des $(UTIL)levcomp
+		$(UTIL)levcomp $@ < dat/vaults.des
+		$(UTIL)levcomp -a $@ < dat/splev.des
+
+$(UTIL)levcomp: $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o mapdef.o
+		$(CXX) -o $@ $^
+
+ifeq ($(DOYACC),y)
+
+$(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
+		cd $(UTIL) && $(YACC) -d levcomp.y \
+			   && mv $(YTABC) levcomp_yacc.cc \
+			   && mv $(YTABH) levcomp.h
+
+$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
+		cd $(UTIL) && $(LEX) levcomp.l \
+			   && mv $(LEXYYC) levcomp_lex.cc
+
+endif
+##########################################################################
+
 
 install: $(GAME)
 	$(COPY) $(GAME) ${INSTALLDIR}
@@ -39,6 +90,8 @@ install: $(GAME)
 
 clean:
 	$(DELETE) *.o
+	$(DELETE) $(UTIL)*.o
+	$(DELETE) $(UTIL)levcomp
 
 distclean:
 	$(DELETE) *.o
@@ -50,20 +103,32 @@ distclean:
 	$(DELETE) core
 	$(DELETE) *.0*
 	$(DELETE) *.lab
+ifeq ($(DOYACC),y)
+	$(DELETE) $(UTIL)*.cc $(UTIL)*.c $(UTIL)*.h
+endif
 
 
-$(GAME): $(OBJECTS)
+$(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 	chmod ${MCHMOD} $(GAME)
 
-debug: $(OBJECTS)
+debug: $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
-profile:	$(OBJECTS)
+profile: $(GAME_DEPENDS)
 	${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+# [ds] maps.cc now includes mapdefs.ixx, so add a dependency.
+$(OPATH)/maps.o: mapdefs.ixx
 
 .cc.o:
 	${CXX} ${CFLAGS} -c $< ${INCLUDE}
+
+# [ds] Note we don't use the standard CFLAGS here; that's intentional, most
+# flex/bison combos I've tried don't produce code that passes the warnings
+# test.
+$(UTIL)%.o: $(UTIL)%.cc
+	$(CXX) -I$(UTIL) -I. -o $@ -c $<
 
 .h.cc:
 	touch $@

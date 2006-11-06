@@ -32,7 +32,7 @@ unsigned short get_packed_place( unsigned char branch, int subdepth,
                                  char level_type )
 {
     unsigned short place = (unsigned short)
-        ( (branch << 8) | subdepth );
+        ( (branch << 8) | (subdepth & 0xFF) );
     if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
             || level_type == LEVEL_LABYRINTH)
         place = (unsigned short) ( (level_type << 8) | 0xFF );
