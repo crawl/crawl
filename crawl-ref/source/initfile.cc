@@ -523,6 +523,7 @@ void reset_options(bool clear_name)
     Options.note_hp_percent        = 0;
     Options.ood_interesting        = 8;
     Options.terse_hand             = true;
+    Options.increasing_skill_progress = false;
     Options.auto_list              = false;
     Options.delay_message_clear    = false;
     Options.pickup_dropped         = true;
@@ -1514,6 +1515,10 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "terse_hand")
     {
         Options.terse_hand = read_bool( field, Options.terse_hand );
+    }
+    else if (key == "increasing_skill_progress")
+    {
+        Options.increasing_skill_progress = read_bool( field, Options.increasing_skill_progress );
     }
     else if (key == "flush")
     {

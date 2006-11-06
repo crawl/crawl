@@ -1885,9 +1885,17 @@ void show_skills(void)
                 const int prev_needed = skill_exp_needed(you.skills[x] + 1);
                 const int spec_abil = species_skills(x, you.species);
 
-                cprintf( " (%d)", 
-                     (((needed * spec_abil) / 100 - you.skill_points[x]) * 10) /
-                           (((needed - prev_needed) * spec_abil) / 100) );
+                int percent_done = ((you.skill_points[x] - (prev_needed * spec_abil) / 100) * 100) / (((needed - prev_needed) * spec_abil) / 100);
+
+                if ( percent_done == 100 )
+                    --percent_done;
+                if ( percent_done == 0 )
+                    ++percent_done;
+
+                if ( !Options.increasing_skill_progress )
+                    cprintf( " (%d)", (100 - percent_done) / 10 );
+                else
+                    cprintf( " (%2d%%)", (percent_done / 5) * 5 );
             }
 
             scrln++;

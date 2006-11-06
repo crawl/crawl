@@ -1882,6 +1882,7 @@ static option_handler handlers[] =
     { "easy_unequip", &Options.easy_unequip, option_hboolean },
     { "easy_butcher", &Options.easy_butcher, option_hboolean },
     { "terse_hand", &Options.terse_hand, option_hboolean },
+    { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
     { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
     { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
     { "note_skill_max", &Options.note_skill_max, option_hboolean },

@@ -153,6 +153,7 @@ hp_warning = 25
 # terse_hand = false
 # delay_message_clear = true
 # always_greet = true
+# increasing_skill_progress = true
 #
 # menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
 # menu_colour = green:(worn|neck|hand|weapon)\)

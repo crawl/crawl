@@ -697,6 +697,7 @@ struct game_options
     bool        easy_open;      // open doors with movement
     bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
+    bool        increasing_skill_progress; // skills go from 0-10 or 10-0
     bool        confirm_self_target; // require confirmation before selftarget
     bool        safe_autopickup; // don't autopickup when monsters visible
     bool        note_skill_max; // take note when skills reach new max
