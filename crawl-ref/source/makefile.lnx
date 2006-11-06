@@ -32,12 +32,12 @@ LIB = -lncurses
 INCLUDES = -I/usr/include/ncurses
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
-DOYACC := n
+DOYACC := y
 
 UTIL = util/
 
 LEX  := lex
-YACC := yacc
+YACC := bison -y
 
 YTABC  := y.tab.c
 YTABH  := y.tab.h

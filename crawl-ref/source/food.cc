@@ -216,6 +216,12 @@ bool butchery(void)
         return (false);
     }
 
+    if (!Options.easy_butcher && !can_butcher)
+    {
+        mpr("Maybe you should try using a sharper implement.");
+        return (false);
+    }
+
     if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
         mpr("You can't reach the floor from up here.");
