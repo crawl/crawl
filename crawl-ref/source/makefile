@@ -4,7 +4,7 @@
 
 #Makefile chooser.  Choose one:
 
-MAKEFILE = makefile.lnx
+MAKEFILE = makefile.unix
 #MAKEFILE = makefile.dos
 #MAKEFILE = makefile.osx
 #MAKEFILE = makefile.mgw
