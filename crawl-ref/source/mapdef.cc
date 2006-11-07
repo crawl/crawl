@@ -30,17 +30,19 @@ std::string clean_string(std::string s, const std::string &tokill)
     return (s);
 }
 
+// [dshaligram] Use sprintf to compile on DOS without having to pull in
+// libutil.cc. The buffers used should be more than sufficient.
 static std::string to_s(int num)
 {
-    char buf[20];
-    snprintf(buf, sizeof buf, "%d", num);
+    char buf[100];
+    sprintf(buf, "%d", num);
     return (buf);
 }
 
 static std::string to_sl(long num)
 {
-    char buf[20];
-    snprintf(buf, sizeof buf, "%ld", num);
+    char buf[100];
+    sprintf(buf, "%ld", num);
     return (buf);
 }
 

@@ -84,7 +84,7 @@ $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		$(subst /,\, cd $(UTIL)) && $(YACC) -d -b levcomp levcomp.ypp
 		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp.tab.cc
 
-$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.lpp
+$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
 		$(subst /,\, cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp)
 
 else

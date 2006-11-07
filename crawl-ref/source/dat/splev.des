@@ -1,7 +1,7 @@
 ##############################################################################
 # splev.des: special levels definitions.
 #
-# If you want to define random vaults and minivaults they should go 
+# If you want to define random vaults and minivaults, they should go 
 # to vaults.des.
 #
 #  key:
@@ -80,11 +80,52 @@
 #  ps - remember to add one to the monster array value when placing monsters
 #       on each map (it is 1-7, not 0-6) {dlb}
 #
+#  [dshaligram] All special levels MUST have an ORIENT: attribute; if there's
+#  no ORIENT: attribute, the level is considered to be a minivault, which is
+#  usually not what you want.
+#
+#  Special levels are selected either by PLACE: (for most special levels) or 
+#  TAGS: (for the Pandemonium demon lords). If you want to define alternate
+#  levels, duplicate the selector and use different names. For instance, to
+#  define an alternate Vestibule level, you could use something like this:
+#
+#  NAME: vestibule_of_hell_alternate
+#  PLACE: Hell
+#
+#  To define an alternate level for Cerebov, you could do:
+#
+#  NAME: cerebov_alternate
+#  TAGS: cerebov
+#
+#  You can also use CHANCE: to control the weight a level is assigned. For 
+#  instance, if you want to make cerebov_alternate five times more likely than
+#  the standard cerebov level, you'd do:
+#
+#  NAME: cerebov_alternate
+#  TAGS: cerebov
+#  CHANCE: 50
+#
+#  (The default weight is 10 if CHANCE: is omitted.)
+#
 ##############################################################################
 
 NAME: vestibule_of_hell
 PLACE: Hell
 ORIENT: encompass
+
+# [dshaligram] If modifying the Vestibule, ensure that:
+#
+#  * The portal to Dis is surrounded by floor squares and nothing but floor 
+#    squares.
+#  * The portal to Tartarus is surrounded only by floor, doors of any kind, and
+#    at least one rock wall.
+#  * The portal to Gehenna is surrounded by nothing but floor and at least one
+#    lava square.
+#  * The portal to Cocytus is surrounded by nothing but floor and at least one
+#    water square.
+#
+# If you don't do this, the portals will not be unbarred correctly when 
+# Geryon's horn is sounded.
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -468,11 +509,15 @@ MONS: skeleton_small, Shadow Fiend
 ###########################################################################
 # mnoleg.
 #
-# NOTE: The Pandemonium demonlord levels are requested by name; if you change
-# the name, also update dungeon.cc.
+# NOTE: The Pandemonium demonlord levels are requested by tag; if you change
+# the tag, also update dungeon.cc.
+#
+# You can define alternate levels for a Pandemonium lord by using the same
+# TAGS: and a different NAME:
 #
 
 NAME: mnoleg
+TAGS: mnoleg
 ORIENT: northeast
 
 MAP
@@ -522,6 +567,7 @@ MONS: random, random, random, random, random
 #
 
 NAME: lom_lobon
+TAGS: lom_lobon
 ORIENT: north
 
 MAP
@@ -570,6 +616,7 @@ MONS: random, random, random
 # cerebov
 
 NAME: cerebov
+TAGS: cerebov
 ORIENT: northeast
 
 # you might not want to teleport too much on this level - unless you can 
@@ -622,6 +669,7 @@ MONS: random, random, random, random
 # Gloorx Vloq
 
 NAME: gloorx_vloq
+TAGS: gloorx_vloq
 ORIENT: southwest
 
 MAP

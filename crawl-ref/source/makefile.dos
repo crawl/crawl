@@ -24,10 +24,100 @@ LDFLAGS =
 LIB =
 # LIB = -lcurso -lpano
 
+UTIL = util/
+
+# If you don't have flex or bison, set DOYACC to N or empty.
+DOYACC := y
+
+LEX  := flex
+YACC := bison -y
+
+# DOS brain damage. What to do, what to do.
+YTABC  := levcom~1.c
+YTABH  := levcom~1.h
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+GAME_DEPENDS := compile-levels $(OBJECTS)
+
+##########################################################################
+
 all:            $(APPNAME)
+
+##########################################################################
+# The level compiler
+#
+compile-levels: $(UTIL)levcomp.exe mapdefs.ixx
+
+mapdefs.ixx:	dat\vaults.des dat\splev.des $(UTIL)levcomp.exe
+		$(subst /,\,$(UTIL)levcomp.exe $@ < dat\vaults.des)
+		$(subst /,\,$(UTIL)levcomp.exe -a $@ < dat\splev.des)
+
+$(UTIL)levcomp.exe: $(UTIL)levcomp.o $(UTIL)levtab.o \
+    			$(UTIL)levlex.o mapdef.o
+		$(CXX) -o $@ $^
+
+# [dshaligram] A million plagues on djgpp make! It doesn't want to use a
+# generic rule for $(UTIL)%.cc; it always uses the .cc.o: rule instead.
+
+LINC := -I $(subst /,,$(UTIL)) -I. 
+
+# [ds] If we're using the prebuilt include, we can't copy it around because
+# djgpp copy mangles the name irreparably.
+ifneq ($(DOYACC),y)
+LINC += -I prebuilt
+endif
+
+$(UTIL)levcomp.o: $(UTIL)levcomp.cc
+		$(subst /,\,$(CXX) $(LINC) -o $@ -c $<)
+
+$(UTIL)levlex.o: $(UTIL)levlex.cc
+		$(subst /,\,$(CXX) $(LINC) -o $@ -c $<)
+
+$(UTIL)levtab.o: $(UTIL)levtab.cc
+		$(subst /,\,$(CXX) $(LINC) -o $@ -c $<)
+
+ifeq ($(DOYACC),y)
+
+$(UTIL)levtab.cc: $(UTIL)levcomp.ypp
+		$(subst /,\,cd $(UTIL))
+		$(YACC) -d -b levcomp levcomp.ypp
+		copy $(YTABC) levtab.cc
+		cd ..
+
+# djgpp flex must not have a space between -o and its parameter, or no business
+# will result.
+$(UTIL)levlex.cc: $(UTIL)levcomp.lpp
+		$(subst /,\,cd $(UTIL))
+		$(LEX) -olevlex.cc levcomp.lpp
+		cd ..
+
+else
+
+$(UTIL)levtab.cc: prebuilt/levcom~2.cc
+		$(subst /,\,$(COPY) $< $@)
+
+$(UTIL)levlex.cc: prebuilt/levcom~1.cc
+		$(subst /,\,$(COPY) $< $@)
+
+endif
+
+##########################################################################
 
 clean:
 		$(DELETE) *.o
+		$(subst /,\,$(DELETE) $(UTIL)*.o)
+		$(subst /,\,$(DELETE) $(UTIL)*.exe)
+		$(subst /,\,$(DELETE) $(UTIL)levcom~1.*)
+		$(subst /,\,$(DELETE) $(UTIL)levtab.*)
+		$(subst /,\,$(DELETE) $(UTIL)levlex.*)
+		$(DELETE) *.ixx
 
 distclean:
 		$(DELETE) *.o 
@@ -40,15 +130,17 @@ distclean:
 		$(DELETE) *.0*
 		$(DELETE) *.lab
 
-$(APPNAME):	$(OBJECTS)
+$(APPNAME):	$(GAME_DEPENDS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
-debug:		$(OBJECTS)
+debug:		$(GAME_DEPENDS)
 		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-profile:	$(OBJECTS)
+profile:	$(GAME_DEPENDS)
 		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+
+maps.o: 	mapdefs.ixx
 
 .cc.o:
 		${CXX} ${CFLAGS} -c $< ${INCLUDE}

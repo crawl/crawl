@@ -32,7 +32,7 @@ int vault_main(map_type vgrid,
                 int vault_force, 
                 int many_many);
 
-int find_map_for(const std::string &place);
+int random_map_for_place(const std::string &place, bool mini = false);
 int find_map_named(const std::string &name);
 int random_map_for_depth(int depth, bool want_minivault = false);
 int random_map_for_tag(std::string tag);

@@ -78,6 +78,10 @@
 #  ps - remember to add one to the monster array value when placing monsters
 #       on each map (it is 1-7, not 0-6) {dlb}
 #
+#  [dshaligram] All vaults MUST have an ORIENT: attribute; if there's no
+#  ORIENT: attribute, the vault is considered to be a minivault, which is
+#  usually not what you want.
+#
 ##############################################################################
 
 default-depth: 1-27
@@ -828,16 +832,20 @@ ENDMAP
 ##############################################################################
 # Minivaults
 ##############################################################################
-
+#
 # NOTE: *Cannot* place 8,9 or 0 monsters in branch vaults which neither use the
 # normal mons_level function or are around level 35, or generation will crash.
-
+#
 # [dshaligram] Minivaults were traditionally drawn after rotating the vault by
 # 90 degrees anticlockwise. Under the new dungeon vault handling, the map may
 # be freely rotated and mirrored to any position (20061105).
 #
-# Minivaults are traditionally 12x12 (hardcoded limitation in dungeon.cc. Under
-# the new rules they can be any size, but the smaller the better.
+# Minivaults are traditionally 12x12 (hardcoded limitation in dungeon.cc). Under
+# the new rules they can be any size, but the smaller the better. I'd recommend
+# no larger than 35x30 or so.
+#
+# NOTE: Minivaults must NOT have an ORIENT: attribute. Including an ORIENT:
+# attribute makes the map a normal vault, and mayhem can result.
 
 NAME: minivault_1
 
@@ -878,6 +886,9 @@ ENDMAP
 ###################################
 
 NAME: minitemple
+
+# More common than the others.
+CHANCE: 20
 
 MAP
 ............

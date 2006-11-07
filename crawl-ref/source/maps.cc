@@ -185,16 +185,34 @@ static int apply_vault_definition(
 // Map lookups
 
 // Returns a map for which PLACE: matches the given place.
-int find_map_for(const std::string &place)
+int random_map_for_place(const std::string &place, bool want_minivault)
 {
     if (place.empty())
         return (-1);
 
-    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
-        if (vdefs[i].place == place)
-            return (i);
+    int mapindex = -1;
+    int rollsize = 0;
 
-    return (-1);
+    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    {
+        // We also accept tagged levels here.
+        if (vdefs[i].place == place
+                && ((vdefs[i].orient == MAP_NONE) == want_minivault))
+        {
+            rollsize += vdefs[i].chance;
+
+            if (rollsize && random2(rollsize) < vdefs[i].chance)
+                mapindex = i;
+        }
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (mapindex != -1)
+        mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s", 
+                vdefs[mapindex].name.c_str(), place.c_str());
+#endif
+
+    return (mapindex);
 }
 
 int find_map_named(const std::string &name)
@@ -240,6 +258,7 @@ int random_map_for_tag(std::string tag)
     int rollsize = 0;
 
     for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    {
         if (vdefs[i].tags.find(tag) != std::string::npos)
         {
             rollsize += vdefs[i].chance;
@@ -247,6 +266,15 @@ int random_map_for_tag(std::string tag)
             if (rollsize && random2(rollsize) < vdefs[i].chance)
                 mapindex = i;
         }
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (mapindex != -1)
+        mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged%s", 
+                vdefs[mapindex].name.c_str(), tag.c_str());
+    else
+        mprf(MSGCH_DIAGNOSTICS, "No map for tag%s", tag.c_str());
+#endif
 
     return (mapindex);
 }
@@ -254,8 +282,8 @@ int random_map_for_tag(std::string tag)
 /////////////////////////////////////////////////////////////////////////////
 // map_def
 // map_def functions that can't be implemented in mapdef.cc because that'll pull
-// in functions from lots of other places and make compiling levcomp unnecessarily
-// painful
+// in functions from lots of other places and make compiling levcomp
+// unnecessarily painful
 
 void map_def::hmirror()
 {

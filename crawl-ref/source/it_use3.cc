@@ -581,8 +581,28 @@ bool evoke_wielded( void )
                         {
                             opened_gates++;
 
+                            // [dshaligram] New approach to placing Hell
+                            // portals to handle the possibility of a mirrored
+                            // Vestibule.
+                            int surround_grid = DNGN_FLOOR;
+
+                            for (int y = -1; y <= 1; ++y)
+                                for (int x = -1; x <= 1; ++x)
+                                {
+                                    if (!x && !y)
+                                        continue;
+                                    const int grid = 
+                                        grd[count_x + x][count_y + y];
+
+                                    if (grid != DNGN_FLOOR 
+                                            && grid != DNGN_SECRET_DOOR
+                                            && grid != DNGN_CLOSED_DOOR
+                                            && grid != DNGN_OPEN_DOOR)
+                                        surround_grid = grid;
+                                }
+
                             // this may generate faulty [][] values {dlb}
-                            switch (grd[count_x + 2][count_y])
+                            switch (surround_grid)
                             {
                             case DNGN_FLOOR:
                                 grd[count_x][count_y] = DNGN_ENTER_DIS;

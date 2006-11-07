@@ -142,7 +142,6 @@ static void jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
 static void build_vaults(int level_number, int vault_number);
-static void build_vaults(int level_number, const std::string &vname);
 static void build_minivaults(int level_number, int force_vault);
 static int vault_grid( int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
@@ -3728,7 +3727,19 @@ static int builder_by_type(int level_number, char level_type)
                 "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
             };
             you.unique_creatures[40 + which_demon] = 1;
-            build_vaults(level_number, pandemon_level_names[(int) which_demon]);
+
+            const int vault = 
+                random_map_for_tag(pandemon_level_names[(int) which_demon]);
+
+            ASSERT(vault != -1);
+            if (vault == -1)
+            {
+                fprintf(stderr, "Failed to find Pandemonium level %s!\n",
+                        pandemon_level_names[(int) which_demon]);
+                exit(1);
+            }
+
+            build_vaults(level_number, vault);
         }
         else
         {
@@ -3761,9 +3772,9 @@ static int builder_by_branch(int level_number)
     if (subdepth == branch_depth( branch_stair(you.where_are_you) ))
         altname = level_name(0);
 
-    int vault = find_map_for(name);
+    int vault = random_map_for_place(name);
     if (vault == -1)
-        vault = find_map_for(altname);
+        vault = random_map_for_place(altname);
 
     if (vault != -1)
     {
@@ -3812,7 +3823,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     bool skipped = false;
     bool done_city = false;
 
-    int vault = find_map_for( 
+    int vault = random_map_for_place( 
                     level_name( 
                         subdungeon_depth(you.where_are_you, level_number)));
 
@@ -5272,20 +5283,6 @@ static void build_minivaults(int level_number, int force_vault)
         }
     }
 }                               // end build_minivaults()
-
-static void build_vaults(int level_number, const std::string &name)
-{
-    int vault = find_map_named(name);
-    ASSERT(vault != -1);
-
-    if (vault == -1)
-    {
-        fprintf(stderr, "Unable to find map named %s\n", name.c_str());
-        exit(1);
-    }
-
-    build_vaults(level_number, vault);
-}
 
 static void build_vaults(int level_number, int force_vault)
 {

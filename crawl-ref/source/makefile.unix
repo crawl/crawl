@@ -60,7 +60,8 @@ SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
 
 LEVCOMP      := $(UTIL)levcomp
 
-PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o $(LEVCOMP)*.cc $(LEVCOMP)*.h *.ixx
+PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
+		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
 PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 
 ##########################################################################
@@ -123,8 +124,7 @@ clean:
 	$(DELETE) $(UTIL)*.tab.cc $(UTIL)*.tab.c $(UTIL)*.tab.h $(UTIL)*.lex.cc
 	$(DELETE) *.ixx
 
-distclean:
-	$(DELETE) *.o
+distclean: clean
 	$(DELETE) bones.*
 	$(DELETE) morgue.txt
 	$(DELETE) scores
@@ -145,7 +145,7 @@ profile: $(GAME_DEPENDS)
 	${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 # [ds] maps.cc now includes mapdefs.ixx, so add a dependency.
-$(OPATH)/maps.o: mapdefs.ixx
+maps.o: mapdefs.ixx
 
 .cc.o:
 	${CXX} ${CFLAGS} -c $< ${INCLUDE}
