@@ -27,7 +27,7 @@ LIB =
 UTIL = util/
 
 # If you don't have flex or bison, set DOYACC to N or empty.
-DOYACC := y
+DOYACC := n
 
 LEX  := flex
 YACC := bison -y
