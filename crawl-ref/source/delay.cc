@@ -899,7 +899,7 @@ void interrupt_activity( activity_interrupt_type ai,
         {
             // Do we have a queued run delay? If we do, flush the delay queue
             // so that stop running Lua notifications happen.
-            for (int j = i + 1; j < size; ++j)
+            for (int j = i; j < size; ++j)
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
