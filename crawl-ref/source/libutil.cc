@@ -150,7 +150,7 @@ static int getch_ck() {
 // Hacky wrapper around getch() that returns CK_ codes for keys
 // we want to use in cancelable_get_line() and menus.
 int c_getch() {
-#if defined(DOS) || defined(LINUX) || defined(WIN32CONSOLE)
+#if defined(DOS) || defined(UNIX) || defined(WIN32CONSOLE)
     return getch_ck();
 #else
     return getch();

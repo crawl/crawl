@@ -60,25 +60,24 @@
 //
 // #define CLUA_BINDINGS
 
+// OS X's Terminal.app has color handling problems; dark grey is
+// especially bad, so we'll want to remap that. OS X is otherwise
+// Unix-ish, so we shouldn't need other special handling.
+#if defined(OSX)
+    #define UNIX
+    #define USE_8_COLOUR_TERM_MAP
+    #define COL_TO_REPLACE_DARKGREY     BLUE
+#endif
+
 // =========================================================================
 //  System Defines
 // =========================================================================
 // Define plain_term for Unix and dos_term for DOS.
 
-#if defined(LINUX)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-#elif defined(OSX)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-    // Darkgrey is a particular problem in Terminal.app.
-    #define USE_8_COLOUR_TERM_MAP
-    #define COL_TO_REPLACE_DARKGREY     BLUE
-#endif
-
 #ifdef UNIX
     #define PLAIN_TERM
     #define MULTIUSER
+    #define USE_UNIX_SIGNALS
 
     #define CHARACTER_SET           0
     #define USE_ASCII_CHARACTERS

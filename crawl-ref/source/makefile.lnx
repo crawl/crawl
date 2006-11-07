@@ -15,7 +15,7 @@ OBJECTS += libunix.o
 CXX = g++
 DELETE = rm -f
 COPY = cp
-OS_TYPE = LINUX
+OS_TYPE = UNIX
 
 CFLAGS = -Wall -Wwrite-strings -fsigned-char \
 	-Wshadow -pedantic \
