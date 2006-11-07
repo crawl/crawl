@@ -1,23 +1,24 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20060926 for Dungeon Crawl Stone Soup 0.1.1.)
+(Last updated on 20061107 for Dungeon Crawl Stone Soup 0.1.3.)
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
 Crawl Stone Soup is known to compile successfully on the following platforms as
-of version 0.1.1:
+of version 0.1:
 
 - Any Unix with a recent gcc (and g++), GNU make and libncurses, including
   Linux and Mac OS X.
-- MS-DOS (with at least 32M RAM).
 - Microsoft Windows NT/2000/XP. The game will also run on Windows 9X and ME.
+  DOS binaries can also be compiled on Windows NT+.
 
 The only supported compiler is gcc (available on almost all Unixes, and as djgpp
 for DOS, and MinGW for Windows).
 
 Other platforms are unsupported, but you should be able to build Crawl on
-pretty much any operating system with a modern C++ compiler and the curses 
-library.
+pretty much any operating system with a modern C++ compiler (full support for
+the standard C++ library, in particular <string>, the collection classes and
+<algorithm> is necessary) and the curses library.
 
 
 Optional libraries
@@ -26,6 +27,11 @@ Crawl can be built with some optional features:
 * Sounds
 * Regular expressions
 * Lua support
+
+Crawl Stone Soup also uses a level compiler to compile special level
+definitions; to make changes to the level compiler, you'll need the flex and
+bison/byacc tools (Other lex/yaccs may also work). More details are available
+below.
 
 Sounds must be enabled by editing AppHdr.h (uncomment SOUND_PLAY_COMMAND on
 Unixes or WINMM_PLAY_SOUNDS on Windows).
@@ -50,26 +56,37 @@ Consult the operating-system specific sections for detailed information on
 building Crawl.
 
 
-Building on Linux (or other Unixes)
------------------------------------
-* Make sure you have gcc and GNU make. This is especially important on non-Linux
-  Unixes such as Solaris (Solaris cc might work, but it's not been tested).
+Building on Unix (Linux, *BSD, Solaris, etc.)
+---------------------------------------------
 
-* Make sure you have libcurses or libncurses. If you're using libcurses, edit
-  makefile.unix to match.
+* Prerequisites:
 
-* cd to the source directory (you can safely ignore the dolinks.sh and 
+GNU gcc and g++, GNU make, libncurses or libcurses.
+
+flex and bison are optional but highly recommended. Recent versions of byacc are
+also fine.
+
+* Building:
+
+* cd to the source directory (you can safely ignore the dolinks.sh and
   domake.sh scripts).
 
-* Edit makefile and make sure that MAKEFILE=makefile.unix is uncommented and all
-  other MAKEFILE= lines are commented out.
+* Edit makefile and make sure that MAKEFILE=makefile.unix is uncommented and
+  all other MAKEFILE= lines are commented out.
 
-* Edit AppHdr.h and check that SAVE_DIR_PATH, SAVE_PACKAGE_CMD and 
+* Edit AppHdr.h and check that SAVE_DIR_PATH, SAVE_PACKAGE_CMD and
   LOAD_UNPACKAGE_CMD are set correctly for your system. If you do not want your
   saves packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD and
   LOAD_UNPACKAGE_CMD.
 
-* Run make to build the normal (non-wizard) Crawl.
+* If you don't have flex or bison, edit makefile.unix and set DOYACC := n. If
+  you want to use byacc instead of bison, edit makefile.unix and set YACC :=
+  byacc. On some Linuxes you may not have lex symlinked to flex, in which case
+  you'll have to set LEX := flex in makefile.unix.
+
+* Run make to build the normal (non-wizard) Crawl. On systems such as Solaris,
+  you may have to use gmake for GNU make. Make sure your make identifies itself
+  as GNU make when you do make --version.
 
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
@@ -113,9 +130,11 @@ it. You may be better off using the DOS build instructions if you're on 9x/ME.
 We've also not tested or updated the makefile for Borland C++. We strongly
 recommend using MinGW if possible.
 
-* Install MinGW from www.mingw.org. The MinGW 5.0.2 installer is best so
+* Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer is best so
   you don't have to fiddle with individual packages (you can mess with the
-  individual packages if you like to, of course).
+  individual packages if you like to, of course). If you want to edit the level
+  compiler, also get the flex and bison packages (available from the GnuWin32
+  project on Sourceforge: http://gnuwin32.sourceforge.net/).
 
 * Make sure you have g++ and mingw32-make in your path.
 
@@ -131,6 +150,8 @@ recommend using MinGW if possible.
         // #define REGEX_PCRE
   Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h - find
   the one in the Windows-specific section.
+
+* If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
 * Add -llua and -lpcre to the LIB line in makefile.mgw as:
         LIB = -lwinmm -static -llua -lpcre
@@ -150,6 +171,9 @@ Building on DOS
 
 * Make sure gxx and make are in your PATH.
 
+* If you want to modify the level compiler, install the djgpp flex, bison and m4
+  packages and set DOYACC := y in makefile.dos.
+
 * cd to the Crawl source directory.
 
 * Build Crawl by running
@@ -164,6 +188,51 @@ Building on DOS
   then build Crawl.
 
 * When the build is done, crawl.exe should be in the source directory.
+
+*****************************************************************************
+
+The level compiler
+------------------
+(NOTE: The level compiler is not in its final form yet; these instructions are
+likely to change for future releases.)
+
+Crawl uses a level compiler to convert the human-readable level design (.des)
+files in the source/dat directory into code that's compiled into Crawl.
+
+If you're using one of the standard makefiles, the steps described in this
+section are performed automatically:
+
+The level compiler source is in the source/util directory (levcomp.lpp and
+levcomp.ypp). The steps involved in building the level compiler are:
+
+* Run flex on levcomp.lpp to produce the levcomp.lex.cc lexer.
+* Run bison on levcomp.ypp to produce the levcomp.tab.cc parser and
+  levcomp.tab.h 
+* Compile the resulting C++ source files with mapdef.cc (in the main source
+  directory) and levcomp.cc to produce the levcomp executable.
+
+Once you've built the level compiler, run it on the .des files in source/dat and
+append the results to mapdefs.ixx:
+
+levcomp(.exe) mapdefs.ixx < dat/vaults.des
+levcomp(.exe) -a mapdefs.ixx < dat/splev.des
+(the -a option tells levcomp to append to mapdefs.ixx instead of overwriting the
+existing contents.)
+
+When mapdefs.ixx is built, Crawl can be compiled as before. mapdefs.ixx is
+#included in maps.cc.
+
+For convenience on systems that don't have flex/bison, pre-generated
+intermediate files are provided under source/prebuilt. The makefiles provided
+with the Crawl source distribution will use these pre-generated files
+automatically if flex/bison is not available.
+
+If you're using an Integrated Development Environment and don't want to modify
+the level design files at all, a pre-generated mapdefs.ixx is provided in
+source/prebuilt - you can add source/prebuilt as an include directory and build
+Crawl as before. (This is not necessary if you're using Xcode on OS X
+- the Xcode project provided with the source distribution is aware of the level
+compiler and will build and use it automatically.)
 
 *****************************************************************************
 Optional Libraries
