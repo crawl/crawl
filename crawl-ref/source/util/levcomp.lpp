@@ -15,6 +15,7 @@ static void clean()
     if (yylval.text && alloced)
         free( (void*) yylval.text);
     yylval.text = NULL;
+    alloced = false;
 }
 
 static void settext()
@@ -98,6 +99,7 @@ north_dis           return NORTH_DIS;
 ,                   return COMMA;
 
 [0-9]+              {
+                        clean();
                         yylval.i = atoi(yytext);
                         return INTEGER;
                     }
