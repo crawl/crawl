@@ -46,18 +46,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef USE_EMX
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
-
 #ifdef __MINGW32__
 #include <io.h>
 #include <sys/types.h>

@@ -610,7 +610,7 @@ const char *rand_armour_names[] = {
    not randart.h because they're only used in this code module.
 */
 
-#if defined(__IBMCPP__) || defined(__BCPLUSPLUS__)
+#if defined(__IBMCPP__)
 #define PACKED
 #else
 #ifndef PACKED

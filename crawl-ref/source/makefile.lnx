@@ -39,9 +39,8 @@ UTIL = util/
 LEX  := lex
 YACC := bison -y
 
-YTABC  := y.tab.c
-YTABH  := y.tab.h
-LEXYYC := lex.yy.c
+YTABC  := levcomp.tab.c
+YTABH  := levcomp.tab.h
 
 ifeq ($(LEX),)
 DOYACC :=
@@ -77,34 +76,31 @@ mapdefs.ixx:	dat/vaults.des dat/splev.des $(LEVCOMP)
 		$(LEVCOMP) $@ < dat/vaults.des
 		$(LEVCOMP) -a $@ < dat/splev.des
 
-$(LEVCOMP): $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o mapdef.o
+$(LEVCOMP): $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o mapdef.o $(UTIL)levcomp.o
 		$(CXX) -o $@ $^
 
 ifeq ($(DOYACC),y)
 
-prebuildyacc:	mapdefs.ixx $(UTIL)levcomp_yacc.cc $(UTIL)levcomp_lex.cc \
-			$(UTIL)levcomp.h
+prebuildyacc:	mapdefs.ixx $(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 		cp $^ prebuilt/
 
-$(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
-		cd $(UTIL) && $(YACC) -d levcomp.y \
-			   && mv $(YTABH) levcomp.h \
-			   && mv $(YTABC) levcomp_yacc.cc
+$(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
+		cd $(UTIL) && $(YACC) -d -b levcomp levcomp.ypp \
+			   && mv $(YTABC) levcomp.tab.cc
 
-$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
-		cd $(UTIL) && $(LEX) levcomp.l \
-			   && mv $(LEXYYC) levcomp_lex.cc
+$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
+		cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp
 
 else
 
 # Pull the level-compiler stuff up from prebuilt/
 
-$(UTIL)levcomp_yacc.cc: prebuilt/levcomp_yacc.cc
-		cp prebuilt/*.h .
+$(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
+		cp prebuilt/*.h $(UTIL)
 		cp $< $@
 
 
-$(UTIL)levcomp_lex.cc: prebuilt/levcomp_lex.cc
+$(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
 		cp $< $@
 
 endif
@@ -124,7 +120,7 @@ clean:
 	$(DELETE) *.o
 	$(DELETE) $(UTIL)*.o
 	$(DELETE) $(LEVCOMP)
-	$(DELETE) $(UTIL)*.cc $(UTIL)*.c $(UTIL)*.h
+	$(DELETE) $(UTIL)*.tab.cc $(UTIL)*.tab.c $(UTIL)*.tab.h $(UTIL)*.lex.cc
 	$(DELETE) *.ixx
 
 distclean:

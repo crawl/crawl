@@ -63,27 +63,17 @@
 // =========================================================================
 //  System Defines
 // =========================================================================
-// Define plain_term for Unix and dos_term for DOS and EMX.
+// Define plain_term for Unix and dos_term for DOS.
 
 #if defined(LINUX)
     #define UNIX
     #define USE_UNIX_SIGNALS
-#elif defined(SOLARIS)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-#elif defined(BSD)
-    #define UNIX
 #elif defined(OSX)
     #define UNIX
+    #define USE_UNIX_SIGNALS
     // Darkgrey is a particular problem in Terminal.app.
     #define USE_8_COLOUR_TERM_MAP
     #define COL_TO_REPLACE_DARKGREY     BLUE
-#elif defined(HPUX)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-    // Under HP-UX it's typically easier to use ncurses than try and
-    // get the colour curses library to work. -- bwr
-    #define CURSES_INCLUDE_FILE         <ncurses.h>
 #endif
 
 #ifdef UNIX
@@ -145,16 +135,6 @@
     
     #include "libunix.h"
 
-// To compile with EMX for OS/2 define USE_EMX macro with compiler command line
-// (already defined in supplied makefile.emx)
-#elif defined(USE_EMX)
-    #define DOS_TERM
-    #define EOL "\n"
-    #define CHARACTER_SET           A_ALTCHARSET
-
-    #include <string>
-    #include "libemx.h"
-
 #elif _MSC_VER >= 1100
     #include <string>
     #include "WinHdr.h"
@@ -178,7 +158,7 @@
         #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
     #endif
 
-#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__BCPLUSPLUS__) || defined(__MINGW32__))
+#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__MINGW32__))
     #include "libw32c.h"
     #define PLAIN_TERM
     #define SHORT_FILE_NAMES

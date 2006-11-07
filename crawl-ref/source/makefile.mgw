@@ -41,9 +41,8 @@ DOYACC := n
 LEX  := flex
 YACC := bison -y
 
-YTABC  := y.tab.c
-YTABH  := y.tab.h
-LEXYYC := lex.yy.c
+YTABC  := levcomp.tab.c
+YTABH  := levcomp.tab.h
 
 
 ifeq ($(LEX),)
@@ -72,32 +71,29 @@ mapdefs.ixx:	dat/vaults.des dat/splev.des $(UTIL)levcomp.exe
 		$(subst /,\, $(UTIL)levcomp.exe $@ < dat/vaults.des)
 		$(subst /,\, $(UTIL)levcomp.exe -a $@ < dat/splev.des)
 
-$(UTIL)levcomp.exe: $(UTIL)levcomp_yacc.o $(UTIL)levcomp_lex.o $(OPATH)/mapdef.o
+$(UTIL)levcomp.exe: $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(OPATH)/mapdef.o $(UTIL)levcomp.o
 		$(CXX) -o $@ $^
 
 ifeq ($(DOYACC),y)
 
 # [ds] A plague on the broken copy command on Windoze.
-prebuildyacc:	mapdefs.ixx $(UTIL)levcomp_lex.cc $(UTIL)levcomp_yacc.cc \
-    			$(UTIL)levcomp.h
+prebuildyacc:	mapdefs.ixx $(UTIL)levcomp.lex.cc $(UTIL)levcomp.tab.cc	$(UTIL)levcomp.tab.h
 		$(subst /,\,for %%f in ($^) do $(COPY) %%f prebuilt)
 
-$(UTIL)levcomp_yacc.cc: $(UTIL)levcomp.y
-		$(subst /,\, cd $(UTIL)) && $(YACC) -d levcomp.y
-		$(subst /,\, cd $(UTIL)) && move $(YTABH) levcomp.h
-		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp_yacc.cc
+$(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
+		$(subst /,\, cd $(UTIL)) && $(YACC) -d -b levcomp levcomp.ypp
+		$(subst /,\, cd $(UTIL)) && move $(YTABC) levcomp.tab.cc
 
-$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.l
-		$(subst /,\, cd $(UTIL) && $(LEX) levcomp.l)
-		$(subst /,\, cd $(UTIL) && move $(LEXYYC) levcomp_lex.cc)
+$(UTIL)levcomp_lex.cc: $(UTIL)levcomp.lpp
+		$(subst /,\, cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp)
 
 else
 
-$(UTIL)levcomp_yacc.cc: prebuilt/levcomp_yacc.cc
-		$(subst /,\,$(COPY) prebuilt/*.h .)
+$(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
+		$(subst /,\,$(COPY) prebuilt/*.h $(UTIL))
 		$(subst /,\,$(COPY) $< $@)
 
-$(UTIL)levcomp_lex.cc: prebuilt/levcomp_lex.cc
+$(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
 		$(subst /,\,$(COPY) $< $@)
 
 endif
@@ -111,9 +107,10 @@ clean:
 		$(DELETE) $(OPATH)\*.o
 		$(subst /,\,$(DELETE) $(UTIL)*.o)
 		$(subst /,\,$(DELETE) $(UTIL)*.exe)
-		$(subst /,\,$(DELETE) $(UTIL)*.cc)
-		$(subst /,\,$(DELETE) $(UTIL)*.h)
-		$(subst /,\,$(DELETE) $(UTIL)*.c)
+		$(subst /,\,$(DELETE) $(UTIL)*.lex.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.cc)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.h)
+		$(subst /,\,$(DELETE) $(UTIL)*.tab.c)
 		$(subst /,\,$(DELETE) *.ixx)
 
 distclean:

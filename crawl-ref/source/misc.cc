@@ -18,7 +18,7 @@
 #include "notes.h"
 
 #include <string.h>
-#if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
+#if !defined(__IBMCPP__)
 #include <unistd.h>
 #endif
 

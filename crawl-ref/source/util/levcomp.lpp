@@ -5,7 +5,7 @@
 // 
 // Based loosely on NetHack's lev_comp.l
 
-#include "levcomp.h"
+#include "levcomp.tab.h"
 #include <cstring>
 
 static bool alloced = false;

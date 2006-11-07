@@ -247,10 +247,7 @@ void unixcurses_startup( void )
     start_color();
     setup_colour_pairs();
 
-#ifndef SOLARIS
-    // These can cause some display problems under Solaris
     scrollok(stdscr, TRUE);
-#endif
 }
 
 

@@ -66,16 +66,6 @@
 #include <signal.h>
 #endif
 
-#ifdef USE_EMX
-#include <sys/types.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
-
 #include "externs.h"
 
 #include "abl-show.h"
@@ -329,10 +319,6 @@ int main( int argc, char *argv[] )
 
 #ifdef UNIX
     unixcurses_shutdown();
-#endif
-
-#ifdef USE_EMX
-    deinit_emx();
 #endif
 
     return 0;
@@ -2727,10 +2713,6 @@ static bool initialise(void)
 
 #ifdef DOS
     directvideo = 1;
-#endif
-
-#ifdef USE_EMX
-    init_emx();
 #endif
 
     seed_rng();

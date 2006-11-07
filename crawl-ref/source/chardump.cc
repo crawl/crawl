@@ -24,20 +24,10 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
+#if !defined(__IBMCPP__)
 #include <unistd.h>
 #endif
 #include <ctype.h>
-
-#ifdef USE_EMX
-#include <sys/types.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
 
 #ifdef DOS
 #include <conio.h>
