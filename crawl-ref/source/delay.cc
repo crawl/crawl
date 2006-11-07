@@ -797,18 +797,17 @@ void run_macro(const char *macroname)
 #endif
 }
 
-static bool userdef_interrupt_activity( activity_interrupt_type ai, 
+// Returns true if the delay should be interrupted, false if the user function
+// had no opinion on the matter, -1 if the delay should not be interrupted.
+static int userdef_interrupt_activity( const delay_queue_item &idelay,
+                                        activity_interrupt_type ai, 
                                         const activity_interrupt_data &at )
 {
-    const int delay = current_delay_action();
+    const int delay = idelay.type;
 #ifdef CLUA_BINDINGS
     lua_State *ls = clua.state();
     if (!ls || ai == AI_FORCE_INTERRUPT)
-    {
-        if (ai == AI_FORCE_INTERRUPT || delay == DELAY_MACRO)
-            stop_delay();
         return (true);
-    }
 
     // Kludge: We have to continue to support ch_stop_run. :-(
     if (is_run_delay(delay) && you.running && ai == AI_SEE_MONSTER)
@@ -818,10 +817,10 @@ static bool userdef_interrupt_activity( activity_interrupt_type ai,
                         (const monsters *) at.data, &stop_run))
         {
             if (stop_run)
-                stop_running();
+                return (true);
 
             // No further processing.
-            return (false);
+            return (-1);
         }
 
         // If we get here, ch_stop_run wasn't defined, fall through to the
@@ -839,28 +838,38 @@ static bool userdef_interrupt_activity( activity_interrupt_type ai,
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return false;
+            return (-1);
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-        {
-            stop_delay();
-            return true;
-        }
+            return (true);
     }
 
     if (delay == DELAY_MACRO &&
                 clua.callbooleanfn(true, "c_interrupt_macro",
                     "sA", interrupt_name, &at))
-        stop_delay();
+        return (true);
 
-#else
-    if (delay == DELAY_MACRO)
-        stop_delay();
 #endif
-    return true;
+    return (false);
+}
+
+// Returns true if the activity should be interrupted, false otherwise.
+static bool should_stop_activity(const delay_queue_item &item,
+                                 activity_interrupt_type ai,
+                                 const activity_interrupt_data &at)
+{
+    int userd = userdef_interrupt_activity(item, ai, at);
+
+    // If the user script wanted to stop the activity or cease processing,
+    // do so.
+    if (userd)
+        return (userd == 1);
+
+    return (ai == AI_FORCE_INTERRUPT || 
+            (Options.activity_interrupts[item.type][ai]));
 }
 
 void interrupt_activity( activity_interrupt_type ai, 
@@ -870,12 +879,41 @@ void interrupt_activity( activity_interrupt_type ai,
     if (delay == DELAY_NOT_DELAYED)
         return;
 
-    if (!userdef_interrupt_activity(ai, at) || !you_are_delayed())
-        return;
-    
-    if (ai == AI_FORCE_INTERRUPT || 
-            (Options.activity_interrupts[delay][ai]))
+    // First try to stop the current delay.
+    const delay_queue_item &item = you.delay_queue.front();
+
+    if (should_stop_activity(item, ai, at))
+    {
         stop_delay();
+        return;
+    }
+
+    // Check the other queued delays; the first delay that is interruptible
+    // will kill itself and all subsequent delays. This is so that a travel
+    // delay stacked behind a delay such as stair/autopickup will be killed
+    // correctly by interrupts that the simple stair/autopickup delay ignores.
+    for (int i = 1, size = you.delay_queue.size(); i < size; ++i)
+    {
+        const delay_queue_item &it = you.delay_queue[i];
+        if (should_stop_activity(it, ai, at))
+        {
+            // Do we have a queued run delay? If we do, flush the delay queue
+            // so that stop running Lua notifications happen.
+            for (int j = i + 1; j < size; ++j)
+            {
+                if (is_run_delay( you.delay_queue[j].type ))
+                {
+                    stop_delay();
+                    return;
+                }
+            }
+
+            // Non-run queued delays can be discarded without any processing.
+            you.delay_queue.erase( you.delay_queue.begin() + i,
+                                   you.delay_queue.end() );
+            break;
+        }
+    }
 }
 
 static const char *activity_interrupt_names[] =
