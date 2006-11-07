@@ -56,12 +56,12 @@ Building on Linux (or other Unixes)
   Unixes such as Solaris (Solaris cc might work, but it's not been tested).
 
 * Make sure you have libcurses or libncurses. If you're using libcurses, edit
-  makefile.lnx to match.
+  makefile.unix to match.
 
 * cd to the source directory (you can safely ignore the dolinks.sh and 
   domake.sh scripts).
 
-* Edit makefile and make sure that MAKEFILE=makefile.lnx is uncommented and all
+* Edit makefile and make sure that MAKEFILE=makefile.unix is uncommented and all
   other MAKEFILE= lines are commented out.
 
 * Edit AppHdr.h and check that SAVE_DIR_PATH, SAVE_PACKAGE_CMD and 
@@ -73,7 +73,7 @@ Building on Linux (or other Unixes)
 
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
-  then add -llua to your LIB = line in makefile.lnx, and rebuild to compile with
+  then add -llua to your LIB = line in makefile.unix, and rebuild to compile with
   Lua support.
 
 

@@ -37,7 +37,7 @@ debug:
 	$(MAKE) $(OTHER) -f $(MAKEFILE) DEBUG_CRAWL=y debug EXTRA_FLAGS='-g -DFULLDEBUG -DWIZARD'
 
 # [dshaligram] The individual makefile need not necessarily support 
-# package-source; only makefile.lnx does at the moment.
+# package-source; only makefile.unix does at the moment.
 package-source:
 	$(MAKE) -f $(MAKEFILE) package-source
 
