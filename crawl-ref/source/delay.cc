@@ -803,8 +803,8 @@ static int userdef_interrupt_activity( const delay_queue_item &idelay,
                                         activity_interrupt_type ai, 
                                         const activity_interrupt_data &at )
 {
-    const int delay = idelay.type;
 #ifdef CLUA_BINDINGS
+    const int delay = idelay.type;
     lua_State *ls = clua.state();
     if (!ls || ai == AI_FORCE_INTERRUPT)
         return (true);
