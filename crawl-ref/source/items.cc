@@ -2616,8 +2616,14 @@ void handle_time( long time_delta )
     // only check for badness once every other turn
     if (coinflip())
     {
+        // [ds] Be less harsh with glow mutation; Brent and Mark Mackey note
+        // that the commented out random2(X) <= MC check was a bug. I've
+        // uncommented it but dropped the roll sharply from 150. (Brent used
+        // the original roll of 150 for 4.1.2, but I think players are
+        // sufficiently used to beta 26's unkindness that we can use a lower
+        // roll.)
         if (you.magic_contamination >= 5
-            /* && random2(150) <= you.magic_contamination */)
+            && random2(50) <= you.magic_contamination)
         {
             mpr("Your body shudders with the violent release of wild energies!", MSGCH_WARN);
 
