@@ -2175,7 +2175,7 @@ void fire_tracer(struct monsters *monster, struct bolt &pbolt)
     // foe ratio for summon gtr. demons & undead -- they may be
     // summoned, but they're hostile and would love nothing better
     // than to nuke the player and his minions
-    if (monster->attitude != ATT_FRIENDLY)
+    if (pbolt.is_friendly && monster->attitude != ATT_FRIENDLY)
         pbolt.foe_ratio = 25;
 
     // fire!
@@ -3249,7 +3249,8 @@ static int beam_source(const bolt &beam)
 // return amount of range used up by affectation of this monster
 static int affect_monster(struct bolt &beam, struct monsters *mon)
 {
-    int tid = mgrd[mon->x][mon->y];
+    const int tid = mgrd[mon->x][mon->y];
+    const int mons_type = menv[tid].type;
     int hurt;
     int hurt_final;
 
@@ -3280,15 +3281,15 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         if (beam.is_tracer)
         {
             // enchant case -- enchantments always hit, so update target immed.
-            if (beam.is_friendly ^ mons_friendly(mon))
+            if (beam.is_friendly != mons_friendly(mon))
             {
                 beam.foe_count += 1;
-                beam.foe_power += mons_power(tid);
+                beam.foe_power += mons_power(mons_type);
             }
             else
             {
                 beam.fr_count += 1;
-                beam.fr_power += mons_power(tid);
+                beam.fr_power += mons_power(mons_type);
             }
 
             return (range_used_on_hit(beam));
@@ -3405,15 +3406,15 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
             // fireball at another fire giant, and it only took
             // 1/3 damage, then power of 5 would be applied to
             // foe_power or fr_power.
-            if (beam.is_friendly ^ mons_friendly(mon))
+            if (beam.is_friendly != mons_friendly(mon))
             {
                 beam.foe_count += 1;
-                beam.foe_power += hurt_final * mons_power(tid) / hurt;
+                beam.foe_power += 2 * hurt_final * mons_power(mons_type) / hurt;
             }
             else
             {
                 beam.fr_count += 1;
-                beam.fr_power += hurt_final * mons_power(tid) / hurt;
+                beam.fr_power += 2 * hurt_final * mons_power(mons_type) / hurt;
             }
         }
         // either way, we could hit this monster, so return range used
