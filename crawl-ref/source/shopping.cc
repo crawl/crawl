@@ -48,6 +48,66 @@ static void shop_set_ident_type(int i, id_fix_arr &shop_id,
                                 unsigned char base_type, unsigned char sub_type);
 static void shop_uninit_id(int i, const id_fix_arr &shop_id);
 
+static std::string hyphenated_suffix(char prev, char last)
+{
+    std::string s;
+    if (prev > last + 2)
+        s += "</w>-<w>";
+    else if (prev == last + 2)
+        s += (char) (last + 1);
+
+    if (prev != last)
+        s += prev;
+    return (s);
+}
+
+static std::string purchase_keys(const std::string &s)
+{
+    if (s.empty())
+        return "";
+
+    std::string list = "<w>" + s.substr(0, 1);
+    char last = s[0];
+    for (int i = 1; i < (int) s.length(); ++i)
+    {
+        if (s[i] == s[i - 1] + 1)
+            continue;
+
+        char prev = s[i - 1];
+        list += hyphenated_suffix(prev, last);
+        list += (last = s[i]);
+    }
+
+    list += hyphenated_suffix( s[s.length() - 1], last );
+    list += "</w>";
+    return (list);
+}
+
+static void list_shop_keys(const std::string &purchasable)
+{
+    char buf[200];
+    gotoxy(1, 23);
+
+    std::string pkeys = purchase_keys(purchasable);
+    if (pkeys.length())
+        pkeys = "[" + pkeys + "] Buy Item";
+
+    snprintf(buf, sizeof buf,
+            "[<w>x</w>/<w>Esc</w>] Exit       [<w>v</w>] Examine Items  %s",
+            pkeys.c_str());
+
+    formatted_string fs = formatted_string::parse_string(buf);
+    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.display();
+    gotoxy(1, 24);
+
+    fs = formatted_string::parse_string(
+            "[<w>?</w>/<w>*</w>]   Inventory  "
+            "[<w>\\</w>] Known Items");
+    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.display();
+}
+
 char in_a_shop( char shoppy, id_arr id )
 {
     // easier to work with {dlb}
@@ -60,6 +120,7 @@ char in_a_shop( char shoppy, id_arr id )
     unsigned int gp_value = 0;
     char i;
     unsigned char ft;
+    std::string purchasable;
 
 #ifdef DOS_TERM
     char buffer[4800];
@@ -125,8 +186,11 @@ char in_a_shop( char shoppy, id_arr id )
 
     itty = igrd[0][5 + shoppy];
 
+    purchasable.clear();
     for (i = 1; i < 18; i++)
     {
+        const char c = i + 96;
+
         gotoxy(1, i);
 
         gp_value = greedy * item_value( mitm[itty], id );
@@ -136,7 +200,11 @@ char in_a_shop( char shoppy, id_arr id )
 
 	bool can_afford = (you.gold >= gp_value);
 	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
-	cprintf("%c - ", i+96);
+
+        if (can_afford)
+            purchasable += c;
+
+	cprintf("%c - ", c);
 
         textcolor((i % 2) ? WHITE : LIGHTGREY);
 
@@ -164,7 +232,7 @@ char in_a_shop( char shoppy, id_arr id )
 
     textcolor(LIGHTGREY);
 
-    shop_print("Type letter to buy item, x/Esc to leave, ?/* for inventory, v to examine.", 23);
+    list_shop_keys(purchasable);
 
   purchase:
     snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
@@ -174,13 +242,23 @@ char in_a_shop( char shoppy, id_arr id )
     shop_print(info, 19);
 
     textcolor(CYAN);
-    shop_print("What would you like to purchase?", 20);
+
+    snprintf(st_pass, sizeof st_pass, 
+            "What would you like to %s?",
+                purchasable.length()? "purchase" : "do");
+    shop_print(st_pass, 20);
     textcolor(LIGHTGREY);
 
     ft = get_ch();
 
     if (ft == 'x' || ft == ESCAPE)
         goto goodbye;
+
+    if (ft == '\\')
+    {
+        check_item_knowledge();
+        goto print_stock;
+    }
 
     if (ft == 'v')
     {

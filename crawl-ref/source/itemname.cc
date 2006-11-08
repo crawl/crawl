@@ -2010,22 +2010,10 @@ void check_item_knowledge()
     if (items.empty())
 	mpr("You don't recognise anything yet!");
     else {    
-
-#ifdef DOS_TERM
-	char buffer[4800];
-	gettext(1, 1, 80, 25, buffer);
-	window(1, 1, 80, 25);
-#endif
-
-	clrscr();
 	select_items( items, "You recognise:", true );
 	for ( std::vector<const item_def*>::iterator iter = items.begin();
 	      iter != items.end(); ++iter )
 	    delete *iter;	    
-
-#ifdef DOS_TERM
-	puttext(1, 1, 80, 25, buffer);
-#endif
 
 	redraw_screen();
     }
