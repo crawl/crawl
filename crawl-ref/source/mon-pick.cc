@@ -2230,6 +2230,11 @@ static int mons_hallzot_rare(int mcls)
     case MONS_SHADOW_DRAGON:
     case MONS_DEATH_DRAKE:
         return 30;
+    case MONS_GUARDIAN_MUMMY:
+    case MONS_ELECTRIC_GOLEM:
+    case MONS_CURSE_TOE:
+        return 20;
+
     case MONS_MOTTLED_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
@@ -2238,11 +2243,8 @@ static int mons_hallzot_rare(int mcls)
     case MONS_PURPLE_DRACONIAN:
     case MONS_PALE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
-        return 21;
-    case MONS_GUARDIAN_MUMMY:
-    case MONS_ELECTRIC_GOLEM:
-    case MONS_CURSE_TOE:
-        return 20;
+        return 18;
+
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_SCORCHER:
@@ -2250,7 +2252,8 @@ static int mons_hallzot_rare(int mcls)
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
-        return 19;
+        return 16;
+
     case MONS_KILLER_KLOWN:
     case MONS_ORB_OF_FIRE:
         return 15;

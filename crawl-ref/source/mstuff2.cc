@@ -1550,7 +1550,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.name = "ball of steam";
         beam.range = 6;
         beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 7 + (power / 14) );
+        beam.damage = dice_def( 3, 7 + (power / 15) );
         beam.hit = 11 + power / 20;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
