@@ -1289,7 +1289,7 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key.find("cset") == 0)
     {
         std::string cset = key.substr(4);
-        if (cset[0] == '_')
+        if (!cset.empty() && cset[0] == '_')
             cset = cset.substr(1);
 
         char_set_type cs = NUM_CSET;

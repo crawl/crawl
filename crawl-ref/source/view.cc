@@ -1803,6 +1803,29 @@ static int find_feature( const std::vector<coord_def>& features,
     return 0;
 }
 
+#ifdef USE_CURSES
+// NOTE: This affects libunix.cc draw state; use this just before setting
+// textcolour and drawing a character and call set_altcharset(false)
+// after you're done drawing.
+//
+static int cset_adjust(int raw)
+{
+    if (Options.char_set != CSET_ASCII) 
+    {
+        // switch to alternate char set for 8-bit characters:
+        set_altcharset( raw > 127 );
+
+        // shift the DEC line drawing set:
+        if (Options.char_set == CSET_DEC 
+            && raw >= 0xE0)
+        {
+            raw &= 0x7F;
+        }
+    }
+    return (raw);
+}
+#endif
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
@@ -1976,11 +1999,19 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             if (i == 0 && j > 0)
                 gotoxy( 1, j + 1 );
 
+            int ch = buffer2[bufcount2 - 2];
+#ifdef USE_CURSES
+            ch = cset_adjust( ch );
+#endif
             textcolor( buffer2[bufcount2 - 1] );
-            putch( buffer2[bufcount2 - 2] );
+            putch(ch);
 #endif
         }
     }
+
+#ifdef USE_CURSES
+    set_altcharset(false);
+#endif
 
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, buffer2);
@@ -3468,18 +3499,7 @@ void viewwindow(bool draw_it, bool do_updates)
                 for (count_x = 0; count_x < X_SIZE; count_x++)
                 {
 #ifdef USE_CURSES
-                    if (Options.char_set != CSET_ASCII) 
-                    {
-                        // switch to alternate char set for 8-bit characters:
-                        set_altcharset( (buffy[bufcount] > 127) );
-
-                        // shift the DEC line drawing set:
-                        if (Options.char_set == CSET_DEC 
-                            && buffy[bufcount] >= 0xE0)
-                        {
-                            buffy[bufcount] &= 0x7F;
-                        }
-                    }
+                    buffy[bufcount] = cset_adjust( buffy[bufcount] );
 #endif
                     textcolor( buffy[bufcount + 1] );
                     putch( buffy[bufcount] );
