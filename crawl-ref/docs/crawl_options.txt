@@ -67,7 +67,8 @@ The contents of this text are:
 		note_messages, note_all_spells
 6-  Miscellaneous.
 6-a	All OS.
-		macro_meta_entry, wiz_mode, colours, char_set
+		macro_meta_entry, wiz_mode, colours, char_set, cset_ascii,
+                cset_ibm, cset_dec, feature.
 6-b	DOS and Windows.
 		dos_use_background_intensity
 6-c     Unix
@@ -944,6 +945,60 @@ char_set = (ascii | ibm | dec)
 	Chooses different character sets for the game play screen. DOS and
         Windows users will want to use the IBM character set, Unix users will
         prefer DEC or plain ASCII.
+
+cset_ascii, cset_ibm, cset_dec, cset_any
+        Can be used to change individual characters in a specific character 
+        set (the character set used for display is determined by the char_set 
+        option). The syntax is the same for all of these; cset_any changes
+        characters in all character sets.
+
+cset_XXX = <dungeon_character_name : symbol>
+        a list of these is allowed, as well.
+
+        The possible entries for dungeon_character_name are:
+           wall, wall_magic, floor, floor_magic, door_open, door_closed, trap,
+           stairs_down, stairs_up, altar, arch, fountain, wavy, statue,
+           invis_exposed, item_detected, item_orb, item_weapon, item_armour,
+           item_wand, item_food, item_scroll, item_ring, item_potion,
+           item_missile, item_book, item_stave, item_miscellany, item_corpse,
+           item_gold, item_amulet, cloud
+        Most of these are self-explanatory. "arch" is used for shops and
+        portals.  "floor_magic" and "wall_magic" are used to display
+        magic-mapped squares on the level map. "invis_exposed" is the character
+        for water creatures submerged in shallow water, or invisible creatures
+        wading in shallow water.
+
+        Symbols can be specified using a letter, or by a number (decimal code).
+        For an example on IBM displays,
+            cset_ibm = wall:219, arch:0
+        shows walls as solid blocks and shops and portals as '0'.
+
+feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
+                    <levelmap_magic_colour>, <levelmap_seen_colour> }
+        where <regex> is a regular expression describing a dungeon feature. This
+        regex should match the description when using the 'x' command. In case
+        the regex matches several descriptions, all such features are affected.
+
+        The list in {...} specifies the appearance of the dungeon feature(s),
+        and should be self-explanatory. <symbol> can be used to override the
+        above cset options, or also to distinguish among subtypes of a
+        character.
+
+        'magic' always refers to magic mapping. So the <magicmap symbol> entry
+        determines what symbol will be used for features only detected via magic
+        mapping.
+
+        Leading parameters in the {...} list can be omitted by leaving them 
+        blank and using placeholder commas. Trailing parameters can be omitted
+        without placeholder commas.
+
+        Multiple feature option lines can be used, as can multiple feature
+        descriptions strung together on the same line separated by semicolons.
+
+        Examples:
+            feature = rock wall { , , red }  # shows rock walls in red
+            feature = metal wall {#}         # use '#' for metal walls
+
 
 6-b	DOS and Windows.
 ------------------------
