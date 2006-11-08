@@ -31,6 +31,7 @@
 #include "externs.h"
 #include "fight.h"
 #include "itemprop.h"
+#include "menu.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -1787,11 +1788,37 @@ JOB_PALADIN:
 
 ************************************************************* */
 
+static const int skill_display_order[] = {
+    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
+    SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
+
+    SK_BLANK_LINE,
+
+    SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_DARTS, SK_RANGED_COMBAT,
+
+    SK_BLANK_LINE,
+   
+    SK_ARMOUR, SK_DODGING, SK_STEALTH, SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS,
+
+    SK_BLANK_LINE,
+
+    SK_SPELLCASTING, SK_CONJURATIONS, SK_ENCHANTMENTS, SK_SUMMONINGS,
+    SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMIGRATION, SK_DIVINATIONS,
+    SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
+
+    SK_BLANK_LINE,
+
+    SK_INVOCATIONS, SK_EVOCATIONS,
+};
+
+static const int ndisplayed_skills =
+            sizeof(skill_display_order) / sizeof(*skill_display_order);
+
 void show_skills(void)
 {
     int i;
     int x;
-    char lcount;
+    menu_letter lcount;
 
     const int num_lines = get_number_of_lines();
 
@@ -1823,21 +1850,30 @@ void show_skills(void)
     // Don't want the help line to appear too far down a big window.
     int bottom_line = ((num_lines > 30) ? 30 : num_lines);
 
-    for (x = 0; x < NUM_SKILLS; x++)
+    for (i = 0; i < ndisplayed_skills; ++i)
     {
-        /* spells in second column */
-        if ((x == SK_SPELLCASTING && scrcol != 40) || scrln > bottom_line - 3)
+        x = skill_display_order[i];
+
+        if (scrln > bottom_line - 3 || x == SK_COLUMN_BREAK)
         {
-            scrln = 3;
-            scrcol = 40;
+            if (scrcol != 40)
+            {
+                scrln = 3;
+                scrcol = 40;
+            }
+            if (x == SK_COLUMN_BREAK)
+                continue;
+        }
+
+        if (x == SK_BLANK_LINE)
+        {
+            scrln++;
+            continue;
         }
 
         gotoxy(scrcol, scrln);
 
-#if DEBUG_DIAGNOSTICS
-        // In diagnostic mode we show skills at 0, but only real skills
-        if (x != SK_UNUSED_1 && (x <= SK_UNARMED_COMBAT || x >= SK_SPELLCASTING))
-#else
+#ifndef DEBUG_DIAGNOSTICS
         if (you.skills[x] > 0)
 #endif
         {
@@ -1853,19 +1889,9 @@ void show_skills(void)
             if (you.skills[x] == 0)
                 putch(' ');
             else
-            {
-                putch(lcount);
-                if (lcount == 'z')
-                    lcount = 'A';
-                else
-                    lcount++;
-            }
+                putch(lcount++);
 #else
-            putch(lcount);
-            if (lcount == 'z')
-                lcount = 'A';
-            else
-                lcount++;
+            putch(lcount++);
 #endif
 
             cprintf( " %c %-14s Skill %2d",
@@ -1900,13 +1926,6 @@ void show_skills(void)
 
             scrln++;
         }
-
-        /* Extra CR between classes of weapons and such things */
-        if (x == SK_STAVES || x == SK_RANGED_COMBAT || x == SK_TRAPS_DOORS
-            || x == SK_UNARMED_COMBAT || x == SK_POISON_MAGIC)
-        {
-            scrln++;
-        }
     }
 
     // if any more skills added, must adapt letters to go into caps
@@ -1927,21 +1946,22 @@ void show_skills(void)
         {
             lcount = 'a';       // toggle skill practise
 
-            for (i = 0; i < 50; i++)
+            for (i = 0; i < ndisplayed_skills; i++)
             {
-                if (you.skills[i] == 0)
+                x = skill_display_order[i];
+                if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
+                    continue;
+
+                if (you.skills[x] == 0)
                     continue;
 
                 if (get_thing == lcount)
                 {
-                    you.practise_skill[i] = (you.practise_skill[i]) ? 0 : 1;
+                    you.practise_skill[x] = !you.practise_skill[x];
                     break;
                 }
 
-                if (lcount == 'z')
-                    lcount = 'A';
-                else
-                    lcount++;
+                ++lcount;
             }
 
             goto reprint_stuff;

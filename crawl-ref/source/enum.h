@@ -2923,6 +2923,11 @@ enum size_type
     SIZE_CHARACTER          // transformations that don't change size
 };
 
+// [dshaligram] If you add a new skill, update skills2.cc, specifically
+// the skills[] array and skill_display_order[]. New skills must go at the
+// end of the list or in the unused skill numbers. NEVER rearrange this enum or
+// move existing skills to new numbers; save file compatibility depends on this
+// order.
 enum skill_type
 {
     SK_FIGHTING,                       //    0
