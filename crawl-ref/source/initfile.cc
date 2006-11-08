@@ -399,6 +399,7 @@ static void set_default_activity_interrupts()
         "interrupt_descending_stairs =",
         "interrupt_uninterruptible =",
         "interrupt_autopickup =",
+        "interrupt_weapon_swap =",
         NULL
     };
 
