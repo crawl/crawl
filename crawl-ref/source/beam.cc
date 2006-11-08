@@ -2408,6 +2408,17 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
     }                           // if (thing_throw == 2) ...
 }
 
+// Returns true if the beam hits the player, fuzzing the beam if necessary
+// for monsters without see invis firing tracers at the player.
+static bool found_player(const bolt &beam, int x, int y)
+{
+    const bool needs_fuzz = beam.is_tracer && !beam.can_see_invis 
+                            && you.invis;
+    const int dist = needs_fuzz? 2 : 0;
+
+    return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
+}
+
 int affect(struct bolt &beam, int x, int y)
 {
     // extra range used by hitting something
@@ -2439,7 +2450,7 @@ int affect(struct bolt &beam, int x, int y)
         rangeUsed += affect_place_clouds(beam, x, y);
 
     // if player is at this location, try to affect unless term_on_target
-    if (x == you.x_pos && y == you.y_pos)
+    if (found_player(beam, x, y))
     {
         // Done this way so that poison blasts affect the target once (via
         // place_cloud) and explosion spells only affect the target once
@@ -2859,6 +2870,36 @@ static void beam_ouch( int dam, struct bolt &beam )
     }
 }
 
+// [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
+// an invisible player. This makes invisibility slightly more powerful.
+static bool fuzz_invis_tracer(bolt &beem)
+{
+    // Did the monster have a rough idea of where you are?
+    int dist = grid_distance(beem.target_x, beem.target_y, 
+                             you.x_pos, you.y_pos);
+
+    // No, ditch this.
+    if (dist > 2)
+        return (false);
+
+    // Apply fuzz now.
+    int xfuzz = random_range(-2, 2),
+        yfuzz = random_range(-2, 2);
+
+    const int newx = beem.target_x + xfuzz,
+              newy = beem.target_y + yfuzz;
+    if (in_bounds(newx, newy)
+            && (newx != beem.source_x
+                || newy != beem.source_y))
+    {
+        beem.target_x = newx;
+        beem.target_y = newy;
+    }
+
+    // Fire away!
+    return (true);
+}
+
 // return amount of extra range used up by affectation of the player
 static int affect_player( struct bolt &beam )
 {
@@ -2872,11 +2913,8 @@ static int affect_player( struct bolt &beam )
     if (beam.is_tracer)
     {
         // check can see player 
-        // XXX: note the cheat to allow for ME_ALERT to target the player...
-        // replace this with a time since alert system, rather than just
-        // peeking to see if the character is still there. -- bwr
         if (beam.can_see_invis || !you.invis
-            || (you.x_pos == beam.target_x && you.y_pos == beam.target_y))
+                || fuzz_invis_tracer(beam))
         {
             if (beam.is_friendly)
             {

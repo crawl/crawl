@@ -1439,13 +1439,18 @@ static void handle_behaviour(struct monsters *mon)
         if (!see_grid(mon->x, mon->y))
             proxPlayer = false;
 
+        const int intel = mons_intel(mon->type);
         // now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'
         if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
-            && one_chance_in(3))
-        {
+                && one_chance_in(3))
             proxPlayer = true;
-        }
+
+        // [dshaligram] Very smart monsters have a chance of cluing in to
+        // invisible players in various ways.
+        else if ((intel == I_NORMAL && one_chance_in(10))
+                || (intel == I_HIGH && one_chance_in(6)))
+            proxPlayer = true;
     }
 
     // set friendly target, if they don't already have one
