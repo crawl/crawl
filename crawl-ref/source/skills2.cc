@@ -1794,7 +1794,7 @@ static const int skill_display_order[] = {
 
     SK_BLANK_LINE,
 
-    SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_DARTS, SK_RANGED_COMBAT,
+    SK_RANGED_COMBAT, SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_DARTS, 
 
     SK_BLANK_LINE,
    
