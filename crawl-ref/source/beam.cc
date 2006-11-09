@@ -2386,7 +2386,9 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
         // The effect is nigh impossible to perceive.
         switch (item->sub_type)
         {
-        case MI_NEEDLE: chance = 6; break;
+        case MI_NEEDLE:
+            chance = (get_ammo_brand(*item) == SPMSL_CURARE? 3 : 6);
+            break;
         case MI_STONE:  chance = 4; break;
         case MI_DART:   chance = 3; break;
         case MI_ARROW:  chance = 4; break;

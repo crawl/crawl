@@ -1958,10 +1958,10 @@ static void fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
-static int fsim_stat(int stat)
+static int cap_stat(int stat)
 {
     return (stat <  1 ? 1  :
-            stat > 60 ? 60 :
+            stat > 127 ? 127 :
                         stat);
 }
 
@@ -1995,9 +1995,9 @@ static bool debug_fight_sim(int mindex, int missile_slot)
     if (you.experience_level > 27)
         you.experience_level = 27;
 
-    you.strength = fsim_stat(Options.fsim_str);
-    you.intel    = fsim_stat(Options.fsim_int);
-    you.dex      = fsim_stat(Options.fsim_dex);
+    you.strength = cap_stat(Options.fsim_str);
+    you.intel    = cap_stat(Options.fsim_int);
+    you.dex      = cap_stat(Options.fsim_dex);
 
     fsim_title(ostat, mindex, missile_slot);
     for (int wskill = 0; wskill <= 27; ++wskill)
@@ -2257,4 +2257,26 @@ void debug_make_shop()
     link_items();
     mprf("Done.");
 }
+
+void debug_set_stats()
+{
+    char buf[80];
+    mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
+    if (cancelable_get_line(buf, sizeof buf))
+        return;
+
+    int sstr = you.strength,
+        sdex = you.dex,
+        sint = you.intel;
+    sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
+
+    you.max_strength = you.strength = cap_stat(sstr);
+    you.max_dex      = you.dex      = cap_stat(sdex);
+    you.max_intel    = you.intel    = cap_stat(sint);
+
+    you.redraw_strength = true;
+    you.redraw_dexterity = true;
+    you.redraw_intelligence = true;
+}
+
 #endif

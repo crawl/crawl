@@ -1379,10 +1379,20 @@ void gain_piety(char pgn)
     }
 
     // slow down gain at upper levels of piety
-    if (you.piety > 199
-        || (you.piety > 150 && one_chance_in(3))
-        || (you.piety > 100 && one_chance_in(3)))
-        return;
+    if (you.religion != GOD_SIF_MUNA)
+    {
+        if (you.piety > 199
+            || (you.piety > 150 && one_chance_in(3))
+            || (you.piety > 100 && one_chance_in(3)))
+            return;
+    }
+    else
+    {
+        // Sif Muna has a gentler taper off because training because
+        // naturally slower as the player gains in spell skills.
+        if (you.piety > 150 && one_chance_in(5))
+            return;
+    }
 
     int old_piety = you.piety;
 

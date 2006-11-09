@@ -256,7 +256,10 @@ char in_a_shop( char shoppy, id_arr id )
 
     if (ft == '\\')
     {
+        shop_uninit_id(shoppy, shop_id);
         check_item_knowledge();
+        shop_init_id(shoppy, shop_id);
+
         goto print_stock;
     }
 
@@ -1712,3 +1715,4 @@ const char *shop_name(int sx, int sy)
 
     return (sh_name);
 }
+

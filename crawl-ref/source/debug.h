@@ -148,5 +148,6 @@ void debug_change_species( void );
 void debug_fight_statistics( bool use_init_defaults );
 void debug_make_trap( void );
 void debug_make_shop( void );
+void debug_set_stats( void );
 
 #endif

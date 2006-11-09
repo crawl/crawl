@@ -686,6 +686,10 @@ static void handle_wizard_command( void )
         magic_mapping(1000, 100);
         break;
 
+    case '@':
+        debug_set_stats();
+        break;
+
     case '^':
         {
             int old_piety = you.piety;
