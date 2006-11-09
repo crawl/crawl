@@ -4390,4 +4390,28 @@ not think it fits into Crawl ... {dlb}
 }
 ,
 
+{
+    MONS_ORANGE_STATUE, '8', LIGHTRED, "orange crystal statue",
+    M_SPECIAL_ABILITY,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
+    0, 10, MONS_CLAY_GOLEM, MONS_ORANGE_STATUE, MH_NONLIVING, 5000,
+    { 0, 0, 0, 0 },
+    { 3, 50, 30, 120 },
+    30, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
+    MONUSE_NOTHING
+}
+,
+
+{
+    MONS_SILVER_STATUE, '8', WHITE, "silver statue",
+    M_SPECIAL_ABILITY,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
+    0, 10, MONS_CLAY_GOLEM, MONS_SILVER_STATUE, MH_NONLIVING, 5000,
+    { 0, 0, 0, 0 },
+    { 3, 50, 0, 120 },
+    30, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
+    MONUSE_NOTHING
+}
+,
+
 #endif

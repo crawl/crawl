@@ -100,5 +100,7 @@ void throw_type(int lnchClass, int lnchType, int wepClass, int wepType,
     bool &launched, bool &thrown);
 
 
+bool orange_statue_effects(monsters *mons);
+bool silver_statue_effects(monsters *mons);
 
 #endif

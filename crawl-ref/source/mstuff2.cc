@@ -1837,3 +1837,39 @@ static unsigned char monster_abjuration(int pow, bool test)
 
     return result;
 }                               // end monster_abjuration()
+
+bool silver_statue_effects(monsters *mons)
+{
+    if ((mons_player_visible(mons) || one_chance_in(3))
+            && !one_chance_in(3))
+    {
+        char wc[30];
+
+        weird_colours( random2(256), wc );
+        snprintf(info, INFO_SIZE, "'s eyes glow %s.", wc);
+        simple_monster_message(mons, info, MSGCH_WARN);
+
+        create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
+                                                     : DEMON_LESSER)),
+                                 ENCH_ABJ_V, BEH_HOSTILE,
+                                 you.x_pos, you.y_pos,
+                                 MHITYOU, 250 );
+        return (true);
+    }
+    return (false);
+}
+
+bool orange_statue_effects(monsters *mons)
+{
+    if ((mons_player_visible(mons) || one_chance_in(3))
+            && !one_chance_in(3))
+    {
+        mpr("A hostile presence attacks your mind!", MSGCH_WARN);
+
+        miscast_effect( SPTYP_DIVINATION, random2(15), random2(150), 100,
+                        "an orange crystal statue" );
+        return (true);
+    }
+
+    return (false);
+}

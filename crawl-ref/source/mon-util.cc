@@ -316,6 +316,7 @@ bool mons_class_is_stationary(int type)
                 || type == MONS_PLANT
                 || type == MONS_FUNGUS
                 || type == MONS_CURSE_SKULL
+                || mons_is_statue(type)
                 || mons_is_mimic(type));
 }
 
@@ -335,6 +336,11 @@ bool invalid_monster_class(int mclass)
             || mclass >= NUM_MONSTERS 
             || mon_entry[mclass] == -1
             || mon_entry[mclass] == MONS_PROGRAM_BUG);
+}
+
+bool mons_is_statue(int mc)
+{
+    return (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE);
 }
 
 bool mons_is_mimic( int mc )
@@ -889,6 +895,11 @@ int exper_value( const struct monsters *monster )
 
     // early out for no XP monsters
     if (mons_class_flag(mclass, M_NO_EXP_GAIN))
+        return (0);
+
+    // no experience for destroying furniture, even if the furniture started
+    // the fight.
+    if (mons_is_statue(mclass))
         return (0);
 
     // These undead take damage to maxhp, so we use only HD. -- bwr
@@ -1623,6 +1634,7 @@ bool mons_looks_stabbable(const monsters *m)
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
                 && !mons_is_mimic(m->type)
+                && !mons_is_statue(m->type)
                 && !mons_friendly(m)
                 && mons_is_sleeping(m));
 }
@@ -1632,6 +1644,7 @@ bool mons_looks_distracted(const monsters *m)
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
                 && !mons_is_mimic(m->type)
+                && !mons_is_statue(m->type)
                 && !mons_friendly(m)
                 && ((m->foe != MHITYOU && !mons_is_batty(m))
                     || mons_is_confused(m)

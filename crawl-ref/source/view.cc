@@ -301,15 +301,6 @@ static void get_symbol( unsigned int object, unsigned short *ch,
         // Note anything we see that's notable
         if (Feature[object].notable)
             seen_notable_thing( object );
-
-        // These effects apply every turn when in sight however.
-        if (Feature[object].seen_effect)
-        {
-            if (object == DNGN_SILVER_STATUE)
-                you.visible_statue[ STATUE_SILVER ] = 1;
-            else if (object == DNGN_ORANGE_CRYSTAL_STATUE)
-                you.visible_statue[ STATUE_ORANGE_CRYSTAL ] = 1;
-        }
     }
     else
     {

@@ -6148,6 +6148,16 @@ void describe_monsters(int class_described, unsigned char which_mons)
             "covered in thick red scales and thorns.";
         break;
 
+    case MONS_ORANGE_STATUE:
+        description += "An intricately carved statue of glittering orange "
+            "crystal. Its eyes fix on yours with a piercing gaze.";
+        break;
+
+    case MONS_SILVER_STATUE:
+        description += "A beautiful filigreed statue of silver. Its eyes "
+            "glow with an otherworldly radiance.";
+        break;
+
     case MONS_PROGRAM_BUG:
     default:
         description += "If this monster is a \"program bug\", then it's "

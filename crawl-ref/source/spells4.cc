@@ -191,6 +191,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
     case MONS_ICE_BEAST:        // 3/2 damage
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
+    case MONS_SILVER_STATUE:
         dam_dice.num = 4;
         break;
 
@@ -201,6 +202,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
     case MONS_STONE_GOLEM:
     case MONS_IRON_GOLEM:
     case MONS_CRYSTAL_GOLEM:
+    case MONS_ORANGE_STATUE:
     case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
     case MONS_SKELETAL_DRAGON:
@@ -2474,6 +2476,27 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             blast.damage.num = 3;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 1;
+            break;
+
+        case MONS_SILVER_STATUE:
+        case MONS_ORANGE_STATUE:
+            explode = true;
+            blast.ex_size = 2;
+            if (menv[mon].type == MONS_SILVER_STATUE)
+            {
+                blast.name       = "blast of silver fragments";
+                blast.colour     = WHITE;
+                blast.damage.num = 3;
+            }
+            else
+            {
+                blast.name       = "blast of orange crystal shards";
+                blast.colour     = LIGHTRED;
+                blast.damage.num = 6;
+            }
+
+            if (player_hurt_monster(mon, roll_dice( blast.damage )))
+                blast.damage.num += 2;
             break;
 
         case MONS_CRYSTAL_GOLEM:

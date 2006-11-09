@@ -451,7 +451,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
  *                                                                        *
  **************************************************************************
  */
-    bool helpless = mons_class_flag(defender->type, M_NO_EXP_GAIN);
+    bool helpless = mons_class_flag(defender->type, M_NO_EXP_GAIN)
+                    || mons_is_statue(defender->type);
 
     if (mons_friendly(defender))
         did_god_conduct(DID_ATTACK_FRIEND, 5);

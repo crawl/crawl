@@ -2171,46 +2171,6 @@ static void world_reacts() {
     if (you.fire_shield > 0)
         manage_fire_shield();
 
-    // There used to be signs of intent to have statues as some sort
-    // of more complex state machine... I'm boiling them down to bare
-    // basics for now.  -- bwr
-    if (you.visible_statue[ STATUE_SILVER ])
-    {
-        interrupt_activity( AI_STATUE );
-
-        if ((!you.invis && one_chance_in(3)) || one_chance_in(5))
-        {
-            char wc[30];
-
-            weird_colours( random2(256), wc );
-            snprintf(info, INFO_SIZE, "The silver statue's eyes glow %s.", wc);
-            mpr( info, MSGCH_WARN );
-
-            create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
-                                                         : DEMON_LESSER)),
-                                     ENCH_ABJ_V, BEH_HOSTILE,
-                                     you.x_pos, you.y_pos,
-                                     MHITYOU, 250 );
-        }
-
-        you.visible_statue[ STATUE_SILVER ] = 0;
-    }
-
-    if (you.visible_statue[ STATUE_ORANGE_CRYSTAL ])
-    {
-        interrupt_activity( AI_STATUE );
-
-        if ((!you.invis && coinflip()) || one_chance_in(4))
-        {
-            mpr("A hostile presence attacks your mind!", MSGCH_WARN);
-
-            miscast_effect( SPTYP_DIVINATION, random2(15), random2(150), 100,
-                            "an orange crystal statue" );
-        }
-
-        you.visible_statue[ STATUE_ORANGE_CRYSTAL ] = 0;
-    }
-
     // food death check:
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
     {

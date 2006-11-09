@@ -579,6 +579,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     // set attitude, behaviour and target
     menv[id].attitude = ATT_HOSTILE;
     menv[id].behaviour = behaviour;
+
+    if (mon_type == MONS_ORANGE_STATUE || mon_type == MONS_SILVER_STATUE)
+        menv[id].behaviour = BEH_WANDER;
+
     menv[id].foe_memory = 0;
 
     // setting attitude will always make the

@@ -2248,6 +2248,10 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
 
+    // Statuary
+    MONS_ORANGE_STATUE,
+    MONS_SILVER_STATUE,
+
     NUM_MONSTERS,                      // used for polymorph 
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
     WANDERING_MONSTER = 2500 // only used in monster placement routines - forced limit checks {dlb}

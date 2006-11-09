@@ -5605,7 +5605,8 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
     int not_used;
 
     // first, set base tile for grids {dlb}:
-    grd[vx][vy] = ((vgrid == 'x') ? DNGN_ROCK_WALL :
+    const int grid =
+        grd[vx][vy] = ((vgrid == 'x') ? DNGN_ROCK_WALL :
                    (vgrid == 'X') ? DNGN_PERMAROCK_WALL :
                    (vgrid == 'c') ? DNGN_STONE_WALL :
                    (vgrid == 'v') ? DNGN_METAL_WALL :
@@ -5740,6 +5741,19 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
             }
         }
         break;
+    }
+
+    if (grid == DNGN_ORANGE_CRYSTAL_STATUE
+            || grid == DNGN_SILVER_STATUE)
+    {
+        const int mtype = 
+            grid == DNGN_ORANGE_CRYSTAL_STATUE? MONS_ORANGE_STATUE
+                                              : MONS_SILVER_STATUE;
+
+        grd[vx][vy] = DNGN_FLOOR;
+
+        place_monster( not_used, mtype, 30, BEH_HOSTILE,
+                       MHITNOT, true, vx, vy, false);
     }
 
     // finally, handle grids that place monsters {dlb}:

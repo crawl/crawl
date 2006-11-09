@@ -1836,7 +1836,8 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         }
 
         // not hasted, slow it
-        if (mons_add_ench(monster, ENCH_SLOW))
+        if (!mons_has_ench(monster, ENCH_SLOW) 
+                && mons_add_ench(monster, ENCH_SLOW))
         {
             // put in an exception for fungi, plants and other things you won't
             // notice slow down.
@@ -3291,6 +3292,9 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 {
     const int tid = mgrd[mon->x][mon->y];
     const int mons_type = menv[tid].type;
+    const int thrower = YOU_KILL(beam.thrower)? KILL_YOU_MISSILE 
+                                              : KILL_MON_MISSILE;
+
     int hurt;
     int hurt_final;
 
@@ -3314,6 +3318,28 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
             // can't see this monster, ignore it
             return 0;
         }
+    }
+    else if ((beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
+            && mons_is_statue(mons_type))
+    {
+        if (!silenced(you.x_pos, you.y_pos))
+        {
+            if (!see_grid( mon->x, mon->y ))
+                mpr("You hear a hideous screaming!", MSGCH_SOUND);
+            else
+                mpr("The statue screams as its substance crumbles away!",
+                        MSGCH_SOUND);
+        }
+        else
+        {
+            if (see_grid( mon->x, mon->y ))
+                mpr("The statue twists and shakes as its substance "
+                        "crumbles away!");
+        }
+        beam.obvious_effect = true;
+        mon->hit_points = 0;
+        monster_die(mon, thrower, beam.beam_source);
+        return (BEAM_STOP);
     }
 
     if (beam.name[0] == '0')
@@ -3524,8 +3550,6 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
     // now hurt monster
     hurt_monster( mon, hurt_final );
-
-    int thrower = YOU_KILL(beam.thrower) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
 
     if (mon->hit_points < 1)
     {

@@ -2344,6 +2344,14 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     switch (mclass)
     {
+    case MONS_ORANGE_STATUE:
+        used = orange_statue_effects(monster);
+        break;
+
+    case MONS_SILVER_STATUE:
+        used = silver_statue_effects(monster);
+        break;
+
     case MONS_BALL_LIGHTNING:
         if (monster->attitude == ATT_HOSTILE
             && distance( you.x_pos, you.y_pos, monster->x, monster->y ) <= 5)
@@ -5215,6 +5223,9 @@ bool hurt_monster(struct monsters * victim, int damage_dealt)
 bool heal_monster(struct monsters * patient, int health_boost,
                   bool permit_growth)
 {
+    if (mons_is_statue(patient->type))
+        return (false);
+
     if (health_boost < 1)
         return (false);
     else if (!permit_growth && patient->hit_points == patient->max_hit_points)
