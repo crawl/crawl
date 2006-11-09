@@ -260,7 +260,12 @@ unsigned long mons_resist(const monsters *mon, unsigned long flags)
 
 bool mons_class_flag(int mc, int bf)
 {
-    return ((smc->bitfields & bf) != 0);
+    const monsterentry *me = smc;
+
+    if (!me)
+        return (false);
+
+    return ((me->bitfields & bf) != 0);
 }                               // end mons_class_flag()
 
 static int scan_mon_inv_randarts( const monsters *mon, int ra_prop )
@@ -434,16 +439,7 @@ int mons_shouts(int mc)
 
 bool mons_is_unique( int mc )
 {
-    if (mc <= MONS_PROGRAM_BUG 
-        || (mc >= MONS_NAGA_MAGE && mc <= MONS_ROYAL_JELLY)
-        || (mc >= MONS_DRACONIAN && mc <= MONS_DRACONIAN_SCORCHER)
-        || (mc >= MONS_ANCIENT_LICH
-            && (mc != MONS_PLAYER_GHOST && mc != MONS_PANDEMONIUM_DEMON)))
-    {
-        return (false);
-    }
-
-    return (true);
+    return (mons_class_flag(mc, M_UNIQUE));
 }
 
 char mons_see_invis( struct monsters *mon )

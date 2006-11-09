@@ -1822,7 +1822,7 @@ enum mons_class_flags
     M_BURROWS           = (1<<18),        // monster digs through rock
     M_EVIL              = (1<<19),        // monster vulnerable to holy spells
 
-    M_ON_FIRE           = (1<<20),        // XXX: Potentially ditchable
+    M_UNIQUE            = (1<<20),        // monster is a unique
     M_FROZEN            = (1<<21),        // XXX: Potentially ditchable
     
 
