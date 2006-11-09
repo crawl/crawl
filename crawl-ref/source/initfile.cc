@@ -68,7 +68,7 @@ int str_to_colour( const std::string &str, int default_colour )
     {
         "fire", "ice", "earth", "electricity", "air", "poison", "water",
         "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
-        "necro", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
+        "death", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
         "slime", "jewel", "elven", "dwarven", "orcish", "gila", "floor",
         "rock", "stone", "random"
     };
