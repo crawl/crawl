@@ -1126,7 +1126,16 @@ bool mutate(int which_mutation, bool failMsg)
 {
     int  mutat = which_mutation;
     bool force_mutation = false;        // is mutation forced?
+    bool demonspawn = false;            // demonspawn mutation?
     int  i;
+
+    if (which_mutation >= 2000)
+    {
+        demonspawn       = true;
+        force_mutation   = true;
+        mutat           -= 2000;
+        which_mutation  -= 2000;
+    }
 
     if (which_mutation >= 1000) // must give mutation without failure
     {
@@ -1137,9 +1146,10 @@ bool mutate(int which_mutation, bool failMsg)
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn in lichform -- haranp
-    if (you.is_undead && !force_mutation) 
+    if (you.is_undead && !demonspawn) 
     {
-	if (wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
+	if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
+                || one_chance_in(10))
         {
             mpr( "Your body decomposes!" );
 
@@ -2173,13 +2183,13 @@ bool perma_mutate(int which_mut, char how_much)
 {
     char levels = 0;
 
-    if (mutate(which_mut + 1000))
+    if (mutate(which_mut + 2000))
         levels++;
 
-    if (how_much >= 2 && mutate(which_mut + 1000))
+    if (how_much >= 2 && mutate(which_mut + 2000))
         levels++;
 
-    if (how_much >= 3 && mutate(which_mut + 1000))
+    if (how_much >= 3 && mutate(which_mut + 2000))
         levels++;
 
     you.demon_pow[which_mut] = levels;
