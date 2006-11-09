@@ -2020,6 +2020,31 @@ bool i_feel_safe()
     return true;
 }
 
+// Do not attempt to use level_id if level_type != LEVEL_DUNGEON
+std::string short_place_name(level_id id)
+{
+    return short_place_name(
+            get_packed_place(id.branch, id.depth, LEVEL_DUNGEON));
+}
+
+unsigned short get_packed_place( unsigned char branch, int subdepth,
+                                 char level_type )
+{
+    unsigned short place = (unsigned short)
+        ( (branch << 8) | (subdepth & 0xFF) );
+    if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
+            || level_type == LEVEL_LABYRINTH)
+        place = (unsigned short) ( (level_type << 8) | 0xFF );
+    return place;
+}
+
+unsigned short get_packed_place()
+{
+    return get_packed_place( you.where_are_you,
+                      subdungeon_depth(you.where_are_you, you.your_level),
+                      you.level_type );
+}
+
 std::string place_name( unsigned short place, bool long_name,
                         bool include_number ) {
 
@@ -2122,6 +2147,32 @@ std::string place_name( unsigned short place, bool long_name,
         result = buf;
     }
     return result;
+}
+
+// Takes a packed 'place' and returns a compact stringified place name.
+// XXX: This is done in several other places; a unified function to
+//      describe places would be nice.
+std::string short_place_name(unsigned short place)
+{
+    return place_name( place, false, true );
+}
+
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned short packed_place)
+{
+    std::string place = place_name( packed_place, true, true );
+    if (place.length() && place != "Pandemonium")
+        place[0] = tolower(place[0]);
+    return (place.find("level") == 0?
+            "on " + place
+          : "in " + place);
+}
+
+// Use current branch and depth
+std::string prep_branch_level_name()
+{
+    return prep_branch_level_name( get_packed_place() );
 }
 
 int absdungeon_depth(unsigned char branch, int subdepth)

@@ -990,7 +990,7 @@ static std::string origin_monster_desc(const item_def &item)
 
 static std::string origin_place_desc(const item_def &item)
 {
-	return prep_branch_level_name(item.orig_place);
+    return prep_branch_level_name(item.orig_place);
 }
 
 bool is_rune(const item_def &item)

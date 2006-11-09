@@ -27,25 +27,6 @@
 static void kill_lua_filltable(std::vector<kill_exp> &v);
 #endif
 
-
-unsigned short get_packed_place( unsigned char branch, int subdepth,
-                                 char level_type )
-{
-    unsigned short place = (unsigned short)
-        ( (branch << 8) | (subdepth & 0xFF) );
-    if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
-            || level_type == LEVEL_LABYRINTH)
-        place = (unsigned short) ( (level_type << 8) | 0xFF );
-    return place;
-}
-
-unsigned short get_packed_place()
-{
-    return get_packed_place( you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.your_level),
-                      you.level_type );
-}
-
 ///////////////////////////////////////////////////////////////////////////
 // KillMaster
 // 
@@ -291,14 +272,6 @@ long Kills::get_kills(std::vector<kill_exp> &all_kills) const
 
     std::sort(all_kills.begin(), all_kills.end());
     return (count);
-}
-
-// Takes a packed 'place' and returns a compact stringified place name.
-// XXX: This is done in several other places; a unified function to
-//      describe places would be nice.
-std::string short_place_name(unsigned short place)
-{
-    return place_name( place, false, true );
 }
 
 void Kills::save(FILE *file) const

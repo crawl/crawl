@@ -169,13 +169,6 @@ private:
         const;
 };
 
-unsigned short get_packed_place();
-
-unsigned short get_packed_place( unsigned char branch, int subdepth,
-                          char level_type );
-
-std::string short_place_name(unsigned short place);
-
 enum KILL_DUMP_OPTIONS
 {
     KDO_NO_PLACES,          // Don't dump places at all

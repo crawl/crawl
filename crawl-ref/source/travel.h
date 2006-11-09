@@ -104,6 +104,8 @@ enum EXPLORE_STOP
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
 
+// Identifies a level. This has no meaning in the Abyss, labyrinths or
+// Pandemonium.
 struct level_id
 {
     unsigned char branch;   // The branch in which the level is.

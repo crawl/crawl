@@ -16,6 +16,7 @@
 
 
 #include "externs.h"
+#include "travel.h"
 
 // last updated 08jan2001 {gdl}
 /* ***********************************************************************
@@ -149,10 +150,30 @@ void curare_hits_player(int agent, int degree);
 
 bool i_feel_safe();
 
+//////////////////////////////////////////////////////////////////////
+// Places and names
+//
+unsigned short get_packed_place();
+
+unsigned short get_packed_place( unsigned char branch, int subdepth,
+                          char level_type );
+
+std::string short_place_name(unsigned short place);
+std::string short_place_name(level_id id);
 std::string place_name( unsigned short place, bool long_name = false,
                         bool include_number = true );
 
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned short packed_place);
+std::string prep_branch_level_name();
+
+// Get displayable depth in the current branch, given the absolute
+// depth.
 int subdungeon_depth(unsigned char branch, int depth);
+
+// Get absolute depth given the displayable depth in the branch.
 int absdungeon_depth(unsigned char branch, int subdepth);
+//////////////////////////////////////////////////////////////////////
 
 #endif

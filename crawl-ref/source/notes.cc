@@ -10,12 +10,12 @@
 #include "files.h"
 #include "Kills.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-pick.h"
 #include "mutation.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
-#include "stash.h"
 
 #define NOTES_VERSION_NUMBER 1001
 
@@ -251,7 +251,7 @@ std::string describe_note( const Note& note ) {
 	break;
     case NOTE_DUNGEON_LEVEL_CHANGE:
 	snprintf(buf, sizeof buf, "Entered %s",
-		branch_level_name(note.packed_place).c_str());
+		place_name(note.packed_place, true, true).c_str());
 	break;
     case NOTE_LEARN_SPELL:
 	snprintf(buf, sizeof buf, "Learned a level %d spell: %s",

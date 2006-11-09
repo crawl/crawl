@@ -41,6 +41,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "misc.h"
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
@@ -544,68 +545,12 @@ static void sdump_notes(const std::string &, std::string& text)
  //---------------------------------------------------------------
 static void sdump_location(const std::string &, std::string & text)
 {
-    if (you.level_type != LEVEL_DUNGEON || you.your_level != -1)
-        text += "You are ";
-
-    if (you.level_type == LEVEL_PANDEMONIUM)
-        text += "in Pandemonium";
-    else if (you.level_type == LEVEL_ABYSS)
-        text += "in the Abyss";
-    else if (you.level_type == LEVEL_LABYRINTH)
-        text += "in a labyrinth";
-    else if (you.where_are_you == BRANCH_DIS)
-        text += "in Dis";
-    else if (you.where_are_you == BRANCH_GEHENNA)
-        text += "in Gehenna";
-    else if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
-        text += "in the Vestibule of Hell";
-    else if (you.where_are_you == BRANCH_COCYTUS)
-        text += "in Cocytus";
-    else if (you.where_are_you == BRANCH_TARTARUS)
-        text += "in Tartarus";
-    else if (you.where_are_you == BRANCH_INFERNO)
-        text += "in the Inferno";
-    else if (you.where_are_you == BRANCH_THE_PIT)
-        text += "in the Pit";
-    else if (you.where_are_you == BRANCH_ORCISH_MINES)
-        text += "in the Mines";
-    else if (you.where_are_you == BRANCH_HIVE)
-        text += "in the Hive";
-    else if (you.where_are_you == BRANCH_LAIR)
-        text += "in the Lair";
-    else if (you.where_are_you == BRANCH_SLIME_PITS)
-        text += "in the Slime Pits";
-    else if (you.where_are_you == BRANCH_VAULTS)
-        text += "in the Vaults";
-    else if (you.where_are_you == BRANCH_CRYPT)
-        text += "in the Crypt";
-    else if (you.where_are_you == BRANCH_HALL_OF_BLADES)
-        text += "in the Hall of Blades";
-    else if (you.where_are_you == BRANCH_HALL_OF_ZOT)
-        text += "in the Hall of Zot";
-    else if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
-        text += "in the Ecumenical Temple";
-    else if (you.where_are_you == BRANCH_SNAKE_PIT)
-        text += "in the Snake Pit";
-    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-        text += "in the Elven Halls";
-    else if (you.where_are_you == BRANCH_TOMB)
-        text += "in the Tomb";
-    else if (you.where_are_you == BRANCH_SWAMP)
-        text += "in the Swamp";
+    if (you.your_level == -1 
+            && you.where_are_you == BRANCH_MAIN_DUNGEON
+            && you.level_type == LEVEL_DUNGEON)
+        text += "You escaped";
     else
-    {
-        if (you.your_level == -1)
-            text += "You escaped";
-        else
-        {
-            text += "on level ";
-
-            char st_prn[20];
-            itoa(you.your_level + 1, st_prn, 10);
-            text += st_prn;
-        }
-    }
+        text += "You are " + prep_branch_level_name();
 
     text += ".";
     text += "\n";

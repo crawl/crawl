@@ -40,12 +40,6 @@
 #define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
 #define LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
 
-std::string short_place_name(level_id id)
-{
-    return short_place_name(
-            get_packed_place(id.branch, id.depth, LEVEL_DUNGEON));
-}
-
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
 {
@@ -960,7 +954,9 @@ bool LevelStashes::in_branch(int branchid) const
 std::string LevelStashes::level_name() const
 {
     int curr_subdungeon_level = subdungeon_depth( branch, depth );
-    return (branch_level_name(branch, curr_subdungeon_level));
+    return (place_name(
+                get_packed_place(branch, curr_subdungeon_level, LEVEL_DUNGEON), 
+                true, true));
 }
 
 std::string LevelStashes::short_level_name() const
@@ -1503,127 +1499,3 @@ void StashTracker::display_search_results(
 StashTracker stashes;
 
 #endif
-
-std::string branch_level_name(unsigned char branch, int sub_depth)
-{
-    int ltype = sub_depth == 0xFF? branch : 0;
-    if (ltype == LEVEL_PANDEMONIUM)
-        return ("Pandemonium");
-    else if (ltype == LEVEL_ABYSS)
-        return ("The Abyss");
-    else if (ltype == LEVEL_LABYRINTH)
-        return ("A Labyrinth");
-    else
-    {
-        char buf[200];
-        const char *s = NULL;
-        *buf = 0;
-        // level_type == LEVEL_DUNGEON
-        if (branch != BRANCH_VESTIBULE_OF_HELL
-                && branch != BRANCH_ECUMENICAL_TEMPLE
-                && branch != BRANCH_HALL_OF_BLADES)
-            snprintf(buf, sizeof buf, "Level %d", sub_depth);
-
-        switch (branch)
-        {
-        case BRANCH_MAIN_DUNGEON:
-            s = " of the Dungeon";
-            break;
-        case BRANCH_DIS:
-            s = " of Dis";
-            break;
-        case BRANCH_GEHENNA:
-            s = " of Gehenna";
-            break;
-        case BRANCH_VESTIBULE_OF_HELL:
-            s = "The Vestibule of Hell";
-            break;
-        case BRANCH_COCYTUS:
-            s = " of Cocytus";
-            break;
-        case BRANCH_TARTARUS:
-            s = " of Tartarus";
-            break;
-        case BRANCH_INFERNO:
-            s = " of the Inferno";
-            break;
-        case BRANCH_THE_PIT:
-            s = " of the Pit";
-            break;
-        case BRANCH_ORCISH_MINES:
-            s = " of the Orcish Mines";
-            break;
-        case BRANCH_HIVE:
-            s = " of the Hive";
-            break;
-        case BRANCH_LAIR:
-            s = " of the Lair";
-            break;
-        case BRANCH_SLIME_PITS:
-            s = " of the Slime Pits";
-            break;
-        case BRANCH_VAULTS:
-            s = " of the Vaults";
-            break;
-        case BRANCH_CRYPT:
-            s = " of the Crypt";
-            break;
-        case BRANCH_HALL_OF_BLADES:
-            s = "The Hall of Blades";
-            break;
-        case BRANCH_HALL_OF_ZOT:
-            s = " of the Realm of Zot";
-            break;
-        case BRANCH_ECUMENICAL_TEMPLE:
-            s = "The Ecumenical Temple";
-            break;
-        case BRANCH_SNAKE_PIT:
-            s = " of the Snake Pit";
-            break;
-        case BRANCH_ELVEN_HALLS:
-            s = " of the Elven Halls";
-            break;
-        case BRANCH_TOMB:
-            s = " of the Tomb";
-            break;
-        case BRANCH_SWAMP:
-            s = " of the Swamp";
-            break;
-        }
-        if (s)
-            strncat(buf, s, sizeof(buf) - 1);
-        return (buf);
-    }
-}
-
-std::string branch_level_name(unsigned short packed_place)
-{
-    return branch_level_name(packed_place >> 8, packed_place & 0xFF);
-}
-
-// Prepositional form of branch level name.  For example, "in the
-// Abyss" or "on level 3 of the Main Dungeon".
-std::string prep_branch_level_name(unsigned char branch, int sub_depth)
-{
-    std::string place = branch_level_name(branch, sub_depth);
-    if (place.length() && place != "Pandemonium")
-        place[0] = tolower(place[0]);
-    return (place.find("level") == 0?
-            "on " + place
-          : "in " + place);
-}
-
-std::string prep_branch_level_name(unsigned short packed_place)
-{
-    return prep_branch_level_name(packed_place >> 8, packed_place & 0xFF);
-}
-
-// Use current branch and depth
-std::string prep_branch_level_name()
-{
-    int branch = you.where_are_you;
-    int sub_depth = subdungeon_depth( branch, you.your_level );
-
-    return prep_branch_level_name(branch, sub_depth);
-}
-
