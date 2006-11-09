@@ -631,8 +631,8 @@ void reset_options(bool clear_name)
 
     // Clear vector options.
     Options.dump_order.clear();
-    add_dump_fields("header,stats,misc,notes,inventory,skills,"
-                   "spells,mutations,messages,screenshot,kills");
+    add_dump_fields("header,stats,misc,inventory,skills,"
+                   "spells,mutations,messages,screenshot,kills,notes");
 
     Options.banned_objects.clear();
     Options.note_monsters.clear(); 

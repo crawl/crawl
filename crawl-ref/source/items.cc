@@ -1245,7 +1245,7 @@ void pickup()
                 break;
             }
 
-            if (keyin == 'q')
+            if (keyin == 'q' || keyin == ESCAPE)
                 break;
 
             if (keyin == 'y' || keyin == 'a')
