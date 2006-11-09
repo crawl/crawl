@@ -6154,7 +6154,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_SILVER_STATUE:
-        description += "A beautiful filigreed statue of silver. Its eyes "
+        description += "A beautiful statue of silver. Its eyes "
             "glow with an otherworldly radiance.";
         break;
 
