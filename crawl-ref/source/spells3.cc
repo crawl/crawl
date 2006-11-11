@@ -39,6 +39,7 @@
 #include "player.h"
 #include "randart.h"
 #include "spells1.h"
+#include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -502,7 +503,10 @@ void dancing_weapon(int pow, bool force_hostile)
     return;
 
 failed_spell:
-    mpr("Your weapon vibrates crazily for a second.");
+    if ( wpn != -1 )
+        mpr("Your weapon vibrates crazily for a second.");
+    else
+        mprf(MSGCH_PLAIN, "Your %s twitch.", your_hand(true));        
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)

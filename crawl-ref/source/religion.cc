@@ -733,7 +733,7 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 (temp_rand == 2) ? "\"Let's see if it's strong enough to survive yet.\""
                                  : "You hear Xom's maniacal laughter.");
 
-            if (one_chance_in(4))
+            if (one_chance_in(4) && (you.equip[EQ_WEAPON] != -1) )
                 dancing_weapon(100, true);      // nasty, but fun
             else
             {
