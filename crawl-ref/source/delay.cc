@@ -526,7 +526,8 @@ void handle_delay( void )
             }
 
             if (!copy_item_to_grid( you.inv[ delay.parm1 ], 
-                                    you.x_pos, you.y_pos, delay.parm2 ))
+                                    you.x_pos, you.y_pos, delay.parm2,
+                                    true ))
             {
                 mpr("Too many items on this level, not dropping the item.");
             }
