@@ -247,7 +247,7 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
 {
     int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
-    int wiz_factor = 90;
+    int wiz_factor = 86;
 
     if (you.religion == GOD_VEHUMET 
         && you.duration[DUR_PRAYER]
@@ -256,8 +256,8 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
             || spell_typematch(spell, SPTYP_SUMMONING)))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
-        // back to 2/3. It's still a huge boost.
-        fail_reduce = fail_reduce * 2 / 3;
+        // back to 60%.
+        fail_reduce = fail_reduce * 60 / 100;
     }
 
     // [dshaligram] Apply wizardry factor here, rather than mixed into the
@@ -265,13 +265,12 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
     while (wizardry-- > 0)
     {
         fail_reduce  = fail_reduce * wiz_factor / 100;
-        wiz_factor  += (100 - wiz_factor) / 3;
+        wiz_factor  += (100 - wiz_factor) / 5;
     }
 
-    // Hard cap on fail rate reduction. This is still less than the insane
-    // boost that Vehumet alone provided in 4.0.
-    if (fail_reduce < 58)
-        fail_reduce = 58;
+    // Hard cap on fail rate reduction.
+    if (fail_reduce < 40)
+        fail_reduce = 40;
 
     return (chance * fail_reduce / 100);
 }
@@ -447,9 +446,6 @@ int spell_fail(int spell)
     if (chance < -180)
         chance2 = 0;
 
-    // Apply the effects of Vehumet prayer and items of wizardry.
-    chance2 = apply_vehumet_wizardry_boost(spell, chance2);
-
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
         switch (you.attribute[ATTR_TRANSFORMATION])
@@ -462,7 +458,13 @@ int spell_fail(int spell)
             chance2 += 10;
             break;
         }
+
+        if (chance2 > 100)
+            chance2 = 100;
     }
+
+    // Apply the effects of Vehumet prayer and items of wizardry.
+    chance2 = apply_vehumet_wizardry_boost(spell, chance2);
 
     return (chance2);
 }                               // end spell_fail()
