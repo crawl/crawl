@@ -2073,29 +2073,30 @@ static int prompt_ring_to_remove(int new_ring)
         mprf("You're already wearing two cursed rings!");
         return (-1);
     }
-    else if (item_cursed(left))
-        return you.equip[EQ_RIGHT_RING];
-    else if (item_cursed(right))
-        return you.equip[EQ_LEFT_RING];
 
     mesclr();
     mprf("Wearing %s.", in_name(new_ring, DESC_NOCAP_A));
+
+    char lslot = index_to_letter(left.link),
+         rslot = index_to_letter(right.link);
+
     mprf(MSGCH_PROMPT,
-            "You're wearing two rings. Remove which one? (L/R/Esc)");
-    mprf(" L - %s", item_name( left, DESC_NOCAP_A ));
-    mprf(" R - %s", item_name( right, DESC_NOCAP_A ));
+            "You're wearing two rings. Remove which one? (%c/%c/Esc)",
+            lslot, rslot);
+    mprf(" %s", item_name( left, DESC_INVENTORY ));
+    mprf(" %s", item_name( right, DESC_INVENTORY ));
 
     int c;
     do
-        c = tolower(getch());
-    while (c != 'l' && c != 'r' && c != ESCAPE && c != ' ');
+        c = getch();
+    while (c != lslot && c != rslot && c != ESCAPE && c != ' ');
 
     mesclr();
 
     if (c == ESCAPE || c == ' ')
         return (-1);
 
-    int eqslot = c == 'l'? EQ_LEFT_RING : EQ_RIGHT_RING;
+    int eqslot = c == lslot? EQ_LEFT_RING : EQ_RIGHT_RING;
     return (you.equip[eqslot]);
 }
 
