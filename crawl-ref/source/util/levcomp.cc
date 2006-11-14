@@ -8,7 +8,6 @@ level_range lc_default_depth;
 
 void reset_map_parser()
 {
-    lc_desfile.clear();
     lc_map.init();
     lc_range.reset();
     lc_default_depth.reset();

@@ -362,22 +362,39 @@ static bool create_dirs(const std::string &dir)
 std::string datafile_path(const std::string &basename)
 {
     std::string cdir = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
-    if (!cdir.empty() && cdir[cdir.length() - 1] != FILE_SEPARATOR)
-        cdir += FILE_SEPARATOR;
 
-    const std::string bases[] = {
+    const std::string rawbases[] = {
+#ifdef DATA_DIR_PATH
+        DATA_DIR_PATH,
+#else
         cdir,
-        SysEnv.crawl_executable_path,
-        "",
+#endif
     };
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
+        std::string("data") + FILE_SEPARATOR,
         std::string("crawl-data") + FILE_SEPARATOR,
         "",
     };
 
-    for (unsigned b = 0; b < sizeof(bases) / sizeof(*bases); ++b)
+    std::vector<std::string> bases;
+    for (unsigned i = 0; i < sizeof(rawbases) / sizeof(*rawbases); ++i)
+    {
+        std::string base = rawbases[i];
+        if (base.empty())
+            continue;
+
+        if (base[base.length() - 1] != FILE_SEPARATOR)
+            base += FILE_SEPARATOR;
+        bases.push_back(base);
+    }
+
+#ifndef DATA_DIR_PATH
+    bases.push_back("");
+#endif
+
+    for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
         for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
         {

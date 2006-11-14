@@ -21,7 +21,12 @@ OS_TYPE = UNIX
 INCLUDES = -I/usr/include/ncurses
 
 MCHMOD = 2755
-INSTALLDIR = /usr/games
+INSTALLDIR := /usr/games
+
+# If you're installing Crawl for multiple users, you *must* set this to a
+# valid path before building Crawl.
+DATADIR    :=
+
 LIB = -lncurses
 
 INCLUDES := $(INCLUDES) -Iutil -I.
@@ -30,6 +35,10 @@ CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
 
 CFOTHERS := -fsigned-char -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+
+ifneq ($(DATADIR),)
+CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
+endif
 
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
@@ -113,8 +122,11 @@ endif
 install: $(GAME)
 	$(COPY) $(GAME) ${INSTALLDIR}
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
-	mkdir $(INSTALLDIR)/crawl-data
-	cp dat/*.des $(INSTALLDIR)/crawl-data
+ifeq ($(DATADIR),)
+	$(error DATADIR not set! Set DATADIR and run make clean install again)
+endif
+	mkdir -p $(DATADIR)/data
+	cp dat/*.des $(DATADIR)/data
 
 clean:
 	$(DELETE) *.o
