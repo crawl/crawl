@@ -152,6 +152,11 @@ crawl_dir= <path>
 	Directory for reading macro.txt and init.txt, and dumping characters.
 	It should end with the path delimiter.
 
+save_dir = <path>
+        Directory where saves and bones are stored. This option may be ignored
+        depending on the settings used to compile Crawl, but should be
+        honoured for the official Crawl binaries.
+
 sound = <regex>:<path to sound file>
 	Plays the sound file if a message contains regex. The regex should 
 	not include commas or colons. For example
