@@ -388,13 +388,10 @@ static bool unlock_file_handle( FILE *handle )
 
 FILE *hs_open( const char *mode )
 {
-#ifdef SAVE_DIR_PATH
-    FILE *handle = fopen(SAVE_DIR_PATH "scores", mode);
+    std::string scores = Options.save_dir + "scores";
+    FILE *handle = fopen(scores.c_str(), mode);
 #ifdef SHARED_FILES_CHMOD_PUBLIC
-    chmod(SAVE_DIR_PATH "scores", SHARED_FILES_CHMOD_PUBLIC);
-#endif
-#else
-    FILE *handle = fopen("scores", mode);
+    chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
 #endif
 
 #ifdef USE_FILE_LOCKING
@@ -429,11 +426,7 @@ void hs_close( FILE *handle, const char *mode )
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     if (stricmp(mode, "w") == 0)
     {
-  #ifdef SAVE_DIR_PATH
-        chmod(SAVE_DIR_PATH "scores", SHARED_FILES_CHMOD_PUBLIC);
-  #else
-        chmod("scores", SHARED_FILES_CHMOD_PUBLIC);
-  #endif
+        chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
     }
 #endif
 }

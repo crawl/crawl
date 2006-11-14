@@ -79,6 +79,8 @@
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
 
+    #define FILE_SEPARATOR '/'
+
     #define CHARACTER_SET           0
     #define USE_ASCII_CHARACTERS
     #define USE_CURSES
@@ -140,11 +142,15 @@
     #error MSVC is not supported yet
     #define CHARACTER_SET           A_ALTCHARSET
 
+    #define FILE_SEPARATOR '/'
+
 #elif defined(DOS)
     #define DOS_TERM
     #define SHORT_FILE_NAMES
     #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
+
+    #define FILE_SEPARATOR '\\'
 
     #include <string>
     #include "libdos.h"
@@ -164,6 +170,9 @@
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         getConsoleString(X,Y)
+
+    // NT and better are happy with /; I'm not sure how 9x reacts.
+    #define FILE_SEPARATOR '/'
 
     // Uncomment to play sounds. winmm must be linked in if this is uncommented.
     // #define WINMM_PLAY_SOUNDS

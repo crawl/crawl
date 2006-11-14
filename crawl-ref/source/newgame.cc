@@ -2143,7 +2143,7 @@ bool verifyPlayerName(void)
         }
     }
 
-#ifdef SAVE_DIR_PATH
+#ifdef MULTIUSER
     // Until we have a better way to handle the fact that this could lead 
     // to some confusion with where the name ends and the uid begins. -- bwr
     if (isdigit( you.your_name[ len - 1 ] ))

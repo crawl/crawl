@@ -29,15 +29,7 @@
 // referenced in files - newgame - ouch:
 extern FixedArray<bool, MAX_LEVELS, MAX_BRANCHES> tmp_file_pairs;
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc
- * *********************************************************************** */
-#if 0
-void load( unsigned char stair_taken, bool moving_level,
-           bool was_a_labyrinth, char old_level, bool want_followers,
-           bool is_new_game, char where_were_you2 );
-#endif
+void check_savedir();
 
 bool travel_load_map( char branch, int absdepth );
 

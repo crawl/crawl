@@ -17,6 +17,10 @@
 #include <string>
 #include <vector>
 
+std::string replace_all(std::string s,
+                        const std::string &tofind,
+                        const std::string &replacement);
+
 int count_occurrences(const std::string &text, const std::string &searchfor);
 
 // getch() that returns a consistent set of values for all platforms.

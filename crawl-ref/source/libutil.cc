@@ -70,6 +70,22 @@ void play_sound( const char *file )
 #endif
 }
 
+std::string replace_all(std::string s,
+                        const std::string &tofind,
+                        const std::string &replacement)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+   
+    while ((found = s.find_first_of(tofind, start)) != std::string::npos)
+    {
+        s.replace( found, tofind.length(), replacement );
+        start = found + replacement.length();
+    }
+
+    return (s);
+}
+
 int count_occurrences(const std::string &text, const std::string &s)
 {
     int nfound = 0;

@@ -478,6 +478,13 @@ void reset_options(bool clear_name)
     set_default_activity_interrupts();
 
     reset_startup_options(clear_name);
+
+#ifdef SAVE_DIR_PATH
+    Options.save_dir  = SAVE_DIR_PATH;
+#else
+    Options.save_dir.clear();
+#endif
+
     Options.prev_race = 0;
     Options.prev_cls  = 0;
     Options.prev_ck   = GOD_NO_GOD;
@@ -965,6 +972,9 @@ static void read_options(InitLineInput &il, bool runscript)
         }
     }
 #endif
+
+    // Check that Options.save_dir is valid.
+    check_savedir();
 }
 
 static int str_to_killcategory(const std::string &s)
@@ -1416,6 +1426,14 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         Options.remember_name = read_bool( field, Options.remember_name );
     }   
+    else if (key == "save_dir")
+    {
+        // If SAVE_DIR_PATH was defined, there are very likely security issues
+        // with allowing the user to specify a different directory.
+#ifndef SAVE_DIR_PATH
+        Options.save_dir = field;
+#endif
+    }
     else if (key == "hp_warning")
     {
         Options.hp_warning = atoi( field.c_str() );

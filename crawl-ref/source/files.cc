@@ -236,15 +236,13 @@ static bool is_uid_file(const std::string &name, const std::string &ext)
     uppercase(save_suffix);
 #endif
 
-#ifdef SAVE_DIR_PATH
-    save_suffix = save_suffix.substr(strlen(SAVE_DIR_PATH));
-#endif
+    save_suffix = save_suffix.substr(Options.save_dir.length());
 
     std::string::size_type suffix_pos = name.find(save_suffix);
     return (suffix_pos != std::string::npos 
             && suffix_pos == name.length() - save_suffix.length()
             && suffix_pos != 0
-#ifdef SAVE_DIR_PATH
+#ifdef MULTIUSER
             // See verifyPlayerName() in newgame.cc
             && !isdigit(name[suffix_pos - 1])
 #endif
@@ -315,15 +313,71 @@ static std::vector<std::string> get_dir_files(const std::string &dirname)
     return (files);
 }
 
+// Low-tech existence check.
+static bool dir_exists(const std::string &dir)
+{
+    DIR *d = opendir(dir.c_str());
+    bool exists = !!d;
+    if (d)
+        closedir(d);
+
+    return (exists);
+}
+
+static bool create_dirs(const std::string &dir)
+{
+    std::string sep = " ";
+    sep[0] = FILE_SEPARATOR;
+    std::vector<std::string> segments = 
+        split_string(
+                sep.c_str(),
+                dir,
+                false,
+                false);
+
+    std::string path;
+    for (int i = 0, size = segments.size(); i < size; ++i)
+    {
+        path += segments[i];
+        path += FILE_SEPARATOR;
+
+        if (!dir_exists(path) && mkdir(path.c_str()))
+            return (false);
+    }
+    return (true);
+}
+
+void check_savedir()
+{
+    std::string &dir = Options.save_dir;
+
+    if (dir.empty())
+        return;
+
+    std::string sep = " ";
+    sep[0] = FILE_SEPARATOR;
+
+    dir = replace_all(dir, "/", sep);
+    dir = replace_all(dir, "\\", sep);
+
+    // Suffix the separator if necessary
+    if (dir[dir.length() - 1] != FILE_SEPARATOR)
+        dir += FILE_SEPARATOR;
+
+    if (!dir_exists(dir) && !create_dirs(dir))
+    {
+        fprintf(stderr, "Save directory \"%s\" does not exist "
+                        "and I can't create it.\n",
+                    dir.c_str());
+        exit(1);
+    }
+}
+
 // Given a simple (relative) name of a save file, returns the full path of 
 // the file in the Crawl saves directory.
 std::string get_savedir_path(const std::string &shortpath)
 {
-    std::string path = shortpath;
-#ifdef SAVE_DIR_PATH
-    path = SAVE_DIR_PATH + path;
-#endif
-    return (path);
+    return (Options.save_dir + shortpath);
 }
 
 /*
@@ -332,10 +386,7 @@ std::string get_savedir_path(const std::string &shortpath)
  */
 std::vector<player> find_saved_characters()
 {
-    std::string searchpath;
-#ifdef SAVE_DIR_PATH
-    searchpath = SAVE_DIR_PATH;
-#endif
+    std::string searchpath = Options.save_dir;
 
     if (searchpath.empty())
         searchpath = ".";
@@ -387,11 +438,7 @@ std::vector<player> find_saved_characters()
 std::string get_savedir_filename(const char *prefix, const char *suffix, 
                                  const char *extension, bool suppress_uid)
 {
-    std::string result;
-
-#ifdef SAVE_DIR_PATH
-    result = SAVE_DIR_PATH;
-#endif
+    std::string result = Options.save_dir;
 
     // Shorten string as appropriate
     result += std::string(prefix).substr(0, kFileNameLen);

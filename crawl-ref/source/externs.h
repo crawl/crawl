@@ -687,6 +687,8 @@ struct colour_mapping
 
 struct game_options 
 {
+    std::string save_dir;       // Directory where saves and bones go.
+
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump
