@@ -51,7 +51,7 @@ void yyerror(const char *e)
 
 %%
 
-file            : defs levels
+file            : definitions
                 {
                     if (outhandle && outfilename) {
                         fclose(outhandle);
@@ -60,8 +60,12 @@ file            : defs levels
                 }
                 ;
 
-defs            : /* empty */
-                | defs def
+definitions     : /* empty */               {}
+                | definition definitions    {}
+                ;
+
+definition      : def       {}
+                | level     {}
                 ;
 
 def             : defdepth
@@ -71,10 +75,6 @@ defdepth        : DEFAULT_DEPTH depth_range
                 {
                     default_depth = range;
                 }
-                ;
-
-levels          : /* no levels */
-                | level levels
                 ;
 
 level           : name metalines map_def metalines
