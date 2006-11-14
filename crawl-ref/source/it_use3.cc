@@ -780,7 +780,6 @@ static bool ball_of_seeing(void)
 static bool disc_of_storms(void)
 {
     int temp_rand = 0;          // probability determination {dlb}
-    struct bolt beam;
     int disc_count = 0;
     unsigned char which_zap = 0;
 
@@ -801,6 +800,8 @@ static bool disc_of_storms(void)
 
         while (disc_count)
         {
+            bolt beam;
+
             temp_rand = random2(3);
 
             which_zap = ((temp_rand > 1) ? ZAP_LIGHTNING :

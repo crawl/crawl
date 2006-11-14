@@ -3928,22 +3928,12 @@ static void explosion1(struct bolt &pbolt)
     if (pbolt.name == "golden flame")
     {
         seeMsg = "The flame explodes!";
-        hearMsg = "You hear a strange explosion.";
-
-        pbolt.type = SYM_BURST;
-        pbolt.flavour = BEAM_HOLY;     // same as golden flame? [dlb]
-    }
-
-    if (pbolt.name == "golden flame")
-    {
-        seeMsg = "The flame explodes!";
         hearMsg = "You feel a deep, resonant explosion.";
 
         pbolt.type = SYM_BURST;
         pbolt.flavour = BEAM_HOLY;
         ex_size = 2;
     }
-
     
     if (pbolt.name == "fireball")
     {
