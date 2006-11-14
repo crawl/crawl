@@ -297,6 +297,8 @@ int random_map_for_tag(const std::string &tag)
 
 static void parse_maps(const std::string &s)
 {
+    reset_map_parser();
+
     FILE *dat = fopen(s.c_str(), "r");
     if (!dat)
     {
