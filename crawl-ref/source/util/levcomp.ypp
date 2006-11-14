@@ -1,5 +1,6 @@
 %{
 
+#include "AppHdr.h"
 #include "levcomp.h"
 
 int yylex();
@@ -8,19 +9,10 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
-    fprintf(stderr, "Error on line %d: %s\n", yylineno, e);
-
-    // If an error occurs, delete the file we're supposed to be writing to
-    // so that life is easier for makefile writers.
-    if (outhandle && outfilename) {
-        fclose(outhandle);
-        outhandle = NULL;
-    }
-    
-    if (outfilename) {
-        unlink(outfilename);
-        outfilename = NULL;
-    }
+    fprintf(stderr, "Error on line %d of %s: %s\n", 
+            yylineno, lc_desfile.c_str(), e);
+    // Bail bail bail.
+    exit(1);
 }
 
 %}
@@ -51,13 +43,7 @@ void yyerror(const char *e)
 
 %%
 
-file            : definitions
-                {
-                    if (outhandle && outfilename) {
-                        fclose(outhandle);
-                        outhandle   = NULL;
-                    }
-                }
+file            : definitions { }
                 ;
 
 definitions     : /* empty */               {}
@@ -73,35 +59,21 @@ def             : defdepth
 
 defdepth        : DEFAULT_DEPTH depth_range
                 {
-                    default_depth = range;
+                    lc_default_depth = lc_range;
                 }
                 ;
 
 level           : name metalines map_def metalines
                 {
-                    if (!outhandle) {
-                        if (outfilename) {
-                            if (!(outhandle = 
-                                    fopen(outfilename, 
-                                          write_append? "a" :"w")))
-                                outfilename = NULL;
-                        }
-                        if (!outhandle)
-                            outhandle = stdout;
-                    }
-                    if (!autowarned) {
-                        fprintf(outhandle, "%s", autogenheader);
-                        autowarned = true;
-                    }
-                    fprintf(outhandle, "%s", map.get_initialiser().c_str());
+                    add_parsed_map( lc_map );
                 }
                 ;
 
 name            : NAME STRING
                 {
-                    map.init();
-                    map.depth = default_depth;
-                    map.name = $2;
+                    lc_map.init();
+                    lc_map.depth = lc_default_depth;
+                    lc_map.name = $2;
                 }
                 ;
 
@@ -125,16 +97,16 @@ tags            : TAGS tagstrings {}
 tagstrings      : /* empty */
                 | STRING tagstrings
                 {
-                    map.tags += " ";
-                    map.tags += $1;
-                    map.tags += " ";
+                    lc_map.tags += " ";
+                    lc_map.tags += $1;
+                    lc_map.tags += " ";
                 }
                 ;
 
 symbol          : SYMBOL {}
                 | SYMBOL STRING
                 {
-                    map.random_symbols = $2;
+                    lc_map.random_symbols = $2;
                 }
                 ;
 
@@ -148,44 +120,44 @@ mnames          : mname COMMA mnames
 
 mname           : MONSTER_NAME
                 {
-                    map.mons.add_mons($1);
+                    lc_map.mons.add_mons($1);
                 }
                 ;
 
 place           : PLACE STRING
                 {
-                    map.place = $2;
+                    lc_map.place = $2;
                 }
                 ;
 
 depth           : DEPTH {}
                 | DEPTH depth_range
                 {
-                    map.depth = range;
+                    lc_map.depth = lc_range;
                 }
                 ;
 
 depth_range     : INTEGER DASH INTEGER
                 {
-                    range.set($1, $3);
+                    lc_range.set($1, $3);
                 }
 
                 | INTEGER
                 {
-                    range.set($1);
+                    lc_range.set($1);
                 }
                 ;
 
 chance          : CHANCE INTEGER
                 {
-                    map.chance = $2;
+                    lc_map.chance = $2;
                 }
                 ;
 
 orientation     : ORIENT {}
                 | ORIENT orient_name
                 {
-                    map.orient = (map_section_type) $2;
+                    lc_map.orient = (map_section_type) $2;
                 }
                 ;
 
@@ -209,13 +181,13 @@ flagnames       : /* empty */
                 {
                     switch ($1) {
                     case NO_HMIRROR:
-                        map.flags &= ~MAPF_MIRROR_HORIZONTAL;
+                        lc_map.flags &= ~MAPF_MIRROR_HORIZONTAL;
                         break;
                     case NO_VMIRROR:
-                        map.flags &= ~MAPF_MIRROR_VERTICAL;
+                        lc_map.flags &= ~MAPF_MIRROR_VERTICAL;
                         break;
                     case NO_ROTATE:
-                        map.flags &= ~MAPF_ROTATE;
+                        lc_map.flags &= ~MAPF_ROTATE;
                         break;
                     }
                 }
@@ -235,7 +207,7 @@ map_lines       : map_line
 
 map_line        : MAP_LINE
                 {
-                    map.map.add_line($1);
+                    lc_map.map.add_line($1);
                 }
                 ;
 

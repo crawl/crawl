@@ -17,19 +17,23 @@ DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
 
-CFLAGS = -Wall -Wwrite-strings -fsigned-char \
-	-Wshadow -pedantic \
-            -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+# Include path for curses or ncurses.
+INCLUDES = -I/usr/include/ncurses
 
 MCHMOD = 2755
-
-# [dshaligram] More common location than /opt/crawl/bin - this is from the
-# Debian patch.
 INSTALLDIR = /usr/games
 LIB = -lncurses
 
-# Include for Linux
-INCLUDES = -I/usr/include/ncurses
+INCLUDES := $(INCLUDES) -Iutil -I.
+
+CFWARN := -Wall -Wwrite-strings \
+	-Wshadow -pedantic
+
+CFOTHERS := -fsigned-char -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+
+CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+YCFLAGS := $(INCLUDES) $(CFOTHERS)
+            
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y
@@ -42,6 +46,9 @@ YACC := bison -y
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
 
+OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(UTIL)levcomp.o \
+		$(OBJECTS)
+
 ifeq ($(LEX),)
 DOYACC :=
 endif
@@ -50,15 +57,13 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
-GAME_DEPENDS := compile-levels $(OBJECTS)
+GAME_DEPENDS := $(OBJECTS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell egrep 'VERSION ".*"' version.h | \
 			egrep -o '[0-9]\.[0-9](\.[0-9])?')
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
 SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
-
-LEVCOMP      := $(UTIL)levcomp
 
 PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
 		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
@@ -71,18 +76,10 @@ all: $(GAME)
 ##########################################################################
 # The level compiler
 #
-compile-levels: $(LEVCOMP) mapdefs.ixx
-
-mapdefs.ixx:	dat/vaults.des dat/splev.des $(LEVCOMP)
-		$(LEVCOMP) $@ < dat/vaults.des
-		$(LEVCOMP) -a $@ < dat/splev.des
-
-$(LEVCOMP): $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o mapdef.o $(UTIL)levcomp.o
-		$(CXX) -o $@ $^
 
 ifeq ($(DOYACC),y)
 
-prebuildyacc:	mapdefs.ixx $(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
+prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
 		cp $^ prebuilt/
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
@@ -116,6 +113,8 @@ endif
 install: $(GAME)
 	$(COPY) $(GAME) ${INSTALLDIR}
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
+	mkdir $(INSTALLDIR)/crawl-data
+	cp dat/*.des $(INSTALLDIR)/crawl-data
 
 clean:
 	$(DELETE) *.o
@@ -135,26 +134,23 @@ distclean: clean
 	$(DELETE) *.lab
 
 $(GAME): $(GAME_DEPENDS)
-	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 	chmod ${MCHMOD} $(GAME)
 
 debug: $(GAME_DEPENDS)
-	${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 profile: $(GAME_DEPENDS)
-	${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
-
-# [ds] maps.cc now includes mapdefs.ixx, so add a dependency.
-maps.o: mapdefs.ixx
+	${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 .cc.o:
-	${CXX} ${CFLAGS} -c $< ${INCLUDE}
+	${CXX} ${CFLAGS} -c $<
 
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings
 # test.
 $(UTIL)%.o: $(UTIL)%.cc
-	$(CXX) -I$(UTIL) -I. -o $@ -c $<
+	$(CXX) $(YCFLAGS) -o $@ -c $<
 
 .h.cc:
 	touch $@

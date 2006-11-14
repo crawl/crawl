@@ -1,6 +1,7 @@
 ##############################################################################
 # Random vaults and minivaults; special levels (including V:8!) should go to
-# splev.des
+# splev.des. Do NOT put special levels here, or they could be selected when the
+# game looks for random vaults.
 #
 #  key:
 #  x - DNGN_ROCK_WALL
@@ -1491,6 +1492,9 @@ ENDMAP
 #############################################################################
 # Pandemonium demon vaults are selected by tag. They must have the tag "pan",
 # or they won't even be considered. Tags are case-sensitive.
+#
+# Tagging these levels also ensures they won't be generated in the main 
+# dungeon.
 
 NAME: rand_demon_1
 TAGS: pan

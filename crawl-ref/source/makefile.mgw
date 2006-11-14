@@ -1,7 +1,6 @@
 # Make file for Dungeon Crawl (Win32, MinGW)
 
-# this file contains a list of the libraries.
-# it will make a variable called OBJECTS that contains all the libraries
+# makefile.obj includes a list of object files needed to build Crawl.
 include makefile.obj
 
 ifeq ($(DEBUG_CRAWL),)
@@ -16,22 +15,32 @@ CXX = g++
 DELETE = del
 COPY = copy
 OS_TYPE = WIN32CONSOLE
-CFLAGS = -Wall -Wwrite-strings \
+
+INSTALLDIR := $(OPATH)
+
+LIB = -lwinmm -static
+
+CFWARN := -Wall -Wwrite-strings \
 			-Wshadow \
 			-Werror \
-			-fsigned-char \
-			-fstrict-aliasing \
-			-pedantic \
-			-D$(OS_TYPE) $(EXTRA_FLAGS) \
-			-DWINMM_PLAY_SOUNDS
+		        -pedantic
+
+INCLUDES := -Iutil -I.
+
+CFOTHERS := -fsigned-char \
+		-fstrict-aliasing \
+		-pedantic \
+		-D$(OS_TYPE) $(EXTRA_FLAGS) \
+		-DWINMM_PLAY_SOUNDS
+
+CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
 OBJECTS := $(OBJECTS) libw32c.o
-OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
 LDFLAGS = 
-INSTALLDIR = .
+
 #LIB = -lcurso -lpano
-LIB = -lwinmm -static
 
 UTIL = util/
 
@@ -53,7 +62,13 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
-GAME_DEPENDS := prepare compile-levels $(OBJECTS)
+# Do the levcomp stuff first because that's the most likely to fail.
+OBJECTS      := levcomp.tab.o levcomp.lex.o levcomp.o \
+		$(OBJECTS)
+
+OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
+
+GAME_DEPENDS := prepare $(OBJECTS)
 
 ##########################################################################
 
@@ -65,19 +80,10 @@ prepare:
 ##########################################################################
 # The level compiler
 #
-compile-levels: $(UTIL)levcomp.exe mapdefs.ixx
-
-mapdefs.ixx:	dat/vaults.des dat/splev.des $(UTIL)levcomp.exe
-		$(subst /,\, $(UTIL)levcomp.exe $@ < dat/vaults.des)
-		$(subst /,\, $(UTIL)levcomp.exe -a $@ < dat/splev.des)
-
-$(UTIL)levcomp.exe: $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(OPATH)/mapdef.o $(UTIL)levcomp.o
-		$(CXX) -o $@ $^
-
 ifeq ($(DOYACC),y)
 
 # [ds] A plague on the broken copy command on Windoze.
-prebuildyacc:	mapdefs.ixx $(UTIL)levcomp.lex.cc $(UTIL)levcomp.tab.cc	$(UTIL)levcomp.tab.h
+prebuildyacc:	$(UTIL)levcomp.lex.cc $(UTIL)levcomp.tab.cc	$(UTIL)levcomp.tab.h
 		$(subst /,\,for %%f in ($^) do $(COPY) %%f prebuilt)
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
@@ -101,7 +107,11 @@ endif
 ##########################################################################
 
 install:        $(APPNAME)
+ifneq ($(OPATH),$(INSTALLDIR))
 		$(COPY) $(APPNAME) ${INSTALLDIR}
+endif
+		mkdir $(INSTALLDIR)\dat 2>nul || echo "" >nul
+		copy dat\*.des $(INSTALLDIR)\dat
 
 clean:
 		$(DELETE) $(OPATH)\*.o
@@ -134,19 +144,17 @@ distclean:
 		$(DELETE) $(OPATH)\*.lab
 
 $(APPNAME):	$(GAME_DEPENDS)
-		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
 debug:		$(GAME_DEPENDS)
-		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
 profile:	$(GAME_DEPENDS)
-		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
-
-$(OPATH)/maps.o: mapdefs.ixx
+		${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
 $(OPATH)/%.o: %.cc
-		${CXX} ${CFLAGS} ${INCLUDES} -o $@ -c $< 
+		${CXX} ${CFLAGS} -o $@ -c $< 
 
-$(UTIL)%.o: $(UTIL)%.cc
-		$(CXX) -I$(UTIL) -I. -o $@ -c $<
+$(OPATH)/%.o: $(UTIL)%.cc
+		$(CXX) $(YCFLAGS) -o $@ -c $<

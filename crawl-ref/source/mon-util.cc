@@ -209,6 +209,38 @@ monster_type random_monster_at_grid(int grid)
                  : monster_type(valid_mons[ random2(valid_mons.size()) ]);
 }
 
+monster_type get_monster_by_name(std::string name, bool exact)
+{
+    lowercase(name);
+
+    monster_type mon = MONS_PROGRAM_BUG;
+    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    {
+        std::string candidate = mondata[i].name;
+        lowercase(candidate);
+
+        const int mtype = mondata[i].mc;
+
+        if (exact)
+        {
+            if (name == candidate)
+                return monster_type(mtype);
+
+            continue;
+        }
+
+        const std::string::size_type match = candidate.find(name);
+        if (match == std::string::npos)
+            continue;
+
+        mon = monster_type(i);
+        // we prefer prefixes over partial matches
+        if (match == 0)
+            break;
+    }
+    return (mon);
+}
+
 void init_monsters(FixedVector < unsigned short, 1000 > &colour)
 {
     unsigned int x;             // must be unsigned to match size_t {dlb}

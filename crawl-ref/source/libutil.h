@@ -17,6 +17,9 @@
 #include <string>
 #include <vector>
 
+void lowercase(std::string &s);
+void uppercase(std::string &s);
+
 std::string replace_all(std::string s,
                         const std::string &tofind,
                         const std::string &replacement);

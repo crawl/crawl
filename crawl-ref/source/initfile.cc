@@ -1985,8 +1985,19 @@ static const char *cmd_ops[] = { "scores", "name", "race", "class",
 const int num_cmd_ops = 10;
 bool arg_seen[num_cmd_ops];
 
+static void set_crawl_path(const std::string &path)
+{
+    const std::string::size_type slash = path.rfind(FILE_SEPARATOR);
+    SysEnv.crawl_executable_path = 
+        slash != std::string::npos? path.substr(0, slash + 1)
+                                  : std::string("");
+}
+
 bool parse_args( int argc, char **argv, bool rc_only )
 {
+    if (argc >= 1)
+        set_crawl_path(argv[0]);
+
     if (argc < 2)           // no args!
         return (true);
 

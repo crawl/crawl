@@ -2,18 +2,9 @@
 #include <string>
 #include <vector>
 #include "mapdef.h"
+#include "maps.h"
 
-// [dshaligram] It may be better to build the web of conditional #ifdefs to
-// figure out which header this is in by platform...
-extern "C" {
-    extern int unlink(const char *);
-}
-
-extern map_def map;
-extern level_range range;
-extern level_range default_depth;
-extern const char *autogenheader;
-extern const char *outfilename;
-extern FILE *outhandle;
-extern bool autowarned;
-extern bool write_append;
+extern map_def      lc_map;
+extern level_range  lc_range;
+extern level_range  lc_default_depth;
+extern std::string  lc_desfile;

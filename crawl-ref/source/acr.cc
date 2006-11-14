@@ -93,6 +93,7 @@
 #include "items.h"
 #include "lev-pand.h"
 #include "macro.h"
+#include "maps.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -217,6 +218,9 @@ int main( int argc, char *argv[] )
 
     // Read the init file
     init_file_location = read_init_file();
+
+    // Read special levels and vaults.
+    read_maps();
 
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );

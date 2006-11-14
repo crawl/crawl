@@ -29,6 +29,8 @@
 // referenced in files - newgame - ouch:
 extern FixedArray<bool, MAX_LEVELS, MAX_BRANCHES> tmp_file_pairs;
 
+std::string datafile_path(const std::string &basename);
+
 void check_savedir();
 
 bool travel_load_map( char branch, int absdepth );

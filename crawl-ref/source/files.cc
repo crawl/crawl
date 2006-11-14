@@ -62,6 +62,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "monstuff.h"
@@ -206,16 +207,6 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
 
 static void load_ghost();
 
-#ifdef DOS
-static void uppercase(std::string &s)
-{
-    /* yes, this is bad, but std::transform() has its own problems */
-    for ( unsigned int i = 0; i < s.size(); ++i ) {
-	s[i] = toupper(s[i]);
-    }
-}
-#endif
-
 static std::string uid_as_string()
 {
 #ifdef MULTIUSER
@@ -313,11 +304,20 @@ static std::vector<std::string> get_dir_files(const std::string &dirname)
     return (files);
 }
 
+static bool file_exists(const std::string &name)
+{
+    FILE *f = fopen(name.c_str(), "r");
+    const bool exists = !!f;
+    if (f)
+        fclose(f);
+    return (exists);
+}
+
 // Low-tech existence check.
 static bool dir_exists(const std::string &dir)
 {
     DIR *d = opendir(dir.c_str());
-    bool exists = !!d;
+    const bool exists = !!d;
     if (d)
         closedir(d);
 
@@ -326,8 +326,11 @@ static bool dir_exists(const std::string &dir)
 
 static int create_directory(const char *dir)
 {
-#ifdef MULTIUSER
+#if defined(MULTIUSER)
     return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
+#elif defined(DOS)
+    // djgpp doesn't seem to have mkdir.
+    return (-1);
 #else
     return mkdir(dir);
 #endif
@@ -354,6 +357,42 @@ static bool create_dirs(const std::string &dir)
             return (false);
     }
     return (true);
+}
+
+std::string datafile_path(const std::string &basename)
+{
+    std::string cdir = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
+    if (!cdir.empty() && cdir[cdir.length() - 1] != FILE_SEPARATOR)
+        cdir += FILE_SEPARATOR;
+
+    const std::string bases[] = {
+        cdir,
+        SysEnv.crawl_executable_path,
+        "",
+    };
+
+    const std::string prefixes[] = {
+        std::string("dat") + FILE_SEPARATOR,
+        std::string("crawl-data") + FILE_SEPARATOR,
+        "",
+    };
+
+    for (unsigned b = 0; b < sizeof(bases) / sizeof(*bases); ++b)
+    {
+        for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
+        {
+            std::string name = bases[b] + prefixes[p] + basename;
+            if (file_exists(name))
+                return (name);
+        }
+    }
+
+    // Die horribly.
+    fprintf(stderr, "Cannot find data file '%s' anywhere, aborting\n", 
+            basename.c_str());
+    exit(1);
+
+    return ("");
 }
 
 void check_savedir()

@@ -62,7 +62,6 @@ public:
 
     void clear();
 
-    std::string get_initialiser() const;
     const std::vector<std::string> &get_lines() const;
 
 private:
@@ -82,14 +81,14 @@ public:
     const std::vector<int> &get_ids() const;
 
     void add_mons(const std::string &s);
+    void resolve();
 
-    std::string get_initialiser() const;
+private:
+    int mons_by_name(std::string name) const;
 
 private:
     std::vector<std::string> mons_names;
     std::vector<int> mons_ids;
-
-    std::string canonical(std::string in) const;
 };
 
 // Not providing a constructor to make life easy for C-style initialisation.
@@ -110,13 +109,13 @@ public:
 
 public:
     void init();
-    std::string get_initialiser() const;
 
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
     void resolve();
+    void fixup();
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;

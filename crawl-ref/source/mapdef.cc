@@ -1,50 +1,12 @@
-#include "mapdef.h"
 #include <cstdarg>
 #include <cstdio>
 #include <cctype>
 
-#define esc(s) escape_string(s, "\"", "\\")
-
-std::string escape_string(std::string s, 
-                          const std::string &toesc, 
-                          const std::string &escwith)
-{
-    std::string::size_type start = 0;
-    std::string::size_type found;
-   
-    while ((found = s.find_first_of(toesc, start)) != std::string::npos)
-    {
-        const char c = s[found];
-        s.replace( found, 1, escwith + c );
-        start = found + 1 + escwith.length();
-    }
-
-    return (s);
-}
-
-std::string clean_string(std::string s, const std::string &tokill)
-{
-    std::string::size_type found;
-    while ((found = s.find_first_of(tokill)) != std::string::npos)
-        s.erase(found, 1);
-    return (s);
-}
-
-// [dshaligram] Use sprintf to compile on DOS without having to pull in
-// libutil.cc. The buffers used should be more than sufficient.
-static std::string to_s(int num)
-{
-    char buf[100];
-    sprintf(buf, "%d", num);
-    return (buf);
-}
-
-static std::string to_sl(long num)
-{
-    char buf[100];
-    sprintf(buf, "%ld", num);
-    return (buf);
-}
+#include "AppHdr.h"
+#include "libutil.h"
+#include "mapdef.h"
+#include "mon-util.h"
+#include "stuff.h"
 
 ///////////////////////////////////////////////
 // level_range
@@ -133,22 +95,89 @@ void map_lines::clear()
     map_width = 0;
 }
 
-std::string map_lines::get_initialiser() const
+void map_lines::resolve(std::string &s, const std::string &fill)
 {
-    std::string init = "  map_lines(" + to_s(lines.size()) + ",\n";
+    std::string::size_type pos;
+    while ((pos = s.find('?')) != std::string::npos)
+        s[pos] = fill[ random2(fill.length()) ];
+}
+
+void map_lines::resolve(const std::string &fillins)
+{
+    if (fillins.empty() || fillins.find('?') != std::string::npos)
+        return;
+
+    for (int i = 0, size = lines.size(); i < size; ++i)
+        resolve(lines[i], fillins);
+}
+
+void map_lines::normalise(char fillch)
+{
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
-        init += "    \"";
-        init += esc(lines[i]);
-        init += "\"";
-        if (i < size - 1)
+        std::string &s = lines[i];
+        if ((int) s.length() < map_width)
+            s += std::string( map_width - s.length(), fillch );
+    }
+}
+
+// Should never be attempted if the map has a defined orientation, or if one
+// of the dimensions is greater than the lesser of GXM,GYM.
+void map_lines::rotate(bool clockwise)
+{
+    std::vector<std::string> newlines;
+
+    // normalise() first for convenience.
+    normalise();
+
+    const int xs = clockwise? 0 : map_width - 1,
+              xe = clockwise? map_width : -1,
+              xi = clockwise? 1 : -1;
+
+    const int ys = clockwise? (int) lines.size() - 1 : 0,
+              ye = clockwise? -1 : (int) lines.size(),
+              yi = clockwise? -1 : 1;
+
+    for (int i = xs; i != xe; i += xi)
+    {
+        std::string line;
+
+        for (int j = ys; j != ye; j += yi)
+            line += lines[j][i];
+
+        newlines.push_back(line);
+    }
+
+    map_width = lines.size();
+    lines = newlines;
+}
+
+void map_lines::vmirror()
+{
+    const int size = lines.size();
+    const int midpoint = size / 2;
+
+    for (int i = 0; i < midpoint; ++i)
+    {
+        std::string temp = lines[i];
+        lines[i] = lines[size - 1 - i];
+        lines[size - 1 - i] = temp;
+    }
+}
+
+void map_lines::hmirror()
+{
+    const int midpoint = map_width / 2;
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        std::string &s = lines[i];
+        for (int j = 0; j < midpoint; ++j)
         {
-            init += ",";
-            init += "\n";
+            int c = s[j];
+            s[j] = s[map_width - 1 - j];
+            s[map_width - 1 - j] = c;
         }
     }
-    init += ")";
-    return (init);
 }
 
 ///////////////////////////////////////////////
@@ -176,33 +205,122 @@ void map_def::init()
     mons.clear();
 }
 
-std::string map_def::get_initialiser() const
+bool map_def::is_minivault() const
 {
-    std::string sinit = "{\n";
+    return (orient == MAP_NONE);
+}
 
-    sinit += "  \"" + esc(name) + "\",\n";
-    sinit += "  \"" + esc(tags) + "\",\n";
-    sinit += "  \"" + esc(place) + "\",\n";
+void map_def::hmirror()
+{
+    if (!(flags & MAPF_MIRROR_HORIZONTAL))
+        return;
 
-    sinit += "  level_range(" 
-            + to_s(depth.shallowest) 
-            + ", "
-            + to_s(depth.deepest)
-            + "),\n";
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s horizontally.", name.c_str());
+#endif
+    map.hmirror();
 
-    sinit += "  (map_section_type) " + to_s(orient) + ",\n";
+    switch (orient)
+    {
+    case MAP_EAST:      orient = MAP_WEST; break;
+    case MAP_NORTHEAST: orient = MAP_NORTHWEST; break;
+    case MAP_SOUTHEAST: orient = MAP_SOUTHWEST; break;
+    case MAP_WEST:      orient = MAP_EAST; break;
+    case MAP_NORTHWEST: orient = MAP_NORTHEAST; break;
+    case MAP_SOUTHWEST: orient = MAP_SOUTHEAST; break;
+    default: break;
+    }
+}
 
-    sinit += "  // Map generation probability weight\n";
-    sinit += "  " + to_s(chance) + ",\n";
+void map_def::vmirror()
+{
+    if (!(flags & MAPF_MIRROR_VERTICAL))
+        return;
 
-    sinit += "  // Map flags\n";
-    sinit += "  " + to_sl(flags) + "L,\n";
-    sinit += map.get_initialiser() + ",\n";
-    sinit += mons.get_initialiser() + ",\n";
-    sinit += "  \"" + esc(random_symbols) + "\"\n";
-    sinit += "},\n";
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s vertically.", name.c_str());
+#endif
+    map.vmirror();
 
-    return (sinit);
+    switch (orient)
+    {
+    case MAP_NORTH:     orient = MAP_SOUTH; break;
+    case MAP_NORTH_DIS: orient = MAP_SOUTH_DIS; break;
+    case MAP_NORTHEAST: orient = MAP_SOUTHEAST; break;
+    case MAP_NORTHWEST: orient = MAP_SOUTHWEST; break;
+
+    case MAP_SOUTH:     orient = MAP_NORTH; break;
+    case MAP_SOUTH_DIS: orient = MAP_NORTH_DIS; break;
+    case MAP_SOUTHEAST: orient = MAP_NORTHEAST; break;
+    case MAP_SOUTHWEST: orient = MAP_NORTHWEST; break;
+    default: break;
+    }
+}
+
+void map_def::rotate(bool clock)
+{
+    if (!(flags & MAPF_ROTATE))
+        return;
+
+#define GMINM ((GXM) < (GYM)? (GXM) : (GYM))
+    // Make sure the largest dimension fits in the smaller map bound.
+    if (map.width() <= GMINM && map.height() <= GMINM)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Rotating %s %sclockwise.",
+                name.c_str(),
+                !clock? "anti-" : "");
+#endif
+        map.rotate(clock);
+
+        // Orientation shifts for clockwise rotation:
+        const map_section_type clockrotate_orients[][2] = {
+            { MAP_NORTH,        MAP_EAST        },
+            { MAP_NORTHEAST,    MAP_SOUTHEAST   },
+            { MAP_EAST,         MAP_SOUTH       },
+            { MAP_SOUTHEAST,    MAP_SOUTHWEST   },
+            { MAP_SOUTH,        MAP_WEST        },
+            { MAP_SOUTHWEST,    MAP_NORTHWEST   },
+            { MAP_WEST,         MAP_NORTH       },
+            { MAP_NORTHWEST,    MAP_NORTHEAST   },
+        };
+        const int nrots = sizeof(clockrotate_orients) 
+                            / sizeof(*clockrotate_orients);
+
+        const int refindex = !clock;
+        for (int i = 0; i < nrots; ++i)
+            if (orient == clockrotate_orients[i][refindex])
+            {
+                orient = clockrotate_orients[i][!refindex];
+                break;
+            }
+    }
+}
+
+void map_def::normalise()
+{
+    // Minivaults are padded out with floor tiles, normal maps are
+    // padded out with rock walls.
+    map.normalise(is_minivault()? '.' : 'x');
+}
+
+void map_def::resolve()
+{
+    map.resolve( random_symbols );
+}
+
+void map_def::fixup()
+{
+    normalise();
+    resolve();
+
+    mons.resolve();
+}
+
+bool map_def::has_tag(const std::string &tagwanted) const
+{
+    return !tags.empty() && !tagwanted.empty()
+        && tags.find(" " + tagwanted + " ") != std::string::npos;
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -240,39 +358,74 @@ void mons_list::add_mons(const std::string &s)
     mons_names.push_back(s);
 }
 
-std::string mons_list::get_initialiser() const
+int mons_list::mons_by_name(std::string name) const
 {
-    std::string init = "  mons_list(" + to_s(mons_names.size());
-    if (mons_names.size())
-        init += ",\n";
-    for (int i = 0, size = mons_names.size(); i < size; ++i)
-    {
-        init += "    ";
-        std::string can = canonical(mons_names[i]);
-        if (can == "MONS_RANDOM" || can == "MONS_RANDOM_MONSTER")
-            can = "RANDOM_MONSTER";
+    lowercase(name);
 
-        if (can == "MONS_ANY_DEMON")
-            can = "-100 - DEMON_RANDOM";
-        else if (can.find("MONS_ANY_DEMON") == 0)
-            can = "-100 - " + can.substr(9);
+    name = replace_all( name, "_", " " );
 
-        init += can;
-        if (i < size - 1)
-            init += ",\n";
-    }
-    init += ")";
+    // Special casery:
+    if (name == "pandemonium demon")
+        return (MONS_PANDEMONIUM_DEMON);
 
-    return (init);
+    if (name == "random" || name == "random monster")
+        return (RANDOM_MONSTER);
+
+    if (name == "any demon" || name == "demon" || name == "random demon")
+        return (-100 - DEMON_RANDOM);
+
+    if (name == "any demon lesser" || name == "any lesser demon"
+            || name == "lesser demon" || name == "random lesser demon")
+        return (-100 - DEMON_LESSER);
+
+    if (name == "any demon common" || name == "any common demon"
+            || name == "common demon" || name == "random common demon")
+        return (-100 - DEMON_COMMON);
+
+    if (name == "any demon greater" || name == "any greater demon"
+            || name == "greater demon" || name == "random greater demon")
+        return (-100 - DEMON_GREATER);
+
+    if (name == "zombie small" || name == "small zombie")
+        return (MONS_ZOMBIE_SMALL);
+    if (name == "zombie large" || name == "large zombie")
+        return (MONS_ZOMBIE_LARGE);
+
+    if (name == "skeleton small" || name == "small skeleton")
+        return (MONS_SKELETON_SMALL);
+    if (name == "skeleton large" || name == "large skeleton")
+        return (MONS_SKELETON_LARGE);
+
+    if (name == "spectral thing")
+        return (MONS_SPECTRAL_THING);
+
+    if (name == "simulacrum small" || name == "small simulacrum")
+        return (MONS_SIMULACRUM_SMALL);
+    if (name == "simulacrum large" || name == "large simulacrum")
+        return (MONS_SIMULACRUM_LARGE);
+
+    if (name == "abomination small" || name == "small abomination")
+        return (MONS_ABOMINATION_SMALL);
+
+    if (name == "abomination large" || name == "large abomination")
+        return (MONS_ABOMINATION_LARGE);
+
+    return (get_monster_by_name(name, true));
 }
 
-std::string mons_list::canonical(std::string name) const
+void mons_list::resolve()
 {
-    for (int i = 0, len = name.length(); i < len; ++i)
+    for (int i = 0, size = mons_names.size(); i < size; ++i)
     {
-        name[i] = toupper(name[i]);
-        if (name[i] == ' ')
-            name[i] = '_';
+        int mons = mons_by_name(mons_names[i]);
+        if (mons == MONS_PROGRAM_BUG)
+        {
+            fprintf(stderr, "Unknown monster: '%s'\n", mons_names[i].c_str());
+            exit(1);
+        }
+
+        mons_ids.push_back( mons );
     }
-    return "MONS_" + name;
+
+    mons_names.clear();
 }

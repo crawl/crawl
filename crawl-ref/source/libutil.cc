@@ -70,6 +70,21 @@ void play_sound( const char *file )
 #endif
 }
 
+void uppercase(std::string &s)
+{
+    /* yes, this is bad, but std::transform() has its own problems */
+    for ( unsigned int i = 0; i < s.size(); ++i ) {
+	s[i] = toupper(s[i]);
+    }
+}
+
+void lowercase(std::string &s)
+{
+    for ( unsigned int i = 0; i < s.size(); ++i ) {
+	s[i] = tolower(s[i]);
+    }
+}
+
 std::string replace_all(std::string s,
                         const std::string &tofind,
                         const std::string &replacement)

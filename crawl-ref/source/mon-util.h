@@ -442,4 +442,6 @@ monster_type draco_subspecies( const monsters *mon );
 monster_type random_monster_at_grid(int x, int y);
 monster_type random_monster_at_grid(int grid);
 
+monster_type get_monster_by_name(std::string name, bool exact = false);
+
 #endif

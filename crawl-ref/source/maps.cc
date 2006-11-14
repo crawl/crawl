@@ -15,14 +15,18 @@
 #include "AppHdr.h"
 #include "maps.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
+#include <errno.h>
 
 #include "dungeon.h"
 #include "enum.h"
+#include "files.h"
 #include "monplace.h"
 #include "mapdef.h"
 #include "stuff.h"
+
+#include "levcomp.h"
 
 static int write_vault(const map_def &mdef, map_type mt, 
                         FixedVector<int,7> &marray,
@@ -39,9 +43,7 @@ static void resolve_map(map_def &def);
 //////////////////////////////////////////////////////////////////////////
 // New style vault definitions
 
-static map_def vdefs[] = {
-#include "mapdefs.ixx"
-};
+static std::vector<map_def> vdefs;
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
@@ -94,9 +96,6 @@ static int write_vault(const map_def &mdef, map_type map,
 // Mirror the map if appropriate, resolve substitutable symbols (?),
 static void resolve_map(map_def &map)
 {
-    map.normalise();
-    map.resolve();
-
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
     if (coinflip())
@@ -207,7 +206,7 @@ int random_map_for_place(const std::string &place, bool want_minivault)
     int mapindex = -1;
     int rollsize = 0;
 
-    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
         // We also accept tagged levels here.
         if (vdefs[i].place == place
@@ -237,7 +236,7 @@ int find_map_named(const std::string &name)
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Looking for map named \"%s\"", name.c_str());
 #endif
-    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
             return (i);
 
@@ -249,9 +248,11 @@ int random_map_for_depth(int depth, bool want_minivault)
     int mapindex = -1;
     int rollsize = 0;
 
-    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].depth.contains(depth) 
-                // Tagged levels MUST be selected by tag!
+                // Tagged levels cannot be selected by depth. This is
+                // the only thing preventing Pandemonium demon vaults from
+                // showing up in the main dungeon.
                 && vdefs[i].tags.empty()
                 && vdefs[i].is_minivault() == want_minivault)
         {
@@ -269,7 +270,7 @@ int random_map_for_tag(const std::string &tag)
     int mapindex = -1;
     int rollsize = 0;
 
-    for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
         if (vdefs[i].has_tag(tag))
         {
@@ -292,205 +293,41 @@ int random_map_for_tag(const std::string &tag)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// map_def
-// map_def functions that can't be implemented in mapdef.cc because that'll pull
-// in functions from lots of other places and make compiling levcomp
-// unnecessarily painful
+// Reading maps from .des files.
 
-bool map_def::is_minivault() const
+static void parse_maps(const std::string &s)
 {
-    return (orient == MAP_NONE);
-}
-
-void map_def::hmirror()
-{
-    if (!(flags & MAPF_MIRROR_HORIZONTAL))
-        return;
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s horizontally.", name.c_str());
-#endif
-    map.hmirror();
-
-    switch (orient)
+    FILE *dat = fopen(s.c_str(), "r");
+    if (!dat)
     {
-    case MAP_EAST:      orient = MAP_WEST; break;
-    case MAP_NORTHEAST: orient = MAP_NORTHWEST; break;
-    case MAP_SOUTHEAST: orient = MAP_SOUTHWEST; break;
-    case MAP_WEST:      orient = MAP_EAST; break;
-    case MAP_NORTHWEST: orient = MAP_NORTHEAST; break;
-    case MAP_SOUTHWEST: orient = MAP_SOUTHEAST; break;
-    default: break;
+        fprintf(stderr, "Failed to open %s for reading: %d\n", s.c_str(),
+                errno);
+        exit(1);
     }
+
+    extern int yyparse(void);
+    extern FILE *yyin;
+    yyin = dat;
+
+    yyparse();
+    fclose(dat);
 }
 
-void map_def::vmirror()
+void read_maps()
 {
-    if (!(flags & MAPF_MIRROR_VERTICAL))
-        return;
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s vertically.", name.c_str());
-#endif
-    map.vmirror();
-
-    switch (orient)
-    {
-    case MAP_NORTH:     orient = MAP_SOUTH; break;
-    case MAP_NORTH_DIS: orient = MAP_SOUTH_DIS; break;
-    case MAP_NORTHEAST: orient = MAP_SOUTHEAST; break;
-    case MAP_NORTHWEST: orient = MAP_SOUTHWEST; break;
-
-    case MAP_SOUTH:     orient = MAP_NORTH; break;
-    case MAP_SOUTH_DIS: orient = MAP_NORTH_DIS; break;
-    case MAP_SOUTHEAST: orient = MAP_NORTHEAST; break;
-    case MAP_SOUTHWEST: orient = MAP_NORTHWEST; break;
-    default: break;
-    }
+    parse_maps( lc_desfile = datafile_path( "splev.des" ) );
+    parse_maps( lc_desfile = datafile_path( "vaults.des" ) );
 }
 
-void map_def::rotate(bool clock)
+void add_parsed_map( const map_def &md )
 {
-    if (!(flags & MAPF_ROTATE))
-        return;
+    map_def map = md;
 
-#define GMINM ((GXM) < (GYM)? (GXM) : (GYM))
-    // Make sure the largest dimension fits in the smaller map bound.
-    if (map.width() <= GMINM && map.height() <= GMINM)
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Rotating %s %sclockwise.",
-                name.c_str(),
-                !clock? "anti-" : "");
-#endif
-        map.rotate(clock);
-
-        // Orientation shifts for clockwise rotation:
-        const map_section_type clockrotate_orients[][2] = {
-            { MAP_NORTH,        MAP_EAST        },
-            { MAP_NORTHEAST,    MAP_SOUTHEAST   },
-            { MAP_EAST,         MAP_SOUTH       },
-            { MAP_SOUTHEAST,    MAP_SOUTHWEST   },
-            { MAP_SOUTH,        MAP_WEST        },
-            { MAP_SOUTHWEST,    MAP_NORTHWEST   },
-            { MAP_WEST,         MAP_NORTH       },
-            { MAP_NORTHWEST,    MAP_NORTHEAST   },
-        };
-        const int nrots = sizeof(clockrotate_orients) 
-                            / sizeof(*clockrotate_orients);
-
-        const int refindex = !clock;
-        for (int i = 0; i < nrots; ++i)
-            if (orient == clockrotate_orients[i][refindex])
-            {
-                orient = clockrotate_orients[i][!refindex];
-                break;
-            }
-    }
-}
-
-void map_def::normalise()
-{
-    // Minivaults are padded out with floor tiles, normal maps are
-    // padded out with rock walls.
-    map.normalise(is_minivault()? '.' : 'x');
-}
-
-void map_def::resolve()
-{
-    map.resolve( random_symbols );
-}
-
-bool map_def::has_tag(const std::string &tagwanted) const
-{
-    return !tags.empty() && !tagwanted.empty()
-        && tags.find(" " + tagwanted + " ") != std::string::npos;
+    map.fixup();
+    vdefs.push_back( map );
 }
 
 //////////////////////////////////////////////////////////////////
 // map_lines
 
-void map_lines::resolve(std::string &s, const std::string &fill)
-{
-    std::string::size_type pos;
-    while ((pos = s.find('?')) != std::string::npos)
-        s[pos] = fill[ random2(fill.length()) ];
-}
 
-void map_lines::resolve(const std::string &fillins)
-{
-    if (fillins.empty() || fillins.find('?') != std::string::npos)
-        return;
-
-    for (int i = 0, size = lines.size(); i < size; ++i)
-        resolve(lines[i], fillins);
-}
-
-void map_lines::normalise(char fillch)
-{
-    for (int i = 0, size = lines.size(); i < size; ++i)
-    {
-        std::string &s = lines[i];
-        if ((int) s.length() < map_width)
-            s += std::string( map_width - s.length(), fillch );
-    }
-}
-
-// Should never be attempted if the map has a defined orientation, or if one
-// of the dimensions is greater than the lesser of GXM,GYM.
-void map_lines::rotate(bool clockwise)
-{
-    std::vector<std::string> newlines;
-
-    // normalise() first for convenience.
-    normalise();
-
-    const int xs = clockwise? 0 : map_width - 1,
-              xe = clockwise? map_width : -1,
-              xi = clockwise? 1 : -1;
-
-    const int ys = clockwise? (int) lines.size() - 1 : 0,
-              ye = clockwise? -1 : (int) lines.size(),
-              yi = clockwise? -1 : 1;
-
-    for (int i = xs; i != xe; i += xi)
-    {
-        std::string line;
-
-        for (int j = ys; j != ye; j += yi)
-            line += lines[j][i];
-
-        newlines.push_back(line);
-    }
-
-    map_width = lines.size();
-    lines = newlines;
-}
-
-void map_lines::vmirror()
-{
-    const int size = lines.size();
-    const int midpoint = size / 2;
-
-    for (int i = 0; i < midpoint; ++i)
-    {
-        std::string temp = lines[i];
-        lines[i] = lines[size - 1 - i];
-        lines[size - 1 - i] = temp;
-    }
-}
-
-void map_lines::hmirror()
-{
-    const int midpoint = map_width / 2;
-    for (int i = 0, size = lines.size(); i < size; ++i)
-    {
-        std::string &s = lines[i];
-        for (int j = 0; j < midpoint; ++j)
-        {
-            int c = s[j];
-            s[j] = s[map_width - 1 - j];
-            s[map_width - 1 - j] = c;
-        }
-    }
-}

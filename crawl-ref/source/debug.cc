@@ -380,35 +380,6 @@ void TRACE(const char *format, ...)
 
 #ifdef WIZARD
 
-static int get_monnum(const char *name)
-{
-    char search[ITEMNAME_SIZE],
-         mname[ITEMNAME_SIZE];
-    strncpy(search, name, sizeof search);
-    search[ITEMNAME_SIZE - 1] = 0;
-    strlwr(search);
-
-    int mon = -1;
-    for (int i = 0; i < NUM_MONSTERS; i++)
-    {
-        moname( i, true, DESC_PLAIN, mname );
-
-        const char *ptr = strstr( strlwr(mname), search );
-        if (ptr != NULL)
-        {
-            if (ptr == mname)
-            {
-                // we prefer prefixes over partial matches
-                mon = i;
-                break;
-            }
-            else
-                mon = i;
-        }
-    }
-    return (mon);
-}
-
 static int debug_prompt_for_monster( void )
 {
     char  specs[80];
@@ -420,7 +391,7 @@ static int debug_prompt_for_monster( void )
     if (specs[0] == '\0')
         return (-1);
 
-    return (get_monnum(specs));
+    return (get_monster_by_name(specs));
 }
 #endif
 
@@ -2093,7 +2064,7 @@ int fsim_kit_equip(const std::string &kit)
 // of current weapon skill.
 void debug_fight_statistics(bool use_defaults)
 {
-    int punching_bag = get_monnum(Options.fsim_mons.c_str());
+    int punching_bag = get_monster_by_name(Options.fsim_mons);
     if (punching_bag == -1)
         punching_bag = MONS_WORM;
 
