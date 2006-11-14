@@ -82,8 +82,10 @@ static int write_vault(const map_def &mdef, map_type map,
                        FixedVector<int, 7> &marray,
                        vault_placement &place)
 {
-    map_def def = mdef;
+    place.map = &mdef;
 
+    // Copy the map so we can monkey with it.
+    map_def def = mdef;
     resolve_map(def);
 
     return apply_vault_definition(def, map, marray, place);
@@ -92,8 +94,8 @@ static int write_vault(const map_def &mdef, map_type map,
 // Mirror the map if appropriate, resolve substitutable symbols (?),
 static void resolve_map(map_def &map)
 {
-    map.map.normalise();
-    map.map.resolve( map.random_symbols );
+    map.normalise();
+    map.resolve();
 
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
@@ -103,9 +105,9 @@ static void resolve_map(map_def &map)
     if (coinflip())
         map.vmirror();
 
-    // Note: the map may refuse to be rotated.
-    if (one_chance_in(3))
-        map.rotate( random2(2) );
+    // The map may also refuse to be rotated.
+    if (coinflip())
+        map.rotate( coinflip() );
 }
 
 static void apply_monsters(
@@ -147,6 +149,18 @@ static void apply_vault_grid(const map_def &def, map_type map,
     if (orient == MAP_EAST || orient == MAP_NORTHEAST 
             || orient == MAP_SOUTHEAST)
         startx = GXM - width;
+
+    // Handle maps aligned along cardinals that are smaller than
+    // the corresponding map dimension.
+    if ((orient == MAP_NORTH || orient == MAP_SOUTH
+                || orient == MAP_ENCOMPASS)
+            && width < GXM)
+        startx = (GXM - width) / 2;
+
+    if ((orient == MAP_EAST || orient == MAP_WEST
+                || orient == MAP_ENCOMPASS)
+            && height < GYM)
+        starty = (GYM - height) / 2;
 
     const std::vector<std::string> &lines = ml.get_lines();
 #ifdef DEBUG_DIAGNOSTICS
@@ -197,7 +211,7 @@ int random_map_for_place(const std::string &place, bool want_minivault)
     {
         // We also accept tagged levels here.
         if (vdefs[i].place == place
-                && ((vdefs[i].orient == MAP_NONE) == want_minivault))
+                && vdefs[i].is_minivault() == want_minivault)
         {
             rollsize += vdefs[i].chance;
 
@@ -239,7 +253,7 @@ int random_map_for_depth(int depth, bool want_minivault)
         if (vdefs[i].depth.contains(depth) 
                 // Tagged levels MUST be selected by tag!
                 && vdefs[i].tags.empty()
-                && ((vdefs[i].orient == MAP_NONE) == want_minivault))
+                && vdefs[i].is_minivault() == want_minivault)
         {
             rollsize += vdefs[i].chance;
 
@@ -250,16 +264,14 @@ int random_map_for_depth(int depth, bool want_minivault)
     return (mapindex);
 }
 
-int random_map_for_tag(std::string tag)
+int random_map_for_tag(const std::string &tag)
 {
-    tag = " " + tag + " ";
-
     int mapindex = -1;
     int rollsize = 0;
 
     for (unsigned i = 0; i < sizeof(vdefs) / sizeof(*vdefs); ++i)
     {
-        if (vdefs[i].tags.find(tag) != std::string::npos)
+        if (vdefs[i].has_tag(tag))
         {
             rollsize += vdefs[i].chance;
 
@@ -270,10 +282,10 @@ int random_map_for_tag(std::string tag)
 
 #ifdef DEBUG_DIAGNOSTICS
     if (mapindex != -1)
-        mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged%s", 
+        mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged '%s'",
                 vdefs[mapindex].name.c_str(), tag.c_str());
     else
-        mprf(MSGCH_DIAGNOSTICS, "No map for tag%s", tag.c_str());
+        mprf(MSGCH_DIAGNOSTICS, "No map for tag '%s'", tag.c_str());
 #endif
 
     return (mapindex);
@@ -284,6 +296,11 @@ int random_map_for_tag(std::string tag)
 // map_def functions that can't be implemented in mapdef.cc because that'll pull
 // in functions from lots of other places and make compiling levcomp
 // unnecessarily painful
+
+bool map_def::is_minivault() const
+{
+    return (orient == MAP_NONE);
+}
 
 void map_def::hmirror()
 {
@@ -334,10 +351,12 @@ void map_def::vmirror()
 
 void map_def::rotate(bool clock)
 {
-    if (orient != MAP_NONE)
+    if (!(flags & MAPF_ROTATE))
         return;
 
-    if (map.width() < GYM && map.height() < GYM)
+#define GMINM ((GXM) < (GYM)? (GXM) : (GYM))
+    // Make sure the largest dimension fits in the smaller map bound.
+    if (map.width() <= GMINM && map.height() <= GMINM)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Rotating %s %sclockwise.",
@@ -345,8 +364,51 @@ void map_def::rotate(bool clock)
                 !clock? "anti-" : "");
 #endif
         map.rotate(clock);
+
+        // Orientation shifts for clockwise rotation:
+        const map_section_type clockrotate_orients[][2] = {
+            { MAP_NORTH,        MAP_EAST        },
+            { MAP_NORTHEAST,    MAP_SOUTHEAST   },
+            { MAP_EAST,         MAP_SOUTH       },
+            { MAP_SOUTHEAST,    MAP_SOUTHWEST   },
+            { MAP_SOUTH,        MAP_WEST        },
+            { MAP_SOUTHWEST,    MAP_NORTHWEST   },
+            { MAP_WEST,         MAP_NORTH       },
+            { MAP_NORTHWEST,    MAP_NORTHEAST   },
+        };
+        const int nrots = sizeof(clockrotate_orients) 
+                            / sizeof(*clockrotate_orients);
+
+        const int refindex = !clock;
+        for (int i = 0; i < nrots; ++i)
+            if (orient == clockrotate_orients[i][refindex])
+            {
+                orient = clockrotate_orients[i][!refindex];
+                break;
+            }
     }
 }
+
+void map_def::normalise()
+{
+    // Minivaults are padded out with floor tiles, normal maps are
+    // padded out with rock walls.
+    map.normalise(is_minivault()? '.' : 'x');
+}
+
+void map_def::resolve()
+{
+    map.resolve( random_symbols );
+}
+
+bool map_def::has_tag(const std::string &tagwanted) const
+{
+    return !tags.empty() && !tagwanted.empty()
+        && tags.find(" " + tagwanted + " ") != std::string::npos;
+}
+
+//////////////////////////////////////////////////////////////////
+// map_lines
 
 void map_lines::resolve(std::string &s, const std::string &fill)
 {
@@ -364,18 +426,18 @@ void map_lines::resolve(const std::string &fillins)
         resolve(lines[i], fillins);
 }
 
-void map_lines::normalise()
+void map_lines::normalise(char fillch)
 {
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         std::string &s = lines[i];
         if ((int) s.length() < map_width)
-            s += std::string( map_width - s.length(), 'x' );
+            s += std::string( map_width - s.length(), fillch );
     }
 }
 
 // Should never be attempted if the map has a defined orientation, or if one
-// of the dimensions is greater than GYM.
+// of the dimensions is greater than the lesser of GXM,GYM.
 void map_lines::rotate(bool clockwise)
 {
     std::vector<std::string> newlines;
@@ -383,16 +445,20 @@ void map_lines::rotate(bool clockwise)
     // normalise() first for convenience.
     normalise();
 
-    for (int i = 0; i < map_width; ++i)
+    const int xs = clockwise? 0 : map_width - 1,
+              xe = clockwise? map_width : -1,
+              xi = clockwise? 1 : -1;
+
+    const int ys = clockwise? (int) lines.size() - 1 : 0,
+              ye = clockwise? -1 : (int) lines.size(),
+              yi = clockwise? -1 : 1;
+
+    for (int i = xs; i != xe; i += xi)
     {
         std::string line;
 
-        if (clockwise)
-            for (int j = lines.size() - 1; j >= 0; --j)
-                line += lines[j][i];
-        else
-            for (int j = 0, size = lines.size(); j < size; ++j)
-                line += lines[j][i];
+        for (int j = ys; j != ye; j += yi)
+            line += lines[j][i];
 
         newlines.push_back(line);
     }

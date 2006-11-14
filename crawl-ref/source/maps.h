@@ -15,13 +15,15 @@
 #include "FixVec.h"
 #include "dungeon.h"
 
+class map_def;
 struct vault_placement
 {
     int x, y;
     int width, height;
+    const map_def *map;
 
     vault_placement()
-        : x(-1), y(-1), width(0), height(0)
+        : x(-1), y(-1), width(0), height(0), map(NULL)
     {
     }
 };
@@ -35,7 +37,7 @@ int vault_main(map_type vgrid,
 int random_map_for_place(const std::string &place, bool mini = false);
 int find_map_named(const std::string &name);
 int random_map_for_depth(int depth, bool want_minivault = false);
-int random_map_for_tag(std::string tag);
+int random_map_for_tag(const std::string &tag);
 
 
 #endif

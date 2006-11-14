@@ -61,6 +61,13 @@
 #
 #  Guidelines for creating new vault maps:
 #
+#  [ds] If your map is not a minivault, make sure the side(s) that form the
+#  border have a rock wall padding at least 6 deep. For instance, if your map
+#  is ORIENT: north, you must have a 6 deep border of rock wall (or any
+#  other kind of wall) along the northern, eastern, and western edges of the
+#  map. If you're doing a fullscreen map (encompass), you must pad all around
+#  the map with 6 layers of wall.
+#
 #  Basically you can just let your creativity run wild. You do not have
 #  to place all of the stairs unless the level is full screen, in which
 #  case you must place all except the extra stairs (> and <). The <> stairs
@@ -225,6 +232,7 @@ ENDMAP
 
 NAME: vault_4
 ORIENT: southwest
+FLAGS: no_rotate
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxx
@@ -269,6 +277,7 @@ ENDMAP
 
 NAME: vault_5
 ORIENT: southeast
+FLAGS: no_rotate
 
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -533,6 +542,7 @@ ENDMAP
 
 NAME: orc_temple
 ORIENT: southwest
+FLAGS: no_rotate
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx

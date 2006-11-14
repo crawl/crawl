@@ -71,7 +71,19 @@ void level_range::reset()
 
 bool level_range::contains(int x) const
 {
+    // [ds] The level ranges used by the game are zero-based, adjust for that.
+    ++x;
     return (x >= shallowest && x <= deepest);
+}
+
+bool level_range::valid() const
+{
+    return (shallowest > 0 && deepest >= shallowest);
+}
+
+int level_range::span() const
+{
+    return (deepest - shallowest);
 }
 
 ///////////////////////////////////////////////
@@ -155,7 +167,8 @@ void map_def::init()
     chance = 10;
 
     // The map designer must explicitly disallow these if unwanted.
-    flags = MAPF_MIRROR_VERTICAL | MAPF_MIRROR_HORIZONTAL;
+    flags = MAPF_MIRROR_VERTICAL | MAPF_MIRROR_HORIZONTAL
+            | MAPF_ROTATE;
 
     random_symbols.clear();
 

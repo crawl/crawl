@@ -83,6 +83,7 @@ MONS:               { BEGIN(MNAME); return MONS; }
 pandemonic          return PANDEMONIC;
 no_hmirror          return NO_HMIRROR;
 no_vmirror          return NO_VMIRROR;
+no_rotate           return NO_ROTATE;
 
 encompass           return ENCOMPASS;
 north               return NORTH;

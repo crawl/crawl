@@ -365,7 +365,7 @@ void direction( struct dist &moves, int restrict, int mode,
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void describe_oos_square(int x, int y)
 {
-    if (!is_mapped(x, y))
+    if (!in_bounds(x, y) || !is_mapped(x, y))
         return;
 
 #ifdef STASH_TRACKING
@@ -634,7 +634,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
             // [dshaligram] We no longer vet the square coordinates if
             // we're justLooking. By not vetting the coordinates, we make 'x'
             // look_around() nicer for travel purposes.
-            if (!justLooking)
+            if (!justLooking || !in_bounds(view2gridX(cx), view2gridY(cy)))
             {
                 // RULE: cannot target what you cannot see
                 if (!in_vlos(cx, cy))
@@ -692,14 +692,19 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         cx = newcx;
         cy = newcy;
         mesclr( true );
+
+        const int gridX = view2gridX(cx),
+                  gridY = view2gridY(cy);
+
         if (!in_vlos(cx, cy))
         {
             mpr("You can't see that place.");
-            describe_oos_square(you.x_pos + cx - VIEW_CX, 
-                                you.y_pos + cy - VIEW_CY);
+            describe_oos_square(gridX, gridY);
             continue;
         }
-        describe_cell(you.x_pos + cx - VIEW_CX, you.y_pos + cy - VIEW_CY);
+        
+        if (in_bounds(gridX, gridY))
+            describe_cell(gridX, gridY);
     } // end WHILE
 
     mesclr( true );

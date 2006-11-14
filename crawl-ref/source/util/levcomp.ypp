@@ -39,7 +39,7 @@ void yyerror(const char *e)
 
 %token <i>      BAD_CHARACTER
 
-%token <i>      NO_HMIRROR NO_VMIRROR
+%token <i>      NO_HMIRROR NO_VMIRROR NO_ROTATE
 
 %token <i>      PANDEMONIC 
 %token <i>      DASH COMMA
@@ -214,12 +214,16 @@ flagnames       : /* empty */
                     case NO_VMIRROR:
                         map.flags &= ~MAPF_MIRROR_VERTICAL;
                         break;
+                    case NO_ROTATE:
+                        map.flags &= ~MAPF_ROTATE;
+                        break;
                     }
                 }
                 ;
 
 flagname        : NO_HMIRROR    { $$ = NO_HMIRROR; }
                 | NO_VMIRROR    { $$ = NO_VMIRROR; }
+                | NO_ROTATE     { $$ = NO_ROTATE;  }
                 ;
 
 map_def         : map_lines

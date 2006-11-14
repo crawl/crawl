@@ -34,10 +34,12 @@
 #include "defines.h"
 #include "enum.h"
 #include "externs.h"
+#include "direct.h"
 #include "dungeon.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "mapdef.h"
 #include "maps.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -3558,9 +3560,11 @@ static void prepare_swamp(void)
     int i, j;                   // loop variables
     int temp_rand;              // probability determination {dlb}
 
-    for (i = 10; i < (GXM - 10); i++)
+    const int margin = 10;
+
+    for (i = margin; i < (GXM - margin); i++)
     {
-        for (j = 10; j < (GYM - 10); j++)
+        for (j = margin; j < (GYM - margin); j++)
         {
             // doors -> floors {dlb}
             if (grd[i][j] == DNGN_CLOSED_DOOR || grd[i][j] == DNGN_SECRET_DOOR)
@@ -4251,6 +4255,10 @@ static void place_branch_entrances(int dlevel, char level_type)
 
         stair = branch + DNGN_ENTER_ORCISH_MINES;
         place_specific_stair(stair);
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Placing stair: %s",
+                feature_description(stair).c_str());
+#endif
     }   // end loop - possible branch entrances
 }
 
@@ -5350,106 +5358,47 @@ static void build_vaults(int level_number, int force_vault)
         }
     }
 
-    // [dshaligram] I've filled in the missing cases so that mirrored maps
-    // work; previously MAP_NORTH had no mirrored or rotated counterparts.
-    switch (gluggy)
-    {
-    case MAP_NORTH:
-        v1x = 1;
-        v2x = GXM;
-        v1y = 1;
-        v2y = place.height;
-        initial_y++;
-        dig_dir_x = 0;
-        dig_dir_y = 1;
-        break;
-
-    case MAP_SOUTH:
-        v1x = 1;
-        v2x = GXM;
-        v1y = GYM - place.height + 1;
-        v2y = GYM;
-        initial_y--;
-        dig_dir_x = 0;
-        dig_dir_y = -1;
-        break;
-
-    case MAP_EAST:
-        v1x = GXM - place.width + 1;
-        v2x = GXM;
-        v1y = 1;
-        v2y = GYM;
-        initial_x--;
-        dig_dir_x = -1;
-        dig_dir_y = 0;
-        break;
-
-    case MAP_WEST:
-        v1x = 1;
-        v2x = place.width;
-        v1y = 1;
-        v2y = GYM;
-        initial_x++;
-        dig_dir_x = 1;
-        dig_dir_y = 0;
-        break;
-
-    case MAP_NORTHWEST:
-        v1x = 1;
-        v2x = place.width;
-        v1y = 1;
-        v2y = place.height;
-        initial_y++;
-        dig_dir_x = 1;
-        dig_dir_y = 0;
-        break;
-
-    case MAP_NORTHEAST:
-        v1x = GXM - place.width + 1;
-        v2x = GXM;
-        v1y = 1;
-        v2y = place.height;
-        initial_y++;
-        dig_dir_x = -1;
-        dig_dir_y = 0;
-        break;
-
-    case MAP_SOUTHWEST:
-        v1x = 1;
-        v2x = place.width;
-        v1y = GYM - place.height + 1;
-        v2y = GYM;
-        initial_y--;
-        dig_dir_x = 0;
-        dig_dir_y = -1;
-        break;
-
-    case MAP_SOUTHEAST:
-        v1x = GXM - place.width + 1;
-        v2x = GXM;
-        v1y = GYM - place.height + 1;
-        v2y = GYM;
-        initial_y--;
-        dig_dir_x = 0;
-        dig_dir_y = -1;
-        break;
-
-    case MAP_ENCOMPASS:
+    // If the map takes the whole screen, our work is done.
+    if (gluggy == MAP_ENCOMPASS)
         return;
 
-    case MAP_NORTH_DIS:
-        v1x = 1;
-        v2x = GXM;
-        v1y = 1;
-        v2y = place.height;
-        plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
-        goto vstair;
+    // Figure out which way we need to go to dig our way out of the vault.
+    const bool x_edge = 
+        initial_x == place.x || initial_x == place.x + place.width - 1;
+    const bool y_edge =
+        initial_y == place.y || initial_y == place.y + place.height - 1;
 
-    case MAP_SOUTH_DIS:
-        v1x = 1;
-        v2x = GXM;
-        v1y = GYM - place.height + 1;
-        v2y = GYM;
+    if (x_edge)
+    {
+        dig_dir_x = place.x == 0? 1 : -1;
+        initial_x += dig_dir_x;
+    }
+
+    if (y_edge)
+    {
+        dig_dir_y = place.y == 0? 1 : -1;
+        initial_y += dig_dir_y;
+    }
+
+    // Does this level require Dis treatment (metal wallification)?
+    // XXX: Change this so the level definition can explicitly state what
+    // kind of wallification it wants.
+    const bool dis_wallify = place.map->has_tag("dis");
+
+    v1x = place.x + 1;
+    v1y = place.y + 1;
+    v2x = place.x + place.width;
+    v2y = place.y + place.height;
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+            "Vault: (%d,%d)-(%d,%d), exit (%d,%d), dir (%d,%d); Dis: %s",
+            v1x, v1y, v2x, v2y, initial_x, initial_y, dig_dir_x, dig_dir_y,
+            dis_wallify? "yes" : "no");
+#endif
+
+    if (dis_wallify)
+    {
         plan_4(v1x, v1y, v2x, v2y, DNGN_METAL_WALL);
         goto vstair;
     }
