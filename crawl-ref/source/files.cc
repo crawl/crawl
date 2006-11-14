@@ -324,6 +324,15 @@ static bool dir_exists(const std::string &dir)
     return (exists);
 }
 
+static int create_directory(const char *dir)
+{
+#ifdef MULTIUSER
+    return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
+#else
+    return mkdir(dir);
+#endif
+}
+
 static bool create_dirs(const std::string &dir)
 {
     std::string sep = " ";
@@ -341,7 +350,7 @@ static bool create_dirs(const std::string &dir)
         path += segments[i];
         path += FILE_SEPARATOR;
 
-        if (!dir_exists(path) && mkdir(path.c_str()))
+        if (!dir_exists(path) && create_directory(path.c_str()))
             return (false);
     }
     return (true);

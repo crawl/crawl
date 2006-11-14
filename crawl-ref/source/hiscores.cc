@@ -426,6 +426,7 @@ void hs_close( FILE *handle, const char *mode )
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     if (stricmp(mode, "w") == 0)
     {
+        std::string scores = Options.save_dir + "scores";
         chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
     }
 #endif
