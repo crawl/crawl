@@ -1944,6 +1944,7 @@ void drop(void)
     {
         drop_item( items_for_multidrop[0].slot,
                    items_for_multidrop[0].quantity );
+        items_for_multidrop.clear();
         you.turn_is_over = true;
     }
     else
