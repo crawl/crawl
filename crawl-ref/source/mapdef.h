@@ -80,14 +80,13 @@ public:
     void clear();
     const std::vector<int> &get_ids() const;
 
-    void add_mons(const std::string &s);
-    void resolve();
+    // Returns false if the monster is unrecognised.
+    bool add_mons(const std::string &s);
 
 private:
     int mons_by_name(std::string name) const;
 
 private:
-    std::vector<std::string> mons_names;
     std::vector<int> mons_ids;
 };
 

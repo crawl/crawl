@@ -54,22 +54,21 @@
      EAST = 270,
      SOUTH = 271,
      WEST = 272,
-     NORTH_DIS = 273,
-     NORTHEAST = 274,
-     SOUTHEAST = 275,
-     SOUTHWEST = 276,
-     NORTHWEST = 277,
-     BAD_CHARACTER = 278,
-     NO_HMIRROR = 279,
-     NO_VMIRROR = 280,
-     NO_ROTATE = 281,
-     PANDEMONIC = 282,
-     DASH = 283,
-     COMMA = 284,
-     INTEGER = 285,
-     STRING = 286,
-     MAP_LINE = 287,
-     MONSTER_NAME = 288
+     NORTHEAST = 273,
+     SOUTHEAST = 274,
+     SOUTHWEST = 275,
+     NORTHWEST = 276,
+     BAD_CHARACTER = 277,
+     NO_HMIRROR = 278,
+     NO_VMIRROR = 279,
+     NO_ROTATE = 280,
+     PANDEMONIC = 281,
+     DASH = 282,
+     COMMA = 283,
+     INTEGER = 284,
+     STRING = 285,
+     MAP_LINE = 286,
+     MONSTER_NAME = 287
    };
 #endif
 /* Tokens.  */
@@ -88,22 +87,21 @@
 #define EAST 270
 #define SOUTH 271
 #define WEST 272
-#define NORTH_DIS 273
-#define NORTHEAST 274
-#define SOUTHEAST 275
-#define SOUTHWEST 276
-#define NORTHWEST 277
-#define BAD_CHARACTER 278
-#define NO_HMIRROR 279
-#define NO_VMIRROR 280
-#define NO_ROTATE 281
-#define PANDEMONIC 282
-#define DASH 283
-#define COMMA 284
-#define INTEGER 285
-#define STRING 286
-#define MAP_LINE 287
-#define MONSTER_NAME 288
+#define NORTHEAST 273
+#define SOUTHEAST 274
+#define SOUTHWEST 275
+#define NORTHWEST 276
+#define BAD_CHARACTER 277
+#define NO_HMIRROR 278
+#define NO_VMIRROR 279
+#define NO_ROTATE 280
+#define PANDEMONIC 281
+#define DASH 282
+#define COMMA 283
+#define INTEGER 284
+#define STRING 285
+#define MAP_LINE 286
+#define MONSTER_NAME 287
 
 
 
@@ -116,7 +114,7 @@ typedef union YYSTYPE
     const char *text;
 }
 /* Line 1529 of yacc.c.  */
-#line 120 "levcomp.tab.h"
+#line 118 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

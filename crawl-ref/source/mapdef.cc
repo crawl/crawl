@@ -245,12 +245,10 @@ void map_def::vmirror()
     switch (orient)
     {
     case MAP_NORTH:     orient = MAP_SOUTH; break;
-    case MAP_NORTH_DIS: orient = MAP_SOUTH_DIS; break;
     case MAP_NORTHEAST: orient = MAP_SOUTHEAST; break;
     case MAP_NORTHWEST: orient = MAP_SOUTHWEST; break;
 
     case MAP_SOUTH:     orient = MAP_NORTH; break;
-    case MAP_SOUTH_DIS: orient = MAP_NORTH_DIS; break;
     case MAP_SOUTHEAST: orient = MAP_NORTHEAST; break;
     case MAP_SOUTHWEST: orient = MAP_NORTHWEST; break;
     default: break;
@@ -313,8 +311,6 @@ void map_def::fixup()
 {
     normalise();
     resolve();
-
-    mons.resolve();
 }
 
 bool map_def::has_tag(const std::string &tagwanted) const
@@ -327,7 +323,7 @@ bool map_def::has_tag(const std::string &tagwanted) const
 // mons_list
 //
 
-mons_list::mons_list(int nids, ...) : mons_names(), mons_ids()
+mons_list::mons_list(int nids, ...) : mons_ids()
 {
     va_list args;
     va_start(args, nids);
@@ -338,7 +334,7 @@ mons_list::mons_list(int nids, ...) : mons_names(), mons_ids()
     va_end(args);
 }
 
-mons_list::mons_list() : mons_names(), mons_ids()
+mons_list::mons_list() : mons_ids()
 {
 }
 
@@ -349,13 +345,15 @@ const std::vector<int> &mons_list::get_ids() const
 
 void mons_list::clear()
 {
-    mons_names.clear();
     mons_ids.clear();
 }
 
-void mons_list::add_mons(const std::string &s)
+bool mons_list::add_mons(const std::string &s)
 {
-    mons_names.push_back(s);
+    const int mid = mons_by_name(s);
+    if (mid != MONS_PROGRAM_BUG)
+        mons_ids.push_back(mid);
+    return (mid != MONS_PROGRAM_BUG);
 }
 
 int mons_list::mons_by_name(std::string name) const
@@ -374,58 +372,41 @@ int mons_list::mons_by_name(std::string name) const
     if (name == "any demon" || name == "demon" || name == "random demon")
         return (-100 - DEMON_RANDOM);
 
-    if (name == "any demon lesser" || name == "any lesser demon"
+    if (name == "any lesser demon" 
             || name == "lesser demon" || name == "random lesser demon")
         return (-100 - DEMON_LESSER);
 
-    if (name == "any demon common" || name == "any common demon"
+    if (name == "any common demon" 
             || name == "common demon" || name == "random common demon")
         return (-100 - DEMON_COMMON);
 
-    if (name == "any demon greater" || name == "any greater demon"
+    if (name == "any greater demon" 
             || name == "greater demon" || name == "random greater demon")
         return (-100 - DEMON_GREATER);
 
-    if (name == "zombie small" || name == "small zombie")
+    if (name == "small zombie")
         return (MONS_ZOMBIE_SMALL);
-    if (name == "zombie large" || name == "large zombie")
+    if (name == "large zombie")
         return (MONS_ZOMBIE_LARGE);
 
-    if (name == "skeleton small" || name == "small skeleton")
+    if (name == "small skeleton")
         return (MONS_SKELETON_SMALL);
-    if (name == "skeleton large" || name == "large skeleton")
+    if (name == "large skeleton")
         return (MONS_SKELETON_LARGE);
 
     if (name == "spectral thing")
         return (MONS_SPECTRAL_THING);
 
-    if (name == "simulacrum small" || name == "small simulacrum")
+    if (name == "small simulacrum")
         return (MONS_SIMULACRUM_SMALL);
-    if (name == "simulacrum large" || name == "large simulacrum")
+    if (name == "large simulacrum")
         return (MONS_SIMULACRUM_LARGE);
 
-    if (name == "abomination small" || name == "small abomination")
+    if (name == "small abomination")
         return (MONS_ABOMINATION_SMALL);
 
-    if (name == "abomination large" || name == "large abomination")
+    if (name == "large abomination")
         return (MONS_ABOMINATION_LARGE);
 
     return (get_monster_by_name(name, true));
-}
-
-void mons_list::resolve()
-{
-    for (int i = 0, size = mons_names.size(); i < size; ++i)
-    {
-        int mons = mons_by_name(mons_names[i]);
-        if (mons == MONS_PROGRAM_BUG)
-        {
-            fprintf(stderr, "Unknown monster: '%s'\n", mons_names[i].c_str());
-            exit(1);
-        }
-
-        mons_ids.push_back( mons );
-    }
-
-    mons_names.clear();
 }

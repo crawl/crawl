@@ -1,6 +1,7 @@
 %{
 
 #include "AppHdr.h"
+#include "libutil.h"
 #include "levcomp.h"
 
 int yylex();
@@ -9,8 +10,7 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
-    fprintf(stderr, "Error on line %d of %s: %s\n", 
-            yylineno, lc_desfile.c_str(), e);
+    fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     exit(1);
 }
@@ -26,7 +26,7 @@ void yyerror(const char *e)
 %token <i>      DEFAULT_DEPTH SYMBOL TAGS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS
 %token <i>      ENCOMPASS 
-%token <i>      NORTH EAST SOUTH WEST NORTH_DIS
+%token <i>      NORTH EAST SOUTH WEST
 %token <i>      NORTHEAST SOUTHEAST SOUTHWEST NORTHWEST
 
 %token <i>      BAD_CHARACTER
@@ -120,7 +120,14 @@ mnames          : mname COMMA mnames
 
 mname           : MONSTER_NAME
                 {
-                    lc_map.mons.add_mons($1);
+                    bool recognised = lc_map.mons.add_mons($1);
+                    if (!recognised)
+                    {
+                        char buf[300];
+                        snprintf(buf, sizeof buf, "unknown monster '%s'",
+                                 $1);
+                        yyerror(buf);
+                    }
                 }
                 ;
 
@@ -170,7 +177,6 @@ orient_name     : ENCOMPASS     { $$ = MAP_ENCOMPASS; }
                 | SOUTHEAST     { $$ = MAP_SOUTHEAST; }
                 | SOUTHWEST     { $$ = MAP_SOUTHWEST; }
                 | NORTHWEST     { $$ = MAP_NORTHWEST; }
-                | NORTH_DIS     { $$ = MAP_NORTH_DIS; }
                 ;
 
 flags           : FLAGS flagnames {}

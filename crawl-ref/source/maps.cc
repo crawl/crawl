@@ -142,7 +142,7 @@ static void apply_vault_grid(const map_def &def, map_type map,
     int startx = 0, starty = 0;
 
     if (orient == MAP_SOUTH || orient == MAP_SOUTHEAST
-            || orient == MAP_SOUTHWEST || orient == MAP_SOUTH_DIS)
+            || orient == MAP_SOUTHWEST)
         starty = GYM - height;
 
     if (orient == MAP_EAST || orient == MAP_NORTHEAST 

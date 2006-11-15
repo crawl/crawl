@@ -5475,7 +5475,7 @@ static void build_vaults(int level_number, int force_vault)
     dig_place_x = initial_x;
     dig_place_y = initial_y;
 
-    if (gluggy != MAP_NORTH_DIS)
+    if (!dis_wallify)
     {
         for (i = 0; i < 40; i++)
         {

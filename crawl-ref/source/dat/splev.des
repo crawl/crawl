@@ -510,8 +510,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Ereshkigal, necrophage, wraith, shadow, zombie small
-MONS: skeleton_small, Shadow Fiend
+MONS: Ereshkigal, necrophage, wraith, shadow, small zombie
+MONS: small skeleton, Shadow Fiend
 
 
 ###########################################################################

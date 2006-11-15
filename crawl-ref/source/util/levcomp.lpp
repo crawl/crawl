@@ -95,7 +95,6 @@ northeast           return NORTHEAST;
 northwest           return NORTHWEST;
 southeast           return SOUTHEAST;
 southwest           return SOUTHWEST;
-north_dis           return NORTH_DIS;
 
 -                   return DASH;
 ,                   return COMMA;

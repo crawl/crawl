@@ -1691,13 +1691,11 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
     MAP_SOUTH,
     MAP_EAST,
     MAP_WEST,
-    MAP_NORTHWEST,
+    MAP_NORTHWEST,                     //    5
     MAP_NORTHEAST,
     MAP_SOUTHWEST,
-    MAP_SOUTHEAST,                     //    5
-    MAP_ENCOMPASS,
-    MAP_NORTH_DIS,
-    MAP_SOUTH_DIS
+    MAP_SOUTHEAST,
+    MAP_ENCOMPASS
 };
 
 enum menu_type
