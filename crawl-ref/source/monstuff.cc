@@ -857,6 +857,8 @@ static bool jelly_divide(struct monsters * parent)
     child->behaviour = parent->behaviour; /* Look at this! */
     child->foe = parent->foe;
     child->attitude = parent->attitude;
+    child->colour = parent->colour;
+
     // duplicate enchantments
     for ( int i = 0; i < NUM_MON_ENCHANTS; ++i )
 	child->enchantment[i] = parent->enchantment[i];
