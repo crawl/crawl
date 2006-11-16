@@ -2166,7 +2166,8 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
         break;
 
     case MS_INVIS:
-        if (mons_has_ench( mon, ENCH_INVIS ))
+        if (mons_has_ench( mon, ENCH_INVIS ) ||
+            (mons_friendly(mon) && !player_see_invis(false)))
             ret = true;
         break;
 

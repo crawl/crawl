@@ -2691,7 +2691,13 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
             // intentional fall through
         case POT_INVISIBILITY:
             if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
+            {
                 beem.colour = MAGENTA;
+                // Friendly monsters won't go invisible if the player
+                // can't see invisible. We're being nice.
+                if ( mons_friendly(monster) && !player_see_invis(false) )
+                    break;
+            }
 
             // why only drink these if not near player? {dlb}
             if (!mons_near(monster))
@@ -2940,7 +2946,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
         case WAND_INVISIBILITY:
             if (!mons_has_ench( monster, ENCH_INVIS ) 
-                && !mons_has_ench( monster, ENCH_SUBMERGED ))
+                && !mons_has_ench( monster, ENCH_SUBMERGED )
+                && (!mons_friendly(monster) || player_see_invis(false)))
             {
                 beem.target_x = monster->x;
                 beem.target_y = monster->y;
