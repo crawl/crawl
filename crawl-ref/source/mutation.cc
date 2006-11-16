@@ -50,6 +50,12 @@ int how_mutated(void);
 char body_covered(void);
 bool perma_mutate(int which_mut, char how_much);
 
+const char* troll_claw_messages[3] = {
+    "Your claws sharpen.",
+    "Your claws sharpen.",
+    "Your claws steel!"
+};
+
 const char *mutation_descrip[][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
      "You have extremely tough skin (AC +3)."},
@@ -932,7 +938,24 @@ void display_mutations(void)
 
     case SP_TROLL:
         cprintf("Your body regenerates quickly." EOL);
-        j++;
+        switch ( you.mutation[MUT_CLAWS] ) {
+        case 0:
+            cprintf("You have claws for hands." EOL);
+            break;
+        case 1:
+            cprintf("You have sharp claws for hands." EOL);
+            break;
+        case 2:
+            cprintf("You have very sharp claws for hands." EOL);
+            break;
+        case 3:
+            // literally true
+            cprintf("Your claws are sharper than steel." EOL);
+            break;
+        default:
+            break;
+        }
+        j += 2;
         break;
 
     case SP_GHOUL:
@@ -1070,6 +1093,8 @@ void display_mutations(void)
                 continue;
 	    if (you.species == SP_CENTAUR && i == MUT_FAST)
 		continue;
+            if (you.species == SP_TROLL && i == MUT_CLAWS)
+                continue;
 
             j++;
             textcolor(LIGHTGREY);
@@ -1474,7 +1499,10 @@ bool mutate(int which_mutation, bool failMsg)
         break;
 
     case MUT_CLAWS:
-        mpr( gain_mutation[ mutat ][ you.mutation[mutat] ], MSGCH_MUTATION );
+
+        mpr((you.species == SP_TROLL ? troll_claw_messages
+             : gain_mutation[mutat])[you.mutation[mutat]],
+             MSGCH_MUTATION);
 
         // gloves aren't prevented until level three
         if (you.mutation[ mutat ] >= 3 && you.equip[ EQ_GLOVES ] != -1)
