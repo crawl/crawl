@@ -1417,6 +1417,19 @@ bool recharge_wand(void)
     int charge_gain = 0;
     if (wand.base_type == OBJ_WANDS)
     {
+        // remove "empty" autoinscription
+        const char* empty_inscription = "[empty]";
+        size_t p = wand.inscription.find(empty_inscription);
+        if ( p != std::string::npos ) {
+            // found it, delete it
+            size_t prespace = 0;
+            if ( p != 0 && wand.inscription[p-1] == ' ' )
+                prespace = 1;
+            wand.inscription =
+                wand.inscription.substr(0, p - prespace) +
+                wand.inscription.substr(p + strlen(empty_inscription),
+                                        std::string::npos);
+        }
         switch (wand.sub_type)
         {
         case WAND_INVISIBILITY:

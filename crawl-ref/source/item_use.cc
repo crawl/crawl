@@ -2484,6 +2484,10 @@ void zap_wand(void)
         return;
     }
 
+    // if you happen to be wielding the wand, its display might change
+    if (you.equip[EQ_WEAPON] == item_slot)
+        you.wield_change = true;
+
     if ( you.inv[item_slot].plus < 1 ) {
 	// it's an empty wand, inscribe it that way
         canned_msg(MSG_NOTHING_HAPPENS);
