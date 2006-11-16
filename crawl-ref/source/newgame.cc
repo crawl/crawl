@@ -1902,8 +1902,9 @@ void openingScreen(void)
     cprintf("Hello, welcome to " CRAWL " " VERSION "!");
     textcolor( BROWN );
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
-    cprintf(EOL "Please consult crawl.txt for instructions and legal details."
-            EOL);
+    cprintf(EOL 
+        "Please consult crawl_manual.txt for instructions and legal details."
+        EOL);
 
     bool init_found = init_file_location.find("not found") == std::string::npos;
     if (!init_found)

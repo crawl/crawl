@@ -11,6 +11,7 @@ The contents of this text are:
 		chaos_knight, death_knight, priest, 
 		race, class, random_pick
 2-  File System and Sound.
+                crawl_dir, save_dir, sound.
 3-  Lua files.
 		lua_file,
 		base.lua, stash.lua, wield.lua, kills.lua, runrest.lua, 

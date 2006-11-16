@@ -44,6 +44,7 @@
 ##### 2-  File System ###############################################
 #
 # crawl_dir= <path>
+# save_dir = saves
 # sound = <regex>:<path to sound file>
 
 ##### 3-  Lua Files #################################################
