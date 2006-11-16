@@ -2270,7 +2270,7 @@ static command_type get_next_cmd() {
 	 you.religion != GOD_NO_GOD &&
 	 you.duration[DUR_PRAYER] == 0 ) {
 	mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
-	about_to_autopray = true;
+	about_to_autopray = false;
     }
 
 #if DEBUG_DIAGNOSTICS
