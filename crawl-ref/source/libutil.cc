@@ -106,7 +106,7 @@ int count_occurrences(const std::string &text, const std::string &s)
     int nfound = 0;
     std::string::size_type pos = 0;
 
-    while (text.find(s, pos) != std::string::npos)
+    while ((pos = text.find(s, pos)) != std::string::npos)
     {
         ++nfound;
         pos += s.length();
