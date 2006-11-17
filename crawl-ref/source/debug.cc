@@ -781,7 +781,7 @@ void create_spec_object(void)
     {
         mon = debug_prompt_for_monster();
 
-        if (mon == -1)
+        if (mon == -1 || mon == MONS_PROGRAM_BUG)
         {
             mpr( "No such monster." );
             return;
@@ -2065,7 +2065,7 @@ int fsim_kit_equip(const std::string &kit)
 void debug_fight_statistics(bool use_defaults)
 {
     int punching_bag = get_monster_by_name(Options.fsim_mons);
-    if (punching_bag == -1)
+    if (punching_bag == -1 || punching_bag == MONS_PROGRAM_BUG)
         punching_bag = MONS_WORM;
 
     int mindex = create_fsim_monster(punching_bag, 500);

@@ -647,7 +647,7 @@ bool new_game(void)
         }
     }
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 153;  // "gluggy white"
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 167;  // "gluggy white"
     you.item_description[IDESC_POTIONS][POT_WATER] = 0;       // "clear"
 
     int passout;
