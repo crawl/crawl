@@ -322,7 +322,7 @@ static unsigned char random_potion_description()
     int desc, nature, colour;
 
     do {
-        desc = random2( (PDQ_NQUALS + 1) * PDC_NCOLOURS );
+        desc = random2( PDQ_NQUALS * PDC_NCOLOURS );
 
         if (coinflip())
             desc %= PDC_NCOLOURS;
