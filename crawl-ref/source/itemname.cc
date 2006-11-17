@@ -869,43 +869,36 @@ static const char *item_name_2(
         }
         else
         {
-            char primary = item.special / 14;
-            char secondary = item.special % 14;
+            int pqual   = PQUAL(item.special);
+            int pcolour = PCOLOUR(item.special);
 
-            strncat(buff,
-                   (primary ==  0) ? "" :
-                   (primary ==  1) ? "bubbling " :
-                   (primary ==  2) ? "fuming " :
-                   (primary ==  3) ? "fizzy " :
-                   (primary ==  4) ? "viscous " :
-                   (primary ==  5) ? "lumpy " :
-                   (primary ==  6) ? "smoky " :
-                   (primary ==  7) ? "glowing " :
-                   (primary ==  8) ? "sedimented " :
-                   (primary ==  9) ? "metallic " :
-                   (primary == 10) ? "murky " :
-                   (primary == 11) ? "gluggy " :
-                   (primary == 12) ? "oily " :
-                   (primary == 13) ? "slimy " :
-                   (primary == 14) ? "emulsified " : "buggy ", ITEMNAME_SIZE);
+            static const char *potion_qualifiers[] = {
+                "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
+                "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
+                "gluggy ", "oily ", "slimy ", "emulsified "
+            };
+            ASSERT( sizeof(potion_qualifiers) / sizeof(*potion_qualifiers)
+                        == PDQ_NQUALS );
 
-            strncat(buff, 
-                   (secondary ==  0) ? "clear" :
-                   (secondary ==  1) ? "blue" :
-                   (secondary ==  2) ? "black" :
-                   (secondary ==  3) ? "silvery" :
-                   (secondary ==  4) ? "cyan" :
-                   (secondary ==  5) ? "purple" :
-                   (secondary ==  6) ? "orange" :
-                   (secondary ==  7) ? "inky" :
-                   (secondary ==  8) ? "red" :
-                   (secondary ==  9) ? "yellow" :
-                   (secondary == 10) ? "green" :
-                   (secondary == 11) ? "brown" :
-                   (secondary == 12) ? "pink" :
-                   (secondary == 13) ? "white" : "buggy", ITEMNAME_SIZE);
+            static const char *potion_colours[] = {
+                "clear", "blue", "black", "silvery", "cyan", "purple",
+                "orange", "inky", "red", "yellow", "green", "brown", "pink",
+                "white"
+            };
+            ASSERT( sizeof(potion_colours) / sizeof(*potion_colours)
+                        == PDC_NCOLOURS );
 
-            strncat(buff, " potion", ITEMNAME_SIZE );
+            const char *qualifier = 
+                (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
+                                    : potion_qualifiers[pqual];
+
+            const char *colour =
+                (pcolour < 0 || pcolour >= PDC_NCOLOURS)? "bogus"
+                                    : potion_colours[pcolour];
+
+            strncat(buff, qualifier, ITEMNAME_SIZE - strlen(buff));
+            strncat(buff, colour, ITEMNAME_SIZE - strlen(buff));
+            strncat(buff, " potion", ITEMNAME_SIZE - strlen(buff) );
 
             if (it_quant > 1)
                 strncat(buff, "s", ITEMNAME_SIZE );

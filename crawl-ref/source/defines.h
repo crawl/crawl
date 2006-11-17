@@ -270,6 +270,12 @@
 
 //#endif
 
+#define PDESCS(colour) (colour)
+#define PDESCQ(qualifier, colour) (((qualifier) * PDC_NCOLOURS) + (colour))
+
+#define PCOLOUR(desc) ((desc) % PDC_NCOLOURS)
+#define PQUAL(desc)   ((desc) / PDC_NCOLOURS)
+
 #define MINIMUM( xxx, yyy )     (((xxx) < (yyy)) ? (xxx) : (yyy))
 #define MAXIMUM( xxx, yyy )     (((xxx) > (yyy)) ? (xxx) : (yyy))
 

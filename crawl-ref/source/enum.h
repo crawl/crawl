@@ -2689,6 +2689,49 @@ enum player_size_type
     PSIZE_PROFILE       // profile only (for stealth checks)
 };
 
+// [dshaligram] If you edit potion colours/descriptions, also update 
+// itemname.cc.
+enum potion_description_colour_type
+{
+    PDC_CLEAR,
+    PDC_BLUE,
+    PDC_BLACK,
+    PDC_SILVERY,
+    PDC_CYAN,
+    PDC_PURPLE,
+    PDC_ORANGE,
+    PDC_INKY,
+    PDC_RED,
+    PDC_YELLOW,
+    PDC_GREEN,
+    PDC_BROWN,
+    PDC_PINK,
+    PDC_WHITE,
+    PDC_NCOLOURS
+};
+
+// [dshaligram] If you edit potion colours/descriptions, also update 
+// itemname.cc.
+enum potion_description_qualifier_type
+{
+    PDQ_NONE,
+    PDQ_BUBBLING,
+    PDQ_FUMING,
+    PDQ_FIZZY,
+    PDQ_VISCOUS,
+    PDQ_LUMPY,
+    PDQ_SMOKY,
+    PDQ_GLOWING,
+    PDQ_SEDIMENTED,
+    PDQ_METALLIC,
+    PDQ_MURKY,
+    PDQ_GLUGGY,
+    PDQ_OILY,
+    PDQ_SLIMY,
+    PDQ_EMULSIFIED,
+    PDQ_NQUALS
+};
+
 enum potion_type
 {
     POT_HEALING,                       //    0

@@ -322,18 +322,20 @@ static unsigned char random_potion_description()
     int desc, nature, colour;
 
     do {
-        desc = random2( 15 * 14 );
+        desc = random2( (PDQ_NQUALS + 1) * PDC_NCOLOURS );
 
         if (coinflip())
-            desc %= 14;
+            desc %= PDC_NCOLOURS;
 
-        nature = desc / 14;
-        colour = desc % 14;
+        nature = PQUAL(desc);
+        colour = PCOLOUR(desc);
 
         // nature and colour correspond to primary and secondary
         // in itemname.cc; this check ensures clear potions don't
         // get odd qualifiers.
-    } while (!colour && nature > 4);
+    } while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
+            || desc == PDESCS(PDC_CLEAR)
+            || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
     return (unsigned char) desc;
 }
@@ -647,8 +649,11 @@ bool new_game(void)
         }
     }
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 167;  // "gluggy white"
-    you.item_description[IDESC_POTIONS][POT_WATER] = 0;       // "clear"
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 
+        PDESCQ(PDQ_GLUGGY, PDC_WHITE);
+
+    you.item_description[IDESC_POTIONS][POT_WATER] =
+        PDESCS(PDC_CLEAR);
 
     int passout;
 
