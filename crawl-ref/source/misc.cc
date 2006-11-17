@@ -797,7 +797,6 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     if (collect_travel_data)
         old_level_info.update();
 
-
     if (you.level_type == LEVEL_PANDEMONIUM
             && stair_find == DNGN_TRANSIT_PANDEMONIUM)
     {

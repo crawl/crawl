@@ -380,12 +380,12 @@ static void set_default_activity_interrupts()
             Options.activity_interrupts[adelay][aint] = true;
 
     const char *default_activity_interrupts[] = {
-        "interrupt_armour_on = hp_loss, stat, monster_attack",
+        "interrupt_armour_on = hp_loss, monster_attack",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
-        "interrupt_memorise = interrupt_armour_on",
-        "interrupt_butcher = interrupt_armour_on, teleport",
+        "interrupt_memorise = interrupt_armour_on, stat",
+        "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_passwall = interrupt_butcher",
         "interrupt_multidrop = interrupt_butcher",
         "interrupt_macro = interrupt_multidrop",

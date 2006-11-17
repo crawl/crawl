@@ -233,7 +233,7 @@ monster_type get_monster_by_name(std::string name, bool exact)
         if (match == std::string::npos)
             continue;
 
-        mon = monster_type(i);
+        mon = monster_type(mtype);
         // we prefer prefixes over partial matches
         if (match == 0)
             break;
@@ -1682,54 +1682,6 @@ bool mons_looks_distracted(const monsters *m)
                     || mons_is_confused(m)
                     || mons_is_fleeing(m)));
 }
-
-/* ******************************************************************
-
-// In the name of England, I declare this function wasteful! {dlb}
-
-static monsterentry *seekmonster( int mc )
-{
-
-    ASSERT(mc >= 0);
-
-    int x = 0;
-
-    while (x < mondatasize)
-    {
-        if (mondata[x].mc == mc)
-          return &mondata[x];
-
-        x++;
-    }
-
-    ASSERT(false);
-
-    return seekmonster(MONS_PROGRAM_BUG);    // see the disasters coming if there is no 250?
-
-}          // end seekmonster()
-****************************************************************** */
-
-
-/* ******************************************************************
-
-// only used once, and internal to this file, to boot {dlb}:
-
-// These are easy to implement here. The difficult (dull!) work of converting
-// the data structures is finally finished now!
-inline char *mons_name( int mc )
-{
-
-    return smc->name;
-
-}          // end mons_name()
-****************************************************************** */
-
-/*****************************************************************
-
-  Used to determine whether or not a monster should fire a beam (MUST be
-  called _after_ fire_tracer() for meaningful result.
-
-*/
 
 bool mons_should_fire(struct bolt &beam)
 {

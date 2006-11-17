@@ -2608,10 +2608,11 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
             unsigned char grid = grd[x + 1][y + 1];
             unsigned char envc = (unsigned char) env.map[x][y];
 
-            if (envc 
-                    && is_travelable_stair(grid) 
-                    && (is_terrain_seen(x + 1, y + 1)
-                        || !is_branch_stair(x + 1, y + 1)))
+            if ((x + 1 == you.x_pos && y + 1 == you.y_pos)
+                    || (envc 
+                        && is_travelable_stair(grid) 
+                        && (is_terrain_seen(x + 1, y + 1)
+                            || !is_branch_stair(x + 1, y + 1))))
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
