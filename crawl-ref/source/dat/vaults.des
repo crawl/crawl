@@ -591,6 +591,9 @@ MONS: orc knight, orc sorcerer
 NAME: my_map
 ORIENT: southwest
 
+# The hell hounds can be deadly at lower levels.
+DEPTH: 18-27
+
 MAP
 xxxxxxxxxx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxx

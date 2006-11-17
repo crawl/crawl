@@ -3833,7 +3833,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
 
     if (vault == -1
             && player_in_branch( BRANCH_MAIN_DUNGEON ) 
-            && level_number > 10 && level_number < 23 && one_chance_in(9))
+            && level_number > 10 && level_number < 26 && one_chance_in(9))
         vault = random_map_for_depth(level_number);
 
     if (vault != -1)
