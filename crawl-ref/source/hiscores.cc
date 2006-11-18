@@ -257,8 +257,8 @@ static const char *const range_type_verb( const char *const aux )
 void hiscores_format_single(char *buf, const scorefile_entry &se)
 {
     std::string line = se.hiscore_line(scorefile_entry::DDV_ONELINE);
-    strncpy(buf, line.c_str(), HIGHSCORE_SIZE);
-    buf[HIGHSCORE_SIZE - 1] = 0;
+    strncpy(buf, line.c_str(), INFO_SIZE);
+    buf[INFO_SIZE - 1] = 0;
 }
 
 static bool hiscore_same_day( time_t t1, time_t t2 )

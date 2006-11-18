@@ -1745,6 +1745,8 @@ static void drop_gold(unsigned int amount)
 
         mitm[i].base_type = OBJ_GOLD;
         mitm[i].quantity = amount;
+        // [ds] #^$#$^@!
+        mitm[i].colour   = YELLOW;
         mitm[i].flags = 0;
 
         move_item_to_grid( &i, you.x_pos, you.y_pos );
