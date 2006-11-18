@@ -707,7 +707,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/bin/sh -x";
-			shellScript = "echo \"Writing to '$DERIVED_FILES_DIR/mapdefs.ixx'\"\n\nif [ ! -d $DERIVED_FILES_DIR ]; then\n\tmkdir $DERIVED_FILES_DIR\nfi\n\n$BUILT_PRODUCTS_DIR/levcomp $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/vaults.des\n$BUILT_PRODUCTS_DIR/levcomp -a $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/vaults.des\nexit 0\n";
+			shellScript = "echo \"Writing to '$DERIVED_FILES_DIR/mapdefs.ixx'\"\n\nif [ ! -d $DERIVED_FILES_DIR ]; then\n\tmkdir $DERIVED_FILES_DIR\nfi\n\n$BUILT_PRODUCTS_DIR/levcomp $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/vaults.des\n$BUILT_PRODUCTS_DIR/levcomp -a $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/splev.des\nexit 0\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
