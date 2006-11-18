@@ -35,7 +35,7 @@
 #  S - Silver statue (summons demons). Avoid using (rare).
 #  T - Water fountain
 #  U - Magic fountain
-#  V - Permenantly dry fountain
+#  V - Permanently dry fountain
 #
 #  Statues can't be walked over and are only destroyed by disintegration
 #
@@ -1025,6 +1025,7 @@ MONS: molten gargoyle
 # Evil zoo
 
 NAME: minivault_9
+DEPTH: 15-27
 
 MAP
 ............
