@@ -197,8 +197,10 @@ static void termio_init()
 int getch_ck() {
     int c = getch();
     switch (c) {
+    // [dshaligram] MacOS ncurses returns 127 for backspace.
+    case 127:
     case KEY_BACKSPACE: return CK_BKSP;
-    case KEY_DC:    return CK_DELETE;                      
+    case KEY_DC:    return CK_DELETE;
     case KEY_HOME:  return CK_HOME;
     case KEY_PPAGE: return CK_PGUP;
     case KEY_END:   return CK_END;
