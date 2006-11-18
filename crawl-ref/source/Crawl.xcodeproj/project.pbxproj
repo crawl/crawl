@@ -141,27 +141,16 @@
 		7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */; };
 		7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E6B0A8EC9D000580F30 /* mstuff2.h */; };
 		7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */; };
-		7B352E9F0B00183400CABB32 /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
 		7B352EA00B00183400CABB32 /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
 		7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
-		7B352ED30B001B9E00CABB32 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
-		7B352ED40B001B9E00CABB32 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
-		7B352EED0B001F4200CABB32 /* levcomp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352EEC0B001F4200CABB32 /* levcomp.cc */; };
+		7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352EEC0B001F4200CABB32 /* levcomp.cc */; };
+		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
+		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
 		7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
 		7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
 		7BD75A350AC214A200B74F6E /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
 		7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		7B352F380B0025B600CABB32 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7B352E8B0B00172000CABB32;
-			remoteInfo = levcomp;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
@@ -379,7 +368,6 @@
 		7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mt19937ar.cc; sourceTree = "<group>"; };
 		7B237E6B0A8EC9D000580F30 /* mstuff2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mstuff2.h; sourceTree = "<group>"; };
 		7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.5.dylib; path = /usr/lib/libncurses.5.dylib; sourceTree = "<absolute>"; };
-		7B352E8C0B00172000CABB32 /* levcomp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = levcomp; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B352E9D0B00183400CABB32 /* mapdef.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mapdef.cc; sourceTree = "<group>"; };
 		7B352E9E0B00183400CABB32 /* mapdef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapdef.h; sourceTree = "<group>"; };
 		7B352ED10B001B9E00CABB32 /* levcomp.lpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.lex; name = levcomp.lpp; path = util/levcomp.lpp; sourceTree = "<group>"; };
@@ -395,13 +383,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7B352E8A0B00172000CABB32 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8DD76FAD0486AB0100D96B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -439,7 +420,6 @@
 			isa = PBXGroup;
 			children = (
 				8DD76FB20486AB0100D96B5E /* crawl */,
-				7B352E8C0B00172000CABB32 /* levcomp */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -642,27 +622,10 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7B352E8B0B00172000CABB32 /* levcomp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7B352E8E0B00177D00CABB32 /* Build configuration list for PBXNativeTarget "levcomp" */;
-			buildPhases = (
-				7B352E890B00172000CABB32 /* Sources */,
-				7B352E8A0B00172000CABB32 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = levcomp;
-			productName = levcomp;
-			productReference = 7B352E8C0B00172000CABB32 /* levcomp */;
-			productType = "com.apple.product-type.tool";
-		};
 		8DD76FA90486AB0100D96B5E /* Crawl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB928508733DD80010E9CD /* Build configuration list for PBXNativeTarget "Crawl" */;
 			buildPhases = (
-				7B352F3A0B0025C400CABB32 /* Compile Levels */,
 				8DD76FAB0486AB0100D96B5E /* Sources */,
 				8DD76FAD0486AB0100D96B5E /* Frameworks */,
 				8DD76FAF0486AB0100D96B5E /* CopyFiles */,
@@ -670,7 +633,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				7B352F390B0025B600CABB32 /* PBXTargetDependency */,
 			);
 			name = Crawl;
 			productInstallPath = "$(HOME)/bin";
@@ -688,45 +650,18 @@
 			mainGroup = 08FB7794FE84155DC02AAC07 /* Crawl */;
 			projectDirPath = "";
 			targets = (
-				7B352E8B0B00172000CABB32 /* levcomp */,
 				8DD76FA90486AB0100D96B5E /* Crawl */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		7B352F3A0B0025C400CABB32 /* Compile Levels */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Compile Levels";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = "/bin/sh -x";
-			shellScript = "echo \"Writing to '$DERIVED_FILES_DIR/mapdefs.ixx'\"\n\nif [ ! -d $DERIVED_FILES_DIR ]; then\n\tmkdir $DERIVED_FILES_DIR\nfi\n\n$BUILT_PRODUCTS_DIR/levcomp $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/vaults.des\n$BUILT_PRODUCTS_DIR/levcomp -a $DERIVED_FILES_DIR/mapdefs.ixx < $SRCROOT/dat/vaults.des\nexit 0\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		7B352E890B00172000CABB32 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7B352ED40B001B9E00CABB32 /* levcomp.ypp in Sources */,
-				7B352ED30B001B9E00CABB32 /* levcomp.lpp in Sources */,
-				7B352E9F0B00183400CABB32 /* mapdef.cc in Sources */,
-				7B352EED0B001F4200CABB32 /* levcomp.cc in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8DD76FAB0486AB0100D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
+				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
 				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
 				7B237E720A8EC9D000580F30 /* insult.cc in Sources */,
@@ -734,6 +669,7 @@
 				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
 				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
 				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
+				7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */,
 				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
 				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
 				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
@@ -802,14 +738,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		7B352F390B0025B600CABB32 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7B352E8B0B00172000CABB32 /* levcomp */;
-			targetProxy = 7B352F380B0025B600CABB32 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
 		1DEB928608733DD80010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -818,7 +746,10 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -853,66 +784,6 @@
 			};
 			name = Development;
 		};
-		7B352E8F0B00177D00CABB32 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
-				INSTALL_PATH = "$(HOME)/bin";
-				PRODUCT_NAME = levcomp;
-				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		7B352E900B00177D00CABB32 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
-				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
-				PRODUCT_NAME = levcomp;
-				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		7B352E910B00177D00CABB32 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 1;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
-				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
-				PRODUCT_NAME = levcomp;
-				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
-			};
-			name = Debug;
-		};
-		7B352E920B00177D00CABB32 /* Wizard */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_WARN_UNUSED_FUNCTION = NO;
-				GCC_WARN_UNUSED_LABEL = NO;
-				INSTALL_PATH = "$(HOME)/bin";
-				PREBINDING = NO;
-				PRODUCT_NAME = levcomp;
-				YACC_GENERATED_FILE_STEM = InputFileStem;
-				ZERO_LINK = YES;
-			};
-			name = Wizard;
-		};
 		7B97C01F0A8ECFD700CE8936 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -921,13 +792,15 @@
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
-					UNIX,
 					WIZARD,
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 					FULLDEBUG,
 				);
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Debug;
@@ -980,7 +853,10 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Wizard;
@@ -1031,7 +907,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1091,17 +970,6 @@
 				7B97C0270A8ED34400CE8936 /* Release */,
 				7B97C0200A8ECFD700CE8936 /* Debug */,
 				7B97C0250A8ED2AB00CE8936 /* Wizard */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		7B352E8E0B00177D00CABB32 /* Build configuration list for PBXNativeTarget "levcomp" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7B352E8F0B00177D00CABB32 /* Development */,
-				7B352E900B00177D00CABB32 /* Release */,
-				7B352E910B00177D00CABB32 /* Debug */,
-				7B352E920B00177D00CABB32 /* Wizard */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
