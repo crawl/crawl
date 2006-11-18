@@ -1485,8 +1485,8 @@ void parse_option_line(const std::string &str, bool runscript)
 
         if (SysEnv.crawl_dir)
         {
-            strncpy(SysEnv.crawl_dir, field.c_str(), kNameLen - 1);
-            SysEnv.crawl_dir[ kNameLen - 1 ] = 0;
+            strncpy(SysEnv.crawl_dir, field.c_str(), kPathLen - 1);
+            SysEnv.crawl_dir[ kPathLen - 1 ] = 0;
         }
     }
     else if (key == "race")
