@@ -168,7 +168,7 @@ struct MenuEntry
                     "%c - %s", hotkeys[0], text.c_str());
             return std::string(buf);
         }
-        return std::string(level == MEL_SUBTITLE? " " : "") + text;
+        return text;
     }
 
     virtual bool selected() const

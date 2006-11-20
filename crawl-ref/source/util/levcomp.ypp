@@ -23,23 +23,29 @@ void yyerror(const char *e)
     const char *text;
 }
 
+%token <i>      BRANCHDEF BRANCH DESC DEFAULT
 %token <i>      DEFAULT_DEPTH SYMBOL TAGS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS
+%token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
+%token <i>      ROCK_COLOUR FLOOR_COLOUR
 %token <i>      ENCOMPASS 
 %token <i>      NORTH EAST SOUTH WEST
 %token <i>      NORTHEAST SOUTHEAST SOUTHWEST NORTHWEST
 
-%token <i>      BAD_CHARACTER
+%token <i>      LEVEL END PVAULT PMINIVAULT MONSTERS ENDMONSTERS
+
+%token <i>      CHARACTER
 
 %token <i>      NO_HMIRROR NO_VMIRROR NO_ROTATE
 
 %token <i>      PANDEMONIC 
-%token <i>      DASH COMMA
+%token <i>      DASH COMMA QUOTE OPAREN CPAREN
 %token <i>      INTEGER
 
 %type  <i>      orient_name flagname
 
 %token <text>   STRING MAP_LINE MONSTER_NAME
+%token <text>   IDENTIFIER
 
 %%
 

@@ -59,10 +59,6 @@
 #include "travel.h"
 #include "version.h"
 
-#ifndef WIZARD
-#define WIZARD
-#endif
-
 #if DEBUG && WIN
 #define MyDebugBreak() _asm {int 3}
 #endif

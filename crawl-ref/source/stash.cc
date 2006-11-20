@@ -360,7 +360,7 @@ bool StashMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static void stash_menu_fixup(MenuEntry *me)
+static MenuEntry *stash_menu_fixup(MenuEntry *me)
 {
     const item_def *item = static_cast<const item_def *>( me->data );
     if (item->base_type == OBJ_GOLD)
@@ -368,6 +368,8 @@ static void stash_menu_fixup(MenuEntry *me)
         me->quantity = 0;
         me->colour   = DARKGREY;
     }
+
+    return (me);
 }
 
 bool Stash::show_menu(const std::string &prefix, bool can_travel) const

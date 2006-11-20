@@ -47,8 +47,6 @@
 #include "macro.h"
 #endif
 
-bool fizzlecheck_on = false;
-
 enum LOSSelect
 {
     LOS_ANY      = 0x00,
@@ -334,27 +332,30 @@ void direction2( struct dist &moves, int restrict, int mode )
 
 /* safe version of direction */
 void direction( struct dist &moves, int restrict, int mode,
-		bool confirm_fizzle )
+                bool confirm_fizzle )
 {
-    while ( 1 ) {
-	direction2( moves, restrict, mode );
-	if ( moves.isMe && Options.confirm_self_target == true &&
-	     mode != TARG_FRIEND ) {
-	    if ( yesno("Really target yourself? ", false, 'n') )
-		return;
-	    else
-		mpr("Choose a better target.", MSGCH_PROMPT);
-	}
-	else if ( confirm_fizzle && !moves.isValid && fizzlecheck_on ) {
-	    if ( yesno("Really fizzle? ", false, 'n') )
-		return;
-	    else
-		mpr("Try again.", MSGCH_PROMPT);
-	}
-	else
-	{
-	    return;
-	}
+    while ( 1 )
+    {
+        direction2( moves, restrict, mode );
+        if ( moves.isMe && Options.confirm_self_target == true &&
+             mode != TARG_FRIEND )
+        {
+            if ( yesno("Really target yourself? ", false, 'n') )
+                return;
+            else
+                mpr("Choose a better target.", MSGCH_PROMPT);
+        }
+        else if ( confirm_fizzle && !moves.isValid && Options.fizzlecheck_on )
+        {
+            if ( yesno("Really fizzle? ", false, 'n') )
+                return;
+            else
+                mpr("Try again.", MSGCH_PROMPT);
+        }
+        else
+        {
+            return;
+        }
     }
 }
 

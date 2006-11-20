@@ -17,12 +17,6 @@
 
 #include "externs.h"
 
-// used in acr.cc {dlb}:
-extern bool autopickup_on;
-
-// used in initfile.cc {dlb}:
-extern long autopickups;
-
 bool is_valid_item( const item_def &item );
 
 bool dec_inv_item_quantity( int obj, int amount );

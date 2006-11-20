@@ -687,9 +687,25 @@ struct colour_mapping
     int colour;
 };
 
+class InitLineInput;
 struct game_options 
 {
+public:
+    game_options();
+    void reset_startup_options();
+    void reset_options();
+
+    void read_option_line(const std::string &s, bool runscripts = false);
+    void read_options(InitLineInput &, bool runscripts);
+
+public:
     std::string save_dir;       // Directory where saves and bones go.
+
+    std::string player_name;
+
+    bool        autopickup_on;
+    bool        autoprayer_on;
+    bool        fizzlecheck_on;
 
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
@@ -841,12 +857,14 @@ struct game_options
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
 
+#ifdef WIZARD
     // Parameters for fight simulations.
     long        fsim_rounds;
     int         fsim_str, fsim_int, fsim_dex;
     int         fsim_xl;
     std::string fsim_mons;
     std::vector<std::string> fsim_kit;
+#endif  // WIZARD
     
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are
@@ -871,6 +889,20 @@ public:
     bool        o_bool(const char *name, bool def = false) const;
     std::string o_str(const char *name, const char *def = NULL) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
+
+private:
+    void set_default_activity_interrupts();
+    void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
+    void set_activity_interrupt(
+        FixedVector<bool, NUM_AINTERRUPTS> &eints,
+        const std::string &interrupt);
+    void set_activity_interrupt(const std::string &activity_name,
+                                const std::string &interrupt_names,
+                                bool append_interrupts);
+    void add_dump_fields(const std::string &text);
+    void do_kill_map(const std::string &from, const std::string &to);
+
+    static const std::string interrupt_prefix;
 };
 
 extern game_options  Options;
@@ -960,8 +992,6 @@ private:
     std::string damage_string(bool terse = false) const;
 };
 
-extern bool autoprayer_on;	// defined in acr.cc
-extern bool fizzlecheck_on;	// defined in direct.cc
 extern const struct coord_def Compass[8];
 
 #endif // EXTERNS_H

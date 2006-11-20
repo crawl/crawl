@@ -276,9 +276,9 @@ const char *item_name( const item_def &item, char descrip,
     /*** HP CHANGE -- warning -- possible stack overflow error ***/
     if ( item.inscription.size() > 0 ) // has an inscription
     {
-	strncat( buff, " {", 2 );
-	strncat( buff, item.inscription.c_str(), ITEMNAME_SIZE );
-	strncat( buff, "}", 1 );
+        strncat( buff, " {", 2 );
+        strncat( buff, item.inscription.c_str(), ITEMNAME_SIZE );
+        strncat( buff, "}", 1 );
     }
 
     return (buff);
@@ -1975,6 +1975,18 @@ char get_ident_type(char cla, int ty)
     }
 }                               // end get_ident_type()
 
+static MenuEntry *discoveries_item_mangle(MenuEntry *me)
+{
+    InvEntry *ie = dynamic_cast<InvEntry*>(me);
+    MenuEntry *newme = new MenuEntry;
+    std::string txt = item_name(*ie->item, DESC_PLAIN);
+    newme->text = " " + txt;
+    newme->quantity = 0;
+    delete me;
+
+    return (newme);
+}
+
 void check_item_knowledge()
 {
     int i,j;
@@ -1982,33 +1994,38 @@ void check_item_knowledge()
     std::vector<const item_def*> items;
 
     int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
-			      OBJ_JEWELLERY, OBJ_POTIONS };
+                              OBJ_JEWELLERY, OBJ_POTIONS };
     int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
-			      NUM_JEWELLERY, NUM_POTIONS };
+                              NUM_JEWELLERY, NUM_POTIONS };
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < idx_to_maxtype[i]; j++) {
-	    if (id[i][j] == ID_KNOWN_TYPE) {
+            if (id[i][j] == ID_KNOWN_TYPE) {
                 item_def* ptmp = new item_def;
-		if ( ptmp != 0 ) {
-		    ptmp->base_type = idx_to_objtype[i];
-		    ptmp->sub_type  = j;
-		    ptmp->colour    = 1;
-		    items.push_back(ptmp);
-		}
-	    }
+                if ( ptmp != 0 ) {
+                    ptmp->base_type = idx_to_objtype[i];
+                    ptmp->sub_type  = j;
+                    ptmp->colour    = 1;
+                    ptmp->quantity  = 1;
+                    items.push_back(ptmp);
+                }
+            }
         }
     }
 
     if (items.empty())
-	mpr("You don't recognise anything yet!");
+        mpr("You don't recognise anything yet!");
     else {    
-	select_items( items, "You recognise:", true );
-	for ( std::vector<const item_def*>::iterator iter = items.begin();
-	      iter != items.end(); ++iter )
-	    delete *iter;	    
+        InvMenu menu;
+        menu.set_title("You recognise:");
+        menu.load_items(items, discoveries_item_mangle);
+        menu.set_flags(MF_NOSELECT);
+        menu.show();
+        redraw_screen();
 
-	redraw_screen();
+        for ( std::vector<const item_def*>::iterator iter = items.begin();
+              iter != items.end(); ++iter )
+            delete *iter;
     }
 }                               // end check_item_knowledge()
 
@@ -2312,9 +2329,9 @@ static char retlet( int sed )
 
 bool is_interesting_item( const item_def& item ) {
     if ( is_random_artefact(item) ||
-	 is_unrandom_artefact(item) ||
-	 is_fixed_artefact(item) )
-	return true;
+         is_unrandom_artefact(item) ||
+         is_fixed_artefact(item) )
+        return true;
 
     char name[ITEMNAME_SIZE];
     item_name(item, DESC_PLAIN, name, false);
@@ -2333,26 +2350,26 @@ bool fully_identified( const item_def& item ) {
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
-	flagset = ISFLAG_KNOW_TYPE;
-	break;
+        flagset = ISFLAG_KNOW_TYPE;
+        break;
     case OBJ_FOOD:
-	flagset = 0;
-	break;
+        flagset = 0;
+        break;
     case OBJ_WANDS:
-	flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
-	break;
+        flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
+        break;
     case OBJ_JEWELLERY:
-	flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-	if ( ring_has_pluses(item) )
-	    flagset |= ISFLAG_KNOW_PLUSES;
-	break;
+        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
+        if ( ring_has_pluses(item) )
+            flagset |= ISFLAG_KNOW_PLUSES;
+        break;
     default:
-	break;
+        break;
     }
     if ( is_random_artefact(item) ||
-	 is_fixed_artefact(item) ||
-	 is_unrandom_artefact(item) )
-	flagset |= ISFLAG_KNOW_PROPERTIES;
+         is_fixed_artefact(item) ||
+         is_unrandom_artefact(item) )
+        flagset |= ISFLAG_KNOW_PROPERTIES;
     
     return item_ident( item, flagset );
 }

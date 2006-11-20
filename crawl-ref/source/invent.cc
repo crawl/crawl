@@ -101,7 +101,7 @@ std::string InvEntry::get_text() const
                 " (%d gold)", value);
     }
     snprintf( buf, sizeof buf,
-            "%c %c %s%s",
+            " %c %c %s%s",
             hotkeys[0],
             (!selected_qty? '-' : selected_qty < quantity? '#' : '+'),
             text.c_str(),
@@ -232,7 +232,8 @@ void InvMenu::set_title(const std::string &s)
     set_title(new InvTitle(this, stitle, title_annotate));
 }
 
-void InvMenu::load_inv_items(int item_selector, void (*procfn)(MenuEntry *me))
+void InvMenu::load_inv_items(int item_selector,
+                             MenuEntry *(*procfn)(MenuEntry *me))
 {
     std::vector<const item_def *> tobeshown;
     get_inv_items_to_show(tobeshown, item_selector);
@@ -268,7 +269,7 @@ static bool compare_menu_entries(const MenuEntry* a, const MenuEntry* b)
 }
 
 void InvMenu::load_items(const std::vector<const item_def*> &mitems,
-                         void (*procfn)(MenuEntry *me))
+                         MenuEntry *(*procfn)(MenuEntry *me))
 {
     FixedVector< int, NUM_OBJECT_CLASSES > inv_class(0);
     for (int i = 0, count = mitems.size(); i < count; ++i)
@@ -300,11 +301,9 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
                 ie->hotkeys[0] = ckey++;
-            if (procfn)
-                (*procfn)(ie);
-
             do_preselect(ie);
-            add_entry( ie );
+
+            add_entry( procfn? (*procfn)(ie) : ie );
         }
     }
 }

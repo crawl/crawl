@@ -412,10 +412,8 @@ std::string datafile_path(const std::string &basename)
     return ("");
 }
 
-void check_savedir()
+void check_savedir(std::string &dir)
 {
-    std::string &dir = Options.save_dir;
-
     if (dir.empty())
         return;
 

@@ -351,6 +351,12 @@ bool new_game(void)
 
     init_player();
 
+    if (!Options.player_name.empty())
+    {
+        strncpy(you.your_name, Options.player_name.c_str(), kNameLen);
+        you.your_name[kNameLen - 1] = 0;
+    }
+
     textcolor(LIGHTGREY);
 
     // copy name into you.your_name if set from environment --

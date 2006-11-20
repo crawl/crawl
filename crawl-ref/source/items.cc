@@ -2896,8 +2896,6 @@ void handle_time( long time_delta )
     return;
 }                               // end handle_time()
 
-bool autopickup_on = true;
-
 static void autoinscribe_item( item_def& item )
 {
     char name[ITEMNAME_SIZE];
@@ -2947,7 +2945,7 @@ static void autopickup(void)
     int result, o, next;
     bool did_pickup = false;
 
-    if (autopickup_on == false || Options.autopickups == 0L)
+    if (!Options.autopickup_on || Options.autopickups == 0L)
         return;
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 

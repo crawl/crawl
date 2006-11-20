@@ -73,16 +73,14 @@ void play_sound( const char *file )
 void uppercase(std::string &s)
 {
     /* yes, this is bad, but std::transform() has its own problems */
-    for ( unsigned int i = 0; i < s.size(); ++i ) {
-	s[i] = toupper(s[i]);
-    }
+    for (unsigned int i = 0; i < s.size(); ++i)
+        s[i] = toupper(s[i]);
 }
 
 void lowercase(std::string &s)
 {
-    for ( unsigned int i = 0; i < s.size(); ++i ) {
-	s[i] = tolower(s[i]);
-    }
+    for (unsigned int i = 0; i < s.size(); ++i)
+        s[i] = tolower(s[i]);
 }
 
 std::string replace_all(std::string s,
@@ -151,10 +149,13 @@ void get_input_line( char *const buff, int len )
 }
 
 #ifdef DOS
-static int getch_ck() {
+static int getch_ck()
+{
     int c = getch();
-    if (!c) {
-        switch (c = getch()) {
+    if (!c)
+    {
+        switch (c = getch())
+        {
         case 'O':  return CK_END;
         case 'P':  return CK_DOWN;
         case 'I':  return CK_PGUP;
@@ -180,7 +181,8 @@ static int getch_ck() {
 
 // Hacky wrapper around getch() that returns CK_ codes for keys
 // we want to use in cancelable_get_line() and menus.
-int c_getch() {
+int c_getch()
+{
 #if defined(DOS) || defined(UNIX) || defined(WIN32CONSOLE)
     return getch_ck();
 #else
@@ -210,7 +212,8 @@ int wrapcprintf( int wrapcol, const char *s, ... )
         
         int avail = wrapcol - x + 1;
         int c = 0;
-        if (len > avail) {
+        if (len > avail)
+        {
             c = run[avail];
             run[avail] = 0;
         }
@@ -255,7 +258,8 @@ std::vector<std::string> split_string(
     int separator_length = strlen(sep);
 
     std::string::size_type pos;
-    while ((pos = s.find(sep, 0)) != std::string::npos) {
+    while ((pos = s.find(sep, 0)) != std::string::npos)
+    {
         if (pos > 0 || accept_empty_segments)
             segments.push_back(s.substr(0, pos));
         s.erase(0, pos + separator_length);
@@ -332,7 +336,8 @@ int snprintf( char *str, size_t size, const char *format, ... )
 ///////////////////////////////////////////////////////////////////////
 // Pattern matching
 
-inline int pm_lower(int ch, bool icase) {
+inline int pm_lower(int ch, bool icase)
+{
     return icase? tolower(ch) : ch;
 }
 
@@ -636,7 +641,8 @@ void line_reader::backspace()
     {
         --cur;
         char *c = cur;
-        while (*c) {
+        while (*c)
+        {
             *c = c[1];
             c++;
         }
@@ -674,7 +680,8 @@ void line_reader::killword()
 
 int line_reader::process_key(int ch)
 {
-    switch (ch) {
+    switch (ch)
+    {
     case CK_ESCAPE:
         return (ch);
     case CK_UP:
@@ -725,9 +732,11 @@ int line_reader::process_key(int ch)
         break;
     }
     case CK_DELETE:
-        if (pos < length) {
+        if (pos < length)
+        {
             char *c = cur;
-            while (c - buffer < length) {
+            while (c - buffer < length)
+            {
                 *c = c[1];
                 c++;
             }
@@ -749,14 +758,16 @@ int line_reader::process_key(int ch)
         break;
 
     case CK_LEFT:
-        if (pos) {
+        if (pos)
+        {
             --pos;
             cur = buffer + pos;
             cursorto(pos);
         }
         break;
     case CK_RIGHT:
-        if (pos < length) {
+        if (pos < length)
+        {
             ++pos;
             cur = buffer + pos;
             cursorto(pos);
@@ -775,10 +786,13 @@ int line_reader::process_key(int ch)
         cursorto(pos);
         break;
     default:
-        if (isprint(ch) && length < (int) bufsz - 1) {
-            if (pos < length) {
+        if (isprint(ch) && length < (int) bufsz - 1)
+        {
+            if (pos < length)
+            {
                 char *c = buffer + length - 1;
-                while (c >= cur) {
+                while (c >= cur)
+                {
                     c[1] = *c;
                     c--;
                 }
@@ -787,7 +801,8 @@ int line_reader::process_key(int ch)
             ++length;
             ++pos;
             putch(ch);
-            if (pos < length) {
+            if (pos < length)
+            {
                 buffer[length] = 0;
                 wrapcprintf( wrapcol, "%s", cur );
             }

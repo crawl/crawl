@@ -98,13 +98,13 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     void load_items(const std::vector<const item_def*> &items,
-                    void (*procfn)(MenuEntry *me) = NULL);
+                    MenuEntry *(*procfn)(MenuEntry *me) = NULL);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY,
-                        void (*procfn)(MenuEntry *me) = NULL);
+                        MenuEntry *(*procfn)(MenuEntry *me) = NULL);
 
     std::vector<SelItem> get_selitems() const;
 
