@@ -3380,6 +3380,11 @@ void viewwindow(bool draw_it, bool do_updates)
                         else 
                             buffy[bufcount + 1] = CYAN;
                     }
+
+                    set_envmap_char( gx, gy, buffy[bufcount] );
+                    set_terrain_seen( gx, gy );
+                    set_envmap_detected_mons(gx, gy, false);
+                    set_envmap_detected_item(gx, gy, false);
                 }
                 else
                 {
