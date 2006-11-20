@@ -1880,7 +1880,7 @@ static void decrement_durations()
         const int chance = chances[0] + chances[1] + chances[2] + chances[3];
 
         if (you.berserk_penalty == NO_BERSERK_PENALTY)
-            mpr("Your unnatural rage keeps you on your feet.");
+            mpr("The very source of your rage keeps you on your feet.");
         // Note the beauty of Trog!  They get an extra save that's at
         // the very least 20% and goes up to 100%.
         else if ( you.religion == GOD_TROG && you.piety > random2(150) &&
