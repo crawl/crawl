@@ -261,16 +261,42 @@ void mprf( const char *format, ... )
 void mpr(const char *inf, int channel, int param)
 {
     char mbuf[400];
-    unsigned int i = 0;
+    size_t i = 0;
     const int stepsize = get_number_of_cols() - 1;
-    while ( i <= strlen(inf) )
+    const size_t msglen = strlen(inf);
+    const int lookback_size = (stepsize < 12 ? 0 : 12);
+    // if a message is exactly STEPSIZE characters long,
+    // it should precisely fit in one line. The printing is thus
+    // from I to I + STEPSIZE - 1. Stop when I reaches MSGLEN.
+    while ( i < msglen || i == 0 )
     {
-        // maybe we should put in some intelligence here, to
-        // try to break after a space or something. For the future.
         strncpy( mbuf, inf + i, stepsize );
         mbuf[stepsize] = 0;
+        // did the message break?
+        if ( i + stepsize < msglen )
+        {
+            // yes, find a nicer place to break it.
+            int lookback, where;
+            for ( lookback = 0; lookback < lookback_size; ++lookback )
+            {
+                where = stepsize - 1 - lookback;
+                if ( where >= 0 && isspace(mbuf[where]) )
+                    // aha!
+                    break;
+            }
+
+            if ( lookback != lookback_size )
+            {
+                // found a good spot to break
+                mbuf[where] = 0;
+                i += where + 1; // skip past the space!
+            }
+            else
+                i += stepsize;
+        }
+        else
+            i += stepsize;
         base_mpr( mbuf, channel, param );
-        i += stepsize;
     }
 }
 

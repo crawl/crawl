@@ -3920,10 +3920,7 @@ static bool handle_pickup(struct monsters *monster)
     if (monster->behaviour == BEH_SLEEP)
         return (false);
 
-    if (monster->type == MONS_JELLY
-        || monster->type == MONS_BROWN_OOZE
-        || monster->type == MONS_ACID_BLOB
-        || monster->type == MONS_ROYAL_JELLY)
+    if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
         int hps_gained = 0;
         int max_eat = roll_dice( 1, 10 );
