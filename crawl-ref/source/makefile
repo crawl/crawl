@@ -14,7 +14,7 @@ MAKEFILE = makefile.unix
 #OTHER=-j2
 
 all:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O2 -fno-strength-reduce'
+	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O3'
 
 noopt:
 	$(MAKE) $(OTHER) -f $(MAKEFILE)
