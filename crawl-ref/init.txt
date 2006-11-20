@@ -167,7 +167,7 @@ fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 
 ##### 4-k	Channels ##############################
 #
-channel.multiturn = plain
+#channel.multiturn = mute
 
 ##### 4-l	Inscriptions ##########################
 #
