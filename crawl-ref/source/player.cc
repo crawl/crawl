@@ -4387,8 +4387,6 @@ void player::init()
     wizard = false;
 #endif
 
-    your_name[0] = 0;
-
     berserk_penalty = 0;
     berserker = 0;
     conf = 0;
