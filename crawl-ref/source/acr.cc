@@ -2361,7 +2361,7 @@ command_type keycode_to_command( keycode_type key ) {
     case '#': return CMD_CHARACTER_DUMP;
     case '=': return CMD_ADJUST_INVENTORY;
     case '?': return CMD_DISPLAY_COMMANDS;
-    case '`': return CMD_MACRO_ADD;
+    case '~': return CMD_MACRO_ADD;
     case '&': return CMD_WIZARD;
     case '"': return CMD_LIST_JEWELLERY;
     case '{': return CMD_INSCRIBE_ITEM;
