@@ -35,13 +35,16 @@ struct SelItem
     }
 };
 
+typedef std::string (*invtitle_annotator)(
+            const Menu *m, const std::string &oldtitle);
+
 struct InvTitle : public MenuEntry
 {
     Menu *m;
-    std::string (*titlefn)( int menuflags, const std::string &oldt );
+    invtitle_annotator titlefn;
     
     InvTitle( Menu *mn, const std::string &title,
-              std::string (*tfn)( int menuflags, const std::string &oldt ) );
+              invtitle_annotator tfn );
 
     std::string get_text() const;
 };
@@ -89,7 +92,7 @@ public:
     // Sets function to annotate the title with meta-information if needed.
     // If you set this, do so *before* calling set_title, or it won't take
     // effect.
-    void set_title_annotator(std::string (*fn)(int, const std::string &));
+    void set_title_annotator(invtitle_annotator fn);
 
     void set_title(MenuEntry *title);
     void set_title(const std::string &s);
@@ -120,7 +123,8 @@ protected:
 protected:
     menu_type type;
     const std::vector<SelItem> *pre_select;
-    std::string (*title_annotate)(int mflags, const std::string &oldtitle);
+
+    invtitle_annotator title_annotate;
 };
 
 
@@ -142,9 +146,7 @@ std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
                         menu_type type,
                         int type_expect,
-                        std::string (*titlefn)( int menuflags, 
-                                                const std::string &oldt ) 
-                            = NULL,
+                        invtitle_annotator titlefn = NULL,
                         bool allow_auto_list = true,
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
@@ -166,7 +168,7 @@ unsigned char invent_select(
                    menu_type type = MT_INVLIST,
                    int item_selector = OSEL_ANY,
                    int menu_select_flags = MF_NOSELECT,
-                   std::string (*titlefn)(int, const std::string &) = NULL,
+                   invtitle_annotator titlefn = NULL,
                    std::vector<SelItem> *sels = NULL,
                    std::vector<text_pattern> *filter = NULL,
                    Menu::selitem_tfn fn = NULL,

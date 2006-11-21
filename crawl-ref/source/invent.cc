@@ -44,7 +44,7 @@ static void get_inv_items_to_show(
         std::vector<const item_def*> &v, int selector);
 
 InvTitle::InvTitle( Menu *mn, const std::string &title,
-          std::string (*tfn)( int menuflags, const std::string &oldt ) ) 
+          invtitle_annotator tfn ) 
     : MenuEntry( title, MEL_TITLE )
 {
     m       = mn;
@@ -53,7 +53,7 @@ InvTitle::InvTitle( Menu *mn, const std::string &title,
 
 std::string InvTitle::get_text() const
 {
-    return titlefn? titlefn( m->get_flags(), MenuEntry::get_text() ) :
+    return titlefn? titlefn( m, MenuEntry::get_text() ) :
                     MenuEntry::get_text();
 }
 
@@ -197,7 +197,7 @@ void InvMenu::set_type(menu_type t)
     type = t;
 }
 
-void InvMenu::set_title_annotator(std::string (*afn)(int, const std::string &))
+void InvMenu::set_title_annotator(invtitle_annotator afn)
 {
     title_annotate = afn;
 }
@@ -501,8 +501,7 @@ unsigned char invent_select(
                       menu_type type,
                       int item_selector,
                       int flags,
-                      std::string (*titlefn)( int menuflags, 
-                                              const std::string &oldt ),
+                      invtitle_annotator titlefn,
                       std::vector<SelItem> *items,
                       std::vector<text_pattern> *filter,
                       Menu::selitem_tfn selitemfn,
@@ -576,8 +575,7 @@ std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
                         menu_type mtype,
                         int type_expect,
-                        std::string (*titlefn)( int menuflags, 
-                                                const std::string &oldt ),
+                        invtitle_annotator titlefn,
                         bool allow_auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,

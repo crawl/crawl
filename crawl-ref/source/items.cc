@@ -1860,12 +1860,39 @@ bool drop_item( int item_dropped, int quant_drop ) {
     return (true);
 }
 
-
-static std::string drop_menu_title(int menuflags, const std::string &oldt)
+static std::string drop_menu_invstatus(const Menu *menu)
 {
-    std::string res = oldt;
-    if (menuflags & MF_MULTISELECT)
-        res = "[Multidrop] Drop which items?";
+    char buf[100];
+    const int cap = carrying_capacity();
+
+    std::string s_newweight;
+    std::vector<MenuEntry*> se = menu->selected_entries();
+    if (!se.empty())
+    {
+        int newweight = you.burden;
+        for (int i = 0, size = se.size(); i < size; ++i)
+        {
+            const item_def *item = static_cast<item_def *>( se[i]->data );
+            newweight -= item_mass(*item) * se[i]->selected_qty;
+        }
+
+        snprintf(buf, sizeof buf, ">%d.%d", newweight / 10, newweight % 10);
+        s_newweight = buf;
+    }
+
+    snprintf(buf, sizeof buf, "(Inv: %d.%d%s/%d.%d aum)",
+            you.burden / 10, you.burden % 10,
+            s_newweight.c_str(),
+            cap / 10, cap % 10);
+    return (buf);
+}
+
+static std::string drop_menu_title(const Menu *menu, const std::string &oldt)
+{
+    std::string res = drop_menu_invstatus(menu) + " " + oldt;
+    if (menu->is_set( MF_MULTISELECT ))
+        res = "[Multidrop] " + res;
+
     return (res);
 }
 
@@ -1897,7 +1924,7 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
     for (int i = 0, size = s->size(); i < size; ++i)
     {
         const item_def *item = static_cast<item_def *>( (*s)[i]->data );
-        int eq = get_equip_slot(item);
+        const int eq = get_equip_slot(item);
         if (eq > EQ_WEAPON && eq < NUM_EQUIP)
         {
             extraturns = true;
@@ -1905,9 +1932,10 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
         }
     }
     
-    snprintf( buf, sizeof buf, "  (%lu%s turn%s)", (unsigned long) (s->size()),
-              extraturns? "+" : "",
-              s->size() > 1? "s" : "" );
+    snprintf( buf, sizeof buf, " (%lu%s turn%s)", 
+                (unsigned long) (s->size()),
+                extraturns? "+" : "",
+                s->size() > 1? "s" : "" );
     return buf;
 }
 
@@ -1927,7 +1955,7 @@ void drop(void)
         return;
     }
 
-    items_for_multidrop = prompt_invent_items( "Drop which item?",
+    items_for_multidrop = prompt_invent_items( "Drop what?",
                                                MT_DROP,
                                                -1, 
                                                drop_menu_title,
