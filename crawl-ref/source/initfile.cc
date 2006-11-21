@@ -517,12 +517,12 @@ void game_options::reset_options()
     colour_map             = false;
     clean_map              = false;
     show_uncursed          = true;
-    always_greet           = false;
+    always_greet           = true;
     easy_open              = true;
     easy_unequip           = true;
     easy_butcher           = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
-    easy_quit_item_prompts = false;
+    easy_quit_item_prompts = true;
     hp_warning             = 10;
     hp_attention           = 25;
     confirm_self_target    = true;
@@ -532,11 +532,16 @@ void game_options::reset_options()
     note_all_spells        = false;
     note_hp_percent        = 0;
     ood_interesting        = 8;
-    terse_hand             = true;
+    terse_hand             = false;
     increasing_skill_progress = false;
-    auto_list              = false;
+
+    // [ds] Grumble grumble.
+    auto_list              = true;
+
     delay_message_clear    = false;
-    pickup_dropped         = true;
+    pickup_dropped         = false;
+    pickup_thrown          = true;
+
     travel_colour          = true;
     travel_delay           = 10;
     travel_stair_cost      = 500;
@@ -1117,11 +1122,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // field is already cleaned up from trim_string()
         player_name = field;
     }
-    else if (key == "verbose_dump")
-    {
-        // gives verbose info in char dumps
-        verbose_dump = read_bool( field, verbose_dump );
-    }
     else if (key == "char_set" || key == "ascii_display")
     {
         bool valid = true;
@@ -1191,7 +1191,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "all")
             easy_confirm = CONFIRM_ALL_EASY;
     }
-    else if (key == "easy_quit_item_lists")
+    else if (key == "easy_quit_item_lists"
+            || key == "easy_quit_item_prompts")
     {
         // allow aborting of item lists with space
         easy_quit_item_prompts = read_bool( field, 
@@ -1349,11 +1350,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // See friend_brand option upstairs. no_dark_brand applies
         // here as well.
         heap_brand = curses_attribute(field);
-    }
-    else if (key == "show_uncursed")
-    {
-        // label known uncursed items as "uncursed"
-        show_uncursed = read_bool( field, show_uncursed );
     }
     else if (key == "always_greet")
     {
@@ -1627,10 +1623,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         pickup_dropped = read_bool(field, pickup_dropped);
     }
-    else if (key == "show_waypoints")
-    {
-        show_waypoints = read_bool(field, show_waypoints);
-    }
 #ifdef WIZARD
     else if (key == "fsim_kit")
     {
@@ -1690,14 +1682,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         macro_meta_entry = read_bool(field, macro_meta_entry);
     }
-    else if (key == "travel_stair_cost")
-    {
-        travel_stair_cost = atoi( field.c_str() );
-        if (travel_stair_cost < 1)
-            travel_stair_cost = 1;
-        else if (travel_stair_cost > 1000)
-            travel_stair_cost = 1000;
-    }
     else if (key == "travel_exclude_radius2")
     {
         travel_exclude_radius2 = atoi( field.c_str() );
@@ -1743,10 +1727,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         for (int i = 0, count = seg.size(); i < count; ++i)
             prevent_travel_to( seg[i] );
     }
-    else if (key == "travel_colour")
-    {
-        travel_colour = read_bool(field, travel_colour);
-    }
     else if (key == "tc_reachable")
     {
         tc_reachable = str_to_colour(field, tc_reachable);
@@ -1768,7 +1748,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tc_disconnected = str_to_colour(field, tc_disconnected);
     }
-    else if (key == "item_colour")
+    else if (key == "item_colour" || key == "item_color")
     {
         item_colour = read_bool(field, item_colour);
     }
@@ -1918,10 +1898,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "target_zero_exp")
     {
         target_zero_exp = read_bool(field, target_zero_exp);
-    }
-    else if (key == "target_wrap")
-    {
-        target_wrap = read_bool(field, target_wrap);
     }
     else if (key == "target_oos")
     {
