@@ -2680,7 +2680,8 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
         case AMU_WARDING:
             description +=
                 "This amulet repels some of the attacks of creatures "
-                "which have been magically summoned. ";
+                "which have been magically summoned, and also "
+                "makes the wearer more resistant to draining attacks. ";
             break;
 
         case AMU_RESIST_CORROSION:

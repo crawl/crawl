@@ -1331,6 +1331,9 @@ int player_prot_life(bool calc_unid)
 {
     int pl = 0;
 
+    if (wearing_amulet(AMU_WARDING, calc_unid))
+        ++pl;
+
     // rings
     pl += player_equip( EQ_RINGS, RING_LIFE_PROTECTION, calc_unid );
 

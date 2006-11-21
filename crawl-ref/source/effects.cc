@@ -59,7 +59,8 @@ int torment_monsters(int x, int y, int pow, int caster)
         int hploss = 0;
         if (!player_res_torment())
         {
-            hploss = you.hp / 2 - 1;
+            // negative energy resistance can alleviate torment
+            hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
             if (hploss >= you.hp)
                 hploss = you.hp - 1;
             if (hploss < 0)
