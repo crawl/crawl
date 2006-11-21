@@ -328,6 +328,7 @@ static void place_monster_corpse(const monsters *monster)
 void monster_die(struct monsters *monster, char killer, int i)
 {
     int dmi;                    // dead monster's inventory
+    int xom_will_act = 0;
     int monster_killed = monster_index(monster);
     bool death_message = mons_near(monster) && player_monster_visible(monster);
 
@@ -447,9 +448,10 @@ void monster_die(struct monsters *monster, char killer, int i)
 
             // Xom doesn't care who you killed:
             if (you.religion == GOD_XOM 
-                    && random2(70) <= 10 + monster->hit_dice)
+                && random2(70) <= 10 + monster->hit_dice)
             {
-                Xom_acts(true, 1 + random2(monster->hit_dice), false);
+                // postpone Xom action until after the monster dies
+                xom_will_act = 1 + random2(monster->hit_dice);
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
@@ -751,6 +753,10 @@ void monster_die(struct monsters *monster, char killer, int i)
                             || killer == KILL_YOU
                             || pet_kill);
     monster_cleanup(monster);
+
+    if ( xom_will_act )
+        Xom_acts(true, xom_will_act, false);
+    
 }                                                   // end monster_die
 
 void monster_cleanup(monsters *monster)
