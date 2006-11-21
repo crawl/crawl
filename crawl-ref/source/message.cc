@@ -276,7 +276,7 @@ void mpr(const char *inf, int channel, int param)
         if ( i + stepsize < msglen )
         {
             // yes, find a nicer place to break it.
-            int lookback, where;
+            int lookback, where = 0;
             for ( lookback = 0; lookback < lookback_size; ++lookback )
             {
                 where = stepsize - 1 - lookback;
