@@ -2685,8 +2685,8 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
 
         case AMU_RESIST_CORROSION:
             description +=
-                "This amulet protects the armour and weaponry of its "
-                "wearer from corrosion caused by acids, although not "
+                "This amulet protects the wearer and their equipment "
+                "from corrosion caused by acids, although not "
                 "infallibly so. ";
             break;
 
