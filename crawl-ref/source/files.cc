@@ -691,7 +691,10 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                 {
                     const int item = fmenv->inv[minvc];
                     if (item == NON_ITEM)
+                    {
+                        f.items.push_back(item_def());
                         continue;
+                    }
 
                     f.items.push_back(mitm[item]);
                     destroy_item( item );
@@ -1015,7 +1018,8 @@ found_stair:
                         {
                             menv[following].inv[minvc] = NON_ITEM;
 
-                            if (f.items.size())
+                            const item_def &minvitem = f.items[minvc];
+                            if (minvitem.base_type != OBJ_UNASSIGNED)
                             {
                                 int itmf = get_item_slot(0);
                                 if (itmf == NON_ITEM)
@@ -1024,13 +1028,11 @@ found_stair:
                                     continue;
                                 }
 
-                                mitm[itmf] = f.items.front();
+                                mitm[itmf] = minvitem;
                                 mitm[itmf].x = 0;
                                 mitm[itmf].y = 0;
                                 mitm[itmf].link = NON_ITEM;
                                 menv[following].inv[minvc] = itmf;
-
-                                f.items.erase(f.items.begin());
                             }
                         }
                         mgrd[count_x][count_y] = following;
