@@ -16,6 +16,9 @@ MAKEFILE = makefile.unix
 all:
 	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O3'
 
+profile:
+	$(MAKE) $(OTHER) -f $(MAKEFILE) EXTRA_FLAGS='-O3 -pg'
+
 noopt:
 	$(MAKE) $(OTHER) -f $(MAKEFILE)
 

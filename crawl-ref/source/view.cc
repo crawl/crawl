@@ -1190,24 +1190,17 @@ static bool is_subset( int starta, int startb, int lengtha, int lengthb )
 {
     int cura = starta, curb = startb;
     int enda = starta + lengtha, endb = startb + lengthb;
-    int numstepped = 0;
-    while ( cura < enda && curb < endb && numstepped < 2 )
+    while ( cura < enda && curb < endb )
     {
+        if ( ray_coord_x[curb] > ray_coord_x[cura] )
+            return false;
+        if ( ray_coord_y[curb] > ray_coord_y[cura] )
+            return false;
         if ( ray_coord_x[cura] == ray_coord_x[curb] &&
              ray_coord_y[cura] == ray_coord_y[curb] )
-        {
             ++cura;
-            ++curb;
-            numstepped = 0;
-            continue;
-        }
-        else
-        {
-            // we can advance curb, not cura!
-            ++curb;
-            ++numstepped;
-            continue;
-        }
+
+        ++curb;
     }
     return ( cura == enda );
 }
@@ -1215,43 +1208,49 @@ static bool is_subset( int starta, int startb, int lengtha, int lengthb )
 // return a vector which lists all the nonduped cellrays (by index)
 static std::vector<int> find_nonduped_cellrays()
 {
-    // a fullray is duped if:
-    // there are rays which are subsets of it, and whose union
-    // is the ray.
-    // a cellray c in a fullray f is duped if:
-    // there is a fullray g such that g contains c and g[:c] is a
-    // subset of f[:c]
-    int i,j,d,e;
-    int curidx, tmpidx;
+    // a cellray c in a fullray f is duped if there is a fullray g
+    // such that g contains c and g[:c] is a subset of f[:c]
+    int raynum, cellnum, curidx, testidx, testray, testcell;
     bool is_duplicate;
-    std::vector<int> result;
-    for (curidx=0, i=0; i < (int)raylengths.size(); curidx += raylengths[i++])
-    {
-        for (j = 0; j < raylengths[i]; ++j)
-        {
-            is_duplicate = false;
-            // is the cellray corresponding to i,j duplicated?
 
-            for (tmpidx = 0, d = 0; d < i; tmpidx += raylengths[d++])
+    std::vector<int> result;
+    for (curidx=0, raynum=0;
+         raynum < (int)raylengths.size();
+         curidx += raylengths[raynum++])
+    {
+        for (cellnum = 0; cellnum < raylengths[raynum]; ++cellnum)
+        {
+            // is the cellray raynum[cellnum] duplicated?
+            is_duplicate = false;
+            // XXX We should really check everything up to now
+            // completely, and all further rays to see if they're
+            // proper subsets.
+            const int curx = ray_coord_x[curidx + cellnum];
+            const int cury = ray_coord_y[curidx + cellnum];
+            for (testidx = 0, testray = 0; testray < raynum;
+                 testidx += raylengths[testray++])
             {
-                if ( d == i )
-                    continue;
-                // scan ahead to see if there's any point in checking
-                for ( e = 0; e < raylengths[d]; ++e )
+                // scan ahead to see if there's an intersect
+                for ( testcell = 0; testcell < raylengths[raynum]; ++testcell )
                 {
-                    if ( ray_coord_x[tmpidx + e] == ray_coord_x[curidx+j] &&
-                         ray_coord_y[tmpidx + e] == ray_coord_y[curidx+j] )
+                    const int testx = ray_coord_x[testidx + testcell];
+                    const int testy = ray_coord_y[testidx + testcell];
+                    // we can short-circuit sometimes
+                    if ( testx > curx || testy > cury )
+                        break;
+                    // bingo!
+                    if ( testx == curx && testy == cury )
                     {
-                        if ( is_subset( tmpidx, curidx, e, j ) )
-                            is_duplicate = true;
+                        is_duplicate = is_subset(testidx, curidx,
+                                                 testcell, cellnum);
                         break;
                     }
                 }
                 if ( is_duplicate )
-                    break;
+                    break;      // no point in checking further rays
             }
             if ( !is_duplicate )
-                result.push_back(curidx + j);
+                result.push_back(curidx + cellnum);
         }
     }
     return result;
@@ -1288,24 +1287,17 @@ static bool register_ray( double accx, double accy, double slope )
     return true;
 }
 
-static unsigned long* blockray_offset( unsigned long* p, unsigned bsize,
-                                       const int x, const int y )
-{
-    return p +
-        ((bsize + LONGSIZE - 1) / LONGSIZE) *
-        (x * (LOS_MAX_RANGE_Y+1) + y);
-}
-
 static void create_blockrays()
 {
     // determine nonduplicated rays
     std::vector<int> nondupe_cellrays = find_nonduped_cellrays();
     const unsigned int num_nondupe_rays = nondupe_cellrays.size();
-    const unsigned int num_nondupe_words = (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
+    const unsigned int num_nondupe_words =
+        (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
     const unsigned int num_cellrays = ray_coord_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
-    // allocate and clear memory
+    // first build all the rays: easier to do blocking calculations there
     unsigned long* full_los_blockrays;
     full_los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
                                            (LOS_MAX_RANGE_Y+1)];
@@ -1319,10 +1311,9 @@ static void create_blockrays()
         for ( int i = 0; i < raylengths[ray]; ++i )
         {
             // every cell blocks...
-            unsigned long* const inptr =
-                blockray_offset( full_los_blockrays, num_cellrays,
-                                 ray_coord_x[i + cur_offset],
-                                 ray_coord_y[i + cur_offset] );
+            unsigned long* const inptr = full_los_blockrays +
+                (ray_coord_x[i + cur_offset] * (LOS_MAX_RANGE_Y + 1) +
+                 ray_coord_y[i + cur_offset]) * num_words;
 
             // ...all following cellrays
             for ( int j = i+1; j < raylengths[ray]; ++j )
@@ -1332,7 +1323,8 @@ static void create_blockrays()
         cur_offset += raylengths[ray];
     }
 
-    // we've built the basic blockray array; now compress it
+    // we've built the basic blockray array; now compress it, keeping
+    // only the nonduplicated cellrays.
 
     // allocate and clear memory
     los_blockrays = new unsigned long[num_nondupe_words * (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y + 1)];
@@ -1340,7 +1332,6 @@ static void create_blockrays()
            (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
 
     // we want to only keep the cellrays from nondupe_cellrays.
-    // we simply compress full_los_blockrays.
     compressed_ray_x.resize(num_nondupe_rays);
     compressed_ray_y.resize(num_nondupe_rays);
     for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
@@ -1539,10 +1530,17 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // kills a cellray, it will kill all remaining cellrays of that ray.
 // Also, rays are checked to see if they are duplicates of each
 // other. If they are, they're eliminated.
+// Some cellrays can also be eliminated. In general, a cellray is
+// unnecessary if there is another cellray with the same coordinates,
+// and whose path (up to those coordinates) is a subset, not necessarily
+// proper, of the original path. We still store the original cellrays
+// fully for beam detection and such.
 // PERFORMANCE:
 // With reasonable values we have around 6000 cellrays, meaning
-// around 600Kb (75 KB) of data. That means that we need to do
-// around 200*100*4 ~ 80,000 memory reads + writes per LOS call.
+// around 600Kb (75 KB) of data. This gets cut down to 700 cellrays
+// after removing duplicates. That means that we need to do
+// around 22*100*4 ~ 9,000 memory reads + writes per LOS call on a
+// 32-bit system. Not too bad.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
              FixedArray < unsigned char, 80, 70 > &gr, int x_p, int y_p)
 {
