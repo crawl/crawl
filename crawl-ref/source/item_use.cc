@@ -222,7 +222,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         {
             if (you.equip[EQ_WEAPON] != -1)
             {
-                unwield_item(you.equip[EQ_WEAPON]);
+                unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
                 you.turn_is_over = true;
 
                 you.equip[EQ_WEAPON] = -1;
@@ -249,7 +249,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     // Go ahead and wield the weapon.
     if (you.equip[EQ_WEAPON] != -1)
-        unwield_item(you.equip[EQ_WEAPON]);
+        unwield_item(you.equip[EQ_WEAPON], show_weff_messages);
 
     you.equip[EQ_WEAPON] = item_slot;
 

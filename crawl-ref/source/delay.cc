@@ -508,7 +508,7 @@ void handle_delay( void )
             break;
 
         case DELAY_DROP_ITEM:
-            // Note:  checking if item is dropable is assumed to 
+            // Note:  checking if item is droppable is assumed to 
             // be done before setting up this delay... this includes
             // quantity (delay.parm2). -- bwr
 
