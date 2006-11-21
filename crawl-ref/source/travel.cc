@@ -1364,7 +1364,7 @@ static struct
 {
     { "Dungeon",        "the Main Dungeon", 'D' },
     { "Dis",            "Dis",              'I' },
-    { "Gehenna",        "Gehenna",          'W' },
+    { "Gehenna",        "Gehenna",          'N' },
     { "Hell",           "Hell",             'U' },
     { "Cocytus",        "Cocytus",          'X' },
     { "Tartarus",       "Tartarus",         'Y' },
