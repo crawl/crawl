@@ -486,6 +486,33 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                 // handle non-directional keys
                 switch (keyin)
                 {
+#ifdef WIZARD
+                    case 'F':
+                        targChosen = true;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
+                        mid = mgrd[mx][my];
+
+                        if (mid == NON_MONSTER)
+                            break;
+
+                        mprf("Changing attitude of %s\n",
+                                ptr_monam(&menv[mid], DESC_PLAIN));
+                        menv[mid].attitude =
+                            menv[mid].attitude == ATT_HOSTILE?
+                                ATT_FRIENDLY
+                              : ATT_HOSTILE;
+
+                        describe_monsters( menv[ mid ].type, mid );
+                        redraw_screen();
+                        mesclr( true );
+                        // describe the cell again.
+                        describe_cell(view2gridX(cx), view2gridY(cy));
+                        break;
+#endif
+
                     case CONTROL('F'):
                         mode = (mode + 1) % TARG_NUM_MODES;
                         
@@ -566,6 +593,8 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         targChosen = true;
                         mx = you.x_pos + cx - VIEW_CX;
                         my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
                         mid = mgrd[mx][my];
 
                         if (mid == NON_MONSTER)
