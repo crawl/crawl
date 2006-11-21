@@ -974,12 +974,21 @@ unsigned long* los_blockrays = NULL;
 unsigned long* dead_rays = NULL;
 std::vector<short> ray_coord_x;
 std::vector<short> ray_coord_y;
+std::vector<short> compressed_ray_x;
+std::vector<short> compressed_ray_y;
 std::vector<int> raylengths;
 std::vector<ray_def> fullrays;
 
 void setLOSRadius(int newLR)
 {
     los_radius_squared = newLR * newLR + 1*1;
+}
+
+bool get_bit_in_long_array( const unsigned long* data, int where )
+{
+    int wordloc = where / LONGSIZE;
+    int bitloc = where % LONGSIZE;
+    return ((data[wordloc] & (1UL << bitloc)) != 0);
 }
 
 static void set_bit_in_long_array( unsigned long* data, int where ) {
@@ -1176,6 +1185,78 @@ static bool is_duplicate_ray( int len, int xpos[], int ypos[] )
     return false;
 }
 
+// is starta...lengtha a subset of startb...lengthb?
+static bool is_subset( int starta, int startb, int lengtha, int lengthb )
+{
+    int cura = starta, curb = startb;
+    int enda = starta + lengtha, endb = startb + lengthb;
+    int numstepped = 0;
+    while ( cura < enda && curb < endb && numstepped < 2 )
+    {
+        if ( ray_coord_x[cura] == ray_coord_x[curb] &&
+             ray_coord_y[cura] == ray_coord_y[curb] )
+        {
+            ++cura;
+            ++curb;
+            numstepped = 0;
+            continue;
+        }
+        else
+        {
+            // we can advance curb, not cura!
+            ++curb;
+            ++numstepped;
+            continue;
+        }
+    }
+    return ( cura == enda );
+}
+
+// return a vector which lists all the nonduped cellrays (by index)
+static std::vector<int> find_nonduped_cellrays()
+{
+    // a fullray is duped if:
+    // there are rays which are subsets of it, and whose union
+    // is the ray.
+    // a cellray c in a fullray f is duped if:
+    // there is a fullray g such that g contains c and g[:c] is a
+    // subset of f[:c]
+    int i,j,d,e;
+    int curidx, tmpidx;
+    bool is_duplicate;
+    std::vector<int> result;
+    for (curidx=0, i=0; i < (int)raylengths.size(); curidx += raylengths[i++])
+    {
+        for (j = 0; j < raylengths[i]; ++j)
+        {
+            is_duplicate = false;
+            // is the cellray corresponding to i,j duplicated?
+
+            for (tmpidx = 0, d = 0; d < i; tmpidx += raylengths[d++])
+            {
+                if ( d == i )
+                    continue;
+                // scan ahead to see if there's any point in checking
+                for ( e = 0; e < raylengths[d]; ++e )
+                {
+                    if ( ray_coord_x[tmpidx + e] == ray_coord_x[curidx+j] &&
+                         ray_coord_y[tmpidx + e] == ray_coord_y[curidx+j] )
+                    {
+                        if ( is_subset( tmpidx, curidx, e, j ) )
+                            is_duplicate = true;
+                        break;
+                    }
+                }
+                if ( is_duplicate )
+                    break;
+            }
+            if ( !is_duplicate )
+                result.push_back(curidx + j);
+        }
+    }
+    return result;
+}
+
 // Create and register the ray defined by the arguments.
 // Return true if the ray was actually registered (i.e., not a duplicate.)
 static bool register_ray( double accx, double accy, double slope )
@@ -1207,23 +1288,28 @@ static bool register_ray( double accx, double accy, double slope )
     return true;
 }
 
-static unsigned long* blockray_offset( const int x, const int y )
+static unsigned long* blockray_offset( unsigned long* p, unsigned bsize,
+                                       const int x, const int y )
 {
-    return los_blockrays +
-        ((ray_coord_x.size() + LONGSIZE - 1) / LONGSIZE) *
+    return p +
+        ((bsize + LONGSIZE - 1) / LONGSIZE) *
         (x * (LOS_MAX_RANGE_Y+1) + y);
 }
 
 static void create_blockrays()
 {
+    // determine nonduplicated rays
+    std::vector<int> nondupe_cellrays = find_nonduped_cellrays();
+    const unsigned int num_nondupe_rays = nondupe_cellrays.size();
+    const unsigned int num_nondupe_words = (num_nondupe_rays + LONGSIZE - 1) / LONGSIZE;
     const unsigned int num_cellrays = ray_coord_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
-    // allocate and clear memory
-    los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
-                                      (LOS_MAX_RANGE_Y+1)];
-    dead_rays = new unsigned long[num_words];
 
-    memset((void*)los_blockrays, 0, sizeof(unsigned long) * num_words *
+    // allocate and clear memory
+    unsigned long* full_los_blockrays;
+    full_los_blockrays = new unsigned long[num_words * (LOS_MAX_RANGE_X+1) *
+                                           (LOS_MAX_RANGE_Y+1)];
+    memset((void*)full_los_blockrays, 0, sizeof(unsigned long) * num_words *
            (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
 
     int cur_offset = 0;
@@ -1234,7 +1320,8 @@ static void create_blockrays()
         {
             // every cell blocks...
             unsigned long* const inptr =
-                blockray_offset( ray_coord_x[i + cur_offset],
+                blockray_offset( full_los_blockrays, num_cellrays,
+                                 ray_coord_x[i + cur_offset],
                                  ray_coord_y[i + cur_offset] );
 
             // ...all following cellrays
@@ -1244,9 +1331,45 @@ static void create_blockrays()
         }
         cur_offset += raylengths[ray];
     }
+
+    // we've built the basic blockray array; now compress it
+
+    // allocate and clear memory
+    los_blockrays = new unsigned long[num_nondupe_words * (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y + 1)];
+    memset((void*)los_blockrays, 0, sizeof(unsigned long) * num_nondupe_words *
+           (LOS_MAX_RANGE_X+1) * (LOS_MAX_RANGE_Y+1));
+
+    // we want to only keep the cellrays from nondupe_cellrays.
+    // we simply compress full_los_blockrays.
+    compressed_ray_x.resize(num_nondupe_rays);
+    compressed_ray_y.resize(num_nondupe_rays);
+    for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
+    {
+        compressed_ray_x[i] = ray_coord_x[nondupe_cellrays[i]];
+        compressed_ray_y[i] = ray_coord_y[nondupe_cellrays[i]];
+    }
+    unsigned long* oldptr = full_los_blockrays;
+    unsigned long* newptr = los_blockrays;
+    for ( int x = 0; x <= LOS_MAX_RANGE_X; ++x )
+    {
+        for ( int y = 0; y <= LOS_MAX_RANGE_Y; ++y )
+        {
+            for ( unsigned int i = 0; i < num_nondupe_rays; ++i )
+                if ( get_bit_in_long_array(oldptr, nondupe_cellrays[i]) )
+                    set_bit_in_long_array(newptr, i);
+            oldptr += num_words;
+            newptr += num_nondupe_words;
+        }
+    }
+
+    // we can throw away full_los_blockrays now
+    delete [] full_los_blockrays;
+
+    dead_rays = new unsigned long[num_nondupe_words];
+    
 #ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u",
-          cur_offset, raylengths.size() );
+    mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
+          num_cellrays, raylengths.size(), num_nondupe_rays );
 #endif
 }
 
@@ -1393,68 +1516,6 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     return false;
 }
 
-// Find a ray from sourcex, sourcey to targetx, targety.
-//
-// Return the maximum length of the ray (until it leaves LOS), and the
-// locations themselves in xpos[] and ypos[]. Note that the ray probably
-// continues; the caller is responsible for finding out, by looking at
-// xpos[] and ypos[], when the target cell is reached.
-//
-// The assumption is that targetx, targety is within LOS of sourcex, sourcey.
-// Therefore, we simply look at all the rays until we hit one which
-// passes through targetx, targety and is nonblocked.
-//
-// If we can't find any path, we return 0.
-int find_ray_path( int sourcex, int sourcey,
-                   int targetx, int targety,
-                   int* xpos, int* ypos, bool just_check )
-{
-    int cellray, inray;
-    const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
-    const int signy = ((targety - sourcey >= 0) ? 1 : -1);
-    const int absx = signx * (targetx - sourcex);
-    const int absy = signy * (targety - sourcey);
-    int cur_offset = 0;
-    for ( unsigned int fullray = 0; fullray < raylengths.size();
-          cur_offset += raylengths[fullray++] ) {
-
-        for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
-        {
-            if ( ray_coord_x[cellray + cur_offset] == absx &&
-                 ray_coord_y[cellray + cur_offset] == absy ) {
-
-                // check if we're blocked so far
-                bool blocked = false;
-                for ( inray = 0; inray < cellray; ++inray ) {
-                    if (grid_is_solid(grd[sourcex + signx * ray_coord_x[inray + cur_offset]][sourcey + signy * ray_coord_y[inray + cur_offset]]))
-                    {
-                        blocked = true;                    
-                        break;
-                    }
-                }
-
-                if ( !blocked )
-                {
-                    // success!
-                    if (!just_check)
-                    {
-                        // write out the ray
-                        for ( inray = 0; inray <= cellray; ++inray )
-                        {
-                            xpos[inray] = sourcex +
-                                signx * ray_coord_x[inray + cur_offset];
-                            ypos[inray] = sourcey +
-                                signy * ray_coord_y[inray + cur_offset];
-                        }
-                    }
-                    return cellray + 1;
-                }
-            }
-        }
-    }
-    return 0;
-}
-
 // The rule behind LOS is:
 // Two cells can see each other if there is any line from some point
 // of the first to some point of the second ("generous" LOS.)
@@ -1495,7 +1556,7 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
         for ( int j = 0; j < 19; ++j )
             sh[i][j] = 0;
 
-    const unsigned int num_cellrays = ray_coord_x.size();
+    const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
     for ( int quadrant = 0; quadrant < 4; ++quadrant ) {
@@ -1506,9 +1567,11 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
         memset( (void*)dead_rays, 0, sizeof(unsigned long) * num_words);
 
         // kill all blocked rays
+        const unsigned long* inptr = los_blockrays;
         for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff ) {
-            for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y; ++ydiff ) {
-
+            for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
+                 ++ydiff, inptr += num_words ) {
+                
                 const int realx = x_p + xdiff * xmult;
                 const int realy = y_p + ydiff * ymult;
 
@@ -1518,7 +1581,6 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                 // if this cell is opaque...
                 if ( grid_is_opaque(gr[realx][realy])) {
                     // then block the appropriate rays
-                    const unsigned long* inptr = blockray_offset(xdiff,ydiff);
                     for ( unsigned int i = 0; i < num_words; ++i )
                         dead_rays[i] |= inptr[i];
                 }
@@ -1535,8 +1597,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                 // make the cells seen by this ray at this point visible
                 if ( ((curword >> bitloc) & 1UL) == 0 ) {
                     // this ray is alive!
-                    const int realx = xmult * ray_coord_x[rayidx];
-                    const int realy = ymult * ray_coord_y[rayidx];
+                    const int realx = xmult * compressed_ray_x[rayidx];
+                    const int realy = ymult * compressed_ray_y[rayidx];
                     // update shadow map
                     if (x_p + realx >= 0 && x_p + realx < 80 &&
                         y_p + realy >= 0 && y_p + realy < 70 &&

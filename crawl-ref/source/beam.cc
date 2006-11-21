@@ -2198,10 +2198,10 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
     if (dist > MONSTER_LOS_RANGE)
         return (false);
     
-    // Note that we are guaranteed to be within the player LOS range.
-    // Thus find_ray_path() is enough. If this ever changes, we can
-    // create the appropriate beam and advance it manually.
-    return ( find_ray_path(sx, sy, tx, ty) != 0 );
+    // Note that we are guaranteed to be within the player LOS range,
+    // so fallback is unnecessary.
+    ray_def ray;
+    return find_ray( sx, sy, tx, ty, false, ray );
 }
 
 /*
