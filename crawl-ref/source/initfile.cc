@@ -514,7 +514,7 @@ void game_options::reset_options()
                    (1L <<  4)); // food
     verbose_dump           = false;
     detailed_stat_dump     = true;
-    colour_map             = false;
+    colour_map             = true;
     clean_map              = false;
     show_uncursed          = true;
     always_greet           = true;
