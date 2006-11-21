@@ -1349,11 +1349,6 @@ void process_command( command_type cmd ) {
     case CMD_MACRO_ADD:
         macro_add_query();
         break;
-
-    case CMD_MACRO_SAVE:
-        mpr("Saving macros.");
-        macro_save();
-        break;
 #endif
 
     case CMD_LIST_WEAPONS:
@@ -2367,7 +2362,6 @@ command_type keycode_to_command( keycode_type key ) {
     case '=': return CMD_ADJUST_INVENTORY;
     case '?': return CMD_DISPLAY_COMMANDS;
     case '`': return CMD_MACRO_ADD;
-    case '~': return CMD_MACRO_SAVE;
     case '&': return CMD_WIZARD;
     case '"': return CMD_LIST_JEWELLERY;
     case '{': return CMD_INSCRIBE_ITEM;

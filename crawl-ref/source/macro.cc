@@ -580,8 +580,7 @@ void macro_add_query( void )
     KeymapContext keymc = KC_DEFAULT;
 
     mesclr();
-    mpr( "Command (m)acro or keymap [(k) default, (x) level-map or "
-            "(t)argeting]? ", MSGCH_PROMPT );
+    mpr( "(m)acro, keymap [(k) default, (x) level-map or (t)argeting], (s)ave?", MSGCH_PROMPT );
     input = getch();
     if (input == 0)
         input = getch();
@@ -604,7 +603,13 @@ void macro_add_query( void )
     }
     else if (input == 'm')
         keymap = false;
-    else 
+    else if (input == 's')
+    {
+        mpr("Saving macros.");
+        macro_save();
+        return;
+    }
+    else
     {
         mpr( "Aborting." );
         return;

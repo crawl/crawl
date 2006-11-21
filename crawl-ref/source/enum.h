@@ -624,11 +624,10 @@ enum command_type
     CMD_REPLAY_MESSAGES,
     CMD_REDRAW_SCREEN,
     CMD_MACRO_ADD,
-    CMD_MACRO_SAVE,
     CMD_SAVE_GAME,
     CMD_SAVE_GAME_NOW,
-    CMD_SUSPEND_GAME,                  // 1000 +  80
-    CMD_QUIT,
+    CMD_SUSPEND_GAME,
+    CMD_QUIT,                          // 1000 +  80
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
 
