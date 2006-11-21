@@ -561,7 +561,6 @@ void game_options::reset_options()
     // [ds] Default to jazzy colours.
     detected_item_colour   = LIGHTGREEN;
     detected_monster_colour= LIGHTRED;
-    remembered_monster_colour = 0;
 
     easy_exit_menu         = true;
 #ifdef DOS
@@ -1278,21 +1277,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             fprintf( stderr, "Bad detected_monster_colour -- %s\n",
                      field.c_str());
-    }
-    else if (key == "remembered_monster_colour")
-    {
-        if (field == "real")
-            remembered_monster_colour = 0xFFFFU;
-        else if (field == "auto")
-            remembered_monster_colour = 0;
-        else {
-            const int col = str_to_colour( field );
-            if (col != -1)
-                remembered_monster_colour = col;
-            else
-                fprintf( stderr, "Bad remembered_monster_colour -- %s\n",
-                         field.c_str());
-        }
     }
     else if (key.find(interrupt_prefix) == 0)
     {
