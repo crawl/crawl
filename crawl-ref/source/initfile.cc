@@ -520,12 +520,12 @@ void game_options::reset_options()
     always_greet           = false;
     easy_open              = true;
     easy_unequip           = true;
-    easy_butcher           = false;
+    easy_butcher           = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = false;
     hp_warning             = 10;
     hp_attention           = 25;
-    confirm_self_target    = false;
+    confirm_self_target    = true;
     safe_autopickup        = false;
     use_notes              = true;
     note_skill_max         = false;
@@ -559,7 +559,12 @@ void game_options::reset_options()
     remembered_monster_colour = 0;
 
     easy_exit_menu         = true;
+#ifdef DOS
     dos_use_background_intensity = false;
+#else
+    dos_use_background_intensity = true;
+#endif
+
     assign_item_slot       = SS_FORWARD;
 
     macro_meta_entry       = true;
@@ -568,16 +573,16 @@ void game_options::reset_options()
     level_map_cursor_step  = 10;
 
 #ifdef STASH_TRACKING
-    stash_tracking         = STM_EXPLICIT;
+    stash_tracking         = STM_ALL;
 #endif
     explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
     safe_zero_exp          = true;
-    target_zero_exp        = true;
-    target_wrap            = false;
+    target_zero_exp        = false;
+    target_wrap            = true;
     target_oos             = true;
     target_los_first       = true;
     dump_kill_places       = KDO_ONE_PLACE;
-    dump_message_count     = 4;
+    dump_message_count     = 7;
     dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
     dump_item_origin_price = -1;
 
