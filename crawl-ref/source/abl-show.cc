@@ -570,7 +570,8 @@ bool activate_ability(void)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        if (you.duration[DUR_BREATH_WEAPON])
+        if (you.duration[DUR_BREATH_WEAPON]
+                && abil.ability != ABIL_SPIT_ACID)
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
@@ -636,11 +637,14 @@ bool activate_ability(void)
 
         }
 
-        you.duration[DUR_BREATH_WEAPON] =
-            3 + random2(4) + random2(30 - you.experience_level) / 2;
+        if (abil.ability != ABIL_SPIT_ACID)
+        {
+            you.duration[DUR_BREATH_WEAPON] =
+                3 + random2(4) + random2(30 - you.experience_level) / 2;
 
-        if (Curr_abil[abil_used].which == ABIL_BREATHE_STEAM)
-            you.duration[DUR_BREATH_WEAPON] /= 2;
+            if (Curr_abil[abil_used].which == ABIL_BREATHE_STEAM)
+                you.duration[DUR_BREATH_WEAPON] /= 2;
+        }
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
