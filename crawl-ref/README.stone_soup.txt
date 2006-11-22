@@ -3,17 +3,17 @@ Dungeon Crawl (Stone Soup)
 
 (If you'd like to dive in and start playing Crawl right away, see readme.txt.)
 
-What you have downloaded is *not* Linley's Dungeon Crawl. This is a somewhat
-experimental branch of the Dungeon Crawl Reference project (codenamed Stone
-Soup). Note that this is a branch, and is NOT the official Dungeon Crawl
-Reference.
+What you have downloaded is *not* Linley's Dungeon Crawl. It's a parallel
+effort, currently not quite a fork.
 
-The goal of this version is to build on Dungeon Crawl Reference (which aims to
-be the stable base platform for experimentation and patches, and to fill in the
-gaps during times when Dungeon Crawl's main maintainer is not available) with
-good features drawn from sources such as Brent Ross' 4.1.2 alpha, and ideas
-from the community of Dungeon Crawl players and to keep development on Dungeon
-Crawl moving without destablizing game balance.
+The goal of this version is to provide a stable base platform for further
+Crawl development during times when Dungeon Crawl's main maintainer is not
+available, and to collect experiments, patches, and ideas from the community
+of Dungeon Crawl players.
+
+Stone Soup is based on Dungeon Crawl 4.0.0 beta26, with additional changes
+gathered from Brent Ross's 4.1.2 alpha release. It incorporates several
+popular community patches and assorted local changes and improvements.
 
 Please do not send bug reports for this code to the main Dungeon Crawl
 maintainers -- the odds are good that the code that's causing you problems
