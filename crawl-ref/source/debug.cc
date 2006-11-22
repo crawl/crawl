@@ -485,6 +485,8 @@ void debug_change_species( void )
         }
 
         you.species = sp;         
+        you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
+                         (you.species == SP_GHOUL) ? US_HUNGRY_DEAD : US_ALIVE);
 
         redraw_screen();
     }
