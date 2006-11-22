@@ -632,10 +632,14 @@ default_autoprayer = false
 	Also note the option safe_zero_exp (see 4-a) decides whether zero 
 	experience monsters (like plants) are considered hostile.
 
-sort_menus = false
+sort_menus = auto:5
         When set to true, items are sorted by description in inventory and
         pickup menus. When set to false (default), items are ordered by
-        equipment slot.
+        equipment slot. When set to a number - using a syntax of the form
+        sort_menus = auto:5 - items are sorted by their description if
+        the total number of items in that category is at least that
+        number; in the default case, having 4 kinds of potions would not
+        sort them, but having 5 would.
 	
 
 4-i	Messages and Display Enhancements.

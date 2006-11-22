@@ -291,7 +291,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             items_in_class.push_back( new InvEntry(*mitems[j]) );
         }
 
-        if (Options.sort_menus)
+        if (Options.sort_menus != -1 &&
+            (int)items_in_class.size() >= Options.sort_menus)
             std::sort( items_in_class.begin(), items_in_class.end(),
                        compare_menu_entries );
 

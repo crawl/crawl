@@ -322,6 +322,27 @@ static bool read_bool( const std::string &field, bool def_value )
     return (ret);
 }
 
+// read a value which can be either a boolean (in which case return
+// 0 for true, -1 for false), or a string of the form PREFIX:NUMBER
+// (e.g., auto:7), in which case return NUMBER as an int.
+static int read_bool_or_number( const std::string &field, int def_value,
+                                const std::string& num_prefix)
+{
+    int ret = def_value;
+
+    if (field == "true" || field == "1" || field == "yes")
+        ret = 0;
+
+    if (field == "false" || field == "0" || field == "no")
+        ret = -1;
+
+    if ( field.find(num_prefix) == 0 )
+        ret = atoi(field.c_str() + num_prefix.size());
+
+    return (ret);
+}
+
+
 static unsigned curses_attribute(const std::string &field)
 {
     if (field == "standout")               // probably reverses
@@ -547,7 +568,7 @@ void game_options::reset_options()
     travel_stair_cost      = 500;
     travel_exclude_radius2 =  68;
 
-    sort_menus             = false;
+    sort_menus             = 5;
 
     tc_reachable           = BLUE;
     tc_excluded            = LIGHTMAGENTA;
@@ -1643,7 +1664,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif // WIZARD
     else if (key == "sort_menus")
     {
-        sort_menus = read_bool(field, sort_menus);
+        sort_menus = read_bool_or_number(field, sort_menus, "auto:");
     }
     else if (key == "travel_delay")
     {

@@ -813,7 +813,8 @@ public:
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
 
-    bool        sort_menus;
+    int        sort_menus;        // 0 = always, -1 = never, number = beyond
+                                  // that size.
 
     int         dump_kill_places; // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
