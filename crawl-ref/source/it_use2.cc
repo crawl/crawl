@@ -93,7 +93,7 @@ bool potion_effect( char pot_eff, int pow )
                 mpr( "You feel very mighty all of a sudden." );
             else 
             {
-                mpr( "You still feel pretty mighty." );
+                mpr( "You feel mightier all of a sudden." );
                 contaminate_player(1);
             }
 
@@ -186,7 +186,7 @@ bool potion_effect( char pot_eff, int pow )
 
     case POT_INVISIBILITY:
         mpr( (!you.invis) ? "You fade into invisibility!"
-                          : "You feel safely hidden away." );
+                          : "You fade further into invisibility." );
 
         // now multiple invisiblity casts aren't as good -- bwr
         if (!you.invis)
