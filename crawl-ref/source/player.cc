@@ -2918,6 +2918,11 @@ void display_char_status(void)
         break;
     }
 
+    if (you.burden_state == BS_ENCUMBERED)
+        mpr("You are burdened.");
+    else if (you.burden_state == BS_OVERLOADED)
+        mpr("You are overloaded with stuff.");
+
     if (you.duration[DUR_BREATH_WEAPON])
         mpr( "You are short of breath." );
 
