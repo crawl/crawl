@@ -160,7 +160,7 @@ public:
 
     std::string kill_info() const;
 private:
-    const char *category_name(KillCategory kc) const;
+    const char *category_name(kill_category kc) const;
 
     Kills categorized_kills[KC_NCATEGORIES];
 private:
@@ -168,13 +168,6 @@ private:
                        long count, const char *c, bool separator)
         const;
 };
-
-unsigned short get_packed_place();
-
-unsigned short get_packed_place( unsigned char branch, int subdepth,
-                          char level_type );
-
-std::string short_place_name(unsigned short place);
 
 enum KILL_DUMP_OPTIONS
 {

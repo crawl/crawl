@@ -3,6 +3,8 @@
  *  Summary:    Misc stuff.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -20,6 +22,7 @@
 #include "direct.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -37,27 +40,63 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 // torment_monsters is called with power 0 because torment is
 // UNRESISTABLE except for being undead or having torment
-// resistance!   Even if we used maximum power of 1000,  high
+// resistance!  Even if we used maximum power of 1000, high
 // level monsters and characters would save too often.  (GDL)
 
-static int torment_monsters(int x, int y, int pow, int garbage)
+int torment_monsters(int x, int y, int pow, int caster)
 {
     UNUSED( pow );
-    UNUSED( garbage );
 
     // is player?
     if (x == you.x_pos && y == you.y_pos)
     {
-        if (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE])
+        // [dshaligram] Switched to using ouch() instead of dec_hp so that
+        // notes can also track torment and activities can be interrupted
+        // correctly.
+        int hploss = 0;
+        if (!player_res_torment())
+        {
+            // negative energy resistance can alleviate torment
+            hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
+            if (hploss >= you.hp)
+                hploss = you.hp - 1;
+            if (hploss < 0)
+                hploss = 0;
+        }
+
+        if (!hploss)
             mpr("You feel a surge of unholy energy.");
         else
         {
             mpr("Your body is wracked with pain!");
-            dec_hp((you.hp / 2) - 1, false);
+
+            const char *aux = "torment";
+            if (caster < 0)
+            {
+                switch (caster)
+                {
+                case TORMENT_CARDS:
+                case TORMENT_SPELL:
+                    aux = "Symbol of Torment";
+                    break;
+                case TORMENT_SPWLD:
+                    // FIXME: If we ever make any other weapon / randart
+                    // eligible to torment, this will be incorrect.
+                    aux = "Sceptre of Torment";
+                    break;
+                case TORMENT_SCROLL:
+                    aux = "scroll of torment";
+                    break;
+                }
+                caster = TORMENT_GENERIC;
+            }
+            ouch(hploss, caster, 
+                    caster != TORMENT_GENERIC? KILLED_BY_MONSTER 
+                                             : KILLED_BY_SOMETHING, 
+                    aux);
         }
 
         return 1;
@@ -83,9 +122,9 @@ static int torment_monsters(int x, int y, int pow, int garbage)
     return 1;
 }
 
-void torment(int tx, int ty)
+void torment(int caster, int tx, int ty)
 {
-    apply_area_within_radius(torment_monsters, tx, ty, 0, 8, 0);
+    apply_area_within_radius(torment_monsters, tx, ty, 0, 8, caster);
 }                               // end torment()
 
 void banished(unsigned char gate_type)
@@ -215,15 +254,16 @@ void direct_effect(struct bolt &pbolt)
     {
     case DMNBM_HELLFIRE:
         mpr( "You are engulfed in a burst of hellfire!" );
-        strcpy( pbolt.beam_name, "hellfire" );
+        pbolt.name = "hellfire";
         pbolt.ex_size = 1;
-        pbolt.flavour = BEAM_EXPLOSION;
+        pbolt.flavour = BEAM_HELLFIRE;
+        pbolt.is_explosion = true;
         pbolt.type = SYM_ZAP;
         pbolt.colour = RED;
         pbolt.thrower = KILL_MON_MISSILE;
-        pbolt.aux_source = NULL;
-        pbolt.isBeam = false;
-        pbolt.isTracer = false;
+        pbolt.aux_source.clear();
+        pbolt.is_beam = false;
+        pbolt.is_tracer = false;
         pbolt.hit = 20;
         pbolt.damage = dice_def( 3, 20 );
         pbolt.aux_source = "burst of hellfire";
@@ -232,7 +272,7 @@ void direct_effect(struct bolt &pbolt)
 
     case DMNBM_SMITING:
         mpr( "Something smites you!" );
-        strcpy( pbolt.beam_name, "smiting" );    // for ouch
+        pbolt.name = "smiting";
         pbolt.aux_source = "by divine providence";
         damage_taken = 7 + random2avg(11, 2);
         break;
@@ -256,7 +296,8 @@ void direct_effect(struct bolt &pbolt)
 
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
-        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM, pbolt.aux_source);
+        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM, 
+             pbolt.aux_source.c_str());
 
     return;
 }                               // end direct_effect()
@@ -276,7 +317,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
     {
     case DMNBM_HELLFIRE:
         simple_monster_message(monster, " is engulfed in hellfire.");
-        strcpy(pbolt.beam_name, "hellfire");
+        pbolt.name = "hellfire";
         pbolt.flavour = BEAM_LAVA;
 
         damage_taken = 5 + random2(10) + random2(5);
@@ -285,7 +326,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
 
     case DMNBM_SMITING:
         simple_monster_message(monster, " is smitten.");
-        strcpy(pbolt.beam_name, "smiting");
+        pbolt.name = "smiting";
         pbolt.flavour = BEAM_MISSILE;
 
         damage_taken += 7 + random2avg(11, 2);
@@ -295,7 +336,7 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         break;
 
     case DMNBM_MUTATION:
-        if (mons_holiness( monster->type ) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL)
             simple_monster_message(monster, " is unaffected.");
         else if (check_mons_resist_magic( monster, pbolt.ench_power ))
             simple_monster_message(monster, " resists.");
@@ -471,23 +512,23 @@ bool acquirement(unsigned char force_class, int agent)
         //mpr("[r|R] - Just give me something good.");
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
-        keyin = get_ch();
+        keyin = tolower( get_ch() );
 
-        if (keyin == 'a' || keyin == 'A')
+        if (keyin == 'a')
             class_wanted = OBJ_WEAPONS;
-        else if (keyin == 'b' || keyin == 'B')
+        else if (keyin == 'b')
             class_wanted = OBJ_ARMOUR;
-        else if (keyin == 'c' || keyin == 'C')
+        else if (keyin == 'c')
             class_wanted = OBJ_JEWELLERY;
-        else if (keyin == 'd' || keyin == 'D')
+        else if (keyin == 'd')
             class_wanted = OBJ_BOOKS;
-        else if (keyin == 'e' || keyin == 'E')
+        else if (keyin == 'e')
             class_wanted = OBJ_STAVES;
-        else if (keyin == 'f' || keyin == 'F')
+        else if (keyin == 'f')
             class_wanted = OBJ_FOOD;
-        else if (keyin == 'g' || keyin == 'G')
+        else if (keyin == 'g')
             class_wanted = OBJ_MISCELLANY;
-        else if (keyin == 'h' || keyin == 'H')
+        else if (keyin == 'h')
             class_wanted = OBJ_GOLD;
     }
     else
@@ -505,7 +546,7 @@ bool acquirement(unsigned char force_class, int agent)
 
     if (class_wanted == OBJ_FOOD)
     {
-        // food is a little less predicatable now -- bwr
+        // food is a little less predictable now -- bwr
 
         if (you.species == SP_GHOUL)
         {
@@ -514,7 +555,7 @@ bool acquirement(unsigned char force_class, int agent)
         }
         else 
         {
-            // Meat is better than bread (except for herbivors), and
+            // Meat is better than bread (except for herbivores), and
             // by choosing it as the default we don't have to worry
             // about special cases for carnivorous races (ie kobold)
             type_wanted = FOOD_MEAT_RATION;
@@ -523,7 +564,7 @@ bool acquirement(unsigned char force_class, int agent)
                 type_wanted = FOOD_BREAD_RATION; 
 
             // If we have some regular rations, then we're probably be more
-            // interested in faster foods (escpecially royal jelly)... 
+            // interested in faster foods (especially royal jelly)... 
             // otherwise the regular rations should be a good enough offer.
             if (already_has[FOOD_MEAT_RATION] 
                     + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
@@ -550,17 +591,26 @@ bool acquirement(unsigned char force_class, int agent)
         int skill = SK_FIGHTING;
 
         // Can't do much with launchers, so we'll avoid them for now -- bwr
-        for (int i = SK_SHORT_BLADES; i <= SK_STAVES; i++)
+        for (int i = SK_SHORT_BLADES; i < SK_DARTS; i++)
         {
             if (i == SK_UNUSED_1)
                 continue;
 
             // Adding a small constant allows for the occasional
-            // weapon in an untrained skill.
-            count += (you.skills[i] + 1);
+            // weapon in an untrained skill.  Since the game 
+            // doesn't allow for much in the way of good launchers, 
+            // we'll lower their weight.
 
-            if (random2(count) < you.skills[i] + 1)
-                skill = i;
+            int weight = 0;
+
+            weight = you.skills[i] + 1;
+            if (weight)
+            {
+                count += weight;
+
+                if (random2(count) < weight)
+                    skill = i;
+            }
         }
 
         if (skill == SK_STAVES)
@@ -572,21 +622,25 @@ bool acquirement(unsigned char force_class, int agent)
             // skipping clubs, knives, blowguns
             for (int i = WPN_MACE; i < NUM_WEAPONS; i++)
             {
-                // skipping launchers
-                if (i == WPN_SLING)
-                    i = WPN_GLAIVE;
-
+                // FIXME: Add a flag to itemprop.cc to do these exclusions
                 // skipping giant clubs
-                if (i == WPN_GIANT_CLUB)
-                    i = WPN_EVENINGSTAR;
+                if (i == WPN_GIANT_CLUB || i == WPN_GIANT_SPIKED_CLUB)
+                    continue;
 
                 // skipping knife and blowgun
-                if (i == WPN_KNIFE)
-                    i = WPN_FALCHION;
+                if (i == WPN_KNIFE || i == WPN_BLOWGUN)
+                    continue;
+
+                // blessed blades can only be created by the player, never found
+                if (i == WPN_BLESSED_BLADE)
+                    continue;
 
                 // "rare" weapons are only considered some of the time...
                 // still, the chance is higher than actual random creation
-                if (weapon_skill( OBJ_WEAPONS, i ) == skill
+                int wskill = range_skill(OBJ_WEAPONS, i);
+                if (wskill == SK_RANGED_COMBAT)
+                    wskill = weapon_skill(OBJ_WEAPONS, i);
+                if (wskill == skill
                     && (i < WPN_EVENINGSTAR || i > WPN_BROAD_AXE 
                         || (i >= WPN_HAMMER && i <= WPN_SABRE) 
                         || one_chance_in(4)))
@@ -597,6 +651,72 @@ bool acquirement(unsigned char force_class, int agent)
                 }
             }
         }
+    }
+    else if (class_wanted == OBJ_MISSILES)
+    {
+        int count = 0;
+        int skill = SK_RANGED_COMBAT;
+
+        for (int i = SK_SLINGS; i <= SK_DARTS; i++)
+        {
+            if (you.skills[i])
+            {
+                count += you.skills[i];
+                if (random2(count) < you.skills[i])
+                    skill = i;
+            }
+        }
+
+        switch (skill)
+        {
+        case SK_SLINGS:
+            type_wanted = MI_STONE;
+            break;
+
+        case SK_BOWS:
+            type_wanted = MI_ARROW;
+            break;
+
+        case SK_CROSSBOWS:
+            type_wanted = MI_DART;
+            for (int i = 0; i < ENDOFPACK; i++) 
+            {
+                // Assuming that crossbow in inventory means that they
+                // want bolts for it (not darts for a hand crossbow)...
+                // perhaps we should check for both and compare ammo
+                // amounts on hand?
+                if (is_valid_item( you.inv[i] )
+                    && you.inv[i].base_type == OBJ_WEAPONS
+                    && you.inv[i].sub_type == WPN_CROSSBOW)
+                {
+                    type_wanted = MI_BOLT;
+                    break;
+                }
+            }
+            break;
+
+        case SK_DARTS:
+            type_wanted = MI_DART;
+            for (int i = 0; i < ENDOFPACK; i++) 
+            {
+                if (is_valid_item( you.inv[i] )
+                    && you.inv[i].base_type == OBJ_WEAPONS
+                    && you.inv[i].sub_type == WPN_BLOWGUN)
+                {
+                    // Assuming that blowgun in inventory means that they
+                    // may want needles for it (but darts might also be
+                    // wanted).  Maybe expand this... see above comment.
+                    if (coinflip())
+                        type_wanted = MI_NEEDLE;
+                    break;
+                }
+            }
+            break;
+
+        default:
+            type_wanted = MI_DART;
+            break;
+        }        
     }
     else if (class_wanted == OBJ_ARMOUR)
     {
@@ -631,11 +751,11 @@ bool acquirement(unsigned char force_class, int agent)
         case SP_PALE_DRACONIAN:
         case SP_UNK0_DRACONIAN:
         case SP_UNK1_DRACONIAN:
-        case SP_UNK2_DRACONIAN:
+        case SP_BASE_DRACONIAN:
         case SP_SPRIGGAN:
             if (type_wanted == ARM_GLOVES || type_wanted == ARM_BOOTS)
             {
-                type_wanted = OBJ_RANDOM;
+                type_wanted = ARM_ROBE;  // no heavy armour
             }
             else if (type_wanted == ARM_SHIELD)
             {
@@ -819,7 +939,7 @@ bool acquirement(unsigned char force_class, int agent)
                     if (best_any >= SK_FIGHTING
                                 && best_any <= SK_STAVES)
                     {
-                        // Fighter mage's get the fighting enchantment books
+                        // Fighter mages get the fighting enchantment books
                         if (!you.had_book[BOOK_WAR_CHANTS])
                             type_wanted = BOOK_WAR_CHANTS;
                         else if (!you.had_book[BOOK_TUKIMA])
@@ -1050,10 +1170,11 @@ bool acquirement(unsigned char force_class, int agent)
         while (already_has[type_wanted] && !one_chance_in(200));
     }
 
-    if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-                        || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER)
+    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
     {
-        mpr("You hear a splash.");      // how sad (and stupid)
+        // how sad (and stupid)
+        mprf(MSGCH_SOUND, 
+	     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
     }
     else
     {
@@ -1067,39 +1188,46 @@ bool acquirement(unsigned char force_class, int agent)
             return (false);
         }
 
-        // remove curse flag from item
-        do_uncurse_item( mitm[thing_created] );
+        // easier to read this way
+        item_def& thing(mitm[thing_created]);
 
-        if (mitm[thing_created].base_type == OBJ_BOOKS)
+	// give some more gold
+	if ( class_wanted == OBJ_GOLD )
+	    thing.quantity += 150;
+
+        // remove curse flag from item
+        do_uncurse_item( thing );
+
+        if (thing.base_type == OBJ_BOOKS)
         {
-            if (mitm[thing_created].base_type == BOOK_MINOR_MAGIC_I
-                || mitm[thing_created].base_type == BOOK_MINOR_MAGIC_II
-                || mitm[thing_created].base_type == BOOK_MINOR_MAGIC_III)
+            if (thing.base_type == BOOK_MINOR_MAGIC_I
+                || thing.base_type == BOOK_MINOR_MAGIC_II
+                || thing.base_type == BOOK_MINOR_MAGIC_III)
             {
                 you.had_book[ BOOK_MINOR_MAGIC_I ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_II ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_III ] = 1;    
             }
-            else if (mitm[thing_created].base_type == BOOK_CONJURATIONS_I
-                || mitm[thing_created].base_type == BOOK_CONJURATIONS_II)
+            else if (thing.base_type == BOOK_CONJURATIONS_I
+                || thing.base_type == BOOK_CONJURATIONS_II)
             {
                 you.had_book[ BOOK_CONJURATIONS_I ] = 1;    
                 you.had_book[ BOOK_CONJURATIONS_II ] = 1;    
             }
             else
             {
-                you.had_book[ mitm[thing_created].sub_type ] = 1;    
+                you.had_book[ thing.sub_type ] = 1;    
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_JEWELLERY)
+        else if (thing.base_type == OBJ_JEWELLERY)
         {
-            switch (mitm[thing_created].sub_type)
+            switch (thing.sub_type)
             {
             case RING_SLAYING:
                 // make sure plus to damage is >= 1
-                mitm[thing_created].plus2 = abs( mitm[thing_created].plus2 );
-                if (mitm[thing_created].plus2 == 0)
-                    mitm[thing_created].plus2 = 1;
+                thing.plus2 = abs( thing.plus2 );
+                if (thing.plus2 == 0)
+                    thing.plus2 = 1;
                 // fall through... 
 
             case RING_PROTECTION:
@@ -1108,24 +1236,24 @@ bool acquirement(unsigned char force_class, int agent)
             case RING_DEXTERITY:
             case RING_EVASION:
                 // make sure plus is >= 1
-                mitm[thing_created].plus = abs( mitm[thing_created].plus );
-                if (mitm[thing_created].plus == 0)
-                    mitm[thing_created].plus = 1;
+                thing.plus = abs( thing.plus );
+                if (thing.plus == 0)
+                    thing.plus = 1;
                 break;
 
             case RING_HUNGER:
             case AMU_INACCURACY:
                 // these are the only truly bad pieces of jewellery
                 if (!one_chance_in(9))
-                    make_item_randart( mitm[thing_created] );
+                    make_item_randart( thing );
                 break;
 
             default:
                 break;
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_WEAPONS
-                    && !is_fixed_artefact( mitm[thing_created] ))
+        else if (thing.base_type == OBJ_WEAPONS
+                    && !is_fixed_artefact( thing ))
         {
             // HACK: make unwieldable weapons wieldable 
             // Note: messing with fixed artefacts is probably very bad.
@@ -1135,23 +1263,23 @@ bool acquirement(unsigned char force_class, int agent)
             case SP_MUMMY:
             case SP_GHOUL:
                 {
-                    int brand = get_weapon_brand( mitm[thing_created] );
+                    int brand = get_weapon_brand( thing );
                     if (brand == SPWPN_HOLY_WRATH 
                             || brand == SPWPN_DISRUPTION)
                     {
-                        if (!is_random_artefact( mitm[thing_created] ))
+                        if (!is_random_artefact( thing ))
                         {
-                            set_item_ego_type( mitm[thing_created], 
+                            set_item_ego_type( thing, 
                                                OBJ_WEAPONS, SPWPN_VORPAL );
                         }
                         else
                         {
-                            // keep reseting seed until it's good:
+                            // keep resetting seed until it's good:
                             for (; brand == SPWPN_HOLY_WRATH 
                                       || brand == SPWPN_DISRUPTION; 
-                                  brand = get_weapon_brand(mitm[thing_created]))
+                                  brand = get_weapon_brand(thing))
                             {
-                                make_item_randart( mitm[thing_created] );    
+                                make_item_randart( thing );    
                             }
                         }
                     }
@@ -1162,30 +1290,35 @@ bool acquirement(unsigned char force_class, int agent)
             case SP_GNOME:
             case SP_KOBOLD:
             case SP_SPRIGGAN:
-                switch (mitm[thing_created].sub_type)
+                switch (thing.sub_type)
                 {
+                case WPN_LONGBOW:
+                    thing.sub_type = WPN_BOW;
+                    break;
+
                 case WPN_GREAT_SWORD:
                 case WPN_TRIPLE_SWORD:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_FALCHION : WPN_LONG_SWORD);
                     break;
 
                 case WPN_GREAT_MACE:
-                case WPN_GREAT_FLAIL:
-                    mitm[thing_created].sub_type = 
+                case WPN_DIRE_FLAIL:
+                    thing.sub_type = 
                             (coinflip() ? WPN_MACE : WPN_FLAIL);
                     break;
 
                 case WPN_BATTLEAXE:
                 case WPN_EXECUTIONERS_AXE:
-                    mitm[thing_created].sub_type = 
+                    thing.sub_type = 
                             (coinflip() ? WPN_HAND_AXE : WPN_WAR_AXE);
                     break;
 
                 case WPN_HALBERD:
                 case WPN_GLAIVE:
                 case WPN_SCYTHE:
-                    mitm[thing_created].sub_type = 
+                case WPN_LOCHABER_AXE:
+                    thing.sub_type = 
                             (coinflip() ? WPN_SPEAR : WPN_TRIDENT);
                     break;
                 }
@@ -1195,16 +1328,16 @@ bool acquirement(unsigned char force_class, int agent)
                 break;
             }
         }
-        else if (mitm[thing_created].base_type == OBJ_ARMOUR
-                    && !is_fixed_artefact( mitm[thing_created] ))
+        else if (thing.base_type == OBJ_ARMOUR
+                    && !is_fixed_artefact( thing ))
         {
             // HACK: make unwearable hats and boots wearable
             // Note: messing with fixed artefacts is probably very bad.
-            switch (mitm[thing_created].sub_type)
+            switch (thing.sub_type)
             {
             case ARM_HELMET:
-                if ((cmp_helmet_type( mitm[thing_created], THELM_HELM )
-                        || cmp_helmet_type( mitm[thing_created], THELM_HELMET ))
+                if ((get_helmet_type(thing) == THELM_HELM
+                        || get_helmet_type(thing) == THELM_HELMET)
                     && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
                         || player_genus(GENPC_DRACONIAN)
                         || you.species == SP_MINOTAUR
@@ -1213,26 +1346,40 @@ bool acquirement(unsigned char force_class, int agent)
                         || you.mutation[MUT_HORNS]))
                 {
                     // turn it into a cap or wizard hat
-                    set_helmet_type( mitm[thing_created], 
-                                    coinflip() ? THELM_CAP : THELM_WIZARD_HAT );
+                    set_helmet_type(thing, 
+                                    coinflip() ? THELM_CAP : THELM_WIZARD_HAT);
 
-                    mitm[thing_created].colour = random_colour();
+                    thing.colour = random_colour();
                 }
                 break;
 
             case ARM_BOOTS:
                 if (you.species == SP_NAGA)
-                    mitm[thing_created].plus2 = TBOOT_NAGA_BARDING;
+                    thing.sub_type = ARM_NAGA_BARDING;
                 else if (you.species == SP_CENTAUR)
-                    mitm[thing_created].plus2 = TBOOT_CENTAUR_BARDING;
-                else 
-                    mitm[thing_created].plus2 = TBOOT_BOOTS;
+                    thing.sub_type = ARM_CENTAUR_BARDING;
 
                 // fix illegal barding ego types caused by above hack
-                if (mitm[thing_created].plus2 != TBOOT_BOOTS
-                    && get_armour_ego_type( mitm[thing_created] ) == SPARM_RUNNING)
+                if (thing.sub_type != ARM_BOOTS &&
+                    get_armour_ego_type(thing) == SPARM_RUNNING)
                 {
-                    set_item_ego_type( mitm[thing_created], OBJ_ARMOUR, SPARM_NORMAL );
+                    set_item_ego_type( thing, OBJ_ARMOUR, SPARM_NORMAL );
+                }
+                break;
+
+            case ARM_NAGA_BARDING:
+            case ARM_CENTAUR_BARDING:
+                // make barding appropriate
+                if (you.species == SP_NAGA )
+                    thing.sub_type = ARM_NAGA_BARDING;
+                else if ( you.species == SP_CENTAUR )
+                    thing.sub_type = ARM_CENTAUR_BARDING;
+                else {
+                    thing.sub_type = ARM_BOOTS;
+                    // Fix illegal ego types
+                    if (get_armour_ego_type(thing) == SPARM_COLD_RESISTANCE ||
+                        get_armour_ego_type(thing) == SPARM_FIRE_RESISTANCE)
+                        set_item_ego_type(thing, OBJ_ARMOUR, SPARM_NORMAL);
                 }
                 break;
 
@@ -1260,48 +1407,91 @@ bool acquirement(unsigned char force_class, int agent)
 
 bool recharge_wand(void)
 {
-    if (you.equip[EQ_WEAPON] == -1
-            || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_WANDS)
-    {
+    if (you.equip[EQ_WEAPON] == -1)
         return (false);
-    }
 
-    unsigned char charge_gain = 0;
+    item_def &wand = you.inv[ you.equip[EQ_WEAPON] ];
 
-    switch (you.inv[you.equip[EQ_WEAPON]].sub_type)
+    if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
+        return (false);
+
+    int charge_gain = 0;
+    if (wand.base_type == OBJ_WANDS)
     {
-    case WAND_INVISIBILITY:
-    case WAND_FIREBALL:
-    case WAND_HEALING:
-        charge_gain = 3;
-        break;
+        // remove "empty" autoinscription
+        const char* empty_inscription = "[empty]";
+        size_t p = wand.inscription.find(empty_inscription);
+        if ( p != std::string::npos ) {
+            // found it, delete it
+            size_t prespace = 0;
+            if ( p != 0 && wand.inscription[p-1] == ' ' )
+                prespace = 1;
+            wand.inscription =
+                wand.inscription.substr(0, p - prespace) +
+                wand.inscription.substr(p + strlen(empty_inscription),
+                                        std::string::npos);
+        }
+        switch (wand.sub_type)
+        {
+        case WAND_INVISIBILITY:
+        case WAND_FIREBALL:
+        case WAND_HEALING:
+	case WAND_HASTING:
+            charge_gain = 3;
+            break;
 
-    case WAND_LIGHTNING:
-    case WAND_DRAINING:
-        charge_gain = 4;
-        break;
+        case WAND_LIGHTNING:
+        case WAND_DRAINING:
+            charge_gain = 4;
+            break;
 
-    case WAND_FIRE:
-    case WAND_COLD:
-        charge_gain = 5;
-        break;
+        case WAND_FIRE:
+        case WAND_COLD:
+            charge_gain = 5;
+            break;
 
-    default:
-        charge_gain = 8;
-        break;
+        default:
+            charge_gain = 8;
+            break;
+        }
+
+        char str_pass[ ITEMNAME_SIZE ];
+        item_name(wand, DESC_CAP_YOUR, str_pass);
+        mprf("%s glows for a moment.", str_pass);
+
+        wand.plus += 1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
+
+        if (wand.plus > charge_gain * 3)
+            wand.plus = charge_gain * 3;
     }
+    else 
+    {
+        // This is a rod.
+        bool work = false;
 
-    char str_pass[ ITEMNAME_SIZE ];
-    in_name(you.equip[EQ_WEAPON], DESC_CAP_YOUR, str_pass);
-    strcpy(info, str_pass);
-    strcat(info, " glows for a moment.");
-    mpr(info);
+        if (wand.plus2 <= MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+        {
+            wand.plus2 += ROD_CHARGE_MULT;
 
-    you.inv[you.equip[EQ_WEAPON]].plus +=
-                            1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
+            if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+                wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
 
-    if (you.inv[you.equip[EQ_WEAPON]].plus > charge_gain * 3)
-        you.inv[you.equip[EQ_WEAPON]].plus = charge_gain * 3;
+            work = true;
+        }
+
+        if (wand.plus < wand.plus2)
+        {
+            wand.plus = wand.plus2;
+            work = true;
+        }
+
+        if (!work) 
+            return (false);
+
+        char str_pass[ITEMNAME_SIZE];
+        item_name( wand, DESC_CAP_YOUR, str_pass );
+        mprf("%s glows for a moment.", str_pass);
+    }
 
     you.wield_change = true;
     return (true);
@@ -1346,8 +1536,8 @@ void yell(void)
     switch (keyn)
     {
     case '!':
-        mpr("You yell for attention!");
-        you.turn_is_over = 1;
+        mpr("You yell for attention!", MSGCH_SOUND);
+        you.turn_is_over = true;
         noisy( 12, you.x_pos, you.y_pos );
         return;
 

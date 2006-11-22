@@ -28,67 +28,34 @@
 #include "externs.h"
 
 #include "invent.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "randart.h"
 #include "skills2.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 #include "view.h"
+#include "items.h"
 
+char id[NUM_IDTYPE][MAX_SUBTYPES];
 
-char id[4][50];
-int  prop[4][50][3];
-FixedArray < int, 20, 50 > mss;
+static bool is_random_name_space( char let );
+static bool is_random_name_vowel( char let);
+static const char *item_name_2(
+        const item_def &item, char buff[ ITEMNAME_SIZE ], bool terse );
 
-static bool is_random_name_vowel(unsigned char let);
-static char item_name_2( const item_def &item, char buff[ ITEMNAME_SIZE ], bool terse );
+static char retvow(int sed);
+static char  retlet(int sed );
 
-char reduce(unsigned char reducee);
-char retbit(char sed);
-char retvow(char sed);
+// [dshaligram] For calls to item_name without a pre-allocated buffer.
+static char default_itembuf[ITEMNAME_SIZE];
 
 bool is_vowel( const char chr )
 {
     const char low = tolower( chr );
 
     return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
-}
-
-// Some convenient functions to hide the bit operations and create 
-// an interface layer between the code and the data in case this 
-// gets changed again. -- bwr
-bool item_cursed( const item_def &item )
-{
-    return (item.flags & ISFLAG_CURSED);
-}
-
-bool item_uncursed( const item_def &item )
-{
-    return !(item.flags & ISFLAG_CURSED);
-}
-
-bool item_known_cursed( const item_def &item )
-{
-    return ((item.flags & ISFLAG_KNOW_CURSE) && (item.flags & ISFLAG_CURSED));
-}
-
-bool item_known_uncursed( const item_def &item )
-{
-    return ((item.flags & ISFLAG_KNOW_CURSE) && !(item.flags & ISFLAG_CURSED));
-}
-
-#if 0
-// currently unused
-bool fully_identified( const item_def &item )
-{
-    return ((item.flags & ISFLAG_IDENT_MASK) == ISFLAG_IDENT_MASK);
-}
-#endif
-
-bool item_ident( const item_def &item, unsigned long flags )
-{
-    return (item.flags & flags);
 }
 
 bool item_type_known( const item_def &item )
@@ -98,293 +65,35 @@ bool item_type_known( const item_def &item )
                 && id[IDTYPE_JEWELLERY][item.sub_type] == ID_KNOWN_TYPE);
 }
 
-bool item_not_ident( const item_def &item, unsigned long flags )
-{
-    return ( !(item.flags & flags) );
-}
-
-void do_curse_item( item_def &item )
-{
-    item.flags |= ISFLAG_CURSED;
-}
-
-void do_uncurse_item( item_def &item )
-{
-    item.flags &= (~ISFLAG_CURSED);
-}
-
-void set_ident_flags( item_def &item, unsigned long flags )
-{
-    item.flags |= flags;
-}
-
-void unset_ident_flags( item_def &item, unsigned long flags )
-{
-    item.flags &= (~flags);
-}
-
-// These six functions might seem silly, but they provide a nice layer
-// for later changes to these systems. -- bwr
-unsigned long get_equip_race( const item_def &item )
-{
-    return (item.flags & ISFLAG_RACIAL_MASK);
-}
-
-unsigned long get_equip_desc( const item_def &item )
-{
-    return (item.flags & ISFLAG_COSMETIC_MASK);
-}
-
-bool cmp_equip_race( const item_def &item, unsigned long val )
-{
-    return (get_equip_race( item ) == val);
-}
-
-bool cmp_equip_desc( const item_def &item, unsigned long val )
-{
-    return (get_equip_desc( item ) == val);
-}
-
-void set_equip_race( item_def &item, unsigned long flags )
-{
-    ASSERT( (flags & ~ISFLAG_RACIAL_MASK) == 0 );
-
-    // first check for base-sub pairs that can't ever have racial types
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        if (item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_KATANA
-            || item.sub_type == WPN_SLING
-            || item.sub_type == WPN_KNIFE
-            || item.sub_type == WPN_QUARTERSTAFF
-            || item.sub_type == WPN_DEMON_BLADE
-            || item.sub_type == WPN_DEMON_WHIP
-            || item.sub_type == WPN_DEMON_TRIDENT)
-        {
-            return;
-        }
-        break;
-
-    case OBJ_ARMOUR:
-        if (item.sub_type >= ARM_DRAGON_HIDE)
-        {
-            return;
-        }
-        break;
-
-    case OBJ_MISSILES:
-        if (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK)
-        {
-            return;
-        }
-        break;
-
-    default:
-        return;
-    }
-
-    // check that item is appropriate for racial type
-    switch (flags)
-    {
-    case ISFLAG_ELVEN: 
-        if (item.base_type == OBJ_ARMOUR 
-            && (item.sub_type == ARM_SPLINT_MAIL
-                || item.sub_type == ARM_BANDED_MAIL
-                || item.sub_type == ARM_PLATE_MAIL))
-        {
-            return;
-        }
-        break;
-            
-    case ISFLAG_DWARVEN: 
-        if (item.base_type == OBJ_ARMOUR 
-            && (item.sub_type == ARM_ROBE
-                || item.sub_type == ARM_LEATHER_ARMOUR))
-        {
-            return;
-        }
-        break;
-
-    case ISFLAG_ORCISH: 
-    default:
-        break;
-    }
-
-    item.flags &= ~ISFLAG_RACIAL_MASK; // delete previous
-    item.flags |= flags;
-}
-
-void set_equip_desc( item_def &item, unsigned long flags )
-{
-    ASSERT( (flags & ~ISFLAG_COSMETIC_MASK) == 0 );
-
-    item.flags &= ~ISFLAG_COSMETIC_MASK; // delete previous
-    item.flags |= flags;
-}
-
-short get_helmet_type( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    return (item.plus2 & THELM_TYPE_MASK);
-}
-
-short get_helmet_desc( const item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    return (item.plus2 & THELM_DESC_MASK);
-}
-
-void set_helmet_type( item_def &item, short type )
-{
-    ASSERT( (type & ~THELM_TYPE_MASK) == 0 );
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    item.plus2 &= ~THELM_TYPE_MASK; 
-    item.plus2 |= type;
-}
-
-void set_helmet_desc( item_def &item, short type )
-{
-    ASSERT( (type & ~THELM_DESC_MASK) == 0 );
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    item.plus2 &= ~THELM_DESC_MASK; 
-    item.plus2 |= type;
-}
-
-void set_helmet_random_desc( item_def &item )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    item.plus2 &= ~THELM_DESC_MASK; 
-    item.plus2 |= (random2(8) << 8);
-}
-
-bool cmp_helmet_type( const item_def &item, short val )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    return (get_helmet_type( item ) == val);
-}
-
-bool cmp_helmet_desc( const item_def &item, short val )
-{
-    ASSERT( item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET );
-
-    return (get_helmet_desc( item ) == val);
-}
-
-bool set_item_ego_type( item_def &item, int item_type, int ego_type )
-{
-    if (item.base_type == item_type 
-        && !is_random_artefact( item ) 
-        && !is_fixed_artefact( item ))
-    {
-        item.special = ego_type;
-        return (true);
-    }
-
-    return (false);
-}
-
-int get_weapon_brand( const item_def &item )
-{
-    // Weapon ego types are "brands", so we do the randart lookup here.
-    
-    // Staves "brands" handled specially
-    if (item.base_type != OBJ_WEAPONS)
-        return (SPWPN_NORMAL);
-
-    if (is_fixed_artefact( item ))
-    {
-        switch (item.special)
-        {
-        case SPWPN_SWORD_OF_CEREBOV:
-            return (SPWPN_FLAMING);
-
-        case SPWPN_STAFF_OF_OLGREB:
-            return (SPWPN_VENOM);
-
-        case SPWPN_VAMPIRES_TOOTH:
-            return (SPWPN_VAMPIRICISM);
-
-        default:
-            return (SPWPN_NORMAL);
-        }
-    }
-    else if (is_random_artefact( item ))
-    {
-        return (randart_wpn_property( item, RAP_BRAND ));
-    }
-
-    return (item.special);
-}
-
-int get_ammo_brand( const item_def &item )
-{
-    // no artefact arrows yet -- bwr
-    if (item.base_type != OBJ_MISSILES || is_random_artefact( item ))
-        return (SPMSL_NORMAL);
-
-    return (item.special);
-}
-
-int get_armour_ego_type( const item_def &item )
-{
-    // artefact armours have no ego type, must look up powers separately
-    if (item.base_type != OBJ_ARMOUR 
-        || (is_random_artefact( item ) && !is_unrandom_artefact( item )))
-    {
-        return (SPARM_NORMAL);
-    }
-
-    return (item.special);
-}
-
-bool item_is_rod( const item_def &item )
-{
-    return (item.base_type == OBJ_STAVES 
-            && item.sub_type >= STAFF_SMITING && item.sub_type < STAFF_AIR);
-}
-
-bool item_is_staff( const item_def &item )
-{
-    // Isn't De Morgan's law wonderful. -- bwr
-    return (item.base_type == OBJ_STAVES 
-            && (item.sub_type < STAFF_SMITING || item.sub_type >= STAFF_AIR));
-}
-
 // it_name() and in_name() are now somewhat obsolete now that itemname
-// takes item_def, so consider them depricated.
-void it_name( int itn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+// takes item_def, so consider them deprecated.
+const char *it_name( int itn, char des, char *buff, bool terse )
 {
-    item_name( mitm[itn], des, buff, terse );
+    return item_name( mitm[itn], des, buff, terse );
 }                               // end it_name()
 
 
-void in_name( int inn, char des, char buff[ ITEMNAME_SIZE ], bool terse )
+const char *in_name( int inn, char des, char *buff, bool terse )
 {
-    item_name( you.inv[inn], des, buff, terse );
+    return item_name( you.inv[inn], des, buff, terse );
 }                               // end in_name()
 
 // quant_name is usful since it prints out a different number of items
 // than the item actually contains.
-void quant_name( const item_def &item, int quant, char des,
+const char *quant_name( const item_def &item, int quant, char des,
                  char buff[ ITEMNAME_SIZE ], bool terse )
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
     tmp.quantity = quant;
 
-    item_name( tmp, des, buff, terse );
+    return item_name( tmp, des, buff, terse );
 }                               // end quant_name()
 
-char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
-                bool terse )
+// buff must be at least ITEMNAME_SIZE if non-NULL. If NULL, a static
+// item buffer will be used.
+const char *item_name( const item_def &item, char descrip, 
+                       char *buff, bool terse )
 {
     const int item_clas = item.base_type;
     const int item_typ = item.sub_type;
@@ -393,6 +102,9 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
     char tmp_quant[20];
     char itm_name[  ITEMNAME_SIZE  ] = "";
 
+    if (!buff)
+        buff = default_itembuf;
+
     item_name_2( item, itm_name, terse );
 
     buff[0] = '\0';
@@ -400,7 +112,7 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
         if (in_inventory(item)) // actually in inventory
-            snprintf( buff,  ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
+            snprintf( buff, ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
                       index_to_letter( item.link ) );
         else 
             descrip = DESC_CAP_A;
@@ -561,15 +273,24 @@ char item_name( const item_def &item, char descrip, char buff[ ITEMNAME_SIZE ],
             strncat( buff, " (around neck)", ITEMNAME_SIZE );
         }
     }
+    /*** HP CHANGE -- warning -- possible stack overflow error ***/
+    if ( item.inscription.size() > 0 ) // has an inscription
+    {
+        strncat( buff, " {", 2 );
+        strncat( buff, item.inscription.c_str(), ITEMNAME_SIZE );
+        strncat( buff, "}", 1 );
+    }
 
-    return (1);
+    return (buff);
 }                               // end item_name()
 
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
-                         bool terse )
+static const char *item_name_2(
+        const item_def &item, 
+        char buff[ITEMNAME_SIZE],
+        bool terse )
 {
     const int item_clas = item.base_type;
     const int item_typ = item.sub_type;
@@ -598,7 +319,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             if (item_cursed( item ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed 
-                    && item_not_ident( item, ISFLAG_KNOW_PLUSES ))
+                    && !item_ident( item, ISFLAG_KNOW_PLUSES ))
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }
@@ -687,7 +408,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         // Now that we can have "glowing elven" weapons, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (item_not_ident( item, ISFLAG_KNOW_PLUSES ) && !terse)
+        if (!item_ident( item, ISFLAG_KNOW_PLUSES ) && !terse)
         {
             switch (get_equip_desc( item ))
             {
@@ -760,7 +481,14 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                 strncat(buff, (terse) ? " (speed)" : " of speed", ITEMNAME_SIZE );
                 break;
             case SPWPN_VORPAL:
-                switch (damage_type(item_clas, item_typ))
+                if (is_range_weapon( item ))
+                {
+                    strncat(buff, (terse) ? " (velocity)" : " of velocity", 
+                            ITEMNAME_SIZE );
+                    break;
+                }
+
+                switch (get_vorpal_type(item))
                 {
                 case DVORP_CRUSHING:
                     strncat(buff, (terse) ? " (crush)" : " of crushing", ITEMNAME_SIZE );
@@ -773,6 +501,12 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                     break;
                 case DVORP_CHOPPING:
                     strncat(buff, (terse) ? " (chop)" : " of chopping", ITEMNAME_SIZE );
+                    break;
+                case DVORP_SLASHING:
+                    strncat(buff, (terse) ? " (slash)" : " of slashing", ITEMNAME_SIZE );
+                    break;
+                case DVORP_STABBING:
+                    strncat(buff, (terse) ? " (stab)" : " of stabbing", ITEMNAME_SIZE );
                     break;
                 }
                 break;
@@ -819,6 +553,11 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         {
             strncat( buff, (terse) ? "poison " : "poisoned ", ITEMNAME_SIZE );
         }
+        
+        if (brand == SPMSL_CURARE)
+        {
+            strncat( buff, (terse) ? "curare " : "curare-tipped ", ITEMNAME_SIZE);
+        }
 
         if (item_ident( item, ISFLAG_KNOW_PLUSES ))
         {
@@ -848,8 +587,8 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                (item_typ == MI_BOLT) ? "bolt" :
                (item_typ == MI_DART) ? "dart" :
                (item_typ == MI_NEEDLE) ? "needle" :
-               (item_typ == MI_EGGPLANT) ? "eggplant" :
-               (item_typ == MI_LARGE_ROCK) ? "large rock" : "", ITEMNAME_SIZE);
+               (item_typ == MI_LARGE_ROCK) ? "large rock" : 
+                                        "hysterical raisin", ITEMNAME_SIZE);
                // this should probably be "" {dlb}
 
         if (it_quant > 1)
@@ -862,7 +601,9 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
               (brand == SPMSL_ICE)     ? ((terse) ? " (ice)" : " of ice") :
               (brand == SPMSL_NORMAL)      ? "" :
               (brand == SPMSL_POISONED)    ? "" :
-              (brand == SPMSL_POISONED_II) ? "" : " (buggy)", ITEMNAME_SIZE );
+              (brand == SPMSL_POISONED_II) ? "" :
+              (brand == SPMSL_CURARE)      ? "" :
+                                             " (buggy)", ITEMNAME_SIZE );
         }
         break;
 
@@ -872,7 +613,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             if (item_cursed( item ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed 
-                    && item_not_ident( item, ISFLAG_KNOW_PLUSES ))
+                    && !item_ident( item, ISFLAG_KNOW_PLUSES ))
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }
@@ -889,8 +630,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             strncat(buff, " ", ITEMNAME_SIZE );
         }
 
-        if (item_typ == ARM_GLOVES
-            || (item_typ == ARM_BOOTS && item_plus2 == TBOOT_BOOTS))
+        if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
         {
             strncat( buff, "pair of ", ITEMNAME_SIZE );
         }
@@ -904,7 +644,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         // Now that we can have "glowing elven" armour, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (item_not_ident( item, ISFLAG_KNOW_PLUSES ) && !terse)
+        if (!item_ident( item, ISFLAG_KNOW_PLUSES ) && !terse)
         {
             switch (get_equip_desc( item ))
             {
@@ -1129,43 +869,36 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         }
         else
         {
-            char primary = item.special / 14;
-            char secondary = item.special % 14;
+            int pqual   = PQUAL(item.special);
+            int pcolour = PCOLOUR(item.special);
 
-            strncat(buff,
-                   (primary ==  0) ? "" :
-                   (primary ==  1) ? "bubbling " :
-                   (primary ==  2) ? "lumpy " :
-                   (primary ==  3) ? "fuming " :
-                   (primary ==  4) ? "smoky " :
-                   (primary ==  5) ? "fizzy " :
-                   (primary ==  6) ? "glowing " :
-                   (primary ==  7) ? "sedimented " :
-                   (primary ==  8) ? "metallic " :
-                   (primary ==  9) ? "murky " :
-                   (primary == 10) ? "gluggy " :
-                   (primary == 11) ? "viscous " :
-                   (primary == 12) ? "oily " :
-                   (primary == 13) ? "slimy " :
-                   (primary == 14) ? "emulsified " : "buggy ", ITEMNAME_SIZE);
+            static const char *potion_qualifiers[] = {
+                "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
+                "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
+                "gluggy ", "oily ", "slimy ", "emulsified "
+            };
+            ASSERT( sizeof(potion_qualifiers) / sizeof(*potion_qualifiers)
+                        == PDQ_NQUALS );
 
-            strncat(buff, 
-                   (secondary ==  0) ? "clear" :
-                   (secondary ==  1) ? "blue" :
-                   (secondary ==  2) ? "black" :
-                   (secondary ==  3) ? "silvery" :
-                   (secondary ==  4) ? "cyan" :
-                   (secondary ==  5) ? "purple" :
-                   (secondary ==  6) ? "orange" :
-                   (secondary ==  7) ? "inky" :
-                   (secondary ==  8) ? "red" :
-                   (secondary ==  9) ? "yellow" :
-                   (secondary == 10) ? "green" :
-                   (secondary == 11) ? "brown" :
-                   (secondary == 12) ? "pink" :
-                   (secondary == 13) ? "white" : "buggy", ITEMNAME_SIZE);
+            static const char *potion_colours[] = {
+                "clear", "blue", "black", "silvery", "cyan", "purple",
+                "orange", "inky", "red", "yellow", "green", "brown", "pink",
+                "white"
+            };
+            ASSERT( sizeof(potion_colours) / sizeof(*potion_colours)
+                        == PDC_NCOLOURS );
 
-            strncat(buff, " potion", ITEMNAME_SIZE );
+            const char *qualifier = 
+                (pqual < 0 || pqual >= PDQ_NQUALS)? "bug-filled "
+                                    : potion_qualifiers[pqual];
+
+            const char *colour =
+                (pcolour < 0 || pcolour >= PDC_NCOLOURS)? "bogus"
+                                    : potion_colours[pcolour];
+
+            strncat(buff, qualifier, ITEMNAME_SIZE - strlen(buff));
+            strncat(buff, colour, ITEMNAME_SIZE - strlen(buff));
+            strncat(buff, " potion", ITEMNAME_SIZE - strlen(buff) );
 
             if (it_quant > 1)
                 strncat(buff, "s", ITEMNAME_SIZE );
@@ -1309,7 +1042,11 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             strncat(buff, "labeled ", ITEMNAME_SIZE );
             char buff3[ ITEMNAME_SIZE ];
 
-            make_name( item.special, it_plus, item_clas, 2, buff3 );
+            const unsigned long sseed = 
+                item.special 
+                + static_cast<unsigned long>(it_plus)
+                + (static_cast<unsigned long>(item_clas) << 16);
+            make_name( sseed, true, buff3 );
             strncat( buff, buff3 , ITEMNAME_SIZE );
 
             if (id[ IDTYPE_SCROLLS ][item_typ] == ID_TRIED_TYPE)
@@ -1328,8 +1065,14 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         {
             if (item_cursed( item ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
-            else if (Options.show_uncursed 
-                    && item_not_ident( item, ISFLAG_KNOW_PLUSES ))
+            else if (Options.show_uncursed
+                    && !terse
+                    && (!ring_has_pluses(item)
+                        || !item_ident(item, ISFLAG_KNOW_PLUSES))
+
+                    // If the item is worn, its curse status is known,
+                    // no need to belabour the obvious.
+                    && get_equip_slot( &item ) == -1)
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }
@@ -1683,7 +1426,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         switch (item_typ)
         {
         case MISC_RUNE_OF_ZOT:
-            strncat( buff, (it_plus == RUNE_DIS)          ? "iron" :
+            strncat(buff, (it_plus == RUNE_DIS)          ? "iron" :
                           (it_plus == RUNE_GEHENNA)      ? "obsidian" :
                           (it_plus == RUNE_COCYTUS)      ? "icy" :
                           (it_plus == RUNE_TARTARUS)     ? "bone" :
@@ -1721,7 +1464,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         case MISC_DECK_OF_TRICKS:
         case MISC_DECK_OF_WONDERS:
             strncat(buff, "deck of ", ITEMNAME_SIZE );
-            strncat(buff, item_not_ident( item, ISFLAG_KNOW_TYPE )  ? "cards"  :
+            strncat(buff, !item_ident( item, ISFLAG_KNOW_TYPE )  ? "cards"  :
                    (item_typ == MISC_DECK_OF_WONDERS)      ? "wonders" :
                    (item_typ == MISC_DECK_OF_SUMMONINGS)   ? "summonings" :
                    (item_typ == MISC_DECK_OF_TRICKS)       ? "tricks" :
@@ -1773,7 +1516,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             break;
 
         case MISC_LANTERN_OF_SHADOWS:
-            if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
                 strncat(buff, "bone ", ITEMNAME_SIZE );
             strncat(buff, "lantern", ITEMNAME_SIZE );
 
@@ -1782,7 +1525,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
                 strncat(buff, "silver ", ITEMNAME_SIZE );
             strncat(buff, "horn", ITEMNAME_SIZE );
 
@@ -1791,7 +1534,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             break;
 
         case MISC_DISC_OF_STORMS:
-            if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
                 strncat(buff, "grey ", ITEMNAME_SIZE );
             strncat(buff, "disc", ITEMNAME_SIZE );
 
@@ -1800,7 +1543,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             break;
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
-            if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
                 strncat(buff, "nondescript ", ITEMNAME_SIZE );
             strncat(buff, "stone", ITEMNAME_SIZE );
 
@@ -1809,7 +1552,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
             break;
 
         case MISC_BOTTLED_EFREET:
-            strncat(buff, (item_not_ident( item, ISFLAG_KNOW_TYPE )) 
+            strncat(buff, (!item_ident( item, ISFLAG_KNOW_TYPE )) 
                                 ? "sealed bronze flask" : "bottled efreet",
                                 ITEMNAME_SIZE );
             break;
@@ -1826,7 +1569,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_BOOKS:
-        if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
         {
             char primary = (item.special / 10);
             char secondary = (item.special % 10);
@@ -1923,7 +1666,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_STAVES:
-        if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
         {
             strncat(buff, (item.special == 0) ? "curved" :
                    (item.special == 1) ? "glowing" :
@@ -1989,6 +1732,19 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
                    (item_typ == STAFF_CHANNELING) ? "channeling"
                    : "bugginess", ITEMNAME_SIZE );
         }
+
+        if (item_is_rod( item ) && item.sub_type != STAFF_STRIKING 
+                && item_ident( item, ISFLAG_KNOW_TYPE ))
+        {
+            strncat( buff, " (", ITEMNAME_SIZE );
+            itoa( item.plus / ROD_CHARGE_MULT, tmp_quant, 10 );
+            strncat( buff, tmp_quant, ITEMNAME_SIZE );
+            strncat( buff, "/", ITEMNAME_SIZE );
+            itoa( item.plus2 / ROD_CHARGE_MULT, tmp_quant, 10 );
+            strncat( buff, tmp_quant, ITEMNAME_SIZE );
+            strncat( buff, ")", ITEMNAME_SIZE );
+        }
+
         break;
 
 
@@ -2133,7 +1889,7 @@ static char item_name_2( const item_def &item, char buff[ITEMNAME_SIZE],
         strncat(buff, "s", ITEMNAME_SIZE );
     }
 
-    return 1;
+    return (buff);
 }                               // end item_name_2()
 
 void save_id(char identy[4][50])
@@ -2219,787 +1975,155 @@ char get_ident_type(char cla, int ty)
     }
 }                               // end get_ident_type()
 
-int property( const item_def &item, int prop_type )
+static MenuEntry *discoveries_item_mangle(MenuEntry *me)
 {
-    switch (item.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_WEAPONS:
-    case OBJ_MISSILES:
-        return (prop[ item.base_type ][ item.sub_type ][ prop_type ]);
+    InvEntry *ie = dynamic_cast<InvEntry*>(me);
+    MenuEntry *newme = new MenuEntry;
+    std::string txt = item_name(*ie->item, DESC_PLAIN);
+    newme->text = " " + txt;
+    newme->quantity = 0;
+    delete me;
 
-    case OBJ_STAVES:
-        if (item_is_staff( item ))
-            return (prop[ OBJ_WEAPONS ][ WPN_QUARTERSTAFF ][ prop_type ]);   
-        else if (prop_type == PWPN_SPEED) // item is rod
-            return (10);                  // extra protection against speed 0
-        else 
-            return (0);
-
-    default:
-        return (0);
-    }
+    return (newme);
 }
 
-int mass_item( const item_def &item )
+void check_item_knowledge()
 {
-    int unit_mass = 0;
-
-    if (item.base_type == OBJ_GOLD)
-    {
-        unit_mass = 0;
-    }
-    else if (item.base_type == OBJ_CORPSES)
-    {
-        unit_mass = mons_weight( item.plus );
-
-        if (item.sub_type == CORPSE_SKELETON)
-            unit_mass /= 2;
-    }
-    else
-    {
-        unit_mass = mss[ item.base_type ][ item.sub_type ];
-    }
-
-    return (unit_mass > 0 ? unit_mass : 0);
-}
-
-void init_properties(void)
-{
-    prop[OBJ_ARMOUR][ARM_ROBE][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_ROBE][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_ROBE] = 60;
-
-    prop[OBJ_ARMOUR][ARM_LEATHER_ARMOUR][PARM_AC] = 2;
-    prop[OBJ_ARMOUR][ARM_LEATHER_ARMOUR][PARM_EVASION] = -1;
-    mss[OBJ_ARMOUR][ARM_LEATHER_ARMOUR] = 150;
-
-    prop[OBJ_ARMOUR][ARM_RING_MAIL][PARM_AC] = 4;
-    prop[OBJ_ARMOUR][ARM_RING_MAIL][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_RING_MAIL] = 300;
-
-    prop[OBJ_ARMOUR][ARM_SCALE_MAIL][PARM_AC] = 5;
-    prop[OBJ_ARMOUR][ARM_SCALE_MAIL][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_SCALE_MAIL] = 400;
-
-    prop[OBJ_ARMOUR][ARM_CHAIN_MAIL][PARM_AC] = 6;
-    prop[OBJ_ARMOUR][ARM_CHAIN_MAIL][PARM_EVASION] = -3;
-    mss[OBJ_ARMOUR][ARM_CHAIN_MAIL] = 450;
-
-    prop[OBJ_ARMOUR][ARM_SPLINT_MAIL][PARM_AC] = 8;
-    prop[OBJ_ARMOUR][ARM_SPLINT_MAIL][PARM_EVASION] = -5;
-    mss[OBJ_ARMOUR][ARM_SPLINT_MAIL] = 550;
-
-    prop[OBJ_ARMOUR][ARM_BANDED_MAIL][PARM_AC] = 7;
-    prop[OBJ_ARMOUR][ARM_BANDED_MAIL][PARM_EVASION] = -4;
-    mss[OBJ_ARMOUR][ARM_BANDED_MAIL] = 500;
-
-    prop[OBJ_ARMOUR][ARM_PLATE_MAIL][PARM_AC] = 9;
-    prop[OBJ_ARMOUR][ARM_PLATE_MAIL][PARM_EVASION] = -5;
-    mss[OBJ_ARMOUR][ARM_PLATE_MAIL] = 650;
-
-    prop[OBJ_ARMOUR][ARM_DRAGON_HIDE][PARM_AC] = 2;
-    prop[OBJ_ARMOUR][ARM_DRAGON_HIDE][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_DRAGON_HIDE] = 220;
-
-    prop[OBJ_ARMOUR][ARM_TROLL_HIDE][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_TROLL_HIDE][PARM_EVASION] = -1;
-    mss[OBJ_ARMOUR][ARM_TROLL_HIDE] = 180;
-
-    prop[OBJ_ARMOUR][ARM_CRYSTAL_PLATE_MAIL][PARM_AC] = 16;
-    prop[OBJ_ARMOUR][ARM_CRYSTAL_PLATE_MAIL][PARM_EVASION] = -8;
-    mss[OBJ_ARMOUR][ARM_CRYSTAL_PLATE_MAIL] = 1200;
-
-    prop[OBJ_ARMOUR][ARM_DRAGON_ARMOUR][PARM_AC] = 8;
-    prop[OBJ_ARMOUR][ARM_DRAGON_ARMOUR][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_DRAGON_ARMOUR] = 220;
-
-    prop[OBJ_ARMOUR][ARM_TROLL_LEATHER_ARMOUR][PARM_AC] = 3;
-    prop[OBJ_ARMOUR][ARM_TROLL_LEATHER_ARMOUR][PARM_EVASION] = -1;
-    mss[OBJ_ARMOUR][ARM_TROLL_LEATHER_ARMOUR] = 180;
-
-    prop[OBJ_ARMOUR][ARM_ICE_DRAGON_HIDE][PARM_AC] = 2;
-    prop[OBJ_ARMOUR][ARM_ICE_DRAGON_HIDE][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_ICE_DRAGON_HIDE] = 220;
-
-    prop[OBJ_ARMOUR][ARM_ICE_DRAGON_ARMOUR][PARM_AC] = 9;
-    prop[OBJ_ARMOUR][ARM_ICE_DRAGON_ARMOUR][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_ICE_DRAGON_ARMOUR] = 220;
-
-    prop[OBJ_ARMOUR][ARM_STEAM_DRAGON_HIDE][PARM_AC] = 0;
-    prop[OBJ_ARMOUR][ARM_STEAM_DRAGON_HIDE][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_STEAM_DRAGON_HIDE] = 120;
-
-    prop[OBJ_ARMOUR][ARM_STEAM_DRAGON_ARMOUR][PARM_AC] = 3;
-    prop[OBJ_ARMOUR][ARM_STEAM_DRAGON_ARMOUR][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_STEAM_DRAGON_ARMOUR] = 120;
-
-    prop[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_HIDE][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_HIDE][PARM_EVASION] = -1;
-    mss[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_HIDE] = 150;
-
-    prop[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_ARMOUR][PARM_AC] = 5;
-    prop[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_ARMOUR][PARM_EVASION] = -1;
-    mss[OBJ_ARMOUR][ARM_MOTTLED_DRAGON_ARMOUR] = 150;
-
-    prop[OBJ_ARMOUR][ARM_STORM_DRAGON_HIDE][PARM_AC] = 2;
-    prop[OBJ_ARMOUR][ARM_STORM_DRAGON_HIDE][PARM_EVASION] = -5;
-    mss[OBJ_ARMOUR][ARM_STORM_DRAGON_HIDE] = 400;
-
-    prop[OBJ_ARMOUR][ARM_STORM_DRAGON_ARMOUR][PARM_AC] = 10;
-    prop[OBJ_ARMOUR][ARM_STORM_DRAGON_ARMOUR][PARM_EVASION] = -5;
-    mss[OBJ_ARMOUR][ARM_STORM_DRAGON_ARMOUR] = 400;
-
-    prop[OBJ_ARMOUR][ARM_GOLD_DRAGON_HIDE][PARM_AC] = 2;
-    prop[OBJ_ARMOUR][ARM_GOLD_DRAGON_HIDE][PARM_EVASION] = -10;
-    mss[OBJ_ARMOUR][ARM_GOLD_DRAGON_HIDE] = 1100;
-
-    prop[OBJ_ARMOUR][ARM_GOLD_DRAGON_ARMOUR][PARM_AC] = 13;
-    prop[OBJ_ARMOUR][ARM_GOLD_DRAGON_ARMOUR][PARM_EVASION] = -10;
-    mss[OBJ_ARMOUR][ARM_GOLD_DRAGON_ARMOUR] = 1100;
-
-    prop[OBJ_ARMOUR][ARM_ANIMAL_SKIN][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_ANIMAL_SKIN][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_ANIMAL_SKIN] = 100;
-
-    prop[OBJ_ARMOUR][ARM_SWAMP_DRAGON_HIDE][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_SWAMP_DRAGON_HIDE][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_SWAMP_DRAGON_HIDE] = 200;
-
-    prop[OBJ_ARMOUR][ARM_SWAMP_DRAGON_ARMOUR][PARM_AC] = 7;
-    prop[OBJ_ARMOUR][ARM_SWAMP_DRAGON_ARMOUR][PARM_EVASION] = -2;
-    mss[OBJ_ARMOUR][ARM_SWAMP_DRAGON_ARMOUR] = 200;
-
-    prop[OBJ_ARMOUR][ARM_SHIELD][PARM_AC] = 0;
-    prop[OBJ_ARMOUR][ARM_SHIELD][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_SHIELD] = 100;
-
-    prop[OBJ_ARMOUR][ARM_CLOAK][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_CLOAK][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_CLOAK] = 20;
-
-    prop[OBJ_ARMOUR][ARM_HELMET][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_HELMET][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_HELMET] = 80;
-
-    prop[OBJ_ARMOUR][ARM_GLOVES][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_GLOVES][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_GLOVES] = 20;
-
-    prop[OBJ_ARMOUR][ARM_BOOTS][PARM_AC] = 1;
-    prop[OBJ_ARMOUR][ARM_BOOTS][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_BOOTS] = 40;
-
-    prop[OBJ_ARMOUR][ARM_BUCKLER][PARM_AC] = 0;
-    prop[OBJ_ARMOUR][ARM_BUCKLER][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_BUCKLER] = 50;
-
-    prop[OBJ_ARMOUR][ARM_LARGE_SHIELD][PARM_AC] = 0;
-    prop[OBJ_ARMOUR][ARM_LARGE_SHIELD][PARM_EVASION] = 0;
-    mss[OBJ_ARMOUR][ARM_LARGE_SHIELD] = 250;
-
-    int i = 0;
-
-    for (i = 0; i < 50; i++)
-    {
-        mss[OBJ_WANDS][i] = 100;
-        mss[OBJ_FOOD][i] = 100;
-        mss[OBJ_UNKNOWN_I][i] = 200;    // labeled as "books" elsewhere
-
-        //jmf: made scrolls, jewellery and potions weigh less.
-        mss[OBJ_SCROLLS][i] = 20;
-        mss[OBJ_JEWELLERY][i] = 10;
-        mss[OBJ_POTIONS][i] = 40;
-        mss[OBJ_UNKNOWN_II][i] = 5;     // "gems"
-        mss[OBJ_BOOKS][i] = 70;
-
-        mss[OBJ_STAVES][i] = 130;
-        mss[OBJ_ORBS][i] = 300;
-        mss[OBJ_MISCELLANY][i] = 100;
-        mss[OBJ_CORPSES][i] = 100;
-    }
-
-    // rods are lighter than staves
-    for (i = STAFF_SMITING; i < STAFF_AIR; i++)
-    {
-        mss[OBJ_STAVES][i] = 70; 
-    }
-
-    // this is food, right?
-    mss[OBJ_FOOD][FOOD_MEAT_RATION] = 80;
-    mss[OBJ_FOOD][FOOD_BREAD_RATION] = 80;
-    mss[OBJ_FOOD][FOOD_PEAR] = 20;
-    mss[OBJ_FOOD][FOOD_APPLE] = 20;
-    mss[OBJ_FOOD][FOOD_CHOKO] = 30;
-    mss[OBJ_FOOD][FOOD_HONEYCOMB] = 40;
-    mss[OBJ_FOOD][FOOD_ROYAL_JELLY] = 55;
-    mss[OBJ_FOOD][FOOD_SNOZZCUMBER] = 50;
-    mss[OBJ_FOOD][FOOD_PIZZA] = 40;
-    mss[OBJ_FOOD][FOOD_APRICOT] = 15;
-    mss[OBJ_FOOD][FOOD_ORANGE] = 20;
-    mss[OBJ_FOOD][FOOD_BANANA] = 20;
-    mss[OBJ_FOOD][FOOD_STRAWBERRY] = 5;
-    mss[OBJ_FOOD][FOOD_RAMBUTAN] = 10;
-    mss[OBJ_FOOD][FOOD_LEMON] = 20;
-    mss[OBJ_FOOD][FOOD_GRAPE] = 5;
-    mss[OBJ_FOOD][FOOD_SULTANA] = 3;
-    mss[OBJ_FOOD][FOOD_LYCHEE] = 10;
-    mss[OBJ_FOOD][FOOD_BEEF_JERKY] = 20;
-    mss[OBJ_FOOD][FOOD_CHEESE] = 40;
-    mss[OBJ_FOOD][FOOD_SAUSAGE] = 40;
-    mss[OBJ_FOOD][FOOD_CHUNK] = 100;
-    /* mss [OBJ_FOOD] [21] = 40;
-       mss [OBJ_FOOD] [22] = 50;
-       mss [OBJ_FOOD] [23] = 60;
-       mss [OBJ_FOOD] [24] = 60;
-       mss [OBJ_FOOD] [25] = 100; */
-
-    mss[OBJ_MISCELLANY][MISC_BOTTLED_EFREET] = 250;
-
-    mss[OBJ_MISCELLANY][MISC_CRYSTAL_BALL_OF_SEEING] = 200;
-    mss[OBJ_MISCELLANY][MISC_CRYSTAL_BALL_OF_ENERGY] = 200;
-    mss[OBJ_MISCELLANY][MISC_CRYSTAL_BALL_OF_FIXATION] = 200;
-
-    // weapons: blunt weapons are first to help grouping them together
-    //  note: AC prop can't be 0 or less because of division.
-    //        If it's 1, makes no difference
-
-    // NOTE: I have *removed* AC bit for weapons - just doesn't work
-    // prop [x] [2] is speed
-
-    prop[OBJ_WEAPONS][WPN_CLUB][PWPN_DAMAGE] = 5;
-    prop[OBJ_WEAPONS][WPN_CLUB][PWPN_HIT] = 4;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_CLUB][PWPN_SPEED] = 12;
-    mss[OBJ_WEAPONS][WPN_CLUB] = 50;
-
-    prop[OBJ_WEAPONS][WPN_MACE][PWPN_DAMAGE] = 8;
-    prop[OBJ_WEAPONS][WPN_MACE][PWPN_HIT] = 3;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_MACE][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_MACE] = 140;
-
-    prop[OBJ_WEAPONS][WPN_GREAT_MACE][PWPN_DAMAGE] = 16;
-    prop[OBJ_WEAPONS][WPN_GREAT_MACE][PWPN_HIT] = -3;
-    prop[OBJ_WEAPONS][WPN_GREAT_MACE][PWPN_SPEED] = 18;
-    mss[OBJ_WEAPONS][WPN_GREAT_MACE] = 260;
-
-    prop[OBJ_WEAPONS][WPN_FLAIL][PWPN_DAMAGE] = 9;
-    prop[OBJ_WEAPONS][WPN_FLAIL][PWPN_HIT] = 2; // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_FLAIL][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_FLAIL] = 150;
-
-    prop[OBJ_WEAPONS][WPN_SPIKED_FLAIL][PWPN_DAMAGE] = 12;
-    prop[OBJ_WEAPONS][WPN_SPIKED_FLAIL][PWPN_HIT] = 1;
-    prop[OBJ_WEAPONS][WPN_SPIKED_FLAIL][PWPN_SPEED] = 16;
-    mss[OBJ_WEAPONS][WPN_SPIKED_FLAIL] = 170;
-
-    prop[OBJ_WEAPONS][WPN_GREAT_FLAIL][PWPN_DAMAGE] = 17;
-    prop[OBJ_WEAPONS][WPN_GREAT_FLAIL][PWPN_HIT] = -4;
-    prop[OBJ_WEAPONS][WPN_GREAT_FLAIL][PWPN_SPEED] = 19;
-    mss[OBJ_WEAPONS][WPN_GREAT_FLAIL] = 300;
-
-    prop[OBJ_WEAPONS][WPN_DAGGER][PWPN_DAMAGE] = 3;
-    prop[OBJ_WEAPONS][WPN_DAGGER][PWPN_HIT] = 6;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_DAGGER][PWPN_SPEED] = 11;
-    mss[OBJ_WEAPONS][WPN_DAGGER] = 20;
-
-    prop[OBJ_WEAPONS][WPN_KNIFE][PWPN_DAMAGE] = 2;
-    prop[OBJ_WEAPONS][WPN_KNIFE][PWPN_HIT] = 0; // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_KNIFE][PWPN_SPEED] = 11;
-    mss[OBJ_WEAPONS][WPN_KNIFE] = 10;
-
-    prop[OBJ_WEAPONS][WPN_MORNINGSTAR][PWPN_DAMAGE] = 10;
-    prop[OBJ_WEAPONS][WPN_MORNINGSTAR][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_MORNINGSTAR][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_MORNINGSTAR] = 150;
-
-    prop[OBJ_WEAPONS][WPN_SHORT_SWORD][PWPN_DAMAGE] = 6;
-    prop[OBJ_WEAPONS][WPN_SHORT_SWORD][PWPN_HIT] = 5;
-    prop[OBJ_WEAPONS][WPN_SHORT_SWORD][PWPN_SPEED] = 12;
-    mss[OBJ_WEAPONS][WPN_SHORT_SWORD] = 100;
-
-    prop[OBJ_WEAPONS][WPN_LONG_SWORD][PWPN_DAMAGE] = 10;
-    prop[OBJ_WEAPONS][WPN_LONG_SWORD][PWPN_HIT] = 3;
-    prop[OBJ_WEAPONS][WPN_LONG_SWORD][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_LONG_SWORD] = 160;
-
-    prop[OBJ_WEAPONS][WPN_GREAT_SWORD][PWPN_DAMAGE] = 16;
-    prop[OBJ_WEAPONS][WPN_GREAT_SWORD][PWPN_HIT] = -1;
-    prop[OBJ_WEAPONS][WPN_GREAT_SWORD][PWPN_SPEED] = 17;
-    mss[OBJ_WEAPONS][WPN_GREAT_SWORD] = 250;
-
-    prop[OBJ_WEAPONS][WPN_FALCHION][PWPN_DAMAGE] = 8;
-    prop[OBJ_WEAPONS][WPN_FALCHION][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_FALCHION][PWPN_SPEED] = 13;
-    mss[OBJ_WEAPONS][WPN_FALCHION] = 130;
-
-    prop[OBJ_WEAPONS][WPN_SCIMITAR][PWPN_DAMAGE] = 11;
-    prop[OBJ_WEAPONS][WPN_SCIMITAR][PWPN_HIT] = 1;
-    prop[OBJ_WEAPONS][WPN_SCIMITAR][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_SCIMITAR] = 170;
-
-    prop[OBJ_WEAPONS][WPN_HAND_AXE][PWPN_DAMAGE] = 7;
-    prop[OBJ_WEAPONS][WPN_HAND_AXE][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_HAND_AXE][PWPN_SPEED] = 13;
-    mss[OBJ_WEAPONS][WPN_HAND_AXE] = 110;
-
-    prop[OBJ_WEAPONS][WPN_WAR_AXE][PWPN_DAMAGE] = 11;
-    prop[OBJ_WEAPONS][WPN_WAR_AXE][PWPN_HIT] = 0;
-    prop[OBJ_WEAPONS][WPN_WAR_AXE][PWPN_SPEED] = 16;
-    mss[OBJ_WEAPONS][WPN_WAR_AXE] = 150;
-
-    prop[OBJ_WEAPONS][WPN_BROAD_AXE][PWPN_DAMAGE] = 14;
-    prop[OBJ_WEAPONS][WPN_BROAD_AXE][PWPN_HIT] = 1;
-    prop[OBJ_WEAPONS][WPN_BROAD_AXE][PWPN_SPEED] = 17;
-    mss[OBJ_WEAPONS][WPN_BROAD_AXE] = 180;
-
-    prop[OBJ_WEAPONS][WPN_BATTLEAXE][PWPN_DAMAGE] = 17;
-    prop[OBJ_WEAPONS][WPN_BATTLEAXE][PWPN_HIT] = -2;
-    prop[OBJ_WEAPONS][WPN_BATTLEAXE][PWPN_SPEED] = 18;
-    mss[OBJ_WEAPONS][WPN_BATTLEAXE] = 200;
-
-    prop[OBJ_WEAPONS][WPN_SPEAR][PWPN_DAMAGE] = 5;
-    prop[OBJ_WEAPONS][WPN_SPEAR][PWPN_HIT] = 3;
-    prop[OBJ_WEAPONS][WPN_SPEAR][PWPN_SPEED] = 13;
-    mss[OBJ_WEAPONS][WPN_SPEAR] = 50;
-
-    prop[OBJ_WEAPONS][WPN_TRIDENT][PWPN_DAMAGE] = 9;
-    prop[OBJ_WEAPONS][WPN_TRIDENT][PWPN_HIT] = -2;
-    prop[OBJ_WEAPONS][WPN_TRIDENT][PWPN_SPEED] = 17;
-    mss[OBJ_WEAPONS][WPN_TRIDENT] = 160;
-
-    prop[OBJ_WEAPONS][WPN_DEMON_TRIDENT][PWPN_DAMAGE] = 15;
-    prop[OBJ_WEAPONS][WPN_DEMON_TRIDENT][PWPN_HIT] = -2;
-    prop[OBJ_WEAPONS][WPN_DEMON_TRIDENT][PWPN_SPEED] = 17;
-    mss[OBJ_WEAPONS][WPN_DEMON_TRIDENT] = 160;
-
-    prop[OBJ_WEAPONS][WPN_HALBERD][PWPN_DAMAGE] = 13;
-    prop[OBJ_WEAPONS][WPN_HALBERD][PWPN_HIT] = -3;
-    prop[OBJ_WEAPONS][WPN_HALBERD][PWPN_SPEED] = 19;
-    mss[OBJ_WEAPONS][WPN_HALBERD] = 200;
-
-    // sling
-    // - the three properties are _not_ irrelevant here
-    // - when something hits something else (either may be you)
-    //   in melee, these are used.
-    prop[OBJ_WEAPONS][WPN_SLING][PWPN_DAMAGE] = 1;
-    prop[OBJ_WEAPONS][WPN_SLING][PWPN_HIT] = -1;
-    prop[OBJ_WEAPONS][WPN_SLING][PWPN_SPEED] = 11;
-    mss[OBJ_WEAPONS][WPN_SLING] = 10;
-
-    prop[OBJ_WEAPONS][WPN_BOW][PWPN_DAMAGE] = 2;
-    prop[OBJ_WEAPONS][WPN_BOW][PWPN_HIT] = -3;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_BOW][PWPN_SPEED] = 11;
-    mss[OBJ_WEAPONS][WPN_BOW] = 100;
-
-    prop[OBJ_WEAPONS][WPN_BLOWGUN][PWPN_DAMAGE] = 1;
-    prop[OBJ_WEAPONS][WPN_BLOWGUN][PWPN_HIT] = 0;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_BLOWGUN][PWPN_SPEED] = 10;
-    mss[OBJ_WEAPONS][WPN_BLOWGUN] = 50;
-
-    prop[OBJ_WEAPONS][WPN_CROSSBOW][PWPN_DAMAGE] = 2;
-    prop[OBJ_WEAPONS][WPN_CROSSBOW][PWPN_HIT] = -1;
-    prop[OBJ_WEAPONS][WPN_CROSSBOW][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_CROSSBOW] = 250;
-
-    prop[OBJ_WEAPONS][WPN_HAND_CROSSBOW][PWPN_DAMAGE] = 1;
-    prop[OBJ_WEAPONS][WPN_HAND_CROSSBOW][PWPN_HIT] = -1;
-    prop[OBJ_WEAPONS][WPN_HAND_CROSSBOW][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_HAND_CROSSBOW] = 70;
-
-    prop[OBJ_WEAPONS][WPN_GLAIVE][PWPN_DAMAGE] = 15;
-    prop[OBJ_WEAPONS][WPN_GLAIVE][PWPN_HIT] = -3;
-    prop[OBJ_WEAPONS][WPN_GLAIVE][PWPN_SPEED] = 18;
-    mss[OBJ_WEAPONS][WPN_GLAIVE] = 200;
-
-    // staff - hmmm
-    prop[OBJ_WEAPONS][WPN_QUARTERSTAFF][PWPN_DAMAGE] = 7;
-    prop[OBJ_WEAPONS][WPN_QUARTERSTAFF][PWPN_HIT] = 6;
-    prop[OBJ_WEAPONS][WPN_QUARTERSTAFF][PWPN_SPEED] = 12;
-    mss[OBJ_WEAPONS][WPN_QUARTERSTAFF] = 130;
-
-    prop[OBJ_WEAPONS][WPN_SCYTHE][PWPN_DAMAGE] = 14;
-    prop[OBJ_WEAPONS][WPN_SCYTHE][PWPN_HIT] = -4;
-    prop[OBJ_WEAPONS][WPN_SCYTHE][PWPN_SPEED] = 22;
-    mss[OBJ_WEAPONS][WPN_SCYTHE] = 230;
-
-    // these two should have the same speed because of 2-h ogres.
-    prop[OBJ_WEAPONS][WPN_GIANT_CLUB][PWPN_DAMAGE] = 15;
-    prop[OBJ_WEAPONS][WPN_GIANT_CLUB][PWPN_HIT] = -5;
-    prop[OBJ_WEAPONS][WPN_GIANT_CLUB][PWPN_SPEED] = 16;
-    mss[OBJ_WEAPONS][WPN_GIANT_CLUB] = 750;
-
-    prop[OBJ_WEAPONS][WPN_GIANT_SPIKED_CLUB][PWPN_DAMAGE] = 18;
-    prop[OBJ_WEAPONS][WPN_GIANT_SPIKED_CLUB][PWPN_HIT] = -6;
-    prop[OBJ_WEAPONS][WPN_GIANT_SPIKED_CLUB][PWPN_SPEED] = 17;
-    mss[OBJ_WEAPONS][WPN_GIANT_SPIKED_CLUB] = 850;
-    // these two should have the same speed because of 2-h ogres.
-
-    prop[OBJ_WEAPONS][WPN_EVENINGSTAR][PWPN_DAMAGE] = 12;
-    prop[OBJ_WEAPONS][WPN_EVENINGSTAR][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_EVENINGSTAR][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_EVENINGSTAR] = 150;
-
-    prop[OBJ_WEAPONS][WPN_QUICK_BLADE][PWPN_DAMAGE] = 5;
-    prop[OBJ_WEAPONS][WPN_QUICK_BLADE][PWPN_HIT] = 6;
-    prop[OBJ_WEAPONS][WPN_QUICK_BLADE][PWPN_SPEED] = 7;
-    mss[OBJ_WEAPONS][WPN_QUICK_BLADE] = 100;
-
-    prop[OBJ_WEAPONS][WPN_KATANA][PWPN_DAMAGE] = 13;
-    prop[OBJ_WEAPONS][WPN_KATANA][PWPN_HIT] = 4;
-    prop[OBJ_WEAPONS][WPN_KATANA][PWPN_SPEED] = 13;
-    mss[OBJ_WEAPONS][WPN_KATANA] = 160;
-
-    prop[OBJ_WEAPONS][WPN_EXECUTIONERS_AXE][PWPN_DAMAGE] = 20;
-    prop[OBJ_WEAPONS][WPN_EXECUTIONERS_AXE][PWPN_HIT] = -4;
-    prop[OBJ_WEAPONS][WPN_EXECUTIONERS_AXE][PWPN_SPEED] = 20;
-    mss[OBJ_WEAPONS][WPN_EXECUTIONERS_AXE] = 320;
-
-    prop[OBJ_WEAPONS][WPN_DOUBLE_SWORD][PWPN_DAMAGE] = 15;
-    prop[OBJ_WEAPONS][WPN_DOUBLE_SWORD][PWPN_HIT] = 3;
-    prop[OBJ_WEAPONS][WPN_DOUBLE_SWORD][PWPN_SPEED] = 16;
-    mss[OBJ_WEAPONS][WPN_DOUBLE_SWORD] = 220;
-
-    prop[OBJ_WEAPONS][WPN_TRIPLE_SWORD][PWPN_DAMAGE] = 19;
-    prop[OBJ_WEAPONS][WPN_TRIPLE_SWORD][PWPN_HIT] = -1;
-    prop[OBJ_WEAPONS][WPN_TRIPLE_SWORD][PWPN_SPEED] = 19;
-    mss[OBJ_WEAPONS][WPN_TRIPLE_SWORD] = 300;
-
-    prop[OBJ_WEAPONS][WPN_HAMMER][PWPN_DAMAGE] = 7;
-    prop[OBJ_WEAPONS][WPN_HAMMER][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_HAMMER][PWPN_SPEED] = 13;
-    mss[OBJ_WEAPONS][WPN_HAMMER] = 130;
-
-    prop[OBJ_WEAPONS][WPN_ANCUS][PWPN_DAMAGE] = 9;
-    prop[OBJ_WEAPONS][WPN_ANCUS][PWPN_HIT] = 1;
-    prop[OBJ_WEAPONS][WPN_ANCUS][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_ANCUS] = 160;
-
-    prop[OBJ_WEAPONS][WPN_WHIP][PWPN_DAMAGE] = 3;
-    prop[OBJ_WEAPONS][WPN_WHIP][PWPN_HIT] = 1;  // helps to get past evasion
-    prop[OBJ_WEAPONS][WPN_WHIP][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_WHIP] = 30;
-
-    prop[OBJ_WEAPONS][WPN_SABRE][PWPN_DAMAGE] = 7;
-    prop[OBJ_WEAPONS][WPN_SABRE][PWPN_HIT] = 4;
-    prop[OBJ_WEAPONS][WPN_SABRE][PWPN_SPEED] = 12;
-    mss[OBJ_WEAPONS][WPN_SABRE] = 110;
-
-    prop[OBJ_WEAPONS][WPN_DEMON_BLADE][PWPN_DAMAGE] = 13;
-    prop[OBJ_WEAPONS][WPN_DEMON_BLADE][PWPN_HIT] = 2;
-    prop[OBJ_WEAPONS][WPN_DEMON_BLADE][PWPN_SPEED] = 15;
-    mss[OBJ_WEAPONS][WPN_DEMON_BLADE] = 200;
-
-    prop[OBJ_WEAPONS][WPN_DEMON_WHIP][PWPN_DAMAGE] = 10;
-    prop[OBJ_WEAPONS][WPN_DEMON_WHIP][PWPN_HIT] = 1;
-    prop[OBJ_WEAPONS][WPN_DEMON_WHIP][PWPN_SPEED] = 14;
-    mss[OBJ_WEAPONS][WPN_DEMON_WHIP] = 30;
-
-
-    // MISSILES:
-
-    prop[OBJ_MISSILES][MI_STONE][PWPN_DAMAGE] = 2;
-    prop[OBJ_MISSILES][MI_STONE][PWPN_HIT] = 4;
-    mss[OBJ_MISSILES][MI_STONE] = 5;
-
-    prop[OBJ_MISSILES][MI_ARROW][PWPN_DAMAGE] = 2;
-    prop[OBJ_MISSILES][MI_ARROW][PWPN_HIT] = 6;
-    mss[OBJ_MISSILES][MI_ARROW] = 10;
-
-    prop[OBJ_MISSILES][MI_NEEDLE][PWPN_DAMAGE] = 0;
-    prop[OBJ_MISSILES][MI_NEEDLE][PWPN_HIT] = 1;
-    mss[OBJ_MISSILES][MI_NEEDLE] = 1;
-
-    prop[OBJ_MISSILES][MI_BOLT][PWPN_DAMAGE] = 2;
-    prop[OBJ_MISSILES][MI_BOLT][PWPN_HIT] = 8;
-    mss[OBJ_MISSILES][MI_BOLT] = 12;
-
-    prop[OBJ_MISSILES][MI_DART][PWPN_DAMAGE] = 2;
-    prop[OBJ_MISSILES][MI_DART][PWPN_HIT] = 4;  //whatever - for hand crossbow
-    mss[OBJ_MISSILES][MI_DART] = 5;
-
-    // large rock
-    prop[OBJ_MISSILES][MI_LARGE_ROCK][PWPN_DAMAGE] = 20;
-    prop[OBJ_MISSILES][MI_LARGE_ROCK][PWPN_HIT] = 10;
-    mss[OBJ_MISSILES][MI_LARGE_ROCK] = 1000;
-}
-
-
-unsigned char check_item_knowledge(void)
-{
-    char st_pass[ITEMNAME_SIZE] = "";
-    int i, j;
-    char lines = 0;
-    unsigned char anything = 0;
-    int ft = 0;
-    int max = 0;
-    int yps = 0;
-    int inv_count = 0;
-    unsigned char ki = 0;
-
-    const int num_lines = get_number_of_lines();
-
-#ifdef DOS_TERM
-    char buffer[2400];
-
-    gettext(35, 1, 80, 25, buffer);
-#endif
-
-#ifdef DOS_TERM
-    window(35, 1, 80, 25);
-#endif
-
-    clrscr();
-
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 30; j++)
-        {
-            if (id[i][j] == ID_KNOWN_TYPE)
-                inv_count++;
-        }
-    }
-
-    if (inv_count == 0)
-    {
-        cprintf("You don't recognise anything yet!");
-        if (getch() == 0)
-            getch();
-        goto putty;
-    }
-
-    textcolor(BLUE);
-    cprintf("  You recognise:");
-    textcolor(LIGHTGREY);
-    lines++;
-
-    for (i = 0; i < 4; i++)
-    {
-        switch (i)
-        {
-        case IDTYPE_WANDS:
-            ft = OBJ_WANDS;
-            max = NUM_WANDS;
-            break;
-        case IDTYPE_SCROLLS:
-            ft = OBJ_SCROLLS;
-            max = NUM_SCROLLS;
-            break;
-        case IDTYPE_JEWELLERY:
-            ft = OBJ_JEWELLERY;
-            max = NUM_JEWELLERY;
-            break;
-        case IDTYPE_POTIONS:
-            ft = OBJ_POTIONS;
-            max = NUM_POTIONS;
-            break;
-        }
-
-        for (j = 0; j < max; j++)
-        {
-            if (lines > num_lines - 2 && inv_count > 0)
-            {
-                gotoxy(1, num_lines);
-                cprintf("-more-");
-
-                ki = getch();
-
-                if (ki == ESCAPE)
-                {
-#ifdef DOS_TERM
-                    puttext(35, 1, 80, 25, buffer);
-#endif
-                    return ESCAPE;
+    int i,j;
+
+    std::vector<const item_def*> items;
+
+    int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
+                              OBJ_JEWELLERY, OBJ_POTIONS };
+    int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
+                              NUM_JEWELLERY, NUM_POTIONS };
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < idx_to_maxtype[i]; j++) {
+            if (id[i][j] == ID_KNOWN_TYPE) {
+                item_def* ptmp = new item_def;
+                if ( ptmp != 0 ) {
+                    ptmp->base_type = idx_to_objtype[i];
+                    ptmp->sub_type  = j;
+                    ptmp->colour    = 1;
+                    ptmp->quantity  = 1;
+                    items.push_back(ptmp);
                 }
-                if (ki >= 'A' && ki <= 'z')
-                {
-#ifdef DOS_TERM
-                    puttext(35, 1, 80, 25, buffer);
-#endif
-                    return ki;
-                }
-
-                if (ki == 0)
-                    ki = getch();
-
-                lines = 0;
-                clrscr();
-                gotoxy(1, 1);
-                anything = 0;
             }
-
-            int ident_level = get_ident_type( ft, j );
-
-            if (ident_level == ID_KNOWN_TYPE)
-            {
-                anything++;
-
-                if (lines > 0)
-                    cprintf(EOL);
-                lines++;
-                cprintf(" ");
-
-                yps = wherey();
-
-                // item_name now requires a "real" item, so we'll create a tmp
-                item_def tmp;// = { ft, j, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
-                tmp.base_type = ft;
-                tmp.sub_type  = j;
-                tmp.colour    = 1;
-
-                item_name( tmp, DESC_PLAIN, st_pass );
-
-                cprintf(st_pass);
-
-                inv_count--;
-
-                if (wherey() != yps)
-                    lines++;
-            }
-        }                       // end of j loop
-    }
-
-    if (anything > 0)
-    {
-        ki = getch();
-        //ki = getch();
-        //ki = anything;
-
-        if (ki >= 'A' && ki <= 'z')
-        {
-#ifdef DOS_TERM
-            puttext(35, 1, 80, 25, buffer);
-#endif
-            return ki;
         }
-
-        if (ki == 0)
-            ki = getch();
-#ifdef DOS_TERM
-        puttext(35, 1, 80, 25, buffer);
-#endif
-        return anything;
     }
 
-  putty:
-#ifdef DOS_TERM
-    puttext(35, 1, 80, 25, buffer);
-#endif
+    if (items.empty())
+        mpr("You don't recognise anything yet!");
+    else {    
+        InvMenu menu;
+        menu.set_title("You recognise:");
+        menu.load_items(items, discoveries_item_mangle);
+        menu.set_flags(MF_NOSELECT);
+        menu.show();
+        redraw_screen();
 
-    return ki;
+        for ( std::vector<const item_def*>::iterator iter = items.begin();
+              iter != items.end(); ++iter )
+            delete *iter;
+    }
 }                               // end check_item_knowledge()
 
 
-// must be certain that you are passing the subtype
-// to an OBJ_ARMOUR and nothing else, or as they say,
-// "Bad Things Will Happen" {dlb}:
-bool hide2armour( unsigned char *which_subtype )
+// Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
+int make_name( unsigned long seed, bool all_cap, char buff[ ITEMNAME_SIZE ] )
 {
-    switch (*which_subtype)
-    {
-    case ARM_DRAGON_HIDE:
-        *which_subtype = ARM_DRAGON_ARMOUR;
-        return true;
-    case ARM_TROLL_HIDE:
-        *which_subtype = ARM_TROLL_LEATHER_ARMOUR;
-        return true;
-    case ARM_ICE_DRAGON_HIDE:
-        *which_subtype = ARM_ICE_DRAGON_ARMOUR;
-        return true;
-    case ARM_MOTTLED_DRAGON_HIDE:
-        *which_subtype = ARM_MOTTLED_DRAGON_ARMOUR;
-        return true;
-    case ARM_STORM_DRAGON_HIDE:
-        *which_subtype = ARM_STORM_DRAGON_ARMOUR;
-        return true;
-    case ARM_GOLD_DRAGON_HIDE:
-        *which_subtype = ARM_GOLD_DRAGON_ARMOUR;
-        return true;
-    case ARM_SWAMP_DRAGON_HIDE:
-        *which_subtype = ARM_SWAMP_DRAGON_ARMOUR;
-        return true;
-    case ARM_STEAM_DRAGON_HIDE:
-        *which_subtype = ARM_STEAM_DRAGON_ARMOUR;
-        return true;
-    default:
-        return false;
-    }
-}                               // end hide2armour()
+    char name[ITEMNAME_SIZE];
+    int  numb[17];
 
-
-void make_name(unsigned char var1, unsigned char var2, unsigned char var3,
-               char ncase, char buff[ITEMNAME_SIZE])
-{
-    char name[ ITEMNAME_SIZE ] = "";
-    FixedVector < unsigned char, 15 > numb;
-    int len;
     int i = 0;
-    int nexty = 0;
-    int j = 0;
-    int x = 0;
+    bool want_vowel = false;
+    bool has_space = false;
 
-    numb[0] = var1 * var2;
-    numb[1] = var1 * var3;
-    numb[2] = var2 * var3;
-    numb[3] = var1 * var2 * var3;
-    numb[4] = var1 + var2;
-    numb[5] = var2 + var3;
-    numb[6] = var1 * var2 + var3;
-    numb[7] = var1 * var3 + var2;
-    numb[8] = var2 * var3 + var1;
-    numb[9] = var1 * var2 * var3 - var1;
-    numb[10] = var1 + var2 + var2;
-    numb[11] = var2 + var3 * var1;
-    numb[12] = var1 * var2 * var3;
-    numb[13] = var1 * var3 * var1;
-    numb[14] = var2 * var3 * var3;
+    for (i = 0; i < ITEMNAME_SIZE; i++)
+        name[i] = '\0';
 
-    for (i = 0; i < 15; i++)
-    {
-        while (numb[i] >= 25)
-        {
-            numb[i] -= 25;
-        }
-    }
+    const int var1 = (seed & 0xFF);
+    const int var2 = ((seed >>  8) & 0xFF);
+    const int var3 = ((seed >> 16) & 0xFF);
+    const int var4 = ((seed >> 24) & 0xFF);
 
-    j = numb[6];
+    numb[0]  = 373 * var1 + 409 * var2 + 281 * var3;
+    numb[1]  = 163 * var4 + 277 * var2 + 317 * var3;
+    numb[2]  = 257 * var1 + 179 * var4 +  83 * var3;
+    numb[3]  =  61 * var1 + 229 * var2 + 241 * var4;
+    numb[4]  =  79 * var1 + 263 * var2 + 149 * var3;
+    numb[5]  = 233 * var4 + 383 * var2 + 311 * var3;
+    numb[6]  = 199 * var1 + 211 * var4 + 103 * var3;
+    numb[7]  = 139 * var1 + 109 * var2 + 349 * var4;
+    numb[8]  =  43 * var1 + 389 * var2 + 359 * var3;
+    numb[9]  = 367 * var4 + 101 * var2 + 251 * var3;
+    numb[10] = 293 * var1 +  59 * var4 + 151 * var3;
+    numb[11] = 331 * var1 + 107 * var2 + 307 * var4;
+    numb[12] =  73 * var1 + 157 * var2 + 347 * var3;
+    numb[13] = 379 * var4 + 353 * var2 + 227 * var3;
+    numb[14] = 181 * var1 + 173 * var4 + 193 * var3;
+    numb[15] = 131 * var1 + 167 * var2 +  53 * var4;
+    numb[16] = 313 * var1 + 127 * var2 + 401 * var3 + 337 * var4;
 
-    len = reduce(numb[reduce(numb[11]) / 2]);
+    int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
-    while (len < 5 && j < 10)
-    {
-        len += 1 + reduce(1 + numb[j]);
-        j++;
-    }
+    if (all_cap)
+        len += 6;
 
-    while (len > 14)
-    {
-        len -= 8;
-    }
-
-    nexty = retbit(numb[4]);
-
-    char k = 0;
-
-    j = 0;
+    int j = numb[3] % 17;
+    const int k = numb[4] % 17;
+    int count = 0;
 
     for (i = 0; i < len; i++)
     {
-        j++;
-
-        if (j >= 15)
+        j = (j + 1) % 17;
+        if (j == 0)
         {
-            j = 0;
-
-            k++;
-
-            if (k > 9)
+            count++;
+            if (count > 9)
                 break;
         }
 
-        if (nexty == 1 || (i > 0 && !is_random_name_vowel(name[i])))
+        if (!has_space && i > 5 && i < len - 4
+            && (numb[(k + 10 * j) % 17] % 5) != 3)
         {
-            name[i] = retvow(numb[j]);
-            if ((i == 0 || i == len - 1) && name[i] == 32)
+            want_vowel = true;
+            name[i] = ' ';
+        }
+        else if (i > 0
+            && (want_vowel 
+                || (i > 1 
+                    && is_random_name_vowel( name[i - 1] )
+                    && !is_random_name_vowel( name[i - 2] )
+                    && (numb[(k + 4 * j) % 17] % 5) <= 1 )))
+        {
+            want_vowel = true;
+            name[i] = retvow( numb[(k + 7 * j) % 17] );
+
+            if (is_random_name_space( name[i] ))
+            {
+                if (i == 0)
+                {
+                    want_vowel = false;
+                    name[i] = retlet( numb[(k + 14 * j) % 17] );
+                }
+                else if (len < 7
+                        || i <= 2 || i >= len - 3 
+                        || is_random_name_space( name[i - 1] )
+                        || (i > 1 && is_random_name_space( name[i - 2] ))
+                        || (i > 2 
+                            && !is_random_name_vowel( name[i - 1] )
+                            && !is_random_name_vowel( name[i - 2] )))
+                {
+                    i--;
+                    continue;
+                }
+            }
+            else if (i > 1 
+                    && name[i] == name[i - 1] 
+                    && (name[i] == 'y' || name[i] == 'i'
+                        || (numb[(k + 12 * j) % 17] % 5) <= 1))
             {
                 i--;
                 continue;
@@ -3007,247 +2131,245 @@ void make_name(unsigned char var1, unsigned char var2, unsigned char var3,
         }
         else
         {
-            if (numb[i / 2] <= 1 && i > 3 && is_random_name_vowel(name[i]))
-                goto two_letter;
+            if ((len > 3 || i != 0)
+                && (numb[(k + 13 * j) % 17] % 7) <= 1
+                && (i < len - 2 || (i > 0 && !is_random_name_space(name[i - 1]))))
+            {
+                const bool beg = ((i < 1) || is_random_name_space(name[i - 1]));
+                const bool end = (i >= len - 2);
+
+                const int first = (beg ?  0 : (end ? 14 :  0));
+                const int last  = (beg ? 27 : (end ? 56 : 67));
+
+                const int num = last - first;
+
+                i++;
+
+                switch (numb[(k + 11 * j) % 17] % num + first)
+                {
+                // start, middle
+                case  0: strcat(name, "kl"); break;
+                case  1: strcat(name, "gr"); break;
+                case  2: strcat(name, "cl"); break;
+                case  3: strcat(name, "cr"); break;
+                case  4: strcat(name, "fr"); break;
+                case  5: strcat(name, "pr"); break;
+                case  6: strcat(name, "tr"); break;
+                case  7: strcat(name, "tw"); break;
+                case  8: strcat(name, "br"); break;
+                case  9: strcat(name, "pl"); break;
+                case 10: strcat(name, "bl"); break;
+                case 11: strcat(name, "str"); i++; len++; break;
+                case 12: strcat(name, "shr"); i++; len++; break;
+                case 13: strcat(name, "thr"); i++; len++; break;
+                // start, middle, end 
+                case 14: strcat(name, "sm"); break;
+                case 15: strcat(name, "sh"); break;
+                case 16: strcat(name, "ch"); break;
+                case 17: strcat(name, "th"); break;
+                case 18: strcat(name, "ph"); break;
+                case 19: strcat(name, "pn"); break;
+                case 20: strcat(name, "kh"); break;
+                case 21: strcat(name, "gh"); break;
+                case 22: strcat(name, "mn"); break;
+                case 23: strcat(name, "ps"); break;
+                case 24: strcat(name, "st"); break;
+                case 25: strcat(name, "sk"); break;
+                case 26: strcat(name, "sch"); i++; len++; break;
+                // middle, end
+                case 27: strcat(name, "ts"); break;
+                case 28: strcat(name, "cs"); break;
+                case 29: strcat(name, "xt"); break;
+                case 30: strcat(name, "nt"); break;
+                case 31: strcat(name, "ll"); break;
+                case 32: strcat(name, "rr"); break;
+                case 33: strcat(name, "ss"); break;
+                case 34: strcat(name, "wk"); break;
+                case 35: strcat(name, "wn"); break;
+                case 36: strcat(name, "ng"); break;
+                case 37: strcat(name, "cw"); break;
+                case 38: strcat(name, "mp"); break;
+                case 39: strcat(name, "ck"); break;
+                case 40: strcat(name, "nk"); break;
+                case 41: strcat(name, "dd"); break;
+                case 42: strcat(name, "tt"); break;
+                case 43: strcat(name, "bb"); break;
+                case 44: strcat(name, "pp"); break;
+                case 45: strcat(name, "nn"); break;
+                case 46: strcat(name, "mm"); break;
+                case 47: strcat(name, "kk"); break;
+                case 48: strcat(name, "gg"); break;
+                case 49: strcat(name, "ff"); break;
+                case 50: strcat(name, "pt"); break;
+                case 51: strcat(name, "tz"); break;
+                case 52: strcat(name, "dgh"); i++; len++; break;
+                case 53: strcat(name, "rgh"); i++; len++; break;
+                case 54: strcat(name, "rph"); i++; len++; break;
+                case 55: strcat(name, "rch"); i++; len++; break;
+                // middle only
+                case 56: strcat(name, "cz"); break;
+                case 57: strcat(name, "xk"); break;
+                case 58: strcat(name, "zx"); break;
+                case 59: strcat(name, "xz"); break;
+                case 60: strcat(name, "cv"); break;
+                case 61: strcat(name, "vv"); break;
+                case 62: strcat(name, "nl"); break;
+                case 63: strcat(name, "rh"); break;
+                case 64: strcat(name, "dw"); break;
+                case 65: strcat(name, "nw"); break;
+                case 66: strcat(name, "khl"); i++; len++; break;
+                default:
+                    i--;
+                    break;
+                }
+            }
             else
-                name[i] = numb[j];
+            {
+                if (i == 0)
+                {
+                    name[i] = 'a' + (numb[(k + 8 * j) % 17] % 26);
+                    want_vowel = is_random_name_vowel( name[i] );
+                }
+                else
+                {
+                    name[i] = retlet( numb[(k + 3 * j) % 17] );
+                }
+            }
         }
 
-        hello:
-
-        if ((nexty == 0 && is_random_name_vowel(name[i]))
-            || (nexty == 1 && !is_random_name_vowel(name[i])))
+        if (name[i] == '\0')
         {
-            if (nexty == 1 && i > 0 && !is_random_name_vowel(name[i - 1]))
-                i--;
-
             i--;
             continue;
         }
 
-        if (!is_random_name_vowel(name[i]))
-            nexty = 1;
+        if (want_vowel && !is_random_name_vowel( name[i] )
+            || (!want_vowel && is_random_name_vowel( name[i] )))
+        {
+            i--;
+            continue;
+        }
+
+        if (is_random_name_space( name[i] ))
+            has_space = true;
+
+        if (!is_random_name_vowel( name[i] ))
+            want_vowel = true;
         else
-            nexty = 0;
-
-        x++;
+            want_vowel = false;
     }
 
-    switch (ncase)
+    // catch break and try to give a final letter
+    if (i > 0 
+        && !is_random_name_space( name[i - 1] )
+        && name[i - 1] != 'y'  
+        && is_random_name_vowel( name[i - 1] )
+        && (count > 9 || (i < 8 && numb[16] % 3)))
     {
-    case 2:
-        for (i = 0; i < len + 1; i++)
+        name[i] = retlet( numb[j] );
+    }
+    
+    len = strlen( name );
+
+    if (len)
+    {
+        for (i = len - 1; i > 0; i--)
         {
-            if (i > 3 && name[i] == 0 && name[i + 1] == 0)
-            {
-                name[i] = 0;
-                if (name[i - 1] == 32)
-                    name[i - 1] = 0;
+            if (!isspace( name[i] ))
                 break;
-            }
-            if (name[i] != 32 && name[i] < 30)
-                name[i] += 65;
-            if (name[i] > 96)
-                name[i] -= 32;
-        }
-        break;
-
-    case 3:
-        for (i = 0; i < len + 0; i++)
-        {
-            if (i != 0 && name[i] >= 65 && name[i] < 97)
+            else 
             {
-                if (name[i - 1] == 32)
-                    name[i] += 32;
-            }
-
-            if (name[i] > 97)
-            {
-                if (i == 0 || name[i - 1] == 32)
-                    name[i] -= 32;
-            }
-
-            if (name[i] < 30)
-            {
-                if (i == 0 || (name[i] != 32 && name[i - 1] == 32))
-                    name[i] += 65;
-                else
-                    name[i] += 97;
+                name[i] = '\0';
+                len--;
             }
         }
-        break;
-
-    case 0:
-        for (i = 0; i < len; i++)
-        {
-            if (name[i] != 32 && name[i] < 30)
-                name[i] += 97;
-        }
-        break;
-
-    case 1:
-        name[i] += 65;
-
-        for (i = 1; i < len; i++)
-        {
-            if (name[i] != 32 && name[i] < 30)
-                name[i] += 97;  //97;
-        }
-        break;
     }
 
-    if (strlen( name ) == 0)
-        strncpy( buff, "Plog", 80 );
+    if (len >= 3)
+        strncpy( buff, name, ITEMNAME_SIZE );
     else
-        strncpy( buff, name, 80 );
-
-    buff[79] = '\0';
-    return;
-
-  two_letter:
-    if (nexty == 1)
-        goto hello;
-
-    if (!is_random_name_vowel(name[i - 1]))
-        goto hello;
-
-    i++;
-
-    switch (i * (retbit(j) + 1))
     {
-    case 0:
-        strcat(name, "sh");
-        break;
-    case 1:
-        strcat(name, "ch");
-        break;
-    case 2:
-        strcat(name, "tz");
-        break;
-    case 3:
-        strcat(name, "ts");
-        break;
-    case 4:
-        strcat(name, "cs");
-        break;
-    case 5:
-        strcat(name, "cz");
-        break;
-    case 6:
-        strcat(name, "xt");
-        break;
-    case 7:
-        strcat(name, "xk");
-        break;
-    case 8:
-        strcat(name, "kl");
-        break;
-    case 9:
-        strcat(name, "cl");
-        break;
-    case 10:
-        strcat(name, "fr");
-        break;
-    case 11:
-        strcat(name, "sh");
-        break;
-    case 12:
-        strcat(name, "ch");
-        break;
-    case 13:
-        strcat(name, "gh");
-        break;
-    case 14:
-        strcat(name, "pr");
-        break;
-    case 15:
-        strcat(name, "tr");
-        break;
-    case 16:
-        strcat(name, "mn");
-        break;
-    case 17:
-        strcat(name, "ph");
-        break;
-    case 18:
-        strcat(name, "pn");
-        break;
-    case 19:
-        strcat(name, "cv");
-        break;
-    case 20:
-        strcat(name, "zx");
-        break;
-    case 21:
-        strcat(name, "xz");
-        break;
-    case 23:
-        strcat(name, "dd");
-        break;
-    case 24:
-        strcat(name, "tt");
-        break;
-    case 25:
-        strcat(name, "ll");
-        break;
-        //case 26: strcat(name, "sh"); break;
-        //case 12: strcat(name, "sh"); break;
-        //case 13: strcat(name, "sh"); break;
-    default:
-        i--;
-        goto hello;
+        strncpy( buff, "plog", ITEMNAME_SIZE );
+        len = 4;
     }
 
-    x += 2;
+    buff[ ITEMNAME_SIZE - 1 ] = '\0';
 
-    goto hello;
+    for (i = 0; i < len; i++)
+    {
+        if (all_cap || i == 0 || buff[i - 1] == ' ')
+            buff[i] = toupper( buff[i] );
+    }
+
+    return (len); 
 }                               // end make_name()
 
-
-char reduce(unsigned char reducee)
+bool is_random_name_space(char let)
 {
-    while (reducee >= 26)
-    {
-        reducee -= 26;
-    }
+    return (let == ' ');
+}
 
-    return reducee;
-}                               // end reduce()
-
-bool is_random_name_vowel(unsigned char let)
+static bool is_random_name_vowel( char let )
 {
-    return (let == 0 || let == 4 || let == 8 || let == 14 || let == 20
-            || let == 24 || let == 32);
+    return (let == 'a' || let == 'e' || let == 'i' || let == 'o' || let == 'u'
+            || let == 'y' || let == ' ');
 }                               // end is_random_name_vowel()
 
-char retvow(char sed)
+static char retvow( int sed )
 {
-
-    while (sed > 6)
-        sed -= 6;
-
-    switch (sed)
-    {
-    case 0:
-        return 0;
-    case 1:
-        return 4;
-    case 2:
-        return 8;
-    case 3:
-        return 14;
-    case 4:
-        return 20;
-    case 5:
-        return 24;
-    case 6:
-        return 32;
-    }
-
-    return 0;
+    static const char vowels[] = "aeiouaeiouaeiouy  ";
+    return (vowels[ sed % (sizeof(vowels) - 1) ]);
 }                               // end retvow()
 
-char retbit(char sed)
+static char retlet( int sed )
 {
-    return (sed % 2);
-}                               // end retbit()
+    static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
+    return (consonants[ sed % (sizeof(consonants) - 1) ]);
+}
+
+bool is_interesting_item( const item_def& item ) {
+    if ( is_random_artefact(item) ||
+         is_unrandom_artefact(item) ||
+         is_fixed_artefact(item) )
+        return true;
+
+    char name[ITEMNAME_SIZE];
+    item_name(item, DESC_PLAIN, name, false);
+    std::string iname(name);
+    for (unsigned i = 0; i < Options.note_items.size(); ++i)
+        if (Options.note_items[i].matches(iname))
+            return true;
+    return false;
+}
+
+bool fully_identified( const item_def& item ) {
+    long flagset = ISFLAG_IDENT_MASK;
+    switch ( item.base_type ) {
+    case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+    case OBJ_ORBS:
+    case OBJ_SCROLLS:
+    case OBJ_POTIONS:
+        flagset = ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_FOOD:
+        flagset = 0;
+        break;
+    case OBJ_WANDS:
+        flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
+        break;
+    case OBJ_JEWELLERY:
+        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
+        if ( ring_has_pluses(item) )
+            flagset |= ISFLAG_KNOW_PLUSES;
+        break;
+    default:
+        break;
+    }
+    if ( is_random_artefact(item) ||
+         is_fixed_artefact(item) ||
+         is_unrandom_artefact(item) )
+        flagset |= ISFLAG_KNOW_PROPERTIES;
+    
+    return item_ident( item, flagset );
+}

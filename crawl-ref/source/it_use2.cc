@@ -3,6 +3,8 @@
  *  Summary:    Functions for using wands, potions, and weapon/armour removal.4\3
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      26jun2000   jmf   added ZAP_MAGMA
@@ -105,7 +107,7 @@ bool potion_effect( char pot_eff, int pow )
             if (you.might > 80)
                 you.might = 80;
 
-            naughty( NAUGHTY_STIMULANTS, 4 + random2(4) );
+            did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
         }
         break;
 
@@ -279,14 +281,14 @@ bool potion_effect( char pot_eff, int pow )
             mutate(100, false);
         }
 
-        naughty(NAUGHTY_STIMULANTS, 4 + random2(4));
+        did_god_conduct(DID_STIMULANTS, 4 + random2(4));
         break;
     }
 
     return (effect);
 }                               // end potion_effect()
 
-void unwield_item(char unw)
+void unwield_item(char unw, bool showMsgs)
 {
     you.special_wield = SPWLD_NONE;
     you.wield_change = true;
@@ -298,10 +300,12 @@ void unwield_item(char unw)
             switch (you.inv[unw].special)
             {
             case SPWPN_SINGING_SWORD:
-                mpr("The Singing Sword sighs.");
+                if (showMsgs)
+                    mpr("The Singing Sword sighs.");
                 break;
             case SPWPN_WRATH_OF_TROG:
-                mpr("You feel less violent.");
+                if (showMsgs)
+                    mpr("You feel less violent.");
                 break;
             case SPWPN_SCYTHE_OF_CURSES:
             case SPWPN_STAFF_OF_OLGREB:
@@ -330,42 +334,56 @@ void unwield_item(char unw)
             char str_pass[ ITEMNAME_SIZE ];
             in_name(unw, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
-
+            
             switch (brand)
             {
             case SPWPN_SWORD_OF_CEREBOV:
             case SPWPN_FLAMING:
-                strcat(info, " stops flaming.");
-                mpr(info);
+                if (showMsgs)
+                {
+                    strcat(info, " stops flaming.");
+                    mpr(info);
+                }
                 break;
 
             case SPWPN_FREEZING:
             case SPWPN_HOLY_WRATH:
-                strcat(info, " stops glowing.");
-                mpr(info);
+                if (showMsgs)
+                {
+                    strcat(info, " stops glowing.");
+                    mpr(info);
+                }
                 break;
 
             case SPWPN_ELECTROCUTION:
-                strcat(info, " stops crackling.");
-                mpr(info);
+                if (showMsgs)
+                {
+                    strcat(info, " stops crackling.");
+                    mpr(info);
+                }
                 break;
 
             case SPWPN_VENOM:
-                strcat(info, " stops dripping with poison.");
-                mpr(info);
+                if (showMsgs)
+                {
+                    strcat(info, " stops dripping with poison.");
+                    mpr(info);
+                }
                 break;
 
             case SPWPN_PROTECTION:
-                mpr("You feel less protected.");
+                if (showMsgs)
+                    mpr("You feel less protected.");
                 you.redraw_armour_class = 1;
                 break;
 
             case SPWPN_VAMPIRICISM:
-                mpr("You feel the strange hunger wane.");
+                if (showMsgs)
+                    mpr("You feel the strange hunger wane.");
                 break;
 
-            /* case 8: draining
-               case 9: speed, 10 slicing etc */
+                /* case 8: draining
+                   case 9: speed, 10 slicing etc */
 
             case SPWPN_DISTORTION:
                 // Removing the translocations skill reduction of effect,
@@ -385,11 +403,11 @@ void unwield_item(char unw)
                 // effect in vorpalise weapon scroll effect in read_scoll
             }                   // end switch
 
-
             if (you.duration[DUR_WEAPON_BRAND])
             {
                 you.duration[DUR_WEAPON_BRAND] = 0;
                 set_item_ego_type( you.inv[unw], OBJ_WEAPONS, SPWPN_NORMAL );
+                // we're letting this through
                 mpr("Your branding evaporates.");
             }
         }                       // end if
@@ -502,10 +520,15 @@ void unwear_armour(char unw)
 
 void unuse_randart(unsigned char unw)
 {
-    ASSERT( is_random_artefact( you.inv[unw] ) );
+    unuse_randart( you.inv[unw] );
+}
+
+void unuse_randart(const item_def &item)
+{
+    ASSERT( is_random_artefact( item ) );
 
     FixedVector< char, RA_PROPERTIES > proprt;
-    randart_wpn_properties( you.inv[unw], proprt );
+    randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])
         you.redraw_armour_class = 1;

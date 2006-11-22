@@ -13,6 +13,8 @@
  */
 
 #include "AppHdr.h"
+#include "externs.h"
+
 #include "initfile.h"
 
 #include <stdio.h>
@@ -21,9 +23,9 @@
 #include <ctype.h>
 
 #include "clua.h"
+#include "delay.h"
 #include "Kills.h"
 #include "files.h"
-#include "externs.h"
 #include "defines.h"
 #include "libutil.h"
 #include "player.h"
@@ -33,34 +35,23 @@
 #include "items.h"
 #include "view.h"
 
-game_options    Options;
+const std::string game_options::interrupt_prefix = "interrupt_";
+game_options Options;
 
-extern void (*viewwindow) (char, bool);
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-extern unsigned char mapchar3(unsigned char ldfk);
-extern unsigned char mapchar4(unsigned char ldfk);
-
-#ifdef UNIX
-extern int character_set;       // unices only
-#endif
-
-static std::string & tolower_string( std::string &str );
+std::string &tolower_string( std::string &str );
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
 const static int   obj_syms_len = 16;
 
 static void read_startup_prefs();
-static void read_options(InitLineInput &il, bool runscript);
 
-template<class A, class B> void append_vector(
-        std::vector<A> &dest, const std::vector<B> &src)
+template<class A, class B> void append_vector(A &dest, const B &src)
 {
     dest.insert( dest.end(), src.begin(), src.end() );
 }
 
 // returns -1 if unmatched else returns 0-15
-static short str_to_colour( const std::string &str )
+int str_to_colour( const std::string &str, int default_colour )
 {
     int ret;
 
@@ -69,6 +60,15 @@ static short str_to_colour( const std::string &str )
         "black", "blue", "green", "cyan", "red", "magenta", "brown",
         "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
         "lightred", "lightmagenta", "yellow", "white"
+    };
+
+    const std::string element_cols[] =
+    {
+        "fire", "ice", "earth", "electricity", "air", "poison", "water",
+        "magic", "mutagenic", "warp", "enchant", "heal", "holy", "dark",
+        "death", "necro", "unholy", "vehumet", "crystal", "blood", "smoke",
+        "slime", "jewel", "elven", "dwarven", "orcish", "gila", "floor",
+        "rock", "stone", "random"
     };
 
     for (ret = 0; ret < 16; ret++)
@@ -88,6 +88,21 @@ static short str_to_colour( const std::string &str )
 
     if (ret == 16)
     {
+        // Maybe we have an element colour attribute.
+        for (unsigned i = 0; i < sizeof(element_cols) / sizeof(*element_cols); 
+                ++i)
+        {
+            if (str == element_cols[i])
+            {
+                // Ugh.
+                ret = element_type(EC_FIRE + i);
+                break;
+            }
+        }
+    }
+
+    if (ret == 16)
+    {
         // Check if we have a direct colour index
         const char *s = str.c_str();
         char *es = NULL;
@@ -96,7 +111,7 @@ static short str_to_colour( const std::string &str )
             ret = ci;
     }
 
-    return ((ret == 16) ? -1 : ret);
+    return ((ret == 16) ? default_colour : ret);
 }
 
 // returns -1 if unmatched else returns 0-15
@@ -121,16 +136,16 @@ static int str_to_channel_colour( const std::string &str )
 
 static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
 {
-    "plain", "prompt", "god", "duration", "danger", "warning", "food",
-    "recovery", "talk", "intrinsic_gain", "mutation", "monster_spell",
-    "monster_enchant", "monster_damage", "rotten_meat", "equipment",
-    "diagnostic",
+    "plain", "prompt", "god", "pray", "duration", "danger", "warning", "food",
+    "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
+    "monster_enchant", "monster_damage", "monster_target", 
+    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic",
 };
 
-// returns -1 if unmatched else returns 0-15
+// returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
 int str_to_channel( const std::string &str )
 {
-    short       ret;
+    int ret;
 
     for (ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
     {
@@ -147,6 +162,19 @@ std::string channel_to_str( int channel )
         return "";
 
     return message_channel_names[channel];
+}
+
+static int str_to_book( const std::string& str )
+{
+    if ( str == "fire" || str == "flame" )
+	return SBT_FIRE;
+    if ( str == "cold" || str == "ice" )
+	return SBT_COLD;
+    if ( str == "summ" || str == "summoning" )
+	return SBT_SUMM;
+    if ( str == "random" )
+	return SBT_RANDOM;
+    return SBT_NO_SELECTION;
 }
 
 static int str_to_weapon( const std::string &str )
@@ -249,7 +277,7 @@ static char str_to_race( const std::string &str )
         index -= (SP_CENTAUR - SP_RED_DRACONIAN - 1);
 
     // SP_HUMAN is at 1, therefore we must subtract one.
-    return ((index != -1) ? index_to_letter( index - 1 ) : '\0'); 
+    return ((index != -1) ? index_to_letter( index - 1 ) : 0); 
 }
 
 static char str_to_class( const std::string &str )
@@ -265,10 +293,10 @@ static char str_to_class( const std::string &str )
     if (index == -1)
         index = get_class_index_by_name( str.c_str() );
 
-    return ((index != -1) ? index_to_letter( index ) : '\0'); 
+    return ((index != -1) ? index_to_letter( index ) : 0); 
 }
 
-static std::string & tolower_string( std::string &str )
+std::string & tolower_string( std::string &str )
 {
     if (str.length()) 
     {
@@ -285,10 +313,10 @@ static bool read_bool( const std::string &field, bool def_value )
 {
     bool ret = def_value;
 
-    if (field == "true" || field == "1")
+    if (field == "true" || field == "1" || field == "yes")
         ret = true;
 
-    if (field == "false" || field == "0")
+    if (field == "false" || field == "0" || field == "no")
         ret = false;
 
     return (ret);
@@ -323,211 +351,379 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
-
-static void reset_startup_options(bool clear_name = true)
+void game_options::add_dump_fields(const std::string &text)
 {
-    if (clear_name)
-        you.your_name[0] = '\0';
-    Options.race                   = '\0';
-    Options.cls                    = '\0';
-    Options.weapon                 = WPN_UNKNOWN;
-    Options.random_pick            = false;
-    Options.chaos_knight           = GOD_NO_GOD;
-    Options.death_knight           = DK_NO_SELECTION;
-    Options.priest                 = GOD_NO_GOD;
+    // Easy; chardump.cc has most of the intelligence.
+    append_vector(dump_order, split_string(",", text, true, true));
 }
 
-void reset_options(bool clear_name)
+void game_options::reset_startup_options()
 {
-    // Option initialization
-    Options.activity_interrupts[ ACT_MULTIDROP ] =
-            AI_HP_LOSS | AI_STAT_CHANGE | AI_TELEPORT;
-    Options.activity_interrupts[ ACT_RUNNING ] =
-            0xFFFF ^ AI_SEE_MONSTER;
-    Options.activity_interrupts[ ACT_TRAVELING ] =
-            0xFFFF ^ (AI_MESSAGE | AI_SEE_MONSTER);
+    race                   = 0;
+    cls                    = 0;
+    weapon                 = WPN_UNKNOWN;
+    book                   = SBT_NO_SELECTION;
+    random_pick            = false;
+    chaos_knight           = GOD_NO_GOD;
+    death_knight           = DK_NO_SELECTION;
+    priest                 = GOD_NO_GOD;
+}
 
-    reset_startup_options(clear_name);
-    Options.prev_race = 0;
-    Options.prev_cls  = 0;
-    Options.prev_ck   = GOD_NO_GOD;
-    Options.prev_dk   = DK_NO_SELECTION;
-    Options.prev_pr   = GOD_NO_GOD;
-    Options.prev_weapon = WPN_UNKNOWN;
-    Options.prev_randpick = false;
-    Options.remember_name = false;
+void game_options::set_default_activity_interrupts()
+{
+    for (int adelay = 0; adelay < NUM_DELAYS; ++adelay)
+        for (int aint = 0; aint < NUM_AINTERRUPTS; ++aint)
+            activity_interrupts[adelay][aint] = true;
 
-    Options.autopickups            = 0x0000;
-    Options.verbose_dump           = false;
-    Options.detailed_stat_dump     = true;
-    Options.colour_map             = false;
-    Options.clean_map              = false;
-    Options.show_uncursed          = true;
-    Options.always_greet           = false;
-    Options.easy_open              = true;
-    Options.easy_armour            = true;
-    Options.easy_butcher           = false;
-    Options.easy_confirm           = CONFIRM_SAFE_EASY;
-    Options.easy_quit_item_prompts = false;
-    Options.hp_warning             = 10;
-    Options.hp_attention           = 25;
-    Options.terse_hand             = true;
-    Options.auto_list              = false;
-    Options.delay_message_clear    = false;
-    Options.pickup_dropped         = true;
-    Options.travel_colour          = true;
-    Options.travel_delay           = -1;
-    Options.travel_stair_cost      = 500;
-    Options.travel_exclude_radius2 =  68;
-    Options.show_waypoints         = true;
-    Options.item_colour            = false;
+    const char *default_activity_interrupts[] = {
+        "interrupt_armour_on = hp_loss, monster_attack",
+        "interrupt_armour_off = interrupt_armour_on",
+        "interrupt_drop_item = interrupt_armour_on",
+        "interrupt_jewellery_on = interrupt_armour_on",
+        "interrupt_memorise = interrupt_armour_on, stat",
+        "interrupt_butcher = interrupt_armour_on, teleport, stat",
+        "interrupt_passwall = interrupt_butcher",
+        "interrupt_multidrop = interrupt_butcher",
+        "interrupt_macro = interrupt_multidrop",
+        "interrupt_travel = interrupt_butcher, statue, hungry, burden, monster",
+        "interrupt_run = interrupt_travel, message",
+        "interrupt_rest = interrupt_run",
 
-    Options.detected_item_colour   = DARKGREY;
-    Options.detected_monster_colour= DARKGREY;
-    Options.remembered_monster_colour = 0;
+        // Stair ascents/descents cannot be interrupted, attempts to interrupt
+        // the delay will just trash all queued delays, including travel.
+        "interrupt_ascending_stairs =",
+        "interrupt_descending_stairs =",
+        "interrupt_uninterruptible =",
+        "interrupt_autopickup =",
+        "interrupt_weapon_swap =",
 
-    Options.easy_exit_menu         = true;
-    Options.dos_use_background_intensity = false;
-    Options.assign_item_slot       = SS_FORWARD;
+        NULL
+    };
 
-    Options.macro_meta_entry       = true;
+    for (int i = 0; default_activity_interrupts[i]; ++i)
+        read_option_line( default_activity_interrupts[i], false );
+}
+
+void game_options::clear_activity_interrupts(
+        FixedVector<bool, NUM_AINTERRUPTS> &eints)
+{
+    for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+        eints[i] = false;
+}
+
+void game_options::set_activity_interrupt(
+        FixedVector<bool, NUM_AINTERRUPTS> &eints,
+        const std::string &interrupt)
+{
+    if (interrupt.find(interrupt_prefix) == 0)
+    {
+        std::string delay_name = interrupt.substr( interrupt_prefix.length() );
+        delay_type delay = get_delay(delay_name);
+        if (delay == NUM_DELAYS)
+        {
+            fprintf(stderr, "Unknown delay: %s\n", delay_name.c_str());
+            return;
+        }
+        
+        FixedVector<bool, NUM_AINTERRUPTS> &refints = 
+            activity_interrupts[delay];
+
+        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+            if (refints[i])
+                eints[i] = true;
+
+        return;
+    }
+
+    activity_interrupt_type ai = get_activity_interrupt(interrupt);
+    if (ai == NUM_AINTERRUPTS)
+    {
+        fprintf(stderr, "Delay interrupt name \"%s\" not recognised.\n",
+                interrupt.c_str());
+        return;
+    }
+
+    eints[ai] = true;
+}
+ 
+void game_options::set_activity_interrupt(const std::string &activity_name,
+                                          const std::string &interrupt_names,
+                                          bool append_interrupts)
+{
+    const delay_type delay = get_delay(activity_name);
+    if (delay == NUM_DELAYS)
+    {
+        fprintf(stderr, "Unknown delay: %s\n", activity_name.c_str());
+        return;
+    }
+
+    FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
+
+    if (!append_interrupts)
+        clear_activity_interrupts(eints);
+
+    std::vector<std::string> interrupts = split_string(",", interrupt_names);
+    for (int i = 0, size = interrupts.size(); i < size; ++i)
+        set_activity_interrupt(eints, interrupts[i]);
+
+    eints[AI_FORCE_INTERRUPT] = true;
+}
+
+void game_options::reset_options()
+{
+    set_default_activity_interrupts();
+
+    reset_startup_options();
+
+#ifdef SAVE_DIR_PATH
+    save_dir  = SAVE_DIR_PATH;
+#else
+    save_dir.clear();
+#endif
+
+    player_name.clear();
+
+    autopickup_on = true;
+    autoprayer_on = false;
+    fizzlecheck_on = false;
+
+    prev_race = 0;
+    prev_cls  = 0;
+    prev_ck   = GOD_NO_GOD;
+    prev_dk   = DK_NO_SELECTION;
+    prev_pr   = GOD_NO_GOD;
+    prev_weapon = WPN_UNKNOWN;
+    prev_book = SBT_NO_SELECTION;
+    prev_randpick = false;
+    remember_name = false;
+
+#ifdef USE_ASCII_CHARACTERS
+    char_set               = CSET_ASCII;
+#else
+    char_set               = CSET_IBM;
+#endif
+    init_char_table(char_set);
+    
+    // set it to the .crawlrc default
+    autopickups = ((1L << 15) | // gold
+                   (1L <<  6) | // scrolls
+                   (1L <<  8) | // potions
+                   (1L << 10) | // books
+                   (1L <<  7) | // jewellery
+                   (1L <<  3) | // wands
+                   (1L <<  4)); // food
+    verbose_dump           = false;
+    detailed_stat_dump     = true;
+    colour_map             = true;
+    clean_map              = false;
+    show_uncursed          = true;
+    always_greet           = true;
+    easy_open              = true;
+    easy_unequip           = true;
+    easy_butcher           = true;
+    easy_confirm           = CONFIRM_SAFE_EASY;
+    easy_quit_item_prompts = true;
+    hp_warning             = 10;
+    hp_attention           = 25;
+    confirm_self_target    = true;
+    safe_autopickup        = false;
+    use_notes              = true;
+    note_skill_max         = false;
+    note_all_spells        = false;
+    note_hp_percent        = 0;
+    ood_interesting        = 8;
+    terse_hand             = false;
+    increasing_skill_progress = false;
+
+    // [ds] Grumble grumble.
+    auto_list              = true;
+
+    delay_message_clear    = false;
+    pickup_dropped         = false;
+    pickup_thrown          = true;
+
+    travel_colour          = true;
+    travel_delay           = 10;
+    travel_stair_cost      = 500;
+    travel_exclude_radius2 =  68;
+
+    sort_menus             = false;
+
+    tc_reachable           = BLUE;
+    tc_excluded            = LIGHTMAGENTA;
+    tc_exclude_circle      = RED;
+    tc_dangerous           = CYAN;
+    tc_disconnected        = DARKGREY;
+
+    show_waypoints         = true;
+    item_colour            = true;
+
+    // [ds] Default to jazzy colours.
+    detected_item_colour   = LIGHTGREEN;
+    detected_monster_colour= LIGHTRED;
+
+    easy_exit_menu         = true;
+#ifdef DOS
+    dos_use_background_intensity = false;
+#else
+    dos_use_background_intensity = true;
+#endif
+
+    assign_item_slot       = SS_FORWARD;
+
+    macro_meta_entry       = true;
 
     // 10 was the cursor step default on Linux.
-    Options.level_map_cursor_step  = 10;
+    level_map_cursor_step  = 10;
 
 #ifdef STASH_TRACKING
-    Options.stash_tracking         = STM_NONE;
+    stash_tracking         = STM_ALL;
 #endif
-    Options.explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
-    Options.target_zero_exp        = true;
-    Options.target_wrap            = false;
-    Options.target_oos             = true;
-    Options.target_los_first       = true;
-    Options.dump_kill_places       = KDO_ONE_PLACE;
-    Options.dump_message_count     = 4;
-    Options.dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
-    Options.dump_item_origin_price = -1;
+    explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
+    safe_zero_exp          = true;
+    target_zero_exp        = false;
+    target_wrap            = true;
+    target_oos             = true;
+    target_los_first       = true;
+    dump_kill_places       = KDO_ONE_PLACE;
+    dump_message_count     = 7;
+    dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
+    dump_item_origin_price = -1;
 
-    Options.drop_mode              = DM_SINGLE;
+    drop_mode              = DM_SINGLE;
 
-    Options.flush_input[ FLUSH_ON_FAILURE ]     = true;
-    Options.flush_input[ FLUSH_BEFORE_COMMAND ] = false;
-    Options.flush_input[ FLUSH_ON_MESSAGE ]     = false;
-    Options.flush_input[ FLUSH_LUA ]            = true;
+    flush_input[ FLUSH_ON_FAILURE ]     = true;
+    flush_input[ FLUSH_BEFORE_COMMAND ] = false;
+    flush_input[ FLUSH_ON_MESSAGE ]     = false;
+    flush_input[ FLUSH_LUA ]            = true;
 
-    Options.lowercase_invocations  = false; 
+    lowercase_invocations  = false; 
 
     // Note: These fire options currently match the old behaviour. -- bwr
-    Options.fire_items_start       = 0;           // start at slot 'a'
+    fire_items_start       = 0;           // start at slot 'a'
 
-    Options.fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
-    Options.fire_order[1] = FIRE_DART;          // then only consider darts
+    fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
+    fire_order[1] = FIRE_DART;          // then only consider darts
 
-    // clear the reast of the list
+    // clear the rest of the list
     for (int i = 2; i < NUM_FIRE_TYPES; i++)
-        Options.fire_order[i] = FIRE_NONE;
+        fire_order[i] = FIRE_NONE;
+
+#ifdef WIZARD
+    fsim_rounds = 40000L;
+    fsim_mons   = "worm";
+    fsim_str = fsim_int = fsim_dex = 15;
+    fsim_xl  = 10;
+    fsim_kit.clear();
+#endif
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
-    Options.sc_entries             = 0;
-    Options.sc_format              = SCORE_REGULAR;
+    sc_entries             = 0;
+    sc_format              = SCORE_REGULAR;
 
-//#ifdef USE_COLOUR_OPTS
-    Options.friend_brand    = CHATTR_NORMAL;
-    Options.heap_brand      = CHATTR_NORMAL;
-    Options.stab_brand      = CHATTR_NORMAL;
-    Options.may_stab_brand  = CHATTR_NORMAL;
-    Options.no_dark_brand = 0;
-//#endif
+    friend_brand    = CHATTR_NORMAL;
+    heap_brand      = CHATTR_NORMAL;
+    stab_brand      = CHATTR_NORMAL;
+    may_stab_brand  = CHATTR_NORMAL;
+    no_dark_brand = 0;
 
 #ifdef WIZARD
-    Options.wiz_mode      = WIZ_NO;
+    wiz_mode      = WIZ_NO;
 #endif
 
     // map each colour to itself as default
 #ifdef USE_8_COLOUR_TERM_MAP
     for (int i = 0; i < 16; i++)
-        Options.colour[i] = i % 8;
+        colour[i] = i % 8;
 
-    Options.colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
+    colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
 #else
     for (int i = 0; i < 16; i++)
-        Options.colour[i] = i;
+        colour[i] = i;
 #endif
     
     // map each channel to plain (well, default for now since I'm testing)
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; i++)
-        Options.channels[i] = MSGCOL_DEFAULT;
+        channels[i] = MSGCOL_DEFAULT;
 
     // Clear vector options.
-    Options.banned_objects.clear();
-    Options.stop_travel.clear();
-    Options.sound_mappings.clear();
-    Options.menu_colour_mappings.clear();
-    Options.drop_filter.clear();
+    dump_order.clear();
+    add_dump_fields("header,stats,misc,inventory,skills,"
+                   "spells,mutations,messages,screenshot,kills,notes");
 
-    Options.named_options.clear();
+    banned_objects.clear();
+    note_monsters.clear(); 
+    note_messages.clear(); 
+    autoinscriptions.clear();
+    note_items.clear();
+    note_skill_levels.clear();
+    travel_stop_message.clear();
+    sound_mappings.clear();
+    menu_colour_mappings.clear();
+    drop_filter.clear();
+    map_file_name.clear();
+    named_options.clear();
+
+    clear_cset_overrides();
+    clear_feature_overrides();
 
     // Map each category to itself. The user can override in init.txt
-    Options.kill_map[KC_YOU] = KC_YOU;
-    Options.kill_map[KC_FRIENDLY] = KC_FRIENDLY;
-    Options.kill_map[KC_OTHER] = KC_OTHER;
+    kill_map[KC_YOU] = KC_YOU;
+    kill_map[KC_FRIENDLY] = KC_FRIENDLY;
+    kill_map[KC_OTHER] = KC_OTHER;
 
     // Setup travel information. What's a better place to do this?
     initialise_travel();
 }
 
-void read_init_file(bool runscript)
+// returns where the init file was read from
+std::string read_init_file(bool runscript)
 {
-    FILE *f;
-    char name_buff[kPathLen];
-
-    reset_options(!runscript);
-
-    if (!runscript)
-        you.your_name[0] = '\0';
-
-    if (SysEnv.crawl_rc)
-    {
-        f = fopen(SysEnv.crawl_rc, "r");
-    }
-    else if (SysEnv.crawl_dir)
-    {
-        strncpy(name_buff, SysEnv.crawl_dir, kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-        strncat(name_buff, "init.txt", kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        f = fopen(name_buff, "r");
-    }
+    const char* locations_data[][2] = {
+        { SysEnv.crawl_rc, "" },
+        { SysEnv.crawl_dir, "init.txt" },
 #ifdef MULTIUSER
-    else if (SysEnv.home)
-    {
-        // init.txt isn't such a good choice if we're looking in
-        // the user's home directory, we'll use Un*x standard
-        strncpy(name_buff, SysEnv.home, kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        // likely not to have a closing slash so we'll insert one...
-        strncat(name_buff, "/.crawlrc", kPathLen);
-        name_buff[ kPathLen - 1 ] = '\0';
-
-        f = fopen(name_buff, "r");
-    }
+        { SysEnv.home, "/.crawlrc" },
+        { SysEnv.home, "init.txt" },
 #endif
-    else
-    {
-        f = fopen("init.txt", "r");
+        { "", "init.txt" },
+#ifdef WIN32CONSOLE
+        { "", ".crawlrc" },
+        { "", "_crawlrc" },
+#endif
+        { NULL, NULL }                // placeholder to mark end
+    };
+
+    Options.reset_options();
+
+    FILE* f = NULL;
+    char name_buff[kPathLen];
+    // Check all possibilities for init.txt
+    for ( int i = 0; f == NULL && locations_data[i][1] != NULL; ++i ) {
+        // Don't look at unset options
+        if ( locations_data[i][0] != NULL ) {
+            snprintf( name_buff, sizeof name_buff, "%s%s",
+                      locations_data[i][0], locations_data[i][1] );
+            f = fopen( name_buff, "r" );
+        }
     }
 
-    if (f == NULL)
-        return;
+    if ( f == NULL )
+    {
+#ifdef MULTIUSER
+        return "not found (~/.crawlrc missing)";
+#else
+        return "not found (init.txt missing from current directory)";
+#endif
+    }
 
+    read_options(f, runscript);
     if (!runscript)
         read_startup_prefs();
 
-    read_options(f, runscript);
     fclose(f);
+    return std::string(name_buff);
 }                               // end read_init_file()
 
 static void read_startup_prefs()
@@ -536,19 +732,21 @@ static void read_startup_prefs()
     FILE *f = fopen(fn.c_str(), "r");
     if (!f)
         return;
-    read_options(f);
+
+    game_options temp;
+    FileLineInput fl(f);
+    temp.read_options(fl, false);
     fclose(f);
 
-    Options.prev_randpick = Options.random_pick;
-    Options.prev_weapon   = Options.weapon;
-    Options.prev_pr       = Options.priest;
-    Options.prev_dk       = Options.death_knight;
-    Options.prev_ck       = Options.chaos_knight;
-    Options.prev_cls      = Options.cls;
-    Options.prev_race     = Options.race;
-    Options.prev_name     = you.your_name;
-
-    reset_startup_options();
+    Options.prev_randpick = temp.random_pick;
+    Options.prev_weapon   = temp.weapon;
+    Options.prev_pr       = temp.priest;
+    Options.prev_dk       = temp.death_knight;
+    Options.prev_ck       = temp.chaos_knight;
+    Options.prev_cls      = temp.cls;
+    Options.prev_race     = temp.race;
+    Options.prev_book     = temp.book;
+    Options.prev_name     = temp.player_name;
 }
 
 static void write_newgame_options(FILE *f)
@@ -589,6 +787,15 @@ static void write_newgame_options(FILE *f)
                 Options.prev_pr == GOD_YREDELEMNUL? "yredelemnul" :
                                             "random");
     }
+
+    if (Options.prev_book != SBT_NO_SELECTION )
+    {
+	fprintf(f, "book = %s\n",
+		Options.prev_book == SBT_FIRE ? "fire" :
+		Options.prev_book == SBT_COLD ? "cold" :
+		Options.prev_book == SBT_SUMM ? "summ" :
+		"random");
+    }
 }
 
 void write_newgame_options_file()
@@ -606,14 +813,8 @@ void save_player_name()
     if (!Options.remember_name)
         return ;
 
-    std::string playername = you.your_name;
-
     // Read other preferences
     read_startup_prefs();
-
-    // Put back your name
-    strncpy(you.your_name, playername.c_str(), kNameLen);
-    you.your_name[kNameLen - 1] = 0;
 
     // And save
     write_newgame_options_file();
@@ -622,16 +823,21 @@ void save_player_name()
 void read_options(FILE *f, bool runscript)
 {
     FileLineInput fl(f);
-    read_options(fl, runscript);
+    Options.read_options(fl, runscript);
 }
 
 void read_options(const std::string &s, bool runscript)
 {
     StringLineInput st(s);
-    read_options(st, runscript);
+    Options.read_options(st, runscript);
 }
 
-static void read_options(InitLineInput &il, bool runscript)
+game_options::game_options()
+{
+    reset_options();
+}
+
+void game_options::read_options(InitLineInput &il, bool runscript)
 {
     unsigned int line = 0;
     
@@ -759,7 +965,7 @@ static void read_options(InitLineInput &il, bool runscript)
             continue;
         }
 
-        parse_option_line(str, runscript);
+        read_option_line(str, runscript);
     }
 
 #ifdef CLUA_BINDINGS
@@ -774,6 +980,9 @@ static void read_options(InitLineInput &il, bool runscript)
         }
     }
 #endif
+
+    // Validate save_dir
+    check_savedir(save_dir);
 }
 
 static int str_to_killcategory(const std::string &s)
@@ -791,15 +1000,15 @@ static int str_to_killcategory(const std::string &s)
    return -1;
 }
 
-static void do_kill_map(const std::string &from, const std::string &to)
+void game_options::do_kill_map(const std::string &from, const std::string &to)
 {
     int ifrom = str_to_killcategory(from),
         ito   = str_to_killcategory(to);
     if (ifrom != -1 && ito != -1)
-        Options.kill_map[ifrom] = ito;
+        kill_map[ifrom] = ito;
 }
 
-void parse_option_line(const std::string &str, bool runscript)
+void game_options::read_option_line(const std::string &str, bool runscript)
 {
     std::string key = "";
     std::string subkey = "";
@@ -807,6 +1016,8 @@ void parse_option_line(const std::string &str, bool runscript)
 
     int first_equals = str.find('=');
     int first_dot = str.find('.');
+
+    bool plus_equal = false;
 
     // all lines with no equal-signs we ignore
     if (first_equals < 0)
@@ -828,6 +1039,15 @@ void parse_option_line(const std::string &str, bool runscript)
 
     // Clean up our data...
     tolower_string( trim_string( key ) );
+
+    // Is this a case of key += val?
+    if (key.length() && key[key.length() - 1] == '+')
+    {
+        plus_equal = true;
+        key = key.substr(0, key.length() - 1);
+        trim_string(key);
+    }
+
     tolower_string( trim_string( subkey ) );
 
     // some fields want capitals... none care about external spaces
@@ -839,7 +1059,12 @@ void parse_option_line(const std::string &str, bool runscript)
     if (key != "name" && key != "crawl_dir" 
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "stop_travel" && key != "sound" 
-        && key != "drop_filter" && key != "lua_file")
+        && key != "travel_stop_message"
+        && key != "drop_filter" && key != "lua_file"
+	&& key != "note_items" && key != "autoinscribe"
+	&& key != "note_monsters" && key != "note_messages"
+        && key.find("cset") != 0 && key != "dungeon"
+        && key != "feature")
     {
         tolower_string( field );
     }
@@ -847,6 +1072,9 @@ void parse_option_line(const std::string &str, bool runscript)
     // everything not a valid line is treated as a comment
     if (key == "autopickup")
     {
+        // clear out autopickup
+        autopickups = 0L;
+
         for (size_t i = 0; i < field.length(); i++)
         {
             char type = field[i];
@@ -880,7 +1108,7 @@ void parse_option_line(const std::string &str, bool runscript)
                 ;
 
             if (j < obj_syms_len)
-                Options.autopickups |= (1L << j);
+                autopickups |= (1L << j);
             else
             {
                 fprintf( stderr, "Bad object type '%c' for autopickup.\n",
@@ -891,59 +1119,100 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "name")
     {
         // field is already cleaned up from trim_string()
-        strncpy(you.your_name, field.c_str(), kNameLen);
-        you.your_name[ kNameLen - 1 ] = '\0';
+        player_name = field;
     }
-    else if (key == "verbose_dump")
+    else if (key == "char_set" || key == "ascii_display")
     {
-        // gives verbose info in char dumps
-        Options.verbose_dump = read_bool( field, Options.verbose_dump );
+        bool valid = true;
+
+        if (key == "ascii_display")
+        {
+            char_set = 
+                read_bool(field, char_set == CSET_ASCII)?
+                    CSET_ASCII
+                  : CSET_IBM;
+            valid = true;
+        }
+        else
+        {
+            if (field == "ascii")
+                char_set = CSET_ASCII;
+            else if (field == "ibm")
+                char_set = CSET_IBM;
+            else if (field == "dec")
+                char_set = CSET_DEC;
+            else 
+            {
+                fprintf( stderr, "Bad character set: %s\n", field.c_str() );
+                valid = false;
+            }
+        }
+        if (valid)
+            init_char_table(char_set);
+    }
+    else if (key == "default_autopickup")
+    {
+	// should autopickup default to on or off?
+	autopickup_on = read_bool( field, autopickup_on );
+    }
+    else if (key == "default_autoprayer")
+    {
+	// should autoprayer default to on or off?
+	autoprayer_on = read_bool( field, autoprayer_on );
+    }
+    else if (key == "default_fizzlecheck")
+    {
+	// should fizzlecheck default to on or off?
+	fizzlecheck_on = read_bool( field, fizzlecheck_on );
     }
     else if (key == "detailed_stat_dump")
     {
-        Options.detailed_stat_dump = 
-            read_bool( field, Options.detailed_stat_dump );
+        detailed_stat_dump = 
+            read_bool( field, detailed_stat_dump );
     }
     else if (key == "clean_map")
     {
         // removes monsters/clouds from map
-        Options.clean_map = read_bool( field, Options.clean_map );
+        clean_map = read_bool( field, clean_map );
     }
     else if (key == "colour_map" || key == "color_map")
     {
         // colour-codes play-screen map
-        Options.colour_map = read_bool( field, Options.colour_map );
+        colour_map = read_bool( field, colour_map );
     }
     else if (key == "easy_confirm")
     {
         // allows both 'Y'/'N' and 'y'/'n' on yesno() prompts
         if (field == "none")
-            Options.easy_confirm = CONFIRM_NONE_EASY;
+            easy_confirm = CONFIRM_NONE_EASY;
         else if (field == "safe")
-            Options.easy_confirm = CONFIRM_SAFE_EASY;
+            easy_confirm = CONFIRM_SAFE_EASY;
         else if (field == "all")
-            Options.easy_confirm = CONFIRM_ALL_EASY;
+            easy_confirm = CONFIRM_ALL_EASY;
     }
-    else if (key == "easy_quit_item_lists")
+    else if (key == "easy_quit_item_lists"
+            || key == "easy_quit_item_prompts")
     {
         // allow aborting of item lists with space
-        Options.easy_quit_item_prompts = read_bool( field, 
-                                        Options.easy_quit_item_prompts );
+        easy_quit_item_prompts = read_bool( field, 
+                                        easy_quit_item_prompts );
     }
     else if (key == "easy_open")
     {
         // automatic door opening with movement
-        Options.easy_open = read_bool( field, Options.easy_open );
+        easy_open = read_bool( field, easy_open );
     }
-    else if (key == "easy_armour" || key == "easy_armour")
+    else if (key == "easy_armor" 
+            || key == "easy_armour" 
+            || key == "easy_unequip")
     {
         // automatic removal of armour when dropping
-        Options.easy_armour = read_bool( field, Options.easy_armour );
+        easy_unequip = read_bool( field, easy_unequip );
     }
     else if (key == "easy_butcher")
     {
         // automatic knife switching
-        Options.easy_butcher = read_bool( field, Options.easy_butcher );
+        easy_butcher = read_bool( field, easy_butcher );
     }
     else if (key == "lua_file" && runscript)
     {
@@ -960,7 +1229,7 @@ void parse_option_line(const std::string &str, bool runscript)
         const int result_col = str_to_colour( field );
 
         if (orig_col != -1 && result_col != -1)
-            Options.colour[orig_col] = result_col;
+            colour[orig_col] = result_col;
         else
         {
             fprintf( stderr, "Bad colour -- %s=%d or %s=%d\n",
@@ -973,7 +1242,7 @@ void parse_option_line(const std::string &str, bool runscript)
         const int col  = str_to_channel_colour( field );
 
         if (chnl != -1 && col != -1)
-            Options.channels[chnl] = col;
+            channels[chnl] = col;
         else if (chnl == -1)
             fprintf( stderr, "Bad channel -- %s\n", subkey.c_str() );
         else if (col == -1)
@@ -986,7 +1255,7 @@ void parse_option_line(const std::string &str, bool runscript)
         const int col = str_to_colour( field );
 
         if (col != -1)
-            Options.background = col;
+            background = col;
         else
             fprintf( stderr, "Bad colour -- %s\n", field.c_str() );
 
@@ -995,7 +1264,7 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         const int col = str_to_colour( field );
         if (col != -1)
-            Options.detected_item_colour = col;
+            detected_item_colour = col;
         else
             fprintf( stderr, "Bad detected_item_colour -- %s\n",
                      field.c_str());
@@ -1004,102 +1273,116 @@ void parse_option_line(const std::string &str, bool runscript)
     {
         const int col = str_to_colour( field );
         if (col != -1)
-            Options.detected_monster_colour = col;
+            detected_monster_colour = col;
         else
             fprintf( stderr, "Bad detected_monster_colour -- %s\n",
                      field.c_str());
     }
-    else if (key == "remembered_monster_colour")
+    else if (key.find(interrupt_prefix) == 0)
     {
-        if (field == "real")
-            Options.remembered_monster_colour = 0xFFFFU;
-        else if (field == "auto")
-            Options.remembered_monster_colour = 0;
-        else {
-            const int col = str_to_colour( field );
-            if (col != -1)
-                Options.remembered_monster_colour = col;
-            else
-                fprintf( stderr, "Bad remembered_monster_colour -- %s\n",
-                         field.c_str());
-        }
+        set_activity_interrupt(key.substr(interrupt_prefix.length()), 
+                               field,
+                               plus_equal);
+    }
+    else if (key.find("cset") == 0)
+    {
+        std::string cset = key.substr(4);
+        if (!cset.empty() && cset[0] == '_')
+            cset = cset.substr(1);
+
+        char_set_type cs = NUM_CSET;
+        if (cset == "ascii")
+            cs = CSET_ASCII;
+        else if (cset == "ibm")
+            cs = CSET_IBM;
+        else if (cset == "dec")
+            cs = CSET_DEC;
+
+        add_cset_override(cs, field);
+    }
+    else if (key == "feature" || key == "dungeon")
+    {
+        std::vector<std::string> defs = split_string(";", field);
+        
+        for (int i = 0, size = defs.size(); i < size; ++i)
+            add_feature_override( defs[i] );
     }
     else if (key == "friend_brand")
     {
         // Use curses attributes to mark friend
         // Some may look bad on some terminals.
         // As a suggestion, try "rxvt -rv -fn 10x20" under Un*xes
-        Options.friend_brand = curses_attribute(field);
+        friend_brand = curses_attribute(field);
     }
     else if (key == "stab_brand")
     {
-        Options.stab_brand = curses_attribute(field);
+        stab_brand = curses_attribute(field);
     }
     else if (key == "may_stab_brand")
     {
-        Options.may_stab_brand = curses_attribute(field);
+        may_stab_brand = curses_attribute(field);
     }
     else if (key == "no_dark_brand")
     {
         // This is useful for terms where dark grey does
         // not have standout modes (since it's black on black).
         // This option will use light-grey instead in these cases.
-        Options.no_dark_brand = read_bool( field, Options.no_dark_brand );
+        no_dark_brand = read_bool( field, no_dark_brand );
     }
     else if (key == "heap_brand")
     {
         // See friend_brand option upstairs. no_dark_brand applies
         // here as well.
-        Options.heap_brand = curses_attribute(field);
-    }
-    else if (key == "show_uncursed")
-    {
-        // label known uncursed items as "uncursed"
-        Options.show_uncursed = read_bool( field, Options.show_uncursed );
+        heap_brand = curses_attribute(field);
     }
     else if (key == "always_greet")
     {
         // show greeting when reloading game
-        Options.always_greet = read_bool( field, Options.always_greet );
+        always_greet = read_bool( field, always_greet );
     }
     else if (key == "weapon")
     {
         // choose this weapon for classes that get choice
-        Options.weapon = str_to_weapon( field );
+        weapon = str_to_weapon( field );
+    }
+    else if (key == "book")
+    {
+	// choose this book for classes that get choice
+	book = str_to_book( field );
     }
     else if (key == "chaos_knight")
     {
         // choose god for Chaos Knights
         if (field == "xom")
-            Options.chaos_knight = GOD_XOM;
+            chaos_knight = GOD_XOM;
         else if (field == "makhleb")
-            Options.chaos_knight = GOD_MAKHLEB;
+            chaos_knight = GOD_MAKHLEB;
         else if (field == "random")
-            Options.chaos_knight = GOD_RANDOM;
+            chaos_knight = GOD_RANDOM;
     }
     else if (key == "death_knight")
     {
         if (field == "necromancy")
-            Options.death_knight = DK_NECROMANCY;
+            death_knight = DK_NECROMANCY;
         else if (field == "yredelemnul")
-            Options.death_knight = DK_YREDELEMNUL;
+            death_knight = DK_YREDELEMNUL;
         else if (field == "random")
-            Options.death_knight = DK_RANDOM;
+            death_knight = DK_RANDOM;
     }
     else if (key == "priest")
     {
         // choose this weapon for classes that get choice
         if (field == "zin")
-            Options.priest = GOD_ZIN;
+            priest = GOD_ZIN;
         else if (field == "yredelemnul")
-            Options.priest = GOD_YREDELEMNUL;
+            priest = GOD_YREDELEMNUL;
         else if (field == "random")
-            Options.priest = GOD_RANDOM;
+            priest = GOD_RANDOM;
     }
     else if (key == "fire_items_start")
     {
         if (isalpha( field[0] ))
-            Options.fire_items_start = letter_to_index( field[0] ); 
+            fire_items_start = letter_to_index( field[0] ); 
         else
         {
             fprintf( stderr, "Bad fire item start index -- %s\n",
@@ -1109,39 +1392,69 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "assign_item_slot")
     {
         if (field == "forward")
-            Options.assign_item_slot = SS_FORWARD;
+            assign_item_slot = SS_FORWARD;
         else if (field == "backward")
-            Options.assign_item_slot = SS_BACKWARD;
+            assign_item_slot = SS_BACKWARD;
     }
     else if (key == "fire_order")
     {
-        str_to_fire_order( field, Options.fire_order );
+        str_to_fire_order( field, fire_order );
     }
     else if (key == "random_pick")
     {
         // randomly generate character
-        Options.random_pick = read_bool( field, Options.random_pick );
+        random_pick = read_bool( field, random_pick );
     }
     else if (key == "remember_name")
     {
-        Options.remember_name = read_bool( field, Options.remember_name );
+        remember_name = read_bool( field, remember_name );
     }   
+    else if (key == "save_dir")
+    {
+        // If SAVE_DIR_PATH was defined, there are very likely security issues
+        // with allowing the user to specify a different directory.
+#ifndef SAVE_DIR_PATH
+        save_dir = field;
+#endif
+    }
     else if (key == "hp_warning")
     {
-        Options.hp_warning = atoi( field.c_str() );
-        if (Options.hp_warning < 0 || Options.hp_warning > 100)
+        hp_warning = atoi( field.c_str() );
+        if (hp_warning < 0 || hp_warning > 100)
         {
-            Options.hp_warning = 0;
+            hp_warning = 0;
             fprintf( stderr, "Bad HP warning percentage -- %s\n",
+                     field.c_str() );
+        }
+    }
+    else if (key == "ood_interesting")
+    {
+	ood_interesting = atoi( field.c_str() );
+    }
+    else if (key == "note_monsters")
+    {
+        append_vector(note_monsters, split_string(",", field));
+    }
+    else if (key == "note_messages")
+    {
+        append_vector(note_messages, split_string(",", field));
+    }
+    else if (key == "note_hp_percent")
+    {
+	note_hp_percent = atoi( field.c_str() );
+        if (note_hp_percent < 0 || note_hp_percent > 100)
+        {
+            note_hp_percent = 0;
+            fprintf( stderr, "Bad HP note percentage -- %s\n",
                      field.c_str() );
         }
     }
     else if (key == "hp_attention")
     {
-        Options.hp_attention = atoi( field.c_str() );
-        if (Options.hp_attention < 0 || Options.hp_attention > 100)
+        hp_attention = atoi( field.c_str() );
+        if (hp_attention < 0 || hp_attention > 100)
         {
-            Options.hp_attention = 0;
+            hp_attention = 0;
             fprintf( stderr, "Bad HP attention percentage -- %s\n",
                      field.c_str() );
         }
@@ -1155,158 +1468,242 @@ void parse_option_line(const std::string &str, bool runscript)
 
         if (SysEnv.crawl_dir)
         {
-            strncpy(SysEnv.crawl_dir, field.c_str(), kNameLen - 1);
-            SysEnv.crawl_dir[ kNameLen - 1 ] = '\0';
+            strncpy(SysEnv.crawl_dir, field.c_str(), kPathLen - 1);
+            SysEnv.crawl_dir[ kPathLen - 1 ] = 0;
         }
     }
     else if (key == "race")
     {
-        Options.race = str_to_race( field );
+        race = str_to_race( field );
 
-        if (Options.race == '\0')
+        if (race == 0)
             fprintf( stderr, "Unknown race choice: %s\n", field.c_str() );
     }
     else if (key == "class")
     {
-        Options.cls = str_to_class( field );
+        cls = str_to_class( field );
 
-        if (Options.cls == '\0')
+        if (cls == 0)
             fprintf( stderr, "Unknown class choice: %s\n", field.c_str() );
     }
     else if (key == "auto_list")
     {
-        Options.auto_list = read_bool( field, Options.auto_list );
+        auto_list = read_bool( field, auto_list );
+    }
+    else if (key == "confirm_self_target")
+    {
+	confirm_self_target = read_bool( field, confirm_self_target );
+    }
+    else if (key == "safe_autopickup")
+    {
+	safe_autopickup = read_bool( field, safe_autopickup );
+    }
+    else if (key == "use_notes")
+    {
+        use_notes = read_bool( field, use_notes );
+    }
+    else if (key == "note_skill_max")
+    {
+        note_skill_max = read_bool( field, note_skill_max );
+    }
+    else if (key == "note_all_spells")
+    {
+        note_all_spells = read_bool( field, note_all_spells );
     }
     else if (key == "delay_message_clear")
     {
-        Options.delay_message_clear = read_bool( field, Options.delay_message_clear );
+        delay_message_clear = read_bool( field, delay_message_clear );
     }
     else if (key == "terse_hand")
     {
-        Options.terse_hand = read_bool( field, Options.terse_hand );
+        terse_hand = read_bool( field, terse_hand );
+    }
+    else if (key == "increasing_skill_progress")
+    {
+        increasing_skill_progress = read_bool( field, increasing_skill_progress );
     }
     else if (key == "flush")
     {
         if (subkey == "failure")
         {
-            Options.flush_input[FLUSH_ON_FAILURE] 
-                = read_bool(field, Options.flush_input[FLUSH_ON_FAILURE]);
+            flush_input[FLUSH_ON_FAILURE] 
+                = read_bool(field, flush_input[FLUSH_ON_FAILURE]);
         }
         else if (subkey == "command")
         {
-            Options.flush_input[FLUSH_BEFORE_COMMAND] 
-                = read_bool(field, Options.flush_input[FLUSH_BEFORE_COMMAND]);
+            flush_input[FLUSH_BEFORE_COMMAND] 
+                = read_bool(field, flush_input[FLUSH_BEFORE_COMMAND]);
         }
         else if (subkey == "message")
         {
-            Options.flush_input[FLUSH_ON_MESSAGE] 
-                = read_bool(field, Options.flush_input[FLUSH_ON_MESSAGE]);
+            flush_input[FLUSH_ON_MESSAGE] 
+                = read_bool(field, flush_input[FLUSH_ON_MESSAGE]);
         }
         else if (subkey == "lua")
         {
-            Options.flush_input[FLUSH_LUA] 
-                = read_bool(field, Options.flush_input[FLUSH_LUA]);
+            flush_input[FLUSH_LUA] 
+                = read_bool(field, flush_input[FLUSH_LUA]);
         }
     }
     else if (key == "lowercase_invocations")
     {
-        Options.lowercase_invocations 
-                = read_bool(field, Options.lowercase_invocations);
+        lowercase_invocations 
+                = read_bool(field, lowercase_invocations);
     }
     else if (key == "wiz_mode")
     {
         // wiz_mode is recognized as a legal key in all compiles -- bwr
 #ifdef WIZARD
         if (field == "never")
-            Options.wiz_mode = WIZ_NEVER;
+            wiz_mode = WIZ_NEVER;
         else if (field == "no")
-            Options.wiz_mode = WIZ_NO;
+            wiz_mode = WIZ_NO;
         else if (field == "yes")
-            Options.wiz_mode = WIZ_YES;
+            wiz_mode = WIZ_YES;
         else
             fprintf(stderr, "Unknown wiz_mode option: %s\n", field.c_str());
 #endif
     }
     else if (key == "ban_pickup")
     {
-        append_vector(Options.banned_objects, split_string(",", field));
+        append_vector(banned_objects, split_string(",", field));
+    }
+    else if (key == "note_items")
+    {
+	append_vector(note_items, split_string(",", field));
+    }
+    else if (key == "autoinscribe")
+    {
+	std::vector<std::string> thesplit =
+	    split_string(":", field);
+	autoinscriptions.push_back(
+	    std::pair<text_pattern,std::string>(thesplit[0],
+						thesplit[1]));
+    }
+    else if (key == "map_file_name")
+    {
+	map_file_name = field;
+    }
+    else if (key == "note_skill_levels")
+    {
+	std::vector<std::string> thesplit = split_string(",", field);
+	for ( unsigned i = 0; i < thesplit.size(); ++i ) {
+	    int num = atoi(thesplit[i].c_str());
+	    if ( num > 0 && num <= 27 ) {
+		note_skill_levels.push_back(num);
+	    }
+	    else {
+		fprintf(stderr, "Bad skill level to note -- %s\n",
+			thesplit[i].c_str());
+		continue;
+	    }
+	}
     }
     else if (key == "pickup_thrown")
     {
-        Options.pickup_thrown = read_bool(field, Options.pickup_thrown);
+        pickup_thrown = read_bool(field, pickup_thrown);
     }
     else if (key == "pickup_dropped")
     {
-        Options.pickup_dropped = read_bool(field, Options.pickup_dropped);
+        pickup_dropped = read_bool(field, pickup_dropped);
     }
-    else if (key == "show_waypoints")
+#ifdef WIZARD
+    else if (key == "fsim_kit")
     {
-        Options.show_waypoints = read_bool(field, Options.show_waypoints);
+        append_vector(fsim_kit, split_string(",", field));
+    }
+    else if (key == "fsim_rounds")
+    {
+        fsim_rounds = atol(field.c_str());
+        if (fsim_rounds < 1000)
+            fsim_rounds = 1000;
+        if (fsim_rounds > 500000L)
+            fsim_rounds = 500000L;
+    }
+    else if (key == "fsim_mons")
+    {
+        fsim_mons = field;
+    }
+    else if (key == "fsim_str")
+    {
+        fsim_str = atoi(field.c_str());
+    }
+    else if (key == "fsim_int")
+    {
+        fsim_int = atoi(field.c_str());
+    }
+    else if (key == "fsim_dex")
+    {
+        fsim_dex = atoi(field.c_str());
+    }
+    else if (key == "fsim_xl")
+    {
+        fsim_xl = atoi(field.c_str());
+    }
+#endif // WIZARD
+    else if (key == "sort_menus")
+    {
+        sort_menus = read_bool(field, sort_menus);
     }
     else if (key == "travel_delay")
     {
         // Read travel delay in milliseconds.
-        Options.travel_delay = atoi( field.c_str() );
-        if (Options.travel_delay < -1)
-            Options.travel_delay = -1;
-        if (Options.travel_delay > 2000)
-            Options.travel_delay = 2000;
+        travel_delay = atoi( field.c_str() );
+        if (travel_delay < -1)
+            travel_delay = -1;
+        if (travel_delay > 2000)
+            travel_delay = 2000;
     }
     else if (key == "level_map_cursor_step")
     {
-        Options.level_map_cursor_step = atoi( field.c_str() );
-        if (Options.level_map_cursor_step < 1)
-            Options.level_map_cursor_step = 1;
-        if (Options.level_map_cursor_step > 50)
-            Options.level_map_cursor_step = 50;
+        level_map_cursor_step = atoi( field.c_str() );
+        if (level_map_cursor_step < 1)
+            level_map_cursor_step = 1;
+        if (level_map_cursor_step > 50)
+            level_map_cursor_step = 50;
     }
     else if (key == "macro_meta_entry")
     {
-        Options.macro_meta_entry = read_bool(field, Options.macro_meta_entry);
-    }
-    else if (key == "travel_stair_cost")
-    {
-        Options.travel_stair_cost = atoi( field.c_str() );
-        if (Options.travel_stair_cost < 1)
-            Options.travel_stair_cost = 1;
-        else if (Options.travel_stair_cost > 1000)
-            Options.travel_stair_cost = 1000;
+        macro_meta_entry = read_bool(field, macro_meta_entry);
     }
     else if (key == "travel_exclude_radius2")
     {
-        Options.travel_exclude_radius2 = atoi( field.c_str() );
-        if (Options.travel_exclude_radius2 < 0)
-            Options.travel_exclude_radius2 = 0;
-        else if (Options.travel_exclude_radius2 > 400)
-            Options.travel_exclude_radius2 = 400;
+        travel_exclude_radius2 = atoi( field.c_str() );
+        if (travel_exclude_radius2 < 0)
+            travel_exclude_radius2 = 0;
+        else if (travel_exclude_radius2 > 400)
+            travel_exclude_radius2 = 400;
     }
-    else if (key == "stop_travel")
+    else if (key == "stop_travel" || key == "travel_stop_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
-        for (int i = 0, count = fragments.size(); i < count; ++i) {
+        for (int i = 0, count = fragments.size(); i < count; ++i)
+        {
             if (fragments[i].length() == 0)
                 continue;
 
             std::string::size_type pos = fragments[i].find(":");
-            if (pos && pos != std::string::npos) {
+            if (pos && pos != std::string::npos)
+            {
                 std::string prefix = fragments[i].substr(0, pos);
                 int channel = str_to_channel( prefix );
-                if (channel != -1 || prefix == "any") {
+                if (channel != -1 || prefix == "any")
+                {
                     std::string s = fragments[i].substr( pos + 1 );
                     trim_string( s );
-                    Options.stop_travel.push_back(
+                    travel_stop_message.push_back(
                        message_filter( channel, s ) );
                     continue;
                 }
             }
 
-            Options.stop_travel.push_back(
+            travel_stop_message.push_back(
                     message_filter( fragments[i] ) );
         }
     }
     else if (key == "drop_filter")
     {
-        append_vector(Options.drop_filter, split_string(",", field));
+        append_vector(drop_filter, split_string(",", field));
     }
     else if (key == "travel_avoid_terrain")
     {
@@ -1314,48 +1711,64 @@ void parse_option_line(const std::string &str, bool runscript)
         for (int i = 0, count = seg.size(); i < count; ++i)
             prevent_travel_to( seg[i] );
     }
-    else if (key == "travel_colour")
+    else if (key == "tc_reachable")
     {
-        Options.travel_colour = read_bool(field, Options.travel_colour);
+        tc_reachable = str_to_colour(field, tc_reachable);
     }
-    else if (key == "item_colour")
+    else if (key == "tc_excluded")
     {
-        Options.item_colour = read_bool(field, Options.item_colour);
+        tc_excluded = str_to_colour(field, tc_excluded);
+    }
+    else if (key == "tc_exclude_circle")
+    {
+        tc_exclude_circle =
+            str_to_colour(field, tc_exclude_circle);
+    }
+    else if (key == "tc_dangerous")
+    {
+        tc_dangerous = str_to_colour(field, tc_dangerous);
+    }
+    else if (key == "tc_disconnected")
+    {
+        tc_disconnected = str_to_colour(field, tc_disconnected);
+    }
+    else if (key == "item_colour" || key == "item_color")
+    {
+        item_colour = read_bool(field, item_colour);
     }
     else if (key == "easy_exit_menu")
     {
-        Options.easy_exit_menu = read_bool(field, Options.easy_exit_menu);
+        easy_exit_menu = read_bool(field, easy_exit_menu);
     }
     else if (key == "dos_use_background_intensity")
     {
-        Options.dos_use_background_intensity = 
-            read_bool(field, Options.dos_use_background_intensity);
+        dos_use_background_intensity = 
+            read_bool(field, dos_use_background_intensity);
     }
     else if (key == "explore_stop")
     {
-        Options.explore_stop = ES_NONE;
+        explore_stop = ES_NONE;
         std::vector<std::string> stops = split_string(",", field);
         for (int i = 0, count = stops.size(); i < count; ++i)
         {
             const std::string &c = stops[i];
             if (c == "item" || c == "items")
-                Options.explore_stop |= ES_ITEM;
+                explore_stop |= ES_ITEM;
             else if (c == "shop" || c == "shops")
-                Options.explore_stop |= ES_SHOP;
+                explore_stop |= ES_SHOP;
             else if (c == "stair" || c == "stairs")
-                Options.explore_stop |= ES_STAIR;
+                explore_stop |= ES_STAIR;
             else if (c == "altar" || c == "altars")
-                Options.explore_stop |= ES_ALTAR;
+                explore_stop |= ES_ALTAR;
         }
     }
 #ifdef STASH_TRACKING
     else if (key == "stash_tracking")
     {
-        Options.stash_tracking =
-             field == "explicit"? STM_EXPLICIT :
+        stash_tracking =
              field == "dropped" ? STM_DROPPED  :
              field == "all"     ? STM_ALL      :
-                                  STM_NONE;
+                                  STM_EXPLICIT;
     }
     else if (key == "stash_filter")
     {
@@ -1374,7 +1787,7 @@ void parse_option_line(const std::string &str, bool runscript)
                 sound_mapping mapping;
                 mapping.pattern = sub.substr(0, cpos);
                 mapping.soundfile = sub.substr(cpos + 1);
-                Options.sound_mappings.push_back(mapping);
+                sound_mappings.push_back(mapping);
             }
         }
     }
@@ -1389,13 +1802,20 @@ void parse_option_line(const std::string &str, bool runscript)
                 mapping.pattern = sub.substr(cpos + 1);
                 mapping.colour  = str_to_colour(sub.substr(0, cpos));
                 if (mapping.colour != -1)
-                    Options.menu_colour_mappings.push_back(mapping);
+                    menu_colour_mappings.push_back(mapping);
             }
         }
     }
+    else if (key == "dump_order")
+    {
+        if (!plus_equal)
+            dump_order.clear();
+
+        add_dump_fields(field);
+    }
     else if (key == "dump_kill_places") 
     {
-        Options.dump_kill_places =
+        dump_kill_places =
             field == "none"? KDO_NO_PLACES :
             field == "all" ? KDO_ALL_PLACES :
                              KDO_ONE_PLACE;
@@ -1417,66 +1837,66 @@ void parse_option_line(const std::string &str, bool runscript)
     else if (key == "dump_message_count")
     {
         // Capping is implicit
-        Options.dump_message_count = atoi( field.c_str() );
+        dump_message_count = atoi( field.c_str() );
     }
     else if (key == "dump_item_origins")
     {
-        Options.dump_item_origins = IODS_PRICE;
+        dump_item_origins = IODS_PRICE;
         std::vector<std::string> choices = split_string(",", field);
         for (int i = 0, count = choices.size(); i < count; ++i)
         {
             const std::string &ch = choices[i];
             if (ch == "artifacts")
-                Options.dump_item_origins |= IODS_ARTIFACTS;
+                dump_item_origins |= IODS_ARTIFACTS;
             else if (ch == "ego_arm" || ch == "ego armour" 
                     || ch == "ego_armour")
-                Options.dump_item_origins |= IODS_EGO_ARMOUR;
+                dump_item_origins |= IODS_EGO_ARMOUR;
             else if (ch == "ego_weap" || ch == "ego weapon" 
                     || ch == "ego_weapon" || ch == "ego weapons"
                     || ch == "ego_weapons")
-                Options.dump_item_origins |= IODS_EGO_WEAPON;
+                dump_item_origins |= IODS_EGO_WEAPON;
             else if (ch == "jewellery" || ch == "jewelry")
-                Options.dump_item_origins |= IODS_JEWELLERY;
+                dump_item_origins |= IODS_JEWELLERY;
             else if (ch == "runes")
-                Options.dump_item_origins |= IODS_RUNES;
+                dump_item_origins |= IODS_RUNES;
             else if (ch == "rods")
-                Options.dump_item_origins |= IODS_RODS;
+                dump_item_origins |= IODS_RODS;
             else if (ch == "staves")
-                Options.dump_item_origins |= IODS_STAVES;
+                dump_item_origins |= IODS_STAVES;
             else if (ch == "books")
-                Options.dump_item_origins |= IODS_BOOKS;
+                dump_item_origins |= IODS_BOOKS;
             else if (ch == "all" || ch == "everything")
-                Options.dump_item_origins = IODS_EVERYTHING;
+                dump_item_origins = IODS_EVERYTHING;
         }
     }
     else if (key == "dump_item_origin_price")
     {
-        Options.dump_item_origin_price = atoi( field.c_str() );
-        if (Options.dump_item_origin_price < -1)
-            Options.dump_item_origin_price = -1;
+        dump_item_origin_price = atoi( field.c_str() );
+        if (dump_item_origin_price < -1)
+            dump_item_origin_price = -1;
+    }
+    else if (key == "safe_zero_exp")
+    {
+	safe_zero_exp = read_bool(field, safe_zero_exp);
     }
     else if (key == "target_zero_exp")
     {
-        Options.target_zero_exp = read_bool(field, Options.target_zero_exp);
-    }
-    else if (key == "target_wrap")
-    {
-        Options.target_wrap = read_bool(field, Options.target_wrap);
+        target_zero_exp = read_bool(field, target_zero_exp);
     }
     else if (key == "target_oos")
     {
-        Options.target_oos = read_bool(field, Options.target_oos);
+        target_oos = read_bool(field, target_oos);
     }
     else if (key == "target_los_first")
     {
-        Options.target_los_first = read_bool(field, Options.target_los_first);
+        target_los_first = read_bool(field, target_los_first);
     }
     else if (key == "drop_mode")
     {
         if (field.find("multi") != std::string::npos)
-            Options.drop_mode = DM_MULTI;
+            drop_mode = DM_MULTI;
         else
-            Options.drop_mode = DM_SINGLE;
+            drop_mode = DM_SINGLE;
     }
     // Catch-all else, copies option into map
     else
@@ -1490,7 +1910,7 @@ void parse_option_line(const std::string &str, bool runscript)
             if (clua.error.length())
                 mpr(clua.error.c_str());
 #endif
-            Options.named_options[key] = orig_field;
+            named_options[key] = orig_field;
         }
     }
 }
@@ -1530,8 +1950,19 @@ static const char *cmd_ops[] = { "scores", "name", "race", "class",
 const int num_cmd_ops = 10;
 bool arg_seen[num_cmd_ops];
 
+static void set_crawl_path(const std::string &path)
+{
+    const std::string::size_type slash = path.rfind(FILE_SEPARATOR);
+    SysEnv.crawl_executable_path = 
+        slash != std::string::npos? path.substr(0, slash + 1)
+                                  : std::string("");
+}
+
 bool parse_args( int argc, char **argv, bool rc_only )
 {
+    if (argc >= 1)
+        set_crawl_path(argv[0]);
+
     if (argc < 2)           // no args!
         return (true);
 
@@ -1630,10 +2061,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 return (false);
 
             if (!rc_only)
-            {
-                strncpy(you.your_name, next_arg, kNameLen);
-                you.your_name[ kNameLen - 1 ] = '\0';
-            }
+                Options.player_name = next_arg;
 
             nextUsed = true;
             break;
@@ -1673,12 +2101,8 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
             if (!rc_only)
             {
-                viewwindow = &viewwindow3;
-                mapch = &mapchar3;
-                mapch2 = &mapchar4;
-#ifdef UNIX
-                character_set = 0;
-#endif
+                Options.char_set = CSET_ASCII;
+                init_char_table(Options.char_set);
             }
             break;
 
@@ -1708,4 +2132,62 @@ bool parse_args( int argc, char **argv, bool rc_only )
     }
 
     return (true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// game_options
+
+int game_options::o_int(const char *name, int def) const
+{
+    int val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+    {
+        val = atoi(i->second.c_str());
+    }
+    return (val);
+}
+
+long game_options::o_long(const char *name, long def) const
+{
+    long val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+    {
+        const char *s = i->second.c_str();
+        char *es = NULL;
+        long num = strtol(s, &es, 10);
+        if (s != (const char *) es && es)
+            val = num;
+    }
+    return (val);
+}
+
+bool game_options::o_bool(const char *name, bool def) const
+{
+    bool val = def;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+        val = read_bool(i->second, val);
+    return (val);
+}
+
+std::string game_options::o_str(const char *name, const char *def) const
+{
+    std::string val;
+    opt_map::const_iterator i = named_options.find(name);
+    if (i != named_options.end())
+        val = i->second;
+    else if (def)
+        val = def;
+    return (val);
+}
+
+int game_options::o_colour(const char *name, int def) const
+{
+    std::string val = o_str(name);
+    trim_string(val);
+    tolower_string(val);
+    int col = str_to_colour(val);
+    return (col == -1? def : col);
 }

@@ -3,6 +3,8 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -15,6 +17,8 @@
 
 // useful macro
 #define SAME_ATTITUDE(x) (mons_friendly(x)?BEH_FRIENDLY:BEH_HOSTILE)
+
+#define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
 
 // for definition of type monsters {dlb}
 #include "externs.h"
@@ -65,7 +69,7 @@ bool curse_an_item(char which, char power);
 /* ***********************************************************************
  * called from: fight
  * *********************************************************************** */
-void monster_blink(struct monsters *monster);
+bool monster_blink(struct monsters *monster);
 
 
 /* ***********************************************************************
@@ -131,7 +135,7 @@ bool message_current_target(void);
 /* ***********************************************************************
  * called from: xxx
  * *********************************************************************** */
-unsigned int monster_index(struct monsters *monster);
+unsigned int monster_index(const monsters *monster);
 
 
 // last updated 08jun2000 {dlb}
@@ -147,5 +151,11 @@ bool hurt_monster(struct monsters *victim, int damage_dealt);
  * *********************************************************************** */
 bool heal_monster(struct monsters *patient, int health_boost, bool permit_growth);
 
+/* ***********************************************************************
+ * called from: monplace - spells2 - view
+ * *********************************************************************** */
+void seen_monster(struct monsters *monster);
+
+bool shift_monster( struct monsters *mon, int x = 0, int y = 0 );
 
 #endif

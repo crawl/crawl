@@ -3,6 +3,8 @@
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -14,6 +16,7 @@
 
 
 #include "externs.h"
+#include "travel.h"
 
 // last updated 08jan2001 {gdl}
 /* ***********************************************************************
@@ -54,7 +57,8 @@ void down_stairs(bool remove_stairs, int old_level, bool force = false);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void fall_into_a_pool(bool place, unsigned char grype);
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+                       unsigned char terrain );
 
 
 // last updated 12may2000 {dlb}
@@ -131,5 +135,45 @@ void weird_writing(char stringy[40]);
  * *********************************************************************** */
 unsigned char trap_category(unsigned char trap_type);
 
+bool grid_is_wall(int grid);
+bool grid_is_opaque(int grid);
+bool grid_is_solid(int grid);
+bool grid_is_water(int grid);
+god_type grid_altar_god( unsigned char grid );
+bool grid_is_branch_stairs( unsigned char grid );
+int grid_secret_door_appearance( int gx, int gy );
+bool grid_destroys_items( int grid );
+
+const char *grid_item_destruction_message( unsigned char grid );
+
+void curare_hits_player(int agent, int degree);
+
+bool i_feel_safe();
+
+//////////////////////////////////////////////////////////////////////
+// Places and names
+//
+unsigned short get_packed_place();
+
+unsigned short get_packed_place( unsigned char branch, int subdepth,
+                          char level_type );
+
+std::string short_place_name(unsigned short place);
+std::string short_place_name(level_id id);
+std::string place_name( unsigned short place, bool long_name = false,
+                        bool include_number = true );
+
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned short packed_place);
+std::string prep_branch_level_name();
+
+// Get displayable depth in the current branch, given the absolute
+// depth.
+int subdungeon_depth(unsigned char branch, int depth);
+
+// Get absolute depth given the displayable depth in the branch.
+int absdungeon_depth(unsigned char branch, int subdepth);
+//////////////////////////////////////////////////////////////////////
 
 #endif

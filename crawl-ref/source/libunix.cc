@@ -63,14 +63,11 @@ static struct termios game_term;
 #endif
 
 // Character set variable
-int character_set = CHARACTER_SET;
+int Character_Set = CHARACTER_SET;
 
 // Globals holding current text/backg. colors
 short FG_COL = WHITE;
 short BG_COL = BLACK;
-
-// a lookup table to convert keypresses to command enums
-static int key_to_command_table[KEY_MAX];
 
 static unsigned int convert_to_curses_attr( int chattr )
 {
@@ -150,10 +147,18 @@ static short translate_colour( short col )
     }
 }
 
+void set_altcharset( bool alt_on )
+{
+    Character_Set = ((alt_on) ? A_ALTCHARSET : 0);
+}
+
+bool get_altcharset( void )
+{
+    return (Character_Set != 0);
+}
 
 static void setup_colour_pairs( void )
 {
-
     short i, j;
 
     for (i = 0; i < 8; i++)
@@ -192,8 +197,10 @@ static void termio_init()
 int getch_ck() {
     int c = getch();
     switch (c) {
+    // [dshaligram] MacOS ncurses returns 127 for backspace.
+    case 127:
     case KEY_BACKSPACE: return CK_BKSP;
-    case KEY_DC:    return CK_DELETE;                      
+    case KEY_DC:    return CK_DELETE;
     case KEY_HOME:  return CK_HOME;
     case KEY_PPAGE: return CK_PGUP;
     case KEY_END:   return CK_END;
@@ -204,188 +211,6 @@ int getch_ck() {
     case KEY_RIGHT: return CK_RIGHT;
     default:        return c;
     }
-}
-
-void init_key_to_command()
-{
-    int i;
-
-    // initialize to "do nothing"
-    for (i = 0; i < KEY_MAX; i++)
-    {
-        key_to_command_table[i] = CMD_NO_CMD;
-    }
-
-    // lower case
-    key_to_command_table[(int) 'a'] = CMD_USE_ABILITY;
-    key_to_command_table[(int) 'b'] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table[(int) 'c'] = CMD_CLOSE_DOOR;
-    key_to_command_table[(int) 'd'] = CMD_DROP;
-    key_to_command_table[(int) 'e'] = CMD_EAT;
-    key_to_command_table[(int) 'f'] = CMD_FIRE;
-    key_to_command_table[(int) 'g'] = CMD_PICKUP;
-    key_to_command_table[(int) 'h'] = CMD_MOVE_LEFT;
-    key_to_command_table[(int) 'i'] = CMD_DISPLAY_INVENTORY;
-    key_to_command_table[(int) 'j'] = CMD_MOVE_DOWN;
-    key_to_command_table[(int) 'k'] = CMD_MOVE_UP;
-    key_to_command_table[(int) 'l'] = CMD_MOVE_RIGHT;
-    key_to_command_table[(int) 'm'] = CMD_DISPLAY_SKILLS;
-    key_to_command_table[(int) 'n'] = CMD_MOVE_DOWN_RIGHT;
-    key_to_command_table[(int) 'o'] = CMD_OPEN_DOOR;
-    key_to_command_table[(int) 'p'] = CMD_PRAY;
-    key_to_command_table[(int) 'q'] = CMD_QUAFF;
-    key_to_command_table[(int) 'r'] = CMD_READ;
-    key_to_command_table[(int) 's'] = CMD_SEARCH;
-    key_to_command_table[(int) 't'] = CMD_THROW;
-    key_to_command_table[(int) 'u'] = CMD_MOVE_UP_RIGHT;
-    key_to_command_table[(int) 'v'] = CMD_EXAMINE_OBJECT;
-    key_to_command_table[(int) 'w'] = CMD_WIELD_WEAPON;
-    key_to_command_table[(int) 'x'] = CMD_LOOK_AROUND;
-    key_to_command_table[(int) 'y'] = CMD_MOVE_UP_LEFT;
-    key_to_command_table[(int) 'z'] = CMD_ZAP_WAND;
-
-    // upper case
-    key_to_command_table[(int) 'A'] = CMD_DISPLAY_MUTATIONS;
-    key_to_command_table[(int) 'B'] = CMD_RUN_DOWN_LEFT;
-    key_to_command_table[(int) 'C'] = CMD_EXPERIENCE_CHECK;
-    key_to_command_table[(int) 'D'] = CMD_BUTCHER;
-    key_to_command_table[(int) 'E'] = CMD_EVOKE;
-    key_to_command_table[(int) 'F'] = CMD_NO_CMD;
-    key_to_command_table[(int) 'G'] = CMD_NO_CMD;
-    key_to_command_table[(int) 'H'] = CMD_RUN_LEFT;
-    key_to_command_table[(int) 'I'] = CMD_OBSOLETE_INVOKE;
-    key_to_command_table[(int) 'J'] = CMD_RUN_DOWN;
-    key_to_command_table[(int) 'K'] = CMD_RUN_UP;
-    key_to_command_table[(int) 'L'] = CMD_RUN_RIGHT;
-    key_to_command_table[(int) 'M'] = CMD_MEMORISE_SPELL;
-    key_to_command_table[(int) 'N'] = CMD_RUN_DOWN_RIGHT;
-    key_to_command_table[(int) 'O'] = CMD_DISPLAY_OVERMAP;
-    key_to_command_table[(int) 'P'] = CMD_WEAR_JEWELLERY;
-    key_to_command_table[(int) 'Q'] = CMD_QUIT;
-    key_to_command_table[(int) 'R'] = CMD_REMOVE_JEWELLERY;
-    key_to_command_table[(int) 'S'] = CMD_SAVE_GAME;
-    key_to_command_table[(int) 'T'] = CMD_REMOVE_ARMOUR;
-    key_to_command_table[(int) 'U'] = CMD_RUN_UP_RIGHT;
-    key_to_command_table[(int) 'V'] = CMD_GET_VERSION;
-    key_to_command_table[(int) 'W'] = CMD_WEAR_ARMOUR;
-    key_to_command_table[(int) 'X'] = CMD_DISPLAY_MAP;
-    key_to_command_table[(int) 'Y'] = CMD_RUN_UP_LEFT;
-    key_to_command_table[(int) 'Z'] = CMD_CAST_SPELL;
-
-    // control
-    key_to_command_table[ (int) CONTROL('A') ] = CMD_TOGGLE_AUTOPICKUP;
-    key_to_command_table[ (int) CONTROL('B') ] = CMD_OPEN_DOOR_DOWN_LEFT;
-    key_to_command_table[ (int) CONTROL('C') ] = CMD_CLEAR_MAP;
-
-#ifdef ALLOW_DESTROY_ITEM_COMMAND
-    key_to_command_table[ (int) CONTROL('D') ] = CMD_DESTROY_ITEM;
-#else
-    key_to_command_table[ (int) CONTROL('D') ] = CMD_NO_CMD;
-#endif
-
-    key_to_command_table[ (int) CONTROL('E') ] = CMD_FORGET_STASH;
-    key_to_command_table[ (int) CONTROL('F') ] = CMD_SEARCH_STASHES;
-    key_to_command_table[ (int) CONTROL('G') ] = CMD_INTERLEVEL_TRAVEL;
-    key_to_command_table[ (int) CONTROL('H') ] = CMD_OPEN_DOOR_LEFT;
-    key_to_command_table[ (int) CONTROL('I') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('J') ] = CMD_OPEN_DOOR_DOWN;
-    key_to_command_table[ (int) CONTROL('K') ] = CMD_OPEN_DOOR_UP;
-    key_to_command_table[ (int) CONTROL('L') ] = CMD_OPEN_DOOR_RIGHT;
-    key_to_command_table[ (int) CONTROL('M') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('N') ] = CMD_OPEN_DOOR_DOWN_RIGHT;
-    key_to_command_table[ (int) CONTROL('O') ] = CMD_EXPLORE;
-    key_to_command_table[ (int) CONTROL('P') ] = CMD_REPLAY_MESSAGES;
-    key_to_command_table[ (int) CONTROL('Q') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('R') ] = CMD_REDRAW_SCREEN;
-    key_to_command_table[ (int) CONTROL('S') ] = CMD_MARK_STASH;
-    key_to_command_table[ (int) CONTROL('T') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('U') ] = CMD_OPEN_DOOR_UP_LEFT;
-    key_to_command_table[ (int) CONTROL('V') ] = CMD_NO_CMD;
-    key_to_command_table[ (int) CONTROL('W') ] = CMD_FIX_WAYPOINT;
-    key_to_command_table[ (int) CONTROL('X') ] = CMD_SAVE_GAME_NOW;
-    key_to_command_table[ (int) CONTROL('Y') ] = CMD_OPEN_DOOR_UP_RIGHT;
-    key_to_command_table[ (int) CONTROL('Z') ] = CMD_SUSPEND_GAME;
-
-    // other printables
-    key_to_command_table[(int) '.'] = CMD_MOVE_NOWHERE;
-    key_to_command_table[(int) '<'] = CMD_GO_UPSTAIRS;
-    key_to_command_table[(int) '>'] = CMD_GO_DOWNSTAIRS;
-    key_to_command_table[(int) '@'] = CMD_DISPLAY_CHARACTER_STATUS;
-    key_to_command_table[(int) ','] = CMD_PICKUP;
-    key_to_command_table[(int) ':'] = CMD_NO_CMD;
-    key_to_command_table[(int) ';'] = CMD_INSPECT_FLOOR;
-    key_to_command_table[(int) '!'] = CMD_SHOUT;
-    key_to_command_table[(int) '^'] = CMD_DISPLAY_RELIGION;
-    key_to_command_table[(int) '#'] = CMD_CHARACTER_DUMP;
-    key_to_command_table[(int) '='] = CMD_ADJUST_INVENTORY;
-    key_to_command_table[(int) '?'] = CMD_DISPLAY_COMMANDS;
-    key_to_command_table[(int) '`'] = CMD_MACRO_ADD;
-    key_to_command_table[(int) '~'] = CMD_MACRO_SAVE;
-    key_to_command_table[(int) '&'] = CMD_WIZARD;
-    key_to_command_table[(int) '"'] = CMD_LIST_JEWELLERY;
-
-
-    // I'm making this both, because I'm tried of changing it
-    // back to '[' (the character that represents armour on the map) -- bwr
-    key_to_command_table[(int) '['] = CMD_LIST_ARMOUR;
-    key_to_command_table[(int) ']'] = CMD_LIST_ARMOUR;
-
-    // This one also ended up backwards this time, so it's also going on
-    // both now -- should be ')'... the same character that's used to
-    // represent weapons.
-    key_to_command_table[(int) ')'] = CMD_LIST_WEAPONS;
-    key_to_command_table[(int) '('] = CMD_LIST_WEAPONS;
-
-    key_to_command_table[(int) '\\'] = CMD_DISPLAY_KNOWN_OBJECTS;
-    key_to_command_table[(int) '\''] = CMD_WEAPON_SWAP;
-
-    // digits
-    key_to_command_table[(int) '0'] = CMD_NO_CMD;
-    key_to_command_table[(int) '1'] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table[(int) '2'] = CMD_MOVE_DOWN;
-    key_to_command_table[(int) '3'] = CMD_MOVE_DOWN_RIGHT;
-    key_to_command_table[(int) '4'] = CMD_MOVE_LEFT;
-    key_to_command_table[(int) '5'] = CMD_REST;
-    key_to_command_table[(int) '6'] = CMD_MOVE_RIGHT;
-    key_to_command_table[(int) '7'] = CMD_MOVE_UP_LEFT;
-    key_to_command_table[(int) '8'] = CMD_MOVE_UP;
-    key_to_command_table[(int) '9'] = CMD_MOVE_UP_RIGHT;
-
-    // keypad
-    key_to_command_table[KEY_A1] = CMD_MOVE_UP_LEFT;
-    key_to_command_table[KEY_A3] = CMD_MOVE_UP_RIGHT;
-    key_to_command_table[KEY_C1] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table[KEY_C3] = CMD_MOVE_DOWN_RIGHT;
-
-    key_to_command_table[KEY_HOME] = CMD_MOVE_UP_LEFT;
-    key_to_command_table[KEY_PPAGE] = CMD_MOVE_UP_RIGHT;
-    key_to_command_table[KEY_END] = CMD_MOVE_DOWN_LEFT;
-    key_to_command_table[KEY_NPAGE] = CMD_MOVE_DOWN_RIGHT;
-
-    key_to_command_table[KEY_B2] = CMD_REST;
-
-    key_to_command_table[KEY_UP] = CMD_MOVE_UP;
-    key_to_command_table[KEY_DOWN] = CMD_MOVE_DOWN;
-    key_to_command_table[KEY_LEFT] = CMD_MOVE_LEFT;
-    key_to_command_table[KEY_RIGHT] = CMD_MOVE_RIGHT;
-
-
-    // other odd things
-    // key_to_command_table[ 263 ] = CMD_OPEN_DOOR_LEFT;   // backspace
-
-    // these are invalid keys, but to help kludge running
-    // pass them through unmolested
-    key_to_command_table[128] = 128;
-    key_to_command_table[(int) '*'] = '*';
-}
-
-int key_to_command(int keyin)
-{
-    bool is_userfunction(int key);
-
-    if (is_userfunction(keyin))
-        return keyin;
-    return (key_to_command_table[keyin]);
 }
 
 void unixcurses_startup( void )
@@ -424,12 +249,7 @@ void unixcurses_startup( void )
     start_color();
     setup_colour_pairs();
 
-    init_key_to_command();
-
-#ifndef SOLARIS
-    // These can cause some display problems under Solaris
     scrollok(stdscr, TRUE);
-#endif
 }
 
 
@@ -575,6 +395,11 @@ int get_number_of_lines_from_curses(void)
     return (LINES);
 }
 
+int get_number_of_cols_from_curses(void)
+{
+    return (COLS);
+}
+
 void get_input_line_from_curses( char *const buff, int len )
 {
     echo();
@@ -605,7 +430,13 @@ inline unsigned get_brand(int col)
            (col & COLFLAG_ITEM_HEAP)?           Options.heap_brand :
            (col & COLFLAG_WILLSTAB)?            Options.stab_brand :
            (col & COLFLAG_MAYSTAB)?             Options.may_stab_brand :
+           (col & COLFLAG_REVERSE)?             CHATTR_REVERSE :
                                                 CHATTR_NORMAL;    
+}
+
+void textattr(int col)
+{
+    textcolor(col);
 }
 
 void textcolor(int col)
@@ -660,7 +491,7 @@ void textcolor(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | character_set );
+    attrset( COLOR_PAIR(pair) | flags | Character_Set );
 }
 
 
@@ -715,7 +546,7 @@ void textbackground(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | character_set );
+    attrset( COLOR_PAIR(pair) | flags | Character_Set );
 }
 
 

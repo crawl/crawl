@@ -3,6 +3,8 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      06-mar-2000    bwr             confusing_touch, sure_blade
@@ -29,6 +31,7 @@
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -40,9 +43,8 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
-void blink(void)
+int blink(void)
 {
     struct dist beam;
 
@@ -65,12 +67,12 @@ void blink(void)
         {
             mpr("Blink to where?", MSGCH_PROMPT);
 
-            direction( beam, DIR_TARGET );
+            direction( beam, DIR_TARGET, TARG_ANY, true );
 
             if (!beam.isValid)
             {
-                canned_msg(MSG_SPELL_FIZZLES);
-                return;         // early return {dlb}
+                canned_msg(MSG_OK);
+                return (-1);         // early return {dlb}
             }
 
             if (see_grid(beam.tx, beam.ty))
@@ -82,7 +84,7 @@ void blink(void)
             }
         }
 
-        if (grd[beam.tx][beam.ty] <= DNGN_LAST_SOLID_TILE
+        if (grid_is_solid(grd[beam.tx][beam.ty])
             || mgrd[beam.tx][beam.ty] != NON_MONSTER)
         {
             mpr("Oops! Maybe something was there already.");
@@ -109,7 +111,7 @@ void blink(void)
         }
     }
 
-    return;
+    return (1);
 }                               // end blink()
 
 void random_blink(bool allow_partial_control)
@@ -130,7 +132,7 @@ void random_blink(bool allow_partial_control)
 
 #ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: add back control, but effect is cast_semi_controlled_blink(pow)
-    else if (you.attribute[ATTR_CONTROL_TELEPORT] && !you.conf
+    else if (player_control_teleport() && !you.conf
              && allow_partial_control && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
@@ -163,7 +165,7 @@ void random_blink(bool allow_partial_control)
     return;
 }                               // end random_blink()
 
-void fireball(int power)
+int fireball(int power)
 {
     struct dist fire_ball;
 
@@ -171,41 +173,42 @@ void fireball(int power)
 
     message_current_target();
 
-    direction( fire_ball, DIR_NONE, TARG_ENEMY );
+    direction( fire_ball, DIR_NONE, TARG_ENEMY, true );
 
     if (!fire_ball.isValid)
-        canned_msg(MSG_SPELL_FIZZLES);
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
     else
     {
         struct bolt beam;
 
         beam.source_x = you.x_pos;
         beam.source_y = you.y_pos;
-        beam.target_x = fire_ball.tx;
-        beam.target_y = fire_ball.ty;
+        beam.set_target(fire_ball);
 
         zapping(ZAP_FIREBALL, power, beam);
     }
 
-    return;
+    return (1);
 }                               // end fireball()
 
-void cast_fire_storm(int powc)
+int cast_fire_storm(int powc)
 {
     struct bolt beam;
     struct dist targ;
 
     mpr("Where?");
 
-    direction( targ, DIR_TARGET, TARG_ENEMY );
+    direction( targ, DIR_TARGET, TARG_ENEMY, true );
 
-    beam.target_x = targ.tx;
-    beam.target_y = targ.ty;
+    beam.set_target(targ);
 
     if (!targ.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     beam.ex_size = 2 + (random2(powc) > 75);
@@ -214,12 +217,13 @@ void cast_fire_storm(int powc)
     beam.colour = RED;
     beam.beam_source = MHITYOU;
     beam.thrower = KILL_YOU_MISSILE;
-    beam.aux_source = NULL;
-    beam.obviousEffect = false;
-    beam.isBeam = false;
-    beam.isTracer = false;
+    beam.aux_source.clear();
+    beam.obvious_effect = false;
+    beam.is_beam = false;
+    beam.is_tracer = false;
+    beam.is_explosion = true;
     beam.ench_power = powc;     // used for radius
-    strcpy( beam.beam_name, "great blast of fire" );
+    beam.name = "great blast of fire";
     beam.hit = 20 + powc / 10;
     beam.damage = calc_dice( 6, 15 + powc );
 
@@ -227,7 +231,163 @@ void cast_fire_storm(int powc)
     mpr("A raging storm of fire appears!");
 
     viewwindow(1, false);
+
+    return (1);
 }                               // end cast_fire_storm()
+
+
+void cast_chain_lightning( int powc )
+{
+    struct bolt beam;
+
+    // initialize beam structure
+    beam.name = "lightning arc";
+    beam.aux_source = "chain lightning";
+    beam.beam_source = MHITYOU;
+    beam.thrower = KILL_YOU_MISSILE;
+    beam.range = 8;
+    beam.rangeMax = 8;
+    beam.hit = AUTOMATIC_HIT;
+    beam.type = SYM_ZAP;
+    beam.flavour = BEAM_ELECTRICITY;
+    beam.obvious_effect = true;
+    beam.is_beam = false;            // since we want to stop at our target
+    beam.is_explosion = false;
+    beam.is_tracer = false;
+
+    int sx, sy;
+    int tx, ty;
+    int i;
+
+    for (sx = you.x_pos, sy = you.y_pos; 
+         powc > 0; 
+         powc -= 8 + random2(13), sx = tx, sy = ty)
+    {
+        // infinity as far as this spell is concerned
+        // (Range - 1) is used because the distance is randomized and
+        // may be shifted by one.
+        int min_dist = MONSTER_LOS_RANGE - 1;
+
+        int dist;
+        int count = 0;
+
+        tx = -1;
+        ty = -1;
+
+        for (i = 0; i < MAX_MONSTERS; i++)
+        {
+            struct monsters *monster = &menv[i];
+
+            if (monster->type == -1)
+                continue;
+
+            dist = grid_distance( sx, sy, monster->x, monster->y );
+
+            // check for the source of this arc
+            if (!dist) 
+                continue;
+                
+            // randomize distance (arcs don't care about a couple of feet)
+            dist += (random2(3) - 1);
+
+            // always ignore targets further than current one 
+            if (dist > min_dist)
+                continue;
+
+            if (!check_line_of_sight( sx, sy, monster->x, monster->y ))
+                continue;
+
+            count++;
+
+            if (dist < min_dist)
+            {
+                // switch to looking for closer targets (but not always)
+                if (!one_chance_in(10))
+                {
+                    min_dist = dist;
+                    tx = monster->x;
+                    ty = monster->y;
+                    count = 0;
+                }
+            }
+            else if (tx == -1 || one_chance_in( count ))
+            {
+                // either first target, or new selected target at min_dist
+                tx = monster->x;
+                ty = monster->y;
+                
+                // need to set min_dist for first target case
+                if (dist < min_dist)
+                    min_dist = dist;
+            }
+        }
+
+        // now check if the player is a target:
+        dist = grid_distance( sx, sy, you.x_pos, you.y_pos );
+
+        if (dist)       // ie player was not the source
+        {
+            // distance randomized (as above)
+            dist += (random2(3) - 1);
+
+            // select player if only, closest, or randomly selected
+            if ((tx == -1 
+                    || dist < min_dist
+                    || (dist == min_dist && one_chance_in( count + 1 )))
+                && check_line_of_sight( sx, sy, you.x_pos, you.y_pos ))
+            {
+                tx = you.x_pos;
+                ty = you.y_pos;
+            }
+        }
+
+        const bool see_source = see_grid( sx, sy );
+        const bool see_targ   = see_grid( tx, ty );
+
+        if (tx == -1)
+        {
+            if (see_source)
+                mpr( "The lightning grounds out." );
+
+            break;
+        }
+
+        // Trying to limit message spamming here so we'll only mention
+        // the thunder when it's out of LoS.
+        if (noisy( 25, sx, sy ) && !see_source)
+            mpr( "You hear a mighty clap of thunder!", MSGCH_SOUND );
+
+        if (see_source && !see_targ)
+            mpr( "The lightning arcs out of your line of sight!" );
+        else if (!see_source && see_targ)
+            mpr( "The lightning arc suddenly appears!" );
+
+        if (!see_targ)
+        {
+            // It's no longer in the caster's LOS and influence.
+            powc = powc / 2 + 1;
+        }
+
+        beam.source_x = sx;
+        beam.source_y = sy;
+        beam.target_x = tx;
+        beam.target_y = ty;
+        beam.colour = LIGHTBLUE;
+        beam.damage = calc_dice( 5, 12 + powc * 2 / 3 );
+
+        // Be kinder to the player
+        if (tx == you.x_pos && ty == you.y_pos)
+        {
+            if (!(beam.damage.num /= 2))
+                beam.damage.num = 1;
+            if ((beam.damage.size /= 2) < 3)
+                beam.damage.size = 3;
+        }
+        fire_beam( beam );
+    }
+
+    more();
+}
 
 void identify(int power)
 {
@@ -241,8 +401,8 @@ void identify(int power)
 
     do
     {
-        item_slot = prompt_invent_item( "Identify which item?", -1, true, 
-                                        false, false );
+        item_slot = prompt_invent_item( "Identify which item?", MT_INVSELECT,
+                                        -1, true, true, false );
         if (item_slot == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -257,16 +417,18 @@ void identify(int power)
         // output identified item
         in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
         mpr( str_pass );
-
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
         id_used--;
+
+        if (Options.auto_list && id_used > 0)
+            more();
     }
     while (id_used > 0);
 }                               // end identify()
 
-void conjure_flame(int pow)
+int conjure_flame(int pow)
 {
     struct dist spelld;
 
@@ -282,12 +444,12 @@ void conjure_flame(int pow)
             done_first_message = true;
         }
 
-        direction( spelld, DIR_TARGET, TARG_ENEMY );
+        direction( spelld, DIR_TARGET, TARG_ENEMY, true );
 
         if (!spelld.isValid)
         {
-            canned_msg(MSG_SPELL_FIZZLES);
-            return;
+            canned_msg(MSG_OK);
+            return (-1);
         }
 
         if (!see_grid(spelld.tx, spelld.ty))
@@ -296,7 +458,7 @@ void conjure_flame(int pow)
             continue;
         }
 
-        if (grd[ spelld.tx ][ spelld.ty ] <= DNGN_LAST_SOLID_TILE 
+        if (grid_is_solid(grd[ spelld.tx ][ spelld.ty ])
             || mgrd[ spelld.tx ][ spelld.ty ] != NON_MONSTER 
             || env.cgrid[ spelld.tx ][ spelld.ty ] != EMPTY_CLOUD)
         {
@@ -313,9 +475,10 @@ void conjure_flame(int pow)
         durat = 23;
 
     place_cloud( CLOUD_FIRE, spelld.tx, spelld.ty, durat );
+    return (1);
 }                               // end cast_conjure_flame()
 
-void stinking_cloud( int pow )
+int stinking_cloud( int pow )
 {
     struct dist spelld;
     struct bolt beem;
@@ -324,21 +487,20 @@ void stinking_cloud( int pow )
 
     message_current_target();
 
-    direction( spelld, DIR_NONE, TARG_ENEMY );
+    direction( spelld, DIR_NONE, TARG_ENEMY, true );
 
     if (!spelld.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
-    beem.target_x = spelld.tx;
-    beem.target_y = spelld.ty;
+    beem.set_target(spelld);
 
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;
 
-    strcpy(beem.beam_name, "ball of vapour");
+    beem.name = "ball of vapour";
     beem.colour = GREEN;
     beem.range = 6;
     beem.rangeMax = 6;
@@ -349,27 +511,30 @@ void stinking_cloud( int pow )
     beem.ench_power = pow;
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU;
-    beem.aux_source = NULL;
-    beem.isBeam = false;
-    beem.isTracer = false;
+    beem.aux_source.clear();
+    beem.is_beam = false;
+    beem.is_tracer = false;
 
     fire_beam(beem);
+
+    return (1);
 }                               // end stinking_cloud()
 
-void cast_big_c(int pow, char cty)
+int cast_big_c(int pow, char cty)
 {
     struct dist cdis;
 
     mpr("Where do you want to put it?", MSGCH_PROMPT);
-    direction( cdis, DIR_TARGET, TARG_ENEMY );
+    direction( cdis, DIR_TARGET, TARG_ENEMY, true );
 
     if (!cdis.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     big_cloud( cty, cdis.tx, cdis.ty, pow, 8 + random2(3) );
+    return (1);
 }                               // end cast_big_c()
 
 void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size)
@@ -377,18 +542,18 @@ void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size)
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size, clouds);
 }                               // end big_cloud()
 
-static char healing_spell( int healed )
+static int healing_spell( int healed )
 {
     int mgr = 0;
     struct monsters *monster = 0;       // NULL {dlb}
     struct dist bmove;
 
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_FRIEND );
+    direction( bmove, DIR_DIR, TARG_FRIEND, true );
 
     if (!bmove.isValid)
     {
-        canned_msg( MSG_HUH );
+        canned_msg( MSG_OK );
         return 0;
     }
 
@@ -446,7 +611,7 @@ char cast_greatest_healing( int pow )
 }                               // end cast_greatest_healing()
 #endif 
 
-char cast_healing( int pow )
+int cast_healing( int pow )
 {
     if (pow > 50)
         pow = 50;
@@ -880,11 +1045,7 @@ void cast_swiftness(int power)
 
     if (player_in_water())
     {
-        if (you.species == SP_MERFOLK)
-            mpr("This spell will not benefit you while you're swimming!");
-        else 
-            mpr("This spell will not benefit you while you're in water!");
-
+        mpr("The water foams!");
         return;
     }
 
@@ -898,11 +1059,9 @@ void cast_swiftness(int power)
     // dur_incr = random2(power) + random2(power) + 20;
     dur_incr = 20 + random2( power );
 
-    // Centaurs do have feet and shouldn't get here anyways -- bwr
-    snprintf( info, INFO_SIZE, "You feel quick%s",  
-              (you.species == SP_NAGA) ? "." : " on your feet." );
-
-    mpr(info);
+    // [dshaligram] Removed the on-your-feet bit. Sounds odd when you're
+    // levitating, for instance.
+    mpr("You feel quick.");
 
     if (dur_incr + you.duration[DUR_SWIFTNESS] > 100)
         you.duration[DUR_SWIFTNESS] = 100;
@@ -962,9 +1121,6 @@ void cast_resist_poison(int power)
 void cast_teleport_control(int power)
 {
     int dur_incr = 10 + random2(power);
-
-    if (you.duration[DUR_CONTROL_TELEPORT] == 0)
-        you.attribute[ATTR_CONTROL_TELEPORT]++;
 
     mpr("You feel in control.");
 
@@ -1047,7 +1203,7 @@ void manage_fire_shield(void)
 
             //if ( one_chance_in(3) ) beam.range ++;
 
-            if (grd[you.x_pos + stx][you.y_pos + sty] > DNGN_LAST_SOLID_TILE
+            if (!grid_is_solid(grd[you.x_pos + stx][you.y_pos + sty])
                 && env.cgrid[you.x_pos + stx][you.y_pos + sty] == EMPTY_CLOUD)
             {
                 place_cloud( CLOUD_FIRE, you.x_pos + stx, you.y_pos + sty,

@@ -3,6 +3,8 @@
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     4/20/99        JDJ             Reformatted, uses string objects, split out
@@ -15,11 +17,11 @@
 
 #include <string>
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - ouch
- * *********************************************************************** */
-bool dump_char( const char fname[30], bool show_prices );
+bool dump_char(const std::string &fname, 
+               bool show_prices, 
+               bool full_id = false);
+
+void resists_screen();
 
 std::string munge_description(const std::string &inStr);
 

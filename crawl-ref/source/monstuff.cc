@@ -3,6 +3,8 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <8>      7 Aug  2001   MV      Inteligent monsters now pick up gold
@@ -36,11 +38,14 @@
 #include "fight.h"
 #include "itemname.h"
 #include "items.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
+#include "mon-pick.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -49,6 +54,7 @@
 #include "spells4.h"
 #include "stuff.h"
 #include "view.h"
+#include "stash.h"
 
 static bool handle_special_ability(struct monsters *monster, bolt & beem);
 static bool handle_pickup(struct monsters *monster);
@@ -58,14 +64,17 @@ static void monster_move(struct monsters *monster);
 static bool plant_spit(struct monsters *monster, struct bolt &pbolt);
 static int map_wand_to_mspell(int wand_type);
 
-char mmov_x, mmov_y;
+// [dshaligram] Doesn't need to be extern.
+static int mmov_x, mmov_y;
 
 static int compass_x[8] = { -1, 0, 1, 1, 1, 0, -1, -1 };
 static int compass_y[8] = { -1, -1, -1, 0, 1, 1, 1, 0 };
 
+static bool immobile_monster[MAX_MONSTERS];
+
 #define FAR_AWAY    1000000         // used in monster_move()
 
-// This function creates an arteficial item to represent a mimic's appearance.
+// This function creates an artificial item to represent a mimic's appearance.
 // Eventually, mimics could be redone to be more like Dancing wepaons...
 // there'd only be one type and it would look like the item it carries. -- bwr
 void get_mimic_item( const struct monsters *mimic, item_def &item )
@@ -114,6 +123,11 @@ void get_mimic_item( const struct monsters *mimic, item_def &item )
     case MONS_ARMOUR_MIMIC:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = (59 * mimic->x + 79 * mimic->y) % NUM_ARMOURS;
+        // FIXME: Remove fudges once these armours are completely implemented.
+        if (item.sub_type == ARM_STUDDED_LEATHER_ARMOUR)
+            item.sub_type = ARM_CRYSTAL_PLATE_MAIL;
+        else if (item.sub_type == ARM_CAP)
+            item.sub_type = ARM_MOTTLED_DRAGON_ARMOUR;
 
         prop %= 100;
 
@@ -238,9 +252,7 @@ static void monster_drop_ething(struct monsters *monster,
     bool destroyed = false;
     bool hostile_grid = false;
 
-    if (grd[monster->x][monster->y] == DNGN_LAVA ||
-        grd[monster->x][monster->y] == DNGN_DEEP_WATER)
-    {
+    if ( grid_destroys_items(grd[monster->x][monster->y]) ) {
         hostile_grid = true;
     }
 
@@ -268,18 +280,18 @@ static void monster_drop_ething(struct monsters *monster,
         }
     }
 
-    if (destroyed)
-    {
-        if (grd[monster->x][monster->y] == DNGN_LAVA)
-            mpr("You hear a hissing sound.");
-        else
-            mpr("You hear a splashing sound.");
+    if (destroyed) {
+	mprf(MSGCH_SOUND,
+	     grid_item_destruction_message(grd[monster->x][monster->y]));
     }
 }                               // end monster_drop_ething()
 
-static void place_monster_corpse(struct monsters *monster)
+static void place_monster_corpse(const monsters *monster)
 {
-    int corpse_class = mons_charclass(monster->type);
+    int corpse_class = mons_species(monster->type);
+
+    if (corpse_class == MONS_DRACONIAN)
+        corpse_class = draco_subspecies(monster);
 
     if (mons_has_ench(monster, ENCH_SHAPESHIFTER))
         corpse_class = MONS_SHAPESHIFTER;
@@ -287,8 +299,8 @@ static void place_monster_corpse(struct monsters *monster)
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
     if (mons_weight(corpse_class) == 0
-        || grd[monster->x][monster->y] == DNGN_LAVA
-        || grd[monster->x][monster->y] == DNGN_DEEP_WATER || coinflip())
+        || grid_destroys_items(grd[monster->x][monster->y])
+        || coinflip())
     {
         return;
     }
@@ -303,11 +315,11 @@ static void place_monster_corpse(struct monsters *monster)
     mitm[o].plus2 = 0;                          // butcher work done
     mitm[o].sub_type = CORPSE_BODY;
     mitm[o].special = 210;                      // rot time
-    mitm[o].colour = mons_colour(corpse_class);
+    mitm[o].colour = mons_class_colour(corpse_class);
     mitm[o].quantity = 1;
 
     if (mitm[o].colour == BLACK)
-        mitm[o].colour = monster->number;
+        mitm[o].colour = monster->colour;
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
@@ -316,6 +328,7 @@ static void place_monster_corpse(struct monsters *monster)
 void monster_die(struct monsters *monster, char killer, int i)
 {
     int dmi;                    // dead monster's inventory
+    int xom_will_act = 0;
     int monster_killed = monster_index(monster);
     bool death_message = mons_near(monster) && player_monster_visible(monster);
 
@@ -435,42 +448,44 @@ void monster_die(struct monsters *monster, char killer, int i)
 
             // Xom doesn't care who you killed:
             if (you.religion == GOD_XOM 
-                    && random2(70) <= 10 + monster->hit_dice)
+                && random2(70) <= 10 + monster->hit_dice)
             {
-                Xom_acts(true, 1 + random2(monster->hit_dice), false);
+                // postpone Xom action until after the monster dies
+                xom_will_act = 1 + random2(monster->hit_dice);
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being being done_good kills,
+            // prevent summoned creatures from being done_good kills,
             // Only affects monsters friendly when created.
             if (!created_friendly)
             {
                 if (you.duration[DUR_PRAYER])
                 {
-                    if (mons_holiness(monster->type) == MH_NATURAL)
-                        done_good(GOOD_KILLED_LIVING, monster->hit_dice);
+                    if (mons_holiness(monster) == MH_NATURAL)
+                        did_god_conduct(DID_DEDICATED_KILL_LIVING, 
+                                        monster->hit_dice);
 
-                    if (mons_holiness(monster->type) == MH_UNDEAD)
-                        done_good(GOOD_KILLED_UNDEAD, monster->hit_dice);
+                    if (mons_holiness(monster) == MH_UNDEAD)
+                        did_god_conduct(DID_DEDICATED_KILL_UNDEAD, 
+                                        monster->hit_dice);
 
-                    if (mons_holiness(monster->type) == MH_DEMONIC)
-                        done_good(GOOD_KILLED_DEMON, monster->hit_dice);
-
-                    if (mons_holiness(monster->type) == MH_HOLY)
-                        done_good(GOOD_KILLED_ANGEL_II, monster->hit_dice);
+                    if (mons_holiness(monster) == MH_DEMONIC)
+                        did_god_conduct(DID_DEDICATED_KILL_DEMON, 
+                                        monster->hit_dice);
 
                     //jmf: Trog hates wizards
-                    if (mons_flag(monster->type, M_ACTUAL_SPELLS))
-                        done_good(GOOD_KILLED_WIZARD, monster->hit_dice);
+                    if (mons_class_flag(monster->type, M_ACTUAL_SPELLS))
+                        did_god_conduct(DID_DEDICATED_KILL_WIZARD,
+                                        monster->hit_dice);
 
                     //jmf: maybe someone hates priests?
-                    if (mons_flag(monster->type, M_PRIEST))
-                        done_good(GOOD_KILLED_PRIEST, monster->hit_dice);
+                    if (mons_class_flag(monster->type, M_PRIEST))
+                        did_god_conduct(DID_DEDICATED_KILL_PRIEST, 
+                                        monster->hit_dice);
                 }
-                else if (mons_holiness(monster->type) == MH_HOLY)
-                {
-                    done_good(GOOD_KILLED_ANGEL_I, monster->hit_dice);
-                }
+
+                if (mons_holiness(monster) == MH_HOLY)
+                    did_god_conduct(DID_KILL_ANGEL, monster->hit_dice);
             }
 
             // Divine health and mp restoration doesn't happen when killing
@@ -501,12 +516,12 @@ void monster_die(struct monsters *monster, char killer, int i)
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && mons_holiness(monster->type) == MH_NATURAL
-                && mons_weight(mons_charclass(monster->type)))
+                && mons_holiness(monster) == MH_NATURAL
+                && mons_weight(mons_species(monster->type)))
             {
                 if (create_monster( MONS_SPECTRAL_THING, 0, BEH_FRIENDLY,
                                     monster->x, monster->y, you.pet_target,
-                                    mons_charclass(monster->type)) != -1)
+                                    mons_species(monster->type)) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
@@ -522,39 +537,82 @@ void monster_die(struct monsters *monster, char killer, int i)
 
             // no piety loss if god gifts killed by other monsters
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
-                naughty(NAUGHTY_FRIEND_DIES, 1 + (monster->hit_dice / 2));
+                did_god_conduct(DID_FRIEND_DIES, 1 + (monster->hit_dice / 2));
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being being done_good kills.
             // Only affects creatures which were friendly when summoned.
             if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && pet_kill)
             {
+                bool notice = false;
+
                 gain_exp(exper_value( monster ) / 2 + 1);
 
-                if (mons_holiness(menv[i].type) == MH_UNDEAD)
-                {
-                    if (mons_holiness(monster->type) == MH_NATURAL)
-                        done_good(GOOD_SLAVES_KILL_LIVING, monster->hit_dice);
-                    else
-                        done_good(GOOD_SERVANTS_KILL, monster->hit_dice);
-                }
-                else
-                {
-                    done_good(GOOD_SERVANTS_KILL, monster->hit_dice);
+                int targ_holy   = mons_holiness(monster),
+                    attacker_holy = mons_holiness(&menv[i]);
 
-                    if (you.religion == GOD_VEHUMET
-                        && (!player_under_penance()
-                            && random2(you.piety) >= 30))
+                if (attacker_holy == MH_UNDEAD)
+                {
+                    if (targ_holy == MH_NATURAL)
+                        notice |= 
+                            did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                                        monster->hit_dice);
+                }
+                else if (you.religion == GOD_VEHUMET
+                        || testbits( menv[i].flags, MF_GOD_GIFT ))
+                {
+                    // Yes, we are splitting undead pets from the others
+                    // as a way to focus Necomancy vs Summoning (ignoring
+                    // Summon Wraith here)... at least we're being nice and
+                    // putting the natural creature Summons together with 
+                    // the Demon ones.  Note that Vehumet gets a free 
+                    // pass here since those followers are assumed to
+                    // come from Summoning spells...  the others are 
+                    // from invocations (Zin, TSO, Makh, Kiku). -- bwr
+
+                    if (targ_holy == MH_NATURAL)
                     {
-                        /* Vehumet - only for non-undead servants (coding
-                           convenience, no real reason except that Vehumet
-                           prefers demons) */
-                        if (you.magic_points < you.max_magic_points)
+                        notice |= did_god_conduct( DID_LIVING_KILLED_BY_SERVANT,
+                                                   monster->hit_dice );
+
+                        if (mons_class_flag( monster->type, M_EVIL ))
                         {
-                            mpr("You feel your power returning.");
-                            inc_mp(1 + random2(random2(monster->hit_dice)),
-                                   false);
+                            notice |= 
+                                did_god_conduct( 
+                                        DID_NATURAL_EVIL_KILLED_BY_SERVANT,
+                                        monster->hit_dice );
                         }
+                    }
+                    else if (targ_holy == MH_DEMONIC)
+                    {
+                        notice |= did_god_conduct( DID_DEMON_KILLED_BY_SERVANT, 
+                                                   monster->hit_dice );
+                    }
+                    else if (targ_holy == MH_UNDEAD)
+                    {
+                        notice |= did_god_conduct( DID_UNDEAD_KILLED_BY_SERVANT,
+                                                   monster->hit_dice );
+                    }
+                }
+
+                // Angel kills are always noticed.
+                if (targ_holy == MH_HOLY)
+                {
+                    notice |= did_god_conduct( DID_ANGEL_KILLED_BY_SERVANT, 
+                                               monster->hit_dice );
+                }
+
+                if (you.religion == GOD_VEHUMET 
+                    && notice
+                    && (!player_under_penance() && random2(you.piety) >= 30))
+                {
+                    /* Vehumet - only for non-undead servants (coding
+                       convenience, no real reason except that Vehumet
+                       prefers demons) */
+                    if (you.magic_points < you.max_magic_points)
+                    {
+                        mpr("You feel your power returning.");
+                        inc_mp( 1 + random2(monster->hit_dice / 2), false );
                     }
                 }
             }
@@ -576,6 +634,9 @@ void monster_die(struct monsters *monster, char killer, int i)
             place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
                          monster->y, 1 + random2(3) );
 
+            // fall-through
+
+        case KILL_DISMISSED:
             for (dmi = MSLOT_GOLD; dmi >= MSLOT_WEAPON; dmi--)
             {                   /* takes whatever it's carrying back home */
                 if (monster->inv[dmi] != NON_ITEM)
@@ -625,7 +686,7 @@ void monster_die(struct monsters *monster, char killer, int i)
                     (tmp == 1) ? " says, \"I'll get you next time!\"" :
                     (tmp == 2) ? " says, \"This isn't over yet!\"" :
                     (tmp == 3) ? " says, \"I'll be back!\"" :
-                    (tmp == 4) ? " says, \"This isn't the end, its only just beginning!\"" :
+                    (tmp == 4) ? " says, \"This isn't the end, it's only just beginning!\"" :
                     (tmp == 5) ? " says, \"Kill me?  I think not!\"" 
                                : " says, \"You cannot defeat me so easily!\"",
                                     MSGCH_TALK );
@@ -636,13 +697,31 @@ void monster_die(struct monsters *monster, char killer, int i)
         you.unique_creatures[ monster->type - 280 ] = 0;
     }
 
-    if (killer != KILL_RESET)
+    if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
+	if ( MONST_INTERESTING(monster) ||
+	     // XXX yucky hack
+	     monster->type == MONS_PLAYER_GHOST ||
+	     monster->type == MONS_PANDEMONIUM_DEMON ) {
+	    /* make a note of it */
+	    char namebuf[ITEMNAME_SIZE];
+	    if ( monster->type == MONS_PLAYER_GHOST ) {
+		snprintf( namebuf, sizeof(namebuf), "the ghost of %s",
+			  ghost.name );
+	    }
+	    else if ( monster->type == MONS_PANDEMONIUM_DEMON ) {
+		strncpy( namebuf, ghost.name, sizeof(namebuf) );
+	    }
+	    else
+		moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
+	}
+
         you.kills.record_kill(monster, killer, pet_kill);
 
         if (mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI))
         {
-            if (mons_weight(mons_charclass(monster->type)))
+            if (mons_weight(mons_species(monster->type)))
             {
                 if (monster->type == MONS_SIMULACRUM_SMALL
                     || monster->type == MONS_SIMULACRUM_LARGE)
@@ -674,9 +753,13 @@ void monster_die(struct monsters *monster, char killer, int i)
                             || killer == KILL_YOU
                             || pet_kill);
     monster_cleanup(monster);
+
+    if ( xom_will_act )
+        Xom_acts(true, xom_will_act, false);
+    
 }                                                   // end monster_die
 
-void monster_cleanup(struct monsters *monster)
+void monster_cleanup(monsters *monster)
 {
     unsigned int monster_killed = monster_index(monster);
     int dmi = 0;
@@ -696,7 +779,8 @@ void monster_cleanup(struct monsters *monster)
     monster->behaviour = BEH_SLEEP;
     monster->foe = MHITNOT;
 
-    mgrd[monster->x][monster->y] = NON_MONSTER;
+    if (in_bounds(monster->x, monster->y))
+        mgrd[monster->x][monster->y] = NON_MONSTER;
 
     for (dmi = MSLOT_GOLD; dmi >= MSLOT_WEAPON; dmi--)
     {
@@ -720,7 +804,7 @@ static bool jelly_divide(struct monsters * parent)
     bool foundSpot = false;     // to rid code of hideous goto {dlb}
     struct monsters *child = 0; // NULL - value determined with loop {dlb}
 
-    if (!mons_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
+    if (!mons_class_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
         return (false);
 
     // first, find a suitable spot for the child {dlb}:
@@ -734,7 +818,7 @@ static bool jelly_divide(struct monsters * parent)
         {
             // 10-50 for now - must take clouds into account:
             if (mgrd[parent->x + jex][parent->y + jey] == NON_MONSTER
-                && grd[parent->x + jex][parent->y + jey] > DNGN_LAST_SOLID_TILE 
+                && !grid_is_solid(grd[parent->x + jex][parent->y + jey])
                 && (parent->x + jex != you.x_pos || parent->y + jey != you.y_pos))
             {
                 foundSpot = true;
@@ -779,6 +863,11 @@ static bool jelly_divide(struct monsters * parent)
     child->behaviour = parent->behaviour; /* Look at this! */
     child->foe = parent->foe;
     child->attitude = parent->attitude;
+    child->colour = parent->colour;
+
+    // duplicate enchantments
+    for ( int i = 0; i < NUM_MON_ENCHANTS; ++i )
+	child->enchantment[i] = parent->enchantment[i];
 
     child->x = parent->x + jex;
     child->y = parent->y + jey;
@@ -788,7 +877,7 @@ static bool jelly_divide(struct monsters * parent)
     if (!simple_monster_message(parent, " splits in two!"))
     {
         if (!silenced(parent->x, parent->y) || !silenced(child->x, child->y))
-            mpr("You hear a squelching noise.");
+            mpr("You hear a squelching noise.", MSGCH_SOUND);
     }
 
     return (true);
@@ -821,13 +910,13 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
 {
     unsigned char current_tile = grd[monster->x][monster->y];
 
-    // morph targets are _always_ "base" classes,  not derived ones.
-    new_mclass = mons_charclass(new_mclass);
+    // morph targets are _always_ "base" classes, not derived ones.
+    new_mclass = mons_species(new_mclass);
 
     /* various inappropriate polymorph targets */
-    if (mons_holiness( new_mclass ) != mons_holiness( monster->type )
-        || mons_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
-        || new_mclass == mons_charclass( monster->type ) // must be different
+    if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
+        || mons_class_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
+        || new_mclass == mons_species( monster->type ) // must be different
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
@@ -841,30 +930,8 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
         return (false);
     }
 
-    /* Not fair to instakill a monster like this --
-     order of evaluation of inner conditional important */
-    if (current_tile == DNGN_LAVA || current_tile == DNGN_DEEP_WATER)
-    {
-        if (!mons_class_flies(new_mclass)
-            || monster_habitat(new_mclass) != current_tile)
-        {
-            return (false);
-        }
-    }
-
-    // not fair to strand a water monster on dry land, either.  :)
-    if (monster_habitat(new_mclass) == DNGN_DEEP_WATER 
-        && current_tile != DNGN_DEEP_WATER 
-        && current_tile != DNGN_SHALLOW_WATER)
-    {
-        return (false);
-    }
-
-    // and putting lava monsters on non-lava sqaures is a no-no, too
-    if (monster_habitat(new_mclass) == DNGN_LAVA && current_tile != DNGN_LAVA)
-        return (false);
-
-    return (true);
+    // Determine if the monster is happy on current tile
+    return (monster_habitable_grid(new_mclass, current_tile));
 }        // end valid_morph()
 
 // note that power is (as of yet) unused within this function -
@@ -890,10 +957,12 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     {
         do
         {
-            targetc = random2( NUM_MONSTERS );
+            // Pick a monster that's guaranteed happy at this grid
+            targetc = random_monster_at_grid(monster->x, monster->y);
 
-            // valid targets are always base classes
-            targetc = mons_charclass( targetc );
+            // valid targets are always base classes ([ds] which is unfortunate
+            // in that well-populated monster classes will dominate polymorphs)
+            targetc = mons_species( targetc );
 
             target_power = mons_power( targetc );
 
@@ -914,9 +983,21 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
         return (player_messaged);
     }
 
+	// If old monster is visible to the player, and is interesting,
+	// then note why the interesting monster went away.
+	if (player_monster_visible(monster) && mons_near(monster)
+	    && MONST_INTERESTING(monster)) {
+
+	    char namebuf[ITEMNAME_SIZE];	    
+	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0, namebuf));
+
+	}
+
     // messaging: {dlb}
-    bool invis = mons_flag( targetc, M_INVIS ) 
-                    || mons_has_ench( monster, ENCH_INVIS );
+    bool invis = (mons_class_flag( targetc, M_INVIS ) 
+		  || mons_has_ench( monster, ENCH_INVIS )) &&
+	(!player_see_invis());
 
     if (mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER ))
         strcat( str_polymon, " changes into " );
@@ -925,11 +1006,11 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     else
         strcat( str_polymon, " evaporates and reforms as " );
 
-    if (invis && !player_see_invis())
+    if (invis)
         strcat( str_polymon, "something you cannot see!" );
     else
     {
-        strcat( str_polymon, monam( 250, targetc, !invis, DESC_NOCAP_A ) );
+        strcat( str_polymon, monam( 250, targetc, true, DESC_NOCAP_A ) );
 
         if (targetc == MONS_PULSATING_LUMP)
             strcat( str_polymon, " of flesh" );
@@ -961,7 +1042,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     if (shifter != ENCH_NONE)
         mons_add_ench( monster, shifter );
 
-    if (mons_flag( monster->type, M_INVIS ))
+    if (mons_class_flag( monster->type, M_INVIS ))
         mons_add_ench( monster, ENCH_INVIS );
 
     monster->hit_points = monster->max_hit_points
@@ -975,16 +1056,23 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 
     monster_drop_ething(monster);
 
+	// New monster type might be interesting
+	mark_interesting_monst(monster);
+
+	// If new monster is visible to player, then we've seen it
+	if (player_monster_visible(monster) && mons_near(monster))
+		seen_monster(monster);
+
     return (player_messaged);
 }                                        // end monster_polymorph()
 
-void monster_blink(struct monsters *monster)
+bool monster_blink(monsters *monster)
 {
     int nx, ny;
 
     if (!random_near_space(monster->x, monster->y, nx, ny,
-        false, false))
-        return;
+            false, false))
+        return (false);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
 
@@ -992,6 +1080,11 @@ void monster_blink(struct monsters *monster)
     monster->y = ny;
 
     mgrd[nx][ny] = monster_index(monster);
+
+    if (player_monster_visible(monster) && mons_near(monster))
+        seen_monster(monster);
+
+    return (true);
 }                               // end monster_blink()
 
 // allow_adjacent:  allow target to be adjacent to origin
@@ -1025,45 +1118,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
 
 static bool habitat_okay( struct monsters *monster, int targ )
 {
-    bool ret = false;
-    const int habitat = monster_habitat( monster->type );
-
-    if (mons_flies( monster ))
-    {
-        // flying monsters don't care
-        ret = true;
-    }
-    else if (mons_flag( monster->type, M_AMPHIBIOUS ) 
-            && (targ == DNGN_DEEP_WATER || targ == DNGN_SHALLOW_WATER))
-    {
-        // Amphibious creatures are "land" by default in mon-data, 
-        // we allow them to swim here. -- bwr
-        ret = true;
-    }
-    else if (monster->type == MONS_WATER_ELEMENTAL && targ >= DNGN_DEEP_WATER)
-    {
-        // water elementals can crawl out over the land
-        ret = true;
-    }
-    else if (habitat == DNGN_FLOOR 
-            && (targ >= DNGN_FLOOR || targ == DNGN_SHALLOW_WATER))
-    {
-        // FLOOR habitat monster going to a non-bad place
-        ret = true;
-    }
-    else if (habitat == DNGN_DEEP_WATER
-            && (targ == DNGN_DEEP_WATER || targ == DNGN_SHALLOW_WATER))
-    {
-        // Water monster to water
-        ret = true;
-    }
-    else if (habitat == DNGN_LAVA && targ == DNGN_LAVA)
-    {
-        // Lava monster to lava
-        ret = true;
-    }
-
-    return (ret);
+    return (monster_habitable_grid(monster, targ));
 }
 
 // This doesn't really swap places, it just sets the monster's
@@ -1216,7 +1271,7 @@ void print_wounds(struct monsters *monster)
 bool wounded_damaged(int wound_class)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const int holy = mons_holiness(wound_class);
+    const int holy = mons_class_holiness(wound_class);
     if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
         return (true);
 
@@ -1266,10 +1321,12 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     case ME_WHACK:
     case ME_ANNOY:
-        // will turn monster against <src>,  unless they
+        // will turn monster against <src>, unless they
         // are BOTH friendly and stupid.   Hitting someone
         // over the head, of course, always triggers this code.
-        if (isFriendly != sourceFriendly || isSmart || event == ME_WHACK)
+        if ( event == ME_WHACK ||
+             ((isFriendly != sourceFriendly || isSmart) &&
+              (mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC)))
         {
             mon->foe = src;
 
@@ -1291,7 +1348,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     case ME_ALERT:
         // will alert monster to <src> and turn them
-        // against them,  unless they have a current foe.
+        // against them, unless they have a current foe.
         // it won't turn friends hostile either.
         if (mon->behaviour != BEH_CORNERED)
             mon->behaviour = BEH_SEEK;
@@ -1362,12 +1419,7 @@ static void handle_behaviour(struct monsters *mon)
     bool isHealthy = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
     bool isScared = mons_has_ench(mon, ENCH_FEAR);
-
-    // immobility logic stolen from later on in handle_monster().. argh!  --gdl
-    bool isMobile = !(mon->type == MONS_OKLOB_PLANT 
-                        || mon->type == MONS_CURSE_SKULL
-                        || (mon->type >= MONS_CURSE_TOE 
-                            && mon->type <= MONS_POTION_MIMIC));
+    bool isMobile = !mons_is_stationary(mon);
 
     // check for confusion -- early out.
     if (mons_has_ench(mon, ENCH_CONFUSION))
@@ -1395,13 +1447,18 @@ static void handle_behaviour(struct monsters *mon)
         if (!see_grid(mon->x, mon->y))
             proxPlayer = false;
 
+        const int intel = mons_intel(mon->type);
         // now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'
         if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
-            && one_chance_in(3))
-        {
+                && one_chance_in(3))
             proxPlayer = true;
-        }
+
+        // [dshaligram] Very smart monsters have a chance of cluing in to
+        // invisible players in various ways.
+        else if ((intel == I_NORMAL && one_chance_in(10))
+                || (intel == I_HIGH && one_chance_in(6)))
+            proxPlayer = true;
     }
 
     // set friendly target, if they don't already have one
@@ -1424,7 +1481,7 @@ static void handle_behaviour(struct monsters *mon)
     }
 
     // unfriendly monsters fighting other monsters will usually
-    // target the player,  if they're healthy
+    // target the player, if they're healthy
     if (!isFriendly && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !one_chance_in(3) && isHealthy)
     {
@@ -1515,7 +1572,7 @@ static void handle_behaviour(struct monsters *mon)
                 {
                     // if we've arrived at our target x,y
                     // do a stealth check.  If the foe
-                    // fails,  monster will then start
+                    // fails, monster will then start
                     // tracking foe's CURRENT position,
                     // but only for a few moves (smell and
                     // intuition only go so far)
@@ -1583,7 +1640,7 @@ static void handle_behaviour(struct monsters *mon)
             // by updating target x,y
             if (mon->foe == MHITYOU)
             {
-                // sometimes,  your friends will wander a bit.
+                // sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
                     mon->target_x = 10 + random2(GXM - 10);
@@ -1635,9 +1692,9 @@ static void handle_behaviour(struct monsters *mon)
                 mon->target_y = 10 + random2(GYM - 10);
             }
 
-            // during their wanderings,  monsters will
+            // during their wanderings, monsters will
             // eventually relax their guard (stupid
-            // ones will do so faster,  smart monsters
+            // ones will do so faster, smart monsters
             // have longer memories
             if (!proxFoe && mon->foe != MHITNOT)
             {
@@ -1652,7 +1709,7 @@ static void handle_behaviour(struct monsters *mon)
                 new_beh = BEH_SEEK;
             // smart monsters flee until they can
             // flee no more...  possible to get a
-            // 'CORNERED' event,  at which point
+            // 'CORNERED' event, at which point
             // we can jump back to WANDER if the foe
             // isn't present.
 
@@ -1727,7 +1784,6 @@ static inline int mod_speed( int val, int speed )
 
 static bool handle_enchantment(struct monsters *monster)
 {
-    const int habitat = monster_habitat( monster->type );
     bool died = false;
     int grid;
     int poisonval;
@@ -1735,7 +1791,7 @@ static bool handle_enchantment(struct monsters *monster)
     int tmp;
 
     // Yes, this is the speed we want.  This function will be called in
-    // two curcumstances: (1) the monster can move and have enough energy, 
+    // two circumstances: (1) the monster can move and has enough energy, 
     // and (2) the monster cannot move (speed == 0) and the monster loop 
     // is running.
     //
@@ -1787,7 +1843,7 @@ static bool handle_enchantment(struct monsters *monster)
             if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
             {
                 // don't delete perma-confusion
-                if (!mons_flag(monster->type, M_CONFUSED))
+                if (!mons_class_flag(monster->type, M_CONFUSED))
                     mons_del_ench(monster, ENCH_CONFUSION);
             }
             break;
@@ -1796,7 +1852,7 @@ static bool handle_enchantment(struct monsters *monster)
             if (random2(1000) < mod_speed( 25, speed ))
             {
                 // don't delete perma-invis
-                if (!mons_flag( monster->type, M_INVIS ))
+                if (!mons_class_flag( monster->type, M_INVIS ))
                     mons_del_ench(monster, ENCH_INVIS);
             }
             break;
@@ -1824,7 +1880,7 @@ static bool handle_enchantment(struct monsters *monster)
             // Badly injured monsters prefer to stay submerged...
             // electrical eels and lava snakes have ranged attacks
             // and are more likely to surface.  -- bwr
-            if (habitat == DNGN_FLOOR || habitat != grid) 
+            if (!monster_can_submerge(monster->type, grid))
                 mons_del_ench( monster, ENCH_SUBMERGED ); // forced to surface
             else if (monster->hit_points <= monster->max_hit_points / 2)
                 break;
@@ -1834,7 +1890,10 @@ static bool handle_enchantment(struct monsters *monster)
                         || (mons_near(monster) 
                             && monster->hit_points == monster->max_hit_points
                             && !one_chance_in(10))))
-                    || random2(5000) < mod_speed( 10, speed ))
+                    || random2(2000) < mod_speed(10, speed)
+                    || (mons_near(monster)
+                            && monster->hit_points == monster->max_hit_points
+                            && !one_chance_in(5)))
             {
                 mons_del_ench( monster, ENCH_SUBMERGED );
             }
@@ -2133,7 +2192,7 @@ static void handle_movement(struct monsters *monster)
 
     // reproduced here is some semi-legacy code that makes monsters
     // move somewhat randomly along oblique paths.  It is an exceedingly
-    // good idea,  given crawl's unique line of sight properties.
+    // good idea, given crawl's unique line of sight properties.
     //
     // Added a check so that oblique movement paths aren't used when
     // close to the target square. -- bwr
@@ -2172,7 +2231,7 @@ static void handle_nearby_ability(struct monsters *monster)
         return;
     }
 
-    if (mons_flag(monster->type, M_SPEAKS) && one_chance_in(21)
+    if (mons_class_flag(monster->type, M_SPEAKS) && one_chance_in(21)
         && monster->behaviour != BEH_WANDER)
     {
         mons_speaks(monster);
@@ -2183,7 +2242,7 @@ static void handle_nearby_ability(struct monsters *monster)
     case MONS_SPATIAL_VORTEX:
     case MONS_KILLER_KLOWN:
         // used for colour (butterflies too, but they don't change)
-        monster->number = random_colour();
+        monster->colour = random_colour();
         break;
 
     case MONS_GIANT_EYEBALL:
@@ -2236,10 +2295,13 @@ static void handle_nearby_ability(struct monsters *monster)
                 mons_del_ench( monster, ENCH_SUBMERGED );
             }
         }
-        else if (monster_habitat(monster->type) == grd[monster->x][monster->y]
+        else if (monster_can_submerge(monster->type,
+                                      grd[monster->x][monster->y])
                  && (one_chance_in(5) 
                      || (grid_distance( monster->x, monster->y, 
                                         you.x_pos, you.y_pos ) > 1
+                            // FIXME This is better expressed as a function
+                            // such as monster_has_ranged_attack:
                             && monster->type != MONS_ELECTRICAL_EEL
                             && monster->type != MONS_LAVA_SNAKE
                             && !one_chance_in(20))
@@ -2257,7 +2319,7 @@ static void handle_nearby_ability(struct monsters *monster)
 
     case MONS_PANDEMONIUM_DEMON:
         if (ghost.values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
-            monster->number = random_colour();
+            monster->colour = random_colour();
         break;
     }
 }                               // end handle_nearby_ability()
@@ -2275,6 +2337,10 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     FixedArray < unsigned int, 19, 19 > show;
 
+    const monster_type mclass = (mons_genus( monster->type ) == MONS_DRACONIAN) 
+                                  ? draco_subspecies( monster ) 
+                                  : static_cast<monster_type>( monster->type );
+
     if (!mons_near( monster )
         || monster->behaviour == BEH_SLEEP
         || mons_has_ench( monster, ENCH_SUBMERGED ))
@@ -2284,8 +2350,16 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
 //    losight(show, grd, you.x_pos, you.y_pos);
 
-    switch (monster->type)
+    switch (mclass)
     {
+    case MONS_ORANGE_STATUE:
+        used = orange_statue_effects(monster);
+        break;
+
+    case MONS_SILVER_STATUE:
+        used = silver_statue_effects(monster);
+        break;
+
     case MONS_BALL_LIGHTNING:
         if (monster->attitude == ATT_HOSTILE
             && distance( you.x_pos, you.y_pos, monster->x, monster->y ) <= 5)
@@ -2323,7 +2397,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             if (tx < 0 || tx > GXM || ty < 0 || ty > GYM)
                 continue;
 
-            if (grd[tx][ty] > DNGN_LAST_SOLID_TILE) 
+            if (!grid_is_solid(grd[tx][ty]))
             {
                 monster->hit_points = -1;
                 used = true;
@@ -2343,7 +2417,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        strcpy(beem.beam_name, "glob of lava");
+        beem.name = "glob of lava";
         beem.range = 4;
         beem.rangeMax = 13;
         beem.damage = dice_def( 3, 10 );
@@ -2378,7 +2452,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             break;
 
         // setup tracer
-        strcpy(beem.beam_name, "bolt of electricity");
+        beem.name = "bolt of electricity";
         beem.damage = dice_def( 3, 6 );
         beem.colour = LIGHTCYAN;
         beem.type = SYM_ZAP;
@@ -2389,7 +2463,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         beem.aux_source = "bolt of electricity";
         beem.range = 4;
         beem.rangeMax = 13;
-        beem.isBeam = true;
+        beem.is_beam = true;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -2405,6 +2479,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
+    case MONS_YELLOW_DRACONIAN:
         if (mons_has_ench(monster, ENCH_CONFUSION))
             break;
 
@@ -2424,7 +2499,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (mons_has_ench(monster, ENCH_CONFUSION))
             break;
 
-        // friendly fiends won't use torment,  preferring hellfire
+        // friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
         // badly they'll damage the player with torment) -- GDL
         if (one_chance_in(4))
@@ -2490,16 +2565,16 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (!mons_near(monster))
             break;
 
-        // the fewer spikes the manticore has left,  the less
+        // the fewer spikes the manticore has left, the less
         // likely it will use them.
         if (random2(16) >= static_cast<int>(monster->number))
             break;
 
-        // do the throwing right here,  since the beam is so
+        // do the throwing right here, since the beam is so
         // easy to set up and doesn't involve inventory.
 
         // set up the beam
-        strcpy(beem.beam_name, "volley of spikes");
+        beem.name = "volley of spikes";
         beem.range = 9;
         beem.rangeMax = 9;
         beem.hit = 14;
@@ -2510,7 +2585,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         beem.flavour = BEAM_MISSILE;
         beem.thrower = KILL_MON;
         beem.aux_source = "volley of spikes";
-        beem.isBeam = false;
+        beem.is_beam = false;
 
         // fire tracer
         fire_tracer(monster, beem);
@@ -2533,6 +2608,8 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
     case MONS_LINDWURM:
     case MONS_FIREDRAKE:
     case MONS_XTAHUA:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
         if (!mons_player_visible( monster ))
             break;
 
@@ -2550,13 +2627,17 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             // good idea?
             if (mons_should_fire(beem))
             {
-                simple_monster_message(monster, " breathes.");
+                simple_monster_message(monster, " breathes.",
+                        MSGCH_MONSTER_SPELL);
                 fire_beam(beem);
                 mmov_x = 0;
                 mmov_y = 0;
                 used = true;
             }
         }
+        break;
+
+    default:
         break;
     }
 
@@ -2590,9 +2671,9 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
             if (monster->hit_points <= monster->max_hit_points / 2
-                && mons_holiness(monster->type) != MH_UNDEAD
-                && mons_holiness(monster->type) != MH_NONLIVING
-                && mons_holiness(monster->type) != MH_PLANT)
+                && mons_holiness(monster) != MH_UNDEAD
+                && mons_holiness(monster) != MH_NONLIVING
+                && mons_holiness(monster) != MH_PLANT)
             {
                 simple_monster_message(monster, " drinks a potion.");
 
@@ -2616,7 +2697,13 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
             // intentional fall through
         case POT_INVISIBILITY:
             if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
+            {
                 beem.colour = MAGENTA;
+                // Friendly monsters won't go invisible if the player
+                // can't see invisible. We're being nice.
+                if ( mons_friendly(monster) && !player_see_invis(false) )
+                    break;
+            }
 
             // why only drink these if not near player? {dlb}
             if (!mons_near(monster))
@@ -2797,12 +2884,12 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
         // set up the beam
         int power = 30 + monster->hit_dice;
-        struct SBeam theBeam = mons_spells(mzap, power);
+        bolt theBeam = mons_spells(mzap, power);
 
         // XXX: ugly hack this:
         static char wand_buff[ ITEMNAME_SIZE ];
 
-        strcpy( beem.beam_name, theBeam.name.c_str() );
+        beem.name = theBeam.name;
         beem.beam_source = monster_index(monster);
         beem.source_x = monster->x;
         beem.source_y = monster->y;
@@ -2814,8 +2901,9 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         beem.hit = theBeam.hit;
         beem.type = theBeam.type;
         beem.flavour = theBeam.flavour;
-        beem.thrower = theBeam.thrown;
-        beem.isBeam = theBeam.isBeam;
+        beem.thrower = theBeam.thrower;
+        beem.is_beam = theBeam.is_beam;
+	beem.is_explosion = theBeam.is_explosion;
 
         item_def item = mitm[ monster->inv[MSLOT_WAND] ];
 
@@ -2864,7 +2952,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
         case WAND_INVISIBILITY:
             if (!mons_has_ench( monster, ENCH_INVIS ) 
-                && !mons_has_ench( monster, ENCH_SUBMERGED ))
+                && !mons_has_ench( monster, ENCH_SUBMERGED )
+                && (!mons_friendly(monster) || player_see_invis(false)))
             {
                 beem.target_x = monster->x;
                 beem.target_y = monster->y;
@@ -2905,12 +2994,12 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
             if (!simple_monster_message(monster, " zaps a wand."))
             {
                 if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a zap.");
+                    mpr("You hear a zap.", MSGCH_SOUND);
             }
 
             // charge expenditure {dlb}
             mitm[monster->inv[MSLOT_WAND]].plus--;
-            beem.isTracer = false;
+            beem.is_tracer = false;
             fire_beam( beem );
 
             return (true);
@@ -2920,6 +3009,69 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
     return (false);
 }                               // end handle_wand()
 
+// Returns a suitable breath weapon for the draconian; does not handle all
+// draconians, does fire a tracer.
+static int get_draconian_breath_spell( struct monsters *monster )
+{
+    int draco_breath = MS_NO_SPELL;
+
+    if (mons_genus( monster->type ) == MONS_DRACONIAN)
+    {
+        switch (draco_subspecies( monster ))
+        {
+        case MONS_BLACK_DRACONIAN:
+            draco_breath = MS_LIGHTNING_BOLT;
+            break;
+
+        case MONS_PALE_DRACONIAN:
+            draco_breath = MS_STEAM_BALL;
+            break;
+
+        case MONS_GREEN_DRACONIAN:
+            draco_breath = MS_POISON_BLAST;
+            break;
+
+        case MONS_PURPLE_DRACONIAN:
+            draco_breath = MS_ORB_ENERGY;
+            break;
+
+        case MONS_MOTTLED_DRACONIAN:
+            draco_breath = MS_STICKY_FLAME;
+            break;
+
+        case MONS_DRACONIAN:
+        case MONS_YELLOW_DRACONIAN:     // already handled as ability
+        case MONS_RED_DRACONIAN:        // already handled as ability
+        case MONS_WHITE_DRACONIAN:      // already handled as ability
+        default:
+            break;
+        }
+
+        if (draco_breath != MS_NO_SPELL)
+        {
+            // [ds] Check line-of-fire here. It won't happen elsewhere.
+            bolt beem;
+            setup_mons_cast(monster, beem, draco_breath);
+            fire_tracer(monster, beem);
+            if (!mons_should_fire(beem))
+                draco_breath = MS_NO_SPELL;
+        }
+
+    }
+
+    return (draco_breath);
+}
+
+static bool is_emergency_spell(const monster_spells &msp, int spell)
+{
+    // If the emergency spell appears early, it's probably not a dedicated
+    // escape spell.
+    for (int i = 0; i < 5; ++i)
+        if (msp[i] == spell)
+            return (false);
+    return (msp[5] == spell);
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -2928,28 +3080,30 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 // a spell was cast.
 //
 //---------------------------------------------------------------
-static bool handle_spell( struct monsters *monster, bolt & beem )
+static bool handle_spell( monsters *monster, bolt & beem )
 {
     bool monsterNearby = mons_near(monster);
     bool finalAnswer = false;   // as in: "Is that your...?" {dlb}
+    const int draco_breath = get_draconian_breath_spell(monster);
 
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP
-        || !mons_flag( monster->type, M_SPELLCASTER )
+        || (!mons_class_flag(monster->type, M_SPELLCASTER)
+                && draco_breath == MS_NO_SPELL)
         || mons_has_ench( monster, ENCH_SUBMERGED ))
     {
         return (false);
     }
 
-    if ((mons_flag(monster->type, M_ACTUAL_SPELLS)
-            || mons_flag(monster->type, M_PRIEST))
+    if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
+            || mons_class_flag(monster->type, M_PRIEST))
         && (mons_has_ench(monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
     {
         return (false);           //jmf: shapeshiftes don't get spells, just
                                   //     physical powers.
     }
     else if (mons_has_ench(monster, ENCH_CONFUSION) 
-            && !mons_flag(monster->type, M_CONFUSED))
+            && !mons_class_flag(monster->type, M_CONFUSED))
     {
         return (false);
     }
@@ -2966,14 +3120,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
     else
     {
         int spell_cast = MS_NO_SPELL;
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        int msecc = ((monster->type == MONS_HELLION)       ? MST_BURNING_DEVIL :
-                 (monster->type == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                           : monster->number);
-
-        mons_spell_list( msecc, hspell_pass );
+        monster_spells hspell_pass = monster->spells;
 
         // forces the casting of dig when player not visible - this is EVIL!
         if (!monsterNearby)
@@ -3055,7 +3202,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             }
 
             // If no useful spells... cast no spell.
-            if (num_no_spell == 6)
+            if (num_no_spell == 6 && draco_breath == MS_NO_SPELL)
                 return (false);
 
             // up to four tries to pick a spell.
@@ -3129,6 +3276,17 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             }
         }
 
+        // If there's otherwise no ranged attack use the breath weapon.
+        // The breath weapon is also occasionally used.
+        if (draco_breath != MS_NO_SPELL 
+                && (spell_cast == MS_NO_SPELL 
+                    || (!is_emergency_spell(hspell_pass, spell_cast)
+                        && one_chance_in(4))))
+        {
+            spell_cast = draco_breath;
+            finalAnswer = true;
+        }
+
         // should the monster *still* not have a spell, well, too bad {dlb}:
         if (spell_cast == MS_NO_SPELL)
             return (false);
@@ -3160,10 +3318,24 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                 switch (monster->type)
                 {
                 default:
+                    if (spell_cast == draco_breath)
+                    {
+                        if (!simple_monster_message(monster, " breathes.",
+                                                    MSGCH_MONSTER_SPELL))
+                        {
+                            if (!silenced(monster->x, monster->y)
+                                && !silenced(you.x_pos, you.y_pos))
+                            {
+                                mpr("You hear a roar.", MSGCH_SOUND);
+                            }
+                        }
+                        break;
+                    }
+
                     if (silenced(monster->x, monster->y))
                         return (false);
 
-                    if (mons_flag(monster->type, M_PRIEST))
+                    if (mons_class_flag(monster->type, M_PRIEST))
                     {
                         switch (random2(3))
                         {
@@ -3193,9 +3365,10 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                             // XXX: could be better, chosen to match the
                             // ones in monspeak.cc... has the problem 
                             // that it doesn't suggest a vocal component. -- bwr
-                            simple_monster_message( monster, 
-                                                    " gestures wildly.",
-                                                    MSGCH_MONSTER_SPELL );
+                            if (player_monster_visible(monster))
+                                simple_monster_message( monster, 
+                                                        " gestures wildly.",
+                                                        MSGCH_MONSTER_SPELL );
                             break;
                         case 1:
                             simple_monster_message( monster, 
@@ -3223,6 +3396,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                 case MONS_SHADOW_DRAGON:
                 case MONS_SWAMP_DRAGON:
                 case MONS_SWAMP_DRAKE:
+                case MONS_DEATH_DRAKE:
                 case MONS_HELL_HOG:
                 case MONS_SERPENT_OF_HELL:
                 case MONS_QUICKSILVER_DRAGON:
@@ -3233,7 +3407,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
                         if (!silenced(monster->x, monster->y)
                             && !silenced(you.x_pos, you.y_pos))
                         {
-                            mpr("You hear a roar.", MSGCH_MONSTER_SPELL);
+                            mpr("You hear a roar.", MSGCH_SOUND);
                         }
                     }
                     break;
@@ -3271,16 +3445,21 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             if (monster->type == MONS_GERYON
                 && !silenced(you.x_pos, you.y_pos))
             {
-                mpr("You hear a weird and mournful sound.");
+                mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
             }
         }
 
         // FINALLY! determine primary spell effects {dlb}:
-        if (spell_cast == MS_BLINK && monsterNearby)
-            // why only cast blink if nearby? {dlb}
+        if (spell_cast == MS_BLINK)
         {
-            simple_monster_message(monster, " blinks!");
-            monster_blink(monster);
+            // why only cast blink if nearby? {dlb}
+            if (monsterNearby)
+            {
+                simple_monster_message(monster, " blinks!");
+                monster_blink(monster);
+            }
+            else
+                return (false);
         }
         else
         {
@@ -3288,7 +3467,7 @@ static bool handle_spell( struct monsters *monster, bolt & beem )
             mmov_x = 0;
             mmov_y = 0;
         }
-    } // end "if mons_flag(monster->type, M_SPELLCASTER) ...
+    } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
 
     return (true);
 }                               // end handle_spell()
@@ -3327,7 +3506,7 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
         return (false);
 
     // recent addition {GDL} - monsters won't throw if they can do melee.
-    // wastes valuable ammo,  and most monsters are better at melee anyway.
+    // wastes valuable ammo, and most monsters are better at melee anyway.
     if (adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
         return (false);
 
@@ -3360,13 +3539,334 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     // good idea?
     if (mons_should_fire( beem ))
     {
-        beem.beam_name[0] = '\0';
+        beem.name.clear();
         return (mons_throw( monster, beem, mon_item ));
     }
 
     return (false);
 }                               // end handle_throw()
 
+static void handle_monster_move(int i, monsters *monster)
+{
+    bool brkk = false;
+    struct bolt beem;
+    FixedArray <unsigned int, 19, 19> show;
+
+    if (monster->hit_points > monster->max_hit_points)
+        monster->hit_points = monster->max_hit_points;
+
+    // monster just summoned (or just took stairs), skip this action
+    if (testbits( monster->flags, MF_JUST_SUMMONED ))
+    {
+        monster->flags &= ~MF_JUST_SUMMONED;
+        return;
+    }
+
+    monster->speed_increment += (monster->speed * you.time_taken) / 10;
+
+    if (you.slow > 0)
+    {
+        monster->speed_increment += (monster->speed * you.time_taken) / 10;
+    }
+
+    // Handle enchantments and clouds on nonmoving monsters:
+    if (monster->speed == 0) 
+    {
+        if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
+            && !mons_has_ench( monster, ENCH_SUBMERGED ))
+        {
+            mons_in_cloud( monster );
+        }
+
+        handle_enchantment( monster );
+    }
+
+    // memory is decremented here for a reason -- we only want it
+    // decrementing once per monster "move"
+    if (monster->foe_memory > 0)
+        monster->foe_memory--;
+
+    if (monster->type == MONS_GLOWING_SHAPESHIFTER)
+        mons_add_ench( monster, ENCH_GLOWING_SHAPESHIFTER );
+
+    // otherwise there are potential problems with summonings
+    if (monster->type == MONS_SHAPESHIFTER)
+        mons_add_ench( monster, ENCH_SHAPESHIFTER );
+
+    // We reset batty monsters from wander to seek here, instead 
+    // of in handle_behaviour() since that will be called with
+    // every single movement, and we want these monsters to 
+    // hit and run. -- bwr
+    if (monster->foe != MHITNOT 
+        && monster->behaviour == BEH_WANDER
+        && testbits( monster->flags, MF_BATTY ))
+    {
+        monster->behaviour = BEH_SEEK;    
+    }
+
+    while (monster->speed_increment >= 80)
+    {                   // The continues & breaks are WRT this.
+        if (monster->type != -1 && monster->hit_points < 1)
+            break;
+
+        monster->speed_increment -= 10;
+
+        if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
+        {
+            if (mons_has_ench( monster, ENCH_SUBMERGED ))
+                break;
+
+            if (monster->type == -1)
+                break;  // problem with vortices
+
+            mons_in_cloud(monster);
+
+            if (monster->type == -1)
+            {
+                monster->speed_increment = 1;
+                break;
+            }
+        }
+
+        handle_behaviour(monster);
+
+        if (handle_enchantment(monster))
+            continue;
+
+        // submerging monsters will hide from clouds
+        if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
+            && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
+        {
+            mons_add_ench( monster, ENCH_SUBMERGED );
+        }
+
+        // regenerate:
+        if (monster_descriptor(monster->type, MDSC_REGENERATES)
+
+            || (monster->type == MONS_FIRE_ELEMENTAL 
+                && (grd[monster->x][monster->y] == DNGN_LAVA
+                    || env.cgrid[monster->x][monster->y] == CLOUD_FIRE
+                    || env.cgrid[monster->x][monster->y] == CLOUD_FIRE_MON))
+
+            || (monster->type == MONS_WATER_ELEMENTAL 
+                && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
+                    || grd[monster->x][monster->y] == DNGN_DEEP_WATER))
+
+            || (monster->type == MONS_AIR_ELEMENTAL
+                && env.cgrid[monster->x][monster->y] == EMPTY_CLOUD
+                && one_chance_in(3))
+
+            || one_chance_in(25))
+        {
+            heal_monster(monster, 1, false);
+        }
+
+        if (monster->speed >= 100)
+            continue;
+
+        if (monster->type == MONS_ZOMBIE_SMALL
+            || monster->type == MONS_ZOMBIE_LARGE
+            || monster->type == MONS_SIMULACRUM_SMALL
+            || monster->type == MONS_SIMULACRUM_LARGE
+            || monster->type == MONS_SKELETON_SMALL
+            || monster->type == MONS_SKELETON_LARGE)
+        {
+            monster->max_hit_points = monster->hit_points;
+        }
+
+        if (igrd[monster->x][monster->y] != NON_ITEM
+            && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR 
+                || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS
+                || monster->type == MONS_NECROPHAGE
+                || monster->type == MONS_GHOUL))
+        {
+            if (handle_pickup(monster))
+                continue;
+        }
+
+        // calculates mmov_x, mmov_y based on monster target.
+        handle_movement(monster);
+
+        brkk = false;
+
+        if (mons_has_ench( monster, ENCH_CONFUSION )
+            || (monster->type == MONS_AIR_ELEMENTAL 
+                && mons_has_ench( monster, ENCH_SUBMERGED )))
+        {
+            mmov_x = random2(3) - 1;
+            mmov_y = random2(3) - 1;
+
+            // bounds check: don't let confused monsters try to run
+            // off the map
+            if (monster->target_x + mmov_x < 0 
+                    || monster->target_x + mmov_x >= GXM)
+            {
+                mmov_x = 0;
+            }
+
+            if (monster->target_y + mmov_y < 0 
+                    || monster->target_y + mmov_y >= GYM)
+            {
+                mmov_y = 0;
+            }
+
+            if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
+                && (mmov_x != 0 || mmov_y != 0))
+            {
+                mmov_x = 0;
+                mmov_y = 0;
+
+                if (monsters_fight(i, mgrd[monster->x + mmov_x][monster->y + mmov_y]))
+                {
+                    brkk = true;
+                }
+            }
+        }
+
+        if (brkk)
+            continue;
+
+        handle_nearby_ability( monster );
+
+        beem.target_x = monster->target_x;
+        beem.target_y = monster->target_y;
+
+        if (monster->behaviour != BEH_SLEEP
+            && monster->behaviour != BEH_WANDER)
+        {
+            // prevents unfriendlies from nuking you from offscreen.
+            // How nice!
+            if (mons_friendly(monster) || mons_near(monster))
+            {
+                if (handle_special_ability(monster, beem))
+                    continue;
+
+                if (handle_potion(monster, beem))
+                    continue;
+
+                if (handle_scroll(monster))
+                    continue;
+
+                // shapeshifters don't get spells
+                if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
+                                             ENCH_SHAPESHIFTER )
+                    || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
+                {
+                    if (handle_spell(monster, beem))
+                        continue;
+                }
+
+                if (handle_wand(monster, beem))
+                    continue;
+
+                if (handle_reaching(monster))
+                    continue;
+            }
+
+            if (handle_throw(monster, beem))
+                continue;
+        }
+
+        // see if we move into (and fight) an unfriendly monster
+        int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+        if (targmon != NON_MONSTER
+            && targmon != i 
+            && !mons_aligned(i, targmon))
+        {
+            // figure out if they fight
+            if (monsters_fight(i, targmon))
+            {
+                if (testbits(monster->flags, MF_BATTY))
+                {
+                    monster->behaviour = BEH_WANDER;
+                    monster->target_x = 10 + random2(GXM - 10);
+                    monster->target_y = 10 + random2(GYM - 10);
+                    // monster->speed_increment -= monster->speed;
+                }
+
+                mmov_x = 0;
+                mmov_y = 0;
+                brkk = true;
+            }
+        }
+
+        if (brkk)
+            continue;
+
+        if (monster->x + mmov_x == you.x_pos
+            && monster->y + mmov_y == you.y_pos)
+        {
+            bool isFriendly = mons_friendly(monster);
+            bool attacked = false;
+
+            if (!isFriendly)
+            {
+                monster_attack(i);
+                attacked = true;
+
+                if (testbits(monster->flags, MF_BATTY))
+                {
+                    monster->behaviour = BEH_WANDER;
+                    monster->target_x = 10 + random2(GXM - 10);
+                    monster->target_y = 10 + random2(GYM - 10);
+                }
+            }
+
+            if ((monster->type == MONS_GIANT_SPORE
+                    || monster->type == MONS_BALL_LIGHTNING)
+                && monster->hit_points < 1)
+            {
+
+                // detach monster from the grid first, so it
+                // doesn't get hit by its own explosion (GDL)
+                mgrd[monster->x][monster->y] = NON_MONSTER;
+
+                spore_goes_pop(monster);
+                monster_cleanup(monster);
+                continue;
+            }
+
+            if (attacked)
+            {
+                mmov_x = 0;
+                mmov_y = 0;
+                continue;   //break;
+            }
+        }
+
+        if (invalid_monster(monster) || mons_is_stationary(monster))
+            continue;
+
+        monster_move(monster);
+
+        // reevaluate behaviour, since the monster's
+        // surroundings have changed (it may have moved,
+        // or died for that matter.  Don't bother for
+        // dead monsters.  :)
+        if (monster->type != -1)
+            handle_behaviour(monster);
+
+    }                   // end while
+
+    if (monster->type != -1 && monster->hit_points < 1)
+    {
+        if (monster->type == MONS_GIANT_SPORE
+            || monster->type == MONS_BALL_LIGHTNING)
+        {
+            // detach monster from the grid first, so it
+            // doesn't get hit by its own explosion (GDL)
+            mgrd[monster->x][monster->y] = NON_MONSTER;
+
+            spore_goes_pop( monster );
+            monster_cleanup( monster );
+            return;
+        }
+        else
+        {
+            monster_die( monster, KILL_MISC, 0 );
+        }
+    }    
+}
 
 //---------------------------------------------------------------
 //
@@ -3377,347 +3877,29 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
 //---------------------------------------------------------------
 void handle_monsters(void)
 {
-    bool        brkk = false;
-    struct bolt beem;
-    int         i;
+    // Keep track of monsters that have already moved and don't allow
+    // them to move again.
+    memset(immobile_monster, 0, sizeof immobile_monster);
 
-    FixedArray < unsigned int, 19, 19 > show;
-
-//    losight(show, grd, you.x_pos, you.y_pos);
-
-    for (i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
         struct monsters *monster = &menv[i];
 
-        if (monster->type != -1)
-        {
-            if (monster->hit_points > monster->max_hit_points)
-                monster->hit_points = monster->max_hit_points;
+        if (monster->type == -1 || immobile_monster[i])
+            continue;
 
-            // monster just summoned (or just took stairs), skip this action
-            if (testbits( monster->flags, MF_JUST_SUMMONED ))
-            {
-                monster->flags &= ~MF_JUST_SUMMONED;
-                continue;
-            }
+        const int mx = monster->x, 
+                  my = monster->y;
+        handle_monster_move(i, monster);
 
-            monster->speed_increment += (monster->speed * you.time_taken) / 10;
-
-            if (you.slow > 0)
-            {
-                monster->speed_increment += (monster->speed * you.time_taken) / 10;
-            }
-
-            // Handle enchantments and clouds on nonmoving monsters:
-            if (monster->speed == 0) 
-            {
-                if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
-                    && !mons_has_ench( monster, ENCH_SUBMERGED ))
-                {
-                    mons_in_cloud( monster );
-                }
-
-                handle_enchantment( monster );
-            }
-
-            // memory is decremented here for a reason -- we only want it
-            // decrementing once per monster "move"
-            if (monster->foe_memory > 0)
-                monster->foe_memory--;
-
-            if (monster->type == MONS_GLOWING_SHAPESHIFTER)
-                mons_add_ench( monster, ENCH_GLOWING_SHAPESHIFTER );
-
-            // otherwise there are potential problems with summonings
-            if (monster->type == MONS_SHAPESHIFTER)
-                mons_add_ench( monster, ENCH_SHAPESHIFTER );
-
-            // We reset batty monsters from wander to seek here, instead 
-            // of in handle_behaviour() since that will be called with
-            // every single movement, and we want these monsters to 
-            // hit and run. -- bwr
-            if (monster->foe != MHITNOT 
-                && monster->behaviour == BEH_WANDER
-                && testbits( monster->flags, MF_BATTY ))
-            {
-                monster->behaviour = BEH_SEEK;    
-            }
-
-            while (monster->speed_increment >= 80)
-            {                   // The continues & breaks are WRT this.
-                if (monster->type != -1 && monster->hit_points < 1)
-                    break;
-
-                monster->speed_increment -= 10;
-
-                if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
-                {
-                    if (mons_has_ench( monster, ENCH_SUBMERGED ))
-                        break;
-
-                    if (monster->type == -1)
-                        break;  // problem with vortices
-
-                    mons_in_cloud(monster);
-
-                    if (monster->type == -1)
-                    {
-                        monster->speed_increment = 1;
-                        break;
-                    }
-                }
-
-                handle_behaviour(monster);
-
-                if (handle_enchantment(monster))
-                    continue;
-
-                // submerging monsters will hide from clouds
-                const int habitat = monster_habitat( monster->type );
-                if (habitat != DNGN_FLOOR 
-                    && habitat == grd[monster->x][monster->y]
-                    && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
-                {
-                    mons_add_ench( monster, ENCH_SUBMERGED );
-                }
-
-                // regenerate:
-                if (monster_descriptor(monster->type, MDSC_REGENERATES)
-
-                    || (monster->type == MONS_FIRE_ELEMENTAL 
-                        && (grd[monster->x][monster->y] == DNGN_LAVA
-                            || env.cgrid[monster->x][monster->y] == CLOUD_FIRE
-                            || env.cgrid[monster->x][monster->y] == CLOUD_FIRE_MON))
-
-                    || (monster->type == MONS_WATER_ELEMENTAL 
-                        && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                            || grd[monster->x][monster->y] == DNGN_DEEP_WATER))
-
-                    || (monster->type == MONS_AIR_ELEMENTAL
-                        && env.cgrid[monster->x][monster->y] == EMPTY_CLOUD
-                        && one_chance_in(3))
-
-                    || one_chance_in(25))
-                {
-                    heal_monster(monster, 1, false);
-                }
-
-                if (monster->speed >= 100)
-                    continue;
-
-                if (monster->type == MONS_ZOMBIE_SMALL
-                    || monster->type == MONS_ZOMBIE_LARGE
-                    || monster->type == MONS_SIMULACRUM_SMALL
-                    || monster->type == MONS_SIMULACRUM_LARGE
-                    || monster->type == MONS_SKELETON_SMALL
-                    || monster->type == MONS_SKELETON_LARGE)
-                {
-                    monster->max_hit_points = monster->hit_points;
-                }
-
-                if (igrd[monster->x][monster->y] != NON_ITEM
-                    && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR 
-                        || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS
-                        || monster->type == MONS_NECROPHAGE
-                        || monster->type == MONS_GHOUL))
-                {
-                    if (handle_pickup(monster))
-                        continue;
-                }
-
-                // calculates mmov_x, mmov_y based on monster target.
-                handle_movement(monster);
-
-                brkk = false;
-
-                if (mons_has_ench( monster, ENCH_CONFUSION )
-                    || (monster->type == MONS_AIR_ELEMENTAL 
-                        && mons_has_ench( monster, ENCH_SUBMERGED )))
-                {
-                    mmov_x = random2(3) - 1;
-                    mmov_y = random2(3) - 1;
-
-                    // bounds check: don't let confused monsters try to run
-                    // off the map
-                    if (monster->target_x + mmov_x < 0 
-                            || monster->target_x + mmov_x >= GXM)
-                    {
-                        mmov_x = 0;
-                    }
-
-                    if (monster->target_y + mmov_y < 0 
-                            || monster->target_y + mmov_y >= GYM)
-                    {
-                        mmov_y = 0;
-                    }
-
-                    if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
-                        && (mmov_x != 0 || mmov_y != 0))
-                    {
-                        mmov_x = 0;
-                        mmov_y = 0;
-
-                        if (monsters_fight(i, mgrd[monster->x + mmov_x][monster->y + mmov_y]))
-                        {
-                            brkk = true;
-                        }
-                    }
-                }
-
-                if (brkk)
-                    continue;
-
-                handle_nearby_ability( monster );
-
-                beem.target_x = monster->target_x;
-                beem.target_y = monster->target_y;
-
-                if (monster->behaviour != BEH_SLEEP
-                    && monster->behaviour != BEH_WANDER)
-                {
-                    // prevents unfriendlies from nuking you from offscreen.
-                    // How nice!
-                    if (mons_friendly(monster) || mons_near(monster))
-                    {
-                        if (handle_special_ability(monster, beem))
-                            continue;
-
-                        if (handle_potion(monster, beem))
-                            continue;
-
-                        if (handle_scroll(monster))
-                            continue;
-
-                        // shapeshifters don't get spells
-                        if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
-                                                     ENCH_SHAPESHIFTER )
-                            || !mons_flag( monster->type, M_ACTUAL_SPELLS ))
-                        {
-                            if (handle_spell(monster, beem))
-                                continue;
-                        }
-
-                        if (handle_wand(monster, beem))
-                            continue;
-
-                        if (handle_reaching(monster))
-                            continue;
-                    }
-
-                    if (handle_throw(monster, beem))
-                        continue;
-                }
-
-                // see if we move into (and fight) an unfriendly monster
-                int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
-                if (targmon != NON_MONSTER
-                    && targmon != i 
-                    && !mons_aligned(i, targmon))
-                {
-                    // figure out if they fight
-                    if (monsters_fight(i, targmon))
-                    {
-                        if (testbits(monster->flags, MF_BATTY))
-                        {
-                            monster->behaviour = BEH_WANDER;
-                            monster->target_x = 10 + random2(GXM - 10);
-                            monster->target_y = 10 + random2(GYM - 10);
-                            // monster->speed_increment -= monster->speed;
-                        }
-
-                        mmov_x = 0;
-                        mmov_y = 0;
-                        brkk = true;
-                    }
-                }
-
-                if (brkk)
-                    continue;
-
-                if (monster->x + mmov_x == you.x_pos
-                    && monster->y + mmov_y == you.y_pos)
-                {
-                    bool isFriendly = mons_friendly(monster);
-                    bool attacked = false;
-
-                    if (!isFriendly)
-                    {
-                        monster_attack(i);
-                        attacked = true;
-
-                        if (testbits(monster->flags, MF_BATTY))
-                        {
-                            monster->behaviour = BEH_WANDER;
-                            monster->target_x = 10 + random2(GXM - 10);
-                            monster->target_y = 10 + random2(GYM - 10);
-                        }
-                    }
-
-                    if ((monster->type == MONS_GIANT_SPORE
-                            || monster->type == MONS_BALL_LIGHTNING)
-                        && monster->hit_points < 1)
-                    {
-
-                        // detach monster from the grid first, so it
-                        // doesn't get hit by its own explosion (GDL)
-                        mgrd[monster->x][monster->y] = NON_MONSTER;
-
-                        spore_goes_pop(monster);
-                        monster_cleanup(monster);
-                        continue;
-                    }
-
-                    if (attacked)
-                    {
-                        mmov_x = 0;
-                        mmov_y = 0;
-                        continue;   //break;
-                    }
-                }
-
-                if (monster->type == -1 || monster->type == MONS_OKLOB_PLANT
-                    || monster->type == MONS_CURSE_SKULL
-                    || (monster->type >= MONS_CURSE_TOE
-                        && monster->type <= MONS_POTION_MIMIC))
-                {
-                    continue;
-                }
-
-                monster_move(monster);
-
-                // reevaluate behaviour, since the monster's
-                // surroundings have changed (it may have moved,
-                // or died for that matter.  Don't bother for
-                // dead monsters.  :)
-                if (monster->type != -1)
-                    handle_behaviour(monster);
-
-            }                   // end while
-
-            if (monster->type != -1 && monster->hit_points < 1)
-            {
-                if (monster->type == MONS_GIANT_SPORE
-                    || monster->type == MONS_BALL_LIGHTNING)
-                {
-                    // detach monster from the grid first, so it
-                    // doesn't get hit by its own explosion (GDL)
-                    mgrd[monster->x][monster->y] = NON_MONSTER;
-
-                    spore_goes_pop( monster );
-                    monster_cleanup( monster );
-                    continue;
-                }
-                else
-                {
-                    monster_die( monster, KILL_MISC, 0 );
-                }
-            }
-        }                       // end of if (mons_class != -1)
+        if (!invalid_monster(monster) 
+                && (monster->x != mx || monster->y != my))
+            immobile_monster[i] = true;
     }                           // end of for loop
 
     // Clear any summoning flags so that lower indiced 
     // monsters get their actions in the next round.
-    for (i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
         menv[i].flags &= ~MF_JUST_SUMMONED;
     }
@@ -3744,10 +3926,7 @@ static bool handle_pickup(struct monsters *monster)
     if (monster->behaviour == BEH_SLEEP)
         return (false);
 
-    if (monster->type == MONS_JELLY
-        || monster->type == MONS_BROWN_OOZE
-        || monster->type == MONS_ACID_BLOB
-        || monster->type == MONS_ROYAL_JELLY)
+    if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
         int hps_gained = 0;
         int max_eat = roll_dice( 1, 10 );
@@ -3785,7 +3964,7 @@ static bool handle_pickup(struct monsters *monster)
                 if (quant > max_eat - eaten)
                     quant = max_eat - eaten;
 
-                hps_gained += (quant * mass_item( mitm[item] )) / 20 + quant;
+                hps_gained += (quant * item_mass( mitm[item] )) / 20 + quant;
                 eaten += quant;
             }
             else
@@ -3822,10 +4001,10 @@ static bool handle_pickup(struct monsters *monster)
                 if (!monsterNearby)
                     strcat(info, " distant");
                 strcat(info, " slurping noise.");
-                mpr(info);
+                mpr(info, MSGCH_SOUND);
             }
 
-            if (mons_flag( monster->type, M_SPLITS )) 
+            if (mons_class_flag( monster->type, M_SPLITS )) 
             {
                 const int reqd = (monster->hit_dice <= 6) 
                                             ? 50 : monster->hit_dice * 8;
@@ -3855,8 +4034,8 @@ static bool handle_pickup(struct monsters *monster)
 
         // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
         // of course, this also block knives {dlb}:
-        if ((mons_charclass(monster->type) == MONS_KOBOLD
-                || mons_charclass(monster->type) == MONS_GOBLIN)
+        if ((mons_species(monster->type) == MONS_KOBOLD
+                || mons_species(monster->type) == MONS_GOBLIN)
             && property( mitm[item], PWPN_HIT ) <= 0)
         {
             return (false);
@@ -4058,6 +4237,135 @@ static bool handle_pickup(struct monsters *monster)
     return (true);
 }                               // end handle_pickup()
 
+static void jelly_grows(monsters *monster)
+{
+    if (!silenced(you.x_pos, you.y_pos)
+        && !silenced(monster->x, monster->y))
+    {
+        strcpy(info, "You hear a");
+        if (!mons_near(monster))
+            strcat(info, " distant");
+        strcat(info, " slurping noise.");
+        mpr(info, MSGCH_SOUND);
+    }
+
+    monster->hit_points += 5;
+
+    // note here, that this makes jellies "grow" {dlb}:
+    if (monster->hit_points > monster->max_hit_points)
+        monster->max_hit_points = monster->hit_points;
+
+    if (mons_class_flag( monster->type, M_SPLITS ))
+    {
+        // and here is where the jelly might divide {dlb}
+        const int reqd = (monster->hit_dice < 6) ? 50 
+                                                 : monster->hit_dice * 8;
+
+        if (monster->hit_points >= reqd)
+            jelly_divide(monster);
+    }
+}
+
+static bool mons_can_displace(const monsters *mpusher, const monsters *mpushee)
+{
+    if (invalid_monster(mpusher) || invalid_monster(mpushee))
+        return (false);
+
+    const int ipushee = monster_index(mpushee);
+    if (ipushee < 0 || ipushee >= MAX_MONSTERS)
+        return (false);
+
+    if (immobile_monster[ipushee])
+        return (false);
+
+    // Confused monsters can't be pushed past, sleeping monsters
+    // can't push. Note that sleeping monsters can't be pushed
+    // past, either, but they may be woken up by a crowd trying to
+    // elbow past them, and the wake-up check happens downstream.
+    if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
+            || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
+            || mons_is_sleeping(mpusher))
+        return (false);
+
+    // Batty monsters are unpushable
+    if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
+        return (false);
+
+    if (!monster_shover(mpusher))
+        return (false);
+
+    if (!monster_senior(mpusher, mpushee))
+        return (false);
+
+    return (true);
+}
+
+static bool monster_swaps_places( monsters *mon, int mx, int my )
+{
+    if (!mx && !my)
+        return (false);
+
+    int targmon = mgrd[mon->x + mx][mon->y + my];    
+    if (targmon == MHITNOT || targmon == MHITYOU)
+        return (false);
+
+    monsters *m2 = &menv[targmon];
+    if (!mons_can_displace(mon, m2))
+        return (false);
+
+    if (mons_is_sleeping(m2))
+    {
+        if (one_chance_in(2))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            char mname[ITEMNAME_SIZE];
+            moname(m2->type, true, DESC_PLAIN, mname);
+            mprf(MSGCH_DIAGNOSTICS, 
+                    "Alerting monster %s at (%d,%d)", mname, m2->x, m2->y);
+#endif
+            behaviour_event( m2, ME_ALERT, MHITNOT );
+        }
+        return (false);
+    }
+
+    // Check that both monsters will be happy at their proposed new locations.
+    const int cx = mon->x, cy = mon->y,
+              nx = mon->x + mx, ny = mon->y + my;
+    if (!habitat_okay(mon, grd[nx][ny])
+            || !habitat_okay(m2, grd[cx][cy]))
+        return (false);
+
+    // Okay, do the swap!
+#ifdef DEBUG_DIAGNOSTICS
+    char mname[ITEMNAME_SIZE];
+    moname(mon->type, true, DESC_PLAIN, mname);
+    mprf(MSGCH_DIAGNOSTICS,
+        "Swap: %s (%d,%d)->(%d,%d) (%d;%d)", 
+            mname, mon->x, mon->y, nx, ny, mon->speed_increment, mon->speed);
+#endif
+    mon->x = nx;
+    mon->y = ny;
+    mgrd[nx][ny] = monster_index(mon);
+
+#ifdef DEBUG_DIAGNOSTICS
+    moname(m2->type, true, DESC_PLAIN, mname);
+    mprf(MSGCH_DIAGNOSTICS,
+        "Swap: %s (%d,%d)->(%d,%d) (%d;%d)",
+            mname, m2->x, m2->y, cx, cy, mon->speed_increment, mon->speed);
+#endif
+    m2->x  = cx;
+    m2->y  = cy;
+    const int m2i = monster_index(m2);
+    ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
+    mgrd[cx][cy] = m2i;
+    immobile_monster[m2i] = true;
+
+    mons_trap(mon);
+    mons_trap(m2);
+
+    return (false);
+}
+
 static void monster_move(struct monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
@@ -4078,7 +4386,7 @@ static void monster_move(struct monsters *monster)
 
     if (mons_flies(monster) > 0 
         || habitat != DNGN_FLOOR
-        || mons_flag( monster->type, M_AMPHIBIOUS ))
+        || mons_class_flag( monster->type, M_AMPHIBIOUS ))
     {
         okmove = MINMOVE;
     }
@@ -4088,12 +4396,11 @@ static void monster_move(struct monsters *monster)
         for (count_y = 0; count_y < 3; count_y++)
         {
             good_move[count_x][count_y] = true;
+            
             const int targ_x = monster->x + count_x - 1;
             const int targ_y = monster->y + count_y - 1;
-            int target_grid = grd[targ_x][targ_y];
-
-            const int targ_cloud = env.cgrid[ targ_x ][ targ_y ];
-            const int curr_cloud = env.cgrid[ monster->x ][ monster->y ];
+            // [ds] Bounds check was after grd[targ_x][targ_y] which would
+            // trigger an ASSERT. Moved it up.
 
             // bounds check - don't consider moving out of grid!
             if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
@@ -4101,6 +4408,18 @@ static void monster_move(struct monsters *monster)
                 good_move[count_x][count_y] = false;
                 continue;
             }
+
+            int target_grid = grd[targ_x][targ_y];
+
+            const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
+            const int targ_cloud_type = 
+                targ_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                             : env.cloud[targ_cloud_num].type;
+
+            const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
+            const int curr_cloud_type =
+                curr_cloud_num == EMPTY_CLOUD? CLOUD_NONE
+                                             : env.cloud[curr_cloud_num].type;
 
             if (target_grid == DNGN_DEEP_WATER)
                 deep_water_available = true;
@@ -4144,10 +4463,10 @@ static void monster_move(struct monsters *monster)
             // Water elementals avoid fire and heat
             if (monster->type == MONS_WATER_ELEMENTAL
                 && (target_grid == DNGN_LAVA
-                    || targ_cloud == CLOUD_FIRE 
-                    || targ_cloud == CLOUD_FIRE_MON
-                    || targ_cloud == CLOUD_STEAM 
-                    || targ_cloud == CLOUD_STEAM_MON))
+                    || targ_cloud_type == CLOUD_FIRE 
+                    || targ_cloud_type == CLOUD_FIRE_MON
+                    || targ_cloud_type == CLOUD_STEAM 
+                    || targ_cloud_type == CLOUD_STEAM_MON))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4158,8 +4477,8 @@ static void monster_move(struct monsters *monster)
                 && (target_grid == DNGN_DEEP_WATER
                     || target_grid == DNGN_SHALLOW_WATER
                     || target_grid == DNGN_BLUE_FOUNTAIN
-                    || targ_cloud == CLOUD_COLD
-                    || targ_cloud == CLOUD_COLD_MON))
+                    || targ_cloud_type == CLOUD_COLD
+                    || targ_cloud_type == CLOUD_COLD_MON))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4167,12 +4486,14 @@ static void monster_move(struct monsters *monster)
 
             // Submerged water creatures avoid the shallows where
             // they would be forced to surface. -- bwr
+            // [dshaligram] Monsters now prefer to head for deep water only if
+            // they're low on hitpoints. No point in hiding if they want a
+            // fight.
             if (habitat == DNGN_DEEP_WATER
                 && (targ_x != you.x_pos || targ_y != you.y_pos)
                 && target_grid != DNGN_DEEP_WATER
                 && grd[monster->x][monster->y] == DNGN_DEEP_WATER
-                && (mons_has_ench( monster, ENCH_SUBMERGED )
-                    || monster->hit_points < (monster->max_hit_points * 3) / 4))
+                && monster->hit_points < (monster->max_hit_points * 3) / 4)
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4182,11 +4503,16 @@ static void monster_move(struct monsters *monster)
             // we're hostile (even if we're heading somewhere
             // else)
 
-            // smacking another monster is good,  if the monsters
+            // smacking another monster is good, if the monsters
             // are aligned differently
             if (mgrd[targ_x][targ_y] != NON_MONSTER)
             {
-                if (mons_aligned(monster_index(monster), mgrd[targ_x][targ_y]))
+                const int thismonster = monster_index(monster),
+                          targmonster = mgrd[targ_x][targ_y];
+                if (mons_aligned(thismonster, targmonster)
+                        && targmonster != MHITNOT
+                        && targmonster != MHITYOU
+                        && !mons_can_displace(monster, &menv[targmonster]))
                 {
                     good_move[count_x][count_y] = false;
                     continue;
@@ -4205,15 +4531,15 @@ static void monster_move(struct monsters *monster)
                 }
             }
 
-            if (targ_cloud != EMPTY_CLOUD)
+            if (targ_cloud_num != EMPTY_CLOUD)
             {
-                if (curr_cloud != EMPTY_CLOUD
-                    && env.cloud[targ_cloud].type == env.cloud[curr_cloud].type)
+                if (curr_cloud_num != EMPTY_CLOUD
+                    && targ_cloud_type == curr_cloud_type)
                 {
                     continue;
                 }
 
-                switch (env.cloud[ targ_cloud ].type)
+                switch (targ_cloud_type)
                 {
                 case CLOUD_FIRE:
                 case CLOUD_FIRE_MON:
@@ -4252,7 +4578,7 @@ static void monster_move(struct monsters *monster)
                         continue;
                     break;
 
-                // this isn't harmful,  but dumb critters might think so.
+                // this isn't harmful, but dumb critters might think so.
                 case CLOUD_GREY_SMOKE:
                 case CLOUD_GREY_SMOKE_MON:
                     if (mons_intel(monster->type) > I_ANIMAL || coinflip())
@@ -4313,42 +4639,20 @@ static void monster_move(struct monsters *monster)
     {
         grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
 
-        if (!silenced(you.x_pos, you.y_pos)
-            && !silenced(monster->x, monster->y))
-        {
-            strcpy(info, "You hear a");
-            if (!mons_near(monster))
-                strcat(info, " distant");
-            strcat(info, " slurping noise.");
-            mpr(info);
-        }
-
-        monster->hit_points += 5;
-
-        // note here, that this makes jellies "grow" {dlb}:
-        if (monster->hit_points > monster->max_hit_points)
-            monster->max_hit_points = monster->hit_points;
-
-        if (mons_flag( monster->type, M_SPLITS ))
-        {
-            // and here is where the jelly might divide {dlb}
-            const int reqd = (monster->hit_dice < 6) ? 50 
-                                                     : monster->hit_dice * 8;
-
-            if (monster->hit_points >= reqd)
-                jelly_divide(monster);
-        }
+        jelly_grows(monster);
     } // done door-eating jellies
 
 
-    // water creatures have a preferance for water they can hide in -- bwr
+    // water creatures have a preference for water they can hide in -- bwr
+    // [ds] Weakened the powerful attraction to deep water if the monster
+    // is in good health.
     if (habitat == DNGN_DEEP_WATER 
         && deep_water_available
         && grd[monster->x][monster->y] != DNGN_DEEP_WATER
         && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER
         && (monster->x + mmov_x != you.x_pos 
             || monster->y + mmov_y != you.y_pos)
-        && (coinflip() 
+        && (one_chance_in(3)
             || monster->hit_points <= (monster->max_hit_points * 3) / 4))
     {
         count = 0;
@@ -4374,10 +4678,10 @@ static void monster_move(struct monsters *monster)
     }
 
 
-    // now,  if a monster can't move in its intended direction,  try
-    // either side.  If they're both good,  move in whichever dir
+    // now, if a monster can't move in its intended direction, try
+    // either side.  If they're both good, move in whichever dir
     // gets it closer(farther for fleeing monsters) to its target.
-    // If neither does,  do nothing.
+    // If neither does, do nothing.
     if (good_move[mmov_x + 1][mmov_y + 1] == false)
     {
         int current_distance = grid_distance( monster->x, monster->y,
@@ -4401,7 +4705,7 @@ static void monster_move(struct monsters *monster)
 
         int dist[2];
 
-        // first 1 away,  then 2 (3 is silly)
+        // first 1 away, then 2 (3 is silly)
         for (int j = 1; j <= 2; j++)
         {
             int sdir, inc;
@@ -4488,7 +4792,7 @@ forget_it:
             grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
 
             if (!silenced(you.x_pos, you.y_pos))
-                mpr("You hear a grinding noise.");
+                mpr("You hear a grinding noise.", MSGCH_SOUND);
         }
     }
 
@@ -4523,7 +4827,12 @@ forget_it:
         int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
         if (targmon != NON_MONSTER)
         {
-            monsters_fight(monster_index(monster), targmon);
+            if (mons_aligned(monster_index(monster), targmon))
+                monster_swaps_places(monster, mmov_x, mmov_y);
+            else
+                monsters_fight(monster_index(monster), targmon);
+
+            // If the monster swapped places, the work's already done.
             mmov_x = 0;
             mmov_y = 0;
         }
@@ -4535,9 +4844,24 @@ forget_it:
                          2 + random2(4) );
         }
 
+        if (monster->type == MONS_ROTTING_DEVIL 
+                || monster->type == MONS_CURSE_TOE)
+        {
+            place_cloud( CLOUD_MIASMA_MON, monster->x, monster->y, 
+                         2 + random2(3) );
+        }
+
         /* this appears to be the real one, ie where the movement occurs: */
         monster->x += mmov_x;
         monster->y += mmov_y;
+
+        if (monster->type == MONS_CURSE_TOE)
+        {
+            // Curse toes are a special case; they can only move at half their
+            // attack rate. To simulate that, the toe loses another action's
+            // worth of energy when moving.
+            monster->speed_increment -= 10;
+        }
     }
     else
     {
@@ -4552,9 +4876,7 @@ forget_it:
     mgrd[monster->x][monster->y] = monster_index(monster);
 
     // monsters stepping on traps:
-    if (grd[monster->x][monster->y] >= DNGN_TRAP_MECHANICAL
-        && grd[monster->x][monster->y] <= DNGN_UNDISCOVERED_TRAP
-        && (mmov_x != 0 || mmov_y != 0))
+    if (mmov_x != 0 || mmov_y != 0)
     {
         mons_trap(monster);
     }
@@ -4568,7 +4890,7 @@ static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
     char spit_string[INFO_SIZE];
 
     // setup plant spit
-    strcpy( pbolt.beam_name, "acid" );
+    pbolt.name = "acid";
     pbolt.type = SYM_ZAP;
     pbolt.range = 9;
     pbolt.rangeMax = 9;
@@ -4578,7 +4900,7 @@ static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
     pbolt.damage = dice_def( 3, 7 );
     pbolt.hit = 20 + (3 * monster->hit_dice);
     pbolt.thrower = KILL_MON_MISSILE;
-    pbolt.aux_source = NULL;
+    pbolt.aux_source.clear();
 
     // fire tracer
     fire_tracer(monster, pbolt);
@@ -4718,7 +5040,8 @@ static void mons_in_cloud(struct monsters *monster)
     case CLOUD_MIASMA_MON:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
-        if (mons_holiness(monster->type) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL 
+                || monster->type == MONS_DEATH_DRAKE)
             return;
 
         poison_monster(monster, (env.cloud[wc].type == CLOUD_MIASMA));
@@ -4891,7 +5214,7 @@ bool message_current_target(void)
 }                               // end message_current_target()
 
 // aaah, the simple joys of pointer arithmetic! {dlb}:
-unsigned int monster_index(struct monsters *monster)
+unsigned int monster_index(const monsters *monster)
 {
     return (monster - menv.buffer());
 }                               // end monster_index()
@@ -4912,6 +5235,9 @@ bool hurt_monster(struct monsters * victim, int damage_dealt)
 bool heal_monster(struct monsters * patient, int health_boost,
                   bool permit_growth)
 {
+    if (mons_is_statue(patient->type))
+        return (false);
+
     if (health_boost < 1)
         return (false);
     else if (!permit_growth && patient->hit_points == patient->max_hit_points)
@@ -4986,4 +5312,99 @@ static int map_wand_to_mspell(int wand_type)
     }
 
     return (mzap);
+}
+
+void seen_monster(struct monsters *monster)
+{
+    if ( monster->flags & MF_SEEN )
+	return;
+    
+    // First time we've seen this particular monster
+    monster->flags |= MF_SEEN;
+    
+    if ( MONST_INTERESTING(monster) &&
+         monster->type != MONS_PANDEMONIUM_DEMON &&
+         monster->type != MONS_PLAYER_GHOST )
+    {
+        char namebuf[ITEMNAME_SIZE];
+        moname(monster->type, true, DESC_NOCAP_A, namebuf);
+        take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
+    }
+}
+
+//---------------------------------------------------------------
+//
+// shift_monster
+//
+// Moves a monster to approximately (x,y) and returns true 
+// if monster was moved.
+//
+//---------------------------------------------------------------
+bool shift_monster( struct monsters *mon, int x, int y )
+{
+    bool found_move = false;
+
+    int i, j;
+    int tx, ty;
+    int nx = 0, ny = 0;
+
+    int count = 0;
+
+    if (x == 0 && y == 0)
+    {
+        // try and find a random floor space some distance away
+        for (i = 0; i < 50; i++)
+        {
+            tx = 5 + random2( GXM - 10 );
+            ty = 5 + random2( GYM - 10 );
+
+            int dist = grid_distance(x, y, tx, ty);
+            if (grd[tx][ty] == DNGN_FLOOR && dist > 10)
+                break;
+        }
+
+        if (i == 50)
+            return (false);
+    }
+
+    for (i = -1; i <= 1; i++)
+    {
+        for (j = -1; j <= 1; j++)
+        {
+            tx = x + i;
+            ty = y + j;
+
+            if (tx < 5 || tx > GXM - 5 || ty < 5 || ty > GXM - 5)
+                continue;
+
+            // won't drop on anything but vanilla floor right now
+            if (grd[tx][ty] != DNGN_FLOOR)
+                continue;
+
+            if (mgrd[tx][ty] != NON_MONSTER)
+                continue;
+
+            if (tx == you.x_pos && ty == you.y_pos)
+                continue;
+
+            count++;
+            if (one_chance_in(count))
+            {
+                nx = tx;
+                ny = ty;
+                found_move = true;
+            }
+        }
+    }
+
+    if (found_move)
+    {
+        const int mon_index = mgrd[mon->x][mon->y];
+        mgrd[mon->x][mon->y] = NON_MONSTER;
+        mgrd[nx][ny] = mon_index;
+        mon->x = nx;
+        mon->y = ny;
+    }
+
+    return (found_move);
 }

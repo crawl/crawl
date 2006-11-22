@@ -28,6 +28,7 @@ bool potion_effect(char pot_eff, int pow);
  * *********************************************************************** */
 void unuse_randart(unsigned char unw);
 
+void unuse_randart(const item_def &item);
 
 /* ***********************************************************************
  * called from: item_use - transfor
@@ -38,6 +39,6 @@ void unwear_armour(char unw);
 /* ***********************************************************************
  * called from: decks - it_use3 - item_use - items - spells3 - transfor
  * *********************************************************************** */
-void unwield_item(char unw);
+void unwield_item(char unw, bool showMsgs = true);
 
 #endif

@@ -1,3 +1,7 @@
+/*
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ */
+
 #include "AppHdr.h"
 
 #ifdef CLUA_BINDINGS
@@ -7,10 +11,12 @@
 #include "abl-show.h"
 #include "command.h"
 #include "chardump.h"
+#include "delay.h"
 #include "food.h"
 #include "invent.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -23,7 +29,6 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 #include <cstring>
 
@@ -297,7 +302,7 @@ void CLua::vfnreturns(const char *format, va_list args)
 }
 
 static void push_monster(lua_State *ls, monsters *mons);
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_t *t);
+static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 int CLua::push_args(lua_State *ls, const char *format, va_list args,
                     va_list *targ)
 {
@@ -346,7 +351,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             break;
         case 'A':
             argc += push_activity_interrupt(
-                        ls, va_arg(args, activity_interrupt_t *));
+                        ls, va_arg(args, activity_interrupt_data *));
             break;
         default:
             --argc;
@@ -376,7 +381,7 @@ int CLua::return_count(lua_State *ls, const char *format)
         // blowing the stack.
         if (ci < 0)
             ci = 0;
-        else if (ci > 5)
+        else if (ci > 10)
             ci = 10;
         return (ci);
     }
@@ -1239,22 +1244,25 @@ static int l_item_equip_type(lua_State *ls)
     if (!item || !is_valid_item(*item))
         return (0);
 
-    int eq = -1;
+    equipment_type eq = EQ_NONE;
+
     if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_STAVES)
         eq = EQ_WEAPON;
     else if (item->base_type == OBJ_ARMOUR)
-        eq = armour_equip_slot(*item);
+        eq = get_armour_slot(*item);
     else if (item->base_type == OBJ_JEWELLERY)
         eq = item->sub_type >= AMU_RAGE? EQ_AMULET : EQ_RINGS;
 
-    if (eq != -1)
+    if (eq != EQ_NONE)
+    {
         lua_pushnumber(ls, eq);
-    else
-        lua_pushnil(ls);
-    if (eq != -1)
         lua_pushstring(ls, equip_slot_to_name(eq));
+    }
     else
+    {
         lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
     return (2);
 }
 
@@ -1264,12 +1272,15 @@ static int l_item_weap_skill(lua_State *ls)
     if (!item || !is_valid_item(*item))
         return (0);
 
-    int skill = weapon_skill( item->base_type, item->sub_type );
+    int skill = range_skill(*item);
+    if (skill == SK_RANGED_COMBAT)
+        skill = weapon_skill(*item);
     if (skill == SK_FIGHTING)
         return (0);
 
     lua_pushstring(ls, skill_name(skill));
-    return (1);
+    lua_pushnumber(ls, skill);
+    return (2);
 }
 
 static int l_item_artifact(lua_State *ls)
@@ -1407,7 +1418,7 @@ static bool eat_item(const item_def &item)
     {
         eat_from_inventory(item.link);
         burden_change();
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         return (true);
     }
@@ -1443,42 +1454,6 @@ static int food_eat(lua_State *ls)
     lua_pushboolean(ls, eaten);
     return (1);
 }
-
-// Giving away chunk type information is spoily.
-/*
-static int food_chunktype(lua_State *ls)
-{
-    LUA_ITEM(item, 1);
-    if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
-    {
-        int mons_type = item->plus;
-        int chunk_type = mons_corpse_thingy(mons_type);
-        const char *schunktype = "unknown";
-        switch (chunk_type)
-        {
-        case CE_HCL:
-        case CE_MUTAGEN_GOOD:
-        case CE_MUTAGEN_BAD:
-        case CE_MUTAGEN_RANDOM:
-            schunktype = "mutagenic";
-            break;
-        case CE_POISONOUS:
-            schunktype = "poisonous";
-            break;
-        case CE_CONTAMINATED:
-            schunktype = "contaminated";
-            break;
-        case CE_CLEAN:
-            schunktype = "clean";
-            break;
-        }
-        lua_pushstring(ls, schunktype);
-    }
-    else
-        lua_pushnil(ls);
-    return (1);
-}
-*/
 
 static int food_rotting(lua_State *ls)
 {
@@ -1557,7 +1532,7 @@ static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
     
-    bool valid = cancelable_get_line(linebuf, sizeof linebuf);
+    bool valid = !cancelable_get_line(linebuf, sizeof linebuf);
     if (valid)
         lua_pushstring(ls, linebuf);
     else
@@ -1903,9 +1878,15 @@ static option_handler handlers[] =
     { "show_uncursed", &Options.show_uncursed, option_hboolean },
     { "always_greet", &Options.always_greet, option_hboolean },
     { "easy_open", &Options.easy_open, option_hboolean },
-    { "easy_armour", &Options.easy_armour, option_hboolean },
+    { "easy_armour", &Options.easy_unequip, option_hboolean },
+    { "easy_unequip", &Options.easy_unequip, option_hboolean },
     { "easy_butcher", &Options.easy_butcher, option_hboolean },
     { "terse_hand", &Options.terse_hand, option_hboolean },
+    { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
+    { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
+    { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
+    { "note_skill_max", &Options.note_skill_max, option_hboolean },
+    { "use_notes", &Options.use_notes, option_hboolean },
     { "delay_message_clear", &Options.delay_message_clear, option_hboolean },
     { "no_dark_brand", &Options.no_dark_brand, option_hboolean },
     { "auto_list", &Options.auto_list, option_hboolean },
@@ -1913,9 +1894,11 @@ static option_handler handlers[] =
                     option_hboolean },
     { "pickup_thrown", &Options.pickup_thrown, option_hboolean },
     { "pickup_dropped", &Options.pickup_dropped, option_hboolean },
+    { "sort_menus", &Options.sort_menus, option_hboolean },
     { "show_waypoints", &Options.show_waypoints, option_hboolean },
     { "item_colour", &Options.item_colour, option_hboolean },
     { "target_zero_exp", &Options.target_zero_exp, option_hboolean },
+    { "safe_zero_exp", &Options.safe_zero_exp, option_hboolean },
     { "target_wrap", &Options.target_wrap, option_hboolean },
     { "easy_exit_menu", &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity, 
@@ -2066,7 +2049,7 @@ static int monster_set(lua_State *ls)
     return (0);
 }
 
-static int push_activity_interrupt(lua_State *ls, activity_interrupt_t *t) 
+static int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t) 
 {
     if (!t->data)
     {

@@ -16,7 +16,6 @@
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
-#include <queue>
 #include <vector>
 #include <list>
 #include <string>
@@ -45,26 +44,14 @@ extern unsigned char show_green;     // defined in view.cc {dlb}
 // defined in mon-util.cc -- w/o this screen redraws *really* slow {dlb}
 extern FixedVector<unsigned short, 1000> mcolour;  
 
+const int kNameLen = 30;
 #ifdef SHORT_FILE_NAMES
-    const int kNameLen = 30;
     const int kFileNameLen = 6;
-    const int kFileNameSize = 5 + kFileNameLen;
-
 #else
-    #ifdef SAVE_DIR_PATH
-        // file name length has to be able to cover full paths -- bwross
-        const int kNameLen = 30;
-        const int kFileNameLen = 250;
-        const int kFileNameSize = 5 + kFileNameLen;
-    #else
-        const int kNameLen = 30;
-        const int kFileNameLen = 28;
-        const int kFileNameSize = 5 + kFileNameLen;
-    #endif
+    const int kFileNameLen = 250;
 #endif
 
-
-// Length of Path + File Name
+// Used only to bound the init file name length
 const int kPathLen = 256;
 
 // This value is used to mark that the current berserk is free from
@@ -74,36 +61,36 @@ const int kPathLen = 256;
 struct monsters;
 struct ait_hp_loss;
 
-struct activity_interrupt_t
+struct activity_interrupt_data
 {
-    AI_PAYLOAD apt;
+    activity_interrupt_payload_type apt;
     const void *data;
 
-    activity_interrupt_t()
+    activity_interrupt_data()
         : apt(AIP_NONE), data(NULL)
     {
     }
-    activity_interrupt_t(const int *i)
+    activity_interrupt_data(const int *i)
         : apt(AIP_INT), data(i)
     {
     }
-    activity_interrupt_t(const char *s)
+    activity_interrupt_data(const char *s)
         : apt(AIP_STRING), data(s)
     {
     }
-    activity_interrupt_t(const std::string &s) 
+    activity_interrupt_data(const std::string &s) 
         : apt(AIP_STRING), data(s.c_str())
     {
     }
-    activity_interrupt_t(const monsters *m)
+    activity_interrupt_data(const monsters *m)
         : apt(AIP_MONSTER), data(m)
     {
     }
-    activity_interrupt_t(const ait_hp_loss *ahl)
+    activity_interrupt_data(const ait_hp_loss *ahl)
         : apt(AIP_HP_LOSS), data(ahl)
     {
     }
-    activity_interrupt_t(const activity_interrupt_t &a)
+    activity_interrupt_data(const activity_interrupt_data &a)
         : apt(a.apt), data(a.data)
     {
     }
@@ -147,6 +134,7 @@ struct dist
     bool isTarget;      // target (true), or direction (false)?
     bool isMe;          // selected self (convenience: tx == you.x_pos,
                         // ty == you.y_pos)
+    bool isEndpoint;    // Does the player want the attack to stop at (tx,ty)?
     bool isCancel;      // user cancelled (usually <ESC> key)
     int  tx,ty;         // target x,y or logical extension of beam to map edge
     int  dx,dy;         // delta x and y if direction - always -1,0,1
@@ -171,26 +159,59 @@ struct bolt
     char        thrower;               // what kind of thing threw this?
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
-    char        beam_name[40];
-    bool        isBeam;                // beams? (can hits multiple targets?)
-    const char *aux_source;            // source of KILL_MISC beams
+    std::string name;
+    bool        is_beam;                // beams? (can hits multiple targets?)
+    bool        is_explosion;
+    bool        is_big_cloud;          // expands into big_cloud at endpoint
+    bool        is_enchant;            // no block/dodge, but mag resist
+    bool        is_energy;             // mostly energy/non-physical attack
+    bool        is_launched;           // was fired from launcher?
+    bool        is_thrown;             // was thrown from hand?
+    bool        target_first;          // targeting by direction 
+    bool        aimed_at_spot;         // aimed at (x,y), should not cross
+    std::string aux_source;            // source of KILL_MISC beams
 
     // OUTPUT parameters (tracing, ID)
-    bool        obviousEffect;         // did an 'obvious' effect happen?
+    bool        obvious_effect;         // did an 'obvious' effect happen?
     int         fr_count, foe_count;   // # of times a friend/foe is "hit"
     int         fr_power, foe_power;   // total levels/hit dice affected
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    bool        isTracer;      // is this a tracer?
-    bool        aimedAtFeet;   // this was aimed at self!
-    bool        msgGenerated;  // an appropriate msg was already mpr'd
-    bool        isExplosion;   // explosion phase (as opposed to beam phase)
-    bool        smartMonster;  // tracer firer can guess at other mons. resists?
-    bool        canSeeInvis;   // tracer firer can see invisible?
-    bool        isFriendly;    // tracer firer is enslaved or pet
-    int         foeRatio;      // 100* foe ratio (see mons_should_fire())
+    bool        is_tracer;      // is this a tracer?
+    bool        aimed_at_feet;   // this was aimed at self!
+    bool        msg_generated;  // an appropriate msg was already mpr'd
+    bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
+    bool        smart_monster;  // tracer firer can guess at other mons. resists?
+    bool        can_see_invis;   // tracer firer can see invisible?
+    bool        is_friendly;    // tracer firer is enslaved or pet
+    int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
+
+public:
+    // A constructor to try and fix some of the bugs that occur because
+    // this struct never seems to be properly initialized.  Definition
+    // is over in beam.cc.
+    bolt();
+
+    void set_target(const dist &);
 };
 
+struct ray_def
+{
+    double accx;
+    double accy;
+    double slope;
+    // Quadrant 1: down-right
+    // Quadrant 2: down-left
+    // Quadrant 3: up-left
+    // Quadrant 4: up-right
+    int quadrant;
+    
+    int x() const { return (int)(accx); }
+    int y() const { return (int)(accy); }
+    int advance();              // returns the direction taken (0,1,2)
+    void advance_and_bounce();
+    void regress();
+};
 
 struct run_check_dir
 {
@@ -217,7 +238,7 @@ struct item_def
     short          plus2;      // +to dam, sub-sub type for boots and helms
     long           special;    // special stuff
     unsigned char  colour;     // item colour
-    unsigned long  flags;      // item statuc flags
+    unsigned long  flags;      // item status flags
     short          quantity;   // number of items
 
     short  x;          // x-location;         for inventory items = -1 
@@ -227,12 +248,20 @@ struct item_def
 
     unsigned short orig_place;
     short          orig_monnum;
+
+    std::string inscription;
     
-    item_def() : base_type(0), sub_type(0), plus(0), plus2(0),
+    item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0L), colour(0), flags(0L), quantity(0),
-                 x(0), y(0), link(0), slot(0), orig_place(0),
+                 x(0), y(0), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0)
     {
+        inscription.clear();
+    }
+
+    void clear()
+    {
+        *this = item_def();
     }
 };
 
@@ -256,25 +285,67 @@ private:
     size_t maxsize;
 };
 
+class runrest
+{
+public:
+    int runmode;
+    int mp;
+    int hp;
+    int x, y;
+
+    FixedVector<run_check_dir,3> run_check; // array of grids to check
+
+public:
+    runrest();
+    void initialise(int rdir, int mode);
+
+    operator int () const;
+    const runrest &operator = (int newrunmode);
+
+    // Returns true if we're currently resting.
+    bool is_rest() const;
+
+    // Clears run state.
+    void clear();
+
+    // Stops running.
+    void stop();
+
+    // Take one off the rest counter.
+    void rest();
+
+    // Decrements the run counter. Identical to rest.
+    void rundown();
+
+    // Checks if shift-run should be aborted and aborts the run if necessary.
+    // Returns true if you were running and are now no longer running.
+    bool check_stop_running();
+
+    // Check if we've reached the HP/MP stop-rest condition
+    void check_hp();
+    void check_mp();
+
+private:
+    void set_run_check(int index, int compass_dir);
+    bool run_grids_changed() const;
+};
+
+typedef std::vector<delay_queue_item> delay_queue_type;
+
 struct player
 {
-  ACTIVITY activity;    // The current multiturn activity, usually set to ACT_NONE
-  char turn_is_over; // flag signaling that player has performed a timed action
+  bool turn_is_over; // flag signaling that player has performed a timed action
 
   unsigned char prev_targ;
   char your_name[kNameLen];
 
   unsigned char species;
 
-  char run_x;
-  char run_y;
-
   // Coordinates of last travel target; note that this is never used by
   // travel itself, only by the level-map to remember the last travel target.
   short travel_x, travel_y;
 
-  FixedVector< run_check_dir, 3 > run_check; // array of grids to check
-  signed char running;                       // Nonzero if running/traveling.
+  runrest running;            // Nonzero if running/traveling.
 
   char special_wield;
   char deaths_door;
@@ -316,6 +387,13 @@ struct player
   bool wield_change;          // redraw weapon
 
   unsigned long redraw_status_flags;
+
+  // PC's symbol (usually @) and colour.
+  int symbol;
+  int colour;
+
+  FixedVector< char, NUM_STATUE_TYPES >  visible_statue;
+
   char redraw_hit_points;
   char redraw_magic_points;
   char redraw_strength;
@@ -326,6 +404,8 @@ struct player
 
   char redraw_gold;
   char redraw_evasion;
+
+  unsigned char flash_colour;
 
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;
@@ -376,7 +456,7 @@ struct player
 
   char is_undead;                     // see UNDEAD_STATES in enum.h
 
-  std::queue< delay_queue_item >  delay_queue;  // pending actions
+  delay_queue_type delay_queue;       // pending actions
 
   FixedVector<unsigned char, 50>  skills;
   FixedVector<unsigned char, 50>  practise_skill;
@@ -403,6 +483,7 @@ struct player
   unsigned char gift_timeout;
   FixedVector<unsigned char, MAX_NUM_GODS>  penance;
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
+  FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
 
   FixedVector<unsigned char, 100> mutation;
@@ -440,9 +521,28 @@ struct player
   // table contains soft links.
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
   FixedVector<int, 52>  ability_letter_table; // ref to ability by enum
+
+public:
+  player();
+  void init();
+
+  bool is_valid() const;
+  std::string short_desc() const;
+
+  // For sorting
+  bool operator < (const player &p) const;
 };
 
 extern struct player you;
+
+class monster_spells : public FixedVector<int, NUM_MONSTER_SPELL_SLOTS>
+{
+public:
+    monster_spells() 
+        : FixedVector<int, NUM_MONSTER_SPELL_SLOTS>(MS_NO_SPELL)
+    { }
+    void clear() { init(MS_NO_SPELL); }
+};
 
 struct monsters
 {
@@ -459,12 +559,16 @@ struct monsters
     unsigned char target_x;
     unsigned char target_y;
     FixedVector<int, 8> inv;
+    monster_spells spells;
     unsigned char attitude;            // from MONS_ATTITUDE
     unsigned int behaviour;
     unsigned int foe;
     FixedVector<unsigned int, NUM_MON_ENCHANTS> enchantment;
     unsigned char flags;               // bitfield of boolean flags
+
     unsigned int number;               // #heads (hydra), etc.
+    int          colour;
+
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight
 };
@@ -536,10 +640,6 @@ struct ghost_struct
 
 extern struct ghost_struct ghost;
 
-
-extern void (*viewwindow) (char, bool);
-
-
 struct system_environment
 {
     char *crawl_name;
@@ -548,6 +648,8 @@ struct system_environment
     char *crawl_dir;
     char *home;                 // only used by MULTIUSER systems
     bool  board_with_nail;      // Easter Egg silliness
+
+    std::string crawl_executable_path; // path to crawl from argv[0]
 };
 
 extern system_environment SysEnv;
@@ -585,62 +687,26 @@ struct colour_mapping
     int colour;
 };
 
-class formatted_string
-{
-public:
-    formatted_string() : ops() { }
-    formatted_string(const std::string &s);
-
-    operator std::string() const;
-    void display(int start = 0, int end = -1) const;
-    std::string tostring(int start = 0, int end = -1) const;
-
-    void cprintf(const char *s, ...);
-    void cprintf(const std::string &s);
-    void gotoxy(int x, int y);
-    void textcolor(int color);
-
-private:
-    enum fs_op_type
-    {
-        FSOP_COLOUR,
-        FSOP_CURSOR,
-        FSOP_TEXT
-    };
-
-    struct fs_op
-    {
-        fs_op_type type;
-        int x, y;
-        std::string text;
-        
-        fs_op(int color)
-            : type(FSOP_COLOUR), x(color), y(-1), text()
-        {
-        }
-        
-        fs_op(int cx, int cy)
-            : type(FSOP_CURSOR), x(cx), y(cy), text()
-        {
-        }
-        
-        fs_op(const std::string &s)
-            : type(FSOP_TEXT), x(-1), y(-1), text(s)
-        {
-        }
-
-        operator fs_op_type () const
-        {
-            return type;
-        }
-        void display() const;
-    };
-
-    std::vector<fs_op> ops;
-};
-
+class InitLineInput;
 struct game_options 
 {
+public:
+    game_options();
+    void reset_startup_options();
+    void reset_options();
+
+    void read_option_line(const std::string &s, bool runscripts = false);
+    void read_options(InitLineInput &, bool runscripts);
+
+public:
+    std::string save_dir;       // Directory where saves and bones go.
+
+    std::string player_name;
+
+    bool        autopickup_on;
+    bool        autoprayer_on;
+    bool        fizzlecheck_on;
+
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump
@@ -649,14 +715,23 @@ struct game_options
     bool        show_uncursed;  // label known uncursed items as "uncursed"
     bool        always_greet;   // display greeting message when reloading
     bool        easy_open;      // open doors with movement
-    bool        easy_armour;    // allow auto-removing of armour
+    bool        easy_unequip;   // allow auto-removing of armour / jewelry
     bool        easy_butcher;   // open doors with movement
+    bool        increasing_skill_progress; // skills go from 0-10 or 10-0
+    bool        confirm_self_target; // require confirmation before selftarget
+    bool        safe_autopickup; // don't autopickup when monsters visible
+    bool        note_skill_max; // take note when skills reach new max
+    bool        note_all_spells; // take note when learning any spell
+    bool        use_notes;	// take (and dump) notes
+    int         note_hp_percent; // percentage hp for notetaking
+    int         ood_interesting; // how many levels OOD is noteworthy?
     int         easy_confirm;   // make yesno() confirming easier
     int         easy_quit_item_prompts; // make item prompts quitable on space
     int         colour[16];     // macro fg colours to other colours
     int         background;     // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     int         weapon;         // auto-choose weapon for character
+    int         book;		// auto-choose book for character
     int         chaos_knight;   // choice of god for Chaos Knights (Xom/Makleb)
     int         death_knight;   // choice of god/necromancy for Death Knights
     int         priest;         // choice of god for priests (Zin/Yred)
@@ -680,6 +755,9 @@ struct game_options
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
     bool        lowercase_invocations;          // prefer lowercase invocations
 
+    char_set_type  char_set;
+    FixedVector<unsigned char, NUM_DCHAR_TYPES> char_table;
+
     int         num_colours;    // used for setting up curses colour table (8 or 16)
     
 #ifdef WIZARD
@@ -690,16 +768,31 @@ struct game_options
     int         sc_entries;     // # of score entries
     int         sc_format;      // Format for score entries
 
+
+    std::string map_file_name;	// name of mapping file to use
     std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
+    std::vector<text_pattern> note_monsters;  // Interesting monsters
+    std::vector<text_pattern> note_messages;  // Interesting messages
+    std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
+    std::vector<text_pattern> note_items; // Objects to note
+    std::vector<int> note_skill_levels; // Skill levels to note
+
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
 
-    std::vector<message_filter> stop_travel;  // Messages that stop travel
+    // Messages that stop travel
+    std::vector<message_filter> travel_stop_message;
 
     int         stash_tracking; // How stashes are tracked
 
     bool        travel_colour;  // Colour levelmap using travel information?
+    int         tc_reachable;   // Colour for squares that are reachable
+    int         tc_excluded;    // Colour for excluded squares.
+    int         tc_exclude_circle; // Colour for squares in the exclusion radius
+    int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
+    int         tc_disconnected;// Areas that are completely disconnected.
+
     int         travel_stair_cost;
 
     int         travel_exclude_radius2; // Square of the travel exclude radius
@@ -709,8 +802,6 @@ struct game_options
 
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
-    unsigned    remembered_monster_colour;  // Colour for monsters remembered
-                                            // on the map.   
 
     unsigned    heap_brand;     // Highlight heaps of items in the playing area
     unsigned    stab_brand;     // Highlight monsters that are stabbable
@@ -722,12 +813,18 @@ struct game_options
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
 
+    bool        sort_menus;
+
     int         dump_kill_places; // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
     int         dump_item_origins;  // Show where items came from?
     int         dump_item_origin_price;
 
+    // Order of sections in the character dump.
+    std::vector<std::string> dump_order;
+
+    bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.
     bool        target_wrap;        // Wrap around from last to first target
@@ -745,7 +842,7 @@ struct game_options
 
     std::vector<text_pattern> drop_filter;
     
-    FixedVector< unsigned, ACT_ACTIVITY_COUNT > activity_interrupts;
+    FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
 
     // Previous startup options
     bool        remember_name;      // Remember and reprompt with last name
@@ -757,6 +854,15 @@ struct game_options
 
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
+
+#ifdef WIZARD
+    // Parameters for fight simulations.
+    long        fsim_rounds;
+    int         fsim_str, fsim_int, fsim_dex;
+    int         fsim_xl;
+    std::string fsim_mons;
+    std::vector<std::string> fsim_kit;
+#endif  // WIZARD
     
     typedef std::map<std::string, std::string> opt_map;
     opt_map     named_options;          // All options not caught above are
@@ -771,7 +877,30 @@ struct game_options
     char        prev_cls;
     int         prev_ck, prev_dk, prev_pr;
     int         prev_weapon;
+    int         prev_book;
     bool        prev_randpick;
+
+public:
+    // Convenience accessors for the second-class options in named_options.
+    int         o_int(const char *name, int def = 0) const;
+    long        o_long(const char *name, long def = 0L) const;
+    bool        o_bool(const char *name, bool def = false) const;
+    std::string o_str(const char *name, const char *def = NULL) const;
+    int         o_colour(const char *name, int def = LIGHTGREY) const;
+
+private:
+    void set_default_activity_interrupts();
+    void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
+    void set_activity_interrupt(
+        FixedVector<bool, NUM_AINTERRUPTS> &eints,
+        const std::string &interrupt);
+    void set_activity_interrupt(const std::string &activity_name,
+                                const std::string &interrupt_names,
+                                bool append_interrupts);
+    void add_dump_fields(const std::string &text);
+    void do_kill_map(const std::string &from, const std::string &to);
+
+    static const std::string interrupt_prefix;
 };
 
 extern game_options  Options;
@@ -784,6 +913,7 @@ struct tagHeader
 
 struct scorefile_entry 
 {
+public:
     char        version;
     char        release;
     long        points;
@@ -820,6 +950,46 @@ struct scorefile_entry
     long        num_turns;          // number of turns taken 
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
+
+public:
+    scorefile_entry();
+    scorefile_entry(int damage, int death_source, int death_type,
+                    const char *aux, bool death_cause_only = false);
+
+    void init_death_cause(int damage, int death_source, int death_type,
+                          const char *aux);
+    void init();
+    void reset();
+
+    enum death_desc_verbosity {
+        DDV_TERSE,
+        DDV_ONELINE,
+        DDV_NORMAL,
+        DDV_VERBOSE
+    };
+
+    std::string hiscore_line(death_desc_verbosity verbosity) const;
+
+    std::string character_description(death_desc_verbosity) const;
+    // Full description of death: Killed by an xyz wielding foo
+    std::string death_description(death_desc_verbosity) const;
+
+    std::string death_place(death_desc_verbosity) const;
+
+    std::string game_time(death_desc_verbosity) const;
+
+private:
+    std::string single_cdesc() const;
+    std::string strip_article_a(const std::string &s) const;
+    std::string terse_missile_cause() const;
+    std::string terse_beam_cause() const;
+    std::string terse_wild_magic() const;
+    std::string terse_trap() const;
+    const char *damage_verb() const;
+    const char *death_source_desc() const;
+    std::string damage_string(bool terse = false) const;
 };
+
+extern const struct coord_def Compass[8];
 
 #endif // EXTERNS_H

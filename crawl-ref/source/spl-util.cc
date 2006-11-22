@@ -3,6 +3,8 @@
  *  Summary:    data handlers for player-avilable spell list         *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Changelog(most recent first):                                    *
  *
  *  <3>     04oct2001     bwr     absorbed spells0.cc
@@ -26,7 +28,9 @@
 #include "stuff.h"
 #include "itemname.h"
 #include "macro.h"
+#include "misc.h"
 #include "monstuff.h"
+#include "notes.h"
 #include "player.h"
 #include "spl-book.h"
 #include "view.h"
@@ -61,7 +65,7 @@ void init_playerspells(void)
     for (x = 0; x < NUM_SPELLS; x++)
         plyrspell_list[x] = -1;
 
-    // can only use up to PLYRSPELLDATASIZE _MINUS ONE_,  or the 
+    // can only use up to PLYRSPELLDATASIZE _MINUS ONE_, or the
     // last entry tries to set plyrspell_list[SPELL_NO_SPELL] 
     // which corrupts the heap.
     for (x = 0; x < PLYRSPELLDATASIZE - 1; x++)
@@ -120,6 +124,8 @@ bool add_spell_to_memory( int spell )
     you.spell_letter_table[j] = i;
 
     you.spell_no++;
+
+    take_note(Note(NOTE_LEARN_SPELL, spell));
 
     return (true);
 }
@@ -198,6 +204,11 @@ int spell_levels_required( int which_spell )
     }
 
     return (levels);
+}
+
+unsigned int get_spell_flags( int which_spell )
+{
+    return (seekspell(which_spell)->flags);
 }
 
 bool spell_typematch(int which_spell, unsigned int which_discipline)
@@ -456,12 +467,12 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
     struct dist bmove;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_ENEMY );
+    direction( bmove, DIR_DIR, TARG_ENEMY, true );
 
     if (!bmove.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (0);
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     int rv = func(you.x_pos + bmove.dx, you.y_pos + bmove.dy, power, 1);
@@ -673,22 +684,55 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
 
     message_current_target();
 
-    direction( spelld, restrict, mode );
+    direction( spelld, restrict, mode, true );
 
     if (!spelld.isValid)
     {
         // check for user cancel
-        canned_msg(MSG_SPELL_FIZZLES);
+        canned_msg(MSG_OK);
         return -1;
     }
 
-    pbolt.target_x = spelld.tx;
-    pbolt.target_y = spelld.ty;
+    pbolt.set_target(spelld);
     pbolt.source_x = you.x_pos;
     pbolt.source_y = you.y_pos;
 
     return 1;
 }                               // end spell_direction()
+
+const char* spelltype_short_name( int which_spelltype ) {
+    switch (which_spelltype)
+    {
+    case SPTYP_CONJURATION:
+        return ("Conj");
+    case SPTYP_ENCHANTMENT:
+        return ("Ench");
+    case SPTYP_FIRE:
+        return ("Fire");
+    case SPTYP_ICE:
+        return ("Ice");
+    case SPTYP_TRANSMIGRATION:
+        return ("Tmgr");
+    case SPTYP_NECROMANCY:
+        return ("Necr");
+    case SPTYP_HOLY:
+        return ("Holy");
+    case SPTYP_SUMMONING:
+        return ("Summ");
+    case SPTYP_DIVINATION:
+        return ("Divn");
+    case SPTYP_TRANSLOCATION:
+        return ("Tloc");
+    case SPTYP_POISON:
+        return ("Pois");
+    case SPTYP_EARTH:
+        return ("Erth");
+    case SPTYP_AIR:
+        return ("Air");
+    default:
+	return "Bug";
+    }
+}
 
 const char *spelltype_name(unsigned int which_spelltype)
 {
@@ -776,7 +820,7 @@ static struct playerspell *seekspell(int spell)
 static bool cloud_helper( int (*func) (int, int, int, int), int x, int y, 
                           int pow, int ctype )
 {
-    if (grd[x][y] > DNGN_LAST_SOLID_TILE && env.cgrid[x][y] == EMPTY_CLOUD)
+    if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {
         func(x, y, pow, ctype);
         return true;

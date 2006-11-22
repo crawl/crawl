@@ -3,6 +3,8 @@
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -37,7 +39,8 @@
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int px, int py, int level_type = LEVEL_DUNGEON, 
                 int proximity = PROX_ANYWHERE, int extra = 250,
-                int dur = 0 );
+                int dur = 0,
+                bool permit_bands = false );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -46,14 +49,14 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y, 
-                    int hitting, int zsec );
+                    int hitting, int zsec, bool permit_bands = false );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: misc - monplace - spells3
  * *********************************************************************** */
-bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, 
+bool empty_surrounds( int emx, int emy, unsigned char spc_wanted, int radius,
                       bool allow_centre, FixedVector<char, 2>& empty );
 
 
@@ -77,5 +80,20 @@ bool place_monster( int &id, int mon_type, int power, char behaviour,
                     int target, bool summoned, int px, int py, bool allow_bands,
                     int proximity = PROX_ANYWHERE, int extra = 250,
                     int dur = 0 );
+
+monster_type rand_dragon( dragon_class_type type );
+
+/* ***********************************************************************
+ * called from: monplace monstuff
+ * *********************************************************************** */
+void mark_interesting_monst(struct monsters* monster,
+							char behaviour = BEH_SLEEP);
+
+bool grid_compatible(int grid_wanted, int actual_grid, bool generation = false);
+bool monster_habitable_grid(int monster_class, int actual_grid, 
+                            bool flies = false);
+bool monster_habitable_grid(const monsters *m, int actual_grid);
+bool monster_floundering(const monsters *m);
+bool monster_can_submerge(int monster_class, int grid);
 
 #endif  // MONPLACE_H

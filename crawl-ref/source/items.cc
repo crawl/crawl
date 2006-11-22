@@ -3,6 +3,8 @@
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <9> 7/08/01   MV   Added messages for chunks/corpses rotting
@@ -40,6 +42,7 @@
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -57,6 +60,11 @@
 
 static void autopickup(void);
 static bool is_stackable_item( const item_def &item );
+static bool invisible_to_player( const item_def& item );
+static void item_list_on_square( std::vector<const item_def*>& items,
+                                 int obj, bool force_squelch = false );
+static void autoinscribe_item( item_def& item );
+static void autoinscribe_items( void );
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -100,7 +108,7 @@ void link_items(void)
     {
         if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
         {
-            // item is not assigned,  or is monster item.  ignore.
+            // item is not assigned, or is monster item.  ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -178,9 +186,9 @@ int cull_items(void)
                     else if (is_unrandom_artefact( mitm[item] ))
                     {
                         // 9. unmark unrandart
-                        int x = find_unrandart_index(item);
-                        if (x >= 0)
-                            set_unrandart_exist(x, 0);
+                        int z = find_unrandart_index(item);
+                        if (z >= 0)
+                            set_unrandart_exist(z, 0);
                     }
 
                     // POOF!
@@ -282,18 +290,7 @@ void init_item( int item )
     if (item == NON_ITEM)
         return;
 
-    mitm[item].base_type = OBJ_UNASSIGNED;
-    mitm[item].sub_type  = 0;
-    mitm[item].plus  = 0;
-    mitm[item].plus2  = 0;
-    mitm[item].special  = 0;
-    mitm[item].quantity  = 0;
-    mitm[item].colour  = 0;
-    mitm[item].flags  = 0;
-
-    mitm[item].x  = 0;
-    mitm[item].y  = 0;
-    mitm[item].link  = NON_ITEM;
+    mitm[item].clear();
 }
 
 // Returns an unused mitm slot, or NON_ITEM if none available.
@@ -465,14 +462,6 @@ void unlink_item( int dest )
 #endif
 }                               // end unlink_item()
 
-static void item_cleanup(item_def &item)
-{
-    item.base_type      = OBJ_UNASSIGNED;
-    item.quantity       = 0;
-    item.orig_place     = 0;
-    item.orig_monnum    = 0;
-}
-
 void destroy_item( int dest )
 {
     // Don't destroy non-items, but this function may be called upon 
@@ -483,7 +472,8 @@ void destroy_item( int dest )
 
     unlink_item( dest );
 
-    item_cleanup(mitm[dest]);
+    // paranoia, shouldn't be needed
+    mitm[dest].clear();
 }
 
 void destroy_item_stack( int x, int y )
@@ -517,18 +507,7 @@ void destroy_item_stack( int x, int y )
     }
 }
 
-
-/*
- * Takes keyin as an argument because it will only display a long list of items
- * if ; is pressed.
- */
-void item_check(char keyin)
-{
-    char item_show[50][50];
-    char temp_quant[10];
-
-    int counter = 0;
-    int counter_max = 0;
+static void describe_floor() {
 
     const int grid = grd[you.x_pos][you.y_pos];
 
@@ -595,6 +574,8 @@ void item_check(char keyin)
                 break;
             case DNGN_ENTER_ORCISH_MINES:
                 mpr("There is a staircase to the Orcish Mines here.");
+		mpr("Reaching the bottom shouldn't be too hard...");
+		mpr("But getting back might take some resources.");
                 break;
             case DNGN_ENTER_HIVE:
                 mpr("There is a staircase to the Hive here.");
@@ -710,21 +691,74 @@ void item_check(char keyin)
             }
         }
     }
+}
+
+static bool invisible_to_player( const item_def& item ) {
+    return strstr(item.inscription.c_str(), "=k") != 0;
+}
+
+static bool has_nonsquelched_items( int obj ) {
+    while ( obj != NON_ITEM ) {
+        if ( !invisible_to_player(mitm[obj]) )
+            return true;
+        obj = mitm[obj].link;
+    }
+    return false;
+}
+
+/* Fill items with the items on a square.
+   Squelched items (marked with =k) are ignored, unless
+   the square contains *only* squelched items, in which case they
+   are included. If force_squelch is true, squelched items are
+   never displayed.
+ */
+static void item_list_on_square( std::vector<const item_def*>& items,
+                                 int obj, bool force_squelch ) {
+
+    const bool have_nonsquelched = (force_squelch ||
+                                    has_nonsquelched_items(obj));
+
+    /* loop through the items */
+    while ( obj != NON_ITEM ) {
+        /* add them to the items list if they qualify */
+        if ( !have_nonsquelched || !invisible_to_player(mitm[obj]) )
+            items.push_back( &mitm[obj] );
+        obj = mitm[obj].link;
+    }
+}
+
+/*
+ * Takes keyin as an argument because it will only display a long list of items
+ * if ; is pressed.
+ */
+void item_check(char keyin)
+{
+    char item_show[50][50];
+    char temp_quant[10];
+
+    int counter = 0;
+    int counter_max = 0;
+
+    describe_floor();
 
     if (igrd[you.x_pos][you.y_pos] == NON_ITEM && keyin == ';')
     {
         mpr("There are no items here.");
         return;
     }
-
+    
+    autoinscribe_items();
     autopickup();
 
     origin_set(you.x_pos, you.y_pos);
 
-    int objl = igrd[you.x_pos][you.y_pos];
 
-    while (objl != NON_ITEM)
+    for ( int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
+	  objl = mitm[objl].link )
     {
+	if ( invisible_to_player(mitm[objl]) )
+	    continue;
+
         counter++;
 
         if (counter > 45)
@@ -749,7 +783,6 @@ void item_check(char keyin)
             strcpy(item_show[counter], str_pass);
         }
 
-        objl = mitm[objl].link;
     }
 
     counter_max = counter;
@@ -785,13 +818,25 @@ void item_check(char keyin)
         mpr("There are several objects here.");
 }
 
+void show_items()
+{
+    std::vector<const item_def*> items;
+    item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
+
+    if ( items.empty() )
+        mpr("There are no items here.");
+    else {
+	select_items( items, "Things that are here:", true );
+	redraw_screen();
+    }
+    
+    describe_floor();
+}
 
 void pickup_menu(int item_link)
 {
-    std::vector<item_def*> items;
-
-    for (int i = item_link; i != NON_ITEM; i = mitm[i].link)
-        items.push_back( &mitm[i] );
+    std::vector<const item_def*> items;
+    item_list_on_square( items, item_link, false );
 
     std::vector<SelItem> selected = 
         select_items( items, "Select items to pick up" );
@@ -945,12 +990,7 @@ static std::string origin_monster_desc(const item_def &item)
 
 static std::string origin_place_desc(const item_def &item)
 {
-    std::string place = branch_level_name(item.orig_place);
-    if (place.length() && place != "Pandemonium")
-        place[0] = tolower(place[0]);
-    return (place.find("level") == 0?
-            "on " + place
-          : "in " + place);
+    return prep_branch_level_name(item.orig_place);
 }
 
 bool is_rune(const item_def &item)
@@ -1101,12 +1141,10 @@ bool pickup_single_item(int link, int qty)
     return (true);
 }
 
-void pickup(void)
+void pickup()
 {
-    int o = 0;
     int m = 0;
-    unsigned char keyin = 0;
-    int next;
+    int keyin = 'x';
     char str_pass[ ITEMNAME_SIZE ];
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
@@ -1165,7 +1203,7 @@ void pickup(void)
         }
     }
 
-    o = igrd[you.x_pos][you.y_pos];
+    int o = igrd[you.x_pos][you.y_pos];
 
     if (o == NON_ITEM)
     {
@@ -1173,49 +1211,41 @@ void pickup(void)
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
+	// deliberately allowing the player to pick up
+	// a killed item here
         pickup_single_item(o, mitm[o].quantity);
     }                           // end of if items_here
     else
-    { 
+    {
+        int next;
         mpr("There are several objects here.");
-
-        while (o != NON_ITEM)
+        const bool hide_squelched = has_nonsquelched_items(o);
+        while ( o != NON_ITEM )
         {
+            // must save this because pickup can destroy the item
             next = mitm[o].link;
+
+	    if ( hide_squelched && invisible_to_player(mitm[o]) ) {
+                o = next;
+		continue;
+            }
 
             if (keyin != 'a')
             {
-                strcpy(info, "Pick up ");
-
-                if (mitm[o].base_type == OBJ_GOLD)
-                {
-                    char st_prn[20];
-                    itoa(mitm[o].quantity, st_prn, 10);
-                    strcat(info, st_prn);
-                    strcat(info, " gold piece");
-
-                    if (mitm[o].quantity > 1)
-                        strcat(info, "s");
-                }
-                else
-                {
-                    it_name(o, DESC_NOCAP_A, str_pass);
-                    strcat(info, str_pass);
-                }
-
-                strcat(info, "\? (y,n,a,*,q)");
+                char buf[ITEMNAME_SIZE];
+                item_name( mitm[o], DESC_NOCAP_A, buf );
+                snprintf( info, INFO_SIZE, "Pick up %s? (y/n/a/*?g,/q)", buf );
                 mpr( info, MSGCH_PROMPT );
-
                 keyin = get_ch();
             }
 
-            if (keyin == '*' || keyin == '?' || keyin == ',')
+            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g')
             {
                 pickup_menu(o);
                 break;
             }
 
-            if (keyin == 'q')
+            if (keyin == 'q' || keyin == ESCAPE)
                 break;
 
             if (keyin == 'y' || keyin == 'a')
@@ -1234,7 +1264,7 @@ void pickup(void)
                     break;
                 }
             }
-
+            
             o = next;
         }
     }
@@ -1299,8 +1329,8 @@ bool items_stack( const item_def &item1, const item_def &item2 )
         // if either isn't identified and they look different.  -- bwr
         if (item1.base_type == OBJ_POTIONS 
             && item1.special != item2.special
-            && (item_not_ident( item1, ISFLAG_KNOW_TYPE )
-                || item_not_ident( item2, ISFLAG_KNOW_TYPE )))
+            && (!item_ident( item1, ISFLAG_KNOW_TYPE )
+                || !item_ident( item2, ISFLAG_KNOW_TYPE )))
         {
             return (false);
         }
@@ -1386,7 +1416,7 @@ int find_free_slot(const item_def &i)
 // the player's inventory is full.
 int move_item_to_player( int obj, int quant_got, bool quiet )
 {
-    int item_mass = 0;
+    int imass = 0;
     int unit_mass = 0;
     int retval = quant_got;
     char brek = 0;
@@ -1409,21 +1439,21 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
             mpr(info);
         }
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (retval);
     }
 
-    unit_mass = mass_item( mitm[obj] );
+    unit_mass = item_mass( mitm[obj] );
     if (quant_got > mitm[obj].quantity || quant_got <= 0)
         quant_got = mitm[obj].quantity;
     
-    item_mass = unit_mass * quant_got;
+    imass = unit_mass * quant_got;
     
     brek = 0;
 
     // multiply both constants * 10
 
-    if ((int) you.burden + item_mass > carrying_capacity())
+    if ((int) you.burden + imass > carrying_capacity())
     {
         // calculate quantity we can actually pick up
         int part = (carrying_capacity() - (int)you.burden) / unit_mass;
@@ -1457,7 +1487,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     mpr(info);
                 }
 
-                you.turn_is_over = 1;
+                you.turn_is_over = true;
 
                 return (retval);
             }
@@ -1486,6 +1516,10 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.y      = -1;
     item.link   = freeslot;
 
+    /*** HP CHANGE: do autoinscribe ***/
+    autoinscribe_item( item );
+    
+
     origin_freeze(item, you.x_pos, you.y_pos);
 
     item.quantity = quant_got;
@@ -1506,7 +1540,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         you.char_direction = DIR_ASCENDING;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (retval);
 }                               // end move_item_to_player()
@@ -1658,6 +1692,9 @@ bool move_top_item( int src_x, int src_y, int dest_x, int dest_y )
 //---------------------------------------------------------------
 static void drop_gold(unsigned int amount)
 {
+    const unsigned long BIGGEST_QUANT_VALUE =
+	((1L << (sizeof(mitm[0].quantity)*8 - 1)) - 1000);
+ 
     if (you.gold > 0)
     {
         if (amount > you.gold)
@@ -1674,10 +1711,17 @@ static void drop_gold(unsigned int amount)
         {
             if (mitm[i].base_type == OBJ_GOLD)
             {
+		if ( mitm[i].quantity + amount > BIGGEST_QUANT_VALUE ) {
+		    amount = BIGGEST_QUANT_VALUE - mitm[i].quantity;
+		    snprintf(info, INFO_SIZE,
+			     "But there's only room for %d.", amount);
+		    mpr(info);
+		    
+		}
                 inc_mitm_item_quantity( i, amount );
                 you.gold -= amount;
                 you.redraw_gold = 1;
-                you.turn_is_over = 1;
+                you.turn_is_over = true;
                 return;
             }
 
@@ -1692,9 +1736,17 @@ static void drop_gold(unsigned int amount)
             mpr( "Too many items on this level, not dropping the gold." );
             return;
         }
+	if (amount > BIGGEST_QUANT_VALUE) {
+	    amount = BIGGEST_QUANT_VALUE;
+	    snprintf(info, INFO_SIZE,
+		     "But there's only room for %d.", amount);
+	    mpr(info);
+	}
 
         mitm[i].base_type = OBJ_GOLD;
         mitm[i].quantity = amount;
+        // [ds] #&^#@&#!
+        mitm[i].colour = YELLOW;
         mitm[i].flags = 0;
 
         move_item_to_grid( &i, you.x_pos, you.y_pos );
@@ -1702,7 +1754,7 @@ static void drop_gold(unsigned int amount)
         you.gold -= amount;
         you.redraw_gold = 1;
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {
@@ -1728,7 +1780,15 @@ bool drop_item( int item_dropped, int quant_drop ) {
         || item_dropped == you.equip[EQ_RIGHT_RING]
         || item_dropped == you.equip[EQ_AMULET])
     {
-        mpr("You will have to take that off first.");
+        if (!Options.easy_unequip)
+        {
+            mpr("You will have to take that off first.");
+            return (false);
+        }
+
+        if (remove_ring( item_dropped, true ))
+            start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
+
         return (false);
     }
 
@@ -1744,7 +1804,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
-            if (!Options.easy_armour)
+            if (!Options.easy_unequip)
             {
                 mpr("You will have to take that off first.");
             }
@@ -1754,7 +1814,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
                 if (takeoff_armour( item_dropped ))
                 {
                     start_delay( DELAY_DROP_ITEM, 1, item_dropped, 1 );
-                    you.turn_is_over = 0; // turn happens later
+                    you.turn_is_over = false; // turn happens later
                 }
             }
 
@@ -1765,6 +1825,8 @@ bool drop_item( int item_dropped, int quant_drop ) {
         }
     }
 
+    // [ds] easy_unequip does not apply to weapons.
+    //
     // Unwield needs to be done before copy in order to clear things
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON])
@@ -1774,9 +1836,11 @@ bool drop_item( int item_dropped, int quant_drop ) {
         canned_msg( MSG_EMPTY_HANDED );
     }
 
-    if (!copy_item_to_grid( you.inv[item_dropped], 
-                            you.x_pos, you.y_pos, quant_drop, true ))
-    {
+    const unsigned char my_grid = grd[you.x_pos][you.y_pos];
+
+    if ( !grid_destroys_items(my_grid) &&
+	 !copy_item_to_grid( you.inv[item_dropped], 
+			     you.x_pos, you.y_pos, quant_drop, true )) {
         mpr( "Too many items on this level, not dropping the item." );
         return (false);
     }
@@ -1785,20 +1849,51 @@ bool drop_item( int item_dropped, int quant_drop ) {
     quant_name( you.inv[item_dropped], quant_drop, DESC_NOCAP_A, str_pass );
     snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
     mpr(info);
+    
+    if ( grid_destroys_items(my_grid) ) {
+        mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
+    }
    
     dec_inv_item_quantity( item_dropped, quant_drop );
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (true);
 }
 
+static std::string drop_menu_invstatus(const Menu *menu)
+{
+    char buf[100];
+    const int cap = carrying_capacity();
 
-static std::string drop_menu_title( int menuflags, const std::string &oldt ) {
-    std::string res = oldt;
-    res.erase(0, res.find_first_not_of(" \n\t"));
-    if (menuflags & MF_MULTISELECT)
+    std::string s_newweight;
+    std::vector<MenuEntry*> se = menu->selected_entries();
+    if (!se.empty())
+    {
+        int newweight = you.burden;
+        for (int i = 0, size = se.size(); i < size; ++i)
+        {
+            const item_def *item = static_cast<item_def *>( se[i]->data );
+            newweight -= item_mass(*item) * se[i]->selected_qty;
+        }
+
+        snprintf(buf, sizeof buf, ">%d.%d", newweight / 10, newweight % 10);
+        s_newweight = buf;
+    }
+
+    snprintf(buf, sizeof buf, "(Inv: %d.%d%s/%d.%d aum)",
+            you.burden / 10, you.burden % 10,
+            s_newweight.c_str(),
+            cap / 10, cap % 10);
+    return (buf);
+}
+
+static std::string drop_menu_title(const Menu *menu, const std::string &oldt)
+{
+    std::string res = drop_menu_invstatus(menu) + " " + oldt;
+    if (menu->is_set( MF_MULTISELECT ))
         res = "[Multidrop] " + res;
-    return "  " + res;
+
+    return (res);
 }
 
 int get_equip_slot(const item_def *item)
@@ -1823,13 +1918,13 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
     char buf[130];
     bool extraturns = false;
 
-    if (!s->size())
+    if (s->empty())
         return "";
 
     for (int i = 0, size = s->size(); i < size; ++i)
     {
         const item_def *item = static_cast<item_def *>( (*s)[i]->data );
-        int eq = get_equip_slot(item);
+        const int eq = get_equip_slot(item);
         if (eq > EQ_WEAPON && eq < NUM_EQUIP)
         {
             extraturns = true;
@@ -1837,12 +1932,14 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
         }
     }
     
-    snprintf( buf, sizeof buf, "  (%lu%s turn%s)", (unsigned long) (s->size()),
-              extraturns? "+" : "",
-              s->size() > 1? "s" : "" );
+    snprintf( buf, sizeof buf, " (%lu%s turn%s)", 
+                (unsigned long) (s->size()),
+                extraturns? "+" : "",
+                s->size() > 1? "s" : "" );
     return buf;
 }
 
+std::vector<SelItem> items_for_multidrop;
 //---------------------------------------------------------------
 //
 // drop
@@ -1855,122 +1952,33 @@ void drop(void)
     if (inv_count() < 1 && you.gold == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        you.activity = ACT_NONE;
         return;
     }
 
-    static std::vector<SelItem> selected;
+    items_for_multidrop = prompt_invent_items( "Drop what?",
+                                               MT_DROP,
+                                               -1, 
+                                               drop_menu_title,
+                                               true, true, '$',
+                                               &Options.drop_filter,
+                                               drop_selitem_text,
+                                               &items_for_multidrop );
 
-    if (!you.activity || selected.empty())
-        selected = prompt_invent_items( "Drop which item?", -1, 
-                                        drop_menu_title,
-                                        true, true, '$',
-                                        &Options.drop_filter,
-                                        drop_selitem_text );
-
-    if (selected.empty())
+    if (items_for_multidrop.empty())
     {
         canned_msg( MSG_OK );
-        you.activity = ACT_NONE;
         return;
     }
 
-    // Throw away invalid items; items usually go invalid because
-    // of chunks rotting away.
-    while (!selected.empty() 
-            // Don't look for gold in inventory
-            && selected[0].slot != PROMPT_GOT_SPECIAL
-            && !is_valid_item(you.inv[ selected[0].slot ]))
-        selected.erase( selected.begin() );
-
-    // Did the defunct item filter above deprive us of a drop target?
-    if (!selected.empty())
+    if ( items_for_multidrop.size() == 1 ) // only one item
     {
-        drop_item( selected[0].slot, selected[0].quantity );
-        // Forget the item we just dropped
-        selected.erase( selected.begin() );
+        drop_item( items_for_multidrop[0].slot,
+                   items_for_multidrop[0].quantity );
+        items_for_multidrop.clear();
+        you.turn_is_over = true;
     }
-
-    // If we still have items that want to be dropped, start the multiturn 
-    // activity
-    you.activity = selected.empty()? ACT_NONE : ACT_MULTIDROP;
-}                               // end drop()
-
-//---------------------------------------------------------------
-//
-// shift_monster
-//
-// Moves a monster to approximately (x,y) and returns true 
-// if monster was moved.
-//
-//---------------------------------------------------------------
-static bool shift_monster( struct monsters *mon, int x, int y )
-{
-    bool found_move = false;
-
-    int i, j;
-    int tx, ty;
-    int nx = 0, ny = 0;
-
-    int count = 0;
-
-    if (x == 0 && y == 0)
-    {
-        // try and find a random floor space some distance away
-        for (i = 0; i < 50; i++)
-        {
-            tx = 5 + random2( GXM - 10 );
-            ty = 5 + random2( GYM - 10 );
-
-            int dist = grid_distance(x, y, tx, ty);
-            if (grd[tx][ty] == DNGN_FLOOR && dist > 10)
-                break;
-        }
-
-        if (i == 50)
-            return (false);
-    }
-
-    for (i = -1; i <= 1; i++)
-    {
-        for (j = -1; j <= 1; j++)
-        {
-            tx = x + i;
-            ty = y + j;
-
-            if (tx < 5 || tx > GXM - 5 || ty < 5 || ty > GXM - 5)
-                continue;
-
-            // won't drop on anything but vanilla floor right now
-            if (grd[tx][ty] != DNGN_FLOOR)
-                continue;
-
-            if (mgrd[tx][ty] != NON_MONSTER)
-                continue;
-
-            if (tx == you.x_pos && ty == you.y_pos)
-                continue;
-
-            count++;
-            if (one_chance_in(count))
-            {
-                nx = tx;
-                ny = ty;
-                found_move = true;
-            }
-        }
-    }
-
-    if (found_move)
-    {
-        const int mon_index = mgrd[mon->x][mon->y];
-        mgrd[mon->x][mon->y] = NON_MONSTER;
-        mgrd[nx][ny] = mon_index;
-        mon->x = nx;
-        mon->y = ny;
-    }
-
-    return (found_move);
+    else
+        start_delay( DELAY_MULTIDROP, items_for_multidrop.size() );
 }
 
 //---------------------------------------------------------------
@@ -2616,9 +2624,9 @@ void handle_time( long time_delta )
     int added_contamination = 0;
 
     // Account for mutagenic radiation.  Invis and haste will give the
-    // player about .1 points per turn,  mutagenic randarts will give
-    // about 1.5 points on average,  so they can corrupt the player
-    // quite quickly.  Wielding one for a short battle is OK,  which is
+    // player about .1 points per turn, mutagenic randarts will give
+    // about 1.5 points on average, so they can corrupt the player
+    // quite quickly.  Wielding one for a short battle is OK, which is
     // as things should be.   -- GDL
     if (you.invis && random2(10) < 6)
         added_contamination++;
@@ -2639,12 +2647,18 @@ void handle_time( long time_delta )
     // only check for badness once every other turn
     if (coinflip())
     {
+        // [ds] Be less harsh with glow mutation; Brent and Mark Mackey note
+        // that the commented out random2(X) <= MC check was a bug. I've
+        // uncommented it but dropped the roll sharply from 150. (Brent used
+        // the original roll of 150 for 4.1.2, but I think players are
+        // sufficiently used to beta 26's unkindness that we can use a lower
+        // roll.)
         if (you.magic_contamination >= 5
-            /* && random2(150) <= you.magic_contamination */)
+            && random2(50) <= you.magic_contamination)
         {
             mpr("Your body shudders with the violent release of wild energies!", MSGCH_WARN);
 
-            // for particularly violent releases,  make a little boom
+            // for particularly violent releases, make a little boom
             if (you.magic_contamination > 25 && one_chance_in(3))
             {
                 struct bolt boom;
@@ -2657,9 +2671,10 @@ void handle_time( long time_delta )
                 boom.thrower = KILL_MISC;
                 boom.aux_source = "a magical explosion";
                 boom.beam_source = NON_MONSTER;
-                boom.isBeam = false;
-                boom.isTracer = false;
-                strcpy(boom.beam_name, "magical storm");
+                boom.is_beam = false;
+                boom.is_tracer = false;
+                boom.is_explosion = true;
+                boom.name = "magical storm";
 
                 boom.ench_power = (you.magic_contamination * 5);
                 boom.ex_size = (you.magic_contamination / 15);
@@ -2669,13 +2684,13 @@ void handle_time( long time_delta )
                 explosion(boom);
             }
 
-            // we want to warp the player,  not do good stuff!
+            // we want to warp the player, not do good stuff!
             if (one_chance_in(5))
                 mutate(100);
             else
                 give_bad_mutation(coinflip());
 
-            // we're meaner now,  what with explosions and whatnot,  but
+            // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
             // mutating you.  -- GDL
             contaminate_player( -(random2(you.magic_contamination / 4) + 1) );
@@ -2686,7 +2701,7 @@ void handle_time( long time_delta )
     // and an appropriate other spell skill... is 1/20 too fast?
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-        && item_not_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE )
+        && !item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE )
         && one_chance_in(20))
     {
         int total_skill = you.skills[SK_SPELLCASTING];
@@ -2848,7 +2863,7 @@ void handle_time( long time_delta )
         case SP_GHOUL: //likes it
             temp_rand = random2(8);
             mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "Smell of rotting flesh makes you more hungry." :
+                  (temp_rand == 5) ? "The smell of rotting flesh makes you hungry." :
                   (temp_rand == 6) ? "You smell decay. Yum-yum."
                                    : "Wow! There is something tasty in your inventory."),
                 MSGCH_ROTTEN_MEAT );
@@ -2869,7 +2884,7 @@ void handle_time( long time_delta )
         default:
             temp_rand = random2(8);
             mpr( ((temp_rand  < 5) ? "You smell something rotten." :
-                  (temp_rand == 5) ? "Smell of rotting flesh makes you sick." :
+                  (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
                   (temp_rand == 6) ? "You smell decay. Yuk..."
                                    : "Ugh! There is something really disgusting in your inventory."), 
                 MSGCH_ROTTEN_MEAT );
@@ -2880,7 +2895,7 @@ void handle_time( long time_delta )
     // exercise armour *xor* stealth skill: {dlb}
     if (!player_light_armour())
     {
-        if (random2(1000) <= mass_item( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
+        if (random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
         {
             return;
         }
@@ -2897,7 +2912,7 @@ void handle_time( long time_delta )
             return;
 
         if (you.equip[EQ_BODY_ARMOUR] != -1
-            && random2( mass_item( you.inv[you.equip[EQ_BODY_ARMOUR]] )) >= 100)
+            && random2( item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] )) >= 100)
         {
             return;
         }
@@ -2909,7 +2924,23 @@ void handle_time( long time_delta )
     return;
 }                               // end handle_time()
 
-int autopickup_on = 1;
+static void autoinscribe_item( item_def& item )
+{
+    char name[ITEMNAME_SIZE];
+    item_name(item, DESC_INVENTORY, name, false);
+
+    std::string iname = name;
+    
+    /* if there's an inscription already do nothing */
+    if ( item.inscription.size() > 0 )
+	return;
+
+    for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i ) {
+	if ( Options.autoinscriptions[i].first.matches(iname) ) {
+	    item.inscription += Options.autoinscriptions[i].second;
+	}
+    }
+}
 
 static bool is_banned(const item_def &item) {
     static char name[ITEMNAME_SIZE];
@@ -2923,13 +2954,26 @@ static bool is_banned(const item_def &item) {
     return false;
 }
 
+static void autoinscribe_items()
+{
+    int o, next;
+    o = igrd[you.x_pos][you.y_pos];
+
+    while (o != NON_ITEM)
+    {
+        next = mitm[o].link;
+	autoinscribe_item( mitm[o] );
+        o = next;
+    }
+}    
+
 static void autopickup(void)
 {
     //David Loewenstern 6/99
     int result, o, next;
     bool did_pickup = false;
 
-    if (autopickup_on == 0 || Options.autopickups == 0L)
+    if (!Options.autopickup_on || Options.autopickups == 0L)
         return;
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
@@ -2941,20 +2985,26 @@ static void autopickup(void)
     if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
         return;
 
+    if ( Options.safe_autopickup && !i_feel_safe() )
+      return;
+
     o = igrd[you.x_pos][you.y_pos];
 
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
 
-        if ( ((mitm[o].flags & ISFLAG_THROWN) && Options.pickup_thrown) ||
+        if (
+	    (strstr(mitm[o].inscription.c_str(), "=g") != 0) || (
+ 
+	    ((mitm[o].flags & ISFLAG_THROWN) && Options.pickup_thrown) ||
             ( (Options.autopickups & (1L << mitm[o].base_type) 
 #ifdef CLUA_BINDINGS
                || clua.callbooleanfn(false, "ch_autopickup", "u", &mitm[o])
 #endif
               )
               && (Options.pickup_dropped || !(mitm[o].flags & ISFLAG_DROPPED))
-              && !is_banned(mitm[o])))
+              && !is_banned(mitm[o]))))
         {
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
@@ -2982,7 +3032,7 @@ static void autopickup(void)
 
     if (did_pickup)
     {
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         start_delay( DELAY_AUTOPICKUP, 1 );
     }
 }

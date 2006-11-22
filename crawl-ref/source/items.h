@@ -3,6 +3,8 @@
  *  Summary:    Misc (mostly) inventory related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <2>     6/9/99         DML             Autopickup
@@ -14,12 +16,6 @@
 #define ITEMS_H
 
 #include "externs.h"
-
-// used in acr.cc {dlb}:
-extern int autopickup_on;
-
-// used in initfile.cc {dlb}:
-extern long autopickups;
 
 bool is_valid_item( const item_def &item );
 
@@ -120,6 +116,8 @@ void handle_time( long time_delta );
  * called from: command food item_use shopping spl-book transfor
  * *********************************************************************** */
 int inv_count(void);
+
+void show_items();
 
 void cmd_destroy_item( void );
 

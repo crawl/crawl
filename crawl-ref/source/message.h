@@ -3,6 +3,8 @@
  *  Summary:    Functions used to print messages.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <2>     5/08/99        JDJ             mpr takes a const char* instead of a char array.
@@ -53,6 +55,18 @@ void more(void);
  * *********************************************************************** */
 void mpr(const char *inf, int channel = MSGCH_PLAIN, int param = 0);
 
+// 4.1-style mpr, currently named mprf for minimal disruption.
+void mprf( int channel, const char *format, ... );
+void mprf( const char *format, ... );
+
+class no_messages
+{
+public:
+    no_messages();
+    ~no_messages();
+private:
+    bool msuppressed;
+};
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

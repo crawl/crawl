@@ -3,6 +3,8 @@
  *  Summary:    Functions for using some of the wackier inventory items.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>     6/13/99         BWR             Auto ID Channel staff
@@ -27,6 +29,7 @@
 #include "items.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -42,7 +45,6 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 static bool ball_of_energy(void);
 static bool ball_of_fixation(void);
@@ -102,7 +104,7 @@ void special_wielded(void)
                      (temp_rand == 29) ? "speaks gibberish." :
                      (temp_rand == 30) ? "raves incoherently."
                                        : "yells in some weird language.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;
 
@@ -142,8 +144,8 @@ void special_wielded(void)
 
         if (one_chance_in(200))
         {
-            torment( you.x_pos, you.y_pos );
-            naughty( NAUGHTY_UNHOLY, 1 );
+            torment( TORMENT_SPWLD, you.x_pos, you.y_pos );
+            did_god_conduct( DID_UNHOLY, 1 );
         }
         break;
 
@@ -153,7 +155,7 @@ void special_wielded(void)
         if (one_chance_in(5))
         {
             animate_dead( 1 + random2(3), BEH_HOSTILE, MHITYOU, 1 );
-            naughty( NAUGHTY_NECROMANCY, 1 );
+            did_god_conduct( DID_NECROMANCY, 1 );
         }
         break;
 
@@ -185,7 +187,7 @@ void special_wielded(void)
 
         if (random2(8) <= player_spec_death())
         {
-            naughty( NAUGHTY_NECROMANCY, 1 );
+            did_god_conduct( DID_NECROMANCY, 1 );
             create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
         }
@@ -199,7 +201,7 @@ void special_wielded(void)
             in_name(wpn, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
             strcat(info, " lets out a weird humming sound.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;                  // to noisy() call at foot 2apr2000 {dlb}
 
@@ -209,18 +211,18 @@ void special_wielded(void)
             in_name(wpn, DESC_CAP_YOUR, str_pass);
             strcpy(info, str_pass);
             strcat(info, " chimes like a gong.");
-            mpr(info);
+            mpr(info, MSGCH_SOUND);
         }
         break;
 
     case SPWLD_BECKON:
         if (makes_noise)
-            mpr("You hear a voice call your name.");
+            mpr("You hear a voice call your name.", MSGCH_SOUND);
         break;
 
     case SPWLD_SHOUT:
         if (makes_noise)
-            mpr("You hear a shout.");
+            mpr("You hear a shout.", MSGCH_SOUND);
         break;
 
     //case SPWLD_PRUNE:
@@ -250,7 +252,7 @@ static void reaching_weapon_attack(void)
 
     mpr("Attack whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
     if (!beam.isValid)
         return;
 
@@ -372,7 +374,7 @@ bool evoke_wielded( void )
 
                 mpr("You feel the staff feeding on your energy!");
 
-                dec_hp( 5 + random2avg(19, 2), false );
+                dec_hp( 5 + random2avg(19, 2), false, "Staff of Dispater" );
                 dec_mp( 2 + random2avg(5, 2) );
                 make_hungry( 100, false );
 
@@ -484,8 +486,12 @@ bool evoke_wielded( void )
         if (item_is_rod( you.inv[wield] ))
         {
             pract = staff_spell( wield );
+            // [ds] Early exit, no turns are lost.
+            if (pract == -1)
+                return (false);
+
             did_work = true;  // staff_spell() will handle messages
-        } 
+        }
         else if (you.inv[wield].sub_type == STAFF_CHANNELING)
         {
             if (you.magic_points < you.max_magic_points 
@@ -497,8 +503,8 @@ bool evoke_wielded( void )
                 pract = (one_chance_in(5) ? 1 : 0);
                 did_work = true;
 
-                if (item_not_ident( you.inv[you.equip[EQ_WEAPON]], 
-                                    ISFLAG_KNOW_TYPE ))
+                if (!item_ident( you.inv[you.equip[EQ_WEAPON]], 
+                                 ISFLAG_KNOW_TYPE ))
                 {
                     set_ident_flags( you.inv[you.equip[EQ_WEAPON]], 
                                      ISFLAG_KNOW_TYPE );
@@ -575,8 +581,28 @@ bool evoke_wielded( void )
                         {
                             opened_gates++;
 
+                            // [dshaligram] New approach to placing Hell
+                            // portals to handle the possibility of a mirrored
+                            // Vestibule.
+                            int surround_grid = DNGN_FLOOR;
+
+                            for (int y = -1; y <= 1; ++y)
+                                for (int x = -1; x <= 1; ++x)
+                                {
+                                    if (!x && !y)
+                                        continue;
+                                    const int grid = 
+                                        grd[count_x + x][count_y + y];
+
+                                    if (grid != DNGN_FLOOR 
+                                            && grid != DNGN_SECRET_DOOR
+                                            && grid != DNGN_CLOSED_DOOR
+                                            && grid != DNGN_OPEN_DOOR)
+                                        surround_grid = grid;
+                                }
+
                             // this may generate faulty [][] values {dlb}
-                            switch (grd[count_x + 2][count_y])
+                            switch (surround_grid)
                             {
                             case DNGN_FLOOR:
                                 grd[count_x][count_y] = DNGN_ENTER_DIS;
@@ -604,9 +630,13 @@ bool evoke_wielded( void )
             else
             {
                 mpr("You produce a hideous howling noise!");
-                pract = (one_chance_in(3) ? 1 : 0);
-                create_monster( MONS_BEAST, ENCH_ABJ_IV, BEH_HOSTILE, 
-                                you.x_pos, you.y_pos, MHITYOU, 250 );
+                int midx = create_monster( MONS_BEAST, ENCH_ABJ_IV,
+                                           BEH_HOSTILE, you.x_pos, you.y_pos,
+                                           MHITYOU, 250 );
+                // avoid scumming; also prevents it from showing up on notes
+                if ( midx != -1 )
+                    menv[midx].flags |= MF_CREATED_FRIENDLY;
+                // no practice
             }
             break;
 
@@ -681,7 +711,7 @@ bool evoke_wielded( void )
     else if (pract > 0)
         exercise( SK_EVOCATIONS, pract );
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     return (did_work);
 }                               // end evoke_wielded()
@@ -750,7 +780,6 @@ static bool ball_of_seeing(void)
 static bool disc_of_storms(void)
 {
     int temp_rand = 0;          // probability determination {dlb}
-    struct bolt beam;
     int disc_count = 0;
     unsigned char which_zap = 0;
 
@@ -771,6 +800,8 @@ static bool disc_of_storms(void)
 
         while (disc_count)
         {
+            bolt beam;
+
             temp_rand = random2(3);
 
             which_zap = ((temp_rand > 1) ? ZAP_LIGHTNING :
@@ -811,7 +842,7 @@ void tome_of_power(char sc_read_2)
     strcat( info, "." );
     mpr( info );
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;
@@ -870,14 +901,15 @@ void tome_of_power(char sc_read_2)
         beam.flavour = BEAM_FIRE;
         beam.target_x = you.x_pos;
         beam.target_y = you.y_pos;
-        strcpy( beam.beam_name, "fiery explosion" );
+        beam.name = "fiery explosion";
         beam.colour = RED;
         // your explosion, (not someone else's explosion)
         beam.beam_source = NON_MONSTER;
         beam.thrower = KILL_YOU;
         beam.aux_source = "an exploding Tome of Power";
         beam.ex_size = 2;
-        beam.isTracer = false;
+        beam.is_tracer = false;
+        beam.is_explosion = true;
 
         explosion(beam);
         return;
@@ -933,7 +965,7 @@ void skill_manual(char sc_read_2)
     strcat(info, "!");
     mpr(info);
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;

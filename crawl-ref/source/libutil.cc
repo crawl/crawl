@@ -13,6 +13,7 @@
 
 #include "AppHdr.h"
 #include "defines.h"
+#include "initfile.h"
 #include "libutil.h"
 #include "externs.h"
 #include <stdio.h>
@@ -47,7 +48,7 @@
 // the shell can do damage with.
 bool shell_safe(const char *file)
 {
-    int match = strcspn(file, "`$*?|><");
+    int match = strcspn(file, "`$*?|><&\n");
     return !(match >= 0 && file[match]);
 }
 
@@ -59,7 +60,7 @@ void play_sound( const char *file )
         sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
-    command[0] = '\0';
+    command[0] = 0;
     if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
             && shell_safe(file))
     {
@@ -69,19 +70,68 @@ void play_sound( const char *file )
 #endif
 }
 
+void uppercase(std::string &s)
+{
+    /* yes, this is bad, but std::transform() has its own problems */
+    for (unsigned int i = 0; i < s.size(); ++i)
+        s[i] = toupper(s[i]);
+}
+
+void lowercase(std::string &s)
+{
+    for (unsigned int i = 0; i < s.size(); ++i)
+        s[i] = tolower(s[i]);
+}
+
+std::string replace_all(std::string s,
+                        const std::string &tofind,
+                        const std::string &replacement)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+   
+    while ((found = s.find_first_of(tofind, start)) != std::string::npos)
+    {
+        s.replace( found, tofind.length(), replacement );
+        start = found + replacement.length();
+    }
+
+    return (s);
+}
+
+int count_occurrences(const std::string &text, const std::string &s)
+{
+    int nfound = 0;
+    std::string::size_type pos = 0;
+
+    while ((pos = text.find(s, pos)) != std::string::npos)
+    {
+        ++nfound;
+        pos += s.length();
+    }
+
+    return (nfound);
+}
+
 void get_input_line( char *const buff, int len )
 {
-    buff[0] = '\0';         // just in case
+    buff[0] = 0;         // just in case
 
 #if defined(UNIX)
     get_input_line_from_curses( buff, len ); // implemented in libunix.cc
-#elif defined(MAC) || defined(WIN32CONSOLE)
-    getstr( buff, len );        // implemented in libmac.cc
+#elif defined(WIN32CONSOLE)
+    getstr( buff, len );
 #else
+
+    // [dshaligram] Turn on the cursor for DOS.
+#ifdef DOS
+    _setcursortype(_NORMALCURSOR);
+#endif
+
     fgets( buff, len, stdin );  // much safer than gets()
 #endif
 
-    buff[ len - 1 ] = '\0';  // just in case 
+    buff[ len - 1 ] = 0;  // just in case 
 
     // Removing white space from the end in order to get rid of any
     // newlines or carriage returns that any of the above might have 
@@ -92,17 +142,20 @@ void get_input_line( char *const buff, int len )
     for (i = end - 1; i >= 0; i++) 
     {
         if (isspace( buff[i] ))
-            buff[i] = '\0';
+            buff[i] = 0;
         else
             break;
     }
 }
 
 #ifdef DOS
-static int getch_ck() {
+static int getch_ck()
+{
     int c = getch();
-    if (!c) {
-        switch (c = getch()) {
+    if (!c)
+    {
+        switch (c = getch())
+        {
         case 'O':  return CK_END;
         case 'P':  return CK_DOWN;
         case 'I':  return CK_PGUP;
@@ -128,8 +181,9 @@ static int getch_ck() {
 
 // Hacky wrapper around getch() that returns CK_ codes for keys
 // we want to use in cancelable_get_line() and menus.
-int c_getch() {
-#if defined(DOS) || defined(LINUX) || defined(WIN32CONSOLE)
+int c_getch()
+{
+#if defined(DOS) || defined(UNIX) || defined(WIN32CONSOLE)
     return getch_ck();
 #else
     return getch();
@@ -144,7 +198,8 @@ int wrapcprintf( int wrapcol, const char *s, ... )
     va_start(args, s);
 
     // XXX: If snprintf isn't available, vsnprintf probably isn't, either.
-    int len = vsnprintf(buf, sizeof buf, s, args), olen = len;
+    int len = vsnprintf(buf, sizeof buf, s, args);
+    int olen = len;
     va_end(args);
 
     char *run = buf;
@@ -157,7 +212,8 @@ int wrapcprintf( int wrapcol, const char *s, ... )
         
         int avail = wrapcol - x + 1;
         int c = 0;
-        if (len > avail) {
+        if (len > avail)
+        {
             c = run[avail];
             run[avail] = 0;
         }
@@ -173,195 +229,49 @@ int wrapcprintf( int wrapcol, const char *s, ... )
     return (olen);
 }
 
-#define WX(x)   ( ((x) - 1) % maxcol + 1 )
-#define WY(x,y) ( (y) + ((x) - 1) / maxcol )
-#define WC(x,y) WX(x), WY(x,y)
-#define GOTOXY(x,y) gotoxy( WC(x,y) )
-bool cancelable_get_line( char *buf, int len, int maxcol,
-                          input_history *mh )
+int cancelable_get_line( char *buf, int len, int maxcol,
+                         input_history *mh, int (*keyproc)(int &ch) )
 {
-    if (len <= 0) return false;
+    line_reader reader(buf, len, maxcol);
+    reader.set_input_history(mh);
+    reader.set_keyproc(keyproc);
 
-    buf[0] = 0;
-
-    char *cur = buf;
-    int start = wherex(), line = wherey();
-    int length = 0, pos = 0;
-
-    if (mh)
-        mh->go_end();
-
-    for ( ; ; ) {
-        int ch = c_getch();
-
-        switch (ch) {
-        case CK_ESCAPE:
-            return false;
-        case CK_UP:
-        case CK_DOWN:
-        {
-            if (!mh)
-                break;
-            const std::string *text = ch == CK_UP? mh->prev() : mh->next();
-            if (text)
-            {
-                int olen = length;
-                length = text->length();
-                if (length >= len)
-                    length = len - 1;
-                memcpy(buf, text->c_str(), length);
-                buf[length] = 0;
-                GOTOXY(start, line);
-
-                int clear = length < olen? olen - length : 0;
-                wrapcprintf(maxcol, "%s%*s", buf, clear, "");
-
-                pos = length;
-                cur = buf + pos;
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-        case CK_ENTER:
-            buf[length] = 0;
-            if (mh && length)
-                mh->new_input(buf);
-            return true;
-        case CONTROL('K'):
-        {
-            // Kill to end of line
-            int erase = length - pos;
-            if (erase)
-            {
-                length = pos;
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%*s", erase, "" );
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-        case CK_DELETE:
-            if (pos < length) {
-                char *c = cur;
-                while (c - buf < length) {
-                    *c = c[1];
-                    c++;
-                }
-                --length;
-
-                GOTOXY( start + pos, line );
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%s ", cur );
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_BKSP:
-            if (pos) {
-                --cur;
-                char *c = cur;
-                while (*c) {
-                    *c = c[1];
-                    c++;
-                }
-                --pos;
-                --length;
-
-                GOTOXY( start + pos, line );
-                buf[length] = 0;
-                wrapcprintf( maxcol, "%s ", cur );
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_LEFT:
-            if (pos) {
-                --pos;
-                cur = buf + pos;
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_RIGHT:
-            if (pos < length) {
-                ++pos;
-                cur = buf + pos;
-                GOTOXY( start + pos, line );
-            }
-            break;
-        case CK_HOME:
-        case CONTROL('A'):
-            pos = 0;
-            cur = buf + pos;
-            GOTOXY( start + pos, line );
-            break;
-        case CK_END:
-        case CONTROL('E'):
-            pos = length;
-            cur = buf + pos;
-            GOTOXY( start + pos, line );
-            break;
-        default:
-            if (isprint(ch) && length < len - 1) {
-                if (pos < length) {
-                    char *c = buf + length - 1;
-                    while (c >= cur) {
-                        c[1] = *c;
-                        c--;
-                    }
-                }
-                *cur++ = (char) ch;
-                ++length;
-                ++pos;
-                putch(ch);
-                if (pos < length) {
-                    buf[length] = 0;
-                    wrapcprintf( maxcol, "%s", cur );
-                }
-                GOTOXY(start + pos, line);
-            }
-            break;
-        }
-    }
+    return reader.read_line();
 }
-#undef GOTOXY
-#undef WC
-#undef WX
-#undef WY
 
 // also used with macros
 std::string & trim_string( std::string &str )
 {
-    // OK,  this is really annoying.  Borland C++ seems to define
-    // basic_string::erase to take iterators,  and basic_string::remove
-    // to take size_t or integer.  This is ass-backwards compared to
-    // nearly all other C++ compilers.  Crap.             (GDL)
-    //
-    // Borland 5.5 does this correctly now... leaving the old code
-    // around for now in case anyone needs it.  -- bwr
-// #ifdef __BCPLUSPLUS__
-//     str.remove( 0, str.find_first_not_of( " \t\n\r" ) );
-//     str.remove( str.find_last_not_of( " \t\n\r" ) + 1 );
-// #else
     str.erase( 0, str.find_first_not_of( " \t\n\r" ) );
     str.erase( str.find_last_not_of( " \t\n\r" ) + 1 );
-// #endif
 
     return (str);
 }
 
-std::vector<std::string> split_string(const char *sep, std::string s)
+std::vector<std::string> split_string(
+        const char *sep, 
+        std::string s,
+        bool trim_segments,
+        bool accept_empty_segments)
 {
     std::vector<std::string> segments;
+    int separator_length = strlen(sep);
 
     std::string::size_type pos;
-    while ((pos = s.find(sep, 0)) != std::string::npos) {
-        if (pos > 0)
+    while ((pos = s.find(sep, 0)) != std::string::npos)
+    {
+        if (pos > 0 || accept_empty_segments)
             segments.push_back(s.substr(0, pos));
-        s.erase(0, pos + 1);
+        s.erase(0, pos + separator_length);
     }
     if (s.length() > 0)
         segments.push_back(s);
     
-    for (int i = 0, count = segments.size(); i < count; ++i)
-        trim_string(segments[i]);
+    if (trim_segments)
+    {
+        for (int i = 0, count = segments.size(); i < count; ++i)
+            trim_string(segments[i]);
+    }
     return segments;
 }
 
@@ -399,15 +309,22 @@ int snprintf( char *str, size_t size, const char *format, ... )
     va_list argp;
     va_start( argp, format );
 
-    char buff[ 10 * size ];  // hopefully enough 
+    char *buff = new char [ 10 * size ];  // hopefully enough 
+    if (!buff)
+    {
+        fprintf(stderr, "Out of memory\n");
+        exit(1);
+    }
 
     vsprintf( buff, format, argp );
     strncpy( str, buff, size );
-    str[ size - 1 ] = '\0';
+    str[ size - 1 ] = 0;
 
     int ret = strlen( str );  
     if ((unsigned int) ret == size - 1 && strlen( buff ) >= size)
         ret = -1;
+
+    delete [] buff;
 
     va_end( argp );
 
@@ -419,7 +336,8 @@ int snprintf( char *str, size_t size, const char *format, ... )
 ///////////////////////////////////////////////////////////////////////
 // Pattern matching
 
-inline int pm_lower(int ch, bool icase) {
+inline int pm_lower(int ch, bool icase)
+{
     return icase? tolower(ch) : ch;
 }
 
@@ -459,7 +377,8 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
 ////////////////////////////////////////////////////////////////////
 // Perl Compatible Regular Expressions
 
-void *compile_pattern(const char *pattern, bool icase) {
+void *compile_pattern(const char *pattern, bool icase)
+{
     const char *error;
     int erroffset;
     int flags = icase? PCRE_CASELESS : 0;
@@ -470,7 +389,8 @@ void *compile_pattern(const char *pattern, bool icase) {
                         NULL);
 }
 
-void free_compiled_pattern(void *cp) {
+void free_compiled_pattern(void *cp)
+{
     if (cp)
         pcre_free(cp);
 }
@@ -494,7 +414,8 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 ////////////////////////////////////////////////////////////////////
 // POSIX regular expressions
 
-void *compile_pattern(const char *pattern, bool icase) {
+void *compile_pattern(const char *pattern, bool icase)
+{
     regex_t *re = new regex_t;
     if (!re)
         return NULL;
@@ -504,15 +425,18 @@ void *compile_pattern(const char *pattern, bool icase) {
         flags |= REG_ICASE;
     int rc = regcomp(re, pattern, flags);
     // Nonzero return code == failure
-    if (rc) {
+    if (rc)
+    {
         delete re;
         return NULL;
     }
     return re;
 }
 
-void free_compiled_pattern(void *cp) {
-    if (cp) {
+void free_compiled_pattern(void *cp)
+{
+    if (cp)
+    {
         regex_t *re = static_cast<regex_t *>( cp );
         regfree(re);
         delete re;
@@ -541,7 +465,8 @@ void *compile_pattern(const char *pattern, bool icase)
     // If we're using simple globs, we need to box the pattern with '*'
     std::string s = std::string("*") + pattern + "*";
     glob_info *gi = new glob_info;
-    if (gi) {
+    if (gi)
+    {
         gi->s = s;
         gi->ignore_case = icase;
     }
@@ -562,113 +487,6 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 
 #endif
 
-
-
-////////////////////////////////////////////////////////////////////
-// formatted_string
-//
-
-formatted_string::formatted_string(const std::string &s)
-    : ops()
-{
-    ops.push_back( s );
-}
-
-formatted_string::operator std::string() const
-{
-    std::string s;
-    for (int i = 0, size = ops.size(); i < size; ++i)
-    {
-        if (ops[i] == FSOP_TEXT)
-            s += ops[i].text;
-    }
-    return s;
-}
-
-inline void cap(int &i, int max)
-{
-    if (i < 0 && -i <= max)
-        i += max;
-    if (i >= max)
-        i = max - 1;
-    if (i < 0)
-        i = 0;
-}
-
-std::string formatted_string::tostring(int s, int e) const
-{
-    std::string st;
-    
-    int size = ops.size();
-    cap(s, size);    
-    cap(e, size);
-    
-    for (int i = s; i <= e && i < size; ++i)
-    {
-        if (ops[i] == FSOP_TEXT)
-            st += ops[i].text;
-    }
-    return st;
-}
-
-void formatted_string::display(int s, int e) const
-{
-    int size = ops.size();
-    if (!size)
-        return ;
-
-    cap(s, size);    
-    cap(e, size);
-    
-    for (int i = s; i <= e && i < size; ++i)
-        ops[i].display();
-}
-
-void formatted_string::gotoxy(int x, int y)
-{
-    ops.push_back( fs_op(x, y) );
-}
-
-void formatted_string::textcolor(int color)
-{
-    ops.push_back(color);
-}
-
-void formatted_string::cprintf(const char *s, ...)
-{
-    char buf[1000];
-    va_list args;
-    va_start(args, s);
-    vsnprintf(buf, sizeof buf, s, args);
-    va_end(args);
-
-    cprintf(std::string(buf));
-}
-
-void formatted_string::cprintf(const std::string &s)
-{
-    ops.push_back(s);
-}
-
-void formatted_string::fs_op::display() const
-{
-    switch (type)
-    {
-    case FSOP_CURSOR:
-    {
-        int cx = (x == -1? wherex() : x);
-        int cy = (y == -1? wherey() : y);
-        ::gotoxy(cx, cy);
-        break;
-    }
-    case FSOP_COLOUR:
-        ::textcolor(x);
-        break;
-    case FSOP_TEXT:
-        ::cprintf("%s", text.c_str());
-        break;
-    }
-}
 
 /////////////////////////////////////////////////////////////
 // input_history
@@ -727,4 +545,271 @@ void input_history::clear()
 {
     history.clear();
     go_end();
+}
+
+/////////////////////////////////////////////////////////////////////////
+// line_reader
+
+line_reader::line_reader(char *buf, size_t sz, int wrap)
+    : buffer(buf), bufsz(sz), history(NULL), start_x(0),
+      start_y(0), keyfn(NULL), wrapcol(wrap), cur(NULL),
+      length(0), pos(-1)
+{
+}
+
+std::string line_reader::get_text() const
+{
+    return (buffer);
+}
+
+void line_reader::set_input_history(input_history *i)
+{
+    history = i;
+}
+
+void line_reader::set_keyproc(keyproc fn)
+{
+    keyfn = fn;
+}
+
+void line_reader::cursorto(int ncx)
+{
+    int x = (start_x + ncx - 1) % wrapcol + 1;
+    int y = start_y + (start_x + ncx - 1) / wrapcol;
+    ::gotoxy(x, y);
+}
+
+int line_reader::read_line(bool clear_previous)
+{
+    if (bufsz <= 0) return false;
+
+    cursor_control coff(true);
+
+    if (clear_previous)
+        *buffer = 0;
+
+    start_x = wherex();
+    start_y = wherey();
+
+    length = strlen(buffer);
+
+    // Remember the previous cursor position, if valid.
+    if (pos < 0 || pos > length)
+        pos = length;
+
+    cur = buffer + pos;
+
+    if (length)
+        wrapcprintf(wrapcol, "%s", buffer);
+
+    if (pos != length)
+        cursorto(pos);
+
+    if (history)
+        history->go_end();
+
+    for ( ; ; )
+    {
+        int ch = c_getch();
+
+        if (keyfn)
+        {
+            int whattodo = (*keyfn)(ch);
+            if (whattodo == 0)
+            {
+                buffer[length] = 0;
+                if (history && length)
+                    history->new_input(buffer);
+                return (0);
+            }
+            else if (whattodo == -1)
+            {
+                buffer[length] = 0;                
+                return (ch);
+            }
+        }
+
+        int ret = process_key(ch);
+        if (ret != -1)
+            return (ret);
+    }
+}
+
+void line_reader::backspace()
+{
+    if (pos)
+    {
+        --cur;
+        char *c = cur;
+        while (*c)
+        {
+            *c = c[1];
+            c++;
+        }
+        --pos;
+        --length;
+
+        cursorto(pos);
+        buffer[length] = 0;
+        wrapcprintf( wrapcol, "%s ", cur );
+        cursorto(pos);
+    }
+}
+
+bool line_reader::is_wordchar(int c)
+{
+    return isalnum(c) || c == '_' || c == '-';
+}
+
+void line_reader::killword()
+{
+    if (!pos || cur == buffer)
+        return;
+
+    bool foundwc = false;
+    while (pos)
+    {
+        if (is_wordchar(cur[-1]))
+            foundwc = true;
+        else if (foundwc)
+            break;
+
+        backspace();
+    }
+}
+
+int line_reader::process_key(int ch)
+{
+    switch (ch)
+    {
+    case CK_ESCAPE:
+        return (ch);
+    case CK_UP:
+    case CK_DOWN:
+    {
+        if (!history)
+            break;
+
+        const std::string *text = 
+                    ch == CK_UP? history->prev() : history->next();
+
+        if (text)
+        {
+            int olen = length;
+            length = text->length();
+            if (length >= (int) bufsz)
+                length = bufsz - 1;
+            memcpy(buffer, text->c_str(), length);
+            buffer[length] = 0;
+            cursorto(0);
+
+            int clear = length < olen? olen - length : 0;
+            wrapcprintf(wrapcol, "%s%*s", buffer, clear, "");
+
+            pos = length;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    }
+    case CK_ENTER:
+        buffer[length] = 0;
+        if (history && length)
+            history->new_input(buffer);
+        return (0);
+
+    case CONTROL('K'):
+    {
+        // Kill to end of line
+        int erase = length - pos;
+        if (erase)
+        {
+            length = pos;
+            buffer[length] = 0;
+            wrapcprintf( wrapcol, "%*s", erase, "" );
+            cursorto(pos);
+        }
+        break;
+    }
+    case CK_DELETE:
+        if (pos < length)
+        {
+            char *c = cur;
+            while (c - buffer < length)
+            {
+                *c = c[1];
+                c++;
+            }
+            --length;
+
+            cursorto(pos);
+            buffer[length] = 0;
+            wrapcprintf( wrapcol, "%s ", cur );
+            cursorto(pos);
+        }
+        break;
+
+    case CK_BKSP:
+        backspace();
+        break;
+
+    case CONTROL('W'):
+        killword();
+        break;
+
+    case CK_LEFT:
+        if (pos)
+        {
+            --pos;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    case CK_RIGHT:
+        if (pos < length)
+        {
+            ++pos;
+            cur = buffer + pos;
+            cursorto(pos);
+        }
+        break;
+    case CK_HOME:
+    case CONTROL('A'):
+        pos = 0;
+        cur = buffer + pos;
+        cursorto(pos);
+        break;
+    case CK_END:
+    case CONTROL('E'):
+        pos = length;
+        cur = buffer + pos;
+        cursorto(pos);
+        break;
+    default:
+        if (isprint(ch) && length < (int) bufsz - 1)
+        {
+            if (pos < length)
+            {
+                char *c = buffer + length - 1;
+                while (c >= cur)
+                {
+                    c[1] = *c;
+                    c--;
+                }
+            }
+            *cur++ = (char) ch;
+            ++length;
+            ++pos;
+            putch(ch);
+            if (pos < length)
+            {
+                buffer[length] = 0;
+                wrapcprintf( wrapcol, "%s", cur );
+            }
+            cursorto(pos);
+        }
+        break;
+    }
+
+    return (-1);
 }

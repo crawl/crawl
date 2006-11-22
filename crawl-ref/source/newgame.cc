@@ -58,24 +58,13 @@
 
 #ifdef DOS
 #include <conio.h>
+#include <dos.h>
 #endif
 
 #ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
-#endif
-
-#ifdef USE_EMX
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
 #endif
 
 #include "externs.h"
@@ -86,8 +75,10 @@
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "menu.h"
 #include "player.h"
 #include "randart.h"
 #include "skills.h"
@@ -95,8 +86,9 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "version.h"
-#include "wpn-misc.h"
+#include "view.h"
 
+extern std::string init_file_location;
 
 #define MIN_START_STAT       1
 
@@ -136,6 +128,7 @@ static char ng_race, ng_cls;
 static bool ng_random;
 static int ng_ck, ng_dk, ng_pr;
 static int ng_weapon;
+static int ng_book;
 
 static void reset_newgame_options(void)
 {
@@ -145,6 +138,7 @@ static void reset_newgame_options(void)
     ng_dk = DK_NO_SELECTION;
     ng_pr = GOD_NO_GOD;
     ng_weapon = WPN_UNKNOWN;
+    ng_book = SBT_NO_SELECTION;
 }
 
 static void save_newgame_options(void)
@@ -158,6 +152,7 @@ static void save_newgame_options(void)
     Options.prev_dk         = ng_dk;
     Options.prev_pr         = ng_pr;
     Options.prev_weapon     = ng_weapon;
+    Options.prev_book       = ng_book;
 
     write_newgame_options_file();
 }
@@ -170,6 +165,7 @@ static void set_startup_options(void)
     Options.death_knight = Options.prev_dk;
     Options.chaos_knight = Options.prev_ck;
     Options.priest       = Options.prev_pr;
+    Options.book = Options.prev_book;
 }
 
 static bool prev_startup_options_set(void)
@@ -251,7 +247,7 @@ static void pick_random_species_and_class( void )
     {
         // we only want draconians counted once in this loop...
         // we'll add the variety lower down -- bwr
-        if (sp >= SP_WHITE_DRACONIAN && sp <= SP_UNK2_DRACONIAN)
+        if (sp >= SP_WHITE_DRACONIAN && sp <= SP_BASE_DRACONIAN)
             continue;
 
         for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
@@ -283,64 +279,35 @@ static void pick_random_species_and_class( void )
 static bool check_saved_game(void)
 {
     FILE *handle;
-    char char_fil[kFileNameSize];
+
+    std::string basename = get_savedir_filename( you.your_name, "", "");
+    std::string savename = basename + ".sav";
 
 #ifdef LOAD_UNPACKAGE_CMD
-    // Create the file name base
-    char name_buff[kFileNameLen];
-
-    snprintf( name_buff, sizeof(name_buff), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-
-    char zip_buff[kFileNameLen];
-
-    strcpy(zip_buff, name_buff);
-    strcat(zip_buff, PACKAGE_SUFFIX);
-
-    // Create save dir name
-    strcpy(char_fil, name_buff);
-    strcat(char_fil, ".sav");
-
-    handle = fopen(zip_buff, "rb+");
+    std::string zipname = basename + PACKAGE_SUFFIX;
+    handle = fopen(zipname.c_str(), "rb+");
     if (handle != NULL)
     {
+	fclose(handle);
         cprintf(EOL "Loading game..." EOL);
 
         // Create command
         char cmd_buff[1024];
 
-        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD, name_buff );
+        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
+		  basename.c_str() );
 
         if (system( cmd_buff ) != 0)
         {
             cprintf( EOL "Warning: Zip command (LOAD_UNPACKAGE_CMD) returned non-zero value!" EOL );
         }
 
-        fclose(handle);
-
         // Remove save game package
-        unlink(zip_buff);
+        unlink(zipname.c_str());
     }
-    else
-    {
-#ifdef DO_ANTICHEAT_CHECKS
-        // Simple security patch -- must have zip file otherwise invalidate
-        // the character.  Right now this just renames the .sav file to
-        // .bak, allowing anyone with the appropriate permissions to
-        // fix a character in the case of a bug.  This could be changed
-        // to unlinking the file(s) which would remove the character.
-        strcat(name_buff, ".bak");
-        rename(char_fil, name_buff);
-#endif
-    }
-
-#else
-    strcpy(char_fil, "");
-    strncat(char_fil, you.your_name, kFileNameLen);
-    strcat(char_fil, ".sav");
 #endif
 
-    handle = fopen(char_fil, "rb+");
+    handle = fopen(savename.c_str(), "rb+");
 
     if (handle != NULL)
     {
@@ -350,19 +317,45 @@ static bool check_saved_game(void)
     return false;
 }
 
+static unsigned char random_potion_description()
+{
+    int desc, nature, colour;
+
+    do {
+        desc = random2( PDQ_NQUALS * PDC_NCOLOURS );
+
+        if (coinflip())
+            desc %= PDC_NCOLOURS;
+
+        nature = PQUAL(desc);
+        colour = PCOLOUR(desc);
+
+        // nature and colour correspond to primary and secondary
+        // in itemname.cc; this check ensures clear potions don't
+        // get odd qualifiers.
+    } while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS) 
+            || desc == PDESCS(PDC_CLEAR)
+            || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
+
+    return (unsigned char) desc;
+}
+
 bool new_game(void)
 {
     int i, j;                   // loop variables {dlb}
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     ASSERT(NUM_SPELLS < SPELL_NO_SPELL);
-    ASSERT(NUM_DURATIONS > DUR_LAST_DUR);
     ASSERT(NUM_JOBS < JOB_UNKNOWN);
-    ASSERT(NUM_ATTRIBUTES < 30);
+    ASSERT(NUM_ATTRIBUTES >= 30);
 
     init_player();
 
-    you.exp_available = 25;     // now why is this all the way up here? {dlb}
+    if (!Options.player_name.empty())
+    {
+        strncpy(you.your_name, Options.player_name.c_str(), kNameLen);
+        you.your_name[kNameLen - 1] = 0;
+    }
 
     textcolor(LIGHTGREY);
 
@@ -372,21 +365,20 @@ bool new_game(void)
     if (SysEnv.crawl_name)
     {
         strncpy( you.your_name, SysEnv.crawl_name, kNameLen );
-        you.your_name[ kNameLen - 1 ] = '\0';
+        you.your_name[ kNameLen - 1 ] = 0;
     }
 
     openingScreen();
     enterPlayerName(true);
 
-    if (you.your_name[0] != '\0')
+    if (you.your_name[0] != 0)
     {
         if (check_saved_game())
         {
             textcolor( BROWN );
             cprintf( EOL "Welcome back, " );
             textcolor( YELLOW );
-            cprintf( you.your_name );
-            cprintf( "!" );
+            cprintf( "%s!", you.your_name );
             textcolor( LIGHTGREY );
 
             save_player_name();
@@ -408,7 +400,7 @@ bool new_game(void)
     strcpy( you.class_name, get_class_name( you.char_class ) );
 
     // new: pick name _after_ race and class choices
-    if (you.your_name[0] == '\0')
+    if (you.your_name[0] == 0)
     {
         clrscr();
 
@@ -432,8 +424,7 @@ bool new_game(void)
                 textcolor( BROWN );
                 cprintf(EOL EOL "Welcome back, ");
                 textcolor( YELLOW );
-                cprintf(you.your_name);
-                cprintf("!");
+                cprintf("%s!", you.your_name);
                 textcolor( LIGHTGREY );
 
                 return (false);
@@ -449,8 +440,8 @@ bool new_game(void)
     you.is_undead = ((you.species == SP_MUMMY) ? US_UNDEAD :
                      (you.species == SP_GHOUL) ? US_HUNGRY_DEAD : US_ALIVE);
 
-    // before we get into the inventory init,  set light radius based
-    // on species vision. currently,  all species see out to 8 squares.
+    // before we get into the inventory init, set light radius based
+    // on species vision. currently, all species see out to 8 squares.
     you.normal_vision = 8;
     you.current_vision = 8;
 
@@ -627,7 +618,7 @@ bool new_game(void)
 
             // don't change object type modifier unless it starts plain
             if (you.inv[i].base_type <= OBJ_ARMOUR
-                && cmp_equip_race( you.inv[i], 0 ))   // == DARM_PLAIN
+                && get_equip_race(you.inv[i]) == 0 )   // == DARM_PLAIN
             {
                 // now add appropriate species type mod:
                 switch (you.species)
@@ -664,8 +655,11 @@ bool new_game(void)
         }
     }
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 153;  // "gluggy white"
-    you.item_description[IDESC_POTIONS][POT_WATER] = 0;       // "clear"
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 
+        PDESCQ(PDQ_GLUGGY, PDC_WHITE);
+
+    you.item_description[IDESC_POTIONS][POT_WATER] =
+        PDESCS(PDC_CLEAR);
 
     int passout;
 
@@ -689,9 +683,7 @@ bool new_game(void)
                     break;
 
                 case IDESC_POTIONS: // potions
-                    you.item_description[i][j] = random2( 15 * 14 );
-                    if (coinflip())
-                        you.item_description[i][j] %= 14;
+                    you.item_description[i][j] = random_potion_description();
                     break;
 
                 case IDESC_SCROLLS: // scrolls
@@ -1422,6 +1414,7 @@ bool class_allowed( unsigned char speci, int char_class )
         case SP_HUMAN:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
+        case SP_GHOUL:
             return true;
         }
         return false;
@@ -1431,6 +1424,88 @@ bool class_allowed( unsigned char speci, int char_class )
         return false;
     }
 }                               // end class_allowed()
+
+
+static void choose_book( item_def& book, int firstbook, int numbooks )
+{
+    int keyin = 0;
+    clrscr();
+    book.base_type = OBJ_BOOKS;
+    book.quantity = 1;
+    book.plus = 0;
+    book.special = 1;
+    book.colour = CYAN;
+
+    // using the fact that CONJ_I and MINOR_MAGIC_I are both
+    // fire books, CONJ_II and MINOR_MAGIC_II are both ice books
+    if ( Options.book && Options.book <= numbooks )
+    {
+	book.sub_type = firstbook + Options.book - 1;
+	ng_book = Options.book;
+	return;
+    }
+
+    if ( Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM )
+	Options.prev_book = SBT_NO_SELECTION;
+
+    if ( !Options.random_pick )
+    {
+	textcolor( CYAN );
+	cprintf(EOL " You have a choice of books:" EOL);
+	textcolor( LIGHTGREY );
+
+	for (int i=0; i < numbooks; ++i)
+	{
+	    char buf[ITEMNAME_SIZE];
+	    book.sub_type = firstbook + i;
+	    item_name( book, DESC_PLAIN, buf );
+	    cprintf("%c - %s" EOL, 'a' + i, buf);
+	}
+
+	textcolor(BROWN);
+	cprintf(EOL "? - Random" );
+	if ( Options.prev_book != SBT_NO_SELECTION ) {
+            cprintf("; Enter - %s",
+		    Options.prev_book == SBT_FIRE   ? "Fire"      :
+		    Options.prev_book == SBT_COLD   ? "Cold"      :
+		    Options.prev_book == SBT_SUMM   ? "Summoning" :
+                    Options.prev_book == SBT_RANDOM ? "Random"    :
+		    "Buggy Book");
+	}
+	cprintf(EOL);
+            
+	do
+	{
+	    textcolor( CYAN );
+	    cprintf(EOL "Which book? ");
+	    textcolor( LIGHTGREY );
+
+	    keyin = get_ch();
+	} while (keyin != '?' && 
+		 ((keyin != '\r' && keyin != '\n') ||
+		  Options.prev_book == SBT_NO_SELECTION ) &&
+		 (keyin < 'a' || keyin > ('a' + numbooks)));
+
+	if ( keyin == '\r' || keyin == '\n' )
+	{
+	    if ( Options.prev_book == SBT_RANDOM )
+		keyin = '?';
+	    else
+		keyin = ('a' +  Options.prev_book - 1);
+	}
+    }
+
+    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '?')
+	ng_book = SBT_RANDOM;
+    else
+	ng_book = keyin - 'a' + 1;
+    
+    if ( Options.random_pick || keyin == '?' )
+	keyin = random2(numbooks) + 'a';
+
+    book.sub_type = firstbook + keyin - 'a';
+}
+    
 
 static char startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
     WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
@@ -1477,10 +1552,8 @@ void choose_weapon( void )
             int x = effective_stat_bonus(startwep[i]);
             standard_name_weap(startwep[i], wepName);
 
-            snprintf( info, INFO_SIZE, "%c - %s%s" EOL, 'a' + i, wepName,
-                      (x <= -4) ? " (not ideal)" : "" );
-
-            cprintf(info);
+            cprintf("%c - %s%s" EOL, 'a' + i, wepName,
+                    (x <= -4) ? " (not ideal)" : "" );
 
             if (Options.prev_weapon == startwep[i])
                 prevmatch = true;
@@ -1527,7 +1600,10 @@ void choose_weapon( void )
         }
 
         if (keyin != '?' && effective_stat_bonus(startwep[keyin-'a']) > -4)
+        {
             cprintf(EOL "A fine choice. " EOL);
+            delay(1000);
+        }
     }
 
     if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '?')
@@ -1553,167 +1629,7 @@ void choose_weapon( void )
 
 void init_player(void)
 {
-    unsigned char i = 0;        // loop variable
-
-    you.birth_time = time( NULL );
-    you.real_time = 0;
-    you.num_turns = 0;
-
-#ifdef WIZARD
-    you.wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
-#else
-    you.wizard = false;
-#endif
-
-    you.activity = ACT_NONE;
-    you.berserk_penalty = 0;
-    you.berserker = 0;
-    you.conf = 0;
-    you.confusing_touch = 0;
-    you.deaths_door = 0;
-    you.disease = 0;
-    you.elapsed_time = 0;
-    you.exhausted = 0;
-    you.haste = 0;
-    you.invis = 0;
-    you.levitation = 0;
-    you.might = 0;
-    you.paralysis = 0;
-    you.poison = 0;
-    you.rotting = 0;
-    you.fire_shield = 0;
-    you.slow = 0;
-    you.special_wield = SPWLD_NONE;
-    you.sure_blade = 0;
-    you.synch_time = 0;
-
-    you.base_hp = 5000;
-    you.base_hp2 = 5000;
-    you.base_magic_points = 5000;
-    you.base_magic_points2 = 5000;
-
-    you.magic_points_regeneration = 0;
-    you.strength = 0;
-    you.max_strength = 0;
-    you.intel = 0;
-    you.max_intel = 0;
-    you.dex = 0;
-    you.max_dex = 0;
-    you.experience = 0;
-    you.experience_level = 1;
-    you.max_level = 1;
-    you.char_class = JOB_UNKNOWN;
-
-    you.hunger = 6000;
-    you.hunger_state = HS_SATIATED;
-
-    you.gold = 0;
-    // you.speed = 10;             // 0.75;  // unused
-
-    you.burden = 0;
-    you.burden_state = BS_UNENCUMBERED;
-
-    you.spell_no = 0;
-
-    you.your_level = 0;
-    you.level_type = LEVEL_DUNGEON;
-    you.where_are_you = BRANCH_MAIN_DUNGEON;
-    you.char_direction = DIR_DESCENDING;
-
-    you.prev_targ = MHITNOT;
-    you.pet_target = MHITNOT;
-
-    you.x_pos = 0;
-    you.y_pos = 0;
-
-    you.running = 0;
-    you.run_x = 0;
-    you.run_y = 0;
-    you.travel_x = 0;
-    you.travel_y = 0;
-
-    for (i = 0; i < 3; i++)
-    {
-        you.run_check[i].grid = 0;
-        you.run_check[i].dx = 0;
-        you.run_check[i].dy = 0;
-    }
-
-    you.religion = GOD_NO_GOD;
-    you.piety = 0;
-
-    you.gift_timeout = 0;
-
-    for (i = 0; i < MAX_NUM_GODS; i++)
-    {
-        you.penance[i] = 0;
-        you.worshipped[i] = 0;
-    }
-
-    ghost.name[0] = '\0';
-
-    for (i = 0; i < NUM_GHOST_VALUES; i++)
-        ghost.values[i] = 0;
-
-    for (i = EQ_WEAPON; i < NUM_EQUIP; i++)
-        you.equip[i] = -1;
-
-    for (i = 0; i < 25; i++)
-        you.spells[i] = SPELL_NO_SPELL;
-
-    for (i = 0; i < 52; i++)
-    {
-        you.spell_letter_table[i] = -1;
-        you.ability_letter_table[i] = ABIL_NON_ABILITY;
-    }
-
-    for (i = 0; i < 100; i++)
-        you.mutation[i] = 0;
-
-    for (i = 0; i < 100; i++)
-        you.demon_pow[i] = 0;
-
-    for (i = 0; i < 50; i++)
-        you.had_book[i] = 0;
-
-    for (i = 0; i < 50; i++)
-        you.unique_items[i] = UNIQ_NOT_EXISTS;
-
-    for (i = 0; i < NO_UNRANDARTS; i++)
-        set_unrandart_exist(i, 0);
-
-    for (i = 0; i < 50; i++)
-    {
-        you.skills[i] = 0;
-        you.skill_points[i] = 0;
-        you.skill_order[i] = MAX_SKILL_ORDER;
-        you.practise_skill[i] = 1;
-    }
-
-    you.skill_cost_level = 1;
-    you.total_skill_points = 0;
-
-    for (i = 0; i < 30; i++)
-        you.attribute[i] = 0;
-
-    for (i = 0; i < ENDOFPACK; i++)
-    {
-        you.inv[i].quantity = 0;
-        you.inv[i].base_type = OBJ_WEAPONS;
-        you.inv[i].sub_type = WPN_CLUB;
-        you.inv[i].plus = 0;
-        you.inv[i].plus2 = 0;
-        you.inv[i].special = 0;
-        you.inv[i].colour = 0;
-        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
-
-        you.inv[i].x = -1;
-        you.inv[i].y = -1;
-        you.inv[i].link = i;
-    }
-
-    for (i = 0; i < NUM_DURATIONS; i++)
-        you.duration[i] = 0;
+    you.init();
 }
 
 void give_last_paycheck(int which_job)
@@ -1803,7 +1719,7 @@ void species_stat_init(unsigned char which_species)
     case SP_PALE_DRACONIAN:
     case SP_UNK0_DRACONIAN:
     case SP_UNK1_DRACONIAN:
-    case SP_UNK2_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+    case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
     modify_all_stats( sb, ib, db );
@@ -1993,116 +1909,202 @@ void give_basic_spells(int which_job)
 // eventually, this should be something more grand {dlb}
 void openingScreen(void)
 {
-/* **********************************************
-// this does not work just yet ... {dlb}:
-    cprintf(EOL "Hello, ");
-
-    if ( you.your_name[0] != '\0' )
-    {
-       cprintf(you.your_name); // better be less than 31 characters :P {dlb}
-                               // of course, invalid names will appear {dlb}
-       cprintf(", ");
-    }
-********************************************** */
-
     textcolor( YELLOW );
-    cprintf("Hello, welcome to Dungeon Crawl " VERSION "!");
+    cprintf("Hello, welcome to " CRAWL " " VERSION "!");
     textcolor( BROWN );
     cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
-    cprintf(EOL "Please consult crawl.txt for instructions and legal details."
-            EOL);
+    cprintf(EOL 
+        "Please consult crawl_manual.txt for instructions and legal details."
+        EOL);
+
+    bool init_found = init_file_location.find("not found") == std::string::npos;
+    if (!init_found)
+        textcolor( LIGHTRED );
+    else
+        textcolor( LIGHTGREY );
+
+    cprintf("Init file %s%s" EOL,
+            init_found? "read: " : "",
+            init_file_location.c_str());
     textcolor( LIGHTGREY );
 
     return;
 }                               // end openingScreen()
 
+static void show_name_prompt(int where, bool blankOK, 
+        const std::vector<player> &existing_chars,
+        slider_menu &menu)
+{
+    gotoxy(1, where);
+    textcolor( CYAN );
+    if (blankOK)
+    {
+        if (Options.prev_name.length() && Options.remember_name)
+            cprintf(EOL "Press <Enter> for \"%s\"." EOL,
+                    Options.prev_name.c_str());
+        else
+            cprintf(EOL 
+                    "Press <Enter> to answer this after race and "
+                    "class are chosen." EOL);
+    }
+
+    cprintf(EOL "What is your name today? ");
+
+    if (!existing_chars.empty())
+    {
+        const int name_x = wherex(), name_y = wherey();
+        menu.set_limits(name_y + 3, get_number_of_lines());
+        menu.display();
+        gotoxy(name_x, name_y);
+    }
+
+    textcolor( LIGHTGREY );
+}
+
+static void preprocess_character_name(char *name, bool blankOK)
+{
+    if (!*name && blankOK && Options.prev_name.length() &&
+            Options.remember_name)
+    {
+        strncpy(name, Options.prev_name.c_str(), kNameLen);
+        name[kNameLen - 1] = 0;
+    }
+
+    // '.', '?' and '*' are blanked.
+    if (!name[1] && (*name == '.' ||
+                      *name == '*' ||
+                      *name == '?'))
+        *name = 0;
+}
+
+static bool is_good_name(char *name, bool blankOK)
+{
+    preprocess_character_name(name, blankOK);
+
+    // verification begins here {dlb}:
+    if (you.your_name[0] == 0)
+    {
+        if (blankOK)
+            return (true);
+
+        cprintf(EOL "That's a silly name!" EOL);
+        return (false);
+    }
+
+    // if MULTIUSER is defined, userid will be tacked onto the end
+    // of each character's files, making bones a valid player name.
+#ifndef MULTIUSER
+    // this would cause big probs with ghosts
+    // what would? {dlb}
+    // ... having the name "bones" of course! The problem comes from
+    // the fact that bones files would have the exact same filename
+    // as level files for a character named "bones".  -- bwr
+    if (stricmp(you.your_name, "bones") == 0)
+    {
+        cprintf(EOL "That's a silly name!" EOL);
+        return (false);
+    }
+#endif
+    return (verifyPlayerName());
+}
+
+static int newname_keyfilter(int &ch)
+{
+    if (ch == CK_DOWN || ch == CK_PGDN || ch == '\t')
+        return -1;
+    return 1;
+}
+
+static bool read_player_name(
+        char *name, 
+        int len,
+        const std::vector<player> &existing,
+        slider_menu &menu)
+{
+    const int name_x = wherex(), name_y = wherey();
+    int (*keyfilter)(int &) = newname_keyfilter;
+    if (existing.empty())
+        keyfilter = NULL;
+
+    line_reader reader(name, len);
+    reader.set_keyproc(keyfilter);
+
+    for (;;)
+    {
+        gotoxy(name_x, name_y);
+        if (name_x <= 80)
+            cprintf("%-*s", 80 - name_x + 1, "");
+
+        gotoxy(name_x, name_y);
+        int ret = reader.read_line(false);
+        if (!ret)
+            return (true);
+
+        if (ret == CK_ESCAPE)
+            return (false);
+
+        if (ret != CK_ESCAPE && existing.size())
+        {
+            menu.set_search(name);
+            menu.show();
+            const MenuEntry *sel = menu.selected_entry();
+            if (sel)
+            {
+                const player &p = *static_cast<player*>( sel->data );
+                strncpy(name, p.your_name, kNameLen);
+                name[kNameLen - 1] = 0;
+                return (true);
+            }
+        }
+
+        // Go back and prompt the user.
+    }
+}
 
 void enterPlayerName(bool blankOK)
 {
-    // temporary 'til copyover to you.your_name {dlb}
-    // made this rediculously long so that the game doesn't
-    // crash if a really really long name is entered (argh).  {gdl}
-    char name_entered[200];
+    int prompt_start = wherey();
+    bool ask_name = true;
+    char *name = you.your_name;
+    std::vector<player> existing_chars;
+    slider_menu char_menu;
 
-    // anything to avoid goto statements {dlb}
-    bool acceptable_name = false;
-    bool first_time = true;
+    if (you.your_name[0] != 0)
+        ask_name = false;
 
-    // first time -- names set through init.txt/environment assumed ok {dlb}
-    if (you.your_name[0] != '\0')
-        acceptable_name = true;
+    if (blankOK)
+    {
+        existing_chars = find_saved_characters();
+
+        MenuEntry *title = new MenuEntry("Or choose an existing character:");
+        title->colour = LIGHTCYAN;
+        char_menu.set_title( title );
+        for (int i = 0, size = existing_chars.size(); i < size; ++i)
+        {
+            std::string desc = " " + existing_chars[i].short_desc();
+            if ((int) desc.length() >= get_number_of_cols())
+                desc = desc.substr(0, get_number_of_cols() - 1);
+
+            MenuEntry *me = new MenuEntry(desc);
+            me->data = &existing_chars[i];
+            char_menu.add_entry(me);
+        }
+        char_menu.set_flags(MF_EASY_EXIT | MF_SINGLESELECT);
+    }
 
     do
     {
         // prompt for a new name if current one unsatisfactory {dlb}:
-        if (!acceptable_name)
+        if (ask_name)
         {
-            textcolor( CYAN );
-            if (blankOK && first_time)
-            {
-                if (Options.prev_name.length() && Options.remember_name)
-                    cprintf(EOL "Press <Enter> for \"%s\"." EOL,
-                            Options.prev_name.c_str());
-                else
-                    cprintf(EOL 
-                            "Press <Enter> to answer this after race and "
-                            "class are chosen." EOL);
-            }
+            show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
 
-            first_time = false;
-
-            cprintf(EOL "What is your name today? ");
-            textcolor( LIGHTGREY );
-            get_input_line( name_entered, sizeof( name_entered ) );
-            
-            strncpy( you.your_name, name_entered, kNameLen );
-            you.your_name[ kNameLen - 1 ] = '\0';
+            // If the player wants out, we bail out.
+            if (!read_player_name(name, kNameLen, existing_chars, char_menu))
+                end(0);
         }
-
-        if (!*you.your_name && blankOK && Options.prev_name.length() &&
-                Options.remember_name)
-        {
-            strncpy(you.your_name, Options.prev_name.c_str(), kNameLen);
-            you.your_name[kNameLen - 1] = 0;
-        }
-
-        // '.', '?' and '*' are blanked.
-        if (!you.your_name[1] && (*you.your_name == '.' ||
-                                  *you.your_name == '*' ||
-                                  *you.your_name == '?'))
-        {
-            *you.your_name = 0;
-        }
-                
-        // verification begins here {dlb}:
-        if (you.your_name[0] == '\0')
-        {
-            if (blankOK)
-                return;
-
-            cprintf(EOL "That's a silly name!" EOL);
-            acceptable_name = false;
-        }
-
-        // if SAVE_DIR_PATH is defined, userid will be tacked onto the end
-        // of each character's files, making bones a valid player name.
-#ifndef SAVE_DIR_PATH
-        // this would cause big probs with ghosts
-        // what would? {dlb}
-        // ... having the name "bones" of course! The problem comes from
-        // the fact that bones files would have the exact same filename
-        // as level files for a character named "bones".  -- bwr
-        else if (stricmp(you.your_name, "bones") == 0)
-        {
-            cprintf(EOL "That's a silly name!" EOL);
-            acceptable_name = false;
-        }
-#endif
-        else
-            acceptable_name = verifyPlayerName();
-
     }
-    while (!acceptable_name);
+    while (ask_name = !is_good_name(you.your_name, blankOK));
 }                               // end enterPlayerName()
 
 bool verifyPlayerName(void)
@@ -2117,7 +2119,7 @@ bool verifyPlayerName(void)
         return (false);
     }
 
-    // quick check for LPTx -- thank you,  Mr. Tanksley!   ;-)
+    // quick check for LPTx -- thank you, Mr. Tanksley! ;-)
     if (strnicmp(you.your_name, "LPT", 3) == 0)
     {
         switch (william_tanksley_asked_for_this)
@@ -2133,7 +2135,7 @@ bool verifyPlayerName(void)
                 return (true);
         } // end switch
 
-        william_tanksley_asked_for_this --;
+        william_tanksley_asked_for_this--;
         return (false);
     }
 #endif
@@ -2141,14 +2143,6 @@ bool verifyPlayerName(void)
     const size_t len = strlen( you.your_name );
     for (unsigned int i = 0; i < len; i++)
     {
-#if MAC
-        // the only bad character on Macs is the path seperator
-        if (you.your_name[i] == ':')
-        {
-            cprintf(EOL "No colons, please." EOL);
-            return (false);
-        }
-#else
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple 
         // and doesn't take the time to escape every characters that
@@ -2159,10 +2153,9 @@ bool verifyPlayerName(void)
             cprintf( EOL "Alpha-numerics and underscores only, please." EOL );
             return (false);
         }
-#endif
     }
 
-#ifdef SAVE_DIR_PATH
+#ifdef MULTIUSER
     // Until we have a better way to handle the fact that this could lead 
     // to some confusion with where the name ends and the uid begins. -- bwr
     if (isdigit( you.your_name[ len - 1 ] ))
@@ -2379,19 +2372,19 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
 static void create_wanderer( void )
 {
     const int util_skills[] =
-        { SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+        { SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_util_skills = sizeof(util_skills) / sizeof(int);
 
-    // Long swords is missing to increae it's rarity because we
+    // Long swords is missing to increase its rarity because we
     // can't give out a long sword to a starting character (they're
     // all too good)... Staves is also removed because it's not
     // one of the fighter options.-- bwr
     const int fight_util_skills[] =
         { SK_FIGHTING, SK_SHORT_BLADES, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_fight_util_skills = sizeof(fight_util_skills) / sizeof(int);
@@ -2402,7 +2395,7 @@ static void create_wanderer( void )
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
           SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_not_rare_skills = sizeof(not_rare_skills) / sizeof(int);
@@ -2415,7 +2408,7 @@ static void create_wanderer( void )
           SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC,
           SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
           SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES,
-          SK_DARTS, SK_THROWING, SK_ARMOUR, SK_DODGING, SK_STEALTH,
+          SK_DARTS, SK_RANGED_COMBAT, SK_ARMOUR, SK_DODGING, SK_STEALTH,
           SK_STABBING, SK_SHIELDS, SK_TRAPS_DOORS, SK_UNARMED_COMBAT,
           SK_INVOCATIONS, SK_EVOCATIONS };
     const int num_all_skills = sizeof(all_skills) / sizeof(int);
@@ -2486,9 +2479,9 @@ static void create_wanderer( void )
         you.skills[ skill ] = 1;
     }
 
-    int wpn_skill = SK_FIGHTING;  // prefered weapon type
-    int wpn_skill_size = 0;       // level of skill in prefered weapon type
-    int num_wpn_skills = 0;       // used to choose prefered weapon
+    int wpn_skill = SK_FIGHTING;  // preferred weapon type
+    int wpn_skill_size = 0;       // level of skill in preferred weapon type
+    int num_wpn_skills = 0;       // used to choose preferred weapon
     int total_wpn_skills = 0;     // used to choose template
 
     // This algorithm is the same as the one used to pick a random
@@ -2638,14 +2631,14 @@ static void create_wanderer( void )
             add_spell_to_memory( spell_list[ school ] );
         }
     }
-    else if (you.skills[ SK_THROWING ] && one_chance_in(3)) // these are rare
+    else if (you.skills[ SK_RANGED_COMBAT ] && one_chance_in(3)) // these are rare
     {
         // Ranger style wanderer
         // Rare since starting with a throwing weapon is very good
 
         // Create a default launcher template, but the
         // quantity may be reset to 0 if we don't want one -- bwr
-        // thorwing weapons are lowered to -1 to make them
+        // throwing weapons are lowered to -1 to make them
         // not as good as the one's hunters get, ammo is
         // also much smaller -- bwr
         you.inv[1].quantity = 1;
@@ -2844,10 +2837,10 @@ static char letter_to_species(int keyn)
 
 static char species_to_letter(int spec)
 {
-    if (spec > SP_RED_DRACONIAN && spec <= SP_UNK2_DRACONIAN)
+    if (spec > SP_RED_DRACONIAN && spec <= SP_BASE_DRACONIAN)
         spec = SP_RED_DRACONIAN;
-    else if (spec > SP_UNK2_DRACONIAN)
-        spec -= SP_UNK2_DRACONIAN - SP_RED_DRACONIAN;
+    else if (spec > SP_BASE_DRACONIAN)
+        spec -= SP_BASE_DRACONIAN - SP_RED_DRACONIAN;
     return 'a' + spec - 1;
 }
 
@@ -2891,12 +2884,12 @@ spec_query:
             textcolor( YELLOW );
             if (strlen(you.your_name) > 0)
             {
-                cprintf(you.your_name);
+                cprintf("%s", you.your_name);
                 if (you.char_class != JOB_UNKNOWN)
                     cprintf(" the ");
             }
             if (you.char_class != JOB_UNKNOWN)
-                cprintf(get_class_name(you.char_class));
+                cprintf("%s", get_class_name(you.char_class));
 
             if (!shortgreet)
                 cprintf(".");
@@ -2918,7 +2911,7 @@ spec_query:
         *linebuf = 0;
         for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
         {
-            if (i > SP_RED_DRACONIAN && i <= SP_UNK2_DRACONIAN)
+            if (i > SP_RED_DRACONIAN && i <= SP_BASE_DRACONIAN)
                 continue;
 
             if (you.char_class != JOB_UNKNOWN && 
@@ -3051,7 +3044,7 @@ spec_query:
     return true;
 }
 
-// returns true if a class was chosen,  false if we should go back to
+// returns true if a class was chosen, false if we should go back to
 // race selection.
 
 bool choose_class(void)
@@ -3089,12 +3082,12 @@ job_query:
             textcolor( YELLOW );
             if (strlen(you.your_name) > 0)
             {
-                cprintf(you.your_name);
+                cprintf("%s", you.your_name);
                 if (you.species)
                     cprintf(" the ");
             }
             if (you.species)
-                cprintf(species_name(you.species,you.experience_level));
+                cprintf("%s", species_name(you.species,you.experience_level));
 
             if (!shortgreet)
                 cprintf(".");
@@ -3126,7 +3119,7 @@ job_query:
             
             putch( letter );
             cprintf( " - " );
-            cprintf( get_class_name(i) );
+            cprintf( "%s", get_class_name(i) );
 
             if (j % 2)
                 cprintf(EOL);
@@ -3301,7 +3294,7 @@ void give_items_skills()
             {
                 you.inv[0].quantity = 1;
                 you.inv[0].base_type = OBJ_WEAPONS;
-                you.inv[0].sub_type = WPN_CLUB;
+                you.inv[0].sub_type = WPN_ANCUS;
                 you.inv[0].plus = 0;
                 you.inv[0].special = 0;
                 you.inv[0].colour = BROWN;
@@ -3399,7 +3392,7 @@ void give_items_skills()
 
         if (you.species == SP_KOBOLD)
         {
-            you.skills[SK_THROWING] = 1;
+            you.skills[SK_RANGED_COMBAT] = 1;
             you.skills[SK_DARTS] = 1;
             you.skills[SK_DODGING] = 1;
             you.skills[SK_STEALTH] = 1;
@@ -3419,13 +3412,13 @@ void give_items_skills()
         else
         {
             // Players get dodging or armour skill depending on their
-            // starting armour now (note: the armour has to be quiped
+            // starting armour now (note: the armour has to be equipped
             // for this function to work)
 
             you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
 
             you.skills[SK_SHIELDS] = 2;
-            you.skills[SK_THROWING] = 2;
+            you.skills[SK_RANGED_COMBAT] = 2;
             you.skills[(coinflip() ? SK_STABBING : SK_SHIELDS)]++;
         }
         break;
@@ -3485,12 +3478,7 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         // extra items being tested:
-        you.inv[2].base_type = OBJ_BOOKS;
-        you.inv[2].sub_type = BOOK_MINOR_MAGIC_I + random2(3);
-        you.inv[2].quantity = 1;
-        you.inv[2].plus = 0;    // = 127
-        you.inv[2].special = 1;
-        you.inv[2].colour = CYAN;
+	choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 );
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -3652,7 +3640,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 2;
         you.skills[SK_STABBING] = 1;
         you.skills[SK_DODGING + random2(3)]++;
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 1;
         you.skills[SK_TRAPS_DOORS] = 2;
         break;
@@ -3856,12 +3844,12 @@ void give_items_skills()
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 3;
         you.skills[SK_STABBING] = 2;
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 1;
         if (you.species == SP_DEEP_ELF)
             you.skills[SK_CROSSBOWS] = 1;
         else
-            you.skills[SK_THROWING] += 1;
+            you.skills[SK_RANGED_COMBAT] += 1;
 
         break;
 
@@ -3874,7 +3862,7 @@ void give_items_skills()
         {
             you.inv[0].quantity = 1;
             you.inv[0].base_type = OBJ_WEAPONS;
-            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].sub_type = WPN_ANCUS;
             you.inv[0].plus = 0;
             you.inv[0].plus2 = 0;
             you.inv[0].special = 0;
@@ -3954,7 +3942,7 @@ void give_items_skills()
             you.skills[SK_POLEARMS] = 1;
             you.skills[SK_ARMOUR] = 2;
             you.skills[SK_DODGING] = 2;
-            you.skills[SK_THROWING] = 2;
+            you.skills[SK_RANGED_COMBAT] = 2;
         }
         break;
 
@@ -4017,7 +4005,7 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 4;
 
         you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_THROWING] = 3;
+        you.skills[SK_RANGED_COMBAT] = 3;
 
         // Removing spellcasting -- bwr
         // you.skills[SK_SPELLCASTING] = 1;
@@ -4064,7 +4052,7 @@ void give_items_skills()
 
             you.skills[SK_POLEARMS] = 2;
             you.skills[SK_DODGING] = 2;
-            you.skills[SK_THROWING] += 1;
+            you.skills[SK_RANGED_COMBAT] += 1;
             break;
 
         default:
@@ -4108,9 +4096,15 @@ void give_items_skills()
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
-        you.inv[2].base_type = OBJ_BOOKS;
-        you.inv[2].sub_type = give_first_conjuration_book();
-        you.inv[2].plus = 0;
+
+	if ( you.char_class == JOB_CONJURER )
+	    choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 );
+	else
+	{
+	    you.inv[2].base_type = OBJ_BOOKS;
+	    // subtype will always be overridden
+	    you.inv[2].plus = 0;
+	}
 
         switch (you.char_class)
         {
@@ -4283,7 +4277,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 1;
 
         if (you.species == SP_GNOME && you.char_class == JOB_EARTH_ELEMENTALIST)
-            you.skills[SK_THROWING]++;
+            you.skills[SK_RANGED_COMBAT]++;
         else
             you.skills[ coinflip() ? SK_DODGING : SK_STEALTH ]++;
         break;
@@ -4332,7 +4326,7 @@ void give_items_skills()
 
         you.skills[SK_FIGHTING] = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
-        you.skills[SK_THROWING] = 2;
+        you.skills[SK_RANGED_COMBAT] = 2;
         you.skills[SK_DODGING] = 2;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_TRANSMIGRATION] = 2;
@@ -4419,7 +4413,7 @@ void give_items_skills()
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
 
-        you.skills[SK_THROWING] = 1;
+        you.skills[SK_RANGED_COMBAT] = 1;
         you.skills[SK_DARTS] = 2;
         you.skills[SK_DODGING] = 2;
         you.skills[SK_STEALTH] = 1;
@@ -4722,7 +4716,7 @@ void give_items_skills()
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
         you.skills[SK_SHIELDS] = 1;
-        you.skills[SK_THROWING] = 2;
+        you.skills[SK_RANGED_COMBAT] = 2;
         you.skills[SK_STAVES] = 3;
         you.skills[SK_INVOCATIONS] = 2;
         break;
@@ -4806,7 +4800,7 @@ void give_items_skills()
         you.skills[SK_STEALTH] = 2;
         you.skills[SK_STABBING] = 2;
         you.skills[SK_DODGING + random2(3)]++;
-        //you.skills[SK_THROWING] = 1; //jmf: removed these, added magic below
+        //you.skills[SK_RANGED_COMBAT] = 1; //jmf: removed these, added magic below
         //you.skills[SK_DARTS] = 1;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;

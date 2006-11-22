@@ -1,0 +1,1563 @@
+##############################################################################
+# splev.des: special levels definitions.
+#
+# If you want to define random vaults and minivaults, they should go 
+# to vaults.des.
+#
+#  key:
+#  x - DNGN_ROCK_WALL
+#  X - DNGN_PERMAROCK_WALL -> should always be undiggable! -- bwr
+#  c - DNGN_STONE_WALL
+#  v - DNGN_METAL_WALL
+#  b - DNGN_GREEN_CRYSTAL_WALL
+#  a - DNGN_WAX_WALL
+#  . - DNGN_FLOOR
+#  + - DNGN_CLOSED_DOOR
+#  = - DNGN_SECRET_DOOR
+#  @ - entry point - must be on outside and on a particular side - see templates
+#  w - water
+#  l - lava
+#  >< - extra stairs - you can leave level by these but will never be placed on
+#                      them from another level
+#  }{ - stairs 82/86 - You must be able to reach these from each other
+#  )( - stairs 83/87
+#  ][ - stairs 84/88
+#  I - orcish idol (does nothing)
+#  ^ - random trap
+#
+#  A - Vestibule gateway (opened by Horn). Can also be put on other levels for 
+#      colour, where it won't do anything.
+#  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc, 
+#      in order.
+#  C - Random Altar.
+#  F - Typically a Granite Statue, but may be Orange or Silver (1 in 100)  
+#  G - Granite statue (does nothing)
+#  H - orange crystal statue (attacks mind)
+#  S - Silver statue (summons demons). Avoid using (rare).
+#  T - Water fountain
+#  U - Magic fountain
+#  V - Permanently dry fountain
+#
+#  Statues can't be walked over and are only destroyed by disintegration
+#
+#  $ - gold
+#  % - normal item
+#  * - higher level item (good)
+#  | - acquirement-level item (almost guaranteed excellent)
+#  O - place an appropriate rune here
+#  P - maybe place a rune here (50%)
+#  R - honeycomb (2/3) or royal jelly (1/3)
+#  Z - the Orb of Zot
+#
+#  0 - normal monster
+#  9 - +5 depth monster
+#  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans 
+#      this way.
+#  1-7 - monster array monster
+#  used to allocate specific monsters for a vault.
+#  is filled with RANDOM_MONSTER if monster not specified
+#
+#  note that a lot of the vaults are in there mainly to add some interest to the
+#  scenery, and are not the lethal treasure-fests you find in Angband
+#  (not that there's anything wrong with that)
+#
+#  Guidelines for creating new vault maps:
+#
+#  [ds] If your map is not a minivault, make sure the side(s) that form the
+#  border have a rock wall padding at least 6 deep. For instance, if your map
+#  is ORIENT: north, you must have a 6 deep border of rock wall (or any
+#  other kind of wall) along the northern, eastern, and western edges of the
+#  map. If you're doing a fullscreen map (encompass), you must pad all around
+#  the map with 6 layers of wall.
+#
+#  Basically you can just let your creativity run wild. You do not have
+#  to place all of the stairs unless the level is full screen, in which
+#  case you must place all except the extra stairs (> and <). The <> stairs
+#  can be put anywhere and in any quantities but do not have to be there. Any
+#  of the other stairs which are not present in the vault will be randomly
+#  placed outside it. Also generally try to avoid rooms with no exit.
+#
+#  You can use the templates below to build vaults. The entry point '@' must be
+#  present (except full-screen vaults where it must not) and be on the same
+#  side of the vault as it is on the template, but can be anywhere along that
+#  side.
+#
+#  I think that's all. Have fun!
+#
+#  ps - remember to add one to the monster array value when placing monsters
+#       on each map (it is 1-7, not 0-6) {dlb}
+#
+#  [dshaligram] All special levels MUST have an ORIENT: attribute; if there's
+#  no ORIENT: attribute, the level is considered to be a minivault, which is
+#  usually not what you want.
+#
+#  Special levels are selected either by PLACE: (for most special levels) or 
+#  TAGS: (for the Pandemonium demon lords). If you want to define alternate
+#  levels, duplicate the selector and use different names. For instance, to
+#  define an alternate Vestibule level, you could use something like this:
+#
+#  NAME: vestibule_of_hell_alternate
+#  PLACE: Hell
+#
+#  To define an alternate level for Cerebov, you could do:
+#
+#  NAME: cerebov_alternate
+#  TAGS: cerebov
+#
+#  You can also use CHANCE: to control the weight a level is assigned. For 
+#  instance, if you want to make cerebov_alternate five times more likely than
+#  the standard cerebov level, you'd do:
+#
+#  NAME: cerebov_alternate
+#  TAGS: cerebov
+#  CHANCE: 50
+#
+#  (The default weight is 10 if CHANCE: is omitted.)
+#
+##############################################################################
+
+NAME: vestibule_of_hell
+PLACE: Hell
+ORIENT: encompass
+
+# [dshaligram] If modifying the Vestibule, ensure that:
+#
+#  * The portal to Dis is surrounded by floor squares and nothing but floor 
+#    squares.
+#  * The portal to Tartarus is surrounded only by floor, doors of any kind, and
+#    at least one rock wall.
+#  * The portal to Gehenna is surrounded by nothing but floor and at least one
+#    lava square.
+#  * The portal to Cocytus is surrounded by nothing but floor and at least one
+#    water square.
+#
+# If you don't do this, the portals will not be unbarred correctly when 
+# Geryon's horn is sounded.
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v.....v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....v.....v.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx........v.....v........xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx..........v..A..v..........xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx............v.....v............xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.............v.....v.............xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx..............vvv+vvv..............xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.........................................xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...........................................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.............................................xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx...............................................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.................................................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...................................................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....................................................xxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....................................................xxxxxxxxxxxxxx
+xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
+xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
+xxxxxxxxxxx.........................................................xxxxxxxxxxxx
+xxxxxxxxxxx............................{............................xxxxxxxxxxxx
+xxxxxxxxxxx.........................................................xxxxxxxxxxxx
+xxxxxxxxxx...l.l.....................................................xxxxxxxxxxx
+xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
+xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
+xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
+xxxxxxxxx.l.l.l.A.l.l.................}1].............................=Axxxxxxxx
+xxxxxxxxxl.l.l.l.l.l.l.................)..............................xxxxxxxxxx
+xxxxxxxxx.l.l.l.l.l.l.................................................xxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.l...............................................xxxxxxxxxxx
+xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
+xxxxxxxxxx.....l.l...................................................xxxxxxxxxxx
+xxxxxxxxxxx......................[...........(......................xxxxxxxxxxxx
+xxxxxxxxxxx.........................................................xxxxxxxxxxxx
+xxxxxxxxxxx.........................................................xxxxxxxxxxxx
+xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
+xxxxxxxxxxxx.......................................................xxxxxxxxxxxxx
+xxxxxxxxxxxxx.....................................................xxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....................................................xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...................................................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx....................wwwww........................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx..................wwwwwwww.....................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..............wwwwwwwwwwwww..................xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...........w..wwww..wwwww..w...............xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx..........w...ww.....ww..wwwww...........xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.........ww......ww....wwwwwwwww.......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.........ww....wwww...wwwwwwwwww.....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx.........ww....ww....wwwwwwwwwww...xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx........wwww.......wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx......wwwwwww....wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx...wwwwwwwwwwAwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Geryon
+MONS: random, random, random, random, random, random
+
+#############################################################################
+# Dispater's castle - rest of level filled up with plan_4 (irregular city)
+#
+
+NAME: castle_dis
+PLACE: Dis:7
+TAGS: dis
+ORIENT: north
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxx
+xxxxxxxxv..............................................................vxxxxxxxx
+xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
+xxxxxxxxv..v3.....|v........................................v|.....2v..vxxxxxxxx
+xxxxxxxxv..v.vv+vvvv.v.v.v.v.v.v.v.v.v..v.v.v.v.v.v.v.v.v.v.vvvv+vv.v..vxxxxxxxx
+xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
+xxxxxxxxv..v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v..vxxxxxxxx
+xxxxxxxxv..vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv..vxxxxxxxx
+xxxxxxxxv....vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5...vxxxxxxxx
+xxxxxxxxv...vvv................v...............vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
+xxxxxxxxv...5vv................+...............+.................vv....vxxxxxxxx
+xxxxxxxxv...vvv+vvvvvvvvvvvvvvvv.v..v..v..v..v.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
+xxxxxxxxv....vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
+xxxxxxxxv...vvv..v.v$$$$$v.....v...............vv|$|$|vv|$|$|$vv.vvv...vxxxxxxxx
+xxxxxxxxv...5vv..v.vvvvvvv.....vvvvv.......vvvvvv$|$|$++$|$|$|vv.vv....vxxxxxxxx
+xxxxxxxxv...vvv..v...............v.vvvv+vvvvvvvvvvvvvvvvvvvvv+vv.vvv...vxxxxxxxx
+xxxxxxxxv....vvv+v..........vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvv+vv.vv5...vxxxxxxxx
+xxxxxxxxv...vvv..v.v..v..v....2vvv+vv5...5vvvvvvv.4.4.vv.4.4.4vv.vvv...vxxxxxxxx
+xxxxxxxxv...5vv.................vv|vvv...vvvvv.++4.4.4++4.4.4.vv.vv....vxxxxxxxx
+xxxxxxxxv...vvv.................1vOvv5...5vvvv.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
+xxxxxxxxv....vv.................vv|vvv...vvvvv.vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
+xxxxxxxxv...vvv.v..v..v..v....3vvv+vv5...5vvvv...................vvv...vxxxxxxxx
+xxxxxxxxv...5vv.............vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvvvvv.vv....vxxxxxxxx
+xxxxxxxxv..vvvv+vvvv.............v.vv5...5vvvvvvvvvvvvvvvvvvvvvv+vvvv..vxxxxxxxx
+xxxxxxxxv..v|v.....vvvvvvvvvvvvvvvvvvv...vvvvvvvvvvvvvvvvvvvv.....v|v..vxxxxxxxx
+xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
+xxxxxxxxv..v.vv+vvvv5.............5.........5..............5vvvv+vv.v..vxxxxxxxx
+xxxxxxxxv..v2.....|v........................................v|.....3v..vxxxxxxxx
+xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
+xxxxxxxxv............................{.[.(.............................vxxxxxxxx
+ENDMAP
+
+MONS: Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle
+MONS: random, random
+
+#############################################################################
+# Asmodeus 
+#
+
+NAME: asmodeus
+PLACE: Geh:7
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxx....xxxxxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxx..xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxx....xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx...xxx................................xxxxxx....xxxxxxxxxxx
+xxxxxxxxxxxx.x.xxxxx.........................................xxx....xxxxxxxxxxxx
+xxxxxxxxxxxx....xx.....................4......................xx...xxxxxxxxxxxxx
+xxxxxxxxxxx......x......................llllllllllllll.........x..xxxxxxxxxxxxxx
+xxxxxxxxxxx..xx..................lllllllllllllllllllllllll........xxxxxxxxxxxxxx
+xxxxxxxxxx...xxx....0..........llllllllllllllllllllllllll........xx...xxxxxxxxxx
+xxxxxxxxx....xxx.............llllllllllllllllllllllllllll..............xxxxxxxxx
+xxxxxxxxxx....xx...........lllllllllllllllllllllllllllll...............xxxxxxxxx
+xxxxxxxxxxxx..............llllllllllllllllllllllllllllll...2..xx...0...xxxxxxxxx
+xxxxxxxxxxxxx...........lllllllllllllllllll.......llllll......xx......xxxxxxxxxx
+xxxxxxxxxxxxxx.......llllllllllllllllll............llllll.............xxxxxxxxxx
+xxxxxxxxxxxxxxx......lllllllll..........4.........4.lllllll..........xxxxxxxxxxx
+xxxxxxxxxx...xx...ll3lllll......4...................llllllll......x.xxxxxxxxxxxx
+xxxxxxxxx.......lllll.l................................llll.......xxxxxxxxxxxxxx
+xxxxxxxxxx..4..llllll...cccccccc+c+c+c+c+c+c+c+c+c+c....lll......xxxxxxxxxxxxxxx
+xxxxxxxxxxx..lllllll..4.c.....c....................c....llll.....xxxxxxxxxxxxxxx
+xxxxxxxxxx...llllll.....c.V.V.+....0.....3.....0...c.....llll....x..xxxxxxxxxxxx
+xxxxxxxxx...llllll...l..c.....c....................c....lllll........xxxxxxxxxxx
+xxxxxxxxxx...lllll..ll..c..5..cccccccccccccccccccccc.4..llllll........xxxxxxxxxx
+xxxxxxxxx...lllll..llll.c.....c...............c....c....lllllll.......xxxxxxxxxx
+xxxxxxxxx...lllll..llll.c.V.V.c.......0.......c....c....lllllll.......xxxxxxxxxx
+xxxxxxxxxx...lllll..lll.c.....+...............+....c...lllllll........xxxxxxxxxx
+xxxxxxxxxxx..lllll...ll.cccccccccc....0.......c....c...llllllll........xxxxxxxxx
+xxxxxxxxxx...lllll..4...c|$$||$$|c............c.0..c...llllllll........xxxxxxxxx
+xxxxxxxxx...lllll.......c$$$$$$$$cccccccccccccc....c...lllllll.........xxxxxxxxx
+xxxxxxxxx...lllll.......c$$|2|$$|c..0.........+....c...lllllll........xxxxxxxxxx
+xxxxxxxxxx.lllllll......c|$$$$$$$c........9...c....c....llllllll.....xxxxxxxxxxx
+xxxxxxxxxx.lllllll......c$|$|$$|$c+ccccccccccccccccc....lllllll......xxxxxxxxxxx
+xxxxxxxxxx..llllll......cccccccc+c.....9.......c.........llllll......x.xxxxxxxxx
+xxxxxxxxxx..lllllll.....c$$$$$$+3c.....8...3...c.....4...llllll........xxxxxxxxx
+xxxxxxxxxx..llllllll....c$$$$$$c.c.....9.......c..ll....llllll.........xxxxxxxxx
+xxxxxxxxxx...llllll..4..c$$2$$$c.ccccccccccccc+c.lll...lllllll...0....xxxxxxxxxx
+xxxxxxxxxxx..llllll.....c$$$$$$c..+............c.ll...lllllll..........xxxxxxxxx
+xxxxxxxxxxx..llllllll...ccccccccc+cccccccccccccc.....lllllll...........xxxxxxxxx
+xxxxxxxxxxxx..llllllll.........cc..........cc........lllllll.......x..xxxxxxxxxx
+xxxxxxxxxxxxx.llllllllll.......ccc.........cc......lllllllll.......xxxxxxxxxxxxx
+xxxxxxxxxx....lllllllllll...4...cc.....2.2.cc....llllllllll.4.......xxxxxxxxxxxx
+xxxxxxxxx....4.lllllllllllll....cccccccc+cccc..lllllllllll.....xx....xxxxxxxxxxx
+xxxxxxxxxx.....llllllllllllll...cccccccc+cccc..llllllllll......xx....xxxxxxxxxxx
+xxxxxxxxxxx.....lllllllllllllll..cc......cc...lllllllllll...........xxxxxxxxxxxx
+xxxxxxxxxxx.....llllllllllllll...ccO1....cc.4..lllllllll...........xxxxxxxxxxxxx
+xxxxxxxxxxxx.....lllllllllllll...cc......cc....lllllllll.......xx.xxxxxxxxxxxxxx
+xxxxxxxxxxxx.......llllllllllll..cccccccccc...lllllllll........xxxxxxxxxxxxxxxxx
+xxxxxxxxx.........llllllllllllll.cccccccccc.lllllllllll.......xxxxxxxxxxxxxxxxxx
+xxxxxxxxxx....0...llllllllllllll............lllllllll....0....xxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.......4.lllllllllllllll..4....lllllllll...........xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..........llllllllllllll....lllllll....4.....x........xxxxxxxxxxxxxxx
+xxxxxxxxxxx...xx.........lllllllllllllllll...................xx{xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..xx................lllllll.....................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.........xxx.................xxxxxx......xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx....xxxxxxxx...xxx......xxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx(xxxxxxxxxxxx[xxxxx...xxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Asmodeus, Fiend, Balrug, molten gargoyle
+MONS: Serpent of Hell, random, random
+
+############################################################################
+# Antaeus; bottom of Cocytus. This needs work.
+#
+
+NAME: antaeus
+PLACE: Coc:7
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx........................xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx..........................xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx................................xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx....cccccccccccc..cccccccccccc....xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....ccccccccccccc2.ccccccccccccc....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx....cc..........................cc....xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx....cc............................cc....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwwwwwwwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx....cc...ww.......3..........3.......ww...cc....xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx....cc...ww............................ww...cc....xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx....cc...ww....cccccccccccccccccccccc....ww...cc....xxxxxxxxxxxxxx
+xxxxxxxxxxxxx....cc...ww....cccccccccccccccccccccccc....ww...cc....xxxxxxxxxxxxx
+xxxxxxxxxxxx....cc...ww....cc......................cc....ww...cc....xxxxxxxxxxxx
+xxxxxxxxxxx....cc...ww....cc...T................T...cc....ww...cc....xxxxxxxxxxx
+xxxxxxxxxx....cc...ww....cc..........wwwwww..........cc....ww...cc....xxxxxxxxxx
+xxxxxxxxx....cc...ww....cc.......wwwwwwwwwwwwww.......cc....ww...cc....xxxxxxxxx
+xxxxxxxxx....cc...ww...cc.....wwwwwwwwwwwwwwwwwwww.....cc...ww...cc....xxxxxxxxx
+xxxxxxxxx....cc..www..cc....wwwwwwwwwccccccwwwwwwwww....cc..www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc....wwwwwwwwccc2O12cccwwwwwwww....cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc...wwwwwwwwcc2+....+2ccwwwwwwww...cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc...wwwwwwwwcc+cc++cc+ccwwwwwwww...cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www..c..wwwwwwwwwc|||c..c$$$cwwwwwwwww..c..www..cc....xxxxxxxxx
+xxxxxxxxx....cc..wwww.c.wwwwwwwwwwc|||c..c$$$cwwwwwwwwww.c.wwww..cc....xxxxxxxxx
+xxxxxxxxx....cc..wwww.c.wwwwwwwwwwcc||c..c$$ccwwwwwwwwww.c.wwww..cc....xxxxxxxxx
+xxxxxxxxx....cc..wwww.c.wwwwwwwwwwwcccc++ccccwwwwwwwwwww.c.wwww..cc....xxxxxxxxx
+xxxxxxxxx....cc..www..c..wwwwwwwwwwwwww..wwwwwwwwwwwwww..c..www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc...wwwwwwwwwwwwwwwwwwwwwwwwwwww...cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc....wwwwwwwwwwwwwwwwwwwwwwwwwww...cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www.cc....wwwwwwwwwwwwwwwwwwwwwwwwww....cc.www..cc....xxxxxxxxx
+xxxxxxxxx....cc..www..cc....wwwwwwwwwwwwwwwwwwwwwwww....cc..www..cc....xxxxxxxxx
+xxxxxxxxx....cc...ww...cc.....wwwwwwwwwwwwwwwwwwww.....cc...ww...cc....xxxxxxxxx
+xxxxxxxxx....cc...ww....cc.......wwwwwwwwwwwwww.......cc....ww...cc....xxxxxxxxx
+xxxxxxxxxx....cc...ww....cc..........wwwwww..........cc....ww...cc....xxxxxxxxxx
+xxxxxxxxxxx....cc...ww....cc...T................T...cc....ww...cc....xxxxxxxxxxx
+xxxxxxxxxxxx....cc...ww....cc......................cc....ww...cc....xxxxxxxxxxxx
+xxxxxxxxxxxxx....cc...ww....ccccccccccc..ccccccccccc....ww...cc....xxxxxxxxxxxxx
+xxxxxxxxxxxxxx....cc...ww....cccccccccc2.cccccccccc....ww...cc....xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx....cc...ww............................ww...cc....xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx....cc...ww..........................ww...cc....xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwwww..wwwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwwww..wwwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx....cc...wwwwwwwwwww..wwwwwwwwwww...cc....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx....cc............................cc....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx....cc..........................cc....xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....cccccccccccccccccccccccccccc....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx....cccccccccccccccccccccccccc....xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx................................xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx..........{.(.[...........xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Antaeus, Ice Fiend, ice dragon
+MONS: random, random, random, random
+
+##############################################################################
+# Ereshkigal (Tartarus)
+#
+
+NAME: ereshkigal
+PLACE: Tar:7
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx.................cccc..........ccc............................xxxxxxxxx
+xxxxxxxxx.............ccccc..cccc.....ccc.cccc.........................xxxxxxxxx
+xxxxxxxxx...........ccc.........ccccccc.....cc.........................xxxxxxxxx
+xxxxxxxxx.........ccc.......2............V..cc.........................xxxxxxxxx
+xxxxxxxxx........cc4........................cc...........xxxxxxxx......xxxxxxxxx
+xxxxxxxxx........cc44xxx==xxx...............cc..........xx......xx.....xxxxxxxxx
+xxxxxxxxx........ccxxx......xxx.......ccc++ccc.........xx........xx....xxxxxxxxx
+xxxxxxxxx........cxx..........xxx.....ccc44ccc.........x..........x....xxxxxxxxx
+xxxxxxxxx........cx............xx....cccc44cc.........xx..........xx...xxxxxxxxx
+xxxxxxxxx.......ccx.G........G.xxx7ccc..c44c..........x.....|......x...xxxxxxxxx
+xxxxxxxxx.......cxx............xxxcc..................x......7.....x...xxxxxxxxx
+xxxxxxxxx......ccx..............xxc...................xx..........xx...xxxxxxxxx
+xxxxxxxxx......ccx..G........G..xxc..x.........x.......x..........x....xxxxxxxxx
+xxxxxxxxx......ccx..............xcc....................xx........xx....xxxxxxxxx
+xxxxxxxxx.......cxx............xxc......................xx......xx.....xxxxxxxxx
+xxxxxxxxx.......ccx.F........F.xcc.......................xxxxxxxx......xxxxxxxxx
+xxxxxxxxx........cx............xc......................................xxxxxxxxx
+xxxxxxxxx........cxx....17....xxc....x.........x.......................xxxxxxxxx
+xxxxxxxxx........ccxxx......xxxcc......................................xxxxxxxxx
+xxxxxxxxx........cccc=xxxxxx=cccc......................................xxxxxxxxx
+xxxxxxxxx........cc||cccccccc||cc......................................xxxxxxxxx
+xxxxxxxxx.........cc||||O|||||cc.......................................xxxxxxxxx
+xxxxxxxxx..........cccccccccccc......x.........x............V..........xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...........................................xx$$$$xxx|||||xx...xxxxxxxxx
+xxxxxxxxx.......V........V...........x.........x....xx$$$$xxx|||||xx...xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...........................................xx44444xx22222xx...xxxxxxxxx
+xxxxxxxxx.......xxxxxxxxx+xxxxxxxxx.................xx44444xx22222xx...xxxxxxxxx
+xxxxxxxxx.......x3.2..........3...x..x.........x..xxxxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x.x.x.x.x.x.x.x.x.x.................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x...2.3..4..5..4..x......................=.......xxx...xxxxxxxxx
+xxxxxxxxx.......xx.x.x.x.x.x.x.x.xx......................=.......xxx...xxxxxxxxx
+xxxxxxxxx.......x..65..3..6.6...5.x.................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x.x.x.x.x.x.x.x.x.x..x.........x..xxxxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x...4...3.....4...x.................xx.....xx555555x...xxxxxxxxx
+xxxxxxxxx.......xx=xxxxx.x.xxxxxxxx.................xx.....xx555555x...xxxxxxxxx
+xxxxxxxxx.......x$$$$$$x.25.x$$$||x.................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x$x$$x$xx.x.x$x$x|x.................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.......x||||||x.556=$$$||x..x.........x....xx$$xx56565xx$|x...xxxxxxxxx
+xxxxxxxxx.......xxxxxxxxxxxxxxxxxxx.................xx$$xx65656xx|7x...xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...........................................xxxxxxxxxxxxxxxx...xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx........(...........................................[.........xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................{...............................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Ereshkigal, necrophage, wraith, shadow, small zombie
+MONS: small skeleton, Shadow Fiend
+
+
+###########################################################################
+# mnoleg.
+#
+# NOTE: The Pandemonium demonlord levels are requested by tag; if you change
+# the tag, also update dungeon.cc.
+#
+# You can define alternate levels for a Pandemonium lord by using the same
+# TAGS: and a different NAME:
+#
+
+NAME: mnoleg
+TAGS: mnoleg
+ORIENT: northeast
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.................2............xxxxxxxxx
+x.....2........................xxxxxxxxx
+x..cccccccc...ccccccc..ccccccc.xxxxxxxxx
+x..ccccccccc.2.ccccccc..cccccc.xxxxxxxxx
+x..cccccccccc...ccccccc..ccccc.xxxxxxxxx
+x..ccccccccccc.1.ccccccc..cccc.xxxxxxxxx
+x2.cccccccccc.2..Occccccc2.ccc.xxxxxxxxx
+x..ccccccccc.....ccccccccc..cc.xxxxxxxxx
+x..cccccccc...c...ccccccccc..c.xxxxxxxxx
+x..ccccccc...ccc...ccccccccc...xxxxxxxxx
+x..cccccc...ccccc...ccccccccc..xxxxxxxxx
+x..ccccc...ccccccc...ccccccccc.xxxxxxxxx
+x..cccc...ccccccccc...ccccccc..xxxxxxxxx
+x..ccc.2.ccccccccccc.2.ccccc...xxxxxxxxx
+x..cc.....ccccccccccc...ccc....xxxxxxxxx
+x..c...c...ccccccccccc...c.2...xxxxxxxxx
+x.....ccc.2.ccccccccccc......c.xxxxxxxxx
+x....ccccc...ccccccccccc....cc.xxxxxxxxx
+x.2.ccccccc...ccccccccccc..ccc.xxxxxxxxx
+x.................2.......cccc.xxxxxxxxx
+x...c..ccccccc.ccccccc...ccccc.xxxxxxxxx
+x..ccc......2c.c2cccc...cccccc.xxxxxxxxx
+x.ccccc..ccc.c.c2ccc.2.ccccccc.xxxxxxxxx
+x.cccccc..cc.c.c.cc...cccccccc.xxxxxxxxx
+x.ccccccc..c.c.c.c...ccccccccc.xxxxxxxxx
+x.cccccccc...c.c....cccccccccc.xxxxxxxxx
+x.ccccccccc..c.c...ccccccccccc.xxxxxxxxx
+x..............................xxxxxxxxx
+xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Mnoleg, neqoxec
+MONS: random, random, random, random, random
+
+#######################################################################
+# lom_lobon
+#
+
+NAME: lom_lobon
+TAGS: lom_lobon
+ORIENT: north
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwww.......wwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwbbbwwwwwww.......wwwwwwwxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwbbbbbbbbbbbwwwwww.........wwwwwwxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxwwwwwwwwwwwwbbbbwwwwwwwwwbbbbwwwwww.........wwwwwwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxwwwwwwwbbbbbbbbwwwwwwwwwwwwwwwbbbwwwww...........wwwwwxxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwbbbb......bbbwwwwwwwwwwww...bbwwwww.............wwwxxxxxxxxxxxx
+xxxxxxxxxxxxwwwbbb...........bbbwwwwww........bbwwwww.............wwxxxxxxxxxxxx
+xxxxxxxxxxxwwwbb...............bbwwww..........bwwwwww.............wwxxxxxxxxxxx
+xxxxxxxxxxxwwbb........1O.......bbww...........bbwwww..............wwxxxxxxxxxxx
+xxxxxxxxxxwwwb...................bw......2......bwww.....U....2.....wwxxxxxxxxxx
+xxxxxxxxxxwwbb...................bb.............bww.................wwxxxxxxxxxx
+xxxxxxxxxxwwbb..3................bbb............bbw..............4..wwxxxxxxxxxx
+xxxxxxxxxwwbbb...................b.b............4....................wwxxxxxxxxx
+xxxxxxxxxwwbwbb.................bb.......U......4..........U..........wxxxxxxxxx
+xxxxxxxxxwwbwwbb...............bb..b............bbw..............4.....xxxxxxxxx
+xxxxxxxxxwwbbwwbbb...........bbb..bb............bwww...................xxxxxxxxx
+xxxxxxxxxwwwbwwwwb..b..2..bbbb....b.............bwww...................xxxxxxxxx
+xxxxxxxxxxwwbwwww...bbbbbbb.......bw.....3.....bbwwww...U.....3.......xxxxxxxxxx
+xxxxxxxxxxwwbbww.................bbww........wwbwwwww.................xxxxxxxxxx
+xxxxxxxxxxwwwbbw................bbwwwww....wwwbbwwww..................xxxxxxxxxx
+xxxxxxxxxxwwwwbb...4...U........bwwwwwwwwwwwwbbwww....................xxxxxxxxxx
+xxxxxxxxxxxwwwwbbb...........bbbbbwwwwwwwwwbbbwww....................xxxxxxxxxxx
+xxxxxxxxxxxwwwwwwbbbb.....bbbbwwwbbbbwwwbbbbwwww....................xxxxxxxxxxxx
+xxxxxxxxxxxwwwwwwwwwbbbbbbbwwwwwwwwwbbbbbwwwww......4.....4........xxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww......................xxxxxxxxxxxxxx
+xxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwww........................xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwww......................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Lom Lobon, giant orange brain, rakshasa, wizard
+MONS: random, random, random
+
+#############################################################################
+# cerebov
+
+NAME: cerebov
+TAGS: cerebov
+ORIENT: northeast
+
+# you might not want to teleport too much on this level - unless you can 
+# reliably teleport away again.
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+...............................xxxxxxxxx
+.............vvvvv.............xxxxxxxxx
+.............v$$$v.............xxxxxxxxx
+.............v|||v.............xxxxxxxxx
+.............v$$$v.............xxxxxxxxx
+.vvvvv...vvvvvvvvvvvvv...vvvvv.xxxxxxxxx
+.v|$|vvvvv...........vvvvv$|$v.xxxxxxxxx
+.v$|$v.....vvvvvvvvv.....v|$|v.xxxxxxxxx
+.v|$|v.vvvvvvvvOvvvvvvvv.v$|$v.xxxxxxxxx
+.vvvvv.vvvvvv..3..vvvvvv.vvvvv.xxxxxxxxx
+...v...vv.....vvv.....vv...v...xxxxxxxxx
+...v.vvvv....vv1vv....vvvv.v...xxxxxxxxx
+...v.vv......v...v......vv.v...xxxxxxxxx
+...v.vvvv.............vvvv.v...xxxxxxxxx
+...v...vv..2.......2..vv...v...xxxxxxxxx
+.vvvvv.vv..2.......2..vv.vvvvv.xxxxxxxxx
+.v|$|v.vv.............vv.v$|$v.xxxxxxxxx
+.v|$|v.vv...vv...vv...vv.v$|$v.xxxxxxxxx
+.v|$|v.vv...vv+++vv...vv.v$|$v.xxxxxxxxx
+.vvvvv.vvvvvvv...vvvvvvv.vvvvv.xxxxxxxxx
+....v..vvvvvvv...vvvvvvv..v....xxxxxxxxx
+....vv...................vv....xxxxxxxxx
+.....vv.vvvvv..2..vvvvv.vv.....xxxxxxxxx
+......vvv|||v.....v$$$vvv......xxxxxxxxx
+........v|$|vv...vv$|$v........xxxxxxxxx
+........v|||v.....v$$$v........xxxxxxxxx
+........vvvvv.....vvvvv........xxxxxxxxx
+...............................xxxxxxxxx
+...............@...............xxxxxxxxx
+ENDMAP
+
+MONS: Cerebov, Balrug, Pit Fiend
+MONS: random, random, random, random
+
+
+##############################################################################
+# Gloorx Vloq
+
+NAME: gloorx_vloq
+TAGS: gloorx_vloq
+ORIENT: southwest
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
+xxxxxxxxx..............................x
+xxxxxxxxx..............................x
+xxxxxxxxx..............................x
+xxxxxxxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
+xxxxxxxxx..............................x
+xxxxxxxxx.x.xxxx=xxxxxxxxxxxx=xxxxxx.x.x
+xxxxxxxxx...xx....................xx...x
+xxxxxxxxx.x.x..ccccc..4..4..ccccc..x.x.x
+xxxxxxxxx...x.cc.3............3.cc.x...x
+xxxxxxxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
+xxxxxxxxx...x.c.cc.....cc.....cc.c.x...x
+xxxxxxxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
+xxxxxxxxx...x...c...ccc..ccc...c...=...x
+xxxxxxxxx.x.x.3.....2..1O..2.....3.x.x.x
+xxxxxxxxx...=...c...ccc..ccc...c...x...x
+xxxxxxxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
+xxxxxxxxx...x.c.cc.....cc.....cc.c.x...x
+xxxxxxxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
+xxxxxxxxx...x.cc.3............3.cc.x...x
+xxxxxxxxx.x.x..ccccc..4..4..ccccc..=.x.x
+xxxxxxxxx...xx....................xx...x
+xxxxxxxxx.x.xxxx=xxxx=xxxxxxxx=xxxxx.x.x
+xxxxxxxxx..............................x
+xxxxxxxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
+xxxxxxxxx..............................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: Gloorx Vloq, Executioner, demonic crawler, shadow demon
+MONS: random, random, random
+
+############################################################################
+# Hive:4 beehive
+
+NAME: beehive
+PLACE: Hive:4
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaaRaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxaaaaaaaaaaRa2aaR1RaaRa2aaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxaaaaaaaaaaRa2a3R3aRaRaRaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxaaaaRaRaRaaa3aaa3aRa.a.aaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxaaaaaaRa.aRa2a2a2a2aRaRa.a.a3aaaaaaaaaaaaaaxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx4aaaaaaaaa.aaRaRaa2aa2aaRaaa.aa3a33aaaaaaaaaa.44xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.4aaaaaaa.222a3a.aaaRaaa.aaa.R3aa3a3aaaaaaaa.....4xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx....aaaaaaa.aRa.a3aRaRa.a3a.a.a.a.aRa2aaaaaa....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx...aaaaaa3a3a.a.a.a3aRa2aRa3a.a.aRaRa.aaaaa...xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...aa2aRa3a3a3aRa.a3a.a.a.a.a.a.a.a3a.aaa...xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...aaa.a.a.a2a.aaa.aRaRa2a.a2a3a.a2aaaa..T..xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.....a2a.a2a.aRaaaaa3a.a.aaa3a3a3a3a.a.........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.4...aaRRaa.a2a.a3a3a3a.aaa.a.aRa.a.aa..4.......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx......a.a.aaa.a3a.a.a.a.aaa2a.a2a.a.aRaa.....4...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.....aa3a2aaa.a.a.a3a3a3a3aRaaa.a2a.a2aa........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx...aaaa.a2aRa.a.a2aaa.a.a.a.aaa.a.aaaa.....xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx..aaa.a.a.a.a.a.a.aaa2a.a3a2a.a2aaa.....xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.aaaa3a.a2aRa.a.aaaRa.a.aa.a.aaa....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...aaaaRa.a3a3a.a.a.aaa.aa.aa....4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx........aa.a2a.a.aaa2aa.aa.aaa....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx....4.....a.a2a2a.a2a.a2a.......4.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.............a.a.a.a.a.a.....4....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..............4..a.a.a......4...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.................a.a.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx........................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.....4...T............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.........................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.................T.........xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.......4.....................xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..............xx...............xxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx............xxxxx........4......xxxx..4....xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx..T..........xxx................xxxxx...T.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx............xxx........T.........xxx........xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx....4........xx....................x..........xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx...............x.x...xxx...............xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.........4...........xxx..................xxxxxxxxxxxxxxxxxxaaaaaxxxxx
+xxxxxxxxx.....4.....................4......4...........4...xxxxxxxxxxaa5a5aaxxxx
+xxxxxxxxx.................................................wwwwwwwwxxxa5*|*5axxxx
+xxxxxxxxx............x...x...T.....xxxx.................wwwwwwwwwwwwxaa*|*aaxxxx
+xxxxxxxxxx.........xx.............xxxxx................wwwwwwwwwwwwwwxaa5aaxxxxx
+xxxxxxxxxxx.......x..................xxx....4..........wwwwwwwwwwwwwwwxa5axxxxxx
+xxxxxxxxxxx.....xxx...4...........................xxxx.4wwwwwwwwwwwwwwwa=axxxxxx
+xxxxxxxxxxxx..xxx.............xx....(.........xxxxxxxx....wwwwwwwwwwwwwwaaxxxxxx
+xxxxxxxxxxxxxxxx.............xxxx..................xxxx......wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxx....{..}..xxxxxx..]......xxx...........4.wwwwwwwwwwwwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx........xxx........xxxxxx....4....wwwwwwwwwwwwwwxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..[.xxx........xxx)....wwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: queen bee, killer bee, killer bee larva, plant, yellow wasp
+MONS: random, random
+
+############################################################################
+# Vault:8 last level of the vaults -- dungeon.cc will change all these 'x's
+#
+
+NAME: vaults_vault
+PLACE: Vault:8
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxxx.x....xxxxx.................xxxxx..xxxxxxxxx
+xxxxxxxxx..x.x*.*.*.*.*x..x........x.x....xxx..........8..........xxx..xxxxxxxxx
+xxxxxxxxx..x.x.*.*.*.*.x..x........x.x....xxx.....................xxx..xxxxxxxxx
+xxxxxxxxx..x.x*.*.*.*.*x..x...||...x.x....xx......9........9.......xx..xxxxxxxxx
+xxxxxxxxx..x.x.*.*.*.*.x..x...||...x.x....xx.......................xx..xxxxxxxxx
+xxxxxxxxx..x.x*.*.*.*.*x..x...||...x.x....xx......xxxxxxxxxxx......xx..xxxxxxxxx
+xxxxxxxxx..x.x.*.*.*.*.x..x........x.x....xx......x.........x......xx..xxxxxxxxx
+xxxxxxxxx..x.x*.*.*.*.*+..+........x.x....xx....xxx..........xx....xx..xxxxxxxxx
+xxxxxxxxx..x.x.*.*.*.*.xxxxxxxxxxxxx.x....xx.9..x....xxxxx....x..8.xx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxxx9998.........x....xx....x...xx$$$xx...x....xx..xxxxxxxxx
+xxxxxxxxx..x...........899xxxxxxxxxx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxxx99x........x.x....xx....x..x$$*|*$$x..x....xx..xxxxxxxxx
+xxxxxxxxx..x.x.....|...x88x.$$$$$$.x.x....xx..8.x..xx$***$xx..x....xx..xxxxxxxxx
+xxxxxxxxx..x.x.|..|..|.x..x.$$$$$$.x.x....xx....x....x$$$xx...x..9.xx..xxxxxxxxx
+xxxxxxxxx..x.x.........x..x.$$$$$$.x.x....xx....xxx..xxxxx..xxx....xx..xxxxxxxxx
+xxxxxxxxx..x.x.|..|..|.x..x.$$$$$$.x.x....xx......x.........x......xx..xxxxxxxxx
+xxxxxxxxx..x.x.........x..x.$$$$$$.x.x....xx......xxxxxxxxxxx......xx..xxxxxxxxx
+xxxxxxxxx..x.x|..|..|..x..x.$$$$$$.x.x....xxx.....................xxx..xxxxxxxxx
+xxxxxxxxx..x.x.........x..+........x.x....xxx......9.........9....xxx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxx+x..xxxxxxxxxx.xx.11....xx................xxxxx..xxxxxxxxx
+xxxxxxxxx..x...........x..x...........x1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..........................xx1..(}..1..........................xxxxxxxxx
+xxxxxxxxx...........................11.[..{.11.........................xxxxxxxxx
+xxxxxxxxx............................1..])..1..........................xxxxxxxxx
+xxxxxxxxx.............................1....1...........................xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.....1111..x.xxx.xxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.....11..........................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x|x.x.x.x.x................................x..xxxxxxxxx
+xxxxxxxxx..xx.x|x.x.x.x.x.x.x.x.x.x.x.....x.........................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x9x.x.x.x.x.x..........8..........9........x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x..9......................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x.x|x.x.x.x....x.........................x..xxxxxxxxx
+xxxxxxxxx..xx.x8x.x.x|x.x.x.x.x.x.x.xx....x..............9...9......x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x9x.x.x.x.x.x.x.x.x...........8..................x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x..9......................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x|x.x9x.x.x....x.........................x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x...................9.....x..xxxxxxxxx
+xxxxxxxxx..x.x.x9x.x.x.x.x.x.x.x.x.x.x....x....9......8.............x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x9x.x.x.x.x.xx....x.........................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x.x.x.x.x.x....x.........................x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.......9......9..........x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x.x8x.x.x.x....x.....................8...x..xxxxxxxxx
+xxxxxxxxx..xx.x8x.x.x.x.x.x.x.x.x.x.xx....x.....................||.|x..xxxxxxxxx
+xxxxxxxxx..x.x|x.x.x.x.x.x.x|x.x.x.x.x....x.....................|...x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x8x.x.x.x.x.xx....x......8..................x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x.x.x.x.x.x....x..........8..8...8.....||x..xxxxxxxxx
+xxxxxxxxx..xO.x.x.x.x.x.x.x.x.x.x|x.xx....x.....................|.||x..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: vault guard
+MONS: random, random, random, random, random, random
+
+############################################################################
+# snake_pit
+
+NAME: snake_pit
+PLACE: Snake:5
+ORIENT: southwest
+
+# Rotation makes this look really bad if the console font is not square.
+FLAGS: no_rotate
+
+# Hey, this looks a bit like a face ...
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
+xxxxxxxxxxxxxx....x.............x..xxxxx
+xxxxxxxxxxxx....2.x.............x.2..xxx
+xxxxxxxxxxx.....2.x....x.....x..x..3.xxx
+xxxxxxxxxxx.....22x.............xx.2..xx
+xxxxxxxxxxx.......xx..x........xx..3..xx
+xxxxxxxxxx.....x23.xx....T...xxx.44...xx
+xxxxxxxxxx......4.4.x.........x.333....x
+xxxxxxxxxx......3.x4...x.......4x4.....x
+xxxxxxxxxx.......3.......x.............x
+xxxxxxxxxx..c......3.........x.......c.x
+xxxxxxxxx...cc...................3..cc.x
+xxxxxxxxx...cc..........4.4.........cc.x
+xxxxxxxxx...cc...3...x........2.....cc.x
+xxxxxxxxx...cc.........1...1.......cc..x
+xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
+xxxxxxxxxx...ccc..................cc..xx
+xxxxxxxxxx....cccc....3333333.....cc..xx
+xxxxxxxxxx.....ccccccc...........cc...xx
+xxxxxxxxxx........cccccccO...ccccc....xx
+xxxxxxxxxxx........cccccccccccccc....xxx
+xxxxxxxxxxx.........cccccccccccc.....xxx
+xxxxxxxxxxxxx.......................xxxx
+xxxxxxxxxxxxxxxx..................xxxxxx
+xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: greater naga, naga, naga mage, naga warrior
+MONS: random, random, random
+
+############################################################################
+# elf_hall
+
+NAME: elf_hall
+PLACE: Elf:7
+ORIENT: northwest
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcccccccccccccccccxxxxx
+xxxxxxxxxxxxxxxxxcc*|*|*|**|||||c$ccxxxx
+xxxxxxxxxxxxxxxxcc*$*|*|*|*|||||c$$ccxxx
+xxxxxxxxxxxxxxxcc*$|*$***$$|||||c|$$ccxx
+xxxxxxxxxxxxxxcc*$*|**ccccccccccc$$$$ccx
+xxxxxxxxxxxxxxc*|*$*$ccc.....2..c+$|$$cx
+xxxxxxxxxxxxxxc$*$*ccc...........c$$$$cx
+xxxxxxxxxxxxxxc||**cc...5.......4cc$|$cx
+xxxxxxxxxxxxxxc*$$cc........3..ccccccccx
+xxxxxxxxxxxxxxc$+ccc.....2....cc.....5cx
+xxxxxxxxxxxxxxc$c....5.......cc.......cx
+xxxxxxxxxxxxxxccc......5....cc..2....ccx
+xxxxxxxxxxxxxxxxc..........cc.......ccxx
+xxxxxxxxxxxxxxxcc..1..U..........4..ccxx
+xxxxxxxxxxxxxxcc.....................ccx
+xxxxxxxxxxxxxxc...........3...........cx
+xxxxxxxxxxxxxxc.......2.......3.......cx
+xxxxxxxxxxxxxxc..2................2..5cx
+xxxxxxxxxxxxxxc......x.........x......cx
+xxxxxxxxxxxxxxc.....xx.........xx.....cx
+xxxxxxxxxxxxxxc2...xxx....1....xxx.4..cx
+xxxxxxxxxxxxxxc..xxxx...........xxxx..cx
+xxxxxxxxxxxxxxc.xxx.....cc.cc.....xxx.cx
+xxxxxxxxxxxxxxc.x.....cccc.cccc.....x.cx
+xxxxxxxxxxxxxxc.3...cccxxc.cxxccc.3...cx
+xxxxxxxxxxxxxxc...cccxxxxc.cxxxxccc...cx
+xxxxxxxxxxxxxxc.cccxxxxxxc.cxxxxxxccc.cx
+xxxxxxxxxxxxxxcccxxxxxxxxc.cxxxxxxxxcccx
+xxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxx
+ENDMAP
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: random, random
+
+##############################################################################
+# slime_pit
+
+NAME: slime_pit
+PLACE: Slime:$
+ORIENT: encompass
+
+# Slime pit take is reduced pending an increase in difficulty of this 
+# subdungeon. -- bwr
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx....................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx..........................x.xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx.................................xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..................................xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....(................................xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx..........................................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx..........................................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx............................................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx............................................xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.....................ccc..ccc............]......xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...................cccc2ccccc...................xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...................cc*cc..cc*cc....................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..................cc***cc4c***cc..................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..................cc*|*cc..cc*|*cc..................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.................cc*|P|*c4cc*|P|*cc.................xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.................cc**|*cc..cc*|**cc....................xxxxxxxxxxxx
+xxxxxxxxxxxx..................ccc**c|cc4c|c**ccc...................xxxxxxxxxxxxx
+xxxxxxxxxxxx..................cccccccc..cccccccc....................xxxxxxxxxxxx
+xxxxxxxxxxx...................c.4.c.4.1..4.c.4.c.....................xxxxxxxxxxx
+xxxxxxxxxxx...................2.c.4.c..3.c.4.c.2.....................xxxxxxxxxxx
+xxxxxxxxxxx..........)........cccccccc..cccccccc.....................xxxxxxxxxxx
+xxxxxxxxxxx...................ccc**c|cc4c|c**ccc.....................xxxxxxxxxxx
+xxxxxxxxxx....................cc**|*cc..cc*|**cc....................xxxxxxxxxxxx
+xxxxxxxxxx....................cc*|P|*c4cc*|P|*cc....................xxxxxxxxxxxx
+xxxxxxxxxx.....................cc*|*cc..cc*|*cc....................xxxxxxxxxxxxx
+xxxxxxxxxxx.....................cc***cc4c***cc.....................xxxxxxxxxxxxx
+xxxxxxxxxxxx.....................cc*cc..cc*cc......................xxxxxxxxxxxxx
+xxxxxxxxxxxxx.....................cccc2ccccc......................xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.....................ccc..ccc.......................xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx...........................................[.........xxxxxxxxxxxxx
+xxxxxxxxxxxxx......................................................xxxxxxxxxxxxx
+xxxxxxxxxxxxx..............................................xxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxx...........................................xxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..........................................xxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx........................................xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.........................................xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.............................}......xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.................................xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx...........{........xxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: royal jelly, acid blob, great orb of eyes
+MONS: random, random, random, random
+
+
+##############################################################################
+# The Hall of Blades
+
+NAME: hall_of_blades
+PLACE: Blade
+ORIENT: north
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxccc....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxxxxxxx
+xxxxxxxxcc......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..........c..............c..............c..............c......cxxxxxxxx
+xxxxxxxxc.........ccc............ccc............ccc............ccc.....cxxxxxxxx
+xxxxxxxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxxxxxxx
+xxxxxxxxc.........ccc............ccc............ccc...........ccccc....cxxxxxxxx
+xxxxxxxxc..........c..............c..............c.............ccc.....cxxxxxxxx
+xxxxxxxxc......................................................ccc.....cxxxxxxxx
+xxxxxxxxc.......................................................c......cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc.......................................................c......cxxxxxxxx
+xxxxxxxxc......................................................ccc.....cxxxxxxxx
+xxxxxxxxc..........c..............c..............c.............ccc.....cxxxxxxxx
+xxxxxxxxc.........ccc............ccc............ccc...........ccccc....cxxxxxxxx
+xxxxxxxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxxxxxxx
+xxxxxxxxc.........ccc............ccc............ccc............ccc.....cxxxxxxxx
+xxxxxxxxc..........c..............c..............c..............c......cxxxxxxxx
+xxxxxxxxc..............................................................cxxxxxxxx
+xxxxxxxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxxxxxxx
+xxxxxxxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxxxxxxx
+xxxxxxxxccc...ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxcccc.............................cccccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxxxxxxx
+ENDMAP
+
+MONS: dancing weapon
+MONS: random, random, random, random, random, random
+
+##############################################################################
+# hall_of_Zot
+
+NAME: hall_of_Zot
+PLACE: Zot:5
+ORIENT: north
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccc..............ccccxxxxxxxxxxxxxxxxxcccc............ccccxxxxxxxxxx
+xxxxxxxxxxcc....................cccxxxxxxxxxxxxxccc..................ccxxxxxxxxx
+xxxxxxxxxcc...........3...........ccxxxxxxxxxxxcc...........3.........ccxxxxxxxx
+xxxxxxxxxc..8......................cXXXXXXXXXXXc....................8..cxxxxxxxx
+xxxxxxxxxc...................8.....XXX...1...XXX....8..................cxxxxxxxx
+xxxxxxxxxcc........................XX..1...1..XX......................ccxxxxxxxx
+xxxxxxxxxxcc.......................X1.........1X.....................ccxxxxxxxxx
+xxxxxxxxxxxcc.....4....2..............1..Z..1............2....4.....ccxxxxxxxxxx
+xxxxxxxxxxcc.......................X1.........1X.....................ccxxxxxxxxx
+xxxxxxxxxcc........................XX..1...1..XX......................ccxxxxxxxx
+xxxxxxxxxc...................8.....XXX...1...XXX....8..................cxxxxxxxx
+xxxxxxxxxc...8.....................cXXXXXXXXXXXc...................8...cxxxxxxxx
+xxxxxxxxxcc..........8............ccccccccccccccc..........8..........ccxxxxxxxx
+xxxxxxxxxxcc....................ccccccccccccccccccc..................ccxxxxxxxxx
+xxxxxxxxxxxcc................ccccccccccccccccccccccccc..............ccxxxxxxxxxx
+xxxxxxxxxxxxccF111FcccccccccccccccccccccccccccccccccccccccccccF111Fccxxxxxxxxxxx
+xxxxxxxxxxxcc................^^1.ccccccccccccccccc.1^^..............ccxxxxxxxxxx
+xxxxxxxxxxcc.................cc1...ccccccccccccc...1cc...............ccxxxxxxxxx
+xxxxxxxxxcc.............8.....ccc...ccccccccccc...ccc...8.............ccxxxxxxxx
+xxxxxxxxxc....8................ccc...............ccc...........8...8...cxxxxxxxx
+xxxxxxxxxc.......8.....8...8...cxcc.............ccxc...................cxxxxxxxx
+xxxxxxxxxc.....................cxxc.............cxxc.......8...........cxxxxxxxx
+xxxxxxxxxc.....................cxxcc.1...1...1.ccxxc............8....8.cxxxxxxxx
+xxxxxxxxxc.......8....8.....8..cxxxc...........cxxxc....8..............cxxxxxxxx
+xxxxxxxxxc.....................cxxcc...........ccxxc..........8........cxxxxxxxx
+xxxxxxxxxcc...5...............ccxxc.............cxxcc..............8..ccxxxxxxxx
+xxxxxxxxxxcc........8........ccxxcc.............ccxxcc....8....5.....ccxxxxxxxxx
+xxxxxxxxxxxcc...............ccxxxc...............cxxxcc.............ccxxxxxxxxxx
+xxxxxxxxxxxxcccccccccccccccccxxxxcccccccc@ccccccccxxxxcccccccccccccccxxxxxxxxxxx
+ENDMAP
+
+MONS: Orb Guardian, Killer Klown, electric golem, orb of fire
+MONS: ancient lich
+MONS: random, random
+
+
+##########################################################################
+# Ecumenical temple
+
+NAME: temple
+PLACE: Temple
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxcc............<............cxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxcc...........................cxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxcc.............................cxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcc...............................cxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxcc.................................cxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxcc...................................cxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxcc.....................................cxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcc.......................................cxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxcc.........................................cxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcc...........................................cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcc.............................................cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...............................................cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc.................................................cxxxxxxxxxxxxxxx
+xxxxxxxxxxxxcc...................................................cxxxxxxxxxxxxxx
+xxxxxxxxxxxcc..........................B..........................cxxxxxxxxxxxxx
+xxxxxxxxxxcc.......................................................cxxxxxxxxxxxx
+xxxxxxxxxcc.....................B.............B.....................cxxxxxxxxxxx
+xxxxxxxxcc...........................................................cxxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.................B.........................B.................cxxxxxxxxx
+xxxxxxxxc..............................T..............................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc..............B...............................B..............cxxxxxxxxx
+xxxxxxxxc(....................T.................T....................{cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc.............................................................cxxxxxxxxx
+xxxxxxxxc................B...........................B................cxxxxxxxxx
+xxxxxxxxcc...........................................................ccxxxxxxxxx
+xxxxxxxxxcc............................T............................ccxxxxxxxxxx
+xxxxxxxxxxcc.......................................................ccxxxxxxxxxxx
+xxxxxxxxxxxcc.....................................................ccxxxxxxxxxxxx
+xxxxxxxxxxxxcc...................................................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc.................................................ccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...............B................B..............ccxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcc.............................................ccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcc.....................B.....................ccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxcc.........................................ccxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxcc.....................................ccxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxcc...................................ccxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxcc.................................ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcc...............................ccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxcc.............................ccxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxcc...........................ccxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxcc............[............ccxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Tomb:1
+
+NAME: tomb_1
+PLACE: Tomb:1
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx(.............................[..............................{xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cc..........................^............cc.........xxxxxxxxx
+xxxxxxxxx..........cc.........^....................^........cc.........xxxxxxxxx
+xxxxxxxxx..........cc..ccccccccccccccccccccccccccccccccccc..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c....^....^..c................c.^)c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..ccccccccc.c..3.............c.^.c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c222c111c.c...............5c..^c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c2c222c.^.c......2.........+cccc..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..ccccccccccc..........3......5..c.^cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..........................3......c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc^.cccccccccccccc.......2............c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c............c....................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c............c.................3..c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..cccccccc..c..........2.........c^5cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c.^.c11c..c....................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c.c.c11c..c...3................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c^c.11cc..c..............2.....c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c.cccccc..c.......2............c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c..^..^...c.................2..c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc5^c..ccccccccccc....................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..cccccccccccccc..^.^..cccccccccccccc..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c...........ccc+++++ccc........^..c.^cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c.^.....^...cc.2...2.cc......^....c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..ccccccc..cc.F...F.cc..ccccccc..c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..cc.322c..cc.......cc..c22..cc..c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..c].c22c..cc.......cc..c22c.}c^.c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c..cccc..c.^cc.G...G.cc..c3.cccc..c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c.....^..c..cc.......cc.^c........c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc..c........c..cc.......cc..c....^...c..cc.........xxxxxxxxx
+xxxxxxxxx..........cc^.cccccccccc..cc.G...G.cc..cccccccccc.^cc.........xxxxxxxxx
+xxxxxxxxx..........cc......^.......cc.......cc..........^...cc.........xxxxxxxxx
+xxxxxxxxx..........cc...........^..cc.......cc.....^........cc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.G...G.cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx.............................G...G............................xxxxxxxxx
+xxxxxxxxx...........................4.......4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx...........................4..V.V..4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx...........................4.......4..........................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: mummy, guardian mummy, mummy priest, sphinx, greater mummy
+MONS: random, random
+
+###############################################################################
+# Tomb:2
+
+NAME: tomb_2
+PLACE: Tomb:2
+
+# Can be rotated!
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc{...c......c.....3....c........c.......ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.....^c^........^c......2^c.......ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c...2.^+..2.....2^+^..2....+.......ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.3.^c^.....c^.........c^2.....^c^......ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...^+^.....c..........c........c...2...ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc+ccccccccccccccccccccccccccccccc....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc..^.c.............................c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................c..3.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c..ccc4.................4ccc..c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c..ccc...................ccc..c..2.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c..ccc.........1.........ccc..c)..}ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.3..c..ccc.....2.......2.....ccc..cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................c^2..ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c........c...........c........+....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc]...c.............................c^2..ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.....3........(........3.....c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................c.^.^ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...^c........c...........c........ccc+cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....+.............................c..^.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...^c.............................c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c..ccc.....2.......2.....ccc..c..2.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc..ccc.........1.........ccc..c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c..ccc...................ccc..c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...^+..ccc4.................4ccc..c2...ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................c....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.............................c..2.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....c.............................ccc+cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc....+cccc+ccccccccccccccc+ccccccccc.^.^ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.1.^^.c.^..c............c^.......c.3...ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...2..c.1..c.....1.1....c.....2..c.....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc......c....c..1......1.^c..2.....c...2.ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc..3...c.1..c...1...1..1^+........c.....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc......c....c[...........c.......3c.....ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: mummy, guardian mummy, mummy priest, greater mummy
+MONS: random, random, random
+
+#############################################################################
+# Tomb:3
+
+NAME: tomb_3
+PLACE: Tomb:3
+ORIENT: encompass
+
+# Unless you have a square aspect ratio, Tomb:3 looks utterly lame when
+# rotated.
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc.............................cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc...............cccccc..............ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc...............cccccccc..............cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc.......4......ccccO4cccc......4......cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc............cccc......cccc...........cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...........cccc..444444..cccc..........ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc.................222222................ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc................223322...............cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc...3............223322............3..cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc...............222222..............ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc....2..........................2...ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc....2......................2....cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc............................cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccc+ccc..................ccc+ccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc....cc................cc....cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc.......cc22222222222222cc......$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc....^.....cc............cc..^.....$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc.^.........cc..........cc.....^.^.$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$...^...^..^.cc........cc..........$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc$$$...........cc222222cc.^........$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|$$$...........c......c.....^...$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc||$$$$...^.....c......c^......$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|||||$$.....^..c......c......$$$$$$$$cccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccc|||||$........c......c...^.$$$$$$$$ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccc||||$$..^....c......c.....$$$$$$$cccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc||||$.......c......c.....$$$$$$ccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccc|||$$....^.c......c.^.^$$$$$$cccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccc|||$^....cc..{...cc...$$$$$ccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccc||$.....cc...(..cc..$$$$$cccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccc|$...cccc..[...cccc$$$$ccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: mummy, guardian mummy, mummy priest, greater mummy
+MONS: random, random
+
+#############################################################################
+# Swamp:5
+
+NAME: swamp
+PLACE: Swamp:5
+ORIENT: southeast
+
+# NB - most of the 'x's here will be set to water in dungeon.cc
+
+MAP
+xxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx2xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx2x.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcc.ccxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcc...ccxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxcc3.2..ccxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcc.1.3.2.ccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxccc....1.1cccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcc.1.32....ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcc...3..1.3ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxcc2.1.3..2.ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxccc33..1..cccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcccc3O3ccccxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxcccccccccxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: swamp dragon, swamp drake, hydra
+MONS: random, random, random, random

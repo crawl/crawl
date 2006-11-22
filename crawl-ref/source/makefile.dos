@@ -1,4 +1,6 @@
 # Make file for Dungeon Crawl (dos)
+#
+# Modified for Crawl Reference by $Author$ on $Date$
 
 # this file contains a list of the libraries.
 # it will make a variable called OBJECTS that contains all the libraries
@@ -10,18 +12,107 @@ CXX = gxx
 DELETE = del
 COPY = copy
 OS_TYPE = DOS
-CFLAGS = -D$(OS_TYPE) $(EXTRA_FLAGS)
-LDFLAGS = -Bc:/djgpp/contrib/pdcurs22/lib 
-INSTALLDIR = c:\games\crawl
+
+LIB =
+
+# If you don't have flex or bison, set DOYACC to N or empty.
+DOYACC := n
+LEX  := flex
+YACC := bison -y
+
+INCLUDES := -Iutil -I.
+
+CFWARN   := -Wall -Wwrite-strings -Wshadow -Werror -pedantic
+CFOTHERS := -D$(OS_TYPE) $(EXTRA_FLAGS) -fsigned-char -fstrict-aliasing
+
+CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+YCFLAGS  := $(INCLUDES) $(CFOTHERS)
+
+OBJECTS += libdos.o
+
+LDFLAGS =
 # LIB = -lcurso -lpano
+
+UTIL = util/
+
+# DOS brain damage. What to do, what to do.
+YTABC  := levcom~1.c
+YTABH  := levcom~1.h
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+OBJECTS := $(UTIL)levcomp.o $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
+
+GAME_DEPENDS := $(OBJECTS)
+
+##########################################################################
 
 all:            $(APPNAME)
 
-install:        $(APPNAME)
-		$(COPY) $(APPNAME) ${INSTALLDIR}
+##########################################################################
+# The level compiler
+#
+
+# [dshaligram] A million plagues on djgpp make! It doesn't want to use a
+# generic rule for $(UTIL)%.cc; it always uses the .cc.o: rule instead.
+
+LINC :=
+
+# [ds] If we're using the prebuilt include, we can't copy it around because
+# djgpp copy mangles the name irreparably.
+ifneq ($(DOYACC),y)
+LINC += -I prebuilt
+endif
+
+$(UTIL)levcomp.o: $(UTIL)levcomp.cc
+		$(subst /,\,$(CXX) $(LINC) $(YCFLAGS) -o $@ -c $<)
+
+$(UTIL)levlex.o: $(UTIL)levlex.cc
+		$(subst /,\,$(CXX) $(LINC) $(YCFLAGS) -o $@ -c $<)
+
+$(UTIL)levtab.o: $(UTIL)levtab.cc
+		$(subst /,\,$(CXX) $(LINC) $(YCFLAGS) -o $@ -c $<)
+
+ifeq ($(DOYACC),y)
+
+$(UTIL)levtab.cc: $(UTIL)levcomp.ypp
+		$(subst /,\,cd $(UTIL))
+		$(YACC) -d -b levcomp levcomp.ypp
+		copy $(YTABC) levtab.cc
+		cd ..
+
+# djgpp flex must not have a space between -o and its parameter, or no business
+# will result.
+$(UTIL)levlex.cc: $(UTIL)levcomp.lpp
+		$(subst /,\,cd $(UTIL))
+		$(LEX) -olevlex.cc levcomp.lpp
+		cd ..
+
+else
+
+$(UTIL)levtab.cc: prebuilt/levcom~2.cc
+		$(subst /,\,$(COPY) $< $@)
+
+$(UTIL)levlex.cc: prebuilt/levcom~1.cc
+		$(subst /,\,$(COPY) $< $@)
+
+endif
+
+##########################################################################
 
 clean:
 		$(DELETE) *.o
+		$(subst /,\,$(DELETE) $(UTIL)*.o)
+		$(subst /,\,$(DELETE) $(UTIL)*.exe)
+		$(subst /,\,$(DELETE) $(UTIL)levcom~1.*)
+		$(subst /,\,$(DELETE) $(UTIL)levtab.*)
+		$(subst /,\,$(DELETE) $(UTIL)levlex.*)
 
 distclean:
 		$(DELETE) *.o 
@@ -34,18 +125,18 @@ distclean:
 		$(DELETE) *.0*
 		$(DELETE) *.lab
 
-$(APPNAME):	$(OBJECTS)
-		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+$(APPNAME):	$(GAME_DEPENDS)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 		strip $(APPNAME)
 
-debug:		$(OBJECTS)
-		${CXX} ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+debug:		$(GAME_DEPENDS)
+		${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-profile:	$(OBJECTS)
-		${CXX} -g -p ${LDFLAGS} $(INCLUDES) $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
+profile:	$(GAME_DEPENDS)
+		${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
 .cc.o:
-		${CXX} ${CFLAGS} -c $< ${INCLUDE}
+		${CXX} ${CFLAGS} -c $<
 
 # I don't have touch for DOS, but if you do, you can put this back.
 #

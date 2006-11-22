@@ -2,6 +2,8 @@
  *  File:       stash.cc
  *  Summary:    Classes tracking player stashes
  *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"
@@ -9,12 +11,14 @@
 #include "clua.h"
 #include "describe.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "files.h"
 #include "invent.h"
 #include "items.h"
 #include "Kills.h"
 #include "libutil.h"
 #include "menu.h"
+#include "misc.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -35,12 +39,6 @@
 #define LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
 #define LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
-
-std::string short_place_name(level_id id)
-{
-    return short_place_name(
-            get_packed_place(id.branch, id.depth, LEVEL_DUNGEON));
-}
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
@@ -324,10 +322,10 @@ std::string Stash::stash_item_name(const item_def &item)
     return buf;
 }
 
-class StashMenu : public Menu
+class StashMenu : public InvMenu
 {
 public:
-    StashMenu() : Menu(MF_SINGLESELECT), can_travel(false) { }
+    StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false) { }
 public:
     bool can_travel;
 protected:
@@ -341,7 +339,7 @@ void StashMenu::draw_title()
     {
         gotoxy(1, 1);
         textcolor(title->colour);
-        cprintf(title->text.c_str());
+        cprintf( "%s", title->text.c_str());
         if (title->quantity)
             cprintf(", %d item%s", title->quantity, 
                                    title->quantity == 1? "" : "s");
@@ -362,7 +360,7 @@ bool StashMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static void stash_menu_fixup(MenuEntry *me)
+static MenuEntry *stash_menu_fixup(MenuEntry *me)
 {
     const item_def *item = static_cast<const item_def *>( me->data );
     if (item->base_type == OBJ_GOLD)
@@ -370,19 +368,20 @@ static void stash_menu_fixup(MenuEntry *me)
         me->quantity = 0;
         me->colour   = DARKGREY;
     }
+
+    return (me);
 }
 
 bool Stash::show_menu(const std::string &prefix, bool can_travel) const
 {
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry("  Stash (" + prefix);
+    MenuEntry *mtitle = new MenuEntry("Stash (" + prefix, MEL_TITLE);
     menu.can_travel = can_travel;
-    mtitle->colour   = WHITE;
     mtitle->quantity = items.size();
     menu.set_title(mtitle);
 
-    populate_item_menu(&menu, items, stash_menu_fixup);
+    menu.load_items( InvMenu::xlat_itemvect(items), stash_menu_fixup);
     std::vector<MenuEntry*> sel;
     while (true)
     {
@@ -412,7 +411,9 @@ std::string Stash::description() const
     if (sz > 1)
     {
         char additionals[50];
-        snprintf(additionals, sizeof additionals, " (+%lu)", (unsigned long) (sz - 1));
+        snprintf(additionals, sizeof additionals, 
+                " (+%lu)", 
+                (unsigned long) (sz - 1));
         desc += additionals;
     }
     return (desc);
@@ -467,8 +468,6 @@ void Stash::write(std::ostream &os,
                   bool identify) 
     const
 {
-    int i;
-    
     if (!enabled || (items.size() == 0 && verified)) return;
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")
@@ -476,7 +475,7 @@ void Stash::write(std::ostream &os,
        << std::endl;
     
     char buf[ITEMNAME_SIZE];
-    for (i = 0; i < (int) items.size(); ++i)
+    for (int i = 0; i < (int) items.size(); ++i)
     {
         item_def item = items[i];
 
@@ -512,9 +511,9 @@ void Stash::write(std::ostream &os,
             if (desc.length())
             {
                 // Walk backwards and prepend indenting spaces to \n characters
-                for (i = desc.length() - 1; i >= 0; --i)
-                    if (desc[i] == '\n')
-                        desc.insert(i + 1, " ");
+                for (int j = desc.length() - 1; j >= 0; --j)
+                    if (desc[j] == '\n')
+                        desc.insert(j + 1, " ");
                 os << "    " << desc << std::endl;
             }
         }
@@ -621,14 +620,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
         desc = munge_description(get_item_description(si.item, 
                     Options.verbose_dump,
                     true));
-
-        // trim leading whitespace
-        std::string::size_type notwhite = desc.find_first_not_of(" \t\n");
-        desc.erase(0, notwhite);
-
-        // trim trailing whitespace
-        notwhite = desc.find_last_not_of(" \t\n"); 
-        desc.erase(notwhite + 1);
+        trim_string(desc);
         
         // Walk backwards and prepend indenting spaces to \n characters
         for (int i = desc.length() - 1; i >= 0; --i)
@@ -649,9 +641,8 @@ bool ShopInfo::show_menu(const std::string &place,
     ShopId id(shoptype);
     StashMenu menu;
 
-    MenuEntry *mtitle = new MenuEntry("  " + name + " (" + place);
+    MenuEntry *mtitle = new MenuEntry(name + " (" + place, MEL_TITLE);
     menu.can_travel = can_travel;
-    mtitle->colour   = WHITE;
     mtitle->quantity = items.size();
     menu.set_title(mtitle);
 
@@ -701,7 +692,7 @@ std::string ShopInfo::description() const
     return (name);
 }
 
-bool ShopInfo::matches_search(const std::string &prefix,  
+bool ShopInfo::matches_search(const std::string &prefix,
                               const base_pattern &search, 
                               stash_search_result &res) const
 {
@@ -712,12 +703,12 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        std::string name = shop_item_name(items[i]);
+        std::string sname = shop_item_name(items[i]);
         std::string ann = stash_annotate_item(
                     LUA_SEARCH_ANNOTATE, &items[i].item, true);
         
         bool thismatch = false;
-        if (search.matches(prefix + " " + ann + name))
+        if (search.matches(prefix + " " + ann + sname))
             thismatch = true;
         else
         {
@@ -729,7 +720,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
         if (thismatch)
         {
             if (!res.count++)
-                res.match = name;
+                res.match = sname;
             res.matches++;
         }
     }
@@ -965,7 +956,9 @@ bool LevelStashes::in_branch(int branchid) const
 std::string LevelStashes::level_name() const
 {
     int curr_subdungeon_level = subdungeon_depth( branch, depth );
-    return (branch_level_name(branch, curr_subdungeon_level));
+    return (place_name(
+                get_packed_place(branch, curr_subdungeon_level, LEVEL_DUNGEON), 
+                true, true));
 }
 
 std::string LevelStashes::short_level_name() const
@@ -1037,11 +1030,11 @@ void LevelStashes::write(std::ostream &os, bool identify) const
     {
         const Stash &s = stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
-        std::string level_name = short_level_name();
+        std::string levname = short_level_name();
         for (c_stashes::const_iterator iter = stashes.begin(); 
                 iter != stashes.end(); iter++)
         {
-            iter->second.write(os, refx, refy, level_name, identify);
+            iter->second.write(os, refx, refy, levname, identify);
         }
     }
     os << std::endl;
@@ -1291,7 +1284,8 @@ void StashTracker::search_stashes()
     mpr("", MSGCH_PROMPT);
 
     char buf[400];
-    bool validline = cancelable_get_line(buf, sizeof buf, 80, &search_history);
+    bool validline = 
+        !cancelable_get_line(buf, sizeof buf, 80, &search_history);
     mesclr();
     if (!validline || (!*buf && !lastsearch.length()))
         return;
@@ -1381,7 +1375,7 @@ void StashSearchMenu::draw_title()
     {
         gotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("  %d %s%s", title->quantity, title->text.c_str(), 
+        cprintf("%d %s%s", title->quantity, title->text.c_str(), 
                            title->quantity > 1? "es" : "");
 
         if (meta_key)
@@ -1395,8 +1389,7 @@ bool StashSearchMenu::process_key(int key)
 {
     if (key == '?')
     {
-        if (sel)
-            sel->clear();
+        sel.clear();
         meta_key  = !meta_key;
         update_title();
         return true;
@@ -1417,8 +1410,7 @@ void StashTracker::display_search_results(
     stashmenu.can_travel = travelable;
     std::string title = "matching stash";
 
-    MenuEntry *mtitle = new MenuEntry(title);
-    mtitle->colour   = WHITE;
+    MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
     mtitle->quantity = results.size();
     stashmenu.set_title(mtitle);
@@ -1509,100 +1501,3 @@ void StashTracker::display_search_results(
 StashTracker stashes;
 
 #endif
-
-std::string branch_level_name(unsigned char branch, int sub_depth)
-{
-    int ltype = sub_depth == 0xFF? branch : 0;
-    if (ltype == LEVEL_PANDEMONIUM)
-        return ("Pandemonium");
-    else if (ltype == LEVEL_ABYSS)
-        return ("The Abyss");
-    else if (ltype == LEVEL_LABYRINTH)
-        return ("A Labyrinth");
-    else
-    {
-        char buf[200];
-        const char *s = NULL;
-        *buf = 0;
-        // level_type == LEVEL_DUNGEON
-        if (branch != BRANCH_VESTIBULE_OF_HELL
-                && branch != BRANCH_ECUMENICAL_TEMPLE
-                && branch != BRANCH_HALL_OF_BLADES)
-            snprintf(buf, sizeof buf, "Level %d", sub_depth);
-
-        switch (branch)
-        {
-        case BRANCH_MAIN_DUNGEON:
-            s = " of the Dungeon";
-            break;
-        case BRANCH_DIS:
-            s = " of Dis";
-            break;
-        case BRANCH_GEHENNA:
-            s = " of Gehenna";
-            break;
-        case BRANCH_VESTIBULE_OF_HELL:
-            s = "The Vestibule of Hell";
-            break;
-        case BRANCH_COCYTUS:
-            s = " of Cocytus";
-            break;
-        case BRANCH_TARTARUS:
-            s = " of Tartarus";
-            break;
-        case BRANCH_INFERNO:
-            s = " of the Inferno";
-            break;
-        case BRANCH_THE_PIT:
-            s = " of the Pit";
-            break;
-        case BRANCH_ORCISH_MINES:
-            s = " of the Orcish Mines";
-            break;
-        case BRANCH_HIVE:
-            s = " of the Hive";
-            break;
-        case BRANCH_LAIR:
-            s = " of the Lair";
-            break;
-        case BRANCH_SLIME_PITS:
-            s = " of the Slime Pits";
-            break;
-        case BRANCH_VAULTS:
-            s = " of the Vaults";
-            break;
-        case BRANCH_CRYPT:
-            s = " of the Crypt";
-            break;
-        case BRANCH_HALL_OF_BLADES:
-            s = "The Hall of Blades";
-            break;
-        case BRANCH_HALL_OF_ZOT:
-            s = " of the Realm of Zot";
-            break;
-        case BRANCH_ECUMENICAL_TEMPLE:
-            s = "The Ecumenical Temple";
-            break;
-        case BRANCH_SNAKE_PIT:
-            s = " of the Snake Pit";
-            break;
-        case BRANCH_ELVEN_HALLS:
-            s = " of the Elven Halls";
-            break;
-        case BRANCH_TOMB:
-            s = " of the Tomb";
-            break;
-        case BRANCH_SWAMP:
-            s = " of the Swamp";
-            break;
-        }
-        if (s)
-            strncat(buf, s, sizeof(buf) - 1);
-        return (buf);
-    }
-}
-
-std::string branch_level_name(unsigned short packed_place)
-{
-    return branch_level_name(packed_place >> 8, packed_place & 0xFF);
-}

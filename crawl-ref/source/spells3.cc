@@ -3,6 +3,8 @@
  *  Summary:    Implementations of some additional spells.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>     9/11/99        LRH    Teleportation takes longer in the Abyss
@@ -26,6 +28,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "it_use2.h"
 #include "misc.h"
@@ -36,15 +39,15 @@
 #include "player.h"
 #include "randart.h"
 #include "spells1.h"
+#include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 static bool monster_on_level(int monster);
 
-void cast_selective_amnesia(bool force)
+bool cast_selective_amnesia(bool force)
 {
     char ep_gain = 0;
     unsigned char keyin = 0;
@@ -61,7 +64,7 @@ void cast_selective_amnesia(bool force)
             keyin = (unsigned char) get_ch();
 
             if (keyin == ESCAPE)
-                return;         // early return {dlb}
+                return (false);        // early return {dlb}
 
             if (keyin == '?' || keyin == '*')
             {
@@ -108,7 +111,7 @@ void cast_selective_amnesia(bool force)
         }
     }
 
-    return;
+    return (true);
 }                               // end cast_selective_amnesia()
 
 bool remove_curse(bool suppress_msg)
@@ -164,7 +167,7 @@ bool detect_curse(bool suppress_msg)
                 || you.inv[loopy].base_type == OBJ_ARMOUR
                 || you.inv[loopy].base_type == OBJ_JEWELLERY))
         {
-            if (item_not_ident( you.inv[loopy], ISFLAG_KNOW_CURSE ))
+            if (!item_ident( you.inv[loopy], ISFLAG_KNOW_CURSE ))
                 success = true;
 
             set_ident_flags( you.inv[loopy], ISFLAG_KNOW_CURSE );
@@ -183,7 +186,7 @@ bool detect_curse(bool suppress_msg)
     return (success);
 }                               // end detect_curse()
 
-bool cast_smiting(int power)
+int cast_smiting(int power)
 {
     bool success = false;
     struct dist beam;
@@ -191,10 +194,15 @@ bool cast_smiting(int power)
 
     mpr("Smite whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
-    if (!beam.isValid
-        || mgrd[beam.tx][beam.ty] == NON_MONSTER
+    if (!beam.isValid)
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
+
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)
     {
         canned_msg(MSG_SPELL_FIZZLES);
@@ -221,7 +229,7 @@ bool cast_smiting(int power)
     return (success);
 }                               // end cast_smiting()
 
-bool airstrike(int power)
+int airstrike(int power)
 {
     bool success = false;
     struct dist beam;
@@ -230,10 +238,15 @@ bool airstrike(int power)
 
     mpr("Strike whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
-    if (!beam.isValid
-        || mgrd[beam.tx][beam.ty] == NON_MONSTER
+    if (!beam.isValid)
+    {
+        canned_msg(MSG_OK);
+        return (-1);
+    }
+
+    if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)
     {
         canned_msg(MSG_SPELL_FIZZLES);
@@ -250,6 +263,10 @@ bool airstrike(int power)
         hurted = random2( random2(12) + (random2(power) / 6)
                                       + (random2(power) / 7) );
         hurted -= random2(1 + monster->armour_class);
+	if ( mons_flies(monster) ) {
+	    hurted *= 3;
+	    hurted /= 2;
+	}
 
         if (hurted < 0)
             hurted = 0;
@@ -269,7 +286,7 @@ bool airstrike(int power)
     return (success);
 }                               // end airstrike()
 
-bool cast_bone_shards(int power)
+int cast_bone_shards(int power)
 {
     bool success = false;
     struct bolt beam;
@@ -282,8 +299,11 @@ bool cast_bone_shards(int power)
     }
     else if (you.inv[you.equip[EQ_WEAPON]].sub_type != CORPSE_SKELETON)
         mpr("The corpse collapses into a mass of pulpy flesh.");
-    else if (spell_direction(spelld, beam) != -1)
+    else
     {
+        if (spell_direction(spelld, beam) == -1)
+            return (-1);
+
         // practical max of 100 * 15 + 3000 = 4500
         // actual max of    200 * 15 + 3000 = 6000
         power *= 15;
@@ -430,10 +450,10 @@ void dancing_weapon(int pow, bool force_hostile)
 
     const int wpn = you.equip[EQ_WEAPON];
 
-    // See if weilded item is appropriate:
+    // See if wielded item is appropriate:
     if (wpn == -1
         || you.inv[wpn].base_type != OBJ_WEAPONS
-        || launches_things( you.inv[wpn].sub_type )
+        || is_range_weapon( you.inv[wpn] )
         || is_fixed_artefact( you.inv[wpn] ))
     {
         goto failed_spell;
@@ -478,12 +498,15 @@ void dancing_weapon(int pow, bool force_hostile)
     you.equip[EQ_WEAPON] = -1;
 
     menv[summs].inv[MSLOT_WEAPON] = i;
-    menv[summs].number = mitm[i].colour;
+    menv[summs].colour = mitm[i].colour;
 
     return;
 
 failed_spell:
-    mpr("Your weapon vibrates crazily for a second.");
+    if ( wpn != -1 )
+        mpr("Your weapon vibrates crazily for a second.");
+    else
+        mprf(MSGCH_PLAIN, "Your %s twitch.", your_hand(true));        
 }                               // end dancing_weapon()
 
 static bool monster_on_level(int monster)
@@ -565,7 +588,7 @@ bool allow_control_teleport( bool silent )
     }
 
     // Tell the player why if they have teleport control.
-    if (!ret && you.attribute[ATTR_CONTROL_TELEPORT] && !silent)
+    if (!ret && player_control_teleport() && !silent)
         mpr("A powerful magic prevents control of your teleportation.");
 
     return ret;
@@ -599,8 +622,8 @@ void you_teleport(void)
 void you_teleport2( bool allow_control, bool new_abyss_area )
 {
     bool is_controlled = (allow_control && !you.conf
-                              && you.attribute[ATTR_CONTROL_TELEPORT]
-                              && allow_control_teleport());
+			  && player_control_teleport()
+			  && allow_control_teleport());
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
     {
@@ -608,11 +631,8 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
         return;
     }
 
-    // after this point, we're guaranteed to teleport. Turn off auto-butcher.
-    // corpses still get butchered,  but at least we don't get a silly message.
-    if (current_delay_action() == DELAY_BUTCHER)
-        stop_delay();
-
+    // after this point, we're guaranteed to teleport. Kill the appropriate
+    // delays.
     interrupt_activity( AI_TELEPORT );
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -639,7 +659,7 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
         mpr("Expect minor deviation.");
         more();
 
-        show_map(plox);
+        show_map(plox, false);
 
         redraw_screen();
 
@@ -854,7 +874,7 @@ bool project_noise(void)
 
     mpr( "Choose the noise's source (press '.' or delete to select)." );
     more();
-    show_map(plox);
+    show_map(plox, false);
 
     redraw_screen();
 
@@ -868,7 +888,7 @@ bool project_noise(void)
         // player can use this spell to "sound out" the dungeon -- bwr
         if (plox[0] > 1 && plox[0] < (GXM - 2) 
             && plox[1] > 1 && plox[1] < (GYM - 2)
-            && grd[ plox[0] ][ plox[1] ] > DNGN_LAST_SOLID_TILE)
+            && !grid_is_solid(grd[ plox[0] ][ plox[1] ]))
         {
             noisy( 30, plox[0], plox[1] );
             success = true;
@@ -877,12 +897,12 @@ bool project_noise(void)
         if (!silenced( you.x_pos, you.y_pos ))
         {
             if (!success)
-                mpr("You hear a dull thud.");
+                mpr("You hear a dull thud.", MSGCH_SOUND);
             else
             {
                 snprintf( info, INFO_SIZE, "You hear a %svoice call your name.",
                           (see_grid( plox[0], plox[1] ) ? "distant " : "") );
-                mpr( info );
+                mpr( info , MSGCH_SOUND );
             }
         }
     }
@@ -926,7 +946,7 @@ bool recall(char type_recalled)
         if (!mons_friendly(monster))
             continue;
 
-        if (monster_habitat(monster->type) != DNGN_FLOOR)
+        if (!monster_habitable_grid(monster, DNGN_FLOOR))
             continue;
 
         if (type_recalled == 1)
@@ -934,19 +954,19 @@ bool recall(char type_recalled)
             /* abomin created by twisted res, although it gets others too */
             if ( !((monster->type == MONS_ABOMINATION_SMALL
                             || monster->type == MONS_ABOMINATION_LARGE)
-                        && (monster->number == BROWN
-                            || monster->number == RED
-                            || monster->number == LIGHTRED)) )
+                        && (monster->colour == BROWN
+                            || monster->colour == RED
+                            || monster->colour == LIGHTRED)) )
             {
                 if (monster->type != MONS_REAPER
-                        && mons_holiness(monster->type) != MH_UNDEAD)
+                        && mons_holiness(monster) != MH_UNDEAD)
                 {
                     continue;
                 }
             }
         }
 
-        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, false, empty))
+        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty))
         {
             // clear old cell pointer -- why isn't there a function for moving a monster?
             mgrd[monster->x][monster->y] = NON_MONSTER;
@@ -972,7 +992,7 @@ bool recall(char type_recalled)
     return (success);
 }                               // end recall()
 
-void portal(void)
+int portal(void)
 {
     char dir_sign = 0;
     unsigned char keyi;
@@ -982,10 +1002,12 @@ void portal(void)
     if (!player_in_branch( BRANCH_MAIN_DUNGEON ))
     {
         mpr("This spell doesn't work here.");
+        return (-1);
     }
     else if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
     {
         mpr("You must find a clear area in which to cast this spell.");
+        return (-1);
     }
     else
     {
@@ -1021,7 +1043,7 @@ void portal(void)
             if (keyi == 'x')
             {
                 canned_msg(MSG_OK);
-                return;         // an early return {dlb}
+                return (-1);         // an early return {dlb}
             }
         }
 
@@ -1035,7 +1057,7 @@ void portal(void)
             if (keyi == 'x')
             {
                 canned_msg(MSG_OK);
-                return;         // another early return {dlb}
+                return (-1);         // another early return {dlb}
             }
 
             if (!(keyi < '1' || keyi > '9'))
@@ -1065,7 +1087,7 @@ void portal(void)
         untag_followers();
     }
 
-    return;
+    return (1);
 }                               // end portal()
 
 bool cast_death_channel(int power)

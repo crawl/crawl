@@ -14,6 +14,8 @@
  *
  *  Copyright © 1999 Jesse Jones.
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *       <9>    9 Aug 2001   MV     Added USE_RIVERS,USE_NEW_UNRANDS
@@ -58,35 +60,26 @@
 //
 // #define CLUA_BINDINGS
 
+// OS X's Terminal.app has color handling problems; dark grey is
+// especially bad, so we'll want to remap that. OS X is otherwise
+// Unix-ish, so we shouldn't need other special handling.
+#if defined(OSX)
+    #define UNIX
+    #define USE_8_COLOUR_TERM_MAP
+    #define COL_TO_REPLACE_DARKGREY     BLUE
+#endif
+
 // =========================================================================
 //  System Defines
 // =========================================================================
-// Define plain_term for Unix and dos_term for DOS and EMX.
-
-#if defined(LINUX)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-#elif defined(SOLARIS)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-#elif defined(BSD)
-    #define UNIX
-#elif defined(OSX)
-    #define UNIX
-    // Darkgrey is a particular problem in Terminal.app.
-    #define USE_8_COLOUR_TERM_MAP
-    #define COL_TO_REPLACE_DARKGREY     BLUE
-#elif defined(HPUX)
-    #define UNIX
-    #define USE_UNIX_SIGNALS
-    // Under HP-UX it's typically easier to use ncurses than try and
-    // get the colour curses library to work. -- bwr
-    #define CURSES_INCLUDE_FILE         <ncurses.h>
-#endif
+// Define plain_term for Unix and dos_term for DOS.
 
 #ifdef UNIX
     #define PLAIN_TERM
     #define MULTIUSER
+    #define USE_UNIX_SIGNALS
+
+    #define FILE_SEPARATOR '/'
 
     #define CHARACTER_SET           0
     #define USE_ASCII_CHARACTERS
@@ -143,30 +136,13 @@
     
     #include "libunix.h"
 
-// To compile with EMX for OS/2 define USE_EMX macro with compiler command line
-// (already defined in supplied makefile.emx)
-#elif defined(USE_EMX)
-    #define DOS_TERM
-    #define EOL "\n"
-    #define CHARACTER_SET           A_ALTCHARSET
-
-    #include <string>
-    #include "libemx.h"
-
 #elif _MSC_VER >= 1100
     #include <string>
     #include "WinHdr.h"
     #error MSVC is not supported yet
     #define CHARACTER_SET           A_ALTCHARSET
 
-// macintosh is predefined on all the common Mac compilers
-#elif defined(macintosh)
-    #define PLAIN_TERM
-    #define HAS_NAMESPACES  1
-    #define EOL "\r"
-    #define CHARACTER_SET           A_ALTCHARSET
-    #include <string>
-    #include "libmac.h"
+    #define FILE_SEPARATOR '/'
 
 #elif defined(DOS)
     #define DOS_TERM
@@ -174,19 +150,29 @@
     #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
 
+    #define FILE_SEPARATOR '\\'
+
     #include <string>
+    #include "libdos.h"
 
     #ifdef __DJGPP__
         #define NEED_SNPRINTF
+
+        // [dshaligram] This is distressing, but djgpp lacks (v)snprintf, and
+        // we have to support DOS. Ow. FIXME
+        #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
     #endif
 
-#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__BCPLUSPLUS__) || defined(__MINGW32__))
+#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__MINGW32__))
     #include "libw32c.h"
     #define PLAIN_TERM
     #define SHORT_FILE_NAMES
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         getConsoleString(X,Y)
+
+    // NT and better are happy with /; I'm not sure how 9x reacts.
+    #define FILE_SEPARATOR '/'
 
     // Uncomment to play sounds. winmm must be linked in if this is uncommented.
     // #define WINMM_PLAY_SOUNDS
@@ -271,9 +257,6 @@
 //jmf: New defines for a bunch of optional features.
 // ================================================= --------------------------
 
-// New silence code -- seems to actually work! Use it!
-#define USE_SILENCE_CODE
-
 // Use special colours for various channels of messages
 #define USE_COLOUR_MESSAGES
 
@@ -300,7 +283,7 @@
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 
-// bwr: allow player to destroy items in inventory (but not equiped items)
+// bwr: allow player to destroy items in inventory (but not equipped items)
 // See comment at items.cc::cmd_destroy_item() for details/issues.
 // #define ALLOW_DESTROY_ITEM_COMMAND
 
@@ -315,7 +298,7 @@
 
 #ifdef MULTIUSER
     // Define SAVE_DIR to the directory where saves, bones, and score file
-    // will go... end it with a '\'.  Since all player files will be in the
+    // will go... end it with a '/'.  Since all player files will be in the
     // same directory, the players UID will be appended when this option
     // is set.
     //
@@ -323,7 +306,13 @@
     // be dumped in the current directory.
     //
     // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
-    #define SAVE_DIR_PATH       ""
+    // #define SAVE_DIR_PATH       ""
+
+    // Define DATA_DIR_PATH to the directory where level-description (.des)
+    // files are stored. NOTE: If you're installing Crawl for a real multiuser
+    // system, you MUST do this. The directory must exist on the filesystem.
+
+    // #define DATA_DIR_PATH       "/opt/crawl"
 
     // will make this little thing go away.  Define SAVE_PACKAGE_CMD
     // to a command to compress and bundle the save game files into a
@@ -334,14 +323,19 @@
     // PACKAGE_SUFFIX is used when the package file name is needed
     //
     // Comment these lines out if you want to leave the save files uncompressed.
-    //
-    // #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
-    // #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d" SAVE_DIR_PATH
-    // #define PACKAGE_SUFFIX      ".zip"
+    #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
+#ifdef SAVE_DIR_PATH
+    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d" SAVE_DIR_PATH
+#else
+    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip"
+#endif
 
-    // This provides some rudimentary protection against people using
-    // save file cheats on multi-user systems.
-    #define DO_ANTICHEAT_CHECKS
+#ifdef SAVE_PACKAGE_CMD
+    // This is used to unpack specific files from the archive.
+    #define UNPACK_SPECIFIC_FILE_CMD LOAD_UNPACKAGE_CMD " %s"
+#endif
+
+    #define PACKAGE_SUFFIX      ".zip"
 
     // This defines the chmod permissions for score and bones files.
     #define SHARED_FILES_CHMOD_PRIVATE  0664

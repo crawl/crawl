@@ -3,6 +3,8 @@
  *  Summary:    Misc monster related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     4/24/99        JDJ             mons_spells returns an
@@ -17,22 +19,6 @@
 
 #include <string>
 #include "externs.h"
-
-
-struct SBeam
-{
-    std::string name;
-    int         colour;
-    int         range;
-    int         rangeMax;
-    int         hit;
-    dice_def    damage;
-    int         ench_power;
-    int         type;
-    int         flavour;
-    int         thrown;
-    bool        isBeam;
-};
 
 
 /*
@@ -50,7 +36,7 @@ struct SBeam
 /* ***********************************************************************
  * called from: monstuff - mstuff2
  * *********************************************************************** */
-struct SBeam mons_spells(int spell_cast, int power);
+bolt mons_spells(int spell_cast, int power);
 
 
 // last updated 12may2000 {dlb}
@@ -95,7 +81,8 @@ void mons_trap(struct monsters *monster);
 /* ***********************************************************************
  * called from: beam - fight - files - monstuff - mstuff2 - spells4
  * *********************************************************************** */
-void monster_teleport(struct monsters *monster, bool instan);
+void monster_teleport(struct monsters *monster, bool instan, 
+                      bool silent = false);
 
 
 // last updated Dec17,2000 -- gdl
@@ -113,5 +100,7 @@ void throw_type(int lnchClass, int lnchType, int wepClass, int wepType,
     bool &launched, bool &thrown);
 
 
+bool orange_statue_effects(monsters *mons);
+bool silver_statue_effects(monsters *mons);
 
 #endif

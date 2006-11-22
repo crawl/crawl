@@ -3,6 +3,8 @@
  *  Summary:    Debug and wizard related functions.
  *  Written by: Linley Henzell and Jesse Jones
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <4>     14/12/99       LRH             Added cast_spec_spell_name()
@@ -19,7 +21,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <time.h>
 #include <ctype.h>
+
+#ifdef UNIX
+#include <errno.h>
+#endif
 
 #ifdef DOS
 #include <conio.h>
@@ -28,9 +35,13 @@
 #include "externs.h"
 
 #include "direct.h"
+#include "describe.h"
 #include "dungeon.h"
+#include "fight.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
+#include "item_use.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -45,10 +56,8 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
-
-#ifndef WIZARD
-#define WIZARD
-#endif
+#include "travel.h"
+#include "version.h"
 
 #if DEBUG && WIN
 #define MyDebugBreak() _asm {int 3}
@@ -74,23 +83,11 @@ static HANDLE sConsole = NULL;
 static void BreakStrToDebugger(const char *mesg)
 {
 
-#if OSX
+#if OSX || defined(__MINGW32__)
     fprintf(stderr, mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
-#elif MAC
-     unsigned char s[50];
-
-     int len = strlen(mesg);
-
-     if (len > 255)
-         len = 255;
-
-     s[0] = (Byte) len;
-     BlockMoveData(mesg, s + 1, len);
-
-     DebugStr(s);
 
 #elif WIN
     MSG msg;    // remove pending quit messages so the message box displays
@@ -309,10 +306,6 @@ static void TraceString(const char *mesg)
 }
 #endif
 
-#if MAC
-#pragma mark -
-#endif
-
 // ========================================================================
 //      Global Functions
 // ========================================================================
@@ -327,10 +320,6 @@ void AssertFailed(const char *expr, const char *file, int line)
 {
     char mesg[512];
 
-#if MAC
-    sprintf(mesg, "ASSERT(%s) in %s at line %d failed.", expr, file, line);
-
-#else
     const char *fileName = file + strlen(file); // strip off path
 
     while (fileName > file && fileName[-1] != '\\')
@@ -338,7 +327,6 @@ void AssertFailed(const char *expr, const char *file, int line)
 
     sprintf(mesg, "ASSERT(%s) in '%s' at line %d failed.", expr, fileName,
             line);
-#endif
 
     BreakStrToDebugger(mesg);
 }
@@ -386,17 +374,11 @@ void TRACE(const char *format, ...)
 }
 #endif // DEBUG
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_monster
-//
-//---------------------------------------------------------------
 #ifdef WIZARD
+
 static int debug_prompt_for_monster( void )
 {
     char  specs[80];
-    char  obj_name[ ITEMNAME_SIZE ];
-    char *ptr;
 
     mpr( "(Hint: 'generated' names, eg 'orc zombie', won't work)", MSGCH_PROMPT );
     mpr( "Which monster by name? ", MSGCH_PROMPT );
@@ -405,28 +387,7 @@ static int debug_prompt_for_monster( void )
     if (specs[0] == '\0')
         return (-1);
 
-    int mon = -1;
-
-    for (int i = 0; i < NUM_MONSTERS; i++)
-    {
-        moname( i, true, DESC_PLAIN, obj_name );
-
-        ptr = strstr( strlwr(obj_name), strlwr(specs) );
-        if (ptr != NULL)
-        {
-            mpr( obj_name );
-            if (ptr == obj_name)
-            {
-                // we prefer prefixes over partial matches
-                mon = i;
-                break;
-            }
-            else
-                mon = i;
-        }
-    }
-
-    return (mon);
+    return (get_monster_by_name(specs));
 }
 #endif
 
@@ -494,7 +455,7 @@ void debug_change_species( void )
 
     int sp = -1;
 
-    for (int i = SP_HUMAN; i < NUM_SPECIES; i++)
+    for (i = SP_HUMAN; i < NUM_SPECIES; i++)
     {
         char sp_name[80];
         strncpy( sp_name, species_name(i, you.experience_level), sizeof( sp_name ) );
@@ -626,7 +587,8 @@ void create_spec_monster(void)
     if (mon == -1)
         canned_msg( MSG_OK );
     else
-        create_monster( mon, 0, BEH_SLEEP, you.x_pos, you.y_pos, MHITNOT, 250 );
+        create_monster( mon, 0, BEH_SLEEP, 
+                you.x_pos, you.y_pos, MHITNOT, 250, true );
 }                               // end create_spec_monster()
 #endif
 
@@ -650,7 +612,8 @@ void create_spec_monster_name(void)
     }
     else
     {
-        create_monster(mon, 0, BEH_SLEEP, you.x_pos, you.y_pos, MHITNOT, 250);
+        create_monster(mon, 0, BEH_SLEEP, 
+                you.x_pos, you.y_pos, MHITNOT, 250, false);
     }
 }                               // end create_spec_monster_name()
 #endif
@@ -736,7 +699,7 @@ void create_spec_object(void)
              MSGCH_PROMPT);
         mpr("= - jewellery   ! - potions   : - books   | - staves   0  - The Orb",
              MSGCH_PROMPT);
-        mpr("} - miscellany  X - corpses   %% - food    $ - gold    ESC - exit", 
+        mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit", 
              MSGCH_PROMPT);
 
         mpr("What class of item? ", MSGCH_PROMPT);
@@ -814,7 +777,7 @@ void create_spec_object(void)
     {
         mon = debug_prompt_for_monster();
 
-        if (mon == -1)
+        if (mon == -1 || mon == MONS_PROGRAM_BUG)
         {
             mpr( "No such monster." );
             return;
@@ -825,7 +788,7 @@ void create_spec_object(void)
         mitm[thing_created].plus      = mon;
         mitm[thing_created].plus2     = 0;
         mitm[thing_created].special   = 210;
-        mitm[thing_created].colour    = mons_colour(mon);;
+        mitm[thing_created].colour    = mons_class_colour(mon);;
         mitm[thing_created].quantity  = 1;
         mitm[thing_created].flags     = 0;
     }
@@ -856,13 +819,11 @@ void create_spec_object(void)
         {
             if (strstr( "naga barding", specs ))
             {
-                mitm[thing_created].sub_type = ARM_BOOTS;
-                mitm[thing_created].plus2 = TBOOT_NAGA_BARDING;
+                mitm[thing_created].sub_type = ARM_NAGA_BARDING;
             }
             else if (strstr( "centaur barding", specs ))
             {
-                mitm[thing_created].sub_type = ARM_BOOTS;
-                mitm[thing_created].plus2 = TBOOT_CENTAUR_BARDING;
+                mitm[thing_created].sub_type = ARM_CENTAUR_BARDING;
             }
             else if (strstr( "wizard's hat", specs ))
             {
@@ -972,6 +933,14 @@ void create_spec_object(void)
             mitm[thing_created].plus = 24;
             break;
 
+        case OBJ_STAVES:
+            if (item_is_rod( mitm[thing_created] ))
+            {
+                mitm[thing_created].plus = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+                mitm[thing_created].plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            }
+            break;
+
         case OBJ_MISCELLANY:
             // Runes to "demonic", decks have 50 cards, ignored elsewhere?
             mitm[thing_created].plus = 50;
@@ -1012,7 +981,7 @@ void tweak_object(void)
     char specs[50];
     char keyin;
 
-    int item = prompt_invent_item( "Tweak which item? ", -1 );
+    int item = prompt_invent_item("Tweak which item? ", MT_INVSELECT, -1);
     if (item == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -1031,7 +1000,7 @@ void tweak_object(void)
             item_name( you.inv[item], DESC_INVENTORY_EQUIP, info );
             mpr( info );
 
-            mpr( "a - plus  b - plus2  c - special  d - quantity  ESC - exit",
+            mpr( "a - plus  b - plus2  c - special  d - quantity  e - flags  ESC - exit",
                  MSGCH_PROMPT );
             mpr( "Which field? ", MSGCH_PROMPT );
 
@@ -1045,6 +1014,8 @@ void tweak_object(void)
                 field_ptr = &(you.inv[item].special);
             else if (keyin == 'd')
                 field_ptr = &(you.inv[item].quantity);
+            else if (keyin == 'e')
+                field_ptr = &(you.inv[item].flags);
             else if (keyin == ESCAPE || keyin == ' ' 
                     || keyin == '\r' || keyin == '\n')
             {
@@ -1052,11 +1023,11 @@ void tweak_object(void)
                 return;
             }
 
-            if (keyin >= 'a' && keyin <= 'd')
+            if (keyin >= 'a' && keyin <= 'e')
                 break;
         }
 
-        if (keyin != 'c')
+        if (keyin != 'c' && keyin != 'e')
         {
             const short *const ptr = static_cast< short * >( field_ptr );
             snprintf( info, INFO_SIZE, "Old value: %d (0x%04x)", *ptr, *ptr );
@@ -1081,7 +1052,7 @@ void tweak_object(void)
         if (new_value == 0 && end == specs)
             return;
 
-        if (keyin != 'c')
+        if (keyin != 'c' && keyin != 'e')
         {
             short *ptr = static_cast< short * >( field_ptr );
             *ptr = new_value;
@@ -1708,3 +1679,571 @@ void error_message_to_player(void)
     mpr("I suggest you leave this level then save as soon as possible.");
 
 }                               // end error_message_to_player()
+
+#ifdef WIZARD
+
+static int create_fsim_monster(int mtype, int hp)
+{
+    const int mi = 
+        create_monster( mtype, 0, BEH_HOSTILE, you.x_pos, you.y_pos, 
+                        MHITNOT, 250 );
+
+    if (mi == -1)
+        return (mi);
+
+    monsters *mon = &menv[mi];
+    mon->hit_points = mon->max_hit_points = hp;
+    return (mi);
+}
+
+static skill_type fsim_melee_skill(const item_def *item)
+{
+    skill_type sk = SK_UNARMED_COMBAT;
+    if (item)
+        sk = weapon_skill(*item);
+    return (sk);
+}
+
+static void fsim_set_melee_skill(int skill, const item_def *item)
+{
+    you.skills[fsim_melee_skill(item)] = skill;
+    you.skills[SK_FIGHTING]           = skill * 15 / 27;
+}
+
+static void fsim_set_ranged_skill(int skill, const item_def *item)
+{
+    you.skills[range_skill(*item)] = skill;
+    you.skills[SK_RANGED_COMBAT]   = skill * 15 / 27;
+}
+
+static void fsim_item(FILE *out, 
+                            bool melee,
+                            const item_def *weap,
+                            int wskill, unsigned long damage,
+                            long iterations, long hits,
+                            int maxdam, unsigned long time)
+{
+    double hitdam = hits? double(damage) / hits : 0.0;
+    int avspeed = (int) (time / iterations);
+    fprintf(out, " %2d   |  %3ld%%    |  %5.2f |    %5.2f  |   %5.2f |   %3d   |   %2ld\n",
+            wskill,
+            100 * hits / iterations,
+            double(damage) / iterations,
+            hitdam,
+            double(damage) * player_speed() / avspeed / iterations,
+            maxdam,
+            time / iterations);
+}
+
+static bool fsim_ranged_combat(FILE *out, int wskill, int mi, 
+                             const item_def *item, int missile_slot)
+{
+    monsters &mon = menv[mi];
+    unsigned long cumulative_damage = 0L;
+    unsigned long time_taken = 0L;
+    long hits = 0L;
+    int maxdam = 0;
+
+    const int thrown = missile_slot == -1? get_fire_item_index() : missile_slot;
+    if (thrown == ENDOFPACK || thrown == -1)
+    {
+        mprf("No suitable missiles for combat simulation.");
+        return (false);
+    }
+
+    fsim_set_ranged_skill(wskill, item);
+
+    no_messages mx;
+    const long iter_limit = Options.fsim_rounds;
+    const int hunger = you.hunger;
+    for (long i = 0; i < iter_limit; ++i)
+    {
+        mon.hit_points = mon.max_hit_points;
+        bolt beam;
+        you.time_taken = player_speed();
+        if (throw_it(beam, thrown, &mon))
+            hits++;
+        you.hunger = hunger;
+        time_taken += you.time_taken;
+
+        int damage = (mon.max_hit_points - mon.hit_points);
+        cumulative_damage += damage;
+        if (damage > maxdam)
+            maxdam = damage;
+    }
+    fsim_item(out, false, item, wskill, cumulative_damage, 
+                    iter_limit, hits, maxdam, time_taken);
+
+    return (true);
+}
+
+static bool fsim_melee_combat(FILE *out, int wskill, int mi, 
+                             const item_def *item)
+{
+    monsters &mon = menv[mi];
+    unsigned long cumulative_damage = 0L;
+    unsigned long time_taken = 0L;
+    long hits = 0L;    
+    int maxdam = 0;
+
+    fsim_set_melee_skill(wskill, item);
+
+    no_messages mx;
+    const long iter_limit = Options.fsim_rounds;
+    const int hunger = you.hunger;
+    for (long i = 0; i < iter_limit; ++i)
+    {
+        mon.hit_points = mon.max_hit_points;
+        you.time_taken = player_speed();
+        if (you_attack(mi, true))
+            hits++;
+
+        you.hunger = hunger;
+        time_taken += you.time_taken;
+
+        int damage = (mon.max_hit_points - mon.hit_points);
+        cumulative_damage += damage;
+        if (damage > maxdam)
+            maxdam = damage;
+    }
+    fsim_item(out, true, item, wskill, cumulative_damage, iter_limit, hits,
+                   maxdam, time_taken);
+
+    return (true);
+}
+
+static bool debug_fight_simulate(FILE *out, int wskill, int mi, int miss_slot)
+{
+    int weapon = you.equip[EQ_WEAPON];
+    const item_def *iweap = weapon != -1? &you.inv[weapon] : NULL;
+
+    if (iweap && iweap->base_type == OBJ_WEAPONS 
+            && is_range_weapon(*iweap))
+        return fsim_ranged_combat(out, wskill, mi, iweap, miss_slot);
+    else
+        return fsim_melee_combat(out, wskill, mi, iweap);
+}
+
+static const item_def *fsim_weap_item()
+{
+    const int weap = you.equip[EQ_WEAPON];
+    if (weap == -1)
+        return NULL;
+
+    return &you.inv[weap];
+}
+
+static std::string fsim_wskill()
+{
+    const item_def *iweap = fsim_weap_item();
+    return iweap && iweap->base_type == OBJ_WEAPONS 
+             && is_range_weapon(*iweap)?
+                        skill_name( range_skill(*iweap) ) :
+            iweap?      skill_name( fsim_melee_skill(iweap) ) :
+                        skill_name( SK_UNARMED_COMBAT );
+}
+
+static std::string fsim_weapon(int missile_slot)
+{
+    char item_buf[ITEMNAME_SIZE];
+    if (you.equip[EQ_WEAPON] != -1)
+    {
+        const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
+        item_name(weapon, DESC_PLAIN, item_buf, true);
+
+        if (is_range_weapon(weapon))
+        {
+            const int missile = 
+                missile_slot == -1? get_fire_item_index() :
+                                    missile_slot;
+            if (missile < ENDOFPACK)
+            {
+                std::string base = item_buf;
+                base += " with ";
+                in_name(missile, DESC_PLAIN, item_buf, true);
+                return (base + item_buf);
+            }
+        }
+    }
+    else
+    {
+        strncpy(item_buf, "unarmed", sizeof item_buf);
+    }
+    return (item_buf);
+}
+
+static std::string fsim_time_string()
+{
+    time_t curr_time = time(NULL);
+    struct tm *ltime = localtime(&curr_time);
+    if (ltime)
+    {
+        char buf[100];
+        snprintf(buf, sizeof buf, "%4d%02d%02d/%2d:%02d:%02d",
+                ltime->tm_year + 1900,
+                ltime->tm_mon  + 1,
+                ltime->tm_mday,
+                ltime->tm_hour,
+                ltime->tm_min,
+                ltime->tm_sec);
+        return (buf);
+    }
+    return ("");
+}
+
+static void fsim_mon_stats(FILE *o, const monsters &mon)
+{
+    char buf[ITEMNAME_SIZE];
+    fprintf(o, "Monster   : %s\n",
+            moname(mon.type, true, DESC_PLAIN, buf));
+    fprintf(o, "HD        : %d\n", mon.hit_dice);
+    fprintf(o, "AC        : %d\n", mon.armour_class);
+    fprintf(o, "EV        : %d\n", mon.evasion);
+}
+
+static void fsim_title(FILE *o, int mon, int ms)
+{
+    char buf[ITEMNAME_SIZE];
+    fprintf(o, CRAWL " version " VERSION "\n\n");
+    fprintf(o, "Combat simulation: %s %s vs. %s (%ld rounds) (%s)\n",
+            species_name(you.species, you.experience_level),
+            you.class_name,
+            moname(menv[mon].type, true, DESC_PLAIN, buf),
+            Options.fsim_rounds,
+            fsim_time_string().c_str());
+    fprintf(o, "Experience: %d\n", you.experience_level);
+    fprintf(o, "Strength  : %d\n", you.strength);
+    fprintf(o, "Intel.    : %d\n", you.intel);
+    fprintf(o, "Dexterity : %d\n", you.dex);
+    fprintf(o, "Base speed: %d\n", player_speed());
+    fprintf(o, "\n");
+    fsim_mon_stats(o, menv[mon]);
+    fprintf(o, "\n");
+    fprintf(o, "Weapon    : %s\n", fsim_weapon(ms).c_str());
+    fprintf(o, "Skill     : %s\n", fsim_wskill().c_str());
+    fprintf(o, "\n");
+    fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
+}
+
+static int cap_stat(int stat)
+{
+    return (stat <  1 ? 1  :
+            stat > 127 ? 127 :
+                        stat);
+}
+
+static bool debug_fight_sim(int mindex, int missile_slot)
+{
+    FILE *ostat = fopen("fight.stat", "a");
+    if (!ostat)
+    {
+        // I'm not sure what header provides errno on djgpp,
+        // and it's insufficiently important for a wizmode-only
+        // feature.
+#ifndef DOS
+        mprf("Can't write fight.stat: %s", strerror(errno));
+#endif
+        return (false);
+    }
+
+    bool success = true;
+    FixedVector<unsigned char, 50> skill_backup = you.skills;
+    int ystr = you.strength,
+        yint = you.intel,
+        ydex = you.dex;
+    int yxp  = you.experience_level;
+
+    for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        you.skills[i] = 0;
+
+    you.experience_level = Options.fsim_xl;
+    if (you.experience_level < 1)
+        you.experience_level = 1;
+    if (you.experience_level > 27)
+        you.experience_level = 27;
+
+    you.strength = cap_stat(Options.fsim_str);
+    you.intel    = cap_stat(Options.fsim_int);
+    you.dex      = cap_stat(Options.fsim_dex);
+
+    fsim_title(ostat, mindex, missile_slot);
+    for (int wskill = 0; wskill <= 27; ++wskill)
+    {
+        mesclr();
+        mprf("Calculating average damage for %s at skill %d",
+                fsim_weapon(missile_slot).c_str(), wskill);
+        if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
+            goto done_combat_sim;
+        
+        fflush(ostat);
+        // Not checking in the combat loop itself; that would be more responsive
+        // for the user, but slow down the sim with all the calls to kbhit().
+        if (kbhit() && getch() == 27)
+        {
+            success = false;
+            mprf("Canceling simulation\n");
+            goto done_combat_sim;
+        }
+    }
+    you.skills = skill_backup;
+    you.strength = ystr;
+    you.intel    = yint;
+    you.dex      = ydex;
+    you.experience_level = yxp;
+
+    mprf("Done fight simulation with %s", fsim_weapon(missile_slot).c_str());
+
+done_combat_sim:
+    fprintf(ostat, "-----------------------------------\n\n");
+    fclose(ostat);
+
+    return (success);
+}
+
+int fsim_kit_equip(const std::string &kit)
+{
+    int missile_slot = -1;
+    char item_buf[ITEMNAME_SIZE];
+
+    std::string::size_type ammo_div = kit.find("/");
+    std::string weapon = kit;
+    std::string missile;
+    if (ammo_div != std::string::npos)
+    {
+        weapon = kit.substr(0, ammo_div);
+        missile = kit.substr(ammo_div + 1);
+        trim_string(weapon);
+        trim_string(missile);
+    }
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!is_valid_item(you.inv[i]))
+            continue;
+
+        in_name(i, DESC_PLAIN, item_buf, true);
+        if (std::string(item_buf).find(weapon) != std::string::npos)
+        {
+            if (i != you.equip[EQ_WEAPON])
+            {
+                wield_weapon(true, i, false);
+                if (i != you.equip[EQ_WEAPON])
+                    return -100;
+            }
+            break;
+        }
+    }
+
+    if (!missile.empty())
+    {
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if (!is_valid_item(you.inv[i]))
+                continue;
+            
+            in_name(i, DESC_PLAIN, item_buf, true);
+            if (std::string(item_buf).find(missile) != std::string::npos)
+            {
+                missile_slot = i;
+                break;
+            }
+        }
+    }
+
+    return (missile_slot);
+}
+
+// Writes statistics about a fight to fight.stat in the current directory.
+// For fight purposes, a punching bag is summoned and given lots of hp, and the
+// average damage the player does to the p. bag over 10000 hits is noted, 
+// advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
+// of current weapon skill.
+void debug_fight_statistics(bool use_defaults)
+{
+    int punching_bag = get_monster_by_name(Options.fsim_mons);
+    if (punching_bag == -1 || punching_bag == MONS_PROGRAM_BUG)
+        punching_bag = MONS_WORM;
+
+    int mindex = create_fsim_monster(punching_bag, 500);
+    if (mindex == -1)
+    {
+        mprf("Failed to create punching bag");
+        return;
+    }
+    
+    if (!use_defaults)
+    {
+        debug_fight_sim(mindex, -1);
+        goto fsim_mcleanup;
+    }
+
+    for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+    {
+        int missile = fsim_kit_equip(Options.fsim_kit[i]);
+        if (missile == -100)
+        {
+            mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+            goto fsim_mcleanup;
+        }
+        if (!debug_fight_sim(mindex, missile))
+            break;
+    }
+fsim_mcleanup:
+    monster_die(&menv[mindex], KILL_DISMISSED, 0);    
+}
+
+static int find_trap_slot()
+{
+    for (int i = 0; i < MAX_TRAPS; ++i)
+    {
+        if (env.trap[i].type == TRAP_UNASSIGNED)
+            return (i);
+    }
+    return (-1);
+}
+
+void debug_make_trap()
+{
+    char requested_trap[80];
+    int trap_slot = find_trap_slot();
+    trap_type trap = TRAP_UNASSIGNED;
+    int gridch = grd[you.x_pos][you.y_pos];
+
+    if (trap_slot == -1)
+    {
+        mpr("Sorry, this level can't take any more traps.");
+        return;
+    }
+
+    if (gridch != DNGN_FLOOR)
+    {
+        mpr("You need to be on a floor square to make a trap.");
+        return;
+    }
+
+    mprf(MSGCH_PROMPT, "What kind of trap? ");
+    get_input_line( requested_trap, sizeof( requested_trap ) );
+    if (!*requested_trap)
+        return;
+
+    strlwr(requested_trap);
+    for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
+    {
+        if (strstr(requested_trap, 
+                   trap_name(trap_type(t))))
+        {
+            trap = trap_type(t);
+            break;
+        }
+    }
+
+    if (trap == TRAP_UNASSIGNED)
+    {
+        mprf("I know no traps named \"%s\"", requested_trap);
+        return;
+    }
+
+    place_specific_trap(you.x_pos, you.y_pos, trap);
+
+    mprf("Created a %s trap, marked it undiscovered",
+            trap_name(trap));
+
+    // Also tell travel that its world-view must change.
+    travel_init_new_level();
+}
+
+static const char *shop_types[] = {
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "wand",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general"
+};
+
+void debug_make_shop()
+{
+    char requested_shop[80];
+    int gridch = grd[you.x_pos][you.y_pos];
+    bool have_shop_slots = false;
+    int new_shop_type = SHOP_UNASSIGNED;
+    bool representative = false;
+
+    if (gridch != DNGN_FLOOR)
+    {
+        mpr("Insufficient floor-space for new Wal-Mart.");
+        return;
+    }
+
+    for (int i = 0; i < MAX_SHOPS; ++i)
+    {
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+        {
+            have_shop_slots = true;
+            break;
+        }
+    }
+
+    if (!have_shop_slots)
+    {
+        mpr("There are too many shops on this level.");
+        return;
+    }
+
+    mprf(MSGCH_PROMPT, "What kind of shop? ");
+    get_input_line( requested_shop, sizeof( requested_shop ) );
+    if (!*requested_shop)
+        return;
+
+    strlwr(requested_shop);
+    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
+    {
+        if (strstr(requested_shop, shop_types[i]))
+        {
+            new_shop_type = i;
+            break;
+        }
+    }
+
+    if (new_shop_type == SHOP_UNASSIGNED)
+    {
+        mprf("Bad shop type: \"%s\"", requested_shop);
+        return;
+    }
+
+    representative = !!strchr(requested_shop, '*');
+
+    place_spec_shop(you.your_level, you.x_pos, you.y_pos, 
+                    new_shop_type, representative);
+    link_items();
+    mprf("Done.");
+}
+
+void debug_set_stats()
+{
+    char buf[80];
+    mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
+    if (cancelable_get_line(buf, sizeof buf))
+        return;
+
+    int sstr = you.strength,
+        sdex = you.dex,
+        sint = you.intel;
+    sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
+
+    you.max_strength = you.strength = cap_stat(sstr);
+    you.max_dex      = you.dex      = cap_stat(sdex);
+    you.max_intel    = you.intel    = cap_stat(sint);
+
+    you.redraw_strength = true;
+    you.redraw_dexterity = true;
+    you.redraw_intelligence = true;
+}
+
+#endif

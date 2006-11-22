@@ -3,6 +3,8 @@
  *  Summary:    Functions for eating and butchering.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -64,5 +66,7 @@ bool eat_from_floor(void);
 void eat_from_inventory(int which_inventory_slot);
 
 bool prompt_eat_from_inventory(void);
+
+void chunk_nutrition_message(int nutrition);
 
 #endif

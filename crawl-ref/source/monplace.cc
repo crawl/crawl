@@ -3,6 +3,8 @@
  *  Summary:    Functions used when placing monsters in the dungeon.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -20,6 +22,7 @@
 #include "player.h"
 #include "stuff.h"
 #include "spells4.h"
+#include "view.h"
 
 // NEW place_monster -- note that power should be set to:
 // 51 for abyss
@@ -38,6 +41,97 @@ static int choose_band( int mon_type, int power, int &band_size );
 static int place_monster_aux(int mon_type, char behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
     int dur = 0);
+
+// Returns whether actual_grid is compatible with grid_wanted for monster 
+// movement (or for monster generation, if generation is true).
+bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
+{
+    // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
+    // device to slow down fiery monsters flying over water.
+    if (grid_wanted == DNGN_FLOOR)
+        return actual_grid >= DNGN_FLOOR 
+            || (!generation 
+                    && actual_grid == DNGN_SHALLOW_WATER);
+
+    return (grid_wanted == actual_grid
+            || (grid_wanted == DNGN_DEEP_WATER
+                && (actual_grid == DNGN_SHALLOW_WATER
+                    || actual_grid == DNGN_BLUE_FOUNTAIN)));
+}
+
+// Can this monster happily on actual_grid?
+//
+// If you have an actual monster, use this instead of the overloaded function
+// that uses only the monster class to make decisions.
+bool monster_habitable_grid(const monsters *m, int actual_grid)
+{
+    return (monster_habitable_grid(m->type, actual_grid, mons_flies(m)));
+}
+
+// Can monsters of class monster_class live happily on actual_grid? Use flies
+// == true to pretend the monster can fly.
+//
+// [dshaligram] We're trying to harmonise the checks from various places into
+// one check, so we no longer care if a water elemental springs into existence
+// on dry land, because they're supposed to be able to move onto dry land 
+// anyway.
+bool monster_habitable_grid(int monster_class, int actual_grid, bool flies)
+{
+    const int preferred_habitat = monster_habitat(monster_class);
+    return (grid_compatible(preferred_habitat, actual_grid)
+            // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
+            // only have to check for the additional valid grids of deep
+            // water and lava.
+            || ((flies || mons_class_flies(monster_class))
+                && (actual_grid == DNGN_LAVA 
+                    || actual_grid == DNGN_DEEP_WATER))
+
+            // Amphibious critters are happy in the water.
+            || (mons_class_flag(monster_class, M_AMPHIBIOUS)
+                && grid_compatible(DNGN_DEEP_WATER, actual_grid))
+
+            // And water elementals are native to the water but happy on land
+            // as well.
+            || (monster_class == MONS_WATER_ELEMENTAL
+                && grid_compatible(DNGN_FLOOR, actual_grid)));
+}
+
+// Returns true if the monster is floundering in water and susceptible to 
+// extra damage from water-natives.
+bool monster_floundering(const monsters *m)
+{
+    const int grid = grd[m->x][m->y];
+    return ((grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER)
+            // Can't use monster_habitable_grid because that'll return true
+            // for non-water monsters in shallow water.
+            && monster_habitat(m->type) != DNGN_DEEP_WATER
+            && !mons_class_flag(m->type, M_AMPHIBIOUS)
+            && !mons_flies(m));
+}
+
+// Returns true if the monster can submerge in the given grid
+bool monster_can_submerge(int monster_class, int grid)
+{
+    switch (monster_class)
+    {
+    case MONS_BIG_FISH:
+    case MONS_GIANT_GOLDFISH:
+    case MONS_ELECTRICAL_EEL:
+    case MONS_JELLYFISH:
+    case MONS_WATER_ELEMENTAL:
+    case MONS_SWAMP_WORM:
+        return (grid == DNGN_DEEP_WATER || grid == DNGN_BLUE_FOUNTAIN);
+
+    case MONS_LAVA_WORM:
+    case MONS_LAVA_FISH:
+    case MONS_LAVA_SNAKE:
+    case MONS_SALAMANDER:
+        return (grid == DNGN_LAVA);
+
+    default:
+        return (false);
+    }
+}
 
 bool place_monster(int &id, int mon_type, int power, char behaviour,
     int target, bool summoned, int px, int py, bool allow_bands,
@@ -160,7 +254,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     }
 
     // Monsters that can't move shouldn't be taking the stairs -- bwr
-    if (proximity == PROX_NEAR_STAIRS && mons_speed( mon_type ) == 0)
+    if (proximity == PROX_NEAR_STAIRS && mons_class_is_stationary( mon_type ))
         proximity = PROX_AWAY_FROM_PLAYER;
 
     // (4) for first monster, choose location.  This is pretty intensive.
@@ -205,17 +299,9 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                 continue;
             }
 
-            // compatible - floor?
-            if (grid_wanted == DNGN_FLOOR && grd[px][py] < DNGN_FLOOR)
+            // Is the monster happy where we want to put it?
+            if (!grid_compatible(grid_wanted, grd[px][py], true))
                 continue;
-
-            // compatible - others (must match, except for deep water monsters
-            // generated in shallow water)
-            if ((grid_wanted != DNGN_FLOOR && grd[px][py] != grid_wanted)
-                && (grid_wanted != DNGN_DEEP_WATER || grd[px][py] != DNGN_SHALLOW_WATER))
-            {
-                continue;
-            }
 
             // don't generate monsters on top of teleport traps
             // (how did they get there?)
@@ -259,7 +345,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                             proxOK = false;
                             break;
                         }
-                        // swap the monster and the player spots,  unless the
+                        // swap the monster and the player spots, unless the
                         // monster was generated in lava or deep water.
                         if (grd[px][py] == DNGN_LAVA || grd[px][py] == DNGN_DEEP_WATER)
                         {
@@ -290,17 +376,17 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     }
 
     id = place_monster_aux( mon_type, behaviour, target, px, py, lev_mons, 
-                            extra, true );
+                            extra, true);
 
-    // now, forget about banding if the first placement failed,  or there's too
-    // many monsters already,  or we successfully placed by stairs
+    // now, forget about banding if the first placement failed, or there's too
+    // many monsters already, or we successfully placed by stairs
     if (id < 0 || id+30 > MAX_MONSTERS)
         return false;
 
     // message to player from stairwell/gate appearance?
     if (see_grid(px, py) && proximity == PROX_NEAR_STAIRS)
     {
-        info[0] = '\0';
+        info[0] = 0;
 
         if (player_monster_visible( &menv[id] ))
             strcpy(info, ptr_monam( &menv[id], DESC_CAP_A ));
@@ -335,7 +421,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     for(i = 1; i < band_size; i++)
     {
         place_monster_aux( band_monsters[i], behaviour, target, px, py, 
-                           lev_mons, extra, false, dur );
+                           lev_mons, extra, false, dur);
     }
 
     // placement of first monster, at least, was a success.
@@ -347,7 +433,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
                               bool first_band_member, int dur )
 {
     int id, i;
-    char grid_wanted;
+    unsigned char grid_wanted;
     int fx=0, fy=0;     // final x,y
 
     // gotta be able to pick an ID
@@ -388,14 +474,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
             if (mgrd[fx][fy] != NON_MONSTER)
                 continue;
 
-            // compatible - floor?
-            if (grid_wanted == DNGN_FLOOR && grd[fx][fy] < DNGN_FLOOR)
-                continue;
-
-            // compatible - others (must match, except for deep water monsters
-            // generated in shallow water)
-            if ((grid_wanted != DNGN_FLOOR && grd[fx][fy] != grid_wanted)
-                && (grid_wanted != DNGN_DEEP_WATER || grd[fx][fy] != DNGN_SHALLOW_WATER))
+            if (!grid_compatible(grid_wanted, grd[fx][fy], true))
                 continue;
 
             // don't generate monsters on top of teleport traps
@@ -449,10 +528,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     if (extra != 250)
         menv[id].number = extra;
 
-    if (mons_flag(mon_type, M_INVIS))
+    if (mons_class_flag(mon_type, M_INVIS))
         mons_add_ench(&menv[id], ENCH_INVIS);
 
-    if (mons_flag(mon_type, M_CONFUSED))
+    if (mons_class_flag(mon_type, M_CONFUSED))
         mons_add_ench(&menv[id], ENCH_CONFUSION);
 
     if (mon_type == MONS_SHAPESHIFTER)
@@ -467,28 +546,10 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         menv[id].flags |= MF_BATTY;
     }
 
-    if ((mon_type == MONS_BIG_FISH
-            || mon_type == MONS_GIANT_GOLDFISH
-            || mon_type == MONS_ELECTRICAL_EEL
-            || mon_type == MONS_JELLYFISH
-            || mon_type == MONS_WATER_ELEMENTAL
-            || mon_type == MONS_SWAMP_WORM)
-        && grd[fx][fy] == DNGN_DEEP_WATER
-        && !one_chance_in(5))
-    {
+    if (monster_can_submerge(mon_type, grd[fx][fy])
+            && !one_chance_in(5))
         mons_add_ench( &menv[id], ENCH_SUBMERGED );
-    }
-
-    if ((mon_type == MONS_LAVA_WORM
-            || mon_type == MONS_LAVA_FISH
-            || mon_type == MONS_LAVA_SNAKE
-            || mon_type == MONS_SALAMANDER)
-        && grd[fx][fy] == DNGN_LAVA
-        && !one_chance_in(5))
-    {
-        mons_add_ench( &menv[id], ENCH_SUBMERGED );
-    }
-
+    
     menv[id].flags |= MF_JUST_SUMMONED;
 
     if (mon_type == MONS_DANCING_WEAPON && extra != 1) // ie not from spell
@@ -496,7 +557,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         give_item( id, power );
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
-            menv[id].number = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
+            menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
     }
     else if (mons_itemuse(mon_type) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -518,11 +579,15 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     // set attitude, behaviour and target
     menv[id].attitude = ATT_HOSTILE;
     menv[id].behaviour = behaviour;
+
+    if (mon_type == MONS_ORANGE_STATUE || mon_type == MONS_SILVER_STATUE)
+        menv[id].behaviour = BEH_WANDER;
+
     menv[id].foe_memory = 0;
 
     // setting attitude will always make the
     // monster wander.. if you want sleeping
-    // hostiles,  use BEH_SLEEP since the default
+    // hostiles, use BEH_SLEEP since the default
     // attitude is hostile.
     if (behaviour > NUM_BEHAVIOURS)
     {
@@ -537,6 +602,11 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         mons_add_ench(&menv[id], dur );
 
     menv[id].foe = target;
+
+    mark_interesting_monst(&menv[id], behaviour);
+    
+    if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
+	seen_monster(&menv[id]);
 
     return (id);
 }                               // end place_monster_aux()
@@ -771,6 +841,34 @@ static int choose_band( int mon_type, int power, int &band_size )
         band = BAND_SKELETAL_WARRIORS;      // skeletal warrior
         band_size = 2 + random2(3);
         break;
+    // Journey -- Added Draconian Packs  
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+        if (power > 18 && one_chance_in(3)) 
+        {
+           band = BAND_DRACONIAN;
+           band_size = random_range(2, 4);
+        }
+        break;
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+        if (power > 20) 
+        {
+           band = BAND_DRACONIAN;
+           band_size = random_range(3, 6);
+        }
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)
@@ -1002,20 +1100,81 @@ static int band_member(int band, int power)
     case BAND_SKELETAL_WARRIORS:
         mon_type = MONS_SKELETAL_WARRIOR;
         break;
+    case BAND_DRACONIAN:
+    {
+        temp_rand = random2( (power < 24) ? 24 : 37 );
+        mon_type =                  
+                ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
+                 (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34
+                 (temp_rand > 31) ? MONS_DRACONIAN_MONK :       // 2 in 34
+                 (temp_rand > 29) ? MONS_DRACONIAN_SHIFTER :    // 2 in 34
+                 (temp_rand > 27) ? MONS_DRACONIAN_ANNIHILATOR :// 2 in 34
+                 (temp_rand > 25) ? MONS_DRACONIAN_SCORCHER :   // 2 in 34
+                 (temp_rand > 23) ? MONS_DRACONIAN_ZEALOT :     // 2 in 34
+                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3 in 34
+                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3 in 34
+                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3 in 34
+                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3 in 34
+                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3 in 34
+                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3 in 34
+                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3 in 34
+                                    MONS_RED_DRACONIAN );       // 3 in 34
+        break;
+    }
     }
 
     return (mon_type);
+}
+
+static int ood_limit() {
+    return Options.ood_interesting;
+}
+
+void mark_interesting_monst(struct monsters* monster, char behaviour)
+{
+    bool interesting = false;
+    
+    // Unique monsters are always intersting
+    if ( mons_is_unique(monster->type) )
+	interesting = true;
+    // If it's never going to attack us, then not interesting
+    else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
+	interesting = false;
+    // Don't waste time on moname() if user isn't using this option
+    else if ( Options.note_monsters.size() > 0 )
+    {
+        char namebuf[ITEMNAME_SIZE];
+	moname(monster->type, true, DESC_NOCAP_A, namebuf);
+	
+	std::string iname = namebuf;
+	
+	for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
+	    if (Options.note_monsters[i].matches(iname)) {
+		interesting = true;
+		break;
+	    }    
+	}
+    }
+    else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
+	      you.level_type == LEVEL_DUNGEON &&
+	      mons_level(monster->type) >= you.your_level + ood_limit() &&
+	      mons_level(monster->type) < 99 &&
+	      !(monster->type >= MONS_EARTH_ELEMENTAL &&
+		monster->type <= MONS_AIR_ELEMENTAL) )
+	interesting = true;
+
+    if ( interesting )
+	monster->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().
 
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int px, int py, int level_type, int proximity, int extra,
-                int dur )
+                int dur, bool permit_bands )
 {
     int mon_count = 0;
-    int temp_rand;          // probabilty determination {dlb}
-    bool permit_bands = false;
+    int temp_rand;          // probability determination {dlb}
 
     for (int il = 0; il < MAX_MONSTERS; il++)
     {
@@ -1051,7 +1210,9 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
                                    : MONS_PIT_FIEND);                //  5.07%
     }
 
-    if (mon_type == RANDOM_MONSTER || level_type == LEVEL_PANDEMONIUM)
+    if (permit_bands 
+            || mon_type == RANDOM_MONSTER 
+            || level_type == LEVEL_PANDEMONIUM)
         permit_bands = true;
 
     int mid = -1;
@@ -1107,26 +1268,42 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
     return (mid);
 }                               // end mons_place()
 
-
-int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
-                    int hitting, int zsec )
+coord_def find_newmons_square(int mons_class, int x, int y)
 {
-    int summd = -1;
     FixedVector < char, 2 > empty;
-
-    unsigned char spcw = ((cls == RANDOM_MONSTER) ? DNGN_FLOOR 
-                                                  : monster_habitat( cls ));
+    coord_def pos = { -1, -1 };
 
     empty[0] = 0;
     empty[1] = 0;
 
+    if (mons_class == WANDERING_MONSTER)
+        mons_class = RANDOM_MONSTER;
+
+    int spcw = ((mons_class == RANDOM_MONSTER)? DNGN_FLOOR 
+                                              : monster_habitat( mons_class ));
+
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water of lava this function would work.  -- bwr 
-    if (empty_surrounds( cr_x, cr_y, spcw, true, empty ))
+    if (empty_surrounds( x, y, spcw, 2, true, empty ))
     {
-        summd = mons_place( cls, beha, hitting, true, empty[0], empty[1],
-                            you.level_type, 0, zsec, dur );
+        pos.x = empty[0];
+        pos.y = empty[1];
+    }
+    
+    return (pos);
+}
+
+int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
+                    int hitting, int zsec, bool permit_bands )
+{
+    int summd = -1;
+    coord_def pos = find_newmons_square(cls, cr_x, cr_y);
+
+    if (pos.x != -1 && pos.y != -1)
+    {
+        summd = mons_place( cls, beha, hitting, true, pos.x, pos.y,
+                            you.level_type, 0, zsec, dur, permit_bands );
     }
 
     // determine whether creating a monster is successful (summd != -1) {dlb}:
@@ -1153,6 +1330,20 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 
             if (beha == BEH_GOD_GIFT)
                 creation->flags |= MF_GOD_GIFT;
+            
+            // get the drawbacks, not the benefits...
+            // (to prevent demon-scumming)
+            if ( (you.religion == GOD_ZIN ||
+                  you.religion == GOD_SHINING_ONE ||
+                  you.religion == GOD_ELYVILON) &&
+                 mons_is_unholy(creation) )
+            {
+                creation->attitude = ATT_HOSTILE;
+                creation->behaviour = BEH_HOSTILE;
+                beha = BEH_HOSTILE;
+                if ( see_grid(cr_x, cr_y) )
+                    mpr("The monster is enraged by your holy aura!");
+            }
 
             if (beha == BEH_CHARMED)
             {
@@ -1175,25 +1366,19 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 
 
 bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
-                     bool allow_centre, FixedVector < char, 2 > &empty)
+                     int radius, bool allow_centre, 
+                     FixedVector < char, 2 > &empty)
 {
     bool success;
     // assume all player summoning originates from player x,y
     bool playerSummon = (emx == you.x_pos && emy == you.y_pos);
 
-    int xpos[25];   // good x pos
-    int ypos[25];   // good y pos
     int good_count = 0;
     int count_x, count_y;
 
-    char minx = -2;
-    char maxx = 2;
-    char miny = -2;
-    char maxy = 2;
-
-    for (count_x = minx; count_x <= maxx; count_x++)
+    for (count_x = -radius; count_x <= radius; count_x++)
     {
-        for (count_y = miny; count_y <= maxy; count_y++)
+        for (count_y = -radius; count_y <= radius; count_y++)
         {
             success = false;
 
@@ -1216,30 +1401,17 @@ bool empty_surrounds(int emx, int emy, unsigned char spc_wanted,
             if (grd[tx][ty] == spc_wanted)
                 success = true;
 
-            // those seeking ground can stand in shallow water or better
-            if (spc_wanted == DNGN_FLOOR && grd[tx][ty] >= DNGN_SHALLOW_WATER)
+            if (grid_compatible(spc_wanted, grd[tx][ty]))
                 success = true;
 
-            // water monsters can be created in shallow as well as deep water
-            if (spc_wanted == DNGN_DEEP_WATER && grd[tx][ty] == DNGN_SHALLOW_WATER)
-                success = true;
-
-            if (success)
+            if (success && one_chance_in(++good_count))
             {
                 // add point to list of good points
-                xpos[good_count] = tx;
-                ypos[good_count] = ty;
-                good_count ++;
+                empty[0] = tx;
+                empty[1] = ty;
             }
         }                       // end "for count_y"
     }                           // end "for count_x"
-
-    if (good_count > 0)
-    {
-        int pick = random2(good_count);
-        empty[0] = xpos[pick];
-        empty[1] = ypos[pick];
-    }
 
     return (good_count > 0);
 }                               // end empty_surrounds()
@@ -1304,3 +1476,53 @@ int summon_any_demon(char demon_class)
 
     return summoned;
 }                               // end summon_any_demon()
+
+monster_type rand_dragon( dragon_class_type type )
+{
+    monster_type  summoned = MONS_PROGRAM_BUG;
+    int temp_rand;
+
+    switch (type)
+    {
+    case DRAGON_LIZARD:
+        temp_rand = random2(100);
+        summoned = ((temp_rand > 85) ? MONS_GIANT_GECKO :
+                    (temp_rand > 59) ? MONS_GIANT_LIZARD : 
+                    (temp_rand > 34) ? MONS_GIANT_IGUANA :
+                    (temp_rand > 22) ? MONS_GILA_MONSTER :
+                    (temp_rand > 11) ? MONS_KOMODO_DRAGON :
+                    (temp_rand >  8) ? MONS_FIREDRAKE : 
+                    (temp_rand >  2) ? MONS_SWAMP_DRAKE
+                                     : MONS_DEATH_DRAKE );
+        break;
+
+    case DRAGON_DRACONIAN:
+        temp_rand = random2(70);
+        summoned = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
+                    (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
+                    (temp_rand > 40) ? MONS_PALE_DRACONIAN :
+                    (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
+                    (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
+                    (temp_rand > 10) ? MONS_RED_DRACONIAN
+                                     : MONS_WHITE_DRACONIAN);
+        break;
+
+    case DRAGON_DRAGON:
+        temp_rand = random2(90);
+        summoned = ((temp_rand > 80) ? MONS_MOTTLED_DRAGON :
+                    (temp_rand > 70) ? MONS_LINDWURM :
+                    (temp_rand > 60) ? MONS_STORM_DRAGON :
+                    (temp_rand > 50) ? MONS_MOTTLED_DRAGON :
+                    (temp_rand > 40) ? MONS_STEAM_DRAGON :
+                    (temp_rand > 30) ? MONS_DRAGON :
+                    (temp_rand > 20) ? MONS_ICE_DRAGON :
+                    (temp_rand > 10) ? MONS_SWAMP_DRAGON
+                                     : MONS_SHADOW_DRAGON);
+        break;
+
+    default:
+        break;
+    }
+
+    return (summoned);
+}

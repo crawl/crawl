@@ -15,56 +15,9 @@
 #define MONUTIL_H
 
 #include "externs.h"
+#include "enum.h"
 
 // ($pellbinder) (c) D.G.S.E. 1998
-
-// ****remember***** must make an hardcopy of this sometime
-
-#if defined(macintosh) || defined(__IBMCPP__) || defined(SOLARIS) || defined(__BCPLUSPLUS__)
-#define PACKED
-#else
-#ifndef PACKED
-#define PACKED __attribute__ ((packed))
-#endif
-#endif
-
-// leaves no skeleton? ("blob" monsters?)
-// if weight=0 or zombie_size=0, this is always true
-#define M_NO_FLAGS 0            // clear
-#define M_NO_SKELETON (1<<0)
-// resistances
-#define M_RES_ELEC (1<<1)
-#define M_RES_POISON (1<<2)
-#define M_RES_FIRE (1<<3)
-#define M_RES_HELLFIRE (1<<4)
-#define M_RES_COLD (1<<5)
-// invisible
-#define M_INVIS (1<<6)          // is created with invis enchantment set, and never runs out
-// vulnerabilities
-//#define M_ED_ELEC (1<<6) // never used
-#define M_ED_POISON (1<<7)      // ???  - - This flag is now (2.50) set for insects (LRH)
-#define M_ED_FIRE (1<<8)
-#define M_ED_COLD (1<<9)
-#define M_SPELLCASTER (1<<10)    // any non-physical-attack powers
-#define M_FLIES (1<<11)          // will crash to ground if paralysed (wings)
-#define M_LEVITATE (1<<12)       // not if this is set
-#define M_SEE_INVIS (1<<13)
-// killing this beast only gives 10 experience (makes sense for plants/fungi)
-#define M_NO_EXP_GAIN (1<<14)    // must do this manually
-#define M_SPEAKS (1<<15)
-//jmf: M_SPELLCASTER was taken ... :-b
-#define M_ACTUAL_SPELLS (1<<16)  // monster is a wizard
-#define M_PRIEST (1<<17)         // monster is a priest of Brian's Orc God (BOG)
-#define M_COLD_BLOOD (1<<18)
-#define M_WARM_BLOOD (1<<19)
-#define M_CONFUSED (1<<20)       // monster is perma-confused
-#define M_SPLITS (1<<21)         // monster is perma-confused
-#define M_AMPHIBIOUS (1<<22)     // monster can swim in water
-
-//jmf: it'd be nice if these next two were implimented ...
-#define M_ON_FIRE (1<<29)        // flag for Hellion-like colour shift
-#define M_FROZEN (1<<30)         // flag for ice-like colour shift
-
 
 // zombie size
 #define Z_NOZOMBIE 0            // no zombie (and no skeleton)
@@ -111,7 +64,9 @@ struct monsterentry
     unsigned char showchar, colour;
     const char *name /*[32]*/; //longest is 23 till now (31 is max alowed here)
 
-    int bitfields;
+    unsigned long bitfields;
+    unsigned long resists;
+
     short weight;
     // experience is calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
@@ -119,9 +74,10 @@ struct monsterentry
     //   Note that this may make draining attacks less attractive (LRH)
     char exp_mod;
 
-    unsigned short charclass;     //
+    monster_type genus,         // "team" the monster plays for
+                 species;       // corpse type of the monster
 
-    char holiness;       // -1=holy,0=normal,1=undead,2=very very evil
+    mon_holy_type holiness;       // -1=holy,0=normal,1=undead,2=very very evil
 
     short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
@@ -146,7 +102,7 @@ struct monsterentry
     short sec;           // not used (250) most o/t time
 
     // eating the corpse: 1=clean,2=might be contaminated,3=poison,4=very bad
-    char corpse_thingy;
+    corpse_effect_type corpse_thingy;
     // 0=no zombie, 1=small zombie (z) 107, 2=_BIG_ zombie (Z) 108
     char zombie_size;
   // 0-12: see above, -1=random one of (0-7)
@@ -165,7 +121,7 @@ struct monsterentry
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void mons_init( FixedVector<unsigned short, 1000>& colour );
+void init_monsters( FixedVector<unsigned short, 1000>& colour );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -184,8 +140,8 @@ const char *ptr_monam( struct monsters *mon, char desc );
 /* ***********************************************************************
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
  * *********************************************************************** */
-char mons_class_flies( int mc );
-char mons_flies( struct monsters *mon );
+int mons_class_flies( int mc );
+int mons_flies( const monsters *mon );
 
 
 // last updated XXmay2000 {dlb}
@@ -218,7 +174,7 @@ bool mons_is_unique(int mclass);
  * called from: describe - fight
  * *********************************************************************** */
 // int exper_value(int mclass, int mHD, int maxhp);
-int exper_value( struct monsters *monster );
+int exper_value( const struct monsters *monster );
 
 
 // last updated 12may2000 {dlb}
@@ -234,8 +190,8 @@ int mons_type_hit_dice( int type );
 /* ***********************************************************************
  * called from: beam - effects
  * *********************************************************************** */
-int mons_resist_magic( struct monsters *mon );
-int mons_resist_turn_undead( struct monsters *mon );
+int mons_resist_magic( const monsters *mon );
+int mons_resist_turn_undead( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
@@ -247,23 +203,15 @@ int mons_damage(int mc, int rt);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: dungeon - fight - monstuff - spells4
- * *********************************************************************** */
-int mons_charclass(int mcls);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
  * called from: food - spells4
  * *********************************************************************** */
-int mons_corpse_thingy(int mclass);
-
+corpse_effect_type mons_corpse_effect(int mc);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - fight - monstuff - mon-util
  * *********************************************************************** */
-int mons_flag(int mc, int bf);
+bool mons_class_flag(int mc, int bf);
 
 
 // last updated 12may2000 {dlb}
@@ -271,10 +219,12 @@ int mons_flag(int mc, int bf);
  * called from: beam - effects - fight - monstuff - mstuff2 - spells2 -
  *              spells3 - spells4
  * *********************************************************************** */
-int mons_holiness(int mclass);
+mon_holy_type mons_class_holiness(int mclass);
+mon_holy_type mons_holiness(const monsters *);
 
 bool mons_is_mimic( int mc ); 
-bool mons_is_demon( int mc ); 
+bool mons_is_statue(int mc);
+bool mons_is_demon( int mc );
 bool mons_is_humanoid( int mc );
 
 
@@ -296,30 +246,32 @@ int mons_intel_type(int mclass); //jmf: added 20mar2000
 /* ***********************************************************************
  * called from: beam - fight - monstuff
  * *********************************************************************** */
-int mons_res_cold( struct monsters *mon );
+int mons_res_cold( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - spells4
  * *********************************************************************** */
-int mons_res_elec( struct monsters *mon );
+int mons_res_elec( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - fight - monstuff
  * *********************************************************************** */
-int mons_res_fire( struct monsters *mon );
+int mons_res_fire( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - monstuff - spells4
  * *********************************************************************** */
-int mons_res_poison( struct monsters *mon );
+int mons_res_poison( const monsters *mon );
 
-int mons_res_negative_energy( struct monsters *mon );
+int mons_res_negative_energy( const monsters *mon );
+
+bool mons_res_asphyx( const monsters *mon );
 
 
 // last updated 12may2000 {dlb}
@@ -376,8 +328,13 @@ unsigned char mons_char(int mc);
 /* ***********************************************************************
  * called from: dungeon - fight - misc
  * *********************************************************************** */
-unsigned char mons_colour(int mc);
+int mons_class_colour(int mc);
+int mons_colour(const monsters *m);
 
+// Only for save-compatibility.
+int obsolete_mons_spell_template_index(const monsters *mon);
+
+void mons_load_spells( monsters *mon, int book );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -390,14 +347,8 @@ void define_monster(int mid);
 /* ***********************************************************************
  * called from: debug - itemname - mon-util
  * *********************************************************************** */
-void moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
+const char *moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
-void mons_spell_list(unsigned char sec, int splist[6]);
 
 #if DEBUG_DIAGNOSTICS
 // last updated 25sep2001 {dlb}
@@ -449,10 +400,19 @@ bool mons_aligned(int m1, int m2);
 /* ***********************************************************************
  * called from: monstuff acr
  * *********************************************************************** */
-bool mons_friendly(struct monsters *m);
+bool mons_friendly(const monsters *m);
 
+bool mons_is_confused(const monsters *m);
+bool mons_is_fleeing(const monsters *m);
+bool mons_is_sleeping(const monsters *m);
+bool mons_is_batty(const monsters *m);
+bool mons_is_evil( const monsters *mon );
+bool mons_is_unholy( const monsters *mon );
+bool mons_has_lifeforce( const monsters *mon );
+monster_type mons_genus( int mc );
+monster_type mons_species( int mc );
 
-int mons_has_ench( struct monsters *mon, unsigned int ench, 
+int mons_has_ench( const monsters *mon, unsigned int ench, 
                    unsigned int ench2 = ENCH_NONE );
 
 int mons_del_ench( struct monsters *mon, unsigned int ench, 
@@ -460,10 +420,28 @@ int mons_del_ench( struct monsters *mon, unsigned int ench,
 
 bool mons_add_ench( struct monsters *mon, unsigned int ench );
 
-bool mons_is_stabbable(struct monsters *m);
+bool mons_looks_stabbable(const monsters *m);
 
-bool mons_maybe_stabbable(struct monsters *m);
+bool mons_looks_distracted(const monsters *m);
 
-bool check_mons_resist_magic( struct monsters *monster, int pow );
+bool check_mons_resist_magic( const monsters *monster, int pow );
+
+bool mons_class_is_stationary(int monsclass);
+bool mons_is_stationary(const monsters *mons);
+bool mons_is_submerged( struct monsters *mon );
+
+bool invalid_monster(const monsters *mons);
+bool invalid_monster_class(int mclass);
+
+bool monster_shover(const monsters *m);
+bool mons_is_paralysed(const monsters *m);
+
+bool monster_senior(const monsters *first, const monsters *second);
+monster_type draco_subspecies( const monsters *mon );
+
+monster_type random_monster_at_grid(int x, int y);
+monster_type random_monster_at_grid(int grid);
+
+monster_type get_monster_by_name(std::string name, bool exact = false);
 
 #endif

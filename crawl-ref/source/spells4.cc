@@ -4,6 +4,8 @@
  *              other neglected areas of Crawl magic ;^)
  *  Written by: Copyleft Josh Fishman 1999-2000, All Rights Preserved
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <2> 29jul2000  jdj  Made a zillion functions static.
@@ -28,6 +30,7 @@
 #include "effects.h"
 #include "it_use2.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "invent.h"
 #include "misc.h"
@@ -57,7 +60,6 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-static bool mons_can_host_shuggoth(int type);
 // static int make_a_random_cloud(int x, int y, int pow, int ctype);
 static int make_a_rot_cloud(int x, int y, int pow, int ctype);
 static int quadrant_blink(int x, int y, int pow, int garbage);
@@ -189,6 +191,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
     case MONS_ICE_BEAST:        // 3/2 damage
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
+    case MONS_SILVER_STATUE:
         dam_dice.num = 4;
         break;
 
@@ -199,6 +202,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
     case MONS_STONE_GOLEM:
     case MONS_IRON_GOLEM:
     case MONS_CRYSTAL_GOLEM:
+    case MONS_ORANGE_STATUE:
     case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
     case MONS_SKELETAL_DRAGON:
@@ -298,7 +302,7 @@ static int shatter_items(int x, int y, int pow, int garbage)
     if (broke_stuff)
     {
         if (!silenced(x, y) && !silenced(you.x_pos, you.y_pos))
-            mpr("You hear glass break.");
+            mpr("You hear glass break.", MSGCH_SOUND);
 
         return 1;
     }
@@ -394,7 +398,7 @@ void cast_shatter(int pow)
         noisy( 30, you.x_pos, you.y_pos );
 
     snprintf(info, INFO_SIZE, "The dungeon %s!", (sil ? "shakes" : "rumbles"));
-    mpr(info);
+    mpr(info, (sil? MSGCH_PLAIN : MSGCH_SOUND));
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -434,7 +438,7 @@ void cast_shatter(int pow)
                                          pow, rad, 0 );
 
     if (dest && !sil)
-        mpr("Ka-crash!");
+        mpr("Ka-crash!", MSGCH_SOUND);
 }                               // end cast_shatter()
 
 // cast_forescry: raises evasion (by 8 currently) via divination
@@ -492,7 +496,7 @@ static void cast_detect_magic(int pow)
     }
 
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR );
+    direction( bmove, DIR_DIR, TARG_ANY, true );
 
     if (!bmove.isValid)
     {
@@ -708,6 +712,7 @@ void cast_sticks_to_snakes(int pow)
             || you.inv[ weapon ].sub_type == WPN_GIANT_CLUB
             || you.inv[ weapon ].sub_type == WPN_GIANT_SPIKED_CLUB
             || you.inv[ weapon ].sub_type == WPN_BOW
+            || you.inv[ weapon ].sub_type == WPN_LONGBOW
             || you.inv[ weapon ].sub_type == WPN_ANCUS
             || you.inv[ weapon ].sub_type == WPN_HALBERD
             || you.inv[ weapon ].sub_type == WPN_GLAIVE
@@ -720,7 +725,7 @@ void cast_sticks_to_snakes(int pow)
         // ogres, and most importantly ogre magi).  Still it's unlikely
         // any character is strong enough to bother lugging a few of
         // these around.  -- bwr
-        if (mass_item( you.inv[ weapon ] ) < 500)
+        if (item_mass( you.inv[ weapon ] ) < 300)
             mon = MONS_SNAKE;
         else
             mon = MONS_BROWN_SNAKE;
@@ -851,7 +856,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     int mnstr = mgrd[x][y];
 
     if (mnstr == NON_MONSTER)                                   return 0;
-    if (mons_holiness( menv[mnstr].type ) != MH_NATURAL)        return 0;
+    if (mons_holiness(&menv[mnstr]) != MH_NATURAL)        return 0;
     if (check_mons_resist_magic( &menv[mnstr], pow ))           return 0;
 
     // Why shouldn't we be able to sleep friendly monsters? -- bwr
@@ -864,7 +869,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     menv[mnstr].behaviour = BEH_SLEEP;
     mons_add_ench( &menv[mnstr], ENCH_SLEEP_WARY );
 
-    if (mons_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
+    if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
         mons_add_ench( &menv[mnstr], ENCH_SLOW );
 
     return 1;
@@ -884,7 +889,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
     struct monsters *monster = &menv[which_mons];
 
-    if (mons_holiness(monster->type) != MH_NATURAL)            return 0;
+    if (mons_holiness(monster) != MH_NATURAL)            return 0;
     if (mons_intel_type(monster->type) != I_ANIMAL)            return 0;
     if (mons_friendly(monster))                                return 0;
 
@@ -1012,7 +1017,7 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
     struct monsters *const mon = &menv[ mon_index ];
 
     // Monsters which have poison corpses or poisonous attacks:
-    if (mons_corpse_thingy( mon->type ) == CE_POISONOUS
+    if (mons_corpse_effect( mon->type ) == CE_POISONOUS
         || mon->type == MONS_GIANT_ANT
         || mon->type == MONS_SMALL_SNAKE
         || mon->type == MONS_SNAKE
@@ -1259,6 +1264,8 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
         mpr( "You are struck by lightning." );
         damage = 3 + random2( 5 + pow / 10 );
         damage = check_your_resists( damage, BEAM_ELECTRICITY );
+	if ( player_is_levitating() )
+	    damage /= 2;
         ouch( damage, 0, KILLED_BY_WILD_MAGIC );
     } 
     else if (mon == NON_MONSTER)
@@ -1707,7 +1714,7 @@ static int intoxicate_monsters(int x, int y, int pow, int garbage)
         return 0;
     if (mons_intel(menv[mon].type) < I_NORMAL)
         return 0;
-    if (mons_holiness(menv[mon].type) != MH_NATURAL)
+    if (mons_holiness(&menv[mon]) != MH_NATURAL)
         return 0;
     if (mons_res_poison(&menv[mon]) > 0)
         return 0;
@@ -1746,7 +1753,7 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
     if (mons_intel(menv[mon].type) < I_NORMAL)
         return (0);
 
-    if (mons_holiness(mon) != MH_NATURAL)
+    if (mons_class_holiness(mon) != MH_NATURAL)
         return (0);
 
     if (!mons_is_humanoid( menv[mon].type ))
@@ -1893,7 +1900,8 @@ void cast_evaporate(int pow)
     struct dist spelld;
     struct bolt beem;
 
-    const int potion = prompt_invent_item( "Throw which potion?", OBJ_POTIONS );
+    const int potion =
+        prompt_invent_item( "Throw which potion?", MT_INVSELECT, OBJ_POTIONS );
 
     if (potion == -1)
     {
@@ -1914,7 +1922,7 @@ void cast_evaporate(int pow)
 
     message_current_target();
 
-    direction( spelld, DIR_NONE, TARG_ENEMY );
+    direction( spelld, DIR_NONE, TARG_ENEMY, true );
 
     if (!spelld.isValid)
     {
@@ -1922,24 +1930,23 @@ void cast_evaporate(int pow)
         return;
     }
 
-    beem.target_x = spelld.tx;
-    beem.target_y = spelld.ty;
+    beem.set_target(spelld);
 
     beem.source_x = you.x_pos;
     beem.source_y = you.y_pos;
 
-    strcpy( beem.beam_name, "potion" );
+    beem.name = "potion";
     beem.colour = you.inv[potion].colour;
     beem.range = 9;
     beem.rangeMax = 9;
     beem.type = SYM_FLASK;
     beem.beam_source = MHITYOU;
     beem.thrower = KILL_YOU_MISSILE;
-    beem.aux_source = NULL;
-    beem.isBeam = false;
-    beem.isTracer = false;
+    beem.aux_source.clear();
+    beem.is_beam = false;
+    beem.is_tracer = false;
 
-    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
+    beem.hit = you.dex / 2 + roll_dice( 2, you.skills[SK_RANGED_COMBAT] / 2 + 1 );
     beem.damage = dice_def( 1, 0 );  // no damage, just producing clouds
     beem.ench_power = pow;           // used for duration only?
 
@@ -2016,7 +2023,7 @@ void cast_evaporate(int pow)
     }
 
     if (coinflip())
-        exercise( SK_THROWING, 1 );
+        exercise( SK_RANGED_COMBAT, 1 );
 
     fire_beam(beem);
 
@@ -2103,7 +2110,7 @@ void cast_fulsome_distillation( int powc )
         break;
 
     default:
-        switch (mons_corpse_thingy( mitm[corpse].plus ))
+        switch (mons_corpse_effect( mitm[corpse].plus ))
         {
         case CE_CLEAN:
             potion_type = (power_up ? POT_CONFUSION : POT_WATER);
@@ -2208,7 +2215,7 @@ static int rot_living(int x, int y, int pow, int message)
     if (mon == NON_MONSTER)
         return 0;
 
-    if (mons_holiness(menv[mon].type) != MH_NATURAL)
+    if (mons_holiness(&menv[mon]) != MH_NATURAL)
         return 0;
 
     if (check_mons_resist_magic(&menv[mon], pow))
@@ -2240,7 +2247,7 @@ static int rot_undead(int x, int y, int pow, int garbage)
     if (mon == NON_MONSTER)
         return 0;
 
-    if (mons_holiness(menv[mon].type) != MH_UNDEAD)
+    if (mons_holiness(&menv[mon]) != MH_UNDEAD)
         return 0;
 
     if (check_mons_resist_magic(&menv[mon], pow))
@@ -2315,7 +2322,7 @@ void do_monster_rot(int mon)
 {
     int damage = 1 + random2(3);
 
-    if (mons_holiness(menv[mon].type) == MH_UNDEAD && random2(5))
+    if (mons_holiness(&menv[mon]) == MH_UNDEAD && random2(5))
     {
         apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
                          10, 1, CLOUD_MIASMA);
@@ -2361,7 +2368,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     const char *what = NULL;
 
     mpr("Fragment what (e.g. a wall)?", MSGCH_PROMPT);
-    direction( beam, DIR_TARGET, TARG_ENEMY );
+    direction( beam, DIR_TARGET, TARG_ENEMY, true );
 
     if (!beam.isValid)
     {
@@ -2372,13 +2379,12 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     //FIXME: if (player typed '>' to attack floor) goto do_terrain;
     blast.beam_source = MHITYOU;
     blast.thrower = KILL_YOU;
-    blast.aux_source = NULL;
+    blast.aux_source.clear();
     blast.ex_size = 1;              // default
     blast.type = '#';
     blast.colour = 0;
-    blast.target_x = beam.tx;
-    blast.target_y = beam.ty;
-    blast.isTracer = false;
+    blast.set_target(beam);
+    blast.is_tracer = false;
     blast.flavour = BEAM_FRAG;
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
@@ -2405,7 +2411,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_SIMULACRUM_SMALL:
         case MONS_SIMULACRUM_LARGE:
             explode = true;
-            strcpy(blast.beam_name, "icy blast");
+            blast.name = "icy blast";
             blast.colour = WHITE;
             blast.damage.num = 2;
             blast.flavour = BEAM_ICE;
@@ -2421,7 +2427,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             snprintf( info, INFO_SIZE, "The sk%s explodes into sharp fragments of bone!",
                     (menv[mon].type == MONS_FLYING_SKULL) ? "ull" : "eleton");
 
-            strcpy(blast.beam_name, "blast of bone shards");
+            blast.name = "blast of bone shards";
 
             blast.colour = LIGHTGREY;
 
@@ -2452,7 +2458,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_IRON_GOLEM:
         case MONS_METAL_GARGOYLE:
             explode = true;
-            strcpy( blast.beam_name, "blast of metal fragments" );
+            blast.name = "blast of metal fragments";
             blast.colour = CYAN;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
@@ -2465,17 +2471,38 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_GARGOYLE:
             explode = true;
             blast.ex_size = 2;
-            strcpy(blast.beam_name, "blast of rock fragments");
+            blast.name = "blast of rock fragments";
             blast.colour = BROWN;
             blast.damage.num = 3;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
                 blast.damage.num += 1;
             break;
 
+        case MONS_SILVER_STATUE:
+        case MONS_ORANGE_STATUE:
+            explode = true;
+            blast.ex_size = 2;
+            if (menv[mon].type == MONS_SILVER_STATUE)
+            {
+                blast.name       = "blast of silver fragments";
+                blast.colour     = WHITE;
+                blast.damage.num = 3;
+            }
+            else
+            {
+                blast.name       = "blast of orange crystal shards";
+                blast.colour     = LIGHTRED;
+                blast.damage.num = 6;
+            }
+
+            if (player_hurt_monster(mon, roll_dice( blast.damage )))
+                blast.damage.num += 2;
+            break;
+
         case MONS_CRYSTAL_GOLEM:
             explode = true;
             blast.ex_size = 2;
-            strcpy(blast.beam_name, "blast of crystal shards");
+            blast.name = "blast of crystal shards";
             blast.colour = WHITE;
             blast.damage.num = 4;
             if (player_hurt_monster(mon, roll_dice( blast.damage )))
@@ -2524,7 +2551,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
 
-        strcpy(blast.beam_name, "blast of rock fragments");
+        blast.name = "blast of rock fragments";
         blast.damage.num = 3;
         if (blast.colour == 0)
             blast.colour = LIGHTGREY;
@@ -2558,7 +2585,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         }
 
         explode = true;
-        strcpy( blast.beam_name, "blast of metal fragments" );
+        blast.name = "blast of metal fragments";
         blast.damage.num = 4;
 
         if (okay_to_dest && pow >= 80 && random2(500) < pow / 5)
@@ -2586,7 +2613,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
         blast.ex_size = 2;
-        strcpy(blast.beam_name, "blast of crystal shards");
+        blast.name = "blast of crystal shards";
         blast.damage.num = 5;
 
         if (okay_to_dest
@@ -2619,7 +2646,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
         explode = true;
         hole = false;           // to hit monsters standing on traps
-        strcpy( blast.beam_name, "blast of fragments" );
+        blast.name = "blast of fragments";
         blast.colour = env.floor_colour;  // in order to blend in
         blast.damage.num = 2;
 
@@ -2645,7 +2672,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_STONE_ARCH:       // floor -- small explosion
         explode = true;
         hole = false;           // to hit monsters standing on doors
-        strcpy( blast.beam_name, "blast of rock fragments" );
+        blast.name = "blast of rock fragments";
         blast.colour = LIGHTGREY;
         blast.damage.num = 2;
         break;
@@ -2698,7 +2725,7 @@ void cast_twist(int pow)
     if (pow > 25)
         pow = 25;
 
-    // Get target,  using DIR_TARGET for targetting only,
+    // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
     if (spell_direction(targ, tmp, DIR_TARGET) == -1)
         return;
@@ -2750,7 +2777,7 @@ void cast_far_strike(int pow)
     struct dist targ;
     struct bolt tmp;    // used, but ignored
 
-    // Get target,  using DIR_TARGET for targetting only,
+    // Get target, using DIR_TARGET for targetting only,
     // since we don't use fire_beam() for this spell.
     if (spell_direction(targ, tmp, DIR_TARGET) == -1)
         return;
@@ -2863,34 +2890,34 @@ void cast_far_strike(int pow)
     return;
 }                               // end cast_far_strike()
 
-void cast_apportation(int pow)
+int cast_apportation(int pow)
 {
     struct dist beam;
 
     mpr("Pull items from where?");
 
-    direction( beam, DIR_TARGET );
+    direction( beam, DIR_TARGET, TARG_ANY, true );
 
     if (!beam.isValid)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (-1);
     }
 
     // it's already here!
     if (beam.isMe)
     {
         mpr( "That's just silly." );
-        return;
+        return (-1);
     }
 
     // Protect the player from destroying the item
     const int grid = grd[ you.x_pos ][ you.y_pos ];
 
-    if (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
+    if (grid_destroys_items(grid))
     {
         mpr( "That would be silly while over this terrain!" );
-        return;
+        return (0);
     }
 
     // If this is ever changed to allow moving objects that can't
@@ -2906,7 +2933,7 @@ void cast_apportation(int pow)
     if (!see_grid( beam.tx, beam.ty ))
     {
         mpr( "You cannot see there!" );
-        return;
+        return (0);
     }
 
     // Let's look at the top item in that square...
@@ -2926,11 +2953,11 @@ void cast_apportation(int pow)
         else 
             mpr( "This spell does not work on creatures." );
 
-        return;
+        return (0);
     }
 
     // mass of one unit
-    const int unit_mass = mass_item( mitm[ item ] );
+    const int unit_mass = item_mass( mitm[ item ] );
     // assume we can pull everything
     int max_units = mitm[ item ].quantity;
 
@@ -2946,8 +2973,10 @@ void cast_apportation(int pow)
     if (max_units <= 0)
     {
         mpr( "The mass is resisting your pull." );
-        return;
+        return (0);
     }
+
+    int done = 0;
 
     // Failure should never really happen after all the above checking,
     // but we'll handle it anyways...
@@ -2965,9 +2994,12 @@ void cast_apportation(int pow)
                                  (mitm[ item ].quantity > 1) ? "s" : "" );
             mpr( info );
         }
+        done = 1;
     }
     else
         mpr( "The spell fails." );
+
+    return (done);
 }
 
 void cast_sandblast(int pow)
@@ -3009,63 +3041,6 @@ void cast_sandblast(int pow)
         zapping(ZAP_SMALL_SANDBLAST, pow, beam);
     }
 }                               // end cast_sandblast()
-
-static bool mons_can_host_shuggoth(int type)    //jmf: simplified
-{
-    if (mons_holiness(type) != MH_NATURAL)
-        return false;
-    if (mons_flag(type, M_WARM_BLOOD))
-        return true;
-
-    return false;
-}
-
-void cast_shuggoth_seed(int powc)
-{
-    struct dist beam;
-    int i;
-
-    mpr("Sow seed in whom?", MSGCH_PROMPT);
-
-    direction( beam, DIR_TARGET, TARG_ENEMY );
-
-    if (!beam.isValid)
-    {
-        mpr("You feel a distant frustration.");
-        return;
-    }
-
-    if (beam.isMe)
-    {
-        if (!you.is_undead)
-        {
-            you.duration[DUR_INFECTED_SHUGGOTH_SEED] = 10;
-            mpr("A deathly dread twitches in your chest.");
-        }
-        else
-            mpr("You feel a distant frustration.");
-    }
-
-    i = mgrd[beam.tx][beam.ty];
-
-    if (i == NON_MONSTER)
-    {
-        mpr("You feel a distant frustration.");
-        return;
-    }
-
-    if (mons_can_host_shuggoth(menv[i].type))
-    {
-        if (random2(powc) > 100)
-            mons_add_ench(&menv[i], ENCH_YOUR_SHUGGOTH_III);
-        else
-            mons_add_ench(&menv[i], ENCH_YOUR_SHUGGOTH_IV);
-
-        simple_monster_message(&menv[i], " twitches.");
-    }
-
-    return;
-}
 
 void cast_condensation_shield(int pow)
 {
@@ -3109,8 +3084,8 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
 
     // setup: Brent's new algorithm
     // we are interested in two things: distance of a test point from
-    // the ideal 'line',  and the distance of a test point from two
-    // actual points,  one in the 'correct' direction and one in the
+    // the ideal 'line', and the distance of a test point from two
+    // actual points, one in the 'correct' direction and one in the
     // 'incorrect' direction.
 
     // scale distance by 10 for more interesting numbers.
@@ -3164,10 +3139,9 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     return (1);
 }
 
-void cast_semi_controlled_blink(int pow)
+int cast_semi_controlled_blink(int pow)
 {
-    apply_one_neighbouring_square(quadrant_blink, pow);
-    return;
+    return apply_one_neighbouring_square(quadrant_blink, pow);
 }
 
 void cast_stoneskin(int pow)

@@ -1,3 +1,7 @@
+/*
+*  Modified for Crawl Reference by $Author$ on $Date$
+*/
+
 #ifndef LIBW32C_H
 #define LIBW32C_H
 
@@ -21,6 +25,7 @@ void _setcursortype(int curstype);
 void clrscr(void);
 void gotoxy(int x, int y);
 void textcolor(int c);
+void textattr(int c);
 void cprintf( const char *format, ... );
 // void cprintf(const char *s);
 void setStringInput(bool value);

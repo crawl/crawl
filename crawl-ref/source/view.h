@@ -3,6 +3,8 @@
  *  Summary:    Misc function used to render the dungeon.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <2>     9/29/99     BCR     Added the BORDER_COLOR define
@@ -16,10 +18,13 @@
 
 #include "externs.h"
 
-
 #define BORDER_COLOR BROWN
 
+void init_char_table(char_set_type set);
+void init_feature_table( void );
+
 int get_number_of_lines(void);
+int get_number_of_cols(void);
 
 /* ***********************************************************************
  * called from: dump_screenshot - chardump
@@ -69,14 +74,14 @@ void magic_mapping(int map_radius, int proportion);
  * called from: acr - effects - it_use2 - it_use3 - item_use - spell -
  *              spells - spells3 - spells4
  * *********************************************************************** */
-void noisy( int loudness, int nois_x, int nois_y );
+bool noisy( int loudness, int nois_x, int nois_y, const char *msg = NULL );
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - spells3
  * *********************************************************************** */
-void show_map( FixedVector<int, 2>& spec_place );
+void show_map( FixedVector<int, 2>& spec_place, bool travel_mode );
 
 
 // last updated 12may2000 {dlb}
@@ -107,5 +112,37 @@ bool check_awaken(int mons_aw);
 void clear_map();
 
 bool is_feature(int feature, int x, int y);
+
+void set_envmap_char( int x, int y, unsigned char chr );
+void set_envmap_detected_item(int x, int y, bool detected = true);
+void set_envmap_detected_mons(int x, int y, bool detected = true);
+bool is_envmap_detected_item(int x, int y);
+bool is_envmap_detected_mons(int x, int y);
+void set_terrain_mapped( int x, int y );
+void set_terrain_seen( int x, int y );
+bool is_terrain_known( int x, int y );
+bool is_terrain_seen( int x, int y );
+
+void clear_feature_overrides();
+void add_feature_override(const std::string &text);
+void clear_cset_overrides();
+void add_cset_override(char_set_type set, const std::string &overrides);
+
+bool see_grid( int grx, int gry );
+
+std::string screenshot(bool fullscreen = false);
+
+unsigned char get_sightmap_char(int feature);
+unsigned char get_magicmap_char(int feature);
+
+void viewwindow(bool draw_it, bool do_updates);
+
+bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+               bool allow_fallback, ray_def& ray );
+
+#if defined(WIN32CONSOLE) || defined(DOS)
+unsigned short dos_brand( unsigned short colour,
+                          unsigned brand = CHATTR_REVERSE);
+#endif
 
 #endif

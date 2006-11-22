@@ -3,6 +3,8 @@
  *  Summary: Contains version information
  *  Written by: ??
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *     <2>     10/12/99    BCR     Added BUILD_DATE #define
@@ -33,13 +35,13 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define CRAWL "Dungeon Crawl Stone Soup"
 
 // last updated 07august2001 {mv}
 /* ***********************************************************************
  * called from: chardump - command - newgame
  * *********************************************************************** */
-#define VERSION "4.0.0 beta 26 (crawl-ref)"
-
+#define VERSION "0.2-svn (crawl-ref)"
 
 // last updated 20feb2001 {GDL}
 /* ***********************************************************************
@@ -47,5 +49,6 @@
  * *********************************************************************** */
 #define BUILD_DATE __DATE__
 
+#define SAVE_MAJOR_VERSION 0
 
 #endif

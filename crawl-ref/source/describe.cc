@@ -3,6 +3,8 @@
  *  Summary:    Functions used to print information about various game objects.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>      10/14/99     BCR     enummed describe_god()
@@ -33,6 +35,7 @@
 #include "debug.h"
 #include "fight.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "player.h"
@@ -41,7 +44,6 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 #include "spl-util.h"
 
 
@@ -112,7 +114,8 @@ static void print_description( const std::string &d )
 
             if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
             {
-                cprintf((d.substr(currentPos, nextLine - currentPos)).c_str());
+                cprintf("%s",
+                        (d.substr(currentPos, nextLine - currentPos)).c_str());
                 currentPos = nextLine + 1;
                 continue;
             }
@@ -331,6 +334,19 @@ static void randart_descpr( std::string &description, const item_def &item )
     }
 }
 
+static const char *trap_names[] =
+{
+    "dart", "arrow", "spear", "axe",
+    "teleport", "amnesia", "blade",
+    "bolt", "zot", "needle",
+};
+
+const char *trap_name(trap_type trap)
+{
+    if (trap >= TRAP_DART && trap < NUM_TRAPS)
+        return trap_names[ static_cast<int>( trap ) ];
+    return (NULL);
+}
 
 //---------------------------------------------------------------
 //
@@ -682,7 +698,7 @@ static std::string describe_demon(void)
 // describe_weapon
 //
 //---------------------------------------------------------------
-static std::string describe_weapon( const item_def &item, char verbose)
+static std::string describe_weapon( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -785,7 +801,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
     }
     else
     {
-        if (verbose == 1)
+        if (verbose)
         {
             switch (item.sub_type)
             {
@@ -872,6 +888,12 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "and a skilled user can use it to great effect. ";
                 break;
 
+            case WPN_LONGBOW:
+                description += "A long, strong bow made of yew. "
+                    "It does excellent damage in combat "
+                    "and a skilled archer can use it to great effect. ";
+                break;
+
             case WPN_BLOWGUN:
                 description += "A long, light tube, open at both ends.  Doing "
                     "very little damage,  its main use is to fire poisoned "
@@ -926,6 +948,17 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "single-edged blade. ";
                 break;
 
+            case WPN_LAJATANG:
+                description += "A very rare and extremely effective "
+                    "imported weapon, featuring a pole with half-moon blades "
+                    "at both ends. ";
+                break;
+
+            case WPN_LOCHABER_AXE:
+                description += "An enormous combination of a pike "
+                               "and a battle axe.";
+                break;
+
             case WPN_EXECUTIONERS_AXE:
                 description += "A huge axe. ";
                 break;
@@ -962,6 +995,10 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "A terrible weapon, forged in the fires of Hell. ";
                 break;
 
+            case WPN_BLESSED_BLADE:
+                description += "A blade blessed by the Shining One. ";
+                break;
+
             case WPN_DEMON_WHIP:
                 description += "A terrible weapon, woven "
                     "in the depths of the inferno. ";
@@ -989,8 +1026,8 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 description += "A large and heavy mace. ";
                 break;
 
-            case WPN_GREAT_FLAIL:
-                description += "A large and heavy flail. ";
+            case WPN_DIRE_FLAIL:
+                description += "A flail with spiked lumps on both ends.";
                 break;
 
             case WPN_FALCHION:
@@ -1005,9 +1042,9 @@ static std::string describe_weapon( const item_def &item, char verbose)
         }
     }
 
-    if (verbose == 1 && !launches_things( item.sub_type ))
+    if (verbose)
     {
-        description += "$Damage rating: ";
+	description += "$Damage rating: ";
         append_value(description, property( item, PWPN_DAMAGE ), false);
 
         description += "$Accuracy rating: ";
@@ -1015,7 +1052,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
 
         description += "$Base attack delay: ";
         append_value(description, property( item, PWPN_SPEED ) * 10, false);
-        description += "%%";
+        description += "%";
     }
     description += "$";
 
@@ -1023,7 +1060,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
     {
         int spec_ench = get_weapon_brand( item );
 
-        if (!is_random_artefact( item ) && verbose == 0)
+        if (!is_random_artefact( item ) && !verbose)
             spec_ench = SPWPN_NORMAL;
 
         // special weapon descrip
@@ -1061,7 +1098,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "all of orcish descent. ";
                 break;
             case SPWPN_VENOM:
-                if (launches_things( item.sub_type ))
+                if (is_range_weapon(item))
                     description += "It poisons the unbranded ammo it fires. ";
                 else
                     description += "It poisons the flesh of those it strikes. ";
@@ -1075,7 +1112,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
                     "it drains the life of those it strikes. ";
                 break;
             case SPWPN_SPEED:
-                if (launches_things( item.sub_type ))
+                if (is_range_weapon(item))
                 {
                     description += "It allows its wielder to fire twice when "
                            "they would otherwise have fired only once. ";
@@ -1087,7 +1124,16 @@ static std::string describe_weapon( const item_def &item, char verbose)
                 }
                 break;
             case SPWPN_VORPAL:
-                description += "It inflicts extra damage upon your enemies. ";
+                if (is_range_weapon(item))
+                {
+                    description += "Any ";
+                    description += ammo_name( item );
+                    description += " fired from it inflicts extra damage."; 
+                }
+                else
+                {
+                    description += "It inflicts extra damage upon your enemies. ";
+                }
                 break;
             case SPWPN_FLAME:
                 description += "It turns projectiles fired from it into "
@@ -1147,7 +1193,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         description += "$It has a curse placed upon it.";
     }
 
-    if (verbose == 1 && !launches_things( item.sub_type ))
+    if (verbose && !is_range_weapon(item))
     {
 #ifdef USE_NEW_COMBAT_STATS
         const int str_weight = weapon_str_weight( item.base_type, item.sub_type );
@@ -1162,17 +1208,20 @@ static std::string describe_weapon( const item_def &item, char verbose)
             description += "$This weapon is better for the dexterous.";
 #endif
 
-        switch (hands_reqd_for_weapon(item.base_type, item.sub_type))
+        switch (hands_reqd(item, player_size()))
         {
-        case HANDS_ONE_HANDED:
+        case HANDS_ONE:
             description += "$It is a one handed weapon.";
             break;
-        case HANDS_ONE_OR_TWO_HANDED:
+        case HANDS_HALF:
             description += "$It can be used with one hand, or more "
                     "effectively with two (i.e. when not using a shield).";
             break;
-        case HANDS_TWO_HANDED:
+        case HANDS_TWO:
             description += "$It is a two handed weapon.";
+            break;
+        default:
+            description += "$It is a buggy weapon.";
             break;
         }
     }
@@ -1186,7 +1235,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
             break;
         }
 
-        if (launches_things( item.sub_type ))
+        if (is_range_weapon(item))
         {
             switch (get_equip_race( item ))
             {
@@ -1206,7 +1255,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
         }
     }
 
-    if (verbose == 1)
+    if (verbose)
     {
         description += "$It falls into the";
 
@@ -1216,6 +1265,7 @@ static std::string describe_weapon( const item_def &item, char verbose)
             description += " 'slings' category. ";
             break;
         case WPN_BOW:
+        case WPN_LONGBOW:
             description += " 'bows' category. ";
             break;
         case WPN_HAND_CROSSBOW:
@@ -1290,7 +1340,7 @@ static std::string describe_ammo( const item_def &item )
     case MI_LARGE_ROCK:
         description += "A rock, used by giants as a missile. ";
         break;
-    case MI_EGGPLANT:
+    case MI_NONE:   // was eggplant
         description += "A purple vegetable. "
             "The presence of this object in the game "
             "indicates a bug (or some kind of cheating on your part). ";
@@ -1330,7 +1380,7 @@ static std::string describe_ammo( const item_def &item )
 // describe_armour
 //
 //---------------------------------------------------------------
-static std::string describe_armour( const item_def &item, char verbose )
+static std::string describe_armour( const item_def &item, bool verbose )
 {
     std::string description;
 
@@ -1345,7 +1395,7 @@ static std::string describe_armour( const item_def &item, char verbose )
     }
     else
     {
-        if (verbose == 1)
+        if (verbose)
         {
             switch (item.sub_type)
             {
@@ -1403,16 +1453,21 @@ static std::string describe_armour( const item_def &item, char verbose )
             case ARM_GLOVES:
                 description += "A pair of gloves. ";
                 break;
-            case ARM_BOOTS:
-                if (item.plus2 == TBOOT_NAGA_BARDING)
-                    description += "A special armour made for Nagas, "
-                        "to wear over their tails. ";
-                else if (item.plus2 == TBOOT_CENTAUR_BARDING)
-                    description += "An armour made for centaurs, "
-                        "to wear over their equine half. ";
-                else
-                    description += "A pair of sturdy boots. ";
+
+            case ARM_CENTAUR_BARDING:
+                description += "An armour made for centaurs, "
+                               "to wear over their equine half.";
                 break;
+
+            case ARM_NAGA_BARDING:
+                description += "A special armour made for nagas, "
+                               "to wear over their tails.";
+                break;
+
+            case ARM_BOOTS:
+                description += "A pair of boots.";
+                break;
+
             case ARM_BUCKLER:
                 description += "A small shield. ";
                 break;
@@ -1543,7 +1598,7 @@ static std::string describe_armour( const item_def &item, char verbose )
         }
     }
 
-    if (verbose == 1 
+    if (verbose 
             && item.sub_type != ARM_SHIELD 
             && item.sub_type != ARM_BUCKLER
             && item.sub_type != ARM_LARGE_SHIELD)
@@ -1557,7 +1612,8 @@ static std::string describe_armour( const item_def &item, char verbose )
             // caps and wizard hats don't have a base AC
             append_value(description, 0, false);
         }
-        else if (item.sub_type == ARM_BOOTS && item.plus2 != TBOOT_BOOTS)
+        else if (item.sub_type == ARM_NAGA_BARDING 
+                || item.sub_type == ARM_CENTAUR_BARDING)
         {
             // Barding has AC value 4.
             append_value(description, 4, false);
@@ -1575,7 +1631,7 @@ static std::string describe_armour( const item_def &item, char verbose )
     int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL 
         && item_ident( item, ISFLAG_KNOW_TYPE ) 
-        && verbose == 1)
+        && verbose)
     {
         description += "$";
 
@@ -1794,7 +1850,8 @@ static std::string describe_stick( const item_def &item )
 
         case WAND_DISINTEGRATION:
             description += "disrupts the physical structure of "
-                "an object, especially a creature's body. ";
+		"anything but the hardest walls -- even rigid "
+		"statues, to say nothing of flesh. ";
             break;
 
         default:
@@ -2422,7 +2479,7 @@ static std::string describe_scroll( const item_def &item )
 // describe_jewellery
 //
 //---------------------------------------------------------------
-static std::string describe_jewellery( const item_def &item, char verbose)
+static std::string describe_jewellery( const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -2437,11 +2494,11 @@ static std::string describe_jewellery( const item_def &item, char verbose)
     else if ((!is_random_artefact( item ) 
             && get_ident_type( OBJ_JEWELLERY, item.sub_type ) != ID_KNOWN_TYPE)
         || (is_random_artefact( item ) 
-            && item_not_ident( item, ISFLAG_KNOW_TYPE )))
+            && !item_ident( item, ISFLAG_KNOW_TYPE )))
     {
         description += "A piece of jewellery.";
     }
-    else if (verbose == 1 || is_random_artefact( item ))
+    else if (verbose || is_random_artefact( item ))
     {
         switch (item.sub_type)
         {
@@ -2623,22 +2680,28 @@ static std::string describe_jewellery( const item_def &item, char verbose)
         case AMU_WARDING:
             description +=
                 "This amulet repels some of the attacks of creatures "
-                "which have been magically summoned. ";
+                "which have been magically summoned, and also "
+                "makes the wearer more resistant to draining attacks. ";
             break;
 
         case AMU_RESIST_CORROSION:
             description +=
-                "This amulet protects the armour and weaponry of its "
-                "wearer from corrosion caused by acids, although not "
+                "This amulet protects the wearer and their equipment "
+                "from corrosion caused by acids, although not "
                 "infallibly so. ";
             break;
 
         case AMU_THE_GOURMAND:
             description +=
+                "This amulet allows its wearer to digest raw meat "
+                "even when not hungry. Its effects on the wearer's digestion "
+                "and palate are cumulative over time, and are initially small.";
+            /*
                 "This amulet allows its wearer to consume meat in "
                 "various states of decay without suffering unduly as "
                 "a result. Poisonous or cursed flesh is still not "
                 "recommended. ";
+                */
             break;
 
         case AMU_CONSERVATION:
@@ -2676,7 +2739,7 @@ static std::string describe_jewellery( const item_def &item, char verbose)
         description += "$";
     }
 
-    if ((verbose == 1 || is_random_artefact( item ))
+    if ((verbose || is_random_artefact( item ))
         && item_ident( item, ISFLAG_KNOW_PLUSES ))
     {
         // Explicit description of ring power (useful for randarts)
@@ -2845,11 +2908,12 @@ static std::string describe_staff( const item_def &item )
             description +=
                 "allows its wielder to smite foes from afar. The wielder "
                 "must be at least level four to safely use this ability, "
-                "which costs 4 magic points. ";
+                "which drains four charges. ";
             break;
 
         case STAFF_STRIKING:
-            description += "allows its wielder to strike foes from afar. ";
+            description += "allows its wielder to strike foes from afar "
+                "with force bolts. ";
             break;
 
         case STAFF_SPELL_SUMMONING:
@@ -2893,13 +2957,16 @@ static std::string describe_staff( const item_def &item )
 
         if (item_is_rod( item ))
         {
-            description +=
-                "Casting a spell from it consumes no food, and will not fail.$";
+            if (item.sub_type != STAFF_STRIKING)
+                description += 
+                    "$$It uses its own mana reservoir for casting spells, and "
+                    "recharges automatically by channeling mana from its "
+                    "wielder.";
         }
         else
         {
             description +=
-                "$$Damage rating: 7 $Accuracy rating: +6 $Attack delay: 120%%";
+                "$$Damage rating: 7 $Accuracy rating: +6 $Attack delay: 120%";
 
             description += "$$It falls into the 'staves' category. ";
         }
@@ -3094,15 +3161,11 @@ static std::string describe_misc_item( const item_def &item )
     return (description);
 }
 
-#if MAC
-#pragma mark -
-#endif
-
 // ========================================================================
 //      Public Functions
 // ========================================================================
 
-bool is_dumpable_artifact( const item_def &item, char verbose)
+bool is_dumpable_artifact( const item_def &item, bool verbose)
 {
     bool ret = false;
 
@@ -3111,13 +3174,13 @@ bool is_dumpable_artifact( const item_def &item, char verbose)
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
     else if (item.base_type == OBJ_ARMOUR
-        && (verbose == 1 && item_ident( item, ISFLAG_KNOW_TYPE )))
+        && (verbose && item_ident( item, ISFLAG_KNOW_TYPE )))
     {
         const int spec_ench = get_armour_ego_type( item );
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);
     }
     else if (item.base_type == OBJ_JEWELLERY 
-        && (verbose == 1 
+        && (verbose 
             && get_ident_type(OBJ_JEWELLERY, item.sub_type) == ID_KNOWN_TYPE))
     {
         ret = true;
@@ -3135,7 +3198,7 @@ bool is_dumpable_artifact( const item_def &item, char verbose)
 // be interpreted as carriage returns.
 //
 //---------------------------------------------------------------
-std::string get_item_description( const item_def &item, char verbose, bool dump )
+std::string get_item_description( const item_def &item, bool verbose, bool dump )
 {
     std::string description;
     description.reserve(500);
@@ -3236,22 +3299,22 @@ std::string get_item_description( const item_def &item, char verbose, bool dump 
         description += "This item should not exist. Mayday! Mayday! ";
     }
 
-    if (verbose == 1)
+    if (verbose)
     {
         description += "$It weighs around ";
 
-        const int mass = mass_item( item );
+        const int mass = item_mass( item );
 
         char item_mass[16];
         itoa( mass / 10, item_mass, 10 ); 
         
         for (int i = 0; i < 14; i++) 
         {
-            if (item_mass[i] == '\0')
+            if (item_mass[i] == 0)
             {
                 item_mass[i] = '.';
                 item_mass[i+1] = (mass % 10) + '0';
-                item_mass[i+2] = '\0';
+                item_mass[i+2] = 0;
                 break;
             }
         }
@@ -3274,11 +3337,9 @@ std::string get_item_description( const item_def &item, char verbose, bool dump 
 void describe_item( const item_def &item )
 {
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
@@ -3306,8 +3367,7 @@ void describe_item( const item_def &item )
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
+    puttext(1, 1, 80, 25, buffer);
 #endif
 }                               // end describe_item()
 
@@ -3326,10 +3386,9 @@ void describe_spell(int spelled)
     description.reserve(500);
 
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
@@ -4110,7 +4169,8 @@ void describe_spell(int spelled)
     case SPELL_AIRSTRIKE:       // jet planes in Crawl ??? {dlb}
         description +=
             "causes the air around a creature to twist itself into "
-            "a whirling vortex of meteorological fury. ";
+            "a whirling vortex of meteorological fury. This spell "
+	    "is especially effective against flying enemies.";
         break;
 
     case SPELL_SHADOW_CREATURES:
@@ -4325,14 +4385,6 @@ void describe_spell(int spelled)
             "corporeal undead. ";
         break;
 
-    case SPELL_SHUGGOTH_SEED:
-        description += "implants a shuggoth seed, the larval parasitic form "
-            "of the fearsome shuggoth, in a living host. The "
-            "shuggoth seed will draw life from its host and then "
-            "hatch, whereupon a fully grown shuggoth will burst "
-            "from the unfortunate host's chest. ";
-        break;
-
     case SPELL_MAXWELLS_SILVER_HAMMER:
         description += "bestows a lethal but temporary gravitic field "
             "to a crushing implement held by the caster. "
@@ -4369,6 +4421,11 @@ void describe_spell(int spelled)
         description += "allows the conjurer to create ball lightning.  "
                         "Using the spell is not without risk - ball lighting "
                         "can be difficult to control. ";
+        break;
+
+    case SPELL_CHAIN_LIGHTNING:
+        description += "releases a massive electrical discharge that "
+                       "arcs from target to target until it grounds out.";
         break;
 
     case SPELL_TWIST:
@@ -4421,7 +4478,7 @@ void describe_spell(int spelled)
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
+    puttext(1, 1, 80, 25, buffer);
     window(1, 1, 80, 25);
 #endif
 }                               // end describe_spell()
@@ -4441,14 +4498,14 @@ void describe_monsters(int class_described, unsigned char which_mons)
     description.reserve(200);
 
 #ifdef DOS_TERM
-    char buffer[3400];
-
-    gettext(25, 1, 80, 25, buffer);
-    window(25, 1, 80, 25);
+    char buffer[4000];
+    gettext(1, 1, 80, 25, buffer);
+    // window(25, 1, 80, 25);
 #endif
 
     clrscr();
-    description = std::string( ptr_monam( &(menv[ which_mons ]), DESC_CAP_A ) );
+
+    description = ptr_monam( &(menv[ which_mons ]), DESC_CAP_A );
     description += "$$";
 
     switch (class_described)
@@ -4834,6 +4891,10 @@ void describe_monsters(int class_described, unsigned char which_mons)
         if (you.species != SP_MUMMY)
             description += "It smells horrible.";
         break;
+
+    case MONS_DEATH_DRAKE:
+	description += "A small dragon, radiating evil.";
+	break;
 
     case MONS_FIREDRAKE:
         description += "A small dragon, puffing clouds of smoke.";
@@ -5806,6 +5867,44 @@ void describe_monsters(int class_described, unsigned char which_mons)
             "A small and slimy eel, crackling with electrical discharge.";
         break;
 
+    case MONS_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_KNIGHT:
+    {
+        description += "A ";
+
+        const int subsp = draco_subspecies( &menv[which_mons] );
+        switch (subsp)
+        {
+        case MONS_DRACONIAN:            description += "brown ";   break;
+        case MONS_BLACK_DRACONIAN:      description += "black ";   break;
+        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
+        case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
+        case MONS_GREEN_DRACONIAN:      description += "green ";   break;
+        case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
+        case MONS_RED_DRACONIAN:        description += "red ";     break;
+        case MONS_WHITE_DRACONIAN:      description += "white ";   break;
+        case MONS_PALE_DRACONIAN:       description += "pale ";    break;
+        default:
+            break;
+        }
+
+        description += "scaled humanoid with wings.";
+        break;        
+    }
     case MONS_PLAYER_GHOST:
         description += "The apparition of ";
         description += ghost_description();
@@ -6050,6 +6149,16 @@ void describe_monsters(int class_described, unsigned char which_mons)
             "covered in thick red scales and thorns.";
         break;
 
+    case MONS_ORANGE_STATUE:
+        description += "An intricately carved statue of glittering orange "
+            "crystal. Its eyes fix on yours with a piercing gaze.";
+        break;
+
+    case MONS_SILVER_STATUE:
+        description += "A beautiful statue of silver. Its eyes "
+            "glow with an otherworldly radiance.";
+        break;
+
     case MONS_PROGRAM_BUG:
     default:
         description += "If this monster is a \"program bug\", then it's "
@@ -6062,17 +6171,9 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
 #if DEBUG_DIAGNOSTICS
 
-    if (mons_flag( menv[ which_mons ].type, M_SPELLCASTER ))
+    if (mons_class_flag( menv[ which_mons ].type, M_SPELLCASTER ))
     {
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        int msecc = ((class_described == MONS_HELLION)    ? MST_BURNING_DEVIL :
-                     (class_described == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                 : menv[ which_mons ].number);
-
-        mons_spell_list(msecc, hspell_pass);
-
+        const monster_spells &hspell_pass = menv[which_mons].spells;
         bool found_spell = false;
 
         for (int i = 0; i < 6; i++)
@@ -6123,7 +6224,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         getch();
 
 #ifdef DOS_TERM
-    puttext(25, 1, 80, 25, buffer);
+    puttext(1, 1, 80, 25, buffer);
     window(1, 1, 80, 25);
 #endif
 }                               // end describe_monsters
@@ -6212,7 +6313,7 @@ static void print_god_abil_desc( int abil )
     std::string str( abil_info.name );
     str += std::string( 79 - str.length() - cost.length(), ' ' ) + cost + EOL;
 
-    cprintf( str.c_str() );
+    cprintf( "%s", str.c_str() );
 }
 
 
@@ -6257,7 +6358,7 @@ void describe_god( int which_god, bool give_title )
     //mv: print god's name and title - if you can think up better titles
     //I have nothing against
     textcolor(colour);
-    cprintf (god_name(which_god,true)); //print long god's name
+    cprintf( "%s", god_name(which_god,true)); //print long god's name
     cprintf (EOL EOL);
 
     //mv: print god's description
@@ -6268,17 +6369,19 @@ void describe_god( int which_god, bool give_title )
     case GOD_ZIN:
         description = "Zin is an ancient and revered God, dedicated to the establishment of order" EOL
                       "and the destruction of the forces of chaos and night. Valued worshippers " EOL
-                      "can gain a variety of powers useful in the fight against the evil, but must" EOL
-                      "abstain from the use of necromancy and other forms of unholy magic." EOL
-                      "Zin appreciates long-standing faith as well as sacrifices of valued objects." EOL;
+                      "can gain blessings on their weapons and a variety of powers useful in the" EOL
+                      "fight against the evil, but must abstain from the use of necromancy and other" EOL
+                      "forms of unholy magic. Zin appreciates long-standing faith as well as " EOL
+                      "sacrifices of valued objects.";
         break;
 
     case GOD_SHINING_ONE:
         description = "The Shining One is a powerful crusading deity, allied with Zin in the fight" EOL
-                      "against evil. Followers may be granted with the ability to summarily dispense" EOL
-                      "the wrath of heaven, but must never use any form of evil magic and should" EOL
-                      "fight honourably. The Shining One appreciates long-standing persistence in " EOL
-                      "the endless crusade, as well as the dedicated destruction of unholy creatures.";
+                      "against evil. Followers may be granted blessings on their weapons and the " EOL
+                      "ability to summarily dispense the wrath of heaven, but must never use any " EOL
+                      "form of evil magic and should fight honourably. The Shining One appreciates" EOL
+                      "long-standing persistence in the endless crusade, as well as the dedicated " EOL
+                      "destruction of unholy creatures.";
         break;
 
     case GOD_KIKUBAAQUDGHA:
@@ -6358,7 +6461,7 @@ void describe_god( int which_god, bool give_title )
                       "be reported to dev-team.";
     }
 
-    cprintf(description);
+    cprintf("%s", description);
     //end of printing description
 
     // title only shown for our own god
@@ -6372,17 +6475,17 @@ void describe_god( int which_god, bool give_title )
         // based on your god
         if (you.piety > 160) 
         { 
-            cprintf((which_god == GOD_SHINING_ONE) ? "Champion of Law" :
+            cprintf("%s", (which_god == GOD_SHINING_ONE) ? "Champion of Law" :
                     (which_god == GOD_ZIN) ? "Divine Warrior" :
                     (which_god == GOD_ELYVILON) ? "Champion of Light" :
-                    (which_god == GOD_OKAWARU) ? "Master of Thousand Battles" :
+                    (which_god == GOD_OKAWARU) ? "Master of a Thousand Battles" :
                     (which_god == GOD_YREDELEMNUL) ? "Master of Eternal Death" :
                     (which_god == GOD_KIKUBAAQUDGHA) ? "Lord of Darkness" :
                     (which_god == GOD_MAKHLEB) ? "Champion of Chaos" :
                     (which_god == GOD_VEHUMET) ? "Lord of Destruction" :
                     (which_god == GOD_TROG) ? "Great Slayer" :
                     (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
-                    (which_god == GOD_SIF_MUNA) ? "Master of Arcane" :
+                    (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
                     (which_god == GOD_XOM) ? "Teddy Bear" : 
                         "Bogy the Lord of the Bugs"); // Xom and no god is handled before
         }
@@ -6443,16 +6546,13 @@ void describe_god( int which_god, bool give_title )
     if (you.religion != which_god)
     {
         textcolor (colour);
-        snprintf( info, INFO_SIZE, 
-                 (you.penance[which_god] >= 50) ? "%s's wrath is upon you!" :
+        cprintf( (you.penance[which_god] >= 50) ? "%s's wrath is upon you!" :
                  (you.penance[which_god] >= 20) ? "%s is annoyed with you." :
                  (you.penance[which_god] >=  5) ? "%s well remembers your sins." :
                  (you.penance[which_god] >   0) ? "%s is ready to forgive your sins." :
                  (you.worshipped[which_god])    ? "%s is ambivalent towards you." 
                                                 : "%s is neutral towards you.",
                  god_name(which_god) );
-
-        cprintf(info);
     } 
     else
     {
@@ -6470,31 +6570,22 @@ void describe_god( int which_god, bool give_title )
                 cprintf("You are ignored.");
             else
             {
-                snprintf( info, INFO_SIZE, 
-
-                         (you.piety > 130) ? "A prized avatar of %s.":
+                cprintf( (you.piety > 130) ? "A prized avatar of %s.":
                          (you.piety > 100) ? "A shining star in the eyes of %s." :
                          (you.piety >  70) ? "A rising star in the eyes of %s." :
                          (you.piety >  40) ? "%s is most pleased with you." :
                          (you.piety >  20) ? "%s has noted your presence." :
                          (you.piety >   5) ? "%s is noncommittal."
-                                           : "You are beneath notice.",
-
-                         god_name(which_god)
-                       );
-
-                cprintf(info);
+                                           : "You are beneath %s's notice.",
+                         god_name(which_god));
             }
         }
         //end of favour
 
         //mv: following code shows abilities given from god (if any)
-
-
         textcolor(LIGHTGRAY);
         cprintf(EOL EOL "Granted powers :                                                         (Cost)" EOL);
         textcolor(colour);
-
 
         // mv: these gods protects you during your prayer (not mentioning XOM)
         // chance for doing so is (random2(you.piety) >= 30)
@@ -6503,33 +6594,31 @@ void describe_god( int which_god, bool give_title )
         // because god isn't really protecting player - he only sometimes
         // saves his life (probably it shouldn't be displayed at all).
         // What about this ?
+        bool penance_ability = false;
         if ((which_god == GOD_ZIN
                 || which_god == GOD_SHINING_ONE
                 || which_god == GOD_ELYVILON
-                || which_god == GOD_OKAWARU
                 || which_god == GOD_YREDELEMNUL)
             && you.piety >= 30)
         {
-            snprintf( info, INFO_SIZE, 
-                      "%s %s watches over you during prayer." EOL,
-                      god_name(which_god),
-                      (you.piety >= 150) ? "carefully":   // > 4/5
-                      (you.piety >=  90) ? "often" :      // > 2/3
-                                           "sometimes"    // less than 2:3
-                    );
-
-            cprintf(info);
+            penance_ability = true; // suppress "none" later
+            cprintf( "%s %s watches over you during prayer." EOL,
+                     god_name(which_god),
+                     (you.piety >= 150) ? "carefully":   // > 4/5
+                     (you.piety >=  90) ? "often" :      // > 2/3
+                                          "sometimes");  // less than 2:3
         }
 
         // mv: No abilities (except divine protection)
         // under penance (fix me if I'm wrong)
         if (player_under_penance()) 
-        { 
-            cprintf( "None." EOL );
+        {
+            if ( !penance_ability )
+                cprintf( "None." EOL );
         }
         else
         {
-            switch (which_god) //mv: finaly let's print abilities
+            switch (which_god) //mv: finally let's print abilities
             {
             case GOD_ZIN:
                 if (you.piety >= 30)
@@ -6563,7 +6652,7 @@ void describe_god( int which_god, bool give_title )
                     print_god_abil_desc( ABIL_TSO_ANNIHILATE_UNDEAD );
 
                 if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_TSO_THUNDERBOLT );
+                    print_god_abil_desc( ABIL_TSO_CLEANSING_FLAME );
 
                 if (you.piety >= 120)
                     print_god_abil_desc( ABIL_TSO_SUMMON_DAEVA );
@@ -6619,9 +6708,6 @@ void describe_god( int which_god, bool give_title )
 
                 if (you.piety >= 75)  
                     cprintf( "During prayer you have some protection from summoned creatures." EOL );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_VEHUMET_CHANNEL_ENERGY );
                 break;
 
 
@@ -6661,10 +6747,13 @@ void describe_god( int which_god, bool give_title )
                 break;
 
             case GOD_SIF_MUNA:
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_SIF_MUNA_FORGET_SPELL );
+                if (you.piety >= 30)
+                    print_god_abil_desc( ABIL_SIF_MUNA_CHANNEL_ENERGY );
                 else 
                     cprintf( "None." EOL );
+
+                if (you.piety >= 50)
+                    print_god_abil_desc( ABIL_SIF_MUNA_FORGET_SPELL );
 
                 if (you.piety >= 100) 
                     cprintf( "You are protected from some side-effects of spellcasting." EOL );

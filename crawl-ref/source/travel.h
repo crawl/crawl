@@ -31,27 +31,14 @@ unsigned char is_waypoint(int x, int y);
 void update_excludes();
 bool is_stair(unsigned gridc);
 bool is_travelable_stair(unsigned gridc);
-int stair_direction(int stair_feat);
+command_type stair_direction(int stair_feat);
 bool is_player_mapped(unsigned char envch);
+command_type direction_to_command( char x, char y );
+bool is_resting( void );
+bool can_travel_interlevel();
 
-inline bool is_player_mapped(int grid_x, int grid_y)
-{
-    return (is_player_mapped( env.map[grid_x - 1][grid_y - 1] ));
-}
+bool is_player_mapped(int grid_x, int grid_y);
 
-/* ***********************************************************************
- * Returns the direction to take to move along the shortest path between
- * (you_x, you_y) and (you.run_x, you.run_y) in (*move_x, *move_y).
- * If move_x or move_y is NULL, the function explores the map outwards from 
- * (you_x, you_y), populating the coords vector with the coordinates
- * of every dungeon feature it finds, features closest to the character 
- * (travel distance-wise) coming first in the vector. A 'feature' is defined
- * as a trap, and any other non-floor, non-water/lava square that the character
- * can step onto.
- *
- * ***********************************************************************
- * called from: acr - view
- * *********************************************************************** */
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);
 
@@ -72,15 +59,11 @@ void start_translevel_travel(bool prompt_for_destination = true);
 
 void start_travel(int x, int y);
 
-void travel(int *keyin, char *move_x, char *move_y);
+command_type travel();
 
 int travel_direction(unsigned char branch, int subdungeondepth);
 
 void prevent_travel_to(const std::string &dungeon_feature_name);
-
-int subdungeon_depth(unsigned char branch, int depth);
-
-int absdungeon_depth(unsigned char branch, int subdepth);
 
 // Sort dungeon features as appropriate.
 void arrange_features(std::vector<coord_def> &features);
@@ -109,14 +92,6 @@ void arrange_features(std::vector<coord_def> &features);
  * *********************************************************************** */
 extern short point_distance[GXM][GYM];
 
-// Possible values of you.running
-enum RUN_MODES
-{
-    RUN_TRAVEL      = -1,   // Classic or Plain Old travel
-    RUN_EXPLORE     = -2,   // Exploring (Ctrl+O)
-    RUN_INTERLEVEL  = -3    // Interlevel travel (Ctrl+G)
-};
-
 enum EXPLORE_STOP
 {
     ES_NONE     = 0,
@@ -129,6 +104,8 @@ enum EXPLORE_STOP
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
 
+// Identifies a level. This has no meaning in the Abyss, labyrinths or
+// Pandemonium.
 struct level_id
 {
     unsigned char branch;   // The branch in which the level is.

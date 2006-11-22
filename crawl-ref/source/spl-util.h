@@ -3,6 +3,8 @@
  *  Summary:    data handlers for player spell list
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Changelog(most recent first):
  *
  *           24jun2000     jmf     simplified structures
@@ -20,7 +22,8 @@ struct playerspell
 {
   int id;
   const char *title;
-  unsigned int disciplines; //jmf: a bitfield
+  unsigned int disciplines; // bitfield
+  unsigned int flags;       // bitfield
   unsigned int level;
 };
 
@@ -46,6 +49,8 @@ int spell_difficulty(int which_spell);
 
 int spell_levels_required(int which_spell);
 
+unsigned int get_spell_flags( int which_spell );
+
 // * called from: chardump - spell - spl-book - spells0
 bool spell_typematch(int which_spell, unsigned int which_discipline);
 unsigned int spell_type( int which_spell ); //jmf: simplification of above
@@ -53,6 +58,8 @@ int count_bits( unsigned int bits );
 
 // * called from: chardump - command - debug - spl-book - spells0
 const char *spell_title(int which_spell);
+
+const char* spelltype_short_name( int which_spelltype );
 
 //int spell_restriction(int which_spell, int which_restriction);
 

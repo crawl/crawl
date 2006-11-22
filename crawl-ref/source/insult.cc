@@ -4,6 +4,8 @@
 // to link with Linley Henzel's Dungeon Crawl (or Crawl) without change to
 // Crawl's license.
 //
+// Modified for Crawl Reference by $Author$ on $Date$
+//
 // The goal of this stuff is catachronistic feel.
 
 #include "AppHdr.h"

@@ -116,7 +116,7 @@ void drain_life(int pow);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-void holy_word(int pow);
+void holy_word(int pow, bool silent = false);
 
 
 // last updated 24may2000 {dlb}
@@ -131,7 +131,7 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-void summon_ice_beast_etc(int pow, int ibc);
+void summon_ice_beast_etc(int pow, int ibc, bool divine_gift = false);
 
 
 // last updated 24may2000 {dlb}

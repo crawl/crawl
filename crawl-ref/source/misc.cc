@@ -3,6 +3,8 @@
  *  Summary:    Misc functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <3>   11/14/99      cdl    evade with random40(ev) vice random2(ev)
@@ -13,9 +15,10 @@
 
 #include "AppHdr.h"
 #include "misc.h"
+#include "notes.h"
 
 #include <string.h>
-#if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
+#if !defined(__IBMCPP__)
 #include <unistd.h>
 #endif
 
@@ -45,6 +48,7 @@
 #include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "shopping.h"
@@ -57,6 +61,7 @@
 #include "travel.h"
 #include "view.h"
 
+extern FixedVector<char, 10>  Visible_Statue;        // defined in acr.cc
 
 bool scramble(void);
 bool trap_item(char base_type, char sub_type, char beam_x, char beam_y);
@@ -93,7 +98,7 @@ void turn_corpse_into_chunks( item_def &item )
         mitm[o].plus2 = 0;
         mitm[o].special = 0;
         mitm[o].flags = 0;
-        mitm[o].colour = mons_colour( mons_class );
+        mitm[o].colour = mons_class_colour( mons_class );
 
         // these values cannot be set by a reasonable formula: {dlb}
         switch (mons_class)
@@ -132,17 +137,91 @@ void turn_corpse_into_chunks( item_def &item )
     }
 }                               // end place_chunks()
 
+bool grid_is_wall( int grid )
+{
+    return (grid == DNGN_ROCK_WALL
+            || grid == DNGN_STONE_WALL
+            || grid == DNGN_METAL_WALL
+            || grid == DNGN_GREEN_CRYSTAL_WALL
+            || grid == DNGN_WAX_WALL
+            || grid == DNGN_PERMAROCK_WALL);
+}
+
+bool grid_is_opaque( int grid )
+{
+    return (grid < MINSEE && grid != DNGN_ORCISH_IDOL);
+}
+
+bool grid_is_solid( int grid )
+{
+    return (grid < MINMOVE);
+}
+
+bool grid_is_water( int grid )
+{
+    return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
+}
+
+bool grid_destroys_items( int grid )
+{
+    return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
+}
+
+// returns 0 is grid is not an altar, else it returns the GOD_* type
+god_type grid_altar_god( unsigned char grid )
+{
+    if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_ELYVILON)
+        return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
+
+    return (GOD_NO_GOD);
+}
+
+bool grid_is_branch_stairs( unsigned char grid )
+{
+    return ((grid >= DNGN_ENTER_ORCISH_MINES && grid <= DNGN_ENTER_RESERVED_4)
+            || (grid >= DNGN_ENTER_DIS && grid <= DNGN_ENTER_TARTARUS));
+}
+
+int grid_secret_door_appearance( int gx, int gy )
+{
+    int ret = DNGN_FLOOR;
+
+    for (int dx = -1; dx <= 1; dx++)
+    {
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            // only considering orthogonal grids
+            if ((abs(dx) + abs(dy)) % 2 == 0)
+                continue;
+
+            const int targ = grd[gx + dx][gy + dy];
+
+            if (!grid_is_wall( targ ))
+                continue;
+
+            if (ret == DNGN_FLOOR)
+                ret = targ;
+            else if (ret != targ)
+                ret = ((ret < targ) ? ret : targ);
+        }
+    }
+
+    return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL 
+                                : ret);
+}
+
+const char *grid_item_destruction_message( unsigned char grid )
+{
+    return grid == DNGN_DEEP_WATER? "You hear a splash."
+         : grid == DNGN_LAVA      ? "You hear a sizzling splash."
+         :                          "You hear an empty echo.";
+}
+
 void search_around(void)
 {
     char srx = 0;
     char sry = 0;
     int i;
-
-    // Never if doing something else... this prevents a slight asymetry 
-    // where using autopickup was giving free searches in comparison to
-    // not using autopickup.  -- bwr
-    if (you_are_delayed())
-        return;
 
     for (srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
     {
@@ -218,7 +297,7 @@ void in_a_cloud(void)
             hurted /= (1 + resist * resist);
             ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
         }
-        scrolls_burn(7, OBJ_SCROLLS);
+        expose_player_to_element(BEAM_FIRE, 7);
         break;
 
     case CLOUD_STINK:
@@ -269,7 +348,7 @@ void in_a_cloud(void)
             hurted /= (1 + resist * resist);
             ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
         }
-        scrolls_burn(7, OBJ_POTIONS);
+        expose_player_to_element(BEAM_COLD, 7);
         break;
 
     case CLOUD_POISON:
@@ -298,13 +377,7 @@ void in_a_cloud(void)
     case CLOUD_STEAM:
     case CLOUD_STEAM_MON:
         mpr("You are engulfed in a cloud of scalding steam!");
-        if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
-        {
-            mpr("It doesn't seem to affect you.");
-            return;
-        }
-
-        if (player_equip( EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR ))
+        if (player_res_steam() > 0)
         {
             mpr("It doesn't seem to affect you.");
             return;
@@ -343,6 +416,27 @@ void in_a_cloud(void)
     return;
 }                               // end in_a_cloud()
 
+void curare_hits_player(int agent, int degree)
+{
+    const bool res_poison = player_res_poison();
+
+    poison_player(degree);
+
+    if (!player_res_asphyx())
+    {
+        int hurted = roll_dice(2, 6);
+        // Note that the hurtage is halved by poison resistance.
+        if (res_poison)
+            hurted /= 2;
+
+        if (hurted)
+        {
+            mpr("You feel difficulty breathing.");
+            ouch( hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea" );
+        }
+        potion_effect(POT_SLOWING, 2 + random2(4 + degree));
+    }
+}
 
 void merfolk_start_swimming(void)
 {
@@ -409,14 +503,14 @@ void up_stairs(void)
         ouch( roll_dice( 3 + you.burden_state, 5 ), 0, 
               KILLED_BY_FALLING_DOWN_STAIRS );
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return;
     }
 
     if (you.burden_state == BS_OVERLOADED)
     {
         mpr("You are carrying too much to climb upwards.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return;
     }
 
@@ -533,7 +627,7 @@ void up_stairs(void)
 
     load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     save_game(false);
 
@@ -703,7 +797,6 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     if (collect_travel_data)
         old_level_info.update();
 
-
     if (you.level_type == LEVEL_PANDEMONIUM
             && stair_find == DNGN_TRANSIT_PANDEMONIUM)
     {
@@ -836,41 +929,21 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         you.level_type = LEVEL_PANDEMONIUM;
     }
 
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-        || you.level_type == LEVEL_PANDEMONIUM)
+    // When going downstairs into a special level, delete any previous
+    // instances of it
+    if (you.level_type == LEVEL_LABYRINTH ||
+        you.level_type == LEVEL_ABYSS ||
+        you.level_type == LEVEL_PANDEMONIUM)
     {
-        char glorpstr[kFileNameSize];
-        char del_file[kFileNameSize];
-        int sysg;
-
-#ifdef SAVE_DIR_PATH
-        snprintf( glorpstr, sizeof(glorpstr), 
-                  SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-#else
-        strncpy(glorpstr, you.your_name, kFileNameLen);
-
-        // glorpstr [strlen(glorpstr)] = 0;
-        // This is broken. Length is not valid yet! We have to check if we got
-        // a trailing NULL; if not, write one:
-        /* is name 6 chars or more? */
-        if (strlen(you.your_name) > kFileNameLen - 1)
-            glorpstr[kFileNameLen] = '\0';
-#endif
-
-        strcpy(del_file, glorpstr);
-        strcat(del_file, ".lab");
-
-#ifdef DOS
-        strupr(del_file);
-#endif
-        sysg = unlink(del_file);
-
+        std::string lname = make_filename(you.your_name, you.your_level,
+                                          you.where_are_you,
+                                          true, false );
 #if DEBUG_DIAGNOSTICS
-        strcpy( info, "Deleting: " );
-        strcat( info, del_file );
+	snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
         mpr( info, MSGCH_DIAGNOSTICS );
         more();
 #endif
+        unlink(lname.c_str());
     }
 
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
@@ -993,7 +1066,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         break;
     }
 
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     save_game(false);
 
@@ -1065,6 +1138,7 @@ void new_level(void)
     env.floor_colour = LIGHTGREY;
     env.rock_colour  = BROWN;
 
+    take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     if (you.level_type == LEVEL_PANDEMONIUM)
     {
         cprintf("- Pandemonium            ");
@@ -1240,7 +1314,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (random2(10) < 2 || (trap_known && !one_chance_in(4)))
     {
         snprintf( info, INFO_SIZE, "You avoid triggering a%s trap.",
-                                    pbolt.beam_name );
+                                    pbolt.name.c_str() );
         mpr(info);
         return;
     }
@@ -1248,9 +1322,9 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (you.equip[EQ_SHIELD] != -1 && one_chance_in(3))
         exercise( SK_SHIELDS, 1 );
 
-    snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.beam_name );
+    snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.name.c_str() );
 
-    if (random2( 50 + 10 * you.shield_blocks * you.shield_blocks ) 
+    if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
                                                 < player_shield_class())
     {
         you.shield_blocks++;
@@ -1280,7 +1354,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
         damage_taken -= random2( player_AC() + 1 );
 
         if (damage_taken > 0)
-            ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.beam_name );
+            ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
     }
     else
     {
@@ -1351,37 +1425,37 @@ void handle_traps(char trt, int i, bool trap_known)
     switch (trt)
     {
     case TRAP_DART:
-        strcpy(beam.beam_name, " dart");
+        beam.name = " dart";
         beam.damage = dice_def( 1, 4 + (you.your_level / 2) );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_NEEDLE:
-        strcpy(beam.beam_name, " needle");
+        beam.name = " needle";
         beam.damage = dice_def( 1, 0 );
         dart_trap(trap_known, i, beam, true);
         break;
 
     case TRAP_ARROW:
-        strcpy(beam.beam_name, "n arrow");
+        beam.name = "n arrow";
         beam.damage = dice_def( 1, 7 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_BOLT:
-        strcpy(beam.beam_name, " bolt");
+        beam.name = " bolt";
         beam.damage = dice_def( 1, 13 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_SPEAR:
-        strcpy(beam.beam_name, " spear");
+        beam.name = " spear";
         beam.damage = dice_def( 1, 10 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
 
     case TRAP_AXE:
-        strcpy(beam.beam_name, "n axe");
+        beam.name = "n axe";
         beam.damage = dice_def( 1, 15 + you.your_level );
         dart_trap(trap_known, i, beam, false);
         break;
@@ -1462,7 +1536,7 @@ void disarm_trap( struct dist &disa )
     {
         mpr("You failed to disarm the trap.");
 
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         if (random2(you.dex) > 5 + random2(5 + you.your_level))
             exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
@@ -1499,7 +1573,7 @@ void disarm_trap( struct dist &disa )
 
     grd[you.x_pos + disa.dx][you.y_pos + disa.dy] = DNGN_FLOOR;
     env.trap[i].type = TRAP_UNASSIGNED;
-    you.turn_is_over = 1;
+    you.turn_is_over = true;
 
     // reduced from 5 + random2(5)
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));
@@ -1604,7 +1678,9 @@ void weird_writing(char stringy[40])
 }                               // end weird_writing()
 
 // must be a better name than 'place' for the first parameter {dlb}
-void fall_into_a_pool(bool place, unsigned char terrain)
+// returns true if we manage to scramble free.
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+                       unsigned char terrain )
 {
     bool escape = false;
     FixedVector< char, 2 > empty;
@@ -1613,7 +1689,7 @@ void fall_into_a_pool(bool place, unsigned char terrain)
     {
         // These can happen when we enter deep water directly -- bwr
         merfolk_start_swimming();
-        return;
+        return (false);
     }
 
     strcpy(info, "You fall into the ");
@@ -1635,67 +1711,73 @@ void fall_into_a_pool(bool place, unsigned char terrain)
         if (resist <= 0)
         {
             mpr( "The lava burns you to a cinder!" );
-            ouch( -9999, 0, KILLED_BY_LAVA );
+            ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
         }
         else
         {
             // should boost # of bangs per damage in the future {dlb}
             mpr( "The lava burns you!" );
-            ouch( (10 + random2avg(100, 2)) / resist, 0, KILLED_BY_LAVA );
+            ouch( (10 + roll_dice(2,50)) / resist, 0, KILLED_BY_LAVA );
         }
 
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr("Your icy shield dissipates!", MSGCH_DURATION);
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
-        }
+        expose_player_to_element( BEAM_LAVA, 14 );
     }
 
     // a distinction between stepping and falling from you.levitation
     // prevents stepping into a thin stream of lava to get to the other side.
     if (scramble())
     {
-        if (place)
+        if (allow_shift)
         {
-            if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, false, empty))
+            if (empty_surrounds( you.x_pos, you.y_pos, DNGN_FLOOR, 1, 
+                                 false, empty ))
             {
-                you.x_pos = empty[0];
-                you.y_pos = empty[1];
                 escape = true;
             }
             else
+            {
                 escape = false;
+            }
         }
         else
-            escape = true;
+        {
+            // back out the way we came in, if possible
+            if (grid_distance( you.x_pos, you.y_pos, entry_x, entry_y ) == 1
+                && (entry_x != empty[0] || entry_y != empty[1]))
+            {
+                escape = true;
+                empty[0] = entry_x;
+                empty[1] = entry_y;
+            }
+            else  // zero or two or more squares away, with no way back
+            {
+                escape = false;
+            }
+        }
     }
     else
     {
-        // that is, don't display following when fall from levitating
-        if (!place)
-            mpr("You try to escape, but your burden drags you down!");
+        mpr("You try to escape, but your burden drags you down!");
     }
 
-    if (escape)
+    if (escape && move_player_to_grid( empty[0], empty[1], false, false, true ))
     {
         mpr("You manage to scramble free!");
 
         if (terrain == DNGN_LAVA)
-            scrolls_burn(10, OBJ_SCROLLS);
+            expose_player_to_element( BEAM_LAVA, 14 );
 
-        return;
+        return (true);
     }
 
     mpr("You drown...");
 
     if (terrain == DNGN_LAVA)
-        ouch(-9999, 0, KILLED_BY_LAVA);
+        ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
     else if (terrain == DNGN_DEEP_WATER)
-        ouch(-9999, 0, KILLED_BY_WATER);
+        ouch( INSTANT_DEATH, 0, KILLED_BY_WATER );
 
-    // Okay, so you don't trigger a trap when you scramble onto it.
-    //I really can't be bothered right now.
+    return (false);
 }                               // end fall_into_a_pool()
 
 bool scramble(void)
@@ -1823,6 +1905,9 @@ bool trap_item(char base_type, char sub_type, char beam_x, char beam_y)
         else
         {
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
+
+            if (sub_type == MI_ARROW)
+                item.colour = BROWN;
         }
     }
     else
@@ -1888,3 +1973,224 @@ int trap_at_xy(int which_x, int which_y)
     // no idea how well this will be handled elsewhere: {dlb}
     return (-1);
 }                               // end trap_at_xy()
+
+bool i_feel_safe()
+{
+    /* This is probably unnecessary, but I'm not sure that
+       you're always at least 9 away from a wall */
+    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
+    int yend = you.y_pos + 9, xend = you.x_pos + 9;
+    if ( xstart < 0 ) xstart = 0;
+    if ( ystart < 0 ) ystart = 0;
+    if ( xend >= GXM ) xend = 0;
+    if ( ystart >= GYM ) yend = 0;
+
+    /* statue check */
+    if (you.visible_statue[STATUE_SILVER] ||
+             you.visible_statue[STATUE_ORANGE_CRYSTAL] )
+	return false;
+
+    /* monster check */
+    for ( int y = ystart; y < yend; ++y ) {
+	for ( int x = xstart; x < xend; ++x ) {
+	    /* if you can see a nonfriendly monster then you feel
+	       unsafe */
+	    if ( see_grid(x,y) ) {
+		const unsigned char targ_monst = mgrd[x][y];
+		if ( targ_monst != NON_MONSTER ) {
+		    struct monsters *mon = &menv[targ_monst];
+		    if ( !mons_friendly(mon) &&
+			 player_monster_visible(mon) &&
+			 !mons_is_mimic(mon->type) &&
+			 (!Options.safe_zero_exp ||
+			  !mons_class_flag( mon->type, M_NO_EXP_GAIN ))) {
+		      return false;
+		    }
+		}
+	    }
+	}
+    }
+    return true;
+}
+
+// Do not attempt to use level_id if level_type != LEVEL_DUNGEON
+std::string short_place_name(level_id id)
+{
+    return short_place_name(
+            get_packed_place(id.branch, id.depth, LEVEL_DUNGEON));
+}
+
+unsigned short get_packed_place( unsigned char branch, int subdepth,
+                                 char level_type )
+{
+    unsigned short place = (unsigned short)
+        ( (branch << 8) | (subdepth & 0xFF) );
+    if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
+            || level_type == LEVEL_LABYRINTH)
+        place = (unsigned short) ( (level_type << 8) | 0xFF );
+    return place;
+}
+
+unsigned short get_packed_place()
+{
+    return get_packed_place( you.where_are_you,
+                      subdungeon_depth(you.where_are_you, you.your_level),
+                      you.level_type );
+}
+
+std::string place_name( unsigned short place, bool long_name,
+                        bool include_number ) {
+
+    unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
+    int lev = place & 0xFF;
+
+    std::string result;
+    if (lev == 0xFF)
+    {
+        switch (branch)
+        {
+        case LEVEL_ABYSS:
+            return ( long_name ? "The Abyss" : "Abyss" );
+        case LEVEL_PANDEMONIUM:
+            return ( long_name ? "Pandemonium" : "Pan" );
+        case LEVEL_LABYRINTH:
+            return ( long_name ? "a Labyrinth" : "Lab" );
+        default:
+            return ( long_name ? "Buggy Badlands" : "Bug" );
+        }
+    }
+    else
+    {
+        switch (branch)
+        {
+        case BRANCH_VESTIBULE_OF_HELL:
+            return ( long_name ? "The Vestibule of Hell" : "Hell" );
+        case BRANCH_HALL_OF_BLADES:
+            return ( long_name ? "The Hall of Blades" : "Blade" );
+        case BRANCH_ECUMENICAL_TEMPLE:
+            return ( long_name ? "The Ecumenical Temple" : "Temple" );
+        case BRANCH_DIS:
+            result = ( long_name ? "The Iron City of Dis" : "Dis");
+            break;
+        case BRANCH_GEHENNA:
+            result = ( long_name ? "Gehenna" : "Geh" );
+            break;            
+        case BRANCH_COCYTUS:
+            result = ( long_name ? "Cocytus" : "Coc" );
+            break;
+        case BRANCH_TARTARUS:
+            result = ( long_name ? "Tartarus" : "Tar" );
+            break;
+        case BRANCH_ORCISH_MINES:
+            result = ( long_name ? "The Orcish Mines" : "Orc" );
+            break;
+        case BRANCH_HIVE:
+            result = ( long_name ? "The Hive" : "Hive" );
+            break;
+        case BRANCH_LAIR:
+            result = ( long_name ? "The Lair" : "Lair" );
+            break;
+        case BRANCH_SLIME_PITS:
+            result = ( long_name ? "The Slime Pits" : "Slime" );
+            break;
+        case BRANCH_VAULTS:
+            result = ( long_name ? "The Vaults" : "Vault" );
+            break;
+        case BRANCH_CRYPT:
+            result = ( long_name ? "The Crypt" : "Crypt" );
+            break;
+        case BRANCH_HALL_OF_ZOT:
+            result = ( long_name ? "The Hall of Zot" : "Zot" );
+            break;
+        case BRANCH_SNAKE_PIT:
+            result = ( long_name ? "The Snake Pit" : "Snake" );
+            break;
+        case BRANCH_ELVEN_HALLS:
+            result = ( long_name ? "The Elven Halls" : "Elf" );
+            break;
+        case BRANCH_TOMB:
+            result = ( long_name ? "The Tomb" : "Tomb" );
+            break;            
+        case BRANCH_SWAMP:
+            result = ( long_name ? "The Swamp" : "Swamp" );
+            break;            
+        default:
+            result = ( long_name ? "The Dungeon" : "D" );
+            break;
+        }
+    }
+
+    if ( include_number ) {
+        char buf[200];
+        if ( long_name ) {
+            // decapitalize 'the'
+            if ( result.find("The") == 0 )
+                result[0] = 't';
+            snprintf( buf, sizeof buf, "Level %d of %s",
+                      lev, result.c_str() );
+        }
+        else if (lev) {
+            snprintf( buf, sizeof buf, "%s:%d",
+                      result.c_str(), lev );
+        }
+        else {
+            snprintf( buf, sizeof buf, "%s:$",
+                      result.c_str() );
+        }
+        result = buf;
+    }
+    return result;
+}
+
+// Takes a packed 'place' and returns a compact stringified place name.
+// XXX: This is done in several other places; a unified function to
+//      describe places would be nice.
+std::string short_place_name(unsigned short place)
+{
+    return place_name( place, false, true );
+}
+
+// Prepositional form of branch level name.  For example, "in the
+// Abyss" or "on level 3 of the Main Dungeon".
+std::string prep_branch_level_name(unsigned short packed_place)
+{
+    std::string place = place_name( packed_place, true, true );
+    if (place.length() && place != "Pandemonium")
+        place[0] = tolower(place[0]);
+    return (place.find("level") == 0?
+            "on " + place
+          : "in " + place);
+}
+
+// Use current branch and depth
+std::string prep_branch_level_name()
+{
+    return prep_branch_level_name( get_packed_place() );
+}
+
+int absdungeon_depth(unsigned char branch, int subdepth)
+{
+    int realdepth = subdepth - 1;
+
+    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
+        realdepth = subdepth + you.branch_stairs[branch - 10];
+
+    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
+        realdepth = subdepth + 26;
+
+    return realdepth;
+}
+
+int subdungeon_depth(unsigned char branch, int depth)
+{
+    int curr_subdungeon_level = depth + 1;
+
+    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
+        curr_subdungeon_level = depth - 26;
+
+    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
+        curr_subdungeon_level = depth
+                                - you.branch_stairs[branch - 10];
+
+    return curr_subdungeon_level;
+}

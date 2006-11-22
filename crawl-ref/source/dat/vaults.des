@@ -1,0 +1,1689 @@
+##############################################################################
+# Random vaults and minivaults; special levels (including V:8!) should go to
+# splev.des. Do NOT put special levels here, or they could be selected when the
+# game looks for random vaults.
+#
+#  key:
+#  x - DNGN_ROCK_WALL
+#  X - DNGN_PERMAROCK_WALL -> should always be undiggable! -- bwr
+#  c - DNGN_STONE_WALL
+#  v - DNGN_METAL_WALL
+#  b - DNGN_GREEN_CRYSTAL_WALL
+#  a - DNGN_WAX_WALL
+#  . - DNGN_FLOOR
+#  + - DNGN_CLOSED_DOOR
+#  = - DNGN_SECRET_DOOR
+#  @ - entry point - must be on outside and on a particular side - see templates
+#  w - water
+#  l - lava
+#  >< - extra stairs - you can leave level by these but will never be placed on
+#                      them from another level
+#  }{ - stairs 82/86 - You must be able to reach these from each other
+#  )( - stairs 83/87
+#  ][ - stairs 84/88
+#  I - orcish idol (does nothing)
+#  ^ - random trap
+#
+#  A - Vestibule gateway (opened by Horn). Can also be put on other levels for 
+#      colour, where it won't do anything.
+#  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc, 
+#      in order.
+#  C - Random Altar.
+#  F - Typically a Granite Statue, but may be Orange or Silver (1 in 100)  
+#  G - Granite statue (does nothing)
+#  H - orange crystal statue (attacks mind)
+#  S - Silver statue (summons demons). Avoid using (rare).
+#  T - Water fountain
+#  U - Magic fountain
+#  V - Permanently dry fountain
+#
+#  Statues can't be walked over and are only destroyed by disintegration
+#
+#  $ - gold
+#  % - normal item
+#  * - higher level item (good)
+#  | - acquirement-level item (almost guaranteed excellent)
+#  O - place an appropriate rune here
+#  P - maybe place a rune here (50%)
+#  R - honeycomb (2/3) or royal jelly (1/3)
+#  Z - the Orb of Zot
+#
+#  0 - normal monster
+#  9 - +5 depth monster
+#  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans 
+#      this way.
+#  1-7 - monster array monster
+#  used to allocate specific monsters for a vault.
+#  is filled with RANDOM_MONSTER if monster not specified
+#
+#  note that a lot of the vaults are in there mainly to add some interest to the
+#  scenery, and are not the lethal treasure-fests you find in Angband
+#  (not that there's anything wrong with that)
+#
+#  Guidelines for creating new vault maps:
+#
+#  [ds] If your map is not a minivault, make sure the side(s) that form the
+#  border have a rock wall padding at least 6 deep. For instance, if your map
+#  is ORIENT: north, you must have a 6 deep border of rock wall (or any
+#  other kind of wall) along the northern, eastern, and western edges of the
+#  map. If you're doing a fullscreen map (encompass), you must pad all around
+#  the map with 6 layers of wall.
+#
+#  Basically you can just let your creativity run wild. You do not have
+#  to place all of the stairs unless the level is full screen, in which
+#  case you must place all except the extra stairs (> and <). The <> stairs
+#  can be put anywhere and in any quantities but do not have to be there. Any
+#  of the other stairs which are not present in the vault will be randomly
+#  placed outside it. Also generally try to avoid rooms with no exit.
+#
+#  You can use the templates below to build vaults. The entry point '@' must be
+#  present (except full-screen vaults where it must not) and be on the same
+#  side of the vault as it is on the template, but can be anywhere along that
+#  side.
+#
+#  I think that's all. Have fun!
+#
+#  ps - remember to add one to the monster array value when placing monsters
+#       on each map (it is 1-7, not 0-6) {dlb}
+#
+#  [dshaligram] All vaults MUST have an ORIENT: attribute; if there's no
+#  ORIENT: attribute, the vault is considered to be a minivault, which is
+#  usually not what you want.
+#
+##############################################################################
+
+default-depth: 1-27
+
+NAME: vault_1
+ORIENT: north
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx....x........x........x.................................xxxxxxxxxxxx
+xxxxxxxxxx|=8...x........+........x......x....x1...x2...x2...x3...x...xxxxxxxxxx
+xxxxxxxxxx|x....x........x........x....................................xxxxxxxxx
+xxxxxxxxxxxxxxxx+xxx+xxxxxxxxxxxxxx..................................xxxxxxxxxxx
+xxxxxxxxx.......x.................+...................................8xxxxxxxxx
+xxxxxxxxx.......x.................x..................................xxxxxxxxxxx
+xxxxxxxxx.......+........3........xx+xx................................xxxxxxxxx
+xxxxxxxxx.......x.................x...x..x....x1...x2...x2...x3...x...xxxxxxxxxx
+xxxxxxxxx.......x.................x...x.............................xxxxxxxxxxxx
+xxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.........................x.S.x...xxxxxx..................|||||xxxxxxxxx
+xxxxxxxxx....xxxxxxxxxxxxxxxxxx...x...x......xxxxxx..................||xxxxxxxxx
+xxxxxxxxx....x...$$$$x****.999x...x...x.........xxxxxx.................xxxxxxxxx
+xxxxxxxxx....+...$$$$x****....x...x...+............xxxxxx.........8....xxxxxxxxx
+xxxxxxxxx....x...$$$$x****....+...x...x...............xxxxxx...........xxxxxxxxx
+xxxxxxxxx....x...$$$$x****....x...x999x..................xxxxxx........xxxxxxxxx
+xxxxxxxxx....xxxxxxxxxxxxxxxxxx...x...xxx...................xxxxxx.....xxxxxxxxx
+xxxxxxxxx.........................x...xxxxxx...................xxxxxx..xxxxxxxxx
+xxxxxxxxxxxxx+xxxxxxxx+xxxxxxx+xxxx...xxxxxx+xxxxxxxx+xxxxxxxx+xxxxxxx=xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxx....1....x...2...x...3...x...x....3....x....2...x......1......xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxx.........x.......x.......x...x.........x........x.............xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: shapeshifter, shapeshifter, glowing shapeshifter
+
+##############################################################################
+# A cell vault
+
+NAME: vault_2
+ORIENT: northwest
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccccccccccccccccccccccccccccccc
+xxxxxxxxccw......^......w......^......wc
+xxxxxxxxcc.ccccccccccccc.ccccccccccccc.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.c.8..+.c....c.c....+.c..9.c.c
+xxxxxxxxcc.c....c.+..9.c.c.9..c.+....c.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.cccccc.cccccc.cccccc.cccccc.c
+xxxxxxxxcc^c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.c....c.c....c.c....+.c....c.c
+xxxxxxxxcc.c8...+.+..8.c.c.8..c.+....c.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.cccccc.cccccc.cccccc.cccccc.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.c....+.c....c.c.0..c.c....c.c
+xxxxxxxxcc.c..9.c.+.8..c^c....+.+.0..c.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.cccccc.cccccc.cccccc.cccccc.c
+xxxxxxxxcc.c....c.c....c.c....c.c....c.c
+xxxxxxxxcc.c.0..+.+.0..c.c....+.+....c.c
+xxxxxxxxcc.c....c.c....c.c.0..c.c.8..c.c
+xxxxxxxxcc.cccccc.c....c.c....c.cccccc.c
+xxxxxxxxcc.c....c.cccccc.cccccc.c....c^c
+xxxxxxxxcc.c....c.c....c.c..9.+.+....c.c
+xxxxxxxxcc.c.0..+.+....c.c9...c.c.0..c.c
+xxxxxxxxcc.c....c.c.8..c.c....c.c....c.c
+xxxxxxxxcc.cccccc^cccccc.cccccc^cccccc.c
+xxxxxxxxccw.......Twwwwc.cwwwwT.......wc
+xxxxxxxxcccccccccccccccc.ccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxc@cxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# A little maze vault
+
+NAME: vault_3
+ORIENT: northeast
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x900x..............x..........xxxxxxxxxx
+x999x.xxxxxxxxxxxx.x.xxxxxxxx.xxxxxxxxxx
+x000x.x............x.x......x.xxxxxxxxxx
+xx.xx.xxxxxxxxxxxxxx.x.xxxx.x.xxxxxxxxxx
+xx.x..............xx.x.88|x.x.xxxxxxxxxx
+xx.x.x.xxxxxxxxxx.xx.xxxxxx.x.xxxxxxxxxx
+xx.x.x.x........x...........x.xxxxxxxxxx
+xx.x.x.x.xxxxxx.xxxxxxxxxxxxx.xxxxxxxxxx
+xx.xxx.x.x$$$$x...............xxxxxxxxxx
+xx.....x.x$$$$x.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx.x$$$$x...............xxxxxxxxxx
+x........x$$$$x.xxxxxxxxxxxxx.xxxxxxxxxx
+x.xxxxxx.xxxx.x.............x.xxxxxxxxxx
+x.xxxxxx.xxxx.xxxxxxxxxxxxx.x.xxxxxxxxxx
+x.x.......xxx.x...........x.x.xxxxxxxxxx
+x.x.xxxxx.....x.x.xxxxx...x.x.xxxxxxxxxx
+x.x.x999xxxxxxx.x.x***x...x.x.xxxxxxxxxx
+x.x.x889........x.x|||xxxxx.x.xxxxxxxxxx
+x.x.x899x.xxxxx.x.x***xxxxx.x.xxxxxxxxxx
+x.x.xxxxx.xxxxx.x.xx.xxxxxx.x.xxxxxxxxxx
+x.x..........xx.x.xx........x.xxxxxxxxxx
+x.xxxxxxx.xx.xx.x.xxxxx.xxxxx.xxxxxxxxxx
+x.xxx000x.xx.xx.x.x$$$x.xxxxx.xxxxxxxxxx
+x|||x000x.x$$$x.x.x$$$x%%x%%%.xxxxxxxxxx
+x|||x000..x$8$x.x.x$$$x%%x%8%xxxxxxxxxxx
+x|||xxxxxxx$$$x.x..$$$xxxx%%%xxxxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# thingy vault.
+
+NAME: vault_4
+ORIENT: southwest
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx^xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxx
+xxxxxxxxxxxxxxxxx......0...0......xxxxxx
+xxxxxxxxxxxxxx.......................xxx
+xxxxxxxxxxxxxx.........0...0.........xxx
+xxxxxxxxxxxxx8......0.........0......8xx
+xxxxxxxxxxxxxx.........0...0.........xxx
+xxxxxxxxxxxxxx.......................xxx
+xxxxxxxxxxxxxxx........0...0........xxxx
+xxxxxxxxxxxxxxxxxxxx...........xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...............xxxxxxx
+xxxxxxxxxxxxxxxx8.................8xxxxx
+xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx999xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# hourglass vault.
+
+NAME: vault_5
+ORIENT: southeast
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxx...................xxxxxxxxxxxxxxxx
+xxxxx...................xxxxxxxxxxxxxxxx
+xxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxxx.................xxxxxxxxxxxxxxxxx
+xxxxxxx...............xxxxxxxxxxxxxxxxxx
+xxxxxxx...............xxxxxxxxxxxxxxxxxx
+xxxxxxxx.............xxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.....8.....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx...999...xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx===xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.........xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx...........xxxxxxxxxxxxxxxxxxxx
+xxxxxxxx......|......xxxxxxxxxxxxxxxxxxx
+xxxxxxx...............xxxxxxxxxxxxxxxxxx
+xxxxxxx...............xxxxxxxxxxxxxxxxxx
+xxxxxx........$........xxxxxxxxxxxxxxxxx
+xxxxxx.......$$$.......xxxxxxxxxxxxxxxxx
+xxxxxx....$$$$$$$$$....xxxxxxxxxxxxxxxxx
+xxxxx$$$$$$$$$$$$$$$$$$$xxxxxxxxxxxxxxxx
+xxxxx$$$$$$$$$$$$$$$$$$$xxxxxxxxxxxxxxxx
+xxxxxx$$$$$$$$$$$$$$$$$xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# A more Angbandy vault
+
+NAME: vault_6
+ORIENT: northeast
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccccccccccccccccccccccccxxxxxxxx
+c*******cc..9...cc.+8c0c*c.c*c8cxxxxxxxx
+c******cc..cc..cc..cc0c.c.c.c8ccxxxxxxxx
+c*****cc..cc..cc..cc.c$c.c.c8c.cxxxxxxxx
+c****cc9.cc..cc8.cc|c.c|c.c*c0ccxxxxxxxx
+c***cc..cc..cc..cc.c.c.c.c.c.c$cxxxxxxxx
+c**cc..cc8.cc..cc.c*c.c.c.c.c.ccxxxxxxxx
+c+cc9.cc..cc..cc.c.c.c.c*c.c.c.cxxxxxxxx
+c^c..cc..cc..cc.c$c.c.c.c.c.c*ccxxxxxxxx
+c...cc..cc..cc.c.c.c9c$c.c.c.c9cxxxxxxxx
+c..cc..cc..cc$c.c.c*c.c.c.c9c9ccxxxxxxxx
+c.cc..cc..cc.c.c|c.c.c.c.c$c.c9cxxxxxxxx
+ccc..cc..cc.c.c.c.c.c.c.c.c.cc+cxxxxxxxx
+cc..cc..cc.c*c.c.c.c.c.c$c.cc..cxxxxxxxx
+c0.cc..cc.c.c.c.c8c.c*c.c.cc0.ccxxxxxxxx
+c.cc..cc*c.c.c.c.c$c.c.c.cc..cccxxxxxxxx
+c^c..cc.c.c9c.c.c.c.c.c.cc..cc.cxxxxxxxx
+c0..cc$c.c.c*c0c.c.c.c.cc..cc.0cxxxxxxxx
+c..cc.c.c9c.c.c.c$c.c.cc.9cc...cxxxxxxxx
+c.cc9c.c.c.c.c.c.c.c.cc..cc..c^cxxxxxxxx
+ccc.c.c$c.c.c.c.c.c$cc..cc..cc^cxxxxxxxx
+cc$c.c.c.c.c$c.c0c.cc..cc..cc..cxxxxxxxx
+c.c.c.c.c.c.c.c.c.cc9.cc..cc..ccxxxxxxxx
+cc.c8c.c.c$c.c.c.cc..cc..cc0.cccxxxxxxxx
+c.c$c.c$c0c.c.c.cc..cc..cc..cc$cxxxxxxxx
+cc.c.c.c.c.c*c.cc..cc..cc..cc$$cxxxxxxxx
+c.c.c.c.c.c.c.cc..cc0.cc..cc$$$cxxxxxxxx
+cc.c.c.c.c.c$cc..cc..cc..cc$$$$cxxxxxxxx
+c.c.c.c.c.c.cc.8.^..cc....+$$$$cxxxxxxxx
+cccc@cccccccccccccccccccccccccccxxxxxxxx
+ENDMAP
+
+############################################################################
+# four-leaf vault
+
+NAME: vault_7
+ORIENT: northwest
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.........^..^.........xxxxx
+xxxxxxxxxxxx...xxxxxxxx..xxxxxxxx...xxxx
+xxxxxxxxxxx...xxxxxxxxx..xxxxxxxxx...xxx
+xxxxxxxxxx...xx$*....xx..xx....$$xx...xx
+xxxxxxxxx...xx$*$....xx..xx....$*$xx...x
+xxxxxxxxx..xx*$*$....xx..xx....*$$$xx..x
+xxxxxxxxx..xx$$$.00..xx..xx..00.*$*xx..x
+xxxxxxxxx..xx....09..xx..xx..90....xx..x
+xxxxxxxxx..xx......+xx....xx+......xx..x
+xxxxxxxxx..xx......x^......^x......xx..x
+xxxxxxxxx..xxxxxxxxx........xxxxxxxxx..x
+xxxxxxxxx..xxxxxxxx..........xxxxxxxx..x
+xxxxxxxxx..............TT..............x
+xxxxxxxxx..............TT..............x
+xxxxxxxxx..xxxxxxxx..........xxxxxxxx..x
+xxxxxxxxx..xxxxxxxxx........xxxxxxxxx..x
+xxxxxxxxx..xx......x^......^x......xx..x
+xxxxxxxxx..xx......+xx....xx+......xx..x
+xxxxxxxxx..xx....09..xx..xx..90....xx..x
+xxxxxxxxx..xx$$*.00..xx..xx..00.*$$xx..x
+xxxxxxxxx..xx*$*$....xx..xx....*$$*xx..x
+xxxxxxxxx...xx*$*....xx..xx....$$$xx...x
+xxxxxxxxxx...xx*$....xx..xx....*$xx...xx
+xxxxxxxxxxx...xxxxxxxxx..xxxxxxxxx...xxx
+xxxxxxxxxxxx...xxxxxxxx..xxxxxxxx...xxxx
+xxxxxxxxxxxxx..^................^..xxxxx
+xxxxxxxxxxxxxxxxxxxxxxx^^xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Cross-vault
+
+NAME: vault_8
+ORIENT: northwest
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx............xxxxxxxxxx
+xxxxxxxxxxxxxxx..................xxxxxxx
+xxxxxxxxxxxxx......................xxxxx
+xxxxxxxxxxxx..........w..w..........xxxx
+xxxxxxxxxxx........wwww++wwww........xxx
+xxxxxxxxxxx......wwwvvv^^vvvwww......xxx
+xxxxxxxxxx......wwwwv.9..9.vwwww......xx
+xxxxxxxxxx.....wwwwwv......vwwwww.....xx
+xxxxxxxxxx....wwwwwvv......vvwwwww....xx
+xxxxxxxxx....wwwwwvv........vvwwwww....x
+xxxxxxxxx....wwvvvv....vv....vvvvww....x
+xxxxxxxxx...wwwv......vvvv......vwww...x
+xxxxxxxxx...wwwv....vv8vv8vv....vwww...x
+xxxxxxxxx..wwwwv...vvvv||vvvv...vwwww..x
+xxxxxxxxx^^wwwwv...vvvv||vvvv...vwwww^^x
+xxxxxxxxx..wwwwv....vv8vv8vv....vwwww..x
+xxxxxxxxx...wwwv......vvvv......vwww...x
+xxxxxxxxx...wwwvvvv....vv....vvvvwww...x
+xxxxxxxxx....wwwwwvv........vvwwwww....x
+xxxxxxxxxx...wwwwwwvv......vvwwwwww...xx
+xxxxxxxxxx....wwwwwwv......vwwwwww....xx
+xxxxxxxxxx.....wwwwwv......vwwwww.....xx
+xxxxxxxxxxx.....wwwwvvvvvvvvwwww.....xxx
+xxxxxxxxxxx.......wwwwwwwwwwww.......xxx
+xxxxxxxxxxxx.........wwwwww.........xxxx
+xxxxxxxxxxxxx.........^..^.........xxxxx
+xxxxxxxxxxxxxxx.......x++x.......xxxxxxx
+xxxxxxxxxxxxxxxxxx...xx..xx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Another thingy vault
+
+NAME: vault_9
+ORIENT: southeast
+
+MAP
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xx.....^...............^.....xxxxxxxxxxx
+x..bb..xxxxxxxxxxxxxxxxx..bb..xxxxxxxxxx
+x..b...xxxxxxxxxxxxxxxxx...b..xxxxxxxxxx
+x...b..xxxxbbbbbbbbbxxxx..b...xxxxxxxxxx
+x..bb..xxbbb.......bbbxx..bb..xxxxxxxxxx
+x......xxb....9.9....bxx......xxxxxxxxxx
+x..bb..xbb..%$$$$$%..bbx..bb..xxxxxxxxxx
+x...b..xb..0%$***$%0..bx..b...xxxxxxxxxx
+x..b...xb..0%$*H*$%0..bx...b..xxxxxxxxxx
+x...b..xb..0%$***$%0..bx..b...xxxxxxxxxx
+x..b...xb...%$$$$$%...bx...b..xxxxxxxxxx
+x...b..xbb.900000009.bbx..b...xxxxxxxxxx
+x..b...xxb...........bxx...b..xxxxxxxxxx
+x..bb..xxbbb..9.9..bbbxx..bb..xxxxxxxxxx
+x......xxxxbbbb.bbbbxxxx......xxxxxxxxxx
+x..bb..xxxxxxxb=bxxxxxxx..bb..xxxxxxxxxx
+x..b...xxxxxxxx=xxxxxxxx...b..xxxxxxxxxx
+x...b..xxxxxxxx^xxxxxxxx..b...xxxxxxxxxx
+x..b....xxxxxxx=xxxxxxx....b..xxxxxxxxxx
+x...b...^.............^...b...xxxxxxxxxx
+x..b....xxxxxxxxxxxxxxx....b..xxxxxxxxxx
+x..bb..xxxxxxxxxxxxxxxxx..bb..xxxxxxxxxx
+xx....xxxxxxxxxxxxxxxxxxx....xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# Impenetrable vault
+
+NAME: vault_10
+ORIENT: southeast
+
+MAP
+..............@................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+.....cccccccccccccccc..........xxxxxxxxx
+.....c[^...........9cc.........xxxxxxxxx
+.....c^xxxxx=xxxxxx..cc........xxxxxxxxx
+.....c.x9..^^^...9xx..cc.......xxxxxxxxx
+.....c.x.xxx=xxxx..xx..cc......xxxxxxxxx
+.....c.x^x$$$$$$xx..xx.9c......xxxxxxxxx
+.....c.=^=$*|||*$xx..xx.c......xxxxxxxxx
+.....c.x^xx$*|||*$xx.9x.c......xxxxxxxxx
+.....c.x9.xx$*|||*$xx^x.c......xxxxxxxxx
+.....c.xx..xx$*|||*$=^=.c......xxxxxxxxx
+.....c9.xx..xx$$$$$$x^x.c......xxxxxxxxx
+.....cc..xx..xxxx=xxx.x.c......xxxxxxxxx
+......cc..xx9...^^^..9x.c......xxxxxxxxx
+.......cc..xxxxxx=xxxxx^c......xxxxxxxxx
+........cc9...........^]c......xxxxxxxxx
+.........cccccccccccccccc......xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#########################################################################
+# Orc temple
+
+NAME: orc_temple
+ORIENT: southwest
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx4.4xxxxxxxxxxxxxxx
+xxxxxxxxx**..........x414x..........**xx
+xxxxxxxxx**..........x4.4x..........**xx
+xxxxxxxxx............+...+....4.......xx
+xxxxxxxxx....4..4....x...x............xx
+xxxxxxxxx............x...x.......4....xx
+xxxxxxxxx............xx.xx............xx
+xxxxxxxxx...4......xxxx+xxxx......6...xx
+xxxxxxxxx........xxx.......xxx........xx
+xxxxxxxxxxx...xxxx..2.....2..xxxx...xxxx
+xxxxxxxxxxxx+xxxx.............xxxx+xxxxx
+xxxxxxxxxxx...xxx.............xxx...xxxx
+xxxxxxxxx......x...............x......xx
+xxxxxxxxx..4...x...2...I...2...x...5..xx
+xxxxxxxxx......x...............x......xx
+xxxxxxxxx...4..xx.............xx..5...xx
+xxxxxxxxx$......x....2...2....x......$xx
+xxxxxxxxx$6..5..xx.....3.....xx.5...7$xx
+xxxxxxxxx$$$.....xxx.......xxx.....$$$xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: orc warlord, orc priest, orc high priest, orc warrior, orc wizard
+MONS: orc knight, orc sorcerer
+
+#############################################################################
+# Matthew Ludivico (my_map)
+
+NAME: my_map
+ORIENT: southwest
+
+# The hell hounds can be deadly at lower levels.
+DEPTH: 18-27
+
+MAP
+xxxxxxxxxx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx..........................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xx
+xxxxxxxxx.^^..........................xx
+xxxxxxxxxx.^^xx+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.^...11....xxxxxxxx..xxxxxxxx
+xxxxxxxxxxxx..x.1..6..xxx........xx..xxx
+xxxxxxxxxxxxx.xxxxxxxxx...vvvvv...x...xx
+xxxxxxxxx6..1...x.........+1..v.......xx
+xxxxxxxxx..1....x.........vvvvv........x
+xxxxxxxxx..5...xx......................x
+xxxxxxxxxxxxxx^++...........vvvvvvv....x
+xxxxxxxxxxxxxx^xx...xx=xx...vv$%$vvvvv.x
+xxxxxxxxxxxxxx^x...xxv1vxx...vvv*2...v.x
+xxxxxxxxxxxxxx^x..vvvv7.vvvv...vv.vv+v^x
+xxxxxxxxx..xxx^..vvvb....bvvv...vvv^...x
+xxxxxxxxx%%.xx..vvvvb....bvvvv.......xxx
+xxxxxxxxxx.....vvbbb......bbbvv.....xxxx
+xxxxxxxxxxx....vvb....66....bvvxxxxxxxxx
+xxxxxxxxxxxxxxvvvb..llllll..bvvvxxxxxxxx
+xxxxxxxxxvvvvvvvvb..ll45ll..bvvvvvvvvxxx
+xxxxxxxxxccc***+== .l3.2.l..cccccccccxxx
+xxxxxxxxxccc+cccbb....ll....c..$$$$+$*cx
+xxxxxxxxxcc|||cbb...3llll2...cc%*%*c$|cx
+xxxxxxxxxcccccccbbbbbbbbbbbccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: hell hound, necromancer, wizard, orange demon, rotting devil
+MONS: hell knight, great orb of eyes
+
+###########################################################################
+# Farm and country (Matthew Ludivico)
+
+NAME: farm_and_country
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..........................................xxxxxxxx}.xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx............xxxxxx....xxx.......xx...........xxxx..]xxxxxxxxx
+xxxxxxxxxxxxxxx***x...........xxx..xxx............xxxx...........xx..xxxxxxxxxxx
+xxxxxxxxxxxxxxx|*$=...xx.xxxxxxx....xxxxxxxxxx......xx................xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx....xxxxxxxx......3..xxx.................x..........xxxxxxxxx
+xxxxxxxxxxxxxxxxxx......x........x......xx.........w...................xxxxxxxxx
+xxxxxxxxxxx)......xx...xxx.....xxx......x........www3....3.............xxxxxxxxx
+xxxxxxxxxxxx=xxxxxxxxxxx...xxxxxxxxx..xxx.....wwwww....%%%.............xxxxxxxxx
+xxxxxxxxxx......xxx.......xx.xxxx.x...xxxxxxxwwwwwww..5%%%..........xx.xxxxxxxxx
+xxxxxxxxx.........x..xxxxxxxx.....x........3wwwwwwwww..%%%........xxx..xxxxxxxxx
+xxxxxxxxx....5...xx..x.xxxxx.....xxx........wwwwwwwww..%%%..........xx.xxxxxxxxx
+xxxxxxxxxxx.....xxx..xx..xx........xxxxxxxxxwwwwwwwww..............xxx.xxxxxxxxx
+xxxxxxxxxx........x..x...............xx..xxxxwwwwwwwwwwwwww............xxxxxxxxx
+xxxxxxxxx.............................x.....xxwwwwww3wwwwww............xxxxxxxxx
+xxxxxxxxxxx...x...........5.....7...............ww.......ww.....44....xxxxxxxxxx
+xxxxxxxxxwxx..xx.....622...2.26...6.2...22.6...62..2..226ww.....44xx...xxxxxxxxx
+xxxxxxxxxwwxxxx......2....2.22....2..2...2.2.......22...2ww....xxxx..xxxxxxxxxxx
+xxxxxxxxxwwwwxxx......2...2.2.2...2.22..2.22...22.2.2..22ww.....xxx....xxxxxxxxx
+xxxxxxxxxwwwwwx....4..2...2...........22...277..2..2.2.22ww...........xxxxxxxxxx
+xxxxxxxxxwwwwwxx....42..2....22.4..2..2...2.4..2.22..22.2ww............xxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwwww..2.........xxxxxxxxx
+xxxxxxxxxwwwwwxx.....62....2.26...62.2.2..26...6...22..26..............xxxxxxxxx
+xxxxxxxxxwwwww.........................................................xxxxxxxxx
+xxxxxxxxxwwwwwxx....222.2.22..2.7.......7..............................xxxxxxxxx
+xxxxxxxxxwwwww...........ccccccc+ccccccc...ccc......cc+ccc...xxxxx.....xxxxxxxxx
+xxxxxxxxxwwwwwxx.........c$$*.c$$5$+.5.c...+5c......c%%%%c......xxx3...xxxxxxxxx
+xxxxxxxxxwwwwwx....2.....c$.c+cccccc.%.c...ccc......c%%%%c....xxxxx....xxxxxxxxx
+xxxxxxxxxwwwwwx..........c..c..........c............cccccc......xxx....xxxxxxxxx
+xxxxxxxxxwwxxxxxxx.......ccccc+ccccccccc.........................xx....xxxxxxxxx
+xxxxxxxxxwxx.....xxxx........c...c.................2...................xxxxxxxxx
+xxxxxxxxxxx.........xxxx...........2....xxxx...........................xxxxxxxxx
+xxxxxxxxx..............xxxx..........xxxx..x...........................xxxxxxxxx
+xxxxxxxxx.................xxxxx++xxxxx.....xx............xx...x........xxxxxxxxx
+xxxxxxxxx.....................c..c..........xxxxx..........xxxxx.......xxxxxxxxx
+xxxxxxxxx.......cccc..........c..c...cccc......xxx...........x.........xxxxxxxxx
+xxxxxxxxx.......c..c..........c++c...c..c........xxx.........x.........xxxxxxxxx
+xxxxxxxxx.......c..c..........c..c...c..c..........xxx.................xxxxxxxxx
+xxxxxxxxx....cccc++cccccccccccc++ccccc..ccccccc......xxx...............xxxxxxxxx
+xxxxxxxxx....c..........1.....................c........xxx.............xxxxxxxxx
+xxxxxxxxx.cccc.....w....w....%1.....w.....%...c..........xxx...........xxxxxxxxx
+xxxxxxxxx.c1.+....www..www..%%%....www...%%%1.c...........xxxxxxxxx....xxxxxxxxx
+xxxxxxxxx.cccc.....w....w....%......w.....%...c..................xxx...xxxxxxxxx
+xxxxxxxxx....c.......5........................c....................xxxxxxxxxxxxx
+xxxxxxxxx....ccc....%%%%%....cccccccccccccccccc........................xxxxxxxxx
+xxxxxxxxx......cc...........cc.........................................xxxxxxxxx
+xxxxxxxxx.......cccccc+cccccc..........................................xxxxxxxxx
+xxxxxxxxx........cc.......cc...........................................xxxxxxxxx
+xxxxxxxxx.........cc.....cc.....................cccccccccccccccccccccccxxxxxxxxx
+xxxxxxxxx..........ccc+ccc......................c......vvv.............xxxxxxxxx
+xxxxxxxxx..........ccc.c........................c......v5+...vvvvv.....xxxxxxxxx
+xxxxxxxxx..........ccc.c........................c......vvv...v.5.v.....xxxxxxxxx
+xxxxxxxxxccccccccccccc.ccc......................c............v..5v.....xxxxxxxxx
+xxxxxxxxx..........c.....cccccccccccccccccccccccccccc..........vv+vv...xxxxxxxxx
+xxxxxxxxx..........c............................+................5111..xxxxxxxxx
+xxxxxxxxx..........c.{([.c......................+................5.....xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: death yak, plant, griffon, killer bee, ogre, oklob plant
+MONS: wandering mushroom
+
+#############################################################################
+# Fort Yaktaur (Matthew Ludivico)
+
+NAME: fort_yaktaur
+ORIENT: southeast
+
+MAP
+.........@....wwwwwwwwwwwwwwwwwxxxxxxxxx
+.ccccc.......ww....wwww....wwwwxxxxxxxxx
+.c$c%c......ww.ccccccccc.......xxxxxxxxx
+.c+c+c......ww.c.%$....ccccccccxxxxxxxxx
+.c...+......ww.c*.115..c$$+|*|cxxxxxxxxx
+.c1..c.....ww..c...55+ccc+cxx=cxxxxxxxxx
+.ccccc.....ww..ccccccc....c|=*cxxxxxxxxx
+............ww.......c5...cxx=cxxxxxxxxx
+....6.ccccc.ww.w...2.+51..c|1.cxxxxxxxxx
+....63+...c..wwww..21+51..c2.2cxxxxxxxxx
+....6.ccccc..wwwwww..c5...cc+ccxxxxxxxxx
+............wwwwwww..c........cxxxxxxxxx
+............wwwwwww..ccccccccccxxxxxxxxx
+...........ww1w..www...........xxxxxxxxx
+.......566.www.....www.........xxxxxxxxx
+.........1ww....ccccc..........xxxxxxxxx
+.....566.w......+...c..........xxxxxxxxx
+.........www....ccccc..........xxxxxxxxx
+...........ww............wwwwwwxxxxxxxxx
+.......3....wwwww......www.....xxxxxxxxx
+......666.......ww...www.......xxxxxxxxx
+.....cc+cc.......wwwww.........xxxxxxxxx
+.....c...c.....................xxxxxxxxx
+.....ccccc.....................xxxxxxxxx
+...............................xxxxxxxxx
+...............................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: yaktaur, death yak, minotaur, random
+MONS: yak, gnoll, random
+
+########################################################################
+# box level (John Savard)
+#
+
+NAME: box_level
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx.................xx.............x...................^.........xxxxxxxxx
+xxxxxxxxx.................xx...xxxxxx....x.xxxxxxx.xxxxxxxxxxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxx.................xx...xx.0......x.x........x......x.........x.xxxxxxxxx
+xxxxxxxxx..$..............xx...xx........x.x........x.....%x.x..*..xxx.xxxxxxxxx
+xxxxxxxxx......................xx........x.x........x.xxxxxx.x.....x...xxxxxxxxx
+xxxxxxxxx......................xx....%...x.x........x.x......xxxxxxx.x.xxxxxxxxx
+xxxxxxxxx.................xx...xx........x.x........x.x.xxxxxx.......x.xxxxxxxxx
+xxxxxxxxx.................xx...xx........x.x..{.....x.x..............x.xxxxxxxxx
+xxxxxxxxx.............0...xx...xxxxxxxxxxx.xxxxxxxxxx.xxxxxxxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxx.................xx...........................................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxx}x.........................>=........xxxxxxxxx
+xxxxxxxxx..................x...xxx.x.xxx+xxxxxxxxxxxxxxxx+xxxxx........xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxx..x...xxx.x.x0...x..0..............0.x........xxxxxxxxx
+xxxxxxxxx..x............x..x...xxx.x.x....x...................x........xxxxxxxxx
+xxxxxxxxx....xxxxxxxxx..x..x...xxx.x.x....x...................x......8*xxxxxxxxx
+xxxxxxxxx..x.x....0..x..x..x...xxx...x...%x...................x......*|xxxxxxxxx
+xxxxxxxxx..x.x..........x..x...xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx..x.x*......x..x..x..........x...........0...x...%............xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxx..x..=..........x.xxxxxxxxxxxxx.x................xxxxxxxxx
+xxxxxxxxx..x......0.....xxxxxxx.......x.x...x...x...x.x................xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxx..0....x...x.x.x.x.x.x.x......0.........xxxxxxxxx
+xxxxxxxxx..........^.........xx.......x.x.x.x.x.x.x...+................xxxxxxxxx
+xxxxxxxxxcccccccccccccccccc..xx.......x.x$x...x...xxxxx................xxxxxxxxx
+xxxxxxxxxc...........9....c..xx.......x.x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxc......c............xx.......x.x.x...x..0.....................xxxxxxxxx
+xxxxxxxxxc.....|c............xx.......x.x.x.x.x........................xxxxxxxxx
+xxxxxxxxxc...........9....c..xx.......x.x...x.x........................xxxxxxxxx
+xxxxxxxxxcccccccccccccccccc..xx.......x.xxxxx.x........................xxxxxxxxx
+xxxxxxxxx....................xx.......x.x.....=....................*...xxxxxxxxx
+xxxxxxxxx....................xx.......x.x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.......x.x.x...........................(xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx.x$x..xxxx.xxxxxxxxxxxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxx...............................x.x..x.......................x.xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.x..x.xxxxxxxxxxxxx.........x.xxxxxxxxx
+xxxxxxxxx.............)xxx................x..x.xxxxxxxxxxxxx.........x.xxxxxxxxx
+xxxxxxxxx..............xxx.xxxxxxxxxxxxxxxx..x.xxxxxxxxxxxxx.........x.xxxxxxxxx
+xxxxxxxxx..............xxx...................x.x...........xxxxx+xxxxx.xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.x..$........x.........x.xxxxxxxxx
+xxxxxxxxx......9.......xxxxxxxxxxxxxxxxxxxxxxx.x...........x........%x.xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.x.0.........x0........x.xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.x.......$...x.........x.xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.x...........xxxxxxxxxxx.xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx.x...........xxxxxxxxx
+xxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxx.............x...........xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxx
+xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx.xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxx=xxxxxx.xxxxxx.xxxxxxxxx
+xxxxxxxxx.....xx.................xxxxxxxxxxx.......x........x.....x....xxxxxxxxx
+xxxxxxxxx....0xx.................xxxxxxxxxxx.%.....x.0......x...0.x....xxxxxxxxx
+xxxxxxxxx.....xx.9...............xxxxxxxxxxx.......x........x.%...x..$.xxxxxxxxx
+xxxxxxxxx.....xx.................xxxxxxxxxxx.......x........x.....x....xxxxxxxxx
+xxxxxxxxx.....xx.................xxxxxxxxxxx.......x........x.....x..0.xxxxxxxxx
+xxxxxxxxx....0xx.................xxxxxxxxxxx.......x$.......x.....x....xxxxxxxxx
+xxxxxxxxx]....xx................*xxxxxxxxxxx......[x........x.....x$...xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Minivaults
+##############################################################################
+#
+# NOTE: *Cannot* place 8,9 or 0 monsters in branch vaults which neither use the
+# normal mons_level function or are around level 35, or generation will crash.
+#
+# [dshaligram] Minivaults were traditionally drawn after rotating the vault by
+# 90 degrees anticlockwise. Under the new dungeon vault handling, the map may
+# be freely rotated and mirrored to any position (20061105).
+#
+# Minivaults are traditionally 12x12 (hardcoded limitation in dungeon.cc). Under
+# the new rules they can be any size, but the smaller the better. I'd recommend
+# no larger than 35x30 or so.
+#
+# NOTE: Minivaults must NOT have an ORIENT: attribute. Including an ORIENT:
+# attribute makes the map a normal vault, and mayhem can result.
+
+NAME: minivault_1
+
+MAP
+............
+..xxxx=xxx..
+.xx..x...xx.
+.x....x...x.
+.x...x....x.
+.xx.x*x.x.=.
+.=.x.x*x.xx.
+.x....x...x.
+.x...x....x.
+.xx...x..xx.
+..xxx=xxxx..
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_2
+
+MAP
+............
+..xxxx.xxxx.
+..xx.....xx.
+..x.......x.
+..x.......x.
+......C.....
+..x.......x.
+..x.......x.
+..xx.....xx.
+..xxxx.xxxx.
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minitemple
+
+# More common than the others.
+CHANCE: 20
+
+MAP
+............
+.cccccccccc.
+.cccccccccc.
+.cBcBcBcBcc.
+.G.c.c.c.Bc.
+.........Bc.
+.........Bc.
+.G.c.c.c.Bc.
+.cBcBcBcBcc.
+.cccccccccc.
+.cccccccccc.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_4
+
+MAP
+............
+....xwxx....
+..xxxwwxwx..
+..xwwwwwwx..
+.xwwxwwxwxx.
+.xwwwwwwwwx.
+.xwwxwwwxww.
+.xxwwwwwwxx.
+..wwwwxwwx..
+..xxxwwxxw..
+....xxww....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_5
+
+MAP
+............
+.x.xxxxxxxx.
+.x.x......x.
+.x.x.xxxx.x.
+.x.x.x**x.x.
+.x.x.x**x.x.
+.x.x.xx.x.x.
+.x.x....x.x.
+.x.xxxxxx.x.
+.x........x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Wizard's laboratory
+NAME: minivault_6
+
+MAP
+............
+.ccccccc+cc.
+.c........c.
+.c........c.
+.c..1.....c.
+.c........c.
+.cc+ccccccc.
+.c***c3232c.
+.c|**+2223c.
+.c||*c3322c.
+.cccccccccc.
+............
+ENDMAP
+
+MONS: wizard, small abomination, large abomination
+
+###################################
+# Beehive minivault
+
+NAME: minivault_7
+
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aaRa3a2a..
+.aa2aRa2aaa.
+.a3aRa1aRa2.
+.aa3aRaRa2a.
+.aaa2a2a3aa.
+..a3aRa2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP
+
+MONS: queen bee, killer bee, killer bee larva
+
+###################################
+# Lava pond
+NAME: minivault_8
+
+MAP
+x.x.x.x.x.x.
+.c.c.c.c.c.x
+x...l1l...c.
+.c.llllll..x
+x.lllllll1c.
+.c.llFGll..x
+x..llGFll.c.
+.c1lllllll.x
+x..llllll.c.
+.c...l1l...x
+x.c.c.c.c.c.
+.x.x.x.x.x.x
+ENDMAP
+
+MONS: molten gargoyle
+
+###################################
+# Evil zoo
+
+NAME: minivault_9
+DEPTH: 15-27
+
+MAP
+............
+.==========.
+.==========.
+.==========.
+.===8888===.
+.===8998===.
+.===8998===.
+.===8888===.
+.==========.
+.==========.
+.==========.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_10
+
+MAP
+............
+.xxxx..xxxx.
+.x**x..x**x.
+.x**+..+**x.
+.xx+x..x+xx.
+............
+............
+.xx+x..x+xx.
+.x**+..+**x.
+.x**x..x**x.
+.xxxx..xxxx.
+............
+ENDMAP
+
+###################################
+# Multicoloured onion
+
+NAME: minivault_11
+
+MAP
+............
+.+xxxxxxxx+.
+.x........x.
+.x.+cccc+.x.
+.x.c....c.x.
+.x.c.bb.c.x.
+.x.c.bb.c.x.
+.x.c....c.x.
+.x.+cccc+.x.
+.x........x.
+.+xxxxxxxx+.
+............
+ENDMAP
+
+###################################
+# Closed-box minivault
+
+NAME: minivault_12
+
+MAP
+............
+.xxxxxxxxxx.
+.x>9$9$9$<x.
+.x.$9$9$.$x.
+.x$.****$.x.
+.x.$*||*.$x.
+.x$.*||*$.x.
+.x.$****.$x.
+.x$9$9$9$.x.
+.x<$9$9$9>x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Little trap spiral
+
+NAME: minivault_13
+
+MAP
+............
+.xxxxxxxxxx.
+.=.^x..=.9x.
+.x.$=.^x..x.
+.xxxxxxxx=x.
+.x.8+|0x8.x.
+.x8$x.|x..x.
+.xx=xxxx=xx.
+.x.9=^.x..x.
+.x..x.^=9.x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+###################################
+# Water cross
+
+NAME: minivault_14
+
+MAP
+............
+.wwwww.wwww.
+.wwwww.wwww.
+.wwwww.wwww.
+.wwwww.wwww.
+.......wwww.
+.wwww.......
+.wwww.wwwww.
+.wwww.wwwww.
+.wwww.wwwww.
+.wwww.wwwww.
+............
+ENDMAP
+
+###################################
+# Lava pond
+
+NAME: minivault_15
+
+MAP
+............
+............
+....lll.....
+...vvlvv....
+..lv|*|vl...
+..ll*S*ll...
+..lv|*|vl...
+...vvlvv....
+....lll.....
+............
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_16
+
+MAP
+............
+............
+............
+............
+............
+............
+......S.....
+............
+............
+............
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_17
+
+MAP
+............
+............
+............
+............
+............
+.....F......
+............
+............
+............
+............
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_18
+
+MAP
+............
+............
+............
+............
+............
+.....H......
+............
+............
+............
+............
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_19
+
+MAP
+............
+.xx......xx.
+.xxx....xxx.
+..xxx..xxx..
+...xxxxxx...
+....xxxx....
+....xxxx....
+...xxxxxx...
+..xxx..xxx..
+.xxx....xxx.
+.xx......xx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_20
+MAP
+............
+.xxxx..xxxx.
+.x........x.
+.x..xxxx..x.
+.x.x....x.x.
+...x.x9.x...
+...x.9x.x...
+.x.x....x.x.
+.x..xxxx..x.
+.x........x.
+.xxxx..xxxx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_21
+
+MAP
+............
+.^xxxxxxxx^.
+.x........x.
+.x.cccccc.x.
+.x.c|..<c.x.
+.x.c.**.c.x.
+.x.c.**.c.x.
+.x.c>..|c.x.
+.x.cccccc.x.
+.x........x.
+.^xxxxxxxx^.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_22
+
+MAP
+............
+.....xx.....
+...xxxxxx...
+..x^x..x^x..
+..xx.xx.xx..
+.xx.x$$x.xx.
+.xx.x$$x.xx.
+..xx.xx.xx..
+..x^x..x^x..
+...xxxxxx...
+.....xx.....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_23
+
+MAP
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+x.x.x.x.x.x.
+.x.x.x.x.x.x
+ENDMAP
+
+###################################
+
+NAME: minivault_24
+
+MAP
+............
+....xxxx....
+....xxxx....
+....xxxx....
+.xxxx.x.xxx.
+.xxx.x.xxxx.
+.xxxx.x.xxx.
+.xxx.x.xxxx.
+....xxxx....
+....xxxx....
+....xxxx....
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_25
+
+MAP
+............
+.xx+xxxxxxx.
+.x........x.
+.x........+.
+.x........x.
+.x........x.
+.x........x.
+.x........x.
+.+........x.
+.x........x.
+.xxxxxxx+xx.
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_26
+
+MAP
+c..........c
+.c...cc...c.
+..c..cc..c..
+...c....c...
+....c..c....
+.cc..cc..cc.
+.cc..cc..cc.
+....c..c....
+...c....c...
+..c..cc..c..
+.c...cc...c.
+c..........c
+ENDMAP
+
+###################################
+
+NAME: minivault_27
+
+MAP
+............
+.x.xxxxxxxx.
+.x........x.
+.xxxxxxxx.x.
+.x........x.
+.x.xxxxxxxx.
+.x........x.
+.xxxxxxxx.x.
+.x........x.
+.x.xxxxxxxx.
+............
+............
+ENDMAP
+
+###################################
+
+NAME: minivault_28
+
+MAP
+............
+.xxxx.xxxx..
+.x.......x..
+.x..999..x..
+.x.9...9.x..
+...9.I.9....
+.x.9...9.x..
+.x..999..x..
+.x.......x..
+.xxxx.xxxx..
+............
+............
+ENDMAP
+
+###################################
+# Anthill
+
+NAME: minivault_29
+
+MAP
+.3......3...
+...x.xx.x.2.
+.xxx2xxxxx..
+.xxxx42xxx2.
+.2xx243432x3
+.xx421424xx.
+3xx423242x..
+.x2x3243xxx.
+.x2xx42422x.
+..xxxxxxxx2.
+...x2xxxx3..
+.3.......33.
+ENDMAP
+
+MONS: queen ant, soldier ant, giant ant, ant larva
+
+###################################
+# Solitary fountain
+
+NAME: minivault_30
+
+MAP
+............
+............
+............
+............
+............
+.....?......
+............
+............
+............
+............
+............
+............
+ENDMAP
+
+SYMBOL: TUV
+
+###################################
+# jmf: Multi-god temple thing
+
+NAME: multi_god_temple
+
+MAP
+............
+.=xxxxxxxx=.
+.x9......9x.
+.xT......Tx.
+.x..C..C..x.
+.xT......Tx.
+.xxxxxxxxxx.
+.xxx$$$$xxx.
+.xx8....8xx.
+..xx....xx..
+...xG..Gx...
+............
+ENDMAP
+
+###################################
+# jmf: Another multi-god temple thing
+
+NAME: multi_god_temple2
+
+MAP
+............
+..vvvvvvvv..
+.vv......vv.
+.v..x..x..v.
+.v.Cx..xC.v.
+.v..x..x..v.
+.vT8x..x8Tv.
+.vvvx==xvvv.
+...Gx99xG...
+...+*99*+...
+...GxxxxG...
+............
+ENDMAP
+
+#############################################################################
+# Pandemonium lesser demon vaults
+#############################################################################
+# Pandemonium demon vaults are selected by tag. They must have the tag "pan",
+# or they won't even be considered. Tags are case-sensitive.
+#
+# Tagging these levels also ensures they won't be generated in the main 
+# dungeon.
+
+NAME: rand_demon_1
+TAGS: pan
+MONS: pandemonium demon, random, random, random, random, random
+
+MAP
+............
+.xx.xx.x.xx.
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x1.x.x..
+..x.x..x.x..
+..x.x..x.x..
+..x.x..x.x..
+.xx.x.xx.xx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_2
+TAGS: pan
+MONS: pandemonium demon, greater demon, common demon
+MONS: common demon, random, random
+
+MAP
+............
+.xxxxxxxx3x.
+.3.....xx.x.
+.xxxxxx4x.x.
+.xx4x..xx.x.
+.x.x.22.x.x.
+.x.x.12.x.x.
+.x.xx..x4xx.
+.x.x4xxxxxx.
+.x.xx.....3.
+.x3xxxxxxxx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_3
+TAGS: pan
+MONS: pandemonium demon, common demon, common demon
+
+MAP
+............
+.x.x.x3x.x..
+..x.x3x3x.x.
+.x.x.x2x.x..
+..x3x2x2x3x.
+.x3x2x1x2x3.
+..x3x2x2x3x.
+.x.x.x2x3x..
+..x.x3x3x.x.
+.x.x.x3x.x..
+..x.x.x.x.x.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_4
+TAGS: pan
+MONS: pandemonium demon, any demon, any demon
+
+MAP
+............
+.xxxxxxxxx..
+.x$=*=3=|x..
+.xxxxxxx=x..
+.x2=3=2x|x..
+.x=xxxxx=x..
+.x3=*x1=Px..
+.x=x=xxxxx..
+.x*x2=3=2=..
+.xxxxxxxxx..
+............
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_5
+TAGS: pan
+MONS: pandemonium demon, any demon, any demon
+
+MAP
+............
+...xxxxxx...
+..xx....xx..
+.xx......xx.
+.x..3232..x.
+.x..2|P3..x.
+.x..3P|2..x.
+.x..2123..x.
+.xx......xx.
+..xx....xx..
+...xxxxxx...
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_6
+TAGS: pan
+MONS: pandemonium demon, any demon, any demon
+
+MAP
+............
+............
+......2.....
+............
+.3..........
+..........2.
+.....1......
+............
+............
+.2.......3..
+............
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_7
+TAGS: pan
+MONS: pandemonium demon, any demon, greater demon
+
+MAP
+............
+.xxx....xxx.
+.x|xx=xxx|x.
+.xx=....=xx.
+..x.x==x.x..
+..x.=12=.=..
+..=.=23=.x..
+..x.x==x.x..
+.xx=....=xx.
+.x|xxx=xx|x.
+.xxx....xxx.
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_8
+TAGS: pan
+MONS: pandemonium demon, greater demon, any demon
+
+MAP
+............
+....xxxxxxx.
+..xxx....1x.
+.xx..2....x.
+.x........x.
+.xx.......x.
+..xx33..2.x.
+....33...xx.
+.....x...x..
+..F..xx.xx..
+......xxx...
+............
+ENDMAP
+
+###################################
+
+NAME: rand_demon_9
+TAGS: pan
+MONS: pandemonium demon, any demon, greater demon
+
+MAP
+............
+.xxxxxxxxxx.
+.x2=3=3=3xx.
+.x=xxxxxx2x.
+.x3x^^^^x=x.
+.x=x^P^^x2x.
+.x3x^^1^x=x.
+.x=x^^^^x3x.
+.x2xxxx=x=x.
+.xx2=2=3x3x.
+.xxxxxxxx=x.
+............
+ENDMAP

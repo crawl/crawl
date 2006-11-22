@@ -3,6 +3,8 @@
  *  Summary:    Travel stuff
  *  Written by: Darshan Shaligram
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Known issues:
  *   Hardcoded dungeon features all over the place - this thing is a devil to
  *   refactor.
@@ -11,15 +13,20 @@
 #include "files.h"
 #include "FixAry.h"
 #include "clua.h"
+#include "delay.h"
+#include "describe.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "player.h"
 #include "stash.h"
 #include "stuff.h"
 #include "travel.h"
 #include "view.h"
-#include <stdarg.h>
-#include <ctype.h>
-#include <stdio.h>
+
+#include <algorithm>
+#include <cstdarg>
+#include <cctype>
+#include <cstdio>
 
 #ifdef DOS
 #include <dos.h>
@@ -71,14 +78,6 @@ inline int sgn(int x)
     return x < 0? -1 : (x > 0);
 }
 
-/* These are defined in view.cc. BWR says these may become obsolete in next
- * release? */
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-extern unsigned char mapchar(unsigned char ldfk);
-extern unsigned char mapchar2(unsigned char ldfk);
-
-
 // Array of points on the map, each value being the distance the character
 // would have to travel to get there. Negative distances imply that the point
 // is a) a trap or hostile terrain or b) only reachable by crossing a trap or
@@ -91,14 +90,6 @@ signed char curr_traps[GXM][GYM];
 
 static FixedArray< unsigned short, GXM, GYM >  mapshadow;
 
-// Clockwise, around the compass from north (same order as enum RUN_DIR)
-// Copied from acr.cc
-static const struct coord_def Compass[8] = 
-{ 
-    {  0, -1 }, {  1, -1 }, {  1,  0 }, {  1,  1 },
-    {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
-};
-
 #define TRAVERSABLE  1
 #define IMPASSABLE   0
 #define FORBIDDEN   -1
@@ -106,11 +97,16 @@ static const struct coord_def Compass[8] =
 // Map of terrain types that are traversable.
 static signed char traversable_terrain[256];
 
-static int trans_negotiate_stairs();
+static command_type trans_negotiate_stairs();
 static int find_transtravel_square(const level_pos &pos, bool verbose = true);
 
 static bool loadlev_populate_stair_distances(const level_pos &target);
 static void populate_stair_distances(const level_pos &target);
+
+bool is_player_mapped(int grid_x, int grid_y)
+{
+    return (is_player_mapped( env.map[grid_x - 1][grid_y - 1] ));
+}
 
 // Determines whether the player has seen this square, given the user-visible
 // character. 
@@ -119,13 +115,14 @@ static void populate_stair_distances(const level_pos &target);
 // a. The square is mapped (the env map char is not zero)
 // b. The square was *not* magic-mapped.
 //
+// FIXME: There's better ways of doing this with the new view.cc.
 bool is_player_mapped(unsigned char envch)
 {
     // Note that we're relying here on mapch(DNGN_FLOOR) != mapch2(DNGN_FLOOR)
     // and that no *other* dungeon feature renders as mapch(DNGN_FLOOR).
     // The check for a ~ is to ensure explore stops for items turned up by
     // detect items.
-    return envch && envch != mapch(DNGN_FLOOR) && envch != '~';
+    return envch && envch != get_magicmap_char(DNGN_FLOOR) && envch != '~';
 }
 
 inline bool is_trap(unsigned char grid)
@@ -150,12 +147,12 @@ inline int feature_traverse_cost(unsigned char feature)
 }
 
 // Returns true if the dungeon feature supplied is an altar.
-inline bool is_altar(unsigned char grid)
+bool is_altar(unsigned char grid)
 {
-    return grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_ELYVILON;
+    return grid_altar_god(grid) != GOD_NO_GOD;
 }
 
-inline bool is_altar(const coord_def &c)
+bool is_altar(const coord_def &c)
 {
     return is_altar(grd[c.x][c.y]);
 }
@@ -194,13 +191,6 @@ static void init_traps()
     traps_inited = true;
 }
 
-static const char *trap_names[] =
-{
-    "dart", "arrow", "spear", "axe",
-    "teleport", "amnesia", "blade",
-    "bolt", "zot", "needle",
-};
-
 static const char *trap_name(int x, int y)
 {
     if (!traps_inited)
@@ -211,7 +201,7 @@ static const char *trap_name(int x, int y)
     {
         int type = env.trap[ti].type;
         if (type >= 0 && type < NUM_TRAPS)
-            return (trap_names[type]);
+            return (trap_name(trap_type(type)));
     }
     return ("");
 }
@@ -251,9 +241,9 @@ static bool is_exclude_root(int x, int y)
 
 const char *run_mode_name(int runmode)
 {
-    return runmode == RUN_TRAVEL?       "travel" :
-           runmode == RUN_INTERLEVEL?   "intertravel" :
-           runmode == RUN_EXPLORE?      "explore" :
+    return runmode == RMODE_TRAVEL?       "travel" :
+           runmode == RMODE_INTERLEVEL?   "intertravel" :
+           runmode == RMODE_EXPLORE?      "explore" :
            runmode > 0?                 "run" :
                                         "";
 }
@@ -387,7 +377,8 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
     // code paths through the secret door because it looks at the actual grid,
     // rather than the env overmap. Hopefully there won't be any more such
     // cases.
-    if (envc == mapch2(DNGN_SECRET_DOOR)) return false;
+    // FIXME: is_terrain_changed ought to do this with the view.cc changes.
+    if (envc == get_sightmap_char(DNGN_SECRET_DOOR)) return false;
 
     unsigned char mon = mgrd[x][y];
     if (mon != NON_MONSTER)
@@ -400,7 +391,7 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
         //                 the information we're giving the player for free.
         // Navigate around plants and fungi. Yet another tasty hack.
         if (player_monster_visible(&menv[mon]) && 
-                mons_flag( menv[mon].type, M_NO_EXP_GAIN ))
+                mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
         {
             extern short point_distance[GXM][GYM];
 
@@ -442,12 +433,12 @@ static bool is_safe(int x, int y)
         if (!player_monster_visible(&menv[mon]) || 
                 mons_is_mimic( menv[mon].type ))
         {
-            you.running = 0;
+            you.running.stop();
             return true;
         }
 
         // Stop before wasting energy on plants and fungi.
-        if (mons_flag( menv[mon].type, M_NO_EXP_GAIN ))
+        if (mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
             return false;
 
         // If this is any *other* monster, it'll be visible and
@@ -506,9 +497,14 @@ static void init_terrain_check()
 
 void travel_init_new_level()
 {
+    // Clear run details, but preserve the runmode, because we might be in
+    // the middle of interlevel travel.
+    int runmode = you.running;
+    you.running.clear();
+    you.running = runmode;
+
     // Zero out last travel coords
-    you.run_x       = you.run_y     = 0;
-    you.travel_x    = you.travel_y  = 0;
+    you.travel_x = you.travel_y  = 0;
 
     traps_inited    = false;
     curr_excludes.clear();
@@ -525,7 +521,6 @@ void initialise_travel()
     traversable_terrain[DNGN_FLOOR] =
     traversable_terrain[DNGN_ENTER_HELL] =
     traversable_terrain[DNGN_OPEN_DOOR] =
-    traversable_terrain[DNGN_BRANCH_STAIRS] =
     traversable_terrain[DNGN_UNDISCOVERED_TRAP] =
     traversable_terrain[DNGN_ENTER_SHOP] =
     traversable_terrain[DNGN_ENTER_LABYRINTH] =
@@ -628,6 +623,16 @@ void prevent_travel_to(const std::string &feature)
         traversable_terrain[feature_type] = FORBIDDEN;
 }
 
+bool is_branch_stair(int gridx, int gridy)
+{
+    coord_def pos = { gridx, gridy };
+
+    const level_id curr = level_id::get_current_level_id();
+    const level_id next = level_id::get_next_level_id(pos);
+
+    return (next.branch != curr.branch);
+}
+
 bool is_stair(unsigned gridc)
 {
     return (is_travelable_stair(gridc)
@@ -727,18 +732,27 @@ static void userdef_run_startrunning_hook(void)
 #endif
 }
 
-/*
- * Stops shift+running and all forms of travel.
- */
-void stop_running(void)
+bool is_resting( void )
 {
-    userdef_run_stoprunning_hook();
-    you.running = 0;
+    return you.running.is_rest();
 }
 
 void start_running(void)
 {
     userdef_run_startrunning_hook();
+
+    if (you.running == RMODE_TRAVEL
+            || you.running == RMODE_EXPLORE
+            || you.running == RMODE_INTERLEVEL)
+        start_delay( DELAY_TRAVEL, 1 );
+}
+
+/*
+ * Stops shift+running and all forms of travel.
+ */
+void stop_running(void)
+{
+    you.running.stop();
 }
 
 /*
@@ -750,21 +764,23 @@ void start_running(void)
  *
  * Don't call travel() if you.running >= 0.
  */
-void travel(int *keyin, char *move_x, char *move_y)
+command_type travel()
 {
-    *keyin = 128;
+    char holdx, holdy;
+    char *move_x = &holdx;
+    char *move_y = &holdy;
+    holdx = holdy = 0;
+    
+    command_type result = CMD_NO_CMD;
 
     // Abort travel/explore if you're confused or a key was pressed.
     if (kbhit() || you.conf)
     {
         stop_running();
-        *keyin      = 0;
-        if (Options.travel_delay == -1)
-            redraw_screen();
-        return ;
+        return CMD_NO_CMD;
     }
 
-    if (Options.explore_stop && you.running == RUN_EXPLORE)
+    if (Options.explore_stop && you.running == RMODE_EXPLORE)
     {
         // Scan through the shadow map, compare it with the actual map, and if
         // there are any squares of the shadow map that have just been
@@ -787,22 +803,22 @@ void travel(int *keyin, char *move_x, char *move_y)
         copy(env.map, mapshadow);
     }
 
-    if (you.running == RUN_EXPLORE)
+    if (you.running == RMODE_EXPLORE)
     {
         // Exploring
-        you.run_x = 0;
+        you.running.x = 0;
         find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
         // No place to go?
-        if (!you.run_x)
+        if (!you.running.x)
             stop_running();
     }
 
-    if (you.running == RUN_INTERLEVEL && !you.run_x)
+    if (you.running == RMODE_INTERLEVEL && !you.running.x)
     {
-        // Interlevel travel. Since you.run_x is zero, we've either just
+        // Interlevel travel. Since you.running.x is zero, we've either just
         // initiated travel, or we've just climbed or descended a staircase,
         // and we need to figure out where to travel to next.
-        if (!find_transtravel_square(travel_target) || !you.run_x)
+        if (!find_transtravel_square(travel_target) || !you.running.x)
             stop_running();
     }
 
@@ -823,15 +839,15 @@ void travel(int *keyin, char *move_x, char *move_y)
             // should continue doing so (explore has its own end condition
             // upstairs); if we're traveling between levels and we've reached
             // our travel target, we're on a staircase and should take it.
-            if (you.x_pos == you.run_x && you.y_pos == you.run_y)
+            if (you.x_pos == you.running.x && you.y_pos == you.running.y)
             {
-                if (runmode == RUN_EXPLORE)
-                    you.running = RUN_EXPLORE;       // Turn explore back on
+                if (runmode == RMODE_EXPLORE)
+                    you.running = RMODE_EXPLORE;       // Turn explore back on
 
                 // For interlevel travel, we'll want to take the stairs unless
                 // the interlevel travel specified a destination square and 
                 // we've reached that destination square.
-                else if (runmode == RUN_INTERLEVEL
+                else if (runmode == RMODE_INTERLEVEL
                         && (travel_target.pos.x != you.x_pos
                             || travel_target.pos.y != you.y_pos
                             || travel_target.id != 
@@ -847,10 +863,10 @@ void travel(int *keyin, char *move_x, char *move_y)
                         // notify Lua hooks if you.running == 0.
                         you.running = runmode;
                         stop_running();
-                        return;
+                        return CMD_NO_CMD;
                     }
-                    you.running = RUN_INTERLEVEL;
-                    *keyin = trans_negotiate_stairs();
+                    you.running = RMODE_INTERLEVEL;
+                    result = trans_negotiate_stairs();
 
                     // If, for some reason, we fail to use the stairs, we
                     // need to make sure we don't go into an infinite loop
@@ -860,11 +876,11 @@ void travel(int *keyin, char *move_x, char *move_y)
 
                     // This is important, else we'll probably stop traveling
                     // the moment we clear the stairs. That's because the 
-                    // (run_x, run_y) destination will no longer be valid on 
-                    // the new level. Setting run_x to zero forces us to
-                    // recalculate our travel target next turn (see previous
-                    // if block).
-                    you.run_x = you.run_y = 0;
+                    // (running.x, running.y) destination will no longer be
+                    // valid on the new level. Setting running.x to zero forces
+                    // us to recalculate our travel target next turn (see
+                    // previous if block).
+                    you.running.x = you.running.y = 0;
                 }
                 else
                 {
@@ -884,6 +900,51 @@ void travel(int *keyin, char *move_x, char *move_y)
 
     if (!you.running && Options.travel_delay == -1)
         redraw_screen();
+
+    if (!you.running)
+	return CMD_NO_CMD;
+
+    if ( result != CMD_NO_CMD )
+	return result;
+
+    return direction_to_command( *move_x, *move_y );
+}
+
+command_type direction_to_command( char x, char y ) {
+    if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
+    if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
+    if ( x == -1 && y ==  1 ) return CMD_MOVE_DOWN_LEFT;
+    if ( x ==  0 && y == -1 ) return CMD_MOVE_UP;
+    if ( x ==  0 && y ==  0 ) return CMD_NO_CMD;
+    if ( x ==  0 && y ==  1 ) return CMD_MOVE_DOWN;
+    if ( x ==  1 && y == -1 ) return CMD_MOVE_UP_RIGHT;
+    if ( x ==  1 && y ==  0 ) return CMD_MOVE_RIGHT;
+    if ( x ==  1 && y ==  1 ) return CMD_MOVE_DOWN_RIGHT;
+
+    ASSERT(0);
+    return CMD_NO_CMD;
+}
+
+static void fill_exclude_radius(const coord_def &c)
+{
+    int radius = 0;
+    while (radius * radius < Options.travel_exclude_radius2)
+        radius++;
+
+    for (int y = c.y - radius; y <= c.y + radius; ++y)
+    {
+        for (int x = c.x - radius; x <= c.x + radius; ++x)
+        {
+            if (!map_bounds(x, y) || !is_terrain_known(x, y)
+                    || point_distance[x][y])
+                continue;
+
+            if (is_exclude_root(x, y))
+                point_distance[x][y] = PD_EXCLUDED;
+            else if (is_excluded(x, y))
+                point_distance[x][y] = PD_EXCLUDED_RADIUS;
+        }
+    }
 }
 
 /*
@@ -896,7 +957,7 @@ void find_travel_pos(int youx, int youy,
 {
     init_terrain_check();
 
-    int start_x = you.run_x, start_y = you.run_y;
+    int start_x = you.running.x, start_y = you.running.y;
     int dest_x  = youx, dest_y  = youy;
     bool floodout = false;
     unsigned char feature;
@@ -922,14 +983,14 @@ void find_travel_pos(int youx, int youy,
     if (dest_x != -1 && !is_travel_ok(start_x, start_y, false) &&
             !is_trap(start_x, start_y))
     {
-        you.running = 0;
+        you.running = RMODE_NOT_RUNNING;
         return ;
     }
 
     // Abort run if we're going nowhere.
     if (start_x == dest_x && start_y == dest_y)
     {
-        you.running = 0;
+        you.running = RMODE_NOT_RUNNING;
         return ;
     }
 
@@ -1009,13 +1070,13 @@ void find_travel_pos(int youx, int youy,
 
                 unsigned char envf = env.map[dx - 1][dy - 1];
 
-                if (floodout && you.running == RUN_EXPLORE 
+                if (floodout && you.running == RMODE_EXPLORE 
                         && !is_player_mapped(envf)) 
                 {
-                    // Setting run_x and run_y here is evil - this function
-                    // should ideally not modify game state in any way.
-                    you.run_x = x;
-                    you.run_y = y;
+                    // Setting running.x and running.y here is evil - this
+                    // function should ideally not modify game state in any way.
+                    you.running.x = x;
+                    you.running.y = y;
 
                     return;
                 }
@@ -1115,6 +1176,20 @@ void find_travel_pos(int youx, int youy,
             ignore_hostile = true;
         }
     } // for ( ; points > 0 ...
+
+    if (features && floodout)
+    {
+        for (int i = 0, size = curr_excludes.size(); i < size; ++i)
+        {
+            const coord_def &exc = curr_excludes[i];
+            // An exclude - wherever it is - is always a feature.
+            if (std::find(features->begin(), features->end(), exc) 
+                    == features->end())
+                features->push_back(exc);
+
+            fill_exclude_radius(exc);
+        }
+    }
 }
 
 // Mappings of which branches spring from which other branches, essential to
@@ -1289,7 +1364,7 @@ static struct
 {
     { "Dungeon",        "the Main Dungeon", 'D' },
     { "Dis",            "Dis",              'I' },
-    { "Gehenna",        "Gehenna",          'W' },
+    { "Gehenna",        "Gehenna",          'N' },
     { "Hell",           "Hell",             'U' },
     { "Cocytus",        "Cocytus",          'X' },
     { "Tartarus",       "Tartarus",         'Y' },
@@ -1459,14 +1534,14 @@ static std::vector<unsigned char> get_known_branches()
         BRANCH_HALL_OF_ZOT
     };
 
-    std::vector<unsigned char> branches;
+    std::vector<unsigned char> result;
     for (unsigned i = 0; i < sizeof list_order / sizeof(*list_order); ++i)
     {
         if (is_known_branch(list_order[i]))
-            branches.push_back(list_order[i]);
+            result.push_back(list_order[i]);
     }
 
-    return branches;
+    return result;
 }
 
 static int prompt_travel_branch()
@@ -1580,7 +1655,7 @@ static int prompt_travel_depth(unsigned char branch)
     mesclr();
     mpr(buf, MSGCH_PROMPT);
 
-    if (!cancelable_get_line( buf, sizeof buf ))
+    if (cancelable_get_line( buf, sizeof buf ))
         return 0;
 
     if (*buf)
@@ -1737,54 +1812,25 @@ void start_translevel_travel(bool prompt_for_destination)
 
     if (travel_target.id.depth > -1)
     {
-        you.running = RUN_INTERLEVEL;
-        you.run_x = you.run_y = 0;
+        you.running = RMODE_INTERLEVEL;
+        you.running.x = you.running.y = 0;
         last_stair.depth = -1;
         start_running();
     }
 }
 
-int stair_direction(int stair)
+command_type stair_direction(int stair)
 {
     return ((stair < DNGN_STONE_STAIRS_UP_I
                 || stair > DNGN_ROCK_STAIRS_UP)
                 && (stair < DNGN_RETURN_FROM_ORCISH_MINES 
                 || stair > DNGN_RETURN_FROM_SWAMP))
-        ? '>' : '<';
+        ? CMD_GO_DOWNSTAIRS : CMD_GO_UPSTAIRS;
 }
 
-int trans_negotiate_stairs()
+command_type trans_negotiate_stairs()
 {
     return stair_direction(grd[you.x_pos][you.y_pos]);
-}
-
-int absdungeon_depth(unsigned char branch, int subdepth)
-{
-    int realdepth = subdepth - 1;
-
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        realdepth = subdepth + you.branch_stairs[branch - 10];
-
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        realdepth = subdepth + 26;
-
-    return realdepth;
-}
-
-int subdungeon_depth(unsigned char branch, int depth)
-{
-    int curr_subdungeon_level = depth + 1;
-
-    // maybe last part better expresssed as <= PIT {dlb}
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        curr_subdungeon_level = depth - 26;
-
-    /* Remember, must add this to the death_string in ouch */
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        curr_subdungeon_level = depth
-                                - you.branch_stairs[branch - 10];
-
-    return curr_subdungeon_level;
 }
 
 static int target_distance_from(const coord_def &pos)
@@ -1910,8 +1956,8 @@ static int find_transtravel_stair(  const level_id &cur,
         {
             si.distance = dist2stair;
 
+            // Account for the cost of taking the stairs
             dist2stair += Options.travel_stair_cost;
-            ++dist2stair;   // Account for the cost of taking the stairs
 
             // Already too expensive? Short-circuit.
             if (local_distance != -1 && dist2stair >= local_distance)
@@ -1935,7 +1981,8 @@ static int find_transtravel_stair(  const level_id &cur,
                 continue;
             }
 
-            if (dest.id.depth > -1) { // We have a valid level descriptor.
+            if (dest.id.depth > -1) // We have a valid level descriptor.
+            {
                 int dist = level_distance(dest.id, target.id);
                 if (dist != -1 &&
                         (dist < best_level_distance || 
@@ -2042,8 +2089,8 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
-        you.run_x = best_stair.x;
-        you.run_y = best_stair.y;
+        you.running.x = best_stair.x;
+        you.running.y = best_stair.y;
         return 1;
     }
     else if (best_level_distance != -1 && closest_level != current
@@ -2067,9 +2114,9 @@ void start_travel(int x, int y)
     if (x == you.x_pos && y == you.y_pos) return ;
 
     // Start running
-    you.running = RUN_TRAVEL;
-    you.run_x   = x;
-    you.run_y   = y;
+    you.running = RMODE_TRAVEL;
+    you.running.x   = x;
+    you.running.y   = y;
 
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = x;
@@ -2079,7 +2126,7 @@ void start_travel(int x, int y)
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
     
     if (point_distance[x][y] == 0 &&
-            (x != you.x_pos || you.run_y != you.y_pos) &&
+            (x != you.x_pos || you.running.y != you.y_pos) &&
             is_travel_ok(x, y, false))
     {
         // We'll need interlevel travel to get here.
@@ -2087,8 +2134,8 @@ void start_travel(int x, int y)
         travel_target.pos.x = x;
         travel_target.pos.y = y;
 
-        you.running = RUN_INTERLEVEL;
-        you.run_x = you.run_y = 0;
+        you.running = RMODE_INTERLEVEL;
+        you.running.x = you.running.y = 0;
         last_stair.depth = -1;
 
         // We need the distance of the target from the various stairs around.
@@ -2103,7 +2150,7 @@ void start_travel(int x, int y)
 
 void start_explore()
 {
-    you.running   = RUN_EXPLORE;
+    you.running   = RMODE_EXPLORE;
     if (Options.explore_stop)
     {
         // Clone shadow array off map
@@ -2561,7 +2608,11 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
             unsigned char grid = grd[x + 1][y + 1];
             unsigned char envc = (unsigned char) env.map[x][y];
 
-            if (envc && is_travelable_stair(grid))
+            if ((x + 1 == you.x_pos && y + 1 == you.y_pos)
+                    || (envc 
+                        && is_travelable_stair(grid) 
+                        && (is_terrain_seen(x + 1, y + 1)
+                            || !is_branch_stair(x + 1, y + 1))))
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
@@ -2636,7 +2687,6 @@ void LevelInfo::save(FILE *file) const
     }
 }
 
-#define EXCLUDE_LOAD_LIMIT 20
 void LevelInfo::load(FILE *file)
 {
     stairs.clear();
@@ -2919,6 +2969,171 @@ void TravelCache::fixup_levels()
 
 bool can_travel_interlevel()
 {
-    return !(you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
-                || you.level_type == LEVEL_PANDEMONIUM);
+    return (player_in_mappable_area() && you.level_type != LEVEL_PANDEMONIUM);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Shift-running and resting.
+
+runrest::runrest()
+    : runmode(0), mp(0), hp(0), x(0), y(0)
+{
+}
+
+// Initialize is only called for resting/shift-running. We should eventually
+// include travel and wrap it all in.
+void runrest::initialise(int dir, int mode)
+{
+    // Note HP and MP for reference.
+    hp = you.hp;
+    mp = you.magic_points;
+
+    if (dir == RDIR_REST)
+    {
+        x = 0;
+        y = 0;
+        runmode = mode;
+    }
+    else
+    {
+        ASSERT( dir >= 0 && dir <= 7 );
+
+        x = Compass[dir].x;
+        y = Compass[dir].y;
+        runmode = mode;
+
+        // Get the compass point to the left/right of intended travel:
+        const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
+        const int right = (dir + 1 > 7) ? 0 : (dir + 1);
+
+        // Record the direction and starting tile type for later reference:
+        set_run_check( 0, left );
+        set_run_check( 1, dir );
+        set_run_check( 2, right );    
+    }
+
+    if (runmode == RMODE_REST_DURATION)
+        start_delay(DELAY_REST, 1);
+    else
+        start_delay(DELAY_RUN, 1);
+}
+
+runrest::operator int () const
+{
+    return (runmode);
+}
+
+const runrest &runrest::operator = (int newrunmode)
+{
+    runmode = newrunmode;
+    return (*this);
+}
+
+static char base_grid_type( char grid )
+{
+    // Don't stop for undiscovered traps:
+    if (grid == DNGN_UNDISCOVERED_TRAP)
+        return (DNGN_FLOOR);
+
+    // Or secret doors (which currently always look like rock walls):
+    if (grid == DNGN_SECRET_DOOR)
+        return (DNGN_ROCK_WALL);
+
+    return (grid);
+}
+
+void runrest::set_run_check(int index, int dir)
+{
+    run_check[index].dx = Compass[dir].x;
+    run_check[index].dy = Compass[dir].y;
+
+    const int targ_x = you.x_pos + Compass[dir].x;
+    const int targ_y = you.y_pos + Compass[dir].y;
+
+    run_check[index].grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+}
+
+bool runrest::check_stop_running()
+{
+    if (runmode > 0 && runmode != RMODE_START && run_grids_changed())
+    {
+        stop();
+        return (true);
+    }
+    return (false);
+}
+
+// This function creates "equivalence classes" so that undiscovered
+// traps and secret doors aren't running stopping points.
+bool runrest::run_grids_changed() const
+{
+    if (env.cgrid[you.x_pos + x][you.y_pos + y] != EMPTY_CLOUD)
+        return (true);
+
+    if (mgrd[you.x_pos + x][you.y_pos + y] != NON_MONSTER)
+        return (true);
+
+    for (int i = 0; i < 3; i++)
+    {
+        const int targ_x = you.x_pos + run_check[i].dx;
+        const int targ_y = you.y_pos + run_check[i].dy;
+        const int targ_grid = base_grid_type( grd[ targ_x ][ targ_y ] );
+
+        if (run_check[i].grid != targ_grid)
+            return (true);
+    }
+
+    return (false);
+}
+
+void runrest::stop()
+{
+    bool need_redraw = 
+        runmode > 0 || (runmode < 0 && Options.travel_delay == -1);
+    userdef_run_stoprunning_hook();
+    runmode = RMODE_NOT_RUNNING;
+
+    // Kill the delay; this is fine because it's not possible to stack 
+    // run/rest/travel on top of other delays.
+    stop_delay();
+
+    if (need_redraw)
+        viewwindow(true, false);
+}
+
+bool runrest::is_rest() const
+{
+    return (runmode > 0 && !x && !y);    
+}
+
+void runrest::rundown()
+{
+    rest();
+}
+
+void runrest::rest()
+{
+    // stop_running() Lua hooks will never see rest stops.
+    if (runmode > 0)
+        --runmode;
+}
+
+void runrest::clear()
+{
+    runmode = RMODE_NOT_RUNNING;
+    x = y = 0;
+    mp = hp = 0;
+}
+
+void runrest::check_hp()
+{
+    if (is_rest() && you.hp == you.hp_max && you.hp > hp)
+        stop();
+}
+
+void runrest::check_mp()
+{
+    if (is_rest() && you.magic_points == you.max_magic_points
+            && you.magic_points > mp)
+        stop();
 }

@@ -245,11 +245,11 @@ void print_stats(void)
         gotoxy(52, 11);
 
 #if DEBUG_DIAGNOSTICS
-        cprintf( "%d/%d  (%d/%d)", 
+        cprintf( "%d/%lu  (%d/%d)", 
                  you.experience_level, you.experience, 
                  you.skill_cost_level, you.exp_available );
 #else
-        cprintf( "%d/%d  (%d)", 
+        cprintf( "%d/%lu  (%d)", 
                  you.experience_level, you.experience, you.exp_available );
 #endif
 
@@ -283,9 +283,9 @@ void print_stats(void)
 
             in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass, 
                      Options.terse_hand );
-            str_pass[39] = '\0';
+            str_pass[39] = 0;
 
-            cprintf(str_pass);
+            cprintf("%s", str_pass);
             textcolor(LIGHTGREY);
         }
         else
@@ -511,7 +511,7 @@ void print_stats(void)
             cprintf( "Rot " );
         }
 
-        if (you.magic_contamination > 5)
+        if (you.magic_contamination >= 5)
         {
             textcolor( bad_ench_colour( you.magic_contamination, 15, 25 ) );
             cprintf( "Glow " );
@@ -559,10 +559,12 @@ unsigned char* itosym1(int stat)
 unsigned char* itosym3(int stat)
 {
     return (unsigned char*)( (stat >= 3) ? "+ + +" :
-             (stat == 2) ? "+ + ." :
-             (stat == 1) ? "+ . ." :
-             (stat == 0) ? ". . ." :
-                           "x . .");
+             (stat ==  2) ? "+ + ." :
+             (stat ==  1) ? "+ . ." :
+             (stat ==  0) ? ". . ." :
+	     (stat == -1) ? "x . ." :
+	     (stat == -2) ? "x x ." :
+                            "x x x");
 }
 
 static const char *s_equip_slot_names[] = 
@@ -600,10 +602,9 @@ int equip_name_to_slot(const char *s)
 
 void get_full_detail(char* buffer, bool calc_unid)
 {
-#define FIR_AD buffer,44
 #define CUR_AD &buffer[++lines*45],44
-#define BUF_SIZE 25*3*45
-    int lines = 0;
+#define BUF_SIZE 24*3*45
+    int lines = -1;
 
     memset(buffer, 0, BUF_SIZE);
 
@@ -642,7 +643,7 @@ void get_full_detail(char* buffer, bool calc_unid)
     }
     else
     {
-        snprintf(CUR_AD,  "HP         : %3d/%d (%d)", 
+        snprintf(CUR_AD, "HP         : %3d/%d (%d)", 
                 you.hp, you.hp_max, you.hp_max + player_rotted() );
     }
 
@@ -683,7 +684,7 @@ void get_full_detail(char* buffer, bool calc_unid)
         snprintf(CUR_AD, "Turns      : %10ld", you.num_turns );
     }
 
-    lines = 27;
+    lines = 24 + 1;
 
     snprintf(CUR_AD, "Res.Fire  : %s", 
             itosym3( player_res_fire(calc_unid) ) );
@@ -722,15 +723,14 @@ void get_full_detail(char* buffer, bool calc_unid)
             const char *slot = equip_slot_to_name( eqslot );
             if (eqslot == EQ_LEFT_RING || eqslot == EQ_RIGHT_RING)
                 slot = "Ring";
-            else if (eqslot == EQ_BOOTS 
-                    && (you.species == SP_CENTAUR
-                        || you.species == SP_NAGA))
+            else if (eqslot == EQ_BOOTS &&
+                     (you.species == SP_CENTAUR || you.species == SP_NAGA))
                 slot = "Barding";
 
             if ( you.equip[ e_order[i] ] != -1)
             {
                 in_name( you.equip[ e_order[i] ], DESC_PLAIN, 
-                         str_pass, Options.terse_hand );
+                         str_pass, true );
                 snprintf(CUR_AD, "%-7s: %s", slot, str_pass);
             }
             else
@@ -752,7 +752,7 @@ void get_full_detail(char* buffer, bool calc_unid)
         }
     }
 
-    lines = 52;
+    lines = 24 * 2 + 1;
     snprintf(CUR_AD, "See Invis. : %s", 
             itosym1( player_see_invis(calc_unid) ) );
     snprintf(CUR_AD, "Warding    : %s", 
@@ -783,11 +783,7 @@ void get_full_detail(char* buffer, bool calc_unid)
         case SP_OGRE:
             snprintf(CUR_AD, "Saprovore  : %s", itosym3(1) );
             break;
-#ifdef V_FIX
-        case SP_OGRE_MAGE:
-            snprintf(CUR_AD, "Voracious  : %s", itosym1(1) );
-            break;
-#endif
+
         default:
             snprintf(CUR_AD, "Gourmand   : %s", itosym1(0) );
             break;
@@ -808,7 +804,7 @@ void get_full_detail(char* buffer, bool calc_unid)
         snprintf(CUR_AD, "Rnd.Telep. : %s", 
             itosym1( player_teleport(calc_unid) ) );
     snprintf(CUR_AD, "Ctrl.Telep.: %s", 
-            itosym1( you.attribute[ATTR_CONTROL_TELEPORT] ) );
+	     itosym1( player_control_teleport(calc_unid) ) );
     snprintf(CUR_AD, "Levitation : %s", itosym1( player_is_levitating() ) );
     snprintf(CUR_AD, "Ctrl.Flight: %s", 
             itosym1( wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid) ) ); 

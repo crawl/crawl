@@ -17,7 +17,7 @@
    than anything else, it is not actually saved as a tag) to TAG_XXX. NUM_TAGS
    is equal to the actual number of defined tags.
 
-2. Tags are created with tag_construct(),  which forwards the construction
+2. Tags are created with tag_construct(), which forwards the construction
    request appropriately.   tag_write() is then used to write the tag to an
    output stream.
 
@@ -25,15 +25,15 @@
    forwards the request appropriately, returning the ID of the tag it found,
    or zero if no tag was found.
 
-4. In order to know which tags are used by a particular file type,  a client
+4. In order to know which tags are used by a particular file type, a client
    calls tag_set_expected( fileType ), which sets up an array of chars.
    Within the array, a value of 1 means the tag is expected; -1 means that
    the tag is not expected.  A client can then set values in this array to
    anything other than 1 to indicate a successful tag_read() of that tag.
 
 5. A case should be provided in tag_missing() for any tag which might be
-   missing from a tagged save file.  For example,  if a developer adds
-   TAG_YOU_NEW_STUFF to the player save file,  he would have to provide a
+   missing from a tagged save file.  For example, if a developer adds
+   TAG_YOU_NEW_STUFF to the player save file, he would have to provide a
    case in tag_missing() for this tag since it might not be there in
    earlier savefiles.   The tags defined with the original tag system (and
    so not needing cases in tag_missing()) are as follows:
@@ -65,18 +65,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef USE_EMX
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
-
 #include "AppHdr.h"
 
 #include "abl-show.h"
@@ -84,6 +72,7 @@
 #include "externs.h"
 #include "files.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "randart.h"
@@ -99,9 +88,6 @@ static char *tagBuffer = NULL;
 extern FixedArray < unsigned char, MAX_LEVELS, MAX_BRANCHES > altars_present;
 extern FixedVector < char, MAX_BRANCHES > stair_level;
 extern FixedArray < unsigned char, MAX_LEVELS, MAX_BRANCHES > feature;
-
-extern unsigned char your_sign; /* these two are defined in view.cc */
-extern unsigned char your_colour;
 
 // temp file pairs used for file level cleanup
 FixedArray < bool, MAX_LEVELS, MAX_BRANCHES > tmp_file_pairs;
@@ -208,23 +194,31 @@ long unmarshallLong(struct tagHeader &th)
     return data;
 }
 
+union float_marshall_kludge
+{
+    // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
+    float f_num;
+    long  l_num;
+};
+
 // single precision float -- marshall in network order.
 void marshallFloat(struct tagHeader &th, float data)
 {
-    long intBits = *((long *)(&data));
-    marshallLong(th, intBits);
+    float_marshall_kludge k;
+    k.f_num = data;
+    marshallLong(th, k.l_num);
 }
 
 // single precision float -- unmarshall in network order.
 float unmarshallFloat(struct tagHeader &th)
 {
-    long intBits = unmarshallLong(th);
-
-    return *((float *)(&intBits));
+    float_marshall_kludge k;
+    k.l_num = unmarshallLong(th);
+    return k.f_num;
 }
 
 // string -- marshall length & string data
-void marshallString(struct tagHeader &th, char *data, int maxSize)
+void marshallString(struct tagHeader &th, const char *data, int maxSize)
 {
     // allow for very long strings.
     short len = strlen(data);
@@ -250,7 +244,7 @@ void unmarshallString(struct tagHeader &th, char *data, int maxSize)
 
     // read the actual string and null terminate
     memcpy(data, &tagBuffer[th.offset], copylen);
-    data[copylen] = '\0';
+    data[copylen] = 0;
 
     th.offset += len;
 }
@@ -285,7 +279,7 @@ void make_date_string( time_t in_date, char buff[20] )
 {
     if (in_date <= 0)
     {
-        buff[0] = '\0';
+        buff[0] = 0;
         return;
     }
 
@@ -481,7 +475,7 @@ int tag_read(FILE *fp, char minorVersion)
 // For now, none are supported.
 
 // This function will be called AFTER all other tags for
-// the savefile are read,  so everything that can be
+// the savefile are read, so everything that can be
 // initialized should have been by now.
 
 // minorVersion is available for any child functions that need
@@ -515,6 +509,10 @@ void tag_set_expected(char tags[], int fileType)
                 if (i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
                     tags[i] = 1;
                 break;
+            case TAGTYPE_PLAYER_NAME:
+                if (i == TAG_YOU)
+                    tags[i] = 1;
+                break;
             case TAGTYPE_LEVEL:
                 if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE)
                     tags[i] = 1;
@@ -529,12 +527,12 @@ void tag_set_expected(char tags[], int fileType)
     }
 }
 
-// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS,  EVER.  THAT IS THE WHOLE POINT
+// NEVER _MODIFY_ THE CONSTRUCT/READ FUNCTIONS, EVER.  THAT IS THE WHOLE POINT
 // OF USING TAGS.  Apologies for the screaming.
 
 // Note anyway that the formats are somewhat flexible;  you could change map
-// size,  the # of slots in player inventory,  etc.  Constants like GXM,
-// NUM_EQUIP, and NUM_DURATIONS are saved,  so the appropriate amount will
+// size, the # of slots in player inventory, etc.  Constants like GXM,
+// NUM_EQUIP, and NUM_DURATIONS are saved, so the appropriate amount will
 // be restored even if a later version increases these constants.
 
 // --------------------------- player tags (foo.sav) -------------------- //
@@ -555,8 +553,8 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th,you.rotting);
     marshallByte(th,you.exhausted);
     marshallByte(th,you.deaths_door);
-    marshallByte(th,your_sign);
-    marshallByte(th,your_colour);
+    marshallByte(th,you.symbol);
+    marshallByte(th,you.colour);
     marshallByte(th,you.pet_target);
 
     marshallByte(th,you.max_level);
@@ -687,6 +685,10 @@ static void tag_construct_you(struct tagHeader &th)
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallByte(th, you.worshipped[i]);
 
+    // what is the extent of divine generosity?
+    for (i = 0; i < MAX_NUM_GODS; i++)
+        marshallShort(th, you.num_gifts[i]);
+
     marshallByte(th, you.gift_timeout);
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
@@ -738,6 +740,8 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallShort(th,you.inv[i].plus2);
         marshallShort(th, you.inv[i].orig_place);
         marshallShort(th, you.inv[i].orig_monnum);
+	/*** HP CHANGE ***/
+	marshallString(th, you.inv[i].inscription.c_str(), 80);
     }
 
     // item descrip for each type & subtype
@@ -758,7 +762,7 @@ static void tag_construct_you_items(struct tagHeader &th)
     marshallByte(th, 50);
 
     // this is really dumb. We copy the id[] array from itemname
-    // to the stack,  for no good reason that I can see.
+    // to the stack, for no good reason that I can see.
     char identy[4][50];
 
     save_id(identy);
@@ -833,8 +837,8 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.rotting = unmarshallByte(th);
     you.exhausted = unmarshallByte(th);
     you.deaths_door = unmarshallByte(th);
-    your_sign = unmarshallByte(th);
-    your_colour = unmarshallByte(th);
+    you.symbol = unmarshallByte(th);
+    you.colour = unmarshallByte(th);
     you.pet_target = unmarshallByte(th);
 
     you.max_level = unmarshallByte(th);
@@ -956,7 +960,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     // how many durations?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.duration[j] = unmarshallByte(th);
+        you.duration[j] = (unsigned char) unmarshallByte(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
@@ -981,6 +985,11 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
         count_c = unmarshallByte(th);
         for (i = 0; i < count_c; i++)
             you.worshipped[i] = unmarshallByte(th);
+
+        if (minorVersion >= 5)
+            for (i = 0; i < count_c; i++)
+                you.num_gifts[i] = unmarshallShort(th);
+
     }
     else
     {
@@ -1266,6 +1275,7 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
     {
         you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
+        you.inv[i].inscription.clear();
         if (minorVersion < 1)
         {
             you.inv[i].base_type = (unsigned char) unmarshallByte(th);
@@ -1294,6 +1304,14 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
             {
                 you.inv[i].orig_place  = unmarshallShort(th);
                 you.inv[i].orig_monnum = unmarshallShort(th);
+
+                if (minorVersion >= 6)
+                {
+                    /*** HP CHANGE ***/
+                    char insstring[80];
+                    unmarshallString(th, insstring, 80);
+                    you.inv[i].inscription = std::string(insstring);
+                }
             }
         }
 
@@ -1485,6 +1503,8 @@ static void tag_construct_level_items(struct tagHeader &th)
 
         marshallShort(th, mitm[i].orig_place);
         marshallShort(th, mitm[i].orig_monnum);
+	/*** HP CHANGE ***/
+	marshallString(th, mitm[i].inscription.c_str(), 80);
     }
 }
 
@@ -1506,28 +1526,34 @@ static void tag_construct_level_monsters(struct tagHeader &th)
 
     for (i = 0; i < MAX_MONSTERS; i++)
     {
-        marshallByte(th, menv[i].armour_class);
-        marshallByte(th, menv[i].evasion);
-        marshallByte(th, menv[i].hit_dice);
-        marshallByte(th, menv[i].speed);
-        marshallByte(th, menv[i].speed_increment);
-        marshallByte(th, menv[i].behaviour);
-        marshallByte(th, menv[i].x);
-        marshallByte(th, menv[i].y);
-        marshallByte(th, menv[i].target_x);
-        marshallByte(th, menv[i].target_y);
-        marshallByte(th, menv[i].flags);
+        const monsters &m = menv[i];
+
+        marshallByte(th, m.armour_class);
+        marshallByte(th, m.evasion);
+        marshallByte(th, m.hit_dice);
+        marshallByte(th, m.speed);
+        marshallByte(th, m.speed_increment);
+        marshallByte(th, m.behaviour);
+        marshallByte(th, m.x);
+        marshallByte(th, m.y);
+        marshallByte(th, m.target_x);
+        marshallByte(th, m.target_y);
+        marshallByte(th, m.flags);
 
         for (j = 0; j < NUM_MON_ENCHANTS; j++)
-            marshallByte(th, menv[i].enchantment[j]);
+            marshallByte(th, m.enchantment[j]);
 
-        marshallShort(th, menv[i].type);
-        marshallShort(th, menv[i].hit_points);
-        marshallShort(th, menv[i].max_hit_points);
-        marshallShort(th, menv[i].number);
+        marshallShort(th, m.type);
+        marshallShort(th, m.hit_points);
+        marshallShort(th, m.max_hit_points);
+        marshallShort(th, m.number);
+        marshallShort(th, m.colour);
 
         for (j = 0; j < NUM_MONSTER_SLOTS; j++)
-            marshallShort(th, menv[i].inv[j]);
+            marshallShort(th, m.inv[j]);
+
+        for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+            marshallShort(th, m.spells[j]);
     }
 }
 
@@ -1658,6 +1684,11 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
             mitm[i].flags = (unsigned long) unmarshallLong(th);
         }
 
+        // [dshaligram] FIXME, remove this kludge when ARM_CAP is fully
+        // integrated.
+        if (mitm[i].base_type == OBJ_ARMOUR && mitm[i].sub_type == ARM_CAP)
+            mitm[i].sub_type = ARM_HELMET;
+
         // pre 4.2 files had monster items stacked at (2,2) -- moved to (0,0)
         if (minorVersion < 2 && mitm[i].x == 2 && mitm[i].y == 2)
         {
@@ -1673,10 +1704,20 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
             mitm[i].slot = unmarshallByte(th);
         }
 
+        mitm[i].inscription.clear();
+
         if (minorVersion >= 7)
         {
             mitm[i].orig_place  = unmarshallShort(th);
             mitm[i].orig_monnum = unmarshallShort(th);
+
+            if (minorVersion >= 9)
+            {
+                /*** HP CHANGE ***/
+                char insstring[80];
+                unmarshallString(th, insstring, 80);
+                mitm[i].inscription = std::string(insstring);
+            }
         }
         else
         {
@@ -1718,8 +1759,8 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].target_y = unmarshallByte(th);
         menv[i].flags = unmarshallByte(th);
 
-        // VERSION NOTICE:  for pre 4.2 files,  flags was either 0
-        // or 1.  Now,  we can transfer ENCH_CREATED_FRIENDLY over
+        // VERSION NOTICE:  for pre 4.2 files, flags was either 0
+        // or 1.  Now, we can transfer ENCH_CREATED_FRIENDLY over
         // from the enchantments array to flags.
         // Also need to take care of ENCH_FRIEND_ABJ_xx flags
 
@@ -1755,8 +1796,25 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].max_hit_points = unmarshallShort(th);
         menv[i].number = unmarshallShort(th);
 
+        if (minorVersion >= 10)
+            menv[i].colour = unmarshallShort(th);
+        else
+            // This will be the wrong colour for many cases, we don't care.
+            menv[i].colour = mons_class_colour( menv[i].type );
+
         for (j = 0; j < icount; j++)
             menv[i].inv[j] = unmarshallShort(th);
+
+        if (minorVersion >= 10)
+        {
+            for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+                menv[i].spells[j] = unmarshallShort(th);
+        }
+        else if (menv[i].type != -1)
+        {
+            const int book = obsolete_mons_spell_template_index( &menv[i] );
+            mons_load_spells( &menv[i], book );
+        }
 
         // place monster
         if (menv[i].type != -1)
@@ -1785,7 +1843,7 @@ void tag_missing_level_attitude()
     // a foe first time through handle_monster() if
     // there's one around.
 
-    // as for attitude,  a couple simple checks
+    // as for attitude, a couple simple checks
     // can be used to determine friendly/neutral/
     // hostile.
     int i;

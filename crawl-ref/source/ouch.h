@@ -19,6 +19,7 @@
 
 #define DEATH_NAME_LENGTH 10
 
+#include "enum.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -70,5 +71,6 @@ void lose_level(void);
  * *********************************************************************** */
 void drain_exp(void);
 
+void expose_player_to_element( beam_type flavour, int strength = 0 );
 
 #endif

@@ -3,6 +3,8 @@
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -20,7 +22,7 @@ void calc_total_skill_points( void );
  * called from: ability - bang - beam - debug - fight - it_use3 - item_use -
  *              items - misc - spell
  * *********************************************************************** */
-void exercise(char exsk, int deg);
+int exercise(int exsk, int deg);
 
 
 #endif

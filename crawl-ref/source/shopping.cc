@@ -3,6 +3,8 @@
  *  Summary:    Shop keeper functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>     Jul 30 00      JDJ      in_a_shop uses shoppy instead of i when calling shop_set_id.
@@ -28,7 +30,9 @@
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "macro.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "spl-book.h"
@@ -44,6 +48,66 @@ static void shop_set_ident_type(int i, id_fix_arr &shop_id,
                                 unsigned char base_type, unsigned char sub_type);
 static void shop_uninit_id(int i, const id_fix_arr &shop_id);
 
+static std::string hyphenated_suffix(char prev, char last)
+{
+    std::string s;
+    if (prev > last + 2)
+        s += "</w>-<w>";
+    else if (prev == last + 2)
+        s += (char) (last + 1);
+
+    if (prev != last)
+        s += prev;
+    return (s);
+}
+
+static std::string purchase_keys(const std::string &s)
+{
+    if (s.empty())
+        return "";
+
+    std::string list = "<w>" + s.substr(0, 1);
+    char last = s[0];
+    for (int i = 1; i < (int) s.length(); ++i)
+    {
+        if (s[i] == s[i - 1] + 1)
+            continue;
+
+        char prev = s[i - 1];
+        list += hyphenated_suffix(prev, last);
+        list += (last = s[i]);
+    }
+
+    list += hyphenated_suffix( s[s.length() - 1], last );
+    list += "</w>";
+    return (list);
+}
+
+static void list_shop_keys(const std::string &purchasable)
+{
+    char buf[200];
+    gotoxy(1, 23);
+
+    std::string pkeys = purchase_keys(purchasable);
+    if (pkeys.length())
+        pkeys = "[" + pkeys + "] Buy Item";
+
+    snprintf(buf, sizeof buf,
+            "[<w>x</w>/<w>Esc</w>] Exit       [<w>v</w>] Examine Items  %s",
+            pkeys.c_str());
+
+    formatted_string fs = formatted_string::parse_string(buf);
+    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.display();
+    gotoxy(1, 24);
+
+    fs = formatted_string::parse_string(
+            "[<w>?</w>/<w>*</w>]   Inventory  "
+            "[<w>\\</w>] Known Items");
+    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.display();
+}
+
 char in_a_shop( char shoppy, id_arr id )
 {
     // easier to work with {dlb}
@@ -56,6 +120,7 @@ char in_a_shop( char shoppy, id_arr id )
     unsigned int gp_value = 0;
     char i;
     unsigned char ft;
+    std::string purchasable;
 
 #ifdef DOS_TERM
     char buffer[4800];
@@ -79,6 +144,8 @@ char in_a_shop( char shoppy, id_arr id )
     shop_print(info, 20);
 
     more3();
+    
+    activate_notes(false);	/* should do a better job here */
     shop_init_id(shoppy, shop_id);
 
     /* *************************************
@@ -119,21 +186,30 @@ char in_a_shop( char shoppy, id_arr id )
 
     itty = igrd[0][5 + shoppy];
 
+    purchasable.clear();
     for (i = 1; i < 18; i++)
     {
+        const char c = i + 96;
+
         gotoxy(1, i);
-
-        textcolor((i % 2) ? WHITE : LIGHTGREY);
-
-        it_name(itty, DESC_NOCAP_A, st_pass);
-        putch(i + 96);
-        cprintf(" - ");
-        cprintf(st_pass);
 
         gp_value = greedy * item_value( mitm[itty], id );
         gp_value /= 10;
         if (gp_value <= 1)
             gp_value = 1;
+
+	bool can_afford = (you.gold >= gp_value);
+	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
+
+        if (can_afford)
+            purchasable += c;
+
+	cprintf("%c - ", c);
+
+        textcolor((i % 2) ? WHITE : LIGHTGREY);
+
+        it_name(itty, DESC_NOCAP_A, st_pass);
+        cprintf("%s", st_pass);
 
         std::string desc;
         if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
@@ -145,10 +221,9 @@ char in_a_shop( char shoppy, id_arr id )
 #   endif
 
         gotoxy(60, i);
-        // cdl - itoa(gp_value, st_pass, 10);
+	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
         snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
-        cprintf(st_pass);
-        cprintf(" gold");
+        cprintf("%s gold", st_pass);
         if (mitm[itty].link == NON_ITEM)
             break;
 
@@ -157,7 +232,7 @@ char in_a_shop( char shoppy, id_arr id )
 
     textcolor(LIGHTGREY);
 
-    shop_print("Type letter to buy item, x/Esc to leave, ?/* for inventory, v to examine.", 23);
+    list_shop_keys(purchasable);
 
   purchase:
     snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
@@ -167,13 +242,26 @@ char in_a_shop( char shoppy, id_arr id )
     shop_print(info, 19);
 
     textcolor(CYAN);
-    shop_print("What would you like to purchase?", 20);
+
+    snprintf(st_pass, sizeof st_pass, 
+            "What would you like to %s?",
+                purchasable.length()? "purchase" : "do");
+    shop_print(st_pass, 20);
     textcolor(LIGHTGREY);
 
     ft = get_ch();
 
     if (ft == 'x' || ft == ESCAPE)
         goto goodbye;
+
+    if (ft == '\\')
+    {
+        shop_uninit_id(shoppy, shop_id);
+        check_item_knowledge();
+        shop_init_id(shoppy, shop_id);
+
+        goto print_stock;
+    }
 
     if (ft == 'v')
     {
@@ -262,6 +350,7 @@ char in_a_shop( char shoppy, id_arr id )
 #endif
 
     shop_uninit_id( shoppy, shop_id );
+    activate_notes(true);
     return 0;
 }
 
@@ -347,7 +436,7 @@ void shop_print( const char *shoppy, char sh_lines )
 {
     gotoxy(1, sh_lines);
 
-    cprintf(shoppy);
+    cprintf("%s", shoppy);
 
     for (int i = strlen(shoppy); i < 80; i++)
         cprintf(" ");
@@ -371,6 +460,21 @@ static void purchase( int shop, int item_got, int cost )
     you.gold -= cost;
 
     origin_purchased(mitm[item_got]);
+
+    if ( fully_identified(mitm[item_got]) &&
+	 is_interesting_item(mitm[item_got]) ) {
+
+	activate_notes(true);
+
+	char buf[ITEMNAME_SIZE];
+	char buf2[ITEMNAME_SIZE];
+	item_name( mitm[item_got], DESC_NOCAP_A, buf );
+	strcpy(buf2, origin_desc(mitm[item_got]).c_str());
+	take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
+
+	activate_notes(false);
+    }
+
     int num = move_item_to_player( item_got, mitm[item_got].quantity, true );
 
     // Shopkeepers will now place goods you can't carry outside the shop.
@@ -498,7 +602,6 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
     int valued = 0;
-    int charge_value = 0;
 
     switch (item.base_type)
     {
@@ -618,6 +721,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case WPN_LONG_SWORD:
+        case WPN_LONGBOW:
         case WPN_SCIMITAR:
             valued += 45;
             break;
@@ -647,8 +751,9 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             valued += 65;
             break;
 
-        case WPN_GREAT_FLAIL:
-            valued += 75;
+        case WPN_DIRE_FLAIL:
+        case WPN_LOCHABER_AXE:
+            valued += 90;
             break;
 
         case WPN_EVENINGSTAR:
@@ -660,22 +765,24 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case WPN_DOUBLE_SWORD:
-            valued += 200;
+            valued += 100;
             break;
 
         case WPN_DEMON_WHIP:
-            valued += 230;
+            valued += 130;
             break;
 
         case WPN_QUICK_BLADE:
         case WPN_DEMON_TRIDENT:
-            valued += 250;
+            valued += 150;
             break;
 
         case WPN_KATANA:
         case WPN_TRIPLE_SWORD:
         case WPN_DEMON_BLADE:
-            valued += 300;
+        case WPN_BLESSED_BLADE:
+        case WPN_LAJATANG:
+            valued += 200;
             break;
         }
 
@@ -737,15 +844,15 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         }
 
         // elf/dwarf
-        if (cmp_equip_race( item, ISFLAG_ELVEN ) 
-                || cmp_equip_race( item, ISFLAG_DWARVEN ))
+        if (get_equip_race(item) == ISFLAG_ELVEN
+                || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;
         }
 
         // value was "6" but comment read "orc", so I went with comment {dlb}
-        if (cmp_equip_race( item, ISFLAG_ORCISH ))
+        if (get_equip_race(item) == ISFLAG_ORCISH)
         {
             valued *= 8;
             valued /= 10;
@@ -795,7 +902,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 valued += 50;
         }
         else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
-                && !cmp_equip_desc( item, 0 ))
+                && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -823,7 +930,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         case MI_DART:
         case MI_LARGE_ROCK:
         case MI_STONE:
-        case MI_EGGPLANT:
+        case MI_NONE:
             valued++;
             break;
         case MI_ARROW:
@@ -892,6 +999,8 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
 
         case ARM_BANDED_MAIL:
+        case ARM_CENTAUR_BARDING:
+        case ARM_NAGA_BARDING:
             valued += 150;
             break;
 
@@ -1006,14 +1115,14 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             valued /= 10;
         }
 
-        if (cmp_equip_race( item, ISFLAG_ELVEN ) 
-                || cmp_equip_race( item, ISFLAG_DWARVEN ))
+        if (get_equip_race(item) == ISFLAG_ELVEN
+                || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;
         }
 
-        if (cmp_equip_race( item, ISFLAG_ORCISH ))
+        if (get_equip_race(item) == ISFLAG_ORCISH)
         {
             valued *= 8;
             valued /= 10;
@@ -1046,7 +1155,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 valued += 50;
         }
         else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
-                && !cmp_equip_desc( item, 0 ))
+                && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -1059,100 +1168,72 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_WANDS:
-        charge_value = 0;
-        if (id[0][item.sub_type])
+        if (!id[ IDTYPE_WANDS ][item.sub_type])
+            valued += 200;
+        else
         {
             switch (item.sub_type)
             {
-            case WAND_FIREBALL:
-            case WAND_LIGHTNING:
-                valued += 20;
-                charge_value += 5;
+            case WAND_HASTING:
+            case WAND_HEALING:
+                valued += 300;
                 break;
 
-            case WAND_DRAINING:
-                valued += 20;
-                charge_value += 4;
-                break;
-
-            case WAND_DISINTEGRATION:
-                valued += 17;
-                charge_value += 4;
-                break;
-
-            case WAND_POLYMORPH_OTHER:
-                valued += 15;
-                charge_value += 4;
+            case WAND_TELEPORTATION:
+                valued += 250;
                 break;
 
             case WAND_COLD:
-            case WAND_ENSLAVEMENT:
             case WAND_FIRE:
-            case WAND_HASTING:
-                valued += 15;
-                charge_value += 3;
+            case WAND_FIREBALL:
+                valued += 200;
                 break;
 
             case WAND_INVISIBILITY:
-                valued += 15;
-                charge_value += 2;
+            case WAND_DRAINING:
+            case WAND_LIGHTNING:
+                valued += 175;
                 break;
 
-            case WAND_RANDOM_EFFECTS:
-                valued += 13;
-                charge_value += 3;
+            case WAND_DISINTEGRATION:
+                valued += 120;
                 break;
 
-            case WAND_PARALYSIS:
-                valued += 12;
-                charge_value += 3;
-                break;
-
-            case WAND_SLOWING:
-                valued += 10;
-                charge_value += 3;
-                break;
-
-            case WAND_CONFUSION:
             case WAND_DIGGING:
-            case WAND_TELEPORTATION:
-                valued += 10;
-                charge_value += 2;
-                break;
-
-            case WAND_HEALING:
-                valued += 7;
-                charge_value += 3;
+                valued += 100;
                 break;
 
             case WAND_FLAME:
             case WAND_FROST:
-                valued += 5;
-                charge_value += 2;
+            case WAND_PARALYSIS:
+                valued += 75;
                 break;
 
+            case WAND_ENSLAVEMENT:
+            case WAND_POLYMORPH_OTHER:
+                valued += 63;
+                break;
+
+            case WAND_SLOWING:
+                valued += 50;
+                break;
+
+            case WAND_CONFUSION:
             case WAND_MAGIC_DARTS:
-                valued += 3;
-                charge_value++;
-                break;
-
-            default:            // no default charge_value ??? 15jan2000 {dlb}
-                valued += 10;
+            case WAND_RANDOM_EFFECTS:
+            default:
+                valued += 45;
                 break;
             }
 
             if (item_ident( item, ISFLAG_KNOW_PLUSES ))
             {
-                valued += item.plus * charge_value;
+                if (item.plus == 0)
+                    valued -= 50;
+                else
+                    valued = (valued * (item.plus + 45)) / 50;
             }
-
-            valued *= 3;
-
-            if (item.plus == 0)
-                valued = 3;     // change if wands are rechargeable!
         }
-        else
-            valued = 35;        // = 10;
         break;
 
     case OBJ_POTIONS:
@@ -1382,6 +1463,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 break;
             case RING_SUSTAIN_ABILITIES:
             case RING_SUSTENANCE:
+            case RING_TELEPORTATION: // usually cursed
                 valued += 25;
                 break;
             case RING_SEE_INVISIBLE:
@@ -1393,9 +1475,6 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             case RING_PROTECTION:
             case RING_STRENGTH:
                 valued += 10;
-                break;
-            case RING_TELEPORTATION:
-                valued -= 10;
                 break;
             case RING_HUNGER:
                 valued -= 50;
@@ -1503,7 +1582,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_STAVES:
-        if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
             valued = 120;
         else if (item.sub_type == STAFF_SMITING 
                 || item.sub_type == STAFF_STRIKING
@@ -1514,6 +1593,10 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         }
         else
             valued = 250;
+
+        if (item_is_rod( item ) && item_ident( item, ISFLAG_KNOW_PLUSES ))
+            valued += 50 * (item.plus2 / ROD_CHARGE_MULT); 
+
         break;
 
     case OBJ_ORBS:
@@ -1593,8 +1676,10 @@ const char *shop_name(int sx, int sy)
 
     char st_p[ITEMNAME_SIZE];
 
-    make_name( cshop->keeper_name[0], cshop->keeper_name[1],
-               cshop->keeper_name[2], 3, st_p );
+    unsigned long seed = static_cast<unsigned long>( cshop->keeper_name[0] )
+                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
+                    | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
+    make_name( seed, false, st_p );
 
     strcpy(sh_name, st_p);
     strcat(sh_name, "'s ");
@@ -1630,3 +1715,4 @@ const char *shop_name(int sx, int sy)
 
     return (sh_name);
 }
+

@@ -22,7 +22,7 @@ function sc_safechunk(rot, race, mon)
     end
 
     if rot then
-        if race ~= "Kobold" and race ~= "Troll" and not you.gourmand() then
+        if race ~= "Kobold" and race ~= "Troll" then
             return false
         end
     end

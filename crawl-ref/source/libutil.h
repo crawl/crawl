@@ -2,6 +2,8 @@
  *  File:       libutil.h
  *  Summary:    System indepentant functions 
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <1>   2001/Nov/01        BWR     Created
@@ -11,8 +13,18 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
+#include "defines.h"
 #include <string>
 #include <vector>
+
+void lowercase(std::string &s);
+void uppercase(std::string &s);
+
+std::string replace_all(std::string s,
+                        const std::string &tofind,
+                        const std::string &replacement);
+
+int count_occurrences(const std::string &text, const std::string &searchfor);
 
 // getch() that returns a consistent set of values for all platforms.
 int c_getch();
@@ -28,12 +40,27 @@ void get_input_line( char *const buff, int len );
 
 class input_history;
 
-// Returns true if user pressed Enter, false if user hit Escape.
-bool cancelable_get_line( char *buf, int len, int wrapcol = 80,
-                          input_history *mh = NULL );
+// In view.cc, declared here for default argument to cancelable_get_line()
+int get_number_of_cols(void);
+
+// Returns zero if user entered text and pressed Enter, otherwise returns the 
+// key pressed that caused the exit, usually Escape.
+//
+// If keyproc is provided, it must return 1 for normal processing, 0 to exit
+// normally (pretend the user pressed Enter), or -1 to exit as if the user
+// pressed Escape
+int cancelable_get_line( char *buf, 
+                         int len, 
+                         int wrapcol = get_number_of_cols(),
+                         input_history *mh = NULL,
+                         int (*keyproc)(int &c) = NULL );
 
 std::string & trim_string( std::string &str );
-std::vector<std::string> split_string(const char *sep, std::string s);
+std::vector<std::string> split_string(
+        const char *sep, 
+        std::string s, 
+        bool trim = true, 
+        bool accept_empties = false);
 
 #ifdef NEED_USLEEP
 void usleep( unsigned long time );
@@ -48,7 +75,7 @@ enum KEYS
 {
     CK_ENTER  = '\r',
     CK_BKSP   = 8,
-    CK_ESCAPE = '\x1b',
+    CK_ESCAPE = ESCAPE,
 
     // 128 is off-limits because it's the code that's used when running
     CK_DELETE = 129,
@@ -97,6 +124,57 @@ enum KEYS
     CK_CTRL_PGDN
 };
 
+class cursor_control
+{
+public:
+    cursor_control(bool cs) : cstate(cs) { 
+        _setcursortype(cs? _NORMALCURSOR : _NOCURSOR);
+    }
+    ~cursor_control() {
+        _setcursortype(cstate? _NOCURSOR : _NORMALCURSOR);
+    }
+private:
+    bool cstate;
+};
+
+// Reads lines of text; used internally by cancelable_get_line.
+class line_reader
+{
+public:
+    line_reader(char *buffer, size_t bufsz, 
+                int wrap_col = get_number_of_cols());
+
+    typedef int (*keyproc)(int &key);
+
+    int read_line(bool clear_previous = true);
+
+    std::string get_text() const;
+
+    void set_input_history(input_history *ih);
+    void set_keyproc(keyproc fn);
+
+protected:
+    void cursorto(int newcpos);
+    int process_key(int ch);
+    void backspace();
+    void killword();
+
+    bool is_wordchar(int c);
+
+private:
+    char            *buffer;
+    size_t          bufsz;
+    input_history   *history;
+    int             start_x, start_y;
+    keyproc         keyfn;
+    int             wrapcol;
+
+    // These are subject to change during editing.
+    char            *cur;
+    int             length;
+    int             pos;
+};
+
 class base_pattern
 {
 public:
@@ -117,12 +195,13 @@ public:
 
     text_pattern()
         : pattern(), compiled_pattern(NULL),
-          isvalid(false), ignore_case(false)
+         isvalid(false), ignore_case(false)
     {
     }
 
     text_pattern(const text_pattern &tp)
-        : pattern(tp.pattern),
+        : 	base_pattern(tp),
+	pattern(tp.pattern),
           compiled_pattern(NULL),
           isvalid(tp.isvalid),
           ignore_case(tp.ignore_case)

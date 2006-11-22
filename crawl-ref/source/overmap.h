@@ -13,6 +13,8 @@
 #define OVERMAP_H
 
 
+void seen_notable_thing( int which_thing );
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: view

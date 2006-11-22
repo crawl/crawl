@@ -105,12 +105,11 @@ static const struct ability_def Ability_List[] =
     { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame", 0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
 
-    // Handled with breath weapons, but doesn't cause a breathing delay
-    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
+    { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_BREATH },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 3, 3, 75, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_DEMON, "Summon Demon", 5, 5, 150, 0, ABFLAG_NONE },
+    { ABIL_SUMMON_DEMONS, "Summon Demons", 5, 5, 150, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 8, 8, 200, 0, ABFLAG_NONE },
     { ABIL_TORMENT, "Torment", 9, 0, 250, 0, ABFLAG_PAIN },
     { ABIL_RAISE_DEAD, "Raise Dead", 5, 5, 150, 0, ABFLAG_NONE },
@@ -160,7 +159,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_TSO_REPEL_UNDEAD, "Repel Undead", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_TSO_SMITING, "Smiting", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_ANNIHILATE_UNDEAD, "Annihilate Undead", 3, 0, 50, 2, ABFLAG_NONE },
-    { ABIL_TSO_THUNDERBOLT, "Thunderbolt", 5, 0, 100, 2, ABFLAG_NONE },
+    { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
     { ABIL_TSO_SUMMON_DAEVA, "Summon Daeva", 8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
@@ -175,9 +174,6 @@ static const struct ability_def Ability_List[] =
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
     { ABIL_YRED_CONTROL_UNDEAD, "Control Undead", 5, 0, 150, 2, ABFLAG_NONE },
 
-    // Vehumet
-    { ABIL_VEHUMET_CHANNEL_ENERGY, "Channel Energy", 0, 0, 50, 0, ABFLAG_NONE },
-
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
     { ABIL_OKAWARU_HEALING, "Healing", 2, 0, 75, 1, ABFLAG_NONE },
@@ -190,6 +186,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb", 6, 0, 100, 3, ABFLAG_NONE },
 
     // Sif Muna
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy", 0, 0, 100, 0, ABFLAG_NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell", 5, 0, 0, 8, ABFLAG_NONE },
 
     // Trog
@@ -211,7 +208,6 @@ static const struct ability_def Ability_List[] =
 
     { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
     { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
-    { ABIL_SHUGGOTH_SEED, "Sow Shuggoth Seed", 12, 8, 0, 6, ABFLAG_NONE },
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
@@ -467,12 +463,10 @@ bool activate_ability(void)
     // no turning back now... {dlb}
     const struct ability_def abil = get_ability_def(Curr_abil[abil_used].which);
 
-    // currently only delayed fireball is instantaneous -- bwr
-    you.turn_is_over = ((abil.flags & ABFLAG_INSTANT) ? 0 : 1);
-
     if (random2avg(100, 3) < Curr_abil[abil_used].fail)
     {
         mpr("You fail to use your ability.");
+        you.turn_is_over = true;
         return (false);
     }
 
@@ -576,8 +570,7 @@ bool activate_ability(void)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
-        if (you.duration[DUR_BREATH_WEAPON]
-            && Curr_abil[abil_used].which != ABIL_SPIT_ACID)
+        if (you.duration[DUR_BREATH_WEAPON])
         {
             canned_msg(MSG_CANNOT_DO_YET);
             return (false);
@@ -643,16 +636,11 @@ bool activate_ability(void)
 
         }
 
-        if (Curr_abil[abil_used].which != ABIL_SPIT_ACID)
-        {
-            you.duration[DUR_BREATH_WEAPON] = 3 + random2(5)
-                                                + random2(30 - you.experience_level);
-        }
+        you.duration[DUR_BREATH_WEAPON] =
+            3 + random2(4) + random2(30 - you.experience_level) / 2;
 
         if (Curr_abil[abil_used].which == ABIL_BREATHE_STEAM)
-        {
             you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
         break;
 
     case ABIL_EVOKE_BLINK:      // randarts
@@ -670,8 +658,9 @@ bool activate_ability(void)
             return (false);
         }
 
-        go_berserk(true);
-        exercise( SK_EVOCATIONS, 1 );
+        // only exercise if berserk succeeds
+        if ( go_berserk(true) )
+            exercise( SK_EVOCATIONS, 1 );
         break;
 
     // fly (kenku) -- eventually becomes permanent (see acr.cc)
@@ -710,13 +699,15 @@ bool activate_ability(void)
                                      summon_any_demon(DEMON_LESSER) );
         break;
 
-    case ABIL_SUMMON_DEMON:
+    case ABIL_SUMMON_DEMONS:
         summon_ice_beast_etc( you.experience_level * 4,
                                      summon_any_demon(DEMON_COMMON) );
         break;
 
     case ABIL_HELLFIRE:
-        your_spells(SPELL_HELLFIRE, 20 + you.experience_level, false);
+        if (your_spells(SPELL_HELLFIRE, 
+                        20 + you.experience_level, false) == -1)
+            return (false);
         break;
 
     case ABIL_TORMENT:
@@ -726,7 +717,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        torment(you.x_pos, you.y_pos);
+        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
         break;
 
     case ABIL_RAISE_DEAD:
@@ -873,14 +864,14 @@ bool activate_ability(void)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
-    case ABIL_TSO_THUNDERBOLT:
+    case ABIL_TSO_CLEANSING_FLAME:
         if (spell_direction(spd, beam) == -1)
         {
             canned_msg(MSG_OK);
             return (false);
         }
 
-        zapping(ZAP_LIGHTNING, you.skills[SK_INVOCATIONS] * 6, beam);
+        zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6, beam);
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 
@@ -906,7 +897,8 @@ bool activate_ability(void)
         break;
 
     case ABIL_KIKU_INVOKE_DEATH:
-        summon_ice_beast_etc(20 + you.skills[SK_INVOCATIONS] * 3, MONS_REAPER);
+        summon_ice_beast_etc(
+                20 + you.skills[SK_INVOCATIONS] * 3, MONS_REAPER, true);
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 
@@ -943,7 +935,7 @@ bool activate_ability(void)
         exercise(SK_INVOCATIONS, 3 + random2(4));
         break;
 
-    case ABIL_VEHUMET_CHANNEL_ENERGY:
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         mpr("You channel some magical energy.");
 
         inc_mp(1 + random2(you.skills[SK_INVOCATIONS] / 4 + 2), false);
@@ -1029,12 +1021,12 @@ bool activate_ability(void)
             beam.flavour = BEAM_ELECTRICITY;
             beam.target_x = you.x_pos;
             beam.target_y = you.y_pos;
-            strcpy(beam.beam_name, "blast of lightning");
+            beam.name = "blast of lightning";
             beam.colour = LIGHTCYAN;
             beam.thrower = KILL_YOU;
             beam.aux_source = "Makhleb's lightning strike";
             beam.ex_size = 1 + you.skills[SK_INVOCATIONS] / 8;
-            beam.isTracer = false;
+            beam.is_tracer = false;
 
             // ... and fire!
             explosion(beam);
@@ -1135,7 +1127,9 @@ bool activate_ability(void)
             return (false);
         }
 
-        your_spells( SPELL_HELLFIRE, 20 + you.experience_level, false );
+        if (your_spells( SPELL_HELLFIRE, 
+                        20 + you.experience_level, false ) == -1)
+            return (false);
 
         you.duration[DUR_BREATH_WEAPON] +=
                         3 + random2(5) + random2(30 - you.experience_level);
@@ -1153,21 +1147,7 @@ bool activate_ability(void)
             return (false);
         }
 
-        torment(you.x_pos, you.y_pos);
-        exercise(SK_INVOCATIONS, 2 + random2(4));
-        break;
-
-    case ABIL_SHUGGOTH_SEED:
-        if (you.duration[DUR_SHUGGOTH_SEED_RELOAD])
-        {
-            canned_msg(MSG_CANNOT_DO_YET);
-            return (false);
-        }
-
-        cast_shuggoth_seed( you.experience_level * 2
-                                + you.skills[SK_INVOCATIONS] * 3 );
-
-        you.duration[DUR_SHUGGOTH_SEED_RELOAD] = 10 + random2avg(39, 2);
+        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1187,6 +1167,9 @@ bool activate_ability(void)
         mpr("Sorry, you can't do that.");
         break;
     }
+
+    // currently only delayed fireball is instantaneous -- bwr
+    you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     // All failures should have returned by this point, so we'll 
     // apply the costs -- its not too neat, but it works for now. -- bwr
@@ -1324,7 +1307,7 @@ char show_abilities( void )
                 if (cost_str.length() > 24)
                     cost_str = cost_str.substr( 0, 24 );
 
-                cprintf( cost_str.c_str() );
+                cprintf( "%s", cost_str.c_str() );
 
                 gotoxy(60, wherey());
 
@@ -1468,7 +1451,7 @@ bool generate_abilities( void )
         insert_ability( ABIL_SUMMON_MINOR_DEMON );
 
     if (you.mutation[MUT_SUMMON_DEMONS])
-        insert_ability( ABIL_SUMMON_DEMON );
+        insert_ability( ABIL_SUMMON_DEMONS );
 
     if (you.mutation[MUT_HURL_HELLFIRE])
         insert_ability( ABIL_HELLFIRE );
@@ -1532,7 +1515,7 @@ bool generate_abilities( void )
             if (you.piety >= 75)
                 insert_ability( ABIL_TSO_ANNIHILATE_UNDEAD );
             if (you.piety >= 100)
-                insert_ability( ABIL_TSO_THUNDERBOLT );
+                insert_ability( ABIL_TSO_CLEANSING_FLAME );
             if (you.piety >= 120)
                 insert_ability( ABIL_TSO_SUMMON_DAEVA );
             break;
@@ -1602,13 +1585,10 @@ bool generate_abilities( void )
             break;
 
         case GOD_SIF_MUNA:
+            if (you.piety >= 30)
+                insert_ability( ABIL_SIF_MUNA_CHANNEL_ENERGY );
             if (you.piety >= 50)
                 insert_ability( ABIL_SIF_MUNA_FORGET_SPELL );
-            break;
-
-        case GOD_VEHUMET:
-            if (you.piety >= 100)
-                insert_ability( ABIL_VEHUMET_CHANNEL_ENERGY );
             break;
 
         default:
@@ -1754,11 +1734,6 @@ void set_god_ability_slots( void )
         num_abil = 5; 
         break;
 
-    case GOD_VEHUMET:
-        abil_start = ABIL_VEHUMET_CHANNEL_ENERGY;
-        num_abil = 1; 
-        break;
-
     case GOD_OKAWARU:
         abil_start = ABIL_OKAWARU_MIGHT;
         num_abil = 3; 
@@ -1770,8 +1745,8 @@ void set_god_ability_slots( void )
         break;
 
     case GOD_SIF_MUNA:
-        abil_start = ABIL_SIF_MUNA_FORGET_SPELL;
-        num_abil = 1; 
+        abil_start = ABIL_SIF_MUNA_CHANNEL_ENERGY;
+        num_abil = 2; 
         break;
 
     case GOD_TROG:
@@ -1784,6 +1759,7 @@ void set_god_ability_slots( void )
         num_abil = 5; 
         break;
 
+    case GOD_VEHUMET:
     case GOD_NEMELEX_XOBEH:
     case GOD_XOM:
     default:
@@ -1973,7 +1949,7 @@ static bool insert_ability( int which_ability )
         failure = 35 - you.experience_level;
         break;
 
-    case ABIL_SUMMON_DEMON:
+    case ABIL_SUMMON_DEMONS:
         failure = 40 - you.experience_level;
         break;
 
@@ -2090,7 +2066,7 @@ static bool insert_ability( int which_ability )
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
         break;
 
-    case ABIL_VEHUMET_CHANNEL_ENERGY:
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         invoc = true;
         failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
         break;
@@ -2113,7 +2089,7 @@ static bool insert_ability( int which_ability )
         break;
 
     case ABIL_ZIN_HOLY_WORD:
-    case ABIL_TSO_THUNDERBOLT:
+    case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_ELYVILON_RESTORATION:
     case ABIL_YRED_CONTROL_UNDEAD:
     case ABIL_OKAWARU_HASTE:
@@ -2149,11 +2125,6 @@ static bool insert_ability( int which_ability )
     case ABIL_TORMENT_II:
         invoc = true;
         failure = 70 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
-        break;
-
-    case ABIL_SHUGGOTH_SEED:
-        invoc = true;
-        failure = 85 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 3);
         break;
 
     case ABIL_RENOUNCE_RELIGION:

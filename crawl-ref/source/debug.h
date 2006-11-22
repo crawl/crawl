@@ -3,6 +3,8 @@
  *  Summary:    Debug and wizard related functions.
  *  Written by: Linley Henzell and Jesse Jones
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *              <4>             5/30/99         JDJ             Added synch checks.
@@ -143,5 +145,9 @@ void stethoscope(int mwh);
 void debug_item_scan( void );
 void debug_get_religion( void );
 void debug_change_species( void );
+void debug_fight_statistics( bool use_init_defaults );
+void debug_make_trap( void );
+void debug_make_shop( void );
+void debug_set_stats( void );
 
 #endif

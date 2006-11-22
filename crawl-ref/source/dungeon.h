@@ -3,6 +3,8 @@
  *  Summary:    Functions used when building new levels.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -16,6 +18,14 @@
 #include "externs.h"
 
 #define MAKE_GOOD_ITEM          351
+
+// Should be the larger of GXM/GYM
+#define MAP_SIDE  GXM
+
+// This may sometimes be used as map_type[x][y] (for minivaults) and as
+// map_type[y][x] for large-scale vaults. Keep an eye out for the associated
+// brain-damage. [dshaligram]
+typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
 
 void item_colour( item_def &item );
 
@@ -45,5 +55,14 @@ void give_item(int mid, int level_number);
  * called from: dungeon monplace
  * *********************************************************************** */
 void define_zombie(int mid, int ztype, int cs, int power);
+
+bool is_wall(int feature);
+
+bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
+                         unsigned char spec_type);
+
+void place_spec_shop(int level_number, unsigned char shop_x,
+                         unsigned char shop_y, unsigned char force_s_type,
+                         bool representative = false );
 
 #endif

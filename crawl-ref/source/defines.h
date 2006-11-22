@@ -10,6 +10,8 @@
  *
  *  Copyright © 1999 Brian Robinson.  // Me?  How come?
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *       <4>     7/29/00        JDJ     Renamed MNG NON_MONSTER, MNST MAX_MONSTERS, ITEMS MAX_ITEMS,
@@ -22,11 +24,12 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define NUM_MONSTER_SPELL_SLOTS  6
+
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
 
 // there's got to be a better way...
-#ifdef _LIBUNIX_IMPLEMENTATION
-#elif macintosh
+#ifndef _LIBUNIX_IMPLEMENTATION
 #else
     #ifndef TRUE
      #define TRUE 1
@@ -41,12 +44,17 @@
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
+// minimum value for strength required on armour and weapons
+#define STR_REQ_THRESHOLD       10
+
 // max size of monter array {dlb}:
 #define MAX_MONSTERS 200
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
 #define NON_MONSTER 201
+
+#define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
 #define MAX_ITEMS 500
@@ -64,6 +72,55 @@
 // max y-bound for level generation {dlb}
 #define GYM 70
 
+// this is the size of the border around the playing area (see in_bounds())
+#define BOUNDARY_BORDER         1
+
+// Now some defines about the actual play area:
+// Note: these boundaries are exclusive for the zone the player can move/dig,
+// and are inclusive for the area that we display on the map.
+// Note: that the right (bottom) boundary is one smaller here.
+#define X_BOUND_1               BOUNDARY_BORDER
+#define X_BOUND_2               (GXM - BOUNDARY_BORDER)
+#define X_WIDTH                 (X_BOUND_2 - X_BOUND_1 + 1)
+
+#define Y_BOUND_1               BOUNDARY_BORDER
+#define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
+#define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
+
+// these mark the center zone where the player moves without shifting
+#define ABYSS_SHIFT_RADIUS      10
+
+#define X_ABYSS_1               (X_BOUND_1 + ABYSS_SHIFT_RADIUS)
+#define X_ABYSS_2               (GXM - X_ABYSS_1)
+#define X_ABYSS_WIDTH           (X_ABYSS_2 - X_ABYSS_1 + 1)
+#define X_ABYSS_CENTER          (X_ABYSS_1 + X_ABYSS_WIDTH / 2)
+
+#define Y_ABYSS_1               (Y_BOUND_1 + ABYSS_SHIFT_RADIUS)
+#define Y_ABYSS_2               (GYM - Y_ABYSS_1)
+#define Y_ABYSS_WIDTH           (Y_ABYSS_2 - Y_ABYSS_1 + 1)
+#define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
+
+#define LOS_SX     8
+#define LOS_EX    25
+#define LOS_SY     1
+#define LOS_EY    17
+
+#define VIEW_SX    1
+#define VIEW_EX   33
+#define VIEW_SY    1
+#define VIEW_EY   17
+
+#define VIEW_WIDTH  (VIEW_EX - VIEW_SX + 1)
+#define VIEW_HEIGHT (VIEW_EY - VIEW_SY + 1)
+
+#define VIEW_Y_DIFF  (((VIEW_EX - VIEW_SX + 1) - (VIEW_EY - VIEW_SY + 1)) / 2) 
+
+// View centre must be the same as LOS centre.
+// VIEW_CX == 17
+#define VIEW_CX   ((VIEW_SX + VIEW_EX) / 2)
+// VIEW_CY == 9
+#define VIEW_CY   ((VIEW_SY + VIEW_EY) / 2)
+
 // max traps per level
 #define MAX_TRAPS 30
 
@@ -76,6 +133,69 @@
 // lowest grid value which can be seen through
 #define MINSEE 11
 
+// This value is used to make test_hit checks always succeed
+#define AUTOMATIC_HIT           1500
+
+// grids that monsters can see
+#define MONSTER_LOS_RANGE       8
+
+// Maximum charge level for rods
+#define MAX_ROD_CHARGE                  17
+#define ROD_CHARGE_MULT                 100
+
+// Should never exceed 255 - durations are saved as single bytes.
+#define GOURMAND_MAX                    200
+#define GOURMAND_NUTRITION_BASE         20
+
+#define CHUNK_BASE_NUTRITION            1000
+
+// This value is used to mark immune levels of MR
+#define MAG_IMMUNE                      5000
+
+// This is the damage amount used to signal insta-death
+#define INSTANT_DEATH                   -9999
+
+// grids that monsters can see
+#define MONSTER_LOS_RANGE               8
+
+// most items allowed in a shop
+#define MAX_SHOP_ITEMS                  16
+
+// sound level standards
+// mininum is the base, we add mult * radius to it:
+#define SL_EXPLODE_MIN                  10
+#define SL_EXPLODE_MULT                 10
+
+// #define SL_BOW                          3
+#define SL_TRAP_CLICK                   3
+#define SL_HISS                         6
+#define SL_BUZZ                         6
+#define SL_GROWL                        8
+#define SL_MOAN                         8
+#define SL_SPLASH                       8 
+#define SL_CREAK                        8
+#define SL_CROAK                        8
+#define SL_BARK                         10
+#define SL_YELL                         10
+#define SL_TRAP_JAM                     12
+#define SL_SHRIEK                       12
+#define SL_ROAR                         15
+#define SL_DIG                          15
+#define SL_NOISY_WEAPON                 20
+#define SL_HORN                         25
+#define SL_NOISE_SCROLL                 30
+#define SL_THUNDER                      30
+#define SL_PROJECTED_NOISE              30
+#define SL_EARTHQUAKE                   30
+#define SL_TRAP_ZOT                     30
+
+// Maximum enchantment on weapons/armour/secondary armours
+// Note: use armour_max_enchant(item) to get the correct limit for item
+#define MAX_WPN_ENCHANT                 5
+#define MAX_ARM_ENCHANT                 5
+#define MAX_SEC_ENCHANT                 2
+
+#define NUM_STAVE_ADJ                   9
 
 // some shortcuts:
 #define menv   env.mons
@@ -83,15 +203,6 @@
 #define grd    env.grid
 #define mgrd   env.mgrid
 #define igrd   env.igrid
-
-#define ENVF_FLAGS          0xFF00U
-#define ENVF_DETECT_MONS    0x0100U
-#define ENVF_DETECT_ITEM    0x0200U
-
-// This square is known because of detect-creatures/detect-items
-#define ENVF_DETECTED       0x0800U
-
-#define ENVF_COLOR(x)       (((x) >> 12) & 0xF)
 
 // (MNG) -- for a reason! see usage {dlb}:
 #define MHITNOT 201
@@ -139,6 +250,8 @@
     #define COLFLAG_WILLSTAB                 0x0400
     #define COLFLAG_MAYSTAB                  0x0800
 
+    #define COLFLAG_REVERSE                  0x1000
+
     enum CHAR_ATTRIBUTES
     {
         CHATTR_NORMAL,          /* 0 */
@@ -157,12 +270,18 @@
 
 //#endif
 
+#define PDESCS(colour) (colour)
+#define PDESCQ(qualifier, colour) (((qualifier) * PDC_NCOLOURS) + (colour))
+
+#define PCOLOUR(desc) ((desc) % PDC_NCOLOURS)
+#define PQUAL(desc)   ((desc) / PDC_NCOLOURS)
+
 #define MINIMUM( xxx, yyy )     (((xxx) < (yyy)) ? (xxx) : (yyy))
 #define MAXIMUM( xxx, yyy )     (((xxx) > (yyy)) ? (xxx) : (yyy))
 
 // Convert capital letters into mystic numbers representing 
 // CTRL sequences.  This is a macro because a lot of the type 
 // it wants to be used in case labels.
-#define CONTROL( xxx )          (xxx - 'A' + 1)
+#define CONTROL( xxx )          ((xxx) - 'A' + 1)
 
 #endif

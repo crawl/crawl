@@ -3,6 +3,8 @@
  *  Summary:    Dumps character info out to the morgue file.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *
@@ -15,26 +17,17 @@
 
 #include "AppHdr.h"
 #include "chardump.h"
+#include "clua.h"
 
 #include <string>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#if !(defined(__IBMCPP__) || defined(__BCPLUSPLUS__))
+#if !defined(__IBMCPP__)
 #include <unistd.h>
 #endif
 #include <ctype.h>
-
-#ifdef USE_EMX
-#include <sys/types.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
 
 #ifdef DOS
 #include <conio.h>
@@ -45,9 +38,12 @@
 #include "debug.h"
 #include "describe.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
+#include "misc.h"
 #include "mutation.h"
+#include "notes.h"
 #include "output.h"
 #include "player.h"
 #include "randart.h"
@@ -62,24 +58,197 @@
 #include "version.h"
 #include "view.h"
 
-// Defined in view.cc
-extern unsigned char (*mapch2) (unsigned char);
+static bool dump_show_prices = false;
+static bool dump_full_id     = false;
 
- // ========================================================================
- //      Internal Functions
- // ========================================================================
+static void sdump_header(const std::string &section, std::string &text);
+static void sdump_stats(const std::string &section, std::string &text);
+static void sdump_location(const std::string &section, std::string &text);
+static void sdump_religion(const std::string &section, std::string &text);
+static void sdump_burden(const std::string &section, std::string &text);
+static void sdump_hunger(const std::string &section, std::string &text);
+static void sdump_transform(const std::string &section, std::string &text);
+static void sdump_misc(const std::string &section, std::string &text);
+static void sdump_notes(const std::string &section, std::string &text);
+static void sdump_inventory(const std::string &section, std::string &text);
+static void sdump_skills(const std::string &section, std::string &text);
+static void sdump_spells(const std::string &section, std::string &text);
+static void sdump_mutations(const std::string &section, std::string &text);
+static void sdump_messages(const std::string &section, std::string &text);
+static void sdump_screenshot(const std::string &section, std::string &text);
+static void sdump_kills(const std::string &section, std::string &text);
+static void sdump_newline(const std::string &section, std::string &text);
+static void sdump_separator(const std::string &section, std::string &text);
+#ifdef CLUA_BINDINGS
+static void sdump_lua(const std::string &section, std::string &text);
+#endif
+static bool write_dump(const std::string &fname, const std::string &text, 
+                       bool full_id);
+static void dump_stats2( std::string & text, bool calc_unid);
+static void dump_stats( std::string & text );
 
- // fillstring() is a hack to get around a missing constructor in
- // Borland C++ implementation of the STD basic_string.   Argh!!!
-static std::string fillstring(size_t strlen, char filler)
+struct dump_section_handler
 {
-    std::string s;
+    const char *name;
+    void (*handler)(const std::string &section, std::string &text);
+};
 
-    for (size_t i=0; i<strlen; i++)
-        s += filler;
+static dump_section_handler dump_handlers[] = {
+    { "header",     sdump_header        },
+    { "stats",      sdump_stats         },
+    { "location",   sdump_location      },
+    { "religion",   sdump_religion      },
+    { "burden",     sdump_burden        },
+    { "hunger",     sdump_hunger        },
+    { "transform",  sdump_transform     },
+    { "misc",       sdump_misc          },
+    { "notes",      sdump_notes         },
+    { "inventory",  sdump_inventory     },
+    { "skills",     sdump_skills        },
+    { "spells",     sdump_spells        },
+    { "mutations",  sdump_mutations     },
+    { "messages",   sdump_messages      },
+    { "screenshot", sdump_screenshot    },
+    { "kills",      sdump_kills         },
 
-    return s;
+    // Conveniences for the .crawlrc artist.
+    { "",           sdump_newline       },
+    { "-",          sdump_separator     },
+
+#ifdef CLUA_BINDINGS
+    { NULL,         sdump_lua           }
+#else
+    { NULL,         NULL                }
+#endif
+};
+
+static void dump_section(const std::string &section, std::string &text)
+{
+    for (int i = 0; ; ++i)
+    {
+        if (!dump_handlers[i].name || section == dump_handlers[i].name)
+        {
+            if (dump_handlers[i].handler)
+                (*dump_handlers[i].handler)(section, text);
+            break;
+        }
+    }
 }
+
+bool dump_char(const std::string &fname, bool show_prices, bool full_id)
+{
+    // start with enough room for 100 80 character lines
+    std::string text;
+    text.reserve(100 * 80);
+
+    dump_show_prices = show_prices;
+    dump_full_id     = full_id;
+
+    for (int i = 0, size = Options.dump_order.size(); i < size; ++i)
+    {
+        const std::string &section = Options.dump_order[i];
+        dump_section(section, text);
+    }
+
+    return write_dump(fname, text, full_id);
+}
+
+static void sdump_header(const std::string &, std::string &text)
+{
+    text += " " CRAWL " version " VERSION " character file.\n\n";
+}
+
+static void sdump_stats(const std::string &, std::string &text)
+{
+    if (Options.detailed_stat_dump)
+        dump_stats2(text, dump_full_id);
+    else
+        dump_stats(text);
+}
+
+static void sdump_burden(const std::string &, std::string &text)
+{
+    switch (you.burden_state)
+    {
+    case BS_OVERLOADED:
+        text += "You are overloaded with stuff.\n";
+        break;
+    case BS_ENCUMBERED:
+        text += "You are encumbered.\n";
+        break;
+    }
+}
+
+static void sdump_hunger(const std::string &, std::string &text)
+{
+    text += std::string("You are ") + hunger_level() + ".\n\n";
+}
+
+static void sdump_transform(const std::string &, std::string &text)
+{
+    if (you.attribute[ATTR_TRANSFORMATION])
+    {
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_SPIDER:
+            text += "You are in spider-form.";
+            break;
+        case TRAN_BLADE_HANDS:
+            text += "Your hands are blades.";
+            break;
+        case TRAN_STATUE:
+            text += "You are a stone statue.";
+            break;
+        case TRAN_ICE_BEAST:
+            text += "You are a creature of crystalline ice.";
+            break;
+        case TRAN_DRAGON:
+            text += "You are a fearsome dragon!";
+            break;
+        case TRAN_LICH:
+            text += "You are in lich-form.";
+            break;
+        case TRAN_SERPENT_OF_HELL:
+            text += "You are a huge, demonic serpent!";
+            break;
+        case TRAN_AIR:
+            text += "You are a cloud of diffuse gas.";
+            break;
+        }
+
+        text += "\n\n";
+    }
+}
+
+static void sdump_misc(const std::string &s, std::string &text)
+{
+    sdump_location(s, text);
+    sdump_religion(s, text);
+    sdump_burden(s, text);
+    sdump_hunger(s, text);
+    sdump_transform(s, text);
+}
+
+static void sdump_newline(const std::string &s, std::string &text)
+{
+    text += "\n";
+}
+
+static void sdump_separator(const std::string &s, std::string &text)
+{
+    text += std::string(79, '-') + "\n";
+}
+
+#ifdef CLUA_BINDINGS
+// Assume this is an arbitrary Lua function name, call the function and
+// dump whatever it returns.
+static void sdump_lua(const std::string &s, std::string &text)
+{
+    std::string luatext;
+    clua.callfn(s.c_str(), ">s", &luatext);
+    text += luatext;
+}
+#endif
 
  //---------------------------------------------------------------
  //
@@ -95,6 +264,7 @@ static std::string fillstring(size_t strlen, char filler)
 std::string munge_description(const std::string & inStr)
 {
     std::string outStr;
+    std::string eol = "\n";
 
     outStr.reserve(inStr.length() + 32);
 
@@ -103,7 +273,7 @@ std::string munge_description(const std::string & inStr)
 
     long i = 0;
 
-    outStr += fillstring(kIndent, ' ');
+    outStr += std::string(kIndent, ' ');
 
     while (i < (long) inStr.length())
     {
@@ -111,9 +281,9 @@ std::string munge_description(const std::string & inStr)
 
         if (ch == '$')
         {
-            outStr += EOL;
+            outStr += eol;
 
-            outStr += fillstring(kIndent, ' ');
+            outStr += std::string(kIndent, ' ');
             lineLen = kIndent;
 
             while (inStr[++i] == '$')
@@ -123,8 +293,8 @@ std::string munge_description(const std::string & inStr)
         {
             if (lineLen >= 79)
             {
-                outStr += EOL;
-                outStr += fillstring(kIndent, ' ');
+                outStr += eol;
+                outStr += std::string(kIndent, ' ');
                 lineLen = kIndent;
 
             }
@@ -148,8 +318,8 @@ std::string munge_description(const std::string & inStr)
 
             if (lineLen + word.length() >= 79)
             {
-                outStr += EOL;
-                outStr += fillstring(kIndent, ' ');
+                outStr += eol;
+                outStr += std::string(kIndent, ' ');
                 lineLen = kIndent;
             }
 
@@ -158,148 +328,27 @@ std::string munge_description(const std::string & inStr)
         }
     }
 
-    outStr += EOL;
+    outStr += eol;
 
     return (outStr);
 }                               // end munge_description()
 
- //---------------------------------------------------------------
- //
- // dump_screenshot
- //
- // Grabs a screenshot and appends the text into the given std::string,
- // using several ugly hacks in the process.
- //---------------------------------------------------------------
-static void dump_screenshot( std::string &text )
+static void sdump_messages(const std::string &, std::string &text)
 {
     // A little message history:
     if (Options.dump_message_count > 0)
     {
-        text += "  Last Messages" EOL EOL;
+        text += "Message History\n\n";
         text += get_last_messages(Options.dump_message_count);
-    }
-
-    FixedVector < char, 1500 > buffy;  //[800]; //392];
-    int bufcount = 0;
-    unsigned short ch, color;
-    int count_x, count_y;
-
-    // Urg, ugly screen capture. CVS Crawl may have a better way of doing this,
-    // but until the next release...
-    for (count_y = (you.y_pos - 8); (count_y < you.y_pos + 9); count_y++)
-    {
-        bufcount += 8;
-        for (count_x = (you.x_pos - 8); (count_x < you.x_pos + 9); count_x++)
-        {
-            if (count_x == you.x_pos && count_y == you.y_pos) 
-            {
-                extern unsigned char your_sign;
-                ch = your_sign;
-            } 
-            else
-            {
-                unsigned int object = env.show[count_x - you.x_pos + 9]
-                    [count_y - you.y_pos + 9];
-                get_non_ibm_symbol(object, &ch, &color);
-            }
-
-            buffy[bufcount++] = (char) ch;
-        }
-        bufcount += 8;
-    }
-
-    int maxbuf = bufcount;
-    bufcount = 0;
-
-    for (count_y = 0; count_y < 17; count_y++)
-    {
-        for (count_x = 0; count_x < 33; count_x++)
-        {
-            if (count_x + you.x_pos - 17 < 3
-                    || count_y + you.y_pos - 9 < 3
-                    || count_x + you.x_pos - 14 > (GXM - 3)
-                    || count_y + you.y_pos - 9 > (GYM - 3))
-            {
-                buffy[bufcount++] = ' ';
-                continue;
-            }
-
-            if (count_x >= 8 && count_x <= 24 && count_y >= 0
-                    && count_y <= 16 && buffy[bufcount] != 0)
-            {
-                bufcount++;
-                continue;
-            }
-
-            unsigned char envc = (unsigned char) 
-                                 env.map[count_x + you.x_pos - 17]
-                                        [count_y + you.y_pos - 9];
-            if (envc)
-            {
-                // If it's printable, use it directly.
-                if (envc < 127 && envc >= 32)
-                    ch = envc;
-                else
-                {
-                    // Otherwise get what's on the grid and get an ASCII
-                    // character for that.
-                    unsigned int object = grd[count_x + you.x_pos - 16]
-                        [count_y + you.y_pos - 8];
-
-                    // Special case secret doors so that monsters that open
-                    // doors out of hero's LOS don't reveal the secret door in
-                    // the dump
-                    if (envc == mapch2(DNGN_SECRET_DOOR))
-                        object = DNGN_SECRET_DOOR;
-
-                    get_non_ibm_symbol(object, &ch, &color);
-                }
-
-                buffy[bufcount++] = (char) ch;
-            }
-            else
-            {
-                buffy[bufcount++] = ' ';
-            }
-        }
-    }
-
-    if (bufcount > maxbuf) maxbuf = bufcount;
-
-    while (maxbuf > 0 && (!buffy[maxbuf - 1] || buffy[maxbuf - 1] == ' '))
-        --maxbuf;
-
-    // 33 columns and a null terminator. More hardcoding. :-(
-    char buf[34];
-    char *s = buf;
-    bool leadblanks = true;
-    for (int i = 0; i < maxbuf; )
-    {
-        *s++ = buffy[i]? buffy[i] : ' ';
-
-        ++i;
-        if (!(i % 33) || i >= maxbuf)
-        {
-            *s = 0;
-            while (s > buf && *--s == ' ')
-                *s = 0;
-            
-            if (s == buf && !*s && leadblanks)
-                continue;
-            
-            leadblanks = false;
-            text += buf;
-            text += EOL;
-            s = buf;
-        }
     }
 }
 
- //---------------------------------------------------------------
- //
- // dump_stats
- //
- //---------------------------------------------------------------
+static void sdump_screenshot(const std::string &, std::string &text)
+{
+    text += screenshot();
+    text += "\n\n";
+}
+
 static void dump_stats( std::string & text )
 {
     char st_prn[20];
@@ -311,7 +360,7 @@ static void dump_stats( std::string & text )
     text += " (";
     text += species_name(you.species, you.experience_level);
     text += ")";
-    text += EOL;
+    text += "\n";
 
     text += "(Level ";
     itoa(you.experience_level, st_prn, 10);
@@ -319,7 +368,7 @@ static void dump_stats( std::string & text )
     text += " ";
     text += you.class_name;
     text += ")";
-    text += EOL EOL;
+    text += "\n\n";
 
     if (you.real_time != -1)
     {
@@ -334,7 +383,7 @@ static void dump_stats( std::string & text )
         text += "       Number of turns: ";
         itoa( you.num_turns, st_prn, 10 );
         text += st_prn;
-        text += EOL EOL;
+        text += "\n\n";
     }
 
     text += "Experience : ";
@@ -343,7 +392,7 @@ static void dump_stats( std::string & text )
     text += "/";
     itoa(you.experience, st_prn, 10);
     text += st_prn;
-    text += EOL;
+    text += "\n\n";
 
     text += "Strength ";
     itoa(you.strength, st_prn, 10);
@@ -374,7 +423,7 @@ static void dump_stats( std::string & text )
         itoa(you.max_intel, st_prn, 10);
         text += st_prn;
     }
-    text += EOL;
+    text += "\n";
 
     text += "Hit Points : ";
     itoa(you.hp, st_prn, 10);
@@ -412,7 +461,7 @@ static void dump_stats( std::string & text )
         itoa(you.max_magic_points, st_prn, 10);
         text += st_prn;
     }
-    text += EOL;
+    text += "\n";
 
     text += "AC : ";
     itoa(player_AC(), st_prn, 10);
@@ -425,13 +474,13 @@ static void dump_stats( std::string & text )
     text += "          Shield : ";
     itoa(player_shield_class(), st_prn, 10);
     text += st_prn;
-    text += EOL;
+    text += "\n";
 
     text += "GP : ";
     itoa( you.gold, st_prn, 10 );
     text += st_prn;
-    text += EOL;
-    text += EOL;
+    text += "\n";
+    text += "\n";
 }                               // end dump_stats()
 
  //---------------------------------------------------------------
@@ -441,38 +490,52 @@ static void dump_stats( std::string & text )
  //---------------------------------------------------------------
 static void dump_stats2( std::string & text, bool calc_unid)
 {
-    char buffer[25*3][45];
+    char buffer[24*3][45];
     char str_pass[80];
     char* ptr_n;
 
     get_full_detail(&buffer[0][0], calc_unid);
 
-    for (int i = 0; i < 25; i++)
+    for (int i = 0; i < 24; i++)
     {
         ptr_n = &buffer[i][0];
-        if (buffer[i+25][0] == '\0' && buffer[i+50][0] == '\0')
+        if (buffer[i+24][0] == 0 && buffer[i+24*2][0] == 0)
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-32s", ptr_n);
         text += str_pass;
 
-        ptr_n = &buffer[i+25][0];
-        if (buffer[i+50][0] == '\0')
+        ptr_n = &buffer[i+24][0];
+        if (buffer[i+24*2][0] == 0)
             snprintf(&str_pass[0], 45, "%s", ptr_n);
         else
             snprintf(&str_pass[0], 45, "%-20s", ptr_n);
         text += str_pass;
 
-        ptr_n = &buffer[i+50][0];
-        if (buffer[i+50][0] != '\0')
+        ptr_n = &buffer[i+24*2][0];
+        if (buffer[i+24*2][0] != 0)
         {
             snprintf(&str_pass[0], 45, "%s", ptr_n);
             text += str_pass;
         }
-        text += EOL;
+        text += "\n";
     }
 
-    text += EOL EOL;
+    text += "\n" "\n";
+}
+
+static void sdump_notes(const std::string &, std::string& text)
+{
+    if ( note_list.size() == 0 || Options.use_notes == false )
+	return;
+
+    text += "\nNotes\n| Turn  |Location | Note\n";
+    text += "--------------------------------------------------------------\n";
+    for ( unsigned i = 0; i < note_list.size(); ++i ) {
+	text += describe_note(note_list[i]);
+	text += "\n";
+    }
+    text += "\n";
 }
 
  //---------------------------------------------------------------
@@ -480,88 +543,27 @@ static void dump_stats2( std::string & text, bool calc_unid)
  // dump_location
  //
  //---------------------------------------------------------------
-static void dump_location( std::string & text )
+static void sdump_location(const std::string &, std::string & text)
 {
-    if (you.level_type != LEVEL_DUNGEON || you.your_level != -1)
-        text += "You are ";
-
-    if (you.level_type == LEVEL_PANDEMONIUM)
-        text += "in Pandemonium";
-    else if (you.level_type == LEVEL_ABYSS)
-        text += "in the Abyss";
-    else if (you.level_type == LEVEL_LABYRINTH)
-        text += "in a labyrinth";
-    else if (you.where_are_you == BRANCH_DIS)
-        text += "in Dis";
-    else if (you.where_are_you == BRANCH_GEHENNA)
-        text += "in Gehenna";
-    else if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
-        text += "in the Vestibule of Hell";
-    else if (you.where_are_you == BRANCH_COCYTUS)
-        text += "in Cocytus";
-    else if (you.where_are_you == BRANCH_TARTARUS)
-        text += "in Tartarus";
-    else if (you.where_are_you == BRANCH_INFERNO)
-        text += "in the Inferno";
-    else if (you.where_are_you == BRANCH_THE_PIT)
-        text += "in the Pit";
-    else if (you.where_are_you == BRANCH_ORCISH_MINES)
-        text += "in the Mines";
-    else if (you.where_are_you == BRANCH_HIVE)
-        text += "in the Hive";
-    else if (you.where_are_you == BRANCH_LAIR)
-        text += "in the Lair";
-    else if (you.where_are_you == BRANCH_SLIME_PITS)
-        text += "in the Slime Pits";
-    else if (you.where_are_you == BRANCH_VAULTS)
-        text += "in the Vaults";
-    else if (you.where_are_you == BRANCH_CRYPT)
-        text += "in the Crypt";
-    else if (you.where_are_you == BRANCH_HALL_OF_BLADES)
-        text += "in the Hall of Blades";
-    else if (you.where_are_you == BRANCH_HALL_OF_ZOT)
-        text += "in the Hall of Zot";
-    else if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
-        text += "in the Ecumenical Temple";
-    else if (you.where_are_you == BRANCH_SNAKE_PIT)
-        text += "in the Snake Pit";
-    else if (you.where_are_you == BRANCH_ELVEN_HALLS)
-        text += "in the Elven Halls";
-    else if (you.where_are_you == BRANCH_TOMB)
-        text += "in the Tomb";
-    else if (you.where_are_you == BRANCH_SWAMP)
-        text += "in the Swamp";
+    if (you.your_level == -1 
+            && you.where_are_you == BRANCH_MAIN_DUNGEON
+            && you.level_type == LEVEL_DUNGEON)
+        text += "You escaped";
     else
-    {
-        if (you.your_level == -1)
-            text += "You escaped";
-        else
-        {
-            text += "on level ";
-
-            char st_prn[20];
-            itoa(you.your_level + 1, st_prn, 10);
-            text += st_prn;
-        }
-    }
+        text += "You are " + prep_branch_level_name();
 
     text += ".";
-    text += EOL;
+    text += "\n";
 }                               // end dump_location()
 
- //---------------------------------------------------------------
- //
- // dump_religion
- //
- //---------------------------------------------------------------
-static void dump_religion( std::string & text )
+static void sdump_religion(const std::string &, std::string & text)
 {
     if (you.religion != GOD_NO_GOD)
     {
         text += "You worship ";
         text += god_name(you.religion);
         text += ".";
-        text += EOL;
+        text += "\n";
 
         if (!player_under_penance())
         {
@@ -577,17 +579,17 @@ static void dump_religion( std::string & text )
                          (you.piety <= 130) ? "extremely pleased with you"
                          : "exalted by your worship");
                 text += ".";
-                text += EOL;
+                text += "\n";
             }
         }
         else
         {
             text += god_name(you.religion);
             text += " is demanding penance.";
-            text += EOL;
+            text += "\n";
         }
     }
-}                               // end dump_religion()
+}
 
 extern char id[4][50];  // itemname.cc
 static bool dump_item_origin(const item_def &item, int value)
@@ -645,7 +647,7 @@ static bool dump_item_origin(const item_def &item, int value)
  // dump_inventory
  //
  //---------------------------------------------------------------
-static void dump_inventory( std::string & text, bool show_prices )
+static void sdump_inventory(const std::string &, std::string & text)
 {
     int i, j;
     char temp_id[4][50];
@@ -683,12 +685,12 @@ static void dump_inventory( std::string & text, bool show_prices )
     if (!inv_count)
     {
         text += "You aren't carrying anything.";
-        text += EOL;
+        text += "\n";
     }
     else
     {
         text += "  Inventory:";
-        text += EOL;
+        text += "\n";
 
         for (i = 0; i < OBJ_GOLD; i++)
         {
@@ -713,7 +715,7 @@ static void dump_inventory( std::string & text, bool show_prices )
                 default:
                     DEBUGSTR("Bad item class");
                 }
-                text += EOL;
+                text += "\n";
 
                 for (j = 0; j < ENDOFPACK; j++)
                 {
@@ -727,7 +729,7 @@ static void dump_inventory( std::string & text, bool show_prices )
                         inv_count--;
 
                         int ival = -1;
-                        if (show_prices)
+                        if (dump_show_prices)
                         {
                             text += " (";
 
@@ -742,7 +744,7 @@ static void dump_inventory( std::string & text, bool show_prices )
                         if (origin_describable(you.inv[j])
                                 && dump_item_origin(you.inv[j], ival))
                         {
-                            text += EOL "   (" + origin_desc(you.inv[j]) + ")";
+                            text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
                         if (is_dumpable_artifact( you.inv[j], 
@@ -756,13 +758,14 @@ static void dump_inventory( std::string & text, bool show_prices )
                         }
                         else
                         {
-                            text += EOL;
+                            text += "\n";
                         }
                     }
                 }
             }
         }
     }
+    text += "\n\n";
 }                               // end dump_inventory()
 
 //---------------------------------------------------------------
@@ -770,14 +773,19 @@ static void dump_inventory( std::string & text, bool show_prices )
 // dump_skills
 //
 //---------------------------------------------------------------
-static void dump_skills( std::string & text )
+static void sdump_skills(const std::string &, std::string & text)
 {
     char tmp_quant[20];
 
-    text += EOL;
-    text += EOL;
+    text += " You have ";
+    itoa( you.exp_available, tmp_quant, 10 );
+    text += tmp_quant;
+    text += " experience left.";
+
+    text += "\n";
+    text += "\n";
     text += "   Skills:";
-    text += EOL;
+    text += "\n";
 
     for (unsigned char i = 0; i < 50; i++)
     {
@@ -792,12 +800,12 @@ static void dump_skills( std::string & text )
             text += tmp_quant;
             text += " ";
             text += skill_name(i);
-            text += EOL;
+            text += "\n";
         }
     }
 
-    text += EOL;
-    text += EOL;
+    text += "\n";
+    text += "\n";
 }                               // end dump_skills()
 
 //---------------------------------------------------------------
@@ -805,24 +813,24 @@ static void dump_skills( std::string & text )
 // Return string of the i-th spell type, with slash if required
 //
 //---------------------------------------------------------------
-static std::string spell_type_name(int spell_class, bool slash)
+static std::string spell_type_shortname(int spell_class, bool slash)
 {
     std::string ret;
 
     if (slash)
         ret = "/";
 
-    ret += spelltype_name(spell_class);
+    ret += spelltype_short_name(spell_class);
 
     return (ret);
-}                               // end spell_type_name()
+}                               // end spell_type_shortname()
 
 //---------------------------------------------------------------
 //
 // dump_spells
 //
 //---------------------------------------------------------------
-static void dump_spells( std::string & text )
+static void sdump_spells(const std::string &, std::string & text)
 {
     char tmp_quant[20];
 
@@ -860,20 +868,20 @@ static void dump_spells( std::string & text )
         text += " spell levels left.";
     }
 
-    text += EOL;
+    text += "\n";
 
     if (!you.spell_no)
     {
         text += "You don't know any spells.";
-        text += EOL;
+        text += "\n";
 
     }
     else
     {
-        text += "You know the following spells:" EOL;
-        text += EOL;
+        text += "You know the following spells:" "\n";
+        text += "\n";
 
-        text += "  Your Spells                       Type                  Success   Level" EOL;
+	text += " Your Spells              Type           Power          Success   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -882,20 +890,17 @@ static void dump_spells( std::string & text )
 
             if (spell != SPELL_NO_SPELL)
             {
-                std::string spell_line = " ";
+                std::string spell_line;
 
-                char strng[2];
-                strng[0] = letter;
-                strng[1] = '\0';
-
-                spell_line += strng;
+                spell_line += letter;
                 spell_line += " - ";
                 spell_line += spell_title( spell );
 
-                for (int i = spell_line.length(); i < 34; i++)
-                {
-                    spell_line += ' ';
-                }
+		if ( spell_line.length() > 24 )
+		    spell_line = spell_line.substr(0, 24);
+		
+		for (int i = spell_line.length(); i < 26; i++) 
+		    spell_line += ' ';
 
                 bool already = false;
 
@@ -903,18 +908,30 @@ static void dump_spells( std::string & text )
                 {
                     if (spell_typematch( spell, spell_type_index[i] ))
                     {
-                        spell_line += 
-                                spell_type_name(spell_type_index[i], already);
+                        spell_line += spell_type_shortname(spell_type_index[i],
+							   already);
                         already = true;
                     }
                 }
 
-                if (spell_line.length() > 57)
-                    spell_line = spell_line.substr(0, 57);
-                for (int i = spell_line.length(); i < 58; i++)
-                {
-                    spell_line += ' ';
-                }
+		for (int i = spell_line.length(); i < 41; ++i )
+		    spell_line += ' ';
+
+		int spell_p = calc_spell_power( spell, true );
+		spell_line += ( (spell_p > 100) ? "Enormous"   :
+				(spell_p >  90) ? "Huge"       :
+				(spell_p >  80) ? "Massive"    :
+				(spell_p >  70) ? "Major"      :
+				(spell_p >  60) ? "Impressive" :
+				(spell_p >  50) ? "Reasonable" :
+				(spell_p >  40) ? "Moderate"   :
+				(spell_p >  30) ? "Adequate"   :
+				(spell_p >  20) ? "Mediocre"   :
+				(spell_p >  10) ? "Minor"
+				: "Negligible");
+
+		for (int i = spell_line.length(); i < 56; ++i )
+		    spell_line += ' ';
 
                 int fail_rate = spell_fail( spell );
 
@@ -931,12 +948,12 @@ static void dump_spells( std::string & text )
                               (fail_rate >   0)  ? "Excellent" 
                                                  : "Perfect";
 
-                for (int i = spell_line.length(); i < 70; i++)
+                for (int i = spell_line.length(); i < 68; i++)
                     spell_line += ' ';
 
                 itoa((int) spell_difficulty( spell ), tmp_quant, 10 );
                 spell_line += tmp_quant;
-                spell_line += EOL;
+                spell_line += "\n";
 
                 text += spell_line;
             }
@@ -945,22 +962,12 @@ static void dump_spells( std::string & text )
 }                               // end dump_spells()
 
 
-//---------------------------------------------------------------
-//
-// dump_kills
-//
-//---------------------------------------------------------------
-static void dump_kills( std::string & text )
+static void sdump_kills(const std::string &, std::string & text)
 {
     text += you.kills.kill_info();
 }
 
-//---------------------------------------------------------------
-//
-// dump_mutations
-//
-//---------------------------------------------------------------
-static void dump_mutations( std::string & text )
+static void sdump_mutations(const std::string &, std::string & text)
 {
     // Can't use how_mutated() here, as it doesn't count demonic powers
     int xz = 0;
@@ -974,9 +981,9 @@ static void dump_mutations( std::string & text )
     if (xz > 0)
     {
         text += "";
-        text += EOL;
+        text += "\n";
         text += "           Mutations & Other Weirdness";
-        text += EOL;
+        text += "\n";
 
         for (int j = 0; j < 100; j++)
         {
@@ -986,15 +993,12 @@ static void dump_mutations( std::string & text )
                     text += "* ";
 
                 text += mutation_name(j);
-                text += EOL;
+                text += "\n";
             }
         }
     }
+    text += "\n\n";
 }                               // end dump_mutations()
-
-#if MAC
-#pragma mark -
-#endif
 
 // ========================================================================
 //      Public Functions
@@ -1008,168 +1012,36 @@ const char *hunger_level(void)
              (you.hunger < 11000) ? "full" : "completely stuffed");
 }
 
-//---------------------------------------------------------------
-//
-// dump_char
-//
-// Creates a disk record of a character. Returns true if the
-// character was successfully saved.
-//
-//---------------------------------------------------------------
-bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
+static bool write_dump(
+        const std::string &fname, 
+        const std::string &text, 
+        bool full_id)
 {
     bool succeeded = false;
 
-    std::string text;
-
-    // start with enough room for 100 80 character lines
-    text.reserve(100 * 80);
-
-    text += " Dungeon Crawl version " VERSION " character file.";
-    text += EOL;
-    text += EOL;
-
-    if (Options.detailed_stat_dump)
-        dump_stats2(text, show_prices);
-    else
-        dump_stats(text);
-
-    dump_location(text);
-    dump_religion(text);
-
-    switch (you.burden_state)
-    {
-    case BS_OVERLOADED:
-        text += "You are overloaded with stuff.";
-        text += EOL;
-        break;
-    case BS_ENCUMBERED:
-        text += "You are encumbered.";
-        text += EOL;
-        break;
-    }
-
-    text += "You are ";
-
-    text += hunger_level();
-
-    text += ".";
-    text += EOL;
-    text += EOL;
-
-    if (you.attribute[ATTR_TRANSFORMATION])
-    {
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_SPIDER:
-            text += "You are in spider-form.";
-            break;
-        case TRAN_BLADE_HANDS:
-            text += "Your hands are blades.";
-            break;
-        case TRAN_STATUE:
-            text += "You are a stone statue.";
-            break;
-        case TRAN_ICE_BEAST:
-            text += "You are a creature of crystalline ice.";
-            break;
-        case TRAN_DRAGON:
-            text += "You are a fearsome dragon!";
-            break;
-        case TRAN_LICH:
-            text += "You are in lich-form.";
-            break;
-        case TRAN_SERPENT_OF_HELL:
-            text += "You are a huge, demonic serpent!";
-            break;
-        case TRAN_AIR:
-            text += "You are a cloud of diffuse gas.";
-            break;
-        }
-
-        text += EOL;
-        text += EOL;
-    }
-
-    dump_inventory(text, show_prices);
-
-    char tmp_quant[20];
-
-    text += EOL;
-    text += EOL;
-    text += " You have ";
-    itoa( you.exp_available, tmp_quant, 10 );
-    text += tmp_quant;
-    text += " experience left.";
-
-    dump_skills(text);
-    dump_spells(text);
-    dump_mutations(text);
-
-    text += EOL;
-    text += EOL;
-    
-    dump_screenshot(text);
-    text += EOL EOL;
-
-    dump_kills(text);
-
-    char file_name[kPathLen] = "\0";
-
+    std::string file_name;
     if (SysEnv.crawl_dir)
-        strncpy(file_name, SysEnv.crawl_dir, kPathLen);
+        file_name += SysEnv.crawl_dir;
 
-    strncat(file_name, fname, kPathLen);
+    file_name += fname;
 
 #ifdef STASH_TRACKING
-    char stash_file_name[kPathLen] = "";
-    strncpy(stash_file_name, file_name, kPathLen);
-#endif
-    if (strcmp(fname, "morgue.txt") != 0)
-    {
-        strncat(file_name, ".txt", kPathLen);
-#ifdef STASH_TRACKING
-        strncat(stash_file_name, ".lst", kPathLen);
-        stashes.dump(stash_file_name);
-#endif
-    }
-#ifdef STASH_TRACKING
-    else
-    {
-        // Grr. Filename is morgue.txt, it needs to be morgue.lst
-        int len = strlen(stash_file_name);
-        stash_file_name[len - 3] = 'l';
-        stash_file_name[len - 2] = 's';
-        // Fully identified stash dump.
-        stashes.dump(stash_file_name, true);
-    }
+    std::string stash_file_name;
+    stash_file_name = file_name;
+    stash_file_name += ".lst";
+    stashes.dump(stash_file_name.c_str(), full_id);
 #endif
 
-    FILE *handle = fopen(file_name, "wb");
+    file_name += ".txt";
+    FILE *handle = fopen(file_name.c_str(), "w");
 
 #if DEBUG_DIAGNOSTICS
-    strcpy( info, "File name: " );
-    strcat( info, file_name );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "File name: %s", file_name.c_str());
 #endif
 
     if (handle != NULL)
     {
-        size_t begin = 0;
-        size_t end = text.find(EOL);
-
-        while (end != std::string::npos)
-        {
-            end += strlen(EOL);
-
-            size_t len = end - begin;
-
-            fwrite(text.c_str() + begin, len, 1, handle);
-
-            begin = end;
-            end = text.find(EOL, end);
-        }
-
+        fputs(text.c_str(), handle);
         fclose(handle);
         succeeded = true;
     }
@@ -1178,3 +1050,73 @@ bool dump_char( const char fname[30], bool show_prices )  // $$$ a try block?
     
     return (succeeded);
 }                               // end dump_char()
+
+static void set_resist_dump_color( const char* data ) {
+    while ( *data && *data != ':' )
+	++data;
+    if ( *data == 0 )
+	return;
+    ++data;
+    int pluscount = 0;
+    while ( *data ) {
+	if ( *data == '+' )
+	    ++pluscount;
+	if ( *data == 'x' )
+	    --pluscount;
+	++data;
+    }
+    switch ( pluscount ) {
+    case 3:
+    case 2:
+	textcolor(LIGHTGREEN);
+	break;
+    case 1:
+	textcolor(GREEN);
+	break;
+    case -1:
+	textcolor(RED);
+	break;
+    case -2:
+    case -3:
+	textcolor(LIGHTRED);
+	break;
+    default:
+	textcolor(LIGHTGREY);
+	break;
+    }
+}
+
+void resists_screen() {
+#ifdef DOS_TERM
+    char dosbuffer[4000];
+    gettext( 1, 1, 80, 25, dosbuffer );
+    window( 1, 1, 80, 25 );
+#endif
+    clrscr();
+    textcolor(LIGHTGREY);
+    char buffer[24*3][45];
+    
+    get_full_detail(&buffer[0][0], false);
+
+    for (int line = 0; line < 24; ++line ) {
+	for ( int block = 0; block < 3; ++block ) {
+	    const int idx = block * 24 + line;
+	    if ( buffer[idx][0] ) {
+		gotoxy( block == 2 ? 53 : block * 32 + 1, line+1 );
+		/* FIXME - hack - magic number 14 */
+		if ( block != 0 && line < 14 )
+		    set_resist_dump_color(buffer[idx]);		    
+		cprintf("%s", buffer[idx] );
+		textcolor(LIGHTGREY);
+	    }
+	}
+    }
+
+    getch();
+#ifdef DOS_TERM
+    puttext(1, 1, 80, 25, dosbuffer);
+    window(1, 1, 80, 25);
+#endif
+
+    redraw_screen();
+}

@@ -16,7 +16,8 @@
 #include "message.h"
 #include "religion.h"
 
-#include <string.h>
+#include <cstdarg>
+#include <cstring>
 
 #ifdef DOS
 #include <conio.h>
@@ -26,17 +27,31 @@
 
 #include "initfile.h"
 #include "macro.h"
-#include "player.h"
+#include "delay.h"
 #include "stuff.h"
 #include "travel.h"
 #include "view.h"
-
+#include "notes.h"
+#include "stash.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
 int Next_Message = 0;                                 // end of messages
 
 char Message_Line = 0;                // line of next (previous?) message
+
+static bool suppress_messages = false;
+static void base_mpr(const char *inf, int channel, int param);
+
+no_messages::no_messages() : msuppressed(suppress_messages)
+{
+    suppress_messages = true;
+}
+
+no_messages::~no_messages()
+{
+    suppress_messages = msuppressed;
+}
 
 static char god_message_altar_colour( char god )
 {
@@ -103,9 +118,9 @@ static char channel_to_colour( int channel, int param )
     {
     case MSGCOL_PLAIN:
         // note that if the plain channel is muted, then we're protecting
-        // the player from having that spead to other other channels here.
+        // the player from having that spread to other channels here.
         // The intent of plain is to give non-coloured messages, not to
-        // supress them.
+        // suppress them.
         if (Options.channels[ MSGCH_PLAIN ] >= MSGCOL_DEFAULT)
             ret = LIGHTGREY;
         else
@@ -117,6 +132,7 @@ static char channel_to_colour( int channel, int param )
         switch (channel)
         {
         case MSGCH_GOD:
+	case MSGCH_PRAY:
             ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
                                     ? god_colour( param )
                                     : god_message_altar_colour( param );
@@ -167,7 +183,8 @@ static char channel_to_colour( int channel, int param )
             break;
 
         case MSGCH_DIAGNOSTICS:
-            ret = DARKGREY;     // makes is easier to ignore at times -- bwr
+        case MSGCH_MULTITURN_ACTION:
+            ret = DARKGREY;     // makes it easier to ignore at times -- bwr
             break;
 
         case MSGCH_PLAIN:
@@ -215,13 +232,91 @@ static char channel_to_colour( int channel, int param )
 
 #endif
 
+static void do_message_print( int channel, int param, 
+                              const char *format, va_list argp )
+{
+    char buff[200];
+    vsnprintf( buff, sizeof( buff ), format, argp ); 
+    buff[199] = 0;
+
+    mpr(buff, channel, param);
+}
+
+void mprf( int channel, const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( channel, 0, format, argp );
+    va_end( argp );
+}
+
+void mprf( const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( MSGCH_PLAIN, 0, format, argp );
+    va_end( argp );
+}
+
 void mpr(const char *inf, int channel, int param)
 {
-    char info2[80];
+    char mbuf[400];
+    size_t i = 0;
+    const int stepsize = get_number_of_cols() - 1;
+    const size_t msglen = strlen(inf);
+    const int lookback_size = (stepsize < 12 ? 0 : 12);
+    // if a message is exactly STEPSIZE characters long,
+    // it should precisely fit in one line. The printing is thus
+    // from I to I + STEPSIZE - 1. Stop when I reaches MSGLEN.
+    while ( i < msglen || i == 0 )
+    {
+        strncpy( mbuf, inf + i, stepsize );
+        mbuf[stepsize] = 0;
+        // did the message break?
+        if ( i + stepsize < msglen )
+        {
+            // yes, find a nicer place to break it.
+            int lookback, where = 0;
+            for ( lookback = 0; lookback < lookback_size; ++lookback )
+            {
+                where = stepsize - 1 - lookback;
+                if ( where >= 0 && isspace(mbuf[where]) )
+                    // aha!
+                    break;
+            }
+
+            if ( lookback != lookback_size )
+            {
+                // found a good spot to break
+                mbuf[where] = 0;
+                i += where + 1; // skip past the space!
+            }
+            else
+                i += stepsize;
+        }
+        else
+            i += stepsize;
+        base_mpr( mbuf, channel, param );
+    }
+}
+
+static void base_mpr(const char *inf, int channel, int param)
+{
+    if (suppress_messages)
+        return;
 
     int colour = channel_to_colour( channel, param );
     if (colour == MSGCOL_MUTED)
         return;
+
+    std::string imsg = inf;
+    
+    for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
+	if (Options.note_messages[i].matches(imsg)) {
+	    take_note(Note(NOTE_MESSAGE, channel, param, inf));
+	    break;
+	}
+    }
 
     interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
 
@@ -230,9 +325,9 @@ void mpr(const char *inf, int channel, int param)
     if (you.running < 0)
     {
         std::string message = inf;
-        for (unsigned i = 0; i < Options.stop_travel.size(); ++i)
+        for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)
         {
-            if (Options.stop_travel[i].is_filtered( channel, message ))
+            if (Options.travel_stop_message[i].is_filtered( channel, message ))
             {
                 stop_running();
                 break;
@@ -246,7 +341,7 @@ void mpr(const char *inf, int channel, int param)
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++) 
         {
             // Maybe we should allow message channel matching as for 
-            // stop_travel?
+            // travel_stop_message?
             if (Options.sound_mappings[i].pattern.matches(message))
             {
                 play_sound(Options.sound_mappings[i].soundfile.c_str());
@@ -269,11 +364,8 @@ void mpr(const char *inf, int channel, int param)
         more();
 
     gotoxy( (Options.delay_message_clear) ? 2 : 1, Message_Line + 18 );
-    strncpy(info2, inf, 78);
-    info2[78] = 0;
-
     textcolor( colour );
-    cprintf(info2);
+    cprintf("%s", inf);
     //
     // reset colour
     textcolor(LIGHTGREY);
@@ -491,7 +583,7 @@ void replay_messages(void)
 #if DEBUG_DIAGNOSTICS
             cprintf( "%d: %s", line, Store_Message[ line ].text.c_str() );
 #else
-            cprintf( Store_Message[ line ].text.c_str() );
+            cprintf( "%s", Store_Message[ line ].text.c_str() );
 #endif
 
             cprintf(EOL);

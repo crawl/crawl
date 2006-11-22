@@ -3,6 +3,8 @@
  *  Summary:    Functions for windows32 console mode support
  *  Written by: Gordon Lipford
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <2>      8 Mar 2001        GDL       Rewrite to use low level IO
@@ -62,10 +64,12 @@
 
 // END -- WINDOWS INCLUDES
 
-#include <string.h>
-#ifdef __BCPLUSPLUS__
-#include <stdio.h>
+#ifdef __MINGW32__
+#include <signal.h>
 #endif
+
+#include <string.h>
+#include <stdio.h>
 #include "AppHdr.h"
 #include "version.h"
 #include "defines.h"
@@ -278,8 +282,7 @@ void bFlush(void)
       xy.X = cx;
       xy.Y = cy;
       CLOCKIN
-      if (SetConsoleCursorPosition(outbuf, xy) == 0)
-         fputs("SetConsoleCursorPosition() failed!", stderr);
+      SetConsoleCursorPosition(outbuf, xy);
       CLOCKOUT(2)
    }
 }
@@ -299,12 +302,12 @@ void setStringInput(bool value)
       outmodes = 0;
    }
 
-   if ( SetConsoleMode( inbuf,  inmodes ) == 0) {
+   if ( SetConsoleMode( inbuf, inmodes ) == 0) {
       fputs("Error initialising console input mode.", stderr);
       exit(0);
    }
 
-   if ( SetConsoleMode( outbuf,  outmodes ) == 0) {
+   if ( SetConsoleMode( outbuf, outmodes ) == 0) {
       fputs("Error initialising console output mode.", stderr);
       exit(0);
    }
@@ -327,6 +330,13 @@ static void init_colors(char *windowTitle)
    // if not found, quit.
 }
 
+#ifdef __MINGW32__
+static void install_sighandlers()
+{
+    signal(SIGINT, SIG_IGN);
+}
+#endif
+
 void init_libw32c(void)
 {
    inbuf = GetStdHandle( STD_INPUT_HANDLE );
@@ -338,11 +348,15 @@ void init_libw32c(void)
    }
 
    GetConsoleTitle( oldTitle, 78 );
-   SetConsoleTitle( "Crawl " VERSION );
+   SetConsoleTitle( CRAWL " " VERSION );
+
+#ifdef __MINGW32__
+   install_sighandlers();
+#endif
 
    init_colors(oldTitle);
 
-   // by default,  set string input to false:  use char-input only
+   // by default, set string input to false:  use char-input only
    setStringInput( false );
    if (SetConsoleMode( outbuf, 0 ) == 0) {
       fputs("Error initialising console output mode.", stderr);
@@ -410,8 +424,7 @@ void deinit_libw32c(void)
 // only on input.
 void _setcursortype(int curstype)
 {
-    UNUSED( curstype );
-    ;
+    _setcursortype_internal(curstype);
 }
 
 
@@ -423,13 +436,13 @@ void _setcursortype_internal(int curstype)
       return;
 
    cci.dwSize = 5;
-   cci.bVisible = (bool)curstype;
+   cci.bVisible = curstype? TRUE : FALSE;
    current_cursor = curstype;
    CLOCKIN
    SetConsoleCursorInfo( outbuf, &cci );
    CLOCKOUT(1)
 
-   // now,  if we just changed from NOCURSOR to CURSOR,
+   // now, if we just changed from NOCURSOR to CURSOR,
    // actually move screen cursor
    if (current_cursor != _NOCURSOR)
       gotoxy(cx+1, cy+1);
@@ -500,6 +513,11 @@ void gotoxy(int x, int y)
          fputs("SetConsoleCursorPosition() failed!", stderr);
       CLOCKOUT(2)
    }
+}
+
+void textattr(int c)
+{
+    textcolor(c);
 }
 
 void textcolor(int c)
@@ -584,7 +602,7 @@ void putch(char c)
 // translate virtual keys
 
 #define VKEY_MAPPINGS 10
-static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted,  control
+static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, control
    {
    { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT },
    { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT },
@@ -696,9 +714,6 @@ int getch_ck(void)
        return repeat_key;
     }
 
-    bool oldValue = current_cursor;
-    _setcursortype_internal(_NORMALCURSOR);
-
     while(1)
     {
        CLOCKIN
@@ -727,8 +742,6 @@ int getch_ck(void)
     }
     // DEBUG
     //fprintf(foo, "getch() returning %02x (%c)\n", key, key);
-
-    _setcursortype_internal(oldValue);
 
     return key;
 }
@@ -801,8 +814,8 @@ int getConsoleString(char *buf, int maxlen)
    if (ReadConsole( inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
       fputs("Error in ReadConsole()!", stderr);
 
-   // terminate string,  then strip CRLF, replace with \0
-   buf[maxlen-1] = '\0';
+   // terminate string, then strip CRLF, replace with \0
+   buf[maxlen-1] = 0;
    for (unsigned i=(nread<3 ? 0 : nread-3); i<nread; i++)
    {
       if (buf[i] == 0x0A || buf[i] == 0x0D)

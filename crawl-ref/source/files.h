@@ -3,6 +3,8 @@
  *  Summary:    Functions used to save and load levels/games.
  *  Written by: Linley Henzell and Alexey Guzeev
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -12,9 +14,11 @@
 #ifndef FILES_H
 #define FILES_H
 
+#include "externs.h"
 #include "FixAry.h"
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 // referenced in files - newgame - ouch - overmap:
 #define MAX_LEVELS 50
@@ -25,20 +29,16 @@
 // referenced in files - newgame - ouch:
 extern FixedArray<bool, MAX_LEVELS, MAX_BRANCHES> tmp_file_pairs;
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc
- * *********************************************************************** */
-#if 0
-void load( unsigned char stair_taken, bool moving_level,
-           bool was_a_labyrinth, char old_level, bool want_followers,
-           bool is_new_game, char where_were_you2 );
-#endif
+std::string datafile_path(const std::string &basename);
+
+void check_savedir(std::string &dir);
 
 bool travel_load_map( char branch, int absdepth );
 
+std::vector<player> find_saved_characters();
+
 std::string get_savedir_filename(const char *pre, const char *suf,
-                                 const char *ext);
+                                 const char *ext, bool suppress_uid = false);
 
 std::string get_prefs_filename();
 
@@ -47,7 +47,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: acr - libmac - misc
+ * called from: acr - misc
  * *********************************************************************** */
 void save_game(bool leave_game);
 
@@ -69,9 +69,8 @@ void save_ghost( bool force = false );
 /* ***********************************************************************
  * called from: files hiscores
  * *********************************************************************** */
-void make_filename( char *buf, const char *prefix, int level, int where,
-                    bool isLabyrinth, bool isGhost );
-
+std::string make_filename( const char *prefix, int level, int where,
+                           bool isLabyrinth, bool isGhost );
 
 void writeShort(FILE *file, short s);
 

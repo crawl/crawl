@@ -3,6 +3,8 @@
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -14,9 +16,14 @@
 
 #include "externs.h"
 
+bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
+                          bool force );
+
+bool player_in_mappable_area(void);
 bool player_in_branch( int branch );
 bool player_in_hell( void );
 
+int get_player_wielded_weapon();
 int player_equip( int slot, int sub_type, bool calc_unid = true );
 int player_equip_ego_type( int slot, int sub_type );
 int player_damage_type( void );
@@ -48,6 +55,7 @@ bool player_is_levitating(void);
  * *********************************************************************** */
 bool player_under_penance(void);
 
+int player_wielded_item();
 
 /* ***********************************************************************
  * called from: ability - acr - fight - food - it_use2 - item_use - items -
@@ -106,13 +114,6 @@ unsigned char player_energy(void);
 int player_evasion(void);
 
 
-#if 0
-/* ***********************************************************************
- * called from: acr - spells1
- * *********************************************************************** */
-unsigned char player_fast_run(void);
-#endif
-
 /* ***********************************************************************
  * called from: acr - spells1
  * *********************************************************************** */
@@ -147,6 +148,14 @@ int player_regen(void);
  * called from: fight - files - it_use2 - misc - ouch - spells - spells2
  * *********************************************************************** */
 int player_res_cold(bool calc_unid = true);
+int player_res_acid(bool consider_unidentified_gear = true);
+int player_acid_resist_factor();
+
+int player_res_torment(bool calc_unid = true);
+
+bool player_res_corrosion(bool calc_unid = true);
+bool player_item_conserve(bool calc_unid = true);
+int player_mental_clarity(bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -159,6 +168,7 @@ int player_res_electricity(bool calc_unid = true);
  * called from: acr - fight - misc - ouch - spells
  * *********************************************************************** */
 int player_res_fire(bool calc_unid = true);
+int player_res_steam(bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -167,7 +177,11 @@ int player_res_fire(bool calc_unid = true);
  * *********************************************************************** */
 int player_res_poison(bool calc_unid = true);
 
+bool player_control_teleport(bool calc_unid = true);
+
 int player_res_magic(void);
+
+bool player_res_asphyx();
 
 /* ***********************************************************************
  * called from: beam - chardump - fight - misc - output
@@ -278,7 +292,7 @@ int slaying_bonus(char which_affected);
  *              spells3
  * *********************************************************************** */
 unsigned char player_see_invis(bool calc_unid = true);
-bool player_monster_visible( struct monsters *mon );
+bool player_monster_visible( const monsters *mon );
 
 
 /* ***********************************************************************
@@ -339,7 +353,7 @@ bool player_genus( unsigned char which_genus,
  * called from: ability - effects - fight - it_use3 - ouch - spell -
  *              spells - spells2 - spells3 - spells4
  * *********************************************************************** */
-void dec_hp(int hp_loss, bool fatal);
+void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 
 
 /* ***********************************************************************
@@ -436,16 +450,12 @@ void dec_disease_player();
 
 void rot_player( int amount );
 
-void perform_activity();
-
-void interrupt_activity( ACT_INTERRUPT ai, 
-                     const activity_interrupt_t &a = activity_interrupt_t() );
-
-// last updated 15sep2001 {bwr}
-/* ***********************************************************************
- * called from:
- * *********************************************************************** */
 bool player_has_spell( int spell );
+size_type player_size( int psize = PSIZE_TORSO, bool base = false );
+
+bool player_weapon_wielded();
+item_def *player_weapon();
+item_def *player_shield();
 
 void run_macro(const char *macroname = NULL);
 

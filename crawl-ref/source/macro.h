@@ -3,6 +3,8 @@
  *  Summary:    Crude macro-capability
  *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <2>     6/25/02        JS              Removed old cruft

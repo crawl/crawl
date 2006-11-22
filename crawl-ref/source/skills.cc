@@ -3,6 +3,8 @@
  *  Summary:    Skill exercising functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *       <3>     8/08/99        BWR             Increased skill cost in midgame
@@ -21,6 +23,7 @@
 #include "externs.h"
 
 #include "macro.h"
+#include "notes.h"
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -38,7 +41,7 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static void exercise2( char exsk );
+static int exercise2( int exsk );
 
 // These values were calculated by running a simulation of gaining skills.
 // The goal is to try and match the old cost system which used the player's
@@ -146,27 +149,37 @@ static int calc_skill_cost( int skill_cost_level, int skill_level )
     return (ret);
 }
 
-void exercise(char exsk, int deg)
+// returns total number of skill points gained
+int exercise(int exsk, int deg)
 {
-    if (you.exp_available > 0 && you.skills[exsk] < 27)
+    int ret = 0;
+
+    while (deg > 0)
     {
-        while (deg > 0)
-        {
-            if (!you.practise_skill[exsk] && !one_chance_in(4))
-                break;
+        if (you.exp_available <= 0 || you.skills[exsk] >= 27)
+            break;
 
-            if (you.skills[exsk] >= 27)
-                break;
+        if (you.practise_skill[exsk] || one_chance_in(4))
+            ret += exercise2( exsk );
 
-            exercise2( exsk );
-            deg--;
-        }
+        deg--;
     }
 
-    return;
+#ifdef DEBUG_DIAGNOSTICS
+    if (ret)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+                "Exercised %s (deg: %d) by %d",
+                skill_name(exsk),
+                deg,
+                ret);
+    }
+#endif
+
+    return (ret);
 }                               // end exercise()
 
-static void exercise2( char exsk )
+static int exercise2( int exsk )
 {
     int deg = 1;
     int bonus = 0;
@@ -237,7 +250,7 @@ static void exercise2( char exsk )
                 || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
         {
             if (one_chance_in(3))
-                return;
+                return (0);
         }
 
         // some are direct opposites
@@ -247,7 +260,7 @@ static void exercise2( char exsk )
         {
             // of course, this is cumulative with the one above.
             if (!one_chance_in(3))
-                return;
+                return (0);
         }
 
         if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
@@ -255,7 +268,7 @@ static void exercise2( char exsk )
                 || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
         {
             if (!one_chance_in(3))
-                return;
+                return (0);
         }
 
         // experimental restriction (too many spell schools) -- bwr
@@ -270,7 +283,7 @@ static void exercise2( char exsk )
         // Things get progressively harder, but not harder than
         // the Fire-Air or Ice-Earth level.
         if (skill_rank > 3 && one_chance_in(10 - skill_rank))
-            return;
+            return (0);
     }
 
     int fraction = 0;
@@ -351,6 +364,9 @@ static void exercise2( char exsk )
         }
     }
 
+    if (skill_inc <= 0)
+        return (0);
+
     you.skill_points[exsk] += skill_inc;
     you.exp_available -= skill_change;
 
@@ -379,15 +395,27 @@ static void exercise2( char exsk )
 */
 
     if (you.skill_points[exsk] >
-                    (skill_exp_needed(you.skills[exsk] + 2) 
-                            * species_skills(exsk, you.species) / 100))
+	(skill_exp_needed(you.skills[exsk] + 2) 
+	 * species_skills(exsk, you.species) / 100))
     {
-        strcpy(info, "Your ");
-        strcat(info, skill_name(exsk));
-        strcat(info, " skill increases!");
-        mpr(info, MSGCH_INTRINSIC_GAIN);
-
+	
         you.skills[exsk]++;
+	take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+
+        if (you.skills[exsk] == 27) {
+            snprintf( info, INFO_SIZE, "You have mastered %s!", 
+                      skill_name( exsk ) );
+        }
+        else if (you.skills[exsk] == 1) {
+            snprintf( info, INFO_SIZE, "You have gained %s skill!", 
+                      skill_name( exsk ) );
+        }
+        else {
+            snprintf( info, INFO_SIZE, "Your %s skill increases to level %d!", 
+                      skill_name( exsk ), you.skills[exsk] );
+        }
+
+        mpr( info, MSGCH_INTRINSIC_GAIN );
 
         // Recalculate this skill's order for tie breaking skills 
         // at its new level.   See skills2.cc::init_skill_order()
@@ -405,8 +433,7 @@ static void exercise2( char exsk )
         if (exsk == SK_FIGHTING)
             calc_hp();
 
-        if (exsk == SK_INVOCATIONS || exsk == SK_EVOCATIONS 
-            || exsk == SK_SPELLCASTING)
+        if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         {
             calc_mp();
         }
@@ -438,4 +465,5 @@ static void exercise2( char exsk )
             redraw_skill( you.your_name, player_title() );
         }
     }
+    return (skill_inc);
 }                               // end exercise2()

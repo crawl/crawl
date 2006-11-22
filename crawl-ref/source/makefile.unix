@@ -1,0 +1,198 @@
+# -*- Makefile -*- for Dungeon Crawl (linux)
+
+#
+# Modified for Crawl Reference by $Author$ on $Date$
+#
+
+GAME = crawl
+
+# this file contains a list of the libraries.
+# it will make a variable called OBJECTS that contains all the libraries
+include makefile.obj
+
+OBJECTS += libunix.o
+
+CXX = g++
+DELETE = rm -f
+COPY = cp
+OS_TYPE = UNIX
+
+# Include path for curses or ncurses.
+INCLUDES = -I/usr/include/ncurses
+
+MCHMOD = 2755
+INSTALLDIR := /usr/games
+
+# If you're installing Crawl for multiple users, you *must* set this to a
+# valid path before building Crawl.
+DATADIR    :=
+
+LIB = -lncurses
+
+INCLUDES := $(INCLUDES) -Iutil -I.
+
+CFWARN := -Wall -Wwrite-strings \
+	-Wshadow -pedantic
+
+CFOTHERS := -fsigned-char -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+
+ifneq ($(DATADIR),)
+CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
+endif
+
+CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+YCFLAGS := $(INCLUDES) $(CFOTHERS)
+            
+
+# If you have lex and yacc, set DOYACC to y (lowercase y).
+DOYACC := y
+
+UTIL = util/
+
+LEX  := lex
+YACC := bison -y
+
+YTABC  := levcomp.tab.c
+YTABH  := levcomp.tab.h
+
+OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(UTIL)levcomp.o \
+		$(OBJECTS)
+
+ifeq ($(LEX),)
+DOYACC :=
+endif
+
+ifeq ($(YACC),)
+DOYACC :=
+endif
+
+GAME_DEPENDS := $(OBJECTS)
+SRC_PKG_BASE := stone_soup
+SRC_VERSION  := $(shell egrep 'VERSION ".*"' version.h | \
+			egrep -o '[0-9]\.[0-9](\.[0-9])?')
+PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
+SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
+SRC_PKG_ZIP  := $(PKG_SRC_DIR).zip
+
+PKG_TIDY_LIST := $(UTIL)*.o $(LEVCOMP) *.o \
+		$(UTIL)*.tab.cc $(UTIL)*.tab.h $(UTIL)*.lex.cc *.ixx
+PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
+
+##########################################################################
+
+all: $(GAME)
+
+##########################################################################
+# The level compiler
+#
+
+ifeq ($(DOYACC),y)
+
+prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
+		cp $^ prebuilt/
+
+$(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
+		cd $(UTIL) && $(YACC) -d -b levcomp levcomp.ypp \
+			   && mv $(YTABC) levcomp.tab.cc
+
+$(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp
+		cd $(UTIL) && $(LEX) -olevcomp.lex.cc levcomp.lpp
+
+else
+
+# Pull the level-compiler stuff up from prebuilt/
+
+$(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
+		cp prebuilt/*.h $(UTIL)
+		cp $< $@
+
+
+$(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
+		cp $< $@
+
+endif
+
+##########################################################################
+
+
+##########################################################################
+# The actual build targets
+#
+
+install: $(GAME)
+	$(COPY) $(GAME) ${INSTALLDIR}
+	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
+ifeq ($(DATADIR),)
+	$(error DATADIR not set! Set DATADIR and run make clean install again)
+endif
+	mkdir -p $(DATADIR)/data
+	cp dat/*.des $(DATADIR)/data
+
+clean:
+	$(DELETE) *.o
+	$(DELETE) $(UTIL)*.o
+	$(DELETE) $(LEVCOMP)
+	$(DELETE) $(UTIL)*.tab.cc $(UTIL)*.tab.c $(UTIL)*.tab.h $(UTIL)*.lex.cc
+	$(DELETE) *.ixx
+
+distclean: clean
+	$(DELETE) bones.*
+	$(DELETE) morgue.txt
+	$(DELETE) scores
+	$(DELETE) $(GAME)
+	$(DELETE) *.sav
+	$(DELETE) core
+	$(DELETE) *.0*
+	$(DELETE) *.lab
+
+$(GAME): $(GAME_DEPENDS)
+	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+	chmod ${MCHMOD} $(GAME)
+
+debug: $(GAME_DEPENDS)
+	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+profile: $(GAME_DEPENDS)
+	${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $<
+
+# [ds] Note we don't use the standard CFLAGS here; that's intentional, most
+# flex/bison combos I've tried don't produce code that passes the warnings
+# test.
+$(UTIL)%.o: $(UTIL)%.cc
+	$(CXX) $(YCFLAGS) -o $@ -c $<
+
+.h.cc:
+	touch $@
+
+#############################################################################
+# Packaging a source tarball for release
+#
+
+# To package, you *must* have lex and yacc to generate the intermediates.
+ifeq ($(DOYACC),y)
+package-source: distclean prebuildyacc pkgtidy removeold vlink pkgtarbz2 pkgzip
+
+pkgtidy:
+	$(DELETE) $(PKG_TIDY_LIST)
+
+removeold:
+	if [ -f ../../$(SRC_PKG_TAR) ]; then $(DELETE) ../../$(SRC_PKG_TAR); fi
+	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(DELETE) ../../$(SRC_PKG_ZIP); fi
+
+# [ds] Existing directory names could produce a bad package!
+vlink:
+	cd .. && WHERE=$$PWD && cd .. && \
+		( [ -e $(PKG_SRC_DIR) ] || ln -sf $$WHERE $(PKG_SRC_DIR) )
+
+pkgtarbz2:
+	cd ../.. && tar -ch --bzip2 -f $(SRC_PKG_TAR) \
+		-X $(PKG_EXCLUDES) $(PKG_SRC_DIR)
+
+pkgzip:
+	cd ../.. && zip -rq $(SRC_PKG_ZIP) $(PKG_SRC_DIR) \
+		-x@$(PKG_EXCLUDES)
+
+endif

@@ -3,6 +3,8 @@
  *  Summary:    Functions used during combat.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -32,7 +34,7 @@ int weapon_str_weight( int wpn_class, int wpn_type );
 /* ***********************************************************************
  * called from: acr - it_use3
  * *********************************************************************** */
-void you_attack(int monster_attacked, bool unarmed_attacks);
+bool you_attack(int monster_attacked, bool unarmed_attacks);
 
 
 // last updated: 08jun2000 {dlb}
@@ -48,5 +50,9 @@ void monster_attack(int monster_attacking);
  * *********************************************************************** */
 bool monsters_fight(int monster_attacking, int monster_attacked);
 
+int calc_your_to_hit( int heavy_armour, bool hand_and_a_half_bonus,
+		      bool water_attack, bool random_factor );
+
+int calc_heavy_armour_penalty( bool random_factor );
 
 #endif

@@ -3,6 +3,8 @@
  *  Summary:    Functions for making use of inventory items.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *              <2>             5/26/99         JDJ             Exposed armour_prompt. takeoff_armour takes an index argument.
@@ -15,13 +17,16 @@
 
 
 #include <string>
+#include "externs.h"
+#include "enum.h"
 
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - item_use
  * *********************************************************************** */
-bool armour_prompt(const std::string & mesg, int *index);
+bool armour_prompt(const std::string & mesg, int *index,
+		   operation_types oper);
 
 
 // last updated 12may2000 {dlb}
@@ -37,12 +42,13 @@ bool takeoff_armour(int index);
  * *********************************************************************** */
 void drink(void);
 
+bool elemental_missile_beam(int launcher_brand, int ammo_brand);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void original_name(void);
+void examine_object(void);
 
 
 // last updated 12may2000 {dlb}
@@ -63,7 +69,7 @@ void read_scroll(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool remove_ring(int slot = -1);
+bool remove_ring(int slot = -1, bool announce = false);
 
 
 // last updated 12may2000 {dlb}
@@ -98,7 +104,7 @@ struct item_def;
 /* ***********************************************************************
  * called from: food
  * *********************************************************************** */
-bool can_wield(const item_def& weapon);
+bool can_wield(const item_def *weapon, bool say_why = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -125,9 +131,20 @@ void wield_effects(int item_wield_2, bool showMsgs);
  * called from: delay.cc item_use.cc it_use2.cc
  * *********************************************************************** */
 void use_randart( unsigned char item_wield_2 );
+void use_randart(const item_def &item);
 
 bool puton_item(int slot, bool prompt_finger = true);
 
-int armour_equip_slot(const item_def &item);
+bool enchant_weapon( int which_stat, bool quiet = false );
+
+bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target = NULL);
+
+void inscribe_item();
+int launcher_shield_slowdown(const item_def &launcher, 
+                             const item_def *shield);
+int launcher_final_speed(const item_def &launcher, 
+                         const item_def *shield);
+
+void warn_shield_penalties();
 
 #endif

@@ -317,10 +317,6 @@ void describe_stash(int x, int y);
 
 #endif // STASH_TRACKING
 
-std::string branch_level_name(unsigned char branch, int sub_depth);
-
-std::string branch_level_name(unsigned short packed_place);
-
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);
 

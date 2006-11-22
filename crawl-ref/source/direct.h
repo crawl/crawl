@@ -3,6 +3,8 @@
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -28,7 +30,7 @@
 #define DIR_DIR     2
 
 void direction( struct dist &moves, int restricts = DIR_NONE, 
-                int mode = TARG_ANY );
+                int mode = TARG_ANY, bool confirm_fizzle = false );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -42,6 +44,31 @@ bool in_viewport_bounds(int x, int y);
 bool in_los(int x, int y);
 bool in_vlos(int x, int y);
 
+int dos_direction_unmunge(int doskey);
+
 std::string feature_description(int mx, int my);
+std::string feature_description(int grid);
+
+std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern);
+
+inline int view2gridX(int vx)
+{
+    return (you.x_pos + vx - VIEW_CX);
+}
+
+inline int view2gridY(int vy)
+{
+    return (you.y_pos + vy - VIEW_CY);
+}
+
+inline int grid2viewX(int gx)
+{
+    return (gx - you.x_pos + VIEW_CX);
+}
+
+inline int grid2viewY(int gy)
+{
+    return (gy - you.y_pos + VIEW_CY);
+}
 
 #endif

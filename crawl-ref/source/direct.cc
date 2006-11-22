@@ -3,6 +3,8 @@
  *  Summary:    Functions used when picking squares.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <5>  01/08/01       GDL   complete rewrite of direction()
@@ -76,7 +78,8 @@ static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
 // [dshaligram] Removed . and 5 from dirchars so it's easier to
 // special case them.
 static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
-static const char DOSidiocy[10] = { "OPQKSMGHI" };
+static const char DOSidiocy[10]     = { "OPQKSMGHI" };
+static const char DOSunidiocy[10]   = { "bjnh.lyku" };
 static const char *aim_prompt = "Aim (move cursor or -/+/=, change mode with CTRL-F, select with . or >)";
 
 static void describe_feature(int mx, int my, bool oos);
@@ -95,6 +98,12 @@ static char find_square( unsigned char xps, unsigned char yps,
 static bool is_mapped(int x, int y)
 {
     return (is_player_mapped(x, y));
+}
+
+int dos_direction_unmunge(int doskey)
+{
+    const char *pos = strchr(DOSidiocy, doskey);
+    return (pos? DOSunidiocy[ pos - DOSidiocy ] : doskey);
 }
 
 //---------------------------------------------------------------
@@ -127,7 +136,8 @@ static bool is_mapped(int x, int y)
 //
 // targetting mode is handled by look_around()
 //---------------------------------------------------------------
-void direction( struct dist &moves, int restrict, int mode )
+
+void direction2( struct dist &moves, int restrict, int mode )
 {
     bool dirChosen = false;
     bool targChosen = false;
@@ -143,7 +153,7 @@ void direction( struct dist &moves, int restrict, int mode )
 
     // XXX.  this is ALWAYS in relation to the player. But a bit of a hack
     // nonetheless!  --GDL
-    gotoxy( 18, 9 );
+    gotoxy( VIEW_CX + 1, VIEW_CY );
 
     int keyin = getchm(KC_TARGETING);
 
@@ -320,13 +330,43 @@ void direction( struct dist &moves, int restrict, int mode )
     moves.ty = you.y_pos + moves.dy * my;
 }
 
+/* safe version of direction */
+void direction( struct dist &moves, int restrict, int mode,
+                bool confirm_fizzle )
+{
+    while ( 1 )
+    {
+        direction2( moves, restrict, mode );
+        if ( moves.isMe && Options.confirm_self_target == true &&
+             mode != TARG_FRIEND )
+        {
+            if ( yesno("Really target yourself? ", false, 'n') )
+                return;
+            else
+                mpr("Choose a better target.", MSGCH_PROMPT);
+        }
+        else if ( confirm_fizzle && !moves.isValid && Options.fizzlecheck_on )
+        {
+            if ( yesno("Really fizzle? ", false, 'n') )
+                return;
+            else
+                mpr("Try again.", MSGCH_PROMPT);
+        }
+        else
+        {
+            return;
+        }
+    }
+}
+
+
 // Attempts to describe a square that's not in line-of-sight. If
 // there's a stash on the square, announces the top item and number
 // of items, otherwise, if there's a stair that's in the travel
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void describe_oos_square(int x, int y)
 {
-    if (!is_mapped(x, y))
+    if (!in_bounds(x, y) || !is_mapped(x, y))
         return;
 
 #ifdef STASH_TRACKING
@@ -365,8 +405,8 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
     bool dirChosen = false;
     bool targChosen = false;
     int dir = 0;
-    int cx = 17;
-    int cy = 9;
+    int cx = VIEW_CX;
+    int cy = VIEW_CY;
     int newcx, newcy;
     int mx, my;         // actual map x,y (scratch)
     int mid;            // monster id (scratch)
@@ -414,6 +454,11 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         if (!justLooking && keyin == ' ')
             keyin = '\r';
 
+        // [dshaligram] Fudge: in targeting mode, '>' says shoot a missile
+        // that lands here.
+        if (!justLooking && keyin == '>')
+            keyin = 'X';
+
         // DOS idiocy
         if (keyin == 0)
         {
@@ -441,6 +486,33 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                 // handle non-directional keys
                 switch (keyin)
                 {
+#ifdef WIZARD
+                    case 'F':
+                        targChosen = true;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
+                        mid = mgrd[mx][my];
+
+                        if (mid == NON_MONSTER)
+                            break;
+
+                        mprf("Changing attitude of %s\n",
+                                ptr_monam(&menv[mid], DESC_PLAIN));
+                        menv[mid].attitude =
+                            menv[mid].attitude == ATT_HOSTILE?
+                                ATT_FRIENDLY
+                              : ATT_HOSTILE;
+
+                        describe_monsters( menv[ mid ].type, mid );
+                        redraw_screen();
+                        mesclr( true );
+                        // describe the cell again.
+                        describe_cell(view2gridX(cx), view2gridY(cy));
+                        break;
+#endif
+
                     case CONTROL('F'):
                         mode = (mode + 1) % TARG_NUM_MODES;
                         
@@ -519,8 +591,10 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
                     case '?':
                         targChosen = true;
-                        mx = you.x_pos + cx - 17;
-                        my = you.y_pos + cy - 9;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
                         mid = mgrd[mx][my];
 
                         if (mid == NON_MONSTER)
@@ -535,22 +609,23 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         redraw_screen();
                         mesclr( true );
                         // describe the cell again.
-                        describe_cell(you.x_pos + cx - 17, you.y_pos + cy - 9);
+                        describe_cell(view2gridX(cx), view2gridY(cy));
                         break;
 
                     case '\r':
                     case '\n':
                     case '.':
                     case '5':
+                    case 'X':
                         // If we're in look-around mode, and the cursor is on
                         // the character and there's a valid travel target 
                         // within the viewport, jump to that target.
-                        if (justLooking && cx == 17 && cy == 9)
+                        if (justLooking && cx == VIEW_CX && cy == VIEW_CY)
                         {
                             if (you.travel_x > 0 && you.travel_y > 0)
                             {
-                                int nx = you.travel_x - you.x_pos + 17;
-                                int ny = you.travel_y - you.y_pos + 9;
+                                int nx = grid2viewX(you.travel_x);
+                                int ny = grid2viewY(you.travel_y);
                                 if (in_viewport_bounds(nx, ny))
                                 {
                                     newcx = nx;
@@ -562,7 +637,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         else
                         {
                             dirChosen = true;
-                            dir = 4;
+                            dir = keyin == 'X'? -1 : 4;
                         }
                         break;
 
@@ -584,12 +659,12 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
             break;
 
         // check for SELECTION
-        if (dirChosen && dir == 4)
+        if (dirChosen && (dir == 4 || dir == -1))
         {
             // [dshaligram] We no longer vet the square coordinates if
             // we're justLooking. By not vetting the coordinates, we make 'x'
             // look_around() nicer for travel purposes.
-            if (!justLooking)
+            if (!justLooking || !in_bounds(view2gridX(cx), view2gridY(cy)))
             {
                 // RULE: cannot target what you cannot see
                 if (!in_vlos(cx, cy))
@@ -602,16 +677,17 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
             moves.isValid = true;
             moves.isTarget = true;
-            moves.tx = you.x_pos + cx - 17;
-            moves.ty = you.y_pos + cy - 9;
+            moves.isEndpoint = (dir == -1);
+            moves.tx = you.x_pos + cx - VIEW_CX;
+            moves.ty = you.y_pos + cy - VIEW_CY;
 
             if (moves.tx == you.x_pos && moves.ty == you.y_pos)
                 moves.isMe = true;
             else
             {
                 // try to set you.previous target
-                mx = you.x_pos + cx - 17;
-                my = you.y_pos + cy - 9;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
                 mid = mgrd[mx][my];
 
                 if (mid == NON_MONSTER)
@@ -633,10 +709,10 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         }
 
         // bounds check for newcx, newcy
-        if (newcx < 1)  newcx = 1;
-        if (newcx > 33) newcx = 33;
-        if (newcy < 1)  newcy = 1;
-        if (newcy > 17) newcy = 17;
+        if (newcx < VIEW_SX) newcx = VIEW_SX;
+        if (newcx > VIEW_EX) newcx = VIEW_EX;
+        if (newcy < VIEW_SY) newcy = VIEW_SY;
+        if (newcy > VIEW_EY) newcy = VIEW_EY;
 
         // no-op if the cursor doesn't move.
         if (newcx == cx && newcy == cy)
@@ -646,14 +722,19 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         cx = newcx;
         cy = newcy;
         mesclr( true );
+
+        const int gridX = view2gridX(cx),
+                  gridY = view2gridY(cy);
+
         if (!in_vlos(cx, cy))
         {
             mpr("You can't see that place.");
-            describe_oos_square(you.x_pos + cx - 17, 
-                                you.y_pos + cy - 9);
+            describe_oos_square(gridX, gridY);
             continue;
         }
-        describe_cell(you.x_pos + cx - 17, you.y_pos + cy - 9);
+        
+        if (in_bounds(gridX, gridY))
+            describe_cell(gridX, gridY);
     } // end WHILE
 
     mesclr( true );
@@ -661,18 +742,19 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
 bool in_vlos(int x, int y)
 {
-    return in_los_bounds(x, y) && (env.show[x - 8][y] || (x == 17 && y == 9));
+    return in_los_bounds(x, y) 
+            && (env.show[x - LOS_SX][y] || (x == VIEW_CX && y == VIEW_CY));
 }
 
 bool in_los(int x, int y)
 {
-    const int tx = x + 9 - you.x_pos,
-              ty = y + 9 - you.y_pos;
+    const int tx = x + VIEW_CX - you.x_pos,
+              ty = y + VIEW_CY - you.y_pos;
     
-    if (!in_los_bounds(tx + 8, ty))
+    if (!in_los_bounds(tx, ty))
         return (false);
 
-    return (x == you.x_pos && y == you.y_pos) || env.show[tx][ty];
+    return (x == you.x_pos && y == you.y_pos) || env.show[tx - LOS_SX][ty];
 }
 
 static bool find_monster( int x, int y, int mode )
@@ -688,7 +770,7 @@ static bool find_monster( int x, int y, int mode )
                 && !mons_friendly( &menv[targ_mon] )
                 && 
                 (Options.target_zero_exp || 
-                    !mons_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) )));
+                    !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN )) )));
 }
 
 static bool find_feature( int x, int y, int mode )
@@ -760,12 +842,12 @@ static int next_los(int dir, int los, bool wrap)
 
 bool in_viewport_bounds(int x, int y)
 {
-    return (x >= 1 && x <= 33 && y >= 1 && y <= 17);
+    return (x >= VIEW_SX && x <= VIEW_EX && y >= VIEW_SY && y <= VIEW_EY);
 }
 
 bool in_los_bounds(int x, int y)
 {
-    return !(x > 25 || x < 8 || y > 17 || y < 1);
+    return !(x > LOS_EX || x < LOS_SX || y > LOS_EY || y < LOS_SY);
 }
 
 //---------------------------------------------------------------
@@ -805,7 +887,8 @@ static char find_square( unsigned char xps, unsigned char yps,
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            bool vis = (env.show[xps - 8][yps] || (xps == 17 && yps == 9));
+            bool vis = (env.show[xps - 8][yps] 
+                            || (xps == VIEW_CX && yps == VIEW_CY));
             
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
@@ -828,9 +911,9 @@ static char find_square( unsigned char xps, unsigned char yps,
     onlyVis     = (los & LOS_VISIBLE);
     onlyHidden  = (los & LOS_HIDDEN);
 
-    const int minx = 1,  maxx = 33,
-              miny = -7, maxy = 25,
-              ctrx = 17, ctry = 9;
+    const int minx = VIEW_SX, maxx = VIEW_EX,
+              miny = VIEW_SY - VIEW_Y_DIFF, maxy = VIEW_EY + VIEW_Y_DIFF,
+              ctrx = VIEW_CX, ctry = VIEW_CY;
 
     while (temp_xps >= minx - 1 && temp_xps <= maxx
                 && temp_yps <= maxy && temp_yps >= miny - 1)
@@ -963,7 +1046,7 @@ static char find_square( unsigned char xps, unsigned char yps,
         //    continue;
 
         if (temp_xps < minx - 1 || temp_xps > maxx
-                || temp_yps < 1 || temp_yps > 17)
+                || temp_yps < VIEW_SY || temp_yps > VIEW_EY)
             continue;
 
         if (targ_x < 1 || targ_x >= GXM || targ_y < 1 || targ_y >= GYM)
@@ -986,61 +1069,12 @@ static char find_square( unsigned char xps, unsigned char yps,
                     next_los(direction, los, wrap)));
 }
 
-static bool is_shopstair(int x, int y)
-{
-    return (is_stair(grd[x][y]) || grd[x][y] == DNGN_ENTER_SHOP);
-}
-
-extern unsigned char (*mapch2) (unsigned char);
-static bool is_full_mapped(int x, int y)
-{
-    unsigned grid = grd[x][y];
-    int envch = env.map[x - 1][y - 1];
-    return (envch && envch == mapch2(grid));
-}
-
-static int surround_nonshopstair_count(int x, int y)
-{
-    int count = 0;
-    for (int ix = -1; ix < 2; ++ix)
-    {
-        for (int iy = -1; iy < 2; ++iy)
-        {
-            int nx = x + ix, ny = y + iy;
-            if (nx <= 0 || nx >= GXM || ny <= 0 || ny >= GYM)
-                continue;
-            if (is_full_mapped(nx, ny) && !is_shopstair(nx, ny))
-                count++;
-        }
-    }
-    return (count);
-}
-
-// For want of a better name...
-static bool clear_mapped(int x, int y)
-{
-    if (!is_full_mapped(x, y))
-        return (false);
-
-    if (is_shopstair(x, y))
-        return (surround_nonshopstair_count(x, y) > 0);
-
-    return (true);
-}
-
 static void describe_feature(int mx, int my, bool oos)
 {
-    if (oos && !clear_mapped(mx, my))
+    if (oos && !is_terrain_seen(mx, my))
         return;
 
-    unsigned oldfeat = grd[mx][my];
-    if (oos && env.map[mx - 1][my - 1] == mapch2(DNGN_SECRET_DOOR))
-        grd[mx][my] = DNGN_ROCK_WALL;
-
     std::string desc = feature_description(mx, my);
-
-    grd[mx][my] = oldfeat;
-
     if (desc.length())
     {
         if (oos)
@@ -1049,10 +1083,29 @@ static void describe_feature(int mx, int my, bool oos)
     }
 }
 
-std::string feature_description(int mx, int my)
+// Returns a vector of features matching the given pattern.
+std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)
 {
-    int   trf;            // used for trap type??
-    switch (grd[mx][my])
+    std::vector<dungeon_feature_type> features;
+
+    if (pattern.valid())
+    {
+        for (int i = 0; i < NUM_FEATURES; ++i)
+        {
+            std::string fdesc = feature_description(i);
+            if (fdesc.empty())
+                continue;
+
+            if (pattern.matches( fdesc ))
+                features.push_back( dungeon_feature_type(i) );
+        }
+    }
+    return (features);
+}
+
+std::string feature_description(int grid)
+{
+    switch (grid)
     {
     case DNGN_STONE_WALL:
         return ("A stone wall.");
@@ -1105,57 +1158,14 @@ std::string feature_description(int mx, int my)
         return ("A stone staircase leading up.");
     case DNGN_ENTER_HELL:
         return ("A gateway to hell.");
-    case DNGN_BRANCH_STAIRS:
-        return ("A staircase to a branch level.");
     case DNGN_TRAP_MECHANICAL:
+        return ("A mechanical trap.");
     case DNGN_TRAP_MAGICAL:
+        return ("A magical trap.");
     case DNGN_TRAP_III:
-        for (trf = 0; trf < MAX_TRAPS; trf++)
-        {
-            if (env.trap[trf].x == mx
-                && env.trap[trf].y == my)
-            {
-                break;
-            }
-
-            if (trf == MAX_TRAPS - 1)
-            {
-                mpr("Error - couldn't find that trap.");
-                error_message_to_player();
-                break;
-            }
-        }
-
-        switch (env.trap[trf].type)
-        {
-        case TRAP_DART:
-            return ("A dart trap.");
-        case TRAP_ARROW:
-            return ("An arrow trap.");
-        case TRAP_SPEAR:
-            return ("A spear trap.");
-        case TRAP_AXE:
-            return ("An axe trap.");
-        case TRAP_TELEPORT:
-            return ("A teleportation trap.");
-        case TRAP_AMNESIA:
-            return ("An amnesia trap.");
-        case TRAP_BLADE:
-            return ("A blade trap.");
-        case TRAP_BOLT:
-            return ("A bolt trap.");
-        case TRAP_ZOT:
-            return ("A Zot trap.");
-        case TRAP_NEEDLE:
-            return ("A needle trap.");
-        default:
-            mpr("An undefined trap. Huh?");
-            error_message_to_player();
-            break;
-        }
-        break;
+        return ("A trap.");
     case DNGN_ENTER_SHOP:
-        return (shop_name(mx, my));
+        return ("A shop.");
     case DNGN_ENTER_LABYRINTH:
         return ("A labyrinth entrance.");
     case DNGN_ENTER_DIS:
@@ -1258,8 +1268,72 @@ std::string feature_description(int mx, int my)
     case DNGN_DRY_FOUNTAIN_VIII:
     case DNGN_PERMADRY_FOUNTAIN:
         return ("A dry fountain.");
+    default:
+        return ("");
     }
-    return ("");
+}
+
+std::string feature_description(int mx, int my)
+{
+    int   trf;            // used for trap type??
+    
+    const int grid = grd[mx][my];
+    std::string desc = feature_description(grid);
+    switch (grid)
+    {
+    case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_III:
+        for (trf = 0; trf < MAX_TRAPS; trf++)
+        {
+            if (env.trap[trf].x == mx
+                && env.trap[trf].y == my)
+            {
+                break;
+            }
+
+            if (trf == MAX_TRAPS - 1)
+            {
+                mpr("Error - couldn't find that trap.");
+                error_message_to_player();
+                break;
+            }
+        }
+
+        switch (env.trap[trf].type)
+        {
+        case TRAP_DART:
+            return ("A dart trap.");
+        case TRAP_ARROW:
+            return ("An arrow trap.");
+        case TRAP_SPEAR:
+            return ("A spear trap.");
+        case TRAP_AXE:
+            return ("An axe trap.");
+        case TRAP_TELEPORT:
+            return ("A teleportation trap.");
+        case TRAP_AMNESIA:
+            return ("An amnesia trap.");
+        case TRAP_BLADE:
+            return ("A blade trap.");
+        case TRAP_BOLT:
+            return ("A bolt trap.");
+        case TRAP_ZOT:
+            return ("A Zot trap.");
+        case TRAP_NEEDLE:
+            return ("A needle trap.");
+        default:
+            mpr("An undefined trap. Huh?");
+            error_message_to_player();
+            break;
+        }
+        break;
+    case DNGN_ENTER_SHOP:
+        return (shop_name(mx, my));
+    default:
+        break;
+    }
+    return (desc);
 }
 
 static void describe_cell(int mx, int my)
@@ -1343,7 +1417,8 @@ static void describe_cell(int mx, int my)
 
         if (mons_is_mimic( menv[i].type ))
             mimic_item = true;
-        else if (!mons_flag(menv[i].type, M_NO_EXP_GAIN))
+        else if (!mons_class_flag(menv[i].type, M_NO_EXP_GAIN)
+                 && !mons_is_statue(menv[i].type))
         {
             if (menv[i].behaviour == BEH_SLEEP)
             {
@@ -1355,7 +1430,7 @@ static void describe_cell(int mx, int my)
             else if (menv[i].behaviour == BEH_FLEE)
             {
                 strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-                strcat(info, " is fleeing in terror.");
+                strcat(info, " is retreating.");
                 mpr(info);
             }
             // hostile with target != you
@@ -1422,7 +1497,7 @@ static void describe_cell(int mx, int my)
                 strcat(info, " is covered in liquid flames.");
                 break;
             default:
-                info[0] = '\0';
+                info[0] = 0;
                 break;
             } // end switch
             if (info[0])

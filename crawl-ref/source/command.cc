@@ -3,6 +3,8 @@
  *  Summary:    Misc commands.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <4>     10/12/99        BCR             BUILD_DATE is now used in version()
@@ -25,17 +27,23 @@
 #include "itemname.h"
 #include "item_use.h"
 #include "items.h"
+#include "libutil.h"
 #include "menu.h"
 #include "ouch.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "version.h"
-#include "wpn-misc.h"
+#include "view.h"
 
 static void adjust_item(void);
 static void adjust_spells(void);
 static void adjust_ability(void);
+static void list_wizard_commands();
+#ifdef OBSOLETE_COMMAND_HELP
+static const char *command_string( int i );
+#endif
+static const char *wizard_string( int i );
 
 void quit_game(void)
 {
@@ -64,7 +72,7 @@ static const char *features[] = {
 
 void version(void)
 {
-    mpr( "This is Dungeon Crawl " VERSION " (Last build " BUILD_DATE ")." );
+    mpr( "This is " CRAWL " " VERSION " (" BUILD_DATE ")." );
     
     std::string feats = "Features: ";
     for (int i = 1, size = sizeof features / sizeof *features; i < size; ++i)
@@ -140,7 +148,7 @@ static void adjust_item(void)
         return;
     }
 
-    from_slot = prompt_invent_item( "Adjust which item?", -1 ); 
+    from_slot = prompt_invent_item( "Adjust which item?", MT_INVSELECT, -1 );
     if (from_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -150,7 +158,12 @@ static void adjust_item(void)
     in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
     mpr( str_pass );
 
-    to_slot = prompt_invent_item( "Adjust to which letter?", -1, false, false );
+    to_slot = prompt_invent_item(
+                    "Adjust to which letter?", 
+                    MT_INVSELECT, 
+                    -1, 
+                    false, 
+                    false );
     if (to_slot ==  PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -551,3 +564,492 @@ void list_weapons(void)
 
     mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()
+
+static void cmdhelp_showline(int index, const MenuEntry *me)
+{
+    static_cast<formatted_string *>(me->data)->display();
+}
+
+static int cmdhelp_keyfilter(int keyin)
+{
+    switch (keyin)
+    {
+    case CK_DOWN:
+    case '+':
+    case '=':
+        return ('>');
+    case CK_UP:
+    case '-':
+    case '_':
+        return ('<');
+    case 'x':
+        return (CK_ESCAPE);
+    default:
+        return (keyin);
+    }
+}
+
+static bool cmdhelp_textfilter(const std::string &tag)
+{
+#ifdef STASH_TRACKING
+    if (tag == "s")
+        return (true);
+#endif
+#ifdef WIZARD
+    if (tag == "wiz")
+        return (true);
+#endif
+    return (false);
+}
+
+static const char *level_map_help = 
+        "<h>Level Map ('<w>X</w><h>' in main screen):\n"
+        "<w>Esc</w> : leave level map (also Space)\n"
+        "<w>Dir.</w>: move cursor\n"
+        "<w>/ Dir.</w>, <w>Shift-Dir.</w>: move cursor far\n"
+        "<w>+</w>/<w>-</w> : scroll level map up/down\n"
+        "<w>.</w>   : travel (also Enter and , and ;)\n"
+        "       (moves cursor to last travel\n"
+        "       destination if still on @)\n"
+        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+        "<w>^</w>   : cycle through traps\n"
+        "<w>Tab</w> : cycle through shops and portals\n"
+        "<w>X</w>   : cycle through travel eXclusions\n"
+        "<w>W</w>   : cycle through waypoints\n"
+        "<w>I</w>   : cycle through stashes\n"
+        "<w>Ctrl-X</w> : set travel eXclusion\n"
+        "<w>Ctrl-E</w> : Erase all travel exclusions\n"
+        "<w>Ctrl-W</w> : set Waypoint\n"
+        "<w>Ctrl-C</w> : Clear level and main maps\n";
+
+static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
+{
+    Menu cmd_help;
+    
+    // Set flags, and don't use easy exit.
+    cmd_help.set_flags(
+            MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP,
+            false);
+
+    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
+    // for page up at start of listing.
+    cmd_help.set_more(
+            formatted_string::parse_string(
+                "<cyan>[ + : Page down.   - : Page up."
+                "                         Esc/x exits.]"));
+    cmd_help.f_drawitem  = cmdhelp_showline;
+    cmd_help.f_keyfilter = cmdhelp_keyfilter;
+
+    std::vector<MenuEntry*> entries;
+
+    for (unsigned i = 0, size = lines.size(); i < size; ++i)
+    {
+        MenuEntry *me = new MenuEntry;
+        me->data = new formatted_string(lines[i]);
+        entries.push_back(me);
+
+        cmd_help.add_entry(me);
+    }
+
+    cmd_help.show();
+
+    for (unsigned i = 0, size = entries.size(); i < size; ++i)
+        delete static_cast<formatted_string*>( entries[i]->data );
+}
+
+void show_levelmap_help()
+{
+    std::vector<std::string> lines =
+        split_string("\n", level_map_help, false, true);
+    std::vector<formatted_string> formatted_lines;
+    for (int i = 0, size = lines.size(); i < size; ++i)
+        formatted_lines.push_back(
+                formatted_string::parse_string(
+                    lines[i], true, cmdhelp_textfilter));
+    show_keyhelp_menu(formatted_lines);
+}
+
+void list_commands(bool wizard)
+{
+    if (wizard)
+    {
+        list_wizard_commands();
+        return;
+    }
+        
+    // 2 columns, split at column 40.
+    column_composer cols(2, 41);
+    // Page size is number of lines - one line for --more-- prompt.
+    cols.set_pagesize(get_number_of_lines() - 1);
+
+    cols.add_formatted(
+            0,
+            "<h>Movement:\n"
+            "To move in a direction or to attack, use\n"
+            "the numpad (try Numlock both off and on)\n"
+            "or vi keys:\n"
+            "              <w>1 2 3      y k u\n"
+            "               \\|/        \\|/\n"
+            "              <w>4</w>-<w>5</w>-<w>6</w>"
+                                "      <w>h</w>-<w>.</w>-<w>l</w>\n"
+            "               /|\\        /|\\\n"
+            "              <w>7 8 9      b j n\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "<h>Rest/Search:\n"
+            "<w>5</w> (numpad), <w>.</w>, <w>s</w>, <w>Del</w>: "
+                                        "rest one turn and\n"
+            "                 search adjacent squares.\n"
+            "<w>Shift-5</w> (numpad), <w>5</w>: rest until HP/MP are\n"
+            "full or something found or 100 turns over\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "<h>Dungeon Interaction and Information:\n"
+            "<w>o</w>/<w>c</w> : Open/Close door\n"
+            "<w><<</w>/<w>></w> : use staircase (<w><<</w> also enters shop)\n"
+            "<w>;</w>   : examine occupied tile\n"
+            "<w>x</w>   : eXamine surroundings/targets\n"
+            "<w>X</w>   : eXamine level map\n"
+            "<w>O</w>   : show dungeon Overview\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "<h>Item Interaction (inventory):\n"
+            "<w>v</w> : View item description\n"
+            "<w>{</w> : inscribe item\n"
+            "<w>t</w> : Throw/shoot an item\n"
+            "<w>f</w> : Fire first available missile\n"
+            "<w>q</w> : Quaff a potion\n"
+            "<w>e</w> : Eat food (but tries floor first)\n"
+            "<w>z</w> : Zap a wand\n"
+            "<w>r</w> : Read a scroll or book\n"
+            "<w>M</w> : Memorise a spell from a book\n"
+            "<w>w</w> : Wield an item ( - for none)\n"
+            "<w>'</w> : wield item a, or switch to b\n"
+            "<w>E</w> : Evoke power of wielded item\n"
+            "<w>W</w> : Wear armour\n"
+            "<w>T</w> : Take off armour\n"
+            "<w>P</w> : Put on jewellery\n"
+            "<w>R</w> : Remove jewellery\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "<h>Other Gameplay Actions:\n"
+            "<w>a</w> : use special Ability\n"
+            "<w>p</w> : Pray\n"
+            "<w>Z</w> : cast a spell\n"
+            "<w>!</w> : shout or command allies\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            "<h>In-game Toggles:\n"
+            "<w>Ctrl-A</w> : toggle Autopickup\n"
+            "<w>Ctrl-V</w> : toggle auto-prayer\n"
+            "<w>Ctrl-T</w> : toggle spell fizzle check\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
+            level_map_help,
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<h>Extended Movement:\n"
+            "<w>Ctrl-G</w> : interlevel travel\n"
+            "<w>Ctrl-O</w> : auto-explore\n"
+            "<w>Ctrl-W</w> : set Waypoint\n"
+            "<w>/ Dir., Shift-Dir.</w>: long walk\n"
+            "<w>* Dir., Ctrl-Dir.</w> : untrap, attack\n"
+            "            without move, open door\n",
+            true, true, cmdhelp_textfilter, 45);
+
+
+    cols.add_formatted(
+            1,
+            "<h>Game Saving and Quitting:\n"
+            "<w>S</w> : Save game and exit \n"
+            "<w>Q</w> : Quit without saving\n"
+            "<w>Ctrl-X</w> : save game without query\n",
+            true, true, cmdhelp_textfilter, 45);
+
+    cols.add_formatted(
+            1,
+            "<h>Player Character Information:\n"
+            "<w>@</w> : display character status\n"
+            "<w>[</w> : display worn armour\n"
+            "<w>\"</w> : display worn jewellery\n"
+            "<w>C</w> : display experience info\n"
+            "<w>^</w> : show religion screen\n"
+            "<w>A</w> : show Abilities/mutations\n"
+            "<w>\\</w> : show item knowledge\n"
+            "<w>m</w> : show skill screen\n"
+            "<w>i</w> : show Inventory list\n"
+            "<w>%</w> : show resistances\n",
+            true, true, cmdhelp_textfilter, 45);
+
+    cols.add_formatted(
+            1,
+            "<h>Item Interaction (floor):\n"
+            "<w>,</w> : pick up items (also <w>g</w>) \n"
+            "    (press twice for pick up menu) \n"
+            "<w>d</w> : Drop an item\n"
+            "<w>d#</w>: Drop exact number of items \n"
+            "<w>D</w> : Dissect a corpse \n"
+            "<w>e</w> : Eat food from floor \n"
+            "<w>z</w> : Zap a wand \n"
+            "<w>r</w> : Read a scroll or book \n"
+            "<w>M</w> : Memorise a spell from a book \n"
+            "<w>w</w> : Wield an item ( - for none) \n"
+            "<w>'</w> : wield item a, or switch to b \n"
+            "<w>E</w> : Evoke power of wielded item\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<h>Non-Gameplay Commands / Info\n"
+            "<w>V</w> : display Version information\n"
+            "<w>Ctrl-P</w> : show Previous messages\n"
+            "<w>Ctrl-R</w> : Redraw screen\n"
+            "<w>Ctrl-C</w> : Clear main and level maps\n"
+            "<w>#</w> : dump character to file\n"
+            "<w>:</w> : add note to dump file\n"
+            "<w>`</w> : add macro\n"
+            "<w>~</w> : save macros\n"
+            "<w>=</w> : reassign inventory/spell letters\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<?s><h>Stash Management Commands:\n"
+            "<?s><w>Ctrl-S</w> : mark Stash\n"
+            "<?s><w>Ctrl-E</w> : Erase stash (ignore square)\n"
+            "<?s><w>Ctrl-F</w> : Find (in stashes and shops)\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<h>Targeting, Surroundings ('<w>x</w><h>' in main):\n"
+            " <w>x</w>  : stop targeting (also <w>Esc</w> and <w>Space</w>)\n"
+            " <w>+</w>  : cycle monsters forward\n"
+            " <w>-</w>  : cycle monsters backward\n"
+            " <w>*</w>  : cycle objects forward (also ')\n"
+            " <w>/</w>  : cycle objects backward (also ;)\n"
+            " <w>.</w>  : choose target/move (also Enter)\n"
+            " <w>?</w>  : describe monster under cursor\n"
+            "<w><<</w>/<w>></w> : cycle through up/down stairs\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<h>Shortcuts in Lists (like multidrop):\n"
+            "<w>(</w>/<w>)</w> : selects all missiles/hand weapons\n"
+            "<w>%</w>/<w>&</w> : selects all food/carrion\n"
+            "<w>+</w>/<w>?</w> : selects all books/scrolls\n"
+            "<w>/</w>/<w>\\</w> : selects all wands/staves\n"
+            "<w>!</w>/<w>\"</w> : selects all potions/jewellry\n"
+            "<w>[</w>/<w>}</w> : selects all armour/misc. items\n"
+            "<w>,</w>/<w>-</w> : global select/deselect\n"
+            "<w>*</w>   : invert selection\n",
+            true, true, cmdhelp_textfilter);
+
+    show_keyhelp_menu(cols.formatted_lines());
+}
+
+static void list_wizard_commands()
+{
+    const char *line;
+    int j = 0;
+
+#ifdef DOS_TERM
+    char buffer[4800];
+
+    window(1, 1, 80, 25);
+    gettext(1, 1, 80, 25, buffer);
+#endif
+
+    clrscr();
+
+    // BCR - Set to screen length - 1 to display the "more" string
+    int moreLength = (get_number_of_lines() - 1) * 2;
+
+    for (int i = 0; i < 500; i++)
+    {
+        line = wizard_string( i );
+
+        if (strlen( line ) != 0)
+        {
+            // BCR - If we've reached the end of the screen, clear
+            if (j == moreLength)
+            {
+                gotoxy(2, j / 2 + 1);
+                cprintf("More...");
+                getch();
+                clrscr();
+                j = 0;
+            }
+
+            gotoxy( ((j % 2) ? 40 : 2), ((j / 2) + 1) );
+            cprintf( "%s", line );
+
+            j++;
+        }
+    }
+
+    getch();
+
+#ifdef DOS_TERM
+    puttext(1, 1, 80, 25, buffer);
+#endif
+
+    return;
+}                               // end list_commands()
+
+static const char *wizard_string( int i )
+{
+    UNUSED( i );
+
+#ifdef WIZARD
+    return((i ==  10) ? "a    : acquirement"                  :
+           (i ==  13) ? "A    : set all skills to level"      :
+           (i ==  15) ? "b    : controlled blink"             :
+           (i ==  20) ? "B    : banish yourself to the Abyss" :
+           (i ==  30) ? "g    : add a skill"                  :
+           (i ==  35) ? "G    : remove all monsters"          :
+           (i ==  40) ? "h/H  : heal yourself (super-Heal)"   :
+           (i ==  50) ? "i/I  : identify/unidentify inventory":
+           (i ==  70) ? "l    : make entrance to labyrinth"   :
+           (i ==  80) ? "m/M  : create monster by number/name":
+           (i ==  90) ? "o/%  : create an object"             :
+           (i == 100) ? "p    : make entrance to pandemonium" :
+           (i == 110) ? "x    : gain an experience level"     :
+           (i == 115) ? "r    : change character's species"   :
+           (i == 120) ? "s    : gain 20000 skill points"      :
+           (i == 130) ? "S    : set skill to level"           :
+           (i == 140) ? "t    : tweak object properties"      :
+           (i == 150) ? "X    : Receive a gift from Xom"      :
+           (i == 160) ? "z/Z  : cast any spell by number/name":
+           (i == 200) ? "$    : get 1000 gold"                :
+           (i == 210) ? "</>  : create up/down staircase"     :
+           (i == 220) ? "u/d  : shift up/down one level"      :
+           (i == 230) ? "~/\"  : goto a level"                :
+           (i == 240) ? "(    : create a feature"             :
+           (i == 250) ? "]    : get a mutation"               :
+           (i == 260) ? "[    : get a demonspawn mutation"    :
+           (i == 270) ? ":    : find branch"                  :
+           (i == 280) ? "{    : magic mapping"                :
+           (i == 290) ? "^    : gain piety"                   :
+           (i == 300) ? "_    : gain religion"                :
+           (i == 310) ? "\'    : list items"                  :
+           (i == 320) ? "?    : list wizard commands"         :
+           (i == 330) ? "|    : acquire all unrand artefacts" :
+           (i == 340) ? "+    : turn item into random artefact" :
+           (i == 350) ? "=    : sum skill points"
+                      : "");
+
+#else
+    return ("");
+#endif
+}                               // end wizard_string()
+
+#ifdef OBSOLETE_COMMAND_HELP
+static const char *command_string( int i )
+{
+    /*
+     * BCR - Command printing, case statement
+     * Note: The numbers in this case indicate the order in which the
+     *       commands will be printed out.  Make sure none of these
+     *       numbers is greater than 500, because that is the limit.
+     *
+     * Arranged alpha lower, alpha upper, punctuation, ctrl.
+     *
+     */
+
+    return((i ==  10) ? "a    : use special ability"              :
+           (i ==  20) ? "d(#) : drop (exact quantity of) items"   :
+           (i ==  30) ? "e    : eat food"                         :
+           (i ==  40) ? "f    : fire first available missile"     :
+           (i ==  50) ? "i    : inventory listing"                :
+           (i ==  55) ? "m    : check skills"                     :
+           (i ==  60) ? "o/c  : open / close a door"              :
+           (i ==  65) ? "p    : pray"                             :
+           (i ==  70) ? "q    : quaff a potion"                   :
+           (i ==  80) ? "r    : read a scroll or book"            :
+           (i ==  90) ? "s    : search adjacent tiles"            :
+           (i == 100) ? "t    : throw/shoot an item"              :
+           (i == 110) ? "v    : view item description"            :
+           (i == 120) ? "w    : wield an item"                    :
+           (i == 130) ? "x    : examine visible surroundings"     :
+           (i == 135) ? "z    : zap a wand"                       :
+           (i == 140) ? "A    : list abilities/mutations"         :
+           (i == 141) ? "C    : check experience"                 :
+           (i == 142) ? "D    : dissect a corpse"                 :
+           (i == 145) ? "E    : evoke power of wielded item"      :
+           (i == 150) ? "M    : memorise a spell"                 :
+           (i == 155) ? "O    : overview of the dungeon"          :
+           (i == 160) ? "P/R  : put on / remove jewellery"        :
+           (i == 165) ? "Q    : quit without saving"              :
+           (i == 168) ? "S    : save game and exit"               :
+           (i == 179) ? "V    : version information"              :
+           (i == 200) ? "W/T  : wear / take off armour"           :
+           (i == 210) ? "X    : examine level map"                :
+           (i == 220) ? "Z    : cast a spell"                     :
+           (i == 240) ? ",/g  : pick up items"                    :
+           (i == 242) ? "./del: rest one turn"                    :
+           (i == 250) ? "</>  : ascend / descend a staircase"     :
+           (i == 270) ? ";    : examine occupied tile"            :
+           (i == 280) ? "\\    : check item knowledge"            :
+#ifdef WIZARD
+           (i == 290) ? "&    : invoke your Wizardly powers"      :
+#endif
+           (i == 300) ? "+/-  : scroll up/down [level map only]"  :
+           (i == 310) ? "!    : shout or command allies"          :
+           (i == 325) ? "^    : describe religion"                :
+           (i == 337) ? "@    : status"                           :
+           (i == 340) ? "#    : dump character to file"           :
+           (i == 350) ? "=    : reassign inventory/spell letters" :
+           (i == 360) ? "\'    : wield item a, or switch to b"    :
+	   (i == 370) ? ":    : make a note"                      :
+#ifdef USE_MACROS
+           (i == 380) ? "`    : add macro"                        :
+           (i == 390) ? "~    : save macros"                      :
+#endif
+           (i == 400) ? "]    : display worn armour"              :
+           (i == 410) ? "\"    : display worn jewellery"          :
+	   (i == 415) ? "{    : inscribe an item"                 :
+           (i == 420) ? "Ctrl-P : see old messages"               :
+#ifdef PLAIN_TERM
+           (i == 430) ? "Ctrl-R : Redraw screen"                  :
+#endif
+           (i == 440) ? "Ctrl-A : toggle autopickup"              :
+	   (i == 445) ? "Ctrl-M : toggle autoprayer"              :
+	   (i == 447) ? "Ctrl-T : toggle fizzle"                  :
+           (i == 450) ? "Ctrl-X : Save game without query"        :
+
+#ifdef ALLOW_DESTROY_ITEM_COMMAND
+           (i == 451) ? "Ctrl-D : Destroy inventory item"         :
+#endif
+           (i == 453) ? "Ctrl-G : interlevel travel"              :
+           (i == 455) ? "Ctrl-O : explore"                        :
+
+#ifdef STASH_TRACKING
+           (i == 456) ? "Ctrl-S : mark stash"                     :
+           (i == 457) ? "Ctrl-E : forget stash"                   :
+           (i == 458) ? "Ctrl-F : search stashes"                 :
+#endif
+
+           (i == 460) ? "Shift & DIR : long walk"                 :
+           (i == 465) ? "/ DIR : long walk"                       :
+           (i == 470) ? "Ctrl  & DIR : door; untrap; attack"      :
+           (i == 475) ? "* DIR : door; untrap; attack"            :
+           (i == 478) ? "Shift & 5 on keypad : rest 100 turns"
+                      : "");
+}                               // end command_string()
+#endif  // OBSOLETE_COMMAND_HELP

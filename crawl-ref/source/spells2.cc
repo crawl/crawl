@@ -29,8 +29,10 @@
 #include "beam.h"
 #include "cloud.h"
 #include "direct.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "monplace.h"
@@ -43,7 +45,6 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "view.h"
-#include "wpn-misc.h"
 
 int raise_corpse( int corps, int corx, int cory, int corps_beh,
                   int corps_hit, int actual );
@@ -73,7 +74,8 @@ unsigned char detect_traps( int pow )
                 traps_found++;
 
                 grd[ etx ][ ety ] = trap_category( env.trap[count_x].type );
-                env.map[etx - 1][ety - 1] = '^';
+                set_envmap_char(etx, ety, get_magicmap_char(grd[etx][ety]));
+                set_terrain_mapped(etx, ety);
             }
         }
     }
@@ -100,11 +102,8 @@ unsigned char detect_items( int pow )
 
             if (igrd[i][j] != NON_ITEM)
             {
-                unsigned short flags = env.map[i - 1][j - 1];
-                flags = !flags || (flags & ENVF_DETECTED)?
-                            ENVF_DETECTED
-                          : 0;
-                env.map[i - 1][j - 1] = '~' | ENVF_DETECT_ITEM | flags;
+                set_envmap_char(i, j, get_magicmap_char(DNGN_ITEM_DETECTED));
+                set_envmap_detected_item(i, j);
             }
         }
     }
@@ -112,13 +111,70 @@ unsigned char detect_items( int pow )
     return (items_found);
 }                               // end detect_items()
 
+static void fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "dc_fuzz: Power is %d", pow);
+#endif
+
+    if (pow < 1)
+        pow = 1;
+
+    *fuzz_radius = pow >= 50? 1 : 2;
+
+    // Fuzz chance starts off at 100% and declines to a low of 10% for obscenely
+    // powerful castings (pow caps around the 60 mark).
+    *fuzz_chance = 100 - 90 * (pow - 1) / 59;
+    if (*fuzz_chance < 10)
+        *fuzz_chance = 10;
+}
+
+static void mark_detected_creature(int gridx, int gridy, const monsters *mon,
+        int fuzz_chance, int fuzz_radius)
+{
+    if (fuzz_radius && fuzz_chance > random2(100))
+    {
+        const int fuzz_diam = 2 * fuzz_radius + 1;
+
+        int gx, gy;
+        bool found_good = false;
+        for (int itry = 0; itry < 5; ++itry)
+        {
+            gx = gridx + random2(fuzz_diam) - fuzz_radius;
+            gy = gridy + random2(fuzz_diam) - fuzz_radius;
+
+            if (map_bounds(gx, gy) && !grid_is_solid(grd[gx][gy]))
+            {
+                found_good = true;
+                break;
+            }
+        }
+
+        if (found_good)
+        {
+            gridx = gx;
+            gridy = gy;
+        }
+    }
+
+    set_envmap_char(gridx, gridy, mons_char(mon->type));
+    set_envmap_detected_mons(gridx, gridy);
+}
+
 unsigned char detect_creatures( int pow )
 {
+    int fuzz_radius = 0, fuzz_chance = 0;
+    fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
+
     if (pow > 50)
         pow = 50;
 
     unsigned char creatures_found = 0;
     const int     map_radius = 8 + random2(8) + pow;
+
+    // Clear the map so detect creatures is more useful and the detection
+    // fuzz is harder to analyse by averaging.
+    clear_map();
 
     mpr("You detect creatures!");
 
@@ -132,19 +188,16 @@ unsigned char detect_creatures( int pow )
             if (mgrd[i][j] != NON_MONSTER)
             {
                 struct monsters *mon = &menv[ mgrd[i][j] ];
+                mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
-                unsigned short flags = env.map[i - 1][j - 1];
-                flags = !flags || (flags & ENVF_DETECTED)?
-                            ENVF_DETECTED
-                          : 0;
-
-                env.map[i - 1][j - 1] = 
-                    mons_char( mon->type ) | ENVF_DETECT_MONS | flags;
+                // [ds] Should we be doing this here? DC doesn't give away
+                // full monster identity, after all. XXX
+                seen_monster(mon);
 
                 // Assuming that highly intelligent spellcasters can
-                // detect scyring. -- bwr
+                // detect scrying. -- bwr
                 if (mons_intel( mon->type ) == I_HIGH
-                    && mons_flag( mon->type, M_SPELLCASTER ))
+                    && mons_class_flag( mon->type, M_SPELLCASTER ))
                 {
                     behaviour_event( mon, ME_DISTURB, MHITYOU, 
                                      you.x_pos, you.y_pos );
@@ -321,7 +374,7 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
     return number_raised;
 }                               // end animate_dead()
 
-int animate_a_corpse( int axps,  int ayps, int corps_beh, int corps_hit,
+int animate_a_corpse( int axps, int ayps, int corps_beh, int corps_hit,
                       int class_allowed )
 {
     if (igrd[axps][ayps] == NON_ITEM)
@@ -495,7 +548,7 @@ bool brand_weapon(int which_brand, int power)
         return false;
 
     if (you.inv[wpn].base_type != OBJ_WEAPONS
-        || launches_things(you.inv[wpn].sub_type))
+        || is_range_weapon(you.inv[wpn]))
     {
         return false;
     }
@@ -511,8 +564,7 @@ bool brand_weapon(int which_brand, int power)
     in_name( wpn, DESC_CAP_YOUR, str_pass );
     strcpy( info, str_pass );
 
-    const int wpn_type = damage_type( you.inv[wpn].base_type,
-                                      you.inv[wpn].sub_type );
+    const int wpn_type = get_vorpal_type(you.inv[wpn]);
 
     switch (which_brand)        // use SPECIAL_WEAPONS here?
     {
@@ -561,9 +613,16 @@ bool brand_weapon(int which_brand, int power)
         strcat( info, coinflip() ? " oddly." : " strangely." );
         duration_affected = 5;
 
+        // [dshaligram] Clamping power to 2.
+        power = 2;
+
         // This brand is insanely powerful, this isn't even really
         // a start to balancing it, but it needs something. -- bwr
-        miscast_effect(SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect");
+        // [dshaligram] At level 7 it's costly enough to experiment
+        // with removing the miscast effect. We may need to revise the spell
+        // to level 8 or 9. XXX.
+        // miscast_effect(SPTYP_TRANSLOCATION, 
+        //                9, 90, 100, "a distortion effect");
         break;
 
     case SPWPN_DUMMY_CRUSHING:  //jmf: added for Maxwell's Silver Hammer
@@ -682,7 +741,7 @@ void turn_undead(int pow)
 
         // used to inflict random2(5) + (random2(pow) / 20) damage,
         // in addition {dlb}
-        if (mons_holiness(monster->type) == MH_UNDEAD)
+        if (mons_holiness(monster) == MH_UNDEAD)
         {
             if (check_mons_resist_magic( monster, pow ))
             {
@@ -707,11 +766,12 @@ void turn_undead(int pow)
     }                           // end "for tu"
 }                               // end turn_undead()
 
-void holy_word(int pow)
+void holy_word(int pow, bool silent)
 {
     struct monsters *monster;
 
-    mpr("You speak a Word of immense power!");
+    if (!silent)
+        mpr("You speak a Word of immense power!");
 
     // doubt this will ever happen, but it's here as a safety -- bwr
     if (pow > 300)
@@ -724,8 +784,8 @@ void holy_word(int pow)
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        if (mons_holiness(monster->type) == MH_UNDEAD
-                || mons_holiness(monster->type) == MH_DEMONIC)
+        if (mons_holiness(monster) == MH_UNDEAD
+                || mons_holiness(monster) == MH_DEMONIC)
         {
             simple_monster_message(monster, " convulses!");
 
@@ -827,7 +887,7 @@ void cast_refrigeration(int pow)
         // Note: this used to be 12!... and it was also applied even if 
         // the player didn't take damage from the cold, so we're being 
         // a lot nicer now.  -- bwr
-        scrolls_burn( 5, OBJ_POTIONS );
+        expose_player_to_element(BEAM_COLD, 5);
     }
 
     // Now do the monsters:
@@ -859,7 +919,7 @@ void cast_refrigeration(int pow)
                     print_wounds(monster);
 
                     //jmf: "slow snakes" finally available
-                    if (mons_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                    if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
                         mons_add_ench(monster, ENCH_SLOW);
                 }
             }
@@ -892,7 +952,7 @@ void drain_life(int pow)
         if (monster->type == -1)
             continue;
 
-        if (mons_holiness( monster->type ) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL)
             continue;
 
         if (mons_res_negative_energy( monster ))
@@ -939,7 +999,7 @@ int vampiric_drain(int pow)
 
   dirc:
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( vmove, DIR_DIR, TARG_ENEMY );
+    direction( vmove, DIR_DIR, TARG_ENEMY, true );
 
     if (!vmove.isValid)
     {
@@ -963,12 +1023,12 @@ int vampiric_drain(int pow)
 
     monster = &menv[mgr];
 
-    const int holy = mons_holiness(monster->type);
+    const int holy = mons_holiness(monster);
 
     if (holy == MH_UNDEAD || holy == MH_DEMONIC)
     {
         mpr("Aaaarggghhhhh!");
-        dec_hp(random2avg(39, 2) + 10, false);
+        dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return -1;
     }
 
@@ -1023,11 +1083,11 @@ char burn_freeze(int pow, char flavour)
     while (mgr == NON_MONSTER)
     {
         mpr("Which direction?", MSGCH_PROMPT);
-        direction( bmove, DIR_DIR, TARG_ENEMY );
+        direction( bmove, DIR_DIR, TARG_ENEMY, true );
 
         if (!bmove.isValid)
         {
-            canned_msg(MSG_SPELL_FIZZLES);
+            canned_msg(MSG_OK);
             return -1;
         }
 
@@ -1043,7 +1103,7 @@ char burn_freeze(int pow, char flavour)
         if (mgr == NON_MONSTER)
         {
             mpr("There isn't anything close enough!");
-            return -1;
+            return 0;
         }
     }
 
@@ -1082,7 +1142,7 @@ char burn_freeze(int pow, char flavour)
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
                     mons_add_ench(monster, ENCH_SLOW);
 
                 const int cold_res = mons_res_cold( monster );
@@ -1123,11 +1183,11 @@ int summon_elemental(int pow, int restricted_type,
     {
         mpr("Summon from material in which direction?", MSGCH_PROMPT);
 
-        direction( smove, DIR_DIR );
+        direction( smove, DIR_DIR, TARG_ANY, true );
 
         if (!smove.isValid)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            canned_msg(MSG_OK);
             return (-1);
         }
 
@@ -1183,7 +1243,7 @@ int summon_elemental(int pow, int restricted_type,
     if (type_summoned == MONS_PROGRAM_BUG)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (-1);
+        return (0);
     }
 
     // silly - ice for water? 15jan2000 {dlb}
@@ -1314,10 +1374,10 @@ void summon_scorpions(int pow)
     }
 }                               // end summon_scorpions()
 
-void summon_ice_beast_etc(int pow, int ibc)
+void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
     int numsc = ENCH_ABJ_II + (random2(pow) / 4);
-    int beha = BEH_FRIENDLY;
+    int beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
 
     if (numsc > ENCH_ABJ_VI)
         numsc = ENCH_ABJ_VI;

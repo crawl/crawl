@@ -3,6 +3,8 @@
  *  Summary:    Misc function related to player transformations.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <2>  5/26/99  JDJ  transform() and untransform() set you.wield_change so
@@ -26,8 +28,6 @@
 #include "skills2.h"
 #include "stuff.h"
 
-extern unsigned char your_sign; // defined in view.cc
-extern unsigned char your_colour;       // defined in view.cc
 void drop_everything(void);
 void extra_hp(int amount_extra);
 
@@ -88,6 +88,26 @@ static bool check_for_cursed_equipment( FixedVector < char, 8 > &remove_stuff )
 
     return (false);
 }                               // end check_for_cursed_equipment()
+
+// FIXME: Switch to 4.1 transforms handling.
+size_type transform_size(int)
+{
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
+    switch (transform)
+    {
+    case TRAN_SPIDER:
+        return SIZE_TINY;
+    case TRAN_ICE_BEAST:
+        return SIZE_LARGE;
+    case TRAN_DRAGON:
+    case TRAN_SERPENT_OF_HELL:
+        return SIZE_HUGE;
+    case TRAN_AIR:
+        return SIZE_MEDIUM;
+    default:
+        return SIZE_CHARACTER;
+    }
+}
 
 bool transform(int pow, char which_trans)
 {
@@ -163,8 +183,8 @@ bool transform(int pow, char which_trans)
 
         modify_stat( STAT_DEXTERITY, 5, true );
 
-        your_sign = 's';
-        your_colour = BROWN;
+        you.symbol = 's';
+        you.colour = BROWN;
         return (true);
 
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1 
@@ -185,8 +205,8 @@ bool transform(int pow, char which_trans)
         if (you.duration[DUR_ICY_ARMOUR])
             mpr( "Your new body merges with your icy armour." );
 
-        your_sign = 'I';
-        your_colour = WHITE;
+        you.symbol = 'I';
+        you.colour = WHITE;
         return (true);
 
     case TRAN_BLADE_HANDS:
@@ -237,8 +257,8 @@ bool transform(int pow, char which_trans)
         if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
             mpr( "Your new body merges with your stone armour." );
 
-        your_sign = '8';
-        your_colour = LIGHTGREY;
+        you.symbol = '8';
+        you.colour = LIGHTGREY;
         return (true);
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
@@ -258,8 +278,8 @@ bool transform(int pow, char which_trans)
         modify_stat( STAT_STRENGTH, 10, true );
         extra_hp(16);   // must occur after attribute set
 
-        your_sign = 'D';
-        your_colour = GREEN;
+        you.symbol = 'D';
+        you.colour = GREEN;
         return (true);
 
     case TRAN_LICH:
@@ -293,8 +313,8 @@ bool transform(int pow, char which_trans)
             you.duration[ DUR_TRANSFORMATION ] = 100;
 
         modify_stat( STAT_STRENGTH, 3, true );
-        your_sign = 'L';
-        your_colour = LIGHTGREY;
+        you.symbol = 'L';
+        you.colour = LIGHTGREY;
         you.is_undead = US_UNDEAD;
         you.hunger_state = HS_SATIATED;  // no hunger effects while transformed
         set_redraw_status( REDRAW_HUNGER );
@@ -316,8 +336,8 @@ bool transform(int pow, char which_trans)
             you.duration[ DUR_TRANSFORMATION ] = 150;
 
         modify_stat( STAT_DEXTERITY, 8, true );
-        your_sign = '#';
-        your_colour = DARKGREY;
+        you.symbol = '#';
+        you.colour = DARKGREY;
         return (true);
 
     case TRAN_SERPENT_OF_HELL:
@@ -335,8 +355,8 @@ bool transform(int pow, char which_trans)
         modify_stat( STAT_STRENGTH, 13, true );
         extra_hp(17);   // must occur after attribute set
 
-        your_sign = 'S';
-        your_colour = RED;
+        you.symbol = 'S';
+        you.colour = RED;
         return (true);
     }
 
@@ -354,8 +374,8 @@ void untransform(void)
     you.redraw_armour_class = 1;
     you.wield_change = true;
 
-    your_sign = '@';
-    your_colour = LIGHTGREY;
+    you.symbol = '@';
+    you.colour = LIGHTGREY;
 
     // must be unset first or else infinite loops might result -- bwr
     const int old_form = you.attribute[ ATTR_TRANSFORMATION ];
@@ -401,21 +421,8 @@ void untransform(void)
         mpr( "Your transformation has ended.", MSGCH_DURATION );
         modify_stat(STAT_STRENGTH, -10, true);
 
-        if (!player_is_levitating()
-            && (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-                || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-                || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER))
-        {
-            if (you.species == SP_MERFOLK 
-                && grd[you.x_pos][you.y_pos] != DNGN_LAVA)
-            {
-                mpr("You dive into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-
-            if (grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
-                fall_into_a_pool( true, grd[you.x_pos][you.y_pos] );
-        }
+        // re-check terrain now that be may no longer be flying.
+        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
         break;
 
     case TRAN_LICH:
@@ -440,7 +447,7 @@ void untransform(void)
     // probably need something better to cover all possibilities.  -bwr
     if ((you.species == SP_NAGA || you.species == SP_CENTAUR)
             && you.equip[ EQ_BOOTS ] != -1
-            && you.inv[ you.equip[EQ_BOOTS] ].plus2 != TBOOT_NAGA_BARDING)
+            && you.inv[ you.equip[EQ_BOOTS] ].sub_type != ARM_NAGA_BARDING)
     {
         rem_stuff[EQ_BOOTS] = 1;
         remove_equipment(rem_stuff);
@@ -451,7 +458,7 @@ void untransform(void)
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip( char use_which )
+bool can_equip( equipment_type use_which )
 {
 
     // if more cases are added to this if must also change in
@@ -519,6 +526,16 @@ bool can_equip( char use_which )
     return (true);
 }                               // end can_equip()
 
+// raw comparison of an item, must use check_armour_shape for full version 
+bool transform_can_equip_type( int eq_slot )
+{
+    // FIXME FIXME FIXME
+    return (false);
+
+    // const int form = you.attribute[ATTR_TRANSFORMATION];
+    // return (!must_remove( Trans[form].rem_stuff, eq_slot ));
+}
+
 void extra_hp(int amount_extra) // must also set in calc_hp
 {
     calc_hp();
@@ -549,3 +566,16 @@ void drop_everything(void)
 
     return;
 }                               // end drop_everything()
+
+// Used to mark transformations which override species/mutation intrinsics.
+// If phys_scales is true then we're checking to see if the form keeps 
+// the physical (AC/EV) properties from scales... the special intrinsic 
+// features (resistances, etc) are lost in those forms however.
+bool transform_changed_physiology( bool phys_scales )
+{
+    return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && you.attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && (!phys_scales 
+                || (you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH
+                    && you.attribute[ATTR_TRANSFORMATION] != TRAN_STATUE)));
+}

@@ -30,6 +30,8 @@
 
 #include "debug.h"
 #include "itemname.h"
+#include "itemprop.h"
+#include "monplace.h"
 #include "mstuff2.h"
 #include "player.h"
 #include "randart.h"
@@ -41,6 +43,20 @@ static FixedVector < int, NUM_MONSTERS > mon_entry;
 
 // really important extern -- screen redraws suck w/o it {dlb}
 FixedVector < unsigned short, 1000 > mcolour;
+
+enum habitat_type
+{
+    // Flying monsters will appear in all categories
+    HT_NORMAL,          // Normal critters
+    HT_SHALLOW_WATER,   // Union of normal + water
+    HT_DEEP_WATER,      // Water critters
+    HT_LAVA,            // Lava critters
+
+    NUM_HABITATS
+};
+
+static bool initialized_randmons = false;
+static std::vector<int> monsters_by_habitat[NUM_HABITATS];
 
 static struct monsterentry mondata[] = {
 #include "mon-data.h"
@@ -59,8 +75,8 @@ static const char *monster_spell_name[] = {
     "Throw Frost",
     "Paralysis",
     "Slow",
-    "Haste",  
-    "Confuse",  
+    "Haste",
+    "Confuse",
     "Venom Bolt",
     "Fire Bolt",
     "Cold Bolt",
@@ -79,45 +95,153 @@ static const char *monster_spell_name[] = {
     "Orb Energy",
     "Brain Feed",
     "Level Summon",
-    "Fake Rakshasa Summon",  
+    "Fake Rakshasa Summon",
     "Steam Ball",
     "Summon Demon",
     "Animate Dead",
     "Pain",
-    "Smite",                
+    "Smite",
     "Sticky Flame",
     "Poison Blast",
     "Summon Demon Lesser",
     "Summon Ufetubus",
-    "Purple Blast",        
+    "Purple Blast",
     "Summon Beast",
     "Energy Bolt",
     "Sting",
     "Iron Bolt",
-    "Stone Arrow",        
+    "Stone Arrow",
     "Poison Splash",
     "Summon Undead",
-    "Mutation",          
+    "Mutation",
     "Cantrip",
     "Disintegrate", 
     "Marsh Gas",
     "Quicksilver Bolt",
     "Torment",
     "Hellfire",
-    "Metal Splinters",  
+    "Metal Splinters",
     "Summon Demon Greater",
     "Banishment",
+    "Controlled Blink",
+    "Control Undead",
+    "Miasma",
+    "Summon Lizards",
+    "Blink Other",
+    "Dispel Undead",
+    "Hellfrost",
+    "Poison Arrow",
+    "Summon Small Mammals",
+    "Summon Mushrooms",
 };
 #endif
 
 static int mons_exp_mod(int mclass);
-static monsterentry *seekmonster(int *p_monsterid);
+static monsterentry *seekmonster(int p_monsterid);
 
 // macro that saves some typing, nothing more
-#define smc seekmonster(&mc)
+#define smc seekmonster(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
-void mons_init(FixedVector < unsigned short, 1000 > &colour)
+
+habitat_type grid2habitat(int grid)
+{
+    switch (grid)
+    {
+    case DNGN_DEEP_WATER:
+        return (HT_DEEP_WATER);
+    case DNGN_SHALLOW_WATER:
+        return (HT_SHALLOW_WATER);
+    case DNGN_LAVA:
+        return (HT_LAVA);
+    default:
+        return (HT_NORMAL);
+    }
+}
+
+int habitat2grid(habitat_type ht)
+{
+    switch (ht)
+    {
+    case HT_DEEP_WATER:
+        return (DNGN_DEEP_WATER);
+    case HT_SHALLOW_WATER:
+        return (DNGN_SHALLOW_WATER);
+    case HT_LAVA:
+        return (DNGN_LAVA);
+    case HT_NORMAL:
+    default:
+        return (DNGN_FLOOR);
+    }
+}
+
+static void initialize_randmons()
+{
+    for (int i = 0; i < NUM_HABITATS; ++i)
+    {
+        int grid = habitat2grid( habitat_type(i) );
+
+        for (int m = 0; m < NUM_MONSTERS; ++m)
+        {
+            if (invalid_monster_class(m))
+                continue;
+            if (monster_habitable_grid(m, grid))
+                monsters_by_habitat[i].push_back(m);
+        }
+    }
+    initialized_randmons = true;
+}
+
+monster_type random_monster_at_grid(int x, int y)
+{
+    return (random_monster_at_grid(grd[x][y]));
+}
+
+monster_type random_monster_at_grid(int grid)
+{
+    if (!initialized_randmons)
+        initialize_randmons();
+
+    const habitat_type ht = grid2habitat(grid);
+    const std::vector<int> &valid_mons = monsters_by_habitat[ht];
+    ASSERT(!valid_mons.empty());
+    return valid_mons.empty()? MONS_PROGRAM_BUG
+                 : monster_type(valid_mons[ random2(valid_mons.size()) ]);
+}
+
+monster_type get_monster_by_name(std::string name, bool exact)
+{
+    lowercase(name);
+
+    monster_type mon = MONS_PROGRAM_BUG;
+    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    {
+        std::string candidate = mondata[i].name;
+        lowercase(candidate);
+
+        const int mtype = mondata[i].mc;
+
+        if (exact)
+        {
+            if (name == candidate)
+                return monster_type(mtype);
+
+            continue;
+        }
+
+        const std::string::size_type match = candidate.find(name);
+        if (match == std::string::npos)
+            continue;
+
+        mon = monster_type(mtype);
+        // we prefer prefixes over partial matches
+        if (match == 0)
+            break;
+    }
+    return (mon);
+}
+
+void init_monsters(FixedVector < unsigned short, 1000 > &colour)
 {
     unsigned int x;             // must be unsigned to match size_t {dlb}
 
@@ -143,13 +267,40 @@ void mons_init(FixedVector < unsigned short, 1000 > &colour)
     //return (monsterentry *) 0; // return value should not matter here {dlb}
 }                               // end mons_init()
 
-
-int mons_flag(int mc, int bf)
+unsigned long get_mons_class_resists(int mc)
 {
-    return ((smc->bitfields & bf) != 0);
-}                               // end mons_flag()
+    return (smc->resists);
+}
 
-static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
+unsigned long get_mons_resists(const monsters *mon)
+{
+    unsigned long resists = get_mons_class_resists(mon->type);
+    if (mons_genus(mon->type) == MONS_DRACONIAN 
+            && mon->type != MONS_DRACONIAN)
+    {
+        monster_type draco_species = draco_subspecies(mon);
+        if (draco_species != mon->type)
+            resists |= get_mons_class_resists(draco_species);
+    }
+    return (resists);
+}
+
+unsigned long mons_resist(const monsters *mon, unsigned long flags)
+{
+    return (get_mons_resists(mon) & flags);
+}
+
+bool mons_class_flag(int mc, int bf)
+{
+    const monsterentry *me = smc;
+
+    if (!me)
+        return (false);
+
+    return ((me->bitfields & bf) != 0);
+}                               // end mons_class_flag()
+
+static int scan_mon_inv_randarts( const monsters *mon, int ra_prop )
 {
     int ret = 0;
 
@@ -181,15 +332,52 @@ static int scan_mon_inv_randarts( struct monsters *mon, int ra_prop )
     return (ret);
 }
 
+mon_holy_type mons_holiness(const monsters *mon)
+{
+    return (mons_class_holiness(mon->type));
+}
 
-int mons_holiness(int mc)
+mon_holy_type mons_class_holiness(int mc)
 {
     return (smc->holiness);
 }                               // end mons_holiness()
 
+bool mons_class_is_stationary(int type)
+{
+    return (type == MONS_OKLOB_PLANT
+                || type == MONS_PLANT
+                || type == MONS_FUNGUS
+                || type == MONS_CURSE_SKULL
+                || mons_is_statue(type)
+                || mons_is_mimic(type));
+}
+
+bool mons_is_stationary(const monsters *mons)
+{
+    return (mons_class_is_stationary(mons->type));
+}
+
+bool invalid_monster(const monsters *mons)
+{
+    return (!mons || mons->type == -1);
+}
+
+bool invalid_monster_class(int mclass)
+{
+    return (mclass < 0 
+            || mclass >= NUM_MONSTERS 
+            || mon_entry[mclass] == -1
+            || mon_entry[mclass] == MONS_PROGRAM_BUG);
+}
+
+bool mons_is_statue(int mc)
+{
+    return (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE);
+}
+
 bool mons_is_mimic( int mc )
 {
-    return (mons_charclass( mc ) == MONS_GOLD_MIMIC);
+    return (mons_species( mc ) == MONS_GOLD_MIMIC);
 }
 
 bool mons_is_demon( int mc )
@@ -197,7 +385,7 @@ bool mons_is_demon( int mc )
     const int show_char = mons_char( mc );
 
     // Not every demonic monster is a demon (ie hell hog, hell hound)
-    if (mons_holiness( mc ) == MH_DEMONIC
+    if (mons_class_holiness( mc ) == MH_DEMONIC
         && (isdigit( show_char ) || show_char == '&'))
     {
         return (true);
@@ -248,18 +436,34 @@ int mons_weight(int mc)
     return (smc->weight);
 }                               // end mons_weight()
 
-
-int mons_corpse_thingy(int mc)
+corpse_effect_type mons_corpse_effect(int mc)
 {
     return (smc->corpse_thingy);
-}                               // end mons_corpse_thingy()
+}                               // end mons_corpse_effect()
 
 
-int mons_charclass(int mc)
+monster_type mons_species( int mc )
 {
-    return (smc->charclass);
-}                               // end mons_charclass()
+    const monsterentry *me = seekmonster(mc);
+    return (me? me->species : MONS_PROGRAM_BUG);
+}                               // end mons_species()
 
+monster_type mons_genus( int mc )
+{
+    return (smc->genus);
+}
+
+monster_type draco_subspecies( const monsters *mon )
+{
+    ASSERT( mons_genus( mon->type ) == MONS_DRACONIAN );
+
+    monster_type ret = mons_species( mon->type );
+
+    if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
+        ret = static_cast<monster_type>( mon->number );
+
+    return (ret);
+}
 
 int mons_shouts(int mc)
 {
@@ -273,22 +477,14 @@ int mons_shouts(int mc)
 
 bool mons_is_unique( int mc )
 {
-    if (mc <= MONS_PROGRAM_BUG 
-        || (mc >= MONS_NAGA_MAGE && mc <= MONS_ROYAL_JELLY)
-        || (mc >= MONS_ANCIENT_LICH 
-            && (mc != MONS_PLAYER_GHOST && mc != MONS_PANDEMONIUM_DEMON)))
-    {
-        return (false);    
-    }
-
-    return (true);    
+    return (mons_class_flag(mc, M_UNIQUE));
 }
 
 char mons_see_invis( struct monsters *mon )
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_SEE_INVIS ]);
-    else if (((seekmonster(&mon->type))->bitfields & M_SEE_INVIS) != 0)
+    else if (((seekmonster(mon->type))->bitfields & M_SEE_INVIS) != 0)
         return (1);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
         return (1);
@@ -339,11 +535,20 @@ char mons_itemuse(int mc)
     return (smc->gmon_use);
 }                               // end mons_itemuse()
 
-unsigned char mons_colour(int mc)
+int mons_class_colour(int mc)
 {
-    return (smc->colour);
+    const monsterentry *m = smc;
+    if (!m)
+        return (BLACK);
+
+    const int class_colour = m->colour;
+    return (class_colour);
 }                               // end mons_colour()
 
+int mons_colour(const monsters *monster)
+{
+    return (monster->colour);
+}
 
 int mons_damage(int mc, int rt)
 {
@@ -359,9 +564,9 @@ int mons_damage(int mc, int rt)
     return (smc->damage[rt]);
 }                               // end mons_damage()
 
-int mons_resist_magic( struct monsters *mon )
+int mons_resist_magic( const monsters *mon )
 {
-    int u = (seekmonster(&mon->type))->resist_magic;
+    int u = (seekmonster(mon->type))->resist_magic;
 
     // negative values get multiplied with mhd
     if (u < 0)
@@ -384,7 +589,7 @@ int mons_resist_magic( struct monsters *mon )
 
 // Returns true if the monster made its save against hostile
 // enchantments/some other magics.
-bool check_mons_resist_magic( struct monsters *monster, int pow )
+bool check_mons_resist_magic( const monsters *monster, int pow )
 {
     int mrs = mons_resist_magic(monster);
 
@@ -422,7 +627,7 @@ bool check_mons_resist_magic( struct monsters *monster, int pow )
 }                               // end check_mons_resist_magic()
 
 
-int mons_res_elec( struct monsters *mon )
+int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
 
@@ -430,11 +635,10 @@ int mons_res_elec( struct monsters *mon )
         return (ghost.values[ GVAL_RES_ELEC ]);
 
     /* this is a variable, not a player_xx() function, so can be above 1 */
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0;
 
-    // of course it makes no sense setting them both :)
-    if (f & M_RES_ELEC)
-        u++;                    //if(f&M_ED_ELEC) u--;
+    if (mons_resist(mon, MR_RES_ELEC))
+        u++;
 
     // don't bother checking equipment if the monster can't use it
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -453,17 +657,26 @@ int mons_res_elec( struct monsters *mon )
     return (u);
 }                               // end mons_res_elec()
 
+bool mons_res_asphyx( const monsters *mon )
+{
+    const int holiness = mons_holiness( mon );
+    return (holiness == MH_UNDEAD 
+                || holiness == MH_DEMONIC
+                || holiness == MH_NONLIVING
+                || holiness == MH_PLANT
+                || mons_resist(mon, MR_RES_ASPHYX));
+}
 
-int mons_res_poison( struct monsters *mon )
+int mons_res_poison( const monsters *mon )
 {
     int mc = mon->type;
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = get_mons_resists(mon);
 
-    if (f & M_RES_POISON)
+    if (f & MR_RES_POISON)
         u++;
 
-    if (f & M_ED_POISON)
+    if (f & MR_VUL_POISON)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -491,25 +704,25 @@ int mons_res_poison( struct monsters *mon )
 }                               // end mons_res_poison()
 
 
-int mons_res_fire( struct monsters *mon )
+int mons_res_fire( const monsters *mon )
 {
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_FIRE ]);
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = get_mons_resists(mon);
 
     // no Big Prize (tm) here either if you set all three flags. It's a pity uh?
     //
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour
     // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & M_RES_HELLFIRE)
+    if (f & MR_RES_HELLFIRE)
         u += 3;
-    else if (f & M_RES_FIRE)
+    else if (f & MR_RES_FIRE)
         u += 2;
-    else if (f & M_ED_FIRE)
+    else if (f & MR_VUL_FIRE)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -539,21 +752,21 @@ int mons_res_fire( struct monsters *mon )
 }                               // end mons_res_fire()
 
 
-int mons_res_cold( struct monsters *mon )
+int mons_res_cold( const monsters *mon )
 {
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_RES_COLD ]);
 
-    int u = 0, f = (seekmonster(&mc))->bitfields;
+    int u = 0, f = get_mons_resists(mon);
 
     // Note that natural monster resistance is two levels, this is duplicate
     // the fact that having this flag used to be a lot better than armour
     // for monsters (it used to make them immune in a lot of cases) -- bwr
-    if (f & M_RES_COLD)
+    if (f & MR_RES_COLD)
         u += 2;
-    else if (f & M_ED_COLD)
+    else if (f & MR_VUL_COLD)
         u--;
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
@@ -582,15 +795,16 @@ int mons_res_cold( struct monsters *mon )
     return (u);
 }                               // end mons_res_cold()
 
-int mons_res_negative_energy( struct monsters *mon )
+int mons_res_negative_energy( const monsters *mon )
 {
     int mc = mon->type;
 
-    if (mons_holiness( mon->type ) == MH_UNDEAD 
-        || mons_holiness( mon->type ) == MH_DEMONIC
-        || mons_holiness( mon->type ) == MH_NONLIVING
-        || mons_holiness( mon->type ) == MH_PLANT
-        || mon->type == MONS_SHADOW_DRAGON)
+    if (mons_holiness(mon) == MH_UNDEAD 
+        || mons_holiness(mon) == MH_DEMONIC
+        || mons_holiness(mon) == MH_NONLIVING
+        || mons_holiness(mon) == MH_PLANT
+        || mon->type == MONS_SHADOW_DRAGON
+        || mon->type == MONS_DEATH_DRAKE)
     {
         return (3);  // to match the value for players
     }
@@ -613,6 +827,26 @@ int mons_res_negative_energy( struct monsters *mon )
     return (u);
 }                               // end mons_res_negative_energy()
 
+bool mons_is_evil( const monsters *mon )
+{
+    return (mons_class_flag( mon->type, M_EVIL ));
+}
+
+bool mons_is_unholy( const monsters *mon )
+{
+    const mon_holy_type holy = mons_holiness( mon );
+
+    return (holy == MH_UNDEAD || holy == MH_DEMONIC);
+}
+
+bool mons_has_lifeforce( const monsters *mon )
+{
+    const int holy = mons_holiness( mon );
+
+    return (holy == MH_NATURAL || holy == MH_PLANT);
+             // && !mons_has_ench( mon, ENCH_PETRIFY ));
+}
+
 int mons_skeleton(int mc)
 {
     if (mons_zombie_size(mc) == 0
@@ -624,7 +858,7 @@ int mons_skeleton(int mc)
     return (1);
 }                               // end mons_skeleton()
 
-char mons_class_flies(int mc)
+int mons_class_flies(int mc)
 {
     if (mc == MONS_PANDEMONIUM_DEMON)
         return (ghost.values[ GVAL_DEMONLORD_FLY ]);
@@ -640,10 +874,9 @@ char mons_class_flies(int mc)
     return (0);
 }
 
-char mons_flies( struct monsters *mon )
+int mons_flies( const monsters *mon )
 {
-    char ret = mons_class_flies( mon->type );
-
+    int ret = mons_class_flies( mon->type );
     return (ret ? ret : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? 2 : 0);
 }                               // end mons_flies()
 
@@ -666,7 +899,7 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
 // of monster, not a pacticular monsters current hit dice. -- bwr
 int mons_type_hit_dice( int type )
 {
-    struct monsterentry *mon_class = seekmonster( &type );
+    struct monsterentry *mon_class = seekmonster( type );
 
     if (mon_class)
         return (mon_class->hpdice[0]);
@@ -675,7 +908,7 @@ int mons_type_hit_dice( int type )
 }
 
 
-int exper_value( struct monsters *monster )
+int exper_value( const struct monsters *monster )
 {
     long x_val = 0;
 
@@ -690,10 +923,15 @@ int exper_value( struct monsters *monster )
     const int  item_usage  = mons_itemuse(mclass);
 
     // XXX: shapeshifters can qualify here, even though they can't cast:
-    const bool spellcaster = mons_flag( mclass, M_SPELLCASTER );
+    const bool spellcaster = mons_class_flag( mclass, M_SPELLCASTER );
 
     // early out for no XP monsters
-    if (mons_flag(mclass, M_NO_EXP_GAIN))
+    if (mons_class_flag(mclass, M_NO_EXP_GAIN))
+        return (0);
+
+    // no experience for destroying furniture, even if the furniture started
+    // the fight.
+    if (mons_is_statue(mclass))
         return (0);
 
     // These undead take damage to maxhp, so we use only HD. -- bwr
@@ -718,14 +956,7 @@ int exper_value( struct monsters *monster )
     // Let's look for big spells:
     if (spellcaster)
     {
-        const int msecc = ((mclass == MONS_HELLION) ? MST_BURNING_DEVIL :
-                 (mclass == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                    : monster->number);
-
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        mons_spell_list( msecc, hspell_pass );
+        const monster_spells &hspell_pass = monster->spells;
 
         for (int i = 0; i < 6; i++)
         {
@@ -831,35 +1062,58 @@ int exper_value( struct monsters *monster )
     return (x_val);
 }                               // end exper_value()
 
-
-// this needs to be rewritten a la the monsterseek rewrite {dlb}:
-void mons_spell_list( unsigned char sec, int splist[6] )
+int obsolete_mons_spell_template_index(const monsters *mon)
 {
-    unsigned int x;
+    return (mons_class_flag(mon->type, M_SPELLCASTER)? 
+                mon->number
+            :   MST_NO_SPELLS);
+}
 
-    for (x = 0; x < NUM_MSTYPES; x++)
+void mons_load_spells( monsters *mon, int book )
+{
+    int x, y;
+
+    if (book == MST_NO_SPELLS)
     {
-        if (mspell_list[x][0] == sec)
-            break;
-    }
-
-    if (x >= NUM_MSTYPES)
+        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
+            mon->spells[y] = MS_NO_SPELL;
         return;
-
-    // I *KNOW* this can easily be done in a loop
-    splist[0] = mspell_list[x][1];      // bolt spell
-    splist[1] = mspell_list[x][2];      // enchantment
-    splist[2] = mspell_list[x][3];      // self_ench
-    splist[3] = mspell_list[x][4];      // misc
-    splist[4] = mspell_list[x][5];      // misc2
-    splist[5] = mspell_list[x][6];      // emergency
-
-    if (sec == MST_GHOST)             /* ghost */
-    {
-        for (x = 0; x < 6; x++)
-            splist[x] = ghost.values[ GVAL_SPELL_1 + x ];
     }
-}                               // end mons_spell_list()
+
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
+            ptr_monam( mon, DESC_PLAIN ), book );
+#endif
+
+    for (x = 0; x < 6; x++)
+        mon->spells[x] = MS_NO_SPELL;
+
+    if (book == MST_GHOST)
+    {
+        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
+        {
+            mon->spells[y] = ghost.values[ GVAL_SPELL_1 + y ];
+#if DEBUG_DIAGNOSTICS
+            mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", y, mon->spells[y] );
+#endif
+        }
+    }
+    else 
+    {
+        // this needs to be rewritten a la the monsterseek rewrite {dlb}:
+        for (x = 0; x < NUM_MSTYPES; x++)
+        {
+            if (mspell_list[x][0] == book)
+                break;
+        }
+
+        if (x < NUM_MSTYPES)
+        {
+            for (y = 0; y < 6; y++)
+                mon->spells[y] = mspell_list[x][y + 1];
+        }
+    }
+}
 
 #if DEBUG_DIAGNOSTICS
 const char *mons_spell_name( int spell )
@@ -872,152 +1126,200 @@ const char *mons_spell_name( int spell )
 #endif
 
 // generate a shiny new and unscarred monster
-void define_monster(int k)
+void define_monster(int index)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-    int m2_class = menv[k].type;
-    int m2_HD, m2_hp, m2_hp_max, m2_AC, m2_ev, m2_speed;
-    int m2_sec = menv[k].number;
-    struct monsterentry *m = seekmonster(&m2_class);
+    monsters &mons = menv[index];
 
-    m2_HD = m->hpdice[0];
+    int temp_rand = 0;          // probability determination {dlb}
+    int mcls = mons.type;
+    int hd, hp, hp_max, ac, ev, speed;
+    int monnumber = mons.number;
+    const monsterentry *m = seekmonster(mcls);
+    int col = mons_class_colour(mons.type);
+    int spells = MST_NO_SPELLS;
+
+    hd = m->hpdice[0];
 
     // misc
-    m2_AC = m->AC;
-    m2_ev = m->ev;
+    ac = m->AC;
+    ev = m->ev;
 
-    // speed
-    m2_speed = m->speed;
+    speed = m->speed;
 
-    // some monsters are randomized:
-    // did I get them all?    // I don't think so {dlb}
-    if (mons_is_mimic( m2_class ))
-        m2_sec = get_mimic_colour( &menv[k] );
-    else
+    switch (mcls)
     {
-        switch (m2_class)
+    case MONS_ABOMINATION_SMALL:
+        hd = 4 + random2(4);
+        ac = 3 + random2(7);
+        ev = 7 + random2(6);
+        speed = 7 + random2avg(9, 2);
+
+        if (monnumber == 250)
+            col = random_colour();
+        break;
+
+    case MONS_ZOMBIE_SMALL:
+        hd = (coinflip() ? 1 : 2);
+        break;
+
+    case MONS_ZOMBIE_LARGE:
+        hd = 3 + random2(5);
+        break;
+
+    case MONS_ABOMINATION_LARGE:
+        hd = 8 + random2(4);
+        ac = 5 + random2avg(9, 2);
+        ev = 3 + random2(5);
+        speed = 6 + random2avg(7, 2);
+
+        if (monnumber == 250)
+            col = random_colour();
+        break;
+
+    case MONS_BEAST:
+        hd = 4 + random2(4);
+        ac = 2 + random2(5);
+        ev = 7 + random2(5);
+        speed = 8 + random2(5);
+        break;
+
+    case MONS_HYDRA:
+        monnumber = random_range(4, 8);
+        break;
+
+    case MONS_DEEP_ELF_FIGHTER:
+    case MONS_DEEP_ELF_KNIGHT:
+    case MONS_DEEP_ELF_SOLDIER:
+    case MONS_ORC_WIZARD:
+        spells = MST_ORC_WIZARD_I + random2(3);
+        break;
+
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+        spells = MST_LICH_I + random2(4);
+        break;
+
+    case MONS_HELL_KNIGHT:
+        spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
+        break;
+
+    case MONS_NECROMANCER:
+        spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
+        break;
+
+    case MONS_WIZARD:
+    case MONS_OGRE_MAGE:
+    case MONS_EROLCHA:
+    case MONS_DEEP_ELF_MAGE:
+        spells = MST_WIZARD_I + random2(5);
+        break;
+
+    case MONS_DEEP_ELF_CONJURER:
+        spells = 
+            (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
+        break;
+
+    case MONS_BUTTERFLY:
+    case MONS_SPATIAL_VORTEX:
+    case MONS_KILLER_KLOWN:
+        col = random_colour();
+        break;
+
+    case MONS_GILA_MONSTER:
+        temp_rand = random2(7);
+
+        col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
+               temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
+               temp_rand == 2 ? RED :                        // 1/7
+               temp_rand == 1 ? MAGENTA                      // 1/7
+                              : YELLOW);                     // 1/7
+        break;
+
+    case MONS_DRACONIAN:
+        // these are supposed to only be created by polymorph
+        hd += random2(10);
+        ac += random2(5);
+        ev += random2(5);
+
+        if (hd >= 7)
         {
-        case MONS_ABOMINATION_SMALL:
-            m2_HD = 4 + random2(4);
-            m2_AC = 3 + random2(7);
-            m2_ev = 7 + random2(6);
-            m2_speed = 7 + random2avg(9, 2);
-
-            if (m2_sec == 250)
-                m2_sec = random_colour();
-            break;
-
-        case MONS_ZOMBIE_SMALL:
-            m2_HD = (coinflip() ? 1 : 2);
-            break;
-
-        case MONS_ZOMBIE_LARGE:
-            m2_HD = 3 + random2(5);
-            break;
-
-        case MONS_ABOMINATION_LARGE:
-            m2_HD = 8 + random2(4);
-            m2_AC = 5 + random2avg(9, 2);
-            m2_ev = 3 + random2(5);
-            m2_speed = 6 + random2avg(7, 2);
-
-            if (m2_sec == 250)
-                m2_sec = random_colour();
-            break;
-
-        case MONS_BEAST:
-            m2_HD = 4 + random2(4);
-            m2_AC = 2 + random2(5);
-            m2_ev = 7 + random2(5);
-            m2_speed = 8 + random2(5);
-            break;
-
-        case MONS_HYDRA:
-            m2_sec = 4 + random2(5);
-            break;
-
-        case MONS_DEEP_ELF_FIGHTER:
-        case MONS_DEEP_ELF_KNIGHT:
-        case MONS_DEEP_ELF_SOLDIER:
-        case MONS_ORC_WIZARD:
-            m2_sec = MST_ORC_WIZARD_I + random2(3);
-            break;
-
-        case MONS_LICH:
-        case MONS_ANCIENT_LICH:
-            m2_sec = MST_LICH_I + random2(4);
-            break;
-
-        case MONS_HELL_KNIGHT:
-            m2_sec = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
-            break;
-
-        case MONS_NECROMANCER:
-            m2_sec = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
-            break;
-
-        case MONS_WIZARD:
-        case MONS_OGRE_MAGE:
-        case MONS_EROLCHA:
-        case MONS_DEEP_ELF_MAGE:
-            m2_sec = MST_WIZARD_I + random2(5);
-            break;
-
-        case MONS_DEEP_ELF_CONJURER:
-            m2_sec = (coinflip()? MST_DEEP_ELF_CONJURER_I : MST_DEEP_ELF_CONJURER_II);
-            break;
-
-        case MONS_BUTTERFLY:
-        case MONS_SPATIAL_VORTEX:
-        case MONS_KILLER_KLOWN:
-            m2_sec = random_colour();
-            break;
-
-        case MONS_GILA_MONSTER:
-            temp_rand = random2(7);
-
-            m2_sec = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
-                      temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
-                      temp_rand == 2 ? RED :                        // 1/7
-                      temp_rand == 1 ? MAGENTA                      // 1/7
-                                     : YELLOW);                     // 1/7
-            break;
-
-        case MONS_HUMAN:
-        case MONS_ELF:
-            // these are supposed to only be created by polymorph 
-            m2_HD += random2(10);
-            m2_AC += random2(5);
-            m2_ev += random2(5);
-            break;
-
-        default:
-            break;
+            mons.type = MONS_BLACK_DRACONIAN + random2(8);
+            col = mons_class_colour( mons.type );
         }
+        break;
+
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_SCORCHER:
+    {
+        // Professional draconians still have a base draconian type.
+        // White draconians will never be draconian scorchers, but
+        // apart from that, anything goes.
+        do
+            monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        while (monnumber == MONS_WHITE_DRACONIAN
+                && mcls == MONS_DRACONIAN_SCORCHER);
+        break;
+    }
+    case MONS_DRACONIAN_KNIGHT:
+    {
+        temp_rand = random2(10);
+        // hell knight, death knight, chaos knight...
+        if (temp_rand < 6)
+            spells = (coinflip() ? MST_HELL_KNIGHT_I : MST_HELL_KNIGHT_II);
+        else if (temp_rand < 9)
+            spells = (coinflip() ? MST_NECROMANCER_I : MST_NECROMANCER_II);
+        else 
+            spells = (coinflip() ? MST_DEEP_ELF_CONJURER_I 
+                                 : MST_DEEP_ELF_CONJURER_II);
+        
+        monnumber = MONS_BLACK_DRACONIAN + random2(8);
+        break;
+    }
+    case MONS_HUMAN:
+    case MONS_ELF:
+        // these are supposed to only be created by polymorph 
+        hd += random2(10);
+        ac += random2(5);
+        ev += random2(5);
+        break;
+
+    default:
+        if (mons_is_mimic( mcls ))
+            col = get_mimic_colour( &mons );
+        break;
     }
 
-    // some calculations
-    m2_hp = hit_points(m2_HD, m->hpdice[1], m->hpdice[2]);
-    m2_hp += m->hpdice[3];
-    m2_hp_max = m2_hp;
+    if (spells == MST_NO_SPELLS && mons_class_flag(mons.type, M_SPELLCASTER))
+        spells = m->sec;
 
-    if (m2_sec == 250)
-        m2_sec = m->sec;
+    // some calculations
+    hp = hit_points(hd, m->hpdice[1], m->hpdice[2]);
+    hp += m->hpdice[3];
+    hp_max = hp;
+
+    if (monnumber == 250)
+        monnumber = m->sec;
 
     // so let it be written, so let it be done
-    menv[k].hit_dice = m2_HD;
-    menv[k].hit_points = m2_hp;
-    menv[k].max_hit_points = m2_hp_max;
-    menv[k].armour_class = m2_AC;
-    menv[k].evasion = m2_ev;
-    menv[k].speed = m2_speed;
-    menv[k].speed_increment = 70;
-    menv[k].number = m2_sec;
-    menv[k].flags = 0;
+    mons.hit_dice = hd;
+    mons.hit_points = hp;
+    mons.max_hit_points = hp_max;
+    mons.armour_class = ac;
+    mons.evasion = ev;
+    mons.speed = speed;
+    mons.speed_increment = 70;
+    mons.number = monnumber;
+    mons.flags = 0;
+    mons.colour = col;
+    mons_load_spells( &mons, spells );
 
     // reset monster enchantments
     for (int i = 0; i < NUM_MON_ENCHANTS; i++)
-        menv[k].enchantment[i] = ENCH_NONE;
+        mons.enchantment[i] = ENCH_NONE;
 }                               // end define_monster()
 
 
@@ -1048,7 +1350,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
     static char gmo_n[ ITEMNAME_SIZE ];
     char gmo_n2[ ITEMNAME_SIZE ] = "";
 
-    gmo_n[0] = '\0';
+    gmo_n[0] = 0;
 
     // If you can't see the critter, let moname() print [Ii]t.
     if (!vis)
@@ -1059,7 +1361,7 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
 
     // These need their description level handled here instead of
     // in monam().
-    if (mons == MONS_SPECTRAL_THING)
+    if (mons == MONS_SPECTRAL_THING || mons_genus(mons) == MONS_DRACONIAN)
     {
         switch (desc)
         {
@@ -1107,6 +1409,33 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
         strcat(gmo_n, gmo_n2);
         break;
 
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_SCORCHER:
+        if (desc != DESC_PLAIN)
+            strcat( gmo_n, " " );
+
+        switch (mons_num)
+        {
+        default: break;
+        case MONS_BLACK_DRACONIAN:   strcat(gmo_n, "black ");   break;
+        case MONS_MOTTLED_DRACONIAN: strcat(gmo_n, "mottled "); break;
+        case MONS_YELLOW_DRACONIAN:  strcat(gmo_n, "yellow ");  break;
+        case MONS_GREEN_DRACONIAN:   strcat(gmo_n, "green ");   break;
+        case MONS_PURPLE_DRACONIAN:  strcat(gmo_n, "purple ");  break;
+        case MONS_RED_DRACONIAN:     strcat(gmo_n, "red ");     break;
+        case MONS_WHITE_DRACONIAN:   strcat(gmo_n, "white ");   break;
+        case MONS_PALE_DRACONIAN:    strcat(gmo_n, "pale ");    break;
+        }
+
+        moname( mons, vis, DESC_PLAIN, gmo_n2 );
+        strcat( gmo_n, gmo_n2 );
+        break;
+
     case MONS_DANCING_WEAPON:
         // safety check -- if we don't have/know the weapon use default name
         if (mons_wpn == NON_ITEM)
@@ -1136,12 +1465,12 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
     return (gmo_n);
 }                               // end monam()
 
-void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
+const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
 {
-    glog[0] = '\0';
+    glog[0] = 0;
 
     char gmon_name[ ITEMNAME_SIZE ] = "";
-    strcpy( gmon_name, seekmonster( &mons_num )->name );
+    strcpy( gmon_name, seekmonster( mons_num )->name );
 
     if (!vis)
     {
@@ -1159,7 +1488,7 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
         }
 
         strcpy(gmon_name, glog);
-        return;
+        return (glog);
     }
 
     if (!mons_is_unique( mons_num )) 
@@ -1203,19 +1532,19 @@ void moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
     }
 
     strcat(glog, gmon_name);
+
+    return (glog);
 }                               // end moname()
 
 /* ********************* END PUBLIC FUNCTIONS ********************* */
 
 // see mons_init for initialization of mon_entry array.
-static struct monsterentry *seekmonster(int *p_monsterid)
+static monsterentry *seekmonster(int p_monsterid)
 {
-    ASSERT(p_monsterid != 0);
-
-    int me = mon_entry[(*p_monsterid)];
+    int me = p_monsterid != -1? mon_entry[p_monsterid] : -1;
 
     if (me >= 0)                // PARANOIA
-        return (&mondata[mon_entry[(*p_monsterid)]]);
+        return (&mondata[me]);
     else
         return (NULL);
 }                               // end seekmonster()
@@ -1261,7 +1590,7 @@ int mons_intel_type(int mc)     //jmf: new, used by my spells
 
 int mons_power(int mc)
 {
-    // for now,  just return monster hit dice.
+    // for now, just return monster hit dice.
     return (smc->hpdice[0]);
 }
 
@@ -1292,79 +1621,67 @@ bool mons_aligned(int m1, int m2)
     return (fr1 == fr2);
 }
 
-bool mons_friendly(struct monsters *m)
+bool mons_friendly(const monsters *m)
 {
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
 }
 
-bool mons_is_stabbable(struct monsters *m)
+bool mons_is_submerged( struct monsters *mon )
+{
+    // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
+    return (mons_has_ench( mon, ENCH_SUBMERGED ));
+}
+
+bool mons_is_paralysed(const monsters *m)
+{
+    // maybe this should be 70
+    return (m->speed_increment <= 60);
+}
+
+bool mons_is_confused(const monsters *m)
+{
+    return (mons_has_ench(m, ENCH_CONFUSION) &&
+                            !mons_class_flag(m->type, M_CONFUSED));
+}
+
+bool mons_is_fleeing(const monsters *m)
+{
+    return (m->behaviour == BEH_FLEE);
+}
+
+bool mons_is_sleeping(const monsters *m)
+{
+    return (m->behaviour == BEH_SLEEP);
+}
+
+bool mons_is_batty(const monsters *m)
+{
+    return testbits(m->flags, MF_BATTY);
+}
+
+bool mons_looks_stabbable(const monsters *m)
 {
     // Make sure oklob plants are never highlighted. That'll defeat the
     // point of making them look like normal plants.
-    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
+                && !mons_is_mimic(m->type)
+                && !mons_is_statue(m->type)
                 && !mons_friendly(m)
-                && m->behaviour == BEH_SLEEP);
+                && mons_is_sleeping(m));
 }
 
-bool mons_maybe_stabbable(struct monsters *m)
+bool mons_looks_distracted(const monsters *m)
 {
-    return (!mons_flag(m->type, M_NO_EXP_GAIN)
+    return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                 && m->type != MONS_OKLOB_PLANT
+                && !mons_is_mimic(m->type)
+                && !mons_is_statue(m->type)
                 && !mons_friendly(m)
-                && ((m->foe != MHITYOU && !testbits(m->flags, MF_BATTY))
-                    || (mons_has_ench(m, ENCH_CONFUSION) &&
-                            !mons_flag(m->type, M_CONFUSED))
-                    || m->behaviour == BEH_FLEE));
+                && ((m->foe != MHITYOU && !mons_is_batty(m))
+                    || mons_is_confused(m)
+                    || mons_is_fleeing(m)));
 }
-
-/* ******************************************************************
-
-// In the name of England, I declare this function wasteful! {dlb}
-
-static monsterentry *seekmonster( int mc )
-{
-
-    ASSERT(mc >= 0);
-
-    int x = 0;
-
-    while (x < mondatasize)
-    {
-        if (mondata[x].mc == mc)
-          return &mondata[x];
-
-        x++;
-    }
-
-    ASSERT(false);
-
-    return seekmonster(MONS_PROGRAM_BUG);    // see the disasters coming if there is no 250?
-
-}          // end seekmonster()
-****************************************************************** */
-
-
-/* ******************************************************************
-
-// only used once, and internal to this file, to boot {dlb}:
-
-// These are easy to implement here. The difficult (dull!) work of converting
-// the data structures is finally finished now!
-inline char *mons_name( int mc )
-{
-
-    return smc->name;
-
-}          // end mons_name()
-****************************************************************** */
-
-/*****************************************************************
-
-  Used to determine whether or not a monster should fire a beam (MUST be
-  called _after_ fire_tracer() for meaningful result.
-
-*/
 
 bool mons_should_fire(struct bolt &beam)
 {
@@ -1380,19 +1697,19 @@ bool mons_should_fire(struct bolt &beam)
         return (false);
 
     // if we either hit no friends, or monster too dumb to care
-    if (beam.fr_count == 0 || !beam.smartMonster)
+    if (beam.fr_count == 0 || !beam.smart_monster)
         return (true);
 
     // only fire if they do acceptably low collateral damage
     // the default for this is 50%;  in other words, don't
     // hit a foe unless you hit 2 or fewer friends.
-    if (beam.foe_power >= (beam.foeRatio * beam.fr_power) / 100)
+    if (beam.foe_power >= (beam.foe_ratio * beam.fr_power) / 100)
         return (true);
 
     return (false);
 }
 
-int mons_has_ench(struct monsters *mon, unsigned int ench, unsigned int ench2)
+int mons_has_ench(const monsters *mon, unsigned int ench, unsigned int ench2)
 {
     // silliness
     if (ench == ENCH_NONE)
@@ -1474,7 +1791,7 @@ int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
     if (ench == ENCH_INVIS)
     {
         // invisible monsters stay invisible
-        if (mons_flag(mon->type, M_INVIS))
+        if (mons_class_flag(mon->type, M_INVIS))
         {
             mon->enchantment[p] = ENCH_INVIS;
         }
@@ -1487,6 +1804,7 @@ int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
                 strcat( info, " appears!" );
                 mpr( info );
             }
+            seen_monster(mon);
         }
     }
 
@@ -1598,6 +1916,7 @@ bool ms_requires_tracer(int monspell)
         case MS_IRON_BOLT:
         case MS_LIGHTNING_BOLT:
         case MS_MARSH_GAS:
+        case MS_MIASMA:
         case MS_METAL_SPLINTERS:
         case MS_MMISSILE:
         case MS_NEGATIVE_BOLT:
@@ -1605,6 +1924,7 @@ bool ms_requires_tracer(int monspell)
         case MS_PAIN:
         case MS_PARALYSIS:
         case MS_POISON_BLAST:
+        case MS_POISON_ARROW:
         case MS_POISON_SPLASH:
         case MS_QUICKSILVER_BOLT:
         case MS_SLOW:
@@ -1637,6 +1957,7 @@ bool ms_requires_tracer(int monspell)
         case MS_SUMMON_UFETUBUS:
         case MS_TELEPORT:
         case MS_TORMENT:
+        case MS_SUMMON_SMALL_MAMMALS:
         case MS_VAMPIRE_SUMMON:
         case MS_CANTRIP:
 
@@ -1677,6 +1998,7 @@ bool ms_direct_nasty(int monspell)
         case MS_SUMMON_DEMON_GREATER:
         case MS_SUMMON_UFETUBUS:
         case MS_TELEPORT:
+        case MS_SUMMON_SMALL_MAMMALS:
         case MS_VAMPIRE_SUMMON:
             nasty = false;
             break;
@@ -1714,6 +2036,7 @@ bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell )
     case MS_ANIMATE_DEAD:
         return (true);
 
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
     case MS_SUMMON_UFETUBUS:
     case MS_FAKE_RAKSHASA_SUMMON:
@@ -1722,6 +2045,7 @@ bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell )
     case MS_SUMMON_DEMON_LESSER:
     case MS_SUMMON_BEAST:
     case MS_SUMMON_UNDEAD:
+    case MS_SUMMON_MUSHROOMS:
     case MS_SUMMON_DEMON_GREATER:
         if (one_chance_in(10))    // only summon friends some of the time
             return (true);
@@ -1763,6 +2087,7 @@ bool ms_low_hitpoint_cast( struct monsters *mon, int monspell )
             ret = true;
         break;
 
+    case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
     case MS_SUMMON_UFETUBUS:
     case MS_FAKE_RAKSHASA_SUMMON:
@@ -1793,7 +2118,8 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
         break;
 
     case MS_INVIS:
-        if (mons_has_ench( mon, ENCH_INVIS ))
+        if (mons_has_ench( mon, ENCH_INVIS ) ||
+            (mons_friendly(mon) && !player_see_invis(false)))
             ret = true;
         break;
 
@@ -1902,20 +2228,11 @@ bool mons_has_ranged_spell( struct monsters *mon )
 {
     const int  mclass = mon->type;
 
-    if (mons_flag( mclass, M_SPELLCASTER ))
+    if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
-        const int  msecc = ((mclass == MONS_HELLION) ? MST_BURNING_DEVIL :
-                  (mclass == MONS_PANDEMONIUM_DEMON) ? MST_GHOST
-                                                     : mon->number);
-
-        int hspell_pass[6] = { MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL,
-                               MS_NO_SPELL, MS_NO_SPELL, MS_NO_SPELL };
-
-        mons_spell_list( msecc, hspell_pass );
-
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
-            if (ms_ranged_spell( hspell_pass[i] ))
+            if (ms_ranged_spell( mon->spells[i] ))
                 return (true);
         }
     }
@@ -2003,4 +2320,99 @@ const char *mons_pronoun(int mon_type, int variant)
     }
 
     return ("");
+}
+
+/*
+ * Checks if the monster can use smiting/torment to attack without unimpeded
+ * LOS to the player.
+ */
+static bool mons_can_smite(const monsters *monster)
+{
+    if (monster->type == MONS_FIEND)
+        return (true);
+
+    const monster_spells &hspell_pass = monster->spells;
+    for (unsigned i = 0; i < hspell_pass.size(); ++i)
+        if (hspell_pass[i] == MS_TORMENT || hspell_pass[i] == MS_SMITE)
+            return (true);
+
+    return (false);
+}
+
+/*
+ * Determines if a monster is smart and pushy enough to displace other monsters.
+ * A shover should not cause damage to the shovee by displacing it, so monsters
+ * that trail clouds of badness are ineligible. The shover should also benefit
+ * from shoving, so monsters that can smite/torment are ineligible.
+ *
+ * (Smiters would be eligible for shoving when fleeing if the AI allowed for 
+ * smart monsters to flee.)
+ */
+bool monster_shover(const monsters *m)
+{
+    const monsterentry *me = seekmonster(m->type);
+    if (!me)
+        return (false);
+
+    // Efreet and fire elementals are disqualified because they leave behind
+    // clouds of flame. Rotting devils trail clouds of miasma.
+    if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
+            || m->type == MONS_ROTTING_DEVIL
+            || m->type == MONS_CURSE_TOE)
+        return (false);
+
+    // Smiters profit from staying back and smiting.
+    if (mons_can_smite(m))
+        return (false);
+    
+    int mchar = me->showchar;
+    // Somewhat arbitrary: giants and dragons are too big to get past anything,
+    // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
+    // aren't pushers and shovers, zombies are zombies. Worms and elementals
+    // are on the list because all 'w' are currently unrelated.
+    return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
+            && mchar != 'G' && mchar != 'Z' && mchar != 'z'
+            && mchar != 'w' && mchar != '#');
+}
+
+// Returns true if m1 and m2 are related, and m1 is higher up the totem pole
+// than m2. The criteria for being related are somewhat loose, as you can see
+// below.
+bool monster_senior(const monsters *m1, const monsters *m2)
+{
+    const monsterentry *me1 = seekmonster(m1->type),
+                       *me2 = seekmonster(m2->type);
+    
+    if (!me1 || !me2)
+        return (false);
+
+    int mchar1 = me1->showchar,
+        mchar2 = me2->showchar;
+
+    // If both are demons, the smaller number is the nastier demon.
+    if (isdigit(mchar1) && isdigit(mchar2))
+        return (mchar1 < mchar2);
+
+    // &s are the evillest demons of all, well apart from Geryon, who really
+    // profits from *not* pushing past beasts.
+    if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
+        return (m1->hit_dice > m2->hit_dice);
+
+    // Skeletal warriors can push past zombies large and small.
+    if (m1->type == MONS_SKELETAL_WARRIOR && (mchar2 == 'z' || mchar2 == 'Z'))
+        return (m1->hit_dice > m2->hit_dice);
+
+    if (m1->type == MONS_QUEEN_BEE 
+            && (m2->type == MONS_KILLER_BEE 
+                    || m2->type == MONS_KILLER_BEE_LARVA))
+        return (true);
+
+    if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
+        return (true);
+
+    // Special-case gnolls so they can't get past (hob)goblins
+    if (m1->type == MONS_GNOLL && m2->type != MONS_GNOLL)
+        return (false);
+
+    return (mchar1 == mchar2 && m1->hit_dice > m2->hit_dice);
 }

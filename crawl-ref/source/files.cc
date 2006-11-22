@@ -24,12 +24,15 @@
 
 #include "AppHdr.h"
 #include "files.h"
+#include "version.h"
 
 #include <string.h>
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+
+#include <algorithm>
 
 #ifdef DOS
 #include <conio.h>
@@ -43,21 +46,12 @@
 #include <unistd.h>
 #endif
 
-#ifdef USE_EMX
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
-#endif
-
 #ifdef __MINGW32__
 #include <io.h>
+#include <sys/types.h>
 #endif
+
+#include <dirent.h>
 
 #include "externs.h"
 
@@ -66,12 +60,15 @@
 #include "debug.h"
 #include "dungeon.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "notes.h"
 #include "player.h"
 #include "randart.h"
 #include "skills2.h"
@@ -79,7 +76,12 @@
 #include "stuff.h"
 #include "tags.h"
 #include "travel.h"
-#include "wpn-misc.h"
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+#define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
+#else
+#define DO_CHMOD_PRIVATE(x) // empty command
+#endif
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
@@ -205,21 +207,322 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
 
 static void load_ghost();
 
-std::string get_savedir_filename(const char *prefix, const char *suffix, 
-                                 const char *extension)
+static std::string uid_as_string()
 {
-    char filename[1200];
-#ifdef SAVE_DIR_PATH
-    snprintf(filename, sizeof filename, SAVE_DIR_PATH "%s%d%s.%s",
-             prefix, (int) getuid(), suffix, extension);
+#ifdef MULTIUSER
+    char struid[20];
+    snprintf( struid, sizeof struid, "%d", (int)getuid() );
+    return std::string(struid);
 #else
-    snprintf(filename, sizeof filename, "%s%s.%s", 
-             prefix, suffix, extension);
+    return std::string();
+#endif
+}
+
+static bool is_uid_file(const std::string &name, const std::string &ext)
+{
+    std::string save_suffix = get_savedir_filename("", "", "");
+    save_suffix += ext;
 #ifdef DOS
-    strupr(filename);
+    // Grumble grumble. Hang all retarded operating systems.
+    uppercase(save_suffix);
 #endif
+
+    save_suffix = save_suffix.substr(Options.save_dir.length());
+
+    std::string::size_type suffix_pos = name.find(save_suffix);
+    return (suffix_pos != std::string::npos 
+            && suffix_pos == name.length() - save_suffix.length()
+            && suffix_pos != 0
+#ifdef MULTIUSER
+            // See verifyPlayerName() in newgame.cc
+            && !isdigit(name[suffix_pos - 1])
 #endif
-    return std::string(filename);
+            );
+
+}
+
+static bool is_save_file_name(const std::string &name)
+{
+    return is_uid_file(name, ".sav");
+}
+
+#ifdef LOAD_UNPACKAGE_CMD
+static bool is_packed_save(const std::string &name)
+{
+    return is_uid_file(name, PACKAGE_SUFFIX);
+}
+#endif
+
+// Returns a full player struct read from the save.
+static player read_character_info(const std::string &savefile)
+{
+    player fromfile;
+    player backup = you;
+
+    FILE *charf = fopen(savefile.c_str(), "rb");
+    if (!charf)
+        return fromfile;
+
+    char majorVersion = 0;
+    char minorVersion = 0;
+
+    if (!determine_version(charf, majorVersion, minorVersion))
+        goto done_reading_character;
+
+    if (majorVersion != SAVE_MAJOR_VERSION)
+        goto done_reading_character;
+
+    restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
+    fromfile = you;
+    you      = backup;
+
+done_reading_character:
+    fclose(charf);
+    return fromfile;
+}
+
+// Returns the names of all files in the given directory. Note that the
+// filenames returned are relative to the directory.
+static std::vector<std::string> get_dir_files(const std::string &dirname)
+{
+    std::vector<std::string> files;
+
+    DIR *dir = opendir(dirname.c_str());
+    if (!dir)
+        return (files);
+
+    while (dirent *entry = readdir(dir))
+    {
+        std::string name = entry->d_name;
+        if (name == "." || name == "..")
+            continue;
+
+        files.push_back(name);
+    }
+    closedir(dir);
+
+    return (files);
+}
+
+static bool file_exists(const std::string &name)
+{
+    FILE *f = fopen(name.c_str(), "r");
+    const bool exists = !!f;
+    if (f)
+        fclose(f);
+    return (exists);
+}
+
+// Low-tech existence check.
+static bool dir_exists(const std::string &dir)
+{
+    DIR *d = opendir(dir.c_str());
+    const bool exists = !!d;
+    if (d)
+        closedir(d);
+
+    return (exists);
+}
+
+static int create_directory(const char *dir)
+{
+#if defined(MULTIUSER)
+    return mkdir(dir, SHARED_FILES_CHMOD_PUBLIC | 0111);
+#elif defined(DOS)
+    // djgpp doesn't seem to have mkdir.
+    return (-1);
+#else
+    return mkdir(dir);
+#endif
+}
+
+static bool create_dirs(const std::string &dir)
+{
+    std::string sep = " ";
+    sep[0] = FILE_SEPARATOR;
+    std::vector<std::string> segments = 
+        split_string(
+                sep.c_str(),
+                dir,
+                false,
+                false);
+
+    std::string path;
+    for (int i = 0, size = segments.size(); i < size; ++i)
+    {
+        path += segments[i];
+        path += FILE_SEPARATOR;
+
+        if (!dir_exists(path) && create_directory(path.c_str()))
+            return (false);
+    }
+    return (true);
+}
+
+std::string datafile_path(const std::string &basename)
+{
+    std::string cdir = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
+
+    const std::string rawbases[] = {
+#ifdef DATA_DIR_PATH
+        DATA_DIR_PATH,
+#else
+        cdir,
+#endif
+    };
+
+    const std::string prefixes[] = {
+        std::string("dat") + FILE_SEPARATOR,
+        std::string("data") + FILE_SEPARATOR,
+        std::string("crawl-data") + FILE_SEPARATOR,
+        "",
+    };
+
+    std::vector<std::string> bases;
+    for (unsigned i = 0; i < sizeof(rawbases) / sizeof(*rawbases); ++i)
+    {
+        std::string base = rawbases[i];
+        if (base.empty())
+            continue;
+
+        if (base[base.length() - 1] != FILE_SEPARATOR)
+            base += FILE_SEPARATOR;
+        bases.push_back(base);
+    }
+
+#ifndef DATA_DIR_PATH
+    bases.push_back("");
+#endif
+
+    for (unsigned b = 0, size = bases.size(); b < size; ++b)
+    {
+        for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
+        {
+            std::string name = bases[b] + prefixes[p] + basename;
+            if (file_exists(name))
+                return (name);
+        }
+    }
+
+    // Die horribly.
+    fprintf(stderr, "Cannot find data file '%s' anywhere, aborting\n", 
+            basename.c_str());
+    exit(1);
+
+    return ("");
+}
+
+void check_savedir(std::string &dir)
+{
+    if (dir.empty())
+        return;
+
+    std::string sep = " ";
+    sep[0] = FILE_SEPARATOR;
+
+    dir = replace_all(dir, "/", sep);
+    dir = replace_all(dir, "\\", sep);
+
+    // Suffix the separator if necessary
+    if (dir[dir.length() - 1] != FILE_SEPARATOR)
+        dir += FILE_SEPARATOR;
+
+    if (!dir_exists(dir) && !create_dirs(dir))
+    {
+        fprintf(stderr, "Save directory \"%s\" does not exist "
+                        "and I can't create it.\n",
+                    dir.c_str());
+        exit(1);
+    }
+}
+
+// Given a simple (relative) name of a save file, returns the full path of 
+// the file in the Crawl saves directory.
+std::string get_savedir_path(const std::string &shortpath)
+{
+    return (Options.save_dir + shortpath);
+}
+
+/*
+ * Returns a list of the names of characters that are already saved for the
+ * current user.
+ */
+std::vector<player> find_saved_characters()
+{
+    std::string searchpath = Options.save_dir;
+
+    if (searchpath.empty())
+        searchpath = ".";
+
+    std::vector<std::string> allfiles = get_dir_files(searchpath);
+    std::vector<player> chars;
+    for (int i = 0, size = allfiles.size(); i < size; ++i)
+    {
+        std::string filename = allfiles[i];
+#ifdef LOAD_UNPACKAGE_CMD
+        if (!is_packed_save(filename))
+            continue;
+
+        std::string basename = 
+            filename.substr(
+                    0,
+                    filename.length() - strlen(PACKAGE_SUFFIX));
+
+        std::string zipname = get_savedir_path(basename);
+
+        // This is the filename we actually read ourselves.
+        filename = basename + ".sav";
+
+        char cmd_buff[1024];
+        snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
+                  zipname.c_str(),
+                  filename.c_str() );
+
+        if (system(cmd_buff) != 0)
+            continue;
+#endif
+        if (is_save_file_name(filename))
+        {
+            player p = read_character_info(get_savedir_path(filename));
+            if (p.is_valid())
+                chars.push_back(p);
+        }
+
+#ifdef LOAD_UNPACKAGE_CMD
+        // If we unpacked the .sav file, throw it away now.
+        unlink( get_savedir_path(filename).c_str() );
+#endif
+    }
+
+    std::sort(chars.begin(), chars.end());
+    return (chars);
+}
+
+std::string get_savedir_filename(const char *prefix, const char *suffix, 
+                                 const char *extension, bool suppress_uid)
+{
+    std::string result = Options.save_dir;
+
+    // Shorten string as appropriate
+    result += std::string(prefix).substr(0, kFileNameLen);
+
+    // Technically we should shorten the string first.  But if
+    // MULTIUSER is set we'll have long filenames anyway. Caveat
+    // emptor.
+    if ( !suppress_uid )
+        result += uid_as_string();
+
+    result += suffix;
+
+    if ( *extension ) {
+	result += '.';
+	result += extension;
+    }
+
+#ifdef DOS
+    uppercase(result);
+#endif
+    return result;
 }
 
 std::string get_prefs_filename()
@@ -227,47 +530,17 @@ std::string get_prefs_filename()
     return get_savedir_filename("start", "ns", "prf");
 }
 
-void make_filename( char *buf, const char *prefix, int level, int where,
-                    bool isLabyrinth, bool isGhost )
+std::string make_filename( const char *prefix, int level, int where,
+                           bool isLabyrinth, bool isGhost )
 {
-    UNUSED( isGhost );
-
     char suffix[4], lvl[5];
-    char finalprefix[kFileNameLen];
-
     strcpy(suffix, (level < 10) ? "0" : "");
     itoa(level, lvl, 10);
     strcat(suffix, lvl);
     suffix[2] = where + 97;
-    suffix[3] = '\0';
-
-    // init buf
-    buf[0] = '\0';
-
-#ifdef SAVE_DIR_PATH
-    strcpy(buf, SAVE_DIR_PATH);
-#endif
-
-    strncpy(finalprefix, prefix, kFileNameLen);
-    finalprefix[kFileNameLen] = '\0';
-
-    strcat(buf, finalprefix);
-
-#ifdef SAVE_DIR_PATH
-    // everyone sees everyone else's ghosts. :)
-    char uid[10];
-    if (!isGhost)
-    {
-        itoa( (int) getuid(), uid, 10 );
-        strcat(buf, uid);
-    }
-#endif
-
-    strcat(buf, ".");
-    if (isLabyrinth)
-        strcat(buf, "lab");     // temporary level
-    else
-        strcat(buf, suffix);
+    suffix[3] = 0;
+    return get_savedir_filename( prefix, "", isLabyrinth ? "lab" : suffix,
+                                 isGhost );
 }
 
 static void write_tagged_file( FILE *dataFile, char majorVersion,
@@ -300,16 +573,9 @@ static void write_tagged_file( FILE *dataFile, char majorVersion,
 
 bool travel_load_map( char branch, int absdepth )
 {
-    char cha_fil[kFileNameSize];
-
-    make_filename( cha_fil, you.your_name, absdepth, branch,
-                   false, false );
-#ifdef DOS
-    strupr(cha_fil);
-#endif
-
     // Try to open level savefile.
-    FILE *levelFile = fopen(cha_fil, "rb");
+    FILE *levelFile = fopen(make_filename(you.your_name, absdepth, branch,
+                                          false, false).c_str(), "rb");
     if (!levelFile)
         return false;
 
@@ -320,7 +586,7 @@ bool travel_load_map( char branch, int absdepth )
     char minorVersion;
 
     if (!determine_level_version( levelFile, majorVersion, minorVersion )
-            || majorVersion != 4)
+            || majorVersion != SAVE_MAJOR_VERSION)
     {
         fclose(levelFile);
         return false;
@@ -333,37 +599,22 @@ bool travel_load_map( char branch, int absdepth )
     return true;
 }
 
+struct follower {
+    monsters mons;
+    std::vector<item_def> items;
+
+    follower() : mons(), items() { }
+    follower(const monsters &m) : mons(m), items() { }
+};
+
 void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
            char old_level, char where_were_you2 )
 {
     int j = 0;
     int i = 0, count_x = 0, count_y = 0;
-    char cha_fil[kFileNameSize];
 
-    int foll_class[8];
-    int foll_hp[8];
-    int foll_hp_max[8];
-    unsigned char foll_HD[8];
-    int foll_AC[8];
-    char foll_ev[8];
-    unsigned char foll_speed[8];
-    unsigned char foll_speed_inc[8];
+    std::vector<follower> followers;
 
-    unsigned char foll_targ_1_x[8];
-    unsigned char foll_targ_1_y[8];
-    unsigned char foll_beh[8];
-    unsigned char foll_att[8];
-    int foll_sec[8];
-    unsigned char foll_hit[8];
-
-    unsigned char foll_ench[8][NUM_MON_ENCHANTS];
-    unsigned char foll_flags[8];
-
-    item_def foll_item[8][8];
-
-    int itmf = 0;
-    int ic = 0;
-    int imn = 0;
     int val;
 
     bool just_created_level = false;
@@ -372,15 +623,17 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
     window(1, 1, 80, 25);
 #endif
 
-    make_filename( cha_fil, you.your_name, you.your_level, you.where_are_you,
-                   you.level_type != LEVEL_DUNGEON, false );
+    std::string cha_fil = make_filename( you.your_name, you.your_level,
+                                         you.where_are_you,
+                                         you.level_type != LEVEL_DUNGEON,
+                                         false );
 
     if (you.level_type == LEVEL_DUNGEON)
     {
         if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
         {
             // make sure old file is gone
-            unlink(cha_fil);
+            unlink(cha_fil.c_str());
 
             // save the information for later deletion -- DML 6/11/99
             tmp_file_pairs[you.your_level][you.where_are_you] = true;
@@ -388,9 +641,6 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
     }
 
     you.prev_targ = MHITNOT;
-
-    int following = -1;
-    int minvc = 0;
 
     // Don't delete clouds just because the player saved and restarted.
     if (load_mode != LOAD_RESTART_GAME)
@@ -412,13 +662,10 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                 if (count_x == you.x_pos && count_y == you.y_pos)
                     continue;
 
-                following++;
-                foll_class[following] = -1;
-
                 if (mgrd[count_x][count_y] == NON_MONSTER)
                     continue;
 
-                struct monsters *fmenv = &menv[mgrd[count_x][count_y]];
+                monsters *fmenv = &menv[mgrd[count_x][count_y]];
 
                 if (fmenv->type == MONS_PLAYER_GHOST
                     && fmenv->hit_points < fmenv->max_hit_points / 2)
@@ -438,52 +685,23 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                 mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-                foll_class[following] = fmenv->type;
-                foll_hp[following] = fmenv->hit_points;
-                foll_hp_max[following] = fmenv->max_hit_points;
-                foll_HD[following] = fmenv->hit_dice;
-                foll_AC[following] = fmenv->armour_class;
-                foll_ev[following] = fmenv->evasion;
-                foll_speed[following] = fmenv->speed;
-                foll_speed_inc[following] = fmenv->speed_increment;
-                foll_targ_1_x[following] = fmenv->target_x;
-                foll_targ_1_y[following] = fmenv->target_y;
+                follower f(*fmenv);
 
-                for (minvc = 0; minvc < NUM_MONSTER_SLOTS; ++minvc)
+                for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; ++minvc)
                 {
                     const int item = fmenv->inv[minvc];
                     if (item == NON_ITEM)
                     {
-                        foll_item[following][minvc].quantity = 0;
+                        f.items.push_back(item_def());
                         continue;
                     }
 
-                    foll_item[following][minvc] = mitm[item];
+                    f.items.push_back(mitm[item]);
                     destroy_item( item );
                 }
 
-                foll_beh[following] = fmenv->behaviour;
-                foll_att[following] = fmenv->attitude;
-                foll_sec[following] = fmenv->number;
-                foll_hit[following] = fmenv->foe;
-
-                for (j = 0; j < NUM_MON_ENCHANTS; j++)
-                {
-                    foll_ench[following][j] = fmenv->enchantment[j];
-                    fmenv->enchantment[j] = ENCH_NONE;
-                }
-
-                foll_flags[following] = fmenv->flags;
-
-                fmenv->flags = 0;
-                fmenv->type = -1;
-                fmenv->hit_points = 0;
-                fmenv->max_hit_points = 0;
-                fmenv->hit_dice = 0;
-                fmenv->armour_class = 0;
-                fmenv->evasion = 0;
-
-                mgrd[count_x][count_y] = NON_MONSTER;
+                followers.push_back(f);
+                monster_cleanup(fmenv);
             }
         }                        // end of grabbing followers
 
@@ -495,22 +713,18 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
     // clear out ghost/demon lord information:
     strcpy( ghost.name, "" );
-    for (ic = 0; ic < NUM_GHOST_VALUES; ++ic)
+    for (int ic = 0; ic < NUM_GHOST_VALUES; ++ic)
         ghost.values[ic] = 0;
 
-#ifdef DOS
-    strupr(cha_fil);
-#endif
-
     // Try to open level savefile.
-    FILE *levelFile = fopen(cha_fil, "rb");
+    FILE *levelFile = fopen(cha_fil.c_str(), "rb");
 
     // GENERATE new level when the file can't be opened:
     if (levelFile == NULL)
     {                           
         strcpy(ghost.name, "");
 
-        for (imn = 0; imn < NUM_GHOST_VALUES; ++imn)
+        for (int imn = 0; imn < NUM_GHOST_VALUES; ++imn)
             ghost.values[imn] = 0;
 
         builder( you.your_level, you.level_type );
@@ -541,7 +755,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         // sanity check - EOF
         if (!feof( levelFile ))
         {
-            snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n", cha_fil);
+            snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n", cha_fil.c_str());
             perror(info);
             end(-1);
         }
@@ -747,15 +961,14 @@ found_stair:
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     */
-    following = 0;
-    int fmenv = -1;
+    int following = 0;
 
     // actually "move" the followers if applicable
     if ((you.level_type == LEVEL_DUNGEON
             || you.level_type == LEVEL_PANDEMONIUM)
         && load_mode == LOAD_ENTER_LEVEL)
     {
-        for (ic = 0; ic < 2; ic++)
+        for (int ic = 0; ic < 2; ic++)
         {
             for (count_x = you.x_pos - 6; count_x < you.x_pos + 7;
                  count_x++)
@@ -789,64 +1002,41 @@ found_stair:
                             goto out_of_foll;
                     }
 
-                    while (fmenv < 7)
+                    if (followers.size())
                     {
-                        fmenv++;
+                        follower f = followers.front();
+                        followers.erase(followers.begin());
 
-                        if (foll_class[fmenv] == -1)
-                            continue;
-
-                        menv[following].type = foll_class[fmenv];
-                        menv[following].hit_points = foll_hp[fmenv];
-                        menv[following].max_hit_points = foll_hp_max[fmenv];
-                        menv[following].hit_dice = foll_HD[fmenv];
-                        menv[following].armour_class = foll_AC[fmenv];
-                        menv[following].evasion = foll_ev[fmenv];
-                        menv[following].speed = foll_speed[fmenv];
+                        menv[following] = f.mons;
                         menv[following].x = count_x;
                         menv[following].y = count_y;
                         menv[following].target_x = 0;
                         menv[following].target_y = 0;
-                        menv[following].speed_increment = foll_speed_inc[fmenv];
-
-                        for (minvc = 0; minvc < NUM_MONSTER_SLOTS; minvc++)
-                        {
-
-                            if (!is_valid_item(foll_item[fmenv][minvc]))
-                            {
-                                menv[following].inv[minvc] = NON_ITEM;
-                                continue;
-                            }
-
-                            itmf = get_item_slot(0);
-                            if (itmf == NON_ITEM)
-                            {
-                                menv[following].inv[minvc] = NON_ITEM;
-                                continue;
-                            }
-
-                            mitm[itmf] = foll_item[fmenv][minvc];
-                            mitm[itmf].x = 0;
-                            mitm[itmf].y = 0;
-                            mitm[itmf].link = NON_ITEM;
-
-                            menv[following].inv[minvc] = itmf;
-                        }
-
-                        menv[following].behaviour = foll_beh[fmenv];
-                        menv[following].attitude = foll_att[fmenv];
-                        menv[following].number = foll_sec[fmenv];
-                        menv[following].foe = foll_hit[fmenv];
-
-                        for (j = 0; j < NUM_MON_ENCHANTS; j++)
-                            menv[following].enchantment[j]=foll_ench[fmenv][j];
-
-                        menv[following].flags = foll_flags[fmenv];
                         menv[following].flags |= MF_JUST_SUMMONED;
 
+                        for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; minvc++)
+                        {
+                            menv[following].inv[minvc] = NON_ITEM;
+
+                            const item_def &minvitem = f.items[minvc];
+                            if (minvitem.base_type != OBJ_UNASSIGNED)
+                            {
+                                int itmf = get_item_slot(0);
+                                if (itmf == NON_ITEM)
+                                {
+                                    menv[following].inv[minvc] = NON_ITEM;
+                                    continue;
+                                }
+
+                                mitm[itmf] = minvitem;
+                                mitm[itmf].x = 0;
+                                mitm[itmf].y = 0;
+                                mitm[itmf].link = NON_ITEM;
+                                menv[following].inv[minvc] = itmf;
+                            }
+                        }
                         mgrd[count_x][count_y] = following;
-                        break;
-                    }
+                    } // followers.size()
                 }
             }
         }
@@ -932,24 +1122,18 @@ found_stair:
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 {
-    char cha_fil[kFileNameSize];
-
-    make_filename( cha_fil, you.your_name, level_saved, where_were_you,
-                   was_a_labyrinth, false );
+    std::string cha_fil = make_filename( you.your_name, level_saved,
+                                         where_were_you, was_a_labyrinth,
+                                         false );
 
     you.prev_targ = MHITNOT;
 
-#ifdef DOS
-    strupr(cha_fil);
-#endif
-
-    FILE *saveFile = fopen(cha_fil, "wb");
+    FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 
     if (saveFile == NULL)
     {
-        strcpy(info, "Unable to open \"");
-        strcat(info, cha_fil );
-        strcat(info, "\" for writing!");
+        snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!",
+                 cha_fil.c_str());
         perror(info);
         end(-1);
     }
@@ -957,164 +1141,95 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // nail all items to the ground
     fix_item_coordinates();
 
-    // 4.0 initial genesis of saved format
-    // 4.1 added attitude tag
-    // 4.2 replaced old 'enchantment1' and with 'flags' (bitfield)
-    // 4.3 changes to make the item structure more sane  
-    // 4.4 changes to the ghost save section
-    // 4.5 spell and ability letter arrays
-    // 4.6 inventory slots of items
-    // 4.7 origin tracking for items
-    // 4.8 widened env.map to 2 bytes
+    // 0.0 initial genesis of saved format
+    // 0.1 added attitude tag
+    // 0.2 replaced old 'enchantment1' and with 'flags' (bitfield)
+    // 0.3 changes to make the item structure more sane  
+    // 0.4 changes to the ghost save section
+    // 0.5 spell and ability letter arrays
+    // 0.6 inventory slots of items
+    // 0.7 origin tracking for items
+    // 0.8 widened env.map to 2 bytes
+    // 0.9 inscriptions (hp)
+    // 0.10 Monster colour and spells separated from mons->number.
 
-    write_tagged_file( saveFile, 4, 8, TAGTYPE_LEVEL );
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 10, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    chmod(cha_fil, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+    DO_CHMOD_PRIVATE(cha_fil.c_str());
 }                               // end save_level()
+
 
 void save_game(bool leave_game)
 {
-    char charFile[kFileNameSize];
-#ifdef STASH_TRACKING
-    char stashFile[kFileNameSize + 4];
-#endif
-    char killFile[kFileNameSize + 4];
-    char travelCacheFile[kFileNameSize + 4];
-#ifdef CLUA_BINDINGS
-    char luaFile[kFileNameSize + 4];
-#endif
-
-#ifdef SAVE_PACKAGE_CMD
-    char cmd_buff[1024];
-    char name_buff[kFileNameSize];
-
-    snprintf( name_buff, sizeof(name_buff), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-
-    snprintf( cmd_buff, sizeof(cmd_buff), 
-              SAVE_PACKAGE_CMD, name_buff, name_buff );
 
 #ifdef STASH_TRACKING
-    strcpy(stashFile, name_buff);
-#endif
-#ifdef CLUA_BINDINGS
-    strcpy(luaFile, name_buff);
-#endif
-    strcpy(killFile, name_buff);
-    strcpy(travelCacheFile, name_buff);
-    snprintf( charFile, sizeof(charFile), 
-              "%s.sav", name_buff );
-
-#else
-    strncpy(charFile, you.your_name, kFileNameLen);
-    charFile[kFileNameLen] = 0;
-
-#ifdef STASH_TRACKING
-    strcpy(stashFile, charFile);
-#endif
-#ifdef CLUA_BINDINGS
-    strcpy(luaFile, charFile);
-#endif
-    strcpy(killFile, charFile);
-    strcpy(travelCacheFile, charFile);
-    strcat(charFile, ".sav");
-
-#ifdef DOS
-    strupr(charFile);
-#ifdef STASH_TRACKING
-    strupr(stashFile);
-#endif
-#ifdef CLUA_BINDINGS
-    strupr(luaFile);
-#endif
-    strupr(killFile);
-    strupr(travelCacheFile);
-#endif
-#endif
-
-#ifdef STASH_TRACKING
-    strcat(stashFile, ".st");
-#endif
-#ifdef CLUA_BINDINGS
-    strcat(luaFile, ".lua");
-#endif
-    strcat(killFile, ".kil");
-    strcat(travelCacheFile, ".tc");
-
-#ifdef STASH_TRACKING
-    FILE *stashf = fopen(stashFile, "wb");
-    if (stashf)
-    {
+    /* Stashes */
+    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    FILE *stashf = fopen(stashFile.c_str(), "wb");
+    if (stashf) {
         stashes.save(stashf);
         fclose(stashf);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(stashFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+	DO_CHMOD_PRIVATE(stashFile.c_str());
     }
-#endif // STASH_TRACKING
+#endif
 
 #ifdef CLUA_BINDINGS
-    clua.save(luaFile);
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    // change mode; note that luaFile may not exist
-    chmod(luaFile, SHARED_FILES_CHMOD_PRIVATE);
+    /* lua */
+    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
+    clua.save(luaFile.c_str());
+    // note that luaFile may not exist
+    DO_CHMOD_PRIVATE(luaFile.c_str());
 #endif
-#endif // CLUA_BINDINGS
 
-    FILE *travelf = fopen(travelCacheFile, "wb");
-    if (travelf)
-    {
-        travel_cache.save(travelf);
-        fclose(travelf);
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(travelCacheFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
-    }
-
-    FILE *killf = fopen(killFile, "wb");
-    if (killf)
-    {
+    /* kills */
+    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    FILE *killf = fopen(killFile.c_str(), "wb");
+    if (killf) {
         you.kills.save(killf);
         fclose(killf);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-        // change mode (unices)
-        chmod(killFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+	DO_CHMOD_PRIVATE(killFile.c_str());
     }
 
-    FILE *saveFile = fopen(charFile, "wb");
-
-    if (saveFile == NULL)
-    {
-        strcpy(info, "Unable to open \"");
-        strcat(info, charFile );
-        strcat(info, "\" for writing!");
-        perror(info);
-        end(-1);
+    /* travel cache */
+    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
+    FILE *travelf = fopen(travelCacheFile.c_str(), "wb");
+    if (travelf) {
+        travel_cache.save(travelf);
+        fclose(travelf);
+	DO_CHMOD_PRIVATE(travelCacheFile.c_str());
+    }
+    
+    /* notes */
+    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
+    FILE *notesf = fopen(notesFile.c_str(), "wb");
+    if (notesf) {
+	save_notes(notesf);
+        fclose(notesf);
+	DO_CHMOD_PRIVATE(notesFile.c_str());
     }
 
-    // 4.0 initial genesis of saved format
-    // 4.1 changes to make the item structure more sane  
-    // 4.2 spell and ability tables
-    // 4.3 added you.magic_contamination (05/03/05)
-    // 4.4 added item origins
+    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    FILE *charf = fopen(charFile.c_str(), "wb");
+    if (!charf) {
+	snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!\n",
+                 charFile.c_str());
+	perror(info);
+	end(-1);
+    }
 
-    write_tagged_file( saveFile, 4, 4, TAGTYPE_PLAYER );
+    // 0.0 initial genesis of saved format
+    // 0.1 changes to make the item structure more sane  
+    // 0.2 spell and ability tables
+    // 0.3 added you.magic_contamination (05/03/05)
+    // 0.4 added item origins
+    // 0.5 added num_gifts
+    // 0.6 inscriptions
+    write_tagged_file( charf, SAVE_MAJOR_VERSION, 6, TAGTYPE_PLAYER );
 
-    fclose(saveFile);
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    // change mode (unices)
-    chmod(charFile, SHARED_FILES_CHMOD_PRIVATE);
-#endif
+    fclose(charf);
+    DO_CHMOD_PRIVATE(charFile.c_str());
 
     // if just save, early out
     if (!leave_game)
@@ -1131,21 +1246,19 @@ void save_game(bool leave_game)
     clrscr();
 
 #ifdef SAVE_PACKAGE_CMD
-    if (system( cmd_buff ) != 0)
-    {
+    std::string basename = get_savedir_filename(you.your_name, "", "");
+    char cmd_buff[1024];
+
+    snprintf( cmd_buff, sizeof(cmd_buff), 
+              SAVE_PACKAGE_CMD, basename.c_str(), basename.c_str() );
+
+    if (system( cmd_buff ) != 0) {
         cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned non-zero value!" EOL );
     }
-
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-    strcat( name_buff, PACKAGE_SUFFIX );
-    // change mode (unices)
-    chmod( name_buff, SHARED_FILES_CHMOD_PRIVATE );
-#endif
-
+    DO_CHMOD_PRIVATE ( (basename + PACKAGE_SUFFIX).c_str() );
 #endif
 
     cprintf( "See you soon, %s!" EOL , you.your_name );
-
     end(0);
 }                               // end save_game()
 
@@ -1153,14 +1266,15 @@ void load_ghost(void)
 {
     char majorVersion;
     char minorVersion;
-    char cha_fil[kFileNameSize];
     int imn;
     int i;
 
-    make_filename( cha_fil, "bones", you.your_level, you.where_are_you,
-                   (you.level_type != LEVEL_DUNGEON), true );
+    std::string cha_fil = make_filename("bones", you.your_level,
+                                        you.where_are_you,
+                                        (you.level_type != LEVEL_DUNGEON),
+                                        true );
 
-    FILE *gfile = fopen(cha_fil, "rb");
+    FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
     if (gfile == NULL)
         return;                 // no such ghost.
@@ -1170,7 +1284,7 @@ void load_ghost(void)
         fclose(gfile);
 #if DEBUG_DIAGNOSTICS
         snprintf( info, INFO_SIZE, "Ghost file \"%s\" seems to be invalid.",
-            cha_fil);
+                  cha_fil.c_str());
         mpr( info, MSGCH_DIAGNOSTICS );
         more();
 #endif
@@ -1184,8 +1298,8 @@ void load_ghost(void)
     {
         fclose(gfile);
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Incomplete read of \"%s\".", cha_fil);
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
+                  cha_fil.c_str() );
         more();
 #endif
         return;
@@ -1198,7 +1312,7 @@ void load_ghost(void)
 #endif
 
     // remove bones file - ghosts are hardly permanent.
-    unlink(cha_fil);
+    unlink(cha_fil.c_str());
 
     // translate ghost to monster and place.
     for (imn = 0; imn < MAX_MONSTERS - 10; imn++)
@@ -1219,17 +1333,9 @@ void load_ghost(void)
         menv[imn].flags = 0;
         menv[imn].foe = MHITNOT;
         menv[imn].foe_memory = 0;
-
+        menv[imn].colour = mons_class_colour(MONS_PLAYER_GHOST);
         menv[imn].number = 250;
-
-        for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
-        {
-            if (ghost.values[i] != MS_NO_SPELL)
-            {
-                menv[imn].number = MST_GHOST;
-                break;
-            }
-        }
+        mons_load_spells(&menv[imn], MST_GHOST);
 
         for (i = 0; i < NUM_MONSTER_SLOTS; i++)
             menv[imn].inv[i] = NON_ITEM;
@@ -1253,58 +1359,12 @@ void load_ghost(void)
 
 void restore_game(void)
 {
-    char char_f[kFileNameSize];
-    char kill_f[kFileNameSize];
-    char travel_f[kFileNameSize];
-#ifdef STASH_TRACKING
-    char stash_f[kFileNameSize];
-#endif
-
-#ifdef CLUA_BINDINGS
-    char lua_f[kFileNameSize];
-#endif
-    
-#ifdef SAVE_DIR_PATH
-    snprintf( char_f, sizeof(char_f), 
-              SAVE_DIR_PATH "%s%d", you.your_name, (int) getuid() );
-#else
-    strncpy(char_f, you.your_name, kFileNameLen);
-    char_f[kFileNameLen] = 0;
-#endif
-
-    strcpy(kill_f, char_f);
-    strcpy(travel_f, char_f);
-#ifdef CLUA_BINDINGS
-    strcpy(lua_f, char_f);
-    strcat(lua_f, ".lua");
-#endif
-#ifdef STASH_TRACKING
-    strcpy(stash_f, char_f);
-    strcat(stash_f, ".st");
-#endif
-    strcat(kill_f, ".kil");
-    strcat(travel_f, ".tc");
-    strcat(char_f, ".sav");
-
-#ifdef DOS
-    strupr(char_f);
-#ifdef STASH_TRACKING
-    strupr(stash_f);
-#endif
-    strupr(kill_f);
-    strupr(travel_f);
-#ifdef CLUA_BINDINGS
-    strupr(lua_f);
-#endif
-#endif
-
-    FILE *restoreFile = fopen(char_f, "rb");
-
-    if (restoreFile == NULL)
+    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    FILE *charf = fopen(charFile.c_str(), "rb");
+    if (!charf )
     {
-        strcpy(info, "Unable to open \"");
-        strcat(info, char_f );
-        strcat(info, "\" for reading!");
+	snprintf(info, INFO_SIZE, "Unable to open %s for reading!\n",
+		 charFile.c_str() );
         perror(info);
         end(-1);
     }
@@ -1312,49 +1372,58 @@ void restore_game(void)
     char majorVersion = 0;
     char minorVersion = 0;
 
-    if (!determine_version(restoreFile, majorVersion, minorVersion))
+    if (!determine_version(charf, majorVersion, minorVersion))
     {
         perror("\nSavefile appears to be invalid.\n");
         end(-1);
     }
 
-    restore_version(restoreFile, majorVersion, minorVersion);
+    restore_version(charf, majorVersion, minorVersion);
 
     // sanity check - EOF
-    if (!feof(restoreFile))
+    if (!feof(charf))
     {
-        snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n", char_f);
+        snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n",
+		  charFile.c_str());
         perror(info);
         end(-1);
     }
 
-    fclose(restoreFile);
+    fclose(charf);
 
 #ifdef STASH_TRACKING
-    FILE *stashFile = fopen(stash_f, "rb");
-    if (stashFile)
-    {
-        stashes.load(stashFile);
-        fclose(stashFile);
+    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    FILE *stashf = fopen(stashFile.c_str(), "rb");
+    if (stashf) {
+        stashes.load(stashf);
+        fclose(stashf);
     }
 #endif
 
 #ifdef CLUA_BINDINGS
-    clua.execfile( lua_f );
-#endif // CLUA_BINDINGS
+    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
+    clua.execfile( luaFile.c_str() );
+#endif
 
-    FILE *travelFile = fopen(travel_f, "rb");
-    if (travelFile)
-    {
-        travel_cache.load(travelFile);
-        fclose(travelFile);
+    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    FILE *killf = fopen(killFile.c_str(), "rb");
+    if (killf) {
+        you.kills.load(killf);
+        fclose(killf);
     }
 
-    FILE *killFile = fopen(kill_f, "rb");
-    if (killFile)
-    {
-        you.kills.load(killFile);
-        fclose(killFile);
+    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
+    FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
+    if (travelf) {
+        travel_cache.load(travelf);
+        fclose(travelf);
+    }
+
+    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
+    FILE *notesf = fopen(notesFile.c_str(), "rb");
+    if (notesf) {
+	load_notes(notesf);
+	fclose(notesf);
     }
 }
 
@@ -1366,23 +1435,14 @@ static bool determine_version( FILE *restoreFile,
     if (read2(restoreFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // check for 3.30
-    if (buf[0] == you.your_name[0] && buf[1] == you.your_name[1])
-    {
-        majorVersion = 0;
-        minorVersion = 0;
-        rewind(restoreFile);
-        return true;
-    }
-
     // otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 1 || majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 1 or 4, no idea!
+    return false;   // if its not 0, no idea
 }
 
 static void restore_version( FILE *restoreFile, 
@@ -1390,7 +1450,7 @@ static void restore_version( FILE *restoreFile,
 {
     // assuming the following check can be removed once we can read all
     // savefile versions.
-    if (majorVersion < 4)
+    if (majorVersion != SAVE_MAJOR_VERSION)
     {
         snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d savefile.\n",
             majorVersion, minorVersion);
@@ -1400,7 +1460,7 @@ static void restore_version( FILE *restoreFile,
 
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(restoreFile, TAGTYPE_PLAYER, minorVersion);
             break;
         default:
@@ -1423,6 +1483,8 @@ static void restore_tagged_file( FILE *restoreFile, int fileType,
         if (i == 0)                 // no tag!
             break;
         tags[i] = 0;                // tag read
+        if (fileType == TAGTYPE_PLAYER_NAME)
+            break;
     }
 
     // go through and init missing tags
@@ -1441,23 +1503,14 @@ static bool determine_level_version( FILE *levelFile,
     if (read2(levelFile, buf, 2) != 2)
         return false;               // empty file?
 
-    // check for 3.30 -- simply started right in with player name.
-    if (isprint(buf[0]) && buf[0] > 4)      // who knows?
-    {
-        majorVersion = 0;
-        minorVersion = 0;
-        rewind(levelFile);
-        return true;
-    }
-
     // otherwise, read version and validate.
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 1 || majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 1 or 4, no idea!
+    return false;   // if its not SAVE_MAJOR_VERSION, no idea
 }
 
 static void restore_level_version( FILE *levelFile, 
@@ -1465,7 +1518,7 @@ static void restore_level_version( FILE *levelFile,
 {
     // assuming the following check can be removed once we can read all
     // savefile versions.
-    if (majorVersion < 4)
+    if (majorVersion != SAVE_MAJOR_VERSION)
     {
         snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d level file.\n",
             majorVersion, minorVersion);
@@ -1475,7 +1528,7 @@ static void restore_level_version( FILE *levelFile,
 
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
             break;
         default:
@@ -1504,42 +1557,19 @@ static bool determine_ghost_version( FILE *ghostFile,
     majorVersion = buf[0];
     minorVersion = buf[1];
 
-    if (majorVersion == 4)
+    if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 4, no idea!
-}
-
-static void restore_old_ghost( FILE *ghostFile )
-{
-    char buf[41];
-
-    read2(ghostFile, buf, 41);  // 41 causes EOF. 40 will not.
-
-    // translate
-    memcpy( ghost.name, buf, 20 );
-
-    for (int i = 0; i < 20; i++)
-        ghost.values[i] = static_cast< unsigned short >( buf[i+20] );
-
-    if (ghost.values[ GVAL_RES_FIRE ] >= 97)
-        ghost.values[ GVAL_RES_FIRE ] -= 100;
-
-    if (ghost.values[ GVAL_RES_COLD ] >= 97)
-        ghost.values[ GVAL_RES_COLD ] -= 100;
+    return false;   // if its not SAVE_MAJOR_VERSION, no idea!
 }
 
 static void restore_ghost_version( FILE *ghostFile, 
                                    char majorVersion, char minorVersion )
 {
-    // currently, we can read all known ghost versions.
     switch(majorVersion)
     {
-        case 4:
+        case SAVE_MAJOR_VERSION:
             restore_tagged_file(ghostFile, TAGTYPE_GHOST, minorVersion);
-            break;
-        case 0:
-            restore_old_ghost(ghostFile);
             break;
         default:
             break;
@@ -1548,16 +1578,17 @@ static void restore_ghost_version( FILE *ghostFile,
 
 void save_ghost( bool force )
 {
-    char cha_fil[kFileNameSize];
     const int wpn = you.equip[EQ_WEAPON];
 
     if (!force && (you.your_level < 2 || you.is_undead))
         return;
 
-    make_filename( cha_fil, "bones", you.your_level, you.where_are_you,
-                   (you.level_type != LEVEL_DUNGEON), true );
+    std::string cha_fil = make_filename( "bones", you.your_level,
+                                         you.where_are_you,
+                                         (you.level_type != LEVEL_DUNGEON),
+                                         true );
 
-    FILE *gfile = fopen(cha_fil, "rb");
+    FILE *gfile = fopen(cha_fil.c_str(), "rb");
 
     // don't overwrite existing bones!
     if (gfile != NULL)
@@ -1566,7 +1597,7 @@ void save_ghost( bool force )
         return;
     }
 
-    memcpy(ghost.name, you.your_name, 20);
+    snprintf(ghost.name, sizeof ghost.name, "%s", you.your_name);
 
     ghost.values[ GVAL_MAX_HP ]    = ((you.hp_max >= 150) ? 150 : you.hp_max);
     ghost.values[ GVAL_EV ]        = player_evasion();
@@ -1628,20 +1659,20 @@ void save_ghost( bool force )
 
     add_spells(ghost);
 
-    gfile = fopen(cha_fil, "wb");
+    gfile = fopen(cha_fil.c_str(), "wb");
 
     if (gfile == NULL)
     {
-        strcpy(info, "Error creating ghost file: ");
-        strcat(info, cha_fil);
+        snprintf(info, INFO_SIZE, "Error creating ghost file: %s",
+                 cha_fil.c_str());
         mpr(info);
         more();
         return;
     }
 
-    // 4.0-4.3  old tagged savefile (values as unsigned char)
-    // 4.4      new tagged savefile (values as signed short)
-    write_tagged_file( gfile, 4, 4, TAGTYPE_GHOST );
+    // 0.0-0.3  old tagged savefile (values as unsigned char)
+    // 0.4      new tagged savefile (values as signed short)
+    write_tagged_file( gfile, SAVE_MAJOR_VERSION, 4, TAGTYPE_GHOST );
 
     fclose(gfile);
 
@@ -1649,9 +1680,7 @@ void save_ghost( bool force )
     mpr( "Saved ghost.", MSGCH_DIAGNOSTICS );
 #endif
 
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    chmod(cha_fil, SHARED_FILES_CHMOD_PUBLIC);
-#endif
+    DO_CHMOD_PRIVATE(cha_fil.c_str());
 }                               // end save_ghost()
 
 /*
@@ -1793,10 +1822,12 @@ unsigned char translate_spell(unsigned char spel)
    case MEPHITIC_CLOUD: return ; */
     case SPELL_VENOM_BOLT:
         return (MS_VENOM_BOLT);
+    case SPELL_POISON_ARROW:
+        return (MS_POISON_ARROW);
     case SPELL_TELEPORT_OTHER:
         return (MS_TELEPORT_OTHER);
     case SPELL_SUMMON_SMALL_MAMMAL:
-        return (MS_VAMPIRE_SUMMON);       /* approximate */
+        return (MS_SUMMON_SMALL_MAMMALS);
     case SPELL_BOLT_OF_DRAINING:
         return (MS_NEGATIVE_BOLT);
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
@@ -1807,6 +1838,8 @@ unsigned char translate_spell(unsigned char spel)
         return (MS_ORB_ENERGY);
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return (MS_LEVEL_SUMMON); /* approximate */
+    case SPELL_SHADOW_CREATURES:
+	return (MS_LEVEL_SUMMON); /* approximate */
     case SPELL_ANIMATE_DEAD:
         return (MS_ANIMATE_DEAD);
     case SPELL_PAIN:
@@ -1861,7 +1894,7 @@ void generate_random_demon(void)
 
     char st_p[ITEMNAME_SIZE];
 
-    make_name(random2(250), random2(250), random2(250), 3, st_p);
+    make_name(random_int(), false, st_p);
     strcpy(ghost.name, st_p);
 
     // hp - could be defined below (as could ev, AC etc). Oh well, too late:
@@ -1944,7 +1977,7 @@ void generate_random_demon(void)
     menv[rdem].evasion = ghost.values[ GVAL_EV ];
     menv[rdem].speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
     menv[rdem].speed_increment = 70;
-    menv[rdem].number = random_colour();        // demon's colour
+    menv[rdem].colour = random_colour();        // demon's colour
 
     for (i = GVAL_SPELL_1; i <= GVAL_SPELL_6; i++)
         ghost.values[i] = SPELL_NO_SPELL;
@@ -2079,8 +2112,6 @@ void generate_random_demon(void)
 // Largest string we'll save
 #define STR_CAP 1000
 
-using std::string;
-
 void writeShort(FILE *file, short s)
 {
     char data[2];
@@ -2112,7 +2143,7 @@ unsigned char readByte(FILE *file)
     return byte;
 }
 
-void writeString(FILE* file, const string &s)
+void writeString(FILE* file, const std::string &s)
 {
     int length = s.length();
     if (length > STR_CAP) length = STR_CAP;
@@ -2120,14 +2151,14 @@ void writeString(FILE* file, const string &s)
     write2(file, s.c_str(), length);
 }
 
-string readString(FILE *file)
+std::string readString(FILE *file)
 {
     char buf[STR_CAP + 1];
     short length = readShort(file);
     if (length)
         read2(file, buf, length);
-    buf[length] = '\0';
-    return string(buf);
+    buf[length] = 0;
+    return std::string(buf);
 }
 
 void writeLong(FILE* file, long num)

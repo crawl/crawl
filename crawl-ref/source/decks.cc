@@ -2,6 +2,8 @@
  *  File:       decks.cc
  *  Summary:    Functions with decks of cards.
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -224,7 +226,7 @@ void deck_of_cards(unsigned char which_deck)
     unsigned char *card = deck_of_wonders;
     unsigned char max_card = 0;
     int i = 0;
-    int brownie_points = 0;     // for passing to done_good() {dlb}
+    int brownie_points = 0;     // for passing to did_god_conduct() {dlb}
 
     mpr("You draw a card...");
 
@@ -292,7 +294,7 @@ void deck_of_cards(unsigned char which_deck)
         if (which_deck == DECK_OF_WONDERS || one_chance_in(3))
             brownie_points++;
 
-        done_good(GOOD_CARDS, brownie_points);
+        did_god_conduct(DID_CARDS, brownie_points);
     }
 
     return;
@@ -774,7 +776,7 @@ static void cards(unsigned char which_card)
 
     case CARD_TORMENT:
         mpr("You have drawn the Symbol of Torment.");
-        torment( you.x_pos, you.y_pos );
+        torment( TORMENT_CARDS, you.x_pos, you.y_pos );
         break;
 
 // what about checking whether there are items there, too? {dlb}
@@ -800,36 +802,20 @@ static void cards(unsigned char which_card)
     case CARD_ALTAR:
         mpr("You have drawn the Altar.");
 
-        if (you.religion == GOD_NO_GOD)
+        if (you.religion == GOD_NO_GOD ||
+            grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
         }
         else
         {
             dvar1 = 179 + you.religion;
-
-            if (grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
-            {
-                strcpy(info, "An altar grows from the floor ");
-                strcat(info,
-                        (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                                            ? "before you!" : "at your feet!");
-                mpr(info);
-                grd[you.x_pos][you.y_pos] = dvar1;
-            }
-            else
-            {
-                do
-                {
-                    dvar[0] = 10 + random2(GXM - 20);
-                    dvar[1] = 10 + random2(GYM - 20);
-                }
-                while (grd[dvar[0]][dvar[1]] != DNGN_FLOOR);
-
-                grd[dvar[0]][dvar[1]] = dvar1;
-
-                mpr( "You sense divine power!" );
-            }
+            
+            snprintf( info, INFO_SIZE, "An altar grows from the floor %s!",
+                      (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                      ? "before you" : "at your feet");
+            mpr(info);
+            grd[you.x_pos][you.y_pos] = dvar1;
         }
         break;
 

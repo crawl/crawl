@@ -3,6 +3,8 @@
  *  Summary:    Functions related to ranged attacks.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     -/--/--        LRH             Created
@@ -82,6 +84,7 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x, unsigned char c
  * *********************************************************************** */
 void fire_tracer( struct monsters *monster, struct bolt &pbolt );
 
+bool check_line_of_sight( int sx, int sy, int tx, int ty );
 
 /* ***********************************************************************
  * called from: monstuff
@@ -90,5 +93,7 @@ void mimic_alert( struct monsters *mimic );
 
 
 void zapping( char ztype, int power, struct bolt &pbolt );
+
+int affect(struct bolt &beam, int x, int y);
 
 #endif

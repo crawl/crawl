@@ -6,6 +6,8 @@
  *  Summary:    Records location of stairs etc
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>      30/7/00        MV      Made Over-map full-screen
@@ -26,6 +28,7 @@
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
+#include "misc.h"
 #include "religion.h"
 #include "stuff.h"
 #include "view.h"
@@ -63,6 +66,22 @@ void print_one_highlighted_line( const char *pre, const char *text,
 
 static void print_level_name( int branch, int depth, 
                               bool &printed_branch, bool &printed_level );
+
+void seen_notable_thing( int which_thing )
+{
+    // Don't record in temporary terrain
+    if (you.level_type != LEVEL_DUNGEON)
+        return;
+
+    const god_type god = grid_altar_god(which_thing);
+
+    if (god != GOD_NO_GOD)
+        seen_altar( god );
+    else if (grid_is_branch_stairs( which_thing ))
+        seen_staircase( which_thing );
+    else
+        seen_other_thing( which_thing );
+}
 
 void init_overmap( void )
 {
@@ -196,7 +215,7 @@ void display_overmap( void )
             {
                 pr_lev = false;
                 // strcpy(info, "    - a staircase leading to ");
-                info[0] = '\0';
+                info[0] = 0;
 
                 if (stair_level[k] == j)
                 {
@@ -359,7 +378,7 @@ static void print_level_name( int branch, int depth,
         }
 
         // we need our own buffer in here (info is used):
-        char buff[ INFO_SIZE ] = "\0";;
+        char buff[INFO_SIZE];
 
         if (branch == BRANCH_MAIN_DUNGEON)
             depth += 1;
@@ -424,9 +443,23 @@ void seen_staircase( unsigned char which_staircase )
     case DNGN_ENTER_SWAMP:
         which_branch = BRANCH_SWAMP;
         break;
+    case DNGN_ENTER_DIS:
+        which_branch = BRANCH_DIS;
+        break;
+    case DNGN_ENTER_GEHENNA:
+        which_branch = BRANCH_GEHENNA;
+        break;
+    case DNGN_ENTER_COCYTUS:
+        which_branch = BRANCH_COCYTUS;
+        break;
+    case DNGN_ENTER_TARTARUS:
+        which_branch = BRANCH_TARTARUS;
+        break;
     default:
-        exit(-1);               // shouldn't happen
+        break;
     }
+
+    ASSERT(which_branch != BRANCH_MAIN_DUNGEON);
 
     stair_level[which_branch] = you.your_level;
 }          // end seen_staircase()
@@ -486,7 +519,7 @@ void seen_other_thing( unsigned char which_thing )
  * prints "More..." message, read key, clear screen and after that prints new
  * line
  */
-void print_one_simple_line( const char *line , int colour)
+void print_one_simple_line( const char *line, int colour)
 {
     if (map_lines == (get_number_of_lines() - 2))
     {
@@ -499,9 +532,7 @@ void print_one_simple_line( const char *line , int colour)
     }
 
     textcolor( colour );
-    cprintf( line );
-    cprintf( EOL );
-
+    cprintf( "%s" EOL, line );
     map_lines++;
 }
 
@@ -518,19 +549,19 @@ void print_one_highlighted_line( const char *pre, const char *text,
         map_lines = 0;
     }
 
-    if (pre[0] != '\0')
+    if (pre[0] != 0)
     {
         textcolor( LIGHTGREY );
-        cprintf( pre );
+        cprintf( "%s", pre );
     }
 
     textcolor( colour );
-    cprintf( text );
+    cprintf( "%s", text );
 
-    if (post[0] != '\0')
+    if (post[0] != 0)
     {
         textcolor( LIGHTGREY );
-        cprintf( post );
+        cprintf( "%s", post );
     }
 
     cprintf( EOL );

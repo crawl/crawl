@@ -1,0 +1,155 @@
+%{
+
+// levcomp.l:
+//      Level compiler lexer for Dungeon Crawl Stone Soup.
+// 
+// Based loosely on NetHack's lev_comp.l
+
+#include "AppHdr.h"
+#include "levcomp.tab.h"
+#include <cstring>
+
+static bool alloced = false;
+
+static void clean()
+{
+    if (yylval.text && alloced)
+        free( (void*) yylval.text);
+    yylval.text = NULL;
+    alloced = false;
+}
+
+static void settext()
+{
+    clean();
+    if ((yylval.text = strdup(yytext)))
+        alloced = true;
+}
+
+%}
+
+%s MAPDEF
+%s ARGUMENT
+%s MNAME
+%s KEYWORDS
+
+%option yylineno
+%option never-interactive
+
+NSPACE [^\ \t\r\n]
+
+%%
+
+<MAPDEF>^\s*ENDMAP  { BEGIN(INITIAL); }
+
+<MAPDEF>^#.*\r?\n   ;
+
+<MAPDEF>[a-zA-Z_&0-9|$+.@^#()\[\]=<>{}%*\-?]* {
+                        settext();
+                        return MAP_LINE;
+                    }
+
+^\s*MAP                { BEGIN(MAPDEF); }
+
+^\s*#.*             ;
+
+NAME:               { BEGIN(ARGUMENT); return NAME; }
+default-depth:      return DEFAULT_DEPTH;
+DEPTH:              return DEPTH;
+ORIENT:             return ORIENT;
+PLACE:              { BEGIN(ARGUMENT); return PLACE; }
+CHANCE:             return CHANCE;
+FLAGS:              return FLAGS;
+TAGS:               { BEGIN(KEYWORDS); return TAGS; }
+SYMBOL:             { BEGIN(ARGUMENT); return SYMBOL; }
+MONS:               { BEGIN(MNAME); return MONS; }
+
+BRANCHDEF:          return BRANCH;
+DEFAULT             return DEFAULT;
+DESC:               return DESC;
+BRANCH:             return BRANCH;
+ROOT_DEPTH:         return ROOT_DEPTH;
+FLOOR_COLOUR:       return FLOOR_COLOUR;
+ROCK_COLOUR:        return ROCK_COLOUR;
+
+LEVEL             return LEVEL;
+END               return END;
+PVAULT:             return PVAULT;
+PMINIVAULT:         return PMINIVAULT;
+
+ENTRY_MSG:          { BEGIN(ARGUMENT); return ENTRY_MSG; }
+EXIT_MSG:           { BEGIN(ARGUMENT); return EXIT_MSG; }
+
+MONSTERS          return MONSTERS;
+ENDMONSTERS       return ENDMONSTERS;
+
+<KEYWORDS>[A-Za-z_0-9\-]+   { 
+                        settext();
+                        return STRING;
+                    }
+
+<KEYWORDS>[ \t]+    ;
+<KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<MNAME>[^, \t\r\n][^,\r\n]+[^, \t\r\n] { 
+                        settext();
+                        return MONSTER_NAME; 
+                    }
+
+<MNAME>,            return COMMA;
+<MNAME>[ \t]*\r?\n   { BEGIN(INITIAL); }
+<MNAME>[ \t]        ;
+
+pandemonic          return PANDEMONIC;
+no_hmirror          return NO_HMIRROR;
+no_vmirror          return NO_VMIRROR;
+no_rotate           return NO_ROTATE;
+
+encompass           return ENCOMPASS;
+north               return NORTH;
+south               return SOUTH;
+east                return EAST;
+west                return WEST;
+northeast           return NORTHEAST;
+northwest           return NORTHWEST;
+southeast           return SOUTHEAST;
+southwest           return SOUTHWEST;
+
+-                   return DASH;
+,                   return COMMA;
+
+[0-9]+              {
+                        clean();
+                        yylval.i = atoi(yytext);
+                        return INTEGER;
+                    }
+
+<ARGUMENT>{NSPACE}.*{NSPACE} { 
+                        BEGIN(INITIAL);
+                        settext();
+                        return STRING; 
+                    }
+
+<ARGUMENT>\r?\n     { BEGIN(INITIAL); }
+
+[\ \t\r\n]+         ;
+
+\(                   return OPAREN;
+\)                   return CPAREN;
+
+\"                  return QUOTE;
+
+[a-zA-Z_][a-zA-Z_0-9]+ {
+                        settext();
+                        return IDENTIFIER;
+                    }
+
+.                   return CHARACTER;
+
+%%
+
+int yywrap()
+{
+    clean();
+    return 1;
+}

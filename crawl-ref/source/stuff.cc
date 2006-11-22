@@ -14,7 +14,10 @@
  */
 
 #include "AppHdr.h"
+#include "direct.h"
+#include "monplace.h"
 #include "stuff.h"
+#include "view.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -50,6 +53,7 @@
 #include "libunix.h"
 #endif
 
+#include "delay.h"
 #include "externs.h"
 
 #include "macro.h"
@@ -57,8 +61,9 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mt19937ar.h"
-#include "player.h"
+#include "notes.h"
 #include "output.h"
+#include "player.h"
 #include "skills2.h"
 #include "view.h"
 
@@ -133,14 +138,14 @@ void tag_followers( void )
                 continue;
             }
 
-            if (monster_habitat(fmenv->type) != DNGN_FLOOR)
+            if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
                 continue;
 
             if (fmenv->speed_increment < 50)
                 continue;
 
-            // only friendly monsters,  or those actively seeking the
-            // player,  will follow up/down stairs.
+            // only friendly monsters, or those actively seeking the
+            // player, will follow up/down stairs.
             if (!(mons_friendly(fmenv) ||
                 (fmenv->behaviour == BEH_SEEK && fmenv->foe == MHITYOU)))
             {   
@@ -330,6 +335,12 @@ unsigned long random_int( void )
     return (genrand_int32());
 }
 
+int random_range(int low, int high)
+{
+    ASSERT(low <= high);
+    return (low + random2(high - low + 1));
+}
+
 int random2( int max )
 {
     if (max <= 1)
@@ -354,6 +365,31 @@ void pop_rng_state()
 }
 
 #endif  // USE_SYSTEM_RAND
+
+// Attempts to make missile weapons nicer to the player by
+// reducing the extreme variance in damage done.
+void scale_dice( dice_def &dice, int threshold )
+{
+    while (dice.size > threshold)
+    {
+        dice.num *= 2;
+        // If it's an odd number, lose one; this is more than
+        // compensated by the increase in number of dice.
+        dice.size /= 2;
+    }
+}
+
+int bestroll(int max, int rolls)
+{
+    int best = 0;
+    for (int i = 0; i < rolls; i++)
+    {
+        int curr = random2(max);
+        if (curr > best)
+            best = curr;
+    }
+    return (best);
+}
 
 // random2avg() returns same mean value as random2() but with a  lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
@@ -438,10 +474,6 @@ void end(int end_arg)
     unixcurses_shutdown();
 #endif
 
-#ifdef MAC
-    deinit_mac();
-#endif
-
 #ifdef WIN32CONSOLE
     deinit_libw32c();
 #endif
@@ -474,7 +506,10 @@ void redraw_screen(void)
     if (Options.delay_message_clear)
         mesclr( true );
 
+    bool note_status = notes_are_active();
+    activate_notes(false);
     new_level();
+    activate_notes(note_status);
 
     viewwindow(1, false);
 #endif
@@ -539,6 +574,37 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 }                               // end stepdown_value()
 
+int skill_bump( int skill )
+{   
+    return ((you.skills[skill] < 3) ? you.skills[skill] * 2
+                                    : you.skills[skill] + 3);
+}
+
+// This gives (default div = 20, shift = 3):
+// - shift/div% @ stat_level = 0; (default 3/20 = 15%, or 20% at stat 1)
+// - even (100%) @ stat_level = div - shift; (default 17)
+// - 1/div% per stat_level (default 1/20 = 5%)
+int stat_mult( int stat_level, int value, int div, int shift )
+{
+    return (((stat_level + shift) * value) / ((div > 1) ? div : 1));
+}
+
+// As above but inverted (ie 5x penalty at stat 1)
+int stat_div( int stat_level, int value, int mult, int shift )
+{
+    int div = stat_level + shift;
+
+    if (div < 1)
+        div = 1;
+
+    return ((mult * value) / div);
+}
+
+// Calculates num/den and randomly adds one based on the remainder.
+int div_rand_round( int num, int den )
+{
+    return (num / den + (random2(den) < num % den));
+}
 
 // I got so tired of seeing: ".. && random2(foo) == 0 && .." in the code
 // that I broke down and wrote this little -- very little -- function.
@@ -589,10 +655,9 @@ void canned_msg(unsigned char which_message)
     switch (which_message)
     {
     case MSG_SOMETHING_APPEARS:
-        strcpy(info, "Something appears ");
-        strcat(info, (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                                            ? "before you" : "at your feet");
-        strcat(info, "!");
+        snprintf(info, INFO_SIZE, "Something appears %s!",
+                 (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                 ? "before you" : "at your feet");
         mpr(info);
         break;
 
@@ -667,7 +732,44 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after )
     }
 }                               // end yesno()
 
-// More accurate than distance() given the actual movement geonmetry -- bwr
+// like yesno(), but returns 0 for no, 1 for yes, and -1 for quit
+int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
+{
+    unsigned char tmp;
+
+    interrupt_activity( AI_FORCE_INTERRUPT );
+    while (1)
+    {
+        mpr(str, MSGCH_PROMPT);
+
+        tmp = (unsigned char) getch();
+
+	if ( tmp == 27 || tmp == 'q' || tmp == 'Q' )
+	    return -1;
+	
+        if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
+            tmp = safeanswer;
+
+        if (Options.easy_confirm == CONFIRM_ALL_EASY
+            || tmp == safeanswer
+            || (Options.easy_confirm == CONFIRM_SAFE_EASY && safe))
+        {
+            tmp = toupper( tmp );
+        }
+
+        if (clear_after)
+            mesclr();
+
+        if (tmp == 'N')
+            return 0;
+        else if (tmp == 'Y')
+            return 1;
+        else
+            mpr("[Y]es or [N]o only, please.");
+    }
+}    
+
+// More accurate than distance() given the actual movement geometry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
 {
     const int dx = abs( x - x2 );
@@ -679,7 +781,7 @@ int grid_distance( int x, int y, int x2, int y2 )
 
 int distance( int x, int y, int x2, int y2 )
 {
-    //jmf: now accurate, but remember to only compare vs. pre-squared distances.
+    //jmf: now accurate, but remember to only compare vs. pre-squared distances
     //     thus, next to == (distance(m1.x,m1.y, m2.x,m2.y) <= 2)
     const int dx = x - x2;
     const int dy = y - y2;
@@ -694,8 +796,6 @@ bool adjacent( int x, int y, int x2, int y2 )
 
 bool silenced(char x, char y)
 {
-#ifdef USE_SILENCE_CODE
-
     if (you.duration[DUR_SILENCE] > 0
         && distance(x, y, you.x_pos, you.y_pos) <= 36)  // (6 * 6)
     {
@@ -711,25 +811,307 @@ bool silenced(char x, char y)
         //  }
         return false;
     }
-
-#else
-    return false;
-#endif
 }                               // end silenced()
 
 bool player_can_hear(char x, char y)
 {
-#ifdef USE_SILENCE_CODE
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
-#else
-    return true;
-#endif
 }                               // end player_can_hear()
+
+// Returns true if inside the area the player can move and dig (ie exclusive)
+bool in_bounds( int x, int y )
+{
+    return (x > X_BOUND_1 && x < X_BOUND_2 
+            && y > Y_BOUND_1 && y < Y_BOUND_2);
+}
+
+// Returns true if inside the area the player can map (ie inclusive).
+// Note that terrain features should be in_bounds() leaving an outer
+// ring of rock to frame the level.
+bool map_bounds( int x, int y )
+{
+    return (x >= X_BOUND_1 && x <= X_BOUND_2
+            && y >= Y_BOUND_1 && y <= Y_BOUND_2);
+}
+
+// Returns a random location in (x_pos, y_pos)... the grid will be
+// DNGN_FLOOR if clear, and NON_MONSTER if empty.  Exclusive tells
+// if we're using in_bounds() or map_bounds() restriction.
+void random_in_bounds( int &x_pos, int &y_pos, int terr, bool empty, bool excl )
+{
+    bool done = false;
+
+    do
+    {
+        x_pos = X_BOUND_1 + random2( X_WIDTH - 2 * excl ) + 1 * excl;
+        y_pos = Y_BOUND_1 + random2( Y_WIDTH - 2 * excl ) + 1 * excl;
+
+        if (terr == DNGN_RANDOM)
+            done = true;
+        else if (terr == grd[x_pos][y_pos])
+            done = true;
+        else if (terr == DNGN_DEEP_WATER && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
+            done = true;
+        else if (empty 
+                && mgrd[x_pos][y_pos] != NON_MONSTER 
+                && (x_pos != you.x_pos || y_pos != you.y_pos))
+        {
+            done = true;
+        }
+    }
+    while (!done);
+}
+
+// takes rectangle (x1,y1)-(x2,y2) and shifts it somewhere randomly in bounds
+void random_place_rectangle( int &x1, int &y1, int &x2, int &y2, bool excl )
+{
+    const unsigned int dx = abs( x2 - x1 );
+    const unsigned int dy = abs( y2 - y1 );
+
+    x1 = X_BOUND_1 + random2( X_WIDTH - dx - 2 * excl ) + excl;
+    y1 = Y_BOUND_1 + random2( Y_WIDTH - dy - 2 * excl ) + excl;
+
+    x2 = x1 + dx;
+    y2 = y1 + dy;
+}
+
+// returns true if point (px,py) is in rectangle (rx1, ry1) - (rx2, ry2)
+bool in_rectangle( int px, int py, int rx1, int ry1, int rx2, int ry2, 
+                   bool excl )
+{
+    ASSERT( rx1 < rx2 - 1 && ry1 < ry2 - 1 );
+
+    if (excl)
+    {
+        rx1++;
+        rx2--;
+        ry1++;
+        ry2--;
+    }
+
+    return (px >= rx1 && px <= rx2 && py >= ry1 && py <= ry2);
+}
+
+// XXX: this can be done better
+// returns true if rectables a and b overlap
+bool rectangles_overlap( int ax1, int ay1, int ax2, int ay2,
+                         int bx1, int by1, int bx2, int by2,
+                         bool excl )
+{
+    ASSERT( ax1 < ax2 - 1 && ay1 < ay2 - 1 );
+    ASSERT( bx1 < bx2 - 1 && by1 < by2 - 1 );
+
+    if (excl)
+    {
+        ax1++;
+        ax2--;
+        ay1++;
+        ay2--;
+    }
+
+    return (in_rectangle( ax1, ay1, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax1, ay2, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax2, ay1, bx1, by1, bx2, by2, excl )
+            || in_rectangle( ax2, ay2, bx1, by1, bx2, by2, excl ));
+}
 
 unsigned char random_colour(void)
 {
     return (1 + random2(15));
 }                               // end random_colour()
+
+// returns if a colour is one of the special element colours (ie not regular)
+bool is_element_colour( int col )
+{
+    // striping any COLFLAGS (just in case)
+    return ((col & 0x007f) >= EC_FIRE);
+}
+
+int element_colour( int element, bool no_random )
+{
+    // Doing this so that we don't have to do recursion here at all 
+    // (these were the only cases which had possible double evaluation):
+    if (element == EC_FLOOR)
+        element = env.floor_colour;
+    else if (element == EC_ROCK)
+        element = env.rock_colour;
+
+    // pass regular colours through for safety.
+    if (!is_element_colour( element ))
+        return (element);
+
+    int ret = BLACK;
+
+    // Setting no_random to true will get the first colour in the cases
+    // below.  This is potentially useful for calls to this function 
+    // which might want a consistant result.
+    int tmp_rand = (no_random ? 0 : random2(120));
+
+    switch (element & 0x007f)   // strip COLFLAGs just in case
+    {
+    case EC_FIRE:
+        ret = (tmp_rand < 40) ? RED :
+              (tmp_rand < 80) ? YELLOW 
+                              : LIGHTRED;
+        break;
+
+    case EC_ICE:
+        ret = (tmp_rand < 40) ? LIGHTBLUE :
+              (tmp_rand < 80) ? BLUE 
+                              : WHITE;
+        break;
+
+    case EC_EARTH:
+        ret = (tmp_rand < 60) ? BROWN : LIGHTRED;
+        break;
+
+    case EC_AIR:
+        ret = (tmp_rand < 60) ? LIGHTGREY : WHITE;
+        break;
+
+    case EC_ELECTRICITY:
+        ret = (tmp_rand < 40) ? LIGHTCYAN :
+              (tmp_rand < 80) ? LIGHTBLUE 
+                              : CYAN;
+        break;
+
+    case EC_POISON:
+        ret = (tmp_rand < 60) ? LIGHTGREEN : GREEN;
+        break;
+
+    case EC_WATER:
+        ret = (tmp_rand < 60) ? BLUE : CYAN;
+        break;
+
+    case EC_MAGIC:
+        ret = (tmp_rand < 30) ? LIGHTMAGENTA :
+              (tmp_rand < 60) ? LIGHTBLUE :
+              (tmp_rand < 90) ? MAGENTA 
+                              : BLUE;
+        break;
+
+    case EC_MUTAGENIC:
+    case EC_WARP:
+        ret = (tmp_rand < 60) ? LIGHTMAGENTA : MAGENTA;
+        break;
+
+    case EC_ENCHANT:
+        ret = (tmp_rand < 60) ? LIGHTBLUE : BLUE;
+        break;
+
+    case EC_HEAL:
+        ret = (tmp_rand < 60) ? LIGHTBLUE : YELLOW;
+        break;
+
+    case EC_BLOOD:
+        ret = (tmp_rand < 60) ? RED : DARKGREY;
+        break;
+
+    case EC_DEATH:      // assassin
+    case EC_NECRO:      // necromancer
+        ret = (tmp_rand < 80) ? DARKGREY : MAGENTA;
+        break;
+
+    case EC_UNHOLY:     // ie demonology
+        ret = (tmp_rand < 80) ? DARKGREY : RED;
+        break;
+
+    case EC_DARK:
+        ret = DARKGREY;
+        break;
+
+    case EC_HOLY:
+        ret = (tmp_rand < 60) ? YELLOW : WHITE;
+        break;
+
+    case EC_VEHUMET:
+        ret = (tmp_rand < 40) ? LIGHTRED :
+              (tmp_rand < 80) ? LIGHTMAGENTA 
+                              : LIGHTBLUE;
+        break;
+
+    case EC_CRYSTAL:
+        ret = (tmp_rand < 40) ? LIGHTGREY :
+              (tmp_rand < 80) ? GREEN 
+                              : LIGHTRED;
+        break;
+
+    case EC_SLIME:
+        ret = (tmp_rand < 40) ? GREEN :
+              (tmp_rand < 80) ? BROWN 
+                              : LIGHTGREEN;
+        break;
+
+    case EC_SMOKE:
+        ret = (tmp_rand < 30) ? LIGHTGREY :
+              (tmp_rand < 60) ? DARKGREY :
+              (tmp_rand < 90) ? LIGHTBLUE 
+                              : MAGENTA;
+        break;
+
+    case EC_JEWEL:
+        ret = (tmp_rand <  12) ? WHITE :
+              (tmp_rand <  24) ? YELLOW :
+              (tmp_rand <  36) ? LIGHTMAGENTA :
+              (tmp_rand <  48) ? LIGHTRED :
+              (tmp_rand <  60) ? LIGHTGREEN :
+              (tmp_rand <  72) ? LIGHTBLUE :
+              (tmp_rand <  84) ? MAGENTA :
+              (tmp_rand <  96) ? RED :
+              (tmp_rand < 108) ? GREEN 
+                               : BLUE;
+        break;
+
+    case EC_ELVEN:
+        ret = (tmp_rand <  40) ? LIGHTGREEN :
+              (tmp_rand <  80) ? GREEN :
+              (tmp_rand < 100) ? LIGHTBLUE 
+                               : BLUE;
+        break;
+
+    case EC_DWARVEN:
+        ret = (tmp_rand <  40) ? BROWN :
+              (tmp_rand <  80) ? LIGHTRED :
+              (tmp_rand < 100) ? LIGHTGREY 
+                               : CYAN;
+        break;
+
+    case EC_ORCISH:
+        ret = (tmp_rand <  40) ? DARKGREY :
+              (tmp_rand <  80) ? RED :
+              (tmp_rand < 100) ? BROWN 
+                               : MAGENTA;
+        break;
+
+    case EC_GILA:
+        ret = (tmp_rand <  30) ? LIGHTMAGENTA :
+              (tmp_rand <  60) ? MAGENTA :
+              (tmp_rand <  90) ? YELLOW : 
+              (tmp_rand < 105) ? LIGHTRED 
+                               : RED;
+        break;
+
+    case EC_STONE:
+        if (player_in_branch( BRANCH_HALL_OF_ZOT ))
+            ret = env.rock_colour;
+        else
+            ret = LIGHTGREY;
+        break;
+
+    case EC_RANDOM:
+        ret = 1 + random2(15);              // always random
+        break;
+
+    case EC_FLOOR: // should alredy be handled 
+    case EC_ROCK:  // should alredy be handled 
+    default:
+        break;
+    }
+
+    ASSERT( !is_element_colour( ret ) );
+
+    return ((ret == BLACK) ? GREEN : ret);
+}
 
 char index_to_letter(int the_index)
 {
@@ -771,11 +1153,56 @@ int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx)
                 && grd[x][y] <= DNGN_RETURN_FROM_SWAMP
                 && grd[x][y] != DNGN_ENTER_SHOP)        // silly
             {
-                stair_gfx = mapch(grd[x][y]);
+                stair_gfx = get_sightmap_char(grd[x][y]);
                 return ((x == you.x_pos && y == you.y_pos) ? 2 : 1);
             }
         }
     }
 
     return false;
+}
+
+bool is_trap_square(int x, int y)
+{
+    return (grd[x][y] >= DNGN_TRAP_MECHANICAL
+        && grd[x][y] <= DNGN_UNDISCOVERED_TRAP);
+}
+
+// Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
+// applied to new games.
+void zap_los_monsters()
+{
+    losight(env.show, grd, you.x_pos, you.y_pos);
+
+    for (int y = LOS_SY; y <= LOS_EY; ++y)
+    {
+        for (int x = LOS_SX; x <= LOS_EX; ++x)
+        {
+            if (!in_vlos(x, y))
+                continue;
+
+            const int gx = view2gridX(x),
+                      gy = view2gridY(y);
+
+            if (!map_bounds(gx, gy))
+                continue;
+
+            if (gx == you.x_pos && gy == you.y_pos)
+                continue;
+
+            int imon = mgrd[gx][gy];
+            if (imon == NON_MONSTER || imon == MHITYOU)
+                continue;
+
+            // If we ever allow starting with a friendly monster,
+            // we'll have to check here.
+            monsters *mon = &menv[imon];
+#ifdef DEBUG_DIAGNOSTICS
+            char mname[ITEMNAME_SIZE];
+            moname(mon->type, true, DESC_PLAIN, mname);
+            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s", mname);
+#endif
+            monster_die(mon, KILL_DISMISSED, 0);
+        }
+    }
 }

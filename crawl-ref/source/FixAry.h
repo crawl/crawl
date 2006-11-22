@@ -3,6 +3,8 @@
  *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
  *  Written by: Jesse Jones
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):    
  *
  *         <1>     6/16/00    JDJ        Created 

@@ -51,8 +51,6 @@
 		7B237E950A8EC9D000580F30 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0E0A8EC9D000580F30 /* files.cc */; };
 		7B237E960A8EC9D000580F30 /* direct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E0F0A8EC9D000580F30 /* direct.cc */; };
 		7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E100A8EC9D000580F30 /* dungeon.h */; };
-		7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E110A8EC9D000580F30 /* wpn-misc.h */; };
-		7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E120A8EC9D000580F30 /* wpn-misc.cc */; };
 		7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E130A8EC9D000580F30 /* view.h */; };
 		7B237E9B0A8EC9D000580F30 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E140A8EC9D000580F30 /* view.cc */; };
 		7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E150A8EC9D000580F30 /* spl-book.cc */; };
@@ -143,6 +141,15 @@
 		7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */; };
 		7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B237E6B0A8EC9D000580F30 /* mstuff2.h */; };
 		7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */; };
+		7B352EA00B00183400CABB32 /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
+		7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
+		7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352EEC0B001F4200CABB32 /* levcomp.cc */; };
+		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
+		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
+		7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BC222E50ABBB286003A7D9A /* itemprop.cc */; };
+		7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
+		7BD75A350AC214A200B74F6E /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
+		7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -175,7 +182,6 @@
 				7B237E910A8EC9D000580F30 /* player.h in CopyFiles */,
 				7B237E930A8EC9D000580F30 /* effects.h in CopyFiles */,
 				7B237E970A8EC9D000580F30 /* dungeon.h in CopyFiles */,
-				7B237E980A8EC9D000580F30 /* wpn-misc.h in CopyFiles */,
 				7B237E9A0A8EC9D000580F30 /* view.h in CopyFiles */,
 				7B237E9D0A8EC9D000580F30 /* spells4.h in CopyFiles */,
 				7B237E9F0A8EC9D000580F30 /* spells3.h in CopyFiles */,
@@ -219,6 +225,9 @@
 				7B237EEC0A8EC9D000580F30 /* abyss.h in CopyFiles */,
 				7B237EF00A8EC9D000580F30 /* mt19937ar.h in CopyFiles */,
 				7B237EF20A8EC9D000580F30 /* mstuff2.h in CopyFiles */,
+				7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */,
+				7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */,
+				7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -269,8 +278,6 @@
 		7B237E0E0A8EC9D000580F30 /* files.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = files.cc; sourceTree = "<group>"; };
 		7B237E0F0A8EC9D000580F30 /* direct.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = direct.cc; sourceTree = "<group>"; };
 		7B237E100A8EC9D000580F30 /* dungeon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = dungeon.h; sourceTree = "<group>"; };
-		7B237E110A8EC9D000580F30 /* wpn-misc.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "wpn-misc.h"; sourceTree = "<group>"; };
-		7B237E120A8EC9D000580F30 /* wpn-misc.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "wpn-misc.cc"; sourceTree = "<group>"; };
 		7B237E130A8EC9D000580F30 /* view.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		7B237E140A8EC9D000580F30 /* view.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = view.cc; sourceTree = "<group>"; };
 		7B237E150A8EC9D000580F30 /* spl-book.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-book.cc"; sourceTree = "<group>"; };
@@ -361,6 +368,17 @@
 		7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mt19937ar.cc; sourceTree = "<group>"; };
 		7B237E6B0A8EC9D000580F30 /* mstuff2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mstuff2.h; sourceTree = "<group>"; };
 		7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.5.dylib; path = /usr/lib/libncurses.5.dylib; sourceTree = "<absolute>"; };
+		7B352E9D0B00183400CABB32 /* mapdef.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mapdef.cc; sourceTree = "<group>"; };
+		7B352E9E0B00183400CABB32 /* mapdef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mapdef.h; sourceTree = "<group>"; };
+		7B352ED10B001B9E00CABB32 /* levcomp.lpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.lex; name = levcomp.lpp; path = util/levcomp.lpp; sourceTree = "<group>"; };
+		7B352ED20B001B9E00CABB32 /* levcomp.ypp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.yacc; name = levcomp.ypp; path = util/levcomp.ypp; sourceTree = "<group>"; };
+		7B352EEC0B001F4200CABB32 /* levcomp.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = levcomp.cc; path = util/levcomp.cc; sourceTree = "<group>"; };
+		7B352F1F0B00232500CABB32 /* splev.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = splev.des; path = dat/splev.des; sourceTree = "<group>"; };
+		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
+		7BC222E50ABBB286003A7D9A /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
+		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
+		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
+		7BD75A340AC214A200B74F6E /* notes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = notes.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -380,6 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				08FB7795FE84155DC02AAC07 /* Source */,
+				7B352F1B0B0022C900CABB32 /* Resources */,
 				7B237F120A8ECCDE00580F30 /* Libraries */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -390,141 +409,9 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				7B237DE50A8EC9D000580F30 /* maps.h */,
-				7B237DE60A8EC9D000580F30 /* maps.cc */,
-				7B237DE70A8EC9D000580F30 /* mon-pick.h */,
-				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
-				7B237DE90A8EC9D000580F30 /* misc.h */,
-				7B237DEA0A8EC9D000580F30 /* insult.h */,
-				7B237DEB0A8EC9D000580F30 /* insult.cc */,
-				7B237DEC0A8EC9D000580F30 /* initfile.h */,
-				7B237DED0A8EC9D000580F30 /* overmap.h */,
-				7B237DEE0A8EC9D000580F30 /* overmap.cc */,
-				7B237DEF0A8EC9D000580F30 /* output.h */,
-				7B237DF00A8EC9D000580F30 /* item_use.h */,
-				7B237DF10A8EC9D000580F30 /* initfile.cc */,
-				7B237DF20A8EC9D000580F30 /* hiscores.h */,
-				7B237DF30A8EC9D000580F30 /* hiscores.cc */,
-				7B237DF40A8EC9D000580F30 /* travel.h */,
-				7B237DF50A8EC9D000580F30 /* travel.cc */,
-				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
-				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
-				7B237DF80A8EC9D000580F30 /* items.h */,
-				7B237DF90A8EC9D000580F30 /* newgame.cc */,
-				7B237DFA0A8EC9D000580F30 /* mutation.h */,
-				7B237DFB0A8EC9D000580F30 /* mutation.cc */,
-				7B237DFC0A8EC9D000580F30 /* misc.cc */,
-				7B237DFD0A8EC9D000580F30 /* message.h */,
-				7B237DFE0A8EC9D000580F30 /* mon-util.h */,
-				7B237DFF0A8EC9D000580F30 /* mon-util.cc */,
-				7B237E000A8EC9D000580F30 /* it_use3.h */,
-				7B237E010A8EC9D000580F30 /* it_use3.cc */,
-				7B237E020A8EC9D000580F30 /* it_use2.h */,
-				7B237E030A8EC9D000580F30 /* itemname.cc */,
-				7B237E040A8EC9D000580F30 /* command.cc */,
-				7B237E050A8EC9D000580F30 /* describe.h */,
-				7B237E060A8EC9D000580F30 /* spl-util.h */,
-				7B237E070A8EC9D000580F30 /* spl-util.cc */,
-				7B237E080A8EC9D000580F30 /* randart.h */,
-				7B237E090A8EC9D000580F30 /* randart.cc */,
-				7B237E0A0A8EC9D000580F30 /* player.h */,
-				7B237E0B0A8EC9D000580F30 /* player.cc */,
-				7B237E0C0A8EC9D000580F30 /* effects.h */,
-				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
-				7B237E0E0A8EC9D000580F30 /* files.cc */,
-				7B237E0F0A8EC9D000580F30 /* direct.cc */,
-				7B237E100A8EC9D000580F30 /* dungeon.h */,
-				7B237E110A8EC9D000580F30 /* wpn-misc.h */,
-				7B237E120A8EC9D000580F30 /* wpn-misc.cc */,
-				7B237E130A8EC9D000580F30 /* view.h */,
-				7B237E140A8EC9D000580F30 /* view.cc */,
-				7B237E150A8EC9D000580F30 /* spl-book.cc */,
-				7B237E160A8EC9D000580F30 /* spells4.h */,
-				7B237E170A8EC9D000580F30 /* spells4.cc */,
-				7B237E180A8EC9D000580F30 /* spells3.h */,
-				7B237E190A8EC9D000580F30 /* macro.h */,
-				7B237E1A0A8EC9D000580F30 /* debug.h */,
-				7B237E1B0A8EC9D000580F30 /* direct.h */,
-				7B237E1C0A8EC9D000580F30 /* decks.h */,
-				7B237E1D0A8EC9D000580F30 /* stuff.h */,
-				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
-				7B237E1F0A8EC9D000580F30 /* stash.h */,
-				7B237E200A8EC9D000580F30 /* stash.cc */,
-				7B237E210A8EC9D000580F30 /* transfor.h */,
-				7B237E220A8EC9D000580F30 /* transfor.cc */,
-				7B237E230A8EC9D000580F30 /* tags.h */,
-				7B237E240A8EC9D000580F30 /* tags.cc */,
-				7B237E250A8EC9D000580F30 /* libutil.h */,
-				7B237E260A8EC9D000580F30 /* item_use.cc */,
-				7B237E270A8EC9D000580F30 /* acr.cc */,
-				7B237E280A8EC9D000580F30 /* abyss.cc */,
-				7B237E290A8EC9D000580F30 /* abl-show.h */,
-				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
-				7B237E2B0A8EC9D000580F30 /* chardump.h */,
-				7B237E2C0A8EC9D000580F30 /* beam.cc */,
-				7B237E2D0A8EC9D000580F30 /* beam.h */,
-				7B237E2E0A8EC9D000580F30 /* spl-cast.h */,
-				7B237E2F0A8EC9D000580F30 /* spl-cast.cc */,
-				7B237E300A8EC9D000580F30 /* spl-book.h */,
-				7B237E310A8EC9D000580F30 /* output.cc */,
-				7B237E320A8EC9D000580F30 /* ouch.h */,
-				7B237E330A8EC9D000580F30 /* ouch.cc */,
-				7B237E340A8EC9D000580F30 /* newgame.h */,
-				7B237E350A8EC9D000580F30 /* message.cc */,
-				7B237E360A8EC9D000580F30 /* menu.h */,
-				7B237E370A8EC9D000580F30 /* menu.cc */,
-				7B237E380A8EC9D000580F30 /* macro.cc */,
-				7B237E390A8EC9D000580F30 /* shopping.cc */,
-				7B237E3A0A8EC9D000580F30 /* religion.h */,
-				7B237E3B0A8EC9D000580F30 /* religion.cc */,
-				7B237E3C0A8EC9D000580F30 /* spells3.cc */,
-				7B237E3D0A8EC9D000580F30 /* spells2.h */,
-				7B237E3E0A8EC9D000580F30 /* spells2.cc */,
-				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
-				7B237E400A8EC9D000580F30 /* monstuff.h */,
-				7B237E410A8EC9D000580F30 /* monstuff.cc */,
-				7B237E420A8EC9D000580F30 /* monspeak.h */,
-				7B237E430A8EC9D000580F30 /* delay.h */,
-				7B237E440A8EC9D000580F30 /* command.h */,
-				7B237E450A8EC9D000580F30 /* spells1.h */,
-				7B237E460A8EC9D000580F30 /* spells1.cc */,
-				7B237E470A8EC9D000580F30 /* skills2.h */,
-				7B237E480A8EC9D000580F30 /* skills2.cc */,
-				7B237E490A8EC9D000580F30 /* decks.cc */,
-				7B237E4A0A8EC9D000580F30 /* describe.cc */,
-				7B237E4B0A8EC9D000580F30 /* monspeak.cc */,
-				7B237E4C0A8EC9D000580F30 /* monplace.h */,
-				7B237E4D0A8EC9D000580F30 /* monplace.cc */,
-				7B237E4E0A8EC9D000580F30 /* Kills.h */,
-				7B237E4F0A8EC9D000580F30 /* Kills.cc */,
-				7B237E500A8EC9D000580F30 /* files.h */,
-				7B237E510A8EC9D000580F30 /* fight.h */,
-				7B237E520A8EC9D000580F30 /* effects.cc */,
-				7B237E530A8EC9D000580F30 /* fight.cc */,
-				7B237E540A8EC9D000580F30 /* food.cc */,
-				7B237E550A8EC9D000580F30 /* food.h */,
-				7B237E560A8EC9D000580F30 /* clua.h */,
-				7B237E570A8EC9D000580F30 /* clua.cc */,
-				7B237E580A8EC9D000580F30 /* cloud.h */,
-				7B237E590A8EC9D000580F30 /* cloud.cc */,
-				7B237E5A0A8EC9D000580F30 /* items.cc */,
-				7B237E5B0A8EC9D000580F30 /* itemname.h */,
-				7B237E5C0A8EC9D000580F30 /* skills.h */,
-				7B237E5D0A8EC9D000580F30 /* skills.cc */,
-				7B237E5E0A8EC9D000580F30 /* shopping.h */,
-				7B237E5F0A8EC9D000580F30 /* it_use2.cc */,
-				7B237E600A8EC9D000580F30 /* invent.h */,
-				7B237E610A8EC9D000580F30 /* invent.cc */,
-				7B237E620A8EC9D000580F30 /* libutil.cc */,
-				7B237E630A8EC9D000580F30 /* libunix.h */,
-				7B237E640A8EC9D000580F30 /* libunix.cc */,
-				7B237E650A8EC9D000580F30 /* abyss.h */,
-				7B237E660A8EC9D000580F30 /* delay.cc */,
-				7B237E670A8EC9D000580F30 /* dungeon.cc */,
-				7B237E680A8EC9D000580F30 /* debug.cc */,
-				7B237E690A8EC9D000580F30 /* mt19937ar.h */,
-				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
-				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
+				7B352EF00B001F5B00CABB32 /* Crawl */,
+				7B352E950B0017CF00CABB32 /* Levcomp */,
+				7B352EF30B001FA700CABB32 /* Shared */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -543,6 +430,186 @@
 				7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */,
 			);
 			name = Libraries;
+			sourceTree = "<group>";
+		};
+		7B352E950B0017CF00CABB32 /* Levcomp */ = {
+			isa = PBXGroup;
+			children = (
+				7B352EEC0B001F4200CABB32 /* levcomp.cc */,
+				7B352ED10B001B9E00CABB32 /* levcomp.lpp */,
+				7B352ED20B001B9E00CABB32 /* levcomp.ypp */,
+			);
+			name = Levcomp;
+			sourceTree = "<group>";
+		};
+		7B352EF00B001F5B00CABB32 /* Crawl */ = {
+			isa = PBXGroup;
+			children = (
+				7B237E0D0A8EC9D000580F30 /* abl-show.cc */,
+				7B237E290A8EC9D000580F30 /* abl-show.h */,
+				7B237E280A8EC9D000580F30 /* abyss.cc */,
+				7B237E650A8EC9D000580F30 /* abyss.h */,
+				7B237E270A8EC9D000580F30 /* acr.cc */,
+				7B237E2C0A8EC9D000580F30 /* beam.cc */,
+				7B237E2D0A8EC9D000580F30 /* beam.h */,
+				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
+				7B237E2B0A8EC9D000580F30 /* chardump.h */,
+				7B237E590A8EC9D000580F30 /* cloud.cc */,
+				7B237E580A8EC9D000580F30 /* cloud.h */,
+				7B237E570A8EC9D000580F30 /* clua.cc */,
+				7B237E560A8EC9D000580F30 /* clua.h */,
+				7B237E040A8EC9D000580F30 /* command.cc */,
+				7B237E440A8EC9D000580F30 /* command.h */,
+				7B237E680A8EC9D000580F30 /* debug.cc */,
+				7B237E1A0A8EC9D000580F30 /* debug.h */,
+				7B237E490A8EC9D000580F30 /* decks.cc */,
+				7B237E1C0A8EC9D000580F30 /* decks.h */,
+				7B237E660A8EC9D000580F30 /* delay.cc */,
+				7B237E430A8EC9D000580F30 /* delay.h */,
+				7B237E4A0A8EC9D000580F30 /* describe.cc */,
+				7B237E050A8EC9D000580F30 /* describe.h */,
+				7B237E0F0A8EC9D000580F30 /* direct.cc */,
+				7B237E1B0A8EC9D000580F30 /* direct.h */,
+				7B237E670A8EC9D000580F30 /* dungeon.cc */,
+				7B237E100A8EC9D000580F30 /* dungeon.h */,
+				7B237E520A8EC9D000580F30 /* effects.cc */,
+				7B237E0C0A8EC9D000580F30 /* effects.h */,
+				7B237E530A8EC9D000580F30 /* fight.cc */,
+				7B237E510A8EC9D000580F30 /* fight.h */,
+				7B237E0E0A8EC9D000580F30 /* files.cc */,
+				7B237E500A8EC9D000580F30 /* files.h */,
+				7B237E540A8EC9D000580F30 /* food.cc */,
+				7B237E550A8EC9D000580F30 /* food.h */,
+				7B237DF30A8EC9D000580F30 /* hiscores.cc */,
+				7B237DF20A8EC9D000580F30 /* hiscores.h */,
+				7B237DF10A8EC9D000580F30 /* initfile.cc */,
+				7B237DEC0A8EC9D000580F30 /* initfile.h */,
+				7B237DEB0A8EC9D000580F30 /* insult.cc */,
+				7B237DEA0A8EC9D000580F30 /* insult.h */,
+				7B237E610A8EC9D000580F30 /* invent.cc */,
+				7B237E600A8EC9D000580F30 /* invent.h */,
+				7B237E5F0A8EC9D000580F30 /* it_use2.cc */,
+				7B237E020A8EC9D000580F30 /* it_use2.h */,
+				7B237E010A8EC9D000580F30 /* it_use3.cc */,
+				7B237E000A8EC9D000580F30 /* it_use3.h */,
+				7B237E260A8EC9D000580F30 /* item_use.cc */,
+				7B237DF00A8EC9D000580F30 /* item_use.h */,
+				7B237E030A8EC9D000580F30 /* itemname.cc */,
+				7B237E5B0A8EC9D000580F30 /* itemname.h */,
+				7BC222E50ABBB286003A7D9A /* itemprop.cc */,
+				7BC222E60ABBB286003A7D9A /* itemprop.h */,
+				7B237E5A0A8EC9D000580F30 /* items.cc */,
+				7B237DF80A8EC9D000580F30 /* items.h */,
+				7B237E4F0A8EC9D000580F30 /* Kills.cc */,
+				7B237E4E0A8EC9D000580F30 /* Kills.h */,
+				7B237DF70A8EC9D000580F30 /* lev-pand.cc */,
+				7B237DF60A8EC9D000580F30 /* lev-pand.h */,
+				7B237E640A8EC9D000580F30 /* libunix.cc */,
+				7B237E630A8EC9D000580F30 /* libunix.h */,
+				7B237E620A8EC9D000580F30 /* libutil.cc */,
+				7B237E250A8EC9D000580F30 /* libutil.h */,
+				7B237E380A8EC9D000580F30 /* macro.cc */,
+				7B237E190A8EC9D000580F30 /* macro.h */,
+				7B237DE60A8EC9D000580F30 /* maps.cc */,
+				7B237DE50A8EC9D000580F30 /* maps.h */,
+				7B237E370A8EC9D000580F30 /* menu.cc */,
+				7B237E360A8EC9D000580F30 /* menu.h */,
+				7B237E350A8EC9D000580F30 /* message.cc */,
+				7B237DFD0A8EC9D000580F30 /* message.h */,
+				7B237DFC0A8EC9D000580F30 /* misc.cc */,
+				7B237DE90A8EC9D000580F30 /* misc.h */,
+				7B237DE80A8EC9D000580F30 /* mon-pick.cc */,
+				7B237DE70A8EC9D000580F30 /* mon-pick.h */,
+				7B237DFF0A8EC9D000580F30 /* mon-util.cc */,
+				7B237DFE0A8EC9D000580F30 /* mon-util.h */,
+				7B237E4D0A8EC9D000580F30 /* monplace.cc */,
+				7B237E4C0A8EC9D000580F30 /* monplace.h */,
+				7B237E4B0A8EC9D000580F30 /* monspeak.cc */,
+				7B237E420A8EC9D000580F30 /* monspeak.h */,
+				7B237E410A8EC9D000580F30 /* monstuff.cc */,
+				7B237E400A8EC9D000580F30 /* monstuff.h */,
+				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
+				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
+				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
+				7B237E690A8EC9D000580F30 /* mt19937ar.h */,
+				7B237DFB0A8EC9D000580F30 /* mutation.cc */,
+				7B237DFA0A8EC9D000580F30 /* mutation.h */,
+				7B237DF90A8EC9D000580F30 /* newgame.cc */,
+				7B237E340A8EC9D000580F30 /* newgame.h */,
+				7BD75A330AC214A200B74F6E /* notes.cc */,
+				7BD75A340AC214A200B74F6E /* notes.h */,
+				7B237E330A8EC9D000580F30 /* ouch.cc */,
+				7B237E320A8EC9D000580F30 /* ouch.h */,
+				7B237E310A8EC9D000580F30 /* output.cc */,
+				7B237DEF0A8EC9D000580F30 /* output.h */,
+				7B237DEE0A8EC9D000580F30 /* overmap.cc */,
+				7B237DED0A8EC9D000580F30 /* overmap.h */,
+				7B237E0B0A8EC9D000580F30 /* player.cc */,
+				7B237E0A0A8EC9D000580F30 /* player.h */,
+				7B237E090A8EC9D000580F30 /* randart.cc */,
+				7B237E080A8EC9D000580F30 /* randart.h */,
+				7B237E3B0A8EC9D000580F30 /* religion.cc */,
+				7B237E3A0A8EC9D000580F30 /* religion.h */,
+				7B237E390A8EC9D000580F30 /* shopping.cc */,
+				7B237E5E0A8EC9D000580F30 /* shopping.h */,
+				7B237E5D0A8EC9D000580F30 /* skills.cc */,
+				7B237E5C0A8EC9D000580F30 /* skills.h */,
+				7B237E480A8EC9D000580F30 /* skills2.cc */,
+				7B237E470A8EC9D000580F30 /* skills2.h */,
+				7B237E460A8EC9D000580F30 /* spells1.cc */,
+				7B237E450A8EC9D000580F30 /* spells1.h */,
+				7B237E3E0A8EC9D000580F30 /* spells2.cc */,
+				7B237E3D0A8EC9D000580F30 /* spells2.h */,
+				7B237E3C0A8EC9D000580F30 /* spells3.cc */,
+				7B237E180A8EC9D000580F30 /* spells3.h */,
+				7B237E170A8EC9D000580F30 /* spells4.cc */,
+				7B237E160A8EC9D000580F30 /* spells4.h */,
+				7B237E150A8EC9D000580F30 /* spl-book.cc */,
+				7B237E300A8EC9D000580F30 /* spl-book.h */,
+				7B237E2F0A8EC9D000580F30 /* spl-cast.cc */,
+				7B237E2E0A8EC9D000580F30 /* spl-cast.h */,
+				7B237E070A8EC9D000580F30 /* spl-util.cc */,
+				7B237E060A8EC9D000580F30 /* spl-util.h */,
+				7B237E200A8EC9D000580F30 /* stash.cc */,
+				7B237E1F0A8EC9D000580F30 /* stash.h */,
+				7B237E1E0A8EC9D000580F30 /* stuff.cc */,
+				7B237E1D0A8EC9D000580F30 /* stuff.h */,
+				7B237E240A8EC9D000580F30 /* tags.cc */,
+				7B237E230A8EC9D000580F30 /* tags.h */,
+				7B237E220A8EC9D000580F30 /* transfor.cc */,
+				7B237E210A8EC9D000580F30 /* transfor.h */,
+				7B237DF50A8EC9D000580F30 /* travel.cc */,
+				7B237DF40A8EC9D000580F30 /* travel.h */,
+				7B237E140A8EC9D000580F30 /* view.cc */,
+				7B237E130A8EC9D000580F30 /* view.h */,
+			);
+			name = Crawl;
+			sourceTree = "<group>";
+		};
+		7B352EF30B001FA700CABB32 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				7B352E9D0B00183400CABB32 /* mapdef.cc */,
+				7B352E9E0B00183400CABB32 /* mapdef.h */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
+		7B352F1B0B0022C900CABB32 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7B352F1E0B0022E100CABB32 /* Levels */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		7B352F1E0B0022E100CABB32 /* Levels */ = {
+			isa = PBXGroup;
+			children = (
+				7B352F1F0B00232500CABB32 /* splev.des */,
+				7B352F200B00232500CABB32 /* vaults.des */,
+			);
+			name = Levels;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -593,6 +660,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
+				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7B237E6D0A8EC9D000580F30 /* maps.cc in Sources */,
 				7B237E6F0A8EC9D000580F30 /* mon-pick.cc in Sources */,
 				7B237E720A8EC9D000580F30 /* insult.cc in Sources */,
@@ -600,6 +669,7 @@
 				7B237E780A8EC9D000580F30 /* initfile.cc in Sources */,
 				7B237E7A0A8EC9D000580F30 /* hiscores.cc in Sources */,
 				7B237E7C0A8EC9D000580F30 /* travel.cc in Sources */,
+				7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */,
 				7B237E7E0A8EC9D000580F30 /* lev-pand.cc in Sources */,
 				7B237E800A8EC9D000580F30 /* newgame.cc in Sources */,
 				7B237E820A8EC9D000580F30 /* mutation.cc in Sources */,
@@ -614,7 +684,6 @@
 				7B237E940A8EC9D000580F30 /* abl-show.cc in Sources */,
 				7B237E950A8EC9D000580F30 /* files.cc in Sources */,
 				7B237E960A8EC9D000580F30 /* direct.cc in Sources */,
-				7B237E990A8EC9D000580F30 /* wpn-misc.cc in Sources */,
 				7B237E9B0A8EC9D000580F30 /* view.cc in Sources */,
 				7B237E9C0A8EC9D000580F30 /* spl-book.cc in Sources */,
 				7B237E9E0A8EC9D000580F30 /* spells4.cc in Sources */,
@@ -661,6 +730,9 @@
 				7B237EEE0A8EC9D000580F30 /* dungeon.cc in Sources */,
 				7B237EEF0A8EC9D000580F30 /* debug.cc in Sources */,
 				7B237EF10A8EC9D000580F30 /* mt19937ar.cc in Sources */,
+				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
+				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
+				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,7 +746,10 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -688,17 +763,22 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
-				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -717,7 +797,10 @@
 					DEBUG_ITEM_SCAN,
 					FULLDEBUG,
 				);
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Debug;
@@ -736,9 +819,23 @@
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -756,7 +853,10 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = YES;
 			};
 			name = Wizard;
@@ -774,9 +874,23 @@
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
@@ -793,7 +907,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
+				YACC_GENERATED_FILE_STEM = InputFileStem;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -810,9 +927,23 @@
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};

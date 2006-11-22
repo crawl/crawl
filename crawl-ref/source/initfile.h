@@ -3,6 +3,8 @@
  *  Summary:    Simple reading of init file.
  *  Written by: David Loewenstern
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *               <1>     6/9/99        DML             Created
@@ -16,18 +18,22 @@
 #include <cstdio>
 
 std::string & trim_string( std::string &str );
+std::string & tolower_string( std::string &str );
+int str_to_colour( const std::string &str, int default_colour = -1 );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void read_init_file(bool runscript = false);
+std::string read_init_file(bool runscript = false);
 
 void read_options(FILE *f, bool runscript = false);
 
 void read_options(const std::string &s, bool runscript = false);
 
 void parse_option_line(const std::string &line, bool runscript = false);
+
+void apply_ascii_display(bool ascii);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

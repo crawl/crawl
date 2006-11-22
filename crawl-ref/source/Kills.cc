@@ -2,18 +2,23 @@
  *  File:       Kills.cc
  *  Summary:    Player kill tracking
  *  Written by: Darshan Shaligram
+ *
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 #include "AppHdr.h"
+
+#include <algorithm>
+
 #include "chardump.h"
 #include "describe.h"
 #include "mon-util.h"
 #include "files.h"
 #include "itemname.h"
+#include "misc.h"
 #include "travel.h"
 #include "tags.h"
 #include "Kills.h"
 #include "clua.h"
-#include <algorithm>
 
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1
@@ -21,25 +26,6 @@
 #ifdef CLUA_BINDINGS
 static void kill_lua_filltable(std::vector<kill_exp> &v);
 #endif
-
-
-unsigned short get_packed_place( unsigned char branch, int subdepth,
-                          char level_type )
-{
-    unsigned short place = (unsigned short)
-        ( (branch << 8) | subdepth );
-    if (level_type == LEVEL_ABYSS || level_type == LEVEL_PANDEMONIUM
-            || level_type == LEVEL_LABYRINTH)
-        place = (unsigned short) ( (level_type << 8) | 0xFF );
-    return place;
-}
-
-unsigned short get_packed_place()
-{
-    return get_packed_place( you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.your_level),
-                      you.level_type );
-}
 
 ///////////////////////////////////////////////////////////////////////////
 // KillMaster
@@ -52,7 +38,7 @@ const char *kill_category_names[] =
     "others",
 };
 
-const char *KillMaster::category_name(KillCategory kc) const
+const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
         return (kill_category_names[kc]);
@@ -95,7 +81,7 @@ void KillMaster::load(FILE *file)
 
 void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
 {
-    KillCategory kc = 
+    kill_category kc = 
         (killer == KILL_YOU || killer == KILL_YOU_MISSILE)? KC_YOU :
         (ispet)?                                            KC_FRIENDLY :
                                                             KC_OTHER;
@@ -134,7 +120,7 @@ std::string KillMaster::kill_info() const
                        kills, 
                        count,
                        i == KC_YOU? NULL :
-                                    category_name((KillCategory) i),
+                                    category_name((kill_category) i),
                        needseparator );
         needseparator = true;
     }
@@ -155,13 +141,11 @@ std::string KillMaster::kill_info() const
 #endif
     {
         // We can sum up ourselves, if Lua doesn't want to.
-        // FIXME: I'm not happy with the looks/wording of the grand total
-        // count.
         if (categories > 1)
         {
             // Give ourselves a newline first
-            killtext += EOL;
-            killtext += grandt + EOL;
+            killtext += "\n";
+            killtext += grandt + "\n";
         }
     }
 
@@ -201,23 +185,23 @@ void KillMaster::add_kill_info(std::string &killtext,
         }
 #endif
         if (separator)
-            killtext += EOL;
+            killtext += "\n";
 
         killtext += "Vanquished Creatures";
         if (category)
             killtext += std::string(" (") + category + ")";
 
-        killtext += EOL;
+        killtext += "\n";
 
         for (int i = 0, sz = kills.size(); i < sz; ++i)
         {
             killtext += "  " + kills[i].desc;
-            killtext += EOL;
+            killtext += "\n";
         }
         {
             char numbuf[100];
             snprintf(numbuf, sizeof numbuf, 
-                    "%ld creature%s vanquished." EOL, count,
+                    "%ld creature%s vanquished." "\n", count,
                     count > 1? "s" : "");
             killtext += numbuf;
         }
@@ -240,10 +224,10 @@ void Kills::merge(const Kills &k)
             i != k.kills.end(); ++i)
     {
         const kill_monster_desc &kmd = i->first;
-        kill_def &k = kills[kmd];
+        kill_def &ki = kills[kmd];
         const kill_def &ko = i->second;
         bool uniq = mons_is_unique(kmd.monnum);
-        k.merge(ko, uniq);
+        ki.merge(ko, uniq);
     }
 }
 
@@ -290,85 +274,13 @@ long Kills::get_kills(std::vector<kill_exp> &all_kills) const
     return (count);
 }
 
-// Takes a packed 'place' and returns a compact stringified place name.
-// XXX: This is done in several other places; a unified function to
-//      describe places would be nice.
-std::string short_place_name(unsigned short place)
-{
-    unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
-    int lev = place & 0xFF;
-
-    const char *s;
-    bool level_num = false;
-    if (lev == 0xFF)
-    {
-        switch (branch)
-        {
-        case LEVEL_ABYSS:
-            s = "Abyss";
-            break;
-        case LEVEL_PANDEMONIUM:
-            s = "Pan";
-            break;
-        case LEVEL_LABYRINTH:
-            s = "Lab";
-            break;
-        default:
-            s = "Buggy Badlands";
-            break;
-        }
-    }
-    else
-    {
-        switch (branch)
-        {
-        case BRANCH_VESTIBULE_OF_HELL:
-          s = "Hell";
-          break;
-        case BRANCH_HALL_OF_BLADES:
-          s = "Blade";
-          break;
-        case BRANCH_ECUMENICAL_TEMPLE:
-          s = "Temple";
-          break;
-        default:
-          level_num = true;
-          s = (branch == BRANCH_DIS)          ? "Dis:" :
-              (branch == BRANCH_GEHENNA)      ? "Geh:" :
-              (branch == BRANCH_COCYTUS)      ? "Coc:" :
-              (branch == BRANCH_TARTARUS)     ? "Tar:" :
-              (branch == BRANCH_ORCISH_MINES) ? "Orc:" :
-              (branch == BRANCH_HIVE)         ? "Hive:" :
-              (branch == BRANCH_LAIR)         ? "Lair:" :
-              (branch == BRANCH_SLIME_PITS)   ? "Slime:" :
-              (branch == BRANCH_VAULTS)       ? "Vault:" :
-              (branch == BRANCH_CRYPT)        ? "Crypt:" :
-              (branch == BRANCH_HALL_OF_ZOT)  ? "Zot:" :
-              (branch == BRANCH_SNAKE_PIT)    ? "Snake:" :
-              (branch == BRANCH_ELVEN_HALLS)  ? "Elf:" :
-              (branch == BRANCH_TOMB)         ? "Tomb:" :
-              (branch == BRANCH_SWAMP)        ? "Swamp:" : "D:";
-          break;
-        }
-    }
-
-    std::string pl = s;
-    if (level_num)
-    {
-        char buf[20];
-        snprintf(buf, sizeof buf, "%d", lev);
-        pl += buf;
-    }
-    return pl;
-}
-
 void Kills::save(FILE *file) const
 {
     // How many kill records do we have?
     writeLong(file, kills.size());
 
-    kill_map::const_iterator iter = kills.begin();
-    for ( ; iter != kills.end(); ++iter)
+    for ( kill_map::const_iterator iter = kills.begin();
+	  iter != kills.end(); ++iter)
     {
         iter->first.save(file);
         iter->second.save(file);
@@ -377,7 +289,7 @@ void Kills::save(FILE *file) const
     // How many ghosts do we have?
     writeShort(file, ghosts.size());
     for (ghost_vec::const_iterator iter = ghosts.begin(); 
-            iter != ghosts.end(); ++iter)
+	 iter != ghosts.end(); ++iter)
     {
         iter->save(file);
     }
@@ -407,13 +319,13 @@ void Kills::load(FILE *file)
 
 void Kills::record_ghost_kill(const struct monsters *mon)
 {
-    kill_ghost ghost(mon);
-    ghosts.push_back(ghost);
+    kill_ghost ghostk(mon);
+    ghosts.push_back(ghostk);
 }
 
 kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)
 {
-    exp = exper_value( (struct monsters *) mon);
+    exp = exper_value(mon);
     add_kill(mon, get_packed_place());
 }
 
@@ -460,9 +372,7 @@ static std::string pluralize(const std::string &name,
     // whole name is not suffixed by a modifier, such as 'zombie' or 'skeleton'
     if ( (pos = name.find(" of ")) != std::string::npos 
             && !ends_with(name, no_of) )
-            {
         return pluralize(name.substr(0, pos)) + name.substr(pos);
-    }
     else if (ends_with(name, "us"))
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
@@ -704,7 +614,7 @@ void kill_def::load(FILE *file)
 
 kill_ghost::kill_ghost(const struct monsters *mon)
 {
-    exp = exper_value( (struct monsters *) mon);
+    exp = exper_value(mon);
     place = get_packed_place();
     ghost_name = ghost.name;
 
@@ -738,7 +648,6 @@ void kill_ghost::load(FILE *file)
 kill_monster_desc::kill_monster_desc(const monsters *mon)
 {
 
-    // TODO: We need to understand how shapeshifters are handled.
     monnum = mon->type;
     modifier = M_NORMAL;
     switch (mon->type)
@@ -758,8 +667,8 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
     }
     if (modifier != M_NORMAL) monnum = mon->number;
 
-    if (mons_has_ench((struct monsters *) mon, ENCH_SHAPESHIFTER) || 
-            mons_has_ench((struct monsters *) mon, ENCH_GLOWING_SHAPESHIFTER))
+    if (mons_has_ench(mon, ENCH_SHAPESHIFTER) || 
+            mons_has_ench(mon, ENCH_GLOWING_SHAPESHIFTER))
         modifier = M_SHAPESHIFTER;
 
     // XXX: Ugly hack - merge all mimics into one mimic record.
@@ -907,7 +816,7 @@ static int kill_lualc_holiness(lua_State *ls)
         }
         else
         {
-            switch (mons_holiness(ke->monnum))
+            switch (mons_class_holiness(ke->monnum))
             {
             case MH_HOLY:       verdict = "holy"; break;
             case MH_NATURAL:    verdict = "natural"; break;
@@ -985,7 +894,7 @@ static int kill_lualc_rawwrite(lua_State *ls)
 
     *skill += s;
     *skill += "\n";
-    
+
     return 0;
 }
 

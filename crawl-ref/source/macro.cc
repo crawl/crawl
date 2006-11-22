@@ -3,6 +3,8 @@
  *  Summary:    Crude macro-capability
  *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <3>     6/25/02         JS              Completely rewritten
@@ -553,11 +555,11 @@ int getch_with_command_macros( void )
         keyseq keys = getch_mul();
         // ... and add them into the buffer (apply keymaps)
         macro_buf_add_long( keys );
+
+        // Apply longest matching macro at front of buffer:
+        macro_buf_apply_command_macro();
     }
 
-    // Apply longest matching macro at front of buffer:
-    macro_buf_apply_command_macro();
-        
     return (macro_buf_get());
 }
 
@@ -578,8 +580,7 @@ void macro_add_query( void )
     KeymapContext keymc = KC_DEFAULT;
 
     mesclr();
-    mpr( "Command (m)acro or keymap [(k) default, (x) level-map or "
-            "(t)argeting]? ", MSGCH_PROMPT );
+    mpr( "(m)acro, keymap [(k) default, (x) level-map or (t)argeting], (s)ave?", MSGCH_PROMPT );
     input = getch();
     if (input == 0)
         input = getch();
@@ -602,7 +603,13 @@ void macro_add_query( void )
     }
     else if (input == 'm')
         keymap = false;
-    else 
+    else if (input == 's')
+    {
+        mpr("Saving macros.");
+        macro_save();
+        return;
+    }
+    else
     {
         mpr( "Aborting." );
         return;

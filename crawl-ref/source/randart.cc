@@ -3,6 +3,8 @@
  *  Summary:    Random and unrandom artifact functions.
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *   <8>     19 Jun 99   GDL    added IBMCPP support
@@ -20,8 +22,8 @@
 
 #include "externs.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "stuff.h"
-#include "wpn-misc.h"
 
 /*
    The initial generation of a randart is very simple - it occurs
@@ -608,7 +610,7 @@ const char *rand_armour_names[] = {
    not randart.h because they're only used in this code module.
 */
 
-#if defined(MAC) || defined(__IBMCPP__) || defined(__BCPLUSPLUS__)
+#if defined(__IBMCPP__)
 #define PACKED
 #else
 #ifndef PACKED
@@ -814,7 +816,7 @@ void randart_wpn_properties( const item_def &item,
         if (proprt[RAP_BRAND] == SPWPN_SPEED && atype == WPN_QUICK_BLADE)
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
-        if (launches_things(atype))
+        if (is_range_weapon(item))
         {
             proprt[RAP_BRAND] = SPWPN_NORMAL;
 
@@ -825,12 +827,14 @@ void randart_wpn_properties( const item_def &item,
                 proprt[RAP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
                                     (tmp >= 14) ? SPWPN_PROTECTION :
                                     (tmp >= 10) ? SPWPN_VENOM                   
-                                                : SPWPN_FLAME + (tmp % 2);
+                                                : SPWPN_VORPAL + random2(3);
+                if (proprt[RAP_BRAND] == SPWPN_VORPAL && atype == WPN_BLOWGUN)
+                    proprt[RAP_BRAND] = SPWPN_VENOM;
             }
         }
 
 
-        if (is_demonic(atype))
+        if (is_demonic(item))
         {
             switch (random5(9))
             {
@@ -1182,11 +1186,11 @@ finished_curses:
     if (random5(10) == 0 
         && (aclass != OBJ_ARMOUR 
             || atype != ARM_CLOAK 
-            || !cmp_equip_race( item, ISFLAG_ELVEN ))
+            || get_equip_race(item) != ISFLAG_ELVEN)
         && (aclass != OBJ_ARMOUR 
             || atype != ARM_BOOTS 
-            || !cmp_equip_race( item, ISFLAG_ELVEN )
-        && get_armour_ego_type( item ) != SPARM_STEALTH))
+            || get_equip_race(item) != ISFLAG_ELVEN)
+        && get_armour_ego_type( item ) != SPARM_STEALTH)
     {
         power_level++;
         proprt[RAP_STEALTH] = 10 + random5(70);
@@ -1239,7 +1243,7 @@ const char *randart_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
     {
         switch (random5(21))
         {
@@ -1286,7 +1290,7 @@ const char *randart_name( const item_def &item )
     {
         char st_p2[ITEMNAME_SIZE];
 
-        make_name(random5(250), random5(250), random5(250), 3, st_p);
+        make_name(random_int(), false, st_p);
         standard_name_weap( item.sub_type, st_p2 );
         strcat(art_n, st_p2);
 
@@ -1336,7 +1340,7 @@ const char *randart_armour_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
     {
         switch (random5(21))
         {
@@ -1382,7 +1386,7 @@ const char *randart_armour_name( const item_def &item )
     {
         char st_p2[ITEMNAME_SIZE];
 
-        make_name(random5(250), random5(250), random5(250), 3, st_p);
+        make_name(random_int(), false, st_p);
         standard_name_armour(item, st_p2);
         strcat(art_n, st_p2);
         if (random5(3) == 0)
@@ -1432,7 +1436,7 @@ const char *randart_ring_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (item_not_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
     {
         temp_rand = random5(21);
 
@@ -1473,7 +1477,7 @@ const char *randart_ring_name( const item_def &item )
     }
     else
     {
-        make_name(random5(250), random5(250), random5(250), 3, st_p);
+        make_name(random_int(), false, st_p);
 
         strcat(art_n, (item.sub_type < AMU_RAGE) ? "ring" : "amulet");
 
@@ -1773,6 +1777,7 @@ void standard_name_weap(unsigned char item_typ, char glorg[ITEMNAME_SIZE])
                    (item_typ == WPN_HALBERD) ? "halberd" :
                    (item_typ == WPN_SLING) ? "sling" :
                    (item_typ == WPN_BOW) ? "bow" :
+                   (item_typ == WPN_LONGBOW) ? "longbow" :
                    (item_typ == WPN_BLOWGUN) ? "blowgun" :
                    (item_typ == WPN_CROSSBOW) ? "crossbow" :
                    (item_typ == WPN_HAND_CROSSBOW) ? "hand crossbow" :
@@ -1782,6 +1787,7 @@ void standard_name_weap(unsigned char item_typ, char glorg[ITEMNAME_SIZE])
                    (item_typ == WPN_EVENINGSTAR) ? "eveningstar" :
                    (item_typ == WPN_QUICK_BLADE) ? "quick blade" :
                    (item_typ == WPN_KATANA) ? "katana" :
+                   (item_typ == WPN_LAJATANG) ? "lajatang" :
                    (item_typ == WPN_EXECUTIONERS_AXE) ? "executioner's axe" :
                    (item_typ == WPN_DOUBLE_SWORD) ? "double sword" :
                    (item_typ == WPN_TRIPLE_SWORD) ? "triple sword" :
@@ -1790,13 +1796,15 @@ void standard_name_weap(unsigned char item_typ, char glorg[ITEMNAME_SIZE])
                    (item_typ == WPN_WHIP) ? "whip" :
                    (item_typ == WPN_SABRE) ? "sabre" :
                    (item_typ == WPN_DEMON_BLADE) ? "demon blade" :
+                   (item_typ == WPN_BLESSED_BLADE)? "blessed blade" :
+                   (item_typ == WPN_LOCHABER_AXE) ? "lochaber axe" :
                    (item_typ == WPN_DEMON_WHIP) ? "demon whip" :
                    (item_typ == WPN_DEMON_TRIDENT) ? "demon trident" :
                    (item_typ == WPN_BROAD_AXE) ? "broad axe" :
                    (item_typ == WPN_WAR_AXE) ? "war axe" :
                    (item_typ == WPN_SPIKED_FLAIL) ? "spiked flail" :
                    (item_typ == WPN_GREAT_MACE) ? "great mace" :
-                   (item_typ == WPN_GREAT_FLAIL) ? "great flail" :
+                   (item_typ == WPN_DIRE_FLAIL) ? "dire flail" :
                    (item_typ == WPN_FALCHION) ? "falchion" :
 
            (item_typ == WPN_GIANT_CLUB) 
@@ -1814,7 +1822,7 @@ void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] )
 {
     short helm_type; 
 
-    glorg[0] = '\0';
+    glorg[0] = 0;
 
     switch (item.sub_type)
     {
@@ -1859,8 +1867,8 @@ void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] )
         break;
 
     case ARM_HELMET:
-        if (cmp_helmet_type( item, THELM_HELM )
-                    || cmp_helmet_type( item, THELM_HELMET ))
+        if (get_helmet_type(item) == THELM_HELM
+                    || get_helmet_type(item) == THELM_HELMET)
         {   
             short dhelm = get_helmet_desc( item );
 
@@ -1893,13 +1901,16 @@ void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] )
         strcat(glorg, "gloves");
         break;
 
+    case ARM_NAGA_BARDING:
+        strcat(glorg, "naga barding");
+        break;
+
+    case ARM_CENTAUR_BARDING:
+        strcat(glorg, "centaur barding");
+        break;
+
     case ARM_BOOTS:
-        if (item.plus2 == TBOOT_NAGA_BARDING)
-            strcat(glorg, "naga barding");
-        else if (item.plus2 == TBOOT_CENTAUR_BARDING)
-            strcat(glorg, "centaur barding");
-        else
-            strcat(glorg, "boots");
+        strcat(glorg, "boots");
         break;
 
     case ARM_BUCKLER:

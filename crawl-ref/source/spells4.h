@@ -3,6 +3,8 @@
  *  Summary:    Yet More Spell Function Declarations
  *  Written by: Josh Fishman
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  * <2> 12jul2000  jmf  Fixed random (undocumented) damage
  * <1> 07jan2000  jmf  Created
@@ -30,7 +32,7 @@ void cast_fragmentation(int powc);
 void cast_twist(int powc);
 void cast_far_strike(int powc);
 void cast_swap(int powc);
-void cast_apportation(int powc);
+int cast_apportation(int powc);
 void cast_glamour(int pow);
 void cast_ignite_poison(int pow);
 void cast_intoxicate(int pow);
@@ -45,6 +47,7 @@ void cast_silence(int pow);
 void cast_sticks_to_snakes(int pow);
 void cast_summon_butterflies(int pow);
 void cast_summon_dragon(int pow);
+void cast_chain_lightning( int pow );
 void cast_conjure_ball_lightning(int pow);
 void cast_summon_large_mammal(int pow);
 void cast_tame_beasts(int pow);
@@ -55,7 +58,7 @@ void cast_stoneskin(int pow);
 void cast_shuggoth_seed(int powc);
 void make_shuggoth(int x, int y, int hp);
 
-void cast_semi_controlled_blink(int pow);
+int cast_semi_controlled_blink(int pow);
 
 
 #endif

@@ -2,6 +2,8 @@
  *  File:       monspeak.cc
  *  Summary:    Functions to handle speaking monsters
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      <1>    01/09/00        BWR     Created
@@ -114,7 +116,7 @@ bool mons_speaks(struct monsters *monster)
 
     if (mons_has_ench(monster, ENCH_CONFUSION))
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);
@@ -259,7 +261,7 @@ bool mons_speaks(struct monsters *monster)
     }
     else if (monster->behaviour == BEH_FLEE)
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);
@@ -378,7 +380,7 @@ bool mons_speaks(struct monsters *monster)
     }
     else if (mons_friendly(monster))
     {
-        if (mons_holiness( monster->type ) == MH_DEMONIC
+        if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)
         {
             return (false);
@@ -1289,7 +1291,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
             case 11:
                 strcat(info,
-                       " says, \"I love to fight,  but killing is better.\"");
+                       " says, \"I love to fight, but killing is better.\"");
                 break;
             }
             break;          // end Erica
@@ -2115,7 +2117,7 @@ bool mons_speaks(struct monsters *monster)
             switch (random2(13))
             {
             case 0:
-                strcat(info, " roars, \"DIE,  PUNY ONE!\"");
+                strcat(info, " roars, \"DIE, PUNY ONE!\"");
                 break;
             case 1:
                 strcat(info, " growls, \"YOU BORE ME SO.\"");

@@ -3,6 +3,8 @@
  *  Summary:    Spellbook/Staff contents array and management functions
  *  Written by: Josh Fishman
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  *      24jun2000  jmf  Changes to many books; addition of Assassinations;
@@ -26,8 +28,10 @@
 
 #include "debug.h"
 #include "delay.h"
+#include "food.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "it_use3.h"
 #include "player.h"
@@ -144,8 +148,8 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_CONDENSATION_SHIELD,
      SPELL_BOLT_OF_COLD,
      SPELL_OZOCUBUS_REFRIGERATION,
-     SPELL_MASS_SLEEP,
      SPELL_SIMULACRUM,
+     SPELL_MASS_SLEEP,
      SPELL_NO_SPELL,
      },
 
@@ -331,15 +335,10 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_BACKLIGHT,
      SPELL_REPEL_MISSILES,
      SPELL_SLEEP,
-#ifdef USE_SILENCE_CODE
-     SPELL_SILENCE,
-#endif
      SPELL_CONFUSE,
      SPELL_ENSLAVEMENT,
+     SPELL_SILENCE,
      SPELL_INVISIBILITY,
-#ifndef USE_SILENCE_CODE
-     SPELL_NO_SPELL,
-#endif
      SPELL_NO_SPELL,
      },
     // 27 - Book of Demonology  -- Vehumet special
@@ -382,19 +381,14 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
 
     // 29 - Book of the Sky
     {0,
-#ifdef USE_SILENCE_CODE
-     SPELL_SILENCE,
-#endif
      SPELL_SUMMON_ELEMENTAL,
      SPELL_INSULATION,
      SPELL_AIRSTRIKE,
      SPELL_FLY,
+     SPELL_SILENCE,
      SPELL_DEFLECT_MISSILES,
      SPELL_LIGHTNING_BOLT,
      SPELL_CONJURE_BALL_LIGHTNING, 
-#ifndef USE_SILENCE_CODE
-     SPELL_NO_SPELL,
-#endif
      },
 
     // 30 - Book of Divinations
@@ -410,11 +404,11 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
     // 31 - Book of the Warp
     {0,
-     SPELL_CONTROLLED_BLINK,
      SPELL_BANISHMENT,
+     SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
      SPELL_PORTAL,
-     SPELL_NO_SPELL,
+     SPELL_CONTROLLED_BLINK,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -434,7 +428,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     {0,
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
-     SPELL_ORB_OF_ELECTROCUTION,        // XXX: chain lightning?
+     SPELL_CHAIN_LIGHTNING,
      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
      SPELL_ICE_STORM,
      SPELL_FIRE_STORM,
@@ -520,7 +514,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_BOLT_OF_IRON,
      SPELL_TOMB_OF_DOROKLOHE,
      SPELL_SHATTER,
-     SPELL_NO_SPELL,
+     SPELL_NO_SPELL
      },
     // 41 - manuals of all kinds
     {0,
@@ -800,7 +794,7 @@ unsigned char spellbook_contents( item_def &book, int action,
 
     char str_pass[ ITEMNAME_SIZE ];
     item_name( book, DESC_CAP_THE, str_pass );
-    out.cprintf( str_pass );
+    out.cprintf( "%s", str_pass );
 
     out.cprintf( EOL EOL " Spells                             Type                      Level" EOL );
 
@@ -824,7 +818,9 @@ unsigned char spellbook_contents( item_def &book, int action,
         if (action == RBOOK_USE_STAFF)
         {
             if (you.experience_level >= level_diff 
-                && you.magic_points >= level_diff)
+                && (book.base_type == OBJ_BOOKS?
+                        you.magic_points >= level_diff
+                      : book.plus >= level_diff * ROD_CHARGE_MULT))
             {
                 colour = LIGHTGREY;
             }
@@ -850,12 +846,12 @@ unsigned char spellbook_contents( item_def &book, int action,
         char strng[2];
 
         strng[0] = index_to_letter(spelcount);
-        strng[1] = '\0';
+        strng[1] = 0;
 
         out.cprintf(strng);
         out.cprintf(" - ");
 
-        out.cprintf( spell_title(spell_types[j]) );
+        out.cprintf( "%s", spell_title(spell_types[j]) );
         out.gotoxy( 35, -1 );
 
         
@@ -872,7 +868,7 @@ unsigned char spellbook_contents( item_def &book, int action,
                     if (already)
                         out.cprintf( "/" );
 
-                    out.cprintf( spelltype_name( 1 << i ) );
+                    out.cprintf( "%s", spelltype_name( 1 << i ) );
                     already = true;
                 }
             }
@@ -897,7 +893,7 @@ unsigned char spellbook_contents( item_def &book, int action,
         out.cprintf( "Select a spell to cast." EOL );
         break;
 
-    case RBOOK_MEMORIZE:
+    case RBOOK_MEMORISE:
         out.cprintf( "Select a spell to memorise (%d level%s available)." EOL,
                  spell_levels, (spell_levels == 1) ? "" : "s" );
         break;
@@ -1063,7 +1059,8 @@ static bool which_spellbook( int &book, int &spell )
 
     mpr( info );
 
-    book = prompt_invent_item( "Memorise from which spellbook?", OBJ_BOOKS );
+    book = prompt_invent_item("Memorise from which spellbook?", MT_INVSELECT,
+                              OBJ_BOOKS );
     if (book == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -1083,7 +1080,7 @@ static bool which_spellbook( int &book, int &spell )
         return (false);
     }
 
-    spell = read_book( you.inv[book], RBOOK_MEMORIZE );
+    spell = read_book( you.inv[book], RBOOK_MEMORISE );
     clrscr();
 
     return (true);
@@ -1156,7 +1153,7 @@ unsigned char read_book( item_def &book, int action )
 
     // reading spell descriptions doesn't take time:
     if (action != RBOOK_READ_SPELL)
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
@@ -1225,7 +1222,6 @@ bool learn_spell(void)
 {
     int chance = 0;
     int levels_needed = 0;
-    unsigned char keyin;
     int book, spell;
     int index;
 
@@ -1247,45 +1243,47 @@ bool learn_spell(void)
     if (!which_spellbook( book, spell ))
         return (false);
 
+    mesclr(true);
+    redraw_screen();
+
     if (spell < 'A' || (spell > 'Z' && spell < 'a') || spell > 'z')
     {
-      whatt:
-        redraw_screen();
-        mpr("What?");
+        canned_msg( MSG_HUH );
         return (false);
     }
 
     index = letter_to_index( spell );
 
-    if (index >= SPELLBOOK_SIZE)
-        goto whatt;
-
-    if (!is_valid_spell_in_book( book, index ))
-        goto whatt;
+    if (index >= SPELLBOOK_SIZE ||
+        !is_valid_spell_in_book( book, index ))
+    {
+        canned_msg( MSG_HUH );
+        return (false);
+    }
 
     unsigned int specspell = which_spell_in_book(you.inv[book].sub_type,index);
 
     if (specspell == SPELL_NO_SPELL)
-        goto whatt;
+    {
+        canned_msg( MSG_HUH );
+        return (false);
+    }
 
     // You can always memorise selective amnesia:
     if (you.spell_no == 21 && specspell != SPELL_SELECTIVE_AMNESIA)
     {
-        redraw_screen();
         mpr("Your head is already too full of spells!");
         return (false);
     }
 
     if (you.is_undead && spell_typematch(specspell, SPTYP_HOLY))
     {
-        redraw_screen();
         mpr("You cannot use this type of magic!");
         return (false);
     }
 
     if (undead_cannot_memorise(specspell, you.is_undead))
     {
-        redraw_screen();
         mpr("You cannot use this spell.");
         return (false);
     }
@@ -1294,9 +1292,8 @@ bool learn_spell(void)
     {
         if (you.spells[i] == specspell)
         {
-            redraw_screen();
             mpr("You already know that spell!");
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             return (false);
         }
     }
@@ -1305,89 +1302,56 @@ bool learn_spell(void)
 
     if (player_spell_levels() < levels_needed)
     {
-        redraw_screen();
         mpr("You can't memorise that many levels of magic yet!");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
     if (you.experience_level < spell_difficulty(specspell))
     {
-        redraw_screen();
         mpr("You're too inexperienced to learn that spell!");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
-    redraw_screen();
-
     chance = spell_fail(specspell);
+    int temp_rand1 = random2(3);
+    int temp_rand2 = random2(4);
 
-    strcpy(info, "This spell is ");
-
-    strcat(info, (chance >= 80) ? "very" :
-                 (chance >= 60) ? "quite" :
-                 (chance >= 45) ? "rather" :
-                 (chance >= 30) ? "somewhat"
-                                : "not that");
-
-    strcat(info, " ");
-
-    int temp_rand = random2(3);
-
-    strcat(info, (temp_rand == 0) ? "difficult" :
-                 (temp_rand == 1) ? "tricky" :
-                 (temp_rand == 2) ? "challenging"
-                                  : "");
-
-    strcat(info, " to ");
-
-    temp_rand = random2(4);
-
-    strcat(info, (temp_rand == 0) ? "memorise" :
-                 (temp_rand == 1) ? "commit to memory" :
-                 (temp_rand == 2) ? "learn" :
-                 (temp_rand == 3) ? "absorb"
-                                  : "");
-
-    strcat(info, ".");
-
+    snprintf(info, INFO_SIZE, "This spell is %s %s to %s.",
+             ((chance >= 80) ? "very" :
+              (chance >= 60) ? "quite" :
+              (chance >= 45) ? "rather" :
+              (chance >= 30) ? "somewhat"
+              : "not that"),
+             ((temp_rand1 == 0) ? "difficult" :
+              (temp_rand1 == 1) ? "tricky" :
+              "challenging"),
+             ((temp_rand2 == 0) ? "memorise" :
+              (temp_rand2 == 1) ? "commit to memory" :
+              (temp_rand2 == 2) ? "learn" :
+              "absorb"));
     mpr(info);
 
-    strcpy(info, "Memorise ");
-    strcat(info, spell_title(specspell));
-    strcat(info, "?");
-    mpr(info);
-
-    for (;;)
+    snprintf(info, INFO_SIZE, "Memorise %s?", spell_title(specspell));
+    if ( !yesno(info, true, 0, false) )
     {
-        keyin = getch();
-
-        if (keyin == 'n' || keyin == 'N')
-        {
-            redraw_screen();
-            return (false);
-        }
-
-        if (keyin == 'y' || keyin == 'Y')
-            break;
+        canned_msg( MSG_OK );
+        return (false);
     }
 
-    mesclr( true );
-
     if (you.mutation[MUT_BLURRY_VISION] > 0
-                && random2(4) < you.mutation[MUT_BLURRY_VISION])
+        && random2(4) < you.mutation[MUT_BLURRY_VISION])
     {
         mpr("The writing blurs into unreadable gibberish.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         return (false);
     }
 
     if (random2(40) + random2(40) + random2(40) < chance)
     {
-        redraw_screen();
         mpr("You fail to memorise the spell.");
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
 
         if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
         {
@@ -1411,19 +1375,17 @@ bool learn_spell(void)
 #if WIZARD
         if (!you.wizard)
             return (false);
-        else if (!yesno("Memorize anyway?"))
+        else if (!yesno("Memorise anyway?"))
             return (false);
 #else 
         return (false);
 #endif
     }
 
-    start_delay( DELAY_MEMORIZE, spell_difficulty( specspell ), specspell );
+    start_delay( DELAY_MEMORISE, spell_difficulty( specspell ), specspell );
+    you.turn_is_over = true;
 
-    you.turn_is_over = 1;
-    redraw_screen();
-
-    naughty( NAUGHTY_SPELLCASTING, 2 + random2(5) );
+    did_god_conduct( DID_SPELL_CASTING, 2 + random2(5) );
 
     return (true);
 }                               // end which_spell()
@@ -1433,7 +1395,7 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (item.base_type != OBJ_STAVES)
         return (-1);
     
-    if (need_id && item_not_ident( item, ISFLAG_KNOW_TYPE ))
+    if (need_id && !item_ident( item, ISFLAG_KNOW_TYPE ))
         return (0);
 
     const int stype = item.sub_type;
@@ -1453,11 +1415,29 @@ int count_staff_spells(const item_def &item, bool need_id)
     return (num_spells);
 }
 
+// Returns a measure of the rod spell power disrupted by a worn shield.
+int rod_shield_leakage()
+{
+    const item_def *shield = player_shield();
+    int leakage = 100;
+
+    if (shield)
+    {
+        const int shield_type = shield->sub_type;
+        leakage = shield_type == ARM_BUCKLER? 125 :
+                  shield_type == ARM_SHIELD ? 150 :
+                                              200;
+        // Adjust for shields skill.
+        leakage -= ((leakage - 100) * 5 / 10) * you.skills[SK_SHIELDS] / 27;
+    }
+    return (leakage);
+}
+
 int staff_spell( int staff )
 {
     int spell;
     unsigned char specspell;
-    int mana, diff;
+    int mana, diff, food, energy;
     FixedVector< int, SPELLBOOK_SIZE >  spell_list;
 
     // converting sub_type into book index type
@@ -1465,18 +1445,19 @@ int staff_spell( int staff )
 
     // Spell staves are mostly for the benefit of non-spellcasters, so we're 
     // not going to involve INT or Spellcasting skills for power. -- bwr
-    const int powc = 5 + you.skills[SK_EVOCATIONS] 
-                       + roll_dice( 2, you.skills[SK_EVOCATIONS] ); 
+    int powc = (5 + you.skills[SK_EVOCATIONS] 
+                 + roll_dice( 2, you.skills[SK_EVOCATIONS] ))
+                * 100
+                / rod_shield_leakage(); 
 
-    if (you.inv[staff].sub_type < STAFF_SMITING
-        || you.inv[staff].sub_type >= STAFF_AIR)
+    const int staff_type = you.inv[staff].sub_type;
+    if (staff_type < STAFF_SMITING || staff_type >= STAFF_AIR)
     {
-        //mpr("That staff has no spells in it.");
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (0);
+        return (-1);
     }
 
-    if (item_not_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
+    if (!item_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
     {
         set_ident_flags( you.inv[staff], ISFLAG_KNOW_TYPE );
         you.wield_change = true;
@@ -1508,7 +1489,11 @@ int staff_spell( int staff )
         spell = get_ch();
         
         if (spell == '?' || spell == '*')
+        {
             spell = read_book( you.inv[staff], RBOOK_USE_STAFF );
+            // [ds] read_book sets turn_is_over.
+            you.turn_is_over = false;
+        }
     }
 
     if (spell < 'A' || (spell > 'Z' && spell < 'a') || spell > 'z')
@@ -1524,39 +1509,74 @@ int staff_spell( int staff )
     if (!is_valid_spell_in_book( staff, spell ))
         goto whattt;
 
-    specspell = which_spell_in_book( type,  spell );
+    specspell = which_spell_in_book( type, spell );
 
     if (specspell == SPELL_NO_SPELL)
         goto whattt;
 
-    mana = spell_mana( specspell );
+    mana = spell_mana( specspell ) * ROD_CHARGE_MULT;
     diff = spell_difficulty( specspell );
+    food = spell_hunger( specspell );
 
-    if (you.magic_points < mana || you.experience_level < diff)
+    if (food && (you.is_undead != US_UNDEAD
+            && (you.hunger_state < HS_HUNGRY || you.hunger <= food)))
     {
-        mpr("Your brain hurts!");
-        confuse_player( 2 + random2(4) );
-        you.turn_is_over = 1;
-        return (0);
+        mpr("You don't have the energy to cast that spell.");
+        return (-1);
     }
 
-    // Exercising the spell skills doesn't make very much sense given 
-    // that spell staves are largely intended to supply spells to 
-    // non-spellcasters, and they don't use spell skills to determine
-    // power in the same way that spellcasting does. -- bwr
-    //
-    // exercise_spell(specspell, true, true);
+    if (staff_type == STAFF_STRIKING)
+        mana /= ROD_CHARGE_MULT;
 
-    your_spells(specspell, powc, false);
+    if ((staff_type == STAFF_STRIKING? 
+                you.magic_points < mana
+              : you.inv[staff].plus < mana)
+            || you.experience_level < diff)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+                "Mana needed: %d, Staff plus: %d, Difficulty: %d, XP: %d",
+                mana, you.inv[staff].plus, diff, you.experience_level);
+#endif
+        if (you.experience_level < diff)
+            mprf("You need to be at least level %d to use that.", diff);
+        else
+            mprf("%s have enough magic points.", 
+                staff_type == STAFF_STRIKING? "You don't" : "The rod doesn't");
 
-    dec_mp(spell_mana(specspell));
+        // Don't lose a turn for trying to evoke without enough MP - that's
+        // needlessly cruel for an honest error.
+        return (-1);
+    }
 
-    you.turn_is_over = 1;
+    if (your_spells(specspell, powc, false) == -1)
+        return (-1);
+
+    // dec_mp(spell_mana(specspell));
+    if (staff_type != STAFF_STRIKING)
+        you.inv[staff].plus -= mana;
+    else {
+        you.magic_points -= mana;
+        you.redraw_magic_points = true;
+    }
+
+    energy = player_energy();
+    if (energy <= 0 && you.is_undead != US_UNDEAD)
+    {
+        food -= 10 * you.skills[SK_EVOCATIONS];
+        if (food < diff * 5)
+            food = diff * 5;
+
+        make_hungry( food, true );
+    }
+
+    you.wield_change = true;
+    you.turn_is_over = true;
 
     return (roll_dice( 1, 1 + spell_difficulty(specspell) / 2 ));
 
   whattt:
     mpr("What?");
 
-    return (0);
+    return (-1);
 }                               // end staff_spell()

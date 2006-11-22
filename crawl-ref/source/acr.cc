@@ -3,6 +3,8 @@
  *  Summary:    Main entry point, event loop, and some initialization functions
  *  Written by: Linley Henzell
  *
+ *  Modified for Crawl Reference by $Author$ on $Date$
+ *
  *  Change History (most recent first):
  *
  * <18> 7/29/00         JDJ             values.h isn't included on Macs
@@ -39,7 +41,7 @@
 #include <string>
 
 // I don't seem to need values.h for VACPP..
-#if !defined(__IBMCPP__) && !defined(MAC)
+#if !defined(__IBMCPP__)
 #include <limits.h>
 #endif
 
@@ -62,16 +64,6 @@
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
-#endif
-
-#ifdef USE_EMX
-#include <sys/types.h>
-#endif
-
-#ifdef OS9
-#include <stat.h>
-#else
-#include <sys/stat.h>
 #endif
 
 #include "externs.h"
@@ -97,15 +89,18 @@
 #include "it_use2.h"
 #include "it_use3.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "macro.h"
+#include "maps.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "notes.h"
 #include "ouch.h"
 #include "output.h"
 #include "overmap.h"
@@ -126,25 +121,27 @@
 #include "transfor.h"
 #include "travel.h"
 #include "view.h"
-#include "wpn-misc.h"
 #include "stash.h"
 
 struct crawl_environment env;
 struct player you;
 struct system_environment SysEnv;
 
+std::string init_file_location; // externed in newgame.cc
+
 char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
-int stealth;                    // externed in view.h     // no it is not {dlb}
+int stealth;                    // externed in view.cc
 char use_colour = 1;
 
-FixedVector< char, NUM_STATUE_TYPES >  Visible_Statue;
+bool just_autoprayed = false;
+bool about_to_autopray = false;
 
 // set to true once a new game starts or an old game loads
 bool game_has_started = false;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
-static const struct coord_def Compass[8] = 
+const struct coord_def Compass[8] = 
 { 
     {  0, -1 }, {  1, -1 }, {  1,  0 }, {  1,  1 },
     {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
@@ -166,33 +163,25 @@ static const struct coord_def Compass[8] =
 
 */
 
-void (*viewwindow) (char, bool);
-
-/* these are all defined in view.cc: */
-extern unsigned char (*mapch) (unsigned char);
-extern unsigned char (*mapch2) (unsigned char);
-unsigned char mapchar(unsigned char ldfk);
-unsigned char mapchar2(unsigned char ldfk);
-unsigned char mapchar3(unsigned char ldfk);
-unsigned char mapchar4(unsigned char ldfk);
-
-/*
-   Function pointers are used to make switching between Unix and DOS char sets
-   possible as a runtime option (command-line -c)
-*/
-
-// these two are defined in view.cc. What does the player look like?
-// (changed for shapechanging)
-extern unsigned char your_sign;
-extern unsigned char your_colour;
-
 // Functions in main module
-static void close_door(char move_x, char move_y);
+static void close_door(int move_x, int move_y);
 static void do_berserk_no_combat_penalty(void);
 static bool initialise(void);
 static void input(void);
-static void move_player(char move_x, char move_y);
-static void open_door(char move_x, char move_y);
+static void move_player(int move_x, int move_y);
+static void open_door(int move_x, int move_y, bool check_confused = true);
+static void start_running( int dir, int mode );
+static void close_door(int move_x, int move_y);
+
+static void init_io();
+static void prep_input();
+static void input();
+static void middle_input();
+static void world_reacts();
+static command_type get_next_cmd();
+typedef int keycode_type;
+static keycode_type get_next_keycode();
+static command_type keycode_to_command( keycode_type key );
 
 /*
    It all starts here. Some initialisations are run first, then straight to
@@ -200,18 +189,6 @@ static void open_door(char move_x, char move_y);
 */
 int main( int argc, char *argv[] )
 {
-#ifdef USE_ASCII_CHARACTERS
-    // Default to the non-ibm set when it makes sense.
-    viewwindow = &viewwindow3;
-    mapch = &mapchar3;
-    mapch2 = &mapchar4;
-#else
-    // Use the standard ibm default
-    viewwindow = &viewwindow2;
-    mapch = &mapchar;
-    mapch2 = &mapchar2;
-#endif
-
     // Load in the system environment variables
     get_system_environment();
 
@@ -239,7 +216,10 @@ int main( int argc, char *argv[] )
     }
 
     // Read the init file
-    read_init_file();
+    init_file_location = read_init_file();
+
+    // Read special levels and vaults.
+    read_maps();
 
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
@@ -251,25 +231,12 @@ int main( int argc, char *argv[] )
         exit(0);
     }
 
-#ifdef UNIX
-    unixcurses_startup();
-#endif
-
-#ifdef MAC
-    init_mac();
-#endif
-
-#ifdef WIN32CONSOLE
-    init_libw32c();
-#endif
+    init_io();
 
 #ifdef USE_MACROS
     // Load macros
     macro_init();
 #endif
-
-    init_overmap();             // in overmap.cc (duh?)
-    clear_ids();                // in itemname.cc
 
     bool game_start = initialise();
 
@@ -357,16 +324,23 @@ int main( int argc, char *argv[] )
     unixcurses_shutdown();
 #endif
 
-#ifdef MAC
-    deinit_mac();
-#endif
-
-#ifdef USE_EMX
-    deinit_emx();
-#endif
-
     return 0;
 }                               // end main()
+
+static void init_io()
+{
+#ifdef UNIX
+    unixcurses_startup();
+#endif
+
+#ifdef WIN32CONSOLE
+    init_libw32c();
+#endif
+
+#ifdef DOS
+    init_libdos();
+#endif
+}
 
 #ifdef WIZARD
 static void handle_wizard_command( void )
@@ -438,7 +412,7 @@ static void handle_wizard_command( void )
 
     case 'v':
         // this command isn't very exciting... feel free to replace
-        i = prompt_invent_item( "Value of which item?", -1 );
+        i = prompt_invent_item( "Value of which item?", MT_INVSELECT, -1 );
         if (i == PROMPT_ABORT || !is_random_artefact( you.inv[i] ))
         {
             canned_msg( MSG_OK );
@@ -452,7 +426,8 @@ static void handle_wizard_command( void )
         break;
 
     case '+':
-        i = prompt_invent_item( "Make an artefact out of which item?", -1 );
+        i = prompt_invent_item(
+                "Make an artefact out of which item?", MT_INVSELECT, -1 );
         if (i == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -593,6 +568,22 @@ static void handle_wizard_command( void )
         tweak_object();
         break;
 
+    case 'T':
+        debug_make_trap();
+        break;
+
+    case '\\':
+        debug_make_shop();
+        break;
+
+    case 'f':
+        debug_fight_statistics(false);
+        break;
+
+    case 'F':
+        debug_fight_statistics(true);
+        break;
+
     case 'm':
         create_spec_monster();
         break;
@@ -695,7 +686,11 @@ static void handle_wizard_command( void )
         break;
 
     case '{':
-        magic_mapping(99, 100);
+        magic_mapping(1000, 100);
+        break;
+
+    case '@':
+        debug_set_stats();
         break;
 
     case '^':
@@ -765,437 +760,312 @@ static void handle_wizard_command( void )
 }
 #endif
 
-// This function creates "equivalence classes" so that undiscovered
-// traps and secret doors aren't running stopping points.
-static char base_grid_type( char grid )
-{
-    // Don't stop for undiscovered traps:
-    if (grid == DNGN_UNDISCOVERED_TRAP)
-        return (DNGN_FLOOR);
-
-    // Or secret doors (which currently always look like rock walls):
-    if (grid == DNGN_SECRET_DOOR)
-        return (DNGN_ROCK_WALL);
-
-    return (grid);
-}
-
-// Set up the front facing array for detecting terrain based stops
-static void set_run_check( int index, int dir )
-{
-    you.run_check[index].dx = Compass[dir].x;   
-    you.run_check[index].dy = Compass[dir].y;   
-
-    const int targ_x = you.x_pos + Compass[dir].x;
-    const int targ_y = you.y_pos + Compass[dir].y;
-
-    you.run_check[index].grid = base_grid_type( grd[ targ_x ][ targ_y ] );
-}
-
 // Set up the running variables for the current run.
-static void start_running( int dir, char mode )
+static void start_running( int dir, int mode )
 {
-    if (dir == RDIR_REST)
-    {
-        you.run_x = 0;
-        you.run_y = 0;
-        you.running = mode;
-        return;
-    }
-
-    ASSERT( dir >= 0 && dir <= 7 );
-
-    you.run_x = Compass[dir].x;
-    you.run_y = Compass[dir].y;
-    you.running = mode;
-
-    // Get the compass point to the left/right of intended travel:
-    const int left  = (dir - 1 < 0) ? 7 : (dir - 1);
-    const int right = (dir + 1 > 7) ? 0 : (dir + 1);
-
-    // Record the direction and starting tile type for later reference:
-    set_run_check( 0, left );
-    set_run_check( 1, dir );
-    set_run_check( 2, right );
+    you.running.initialise(dir, mode);
 }
 
-// Returns true if one of the front three grids has changed.
-static bool check_stop_running( void )
+static bool recharge_rod( item_def &rod, bool wielded )
 {
-    if (env.cgrid[you.x_pos + you.run_x][you.y_pos + you.run_y] != EMPTY_CLOUD)
-        return (true);
+    if (!item_is_rod(rod) || rod.plus >= rod.plus2 || !enough_mp(1, true))
+        return (false);
 
-    if (mgrd[you.x_pos + you.run_x][you.y_pos + you.run_y] != NON_MONSTER)
-        return (true);
+    const int charge = rod.plus / ROD_CHARGE_MULT;
 
-    for (int i = 0; i < 3; i++)
+    int rate = ((charge + 1) * ROD_CHARGE_MULT) / 10;
+            
+    rate *= (10 + skill_bump( SK_EVOCATIONS ));
+    rate = div_rand_round( rate, 100 );
+
+    if (rate < 5)
+        rate = 5;
+    else if (rate > ROD_CHARGE_MULT / 2)
+        rate = ROD_CHARGE_MULT / 2;
+
+    // If not wielded, the rod charges far more slowly.
+    if (!wielded)
+        rate /= 5;
+    // Shields hamper recharging for wielded rods.
+    else if (player_shield())
+        rate /= 2;
+
+    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
     {
-        const int targ_x = you.x_pos + you.run_check[i].dx;
-        const int targ_y = you.y_pos + you.run_check[i].dy;
-        const int targ_grid = base_grid_type( grd[ targ_x ][ targ_y ] );
-
-        if (you.run_check[i].grid != targ_grid)
-            return (true);
+        dec_mp(1);
+        if (wielded)
+            you.wield_change = true;
     }
 
-    return (false);
+    rod.plus += rate;
+    if (rod.plus > rod.plus2)
+        rod.plus = rod.plus2;
+
+    if (wielded && rod.plus == rod.plus2 && is_resting())
+        stop_running();
+
+    return (true);
 }
 
+static void recharge_rods()
+{
+    const int wielded = you.equip[EQ_WEAPON];
+    if (wielded != -1)
+    {
+        if (recharge_rod( you.inv[wielded], true ))
+            return ;
+    }
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (i != wielded && is_valid_item(you.inv[i])
+                && one_chance_in(3)
+                && recharge_rod( you.inv[i], false ))
+            return;
+    }
+}
+
+/* used to determine whether to apply the berserk penalty at end
+   of round */
+bool apply_berserk_penalty = false;
+
+/* There is now a distinction between keycodes and commands.
+   A keycode_type gets mapped through keycode_to_command to
+   become a command_type.
+   So a keycode_type could be something like 'H';
+   a command_type would be something like COMMAND_RUN_LEFT.
+*/
 
 /*
    This function handles the player's input. It's called from main(), from
    inside an endless loop.
+
+   It's now undergone major refactoring. The code path is now:
+   1. Get next player input item (key)
+   2. Translate key to command
+   3. Execute the command
+   4. Update rest of world if necessary
  */
-static void input(void)
-{
+static void input() {
 
-    bool its_quiet;             //jmf: for silence messages
-    FixedVector < int, 2 > plox;
-    char move_x = 0;
-    char move_y = 0;
+    you.turn_is_over = false;
+    prep_input();
 
-    int keyin = 0;
-
-#ifdef UNIX
-    // Stuff for the Unix keypad kludge
-    bool running = false;
-    bool opening = false;
-#endif
-
-    you.shield_blocks = 0;              // no blocks this round
-
-    you.time_taken = player_speed();
-
-#ifdef UNIX
-    update_screen();
-#else
-    window( 1, 1, 80, get_number_of_lines() );
-#endif
-
-    textcolor(LIGHTGREY);
-
-    set_redraw_status( REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
-    print_stats();
-
-    if (you.paralysis)
-    {
-        keyin = '.';            // end of if you.paralysis == 0
-    }
-    else
-    {
-#ifdef STASH_TRACKING
-        if (Options.stash_tracking)
-            stashes.update_visible_stashes(
-                    Options.stash_tracking == STM_ALL? 
-                            StashTracker::ST_AGGRESSIVE :
-                            StashTracker::ST_PASSIVE);
-#endif
-        handle_delay(); 
-
-        gotoxy(18, 9);
-
-        if (you_are_delayed())
-            keyin = '.';
-        else if (you.activity)
-        {
-            keyin = 128;
-            you.turn_is_over = 0;
-            perform_activity();
-        }
-        else
-        {
-            if (you.running < 0)        // Travel and explore
-                travel(&keyin, &move_x, &move_y);
-
-            if (you.running > 0)
-            {
-                keyin = 128;
-
-                move_x = you.run_x;
-                move_y = you.run_y;
-
-                if (kbhit())
-                {
-                    stop_running();
-                    goto gutch;
-                }
-
-                if (you.run_x == 0 && you.run_y == 0)
-                {
-                    you.running--;
-                    keyin = '.';
-                }
-            }
-            else if (!you.running)
-            {
-
-#if DEBUG_DIAGNOSTICS
-                // save hunger at start of round
-                // for use with hunger "delta-meter" in  output.cc
-                you.old_hunger = you.hunger;        
-#endif
-
-#if DEBUG_ITEM_SCAN
-                debug_item_scan();
-#endif
-
-              gutch:
-                flush_input_buffer( FLUSH_BEFORE_COMMAND );
-                keyin = getch_with_command_macros();
-            }
-
-            mesclr();
-
-#ifdef UNIX
-            // Kludging running and opening as two character sequences
-            // for Unix systems.  This is an easy way out... all the
-            // player has to do is find a termcap and numlock setting
-            // that will get curses the numbers from the keypad.  This
-            // will hopefully be easy.
-
-            if (keyin == '*')
-            {
-                opening = true;
-                keyin = getch();
-            }
-            else if (keyin == '/')
-            {
-                running = true;
-                keyin = getch();
-            }
-
-            // Translate keypad codes into command enums
-            keyin = key_to_command(keyin);
-#else
-            // Old DOS keypad support
-            if (keyin == 0)     // ALT also works - see ..\KEYTEST.CPP
-            {
-                keyin = getch();
-                switch (keyin)
-                {
-                case 'O': move_x = -1; move_y =  1; break;
-                case 'P': move_x =  0; move_y =  1; break;
-                case 'I': move_x =  1; move_y = -1; break;
-                case 'H': move_x =  0; move_y = -1; break;
-                case 'G': move_x = -1; move_y = -1; break;
-                case 'K': move_x = -1; move_y =  0; break;
-                case 'Q': move_x =  1; move_y =  1; break;
-                case 'M': move_x =  1; move_y =  0; break;
-
-                case 119: open_door(-1, -1); move_x = 0; move_y = 0; break;
-                case 141: open_door( 0, -1); move_x = 0; move_y = 0; break;
-                case 132: open_door( 1, -1); move_x = 0; move_y = 0; break;
-                case 116: open_door( 1,  0); move_x = 0; move_y = 0; break;
-                case 118: open_door( 1,  1); move_x = 0; move_y = 0; break;
-                case 145: open_door( 0,  1); move_x = 0; move_y = 0; break;
-                case 117: open_door(-1,  1); move_x = 0; move_y = 0; break;
-                case 115: open_door(-1,  0); move_x = 0; move_y = 0; break;
-
-                case 76:
-                case 'S':
-                    keyin = '.';
-                    goto get_keyin_again;
-                }
-
-                keyin = 128;
-            }
-#endif
-        }
-    }
-
-    if (keyin != 128)
-    {
-        move_x = 0;
-        move_y = 0;
-        you.turn_is_over = 0;
-    }
-
-#ifndef UNIX
-  get_keyin_again:
-#endif //jmf: just stops an annoying gcc warning
-
-    if (is_userfunction(keyin))
-    {
-        run_macro(get_userfunction(keyin));
-        keyin = 128;
+    /* you.paralysis check */
+    if ( you.paralysis ) {
+        world_reacts();
+        return;
     }
     
-    switch (keyin)
-    {
-    case CONTROL('Y'):
-    case CMD_OPEN_DOOR_UP_RIGHT:
-        open_door(-1, -1); move_x = 0; move_y = 0; break;
+    middle_input();
 
-    case CONTROL('K'):
-    case CMD_OPEN_DOOR_UP:
-        open_door( 0, -1); move_x = 0; move_y = 0; break;
+    handle_delay();
 
-    case CONTROL('U'):
-    case CMD_OPEN_DOOR_UP_LEFT:
-        open_door( 1, -1); move_x = 0; move_y = 0; break;
+    gotoxy(18,9);
 
-    case CONTROL('L'):
-    case CMD_OPEN_DOOR_RIGHT:
-        open_door( 1,  0); move_x = 0; move_y = 0; break;
+    if ( you_are_delayed() ) {
+        world_reacts();
+        return;
+    }
 
-    case CONTROL('N'):
-    case CMD_OPEN_DOOR_DOWN_RIGHT:
-        open_door( 1,  1); move_x = 0; move_y = 0; break;
+    /* Change from previous code! */
+    if ( you.turn_is_over ) {
+        world_reacts();
+        return;
+    }
 
-    case CONTROL('J'):
-    case CMD_OPEN_DOOR_DOWN:
-        open_door( 0,  1); move_x = 0; move_y = 0; break;
+    command_type cmd = get_next_cmd();
 
-    case CONTROL('B'):
-    case CMD_OPEN_DOOR_DOWN_LEFT:
-        open_door(-1,  1); move_x = 0; move_y = 0; break;
+    // [dshaligram] If get_next_cmd encountered a Lua macro binding, your turn
+    // may be ended by the first invoke of the macro.
+    if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
+        process_command( cmd );
 
-    case CONTROL('H'):
-    case CMD_OPEN_DOOR_LEFT:
-        open_door(-1,  0); move_x = 0; move_y = 0; break;
+    if ( you.turn_is_over ) {
 
-    case 'b': case CMD_MOVE_DOWN_LEFT:  move_x = -1; move_y =  1; break;
-    case 'j': case CMD_MOVE_DOWN:       move_y =  1; move_x =  0; break;
-    case 'u': case CMD_MOVE_UP_RIGHT:   move_x =  1; move_y = -1; break;
-    case 'k': case CMD_MOVE_UP:         move_y = -1; move_x =  0; break;
-    case 'y': case CMD_MOVE_UP_LEFT:    move_y = -1; move_x = -1; break;
-    case 'h': case CMD_MOVE_LEFT:       move_x = -1; move_y =  0; break;
-    case 'n': case CMD_MOVE_DOWN_RIGHT: move_y =  1; move_x =  1; break;
-    case 'l': case CMD_MOVE_RIGHT:      move_x =  1; move_y =  0; break;
+        if ( apply_berserk_penalty )
+            do_berserk_no_combat_penalty();
+
+        world_reacts();
+    }
+    else
+        viewwindow(true, false);
+}
+
+static int toggle_flag( bool* flag, const char* flagname ) {
+    char buf[INFO_SIZE];
+    *flag = !(*flag);
+    sprintf( buf, "%s is now %s.", flagname,
+             (*flag) ? "on" : "off" );
+    mpr(buf);
+    return *flag;
+}
+
+static void go_upstairs() {
+    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP) {   
+        shop();
+        return;
+    }
+    else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
+              || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
+             && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
+                 || grd[you.x_pos][you.y_pos] >= 150)) {   
+        mpr( "You can't go up here!" );
+        return;
+    }
+
+    tag_followers();  // only those beside us right now can follow
+    start_delay( DELAY_ASCENDING_STAIRS, 
+                 1 + (you.burden_state > BS_UNENCUMBERED) );
+}
+
+static void go_downstairs() {
+
+    if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
+         || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
+        && grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
+        && ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_DIS
+             || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
+            && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
+        && !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
+             && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES)) {
+        mpr( "You can't go down here!" );
+        return;
+    }
+
+    tag_followers();  // only those beside us right now can follow
+    start_delay( DELAY_DESCENDING_STAIRS,
+                 1 + (you.burden_state > BS_UNENCUMBERED),
+                 you.your_level );
+}
+
+static void experience_check() {
+    snprintf( info, INFO_SIZE, "You are a level %d %s %s.",
+              you.experience_level,
+              species_name(you.species,you.experience_level),
+              you.class_name);
+    mpr(info);
+
+    if (you.experience_level < 27) {
+        int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
+        snprintf( info, INFO_SIZE,
+                  "Level %d requires %ld experience (%d point%s to go!)",
+                  you.experience_level + 1, 
+                  exp_needed(you.experience_level + 2) + 1,
+                  xp_needed, 
+                  (xp_needed > 1) ? "s" : "");
+        mpr(info);
+    }
+    else {
+        mpr( "I'm sorry, level 27 is as high as you can go." );
+        mpr( "With the way you've been playing, I'm surprised you got this far." );
+    }
+
+    if (you.real_time != -1) {
+        const time_t curr = you.real_time + (time(NULL) - you.start_time);
+        char buff[200];
+
+        make_time_string( curr, buff, sizeof(buff) );
+
+        snprintf( info, INFO_SIZE, "Play time: %s (%ld turns)", 
+                  buff, you.num_turns );
+
+        mpr( info );
+    }
+#ifdef DEBUG_DIAGNOSTICS
+    if (wearing_amulet(AMU_THE_GOURMAND))
+        mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d", 
+             you.duration[DUR_GOURMAND]);
+#endif
+}
+
+/* note that in some actions, you don't want to clear afterwards.
+   e.g. list_jewellery, etc. */
+
+void process_command( command_type cmd ) {
+
+    FixedVector < int, 2 > plox;
+    apply_berserk_penalty = true;
+
+    switch ( cmd ) {
+
+    case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
+    case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
+    case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
+    case CMD_OPEN_DOOR_RIGHT:      open_door( 1,  0); break;
+    case CMD_OPEN_DOOR_DOWN_RIGHT: open_door( 1,  1); break;
+    case CMD_OPEN_DOOR_DOWN:       open_door( 0,  1); break;
+    case CMD_OPEN_DOOR_DOWN_LEFT:  open_door(-1,  1); break;
+    case CMD_OPEN_DOOR_LEFT:       open_door(-1,  0); break;
+
+    case CMD_MOVE_DOWN_LEFT:  move_player(-1,  1); break;
+    case CMD_MOVE_DOWN:       move_player( 0,  1); break;
+    case CMD_MOVE_UP_RIGHT:   move_player( 1, -1); break;
+    case CMD_MOVE_UP:         move_player( 0, -1); break;
+    case CMD_MOVE_UP_LEFT:    move_player(-1, -1); break;
+    case CMD_MOVE_LEFT:       move_player(-1,  0); break;
+    case CMD_MOVE_DOWN_RIGHT: move_player( 1,  1); break;
+    case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
 
     case CMD_REST:
-        // Yes this is backwards, but everyone here is used to using
-        // straight 5s for long rests... might need to define a roguelike
-        // rest key and get people switched over. -- bwr
-
-#ifdef UNIX
-        if (!running && !opening)
-            start_running( RDIR_REST, 100 );
-        else
-        {
-            search_around();
-            move_x = 0;
-            move_y = 0;
-            you.turn_is_over = 1;
-        }
-#endif
+        start_running( RDIR_REST, RMODE_REST_DURATION );
         break;
 
-    case 'B': case CMD_RUN_DOWN_LEFT:   
-        start_running( RDIR_DOWN_LEFT, 2 ); break;
+    case CMD_RUN_DOWN_LEFT:
+        start_running( RDIR_DOWN_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_DOWN:
+        start_running( RDIR_DOWN, RMODE_START );
+        break;
+    case CMD_RUN_UP_RIGHT:
+        start_running( RDIR_UP_RIGHT, RMODE_START );
+        break;
+    case CMD_RUN_UP:
+        start_running( RDIR_UP, RMODE_START );
+        break;
+    case CMD_RUN_UP_LEFT:
+        start_running( RDIR_UP_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_LEFT:
+        start_running( RDIR_LEFT, RMODE_START );
+        break;
+    case CMD_RUN_DOWN_RIGHT:
+        start_running( RDIR_DOWN_RIGHT, RMODE_START );
+        break;
+    case CMD_RUN_RIGHT:
+        start_running( RDIR_RIGHT, RMODE_START );
+        break;
 
-    case 'J': case CMD_RUN_DOWN:        
-        start_running( RDIR_DOWN, 2 ); break;
-
-    case 'U': case CMD_RUN_UP_RIGHT:    
-        start_running( RDIR_UP_RIGHT, 2 ); break;
-
-    case 'K': case CMD_RUN_UP:          
-        start_running( RDIR_UP, 2 ); break;
-
-    case 'Y': case CMD_RUN_UP_LEFT:     
-        start_running( RDIR_UP_LEFT, 2 ); break;
-
-    case 'H': case CMD_RUN_LEFT:        
-        start_running( RDIR_LEFT, 2 ); break;
-
-    case 'N': case CMD_RUN_DOWN_RIGHT:  
-        start_running( RDIR_DOWN_RIGHT, 2 ); break;
-
-    case 'L': case CMD_RUN_RIGHT:       
-        start_running( RDIR_RIGHT, 2 ); break;
-
-#ifdef UNIX
-        // taken care of via key -> command mapping
-#else
-        // Old DOS keypad support
-    case '1': start_running( RDIR_DOWN_LEFT, 2 ); break;
-    case '2': start_running( RDIR_DOWN, 2 ); break;
-    case '9': start_running( RDIR_UP_RIGHT, 2 ); break;
-    case '8': start_running( RDIR_UP, 2 ); break;
-    case '7': start_running( RDIR_UP_LEFT, 2 ); break;
-    case '4': start_running( RDIR_LEFT, 2 ); break;
-    case '3': start_running( RDIR_DOWN_RIGHT, 2 ); break;
-    case '6': start_running( RDIR_RIGHT, 2 ); break;
-    case '5': start_running( RDIR_REST, 100 ); break;
-
-#endif
-
-    case CONTROL('A'):
     case CMD_TOGGLE_AUTOPICKUP:
-        autopickup_on = !autopickup_on;
-        strcpy(info, "Autopickup is now ");
-        strcat(info, (autopickup_on) ? "on" : "off");
-        strcat(info, ".");
-        mpr(info);
+        toggle_flag( &Options.autopickup_on, "Autopickup");
         break;
 
-    case CONTROL('C'):
+    case CMD_TOGGLE_AUTOPRAYER:
+        toggle_flag( &Options.autoprayer_on, "Autoprayer" );
+        break;
+
+    case CMD_TOGGLE_NOFIZZLE:
+        toggle_flag( &Options.fizzlecheck_on, "Fizzle confirmation" );
+        break;
+    
+    case CMD_MAKE_NOTE:
+        make_user_note();
+        break;
+
     case CMD_CLEAR_MAP:
-        if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS)
-        {
+        if (you.level_type != LEVEL_LABYRINTH &&
+            you.level_type != LEVEL_ABYSS) {
             mpr("Clearing level map.");
             clear_map();
         }
         break;
-        
-    case '<':
-    case CMD_GO_UPSTAIRS:
-        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
-        {   
-            shop();
-            break;
-        }
-        else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
-                    || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
-                && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
-                    || grd[you.x_pos][you.y_pos] >= 150))
-        {   
-            mpr( "You can't go up here!" );
-            break;
-        }
 
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_ASCENDING_STAIRS, 
-                     1 + (you.burden_state > BS_UNENCUMBERED) );
-        break;
+    case CMD_GO_UPSTAIRS: go_upstairs(); break;
+    case CMD_GO_DOWNSTAIRS: go_downstairs(); break;
+    case CMD_DISPLAY_OVERMAP: display_overmap(); break;
+    case CMD_OPEN_DOOR: open_door(0, 0); break;
+    case CMD_CLOSE_DOOR: close_door(0, 0); break;
 
-    case '>':
-    case CMD_GO_DOWNSTAIRS:
-        if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
-                || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
-            && grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
-            && ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_DIS
-                    || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
-                && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
-            && !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
-                && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES))
-        {
-            mpr( "You can't go down here!" );
-            break;
-        }
-
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_DESCENDING_STAIRS,
-                     1 + (you.burden_state > BS_UNENCUMBERED),
-                     you.your_level );
-        break;
-
-    case 'O':
-    case CMD_DISPLAY_OVERMAP:
-        display_overmap();
-        break;
-
-    case 'o':
-    case CMD_OPEN_DOOR:
-        open_door(0, 0);
-        break;
-    case 'c':
-    case CMD_CLOSE_DOOR:
-        close_door(0, 0);
-        break;
-
-    case 'd':
     case CMD_DROP:
         drop();
 #ifdef STASH_TRACKING
@@ -1205,166 +1075,129 @@ static void input(void)
         break;
         
 #ifdef STASH_TRACKING
-    case CONTROL('F'):
     case CMD_SEARCH_STASHES:
         stashes.search_stashes();
         break;
 
-    case CONTROL('S'):
     case CMD_MARK_STASH:
         if (Options.stash_tracking >= STM_EXPLICIT)
             stashes.add_stash(-1, -1, true);
         break;
 
-    case CONTROL('E'):
     case CMD_FORGET_STASH:
         if (Options.stash_tracking >= STM_EXPLICIT)
             stashes.no_stash();
         break;
 #endif
 
-    case 'D':
     case CMD_BUTCHER:
         butchery();
         break;
 
-    case 'i':
     case CMD_DISPLAY_INVENTORY:
         get_invent(-1);
         break;
 
-    case 'I':
-    case CMD_OBSOLETE_INVOKE:
-        // We'll leave this message in for a while.  Eventually, this
-        // might be some special for of inventory command, or perhaps
-        // actual god invocations will be split to here from abilities. -- bwr
-        mpr( "This command is now 'E'voke wielded item.", MSGCH_WARN );
-        break;
-    
-    case 'E':
     case CMD_EVOKE:
         if (!evoke_wielded())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
-    case 'g':
-    case ',':
     case CMD_PICKUP:
         pickup();
         break;
 
-    case ';':
     case CMD_INSPECT_FLOOR:
         item_check(';');
         break;
 
-    case 'w':
     case CMD_WIELD_WEAPON:
         wield_weapon(false);
         break;
 
-    case 't':
     case CMD_THROW:
         throw_anything();
         break;
 
-    case 'f':
     case CMD_FIRE:
         shoot_thing();
         break;
 
-    case 'W':
     case CMD_WEAR_ARMOUR:
         wear_armour();
         break;
 
-    case 'T':
     case CMD_REMOVE_ARMOUR:
-        {
-            int index=0;
+    {
+        int index=0;
 
-            if (armour_prompt("Take off which item?", &index))
-                takeoff_armour(index);
-        }
-        break;
+        if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
+            takeoff_armour(index);
+    }
+    break;
 
-    case 'R':
     case CMD_REMOVE_JEWELLERY:
         remove_ring();
         break;
-    case 'P':
+
     case CMD_WEAR_JEWELLERY:
-        puton_ring();
+        puton_ring(-1, false);
         break;
 
-    case '=':
     case CMD_ADJUST_INVENTORY:
         adjust();
-        return;
+        break;
 
-    case 'M':
     case CMD_MEMORISE_SPELL:
         if (!learn_spell())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
-    case 'z':
     case CMD_ZAP_WAND:
         zap_wand();
         break;
 
-    case 'e':
     case CMD_EAT:
         eat_food();
         break;
 
-    case 'a':
     case CMD_USE_ABILITY:
         if (!activate_ability())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
-    case 'A':
     case CMD_DISPLAY_MUTATIONS:
         display_mutations();
         redraw_screen();
         break;
 
-    case 'v':
     case CMD_EXAMINE_OBJECT:
-        original_name();
+        examine_object();
         break;
 
-    case 'p':
     case CMD_PRAY:
         pray();
         break;
 
-    case '^':
     case CMD_DISPLAY_RELIGION:
         describe_god( you.religion, true );
         redraw_screen();
         break;
 
-    case '.':
     case CMD_MOVE_NOWHERE:
+    case CMD_SEARCH:
         search_around();
-        move_x = 0;
-        move_y = 0;
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
         break;
 
-    case 'q':
     case CMD_QUAFF:
         drink();
         break;
 
-    case 'r':
     case CMD_READ:
         read_scroll();
         break;
 
-    case 'x':
     case CMD_LOOK_AROUND:
         mpr("Move the cursor around to observe a square.", MSGCH_PROMPT);
         mpr("Press '?' for a monster description.", MSGCH_PROMPT);
@@ -1376,13 +1209,6 @@ static void input(void)
             start_travel( lmove.tx, lmove.ty );
         break;
 
-    case 's':
-    case CMD_SEARCH:
-        search_around();
-        you.turn_is_over = 1;
-        break;
-
-    case 'Z':
     case CMD_CAST_SPELL:
         /* randart wpns */
         if (scan_randarts(RAP_PREVENT_SPELLCASTING))
@@ -1396,23 +1222,20 @@ static void input(void)
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
 
-    case '\'':
     case CMD_WEAPON_SWAP:
         wield_weapon(true);
         break;
 
-    // [ds] Waypoints can be added from the level-map, and we need Ctrl+F for
-    // nobler things. Who uses waypoints, anyway?
-    // Update: Appears people do use waypoints. Reinstating, on CONTROL('W').
-    //         This means Ctrl+W is no longer a wizmode trigger, but there's
-    //         always '&'. :-)
+        // [ds] Waypoints can be added from the level-map, and we need
+        // Ctrl+F for nobler things. Who uses waypoints, anyway?
+        // Update: Appears people do use waypoints. Reinstating, on
+        // CONTROL('W'). This means Ctrl+W is no longer a wizmode
+        // trigger, but there's always '&'. :-)
     case CMD_FIX_WAYPOINT:
-    case CONTROL('W'):
         travel_cache.add_waypoint();
         break;
         
     case CMD_INTERLEVEL_TRAVEL:
-    case CONTROL('G'):
         if (!can_travel_interlevel())
         {
             mpr("Sorry, you can't auto-travel out of here.");
@@ -1422,7 +1245,6 @@ static void input(void)
         redraw_screen();
         break;
 
-    case CONTROL('O'):
     case CMD_EXPLORE:
         if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         {
@@ -1433,7 +1255,6 @@ static void input(void)
         start_explore();
         break;
 
-    case 'X':
     case CMD_DISPLAY_MAP:
 #if (!DEBUG_DIAGNOSTICS)
         if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
@@ -1443,44 +1264,37 @@ static void input(void)
         }
 #endif
         plox[0] = 0;
-        show_map(plox);
+        show_map(plox, true);
         redraw_screen();
         if (plox[0] > 0) 
             start_travel(plox[0], plox[1]);
         break;
 
-    case '\\':
     case CMD_DISPLAY_KNOWN_OBJECTS:
-        check_item_knowledge(); //nothing = check_item_knowledge();
-        redraw_screen();
+        check_item_knowledge();
         break;
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND
-    case CONTROL('D'):
     case CMD_DESTROY_ITEM:
         cmd_destroy_item();
         break;
 #endif
 
-    case CONTROL('P'):
     case CMD_REPLAY_MESSAGES:
         replay_messages();
         redraw_screen();
         break;
 
-    case CONTROL('R'):
     case CMD_REDRAW_SCREEN:
         redraw_screen();
         break;
 
-    case CONTROL('X'):
     case CMD_SAVE_GAME_NOW:
         mpr("Saving game... please wait.");
         save_game(true);
         break;
 
 #ifdef USE_UNIX_SIGNALS
-    case CONTROL('Z'):
     case CMD_SUSPEND_GAME:
         // CTRL-Z suspend behaviour is implemented here,
         // because we want to have CTRL-Y available...
@@ -1493,71 +1307,37 @@ static void input(void)
         break;
 #endif
 
-    case '?':
     case CMD_DISPLAY_COMMANDS:
         list_commands(false);
         redraw_screen();
         break;
 
-    case 'C':
     case CMD_EXPERIENCE_CHECK:
-        snprintf( info, INFO_SIZE, "You are a level %d %s %s.", you.experience_level,
-                species_name(you.species,you.experience_level), you.class_name);
-        mpr(info);
-
-        if (you.experience_level < 27)
-        {
-            int xp_needed = (exp_needed(you.experience_level+2) - you.experience) + 1;
-            snprintf( info, INFO_SIZE, "Level %d requires %ld experience (%d point%s to go!)",
-                    you.experience_level + 1, 
-                    exp_needed(you.experience_level + 2) + 1,
-                    xp_needed, 
-                    (xp_needed > 1) ? "s" : "");
-            mpr(info);
-        }
-        else
-        {
-            mpr( "I'm sorry, level 27 is as high as you can go." );
-            mpr( "With the way you've been playing, I'm surprised you got this far." );
-        }
-
-        if (you.real_time != -1)
-        {
-            const time_t curr = you.real_time + (time(NULL) - you.start_time);
-            char buff[200];
-
-            make_time_string( curr, buff, sizeof(buff) );
-
-            snprintf( info, INFO_SIZE, "Play time: %s (%ld turns)", 
-                      buff, you.num_turns );
-
-            mpr( info );
-        }
+        experience_check();
         break;
 
-
-    case '!':
     case CMD_SHOUT:
         yell();                 /* in effects.cc */
         break;
 
-    case '@':
     case CMD_DISPLAY_CHARACTER_STATUS:
         display_char_status();
         break;
+        
+    case CMD_RESISTS_SCREEN:
+        resists_screen();
+        break;
 
-    case 'm':
     case CMD_DISPLAY_SKILLS:
         show_skills();
         redraw_screen();
         break;
 
-    case '#':
     case CMD_CHARACTER_DUMP:
         char name_your[kNameLen+1];
 
         strncpy(name_your, you.your_name, kNameLen);
-        name_your[kNameLen] = '\0';
+        name_your[kNameLen] = 0;
         if (dump_char( name_your, false ))
             strcpy(info, "Char dumped successfully.");
         else
@@ -1566,134 +1346,78 @@ static void input(void)
         break;
 
 #ifdef USE_MACROS
-    case '`':
     case CMD_MACRO_ADD:
         macro_add_query();
         break;
-    case '~':
-    case CMD_MACRO_SAVE:
-        mpr("Saving macros.");
-        macro_save();
-        break;
 #endif
 
-    case ')':
     case CMD_LIST_WEAPONS:
         list_weapons();
-        return;
+        break;
 
-    case ']':
+    case CMD_INSCRIBE_ITEM:
+        inscribe_item();
+        break;
+        
     case CMD_LIST_ARMOUR:
         list_armour();
-        return;
+        break;
 
-    case '"':
     case CMD_LIST_JEWELLERY:
         list_jewellery();
-        return;
+        break;
 
 #ifdef WIZARD
     case CMD_WIZARD:
-    case '&':
         handle_wizard_command();
         break;
 #endif
 
-    case 'S':
     case CMD_SAVE_GAME:
-        if (yesno("Save game and exit?", false, 'n'))
+        if (yesno("Save game and exit?", true, 'n'))
             save_game(true);
         break;
 
-    case 'Q':
     case CMD_QUIT:
         quit_game();
         break;
 
-    case 'V':
     case CMD_GET_VERSION:
         version();
         break;
 
-    case 128:   // Can't use this char -- it's the special value 128
-        break;
-
-    default:
     case CMD_NO_CMD:
+    default:
         mpr("Unknown command.");
         break;
 
     }
+}
 
+static void prep_input() {
+    you.time_taken = player_speed();
+    you.shield_blocks = 0;              // no blocks this round
 #ifdef UNIX
-    // New Unix keypad stuff
-    if (running)
-    {
-        int dir = -1;
-        
-        // XXX: ugly hack to interface this with the new running code. -- bwr
-        for (int i = 0; i < 8; i++)
-        {
-            if (Compass[i].x == move_x && Compass[i].y == move_y)
-            {
-                dir = i;
-                break;
-            }
-        }
-
-        if (dir != -1)
-        {
-            start_running( dir, 2 );
-            move_x = 0;
-            move_y = 0;
-        }
-    }
-    else if (opening)
-    {
-        open_door(move_x, move_y);
-        move_x = 0;
-        move_y = 0;
-    }
+    update_screen();
+#else
+    window( 1, 1, 80, get_number_of_lines() );
 #endif
 
-    if (move_x != 0 || move_y != 0)
-        move_player(move_x, move_y);
-    else if (you.turn_is_over)      // we did something other than move/attack
-        do_berserk_no_combat_penalty();
+    textcolor(LIGHTGREY);
 
-    if (!you.turn_is_over)
+    set_redraw_status( REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
+    print_stats();
+}
+
+static void decrement_durations()
+{
+    if (wearing_amulet(AMU_THE_GOURMAND))
     {
-        viewwindow(1, false);
-        return;
+        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
+            you.duration[DUR_GOURMAND]++;
     }
-
-    if (you.num_turns != -1)
-        you.num_turns++;
-
-    //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
-
-    stealth = check_stealth();
-
-#if 0
-    // too annoying for regular diagnostics
-    snprintf( info, INFO_SIZE, "stealth: %d", stealth );
-    mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
-    if (you.special_wield != SPWLD_NONE)
-        special_wielded();
-
-    if (one_chance_in(10))
-    {   
-        // this is instantaneous
-        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
-            you_teleport2( true ); 
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
-            you_teleport2( false, true ); // to new area of the Abyss
-    }
-
-    if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
-        in_a_cloud();
+    else
+        you.duration[DUR_GOURMAND] = 0;
 
     if (you.duration[DUR_REPEL_UNDEAD] > 1)
         you.duration[DUR_REPEL_UNDEAD]--;
@@ -1722,7 +1446,7 @@ static void input(void)
         const int res_fire = player_res_fire();
 
         mpr( "You are covered in liquid flames!", MSGCH_WARN );
-        scrolls_burn(8, OBJ_SCROLLS);
+        expose_player_to_element(BEAM_NAPALM, 12);
 
         if (res_fire > 0)
         {
@@ -1733,13 +1457,13 @@ static void input(void)
         if (res_fire <= 0)
         {
             ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                                                KILLED_BY_BURNING);
+                 KILLED_BY_BURNING);
         }
 
         if (res_fire < 0)
         {
             ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                                                KILLED_BY_BURNING);
+                 KILLED_BY_BURNING);
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -1815,10 +1539,10 @@ static void input(void)
         you.duration[DUR_PRAYER]--;
     else if (you.duration[DUR_PRAYER] == 1)
     {
-        god_speaks(you.religion, "Your prayer is over.");
+        mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
+        about_to_autopray = true;
         you.duration[DUR_PRAYER] = 0;
     }
-
 
     //jmf: more flexible weapon branding code
     if (you.duration[DUR_WEAPON_BRAND] > 1)
@@ -1839,16 +1563,11 @@ static void input(void)
         switch (temp_effect)
         {
         case SPWPN_VORPAL:
-            if (damage_type(you.inv[you.equip[EQ_WEAPON]].base_type,
-                     you.inv[you.equip[EQ_WEAPON]].sub_type) != DVORP_CRUSHING)
-            {
+            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]])
+                    == DVORP_SLICING)
                 strcat(info, " seems blunter.");
-            }
             else
-            {
-                //jmf: for Maxwell's Silver Hammer
                 strcat(info, " feels lighter.");
-            }
             break;
 
         case SPWPN_FLAMING:
@@ -1865,7 +1584,8 @@ static void input(void)
             break;
         case SPWPN_DISTORTION:
             strcat( info, " seems straighter." );
-            miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+            // [dshaligram] Makes the brand unusable
+            // miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
             break;
         default:
             strcat(info, " seems inexplicably less special.");
@@ -1938,7 +1658,7 @@ static void input(void)
         you.duration[DUR_STONEMAIL]--;
         if (you.duration[DUR_STONEMAIL] == 6)
         {
-            mpr("Your scaley stone armour is starting to flake away.", MSGCH_DURATION);
+            mpr("Your scaly stone armour is starting to flake away.", MSGCH_DURATION);
             you.redraw_armour_class = 1;
             if (coinflip())
                 you.duration[DUR_STONEMAIL]--;
@@ -1946,7 +1666,7 @@ static void input(void)
     }
     else if (you.duration[DUR_STONEMAIL] == 1)
     {
-        mpr("Your scaley stone armour disappears.", MSGCH_DURATION);
+        mpr("Your scaly stone armour disappears.", MSGCH_DURATION);
         you.duration[DUR_STONEMAIL] = 0;
         you.redraw_armour_class = 1;
         burden_change();
@@ -1978,7 +1698,8 @@ static void input(void)
     {
         you.duration[DUR_CONDENSATION_SHIELD]--;
 
-        scrolls_burn( 1, OBJ_POTIONS );
+        // [dshaligram] Makes this spell useless
+        // scrolls_burn( 1, OBJ_POTIONS );
         
         if (player_res_cold() < 0)
         {
@@ -2034,7 +1755,6 @@ static void input(void)
     {
         mpr("You feel uncertain.", MSGCH_DURATION);
         you.duration[DUR_CONTROL_TELEPORT] = 0;
-        you.attribute[ATTR_CONTROL_TELEPORT]--;
     }
 
     if (you.duration[DUR_RESIST_POISON] > 1)
@@ -2067,20 +1787,6 @@ static void input(void)
     {
         mpr("Your unholy channel expires.", MSGCH_DURATION);    // Death channel wore off
         you.duration[DUR_DEATH_CHANNEL] = 0;
-    }
-
-    if (you.duration[DUR_SHUGGOTH_SEED_RELOAD] > 0)     //jmf: added
-        you.duration[DUR_SHUGGOTH_SEED_RELOAD]--;
-
-    if (you.duration[DUR_INFECTED_SHUGGOTH_SEED] > 1)
-        you.duration[DUR_INFECTED_SHUGGOTH_SEED]--;
-    else if (you.duration[DUR_INFECTED_SHUGGOTH_SEED] == 1)
-    {
-        //jmf: use you.max_hp instead? or would that be too evil?
-        you.duration[DUR_INFECTED_SHUGGOTH_SEED] = 0;
-        mpr("A horrible thing bursts from your chest!", MSGCH_WARN);
-        ouch(1 + you.hp / 2, 0, KILLED_BY_SHUGGOTH);
-        make_shuggoth(you.x_pos, you.y_pos, 1 + you.hp / 2);
     }
 
     if (you.invis > 1)
@@ -2139,7 +1845,7 @@ static void input(void)
         you.berserker = 0;
 
         //jmf: guilty for berserking /after/ berserk
-        naughty( NAUGHTY_STIMULANTS, 6 + random2(6) );
+        did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
 
         //
         // Sometimes berserk leaves us physically drained
@@ -2155,23 +1861,55 @@ static void input(void)
         //       this should make it a bit more interesting for
         //       Crusaders again.
         //     - similarly for the amulet
-        int chance = 10 + you.mutation[MUT_BERSERK] * 25 
-                        + (wearing_amulet( AMU_RAGE ) ? 10 : 0)
-                        + (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
+        int chances[4];
+        chances[0] = 10;
+        chances[1] = you.mutation[MUT_BERSERK] * 25;
+        chances[2] = (wearing_amulet( AMU_RAGE ) ? 10 : 0);
+        chances[3] = (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
+        const char* reasons[4] = {
+            "You struggle, and manage to stay standing.",
+            "Your mutated body refuses to collapse.",
+            "You feel your neck pulse as blood rushes through your body.",
+            "Your mind masters your body."
+        };
+        const int chance = chances[0] + chances[1] + chances[2] + chances[3];
 
+        if (you.berserk_penalty == NO_BERSERK_PENALTY)
+            mpr("The very source of your rage keeps you on your feet.");
         // Note the beauty of Trog!  They get an extra save that's at
         // the very least 20% and goes up to 100%.
-        if (you.berserk_penalty == NO_BERSERK_PENALTY
-            || (you.religion == GOD_TROG && you.piety > random2(150))
-            || !one_chance_in( chance ))
+        else if ( you.religion == GOD_TROG && you.piety > random2(150) &&
+                  !player_under_penance() )
+            mpr("Trog's vigour flows through your veins.");
+        else if ( !one_chance_in(chance) )
         {
-            mpr("You are exhausted.");
+            // Survived the probabilistic check.
+            // Figure out why.
+
+            int cause = random2(chance); // philosophically speaking...
+            int i;
+            for ( i = 0; i < 4; ++i )
+            {
+                if ( cause < chances[i] )
+                {
+                    // only print a reason if it actually exists
+                    if ( reasons[i][0] != 0 )
+                        mpr(reasons[i]);
+                    break;
+                }
+                else
+                    cause -= chances[i];
+            }
+            if (i == 4)
+                mpr("Oops. Couldn't find a reason. Well, lucky you.");
         }
         else
         {
             mpr("You pass out from exhaustion.", MSGCH_WARN);
             you.paralysis += roll_dice( 1, 4 );
         }
+        if ( you.paralysis == 0 )
+            mpr("You are exhausted.", MSGCH_WARN);
 
         // this resets from an actual penalty or from NO_BERSERK_PENALTY
         you.berserk_penalty = 0;
@@ -2229,20 +1967,8 @@ static void input(void)
         burden_change();
         you.duration[DUR_CONTROLLED_FLIGHT] = 0;
 
-        if (grd[you.x_pos][you.y_pos] == DNGN_LAVA
-            || grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-            || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
-        {
-            if (you.species == SP_MERFOLK 
-                && grd[you.x_pos][you.y_pos] != DNGN_LAVA)
-            {
-                mpr("You dive into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-
-            if (grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER)
-                fall_into_a_pool(true, grd[you.x_pos][you.y_pos]);
-        }
+        // re-enter the terrain:
+        move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
     }
 
     if (you.rotting > 0)
@@ -2332,6 +2058,47 @@ static void input(void)
             more();
         }
     }
+}
+
+/* Perhaps we should write functions like: update_repel_undead(),
+   update_liquid_flames(), and so on. Even better, we could have a
+   vector of callback functions (or objects) which get installed
+   at some point.
+*/
+
+static void world_reacts() {
+
+    bool its_quiet;             //jmf: for silence messages
+
+    if (you.num_turns != -1)
+        you.num_turns++;
+
+    //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
+
+    stealth = check_stealth();
+
+#if 0
+    // too annoying for regular diagnostics
+    snprintf( info, INFO_SIZE, "stealth: %d", stealth );
+    mpr( info, MSGCH_DIAGNOSTICS );
+#endif
+
+    if (you.special_wield != SPWLD_NONE)
+        special_wielded();
+
+    if (one_chance_in(10))
+    {   
+        // this is instantaneous
+        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
+            you_teleport2( true ); 
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
+            you_teleport2( false, true ); // to new area of the Abyss
+    }
+
+    if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+        in_a_cloud();
+
+    decrement_durations();
 
     const int food_use = player_hunger_rate();
 
@@ -2347,14 +2114,10 @@ static void input(void)
 
     while (tmp >= 100)
     {
-        if (you.hp >= you.hp_max - 1 
-            && you.running && you.run_x == 0 && you.run_y == 0)
-        {
-            stop_running();
-        }
-
         inc_hp(1, false);
         tmp -= 100;
+
+        you.running.check_hp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );
@@ -2369,18 +2132,17 @@ static void input(void)
 
     while (tmp >= 100)
     {
-        if (you.magic_points >= you.max_magic_points - 1 
-            && you.running && you.run_x == 0 && you.run_y == 0)
-        {
-            stop_running();
-        }
-
         inc_mp(1, false);
         tmp -= 100;
+
+        you.running.check_mp();
     }
 
     ASSERT( tmp >= 0 && tmp < 100 );
     you.magic_points_regeneration = static_cast< unsigned char >( tmp );
+
+    // If you're wielding a rod, it'll gradually recharge.
+    recharge_rods();
 
     viewwindow(1, true);
 
@@ -2406,46 +2168,6 @@ static void input(void)
 
     if (you.fire_shield > 0)
         manage_fire_shield();
-
-    // There used to be signs of intent to have statues as some sort
-    // of more complex state machine... I'm boiling them down to bare
-    // basics for now.  -- bwr
-    if (Visible_Statue[ STATUE_SILVER ])
-    {
-        interrupt_activity( AI_STATUE );
-
-        if ((!you.invis && one_chance_in(3)) || one_chance_in(5))
-        {
-            char wc[30];
-
-            weird_colours( random2(256), wc );
-            snprintf(info, INFO_SIZE, "The silver statue's eyes glow %s.", wc);
-            mpr( info, MSGCH_WARN );
-
-            create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
-                                                         : DEMON_LESSER)),
-                                     ENCH_ABJ_V, BEH_HOSTILE,
-                                     you.x_pos, you.y_pos,
-                                     MHITYOU, 250 );
-        }
-
-        Visible_Statue[ STATUE_SILVER ] = 0;
-    }
-
-    if (Visible_Statue[ STATUE_ORANGE_CRYSTAL ])
-    {
-        interrupt_activity( AI_STATUE );
-
-        if ((!you.invis && coinflip()) || one_chance_in(4))
-        {
-            mpr("A hostile presence attacks your mind!", MSGCH_WARN);
-
-            miscast_effect( SPTYP_DIVINATION, random2(15), random2(150), 100,
-                            "an orange crystal statue" );
-        }
-
-        Visible_Statue[ STATUE_ORANGE_CRYSTAL ] = 0;
-    }
 
     // food death check:
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
@@ -2518,8 +2240,266 @@ static void input(void)
     if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
         pandemonium_mons();
 
-    // No monsters in the Labyrinth,  or Ecumenical Temple
+    // No monsters in the Labyrinth, or the Ecumenical Temple
     return;
+}
+
+static command_type get_next_cmd() {
+    if (Options.autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
+        just_autoprayed == false && you.religion != GOD_NO_GOD &&
+        grid_altar_god( grd[you.x_pos][you.y_pos] ) == GOD_NO_GOD &&
+        i_feel_safe())
+    {
+        just_autoprayed = true;
+        about_to_autopray = false;
+        return CMD_PRAY;
+    }
+    if ( just_autoprayed && you.duration[DUR_PRAYER] == 0 )
+    {
+        /* oops */
+        mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
+        Options.autoprayer_on = false;
+    }
+    just_autoprayed = false;
+    if ( Options.autoprayer_on && about_to_autopray &&
+         you.religion != GOD_NO_GOD &&
+         you.duration[DUR_PRAYER] == 0 )
+    {
+        mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
+        about_to_autopray = false;
+    }
+
+#if DEBUG_DIAGNOSTICS
+    // save hunger at start of round
+    // for use with hunger "delta-meter" in  output.cc
+    you.old_hunger = you.hunger;        
+#endif
+    
+#if DEBUG_ITEM_SCAN
+    debug_item_scan();
+#endif
+    keycode_type keyin = get_next_keycode();
+
+    if (is_userfunction(keyin))
+    {
+        run_macro(get_userfunction(keyin));
+        return (CMD_NEXT_CMD);
+    }
+
+    return keycode_to_command(keyin);
+}
+
+/* for now, this is an extremely yucky hack */
+command_type keycode_to_command( keycode_type key ) {
+    switch ( key ) {
+    case 'b': return CMD_MOVE_DOWN_LEFT;
+    case 'h': return CMD_MOVE_LEFT;
+    case 'j': return CMD_MOVE_DOWN;
+    case 'k': return CMD_MOVE_UP;
+    case 'l': return CMD_MOVE_RIGHT;
+    case 'n': return CMD_MOVE_DOWN_RIGHT;
+    case 'u': return CMD_MOVE_UP_RIGHT;
+    case 'y': return CMD_MOVE_UP_LEFT;
+
+    case 'a': return CMD_USE_ABILITY;
+    case 'c': return CMD_CLOSE_DOOR;
+    case 'd': return CMD_DROP;
+    case 'e': return CMD_EAT;
+    case 'f': return CMD_FIRE;
+    case 'g': return CMD_PICKUP;
+    case 'i': return CMD_DISPLAY_INVENTORY;
+    case 'm': return CMD_DISPLAY_SKILLS;
+    case 'o': return CMD_OPEN_DOOR;
+    case 'p': return CMD_PRAY;
+    case 'q': return CMD_QUAFF;
+    case 'r': return CMD_READ;
+    case 's': return CMD_SEARCH;
+    case 't': return CMD_THROW;
+    case 'v': return CMD_EXAMINE_OBJECT;
+    case 'w': return CMD_WIELD_WEAPON;
+    case 'x': return CMD_LOOK_AROUND;
+    case 'z': return CMD_ZAP_WAND;
+
+    case 'B': return CMD_RUN_DOWN_LEFT;
+    case 'H': return CMD_RUN_LEFT;
+    case 'J': return CMD_RUN_DOWN;
+    case 'K': return CMD_RUN_UP;
+    case 'L': return CMD_RUN_RIGHT;
+    case 'N': return CMD_RUN_DOWN_RIGHT;
+    case 'U': return CMD_RUN_UP_RIGHT;
+    case 'Y': return CMD_RUN_UP_LEFT;
+
+    case 'A': return CMD_DISPLAY_MUTATIONS;
+    case 'C': return CMD_EXPERIENCE_CHECK;
+    case 'D': return CMD_BUTCHER;
+    case 'E': return CMD_EVOKE;
+    case 'F': return CMD_NO_CMD;
+    case 'G': return CMD_NO_CMD;
+    case 'I': return CMD_NO_CMD;
+    case 'M': return CMD_MEMORISE_SPELL;
+    case 'O': return CMD_DISPLAY_OVERMAP;
+    case 'P': return CMD_WEAR_JEWELLERY;
+    case 'Q': return CMD_QUIT;
+    case 'R': return CMD_REMOVE_JEWELLERY;
+    case 'S': return CMD_SAVE_GAME;
+    case 'T': return CMD_REMOVE_ARMOUR;
+    case 'V': return CMD_GET_VERSION;
+    case 'W': return CMD_WEAR_ARMOUR;
+    case 'X': return CMD_DISPLAY_MAP;
+    case 'Z': return CMD_CAST_SPELL;
+
+    case '.': return CMD_MOVE_NOWHERE;
+    case '<': return CMD_GO_UPSTAIRS;
+    case '>': return CMD_GO_DOWNSTAIRS;
+    case '@': return CMD_DISPLAY_CHARACTER_STATUS;
+    case '%': return CMD_RESISTS_SCREEN;
+    case ',': return CMD_PICKUP;
+    case ':': return CMD_MAKE_NOTE;
+    case ';': return CMD_INSPECT_FLOOR;
+    case '!': return CMD_SHOUT;
+    case '^': return CMD_DISPLAY_RELIGION;
+    case '#': return CMD_CHARACTER_DUMP;
+    case '=': return CMD_ADJUST_INVENTORY;
+    case '?': return CMD_DISPLAY_COMMANDS;
+    case '~': return CMD_MACRO_ADD;
+    case '&': return CMD_WIZARD;
+    case '"': return CMD_LIST_JEWELLERY;
+    case '{': return CMD_INSCRIBE_ITEM;
+    case '[': return CMD_LIST_ARMOUR;
+    case ']': return CMD_LIST_ARMOUR;
+    case ')': return CMD_LIST_WEAPONS;
+    case '(': return CMD_LIST_WEAPONS;
+    case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;
+    case '\'': return CMD_WEAPON_SWAP;
+
+    case '0': return CMD_NO_CMD;
+
+#ifdef UNIX
+    case '1': return CMD_MOVE_DOWN_LEFT;
+    case '2': return CMD_MOVE_DOWN;
+    case '3': return CMD_MOVE_DOWN_RIGHT;
+    case '4': return CMD_MOVE_LEFT;
+    case '5': return CMD_REST;
+    case '6': return CMD_MOVE_RIGHT;
+    case '7': return CMD_MOVE_UP_LEFT;
+    case '8': return CMD_MOVE_UP;
+    case '9': return CMD_MOVE_UP_RIGHT;
+#else
+    case '1': return CMD_RUN_DOWN_LEFT;
+    case '2': return CMD_RUN_DOWN;
+    case '3': return CMD_RUN_DOWN_RIGHT;
+    case '4': return CMD_RUN_LEFT;
+    case '5': return CMD_REST;
+    case '6': return CMD_RUN_RIGHT;
+    case '7': return CMD_RUN_UP_LEFT;
+    case '8': return CMD_RUN_UP;
+    case '9': return CMD_RUN_UP_RIGHT;
+#endif
+
+    case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
+    case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;
+    case CONTROL('J'): return CMD_OPEN_DOOR_DOWN;
+    case CONTROL('K'): return CMD_OPEN_DOOR_UP;
+    case CONTROL('L'): return CMD_OPEN_DOOR_RIGHT;
+    case CONTROL('N'): return CMD_OPEN_DOOR_DOWN_RIGHT;
+    case CONTROL('U'): return CMD_OPEN_DOOR_UP_LEFT;
+    case CONTROL('Y'): return CMD_OPEN_DOOR_UP_RIGHT;
+
+    case CONTROL('A'): return CMD_TOGGLE_AUTOPICKUP;
+    case CONTROL('C'): return CMD_CLEAR_MAP;
+    case CONTROL('D'): return CMD_NO_CMD;
+    case CONTROL('E'): return CMD_FORGET_STASH;
+    case CONTROL('F'): return CMD_SEARCH_STASHES;
+    case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
+    case CONTROL('I'): return CMD_NO_CMD;
+    case CONTROL('M'): return CMD_NO_CMD;
+    case CONTROL('O'): return CMD_EXPLORE;
+    case CONTROL('P'): return CMD_REPLAY_MESSAGES;
+    case CONTROL('Q'): return CMD_NO_CMD;
+    case CONTROL('R'): return CMD_REDRAW_SCREEN;
+    case CONTROL('S'): return CMD_MARK_STASH;
+    case CONTROL('T'): return CMD_TOGGLE_NOFIZZLE;
+    case CONTROL('V'): return CMD_TOGGLE_AUTOPRAYER;
+    case CONTROL('W'): return CMD_FIX_WAYPOINT;
+    case CONTROL('X'): return CMD_SAVE_GAME_NOW;
+    case CONTROL('Z'): return CMD_SUSPEND_GAME;
+    default: return CMD_NO_CMD;
+    }
+}
+
+#ifdef UNIX
+static keycode_type numpad2vi(keycode_type key)
+{
+    if (key >= '1' && key <= '9')
+    {
+        const char *vikeys = "bjnh.lyku";
+        return keycode_type(vikeys[key - '1']);
+    }
+    return (key);
+}
+#endif
+
+keycode_type get_next_keycode() {
+
+    keycode_type keyin;
+
+    flush_input_buffer( FLUSH_BEFORE_COMMAND );
+    keyin = getch_with_command_macros();
+
+#ifdef UNIX
+    // Kludging running and opening as two character sequences
+    // for Unix systems.  This is an easy way out... all the
+    // player has to do is find a termcap and numlock setting
+    // that will get curses the numbers from the keypad.  This
+    // will hopefully be easy.
+
+    /* can we say yuck? -- haranp */
+    if (keyin == '*')
+    {
+        keyin = getch();
+        // return control-key
+        keyin = CONTROL(toupper(numpad2vi(keyin)));
+    }
+    else if (keyin == '/')
+    {
+        keyin = getch();
+        // return shift-key
+        keyin = toupper(numpad2vi(keyin));
+    }
+#else
+    // Old DOS keypad support
+    if (keyin == 0)
+    {
+        /* FIXME haranp - hackiness */
+        const char DOSidiocy[10]     = { "OPQKSMGHI" };
+        const char DOSunidiocy[10]   = { "bjnh.lyku" };
+        const int DOScontrolidiocy[9] = {
+            117, 145, 118, 115, 76, 116, 119, 141, 132
+        };
+        keyin = getch();
+        for (int j = 0; j < 9; ++j ) {
+            if (keyin == DOSidiocy[j]) {
+                keyin = DOSunidiocy[j];
+                break;
+            }
+            if (keyin == DOScontrolidiocy[j]) {
+                keyin = CONTROL(toupper(DOSunidiocy[j]));
+                break;
+            }
+        }
+    }
+#endif
+    mesclr();
+
+    return keyin;
+}
+
+static void middle_input() {
+    if (Options.stash_tracking)
+        stashes.update_visible_stashes(
+            Options.stash_tracking == STM_ALL? 
+            StashTracker::ST_AGGRESSIVE :
+            StashTracker::ST_PASSIVE);
 }
 
 /*
@@ -2527,10 +2507,16 @@ static void input(void)
    move_y are non-zero,  the pair carries a specific direction for the door
    to be opened (eg if you type ctrl - dir).
  */
-static void open_door(char move_x, char move_y)
+static void open_door(int move_x, int move_y, bool check_confused)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
+
+    if (check_confused && you.conf && !one_chance_in(3))
+    {
+        move_x = random2(3) - 1;
+        move_y = random2(3) - 1;
+    }
 
     door_move.dx = move_x;
     door_move.dy = move_y;
@@ -2546,7 +2532,7 @@ static void open_door(char move_x, char move_y)
         if (mon != NON_MONSTER && !mons_has_ench( &menv[mon], ENCH_SUBMERGED ))
         {
             you_attack(mgrd[dx][dy], true);
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
@@ -2595,20 +2581,20 @@ static void open_door(char move_x, char move_y)
         }
 
         grd[dx][dy] = DNGN_OPEN_DOOR;
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {
         mpr("You swing at nothing.");
         make_hungry(3, true);
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
 }                               // end open_door()
 
 /*
    Similar to open_door. Can you spot the difference?
  */
-static void close_door(char door_x, char door_y)
+static void close_door(int door_x, int door_y)
 {
     struct dist door_move;
     int dx, dy;             // door x, door y
@@ -2638,7 +2624,8 @@ static void close_door(char door_x, char door_y)
     {
         if (mgrd[dx][dy] != NON_MONSTER)
         {
-            // Need to make sure that turn_is_over = 1 if creature is invisible
+            // Need to make sure that turn_is_over is set if creature is 
+            // invisible
             mpr("There's a creature in the doorway!");
             door_move.dx = 0;
             door_move.dy = 0;
@@ -2667,7 +2654,7 @@ static void close_door(char door_x, char door_y)
         }
 
         grd[dx][dy] = DNGN_CLOSED_DOOR;
-        you.turn_is_over = 1;
+        you.turn_is_over = true;
     }
     else
     {
@@ -2684,8 +2671,8 @@ static bool initialise(void)
 
     int i = 0, j = 0;           // counter variables {dlb}
 
-    your_sign = '@';
-    your_colour = LIGHTGREY;
+    you.symbol = '@';
+    you.colour = LIGHTGREY;
 
     // system initialisation stuff:
     textbackground(0);
@@ -2694,19 +2681,19 @@ static bool initialise(void)
     directvideo = 1;
 #endif
 
-#ifdef USE_EMX
-    init_emx();
-#endif
-
     seed_rng();
+    init_overmap();             // in overmap.cc (duh?)
+    clear_ids();                // in itemname.cc
+    init_feature_table();
 
-    mons_init(mcolour);          // this needs to be way up top {dlb}
+    init_properties();
+    init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_playerspells();        // this needs to be way up top {dlb}
 
     clrscr();
 
     // init item array:
-    for (i = 1; i < MAX_ITEMS; i++)
+    for (i = 0; i < MAX_ITEMS; i++)
         init_item( i );
 
     // empty messaging string
@@ -2748,7 +2735,7 @@ static bool initialise(void)
     }
 
     for (i = 0; i < NUM_STATUE_TYPES; i++)
-        Visible_Statue[i] = 0;
+        you.visible_statue[i] = 0;
 
     // initialize tag system before we try loading anything!
     tag_init();
@@ -2797,8 +2784,12 @@ static bool initialise(void)
 
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );
-    viewwindow(1, false);   // This just puts the view up for the first turn.
-    item();
+
+    if (newc)
+    {
+        // For a new game, wipe out monsters in LOS.
+        zap_los_monsters();
+    }
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "%b", ret);
@@ -2806,15 +2797,20 @@ static bool initialise(void)
     read_init_file(true);
     strncpy(you.your_name, yname.c_str(), kNameLen);
     you.your_name[kNameLen - 1] = 0;
-#endif
 
+    // In case Lua changed the character set.
+    init_feature_table();
+#endif
+    viewwindow(1, false);   // This just puts the view up for the first turn.
+
+    activate_notes(true);
     return (ret);
 }
 
 // An attempt to tone down berserk a little bit. -- bwross
 //
 // This function does the accounting for not attacking while berserk
-// This gives a triangluar number function for the additional penalty
+// This gives a triangular number function for the additional penalty
 // Turn:    1  2  3   4   5   6   7   8
 // Penalty: 1  3  6  10  15  21  28  36
 //
@@ -2868,13 +2864,11 @@ static void do_berserk_no_combat_penalty(void)
 
 // Called when the player moves by walking/running. Also calls
 // attack function and trap function etc when necessary.
-static void move_player(char move_x, char move_y)
+static void move_player(int move_x, int move_y)
 {
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
-
-    int i;
-    bool trap_known;
+    bool swap = false;
 
     if (you.conf)
     {
@@ -2886,224 +2880,84 @@ static void move_player(char move_x, char move_y)
 
         const int new_targ_x = you.x_pos + move_x;
         const int new_targ_y = you.y_pos + move_y;
-        const unsigned char new_targ_grid = grd[ new_targ_x ][ new_targ_y ];
-
-        if (new_targ_grid < MINMOVE)
+        if (!in_bounds(new_targ_x, new_targ_y)
+                || grid_is_solid(grd[new_targ_x][new_targ_y]))
         {
-            you.turn_is_over = 1;
+            you.turn_is_over = true;
             mpr("Ouch!");
+            apply_berserk_penalty = true;
             return;
         }
+    } // end of if you.conf
 
-        if (new_targ_grid == DNGN_LAVA 
-            && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr("Your icy shield dissipates!", MSGCH_DURATION);
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
-        }
-
-        if ((new_targ_grid == DNGN_LAVA 
-                || new_targ_grid == DNGN_DEEP_WATER
-                || new_targ_grid == DNGN_SHALLOW_WATER)
-             && !player_is_levitating())
-        {
-            if (you.species == SP_MERFOLK && new_targ_grid != DNGN_LAVA)
-            {
-                mpr("You stumble into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-
-            if (new_targ_grid != DNGN_SHALLOW_WATER)
-                fall_into_a_pool( false, new_targ_grid );
-
-            you.turn_is_over = 1;
-            do_berserk_no_combat_penalty();
-            return;
-        }
-    }                           // end of if you.conf
-
-    if (you.running > 0 && you.running != 2 && check_stop_running())
+    if (you.running.check_stop_running())
     {
-        stop_running();
         move_x = 0;
         move_y = 0;
-        you.turn_is_over = 0;
+        // [ds] Do we need this? Shouldn't it be false to start with?
+        you.turn_is_over = false;
         return;
     }
 
     const int targ_x = you.x_pos + move_x;
     const int targ_y = you.y_pos + move_y;
-    const unsigned char old_grid   =  grd[ you.x_pos ][ you.y_pos ];
     const unsigned char targ_grid  =  grd[ targ_x ][ targ_y ];
     const unsigned char targ_monst = mgrd[ targ_x ][ targ_y ];
+    const bool          targ_solid = grid_is_solid(targ_grid);
 
-    if (targ_monst != NON_MONSTER)
+    if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {
         struct monsters *mon = &menv[targ_monst];
-
-        if (mons_has_ench( mon, ENCH_SUBMERGED ))
-            goto break_out;
 
         // you can swap places with a friendly monster if you
         // can see it and you're not confused
         if (mons_friendly( mon ) && player_monster_visible( mon ) && !you.conf)
         {
-            if (!swap_places( mon ))
-                moving = false;
-
-            goto break_out;
-        }
-
-        you_attack( targ_monst, true );
-        you.turn_is_over = 1;
-
-        // we don't want to create a penalty if there isn't
-        // supposed to be one
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
-            you.berserk_penalty = 0;
-
-        attacking = true;
-    }
-
-  break_out:
-    if (targ_grid == DNGN_LAVA && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-    {
-        mpr("Your icy shield dissipates!", MSGCH_DURATION);
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
-    }
-
-    // Handle dangerous tiles
-    if ((targ_grid == DNGN_LAVA 
-            || targ_grid == DNGN_DEEP_WATER
-            || targ_grid == DNGN_SHALLOW_WATER)
-        && !attacking && !player_is_levitating() && moving)
-    {
-        // Merfold automatically enter deep water... every other case
-        // we ask for confirmation.
-        if (you.species == SP_MERFOLK && targ_grid != DNGN_LAVA)
-        {
-            // Only mention diving if we just entering the water.
-            if (!player_in_water())
-            {
-                mpr("You dive into the water and return to your normal form.");
-                merfolk_start_swimming();
-            }
-        }
-        else if (targ_grid != DNGN_SHALLOW_WATER)
-        {
-            bool enter = yesno("Do you really want to step there?", false, 'n');
-
-            if (enter)
-            {
-                fall_into_a_pool( false, targ_grid );
-                you.turn_is_over = 1;
-                do_berserk_no_combat_penalty();
-                return;
-            }
+            if (swap_places( mon ))
+                swap = true;
             else
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
+                moving = false;
+        }
+        else // attack!
+        {
+            you_attack( targ_monst, true );
+            you.turn_is_over = true;
+
+            // we don't want to create a penalty if there isn't
+            // supposed to be one
+            if (you.berserk_penalty != NO_BERSERK_PENALTY)
+                you.berserk_penalty = 0;
+
+            attacking = true;
         }
     }
 
-    if (!attacking && targ_grid >= MINMOVE && moving)
+    if (!attacking && !targ_solid && moving)
     {
-        if (targ_grid == DNGN_UNDISCOVERED_TRAP
-                && random2(you.skills[SK_TRAPS_DOORS] + 1) > 3)
+        you.time_taken *= player_movement_speed();
+        you.time_taken /= 10;
+        move_player_to_grid(targ_x, targ_y, true, false, swap);
+
+        // Returning the random trap scans as a way to get more use from the
+        // skill and acute mutations.
+        if (you.mutation[MUT_ACUTE_VISION] >= 2
+            || (!you.mutation[MUT_BLURRY_VISION]
+                && random2(100) < 
+                        stat_mult(you.intel, skill_bump(SK_TRAPS_DOORS))))
         {
-            strcpy(info, "Wait a moment, ");
-            strcat(info, you.your_name);
-            strcat(info, "! Do you really want to step there?");
-            mpr(info, MSGCH_WARN);
-            more();
-            you.turn_is_over = 0;
-
-            i = trap_at_xy( targ_x, targ_y );
-            if (i != -1)  
-                grd[ targ_x ][ targ_y ] = trap_category(env.trap[i].type);
-            return;
+            search_around();
         }
-
-        you.x_pos += move_x;
-        you.y_pos += move_y;
-
-        if (targ_grid == DNGN_SHALLOW_WATER && !player_is_levitating())
-        {
-            if (you.species != SP_MERFOLK)
-            {
-                if (one_chance_in(3) && !silenced(you.x_pos, you.y_pos))
-                {
-                    mpr("Splash!");
-                    noisy( 10, you.x_pos, you.y_pos );
-                }
-
-                you.time_taken *= 13 + random2(8);
-                you.time_taken /= 10;
-
-                if (old_grid != DNGN_SHALLOW_WATER)
-                {
-                    mpr( "You enter the shallow water. "
-                         "Moving in this stuff is going to be slow." );
-
-                    if (you.invis)
-                        mpr( "And don't expect to remain undetected." );
-                }
-            }
-            else if (old_grid != DNGN_SHALLOW_WATER
-                    && old_grid != DNGN_DEEP_WATER)
-            {
-                mpr("You return to your normal form as you enter the water.");
-                merfolk_start_swimming();
-            }
-        }
-
         move_x = 0;
         move_y = 0;
 
-        you.time_taken *= player_movement_speed();
-        you.time_taken /= 10;
-
-        you.turn_is_over = 1;
-        item_check(0);
-
-        if (targ_grid >= DNGN_TRAP_MECHANICAL
-                                && targ_grid <= DNGN_UNDISCOVERED_TRAP)
-        {
-            if (targ_grid == DNGN_UNDISCOVERED_TRAP)
-            {
-                i = trap_at_xy(you.x_pos, you.y_pos);
-                if (i != -1)
-                    grd[ you.x_pos ][ you.y_pos ] = trap_category(env.trap[i].type);
-                trap_known = false;
-            }
-            else
-            {
-                trap_known = true;
-            }
-
-            i = trap_at_xy( you.x_pos, you.y_pos );
-            if (i != -1)
-            {
-                if (player_is_levitating()
-                    && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
-                {
-                    goto out_of_traps;      // can fly over mechanical traps
-                }
-
-                handle_traps(env.trap[i].type, i, trap_known);
-            }
-        }                       // end of if another grd == trap
+        you.turn_is_over = true;
+        item_check( false );
     }
 
-  out_of_traps:
     // BCR - Easy doors single move
-    if (targ_grid == DNGN_CLOSED_DOOR && (Options.easy_open || you.running < 0))
-        open_door(move_x, move_y);
-    else if (targ_grid <= MINMOVE)
+    if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open)
+        open_door(move_x, move_y, false);
+    else if (targ_solid)
     {
         stop_running();
         move_x = 0;
@@ -3111,8 +2965,8 @@ static void move_player(char move_x, char move_y)
         you.turn_is_over = 0;
     }
 
-    if (you.running == 2)
-        you.running = 1;
+    if (you.running == RMODE_START)
+        you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
             && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)
@@ -3150,8 +3004,5 @@ static void move_player(char move_x, char move_y)
 #endif
     }
 
-    if (!attacking)
-    {
-        do_berserk_no_combat_penalty();
-    }
+    apply_berserk_penalty = !attacking;
 }                               // end move_player()

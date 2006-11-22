@@ -35,7 +35,9 @@
 
 #include "defines.h"
 #include "effects.h"
+#include "itemprop.h"
 #include "macro.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "skills2.h"
@@ -47,6 +49,12 @@
 int how_mutated(void);
 char body_covered(void);
 bool perma_mutate(int which_mut, char how_much);
+
+const char* troll_claw_messages[3] = {
+    "Your claws sharpen.",
+    "Your claws sharpen.",
+    "Your claws steel!"
+};
 
 const char *mutation_descrip[][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
@@ -896,6 +904,20 @@ void display_mutations(void)
         j++;
         break;
 
+    case SP_SPRIGGAN:
+	cprintf("You can see invisible." EOL);
+	cprintf("You cover the ground extremely quickly." EOL);
+	j += 2;
+	break;
+
+    case SP_CENTAUR:
+	if (!you.mutation[MUT_FAST])
+	    cprintf("You cover the ground quickly." EOL);
+	else
+	    cprintf("You cover the ground extremely quickly." EOL);
+	j++;
+	break;
+
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
@@ -905,7 +927,8 @@ void display_mutations(void)
 
         cprintf("Your system is immune to poisons." EOL);
         cprintf("You can see invisible." EOL);
-        j += 3;
+	cprintf("You move rather slowly." EOL);
+        j += 4;
         break;
 
     case SP_GNOME:
@@ -915,7 +938,24 @@ void display_mutations(void)
 
     case SP_TROLL:
         cprintf("Your body regenerates quickly." EOL);
-        j++;
+        switch ( you.mutation[MUT_CLAWS] ) {
+        case 0:
+            cprintf("You have claws for hands." EOL);
+            break;
+        case 1:
+            cprintf("You have sharp claws for hands." EOL);
+            break;
+        case 2:
+            cprintf("You have very sharp claws for hands." EOL);
+            break;
+        case 3:
+            // literally true
+            cprintf("Your claws are sharper than steel." EOL);
+            break;
+        default:
+            break;
+        }
+        j += 2;
         break;
 
     case SP_GHOUL:
@@ -1051,6 +1091,10 @@ void display_mutations(void)
             // this is already handled above:
             if (you.species == SP_NAGA && i == MUT_BREATHE_POISON)
                 continue;
+	    if (you.species == SP_CENTAUR && i == MUT_FAST)
+		continue;
+            if (you.species == SP_TROLL && i == MUT_CLAWS)
+                continue;
 
             j++;
             textcolor(LIGHTGREY);
@@ -1100,9 +1144,6 @@ void display_mutations(void)
     puttext(1, 1, 80, 25, buffer);
 #endif
 
-    //cprintf("xxxxxxxxxxxxx");
-    //last_requested = 0;
-
     return;
 }                               // end display_mutations()
 
@@ -1110,7 +1151,16 @@ bool mutate(int which_mutation, bool failMsg)
 {
     int  mutat = which_mutation;
     bool force_mutation = false;        // is mutation forced?
+    bool demonspawn = false;            // demonspawn mutation?
     int  i;
+
+    if (which_mutation >= 2000)
+    {
+        demonspawn       = true;
+        force_mutation   = true;
+        mutat           -= 2000;
+        which_mutation  -= 2000;
+    }
 
     if (which_mutation >= 1000) // must give mutation without failure
     {
@@ -1120,10 +1170,11 @@ bool mutate(int which_mutation, bool failMsg)
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    if (you.is_undead) 
+    // except for demonspawn in lichform -- haranp
+    if (you.is_undead && !demonspawn) 
     {
-        if (force_mutation 
-            || (wearing_amulet(AMU_RESIST_MUTATION) && coinflip()))
+	if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
+                || one_chance_in(10))
         {
             mpr( "Your body decomposes!" );
 
@@ -1427,7 +1478,6 @@ bool mutate(int which_mutation, bool failMsg)
         break;
 
     case MUT_TELEPORT_CONTROL:
-        you.attribute[ATTR_CONTROL_TELEPORT]++;
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
@@ -1449,7 +1499,10 @@ bool mutate(int which_mutation, bool failMsg)
         break;
 
     case MUT_CLAWS:
-        mpr( gain_mutation[ mutat ][ you.mutation[mutat] ], MSGCH_MUTATION );
+
+        mpr((you.species == SP_TROLL ? troll_claw_messages
+             : gain_mutation[mutat])[you.mutation[mutat]],
+             MSGCH_MUTATION);
 
         // gloves aren't prevented until level three
         if (you.mutation[ mutat ] >= 3 && you.equip[ EQ_GLOVES ] != -1)
@@ -1470,8 +1523,9 @@ bool mutate(int which_mutation, bool failMsg)
         {
             mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
-            if (you.equip[EQ_HELMET] != -1
-                && you.inv[you.equip[EQ_HELMET]].plus2 > 1)
+            if (you.equip[EQ_HELMET] != -1 &&
+		(get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_CAP ||
+		 get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_WIZARD_HAT))
             {
                 break;          // horns don't push caps/wizard hats off
             }
@@ -1519,6 +1573,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1530,6 +1586,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
@@ -1567,6 +1625,7 @@ bool mutate(int which_mutation, bool failMsg)
 
     you.mutation[mutat]++;
 
+    take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
     /* remember, some mutations don't get this far (eg frail) */
     return true;
 }                               // end mutation()
@@ -1678,7 +1737,6 @@ bool delete_mutation(int which_mutation)
         break;
 
     case MUT_TELEPORT_CONTROL:
-        you.attribute[ATTR_CONTROL_TELEPORT]--;
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
         break;
 
@@ -1699,6 +1757,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1706,6 +1766,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
+	/* special-case check */
+	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
@@ -1766,6 +1828,7 @@ bool delete_mutation(int which_mutation)
     if (you.mutation[mutat] > 0)
         you.mutation[mutat]--;
 
+    take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return true;
 }                               // end delete_mutation()
 
@@ -1825,7 +1888,7 @@ const char *mutation_name(int which_mutat, int level )
 
     // Some mutations only have one "level", and it's better
     // to show the first level description than a blank description.
-    if (mutation_descrip[ which_mutat ][ level - 1 ][0] == '\0')
+    if (mutation_descrip[ which_mutat ][ level - 1 ][0] == 0)
         return (mutation_descrip[ which_mutat ][ 0 ]);
     else 
         return (mutation_descrip[ which_mutat ][ level - 1 ]);
@@ -1956,7 +2019,7 @@ void demonspawn(void)
             }
         }
 
-        // check here so we can see if we need to extent our options:
+        // check here so we can see if we need to extend our options:
         if (whichm != -1 && you.mutation[whichm] != 0)
             whichm = -1;
 
@@ -2148,13 +2211,13 @@ bool perma_mutate(int which_mut, char how_much)
 {
     char levels = 0;
 
-    if (mutate(which_mut + 1000))
+    if (mutate(which_mut + 2000))
         levels++;
 
-    if (how_much >= 2 && mutate(which_mut + 1000))
+    if (how_much >= 2 && mutate(which_mut + 2000))
         levels++;
 
-    if (how_much >= 3 && mutate(which_mut + 1000))
+    if (how_much >= 3 && mutate(which_mut + 2000))
         levels++;
 
     you.demon_pow[which_mut] = levels;
