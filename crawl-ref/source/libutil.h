@@ -13,6 +13,7 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
+#include "AppHdr.h"
 #include "defines.h"
 #include <string>
 #include <vector>
@@ -127,14 +128,19 @@ enum KEYS
 class cursor_control
 {
 public:
-    cursor_control(bool cs) : cstate(cs) { 
+    cursor_control(bool cs) 
+        : cstate(cs), smartcstate( is_smart_cursor_enabled() )
+    {
+        enable_smart_cursor(false);
         _setcursortype(cs? _NORMALCURSOR : _NOCURSOR);
     }
     ~cursor_control() {
         _setcursortype(cstate? _NOCURSOR : _NORMALCURSOR);
+        enable_smart_cursor(smartcstate);
     }
 private:
     bool cstate;
+    bool smartcstate;
 };
 
 // Reads lines of text; used internally by cancelable_get_line.

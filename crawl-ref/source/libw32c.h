@@ -45,6 +45,9 @@ int kbhit(void);
 void delay(int ms);
 void textbackground(int c);
 
+void enable_smart_cursor(bool cursor);
+bool is_smart_cursor_enabled();
+
 inline void srandom(unsigned int seed) { srand(seed); }
 
 #endif

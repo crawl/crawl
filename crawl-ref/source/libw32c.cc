@@ -98,6 +98,8 @@ static bool buffering = false;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
+static bool w32_smart_cursor = true;
+
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char c);
@@ -249,6 +251,16 @@ void writeChar(char c)
    // update x position
    cx += 1;
    if (cx >= 80) cx = 80;
+}
+
+void enable_smart_cursor(bool cursor)
+{
+    w32_smart_cursor = cursor;
+}
+
+bool is_smart_cursor_enabled()
+{
+    return (w32_smart_cursor);
 }
 
 void bFlush(void)
@@ -420,13 +432,11 @@ void deinit_libw32c(void)
    SetConsoleTitle( oldTitle );
 }
 
-// we don't take our cues from Crawl.  Cursor is shown
-// only on input.
 void _setcursortype(int curstype)
 {
-    _setcursortype_internal(curstype);
+    if (!w32_smart_cursor)
+        _setcursortype_internal(curstype);
 }
-
 
 void _setcursortype_internal(int curstype)
 {
@@ -714,6 +724,10 @@ int getch_ck(void)
        return repeat_key;
     }
 
+    const bool oldValue = current_cursor;
+    if (w32_smart_cursor)
+        _setcursortype_internal(_NORMALCURSOR);
+
     while(1)
     {
        CLOCKIN
@@ -740,8 +754,9 @@ int getch_ck(void)
           }
        }
     }
-    // DEBUG
-    //fprintf(foo, "getch() returning %02x (%c)\n", key, key);
+
+    if (w32_smart_cursor)
+        _setcursortype_internal(oldValue);
 
     return key;
 }
@@ -755,7 +770,7 @@ int getch(void)
 int getche(void)
 {
    // turn buffering off temporarily
-   bool oldValue = buffering;
+   const bool oldValue = buffering;
    setBuffering(false);
 
    int val = getch();
@@ -805,8 +820,10 @@ int getConsoleString(char *buf, int maxlen)
    setStringInput( true );
 
    // force cursor
-   bool oldValue = current_cursor;
-   _setcursortype_internal(_NORMALCURSOR);
+   const bool oldValue = current_cursor;
+
+   if (w32_smart_cursor)
+       _setcursortype_internal(_NORMALCURSOR);
 
    // set actual screen color to current color
    SetConsoleTextAttribute( outbuf, WIN32COLOR(current_color) );
@@ -830,7 +847,8 @@ int getConsoleString(char *buf, int maxlen)
    setStringInput( false );
 
    // restore old cursor
-   _setcursortype_internal(oldValue);
+   if (w32_smart_cursor)
+       _setcursortype_internal(oldValue);
 
    // return # of bytes read
    return (int)nread;

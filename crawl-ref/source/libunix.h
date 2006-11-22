@@ -41,6 +41,9 @@ void textattr(int col);
 void set_altcharset(bool alt_on);
 bool get_altcharset();
 
+inline void enable_smart_cursor(bool) { }
+inline bool is_smart_cursor_enabled() { return (false); }
+
 #ifndef _LIBUNIX_IMPLEMENTATION
 /* Some stuff from curses, to remove compiling warnings.. */
 extern "C"
