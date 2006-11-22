@@ -26,6 +26,21 @@ function prompt_eat(i)
     return res
 end
 
+function chunk_maybe_safe(chunk)
+    local rot = food.rotting(chunk)
+    local race = you.race()
+
+    if rot then
+        return race == "Ghoul"
+            or race == "Kobold"
+            or race == "Troll"
+            or race == "Hill Orc"
+            or race == "Ogre"
+    end
+
+    return true
+end
+
 function is_chunk_safe(chunk)
     local rot = food.rotting(chunk)
     local race = you.race()
@@ -77,7 +92,7 @@ function c_eat(floor, inv)
     
     for i, it in ipairs(inv) do
         -- If we have chunks in inventory that the player can eat, prompt.
-        if food.ischunk(it) and food.can_eat(it) then
+        if food.ischunk(it) and food.can_eat(it) and chunk_maybe_safe(it) then
             local answer = prompt_eat(it)
             if answer == "q" then
                 break
