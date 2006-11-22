@@ -708,7 +708,8 @@ static void armour_wear_effects(const int item_slot)
     if (item_cursed( arm ))
         mpr( "Oops, that feels deathly cold." );
 
-    warn_shield_penalties();
+    if (eq_slot == EQ_SHIELD)
+        warn_shield_penalties();
 
     you.redraw_armour_class = 1;
     you.redraw_evasion = 1;

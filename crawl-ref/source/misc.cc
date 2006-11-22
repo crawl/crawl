@@ -835,7 +835,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
             && stair_find < DNGN_RETURN_FROM_ORCISH_MINES))
     {
         // no idea why such a huge switch and not 100-grd[][]
-        // planning ahead for re-organizaing grd[][] values - 13jan2000 {dlb}
+        // planning ahead for reorganizing grd[][] values - 13jan2000 {dlb}
         strcpy( info, "Welcome to " );
         switch (stair_find)
         {

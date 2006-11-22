@@ -98,7 +98,7 @@ void init_overmap( void )
         stair_level[i] = -1;
 }          // end init_overmap()
 
-void display_overmap( void )
+void display_overmap()
 {
 #ifdef DOS_TERM
     char buffer[4800];
