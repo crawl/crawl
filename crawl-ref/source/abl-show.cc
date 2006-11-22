@@ -481,10 +481,24 @@ bool activate_ability(void)
     switch (abil.ability)
     {
     case ABIL_MUMMY_RESTORATION:
+    {
         mpr( "You infuse your body with magical energy." );
-        restore_stat( STAT_ALL, false );
+        bool did_restore = restore_stat( STAT_ALL, false );
+
+        const int oldhpmax = you.hp_max;
         unrot_hp( 100 );
+        if (you.hp_max > oldhpmax)
+            did_restore = true;
+
+        // If nothing happened, don't take one max MP, don't use a turn.
+        if (!did_restore)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
+        }
+
         break;
+    }
 
     case ABIL_DELAYED_FIREBALL:
         // Note: power level of ball calculated at release -- bwr
