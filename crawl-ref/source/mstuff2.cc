@@ -667,7 +667,9 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
 {
     // always set these -- used by things other than fire_beam()
 
-    // [ds] Used to be 12 * MHD, reduced to 7 * HD.
+    // [ds] Used to be 12 * MHD and later buggily forced to -1 downstairs.
+    // Setting this to a more realistic number now that that bug is
+    // squashed.
     pbolt.ench_power = 4 * monster->hit_dice;
 
     if (spell_cast == MS_TELEPORT)
