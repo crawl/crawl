@@ -207,7 +207,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     {
         if (!auto_wield)
             item_slot = prompt_invent_item(
-                            "Wield which item (- for none)?",
+                            "Wield which item (- for none, * to show all)?",
                             MT_INVSELECT, OSEL_WIELD, 
                             true, true, true, '-', NULL, OPER_WIELD);
         else
@@ -1017,7 +1017,8 @@ void throw_anything(void)
         return;
     }
 
-    throw_slot = prompt_invent_item( "Throw which item?", MT_INVSELECT,
+    throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
+                                     MT_INVSELECT,
                                      OBJ_MISSILES, true, true, true, 0, NULL,
 				     OPER_THROW );
     if (throw_slot == PROMPT_ABORT)
