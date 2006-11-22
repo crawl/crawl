@@ -4483,6 +4483,89 @@ void describe_spell(int spelled)
 #endif
 }                               // end describe_spell()
 
+static std::string describe_draconian_role(const monsters *mon)
+{
+    switch (mon->type)
+    {
+    case MONS_DRACONIAN_SHIFTER:
+        return "It darts around disconcertingly without taking a step.";
+    case MONS_DRACONIAN_SCORCHER:
+        return "Its scales are sooty black from years of magical pyrotechnics.";
+    case MONS_DRACONIAN_ZEALOT:
+        return "In its gaze you see all the malefic power of its "
+               "terrible god.";
+    case MONS_DRACONIAN_ANNIHILATOR:
+        return "Crackling balls of pure energy hum and spark up and down its "
+               "scaled fists and arms.";
+    case MONS_DRACONIAN_CALLER:
+        return "It looks especially reptilian, and eager for company.";
+    case MONS_DRACONIAN_MONK:
+        return "It looks unnaturally strong and dangerous with its fists.";
+    case MONS_DRACONIAN_KNIGHT:
+        return "It wields a deadly weapon with menacing efficiency.";
+    }
+    return ("");
+}
+
+static std::string describe_draconian_colour(int species)
+{
+    switch (species)
+    {
+    case MONS_BLACK_DRACONIAN:
+        return "Sparks crackle and flare out of its mouth and nostrils.";
+    case MONS_MOTTLED_DRACONIAN:
+        return "Liquid flames drip from its mouth.";
+    case MONS_YELLOW_DRACONIAN:
+        return "Acid fumes swirl around it.";
+    case MONS_GREEN_DRACONIAN:
+        return "Venom steams and drips from its jaws.";
+    case MONS_PURPLE_DRACONIAN:
+        return "Its outline shimmers with wild energies.";
+    case MONS_RED_DRACONIAN:
+        return "Smoke pours from its nostrils.";
+    case MONS_WHITE_DRACONIAN:
+        return "Frost pours from its nostrils.";
+    case MONS_PALE_DRACONIAN:
+        return "It is cloaked in a pall of superheated steam.";
+    }
+    return ("");
+}
+
+static std::string describe_draconian(const monsters *mon)
+{
+    std::string description;
+    const int subsp = draco_subspecies( mon );
+
+    if (subsp == MONS_DRACONIAN)
+        description += "A ";
+    else
+        description += "An enormous, muscular ";
+
+    switch (subsp)
+    {
+    case MONS_DRACONIAN:            description += "brown-";   break;
+    case MONS_BLACK_DRACONIAN:      description += "black-";   break;
+    case MONS_MOTTLED_DRACONIAN:    description += "mottled-"; break;
+    case MONS_YELLOW_DRACONIAN:     description += "yellow-";  break;
+    case MONS_GREEN_DRACONIAN:      description += "green-";   break;
+    case MONS_PURPLE_DRACONIAN:     description += "purple-";  break;
+    case MONS_RED_DRACONIAN:        description += "red-";     break;
+    case MONS_WHITE_DRACONIAN:      description += "white-";   break;
+    case MONS_PALE_DRACONIAN:       description += "pale-";    break;
+    default:
+        break;
+    }
+
+    description += "scaled humanoid with wings.";
+    
+    if (subsp != MONS_DRACONIAN)
+        description += "  " + describe_draconian_colour(subsp);
+
+    if (subsp != mon->type)
+        description += "  " + describe_draconian_role(mon);
+
+    return (description);
+}
 
 //---------------------------------------------------------------
 //
@@ -4688,8 +4771,8 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     case MONS_ORC_PRIEST:
         description += "A servant of the ancient and cruel gods of the orcs,"
-            " dressed in long robe. he's mumbling some strange prayers. "
-            "Hope that they will remain unheard.";
+            " dressed in long robe. It continually mumbles strange prayers. "
+            "Hope that they remain unheard.";
         break;
 
     case MONS_ORC_HIGH_PRIEST:
@@ -5884,25 +5967,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        description += "A ";
-
-        const int subsp = draco_subspecies( &menv[which_mons] );
-        switch (subsp)
-        {
-        case MONS_DRACONIAN:            description += "brown ";   break;
-        case MONS_BLACK_DRACONIAN:      description += "black ";   break;
-        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
-        case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
-        case MONS_GREEN_DRACONIAN:      description += "green ";   break;
-        case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
-        case MONS_RED_DRACONIAN:        description += "red ";     break;
-        case MONS_WHITE_DRACONIAN:      description += "white ";   break;
-        case MONS_PALE_DRACONIAN:       description += "pale ";    break;
-        default:
-            break;
-        }
-
-        description += "scaled humanoid with wings.";
+        description += describe_draconian( &menv[which_mons] );
         break;        
     }
     case MONS_PLAYER_GHOST:
@@ -6182,7 +6247,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
             {
                 if (!found_spell)
                 {
-                    description += "$Monster Spells:$";
+                    description += "$$Monster Spells:$";
                     found_spell = true;
                 }
 

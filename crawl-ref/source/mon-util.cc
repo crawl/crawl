@@ -126,7 +126,7 @@ static const char *monster_spell_name[] = {
     "Controlled Blink",
     "Control Undead",
     "Miasma",
-    "Summon Lizards",
+    "Summon Drakes",
     "Blink Other",
     "Dispel Undead",
     "Hellfrost",

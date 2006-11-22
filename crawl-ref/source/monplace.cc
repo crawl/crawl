@@ -1486,14 +1486,11 @@ monster_type rand_dragon( dragon_class_type type )
     {
     case DRAGON_LIZARD:
         temp_rand = random2(100);
-        summoned = ((temp_rand > 85) ? MONS_GIANT_GECKO :
-                    (temp_rand > 59) ? MONS_GIANT_LIZARD : 
-                    (temp_rand > 34) ? MONS_GIANT_IGUANA :
-                    (temp_rand > 22) ? MONS_GILA_MONSTER :
-                    (temp_rand > 11) ? MONS_KOMODO_DRAGON :
-                    (temp_rand >  8) ? MONS_FIREDRAKE : 
-                    (temp_rand >  2) ? MONS_SWAMP_DRAKE
-                                     : MONS_DEATH_DRAKE );
+        summoned = ((temp_rand > 80) ? MONS_SWAMP_DRAKE :
+                    (temp_rand > 59) ? MONS_KOMODO_DRAGON : 
+                    (temp_rand > 34) ? MONS_FIREDRAKE :
+                    (temp_rand > 11) ? MONS_DEATH_DRAKE :
+                                       MONS_DRAGON);
         break;
 
     case DRAGON_DRACONIAN:

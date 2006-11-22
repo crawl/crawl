@@ -2425,7 +2425,7 @@ enum mon_spell_type
     MS_CONTROLLED_BLINK,
     MS_CONTROL_UNDEAD,
     MS_MIASMA,                          //   55
-    MS_SUMMON_LIZARDS,
+    MS_SUMMON_DRAKES,
     MS_BLINK_OTHER,
     MS_DISPEL_UNDEAD,
     MS_HELLFROST,

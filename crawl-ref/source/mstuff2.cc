@@ -575,7 +575,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         return;
 
     // Journey -- Added in Summon Lizards and Draconian
-    case MS_SUMMON_LIZARDS:
+    case MS_SUMMON_DRAKES:
         if (!mons_friendly( monster ) && !monsterNearby &&
             monster_abjuration( 1, true ) > 0 && coinflip())
         {
@@ -589,11 +589,27 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         if (duration > ENCH_ABJ_VI)
             duration = ENCH_ABJ_VI;
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster( rand_dragon( DRAGON_LIZARD ), duration,
-                            SAME_ATTITUDE(monster), 
-                            monster->x, monster->y, monster->foe, 250 );
+            std::vector<int> monsters;
+
+            for (sumcount = 0; sumcount < sumcount2; sumcount++)
+            {
+                const int mons = rand_dragon( DRAGON_LIZARD );
+                if (mons == MONS_DRAGON)
+                {
+                    monsters.clear();
+                    monsters.push_back( rand_dragon(DRAGON_DRAGON) );
+                    break;
+                }
+                monsters.push_back( mons );
+            }
+
+            for (int i = 0, size = monsters.size(); i < size; ++i)
+            {
+                create_monster( monsters[i], duration,
+                                SAME_ATTITUDE(monster), 
+                                monster->x, monster->y, monster->foe, 250 );
+            }
         }
         break;
 
@@ -650,7 +666,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 {
     // always set these -- used by things other than fire_beam()
-    pbolt.ench_power = 12 * monster->hit_dice;
+
+    // [ds] Used to be 12 * MHD, reduced to 7 * HD.
+    pbolt.ench_power = 7 * monster->hit_dice;
 
     if (spell_cast == MS_TELEPORT)
         pbolt.ench_power = 2000;
@@ -697,7 +715,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     case MS_SUMMON_BEAST:       // Geryon
     case MS_SUMMON_UNDEAD:      // summon undead around player
     case MS_SUMMON_MUSHROOMS:
-    case MS_SUMMON_LIZARDS:
+    case MS_SUMMON_DRAKES:
     case MS_TORMENT:
     case MS_SUMMON_DEMON_GREATER:
     case MS_CANTRIP:
@@ -716,7 +734,8 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     pbolt.rangeMax = theBeam.rangeMax;
     pbolt.hit = theBeam.hit;
     pbolt.damage = theBeam.damage;
-    pbolt.ench_power = theBeam.ench_power;
+    if (theBeam.ench_power != -1)
+        pbolt.ench_power = theBeam.ench_power;
     pbolt.type = theBeam.type;
     pbolt.flavour = theBeam.flavour;
     pbolt.thrower = theBeam.thrower;

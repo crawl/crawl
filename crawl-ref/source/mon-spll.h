@@ -760,14 +760,14 @@
 
     {  MST_DRAC_CALLER,
        MS_NO_SPELL,
-       MS_SUMMON_LIZARDS,
-       MS_SUMMON_LIZARDS,
+       MS_SUMMON_DRAKES,
+       MS_SUMMON_DRAKES,
        MS_NO_SPELL,
        MS_NO_SPELL,
-       MS_SUMMON_LIZARDS },
+       MS_SUMMON_DRAKES },
 
     {  MST_DRAC_SHIFTER,
-       MS_NO_SPELL,
+       MS_BANISHMENT,
        MS_BLINK_OTHER,
        MS_BLINK,
        MS_NO_SPELL,
