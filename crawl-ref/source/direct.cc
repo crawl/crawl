@@ -131,7 +131,7 @@ int dos_direction_unmunge(int doskey)
 // *     go to targetting mode
 // +,=   go to targetting mode, next monster
 // -               "          , prev monster
-// t,p   auto-select previous target
+// t,p,f   auto-select previous target
 //
 //
 // targetting mode is handled by look_around()
@@ -226,6 +226,7 @@ void direction2( struct dist &moves, int restrict, int mode )
 
                 case 't':
                 case 'p':
+                case 'f':
                     targChosen = true;
                     dir = 2;
                     break;
