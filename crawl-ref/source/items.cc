@@ -1684,95 +1684,7 @@ bool move_top_item( int src_x, int src_y, int dest_x, int dest_y )
     return (true);
 }
 
-
-//---------------------------------------------------------------
-//
-// drop_gold
-//
-//---------------------------------------------------------------
-static void drop_gold(unsigned int amount)
-{
-    const unsigned long BIGGEST_QUANT_VALUE =
-	((1L << (sizeof(mitm[0].quantity)*8 - 1)) - 1000);
- 
-    if (you.gold > 0)
-    {
-        if (amount > you.gold)
-            amount = you.gold;
-
-        snprintf( info, INFO_SIZE, "You drop %d gold piece%s.", 
-                 amount, (amount > 1) ? "s" : "" );
-        mpr(info);
-
-        // loop through items at grid location, look for gold
-        int i = igrd[you.x_pos][you.y_pos];
-
-        while(i != NON_ITEM)
-        {
-            if (mitm[i].base_type == OBJ_GOLD)
-            {
-		if ( mitm[i].quantity + amount > BIGGEST_QUANT_VALUE ) {
-		    amount = BIGGEST_QUANT_VALUE - mitm[i].quantity;
-		    snprintf(info, INFO_SIZE,
-			     "But there's only room for %d.", amount);
-		    mpr(info);
-		    
-		}
-                inc_mitm_item_quantity( i, amount );
-                you.gold -= amount;
-                you.redraw_gold = 1;
-                you.turn_is_over = true;
-                return;
-            }
-
-            // follow link
-            i = mitm[i].link;
-        }
-
-        // place on top.
-        i = get_item_slot(10);
-        if (i == NON_ITEM)
-        {
-            mpr( "Too many items on this level, not dropping the gold." );
-            return;
-        }
-	if (amount > BIGGEST_QUANT_VALUE) {
-	    amount = BIGGEST_QUANT_VALUE;
-	    snprintf(info, INFO_SIZE,
-		     "But there's only room for %d.", amount);
-	    mpr(info);
-	}
-
-        mitm[i].base_type = OBJ_GOLD;
-        mitm[i].quantity = amount;
-        // [ds] #&^#@&#!
-        mitm[i].colour = YELLOW;
-        mitm[i].flags = 0;
-
-        move_item_to_grid( &i, you.x_pos, you.y_pos );
-
-        you.gold -= amount;
-        you.redraw_gold = 1;
-
-        you.turn_is_over = true;
-    }
-    else
-    {
-        mpr("You don't have any money.");
-    }
-}                               // end drop_gold()
-
 bool drop_item( int item_dropped, int quant_drop ) {
-    if (item_dropped == PROMPT_GOT_SPECIAL)  // ie '$' for gold
-    {
-        // drop gold
-        if (quant_drop < 0 || quant_drop > static_cast< int >( you.gold ))
-            quant_drop = you.gold;
-
-        drop_gold( quant_drop );
-        return (true);
-    }
-
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
 
@@ -1959,7 +1871,7 @@ void drop(void)
                                                MT_DROP,
                                                -1, 
                                                drop_menu_title,
-                                               true, true, '$',
+                                               true, true, 0,
                                                &Options.drop_filter,
                                                drop_selitem_text,
                                                &items_for_multidrop );

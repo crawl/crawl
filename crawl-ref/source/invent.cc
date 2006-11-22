@@ -619,7 +619,7 @@ std::vector<SelItem> prompt_invent_items(
 
         // Note:  We handle any "special" character first, so that
         //        it can be used to override the others.
-        if (other_valid_char != '\0' && keyin == other_valid_char)
+        if (other_valid_char != 0 && keyin == other_valid_char)
         {
             ret = PROMPT_GOT_SPECIAL;
             break;
@@ -804,7 +804,7 @@ int prompt_invent_item( const char *prompt,
 
         // Note:  We handle any "special" character first, so that
         //        it can be used to override the others.
-        if (other_valid_char != '\0' && keyin == other_valid_char)
+        if (other_valid_char != 0 && keyin == other_valid_char)
         {
             ret = PROMPT_GOT_SPECIAL;
             break;

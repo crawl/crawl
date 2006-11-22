@@ -164,7 +164,7 @@ static void adjust_item(void)
                     -1, 
                     false, 
                     false );
-    if (to_slot ==  PROMPT_ABORT)
+    if (to_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
         return;
