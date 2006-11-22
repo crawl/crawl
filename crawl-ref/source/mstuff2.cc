@@ -668,7 +668,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     // always set these -- used by things other than fire_beam()
 
     // [ds] Used to be 12 * MHD, reduced to 7 * HD.
-    pbolt.ench_power = 7 * monster->hit_dice;
+    pbolt.ench_power = 4 * monster->hit_dice;
 
     if (spell_cast == MS_TELEPORT)
         pbolt.ench_power = 2000;
