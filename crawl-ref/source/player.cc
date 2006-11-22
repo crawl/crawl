@@ -2990,9 +2990,9 @@ void display_char_status(void)
     if (you.slow && you.haste)
         mpr( "You are under both slowing and hasting effects." );
     else if (you.slow)
-        mpr( "You actions are slowed." );
+        mpr( "Your actions are slowed." );
     else if (you.haste)
-        mpr( "You actions are hasted." );
+        mpr( "Your actions are hasted." );
 
     if (you.might)
         mpr( "You are mighty." );

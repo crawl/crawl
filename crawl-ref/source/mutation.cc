@@ -56,6 +56,13 @@ const char* troll_claw_messages[3] = {
     "Your claws steel!"
 };
 
+const char* naga_speed_descrip[4] = {
+    "You cover the ground very slowly.",    // 10*14/10 = 14
+    "You cover the ground rather slowly.",  //  8*14/10 = 11
+    "You cover the ground rather quickly.", //  7*14/10 = 9
+    "You cover the ground quickly.",        //  6*14/10 = 8
+};
+
 const char *mutation_descrip[][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
      "You have extremely tough skin (AC +3)."},
@@ -927,7 +934,8 @@ void display_mutations(void)
 
         cprintf("Your system is immune to poisons." EOL);
         cprintf("You can see invisible." EOL);
-	cprintf("You move rather slowly." EOL);
+        // slowness can be overriden
+        cprintf("%s" EOL, naga_speed_descrip[you.mutation[MUT_FAST]]);
         j += 4;
         break;
 
@@ -1053,7 +1061,8 @@ void display_mutations(void)
         if (you.experience_level > 6)
         {
             cprintf("You can spit acid." EOL);
-            j++;
+            cprintf("You are resistant to acid." EOL);
+            j += 2;
         }
         break;
 
@@ -1089,7 +1098,8 @@ void display_mutations(void)
         if (you.mutation[i] != 0)
         {
             // this is already handled above:
-            if (you.species == SP_NAGA && i == MUT_BREATHE_POISON)
+            if (you.species == SP_NAGA &&
+                (i == MUT_BREATHE_POISON || i == MUT_FAST))
                 continue;
 	    if (you.species == SP_CENTAUR && i == MUT_FAST)
 		continue;
