@@ -3546,6 +3546,19 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     return (false);
 }                               // end handle_throw()
 
+static bool handle_monster_spell(monsters *monster, bolt &beem)
+{
+    // shapeshifters don't get spells
+    if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
+                                 ENCH_SHAPESHIFTER )
+        || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
+    {
+        if (handle_spell(monster, beem))
+            return (true);
+    }
+    return (false);
+}
+
 static void handle_monster_move(int i, monsters *monster)
 {
     bool brkk = false;
@@ -3738,23 +3751,23 @@ static void handle_monster_move(int i, monsters *monster)
             // How nice!
             if (mons_friendly(monster) || mons_near(monster))
             {
-                if (handle_special_ability(monster, beem))
+                // [ds] Special abilities shouldn't overwhelm spellcasting
+                // in monsters that have both. This aims to give them both
+                // roughly the same weight.
+                if (coinflip()?
+                        handle_special_ability(monster, beem)
+                            || handle_monster_spell(monster, beem)
+                    :   handle_monster_spell(monster, beem)
+                            || handle_special_ability(monster, beem))
+                {
                     continue;
+                }
 
                 if (handle_potion(monster, beem))
                     continue;
 
                 if (handle_scroll(monster))
                     continue;
-
-                // shapeshifters don't get spells
-                if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
-                                             ENCH_SHAPESHIFTER )
-                    || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
-                {
-                    if (handle_spell(monster, beem))
-                        continue;
-                }
 
                 if (handle_wand(monster, beem))
                     continue;
