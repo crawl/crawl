@@ -3285,7 +3285,7 @@ std::string screenshot( bool fullscreen )
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
                 int object = grd[gx][gy];
-                unsigned short glych, glycol;
+                unsigned short glych, glycol = 0;
 
                 if (object == DNGN_SECRET_DOOR)
                     object = grid_secret_door_appearance( gx, gy );

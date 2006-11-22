@@ -630,7 +630,7 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour(void)
 {
-    int armour_wear_2;
+    int armour_wear_2 = 0;
 
     if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
         return;
