@@ -1,0 +1,151 @@
+The following three tables describe all aptitudes of the various races for the
+various skills. These are not necessary for winning in Crawl, neither explicit
+nor implicit. The qualitative information behind this sheet (ie. which species
+is good at which tasks) can be obtained in two other, less sophisticated ways:
+- read the species section in the manual about strenghts and weaknesses
+- look which combinations of race and class are possible.
+
+If you consider figuring out such things yourself to be fun, stop reading now.
+Otherwise, just go ahead. A lower a value, the better the aptitude. 100 is the
+Human standard. Please note that many things effect how quick a character will
+actually learn a skill. Thus the numbers below are good enough for comparisons
+among races, but not necessarily among skills.
+
+The abbreviations used for the skills are:
+
+General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
+--------------------------   -----------------------     ----------------------
+Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
+Ddg - Dodging                SBl - Short Blades          Coj - Conjuration
+Sth - Stealth                LBl - Long Blades           Enc - Enchantments
+Stb - Stabbing               Axs - Axes                  Sum - Summonings
+Shd - Shields                M&F - Maces & Flails        Nec - Necromancy
+T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
+                             Stv - Staves                Trm - Transmigration
+Inv - Invocations            U C - Unarmed Combat        Div - Divination
+Evo - Evocations
+                             Ran - Ranged Combat         Fir - Fire Magic
+                             Slg - Slings                Ice - Ice Magic
+Exp - Experience             Bws - Bows                  Air - Air Magic
+                             Crb - Crossbows             Ear - Earth Magic
+                             Drt - Darts                 Poi - Poison Magic
+
+
+                Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
+---------------------------------------------------------------------
+Human           100 100 100 100 100 100   100 100                 100
+Elf             120  80  80 100 120 100   100  80                 120
+High Elf        110  90  90 110 110 100   100  90                 150
+Grey Elf        140  75  70 100 140 100   100  90                 140
+Deep Elf        140  70  65  80 140 100   100  90                 140
+Sludge Elf      140  70  75 100 130 100   100 110                 120
+Hill Dwarf       70 120 150 140  70 100   100  60                 140
+Mountain Dwarf   60 110 140 130  70 100   100  70                 140
+Halfling        150  70  60  70 130 100   100  90                 100
+Hill Orc         90 140 150 100  80 100   100 100                 100
+Kobold          140  70  60  70 130 100   100  80                 100
+Mummy           140 140 140 140 140 140   140 140                 150
+Naga            150 150  40 100 140 100   100 100                 120
+Gnome           150  70  70  80 120 100   120  60                 110
+Ogre            140 150 200 150 110 200   130 170                 140
+Troll           150 130 250 150 150 200   150 180                 150
+Ogre Mage       170 130 100 130 150 150   100 100                 150
+Draconian Red   200 120 120 100 100 100   100 100                 130
+        White   200 120 120 100 100 100   100 100                 130
+        Green   200 120 120 100 100 100   100 100                 130
+       Yellow   200 120 120 100 100 100   100 100                 130
+         Grey   200 120 120 100 100 100   100 100                 130
+        Black   200 120 120 100 100 100   100 100                 130
+       Purple   200 120 120 100 100 100   100  90                 130
+      Mottled   200 120 120 100 100 100   100 100                 130
+         Pale   200 120 120 100 100 100   100  90                 130
+Centaur         180 170 200 170 180 150   100 130                 140
+Demigod         110 110 110 110 110 110   110 110                 160
+Spriggan        170  50  50  50 180  60   130  70                 130
+Minotaur         80  80 130 100  80 120   130 170                 140
+Demonspawn      110 110 110 110 110 110    80 110                 140
+Ghoul           110 110  80 100 110 120   110 130                 120
+Kenku            90  90 100  80 100 100   160 100                 130
+Merfolk         160  60  90  70 100 120   100 100                 120
+---------------------------------------------------------------------
+                Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
+
+
+        	Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+---------------------------------------------------------------------
+Human           100 100 100 100 100 100 100 100   100 100 100 100 100
+Elf             120  80  80 120 130 130 100 110    80 120  60 100  90
+High Elf        100  70  70 130 150 150 100 130    80 140  60 100  90
+Grey Elf        140  90  95 140 160 160 100 130    80 130  70 100  90
+Deep Elf        150 100 105 150 165 165 100 130    80 135  74  75  75
+Sludge Elf       80 110 110 130 140 140 100  80    70 100 100 100 100
+Hill Dwarf       70  80  80  60  70 110 130 100   120 130 150 120 120
+Mountain Dwarf   70  90  90  70  70 110 120 100   115 125 140 100 120
+Halfling        120  60 100 120 150 160 130 140    60  50  70  90  50
+Hill Orc         70 100  80  70  80  80 110  90   130 130 120 120 130
+Kobold           80  60 100 110 140 150 110 100    60  70  80  90  50
+Mummy           100 140 140 140 140 140 140 140   140 140 140 140 140
+Naga            100 100 100 100 100 100 120 100   120 120 120 120 120
+Gnome           100  75 100 100 130 140 130 110   100  80 100  90  60
+Ogre            100 140 120 100 100 110 120 130   100 150 150 180 150
+Troll           140 150 150 150 130 150 150 100   130 180 180 180 180
+Ogre Mage       100 110 100 100 100 100 100 100   150 150 150 150 150
+Draconian Red    90 100 100 100 100 100 100 100   120 120 120 120 120
+        White    90 100 100 100 100 100 100 100   120 120 120 120 120
+        Green    90 100 100 100 100 100 100 100   120 120 120 120 120
+       Yellow    90 100 100 100 100 100 100 100   120 120 120 120 120
+         Grey    90 100 100 100 100 100 100 100   120 120 120 120 120
+        Black    90 100 100 100 100 100 100 100   120 120 120 120 120
+       Purple    90 100 100 100 100 100 100 100   120 120 120 120 120
+      Mottled    90 100 100 100 100 100 100 100   120 120 120 120 120
+         Pale    90 100 100 100 100 100 100 100   120 120 120 120 120
+Centaur         100 120 110 110 110 110 110 100    60  75  60  85  80
+Demigod         110 110 110 110 110 110 110 110   110 110 110 110 110
+Spriggan        150  90 140 150 160 180 150 130    90  70  70 100  70
+Minotaur         70  70  70  70  70  70  70  80    90  90  90  90  90
+Demonspawn      100 110 110 110 110 110 110 110   110 110 110 110 110
+Ghoul            80 110 110 110 110 110 110  80   130 130 130 130 130
+Kenku           100  75  75  75  75  75  75  80    90 100  80  80  90
+Merfolk          80  70  90 140 150  50 130  90   100 150 140 140 100
+---------------------------------------------------------------------
+		Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+
+
+                Spc Coj Enc Sum Nec Trl Trm Div   Fir Ice Air Ear Poi
+---------------------------------------------------------------------
+Human           100 100 100 100 100 100 100 100   100 100 100 100 100
+Elf              80 105  70 100 120 100 100 100   100 100  70 130 110
+High Elf         70  90  70 110 130  90  90 110   100 100  70 130 130
+Grey Elf         60  90  50  90 130  80  80  80    90  90  60 150 110
+Deep Elf         55  80  50  80  70  75  75  75    90  90  80 100  80
+Sludge Elf       70 130 130  90  90 100  60 130    80  80  80  80  80
+Hill Dwarf      160 120 150 150 160 150 120 130    80 120 150  70 130
+Mountain Dwarf  140 115 135 150 160 150 120 130    70 130 150  70 130
+Halfling        130 130 100 120 150 100 150 140   100 100  90 100 120
+Hill Orc        150 100 120 120 100 150 160 160   100 100 150 100 110
+Kobold          110 110 110 105 105 100 110 130   100 100 100 100 100
+Mummy           100 140 140 140 100 140 140 140   140 140 140 140 140
+Naga            100 100 100 100 100 100 100 100   100 100 100 100  60
+Gnome           120 100 100 110 130 130 120 120   100 100 170  60 130
+Ogre            220 180 220 200 150 200 200 200   150 150 200 120 150
+Troll           200 160 200 160 150 160 160 200   160 160 200 120 160
+Ogre Mage        70 100  80 100 100 100 100 100   100 100 100 100 100
+Draconian Red   100 100 120 100 100 100 100 100    70 135 100 100 100
+        Green   100 100 120 100 100 100 100 100   100 100 100 100  70
+        White   100 100 120 100 100 100 100 100   135  70 100 100 100
+       Yellow   100 100 120 100 100 100 100 100   100 100 100 100 100
+         Grey   100 100 120 100 100 100 100 100   100 100 100 100 100
+        Black   100 100 120 100 100 100 100 100   100 100  70 135 100
+       Purple    70 100  90 100 100 100 100 100   100 100 100 100 100
+      Mottled   100 100 120 100 100 100 100 100    80 100 100 100 100
+         Pale   100 100 120 100 100 100 100 100    90 100  90 100 100
+Centaur         140 120 110 120 120 120 120 130   120 120 120 120 130
+Demigod         110 110 110 110 110 110 110 110   110 110 110 110 110
+Spriggan         60 160  50 150 120  50  60  70   140 140 120 120 100
+Minotaur        180 170 170 170 170 170 170 170   170 170 170 170 170
+Demonspawn      100 100 110 100  90 110 110 110   100 110 110 110 100
+Ghoul           120 130 130 120 100 120 120 120   150  90 150  90 100
+Kenku           100  60 160  70  80 150 150 180    90 120  90 120 100
+Merfolk         100 140  90 100 150 140  60  80   160  80 150 150  80
+---------------------------------------------------------------------
+                Spc Coj Enc Sum Nec Trl Trm Div   Fir Ice Air Ear Poi

@@ -1,0 +1,245 @@
+This document aims at easier Crawling (in Stone Soup) by explaining:
+- macros and keybindings
+- lua snippets in init.txt
+
+-----------------------------------------------------------------------
+
+Macros and Keymaps.
+===================
+
+Following Brent Ross's phrasing, the simple explanation is:
+
+Command macros make keys into commands.
+Keymaps make keys into other keys.
+
+And him a bit more verbose:
+
+For the most part, people will probably want command macros.  They allow 
+for things like making a key run a sequence of commands (e.g. associating
+a key stroke to the casting of a certain spell) without having to worry 
+about messing up what that key does at prompts (e.g. you can macro a 
+number or letter without worrying about it making the substitution when 
+you're trying to drop an item).
+
+Keymaps are for when you want to fix layout and behavioural problems on 
+your keyboard (i.e. unrecognised numpad sequences can by mapped into 
+their numbers, foreign keyboard layouts can be modified to be more 
+comfortable). There are also special sets of keymaps for the level-map 
+and targeting modes, which allow for keymaps that are restricted to just
+those situations. 
+
+[The keymap system is currently being overhauled. I hope that the 
+examples below will also work in the new version. 
+From what I gather, the keybindings will be moved to a file (which is
+good). I hope that it will still be possible to define macros in-game:
+this makes testing so convenient. And it should be possible to have
+macros at all three levels (main, level map, targeting).]
+
+How to create macros?
+---------------------
+The simplest way is in-game: press the '`' key (this may be a bit awkward
+on certain keyboard layouts). Then choose a key to assign for your macro,
+and enter the command sequence. Observe how Crawl spits out a funny number
+in some cases. These are the key codes for certain (non-alpanumeric) keys,
+and these can vary between different systems.
+
+The following keys and combinations are sensible to use:
+- The function keys are good choices, possibly modified by Shift, Ctrl, 
+  or Shift-Ctrl.
+- On some systems, it is possible to also incorporate the Alt (meta) key.
+- All alphanumerical keys, these also in combination with Shift or Ctrl 
+  keys (note that usually Ctrl-Shift-A is the same thing as Ctrl-A). 
+  Be careful that you do not redefine important game keys. 
+- All special keys: digits, punctation, etc. These also in combination 
+  with Ctrl. Try if Alt works. Again check for vital game commands.
+
+For example, on my home system (Windows), I get key codes
+ F1		    \{368}		A		  A
+ Shift-F1	    \{1392}		Ctrl-A		  \{1}
+ Ctrl-F1	    \{880}		Alt-A		  a
+ Alt-F1		    \{2416}		Ctrl-Shift-A	  \{1}
+ Ctrl-Shift-F1	    \{1904}		Ctrl-Shift-Alt-A  \{3905}
+ Ctrl-Alt-F1	    \{2928}
+ Shift-Alt-F1	    \{3440}
+ Ctrl-Shift-Alt-F1  \{3952}
+
+After defining such a macro, you should test it. Saving of all macros is 
+done with the '~' command.
+
+The macros are stored in the file macro.txt in your main Crawl directory. 
+This file is human readable and editable, you just have to figure out the
+magic numbers, as shown above for F1 and Ctrl-A etc. When using strange 
+keys as triggers for a macro, it might actually be necessary to edit this 
+manually in macro.txt.
+Note that you can make comments in macro.txt using lines with a leading 
+'#'. In this manner, you can recall which keys the numbers belong to (on 
+your system). 
+See below for examples for macro definitions.
+
+Keymaps work in exactly the same way. There are three different keymaps 
+actually, one for the main view, one for the level map, and another one
+for the targeting map. In macro.txt, these are differentiated by
+ K  - main screen
+ K1 - level map
+ K2 - targeting
+However, you should not map alphabet letters to something; otherwise you
+will meet difficulties accessing your inventory!
+
+Next follow some macros and keymaps that have been considered useful by 
+at least a few players. For the sake of completeness, both key line and 
+command line are given, but you should really substitute your own keys 
+here :)
+
+Spellcasting.
+-------------
+# F1: cast spell a at previous target
+M:\{368}
+A:Zap
+
+#: Shift-F1: cast spell a at nearest target
+M:\{1392}
+A:Za+.	 
+
+Note that you can assign new letters to your spells with '='. So you can
+always have you primary attack spell on a. You may want to set the option 
+ target_zero_exp = false 
+when using macros like this.
+
+Easier Nemelex hoovering.
+-------------------------
+# F12: Nemelex hoover
+K:\{379}
+A:w0Iyp,y
+
+This sets up your portable altar, prays there, confirms, and picks it up 
+again. The sequence assumes that the altar carries the inscription {w0}. 
+Actually, this can be achieved automatically with the init.txt line
+ autoinscribe = portable altar:w0
+If you have your weapon on slot a, feel free to add 'wa' to the sequence.
+
+Easy surroundings mode.
+-----------------------
+K:0  
+A:x*
+
+K2:0
+A:*
+
+Here I use '0' for the numpad, but 'x' would also be a good choice (then 
+you should set K2:x A:* only).
+This makes going through items in the surroundings very easy. You can use
+Enter to go directly to item under the cursor. 
+Options you may want to check here are
+ target_wrap, target_oos, target_los_first.
+If you want to cycle through items out of sight, set 
+ stash_tracking = all
+ target_oos = true
+(as only out-of-sight _stashes_ will be checked).
+
+# F5: explore (both in main and target screens)
+K:\{372}
+A:\{15}
+
+K2:\{372}
+A:\{32}\{15}
+
+I find the Ctrl-O key awkward to type, so I have mapped it to F5. The 
+second keymap makes F5 in target mode do two things: leave target mode 
+(\{32} is the Escape key) and then starts exploring.
+
+General Keybindings.
+--------------------
+With my German keyboard layout, the keys '^' and '@' do not work 
+properly. The first problem is dealt with the map
+K:\{17}
+A:@
+which maps @ to @ in the main mode :)
+
+Other keymaps I found useful:
+- Tab for ' (switching weapons in slots a and b)
+- Backspace for p (both Praying in main and Previous in target mode)
+  (Unfortunately, Backspace is the same thing as Ctrl-Left. Perhaps 
+  something can be done about this.)
+
+Lua snippets.
+=============
+
+You can copy the following lua code verbatim in your init.txt; it is up 
+to you to apply appropriate modifications. It would be nice of course, 
+if someday these snippets turn into full-grown lua files with their own 
+options.
+
+For a tutorial of the language Lua, refer to the following link:
+         http://lua-users.org/wiki/TutorialDirectory
+
+Advanced autopick: ch_autopickup.
+---------------------------------
+Using a Lua script, you can define a function "ch_autopickup" to select 
+additional items for autopickup. Let's say you want autopickup to only 
+grab food if your character can eat it. You could use the following 
+(if '%' is not in the autopickup option):
+
+{
+function ch_autopickup(it)
+    -- The "false" suppresses hunger checks to see if your character is 
+    -- hungry enough to eat food/chunks.
+    return food.can_eat(it, false)
+end
+}
+
+Here's a ch_autopickup that a mummy might find useful:
+
+{
+-- The mummy special. Remove % and ! from your autopickup option if you 
+-- use this.
+function ch_autopickup(it)
+    return food.can_eat(it, false)
+        or ( item.class(it) == "Potions" and you.race() ~= "Mummy" )
+end
+}
+
+Advanced autopick: conditional ban_pickup.
+------------------------------------------
+
+There is an overlap in functionality with the above mummy function.
+
+# mummies can't quaff or hunger
+<if you.race() == "Mummy" then>
+    	ban_pickup = potion
+    	ban_pickup = sustenance
+<end>
+
+# ban harmful potions for non-Transmuters
+<if you.class() ~= "Transmuter" then>
+    	ban_pickup = degeneration, decay, potions? of poison
+    	ban_pickup = potions? of confusion, potions? of slowing,
+    	ban_pickup = potions? of paralysis, strong poison
+<end>
+
+
+# Trog doesn't like Spellcasting
+#<if you.religion() == "Trog" then> # (doesn't work), so
+
+<if you.class() == "Berserker" then>
+  	ban_pickup = book
+<end>
+
+Ignoring certain monsters when running.
+---------------------------------------
+Defining a "ch_stop_run" function affects the monster stop condition for *all*
+run modes: shift-running, travel, explore and interlevel travel.
+
+{
+function ch_stop_run(mons)
+    local name = mons.name
+    -- Stop running only if these monsters get closer than 3 squares
+    if name == "swamp worm" or name == "big fish" 
+            or name == "giant goldfish" or name == "lava worm"
+            or name == "butterfly" then
+        -- mons.x and y coords are relative to the player.
+        local dist = mons.x * mons.x + mons.y * mons.y
+        if dist >= 9 then return false end
+    end
+    return true
+end
+}
