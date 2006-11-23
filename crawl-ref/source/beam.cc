@@ -20,16 +20,15 @@
 #include "AppHdr.h"
 #include "beam.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cstdarg>
+#include <set>
 
 #ifdef DOS
 #include <dos.h>
 #include <conio.h>
-#endif
-#if DEBUG_DIAGNOSTICS
-#include <stdio.h>
 #endif
 
 #include "externs.h"
@@ -91,6 +90,8 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly);
 static void ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
 static void zappy(char z_type, int power, struct bolt &pbolt);
 
+static std::set<std::string> beam_message_cache;
+
 static bool beam_is_blockable( struct bolt &pbolt )
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not 
@@ -98,6 +99,23 @@ static bool beam_is_blockable( struct bolt &pbolt )
     // from there)... but we don't want it shield blockable.
     return (!pbolt.is_beam && !pbolt.is_explosion 
             && pbolt.flavour != BEAM_ELECTRICITY);
+}
+
+static void beam_mpr(int channel, const char *s, ...)
+{
+    va_list args;
+    va_start(args, s);
+
+    char buf[500];
+    vsnprintf(buf, sizeof buf, s, args);
+
+    va_end(args);
+
+    std::string message = buf;
+    if (beam_message_cache.find(message) == beam_message_cache.end())
+        mpr(message.c_str(), channel);
+
+    beam_message_cache.insert( message );
 }
 
 // simple animated flash from Rupert Smith (and expanded to be more generic):
@@ -1216,6 +1234,8 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     bool beamTerminate;     // has beam been 'stopped' by something?
     int tx = 0, ty = 0;     // test(new) x,y - integer
     int rangeRemaining;
+
+    beam_message_cache.clear();
 
 #if DEBUG_DIAGNOSTICS
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
@@ -2487,13 +2507,25 @@ int affect(struct bolt &beam, int x, int y)
     return (rangeUsed);
 }
 
-static bool affectsWall(const bolt &beam, int wall)
+static bool is_fiery(const bolt &beam)
 {
-    // don't know of any explosion that affects walls.  But change it here
-    // if there is.
-    if (beam.is_explosion)
+    return (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_HELLFIRE
+            || beam.flavour == BEAM_LAVA);
+}
+
+static bool is_superhot(const bolt &beam)
+{
+    if (!is_fiery(beam))
         return (false);
 
+    return beam.name == "bolt of fire"
+        || beam.name == "bolt of magma"
+        || (beam.name.find("hellfire") != std::string::npos
+                && beam.in_explosion_phase);
+}
+
+static bool affectsWall(const bolt &beam, int wall)
+{
     // digging
     if (beam.flavour == BEAM_DIGGING)
         return (true);
@@ -2503,9 +2535,7 @@ static bool affectsWall(const bolt &beam, int wall)
     if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
         return (true);
 
-    if (beam.flavour == BEAM_FIRE
-            && wall == DNGN_WAX_WALL
-            && beam.name == "bolt of fire")
+    if (is_fiery(beam) && wall == DNGN_WAX_WALL)
         return (true);
 
     // eye of devastation?
@@ -2553,21 +2583,37 @@ static int affect_wall(struct bolt &beam, int x, int y)
     // END DIGGING EFFECT
     
     // FIRE effect
-    if (beam.flavour == BEAM_FIRE && beam.name == "bolt of fire")
+    if (is_fiery(beam))
     {
         const int wgrd = grd[x][y];
         if (wgrd != DNGN_WAX_WALL)
             return (0);
 
+        if (!is_superhot(beam))
+        {
+            if (beam.flavour != BEAM_HELLFIRE)
+            {
+                if (see_grid(x, y))
+                    beam_mpr(MSGCH_PLAIN, 
+                            "The wax appears to soften slightly.");
+                else if (player_can_smell())
+                    beam_mpr(MSGCH_PLAIN, "You smell warm wax.");
+            }
+
+            return (BEAM_STOP);
+        }
+
         grd[x][y] = DNGN_FLOOR;
         if (see_grid(x, y))
-            mprf("The wax bubbles and burns!");
+            beam_mpr(MSGCH_PLAIN, "The wax bubbles and burns!");
         else if (player_can_smell())
-            mprf("You smell burning wax.");
+            beam_mpr(MSGCH_PLAIN, "You smell burning wax.");
 
         place_cloud( 
                 YOU_KILL(beam.thrower)? CLOUD_FIRE : CLOUD_FIRE_MON, 
                 x, y, random2(10) + 15 );
+
+        beam.obvious_effect = true;
 
         return (BEAM_STOP);
     }
@@ -4196,7 +4242,11 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly)
 
     // now affect items
     if (!drawOnly)
+    {
         affect_items(beam, realx, realy);
+        if (affectsWall(beam, grd[realx][realy]))
+            affect_wall(beam, realx, realy);
+    }
 
     if (drawOnly)
     {
@@ -4241,7 +4291,7 @@ static void explosion_map( struct bolt &beam, int x, int y,
     // solid cells at the center of the explosion.
     if (dngn_feat < DNGN_GREEN_CRYSTAL_WALL || dngn_feat == DNGN_WAX_WALL)
     {
-        if (!(x==0 && y==0))
+        if (!(x==0 && y==0) && !affectsWall(beam, dngn_feat))
             return;
     }
 
