@@ -215,17 +215,28 @@ inline bool is_traversable(unsigned char grid)
     return traversable_terrain[(int) grid] == TRAVERSABLE;
 }
 
-static bool is_excluded(int x, int y)
+static bool is_excluded(int x, int y, const std::vector<coord_def> &exc)
 {
-    for (int i = 0, count = curr_excludes.size(); i < count; ++i)
+    for (int i = 0, count = exc.size(); i < count; ++i)
     {
-        const coord_def &c = curr_excludes[i];
+        const coord_def &c = exc[i];
         int dx = c.x - x,
             dy = c.y - y;
         if (dx * dx + dy * dy <= Options.travel_exclude_radius2)
             return true;
     }
     return false;
+}
+
+inline static bool is_excluded(const coord_def &c, 
+                               const std::vector<coord_def> &exc)
+{
+    return is_excluded(c.x, c.y, exc);
+}
+
+inline static bool is_excluded(int x, int y)
+{
+    return is_excluded(x, y, curr_excludes);
 }
 
 static bool is_exclude_root(int x, int y)
@@ -314,20 +325,6 @@ void toggle_exclude(int x, int y)
         LevelInfo &li = travel_cache.get_level_info(
                             level_id::get_current_level_id());
         li.update();
-    }
-}
-
-void update_excludes()
-{
-    // Sanity checks
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        return;
-    for (int i = curr_excludes.size() - 1; i >= 0; --i)
-    {
-        int x = curr_excludes[i].x,
-            y = curr_excludes[i].y;
-        if (!env.map[x - 1][y - 1])
-            curr_excludes.erase( curr_excludes.begin() + i );
     }
 }
 
@@ -1857,17 +1854,26 @@ static int target_distance_from(const coord_def &pos)
 static int find_transtravel_stair(  const level_id &cur,
                                     const level_pos &target,
                                     int distance,
+                                // This is actually the current position on cur,
+                                // not necessarily a stair.
                                     const coord_def &stair,
                                     level_id &closest_level,
                                     int &best_level_distance,
-                                    coord_def &best_stair)
+                                    coord_def &best_stair,
+                                    const bool target_has_excludes )
 {
     int local_distance = -1;
     level_id player_level = level_id::get_current_level_id();
 
+    LevelInfo &li = travel_cache.get_level_info(cur);
+
     // Have we reached the target level?
     if (cur == target.id)
     {
+        // Are we in an exclude? If so, bail out.
+        if (is_excluded( stair, li.get_excludes() ))
+            return (-1);
+
         // If there's no target position on the target level, or we're on the 
         // target, we're home.
         if (target.pos.x == -1 || target.pos == stair)
@@ -1916,7 +1922,6 @@ static int find_transtravel_stair(  const level_id &cur,
         }
     }
 
-    LevelInfo &li = travel_cache.get_level_info(cur);
     std::vector<stair_info> &stairs = li.get_stairs();
 
     // this_stair being NULL is perfectly acceptable, since we start with
@@ -1969,7 +1974,11 @@ static int find_transtravel_stair(  const level_id &cur,
             // have no exact target location. If there *is* an exact target
             // location, we can't follow stairs for which we have incomplete
             // information.
-            if (target.pos.x == -1 && dest.id == target.id)
+            //
+            // We can also not use incomplete stair information if there are
+            // excludes on the target level.
+            if (target.pos.x == -1 && dest.id == target.id
+                    && !target_has_excludes)
             {
                 if (local_distance == -1 || local_distance > dist2stair)
                 {
@@ -2012,7 +2021,8 @@ static int find_transtravel_stair(  const level_id &cur,
             // Okay, take these stairs and keep going.
             int newdist = find_transtravel_stair(dest.id, target,
                     dist2stair, dest.pos, closest_level,
-                    best_level_distance, best_stair);
+                    best_level_distance, best_stair,
+                    target_has_excludes);
             if (newdist != -1 && 
                     (local_distance == -1 || local_distance > newdist))
             {
@@ -2083,9 +2093,11 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
 
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
 
+    const LevelInfo &target_level = travel_cache.get_level_info( target.id );
     find_transtravel_stair(current, target,
                            0, cur_stair, closest_level,
-                           best_level_distance, best_stair);
+                           best_level_distance, best_stair,
+                           !target_level.get_excludes().empty());
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
@@ -2099,7 +2111,8 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
         int current_dist = level_distance(current, target.id);
         level_pos newlev;
         newlev.id = closest_level;
-        if (current_dist == -1 || best_level_distance < current_dist)
+        if (newlev.id != target.id 
+                && (current_dist == -1 || best_level_distance < current_dist))
             return find_transtravel_square(newlev, verbose);
     }
 
@@ -2394,9 +2407,6 @@ void LevelInfo::set_level_excludes()
 
 void LevelInfo::update()
 {
-    // We need to update all stair information and distances on this level.
-    update_excludes();
-
     // First, set excludes, so that stair distances will be correctly populated.
     excludes = curr_excludes;
 
@@ -2955,8 +2965,6 @@ void TravelCache::update()
 {
     if (can_travel_interlevel())
         get_level_info(level_id::get_current_level_id()).update();
-    else
-        update_excludes();
 }
 
 void TravelCache::fixup_levels()

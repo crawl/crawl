@@ -241,6 +241,11 @@ struct LevelInfo
     void reset_distances();
     void set_level_excludes();
 
+    const std::vector<coord_def> &get_excludes() const
+    {
+        return excludes;
+    }
+
     // Returns the travel distance between two stairs. If either stair is NULL,
     // or does not exist in our list of stairs, returns 0.
     int distance_between(const stair_info *s1, const stair_info *s2) const;
