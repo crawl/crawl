@@ -980,24 +980,10 @@ static void sdump_mutations(const std::string &, std::string & text)
 
     if (xz > 0)
     {
-        text += "";
         text += "\n";
-        text += "           Mutations & Other Weirdness";
-        text += "\n";
-
-        for (int j = 0; j < 100; j++)
-        {
-            if (you.mutation[j])
-            {
-                if (you.demon_pow[j] > 0)
-                    text += "* ";
-
-                text += mutation_name(j);
-                text += "\n";
-            }
-        }
+        text += describe_mutations();
+        text += "\n\n";
     }
-    text += "\n\n";
 }                               // end dump_mutations()
 
 // ========================================================================

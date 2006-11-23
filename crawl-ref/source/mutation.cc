@@ -63,6 +63,13 @@ const char* naga_speed_descrip[4] = {
     "You cover the ground quickly.",        //  6*14/10 = 8
 };
 
+const char* troll_claw_descrip[4] = {
+    "You have claws for hands.",
+    "You have sharp claws for hands.",
+    "You have very sharp claws for hands.",
+    "Your claws are sharper than steel."
+};
+
 const char *mutation_descrip[][3] = {
     {"You have tough skin (AC +1).", "You have very tough skin (AC +2).",
      "You have extremely tough skin (AC +3)."},
@@ -879,217 +886,207 @@ const char mutation_rarity[] = {
     0                           //
 };
 
-void display_mutations(void)
+formatted_string describe_mutations()
 {
-    int i;
-    int j = 0;
+    std::string result;
+    bool have_any = false;
     const char *mut_title = "Innate abilities, Weirdness & Mutations";
-    const int num_lines = get_number_of_lines(); 
-
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    window(1, 1, 80, 25);
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
-    clrscr();
-    textcolor(WHITE);
 
     // center title
-    i = 40 - strlen(mut_title) / 2;
-    if (i<1) i=1;
-    gotoxy(i, 1);
-    cprintf(mut_title);
-    gotoxy(1,3);
-    textcolor(LIGHTBLUE);  //textcolor for inborn abilities and weirdness
+    int i;
+    i = 39 - strlen(mut_title) / 2;
+    if (i<0) i=0;
+
+    result += std::string(i, ' ');
+    result += "<white>";
+    result += mut_title;
+    result += "</white>" EOL EOL;
+
+    result += "<lightblue>"; // inborn abilities and weirdness
 
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
     case SP_MERFOLK:
-        cprintf("You revert to your normal form in water." EOL);
-        j++;
+        result += "You revert to your normal form in water." EOL;
+        have_any = true;
         break;
 
     case SP_SPRIGGAN:
-	cprintf("You can see invisible." EOL);
-	cprintf("You cover the ground extremely quickly." EOL);
-	j += 2;
+        result += "You can see invisible." EOL;
+        result += "You cover the ground extremely quickly." EOL;
+        have_any = true;
 	break;
 
     case SP_CENTAUR:
 	if (!you.mutation[MUT_FAST])
-	    cprintf("You cover the ground quickly." EOL);
+            result += "You cover the ground quickly." EOL;
 	else
-	    cprintf("You cover the ground extremely quickly." EOL);
-	j++;
+	    result += "You cover the ground extremely quickly." EOL;
+        have_any = true;
 	break;
 
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
-            cprintf("You can spit poison." EOL);
+            result += "You can spit poison." EOL;
         else
-            cprintf("You can exhale a cloud of poison." EOL);
+            result += "<lightred>You can exhale a cloud of poison.</lightred>" EOL;
 
-        cprintf("Your system is immune to poisons." EOL);
-        cprintf("You can see invisible." EOL);
+        result += "Your system is immune to poisons." EOL;
+        result += "You can see invisible." EOL;
         // slowness can be overriden
-        cprintf("%s" EOL, naga_speed_descrip[you.mutation[MUT_FAST]]);
-        j += 4;
+        if ( you.mutation[MUT_FAST] )
+            result += "<lightred>";
+        result += naga_speed_descrip[you.mutation[MUT_FAST]];
+        if ( you.mutation[MUT_FAST] )
+            result += "</lightred>";
+        result += EOL;
+        have_any = true;
         break;
 
     case SP_GNOME:
-        cprintf("You can sense your surroundings." EOL);
-        j++;
+        result += "You can sense your surroundings." EOL;
+        have_any = true;
         break;
 
     case SP_TROLL:
-        cprintf("Your body regenerates quickly." EOL);
-        switch ( you.mutation[MUT_CLAWS] ) {
-        case 0:
-            cprintf("You have claws for hands." EOL);
-            break;
-        case 1:
-            cprintf("You have sharp claws for hands." EOL);
-            break;
-        case 2:
-            cprintf("You have very sharp claws for hands." EOL);
-            break;
-        case 3:
-            // literally true
-            cprintf("Your claws are sharper than steel." EOL);
-            break;
-        default:
-            break;
-        }
-        j += 2;
+        result += "Your body regenerates quickly." EOL;
+        if ( you.mutation[MUT_CLAWS] )
+            result += "<lightred>";
+        result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
+        if ( you.mutation[MUT_CLAWS] )
+            result += "</lightred";
+        result += EOL;
+        have_any = true;
         break;
 
     case SP_GHOUL:
-        cprintf("Your body is rotting away." EOL);
-        cprintf("You are carnivorous." EOL);
-        j += 2;
+        result += "Your body is rotting away." EOL;
+        result += "You are carnivorous." EOL;
+        have_any = true;
         break;
 
     case SP_KOBOLD:
-        cprintf("You are carnivorous." EOL);
-        j++;
+        result += "You are carnivorous." EOL;
+        have_any = true;
         break;
 
     case SP_GREY_ELF:
         if (you.experience_level > 4)
         {
-            cprintf("You are very charming." EOL);
-            j++;
+            result += "You are very charming." EOL;
+            have_any = true;
         }
         break;
 
     case SP_KENKU:
         if (you.experience_level > 4)
         {
-            cprintf("You can fly");
-            cprintf((you.experience_level > 14) ? " continuously." EOL : "."
-                    EOL);
-            j++;
+            result += "You can fly";
+            if (you.experience_level > 14)
+                result += " continuously";
+            result += "." EOL;
+            have_any = true;
         }
         break;
 
     case SP_MUMMY:
-        cprintf("You are");
-        cprintf((you.experience_level > 25) ? " very strongly" :
-                ((you.experience_level > 12) ? " strongly" : ""));
-        cprintf(" in touch with the powers of death." EOL);
-        j++;
+        result += "You are";
+        if (you.experience_level > 25)
+            result += " very strongly";
+        else if (you.experience_level > 12)
+            result += " strongly";
+
+        result += " in touch with the powers of death." EOL;
 
         if (you.experience_level >= 12)
-        {
-            cprintf("You can restore your body by infusing magical energy." EOL);
-            j++;
-        }
+            result += "You can restore your body by infusing magical energy." EOL;
+        have_any = true;
         break;
 
     case SP_GREEN_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You are resistant to poison." EOL);
-            cprintf("You can breathe poison." EOL);
-            j += 2;
+            result += "You are resistant to poison." EOL;
+            result += "You can breathe poison." EOL;
+            have_any = true;
         }
         break;
 
     case SP_RED_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe fire." EOL);
-            j++;
+            result += "You can breathe fire." EOL;
+            have_any = true;
         }
         if (you.experience_level > 17)
         {
-            cprintf("You are resistant to fire." EOL);
-            j++;
+            result += "You are resistant to fire." EOL;
+            have_any = true;
         }
         break;
 
     case SP_WHITE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe frost." EOL);
-            j++;
+            result += "You can breathe frost." EOL;
+            have_any = true;
         }
         if (you.experience_level > 17)
         {
-            cprintf("You are resistant to cold." EOL);
-            j++;
+            result += "You are resistant to cold." EOL;
+            have_any = true;
         }
         break;
 
     case SP_BLACK_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe lightning." EOL);
-            j++;
+            result += "You can breathe lightning." EOL;
+            have_any = true;
         }
         if (you.experience_level > 17)
         {
-            cprintf("You are resistant to lightning." EOL);
-            j++;
+            result += "You are resistant to lightning." EOL;
+            have_any = true;
         }
         break;
 
     case SP_GOLDEN_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can spit acid." EOL);
-            cprintf("You are resistant to acid." EOL);
-            j += 2;
+            result += "You can spit acid." EOL;
+            result += "You are resistant to acid." EOL;
+            have_any = true;
         }
         break;
 
     case SP_PURPLE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe power." EOL);
-            j++;
+            result += "You can breathe power." EOL;
+            have_any = true;
         }
         break;
 
     case SP_MOTTLED_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe sticky flames." EOL);
-            j++;
+            result += "You can breathe sticky flames." EOL;
+            have_any = true;
         }
         break;
 
     case SP_PALE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            cprintf("You can breathe steam." EOL);
-            j++;
+            result += "You can breathe steam." EOL;
+            have_any = true;
         }
         break;
     }                           //end switch - innate abilities
+    
+    result += "</lightcyan>";
 
     textcolor(LIGHTGREY);
 
@@ -1097,6 +1094,8 @@ void display_mutations(void)
     {
         if (you.mutation[i] != 0)
         {
+            have_any = true;
+
             // this is already handled above:
             if (you.species == SP_NAGA &&
                 (i == MUT_BREATHE_POISON || i == MUT_FAST))
@@ -1106,56 +1105,52 @@ void display_mutations(void)
             if (you.species == SP_TROLL && i == MUT_CLAWS)
                 continue;
 
-            j++;
-            textcolor(LIGHTGREY);
-
-            if (j > num_lines - 4)
-            {
-                gotoxy( 1, num_lines - 1 );
-                cprintf("-more-");
-
-                if (getch() == 0)
-                    getch();
-
-                clrscr();
-
-                // center title
-                int x = 40 - strlen(mut_title) / 2;
-                if (x < 1) 
-                    x = 1;
-
-                gotoxy(x, 1);
-                textcolor(WHITE);
-                cprintf(mut_title);
-                textcolor(LIGHTGREY);
-                gotoxy(1,3);
-                j = 1;
-            }
-
-            /* mutation is actually a demonic power */
+            // mutation is actually a demonic power
             if (you.demon_pow[i] != 0)
-                textcolor(RED);
+                // enhanced by mutation
+                if ( you.demon_pow[i] < you.mutation[i] )
+                    result += "<lightred>";
+                else
+                    result += "<red>";
 
-            /* same as above, but power is enhanced by mutation */
-            if (you.demon_pow[i] != 0 && you.demon_pow[i] < you.mutation[i])
-                textcolor(LIGHTRED);
+            result += mutation_name(i);
 
-            cprintf( mutation_name( i ) );
-            cprintf(EOL);
+            if (you.demon_pow[i] != 0)
+                if ( you.demon_pow[i] < you.mutation[i] )
+                    result += "</lightred>";
+                else
+                    result += "</red>";
+
+            result += EOL;
         }
     }
 
-    if (j == 0)
-        cprintf( "You are not a mutant." EOL );
+    if (!have_any)
+        result +=  "You are not a mutant." EOL;
 
+    return formatted_string::parse_string(result);
+}
+
+void display_mutations()
+{
+#ifdef DOS_TERM
+    char buffer[4800];
+
+    window(1, 1, 80, 25);
+    gettext(1, 1, 80, 25, buffer);
+#endif
+
+    clrscr();
+    gotoxy(1,1);
+    describe_mutations().display();
+    
     if (getch() == 0)
         getch();
+
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, buffer);
 #endif
-
-    return;
-}                               // end display_mutations()
+}
 
 bool mutate(int which_mutation, bool failMsg)
 {

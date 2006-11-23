@@ -14,6 +14,8 @@
 #ifndef MUTATION_H
 #define MUTATION_H
 
+// for formatted_string
+#include "menu.h"
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -27,7 +29,9 @@ bool mutate(int which_mutation, bool failMsg = true);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void display_mutations(void);
+void display_mutations();
+
+formatted_string describe_mutations();
 
 
 // last updated 12may2000 {dlb}
