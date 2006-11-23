@@ -2693,15 +2693,11 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
 
         case AMU_THE_GOURMAND:
             description +=
-                "This amulet allows its wearer to digest raw meat "
-                "even when not hungry. Its effects on the wearer's digestion "
-                "and palate are cumulative over time, and are initially small.";
-            /*
-                "This amulet allows its wearer to consume meat in "
-                "various states of decay without suffering unduly as "
-                "a result. Poisonous or cursed flesh is still not "
-                "recommended. ";
-                */
+                "This amulet immediately fully protects its wearer from "
+                "sickness from eating fresh raw meat and allows them to "
+                "digest it when not hungry, but its effects on the wearer's "
+                "digestion are cumulative over time, and are initially "
+                "small.";
             break;
 
         case AMU_CONSERVATION:
