@@ -871,6 +871,10 @@ int player_res_steam(bool calc_unid)
     return (res + player_res_fire(calc_unid) / 2);
 }
 
+bool player_can_smell()
+{
+    return (you.species != SP_MUMMY);
+}
 
 int player_res_fire(bool calc_unid)
 {

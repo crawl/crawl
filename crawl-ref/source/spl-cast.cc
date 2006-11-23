@@ -2107,10 +2107,9 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 canned_msg(MSG_NOTHING_HAPPENS);
                 break;
             case 9:
-                // josh declares mummies cannot smell {dlb}
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                     mpr("You smell something strange.");
-                else
+                else if (you.species == SP_MUMMY)
                     mpr("Your bandages flutter.");
             }
             break;
@@ -2713,8 +2712,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             switch (random2(10))
             {
             case 0:
-                // mummies cannot smell {dlb}
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                     mpr("You smell decay.");
                 break;
             case 1:
@@ -2768,7 +2766,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 2:
                 // josh declares mummies cannot smell {dlb}
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                 {
                     mpr("You smell decay."); // identical to a harmless message
                     you.rotting++;
@@ -2910,8 +2908,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 canned_msg(MSG_NOTHING_HAPPENS);
                 break;
             case 9:
-                // mummies cannot smell
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                     mpr("You smell something strange.");
                 break;
             }
@@ -3003,8 +3000,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You feel a strange surge of energy!");
                 break;
             case 4:
-                // mummies cannot smell
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                     mpr("You smell smoke.");
                 break;
             case 5:
@@ -3390,20 +3386,18 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr("You are blasted with air!");
                 break;
             case 7:
-                // mummies cannot smell
                 if (!silenced(you.x_pos, you.y_pos))
                     mpr("You hear a whooshing sound.", MSGCH_SOUND);
-                else if (you.species != SP_MUMMY)
+                else if (player_can_smell())
                     mpr("You smell ozone.");
                 break;
             case 8:
                 canned_msg(MSG_NOTHING_HAPPENS);
                 break;
             case 9:
-                // mummies cannot smell
                 if (!silenced(you.x_pos, you.y_pos))
                     mpr("You hear a crackling sound.", MSGCH_SOUND);
-                else if (you.species != SP_MUMMY)
+                else if (player_can_smell())
                     mpr("You smell something musty.");
                 break;
             }

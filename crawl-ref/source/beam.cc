@@ -70,7 +70,7 @@ static FixedArray < bool, 19, 19 > explode_map;
 // helper functions (some of these, esp. affect(), should probably
 // be public):
 static void sticky_flame_monster( int mn, bool source, int hurt_final );
-static bool affectsWalls(struct bolt &beam);
+static bool affectsWall(const bolt &beam, int wall_feature);
 static bool isBouncy(struct bolt &beam, unsigned char gridtype);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(struct bolt &beam, int x, int y);
@@ -1276,7 +1276,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
         if (grid_is_solid(grd[tx][ty]))
         {
             // first, check to see if this beam affects walls.
-            if (affectsWalls(pbolt))
+            if (affectsWall(pbolt, grd[tx][ty]))
             {
                 // should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
@@ -2436,7 +2436,7 @@ int affect(struct bolt &beam, int x, int y)
         if (beam.is_tracer)          // tracers always stop on walls.
             return (BEAM_STOP);
 
-        if (affectsWalls(beam))
+        if (affectsWall(beam, grd[x][y]))
         {
             rangeUsed += affect_wall(beam, x, y);
         }
@@ -2487,7 +2487,7 @@ int affect(struct bolt &beam, int x, int y)
     return (rangeUsed);
 }
 
-static bool affectsWalls(struct bolt &beam)
+static bool affectsWall(const bolt &beam, int wall)
 {
     // don't know of any explosion that affects walls.  But change it here
     // if there is.
@@ -2501,6 +2501,11 @@ static bool affectsWalls(struct bolt &beam)
     // Isn't this much nicer than the hack to remove ice bolts, disrupt, 
     // and needles (just because they were also coloured "white") -- bwr
     if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
+        return (true);
+
+    if (beam.flavour == BEAM_FIRE
+            && wall == DNGN_WAX_WALL
+            && beam.name == "bolt of fire")
         return (true);
 
     // eye of devastation?
@@ -2546,6 +2551,26 @@ static int affect_wall(struct bolt &beam, int x, int y)
         return (rangeUsed);
     }
     // END DIGGING EFFECT
+    
+    // FIRE effect
+    if (beam.flavour == BEAM_FIRE && beam.name == "bolt of fire")
+    {
+        const int wgrd = grd[x][y];
+        if (wgrd != DNGN_WAX_WALL)
+            return (0);
+
+        grd[x][y] = DNGN_FLOOR;
+        if (see_grid(x, y))
+            mprf("The wax bubbles and burns!");
+        else if (player_can_smell())
+            mprf("You smell burning wax.");
+
+        place_cloud( 
+                YOU_KILL(beam.thrower)? CLOUD_FIRE : CLOUD_FIRE_MON, 
+                x, y, random2(10) + 15 );
+
+        return (BEAM_STOP);
+    }
 
     // NUKE / DISRUPT
     if (beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
