@@ -1609,6 +1609,9 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
             }
         }
     }
+
+    // [dshaligram] The player's current position is always visible.
+    sh[sh_xo][sh_yo] = gr[x_p][y_p];
 }
 
 
@@ -3429,6 +3432,19 @@ void viewwindow(bool draw_it, bool do_updates)
                 }
                 else if (gx == you.x_pos && gy == you.y_pos)
                 {
+                    const int ex = gx - you.x_pos + 9;
+                    const int ey = gy - you.y_pos + 9;
+
+                    int             object = env.show[ex][ey];
+                    unsigned short  colour = env.show_col[ex][ey];
+                    unsigned short  ch;
+                    get_symbol( object, &ch, &colour );
+
+                    set_envmap_char( gx, gy, ch );
+                    set_terrain_seen( gx, gy );
+                    set_envmap_detected_mons(gx, gy, false);
+                    set_envmap_detected_item(gx, gy, false);
+
                     // player overrides everything in cell
                     buffy[bufcount] = you.symbol;
                     buffy[bufcount + 1] = you.colour;
@@ -3440,11 +3456,6 @@ void viewwindow(bool draw_it, bool do_updates)
                         else 
                             buffy[bufcount + 1] = CYAN;
                     }
-
-                    set_envmap_char( gx, gy, buffy[bufcount] );
-                    set_terrain_seen( gx, gy );
-                    set_envmap_detected_mons(gx, gy, false);
-                    set_envmap_detected_item(gx, gy, false);
                 }
                 else
                 {
