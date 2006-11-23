@@ -123,7 +123,7 @@ clean:
 		$(subst /,\,$(DELETE) $(UTIL)*.tab.c)
 		$(subst /,\,$(DELETE) *.ixx)
 
-distclean:
+distclean: clean
 		$(DELETE) $(OPATH)\*.o 
 		$(DELETE) *.o
 		$(DELETE) bones.*

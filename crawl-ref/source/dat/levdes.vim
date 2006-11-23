@@ -2,6 +2,7 @@
 "
 " Basic Vim syntax highlighting for Dungeon Crawl Stone Soup level design
 " (.des) files.
+"
 
 if version < 600
   syntax clear
@@ -54,22 +55,24 @@ hi link desComment    Comment
 hi link desMap        String
 hi link desOrientation Type
 
-hi desMapWall guifg=darkgrey term=bold gui=bold
-hi desMapCrystalWall guifg=#009040 term=bold gui=bold
-hi desMapStoneWall guifg=black gui=bold
-hi desMapMetalWall guifg=#004090 term=bold gui=bold
-hi desMapWaxWall guifg=#a0a000 gui=bold
-hi desMapFloor guifg=#008000
-hi desMapMonst guifg=red
-hi desMapLava guifg=red gui=bold
-hi desMapTrap guifg=red gui=bold
-hi desMapWater guifg=lightblue
-hi desMapGold guifg=#c09000
-hi desMapDoor guifg=brown gui=bold
-hi desMapEntry guifg=black guibg=white gui=bold
+hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
+hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
+hi desMapStoneWall guifg=black gui=bold ctermfg=darkgray
+hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=blue
+hi desMapWaxWall guifg=#a0a000 gui=bold ctermfg=yellow
+hi desMapFloor guifg=#008000 ctermfg=lightgray
+hi desMapMonst guifg=red ctermfg=darkred
+hi desMapLava guifg=red gui=bold ctermfg=red
+hi desMapTrap guifg=red gui=bold ctermfg=red
+hi desMapWater guifg=lightblue ctermfg=darkblue
+hi desMapGold guifg=#c09000 ctermfg=yellow
+hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
+hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white
 
-hi desMapValuable guifg=darkgreen gui=bold
-hi desMapRune     guifg=orange gui=bold
-hi desMapOrb      guibg=gold guifg=black
+hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
+hi desMapRune     guifg=orange gui=bold ctermfg=white
+hi desMapOrb      guibg=gold guifg=black ctermfg=white
 
 syn sync minlines=45
+
+let b:current_syntax="levdes"

@@ -639,6 +639,7 @@ MONS: hell knight, great orb of eyes
 
 NAME: farm_and_country
 ORIENT: encompass
+DEPTH: 16-27
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1411,6 +1412,7 @@ ENDMAP
 # Anthill
 
 NAME: minivault_29
+MONS: queen ant, soldier ant, giant ant, ant larva
 
 MAP
 .3......3...
@@ -1427,29 +1429,41 @@ MAP
 .3.......33.
 ENDMAP
 
-MONS: queen ant, soldier ant, giant ant, ant larva
-
 ###################################
 # Solitary fountain
-
-NAME: minivault_30
+NAME: solitary_fountain
+SYMBOL: TUV
 
 MAP
-............
-............
-............
-............
-............
-.....?......
-............
-............
-............
-............
-............
-............
+.....
+.....
+..?..
+.....
+.....
 ENDMAP
 
+###################################
+# Fountainhead
+
+NAME: fountainhead
 SYMBOL: TUV
+
+MAP
+..............
+..xxxw..wxxx..
+.x...xwwx...x.
+.x.?.xwwx.?.x.
+.x...xwwx...x.
+..xxxwwwwxxx..
+....wwwwww....
+....wwwwww....
+..xxxwwwwxxx..
+.x...xwwx...x.
+.x.?.xwwx.?.x.
+.x...xwwx...x.
+..xxxw..wxxx..
+..............
+ENDMAP
 
 ###################################
 # jmf: Multi-god temple thing
