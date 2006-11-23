@@ -20,7 +20,7 @@ The contents of this text are:
 4-a	Dropping and Picking up.
 		autopickup, default_autopickup, safe_autopickup, safe_zero_exp,
 		pickup_thrown, pickup_dropped, assign_item_slot, ban_pickup, 
-		drop_mode, drop_filter;
+		drop_mode, pickup_mode, drop_filter;
 		lua: ch_autopickup (advanced autopickup exceptions)
 4-b	Targeting. 
 		target_zero_exp, target_wrap, target_oos, target_los_first,
@@ -278,6 +278,16 @@ drop_mode = (multi | single)
 	number of turns.
 	The order in which items get dropped is always from top to bottom in 
 	the inventory listing.
+
+pickup_mode = (multi | single | auto:X)
+        Single is the classical behaviour (and default): when picking up
+        items, you are prompted for them one by one. Multi makes a menu
+        appear, where you can choose which items to pick up. Note that
+        no matter how many items you choose, picking up will always take
+        one turn.
+        If pickup_mode is auto:X, where X is some number (for example,
+        auto:5), then pickup will give a menu if there are at least X
+        items on your square, and will prompt one by one otherwise.
 
 drop_filter = <regex>
 	When selecting items using the global (de)select keys (',' or '-') in 

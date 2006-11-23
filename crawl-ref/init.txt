@@ -77,6 +77,7 @@ ban_pickup = scrolls? of paper,immolation,curse armor,curse weapon
 ban_pickup = forgetfulness,uselessness,noise,torment
 #
 drop_mode = multi
+pickup_mode = auto:5
 # drop_filter = skeleton, rotting, corpse
 
 ##### 4-b	Targetting ############################

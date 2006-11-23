@@ -612,6 +612,7 @@ void game_options::reset_options()
     dump_item_origin_price = -1;
 
     drop_mode              = DM_SINGLE;
+    pickup_mode            = -1;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -1918,6 +1919,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             drop_mode = DM_MULTI;
         else
             drop_mode = DM_SINGLE;
+    }
+    else if (key == "pickup_mode")
+    {
+        if (field.find("multi") != std::string::npos)
+            pickup_mode = 0;
+        else if (field.find("single") != std::string::npos)
+            pickup_mode = -1;
+        else
+            pickup_mode = read_bool_or_number(field, pickup_mode, "auto:");
     }
     // Catch-all else, copies option into map
     else

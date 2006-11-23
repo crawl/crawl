@@ -697,13 +697,15 @@ static bool invisible_to_player( const item_def& item ) {
     return strstr(item.inscription.c_str(), "=k") != 0;
 }
 
-static bool has_nonsquelched_items( int obj ) {
-    while ( obj != NON_ITEM ) {
+static int count_nonsquelched_items( int obj ) {
+    int result = 0;
+    while ( obj != NON_ITEM )
+    {
         if ( !invisible_to_player(mitm[obj]) )
-            return true;
+            ++result;
         obj = mitm[obj].link;
     }
-    return false;
+    return result;
 }
 
 /* Fill items with the items on a square.
@@ -716,7 +718,7 @@ static void item_list_on_square( std::vector<const item_def*>& items,
                                  int obj, bool force_squelch ) {
 
     const bool have_nonsquelched = (force_squelch ||
-                                    has_nonsquelched_items(obj));
+                                    count_nonsquelched_items(obj));
 
     /* loop through the items */
     while ( obj != NON_ITEM ) {
@@ -1204,6 +1206,7 @@ void pickup()
     }
 
     int o = igrd[you.x_pos][you.y_pos];
+    const int num_nonsquelched = count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
     {
@@ -1214,18 +1217,22 @@ void pickup()
 	// deliberately allowing the player to pick up
 	// a killed item here
         pickup_single_item(o, mitm[o].quantity);
-    }                           // end of if items_here
+    }
+    else if (Options.pickup_mode != -1 &&
+             num_nonsquelched >= Options.pickup_mode)
+    {
+        pickup_menu(o);
+    }
     else
     {
         int next;
         mpr("There are several objects here.");
-        const bool hide_squelched = has_nonsquelched_items(o);
         while ( o != NON_ITEM )
         {
             // must save this because pickup can destroy the item
             next = mitm[o].link;
 
-	    if ( hide_squelched && invisible_to_player(mitm[o]) ) {
+	    if ( num_nonsquelched && invisible_to_player(mitm[o]) ) {
                 o = next;
 		continue;
             }
