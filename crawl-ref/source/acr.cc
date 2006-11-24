@@ -2728,6 +2728,7 @@ static bool initialise(void)
             igrd[i][j] = NON_ITEM;
             mgrd[i][j] = NON_MONSTER;
             env.map[i][j] = 0;
+            env.map_col[i][j].clear();
         }
     }
 

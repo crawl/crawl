@@ -773,7 +773,10 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         for (j = 0; j < GYM; j++)
         {
             if (just_created_level)
+            {
                 env.map[i][j] = 0;
+                env.map_col[i][j].clear();
+            }
 
             if (you.char_direction == DIR_ASCENDING
                 && you.level_type != LEVEL_PANDEMONIUM)
@@ -1154,8 +1157,9 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // 0.8 widened env.map to 2 bytes
     // 0.9 inscriptions (hp)
     // 0.10 Monster colour and spells separated from mons->number.
+    // 0.11 env colours moved into env.mapcol
 
-    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 10, TAGTYPE_LEVEL );
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 11, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 

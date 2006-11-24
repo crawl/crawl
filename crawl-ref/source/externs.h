@@ -599,6 +599,15 @@ struct trap_struct
     unsigned char       type;
 };
 
+struct map_colour
+{
+    short colour;
+    short flags;
+
+    operator short () const { return colour; }
+    void clear()            { colour = flags = 0; }
+};
+
 struct crawl_environment
 {
     unsigned char rock_colour;
@@ -612,7 +621,8 @@ struct crawl_environment
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned char, GXM, GYM >    cgrid; // cloud grid
 
-    FixedArray< unsigned short, GXM, GYM >    map;   // discovered terrain
+    FixedArray< unsigned short, GXM, GYM >    map;    // discovered terrain
+    FixedArray< map_colour, GXM, GYM >        map_col; // map colours
 
     FixedArray< unsigned int, 19, 19>        show;      // view window char 
     FixedArray< unsigned short, 19, 19>      show_col;  // view window colour

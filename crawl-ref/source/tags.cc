@@ -1436,6 +1436,8 @@ static void tag_construct_level(struct tagHeader &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallShort(th, env.map[count_x][count_y]);
+            marshallShort(th, env.map_col[count_x][count_y].colour);
+            marshallShort(th, env.map_col[count_x][count_y].flags);
             marshallByte(th, env.cgrid[count_x][count_y]);
         }
     }
@@ -1597,6 +1599,14 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
             
             if ((env.map[i][j] & 0xFF) == 201)       // what is this??
                 env.map[i][j] = (env.map[i][j] & 0xFF00U) | 239;
+
+            if (minorVersion >= 11)
+            {
+                env.map_col[i][j].colour = unmarshallShort(th);
+                env.map_col[i][j].flags  = unmarshallShort(th);
+            }
+            else
+                env.map_col[i][j].clear();
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = unmarshallByte(th);

@@ -59,7 +59,7 @@ time_t parse_date_string( char[20] );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void tag_init(long largest_tag = 50000);
+void tag_init(long largest_tag = 100000);
 
 
 // last updated 22jan2001 {gdl}

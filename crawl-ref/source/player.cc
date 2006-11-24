@@ -2135,6 +2135,7 @@ void forget_map(unsigned char chance_forgotten)
             if (random2(100) < chance_forgotten)
             {
                 env.map[xcount][ycount] = 0;
+                env.map_col[xcount][ycount].clear();
             }
         }
     }

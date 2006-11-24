@@ -71,6 +71,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
         for (j = 0; j < GYM; j++)
         {
             env.map[i][j] = 0;
+            env.map_col[i][j].clear();
         }
     }
 

@@ -64,6 +64,10 @@
 
 #define MAP_CHARACTER_MASK      0x00ff
 
+// Flags that define what the player remembers on this square.
+#define MC_ITEM             0x01
+#define MC_MONS             0x02
+
 struct feature_def
 {
     unsigned short      symbol;          // symbol used for seen terrain
@@ -109,6 +113,7 @@ static void set_show_backup( int ex, int ey );
 
 // Applies EC_ colour substitutions and brands.
 static unsigned fix_colour(unsigned raw_colour);
+static int get_viewobj_flags(int viewobj);
 
 //---------------------------------------------------------------
 //
@@ -181,10 +186,59 @@ bool is_envmap_detected_mons(int x, int y)
     return (env.map[x - 1][y - 1] & MAP_DETECTED_MONSTER);
 }
 
+void set_envmap_glyph(int x, int y, int chr, int col, int object)
+{
+    set_envmap_char(x, y, chr);
+    set_envmap_col(x, y, col, get_viewobj_flags(object));
+}
+
 void set_envmap_char( int x, int y, unsigned char chr )
 {
     env.map[x - 1][y - 1] &= (~MAP_CHARACTER_MASK);       // clear old first
     env.map[x - 1][y - 1] |= chr;
+}
+
+void set_envmap_col( int x, int y, int colour )
+{
+    env.map_col[x - 1][y - 1].colour = colour;
+    env.map_col[x - 1][y - 1].flags  = 0;
+}
+
+void set_envmap_col( int x, int y, int colour, int flags )
+{
+    env.map_col[x - 1][y - 1].colour = colour;
+    env.map_col[x - 1][y - 1].flags  = flags;
+}
+
+inline void set_envmap_item(int x, int y, bool isitem)
+{
+    if (isitem)
+        env.map_col[x - 1][y - 1].flags |= MC_ITEM;
+    else
+        env.map_col[x - 1][y - 1].flags &= ~MC_ITEM;
+}
+
+inline void set_envmap_mons(int x, int y, bool ismons)
+{
+    if (ismons)
+        env.map_col[x - 1][y - 1].flags |= MC_MONS;
+    else
+        env.map_col[x - 1][y - 1].flags &= ~MC_MONS;
+}
+
+bool is_envmap_item(int x, int y)
+{
+    return (env.map_col[x - 1][y - 1].flags & MC_ITEM);
+}
+
+bool is_envmap_mons(int x, int y)
+{
+    return (env.map_col[x - 1][y - 1].flags & MC_MONS);
+}
+
+int get_envmap_col(int x, int y)
+{
+    return (env.map_col[x - 1][y - 1].colour);
 }
 
 bool is_terrain_known( int x, int y )
@@ -223,6 +277,7 @@ void set_terrain_seen( int x, int y )
 void clear_envmap_grid( int x, int y )
 {
     env.map[x - 1][y - 1] = 0;
+    env.map_col[x - 1][y - 1].clear();
 }
 
 void clear_envmap( void )
@@ -232,6 +287,7 @@ void clear_envmap( void )
         for (int j = 0; j < GYM; j++)
         {
             env.map[i][j] = 0;
+            env.map_col[i][j].clear();
         }
     }
 }
@@ -282,6 +338,21 @@ static unsigned fix_colour(unsigned raw_colour)
 #endif
 
     return (raw_colour);
+}
+
+static int get_viewobj_flags(int object)
+{
+    // Check for monster glyphs.
+    if (object >= DNGN_START_OF_MONSTERS)
+        return (MC_MONS);
+
+    // Check for item glyphs.
+    if (object >= DNGN_ITEM_ORB && object < DNGN_CLOUD)
+        return (MC_ITEM);
+
+    // We don't care to look further; we could check for
+    // clouds here as well.
+    return (0);
 }
 
 static void get_symbol( unsigned int object, unsigned short *ch, 
@@ -423,7 +494,6 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
                                  bool travel_colour )
 {
     // XXX: Yes, the map array and the grid array are off by one. -- bwr
-    const int map_value = (unsigned char) env.map[x][y];
     const unsigned short map_flags = env.map[x][y];
     const int grid_value = grd[x + 1][y + 1];
 
@@ -445,30 +515,8 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     if (tc == LIGHTGREEN || tc == LIGHTMAGENTA)
         return fix_colour(tc);
 
-    // XXX: Yeah, this is ugly, but until we have stored layers in the
-    // map we can't tell if we've seen a square, detected it, or just
-    // detected the item or monster on top... giving colour here will
-    // result in detect creature/item detecting features like stairs. -- bwr
-    if (map_value != get_sightmap_char(grid_value))
-    {
-        // If there's an item on this square, change colour to indicate
-        // that, iff the item's glyph matches map_value. XXX: Potentially
-        // abusable? -- ds 
-        int item = igrd[x + 1][y + 1];
-        if (item_colour && item != NON_ITEM 
-                && map_value == 
-                        get_sightmap_char(get_item_dngn_code(mitm[item])))
-        {
-            unsigned ic = mitm[item].colour;
-
-            if (mitm[item].link != NON_ITEM )
-                ic |= COLFLAG_ITEM_HEAP;
-
-            // If the item colour is the background colour, tweak it to WHITE
-            // instead to catch the player's eye.
-            return fix_colour( ic == tc? WHITE : ic );
-        }
-    }
+    if (item_colour && is_envmap_item(x + 1, y + 1))
+        return get_envmap_col(x + 1, y + 1);
 
     int feature_colour = DARKGREY;
     feature_colour = 
@@ -494,14 +542,11 @@ void clear_map()
             if (is_terrain_changed(x, y))
                 continue;
 
-            unsigned short envc = env.map[x][y] & MAP_CHARACTER_MASK;
+            unsigned short envc = get_envmap_char(x, y);
             if (!envc)
                 continue;
 
-            const int item = igrd[x + 1][y + 1];
-            if (item != NON_ITEM 
-                    && envc == 
-                        get_sightmap_char(get_item_dngn_code(mitm[item])))
+            if (is_envmap_item(x, y))
                 continue;
 
             set_envmap_char(x, y,
@@ -3444,7 +3489,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned short  ch;
                     get_symbol( object, &ch, &colour );
 
-                    set_envmap_char( gx, gy, ch );
+                    set_envmap_glyph( gx, gy, ch, colour, object );
                     set_terrain_seen( gx, gy );
                     set_envmap_detected_mons(gx, gy, false);
                     set_envmap_detected_item(gx, gy, false);
@@ -3490,7 +3535,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         if (buffy[bufcount] != 0)
                         {
                             // ... map that we've seen this
-                            set_envmap_char( gx, gy, buffy[bufcount] );
+                            set_envmap_glyph( gx, gy, ch, colour, object );
                             set_terrain_seen( gx, gy );
                             set_envmap_detected_mons(gx, gy, false);
                             set_envmap_detected_item(gx, gy, false);
@@ -3512,7 +3557,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             && is_terrain_seen( gx, gy ))
                         {
                             get_symbol( Show_Backup[ex][ey], &ch, &colour );
-                            set_envmap_char( gx, gy, ch );
+                            set_envmap_glyph( gx, gy, ch, colour, 
+                                              Show_Backup[ex][ey] );
                         }
 
                         // Now we get to filling in both the unseen 
