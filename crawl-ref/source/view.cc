@@ -1875,8 +1875,10 @@ void find_features(const std::vector<coord_def>& features,
 static int find_feature( const std::vector<coord_def>& features,
                          unsigned char feature, int curs_x, int curs_y, 
                          int start_x, int start_y, 
-                         int ignore_count, char *move_x, char *move_y) {
-    int firstx = -1, firsty = -1;
+                         int ignore_count, 
+                         char *move_x, char *move_y,
+                         bool forward) {
+    int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
 
     for (unsigned feat = 0; feat < features.size(); ++feat) {
@@ -1884,15 +1886,16 @@ static int find_feature( const std::vector<coord_def>& features,
 
         if (is_feature(feature, coord.x, coord.y)) {
             ++matchcount;
-            if (!ignore_count--) {
+            if (forward? !ignore_count-- : --ignore_count == 1) {
                 // We want to cursor to (x,y)
                 *move_x = coord.x - (start_x + curs_x);
                 *move_y = coord.y - (start_y + curs_y);
                 return matchcount;
             }
-            else if (firstx == -1) {
+            else if (!forward || firstx == -1) {
                 firstx = coord.x;
                 firsty = coord.y;
+                firstmatch = matchcount;
             }
         }
     }
@@ -1901,7 +1904,7 @@ static int find_feature( const std::vector<coord_def>& features,
     if (firstx != -1) {
         *move_x = firstx - (start_x + curs_x);
         *move_y = firsty - (start_y + curs_y);
-        return 1;
+        return matchcount;
     }
     return 0;
 }
@@ -1929,104 +1932,12 @@ static int cset_adjust(int raw)
 }
 #endif
 
-// show_map() now centers the known map along x or y.  This prevents
-// the player from getting "artificial" location clues by using the
-// map to see how close to the end they are.  They'll need to explore
-// to get that.  This function is still a mess, though. -- bwr
-void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
+static void draw_level_map(
+        int start_x, int start_y, int screen_y, bool travel_mode)
 {
-    int i, j;
-
     int bufcount2 = 0;
-
-    char move_x = 0;
-    char move_y = 0;
-    char getty = 0;
-
-#ifdef DOS_TERM
-    char buffer[4800];
-#endif
-
-    // Vector to track all features we can travel to, in order of distance.
-    std::vector<coord_def> features;
-    if (travel_mode)
-    {
-        travel_cache.update();
-
-        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
-        // Sort features into the order the player is likely to prefer.
-        arrange_features(features);
-    }
-
-    // buffer2[GYM * GXM * 2] segfaults my box {dlb}
     screen_buffer_t buffer2[GYM * GXM * 2];        
-
-    char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
-    bool found_y = false;
-
     const int num_lines = get_number_of_lines();
-    const int half_screen = num_lines / 2 - 1;
-
-    for (j = 0; j < GYM; j++)
-    {
-        for (i = 0; i < GXM; i++)
-        {
-            if (env.map[i][j])
-            {
-                if (!found_y)
-                {
-                    found_y = true;
-                    min_y = j;
-                }
-
-                max_y = j;
-
-                if (i < min_x)
-                    min_x = i;
-
-                if (i > max_x)
-                    max_x = i;
-            }
-        }
-    }
-
-    const int map_lines = max_y - min_y + 1;
-
-    const int start_x = min_x + (max_x - min_x + 1) / 2 - 40; // no x scrolling
-    const int block_step = Options.level_map_cursor_step;
-    int start_y;                                              // y does scroll
-
-    int screen_y = you.y_pos;
-
-    // if close to top of known map, put min_y on top
-    // else if close to bottom of known map, put max_y on bottom.
-    //
-    // The num_lines comparisons are done to keep things neat, by
-    // keeping things at the top of the screen.  By shifting an
-    // additional one in the num_lines > map_lines case, we can 
-    // keep the top line clear... which makes things look a whole
-    // lot better for small maps.
-    if (num_lines > map_lines)
-        screen_y = min_y + half_screen - 1;
-    else if (num_lines == map_lines || screen_y - half_screen < min_y)
-        screen_y = min_y + half_screen;
-    else if (screen_y + half_screen > max_y)
-        screen_y = max_y - half_screen;
-
-    int curs_x = you.x_pos - start_x;
-    int curs_y = you.y_pos - screen_y + half_screen;
-    int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
-
-#ifdef DOS_TERM
-    gettext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
-
-    clrscr();
-    textcolor(DARKGREY);
-
-  put_screen:
-    bufcount2 = 0;
 
     _setcursortype(_NOCURSOR);
 
@@ -2034,11 +1945,9 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     gotoxy(1, 1);
 #endif
 
-    start_y = screen_y - half_screen;
-
-    for (j = 0; j < num_lines; j++)
+    for (int j = 0; j < num_lines; j++)
     {
-        for (i = 0; i < 80; i++)
+        for (int i = 0; i < 80; i++)
         {
             screen_buffer_t colour = DARKGREY;
             if (start_y + j >= 65 || start_y + j <= 3 
@@ -2055,7 +1964,6 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 #ifdef DOS_TERM
                 continue;
 #endif
-
             }
 
             colour = colour_code_map(start_x + i, start_y + j,
@@ -2121,319 +2029,408 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 #endif
 
     _setcursortype(_NORMALCURSOR);
-    gotoxy(curs_x, curs_y);
+}
 
-  gettything:
-    getty = getchm(KC_LEVELMAP);
+// show_map() now centers the known map along x or y.  This prevents
+// the player from getting "artificial" location clues by using the
+// map to see how close to the end they are.  They'll need to explore
+// to get that.  This function is still a mess, though. -- bwr
+void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
+{
+    int i, j;
 
-    if (travel_mode && getty != 0 && getty != '+' && getty != '-'
-        && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
-        && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-        && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
-        && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
-        // Keystrokes to initiate travel
-        && getty != ',' && getty != '.' && getty != '\r' && getty != ';'
+    char move_x = 0;
+    char move_y = 0;
+    char getty = 0;
 
-        // Keystrokes for jumping to features
-        && getty != '<' && getty != '>' && getty != '@' && getty != '\t'
-        && getty != '^' && getty != '_'
-        && (getty < '0' || getty > '9')
-        && getty != CONTROL('X')
-        && getty != CONTROL('E')
-        && getty != CONTROL('F')
-        && getty != CONTROL('W')
-        && getty != CONTROL('C')
-        && getty != '?'
-        && getty != 'X' && getty != 'F' && getty != 'I' && getty != 'W')
-    {
-        goto putty;
-    }
-
-    if (!travel_mode && getty != 0 && getty != '+' && getty != '-'
-        && getty != 'h' && getty != 'j' && getty != 'k' && getty != 'l'
-        && getty != 'y' && getty != 'u' && getty != 'b' && getty != 'n'
-        && getty != 'H' && getty != 'J' && getty != 'K' && getty != 'L'
-        && getty != 'Y' && getty != 'U' && getty != 'B' && getty != 'N'
-        && getty != '.' && getty != 'S' && (getty < '0' || getty > '9')
-        // Keystrokes for jumping to features
-        && getty != '<' && getty != '>' && getty != '@' && getty != '\t'
-        && getty != '^' && getty != '_')
-    {
-        goto gettything;
-    }
-
-    if (getty == 0)
-    {
-        getty = getchm(KC_LEVELMAP);
-        // [dshaligram] DOS madness.
-        getty = dos_direction_unmunge(getty);
-    }
-
-#if defined(WIN32CONSOLE) || defined(DOS)
-    // Translate shifted numpad to shifted vi keys. Yes,
-    // this is horribly hacky.
-    {
-        static int win_keypad[] = { 'B', 'J', 'N', 
-                                    'H', '5', 'L',
-                                    'Y', 'K', 'U' };
-        if (getty >= '1' && getty <= '9')
-            getty = win_keypad[ getty - '1' ];
-    }
+#ifdef DOS_TERM
+    char buffer[4800];
 #endif
 
-    switch (getty)
+    // Vector to track all features we can travel to, in order of distance.
+    std::vector<coord_def> features;
+    if (travel_mode)
     {
-    case '?':
-        show_levelmap_help();
-        break;
+        travel_cache.update();
 
-    case CONTROL('C'):
-        clear_map();
-        break;
-
-    case CONTROL('F'):
-    case CONTROL('W'):
-        travel_cache.add_waypoint(start_x + curs_x, start_y + curs_y);
-        // We need to do this all over again so that the user can jump
-        // to the waypoint he just created.
-        features.clear();
         find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
         // Sort features into the order the player is likely to prefer.
         arrange_features(features);
-        move_x = move_y = 0;
-        break;
-    case CONTROL('E'):
-    case CONTROL('X'):
-        {
-            int x = start_x + curs_x, y = start_y + curs_y;
-            if (getty == CONTROL('X'))
-                toggle_exclude(x, y);
-            else
-                clear_excludes();
+    }
 
-            // We now need to redo travel colours
+    char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
+    bool found_y = false;
+
+    const int num_lines = get_number_of_lines();
+    const int half_screen = num_lines / 2 - 1;
+
+    for (j = 0; j < GYM; j++)
+    {
+        for (i = 0; i < GXM; i++)
+        {
+            if (env.map[i][j])
+            {
+                if (!found_y)
+                {
+                    found_y = true;
+                    min_y = j;
+                }
+
+                max_y = j;
+
+                if (i < min_x)
+                    min_x = i;
+
+                if (i > max_x)
+                    max_x = i;
+            }
+        }
+    }
+
+    const int map_lines = max_y - min_y + 1;
+
+    const int start_x = min_x + (max_x - min_x + 1) / 2 - 40; // no x scrolling
+    const int block_step = Options.level_map_cursor_step;
+    int start_y = 0;                                          // y does scroll
+
+    int screen_y = you.y_pos;
+
+    // if close to top of known map, put min_y on top
+    // else if close to bottom of known map, put max_y on bottom.
+    //
+    // The num_lines comparisons are done to keep things neat, by
+    // keeping things at the top of the screen.  By shifting an
+    // additional one in the num_lines > map_lines case, we can 
+    // keep the top line clear... which makes things look a whole
+    // lot better for small maps.
+    if (num_lines > map_lines)
+        screen_y = min_y + half_screen - 1;
+    else if (num_lines == map_lines || screen_y - half_screen < min_y)
+        screen_y = min_y + half_screen;
+    else if (screen_y + half_screen > max_y)
+        screen_y = max_y - half_screen;
+
+    int curs_x = you.x_pos - start_x;
+    int curs_y = you.y_pos - screen_y + half_screen;
+    int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
+
+    bool map_alive  = true;
+    bool redraw_map = true;
+
+#ifdef DOS_TERM
+    gettext(1, 1, 80, 25, buffer);
+    window(1, 1, 80, 25);
+#endif
+
+    clrscr();
+    textcolor(DARKGREY);
+
+    while (map_alive)
+    {
+        start_y = screen_y - half_screen;
+
+        if (redraw_map)
+            draw_level_map(start_x, start_y, screen_y, travel_mode);
+
+        redraw_map = true;
+        gotoxy(curs_x, curs_y);
+
+        getty = getchm(KC_LEVELMAP);
+        if (getty == 0)
+        {
+            getty = getchm(KC_LEVELMAP);
+            // [dshaligram] DOS madness.
+            getty = dos_direction_unmunge(getty);
+        }
+
+#if defined(WIN32CONSOLE) || defined(DOS)
+        // Translate shifted numpad to shifted vi keys. Yes,
+        // this is horribly hacky.
+        {
+            static int win_keypad[] = { 'B', 'J', 'N', 
+                                        'H', '5', 'L',
+                                        'Y', 'K', 'U' };
+            if (getty >= '1' && getty <= '9')
+                getty = win_keypad[ getty - '1' ];
+        }
+#endif
+
+        switch (getty)
+        {
+        case '?':
+            show_levelmap_help();
+            break;
+
+        case CONTROL('C'):
+            clear_map();
+            break;
+
+        case CONTROL('F'):
+        case CONTROL('W'):
+            travel_cache.add_waypoint(start_x + curs_x, start_y + curs_y);
+            // We need to do this all over again so that the user can jump
+            // to the waypoint he just created.
             features.clear();
             find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
             // Sort features into the order the player is likely to prefer.
             arrange_features(features);
-
             move_x = move_y = 0;
-        }
-        break;
-        
-    case 'b':
-    case '1':
-        move_x = -1;
-        move_y = 1;
-        break;
+            break;
+        case CONTROL('E'):
+        case CONTROL('X'):
+            {
+                int x = start_x + curs_x, y = start_y + curs_y;
+                if (getty == CONTROL('X'))
+                    toggle_exclude(x, y);
+                else
+                    clear_excludes();
 
-    case 'j':
-    case '2':
-        move_y = 1;
-        move_x = 0;
-        break;
+                // We now need to redo travel colours
+                features.clear();
+                find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+                // Sort features into the order the player is likely to prefer.
+                arrange_features(features);
 
-    case 'u':
-    case '9':
-        move_x = 1;
-        move_y = -1;
-        break;
-
-    case 'k':
-    case '8':
-        move_y = -1;
-        move_x = 0;
-        break;
-
-    case 'y':
-    case '7':
-        move_y = -1;
-        move_x = -1;
-        break;
-
-    case 'h':
-    case '4':
-        move_x = -1;
-        move_y = 0;
-        break;
-
-    case 'n':
-    case '3':
-        move_y = 1;
-        move_x = 1;
-        break;
-
-    case 'l':
-    case '6':
-        move_x = 1;
-        move_y = 0;
-        break;
-
-    case 'B':
-        move_x = -block_step;
-        move_y = block_step;
-        break;
-
-    case 'J':
-        move_y = block_step;
-        move_x = 0;
-        break;
-
-    case 'U':
-        move_x = block_step;
-        move_y = -block_step;
-        break;
-
-    case 'K':
-        move_y = -block_step;
-        move_x = 0;
-        break;
-
-    case 'Y':
-        move_y = -block_step;
-        move_x = -block_step;
-        break;
-
-    case 'H':
-        move_x = -block_step;
-        move_y = 0;
-        break;
-
-    case 'N':
-        move_y = block_step;
-        move_x = block_step;
-        break;
-
-    case 'L':
-        move_x = block_step;
-        move_y = 0;
-        break;
-
-    case '+':
-        move_y = 20;
-        move_x = 0;
-        break;
-    case '-':
-        move_y = -20;
-        move_x = 0;
-        break;
-    case '<':
-    case '>':
-    case '@':
-    case '\t':
-    case '^':
-    case '_':
-    case 'X':
-    case 'F':
-    case 'W':
-    case 'I':
-        move_x = 0;
-        move_y = 0;
-        if (anchor_x == -1) {
-            anchor_x = start_x + curs_x - 1;
-            anchor_y = start_y + curs_y - 1;
-        }
-        if (search_feat != getty) {
-            search_feat         = getty;
-            search_found        = 0;
-        }
-        if (travel_mode)
-            search_found = find_feature(features, getty, curs_x, curs_y, 
-                                        start_x, start_y,
-                                        search_found, &move_x, &move_y);
-        else
-            search_found = find_feature(getty, curs_x, curs_y,
-                                        start_x, start_y,
-                                        anchor_x, anchor_y,
-                                        search_found, &move_x, &move_y);
-        break;
-    case '.':
-    case '\r':
-    case 'S':
-    case ',':
-    case ';':
-    {
-        int x = start_x + curs_x, y = start_y + curs_y;
-        if (travel_mode && x == you.x_pos && y == you.y_pos)
-        {
-            if (you.travel_x > 0 && you.travel_y > 0) {
-                move_x = you.travel_x - x;
-                move_y = you.travel_y - y;
+                move_x = move_y = 0;
             }
             break;
-        }
-        else {
-            spec_place[0] = x;
-            spec_place[1] = y;
-            goto putty;
-        }
-    }
-    default:
-        move_x = 0;
-        move_y = 0;
-        break;
-    }
+            
+        case 'b':
+        case '1':
+            move_x = -1;
+            move_y = 1;
+            break;
 
-    if (curs_x + move_x < 1 || curs_x + move_x > 80)
-        move_x = 0;
+        case 'j':
+        case '2':
+            move_y = 1;
+            move_x = 0;
+            break;
 
-    curs_x += move_x;
+        case 'u':
+        case '9':
+            move_x = 1;
+            move_y = -1;
+            break;
 
-    if (num_lines < map_lines)
-    {
-        // Scrolling only happens when we don't have a large enough 
-        // display to show the known map.
-        if (getty == '-' || getty == '+')
+        case 'k':
+        case '8':
+            move_y = -1;
+            move_x = 0;
+            break;
+
+        case 'y':
+        case '7':
+            move_y = -1;
+            move_x = -1;
+            break;
+
+        case 'h':
+        case '4':
+            move_x = -1;
+            move_y = 0;
+            break;
+
+        case 'n':
+        case '3':
+            move_y = 1;
+            move_x = 1;
+            break;
+
+        case 'l':
+        case '6':
+            move_x = 1;
+            move_y = 0;
+            break;
+
+        case 'B':
+            move_x = -block_step;
+            move_y = block_step;
+            break;
+
+        case 'J':
+            move_y = block_step;
+            move_x = 0;
+            break;
+
+        case 'U':
+            move_x = block_step;
+            move_y = -block_step;
+            break;
+
+        case 'K':
+            move_y = -block_step;
+            move_x = 0;
+            break;
+
+        case 'Y':
+            move_y = -block_step;
+            move_x = -block_step;
+            break;
+
+        case 'H':
+            move_x = -block_step;
+            move_y = 0;
+            break;
+
+        case 'N':
+            move_y = block_step;
+            move_x = block_step;
+            break;
+
+        case 'L':
+            move_x = block_step;
+            move_y = 0;
+            break;
+
+        case '+':
+            move_y = 20;
+            move_x = 0;
+            break;
+        case '-':
+            move_y = -20;
+            move_x = 0;
+            break;
+        case '<':
+        case '>':
+        case '@':
+        case '\t':
+        case '^':
+        case '_':
+        case 'X':
+        case 'F':
+        case 'W':
+        case 'I':
+        case '*':
+        case '/':
+        case '\'':
         {
-            if (getty == '-')
-                screen_y -= 20;
+            bool forward = true;
 
-            if (screen_y <= min_y + half_screen)
-                screen_y = min_y + half_screen;
+            if (getty == '/' || getty == ';')
+                forward = false;
 
-            if (getty == '+')
-                screen_y += 20;
+            if (getty == '/' || getty == ';' || getty == ';' || getty == '\'')
+                getty = 'I';
 
-            if (screen_y >= max_y - half_screen)
-                screen_y = max_y - half_screen;
-
-            goto put_screen;
-        }
-
-        if (curs_y + move_y < 1)
-        {
-            // screen_y += (curs_y + move_y) - 1;
-            screen_y += move_y;
-
-            if (screen_y < min_y + half_screen) {
-                move_y   = screen_y - (min_y + half_screen);
-                screen_y = min_y + half_screen;
+            move_x = 0;
+            move_y = 0;
+            if (anchor_x == -1) {
+                anchor_x = start_x + curs_x - 1;
+                anchor_y = start_y + curs_y - 1;
             }
-            else
-                move_y = 0;
-        }
-
-        if (curs_y + move_y > num_lines - 1)
-        {
-            // screen_y += (curs_y + move_y) - num_lines + 1;
-            screen_y += move_y;
-
-            if (screen_y > max_y - half_screen) {
-                move_y   = screen_y - (max_y - half_screen);
-                screen_y = max_y - half_screen;
+            if (search_feat != getty) {
+                search_feat         = getty;
+                search_found        = 0;
             }
+            if (travel_mode)
+                search_found = find_feature(features, getty, curs_x, curs_y, 
+                                            start_x, start_y,
+                                            search_found, 
+                                            &move_x, &move_y,
+                                            forward);
             else
-                move_y = 0;
+                search_found = find_feature(getty, curs_x, curs_y,
+                                            start_x, start_y,
+                                            anchor_x, anchor_y,
+                                            search_found, &move_x, &move_y);
+            break;
         }
+        case '.':
+        case '\r':
+        case 'S':
+        case ',':
+        case ';':
+        {
+            int x = start_x + curs_x, y = start_y + curs_y;
+            if (travel_mode && x == you.x_pos && y == you.y_pos)
+            {
+                if (you.travel_x > 0 && you.travel_y > 0) {
+                    move_x = you.travel_x - x;
+                    move_y = you.travel_y - y;
+                }
+                break;
+            }
+            else {
+                spec_place[0] = x;
+                spec_place[1] = y;
+                map_alive = false;
+                break;
+            }
+        }
+        default:
+            move_x = 0;
+            move_y = 0;
+            if (travel_mode)
+            {
+                map_alive = false;
+                break;
+            }
+            redraw_map = false;
+            continue;
+        }
+
+        if (!map_alive)
+            break;
+
+        if (curs_x + move_x < 1 || curs_x + move_x > 80)
+            move_x = 0;
+
+        curs_x += move_x;
+
+        if (num_lines < map_lines)
+        {
+            // Scrolling only happens when we don't have a large enough 
+            // display to show the known map.
+            if (getty == '-' || getty == '+')
+            {
+                if (getty == '-')
+                    screen_y -= 20;
+
+                if (screen_y <= min_y + half_screen)
+                    screen_y = min_y + half_screen;
+
+                if (getty == '+')
+                    screen_y += 20;
+
+                if (screen_y >= max_y - half_screen)
+                    screen_y = max_y - half_screen;
+
+                continue;
+            }
+
+            if (curs_y + move_y < 1)
+            {
+                // screen_y += (curs_y + move_y) - 1;
+                screen_y += move_y;
+
+                if (screen_y < min_y + half_screen) {
+                    move_y   = screen_y - (min_y + half_screen);
+                    screen_y = min_y + half_screen;
+                }
+                else
+                    move_y = 0;
+            }
+
+            if (curs_y + move_y > num_lines - 1)
+            {
+                // screen_y += (curs_y + move_y) - num_lines + 1;
+                screen_y += move_y;
+
+                if (screen_y > max_y - half_screen) {
+                    move_y   = screen_y - (max_y - half_screen);
+                    screen_y = max_y - half_screen;
+                }
+                else
+                    move_y = 0;
+            }
+        }
+
+        if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
+            move_y = 0;
+
+        curs_y += move_y;
     }
-
-    if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-        move_y = 0;
-
-    curs_y += move_y;
-    goto put_screen;
-
-  putty:
 
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, buffer);
