@@ -71,6 +71,7 @@
 #include "abl-show.h"
 #include "abyss.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "clua.h"
 #include "command.h"
 #include "debug.h"
@@ -2072,6 +2073,8 @@ static void world_reacts() {
 
     if (you.num_turns != -1)
         you.num_turns++;
+
+    run_environment_effects();
 
     //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
 

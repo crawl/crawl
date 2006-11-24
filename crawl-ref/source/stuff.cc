@@ -1098,6 +1098,10 @@ int element_colour( int element, bool no_random )
             ret = LIGHTGREY;
         break;
 
+    case EC_MIST:
+        ret = tmp_rand < 100? CYAN : BLUE;
+        break;
+
     case EC_RANDOM:
         ret = 1 + random2(15);              // always random
         break;

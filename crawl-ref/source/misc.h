@@ -36,13 +36,6 @@ void search_around(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void manage_clouds(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void disarm_trap(struct dist &disa);
 
 
@@ -139,6 +132,7 @@ bool grid_is_wall(int grid);
 bool grid_is_opaque(int grid);
 bool grid_is_solid(int grid);
 bool grid_is_water(int grid);
+bool grid_is_watery( int grid );
 god_type grid_altar_god( unsigned char grid );
 bool grid_is_branch_stairs( unsigned char grid );
 int grid_secret_door_appearance( int gx, int gy );
@@ -149,6 +143,11 @@ const char *grid_item_destruction_message( unsigned char grid );
 void curare_hits_player(int agent, int degree);
 
 bool i_feel_safe();
+
+void setup_environment_effects();
+
+// Lava smokes, swamp water mists.
+void run_environment_effects();
 
 //////////////////////////////////////////////////////////////////////
 // Places and names

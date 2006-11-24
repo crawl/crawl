@@ -1118,6 +1118,8 @@ found_stair:
     // Save the created/updated level out to disk:
     save_level( you.your_level, (you.level_type != LEVEL_DUNGEON),
                 you.where_are_you );
+
+    setup_environment_effects();
 }                               // end load()
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)

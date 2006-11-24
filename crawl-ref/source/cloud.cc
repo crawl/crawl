@@ -16,7 +16,138 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "misc.h"
 #include "stuff.h"
+
+// Returns true if this cloud spreads out as it dissipates.
+static bool cloud_spreads(const cloud_struct &cloud)
+{
+    switch (cloud.type)
+    {
+    case CLOUD_STEAM:
+    case CLOUD_STEAM_MON:
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_GREY_SMOKE_MON:
+    case CLOUD_BLACK_SMOKE_MON:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+static void new_cloud( int cloud, int type, int x, int y, int decay )
+{
+    ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
+
+    env.cloud[ cloud ].type = type;
+    env.cloud[ cloud ].decay = decay;
+    env.cloud[ cloud ].x = x;
+    env.cloud[ cloud ].y = y;
+    env.cgrid[ x ][ y ] = cloud;
+    env.cloud_no++;
+}
+
+static void place_new_cloud(int cltype, int x, int y, int decay)
+{
+    if (env.cloud_no >= MAX_CLOUDS)
+        return;
+
+    // find slot for cloud
+    for (int ci = 0; ci < MAX_CLOUDS; ci++)
+    {
+        if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
+        {
+            new_cloud( ci, cltype, x, y, decay );
+            break;
+        }
+    }
+}
+
+static int spread_cloud(const cloud_struct &cloud)
+{
+    const int spreadch = cloud.decay > 30? 80 :
+                         cloud.decay > 20? 50 :
+                                           30;
+    int extra_decay = 0;
+
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if ((!xi && !yi) || random2(100) >= spreadch)
+                continue;
+
+            const int x = cloud.x + xi;
+            const int y = cloud.y + yi;
+
+            if (!in_bounds(x, y) 
+                    || env.cgrid[x][y] != EMPTY_CLOUD
+                    || grid_is_solid(grd[x][y]))
+                continue;
+
+            int newdecay = cloud.decay / 2 + 1;
+            if (newdecay >= cloud.decay)
+                newdecay = cloud.decay - 1;
+
+            place_new_cloud( cloud.type, x, y, newdecay );
+
+            extra_decay += 8;
+        }
+    }
+
+    return (extra_decay);
+}
+
+static void dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
+{
+    // apply calculated rate to the actual cloud:
+    cloud.decay -= dissipate;
+
+    if (cloud_spreads(cloud) && cloud.decay > 10 && one_chance_in(5))
+        cloud.decay -= spread_cloud(cloud);
+
+    // check for total dissipation and handle accordingly:
+    if (cloud.decay < 1)
+        delete_cloud( cc );
+}
+
+void manage_clouds(void)
+{
+    // amount which cloud dissipates - must be unsigned! {dlb}
+    unsigned int dissipate = 0;
+
+    for (unsigned char cc = 0; cc < MAX_CLOUDS; cc++)
+    {
+        if (env.cloud[cc].type == CLOUD_NONE)   // no cloud -> next iteration
+            continue;
+
+        dissipate = you.time_taken;
+
+        // water -> flaming clouds:
+        // lava -> freezing clouds:
+        if ((env.cloud[cc].type == CLOUD_FIRE
+                || env.cloud[cc].type == CLOUD_FIRE_MON)
+            && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_DEEP_WATER)
+        {
+            dissipate *= 4;
+        }
+        else if ((env.cloud[cc].type == CLOUD_COLD
+                    || env.cloud[cc].type == CLOUD_COLD_MON)
+                && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_LAVA)
+        {
+            dissipate *= 4;
+        }
+
+        // double the amount when slowed - must be applied last(!):
+        if (you.slow)
+            dissipate *= 2;
+
+        dissipate_cloud( cc, env.cloud[cc], dissipate );
+    }
+
+    return;
+}                               // end manage_clouds()
 
 void delete_cloud( int cloud )
 {
@@ -34,18 +165,6 @@ void delete_cloud( int cloud )
     }
 }
 
-static void new_cloud( int cloud, int type, int x, int y, int decay )
-{
-    ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
-
-    env.cloud[ cloud ].type = type;
-    env.cloud[ cloud ].decay = decay;
-    env.cloud[ cloud ].x = x;
-    env.cloud[ cloud ].y = y;
-    env.cgrid[ x ][ y ] = cloud;
-    env.cloud_no++;
-}
-
 // The current use of this function is for shifting in the abyss, so
 // that clouds get moved along with the rest of the map. 
 void move_cloud( int cloud, int new_x, int new_y )
@@ -60,6 +179,16 @@ void move_cloud( int cloud, int new_x, int new_y )
         env.cloud[ cloud ].y = new_y;
         env.cgrid[ old_x ][ old_y ] = EMPTY_CLOUD;
     }
+}
+
+// Places a cloud with the given stats assuming one doesn't already
+// exist at that point.
+void check_place_cloud( int cl_type, int x, int y, int lifetime )
+{
+    if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
+        return;
+
+    place_cloud( cl_type, x, y, lifetime );
 }
 
 //   Places a cloud with the given stats. May delete old clouds to make way
@@ -80,6 +209,7 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x,
                 && env.cloud[ target_cgrid ].type <= CLOUD_STEAM)
             || env.cloud[ target_cgrid ].type == CLOUD_STINK
             || env.cloud[ target_cgrid ].type == CLOUD_BLACK_SMOKE
+            || env.cloud[ target_cgrid ].type == CLOUD_MIST
             || env.cloud[ target_cgrid ].decay <= 20)     //soon gone
         {
             cl_new = env.cgrid[ ctarget_x ][ ctarget_y ];
@@ -103,6 +233,7 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x,
                     && env.cloud[ ci ].type <= CLOUD_STEAM)
                 || env.cloud[ ci ].type == CLOUD_STINK
                 || env.cloud[ ci ].type == CLOUD_BLACK_SMOKE
+                || env.cloud[ ci ].type == CLOUD_MIST
                 || env.cloud[ ci ].decay <= 20)     //soon gone
             {
                 cl_del = ci;

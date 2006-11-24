@@ -1541,8 +1541,9 @@ static void describe_cell(int mx, int my)
             (cloud_type == CLOUD_MIASMA
               || cloud_type == CLOUD_MIASMA_MON) ? "foul pestilence" :
             (cloud_type == CLOUD_BLACK_SMOKE
-              || cloud_type == CLOUD_BLACK_SMOKE_MON) ? "black smoke"
-                                                      : "buggy goodness");
+              || cloud_type == CLOUD_BLACK_SMOKE_MON) ? "black smoke" :
+            (cloud_type == CLOUD_MIST)?                 "thin mist" :
+                                                        "buggy goodness");
         strcat(info, " here.");
         mpr(info);
     }

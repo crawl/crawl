@@ -2722,10 +2722,15 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
 
     // FIRE/COLD over water/lava
     if ( (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD)
-        || ((grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
-              && beam.flavour == BEAM_FIRE) )
+        || (grid_is_watery(grd[x][y]) && beam.flavour == BEAM_FIRE) )
     {
         cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STEAM : CLOUD_STEAM_MON;
+        place_cloud( cloud_type, x, y, 2 + random2(5) );
+    }
+
+    if (beam.flavour == BEAM_COLD && grid_is_watery(grd[x][y]))
+    {
+        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_COLD : CLOUD_COLD_MON;
         place_cloud( cloud_type, x, y, 2 + random2(5) );
     }
 

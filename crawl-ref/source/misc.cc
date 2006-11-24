@@ -162,6 +162,11 @@ bool grid_is_water( int grid )
     return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
 }
 
+bool grid_is_watery( int grid )
+{
+    return (grid_is_water(grid) || grid == DNGN_BLUE_FOUNTAIN);
+}
+
 bool grid_destroys_items( int grid )
 {
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
@@ -1579,48 +1584,6 @@ void disarm_trap( struct dist &disa )
     exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level / 5));
 }                               // end disarm_trap()
 
-void manage_clouds(void)
-{
-    // amount which cloud dissipates - must be unsigned! {dlb}
-    unsigned int dissipate = 0;
-
-    for (unsigned char cc = 0; cc < MAX_CLOUDS; cc++)
-    {
-        if (env.cloud[cc].type == CLOUD_NONE)   // no cloud -> next iteration
-            continue;
-
-        dissipate = you.time_taken;
-
-        // water -> flaming clouds:
-        // lava -> freezing clouds:
-        if ((env.cloud[cc].type == CLOUD_FIRE
-                || env.cloud[cc].type == CLOUD_FIRE_MON)
-            && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_DEEP_WATER)
-        {
-            dissipate *= 4;
-        }
-        else if ((env.cloud[cc].type == CLOUD_COLD
-                    || env.cloud[cc].type == CLOUD_COLD_MON)
-                && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_LAVA)
-        {
-            dissipate *= 4;
-        }
-
-        // double the amount when slowed - must be applied last(!):
-        if (you.slow)
-            dissipate *= 2;
-
-        // apply calculated rate to the actual cloud:
-        env.cloud[cc].decay -= dissipate;
-
-        // check for total dissipatation and handle accordingly:
-        if (env.cloud[cc].decay < 1)
-            delete_cloud( cc );
-    }
-
-    return;
-}                               // end manage_clouds()
-
 void weird_writing(char stringy[40])
 {
     int temp_rand = 0;          // for probability determinations {dlb}
@@ -2193,4 +2156,81 @@ int subdungeon_depth(unsigned char branch, int depth)
                                 - you.branch_stairs[branch - 10];
 
     return curr_subdungeon_level;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// Living breathing dungeon stuff.
+//
+
+static std::vector<coord_def> sfx_seeds;
+
+void setup_environment_effects()
+{
+    sfx_seeds.clear();
+
+    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+    {
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+        {
+            if (!in_bounds(x, y))
+                continue;
+
+            const int grid = grd[x][y];
+            if (grid == DNGN_LAVA 
+                    || (grid == DNGN_SHALLOW_WATER
+                        && you.where_are_you == BRANCH_SWAMP))
+            {
+                coord_def c = { x, y };
+                sfx_seeds.push_back(c);
+            }
+        }
+    }
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "%u environment effect seeds", sfx_seeds.size());
+#endif
+}
+
+static void apply_environment_effect(const coord_def &c)
+{
+    const int grid = grd[c.x][c.y];
+    if (grid == DNGN_LAVA)
+        check_place_cloud( CLOUD_BLACK_SMOKE_MON, 
+                           c.x, c.y, random_range( 4, 8 ) );
+    else if (grid == DNGN_SHALLOW_WATER)
+        check_place_cloud( CLOUD_MIST, 
+                           c.x, c.y, random_range( 2, 5 ) );
+}
+
+static const int Base_Sfx_Chance = 5;
+void run_environment_effects()
+{
+    if (!you.time_taken)
+        return;
+
+    // Each square in sfx_seeds has this chance of doing something special
+    // per turn.
+    const int sfx_chance = Base_Sfx_Chance * you.time_taken / 10;
+    const int nseeds = sfx_seeds.size();
+
+    // If there is a large number of seeds, speed things up by fudging the
+    // numbers.
+    if (nseeds > 100)
+    {
+        int nsels = div_rand_round( sfx_seeds.size() * sfx_chance, 100 );
+        if (one_chance_in(5))
+            nsels += random2(nsels * 3);
+
+        for (int i = 0; i < nsels; ++i)
+            apply_environment_effect( sfx_seeds[ random2(nseeds) ] );
+    }
+    else
+    {
+        for (int i = 0; i < nseeds; ++i)
+        {
+            if (random2(100) >= sfx_chance)
+                continue;
+
+            apply_environment_effect( sfx_seeds[i] );
+        }
+    }
 }

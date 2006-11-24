@@ -456,7 +456,8 @@ static bool is_safe(int x, int y)
         cloud_type == CLOUD_PURP_SMOKE     ||
         cloud_type == CLOUD_PURP_SMOKE_MON ||
         cloud_type == CLOUD_BLACK_SMOKE    ||
-        cloud_type == CLOUD_BLACK_SMOKE_MON;
+        cloud_type == CLOUD_BLACK_SMOKE_MON ||
+        cloud_type == CLOUD_MIST;
 }
 
 static bool player_is_permalevitating()

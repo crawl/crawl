@@ -890,6 +890,10 @@ void cloud_grid(void)
                     which_colour = DARKGREY;
                     break;
 
+                case CLOUD_MIST:
+                    which_colour = EC_MIST;
+                    break;
+
                 default:
                     which_colour = LIGHTGREY;
                     break;

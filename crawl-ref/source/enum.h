@@ -530,6 +530,7 @@ enum cloud_type
     CLOUD_STEAM,                       //    8
     CLOUD_MIASMA = 9,                  //    9: found 11jan2000 {dlb}
     CLOUD_BLACK_SMOKE = 10, //was: CLOUD_STICKY_FLAME and wrong 19jan2000 {dlb}
+    CLOUD_MIST,
     CLOUD_RANDOM = 98, 
     CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
 // if env.cloud_type > 100, it is a monster's cloud {dlb}
@@ -1158,6 +1159,7 @@ enum element_type
     EC_FLOOR,           // colour of the area's floor
     EC_ROCK,            // colour of the area's rock
     EC_STONE,           // colour of the area's stone
+    EC_MIST,            // colour of mist
     EC_RANDOM           // any colour (except BLACK)
 };
 
