@@ -1390,7 +1390,8 @@ void gain_piety(char pgn)
     {
         // Sif Muna has a gentler taper off because training because
         // naturally slower as the player gains in spell skills.
-        if (you.piety > 150 && one_chance_in(5))
+        if ((you.piety > 220) ||
+            (you.piety > 150 && one_chance_in(5)))
             return;
     }
 
