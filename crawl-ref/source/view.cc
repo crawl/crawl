@@ -1904,7 +1904,7 @@ static int find_feature( const std::vector<coord_def>& features,
     if (firstx != -1) {
         *move_x = firstx - (start_x + curs_x);
         *move_y = firsty - (start_y + curs_y);
-        return matchcount;
+        return firstmatch;
     }
     return 0;
 }
