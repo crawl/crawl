@@ -355,7 +355,8 @@ static int get_viewobj_flags(int object)
     return (0);
 }
 
-static void get_symbol( unsigned int object, unsigned short *ch, 
+static void get_symbol( int x, int y,
+                        unsigned int object, unsigned short *ch, 
                         unsigned short *colour )
 {
     ASSERT( ch != NULL );
@@ -371,7 +372,7 @@ static void get_symbol( unsigned int object, unsigned short *ch,
 
         // Note anything we see that's notable
         if (Feature[object].notable)
-            seen_notable_thing( object );
+            seen_notable_thing( object, x, y );
     }
     else
     {
@@ -3284,7 +3285,7 @@ static int get_screen_glyph( int x, int y )
     if (object == DNGN_SECRET_DOOR)
         object = grid_secret_door_appearance( x, y );
 
-    get_symbol( object, &ch, &colour );
+    get_symbol( x, y, object, &ch, &colour );
     return (ch);
 }
 
@@ -3339,7 +3340,7 @@ std::string screenshot( bool fullscreen )
                 if (object == DNGN_SECRET_DOOR)
                     object = grid_secret_door_appearance( gx, gy );
 
-                get_symbol( object, &glych, &glycol );
+                get_symbol( gx, gy, object, &glych, &glycol );
                 ch = glych;
             }
             
@@ -3484,7 +3485,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     int             object = env.show[ex][ey];
                     unsigned short  colour = env.show_col[ex][ey];
                     unsigned short  ch;
-                    get_symbol( object, &ch, &colour );
+                    get_symbol( gx, gy, object, &ch, &colour );
 
                     set_envmap_glyph( gx, gy, ch, colour, object );
                     set_terrain_seen( gx, gy );
@@ -3517,7 +3518,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (object == DNGN_SECRET_DOOR)
                         object = grid_secret_door_appearance( gx, gy );
 
-                    get_symbol( object, &ch, &colour );
+                    get_symbol( gx, gy, object, &ch, &colour );
 
                     buffy[bufcount] = ch;
                     buffy[bufcount + 1] = colour;
@@ -3553,7 +3554,8 @@ void viewwindow(bool draw_it, bool do_updates)
                             && Show_Backup[ex][ey]
                             && is_terrain_seen( gx, gy ))
                         {
-                            get_symbol( Show_Backup[ex][ey], &ch, &colour );
+                            get_symbol( gx, gy,
+                                        Show_Backup[ex][ey], &ch, &colour );
                             set_envmap_glyph( gx, gy, ch, colour, 
                                               Show_Backup[ex][ey] );
                         }

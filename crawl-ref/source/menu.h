@@ -404,6 +404,15 @@ private:
     std::vector<formatted_string> flines;
 };
 
+class formatted_scroller : public Menu
+{
+public:
+    formatted_scroller(int flags, const std::string& s);
+protected:
+    virtual void draw_item(int index, const MenuEntry* me) const;
+};
+
 int menu_colour(const std::string &itemtext);
+int linebreak_string( std::string& s, int wrapcol, int maxcol );
 
 #endif

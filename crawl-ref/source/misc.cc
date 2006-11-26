@@ -2001,6 +2001,45 @@ unsigned short get_packed_place()
                       you.level_type );
 }
 
+bool single_level_branch( int branch )
+{
+    return
+        branch == BRANCH_VESTIBULE_OF_HELL ||
+        branch == BRANCH_HALL_OF_BLADES ||
+        branch == BRANCH_ECUMENICAL_TEMPLE;
+}
+
+std::string branch_name( int branch, bool terse )
+{
+    const char* names[][2] = {
+        { "The Dungeon", "D" },
+        { "The Iron City of Dis", "Dis" },
+        { "Gehenna", "Geh" },
+        { "The Vestibule of Hell", "Hell" },
+        { "Cocytus", "Coc" },
+        { "Tartarus", "Tar" },
+        { "Inferno", "Inf" },
+        { "The Pit", "Pit" },
+        { "", "" },
+        { "", "" },
+        { "The Orcish Mines", "Orc" },
+        { "The Hive", "Hive" },
+        { "The Lair", "Lair" },
+        { "The Slime Pits", "Slime" },
+        { "The Vaults", "Vault" },
+        { "The Crypt", "Crypt" },
+        { "The Hall of Blades", "Blade" },
+        { "The Hall of Zot", "Zot" },
+        { "The Ecumenical Temple", "Temple" },
+        { "The Snake Pit", "Snake" },
+        { "The Elven Halls", "Elf" },
+        { "The Tomb", "Tomb" },
+        { "The Swamp", "Swamp" },
+        { "The Caverns", "Cav" }
+    };
+    return names[branch][terse];
+}
+
 std::string place_name( unsigned short place, bool long_name,
                         bool include_number ) {
 
@@ -2022,68 +2061,10 @@ std::string place_name( unsigned short place, bool long_name,
             return ( long_name ? "Buggy Badlands" : "Bug" );
         }
     }
-    else
-    {
-        switch (branch)
-        {
-        case BRANCH_VESTIBULE_OF_HELL:
-            return ( long_name ? "The Vestibule of Hell" : "Hell" );
-        case BRANCH_HALL_OF_BLADES:
-            return ( long_name ? "The Hall of Blades" : "Blade" );
-        case BRANCH_ECUMENICAL_TEMPLE:
-            return ( long_name ? "The Ecumenical Temple" : "Temple" );
-        case BRANCH_DIS:
-            result = ( long_name ? "The Iron City of Dis" : "Dis");
-            break;
-        case BRANCH_GEHENNA:
-            result = ( long_name ? "Gehenna" : "Geh" );
-            break;            
-        case BRANCH_COCYTUS:
-            result = ( long_name ? "Cocytus" : "Coc" );
-            break;
-        case BRANCH_TARTARUS:
-            result = ( long_name ? "Tartarus" : "Tar" );
-            break;
-        case BRANCH_ORCISH_MINES:
-            result = ( long_name ? "The Orcish Mines" : "Orc" );
-            break;
-        case BRANCH_HIVE:
-            result = ( long_name ? "The Hive" : "Hive" );
-            break;
-        case BRANCH_LAIR:
-            result = ( long_name ? "The Lair" : "Lair" );
-            break;
-        case BRANCH_SLIME_PITS:
-            result = ( long_name ? "The Slime Pits" : "Slime" );
-            break;
-        case BRANCH_VAULTS:
-            result = ( long_name ? "The Vaults" : "Vault" );
-            break;
-        case BRANCH_CRYPT:
-            result = ( long_name ? "The Crypt" : "Crypt" );
-            break;
-        case BRANCH_HALL_OF_ZOT:
-            result = ( long_name ? "The Hall of Zot" : "Zot" );
-            break;
-        case BRANCH_SNAKE_PIT:
-            result = ( long_name ? "The Snake Pit" : "Snake" );
-            break;
-        case BRANCH_ELVEN_HALLS:
-            result = ( long_name ? "The Elven Halls" : "Elf" );
-            break;
-        case BRANCH_TOMB:
-            result = ( long_name ? "The Tomb" : "Tomb" );
-            break;            
-        case BRANCH_SWAMP:
-            result = ( long_name ? "The Swamp" : "Swamp" );
-            break;            
-        default:
-            result = ( long_name ? "The Dungeon" : "D" );
-            break;
-        }
-    }
 
-    if ( include_number ) {
+    result = branch_name(branch, !long_name);
+
+    if ( include_number && !single_level_branch(branch) ) {
         char buf[200];
         if ( long_name ) {
             // decapitalize 'the'

@@ -331,9 +331,6 @@ unsigned char mons_char(int mc);
 int mons_class_colour(int mc);
 int mons_colour(const monsters *m);
 
-// Only for save-compatibility.
-int obsolete_mons_spell_template_index(const monsters *mon);
-
 void mons_load_spells( monsters *mon, int book );
 
 // last updated 12may2000 {dlb}

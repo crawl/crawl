@@ -2690,6 +2690,16 @@ enum player_size_type
     PSIZE_PROFILE       // profile only (for stealth checks)
 };
 
+enum portal_type
+{
+    PORTAL_NONE = 0,
+    PORTAL_LABYRINTH,
+    PORTAL_HELL,
+    PORTAL_ABYSS,
+    PORTAL_PANDEMONIUM,
+    NUM_PORTALS
+};
+
 // [dshaligram] If you edit potion colours/descriptions, also update 
 // itemname.cc.
 enum potion_description_colour_type

@@ -1146,20 +1146,7 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
     // nail all items to the ground
     fix_item_coordinates();
 
-    // 0.0 initial genesis of saved format
-    // 0.1 added attitude tag
-    // 0.2 replaced old 'enchantment1' and with 'flags' (bitfield)
-    // 0.3 changes to make the item structure more sane  
-    // 0.4 changes to the ghost save section
-    // 0.5 spell and ability letter arrays
-    // 0.6 inventory slots of items
-    // 0.7 origin tracking for items
-    // 0.8 widened env.map to 2 bytes
-    // 0.9 inscriptions (hp)
-    // 0.10 Monster colour and spells separated from mons->number.
-    // 0.11 env colours moved into env.mapcol
-
-    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 11, TAGTYPE_LEVEL );
+    write_tagged_file( saveFile, SAVE_MAJOR_VERSION, 0, TAGTYPE_LEVEL );
 
     fclose(saveFile);
 
@@ -1225,14 +1212,7 @@ void save_game(bool leave_game)
 	end(-1);
     }
 
-    // 0.0 initial genesis of saved format
-    // 0.1 changes to make the item structure more sane  
-    // 0.2 spell and ability tables
-    // 0.3 added you.magic_contamination (05/03/05)
-    // 0.4 added item origins
-    // 0.5 added num_gifts
-    // 0.6 inscriptions
-    write_tagged_file( charf, SAVE_MAJOR_VERSION, 6, TAGTYPE_PLAYER );
+    write_tagged_file( charf, SAVE_MAJOR_VERSION, 0, TAGTYPE_PLAYER );
 
     fclose(charf);
     DO_CHMOD_PRIVATE(charFile.c_str());
@@ -1448,7 +1428,7 @@ static bool determine_version( FILE *restoreFile,
     if (majorVersion == SAVE_MAJOR_VERSION)
         return true;
 
-    return false;   // if its not 0, no idea
+    return false;   // if it's not 0, no idea
 }
 
 static void restore_version( FILE *restoreFile, 
@@ -1676,9 +1656,7 @@ void save_ghost( bool force )
         return;
     }
 
-    // 0.0-0.3  old tagged savefile (values as unsigned char)
-    // 0.4      new tagged savefile (values as signed short)
-    write_tagged_file( gfile, SAVE_MAJOR_VERSION, 4, TAGTYPE_GHOST );
+    write_tagged_file( gfile, SAVE_MAJOR_VERSION, 0, TAGTYPE_GHOST );
 
     fclose(gfile);
 

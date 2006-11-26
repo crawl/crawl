@@ -116,6 +116,10 @@ struct level_id
 
     level_id(unsigned char br, int dep) : branch(br), depth(dep) { }
 
+    unsigned short packed_place() const;
+
+    std::string describe( bool long_name, bool with_number ) const;
+
     // Returns the level_id of the current level.
     static level_id get_current_level_id();
 
@@ -131,6 +135,11 @@ struct level_id
     bool operator != ( const level_id &id ) const
     {
         return branch != id.branch || depth != id.depth;
+    }
+
+    bool operator <( const level_id &id ) const
+    {
+        return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
     struct less_than
@@ -176,6 +185,11 @@ struct level_pos
     bool operator != ( const level_pos &lp ) const
     {
         return id != lp.id || pos != lp.pos;
+    }
+
+    bool operator <  ( const level_pos &lp ) const
+    {
+        return (id < lp.id) || (id == lp.id && pos < lp.pos);
     }
     
     bool is_valid() const

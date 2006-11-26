@@ -830,22 +830,9 @@ static void recharge_rods()
    of round */
 bool apply_berserk_penalty = false;
 
-/* There is now a distinction between keycodes and commands.
-   A keycode_type gets mapped through keycode_to_command to
-   become a command_type.
-   So a keycode_type could be something like 'H';
-   a command_type would be something like COMMAND_RUN_LEFT.
-*/
-
 /*
-   This function handles the player's input. It's called from main(), from
-   inside an endless loop.
-
-   It's now undergone major refactoring. The code path is now:
-   1. Get next player input item (key)
-   2. Translate key to command
-   3. Execute the command
-   4. Update rest of world if necessary
+  This function handles the player's input. It's called from main(), from
+  inside an endless loop.
  */
 static void input() {
 
@@ -2685,7 +2672,6 @@ static bool initialise(void)
 #endif
 
     seed_rng();
-    init_overmap();             // in overmap.cc (duh?)
     clear_ids();                // in itemname.cc
     init_feature_table();
 

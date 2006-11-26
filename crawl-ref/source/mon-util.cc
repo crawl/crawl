@@ -1062,13 +1062,6 @@ int exper_value( const struct monsters *monster )
     return (x_val);
 }                               // end exper_value()
 
-int obsolete_mons_spell_template_index(const monsters *mon)
-{
-    return (mons_class_flag(mon->type, M_SPELLCASTER)? 
-                mon->number
-            :   MST_NO_SPELLS);
-}
-
 void mons_load_spells( monsters *mon, int book )
 {
     int x, y;

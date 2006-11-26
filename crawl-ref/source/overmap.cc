@@ -27,99 +27,94 @@
 
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
-// for #definitions of MAX_BRANCHES & MAX_LEVELS
+#include "menu.h"
 #include "misc.h"
 #include "religion.h"
+#include "shopping.h"
 #include "stuff.h"
 #include "view.h"
 
-enum
-{
-     NO_FEATURE          = 0x00,
-     FEATURE_SHOP        = 0x01,
-     FEATURE_LABYRINTH   = 0x02,
-     FEATURE_HELL        = 0x04,
-     FEATURE_ABYSS       = 0x08,
-     FEATURE_PANDEMONIUM = 0x10
-};
+std::map<branch_type, level_id> stair_level;
+std::map<level_pos, shop_type> shops_present;
+std::map<level_pos, god_type> altars_present;
+std::map<level_pos, portal_type> portals_present;
 
-// These variables need to become part of the player struct
-// and need to be stored in the .sav file:
+static void seen_altar( god_type god, const coord_def& pos );
+static void seen_staircase(unsigned char which_staircase,const coord_def& pos);
+static void seen_other_thing(unsigned char which_thing, const coord_def& pos);
 
-//   0 == no altars;
-// 100 == more than one altar; or
-//   # == which god for remaining numbers.
-
-FixedArray<unsigned char, MAX_LEVELS, MAX_BRANCHES> altars_present;
-FixedVector<char, MAX_BRANCHES> stair_level;
-FixedArray<unsigned char, MAX_LEVELS, MAX_BRANCHES> feature;
-
-int map_lines = 0; //mv: number of lines already printed on "over-map" screen
-
-//mv: prints one line in specified colour
-// void print_one_map_line( const char *line, int colour );
-// void print_branch_entrance_line( const char *area );
-
-void print_one_simple_line( const char *line, int colour );
-void print_one_highlighted_line( const char *pre, const char *text, 
-                                 const char *post, int colour );
-
-static void print_level_name( int branch, int depth, 
-                              bool &printed_branch, bool &printed_level );
-
-void seen_notable_thing( int which_thing )
+void seen_notable_thing( int which_thing, int x, int y )
 {
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
         return;
+    
+    coord_def pos = {x, y};
 
     const god_type god = grid_altar_god(which_thing);
-
     if (god != GOD_NO_GOD)
-        seen_altar( god );
+        seen_altar( god, pos );
     else if (grid_is_branch_stairs( which_thing ))
-        seen_staircase( which_thing );
+        seen_staircase( which_thing, pos );
     else
-        seen_other_thing( which_thing );
+        seen_other_thing( which_thing, pos );
 }
 
-void init_overmap( void )
+static const char* portaltype_to_string(portal_type p)
 {
-    for (int i = 0; i < MAX_LEVELS; i++)
+    switch ( p )
     {
-        for (int j = 0; j < MAX_BRANCHES; j++)
-        {
-            altars_present[i][j] = 0;
-            feature[i][j] = 0;
-        }
+    case PORTAL_LABYRINTH:
+        return "<cyan>Labyrinth:</cyan>";
+    case PORTAL_HELL:
+        return "<red>Hell:</red>";
+    case PORTAL_ABYSS:
+        return "<magenta>Abyss:</magenta>";
+    case PORTAL_PANDEMONIUM:
+        return "<blue>Pan:</blue>";
+    default:
+        return "<lightred>Buggy:</lightred>";
     }
+}
 
-    for (int i = 0; i < MAX_BRANCHES; i++)
-        stair_level[i] = -1;
-}          // end init_overmap()
+static char shoptype_to_char(shop_type s)
+{
+    switch ( s )
+    {
+    case SHOP_WEAPON:
+    case SHOP_WEAPON_ANTIQUE:
+        return '(';
+    case SHOP_ARMOUR:
+    case SHOP_ARMOUR_ANTIQUE:
+        return '[';
+    case SHOP_GENERAL_ANTIQUE:
+    case SHOP_GENERAL:
+        return '*';
+    case SHOP_JEWELLERY:
+        return '=';
+    case SHOP_WAND:
+        return '/';
+    case SHOP_BOOK:
+        return ':';
+    case SHOP_FOOD:
+        return '%';
+    case SHOP_DISTILLERY:
+        return '!';
+    case SHOP_SCROLL:
+        return '?';
+    default:
+        return 'x';
+    }
+}
 
 void display_overmap()
 {
-#ifdef DOS_TERM
-    char buffer[4800];
+    char buffer[100];
+    std::string disp;
+    bool seen_anything = false;
 
-    window(1, 1, 80, 25);
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
-    //mv: must be set to 0 so "More..." message appears really at the
-    // bottom of the screen
-    //Don't forget it could be changed since the last call of display_overmap
-    map_lines = 0;
-
-    clrscr();
-    bool pr_lev = false;
-    bool output = false;
-
-    print_one_simple_line("                            Overview of the Dungeon", WHITE);
-
-    // This is a more sensible order than the order of the enums -- bwr
-    const int list_order[] = 
+    // better put this somewhere central
+    const branch_type list_order[] = 
     {
         BRANCH_MAIN_DUNGEON, 
         BRANCH_ECUMENICAL_TEMPLE,
@@ -132,267 +127,165 @@ void display_overmap()
         BRANCH_HALL_OF_ZOT
     };
 
-    for (unsigned int index = 0; index < sizeof(list_order) / sizeof(int); index++)
+    disp += "                    <white>Overview of the Dungeon</white>" EOL;
+
+    // print branches
+    int branchcount = 0;
+    for (unsigned int i = 1; i < sizeof(list_order)/sizeof(branch_type); ++i)
     {
-        const int i = list_order[index];
-        bool printed_branch = false;
-
-        for (int j = 0; j < MAX_LEVELS; j++)
+        const branch_type branch = list_order[i];
+        if ( stair_level.find(branch) != stair_level.end() )
         {
-            bool printed_level = false;
-
-            if (altars_present[j][i] != 0)
+            if ( !branchcount )
             {
-                print_level_name( i, j, printed_branch, printed_level );
-                output = true;
+                disp += EOL "<white>Branches:</white>" EOL;
+                seen_anything = true;
+            }
+            
+            ++branchcount;
 
-                if (altars_present[j][i] == 100)
+            snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
+                     branch_name(branch, true).c_str(),
+                     stair_level[branch].describe(false, true).c_str());
+            disp += buffer;
+            if ( (branchcount % 4) == 0 )
+                disp += EOL;
+            else
+                disp += "   ";
+        }
+    }
+    if ( branchcount && (branchcount % 4) )
+        disp += EOL;
+    
+    // print altars
+    // we loop through everything a dozen times, oh well
+    if ( !altars_present.empty() )
+    {
+        disp += EOL "<white>Altars:</white>" EOL;
+        seen_anything = true;
+    }
+
+    level_id last_id;
+    std::map<level_pos, god_type>::const_iterator ci_altar;    
+    for ( int cur_god = GOD_NO_GOD; cur_god < NUM_GODS; ++cur_god )
+    {
+        last_id.depth = 10000;  // fake depth to be sure we don't match
+        // GOD_NO_GOD becomes your god
+        int real_god = (cur_god == GOD_NO_GOD ? you.religion : cur_god);
+        if ( cur_god == you.religion )
+            continue;
+
+        for ( ci_altar = altars_present.begin();
+              ci_altar != altars_present.end();
+              ++ci_altar )
+        {
+            if ( ci_altar->second == real_god )
+            {
+                if ( last_id.depth == 10000 )
                 {
-                    print_one_highlighted_line( "    - some ", 
-                                                "altars to the gods", ".", 
-                                                WHITE );
+                    disp += god_name( ci_altar->second, false );
+                    disp += ": ";
+                    disp += ci_altar->first.id.describe(false, true);
                 }
                 else
                 {
-                    snprintf( info, INFO_SIZE, "altar to %s", 
-                              god_name( altars_present[j][i] ) );
-                              
-                    print_one_highlighted_line( "    - an ", info, ".", WHITE );
-                }
-            }
-
-            if ( (feature[j][i] & FEATURE_SHOP) )
-            {
-                print_level_name( i, j, printed_branch, printed_level );
-
-                // print_one_simple_line("    - facilities for the purchase of goods.",LIGHTGREY);
-
-                print_one_highlighted_line( "    - facilities for the ", 
-                                            "purchase of goods", ".", LIGHTGREEN );
-                output = true;
-            }
-
-            if ( (feature[j][i] & FEATURE_ABYSS) )
-            {
-                print_level_name( i, j, printed_branch, printed_level );
-                // print_one_simple_line("    - a gateway into the Abyss.", LIGHTRED);
-                print_one_highlighted_line( "    - a gateway into ", 
-                                            "the Abyss", ".", MAGENTA );
-                output = true;
-            }
-
-            if ( (feature[j][i] & FEATURE_PANDEMONIUM) )
-            {
-                print_level_name( i, j, printed_branch, printed_level );
-                // print_one_simple_line("    - a link to Pandemonium.", LIGHTRED);
-
-                print_one_highlighted_line( "    - a link to ", "Pandemonium", 
-                                            ".", LIGHTBLUE );
-                output = true;
-            }
-
-            if ( (feature[j][i] & FEATURE_HELL) )
-            {
-                print_level_name( i, j, printed_branch, printed_level );
-                // print_one_simple_line("    - a mouth of Hell.", LIGHTRED);
-                print_one_highlighted_line( "    - a mouth of ", "Hell", ".", RED );
-                output = true;
-            }
-
-            if ( (feature[j][i] & FEATURE_LABYRINTH) )
-            {
-                print_level_name( i, j, printed_branch, printed_level );
-                // print_one_simple_line("    - the entrance of a Labyrinth.", LIGHTRED);
-                print_one_highlighted_line( "    - an entrance to ", 
-                                            "a Labyrinth", ".", CYAN );
-                output = true;
-            }
-
-
-            // NB: k starts at 1 because there aren't any staircases
-            // to the main dungeon
-            for (int k = 1; k < MAX_BRANCHES; k++)
-            {
-                pr_lev = false;
-                // strcpy(info, "    - a staircase leading to ");
-                info[0] = 0;
-
-                if (stair_level[k] == j)
-                {
-                    switch (i)
+                    if ( last_id == ci_altar->first.id )
+                        disp += '*';
+                    else
                     {
-                    case BRANCH_LAIR:
-                        switch (k)
-                        {
-                        case BRANCH_SLIME_PITS:
-                            strcat(info, "the Slime Pits");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_SNAKE_PIT:
-                            strcat(info, "the Snake Pit");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_SWAMP:
-                            strcat(info, "the Swamp");
-                            pr_lev = true;
-                            break;
-                        }
-                        break;
-
-                    case BRANCH_VAULTS:
-                        switch (k)
-                        {
-                        case BRANCH_HALL_OF_BLADES:
-                            strcat(info, "the Hall of Blades");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_CRYPT:
-                            strcat(info, "the Crypt");
-                            pr_lev = true;
-                            break;
-                        }
-                        break;
-
-                    case BRANCH_CRYPT:
-                        switch (k)
-                        {
-                        case BRANCH_TOMB:
-                            strcat(info, "the Tomb");
-                            pr_lev = true;
-                            break;
-                        }
-                        break;
-
-                    case BRANCH_ORCISH_MINES:
-                        switch (k)
-                        {
-                        case BRANCH_ELVEN_HALLS:
-                            strcat(info, "the Elven Halls");
-                            pr_lev = true;
-                            break;
-                        }
-                        break;
-
-                    case BRANCH_MAIN_DUNGEON:
-                        switch (k)
-                        {
-                        case BRANCH_ORCISH_MINES:
-                            strcat(info, "the Orcish Mines");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_HIVE:
-                            strcat(info, "the Hive");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_LAIR:
-                            strcat(info, "the Lair");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_VAULTS:
-                            strcat(info, "the Vaults");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_HALL_OF_ZOT:
-                            strcat(info, "the Hall of Zot");
-                            pr_lev = true;
-                            break;
-                        case BRANCH_ECUMENICAL_TEMPLE:
-                            strcat(info, "the Ecumenical Temple");
-                            pr_lev = true;
-                            break;
-                        }
-                        break;
+                        disp += ", ";
+                        disp += ci_altar->first.id.describe(false, true);
                     }
                 }
-
-                if (pr_lev)
-                {
-                    print_level_name( i, j, printed_branch, printed_level );
-                    print_one_highlighted_line( "    - the entrance to ", info,
-                                                ".", YELLOW );
-                    output = true;
-                }
+                last_id = ci_altar->first.id;
             }
         }
+        if ( last_id.depth != 10000 )
+            disp += EOL;
     }
 
-    textcolor( LIGHTGREY );
-
-    if (!output)
-        cprintf( EOL "You have yet to discover anything worth noting." EOL );
-
-    getch();
-
-    redraw_screen();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
-}          // end display_overmap()
-
-
-static void print_level_name( int branch, int depth, 
-                              bool &printed_branch, bool &printed_level )
-{
-    if (!printed_branch)
+    // print shops
+    if (!shops_present.empty())
     {
-        printed_branch = true;
-
-        print_one_simple_line( "", YELLOW );
-        print_one_simple_line( 
-                (branch == BRANCH_MAIN_DUNGEON)      ? "Main Dungeon" :
-                (branch == BRANCH_ORCISH_MINES)      ? "The Orcish Mines" :
-                (branch == BRANCH_HIVE)              ? "The Hive" :
-                (branch == BRANCH_LAIR)              ? "The Lair" :
-                (branch == BRANCH_SLIME_PITS)        ? "The Slime Pits" :
-                (branch == BRANCH_VAULTS)            ? "The Vaults" :
-                (branch == BRANCH_CRYPT)             ? "The Crypt" :
-                (branch == BRANCH_HALL_OF_BLADES)    ? "The Hall of Blades" :
-                (branch == BRANCH_HALL_OF_ZOT)       ? "The Hall of Zot" :
-                (branch == BRANCH_ECUMENICAL_TEMPLE) ? "The Ecumenical Temple" :
-                (branch == BRANCH_SNAKE_PIT)         ? "The Snake Pit" :
-                (branch == BRANCH_ELVEN_HALLS)       ? "The Elven Halls" :
-                (branch == BRANCH_TOMB)              ? "The Tomb" :
-                (branch == BRANCH_SWAMP)             ? "The Swamp" :
-
-                (branch == BRANCH_DIS)               ? "The Iron City of Dis" :
-                (branch == BRANCH_GEHENNA)           ? "Gehenna" :
-                (branch == BRANCH_VESTIBULE_OF_HELL) ? "The Vestibule of Hell" :
-                (branch == BRANCH_COCYTUS)           ? "Cocytus" :
-                (branch == BRANCH_TARTARUS)          ? "Tartarus" 
-                                                     : "Unknown Area",
-        
-                YELLOW );
+        disp += EOL "<white>Shops:</white>" EOL;
+        seen_anything = true;
     }
-
-    if (!printed_level)
+    last_id.depth = 10000;
+    std::map<level_pos, shop_type>::const_iterator ci_shops;
+    int placecount = 0;
+    for ( ci_shops = shops_present.begin();
+          ci_shops != shops_present.end();
+          ++ci_shops )
     {
-        printed_level = true;
-
-        if (branch == BRANCH_ECUMENICAL_TEMPLE
-            || branch == BRANCH_HALL_OF_BLADES
-            || branch == BRANCH_VESTIBULE_OF_HELL)
+        if ( ci_shops->first.id != last_id )
         {
-            // these areas only have one level... let's save the space
-            return;
+            if ( placecount )
+            {
+                // there are at most 5 shops per level, plus 7 chars for
+                // the level name, plus 4 for the spacing; that makes
+                // a total of 16 chars per shop or exactly 5 per line.
+                if ( placecount % 5 == 0 )
+                    disp += EOL;
+                else
+                    disp += "  ";
+            }
+            ++placecount;
+            disp += "<brown>";
+            disp += ci_shops->first.id.describe(false, true);
+            disp += "</brown>";
+            disp += ": ";
+            last_id = ci_shops->first.id;
         }
-
-        // we need our own buffer in here (info is used):
-        char buff[INFO_SIZE];
-
-        if (branch == BRANCH_MAIN_DUNGEON)
-            depth += 1;
-        else if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-            depth -= you.branch_stairs[ branch - BRANCH_ORCISH_MINES ];
-        else // branch is in hell (all of which start at depth 28)
-            depth -= 26;
-
-        snprintf( buff, INFO_SIZE, "  Level %d:", depth );
-        print_one_simple_line( buff, LIGHTRED );
+        disp += shoptype_to_char(ci_shops->second);
     }
+    disp += EOL;
+
+    // print portals
+    if ( !portals_present.empty() )
+    {
+        disp += EOL "<white>Portals:</white>" EOL;
+        seen_anything = true;
+    }
+    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
+    {
+        last_id.depth = 10000;
+        std::map<level_pos, portal_type>::const_iterator ci_portals;
+        for ( ci_portals = portals_present.begin();
+              ci_portals != portals_present.end();
+              ++ci_portals )
+        {
+            // one line per region should be enough, they're all of
+            // the form D:XX, except for labyrinth portals, of which
+            // you would need 11 (at least) to have a problem.
+            if ( ci_portals->second == cur_portal )
+            {
+                if ( last_id.depth == 10000 )
+                    disp += portaltype_to_string(ci_portals->second);
+
+                if ( ci_portals->first.id == last_id )
+                    disp += '*';
+                else
+                {
+                    disp += ' ';
+                    disp += ci_portals->first.id.describe(false, true);
+                }
+                last_id = ci_portals->first.id;
+            }
+        }
+        if ( last_id.depth != 10000 )
+            disp += EOL;
+    }
+
+    if (!seen_anything)
+        disp += "You haven't discovered anything interesting yet.";
+
+    linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
+    formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
+                       disp).show();
+    redraw_screen();
 }
 
-void seen_staircase( unsigned char which_staircase )
+void seen_staircase( unsigned char which_staircase, const coord_def& pos )
 {
     // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
@@ -400,7 +293,7 @@ void seen_staircase( unsigned char which_staircase )
     //   - stairs returning to dungeon - predictable
     //   - entrances to the hells - always in vestibule
 
-    unsigned char which_branch = BRANCH_MAIN_DUNGEON;
+    branch_type which_branch = BRANCH_MAIN_DUNGEON;
 
     switch ( which_staircase )
     {
@@ -461,110 +354,63 @@ void seen_staircase( unsigned char which_staircase )
 
     ASSERT(which_branch != BRANCH_MAIN_DUNGEON);
 
-    stair_level[which_branch] = you.your_level;
-}          // end seen_staircase()
-
+    stair_level[which_branch] = level_id::get_current_level_id();
+}
 
 // if player has seen an altar; record it
-void seen_altar( unsigned char which_altar )
+void seen_altar( god_type god, const coord_def& pos )
 {
     // can't record in abyss or pan.
     if ( you.level_type != LEVEL_DUNGEON )
         return;
+    
+    // no point in recording Temple altars
+    if ( you.where_are_you == BRANCH_ECUMENICAL_TEMPLE )
+        return;
 
     // portable; no point in recording
-    if ( which_altar == GOD_NEMELEX_XOBEH )
+    if ( god == GOD_NEMELEX_XOBEH )
         return;
 
-    // already seen
-    if ( altars_present[you.your_level][you.where_are_you] == which_altar )
-        return;
+    level_pos where(level_id::get_current_level_id(), pos);
+    altars_present[where] = god;
+}
 
-    if ( altars_present[you.your_level][you.where_are_you] == 0 )
-        altars_present[you.your_level][you.where_are_you] = which_altar;
-    else
-        altars_present[you.your_level][you.where_are_you] = 100;
-}          // end seen_altar()
-
+portal_type feature_to_portal( unsigned char feat )
+{
+    switch ( feat )
+    {
+    case DNGN_ENTER_LABYRINTH:
+        return PORTAL_LABYRINTH;
+    case DNGN_ENTER_HELL:
+        return PORTAL_HELL;
+    case DNGN_ENTER_ABYSS:
+        return PORTAL_ABYSS;
+    case DNGN_ENTER_PANDEMONIUM:
+        return PORTAL_PANDEMONIUM;
+    default:
+        return PORTAL_NONE;
+    }
+}
 
 // if player has seen any other thing; record it
-void seen_other_thing( unsigned char which_thing )
+void seen_other_thing( unsigned char which_thing, const coord_def& pos )
 {
-    if ( you.level_type != LEVEL_DUNGEON )     // can't record in abyss or pan.
+    if ( you.level_type != LEVEL_DUNGEON ) // can't record in abyss or pan.
         return;
+
+    level_pos where(level_id::get_current_level_id(), pos);
 
     switch ( which_thing )
     {
     case DNGN_ENTER_SHOP:
-        feature[you.your_level][you.where_are_you] |= FEATURE_SHOP;
+        shops_present[where] =
+            static_cast<shop_type>(get_shop(pos.x, pos.y)->type);
         break;
-    case DNGN_ENTER_LABYRINTH:
-        feature[you.your_level][you.where_are_you] |= FEATURE_LABYRINTH;
-        break;
-    case DNGN_ENTER_HELL:
-        feature[you.your_level][you.where_are_you] |= FEATURE_HELL;
-        break;
-    case DNGN_ENTER_ABYSS:
-        feature[you.your_level][you.where_are_you] |= FEATURE_ABYSS;
-        break;
-    case DNGN_ENTER_PANDEMONIUM:
-        feature[you.your_level][you.where_are_you] |= FEATURE_PANDEMONIUM;
+    default:
+        const portal_type portal = feature_to_portal(which_thing);
+        if ( portal != PORTAL_NONE )
+            portals_present[where] = portal;
         break;
     }
 }          // end seen_other_thing()
-
-
-/* mv: this function prints one line at "Over-map screen" in specified colour.
- * If map_lines = maximum number of lines (it means the screen is full) it
- * prints "More..." message, read key, clear screen and after that prints new
- * line
- */
-void print_one_simple_line( const char *line, int colour)
-{
-    if (map_lines == (get_number_of_lines() - 2))
-    {
-        textcolor( LIGHTGREY );
-        cprintf(EOL);
-        cprintf("More...");
-        getch();
-        clrscr();
-        map_lines = 0;
-    }
-
-    textcolor( colour );
-    cprintf( "%s" EOL, line );
-    map_lines++;
-}
-
-void print_one_highlighted_line( const char *pre, const char *text, 
-                                 const char *post, int colour )
-{
-    if (map_lines == (get_number_of_lines() - 2))
-    {
-        textcolor( LIGHTGREY );
-        cprintf(EOL);
-        cprintf("More...");
-        getch();
-        clrscr();
-        map_lines = 0;
-    }
-
-    if (pre[0] != 0)
-    {
-        textcolor( LIGHTGREY );
-        cprintf( "%s", pre );
-    }
-
-    textcolor( colour );
-    cprintf( "%s", text );
-
-    if (post[0] != 0)
-    {
-        textcolor( LIGHTGREY );
-        cprintf( "%s", post );
-    }
-
-    cprintf( EOL );
-
-    map_lines++;
-}

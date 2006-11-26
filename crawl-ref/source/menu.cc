@@ -1017,9 +1017,9 @@ void formatted_string::display(int s, int e) const
 {
     int size = ops.size();
     if (!size)
-        return ;
+        return;
 
-    cap(s, size);    
+    cap(s, size);
     cap(e, size);
     
     for (int i = s; i <= e && i < size; ++i)
@@ -1204,4 +1204,75 @@ void column_composer::compose_formatted_column(
         }
         flines[f] += lines[i];
     }
+}
+
+formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
+    Menu(_flags)
+{
+    size_t eolpos = 0;
+    while ( true )
+    {
+        const size_t newpos = s.find( EOL, eolpos );
+        add_entry(new MenuEntry(std::string(s, eolpos, newpos-eolpos)));
+        if ( newpos == std::string::npos )
+            break;
+        else
+            eolpos = newpos + strlen(EOL);
+    }
+}
+
+void formatted_scroller::draw_item(int index, const MenuEntry *me) const
+{
+    formatted_string::parse_string(me->text).display();
+}
+
+int linebreak_string( std::string& s, int wrapcol, int maxcol )
+{
+    size_t loc = 0;
+    int xpos = 0;
+    int breakcount = 0;
+    while ( loc < s.size() )
+    {
+        if ( s[loc] == '<' )    // tag
+        {
+            // << escape
+            if ( loc + 1 < s.size() && s[loc+1] == '<' )
+            {
+                ++xpos;
+                loc += 2;
+                // Um, we never break on <<. That's a feature. Right.
+                continue;
+            }
+            // skip tag
+            while ( loc < s.size() && s[loc] != '>' )
+                ++loc;
+            ++loc;
+        }
+        else
+        {
+            // user-forced newline
+            if ( s[loc] == '\n' )
+                xpos = 0;
+            // soft linebreak
+            else if ( s[loc] == ' ' && xpos > wrapcol )
+            {
+                s.replace(loc, 1, EOL);
+                xpos = 0;
+                ++breakcount;
+            }
+            // hard linebreak
+            else if ( xpos > maxcol )
+            {
+                s.insert(loc, EOL);
+                xpos = 0;
+                ++breakcount;
+            }
+            // bog-standard
+            else
+                ++xpos;
+
+            ++loc;
+        }
+    }
+    return breakcount;
 }

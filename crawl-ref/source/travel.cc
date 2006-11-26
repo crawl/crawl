@@ -1229,21 +1229,21 @@ unsigned char find_parent_branch(unsigned char br)
     return 0;
 }
 
-extern FixedVector<char, MAX_BRANCHES> stair_level;
+extern std::map<branch_type, level_id> stair_level;
 
 void find_parent_branch(unsigned char br, int depth, 
                         unsigned char *pb, int *pd)
 {
-    int lev = stair_level[br];
-    if (lev <= 0)
+    const branch_type bran = static_cast<branch_type>(br);
+    if ( stair_level.find(bran) == stair_level.end() )
     {
         *pb = 0;
         *pd = 0;        // Check depth before using *pb.
         return ;
     }
 
-    *pb = find_parent_branch(br);
-    *pd = subdungeon_depth(*pb, lev);
+    *pb = find_parent_branch(stair_level[bran].branch);
+    *pd = stair_level[bran].depth;
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to 
@@ -1490,14 +1490,7 @@ static bool is_known_branch(unsigned char branch)
     if (you.where_are_you == branch) return true;
 
     // If the overmap knows the stairs to this branch, we know the branch.
-    unsigned char par;
-    int pdep;
-    find_parent_branch(branch, 1, &par, &pdep);
-    if (pdep)
-        return true;
-
-    // Do a brute force search in the travel cache for this branch.
-    return travel_cache.is_known_branch(branch);
+    return ( stair_level.find(static_cast<branch_type>(branch)) != stair_level.end() );
 
     // Doing this to check for the reachability of a branch is slow enough to
     // be noticeable.
@@ -2331,6 +2324,16 @@ level_id level_id::get_next_level_id(const coord_def &pos)
         break;
     }
     return id;
+}
+
+unsigned short level_id::packed_place() const
+{
+    return get_packed_place(branch, depth, LEVEL_DUNGEON);
+}
+
+std::string level_id::describe( bool long_name, bool with_number ) const
+{
+    return place_name( this->packed_place(), long_name, with_number );
 }
 
 void level_id::save(FILE *file) const
