@@ -6012,8 +6012,12 @@ void item_colour( item_def &item )
 
         switch (item.sub_type)
         {
-        case ARM_CLOAK:
         case ARM_ROBE:
+            do {
+                item.colour = random_colour();
+            } while ( item.colour == LIGHTCYAN );
+            break;
+        case ARM_CLOAK:
         case ARM_NAGA_BARDING:
         case ARM_CENTAUR_BARDING:
         case ARM_CAP:
