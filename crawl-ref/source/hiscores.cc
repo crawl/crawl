@@ -214,25 +214,26 @@ void hiscores_print_list( int display_count, int format )
         else
             cprintf("%s", info);
 
+        std::string entry;
         // format the entry
         if (format == SCORE_TERSE)
         {
-            hiscores_format_single( info, hs_list[i] );
+            entry = hiscores_format_single( hs_list[i] );
             // truncate if we want short format
-            info[75] = 0;
+            if (entry.length() > 75)
+                entry = entry.substr(0, 75);
         }
         else
         {
-            hiscores_format_single_long( info, hs_list[i], 
+            entry = hiscores_format_single_long( hs_list[i], 
                                          (format == SCORE_VERBOSE) );
         }
 
-        // print entry
-        strcat(info, EOL);
+        entry += EOL;
         if(use_printf)
-            printf("%s", info);
+            printf("%s", entry.c_str());
         else
-            cprintf("%s", info);
+            cprintf("%s", entry.c_str());
 
         if (i == newest_entry && !use_printf)
             textcolor(LIGHTGREY);
@@ -254,11 +255,9 @@ static const char *const range_type_verb( const char *const aux )
     return ("blasted");                                 // spells, wands
 }
 
-void hiscores_format_single(char *buf, const scorefile_entry &se)
+std::string hiscores_format_single(const scorefile_entry &se)
 {
-    std::string line = se.hiscore_line(scorefile_entry::DDV_ONELINE);
-    strncpy(buf, line.c_str(), INFO_SIZE);
-    buf[INFO_SIZE - 1] = 0;
+    return se.hiscore_line(scorefile_entry::DDV_ONELINE);
 }
 
 static bool hiscore_same_day( time_t t1, time_t t2 )
@@ -289,16 +288,14 @@ static std::string hiscore_newline_string()
     return (EOL "             ");
 }
 
-void hiscores_format_single_long( char *buf, const scorefile_entry &se, 
-                                 bool verbose )
+std::string hiscores_format_single_long( const scorefile_entry &se, 
+                                         bool verbose )
 {
-    std::string line = 
-        se.hiscore_line( 
+    return se.hiscore_line( 
                 verbose? 
                     scorefile_entry::DDV_VERBOSE 
                   : scorefile_entry::DDV_NORMAL );
-    strncpy(buf, line.c_str(), HIGHSCORE_SIZE);
-    buf[HIGHSCORE_SIZE - 1] = 0;
+
 }
 
 // --------------------------------------------------------------------------
@@ -1510,7 +1507,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     bool verbose = verbosity == DDV_VERBOSE;
     char  scratch[INFO_SIZE];
-    char  buf[INFO_SIZE];
+    char  buf[HIGHSCORE_SIZE];
 
     std::string desc;
     // Please excuse the following bit of mess in the name of flavour ;)
