@@ -28,8 +28,8 @@ void hiscores_print_list( int display_count = -1, int format = SCORE_TERSE );
 /* ***********************************************************************
  * called from: ouch hiscores
  * *********************************************************************** */
-void hiscores_format_single( char *buffer, const scorefile_entry &se );
-void hiscores_format_single_long( char *buffer, const scorefile_entry &se, 
+std::string hiscores_format_single( const scorefile_entry &se );
+std::string hiscores_format_single_long( const scorefile_entry &se, 
                                   bool verbose = false );
 
 #endif  // HISCORES_H

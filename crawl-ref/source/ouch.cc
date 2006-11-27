@@ -891,15 +891,12 @@ void end_game( struct scorefile_entry &se )
     cprintf( "Goodbye, %s.", you.your_name );
     cprintf( EOL EOL "    " ); // Space padding where # would go in list format
 
-    char scorebuff[ HIGHSCORE_SIZE ];
 
-    hiscores_format_single_long( scorebuff, se, true );
-    // truncate
-    scorebuff[ HIGHSCORE_SIZE - 1 ] = 0;
+    std::string hiscore = hiscores_format_single_long( se, true );
 
-    const int lines = count_occurrences(scorebuff, EOL) + 1;
+    const int lines = count_occurrences(hiscore, EOL) + 1;
 
-    cprintf( scorebuff );
+    cprintf( "%s", hiscore.c_str() );
 
     cprintf( EOL "Best Crawlers -" EOL );
 
