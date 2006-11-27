@@ -1739,6 +1739,16 @@ static std::string describe_armour( const item_def &item, bool verbose )
         }
     }
 
+    if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
+    {
+        if ( is_light_armour(item) )
+            description += "$This is a light armour. Wearing it will "
+                "exercise Dodging and Stealth.";
+        else
+            description += "$This is a heavy armour. Wearing it will "
+                "exercise Armour.";
+    }
+
     if (item_known_cursed( item ))
     {
         description += "$It has a curse placed upon it.";
