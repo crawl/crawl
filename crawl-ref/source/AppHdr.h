@@ -318,17 +318,14 @@
     // to a command to compress and bundle the save game files into a
     // single unit... the two %s will be replaced with the players
     // save file name.  Define LOAD_UNPACKAGE_CMD to undo this process
-    // the %s is the same as above.
+    // the %s is the same as above.  The second %s in LOAD_UNPACKAGE_CMD
+    // is for the output directory.
     //
     // PACKAGE_SUFFIX is used when the package file name is needed
     //
     // Comment these lines out if you want to leave the save files uncompressed.
     #define SAVE_PACKAGE_CMD    "/usr/bin/zip -m -q -j -1 %s.zip %s.*"
-#ifdef SAVE_DIR_PATH
-    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d" SAVE_DIR_PATH
-#else
-    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip"
-#endif
+    #define LOAD_UNPACKAGE_CMD  "/usr/bin/unzip -q -o %s.zip -d %s"
 
 #ifdef SAVE_PACKAGE_CMD
     // This is used to unpack specific files from the archive.

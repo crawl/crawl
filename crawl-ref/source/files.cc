@@ -465,14 +465,17 @@ std::vector<player> find_saved_characters()
                     0,
                     filename.length() - strlen(PACKAGE_SUFFIX));
 
-        std::string zipname = get_savedir_path(basename);
+        const std::string zipname = get_savedir_path(basename);
 
         // This is the filename we actually read ourselves.
         filename = basename + ".sav";
 
+        const std::string dir = get_savedir();
+
         char cmd_buff[1024];
         snprintf( cmd_buff, sizeof(cmd_buff), UNPACK_SPECIFIC_FILE_CMD,
                   zipname.c_str(),
+                  dir.c_str(),
                   filename.c_str() );
 
         if (system(cmd_buff) != 0)
@@ -495,6 +498,12 @@ std::vector<player> find_saved_characters()
     return (chars);
 }
 
+std::string get_savedir()
+{
+    const std::string &dir = Options.save_dir;
+    return (dir.empty()? "." : dir);
+}
+
 std::string get_savedir_filename(const char *prefix, const char *suffix, 
                                  const char *extension, bool suppress_uid)
 {
@@ -512,8 +521,8 @@ std::string get_savedir_filename(const char *prefix, const char *suffix,
     result += suffix;
 
     if ( *extension ) {
-	result += '.';
-	result += extension;
+        result += '.';
+        result += extension;
     }
 
 #ifdef DOS
@@ -1161,7 +1170,7 @@ void save_game(bool leave_game)
     if (stashf) {
         stashes.save(stashf);
         fclose(stashf);
-	DO_CHMOD_PRIVATE(stashFile.c_str());
+        DO_CHMOD_PRIVATE(stashFile.c_str());
     }
 #endif
 
@@ -1179,7 +1188,7 @@ void save_game(bool leave_game)
     if (killf) {
         you.kills.save(killf);
         fclose(killf);
-	DO_CHMOD_PRIVATE(killFile.c_str());
+        DO_CHMOD_PRIVATE(killFile.c_str());
     }
 
     /* travel cache */
@@ -1188,25 +1197,25 @@ void save_game(bool leave_game)
     if (travelf) {
         travel_cache.save(travelf);
         fclose(travelf);
-	DO_CHMOD_PRIVATE(travelCacheFile.c_str());
+        DO_CHMOD_PRIVATE(travelCacheFile.c_str());
     }
     
     /* notes */
     std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "wb");
     if (notesf) {
-	save_notes(notesf);
+        save_notes(notesf);
         fclose(notesf);
-	DO_CHMOD_PRIVATE(notesFile.c_str());
+        DO_CHMOD_PRIVATE(notesFile.c_str());
     }
 
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "wb");
     if (!charf) {
-	snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!\n",
+        snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!\n",
                  charFile.c_str());
-	perror(info);
-	end(-1);
+        perror(info);
+        end(-1);
     }
 
     write_tagged_file( charf, SAVE_MAJOR_VERSION, 0, TAGTYPE_PLAYER );
@@ -1346,8 +1355,8 @@ void restore_game(void)
     FILE *charf = fopen(charFile.c_str(), "rb");
     if (!charf )
     {
-	snprintf(info, INFO_SIZE, "Unable to open %s for reading!\n",
-		 charFile.c_str() );
+        snprintf(info, INFO_SIZE, "Unable to open %s for reading!\n",
+                 charFile.c_str() );
         perror(info);
         end(-1);
     }
@@ -1367,7 +1376,7 @@ void restore_game(void)
     if (!feof(charf))
     {
         snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n",
-		  charFile.c_str());
+                  charFile.c_str());
         perror(info);
         end(-1);
     }
@@ -1405,8 +1414,8 @@ void restore_game(void)
     std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "rb");
     if (notesf) {
-	load_notes(notesf);
-	fclose(notesf);
+        load_notes(notesf);
+        fclose(notesf);
     }
 }
 
@@ -1820,7 +1829,7 @@ unsigned char translate_spell(unsigned char spel)
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return (MS_LEVEL_SUMMON); /* approximate */
     case SPELL_SHADOW_CREATURES:
-	return (MS_LEVEL_SUMMON); /* approximate */
+        return (MS_LEVEL_SUMMON); /* approximate */
     case SPELL_ANIMATE_DEAD:
         return (MS_ANIMATE_DEAD);
     case SPELL_PAIN:
