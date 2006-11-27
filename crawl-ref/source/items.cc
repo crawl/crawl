@@ -2691,11 +2691,9 @@ void handle_time( long time_delta )
     handle_god_time();
 
     // If the player has the lost mutation forget portions of the map
-    if (you.mutation[MUT_LOST])
-    {
-        if (random2(100) <= you.mutation[MUT_LOST] * 5)
-            forget_map(5 + random2(you.mutation[MUT_LOST] * 10));
-    }
+    if (you.mutation[MUT_LOST] && !wearing_amulet(AMU_CLARITY) &&
+        (random2(100) <= you.mutation[MUT_LOST] * 5) )
+        forget_map(5 + random2(you.mutation[MUT_LOST] * 10));
 
     // Update all of the corpses and food chunks on the floor
     update_corpses(time_delta);
