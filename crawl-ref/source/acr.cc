@@ -2673,6 +2673,7 @@ static bool initialise(void)
 
     seed_rng();
     clear_ids();                // in itemname.cc
+    init_char_table(Options.char_set);
     init_feature_table();
 
     init_properties();
@@ -2789,6 +2790,7 @@ static bool initialise(void)
     you.your_name[kNameLen - 1] = 0;
 
     // In case Lua changed the character set.
+    init_char_table(Options.char_set);
     init_feature_table();
 #endif
     viewwindow(1, false);   // This just puts the view up for the first turn.
