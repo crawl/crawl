@@ -95,55 +95,38 @@ static short translate_colour( short col )
     {
     case BLACK:
         return COLOR_BLACK;
-        break;
     case BLUE:
         return COLOR_BLUE;
-        break;
     case GREEN:
         return COLOR_GREEN;
-        break;
     case CYAN:
         return COLOR_CYAN;
-        break;
     case RED:
         return COLOR_RED;
-        break;
     case MAGENTA:
         return COLOR_MAGENTA;
-        break;
     case BROWN:
         return COLOR_YELLOW;
-        break;
     case LIGHTGREY:
         return COLOR_WHITE;
-        break;
     case DARKGREY:
         return COLOR_BLACK + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case LIGHTBLUE:
         return COLOR_BLUE + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case LIGHTGREEN:
         return COLOR_GREEN + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case LIGHTCYAN:
         return COLOR_CYAN + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case LIGHTRED:
         return COLOR_RED + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case LIGHTMAGENTA:
         return COLOR_MAGENTA + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case YELLOW:
         return COLOR_YELLOW + COLFLAG_CURSES_BRIGHTEN;
-        break;
     case WHITE:
         return COLOR_WHITE + COLFLAG_CURSES_BRIGHTEN;
-        break;
     default:
         return COLOR_GREEN;
-        break;                  //mainly for debugging
     }
 }
 
