@@ -37,6 +37,7 @@ bool travel_load_map( char branch, int absdepth );
 
 std::vector<player> find_saved_characters();
 
+std::string get_savedir();
 std::string get_savedir_filename(const char *pre, const char *suf,
                                  const char *ext, bool suppress_uid = false);
 

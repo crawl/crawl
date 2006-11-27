@@ -294,12 +294,15 @@ static bool check_saved_game(void)
         // Create command
         char cmd_buff[1024];
 
+        const std::string directory = get_savedir();
+
         snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
-		  basename.c_str() );
+		  basename.c_str(), directory.c_str() );
 
         if (system( cmd_buff ) != 0)
         {
-            cprintf( EOL "Warning: Zip command (LOAD_UNPACKAGE_CMD) returned non-zero value!" EOL );
+            cprintf( EOL "Warning: Zip command (LOAD_UNPACKAGE_CMD) "
+                         "returned non-zero value!" EOL );
         }
 
         // Remove save game package
