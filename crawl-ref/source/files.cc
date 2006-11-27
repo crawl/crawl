@@ -85,9 +85,6 @@
 
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
-// temp file pairs used for file level cleanup
-extern FixedArray < bool, MAX_LEVELS, MAX_BRANCHES > tmp_file_pairs;
-
 /*
    Order for looking for conjurations for the 1st & 2nd spell slots,
    when finding spells to be remembered by a player's ghost:

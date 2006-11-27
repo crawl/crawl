@@ -506,10 +506,10 @@ void Menu::draw_item( int index ) const
         return;
     gotoxy( 1, y_offset + index - first_entry );
 
-    draw_item(index, items[index]);
+    draw_index_item(index, items[index]);
 }
 
-void Menu::draw_item(int index, const MenuEntry *me) const
+void Menu::draw_index_item(int index, const MenuEntry *me) const
 {
     if (f_drawitem)
         (*f_drawitem)(index, me);
@@ -1221,7 +1221,7 @@ formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
     }
 }
 
-void formatted_scroller::draw_item(int index, const MenuEntry *me) const
+void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 {
     formatted_string::parse_string(me->text).display();
 }

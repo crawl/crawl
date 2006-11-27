@@ -292,7 +292,7 @@ protected:
     void do_menu();
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item( int index ) const;
-    virtual void draw_item(int index, const MenuEntry *me) const;
+    virtual void draw_index_item(int index, const MenuEntry *me) const;
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
 
     virtual void draw_title();
@@ -409,7 +409,7 @@ class formatted_scroller : public Menu
 public:
     formatted_scroller(int flags, const std::string& s);
 protected:
-    virtual void draw_item(int index, const MenuEntry* me) const;
+    virtual void draw_index_item(int index, const MenuEntry* me) const;
 };
 
 int menu_colour(const std::string &itemtext);
