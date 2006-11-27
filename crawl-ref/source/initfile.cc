@@ -523,7 +523,6 @@ void game_options::reset_options()
 #else
     char_set               = CSET_IBM;
 #endif
-    init_char_table(char_set);
     
     // set it to the .crawlrc default
     autopickups = ((1L << 15) | // gold
@@ -1169,8 +1168,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 valid = false;
             }
         }
-        if (valid)
-            init_char_table(char_set);
     }
     else if (key == "default_autopickup")
     {
