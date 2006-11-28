@@ -2500,7 +2500,7 @@ void zap_wand(void)
 
 		if ( !you.inv[item_slot].inscription.empty() )
 		    you.inv[item_slot].inscription += ' ';
-		you.inv[item_slot].inscription += "[empty]";
+		you.inv[item_slot].inscription += "empty";
 		
 	    }
 	}

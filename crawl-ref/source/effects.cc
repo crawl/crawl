@@ -1419,7 +1419,7 @@ bool recharge_wand(void)
     if (wand.base_type == OBJ_WANDS)
     {
         // remove "empty" autoinscription
-        const char* empty_inscription = "[empty]";
+        const char* empty_inscription = "empty";
         size_t p = wand.inscription.find(empty_inscription);
         if ( p != std::string::npos ) {
             // found it, delete it

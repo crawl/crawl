@@ -46,10 +46,26 @@ static const char *item_name_2(
         const item_def &item, char buff[ ITEMNAME_SIZE ], bool terse );
 
 static char retvow(int sed);
-static char  retlet(int sed );
+static char retlet(int sed);
 
 // [dshaligram] For calls to item_name without a pre-allocated buffer.
 static char default_itembuf[ITEMNAME_SIZE];
+
+static bool is_tried_type( int basetype, int subtype )
+{
+    switch ( basetype )
+    {
+    case OBJ_SCROLLS:
+        return id[IDTYPE_SCROLLS][subtype] == ID_TRIED_TYPE;
+    case OBJ_POTIONS:
+        return id[IDTYPE_POTIONS][subtype] == ID_TRIED_TYPE;
+    case OBJ_WANDS:
+        return id[IDTYPE_WANDS][subtype] == ID_TRIED_TYPE;
+    default:
+        return false;
+    }
+}
+
 
 bool is_vowel( const char chr )
 {
@@ -273,13 +289,17 @@ const char *item_name( const item_def &item, char descrip,
             strncat( buff, " (around neck)", ITEMNAME_SIZE );
         }
     }
-    /*** HP CHANGE -- warning -- possible stack overflow error ***/
-    if ( item.inscription.size() > 0 ) // has an inscription
+
+    if ( !item.inscription.empty() )
     {
         strncat( buff, " {", 2 );
+        if ( is_tried_type(item.base_type, item.sub_type) )
+            strncat(buff, "tried, ", 10);
         strncat( buff, item.inscription.c_str(), ITEMNAME_SIZE );
         strncat( buff, "}", 1 );
     }
+    else if ( is_tried_type(item.base_type, item.sub_type) )
+        strncat(buff, " {tried}", 10);
 
     return (buff);
 }                               // end item_name()
@@ -303,7 +323,7 @@ static const char *item_name_2(
     int  brand;
     unsigned char sparm;
 
-    buff[0] = '\0';
+    buff[0] = 0;
 
     switch (item_clas)
     {
@@ -814,11 +834,6 @@ static const char *item_name_2(
                    (primary == 11) ? "plastic" : "buggy", ITEMNAME_SIZE);
 
             strncat(buff, " wand", ITEMNAME_SIZE );
-
-            if (id[ IDTYPE_WANDS ][item_typ] == ID_TRIED_TYPE)
-            {
-                strncat( buff, " {tried}" , ITEMNAME_SIZE );
-            }
         }
 
         if (item_ident( item, ISFLAG_KNOW_PLUSES ))
@@ -902,11 +917,6 @@ static const char *item_name_2(
 
             if (it_quant > 1)
                 strncat(buff, "s", ITEMNAME_SIZE );
-
-            if (id[ IDTYPE_POTIONS ][item_typ] == ID_TRIED_TYPE)
-            {
-                strncat( buff, " {tried}" , ITEMNAME_SIZE );
-            }
         }
         break;
 
@@ -1048,11 +1058,6 @@ static const char *item_name_2(
                 + (static_cast<unsigned long>(item_clas) << 16);
             make_name( sseed, true, buff3 );
             strncat( buff, buff3 , ITEMNAME_SIZE );
-
-            if (id[ IDTYPE_SCROLLS ][item_typ] == ID_TRIED_TYPE)
-            {
-                strncat( buff, " {tried}" , ITEMNAME_SIZE );
-            }
         }
         break;
 
