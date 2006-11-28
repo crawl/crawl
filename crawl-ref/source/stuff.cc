@@ -920,6 +920,16 @@ unsigned char random_colour(void)
     return (1 + random2(15));
 }                               // end random_colour()
 
+unsigned char random_uncommon_colour()
+{
+    unsigned char result;
+    do {
+        result = random_colour();
+    } while ( result == LIGHTCYAN || result == CYAN || result == BROWN );
+    return result;
+}
+
+
 // returns if a colour is one of the special element colours (ie not regular)
 bool is_element_colour( int col )
 {

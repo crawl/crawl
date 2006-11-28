@@ -78,6 +78,7 @@ bool silenced(char x, char y);
 bool player_can_hear(char x, char y);
 
 unsigned char random_colour(void);
+unsigned char random_uncommon_colour();
 bool is_element_colour( int col );
 int  element_colour( int element, bool no_random = false );
 

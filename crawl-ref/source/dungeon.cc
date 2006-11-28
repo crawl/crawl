@@ -6012,16 +6012,12 @@ void item_colour( item_def &item )
 
         switch (item.sub_type)
         {
-        case ARM_ROBE:
-            do {
-                item.colour = random_colour();
-            } while ( item.colour == LIGHTCYAN );
-            break;
         case ARM_CLOAK:
+        case ARM_ROBE:
         case ARM_NAGA_BARDING:
         case ARM_CENTAUR_BARDING:
         case ARM_CAP:
-            item.colour = random_colour();
+            item.colour = random_uncommon_colour();
             break;
 
         case ARM_HELMET:
@@ -6029,14 +6025,18 @@ void item_colour( item_def &item )
             if (get_helmet_type(item) == THELM_CAP
                     || get_helmet_type(item) == THELM_WIZARD_HAT)
             {
-                item.colour = random_colour();
+                item.colour = random_uncommon_colour();
             } 
             else
-                item.colour = LIGHTCYAN;
+                item.colour = GREEN;
             break;
 
-        case ARM_BOOTS: // maybe more interesting boot colours?
+        case ARM_BOOTS:
+            item.colour = RED;
+            break;
         case ARM_GLOVES:
+            item.colour = MAGENTA;
+            break;
         case ARM_LEATHER_ARMOUR:
             item.colour = BROWN;
             break;
