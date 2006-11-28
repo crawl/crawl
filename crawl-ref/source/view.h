@@ -143,6 +143,8 @@ void viewwindow(bool draw_it, bool do_updates);
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray );
 
+dungeon_char_type dchar_by_name(const std::string &name);
+
 #if defined(WIN32CONSOLE) || defined(DOS)
 unsigned short dos_brand( unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);

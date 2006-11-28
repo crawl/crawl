@@ -701,6 +701,23 @@ struct colour_mapping
     int colour;
 };
 
+struct feature_def
+{
+    unsigned short      symbol;          // symbol used for seen terrain
+    unsigned short      magic_symbol;    // symbol used for magic-mapped terrain
+    unsigned short      colour;          // normal in LoS colour
+    unsigned short      map_colour;      // colour when out of LoS on display
+    unsigned short      seen_colour;     // map_colour when is_terrain_seen()
+    bool                notable;         // gets noted when seen
+    bool                seen_effect;     // requires special handling when seen
+};
+
+struct feature_override
+{
+    dungeon_feature_type    feat;
+    feature_def             override;
+};
+
 class InitLineInput;
 struct game_options 
 {
@@ -713,6 +730,10 @@ public:
     void read_options(InitLineInput &, bool runscripts);
 
 public:
+    // View options
+    std::vector<feature_override> feature_overrides;
+    unsigned cset_override[NUM_CSET][NUM_DCHAR_TYPES];
+
     std::string save_dir;       // Directory where saves and bones go.
 
     std::string player_name;
@@ -758,7 +779,7 @@ public:
     bool        delay_message_clear; // avoid clearing messages each turn
     unsigned    friend_brand;   // Attribute for branding friendly monsters
     bool        no_dark_brand;  // Attribute for branding friendly monsters
-    bool        macro_meta_entry; // Allow user to use \{foo} sequences when
+    bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
 
     int         fire_items_start; // index of first item for fire command
@@ -906,6 +927,13 @@ public:
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
 private:
+    void clear_feature_overrides();
+    void clear_cset_overrides();
+    void add_cset_override(char_set_type set, const std::string &overrides);
+    void add_cset_override(char_set_type set, dungeon_char_type dc,
+                           unsigned char symbol);
+    void add_feature_override(const std::string &);
+    
     void set_default_activity_interrupts();
     void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
     void set_activity_interrupt(

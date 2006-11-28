@@ -24,6 +24,7 @@
 
 #include "clua.h"
 #include "delay.h"
+#include "direct.h"
 #include "Kills.h"
 #include "files.h"
 #include "defines.h"
@@ -696,6 +697,103 @@ void game_options::reset_options()
 
     // Setup travel information. What's a better place to do this?
     initialise_travel();
+}
+
+void game_options::clear_cset_overrides()
+{
+    memset(cset_override, 0, sizeof cset_override);
+}
+
+void game_options::clear_feature_overrides()
+{
+    feature_overrides.clear();
+}
+
+static unsigned short read_symbol(std::string s)
+{
+    if (s.empty())
+        return (0);
+    if (s.length() == 1)
+        return s[0];
+
+    if (s[0] == '\\')
+        s = s.substr(1);
+    
+    int feat = atoi(s.c_str());
+    if (feat < 0)
+        feat = 0;
+    return static_cast<unsigned short>(feat);
+}
+
+void game_options::add_feature_override(const std::string &text)
+{
+    std::string::size_type epos = text.rfind("}");
+    if (epos == std::string::npos)
+        return;
+
+    std::string::size_type spos = text.rfind("{", epos);
+    if (spos == std::string::npos)
+        return;
+    
+    std::string fname = text.substr(0, spos);
+    std::string props = text.substr(spos + 1, epos - spos - 1);
+    std::vector<std::string> iprops = split_string(",", props, true, true);
+
+    if (iprops.size() < 1 || iprops.size() > 5)
+        return;
+
+    if (iprops.size() < 5)
+        iprops.resize(5);
+
+    trim_string(fname);
+    std::vector<dungeon_feature_type> feats = features_by_desc(fname);
+    if (feats.empty())
+        return;
+
+    for (int i = 0, size = feats.size(); i < size; ++i)
+    {
+        feature_override fov;
+        fov.feat = feats[i];
+        
+        fov.override.symbol         = read_symbol(iprops[0]);
+        fov.override.magic_symbol   = read_symbol(iprops[1]);
+        fov.override.colour         = str_to_colour(iprops[2], BLACK);
+        fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
+        fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
+
+        feature_overrides.push_back(fov);
+    }
+}
+
+void game_options::add_cset_override(
+        char_set_type set, const std::string &overrides)
+{
+    std::vector<std::string> overs = split_string(",", overrides);
+    for (int i = 0, size = overs.size(); i < size; ++i)
+    {
+        std::vector<std::string> mapping = split_string(":", overs[i]);
+        if (mapping.size() != 2)
+            continue;
+        
+        dungeon_char_type dc = dchar_by_name(mapping[0]);
+        if (dc == NUM_DCHAR_TYPES)
+            continue;
+        
+        unsigned char symbol = 
+            static_cast<unsigned char>(read_symbol(mapping[1]));
+
+        if (set == NUM_CSET)
+            for (int c = 0; c < NUM_CSET; ++c)
+                add_cset_override(char_set_type(c), dc, symbol);
+        else
+            add_cset_override(set, dc, symbol);
+    }
+}
+
+void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
+                                     unsigned char symbol)
+{
+    cset_override[set][dc] = symbol;
 }
 
 // returns where the init file was read from
