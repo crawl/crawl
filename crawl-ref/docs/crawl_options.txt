@@ -23,7 +23,7 @@ The contents of this text are:
 		drop_mode, pickup_mode, drop_filter;
 		lua: ch_autopickup (advanced autopickup exceptions)
 4-b	Targeting. 
-		target_zero_exp, target_wrap, target_oos, target_los_first,
+		target_zero_exp, target_oos, target_los_first,
 		confirm_self_target, default_fizzlecheck
 4-c	Passive Sightings (Detection and Rememberance).
 		detected_monster_colour, detected_item_colour, 
@@ -31,22 +31,22 @@ The contents of this text are:
 4-d	Branding (Item and Monster Highlighting).
 		heap_brand, friend_brand, stab_brand, may_stab_brand 
 4-e	Level Map Functions.
-		level_map_cursor_step, item_colour, show_waypoints
+		level_map_cursor_step, item_colour, 
 4-f	Travel and Exploration. 
-		travel_colour, travel_delay, travel_stair_cost, 
-                travel_avoid_terrain, travel_exclude_radius2,
+		travel_delay, travel_avoid_terrain, travel_exclude_radius2,
                 travel_stop_message, explore_stop, runrest_ignore_message,
-                runrest_ignore_poison, trapwalk_safe_hp;
+                runrest_ignore_poison, trapwalk_safe_hp,
+		tc_reachable, tc_dangerous, tc_excluded, tc_exclude_circle;
 		lua: ch_stop_run (ignoring monsters)
 4-g	Stashes.
 		stash_tracking, stash_filter
 4-h	Command Enhancements.
 		auto_list, lowercase_invocations, easy_open, easy_butcher, 
-		easy_armour, easy_confirm, easy_quit_item_lists, easy_exit_menu,
-		default_autoprayer, sort_menus
+		easy_unequip, easy_confirm, easy_quit_item_prompts, 
+                easy_exit_menu,	default_autoprayer, sort_menus
 4-i	Message and Display Improvements.
-		show_uncursed, hp_warning, always_greet, terse_hand, 
-		delay_message_clear, menu_colour
+		hp_warning, hp_attention, always_greet, terse_hand, 
+                delay_message_clear, menu_colour, increasing_skill_progress
 4-j	Missiles.
 		fire_items_start, fire_order
 4-k	Message Channels.
@@ -60,8 +60,7 @@ The contents of this text are:
 5-  Character Dump.
 5-a	Items and Kills.
 		kill_map, dump_kill_places, dump_item_origins, 
-		dump_item_origin_price, dump_message_count, dump_order,
-                verbose_dump 
+		dump_item_origin_price, dump_message_count, dump_order
 5-b	Notes.
 		use_notes, note_items, ood_interesting, note_hp_percent, 
 		note_skill_levels, note_skill_max, note_monsters, 
@@ -200,8 +199,8 @@ The currently available lua's are
 4-a	Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!:"/
-	By default, the list is empty. The valid symbols are
+autopickup = $?!+"/%
+	The above is the default list. The valid symbols are
  	)	Weapons
 	(	Missiles
 	[	Armour
@@ -210,8 +209,8 @@ autopickup = $?!:"/
 	?	Scrolls
 	" or =  Jewellery
 	!	Potions
-	+ or :	Books
-	\ or |	Staves
+	+ 	Books
+	\ 	Staves
 	0	Orbs
 	}	Misc items
 	X	Corpses
@@ -236,14 +235,14 @@ safe_zero_exp = true
 	cause autopickups, even if safe_autopickup=true is set. This option 
 	also settles whether autoprayer considers such monsters risky.
 
-pickup_thrown = false
+pickup_thrown = true
 	Pickup_thrown=true causes autopickup to grab thrown/fired missiles. 
 	Many players use this because it eases ranged combat quite a bit. If 
 	following suit, be aware that there are situations when there is no 
 	time for picking up projectiles. Use Ctrl-A for switching off 
 	autopickup altogether in such cases or set safe_autopickup=true.
 
-pickup_dropped = true
+pickup_dropped = false
 	Pickup_dropped lets autopickup affect objects you've dropped. Set to 
 	false to block autopickup for dropped objects. This can be convenient.
 
@@ -333,13 +332,9 @@ end
 4-b	Targeting.
 -------------------
 
-target_zero_exp = true
+target_zero_exp = false
 	Set to false to disable targeting zero exp monsters (i.e. plants) 
 	in hostile targeting mode. This is usually convenient to do.
-
-target_wrap = true
-	Set to true if targeting should wrap around from last to first and 
-	vice versa.
 
 target_oos = true
         When cycling through items with 'x' look-around, setting target_oos to
@@ -354,7 +349,7 @@ target_los_first = true
 	setting	target_los_first to true will force the cursor to squares in 
 	line-of-sight before going to squares outside LOS. Defaults to true.
 
-confirm_self_target = false
+confirm_self_target = true
 	Setting this to true will make Crawl ask for confirmation whenever
 	selecting the character as the target of a non-friendly-targeted spell 
 	(i.e., something other than haste, healing or invisibility.)
@@ -376,7 +371,7 @@ detected_item_colour = darkgrey
 	Items found by detect items will be given this colour, for example
 	  detected_item_colour = green
 
-colour_map = false
+colour_map = true
 	Colours out of sight map features on the playing screen.
 
 clean_map = false
@@ -436,40 +431,18 @@ level_map_cursor_step = 10
 	How many squares the cursor moves on the level map when using 
 	Shift-direction or * direction.
 
-item_colour = false
+item_colour = true
 	Colours items on level-map.
-
-show_waypoints = true
-        If set to true (the default), waypoints will be numbered on the level
-        map, assuming that they're on a floor square with nothing on it.
-        Otherwise only a green dot will mark the square.
 
 
 4-f	Travel and Exploration.
 -------------------------------
-
-travel_colour = true
-        Option to turn off colouring the level-map with travel information. Few
-        will set this to false; it's only there for backwards compatibility.
 
 travel_delay = 20
         How long travel waits after each move (milliseconds). Depends on
         platform. Setting to -1 will jump to end of travel - you will not see
         the individual moves.
 
-travel_stair_cost = 500
-	travel_stair_cost determines how costly interlevel travel considers 
-	stairs.	With a high travel_stair_cost (such as the default of 500), 
-	interlevel travel will always choose routes with the minimum number of 
-	level changes possible.	If you set travel_stair_cost to a low value 
-	(such as the minimum of 1), interlevel travel will treat a staircase 
-	just like a normal move, and it may consequently choose routes that 
-	involve extra level transitions. This can be disconcerting in branches 
-	with elevator-type stair arrangements, particularly in the Lair, where 
-	there are typically long chains of elevator stairs, because travel will 
-	go out of its way to use the elevator and minimise total travel 
-	distance.
-	
 travel_avoid_terrain = (shallow water | deep water)
 	Prevent travel from routing through shallow water. By default, this 
 	option is commented out. For merfolk and/or characters with permanent 
@@ -536,6 +509,20 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
 
+tc_reachable = blue
+tc_dangerous = cyan
+tc_excluded = lightmagenta
+tc_exclude_circle = red
+	The above four settle the colouring of the level map ('X'). They are
+	reachable: all squares reachable without problems (perhaps via stairs)
+	dangerous: squares which are only connected to your place via traps
+	excluded: the colour for the centre of travel exclusions (Ctrl-X)
+	excluded_circle: the colour for travel exclusions apart from centre 
+
+
+you travel to without problems (perhaps including
+
+
 Using small scripts in init.txt, travel can get even more convenient.
 
 * Deciding whether monsters are worth stopping for:
@@ -567,47 +554,49 @@ end
 stash_tracking = (explicit | dropped | all)
         A stash is a heap of items tracked by crawl. You can search in your
         stashes with Ctrl-F. This options rules how stashes are generated.
-        When stash_tracking is set to 'explicit' (the default), you have to
-        explicitly tell the game what squares you want it to keep track of. You
-        do that by stepping onto the square containing your stash of goodies and
-        hitting Ctrl+S. The game will now keep track of what's on the square,
-        when you add and remove stuff from your stash. If you remove everything
-        from that square, the game will stop tracking the square altogether. You
-        can also erase a stash square with Ctrl-E.
+        When stash_tracking is set to 'all' (the default), the game marks any 
+	square where it sees any object as a stash. That gives you a 
+	comprehensive list of everything your character sees in the dungeon, 
+	but may slow the game down and use too much memory on older computers.
+
+	With 'explicit', you have to explicitly tell the game what squares you 
+	want it to keep track of. You do that by stepping onto the square 
+	containing your stash of goodies and hitting Ctrl+S. The game will now 
+	keep track of what's on the square, when you add and remove stuff from 
+	your stash. If you remove everything from that square, the game will 
+	stop tracking the square altogether. You can also erase a stash square 
+	with Ctrl-E.
 	
         When stash_tracking is set to 'dropped', any square where you drop 
 	something becomes a stash, and the game keeps track of all such 
 	squares.
 
-	When stash_tracking is set to 'all', the game marks any square where it 
-        sees any object as a stash. That gives you a comprehensive list of
-        everything your character sees in the dungeon, but may slow the game
-        down and use too much memory on older computers.
-
+	When stash_tracking is set to 'all', 
 4-h	Command Enhancements.
 -----------------------------
 
-auto_list = false
+auto_list = true
 	Change to true if you want to automatically list appropriate inventory 
 	items for commands like eat and read. This is like immediately hitting 
 	'?', and can be confusing to beginners because they won't get to see 
 	the prompts. This option does not apply to spell casting... Conjurers 
 	would probably find that really annoying. 
 
-lowercase_invocations = false
+lowercase_invocations = true
 	Set this option to true if you prefer to have invocations on 'a'-'e' 
-	instead of the traditional 'A'-'E' (which is the default). Setting to 
-	true save invocations an annoying shift keypress.
+	instead of the older 'A'-'E'.
 
 easy_open = false
 	Open doors by moving on to them. Highly convenient. Note that travel 
 	and exploration will automatically open doors depending on this option.
 
-easy_butcher = false
-	If true, auto-switch to uncursed short blade for butchery.
+easy_butcher = true
+	If true, auto-switch to uncursed short blade for butchery. For such 
+	tools any special messages are ignored. If false, you have to wield the 
+	tool manually.
 
-easy_armour = true
-	Allows auto removal of armour when dropping it. 
+easy_unequip = true
+	Allows auto removal of armour and jewellery when dropping it. 
 
 easy_confirm = (none | safe | all)
 	Make confirmation questions easier to answer:
@@ -618,11 +607,11 @@ easy_confirm = (none | safe | all)
 	which can result in accidentally answering yes to questions; it is 
 	suggested that you use a value of 'none' or 'safe'
 
-easy_quit_item_lists = false
+easy_quit_item_prompts = true
 	Setting this option to true allows the quitting of item listing with 
-	space as well as escape. These lists are essentially all of those that 
-	are requesting an inventory item and accept '?' and '*'.
-	The identify list will never easy quit. The default is false.
+	Space (as well as Escape, which always works). These lists are 
+	essentially all of those that are requesting an inventory item and 
+	accept '?' and '*'. The identify list will never easy quit. 
 
 easy_exit_menu = true
 	In multidrop (and pickup) menus, paging past the end will drop out of
@@ -642,33 +631,29 @@ default_autoprayer = false
 	Also note the option safe_zero_exp (see 4-a) decides whether zero 
 	experience monsters (like plants) are considered hostile.
 
-sort_menus = auto:5
+sort_menus = (true | false | auto:X)
         When set to true, items are sorted by description in inventory and
-        pickup menus. When set to false (default), items are ordered by
-        equipment slot. When set to a number - using a syntax of the form
-        sort_menus = auto:5 - items are sorted by their description if
-        the total number of items in that category is at least that
-        number; in the default case, having 4 kinds of potions would not
-        sort them, but having 5 would.
+        pickup menus. When set to false, items are ordered by equipment slot. 
+	When set to a number - using a syntax of the form 
+         sort_menus = auto:5 (the default) 
+        - items are sorted by their description if the total number of items in 
+        that category is at least that number; in the default case, having 4 
+        kinds of potions would not sort them, but having 5 would.
 	
 
 4-i	Messages and Display Enhancements.
 ------------------------------------------
 
-show_uncursed = true
-	This option adds the text "uncursed" to items where the curse status is 
-        relevent and known. Does not bother to show "uncursed" on items that are
-        fully identified (showing pluses), since that wound be redundant and 
-	waste space. Should be set to true.
-
-hp_warning = 25
+hp_warning = 10
 	hp_warning gives "* * * LOW HITPOINT WARNING * * *" on the danger 
         channel when the player takens damage and their hitpoints are less than
-        this percentage of their maximum (use 0 to turn off these messages). It 
-	is recommended to use
-	  hp_warning = 55
+        this percentage of their maximum (use 0 to turn off these messages).
 
-terse_hand = true
+hp_attention = 25
+	hp_attention gives a less alert warning than hp_warning (it appears in
+	yellow instead of red).
+
+terse_hand = false
 	Set this to false to have the "in hand" description on the main screen 
 	the same as the inventory. The default setting of true will give the 
 	newer more terse description that should fit the limited space better 
@@ -679,7 +664,7 @@ delay_message_clear = false
         the message space is full (default is false which results in clearing
         between player actions).
 
-always_greet = false
+always_greet = true
 	always_greet will give the race/class and god messages everytime the 
 	game is started. 
 
@@ -689,15 +674,25 @@ menu_colour = <colour>:<regex>
 	statements in a list, or also several menu_colour lines. When using
 	several menu_colour lines, the colour of the _first_ matching regex 
 	is applied. For a list of colours, check the colour option in 6-a.
+
 	To colour worn stuff and highlight cursed items, take
 	  menu_colour = lightred: cursed.*(worn|neck|hand|weapon)
 	  menu_colour = green:(worn|neck|hand|weapon)
 	  menu_colour = red: cursed
+
 	If you frequently die because you forget to use emergency items, try
 	  menu_colour = cyan:(potions? of heal wounds|teleportation)
 	  menu_colour = lightcyan:(blinking|wand of (fire|cold|draining))
+
 	To quickly check what potions were trashed by a mummy curse, use
 	  menu_colour = lightred:potions? of (degeneration|decay)
+
+increasing_skill_progress = true
+        This affects the appearance of the skills screen ('m'). With the 
+	default true, the progress for getting ew levels is shown with
+        increasing percentiles; so that immediately after level up it will
+        read (0%). With false, you get the old behaviour which counts backwards
+        from 10.
 
 
 4-j	Missiles.
@@ -846,17 +841,13 @@ dump_item_origin_price = 100
 	Item origins are dumped if the price of the item is greater than or 
 	equal to this amount. Set this to -1 to prevent selection by price.
 
-dump_message_count = 4
+dump_message_count = 7
 	The number of last messages to be displayed in character dump files. 
 
 dump_order  = header,stats,misc,notes,inventory,skills
 dump_order += spells,mutations,messages,screenshot,kills
         Controls the order of sections in the dump. You can use multiple
         dump_order lines - all lines but the first must use dump_order +=
-
-verbose_dump = false
-	verbose dump causes less important item details to appear in character 
-	dumps.
 
 
 5-b	Notes.

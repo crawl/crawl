@@ -546,7 +546,7 @@ void game_options::reset_options()
     hp_warning             = 10;
     hp_attention           = 25;
     confirm_self_target    = true;
-    safe_autopickup        = false;
+    safe_autopickup        = true;
     use_notes              = true;
     note_skill_max         = false;
     note_all_spells        = false;
@@ -594,7 +594,7 @@ void game_options::reset_options()
     macro_meta_entry       = true;
 
     // 10 was the cursor step default on Linux.
-    level_map_cursor_step  = 10;
+    level_map_cursor_step  = 7;
 
 #ifdef STASH_TRACKING
     stash_tracking         = STM_ALL;
