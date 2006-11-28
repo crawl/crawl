@@ -1,3 +1,48 @@
+Stone Soup 0.1.4 (20061128)
+---------------------------
+* Sif Muna piety no longer wraps around.
+* LOS speedup.
+* Level compiler now reads splev.des and vaults.des when Crawl starts up.
+* [1603062] Fixed save_dir + LOAD_PACKAGE_CMD problems (sartak).
+* Fixed more hiscores segfaults.
+* List of saved games is sorted by experience.
+* [1601205] */' now work to jump to stashes in the level-map.
+* [1581184] Fixed rotting meat/corpses being visible outside LOS.
+* [1601595] Lava smokes, swamp shallow water tends to mist.
+* Fixed 1594106: innate abilities were not being dumped.
+* Implemented 1601227, pickup_mode.
+* [1601588] Hellfire, bolts of fire, and bolts of magma melt wax.
+* [1601349] Fixed LOS not affecting square the player stands on.
+* [1599883] Interlevel travel now makes a best effort to avoid excludes.
+* Added tty colours to levdes syntax highlight script.
+* Set shallowest depth for farm_and_country to 16.
+* Implemented 1601230: sort_menus can now be of the form auto:5 (the default),
+  in which case categories with >= 5 items will be sorted.
+* Implemented 1601277: 'f' is an alias for 't' during targeting.
+* [1601161] Adjusted statue stats.
+* Monster enchantment power is now 4*HD instead of -1.
+* Added draconian descriptions.
+* Draconian shifters and callers are a little more powerful.
+* Implemented 1601016: better menu titles for wield and throw.
+* Implemented 1601061: better messages for extending might/invisibility.
+* Player status now also shows burden.
+* Clean up speed mutation messages for nagas.
+* Let golden draconians know that they resist acid.
+* Gold can no longer be dropped.
+* [1597621] Auto-eat Lua only offers rotten chunks to the appropriate races.
+* Fixed cursor behaviour on Windows.
+* [1600189] Mummy restoration doesn't use mp or turn when it does nothing.
+* Yellow draconians get rapid-fire spit again.
+* Fixed 160093: too many shield interaction messages.
+* Amulets of warding provides one level of negative energy resistance.
+* Negative energy resistance cuts torment damage by 10% per level. Amulets of
+  warding also confer one level of NE resistance.
+* Implemented 1599765, no wield messages while autobutchering.
+* Fixed 1599805 - Xom rekilling dead monsters with lightning.
+* [1597595] Show inventory weight summary in drop menu.
+* Macros are created and saved from ~.
+* [1598730] Fixed monster inventory scrambling.
+
 Stone Soup 0.1.3 (20061116)
 ---------------------------
 * Updated documentation and reorganised the manual.
