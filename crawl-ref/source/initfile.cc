@@ -618,7 +618,7 @@ void game_options::reset_options()
     flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
 
-    lowercase_invocations  = false; 
+    lowercase_invocations  = true; 
 
     // Note: These fire options currently match the old behaviour. -- bwr
     fire_items_start       = 0;           // start at slot 'a'
