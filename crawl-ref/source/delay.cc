@@ -490,13 +490,10 @@ void handle_delay( void )
             break; 
 
         case DELAY_BUTCHER:
-            strcpy( info, "You finish " );
-            strcat( info, (you.species == SP_TROLL
-                            || you.species == SP_GHOUL) ? "ripping"
-                                                        : "chopping" );
-
-            strcat( info, " the corpse into pieces." );
-            mpr( info );
+            snprintf(info, INFO_SIZE, "You finish %s the corpse into pieces.",
+                     (you.species == SP_TROLL ||
+                      you.species == SP_GHOUL) ? "ripping" : "chopping" );
+            mpr(info);
 
             turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 

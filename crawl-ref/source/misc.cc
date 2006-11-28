@@ -127,6 +127,10 @@ void turn_corpse_into_chunks( item_def &item )
         case MONS_SWAMP_DRAGON:
             mitm[o].sub_type = ARM_SWAMP_DRAGON_HIDE;
             break;
+        case MONS_SHEEP:
+        case MONS_YAK:
+            mitm[o].sub_type = ARM_ANIMAL_SKIN;
+            break;
         default:
             // future implementation {dlb}
             mitm[o].sub_type = ARM_ANIMAL_SKIN;

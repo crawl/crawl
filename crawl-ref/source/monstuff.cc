@@ -5156,6 +5156,8 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
         case MONS_STORM_DRAGON:
         case MONS_GOLDEN_DRAGON:
         case MONS_SWAMP_DRAGON:
+        case MONS_YAK:
+        case MONS_SHEEP:
             return (true);
         default:
             return (false);
