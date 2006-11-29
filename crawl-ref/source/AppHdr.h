@@ -308,16 +308,9 @@
     // #define SAVE_DIR_PATH       "/opt/crawl/lib/"
     // #define SAVE_DIR_PATH       ""
 
-    // Define DATA_DIR_PATH to the directory where level-description (.des)
-    // files are stored. NOTE: If you're installing Crawl for a real multiuser
-    // system, you MUST do this. The directory must exist on the filesystem.
-
-    // #define DATA_DIR_PATH       "/opt/crawl"
-
-    // will make this little thing go away.  Define SAVE_PACKAGE_CMD
-    // to a command to compress and bundle the save game files into a
-    // single unit... the two %s will be replaced with the players
-    // save file name.  Define LOAD_UNPACKAGE_CMD to undo this process
+    // Define SAVE_PACKAGE_CMD to a command to compress and bundle the save
+    // game files into a single unit... the two %s will be replaced with the
+    // players save file name.  Define LOAD_UNPACKAGE_CMD to undo this process
     // the %s is the same as above.  The second %s in LOAD_UNPACKAGE_CMD
     // is for the output directory.
     //
