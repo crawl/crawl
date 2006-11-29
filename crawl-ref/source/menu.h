@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <time.h>
 #include "AppHdr.h"
 #include "externs.h"
 #include "defines.h"
@@ -337,6 +338,12 @@ protected:
     int item_colour(int index, const MenuEntry *me) const;
     void draw_stock_item(int index, const MenuEntry *me) const;
     void draw_menu();
+    void show_less();
+    void show_more();
+    void calc_y_offset();
+    void adjust_pagesizes(int rdepth = 3);
+    int  entry_end() const;
+    void fill_line() const;
 
     void new_selection(int nsel);
     bool move_selection(int nsel);
@@ -348,7 +355,7 @@ protected:
 
     bool is_set(int flag) const;
     void select_items( int key, int qty );
-    bool fix_entry();
+    bool fix_entry(int rdepth = 3);
     bool process_key( int keyin );
 
     int post_process(int key);
@@ -359,6 +366,9 @@ protected:
     formatted_string less;
     int starty, endy;
     int selected;
+    bool need_less, need_more;
+    int oldselect;
+    time_t lastkey;
     std::string search;
 };
 

@@ -4572,5 +4572,7 @@ std::string player::short_desc() const
 
 bool player::operator < (const player &p) const
 {
-    return (experience > p.experience);
+    return (experience > p.experience
+        || (experience == p.experience &&
+                stricmp(your_name, p.your_name) < 0));
 }
