@@ -490,38 +490,14 @@ static void dump_stats( std::string & text )
  //---------------------------------------------------------------
 static void dump_stats2( std::string & text, bool calc_unid)
 {
-    char buffer[24*3][45];
-    char str_pass[80];
-    char* ptr_n;
+    std::vector<formatted_string> vfs = get_full_detail(calc_unid);
 
-    get_full_detail(&buffer[0][0], calc_unid);
-
-    for (int i = 0; i < 24; i++)
+    for (unsigned int i = 0; i < vfs.size(); i++)
     {
-        ptr_n = &buffer[i][0];
-        if (buffer[i+24][0] == 0 && buffer[i+24*2][0] == 0)
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-        else
-            snprintf(&str_pass[0], 45, "%-32s", ptr_n);
-        text += str_pass;
-
-        ptr_n = &buffer[i+24][0];
-        if (buffer[i+24*2][0] == 0)
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-        else
-            snprintf(&str_pass[0], 45, "%-20s", ptr_n);
-        text += str_pass;
-
-        ptr_n = &buffer[i+24*2][0];
-        if (buffer[i+24*2][0] != 0)
-        {
-            snprintf(&str_pass[0], 45, "%s", ptr_n);
-            text += str_pass;
-        }
-        text += "\n";
+        text += vfs[i];
+        text += '\n';
     }
-
-    text += "\n" "\n";
+    text += "\n\n";
 }
 
 static void sdump_notes(const std::string &, std::string& text)
@@ -532,7 +508,7 @@ static void sdump_notes(const std::string &, std::string& text)
     text += "\nNotes\n| Turn  |Location | Note\n";
     text += "--------------------------------------------------------------\n";
     for ( unsigned i = 0; i < note_list.size(); ++i ) {
-	text += describe_note(note_list[i]);
+	text += note_list[i].describe();
 	text += "\n";
     }
     text += "\n";
@@ -1037,72 +1013,61 @@ static bool write_dump(
     return (succeeded);
 }                               // end dump_char()
 
-static void set_resist_dump_color( const char* data ) {
-    while ( *data && *data != ':' )
-	++data;
-    if ( *data == 0 )
-	return;
-    ++data;
-    int pluscount = 0;
-    while ( *data ) {
-	if ( *data == '+' )
-	    ++pluscount;
-	if ( *data == 'x' )
-	    --pluscount;
-	++data;
-    }
-    switch ( pluscount ) {
-    case 3:
-    case 2:
-	textcolor(LIGHTGREEN);
-	break;
-    case 1:
-	textcolor(GREEN);
-	break;
-    case -1:
-	textcolor(RED);
-	break;
-    case -2:
-    case -3:
-	textcolor(LIGHTRED);
-	break;
-    default:
-	textcolor(LIGHTGREY);
-	break;
-    }
-}
-
-void resists_screen() {
+void display_notes()
+{
 #ifdef DOS_TERM
     char dosbuffer[4000];
     gettext( 1, 1, 80, 25, dosbuffer );
     window( 1, 1, 80, 25 );
 #endif
-    clrscr();
-    textcolor(LIGHTGREY);
-    char buffer[24*3][45];
-    
-    get_full_detail(&buffer[0][0], false);
+    Menu scr;
+    scr.set_title( new MenuEntry("| Turn  |Location | Note"));
+    for ( unsigned int i = 0; i < note_list.size(); ++i )
+    {
+        std::string prefix = note_list[i].describe(true, true, false);
+        std::string suffix = note_list[i].describe(false, false, true);
+        if ( suffix.empty() )
+            continue;
+        int spaceleft = get_number_of_cols() - prefix.length() - 1;
+        if ( spaceleft <= 0 )
+            return;
+        linebreak_string(suffix, spaceleft - 4, spaceleft);
+        std::vector<std::string> parts = split_string("\n", suffix);
+        scr.add_entry(new MenuEntry(prefix + parts[0]));
+        for ( unsigned int j = 1; j < parts.size(); ++j )
+            scr.add_entry(new MenuEntry(std::string(prefix.length()-2, ' ') +
+                                        std::string("| ") + parts[j]));
 
-    for (int line = 0; line < 24; ++line ) {
-	for ( int block = 0; block < 3; ++block ) {
-	    const int idx = block * 24 + line;
-	    if ( buffer[idx][0] ) {
-		gotoxy( block == 2 ? 53 : block * 32 + 1, line+1 );
-		/* FIXME - hack - magic number 14 */
-		if ( block != 0 && line < 14 )
-		    set_resist_dump_color(buffer[idx]);		    
-		cprintf("%s", buffer[idx] );
-		textcolor(LIGHTGREY);
-	    }
-	}
     }
-
-    getch();
+    scr.show();
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, dosbuffer);
     window(1, 1, 80, 25);
 #endif
+    redraw_screen();
+}
 
+void resists_screen()
+{
+#ifdef DOS_TERM
+    char dosbuffer[4000];
+    gettext( 1, 1, 80, 25, dosbuffer );
+    window( 1, 1, 80, 25 );
+#endif
+    std::vector<formatted_string> vfs = get_full_detail(false);
+    clrscr();
+    gotoxy(1,1);
+    textcolor(LIGHTGREY);
+    
+    formatted_scroller scr;
+    for ( unsigned i = 0; i < vfs.size(); ++i )
+    {
+        scr.add_item_formatted_string(vfs[i]);
+    }
+    scr.show();
+#ifdef DOS_TERM
+    puttext(1, 1, 80, 25, dosbuffer);
+    window(1, 1, 80, 25);
+#endif
     redraw_screen();
 }

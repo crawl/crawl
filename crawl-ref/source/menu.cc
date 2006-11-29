@@ -1276,21 +1276,50 @@ void column_composer::compose_formatted_column(
 formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
     Menu(_flags)
 {
+    add_text(s);
+}
+
+void formatted_scroller::add_text(const std::string& s)
+{
     size_t eolpos = 0;
     while ( true )
     {
-        const size_t newpos = s.find( EOL, eolpos );
-        add_entry(new MenuEntry(std::string(s, eolpos, newpos-eolpos)));
+        const size_t newpos = s.find( "\n", eolpos );
+        add_item_formatted_string(formatted_string::parse_string(std::string(s, eolpos, newpos-eolpos)));
         if ( newpos == std::string::npos )
             break;
         else
-            eolpos = newpos + strlen(EOL);
-    }
+            eolpos = newpos + 1;
+    }    
+}
+
+void formatted_scroller::add_item_formatted_string(const formatted_string& fs)
+{
+    MenuEntry* me = new MenuEntry;
+    me->data = new formatted_string(fs);
+    add_entry(me);
+}
+
+void formatted_scroller::add_item_string(const std::string& s)
+{
+    add_entry( new MenuEntry(s) );
 }
 
 void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 {
-    formatted_string::parse_string(me->text).display();
+    if ( me->data == NULL )
+        Menu::draw_index_item(index, me);
+    else
+        static_cast<formatted_string*>(me->data)->display();
+}
+
+formatted_scroller::~formatted_scroller()
+{
+    // very important: this destructor is called *before* the
+    // base (Menu) class destructor...which is at it should be.
+    for ( unsigned i = 0; i < items.size(); ++i )
+        if ( items[i]->data != NULL )
+            delete static_cast<formatted_string*>(items[i]->data);
 }
 
 int linebreak_string( std::string& s, int wrapcol, int maxcol )
@@ -1323,14 +1352,14 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
             // soft linebreak
             else if ( s[loc] == ' ' && xpos > wrapcol )
             {
-                s.replace(loc, 1, EOL);
+                s.replace(loc, 1, "\n");
                 xpos = 0;
                 ++breakcount;
             }
             // hard linebreak
             else if ( xpos > maxcol )
             {
-                s.insert(loc, EOL);
+                s.insert(loc, "\n");
                 xpos = 0;
                 ++breakcount;
             }

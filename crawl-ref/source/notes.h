@@ -53,10 +53,11 @@ struct Note {
     std::string desc;
     void load( FILE* fp );
     void save( FILE* fp ) const;
+    std::string describe( bool when = true, bool where = true,
+                          bool what = true ) const;
 };
 
 extern std::vector<Note> note_list;
-std::string describe_note( const Note& note );
 void activate_notes( bool active );
 bool notes_are_active();
 void take_note( const Note& note );

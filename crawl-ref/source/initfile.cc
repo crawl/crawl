@@ -51,17 +51,25 @@ template<class A, class B> void append_vector(A &dest, const B &src)
     dest.insert( dest.end(), src.begin(), src.end() );
 }
 
+const std::string cols[16] =
+{
+    "black", "blue", "green", "cyan", "red", "magenta", "brown",
+    "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
+    "lightred", "lightmagenta", "yellow", "white"
+};
+
+const char* colour_to_str(unsigned char colour)
+{
+    if ( colour >= 16 )
+        return "lightgrey";
+    else
+        return cols[colour].c_str();
+}
+
 // returns -1 if unmatched else returns 0-15
 int str_to_colour( const std::string &str, int default_colour )
 {
     int ret;
-
-    const std::string cols[16] =
-    {
-        "black", "blue", "green", "cyan", "red", "magenta", "brown",
-        "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
-        "lightred", "lightmagenta", "yellow", "white"
-    };
 
     const std::string element_cols[] =
     {

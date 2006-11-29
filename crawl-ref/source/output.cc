@@ -23,6 +23,7 @@
 #include "externs.h"
 
 #include "fight.h"
+#include "initfile.h"
 #include "itemname.h"
 #include "menu.h"
 #include "ouch.h"
@@ -551,14 +552,14 @@ void print_stats(void)
 #endif
 }                               // end print_stats()
 
-unsigned char* itosym1(int stat)
+const char* itosym1(int stat)
 {
-    return (unsigned char*)( (stat >= 1) ? "+  " : ".  " );
+    return ( (stat >= 1) ? "+  " : ".  " );
 }
 
-unsigned char* itosym3(int stat)
+const char* itosym3(int stat)
 {
-    return (unsigned char*)( (stat >= 3) ? "+ + +" :
+    return ( (stat >=  3) ? "+ + +" :
              (stat ==  2) ? "+ + ." :
              (stat ==  1) ? "+ . ." :
              (stat ==  0) ? ". . ." :
@@ -600,79 +601,112 @@ int equip_name_to_slot(const char *s)
     return -1;
 }
 
-void get_full_detail(char* buffer, bool calc_unid)
+static const char* determine_color_string( int level ) {
+    switch ( level ) {
+    case 3:
+    case 2:
+	return "<lightgreen>";
+    case 1:
+        return "<green>";
+    case -1:
+        return "<red>";
+    case -2:
+    case -3:
+        return "<lightred>";
+    default:
+        return "<lightgrey>";
+    }
+}
+
+std::vector<formatted_string> get_full_detail(bool calc_unid)
 {
-#define CUR_AD &buffer[++lines*45],44
-#define BUF_SIZE 24*3*45
-    int lines = -1;
-
-    memset(buffer, 0, BUF_SIZE);
-
-    snprintf(CUR_AD, "%s the %s", you.your_name, player_title());
-    lines++;
-    snprintf(CUR_AD, "Race       : %s", species_name(you.species,you.experience_level) );
-    snprintf(CUR_AD, "Class      : %s", you.class_name);
-    snprintf(CUR_AD, "Worship    : %s", 
-            you.religion == GOD_NO_GOD? "" : god_name(you.religion) );
-    snprintf(CUR_AD, "Level      : %7d", you.experience_level);
-    snprintf(CUR_AD, "Exp        : %7lu", you.experience);
+    char buf[1000];
+    // 3 columns, splits at columns 32, 52
+    column_composer cols(3, 32, 52);
+    snprintf(buf, sizeof buf,
+             "<red>%s the %s</red>\n\n"
+             "Race       : %s\n"
+             "Class      : %s\n"
+             "Worship    : %s\n"
+             "Level      : %7d\n"
+             "Exp        : %7lu\n",
+             you.your_name, player_title(),
+             species_name(you.species,you.experience_level),
+             you.class_name,
+             you.religion == GOD_NO_GOD? "" : god_name(you.religion),
+             you.experience_level,
+             you.experience);
+    cols.add_formatted(0, buf, false);
 
     if (you.experience_level < 27)
     {
-        int xp_needed = (exp_needed(you.experience_level+2) - you.experience) + 1;
-        snprintf(CUR_AD, "Next Level : %7lu", exp_needed(you.experience_level + 2) + 1);
-        snprintf(CUR_AD, "Exp Needed : %7d", xp_needed);
+        int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
+        snprintf(buf, sizeof buf,
+                 "Next Level : %7lu\n"
+                 "Exp Needed : %7d\n",
+                 exp_needed(you.experience_level + 2) + 1,
+                 xp_needed);
+        cols.add_formatted(0, buf, false);
     }
     else
-    {
-        snprintf(CUR_AD, "                  ");
-        snprintf(CUR_AD, "                  ");
-    }
-
-    snprintf(CUR_AD, "Spls.Left  : %7d", player_spell_levels() );
-    snprintf(CUR_AD, "Gold       : %7d", you.gold );
-
-    lines++;
+        cols.add_formatted(0, "\n\n", false);
+       
+    snprintf(buf, sizeof buf,
+             "Spls.Left  : %7d\n"
+             "Gold       : %7d\n",
+             player_spell_levels(),
+             you.gold);
+    cols.add_formatted(0, buf, false);
 
     if (!player_rotted())
     {
         if (you.hp < you.hp_max)
-            snprintf(CUR_AD, "HP         : %3d/%d", you.hp, you.hp_max);
+            snprintf(buf, sizeof buf, "HP         : %3d/%d",you.hp,you.hp_max);
         else
-            snprintf(CUR_AD, "HP         : %3d", you.hp);
+            snprintf(buf, sizeof buf, "HP         : %3d", you.hp);
     }
     else
     {
-        snprintf(CUR_AD, "HP         : %3d/%d (%d)", 
-                you.hp, you.hp_max, you.hp_max + player_rotted() );
+        snprintf(buf, sizeof buf, "HP         : %3d/%d (%d)", 
+                 you.hp, you.hp_max, you.hp_max + player_rotted() );
     }
+    cols.add_formatted(0, buf, true);
 
     if (you.magic_points < you.max_magic_points)
-        snprintf(CUR_AD, "MP         : %3d/%d", 
-            you.magic_points, you.max_magic_points);
+        snprintf(buf, sizeof buf, "MP         : %3d/%d", 
+                 you.magic_points, you.max_magic_points);
     else
-        snprintf(CUR_AD, "MP         : %3d", you.magic_points);
+        snprintf(buf, sizeof buf, "MP         : %3d", you.magic_points);
+    cols.add_formatted(0, buf, false);
 
     if (you.strength == you.max_strength)
-        snprintf(CUR_AD, "Str        : %3d", you.strength);
+        snprintf(buf, sizeof buf, "Str        : %3d", you.strength);
     else
-        snprintf(CUR_AD, "Str        : %3d (%d)", 
-                you.strength, you.max_strength);
+        snprintf(buf, sizeof buf, "Str        : %3d (%d)",
+                 you.strength, you.max_strength);
+    cols.add_formatted(0, buf, false);
     
     if (you.intel == you.max_intel)
-        snprintf(CUR_AD, "Int        : %3d", you.intel);
+        snprintf(buf, sizeof buf, "Int        : %3d", you.intel);
     else
-        snprintf(CUR_AD, "Int        : %3d (%d)", you.intel, you.max_intel);
+        snprintf(buf, sizeof buf, "Int        : %3d (%d)",
+                 you.intel, you.max_intel);
+    cols.add_formatted(0, buf, false);
     
     if (you.dex == you.max_dex)
-        snprintf(CUR_AD, "Dex        : %3d", you.dex);
+        snprintf(buf, sizeof buf, "Dex        : %3d", you.dex);
     else
-        snprintf(CUR_AD, "Dex        : %3d (%d)", you.dex, you.max_dex);
+        snprintf(buf, sizeof buf, "Dex        : %3d (%d)",you.dex,you.max_dex);
+    cols.add_formatted(0, buf, false);
 
-    snprintf(CUR_AD, "AC         : %3d", player_AC() );
-    snprintf(CUR_AD, "Evasion    : %3d", player_evasion() );
-    snprintf(CUR_AD, "Shield     : %3d", player_shield_class() );
-    lines++;
+    snprintf(buf, sizeof buf,
+             "AC         : %3d\n"
+             "Evasion    : %3d\n"
+             "Shield     : %3d\n",
+             player_AC(),
+             player_evasion(),
+             player_shield_class());
+    cols.add_formatted(0, buf, false);
 
     if (you.real_time != -1)
     {
@@ -680,34 +714,47 @@ void get_full_detail(char* buffer, bool calc_unid)
         char buff[200];
         make_time_string( curr, buff, sizeof(buff), true );
 
-        snprintf(CUR_AD, "Play time  : %10s", buff);
-        snprintf(CUR_AD, "Turns      : %10ld", you.num_turns );
+        snprintf(buf, sizeof buf,
+                 "Play time  : %10s\n"
+                 "Turns      : %10ld\n",
+                 buff, you.num_turns );
+        cols.add_formatted(0, buf, true);
     }
 
-    lines = 24 + 1;
+    const int rfire = player_res_fire(calc_unid);
+    const int rcold = player_res_cold(calc_unid);
+    const int rlife = player_prot_life(calc_unid);
+    const int rpois = player_res_poison(calc_unid);
+    const int relec = player_res_electricity(calc_unid);
 
-    snprintf(CUR_AD, "Res.Fire  : %s", 
-            itosym3( player_res_fire(calc_unid) ) );
-    snprintf(CUR_AD, "Res.Cold  : %s", 
-            itosym3( player_res_cold(calc_unid) ) );
-    snprintf(CUR_AD, "Life Prot.: %s", 
-            itosym3( player_prot_life(calc_unid) ) );
-    snprintf(CUR_AD, "Res.Poison: %s", 
-            itosym1( player_res_poison(calc_unid) ) );
-    snprintf(CUR_AD, "Res.Elec. : %s", 
-            itosym1( player_res_electricity(calc_unid) ) );
-    lines++;
-    
-    snprintf(CUR_AD, "Sust.Abil.: %s", 
-            itosym1( player_sust_abil(calc_unid) ) );
-    snprintf(CUR_AD, "Res.Mut.  : %s", 
-            itosym1( wearing_amulet( AMU_RESIST_MUTATION, calc_unid) ) );
-    snprintf(CUR_AD, "Res.Slow  : %s", 
-            itosym1( wearing_amulet( AMU_RESIST_SLOW, calc_unid) ) );
-    snprintf(CUR_AD, "Clarity   : %s", 
-            itosym1( wearing_amulet( AMU_CLARITY, calc_unid) ) );
-    lines++;
-    lines++;
+    snprintf(buf, sizeof buf, "\n\n"             
+             "Res.Fire  : %s%s\n"
+             "Res.Cold  : %s%s\n"
+             "Life Prot.: %s%s\n"
+             "Res.Poison: %s%s\n"
+             "Res.Elec. : %s%s\n",
+             determine_color_string(rfire), itosym3(rfire),
+             determine_color_string(rcold), itosym3(rcold),
+             determine_color_string(rlife), itosym3(rlife),
+             determine_color_string(rpois), itosym1(rpois),
+             determine_color_string(relec), itosym1(relec));
+    cols.add_formatted(1, buf, false);
+
+    const int rsust = player_sust_abil(calc_unid);
+    const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
+    const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
+    const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
+
+    snprintf(buf, sizeof buf,
+             "Sust.Abil.: %s%s\n"
+             "Res.Mut.  : %s%s\n"
+             "Res.Slow  : %s%s\n"
+             "Clarity   : %s%s\n \n",
+             determine_color_string(rsust), itosym1(rsust),
+             determine_color_string(rmuta), itosym1(rmuta),
+             determine_color_string(rslow), itosym1(rslow),
+             determine_color_string(rclar), itosym1(rclar));
+    cols.add_formatted(1, buf, true);
 
     {
         char str_pass[ITEMNAME_SIZE];
@@ -729,86 +776,116 @@ void get_full_detail(char* buffer, bool calc_unid)
 
             if ( you.equip[ e_order[i] ] != -1)
             {
-                in_name( you.equip[ e_order[i] ], DESC_PLAIN, 
-                         str_pass, true );
-                snprintf(CUR_AD, "%-7s: %s", slot, str_pass);
+                const int inum = you.equip[e_order[i]];
+                in_name( inum, DESC_PLAIN, str_pass, true );
+                str_pass[38] = 0; // truncate
+                const char* colname = colour_to_str(you.inv[inum].colour);
+                snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
+                         slot, colname, str_pass, colname);
             }
             else
             {
                 if (e_order[i] == EQ_WEAPON)
                 {
                     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-                        snprintf(CUR_AD, "%-7s: Blade Hands", slot);
+                        snprintf(buf, sizeof buf, "%-7s: Blade Hands", slot);
                     else if (you.skills[SK_UNARMED_COMBAT])
-                        snprintf(CUR_AD, "%-7s: Unarmed", slot);
+                        snprintf(buf, sizeof buf, "%-7s: Unarmed", slot);
                     else
-                        snprintf(CUR_AD, "%-7s:", slot);
+                        snprintf(buf, sizeof buf, "%-7s:", slot);
                 }
                 else
                 {
-                    snprintf(CUR_AD, "%-7s:", slot);
+                    snprintf(buf, sizeof buf, "%-7s:", slot);
                 }
             }
+            cols.add_formatted(1, buf, false);
         }
     }
 
-    lines = 24 * 2 + 1;
-    snprintf(CUR_AD, "See Invis. : %s", 
-            itosym1( player_see_invis(calc_unid) ) );
-    snprintf(CUR_AD, "Warding    : %s", 
-            itosym1( wearing_amulet(AMU_WARDING, calc_unid)
-                     || (you.religion == GOD_VEHUMET && 
-                         you.duration[DUR_PRAYER] && 
-                         !player_under_penance() &&
-                         you.piety >= 75) ) );
-    snprintf(CUR_AD, "Conserve   : %s", 
-            itosym1( wearing_amulet( AMU_CONSERVATION, calc_unid) ) );
-    snprintf(CUR_AD, "Res.Corr.  : %s", 
-            itosym1( wearing_amulet( AMU_RESIST_CORROSION, calc_unid) ) );
-    
-    if ( !wearing_amulet( AMU_THE_GOURMAND, calc_unid) )
+    const int rinvi = player_see_invis(calc_unid);
+    const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
+        (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
+         !player_under_penance() && you.piety >= 75);
+    const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
+    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
+
+    snprintf(buf, sizeof buf, "\n\n"
+             "See Invis. : %s%s\n"
+             "Warding    : %s%s\n"
+             "Conserve   : %s%s\n"
+             "Res.Corr.  : %s%s\n",
+             determine_color_string(rinvi), itosym1(rinvi),
+             determine_color_string(rward), itosym1(rward),
+             determine_color_string(rcons), itosym1(rcons),
+             determine_color_string(rcorr), itosym1(rcorr));
+    cols.add_formatted(2, buf, false);    
+             
+    int saplevel = 0;
+    switch (you.species)
+    {            
+    case SP_GHOUL:
+        saplevel = 3;
+        snprintf(buf, sizeof buf, "Saprovore  : %s%s",
+                 determine_color_string(3), itosym3(3) );
+        break;
+
+    case SP_KOBOLD:
+    case SP_TROLL:
+        saplevel = 2;
+        snprintf(buf, sizeof buf, "Saprovore  : %s%s",
+                 determine_color_string(2), itosym3(2) );
+        break;
+
+    case SP_HILL_ORC:
+    case SP_OGRE:
+        saplevel = 1;
+        break;
+    default:
+        saplevel = 0;
+        break;
+    }
+    const char* pregourmand;
+    const char* postgourmand;
+    if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
     {
-        switch (you.species)
-        {
-        case SP_GHOUL:
-            snprintf(CUR_AD, "Saprovore  : %s", itosym3(3) );
-            break;
-
-        case SP_KOBOLD:
-        case SP_TROLL:
-            snprintf(CUR_AD, "Saprovore  : %s", itosym3(2) );
-            break;
-
-        case SP_HILL_ORC:
-        case SP_OGRE:
-            snprintf(CUR_AD, "Saprovore  : %s", itosym3(1) );
-            break;
-
-        default:
-            snprintf(CUR_AD, "Gourmand   : %s", itosym1(0) );
-            break;
-        }
+        pregourmand = "Gourmand   : ";
+        postgourmand = itosym1(1);
+        saplevel = 1;
     }
     else
     {
-        snprintf(CUR_AD, "Gourmand   : %s", 
-                itosym1( wearing_amulet( AMU_THE_GOURMAND, calc_unid) ) );
+        pregourmand = "Saprovore  : ";
+        postgourmand = itosym3(saplevel);
     }
-    
-    lines++;
+    snprintf(buf, sizeof buf, "%s%s%s", pregourmand,
+             determine_color_string(saplevel), postgourmand);
+    cols.add_formatted(2, buf, false);
+
+    cols.add_formatted(2, " \n", false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
-        snprintf(CUR_AD, "Prev.Telep.: %s", 
-            itosym1( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) ) );
+        snprintf(buf, sizeof buf, "Prev.Telep.: %s%s",
+                 determine_color_string(-1), itosym1(1));
     else
-        snprintf(CUR_AD, "Rnd.Telep. : %s", 
-            itosym1( player_teleport(calc_unid) ) );
-    snprintf(CUR_AD, "Ctrl.Telep.: %s", 
-	     itosym1( player_control_teleport(calc_unid) ) );
-    snprintf(CUR_AD, "Levitation : %s", itosym1( player_is_levitating() ) );
-    snprintf(CUR_AD, "Ctrl.Flight: %s", 
-            itosym1( wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid) ) ); 
-    lines++;
+    {
+        const int rrtel = player_teleport(calc_unid);
+        snprintf(buf, sizeof buf, "Rnd.Telep. : %s%s",
+                 determine_color_string(rrtel), itosym1(rrtel));
+    }
+    cols.add_formatted(2, buf, false);
 
-    return;
+    const int rctel = player_control_teleport(calc_unid);
+    const int rlevi = player_is_levitating();
+    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    snprintf(buf, sizeof buf,
+             "Ctrl.Telep.: %s%s\n"
+             "Levitation : %s%s\n"
+             "Ctrl.Flight: %s%s\n",
+             determine_color_string(rctel), itosym1(rctel),
+             determine_color_string(rlevi), itosym1(rlevi),
+             determine_color_string(rcfli), itosym1(rcfli));
+    cols.add_formatted(2, buf, false);
+
+    return cols.formatted_lines();
 }

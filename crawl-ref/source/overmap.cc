@@ -127,7 +127,7 @@ void display_overmap()
         BRANCH_HALL_OF_ZOT
     };
 
-    disp += "                    <white>Overview of the Dungeon</white>" EOL;
+    disp += "                    <white>Overview of the Dungeon</white>\n" ;
 
     // print branches
     int branchcount = 0;
@@ -138,7 +138,7 @@ void display_overmap()
         {
             if ( !branchcount )
             {
-                disp += EOL "<white>Branches:</white>" EOL;
+                disp += "\n<white>Branches:</white>\n";
                 seen_anything = true;
             }
             
@@ -149,19 +149,19 @@ void display_overmap()
                      stair_level[branch].describe(false, true).c_str());
             disp += buffer;
             if ( (branchcount % 4) == 0 )
-                disp += EOL;
+                disp += "\n";
             else
                 disp += "   ";
         }
     }
     if ( branchcount && (branchcount % 4) )
-        disp += EOL;
+        disp += "\n";
     
     // print altars
     // we loop through everything a dozen times, oh well
     if ( !altars_present.empty() )
     {
-        disp += EOL "<white>Altars:</white>" EOL;
+        disp += "\n<white>Altars:</white>\n";
         seen_anything = true;
     }
 
@@ -201,13 +201,13 @@ void display_overmap()
             }
         }
         if ( last_id.depth != 10000 )
-            disp += EOL;
+            disp += "\n";
     }
 
     // print shops
     if (!shops_present.empty())
     {
-        disp += EOL "<white>Shops:</white>" EOL;
+        disp += "\n<white>Shops:</white>\n";
         seen_anything = true;
     }
     last_id.depth = 10000;
@@ -225,7 +225,7 @@ void display_overmap()
                 // the level name, plus 4 for the spacing; that makes
                 // a total of 16 chars per shop or exactly 5 per line.
                 if ( placecount % 5 == 0 )
-                    disp += EOL;
+                    disp += "\n";
                 else
                     disp += "  ";
             }
@@ -238,12 +238,12 @@ void display_overmap()
         }
         disp += shoptype_to_char(ci_shops->second);
     }
-    disp += EOL;
+    disp += "\n";
 
     // print portals
     if ( !portals_present.empty() )
     {
-        disp += EOL "<white>Portals:</white>" EOL;
+        disp += "\n<white>Portals:</white>\n";
         seen_anything = true;
     }
     for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
@@ -273,7 +273,7 @@ void display_overmap()
             }
         }
         if ( last_id.depth != 10000 )
-            disp += EOL;
+            disp += "\n";
     }
 
     if (!seen_anything)

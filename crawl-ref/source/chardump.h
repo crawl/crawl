@@ -22,6 +22,7 @@ bool dump_char(const std::string &fname,
                bool full_id = false);
 
 void resists_screen();
+void display_notes();
 
 std::string munge_description(const std::string &inStr);
 

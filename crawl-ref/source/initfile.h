@@ -20,6 +20,7 @@
 std::string & trim_string( std::string &str );
 std::string & tolower_string( std::string &str );
 int str_to_colour( const std::string &str, int default_colour = -1 );
+const char* colour_to_str( unsigned char colour );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

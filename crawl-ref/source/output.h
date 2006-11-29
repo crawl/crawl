@@ -14,6 +14,8 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
+#include "menu.h"
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - player - stuff
@@ -23,7 +25,7 @@ void print_stats(void);
 /* ***********************************************************************
  * called from: chardump
  * *********************************************************************** */
-void get_full_detail(char* buffer, bool calc_unid);
+std::vector<formatted_string> get_full_detail(bool calc_unid);
 
 const char *equip_slot_to_name(int equip);
 

@@ -839,8 +839,8 @@ static void input() {
     you.turn_is_over = false;
     prep_input();
 
-    /* you.paralysis check */
-    if ( you.paralysis ) {
+    if ( you.paralysis )
+    {
         world_reacts();
         return;
     }
@@ -851,13 +851,14 @@ static void input() {
 
     gotoxy(18,9);
 
-    if ( you_are_delayed() ) {
+    if ( you_are_delayed() )
+    {
         world_reacts();
         return;
     }
 
-    /* Change from previous code! */
-    if ( you.turn_is_over ) {
+    if ( you.turn_is_over )
+    {
         world_reacts();
         return;
     }
@@ -1038,6 +1039,10 @@ void process_command( command_type cmd ) {
     
     case CMD_MAKE_NOTE:
         make_user_note();
+        break;
+
+    case CMD_DISPLAY_NOTES:
+        display_notes();
         break;
 
     case CMD_CLEAR_MAP:
@@ -2345,6 +2350,7 @@ command_type keycode_to_command( keycode_type key ) {
     case '%': return CMD_RESISTS_SCREEN;
     case ',': return CMD_PICKUP;
     case ':': return CMD_MAKE_NOTE;
+    case '_': return CMD_DISPLAY_NOTES;
     case ';': return CMD_INSPECT_FLOOR;
     case '!': return CMD_SHOUT;
     case '^': return CMD_DISPLAY_RELIGION;

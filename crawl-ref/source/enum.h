@@ -645,6 +645,7 @@ enum command_type
     CMD_TOGGLE_AUTOPRAYER,
     CMD_MAKE_NOTE,
     CMD_RESISTS_SCREEN,
+    CMD_DISPLAY_NOTES,
 
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,
