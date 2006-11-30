@@ -133,7 +133,7 @@ void init_monsters( FixedVector<unsigned short, 1000>& colour );
 const char *monam(int mons_num, int mons, bool vis, char desc, int mons_wpn = NON_ITEM);
 
 // these front for monam
-const char *ptr_monam( struct monsters *mon, char desc );
+const char *ptr_monam( const monsters *mon, char desc );
 
 
 // last updated 12may2000 {dlb}

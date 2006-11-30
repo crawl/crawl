@@ -29,6 +29,7 @@
 #include "message.h"
 #include "misc.h"
 #include "monstuff.h"
+#include "mon-util.h"
 #include "mstuff2.h"
 #include "ouch.h"
 #include "output.h"
@@ -883,6 +884,12 @@ void interrupt_activity( activity_interrupt_type ai,
 
     if (should_stop_activity(item, ai, at))
     {
+        if ( ai == AI_SEE_MONSTER && is_run_delay(item.type) )
+        {
+            const monsters* mon = static_cast<const monsters*>(at.data);
+            mprf(MSGCH_WARN, "%s comes into view.",
+                 ptr_monam(mon, DESC_CAP_A));
+        }
         stop_delay();
         return;
     }
@@ -902,6 +909,12 @@ void interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
+                    if ( ai == AI_SEE_MONSTER )
+                    {
+                        const monsters* mon = static_cast<const monsters*>(at.data);
+                        mprf(MSGCH_WARN, "%s comes into view.",
+                             ptr_monam(mon, DESC_CAP_A));
+                    }
                     stop_delay();
                     return;
                 }

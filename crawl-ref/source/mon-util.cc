@@ -1317,7 +1317,7 @@ void define_monster(int index)
 
 
 /* ------------------------- monam/moname ------------------------- */
-const char *ptr_monam( struct monsters *mon, char desc )
+const char *ptr_monam( const monsters *mon, char desc )
 {
     // We give an item type description for mimics now, note that 
     // since gold mimics only have one description (to match the
