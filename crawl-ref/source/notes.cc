@@ -138,9 +138,10 @@ static bool is_noteworthy( const Note& note ) {
          note.type == NOTE_POLY_MONSTER ||
 	 note.type == NOTE_USER_NOTE ||
          note.type == NOTE_MESSAGE ||
-	 note.type == NOTE_LOSE_GOD )
+	 note.type == NOTE_LOSE_GOD ||
+         note.type == NOTE_MOLLIFY_GOD )
 	return true;
-
+    
     /* never noteworthy, hooked up for fun or future use */
     if ( note.type == NOTE_GET_ITEM ||
 	 note.type == NOTE_MP_CHANGE ||
@@ -282,6 +283,10 @@ std::string Note::describe( bool when, bool where, bool what ) const {
             break;
         case NOTE_LOSE_GOD:
             snprintf(buf, sizeof buf, "Fell from the grace of %s",
+                     god_name(first));
+            break;
+        case NOTE_MOLLIFY_GOD:
+            snprintf(buf, sizeof buf, "Was forgiven by %s",
                      god_name(first));
             break;
         case NOTE_GOD_GIFT:

@@ -91,6 +91,7 @@ void dec_penance(int god, int val)
         if (you.penance[god] <= val)
         {
             simple_god_message(" seems mollified.", god);
+            take_note(Note(NOTE_MOLLIFY_GOD, god));
             you.penance[god] = 0;
         }
         else
