@@ -1258,6 +1258,36 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+##########################################################################
+# Alternate Temple level
+NAME: water_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwww...................B...................wwwwwcx
+xcwww......B.............................B......wwwcx
+xcwww.............B...............B.............wwwcx
+xcww......................(......................wwcx
+xcww.............................................wwcx
+xcww...B..................T..................B...wwcx
+xcww.............................................wwcx
+xcww...................[.....{...................wwcx
+xcwww.............B...............B.............wwwcx
+xcwww......B.............................B......wwwcx
+xcwwwww...................B...................wwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+ENDMAP
+
+
 ##############################################################################
 # Tomb:1
 

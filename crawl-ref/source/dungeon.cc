@@ -4532,7 +4532,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
     int aq_creatures;
     int swimming_things[4];
 
-    if (level_type == LEVEL_PANDEMONIUM)
+    if (level_type == LEVEL_PANDEMONIUM 
+            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
         return;
 
     for (i = 0; i < mon_wanted; i++)
