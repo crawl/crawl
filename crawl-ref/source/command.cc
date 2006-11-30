@@ -565,11 +565,6 @@ void list_weapons(void)
     mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()
 
-static void cmdhelp_showline(int index, const MenuEntry *me)
-{
-    static_cast<formatted_string *>(me->data)->display();
-}
-
 static int cmdhelp_keyfilter(int keyin)
 {
     switch (keyin)
@@ -639,12 +634,10 @@ static const char *targeting_help =
             
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
 {
-    Menu cmd_help;
+    formatted_scroller cmd_help;
     
     // Set flags, and don't use easy exit.
-    cmd_help.set_flags(
-            MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP,
-            false);
+    cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
 
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
@@ -652,24 +645,11 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
             formatted_string::parse_string(
                 "<cyan>[ + : Page down.   - : Page up."
                 "                         Esc/x exits.]"));
-    cmd_help.f_drawitem  = cmdhelp_showline;
     cmd_help.f_keyfilter = cmdhelp_keyfilter;
 
-    std::vector<MenuEntry*> entries;
-
-    for (unsigned i = 0, size = lines.size(); i < size; ++i)
-    {
-        MenuEntry *me = new MenuEntry;
-        me->data = new formatted_string(lines[i]);
-        entries.push_back(me);
-
-        cmd_help.add_entry(me);
-    }
-
+    for (unsigned i = 0; i < lines.size(); ++i )
+        cmd_help.add_item_formatted_string(lines[i]);
     cmd_help.show();
-
-    for (unsigned i = 0, size = entries.size(); i < size; ++i)
-        delete static_cast<formatted_string*>( entries[i]->data );
 }
 
 void show_levelmap_help()
