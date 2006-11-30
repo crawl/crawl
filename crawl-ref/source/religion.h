@@ -31,5 +31,6 @@ void pray(void);
 void handle_god_time(void);
 char god_colour(char god);
 void god_pitch(unsigned char which_god);
+int piety_rank(int piety = -1);
 
 #endif

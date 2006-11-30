@@ -623,17 +623,38 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     char buf[1000];
     // 3 columns, splits at columns 32, 52
     column_composer cols(3, 32, 52);
+    char god_colour_tag[20];
+    god_colour_tag[0] = 0;
+    std::string godpowers(god_name(you.religion));
+    if ( you.religion != GOD_NO_GOD )
+    {
+        if ( player_under_penance() )
+            strcpy(god_colour_tag, "<red>*");
+        else
+        {
+            snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
+                     colour_to_str(god_colour(you.religion)));
+            // piety rankings
+            int prank = piety_rank() - 1;
+            if ( prank < 0 )
+                prank = 0;
+            // Careful about overflow. We erase some of the god's name
+            // if necessary.
+            godpowers = godpowers.substr(0, 17 - prank) +
+                std::string(prank, '*');
+        }
+    }
     snprintf(buf, sizeof buf,
-             "<red>%s the %s</red>\n\n"
+             "<yellow>%s the %s</yellow>\n\n"
              "Race       : %s\n"
              "Class      : %s\n"
-             "Worship    : %s\n"
+             "Worship    : %s%s\n"
              "Level      : %7d\n"
              "Exp        : %7lu\n",
              you.your_name, player_title(),
              species_name(you.species,you.experience_level),
              you.class_name,
-             you.religion == GOD_NO_GOD? "" : god_name(you.religion),
+             god_colour_tag, godpowers.c_str(),
              you.experience_level,
              you.experience);
     cols.add_formatted(0, buf, false);
@@ -682,21 +703,22 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     if (you.strength == you.max_strength)
         snprintf(buf, sizeof buf, "Str        : %3d", you.strength);
     else
-        snprintf(buf, sizeof buf, "Str        : %3d (%d)",
+        snprintf(buf, sizeof buf, "Str        : <yellow>%3d</yellow> (%d)",
                  you.strength, you.max_strength);
     cols.add_formatted(0, buf, false);
     
     if (you.intel == you.max_intel)
         snprintf(buf, sizeof buf, "Int        : %3d", you.intel);
     else
-        snprintf(buf, sizeof buf, "Int        : %3d (%d)",
+        snprintf(buf, sizeof buf, "Int        : <yellow>%3d</yellow> (%d)",
                  you.intel, you.max_intel);
     cols.add_formatted(0, buf, false);
     
     if (you.dex == you.max_dex)
         snprintf(buf, sizeof buf, "Dex        : %3d", you.dex);
     else
-        snprintf(buf, sizeof buf, "Dex        : %3d (%d)",you.dex,you.max_dex);
+        snprintf(buf, sizeof buf, "Dex        : <yellow>%3d</yellow> (%d)",
+                 you.dex, you.max_dex);
     cols.add_formatted(0, buf, false);
 
     snprintf(buf, sizeof buf,

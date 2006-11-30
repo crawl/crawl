@@ -484,7 +484,7 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
         sprintf(godname_buff, "Zin%s", long_name ? " the Law-Giver" : "");
         break;
     case GOD_SHINING_ONE:
-        sprintf(godname_buff, "The Shining One");
+        strcpy(godname_buff, "The Shining One");
         break;
     case GOD_KIKUBAAQUDGHA:
         strcpy(godname_buff, "Kikubaaqudgha");
@@ -497,7 +497,7 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
         if (long_name) 
         {
             strcat(godname_buff, " ");
-            switch(random2(1000)) 
+            switch(random2(30))
             {
             default:
                 strcat(godname_buff, "of Chaos"); 
@@ -2837,4 +2837,16 @@ char god_colour( char god ) //mv - added
     }
 
     return(YELLOW);
+}
+
+int piety_rank( int piety )
+{
+    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
+    const int numbreakpoints = sizeof(breakpoints) / sizeof(int);
+    if ( piety < 0 )
+        piety = you.piety;
+    for ( int i = 0; i < numbreakpoints; ++i )
+        if ( piety >= breakpoints[i] )
+            return numbreakpoints - i;
+    return 0;
 }

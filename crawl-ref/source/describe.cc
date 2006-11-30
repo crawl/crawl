@@ -6387,7 +6387,6 @@ static void print_god_abil_desc( int abil )
     cprintf( "%s", str.c_str() );
 }
 
-
 //---------------------------------------------------------------
 //
 // describe_god
