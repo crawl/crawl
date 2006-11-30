@@ -3,6 +3,8 @@
 " Basic Vim syntax highlighting for Dungeon Crawl Stone Soup level design
 " (.des) files.
 "
+" This syntax highlighting script is distributed under the terms of the
+" Crawl Public License. See licence.txt for details.
 
 if version < 600
   syntax clear
