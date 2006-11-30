@@ -155,8 +155,11 @@ int Menu::post_process(int k)
 bool Menu::process_key( int keyin )
 {
     if (items.size() == 0)
+    {
+        lastch = keyin;
         return false;
-
+    }
+    
     bool nav = false, repaint = false;
 
     if (f_keyfilter)
