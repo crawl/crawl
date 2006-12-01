@@ -359,11 +359,9 @@ void handle_delay( void )
         switch (delay.type)
         {
         case DELAY_AUTOPICKUP:
-            // Ask the player if they want to stop explore to examine
-            // the loot, but only if we picked up at least one item
-            // that the character did not throw.
-            int estop = (you.running == RMODE_EXPLORE_GREEDY
-                         && delay.parm1)? ES_GREEDY_PICKUP : ES_PICKUP;
+            const int estop =
+                you.running == RMODE_EXPLORE_GREEDY?
+                                        ES_GREEDY_PICKUP : ES_PICKUP;
             if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
                 stop_delay();
             break;
