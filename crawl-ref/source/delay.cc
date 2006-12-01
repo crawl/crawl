@@ -359,12 +359,14 @@ void handle_delay( void )
         switch (delay.type)
         {
         case DELAY_AUTOPICKUP:
+        {
             const int estop =
                 you.running == RMODE_EXPLORE_GREEDY?
                                         ES_GREEDY_PICKUP : ES_PICKUP;
             if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
                 stop_delay();
             break;
+        }
 
         case DELAY_WEAPON_SWAP:
             weapon_switch( delay.parm1 );
