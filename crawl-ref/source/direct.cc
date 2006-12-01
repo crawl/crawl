@@ -370,9 +370,7 @@ static void describe_oos_square(int x, int y)
     if (!in_bounds(x, y) || !is_mapped(x, y))
         return;
 
-#ifdef STASH_TRACKING
     describe_stash(x, y);
-#endif
     describe_feature(x, y, true);
 }
 
@@ -788,11 +786,8 @@ static bool find_object(int x, int y, int mode)
     const int item = igrd[x][y];
     // The square need not be in LOS if the stash tracker knows this item.
     return (item != NON_ITEM
-                && (in_los(x, y)
-#ifdef STASH_TRACKING
-                || (Options.target_oos && is_mapped(x, y) && is_stash(x, y))
-#endif
-                    ));
+            && (in_los(x, y)
+                || (Options.target_oos && is_mapped(x, y) && is_stash(x, y))));
 }
 
 static int next_los(int dir, int los, bool wrap)

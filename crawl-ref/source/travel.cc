@@ -15,6 +15,8 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "itemname.h"
+#include "items.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "player.h"
@@ -252,11 +254,12 @@ static bool is_exclude_root(int x, int y)
 
 const char *run_mode_name(int runmode)
 {
-    return runmode == RMODE_TRAVEL?       "travel" :
-           runmode == RMODE_INTERLEVEL?   "intertravel" :
-           runmode == RMODE_EXPLORE?      "explore" :
-           runmode > 0?                 "run" :
-                                        "";
+    return runmode == RMODE_TRAVEL?         "travel" :
+           runmode == RMODE_INTERLEVEL?     "intertravel" :
+           runmode == RMODE_EXPLORE?        "explore" :
+           runmode == RMODE_EXPLORE_GREEDY? "explore_greedy" :
+           runmode > 0?                     "run" :
+                                            "";
 }
 
 unsigned char is_waypoint(int x, int y)
@@ -267,7 +270,6 @@ unsigned char is_waypoint(int x, int y)
     return curr_waypoints[x][y];
 }
 
-#ifdef STASH_TRACKING
 inline bool is_stash(LevelStashes *ls, int x, int y)
 {
     if (!ls)
@@ -275,7 +277,6 @@ inline bool is_stash(LevelStashes *ls, int x, int y)
     Stash *s = ls->find_stash(x, y);
     return s && s->enabled;
 }
-#endif
 
 void clear_excludes()
 {
@@ -693,10 +694,30 @@ bool is_travelable_stair(unsigned gridc)
     }
 }
 
+// Prompts the user to stop explore if necessary for the given
+// explore-stop condition, returns true if explore should be stopped.
+bool prompt_stop_explore(int es_why)
+{
+    return (!(Options.explore_stop_prompt & es_why)
+            || yesno("Stop exploring?", true, 'n', true, false));
+}
+
+static bool es_say(const char *what)
+{
+    mprf("Spotted %s.", what);
+    return (true);
+}
+
 #define ES_item  (Options.explore_stop & ES_ITEM)
-#define ES_shop  (Options.explore_stop & ES_SHOP)
-#define ES_stair (Options.explore_stop & ES_STAIR)
-#define ES_altar (Options.explore_stop & ES_ALTAR)
+
+#define ES_shop  ((Options.explore_stop & ES_SHOP) && \
+                  es_say("a shop") && prompt_stop_explore(ES_SHOP))
+
+#define ES_stair ((Options.explore_stop & ES_STAIR) &&  \
+                  es_say("a stair") && prompt_stop_explore(ES_STAIR))
+
+#define ES_altar ((Options.explore_stop & ES_ALTAR) &&  \
+                  es_say("an altar") && prompt_stop_explore(ES_ALTAR))
 
 /*
  * Given a square that has just become visible during explore, returns true
@@ -704,14 +725,22 @@ bool is_travelable_stair(unsigned gridc)
  */
 static bool is_interesting_square(int x, int y)
 {
-    if (ES_item && igrd[x + 1][y + 1] != NON_ITEM)
-        return true;
+    if (ES_item && igrd[x + 1][y + 1] != NON_ITEM
+        && you.running != RMODE_EXPLORE_GREEDY)
+    {
+        mprf("Spotted %s.",
+             item_name( mitm[ igrd[x + 1][y + 1] ], DESC_NOCAP_A ));
+        if (prompt_stop_explore(ES_ITEM))
+            return (true);
+    }
 
     unsigned char grid = grd[x + 1][y + 1];
-    return (ES_shop && grid == DNGN_ENTER_SHOP)
-            || (ES_stair && is_stair(grid))
-            || (ES_altar && is_altar(grid) 
-                    && you.where_are_you != BRANCH_ECUMENICAL_TEMPLE);
+    return (grid == DNGN_ENTER_SHOP && you.running != RMODE_EXPLORE_GREEDY
+            && ES_shop)
+            || (is_stair(grid) && ES_stair)
+            || (is_altar(grid)
+                    && you.where_are_you != BRANCH_ECUMENICAL_TEMPLE
+                    && ES_altar);
 }
 
 static void userdef_run_stoprunning_hook(void)
@@ -739,9 +768,7 @@ void start_running(void)
 {
     userdef_run_startrunning_hook();
 
-    if (you.running == RMODE_TRAVEL
-            || you.running == RMODE_EXPLORE
-            || you.running == RMODE_INTERLEVEL)
+    if (you.running < 0)
         start_delay( DELAY_TRAVEL, 1 );
 }
 
@@ -778,7 +805,7 @@ command_type travel()
         return CMD_NO_CMD;
     }
 
-    if (Options.explore_stop && you.running == RMODE_EXPLORE)
+    if (you.running.is_explore())
     {
         // Scan through the shadow map, compare it with the actual map, and if
         // there are any squares of the shadow map that have just been
@@ -801,9 +828,20 @@ command_type travel()
         copy(env.map, mapshadow);
     }
 
-    if (you.running == RMODE_EXPLORE)
+    if (you.running.is_explore())
     {
         // Exploring
+        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP
+            && you.running == RMODE_EXPLORE_GREEDY)
+        {
+            LevelStashes *lev = stashes.find_current_level();
+            if (lev && lev->shop_needs_visit(you.x_pos, you.y_pos))
+            {
+                stop_running();
+                return (CMD_GO_UPSTAIRS);
+            }
+        }
+        
         you.running.x = 0;
         find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
         // No place to go?
@@ -839,8 +877,8 @@ command_type travel()
             // our travel target, we're on a staircase and should take it.
             if (you.x_pos == you.running.x && you.y_pos == you.running.y)
             {
-                if (runmode == RMODE_EXPLORE)
-                    you.running = RMODE_EXPLORE;       // Turn explore back on
+                if (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY)
+                    you.running = runmode;       // Turn explore back on
 
                 // For interlevel travel, we'll want to take the stairs unless
                 // the interlevel travel specified a destination square and 
@@ -945,6 +983,11 @@ static void fill_exclude_radius(const coord_def &c)
     }
 }
 
+static bool is_greed_inducing_square(const LevelStashes *ls, int x, int y)
+{
+    return (ls && can_autopickup() && ls->needs_visit(x, y));
+}
+
 /*
  * The travel algorithm is based on the NetHack travel code written by Warwick
  * Allison - used with his permission.
@@ -959,9 +1002,7 @@ void find_travel_pos(int youx, int youy,
     int dest_x  = youx, dest_y  = youy;
     bool floodout = false;
     unsigned char feature;
-#ifdef STASH_TRACKING
-    LevelStashes *lev = features? stashes.find_current_level() : NULL;
-#endif
+    LevelStashes *lev = stashes.find_current_level();
 
     // Normally we start from the destination and floodfill outwards, looking
     // for the character's current position. If we're merely trying to populate
@@ -1063,19 +1104,29 @@ void find_travel_pos(int youx, int youy,
             for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
             {
                 int dx = x + Compass[dir].x, dy = y + Compass[dir].y;
-               
-                if (dx <= 0 || dx >= GXM || dy <= 0 || dy >= GYM) continue;
+
+                if (!in_bounds(dx, dy))
+                    continue;
 
                 unsigned char envf = env.map[dx - 1][dy - 1];
 
-                if (floodout && you.running == RMODE_EXPLORE 
-                        && !is_player_mapped(envf)) 
+                if (floodout && you.running.is_explore()
+                    && (!is_player_mapped(envf)
+                        || (you.running == RMODE_EXPLORE_GREEDY
+                            && is_greed_inducing_square(lev, dx, dy))))
                 {
                     // Setting running.x and running.y here is evil - this
                     // function should ideally not modify game state in any way.
-                    you.running.x = x;
-                    you.running.y = y;
-
+                    if (!is_player_mapped(envf))
+                    {
+                        you.running.x = x;
+                        you.running.y = y;
+                    }
+                    else
+                    {
+                        you.running.x = dx;
+                        you.running.y = dy;
+                    }
                     return;
                 }
 
@@ -1144,10 +1195,7 @@ void find_travel_pos(int youx, int youy,
                                 && feature != DNGN_DEEP_WATER
                                 && feature != DNGN_LAVA)
                                 || is_waypoint(dx, dy)
-#ifdef STASH_TRACKING
-                                || is_stash(lev, dx, dy)
-#endif
-                                )
+                                || is_stash(lev, dx, dy))
                             && (dx != start_x || dy != start_y))
                     {
                         coord_def c = { dx, dy };
@@ -2155,14 +2203,19 @@ void start_travel(int x, int y)
     start_running();
 }
 
-void start_explore()
+void start_explore(bool grab_items)
 {
-    you.running   = RMODE_EXPLORE;
-    if (Options.explore_stop)
+    you.running = grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE;
+    if (you.running == RMODE_EXPLORE_GREEDY
+        && Options.stash_tracking != STM_ALL)
     {
-        // Clone shadow array off map
-        copy(env.map, mapshadow);
+        mpr("Explore + pickup is available only if stash_tracking = all");
+        you.running = RMODE_EXPLORE;
     }
+    
+    // Clone shadow array off map
+    copy(env.map, mapshadow);
+
     start_running();
 }
 
@@ -3116,6 +3169,11 @@ void runrest::stop()
 bool runrest::is_rest() const
 {
     return (runmode > 0 && !x && !y);    
+}
+
+bool runrest::is_explore() const
+{
+    return (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY);
 }
 
 void runrest::rundown()

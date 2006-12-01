@@ -381,10 +381,26 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
-void game_options::add_dump_fields(const std::string &text)
+void game_options::new_dump_fields(const std::string &text, bool add)
 {
     // Easy; chardump.cc has most of the intelligence.
-    append_vector(dump_order, split_string(",", text, true, true));
+    std::vector<std::string> fields = split_string(",", text, true, true);
+    if (add)
+        append_vector(dump_order, fields);
+    else
+    {
+        for (int f = 0, size = fields.size(); f < size; ++f)
+        {
+            for (int i = 0, dsize = dump_order.size(); i < dsize; ++i)
+            {
+                if (dump_order[i] == fields[f])
+                {
+                    dump_order.erase( dump_order.begin() + i );
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void game_options::reset_startup_options()
@@ -605,10 +621,14 @@ void game_options::reset_options()
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
 
-#ifdef STASH_TRACKING
     stash_tracking         = STM_ALL;
-#endif
+
     explore_stop           = ES_ITEM | ES_STAIR | ES_SHOP | ES_ALTAR;
+
+    // The prompt conditions will be combined into explore_stop after
+    // reading options.
+    explore_stop_prompt    = ES_GREEDY_PICKUP;
+    
     safe_zero_exp          = true;
     target_zero_exp        = false;
     target_wrap            = true;
@@ -679,7 +699,7 @@ void game_options::reset_options()
 
     // Clear vector options.
     dump_order.clear();
-    add_dump_fields("header,stats,misc,inventory,skills,"
+    new_dump_fields("header,stats,misc,inventory,skills,"
                    "spells,,mutations,messages,screenshot,kills,notes");
 
     banned_objects.clear();
@@ -1108,6 +1128,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
     }
 #endif
 
+    Options.explore_stop |= Options.explore_stop_prompt;
+    
     // Validate save_dir
     check_savedir(save_dir);
 }
@@ -1135,6 +1157,29 @@ void game_options::do_kill_map(const std::string &from, const std::string &to)
         kill_map[ifrom] = ito;
 }
 
+int game_options::read_explore_stop_conditions(const std::string &field) const
+{
+    int conditions = 0;
+    std::vector<std::string> stops = split_string(",", field);
+    for (int i = 0, count = stops.size(); i < count; ++i)
+    {
+        const std::string &c = stops[i];
+        if (c == "item" || c == "items")
+            conditions |= ES_ITEM;
+        else if (c == "pickup")
+            conditions |= ES_PICKUP;
+        else if (c == "greedy_pickup" || c == "greedy pickup")
+            conditions |= ES_GREEDY_PICKUP;
+        else if (c == "shop" || c == "shops")
+            conditions |= ES_SHOP;
+        else if (c == "stair" || c == "stairs")
+            conditions |= ES_STAIR;
+        else if (c == "altar" || c == "altars")
+            conditions |= ES_ALTAR;
+    }
+    return (conditions);
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
     std::string key = "";
@@ -1145,6 +1190,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     int first_dot = str.find('.');
 
     bool plus_equal = false;
+    bool minus_equal = false;
 
     // all lines with no equal-signs we ignore
     if (first_equals < 0)
@@ -1171,6 +1217,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key.length() && key[key.length() - 1] == '+')
     {
         plus_equal = true;
+        key = key.substr(0, key.length() - 1);
+        trim_string(key);
+    }
+    else if (key.length() && key[key.length() - 1] == '-')
+    {
+        minus_equal = true;
         key = key.substr(0, key.length() - 1);
         trim_string(key);
     }
@@ -1872,22 +1924,25 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "explore_stop")
     {
-        explore_stop = ES_NONE;
-        std::vector<std::string> stops = split_string(",", field);
-        for (int i = 0, count = stops.size(); i < count; ++i)
-        {
-            const std::string &c = stops[i];
-            if (c == "item" || c == "items")
-                explore_stop |= ES_ITEM;
-            else if (c == "shop" || c == "shops")
-                explore_stop |= ES_SHOP;
-            else if (c == "stair" || c == "stairs")
-                explore_stop |= ES_STAIR;
-            else if (c == "altar" || c == "altars")
-                explore_stop |= ES_ALTAR;
-        }
+        if (!plus_equal && !minus_equal)
+            explore_stop = ES_NONE;
+
+        const int new_conditions = read_explore_stop_conditions(field);
+        if (minus_equal)
+            explore_stop &= ~new_conditions;
+        else
+            explore_stop |= new_conditions;
     }
-#ifdef STASH_TRACKING
+    else if (key == "explore_stop_prompt")
+    {
+        if (!plus_equal && !minus_equal)
+            explore_stop_prompt = ES_NONE;
+        const int new_conditions = read_explore_stop_conditions(field);
+        if (minus_equal)
+            explore_stop_prompt &= ~new_conditions;
+        else
+            explore_stop_prompt |= new_conditions;
+    }
     else if (key == "stash_tracking")
     {
         stash_tracking =
@@ -1901,7 +1956,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         for (int i = 0, count = seg.size(); i < count; ++i)
             Stash::filter( seg[i] );
     }
-#endif
     else if (key == "sound")
     {
         std::vector<std::string> seg = split_string(",", field);
@@ -1936,7 +1990,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (!plus_equal)
             dump_order.clear();
 
-        add_dump_fields(field);
+        new_dump_fields(field, !minus_equal);
     }
     else if (key == "dump_kill_places") 
     {

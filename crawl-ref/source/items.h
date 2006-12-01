@@ -139,4 +139,7 @@ void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory( void (*oset)(item_def &item) );
 
+bool item_needs_autopickup(const item_def &);
+bool can_autopickup();
+
 #endif

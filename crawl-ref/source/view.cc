@@ -1692,10 +1692,8 @@ bool is_feature(int feature, int x, int y) {
     case 'F':
     case 'W':
         return is_waypoint(x, y);
-#ifdef STASH_TRACKING
     case 'I':
         return is_stash(x, y);
-#endif
     case '_':
         switch (grid) {
         case DNGN_ALTAR_ZIN:

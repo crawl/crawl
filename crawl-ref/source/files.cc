@@ -1162,8 +1162,6 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 
 void save_game(bool leave_game)
 {
-
-#ifdef STASH_TRACKING
     /* Stashes */
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
     FILE *stashf = fopen(stashFile.c_str(), "wb");
@@ -1172,7 +1170,6 @@ void save_game(bool leave_game)
         fclose(stashf);
         DO_CHMOD_PRIVATE(stashFile.c_str());
     }
-#endif
 
 #ifdef CLUA_BINDINGS
     /* lua */
@@ -1383,14 +1380,12 @@ void restore_game(void)
 
     fclose(charf);
 
-#ifdef STASH_TRACKING
     std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
     FILE *stashf = fopen(stashFile.c_str(), "rb");
     if (stashf) {
         stashes.load(stashf);
         fclose(stashf);
     }
-#endif
 
 #ifdef CLUA_BINDINGS
     std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );

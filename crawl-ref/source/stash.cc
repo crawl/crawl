@@ -31,8 +31,6 @@
 #include <fstream>
 #include <algorithm>
 
-#ifdef STASH_TRACKING
-
 #define ST_MAJOR_VER ((unsigned char) 4)
 #define ST_MINOR_VER ((unsigned char) 4)
 
@@ -163,14 +161,22 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
 
 bool Stash::are_items_same(const item_def &a, const item_def &b)
 {
-    return a.base_type == b.base_type &&
-           a.sub_type == b.sub_type &&
-           a.plus == b.plus &&
-           a.plus2 == b.plus2 &&
-           a.special == b.special &&
-           a.colour == b.colour &&
-           a.flags == b.flags &&
-           a.quantity == b.quantity;
+    const bool same = a.base_type == b.base_type
+        && a.sub_type == b.sub_type
+        && a.plus == b.plus
+        && a.plus2 == b.plus2
+        && a.special == b.special
+        && a.colour == b.colour
+        && a.flags == b.flags
+        && a.quantity == b.quantity;
+
+    // Account for rotting meat when comparing items.
+    return (same
+            || (a.base_type == b.base_type
+                && (a.base_type == OBJ_CORPSES
+                    || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
+                        && b.sub_type == FOOD_CHUNK))
+                && a.plus == b.plus));
 }
 
 void Stash::filter(const std::string &str)
@@ -216,6 +222,19 @@ bool Stash::is_filtered(const item_def &item)
     return false;
 }
 
+bool Stash::unverified() const
+{
+    return (!verified);
+}
+
+bool Stash::pickup_eligible() const
+{
+    for (int i = 0, size = items.size(); i < size; ++i)
+        if (item_needs_autopickup(items[i]))
+            return (true);
+    return (false);
+}
+
 void Stash::update()
 {
     int objl = igrd[x][y];
@@ -247,9 +266,10 @@ void Stash::update()
         }
 
         // There's something on this square. Take a squint at it.
-        item_def &item = mitm[objl];
+        const item_def &item = mitm[objl];
 
-        if (item.link == NON_ITEM) items.clear();
+        if (item.link == NON_ITEM)
+            items.clear();
 
         // We knew of nothing on this square, so we'll assume this is the 
         // only item here, but mark it as unverified unless we can see nothing
@@ -268,7 +288,7 @@ void Stash::update()
 
         if (is_filtered(item)) return;
 
-        item_def &first = items[0];
+        const item_def &first = items[0];
         // Compare these items
         if (!are_items_same(first, item))
         {
@@ -841,13 +861,19 @@ bool LevelStashes::isBelowPlayer() const
 
 Stash *LevelStashes::find_stash(int x, int y)
 {
+    return const_cast<Stash *>(
+        const_cast<const LevelStashes *>(this)->find_stash(x, y) );
+}
+
+const Stash *LevelStashes::find_stash(int x, int y) const
+{
     if (x == -1 || y == -1)
     {
         x = you.x_pos;
         y = you.y_pos;
     }
     const int abspos = (GXM * y) + x;
-    c_stashes::iterator st = stashes.find(abspos);
+    c_stashes::const_iterator st = stashes.find(abspos);
     return (st == stashes.end()? NULL : &st->second);
 }
 
@@ -859,6 +885,21 @@ const ShopInfo *LevelStashes::find_shop(int x, int y) const
             return (&shops[i]);
     }
     return (NULL);
+}
+
+bool LevelStashes::shop_needs_visit(int x, int y) const
+{
+    const ShopInfo *shop = find_shop(x, y);
+    return (shop && !shop->is_visited());
+}
+
+bool LevelStashes::needs_visit(int x, int y) const
+{
+    const Stash *s = find_stash(x, y);
+    if (s && (s->unverified() || s->pickup_eligible()))
+        return (true);
+
+    return (shop_needs_visit(x, y));
 }
 
 ShopInfo &LevelStashes::get_shop(int x, int y)
@@ -1499,5 +1540,3 @@ void StashTracker::display_search_results(
 
 // Global
 StashTracker stashes;
-
-#endif

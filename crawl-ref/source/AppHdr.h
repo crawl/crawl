@@ -52,10 +52,6 @@
 #   define HASH_CONTAINERS
 #endif
 
-// Enables stash-tracking: keeps track of items in the dungeon as a convenience
-// for the player.
-#define STASH_TRACKING
-
 // Uncomment to enable the Crawl Lua bindings.
 //
 // #define CLUA_BINDINGS

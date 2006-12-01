@@ -1061,13 +1061,10 @@ void process_command( command_type cmd ) {
 
     case CMD_DROP:
         drop();
-#ifdef STASH_TRACKING
         if (Options.stash_tracking >= STM_DROPPED)
             stashes.add_stash();
-#endif
         break;
         
-#ifdef STASH_TRACKING
     case CMD_SEARCH_STASHES:
         stashes.search_stashes();
         break;
@@ -1081,7 +1078,6 @@ void process_command( command_type cmd ) {
         if (Options.stash_tracking >= STM_EXPLICIT)
             stashes.no_stash();
         break;
-#endif
 
     case CMD_BUTCHER:
         butchery();
@@ -1239,13 +1235,14 @@ void process_command( command_type cmd ) {
         break;
 
     case CMD_EXPLORE:
+    case CMD_EXPLORE_GREEDY:
         if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         {
             mpr("It would help if you knew where you were, first.");
             break;
         }
         // Start exploring
-        start_explore();
+        start_explore(cmd == CMD_EXPLORE_GREEDY);
         break;
 
     case CMD_DISPLAY_MAP:
@@ -2407,7 +2404,7 @@ command_type keycode_to_command( keycode_type key ) {
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
     case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
-    case CONTROL('I'): return CMD_NO_CMD;
+    case CONTROL('I'): return CMD_EXPLORE_GREEDY;
     case CONTROL('M'): return CMD_NO_CMD;
     case CONTROL('O'): return CMD_EXPLORE;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;

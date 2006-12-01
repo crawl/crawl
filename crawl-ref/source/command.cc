@@ -53,9 +53,7 @@ void quit_game(void)
 
 static const char *features[] = {
     "",
-#ifdef STASH_TRACKING
     "Stash-tracking",
-#endif
 
 #ifdef CLUA_BINDINGS
     "Lua",
@@ -586,10 +584,8 @@ static int cmdhelp_keyfilter(int keyin)
 
 static bool cmdhelp_textfilter(const std::string &tag)
 {
-#ifdef STASH_TRACKING
     if (tag == "s")
         return (true);
-#endif
 #ifdef WIZARD
     if (tag == "wiz")
         return (true);
@@ -1096,11 +1092,9 @@ static const char *command_string( int i )
            (i == 453) ? "Ctrl-G : interlevel travel"              :
            (i == 455) ? "Ctrl-O : explore"                        :
 
-#ifdef STASH_TRACKING
            (i == 456) ? "Ctrl-S : mark stash"                     :
            (i == 457) ? "Ctrl-E : forget stash"                   :
            (i == 458) ? "Ctrl-F : search stashes"                 :
-#endif
 
            (i == 460) ? "Shift & DIR : long walk"                 :
            (i == 465) ? "/ DIR : long walk"                       :

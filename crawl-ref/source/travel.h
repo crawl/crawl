@@ -46,11 +46,14 @@ void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y,
  * Initiates explore - the character runs around the level to map it. Note
  * that the caller has to ensure that the level is mappable before calling
  * start_explore. start_explore may lock up the game on unmappable levels.
+ * If grab_items is true, greedy explore is triggered - in greedy mode, explore
+ * grabs items that are eligible for autopickup and visits (previously
+ * unvisited) shops.
  *
  * ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void start_explore();
+void start_explore(bool grab_items = false);
 
 struct level_pos;
 void start_translevel_travel(const level_pos &pos);
@@ -92,13 +95,15 @@ void arrange_features(std::vector<coord_def> &features);
  * *********************************************************************** */
 extern short point_distance[GXM][GYM];
 
-enum EXPLORE_STOP
+enum explore_stop_type
 {
-    ES_NONE     = 0,
-    ES_ITEM     = 1,
-    ES_STAIR    = 2,
-    ES_SHOP     = 4,
-    ES_ALTAR    = 8
+    ES_NONE               = 0x00,
+    ES_ITEM               = 0x01,
+    ES_PICKUP             = 0x02,
+    ES_GREEDY_PICKUP      = 0x04,
+    ES_STAIR              = 0x08,
+    ES_SHOP               = 0x10,
+    ES_ALTAR              = 0x20
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -359,6 +364,7 @@ private:
 int level_distance(level_id first, level_id second);
 
 bool can_travel_interlevel();
+bool prompt_stop_explore(int es_why);
 
 extern TravelCache travel_cache;
 

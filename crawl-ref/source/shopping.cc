@@ -137,9 +137,7 @@ char in_a_shop( char shoppy, id_arr id )
     snprintf( info, INFO_SIZE, "Welcome to %s!", 
              shop_name(env.shop[shoppy].x, env.shop[shoppy].y) );
 
-#ifdef STASH_TRACKING
     ShopInfo &si = stashes.get_shop(env.shop[shoppy].x, env.shop[shoppy].y);
-#endif
 
     shop_print(info, 20);
 
@@ -161,9 +159,8 @@ char in_a_shop( char shoppy, id_arr id )
     clrscr();
     itty = igrd[0][5 + shoppy];
 
-#ifdef STASH_TRACKING
     si.reset();
-#endif
+
     if (itty == NON_ITEM)
     {
         shop_print("I'm sorry, my shop is empty now.", 20);
@@ -216,12 +213,10 @@ char in_a_shop( char shoppy, id_arr id )
             desc = munge_description(get_item_description(mitm[itty], 
                                                           Options.verbose_dump,
                                                           true ));
-#   ifdef STASH_TRACKING
         si.add_item(mitm[itty], gp_value);
-#   endif
 
         gotoxy(60, i);
-	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
+        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
         snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
         cprintf("%s gold", st_pass);
         if (mitm[itty].link == NON_ITEM)

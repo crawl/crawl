@@ -987,12 +987,10 @@ static bool write_dump(
 
     file_name += fname;
 
-#ifdef STASH_TRACKING
     std::string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";
     stashes.dump(stash_file_name.c_str(), full_id);
-#endif
 
     file_name += ".txt";
     FILE *handle = fopen(file_name.c_str(), "w");
