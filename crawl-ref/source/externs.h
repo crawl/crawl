@@ -848,6 +848,9 @@ public:
                                    // item comes into view
 
     int         explore_stop_prompt;
+
+    // How much more eager greedy-explore is for items than to explore.
+    int         explore_item_greed;
     
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;

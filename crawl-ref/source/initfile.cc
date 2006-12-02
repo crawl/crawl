@@ -629,6 +629,8 @@ void game_options::reset_options()
     // The prompt conditions will be combined into explore_stop after
     // reading options.
     explore_stop_prompt    = ES_NONE;
+
+    explore_item_greed     = 10;
     
     safe_zero_exp          = true;
     target_zero_exp        = false;
@@ -1943,6 +1945,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_stop_prompt &= ~new_conditions;
         else
             explore_stop_prompt |= new_conditions;
+    }
+    else if (key == "explore_item_greed")
+    {
+        explore_item_greed = atoi( field.c_str() );
+        if (explore_item_greed > 1000)
+            explore_item_greed = 1000;
+        else if (explore_item_greed < -1000)
+            explore_item_greed = -1000;
     }
     else if (key == "stash_tracking")
     {

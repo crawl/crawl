@@ -34,7 +34,7 @@ INCLUDES := $(INCLUDES) -Iutil -I.
 CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
 
-CFOTHERS := -fsigned-char -g -D$(OS_TYPE) $(EXTRA_FLAGS)
+CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS)
 
 ifneq ($(DATADIR),)
 CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
@@ -42,7 +42,7 @@ endif
 
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
-            
+
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
 DOYACC := y

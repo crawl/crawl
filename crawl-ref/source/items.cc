@@ -2923,6 +2923,7 @@ static void autopickup(void)
     //David Loewenstern 6/99
     int result, o, next;
     bool did_pickup = false;
+    bool tried_pickup = false;
 
     if (!can_autopickup())
         return;
@@ -2945,11 +2946,13 @@ static void autopickup(void)
 
             if (result == 0)
             {
+                tried_pickup = true;
                 mpr("You can't carry any more.");
                 break;
             }
             else if (result == -1)
             {
+                tried_pickup = true;
                 mpr("Your pack is full.");
                 break;
             }
@@ -2968,6 +2971,10 @@ static void autopickup(void)
         you.turn_is_over = true;
         start_delay( DELAY_AUTOPICKUP, 1, unthrown );
     }
+    // Greedy explore has no good way to deal with an item that we can't
+    // pick up, so the only thing to do is to stop.
+    else if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
+        stop_delay();
 }
 
 int inv_count(void)
@@ -2977,7 +2984,7 @@ int inv_count(void)
     for(int i=0; i< ENDOFPACK; i++)
     {
         if (is_valid_item( you.inv[i] ))
-            count += 1;
+            count++;
     }
 
     return count;

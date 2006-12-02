@@ -704,7 +704,7 @@ bool prompt_stop_explore(int es_why)
 
 static bool es_say(const char *what)
 {
-    mprf("Spotted %s.", what);
+    mprf("Found %s.", what);
     return (true);
 }
 
@@ -722,16 +722,29 @@ static bool es_say(const char *what)
 /*
  * Given a square that has just become visible during explore, returns true
  * if the player might consider the square worth stopping explore for.
+ * 
+ * NOTE: These are env.map coords, add +1 to get grid coords.
  */
 static bool is_interesting_square(int x, int y)
 {
-    if (ES_item && igrd[x + 1][y + 1] != NON_ITEM
-        && you.running != RMODE_EXPLORE_GREEDY)
+    if (ES_item && igrd[x + 1][y + 1] != NON_ITEM)
     {
-        mprf("Spotted %s.",
-             item_name( mitm[ igrd[x + 1][y + 1] ], DESC_NOCAP_A ));
-        if (prompt_stop_explore(ES_ITEM))
-            return (true);
+        bool valid_stop = true;
+        if (you.running == RMODE_EXPLORE_GREEDY)
+        {
+            // The things we need to do...
+            const LevelStashes *lev = stashes.find_current_level();
+            if (lev && lev->needs_visit(x + 1, y + 1))
+                valid_stop = false;
+        }
+
+        if (valid_stop)
+        {
+            mprf("Found %s.",
+                 item_name( mitm[ igrd[x + 1][y + 1] ], DESC_NOCAP_A ));
+            if (prompt_stop_explore(ES_ITEM))
+                return (true);
+        }
     }
 
     unsigned char grid = grd[x + 1][y + 1];
@@ -778,6 +791,33 @@ void start_running(void)
 void stop_running(void)
 {
     you.running.stop();
+}
+
+static bool is_valid_explore_target(int x, int y)
+{
+    // If an adjacent square is unmapped, it's valid.
+    for (int yi = -1; yi <= 1; ++yi)
+    {
+        for (int xi = -1; xi <= 1; ++xi)
+        {
+            if (!xi && !yi)
+                continue;
+
+            const int ax = x + xi, ay = y + yi;
+            if (!in_bounds(ax, ay))
+                continue;
+            if (!is_player_mapped( get_envmap_char(ax, ay) ))
+                return (true);
+        }
+    }
+
+    if (you.running == RMODE_EXPLORE_GREEDY)
+    {
+        LevelStashes *lev = stashes.find_current_level();
+        return (lev && lev->needs_visit(x, y));
+    }
+
+    return (false);
 }
 
 /*
@@ -837,16 +877,23 @@ command_type travel()
             LevelStashes *lev = stashes.find_current_level();
             if (lev && lev->shop_needs_visit(you.x_pos, you.y_pos))
             {
-                stop_running();
+                you.running = 0;
                 return (CMD_GO_UPSTAIRS);
             }
         }
-        
-        you.running.x = 0;
-        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
-        // No place to go?
-        if (!you.running.x)
-            stop_running();
+
+        // Speed up explore by not doing a double-floodfill if we have
+        // a valid target.
+        if (!you.running.x
+            || (you.running.x == you.x_pos && you.running.y == you.y_pos)
+            || !is_valid_explore_target(you.running.x, you.running.y))
+        {
+            you.running.x = 0;
+            find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
+            // No place to go?
+            if (!you.running.x)
+                stop_running();
+        }
     }
 
     if (you.running == RMODE_INTERLEVEL && !you.running.x)
@@ -1004,6 +1051,13 @@ void find_travel_pos(int youx, int youy,
     unsigned char feature;
     LevelStashes *lev = stashes.find_current_level();
 
+    // For greedy explore, keep track of the closest unexplored
+    // territory and the closest greedy square.
+    int e_x = 0, e_y = 0;
+    int i_x = 0, i_y = 0;
+    // Use these weird defaults to handle negative item greeds.
+    int ex_dist = -10000, ix_dist = -10000;
+
     // Normally we start from the destination and floodfill outwards, looking
     // for the character's current position. If we're merely trying to populate
     // the point_distance array (or exploring), we'll want to start from the 
@@ -1110,24 +1164,68 @@ void find_travel_pos(int youx, int youy,
 
                 unsigned char envf = env.map[dx - 1][dy - 1];
 
-                if (floodout && you.running.is_explore()
-                    && (!is_player_mapped(envf)
-                        || (you.running == RMODE_EXPLORE_GREEDY
-                            && is_greed_inducing_square(lev, dx, dy))))
+                if (floodout && you.running.is_explore())
                 {
-                    // Setting running.x and running.y here is evil - this
-                    // function should ideally not modify game state in any way.
                     if (!is_player_mapped(envf))
                     {
-                        you.running.x = x;
-                        you.running.y = y;
+                        if (you.running != RMODE_EXPLORE_GREEDY)
+                        {
+                            you.running.x = x;
+                            you.running.y = y;
+                            return;
+                        }
+
+                        if (ex_dist == -10000)
+                        {
+                            e_x = x;
+                            e_y = y;
+                            ex_dist = 
+                                traveled_distance + Options.explore_item_greed;
+                        }
                     }
-                    else
+                    else if (you.running == RMODE_EXPLORE_GREEDY
+                             && ix_dist == -10000
+                             && is_greed_inducing_square(lev, dx, dy))
                     {
-                        you.running.x = dx;
-                        you.running.y = dy;
+                        i_x = dx;
+                        i_y = dy;
+                        ix_dist = traveled_distance + 1;
                     }
-                    return;
+
+                    // Short-circuit if we can.
+                    if (you.running == RMODE_EXPLORE_GREEDY)
+                    {
+                        const int refdist =
+                            Options.explore_item_greed > 0? ex_dist: ix_dist;
+                    
+                        if (refdist != -10000
+                            && traveled_distance > refdist)
+                        {
+                            if (Options.explore_item_greed > 0)
+                                ix_dist = 10000;
+                            else
+                                ex_dist = 10000;
+                        }
+                    }
+                    
+                    // ex_dist/ix_dist are only ever set in
+                    // greedy-explore so this check implies
+                    // greedy-explore.
+                    if (ex_dist != -10000 && ix_dist != -10000)
+                    {
+                        if (ex_dist < ix_dist)
+                        {
+                            you.running.x = e_x;
+                            you.running.y = e_y;
+                        }
+                        else
+                        {
+                            you.running.x = i_x;
+                            you.running.y = i_y;
+                        }
+                        return;
+                    }
+                    
                 }
 
                 if ((dx != dest_x || dy != dest_y) 
@@ -1235,6 +1333,19 @@ void find_travel_pos(int youx, int youy,
 
             fill_exclude_radius(exc);
         }
+    }
+
+    if (you.running == RMODE_EXPLORE_GREEDY
+        && (ex_dist != -10000 || ix_dist != -10000))
+    {
+        if (ix_dist != -10000)
+        {
+            e_x = i_x;
+            e_y = i_y;
+        }
+
+        you.running.x = e_x;
+        you.running.y = e_y;
     }
 }
 
