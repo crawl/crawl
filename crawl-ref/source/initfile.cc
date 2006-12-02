@@ -703,7 +703,8 @@ void game_options::reset_options()
     // Clear vector options.
     dump_order.clear();
     new_dump_fields("header,stats,misc,inventory,skills,"
-                   "spells,,mutations,messages,screenshot,kills,notes");
+                   "spells,,overview,mutations,messages,screenshot,"
+                    "kills,notes");
 
     banned_objects.clear();
     note_monsters.clear(); 

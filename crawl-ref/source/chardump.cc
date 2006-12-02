@@ -45,6 +45,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
+#include "overmap.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -78,6 +79,7 @@ static void sdump_messages(const std::string &section, std::string &text);
 static void sdump_screenshot(const std::string &section, std::string &text);
 static void sdump_kills(const std::string &section, std::string &text);
 static void sdump_newline(const std::string &section, std::string &text);
+static void sdump_overview(const std::string &section, std::string &text);
 static void sdump_separator(const std::string &section, std::string &text);
 #ifdef CLUA_BINDINGS
 static void sdump_lua(const std::string &section, std::string &text);
@@ -110,6 +112,7 @@ static dump_section_handler dump_handlers[] = {
     { "messages",   sdump_messages      },
     { "screenshot", sdump_screenshot    },
     { "kills",      sdump_kills         },
+    { "overview",   sdump_overview      },
 
     // Conveniences for the .crawlrc artist.
     { "",           sdump_newline       },
@@ -941,6 +944,11 @@ static void sdump_spells(const std::string &, std::string & text)
 static void sdump_kills(const std::string &, std::string & text)
 {
     text += you.kills.kill_info();
+}
+
+static void sdump_overview(const std::string&, std::string& text)
+{
+    text += formatted_string::parse_string(overview_description_string());
 }
 
 static void sdump_mutations(const std::string &, std::string & text)

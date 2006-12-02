@@ -14,5 +14,6 @@
 
 void seen_notable_thing( int which_thing, int x, int y );
 void display_overmap();
+std::string overview_description_string();
 
 #endif

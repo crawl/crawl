@@ -189,7 +189,7 @@ fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 # dump_item_origin_price = 100
 # dump_message_count = 7
 # dump_order  = header,stats,misc,notes,inventory,skills
-# dump_order += spells,mutations,messages,screenshot,kills
+# dump_order += spells,overview,mutations,messages,screenshot,kills
 
 ##### 5-b	Notes #################################
 #

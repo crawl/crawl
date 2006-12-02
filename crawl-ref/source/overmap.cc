@@ -95,7 +95,7 @@ static char shoptype_to_char(shop_type s)
     case SHOP_WAND:
         return '/';
     case SHOP_BOOK:
-        return ':';
+        return '+';
     case SHOP_FOOD:
         return '%';
     case SHOP_DISTILLERY:
@@ -107,7 +107,7 @@ static char shoptype_to_char(shop_type s)
     }
 }
 
-void display_overmap()
+std::string overview_description_string()
 {
     char buffer[100];
     std::string disp;
@@ -279,6 +279,12 @@ void display_overmap()
     if (!seen_anything)
         disp += "You haven't discovered anything interesting yet.";
 
+    return disp;
+}
+
+void display_overmap()
+{
+    std::string disp = overview_description_string();
     linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
