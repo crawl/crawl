@@ -14,6 +14,7 @@
 
 void seen_notable_thing( int which_thing, int x, int y );
 void display_overmap();
+void unnotice_labyrinth_portal();
 std::string overview_description_string();
 
 #endif

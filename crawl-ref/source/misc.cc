@@ -50,6 +50,7 @@
 #include "monstuff.h"
 #include "notes.h"
 #include "ouch.h"
+#include "overmap.h"
 #include "player.h"
 #include "shopping.h"
 #include "skills.h"
@@ -926,6 +927,8 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     }
     else if (stair_find == DNGN_ENTER_LABYRINTH)
     {
+        // no longer a feature
+        unnotice_labyrinth_portal();
         you.level_type = LEVEL_LABYRINTH;
         grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     }

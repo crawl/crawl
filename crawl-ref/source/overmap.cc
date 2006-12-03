@@ -282,6 +282,18 @@ std::string overview_description_string()
     return disp;
 }
 
+void unnotice_labyrinth_portal()
+{
+    level_pos curpos(level_id::get_current_level_id());
+    // XXX Is there really no better way to do this?
+    curpos.pos.x = you.x_pos;
+    curpos.pos.y = you.y_pos;
+    if ( portals_present.find(curpos) != portals_present.end() )
+        portals_present.erase(curpos);
+    else
+        mprf(MSGCH_DIAGNOSTICS, "Oops - tried to unnotice bad portal.");
+}
+
 void display_overmap()
 {
     std::string disp = overview_description_string();
