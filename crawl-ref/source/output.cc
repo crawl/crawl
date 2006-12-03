@@ -65,15 +65,18 @@ void print_stats(void)
     if (you.redraw_hit_points)
     {
         const int max_max_hp = you.hp_max + player_rotted();
-        const int hp_warn = MAXIMUM( 25, Options.hp_warning );
-        const int hp_attent = MAXIMUM( 10, Options.hp_attention );
-
+        const int hp_percent = (you.hp * 100) / max_max_hp;
+        for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
+        {
+            if ( i+1 == Options.hp_colour.size() ||
+                 hp_percent > Options.hp_colour[i+1].first )
+            {
+                textcolor(Options.hp_colour[i].second);
+                break;
+            }
+        }
+        
         gotoxy(44, 3);
-
-        if (you.hp <= (you.hp_max * hp_warn) / 100)
-            textcolor(RED);
-        else if (you.hp <= (you.hp_max * hp_attent) / 100)
-            textcolor(YELLOW);
 
         cprintf( "%d", you.hp );
 
@@ -94,9 +97,23 @@ void print_stats(void)
 
     if (you.redraw_magic_points)
     {
+
+        const int mp_percent = (you.magic_points * 100) / you.max_magic_points;
+        for ( unsigned int i = 0; i < Options.mp_colour.size(); ++i )
+        {
+            if ( i+1 == Options.mp_colour.size() ||
+                 mp_percent > Options.mp_colour[i+1].first )
+            {
+                textcolor(Options.mp_colour[i].second);
+                break;
+            }
+        }
         gotoxy(47, 4);
 
-        cprintf( "%d/%d", you.magic_points, you.max_magic_points );
+        cprintf( "%d", you.magic_points);
+
+        textcolor(LIGHTGREY);
+        cprintf("/%d", you.max_magic_points );
 
 #ifdef UNIX
         clear_to_end_of_line();

@@ -569,7 +569,6 @@ void game_options::reset_options()
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
-    hp_attention           = 25;
     confirm_self_target    = true;
     safe_autopickup        = true;
     use_notes              = true;
@@ -706,6 +705,14 @@ void game_options::reset_options()
                    "spells,,overview,mutations,messages,screenshot,"
                     "kills,notes");
 
+    hp_colour.clear();
+    hp_colour.push_back(std::pair<int,int>(100, LIGHTGREY));
+    hp_colour.push_back(std::pair<int,int>(50, YELLOW));
+    hp_colour.push_back(std::pair<int,int>(25, RED));
+    mp_colour.clear();
+    mp_colour.push_back(std::pair<int, int>(100, LIGHTGREY));
+    mp_colour.push_back(std::pair<int, int>(50, YELLOW));
+    mp_colour.push_back(std::pair<int, int>(25, RED));
     banned_objects.clear();
     note_monsters.clear(); 
     note_messages.clear(); 
@@ -1630,16 +1637,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
-    else if (key == "hp_attention")
-    {
-        hp_attention = atoi( field.c_str() );
-        if (hp_attention < 0 || hp_attention > 100)
-        {
-            hp_attention = 0;
-            fprintf( stderr, "Bad HP attention percentage -- %s\n",
-                     field.c_str() );
-        }
-    }
     else if (key == "crawl_dir")
     {
         // We shouldn't bother to allocate this a second time
@@ -1755,8 +1752,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "autoinscribe")
     {
-	std::vector<std::string> thesplit =
-	    split_string(":", field);
+	std::vector<std::string> thesplit = split_string(":", field);
 	autoinscriptions.push_back(
 	    std::pair<text_pattern,std::string>(thesplit[0],
 						thesplit[1]));
@@ -1765,15 +1761,62 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
 	map_file_name = field;
     }
+    else if (key == "hp_colour" || key == "hp_color")
+    {
+        hp_colour.clear();
+        std::vector<std::string> thesplit = split_string(",", field);
+        for ( unsigned i = 0; i < thesplit.size(); ++i )
+        {
+            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            int hp_percent = 100;
+
+            if ( insplit.size() == 0 || insplit.size() > 2 ||
+                 (insplit.size() == 1 && i != 0) )
+            {
+                fprintf(stderr, "Bad hp_colour string: %s\n", field.c_str());
+                break;
+            }
+
+            if ( insplit.size() == 2 )
+                hp_percent = atoi(insplit[0].c_str());
+
+            int scolour = str_to_colour(insplit[(insplit.size()==1) ? 0 : 1]);
+            hp_colour.push_back(std::pair<int, int>(hp_percent, scolour));
+        }
+    }
+    else if (key == "mp_color" || key == "mp_colour")
+    {
+        mp_colour.clear();
+        std::vector<std::string> thesplit = split_string(",", field);
+        for ( unsigned i = 0; i < thesplit.size(); ++i )
+        {
+            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            int mp_percent = 100;
+
+            if ( insplit.size() == 0 || insplit.size() > 2 ||
+                 (insplit.size() == 1 && i != 0) )
+            {
+                fprintf(stderr, "Bad mp_colour string: %s\n", field.c_str());
+                break;
+            }
+
+            if ( insplit.size() == 2 )
+                mp_percent = atoi(insplit[0].c_str());
+
+            int scolour = str_to_colour(insplit[(insplit.size()==1) ? 0 : 1]);
+            mp_colour.push_back(std::pair<int, int>(mp_percent, scolour));
+        }
+    }
     else if (key == "note_skill_levels")
     {
 	std::vector<std::string> thesplit = split_string(",", field);
-	for ( unsigned i = 0; i < thesplit.size(); ++i ) {
+	for ( unsigned i = 0; i < thesplit.size(); ++i )
+        {
 	    int num = atoi(thesplit[i].c_str());
-	    if ( num > 0 && num <= 27 ) {
+	    if ( num > 0 && num <= 27 )
 		note_skill_levels.push_back(num);
-	    }
-	    else {
+	    else
+            {
 		fprintf(stderr, "Bad skill level to note -- %s\n",
 			thesplit[i].c_str());
 		continue;

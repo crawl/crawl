@@ -774,7 +774,6 @@ public:
     int         priest;         // choice of god for priests (Zin/Yred)
     bool        random_pick;    // randomly generate character
     int         hp_warning;     // percentage hp for danger warning
-    int         hp_attention;   // percentage hp for danger attention
     char        race;           // preselected race
     char        cls;            // preselected class
     bool        terse_hand;     // use terse description for wielded item
@@ -805,6 +804,8 @@ public:
     int         sc_entries;     // # of score entries
     int         sc_format;      // Format for score entries
 
+    std::vector<std::pair<int, int> > hp_colour;
+    std::vector<std::pair<int, int> > mp_colour;
 
     std::string map_file_name;	// name of mapping file to use
     std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
