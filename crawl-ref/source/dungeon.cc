@@ -5954,38 +5954,38 @@ void item_colour( item_def &item )
         }
 
         if (is_demonic( item ))
-            item.colour = random_colour();
+            item.colour = random_uncommon_colour();
         else if (is_range_weapon( item ))
-            item.colour = BROWN;
+            item.colour = WHITE;
         else
         {
-            switch (item.sub_type)
+            switch (weapon_skill(item))
             {
-            case WPN_CLUB:
-            case WPN_GIANT_CLUB:
-            case WPN_GIANT_SPIKED_CLUB:
-            case WPN_ANCUS:
-            case WPN_WHIP:
-            case WPN_QUARTERSTAFF:
+            case SK_SHORT_BLADES:
+                item.colour = CYAN;
+                break;
+            case SK_LONG_SWORDS:
+                item.colour = LIGHTCYAN;
+                break;
+            case SK_AXES:
+                item.colour = LIGHTGREY;
+                break;
+            case SK_MACES_FLAILS:
                 item.colour = BROWN;
                 break;
-            case WPN_QUICK_BLADE:
+            case SK_POLEARMS:
                 item.colour = LIGHTBLUE;
                 break;
-            case WPN_EXECUTIONERS_AXE:
-                item.colour = RED;
-                break;
             default:
-                item.colour = LIGHTCYAN;
-                if (get_equip_race(item) == ISFLAG_DWARVEN)
-                    item.colour = CYAN;
+                // huh?
+                item.colour = random_colour();
                 break;
             }
         }
 
-        // I don't think this is ever done -- see start of case {dlb}:
         if (is_random_artefact( item ) && one_chance_in(5))
             item.colour = random_colour();
+
         break;
 
     case OBJ_MISSILES:
@@ -5993,11 +5993,19 @@ void item_colour( item_def &item )
         {
         case MI_STONE:
         case MI_LARGE_ROCK:
-        case MI_ARROW:
             item.colour = BROWN;
+            break;
+        case MI_ARROW:
+            item.colour = LIGHTBLUE;
             break;
         case MI_NEEDLE:
             item.colour = WHITE;
+            break;
+        case MI_BOLT:
+            item.colour = CYAN;
+            break;
+        case MI_DART:
+            item.colour = LIGHTCYAN;
             break;
         default:
             item.colour = LIGHTCYAN;
