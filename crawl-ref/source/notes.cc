@@ -161,17 +161,24 @@ static bool is_noteworthy( const Note& note ) {
 
     /* skills are noteworthy if in the skill value list or if
        it's a new maximal skill (depending on options) */
-    if ( note.type == NOTE_GAIN_SKILL ) {
+    if ( note.type == NOTE_GAIN_SKILL )
+    {
 	if ( is_noteworthy_skill_level(note.second) )
 	    return true;
 	if ( Options.note_skill_max && is_highest_skill(note.first) )
 	    return true;
 	return false;
     }
-    
-    if ( note.type == NOTE_DUNGEON_LEVEL_CHANGE &&
-	 !is_noteworthy_dlevel(note.packed_place) )
-	return false;
+
+    if ( note.type == NOTE_DUNGEON_LEVEL_CHANGE )
+    {
+        if ( !is_noteworthy_dlevel(note.packed_place) )            
+            return false;
+        // labyrinths are always interesting
+        if ( (note.packed_place & 0xFF) == 0xFF &&
+             (note.packed_place >> 8) == LEVEL_LABYRINTH )
+            return true;
+    }
     
     /* Learning a spell is always noteworthy if note_all_spells is set */
     if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
