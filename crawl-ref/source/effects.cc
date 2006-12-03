@@ -414,8 +414,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 4:
-        // josh declares mummies can't smell {dlb}
-        if (you.species != SP_MUMMY)
+        if (player_can_smell())
         {
             strcpy(info, "You smell ");
 

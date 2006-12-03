@@ -1916,14 +1916,10 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
                 // don't worry about invisibility - you should be able to
                 // see if something has fallen into the lava
                 if (is_near)
-                {
-                    strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-                    strcat(info, " falls into the ");
-                    strcat(info, (grd[monster->x][monster->y] == DNGN_LAVA)
-                                ? "lava" : "water");
-                    strcat(info, "!");
-                    mpr(info);
-                }
+                    mprf("%s falls into the %s!",
+                         ptr_monam(monster, DESC_CAP_THE),
+                         (grd[monster->x][monster->y] == DNGN_LAVA) ? "lava" :
+                         "water");
 
                 switch (pbolt.thrower)
                 {

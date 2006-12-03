@@ -1366,8 +1366,8 @@ static void describe_cell(int mx, int my)
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
-            snprintf( info, INFO_SIZE, "%s is wielding ", mons_pronoun( menv[i].type, 
-                                                           PRONOUN_CAP ));
+            snprintf( info, INFO_SIZE, "%s is wielding ",
+                      mons_pronoun( menv[i].type, PRONOUN_CAP ));
             it_name(mon_wep, DESC_NOCAP_A, str_pass);
             strcat(info, str_pass);
 
@@ -1435,20 +1435,13 @@ static void describe_cell(int mx, int my)
                 // special case: batty monsters get set to BEH_WANDER as
                 // part of their special behaviour.
                 if (!testbits(menv[i].flags, MF_BATTY))
-                {
-                    strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-                    strcat(info, " doesn't appear to be interested in you.");
-                    mpr(info);
-                }
+                    mprf("%s doesn't appear to be interested in you.",
+                         mons_pronoun(menv[i].type, PRONOUN_CAP));
             }
         }
 
         if (menv[i].attitude == ATT_FRIENDLY)
-        {
-            strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-            strcat(info, " is friendly.");
-            mpr(info);
-        }
+            mprf("%s is friendly.", mons_pronoun(menv[i].type, PRONOUN_CAP));
 
         for (int p = 0; p < NUM_MON_ENCHANTS; p++)
         {
@@ -1549,24 +1542,18 @@ static void describe_cell(int mx, int my)
     {
         // If a mimic is on this square, we pretend its the first item -- bwr
         if (mimic_item)
-            mpr("There is something else lying underneath.");
+            mpr("There is something else lying underneath.",MSGCH_FLOOR_ITEMS);
         else
         {
             if (mitm[ targ_item ].base_type == OBJ_GOLD)
-            {
-                mpr( "A pile of gold coins." );
-            }
+                mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
             else
-            {
-                strcpy(info, "You see ");
-                it_name( targ_item, DESC_NOCAP_A, str_pass);
-                strcat(info, str_pass);
-                strcat(info, " here.");
-                mpr(info);
-            }
+                mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
+                      it_name(targ_item, DESC_NOCAP_A, str_pass));
 
             if (mitm[ targ_item ].link != NON_ITEM)
-                mpr("There is something else lying underneath.");
+                mprf( MSGCH_FLOOR_ITEMS,
+                      "There is something else lying underneath.");
         }
     }
 

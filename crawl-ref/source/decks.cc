@@ -778,19 +778,17 @@ static void cards(unsigned char which_card)
         mpr("You have drawn the Symbol of Torment.");
         torment( TORMENT_CARDS, you.x_pos, you.y_pos );
         break;
-
-// what about checking whether there are items there, too? {dlb}
+        
     case CARD_FOUNTAIN:
+        // what about checking whether there are items there, too? {dlb}
         mpr("You have drawn the Fountain.");
 
         if (grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
         {
-            strcpy( info, "A beautiful fountain of clear blue water grows "
-                          "from the floor " );
-
-            strcat( info, (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                                ? "before you!" : "at your feet!" );
-            mpr(info);
+            mprf("A beautiful fountain of clear blue water grows from the "
+                 "floor %s!",
+                 (you.species == SP_NAGA || you.species == SP_CENTAUR) ?
+                 "before you!" : "at your feet!" );
             grd[you.x_pos][you.y_pos] = DNGN_BLUE_FOUNTAIN;
         }
         else

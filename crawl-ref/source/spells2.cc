@@ -284,7 +284,7 @@ int corpse_rot(int power)
         }
     }
 
-    if (you.species != SP_MUMMY)   // josh declares mummies cannot smell {dlb}
+    if (player_can_smell())
         mpr("You smell decay.");
 
     // should make zombies decay into skeletons

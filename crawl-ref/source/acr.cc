@@ -148,22 +148,6 @@ const struct coord_def Compass[8] =
     {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
 };
 
-/*
-
-   Functions needed:
-   New:
-   int player_speed(player you);
-   hit_player(damage, flavour, then last two ouch values, env);
-
-
-   Old:
-   wield(player you);
-   show_map
-   noisy()
-   losight
-
-*/
-
 // Functions in main module
 static void close_door(int move_x, int move_y);
 static void do_berserk_no_combat_penalty(void);
@@ -1329,10 +1313,9 @@ void process_command( command_type cmd ) {
         strncpy(name_your, you.your_name, kNameLen);
         name_your[kNameLen] = 0;
         if (dump_char( name_your, false ))
-            strcpy(info, "Char dumped successfully.");
+            mpr("Char dumped successfully.");
         else
-            strcat(info, "Char dump unsuccessful! Sorry about that.");
-        mpr(info);
+            mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
 #ifdef USE_MACROS
@@ -2056,7 +2039,8 @@ static void decrement_durations()
    at some point.
 */
 
-static void world_reacts() {
+static void world_reacts()
+{
 
     bool its_quiet;             //jmf: for silence messages
 

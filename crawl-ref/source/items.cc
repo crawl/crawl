@@ -2396,9 +2396,8 @@ void handle_time( long time_delta )
             (temp_rand == 7) ? "You feel a terrible foreboding..." :
             (temp_rand == 8) ? "You hear words spoken in a strange and terrible language..." :
 
-            (temp_rand == 9) ? ((you.species != SP_MUMMY)
-                    ? "You smell brimstone." : "Brimstone rains from above.") :
-
+            (temp_rand == 9) ? (player_can_smell()) ? "You smell brimstone." :
+            "Brimstone rains from above." :
             (temp_rand == 10) ? "Something frightening happens." :
             (temp_rand == 11) ? "You sense an ancient evil watching you..." :
             (temp_rand == 12) ? "You feel lost and a long, long way from home..." :

@@ -493,8 +493,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_STAFF_OF_OLGREB:
-                    // mummies cannot smell
-                    if (you.species != SP_MUMMY)
+                    if (player_can_smell())
                         mpr("You smell chlorine.");
                     else
                         mpr("The staff glows slightly green.");

@@ -615,7 +615,7 @@ static std::string describe_demon(void)
 
     description += ".";
 
-    switch (random2(40) + (you.species == SP_MUMMY ? 3 : 0))
+    switch (random2(40) + (player_can_smell() ? 0 : 3))
     {
     case 0:
         description += " It stinks of brimstone.";
@@ -1580,7 +1580,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
                 break;
             case ARM_SWAMP_DRAGON_HIDE:
                 description += "The slimy";
-                if (you.species != SP_MUMMY)
+                if (player_can_smell())
                     description += ", smelly";
                 description += " skin of a swamp-dwelling dragon. I suppose "
                     "you could wear it if you really wanted to. ";
@@ -4670,7 +4670,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         description += "A hideous decaying form.";
         if (you.species == SP_GHOUL)
             description += "$It smells great!";
-        else if (you.species != SP_MUMMY)
+        else if (player_can_smell())
             description += "$It stinks.";
         break;
 
@@ -4977,7 +4977,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     case MONS_SWAMP_DRAKE:
         description += "A small and slimy dragon, covered in swamp muck. ";
-        if (you.species != SP_MUMMY)
+        if (player_can_smell())
             description += "It smells horrible.";
         break;
 
@@ -6165,7 +6165,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     case MONS_URUG:
         description += "A rude";
-        if (you.species != SP_MUMMY)
+        if (player_can_smell())
             description += ", smelly";
         description += " orc.";
         break;
