@@ -969,10 +969,7 @@ found_stair:
     // This should fix the "monster occuring under the player" bug?
     if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true);
-    /*
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
-    */
+
     int following = 0;
 
     // actually "move" the followers if applicable

@@ -3486,10 +3486,13 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned short  ch;
                     get_symbol( object, &ch, &colour );
 
-                    set_envmap_glyph( gx, gy, ch, colour, object );
-                    set_terrain_seen( gx, gy );
-                    set_envmap_detected_mons(gx, gy, false);
-                    set_envmap_detected_item(gx, gy, false);
+                    if (map)
+                    {
+                        set_envmap_glyph( gx, gy, ch, colour, object );
+                        set_terrain_seen( gx, gy );
+                        set_envmap_detected_mons(gx, gy, false);
+                        set_envmap_detected_item(gx, gy, false);
+                    }
 
                     // player overrides everything in cell
                     buffy[bufcount] = you.symbol;
