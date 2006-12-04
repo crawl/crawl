@@ -915,6 +915,29 @@ command_type travel()
         // we turn off travel (find_travel_pos does that automatically).
         find_travel_pos(you.x_pos, you.y_pos, move_x, move_y);
 
+        if ((*move_x || *move_y) && you.running == RMODE_EXPLORE_GREEDY)
+        {
+            // Greedy explore should cut off on reaching an item. We can't
+            // check after reaching the item, because at that point the stash
+            // tracker will have verified the stash and say "false" to
+            // needs_visit.
+            const int new_x = you.x_pos + *move_x;
+            const int new_y = you.y_pos + *move_y;
+
+            if (new_x == you.running.x && new_y == you.running.y)
+            {
+                const LevelStashes *lev = stashes.find_current_level();
+                if (lev && lev->needs_visit(new_x, new_y)
+                    && !lev->shop_needs_visit(new_x, new_y))
+                {
+                    if ((Options.explore_stop & ES_ITEM)
+                            && prompt_stop_explore(ES_ITEM))
+                        stop_running();
+                    return direction_to_command( *move_x, *move_y );
+                }
+            }
+        }
+
         if (!*move_x && !*move_y)
         {
             // If we've reached the square we were traveling towards, travel
@@ -985,10 +1008,10 @@ command_type travel()
         redraw_screen();
 
     if (!you.running)
-	return CMD_NO_CMD;
+        return CMD_NO_CMD;
 
     if ( result != CMD_NO_CMD )
-	return result;
+        return result;
 
     return direction_to_command( *move_x, *move_y );
 }
@@ -2327,6 +2350,7 @@ void start_explore(bool grab_items)
     // Clone shadow array off map
     copy(env.map, mapshadow);
 
+    you.running.x = you.running.y = 0;
     start_running();
 }
 
