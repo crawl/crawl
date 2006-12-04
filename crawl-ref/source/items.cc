@@ -735,7 +735,7 @@ static void item_list_on_square( std::vector<const item_def*>& items,
  */
 void item_check(char keyin)
 {
-    char item_show[50][50];
+    char item_show[50][ITEMNAME_SIZE];
     char temp_quant[10];
 
     int counter = 0;

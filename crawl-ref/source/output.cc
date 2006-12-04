@@ -65,7 +65,12 @@ void print_stats(void)
     if (you.redraw_hit_points)
     {
         const int max_max_hp = you.hp_max + player_rotted();
-        const int hp_percent = (you.hp * 100) / max_max_hp;
+        int hp_percent;
+        if ( max_max_hp )
+            hp_percent = (you.hp * 100) / max_max_hp;
+        else
+            hp_percent = 100;
+
         for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
         {
             if ( i+1 == Options.hp_colour.size() ||
