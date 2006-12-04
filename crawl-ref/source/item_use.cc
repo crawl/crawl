@@ -177,7 +177,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (false);
     }
 
-    // Any general reasons why we can't wield a new object?
+    // Look for conditions like berserking that could prevent wielding
+    // weapons.
     if (!can_wield(NULL, true))
         return (false);
 
@@ -201,8 +202,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
                    && you.inv[item_slot].base_type != OBJ_MISSILES
                    && you.inv[item_slot].base_type != OBJ_STAVES;
 
-    // Prompt if not using the auto swap command, 
-    // or if the swap slot is empty.
+    // Prompt if not using the auto swap command, or if the swap slot
+    // is empty.
     if (!auto_wield || !is_valid_item(you.inv[item_slot]) || force_unwield)
     {
         if (!auto_wield)

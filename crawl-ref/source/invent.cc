@@ -362,9 +362,6 @@ bool InvMenu::process_key( int key )
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
-    // Fake an ESCAPE if the menu is empty.
-    if (!item_count())
-        mkey = ESCAPE;
     if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?' 
             && mkey != '*' && mkey != ESCAPE)
         mkey = ' ';
