@@ -1365,6 +1365,7 @@ enum ghost_value_type
     GVAL_DEMONLORD_CYCLE_COLOUR         // 13
 };
 
+// The order of this enum must match the order of DNGN_ALTAR_FOO.
 enum god_type
 {
     GOD_NO_GOD,                        //    0  -- must be zero

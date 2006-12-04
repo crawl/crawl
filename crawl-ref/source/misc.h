@@ -134,6 +134,7 @@ bool grid_is_solid(int grid);
 bool grid_is_water(int grid);
 bool grid_is_watery( int grid );
 god_type grid_altar_god( unsigned char grid );
+int altar_for_god( god_type god );
 bool grid_is_branch_stairs( unsigned char grid );
 int grid_secret_door_appearance( int gx, int gy );
 bool grid_destroys_items( int grid );

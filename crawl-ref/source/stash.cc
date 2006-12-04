@@ -19,6 +19,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "misc.h"
+#include "overmap.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -475,8 +476,9 @@ bool Stash::matches_search(const std::string &prefix,
     if (res.matches)
     {
         res.stash = this;
-        res.pos.x = x;
-        res.pos.y = y;
+        // XXX pos.pos looks lame. Lameness is not solicited.
+        res.pos.pos.x = x;
+        res.pos.pos.y = y;
     }
 
     return !!res.matches;
@@ -760,8 +762,8 @@ bool ShopInfo::matches_search(const std::string &prefix,
     if (match || res.matches)
     {
         res.shop = this;
-        res.pos.x = x;
-        res.pos.y = y;
+        res.pos.pos.x = x;
+        res.pos.pos.y = y;
     }
     
     return match || res.matches;
@@ -1040,7 +1042,7 @@ void LevelStashes::get_matching_stashes(
             stash_search_result res;
             if (iter->second.matches_search(lplace, search, res))
             {
-                res.level = clid;
+                res.pos.id = clid;
                 results.push_back(res);
             }
         }
@@ -1051,7 +1053,7 @@ void LevelStashes::get_matching_stashes(
         stash_search_result res;
         if (shops[i].matches_search(lplace, search, res))
         {
-            res.level = clid;
+            res.pos.id = clid;
             results.push_back(res);
         }
     }
@@ -1314,11 +1316,11 @@ void StashTracker::search_stashes()
     char prompt[200];
     if (lastsearch.length())
         snprintf(prompt, sizeof prompt,
-                "Search your stashes for what item [Enter for \"%s\"]?",
+                "Search for what [Enter for \"%s\"]?",
                 lastsearch.c_str());
     else
         snprintf(prompt, sizeof prompt,
-                "Search your stashes for what item?");
+                "Search for what?");
     
     mpr(prompt, MSGCH_PROMPT);
     // Push the cursor down to the next line.
@@ -1358,7 +1360,7 @@ void StashTracker::search_stashes()
 
     if (results.empty())
     {
-        mpr("That item is not present in any of your stashes.",
+        mpr("Can't find anything matching that.",
                 MSGCH_PLAIN);
         return;
     }
@@ -1385,11 +1387,11 @@ void StashTracker::get_matching_stashes(
             return;
     }
 
+    get_matching_features(search, results);
+
     level_id curr = level_id::get_current_level_id();
     for (unsigned i = 0; i < results.size(); ++i)
-    {
-        results[i].player_distance = level_distance(curr, results[i].level);
-    }
+        results[i].player_distance = level_distance(curr, results[i].pos.id);
 
     // Sort stashes so that closer stashes come first and stashes on the same
     // levels with more items come first.
@@ -1420,9 +1422,9 @@ void StashSearchMenu::draw_title()
                            title->quantity > 1? "es" : "");
 
         if (meta_key)
-            draw_title_suffix(" (x - examine stash)", false);
+            draw_title_suffix(" (x - examine)", false);
         else
-            draw_title_suffix(" (x - go to stash; ? - examine stash)", false);
+            draw_title_suffix(" (x - travel; ? - examine)", false);
     }
 }
 
@@ -1449,7 +1451,7 @@ void StashTracker::display_search_results(
 
     StashSearchMenu stashmenu;
     stashmenu.can_travel = travelable;
-    std::string title = "matching stash";
+    std::string title = "match";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
@@ -1461,7 +1463,7 @@ void StashTracker::display_search_results(
     {
         stash_search_result &res = results[i];
         char matchtitle[ITEMNAME_SIZE];
-        std::string place = short_place_name(res.level);
+        std::string place = short_place_name(res.pos.id);
         if (res.matches > 1 && res.count > 1)
         {
             snprintf(matchtitle, sizeof matchtitle,
@@ -1501,21 +1503,19 @@ void StashTracker::display_search_results(
             bool dotravel = false;
             if (res->shop)
             {
-                dotravel = res->shop->show_menu(short_place_name(res->level),
+                dotravel = res->shop->show_menu(short_place_name(res->pos.id),
                                                  travelable);
             }
             else if (res->stash)
             {
-                dotravel = res->stash->show_menu(short_place_name(res->level),
+                dotravel = res->stash->show_menu(short_place_name(res->pos.id),
                                                  travelable);
             }
 
             if (dotravel && travelable)
             {
                 redraw_screen();
-                level_pos lp;
-                lp.id  = res->level;
-                lp.pos = res->pos;
+                const level_pos lp = res->pos;
                 start_translevel_travel(lp);
                 return ;
             }
@@ -1529,9 +1529,7 @@ void StashTracker::display_search_results(
     {
         const stash_search_result *res = 
                 static_cast<stash_search_result *>(sel[0]->data);
-        level_pos lp;
-        lp.id  = res->level;
-        lp.pos = res->pos;
+        const level_pos lp = res->pos;
         start_translevel_travel(lp);
         return ;
     }

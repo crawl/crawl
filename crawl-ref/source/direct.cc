@@ -1153,7 +1153,7 @@ std::string feature_description(int grid)
     case DNGN_STONE_STAIRS_UP_III:
         return ("A stone staircase leading up.");
     case DNGN_ENTER_HELL:
-        return ("A gateway to hell.");
+        return ("A gateway to Hell.");
     case DNGN_TRAP_MECHANICAL:
         return ("A mechanical trap.");
     case DNGN_TRAP_MAGICAL:

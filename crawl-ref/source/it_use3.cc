@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
+#include "overmap.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -693,6 +694,8 @@ bool evoke_wielded( void )
                 mpr("You unfold the altar and place it on the floor.");
                 grd[you.x_pos][you.y_pos] = DNGN_ALTAR_NEMELEX_XOBEH;
                 dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
+                seen_notable_thing(
+                    DNGN_ALTAR_NEMELEX_XOBEH, you.x_pos, you.y_pos);
             }
             break;
 

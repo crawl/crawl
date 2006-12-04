@@ -177,13 +177,23 @@ bool grid_destroys_items( int grid )
     return (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER);
 }
 
-// returns 0 is grid is not an altar, else it returns the GOD_* type
+// returns 0 if grid is not an altar, else it returns the GOD_* type
 god_type grid_altar_god( unsigned char grid )
 {
     if (grid >= DNGN_ALTAR_ZIN && grid <= DNGN_ALTAR_ELYVILON)
         return (static_cast<god_type>( grid - DNGN_ALTAR_ZIN + 1 ));
 
     return (GOD_NO_GOD);
+}
+
+// returns DNGN_FLOOR for non-gods, otherwise returns the altar for
+// the god.
+int altar_for_god( god_type god )
+{
+    if (god == GOD_NO_GOD || god >= NUM_GODS)
+        return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
+
+    return (DNGN_ALTAR_ZIN + god - 1);
 }
 
 bool grid_is_branch_stairs( unsigned char grid )

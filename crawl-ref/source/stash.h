@@ -159,10 +159,8 @@ private:
 
 struct stash_search_result
 {
-    // What level is this stash or shop on.
-    level_id level;
-
-    coord_def pos;
+    // Where's this thingummy of interest.
+    level_pos pos;
 
     // Number of levels the player must cross to reach the level the stash/shop
     // is on.
@@ -178,11 +176,11 @@ struct stash_search_result
     // First item in stash that matched
     std::string match;
 
-    // The stash or shop in question.
+    // The stash or shop in question. Both can be null if this is a feature.
     const Stash    *stash;
     const ShopInfo *shop;
 
-    stash_search_result() : level(), player_distance(0), matches(0),
+    stash_search_result() : pos(), player_distance(0), matches(0),
                             count(0), match(), stash(NULL), shop(NULL)
     {
     }

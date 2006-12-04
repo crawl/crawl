@@ -49,6 +49,7 @@
 #include "mstuff2.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "overmap.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -1202,6 +1203,7 @@ void pickup()
             }
 
             grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
+            unnotice_altar();
         }
     }
 

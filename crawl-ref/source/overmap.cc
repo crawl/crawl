@@ -25,6 +25,7 @@
 
 #include "externs.h"
 
+#include "direct.h"
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
 #include "menu.h"
@@ -34,10 +35,15 @@
 #include "stuff.h"
 #include "view.h"
 
-std::map<branch_type, level_id> stair_level;
-std::map<level_pos, shop_type> shops_present;
-std::map<level_pos, god_type> altars_present;
-std::map<level_pos, portal_type> portals_present;
+typedef std::map<branch_type, level_id> stair_map_type;
+typedef std::map<level_pos, shop_type> shop_map_type;
+typedef std::map<level_pos, god_type> altar_map_type;
+typedef std::map<level_pos, portal_type> portal_map_type;
+
+stair_map_type stair_level;
+shop_map_type shops_present;
+altar_map_type altars_present;
+portal_map_type portals_present;
 
 static void seen_altar( god_type god, const coord_def& pos );
 static void seen_staircase(unsigned char which_staircase,const coord_def& pos);
@@ -58,6 +64,23 @@ void seen_notable_thing( int which_thing, int x, int y )
         seen_staircase( which_thing, pos );
     else
         seen_other_thing( which_thing, pos );
+}
+
+static int portal_to_feature(portal_type p)
+{
+    switch ( p )
+    {
+    case PORTAL_LABYRINTH:
+        return DNGN_ENTER_LABYRINTH;
+    case PORTAL_HELL:
+        return DNGN_ENTER_HELL;
+    case PORTAL_ABYSS:
+        return DNGN_ENTER_ABYSS;
+    case PORTAL_PANDEMONIUM:
+        return DNGN_ENTER_PANDEMONIUM;
+    default:
+        return DNGN_FLOOR;
+    }
 }
 
 static const char* portaltype_to_string(portal_type p)
@@ -105,6 +128,81 @@ static char shoptype_to_char(shop_type s)
     default:
         return 'x';
     }
+}
+
+static altar_map_type get_notable_altars(const altar_map_type &altars)
+{
+    altar_map_type notable_altars;
+    for ( altar_map_type::const_iterator na_iter = altars.begin();
+          na_iter != altars.end(); ++na_iter )
+    {
+        if (na_iter->first.id.branch != BRANCH_ECUMENICAL_TEMPLE)
+            notable_altars[na_iter->first] = na_iter->second;
+    }
+    return (notable_altars);
+}
+
+inline static std::string place_desc(const level_pos &pos)
+{
+    return "[" + pos.id.describe(false, true) + "] ";
+}
+
+inline static std::string altar_description(god_type god)
+{
+    return feature_description( altar_for_god(god) );
+}
+
+inline static std::string portal_description(portal_type portal)
+{
+    return feature_description( portal_to_feature(portal) );
+}
+
+static void get_matching_altars(
+    const base_pattern &pattern, std::vector<stash_search_result> &results)
+{
+    for ( altar_map_type::const_iterator na_iter = altars_present.begin();
+          na_iter != altars_present.end(); ++na_iter )
+    {
+        const std::string adesc =
+            altar_description(na_iter->second);
+        
+        if (pattern.matches(place_desc(na_iter->first) + adesc))
+        {
+            stash_search_result sr;
+            sr.pos   = na_iter->first;
+            sr.match = adesc;
+            results.push_back(sr);
+        }
+    }
+}
+
+static void get_matching_portals(
+    const base_pattern &pattern, std::vector<stash_search_result> &results)
+{
+    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
+          pl_iter != portals_present.end(); ++pl_iter )
+    {
+        const std::string desc =
+            portal_description(pl_iter->second);
+        
+        if (pattern.matches(place_desc(pl_iter->first) + desc + " [portal]"))
+        {
+            stash_search_result sr;
+            sr.pos   = pl_iter->first;
+            sr.match = desc;
+            results.push_back(sr);
+        }
+    }
+}
+
+void get_matching_features(
+    const base_pattern &pattern, std::vector<stash_search_result> &results)
+{
+    if (!pattern.valid())
+        return;
+
+    get_matching_altars(pattern, results);
+    get_matching_portals(pattern, results);
 }
 
 std::string overview_description_string()
@@ -156,10 +254,14 @@ std::string overview_description_string()
     }
     if ( branchcount && (branchcount % 4) )
         disp += "\n";
+
+    // remove unworthy altars from the list we show the user. Yeah,
+    // one more round of map iteration.
+    const altar_map_type notable_altars = get_notable_altars(altars_present);
     
     // print altars
     // we loop through everything a dozen times, oh well
-    if ( !altars_present.empty() )
+    if ( !notable_altars.empty() )
     {
         disp += "\n<white>Altars:</white>\n";
         seen_anything = true;
@@ -175,8 +277,8 @@ std::string overview_description_string()
         if ( cur_god == you.religion )
             continue;
 
-        for ( ci_altar = altars_present.begin();
-              ci_altar != altars_present.end();
+        for ( ci_altar = notable_altars.begin();
+              ci_altar != notable_altars.end();
               ++ci_altar )
         {
             if ( ci_altar->second == real_god )
@@ -382,16 +484,17 @@ void seen_altar( god_type god, const coord_def& pos )
     if ( you.level_type != LEVEL_DUNGEON )
         return;
     
-    // no point in recording Temple altars
-    if ( you.where_are_you == BRANCH_ECUMENICAL_TEMPLE )
-        return;
-
-    // portable; no point in recording
-    if ( god == GOD_NEMELEX_XOBEH )
-        return;
-
     level_pos where(level_id::get_current_level_id(), pos);
     altars_present[where] = god;
+}
+
+void unnotice_altar()
+{
+    const coord_def pos = { you.x_pos, you.y_pos };
+    const level_pos curpos(level_id::get_current_level_id(), pos);
+    // Hmm, what happens when erasing a nonexistent key directly?
+    if (altars_present.find(curpos) != altars_present.end())
+        altars_present.erase(curpos);
 }
 
 portal_type feature_to_portal( unsigned char feat )
