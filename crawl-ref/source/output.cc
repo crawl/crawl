@@ -97,8 +97,11 @@ void print_stats(void)
 
     if (you.redraw_magic_points)
     {
-
-        const int mp_percent = (you.magic_points * 100) / you.max_magic_points;
+        int mp_percent;
+        if ( you.max_magic_points )
+            mp_percent = (you.magic_points * 100) / you.max_magic_points;
+        else
+            mp_percent = 100;
         for ( unsigned int i = 0; i < Options.mp_colour.size(); ++i )
         {
             if ( i+1 == Options.mp_colour.size() ||
