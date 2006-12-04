@@ -2362,6 +2362,17 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
     return (ret);
 }
 
+static void make_rod(item_def &item, int rod_type)
+{
+    item.base_type = OBJ_STAVES;
+    item.sub_type = rod_type;
+    item.quantity = 1;
+    item.special = 0;
+    item.colour = BROWN;
+    
+    init_rod_mp(item);
+}
+
 //
 // The idea behind wanderers is a class that has various different
 // random skills that's a challenge to play... not a class that can
@@ -4143,11 +4154,7 @@ void give_items_skills()
             you.inv[3].colour = LIGHTCYAN;
 
             if (you.species == SP_SPRIGGAN)
-            {
-                you.inv[0].base_type = OBJ_STAVES;
-                you.inv[0].sub_type = STAFF_STRIKING;
-                you.inv[0].colour = BROWN;
-            }
+                make_rod(you.inv[0], STAFF_STRIKING);
             break;
 
         case JOB_FIRE_ELEMENTALIST:
@@ -4336,13 +4343,7 @@ void give_items_skills()
 
         if (you.species == SP_SPRIGGAN)
         {
-            you.inv[0].base_type = OBJ_STAVES;
-            you.inv[0].sub_type = STAFF_STRIKING;
-            you.inv[0].quantity = 1;
-            you.inv[0].plus = 0;
-            you.inv[0].plus2 = 0;
-            you.inv[0].special = 0;
-            you.inv[0].colour = BROWN;
+            make_rod(you.inv[0], STAFF_STRIKING);
 
             you.skills[SK_EVOCATIONS] = 2;
             you.skills[SK_FIGHTING] = 0;
@@ -4360,9 +4361,7 @@ void give_items_skills()
 
         if (you.species == SP_SPRIGGAN)
         {
-            you.inv[0].base_type = OBJ_STAVES;
-            you.inv[0].sub_type = STAFF_STRIKING;
-            you.inv[0].colour = BROWN;
+            make_rod(you.inv[0], STAFF_STRIKING);
 
             you.skills[SK_EVOCATIONS] = 3;
         }

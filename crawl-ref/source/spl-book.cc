@@ -1525,13 +1525,8 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    if (staff_type == STAFF_STRIKING)
-        mana /= ROD_CHARGE_MULT;
-
-    if ((staff_type == STAFF_STRIKING? 
-                you.magic_points < mana
-              : you.inv[staff].plus < mana)
-            || you.experience_level < diff)
+    if (you.inv[staff].plus < mana
+        || you.experience_level < diff)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
@@ -1541,8 +1536,7 @@ int staff_spell( int staff )
         if (you.experience_level < diff)
             mprf("You need to be at least level %d to use that.", diff);
         else
-            mprf("%s have enough magic points.", 
-                staff_type == STAFF_STRIKING? "You don't" : "The rod doesn't");
+            mpr("The rod doesn't have enough magic points.");
 
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
@@ -1552,13 +1546,7 @@ int staff_spell( int staff )
     if (your_spells(specspell, powc, false) == -1)
         return (-1);
 
-    // dec_mp(spell_mana(specspell));
-    if (staff_type != STAFF_STRIKING)
-        you.inv[staff].plus -= mana;
-    else {
-        you.magic_points -= mana;
-        you.redraw_magic_points = true;
-    }
+    you.inv[staff].plus -= mana;
 
     energy = player_energy();
     if (energy <= 0 && you.is_undead != US_UNDEAD)

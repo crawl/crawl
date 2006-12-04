@@ -2963,11 +2963,10 @@ static std::string describe_staff( const item_def &item )
 
         if (item_is_rod( item ))
         {
-            if (item.sub_type != STAFF_STRIKING)
-                description += 
-                    "$$It uses its own mana reservoir for casting spells, and "
-                    "recharges automatically by channeling mana from its "
-                    "wielder.";
+            description += 
+                "$$It uses its own mana reservoir for casting spells, and "
+                "recharges automatically by channeling mana from its "
+                "wielder.";
         }
         else
         {

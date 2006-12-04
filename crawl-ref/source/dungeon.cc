@@ -478,6 +478,19 @@ void builder(int level_number, char level_type)
         prepare_water( level_number );
 }                               // end builder()
 
+void init_rod_mp(item_def &item)
+{
+    if (!item_is_rod(item))
+        return;
+
+    if (item.sub_type == STAFF_STRIKING)
+        item.plus2 = random_range(6, 9) * ROD_CHARGE_MULT;
+    else
+        item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
+    
+    item.plus  = item.plus2;
+}
+
 // Returns item slot or NON_ITEM if it fails
 int items( int allow_uniques,       // not just true-false,
                                     //     because of BCR acquirement hack
@@ -2434,10 +2447,7 @@ int items( int allow_uniques,       // not just true-false,
         mitm[p].special = random2(NUM_STAVE_ADJ);
 
         if (item_is_rod( mitm[p] ))
-        {
-            mitm[p].plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
-            mitm[p].plus  = mitm[p].plus2;
-        }
+            init_rod_mp( mitm[p] );
 
         quant = 1;
         break;

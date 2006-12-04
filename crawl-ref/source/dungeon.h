@@ -49,6 +49,7 @@ int items( int allow_uniques, int force_class, int force_type,
  * *********************************************************************** */
 void give_item(int mid, int level_number);
 
+void init_rod_mp(item_def &item);
 
 // last updated 13mar2001 {gdl}
 /* ***********************************************************************

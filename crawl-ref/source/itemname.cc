@@ -1738,8 +1738,8 @@ static const char *item_name_2(
                    : "bugginess", ITEMNAME_SIZE );
         }
 
-        if (item_is_rod( item ) && item.sub_type != STAFF_STRIKING 
-                && item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_is_rod( item )
+            && item_ident( item, ISFLAG_KNOW_TYPE ))
         {
             strncat( buff, " (", ITEMNAME_SIZE );
             itoa( item.plus / ROD_CHARGE_MULT, tmp_quant, 10 );
