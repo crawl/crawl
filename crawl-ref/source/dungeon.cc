@@ -1197,10 +1197,6 @@ int items( int allow_uniques,       // not just true-false,
                                                            : SPWPN_SPEED );
                         break;
                     }
-                    case WPN_BLOWGUN:
-                        if (one_chance_in(7))
-                            set_weapon_special(p, SPWPN_VENOM);
-                        break;
 
                     // quarterstaff - not powerful, as this would make
                     // the 'staves' skill just too good
@@ -1430,8 +1426,7 @@ int items( int allow_uniques,       // not just true-false,
         // some paralysis or slowing poison needles, just
         // so that blowguns have some added utility over
         // the other launchers/throwing weapons. -- bwr
-        if (mitm[p].sub_type == MI_NEEDLE 
-            && (item_level == MAKE_GOOD_ITEM || !one_chance_in(5)))
+        if (mitm[p].sub_type == MI_NEEDLE)
         {
             const int pois = 
                 got_curare_roll(item_level)
