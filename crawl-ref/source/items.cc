@@ -94,7 +94,7 @@ void link_items(void)
 {
     int i,j;
 
-    // first, initailize igrd array
+    // first, initialise igrd array
     for (i = 0; i < GXM; i++)
     {
         for (j = 0; j < GYM; j++)
@@ -1766,8 +1766,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
 
     char str_pass[ ITEMNAME_SIZE ];
     quant_name( you.inv[item_dropped], quant_drop, DESC_NOCAP_A, str_pass );
-    snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
-    mpr(info);
+    mprf( "You drop %s.", str_pass );
     
     if ( grid_destroys_items(my_grid) ) {
         mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
@@ -1859,6 +1858,28 @@ static std::string drop_selitem_text( const std::vector<MenuEntry*> *s )
 }
 
 std::vector<SelItem> items_for_multidrop;
+
+// Arrange items that have been selected for multidrop so that
+// equipped items are dropped after other items, and equipped items
+// are dropped in the same order as their EQ_ slots are numbered.
+static bool drop_item_order(const SelItem &first, const SelItem &second)
+{
+    const item_def &i1 = you.inv[first.slot];
+    const item_def &i2 = you.inv[second.slot];
+
+    const int slot1 = get_equip_slot(&i1),
+              slot2 = get_equip_slot(&i2);
+
+    if (slot1 != -1 && slot2 != -1)
+        return (slot1 < slot2);
+    else if (slot1 != -1 && slot2 == -1)
+        return (false);
+    else if (slot2 != -1 && slot1 == -1)
+        return (true);
+
+    return (first.slot < second.slot);
+}
+
 //---------------------------------------------------------------
 //
 // drop
@@ -1888,6 +1909,13 @@ void drop(void)
         canned_msg( MSG_OK );
         return;
     }
+
+    // Sort the dropped items so we don't see weird behaviour when
+    // dropping a worn robe before a cloak (old behaviour: remove
+    // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
+    // cloak).
+    std::sort( items_for_multidrop.begin(), items_for_multidrop.end(),
+               drop_item_order );
 
     if ( items_for_multidrop.size() == 1 ) // only one item
     {

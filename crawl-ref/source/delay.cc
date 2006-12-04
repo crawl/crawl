@@ -55,7 +55,9 @@ static bool is_parent_delay(int delay)
     // Lua macros can in theory perform any of the other delays,
     // including travel; in practise travel still assumes there can be
     // no parent delay.
-    return (delay == DELAY_TRAVEL || delay == DELAY_MACRO);
+    return (delay == DELAY_TRAVEL
+            || delay == DELAY_MACRO
+            || delay == DELAY_MULTIDROP);
 }
 
 static void push_delay(const delay_queue_item &delay)
@@ -319,6 +321,13 @@ void handle_delay( void )
 
         mpr( info, MSGCH_DIAGNOSTICS );
 #endif
+        // delay.duration-- *must* be done before multidrop, because
+        // multidrop is now a parent delay, which means other delays
+        // can be pushed to the front of the queue, invalidating the
+        // "delay" reference here, and resulting in tons of debugging
+        // fun with valgrind.
+        delay.duration--;
+        
         switch ( delay.type )
         {
         case DELAY_ARMOUR_ON:
@@ -352,7 +361,6 @@ void handle_delay( void )
         default:
             break;
         }
-        delay.duration--;
     }
     else 
     {
