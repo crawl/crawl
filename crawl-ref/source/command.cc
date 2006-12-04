@@ -584,8 +584,6 @@ static int cmdhelp_keyfilter(int keyin)
 
 static bool cmdhelp_textfilter(const std::string &tag)
 {
-    if (tag == "s")
-        return (true);
 #ifdef WIZARD
     if (tag == "wiz")
         return (true);
@@ -772,12 +770,12 @@ void list_commands(bool wizard)
 
     cols.add_formatted(            
             0,
-            "<?s><h>Stash Management Commands:\n"
-            "<?s><w>Ctrl-F</w> : Find (in stashes and shops)\n"
-            "<?s>\n"
-            "<?s>Searching in stashes allows regular\n"
-            "<?s>expressions, and terms like 'altar'\n"
-            "<?s>or 'artifact' or 'long blades'.\n",
+            "<h>Stash Management Commands:\n"
+            "<w>Ctrl-F</w> : Find (in stashes and shops)\n"
+            "\n"
+            "Searching in stashes allows regular\n"
+            "expressions, and terms like 'altar'\n"
+            "or 'artifact' or 'long blades'.\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -850,18 +848,9 @@ void list_commands(bool wizard)
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note to dump file\n"
             "<w>~</w> : add macro\n"
-//            "<w>~</w> : save macros\n"
             "<w>=</w> : reassign inventory/spell letters\n"
             " \n",
             true, true, cmdhelp_textfilter);
-
-//    cols.add_formatted(
-//            1,
-//            "<?s><h>Stash Management Commands:\n"
-//            "<?s><w>Ctrl-S</w> : mark Stash\n"
-//            "<?s><w>Ctrl-E</w> : Erase stash (ignore square)\n"
-//            "<?s><w>Ctrl-F</w> : Find (in stashes and shops)\n",
-//            true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -906,11 +895,11 @@ void list_commands(bool wizard)
     cols.add_formatted(            
             1, 
             " \n"
-            "<?s>Crawl usually considers every item it\n"
-            "<?s>sees as a stash. When using a value\n"
-            "<?s>different from <darkgrey>stash_tracking = all</darkgrey>, you\n"
-            "<?s>can use <w>Ctrl-S</w> to manually declare\n"
-            "<?s>stashes, and <w>Ctrl-E</w> to erase them.\n",
+            "Crawl usually considers every item it\n"
+            "sees as a stash. When using a value\n"
+            "different from <green>stash_tracking = all</green>, you\n"
+            "can use <w>Ctrl-S</w> to manually declare\n"
+            "stashes, and <w>Ctrl-E</w> to erase them.\n",
             true, true, cmdhelp_textfilter);
     
     show_keyhelp_menu(cols.formatted_lines());
