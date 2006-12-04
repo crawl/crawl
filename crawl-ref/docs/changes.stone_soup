@@ -1,3 +1,12 @@
+Stone Soup 0.1.5 (20061205)
+---------------------------
+* Fixed crash when multidropping a worn cloak and worn body armour, in
+  that order, with easy_armour enabled.
+* Fixed labyrinths and the abyss being semi-mappable.
+* Fixed item name corruption when displaying long names with ;.
+* [1605400] Fixed inability to wield stuff when using auto_list and
+  not carrying any weapons/staves.
+
 Stone Soup 0.1.4 (20061128)
 ---------------------------
 * Sif Muna piety no longer wraps around.
