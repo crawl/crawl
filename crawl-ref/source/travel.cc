@@ -892,7 +892,10 @@ command_type travel()
             find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
             // No place to go?
             if (!you.running.x)
+            {
                 stop_running();
+                mpr("There's nowhere new to go, done exploring.");
+            }
         }
     }
 
