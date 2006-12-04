@@ -64,8 +64,8 @@ static scorefile_entry hs_list[SCORE_FILE_ENTRIES];
 // highscore printing (always -1 when run from command line).
 static int newest_entry = -1;
 
-static FILE *hs_open(const char *mode);
-static void hs_close(FILE *handle, const char *mode);
+static FILE *hs_open(const char *mode, const char *filename);
+static void hs_close(FILE *handle, const char *mode, const char *filename);
 static bool hs_read(FILE *scores, scorefile_entry &dest);
 static void hs_parse_numeric(char *inbuf, scorefile_entry &dest);
 static void hs_parse_string(char *inbuf, scorefile_entry &dest);
@@ -96,7 +96,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
     bool inserted = false;
 
     // open highscore file (reading) -- note that NULL is not fatal!
-    scores = hs_open("r");
+    scores = hs_open("r", "scores");
 
     for (i = 0; i < SCORE_FILE_ENTRIES; ++i)
         hs_list[i].reset();
@@ -139,10 +139,10 @@ void hiscores_new_entry( const scorefile_entry &ne )
     total_entries = i;
 
     // close so we can re-open for writing
-    hs_close(scores,"r");
+    hs_close(scores,"r", "scores");
 
     // open highscore file (writing) -- NULL *is* fatal here.
-    scores = hs_open("w");
+    scores = hs_open("w", "scores");
     if (scores == NULL)
     {
         perror("Entry not added - failure opening score file for writing.");
@@ -156,7 +156,26 @@ void hiscores_new_entry( const scorefile_entry &ne )
     }
 
     // close scorefile.
-    hs_close(scores, "w");
+    hs_close(scores, "w", "scores");
+}
+
+void logfile_new_entry( const scorefile_entry &ne )
+{
+    FILE *logfile;
+    scorefile_entry le = ne;
+
+    // open logfile (appending) -- NULL *is* fatal here.
+    logfile = hs_open("a", "logfile");
+    if (logfile == NULL)
+    {
+        perror("Entry not added - failure opening logfile for appending.");
+        return;
+    }
+
+    hs_write(logfile, le);
+
+    // close logfile.
+    hs_close(logfile, "a", "logfile");
 }
 
 void hiscores_print_list( int display_count, int format )
@@ -169,7 +188,7 @@ void hiscores_print_list( int display_count, int format )
         display_count = SCORE_FILE_ENTRIES;
 
     // open highscore file (reading)
-    scores = hs_open("r");
+    scores = hs_open("r", "scores");
     if (scores == NULL)
     {
         // will only happen from command line
@@ -186,7 +205,7 @@ void hiscores_print_list( int display_count, int format )
     total_entries = i;
 
     // close off
-    hs_close( scores, "r" );
+    hs_close( scores, "r", "scores" );
 
     if (!use_printf) 
         textcolor(LIGHTGREY);
@@ -383,9 +402,10 @@ static bool unlock_file_handle( FILE *handle )
 
 
 
-FILE *hs_open( const char *mode )
+FILE *hs_open( const char *mode, const char *filename )
 {
-    std::string scores = Options.save_dir + "scores";
+    const std::string scores = Options.save_dir + filename;
+
     FILE *handle = fopen(scores.c_str(), mode);
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
@@ -393,7 +413,7 @@ FILE *hs_open( const char *mode )
 
 #ifdef USE_FILE_LOCKING
     int locktype = F_RDLCK;
-    if (stricmp(mode, "w") == 0)
+    if (stricmp(mode, "r"))
         locktype = F_WRLCK;
 
     if (handle && !lock_file_handle( handle, locktype ))
@@ -406,7 +426,7 @@ FILE *hs_open( const char *mode )
     return handle;
 }
 
-void hs_close( FILE *handle, const char *mode )
+void hs_close( FILE *handle, const char *mode, const char *filename )
 {
     UNUSED( mode );
 
@@ -423,7 +443,8 @@ void hs_close( FILE *handle, const char *mode )
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     if (stricmp(mode, "w") == 0)
     {
-        std::string scores = Options.save_dir + "scores";
+        std::string scores = Options.save_dir;
+        scores += filename;
         chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
     }
 #endif
