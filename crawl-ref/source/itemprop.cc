@@ -1028,7 +1028,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
                 return (false);
             }
 
-            if (you.species == SP_MINOTAUR || you.mutation[MUT_HORNS])
+            if (you.mutation[MUT_HORNS])
             {
                 if (!quiet)
                     mpr( "You can't wear that with your horns!" );

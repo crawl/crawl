@@ -1691,9 +1691,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             case 1:
                 if (unarmed_attack != UNAT_HEADBUTT)
                 {
-                    if ((you.species != SP_MINOTAUR
-                            && (!you.mutation[MUT_HORNS]
-                                && you.species != SP_KENKU))
+                    if ((!you.mutation[MUT_HORNS] && you.species != SP_KENKU)
                         || !one_chance_in(3))
                     {
                         continue;
@@ -1712,9 +1710,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                                                               : "headbutt");
 
                 sc_dam = 5 + you.mutation[MUT_HORNS] * 3;
-
-                if (you.species == SP_MINOTAUR)
-                    sc_dam += 5;
+                // minotaurs used to get +5 damage here, now they get
+                // +6 because of the horns.
 
                 if (you.equip[EQ_HELMET] != -1
                     && (get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_HELMET

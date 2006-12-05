@@ -1339,7 +1339,6 @@ bool acquirement(unsigned char force_class, int agent)
                         || get_helmet_type(thing) == THELM_HELMET)
                     && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
                         || player_genus(GENPC_DRACONIAN)
-                        || you.species == SP_MINOTAUR
                         || you.species == SP_KENKU
                         || you.species == SP_SPRIGGAN
                         || you.mutation[MUT_HORNS]))

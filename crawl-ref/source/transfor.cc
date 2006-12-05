@@ -482,7 +482,6 @@ bool can_equip( equipment_type use_which )
         {
             switch (you.species)
             {
-            case SP_MINOTAUR:
             case SP_KENKU:
                 return (false);
             default:

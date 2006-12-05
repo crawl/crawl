@@ -1264,9 +1264,6 @@ bool mutate(int which_mutation, bool failMsg)
         return false;
     }
 
-    if (mutat == MUT_HORNS && you.species == SP_MINOTAUR)
-        return false;
-
     // nagas have see invis and res poison and can spit poison
     if (you.species == SP_NAGA)
     {

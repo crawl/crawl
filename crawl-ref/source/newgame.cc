@@ -92,17 +92,18 @@ extern std::string init_file_location;
 
 #define MIN_START_STAT       1
 
-bool class_allowed(unsigned char speci, int char_class);
-bool verifyPlayerName(void);
-void choose_weapon(void);
-void enterPlayerName(bool blankOK);
-void give_basic_knowledge(int which_job);
-void give_basic_spells(int which_job);
-void give_last_paycheck(int which_job);
-void init_player(void);
-void jobs_stat_init(int which_job);
-void openingScreen(void);
-void species_stat_init(unsigned char which_species);
+static bool class_allowed(unsigned char speci, int char_class);
+static bool verifyPlayerName(void);
+static void choose_weapon(void);
+static void enterPlayerName(bool blankOK);
+static void give_basic_knowledge(int which_job);
+static void give_basic_spells(int which_job);
+static void give_basic_mutations(unsigned char speci);
+static void give_last_paycheck(int which_job);
+static void init_player(void);
+static void jobs_stat_init(int which_job);
+static void openingScreen(void);
+static void species_stat_init(unsigned char which_species);
 
 #if 0
 // currently unused -- bwr
@@ -788,6 +789,8 @@ bool new_game(void)
             tmp_file_pairs[lvl][dng] = false;
         }
     }
+    
+    give_basic_mutations(you.species);
 
     // places staircases to the branch levels:
     for (i = 0; i < 30; i++)
@@ -837,7 +840,7 @@ static bool species_is_undead( unsigned char speci )
     return (speci == SP_MUMMY || speci == SP_GHOUL);
 }
 
-bool class_allowed( unsigned char speci, int char_class )
+static bool class_allowed( unsigned char speci, int char_class )
 {
     switch (char_class)
     {
@@ -1513,7 +1516,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
 static char startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
     WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
 
-void choose_weapon( void )
+static void choose_weapon( void )
 {
     char wepName[ ITEMNAME_SIZE ];
     unsigned char keyin = 0;
@@ -1630,12 +1633,12 @@ void choose_weapon( void )
         ? WPN_RANDOM : you.inv[0].sub_type;
 }
 
-void init_player(void)
+static void init_player(void)
 {
     you.init();
 }
 
-void give_last_paycheck(int which_job)
+static void give_last_paycheck(int which_job)
 {
     switch (which_job)
     {
@@ -1663,8 +1666,8 @@ void give_last_paycheck(int which_job)
 
 // requires stuff::modify_all_stats() and works because
 // stats zeroed out by newgame::init_player()... recall
-// that demonspawn & demingods get more later on {dlb}
-void species_stat_init(unsigned char which_species)
+// that demonspawn & demigods get more later on {dlb}
+static void species_stat_init(unsigned char which_species)
 {
     int sb = 0; // strength base
     int ib = 0; // intelligence base
@@ -1728,7 +1731,7 @@ void species_stat_init(unsigned char which_species)
     modify_all_stats( sb, ib, db );
 }
 
-void jobs_stat_init(int which_job)
+static void jobs_stat_init(int which_job)
 {
     int s = 0;   // strength mod
     int i = 0;   // intelligence mod
@@ -1783,7 +1786,16 @@ void jobs_stat_init(int which_job)
     set_mp( mp, true );
 }
 
-void give_basic_knowledge(int which_job)
+static void give_basic_mutations(unsigned char speci)
+{
+    if (speci == SP_MINOTAUR)
+    {
+        you.mutation[MUT_HORNS] = 2;
+        you.demon_pow[MUT_HORNS] = 2;
+    }
+}
+
+static void give_basic_knowledge(int which_job)
 {
     switch (which_job)
     {
@@ -1820,7 +1832,7 @@ void give_basic_knowledge(int which_job)
     return;
 }                               // end give_basic_knowledge()
 
-void give_basic_spells(int which_job)
+static void give_basic_spells(int which_job)
 {
     // wanderers may or may not already have a spell -- bwr
     if (which_job == JOB_WANDERER)
@@ -1910,7 +1922,7 @@ void give_basic_spells(int which_job)
 
 
 // eventually, this should be something more grand {dlb}
-void openingScreen(void)
+static void openingScreen(void)
 {
     textcolor( YELLOW );
     cprintf("Hello, welcome to " CRAWL " " VERSION "!");
@@ -2064,7 +2076,7 @@ static bool read_player_name(
     }
 }
 
-void enterPlayerName(bool blankOK)
+static void enterPlayerName(bool blankOK)
 {
     int prompt_start = wherey();
     bool ask_name = true;
@@ -2110,7 +2122,7 @@ void enterPlayerName(bool blankOK)
     while (ask_name = !is_good_name(you.your_name, blankOK));
 }                               // end enterPlayerName()
 
-bool verifyPlayerName(void)
+static bool verifyPlayerName(void)
 {
 #if defined(DOS) || defined(WIN32CONSOLE)
     static int william_tanksley_asked_for_this = 2;
