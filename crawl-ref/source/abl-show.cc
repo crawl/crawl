@@ -1445,10 +1445,8 @@ bool generate_abilities( void )
     }
 
     //jmf: alternately put check elsewhere
-    if ((you.level_type == LEVEL_DUNGEON
-            && (you.species == SP_GNOME || you.mutation[MUT_MAPPING]))
-        || (you.level_type == LEVEL_PANDEMONIUM
-            && you.mutation[MUT_MAPPING] == 3))
+    if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
+        (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
     {
         insert_ability( ABIL_MAPPING );
     }
@@ -1906,9 +1904,7 @@ static bool insert_ability( int which_ability )
         break;
 
     case ABIL_MAPPING:
-        failure = ((you.species == SP_GNOME) ? 20 : 40) 
-                        - 10 * you.mutation[MUT_MAPPING]
-                        - you.experience_level;
+        failure = 40 - 10 * you.mutation[MUT_MAPPING] - you.experience_level;
         break;
 
     case ABIL_BREATHE_FIRE:

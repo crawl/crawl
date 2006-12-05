@@ -1788,10 +1788,46 @@ static void jobs_stat_init(int which_job)
 
 static void give_basic_mutations(unsigned char speci)
 {
-    if (speci == SP_MINOTAUR)
+    switch ( speci )
     {
+    case SP_MINOTAUR:
         you.mutation[MUT_HORNS] = 2;
         you.demon_pow[MUT_HORNS] = 2;
+        break;
+    case SP_SPRIGGAN:
+        you.mutation[MUT_ACUTE_VISION] = 1;
+        you.demon_pow[MUT_ACUTE_VISION] = 1;
+        you.mutation[MUT_FAST] = 3;
+        you.demon_pow[MUT_FAST] = 3;
+        break;
+    case SP_CENTAUR:
+        you.mutation[MUT_FAST] = 1;
+        you.demon_pow[MUT_FAST] = 1;
+        break;
+    case SP_NAGA:
+        you.mutation[MUT_ACUTE_VISION] = 1;
+        you.demon_pow[MUT_ACUTE_VISION] = 1;
+        you.mutation[MUT_POISON_RESISTANCE] = 1;
+        you.demon_pow[MUT_POISON_RESISTANCE] = 1;
+        break;
+    case SP_MUMMY:
+        you.mutation[MUT_POISON_RESISTANCE] = 1;
+        you.demon_pow[MUT_POISON_RESISTANCE] = 1;
+        you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.demon_pow[MUT_COLD_RESISTANCE] = 1;
+        break;
+    case SP_GNOME:
+        you.mutation[MUT_MAPPING] = 2;
+        you.demon_pow[MUT_MAPPING] = 2;
+        break;
+    case SP_GHOUL:
+        you.mutation[MUT_POISON_RESISTANCE] = 1;
+        you.demon_pow[MUT_POISON_RESISTANCE] = 1;
+        you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.demon_pow[MUT_COLD_RESISTANCE] = 1;
+        break;
+    default:
+        break;
     }
 }
 

@@ -966,9 +966,7 @@ int player_res_cold(bool calc_unid)
     rc += scan_randarts(RAP_COLD, calc_unid);
 
     // species:
-    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
-        rc++;
-    else if (you.species == SP_WHITE_DRACONIAN && you.experience_level > 17)
+    if (you.species == SP_WHITE_DRACONIAN && you.experience_level > 17)
         rc++;
 
     // mutations:
@@ -1144,12 +1142,8 @@ int player_res_poison(bool calc_unid)
     rp += scan_randarts(RAP_POISON, calc_unid);
 
     // species:
-    if (you.species == SP_MUMMY || you.species == SP_NAGA
-        || you.species == SP_GHOUL
-        || (you.species == SP_GREEN_DRACONIAN && you.experience_level > 6))
-    {
+    if (you.species == SP_GREEN_DRACONIAN && you.experience_level > 6)
         rp++;
-    }
 
     // mutations:
     rp += you.mutation[MUT_POISON_RESISTANCE];
@@ -1400,16 +1394,7 @@ int player_movement_speed(void)
     else
     {
         /* transformations */
-        if (!player_is_shapechanged())
-        {
-            // Centaurs and spriggans are only fast in their regular
-            // shape (ie untransformed, blade hands, lich form)
-            if (you.species == SP_CENTAUR)
-                mv = 8;
-            else if (you.species == SP_SPRIGGAN)
-                mv = 6;
-        }
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
             mv = 8;
 
         /* armour */
@@ -1424,8 +1409,9 @@ int player_movement_speed(void)
         if (you.duration[DUR_SWIFTNESS] > 0 && !player_in_water())
             mv -= (player_is_levitating() ? 4 : 2);
 
-        /* Mutations: -2, -3, -4 */
-        if (you.mutation[MUT_FAST] > 0)
+        /* Mutations: -2, -3, -4, unless innate and shapechanged */
+        if (you.mutation[MUT_FAST] > 0 &&
+            (!you.demon_pow[MUT_FAST] || !player_is_shapechanged()))
             mv -= (you.mutation[MUT_FAST] + 1);
 
         // Burden
@@ -1983,10 +1969,6 @@ unsigned char player_see_invis(bool calc_unid)
 
     /* armour: (checks head armour only) */
     si += player_equip_ego_type( EQ_HELMET, SPARM_SEE_INVISIBLE );
-
-    /* Nagas & Spriggans have good eyesight */
-    if (you.species == SP_NAGA || you.species == SP_SPRIGGAN)
-        si++;
 
     if (you.mutation[MUT_ACUTE_VISION] > 0)
         si += you.mutation[MUT_ACUTE_VISION];

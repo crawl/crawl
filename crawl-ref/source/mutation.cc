@@ -911,20 +911,6 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_SPRIGGAN:
-        result += "You can see invisible." EOL;
-        result += "You cover the ground extremely quickly." EOL;
-        have_any = true;
-	break;
-
-    case SP_CENTAUR:
-	if (!you.mutation[MUT_FAST])
-            result += "You cover the ground quickly." EOL;
-	else
-	    result += "You cover the ground extremely quickly." EOL;
-        have_any = true;
-	break;
-
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!you.mutation[MUT_BREATHE_POISON])
@@ -932,8 +918,6 @@ formatted_string describe_mutations()
         else
             result += "<lightred>You can exhale a cloud of poison.</lightred>" EOL;
 
-        result += "Your system is immune to poisons." EOL;
-        result += "You can see invisible." EOL;
         // slowness can be overriden
         if ( you.mutation[MUT_FAST] )
             result += "<lightred>";
@@ -941,11 +925,6 @@ formatted_string describe_mutations()
         if ( you.mutation[MUT_FAST] )
             result += "</lightred>";
         result += EOL;
-        have_any = true;
-        break;
-
-    case SP_GNOME:
-        result += "You can sense your surroundings." EOL;
         have_any = true;
         break;
 
@@ -1100,27 +1079,42 @@ formatted_string describe_mutations()
             if (you.species == SP_NAGA &&
                 (i == MUT_BREATHE_POISON || i == MUT_FAST))
                 continue;
-	    if (you.species == SP_CENTAUR && i == MUT_FAST)
-		continue;
             if (you.species == SP_TROLL && i == MUT_CLAWS)
                 continue;
 
+            const char* colourname = "";
             // mutation is actually a demonic power
-            if (you.demon_pow[i] != 0)
-                // enhanced by mutation
-                if ( you.demon_pow[i] < you.mutation[i] )
-                    result += "<lightred>";
-                else
-                    result += "<red>";
+            if ( you.demon_pow[i] )
+            {
+                if ( you.species == SP_DEMONSPAWN )
+                {
+                    if ( you.demon_pow[i] < you.mutation[i] )
+                        colourname = "lightred";
+                    else
+                        colourname = "red";
+                }
+                else            // innate ability
+                {
+                    if ( you.demon_pow[i] < you.mutation[i] )
+                        colourname = "lightred";
+                    else
+                        colourname = "lightblue";
+                }
+            }
 
+            if ( you.demon_pow[i] )
+            {
+                result += '<';
+                result += colourname;
+                result += '>';
+            }
             result += mutation_name(i);
-
-            if (you.demon_pow[i] != 0)
-                if ( you.demon_pow[i] < you.mutation[i] )
-                    result += "</lightred>";
-                else
-                    result += "</red>";
-
+            if ( you.demon_pow[i] )
+            {
+                result += "</";
+                result += colourname;
+                result += '>';
+            }
             result += EOL;
         }
     }
@@ -1287,14 +1281,6 @@ bool mutate(int which_mutation, bool failMsg)
             }
         }
     }
-
-    // gnomes can already sense surroundings
-    if (you.species == SP_GNOME && mutat == MUT_MAPPING)
-        return false;
-
-    // spriggans already run at max speed (centaurs can get a bit faster)
-    if (you.species == SP_SPRIGGAN && mutat == MUT_FAST)
-        return false;
 
     // this might have issues if we allowed it -- bwr
     if (you.species == SP_KOBOLD 
