@@ -2291,7 +2291,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             if (getty == '/' || getty == ';')
                 forward = false;
 
-            if (getty == '/' || getty == ';' || getty == ';' || getty == '\'')
+            if (getty == '/' || getty == '*' || getty == ';' || getty == '\'')
                 getty = 'I';
 
             move_x = 0;
