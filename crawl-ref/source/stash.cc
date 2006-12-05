@@ -347,6 +347,7 @@ class StashMenu : public InvMenu
 {
 public:
     StashMenu() : InvMenu(MF_SINGLESELECT), can_travel(false) { }
+    unsigned char getkey() const;
 public:
     bool can_travel;
 protected:
@@ -379,6 +380,11 @@ bool StashMenu::process_key(int key)
         return false;
     }
     return Menu::process_key(key);
+}
+
+unsigned char StashMenu::getkey() const
+{
+    return (lastch);
 }
 
 static MenuEntry *stash_menu_fixup(MenuEntry *me)

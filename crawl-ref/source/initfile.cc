@@ -587,7 +587,7 @@ void game_options::reset_options()
     pickup_thrown          = true;
 
     travel_colour          = true;
-    travel_delay           = 10;
+    travel_delay           = 20;
     travel_stair_cost      = 500;
     travel_exclude_radius2 =  68;
 
@@ -642,7 +642,7 @@ void game_options::reset_options()
     dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
     dump_item_origin_price = -1;
 
-    drop_mode              = DM_SINGLE;
+    drop_mode              = DM_MULTI;
     pickup_mode            = -1;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
