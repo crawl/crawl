@@ -115,6 +115,7 @@ stab_brand = hi:blue
 # stop_travel = Something appears
 # stop_travel = god:wrath finds you
 #
+# explore_greedy = yes
 # explore_stop = items,stairs,shops,altars
 #
 # runrest_ignore_message = prayer ends
