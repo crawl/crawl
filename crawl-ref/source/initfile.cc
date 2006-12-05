@@ -630,6 +630,7 @@ void game_options::reset_options()
     explore_stop_prompt    = ES_NONE;
 
     explore_item_greed     = 10;
+    explore_greedy         = false;
     
     safe_zero_exp          = true;
     target_zero_exp        = false;
@@ -1997,6 +1998,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_item_greed = 1000;
         else if (explore_item_greed < -1000)
             explore_item_greed = -1000;
+    }
+    else if (key == "explore_greedy")
+    {
+        explore_greedy = read_bool(field, explore_greedy);
     }
     else if (key == "stash_tracking")
     {

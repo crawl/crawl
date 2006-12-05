@@ -850,6 +850,8 @@ public:
 
     int         explore_stop_prompt;
 
+    bool        explore_greedy;    // Explore goes after items as well.
+    
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
     

@@ -270,11 +270,11 @@ unsigned char is_waypoint(int x, int y)
     return curr_waypoints[x][y];
 }
 
-inline bool is_stash(LevelStashes *ls, int x, int y)
+inline bool is_stash(const LevelStashes *ls, int x, int y)
 {
     if (!ls)
         return (false);
-    Stash *s = ls->find_stash(x, y);
+    const Stash *s = ls->find_stash(x, y);
     return s && s->enabled;
 }
 
@@ -365,18 +365,20 @@ static bool is_reseedable(int x, int y)
  */
 static bool is_travel_ok(int x, int y, bool ignore_hostile)
 {
-    unsigned char grid = grd[x][y];
+    const int grid = grd[x][y];
 
-    unsigned char envc = (unsigned char) env.map[x - 1][y - 1];
-    if (!envc) return false;
+    if (!is_terrain_known(x, y))
+        return (false);
 
     // Special-case secret doors so that we don't run into awkwardness when
     // a monster opens a secret door without the hero seeing it, but the travel
     // code paths through the secret door because it looks at the actual grid,
-    // rather than the env overmap. Hopefully there won't be any more such
-    // cases.
-    // FIXME: is_terrain_changed ought to do this with the view.cc changes.
-    if (envc == get_sightmap_char(DNGN_SECRET_DOOR)) return false;
+    // rather than the env overmap.
+    if ((grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
+        && is_terrain_changed(x, y))
+    {
+        return (false);
+    }
 
     unsigned char mon = mgrd[x][y];
     if (mon != NON_MONSTER)
@@ -388,8 +390,8 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
         //                 Arguably the utility of this feature is greater than
         //                 the information we're giving the player for free.
         // Navigate around plants and fungi. Yet another tasty hack.
-        if (player_monster_visible(&menv[mon]) && 
-                mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
+        if (player_monster_visible(&menv[mon])
+            && mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
         {
             extern short point_distance[GXM][GYM];
 
@@ -444,12 +446,12 @@ static bool is_safe(int x, int y)
         // b) Unfriendly, in which case we're in deep trouble, since travel
         //    should have been aborted already by the checks in view.cc.
     }
-    const char cloud = env.cgrid[x][y];
+    const int cloud = env.cgrid[x][y];
     if (cloud == EMPTY_CLOUD)
         return true;
 
     // We can also safely run through smoke.
-    const char cloud_type = env.cloud[ cloud ].type;
+    const int cloud_type = env.cloud[ cloud ].type;
     return cloud_type == CLOUD_GREY_SMOKE ||
         cloud_type == CLOUD_GREY_SMOKE_MON ||
         cloud_type == CLOUD_BLUE_SMOKE     ||
@@ -894,7 +896,7 @@ command_type travel()
             if (!you.running.x)
             {
                 stop_running();
-                mpr("There's nowhere new to go, done exploring.");
+                mpr("Done exploring.");
             }
         }
     }
@@ -1058,7 +1060,7 @@ static void fill_exclude_radius(const coord_def &c)
 
 static bool is_greed_inducing_square(const LevelStashes *ls, int x, int y)
 {
-    return (ls && can_autopickup() && ls->needs_visit(x, y));
+    return (ls && ls->needs_visit(x, y));
 }
 
 /*
@@ -1075,7 +1077,8 @@ void find_travel_pos(int youx, int youy,
     int dest_x  = youx, dest_y  = youy;
     bool floodout = false;
     unsigned char feature;
-    LevelStashes *lev = stashes.find_current_level();
+    const LevelStashes *lev = stashes.find_current_level();
+    const bool need_for_greed = you.running == RMODE_EXPLORE_GREEDY && can_autopickup();
 
     // For greedy explore, keep track of the closest unexplored
     // territory and the closest greedy square.
@@ -1194,7 +1197,7 @@ void find_travel_pos(int youx, int youy,
                 {
                     if (!is_player_mapped(envf))
                     {
-                        if (you.running != RMODE_EXPLORE_GREEDY)
+                        if (!need_for_greed)
                         {
                             you.running.x = x;
                             you.running.y = y;
@@ -1209,7 +1212,7 @@ void find_travel_pos(int youx, int youy,
                                 traveled_distance + Options.explore_item_greed;
                         }
                     }
-                    else if (you.running == RMODE_EXPLORE_GREEDY
+                    else if (need_for_greed
                              && ix_dist == -10000
                              && is_greed_inducing_square(lev, dx, dy))
                     {
@@ -1219,7 +1222,7 @@ void find_travel_pos(int youx, int youy,
                     }
 
                     // Short-circuit if we can.
-                    if (you.running == RMODE_EXPLORE_GREEDY)
+                    if (need_for_greed)
                     {
                         const int refdist =
                             Options.explore_item_greed > 0? ex_dist: ix_dist;
@@ -1361,8 +1364,7 @@ void find_travel_pos(int youx, int youy,
         }
     }
 
-    if (you.running == RMODE_EXPLORE_GREEDY
-        && (ex_dist != -10000 || ix_dist != -10000))
+    if (need_for_greed && (ex_dist != -10000 || ix_dist != -10000))
     {
         if (ix_dist != -10000)
         {
