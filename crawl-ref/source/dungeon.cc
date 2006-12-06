@@ -5961,7 +5961,27 @@ void item_colour( item_def &item )
         if (is_demonic( item ))
             item.colour = random_uncommon_colour();
         else if (is_range_weapon( item ))
-            item.colour = WHITE;
+        {
+            switch (range_skill(item))
+            {
+            case SK_BOWS:
+                item.colour = BLUE;
+                break;
+            case SK_CROSSBOWS:
+                item.colour = RED;
+                break;
+            case SK_DARTS:
+                item.colour = WHITE;
+                break;
+            case SK_SLINGS:
+                item.colour = BROWN;
+                break;
+            default:
+                // huh?
+                item.colour = MAGENTA;
+                break;
+            }
+        }
         else
         {
             switch (weapon_skill(item))
@@ -5973,13 +5993,16 @@ void item_colour( item_def &item )
                 item.colour = LIGHTCYAN;
                 break;
             case SK_AXES:
-                item.colour = LIGHTGREY;
+                item.colour = DARKGREY;
                 break;
             case SK_MACES_FLAILS:
-                item.colour = BROWN;
+                item.colour = LIGHTGREY;
                 break;
             case SK_POLEARMS:
-                item.colour = LIGHTBLUE;
+                item.colour = LIGHTGREEN;
+                break;
+            case SK_STAVES:
+                item.colour = GREEN;
                 break;
             default:
                 // huh?
@@ -6001,18 +6024,19 @@ void item_colour( item_def &item )
             item.colour = BROWN;
             break;
         case MI_ARROW:
-            item.colour = LIGHTBLUE;
+            item.colour = BLUE;
             break;
         case MI_NEEDLE:
             item.colour = WHITE;
             break;
         case MI_BOLT:
-            item.colour = CYAN;
+            item.colour = RED;
             break;
         case MI_DART:
-            item.colour = LIGHTCYAN;
+            item.colour = LIGHTRED;
             break;
         default:
+            // huh?
             item.colour = LIGHTCYAN;
             if (get_equip_race(item) == ISFLAG_DWARVEN)
                 item.colour = CYAN;
@@ -6027,9 +6051,15 @@ void item_colour( item_def &item )
         switch (item.sub_type)
         {
         case ARM_CLOAK:
-        case ARM_ROBE:
+            item.colour = WHITE;
+            break;
         case ARM_NAGA_BARDING:
+            item.colour = LIGHTGREEN;
+            break;
         case ARM_CENTAUR_BARDING:
+            item.colour = GREEN;
+            break;
+        case ARM_ROBE:
         case ARM_CAP:
             item.colour = random_uncommon_colour();
             break;
@@ -6042,14 +6072,14 @@ void item_colour( item_def &item )
                 item.colour = random_uncommon_colour();
             } 
             else
-                item.colour = GREEN;
+                item.colour = DARKGREY;
             break;
 
         case ARM_BOOTS:
-            item.colour = RED;
+            item.colour = BLUE;
             break;
         case ARM_GLOVES:
-            item.colour = MAGENTA;
+            item.colour = LIGHTBLUE;
             break;
         case ARM_LEATHER_ARMOUR:
             item.colour = BROWN;
@@ -6063,7 +6093,7 @@ void item_colour( item_def &item )
             item.colour = mons_class_colour( MONS_TROLL );
             break;
         case ARM_CRYSTAL_PLATE_MAIL:
-            item.colour = LIGHTGREY;
+            item.colour = WHITE;
             break;
         case ARM_ICE_DRAGON_HIDE:
         case ARM_ICE_DRAGON_ARMOUR:
@@ -6086,7 +6116,7 @@ void item_colour( item_def &item )
             item.colour = mons_class_colour( MONS_GOLDEN_DRAGON );
             break;
         case ARM_ANIMAL_SKIN:
-            item.colour = BROWN;
+            item.colour = YELLOW;
             break;
         case ARM_SWAMP_DRAGON_HIDE:
         case ARM_SWAMP_DRAGON_ARMOUR:
