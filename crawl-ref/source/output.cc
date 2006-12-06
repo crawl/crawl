@@ -153,7 +153,7 @@ void print_stats(void)
         textcolor(LIGHTGREY);
 
         if (you.strength != you.max_strength)
-            cprintf( " (%d)", you.max_strength );
+            cprintf( " (%d)  ", you.max_strength );
         else
             cprintf( "       " );
 
@@ -184,7 +184,7 @@ void print_stats(void)
         textcolor(LIGHTGREY);
 
         if (you.intel != you.max_intel)
-            cprintf( " (%d)", you.max_intel );
+            cprintf( " (%d)  ", you.max_intel );
         else
             cprintf( "       " );
 
@@ -213,7 +213,7 @@ void print_stats(void)
         textcolor(LIGHTGREY);
 
         if (you.dex != you.max_dex)
-            cprintf( " (%d)", you.max_dex );
+            cprintf( " (%d)  ", you.max_dex );
         else
             cprintf( "       " );
 
