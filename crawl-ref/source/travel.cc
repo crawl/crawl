@@ -1026,7 +1026,9 @@ command_type direction_to_command( char x, char y ) {
     if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
     if ( x == -1 && y ==  1 ) return CMD_MOVE_DOWN_LEFT;
     if ( x ==  0 && y == -1 ) return CMD_MOVE_UP;
-    if ( x ==  0 && y ==  0 ) return CMD_NO_CMD;
+    if ( x ==  0 && y ==  0 )
+        return you.running == RMODE_EXPLORE_GREEDY?
+            CMD_INSPECT_FLOOR : CMD_NO_CMD;
     if ( x ==  0 && y ==  1 ) return CMD_MOVE_DOWN;
     if ( x ==  1 && y == -1 ) return CMD_MOVE_UP_RIGHT;
     if ( x ==  1 && y ==  0 ) return CMD_MOVE_RIGHT;
