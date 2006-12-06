@@ -1295,10 +1295,17 @@ coord_def find_newmons_square(int mons_class, int x, int y)
 }
 
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
-                    int hitting, int zsec, bool permit_bands )
+                    int hitting, int zsec, bool permit_bands,
+                    bool force_place )
 {
     int summd = -1;
     coord_def pos = find_newmons_square(cls, cr_x, cr_y);
+    if (force_place && !grid_is_solid(grd[cr_x][cr_y])
+        && mgrd[cr_x][cr_y] == NON_MONSTER)
+    {
+        pos.x = cr_x;
+        pos.y = cr_y;
+    }
 
     if (pos.x != -1 && pos.y != -1)
     {

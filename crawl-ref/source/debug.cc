@@ -601,7 +601,7 @@ void create_spec_monster(void)
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void create_spec_monster_name(void)
+void create_spec_monster_name(int x, int y)
 {
     int mon = debug_prompt_for_monster();
 
@@ -614,8 +614,14 @@ void create_spec_monster_name(void)
     }
     else
     {
-        create_monster(mon, 0, BEH_SLEEP, 
-                you.x_pos, you.y_pos, MHITNOT, 250, false);
+        const bool force_place = x != -1 && y != -1;
+        if (x == -1)
+            x = you.x_pos;
+        if (y == -1)
+            y = you.y_pos;
+        
+        create_monster(mon, 0, BEH_SLEEP, x, y,
+                       MHITNOT, 250, false, force_place);
     }
 }                               // end create_spec_monster_name()
 #endif

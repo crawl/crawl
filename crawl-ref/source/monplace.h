@@ -49,7 +49,8 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y, 
-                    int hitting, int zsec, bool permit_bands = false );
+                    int hitting, int zsec, bool permit_bands = false,
+                    bool force_place = false );
 
 
 // last updated 12may2000 {dlb}

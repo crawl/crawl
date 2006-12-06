@@ -486,6 +486,36 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                 switch (keyin)
                 {
 #ifdef WIZARD
+                    case 'C':
+                        targChosen = true;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
+                        if (mgrd[mx][my] != NON_MONSTER)
+                        {
+                            mprf("%s won't like that.",
+                                 ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_A));
+                            break;
+                        }
+                        create_spec_monster_name(mx, my);
+                        viewwindow(true, false);
+                        break;
+                        
+                    case 'D':
+                        targChosen = true;
+                        mx = you.x_pos + cx - VIEW_CX;
+                        my = you.y_pos + cy - VIEW_CY;
+                        if (!in_bounds(mx, my))
+                            break;
+                        mid = mgrd[mx][my];
+
+                        if (mid == NON_MONSTER)
+                            break;
+                        monster_die(&menv[mid], KILL_RESET, 0);
+                        viewwindow(true, false);
+                        break;
+                        
                     case 'F':
                         targChosen = true;
                         mx = you.x_pos + cx - VIEW_CX;
@@ -1558,5 +1588,9 @@ static void describe_cell(int mx, int my)
     }
 
     std::string feature_desc = feature_description(mx, my);
+#ifdef DEBUG_DIAGNOSTICS
+    mprf("(%d,%d): %s", mx, my, feature_desc.c_str());
+#else
     mpr(feature_desc.c_str());
+#endif
 }

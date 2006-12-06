@@ -887,6 +887,25 @@ static bool should_stop_activity(const delay_queue_item &item,
             (Options.activity_interrupts[item.type][ai]));
 }
 
+inline static void monster_warning(activity_interrupt_type ai,
+                                   const activity_interrupt_data &at,
+                                   int atype)
+{
+    if ( ai == AI_SEE_MONSTER && is_run_delay(atype) )
+    {
+        const monsters* mon = static_cast<const monsters*>(at.data);
+#ifndef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_WARN, "%s comes into view.", ptr_monam(mon, DESC_CAP_A));
+#else
+        mprf(MSGCH_WARN,
+             "%s in view: (%d,%d), see_grid: %s",
+             ptr_monam(mon, DESC_PLAIN),
+             mon->x, mon->y,
+             see_grid(mon->x, mon->y)? "yes" : "no");
+#endif
+    }
+}
+
 void interrupt_activity( activity_interrupt_type ai, 
                          const activity_interrupt_data &at )
 {
@@ -899,12 +918,7 @@ void interrupt_activity( activity_interrupt_type ai,
 
     if (should_stop_activity(item, ai, at))
     {
-        if ( ai == AI_SEE_MONSTER && is_run_delay(item.type) )
-        {
-            const monsters* mon = static_cast<const monsters*>(at.data);
-            mprf(MSGCH_WARN, "%s comes into view.",
-                 ptr_monam(mon, DESC_CAP_A));
-        }
+        monster_warning(ai, at, item.type);
         stop_delay();
         return;
     }
@@ -924,12 +938,7 @@ void interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
-                    if ( ai == AI_SEE_MONSTER )
-                    {
-                        const monsters* mon = static_cast<const monsters*>(at.data);
-                        mprf(MSGCH_WARN, "%s comes into view.",
-                             ptr_monam(mon, DESC_CAP_A));
-                    }
+                    monster_warning(ai, at, you.delay_queue[j].type);
                     stop_delay();
                     return;
                 }
