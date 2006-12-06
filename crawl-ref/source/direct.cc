@@ -495,7 +495,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                         if (mgrd[mx][my] != NON_MONSTER)
                         {
                             mprf("%s won't like that.",
-                                 ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_A));
+                                 ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_THE));
                             break;
                         }
                         create_spec_monster_name(mx, my);
