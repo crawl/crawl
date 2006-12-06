@@ -268,16 +268,20 @@ ban_pickup = <regex>
 	  ban_pickup = forgetfulness, uselessness, noise, torment
 
 drop_mode = (multi | single)
-	Single is the classical behaviour (and default): after pressing another
-	key, that item will be dropped. Multi makes an inventory menu appear, 
-	allowing the selection of items to be dropped. (You can also switch to 
-	multidrop from the classic drop line using the '@' key).
-	Multidrops are highly convenient. Be aware of the fact that every 
-	single drop takes one turn. (This is different from picking up.) When
-	selecting multidrops, the top right corner will show the estimated 
-	number of turns.
-	The order in which items get dropped is always from top to bottom in 
-	the inventory listing.
+	Single is the classic behaviour after pressing another key,
+	that item will be dropped. Multi (the default) makes an
+	inventory menu appear, allowing the selection of items to be
+	dropped. (You can also switch to multidrop from the classic
+	drop line using the '@' key).
+
+	Multidrops are highly convenient. Be aware of the fact that
+	every single drop takes one turn. (This is different from
+	picking up.) When selecting multidrops, the top right corner
+	will show the estimated number of turns.
+
+	The order in which items get dropped is from top to bottom in
+	the inventory listing, but equipped items will be dropped
+	last, and may be dropped out of order.
 
 pickup_mode = (multi | single | auto:X)
         Single is the classical behaviour (and default): when picking up
