@@ -663,7 +663,8 @@ void monster_grid(bool do_updates)
                 }
                 continue;
             }
-            else if (!mons_friendly( monster )
+            else if (!do_updates
+                     && !mons_friendly( monster )
                      && !mons_is_mimic( monster->type )
                      && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
             {
