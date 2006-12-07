@@ -413,7 +413,6 @@
         ""
 }
 
-#ifdef USE_NEW_UNRANDS
 ,
 /* 15 */
 {
@@ -1108,7 +1107,6 @@
         "",
         ""
 }
-#endif // USE_NEW_UNRANDS
 ,
 /* This is a dummy */
 /* 1 */

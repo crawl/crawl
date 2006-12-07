@@ -1271,7 +1271,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
 coord_def find_newmons_square(int mons_class, int x, int y)
 {
     FixedVector < char, 2 > empty;
-    coord_def pos = { -1, -1 };
+    coord_def pos(-1, -1);
 
     empty[0] = 0;
     empty[1] = 0;

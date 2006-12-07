@@ -270,12 +270,6 @@
 // or just want fighter type wanderers.
 // #define USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
 
-//mv: (new 9 Aug 01) switches on new rivers & lakes code
-#define USE_RIVERS
-
-//mv: (new 9 Aug 01) switches on new unrands
-#define USE_NEW_UNRANDS
-
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 

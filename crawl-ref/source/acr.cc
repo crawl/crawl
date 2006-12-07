@@ -144,8 +144,8 @@ bool game_has_started = false;
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
 const struct coord_def Compass[8] = 
 { 
-    {  0, -1 }, {  1, -1 }, {  1,  0 }, {  1,  1 },
-    {  0,  1 }, { -1,  1 }, { -1,  0 }, { -1, -1 },
+    coord_def(0, -1), coord_def(1, -1), coord_def(1, 0), coord_def(1, 1),
+    coord_def(0, 1), coord_def(-1, 1), coord_def(-1, 0), coord_def(-1, -1),
 };
 
 // Functions in main module

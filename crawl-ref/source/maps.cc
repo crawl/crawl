@@ -32,7 +32,7 @@ static int write_vault(const map_def &mdef, map_type mt,
                         FixedVector<int,7> &marray,
                         vault_placement &);
 static int apply_vault_definition(
-                        const map_def &def,
+                        map_def &def,
                         map_type map,
                         FixedVector<int,7> &marray,
                         vault_placement &);
@@ -90,7 +90,7 @@ static int write_vault(const map_def &mdef, map_type map,
     map_def def = mdef;
     resolve_map(def);
 
-    return apply_vault_definition(def, map, marray, place);
+    return (place.orient = apply_vault_definition(def, map, marray, place));
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
@@ -131,7 +131,7 @@ static void apply_monsters(
     }
 }
 
-static void apply_vault_grid(const map_def &def, map_type map, 
+static void apply_vault_grid(map_def &def, map_type map, 
                              vault_placement &place)
 {
     const map_lines &ml = def.map;
@@ -161,6 +161,16 @@ static void apply_vault_grid(const map_def &def, map_type map,
             && height < GYM)
         starty = (GYM - height) / 2;
 
+    // Floating maps can go anywhere, ask the map_def to suggest a place.
+    if (orient == MAP_FLOAT)
+    {
+        coord_def where = def.float_place();
+
+        // No further sanity checks.
+        startx = where.x;
+        starty = where.y;
+    }
+
     const std::vector<std::string> &lines = ml.get_lines();
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d,%d), dimensions (%d,%d)",
@@ -180,7 +190,7 @@ static void apply_vault_grid(const map_def &def, map_type map,
 }
 
 static int apply_vault_definition(
-        const map_def &def,
+        map_def &def,
         map_type map,
         FixedVector<int,7> &marray,
         vault_placement &place)
@@ -265,14 +275,14 @@ int random_map_for_depth(int depth, bool want_minivault)
     return (mapindex);
 }
 
-int random_map_for_tag(const std::string &tag)
+int random_map_for_tag(const std::string &tag, bool want_minivault)
 {
     int mapindex = -1;
     int rollsize = 0;
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
-        if (vdefs[i].has_tag(tag))
+        if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault)
         {
             rollsize += vdefs[i].chance;
 
@@ -285,8 +295,6 @@ int random_map_for_tag(const std::string &tag)
     if (mapindex != -1)
         mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged '%s'",
                 vdefs[mapindex].name.c_str(), tag.c_str());
-    else
-        mprf(MSGCH_DIAGNOSTICS, "No map for tag '%s'", tag.c_str());
 #endif
 
     return (mapindex);

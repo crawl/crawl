@@ -58,6 +58,16 @@ public:
     // ----- Access -----
             Column&       operator[](unsigned long index)          {return mData[index];}    
             const Column& operator[](unsigned long index) const    {return mData[index];}
+            template<class Indexer> TYPE& operator () (const Indexer &i)
+            {
+                return mData[i.x][i.y];
+            }
+
+            template<class Indexer> const TYPE& operator () (const Indexer &i)
+                const
+            {
+                return mData[i.x][i.y];
+            }            
             
 //-----------------------------------
 //    Member Data

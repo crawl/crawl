@@ -55,8 +55,7 @@ void seen_notable_thing( int which_thing, int x, int y )
     if (you.level_type != LEVEL_DUNGEON)
         return;
     
-    coord_def pos = {x, y};
-
+    const coord_def pos(x, y);
     const god_type god = grid_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         seen_altar( god, pos );
@@ -490,7 +489,7 @@ void seen_altar( god_type god, const coord_def& pos )
 
 void unnotice_altar()
 {
-    const coord_def pos = { you.x_pos, you.y_pos };
+    const coord_def pos(you.x_pos, you.y_pos);
     const level_pos curpos(level_id::get_current_level_id(), pos);
     // Hmm, what happens when erasing a nonexistent key directly?
     if (altars_present.find(curpos) != altars_present.end())

@@ -162,6 +162,16 @@ bool grid_is_solid( int grid )
     return (grid < MINMOVE);
 }
 
+bool grid_is_solid( int x, int y )
+{
+    return (grid_is_solid(grd[x][y]));
+}
+
+bool grid_is_solid(const coord_def &c)
+{
+    return (grid_is_solid(grd(c)));
+}
+
 bool grid_is_water( int grid )
 {
     return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
@@ -2178,7 +2188,7 @@ void setup_environment_effects()
                     || (grid == DNGN_SHALLOW_WATER
                         && you.where_are_you == BRANCH_SWAMP))
             {
-                coord_def c = { x, y };
+                const coord_def c(x, y);
                 sfx_seeds.push_back(c);
             }
         }

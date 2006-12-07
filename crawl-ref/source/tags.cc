@@ -1304,7 +1304,7 @@ static void tag_construct_level_monsters(struct tagHeader &th)
         marshallByte(th, m.y);
         marshallByte(th, m.target_x);
         marshallByte(th, m.target_y);
-        marshallByte(th, m.flags);
+        marshallLong(th, m.flags);
 
         for (j = 0; j < NUM_MON_ENCHANTS; j++)
             marshallByte(th, m.enchantment[j]);
@@ -1320,6 +1320,8 @@ static void tag_construct_level_monsters(struct tagHeader &th)
 
         for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
             marshallShort(th, m.spells[j]);
+
+        marshallByte(th, m.god);
     }
 }
 
@@ -1475,12 +1477,7 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
         menv[i].y = unmarshallByte(th);
         menv[i].target_x = unmarshallByte(th);
         menv[i].target_y = unmarshallByte(th);
-        menv[i].flags = unmarshallByte(th);
-
-        // VERSION NOTICE:  for pre 4.2 files, flags was either 0
-        // or 1.  Now, we can transfer ENCH_CREATED_FRIENDLY over
-        // from the enchantments array to flags.
-        // Also need to take care of ENCH_FRIEND_ABJ_xx flags
+        menv[i].flags = unmarshallLong(th);
 
         for (j = 0; j < ecount; j++)
             menv[i].enchantment[j] = unmarshallByte(th);
@@ -1496,7 +1493,9 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
             menv[i].inv[j] = unmarshallShort(th);
 
         for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-          menv[i].spells[j] = unmarshallShort(th);
+            menv[i].spells[j] = unmarshallShort(th);
+
+        menv[i].god = (god_type) unmarshallByte(th);
 
         // place monster
         if (menv[i].type != -1)

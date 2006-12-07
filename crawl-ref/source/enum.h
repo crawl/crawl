@@ -1176,10 +1176,10 @@ enum enchant_type
     ENCH_YOUR_POISON_II,
     ENCH_YOUR_POISON_III,
     ENCH_YOUR_POISON_IV,               //   10
-    ENCH_YOUR_SHUGGOTH_I,              //jmf: Shuggothim!
-    ENCH_YOUR_SHUGGOTH_II,
-    ENCH_YOUR_SHUGGOTH_III,
-    ENCH_YOUR_SHUGGOTH_IV,
+    ENCH_BERSERK_I,
+    ENCH_BERSERK_II,
+    ENCH_BERSERK_III,
+    ENCH_BERSERK_IV,
     ENCH_YOUR_ROT_I, //   15 //jmf: rotting effect for monsters
     ENCH_YOUR_ROT_II,
     ENCH_YOUR_ROT_III,
@@ -1698,7 +1698,13 @@ enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
     MAP_NORTHEAST,
     MAP_SOUTHWEST,
     MAP_SOUTHEAST,
-    MAP_ENCOMPASS
+    MAP_ENCOMPASS,
+
+    // A "floating" vault is placed somewhat like a minivault, away from
+    // the edges, although in other respects it behaves like a regular vault.
+    MAP_FLOAT,
+
+    MAP_NUM_SECTION_TYPES
 };
 
 enum menu_type
@@ -2314,7 +2320,7 @@ enum monster_flag_type
 
     MF_INTERESTING        = 0x20,  // Player finds monster interesting
     MF_SEEN               = 0x40,  // Player already seen monster
-    MF_UNUSED_I           = 0x80
+    MF_DIVINE_PROTECTION  = 0x80   // Monster has divine protection.
 };
 
 enum mon_dam_level_type
@@ -2436,6 +2442,12 @@ enum mon_spell_type
     MS_POISON_ARROW,                    //   60
     MS_SUMMON_SMALL_MAMMALS,
     MS_SUMMON_MUSHROOMS,
+
+    MS_BERSERK_RAGE,
+    MS_MIGHT,
+    MS_MAKHLEB_MINOR_DESTRUCTION,
+    MS_MAKHLEB_MAJOR_DESTRUCTION,
+    
     // XXX: before adding more monster versions of player spells we should
     // consider merging the two lists into one and just having monsters 
     // fail to implement the ones that are impractical.

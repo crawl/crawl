@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "enum.h"
+#include "externs.h"
 
 enum map_flags {
     MAPF_PANDEMONIUM_VAULT = 0x01,     // A pandemonium minivault.
@@ -50,6 +51,11 @@ public:
     int width() const;
     int height() const;
 
+    int glyph(int x, int y) const;
+    bool is_solid(int gly) const;
+    
+    bool solid_borders(map_section_type border);
+    
     void resolve(const std::string &fillins);
 
     // Make all lines the same length.
@@ -66,10 +72,13 @@ public:
 
 private:
     void resolve(std::string &s, const std::string &fill);
+    void check_borders();
 
 private:
     std::vector<std::string> lines;
     int map_width;
+    bool solid_north, solid_east, solid_south, solid_west;
+    bool solid_checked;
 };
 
 class mons_list {
@@ -108,13 +117,18 @@ public:
 
 public:
     void init();
-
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
     void resolve();
     void fixup();
+
+    bool can_dock(map_section_type) const;
+    coord_def dock_pos(map_section_type) const;
+    coord_def float_dock();
+    coord_def float_place();
+    coord_def float_random_place() const;
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;

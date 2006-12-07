@@ -109,7 +109,15 @@ struct coord_def
     int         x;
     int         y;
 
-    // coord_def( int x_in, int y_in ) : x(x_in), y(y_in) {};
+    coord_def( int x_in, int y_in ) : x(x_in), y(y_in) { }
+    coord_def() : x(0), y(0) { }
+
+    void set(int xi, int yi)
+    {
+        x = xi;
+        y = yi;
+    }
+    
     bool operator == (const coord_def &other) const {
         return x == other.x && y == other.y;
     }
@@ -120,6 +128,30 @@ struct coord_def
 
     bool operator <  (const coord_def &other) const {
         return (x < other.x) || (x == other.x && y < other.y);
+    }
+
+    const coord_def &operator += (const coord_def &other) {
+        x += other.x;
+        y += other.y;
+        return (*this);
+    }
+    
+    const coord_def &operator -= (const coord_def &other) {
+        x -= other.x;
+        y -= other.y;
+        return (*this);
+    }
+    
+    coord_def operator + (const coord_def &other) const {
+        coord_def copy = *this;
+        copy += other;
+        return (copy);
+    }
+
+    coord_def operator - (const coord_def &other) const {
+        coord_def copy = *this;
+        copy -= other;
+        return (copy);
     }
 };
 
@@ -570,13 +602,15 @@ struct monsters
     unsigned int behaviour;
     unsigned int foe;
     FixedVector<unsigned int, NUM_MON_ENCHANTS> enchantment;
-    unsigned char flags;               // bitfield of boolean flags
+    unsigned long flags;               // bitfield of boolean flags
 
     unsigned int number;               // #heads (hydra), etc.
     int          colour;
 
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight
+
+    god_type god;                      // Usually GOD_NO_GOD.
 };
 
 struct cloud_struct

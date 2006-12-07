@@ -8,13 +8,32 @@
 #include "AppHdr.h"
 #include "levcomp.tab.h"
 #include <cstring>
+#include <queue>
 
 static bool alloced = false;
+
+std::queue<const char *> free_queue;
+
+static void flush_free_queue(int max_allowed)
+{
+    while (free_queue.size() > max_allowed)
+    {
+        const char *s = free_queue.front();
+        free((void *) s);
+        free_queue.pop();
+    }
+}
+
+static void add_to_queue(const char *s)
+{
+    free_queue.push(s);
+    flush_free_queue(20);
+}
 
 static void clean()
 {
     if (yylval.text && alloced)
-        free( (void*) yylval.text);
+        add_to_queue(yylval.text);
     yylval.text = NULL;
     alloced = false;
 }
@@ -83,7 +102,7 @@ EXIT_MSG:           { BEGIN(ARGUMENT); return EXIT_MSG; }
 MONSTERS          return MONSTERS;
 ENDMONSTERS       return ENDMONSTERS;
 
-<KEYWORDS>[A-Za-z_0-9\-]+   { 
+<KEYWORDS>[A-Za-z_0-9\-]+   {
                         settext();
                         return STRING;
                     }
@@ -114,6 +133,7 @@ northeast           return NORTHEAST;
 northwest           return NORTHWEST;
 southeast           return SOUTHEAST;
 southwest           return SOUTHWEST;
+float               return FLOAT;
 
 -                   return DASH;
 ,                   return COMMA;
@@ -151,5 +171,6 @@ southwest           return SOUTHWEST;
 int yywrap()
 {
     clean();
+    flush_free_queue(0);
     return 1;
 }

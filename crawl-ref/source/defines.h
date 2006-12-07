@@ -75,6 +75,10 @@
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
 
+// This is the border that must be left around the map. I'm not sure why it's
+// necessary, beyond hysterical raisins.
+#define MAPGEN_BORDER           6
+
 // Now some defines about the actual play area:
 // Note: these boundaries are exclusive for the zone the player can move/dig,
 // and are inclusive for the area that we display on the map.

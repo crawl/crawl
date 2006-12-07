@@ -285,6 +285,15 @@ unsigned long get_mons_resists(const monsters *mon)
     return (resists);
 }
 
+int mons_piety(const monsters *mon)
+{
+    if (mon->god == GOD_NO_GOD)
+        return (0);
+
+    // We're open to fine-tuning.
+    return (mon->hit_dice * 14);
+}
+
 unsigned long mons_resist(const monsters *mon, unsigned long flags)
 {
     return (get_mons_resists(mon) & flags);
@@ -967,7 +976,6 @@ int exper_value( const struct monsters *monster )
             case MS_HELLFIRE_BURST:
             case MS_HELLFIRE:
             case MS_TORMENT:
-            case MS_IRON_BOLT:
                 diff += 25;
                 break;
 
@@ -979,6 +987,7 @@ int exper_value( const struct monsters *monster )
             case MS_SUMMON_DEMON_GREATER:
             case MS_BANISHMENT:
             case MS_CRYSTAL_SPEAR:
+            case MS_IRON_BOLT:
             case MS_TELEPORT:
             case MS_TELEPORT_OTHER:
                 diff += 10;
@@ -1138,6 +1147,8 @@ void define_monster(int index)
     ev = m->ev;
 
     speed = m->speed;
+
+    mons.god = GOD_NO_GOD;
 
     switch (mcls)
     {
@@ -1306,7 +1317,7 @@ void define_monster(int index)
     mons.speed = speed;
     mons.speed_increment = 70;
     mons.number = monnumber;
-    mons.flags = 0;
+    mons.flags = 0L;
     mons.colour = col;
     mons_load_spells( &mons, spells );
 

@@ -2086,13 +2086,6 @@ static void update_enchantments( struct monsters *mon, int levels )
             remove_enchant_levels( mon, i, ENCH_YOUR_POISON_I, levels );  
             break;
 
-        case ENCH_YOUR_SHUGGOTH_I:
-        case ENCH_YOUR_SHUGGOTH_II:
-        case ENCH_YOUR_SHUGGOTH_III:
-        case ENCH_YOUR_SHUGGOTH_IV:
-            remove_enchant_levels( mon, i, ENCH_YOUR_SHUGGOTH_I, levels );  
-            break;
-
         case ENCH_YOUR_ROT_I:
         case ENCH_YOUR_ROT_II:
         case ENCH_YOUR_ROT_III:
@@ -2126,18 +2119,6 @@ static void update_enchantments( struct monsters *mon, int levels )
         case ENCH_STICKY_FLAME_III:
         case ENCH_STICKY_FLAME_IV:
             remove_enchant_levels( mon, i, ENCH_STICKY_FLAME_I, levels );  
-            break;
-
-        case ENCH_FRIEND_ABJ_I:
-        case ENCH_FRIEND_ABJ_II:
-        case ENCH_FRIEND_ABJ_III:
-        case ENCH_FRIEND_ABJ_IV:
-        case ENCH_FRIEND_ABJ_V:
-        case ENCH_FRIEND_ABJ_VI:
-            if (remove_enchant_levels( mon, i, ENCH_FRIEND_ABJ_I, levels ))
-            {
-                monster_die( mon, KILL_RESET, 0 );
-            }
             break;
 
         case ENCH_ABJ_I:
@@ -2264,7 +2245,7 @@ void update_level( double elapsedTime )
 #if DEBUG_DIAGNOSTICS
         // probably too annoying even for DEBUG_DIAGNOSTICS
         snprintf( info, INFO_SIZE, 
-                  "mon #%d: range %d; long %d; pos (%d,%d); targ %d(%d,%d); flags %d", 
+                  "mon #%d: range %d; long %d; pos (%d,%d); targ %d(%d,%d); flags %ld", 
                   m, range, long_time, mon->x, mon->y, 
                   mon->foe, mon->target_x, mon->target_y, mon->flags );
 

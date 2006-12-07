@@ -16,12 +16,7 @@
 #include "externs.h"
 
 // used in files.cc, newgame.cc, randart.cc {dlb}
-#ifdef USE_NEW_UNRANDS
 #define NO_UNRANDARTS 52
-#else // USE_NEW_UNRANDS
-#define NO_UNRANDARTS 14
-#endif // USE_NEW_UNRANDS
-
 #define RA_PROPERTIES 30
 
 // Reserving the upper bits for later expansion/versioning.

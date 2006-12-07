@@ -66,4 +66,54 @@ void place_spec_shop(int level_number, unsigned char shop_x,
                          unsigned char shop_y, unsigned char force_s_type,
                          bool representative = false );
 
+class dgn_region;
+typedef std::vector<dgn_region> dgn_region_list;
+
+struct dgn_region
+{
+    // pos is top-left corner.
+    coord_def pos, size;
+
+    dgn_region(int left, int top, int width, int height)
+        : pos(left, top), size(width, height)
+    {
+    }
+
+    dgn_region() : pos(-1, -1), size()
+    {
+    }
+
+    coord_def end() const
+    {
+        return pos + size - coord_def(1, 1);
+    }
+
+    coord_def random_edge_point() const;
+
+    static dgn_region absolute(int left, int top, int right, int bottom)
+    {
+        return dgn_region(left, top, right - left + 1, bottom - top + 1);
+    }
+
+    static bool between(int val, int low, int high)
+    {
+        return (val >= low && val <= high);
+    }
+
+    bool contains(const coord_def &p) const
+    {
+        return (p.x >= pos.x && p.x < pos.x + size.x
+                && p.y >= pos.y && p.y < pos.y + size.y);
+    }
+    
+    bool fully_contains(const coord_def &p) const
+    {
+        return (p.x > pos.x && p.x < pos.x + size.x - 1
+                && p.y >= pos.y && p.y < pos.y + size.y - 1);
+    }
+    
+    bool overlaps(const dgn_region &other) const;
+    bool overlaps_any(const dgn_region_list &others) const;
+};
+
 #endif

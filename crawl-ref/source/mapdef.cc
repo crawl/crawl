@@ -8,6 +8,28 @@
 #include "mon-util.h"
 #include "stuff.h"
 
+static const char *map_section_names[] = {
+    "",
+    "north",
+    "south",
+    "east",
+    "west",
+    "northwest",
+    "northeast",
+    "southwest",
+    "southeast",
+    "encompass",
+    "float",
+};
+
+static const char *map_section_name(int msect)
+{
+    if (msect < 0 || msect >= MAP_NUM_SECTION_TYPES)
+        return "";
+
+    return map_section_names[msect];
+}
+
 ///////////////////////////////////////////////
 // level_range
 //
@@ -52,19 +74,10 @@ int level_range::span() const
 // map_lines
 //
 
-map_lines::map_lines() : lines(), map_width(0)
+map_lines::map_lines()
+    : lines(), map_width(0), solid_north(false), solid_east(false),
+      solid_south(false), solid_west(false), solid_checked(false)
 {
-}
-
-map_lines::map_lines(int nlines, ...) : lines(), map_width(0)
-{
-    va_list args;
-    va_start(args, nlines);
-
-    for (int i = 0; i < nlines; ++i)
-        add_line( va_arg(args, const char *) );
-
-    va_end(args);
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
@@ -87,6 +100,61 @@ int map_lines::width() const
 int map_lines::height() const
 {
     return lines.size();
+}
+
+int map_lines::glyph(int x, int y) const
+{
+    return lines[y][x];
+}
+
+bool map_lines::is_solid(int gly) const
+{
+    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v');
+}
+
+void map_lines::check_borders()
+{
+    if (solid_checked)
+        return;
+
+    const int wide = width(), high = height();
+
+    solid_north = solid_south = true;
+    for (int x = 0; x < wide && (solid_north || solid_south); ++x)
+    {
+        if (solid_north && !is_solid(glyph(x, 0)))
+            solid_north = false;
+        if (solid_south && !is_solid(glyph(x, high - 1)))
+            solid_south = false;
+    }
+
+    solid_east = solid_west = true;
+    for (int y = 0; y < high && (solid_east || solid_west); ++y)
+    {
+        if (solid_west && !is_solid(glyph(0, y)))
+            solid_west = false;
+        if (solid_east && !is_solid(glyph(wide - 1, y)))
+            solid_east = false;
+    }
+
+    solid_checked = true;
+}
+
+bool map_lines::solid_borders(map_section_type border)
+{
+    check_borders();
+    switch (border)
+    {
+    case MAP_NORTH: return solid_north;
+    case MAP_SOUTH: return solid_south;
+    case MAP_EAST:  return solid_east;
+    case MAP_WEST:  return solid_west;
+    case MAP_NORTHEAST: return solid_north && solid_east;
+    case MAP_NORTHWEST: return solid_north && solid_west;
+    case MAP_SOUTHEAST: return solid_south && solid_east;
+    case MAP_SOUTHWEST: return solid_south && solid_west;
+    default: return (false);
+    }
 }
 
 void map_lines::clear()
@@ -150,6 +218,8 @@ void map_lines::rotate(bool clockwise)
 
     map_width = lines.size();
     lines = newlines;
+
+    solid_checked = false;
 }
 
 void map_lines::vmirror()
@@ -163,6 +233,8 @@ void map_lines::vmirror()
         lines[i] = lines[size - 1 - i];
         lines[size - 1 - i] = temp;
     }
+
+    solid_checked = false;
 }
 
 void map_lines::hmirror()
@@ -178,6 +250,8 @@ void map_lines::hmirror()
             s[map_width - 1 - j] = c;
         }
     }
+
+    solid_checked = false;
 }
 
 ///////////////////////////////////////////////
@@ -208,6 +282,116 @@ void map_def::init()
 bool map_def::is_minivault() const
 {
     return (orient == MAP_NONE);
+}
+
+// Tries to dock a floating vault - push it to one edge of the level.
+// Docking will only succeed if two contiguous edges are all x/c/b/v
+// (other walls prevent docking). If the vault's width is > GXM*2/3,
+// it's also eligible for north/south docking, and if the height >
+// GYM*2/3, it's eligible for east/west docking. Although docking is
+// similar to setting the orientation, it doesn't affect 'orient'.
+coord_def map_def::float_dock()
+{
+    const map_section_type orients[] =
+        { MAP_NORTH, MAP_SOUTH, MAP_EAST, MAP_WEST,
+          MAP_NORTHEAST, MAP_SOUTHEAST, MAP_NORTHWEST, MAP_SOUTHWEST };
+    map_section_type which_orient = MAP_NONE;
+    int norients = 0;
+    
+    for (unsigned i = 0; i < sizeof(orients) / sizeof(*orients); ++i)
+    {
+        if (map.solid_borders(orients[i]) && can_dock(orients[i])
+            && one_chance_in(++norients))
+        {
+            which_orient = orients[i];
+        }
+    }
+
+    if (which_orient == MAP_NONE || which_orient == MAP_FLOAT)
+        return coord_def(-1, -1);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Docking floating vault to %s",
+         map_section_name(which_orient));
+#endif
+    return dock_pos(which_orient);
+}
+
+coord_def map_def::dock_pos(map_section_type norient) const
+{
+    const int minborder = 6;
+
+    switch (norient)
+    {
+    case MAP_NORTH:
+        return coord_def( (GXM - map.width()) / 2, minborder );
+    case MAP_SOUTH:
+        return coord_def( (GXM - map.width()) / 2,
+                          GYM - minborder - map.height() );
+    case MAP_EAST:
+        return coord_def( GXM - minborder - map.width(),
+                          (GYM - map.height()) / 2 );
+    case MAP_WEST:
+        return coord_def( minborder,
+                          (GYM - map.height()) / 2 );
+    case MAP_NORTHEAST:
+        return coord_def( GXM - minborder - map.width(), minborder );
+    case MAP_NORTHWEST:
+        return coord_def( minborder, minborder );
+    case MAP_SOUTHEAST:
+        return coord_def( GXM - minborder - map.width(),
+                          GYM - minborder - map.height() );
+    case MAP_SOUTHWEST:
+        return coord_def( minborder,
+                          GYM - minborder - map.height() );
+    default:
+        return coord_def(-1, -1);
+    }
+}
+
+bool map_def::can_dock(map_section_type norient) const
+{
+    switch (norient)
+    {
+    case MAP_NORTH: case MAP_SOUTH:
+        return map.width() > GXM * 2 / 3;
+    case MAP_EAST: case MAP_WEST:
+        return map.height() > GYM * 2 / 3;
+    default:
+        return (true);
+    }
+}
+
+coord_def map_def::float_random_place() const
+{
+    // Try to leave enough around the float for roomification.
+    int minhborder = MAPGEN_BORDER + 11,
+        minvborder = minhborder;
+
+    if (GXM - 2 * minhborder < map.width())
+        minhborder = (GXM - map.width()) / 2 - 1;
+
+    if (GYM - 2 * minvborder < map.height())
+        minvborder = (GYM - map.height()) / 2 - 1;
+    
+    return coord_def(
+        random_range(minhborder, GXM - minhborder - map.width()),
+        random_range(minvborder, GYM - minvborder - map.height()));
+}
+
+coord_def map_def::float_place()
+{
+    ASSERT(orient == MAP_FLOAT);
+
+    coord_def pos(-1, -1);
+
+    if (coinflip())
+        pos = float_dock();
+
+    if (pos.x == -1)
+        pos = float_random_place();
+
+    return (pos);
 }
 
 void map_def::hmirror()

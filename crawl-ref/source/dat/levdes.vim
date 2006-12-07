@@ -18,7 +18,7 @@ setlocal iskeyword+=:
 setlocal iskeyword+=-
 
 syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: SYMBOL: default-depth: TAGS: CHANCE:
-syn keyword desOrientation encompass north south east west northeast northwest southeast southwest
+syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
 
 syn match desComment "^\s*#.*$"
 
@@ -69,7 +69,7 @@ hi desMapTrap guifg=red gui=bold ctermfg=red
 hi desMapWater guifg=lightblue ctermfg=darkblue
 hi desMapGold guifg=#c09000 ctermfg=yellow
 hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
-hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white
+hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
 
 hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
 hi desMapRune     guifg=orange gui=bold ctermfg=white

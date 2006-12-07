@@ -69,6 +69,16 @@ int yesnoquit( const char* str, bool safe = true,
 bool in_bounds( int x, int y );
 bool map_bounds( int x, int y );
 
+inline bool in_bounds(const coord_def &p)
+{
+    return in_bounds(p.x, p.y);
+}
+
+inline bool map_bounds(const coord_def &p)
+{
+    return map_bounds(p.x, p.y);
+}
+
 int grid_distance( int x, int y, int x2, int y2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( int x, int y, int x2, int y2 );

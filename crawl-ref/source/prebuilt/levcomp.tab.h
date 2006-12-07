@@ -1,125 +1,58 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
-
-/* Skeleton interface for Bison's Yacc-like parsers in C
-
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
-
-/* As a special exception, you may create a larger work that contains
-   part or all of the Bison parser skeleton and distribute that work
-   under terms of your choice, so long as that work isn't itself a
-   parser generator using the skeleton or a modified version thereof
-   as a parser skeleton.  Alternatively, if you modify or redistribute
-   the parser skeleton itself, you may (at your option) remove this
-   special exception, which will cause the skeleton and the resulting
-   Bison output files to be licensed under the GNU General Public
-   License without this special exception.
-
-   This special exception was added by the Free Software Foundation in
-   version 2.2 of Bison.  */
-
-/* Tokens.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     DEFAULT_DEPTH = 258,
-     SYMBOL = 259,
-     TAGS = 260,
-     NAME = 261,
-     DEPTH = 262,
-     ORIENT = 263,
-     PLACE = 264,
-     CHANCE = 265,
-     FLAGS = 266,
-     MONS = 267,
-     ENCOMPASS = 268,
-     NORTH = 269,
-     EAST = 270,
-     SOUTH = 271,
-     WEST = 272,
-     NORTHEAST = 273,
-     SOUTHEAST = 274,
-     SOUTHWEST = 275,
-     NORTHWEST = 276,
-     BAD_CHARACTER = 277,
-     NO_HMIRROR = 278,
-     NO_VMIRROR = 279,
-     NO_ROTATE = 280,
-     PANDEMONIC = 281,
-     DASH = 282,
-     COMMA = 283,
-     INTEGER = 284,
-     STRING = 285,
-     MAP_LINE = 286,
-     MONSTER_NAME = 287
-   };
-#endif
-/* Tokens.  */
-#define DEFAULT_DEPTH 258
-#define SYMBOL 259
-#define TAGS 260
-#define NAME 261
-#define DEPTH 262
-#define ORIENT 263
-#define PLACE 264
-#define CHANCE 265
-#define FLAGS 266
-#define MONS 267
-#define ENCOMPASS 268
-#define NORTH 269
-#define EAST 270
-#define SOUTH 271
-#define WEST 272
-#define NORTHEAST 273
-#define SOUTHEAST 274
-#define SOUTHWEST 275
-#define NORTHWEST 276
-#define BAD_CHARACTER 277
-#define NO_HMIRROR 278
-#define NO_VMIRROR 279
-#define NO_ROTATE 280
-#define PANDEMONIC 281
-#define DASH 282
-#define COMMA 283
-#define INTEGER 284
-#define STRING 285
-#define MAP_LINE 286
-#define MONSTER_NAME 287
-
-
-
-
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-#line 21 "levcomp.ypp"
+typedef union
 {
     int i;
     const char *text;
-}
-/* Line 1529 of yacc.c.  */
-#line 118 "levcomp.tab.h"
-	YYSTYPE;
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
-#endif
+} YYSTYPE;
+#define	BRANCHDEF	257
+#define	BRANCH	258
+#define	DESC	259
+#define	DEFAULT	260
+#define	DEFAULT_DEPTH	261
+#define	SYMBOL	262
+#define	TAGS	263
+#define	NAME	264
+#define	DEPTH	265
+#define	ORIENT	266
+#define	PLACE	267
+#define	CHANCE	268
+#define	FLAGS	269
+#define	MONS	270
+#define	ROOT_DEPTH	271
+#define	ENTRY_MSG	272
+#define	EXIT_MSG	273
+#define	ROCK_COLOUR	274
+#define	FLOOR_COLOUR	275
+#define	ENCOMPASS	276
+#define	FLOAT	277
+#define	NORTH	278
+#define	EAST	279
+#define	SOUTH	280
+#define	WEST	281
+#define	NORTHEAST	282
+#define	SOUTHEAST	283
+#define	SOUTHWEST	284
+#define	NORTHWEST	285
+#define	LEVEL	286
+#define	END	287
+#define	PVAULT	288
+#define	PMINIVAULT	289
+#define	MONSTERS	290
+#define	ENDMONSTERS	291
+#define	CHARACTER	292
+#define	NO_HMIRROR	293
+#define	NO_VMIRROR	294
+#define	NO_ROTATE	295
+#define	PANDEMONIC	296
+#define	DASH	297
+#define	COMMA	298
+#define	QUOTE	299
+#define	OPAREN	300
+#define	CPAREN	301
+#define	INTEGER	302
+#define	STRING	303
+#define	MAP_LINE	304
+#define	MONSTER_NAME	305
+#define	IDENTIFIER	306
+
 
 extern YYSTYPE yylval;
-

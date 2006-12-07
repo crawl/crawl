@@ -1165,7 +1165,7 @@ void stethoscope(int mwh)
     mpr( info, MSGCH_DIAGNOSTICS );
 
     // print stats and other info
-    snprintf( info, INFO_SIZE,"HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%02x",
+    snprintf( info, INFO_SIZE,"HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%04lx",
              menv[i].hit_dice, 
              menv[i].hit_points, menv[i].max_hit_points, 
              menv[i].armour_class, menv[i].evasion,

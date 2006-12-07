@@ -28,7 +28,7 @@ void yyerror(const char *e)
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS
 %token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
 %token <i>      ROCK_COLOUR FLOOR_COLOUR
-%token <i>      ENCOMPASS 
+%token <i>      ENCOMPASS FLOAT 
 %token <i>      NORTH EAST SOUTH WEST
 %token <i>      NORTHEAST SOUTHEAST SOUTHWEST NORTHWEST
 
@@ -71,6 +71,39 @@ defdepth        : DEFAULT_DEPTH depth_range
 
 level           : name metalines map_def metalines
                 {
+                    if (lc_map.orient == MAP_FLOAT
+                        || lc_map.is_minivault())
+                    {
+                        if (lc_map.map.width() > GXM - MAPGEN_BORDER * 2
+                            || lc_map.map.height() > GYM - MAPGEN_BORDER * 2)
+                        {
+                            char buf[300];
+                            snprintf(buf, sizeof buf, 
+                                 "%s is too big: %dx%d - max %dx%d",
+                                 lc_map.is_minivault()? "Minivault" : "Float",
+                                 lc_map.map.width(), lc_map.map.height(),
+                                 GXM - MAPGEN_BORDER * 2,
+                                 GYM - MAPGEN_BORDER * 2);
+                            yyerror(buf);
+                        }
+                    }
+                    else
+                    {
+                        if (lc_map.map.width() > GXM
+                            || lc_map.map.height() > GYM)
+                        {
+                            char buf[300];
+                            snprintf(buf, sizeof buf, 
+                                 "Map is too big: %dx%d - max %dx%d",
+                                 lc_map.map.width(), lc_map.map.height(),
+                                 GXM, GYM);
+                            yyerror(buf);
+                        }
+                    }
+
+                    if (lc_map.map.height() == 0)
+                        yyerror("Must define map.");
+
                     add_parsed_map( lc_map );
                 }
                 ;
@@ -183,6 +216,7 @@ orient_name     : ENCOMPASS     { $$ = MAP_ENCOMPASS; }
                 | SOUTHEAST     { $$ = MAP_SOUTHEAST; }
                 | SOUTHWEST     { $$ = MAP_SOUTHWEST; }
                 | NORTHWEST     { $$ = MAP_NORTHWEST; }
+                | FLOAT         { $$ = MAP_FLOAT; }
                 ;
 
 flags           : FLAGS flagnames {}

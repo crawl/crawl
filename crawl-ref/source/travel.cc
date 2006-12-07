@@ -317,7 +317,7 @@ void toggle_exclude(int x, int y)
     }
     else
     {
-        coord_def c = { x, y };
+        const coord_def c(x, y);
         curr_excludes.push_back(c);
     }
 
@@ -626,7 +626,7 @@ void prevent_travel_to(const std::string &feature)
 
 bool is_branch_stair(int gridx, int gridy)
 {
-    coord_def pos = { gridx, gridy };
+    const coord_def pos(gridx, gridy);
 
     const level_id curr = level_id::get_current_level_id();
     const level_id next = level_id::get_next_level_id(pos);
@@ -1270,7 +1270,7 @@ void find_travel_pos(int youx, int youy,
                     {
                         if (features)
                         {
-                            coord_def c = { dx, dy };
+                            const coord_def c(dx, dy);
                             if (is_trap(dx, dy) || is_exclude_root(dx, dy))
                                 features->push_back(c);
                             trap_seeds.push_back(c);
@@ -1327,14 +1327,14 @@ void find_travel_pos(int youx, int youy,
                                 || is_stash(lev, dx, dy))
                             && (dx != start_x || dy != start_y))
                     {
-                        coord_def c = { dx, dy };
+                        const coord_def c(dx, dy);
                         features->push_back(c);
                     }
 
                     if (features && is_exclude_root(dx, dy) && dx != start_x
                             && dy != start_y)
                     {
-                        coord_def c = { dx, dy };
+                        const coord_def c(dx, dy);
                         features->push_back(c);
                     }
                 }
@@ -1380,8 +1380,8 @@ void find_travel_pos(int youx, int youy,
 }
 
 // Mappings of which branches spring from which other branches, essential to
-// walk backwards up the tree. Yes, this is a horrible abuse of coord_def.
-static coord_def branch_backout[] =
+// walk backwards up the tree.
+static int branch_backout[][2] =
 {
     { BRANCH_SWAMP, BRANCH_LAIR },
     { BRANCH_SLIME_PITS, BRANCH_LAIR },
@@ -1412,8 +1412,8 @@ unsigned char find_parent_branch(unsigned char br)
             i < sizeof(branch_backout) / sizeof(branch_backout[0]); 
             i++)
     {
-        if (branch_backout[i].x == br)
-            return (unsigned char) branch_backout[i].y;
+        if (branch_backout[i][0] == br)
+            return (unsigned char) branch_backout[i][1];
     }
     return 0;
 }
@@ -2268,8 +2268,9 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
 {
     level_id current = level_id::get_current_level_id();
 
-    coord_def best_stair = { -1, -1 };
-    coord_def cur_stair  = { you.x_pos, you.y_pos };
+    coord_def best_stair(-1, -1);
+    coord_def cur_stair(you.x_pos, you.y_pos);
+    
     level_id closest_level;
     int best_level_distance = -1;
     travel_cache.reset_distances();
@@ -2674,7 +2675,7 @@ void LevelInfo::update_stair(int x, int y, const level_pos &p, bool guess)
 
 stair_info *LevelInfo::get_stair(int x, int y)
 {
-    coord_def c = { x, y };
+    const coord_def c(x, y);
     return get_stair(c);
 }
 
@@ -2825,7 +2826,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
             {
                 // Convert to grid coords, because that's what we use
                 // everywhere else.
-                coord_def stair = { x + 1, y + 1 };
+                const coord_def stair(x + 1, y + 1);
                 st.push_back(stair);
             }
         }
@@ -3065,7 +3066,7 @@ void TravelCache::add_waypoint(int x, int y)
         x = you.x_pos;
         y = you.y_pos;
     }
-    coord_def pos = { x, y };
+    const coord_def pos(x, y);
     const level_id &lid = level_id::get_current_level_id();
 
     LevelInfo &li = get_level_info(lid);

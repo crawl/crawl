@@ -131,6 +131,9 @@ unsigned char trap_category(unsigned char trap_type);
 bool grid_is_wall(int grid);
 bool grid_is_opaque(int grid);
 bool grid_is_solid(int grid);
+bool grid_is_solid(int x, int y);
+bool grid_is_solid(const coord_def &c);
+
 bool grid_is_water(int grid);
 bool grid_is_watery( int grid );
 god_type grid_altar_god( unsigned char grid );
