@@ -820,20 +820,20 @@ int prompt_invent_item( const char *prompt,
                         NULL, 
                         &items );
 
-            if (items.size())
-            {
-                if (count)
-                    *count = items[0].quantity;
-                redraw_screen();
-                mesclr( true );
-                return letter_to_index( keyin );
-            }
 
             need_getch  = false;
 
             // Don't redraw if we're just going to display another listing
             need_redraw = (keyin != '?' && keyin != '*');
             need_prompt = need_redraw;
+
+            if (items.size())
+            {
+                if (count)
+                    *count = items[0].quantity;
+                redraw_screen();
+                mesclr( true );
+            }
         }
         else if (count != NULL && isdigit( keyin ))
         {
