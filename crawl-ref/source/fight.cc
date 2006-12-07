@@ -371,6 +371,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     int your_to_hit;
     int damage_done = 0;
     bool hit = false;
+    bool base_nodamage = false;
     unsigned char stab_bonus = 0;       // this is never negative {dlb}
     int temp_rand;              // for probability determination {dlb}
 
@@ -385,12 +386,17 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     char damage_noise[80], damage_noise2[80];
 
     char str_pass[ ITEMNAME_SIZE ];
+    char base_damage_message[ITEMNAME_SIZE];
+    char special_damage_message[ITEMNAME_SIZE];
 
 #if DEBUG_DIAGNOSTICS
     char st_prn[ 20 ];
 #endif
 
     FixedVector< char, RA_PROPERTIES > art_proprt;
+
+    special_damage_message[0] = 0;
+    base_damage_message[0] = 0;
 
     if (ur_armed && you.inv[weapon].base_type == OBJ_WEAPONS
                  && is_random_artefact( you.inv[weapon] ))
@@ -1037,28 +1043,19 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             monster_die(defender, KILL_YOU, 0);
 
             if (defender->type == MONS_GIANT_SPORE)
-            {
-                snprintf( info, INFO_SIZE, "You %s the giant spore.", damage_noise);
-                mpr(info);
-            }
+                mprf("You %s the giant spore.", damage_noise);
             else if (defender->type == MONS_BALL_LIGHTNING)
-            {
-                snprintf( info, INFO_SIZE, "You %s the ball lightning.", damage_noise);
-                mpr(info);
-            }
+                mprf("You %s the ball lightning.", damage_noise);
+
             return (true);
         }
 
         if (damage_done < 1 && player_monster_visible( defender ))
         {
             hit = true;
-
-            if ( !ur_armed || melee_brand != SPWPN_VORPAL )
-            {
-                snprintf(info, INFO_SIZE, "You %s %s, but do no damage.",
-                         damage_noise, ptr_monam(defender, DESC_NOCAP_THE));
-                mpr(info);
-            }
+            base_nodamage = true;
+            snprintf( base_damage_message, INFO_SIZE, "You %s %s.",
+                      damage_noise, ptr_monam(defender, DESC_NOCAP_THE));
         }
     }
     else
@@ -1082,12 +1079,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     if (hit && damage_done > 0
         || (hit && damage_done < 1 && mons_has_ench(defender,ENCH_INVIS)))
     {
-        strcpy(info, "You ");
-        strcat(info, damage_noise);
-        strcat(info, " ");
-        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-        strcat(info, damage_noise2);
-
+        snprintf(info, INFO_SIZE, "You %s %s%s", damage_noise,
+                 ptr_monam(defender, DESC_NOCAP_THE), damage_noise2);
 #if DEBUG_DIAGNOSTICS
         strcat( info, " for " );
         /* note: doesn't take account of special weapons etc */
@@ -1226,14 +1219,14 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                         if (specdam)
                         {
-                            snprintf( info, INFO_SIZE, "%s is jolted!",
+                            snprintf( special_damage_message, INFO_SIZE,
+                                      "%s is jolted!",
                                       ptr_monam(defender, DESC_CAP_THE) );
-                            mpr(info);
                         }
                     }
                     break;
 
-                case STAFF_COLD:    // FIXME: I don't think I used these right ...
+                case STAFF_COLD: // FIXME: I don't think I used these right ...
                     if (mons_res_cold(defender) > 0)
                         break;
 
@@ -1244,10 +1237,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                     if (specdam)
                     {
-
-                        snprintf( info, INFO_SIZE, "You freeze %s!",
+                        snprintf( special_damage_message, INFO_SIZE,
+                                  "You freeze %s!",
                                   ptr_monam(defender, DESC_NOCAP_THE) );
-                        mpr(info);
                     }
                     break;
 
@@ -1259,9 +1251,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                     if (specdam) 
                     {
-                        snprintf( info, INFO_SIZE, "You crush %s!",
+                        snprintf( special_damage_message, INFO_SIZE,
+                                  "You crush %s!",
                                   ptr_monam(defender, DESC_NOCAP_THE) );
-                        mpr(info);
                     }
                     break;
 
@@ -1276,9 +1268,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                     if (specdam)
                     {
-                        snprintf( info, INFO_SIZE, "You burn %s!",
+                        snprintf( special_damage_message, INFO_SIZE,
+                                  "You burn %s!",
                                   ptr_monam(defender, DESC_NOCAP_THE) );
-                        mpr(info);
                     }
                     break;
 
@@ -1290,7 +1282,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                         temp_rand = 30;
 
                     if (random2(100) < temp_rand)
+                    {
+                        // HACK: poison_monster emits a message, so
+                        // we need to get ours out first.
+                        if ( base_nodamage )
+                        {
+                            mpr(base_damage_message);
+                            base_nodamage = false; // don't double-message
+                        }                        
                         poison_monster(defender, true);
+                    }
                     break;
 
                 case STAFF_DEATH:
@@ -1302,10 +1303,10 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                         specdam = STAFF_DAMAGE(SK_NECROMANCY);
 
                         if (specdam)
-                        {
-                            snprintf( info, INFO_SIZE, "%s convulses in agony!",
-                                      ptr_monam(defender, DESC_CAP_THE) );
-                            mpr(info);
+                        {                            
+                            snprintf( special_damage_message, INFO_SIZE,
+                                      "%s convulses in agony!",
+                                      ptr_monam(defender, DESC_CAP_THE));
 
                             did_god_conduct(DID_NECROMANCY, 4);
                         }
@@ -1376,17 +1377,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                 if (specdam)
                 {
-                    strcpy(info, "You burn ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    snprintf(special_damage_message, INFO_SIZE,
+                             "You burn %s",
+                             ptr_monam(defender, DESC_NOCAP_THE));
 
                     if (specdam < 3)
-                        strcat(info, ".");
+                        strcat(special_damage_message, ".");
                     else if (specdam < 7)
-                        strcat(info, "!");
+                        strcat(special_damage_message, "!");
                     else
-                        strcat(info, "!!");
-
-                    mpr(info);
+                        strcat(special_damage_message, "!!");
                 }
                 break;
 
@@ -1401,15 +1401,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                 if (specdam)
                 {
-                    strcpy(info, "You freeze ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
+                    snprintf(special_damage_message, INFO_SIZE,
+                             "You freeze %s",
+                             ptr_monam(defender, DESC_NOCAP_THE));
 
                     if (specdam < 3)
-                        strcat(info, ".");
+                        strcat(special_damage_message, ".");
                     else if (specdam < 7)
-                        strcat(info, "!");
+                        strcat(special_damage_message, "!");
                     else
-                        strcat(info, "!!");
+                        strcat(special_damage_message, "!!");
 
                     mpr(info);
                 }
@@ -1444,7 +1445,8 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                     break;
                 else if (one_chance_in(3))
                 {
-                    mpr("There is a sudden explosion of sparks!");
+                    strcpy(special_damage_message,
+                           "There is a sudden explosion of sparks!");
                     specdam = random2avg(28, 3);
                 }
                 break;
@@ -1456,17 +1458,23 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
             case SPWPN_VENOM:
                 if (!one_chance_in(4))
+                {
+                    // HACK - poison_monster bites us again
+                    if ( base_nodamage )
+                    {
+                        mpr(base_damage_message);
+                        base_nodamage = false;
+                    }
                     poison_monster(defender, true);
+                }
                 break;
 
             case SPWPN_DRAINING:
                 if (mons_res_negative_energy(defender) > 0 || one_chance_in(3))
                     break;
 
-                strcpy(info, "You drain ");
-                strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-                strcat(info, "!");
-                mpr(info);
+                snprintf(special_damage_message, INFO_SIZE, "You drain %s!",
+                         ptr_monam(defender, DESC_NOCAP_THE));
 
                 if (one_chance_in(5))
                     defender->hit_dice--;
@@ -1488,23 +1496,21 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
             case SPWPN_VORPAL:
                 specdam = 1 + random2(damage_done) / 2;
-                if (damage_done < 1)
-                    mprf(MSGCH_PLAIN, "You strike %s.",
-                         ptr_monam(defender, DESC_NOCAP_THE));
+                // note: leaving special_damage_message empty because there
+                // isn't one.
                 break;
 
             case SPWPN_VAMPIRICISM:
                 specdam = 0;        // NB: does no extra damage
 
-                if (mons_holiness(defender) != MH_NATURAL)
-                    break;
-                else if (mons_res_negative_energy(defender) > 0)
-                    break;
-                else if (damage_done < 1)
-                    break;
-                else if (you.hp == you.hp_max || one_chance_in(5))
+                if (mons_holiness(defender) != MH_NATURAL ||
+                    mons_res_negative_energy(defender) > 0 ||
+                    damage_done < 1 || you.hp == you.hp_max ||
+                    one_chance_in(5))
                     break;
 
+                // We only get here if we've done base damage, so no
+                // worries on that score.
                 mpr("You feel better.");
 
                 // thus is probably more valuable on larger weapons?
@@ -1527,6 +1533,12 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                 specdam = 0;
                 if (mons_holiness(defender) == MH_UNDEAD && !one_chance_in(3))
                 {
+                    // see previous HACKs
+                    if ( base_nodamage )
+                    {
+                        mpr(base_damage_message);
+                        base_nodamage = false;
+                    }
                     simple_monster_message(defender, " shudders.");
                     specdam += random2avg((1 + (damage_done * 3)), 3);
                 }
@@ -1537,6 +1549,12 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                 if (mons_res_negative_energy(defender) <= 0
                     && random2(8) <= you.skills[SK_NECROMANCY])
                 {
+                    // see previous HACKs
+                    if ( base_nodamage )
+                    {
+                        mpr(base_damage_message);
+                        base_nodamage = false;
+                    }
                     simple_monster_message(defender, " convulses in agony.");
                     specdam += random2( 1 + you.skills[SK_NECROMANCY] );
                 }
@@ -1551,6 +1569,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                 {
                     if (one_chance_in(5))
                     {
+                        if ( base_nodamage )
+                        {
+                            mpr(base_damage_message);
+                            base_nodamage = false;
+                        }
                         simple_monster_message( defender,
                             " basks in the translocular energy." );
                         heal_monster(defender, 1 + random2avg(7, 2), true); // heh heh
@@ -1560,20 +1583,18 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                 if (one_chance_in(3))
                 {
-                    strcpy(info, "Space bends around ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-                    strcat(info, ".");
-                    mpr(info);
+                    snprintf(special_damage_message, INFO_SIZE,
+                             "Space bends around %s.",
+                             ptr_monam(defender, DESC_NOCAP_THE));
                     specdam += 1 + random2avg(7, 2);
                     break;
                 }
 
                 if (one_chance_in(3))
                 {
-                    strcpy(info, "Space warps horribly around ");
-                    strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-                    strcat(info, "!");
-                    mpr(info);
+                    snprintf( special_damage_message, INFO_SIZE,
+                              "Space warps horribly around %s!",
+                              ptr_monam(defender, DESC_NOCAP_THE));
                     specdam += 3 + random2avg(24, 2);
                     break;
                 }
@@ -1586,19 +1607,32 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
                 if (coinflip())
                 {
+                    if ( base_nodamage )
+                    {
+                        mpr(base_damage_message);
+                        base_nodamage = false;
+                    }
                     monster_teleport(defender, coinflip());
                     break;
                 }
 
                 if (coinflip())
                 {
+                    if ( base_nodamage )
+                        mpr(base_damage_message);
                     monster_die(defender, KILL_RESET, 0);
                     return (true);
                 }
                 break;
 
             case SPWPN_CONFUSE:
-                {
+                {                    
+                    if ( base_nodamage )
+                    {
+                        mpr(base_damage_message);
+                        base_nodamage = false;
+                    }
+
                     // declaring these just to pass to the enchant function
                     struct bolt beam_temp;
                     beam_temp.flavour = BEAM_CONFUSION;
@@ -1620,6 +1654,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
                   melee_brand, specdam );
         mpr( info, MSGCH_DIAGNOSTICS );
 #endif
+        if ( base_nodamage )
+        {
+            if ( specdam > 0 )
+                mpr(base_damage_message);
+            else
+                mprf("You %s %s, but do no damage.",
+                     damage_noise, ptr_monam(defender, DESC_NOCAP_THE));
+        }
+        if ( special_damage_message[0] )
+            mpr(special_damage_message);
 
         hurt_monster( defender, specdam );
     } // end if (hit)

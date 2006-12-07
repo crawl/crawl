@@ -1760,7 +1760,7 @@ static void handle_behaviour(struct monsters *mon)
 // note that this function *completely* blocks messaging for monsters
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
-// INtentionally avoids info and str_pass now. -- bwr
+// Intentionally avoids info and str_pass now. -- bwr
 bool simple_monster_message(struct monsters *monster, const char *event,
                             int channel, int param)
 {
