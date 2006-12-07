@@ -313,8 +313,8 @@ void unmarshallString(struct tagHeader &th, char *data, int maxSize)
     // get length
     short len = unmarshallShort(th);
     int copylen = len;
-    if (len > maxSize && maxSize > 0)
-        copylen = maxSize;
+    if (len >= maxSize && maxSize > 0)
+        copylen = maxSize - 1;
 
     // read the actual string and null terminate
     memcpy(data, &tagBuffer[th.offset], copylen);
