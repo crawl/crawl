@@ -591,7 +591,6 @@ bool new_game(void)
                     you.inv[i].sub_type = FOOD_MEAT_RATION;
                 }
 
-                you.inv[i].colour = BROWN;
                 break;
             }
         }
@@ -638,8 +637,6 @@ bool new_game(void)
                 case SP_HILL_DWARF:
                 case SP_MOUNTAIN_DWARF:
                     set_equip_race( you.inv[i], ISFLAG_DWARVEN );
-                    if (you.inv[i].colour == LIGHTCYAN)
-                        you.inv[i].colour = CYAN;
                     break;
 
                 case SP_HILL_ORC:
@@ -748,24 +745,17 @@ bool new_game(void)
 
     for (i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].base_type != OBJ_WEAPONS)
-        {
-            set_ident_type( you.inv[i].base_type, 
-                            you.inv[i].sub_type, ID_KNOWN_TYPE );
-        }
-
-        if (you.inv[i].base_type == OBJ_POTIONS
-            || you.inv[i].base_type == OBJ_WANDS
-            || you.inv[i].base_type == OBJ_JEWELLERY)
-        {
-            item_colour( you.inv[i] );  // set correct special and colour
-        }
-
         if (is_valid_item(you.inv[i]))
         {
+            // identify all items in pack
+            set_ident_type( you.inv[i].base_type, 
+                            you.inv[i].sub_type, ID_KNOWN_TYPE );
+
             you.inv[i].slot = index_to_letter(you.inv[i].link);
+            item_colour( you.inv[i] );  // set correct special and colour
         }
     }
+
     // Brand items as original equipment.
     origin_set_inventory(origin_set_startequip);
 
