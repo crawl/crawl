@@ -524,7 +524,7 @@ void game_options::reset_options()
 #if defined(SAVE_DIR_PATH)
     save_dir  = SAVE_DIR_PATH;
 #elif !defined(DOS)
-    save_dir = "saves";
+    save_dir = "saves/";
 #else
     save_dir.clear();
 #endif
