@@ -1145,10 +1145,13 @@ bool swap_places(struct monsters *monster)
     int loc_x = you.x_pos;
     int loc_y = you.y_pos;
 
-    swap = habitat_okay( monster, grd[loc_x][loc_y] );
+    const int mgrid = grd[monster->x][monster->y];
+
+    swap = habitat_okay( monster, grd[loc_x][loc_y] )
+        && !is_grid_dangerous(mgrid);
 
     // chose an appropiate habitat square at random around the target.
-    if (!swap)
+    if (!swap && !is_grid_dangerous(mgrid))
     {
         int num_found = 0;
         int temp_x, temp_y;

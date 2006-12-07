@@ -177,8 +177,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     {
         // XXX: at some point we're going to need to fix the swimming 
         // code to handle burden states.
-        if (new_grid == DNGN_LAVA 
-            || (new_grid == DNGN_DEEP_WATER && you.species != SP_MERFOLK))
+        if (is_grid_dangerous(new_grid))
         {
             // lava and dangerous deep water (ie not merfolk)
             int entry_x = (stepped) ? you.x_pos : x;
@@ -295,6 +294,18 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     return (true);
 }
 
+bool player_can_swim()
+{
+    return (you.species == SP_MERFOLK);
+}
+
+bool is_grid_dangerous(int grid)
+{
+    return (!player_is_levitating()
+            && (grid == DNGN_LAVA
+                || grid == DNGN_DEEP_WATER && !player_can_swim()));
+}
+
 bool player_in_mappable_area( void )
 {
     return (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_ABYSS);
@@ -322,7 +333,7 @@ bool player_in_water(void)
 
 bool player_is_swimming(void)
 {
-    return (player_in_water() && you.species == SP_MERFOLK);
+    return (player_in_water() && player_can_swim());
 }
 
 bool player_under_penance(void)
@@ -1383,7 +1394,7 @@ int player_movement_speed(void)
 {
     int mv = 10;
 
-    if (you.species == SP_MERFOLK && player_is_swimming())
+    if (player_is_swimming())
     {
         // This is swimming... so it doesn't make sense to really
         // apply the other things (the mutation is "cover ground",

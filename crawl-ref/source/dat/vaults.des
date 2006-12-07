@@ -62,12 +62,14 @@
 #
 #  Guidelines for creating new vault maps:
 #
-#  [ds] If your map is not a minivault, make sure the side(s) that form the
-#  border have a rock wall padding at least 6 deep. For instance, if your map
-#  is ORIENT: north, you must have a 6 deep border of rock wall (or any
-#  other kind of wall) along the northern, eastern, and western edges of the
-#  map. If you're doing a fullscreen map (encompass), you must pad all around
-#  the map with 6 layers of wall.
+#  If your map is not a minivault, make sure the side(s) that form the border
+#  have a rock wall padding at least 6 deep. For instance, if your map is
+#  ORIENT: north, you must have a 6 deep border of rock wall (or any other kind
+#  of wall) along the northern, eastern, and western edges of the map. If
+#  you're doing a fullscreen map (encompass), you must pad all around the map
+#  with 6 layers of wall. For ORIENT: encompass maps, you don't need to
+#  explicitly include the padding provided you make the map small enough that
+#  the padding can be provided automatically.
 #
 #  Basically you can just let your creativity run wild. You do not have
 #  to place all of the stairs unless the level is full screen, in which
@@ -86,9 +88,23 @@
 #  ps - remember to add one to the monster array value when placing monsters
 #       on each map (it is 1-7, not 0-6) {dlb}
 #
-#  [dshaligram] All vaults MUST have an ORIENT: attribute; if there's no
-#  ORIENT: attribute, the vault is considered to be a minivault, which is
-#  usually not what you want.
+#  All vaults MUST have an ORIENT: attribute; if there's no ORIENT: attribute,
+#  the vault is considered to be a minivault, which is usually not what you
+#  want.
+#
+#  Minivaults are handled very differently from regular vaults and special
+#  levels. They're placed *after* normal map generation, whereas normal vaults
+#  are placed before generating the rest of the level. There's no way to
+#  guarantee generation of a minivault on a particular level, whereas vaults
+#  can be forced to appear using a PLACE: attribute.
+#
+#  Floating vaults:
+#  If you want to do vault-like things in a map that should be positioned like
+#  a minivault, use ORIENT: float. This allows the vault to be placed in the
+#  middle of a level, unlike normal vaults that must be anchored to at least
+#  two edges of the map. Floating maps also do not need explicit entry points -
+#  the dungeon builder will choose random entry points if you don't specify
+#  any.
 #
 ##############################################################################
 
