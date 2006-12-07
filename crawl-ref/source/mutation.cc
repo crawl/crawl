@@ -890,7 +890,7 @@ formatted_string describe_mutations()
 {
     std::string result;
     bool have_any = false;
-    const char *mut_title = "Innate abilities, Weirdness & Mutations";
+    const char *mut_title = "Innate Abilities, Weirdness & Mutations";
 
     // center title
     int i;
