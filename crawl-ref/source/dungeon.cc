@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include <algorithm>
 
 #include "AppHdr.h"
 #include "abyss.h"
@@ -155,6 +154,12 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
 static int pick_an_altar(void);
 static void place_altar(void);
 
+//////////////////////////////////////////////////////////////////////////
+// Static data
+
+// Places where monsters should not be randomly generated.
+static dgn_region_list no_monster_zones;
+
 static std::string level_name(int subdepth)
 {
     return place_name(
@@ -233,6 +238,8 @@ void builder(int level_number, char level_type)
     int i;          // generic loop variable
     int x,y;        // generic map loop variables
 
+    no_monster_zones.clear();
+    
     // blank level with DNGN_ROCK_WALL
     make_box(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,DNGN_ROCK_WALL);
 
@@ -4552,7 +4559,7 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
 {
     int i = 0;
     int totalplaced = 0;
-    int not_used=0;
+    int not_used = 0;
     int x,y;
     int lava_spaces, water_spaces;
     int aq_creatures;
@@ -4565,7 +4572,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
     for (i = 0; i < mon_wanted; i++)
     {
         if (place_monster( not_used, RANDOM_MONSTER, level_number, BEH_SLEEP,
-                           MHITNOT, false, 1, 1, true ))
+                           MHITNOT, false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+                           no_monster_zones ))
         {
             totalplaced++;
         }
@@ -4612,7 +4620,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
 
             // note: unique_creatures 40 + used by unique demons
             if (place_monster( not_used, 280 + which_unique, level_number, 
-                               BEH_SLEEP, MHITNOT, false, 1, 1, true ))
+                               BEH_SLEEP, MHITNOT, false, 1, 1, true,
+                               PROX_ANYWHERE, 250, 0, no_monster_zones ))
             {
                 totalplaced++;
             }
@@ -4663,7 +4672,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
         {
             if (place_monster( not_used, swimming_things[ random2(4) ],
                                level_number, BEH_SLEEP, MHITNOT, 
-                               false, 1, 1, true ))
+                               false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+                               no_monster_zones ))
             {
                 totalplaced++;
             }
@@ -4700,7 +4710,8 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
         {
             if (place_monster( not_used, swimming_things[ random2(4) ],
                                level_number, BEH_SLEEP, MHITNOT, 
-                               false, 1, 1, true ))
+                               false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+                               no_monster_zones ))
             {
                 totalplaced++;
             }
@@ -5522,6 +5533,9 @@ static void build_vaults(int level_number, int force_vault)
         }
     }
 
+    if (place.map->has_tag("no_monster_gen"))
+        no_monster_zones.push_back( dgn_region( place.x, place.y, place.width, place.height ) );
+
     // If the map takes the whole screen, our work is done.
     if (gluggy == MAP_ENCOMPASS)
         return;
@@ -5818,7 +5832,7 @@ static void replace_area(int sx, int sy, int ex, int ey, unsigned char replace,
 }
 
 // With apologies to Metallica.
-static bool unforbidden(const coord_def &c, const dgn_region_list &forbidden)
+bool unforbidden(const coord_def &c, const dgn_region_list &forbidden)
 {
     for (dgn_region_list::const_iterator i = forbidden.begin();
          i != forbidden.end(); ++i)

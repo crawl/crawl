@@ -134,8 +134,9 @@ bool monster_can_submerge(int monster_class, int grid)
 }
 
 bool place_monster(int &id, int mon_type, int power, char behaviour,
-    int target, bool summoned, int px, int py, bool allow_bands,
-    int proximity, int extra, int dur)
+                   int target, bool summoned, int px, int py, bool allow_bands,
+                   int proximity, int extra, int dur,
+                   const dgn_region_list &forbidden)
 {
     int band_size = 0;
     int band_monsters[BIG_BAND];        // band monster types
@@ -286,7 +287,8 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
                     tries = 0;
                 }
             }
-            else if (tries > 60) 
+            // Dropped number of tries from 60.
+            else if (tries > 45)
                 return (false);
 
             px = 5 + random2(GXM - 10);
@@ -301,6 +303,10 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
 
             // Is the monster happy where we want to put it?
             if (!grid_compatible(grid_wanted, grd[px][py], true))
+                continue;
+
+            // Is the grid verboten?
+            if (!unforbidden( coord_def(px, py), forbidden ))
                 continue;
 
             // don't generate monsters on top of teleport traps

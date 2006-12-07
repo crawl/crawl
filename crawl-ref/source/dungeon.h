@@ -116,4 +116,6 @@ struct dgn_region
     bool overlaps_any(const dgn_region_list &others) const;
 };
 
+bool unforbidden(const coord_def &c, const dgn_region_list &forbidden);
+
 #endif
