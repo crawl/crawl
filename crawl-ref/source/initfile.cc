@@ -521,8 +521,10 @@ void game_options::reset_options()
 
     reset_startup_options();
 
-#ifdef SAVE_DIR_PATH
+#if defined(SAVE_DIR_PATH)
     save_dir  = SAVE_DIR_PATH;
+#elif !defined(DOS)
+    save_dir = "saves";
 #else
     save_dir.clear();
 #endif
