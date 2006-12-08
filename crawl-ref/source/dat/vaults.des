@@ -110,6 +110,144 @@
 
 default-depth: 1-27
 
+##############################################################################
+# Entry vaults
+##############################################################################
+# A dummy vault included purely to make the others less likely.
+NAME: dummy_entry
+TAGS: entry
+ORIENT: float
+
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Lemuel's entry vaults.
+
+NAME: lemuel_001
+TAGS: entry
+ORIENT: southwest
+
+# Can't rotate - the aspect ratio makes it look hideous.
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxx.@.xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxx.............x
+xxxxxxx.............x
+xxxxxxx.....[{(.....x
+xxxxxxx.............x
+xxxxxxx.............x
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Another Lemuel entry vault
+
+NAME: lemuel_002
+TAGS: entry
+ORIENT: float
+
+# dungeon.cc isn't very clever with non-rectangular geometries...
+
+MAP
+......x@x......
+....xxx.xxx....
+...xx.....xx...
+..xx.......xx..
+.xx.........xx.
+xx...........xx
+x.............x
+x......{......x
+x.....[.(.....x
+x......<......x
+x.............x
+xx...........xx
+.xx.........xx.
+..xx.......xx..
+...xx.....xx...
+....xx...xx....
+.....xx.xx.....
+......x@x......
+ENDMAP
+
+##############################################################################
+# lemuel_003
+
+NAME: lemuel_003
+TAGS: entry
+ORIENT: float
+
+# The map will be padded out to the right with rock.
+
+# This is the sort of map that would benefit a lot from non-rectangular vaults.
+
+MAP
+xxxxxxxxxx
+xxxxxxxx{x
+xxxxxxxx.x
+xxxxxxxx.x
+xxxxxxxx.x
+xxxxxxxx.xxxxxxx
+xx[...........(x
+xxxxxxxx.xxxxxxx
+xxxxxxxx.x
+xxxxxxxx.x
+xxxxxxxx.x
+xxxxxxxx.xx
+xxxxxxxG.Gx
+xxxxxxxx.xx
+xxxxxxxx.x
+xxxxxxxx@x
+ENDMAP
+
+##############################################################################
+# lemuel_004
+
+NAME: lemuel_004
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxx@xxxxxx
+xxxxxxxxxxx.xxxxxx
+xx..............xx
+xx..............xx
+xx..xx.xxxxxxx..xx
+xx..x.......(x..xx
+xx...........x...@
+xx..x........x..xx
+xx..x...{....x..xx
+xx..x........x..xx
+@...x...........xx
+xx..x[.......x..xx
+xx..xxxxxxx.xx..xx
+xx..............xx
+xx..............xx
+xxxxxx.xxxxxxxxxxx
+xxxxxx@xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Regular vaults
+##############################################################################
+
 NAME: vault_1
 ORIENT: north
 

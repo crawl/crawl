@@ -98,7 +98,7 @@ static void place_pool(unsigned char pool_type, unsigned char pool_x1,
                        unsigned char pool_y1, unsigned char pool_x2,
                        unsigned char pool_y2);
 static void many_pools(unsigned char pool_type);
-static void join_the_dots(
+static bool join_the_dots(
     const coord_def &from,
     const coord_def &to,
     const dgn_region_list &forbidden);
@@ -5374,12 +5374,21 @@ static void build_rooms(const dgn_region_list &excluded,
     for (int i = 0; i < nrooms; i++)
     {
         dgn_region &myroom = rom[which_room];
+
+        int overlap_tries = 200;
         do
         {
-            myroom.pos.set(10 + random2(50), 10 + random2(40));
             myroom.size.set(3 + random2(8), 3 + random2(8));
+            myroom.pos.set(
+                random_range(MAPGEN_BORDER + 1,
+                             GXM - MAPGEN_BORDER - 1 - myroom.size.x),
+                random_range(MAPGEN_BORDER + 1,
+                             GYM - MAPGEN_BORDER - 1 - myroom.size.y));
         }
-        while (myroom.overlaps_any(excluded));
+        while (myroom.overlaps_any(excluded) && overlap_tries-- > 0);
+
+        if (overlap_tries < 0)
+            continue;
 
         if (connections.size())
         {
@@ -5430,7 +5439,8 @@ static void build_rooms(const dgn_region_list &excluded,
     }
 }
 
-static void dig_away_from(const vault_placement &place, const coord_def &pos)
+static coord_def dig_away_dir(const vault_placement &place,
+                              const coord_def &pos)
 {
     // Figure out which way we need to go to dig our way out of the vault.
     const bool x_edge = 
@@ -5445,14 +5455,21 @@ static void dig_away_from(const vault_placement &place, const coord_def &pos)
     if (y_edge)
         dig_dir.y = pos.y == place.y? -1 : 1;
 
+    return (dig_dir);
+}
+
+static void dig_away_from(const vault_placement &place, const coord_def &pos)
+{
+    coord_def dig_dir = dig_away_dir(place, pos);
     coord_def dig_at = pos;
     bool dug = false;
     for (int i = 0; i < GXM; i++)
     {
         dig_at += dig_dir;
         
-        if (dig_at.x < 10 || dig_at.x > (GXM - 10)
-            || dig_at.y < 10 || dig_at.y > (GYM - 10))
+        if (dig_at.x < MAPGEN_BORDER + 1 || dig_at.x > (GXM - MAPGEN_BORDER - 1)
+            || dig_at.y < MAPGEN_BORDER + 1
+            || dig_at.y > (GYM - MAPGEN_BORDER - 1))
         {
             break;
         }
@@ -5462,8 +5479,26 @@ static void dig_away_from(const vault_placement &place, const coord_def &pos)
             grd(dig_at) = DNGN_FLOOR;
             dug = true;
         }
-        else if (dug && grd(dig_at) == DNGN_FLOOR)
-            break;
+        else if (grd(dig_at) == DNGN_FLOOR && i > 0)
+        {
+            // If the floor square has at least two non-solid squares,
+            // we're done.
+            int adjacent_count = 0;
+
+            for (int yi = -1; yi <= 1; ++yi)
+            {
+                for (int xi = -1; xi <= 1; ++xi)
+                {
+                    if (!xi && !yi)
+                        continue;
+                    if (!grid_is_solid(dig_at + coord_def(xi, yi))
+                        && ++adjacent_count >= 2)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -5512,7 +5547,6 @@ static void build_vaults(int level_number, int force_vault)
 {
     // for some weird reason can't put a vault on level 1, because monster equip
     // isn't generated.
-    int i,j;                // general loop variables
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
@@ -5562,7 +5596,8 @@ static void build_vaults(int level_number, int force_vault)
     }
 
     if (place.map->has_tag("no_monster_gen"))
-        no_monster_zones.push_back( dgn_region( place.x, place.y, place.width, place.height ) );
+        no_monster_zones.push_back(
+            dgn_region( place.x, place.y, place.width, place.height ) );
 
     // If the map takes the whole screen, our work is done.
     if (gluggy == MAP_ENCOMPASS)
@@ -5576,10 +5611,10 @@ static void build_vaults(int level_number, int force_vault)
     // kind of wallification it wants.
     const bool dis_wallify = place.map->has_tag("dis");
 
-    const int v1x = place.x + 1;
-    const int v1y = place.y + 1;
-    const int v2x = place.x + place.width;
-    const int v2y = place.y + place.height;
+    const int v1x = place.x;
+    const int v1y = place.y;
+    const int v2x = place.x + place.width - 1;
+    const int v2y = place.y + place.height - 1;
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -5604,8 +5639,19 @@ static void build_vaults(int level_number, int force_vault)
         // building somewhat.
         if (gluggy == MAP_FLOAT)
             nrooms += 10;
+
+        std::vector<coord_def> ex_connection_points;
+        // Giving target_connections directly to build_rooms causes
+        // problems with long, skinny vaults where paths to the exit
+        // tend to cut through the vault. By backing out of the vault
+        // one square, we improve connectability.
+        for (int i = 0, size = target_connections.size(); i < size; ++i)
+        {
+            const coord_def &p = target_connections[i];
+            ex_connection_points.push_back(p + dig_away_dir(place, p));
+        }
         
-        build_rooms(excluded_regions, target_connections, nrooms);
+        build_rooms(excluded_regions, ex_connection_points, nrooms);
 
         // Excavate and connect the vault to the rest of the level.
         dig_vault_loose(place, target_connections);
@@ -5637,9 +5683,9 @@ static void build_vaults(int level_number, int force_vault)
             stair_exist[sty] = 0;
     }
 
-    for (j = 0; j < (coinflip()? 4 : 3); j++)
+    for (int j = 0; j < (coinflip()? 4 : 3); j++)
     {
-        for (i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             // does this look funny to *you*? {dlb}
             if (stair_exist[(82 + j + (i * 4)) - 82] == 1)   
@@ -5940,13 +5986,13 @@ bool unforbidden(const coord_def &c, const dgn_region_list &forbidden)
     return (true);
 }
 
-static void join_the_dots(
+static bool join_the_dots(
     const coord_def &from,
     const coord_def &to,
     const dgn_region_list &forbidden)
 {
     if (from == to)
-        return;
+        return (true);
 
     int join_count = 0;
 
@@ -5957,7 +6003,7 @@ static void join_the_dots(
         grd(at) = DNGN_FLOOR;
 
         if (join_count > 10000) // just insurance
-            return;
+            return (false);
 
         if (at.x < to.x
             && unforbidden(coord_def(at.x + 1, at.y), forbidden))
@@ -5995,6 +6041,8 @@ static void join_the_dots(
 
     if (in_bounds(at))
         grd(at) = DNGN_FLOOR;
+
+    return (at == to);
 }                               // end join_the_dots()
 
 static void place_pool(unsigned char pool_type, unsigned char pool_x1,
