@@ -400,7 +400,7 @@ std::string item_class_name( int type, bool terse )
         case OBJ_POTIONS:    return ("potion");
         case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
-        case OBJ_STAVES:     return ("stave");
+        case OBJ_STAVES:     return ("staff");
         case OBJ_ORBS:       return ("orb");
         case OBJ_MISCELLANY: return ("misc");
         case OBJ_CORPSES:    return ("carrion");
