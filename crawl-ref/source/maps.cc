@@ -300,6 +300,14 @@ int random_map_for_tag(const std::string &tag, bool want_minivault)
     return (mapindex);
 }
 
+const map_def *map_by_index(int index)
+{
+    if (index < 0 || index >= (int) vdefs.size())
+        return (NULL);
+    
+    return &vdefs[index];
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 

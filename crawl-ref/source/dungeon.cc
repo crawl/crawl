@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <set>
 
 #include "AppHdr.h"
 #include "abyss.h"
@@ -84,7 +85,7 @@ static void builder_items(int level_number, char level_type, int items_wanted);
 static void builder_monsters(int level_number, char level_type, int mon_wanted);
 static void place_specific_stair(unsigned char stair);
 static void place_branch_entrances(int dlevel, char level_type);
-static void place_entry_minivaults(int level_number);
+static void place_special_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
 static void prepare_swamp(void);
 static void prepare_water( int level_number );
@@ -302,6 +303,10 @@ void builder(int level_number, char level_type)
                 builder_extras(level_number, level_type);
         }
     }
+
+    // Try to place minivaults that really badly want to be placed. Still
+    // no guarantees, seeing this is a minivault.
+    place_special_minivaults(level_number, level_type);
 
     // hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level()
@@ -3781,7 +3786,7 @@ static int builder_by_type(int level_number, char level_type)
     return 0;
 }
 
-static int random_map_for_dlevel(int level_number)
+static int random_map_for_dlevel(int level_number, bool wantmini = false)
 {
     int subdepth = subdungeon_depth(you.where_are_you, level_number);
     const std::string name = level_name(subdepth);
@@ -3792,16 +3797,16 @@ static int random_map_for_dlevel(int level_number)
     if (subdepth == branch_depth( branch_stair(you.where_are_you) ))
         altname = level_name(0);
 
-    int vault = random_map_for_place(name);
+    int vault = random_map_for_place(name, wantmini);
     
     if (vault == -1)
-        vault = random_map_for_place(altname);
+        vault = random_map_for_place(altname, wantmini);
     
     if (vault == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
         && level_number == 0)
     {
-        vault = random_map_for_tag("entry", false);
+        vault = random_map_for_tag("entry", wantmini);
     }
 
     return (vault);
@@ -3816,15 +3821,6 @@ static int builder_by_branch(int level_number)
     if (vault != -1)
     {
         build_vaults(level_number, vault);
-        place_entry_minivaults(level_number);
-        
-        // link_items() is only needed if we're going to bypass the
-        // rest of the dungeon generation process (previously done
-        // only for the Vestibule of Hell). We really don't need it
-        // any more since we use the regular generation process even
-        // for the Vestibule (the Vestibule now also gets random
-        // monsters in addition to the loser Geryon).
-        link_items();
         return 1;
     }
 
@@ -3856,19 +3852,30 @@ static int builder_by_branch(int level_number)
     return 0;
 }
 
-static void place_entry_minivaults(int level_number)
+static void place_special_minivaults(int level_number, int level_type)
 {
-    if (level_number > 0 || you.where_are_you != BRANCH_MAIN_DUNGEON)
+    // Dungeon-style branches only, thankyouverymuch.
+    if (level_type != LEVEL_DUNGEON)
         return;
 
-    int chance = 50;
+    int chance = level_number == 0? 50 : 100;
+    std::set<int> used;
     while (chance && random2(100) < chance)
     {
-        const int vault = random_map_for_tag("entry", true);
+        const int vault = random_map_for_dlevel(level_number, true);
         if (vault == -1)
             break;
 
+        // If we've already used this minivault and it doesn't want duplicates,
+        // break.
+        if (used.find(vault) != used.end()
+            && !map_by_index(vault)->has_tag("allow_dup"))
+        {
+            break;
+        }
+        
         build_minivaults(level_number, vault);
+        used.insert(vault);
         chance /= 4;
     }
 }
@@ -3895,7 +3902,6 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     if (vault != -1)
     {
         build_vaults(level_number, vault);
-        place_entry_minivaults(level_number);
         return 1;
     }
 
@@ -3976,10 +3982,6 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
         }
     }
 
-    // On D:1, try to place minivaults tagged "entry". This is over
-    // and above full-fledged entry vaults.
-    place_entry_minivaults(level_number);
-    
     // maybe create a special room, if roguey_level hasn't done it
     // already.
     if (!sr.created && level_number > 5 && !done_city && one_chance_in(5))

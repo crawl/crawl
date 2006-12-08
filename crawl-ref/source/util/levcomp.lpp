@@ -68,6 +68,7 @@ NSPACE [^\ \t\r\n]
                         settext();
                         return MAP_LINE;
                     }
+<MAPDEF>[\ ][^\ \r\n]   return CHARACTER;
 
 <KEYWORDS>[A-Za-z_0-9\-]+   {
                         settext();
