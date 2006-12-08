@@ -5393,10 +5393,11 @@ static void build_rooms(const dgn_region_list &excluded,
         if (connections.size())
         {
             const coord_def c = connections[0];
-            connections.erase( connections.begin() );
-            join_the_dots(c, myroom.random_edge_point(), excluded);
+            if (join_the_dots(c, myroom.random_edge_point(), excluded))
+                connections.erase( connections.begin() );
         }
-        else if (exclusive)
+        
+        if (i > 0 && exclusive)
         {
             const coord_def end = myroom.end();
             bool found_collision = false;
@@ -5424,7 +5425,7 @@ static void build_rooms(const dgn_region_list &excluded,
         replace_area(myroom.pos.x, myroom.pos.y, end.x, end.y,
                      DNGN_ROCK_WALL, DNGN_FLOOR);
 
-        if (which_room > 0)     // && !exclusive2
+        if (which_room > 0)
         {
             join_the_dots(
                 myroom.random_edge_point(),
