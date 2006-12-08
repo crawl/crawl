@@ -18,42 +18,44 @@
 #define	CHANCE	268
 #define	FLAGS	269
 #define	MONS	270
-#define	ROOT_DEPTH	271
-#define	ENTRY_MSG	272
-#define	EXIT_MSG	273
-#define	ROCK_COLOUR	274
-#define	FLOOR_COLOUR	275
-#define	ENCOMPASS	276
-#define	FLOAT	277
-#define	NORTH	278
-#define	EAST	279
-#define	SOUTH	280
-#define	WEST	281
-#define	NORTHEAST	282
-#define	SOUTHEAST	283
-#define	SOUTHWEST	284
-#define	NORTHWEST	285
-#define	LEVEL	286
-#define	END	287
-#define	PVAULT	288
-#define	PMINIVAULT	289
-#define	MONSTERS	290
-#define	ENDMONSTERS	291
-#define	CHARACTER	292
-#define	NO_HMIRROR	293
-#define	NO_VMIRROR	294
-#define	NO_ROTATE	295
-#define	PANDEMONIC	296
-#define	DASH	297
-#define	COMMA	298
-#define	QUOTE	299
-#define	OPAREN	300
-#define	CPAREN	301
-#define	INTEGER	302
-#define	STRING	303
-#define	MAP_LINE	304
-#define	MONSTER_NAME	305
-#define	IDENTIFIER	306
+#define	ITEM	271
+#define	ROOT_DEPTH	272
+#define	ENTRY_MSG	273
+#define	EXIT_MSG	274
+#define	ROCK_COLOUR	275
+#define	FLOOR_COLOUR	276
+#define	ENCOMPASS	277
+#define	FLOAT	278
+#define	NORTH	279
+#define	EAST	280
+#define	SOUTH	281
+#define	WEST	282
+#define	NORTHEAST	283
+#define	SOUTHEAST	284
+#define	SOUTHWEST	285
+#define	NORTHWEST	286
+#define	LEVEL	287
+#define	END	288
+#define	PVAULT	289
+#define	PMINIVAULT	290
+#define	MONSTERS	291
+#define	ENDMONSTERS	292
+#define	CHARACTER	293
+#define	NO_HMIRROR	294
+#define	NO_VMIRROR	295
+#define	NO_ROTATE	296
+#define	PANDEMONIC	297
+#define	DASH	298
+#define	COMMA	299
+#define	QUOTE	300
+#define	OPAREN	301
+#define	CPAREN	302
+#define	INTEGER	303
+#define	STRING	304
+#define	MAP_LINE	305
+#define	MONSTER_NAME	306
+#define	ITEM_INFO	307
+#define	IDENTIFIER	308
 
 #line 1 "levcomp.ypp"
 
@@ -61,6 +63,7 @@
 #include "AppHdr.h"
 #include "libutil.h"
 #include "levcomp.h"
+#include "stuff.h"
 
 int yylex();
 
@@ -68,13 +71,14 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
+    io_cleanup();
     fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     exit(1);
 }
 
 
-#line 20 "levcomp.ypp"
+#line 22 "levcomp.ypp"
 typedef union
 {
     int i;
@@ -90,11 +94,11 @@ typedef union
 
 
 
-#define	YYFINAL		71
+#define	YYFINAL		78
 #define	YYFLAG		-32768
-#define	YYNTBASE	53
+#define	YYNTBASE	55
 
-#define YYTRANSLATE(x) ((unsigned)(x) <= 306 ? yytranslate[x] : 80)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 308 ? yytranslate[x] : 85)
 
 static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -127,46 +131,49 @@ static const char yytranslate[] = {     0,
     17,    18,    19,    20,    21,    22,    23,    24,    25,    26,
     27,    28,    29,    30,    31,    32,    33,    34,    35,    36,
     37,    38,    39,    40,    41,    42,    43,    44,    45,    46,
-    47,    48,    49,    50,    51,    52
+    47,    48,    49,    50,    51,    52,    53,    54
 };
 
 #if YYDEBUG != 0
 static const short yyprhs[] = {     0,
      0,     2,     3,     6,     8,    10,    12,    15,    20,    23,
     24,    27,    29,    31,    33,    35,    37,    39,    41,    43,
-    46,    47,    50,    52,    55,    57,    60,    64,    66,    68,
-    71,    73,    76,    80,    82,    85,    87,    90,    92,    94,
-    96,    98,   100,   102,   104,   106,   108,   110,   113,   114,
-   117,   119,   121,   123,   125,   127,   130
+    45,    48,    49,    52,    54,    57,    59,    62,    66,    68,
+    70,    72,    75,    79,    81,    83,    86,    88,    91,    95,
+    97,   100,   102,   105,   107,   109,   111,   113,   115,   117,
+   119,   121,   123,   125,   128,   129,   132,   134,   136,   138,
+   140,   142,   145
 };
 
-static const short yyrhs[] = {    54,
-     0,     0,    55,    54,     0,    56,     0,    58,     0,    57,
-     0,     7,    70,     0,    59,    60,    77,    60,     0,    10,
-    49,     0,     0,    61,    60,     0,    68,     0,    69,     0,
-    71,     0,    72,     0,    74,     0,    65,     0,    64,     0,
-    62,     0,     9,    63,     0,     0,    49,    63,     0,     8,
-     0,     8,    49,     0,    16,     0,    16,    66,     0,    67,
-    44,    66,     0,    67,     0,    51,     0,    13,    49,     0,
-    11,     0,    11,    70,     0,    48,    43,    48,     0,    48,
-     0,    14,    48,     0,    12,     0,    12,    73,     0,    22,
-     0,    24,     0,    25,     0,    26,     0,    27,     0,    28,
-     0,    29,     0,    30,     0,    31,     0,    23,     0,    15,
-    75,     0,     0,    76,    75,     0,    39,     0,    40,     0,
-    41,     0,    78,     0,    79,     0,    79,    78,     0,    50,
-     0
+static const short yyrhs[] = {    56,
+     0,     0,    57,    56,     0,    58,     0,    60,     0,    59,
+     0,     7,    75,     0,    61,    62,    82,    62,     0,    10,
+    50,     0,     0,    63,    62,     0,    73,     0,    74,     0,
+    76,     0,    77,     0,    79,     0,    70,     0,    67,     0,
+    66,     0,    64,     0,     9,    65,     0,     0,    50,    65,
+     0,     8,     0,     8,    50,     0,    17,     0,    17,    68,
+     0,    69,    45,    68,     0,    69,     0,    53,     0,    16,
+     0,    16,    71,     0,    72,    45,    71,     0,    72,     0,
+    52,     0,    13,    50,     0,    11,     0,    11,    75,     0,
+    49,    44,    49,     0,    49,     0,    14,    49,     0,    12,
+     0,    12,    78,     0,    23,     0,    25,     0,    26,     0,
+    27,     0,    28,     0,    29,     0,    30,     0,    31,     0,
+    32,     0,    24,     0,    15,    80,     0,     0,    81,    80,
+     0,    40,     0,    41,     0,    42,     0,    83,     0,    84,
+     0,    84,    83,     0,    51,     0
 };
 
 #endif
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    52,    55,    56,    59,    60,    63,    66,    72,   111,   119,
-   120,   123,   124,   125,   126,   127,   128,   129,   130,   133,
-   136,   137,   145,   146,   152,   153,   156,   157,   160,   173,
-   179,   180,   186,   191,   197,   203,   204,   210,   211,   212,
-   213,   214,   215,   216,   217,   218,   219,   222,   225,   226,
-   242,   243,   244,   247,   250,   251,   254
+    54,    57,    58,    61,    62,    65,    68,    74,   113,   121,
+   122,   125,   126,   127,   128,   129,   130,   131,   132,   133,
+   136,   139,   140,   148,   149,   155,   156,   159,   160,   163,
+   178,   179,   182,   183,   186,   201,   207,   208,   214,   219,
+   225,   231,   232,   238,   239,   240,   241,   242,   243,   244,
+   245,   246,   247,   250,   253,   254,   270,   271,   272,   275,
+   278,   279,   282
 };
 #endif
 
@@ -175,88 +182,93 @@ static const short yyrline[] = { 0,
 
 static const char * const yytname[] = {   "$","error","$undefined.","BRANCHDEF",
 "BRANCH","DESC","DEFAULT","DEFAULT_DEPTH","SYMBOL","TAGS","NAME","DEPTH","ORIENT",
-"PLACE","CHANCE","FLAGS","MONS","ROOT_DEPTH","ENTRY_MSG","EXIT_MSG","ROCK_COLOUR",
+"PLACE","CHANCE","FLAGS","MONS","ITEM","ROOT_DEPTH","ENTRY_MSG","EXIT_MSG","ROCK_COLOUR",
 "FLOOR_COLOUR","ENCOMPASS","FLOAT","NORTH","EAST","SOUTH","WEST","NORTHEAST",
 "SOUTHEAST","SOUTHWEST","NORTHWEST","LEVEL","END","PVAULT","PMINIVAULT","MONSTERS",
 "ENDMONSTERS","CHARACTER","NO_HMIRROR","NO_VMIRROR","NO_ROTATE","PANDEMONIC",
 "DASH","COMMA","QUOTE","OPAREN","CPAREN","INTEGER","STRING","MAP_LINE","MONSTER_NAME",
-"IDENTIFIER","file","definitions","definition","def","defdepth","level","name",
-"metalines","metaline","tags","tagstrings","symbol","mons","mnames","mname",
-"place","depth","depth_range","chance","orientation","orient_name","flags","flagnames",
-"flagname","map_def","map_lines","map_line", NULL
+"ITEM_INFO","IDENTIFIER","file","definitions","definition","def","defdepth",
+"level","name","metalines","metaline","tags","tagstrings","symbol","items","item_specifiers",
+"item_specifier","mons","mnames","mname","place","depth","depth_range","chance",
+"orientation","orient_name","flags","flagnames","flagname","map_def","map_lines",
+"map_line", NULL
 };
 #endif
 
 static const short yyr1[] = {     0,
-    53,    54,    54,    55,    55,    56,    57,    58,    59,    60,
-    60,    61,    61,    61,    61,    61,    61,    61,    61,    62,
-    63,    63,    64,    64,    65,    65,    66,    66,    67,    68,
-    69,    69,    70,    70,    71,    72,    72,    73,    73,    73,
-    73,    73,    73,    73,    73,    73,    73,    74,    75,    75,
-    76,    76,    76,    77,    78,    78,    79
+    55,    56,    56,    57,    57,    58,    59,    60,    61,    62,
+    62,    63,    63,    63,    63,    63,    63,    63,    63,    63,
+    64,    65,    65,    66,    66,    67,    67,    68,    68,    69,
+    70,    70,    71,    71,    72,    73,    74,    74,    75,    75,
+    76,    77,    77,    78,    78,    78,    78,    78,    78,    78,
+    78,    78,    78,    79,    80,    80,    81,    81,    81,    82,
+    83,    83,    84
 };
 
 static const short yyr2[] = {     0,
      1,     0,     2,     1,     1,     1,     2,     4,     2,     0,
-     2,     1,     1,     1,     1,     1,     1,     1,     1,     2,
-     0,     2,     1,     2,     1,     2,     3,     1,     1,     2,
-     1,     2,     3,     1,     2,     1,     2,     1,     1,     1,
-     1,     1,     1,     1,     1,     1,     1,     2,     0,     2,
-     1,     1,     1,     1,     1,     2,     1
+     2,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+     2,     0,     2,     1,     2,     1,     2,     3,     1,     1,
+     1,     2,     3,     1,     1,     2,     1,     2,     3,     1,
+     2,     1,     2,     1,     1,     1,     1,     1,     1,     1,
+     1,     1,     1,     2,     0,     2,     1,     1,     1,     1,
+     1,     2,     1
 };
 
 static const short yydefact[] = {     2,
-     0,     0,     1,     2,     4,     6,     5,    10,    34,     7,
-     9,     3,    23,    21,    31,    36,     0,     0,    49,    25,
-     0,    10,    19,    18,    17,    12,    13,    14,    15,    16,
-     0,    24,    21,    20,    32,    38,    47,    39,    40,    41,
-    42,    43,    44,    45,    46,    37,    30,    35,    51,    52,
-    53,    48,    49,    29,    26,    28,    57,    10,    54,    55,
-    11,    33,    22,    50,     0,     8,    56,    27,     0,     0,
-     0
+     0,     0,     1,     2,     4,     6,     5,    10,    40,     7,
+     9,     3,    24,    22,    37,    42,     0,     0,    55,    31,
+    26,     0,    10,    20,    19,    18,    17,    12,    13,    14,
+    15,    16,     0,    25,    22,    21,    38,    44,    53,    45,
+    46,    47,    48,    49,    50,    51,    52,    43,    36,    41,
+    57,    58,    59,    54,    55,    35,    32,    34,    30,    27,
+    29,    63,    10,    60,    61,    11,    39,    23,    56,     0,
+     0,     8,    62,    33,    28,     0,     0,     0
 };
 
-static const short yydefgoto[] = {    69,
-     3,     4,     5,     6,     7,     8,    21,    22,    23,    34,
-    24,    25,    55,    56,    26,    27,    10,    28,    29,    46,
-    30,    52,    53,    58,    59,    60
+static const short yydefgoto[] = {    76,
+     3,     4,     5,     6,     7,     8,    22,    23,    24,    36,
+    25,    26,    60,    61,    27,    57,    58,    28,    29,    10,
+    30,    31,    48,    32,    54,    55,    63,    64,    65
 };
 
-static const short yypact[] = {    13,
-   -35,   -28,-32768,    13,-32768,-32768,-32768,     3,   -16,-32768,
--32768,-32768,   -27,   -20,   -35,   -21,   -19,   -17,   -15,   -23,
-   -18,     3,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
-   -14,-32768,   -20,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
+static const short yypact[] = {    14,
+   -36,   -28,-32768,    14,-32768,-32768,-32768,     3,   -21,-32768,
+-32768,-32768,   -20,   -19,   -36,   -22,   -18,   -16,   -15,   -24,
+   -17,   -14,     3,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
+-32768,-32768,   -11,-32768,   -19,-32768,-32768,-32768,-32768,-32768,
 -32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,-32768,
--32768,-32768,   -15,-32768,-32768,   -11,-32768,     3,-32768,   -18,
--32768,-32768,-32768,-32768,   -23,-32768,-32768,-32768,    35,    37,
--32768
+-32768,-32768,-32768,-32768,   -15,-32768,-32768,   -10,-32768,-32768,
+    -6,-32768,     3,-32768,   -14,-32768,-32768,-32768,-32768,   -24,
+   -17,-32768,-32768,-32768,-32768,    29,    34,-32768
 };
 
 static const short yypgoto[] = {-32768,
-    34,-32768,-32768,-32768,-32768,-32768,   -22,-32768,-32768,     6,
--32768,-32768,   -25,-32768,-32768,-32768,    26,-32768,-32768,-32768,
--32768,   -10,-32768,-32768,   -13,-32768
+    37,-32768,-32768,-32768,-32768,-32768,   -23,-32768,-32768,     7,
+-32768,-32768,   -27,-32768,-32768,   -25,-32768,-32768,-32768,    28,
+-32768,-32768,-32768,-32768,    -9,-32768,-32768,   -13,-32768
 };
 
 
-#define	YYLAST		47
+#define	YYLAST		52
 
 
-static const short yytable[] = {    61,
-    36,    37,    38,    39,    40,    41,    42,    43,    44,    45,
-    13,    14,     9,    15,    16,    17,    18,    19,    20,     1,
-    11,    32,     2,    49,    50,    51,    31,    54,    33,    47,
-    48,    57,    65,    62,    70,    66,    71,    12,    63,    68,
-    35,     0,    64,     0,     0,     0,    67
+static const short yytable[] = {    66,
+    38,    39,    40,    41,    42,    43,    44,    45,    46,    47,
+    13,    14,     9,    15,    16,    17,    18,    19,    20,    21,
+     1,    11,    33,     2,    51,    52,    53,    56,    77,    34,
+    35,    49,    50,    78,    70,    59,    62,    67,    71,    72,
+    12,    68,    37,    75,    74,    69,     0,     0,     0,     0,
+     0,    73
 };
 
-static const short yycheck[] = {    22,
-    22,    23,    24,    25,    26,    27,    28,    29,    30,    31,
-     8,     9,    48,    11,    12,    13,    14,    15,    16,     7,
-    49,    49,    10,    39,    40,    41,    43,    51,    49,    49,
-    48,    50,    44,    48,     0,    58,     0,     4,    33,    65,
-    15,    -1,    53,    -1,    -1,    -1,    60
+static const short yycheck[] = {    23,
+    23,    24,    25,    26,    27,    28,    29,    30,    31,    32,
+     8,     9,    49,    11,    12,    13,    14,    15,    16,    17,
+     7,    50,    44,    10,    40,    41,    42,    52,     0,    50,
+    50,    50,    49,     0,    45,    53,    51,    49,    45,    63,
+     4,    35,    15,    71,    70,    55,    -1,    -1,    -1,    -1,
+    -1,    65
 };
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
 #line 3 "/usr/share/bison.simple"
@@ -802,33 +814,33 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 52 "levcomp.ypp"
+#line 54 "levcomp.ypp"
 { ;
     break;}
 case 2:
-#line 55 "levcomp.ypp"
+#line 57 "levcomp.ypp"
 {;
     break;}
 case 3:
-#line 56 "levcomp.ypp"
+#line 58 "levcomp.ypp"
 {;
     break;}
 case 4:
-#line 59 "levcomp.ypp"
+#line 61 "levcomp.ypp"
 {;
     break;}
 case 5:
-#line 60 "levcomp.ypp"
+#line 62 "levcomp.ypp"
 {;
     break;}
 case 7:
-#line 67 "levcomp.ypp"
+#line 69 "levcomp.ypp"
 {
                     lc_default_depth = lc_range;
                 ;
     break;}
 case 8:
-#line 73 "levcomp.ypp"
+#line 75 "levcomp.ypp"
 {
                     if (lc_map.orient == MAP_FLOAT
                         || lc_map.is_minivault())
@@ -867,45 +879,69 @@ case 8:
                 ;
     break;}
 case 9:
-#line 112 "levcomp.ypp"
+#line 114 "levcomp.ypp"
 {
                     lc_map.init();
                     lc_map.depth = lc_default_depth;
                     lc_map.name = yyvsp[0].text;
                 ;
     break;}
-case 20:
-#line 133 "levcomp.ypp"
+case 21:
+#line 136 "levcomp.ypp"
 {;
     break;}
-case 22:
-#line 138 "levcomp.ypp"
+case 23:
+#line 141 "levcomp.ypp"
 {
                     lc_map.tags += " ";
                     lc_map.tags += yyvsp[-1].text;
                     lc_map.tags += " ";
                 ;
     break;}
-case 23:
-#line 145 "levcomp.ypp"
+case 24:
+#line 148 "levcomp.ypp"
 {;
     break;}
-case 24:
-#line 147 "levcomp.ypp"
+case 25:
+#line 150 "levcomp.ypp"
 {
                     lc_map.random_symbols = yyvsp[0].text;
                 ;
     break;}
-case 25:
-#line 152 "levcomp.ypp"
-{;
-    break;}
 case 26:
-#line 153 "levcomp.ypp"
+#line 155 "levcomp.ypp"
 {;
     break;}
-case 29:
-#line 161 "levcomp.ypp"
+case 27:
+#line 156 "levcomp.ypp"
+{;
+    break;}
+case 30:
+#line 164 "levcomp.ypp"
+{
+                    std::string error = lc_map.items.add_item(yyvsp[0].text);
+                    if (error.size())
+                    {
+                        char errbuf[300];
+                        snprintf(errbuf, sizeof errbuf,
+                            "Invalid item descriptor: '%s' (%s)",
+                                yyvsp[0].text, error.c_str());
+                        yyerror(errbuf);
+                    }
+                    if (lc_map.items.size() > 8)
+                        yyerror("Too many items specified (max 8)");
+                ;
+    break;}
+case 31:
+#line 178 "levcomp.ypp"
+{;
+    break;}
+case 32:
+#line 179 "levcomp.ypp"
+{;
+    break;}
+case 35:
+#line 187 "levcomp.ypp"
 {
                     bool recognised = lc_map.mons.add_mons(yyvsp[0].text);
                     if (!recognised)
@@ -915,98 +951,100 @@ case 29:
                                  yyvsp[0].text);
                         yyerror(buf);
                     }
+                    if (lc_map.mons.size() > 7)
+                        yyerror("Too many monsters specified (max 7)");
                 ;
     break;}
-case 30:
-#line 174 "levcomp.ypp"
+case 36:
+#line 202 "levcomp.ypp"
 {
                     lc_map.place = yyvsp[0].text;
                 ;
     break;}
-case 31:
-#line 179 "levcomp.ypp"
+case 37:
+#line 207 "levcomp.ypp"
 {;
     break;}
-case 32:
-#line 181 "levcomp.ypp"
+case 38:
+#line 209 "levcomp.ypp"
 {
                     lc_map.depth = lc_range;
                 ;
     break;}
-case 33:
-#line 187 "levcomp.ypp"
+case 39:
+#line 215 "levcomp.ypp"
 {
                     lc_range.set(yyvsp[-2].i, yyvsp[0].i);
                 ;
     break;}
-case 34:
-#line 192 "levcomp.ypp"
+case 40:
+#line 220 "levcomp.ypp"
 {
                     lc_range.set(yyvsp[0].i);
                 ;
     break;}
-case 35:
-#line 198 "levcomp.ypp"
+case 41:
+#line 226 "levcomp.ypp"
 {
                     lc_map.chance = yyvsp[0].i;
                 ;
     break;}
-case 36:
-#line 203 "levcomp.ypp"
+case 42:
+#line 231 "levcomp.ypp"
 {;
     break;}
-case 37:
-#line 205 "levcomp.ypp"
+case 43:
+#line 233 "levcomp.ypp"
 {
                     lc_map.orient = (map_section_type) yyvsp[0].i;
                 ;
     break;}
-case 38:
-#line 210 "levcomp.ypp"
+case 44:
+#line 238 "levcomp.ypp"
 { yyval.i = MAP_ENCOMPASS; ;
     break;}
-case 39:
-#line 211 "levcomp.ypp"
+case 45:
+#line 239 "levcomp.ypp"
 { yyval.i = MAP_NORTH; ;
     break;}
-case 40:
-#line 212 "levcomp.ypp"
+case 46:
+#line 240 "levcomp.ypp"
 { yyval.i = MAP_EAST; ;
     break;}
-case 41:
-#line 213 "levcomp.ypp"
+case 47:
+#line 241 "levcomp.ypp"
 { yyval.i = MAP_SOUTH; ;
     break;}
-case 42:
-#line 214 "levcomp.ypp"
+case 48:
+#line 242 "levcomp.ypp"
 { yyval.i = MAP_WEST; ;
     break;}
-case 43:
-#line 215 "levcomp.ypp"
+case 49:
+#line 243 "levcomp.ypp"
 { yyval.i = MAP_NORTHEAST; ;
     break;}
-case 44:
-#line 216 "levcomp.ypp"
+case 50:
+#line 244 "levcomp.ypp"
 { yyval.i = MAP_SOUTHEAST; ;
     break;}
-case 45:
-#line 217 "levcomp.ypp"
+case 51:
+#line 245 "levcomp.ypp"
 { yyval.i = MAP_SOUTHWEST; ;
     break;}
-case 46:
-#line 218 "levcomp.ypp"
+case 52:
+#line 246 "levcomp.ypp"
 { yyval.i = MAP_NORTHWEST; ;
     break;}
-case 47:
-#line 219 "levcomp.ypp"
+case 53:
+#line 247 "levcomp.ypp"
 { yyval.i = MAP_FLOAT; ;
     break;}
-case 48:
-#line 222 "levcomp.ypp"
+case 54:
+#line 250 "levcomp.ypp"
 {;
     break;}
-case 50:
-#line 227 "levcomp.ypp"
+case 56:
+#line 255 "levcomp.ypp"
 {
                     switch (yyvsp[-1].i) {
                     case NO_HMIRROR:
@@ -1021,20 +1059,20 @@ case 50:
                     }
                 ;
     break;}
-case 51:
-#line 242 "levcomp.ypp"
+case 57:
+#line 270 "levcomp.ypp"
 { yyval.i = NO_HMIRROR; ;
     break;}
-case 52:
-#line 243 "levcomp.ypp"
+case 58:
+#line 271 "levcomp.ypp"
 { yyval.i = NO_VMIRROR; ;
     break;}
-case 53:
-#line 244 "levcomp.ypp"
+case 59:
+#line 272 "levcomp.ypp"
 { yyval.i = NO_ROTATE;  ;
     break;}
-case 57:
-#line 255 "levcomp.ypp"
+case 63:
+#line 283 "levcomp.ypp"
 {
                     lc_map.map.add_line(yyvsp[0].text);
                 ;
@@ -1261,5 +1299,5 @@ yyerrhandle:
     }
   return 1;
 }
-#line 260 "levcomp.ypp"
+#line 288 "levcomp.ypp"
 

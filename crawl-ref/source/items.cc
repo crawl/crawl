@@ -43,6 +43,7 @@
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -2998,6 +2999,128 @@ int inv_count(void)
     }
 
     return count;
+}
+
+static bool find_subtype_by_name(item_def &item,
+                                 int base_type, int ntypes,
+                                 const std::string &name)
+{
+    // In order to get the sub-type, we'll fill out the base type... 
+    // then we're going to iterate over all possible subtype values 
+    // and see if we get a winner. -- bwr
+
+    item.base_type = base_type;
+    item.sub_type  = OBJ_RANDOM;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.special   = 0;
+    item.flags     = 0;
+    item.quantity  = 1;
+    set_ident_flags( item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES );
+
+    if (base_type == OBJ_ARMOUR) 
+    {
+        if (name.find("wizard's hat") != std::string::npos)
+        {
+            item.sub_type = ARM_HELMET;
+            item.plus2 = THELM_WIZARD_HAT;
+        }
+        else if (name == "cap") // Don't search - too many possible collisions
+        {
+            item.sub_type = ARM_HELMET;
+            item.plus2 = THELM_CAP;
+        }
+        else if (name == "helm")  // Don't search.
+        {
+            item.sub_type = ARM_HELMET;
+            item.plus2 = THELM_HELM;
+        }
+    }
+
+    if (item.sub_type != OBJ_RANDOM)
+        return (true);
+
+    int type_wanted = -1;
+    int best_index  = 10000;
+
+    char obj_name[ITEMNAME_SIZE];
+    const char *ptr;
+    for (int i = 0; i < ntypes; i++)
+    {
+        item.sub_type = i;     
+        item_name( item, DESC_PLAIN, obj_name );
+
+        ptr = strstr( strlwr(obj_name), name.c_str() );
+        if (ptr != NULL)
+        {
+            // earliest match is the winner
+            if (ptr - obj_name < best_index)
+            {
+                type_wanted = i;    
+                best_index = ptr - obj_name;
+            }
+        }
+    }
+
+    if (type_wanted != -1)
+        item.sub_type = type_wanted;
+    else
+        item.sub_type = OBJ_RANDOM;
+
+    return (item.sub_type != OBJ_RANDOM);
+}
+
+// Returns an incomplete item_def with base_type and sub_type set correctly
+// for the given item name. If the name is not found, sets sub_type to
+// OBJ_RANDOM.
+item_def find_item_type(int base_type, std::string name)
+{
+    item_def item;
+    item.base_type = OBJ_RANDOM;
+    item.sub_type  = OBJ_RANDOM;
+    lowercase(name);
+
+    if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
+        base_type = -1;
+    
+    static int max_subtype[] = 
+    {
+        NUM_WEAPONS,
+        NUM_MISSILES,
+        NUM_ARMOURS,
+        NUM_WANDS,
+        NUM_FOODS,
+        0,              // unknown I
+        NUM_SCROLLS,
+        NUM_JEWELLERY,
+        NUM_POTIONS,
+        0,              // unknown II
+        NUM_BOOKS,
+        NUM_STAVES,
+        0,              // Orbs         -- only one, handled specially
+        NUM_MISCELLANY,
+        0,              // corpses      -- handled specially
+        0,              // gold         -- handled specially
+        0,              // "gemstones"  -- no items of type
+    };
+
+    if (base_type == -1)
+    {
+        for (unsigned i = 0; i < sizeof(max_subtype) / sizeof(*max_subtype);
+             ++i)
+        {
+            if (!max_subtype[i])
+                continue;
+            if (find_subtype_by_name(item, i, max_subtype[i], name))
+                break;
+        }
+    }
+    else
+    {
+        find_subtype_by_name(item, base_type, max_subtype[base_type], name);
+    }
+
+    return (item);
 }
 
 #ifdef ALLOW_DESTROY_ITEM_COMMAND

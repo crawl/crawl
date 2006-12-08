@@ -656,14 +656,13 @@ void level_travel( int delta )
 }                               // end level_travel()
 #endif
 
-
+#ifdef WIZARD
 //---------------------------------------------------------------
 //
 // create_spec_object
 //
 //---------------------------------------------------------------
-#ifdef WIZARD
-void create_spec_object(void)
+void create_spec_object()
 {
     static int max_subtype[] = 
     {
@@ -701,7 +700,7 @@ void create_spec_object(void)
 
     int            thing_created;
 
-    for (;;) 
+    while (class_wanted == OBJ_UNASSIGNED) 
     {
         mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
              MSGCH_PROMPT);
@@ -748,9 +747,6 @@ void create_spec_object(void)
             canned_msg( MSG_OK );
             return;
         }
-
-        if (class_wanted != OBJ_UNASSIGNED)
-            break;
     }
 
     // allocate an item to play with:

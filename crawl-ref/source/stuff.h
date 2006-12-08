@@ -51,6 +51,7 @@ int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
 int skill_bump( int skill );
 unsigned char get_ch(void);
 
+void io_cleanup();
 void end(int end_arg);
 
 void modify_all_stats(int STmod, int IQmod, int DXmod);

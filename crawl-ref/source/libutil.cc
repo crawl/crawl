@@ -70,6 +70,19 @@ void play_sound( const char *file )
 #endif
 }
 
+std::string make_stringf(const char *s, ...)
+{
+    va_list args;
+    va_start(args, s);
+
+    char buf[400];
+    vsnprintf(buf, sizeof buf, s, args);
+
+    va_end(args);
+
+    return (buf);
+}
+
 void uppercase(std::string &s)
 {
     /* yes, this is bad, but std::transform() has its own problems */

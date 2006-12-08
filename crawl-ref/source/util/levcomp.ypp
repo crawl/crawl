@@ -3,6 +3,7 @@
 #include "AppHdr.h"
 #include "libutil.h"
 #include "levcomp.h"
+#include "stuff.h"
 
 int yylex();
 
@@ -10,6 +11,7 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
+    io_cleanup();
     fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     exit(1);
@@ -25,7 +27,7 @@ void yyerror(const char *e)
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
 %token <i>      DEFAULT_DEPTH SYMBOL TAGS
-%token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS
+%token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS ITEM
 %token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
 %token <i>      ROCK_COLOUR FLOOR_COLOUR
 %token <i>      ENCOMPASS FLOAT 
@@ -44,7 +46,7 @@ void yyerror(const char *e)
 
 %type  <i>      orient_name flagname
 
-%token <text>   STRING MAP_LINE MONSTER_NAME
+%token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
 %token <text>   IDENTIFIER
 
 %%
@@ -126,6 +128,7 @@ metaline        : place
                 | orientation
                 | flags
                 | mons
+                | items
                 | symbol
                 | tags
                 ;
@@ -149,6 +152,29 @@ symbol          : SYMBOL {}
                 }
                 ;
 
+items           : ITEM {}
+                | ITEM item_specifiers {}
+                ;
+
+item_specifiers : item_specifier COMMA item_specifiers
+                | item_specifier
+                ;
+
+item_specifier  : ITEM_INFO
+                {
+                    std::string error = lc_map.items.add_item($1);
+                    if (error.size())
+                    {
+                        char errbuf[300];
+                        snprintf(errbuf, sizeof errbuf,
+                            "Invalid item descriptor: '%s' (%s)",
+                                $1, error.c_str());
+                        yyerror(errbuf);
+                    }
+                    if (lc_map.items.size() > 8)
+                        yyerror("Too many items specified (max 8)");
+                }
+                
 mons            : MONS {}
                 | MONS mnames {}
                 ;
@@ -167,6 +193,8 @@ mname           : MONSTER_NAME
                                  $1);
                         yyerror(buf);
                     }
+                    if (lc_map.mons.size() > 7)
+                        yyerror("Too many monsters specified (max 7)");
                 }
                 ;
 

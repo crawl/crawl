@@ -203,9 +203,6 @@ int main( int argc, char *argv[] )
     // Read the init file
     init_file_location = read_init_file();
 
-    // Read special levels and vaults.
-    read_maps();
-
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
 
@@ -2716,6 +2713,9 @@ static bool initialise(void)
 
     // initialize tag system before we try loading anything!
     tag_init();
+
+    // Read special levels and vaults.
+    read_maps();
 
     // sets up a new game:
     bool newc = new_game();

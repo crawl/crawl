@@ -84,6 +84,7 @@ static void builder_items(int level_number, char level_type, int items_wanted);
 static void builder_monsters(int level_number, char level_type, int mon_wanted);
 static void place_specific_stair(unsigned char stair);
 static void place_branch_entrances(int dlevel, char level_type);
+static void place_entry_minivaults(int level_number);
 static void place_traps( int level_number );
 static void prepare_swamp(void);
 static void prepare_water( int level_number );
@@ -144,11 +145,12 @@ static void jelly_pit(int level_number, spec_room &sr);
 // VAULT FUNCTIONS
 static void build_vaults(int level_number, int vault_number);
 static void build_minivaults(int level_number, int force_vault);
-static int vault_grid( int level_number, int vx, int vy, int altar_count,
+static int vault_grid( const vault_placement &,
+                       int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
                        FixedVector < int, 7 > &mons_array,
                        char vgrid, std::vector<coord_def> &targets,
-                       int force_vault, int &num_runes );
+                       int &num_runes );
 
 // ALTAR FUNCTIONS
 static int pick_an_altar(void);
@@ -3814,6 +3816,7 @@ static int builder_by_branch(int level_number)
     if (vault != -1)
     {
         build_vaults(level_number, vault);
+        place_entry_minivaults(level_number);
         
         // link_items() is only needed if we're going to bypass the
         // rest of the dungeon generation process (previously done
@@ -3853,6 +3856,23 @@ static int builder_by_branch(int level_number)
     return 0;
 }
 
+static void place_entry_minivaults(int level_number)
+{
+    if (level_number > 0 || you.where_are_you != BRANCH_MAIN_DUNGEON)
+        return;
+
+    int chance = 50;
+    while (chance && random2(100) < chance)
+    {
+        const int vault = random_map_for_tag("entry", true);
+        if (vault == -1)
+            break;
+
+        build_minivaults(level_number, vault);
+        chance /= 4;
+    }
+}
+
 // returns 1 if we should dispense with city building,
 // 0 otherwise.  Also sets special_room if one is generated
 // so that we can link it up later.
@@ -3866,6 +3886,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
 
     int vault = random_map_for_dlevel(level_number); 
 
+    // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
             && player_in_branch( BRANCH_MAIN_DUNGEON ) 
             && level_number > 10 && level_number < 26 && one_chance_in(9))
@@ -3873,8 +3894,8 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
 
     if (vault != -1)
     {
-        // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
         build_vaults(level_number, vault);
+        place_entry_minivaults(level_number);
         return 1;
     }
 
@@ -3955,6 +3976,10 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
         }
     }
 
+    // On D:1, try to place minivaults tagged "entry". This is over
+    // and above full-fledged entry vaults.
+    place_entry_minivaults(level_number);
+    
     // maybe create a special room, if roguey_level hasn't done it
     // already.
     if (!sr.created && level_number > 5 && !done_city && one_chance_in(5))
@@ -5322,10 +5347,11 @@ static void build_minivaults(int level_number, int force_vault)
     {
         for (vy = v1y; vy < v1y + place.height; vy++)
         {
-            altar_count = vault_grid( level_number, vx, vy, altar_count, 
+            altar_count = vault_grid( place,
+                                      level_number, vx, vy, altar_count, 
                                       acq_item_class, mons_array, 
                                       grd[vx][vy], dummy, 
-                                      force_vault, num_runes );
+                                      num_runes );
         }
     }
 }                               // end build_minivaults()
@@ -5524,11 +5550,12 @@ static void build_vaults(int level_number, int force_vault)
     {
         for (vy = 0; vy < GYM; vy++)
         {
-            altar_count = vault_grid( level_number, vx, vy, altar_count, 
+            altar_count = vault_grid( place,
+                                      level_number, vx, vy, altar_count, 
                                       acq_item_class, mons_array, 
                                       vgrid[vy][vx],
                                       target_connections,
-                                      force_vault, num_runes );
+                                      num_runes );
         }
     }
 
@@ -5631,15 +5658,71 @@ static void build_vaults(int level_number, int force_vault)
     }
 }                               // end build_vaults()
 
+static const item_spec *dngn_item_by_weight(const item_spec_list &specs)
+{
+    int cumulative = 0;
+    const item_spec *spec = NULL;
+    for (item_spec_list::const_iterator i = specs.begin();
+         i != specs.end(); ++i)
+    {
+        const int weight = i->genweight;
+        if (random2(cumulative += weight) < weight)
+            spec = &*i;
+    }
+    return (spec);
+}
+
+static void dngn_place_item_explicit(int index, int x, int y,
+                                     const vault_placement &place,
+                                     int level)
+{
+    const map_def *map = place.map;
+    const std::vector<item_spec_list> &itemlist = map->items.get_items();
+    if (index < 0 || index >= (int) itemlist.size())
+    {
+        // Non-fatal, but we warn even in non-debug mode so there's incentive
+        // to fix the problem.
+        mprf(MSGCH_DIAGNOSTICS, "Map '%s' requested invalid item index: %d",
+             map->name.c_str(),
+             index);
+        return;
+    }
+
+    const item_spec *spec = dngn_item_by_weight(itemlist[index]);
+    if (!spec)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Map '%s' bad item spec for %d",
+             map->name.c_str(),
+             index);
+        return;
+    }
+
+    if (spec->level >= 0)
+        level = spec->level;
+
+    const int item_made =
+        items( spec->allow_uniques, spec->base_type, spec->sub_type, true, 
+               level, spec->race );
+    
+    if (item_made != NON_ITEM)
+    {
+        mitm[item_made].x = x;
+        mitm[item_made].y = y;
+    }
+}
+
 // returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb}
-static int vault_grid( int level_number, int vx, int vy, int altar_count,
+static int vault_grid( const vault_placement &place,
+                       int level_number,
+                       int vx, int vy,
+                       int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
                        FixedVector < int, 7 > &mons_array,
                        char vgrid,
                        std::vector<coord_def> &targets,
-                       int force_vault, int &num_runes)
+                       int &num_runes)
 {
     int not_used;
 
@@ -5751,13 +5834,19 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
 
                 if (you.level_type == LEVEL_PANDEMONIUM)
                 {
-                    if (force_vault >= 60 && force_vault <= 63)
-                        spec = force_vault;
+                    if (place.map->has_tag("mnoleg"))
+                        spec = RUNE_MNOLEG;
+                    else if (place.map->has_tag("lom_lobon"))
+                        spec = RUNE_LOM_LOBON;
+                    else if (place.map->has_tag("gloorx_vloq"))
+                        spec = RUNE_GLOORX_VLOQ;
+                    else if (place.map->has_tag("cerebov"))
+                        spec = RUNE_CEREBOV;
                     else
-                        spec = 50;
+                        spec = RUNE_DEMONIC;
                 }
                 else if (you.level_type == LEVEL_ABYSS)
-                    spec = 51;
+                    spec = RUNE_ABYSSAL;
                 else 
                     spec = you.where_are_you;
             }
@@ -5779,6 +5868,12 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
             }
         }
         break;
+    }
+
+    // defghijk - items
+    if (vgrid >= 'd' && vgrid <= 'k')
+    {
+        dngn_place_item_explicit(vgrid - 'd', vx, vy, place, level_number);
     }
 
     if (grid == DNGN_ORANGE_CRYSTAL_STATUE

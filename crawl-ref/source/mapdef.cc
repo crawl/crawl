@@ -3,10 +3,13 @@
 #include <cctype>
 
 #include "AppHdr.h"
+#include "invent.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "mon-util.h"
 #include "stuff.h"
+#include "dungeon.h"
 
 static const char *map_section_names[] = {
     "",
@@ -28,6 +31,52 @@ const char *map_section_name(int msect)
         return "";
 
     return map_section_names[msect];
+}
+
+// Returns true if s contains tag 'tag', and strips out tag from s.
+bool strip_tag(std::string &s, const std::string &tag)
+{
+    if (s == tag)
+    {
+        s.clear();
+        return (true);
+    }
+
+    std::string::size_type pos;
+    if ((pos = s.find(" " + tag + " ")) != std::string::npos)
+    {
+        // Leave one space intact.
+        s.erase(pos, tag.length() + 1);
+        return (true);
+    }
+
+    if ((pos = s.find(tag + " ")) != std::string::npos
+        || (pos = s.find(" " + tag)) != std::string::npos)
+    {
+        s.erase(pos, tag.length() + 1);
+        return (true);
+    }
+
+    return (false);
+}
+
+#define TAG_UNFOUND -20404
+int strip_number_tag(std::string &s, const std::string &tagprefix)
+{
+    std::string::size_type pos = s.find(tagprefix);
+    if (pos == std::string::npos)
+        return (TAG_UNFOUND);
+
+    std::string::size_type ns = s.find(" ", pos);
+    if (ns == std::string::npos)
+        ns = s.length();
+
+    std::string argument =
+        s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
+
+    s.erase(pos, ns - pos + 1);
+
+    return atoi(argument.c_str());
 }
 
 ///////////////////////////////////////////////
@@ -507,17 +556,6 @@ bool map_def::has_tag(const std::string &tagwanted) const
 // mons_list
 //
 
-mons_list::mons_list(int nids, ...) : mons_ids()
-{
-    va_list args;
-    va_start(args, nids);
-
-    for (int i = 0; i < nids; ++i)
-        mons_ids.push_back( va_arg(args, int) );
-
-    va_end(args);
-}
-
 mons_list::mons_list() : mons_ids()
 {
 }
@@ -593,4 +631,156 @@ int mons_list::mons_by_name(std::string name) const
         return (MONS_ABOMINATION_LARGE);
 
     return (get_monster_by_name(name, true));
+}
+
+//////////////////////////////////////////////////////////////////////
+// item_list
+
+void item_list::clear()
+{
+    items.clear();
+}
+
+const std::vector<item_spec_list> &item_list::get_items() const
+{
+    return (items);
+}
+
+std::string item_list::add_item(const std::string &spec)
+{
+    error.clear();
+
+    item_spec_list sp = parse_item_spec(spec);
+    if (error.empty())
+        items.push_back(sp);
+    
+    return (error);
+}
+
+item_spec item_list::parse_single_spec(std::string s)
+{
+    item_spec result;
+
+    // If there's a colon, this must be a generation weight.
+    int weight = strip_number_tag(s, "weight:");
+    if (weight != TAG_UNFOUND)
+    {
+        result.genweight = weight;
+        if (result.genweight <= 0)
+        {
+            error = make_stringf("Bad item generation weight: '%d'",
+                                 result.genweight);
+            return (result);
+        }
+    }
+
+    if (strip_tag(s, "good_item"))
+        result.level = MAKE_GOOD_ITEM;
+    else
+    {
+        int number = strip_number_tag(s, "level:");
+        if (number != TAG_UNFOUND)
+        {
+            if (number <= 0)
+                error = make_stringf("Bad item level: %d", number);
+
+            result.level = number;
+        }
+    }
+
+    if (strip_tag(s, "no_uniq"))
+        result.allow_uniques = 0;
+    if (strip_tag(s, "allow_uniq"))
+        result.allow_uniques = 1;
+    else
+    {
+        int uniq = strip_number_tag(s, "uniq:");
+        if (uniq != TAG_UNFOUND)
+        {
+            if (uniq <= 0)
+                error = make_stringf("Bad uniq level: %d", uniq);
+            result.allow_uniques = uniq;
+        }
+    }
+
+    // Clean up after any tag brain damage.
+    trim_string(s);
+    
+    // Completely random?
+    if (s == "random" || s == "any")
+        return (result);
+
+    // Check for "any objclass"
+    if (s.find("any ") == 0)
+    {
+        parse_random_by_class(s.substr(4), result);
+        return (result);
+    }
+
+    if (s.find("random ") == 0)
+    {
+        parse_random_by_class(s.substr(7), result);
+        return (result);
+    }
+
+    // Check for actual item names.
+    parse_raw_name(s, result);
+
+    return (result);
+}
+
+void item_list::parse_random_by_class(std::string c, item_spec &spec)
+{
+    trim_string(c);
+    if (c == "?" || c.empty())
+    {
+        error = make_stringf("Bad item class: '%s'", c.c_str());
+        return;
+    }
+    
+    for (int type = OBJ_WEAPONS; type < NUM_OBJECT_CLASSES; ++type)
+    {
+        if (c == item_class_name(type, true))
+        {
+            spec.base_type = type;
+            return;
+        }
+    }
+
+    error = make_stringf("Bad item class: '%s'", c.c_str());
+}
+
+void item_list::parse_raw_name(std::string name, item_spec &spec)
+{
+    trim_string(name);
+    if (name.empty())
+    {
+        error = make_stringf("Bad item name: '%s'", name.c_str());
+        return ;
+    }
+
+    item_def parsed = find_item_type(-1, name);
+    if (parsed.sub_type != OBJ_RANDOM)
+    {
+        spec.base_type = parsed.base_type;
+        spec.sub_type  = parsed.sub_type;
+        return;
+    }
+
+    error = make_stringf("Bad item name: '%s'", name.c_str());
+}
+
+item_spec_list item_list::parse_item_spec(std::string spec)
+{
+    lowercase(spec);
+
+    item_spec_list list;
+    std::vector<std::string> specifiers = split_string( "/", spec );
+
+    for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
+    {
+        list.push_back( parse_single_spec(specifiers[i]) );
+    }
+
+    return (list);
 }

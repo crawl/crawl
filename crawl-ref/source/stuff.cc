@@ -468,7 +468,7 @@ bool see_grid(unsigned char grx, unsigned char gry)
     return false;
 }                               // end see_grid()
 
-void end(int end_arg)
+void io_cleanup()
 {
 #ifdef UNIX
     unixcurses_shutdown();
@@ -477,7 +477,11 @@ void end(int end_arg)
 #ifdef WIN32CONSOLE
     deinit_libw32c();
 #endif
+}
 
+void end(int end_arg)
+{
+    io_cleanup();
     exit(end_arg);
 }
 

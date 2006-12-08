@@ -83,7 +83,6 @@ private:
 
 class mons_list {
 public:
-    mons_list(int nids, ...);
     mons_list();
 
     void clear();
@@ -92,11 +91,52 @@ public:
     // Returns false if the monster is unrecognised.
     bool add_mons(const std::string &s);
 
+    size_t size() const { return mons_ids.size(); }
+
 private:
     int mons_by_name(std::string name) const;
 
 private:
     std::vector<int> mons_ids;
+};
+
+struct item_spec {
+    int genweight;
+    
+    int base_type, sub_type;
+    int allow_uniques;
+    int level;
+    int race;
+
+    item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
+        allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE)
+    {
+    }
+};
+
+typedef std::vector<item_spec> item_spec_list;
+
+class item_list {
+public:
+    item_list() : items() { }
+
+    void clear();
+    const std::vector<item_spec_list> &get_items() const;
+
+    std::string add_item(const std::string &spec);
+    
+    size_t size() const { return items.size(); }
+
+private:
+    item_spec item_by_specifier(const std::string &spec);
+    item_spec_list parse_item_spec(std::string spec);
+    item_spec parse_single_spec(std::string s);
+    void parse_raw_name(std::string name, item_spec &spec);
+    void parse_random_by_class(std::string c, item_spec &spec);
+
+private:
+    std::vector<item_spec_list> items;
+    std::string error;
 };
 
 // Not providing a constructor to make life easy for C-style initialisation.
@@ -112,6 +152,7 @@ public:
 
     map_lines       map;
     mons_list       mons;
+    item_list       items;
 
     std::string     random_symbols;
 

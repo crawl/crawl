@@ -51,6 +51,7 @@ static void settext()
 %s ARGUMENT
 %s MNAME
 %s KEYWORDS
+%s ITEM_LIST
 
 %option yylineno
 %option never-interactive
@@ -68,9 +69,45 @@ NSPACE [^\ \t\r\n]
                         return MAP_LINE;
                     }
 
+<KEYWORDS>[A-Za-z_0-9\-]+   {
+                        settext();
+                        return STRING;
+                    }
+
+<KEYWORDS>[ \t]+    ;
+<KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<ITEM_LIST>[^, \t\r\n][^,\r\n]+[^, \t\r\n] { 
+                        settext();
+                        return ITEM_INFO;
+                    }
+
+<ITEM_LIST>,            return COMMA;
+<ITEM_LIST>[ \t]+       ;
+<ITEM_LIST>[ \t]*\r?\n  { BEGIN(INITIAL); }
+
+<MNAME>[\ \t\r]*\n  { BEGIN(INITIAL); }
+
+<MNAME>[^,\ \t\r\n][^,\r\n]+[^,\ \t\r\n] { 
+                        settext();
+                        return MONSTER_NAME; 
+                    }
+
+<MNAME>,            return COMMA;
+<MNAME>[ \t\r]+     ;
+
+<ARGUMENT>{NSPACE}.*{NSPACE} { 
+                        BEGIN(INITIAL);
+                        settext();
+                        return STRING; 
+                    }
+
+<ARGUMENT>\r?\n     { BEGIN(INITIAL); }
+
+^[ \t]*#.*          ;
+
 ^\s*MAP                { BEGIN(MAPDEF); }
 
-^\s*#.*             ;
 
 NAME:               { BEGIN(ARGUMENT); return NAME; }
 default-depth:      return DEFAULT_DEPTH;
@@ -82,6 +119,7 @@ FLAGS:              return FLAGS;
 TAGS:               { BEGIN(KEYWORDS); return TAGS; }
 SYMBOL:             { BEGIN(ARGUMENT); return SYMBOL; }
 MONS:               { BEGIN(MNAME); return MONS; }
+ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
 
 BRANCHDEF:          return BRANCH;
 DEFAULT             return DEFAULT;
@@ -102,22 +140,6 @@ EXIT_MSG:           { BEGIN(ARGUMENT); return EXIT_MSG; }
 MONSTERS          return MONSTERS;
 ENDMONSTERS       return ENDMONSTERS;
 
-<KEYWORDS>[A-Za-z_0-9\-]+   {
-                        settext();
-                        return STRING;
-                    }
-
-<KEYWORDS>[ \t]+    ;
-<KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
-
-<MNAME>[^, \t\r\n][^,\r\n]+[^, \t\r\n] { 
-                        settext();
-                        return MONSTER_NAME; 
-                    }
-
-<MNAME>,            return COMMA;
-<MNAME>[ \t]*\r?\n   { BEGIN(INITIAL); }
-<MNAME>[ \t]        ;
 
 pandemonic          return PANDEMONIC;
 no_hmirror          return NO_HMIRROR;
@@ -144,15 +166,8 @@ float               return FLOAT;
                         return INTEGER;
                     }
 
-<ARGUMENT>{NSPACE}.*{NSPACE} { 
-                        BEGIN(INITIAL);
-                        settext();
-                        return STRING; 
-                    }
-
-<ARGUMENT>\r?\n     { BEGIN(INITIAL); }
-
-[\ \t\r\n]+         ;
+[\ \t]+             ;
+\r?\n               ;
 
 \(                   return OPAREN;
 \)                   return CPAREN;

@@ -394,11 +394,11 @@ std::string item_class_name( int type, bool terse )
         case OBJ_ARMOUR:     return ("armour");
         case OBJ_WANDS:      return ("wand");
         case OBJ_FOOD:       return ("food");
-        case OBJ_UNKNOWN_I:  return ("book");
+        case OBJ_UNKNOWN_I:  return ("?");
         case OBJ_SCROLLS:    return ("scroll");
         case OBJ_JEWELLERY:  return ("jewelry");
         case OBJ_POTIONS:    return ("potion");
-        case OBJ_UNKNOWN_II: return ("gem");
+        case OBJ_UNKNOWN_II: return ("?");
         case OBJ_BOOKS:      return ("book");
         case OBJ_STAVES:     return ("stave");
         case OBJ_ORBS:       return ("orb");
