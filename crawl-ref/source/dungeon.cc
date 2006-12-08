@@ -5357,7 +5357,6 @@ static void build_rooms(const dgn_region_list &excluded,
         {
             const coord_def c = connections[0];
             connections.erase( connections.begin() );
-            coord_def edge = myroom.random_edge_point();
             join_the_dots(c, myroom.random_edge_point(), excluded);
         }
         else if (exclusive)

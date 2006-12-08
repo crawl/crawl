@@ -13,7 +13,6 @@
 typedef std::basic_string<char> string;
 #endif
 
-#include <excpt.h>
 #include <stdarg.h>
 
 #define _NORMALCURSOR   true

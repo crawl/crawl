@@ -22,7 +22,7 @@ static const char *map_section_names[] = {
     "float",
 };
 
-static const char *map_section_name(int msect)
+const char *map_section_name(int msect)
 {
     if (msect < 0 || msect >= MAP_NUM_SECTION_TYPES)
         return "";
