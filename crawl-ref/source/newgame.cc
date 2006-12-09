@@ -1430,7 +1430,6 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
     book.quantity = 1;
     book.plus = 0;
     book.special = 1;
-    book.colour = CYAN;
 
     // using the fact that CONJ_I and MINOR_MAGIC_I are both
     // fire books, CONJ_II and MINOR_MAGIC_II are both ice books
@@ -2217,7 +2216,6 @@ static void give_random_scroll( int slot )
     you.inv[ slot ].base_type = OBJ_SCROLLS;
     you.inv[ slot ].plus = 0;
     you.inv[ slot ].special = 0;
-    you.inv[ slot ].colour = WHITE;
 
     switch (random2(8))
     {
@@ -2289,7 +2287,6 @@ static void give_random_wand( int slot )
     you.inv[ slot ].base_type = OBJ_WANDS;
     you.inv[ slot ].special = 0;
     you.inv[ slot ].plus2 = 0;
-    you.inv[ slot ].colour = random_colour();
 
     switch (random2(4))
     {
@@ -2320,7 +2317,6 @@ static void give_random_secondary_armour( int slot )
     you.inv[ slot ].special = 0;
     you.inv[ slot ].plus = 0;
     you.inv[ slot ].plus2 = 0;
-    you.inv[ slot ].colour = BROWN;
 
     switch (random2(4))
     {
@@ -2354,7 +2350,6 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
     // safe reuse of code in the future.
     you.inv[ slot ].quantity = 1;
     you.inv[ slot ].base_type = OBJ_WEAPONS;
-    you.inv[ slot ].colour = LIGHTCYAN;
     you.inv[ slot ].plus = 0;
     you.inv[ slot ].plus2 = 0;
     you.inv[ slot ].special = 0;
@@ -2364,7 +2359,6 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
     {
     case SK_MACES_FLAILS:
         you.inv[ slot ].sub_type = WPN_CLUB;
-        you.inv[ slot ].colour = BROWN;
         break;
 
     case SK_POLEARMS:
@@ -2382,7 +2376,6 @@ static bool give_wanderer_weapon( int slot, int wpn_skill )
 
     case SK_STAVES:
         you.inv[ slot ].sub_type = WPN_QUARTERSTAFF;
-        you.inv[ slot ].colour = BROWN;
         ret = true;
         break;
 
@@ -2573,7 +2566,6 @@ static void create_wanderer( void )
     you.inv[0].quantity = 1;
     you.inv[0].base_type = OBJ_WEAPONS;
     you.inv[0].sub_type = WPN_KNIFE;
-    you.inv[0].colour = LIGHTCYAN;
     you.inv[0].plus = 0;
     you.inv[0].plus2 = 0;
     you.inv[0].special = 0;
@@ -2583,7 +2575,6 @@ static void create_wanderer( void )
     you.inv[2].quantity = 1;
     you.inv[2].base_type = OBJ_ARMOUR;
     you.inv[2].sub_type = ARM_ROBE;
-    you.inv[2].colour = BROWN;
     you.inv[2].plus = 0;
     you.inv[2].special = 0;
 
@@ -2599,8 +2590,6 @@ static void create_wanderer( void )
         if (you.skills[SK_ARMOUR])
         {
             you.inv[2].sub_type = ARM_RING_MAIL;
-            you.inv[2].colour = LIGHTCYAN;
-
             you.inv[3].quantity = 0;            // remove potion
         }
         else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
@@ -2610,7 +2599,6 @@ static void create_wanderer( void )
             you.inv[4].sub_type = ARM_BUCKLER;
             you.inv[4].plus = 0;
             you.inv[4].special = 0;
-            you.inv[4].colour = LIGHTCYAN;
             you.equip[EQ_SHIELD] = 4;
 
             you.inv[3].quantity = 0;            // remove potion
@@ -2699,7 +2687,6 @@ static void create_wanderer( void )
         you.inv[1].plus = -1;
         you.inv[1].plus2 = -1;
         you.inv[1].special = 0;
-        you.inv[1].colour = BROWN;
 
         // Create default ammo template (darts) (armour is slot 2)
         you.inv[4].base_type = OBJ_MISSILES;
@@ -2708,14 +2695,12 @@ static void create_wanderer( void )
         you.inv[4].plus = 0;
         you.inv[4].plus2 = 0;
         you.inv[4].special = 0;
-        you.inv[4].colour = LIGHTCYAN;
 
         if (you.skills[ SK_SLINGS ])
         {
             // slingers get some extra ammo
             you.inv[4].quantity += random2avg(20,5);
             you.inv[4].sub_type = MI_STONE;
-            you.inv[4].colour = BROWN;
             you.inv[1].sub_type = WPN_SLING;
             you.inv[1].plus = 0;               // slings aren't so good
             you.inv[1].plus2 = 0;              // so we'll make them +0
@@ -2727,7 +2712,6 @@ static void create_wanderer( void )
         else if (you.skills[ SK_BOWS ])
         {
             you.inv[4].sub_type = MI_ARROW;
-            you.inv[4].colour = BROWN;
             you.inv[1].sub_type = WPN_BOW;
 
             you.inv[3].quantity = 0;            // remove potion
@@ -3319,7 +3303,6 @@ void give_items_skills()
     int weap_skill = 0;
     int to_hit_bonus;           // used for assigning primary weapons {dlb}
     int choice;                 // used for third-screen choices
-    int tmp;
 
     switch (you.char_class)
     {
@@ -3330,7 +3313,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         if (you.species == SP_OGRE || you.species == SP_TROLL
             || player_genus(GENPC_DRACONIAN))
@@ -3340,7 +3322,6 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_ANIMAL_SKIN;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = BROWN;
 
             if (you.species == SP_OGRE)
             {
@@ -3349,8 +3330,6 @@ void give_items_skills()
                 you.inv[0].sub_type = WPN_ANCUS;
                 you.inv[0].plus = 0;
                 you.inv[0].special = 0;
-                you.inv[0].colour = BROWN;
-
             }
             else if (you.species == SP_TROLL)
             {
@@ -3359,8 +3338,6 @@ void give_items_skills()
                 you.inv[0].sub_type = WPN_CLUB;
                 you.inv[0].plus = 0;
                 you.inv[0].special = 0;
-                you.inv[0].colour = BROWN;
-
             }
             else if (player_genus(GENPC_DRACONIAN))
             {
@@ -3369,7 +3346,6 @@ void give_items_skills()
                 you.inv[2].sub_type = ARM_SHIELD;
                 you.inv[2].plus = 0;
                 you.inv[2].special = 0;
-                you.inv[2].colour = LIGHTCYAN;
             }
         }
         else if (you.species == SP_GHOUL || you.species == SP_MUMMY)
@@ -3379,7 +3355,6 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_ROBE;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = WHITE;  // grave shroud
 
             if (you.species == SP_MUMMY)
             {
@@ -3388,7 +3363,6 @@ void give_items_skills()
                 you.inv[2].sub_type = ARM_SHIELD;
                 you.inv[2].plus = 0;
                 you.inv[2].special = 0;
-                you.inv[2].colour = LIGHTCYAN;
             }
         }
         else if (you.species == SP_KOBOLD)
@@ -3398,15 +3372,12 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_LEATHER_ARMOUR;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = BROWN;
 
             you.inv[2].base_type = OBJ_MISSILES;
             you.inv[2].sub_type = MI_DART;
             you.inv[2].quantity = 10 + roll_dice( 2, 10 );
             you.inv[2].plus = 0;
             you.inv[2].special = 0;
-            you.inv[2].colour = LIGHTCYAN;
-
         }
         else
         {
@@ -3415,14 +3386,12 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_SCALE_MAIL;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = LIGHTCYAN;
 
             you.inv[2].quantity = 1;
             you.inv[2].base_type = OBJ_ARMOUR;
             you.inv[2].sub_type = ARM_SHIELD;
             you.inv[2].plus = 0;
             you.inv[2].special = 0;
-            you.inv[2].colour = LIGHTCYAN;
 
             choose_weapon();
         }
@@ -3480,20 +3449,11 @@ void give_items_skills()
         you.inv[0].base_type = OBJ_WEAPONS;
 
         if (you.species == SP_OGRE_MAGE)
-        {
             you.inv[0].sub_type = WPN_QUARTERSTAFF;
-            you.inv[0].colour = BROWN;
-        }
         else if (player_genus(GENPC_DWARVEN))
-        {
             you.inv[0].sub_type = WPN_HAMMER;
-            you.inv[0].colour = CYAN;
-        }
         else
-        {
             you.inv[0].sub_type = WPN_DAGGER;
-            you.inv[0].colour = LIGHTCYAN;
-        }
 
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
@@ -3524,8 +3484,6 @@ void give_items_skills()
             break;
         }
 
-
-        you.inv[1].colour = random_colour();
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
 
@@ -3558,14 +3516,12 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = WHITE;
 
         you.inv[2].base_type = OBJ_POTIONS;
         you.inv[2].sub_type = POT_HEALING;
@@ -3650,7 +3606,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_WEAPONS;
@@ -3659,28 +3614,24 @@ void give_items_skills()
         you.inv[1].plus = 0;
         you.inv[1].plus2 = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = LIGHTCYAN;
 
         you.inv[2].quantity = 1;
         you.inv[2].base_type = OBJ_ARMOUR;
         you.inv[2].sub_type = ARM_ROBE;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = BROWN;
 
         you.inv[3].quantity = 1;
         you.inv[3].base_type = OBJ_ARMOUR;
         you.inv[3].sub_type = ARM_CLOAK;
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
-        you.inv[3].colour = DARKGREY;
 
         you.inv[4].base_type = OBJ_MISSILES;
         you.inv[4].sub_type = MI_DART;
         you.inv[4].quantity = 10 + roll_dice( 2, 10 );
         you.inv[4].plus = 0;
         you.inv[4].special = 0;
-        you.inv[4].colour = LIGHTCYAN;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 2;
@@ -3706,7 +3657,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         if (player_genus(GENPC_DRACONIAN))
         {
@@ -3715,14 +3665,12 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_ANIMAL_SKIN;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = BROWN;
 
             you.inv[2].quantity = 1;
             you.inv[2].base_type = OBJ_ARMOUR;
             you.inv[2].sub_type = ARM_SHIELD;
             you.inv[2].plus = 0;
             you.inv[2].special = 0;
-            you.inv[2].colour = LIGHTCYAN;
         }
         else
         {
@@ -3731,14 +3679,12 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_RING_MAIL;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = LIGHTCYAN;
 
             you.inv[2].quantity = 1;
             you.inv[2].base_type = OBJ_ARMOUR;
             you.inv[2].sub_type = ARM_BUCKLER;
             you.inv[2].plus = 0;
             you.inv[2].special = 0;
-            you.inv[2].colour = LIGHTCYAN;
         }
 
         you.equip[EQ_WEAPON] = 0;
@@ -3765,13 +3711,11 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = DARKGREY;
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
 
@@ -3780,7 +3724,6 @@ void give_items_skills()
         you.inv[2].quantity = 1;
         you.inv[2].plus = 0;    // = 127
         you.inv[2].special = 0;     // = 1;
-        you.inv[2].colour = DARKGREY;
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -3801,21 +3744,18 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = WHITE;
 
         you.inv[2].quantity = 1;
         you.inv[2].base_type = OBJ_ARMOUR;
         you.inv[2].sub_type = ARM_SHIELD;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = LIGHTCYAN;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -3843,7 +3783,6 @@ void give_items_skills()
         you.inv[0].plus = 1 + to_hit_bonus;
         you.inv[0].plus2 = 1 + (2 - to_hit_bonus);
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_WEAPONS;
@@ -3851,27 +3790,23 @@ void give_items_skills()
         you.inv[1].plus = 0;
         you.inv[1].plus2 = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = LIGHTGREY;
 
         you.inv[2].quantity = 1;
         you.inv[2].base_type = OBJ_ARMOUR;
         you.inv[2].sub_type = ARM_ROBE;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = DARKGREY;
 
         you.inv[3].quantity = 1;
         you.inv[3].base_type = OBJ_ARMOUR;
         you.inv[3].sub_type = ARM_CLOAK;
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
-        you.inv[3].colour = DARKGREY;
 
         you.inv[4].base_type = OBJ_MISSILES;
         you.inv[4].sub_type = MI_NEEDLE;
         you.inv[4].quantity = 10 + roll_dice( 2, 10 );
         you.inv[4].plus = 0;
-        you.inv[4].colour = WHITE;
         set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
 
         // deep elves get hand crossbows, everyone else gets blowguns
@@ -3880,12 +3815,8 @@ void give_items_skills()
         if (you.species == SP_DEEP_ELF)
         {
             you.inv[1].sub_type = WPN_HAND_CROSSBOW;
-            you.inv[1].colour = BROWN;
-
             you.inv[4].sub_type = MI_DART;
-            you.inv[4].colour = LIGHTCYAN;
         }
-
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 2;
@@ -3918,7 +3849,6 @@ void give_items_skills()
             you.inv[0].plus = 0;
             you.inv[0].plus2 = 0;
             you.inv[0].special = 0;
-            you.inv[0].colour = BROWN;
             you.equip[EQ_WEAPON] = 0;
         }
         else if (you.species == SP_TROLL)
@@ -3933,7 +3863,6 @@ void give_items_skills()
             you.inv[0].plus = 0;
             you.inv[0].plus2 = 0;
             you.inv[0].special = 0;
-            you.inv[0].colour = LIGHTCYAN;
             you.equip[EQ_WEAPON] = 0;
 
             for (unsigned char i = 1; i <= 3; i++)
@@ -3944,7 +3873,6 @@ void give_items_skills()
                 you.inv[i].plus = 0;
                 you.inv[i].plus2 = 0;
                 you.inv[i].special = 0;
-                you.inv[i].colour = LIGHTCYAN;
             }
         }
 
@@ -3958,7 +3886,6 @@ void give_items_skills()
             you.inv[1].sub_type = ARM_ANIMAL_SKIN;
             you.inv[1].plus = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = BROWN;
             you.equip[EQ_BODY_ARMOUR] = 1;
         }
         else
@@ -3968,7 +3895,6 @@ void give_items_skills()
             you.inv[4].sub_type = ARM_LEATHER_ARMOUR;
             you.inv[4].plus = 0;
             you.inv[4].special = 0;
-            you.inv[4].colour = BROWN;
             you.equip[EQ_BODY_ARMOUR] = 4;
         }
 
@@ -4005,14 +3931,12 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[4].quantity = 1;
         you.inv[4].base_type = OBJ_ARMOUR;
         you.inv[4].sub_type = ARM_LEATHER_ARMOUR;
         you.inv[4].plus = 0;
         you.inv[4].special = 0;
-        you.inv[4].colour = BROWN;
 
         if (you.species != SP_MERFOLK)
         {
@@ -4022,7 +3946,6 @@ void give_items_skills()
             you.inv[2].plus = 0;
             you.inv[2].plus2 = 0;
             you.inv[2].special = 0;
-            you.inv[2].colour = BROWN;
 
             you.inv[1].quantity = 1;
             you.inv[1].base_type = OBJ_WEAPONS;
@@ -4030,7 +3953,6 @@ void give_items_skills()
             you.inv[1].plus = 0;
             you.inv[1].plus2 = 0;
             you.inv[1].special = 0;
-            you.inv[1].colour = BROWN;
         }
         else
         {
@@ -4043,15 +3965,11 @@ void give_items_skills()
                 you.inv[i].plus = 0;
                 you.inv[i].plus2 = 0;
                 you.inv[i].special = 0;
-                you.inv[i].colour = LIGHTCYAN;
             }
         }
 
         if (player_genus(GENPC_DRACONIAN))
-        {
             you.inv[4].sub_type = ARM_ROBE;
-            you.inv[4].colour = GREEN;
-        }
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 4;
@@ -4068,7 +3986,6 @@ void give_items_skills()
         case SP_GNOME:
             you.inv[2].quantity += random2avg(15, 2);
             you.inv[2].sub_type = MI_STONE;
-            you.inv[2].colour = BROWN;
             you.inv[1].sub_type = WPN_SLING;
 
             you.skills[SK_DODGING] = 2;
@@ -4080,7 +3997,6 @@ void give_items_skills()
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
             you.inv[2].sub_type = MI_BOLT;
-            you.inv[2].colour = LIGHTCYAN;
             you.inv[1].sub_type = WPN_CROSSBOW;
 
             if (you.species == SP_HILL_ORC)
@@ -4127,7 +4043,6 @@ void give_items_skills()
         you.inv[0].quantity = 1;
         you.inv[0].base_type = OBJ_WEAPONS;
         you.inv[0].sub_type = WPN_DAGGER;
-        you.inv[0].colour = LIGHTCYAN;
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
@@ -4171,7 +4086,6 @@ void give_items_skills()
             you.inv[3].quantity = 8 + roll_dice( 2, 8 );
             you.inv[3].plus = 0;
             you.inv[3].special = 0;
-            you.inv[3].colour = LIGHTCYAN;
             break;
 
         case JOB_CONJURER:
@@ -4189,7 +4103,6 @@ void give_items_skills()
             you.inv[3].quantity = 8 + roll_dice( 2, 8 );
             you.inv[3].plus = 1;
             you.inv[3].special = 0;
-            you.inv[3].colour = LIGHTCYAN;
 
             if (you.species == SP_SPRIGGAN)
                 make_rod(you.inv[0], STAFF_STRIKING);
@@ -4228,7 +4141,6 @@ void give_items_skills()
             you.inv[3].plus = 0;
             you.inv[3].plus2 = 0;
             you.inv[3].special = 0;
-            you.inv[3].colour = BROWN;
 
             if (you.species == SP_GNOME)
             {
@@ -4238,7 +4150,6 @@ void give_items_skills()
                 you.inv[1].plus = 0;
                 you.inv[1].plus2 = 0;
                 you.inv[1].special = 0;
-                you.inv[1].colour = BROWN;
 
                 you.inv[4].quantity = 1;
                 you.inv[4].base_type = OBJ_ARMOUR;
@@ -4246,7 +4157,6 @@ void give_items_skills()
                 you.inv[4].plus = 0;
                 you.inv[4].plus2 = 0;
                 you.inv[4].special = 0;
-                you.inv[4].colour = BROWN;
                 you.equip[EQ_BODY_ARMOUR] = 4;
 
             }
@@ -4261,31 +4171,12 @@ void give_items_skills()
         }
 
         if (you.species == SP_OGRE_MAGE)
-        {
             you.inv[0].sub_type = WPN_QUARTERSTAFF;
-            you.inv[0].colour = BROWN;
-        }
         else if (player_genus(GENPC_DWARVEN))
-        {
             you.inv[0].sub_type = WPN_HAMMER;
-            you.inv[0].colour = CYAN;
-        }
 
         you.inv[2].quantity = 1;
         you.inv[2].special = 0;
-
-        switch (you.char_class) 
-        {
-        case JOB_FIRE_ELEMENTALIST:  tmp = RED;                 break;
-        case JOB_ICE_ELEMENTALIST:   tmp = LIGHTCYAN;           break;
-        case JOB_AIR_ELEMENTALIST:   tmp = LIGHTBLUE;           break;
-        case JOB_EARTH_ELEMENTALIST: tmp = BROWN;               break;
-        case JOB_VENOM_MAGE:         tmp = GREEN;               break;
-        default:                     tmp = random_colour();     break;
-        }
-
-        you.inv[1].colour = tmp;        // robe
-        you.inv[2].colour = tmp;        // book
 
         you.skills[SK_SPELLCASTING] = 1;
 
@@ -4338,21 +4229,18 @@ void give_items_skills()
         you.inv[1].plus = 0;
         you.inv[1].plus2 = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = BROWN;
 
         you.inv[2].base_type = OBJ_ARMOUR;
         you.inv[2].sub_type = ARM_ROBE;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
         you.inv[2].quantity = 1;
-        you.inv[2].colour = BROWN;
 
         you.inv[3].base_type = OBJ_BOOKS;
         you.inv[3].sub_type = BOOK_CHANGES;
         you.inv[3].quantity = 1;
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
-        you.inv[3].colour = random_colour();
 
         // A little bit of starting ammo for evaporate... don't need too
         // much now that the character can make their own. -- bwr
@@ -4395,7 +4283,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         if (you.species == SP_SPRIGGAN)
         {
@@ -4409,10 +4296,7 @@ void give_items_skills()
             you.inv[0].sub_type = WPN_SHORT_SWORD;
 
             if (you.species == SP_OGRE_MAGE)
-            {
                 you.inv[0].sub_type = WPN_QUARTERSTAFF;
-                you.inv[0].colour = BROWN;
-            }
 
             weap_skill = 2;
             you.skills[SK_FIGHTING] = 1;
@@ -4423,7 +4307,6 @@ void give_items_skills()
         you.inv[1].quantity = 1;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = BROWN;
 
         if (you.species == SP_SPRIGGAN || you.species == SP_OGRE_MAGE)
             you.inv[1].sub_type = ARM_ROBE;
@@ -4433,7 +4316,6 @@ void give_items_skills()
         you.inv[2].quantity = 1;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = random_colour();
 
         // one free escape:
         you.inv[3].base_type = OBJ_SCROLLS;
@@ -4441,14 +4323,12 @@ void give_items_skills()
         you.inv[3].quantity = 1;
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
-        you.inv[3].colour = WHITE;
 
         you.inv[4].base_type = OBJ_MISSILES;
         you.inv[4].sub_type = MI_DART;
         you.inv[4].quantity = 10 + roll_dice( 2, 10 );
         you.inv[4].plus = 0;
         you.inv[4].special = 0;
-        you.inv[4].colour = LIGHTCYAN;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4471,7 +4351,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
         choose_weapon();
         weap_skill = 2;
         you.inv[1].quantity = 1;
@@ -4479,14 +4358,12 @@ void give_items_skills()
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = random_colour();
 
         you.inv[2].base_type = OBJ_BOOKS;
         you.inv[2].sub_type = BOOK_WAR_CHANTS;
         you.inv[2].quantity = 1;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = random_colour();
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4507,7 +4384,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
         choose_weapon();
         weap_skill = 2;
 
@@ -4516,14 +4392,12 @@ void give_items_skills()
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = DARKGREY;
 
         you.inv[2].base_type = OBJ_BOOKS;
         you.inv[2].sub_type = BOOK_NECROMANCY;
         you.inv[2].quantity = 1;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = DARKGREY;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4633,7 +4507,6 @@ void give_items_skills()
         if (one_chance_in(5))
             set_equip_desc( you.inv[0], ISFLAG_GLOWING );
 
-        you.inv[0].colour = LIGHTCYAN;
         choose_weapon();
         weap_skill = 2;
         you.inv[1].quantity = 1;
@@ -4641,7 +4514,6 @@ void give_items_skills()
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = random2(3);
         you.inv[1].special = 0;
-        you.inv[1].colour = random_colour();
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4727,7 +4599,6 @@ void give_items_skills()
         you.inv[0].quantity = 1;
         you.inv[0].base_type = OBJ_WEAPONS;
         you.inv[0].sub_type = WPN_QUARTERSTAFF;
-        you.inv[0].colour = BROWN;
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
@@ -4738,7 +4609,6 @@ void give_items_skills()
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = WHITE;
 
         you.inv[2].base_type = OBJ_POTIONS;
         you.inv[2].sub_type = POT_HEALING;
@@ -4768,7 +4638,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].plus2 = 0;
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
         choose_weapon();
         weap_skill = 3;
 
@@ -4777,14 +4646,12 @@ void give_items_skills()
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = RED;
 
         you.inv[2].base_type = OBJ_BOOKS;
         you.inv[2].sub_type = give_first_conjuration_book();
         you.inv[2].quantity = 1;
         you.inv[2].plus = 0;    // = 127
         you.inv[2].special = 0;
-        you.inv[2].colour = RED;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4805,21 +4672,18 @@ void give_items_skills()
         you.inv[0].plus = 1 + to_hit_bonus;
         you.inv[0].plus2 = 1 + (2 - to_hit_bonus);
         you.inv[0].special = 0;
-        you.inv[0].colour = LIGHTCYAN;
 
         you.inv[1].quantity = 1;
         you.inv[1].base_type = OBJ_ARMOUR;
         you.inv[1].sub_type = ARM_ROBE;
         you.inv[1].plus = 0;
         you.inv[1].special = 0;
-        you.inv[1].colour = GREEN;
 
         you.inv[2].quantity = 1;
         you.inv[2].base_type = OBJ_ARMOUR;
         you.inv[2].sub_type = ARM_CLOAK;
         you.inv[2].plus = 0;
         you.inv[2].special = 0;
-        you.inv[2].colour = DARKGREY;
 
         you.inv[3].base_type = OBJ_BOOKS;
         //you.inv[3].sub_type = BOOK_YOUNG_POISONERS;
@@ -4827,7 +4691,6 @@ void give_items_skills()
         you.inv[3].quantity = 1;
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
-        you.inv[3].colour = GREEN;
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
@@ -4852,7 +4715,6 @@ void give_items_skills()
         you.inv[0].plus = 0;
         you.inv[0].special = 0;
         you.inv[0].quantity = 1;
-        you.inv[0].colour = BROWN;
 
         you.equip[EQ_WEAPON] = -1;
         you.equip[EQ_BODY_ARMOUR] = 0;
