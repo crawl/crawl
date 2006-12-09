@@ -1883,27 +1883,20 @@ bool trap_item(char base_type, char sub_type, char beam_x, char beam_y)
     item.flags = 0;
     item.special = 0;
     item.quantity = 1;
-    item.colour = LIGHTCYAN;
 
     if (base_type == OBJ_MISSILES)
     {
         if (sub_type == MI_NEEDLE)
-        {
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
-            item.colour = WHITE;
-        }
         else
-        {
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
-
-            if (sub_type == MI_ARROW)
-                item.colour = BROWN;
-        }
     }
     else
     {
         set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
     }
+
+    item_colour(item);
 
     if (igrd[beam_x][beam_y] != NON_ITEM)
     {
