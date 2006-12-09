@@ -1920,6 +1920,17 @@ void drop(void)
     std::sort( items_for_multidrop.begin(), items_for_multidrop.end(),
                drop_item_order );
 
+    for ( unsigned int i = 0; i < items_for_multidrop.size(); ++i )
+    {
+        if ( !check_warning_inscriptions( *(items_for_multidrop[i].item),
+                                          OPER_DROP))
+        {
+            canned_msg( MSG_OK );
+            items_for_multidrop.clear();
+            return;
+        }
+    }
+
     if ( items_for_multidrop.size() == 1 ) // only one item
     {
         drop_item( items_for_multidrop[0].slot,

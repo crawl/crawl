@@ -727,33 +727,40 @@ static int digit_to_index( char digit, operation_types oper ) {
     return -1;
 }
 
-/* return true if user OK'd it (or no warning), false otherwise */ 
-static bool check_warning_inscriptions( const item_def& item,
-					operation_types oper )
+static bool has_warning_inscription(const item_def& item,
+                                    operation_types oper)
 {
-    unsigned int i;
     char iletter = (char)(oper);
+    unsigned int i;
     char name[ITEMNAME_SIZE];
-    char prompt[ITEMNAME_SIZE + 100];
     item_name(item, DESC_INVENTORY, name, false);
-    strcpy( prompt, "Really choose ");
-    strncat( prompt, name, ITEMNAME_SIZE );
-    strcat( prompt, "?");
     
     const std::string& r(item.inscription);
-    for ( i = 0; i + 1 < r.size(); ++i ) {
-	if ( r[i] == '!' &&
-	     (r[i+1] == iletter || r[i+1] == '*') ) {
-	    
-	    return yesno(prompt, false, 'n');
-	}
+    for ( i = 0; i + 1 < r.size(); ++i )
+	if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
+	    return true;
+    return false;
+}    
+
+/* return true if user OK'd it (or no warning), false otherwise */ 
+bool check_warning_inscriptions( const item_def& item,
+                                 operation_types oper )
+{
+    char prompt[ITEMNAME_SIZE + 100];
+    char name[ITEMNAME_SIZE];
+    if ( has_warning_inscription(item, oper) )
+    {
+        snprintf(prompt, sizeof prompt, "Really choose %s?",
+                 item_name(item, DESC_INVENTORY, name, false));
+        return yesno(prompt, false, 'n');
     }
-    return true;
+    else
+        return true;
 }
 
 // This function prompts the user for an item, handles the '?' and '*'
 // listings, and returns the inventory slot to the caller (which if
-// must_exist is true (the default) will be an assigned item, with
+// must_exist is true (the default) will be an assigned item), with
 // a positive quantity.
 //
 // It returns PROMPT_ABORT       if the player hits escape.
@@ -843,7 +850,6 @@ int prompt_invent_item( const char *prompt,
             need_prompt = false;
             need_getch  = false;
         }
-        /*** HP CHANGE ***/
         else if ( count == NULL && isdigit( keyin ) )
         {
             /* scan for our item */
