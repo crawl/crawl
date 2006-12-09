@@ -588,7 +588,7 @@ struct monsters
     int hit_points;
     int max_hit_points;
     int hit_dice;
-    int armour_class;       // great -- more mixed american/proper spelling
+    int armour_class;
     int evasion;
     unsigned int speed;
     unsigned int speed_increment;

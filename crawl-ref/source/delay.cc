@@ -735,6 +735,8 @@ static command_type get_running_command() {
     }
     if ( is_resting() ) {
 	you.running.rest();
+        if ( !is_resting() )
+            mpr("Done searching.");
 	return CMD_MOVE_NOWHERE;
     }
     return direction_to_command( you.running.x, you.running.y );
@@ -766,7 +768,8 @@ static void handle_run_delays(const delay_queue_item &delay)
 
     if (cmd != CMD_NO_CMD)
     {
-        mesclr();
+        if ( delay.type != DELAY_REST )
+            mesclr();
         process_command(cmd);
     }
 

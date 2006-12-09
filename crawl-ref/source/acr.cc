@@ -978,6 +978,11 @@ void process_command( command_type cmd ) {
     case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
 
     case CMD_REST:
+        if ( you.hp == you.hp_max &&
+             you.magic_points == you.max_magic_points )
+            mpr("You start searching.");
+        else
+            mpr("You start resting.");
         start_running( RDIR_REST, RMODE_REST_DURATION );
         break;
 
@@ -2216,7 +2221,8 @@ static void world_reacts()
     return;
 }
 
-static command_type get_next_cmd() {
+static command_type get_next_cmd()
+{
     if (Options.autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
         just_autoprayed == false && you.religion != GOD_NO_GOD &&
         grid_altar_god( grd[you.x_pos][you.y_pos] ) == GOD_NO_GOD &&
@@ -2412,7 +2418,8 @@ static keycode_type numpad2vi(keycode_type key)
 }
 #endif
 
-keycode_type get_next_keycode() {
+keycode_type get_next_keycode()
+{
 
     keycode_type keyin;
 
