@@ -710,6 +710,12 @@ item_spec item_list::parse_single_spec(std::string s)
     if (s == "random" || s == "any")
         return (result);
 
+    if (s == "nothing")
+    {
+        result.base_type = OBJ_UNASSIGNED;
+        return (result);
+    }
+
     // Check for "any objclass"
     if (s.find("any ") == 0)
     {

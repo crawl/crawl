@@ -5746,6 +5746,10 @@ static void dngn_place_item_explicit(int index, int x, int y,
         return;
     }
 
+    // Dummy object?
+    if (spec->base_type == OBJ_UNASSIGNED)
+        return;
+
     if (spec->level >= 0)
         level = spec->level;
 
