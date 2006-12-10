@@ -993,7 +993,7 @@ static bool write_dump(
     if (SysEnv.crawl_dir)
         file_name += SysEnv.crawl_dir;
 
-    file_name += fname;
+    file_name += strip_filename_unsafe_chars(fname);
 
     std::string stash_file_name;
     stash_file_name = file_name;

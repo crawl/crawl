@@ -93,7 +93,7 @@ extern std::string init_file_location;
 #define MIN_START_STAT       1
 
 static bool class_allowed(unsigned char speci, int char_class);
-static bool verifyPlayerName(void);
+static bool validate_player_name(void);
 static void choose_weapon(void);
 static void enterPlayerName(bool blankOK);
 static void give_basic_knowledge(int which_job);
@@ -2045,7 +2045,7 @@ static bool is_good_name(char *name, bool blankOK)
         return (false);
     }
 #endif
-    return (verifyPlayerName());
+    return (validate_player_name());
 }
 
 static int newname_keyfilter(int &ch)
@@ -2142,18 +2142,25 @@ static void enterPlayerName(bool blankOK)
             // If the player wants out, we bail out.
             if (!read_player_name(name, kNameLen, existing_chars, char_menu))
                 end(0);
+
+            // Laboriously trim the damn thing.
+            std::string read_name = name;
+            trim_string(read_name);
+            strncpy(name, read_name.c_str(), kNameLen);
+            name[kNameLen - 1] = 0;
         }
     }
     while (ask_name = !is_good_name(you.your_name, blankOK));
 }                               // end enterPlayerName()
 
-static bool verifyPlayerName(void)
+static bool validate_player_name(void)
 {
 #if defined(DOS) || defined(WIN32CONSOLE)
     static int william_tanksley_asked_for_this = 2;
 
     // quick check for CON -- blows up real good under DOS/Windows
-    if (stricmp(you.your_name, "con") == 0)
+    if (stricmp(you.your_name, "con") == 0
+        || stricmp(you.your_name, "nul") == 0)
     {
         cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
         return (false);
@@ -2180,17 +2187,20 @@ static bool verifyPlayerName(void)
     }
 #endif
 
-    const size_t len = strlen( you.your_name );
-    for (unsigned int i = 0; i < len; i++)
+    for (const char *pn = you.your_name; *pn; ++pn)
     {
+        char c = *pn;
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple 
         // and doesn't take the time to escape every characters that
         // might be a problem for some random shell or OS... so we 
         // play it very conservative here.  -- bwr
-        if (!isalnum( you.your_name[i] ) && you.your_name[i] != '_')
+        if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
-            cprintf( EOL "Alpha-numerics and underscores only, please." EOL );
+            cprintf( EOL
+                     "Alpha-numerics, spaces, dashes, periods and underscores "
+                     "only, please."
+                     EOL );
             return (false);
         }
     }
@@ -2198,6 +2208,7 @@ static bool verifyPlayerName(void)
 #ifdef MULTIUSER
     // Until we have a better way to handle the fact that this could lead 
     // to some confusion with where the name ends and the uid begins. -- bwr
+    const size_t len = strlen( you.your_name );
     if (isdigit( you.your_name[ len - 1 ] ))
     {
         cprintf( EOL "Sorry, your name cannot end with a digit." EOL );

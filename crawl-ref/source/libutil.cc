@@ -70,6 +70,11 @@ void play_sound( const char *file )
 #endif
 }
 
+std::string strip_filename_unsafe_chars(const std::string &s)
+{
+    return replace_all_of(s, " .", "");
+}
+
 std::string make_stringf(const char *s, ...)
 {
     va_list args;
@@ -96,7 +101,7 @@ void lowercase(std::string &s)
         s[i] = tolower(s[i]);
 }
 
-std::string replace_all(std::string s,
+std::string replace_all_of(std::string s,
                         const std::string &tofind,
                         const std::string &replacement)
 {
@@ -105,7 +110,7 @@ std::string replace_all(std::string s,
    
     while ((found = s.find_first_of(tofind, start)) != std::string::npos)
     {
-        s.replace( found, tofind.length(), replacement );
+        s.replace( found, 1, replacement );
         start = found + replacement.length();
     }
 

@@ -582,7 +582,7 @@ int mons_list::mons_by_name(std::string name) const
 {
     lowercase(name);
 
-    name = replace_all( name, "_", " " );
+    name = replace_all_of( name, "_", " " );
 
     // Special casery:
     if (name == "pandemonium demon")

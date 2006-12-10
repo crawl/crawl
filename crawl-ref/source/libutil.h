@@ -21,11 +21,13 @@
 void lowercase(std::string &s);
 void uppercase(std::string &s);
 
+std::string strip_filename_unsafe_chars(const std::string &s);
+
 std::string make_stringf(const char *format, ...);
 
-std::string replace_all(std::string s,
-                        const std::string &tofind,
-                        const std::string &replacement);
+std::string replace_all_of(std::string s,
+                           const std::string &tofind,
+                           const std::string &replacement);
 
 int count_occurrences(const std::string &text, const std::string &searchfor);
 

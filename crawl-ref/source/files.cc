@@ -417,8 +417,8 @@ void check_savedir(std::string &dir)
     std::string sep = " ";
     sep[0] = FILE_SEPARATOR;
 
-    dir = replace_all(dir, "/", sep);
-    dir = replace_all(dir, "\\", sep);
+    dir = replace_all_of(dir, "/", sep);
+    dir = replace_all_of(dir, "\\", sep);
 
     // Suffix the separator if necessary
     if (dir[dir.length() - 1] != FILE_SEPARATOR)
@@ -504,13 +504,15 @@ std::string get_savedir()
     return (dir.empty()? "." : dir);
 }
 
-std::string get_savedir_filename(const char *prefix, const char *suffix, 
-                                 const char *extension, bool suppress_uid)
+std::string get_savedir_filename(const std::string &prefix,
+                                 const std::string &suffix, 
+                                 const std::string &extension,
+                                 bool suppress_uid)
 {
     std::string result = Options.save_dir;
 
     // Shorten string as appropriate
-    result += std::string(prefix).substr(0, kFileNameLen);
+    result += strip_filename_unsafe_chars(prefix).substr(0, kFileNameLen);
 
     // Technically we should shorten the string first.  But if
     // MULTIUSER is set we'll have long filenames anyway. Caveat
@@ -520,7 +522,8 @@ std::string get_savedir_filename(const char *prefix, const char *suffix,
 
     result += suffix;
 
-    if ( *extension ) {
+    if (!extension.empty())
+    {
         result += '.';
         result += extension;
     }
