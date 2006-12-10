@@ -48,7 +48,7 @@ static const char *wizard_string( int i );
 void quit_game(void)
 {
     if (yesno("Really quit?", false, 'n'))
-        ouch(-9999, 0, KILLED_BY_QUITTING);
+        ouch(INSTANT_DEATH, 0, KILLED_BY_QUITTING);
 }                               // end quit_game()
 
 static const char *features[] = {

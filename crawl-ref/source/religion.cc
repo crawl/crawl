@@ -78,6 +78,150 @@ const char *sacrifice[] = {
     " evaporates."
 };
 
+const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+{
+    // no god
+    { "", "", "", "", "" },
+    // Zin
+    { "repel the undead",
+      "call upon Zin for minor healing",
+      "call down a plague",
+      "utter a Holy Word",      
+      "summon a guardian angel" },
+    // TSO
+    { "repel the undead",
+      "smite your foes",
+      "dispel the undead",
+      "hurl bolts of divine anger",
+      "summon a divine warrior" },
+    // Kikubaaqudgha
+    { "recall your undead slaves",
+      "Kikubaaqudgha is protecting you from some side-effects of death magic.",
+      "permanently enslave the undead",
+      "",
+      "summon an emissary of Death" },
+    // Yredelemnul
+    { "animate corpses",
+      "recall your undead slaves",
+      "animate legions of the dead",
+      "drain ambient lifeforce",
+      "control the undead" },
+    // Xom
+    { "", "", "",
+      "", "" },
+    // Vehumet
+    { "gain power from killing in Vehumet's name",
+      "You can call upon Vehumet to aid your destructive magics with prayer.",
+      "During prayer you have some protection from summoned creatures.",
+      "", "" },
+    // Okawaru
+    { "give your body great, but temporary strength",
+      "call upon Okawaru for minor healing",
+      "",
+      "",
+      "haste yourself" },
+    // Makhleb
+    { "gain power from killing in Makhleb's name",
+      "harness Makhleb's destructive might",
+      "summon a lesser servant of Makhleb",
+      "hurl Makhleb's greater destruction",
+      "summon a greater servant of Makhleb" },
+    // Sif Muna
+    { "tap ambient magical fields",
+      "freely open your mind to new spells",
+      "",
+      "Sif Muna is protecting you from some side-effects of spellcasting.",
+      "" },
+    // Trog
+    { "go berserk at will",
+      "give your body great, but temporary, strength",
+      "",
+      "haste yourself",
+      "" },
+    // Nemelex
+    { "", "", "",
+      "", "" },
+    // Elyvilon
+    { "call upon Elyvilon for minor healing",
+      "call upon Elyvilon for purification",
+      "call upon Elyvilon for moderate healing",
+      "call upon Elyvilon to restore your abilities",
+      "call upon Elyvilon for incredible healing" }
+};
+
+const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+{
+    // no god
+    { "", "", "", "", "" },
+    // Zin
+    { "repel the undead",
+      "call upon Zin for minor healing",
+      "call down a plague",
+      "utter a Holy Word",      
+      "summon a guardian angel" },
+    // TSO
+    { "repel the undead",
+      "smite your foes",
+      "dispel the undead",
+      "hurl bolts of divine anger",
+      "summon a divine warrior" },
+    // Kikubaaqudgha
+    { "recall your undead slaves",
+      "Kikubaaqudgha is no longer shielding you from miscast death magic.",
+      "permanently enslave the undead",
+      "",
+      "summon an emissary of Death" },
+    // Yredelemnul
+    { "animate corpses",
+      "recall your undead slaves",
+      "animate legions of the dead",
+      "drain ambient lifeforce",
+      "control the undead" },
+    // Xom
+    { "", "", "",
+      "", "" },
+    // Vehumet
+    { "gain power from killing in Vehumet's name",
+      "Vehumet will no longer aid your destructive magics.",
+      "Vehumet will no longer shield you from summoned creatures.",
+      "",
+      "" },
+    // Okawaru
+    { "give your body great, but temporary strength",
+      "call upon Okawaru for minor healing",
+      "",
+      "",
+      "haste yourself" },
+    // Makhleb
+    { "gain power from killing in Makhleb's name",
+      "harness Makhleb's destructive might",
+      "summon a lesser servant of Makhleb",
+      "hurl Makhleb's greater destruction",
+      "summon a greater servant of Makhleb" },
+    // Sif Muna
+    { "tap ambient magical fields",
+      "forget spells at will",
+      "",
+      "Sif Muna is no longer protecting you from miscast magic.",
+      "" },
+    // Trog
+    { "go berserk at will",
+      "give your body great, but temporary, strength",
+      "",
+      "haste yourself",
+      "" },
+    // Nemelex
+    { "", "", "",
+      "", "" },
+    // Elyvilon
+    { "call upon Elyvilon for minor healing",
+      "call upon Elyvilon for purification",
+      "call upon Elyvilon for moderate healing",
+      "call upon Elyvilon to restore your abilities",
+      "call upon Elyvilon for incredible healing" }
+};
+
+
 void altar_prayer(void);
 void dec_penance(int god, int val);
 void divine_retribution(int god);
@@ -1400,208 +1544,24 @@ void gain_piety(char pgn)
 
     you.piety += pgn;
 
-    if (you.piety >= 30 && old_piety < 30)
+    for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
-	take_note(Note(NOTE_GOD_POWER, you.religion, 0));
-        switch (you.religion)
+        if ( you.piety >= piety_breakpoint(i) &&
+             old_piety < piety_breakpoint(i) )
         {
-        case GOD_NO_GOD:
-        case GOD_XOM:
-        case GOD_NEMELEX_XOBEH:
-            break;
-        default:
-            strcpy(info, "You can now ");
-            strcat(info,
-                    (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
-                            ? "repel the undead" :
-                    (you.religion == GOD_SIF_MUNA)
-                            ? "tap ambient magical fields" :
-                    (you.religion == GOD_KIKUBAAQUDGHA)
-                            ? "recall your undead slaves" :
-                    (you.religion == GOD_YREDELEMNUL)
-                            ? "animate corpses" :
-                    (you.religion == GOD_VEHUMET)
-                            ? "gain power from killing in Vehumet's name" :
-                    (you.religion == GOD_MAKHLEB)
-                            ? "gain power from killing in Makhleb's name" :
-                    (you.religion == GOD_OKAWARU)
-                            ? "give your body great, but temporary strength" :
-                    (you.religion == GOD_TROG)
-                            ? "go berserk at will" :
-                    (you.religion == GOD_ELYVILON)
-                            ? "call upon Elyvilon for minor healing"
-                // Unknown god
-                            : "endure this program bug @30");
-
-            strcat(info, ".");
-            god_speaks(you.religion, info);
-            break;
-        }
-    }
-
-    if (you.piety >= 50 && old_piety < 50)
-    {
-	take_note(Note(NOTE_GOD_POWER, you.religion, 1));
-        switch (you.religion)
-        {
-        case GOD_NO_GOD:
-        case GOD_XOM:
-        case GOD_NEMELEX_XOBEH:
-            break;
-        case GOD_KIKUBAAQUDGHA:
-            simple_god_message(" is protecting you from some side-effects of death magic.");
-            break;
-
-        case GOD_VEHUMET:
-            god_speaks(you.religion, "You can call upon Vehumet to aid your destructive magics with prayer.");
-            break;
-
-        default:
-            strcpy(info, "You can now ");
-
-            strcat(info,
-                   (you.religion == GOD_ZIN)
-                           ? "call upon Zin for minor healing" :
-                   (you.religion == GOD_SHINING_ONE)
-                           ? "smite your foes" :
-                   (you.religion == GOD_YREDELEMNUL)
-                           ? "recall your undead slaves" :
-                   (you.religion == GOD_OKAWARU)
-                           ? "call upon Okawaru for minor healing" :
-                   (you.religion == GOD_MAKHLEB)
-                           ? "harness Makhleb's destructive might" :
-                   (you.religion == GOD_SIF_MUNA)
-                           ? "freely open your mind to new spells" :
-                   (you.religion == GOD_TROG)
-                           ? "give your body great, but temporary, strength" :
-                   (you.religion == GOD_ELYVILON)
-                           ? "call upon Elyvilon for purification"
-                   // Unknown god
-                           : "endure this program bug @50");
-
-            strcat(info, ".");
-            god_speaks(you.religion, info);
-            break;
-        }
-    }
-
-    if (you.piety >= 75 && old_piety < 75)
-    {
-	take_note(Note(NOTE_GOD_POWER, you.religion, 2));
-        switch (you.religion)
-        {
-        case GOD_NO_GOD:
-        case GOD_XOM:
-        case GOD_OKAWARU:
-        case GOD_NEMELEX_XOBEH:
-        case GOD_SIF_MUNA:
-        case GOD_TROG:
-            break;
-        case GOD_VEHUMET:
-            god_speaks(you.religion,"During prayer you have some protection from summoned creatures.");
-            break;
-
-        default:
-            strcpy(info, "You can now ");
-            strcat(info,
-                     (you.religion == GOD_ZIN)
-                                 ? "call down a plague" :
-                     (you.religion == GOD_SHINING_ONE)
-                                 ? "dispel the undead" :
-                     (you.religion == GOD_KIKUBAAQUDGHA)
-                                 ? "permanently enslave the undead" :
-                     (you.religion == GOD_YREDELEMNUL)
-                                 ? "animate legions of the dead" :
-                     (you.religion == GOD_MAKHLEB)
-                                 ? "summon a lesser servant of Makhleb" :
-                     (you.religion == GOD_ELYVILON)
-                                 ? "call upon Elyvilon for moderate healing"
-                     // Unknown god
-                                 : "endure this program bug @75");
-            strcat(info, ".");
-            god_speaks(you.religion, info);
-            break;
-        }
-    }
-
-    if (you.piety >= 100 && old_piety < 100)
-    {
-	take_note(Note(NOTE_GOD_POWER, you.religion, 3));
-        switch (you.religion)
-        {
-        case GOD_NO_GOD:
-        case GOD_XOM:
-        case GOD_OKAWARU:
-        case GOD_NEMELEX_XOBEH:
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_VEHUMET:
-            break;
-        case GOD_SIF_MUNA:
-            simple_god_message
-                (" is protecting you from some side-effects of spellcasting.");
-            break;
-
-        default:
-            strcpy(info, "You can now ");
-
-            strcat(info,
-                        (you.religion == GOD_ZIN)
-                                ? "utter a Holy Word" :
-                        (you.religion == GOD_SHINING_ONE)
-                                ? "hurl bolts of divine anger" :
-                        (you.religion == GOD_YREDELEMNUL)
-                                ? "drain ambient lifeforce" :
-                        (you.religion == GOD_MAKHLEB)
-                                ? "hurl Makhleb's greater destruction" :
-                        (you.religion == GOD_TROG)
-                                ? "haste yourself" :
-                        (you.religion == GOD_ELYVILON)
-                                ? "call upon Elyvilon to restore your abilities"
-                        // Unknown god
-                                : "endure this program bug @100");
-
-            strcat(info, ".");
-            god_speaks(you.religion, info);
-            break;
-        }
-    }
-
-    if (you.piety >= 120 && old_piety < 120)
-    {
-	take_note(Note(NOTE_GOD_POWER, you.religion, 4));
-        switch (you.religion)
-        {
-        case GOD_NO_GOD:
-        case GOD_XOM:
-        case GOD_NEMELEX_XOBEH:
-        case GOD_VEHUMET:
-        case GOD_SIF_MUNA:
-        case GOD_TROG:
-            break;
-        default:
-            strcpy(info, "You can now ");
-
-            strcat(info,
-                     (you.religion == GOD_ZIN)
-                                ? "summon a guardian angel" :
-                     (you.religion == GOD_SHINING_ONE)
-                                ? "summon a divine warrior" :
-                     (you.religion == GOD_KIKUBAAQUDGHA)
-                                ? "summon an emissary of Death" :
-                     (you.religion == GOD_YREDELEMNUL)
-                                ? "control the undead" :
-                     (you.religion == GOD_OKAWARU)
-                                ? "haste yourself" :
-                     (you.religion == GOD_MAKHLEB)
-                                ? "summon a greater servant of Makhleb" :
-                     (you.religion == GOD_ELYVILON)
-                                ? "call upon Elyvilon for incredible healing"
-                     // Unknown god
-                                : "endure this program bug @120");
-
-            strcat(info, ".");
-            god_speaks(you.religion, info);
-            break;
+            take_note(Note(NOTE_GOD_POWER, you.religion, i));
+            const char* pmsg = god_gain_power_messages[(int)you.religion][i];
+            const char first = pmsg[0];
+            if ( first )
+            {
+                if ( isupper(first) )
+                    god_speaks(you.religion, pmsg);
+                else
+                {
+                    snprintf(info, INFO_SIZE, "You can now %s.", pmsg);
+                    god_speaks(you.religion, info);
+                }
+            }
         }
     }
 
@@ -1609,8 +1569,7 @@ void gain_piety(char pgn)
          (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN) &&
          you.num_gifts[you.religion] == 0 )
         simple_god_message( " will now bless your weapon at an altar...once.");
-
-}                               // end gain_piety()
+}
 
 void lose_piety(char pgn)
 {
@@ -1631,205 +1590,27 @@ void lose_piety(char pgn)
             you.num_gifts[you.religion] == 0)
             simple_god_message(" is no longer ready to bless your weapon.");
 
-        if (you.piety < 120 && old_piety >= 120)
+        for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
         {
-            switch (you.religion)
+            if ( you.piety < piety_breakpoint(i) &&
+                 old_piety >= piety_breakpoint(i) )
             {
-            case GOD_NO_GOD:
-            case GOD_XOM:
-            case GOD_NEMELEX_XOBEH:
-            case GOD_VEHUMET:
-            case GOD_SIF_MUNA:
-            case GOD_TROG:
-                break;
-            default:
-                strcpy(info, "You can no longer ");
-
-                strcat(info,
-                           (you.religion == GOD_ZIN)
-                                ? "summon guardian angels" :
-                           (you.religion == GOD_SHINING_ONE)
-                                ? "summon divine warriors" :
-                           (you.religion == GOD_KIKUBAAQUDGHA)
-                                ? "summon Death's emissaries" :
-                           (you.religion == GOD_YREDELEMNUL)
-                                ? "control undead beings" :
-                           (you.religion == GOD_OKAWARU)
-                                ? "haste yourself" :
-                           (you.religion == GOD_MAKHLEB)
-                                ? "summon a greater servant of Makhleb" :
-                           (you.religion == GOD_ELYVILON)
-                                ? "call upon Elyvilon for incredible healing"
-                           // Unknown god
-                                : "endure this program bug @120");
-
-                strcat(info, ".");
-                god_speaks(you.religion, info);
-                break;
-            }
-        }
-
-        if (you.piety < 100 && old_piety >= 100)
-        {
-            switch (you.religion)
-            {
-            case GOD_NO_GOD:
-            case GOD_XOM:
-            case GOD_OKAWARU:
-            case GOD_NEMELEX_XOBEH:
-            case GOD_KIKUBAAQUDGHA:
-            case GOD_VEHUMET:
-                break;
-            case GOD_SIF_MUNA:
-                god_speaks(you.religion,"Sif Muna is no longer protecting you from miscast magic.");
-                break;
-            default:
-                strcpy(info, "You can no longer ");
-                strcat(info,
-                        (you.religion == GOD_ZIN)
-                            ? "utter a Holy Word" :
-                        (you.religion == GOD_ELYVILON)
-                            ? "call upon Elyvilon to restore your abilities" :
-                        (you.religion == GOD_SHINING_ONE)
-                            ? "hurl bolts of divine anger" :
-                        (you.religion == GOD_YREDELEMNUL)
-                            ? "drain ambient life force" :
-                        (you.religion == GOD_MAKHLEB)
-                            ? "direct Makhleb's greater destructive powers" :
-                        (you.religion == GOD_TROG)
-                            ? "haste yourself"
-                        // Unknown god
-                            : "endure this program bug @100");
-
-                strcat(info, ".");
-                god_speaks(you.religion, info);
-                break;
-            }
-        }
-
-        if (you.piety < 75 && old_piety >= 75)
-        {
-            switch (you.religion)
-            {
-            case GOD_NO_GOD:
-            case GOD_XOM:
-            case GOD_OKAWARU:
-            case GOD_NEMELEX_XOBEH:
-            case GOD_SIF_MUNA:
-            case GOD_TROG:
-                break;
-            case GOD_VEHUMET:
-                simple_god_message(" will no longer shield you from summoned creatures.");
-                break;
-            default:
-                strcpy(info, "You can no longer ");
-
-                strcat(info,
-                       (you.religion == GOD_ZIN)
-                                ? "call down a plague" :
-                       (you.religion == GOD_SHINING_ONE)
-                                ? "dispel undead" :
-                       (you.religion == GOD_KIKUBAAQUDGHA)
-                                ? "enslave undead" :
-                       (you.religion == GOD_YREDELEMNUL)
-                                ? "animate legions of the dead" :
-                       (you.religion == GOD_MAKHLEB)
-                                ? "summon a servant of Makhleb" :
-                       (you.religion == GOD_ELYVILON)
-                                ? "call upon Elyvilon for moderate healing"
-                       // Unknown god
-                                : "endure this program bug @75");
-
-                strcat(info, ".");
-                god_speaks(you.religion, info);
-                break;
-            }
-        }
-
-        if (you.piety < 50 && old_piety >= 50)
-        {
-            switch (you.religion)
-            {
-            case GOD_NO_GOD:
-            case GOD_XOM:
-            case GOD_NEMELEX_XOBEH:
-                break;
-            case GOD_KIKUBAAQUDGHA:
-                simple_god_message(" is no longer shielding you from miscast death magic.");
-                break;
-            case GOD_VEHUMET:
-                simple_god_message(" will no longer aid your destructive magics.");
-                break;
-
-            default:
-                strcpy(info, "You can no longer ");
-
-                strcat(info,
-                       (you.religion == GOD_ZIN)
-                            ? "call upon Zin for minor healing" :
-                       (you.religion == GOD_SHINING_ONE)
-                            ? "smite your foes" :
-                       (you.religion == GOD_YREDELEMNUL)
-                            ? "recall your undead slaves" :
-                       (you.religion == GOD_OKAWARU)
-                            ? "call upon Okawaru for minor healing" :
-                       (you.religion == GOD_MAKHLEB)
-                            ? "hurl Makhleb's destruction" :
-                       (you.religion == GOD_SIF_MUNA)
-                            ? "forget spells at will" :
-                       (you.religion == GOD_TROG)
-                            ? "give your body great, but temporary, strength" :
-                       (you.religion == GOD_ELYVILON)
-                            ? "call upon Elyvilon for Purification"
-                       // Unknown god
-                            : "endure this program bug @50");
-
-                strcat(info, ".");
-                god_speaks(you.religion, info);
-                break;
-            }
-        }
-
-        if (you.piety < 30 && old_piety >= 30)
-        {
-            switch (you.religion)
-            {
-            case GOD_NO_GOD:
-            case GOD_XOM:
-            case GOD_NEMELEX_XOBEH:
-                break;
-            default:
-                strcpy(info, "You can no longer ");
-
-                strcat(info,
-                    (you.religion == GOD_ZIN || you.religion == GOD_SHINING_ONE)
-                            ? "repel the undead" :
-                    (you.religion == GOD_KIKUBAAQUDGHA)
-                            ? "recall your undead slaves" :
-                    (you.religion == GOD_YREDELEMNUL)
-                            ? "animate corpses" :
-                    (you.religion == GOD_SIF_MUNA)
-                            ? "tap ambient magical fields" :
-                    (you.religion == GOD_VEHUMET)
-                            ? "gain power from killing in Vehumet's name" :
-                    (you.religion == GOD_MAKHLEB)
-                            ? "gain power from killing in Makhleb's name" :
-                    (you.religion == GOD_OKAWARU)
-                            ? "give your body great, but temporary, strength" :
-                    (you.religion == GOD_TROG)
-                            ? "go berserk at will" :
-                    (you.religion == GOD_ELYVILON)
-                            ? "call upon Elyvilon for minor healing."
-                    // Unknown god
-                            : "endure this program bug @30");
-
-                strcat(info, ".");
-                god_speaks(you.religion, info);
-                break;
+                const char* pmsg=god_lose_power_messages[(int)you.religion][i];
+                const char first = pmsg[0];
+                if ( first )
+                {
+                    if ( isupper(first) )
+                        god_speaks(you.religion, pmsg);
+                    else
+                    {
+                        snprintf(info,INFO_SIZE,"You can no longer %s.",pmsg);
+                        god_speaks(you.religion, info);
+                    }
+                }
             }
         }
     }
-}                               // end lose_piety()
+}
 
 void divine_retribution( int god )
 {
@@ -2849,4 +2630,13 @@ int piety_rank( int piety )
         if ( piety >= breakpoints[i] )
             return numbreakpoints - i;
     return 0;
+}
+
+int piety_breakpoint(int i)
+{
+    int breakpoints[MAX_GOD_ABILITIES] = { 30, 50, 75, 100, 120 };
+    if ( i >= MAX_GOD_ABILITIES || i < 0 )
+        return 255;
+    else
+        return breakpoints[i];
 }

@@ -2057,7 +2057,7 @@ void monster_attack(int monster_attacking)
 
     if (wearing_amulet(AMU_WARDING)
         || (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER]
-            && (!player_under_penance() && you.piety >= 75)))
+            && (!player_under_penance() && you.piety >= piety_breakpoint(2))))
     {
         if (mons_has_ench(attacker, ENCH_ABJ_I, ENCH_ABJ_VI))
         {

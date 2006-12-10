@@ -21,44 +21,17 @@
 
 std::vector<Note> note_list;
 
-/* I can't believe I'm writing code this bad */
-static int real_god_power( int religion, int idx ) {
-    switch ( religion ) {
-    case GOD_NO_GOD:
-    case GOD_XOM:
-    case GOD_NEMELEX_XOBEH:
-	return -1;
-    case GOD_ZIN:
-    case GOD_SHINING_ONE:
-    case GOD_YREDELEMNUL:
-    case GOD_MAKHLEB:	
-    case GOD_ELYVILON:
-	return idx;
-    case GOD_KIKUBAAQUDGHA:
-	if ( idx < 3 )
-	    return idx;
-	if ( idx == 3 )
-	    return -1;
-	return idx-1;	
-    case GOD_VEHUMET:
-	return ( idx > 3 ? -1 : idx );
-    case GOD_OKAWARU:
-	if ( idx < 2 )
-	    return idx;
-	if ( idx == 2 || idx == 3 )
-	    return -1;
-	return idx - 2;
-    case GOD_SIF_MUNA:
-	if ( idx == 2 || idx == 4 ) return -1;
-	if ( idx < 2 ) return idx;
-	if ( idx == 3 ) return 2;
-    case GOD_TROG:
-	if ( idx == 2 || idx == 4 ) return -1;
-	if ( idx < 2 ) return idx;
-	if ( idx == 3 ) return idx-1;
-    default:
-	return -1;
-    }
+// return the real number of the power (casting out nonexistent powers),
+// starting from 0, or -1 if the power doesn't exist
+static int real_god_power( int religion, int idx )
+{
+    if ( god_gain_power_messages[religion][idx][0] == 0 )
+        return -1;
+    int count = 0;
+    for ( int j = 0; j < idx; ++j )
+        if ( god_gain_power_messages[religion][j][0] )
+            ++count;
+    return count;
 }
 
 static bool is_noteworthy_skill_level( int level ) {

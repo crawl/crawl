@@ -2699,7 +2699,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
     case SPTYP_NECROMANCY:
         if (you.religion == GOD_KIKUBAAQUDGHA
-            && (!player_under_penance() && you.piety >= 50
+            && (!player_under_penance() && you.piety >= piety_breakpoint(1)
                 && random2(150) <= you.piety))
         {
             canned_msg(MSG_NOTHING_HAPPENS);

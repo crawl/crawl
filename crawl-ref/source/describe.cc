@@ -6373,17 +6373,33 @@ std::string ghost_description(bool concise)
     return std::string(tmp_buff);
 }
 
-static void print_god_abil_desc( int abil )
+extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
+
+static bool print_god_abil_desc( int god, int numpower )
 {
-    const ability_def &abil_info = get_ability_def( abil );
-
-    const std::string cost = "(" + make_cost_description( abil_info ) + ")";
-
+    const char* pmsg = god_gain_power_messages[god][numpower];
+    char buf[200];
+    // if no message then no power
+    if ( !pmsg[0] )
+        return false;
+    
+    // The power could be either passive or an active ability.
+    // Determine which.
+    const ability_type abil = god_abilities[god][numpower];
+    if ( isupper(pmsg[0]) )
+        strcpy(buf, pmsg);
+    else
+        snprintf(buf, sizeof buf, "You can %s.", pmsg);
+    std::string cost;
+    if ( abil != ABIL_NON_ABILITY )
+    {
+        cost = "(" + make_cost_description(get_ability_def(abil)) + ")";
+        cost = std::string(79 - strlen(buf) - cost.length(), ' ') + cost;
+    }
+    
     // Produce a 79 character string with cost right justified:
-    std::string str( abil_info.name );
-    str += std::string( 79 - str.length() - cost.length(), ' ' ) + cost + EOL;
-
-    cprintf( "%s", str.c_str() );
+    cprintf( "%s%s\n", buf, cost.c_str() );
+    return true;
 }
 
 //---------------------------------------------------------------
@@ -6663,14 +6679,14 @@ void describe_god( int which_god, bool give_title )
         // because god isn't really protecting player - he only sometimes
         // saves his life (probably it shouldn't be displayed at all).
         // What about this ?
-        bool penance_ability = false;
+        bool have_any = false;
         if ((which_god == GOD_ZIN
                 || which_god == GOD_SHINING_ONE
                 || which_god == GOD_ELYVILON
                 || which_god == GOD_YREDELEMNUL)
             && you.piety >= 30)
         {
-            penance_ability = true; // suppress "none" later
+            have_any = true;
             cprintf( "%s %s watches over you during prayer." EOL,
                      god_name(which_god),
                      (you.piety >= 150) ? "carefully":   // > 4/5
@@ -6678,192 +6694,17 @@ void describe_god( int which_god, bool give_title )
                                           "sometimes");  // less than 2:3
         }
 
-        // mv: No abilities (except divine protection)
-        // under penance (fix me if I'm wrong)
-        if (player_under_penance()) 
+        // mv: No abilities (except divine protection) under penance
+        if (!player_under_penance())
         {
-            if ( !penance_ability )
-                cprintf( "None." EOL );
+            for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
+                if ( you.piety >= piety_breakpoint(i) )
+                    if (print_god_abil_desc(which_god, i))
+                        have_any = true;
+            
         }
-        else
-        {
-            switch (which_god) //mv: finally let's print abilities
-            {
-            case GOD_ZIN:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_ZIN_REPEL_UNDEAD );
-                else 
-                    cprintf( "None." EOL ); 
-
-                if (you.piety >= 50)  
-                    print_god_abil_desc( ABIL_ZIN_HEALING );
-
-                if (you.piety >= 75)
-                    print_god_abil_desc( ABIL_ZIN_PESTILENCE );
-
-                if (you.piety >= 100) 
-                    print_god_abil_desc( ABIL_ZIN_HOLY_WORD );
-
-                if (you.piety >= 120) 
-                    print_god_abil_desc( ABIL_ZIN_SUMMON_GUARDIAN );
-                break;
-
-            case GOD_SHINING_ONE:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_TSO_REPEL_UNDEAD );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_TSO_SMITING );
-
-                if (you.piety >= 75)
-                    print_god_abil_desc( ABIL_TSO_ANNIHILATE_UNDEAD );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_TSO_CLEANSING_FLAME );
-
-                if (you.piety >= 120)
-                    print_god_abil_desc( ABIL_TSO_SUMMON_DAEVA );
-                break;
-
-            case GOD_KIKUBAAQUDGHA:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_KIKU_RECALL_UNDEAD_SLAVES );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    cprintf("You are protected from some of the side-effects of death magic." EOL);
-
-                if (you.piety >= 75)
-                    print_god_abil_desc( ABIL_KIKU_ENSLAVE_UNDEAD );
-
-                if (you.piety >= 120) 
-                    print_god_abil_desc( ABIL_KIKU_INVOKE_DEATH );
-                break;
-
-            case GOD_YREDELEMNUL:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_YRED_ANIMATE_CORPSE );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_YRED_RECALL_UNDEAD );
-
-                if (you.piety >= 75)
-                    print_god_abil_desc( ABIL_YRED_ANIMATE_DEAD );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_YRED_DRAIN_LIFE );
-
-                if (you.piety >= 120)
-                    print_god_abil_desc( ABIL_YRED_CONTROL_UNDEAD );
-                break;
-
-
-            case GOD_VEHUMET:
-                if (you.piety >= 30)  
-                {
-                    cprintf( "You can gain power from the those you kill " EOL
-                             "   in Vehumet's name, or those slain by your servants." EOL );
-                }
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)  
-                    cprintf( "Vehumet assists with destructive magics during prayer." EOL );
-
-                if (you.piety >= 75)  
-                    cprintf( "During prayer you have some protection from summoned creatures." EOL );
-                break;
-
-
-            case GOD_OKAWARU:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_OKAWARU_MIGHT );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_OKAWARU_HEALING );
-
-                if (you.piety >= 120)
-                    print_god_abil_desc( ABIL_OKAWARU_HASTE );
-                break;
-
-            case GOD_MAKHLEB:
-                if (you.piety >= 30)
-                {
-                    cprintf( "You can gain power from the deaths " EOL
-                             "   of those you kill in Makhleb's name." EOL );
-                }
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_MAKHLEB_MINOR_DESTRUCTION );
-
-                if (you.piety >= 75)
-                    print_god_abil_desc( ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_MAKHLEB_MAJOR_DESTRUCTION );
-
-                if (you.piety >= 120)
-                    print_god_abil_desc( ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB );
-                break;
-
-            case GOD_SIF_MUNA:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_SIF_MUNA_CHANNEL_ENERGY );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_SIF_MUNA_FORGET_SPELL );
-
-                if (you.piety >= 100) 
-                    cprintf( "You are protected from some side-effects of spellcasting." EOL );
-                break;
-
-            case GOD_TROG:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_TROG_BERSERK );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)
-                    print_god_abil_desc( ABIL_TROG_MIGHT );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_TROG_HASTE_SELF );
-                break;
-
-            case GOD_ELYVILON:
-                if (you.piety >= 30)
-                    print_god_abil_desc( ABIL_ELYVILON_LESSER_HEALING );
-                else 
-                    cprintf( "None." EOL );
-
-                if (you.piety >= 50)  
-                    print_god_abil_desc( ABIL_ELYVILON_PURIFICATION );
-
-                if (you.piety >= 75) 
-                    print_god_abil_desc( ABIL_ELYVILON_HEALING );
-
-                if (you.piety >= 100)
-                    print_god_abil_desc( ABIL_ELYVILON_RESTORATION );
-
-                if (you.piety >= 120) 
-                    print_god_abil_desc( ABIL_ELYVILON_GREATER_HEALING );
-                break;
-
-            default:   //mv: default is Xom, Nemelex and all bugs.
-                cprintf( "None." EOL );
-            } //end of printing abilities
-        }
+        if ( !have_any )
+            cprintf( "None." EOL );
     }
 
 

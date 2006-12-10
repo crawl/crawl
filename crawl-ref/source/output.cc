@@ -160,7 +160,7 @@ void print_stats(void)
         you.redraw_strength = 0;
 
         if (you.strength < 1)
-            ouch(-9999, 0, KILLED_BY_WEAKNESS);
+            ouch(INSTANT_DEATH, 0, KILLED_BY_WEAKNESS);
 
         burden_change();
     }
@@ -191,7 +191,7 @@ void print_stats(void)
         you.redraw_intelligence = 0;
 
         if (you.intel < 1)
-            ouch(-9999, 0, KILLED_BY_STUPIDITY);
+            ouch(INSTANT_DEATH, 0, KILLED_BY_STUPIDITY);
     }
 
     if (you.redraw_dexterity)
@@ -220,7 +220,7 @@ void print_stats(void)
         you.redraw_dexterity = 0;
 
         if (you.dex < 1)
-            ouch(-9999, 0, KILLED_BY_CLUMSINESS);
+            ouch(INSTANT_DEATH, 0, KILLED_BY_CLUMSINESS);
     }
 
     if (you.redraw_armour_class)
@@ -853,7 +853,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int rinvi = player_see_invis(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
         (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
-         !player_under_penance() && you.piety >= 75);
+         !player_under_penance() && you.piety >= piety_breakpoint(2));
     const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
     const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
 

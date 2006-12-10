@@ -153,6 +153,9 @@
 
 #define CHUNK_BASE_NUTRITION            1000
 
+// The maximum number of abilities any god can have
+#define MAX_GOD_ABILITIES               5
+
 // This value is used to mark immune levels of MR
 #define MAG_IMMUNE                      5000
 

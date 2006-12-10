@@ -1081,5 +1081,6 @@ private:
 };
 
 extern const struct coord_def Compass[8];
+extern const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
 #endif // EXTERNS_H

@@ -17,6 +17,7 @@
 #include "enum.h"
 
 void simple_god_message( const char *event, int which_deity = GOD_NO_GOD );
+int piety_breakpoint(int i);
 char *god_name(int which_god,bool long_name=false); //mv
 void dec_penance(int val);
 void dec_penance(int god, int val);

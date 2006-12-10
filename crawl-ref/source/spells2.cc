@@ -41,6 +41,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
 #include "stuff.h"
@@ -1539,7 +1540,8 @@ void summon_undead(int pow)
     if (!you.is_undead
         && !(you.religion == GOD_KIKUBAAQUDGHA
              && (!player_under_penance()
-                 && you.piety >= 100 && random2(200) <= you.piety)))
+                 && you.piety >= piety_breakpoint(3)
+                 && random2(200) <= you.piety)))
     {
         disease_player( 25 + random2(50) );
     }

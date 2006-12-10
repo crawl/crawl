@@ -2161,7 +2161,7 @@ static void world_reacts()
         if (you.hunger <= 100)
         {
             mpr( "You have starved to death.", MSGCH_FOOD );
-            ouch( -9999, 0, KILLED_BY_STARVATION );
+            ouch( INSTANT_DEATH, 0, KILLED_BY_STARVATION );
         }
     }
 

@@ -80,6 +80,56 @@ static FixedVector< talent, 52 >  Curr_abil;
 
 static bool insert_ability( int which_ability );
 
+// declaring this const messes up externs later, so don't do it
+ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
+{
+    // no god
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    // Zin
+    { ABIL_ZIN_REPEL_UNDEAD, ABIL_ZIN_HEALING, ABIL_ZIN_PESTILENCE,
+      ABIL_ZIN_HOLY_WORD, ABIL_ZIN_SUMMON_GUARDIAN },
+    // TSO
+    { ABIL_TSO_REPEL_UNDEAD, ABIL_TSO_SMITING, ABIL_TSO_ANNIHILATE_UNDEAD,
+      ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
+    // Kikubaaqudgha
+    { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
+      ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY,
+      ABIL_KIKU_INVOKE_DEATH },
+    // Yredelemnul
+    { ABIL_YRED_ANIMATE_CORPSE, ABIL_YRED_RECALL_UNDEAD,
+      ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE,
+      ABIL_YRED_CONTROL_UNDEAD },
+    // Xom
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    // Vehumet
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    // Okawaru
+    { ABIL_OKAWARU_MIGHT, ABIL_OKAWARU_HEALING, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_OKAWARU_HASTE },
+    // Makhleb
+    { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
+      ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
+      ABIL_MAKHLEB_MAJOR_DESTRUCTION,
+      ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB },
+    // Sif Muna
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY,
+      ABIL_SIF_MUNA_FORGET_SPELL, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    // Trog
+    { ABIL_TROG_BERSERK, ABIL_TROG_MIGHT, ABIL_NON_ABILITY,
+      ABIL_TROG_HASTE_SELF, ABIL_NON_ABILITY },
+    // Nemelex
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    // Elyvilon
+    { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
+      ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
+      ABIL_ELYVILON_GREATER_HEALING }
+};
+
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
 // 
@@ -1508,107 +1558,14 @@ bool generate_abilities( void )
     // gods take abilities away until penance completed -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
     {
-        switch (you.religion)
+        for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
         {
-        case GOD_ZIN:
-            if (you.piety >= 30)
-                insert_ability( ABIL_ZIN_REPEL_UNDEAD );
-            if (you.piety >= 50)
-                insert_ability( ABIL_ZIN_HEALING );
-            if (you.piety >= 75)
-                insert_ability( ABIL_ZIN_PESTILENCE );
-            if (you.piety >= 100)
-                insert_ability( ABIL_ZIN_HOLY_WORD );
-            if (you.piety >= 120)
-                insert_ability( ABIL_ZIN_SUMMON_GUARDIAN );
-            break;
-
-        case GOD_SHINING_ONE:
-            if (you.piety >= 30)
-                insert_ability( ABIL_TSO_REPEL_UNDEAD );
-            if (you.piety >= 50)
-                insert_ability( ABIL_TSO_SMITING );
-            if (you.piety >= 75)
-                insert_ability( ABIL_TSO_ANNIHILATE_UNDEAD );
-            if (you.piety >= 100)
-                insert_ability( ABIL_TSO_CLEANSING_FLAME );
-            if (you.piety >= 120)
-                insert_ability( ABIL_TSO_SUMMON_DAEVA );
-            break;
-
-        case GOD_YREDELEMNUL:
-            if (you.piety >= 30)
-                insert_ability( ABIL_YRED_ANIMATE_CORPSE );
-            if (you.piety >= 50)
-                insert_ability( ABIL_YRED_RECALL_UNDEAD );
-            if (you.piety >= 75)
-                insert_ability( ABIL_YRED_ANIMATE_DEAD );
-            if (you.piety >= 100)
-                insert_ability( ABIL_YRED_DRAIN_LIFE );
-            if (you.piety >= 120)
-                insert_ability( ABIL_YRED_CONTROL_UNDEAD );
-            break;
-
-        case GOD_ELYVILON:
-            if (you.piety >= 30)
-                insert_ability( ABIL_ELYVILON_LESSER_HEALING );
-            if (you.piety >= 50)
-                insert_ability( ABIL_ELYVILON_PURIFICATION );
-            if (you.piety >= 75)
-                insert_ability( ABIL_ELYVILON_HEALING );
-            if (you.piety >= 100)
-                insert_ability( ABIL_ELYVILON_RESTORATION );
-            if (you.piety >= 120)
-                insert_ability( ABIL_ELYVILON_GREATER_HEALING );
-            break;
-
-        case GOD_MAKHLEB:
-            if (you.piety >= 50)
-                insert_ability( ABIL_MAKHLEB_MINOR_DESTRUCTION );
-            if (you.piety >= 75)
-                insert_ability( ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB );
-            if (you.piety >= 100)
-                insert_ability( ABIL_MAKHLEB_MAJOR_DESTRUCTION );
-            if (you.piety >= 120)
-                insert_ability( ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB );
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-            if (you.piety >= 30)
-                insert_ability( ABIL_KIKU_RECALL_UNDEAD_SLAVES );
-            if (you.piety >= 75)
-                insert_ability( ABIL_KIKU_ENSLAVE_UNDEAD );
-            if (you.piety >= 120)
-                insert_ability( ABIL_KIKU_INVOKE_DEATH );
-            break;
-
-        case GOD_OKAWARU:
-            if (you.piety >= 30)
-                insert_ability( ABIL_OKAWARU_MIGHT );
-            if (you.piety >= 50)
-                insert_ability( ABIL_OKAWARU_HEALING );
-            if (you.piety >= 120)
-                insert_ability( ABIL_OKAWARU_HASTE );
-            break;
-
-        case GOD_TROG:
-            if (you.piety >= 30)
-                insert_ability( ABIL_TROG_BERSERK );
-            if (you.piety >= 50)
-                insert_ability( ABIL_TROG_MIGHT );
-            if (you.piety >= 100)
-                insert_ability( ABIL_TROG_HASTE_SELF );
-            break;
-
-        case GOD_SIF_MUNA:
-            if (you.piety >= 30)
-                insert_ability( ABIL_SIF_MUNA_CHANNEL_ENERGY );
-            if (you.piety >= 50)
-                insert_ability( ABIL_SIF_MUNA_FORGET_SPELL );
-            break;
-
-        default:
-            break;
+            if ( you.piety >= piety_breakpoint(i) )
+            {
+                ability_type abil = god_abilities[(int)you.religion][i];
+                if ( abil != ABIL_NON_ABILITY )
+                    insert_ability(abil);
+            }
         }
     }
 

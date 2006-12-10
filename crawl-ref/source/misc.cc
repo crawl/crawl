@@ -586,11 +586,11 @@ void up_stairs(void)
             if (is_valid_item( you.inv[i] ) 
                 && you.inv[i].base_type == OBJ_ORBS)
             {
-                ouch(-9999, 0, KILLED_BY_WINNING);
+                ouch(INSTANT_DEATH, 0, KILLED_BY_WINNING);
             }
         }
 
-        ouch(-9999, 0, KILLED_BY_LEAVING);
+        ouch(INSTANT_DEATH, 0, KILLED_BY_LEAVING);
     }
 
     mpr("Entering...");
