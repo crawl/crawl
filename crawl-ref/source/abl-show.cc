@@ -1379,20 +1379,7 @@ char show_abilities( void )
 
                 gotoxy(60, wherey());
 
-                int spell_f = Curr_abil[loopy].fail;
-
-                cprintf( (spell_f >= 100) ? "Useless"   :
-                         (spell_f >   90) ? "Terrible"  :
-                         (spell_f >   80) ? "Cruddy"    :
-                         (spell_f >   70) ? "Bad"       :
-                         (spell_f >   60) ? "Very Poor" :
-                         (spell_f >   50) ? "Poor"      :
-                         (spell_f >   40) ? "Fair"      :
-                         (spell_f >   30) ? "Good"      :
-                         (spell_f >   20) ? "Very Good" :
-                         (spell_f >   10) ? "Great"     :
-                         (spell_f >    0) ? "Excellent" :
-                                            "Perfect" );
+                cprintf( "%s", failure_rate_to_string(Curr_abil[loopy].fail));
 
                 gotoxy(70, wherey());
             }                              // end if conditional
@@ -1435,7 +1422,6 @@ bool generate_abilities( void )
 /*****************************/
 {
     int loopy;
-    int ability = -1;                   // used with draconian checks {dlb}
 
     // fill array of structs with "empty" values {dlb}:
     for (loopy = 0; loopy < 52; loopy++)
@@ -1478,7 +1464,7 @@ bool generate_abilities( void )
     {
         if (you.experience_level >= 7)
         {
-            ability = (
+            const int ability = (
                 (you.species == SP_GREEN_DRACONIAN)  ? ABIL_BREATHE_POISON :
                 (you.species == SP_RED_DRACONIAN)    ? ABIL_BREATHE_FIRE :
                 (you.species == SP_WHITE_DRACONIAN)  ? ABIL_BREATHE_FROST :
@@ -1488,7 +1474,6 @@ bool generate_abilities( void )
                 (you.species == SP_PALE_DRACONIAN)   ? ABIL_BREATHE_STEAM :
                 (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME:
                                                      -1);
-
             if (ability != -1)
                 insert_ability( ability );
         }

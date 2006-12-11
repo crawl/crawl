@@ -174,36 +174,12 @@ char list_spells(void)
 	    // 35--48 is the spell schools
 	    
 	    gotoxy(51, wherey());
-	    int spell_p = calc_spell_power( spell, true );
-	    cprintf( (spell_p > 100) ? "Enormous"   :
-		     (spell_p >  90) ? "Huge"       :
-		     (spell_p >  80) ? "Massive"    :
-		     (spell_p >  70) ? "Major"      :
-		     (spell_p >  60) ? "Impressive" :
-		     (spell_p >  50) ? "Reasonable" :
-		     (spell_p >  40) ? "Moderate"   :
-		     (spell_p >  30) ? "Adequate"   :
-		     (spell_p >  20) ? "Mediocre"   :
-		     (spell_p >  10) ? "Minor"
-		     : "Negligible");
+	    cprintf("%s",spell_power_to_string(calc_spell_power(spell,true)));
 		     
             //gotoxy(58, wherey());
             gotoxy(65, wherey());
 
-            int spell_f = spell_fail( spell );
-
-            cprintf( (spell_f == 100) ? "Useless"   :
-                     (spell_f >   90) ? "Terrible"  :
-                     (spell_f >   80) ? "Cruddy"    :
-                     (spell_f >   70) ? "Bad"       :
-                     (spell_f >   60) ? "Very Poor" :
-                     (spell_f >   50) ? "Poor"      :
-                     (spell_f >   40) ? "Fair"      :
-                     (spell_f >   30) ? "Good"      :
-                     (spell_f >   20) ? "Very Good" :
-                     (spell_f >   10) ? "Great"     :
-                     (spell_f >    0) ? "Excellent" 
-                                      : "Perfect" );
+            cprintf( "%s", failure_rate_to_string(spell_fail(spell)));
 
             gotoxy(77, wherey());
 
@@ -3610,3 +3586,36 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
     return (true);
 }                               // end miscast_effect()
+
+const char* failure_rate_to_string( int fail )
+{
+    return
+        (fail == 100) ? "Useless"   :
+        (fail >   90) ? "Terrible"  :
+        (fail >   80) ? "Cruddy"    :
+        (fail >   70) ? "Bad"       :
+        (fail >   60) ? "Very Poor" :
+        (fail >   50) ? "Poor"      :
+        (fail >   40) ? "Fair"      :
+        (fail >   30) ? "Good"      :
+        (fail >   20) ? "Very Good" :
+        (fail >   10) ? "Great"     :
+        (fail >    0) ? "Excellent" 
+        : "Perfect";
+}
+
+const char* spell_power_to_string( int power )
+{
+    return
+        (power > 100) ? "Enormous"   :
+        (power >  90) ? "Huge"       :
+        (power >  80) ? "Massive"    :
+        (power >  70) ? "Major"      :
+        (power >  60) ? "Impressive" :
+        (power >  50) ? "Reasonable" :
+        (power >  40) ? "Moderate"   :
+        (power >  30) ? "Adequate"   :
+        (power >  20) ? "Mediocre"   :
+        (power >  10) ? "Minor"
+        : "Negligible";
+}

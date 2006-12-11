@@ -896,36 +896,12 @@ static void sdump_spells(const std::string &, std::string & text)
 		for (int i = spell_line.length(); i < 41; ++i )
 		    spell_line += ' ';
 
-		int spell_p = calc_spell_power( spell, true );
-		spell_line += ( (spell_p > 100) ? "Enormous"   :
-				(spell_p >  90) ? "Huge"       :
-				(spell_p >  80) ? "Massive"    :
-				(spell_p >  70) ? "Major"      :
-				(spell_p >  60) ? "Impressive" :
-				(spell_p >  50) ? "Reasonable" :
-				(spell_p >  40) ? "Moderate"   :
-				(spell_p >  30) ? "Adequate"   :
-				(spell_p >  20) ? "Mediocre"   :
-				(spell_p >  10) ? "Minor"
-				: "Negligible");
+		spell_line += spell_power_to_string(calc_spell_power(spell,true));
 
 		for (int i = spell_line.length(); i < 56; ++i )
 		    spell_line += ' ';
 
-                int fail_rate = spell_fail( spell );
-
-                spell_line += (fail_rate == 100) ? "Useless"   :
-                              (fail_rate >   90) ? "Terrible"  :
-                              (fail_rate >   80) ? "Cruddy"    :
-                              (fail_rate >   70) ? "Bad"       :
-                              (fail_rate >   60) ? "Very Poor" :
-                              (fail_rate >   50) ? "Poor"      :
-                              (fail_rate >   40) ? "Fair"      :
-                              (fail_rate >   30) ? "Good"      :
-                              (fail_rate >   20) ? "Very Good" :
-                              (fail_rate >   10) ? "Great"     :
-                              (fail_rate >   0)  ? "Excellent" 
-                                                 : "Perfect";
+                spell_line += failure_rate_to_string(spell_fail(spell));
 
                 for (int i = spell_line.length(); i < 68; i++)
                     spell_line += ' ';
