@@ -391,7 +391,7 @@ std::vector<const char *> get_ability_names()
 
 /*
    Activates a menu which gives player access to all of their non-spell
-   special abilities - Eg naga's spit poison, or the Invocations you get
+   special abilities - e.g. nagas' spit poison, or the Invocations you get
    from worshipping. Generated dynamically - the function checks to see which
    abilities you have every time.
  */
@@ -1653,8 +1653,7 @@ bool generate_abilities( void )
 // the old invocation slots void and erase them).  We also try to 
 // protect any bindings the character might have made into the 
 // traditional invocation slots (A-E and X). -- bwr
-void set_god_ability_helper( int abil, char letter )
-/**************************************************/
+static void set_god_ability_helper( int abil, char letter )
 {
     int i;
     const int index = letter_to_index( letter );
@@ -1673,8 +1672,20 @@ void set_god_ability_helper( int abil, char letter )
     }
 }
 
+// return GOD_NO_GOD if it isn't a god ability, otherwise return
+// the index of the god.
+static int is_god_ability(int abil)
+{
+    if ( abil == ABIL_NON_ABILITY )
+        return GOD_NO_GOD;
+    for ( int i = 0; i < MAX_NUM_GODS; ++i )
+        for ( int j = 0; j < MAX_GOD_ABILITIES; ++j )
+            if ( god_abilities[i][j] == abil )
+                return i;
+    return GOD_NO_GOD;
+}
+
 void set_god_ability_slots( void )
-/********************************/
 {
     ASSERT( you.religion != GOD_NO_GOD );
 
@@ -1682,85 +1693,23 @@ void set_god_ability_slots( void )
 
     set_god_ability_helper( ABIL_RENOUNCE_RELIGION, 'X' );
 
-    int num_abil = 0;
-    int abil_start = ABIL_NON_ABILITY;
-
-    switch (you.religion)
-    {
-    case GOD_ZIN:
-        abil_start = ABIL_ZIN_REPEL_UNDEAD;
-        num_abil = 5; 
-        break;
-
-    case GOD_SHINING_ONE:
-        abil_start = ABIL_TSO_REPEL_UNDEAD;
-        num_abil = 5; 
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-        abil_start = ABIL_KIKU_RECALL_UNDEAD_SLAVES;
-        num_abil = 3; 
-        break;
-
-    case GOD_YREDELEMNUL:
-        abil_start = ABIL_YRED_ANIMATE_CORPSE;
-        num_abil = 5; 
-        break;
-
-    case GOD_OKAWARU:
-        abil_start = ABIL_OKAWARU_MIGHT;
-        num_abil = 3; 
-        break;
-
-    case GOD_MAKHLEB:
-        abil_start = ABIL_MAKHLEB_MINOR_DESTRUCTION;
-        num_abil = 4; 
-        break;
-
-    case GOD_SIF_MUNA:
-        abil_start = ABIL_SIF_MUNA_CHANNEL_ENERGY;
-        num_abil = 2; 
-        break;
-
-    case GOD_TROG:
-        abil_start = ABIL_TROG_BERSERK;
-        num_abil = 3; 
-        break;
-
-    case GOD_ELYVILON:
-        abil_start = ABIL_ELYVILON_LESSER_HEALING;
-        num_abil = 5; 
-        break;
-
-    case GOD_VEHUMET:
-    case GOD_NEMELEX_XOBEH:
-    case GOD_XOM:
-    default:
-        break;
-    }
-
-    // clear out other god invocations:
+    // clear out other god invocations
     for (i = 0; i < 52; i++)
     {
-        const int abil = you.ability_letter_table[i];
-
-        if ((abil >= ABIL_ZIN_REPEL_UNDEAD      // is a god ability
-                    && abil <= ABIL_ELYVILON_GREATER_HEALING)
-            && (num_abil == 0           // current god does have abilities
-                || abil < abil_start    // not one of current god's abilities
-                || abil >= abil_start + num_abil))
-        {
+        const int god = is_god_ability(you.ability_letter_table[i]);
+        if ( god != GOD_NO_GOD && god != you.religion )
             you.ability_letter_table[i] = ABIL_NON_ABILITY;
-        }
     }
 
-    // finally, add in current god's invocaions in traditional slots:
-    if (num_abil)
+    // finally, add in current god's invocations in traditional slots:
+    int num = 0;
+    for ( i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
-        for (i = 0; i < num_abil; i++)
+        if ( god_abilities[(int)you.religion][i] != ABIL_NON_ABILITY )
         {
-            set_god_ability_helper( abil_start + i, 
-                    (Options.lowercase_invocations ? 'a' : 'A') + i );
+            set_god_ability_helper(god_abilities[(int)you.religion][i],
+                                   (Options.lowercase_invocations ? 'a' : 'A') + num);
+            ++num;
         }
     }
 }
@@ -1777,7 +1726,7 @@ static int find_ability_slot( int which_ability )
             break;
     }
 
-    // no requested slot, find new one and make it prefered.
+    // no requested slot, find new one and make it preferred.
     if (slot == 52)  
     {
         // skip over a-e if player prefers them for invocations
