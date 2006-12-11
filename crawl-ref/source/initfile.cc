@@ -578,7 +578,7 @@ void game_options::reset_options()
     note_all_spells        = false;
     note_hp_percent        = 0;
     ood_interesting        = 8;
-    terse_hand             = false;
+    terse_hand             = true;
     increasing_skill_progress = true;
 
     // [ds] Grumble grumble.
