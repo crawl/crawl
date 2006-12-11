@@ -856,7 +856,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_BLACK_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-        if (power > 18 && one_chance_in(3)) 
+        if (power > 18 && one_chance_in(3) && you.level_type == LEVEL_DUNGEON) 
         {
            band = BAND_DRACONIAN;
            band_size = random_range(2, 4);
@@ -869,7 +869,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
-        if (power > 20) 
+        if (power > 20 && you.level_type == LEVEL_DUNGEON)
         {
            band = BAND_DRACONIAN;
            band_size = random_range(3, 6);

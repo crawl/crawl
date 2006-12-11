@@ -288,6 +288,21 @@ bool mons_abyss(int mcls)
     case MONS_ZOMBIE_SMALL:
     case MONS_SIMULACRUM_LARGE:
     case MONS_SIMULACRUM_SMALL:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
         return true;
     default:
         return false;
@@ -415,6 +430,7 @@ int mons_rare_abyss(int mcls)
     case MONS_TENTACLED_MONSTROSITY:
     case MONS_WIZARD:
     case MONS_WOOD_GOLEM:
+    case MONS_DEATH_DRAKE:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
@@ -428,6 +444,21 @@ int mons_rare_abyss(int mcls)
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
     case MONS_UGLY_THING:
+    case MONS_MOTTLED_DRACONIAN:
+    case MONS_YELLOW_DRACONIAN:
+    case MONS_BLACK_DRACONIAN:
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+    case MONS_PURPLE_DRACONIAN:
+    case MONS_PALE_DRACONIAN:
+    case MONS_GREEN_DRACONIAN:
+    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_MONK:
+    case MONS_DRACONIAN_SCORCHER:
+    case MONS_DRACONIAN_KNIGHT:
+    case MONS_DRACONIAN_ANNIHILATOR:
+    case MONS_DRACONIAN_ZEALOT:
+    case MONS_DRACONIAN_SHIFTER:
         return 3;
 
     case MONS_DANCING_WEAPON:
