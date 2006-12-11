@@ -14,7 +14,7 @@ static bool alloced = false;
 
 std::queue<const char *> free_queue;
 
-static void flush_free_queue(int max_allowed)
+static void flush_free_queue(unsigned int max_allowed)
 {
     while (free_queue.size() > max_allowed)
     {
