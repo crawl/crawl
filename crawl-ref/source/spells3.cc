@@ -489,6 +489,9 @@ void dancing_weapon(int pow, bool force_hostile)
     mitm[i].y = 0;
     mitm[i].link = NON_ITEM;
 
+    // Mark the weapon as thrown so we'll autograb it when the tango's done.
+    mitm[i].flags |= ISFLAG_THROWN;
+
     in_name( wpn, DESC_CAP_YOUR, str_pass );
     strcpy( info, str_pass );
     strcat( info, " dances into the air!" );
