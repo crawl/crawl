@@ -2769,7 +2769,7 @@ static bool initialise(void)
     draw_border();
     new_level();
 
-    init_new_level();
+    init_new_level(false);
     // Mark items in inventory as of unknown origin.
     origin_set_inventory(origin_set_unknown);
 

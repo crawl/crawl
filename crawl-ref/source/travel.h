@@ -409,6 +409,7 @@ private:
 
 int level_distance(level_id first, level_id second);
 
+bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
 bool prompt_stop_explore(int es_why);
 

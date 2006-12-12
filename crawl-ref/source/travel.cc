@@ -1466,7 +1466,7 @@ void track_intersect(std::vector<level_id> &cur,
     cx->branch = 0;
     cx->depth  = -1;
     
-    int us = cur.size() - 1, them = targ.size() - 1;
+    int us = int(cur.size()) - 1, them = int(targ.size()) - 1;
 
     for ( ; us >= 0 && them >= 0; us--, them--)
     {
@@ -1488,7 +1488,12 @@ void track_intersect(std::vector<level_id> &cur,
  */
 int level_distance(level_id first, level_id second)
 {
-    if (first == second) return 0;
+    if (first == second
+        || (first.level_type != LEVEL_DUNGEON
+            && first.level_type == second.level_type))
+    {
+        return 0;
+    }
 
     std::vector<level_id> fv, sv;
 
@@ -1533,6 +1538,7 @@ int level_distance(level_id first, level_id second)
         }
         distance += sv[i].depth;
     }
+    
     return distance;
 }
 
@@ -1938,6 +1944,15 @@ static level_pos prompt_translevel_target()
 
 void start_translevel_travel(const level_pos &pos)
 {
+    if (!can_travel_to(pos.id))
+        return;
+
+    if (!can_travel_interlevel())
+    {
+        start_travel(pos.pos.x, pos.pos.y);
+        return;
+    }
+    
     travel_target = pos;
 
     if (pos.id != level_id::current())
@@ -3168,6 +3183,14 @@ void TravelCache::fixup_levels()
     std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         i->second.fixup();
+}
+
+bool can_travel_to(const level_id &id)
+{
+    return ((id.level_type == LEVEL_DUNGEON
+             && can_travel_interlevel())
+            || (id.level_type == LEVEL_PANDEMONIUM
+                && you.level_type == LEVEL_PANDEMONIUM));
 }
 
 bool can_travel_interlevel()

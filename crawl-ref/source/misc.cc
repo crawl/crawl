@@ -669,7 +669,7 @@ void up_stairs(void)
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
     // Tell the travel code that we're now on a new level
-    init_new_level();
+    init_new_level(true);
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just ascended, and the
@@ -1109,7 +1109,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
-    init_new_level();
+    init_new_level(true);
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just descended, and the
@@ -1143,10 +1143,11 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     }
 }                               // end down_stairs()
 
-void init_new_level()
+void init_new_level(bool transit)
 {
     travel_init_new_level();
-    stash_init_new_level();
+    if (transit)
+        stash_init_new_level();
 }
 
 void new_level(void)
@@ -2005,8 +2006,7 @@ bool i_feel_safe()
 // Do not attempt to use level_id if level_type != LEVEL_DUNGEON
 std::string short_place_name(level_id id)
 {
-    return short_place_name(
-            get_packed_place(id.branch, id.depth, LEVEL_DUNGEON));
+    return id.describe();
 }
 
 unsigned short get_packed_place( unsigned char branch, int subdepth,

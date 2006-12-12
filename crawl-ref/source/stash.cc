@@ -856,7 +856,7 @@ std::ostream &operator << (std::ostream &os, const ShopInfo &s)
     return os;
 }
 
-LevelStashes::LevelStashes() : place(), stashes(), shops()
+LevelStashes::LevelStashes() : place(level_id::current()), stashes(), shops()
 {
 }
 
@@ -1268,7 +1268,7 @@ void StashTracker::update_visible_stashes(
             int x = you.x_pos + cx - 17, y = you.y_pos + cy - 9;
             if (x < 0 || x >= GXM || y < 0 || y >= GYM)
                 continue;
-            
+
             if (!env.show[cx - 8][cy] && !(cx == 17 && cy == 9))
                 continue;
 
@@ -1374,7 +1374,13 @@ void StashTracker::get_matching_stashes(
 
     level_id curr = level_id::current();
     for (unsigned i = 0; i < results.size(); ++i)
-        results[i].player_distance = level_distance(curr, results[i].pos.id);
+    {
+        int ldist = level_distance(curr, results[i].pos.id);
+        if (ldist == -1)
+            ldist = 1000;
+        
+        results[i].player_distance = ldist;
+    }
 
     // Sort stashes so that closer stashes come first and stashes on the same
     // levels with more items come first.
@@ -1487,15 +1493,15 @@ void StashTracker::display_search_results(
             if (res->shop)
             {
                 dotravel = res->shop->show_menu(short_place_name(res->pos.id),
-                                                 travelable);
+                                                can_travel_to(res->pos.id));
             }
             else if (res->stash)
             {
                 dotravel = res->stash->show_menu(short_place_name(res->pos.id),
-                                                 travelable);
+                                                 can_travel_to(res->pos.id));
             }
 
-            if (dotravel && travelable)
+            if (dotravel && can_travel_to(res->pos.id))
             {
                 redraw_screen();
                 const level_pos lp = res->pos;
@@ -1508,7 +1514,7 @@ void StashTracker::display_search_results(
     }
 
     redraw_screen();
-    if (travelable && sel.size() == 1 && !stashmenu.meta_key)
+    if (sel.size() == 1 && !stashmenu.meta_key)
     {
         const stash_search_result *res = 
                 static_cast<stash_search_result *>(sel[0]->data);
