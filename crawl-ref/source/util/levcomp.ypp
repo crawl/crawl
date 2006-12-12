@@ -11,7 +11,6 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
-    io_cleanup();
     fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     exit(1);

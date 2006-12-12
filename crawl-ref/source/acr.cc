@@ -213,13 +213,6 @@ int main( int argc, char *argv[] )
         exit(0);
     }
 
-    init_io();
-
-#ifdef USE_MACROS
-    // Load macros
-    macro_init();
-#endif
-
     bool game_start = initialise();
 
     if (game_start || Options.always_greet)
@@ -2654,13 +2647,6 @@ static bool initialise(void)
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
-    // system initialisation stuff:
-    textbackground(0);
-
-#ifdef DOS
-    directvideo = 1;
-#endif
-
     seed_rng();
     clear_ids();                // in itemname.cc
     init_char_table(Options.char_set);
@@ -2669,8 +2655,6 @@ static bool initialise(void)
     init_properties();
     init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_playerspells();        // this needs to be way up top {dlb}
-
-    clrscr();
 
     // init item array:
     for (i = 0; i < MAX_ITEMS; i++)
@@ -2723,6 +2707,22 @@ static bool initialise(void)
 
     // Read special levels and vaults.
     read_maps();
+    
+    init_io();
+
+#ifdef USE_MACROS
+    // Load macros
+    macro_init();
+#endif
+
+    // system initialisation stuff:
+    textbackground(0);
+
+#ifdef DOS
+    directvideo = 1;
+#endif
+
+    clrscr();
 
     // sets up a new game:
     bool newc = new_game();
