@@ -2193,26 +2193,32 @@ void get_system_environment(void)
 // parse args, filling in Options and game environment as we go.
 // returns true if no unknown or malformed arguments were found.
 
+// Keep this in sync with the option names.
+enum commandline_option_type {
+    CLO_SCORES,
+    CLO_NAME,
+    CLO_RACE,
+    CLO_CLASS,
+    CLO_PIZZA,
+    CLO_PLAIN,
+    CLO_DIR,
+    CLO_RC,
+    CLO_TSCORES,
+    CLO_VSCORES,
+    CLO_SCOREFILE,
+
+    CLO_NOPS
+};
+
 static const char *cmd_ops[] = { "scores", "name", "race", "class",
                                  "pizza", "plain", "dir", "rc", "tscores",
-                                 "vscores" };
+                                 "vscores", "scorefile" };
 
-const int num_cmd_ops = 10;
+const int num_cmd_ops = CLO_NOPS;
 bool arg_seen[num_cmd_ops];
-
-static void set_crawl_path(const std::string &path)
-{
-    const std::string::size_type slash = path.rfind(FILE_SEPARATOR);
-    SysEnv.crawl_executable_path = 
-        slash != std::string::npos? path.substr(0, slash + 1)
-                                  : std::string("");
-}
 
 bool parse_args( int argc, char **argv, bool rc_only )
 {
-    if (argc >= 1)
-        set_crawl_path(argv[0]);
-
     if (argc < 2)           // no args!
         return (true);
 
@@ -2277,9 +2283,9 @@ bool parse_args( int argc, char **argv, bool rc_only )
         //.take action according to the cmd chosen
         switch(o)
         {
-        case 0:             // scores
-        case 8:             // tscores
-        case 9:             // vscores
+        case CLO_SCORES:
+        case CLO_TSCORES:
+        case CLO_VSCORES:
             if (!next_is_param)      
                 ecount = SCORE_FILE_ENTRIES;            // default
             else // optional number given
@@ -2298,26 +2304,31 @@ bool parse_args( int argc, char **argv, bool rc_only )
             {
                 Options.sc_entries = ecount;
 
-                if (o == 8)
+                if (o == CLO_TSCORES)
                     Options.sc_format = SCORE_TERSE;
-                else if (o == 9)
+                else if (o == CLO_VSCORES)
                     Options.sc_format = SCORE_VERBOSE;
-
             }
             break;
 
-        case 1:             // name
+        case CLO_SCOREFILE:
             if (!next_is_param)
                 return (false);
-
+            if (!rc_only)
+                SysEnv.scorefile = next_arg;
+            nextUsed = true;
+            break;
+            
+        case CLO_NAME:
+            if (!next_is_param)
+                return (false);
             if (!rc_only)
                 Options.player_name = next_arg;
-
             nextUsed = true;
             break;
 
-        case 2:             // race
-        case 3:             // class
+        case CLO_RACE:
+        case CLO_CLASS:
             if (!next_is_param)
                 return (false);
 
@@ -2335,7 +2346,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             nextUsed = true;
             break;
 
-        case 4:             // pizza
+        case CLO_PIZZA:
             if (!next_is_param)
                 return (false);
 
@@ -2345,7 +2356,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             nextUsed = true;
             break;
 
-        case 5:             // plain
+        case CLO_PLAIN:
             if (next_is_param)
                 return (false);
 
@@ -2356,7 +2367,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             }
             break;
 
-        case 6:             // dir
+        case CLO_DIR:
             // ALWAYS PARSE
             if (!next_is_param)
                 return (false);
@@ -2365,7 +2376,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             nextUsed = true;
             break;
 
-        case 7:
+        case CLO_RC:
             // ALWAYS PARSE
             if (!next_is_param)
                 return (false);
