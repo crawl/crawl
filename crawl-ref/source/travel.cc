@@ -2330,9 +2330,10 @@ void start_travel(int x, int y)
     // Check whether we can get to the square.
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
     
-    if (point_distance[x][y] == 0 &&
-            (x != you.x_pos || you.running.y != you.y_pos) &&
-            is_travel_ok(x, y, false))
+    if (point_distance[x][y] == 0
+        && (x != you.x_pos || you.running.y != you.y_pos)
+        && is_travel_ok(x, y, false)
+        && can_travel_interlevel())
     {
         // We'll need interlevel travel to get here.
         travel_target.id = level_id::current();
