@@ -3344,11 +3344,8 @@ void give_items_skills()
             }
             else if (you.species == SP_TROLL)
             {
-                you.inv[0].quantity = 0;
-                you.inv[0].base_type = OBJ_WEAPONS;
-                you.inv[0].sub_type = WPN_CLUB;
-                you.inv[0].plus = 0;
-                you.inv[0].special = 0;
+                // no weapon for trolls
+                you.inv[0] = item_def();
             }
             else if (player_genus(GENPC_DRACONIAN))
             {
@@ -3420,7 +3417,8 @@ void give_items_skills()
 
         you.skills[SK_FIGHTING] = 3;
 
-        weap_skill = 2;
+        if (you.species != SP_TROLL)
+            weap_skill = 2;
 
         if (you.species == SP_KOBOLD)
         {
