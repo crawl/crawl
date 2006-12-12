@@ -28,8 +28,8 @@ const char *delay_name(int delay);
 delay_type get_delay(const std::string &);
 
 void perform_activity();
-void interrupt_activity( activity_interrupt_type ai, 
-                     const activity_interrupt_data &a 
+bool interrupt_activity( activity_interrupt_type ai, 
+                         const activity_interrupt_data &a 
                             = activity_interrupt_data() );
 
 #endif

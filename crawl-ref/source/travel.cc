@@ -15,6 +15,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "direct.h"
 #include "itemname.h"
 #include "items.h"
 #include "misc.h"
@@ -250,6 +251,25 @@ static bool is_exclude_root(int x, int y)
             return true;
     }
     return false;
+}
+
+// Determines if the level is fully explored. Clobbers you.run_x/y.
+static bool fully_explored()
+{
+    const int oldrun = you.running;
+    
+    if (!you.running.is_explore())
+        you.running = RMODE_EXPLORE;
+    
+    // Do a second floodfill to check if the level is fully explored.
+    // Note we're passing in a features vector to force find_travel_pos to
+    // reseed past traps/deep water/lava. Icky.
+    
+    std::vector<coord_def> features_dummy;
+    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features_dummy);
+    you.running = oldrun;
+
+    return !(you.running.x > 0 && you.running.y > 0);
 }
 
 const char *run_mode_name(int runmode)
@@ -704,58 +724,25 @@ bool prompt_stop_explore(int es_why)
             || yesno("Stop exploring?", true, 'n', true, false));
 }
 
-static bool es_say(const char *what)
-{
-    mprf("Found %s.", what);
-    return (true);
-}
-
 #define ES_item  (Options.explore_stop & ES_ITEM)
-
-#define ES_shop  ((Options.explore_stop & ES_SHOP) && \
-                  es_say("a shop") && prompt_stop_explore(ES_SHOP))
-
-#define ES_stair ((Options.explore_stop & ES_STAIR) &&  \
-                  es_say("a stair") && prompt_stop_explore(ES_STAIR))
-
-#define ES_altar ((Options.explore_stop & ES_ALTAR) &&  \
-                  es_say("an altar") && prompt_stop_explore(ES_ALTAR))
+#define ES_shop  (Options.explore_stop & ES_SHOP)
+#define ES_stair (Options.explore_stop & ES_STAIR)
+#define ES_altar (Options.explore_stop & ES_ALTAR)
 
 /*
- * Given a square that has just become visible during explore, returns true
- * if the player might consider the square worth stopping explore for.
+ * Adds interesting stuf on (x, y) to explore_discoveries.
  * 
  * NOTE: These are env.map coords, add +1 to get grid coords.
  */
-static bool is_interesting_square(int x, int y)
+inline static void check_interesting_square(int x, int y,
+                                            explore_discoveries &ed)
 {
-    if (ES_item && igrd[x + 1][y + 1] != NON_ITEM)
-    {
-        bool valid_stop = true;
-        if (you.running == RMODE_EXPLORE_GREEDY)
-        {
-            // The things we need to do...
-            const LevelStashes *lev = stashes.find_current_level();
-            if (lev && lev->needs_visit(x + 1, y + 1))
-                valid_stop = false;
-        }
+    coord_def pos(x + 1, y + 1);
+    
+    if (ES_item && igrd(pos) != NON_ITEM)
+        ed.found_item( pos, mitm[ igrd(pos) ] );
 
-        if (valid_stop)
-        {
-            mprf("Found %s.",
-                 item_name( mitm[ igrd[x + 1][y + 1] ], DESC_NOCAP_A ));
-            if (prompt_stop_explore(ES_ITEM))
-                return (true);
-        }
-    }
-
-    unsigned char grid = grd[x + 1][y + 1];
-    return (grid == DNGN_ENTER_SHOP && you.running != RMODE_EXPLORE_GREEDY
-            && ES_shop)
-            || (is_stair(grid) && ES_stair)
-            || (is_altar(grid)
-                    && you.where_are_you != BRANCH_ECUMENICAL_TEMPLE
-                    && ES_altar);
+    ed.found_feature( pos, grd(pos) );
 }
 
 static void userdef_run_stoprunning_hook(void)
@@ -853,20 +840,23 @@ command_type travel()
         // there are any squares of the shadow map that have just been
         // discovered and contain an item, or have an interesting dungeon
         // feature, stop exploring.
+
+        explore_discoveries discoveries;
         for (int y = 0; y < GYM - 1; ++y)
         {
             for (int x = 0; x < GXM - 1; ++x)
             {
                 if (!is_player_mapped(mapshadow[x][y])
-                        && is_player_mapped((unsigned char) env.map[x][y])
-                        && is_interesting_square(x, y))
+                    && is_player_mapped((unsigned char) env.map[x][y]))
                 {
-                    stop_running();
-                    y = GYM;
-                    break;
+                    check_interesting_square(x, y, discoveries);
                 }
             }
         }
+
+        if (discoveries.prompt_stop())
+            stop_running();
+
         copy(env.map, mapshadow);
     }
 
@@ -895,8 +885,12 @@ command_type travel()
             // No place to go?
             if (!you.running.x)
             {
+                // Do fully_explored() *before* stop_running!
+                if (fully_explored())
+                    mpr("Done exploring.");
+                else
+                    mpr("Partly explored, some areas are inaccessible.");
                 stop_running();
-                mpr("Done exploring.");
             }
         }
     }
@@ -1080,12 +1074,13 @@ void find_travel_pos(int youx, int youy,
     bool floodout = false;
     unsigned char feature;
     const LevelStashes *lev = stashes.find_current_level();
-    const bool need_for_greed = you.running == RMODE_EXPLORE_GREEDY && can_autopickup();
+    const bool need_for_greed =
+        you.running == RMODE_EXPLORE_GREEDY && can_autopickup();
 
     // For greedy explore, keep track of the closest unexplored
     // territory and the closest greedy square.
-    int e_x = 0, e_y = 0;
-    int i_x = 0, i_y = 0;
+    int e_x = 0, e_y = 0;     // Unexplored
+    int i_x = 0, i_y = 0;     // Square with interesting item.
     // Use these weird defaults to handle negative item greeds.
     int ex_dist = -10000, ix_dist = -10000;
 
@@ -3355,4 +3350,90 @@ void runrest::check_mp()
         mpr("MP restored.");
         stop();        
     }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// explore_discoveries
+
+explore_discoveries::explore_discoveries()
+    : es_flags(0), current_level(NULL), items(), stairs(), shops(), altars()
+{
+}
+
+std::string explore_discoveries::cleaned_feature_description(int grid) const
+{
+    std::string s = lowercase_first(feature_description(grid));
+    if (s.length() && s[s.length() - 1] == '.')
+    {
+        s.erase(s.length() - 1);
+    }
+    return (s);
+}
+
+void explore_discoveries::found_feature(const coord_def &pos, int grid)
+{
+    if (grid == DNGN_ENTER_SHOP && ES_shop)
+    {
+        shops.push_back( named_thing<int>( shop_name(pos.x, pos.y), grid ) );
+        es_flags |= ES_SHOP;
+    }
+    else if (is_stair(grid) && ES_stair)
+    {
+        stairs.push_back(
+            named_thing<int>(
+                cleaned_feature_description(grid), grid ) );
+        es_flags |= ES_STAIR;
+    }
+    else if (is_altar(grid) && ES_altar)
+    {
+        altars.push_back(
+            named_thing<int>(
+                cleaned_feature_description(grid), grid ) );
+        es_flags |= ES_ALTAR;        
+    }
+}
+
+void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
+{
+    if (you.running == RMODE_EXPLORE_GREEDY)
+    {
+        // The things we need to do...
+        if (!current_level)
+            current_level = stashes.find_current_level();
+
+        if (current_level && current_level->needs_visit(pos.x, pos.y))
+            return;
+    }
+
+    items.push_back( named_thing<item_def>(item_name(i, DESC_NOCAP_A), i) );
+    es_flags |= ES_ITEM;
+}
+
+template <class C> void explore_discoveries::say_any(
+    const C &coll, const char *stub) const
+{
+    if (coll.empty())
+        return;
+    
+    const std::string message = "Found " +
+        comma_separated_line(coll.begin(), coll.end()) + ".";
+    
+    if ((int) message.length() >= get_number_of_cols())
+        mprf(stub, coll.size());
+    else
+        mprf("%s", message.c_str());
+}
+
+bool explore_discoveries::prompt_stop() const
+{
+    if (!es_flags)
+        return (false);
+
+    say_any(items, "Found %u items.");
+    say_any(stairs, "Found %u stairs.");
+    say_any(altars, "Found %u altars.");
+    say_any(shops, "Found %u shops.");
+
+    return ((Options.explore_stop_prompt & es_flags) != es_flags
+            || prompt_stop_explore(es_flags));
 }

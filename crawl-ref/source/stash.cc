@@ -1155,12 +1155,15 @@ LevelStashes &StashTracker::get_current_level()
 
 LevelStashes *StashTracker::find_current_level()
 {
+    if (is_level_untrackable())
+        return (NULL);
+    
     std::vector<LevelStashes>::iterator iter = levels.begin();
     for ( ; iter != levels.end() && !iter->isBelowPlayer(); iter++)
     {
         if (iter->isCurrent()) return &*iter;
     }
-    return NULL;
+    return (NULL);
 }
 
 

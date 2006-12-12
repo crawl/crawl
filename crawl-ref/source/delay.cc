@@ -909,12 +909,13 @@ inline static void monster_warning(activity_interrupt_type ai,
     }
 }
 
-void interrupt_activity( activity_interrupt_type ai, 
+// Returns true if any activity was stopped.
+bool interrupt_activity( activity_interrupt_type ai, 
                          const activity_interrupt_data &at )
 {
     const int delay = current_delay_action();
     if (delay == DELAY_NOT_DELAYED)
-        return;
+        return (false);
 
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
@@ -923,7 +924,7 @@ void interrupt_activity( activity_interrupt_type ai,
     {
         monster_warning(ai, at, item.type);
         stop_delay();
-        return;
+        return (true);
     }
 
     // Check the other queued delays; the first delay that is interruptible
@@ -943,16 +944,18 @@ void interrupt_activity( activity_interrupt_type ai,
                 {
                     monster_warning(ai, at, you.delay_queue[j].type);
                     stop_delay();
-                    return;
+                    return (true);
                 }
             }
 
             // Non-run queued delays can be discarded without any processing.
             you.delay_queue.erase( you.delay_queue.begin() + i,
                                    you.delay_queue.end() );
-            break;
+            return (true);
         }
     }
+
+    return (false);
 }
 
 static const char *activity_interrupt_names[] =

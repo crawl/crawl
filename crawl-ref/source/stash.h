@@ -263,8 +263,9 @@ class StashTracker
 public:
     static bool is_level_untrackable()
     {
-        return you.level_type == LEVEL_LABYRINTH 
-                || you.level_type == LEVEL_ABYSS;
+        return you.level_type == LEVEL_LABYRINTH
+            || you.level_type == LEVEL_ABYSS
+            || you.level_type == LEVEL_PANDEMONIUM;
     }
 
     StashTracker() : levels()
