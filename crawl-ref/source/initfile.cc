@@ -204,7 +204,7 @@ static int str_to_weapon( const std::string &str )
     return (WPN_UNKNOWN);
 }
 
-static std::string weapon_to_str( int weapon )
+std::string weapon_to_str( int weapon )
 {
     switch (weapon)
     {
@@ -889,6 +889,7 @@ std::string read_init_file(bool runscript)
 
 static void read_startup_prefs()
 {
+#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
     FILE *f = fopen(fn.c_str(), "r");
     if (!f)
@@ -908,8 +909,10 @@ static void read_startup_prefs()
     Options.prev_race     = temp.race;
     Options.prev_book     = temp.book;
     Options.prev_name     = temp.player_name;
+#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
+#ifndef DISABLE_STICKY_STARTUP_OPTIONS
 static void write_newgame_options(FILE *f)
 {
     // Write current player name
@@ -958,19 +961,23 @@ static void write_newgame_options(FILE *f)
 		"random");
     }
 }
+#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
 void write_newgame_options_file()
 {
+#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
     FILE *f = fopen(fn.c_str(), "w");
     if (!f)
         return;
     write_newgame_options(f);
     fclose(f);
+#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
 void save_player_name()
 {
+#ifndef DISABLE_STICKY_STARTUP_OPTIONS
     if (!Options.remember_name)
         return ;
 
@@ -979,6 +986,7 @@ void save_player_name()
 
     // And save
     write_newgame_options_file();
+#endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
  
 void read_options(FILE *f, bool runscript)

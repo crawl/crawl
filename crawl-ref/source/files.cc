@@ -238,20 +238,20 @@ static bool is_uid_file(const std::string &name, const std::string &ext)
 
 }
 
-static bool is_save_file_name(const std::string &name)
+bool is_save_file_name(const std::string &name)
 {
     return is_uid_file(name, ".sav");
 }
 
 #ifdef LOAD_UNPACKAGE_CMD
-static bool is_packed_save(const std::string &name)
+bool is_packed_save(const std::string &name)
 {
     return is_uid_file(name, PACKAGE_SUFFIX);
 }
 #endif
 
 // Returns a full player struct read from the save.
-static player read_character_info(const std::string &savefile)
+player read_character_info(const std::string &savefile)
 {
     player fromfile;
     player backup = you;
@@ -263,24 +263,21 @@ static player read_character_info(const std::string &savefile)
     char majorVersion = 0;
     char minorVersion = 0;
 
-    if (!determine_version(charf, majorVersion, minorVersion))
-        goto done_reading_character;
+    if (determine_version(charf, majorVersion, minorVersion)
+        && majorVersion == SAVE_MAJOR_VERSION)
+    {
+        restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
+        fromfile = you;
+        you      = backup;
+    }
 
-    if (majorVersion != SAVE_MAJOR_VERSION)
-        goto done_reading_character;
-
-    restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
-    fromfile = you;
-    you      = backup;
-
-done_reading_character:
     fclose(charf);
     return fromfile;
 }
 
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
-static std::vector<std::string> get_dir_files(const std::string &dirname)
+std::vector<std::string> get_dir_files(const std::string &dirname)
 {
     std::vector<std::string> files;
 
@@ -446,13 +443,14 @@ std::string get_savedir_path(const std::string &shortpath)
  */
 std::vector<player> find_saved_characters()
 {
+    std::vector<player> chars;
+#ifndef DISABLE_SAVEGAME_LISTS
     std::string searchpath = Options.save_dir;
 
     if (searchpath.empty())
         searchpath = ".";
 
     std::vector<std::string> allfiles = get_dir_files(searchpath);
-    std::vector<player> chars;
     for (int i = 0, size = allfiles.size(); i < size; ++i)
     {
         std::string filename = allfiles[i];
@@ -495,6 +493,7 @@ std::vector<player> find_saved_characters()
     }
 
     std::sort(chars.begin(), chars.end());
+#endif // !DISABLE_SAVEGAME_LISTS
     return (chars);
 }
 

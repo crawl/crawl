@@ -33,11 +33,17 @@
 #include <algorithm>
 
 #define ST_MAJOR_VER ((unsigned char) 4)
-#define ST_MINOR_VER ((unsigned char) 4)
+#define ST_MINOR_VER ((unsigned char) 5)
 
 #define LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
 #define LUA_VIEW_ANNOTATE   "ch_stash_view_annotate_item"
+
+void stash_init_new_level()
+{
+    // If there's an existing stash level for Pan, blow it away.
+    stashes.remove_level( level_id(LEVEL_PANDEMONIUM) );
+}
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
@@ -850,21 +856,13 @@ std::ostream &operator << (std::ostream &os, const ShopInfo &s)
     return os;
 }
 
-LevelStashes::LevelStashes()
+LevelStashes::LevelStashes() : place(), stashes(), shops()
 {
-    branch = you.where_are_you;
-    depth  = you.your_level;
 }
 
-bool LevelStashes::operator < (const LevelStashes &lev) const
+level_id LevelStashes::where() const
 {
-    return branch < lev.branch || (branch == lev.branch && depth < lev.depth);
-}
-
-bool LevelStashes::isBelowPlayer() const
-{
-    return branch > you.where_are_you 
-        || (branch == you.where_are_you && depth > you.your_level);
+    return (place);
 }
 
 Stash *LevelStashes::find_stash(int x, int y)
@@ -881,7 +879,7 @@ const Stash *LevelStashes::find_stash(int x, int y) const
         y = you.y_pos;
     }
     const int abspos = (GXM * y) + x;
-    c_stashes::const_iterator st = stashes.find(abspos);
+    stashes_t::const_iterator st = stashes.find(abspos);
     return (st == stashes.end()? NULL : &st->second);
 }
 
@@ -984,38 +982,32 @@ void LevelStashes::add_stash(int x, int y)
     }
 }
 
-bool LevelStashes::isCurrent() const
+bool LevelStashes::is_current() const
 {
-    return branch == you.where_are_you && depth == you.your_level;
+    return (place == level_id::current());
 }
 
 bool LevelStashes::in_hell() const
 {
-    return branch >= BRANCH_DIS 
-            && branch <= BRANCH_THE_PIT
-            && branch != BRANCH_VESTIBULE_OF_HELL;
+    return place.branch >= BRANCH_DIS
+            && place.branch <= BRANCH_THE_PIT
+            && place.branch != BRANCH_VESTIBULE_OF_HELL;
 }
 
 bool LevelStashes::in_branch(int branchid) const
 {
-    return branch == branchid;
+    return place.branch == branchid;
 }
 
 
 std::string LevelStashes::level_name() const
 {
-    int curr_subdungeon_level = subdungeon_depth( branch, depth );
-    return (place_name(
-                get_packed_place(branch, curr_subdungeon_level, LEVEL_DUNGEON), 
-                true, true));
+    return place.describe(true, true);
 }
 
 std::string LevelStashes::short_level_name() const
 {
-    return (short_place_name(
-            get_packed_place( branch, 
-                subdungeon_depth( branch, depth ),
-                LEVEL_DUNGEON ) ));
+    return place.describe();
 }
 
 int LevelStashes::count_stashes() const
@@ -1024,7 +1016,7 @@ int LevelStashes::count_stashes() const
     if (!rawcount)
         return (0);
 
-    for (c_stashes::const_iterator iter = stashes.begin(); 
+    for (stashes_t::const_iterator iter = stashes.begin(); 
             iter != stashes.end(); iter++)
     {
         if (!iter->second.enabled)
@@ -1038,9 +1030,8 @@ void LevelStashes::get_matching_stashes(
         std::vector<stash_search_result> &results)
     const
 {
-    level_id clid(branch, subdungeon_depth(branch, depth));
-    std::string lplace = "{" + short_place_name(clid) + "}";
-    for (c_stashes::const_iterator iter = stashes.begin();
+    std::string lplace = "{" + place.describe() + "}";
+    for (stashes_t::const_iterator iter = stashes.begin();
             iter != stashes.end(); iter++)
     {
         if (iter->second.enabled)
@@ -1048,7 +1039,7 @@ void LevelStashes::get_matching_stashes(
             stash_search_result res;
             if (iter->second.matches_search(lplace, search, res))
             {
-                res.pos.id = clid;
+                res.pos.id = place;
                 results.push_back(res);
             }
         }
@@ -1059,7 +1050,7 @@ void LevelStashes::get_matching_stashes(
         stash_search_result res;
         if (shops[i].matches_search(lplace, search, res))
         {
-            res.pos.id = clid;
+            res.pos.id = place;
             results.push_back(res);
         }
     }
@@ -1080,7 +1071,7 @@ void LevelStashes::write(std::ostream &os, bool identify) const
         const Stash &s = stashes.begin()->second;
         int refx = s.getX(), refy = s.getY();
         std::string levname = short_level_name();
-        for (c_stashes::const_iterator iter = stashes.begin(); 
+        for (stashes_t::const_iterator iter = stashes.begin(); 
                 iter != stashes.end(); iter++)
         {
             iter->second.write(os, refx, refy, levname, identify);
@@ -1094,11 +1085,10 @@ void LevelStashes::save(FILE *file) const
     // How many stashes on this level?
     writeShort(file, (short) stashes.size());
 
-    writeByte(file, branch);
-    writeShort(file, (short) depth);
+    place.save(file);
 
     // And write the individual stashes
-    for (c_stashes::const_iterator iter = stashes.begin(); 
+    for (stashes_t::const_iterator iter = stashes.begin(); 
             iter != stashes.end(); iter++)
         iter->second.save(file);
 
@@ -1111,8 +1101,7 @@ void LevelStashes::load(FILE *file)
 {
     int size = readShort(file);
 
-    branch = readByte(file);
-    depth  = readShort(file);
+    place.load(file);
 
     stashes.clear();
     for (int i = 0; i < size; ++i)
@@ -1141,29 +1130,21 @@ std::ostream &operator << (std::ostream &os, const LevelStashes &ls)
 
 LevelStashes &StashTracker::get_current_level()
 {
-    std::vector<LevelStashes>::iterator iter = levels.begin();
-    for ( ; iter != levels.end() && !iter->isBelowPlayer(); iter++)
-    {
-        if (iter->isCurrent()) return *iter;
-    }
-    if (iter == levels.end())
-        levels.push_back(LevelStashes());
-    else
-        levels.insert(iter, LevelStashes());
-    return get_current_level();
+    return (levels[level_id::current()]);
+}
+
+LevelStashes *StashTracker::find_level(const level_id &id)
+{
+    stash_levels_t::iterator i = levels.find(id);
+    return (i != levels.end()? &i->second : NULL);
 }
 
 LevelStashes *StashTracker::find_current_level()
 {
     if (is_level_untrackable())
         return (NULL);
-    
-    std::vector<LevelStashes>::iterator iter = levels.begin();
-    for ( ; iter != levels.end() && !iter->isBelowPlayer(); iter++)
-    {
-        if (iter->isCurrent()) return &*iter;
-    }
-    return (NULL);
+
+    return find_level(level_id::current());
 }
 
 
@@ -1174,23 +1155,15 @@ bool StashTracker::update_stash(int x, int y)
     {
         bool res = lev->update_stash(x, y);
         if (!lev->stash_count())
-            remove_level(*lev);
+            remove_level();
         return res;
     }
     return false;
 }
 
-void StashTracker::remove_level(const LevelStashes &ls)
+void StashTracker::remove_level(const level_id &place)
 {
-    std::vector<LevelStashes>::iterator iter = levels.begin();
-    for ( ; iter != levels.end(); ++iter)
-    {
-        if (&ls == &*iter)
-        {
-            levels.erase(iter);
-            break ;
-        }
-    }
+    levels.erase(place);
 }
 
 void StashTracker::no_stash(int x, int y)
@@ -1200,7 +1173,7 @@ void StashTracker::no_stash(int x, int y)
     LevelStashes &current = get_current_level();
     current.no_stash(x, y);
     if (!current.stash_count())
-        remove_level(current);
+        remove_level();
 }
 
 void StashTracker::add_stash(int x, int y, bool verbose)
@@ -1218,7 +1191,7 @@ void StashTracker::add_stash(int x, int y, bool verbose)
     }
     
     if (!current.stash_count())
-        remove_level(current);
+        remove_level();
 }
 
 void StashTracker::dump(const char *filename, bool identify) const
@@ -1238,10 +1211,10 @@ void StashTracker::write(std::ostream &os, bool identify) const
         os << "  You have no stashes." << std::endl;
     else
     {
-        std::vector<LevelStashes>::const_iterator iter = levels.begin();
-        for ( ; iter != levels.end(); iter++)
+        for (stash_levels_t::const_iterator iter = levels.begin();
+             iter != levels.end(); iter++)
         {
-            iter->write(os, identify);
+            iter->second.write(os, identify);
         }
     }
 }
@@ -1256,9 +1229,9 @@ void StashTracker::save(FILE *file) const
     writeShort(file, (short) levels.size());
 
     // And ask each level to write itself to the tag
-    std::vector<LevelStashes>::const_iterator iter = levels.begin();
+    stash_levels_t::const_iterator iter = levels.begin();
     for ( ; iter != levels.end(); iter++)
-        iter->save(file);
+        iter->second.save(file);
 }
 
 void StashTracker::load(FILE *file)
@@ -1276,7 +1249,8 @@ void StashTracker::load(FILE *file)
     {
         LevelStashes st;
         st.load(file);
-        if (st.stash_count()) levels.push_back(st);
+        if (st.stash_count())
+            levels[st.where()] = st;
     }
 }
 
@@ -1313,7 +1287,7 @@ void StashTracker::update_visible_stashes(
     }
 
     if (lev && !lev->stash_count())
-        remove_level(*lev);
+        remove_level();
 }
 
 #define SEARCH_SPAM_THRESHOLD 400
@@ -1388,17 +1362,17 @@ void StashTracker::get_matching_stashes(
         std::vector<stash_search_result> &results)
     const
 {
-    std::vector<LevelStashes>::const_iterator iter = levels.begin();
+    stash_levels_t::const_iterator iter = levels.begin();
     for ( ; iter != levels.end(); iter++)
     {
-        iter->get_matching_stashes(search, results);
+        iter->second.get_matching_stashes(search, results);
         if (results.size() > SEARCH_SPAM_THRESHOLD)
             return;
     }
 
     get_matching_features(search, results);
 
-    level_id curr = level_id::get_current_level_id();
+    level_id curr = level_id::current();
     for (unsigned i = 0; i < results.size(); ++i)
         results[i].player_distance = level_distance(curr, results[i].pos.id);
 

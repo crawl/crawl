@@ -385,7 +385,7 @@ std::string overview_description_string()
 
 void unnotice_labyrinth_portal()
 {
-    level_pos curpos(level_id::get_current_level_id());
+    level_pos curpos(level_id::current());
     // XXX Is there really no better way to do this?
     curpos.pos.x = you.x_pos;
     curpos.pos.y = you.y_pos;
@@ -473,7 +473,7 @@ void seen_staircase( unsigned char which_staircase, const coord_def& pos )
 
     ASSERT(which_branch != BRANCH_MAIN_DUNGEON);
 
-    stair_level[which_branch] = level_id::get_current_level_id();
+    stair_level[which_branch] = level_id::current();
 }
 
 // if player has seen an altar; record it
@@ -483,14 +483,14 @@ void seen_altar( god_type god, const coord_def& pos )
     if ( you.level_type != LEVEL_DUNGEON )
         return;
     
-    level_pos where(level_id::get_current_level_id(), pos);
+    level_pos where(level_id::current(), pos);
     altars_present[where] = god;
 }
 
 void unnotice_altar()
 {
     const coord_def pos(you.x_pos, you.y_pos);
-    const level_pos curpos(level_id::get_current_level_id(), pos);
+    const level_pos curpos(level_id::current(), pos);
     // Hmm, what happens when erasing a nonexistent key directly?
     if (altars_present.find(curpos) != altars_present.end())
         altars_present.erase(curpos);
@@ -519,7 +519,7 @@ void seen_other_thing( unsigned char which_thing, const coord_def& pos )
     if ( you.level_type != LEVEL_DUNGEON ) // can't record in abyss or pan.
         return;
 
-    level_pos where(level_id::get_current_level_id(), pos);
+    level_pos where(level_id::current(), pos);
 
     switch ( which_thing )
     {

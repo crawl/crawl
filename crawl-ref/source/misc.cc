@@ -558,7 +558,7 @@ void up_stairs(void)
         	    && you.level_type != LEVEL_ABYSS 
                 && you.level_type != LEVEL_PANDEMONIUM;
 
-    level_id  old_level_id    = level_id::get_current_level_id();
+    level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
     int stair_x = you.x_pos, stair_y = you.y_pos;
     if (collect_travel_data)
@@ -669,12 +669,12 @@ void up_stairs(void)
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
     // Tell the travel code that we're now on a new level
-    travel_init_new_level();
+    init_new_level();
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just ascended, and the
         // down stairs we're currently on.
-        level_id  new_level_id    = level_id::get_current_level_id();
+        level_id  new_level_id    = level_id::current();
 
         if (you.level_type != LEVEL_PANDEMONIUM &&
                 you.level_type != LEVEL_ABYSS &&
@@ -821,7 +821,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         	    && you.level_type != LEVEL_ABYSS
                 && you.level_type != LEVEL_PANDEMONIUM;
 
-    level_id  old_level_id    = level_id::get_current_level_id();
+    level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
     int stair_x = you.x_pos, stair_y = you.y_pos;
     if (collect_travel_data)
@@ -1109,12 +1109,12 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
-    travel_init_new_level();
+    init_new_level();
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just descended, and the
         // upstairs we're currently on.
-        level_id  new_level_id    = level_id::get_current_level_id();
+        level_id  new_level_id    = level_id::current();
 
         if (you.level_type != LEVEL_PANDEMONIUM &&
                 you.level_type != LEVEL_ABYSS &&
@@ -1142,6 +1142,12 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         }
     }
 }                               // end down_stairs()
+
+void init_new_level()
+{
+    travel_init_new_level();
+    stash_init_new_level();
+}
 
 void new_level(void)
 {

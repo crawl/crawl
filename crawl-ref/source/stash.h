@@ -15,9 +15,11 @@
 #include <vector>
 
 #include "externs.h"
+#include "misc.h"
 #include "travel.h"
 
 // Stash definitions
+void stash_init_new_level();
 
 enum STASH_TRACK_MODES
 {
@@ -205,6 +207,8 @@ public:
     ShopInfo &get_shop(int x, int y);
     const ShopInfo *find_shop(int x, int y) const;
 
+    level_id where() const;
+    
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
 
@@ -239,19 +243,16 @@ public:
     int   stash_count() const { return stashes.size() + shops.size(); }
     int   visible_stash_count() const { return count_stashes() + shops.size(); }
 
-    bool  isCurrent() const;
-    bool  isBelowPlayer() const;
-    bool  operator < (const LevelStashes &lev) const;
+    bool  is_current() const;
 private:
     // which level
-    unsigned char branch;
-    int depth;
+    level_id place;
 
-    typedef std::map<int, Stash>  c_stashes;
-    typedef std::vector<ShopInfo> c_shops;
+    typedef std::map<int, Stash>  stashes_t;
+    typedef std::vector<ShopInfo> shops_t;
     
-    c_stashes stashes;
-    c_shops   shops;
+    stashes_t stashes;
+    shops_t   shops;
 
     int count_stashes() const;
 };
@@ -264,8 +265,7 @@ public:
     static bool is_level_untrackable()
     {
         return you.level_type == LEVEL_LABYRINTH
-            || you.level_type == LEVEL_ABYSS
-            || you.level_type == LEVEL_PANDEMONIUM;
+            || you.level_type == LEVEL_ABYSS;
     }
 
     StashTracker() : levels()
@@ -276,13 +276,14 @@ public:
 
     LevelStashes &get_current_level();
     LevelStashes *find_current_level();
+    LevelStashes *find_level(const level_id &pos);
 
     ShopInfo &get_shop(int x, int y)
     { 
         return get_current_level().get_shop(x, y);
     }
 
-    void remove_level(const LevelStashes &ls);
+    void remove_level(const level_id &which = level_id::current());
 
     enum stash_update_mode
     {
@@ -313,12 +314,15 @@ public:
     void write(std::ostream &os, bool identify = false) const;
 
     void dump(const char *filename, bool identify = false) const;
-private:
-    std::vector<LevelStashes> levels;
 
+private:
     void get_matching_stashes(const base_pattern &search, 
                               std::vector<stash_search_result> &results) const;
     void display_search_results(std::vector<stash_search_result> &results);
+
+private:
+    typedef std::map<level_id, LevelStashes> stash_levels_t;
+    stash_levels_t levels;
 };
 
 extern StashTracker stashes;

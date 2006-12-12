@@ -2151,9 +2151,6 @@ void debug_make_trap()
 
     mprf("Created a %s trap, marked it undiscovered",
             trap_name(trap));
-
-    // Also tell travel that its world-view must change.
-    travel_init_new_level();
 }
 
 static const char *shop_types[] = {

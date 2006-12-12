@@ -56,6 +56,17 @@
 //
 // #define CLUA_BINDINGS
 
+// Uncomment to prevent Crawl from looking for a list of saves when
+// asking the player to enter a name. This can speed up startup
+// considerably if you have a lot of saves lying around (even more so
+// if the saves are zipped).
+// 
+// #define DISABLE_SAVEGAME_LISTS
+
+// Uncomment to prevent Crawl from remembering startup preferences.
+// 
+// #define DISABLE_STICKY_STARTUP_OPTIONS
+
 // OS X's Terminal.app has color handling problems; dark grey is
 // especially bad, so we'll want to remap that. OS X is otherwise
 // Unix-ish, so we shouldn't need other special handling.

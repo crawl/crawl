@@ -86,6 +86,7 @@ void itrap(struct bolt &pbolt, int trapped);
  * *********************************************************************** */
 void new_level(void);
 
+void init_new_level();
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

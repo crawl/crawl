@@ -109,24 +109,34 @@ enum explore_stop_type
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
 
-// Identifies a level. This has no meaning in the Abyss, labyrinths or
-// Pandemonium.
+// Identifies a level.
 struct level_id
 {
-    unsigned char branch;   // The branch in which the level is.
-    int           depth;    // What depth (in this branch - starting from 1)
-                            // this level is.
+public:
+    int branch;     // The branch in which the level is.
+    int depth;      // What depth (in this branch - starting from 1)
+    int level_type;
 
-    level_id() : branch(0), depth(-1) { }
-
-    level_id(unsigned char br, int dep) : branch(br), depth(dep) { }
+public:
+    level_id() : branch(0), depth(-1), level_type(LEVEL_DUNGEON) { }
+    level_id(int br, int dep, int ltype = LEVEL_DUNGEON)
+        : branch(br), depth(dep), level_type(ltype)
+    {
+        if (level_type != LEVEL_DUNGEON)
+            branch = depth = -1;
+    }
+    level_id(int ltype) : branch(-1), depth(-1), level_type(ltype) { }
 
     unsigned short packed_place() const;
+    std::string describe(bool long_name = false, bool with_number = true) const;
 
-    std::string describe( bool long_name, bool with_number ) const;
+    bool is_valid() const
+    {
+        return (branch != -1 && depth != -1) || level_type != LEVEL_DUNGEON;
+    }
 
     // Returns the level_id of the current level.
-    static level_id get_current_level_id();
+    static level_id current();
 
     // Returns the level_id of the level that the stair/portal/whatever at
     // 'pos' on the current level leads to.
@@ -134,27 +144,23 @@ struct level_id
 
     bool operator == ( const level_id &id ) const
     {
-        return branch == id.branch && depth == id.depth;
+        return branch == id.branch && depth == id.depth
+            && level_type == id.level_type;
     }
 
     bool operator != ( const level_id &id ) const
     {
-        return branch != id.branch || depth != id.depth;
+        return branch != id.branch || depth != id.depth
+            || level_type != id.level_type;
     }
 
     bool operator <( const level_id &id ) const
     {
+        if (level_type != id.level_type)
+            return (level_type < id.level_type);
+        
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
-
-    struct less_than
-    {
-        bool operator () (const level_id &first, const level_id &second) const
-        {
-            return first.branch < second.branch ||
-                (first.branch == second.branch && first.depth < second.depth);
-        }
-    };
 
     void save(FILE *) const;
     void load(FILE *);
@@ -359,6 +365,12 @@ public:
         return li;
     }
 
+    LevelInfo *find_level_info(const level_id &lev)
+    {
+        std::map<level_id, LevelInfo>::iterator i = levels.find(lev);
+        return (i != levels.end()? &i->second : NULL);
+    }
+
     bool know_level(const level_id &lev) const
     {
         return levels.find(lev) != levels.end();
@@ -391,7 +403,7 @@ private:
     void fixup_levels();
 
 private:
-    std::map<level_id, LevelInfo, level_id::less_than> levels;
+    std::map<level_id, LevelInfo> levels;
     level_pos waypoints[TRAVEL_WAYPOINT_COUNT];
 };
 

@@ -36,7 +36,7 @@
 #endif
 
 #define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 4)
+#define TC_MINOR_VERSION ((unsigned char) 5)
 
 enum IntertravelDestination
 {
@@ -308,8 +308,7 @@ void clear_excludes()
 
     if (can_travel_interlevel())
     {
-        LevelInfo &li = travel_cache.get_level_info(
-                            level_id::get_current_level_id());
+        LevelInfo &li = travel_cache.get_level_info(level_id::current());
         li.update();
     }
 }
@@ -343,8 +342,7 @@ void toggle_exclude(int x, int y)
 
     if (can_travel_interlevel())
     {
-        LevelInfo &li = travel_cache.get_level_info(
-                            level_id::get_current_level_id());
+        LevelInfo &li = travel_cache.get_level_info(level_id::current());
         li.update();
     }
 }
@@ -648,7 +646,7 @@ bool is_branch_stair(int gridx, int gridy)
 {
     const coord_def pos(gridx, gridy);
 
-    const level_id curr = level_id::get_current_level_id();
+    const level_id curr = level_id::current();
     const level_id next = level_id::get_next_level_id(pos);
 
     return (next.branch != curr.branch);
@@ -956,10 +954,10 @@ command_type travel()
                         && (travel_target.pos.x != you.x_pos
                             || travel_target.pos.y != you.y_pos
                             || travel_target.id != 
-                                        level_id::get_current_level_id()))
+                                        level_id::current()))
                 {
                     if (last_stair.depth != -1 
-                        && last_stair == level_id::get_current_level_id()) 
+                        && last_stair == level_id::current()) 
                     {
                         // We're trying to take the same stairs again. Baaad.
 
@@ -977,7 +975,7 @@ command_type travel()
                     // need to make sure we don't go into an infinite loop
                     // trying to take it again and again. We'll check
                     // last_stair before attempting to take stairs again.
-                    last_stair = level_id::get_current_level_id();
+                    last_stair = level_id::current();
 
                     // This is important, else we'll probably stop traveling
                     // the moment we clear the stairs. That's because the 
@@ -1401,22 +1399,22 @@ static int branch_backout[][2] =
  * Given a branch id, returns the parent branch. If the branch id is not found,
  * returns BRANCH_MAIN_DUNGEON.
  */
-unsigned char find_parent_branch(unsigned char br)
+int find_parent_branch(int br)
 {
     for (unsigned i = 0; 
             i < sizeof(branch_backout) / sizeof(branch_backout[0]); 
             i++)
     {
         if (branch_backout[i][0] == br)
-            return (unsigned char) branch_backout[i][1];
+            return branch_backout[i][1];
     }
     return 0;
 }
 
 extern std::map<branch_type, level_id> stair_level;
 
-void find_parent_branch(unsigned char br, int depth, 
-                        unsigned char *pb, int *pd)
+void find_parent_branch(int br, int depth, 
+                        int *pb, int *pd)
 {
     const branch_type bran = static_cast<branch_type>(br);
     if ( stair_level.find(bran) == stair_level.end() )
@@ -1444,7 +1442,7 @@ void find_parent_branch(unsigned char br, int depth,
 // (Assuming, of course, that the vector started out empty.)
 //
 void trackback(std::vector<level_id> &vec, 
-               unsigned char branch, int subdepth)
+               int branch, int subdepth)
 {
     if (subdepth < 1 || subdepth > MAX_LEVELS) return;
 
@@ -1453,7 +1451,7 @@ void trackback(std::vector<level_id> &vec,
 
     if (branch != BRANCH_MAIN_DUNGEON)
     {
-        unsigned char pb;
+        int pb;
         int pd;
         find_parent_branch(branch, subdepth, &pb, &pd);
         if (pd)
@@ -1646,7 +1644,7 @@ static int get_nearest_level_depth(unsigned char branch)
              player_in_branch( BRANCH_GEHENNA )))
         return you.hell_exit + 1;
 
-    level_id id = level_id::get_current_level_id();
+    level_id id = level_id::current();
     do
     {
         find_parent_branch(id.branch, id.depth, 
@@ -1848,7 +1846,7 @@ static bool is_hell_branch(int branch)
 
 static level_pos find_up_level()
 {
-    level_id curr = level_id::get_current_level_id();
+    level_id curr = level_id::current();
     curr.depth--;
 
     if (is_hell_branch(curr.branch))
@@ -1882,7 +1880,7 @@ static level_pos find_up_level()
 
 static level_pos find_down_level()
 {
-    level_id curr = level_id::get_current_level_id();
+    level_id curr = level_id::current();
     curr.depth++;
     return (curr);
 }
@@ -1942,7 +1940,7 @@ void start_translevel_travel(const level_pos &pos)
 {
     travel_target = pos;
 
-    if (pos.id != level_id::get_current_level_id())
+    if (pos.id != level_id::current())
     {
         if (!loadlev_populate_stair_distances(pos))
         {
@@ -1962,7 +1960,7 @@ void start_translevel_travel(bool prompt_for_destination)
 {
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
-    travel_cache.get_level_info(level_id::get_current_level_id()).update();
+    travel_cache.get_level_info(level_id::current()).update();
 
     if (prompt_for_destination)
     {
@@ -1976,7 +1974,7 @@ void start_translevel_travel(bool prompt_for_destination)
         travel_target = target;
     }
 
-    if (level_id::get_current_level_id() == travel_target.id &&
+    if (level_id::current() == travel_target.id &&
             (travel_target.pos.x == -1 || 
              (travel_target.pos.x == you.x_pos &&
              travel_target.pos.y == you.y_pos)))
@@ -2041,7 +2039,7 @@ static int find_transtravel_stair(  const level_id &cur,
                                     const bool target_has_excludes )
 {
     int local_distance = -1;
-    level_id player_level = level_id::get_current_level_id();
+    level_id player_level = level_id::current();
 
     LevelInfo &li = travel_cache.get_level_info(cur);
 
@@ -2261,7 +2259,7 @@ static void populate_stair_distances(const level_pos &target)
 
 static int find_transtravel_square(const level_pos &target, bool verbose)
 {
-    level_id current = level_id::get_current_level_id();
+    level_id current = level_id::current();
 
     coord_def best_stair(-1, -1);
     coord_def cur_stair(you.x_pos, you.y_pos);
@@ -2322,7 +2320,7 @@ void start_travel(int x, int y)
             is_travel_ok(x, y, false))
     {
         // We'll need interlevel travel to get here.
-        travel_target.id = level_id::get_current_level_id();
+        travel_target.id = level_id::current();
         travel_target.pos.x = x;
         travel_target.pos.y = y;
 
@@ -2403,19 +2401,18 @@ static void readCoord(FILE *file, coord_def &pos)
     pos.y = readShort(file);
 }
 
-level_id level_id::get_current_level_id()
+level_id level_id::current()
 {
-    level_id id;
-    id.branch = you.where_are_you;
-    id.depth  = subdungeon_depth(you.where_are_you, you.your_level);
-
+    const level_id id(you.where_are_you,
+                      subdungeon_depth(you.where_are_you, you.your_level),
+                      you.level_type);
     return id;
 }
 
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
     short gridc = grd[pos.x][pos.y];
-    level_id id = get_current_level_id();
+    level_id id = current();
 
     switch (gridc)
     {
@@ -2519,7 +2516,7 @@ level_id level_id::get_next_level_id(const coord_def &pos)
 
 unsigned short level_id::packed_place() const
 {
-    return get_packed_place(branch, depth, LEVEL_DUNGEON);
+    return get_packed_place(branch, depth, level_type);
 }
 
 std::string level_id::describe( bool long_name, bool with_number ) const
@@ -2529,14 +2526,16 @@ std::string level_id::describe( bool long_name, bool with_number ) const
 
 void level_id::save(FILE *file) const
 {
-    writeByte(file, branch);
+    writeShort(file, branch);
     writeShort(file, depth);
+    writeShort(file, level_type);
 }
 
 void level_id::load(FILE *file)
 {
-    branch = readByte(file);
-    depth  = readShort(file);
+    branch     = readShort(file);
+    depth      = readShort(file);
+    level_type = readShort(file);
 }
 
 void level_pos::save(FILE *file) const
@@ -2999,7 +2998,7 @@ unsigned char TravelCache::is_waypoint(const level_pos &lp) const
 void TravelCache::update_waypoints() const
 {
     level_pos lp;
-    lp.id = level_id::get_current_level_id();
+    lp.id = level_id::current();
 
     memset(curr_waypoints, 0, sizeof curr_waypoints);
     for (lp.pos.x = 1; lp.pos.x < GXM; ++lp.pos.x)
@@ -3062,7 +3061,7 @@ void TravelCache::add_waypoint(int x, int y)
         y = you.y_pos;
     }
     const coord_def pos(x, y);
-    const level_id &lid = level_id::get_current_level_id();
+    const level_id &lid = level_id::current();
 
     LevelInfo &li = get_level_info(lid);
     li.add_waypoint(pos);
@@ -3084,15 +3083,14 @@ int TravelCache::get_waypoint_count() const
 
 void TravelCache::reset_distances()
 {
-    std::map<level_id, LevelInfo, level_id::less_than>::iterator i =
-                    levels.begin();
+    std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         i->second.reset_distances();
 }
 
 bool TravelCache::is_known_branch(unsigned char branch) const
 {
-    std::map<level_id, LevelInfo, level_id::less_than>::const_iterator i =
+    std::map<level_id, LevelInfo>::const_iterator i =
                     levels.begin();
     for ( ; i != levels.end(); ++i)
         if (i->second.is_known_branch(branch))
@@ -3110,10 +3108,13 @@ void TravelCache::save(FILE *file) const
     writeShort(file, levels.size());
 
     // Save all the levels we have
-    std::map<level_id, LevelInfo, level_id::less_than>::const_iterator i =
+    std::map<level_id, LevelInfo>::const_iterator i =
                 levels.begin();
     for ( ; i != levels.end(); ++i)
     {
+        if (i->first.level_type != LEVEL_DUNGEON)
+            continue;
+
         i->first.save(file);
         i->second.save(file);
     }
@@ -3153,19 +3154,18 @@ void TravelCache::load(FILE *file)
 void TravelCache::set_level_excludes()
 {
     if (can_travel_interlevel())
-        get_level_info(level_id::get_current_level_id()).set_level_excludes();
+        get_level_info(level_id::current()).set_level_excludes();
 }
 
 void TravelCache::update()
 {
     if (can_travel_interlevel())
-        get_level_info(level_id::get_current_level_id()).update();
+        get_level_info(level_id::current()).update();
 }
 
 void TravelCache::fixup_levels()
 {
-    std::map<level_id, LevelInfo, level_id::less_than>::iterator i =
-                levels.begin();
+    std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         i->second.fixup();
 }
