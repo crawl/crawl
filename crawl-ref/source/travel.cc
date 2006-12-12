@@ -3393,6 +3393,25 @@ void explore_discoveries::found_feature(const coord_def &pos, int grid)
     }
 }
 
+void explore_discoveries::add_item(const item_def &i)
+{
+    if (is_stackable_item(i))
+    {
+        // Try to find something to stack it with.
+        for (int j = 0, size = items.size(); j < size; ++j)
+        {
+            if (items_stack(i, items[j].thing))
+            {
+                items[j].thing.quantity += i.quantity;
+                items[j].name = item_name(items[j].thing, DESC_NOCAP_A);
+                return;
+            }
+        }
+    }
+
+    items.push_back( named_thing<item_def>(item_name(i, DESC_NOCAP_A), i) );
+}
+
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
 {
     if (you.running == RMODE_EXPLORE_GREEDY)
@@ -3405,7 +3424,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
             return;
     }
 
-    items.push_back( named_thing<item_def>(item_name(i, DESC_NOCAP_A), i) );
+    add_item(i);
     es_flags |= ES_ITEM;
 }
 

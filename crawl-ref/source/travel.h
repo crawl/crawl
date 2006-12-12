@@ -222,6 +222,7 @@ public:
 private:
     template <class C> void say_any(const C &coll, const char *stub) const;
     std::string cleaned_feature_description(int feature) const;
+    void add_item(const item_def &item);
     
 private:
     template <class Z> struct named_thing {

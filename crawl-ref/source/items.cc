@@ -61,7 +61,6 @@
 #include "stash.h"
 
 static void autopickup(void);
-static bool is_stackable_item( const item_def &item );
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
                                  int obj, bool force_squelch = false );
@@ -1280,7 +1279,7 @@ void pickup()
     }
 }                               // end pickup()
 
-static bool is_stackable_item( const item_def &item )
+bool is_stackable_item( const item_def &item )
 {
     if (!is_valid_item( item ))
         return (false);
@@ -1290,6 +1289,7 @@ static bool is_stackable_item( const item_def &item )
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
         || item.base_type == OBJ_UNKNOWN_II
+        || item.base_type == OBJ_GOLD
         || (item.base_type == OBJ_MISCELLANY 
             && item.sub_type == MISC_RUNE_OF_ZOT))
     {
@@ -1308,6 +1308,9 @@ bool items_stack( const item_def &item1, const item_def &item2 )
     // base and sub-types must always be the same to stack
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return (false);
+
+    if (item1.base_type == OBJ_GOLD)
+        return (true);
 
     // These classes also require pluses and special
     if (item1.base_type == OBJ_MISSILES
