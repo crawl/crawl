@@ -430,4 +430,15 @@ protected:
 int menu_colour(const std::string &itemtext);
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
 
+// Idea: Menu entries with the hotkey set will jump to that
+// entry when the hotkey is pressed.
+class menu_browser : public Menu
+{
+public:
+    menu_browser() {}
+protected:
+    virtual bool process_key( int keyin );
+    bool jump_to( int linenum );
+};
+
 #endif

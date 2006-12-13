@@ -1093,3 +1093,25 @@ static const char *command_string( int i )
                       : "");
 }                               // end command_string()
 #endif  // OBSOLETE_COMMAND_HELP
+
+void browse_file( FILE* fp )
+{
+    menu_browser m;
+    bool next_is_hotkey = false;
+    char buf[200];
+    while (fgets(buf, sizeof buf, fp))
+    {
+        MenuEntry* me = new MenuEntry(buf);
+        if ( next_is_hotkey && isupper(buf[0]) )
+        {
+            me->add_hotkey(buf[0]);
+            me->add_hotkey(tolower(buf[0]));
+            me->level = MEL_TITLE;
+            me->colour = WHITE;
+        }
+        m.add_entry(me);
+        // XXX FIXME: there must be some better way to identify sections
+        next_is_hotkey = (strstr(buf, "------------------------------------------------------------------------") == buf);
+    }
+    m.show();
+}            

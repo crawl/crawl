@@ -182,12 +182,6 @@ unsigned char get_invent(int invent_type);
 
 bool in_inventory(const item_def &i);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void list_commands(bool wizard);
-
 std::string item_class_name(int type, bool terse = false);
 
 bool check_warning_inscriptions(const item_def& item, operation_types oper);

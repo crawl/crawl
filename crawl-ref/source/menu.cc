@@ -1375,3 +1375,56 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
     }
     return breakcount;
 }
+
+bool menu_browser::jump_to( int i )
+{
+    if ( i == first_entry + 1 )
+        return false;
+    if ( i == 0 )
+        first_entry = 0;
+    else
+        first_entry = i - 1;
+    return true;
+}
+
+bool menu_browser::process_key( int keyin )
+{
+    bool repaint = false;
+    switch ( keyin )
+    {
+    case 0:
+        return true;
+    case CK_ENTER:
+    case CK_ESCAPE:
+        return false;
+        return false;
+    case ' ': case '+': case CK_PGDN: case '>': case '\'':
+        repaint = page_down();
+        break;
+    case '-': case CK_PGUP: case '<': case ';':
+        repaint = page_up();
+        break;
+    case CK_UP:
+        repaint = line_up();
+        break;
+    case CK_DOWN:
+        repaint = line_down();
+        break;
+    default:
+        // look for it as a hotkey
+        for ( unsigned int i = 0; i < items.size(); ++i )
+        {
+            // found it
+            if ( items[i]->is_hotkey(keyin) )
+            {
+                repaint = jump_to(i);
+                break;
+            }
+        }
+        break;
+    }
+
+    if (repaint)
+        draw_menu();
+    return true;
+}

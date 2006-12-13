@@ -646,6 +646,7 @@ enum command_type
     CMD_MAKE_NOTE,
     CMD_RESISTS_SCREEN,
     CMD_DISPLAY_NOTES,
+    CMD_BROWSE_MANUAL,
 
     /* overmap commands */
     CMD_MAP_CLEAR_MAP,
