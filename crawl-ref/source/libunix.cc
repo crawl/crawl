@@ -441,7 +441,9 @@ void textcolor(int col)
 
         if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
         {
-            bg = (brand & CHATTR_COLMASK) >> 8;
+            bg = translate_colour(
+                    macro_colour( (brand & CHATTR_COLMASK) >> 8 ));
+            
             if (fg == bg)
                 fg = COLOR_BLACK;
         }
