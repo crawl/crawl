@@ -1270,7 +1270,7 @@ static void tag_construct_level_items(struct tagHeader &th)
 
         marshallShort(th, mitm[i].orig_place);
         marshallShort(th, mitm[i].orig_monnum);
-	marshallString(th, mitm[i].inscription.c_str(), 80);
+        marshallString(th, mitm[i].inscription.c_str(), 80);
     }
 }
 

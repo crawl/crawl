@@ -33,7 +33,7 @@
 #include <algorithm>
 
 #define ST_MAJOR_VER ((unsigned char) 4)
-#define ST_MINOR_VER ((unsigned char) 5)
+#define ST_MINOR_VER ((unsigned char) 6)
 
 #define LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
@@ -134,6 +134,10 @@ static void save_item(FILE *file, const item_def &item)
     writeShort(file, item.quantity);
     writeByte(file, item.colour);
     writeLong(file, item.flags);
+    
+    writeShort(file, item.orig_place);
+    writeShort(file, item.orig_monnum);
+    writeString(file, item.inscription.c_str(), 80);
 }
 
 static void load_item(FILE *file, item_def &item)
@@ -146,6 +150,10 @@ static void load_item(FILE *file, item_def &item)
     item.quantity   = readShort(file);
     item.colour     = readByte(file);
     item.flags      = readLong(file);
+
+    item.orig_place = readShort(file);
+    item.orig_monnum = readShort(file);
+    item.inscription = readString(file);
 }
 
 bool Stash::aggressive_verify = true;

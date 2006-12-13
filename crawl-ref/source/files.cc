@@ -2127,22 +2127,33 @@ unsigned char readByte(FILE *file)
     return byte;
 }
 
-void writeString(FILE* file, const std::string &s)
+void writeString(FILE* file, const std::string &s, int cap)
 {
     int length = s.length();
-    if (length > STR_CAP) length = STR_CAP;
+    if (length > cap)
+        length = cap;
     writeShort(file, length);
     write2(file, s.c_str(), length);
 }
 
 std::string readString(FILE *file)
 {
-    char buf[STR_CAP + 1];
     short length = readShort(file);
-    if (length)
-        read2(file, buf, length);
-    buf[length] = 0;
-    return std::string(buf);
+    if (length > 0)
+    {
+        if (length <= STR_CAP)
+        {
+            char buf[STR_CAP + 1];
+            read2(file, buf, length);
+            buf[length] = 0;
+            return (buf);
+        }
+
+        fprintf(stderr, "String too long: %d bytes\n", length);
+        end(1);
+    }
+
+    return ("");
 }
 
 void writeLong(FILE* file, long num)

@@ -83,7 +83,7 @@ void writeByte(FILE *file, unsigned char byte);
 
 unsigned char readByte(FILE *file);
 
-void writeString(FILE* file, const std::string &s);
+void writeString(FILE* file, const std::string &s, int cap = 200);
 
 std::string readString(FILE *file);
 
