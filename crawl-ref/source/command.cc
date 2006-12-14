@@ -616,7 +616,7 @@ static const char *targeting_help =
         "<h>Targeting (like zapping wands/spells):\n"
         "<w>Esc</w>  : stop targeting\n"
         "<w>Dir.</w> : shoots straight in that direction\n"
-        "<w>p</w> : fires at Previous target (also <w>t</w>)\n"
+        "<w>p</w> : fires at Previous target (also <w>t</w>, <w>f</w>)\n"
         "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
         "<w>-</w> : cycle monsters backward\n"
 	"<w>.</w> : fires at target (also <w>Enter</w> or <w>Del</w>)\n"
@@ -753,7 +753,7 @@ void list_commands(bool wizard)
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
             "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-            "<brown>%</brown> : food and corpses (<w>e</w> and <w>D</w>issect)\n"
+            "<brown>%</brown> : food and corpses (<w>e</w>at and <w>D</w>issect)\n"
             "<w>?</w> : scrolls (<w>r</w>ead)\n"
             "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
             "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
@@ -762,7 +762,7 @@ void list_commands(bool wizard)
             "<lightcyan>+</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"   
             "<brown>\\</brown> : staves and rods (<w>w</w>ield and <w>E</w>voke)\n"
             "<lightgreen>}</lightgreen> : miscellaneous items (<w>E</w>voke)\n"
-            "<lightred>0</lightred> : the Orb of Zot\n"
+            "<lightmagenta>0</lightmagenta> : the Orb of Zot\n"
             "\n"
             "<yellow>$</yellow> : gold\n"
             " \n",
@@ -821,12 +821,6 @@ void list_commands(bool wizard)
             "<w>d#</w>: Drop exact number of items \n"
             "<w>D</w> : Dissect a corpse \n"
             "<w>e</w> : Eat food from floor \n",
-//            "<w>z</w> : Zap a wand \n"
-//            "<w>r</w> : Read a scroll or book \n"
-//            "<w>M</w> : Memorise a spell from a book \n"
-//            "<w>w</w> : Wield an item ( <w>-</w> for none) \n"
-//            "<w>'</w> : wield item a, or switch to b \n"
-//            "<w>E</w> : Evoke power of wielded item\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -847,6 +841,7 @@ void list_commands(bool wizard)
             "<w>Ctrl-C</w> : Clear main and level maps\n"
             "<w>#</w> : dump character to file\n"
             "<w>:</w> : add note to dump file\n"
+            "<w>_</w> : show notes\n"
             "<w>~</w> : add macro\n"
             "<w>=</w> : reassign inventory/spell letters\n"
             " \n",
@@ -1001,99 +996,6 @@ static const char *wizard_string( int i )
 #endif
 }                               // end wizard_string()
 
-#ifdef OBSOLETE_COMMAND_HELP
-static const char *command_string( int i )
-{
-    /*
-     * BCR - Command printing, case statement
-     * Note: The numbers in this case indicate the order in which the
-     *       commands will be printed out.  Make sure none of these
-     *       numbers is greater than 500, because that is the limit.
-     *
-     * Arranged alpha lower, alpha upper, punctuation, ctrl.
-     *
-     */
-
-    return((i ==  10) ? "a    : use special ability"              :
-           (i ==  20) ? "d(#) : drop (exact quantity of) items"   :
-           (i ==  30) ? "e    : eat food"                         :
-           (i ==  40) ? "f    : fire first available missile"     :
-           (i ==  50) ? "i    : inventory listing"                :
-           (i ==  55) ? "m    : check skills"                     :
-           (i ==  60) ? "o/c  : open / close a door"              :
-           (i ==  65) ? "p    : pray"                             :
-           (i ==  70) ? "q    : quaff a potion"                   :
-           (i ==  80) ? "r    : read a scroll or book"            :
-           (i ==  90) ? "s    : search adjacent tiles"            :
-           (i == 100) ? "t    : throw/shoot an item"              :
-           (i == 110) ? "v    : view item description"            :
-           (i == 120) ? "w    : wield an item"                    :
-           (i == 130) ? "x    : examine visible surroundings"     :
-           (i == 135) ? "z    : zap a wand"                       :
-           (i == 140) ? "A    : list abilities/mutations"         :
-           (i == 141) ? "C    : check experience"                 :
-           (i == 142) ? "D    : dissect a corpse"                 :
-           (i == 145) ? "E    : evoke power of wielded item"      :
-           (i == 150) ? "M    : memorise a spell"                 :
-           (i == 155) ? "O    : overview of the dungeon"          :
-           (i == 160) ? "P/R  : put on / remove jewellery"        :
-           (i == 165) ? "Q    : quit without saving"              :
-           (i == 168) ? "S    : save game and exit"               :
-           (i == 179) ? "V    : version information"              :
-           (i == 200) ? "W/T  : wear / take off armour"           :
-           (i == 210) ? "X    : examine level map"                :
-           (i == 220) ? "Z    : cast a spell"                     :
-           (i == 240) ? ",/g  : pick up items"                    :
-           (i == 242) ? "./del: rest one turn"                    :
-           (i == 250) ? "</>  : ascend / descend a staircase"     :
-           (i == 270) ? ";    : examine occupied tile"            :
-           (i == 280) ? "\\    : check item knowledge"            :
-#ifdef WIZARD
-           (i == 290) ? "&    : invoke your Wizardly powers"      :
-#endif
-           (i == 300) ? "+/-  : scroll up/down [level map only]"  :
-           (i == 310) ? "!    : shout or command allies"          :
-           (i == 325) ? "^    : describe religion"                :
-           (i == 337) ? "@    : status"                           :
-           (i == 340) ? "#    : dump character to file"           :
-           (i == 350) ? "=    : reassign inventory/spell letters" :
-           (i == 360) ? "\'    : wield item a, or switch to b"    :
-	   (i == 370) ? ":    : make a note"                      :
-#ifdef USE_MACROS
-           (i == 380) ? "`    : add macro"                        :
-           (i == 390) ? "~    : save macros"                      :
-#endif
-           (i == 400) ? "]    : display worn armour"              :
-           (i == 410) ? "\"    : display worn jewellery"          :
-	   (i == 415) ? "{    : inscribe an item"                 :
-           (i == 420) ? "Ctrl-P : see old messages"               :
-#ifdef PLAIN_TERM
-           (i == 430) ? "Ctrl-R : Redraw screen"                  :
-#endif
-           (i == 440) ? "Ctrl-A : toggle autopickup"              :
-	   (i == 445) ? "Ctrl-M : toggle autoprayer"              :
-	   (i == 447) ? "Ctrl-T : toggle fizzle"                  :
-           (i == 450) ? "Ctrl-X : Save game without query"        :
-
-#ifdef ALLOW_DESTROY_ITEM_COMMAND
-           (i == 451) ? "Ctrl-D : Destroy inventory item"         :
-#endif
-           (i == 453) ? "Ctrl-G : interlevel travel"              :
-           (i == 455) ? "Ctrl-O : explore"                        :
-
-           (i == 456) ? "Ctrl-S : mark stash"                     :
-           (i == 457) ? "Ctrl-E : forget stash"                   :
-           (i == 458) ? "Ctrl-F : search stashes"                 :
-
-           (i == 460) ? "Shift & DIR : long walk"                 :
-           (i == 465) ? "/ DIR : long walk"                       :
-           (i == 470) ? "Ctrl  & DIR : door; untrap; attack"      :
-           (i == 475) ? "* DIR : door; untrap; attack"            :
-           (i == 478) ? "Shift & 5 on keypad : rest 100 turns"
-                      : "");
-}                               // end command_string()
-#endif  // OBSOLETE_COMMAND_HELP
-
 void browse_file( FILE* fp )
 {
     menu_browser m;
@@ -1111,7 +1013,10 @@ void browse_file( FILE* fp )
         }
         m.add_entry(me);
         // XXX FIXME: there must be some better way to identify sections
-        next_is_hotkey = (strstr(buf, "------------------------------------------------------------------------") == buf);
+        next_is_hotkey =
+            (strstr(buf,
+                    "--------------------------------------------------"
+                    "----------------------") == buf);
     }
     m.show();
-}            
+}
