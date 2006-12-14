@@ -208,7 +208,7 @@ static std::string uid_as_string()
 {
 #ifdef MULTIUSER
     char struid[20];
-    snprintf( struid, sizeof struid, "%d", (int)getuid() );
+    snprintf( struid, sizeof struid, "-%d", (int)getuid() );
     return std::string(struid);
 #else
     return std::string();
@@ -229,13 +229,7 @@ static bool is_uid_file(const std::string &name, const std::string &ext)
     std::string::size_type suffix_pos = name.find(save_suffix);
     return (suffix_pos != std::string::npos 
             && suffix_pos == name.length() - save_suffix.length()
-            && suffix_pos != 0
-#ifdef MULTIUSER
-            // See verifyPlayerName() in newgame.cc
-            && !isdigit(name[suffix_pos - 1])
-#endif
-            );
-
+            && suffix_pos != 0);
 }
 
 bool is_save_file_name(const std::string &name)
@@ -346,6 +340,10 @@ static bool create_dirs(const std::string &dir)
     {
         path += segments[i];
         path += FILE_SEPARATOR;
+
+        // Handle absolute paths correctly.
+        if (i == 0 && dir.size() && dir[0] == FILE_SEPARATOR)
+            path = FILE_SEPARATOR + path;
 
         if (!dir_exists(path) && create_directory(path.c_str()))
             return (false);

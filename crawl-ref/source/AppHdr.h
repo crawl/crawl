@@ -173,7 +173,6 @@
 #elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__MINGW32__))
     #include "libw32c.h"
     #define PLAIN_TERM
-    #define SHORT_FILE_NAMES
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         getConsoleString(X,Y)
@@ -188,7 +187,7 @@
     // linked in.
     // #define REGEX_PCRE
 #else
-    #error unsupported compiler
+    #error Missing platform #define or unsupported compiler.
 #endif
 
 

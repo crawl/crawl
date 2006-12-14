@@ -93,9 +93,9 @@ extern std::string init_file_location;
 #define MIN_START_STAT       1
 
 static bool class_allowed(unsigned char speci, int char_class);
-static bool validate_player_name(void);
+static bool validate_player_name(bool verbose);
 static void choose_weapon(void);
-static void enterPlayerName(bool blankOK);
+static void enter_player_name(bool blankOK);
 static void give_basic_knowledge(int which_job);
 static void give_basic_spells(int which_job);
 static void give_basic_mutations(unsigned char speci);
@@ -281,7 +281,7 @@ static bool check_saved_game(void)
 {
     FILE *handle;
 
-    std::string basename = get_savedir_filename( you.your_name, "", "");
+    std::string basename = get_savedir_filename( you.your_name, "", "" );
     std::string savename = basename + ".sav";
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -289,7 +289,7 @@ static bool check_saved_game(void)
     handle = fopen(zipname.c_str(), "rb+");
     if (handle != NULL)
     {
-	fclose(handle);
+        fclose(handle);
         cprintf(EOL "Loading game..." EOL);
 
         // Create command
@@ -298,7 +298,7 @@ static bool check_saved_game(void)
         const std::string directory = get_savedir();
 
         snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
-		  basename.c_str(), directory.c_str() );
+                  basename.c_str(), directory.c_str() );
 
         if (system( cmd_buff ) != 0)
         {
@@ -373,7 +373,7 @@ bool new_game(void)
     }
 
     openingScreen();
-    enterPlayerName(true);
+    enter_player_name(true);
 
     if (you.your_name[0] != 0)
     {
@@ -417,7 +417,7 @@ bool new_game(void)
 
         cprintf( info );
 
-        enterPlayerName(false);
+        enter_player_name(false);
 
         if (check_saved_game())
         {
@@ -2017,7 +2017,7 @@ static void preprocess_character_name(char *name, bool blankOK)
         *name = 0;
 }
 
-static bool is_good_name(char *name, bool blankOK)
+static bool is_good_name(char *name, bool blankOK, bool verbose)
 {
     preprocess_character_name(name, blankOK);
 
@@ -2027,7 +2027,8 @@ static bool is_good_name(char *name, bool blankOK)
         if (blankOK)
             return (true);
 
-        cprintf(EOL "That's a silly name!" EOL);
+        if (verbose)
+            cprintf(EOL "That's a silly name!" EOL);
         return (false);
     }
 
@@ -2041,11 +2042,12 @@ static bool is_good_name(char *name, bool blankOK)
     // as level files for a character named "bones".  -- bwr
     if (stricmp(you.your_name, "bones") == 0)
     {
-        cprintf(EOL "That's a silly name!" EOL);
+        if (verbose)
+            cprintf(EOL "That's a silly name!" EOL);
         return (false);
     }
 #endif
-    return (validate_player_name());
+    return (validate_player_name(verbose));
 }
 
 static int newname_keyfilter(int &ch)
@@ -2101,7 +2103,7 @@ static bool read_player_name(
     }
 }
 
-static void enterPlayerName(bool blankOK)
+static void enter_player_name(bool blankOK)
 {
     int prompt_start = wherey();
     bool ask_name = true;
@@ -2112,7 +2114,7 @@ static void enterPlayerName(bool blankOK)
     if (you.your_name[0] != 0)
         ask_name = false;
 
-    if (blankOK)
+    if (blankOK && (ask_name || !is_good_name(you.your_name, false, false)))
     {
         existing_chars = find_saved_characters();
 
@@ -2150,39 +2152,20 @@ static void enterPlayerName(bool blankOK)
             name[kNameLen - 1] = 0;
         }
     }
-    while (ask_name = !is_good_name(you.your_name, blankOK));
-}                               // end enterPlayerName()
+    while (ask_name = !is_good_name(you.your_name, blankOK, true));
+}                               // end enter_player_name()
 
-static bool validate_player_name(void)
+static bool validate_player_name(bool verbose)
 {
 #if defined(DOS) || defined(WIN32CONSOLE)
-    static int william_tanksley_asked_for_this = 2;
-
     // quick check for CON -- blows up real good under DOS/Windows
     if (stricmp(you.your_name, "con") == 0
-        || stricmp(you.your_name, "nul") == 0)
+        || stricmp(you.your_name, "nul") == 0
+        || stricmp(you.your_name, "prn") == 0
+        || strnicmp(you.your_name, "LPT", 3) == 0)
     {
-        cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
-        return (false);
-    }
-
-    // quick check for LPTx -- thank you, Mr. Tanksley! ;-)
-    if (strnicmp(you.your_name, "LPT", 3) == 0)
-    {
-        switch (william_tanksley_asked_for_this)
-        {
-            case 2:
-                cprintf(EOL "Hello, William!  How is work on Omega going?" EOL);
-                break;
-            case 1:
-                cprintf(EOL "Look, it's just not a legal name." EOL);
-                break;
-            case 0:
-                strcpy(you.your_name, "William");
-                return (true);
-        } // end switch
-
-        william_tanksley_asked_for_this--;
+        if (verbose)
+            cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
         return (false);
     }
 #endif
@@ -2197,27 +2180,17 @@ static bool validate_player_name(void)
         // play it very conservative here.  -- bwr
         if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
-            cprintf( EOL
-                     "Alpha-numerics, spaces, dashes, periods and underscores "
-                     "only, please."
-                     EOL );
+            if (verbose)
+                cprintf( EOL
+                         "Alpha-numerics, spaces, dashes, periods "
+                         "and underscores only, please."
+                         EOL );
             return (false);
         }
     }
 
-#ifdef MULTIUSER
-    // Until we have a better way to handle the fact that this could lead 
-    // to some confusion with where the name ends and the uid begins. -- bwr
-    const size_t len = strlen( you.your_name );
-    if (isdigit( you.your_name[ len - 1 ] ))
-    {
-        cprintf( EOL "Sorry, your name cannot end with a digit." EOL );
-        return (false);
-    }
-#endif
-
     return (true);
-}                               // end verifyPlayerName()
+}                               // end validate_player_name()
 
 #if 0
 // currently unused

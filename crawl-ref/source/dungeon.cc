@@ -3274,8 +3274,8 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         if (xitt == MI_NEEDLE)
             set_item_ego_type(mitm[thing_created], OBJ_MISSILES, 
                     got_curare_roll(give_level)? 
-                            SPMSL_CURARE 
-                          : SPMSL_POISONED);
+                            SPMSL_CURARE
+                          : SPMSL_POISONED_II);
 
         mitm[thing_created].x = 0;
         mitm[thing_created].y = 0;
