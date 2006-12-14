@@ -1389,9 +1389,8 @@ static std::string describe_armour( const item_def &item, bool verbose )
     if (is_unrandom_artefact( item )
         && strlen(unrandart_descrip(1, item)) != 0)
     {
-        description += "$";
         description += unrandart_descrip(1, item);
-        description += "$$";
+        description += "$";
     }
     else
     {
@@ -2497,9 +2496,8 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
 
     if (is_unrandom_artefact( item ) && strlen(unrandart_descrip(1, item)) != 0)
     {
-        description += "$";
         description += unrandart_descrip(1, item);
-        description += "$$";
+        description += "$";
     }
     else if ((!is_random_artefact( item ) 
             && get_ident_type( OBJ_JEWELLERY, item.sub_type ) != ID_KNOWN_TYPE)
@@ -3306,6 +3304,7 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
 
     if (verbose)
     {
+
         description += "$It weighs around ";
 
         const int mass = item_mass( item );
@@ -3326,6 +3325,10 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
 
         description += item_mass;
         description += " aum. ";        // arbitrary unit of mass
+
+        if ( is_dumpable_artifact(item, false) )
+            description += "$$This ancient artifact cannot be changed "
+                "by magic or mundane means.";
     }
 
     return (description);
