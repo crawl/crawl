@@ -11,7 +11,7 @@ The contents of this text are:
 		chaos_knight, death_knight, priest, 
 		race, class, random_pick
 2-  File System and Sound.
-                crawl_dir, save_dir, sound.
+                crawl_dir, save_dir, sound
 3-  Lua files.
 		lua_file,
 		base.lua, stash.lua, wield.lua, kills.lua, runrest.lua, 
@@ -31,14 +31,14 @@ The contents of this text are:
 4-d	Branding (Item and Monster Highlighting).
 		heap_brand, friend_brand, stab_brand, may_stab_brand 
 4-e	Level Map Functions.
-		level_map_cursor_step, item_colour, 
+		level_map_cursor_step, item_colour
 4-f	Travel and Exploration. 
 		travel_delay, travel_avoid_terrain,
                 travel_exclude_radius2, travel_stop_message,
                 explore_greedy, explore_stop, runrest_ignore_message,
                 runrest_ignore_poison, trapwalk_safe_hp, tc_reachable,
-                tc_dangerous, tc_excluded, tc_exclude_circle; lua:
-                ch_stop_run (ignoring monsters)
+                tc_dangerous, tc_excluded, tc_exclude_circle; 
+                lua: ch_stop_run (ignoring monsters)
 4-g	Stashes.
 		stash_tracking, stash_filter
 4-h	Command Enhancements.
@@ -69,7 +69,7 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a	All OS.
 		macro_meta_entry, wiz_mode, colours, char_set, cset_ascii,
-                cset_ibm, cset_dec, feature.
+                cset_ibm, cset_dec, feature
 6-b	DOS and Windows.
 		dos_use_background_intensity
 6-c     Unix
@@ -181,8 +181,9 @@ The currently available lua's are
   base.lua	-- needed for other lua scripts
   stash.lua	-- annotates the stash file for better searching (Ctrl-F)
 		   Searching for 'Long blades' will also turn up all weapons
-		   with the long blade skill. Also, you can now look for
-		   spellbooks ('book'), artifacts ('art'), ego items ('ego').	
+		   with the long blade skill. Similarly, you can use 'altar',
+                   'portal' etc. Also, you can now look for spellbooks 
+                   ('book'), artifacts ('\{art'), ego items ('ego').	
   wield.lua	-- shows more intelligent options when using 'w?'
   kills.lua	-- improves the Vanquished Creatures list in dump files; 
 		   currently gives three lists (Vanquished, Friendly, Others)
@@ -268,47 +269,43 @@ ban_pickup = <regex>
 	  ban_pickup = forgetfulness, uselessness, noise, torment
 
 drop_mode = (multi | single)
-	Single is the classic behaviour after pressing another key,
-	that item will be dropped. Multi (the default) makes an
-	inventory menu appear, allowing the selection of items to be
-	dropped. (You can also switch to multidrop from the classic
-	drop line using the '@' key).
+	Single is the classic behaviour after pressing another key, that item 
+        will be dropped. Multi (the default) makes an inventory menu appear, 
+        allowing the selection of items to be dropped. (You can also switch to 
+        multidrop from the classic drop line using the '@' key).
 
-	Multidrops are highly convenient. Be aware of the fact that
-	every single drop takes one turn. (This is different from
-	picking up.) When selecting multidrops, the top right corner
-	will show the estimated number of turns.
+	Multidrops are highly convenient. Be aware of the fact that every single
+        drop takes one turn. (This is different from picking up.) When selecting
+        multidrops, the top right corner shows the estimated number of turns.
 
-	The order in which items get dropped is from top to bottom in
-	the inventory listing, but equipped items will be dropped
-	last, and may be dropped out of order.
+	The order in which items get dropped is from top to bottom in the 
+        inventory listing, but equipped items will be dropped last, and may be 
+        dropped out of order.
 
 pickup_mode = (multi | single | auto:X)
-        Single is the classical behaviour (and default): when picking up
-        items, you are prompted for them one by one. Multi makes a menu
-        appear, where you can choose which items to pick up. Note that
-        no matter how many items you choose, picking up will always take
-        one turn.
-        If pickup_mode is auto:X, where X is some number (for example,
-        auto:5), then pickup will give a menu if there are at least X
-        items on your square, and will prompt one by one otherwise.
+        Single is the classical behaviour (and default): when picking up items, 
+        you are prompted for them one by one. Multi makes a menu appear, where 
+        you can choose which items to pick up. Note that no matter how many 
+        items you choose, picking up will always take one turn.
+        If pickup_mode is auto:X, where X is some number (for example, auto:5), 
+        then pickup will give a menu if there are at least X items on your 
+        square, and will prompt one by one otherwise.
 
 drop_filter = <regex>
 	When selecting items using the global (de)select keys (',' or '-') in 
-	a multidrop listing, you can choose to apply a filter: only items 
-	whose names match the filter will be selected. The filter strings are 
-	regexes. For instance, to quickly select carrion and rotting chunks of 
-	meat, you could use:
+	a multidrop listing, you can choose to apply a filter: only items whose 
+        names match the filter will be selected. The filter strings are regexes. 
+        For instance, to quickly select carrion and rotting chunks of meat, you 
+        could use:
 	  drop_filter = skeleton, rotting, corpse
 	Other choices can come in handy as well, e.g. if you want to sacrifice
 	regularly all weapons except axes, use:
 	  drop_filter = axe, broadaxe
-	Note that if you use this option, you will lose the (de)select all 
-        keys. However, '*' inverts the current selection and so salvages this 
-	problem.
+	Note that if you use this option, you will lose the (de)select all keys. 
+        However, '*' inverts the current selection and so salvages this problem.
 	The default is empty.
 
-Using a Lua script, you can define a function "ch_autopickup" to select
+Using a Lua script, you can define a function "ch_autopickup" to select 
 additional items for autopickup. Let's say you want autopickup to only grab food
 if your character can eat it (let's say you're playing a kobold and you want to
 stop picking up vegetables). You could use the following (if '%' is not in the
@@ -432,7 +429,7 @@ may_stab_brand
 4-e	Level Map Functions.
 ----------------------------
 
-level_map_cursor_step = 10
+level_map_cursor_step = 7
 	How many squares the cursor moves on the level map when using 
 	Shift-direction or * direction.
 
@@ -482,14 +479,15 @@ travel_stop_message = <list of regexes>
         Multiple travel_stop_message lines can be used.
 
 explore_greedy = false
-        Enables greedy explore. Greedy explore travels to items that
-        are eligible for autopickup in addition to exploring the
-        level, but is otherwise identical to regular explore. Greedy
-        explore is only available with stash_tracking = all (for any
-        other value of stash_tracking, normal explore behaviour is
-        used). Greedy explore is also best with pickup_dropped =
-        false. Explore greed is disabled if you're temporarily unable
-        to pick up items (from uncontrolled levitation, for instance).
+        Greedy explore travels to items that are eligible for autopickup in
+        addition to exploring the level, but is otherwise identical to
+        regular explore. Greedy explore is only available with
+        stash_tracking = all (for any other value of stash_tracking, normal
+        explore behaviour is used). Greedy explore is also best with
+        pickup_dropped = false. Explore greed is disabled if you're
+        temporarily unable to pick up items (from uncontrolled levitation,
+        for instance). Default is false (no greedy explore) and using greedy
+        explore may slow down the performance.
 
 explore_stop = items,stairs,shops,altars
 	Explore will stop for one of these conditions. Whatever you set this 
@@ -535,9 +533,6 @@ tc_exclude_circle = red
 	excluded_circle: the colour for travel exclusions apart from centre 
 
 
-you travel to without problems (perhaps including
-
-
 Using small scripts in init.txt, travel can get even more convenient.
 
 * Deciding whether monsters are worth stopping for:
@@ -567,7 +562,7 @@ end
 ----------------
 
 stash_tracking = (explicit | dropped | all)
-        A stash is a heap of items tracked by crawl. You can search in your
+        A stash is a heap of items tracked by Crawl. You can search in your
         stashes with Ctrl-F. This options rules how stashes are generated.
         When stash_tracking is set to 'all' (the default), the game marks any 
 	square where it sees any object as a stash. That gives you a 
@@ -584,9 +579,9 @@ stash_tracking = (explicit | dropped | all)
 	
         When stash_tracking is set to 'dropped', any square where you drop 
 	something becomes a stash, and the game keeps track of all such 
-	squares.
+	squares. You can still use Ctrl-S and Ctrl-E as above.
 
-	When stash_tracking is set to 'all', 
+
 4-h	Command Enhancements.
 -----------------------------
 
@@ -599,7 +594,8 @@ auto_list = true
 
 lowercase_invocations = true
 	Set this option to true if you prefer to have invocations on 'a'-'e' 
-	instead of the older 'A'-'E'.
+	instead of the older 'A'-'E'. Note that you can change the letters of
+        invocations (and other abilites) with the '=' command.
 
 easy_open = false
 	Open doors by moving on to them. Highly convenient. Note that travel 
@@ -665,18 +661,17 @@ hp_warning = 10
         this percentage of their maximum (use 0 to turn off these messages).
 
 hp_colour = lightgrey, 50:yellow, 25:red
-	hp_colour colours your HP appropriately in the display. In the
-	default setting, your HP will appear in red if at less then 25%,
-	yellow if at less than 50%, and lightgrey otherwise.
+	hp_colour colours your HP appropriately in the display. In the default 
+        setting, your HP will appear in red if at less then 25%, yellow if at 
+        less than 50%, and lightgrey otherwise.
 
 mp_colour = lightgrey, 50:yellow, 25:red
 	mp_colour does to MP what hp_colour does to HP.
 
-terse_hand = false
+terse_hand = true
 	Set this to false to have the "in hand" description on the main screen 
 	the same as the inventory. The default setting of true will give the 
-	newer more terse description that should fit the limited space better 
-	(but will be harder for new players to understand).
+	newer more terse description that should fit the limited space better. 
 
 delay_message_clear = false
         Setting this option to true will delay the clearing of messages until
@@ -802,6 +797,10 @@ autoinscribe = <regex>:<inscription>
 	autopickup option):
 	  autoinscribe = royal jell:=g
 	  autoinscribe = honeycomb:=g
+
+        Another use of autoinscription is making sure that you don't lose
+        charges of important wands accidentally, as in
+          autoinscribe = wand of healing:!z
 
 
 4-m	Macro related Options.

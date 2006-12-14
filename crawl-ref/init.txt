@@ -102,7 +102,7 @@ stab_brand = hi:blue
 
 ##### 4-e	Level Map Functions ###################
 #
-# level_map_cursor_step = 10
+# level_map_cursor_step = 7
 # item_colour = false
 
 ##### 4-f	Travel and Exploration #################
@@ -112,23 +112,22 @@ stab_brand = hi:blue
 # travel_avoid_terrain = shallow water
 # travel_exclude_radius2 = 68
 #
-# stop_travel = Something appears
-# stop_travel = god:wrath finds you
-#
 # explore_greedy = yes
 # explore_stop = items,stairs,shops,altars
-#
-# runrest_ignore_message = prayer ends
-#
-# runrest_ignore_message = You feel.*sick
-# runrest_ignore_poison = 4:100
-
-# trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 # tc_reachable = blue
 # tc_dangerous = cyan
 # tc_excluded = lightmagenta
 # tc_exclude_circle = red
+
+# The following options are not default. Uncommenting activates them.
+#
+# stop_travel = Something appears
+# stop_travel = god:wrath finds you
+# runrest_ignore_message = prayer ends
+# runrest_ignore_message = You feel.*sick
+# runrest_ignore_poison = 4:100
+# trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 ##### 4-g	Stashes ###############################
 #
@@ -151,9 +150,9 @@ stab_brand = hi:blue
 ##### 4-i	Messages and Display Enhancements #####
 #
 # hp_warning = 10
-# hp_colour = lightgrey, 99:green, 50:yellow, 25:red
-# mp_colour = lightgrey, 99:green, 50:yellow, 25:red
-# terse_hand = true
+# hp_colour = lightgrey, 50:yellow, 25:red
+# mp_colour = lightgrey, 50:yellow, 25:red
+# terse_hand = false
 # delay_message_clear = true
 # always_greet = false
 # increasing_skill_progress = false
@@ -164,8 +163,8 @@ menu_colour = red: cursed
 
 ##### 4-j	Firing Commands #######################
 #
-fire_items_start = a
-fire_order = launcher, dart, stone, dagger, spear, handaxe, club
+# fire_items_start = a
+# fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 
 ##### 4-k	Channels ##############################
 #
