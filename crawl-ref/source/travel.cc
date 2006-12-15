@@ -735,7 +735,7 @@ bool prompt_stop_explore(int es_why)
 inline static void check_interesting_square(int x, int y,
                                             explore_discoveries &ed)
 {
-    coord_def pos(x + 1, y + 1);
+    const coord_def pos(x + 1, y + 1);
     
     if (ES_item && igrd(pos) != NON_ITEM)
         ed.found_item( pos, mitm[ igrd(pos) ] );

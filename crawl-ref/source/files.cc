@@ -404,10 +404,10 @@ std::string datafile_path(const std::string &basename)
     return ("");
 }
 
-void check_savedir(std::string &dir)
+bool check_dir(const std::string &whatdir, std::string &dir)
 {
     if (dir.empty())
-        return;
+        return (true);
 
     std::string sep = " ";
     sep[0] = FILE_SEPARATOR;
@@ -421,11 +421,13 @@ void check_savedir(std::string &dir)
 
     if (!dir_exists(dir) && !create_dirs(dir))
     {
-        fprintf(stderr, "Save directory \"%s\" does not exist "
+        fprintf(stderr, "%s \"%s\" does not exist "
                         "and I can't create it.\n",
-                    dir.c_str());
-        exit(1);
+                whatdir.c_str(), dir.c_str());
+        return (false);
     }
+
+    return (true);
 }
 
 // Given a simple (relative) name of a save file, returns the full path of 

@@ -31,7 +31,7 @@ extern FixedArray<bool, MAX_LEVELS, MAX_BRANCHES> tmp_file_pairs;
 
 std::string datafile_path(const std::string &basename);
 
-void check_savedir(std::string &dir);
+bool check_dir(const std::string &what, std::string &dir);
 
 bool travel_load_map( char branch, int absdepth );
 

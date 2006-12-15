@@ -170,11 +170,10 @@ static int userfunc_getindex(const std::string &fname)
  */
 static std::string get_macro_file() 
 {
-    std::string s;
+    if (SysEnv.macro_file.length())
+        return (SysEnv.macro_file);
     
-    if (SysEnv.crawl_dir)
-        s = SysEnv.crawl_dir;
-    
+    std::string s = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
     return (s + "macro.txt");
 }
 

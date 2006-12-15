@@ -804,6 +804,29 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     end_game(se);
 }
 
+static std::string morgue_name()
+{
+#ifdef SHORT_FILE_NAMES
+    return "morgue";
+#else  // !SHORT_FILE_NAMES
+    std::string name = "morgue-" + std::string(you.your_name);
+    time_t when_crawl_got_even = time(NULL);
+
+    if (tm *loc = localtime(&when_crawl_got_even))
+    {
+        char buf[25];
+        snprintf(buf, sizeof buf, "-%04d%02d%02d-%02d%02d",
+                 loc->tm_year + 1900,
+                 loc->tm_mon + 1,
+                 loc->tm_mday,
+                 loc->tm_hour,
+                 loc->tm_min);
+        name += buf;
+    }
+    return (name);
+#endif // SHORT_FILE_NAMES
+}
+
 void end_game( struct scorefile_entry &se )
 {
     int i;
@@ -874,7 +897,7 @@ void end_game( struct scorefile_entry &se )
     invent( -1, dead );
     clrscr();
 
-    if (!dump_char( "morgue", !dead, true ))
+    if (!dump_char( morgue_name(), !dead, true ))
         mpr("Char dump unsuccessful! Sorry about that.");
 #if DEBUG_DIAGNOSTICS
     //jmf: switched logic and moved "success" message to debug-only

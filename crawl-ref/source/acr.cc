@@ -189,6 +189,8 @@ int main( int argc, char *argv[] )
         puts("  -plain           don't use IBM extended characters");
         puts("  -dir <path>      crawl directory");
         puts("  -rc <file>       init file name");
+        puts("  -morgue <dir>    directory to save character dumps");
+        puts("  -macro <file>    macro file name");
         puts("");
         puts("Command line options override init file options, which override");
         puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
