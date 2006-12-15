@@ -199,22 +199,22 @@ ORIENT: float
 # This is the sort of map that would benefit a lot from non-rectangular vaults.
 
 MAP
-xxxxxxxxxx
-xxxxxxxx{x
-xxxxxxxx.x
-xxxxxxxx.x
-xxxxxxxx.x
-xxxxxxxx.xxxxxxx
-xx[...........(x
-xxxxxxxx.xxxxxxx
-xxxxxxxx.x
-xxxxxxxx.x
-xxxxxxxx.x
-xxxxxxxx.xx
-xxxxxxxG.Gx
-xxxxxxxx.xx
-xxxxxxxx.x
-xxxxxxxx@x
+xxxxxxxxx
+xxxxxxx{x
+xxxxxxx.x
+xxxxxxx.x
+xxxxxxx.x
+xxxxxxx.xxxxxxx
+x[...........(x
+xxxxxxx.xxxxxxx
+xxxxxxx.x
+xxxxxxx.x
+xxxxxxx.x
+xxxxxxx.xx
+xxxxxxG.Gx
+xxxxxxx.xx
+xxxxxxx.x
+xxxxxxx@x
 ENDMAP
 
 ##############################################################################
@@ -242,6 +242,198 @@ xx..............xx
 xx..............xx
 xxxxxx.xxxxxxxxxxx
 xxxxxx@xxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# David's entry vaults
+##############################################################################
+
+NAME: david_entry_001
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccc@ccccccccccc
+cccc...cccc+cccc...cccc
+cc.......cc.c........cc
+c.........c.c.........c
+c....[....+.+....(....c
+c.........c.c.........c
+cc.......cc.cc.......cc
+cccc...cccc+ccc....cccc
+cccc+ccccc...ccccc+cccc
+cccc.ccc.......ccc.cccc
+ccc...c.........c...ccc
+ccc...+....{....+...ccc
+ccc...c.........c...ccc
+ccc..ccc.......ccc.cccc
+cccc.ccccc...ccccc.cccc
+cccc..ccccc+ccccc..cccc
+ccccc.............ccccc
+ccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# the eight (infinity)
+
+NAME: david_entry_002
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccccccccccccccccccccccccccc
+ccccc..........cc(cc..........ccccc
+ccc...cccc=ccc.......ccc=cccc...ccc
+cc..ccc......ccccccccc......ccc..cc
+cc.cc...cccc...ccccc...cccc...cc.cc
+c..c..cccccccc..ccc..cccccccc..c..c
+c.cc.cc..........ccc........cc.cc.c
+c.c..c....bb..cc...cc..bb.{..c..=.c
+c.=..c..[.bb..cc...cc..bb....c..c.c
+c.cc.cc........ccc..........cc.cc.c
+c..c..cccccccc..ccc..cccccccc..cc.c
+cc.cc...cccc...cccc....cccc...cc.cc
+cc..ccc......ccccccccc......ccc..cc
+ccc...ccccc+cc.......c=cccccc...ccc
+ccccc..........cc.cc..........ccccc
+ccccccccccccccccc@ccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Less symmetry
+
+NAME: david_entry_003
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: northeast
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+cccccccccccccccccccccccxxxxxx
+cccccccccccccccc...ccccxxxxxx
+cccccccccccccc.......ccxxxxxx
+cccc...cccccc.........cxxxxxx
+cc.......cc......{....cxxxxxx
+c..........cc.........cxxxxxx
+c....(....cccc.......ccxxxxxx
+c.........cccccc...ccccxxxxxx
+cc.......cccccc.cccccccxxxxxx
+cccc...cccccc...cccccccxxxxxx
+ccccccccccc.......cccccxxxxxx
+ccc...c............ccccxxxxxx
+cc..c...cc....[....ccccxxxxxx
+cc.ccccccc.........ccccxxxxxx
+cc...c...cc.......cccccxxxxxx
+cccc...c..ccc...cccccccxxxxxx
+ccccccccc@cccccccccccccxxxxxx
+ENDMAP
+
+##############################################################################
+# Oval
+
+NAME: david_entry_004
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccccccc@ccccccccccccccc
+ccccccccc.............ccccccccc
+ccccc.......vxvxvxv.......ccccc
+ccc......xvx.......xvx......ccc
+cc....vxv.............vxv....cc
+cc...x......ccc=ccc......x...cc
+c...v..[..ccccc.ccccc..(..v...c
+c...x....ccccc.%.ccccc....x...c
+c...v....ccccc.%.ccccc....v...c
+c...x..(..ccccc.ccccc..{..x...c
+cc...v......ccccccc......v...cc
+cc....xvx.............xvx....cc
+ccc......vxv.......vxv......ccc
+ccccc.......xvxvxvx.......ccccc
+ccccccccc.............ccccccccc
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Ellipse
+
+NAME: david_entry_005
+TAGS: entry no_monster_gen
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccccccc@ccccccccccccccc
+ccccccccc.............ccccccccc
+ccccc..........T..........ccccc
+ccc...T.................T...ccc
+cc........T.........T........cc
+c..............{..............c
+c...T.....................T...c
+c............[...(............c
+cc........T.........T........cc
+ccc...T.................T...ccc
+ccccc..........T..........ccccc
+ccccccccc.............ccccccccc
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Mini-octagon
+
+NAME: david_entry_006
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+ccccccccccccccccccccc
+ccccc.....[.....ccccc
+cccc.............cccc
+ccc.....T...T.....ccc
+cc...T.........T...cc
+c.........w.........c
+c...T...........T...c
+c{.....w.....w......@
+c...T...........T...c
+c.........w.........c
+cc...T.........T...cc
+ccc.....T...T.....ccc
+cccc.............cccc
+ccccc.....(.....ccccc
+ccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Mini-triangle
+
+NAME: david_entry_007
+TAGS: entry no_monster_gen
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccccccccccccccc
+cccccccccc...cccccccccc
+ccccccccc..{..ccccccccc
+cccccccc.......cccccccc
+ccccccc..T...T..ccccccc
+cccccc...........cccccc
+ccccc.T....T....T.ccccc
+cccc...............cccc
+ccc..T...T...T...T..ccc
+cc...................cc
+c......T.......T......c
+c..[.......T.......(..c
+cc...................cc
+ccccccccccc@ccccccccccc
 ENDMAP
 
 ##############################################################################
