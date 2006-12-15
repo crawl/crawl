@@ -964,7 +964,7 @@ static std::string morgue_directory()
         !SysEnv.morgue_dir.empty()? SysEnv.morgue_dir :
         SysEnv.crawl_dir          ? SysEnv.crawl_dir : "";
 
-    if (!dir.empty() && !dir[dir.length() - 1] == FILE_SEPARATOR)
+    if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
 
     return (dir);
