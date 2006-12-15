@@ -145,11 +145,12 @@ static void jelly_pit(int level_number, spec_room &sr);
 // VAULT FUNCTIONS
 static void build_vaults(int level_number, int vault_number);
 static void build_minivaults(int level_number, int force_vault);
-static int vault_grid( int level_number, int vx, int vy, int altar_count,
+static int vault_grid( const vault_placement &place,
+                       int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
                        FixedVector < int, 7 > &mons_array,
                        char vgrid, int &initial_x, int &initial_y, 
-                       int force_vault, int &num_runes );
+                       int &num_runes );
 
 // ALTAR FUNCTIONS
 static int pick_an_altar(void);
@@ -5284,10 +5285,11 @@ static void build_minivaults(int level_number, int force_vault)
     {
         for (vy = v1y; vy < v1y + place.height; vy++)
         {
-            altar_count = vault_grid( level_number, vx, vy, altar_count, 
+            altar_count = vault_grid( place,
+                                      level_number, vx, vy, altar_count, 
                                       acq_item_class, mons_array, 
                                       grd[vx][vy], initial_x, initial_y, 
-                                      force_vault, num_runes );
+                                      num_runes );
         }
     }
 }                               // end build_minivaults()
@@ -5351,10 +5353,10 @@ static void build_vaults(int level_number, int force_vault)
     {
         for (vy = 0; vy < GYM; vy++)
         {
-            altar_count = vault_grid( level_number, vx, vy, altar_count, 
+            altar_count = vault_grid( place, level_number, vx, vy, altar_count, 
                                       acq_item_class, mons_array, 
                                       vgrid[vy][vx], initial_x, initial_y,
-                                      force_vault, num_runes );
+                                      num_runes );
         }
     }
 
@@ -5545,11 +5547,12 @@ static void build_vaults(int level_number, int force_vault)
 // returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb}
-static int vault_grid( int level_number, int vx, int vy, int altar_count,
+static int vault_grid( const vault_placement &place,
+                       int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
                        FixedVector < int, 7 > &mons_array,
                        char vgrid, int &initial_x, int &initial_y, 
-                       int force_vault, int &num_runes)
+                       int &num_runes)
 {
     int not_used;
 
@@ -5662,14 +5665,20 @@ static int vault_grid( int level_number, int vx, int vy, int altar_count,
 
                 if (you.level_type == LEVEL_PANDEMONIUM)
                 {
-                    if (force_vault >= 60 && force_vault <= 63)
-                        spec = force_vault;
+                    if (place.map->has_tag("mnoleg"))
+                        spec = RUNE_MNOLEG;
+                    else if (place.map->has_tag("lom_lobon"))
+                        spec = RUNE_LOM_LOBON;
+                    else if (place.map->has_tag("gloorx_vloq"))
+                        spec = RUNE_GLOORX_VLOQ;
+                    else if (place.map->has_tag("cerebov"))
+                        spec = RUNE_CEREBOV;
                     else
-                        spec = 50;
+                        spec = RUNE_DEMONIC;
                 }
                 else if (you.level_type == LEVEL_ABYSS)
-                    spec = 51;
-                else 
+                    spec = RUNE_ABYSSAL;
+                else
                     spec = you.where_are_you;
             }
 
