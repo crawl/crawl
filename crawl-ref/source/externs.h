@@ -659,7 +659,7 @@ struct system_environment
     char *home;                 // only used by MULTIUSER systems
     bool  board_with_nail;      // Easter Egg silliness
 
-    std::string crawl_executable_path; // path to crawl from argv[0]
+    std::string scorefile;
 };
 
 extern system_environment SysEnv;

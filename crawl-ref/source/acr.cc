@@ -210,9 +210,10 @@ int main( int argc, char *argv[] )
         puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
         puts("");
         puts("Highscore list options: (Can now be redirected to more, etc)");
-        puts("  -scores [N]      highscore list");
-        puts("  -tscores [N]     terse highscore list");
-        puts("  -vscores [N]     verbose highscore list");
+        puts("  -scores [N]            highscore list");
+        puts("  -tscores [N]           terse highscore list");
+        puts("  -vscores [N]           verbose highscore list");
+        puts("  -scorefile <filename>  scorefile to report on");
         exit(1);
     }
 
@@ -230,6 +231,12 @@ int main( int argc, char *argv[] )
         printf( " Best Crawlers -" EOL );
         hiscores_print_list( Options.sc_entries, Options.sc_format );
         exit(0);
+    }
+    else
+    {
+        // Don't allow scorefile override for actual gameplay, only for
+        // score listings.
+        SysEnv.scorefile.clear();
     }
 
     init_io();

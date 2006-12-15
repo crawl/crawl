@@ -785,6 +785,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
 #ifdef SCORE_WIZARD_CHARACTERS
     // add this highscore to the score file.
     hiscores_new_entry(se);
+    logfile_new_entry(se);
 #else
 
     // only add non-wizards to the score file.
@@ -792,6 +793,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     if (!you.wizard)
     {
         hiscores_new_entry(se);
+        logfile_new_entry(se);
 
         if (death_type != KILLED_BY_LEAVING && death_type != KILLED_BY_WINNING)
             save_ghost();
