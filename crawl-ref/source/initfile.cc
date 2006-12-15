@@ -1003,7 +1003,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
 #endif
 
     // Validate save_dir
-    check_savedir(save_dir);
+    if (!check_dir("Save directory", save_dir))
+        exit(1);
 }
 
 static int str_to_killcategory(const std::string &s)
@@ -1427,7 +1428,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "remember_name")
     {
         remember_name = read_bool( field, remember_name );
-    }   
+    }
     else if (key == "save_dir")
     {
         // If SAVE_DIR_PATH was defined, there are very likely security issues
@@ -1460,7 +1461,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "note_hp_percent")
     {
-	note_hp_percent = atoi( field.c_str() );
+        note_hp_percent = atoi( field.c_str() );
         if (note_hp_percent < 0 || note_hp_percent > 100)
         {
             note_hp_percent = 0;
@@ -1984,13 +1985,16 @@ enum commandline_option_type {
     CLO_TSCORES,
     CLO_VSCORES,
     CLO_SCOREFILE,
+    CLO_MORGUE,
+    CLO_MACRO,
 
     CLO_NOPS
 };
 
 static const char *cmd_ops[] = { "scores", "name", "race", "class",
                                  "pizza", "plain", "dir", "rc", "tscores",
-                                 "vscores", "scorefile" };
+                                 "vscores", "scorefile", "morgue",
+                                 "macro" };
 
 const int num_cmd_ops = CLO_NOPS;
 bool arg_seen[num_cmd_ops];
@@ -2087,6 +2091,22 @@ bool parse_args( int argc, char **argv, bool rc_only )
                 else if (o == CLO_VSCORES)
                     Options.sc_format = SCORE_VERBOSE;
             }
+            break;
+
+        case CLO_MACRO:
+            if (!next_is_param)
+                return (false);
+            if (!rc_only)
+                SysEnv.macro_file = next_arg;
+            nextUsed = true;
+            break;
+
+        case CLO_MORGUE:
+            if (!next_is_param)
+                return (false);
+            if (!rc_only)
+                SysEnv.morgue_dir = next_arg;
+            nextUsed = true;
             break;
 
         case CLO_SCOREFILE:

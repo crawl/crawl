@@ -998,6 +998,18 @@ const char *hunger_level(void)
              (you.hunger < 11000) ? "full" : "completely stuffed");
 }
 
+static std::string morgue_directory()
+{
+    std::string dir =
+        !SysEnv.morgue_dir.empty()? SysEnv.morgue_dir :
+        SysEnv.crawl_dir          ? SysEnv.crawl_dir : "";
+
+    if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
+        dir += FILE_SEPARATOR;
+
+    return (dir);
+}
+
 static bool write_dump(
         const std::string &fname, 
         const std::string &text, 
@@ -1005,9 +1017,7 @@ static bool write_dump(
 {
     bool succeeded = false;
 
-    std::string file_name;
-    if (SysEnv.crawl_dir)
-        file_name += SysEnv.crawl_dir;
+    std::string file_name = morgue_directory();
 
     file_name += fname;
 
