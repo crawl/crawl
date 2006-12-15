@@ -2252,9 +2252,9 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         nextUsed = false;
 
-        // arg MUST begin with '-' or '/'
+        // arg MUST begin with '-'
         char c = arg[0];
-        if (c != '-' && c != '/')
+        if (c != '-')
             return (false);
 
         // look for match (now we also except --scores)
@@ -2284,7 +2284,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         bool next_is_param = false;
         if (next_arg != NULL)
         {
-            if (next_arg[0] != '-' && next_arg[0] != '/')
+            if (next_arg[0] != '-')
                 next_is_param = true;
         }
 
