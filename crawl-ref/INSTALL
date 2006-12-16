@@ -61,10 +61,12 @@ Building on Unix (Linux, *BSD, Solaris, etc.)
 
 * Prerequisites:
 
-GNU gcc and g++, GNU make, libncurses or libcurses.
+GNU gcc and g++, GNU make, libncurses or libcurses. You need the
+development headers for ncurses - they may not be installed by default
+on some Unixes.
 
-flex and bison are optional but highly recommended. Recent versions of byacc are
-also fine.
+flex and bison are optional but highly recommended. Recent versions of
+byacc are also fine (edit your makefile appropriately).
 
 * Building:
 
@@ -193,14 +195,12 @@ Building on DOS
 
 The level compiler
 ------------------
-(NOTE: The level compiler is not in its final form yet; these instructions are
-likely to change for future releases.)
 
-Crawl uses a level compiler to convert the human-readable level design (.des)
-files in the source/dat directory into code that's compiled into Crawl.
+Crawl uses a level compiler to read the level design (.des) files in
+the source/dat directory.
 
-If you're using one of the standard makefiles, the steps described in this
-section are performed automatically:
+If you're using one of the standard makefiles, the steps described in
+this section are performed automatically:
 
 The level compiler source is in the source/util directory (levcomp.lpp and
 levcomp.ypp). The steps involved in building the level compiler are:
@@ -208,31 +208,13 @@ levcomp.ypp). The steps involved in building the level compiler are:
 * Run flex on levcomp.lpp to produce the levcomp.lex.cc lexer.
 * Run bison on levcomp.ypp to produce the levcomp.tab.cc parser and
   levcomp.tab.h 
-* Compile the resulting C++ source files with mapdef.cc (in the main source
-  directory) and levcomp.cc to produce the levcomp executable.
-
-Once you've built the level compiler, run it on the .des files in source/dat and
-append the results to mapdefs.ixx:
-
-levcomp(.exe) mapdefs.ixx < dat/vaults.des
-levcomp(.exe) -a mapdefs.ixx < dat/splev.des
-(the -a option tells levcomp to append to mapdefs.ixx instead of overwriting the
-existing contents.)
-
-When mapdefs.ixx is built, Crawl can be compiled as before. mapdefs.ixx is
-#included in maps.cc.
+* Compile the resulting C++ source files and levcomp.cc and link the
+  object files into the Crawl executable.
 
 For convenience on systems that don't have flex/bison, pre-generated
-intermediate files are provided under source/prebuilt. The makefiles provided
-with the Crawl source distribution will use these pre-generated files
-automatically if flex/bison is not available.
-
-If you're using an Integrated Development Environment and don't want to modify
-the level design files at all, a pre-generated mapdefs.ixx is provided in
-source/prebuilt - you can add source/prebuilt as an include directory and build
-Crawl as before. (This is not necessary if you're using Xcode on OS X
-- the Xcode project provided with the source distribution is aware of the level
-compiler and will build and use it automatically.)
+intermediate files are provided under source/prebuilt. The makefiles
+provided with the Crawl source distribution will use these
+pre-generated files automatically if flex/bison is not available.
 
 *****************************************************************************
 Optional Libraries
@@ -248,6 +230,16 @@ If you're using Lua older than 5.1, though, the Lua library comprises of *two*
 libraries: liblua and liblualib (yes, confusing), so you need
 
 LIB = -llua -llualib
+
+This also depends on how you install Lua - some package management
+systems build just the plain old liblua.so even for pre 5.1 Lua. If in
+doubt, try both "-llua -llualib" and "-llua".
+
+On many Linuxes, the package management system installs Lua libraries
+including the version number, so the linker option becomes something
+like:
+
+LIB = -llua50
 
 
 Getting Lua:
