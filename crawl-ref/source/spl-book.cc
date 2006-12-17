@@ -912,6 +912,7 @@ unsigned char spellbook_contents( item_def &book, int action,
     unsigned char keyn = 0;
     if (update_screen)
     {
+        cursor_control coff(false);
 #ifdef DOS_TERM
         char buffer[4800];
         gettext(1, 1, 80, 25, buffer);

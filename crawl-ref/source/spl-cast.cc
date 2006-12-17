@@ -90,7 +90,8 @@ char list_spells(void)
     bool already = false;
 
     const int num_lines = get_number_of_lines();
-
+    cursor_control coff(false);
+    
 #ifdef DOS_TERM
     char buffer[4800];
 
