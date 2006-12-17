@@ -3425,6 +3425,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     case MONS_DRACONIAN_KNIGHT:
     case MONS_ORC_WIZARD:
     case MONS_WIZARD:
+    case MONS_BLORK_THE_ORC:
         item_race = MAKE_ITEM_NO_RACE;
         mitm[bp].base_type = OBJ_ARMOUR;
         mitm[bp].sub_type = ARM_ROBE;
@@ -3434,7 +3435,6 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         give_level = MAKE_GOOD_ITEM;
         // fall-through
     case MONS_AGNES:
-    case MONS_BLORK_THE_ORC:
     case MONS_FRANCES:
     case MONS_FRANCIS:
     case MONS_NECROMANCER:
