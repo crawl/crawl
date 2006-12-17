@@ -703,7 +703,7 @@ void canned_msg(unsigned char which_message)
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
 bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
-            bool interrupt_delays )
+            bool interrupt_delays, bool noprompt )
 {
     unsigned char tmp;
 
@@ -711,7 +711,8 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         interrupt_activity( AI_FORCE_INTERRUPT );
     for (;;)
     {
-        mpr(str, MSGCH_PROMPT);
+        if ( !noprompt )
+            mpr(str, MSGCH_PROMPT);
 
         tmp = (unsigned char) getch();
 
@@ -733,7 +734,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             return false;
         else if (tmp == 'Y')
             return true;
-        else
+        else if (!noprompt)
             mpr("[Y]es or [N]o only, please.");
     }
 }                               // end yesno()

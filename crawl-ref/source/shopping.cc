@@ -327,11 +327,15 @@ char in_a_shop( char shoppy, id_arr id )
         more3();
         goto purchase;
     }
-
-    shop_set_ident_type( shoppy, shop_id, mitm[shop_items[ft]].base_type,
-                         mitm[shop_items[ft]].sub_type );
-
-    purchase( shoppy, shop_items[ft], gp_value );
+    snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? [y/n]",
+             item_name(mitm[shop_items[ft]], DESC_NOCAP_A), gp_value);
+    shop_print(info, 20);
+    if ( yesno(NULL, true, 'n', false, false, true) )
+    {        
+        shop_set_ident_type( shoppy, shop_id, mitm[shop_items[ft]].base_type,
+                             mitm[shop_items[ft]].sub_type );
+        purchase( shoppy, shop_items[ft], gp_value );
+    }
 
     goto print_stock;
 
