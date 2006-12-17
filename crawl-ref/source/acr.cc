@@ -228,10 +228,9 @@ int main( int argc, char *argv[] )
     // now parse the args again, looking for everything else.
     parse_args( argc, argv, false );
 
-    if (Options.sc_entries > 0)
+    if (Options.sc_entries != 0)
     {
-        printf( " Best Crawlers -" EOL );
-        hiscores_print_list( Options.sc_entries, Options.sc_format );
+        hiscores_print_all( Options.sc_entries, Options.sc_format );
         exit(0);
     }
     else

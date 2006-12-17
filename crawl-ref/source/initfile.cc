@@ -2069,7 +2069,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_TSCORES:
         case CLO_VSCORES:
             if (!next_is_param)      
-                ecount = SCORE_FILE_ENTRIES;            // default
+                ecount = -1;            // default
             else // optional number given
             {
                 ecount = atoi(next_arg);
