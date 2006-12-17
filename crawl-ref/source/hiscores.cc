@@ -192,23 +192,72 @@ void logfile_new_entry( const scorefile_entry &ne )
     hs_close(logfile, "a", log_file_name());
 }
 
+static void hiscores_print_entry(const scorefile_entry &se,
+                                 int index,
+                                 int format,
+                                 int (*pf)(const char *, ...))
+{
+    char buf[INFO_SIZE];
+    // print position (tracked implicitly by order score file)
+    snprintf( buf, sizeof buf, "%3d.", index + 1 );
+
+    pf("%s", buf);
+
+    std::string entry;
+    // format the entry
+    if (format == SCORE_TERSE)
+    {
+        entry = hiscores_format_single( se );
+        // truncate if we want short format
+        if (entry.length() > 75)
+            entry = entry.substr(0, 75);
+    }
+    else
+    {
+        entry = hiscores_format_single_long( se, (format == SCORE_VERBOSE) );
+    }
+
+    entry += EOL;
+    pf("%s", entry.c_str());
+}
+
+// Writes all entries in the scorefile to stdout in human-readable form.
+void hiscores_print_all(int display_count, int format)
+{
+    FILE *scores = hs_open("r", score_file_name());
+    if (scores == NULL)
+    {
+        // will only happen from command line
+        puts( "No scores." );
+        return;
+    }
+
+    for (int entry = 0; display_count <= 0 || entry < display_count; ++entry)
+    {
+        scorefile_entry se;
+        if (!hs_read(scores, se))
+            break;
+
+        hiscores_print_entry(se, entry, format, printf);
+    }
+
+    hs_close( scores, "r", score_file_name() );
+}
+
+// Displays high scores using curses. For output to the console, use
+// hiscores_print_all.
 void hiscores_print_list( int display_count, int format )
 {
     FILE *scores;
     int i, total_entries;
-    bool use_printf = (Options.sc_entries > 0);
 
     if (display_count <= 0)
-        display_count = SCORE_FILE_ENTRIES;
+        return;
 
     // open highscore file (reading)
     scores = hs_open("r", score_file_name());
     if (scores == NULL)
-    {
-        // will only happen from command line
-        puts( "No high scores." );
         return;
-    }
 
     // read highscore file
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
@@ -221,8 +270,7 @@ void hiscores_print_list( int display_count, int format )
     // close off
     hs_close( scores, "r", score_file_name() );
 
-    if (!use_printf) 
-        textcolor(LIGHTGREY);
+    textcolor(LIGHTGREY);
 
     int start = (newest_entry > 10) ? newest_entry - 10: 0;
 
@@ -237,38 +285,12 @@ void hiscores_print_list( int display_count, int format )
     for (i = start; i < finish && i < total_entries; i++)
     {
         // check for recently added entry
-        if (i == newest_entry && !use_printf)
+        if (i == newest_entry)
             textcolor(YELLOW);
 
-        // print position (tracked implicitly by order score file)
-        snprintf( info, INFO_SIZE, "%3d.", i + 1 );
-        if (use_printf)
-            printf("%s", info);
-        else
-            cprintf("%s", info);
+        hiscores_print_entry(hs_list[i], i, format, cprintf);
 
-        std::string entry;
-        // format the entry
-        if (format == SCORE_TERSE)
-        {
-            entry = hiscores_format_single( hs_list[i] );
-            // truncate if we want short format
-            if (entry.length() > 75)
-                entry = entry.substr(0, 75);
-        }
-        else
-        {
-            entry = hiscores_format_single_long( hs_list[i], 
-                                         (format == SCORE_VERBOSE) );
-        }
-
-        entry += EOL;
-        if(use_printf)
-            printf("%s", entry.c_str());
-        else
-            cprintf("%s", entry.c_str());
-
-        if (i == newest_entry && !use_printf)
+        if (i == newest_entry)
             textcolor(LIGHTGREY);
     }
 }

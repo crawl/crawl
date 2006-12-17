@@ -29,6 +29,7 @@ void logfile_new_entry( const scorefile_entry &se );
  * called from: acr ouch
  * *********************************************************************** */
 void hiscores_print_list( int display_count = -1, int format = SCORE_TERSE );
+void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
 
 // last updated 16feb2001 {gdl}
 /* ***********************************************************************
