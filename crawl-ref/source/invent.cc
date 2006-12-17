@@ -815,8 +815,8 @@ int prompt_invent_item( const char *prompt,
                         prompt,
                         mtype,
                         keyin == '*'? OSEL_ANY : type_expect, 
-                        MF_SINGLESELECT | MF_ANYPRINTABLE
-                            | MF_EASY_EXIT, 
+                        MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
+                        | MF_EASY_EXIT,
                         NULL, 
                         &items );
 

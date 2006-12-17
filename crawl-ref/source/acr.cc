@@ -1252,7 +1252,7 @@ void process_command( command_type cmd ) {
             break;
         }
         start_translevel_travel();
-        redraw_screen();
+        mesclr();
         break;
 
     case CMD_EXPLORE:

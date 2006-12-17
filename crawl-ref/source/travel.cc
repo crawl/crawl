@@ -1615,11 +1615,7 @@ static int prompt_travel_branch()
             return (ID_DOWN);
         case '*':
             if (waypoint_list || waycount)
-            {
                 waypoint_list = !waypoint_list;
-                mesclr();
-                continue;
-            }
             break;
         default:
             // Is this a branch hotkey?
@@ -1634,6 +1630,7 @@ static int prompt_travel_branch()
                 return (-1 - (keyin - '0'));
             return (ID_CANCEL);
         }
+        mesclr();
     }
 }
 
