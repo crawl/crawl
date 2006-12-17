@@ -1307,7 +1307,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
         if (mon->behaviour == BEH_SLEEP)
             mon->behaviour = BEH_WANDER;
 
-        // A bit of code to make Project Noise actually so
+        // A bit of code to make Project Noise actually do
         // something again.  Basically, dumb monsters and 
         // monsters who aren't otherwise occupied will at 
         // least consider the (apparent) source of the noise 
@@ -1322,8 +1322,9 @@ void behaviour_event( struct monsters *mon, int event, int src,
     case ME_WHACK:
     case ME_ANNOY:
         // will turn monster against <src>, unless they
-        // are BOTH friendly and stupid.   Hitting someone
-        // over the head, of course, always triggers this code.
+        // are BOTH friendly and stupid, or else fleeing anyway.
+        // Hitting someone over the head, of course,
+        //  always triggers this code.
         if ( event == ME_WHACK ||
              ((isFriendly != sourceFriendly || isSmart) &&
               (mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC)))
