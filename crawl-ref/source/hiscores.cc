@@ -418,6 +418,10 @@ static bool unlock_file_handle( FILE *handle )
 
 FILE *hs_open( const char *mode, const std::string &scores )
 {
+    // allow reading from standard input
+    if ( scores == "-" )
+        return stdin;
+
     FILE *handle = fopen(scores.c_str(), mode);
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
@@ -442,7 +446,7 @@ void hs_close( FILE *handle, const char *mode, const std::string &scores )
 {
     UNUSED( mode );
 
-    if (handle == NULL)
+    if (handle == NULL || handle == stdin)
         return;
 
 #ifdef USE_FILE_LOCKING
