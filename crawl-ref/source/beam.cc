@@ -1829,7 +1829,7 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (msg_generated);
-}                               // end mass_enchantmenet()
+}                               // end mass_enchantment()
 
 /*
    Monster has probably failed save, now it gets enchanted somehow.
