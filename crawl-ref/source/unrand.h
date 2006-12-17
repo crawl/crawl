@@ -965,7 +965,7 @@
 ,
 /* 45 */
 {
-    "longbow \"Piercer\"", "very long bow",
+    "longbow \"Piercer\"", "very long metal bow",
         OBJ_WEAPONS, WPN_LONGBOW, +2, +10, CYAN,
     {
         SPWPN_VORPAL, 0, -2, 0, 0, 0,       // ev
@@ -977,7 +977,7 @@
     }
     ,
         "",
-        "An exceptionally large longbow.",
+        "An exceptionally large metal longbow.",
         ""
 }
 ,
