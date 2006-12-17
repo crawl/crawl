@@ -69,6 +69,8 @@ int Character_Set = CHARACTER_SET;
 short FG_COL = WHITE;
 short BG_COL = BLACK;
 
+static bool cursor_is_enabled = true;
+
 static unsigned int convert_to_curses_attr( int chattr )
 {
     switch (chattr & CHATTR_ATTRMASK)
@@ -401,10 +403,14 @@ int clrscr()
     return (retval);
 }
 
-
-void _setcursortype(int curstype)
+void set_cursor_enabled(bool enabled)
 {
-    curs_set(curstype);
+    curs_set(cursor_is_enabled = enabled);
+}
+
+bool is_cursor_enabled()
+{
+    return (cursor_is_enabled);
 }
 
 inline unsigned get_brand(int col)

@@ -114,6 +114,7 @@ char in_a_shop( char shoppy, id_arr id )
 {
     // easier to work with {dlb}
     unsigned int greedy = env.shop[shoppy].greed;
+    cursor_control coff(false);
 
     id_fix_arr shop_id;
     FixedVector < int, 20 > shop_items;

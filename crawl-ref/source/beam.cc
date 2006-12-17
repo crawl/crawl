@@ -1234,6 +1234,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     bool beamTerminate;     // has beam been 'stopped' by something?
     int tx = 0, ty = 0;     // test(new) x,y - integer
     int rangeRemaining;
+    cursor_control coff(false);
 
     beam_message_cache.clear();
 

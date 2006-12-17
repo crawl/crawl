@@ -884,15 +884,22 @@ static void input() {
         return;
     }
 
-    command_type cmd = get_next_cmd();
+    {
+        // Enable the cursor to read input. The cursor stays on while
+        // the command is being processed, so subsidiary prompts
+        // shouldn't need to turn it on explicitly.
+        cursor_control con(true);
+        command_type cmd = get_next_cmd();
 
-    // [dshaligram] If get_next_cmd encountered a Lua macro binding, your turn
-    // may be ended by the first invoke of the macro.
-    if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-        process_command( cmd );
+        // [dshaligram] If get_next_cmd encountered a Lua macro
+        // binding, your turn may be ended by the first invoke of the
+        // macro.
+        if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
+            process_command( cmd );
+    }
 
-    if ( you.turn_is_over ) {
-
+    if (you.turn_is_over)
+    {
         if ( apply_berserk_penalty )
             do_berserk_no_combat_penalty();
 
@@ -2816,6 +2823,8 @@ static bool initialise(void)
     init_char_table(Options.char_set);
     init_feature_table();
 #endif
+
+    set_cursor_enabled(false);
     viewwindow(1, false);   // This just puts the view up for the first turn.
 
     activate_notes(true);

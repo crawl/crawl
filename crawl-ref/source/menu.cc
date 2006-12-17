@@ -97,6 +97,8 @@ void Menu::reset()
 
 std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
+    cursor_control cs(false);
+    
     if (reuse_selections)
         get_selected(&sel);
     else

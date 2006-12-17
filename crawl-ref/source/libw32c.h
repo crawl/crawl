@@ -16,12 +16,12 @@ typedef std::basic_string<char> string;
 #include <excpt.h>
 #include <stdarg.h>
 
-#define _NORMALCURSOR   true
-#define _NOCURSOR       false
-
 void init_libw32c(void);
 void deinit_libw32c(void);
-void _setcursortype(int curstype);
+
+void set_cursor_enabled(bool enabled);
+bool is_cursor_enabled();
+
 void clrscr(void);
 void gotoxy(int x, int y);
 void textcolor(int c);

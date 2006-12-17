@@ -128,14 +128,14 @@ enum KEYS
 class cursor_control
 {
 public:
-    cursor_control(bool cs) 
-        : cstate(cs), smartcstate( is_smart_cursor_enabled() )
+    cursor_control(bool cursor_enabled) 
+        : cstate(is_cursor_enabled()), smartcstate(is_smart_cursor_enabled())
     {
         enable_smart_cursor(false);
-        _setcursortype(cs? _NORMALCURSOR : _NOCURSOR);
+        set_cursor_enabled(cursor_enabled);
     }
     ~cursor_control() {
-        _setcursortype(cstate? _NOCURSOR : _NORMALCURSOR);
+        set_cursor_enabled(cstate);
         enable_smart_cursor(smartcstate);
     }
 private:
