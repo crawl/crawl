@@ -38,6 +38,7 @@
 #include "spl-book.h"
 #include "stash.h"
 #include "stuff.h"
+#include "view.h"
 
 static char in_a_shop(char shoppy, id_arr id);
 static char more3(void);
@@ -86,7 +87,8 @@ static std::string purchase_keys(const std::string &s)
 static void list_shop_keys(const std::string &purchasable)
 {
     char buf[200];
-    gotoxy(1, 23);
+    const int numlines = get_number_of_lines();
+    gotoxy(1, numlines - 1);
 
     std::string pkeys = purchase_keys(purchasable);
     if (pkeys.length())
@@ -97,14 +99,14 @@ static void list_shop_keys(const std::string &purchasable)
             pkeys.c_str());
 
     formatted_string fs = formatted_string::parse_string(buf);
-    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
-    gotoxy(1, 24);
+    gotoxy(1, numlines);
 
     fs = formatted_string::parse_string(
             "[<w>?</w>/<w>*</w>]   Inventory  "
             "[<w>\\</w>] Known Items");
-    fs.cprintf("%*s", get_number_of_cols() - fs.length(), "");
+    fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
 }
 
