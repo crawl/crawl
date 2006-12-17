@@ -656,11 +656,11 @@
 ,
 /* 28 */
 {
-    "crossbow \"Fiery Devil\"", "flaming crossbow",
-        OBJ_WEAPONS, WPN_CROSSBOW, +4, +0, LIGHTRED,
+    "crossbow \"Hellfire\"", "flaming crossbow",
+        OBJ_WEAPONS, WPN_CROSSBOW, +6, +9, LIGHTRED,
     {
         SPWPN_FLAME, 0, 0, 0, 0, 0,
-        1, 0, 0, 0, 0, 0,               // res fire
+        2, -1, 0, 0, 0, 0,              // +2 fire, -1 cold
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -668,7 +668,7 @@
     }
     ,
         "",
-        "A flaming crossbow.",
+        "A flaming crossbow, forged in the fires of the Hells.",
         ""
 }
 ,
@@ -965,10 +965,10 @@
 ,
 /* 45 */
 {
-    "bow \"Erchidel\"", "metal bow",
-        OBJ_WEAPONS, WPN_BOW, +5, +3, CYAN,
+    "longbow \"Piercer\"", "very long bow",
+        OBJ_WEAPONS, WPN_LONGBOW, +2, +10, CYAN,
     {
-        SPWPN_PROTECTION, 0, 0, 3, 0, 0,       // str
+        SPWPN_VORPAL, 0, -2, 0, 0, 0,       // ev
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
@@ -977,7 +977,7 @@
     }
     ,
         "",
-        "A metal bow.",
+        "An exceptionally large longbow.",
         ""
 }
 ,
@@ -1108,6 +1108,27 @@
         ""
 }
 ,
+
+/* 53 */
+{
+    "blowgun of the Assassin", "tiny blowgun",
+        OBJ_WEAPONS, WPN_BLOWGUN, +6, +6, WHITE,
+    {
+        SPWPN_VENOM, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0,       // turn invisible
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 60                   // stealth
+    }
+    ,
+        "",
+        "It is designed for easy concealment, but still packs a nasty punch.",
+        ""
+}
+,
+
+  
 /* This is a dummy */
 /* 1 */
 {
