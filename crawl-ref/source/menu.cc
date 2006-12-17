@@ -220,8 +220,11 @@ bool Menu::process_key( int keyin )
             return false;
         draw_select_count( sel.size() );
 
-        if (flags & MF_ANYPRINTABLE && !isdigit( keyin ))
+        if (flags & MF_ANYPRINTABLE
+            && (!isdigit(keyin) || is_set(MF_NO_SELECT_QTY)))
+        {
             return false;
+        }
 
         break;
     }
