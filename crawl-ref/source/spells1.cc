@@ -28,6 +28,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "direct.h"
+#include "effects.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -413,7 +414,8 @@ void identify(int power)
                         you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
 
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
-
+        remove_empty_inscription(you.inv[item_slot]);
+        
         // output identified item
         in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
         mpr( str_pass );

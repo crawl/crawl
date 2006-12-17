@@ -92,4 +92,6 @@ void torment( int caster, int tx, int ty );
 
 int torment_monsters(int x, int y, int pow, int caster);
 
+bool remove_empty_inscription( item_def& item );
+
 #endif

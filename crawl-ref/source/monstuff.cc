@@ -1351,7 +1351,8 @@ void behaviour_event( struct monsters *mon, int event, int src,
         // will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // it won't turn friends hostile either.
-        if (mon->behaviour != BEH_CORNERED)
+        if (mon->behaviour != BEH_CORNERED && mon->behaviour != BEH_PANIC &&
+            mon->behaviour != BEH_FLEE)
             mon->behaviour = BEH_SEEK;
 
         if (mon->foe == MHITNOT)

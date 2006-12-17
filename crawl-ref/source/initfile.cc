@@ -2058,7 +2058,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         bool next_is_param = false;
         if (next_arg != NULL)
         {
-            if (next_arg[0] != '-')
+            if (next_arg[0] != '-' || strlen(next_arg) == 1)
                 next_is_param = true;
         }
 
