@@ -81,7 +81,7 @@ char oldTitle[80];
 static HANDLE inbuf = NULL;
 static HANDLE outbuf = NULL;
 static int current_color = -1;
-static bool current_cursor = _NOCURSOR;
+static bool cursor_is_enabled = false;
 // dirty line (sx,ex,y)
 static int chsx=0, chex=0, chy=-1;
 // cursor position (start at 0,0 --> 1,1)
@@ -104,7 +104,7 @@ static bool w32_smart_cursor = true;
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char c);
 static void bFlush(void);
-static void _setcursortype_internal(int curstype);
+static void _setcursortype_internal(bool curstype);
 
 // [ds] Unused for portability reasons
 /*
@@ -288,7 +288,7 @@ void bFlush(void)
    chy = -1;
 
    // if cursor is not NOCURSOR, update screen
-   if (current_cursor != _NOCURSOR)
+   if (cursor_is_enabled)
    {
       COORD xy;
       xy.X = cx;
@@ -383,7 +383,7 @@ void init_libw32c(void)
    textcolor(DARKGREY);
 
    // initialise cursor to NONE.
-   _setcursortype_internal(_NOCURSOR);
+   _setcursortype_internal(false);
 
    // buffering defaults to ON -- very important!
    setBuffering(true);
@@ -425,7 +425,7 @@ void deinit_libw32c(void)
    setStringInput(true);
 
    // set cursor and normal textcolor
-   _setcursortype_internal(_NORMALCURSOR);
+   _setcursortype_internal(true);
    textcolor(DARKGREY);
 
    // finally, restore title
@@ -440,26 +440,26 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (current_cursor);
+    return (cursor_is_enabled);
 }
 
 void _setcursortype_internal(bool curstype)
 {
    CONSOLE_CURSOR_INFO cci;
 
-   if (curstype == current_cursor)
+   if (curstype == cursor_is_enabled)
        return;
 
    cci.dwSize = 5;
    cci.bVisible = curstype? TRUE : FALSE;
-   current_cursor = curstype;
+   cursor_is_enabled = curstype;
    CLOCKIN
    SetConsoleCursorInfo( outbuf, &cci );
    CLOCKOUT(1)
 
    // now, if we just changed from NOCURSOR to CURSOR,
    // actually move screen cursor
-   if (current_cursor != _NOCURSOR)
+   if (cursor_is_enabled)
        gotoxy(cx+1, cy+1);
 }
 
@@ -518,7 +518,7 @@ void gotoxy(int x, int y)
    cy = y-1;
 
    // if cursor is not NOCURSOR, update screen
-   if (current_cursor != _NOCURSOR)
+   if (cursor_is_enabled)
    {
       COORD xy;
       xy.X = cx;
@@ -729,9 +729,9 @@ int getch_ck(void)
        return repeat_key;
     }
 
-    const bool oldValue = current_cursor;
+    const bool oldValue = cursor_is_enabled;
     if (w32_smart_cursor)
-        _setcursortype_internal(_NORMALCURSOR);
+        _setcursortype_internal(true);
 
     while(1)
     {
@@ -825,10 +825,10 @@ int getConsoleString(char *buf, int maxlen)
    setStringInput( true );
 
    // force cursor
-   const bool oldValue = current_cursor;
+   const bool oldValue = cursor_is_enabled;
 
    if (w32_smart_cursor)
-       _setcursortype_internal(_NORMALCURSOR);
+       _setcursortype_internal(true);
 
    // set actual screen color to current color
    SetConsoleTextAttribute( outbuf, WIN32COLOR(current_color) );
