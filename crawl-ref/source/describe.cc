@@ -6507,7 +6507,7 @@ void describe_god( int which_god, bool give_title )
         description = "Okawaru is a dangerous and powerful God of battle. Followers can gain a " EOL
                       "number of powers useful in combat as well as various rewards, but must " EOL
                       "constantly prove themselves through battle and the sacrifice of corpses" EOL
-                      "and valuable items.";
+                      "and valuable items. Okawaru despises those who harm their allies.";
         break;
 
     case GOD_MAKHLEB:
