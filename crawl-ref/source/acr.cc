@@ -296,6 +296,19 @@ int main( int argc, char *argv[] )
         wield_warning(false);
     }
 
+    if ( game_start )
+    {
+        snprintf(info, INFO_SIZE,
+                 "%s, the %s %s, began the quest for the Orb.",
+                 you.your_name,
+                 species_name(you.species,you.experience_level),
+                 you.class_name);                 
+        take_note(Note(NOTE_USER_NOTE, 0, 0, info));
+        snprintf(info, INFO_SIZE, "HP: %d/%d MP: %d/%d",
+                 you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, info));
+    }
+
     while (true)
     {
         input();
