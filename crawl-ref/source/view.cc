@@ -1921,7 +1921,7 @@ static void draw_level_map(
     screen_buffer_t buffer2[GYM * GXM * 2];        
     const int num_lines = get_number_of_lines();
 
-    _setcursortype(_NOCURSOR);
+    cursor_control cs(false);
 
 #ifdef PLAIN_TERM
     gotoxy(1, 1);
@@ -2009,8 +2009,6 @@ static void draw_level_map(
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, buffer2);
 #endif
-
-    _setcursortype(_NORMALCURSOR);
 }
 
 // show_map() now centers the known map along x or y.  This prevents
@@ -3325,7 +3323,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
     if (draw_it)
     {
-        _setcursortype(_NOCURSOR);
+        cursor_control cs(false);
 
         const bool map = player_in_mappable_area();
         int bufcount = 0;
@@ -3517,6 +3515,5 @@ void viewwindow(bool draw_it, bool do_updates)
 #endif
 
 #endif
-        _setcursortype(_NORMALCURSOR);
     }
 }                               // end viewwindow()

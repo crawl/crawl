@@ -4,8 +4,6 @@
 
 // Some replacement routines missing in gcc
 
-#define _NORMALCURSOR 1
-#define _NOCURSOR 0
 #define O_BINARY O_RDWR
 
 char *strlwr(char *str);
@@ -30,7 +28,6 @@ int get_number_of_lines_from_curses(void);
 int get_number_of_cols_from_curses(void);
 void get_input_line_from_curses( char *const buff, int len );
 
-void _setcursortype(int curstype);
 void delay(unsigned long time);
 void unixcurses_shutdown(void);
 void unixcurses_startup(void);
@@ -41,6 +38,8 @@ void textattr(int col);
 void set_altcharset(bool alt_on);
 bool get_altcharset();
 
+void set_cursor_enabled(bool enabled);
+bool is_cursor_enabled();
 inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return (false); }
 

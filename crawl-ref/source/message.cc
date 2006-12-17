@@ -26,6 +26,7 @@
 #include "externs.h"
 
 #include "initfile.h"
+#include "libutil.h"
 #include "macro.h"
 #include "delay.h"
 #include "stuff.h"
@@ -413,7 +414,8 @@ void mesclr( bool force )
     }
 
     // turn cursor off -- avoid 'cursor dance'
-    _setcursortype(_NOCURSOR);
+
+    cursor_control cs(false);
 
 #ifdef DOS_TERM
     window(1, 18, 78, 25);
@@ -447,9 +449,6 @@ void mesclr( bool force )
     }
 #endif
 #endif
-
-    // turn cursor back on
-    _setcursortype(_NORMALCURSOR);
 
     Message_Line = 0;
 }                               // end mseclr()
@@ -553,11 +552,11 @@ void replay_messages(void)
             win_start_line = 0;
     }
 
+    // Turn off the cursor
+    cursor_control cursoff(false);
+
     for(;;)
     {
-        // turn cursor off
-        _setcursortype(_NOCURSOR);
-
         clrscr();
 
         gotoxy(1, 1);
@@ -612,9 +611,6 @@ void replay_messages(void)
         cprintf(EOL);
         cprintf( "<< Lines %d-%d of %d >>", rel_start, rel_end, num_msgs );
                  
-        // turn cursor back on
-        _setcursortype(_NORMALCURSOR);
-
         keyin = get_ch();
 
         if ((full_buffer && NUM_STORED_MESSAGES > num_lines - 2)

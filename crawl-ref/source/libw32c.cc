@@ -432,18 +432,23 @@ void deinit_libw32c(void)
    SetConsoleTitle( oldTitle );
 }
 
-void _setcursortype(int curstype)
+void set_cursor_enabled(bool enabled)
 {
     if (!w32_smart_cursor)
-        _setcursortype_internal(curstype);
+        _setcursortype_internal(enabled);
 }
 
-void _setcursortype_internal(int curstype)
+bool is_cursor_enabled()
+{
+    return (current_cursor);
+}
+
+void _setcursortype_internal(bool curstype)
 {
    CONSOLE_CURSOR_INFO cci;
 
    if (curstype == current_cursor)
-      return;
+       return;
 
    cci.dwSize = 5;
    cci.bVisible = curstype? TRUE : FALSE;
@@ -455,7 +460,7 @@ void _setcursortype_internal(int curstype)
    // now, if we just changed from NOCURSOR to CURSOR,
    // actually move screen cursor
    if (current_cursor != _NOCURSOR)
-      gotoxy(cx+1, cy+1);
+       gotoxy(cx+1, cy+1);
 }
 
 void clrscr(void)
