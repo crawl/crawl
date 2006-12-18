@@ -4917,7 +4917,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_CYCLOPS:
         description += "A giant with one eye in the centre of its forehead."
             " Despite their lack of binocular vision, cyclopes "
-            "throw boulders with fearsomely accuracy.";
+            "throw boulders with fearsome accuracy.";
         break;
 
     case MONS_DRAGON:
