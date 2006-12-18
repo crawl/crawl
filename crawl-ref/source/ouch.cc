@@ -898,16 +898,12 @@ void end_game( struct scorefile_entry &se )
     clrscr();
 
     if (!dump_char( morgue_name(), !dead, true ))
+    {
         mpr("Char dump unsuccessful! Sorry about that.");
-#if DEBUG_DIAGNOSTICS
-    //jmf: switched logic and moved "success" message to debug-only
-    else
-        mpr("Char dump successful! (morgue.txt).");
-#endif // DEBUG
+        more();
+        clrscr();
+    }
 
-    more();
-
-    clrscr();
 #ifdef DOS_TERM
     window(1, 1, 80, 25);
 #endif
