@@ -43,10 +43,6 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
-#if _MSC_VER >= 1100            // note that we can't just check for _MSC_VER: most compilers will wind up defining this in order to work with the SDK headers...
-#pragma message("Compiling AppHeader.h (this message should only appear once)")
-#endif
-
 #if defined(GCC)
 #   define HASH_CONTAINER_NS __gnu_cxx
 #   define HASH_CONTAINERS
@@ -82,6 +78,26 @@
 // Define plain_term for Unix and dos_term for DOS.
 
 #ifdef UNIX
+    // Uncomment if you're running Crawl with dgamelaunch and have
+    // problems viewing games in progress. This affects how Crawl
+    // clears the screen (see DGL_CLEAR_SCREEN) below.
+    //
+    // #define DGAMELAUNCH
+
+    // DGL_CLEAR_SCREEN specifies the escape sequence to use to clear
+    // the screen (used only when DGAMELAUNCH is defined). We make no
+    // attempt to discover an appropriate escape sequence for the
+    // term, assuming that dgamelaunch admins can adjust this as
+    // needed.
+    //
+    // Why this is necessary: dgamelaunch's ttyplay initialises
+    // playback by jumping to the last screen clear and playing back
+    // from there. For that to work, ttyplay must be able to recognise
+    // the clear screen sequence, and ncurses clear()+refresh()
+    // doesn't do the trick.
+    //
+    #define DGL_CLEAR_SCREEN "\033[2J"
+
     #define PLAIN_TERM
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
@@ -143,14 +159,6 @@
     
     #include "libunix.h"
 
-#elif _MSC_VER >= 1100
-    #include <string>
-    #include "WinHdr.h"
-    #error MSVC is not supported yet
-    #define CHARACTER_SET           A_ALTCHARSET
-
-    #define FILE_SEPARATOR '/'
-
 #elif defined(DOS)
     #define DOS_TERM
     #define SHORT_FILE_NAMES
@@ -170,7 +178,7 @@
         #define vsnprintf(buf, size, format, args) vsprintf(buf, format, args)
     #endif
 
-#elif defined(WIN32CONSOLE) && (defined(__IBMCPP__) || defined(__MINGW32__))
+#elif defined(WIN32CONSOLE)
     #include "libw32c.h"
     #define PLAIN_TERM
     #define EOL "\n"

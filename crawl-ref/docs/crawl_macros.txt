@@ -109,12 +109,12 @@ Easier Nemelex hoovering.
 -------------------------
 # F12: Nemelex hoover
 K:\{379}
-A:w0Iyp,y
+A:w0Eyp,y
 
 This sets up your portable altar, prays there, confirms, and picks it up 
-again. The sequence assumes that the altar carries the inscription {w0}. 
+again. The sequence assumes that the altar carries the inscription {@w0}. 
 Actually, this can be achieved automatically with the init.txt line
- autoinscribe = portable altar:w0
+ autoinscribe = portable altar:@w0
 If you have your weapon on slot a, feel free to add 'wa' to the sequence.
 
 Easy surroundings mode.

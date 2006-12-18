@@ -399,7 +399,12 @@ int clrscr()
     textcolor( LIGHTGREY );
     textbackground( BLACK );
     retval = clear();
+#ifndef DGAMELAUNCH
     refresh();
+#else
+    printf(DGL_CLEAR_SCREEN);
+    fflush(stdout);
+#endif
     return (retval);
 }
 
