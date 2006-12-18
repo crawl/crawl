@@ -437,6 +437,67 @@ ccccccccccc@ccccccccccc
 ENDMAP
 
 ##############################################################################
+# the imperial orb
+
+NAME: david_entry_008
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: float
+
+MAP
+ccccccccccccccccccccccc
+cccccccccc...cccccccccc
+ccccccccc..{..ccccccccc
+ccccccccc.....ccccccccc
+cccc...ccc...ccc...cccc
+cc.......cc+cc.......cc
+c.........c.c.........c
+c....[....+.+....(....c
+c.........c.c.........c
+cc.......cc+cc.......cc
+cccc...cccc.cccc...cccc
+cccccccc.......cccccccc
+ccccc.............ccccc
+cccc...............cccc
+ccc.................ccc
+ccc........<........ccc
+ccc.................ccc
+ccc.................ccc
+cccc...............cccc
+ccccc.............ccccc
+cccccccc.......cccccccc
+ccccccccccc@ccccccccccc
+ENDMAP
+
+##############################################################################
+# from cave to hall
+
+NAME: david_entry_009
+TAGS: entry
+ORIENT: float
+MONS: hobgoblin
+
+MAP
+cccccccccccccccccccccccccccccccccccccccc
+c[c..c...cc......c.....................c
+c..ccc.cc..c...c....c....c.............c
+ccc..c..c.c..c..c..cc.c.c...T....ccc...c
+c..cccc.cc..c..cc.......c.......ccccc..c
+c.cc...c.c..c......c...c........ccccc..c
+cc.c.ccc..c...c..cc...c...cccc...ccc...c
+ccc.ccc.c.c..c...c..c....cc..cc........c
+c{ccc..cc.cc......cc.....=.cc1c...T....@
+c.c...c.cc.c..cc.........ccc%cc........c
+cc.cccccc.c...c..c..cc....cccc...ccc...c
+cccc.c...c..c...c...............ccccc..c
+c.cc..ccc.c.......c...c.........ccccc..c
+c..cc.c.c...cc...ccc...cc...T....ccc...c
+cc..cc.cc.cc....c....c...c.............c
+c(.c..c.cc...c......c..................c
+cccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
 # Regular vaults
 ##############################################################################
 
