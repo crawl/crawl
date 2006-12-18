@@ -198,7 +198,7 @@ char in_a_shop( char shoppy, id_arr id )
         if (gp_value <= 1)
             gp_value = 1;
 
-	bool can_afford = (you.gold >= gp_value);
+	const bool can_afford = (you.gold >= gp_value);
 	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
 
         if (can_afford)
@@ -219,9 +219,7 @@ char in_a_shop( char shoppy, id_arr id )
         si.add_item(mitm[itty], gp_value);
 
         gotoxy(60, i);
-        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
-        snprintf(st_pass, sizeof(st_pass), "%5d", gp_value);
-        cprintf("%s gold", st_pass);
+        cprintf("%5d gold", gp_value);
         if (mitm[itty].link == NON_ITEM)
             break;
 
