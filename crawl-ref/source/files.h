@@ -52,6 +52,8 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
  * *********************************************************************** */
 void save_game(bool leave_game);
 
+// Save game without exiting (used when changing levels).
+void save_game_state();
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

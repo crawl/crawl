@@ -1177,6 +1177,7 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 
 void save_game(bool leave_game)
 {
+    unwind_bool saving_game(crawl_state.saving_game, true);
 
 #ifdef STASH_TRACKING
     /* Stashes */
@@ -1275,6 +1276,14 @@ void save_game(bool leave_game)
     cprintf( "See you soon, %s!" EOL , you.your_name );
     end(0);
 }                               // end save_game()
+
+// Saves the game without exiting.
+void save_game_state()
+{
+    save_game(false);
+    if (crawl_state.seen_hups)
+        save_game(true);
+}
 
 void load_ghost(void)
 {

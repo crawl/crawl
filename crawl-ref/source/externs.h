@@ -640,6 +640,21 @@ struct crawl_environment
 
 extern struct crawl_environment env;
 
+// Track stuff for SIGHUP handling.
+struct game_state
+{
+    bool need_save;         // Set to true when game has started.
+    bool saving_game;       // Set to true while in save_game.
+    bool updating_scores;   // Set to true while updating hiscores.
+
+    int seen_hups;          // Set to true if SIGHUP received.
+
+    game_state() : need_save(false), saving_game(false),
+                   updating_scores(false), seen_hups(0)
+    {
+    }
+};
+extern game_state crawl_state;
 
 struct ghost_struct
 {

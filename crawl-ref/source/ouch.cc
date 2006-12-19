@@ -776,6 +776,9 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
 
     //okay, so you're dead:
 
+    crawl_state.need_save       = false;
+    crawl_state.updating_scores = true;
+
     // prevent bogus notes
     activate_notes(false);
 
@@ -870,8 +873,8 @@ void end_game( struct scorefile_entry &se )
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
 
     for ( i = 0; i < num_suffixes; ++i ) {
-	std::string tmpname = basename + suffixes[i];
-	unlink( tmpname.c_str() );
+        std::string tmpname = basename + suffixes[i];
+        unlink( tmpname.c_str() );
     }
 
     // death message
@@ -880,7 +883,9 @@ void end_game( struct scorefile_entry &se )
         mpr("You die...");      // insert player name here? {dlb}
         viewwindow(1, false);   // don't do this for leaving/winning characters
     }
-    more();
+
+    if (!crawl_state.seen_hups)
+        more();
 
     for (i = 0; i < ENDOFPACK; i++)
         set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
@@ -900,7 +905,8 @@ void end_game( struct scorefile_entry &se )
     if (!dump_char( morgue_name(), !dead, true ))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
-        more();
+        if (!crawl_state.seen_hups)
+            more();
         clrscr();
     }
 
@@ -925,6 +931,7 @@ void end_game( struct scorefile_entry &se )
     hiscores_print_list( get_number_of_lines() - lines - 5 );
 
     // just to pause, actual value returned does not matter {dlb}
-    get_ch();
+    if (!crawl_state.seen_hups)
+        get_ch();
     end(0);
 }

@@ -95,6 +95,10 @@
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
 
+    // If this is defined, Crawl will attempt to save and exit when it
+    // receives a hangup signal.
+    #define SIGHUP_SAVE
+
     #define FILE_SEPARATOR '/'
 
     #define CHARACTER_SET           0

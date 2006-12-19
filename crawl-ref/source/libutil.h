@@ -125,6 +125,23 @@ enum KEYS
     CK_CTRL_PGDN
 };
 
+// Sets a boolean to a new value in the scope of the object instance.
+class unwind_bool
+{
+public:
+    unwind_bool(bool &val_, bool newval) : val(val_), oldval(val_)
+    {
+        val = newval;
+    }
+    ~unwind_bool()
+    {
+        val = oldval;
+    }
+private:
+    bool &val;
+    bool oldval;
+};
+
 class cursor_control
 {
 public:

@@ -105,6 +105,8 @@ std::string log_file_name()
 
 void hiscores_new_entry( const scorefile_entry &ne )
 {
+    unwind_bool score_update(crawl_state.updating_scores, true);
+    
     FILE *scores;
     int i, total_entries;
     bool inserted = false;
@@ -175,6 +177,8 @@ void hiscores_new_entry( const scorefile_entry &ne )
 
 void logfile_new_entry( const scorefile_entry &ne )
 {
+    unwind_bool logfile_update(crawl_state.updating_scores, true);
+    
     FILE *logfile;
     scorefile_entry le = ne;
 
@@ -225,6 +229,8 @@ static void hiscores_print_entry(const scorefile_entry &se,
 // Writes all entries in the scorefile to stdout in human-readable form.
 void hiscores_print_all(int display_count, int format)
 {
+    unwind_bool scorefile_display(crawl_state.updating_scores, true);
+    
     FILE *scores = hs_open("r", score_file_name());
     if (scores == NULL)
     {
@@ -249,6 +255,8 @@ void hiscores_print_all(int display_count, int format)
 // hiscores_print_all.
 void hiscores_print_list( int display_count, int format )
 {
+    unwind_bool scorefile_display(crawl_state.updating_scores, true);
+    
     FILE *scores;
     int i, total_entries;
 
@@ -436,8 +444,6 @@ static bool unlock_file_handle( FILE *handle )
 }
 
 #endif
-
-
 
 FILE *hs_open( const char *mode, const std::string &scores )
 {
