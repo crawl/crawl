@@ -192,10 +192,11 @@ void logfile_new_entry( const scorefile_entry &ne )
     hs_close(logfile, "a", log_file_name());
 }
 
+template <class t_printf>
 static void hiscores_print_entry(const scorefile_entry &se,
                                  int index,
                                  int format,
-                                 int (*pf)(const char *, ...))
+                                 t_printf pf)
 {
     char buf[INFO_SIZE];
     // print position (tracked implicitly by order score file)
