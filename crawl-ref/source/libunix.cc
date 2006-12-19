@@ -45,6 +45,7 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "files.h"
 
 #include <termios.h>
 
@@ -198,6 +199,35 @@ int getch_ck() {
     }
 }
 
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE)
+
+/* [ds] This SIGHUP handling is primitive and far from safe, but it
+ * should be better than nothing. Feel free to get rigorous on this.
+ */
+static void handle_hangup(int)
+{
+    if (crawl_state.seen_hups++)
+        return;
+
+    if (crawl_state.saving_game || crawl_state.updating_scores)
+        return;
+    
+    crawl_state.saving_game = true;
+    if (crawl_state.need_save)
+    {
+        // save_game(true) also exits, saving us the trouble of doing so.
+        save_game(true);
+    }
+    else
+    {
+        // CROAK! No attempt to clean up curses. This is probably not an
+        // issue since the term has gone away.
+        exit(1);
+    }
+}
+
+#endif // USE_UNIX_SIGNALS && SIGHUP_SAVE
+
 void unixcurses_startup( void )
 {
     termio_init();
@@ -210,12 +240,14 @@ void unixcurses_startup( void )
 #ifdef SIGINT
     signal(SIGINT, SIG_IGN);
 #endif
+
+#ifdef SIGHUP_SAVE
+    signal(SIGHUP, handle_hangup);
+#endif
+    
 #endif
 
-    //savetty();
-
     initscr();
-    // cbreak();
     raw();
     noecho();
 
@@ -228,7 +260,6 @@ void unixcurses_startup( void )
     ESCDELAY = CURSES_SET_ESCDELAY;
 #endif
 #endif
-    //cbreak();
 
     meta(stdscr, TRUE);
     start_color();

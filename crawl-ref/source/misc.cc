@@ -659,7 +659,7 @@ void up_stairs(void)
 
     you.turn_is_over = true;
 
-    save_game(false);
+    save_game_state();
 
     new_level();
 
@@ -1100,7 +1100,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
 
     you.turn_is_over = true;
 
-    save_game(false);
+    save_game_state();
 
     new_level();
 

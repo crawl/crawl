@@ -124,9 +124,10 @@
 #include "view.h"
 #include "stash.h"
 
-struct crawl_environment env;
-struct player you;
-struct system_environment SysEnv;
+crawl_environment env;
+player you;
+system_environment SysEnv;
+game_state crawl_state;
 
 std::string init_file_location; // externed in newgame.cc
 
@@ -2832,6 +2833,9 @@ static bool initialise(void)
     viewwindow(1, false);   // This just puts the view up for the first turn.
 
     activate_notes(true);
+
+    crawl_state.need_save = true;
+
     return (ret);
 }
 
