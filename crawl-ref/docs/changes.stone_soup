@@ -1,3 +1,20 @@
+Stone Soup 0.1.6 (20061219)
+---------------------------
+* Fixed Pandemonium demonlords (Cerebov and friends) not getting the
+  right runes.
+* Added sartak's logfile patch and -scorefile option.
+* Crawl can now read scorefile from stdin for use with -[vt]scores.
+* Crawl can handle logfiles with -[vt]scores.
+* Fixed hilight: brand being misapplied on curses.
+* The Hat of the Alchemist is now a wizard hat.
+* Shopping display cleaned up, less prone to breakage on nonstandard
+  term sizes.
+* Fixed inconsistent application of inscripted hotkeys.
+* Fixed batty cursor syndrome on Windows and Unix.
+* Added DGAMELAUNCH #ifdef conditional to make Crawl play better when
+  run with dgamelaunch.
+* Crawl now handles SIGHUP by saving the game and exiting.
+
 Stone Soup 0.1.5 (20061205)
 ---------------------------
 * Fixed crash when multidropping a worn cloak and worn body armour, in
