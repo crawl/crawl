@@ -6,7 +6,6 @@ Stone Soup 0.1.6 (20061219)
 * Crawl can now read scorefile from stdin for use with -[vt]scores.
 * Crawl can handle logfiles with -[vt]scores.
 * Fixed hilight: brand being misapplied on curses.
-* The Hat of the Alchemist is now a wizard hat.
 * Shopping display cleaned up, less prone to breakage on nonstandard
   term sizes.
 * Fixed inconsistent application of inscripted hotkeys.

@@ -1058,7 +1058,7 @@
 /* 50 */
 {
     "hat of the Alchemist", "dirty hat",
-        OBJ_ARMOUR, ARM_HELMET, +2, THELM_WIZARD_HAT, MAGENTA,
+        OBJ_ARMOUR, ARM_HELMET, +2, THELM_SPECIAL, MAGENTA,
     {
         0, 0, 0, 0, 0, 0,
         1, 1, 1, 0, 0, 30,      // res fire, cold, elec, magic
