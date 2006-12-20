@@ -1055,7 +1055,10 @@ void process_command( command_type cmd ) {
         
     case CMD_BROWSE_MANUAL:
     {
-        FILE* fp = fopen("../docs/crawl_manual.txt", "r");
+        FILE* fp;
+        fp = fopen("../docs/crawl_manual.txt", "r");
+        if ( !fp )
+            fp = fopen("./docs/crawl_manual.txt", "r");
         if ( fp )
         {
             browse_file(fp);
