@@ -1056,15 +1056,23 @@ void process_command( command_type cmd ) {
     case CMD_BROWSE_MANUAL:
     {
         FILE* fp;
+#ifdef DATA_DIR_PATH
+        fp = fopen(DATA_DIR_PATH "/crawl_manual.txt", "r");
+#else
         fp = fopen("../docs/crawl_manual.txt", "r");
         if ( !fp )
             fp = fopen("./docs/crawl_manual.txt", "r");
+#endif
         if ( fp )
         {
             browse_file(fp);
             fclose(fp);
             redraw_screen();
-        }        
+        }
+        else
+        {
+            mpr("Crawl manual (crawl_manual.txt) not found.");
+        }
     }
     break;
 
