@@ -32,6 +32,7 @@
 
 #include "AppHdr.h"
 #include "abyss.h"
+#include "branch.h"
 #include "defines.h"
 #include "enum.h"
 #include "externs.h"
@@ -179,56 +180,24 @@ static bool got_curare_roll(const int item_level)
 
 static void place_altars()
 {
-    int altar_chances[][2] = {
-        // These are percentages
-        { BRANCH_MAIN_DUNGEON,      8 },
-        { BRANCH_DIS,               0 },
-        { BRANCH_GEHENNA,           0 },
-        { BRANCH_VESTIBULE_OF_HELL, 0 },
-        { BRANCH_COCYTUS,           0 },
-        { BRANCH_TARTARUS,          0 },
-        { BRANCH_INFERNO,           0 },
-        { BRANCH_THE_PIT,           0 },
-        { BRANCH_ORCISH_MINES,     20 },
-        { BRANCH_HIVE,              0 },
-        { BRANCH_LAIR,              5 },
-        { BRANCH_SLIME_PITS,        5 },
-        { BRANCH_VAULTS,            5 },
-        { BRANCH_CRYPT,             5 },
-        { BRANCH_HALL_OF_BLADES,    0 },
-        { BRANCH_HALL_OF_ZOT,       1 },
-        { BRANCH_ECUMENICAL_TEMPLE, 0 },
-        { BRANCH_SNAKE_PIT,        10 },
-        { BRANCH_ELVEN_HALLS,       8 },
-        { BRANCH_TOMB,              0 },
-        { BRANCH_SWAMP,             0 },
-        { BRANCH_CAVERNS,           0 },
-        { -1, -1 }
-    };
-
     // No altars before level 5.
     if (you.your_level < 4)
         return;
 
-    for (int i = 0; altar_chances[i][0] != -1; ++i)
+    if ( you.level_type == LEVEL_DUNGEON )
     {
-        if (player_in_branch( altar_chances[i][0] ))
+        int prob = branches[(int)you.where_are_you].altar_chance;
+        while (prob)
         {
-            int prob = altar_chances[i][1];
-            while (prob)
-            {
-                if (random2(100) >= prob)
-                    break;
+            if (random2(100) >= prob)
+                break;
 
 #ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
+            mprf(MSGCH_DIAGNOSTICS, "Placing an altar");
 #endif
-                place_altar();
-
-                // Reduce the chance and try to place another.
-                prob /= 5;
-            }
-            break;
+            place_altar();
+            // Reduce the chance and try to place another.
+            prob /= 5;
         }
     }
 }
@@ -270,9 +239,7 @@ void builder(int level_number, char level_type)
 
     // reset all shops
     for (unsigned char shcount = 0; shcount < 5; shcount++)
-    {
         env.shop[shcount].type = SHOP_UNASSIGNED;
-    }
 
     int skip_build;
 
@@ -392,18 +359,16 @@ void builder(int level_number, char level_type)
         if (player_in_branch( BRANCH_VAULTS ))
         {
             vault_wall = DNGN_ROCK_WALL;
+            const int bdepth = player_branch_depth();
 
-            if (level_number > you.branch_stairs[STAIRS_VAULTS] + 2)
+            if ( bdepth > 2 )
                 vault_wall = DNGN_STONE_WALL;
 
-            if (level_number > you.branch_stairs[STAIRS_VAULTS] + 4)
+            if ( bdepth > 4 )
                 vault_wall = DNGN_METAL_WALL;
 
-            if (level_number > you.branch_stairs[STAIRS_VAULTS] + 6
-                && one_chance_in(10))
-            {
+            if ( bdepth > 6 && one_chance_in(10))
                 vault_wall = DNGN_GREEN_CRYSTAL_WALL;
-            }
         }
         else if (player_in_branch( BRANCH_CRYPT ))
         {
@@ -415,48 +380,24 @@ void builder(int level_number, char level_type)
 
     // Top level of branch levels - replaces up stairs
     // with stairs back to dungeon or wherever:
-    for (i = 0; i< 30; i++)
+    if ( branches[(int)you.where_are_you].exit_stairs != NUM_FEATURES &&
+         player_branch_depth() == 1 )
     {
-        if (you.branch_stairs[i] == 0)
-            break;
-
-        if (level_number == you.branch_stairs[i] + 1
-            && level_type == LEVEL_DUNGEON
-            && you.where_are_you == BRANCH_ORCISH_MINES + i)
-        {
-            for (x = 1; x < GXM; x++)
-            {
-                for (y = 1; y < GYM; y++)
-                {
-                    if (grd[x][y] >= DNGN_STONE_STAIRS_UP_I
-                        && grd[x][y] <= DNGN_ROCK_STAIRS_UP)
-                    {
-                        grd[x][y] = DNGN_RETURN_FROM_ORCISH_MINES + i;
-                    }
-                }
-            }
-        }
+        for (x = 1; x < GXM; x++)
+            for (y = 1; y < GYM; y++)
+                if (grd[x][y] >= DNGN_STONE_STAIRS_UP_I
+                    && grd[x][y] <= DNGN_ROCK_STAIRS_UP)
+                    grd[x][y] = branches[(int)you.where_are_you].exit_stairs;
     }
 
     // bottom level of branch - replaces down stairs with up ladders:
-    for (i = 0; i < 30; i++)
+    if ( player_branch_depth() == branches[(int)you.where_are_you].depth )
     {
-        if (level_number == you.branch_stairs[i] + branch_depth(i)
-            && level_type == LEVEL_DUNGEON
-            && you.where_are_you == BRANCH_ORCISH_MINES + i)
-        {
-            for (x = 1; x < GXM; x++)
-            {
-                for (y = 1; y < GYM; y++)
-                {
-                    if (grd[x][y] >= DNGN_STONE_STAIRS_DOWN_I
-                        && grd[x][y] <= DNGN_ROCK_STAIRS_DOWN)
-                    { 
-                        grd[x][y] = DNGN_ROCK_STAIRS_UP;
-                    }
-                }
-            }
-        }
+        for (x = 1; x < GXM; x++)
+            for (y = 1; y < GYM; y++)
+                if (grd[x][y] >= DNGN_STONE_STAIRS_DOWN_I
+                    && grd[x][y] <= DNGN_ROCK_STAIRS_DOWN)
+                    grd[x][y] = DNGN_ROCK_STAIRS_UP;
     }
 
     if (player_in_branch( BRANCH_CRYPT ))
@@ -3794,7 +3735,7 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
 
     // This dodge allows designers to specify PLACE: as Elf:$ or Slime:$ or
     // whatever:$ to say "last level in branch 'whatever'".
-    if (subdepth == branch_depth( branch_stair(you.where_are_you) ))
+    if (subdepth == branches[(int)you.where_are_you].depth)
         altname = level_name(0);
 
     int vault = random_map_for_place(name, wantmini);
@@ -4225,8 +4166,6 @@ static void place_specific_stair(unsigned char stair)
 
 static void place_branch_entrances(int dlevel, char level_type)
 {
-    unsigned char stair;
-    unsigned char entrance;
     int sx, sy;
 
     if (!level_type == LEVEL_DUNGEON)
@@ -4264,62 +4203,20 @@ static void place_branch_entrances(int dlevel, char level_type)
     }
 
     // place actual branch entrances
-    for (int branch = 0; branch < 30; branch++)
+    for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        stair = 0;
-        entrance = 100;
-
-        if (you.branch_stairs[branch] == 100)   // set in newgame
-            break;
-
-        if (you.branch_stairs[branch] != dlevel)
-            continue;
-
-        // decide if this branch leaves from this level
-        switch(branch)
+        if ( branches[i].entry_stairs != NUM_FEATURES &&
+             player_in_branch(branches[i].parent_branch) &&
+             player_branch_depth() == branches[i].startdepth )
         {
-            case STAIRS_ORCISH_MINES:
-            case STAIRS_HIVE:
-            case STAIRS_LAIR:
-            case STAIRS_VAULTS:
-            case STAIRS_ECUMENICAL_TEMPLE:
-                entrance = BRANCH_MAIN_DUNGEON;
-                break;
-
-            case STAIRS_SLIME_PITS:
-            case STAIRS_SWAMP:
-            case STAIRS_SNAKE_PIT:
-                entrance = BRANCH_LAIR;
-                break;
-
-            case STAIRS_ELVEN_HALLS:
-                entrance = BRANCH_ORCISH_MINES;
-                break;
-
-            case STAIRS_CRYPT:
-            case STAIRS_HALL_OF_BLADES:
-                entrance = BRANCH_VAULTS;
-                break;
-
-            case STAIRS_TOMB:
-                entrance = BRANCH_CRYPT;
-                break;
-
-            default:
-                entrance = 100;
-                break;
-        }
-
-        if (you.where_are_you != entrance)
-            continue;
-
-        stair = branch + DNGN_ENTER_ORCISH_MINES;
-        place_specific_stair(stair);
+            // place a stair
 #ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Placing stair: %s",
-                feature_description(stair).c_str());
+            mprf(MSGCH_DIAGNOSTICS, "Placing stair to %s",
+                 branches[i].shortname);
 #endif
-    }   // end loop - possible branch entrances
+            place_specific_stair(branches[i].entry_stairs);
+        }
+    }
 }
 
 static void make_trail(int xs, int xr, int ys, int yr, int corrlength, 

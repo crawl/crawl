@@ -25,6 +25,7 @@
 
 #include "externs.h"
 
+#include "branch.h"
 #include "direct.h"
 // for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
@@ -210,27 +211,13 @@ std::string overview_description_string()
     std::string disp;
     bool seen_anything = false;
 
-    // better put this somewhere central
-    const branch_type list_order[] = 
-    {
-        BRANCH_MAIN_DUNGEON, 
-        BRANCH_ECUMENICAL_TEMPLE,
-        BRANCH_ORCISH_MINES, BRANCH_ELVEN_HALLS,
-        BRANCH_LAIR, BRANCH_SWAMP, BRANCH_SLIME_PITS, BRANCH_SNAKE_PIT, 
-        BRANCH_HIVE,
-        BRANCH_VAULTS, BRANCH_HALL_OF_BLADES, BRANCH_CRYPT, BRANCH_TOMB,
-        BRANCH_VESTIBULE_OF_HELL,
-        BRANCH_DIS, BRANCH_GEHENNA, BRANCH_COCYTUS, BRANCH_TARTARUS, 
-        BRANCH_HALL_OF_ZOT
-    };
-
     disp += "                    <white>Overview of the Dungeon</white>\n" ;
 
     // print branches
     int branchcount = 0;
-    for (unsigned int i = 1; i < sizeof(list_order)/sizeof(branch_type); ++i)
+    for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        const branch_type branch = list_order[i];
+        const branch_type branch = branches[i].id;
         if ( stair_level.find(branch) != stair_level.end() )
         {
             if ( !branchcount )
@@ -242,7 +229,7 @@ std::string overview_description_string()
             ++branchcount;
 
             snprintf(buffer, sizeof buffer, "<yellow>%-6s</yellow>: %-7s",
-                     branch_name(branch, true).c_str(),
+                     branches[branch].abbrevname,
                      stair_level[branch].describe(false, true).c_str());
             disp += buffer;
             if ( (branchcount % 4) == 0 )

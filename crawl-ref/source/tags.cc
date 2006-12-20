@@ -68,6 +68,7 @@
 #include "AppHdr.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "enum.h"
 #include "externs.h"
 #include "files.h"
@@ -92,7 +93,7 @@ extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
 
 // temp file pairs used for file level cleanup
-FixedArray < bool, MAX_LEVELS, MAX_BRANCHES > tmp_file_pairs;
+FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
 
 // static helpers
 static void tag_construct_you(struct tagHeader &th);
@@ -871,13 +872,13 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
         marshallByte(th,you.unique_creatures[j]); /* unique beasties */
 
     // how many branches?
-    marshallByte(th, MAX_BRANCHES);
-    for (j = 0; j < 30; ++j)
-        marshallByte(th,you.branch_stairs[j]);
+    marshallByte(th, NUM_BRANCHES);
+    for (j = 0; j < NUM_BRANCHES; ++j)
+        marshallLong(th, branches[j].startdepth);
 
     marshallShort(th, MAX_LEVELS);
     for (i = 0; i < MAX_LEVELS; ++i)
-        for (j = 0; j < MAX_BRANCHES; ++j)
+        for (j = 0; j < NUM_BRANCHES; ++j)
             marshallBoolean(th, tmp_file_pairs[i][j]);
 
     marshallMap(th, stair_level,
@@ -1164,12 +1165,18 @@ static void tag_read_you_dungeon(struct tagHeader &th)
     // how many branches?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.branch_stairs[j] = unmarshallByte(th);
+        branches[j].startdepth = unmarshallLong(th);
+
+    cprintf("found %d branches\n", (int)count_c);
 
     count_s = unmarshallShort(th);
+    cprintf("found %d maxlevel\n", (int)count_s);
     for (i = 0; i < count_s; ++i)
+    {
+//        cprintf("i = %d\n", i);
         for (j = 0; j < count_c; ++j)
             tmp_file_pairs[i][j] = unmarshallBoolean(th);
+    }
     
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>, unmarshall_level_id);

@@ -23,6 +23,7 @@
 
 #include "abyss.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "direct.h"
 #include "debug.h"
@@ -564,8 +565,7 @@ bool allow_control_teleport( bool silent )
 
         case BRANCH_ELVEN_HALLS:
             // Cannot raid the elven halls vaults until fountain drained
-            if (you.branch_stairs[STAIRS_ELVEN_HALLS] +
-                    branch_depth(STAIRS_ELVEN_HALLS) == you.your_level)
+            if (player_branch_depth() == branches[BRANCH_ELVEN_HALLS].depth)
             {
                 for (int x = 5; x < GXM - 5; x++) 
                 {
@@ -580,8 +580,7 @@ bool allow_control_teleport( bool silent )
 
         case BRANCH_HALL_OF_ZOT:
             // Cannot control teleport until the Orb is picked up
-            if (you.branch_stairs[STAIRS_HALL_OF_ZOT] +
-                    branch_depth(STAIRS_HALL_OF_ZOT) == you.your_level
+            if (player_branch_depth() == branches[BRANCH_HALL_OF_ZOT].depth
                 && you.char_direction != DIR_ASCENDING)
             {
                 ret = false;

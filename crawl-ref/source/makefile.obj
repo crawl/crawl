@@ -5,6 +5,7 @@ abl-show.o \
 abyss.o \
 acr.o \
 beam.o \
+branch.o \
 chardump.o \
 cloud.o \
 command.o \

@@ -1034,7 +1034,7 @@ static void hs_search_where(char *inbuf, struct scorefile_entry &se)
     if (se.level_type != LEVEL_DUNGEON)
         return;
 
-    // check for vestible
+    // check for vestibule
     if (strstr(inbuf, "in the Vestibule") != NULL)
     {
         se.branch = BRANCH_VESTIBULE_OF_HELL;
@@ -1332,36 +1332,7 @@ void scorefile_entry::init()
     }
 
     // main dungeon: level is simply level
-    dlvl = you.your_level + 1;
-    switch (you.where_are_you)
-    {
-        case BRANCH_ORCISH_MINES:
-        case BRANCH_HIVE:
-        case BRANCH_LAIR:
-        case BRANCH_SLIME_PITS:
-        case BRANCH_VAULTS:
-        case BRANCH_CRYPT:
-        case BRANCH_HALL_OF_BLADES:
-        case BRANCH_HALL_OF_ZOT:
-        case BRANCH_ECUMENICAL_TEMPLE:
-        case BRANCH_SNAKE_PIT:
-        case BRANCH_ELVEN_HALLS:
-        case BRANCH_TOMB:
-        case BRANCH_SWAMP:
-            dlvl = you.your_level - you.branch_stairs[you.where_are_you - 10];
-            break;
-
-        case BRANCH_DIS:
-        case BRANCH_GEHENNA:
-        case BRANCH_VESTIBULE_OF_HELL:
-        case BRANCH_COCYTUS:
-        case BRANCH_TARTARUS:
-        case BRANCH_INFERNO:
-        case BRANCH_THE_PIT:
-            dlvl = you.your_level - 26;
-            break;
-    }
-
+    dlvl = player_branch_depth();
     branch = you.where_are_you;      // no adjustments necessary.
     level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
 

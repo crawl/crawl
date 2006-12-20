@@ -15,180 +15,35 @@
 #include "mon-pick.h"
 
 #include "externs.h"
-
-static int mons_cocytus_level(int mcls);
-static int mons_cocytus_rare(int mcls);
-static int mons_crypt_level(int mcls);
-static int mons_crypt_rare(int mcls);
-static int mons_dis_level(int mcls);
-static int mons_dis_rare(int mcls);
-static int mons_gehenna_level(int mcls);
-static int mons_gehenna_rare(int mcls);
-static int mons_hallblade_level(int mcls);
-static int mons_hallblade_rare(int mcls);
-static int mons_hallelf_level(int mcls);
-static int mons_hallelf_rare(int mcls);
-static int mons_hallzot_level(int mcls);
-static int mons_hallzot_rare(int mcls);
-static int mons_hive_level(int mcls);
-static int mons_hive_rare(int mcls);
-static int mons_lair_level(int mcls);
-static int mons_lair_rare(int mcls);
-static int mons_mineorc_level(int mcls);
-static int mons_mineorc_rare(int mcls);
-static int mons_pitslime_level(int mcls);
-static int mons_pitslime_rare(int mcls);
-static int mons_pitsnake_level(int mcls);
-static int mons_pitsnake_rare(int mcls);
-static int mons_standard_level(int mcls);
-static int mons_standard_rare(int mcls);
-static int mons_swamp_level(int mcls);
-static int mons_swamp_rare(int mcls);
-static int mons_tartarus_level(int mcls);
-static int mons_tartarus_rare(int mcls);
-static int mons_tomb_level(int mcls);
-static int mons_tomb_rare(int mcls);
-static int mons_caverns_level(int mcls);                       
-static int mons_caverns_rare(int mcls);
-
-/* ******************* BEGIN EXTERNAL FUNCTIONS ******************* */
-int branch_depth(int branch)
-{
-    switch (branch)
-    {
-    case STAIRS_LAIR:
-        return 10;
-
-    case STAIRS_VAULTS:
-        return 8;
-
-    case STAIRS_ELVEN_HALLS:
-        return 7;
-
-    case STAIRS_SLIME_PITS:
-        return 6;
-
-    case STAIRS_CRYPT:
-    case STAIRS_HALL_OF_ZOT:
-    case STAIRS_SNAKE_PIT:
-    case STAIRS_SWAMP:
-        return 5;
-
-    case STAIRS_HIVE:
-    case STAIRS_ORCISH_MINES:
-        return 4;
-
-    case STAIRS_TOMB:
-        return 3;
-
-    case STAIRS_ECUMENICAL_TEMPLE:
-    case STAIRS_HALL_OF_BLADES:
-        return 1;
-
-    default:
-        return 0;
-    }
-}                               // end branch_depth()
-
-int branch_stair(int branch)
-{
-    switch (branch)
-    {
-    case BRANCH_ORCISH_MINES: return STAIRS_ORCISH_MINES;
-    case BRANCH_HIVE:         return STAIRS_HIVE;
-    case BRANCH_LAIR:         return STAIRS_LAIR;
-    case BRANCH_SLIME_PITS:   return STAIRS_SLIME_PITS;
-    case BRANCH_VAULTS:       return STAIRS_VAULTS;
-    case BRANCH_CRYPT:        return STAIRS_CRYPT;
-    case BRANCH_HALL_OF_BLADES: return STAIRS_HALL_OF_BLADES;
-    case BRANCH_HALL_OF_ZOT:  return STAIRS_HALL_OF_ZOT;
-    case BRANCH_ECUMENICAL_TEMPLE: return STAIRS_ECUMENICAL_TEMPLE;
-    case BRANCH_SNAKE_PIT:    return STAIRS_SNAKE_PIT;
-    case BRANCH_ELVEN_HALLS:  return STAIRS_ELVEN_HALLS;
-    case BRANCH_TOMB:         return STAIRS_TOMB;
-    case BRANCH_SWAMP:        return STAIRS_SWAMP;
-    default:
-        return -1;
-    }
-}
+#include "branch.h"
+#include "misc.h"
 
 // NB - When adding new branches or levels above 50, you must
 // change pre-game deletion routine in new_game in newgame.cc
-
 int mons_level(int mcls)
 {
     int monster_level = 0;
-    int (*fnc_level) (int) = 0;
 
     if (you.level_type == LEVEL_ABYSS)
         monster_level = ((mons_abyss(mcls)) ? 51 : 0);
     else if (you.level_type == LEVEL_PANDEMONIUM)
         monster_level = ((mons_pan(mcls)) ? 52 : 0);
     else
-    {
-        fnc_level =
-            ((you.where_are_you == BRANCH_DIS)          ? mons_dis_level :
-             (you.where_are_you == BRANCH_GEHENNA)      ? mons_gehenna_level :
-             (you.where_are_you == BRANCH_COCYTUS)      ? mons_cocytus_level :
-             (you.where_are_you == BRANCH_TARTARUS)     ? mons_tartarus_level :
-             (you.where_are_you == BRANCH_ORCISH_MINES) ? mons_mineorc_level :
-             (you.where_are_you == BRANCH_HIVE)         ? mons_hive_level :
-             (you.where_are_you == BRANCH_LAIR)         ? mons_lair_level :
-             (you.where_are_you == BRANCH_SLIME_PITS)   ? mons_pitslime_level :
-             (you.where_are_you == BRANCH_CRYPT)        ? mons_crypt_level :
-             (you.where_are_you == BRANCH_HALL_OF_BLADES)?mons_hallblade_level :
-             (you.where_are_you == BRANCH_HALL_OF_ZOT)  ? mons_hallzot_level :
-             (you.where_are_you == BRANCH_SNAKE_PIT)    ? mons_pitsnake_level :
-             (you.where_are_you == BRANCH_ELVEN_HALLS)  ? mons_hallelf_level :
-             (you.where_are_you == BRANCH_TOMB)         ? mons_tomb_level :
-             (you.where_are_you == BRANCH_SWAMP)        ? mons_swamp_level :
-             (you.where_are_you == BRANCH_VAULTS)       ? mons_standard_level :
-             (you.where_are_you == BRANCH_CAVERNS)      ? mons_caverns_level 
-                                                        : mons_standard_level);
+        monster_level = branches[you.where_are_you].mons_level_function(mcls);
 
-        monster_level = fnc_level(mcls);
-    }
-
-    return (monster_level);
-}                               // end mons_level()
+    return monster_level;
+}
 
 // higher values returned means the monster is "more common"
 // a return value of zero means the monster will never appear {dlb}
 int mons_rarity(int mcls)
 {
-    int monster_rarity = 0;
-    int (*fnc_rarity) (int) = 0;
-
     // now, what about pandemonium ??? {dlb}
     if (you.level_type == LEVEL_ABYSS)
         return mons_rare_abyss(mcls);
     else
-    {
-        fnc_rarity =
-             ((you.where_are_you == BRANCH_DIS)           ? mons_dis_rare :
-              (you.where_are_you == BRANCH_GEHENNA)       ? mons_gehenna_rare :
-              (you.where_are_you == BRANCH_COCYTUS)       ? mons_cocytus_rare :
-              (you.where_are_you == BRANCH_TARTARUS)      ? mons_tartarus_rare :
-              (you.where_are_you == BRANCH_ORCISH_MINES)  ? mons_mineorc_rare :
-              (you.where_are_you == BRANCH_HIVE)          ? mons_hive_rare :
-              (you.where_are_you == BRANCH_LAIR)          ? mons_lair_rare :
-              (you.where_are_you == BRANCH_SLIME_PITS)    ? mons_pitslime_rare :
-              (you.where_are_you == BRANCH_CRYPT)         ? mons_crypt_rare :
-              (you.where_are_you == BRANCH_HALL_OF_BLADES)?mons_hallblade_rare :
-              (you.where_are_you == BRANCH_HALL_OF_ZOT)   ? mons_hallzot_rare :
-              (you.where_are_you == BRANCH_SNAKE_PIT)     ? mons_pitsnake_rare :
-              (you.where_are_you == BRANCH_ELVEN_HALLS)   ? mons_hallelf_rare :
-              (you.where_are_you == BRANCH_TOMB)          ? mons_tomb_rare :
-              (you.where_are_you == BRANCH_SWAMP)         ? mons_swamp_rare :
-              (you.where_are_you == BRANCH_VAULTS)        ? mons_standard_rare :
-              (you.where_are_you == BRANCH_CAVERNS)       ? mons_caverns_rare
-                                                          : mons_standard_rare);
-
-        monster_rarity = fnc_rarity(mcls);
-    }
-
-    return (monster_rarity);
-}                               // end mons_rarity()
+        return branches[you.where_are_you].mons_rarity_function(mcls);
+}
 
 bool mons_abyss(int mcls)
 {
@@ -559,7 +414,7 @@ bool mons_pan(int mcls)
 
 /* ******************** END EXTERNAL FUNCTIONS ******************** */
 
-static int mons_dis_level(int mcls)
+int mons_dis_level(int mcls)
 {
     int mlev = 26;
 
@@ -632,7 +487,7 @@ static int mons_dis_level(int mcls)
     return (mlev);
 }                               // end mons_dis_level()
 
-static int mons_dis_rare(int mcls)
+int mons_dis_rare(int mcls)
 {
     switch (mcls)
     {
@@ -719,7 +574,7 @@ static int mons_dis_rare(int mcls)
     }
 }                               // end mons_dis_rare()
 
-static int mons_gehenna_level(int mcls)
+int mons_gehenna_level(int mcls)
 {
     int mlev = 26;
 
@@ -785,7 +640,7 @@ static int mons_gehenna_level(int mcls)
     return (mlev);
 }                               // end mons_gehenna_level()
 
-static int mons_gehenna_rare(int mcls)
+int mons_gehenna_rare(int mcls)
 {
     switch (mcls)
     {
@@ -872,7 +727,7 @@ static int mons_gehenna_rare(int mcls)
     }
 }                               // end mons_gehenna_rare()
 
-static int mons_cocytus_level(int mcls)
+int mons_cocytus_level(int mcls)
 {
     int mlev = 26;
 
@@ -933,7 +788,7 @@ static int mons_cocytus_level(int mcls)
     return (mlev);
 }                               // end mons_cocytus_level()
 
-static int mons_cocytus_rare(int mcls)
+int mons_cocytus_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1008,7 +863,7 @@ static int mons_cocytus_rare(int mcls)
     }
 }                               // end mons_cocytus_rare()
 
-static int mons_tartarus_level(int mcls)
+int mons_tartarus_level(int mcls)
 {
     int mlev = 26;
 
@@ -1077,7 +932,7 @@ static int mons_tartarus_level(int mcls)
     return (mlev);
 }                               // end mons_tartarus_level()
 
-static int mons_tartarus_rare(int mcls)
+int mons_tartarus_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1175,9 +1030,9 @@ static int mons_tartarus_rare(int mcls)
     }
 }
 
-static int mons_mineorc_level(int mcls)
+int mons_mineorc_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_ORCISH_MINES] + 1;
+    int mlev = absdungeon_depth(BRANCH_ORCISH_MINES, 1);
 
     switch (mcls)
     {
@@ -1219,7 +1074,7 @@ static int mons_mineorc_level(int mcls)
     return (mlev);
 }                               // end mons_mineorc_level()
 
-static int mons_mineorc_rare(int mcls)
+int mons_mineorc_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1268,9 +1123,9 @@ static int mons_mineorc_rare(int mcls)
     }
 }                               // end mons_mineorc_rare()
 
-static int mons_hive_level(int mcls)
+int mons_hive_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_HIVE] + 1;
+    int mlev = absdungeon_depth(BRANCH_HIVE, 1);
 
     switch (mcls)
     {
@@ -1290,7 +1145,7 @@ static int mons_hive_level(int mcls)
     return (mlev);
 }                               // end mons_hive_level()
 
-static int mons_hive_rare(int mcls)
+int mons_hive_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1308,9 +1163,9 @@ static int mons_hive_rare(int mcls)
     }
 }                               // end mons_hive_rare()
 
-static int mons_lair_level(int mcls)
+int mons_lair_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_LAIR] + 1;
+    int mlev = absdungeon_depth(BRANCH_LAIR, 1);
 
     switch (mcls)
     {
@@ -1410,7 +1265,7 @@ static int mons_lair_level(int mcls)
     return (mlev);
 }                               // end mons_lair_level()
 
-static int mons_lair_rare(int mcls)
+int mons_lair_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1530,9 +1385,9 @@ static int mons_lair_rare(int mcls)
     }
 }                               // end mons_lair_rare()
 
-static int mons_pitslime_level(int mcls)
+int mons_pitslime_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_SLIME_PITS] + 1;
+    int mlev = absdungeon_depth(BRANCH_SLIME_PITS, 1);
 
 
     switch (mcls)
@@ -1577,7 +1432,7 @@ static int mons_pitslime_level(int mcls)
     return (mlev);
 }                               // end mons_pitslime_level()
 
-static int mons_pitslime_rare(int mcls)
+int mons_pitslime_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1619,9 +1474,9 @@ static int mons_pitslime_rare(int mcls)
     }
 }                               // end mons_pitslime_rare()
 
-static int mons_crypt_level(int mcls)
+int mons_crypt_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_CRYPT] + 1;
+    int mlev = absdungeon_depth(BRANCH_CRYPT, 1);
 
     switch (mcls)
     {
@@ -1681,7 +1536,7 @@ static int mons_crypt_level(int mcls)
     return (mlev);
 }                               // end mons_crypt_level()
 
-static int mons_crypt_rare(int mcls)
+int mons_crypt_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1761,9 +1616,9 @@ static int mons_crypt_rare(int mcls)
     }
 }                               // end mons_crypt_rare()
 
-static int mons_pitsnake_level(int mcls)
+int mons_pitsnake_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_SNAKE_PIT] + 1;
+    int mlev = absdungeon_depth(BRANCH_SNAKE_PIT, 1);
 
     switch (mcls)
     {
@@ -1800,7 +1655,7 @@ static int mons_pitsnake_level(int mcls)
     return (mlev);
 }                               // end mons_pitsnake_level()
 
-static int mons_pitsnake_rare(int mcls)
+int mons_pitsnake_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1832,9 +1687,9 @@ static int mons_pitsnake_rare(int mcls)
     }
 }                               // end mons_pitsnake_rare()
 
-static int mons_hallelf_level(int mcls)
+int mons_hallelf_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_ELVEN_HALLS] + 1;
+    int mlev = absdungeon_depth(BRANCH_ELVEN_HALLS, 1);
 
     switch (mcls)
     {
@@ -1886,7 +1741,7 @@ static int mons_hallelf_level(int mcls)
     return (mlev);
 }                               // end mons_hallelf_level()
 
-static int mons_hallelf_rare(int mcls)
+int mons_hallelf_rare(int mcls)
 {
     switch (mcls)
     {
@@ -1943,9 +1798,9 @@ static int mons_hallelf_rare(int mcls)
     }
 }                               // end mons_hallelf_rare()
 
-static int mons_tomb_level(int mcls)
+int mons_tomb_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_CRYPT] + 1;
+    int mlev = absdungeon_depth(BRANCH_TOMB, 1);
 
     switch (mcls)
     {
@@ -1980,7 +1835,7 @@ static int mons_tomb_level(int mcls)
     return (mlev);
 }                               // end mons_tomb_level()
 
-static int mons_tomb_rare(int mcls)
+int mons_tomb_rare(int mcls)
 {
     switch (mcls)
     {
@@ -2019,9 +1874,9 @@ static int mons_tomb_rare(int mcls)
     }
 }                               // end mons_tomb_rare()
 
-static int mons_swamp_level(int mcls)
+int mons_swamp_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_SWAMP] + 1;
+    int mlev = absdungeon_depth(BRANCH_SWAMP, 1);
 
     switch (mcls)
     {
@@ -2079,7 +1934,7 @@ static int mons_swamp_level(int mcls)
     return (mlev);
 }                               // end mons_swamp_level()
 
-static int mons_swamp_rare(int mcls)
+int mons_swamp_rare(int mcls)
 {
     switch (mcls)
     {
@@ -2165,15 +2020,15 @@ static int mons_swamp_rare(int mcls)
     }
 }                               // end mons_swamp_rare()
 
-static int mons_hallblade_level(int mcls)
+int mons_hallblade_level(int mcls)
 {
     if (mcls == MONS_DANCING_WEAPON)
-        return (you.branch_stairs[STAIRS_HALL_OF_BLADES] + 1);
+        return absdungeon_depth(BRANCH_HALL_OF_BLADES, 1);
     else
         return 0;
 }                               // end mons_hallblade_level
 
-static int mons_hallblade_rare(int mcls)
+int mons_hallblade_rare(int mcls)
 {
     return ((mcls == MONS_DANCING_WEAPON) ? 1000 : 0);
 }                               // end mons_hallblade_rare()
@@ -2187,9 +2042,9 @@ static int mons_hallblade_rare(int mcls)
 //    - ouch ouch.cc (death message)
 //    - and here...
 
-static int mons_hallzot_level(int mcls)
+int mons_hallzot_level(int mcls)
 {
-    int mlev = you.branch_stairs[STAIRS_HALL_OF_ZOT];
+    int mlev = absdungeon_depth(BRANCH_HALL_OF_ZOT, 0);
 
     switch (mcls)
     {
@@ -2242,7 +2097,7 @@ static int mons_hallzot_level(int mcls)
     return (mlev);
 }                               // end mons_hallzot_level()
 
-static int mons_hallzot_rare(int mcls)
+int mons_hallzot_rare(int mcls)
 {
     switch (mcls)
     {
@@ -2293,10 +2148,10 @@ static int mons_hallzot_rare(int mcls)
     }
 }                               // end mons_hallzot_rare()
 
-static int mons_caverns_level( int mcls )
+int mons_caverns_level( int mcls )
 {
 
-    int mlev = you.branch_stairs[STAIRS_CAVERNS] + 1;
+    int mlev = absdungeon_depth(BRANCH_CAVERNS, 1);
 
     switch (mcls)
     {
@@ -2329,7 +2184,7 @@ static int mons_caverns_level( int mcls )
     return (mlev);
 }
 
-static int mons_caverns_rare( int mcls )
+int mons_caverns_rare( int mcls )
 {
     switch (mcls)
     {
@@ -2355,7 +2210,7 @@ static int mons_caverns_rare( int mcls )
     }
 }
 
-static int mons_standard_level(int mcls)
+int mons_standard_level(int mcls)
 {
     switch (mcls)
     {
@@ -2604,7 +2459,7 @@ static int mons_standard_level(int mcls)
     }
 }                               // end mons_standard_level()
 
-static int mons_standard_rare(int mcls)
+int mons_standard_rare(int mcls)
 {
     switch (mcls)
     {

@@ -439,48 +439,31 @@ enum book_type
     NUM_BOOKS
 };
 
-enum branch_type                        // you.where_are_you
+enum branch_type                // you.where_are_you
 {
-    BRANCH_MAIN_DUNGEON,               //    0
+    BRANCH_MAIN_DUNGEON,        //    0
+    BRANCH_ECUMENICAL_TEMPLE,
+    BRANCH_ORCISH_MINES,
+    BRANCH_ELVEN_HALLS,
+    BRANCH_LAIR,
+    BRANCH_SWAMP,
+    BRANCH_SLIME_PITS,
+    BRANCH_SNAKE_PIT,
+    BRANCH_HIVE,
+    BRANCH_VAULTS,
+    BRANCH_HALL_OF_BLADES,
+    BRANCH_CRYPT,
+    BRANCH_TOMB,
+    BRANCH_VESTIBULE_OF_HELL,
     BRANCH_DIS,
     BRANCH_GEHENNA,
-    BRANCH_VESTIBULE_OF_HELL,
     BRANCH_COCYTUS,
-    BRANCH_TARTARUS,                   //    5
-    BRANCH_INFERNO,                             // unimplemented
-    BRANCH_THE_PIT,                    //    7  // unimplemented
-    BRANCH_ORCISH_MINES = 10,          //   10
-    BRANCH_HIVE,
-    BRANCH_LAIR,
-    BRANCH_SLIME_PITS,
-    BRANCH_VAULTS,
-    BRANCH_CRYPT,                      //   15
-    BRANCH_HALL_OF_BLADES,
+    BRANCH_TARTARUS,
+    BRANCH_INFERNO,             // unimplemented
+    BRANCH_THE_PIT,             // unimplemented
     BRANCH_HALL_OF_ZOT,
-    BRANCH_ECUMENICAL_TEMPLE,
-    BRANCH_SNAKE_PIT,
-    BRANCH_ELVEN_HALLS,                //   20
-    BRANCH_TOMB,
-    BRANCH_SWAMP, 
-    BRANCH_CAVERNS
-};
-
-enum branch_stair_type // you.branch_stairs[] - 10 less than BRANCHES {dlb}
-{
-    STAIRS_ORCISH_MINES,               //    0
-    STAIRS_HIVE,
-    STAIRS_LAIR,
-    STAIRS_SLIME_PITS,
-    STAIRS_VAULTS,
-    STAIRS_CRYPT,                      //    5
-    STAIRS_HALL_OF_BLADES,
-    STAIRS_HALL_OF_ZOT,
-    STAIRS_ECUMENICAL_TEMPLE,
-    STAIRS_SNAKE_PIT,
-    STAIRS_ELVEN_HALLS,                //   10
-    STAIRS_TOMB,
-    STAIRS_SWAMP,
-    STAIRS_CAVERNS
+    BRANCH_CAVERNS,             // unimplemented
+    NUM_BRANCHES
 };
 
 enum burden_state_type                 // you.burden_state

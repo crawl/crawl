@@ -70,6 +70,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
@@ -670,16 +671,11 @@ static void handle_wizard_command( void )
 
     case ':':
         j = 0;
-        for (i = 0; i < 20; i++)
-        {
-            if (you.branch_stairs[i] == 0)
-                continue;
-
-            snprintf( info, INFO_SIZE, "Branch %2d is on level %2d", 
-                     i, you.branch_stairs[i] + 1 );
-
-            mpr(info);
-        }
+        for (i = 0; i < NUM_BRANCHES; i++)
+            if (branches[i].startdepth != - 1)
+                mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
+                     i, branches[i].longname, branches[i].startdepth,
+                     branches[branches[i].parent_branch].abbrevname);
         break;
 
     case '{':

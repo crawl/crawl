@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 #include "notes.h"
 
+#include "branch.h"
 #include "files.h"
 #include "Kills.h"
 #include "message.h"
@@ -58,24 +59,9 @@ static bool is_noteworthy_hp( int hp, int maxhp ) {
 }
 
 static int dungeon_branch_depth( unsigned char branch ) {
-    if ( branch > BRANCH_CAVERNS ) // last branch
-	return -1;
-    switch ( branch ) {
-    case BRANCH_MAIN_DUNGEON:
-	return 27;
-    case BRANCH_DIS:
-    case BRANCH_GEHENNA:
-    case BRANCH_COCYTUS:
-    case BRANCH_TARTARUS:
-	return 7;
-    case BRANCH_VESTIBULE_OF_HELL:
-	return 1;
-    case BRANCH_INFERNO:
-    case BRANCH_THE_PIT:
-	return -1;
-    default:
-	return branch_depth( branch - 10 );
-    }
+    if ( branch >= NUM_BRANCHES )
+        return -1;
+    return branches[branch].depth;
 }
 
 static bool is_noteworthy_dlevel( unsigned short place ) {

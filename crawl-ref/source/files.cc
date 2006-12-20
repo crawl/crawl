@@ -813,7 +813,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
             && where_were_you2 == BRANCH_VESTIBULE_OF_HELL
             && stair_taken == DNGN_STONE_STAIRS_UP_I)
         {
-            // leaving hell - look for entry potal first
+            // leaving hell - look for entry portal first
             stair_taken = DNGN_ENTER_HELL;
             find_first = false;
         }

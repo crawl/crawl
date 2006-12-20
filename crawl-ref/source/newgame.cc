@@ -70,6 +70,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "branch.h"
 #include "dungeon.h"
 #include "files.h"
 #include "fight.h"
@@ -342,6 +343,23 @@ static unsigned char random_potion_description()
             || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
     return (unsigned char) desc;
+}
+
+// Determine starting depths of branches
+static void initialise_branch_depths()
+{
+    branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = 3 + random2(4);
+    branches[BRANCH_ORCISH_MINES].startdepth = 5 + random2(6);
+    branches[BRANCH_ELVEN_HALLS].startdepth = coinflip() ? 4 : 3;
+    branches[BRANCH_LAIR].startdepth = 7 + random2(6);
+    branches[BRANCH_HIVE].startdepth = 10 + random2(6);
+    branches[BRANCH_SLIME_PITS].startdepth = 3 + random2(4);
+    branches[BRANCH_SWAMP].startdepth = 2 + random2(6);
+    branches[BRANCH_SNAKE_PIT].startdepth = coinflip() ? 7 : 6;
+    branches[BRANCH_VAULTS].startdepth = 13 + random2(6);
+    branches[BRANCH_CRYPT].startdepth = 2 + random2(3);
+    branches[BRANCH_HALL_OF_BLADES].startdepth = 4;
+    branches[BRANCH_TOMB].startdepth = coinflip() ? 3 : 2;
 }
 
 bool new_game(void)
@@ -774,52 +792,14 @@ bool new_game(void)
     // tmpfile purging removed in favour of marking
     for (int lvl = 0; lvl < MAX_LEVELS; lvl++)
     {
-        for (int dng = 0; dng < MAX_BRANCHES; dng++)
+        for (int dng = 0; dng < NUM_BRANCHES; dng++)
         {
             tmp_file_pairs[lvl][dng] = false;
         }
     }
     
     give_basic_mutations(you.species);
-
-    // places staircases to the branch levels:
-    for (i = 0; i < 30; i++)
-    {
-        you.branch_stairs[i] = 100;
-    }
-
-    you.branch_stairs[STAIRS_ECUMENICAL_TEMPLE] = 3 + random2(4); // avg:  4.5
-
-    you.branch_stairs[STAIRS_ORCISH_MINES] = 5 + random2(6);    // avg:  7.5
-
-    you.branch_stairs[STAIRS_ELVEN_HALLS] =
-        you.branch_stairs[STAIRS_ORCISH_MINES] + (coinflip() ? 4 : 3);  // 11.0
-
-    you.branch_stairs[STAIRS_LAIR] = 7 + random2(6);    // avg:  9.5
-
-    you.branch_stairs[STAIRS_HIVE] = 10 + random2(6);   // avg: 12.5
-
-    you.branch_stairs[STAIRS_SLIME_PITS] =
-        you.branch_stairs[STAIRS_LAIR] + 3 + random2(4);        // avg: 14.0
-
-    you.branch_stairs[STAIRS_SWAMP] =
-        you.branch_stairs[STAIRS_LAIR] + 2 + random2(6);        // avg: 14.0
-
-    you.branch_stairs[STAIRS_SNAKE_PIT] =
-        you.branch_stairs[STAIRS_LAIR] + (coinflip() ? 7 : 6);   // avg: 16.0
-
-    you.branch_stairs[STAIRS_VAULTS] = 13 + random2(6); // avg: 15.5
-
-    you.branch_stairs[STAIRS_CRYPT] =
-        you.branch_stairs[STAIRS_VAULTS] + 2 + random2(3);      // avg: 18.5
-
-    you.branch_stairs[STAIRS_HALL_OF_BLADES] =
-        you.branch_stairs[STAIRS_VAULTS] + 4;   // avg: 19.5
-
-    you.branch_stairs[STAIRS_TOMB] =
-        you.branch_stairs[STAIRS_CRYPT] + ((coinflip()) ? 3 : 2);   // avg: 20.0
-
-    you.branch_stairs[STAIRS_HALL_OF_ZOT] = 26; // always 26
+    initialise_branch_depths();
 
     save_newgame_options();
     return (true);

@@ -844,7 +844,7 @@ void end_game( struct scorefile_entry &se )
     // clean all levels that we think we have ever visited
     for (int level = 0; level < MAX_LEVELS; level++)
     {
-        for (int dungeon = 0; dungeon < MAX_BRANCHES; dungeon++)
+        for (int dungeon = 0; dungeon < NUM_BRANCHES; dungeon++)
         {
             if (tmp_file_pairs[level][dungeon])
             {

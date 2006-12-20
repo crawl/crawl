@@ -35,6 +35,7 @@
 
 #include "externs.h"
 
+#include "branch.h"
 #include "cloud.h"
 #include "delay.h"
 #include "fight.h"
@@ -611,39 +612,19 @@ void up_stairs(void)
         you.your_level = 27;
     }
 
-    switch (stair_find)
+    // did we take a branch stair?
+    for ( i = 0; i < NUM_BRANCHES; ++i )
     {
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_ZOT:
-        mpr("Welcome back to the Dungeon!");
-        you.where_are_you = BRANCH_MAIN_DUNGEON;
-        break;
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_SWAMP:
-        mpr("Welcome back to the Lair of Beasts!");
-        you.where_are_you = BRANCH_LAIR;
-        break;
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
-        mpr("Welcome back to the Vaults!");
-        you.where_are_you = BRANCH_VAULTS;
-        break;
-    case DNGN_RETURN_FROM_TOMB:
-        mpr("Welcome back to the Crypt!");
-        you.where_are_you = BRANCH_CRYPT;
-        break;
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-        mpr("Welcome back to the Orcish Mines!");
-        you.where_are_you = BRANCH_ORCISH_MINES;
-        break;
+        if ( branches[i].exit_stairs == stair_find )
+        {
+            mprf("Welcome back to %s!",
+                 branches[branches[i].parent_branch].longname);
+            you.where_are_you = branches[i].parent_branch;
+            break;
+        }
     }
 
-    unsigned char stair_taken = stair_find;
+    const unsigned char stair_taken = stair_find;
 
     if (player_is_levitating())
     {
@@ -856,96 +837,25 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         if (!you.running)
             more();
 
-        you.your_level = 26;    // = 59;
+        you.your_level = 26;
     }
 
-    if ((stair_find >= DNGN_ENTER_DIS 
-            && stair_find <= DNGN_ENTER_TARTARUS)
-        || (stair_find >= DNGN_ENTER_ORCISH_MINES 
-            && stair_find < DNGN_RETURN_FROM_ORCISH_MINES))
+    // welcome message
+    // try to find a branch stair
+    for ( i = 0; i < NUM_BRANCHES; ++i )
     {
-        // no idea why such a huge switch and not 100-grd[][]
-        // planning ahead for reorganizing grd[][] values - 13jan2000 {dlb}
-        strcpy( info, "Welcome to " );
-        switch (stair_find)
+        if ( branches[i].entry_stairs == stair_find )
         {
-        case DNGN_ENTER_DIS:
-            strcat(info, "the Iron City of Dis!");
-            you.where_are_you = BRANCH_DIS;
-            you.your_level = 26;
-            break;
-        case DNGN_ENTER_GEHENNA:
-            strcat(info, "Gehenna!");
-            you.where_are_you = BRANCH_GEHENNA;
-            you.your_level = 26;
-            break;
-        case DNGN_ENTER_COCYTUS:
-            strcat(info, "Cocytus!");
-            you.where_are_you = BRANCH_COCYTUS;
-            you.your_level = 26;
-            break;
-        case DNGN_ENTER_TARTARUS:
-            strcat(info, "Tartarus!");
-            you.where_are_you = BRANCH_TARTARUS;
-            you.your_level = 26;
-            break;
-        case DNGN_ENTER_ORCISH_MINES:
-            strcat(info, "the Orcish Mines!");
-            you.where_are_you = BRANCH_ORCISH_MINES;
-            break;
-        case DNGN_ENTER_HIVE:
-            strcpy(info, "You hear a buzzing sound coming from all directions.");
-            you.where_are_you = BRANCH_HIVE;
-            break;
-        case DNGN_ENTER_LAIR:
-            strcat(info, "the Lair of Beasts!");
-            you.where_are_you = BRANCH_LAIR;
-            break;
-        case DNGN_ENTER_SLIME_PITS:
-            strcat(info, "the Pits of Slime!");
-            you.where_are_you = BRANCH_SLIME_PITS;
-            break;
-        case DNGN_ENTER_VAULTS:
-            strcat(info, "the Vaults!");
-            you.where_are_you = BRANCH_VAULTS;
-            break;
-        case DNGN_ENTER_CRYPT:
-            strcat(info, "the Crypt!");
-            you.where_are_you = BRANCH_CRYPT;
-            break;
-        case DNGN_ENTER_HALL_OF_BLADES:
-            strcat(info, "the Hall of Blades!");
-            you.where_are_you = BRANCH_HALL_OF_BLADES;
-            break;
-        case DNGN_ENTER_ZOT:
-            strcat(info, "the Hall of Zot!");
-            you.where_are_you = BRANCH_HALL_OF_ZOT;
-            break;
-        case DNGN_ENTER_TEMPLE:
-            strcat(info, "the Ecumenical Temple!");
-            you.where_are_you = BRANCH_ECUMENICAL_TEMPLE;
-            break;
-        case DNGN_ENTER_SNAKE_PIT:
-            strcat(info, "the Snake Pit!");
-            you.where_are_you = BRANCH_SNAKE_PIT;
-            break;
-        case DNGN_ENTER_ELVEN_HALLS:
-            strcat(info, "the Elven Halls!");
-            you.where_are_you = BRANCH_ELVEN_HALLS;
-            break;
-        case DNGN_ENTER_TOMB:
-            strcat(info, "the Tomb!");
-            you.where_are_you = BRANCH_TOMB;
-            break;
-        case DNGN_ENTER_SWAMP:
-            strcat(info, "the Swamp!");
-            you.where_are_you = BRANCH_SWAMP;
+            if ( branches[i].entry_message )
+                mpr(branches[i].entry_message);
+            else
+                mprf("Welcome to %s!", branches[i].longname);
+            you.where_are_you = branches[i].id;
             break;
         }
-
-        mpr(info);
     }
-    else if (stair_find == DNGN_ENTER_LABYRINTH)
+
+    if (stair_find == DNGN_ENTER_LABYRINTH)
     {
         // no longer a feature
         unnotice_labyrinth_portal();
@@ -1004,10 +914,8 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
 
     int stair_taken = stair_find;
 
-    //unsigned char save_old = 1;
-
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        stair_taken = DNGN_FLOOR;       //81;
+        stair_taken = DNGN_FLOOR;
 
     if (you.level_type == LEVEL_PANDEMONIUM)
         stair_taken = DNGN_TRANSIT_PANDEMONIUM;
@@ -1150,23 +1058,19 @@ void init_new_level(bool transit)
         stash_init_new_level();
 }
 
+static char fix_colour(char incol )
+{
+    if ( incol == BLACK )
+        return LIGHTGREY;
+    else
+        return incol;
+}
+
 void new_level(void)
 {
-    int curr_subdungeon_level = you.your_level + 1;
+    const int curr_subdungeon_level = player_branch_depth();
 
     textcolor(LIGHTGREY);
-
-    // maybe last part better expresssed as <= PIT {dlb}
-    if (player_in_hell() || player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
-        curr_subdungeon_level = you.your_level - 26;
-
-    /* Remember, must add this to the death_string in ouch */
-    if (you.where_are_you >= BRANCH_ORCISH_MINES
-        && you.where_are_you <= BRANCH_SWAMP)
-    {
-        curr_subdungeon_level = you.your_level 
-                                    - you.branch_stairs[you.where_are_you - 10];
-    }
 
     gotoxy(46, 12);
 
@@ -1174,29 +1078,18 @@ void new_level(void)
     cprintf( "(%d) ", you.your_level + 1 );
 #endif
 
-    env.floor_colour = LIGHTGREY;
-    env.rock_colour  = BROWN;
-
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     if (you.level_type == LEVEL_PANDEMONIUM)
     {
         cprintf("- Pandemonium            ");
-
-        env.floor_colour = (mcolour[env.mons_alloc[9]] == BLACK)
-                                    ? LIGHTGREY : mcolour[env.mons_alloc[9]];
-
-        env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
-                                    ? LIGHTGREY : mcolour[env.mons_alloc[8]];
+        env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
+        env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
         cprintf("- The Abyss               ");
-
-        env.floor_colour = (mcolour[env.mons_alloc[9]] == BLACK)
-                                    ? LIGHTGREY : mcolour[env.mons_alloc[9]];
-
-        env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
-                                    ? LIGHTGREY : mcolour[env.mons_alloc[8]];
+        env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
+        env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {
@@ -1205,144 +1098,34 @@ void new_level(void)
     else
     {
         // level_type == LEVEL_DUNGEON
-        if (!player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
-            cprintf( "%d", curr_subdungeon_level );
+        const int youbranch = you.where_are_you;
+        if ( branches[youbranch].depth == 1 )
+            cprintf( "- %s", branches[youbranch].longname );
+        else
+            cprintf( "%d of %s", curr_subdungeon_level,
+                     branches[youbranch].longname );
 
-        switch (you.where_are_you)
+        env.floor_colour = branches[youbranch].floor_colour;
+        env.rock_colour = branches[youbranch].rock_colour;
+
+        // Zot is multicoloured
+        if ( you.where_are_you == BRANCH_HALL_OF_ZOT )
         {
-        case BRANCH_MAIN_DUNGEON:
-            cprintf(" of the Dungeon           ");
-            break;
-        case BRANCH_DIS:
-            env.floor_colour = CYAN;
-            env.rock_colour = CYAN;
-            cprintf(" of Dis                   ");
-            break;
-        case BRANCH_GEHENNA:
-            env.floor_colour = DARKGREY;
-            env.rock_colour = RED;
-            cprintf(" of Gehenna               ");
-            break;
-        case BRANCH_VESTIBULE_OF_HELL:
-            env.floor_colour = LIGHTGREY;
-            env.rock_colour = LIGHTGREY;
-            cprintf("- the Vestibule of Hell            ");
-            break;
-        case BRANCH_COCYTUS:
-            env.floor_colour = LIGHTBLUE;
-            env.rock_colour = LIGHTCYAN;
-            cprintf(" of Cocytus                   ");
-            break;
-        case BRANCH_TARTARUS:
-            env.floor_colour = DARKGREY;
-            env.rock_colour = DARKGREY;
-            cprintf(" of Tartarus                ");
-            break;
-        case BRANCH_INFERNO:
-            env.floor_colour = LIGHTRED;
-            env.rock_colour = RED;
-            cprintf(" of the Inferno               ");
-            break;
-        case BRANCH_THE_PIT:
-            env.floor_colour = RED;
-            env.rock_colour = DARKGREY;
-            cprintf(" of the Pit              ");
-            break;
-        case BRANCH_ORCISH_MINES:
-            env.floor_colour = BROWN;
-            env.rock_colour = BROWN;
-            cprintf(" of the Orcish Mines          ");
-            break;
-        case BRANCH_HIVE:
-            env.floor_colour = YELLOW;
-            env.rock_colour = BROWN;
-            cprintf(" of the Hive                  ");
-            break;
-        case BRANCH_LAIR:
-            env.floor_colour = GREEN;
-            env.rock_colour = BROWN;
-            cprintf(" of the Lair                  ");
-            break;
-        case BRANCH_SLIME_PITS:
-            env.floor_colour = GREEN;
-            env.rock_colour = LIGHTGREEN;
-            cprintf(" of the Slime Pits            ");
-            break;
-        case BRANCH_VAULTS:
-            env.floor_colour = LIGHTGREY;
-            env.rock_colour = BROWN;
-            cprintf(" of the Vaults                ");
-            break;
-        case BRANCH_CRYPT:
-            env.floor_colour = LIGHTGREY;
-            env.rock_colour = LIGHTGREY;
-            cprintf(" of the Crypt                 ");
-            break;
-        case BRANCH_HALL_OF_BLADES:
-            env.floor_colour = LIGHTGREY;
-            env.rock_colour = LIGHTGREY;
-            cprintf(" of the Hall of Blades        ");
-            break;
-
-        case BRANCH_HALL_OF_ZOT:
-            if (you.your_level - you.branch_stairs[7] <= 1)
-            {
-                env.floor_colour = LIGHTGREY;
-                env.rock_colour = LIGHTGREY;
-            }
+            const char floorcolours_zot[] = { LIGHTGREY, LIGHTGREY, BLUE,
+                                              LIGHTBLUE, MAGENTA };
+            const char rockcolours_zot[] = { LIGHTGREY, BLUE, LIGHTBLUE,
+                                             MAGENTA, LIGHTMAGENTA };
+            if ( curr_subdungeon_level > 5 || curr_subdungeon_level < 1 )
+                mpr("Odd colouring!");
             else
             {
-                switch (you.your_level - you.branch_stairs[7])
-                {
-                case 2:
-                    env.rock_colour = LIGHTGREY;
-                    env.floor_colour = BLUE;
-                    break;
-                case 3:
-                    env.rock_colour = BLUE;
-                    env.floor_colour = LIGHTBLUE;
-                    break;
-                case 4:
-                    env.rock_colour = LIGHTBLUE;
-                    env.floor_colour = MAGENTA;
-                    break;
-                case 5:
-                    env.rock_colour = MAGENTA;
-                    env.floor_colour = LIGHTMAGENTA;
-                    break;
-                }
+                env.floor_colour = floorcolours_zot[curr_subdungeon_level-1];
+                env.rock_colour = rockcolours_zot[curr_subdungeon_level-1];
             }
-            cprintf(" of the Realm of Zot          ");
-            break;
-
-        case BRANCH_ECUMENICAL_TEMPLE:
-            env.floor_colour = LIGHTGREY;
-            env.rock_colour = LIGHTGREY;
-            cprintf(" of the Temple                ");
-            break;
-        case BRANCH_SNAKE_PIT:
-            env.floor_colour = LIGHTGREEN;
-            env.rock_colour = YELLOW;
-            cprintf(" of the Snake Pit             ");
-            break;
-        case BRANCH_ELVEN_HALLS:
-            env.floor_colour = DARKGREY;
-            env.rock_colour = LIGHTGREY;
-            cprintf(" of the Elven Halls           ");
-            break;
-        case BRANCH_TOMB:
-            env.floor_colour = YELLOW;
-            env.rock_colour = LIGHTGREY;
-            cprintf(" of the Tomb                  ");
-            break;
-        case BRANCH_SWAMP:
-            env.floor_colour = BROWN;
-            env.rock_colour = BROWN;
-            cprintf(" of the Swamp                 ");
-            break;
         }
-    }                           // end else
-}                               // end new_level()
+    }
+    clear_to_end_of_line();
+}
 
 static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt, 
                        bool poison )
@@ -2035,37 +1818,6 @@ bool single_level_branch( int branch )
         branch == BRANCH_ECUMENICAL_TEMPLE;
 }
 
-std::string branch_name( int branch, bool terse )
-{
-    const char* names[][2] = {
-        { "The Dungeon", "D" },
-        { "The Iron City of Dis", "Dis" },
-        { "Gehenna", "Geh" },
-        { "The Vestibule of Hell", "Hell" },
-        { "Cocytus", "Coc" },
-        { "Tartarus", "Tar" },
-        { "Inferno", "Inf" },
-        { "The Pit", "Pit" },
-        { "", "" },
-        { "", "" },
-        { "The Orcish Mines", "Orc" },
-        { "The Hive", "Hive" },
-        { "The Lair", "Lair" },
-        { "The Slime Pits", "Slime" },
-        { "The Vaults", "Vault" },
-        { "The Crypt", "Crypt" },
-        { "The Hall of Blades", "Blade" },
-        { "The Hall of Zot", "Zot" },
-        { "The Ecumenical Temple", "Temple" },
-        { "The Snake Pit", "Snake" },
-        { "The Elven Halls", "Elf" },
-        { "The Tomb", "Tomb" },
-        { "The Swamp", "Swamp" },
-        { "The Caverns", "Cav" }
-    };
-    return names[branch][terse];
-}
-
 std::string place_name( unsigned short place, bool long_name,
                         bool include_number ) {
 
@@ -2088,25 +1840,25 @@ std::string place_name( unsigned short place, bool long_name,
         }
     }
 
-    result = branch_name(branch, !long_name);
+    result = (long_name ?
+              branches[branch].longname : branches[branch].abbrevname);
 
-    if ( include_number && !single_level_branch(branch) ) {
+    if ( include_number && branches[branch].depth != 1 )
+    {
         char buf[200];
-        if ( long_name ) {
+        if ( long_name )
+        {
             // decapitalize 'the'
             if ( result.find("The") == 0 )
                 result[0] = 't';
             snprintf( buf, sizeof buf, "Level %d of %s",
                       lev, result.c_str() );
         }
-        else if (lev) {
-            snprintf( buf, sizeof buf, "%s:%d",
-                      result.c_str(), lev );
-        }
-        else {
-            snprintf( buf, sizeof buf, "%s:$",
-                      result.c_str() );
-        }
+        else if (lev)
+            snprintf( buf, sizeof buf, "%s:%d", result.c_str(), lev );
+        else
+            snprintf( buf, sizeof buf, "%s:$", result.c_str() );
+
         result = buf;
     }
     return result;
@@ -2140,29 +1892,28 @@ std::string prep_branch_level_name()
 
 int absdungeon_depth(unsigned char branch, int subdepth)
 {
-    int realdepth = subdepth - 1;
-
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        realdepth = subdepth + you.branch_stairs[branch - 10];
-
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        realdepth = subdepth + 26;
-
-    return realdepth;
+    if (branch >= BRANCH_VESTIBULE_OF_HELL && branch <= BRANCH_THE_PIT)
+        return subdepth + 27;
+    else
+    {
+        --subdepth;
+        while ( branch != BRANCH_MAIN_DUNGEON )
+        {
+            subdepth += branches[branch].startdepth;
+            branch = branches[branch].parent_branch;
+        }
+    }
+    return subdepth;
 }
 
 int subdungeon_depth(unsigned char branch, int depth)
 {
-    int curr_subdungeon_level = depth + 1;
+    return depth - absdungeon_depth(branch, 0);
+}
 
-    if (branch >= BRANCH_DIS && branch <= BRANCH_THE_PIT)
-        curr_subdungeon_level = depth - 26;
-
-    if (branch >= BRANCH_ORCISH_MINES && branch <= BRANCH_SWAMP)
-        curr_subdungeon_level = depth
-                                - you.branch_stairs[branch - 10];
-
-    return curr_subdungeon_level;
+int player_branch_depth()
+{
+    return subdungeon_depth(you.where_are_you, you.your_level);
 }
 
 ////////////////////////////////////////////////////////////////////////////

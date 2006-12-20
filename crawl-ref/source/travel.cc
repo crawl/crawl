@@ -12,6 +12,7 @@
 #include "AppHdr.h"
 #include "files.h"
 #include "FixAry.h"
+#include "branch.h"
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
@@ -20,6 +21,7 @@
 #include "items.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "overmap.h"
 #include "player.h"
 #include "stash.h"
 #include "stuff.h"
@@ -1372,43 +1374,13 @@ void find_travel_pos(int youx, int youy,
     }
 }
 
-// Mappings of which branches spring from which other branches, essential to
-// walk backwards up the tree.
-static int branch_backout[][2] =
-{
-    { BRANCH_SWAMP, BRANCH_LAIR },
-    { BRANCH_SLIME_PITS, BRANCH_LAIR },
-    { BRANCH_SNAKE_PIT, BRANCH_LAIR },
-
-    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS },
-    { BRANCH_CRYPT, BRANCH_VAULTS },
-
-    { BRANCH_TOMB, BRANCH_CRYPT },
-
-    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES },
-
-    { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON },
-    { BRANCH_HIVE, BRANCH_MAIN_DUNGEON },
-    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON },
-    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON },
-    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON },
-    { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON },
-};
-
 /*
  * Given a branch id, returns the parent branch. If the branch id is not found,
  * returns BRANCH_MAIN_DUNGEON.
  */
 int find_parent_branch(int br)
 {
-    for (unsigned i = 0; 
-            i < sizeof(branch_backout) / sizeof(branch_backout[0]); 
-            i++)
-    {
-        if (branch_backout[i][0] == br)
-            return branch_backout[i][1];
-    }
-    return 0;
+    return branches[br].parent_branch;
 }
 
 extern std::map<branch_type, level_id> stair_level;
@@ -1421,11 +1393,13 @@ void find_parent_branch(int br, int depth,
     {
         *pb = 0;
         *pd = 0;        // Check depth before using *pb.
-        return ;
     }
-
-    *pb = find_parent_branch(stair_level[bran].branch);
-    *pd = stair_level[bran].depth;
+    else
+    {
+        // XXX XXX FIXME Just read this from our data...
+        *pb = find_parent_branch(stair_level[bran].branch);
+        *pd = stair_level[bran].depth;
+    }
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to 
@@ -1542,96 +1516,25 @@ int level_distance(level_id first, level_id second)
     return distance;
 }
 
-static struct
-{
-    const char *branch_name, *full_name;
-    char hotkey;
-} branches [] =
-{
-    { "Dungeon",        "the Main Dungeon", 'D' },
-    { "Dis",            "Dis",              'I' },
-    { "Gehenna",        "Gehenna",          'N' },
-    { "Hell",           "Hell",             'U' },
-    { "Cocytus",        "Cocytus",          'X' },
-    { "Tartarus",       "Tartarus",         'Y' },
-    { "Inferno",        "",                 'R' },
-    { "The Pit",        "",                 '0' },
-    { "------------",   "",                 '-' },
-    { "------------",   "",                 '-' },
-    { "Orcish Mines",   "the Orcish Mines", 'O' },
-    { "Hive",           "the Hive",         'H' },
-    { "Lair",           "the Lair",         'L' },
-    { "Slime Pits",     "the Slime Pits",   'M' },
-    { "Vaults",         "the Vaults",       'V' },
-    { "Crypt",          "the Crypt",        'C' },
-    { "Hall of Blades", "the Hall of Blades", 'B' },
-    { "Zot",            "the Realm of Zot", 'Z' },
-    { "Temple",         "the Ecumenical Temple",  'T' },
-    { "Snake Pit",      "the Snake Pit",    'P' },
-    { "Elven Halls",    "the Elven Halls",  'E' },
-    { "Tomb",           "the Tomb",         'G' },
-    { "Swamp",          "the Swamp",        'S' }
-};
-
-static struct
-{
-    const char *abbr;
-    unsigned char branch;
-} branch_abbrvs[] =
-{
-    { "D",      BRANCH_MAIN_DUNGEON },
-    { "Dis",    BRANCH_DIS },
-    { "Geh",     BRANCH_GEHENNA },
-    { "Hell",   BRANCH_VESTIBULE_OF_HELL },
-    { "Coc",    BRANCH_COCYTUS },
-    { "Tar",    BRANCH_TARTARUS },
-    { "inf",    BRANCH_INFERNO },
-    { "pit",    BRANCH_THE_PIT },
-    { "Orc",    BRANCH_ORCISH_MINES },
-    { "Hive",   BRANCH_HIVE },
-    { "Lair",   BRANCH_LAIR },
-    { "Slime",    BRANCH_SLIME_PITS },
-    { "Vault",  BRANCH_VAULTS },
-    { "Crypt",  BRANCH_CRYPT },
-    { "Blades", BRANCH_HALL_OF_BLADES },
-    { "Zot",    BRANCH_HALL_OF_ZOT },
-    { "Temple", BRANCH_ECUMENICAL_TEMPLE },
-    { "Snake",  BRANCH_SNAKE_PIT },
-    { "Elf",    BRANCH_ELVEN_HALLS },
-    { "Tomb",   BRANCH_TOMB },
-    { "Swamp",  BRANCH_SWAMP },
-};
-
 void set_trans_travel_dest(char *buffer, int maxlen, const level_pos &target)
 {
     if (!buffer) return;
 
-    const char *branch = NULL;
-    for (unsigned i = 0; i < sizeof(branch_abbrvs) / sizeof(branch_abbrvs[0]); 
-            ++i)
-    {
-        if (branch_abbrvs[i].branch == target.id.branch)
-        {
-            branch = branch_abbrvs[i].abbr;
-            break;
-        }
-    }
+    const int branch_id = target.id.branch;
+    const char *branch = branches[branch_id].abbrevname;
     
     if (!branch) return;
 
-    unsigned char branch_id = target.id.branch;
     // Show level+depth information and tack on an @(x,y) if the player
     // wants to go to a specific square on the target level. We don't use 
     // actual coordinates since that will give away level information we
     // don't want the player to have.
-    if (branch_id != BRANCH_ECUMENICAL_TEMPLE 
-            && branch_id != BRANCH_HALL_OF_BLADES
-            && branch_id != BRANCH_VESTIBULE_OF_HELL)
+    if ( branches[branch_id].depth != 1 )
         snprintf(buffer, maxlen, "%s:%d%s", branch, target.id.depth,
-            target.pos.x != -1? " @ (x,y)" : "");
+                 target.pos.x != -1? " @ (x,y)" : "");
     else
         snprintf(buffer, maxlen, "%s%s", branch,
-            target.pos.x != -1? " @ (x,y)" : "");
+                 target.pos.x != -1? " @ (x,y)" : "");
 }
 
 // Returns the level on the given branch that's closest to the player's
@@ -1669,7 +1572,7 @@ static char trans_travel_dest[30];
 
 // Returns true if the player character knows of the existence of the given
 // branch (which would make the branch a valid target for interlevel travel).
-static bool is_known_branch(unsigned char branch)
+static bool is_known_branch(int branch)
 {
     // The main dungeon is always known.
     if (branch == BRANCH_MAIN_DUNGEON) return true;
@@ -1677,48 +1580,32 @@ static bool is_known_branch(unsigned char branch)
     // If we're in the branch, it darn well is known.
     if (you.where_are_you == branch) return true;
 
+    // The Vestibule is special: there are no stairs to it, just
+    // a portal
+    if (branch == BRANCH_VESTIBULE_OF_HELL)
+    {
+        // XXX There must be a better way to do this...
+        std::vector<stash_search_result> tmp;
+        get_matching_features(text_pattern("gateway to Hell"), tmp);
+        return !tmp.empty();
+    }
+
     // If the overmap knows the stairs to this branch, we know the branch.
-    return ( stair_level.find(static_cast<branch_type>(branch)) != stair_level.end() );
-
-    // Doing this to check for the reachability of a branch is slow enough to
-    // be noticeable.
-
-    // Ask interlevel travel if it knows how to go there. If it knows how to
-    // get (partway) there, return true.
-
-    // level_pos pos;
-    // pos.id.branch = branch;
-    // pos.id.depth  = 1;
-    
-    // return find_transtravel_square(pos, false) != 0;
+    return ( stair_level.find(static_cast<branch_type>(branch)) !=
+             stair_level.end() );
 }
 
 /*
  * Returns a list of the branches that the player knows the location of the
  * stairs to, in the same order as overmap.cc lists them.
  */
-static std::vector<unsigned char> get_known_branches()
+static std::vector<branch_type> get_known_branches()
 {
-    // Lifted from overmap.cc. XXX: Move this to a better place?
-    const unsigned char list_order[] =
-    {
-        BRANCH_MAIN_DUNGEON, 
-        BRANCH_ECUMENICAL_TEMPLE,
-        BRANCH_ORCISH_MINES, BRANCH_ELVEN_HALLS,
-        BRANCH_LAIR, BRANCH_SWAMP, BRANCH_SLIME_PITS, BRANCH_SNAKE_PIT, 
-        BRANCH_HIVE,
-        BRANCH_VAULTS, BRANCH_HALL_OF_BLADES, BRANCH_CRYPT, BRANCH_TOMB,
-        BRANCH_VESTIBULE_OF_HELL,
-        BRANCH_DIS, BRANCH_GEHENNA, BRANCH_COCYTUS, BRANCH_TARTARUS, 
-        BRANCH_HALL_OF_ZOT
-    };
+    std::vector<branch_type> result;
 
-    std::vector<unsigned char> result;
-    for (unsigned i = 0; i < sizeof list_order / sizeof(*list_order); ++i)
-    {
-        if (is_known_branch(list_order[i]))
-            result.push_back(list_order[i]);
-    }
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        if (is_known_branch(branches[i].id))
+            result.push_back(branches[i].id);
 
     return result;
 }
@@ -1726,7 +1613,7 @@ static std::vector<unsigned char> get_known_branches()
 static int prompt_travel_branch()
 {
     unsigned char branch = BRANCH_MAIN_DUNGEON;     // Default
-    std::vector<unsigned char> br = get_known_branches();
+    std::vector<branch_type> br = get_known_branches();
 
     // Don't kill the prompt even if the only branch we know is the main dungeon
     // This keeps things consistent for the player.
@@ -1751,8 +1638,9 @@ static int prompt_travel_branch()
                     mpr(line.c_str());
                     line = "";
                 }
-                snprintf(buf, sizeof buf, "(%c) %-14s ", branches[br[i]].hotkey,
-                        branches[br[i]].branch_name);
+                snprintf(buf, sizeof buf, "(%c) %-14s ",
+                         branches[br[i]].travel_shortcut,
+                         branches[br[i]].shortname);
                 line += buf;
             }
             if (line.length())
@@ -1802,7 +1690,7 @@ static int prompt_travel_branch()
             // Is this a branch hotkey?
             for (int i = 0, count = br.size(); i < count; ++i)
             {
-                if (toupper(keyin) == branches[br[i]].hotkey)
+                if (toupper(keyin) == branches[br[i]].travel_shortcut)
                     return (br[i]);
             }
 
@@ -1815,19 +1703,17 @@ static int prompt_travel_branch()
     }
 }
 
-static int prompt_travel_depth(unsigned char branch)
+static int prompt_travel_depth(int branch)
 {
     // Handle one-level branches by not prompting.
-    if (branch == BRANCH_ECUMENICAL_TEMPLE || 
-            branch == BRANCH_VESTIBULE_OF_HELL ||
-            branch == BRANCH_HALL_OF_BLADES)
+    if ( branches[branch].depth == 1 )
         return 1;
 
     char buf[100];
     int depth = get_nearest_level_depth(branch);
 
     snprintf(buf, sizeof buf, "What level of %s do you want to go to? "
-            "[default %d] ", branches[branch].full_name, depth);
+            "[default %d] ", branches[branch].longname, depth);
     mesclr();
     mpr(buf, MSGCH_PROMPT);
 
@@ -2424,8 +2310,24 @@ level_id level_id::current()
 
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
-    short gridc = grd[pos.x][pos.y];
+    unsigned char gridc = grd[pos.x][pos.y];
     level_id id = current();
+
+    for ( int i = 0; i < NUM_BRANCHES; ++i )
+    {
+        if ( gridc == branches[i].entry_stairs )
+        {
+            id.branch = i;
+            id.depth = 1;
+            break;
+        }
+        if ( gridc == branches[i].exit_stairs )
+        {
+            id.branch = branches[i].parent_branch;
+            id.depth = branches[i].startdepth;
+            break;
+        }
+    }
 
     switch (gridc)
     {
@@ -2437,91 +2339,7 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     case DNGN_STONE_STAIRS_UP_III:   case DNGN_ROCK_STAIRS_UP:
         id.depth--;
         break;
-    case DNGN_ENTER_HELL:
-        id.branch = BRANCH_VESTIBULE_OF_HELL;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_DIS:
-        id.branch = BRANCH_DIS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_GEHENNA:
-        id.branch = BRANCH_GEHENNA;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_COCYTUS:
-        id.branch = BRANCH_COCYTUS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_TARTARUS:
-        id.branch = BRANCH_TARTARUS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_ORCISH_MINES:
-        id.branch = BRANCH_ORCISH_MINES;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_HIVE:
-        id.branch = BRANCH_HIVE;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_LAIR:
-        id.branch = BRANCH_LAIR;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_SLIME_PITS:
-        id.branch = BRANCH_SLIME_PITS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_VAULTS:
-        id.branch = BRANCH_VAULTS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_CRYPT:
-        id.branch = BRANCH_CRYPT;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_HALL_OF_BLADES:
-        id.branch = BRANCH_HALL_OF_BLADES;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_ZOT:
-        id.branch = BRANCH_HALL_OF_ZOT;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_TEMPLE:
-        id.branch = BRANCH_ECUMENICAL_TEMPLE;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_SNAKE_PIT:
-        id.branch = BRANCH_SNAKE_PIT;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_ELVEN_HALLS:
-        id.branch = BRANCH_ELVEN_HALLS;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_TOMB:
-        id.branch = BRANCH_TOMB;
-        id.depth  = 1;
-        break;
-    case DNGN_ENTER_SWAMP:
-        id.branch = BRANCH_SWAMP;
-        id.depth  = 1;
-        break;
-    case DNGN_RETURN_FROM_ORCISH_MINES:     case DNGN_RETURN_FROM_HIVE:
-    case DNGN_RETURN_FROM_LAIR:             case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_VAULTS:           case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:   case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:           case DNGN_RETURN_FROM_SNAKE_PIT:
-    case DNGN_RETURN_FROM_ELVEN_HALLS:      case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-        find_parent_branch(id.branch, id.depth, &id.branch, &id.depth);
-        if (!id.depth)
-        {
-            id.branch = find_parent_branch(you.where_are_you);
-            id.depth  = -1;
-        }
+    default:
         break;
     }
     return id;

@@ -22,12 +22,9 @@
 
 // referenced in files - newgame - ouch - overmap:
 #define MAX_LEVELS 50
-// referenced in files - newgame - ouch - overmap:
-#define MAX_BRANCHES 30         // there must be a way this can be extracted from other data
-
 
 // referenced in files - newgame - ouch:
-extern FixedArray<bool, MAX_LEVELS, MAX_BRANCHES> tmp_file_pairs;
+extern FixedArray<bool, MAX_LEVELS, NUM_BRANCHES> tmp_file_pairs;
 
 std::string datafile_path(const std::string &basename);
 
