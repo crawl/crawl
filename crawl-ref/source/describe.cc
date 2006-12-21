@@ -2701,7 +2701,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
 
         case AMU_THE_GOURMAND:
             description +=
-                "This amulet immediately fully protects its wearer from "
+                "This amulet protects its wearer from "
                 "sickness from eating fresh raw meat and allows them to "
                 "digest it when not hungry, but its effects on the wearer's "
                 "digestion are cumulative over time, and are initially "

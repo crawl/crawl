@@ -1428,7 +1428,7 @@ static void decrement_durations()
 {
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
-        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
+        if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && one_chance_in(4))
             you.duration[DUR_GOURMAND]++;
     }
     else

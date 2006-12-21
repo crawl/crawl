@@ -149,7 +149,7 @@
 
 // Should never exceed 255 - durations are saved as single bytes.
 #define GOURMAND_MAX                    200
-#define GOURMAND_NUTRITION_BASE         20
+#define GOURMAND_NUTRITION_BASE         10
 
 #define CHUNK_BASE_NUTRITION            1000
 

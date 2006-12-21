@@ -1270,10 +1270,12 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         }
     }
 
-    // the amulet of the gourmad will permit consumption of rotting meat as
-    // though it were "clean" meat - ghouls can expect the reverse, as they
-    // prize rotten meat ... yum! {dlb}:
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    // the amulet of the gourmad will permit consumption of
+    // contaminated meat as though it were "clean" meat - ghouls get
+    // rotting meat effect from clean chunks, since they love rotting
+    // meat.
+    if (wearing_amulet(AMU_THE_GOURMAND)
+        && random2(GOURMAND_MAX) < you.duration[DUR_GOURMAND])
     {
         if (you.species == SP_GHOUL)
         {
