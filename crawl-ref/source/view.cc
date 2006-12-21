@@ -2017,6 +2017,7 @@ static void draw_level_map(
 // to get that.  This function is still a mess, though. -- bwr
 void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 {
+    cursor_control con(true);
     int i, j;
 
     char move_x = 0;
