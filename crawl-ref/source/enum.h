@@ -2863,17 +2863,17 @@ enum run_mode_type
 
 enum rune_type
 {
-    // Note: that runes DIS-SWAMP have the same numberic value as the branch
-    RUNE_DIS                    = 1,
-    RUNE_GEHENNA,
-    RUNE_COCYTUS                = 4,
-    RUNE_TARTARUS,                  
-    RUNE_SLIME_PITS             = 13,
-    RUNE_VAULTS,
-    RUNE_SNAKE_PIT              = 19,
-    RUNE_ELVEN_HALLS,                   // unused  
-    RUNE_TOMB,
-    RUNE_SWAMP,
+    // Note: that runes DIS-SWAMP have the same numeric value as the branch
+    RUNE_DIS         = BRANCH_DIS,
+    RUNE_GEHENNA     = BRANCH_GEHENNA,
+    RUNE_COCYTUS     = BRANCH_COCYTUS,
+    RUNE_TARTARUS    = BRANCH_TARTARUS,
+    RUNE_SLIME_PITS  = BRANCH_SLIME_PITS,
+    RUNE_VAULTS      = BRANCH_VAULTS,
+    RUNE_SNAKE_PIT   = BRANCH_SNAKE_PIT,
+    RUNE_ELVEN_HALLS = BRANCH_ELVEN_HALLS, // unused
+    RUNE_TOMB        = BRANCH_TOMB,
+    RUNE_SWAMP       = BRANCH_SWAMP,
 
     // Runes 50 and 51 are for Pandemonium (general demon) and the Abyss
     RUNE_DEMONIC                = 50,
