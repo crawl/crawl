@@ -1987,7 +1987,7 @@ void demonspawn(void)
                 howm = 1;
             }
 
-            if (you.religion != GOD_VEHUMET && one_chance_in(11))
+            if (you.religion != GOD_SIF_MUNA && one_chance_in(11))
             {
                 whichm = MUT_CHANNEL_HELL;
                 howm = 1;
