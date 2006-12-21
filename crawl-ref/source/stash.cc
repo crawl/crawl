@@ -1351,8 +1351,7 @@ void StashTracker::search_stashes()
 
     if (results.empty())
     {
-        mpr("Can't find anything matching that.",
-                MSGCH_PLAIN);
+        mpr("Can't find anything matching that.", MSGCH_PLAIN);
         return;
     }
 

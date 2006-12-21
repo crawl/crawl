@@ -175,7 +175,8 @@ struct stash_search_result
     // matches if each matching stack's quantity is 1.
     int count;
     
-    // First item in stash that matched
+    // Text that describes this search result - usually the name of
+    // the first matching item in the stash or the name of the shop.
     std::string match;
 
     // The stash or shop in question. Both can be null if this is a feature.
