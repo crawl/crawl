@@ -682,10 +682,9 @@ int player_regen(void)
     if (you.duration[DUR_REGENERATION])
         rr += 100;
 
-    /* troll or troll leather -- trolls can't get both */
-    if (you.species == SP_TROLL)
-        rr += 40;
-    else if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ))
+    /* troll leather (except for trolls) */
+    if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ) &&
+        you.species != SP_TROLL)
         rr += 30;
 
     /* fast heal mutation */
@@ -735,7 +734,7 @@ int player_hunger_rate(void)
         break;
 
     case SP_TROLL:
-        hunger += 6;
+        hunger += 3;            // in addition to the +3 for fast metabolism
         break;
     }
 
@@ -916,8 +915,6 @@ int player_res_fire(bool calc_unid)
     // species:
     if (you.species == SP_MUMMY)
         rf--;
-    else if (you.species == SP_RED_DRACONIAN && you.experience_level > 17)
-        rf++;
 
     // mutations:
     rf += you.mutation[MUT_HEAT_RESISTANCE];
@@ -975,10 +972,6 @@ int player_res_cold(bool calc_unid)
 
     // randart weapons:
     rc += scan_randarts(RAP_COLD, calc_unid);
-
-    // species:
-    if (you.species == SP_WHITE_DRACONIAN && you.experience_level > 17)
-        rc++;
 
     // mutations:
     rc += you.mutation[MUT_COLD_RESISTANCE];
@@ -1151,10 +1144,6 @@ int player_res_poison(bool calc_unid)
 
     // randart weapons:
     rp += scan_randarts(RAP_POISON, calc_unid);
-
-    // species:
-    if (you.species == SP_GREEN_DRACONIAN && you.experience_level > 6)
-        rp++;
 
     // mutations:
     rp += you.mutation[MUT_POISON_RESISTANCE];
@@ -1533,12 +1522,10 @@ int player_AC(void)
 
         AC += ac_value * (15 + you.skills[SK_ARMOUR] + racial_bonus) / 15;
 
-        /* Nagas/Centaurs/the deformed don't fit into body armour very well */
-        if ((you.species == SP_NAGA || you.species == SP_CENTAUR
-             || you.mutation[MUT_DEFORMED] > 0) && i == EQ_BODY_ARMOUR)
-        {
+        /* The deformed don't fit into body armour very well
+           (this includes nagas and centaurs) */
+        if (i == EQ_BODY_ARMOUR && you.mutation[MUT_DEFORMED])
             AC -= ac_value / 2;
-        }
     }
 
     AC += player_equip( EQ_RINGS_PLUS, RING_PROTECTION );
@@ -2470,7 +2457,8 @@ void level_change(void)
                     case SP_GREEN_DRACONIAN:
                         mpr("Your scales start taking on a green colour.",
                             MSGCH_INTRINSIC_GAIN);
-                        mpr("You feel resistant to poison.", MSGCH_INTRINSIC_GAIN);
+                        // green dracos get this at level 7
+                        perma_mutate(MUT_POISON_RESISTANCE, 1);
                         break;
 
                     case SP_GOLDEN_DRACONIAN:
@@ -2503,14 +2491,15 @@ void level_change(void)
                     switch (you.species)
                     {
                     case SP_RED_DRACONIAN:
-                        mpr("You feel resistant to fire.", MSGCH_INTRINSIC_GAIN);
+                        perma_mutate(MUT_HEAT_RESISTANCE, 1);
                         break;
                     case SP_WHITE_DRACONIAN:
-                        mpr("You feel resistant to cold.", MSGCH_INTRINSIC_GAIN);
+                        perma_mutate(MUT_COLD_RESISTANCE, 1);
                         break;
                     case SP_BLACK_DRACONIAN:
-                        mpr("You feel resistant to electrical energy.",
-                            MSGCH_INTRINSIC_GAIN);
+                        perma_mutate(MUT_SHOCK_RESISTANCE, 1);
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -2667,8 +2656,6 @@ void level_change(void)
                     demonspawn();
                 }
 
-/*if (you.attribute [ATTR_NUM_DEMONIC_POWERS] == 6 && (you.experience_level == 8 || (you.experience_level < 8 && one_chance_in(3) ) )
-   demonspawn(); */
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false);
                 break;

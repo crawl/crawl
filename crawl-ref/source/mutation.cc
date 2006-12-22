@@ -48,7 +48,6 @@
 
 int how_mutated(void);
 char body_covered(void);
-bool perma_mutate(int which_mut, char how_much);
 
 const char* troll_claw_messages[3] = {
     "Your claws sharpen.",
@@ -929,7 +928,6 @@ formatted_string describe_mutations()
         break;
 
     case SP_TROLL:
-        result += "Your body regenerates quickly." EOL;
         if ( you.mutation[MUT_CLAWS] )
             result += "<lightred>";
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
@@ -959,6 +957,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_KENKU:
+        result += "You cannot wear helmets." EOL;
         if (you.experience_level > 4)
         {
             result += "You can fly";
@@ -983,10 +982,17 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_GREY_DRACONIAN:
+        if (you.experience_level > 6)
+        {
+            result += "Your tail is studded with spikes." EOL;
+            have_any = true;
+        }
+        break;
+
     case SP_GREEN_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You are resistant to poison." EOL;
             result += "You can breathe poison." EOL;
             have_any = true;
         }
@@ -998,11 +1004,6 @@ formatted_string describe_mutations()
             result += "You can breathe fire." EOL;
             have_any = true;
         }
-        if (you.experience_level > 17)
-        {
-            result += "You are resistant to fire." EOL;
-            have_any = true;
-        }
         break;
 
     case SP_WHITE_DRACONIAN:
@@ -1011,22 +1012,12 @@ formatted_string describe_mutations()
             result += "You can breathe frost." EOL;
             have_any = true;
         }
-        if (you.experience_level > 17)
-        {
-            result += "You are resistant to cold." EOL;
-            have_any = true;
-        }
         break;
 
     case SP_BLACK_DRACONIAN:
         if (you.experience_level > 6)
         {
             result += "You can breathe lightning." EOL;
-            have_any = true;
-        }
-        if (you.experience_level > 17)
-        {
-            result += "You are resistant to lightning." EOL;
             have_any = true;
         }
         break;
@@ -1258,12 +1249,8 @@ bool mutate(int which_mutation, bool failMsg)
         return false;
     }
 
-    // nagas have see invis and res poison and can spit poison
     if (you.species == SP_NAGA)
     {
-        if (mutat == MUT_ACUTE_VISION || mutat == MUT_POISON_RESISTANCE)
-            return false;
-
         // gdl: spit poison 'upgrades' to breathe poison.  Why not..
         if (mutat == MUT_SPIT_POISON)
         {

@@ -73,5 +73,6 @@ bool give_bad_mutation( bool forceMutation = false, bool failMsg = true );
  * *********************************************************************** */
 void demonspawn(void);
 
+bool perma_mutate(int which_mut, char how_much);
 
 #endif

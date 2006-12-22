@@ -755,7 +755,7 @@ bool do_wear_armour( int item, bool quiet )
              && (get_helmet_type(invitem) == THELM_CAP
                  || get_helmet_type(invitem) == THELM_WIZARD_HAT))
     {
-        // caps & wiz hats always fit, unless your head's too big (ogres &c)
+        // caps & wiz hats always fit
     }
     else if (!can_equip( slot ))
     {
