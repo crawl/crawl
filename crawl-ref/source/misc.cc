@@ -248,34 +248,54 @@ const char *grid_item_destruction_message( unsigned char grid )
          :                          "You hear an empty echo.";
 }
 
-void search_around(void)
+void search_around( bool only_adjacent )
 {
     char srx = 0;
     char sry = 0;
     int i;
 
-    for (srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
+    // Traps and doors stepdown skill:
+    // skill/(2x-1) for squares at distance x
+    int max_dist = (you.skills[SK_TRAPS_DOORS] + 1) / 2;
+    if ( max_dist > 5 )
+        max_dist = 5;
+    if ( max_dist > 1 && only_adjacent )
+        max_dist = 1;
+
+    for ( int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx )
     {
-        for (sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
+        for ( int sry=you.y_pos - max_dist; sry<=you.y_pos + max_dist; ++sry )
         {
-            // don't exclude own square; may be levitating
-            if (grd[srx][sry] == DNGN_SECRET_DOOR
-                && random2(17) <= 1 + you.skills[SK_TRAPS_DOORS])
+            if ( see_grid(srx,sry) ) // must have LOS
             {
-                grd[srx][sry] = DNGN_CLOSED_DOOR;
-                mpr("You found a secret door!");
-                exercise(SK_TRAPS_DOORS, ((coinflip())? 2 : 1));
-            }
+                // maybe we want distance() instead of grid_distance()?
+                int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
 
-            if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
-                && random2(17) <= 1 + you.skills[SK_TRAPS_DOORS])
-            {
-                i = trap_at_xy(srx, sry);
+                // don't exclude own square; may be levitating
+                if (dist == 0)
+                    ++dist;
+                
+                // making this harsher by removing the old +1
+                int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
+                
+                if (grd[srx][sry] == DNGN_SECRET_DOOR &&
+                    random2(17) <= effective)
+                {
+                    grd[srx][sry] = DNGN_CLOSED_DOOR;
+                    mpr("You found a secret door!");
+                    exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
+                }
 
-                if (i != -1)
-                    grd[srx][sry] = trap_category(env.trap[i].type);
-
-                mpr("You found a trap!");
+                if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP &&
+                    random2(17) <= effective)
+                {
+                    i = trap_at_xy(srx, sry);
+                    
+                    if (i != -1)
+                        grd[srx][sry] = trap_category(env.trap[i].type);
+                    
+                    mpr("You found a trap!");
+                }
             }
         }
     }

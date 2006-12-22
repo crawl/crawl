@@ -2091,7 +2091,10 @@ static void world_reacts()
 
     run_environment_effects();
 
-    //if (random2(10) < you.skills [SK_TRAPS_DOORS] + 2) search_around();
+    if ( !you.paralysis && !you.mutation[MUT_BLURRY_VISION] &&
+         (you.mutation[MUT_ACUTE_VISION] >= 2 ||
+          random2(30) < you.skills[SK_TRAPS_DOORS]) )
+        search_around(true); // only check adjacent squares
 
     stealth = check_stealth();
 
@@ -2977,15 +2980,6 @@ static void move_player(int move_x, int move_y)
         you.time_taken /= 10;
         move_player_to_grid(targ_x, targ_y, true, false, swap);
 
-        // Returning the random trap scans as a way to get more use from the
-        // skill and acute mutations.
-        if (you.mutation[MUT_ACUTE_VISION] >= 2
-            || (!you.mutation[MUT_BLURRY_VISION]
-                && random2(100) < 
-                        stat_mult(you.intel, skill_bump(SK_TRAPS_DOORS))))
-        {
-            search_around();
-        }
         move_x = 0;
         move_y = 0;
 
