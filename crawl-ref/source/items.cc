@@ -2962,12 +2962,30 @@ static void autopickup(void)
 
         if (item_needs_autopickup(mitm[o]))
         {
+
+            int num_to_take = mitm[o].quantity;
+            if ( Options.autopickup_no_burden )
+            {
+                int num_can_take =
+                    (carrying_capacity(you.burden_state) - you.burden) /
+                    item_mass(mitm[o]);
+
+                if ( num_can_take == 0 )
+                {
+                    o = next;
+                    continue;
+                }
+
+                if ( num_can_take < num_to_take )
+                    num_to_take = num_can_take;
+            }
+
             if (!(mitm[o].flags & ISFLAG_THROWN))
                 unthrown++;
             
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
-            result = move_item_to_player( o, mitm[o].quantity);
+            result = move_item_to_player(o, num_to_take);
 
             if (result == 0)
             {

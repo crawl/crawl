@@ -67,6 +67,7 @@ lua_file = lua/trapwalk.lua
 # autopickup = $?!+"/%
 # default_autopickup = false
 # safe_autopickup = false
+# autopickup_no_burden = true
 # safe_zero_exp = false
 # pickup_thrown = false
 # pickup_dropped = true

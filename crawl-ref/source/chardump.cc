@@ -179,6 +179,8 @@ static void sdump_burden(const std::string &, std::string &text)
     case BS_ENCUMBERED:
         text += "You are encumbered.\n";
         break;
+    default:
+        break;
     }
 }
 

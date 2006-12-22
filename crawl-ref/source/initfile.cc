@@ -573,6 +573,7 @@ void game_options::reset_options()
     hp_warning             = 10;
     confirm_self_target    = true;
     safe_autopickup        = true;
+    autopickup_no_burden   = false;
     use_notes              = true;
     note_skill_max         = false;
     note_all_spells        = false;
@@ -1688,6 +1689,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
 	safe_autopickup = read_bool( field, safe_autopickup );
     }
+    else if (key == "autopickup_no_burden")
+    {
+	autopickup_no_burden = read_bool( field, autopickup_no_burden );
+    }   
     else if (key == "use_notes")
     {
         use_notes = read_bool( field, use_notes );

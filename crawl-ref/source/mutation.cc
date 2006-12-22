@@ -1160,7 +1160,7 @@ bool mutate(int which_mutation, bool failMsg)
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    // except for demonspawn in lichform -- haranp
+    // except for demonspawn (or other permamutations) in lichform -- haranp
     if (you.is_undead && !demonspawn) 
     {
 	if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())

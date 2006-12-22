@@ -1885,6 +1885,7 @@ static option_handler handlers[] =
     { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
     { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
     { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
+    { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max", &Options.note_skill_max, option_hboolean },
     { "use_notes", &Options.use_notes, option_hboolean },
     { "delay_message_clear", &Options.delay_message_clear, option_hboolean },

@@ -18,9 +18,10 @@ The contents of this text are:
 		gearset.lua, eat.lua, trapwalk.lua
 4-  Interface. 
 4-a	Dropping and Picking up.
-		autopickup, default_autopickup, safe_autopickup, safe_zero_exp,
-		pickup_thrown, pickup_dropped, assign_item_slot, ban_pickup, 
-		drop_mode, pickup_mode, drop_filter;
+		autopickup, default_autopickup, safe_autopickup,
+		autopickup_no_burden, safe_zero_exp, pickup_thrown,
+		pickup_dropped, assign_item_slot, ban_pickup, drop_mode,
+		pickup_mode, drop_filter;
 		lua: ch_autopickup (advanced autopickup exceptions)
 4-b	Targeting. 
 		target_zero_exp, target_oos, target_los_first,
@@ -231,6 +232,11 @@ safe_autopickup = true
 	When set, autopickup will not operate if there are visible unfriendly
 	monsters (or statues.) If safe_zero_exp is set (the default), zero-XP
 	monsters are considered friendly. 
+
+autopickup_no_burden = false
+	When set, autopickup will not pick up items which would increase
+        your burden status (from unencumbered to burdened, or from encumbered
+        to overloaded.)
 
 safe_zero_exp = true
 	If set, presence of only zero experience monsters (like plants) will
