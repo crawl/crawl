@@ -2964,7 +2964,7 @@ static void autopickup(void)
         {
 
             int num_to_take = mitm[o].quantity;
-            if ( Options.autopickup_no_burden )
+            if ( Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
             {
                 int num_can_take =
                     (carrying_capacity(you.burden_state) - you.burden) /
