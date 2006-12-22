@@ -719,7 +719,6 @@ int player_hunger_rate(void)
     switch (you.species)
     {
     case SP_HALFLING:
-    case SP_SPRIGGAN:
         hunger--;
         break;
 
