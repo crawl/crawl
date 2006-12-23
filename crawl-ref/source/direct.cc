@@ -1283,6 +1283,8 @@ std::string feature_description(int grid)
         return ("A sparkling altar of Nemelex Xobeh.");
     case DNGN_ALTAR_ELYVILON:
         return ("A silver altar of Elyvilon.");
+    case DNGN_ALTAR_LUCY:
+        return ("A corrupt altar of Lucy.");
     case DNGN_BLUE_FOUNTAIN:
         return ("A fountain of clear blue water.");
     case DNGN_SPARKLING_FOUNTAIN:

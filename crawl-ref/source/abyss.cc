@@ -47,6 +47,8 @@ void generate_abyss(void)
     }
 
     grd[45][35] = DNGN_FLOOR;
+    if ( one_chance_in(5) )
+        grd[46][35] = DNGN_ALTAR_LUCY;
 }                               // end generate_abyss()
 
 
@@ -379,4 +381,7 @@ void abyss_teleport( bool new_area )
     generate_area( 10, 10, (GXM - 10), (GYM - 10) );
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
+    if ( one_chance_in(5) )
+        grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUCY;
+
 }

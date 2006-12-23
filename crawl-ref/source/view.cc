@@ -1709,6 +1709,7 @@ bool is_feature(int feature, int x, int y) {
         case DNGN_ALTAR_TROG:
         case DNGN_ALTAR_NEMELEX_XOBEH:
         case DNGN_ALTAR_ELYVILON:
+        case DNGN_ALTAR_LUCY:
             return true;
         default:
             return false;
@@ -3047,6 +3048,14 @@ void init_feature_table( void )
             Feature[i].notable = true;
             Feature[i].map_colour = DARKGREY;
             Feature[i].seen_colour = LIGHTGREY;
+            break;
+
+        case DNGN_ALTAR_LUCY:
+            Feature[i].colour = GREEN;
+            Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
+            Feature[i].notable = true;
+            Feature[i].map_colour = DARKGREY;
+            Feature[i].seen_colour = GREEN;
             break;
 
         case DNGN_BLUE_FOUNTAIN:

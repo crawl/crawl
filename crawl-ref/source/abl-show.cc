@@ -127,7 +127,11 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
-      ABIL_ELYVILON_GREATER_HEALING }
+      ABIL_ELYVILON_GREATER_HEALING },
+    // Lucy
+    { ABIL_LUCY_ABYSS_EXIT, ABIL_NON_ABILITY,
+      ABIL_LUCY_SUMMON_DEMONS, ABIL_NON_ABILITY,
+      ABIL_LUCY_ABYSS_ENTER }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -250,6 +254,11 @@ static const struct ability_def Ability_List[] =
     { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_NONE },
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_NONE },
     { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 4, ABFLAG_NONE },
+
+    // Lucy
+    { ABIL_LUCY_ABYSS_EXIT, "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
+    { ABIL_LUCY_SUMMON_DEMONS, "Summon Abyssal Servants", 7, 0, 100, 5, ABFLAG_NONE },
+    { ABIL_LUCY_ABYSS_ENTER, "Enter the Abyss", 9, 0, 200, 40, ABFLAG_NONE },
 
     // These six are unused "evil" god abilities:
     { ABIL_CHARM_SNAKE, "Charm Snake", 6, 0, 200, 5, ABFLAG_NONE },
@@ -1171,6 +1180,48 @@ bool activate_ability(void)
             break;
 
         exercise( SK_INVOCATIONS, 6 + random2(10) );
+        break;
+
+    case ABIL_LUCY_ABYSS_EXIT:
+        if ( you.level_type != LEVEL_ABYSS )
+        {
+            mpr("You aren't in the Abyss!");
+            return false;       // don't incur costs
+        }
+        banished(DNGN_EXIT_ABYSS);
+        exercise(SK_INVOCATIONS, 8 + random2(10));
+
+        // Lose 1d2 permanent HP
+        you.hp_max -= (coinflip() ? 2 : 1);
+        // Deflate HP
+        set_hp( 1 + random2(you.hp), false );
+
+        // Lose 1d2 permanent MP
+        rot_mp(coinflip() ? 2 : 1);
+        // Deflate MP
+        if (you.magic_points)
+            set_mp(random2(you.magic_points), false);
+        break;
+
+    case ABIL_LUCY_SUMMON_DEMONS:
+        for ( int i = 0; i < you.skills[SK_INVOCATIONS] / 4; ++i )
+            summon_ice_beast_etc( 20 + you.skills[SK_INVOCATIONS] * 3,
+                                  summon_any_demon(DEMON_COMMON), true);
+        exercise(SK_INVOCATIONS, 6 + random2(6));
+        break;
+
+    case ABIL_LUCY_ABYSS_ENTER:
+        if (you.level_type == LEVEL_ABYSS)
+        {
+            mpr("You're already here.");
+            return false;
+        }
+        else if (you.level_type == LEVEL_PANDEMONIUM)
+        {
+            mpr("That doesn't work from Pandemonium.");
+            return false;
+        }
+        banished(DNGN_ENTER_ABYSS);
         break;
 
     //jmf: intended as invocations from evil god(s):

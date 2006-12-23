@@ -6544,6 +6544,12 @@ void describe_god( int which_god, bool give_title )
                       "appreciates the offering of weapons. ";
         break;
 
+    case GOD_LUCY:
+        description =
+            "Lucy is a god who revels in the chaos of the Abyss. Followers are sent out" EOL
+            "to spread Lucy's word in the world. Lucy enjoys seeing her followers spread" EOL
+            "chaos and destruction.";
+        break;
     default:
         description = "God of Program Bugs is a weird and dangerous God and his presence should" EOL
                       "be reported to dev-team.";
@@ -6574,6 +6580,7 @@ void describe_god( int which_god, bool give_title )
                     (which_god == GOD_TROG) ? "Great Slayer" :
                     (which_god == GOD_NEMELEX_XOBEH) ? "Great Trickster" :
                     (which_god == GOD_SIF_MUNA) ? "Master of the Arcane" :
+                    (which_god == GOD_LUCY) ? "Abyssal Lord" :
                     (which_god == GOD_XOM) ? "Teddy Bear" : 
                         "Bogy the Lord of the Bugs"); // Xom and no god is handled before
         }
@@ -6599,6 +6606,7 @@ void describe_god( int which_god, bool give_title )
             case GOD_TROG:
             case GOD_NEMELEX_XOBEH:
             case GOD_ELYVILON:
+            case GOD_LUCY:
                 cprintf ( (you.piety >= 120) ? "High Priest" :
                           (you.piety >= 100) ? "Elder" :
                           (you.piety >=  75) ? "Priest" :

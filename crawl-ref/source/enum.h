@@ -109,6 +109,10 @@ enum ability_type
     ABIL_ELYVILON_HEALING,
     ABIL_ELYVILON_RESTORATION,
     ABIL_ELYVILON_GREATER_HEALING,              //  224
+    ABIL_LUCY_ABYSS_EXIT,
+    ABIL_LUCY_SUMMON_DEMONS,
+    ABIL_LUCY_ABYSS_ENTER,
+
     ABIL_CHARM_SNAKE,
     ABIL_TRAN_SERPENT_OF_HELL,
     ABIL_ROTTING,
@@ -1032,6 +1036,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_TROG,
     DNGN_ALTAR_NEMELEX_XOBEH,          //  190
     DNGN_ALTAR_ELYVILON,               //  191
+    DNGN_ALTAR_LUCY,
 
     DNGN_BLUE_FOUNTAIN = 200,          //  200
     DNGN_DRY_FOUNTAIN_I,
@@ -1364,6 +1369,7 @@ enum god_type
     GOD_TROG,                          //   10
     GOD_NEMELEX_XOBEH,
     GOD_ELYVILON,
+    GOD_LUCY,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM  = 100
