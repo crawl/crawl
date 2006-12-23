@@ -143,6 +143,8 @@
 		7B237F150A8ECD2E00580F30 /* libncurses.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B237F140A8ECD2E00580F30 /* libncurses.5.dylib */; };
 		7B352EA00B00183400CABB32 /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
 		7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7B352E9E0B00183400CABB32 /* mapdef.h */; };
+		7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BA3DBB90B3D90A700B5B3D7 /* branch.cc */; };
+		7BA3DBBC0B3D90A700B5B3D7 /* branch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BA3DBBA0B3D90A700B5B3D7 /* branch.h */; };
 		7BBC4A060B0F782800F27D45 /* levcomp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352EEC0B001F4200CABB32 /* levcomp.cc */; };
 		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
@@ -228,6 +230,7 @@
 				7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */,
 				7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */,
 				7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */,
+				7BA3DBBC0B3D90A700B5B3D7 /* branch.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -375,6 +378,8 @@
 		7B352EEC0B001F4200CABB32 /* levcomp.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = levcomp.cc; path = util/levcomp.cc; sourceTree = "<group>"; };
 		7B352F1F0B00232500CABB32 /* splev.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = splev.des; path = dat/splev.des; sourceTree = "<group>"; };
 		7B352F200B00232500CABB32 /* vaults.des */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = vaults.des; path = dat/vaults.des; sourceTree = "<group>"; };
+		7BA3DBB90B3D90A700B5B3D7 /* branch.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = branch.cc; sourceTree = "<group>"; };
+		7BA3DBBA0B3D90A700B5B3D7 /* branch.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = branch.h; sourceTree = "<group>"; };
 		7BC222E50ABBB286003A7D9A /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
 		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
 		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
@@ -452,6 +457,8 @@
 				7B237E270A8EC9D000580F30 /* acr.cc */,
 				7B237E2C0A8EC9D000580F30 /* beam.cc */,
 				7B237E2D0A8EC9D000580F30 /* beam.h */,
+				7BA3DBB90B3D90A700B5B3D7 /* branch.cc */,
+				7BA3DBBA0B3D90A700B5B3D7 /* branch.h */,
 				7B237E2A0A8EC9D000580F30 /* chardump.cc */,
 				7B237E2B0A8EC9D000580F30 /* chardump.h */,
 				7B237E590A8EC9D000580F30 /* cloud.cc */,
@@ -733,6 +740,7 @@
 				7BC222E70ABBB286003A7D9A /* itemprop.cc in Sources */,
 				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
 				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
+				7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
