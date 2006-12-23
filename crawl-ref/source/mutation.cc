@@ -102,7 +102,7 @@ const char *mutation_descrip[][3] = {
 
     {"Your digestive system is specialised to digest meat.",
      "Your digestive system is specialised to digest meat.",
-     "You are primarily a carnivore."},
+     "You are carnivorous."},
 
     {"You digest meat inefficiently.", "You digest meat inefficiently.",
      "You are primarily a herbivore."},
@@ -939,17 +939,19 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away." EOL;
-        result += "You are carnivorous." EOL;
-        have_any = true;
-        break;
-
-    case SP_KOBOLD:
-        result += "You are carnivorous." EOL;
         have_any = true;
         break;
 
     case SP_GREY_ELF:
         if (you.experience_level > 4)
+        {
+            result += "You are very charming." EOL;
+            have_any = true;
+        }
+        break;
+
+    case SP_HIGH_ELF:
+        if (you.experience_level > 14)
         {
             result += "You are very charming." EOL;
             have_any = true;
@@ -977,7 +979,7 @@ formatted_string describe_mutations()
 
         result += " in touch with the powers of death." EOL;
 
-        if (you.experience_level >= 12)
+        if (you.experience_level > 12)
             result += "You can restore your body by infusing magical energy." EOL;
         have_any = true;
         break;
@@ -1055,6 +1057,15 @@ formatted_string describe_mutations()
         }
         break;
     }                           //end switch - innate abilities
+
+    // a bit more stuff
+    if ( (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE) ||
+         player_genus(GENPC_DRACONIAN) ||
+         you.species == SP_SPRIGGAN )
+    {
+        result += "Your body does not fit into most forms of armour." EOL;
+        have_any = true;
+    }
     
     result += "</lightcyan>";
 
@@ -1267,13 +1278,6 @@ bool mutate(int which_mutation, bool failMsg)
                 }
             }
         }
-    }
-
-    // this might have issues if we allowed it -- bwr
-    if (you.species == SP_KOBOLD 
-        && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
-    {
-        return (false);
     }
 
     // This one can be forced by demonspawn

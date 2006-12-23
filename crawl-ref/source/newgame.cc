@@ -1787,10 +1787,14 @@ static void give_basic_mutations(unsigned char speci)
     case SP_GHOUL:
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE] = 1;
+        you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_TROLL:
         you.mutation[MUT_REGENERATION] = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
+        break;
+    case SP_KOBOLD:
+        you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     default:
         break;

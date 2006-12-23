@@ -1489,7 +1489,7 @@ bool generate_abilities( void )
     if (!you.duration[DUR_CONTROLLED_FLIGHT] && !player_is_levitating())
     {
         // kenku can fly, but only from the ground
-        // (until levitation 15, when it becomes permanent until revoked)
+        // (until level 15, when it becomes permanent until revoked)
         //jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
             insert_ability( ABIL_FLY );

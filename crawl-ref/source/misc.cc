@@ -250,8 +250,6 @@ const char *grid_item_destruction_message( unsigned char grid )
 
 void search_around( bool only_adjacent )
 {
-    char srx = 0;
-    char sry = 0;
     int i;
 
     // Traps and doors stepdown skill:

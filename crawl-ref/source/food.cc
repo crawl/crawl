@@ -688,9 +688,8 @@ static void say_chunk_flavour(bool likes_chunks)
 static void eat_chunk( int chunk_effect )
 {
 
-    bool likes_chunks = (you.species == SP_KOBOLD || you.species == SP_OGRE
-                         || you.species == SP_TROLL
-                         || you.mutation[MUT_CARNIVOROUS] > 0);
+    bool likes_chunks = (you.species == SP_OGRE || you.species == SP_TROLL ||
+                         you.mutation[MUT_CARNIVOROUS] > 0);
 
     if (you.species == SP_GHOUL)
     {
@@ -1081,9 +1080,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     }
 
 
-    bool ur_carnivorous = (you.species == SP_GHOUL
-                           || you.species == SP_KOBOLD
-                           || you.mutation[MUT_CARNIVOROUS] == 3);
+    bool ur_carnivorous = (you.mutation[MUT_CARNIVOROUS] == 3);
 
     bool ur_herbivorous = (you.mutation[MUT_HERBIVOROUS] > 1);
 
@@ -1092,10 +1089,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     bool ur_chunkslover = ( 
                 (check_hunger? you.hunger_state <= HS_HUNGRY : true)
                            || wearing_amulet(AMU_THE_GOURMAND, !reqid)
-                           || you.species == SP_KOBOLD
                            || you.species == SP_OGRE
                            || you.species == SP_TROLL
-                           || you.species == SP_GHOUL
                            || you.mutation[MUT_CARNIVOROUS]);
 
     switch (what_isit)
