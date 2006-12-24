@@ -775,11 +775,11 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int relec = player_res_electricity(calc_unid);
 
     snprintf(buf, sizeof buf, "\n\n"             
-             "Res.Fire  : %s%s\n"
-             "Res.Cold  : %s%s\n"
-             "Life Prot.: %s%s\n"
-             "Res.Poison: %s%s\n"
-             "Res.Elec. : %s%s\n",
+             "%sRes.Fire  : %s\n"
+             "%sRes.Cold  : %s\n"
+             "%sLife Prot.: %s\n"
+             "%sRes.Poison: %s\n"
+             "%sRes.Elec. : %s\n",
              determine_color_string(rfire), itosym3(rfire),
              determine_color_string(rcold), itosym3(rcold),
              determine_color_string(rlife), itosym3(rlife),
@@ -793,10 +793,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
 
     snprintf(buf, sizeof buf,
-             "Sust.Abil.: %s%s\n"
-             "Res.Mut.  : %s%s\n"
-             "Res.Slow  : %s%s\n"
-             "Clarity   : %s%s\n \n",
+             "%sSust.Abil.: %s\n"
+             "%sRes.Mut.  : %s\n"
+             "%sRes.Slow  : %s\n"
+             "%sClarity   : %s\n \n",
              determine_color_string(rsust), itosym1(rsust),
              determine_color_string(rmuta), itosym1(rmuta),
              determine_color_string(rslow), itosym1(rslow),
@@ -858,10 +858,10 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
 
     snprintf(buf, sizeof buf, "\n\n"
-             "See Invis. : %s%s\n"
-             "Warding    : %s%s\n"
-             "Conserve   : %s%s\n"
-             "Res.Corr.  : %s%s\n",
+             "%sSee Invis. : %s\n"
+             "%sWarding    : %s\n"
+             "%sConserve   : %s\n"
+             "%sRes.Corr.  : %s\n",
              determine_color_string(rinvi), itosym1(rinvi),
              determine_color_string(rward), itosym1(rward),
              determine_color_string(rcons), itosym1(rcons),
@@ -873,14 +873,14 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     {            
     case SP_GHOUL:
         saplevel = 3;
-        snprintf(buf, sizeof buf, "Saprovore  : %s%s",
+        snprintf(buf, sizeof buf, "%sSaprovore  : %s",
                  determine_color_string(3), itosym3(3) );
         break;
 
     case SP_KOBOLD:
     case SP_TROLL:
         saplevel = 2;
-        snprintf(buf, sizeof buf, "Saprovore  : %s%s",
+        snprintf(buf, sizeof buf, "%sSaprovore  : %s",
                  determine_color_string(2), itosym3(2) );
         break;
 
@@ -905,19 +905,19 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
         pregourmand = "Saprovore  : ";
         postgourmand = itosym3(saplevel);
     }
-    snprintf(buf, sizeof buf, "%s%s%s", pregourmand,
-             determine_color_string(saplevel), postgourmand);
+    snprintf(buf, sizeof buf, "%s%s%s",
+             determine_color_string(saplevel), pregourmand, postgourmand);
     cols.add_formatted(2, buf, false);
 
     cols.add_formatted(2, " \n", false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
-        snprintf(buf, sizeof buf, "Prev.Telep.: %s%s",
+        snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
                  determine_color_string(-1), itosym1(1));
     else
     {
         const int rrtel = player_teleport(calc_unid);
-        snprintf(buf, sizeof buf, "Rnd.Telep. : %s%s",
+        snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  determine_color_string(rrtel), itosym1(rrtel));
     }
     cols.add_formatted(2, buf, false);
@@ -926,9 +926,9 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int rlevi = player_is_levitating();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
-             "Ctrl.Telep.: %s%s\n"
-             "Levitation : %s%s\n"
-             "Ctrl.Flight: %s%s\n",
+             "%sCtrl.Telep.: %s\n"
+             "%sLevitation : %s\n"
+             "%sCtrl.Flight: %s\n",
              determine_color_string(rctel), itosym1(rctel),
              determine_color_string(rlevi), itosym1(rlevi),
              determine_color_string(rcfli), itosym1(rcfli));
