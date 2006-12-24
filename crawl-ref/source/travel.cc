@@ -1212,7 +1212,8 @@ void find_travel_pos(int youx, int youy,
                     }
                     else if (need_for_greed
                              && ix_dist == -10000
-                             && is_greed_inducing_square(lev, dx, dy))
+                             && is_greed_inducing_square(lev, dx, dy)
+                             && is_travel_ok(dx, dy, ignore_hostile))
                     {
                         i_x = dx;
                         i_y = dy;
