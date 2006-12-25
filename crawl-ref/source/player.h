@@ -39,7 +39,7 @@ bool is_light_armour( const item_def &item );
 /* ***********************************************************************
  * called from: beam - fight - misc - newgame
  * *********************************************************************** */
-bool player_light_armour(void);
+bool player_light_armour(bool with_skill = false);
 
 
 /* ***********************************************************************

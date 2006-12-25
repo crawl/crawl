@@ -3033,7 +3033,7 @@ static int affect_player( struct bolt &beam )
             if (beam.is_beam)
             {
                 // beams can be dodged
-                if (player_light_armour()
+                if (player_light_armour(true)
                     && !beam.aimed_at_feet && coinflip())
                 {
                     exercise(SK_DODGING, 1);
@@ -3086,7 +3086,7 @@ static int affect_player( struct bolt &beam )
                     exercise( SK_SHIELDS, exer );
                 }
 
-                if (player_light_armour() && !beam.aimed_at_feet
+                if (player_light_armour(true) && !beam.aimed_at_feet
                     && coinflip())
                     exercise(SK_DODGING, 1);
 
@@ -3281,7 +3281,7 @@ static int affect_player( struct bolt &beam )
 
     if (you.equip[EQ_BODY_ARMOUR] != -1)
     {
-        if (!player_light_armour() && one_chance_in(4)
+        if (!player_light_armour(false) && one_chance_in(4)
             && random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
         {
             exercise( SK_ARMOUR, 1 );

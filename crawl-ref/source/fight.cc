@@ -2189,7 +2189,7 @@ void monster_attack(int monster_attacking)
             if (bearing_shield && one_chance_in(4))
                 exercise(SK_SHIELDS, 1);
         }
-        else if (player_light_armour() && one_chance_in(3))
+        else if (player_light_armour(true) && one_chance_in(3))
         {
             exercise(SK_DODGING, 1);
         }
@@ -2322,7 +2322,9 @@ void monster_attack(int monster_attacking)
                 {
                     const int body_arm_mass = item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] );
 
-                    if (!player_light_armour() && coinflip()
+                    // Being generous here...this can train both Armour
+                    // and Dodging.
+                    if (!player_light_armour(false) && coinflip()
                         && random2(1000) <= body_arm_mass)
                     {
                         // raised from 1 {bwross}

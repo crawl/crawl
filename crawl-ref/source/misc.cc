@@ -1202,7 +1202,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
         mpr(info);
     }
 
-    if (player_light_armour() && coinflip())
+    if (player_light_armour(true) && coinflip())
         exercise( SK_DODGING, 1 );
 
   out_of_trap:

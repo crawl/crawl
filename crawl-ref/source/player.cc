@@ -1722,12 +1722,18 @@ bool is_light_armour( const item_def &item )
     }
 }
 
-bool player_light_armour(void)
+bool player_light_armour(bool with_skill)
 {
-    if (you.equip[EQ_BODY_ARMOUR] == -1)
+    const int arm = you.equip[EQ_BODY_ARMOUR];
+
+    if (arm == -1)
         return true;
 
-    return (is_light_armour( you.inv[you.equip[EQ_BODY_ARMOUR]] ));
+    if (with_skill &&
+        property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
+        return true;
+
+    return (is_light_armour(you.inv[arm]));
 }                               // end player_light_armour()
 
 //

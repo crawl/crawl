@@ -2838,12 +2838,10 @@ void handle_time( long time_delta )
     }
 
     // exercise armour *xor* stealth skill: {dlb}
-    if (!player_light_armour())
+    if (!player_light_armour(true))
     {
         if (random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
-        {
             return;
-        }
 
         if (one_chance_in(6))   // lowered random roll from 7 to 6 -- bwross
             exercise(SK_ARMOUR, 1);
