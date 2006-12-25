@@ -22,6 +22,7 @@ void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
 
 void clrscr(void);
+void clear_to_end_of_line();
 void gotoxy(int x, int y);
 void textcolor(int c);
 void textattr(int c);

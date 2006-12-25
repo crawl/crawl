@@ -463,6 +463,15 @@ void _setcursortype_internal(bool curstype)
        gotoxy(cx+1, cy+1);
 }
 
+// This will force the cursor down to the next line.
+void clear_to_end_of_line()
+{
+    const int pos = wherex();
+    const int cols = get_number_of_cols();
+    if (pos <= cols)
+        cprintf("%*s", cols - pos + 1, "");
+}
+
 void clrscr(void)
 {
    int x,y;
