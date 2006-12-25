@@ -913,6 +913,15 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
     // morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
 
+    // [ds] Non-base draconians are much more trouble than their HD
+    // suggests.
+    if (mons_genus(new_mclass) == MONS_DRACONIAN
+        && new_mclass != MONS_DRACONIAN
+        && !one_chance_in(4))
+    {
+        return (false);
+    }
+
     /* various inappropriate polymorph targets */
     if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN )        // not helpless
@@ -920,11 +929,13 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
         || new_mclass == MONS_PROGRAM_BUG
         || new_mclass == MONS_SHAPESHIFTER
         || new_mclass == MONS_GLOWING_SHAPESHIFTER
-
         // These shouldn't happen anyways (demons unaffected + holiness check), 
         // but if we ever do have polydemon, these will be needed:
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
+        || new_mclass == MONS_ROYAL_JELLY
+        || new_mclass == MONS_ORANGE_STATUE
+        || new_mclass == MONS_SILVER_STATUE
         || (new_mclass >= MONS_GERYON && new_mclass <= MONS_ERESHKIGAL))
     {
         return (false);
