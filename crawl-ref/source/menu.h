@@ -435,7 +435,7 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol );
 class menu_browser : public Menu
 {
 public:
-    menu_browser() {}
+    menu_browser() { flags &= (~MF_EASY_EXIT); }
 protected:
     virtual bool process_key( int keyin );
     bool jump_to( int linenum );

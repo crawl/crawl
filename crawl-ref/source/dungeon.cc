@@ -472,7 +472,7 @@ int items( int allow_uniques,       // not just true-false,
     int icky = 0;
     int p = 0;
 
-    // find an emtpy slot for the item (with culling if required)
+    // find an empty slot for the item (with culling if required)
     p = get_item_slot(10);
     if (p == NON_ITEM)
         return (NON_ITEM);
