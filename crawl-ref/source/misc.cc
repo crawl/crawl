@@ -259,6 +259,8 @@ void search_around( bool only_adjacent )
         max_dist = 5;
     if ( max_dist > 1 && only_adjacent )
         max_dist = 1;
+    if ( max_dist < 1 )
+        max_dist = 1;
 
     for ( int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx )
     {
