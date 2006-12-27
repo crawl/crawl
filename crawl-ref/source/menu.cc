@@ -200,6 +200,22 @@ bool Menu::process_key( int keyin )
         nav = true;
         repaint = line_down();
         break;
+    case CK_HOME:
+        nav = true;
+        repaint = first_entry != 0;
+        first_entry = 0;
+        break;
+    case CK_END:
+    {
+        nav = true;
+        const int breakpoint = (items.size() + 1) - pagesize;
+        if ( first_entry < breakpoint )
+        {
+            first_entry = breakpoint;
+            repaint = true;
+        }
+        break;
+    }
     default:
         keyin = post_process(keyin);
         lastch = keyin;
@@ -1419,8 +1435,12 @@ bool menu_browser::process_key( int keyin )
         repaint = jump_to(0);
         break;
     case CK_END:
-        repaint = jump_to(items.size() > 10 ? items.size() - 10 : 0);
+    {
+        const int breakpoint = (items.size() + 1) - pagesize;
+        if ( first_entry < breakpoint )
+            repaint = jump_to(breakpoint);
         break;
+    }
     default:
         // look for it as a hotkey
         for ( unsigned int i = 0; i < items.size(); ++i )
