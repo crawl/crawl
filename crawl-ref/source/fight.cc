@@ -2761,7 +2761,13 @@ void monster_attack(int monster_attacking)
                 itdam = ghost.values[ GVAL_BRAND ];
             }
             else
-                itdam = mitm[attacker->inv[hand_used]].special;
+            {
+                const item_def& mons_weapon = mitm[attacker->inv[hand_used]];
+                if ( is_range_weapon(mons_weapon) )
+                    itdam = SPWPN_NORMAL;
+                else
+                    itdam = mons_weapon.special;
+            }
 
             specdam = 0;
 

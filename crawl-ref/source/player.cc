@@ -618,7 +618,10 @@ int player_damage_brand( void )
     const int wpn = you.equip[ EQ_WEAPON ];
 
     if (wpn != -1) 
-        ret = get_weapon_brand( you.inv[wpn] );
+    {
+        if ( !is_range_weapon(you.inv[wpn]) )
+            ret = get_weapon_brand( you.inv[wpn] );
+    }
     else if (you.confusing_touch)
         ret = SPWPN_CONFUSE;
     else if (you.mutation[MUT_DRAIN_LIFE])
