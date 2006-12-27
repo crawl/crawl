@@ -64,19 +64,32 @@
 #include "view.h"
 
 const char *sacrifice[] = {
+    // Zin
     " glows silver and disappears.",
+    // TSO
     " glows a brilliant golden colour and disappears.",
+    // Kikubaaqudgha
     " rots away in an instant.",
+    // Yredelemnul
     " crumbles to dust.",
-    " is eaten by a bug.",    /* Xom - no sacrifices */
+    // Xom (no sacrifices)
+    " is eaten by a bug.",
+    // Vehumet
     " explodes into nothingness.",
+    // Okawaru
     " is consumed in a burst of flame.",
+    // Makhleb
     " is consumed in a roaring column of flame.",
+    // Sif Muna
     " glows faintly for a moment, then is gone.",
+    // Trog
     " is consumed in a roaring column of flame.",
+    // Nemelex
     " glows with a rainbow of weird colours and disappears.",
-    " is consumed by the void.",
-    " evaporates."
+    // Elyvilon
+    " evaporates.",
+    // Lucy
+    " is consumed by the void."
 };
 
 const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
