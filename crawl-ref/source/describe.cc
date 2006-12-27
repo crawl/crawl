@@ -3327,8 +3327,13 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
         description += " aum. ";        // arbitrary unit of mass
 
         if ( is_dumpable_artifact(item, false) )
-            description += "$$This ancient artifact cannot be changed "
-                "by magic or mundane means.";
+        {
+            if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_WEAPONS)
+                description += "$$This ancient artifact cannot be changed "
+                    "by magic or mundane means.";
+            else
+                description += "$$It is an ancient artifact.";
+        }
     }
 
     return (description);
