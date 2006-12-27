@@ -1429,8 +1429,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];        
         const int bow_brand = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
-        bool poisoned = (ammo_brand == SPMSL_POISONED
-                            || ammo_brand == SPMSL_POISONED_II);
+        bool poisoned = (ammo_brand == SPMSL_POISONED);
         const int rc_skill = you.skills[SK_RANGED_COMBAT];
 
         const int item_base_dam = property( item, PWPN_DAMAGE );

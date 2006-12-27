@@ -1384,8 +1384,7 @@ int items( int allow_uniques,       // not just true-false,
         if (mitm[p].sub_type == MI_NEEDLE)
         {
             const int pois = 
-                got_curare_roll(item_level)
-                ? SPMSL_CURARE : SPMSL_POISONED_II;
+                got_curare_roll(item_level) ? SPMSL_CURARE : SPMSL_POISONED;
             set_item_ego_type( mitm[p], OBJ_MISSILES, pois );
         }
         else
@@ -1399,14 +1398,14 @@ int items( int allow_uniques,       // not just true-false,
             set_item_ego_type( mitm[p], OBJ_MISSILES, 
                                (temp_rand <  60) ? SPMSL_FLAME :
                                (temp_rand < 120) ? SPMSL_ICE   :
-                               (temp_rand < 150) ? SPMSL_POISONED_II
+                               (temp_rand < 150) ? SPMSL_POISONED
                                                  : SPMSL_NORMAL );
         }
 
         // orcish ammo gets poisoned a lot more often -- in the original
         // code it was poisoned every time!?
         if (get_equip_race(mitm[p]) == ISFLAG_ORCISH && one_chance_in(3))
-            set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED_II );
+            set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED );
 
         // reduced quantity if special
         if (get_ammo_brand( mitm[p] ) != SPMSL_NORMAL )
@@ -3216,7 +3215,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
             set_item_ego_type(mitm[thing_created], OBJ_MISSILES, 
                     got_curare_roll(give_level)? 
                             SPMSL_CURARE
-                          : SPMSL_POISONED_II);
+                          : SPMSL_POISONED);
 
         mitm[thing_created].x = 0;
         mitm[thing_created].y = 0;

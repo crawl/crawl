@@ -3066,8 +3066,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_NORMAL,                      //    0
     SPMSL_FLAME,                       //    1
     SPMSL_ICE,                         //    2
-    SPMSL_POISONED, //    3 - from poison_ammo() enchantment {dlb}
-    SPMSL_POISONED_II,                 //    4
+    SPMSL_POISONED,                    //    3
+    SPMSL_POISONED_II,                 //    4 - unused
     SPMSL_CURARE                       //    5
 };
 

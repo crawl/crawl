@@ -1113,8 +1113,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
                 pbolt.hit++;
         }
 
-        bool poison = (ammo_brand == SPMSL_POISONED 
-                        || ammo_brand == SPMSL_POISONED_II);
+        const bool poison = (ammo_brand == SPMSL_POISONED);
 
         // POISON brand launchers poison ammo
         if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)

@@ -569,10 +569,8 @@ static const char *item_name_2(
     case OBJ_MISSILES:
         brand = get_ammo_brand( item );  
 
-        if (brand == SPMSL_POISONED || brand == SPMSL_POISONED_II)
-        {
+        if (brand == SPMSL_POISONED)
             strncat( buff, (terse) ? "poison " : "poisoned ", ITEMNAME_SIZE );
-        }
         
         if (brand == SPMSL_CURARE)
         {
@@ -621,7 +619,6 @@ static const char *item_name_2(
               (brand == SPMSL_ICE)     ? ((terse) ? " (ice)" : " of ice") :
               (brand == SPMSL_NORMAL)      ? "" :
               (brand == SPMSL_POISONED)    ? "" :
-              (brand == SPMSL_POISONED_II) ? "" :
               (brand == SPMSL_CURARE)      ? "" :
                                              " (buggy)", ITEMNAME_SIZE );
         }
