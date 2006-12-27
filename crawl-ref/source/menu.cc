@@ -1415,6 +1415,12 @@ bool menu_browser::process_key( int keyin )
     case CK_DOWN:
         repaint = line_down();
         break;
+    case CK_HOME:
+        repaint = jump_to(0);
+        break;
+    case CK_END:
+        repaint = jump_to(items.size() > 10 ? items.size() - 10 : 0);
+        break;
     default:
         // look for it as a hotkey
         for ( unsigned int i = 0; i < items.size(); ++i )
