@@ -37,7 +37,7 @@ macros at all three levels (main, level map, targeting).]
 
 How to create macros?
 ---------------------
-The simplest way is in-game: press the '`' key (this may be a bit awkward
+The simplest way is in-game: press the '~' key (this may be a bit awkward
 on certain keyboard layouts). Then choose a key to assign for your macro,
 and enter the command sequence. Observe how Crawl spits out a funny number
 in some cases. These are the key codes for certain (non-alpanumeric) keys,
@@ -63,8 +63,9 @@ For example, on my home system (Windows), I get key codes
  Shift-Alt-F1	    \{3440}
  Ctrl-Shift-Alt-F1  \{3952}
 
-After defining such a macro, you should test it. Saving of all macros is 
-done with the '~' command.
+After defining such a macro, you should test it. Saving of all macros
+and keymaps is done with the '~' command (use s to save macros at the
+prompt).
 
 The macros are stored in the file macro.txt in your main Crawl directory. 
 This file is human readable and editable, you just have to figure out the
