@@ -1779,9 +1779,12 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         }
         break;
 
-    case KILLED_BY_CURARE:
-        desc += terse? "asphyx" : "Asphyxiated";
+/* deprecated */
+/*
+    case KILLED_BY_DEATHS_DOOR:
+        desc += terse? "Death's door" : "Knocked on Death's door";
         break;
+*/
 
     case KILLED_BY_LAVA:
         if (terse)
@@ -1919,13 +1922,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "petrified" : "Turned to stone";
         break;
 
-    case KILLED_BY_MELTING:
-        desc += terse? "melted" : " melted into a puddle";
-        break;
-
-    case KILLED_BY_BLEEDING:
-        desc += terse? "bleeding" : " bled to death";
-        break;
+    /* case 26 */
 
     case KILLED_BY_SOMETHING:
         if (auxkilldata)
@@ -1943,6 +1940,18 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_ACID:
         desc += terse? "acid" : "Splashed by acid";
         needs_damage = true;
+        break;
+    
+    case KILLED_BY_CURARE:
+        desc += terse? "asphyx" : "Asphyxiated";
+        break;
+
+    case KILLED_BY_MELTING:
+        desc += terse? "melted" : " melted into a puddle";
+        break;
+
+    case KILLED_BY_BLEEDING:
+        desc += terse? "bleeding" : " bled to death";
         break;
 
     default:
