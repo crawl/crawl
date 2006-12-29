@@ -1114,6 +1114,8 @@ void new_level(void)
     else if (you.level_type == LEVEL_LABYRINTH)
     {
         cprintf("- a Labyrinth           ");
+        env.floor_colour = LIGHTGREY;
+        env.rock_colour  = BROWN;
     }
     else
     {
