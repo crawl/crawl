@@ -734,7 +734,7 @@ void list_commands(bool wizard)
             "<h>In-game Toggles:\n"
             "<w>Ctrl-A</w> : toggle Autopickup\n"
             "<w>Ctrl-V</w> : toggle auto-prayer\n"
-//            "<w>Ctrl-T</w> : toggle spell fizzle check\n"
+            " \n"
             " \n"
             " \n",
             true, true, cmdhelp_textfilter);
@@ -746,10 +746,6 @@ void list_commands(bool wizard)
 
     cols.add_formatted(
             0,
-//            "\p" 
-           // I want a page break here, but perhaps there are 
-           // less violent ways to enforce it.
-            " \n \n \n \n"
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
