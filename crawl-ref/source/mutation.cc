@@ -104,7 +104,7 @@ const char *mutation_descrip[][3] = {
      "Your digestive system is specialised to digest meat.",
      "You are carnivorous."},
 
-    {"You digest meat inefficiently.", "You digest meat inefficiently.",
+    {"You digest meat inefficiently.", "You digest meat very inefficiently.",
      "You are primarily a herbivore."},
 
     {"Your flesh is heat resistant.", "Your flesh is very heat resistant.",

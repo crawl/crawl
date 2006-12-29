@@ -650,11 +650,23 @@ void chunk_nutrition_message(int nutrition)
         mpr("That was not very filling.");
 }
 
+static int apply_herbivore_chunk_effects(int nutrition)
+{
+    int how_herbivorous = you.mutation[MUT_HERBIVOROUS];
+
+    while (how_herbivorous--)
+        nutrition = nutrition * 80 / 100;
+
+    return (nutrition);
+}
+
 static int chunk_nutrition(bool likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
+    
     if (likes_chunks || you.hunger_state < HS_SATIATED)
-        return (nutrition);
+        return (likes_chunks? nutrition
+                : apply_herbivore_chunk_effects(nutrition));
 
     const int gourmand = 
         wearing_amulet(AMU_THE_GOURMAND)? 
@@ -675,7 +687,7 @@ static int chunk_nutrition(bool likes_chunks)
                     epercent);
 #endif
 
-    return (effective_nutrition);
+    return (apply_herbivore_chunk_effects(effective_nutrition));
 }
 
 static void say_chunk_flavour(bool likes_chunks)
@@ -1082,7 +1094,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
 
     bool ur_carnivorous = (you.mutation[MUT_CARNIVOROUS] == 3);
 
-    bool ur_herbivorous = (you.mutation[MUT_HERBIVOROUS] > 1);
+    bool ur_herbivorous = (you.mutation[MUT_HERBIVOROUS] == 3);
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
