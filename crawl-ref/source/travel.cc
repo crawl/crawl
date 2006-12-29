@@ -3178,7 +3178,7 @@ void runrest::check_hp()
 {
     if (is_rest() && you.hp == you.hp_max && you.hp > hp)
     {
-        mpr("Health restored.");
+        mpr("HP restored.");
         stop();
     }
 }
