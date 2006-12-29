@@ -180,8 +180,7 @@ static bool got_curare_roll(const int item_level)
 
 static bool got_distortion_roll(const int item_level)
 {
-    return (item_level < 25? random2(600) <= item_level
-            : one_chance_in(25));
+    return (one_chance_in(25));
 }
 
 static void place_altars()
@@ -450,6 +449,24 @@ void init_rod_mp(item_def &item)
         item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
     
     item.plus  = item.plus2;
+}
+
+static bool weapon_is_visibly_special(const item_def &item)
+{
+    const int brand = get_weapon_brand(item);
+    const bool visibly_branded =
+        brand != SPWPN_NORMAL && brand != SPWPN_DISTORTION;
+
+    return (((is_random_artefact(item) || visibly_branded)
+             && !one_chance_in(10))
+            || ((item.plus != 0 || item.plus2 != 0)
+                && one_chance_in(3)
+                && brand != SPWPN_DISTORTION))
+        && item.sub_type != WPN_CLUB
+        && item.sub_type != WPN_GIANT_CLUB
+        && item.sub_type != WPN_GIANT_SPIKED_CLUB
+        && get_equip_desc(item) == 0
+        && get_equip_race(item) == 0;
 }
 
 // Returns item slot or NON_ITEM if it fails
@@ -1289,16 +1306,7 @@ int items( int allow_uniques,       // not just true-false,
             }
         }
 
-        if ((((is_random_artefact( mitm[p] ) 
-                        || get_weapon_brand( mitm[p] ) != SPWPN_NORMAL)
-                    && !one_chance_in(10))
-                || ((mitm[p].plus != 0 || mitm[p].plus2 != 0) 
-                    && one_chance_in(3)))
-            && mitm[p].sub_type != WPN_CLUB
-            && mitm[p].sub_type != WPN_GIANT_CLUB
-            && mitm[p].sub_type != WPN_GIANT_SPIKED_CLUB
-            && get_equip_desc(mitm[p]) == 0
-            && get_equip_race(mitm[p]) == 0)
+        if (weapon_is_visibly_special(mitm[p]))
         {
             set_equip_desc( mitm[p], (coinflip() ? ISFLAG_GLOWING 
                                                  : ISFLAG_RUNED) );
