@@ -2820,7 +2820,7 @@ static bool handle_scroll(struct monsters *monster)
         switch (mitm[monster->inv[MSLOT_SCROLL]].sub_type)
         {
         case SCR_TELEPORTATION:
-            if (!mons_has_ench(monster, ENCH_TP_I))
+            if (!mons_has_ench(monster, ENCH_TP_I, ENCH_TP_IV))
             {
                 if (monster->behaviour == BEH_FLEE)
                 {
@@ -2982,7 +2982,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         case WAND_TELEPORTATION:
             if (monster->hit_points <= monster->max_hit_points / 2)
             {
-                if (!mons_has_ench(monster, ENCH_TP_I) && !one_chance_in(20))
+                if (!mons_has_ench(monster, ENCH_TP_I, ENCH_TP_IV)
+                    && !one_chance_in(20))
                 {
                     beem.target_x = monster->x;
                     beem.target_y = monster->y;
