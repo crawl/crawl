@@ -690,11 +690,16 @@ void cast_sticks_to_snakes(int pow)
 
         for (i = 0; i <= max; i++)
         {
-            //jmf: perhaps also check for poison ammo?
-            if (pow > 50 || (pow > 25 && one_chance_in(3)))
+            if (pow > 50 || (pow > 25 && one_chance_in(3))
+                || (get_ammo_brand(you.inv[weapon]) == SPMSL_POISONED
+                    && random2(100) < 43))
+            {
                 mon = MONS_SNAKE;
+            }
             else
+            {
                 mon = MONS_SMALL_SNAKE;
+            }
 
             if (create_monster( mon, dur, behaviour, you.x_pos, you.y_pos, 
                                 MHITYOU, 250 ) != -1)
