@@ -1618,6 +1618,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         save_dir = field;
 #endif
     }
+    else if (key == "morgue_dir")
+    {
+        if (morgue_dir.empty())
+            morgue_dir = field;
+    }
     else if (key == "hp_warning")
     {
         hp_warning = atoi( field.c_str() );
@@ -2332,7 +2337,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                SysEnv.macro_file = next_arg;
+                Options.macro_dir = next_arg;
             nextUsed = true;
             break;
 
@@ -2340,7 +2345,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                SysEnv.morgue_dir = next_arg;
+                Options.morgue_dir = next_arg;
             nextUsed = true;
             break;
 

@@ -170,11 +170,17 @@ static int userfunc_getindex(const std::string &fname)
  */
 static std::string get_macro_file() 
 {
-    if (SysEnv.macro_file.length())
-        return (SysEnv.macro_file);
+    std::string dir =
+        !Options.macro_dir.empty()? Options.macro_dir :
+        SysEnv.crawl_dir?           SysEnv.crawl_dir : "";
     
-    std::string s = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
-    return (s + "macro.txt");
+    if (!dir.empty())
+    {
+        if (dir[dir.length() - 1] != FILE_SEPARATOR)
+            dir += FILE_SEPARATOR;
+    }
+    
+    return (dir + "macro.txt");
 }
 
 static void buf2keyseq(const char *buff, keyseq &k)

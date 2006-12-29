@@ -963,8 +963,8 @@ const char *hunger_level(void)
 static std::string morgue_directory()
 {
     std::string dir =
-        !SysEnv.morgue_dir.empty()? SysEnv.morgue_dir :
-        SysEnv.crawl_dir          ? SysEnv.crawl_dir : "";
+        !Options.morgue_dir.empty()? Options.morgue_dir :
+        SysEnv.crawl_dir           ? SysEnv.crawl_dir : "";
 
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;

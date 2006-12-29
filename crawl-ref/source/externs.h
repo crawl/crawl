@@ -715,10 +715,6 @@ struct system_environment
     bool  board_with_nail;      // Easter Egg silliness
 
     std::string scorefile;
-    std::string macro_file;     // File to read instead of macro.txt
-    std::string morgue_dir;     // Directory where character dumps and morgue
-                                // dumps are saved. Overrides crawl_dir.
-
 };
 
 extern system_environment SysEnv;
@@ -790,6 +786,9 @@ public:
     unsigned cset_override[NUM_CSET][NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
+    std::string macro_dir;      // Directory containing macro.txt
+    std::string morgue_dir;     // Directory where character dumps and morgue
+                                // dumps are saved. Overrides crawl_dir.
 
     std::string player_name;
 
