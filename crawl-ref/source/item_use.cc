@@ -1269,6 +1269,21 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
     return (element);
 }
 
+// XXX This is a bit too generous, as it lets the player determine
+// that the bolt of fire he just shot from a flaming bow is actually
+// a poison arrow. Hopefully this isn't too abusable.
+static bool determines_ammo_brand(int bow_brand, int ammo_brand)   
+{
+    if (bow_brand == SPWPN_FLAME && ammo_brand == SPMSL_FLAME)
+        return false;
+    if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_ICE)
+        return false;
+    if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
+        return false;
+
+    return true;
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If dummy_target is non-NULL, throw_it fakes a bolt and calls
@@ -1518,6 +1533,15 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         exHitBonus = lnchHitBonus > 0? random2(lnchHitBonus + 1)
                                      : -random2(-lnchHitBonus + 1);
 
+        // Identify ammo type if the information is there. Note
+        // that the bow is always type-identified because it's
+        // wielded.
+        if (determines_ammo_brand(bow_brand, ammo_brand))
+        {
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+        }
+
         // removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
         // a good source of shot in the dungeon.
@@ -1645,7 +1669,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
         {
             // [dshaligram] Branded arrows are much stronger.
-            dice_mult = dice_mult * 150 / 100;
+            dice_mult = (dice_mult * 150) / 100;
 
             pbolt.flavour = BEAM_FIRE;
             pbolt.name = "bolt of ";
@@ -1659,19 +1683,13 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
 
-            // ammo known if we can't attribute it to the bow
-            if (bow_brand != SPWPN_FLAME)
-            {
-                set_ident_flags( item, ISFLAG_KNOW_TYPE );
-                set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_TYPE );
-            }
         }
 
         if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
         {
             // [dshaligram] Branded arrows are much stronger.
-            dice_mult = dice_mult * 150 / 100;
+            dice_mult = (dice_mult * 150) / 100;
 
             pbolt.flavour = BEAM_COLD;
             pbolt.name = "bolt of ";
@@ -1684,21 +1702,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
             pbolt.type = SYM_BOLT;
             pbolt.thrower = KILL_YOU_MISSILE;
             pbolt.aux_source.clear();
-
-            // ammo known if we can't attribute it to the bow
-            if (bow_brand != SPWPN_FROST)
-            {
-                set_ident_flags( item, ISFLAG_KNOW_TYPE );
-                set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_TYPE );
-            }
-        }
-
-        // ammo known if it cancels the effect of the bow
-        if ((bow_brand == SPWPN_FLAME && ammo_brand == SPMSL_ICE)
-            || (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_FLAME))
-        {
-            set_ident_flags( item, ISFLAG_KNOW_TYPE );
-            set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_TYPE );
         }
 
         /* the chief advantage here is the extra damage this does

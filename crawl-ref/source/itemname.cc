@@ -2344,18 +2344,23 @@ bool is_interesting_item( const item_def& item ) {
     return false;
 }
 
-bool fully_identified( const item_def& item ) {
-    long flagset = ISFLAG_IDENT_MASK;
-    switch ( item.base_type ) {
+// Returns the mask of interesting identify bits for this item
+// (e.g., scrolls don't have know-cursedness.)
+unsigned long full_ident_mask( const item_def& item )
+{
+    unsigned long flagset = ISFLAG_IDENT_MASK;
+    switch ( item.base_type )
+    {
+    case OBJ_FOOD:
+        flagset = 0;
+        break;
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
     case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
+    case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_FOOD:
-        flagset = 0;
         break;
     case OBJ_WANDS:
         flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
@@ -2365,6 +2370,11 @@ bool fully_identified( const item_def& item ) {
         if ( ring_has_pluses(item) )
             flagset |= ISFLAG_KNOW_PLUSES;
         break;
+    case OBJ_MISSILES:
+        flagset = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
+        break;
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
     default:
         break;
     }
@@ -2372,6 +2382,10 @@ bool fully_identified( const item_def& item ) {
          is_fixed_artefact(item) ||
          is_unrandom_artefact(item) )
         flagset |= ISFLAG_KNOW_PROPERTIES;
-    
-    return item_ident( item, flagset );
+    return flagset;
+}
+
+bool fully_identified( const item_def& item )
+{
+    return item_ident(item, full_ident_mask(item));
 }

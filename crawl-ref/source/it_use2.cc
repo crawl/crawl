@@ -387,7 +387,7 @@ void unwield_item(char unw, bool showMsgs)
 
             case SPWPN_DISTORTION:
                 // Removing the translocations skill reduction of effect,
-                // it might seem sensible, but this brand is supposted
+                // it might seem sensible, but this brand is supposed
                 // to be dangerous because it does large bonus damage,
                 // as well as free teleport other side effects, and
                 // even with the miscast effects you can rely on the

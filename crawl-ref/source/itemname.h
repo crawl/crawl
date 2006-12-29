@@ -79,6 +79,7 @@ bool item_cursed( const item_def &item );
 bool item_known_cursed( const item_def &item );
 bool item_known_uncursed( const item_def &item );
 bool fully_identified( const item_def &item );
+unsigned long full_ident_mask( const item_def& item );
 
 bool item_type_known( const item_def &item );
 

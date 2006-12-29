@@ -1327,34 +1327,24 @@ bool items_stack( const item_def &item1, const item_def &item2 )
         }
     }
 
-    // Check the flags, food/scrolls/potions don't care about the item's
-    // ident status (scrolls and potions are known by identifying any
-    // one of them, the individual status might not be the same).
-    if (item1.base_type == OBJ_FOOD
-            || item1.base_type == OBJ_SCROLLS
-            || item1.base_type == OBJ_POTIONS)
-    {
-        if ((item1.flags & ~ISFLAG_IDENT_MASK) 
-                != (item2.flags & ~ISFLAG_IDENT_MASK))
-        {
-            return (false);
-        }
+    // Check the ID flags
+    if ( (item1.flags & full_ident_mask(item1)) !=
+         (item2.flags & full_ident_mask(item2)) )
+        return false;
 
-        // Thanks to mummy cursing, we can have potions of decay 
-        // that don't look alike... so we don't stack potions 
-        // if either isn't identified and they look different.  -- bwr
-        if (item1.base_type == OBJ_POTIONS 
-            && item1.special != item2.special
-            && (!item_ident( item1, ISFLAG_KNOW_TYPE )
-                || !item_ident( item2, ISFLAG_KNOW_TYPE )))
-        {
-            return (false);
-        }
-    }
-    else if (item1.flags != item2.flags)
-    {
-        return (false); 
-    }
+    // Check the non-ID flags
+    if ((item1.flags & (~ISFLAG_IDENT_MASK)) !=
+        (item2.flags & (~ISFLAG_IDENT_MASK)))
+        return false;
+
+
+    // Thanks to mummy cursing, we can have potions of decay 
+    // that don't look alike... so we don't stack potions 
+    // if either isn't identified and they look different.  -- bwr
+    if (item1.base_type == OBJ_POTIONS && item1.special != item2.special &&
+        (!item_ident(item1, ISFLAG_KNOW_TYPE) ||
+         !item_ident(item2, ISFLAG_KNOW_TYPE )))
+        return false;
 
     return (true);
 }
