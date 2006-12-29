@@ -202,7 +202,7 @@ void stop_delay( void )
         // XXX: Large problems with object destruction here... food can
         // be from in the inventory or on the ground and these are
         // still handled quite differently.  Eventually we would like 
-        // this to be stoppable, with partial food items implimented. -- bwr
+        // this to be stoppable, with partial food items implemented. -- bwr
         break; 
 
     case DELAY_ARMOUR_ON:
@@ -218,7 +218,6 @@ void stop_delay( void )
         // and would have to have a prompt... this works just fine. -- bwr
         break;
 
-    case DELAY_AUTOPICKUP:        // one turn... too much trouble
     case DELAY_WEAPON_SWAP:       // one turn... too much trouble 
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
@@ -385,16 +384,6 @@ static void finish_delay(const delay_queue_item &delay)
     char  str_pass[ ITEMNAME_SIZE ];
     switch (delay.type)
     {
-    case DELAY_AUTOPICKUP:
-    {
-        const int estop =
-            you.running == RMODE_EXPLORE_GREEDY?
-            ES_GREEDY_PICKUP : ES_PICKUP;
-        if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
-            stop_delay();
-        break;
-    }
-
     case DELAY_WEAPON_SWAP:
         weapon_switch( delay.parm1 );
         break;
@@ -775,7 +764,8 @@ static void handle_run_delays(const delay_queue_item &delay)
         return;
     }
 
-    ASSERT( !you.turn_is_over );
+    if ( you.turn_is_over )
+        return;
 
     command_type cmd = CMD_NO_CMD;
     switch (delay.type)
@@ -1014,7 +1004,7 @@ activity_interrupt_type get_activity_interrupt(const std::string &name)
 static const char *delay_names[] =
 {
     "not_delayed", "eat", "armour_on", "armour_off", "jewellery_on",
-    "memorise", "butcher", "autopickup", "weapon_swap", "passwall",
+    "memorise", "butcher", "weapon_swap", "passwall",
     "drop_item", "multidrop", "ascending_stairs", "descending_stairs", "run",
     "rest", "travel", "macro", "interruptible", "uninterruptible",
 };

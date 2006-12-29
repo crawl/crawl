@@ -60,12 +60,13 @@
 #include "stuff.h"
 #include "stash.h"
 
-static void autopickup(void);
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
                                  int obj, bool force_squelch = false );
 static void autoinscribe_item( item_def& item );
-static void autoinscribe_items( void );
+static void autoinscribe_items();
+
+static bool will_autopickup = false;
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
@@ -733,6 +734,11 @@ static void item_list_on_square( std::vector<const item_def*>& items,
     }
 }
 
+bool need_to_autopickup()
+{
+    return will_autopickup;
+}
+
 /*
  * Takes keyin as an argument because it will only display a long list of items
  * if ; is pressed.
@@ -754,7 +760,7 @@ void item_check(char keyin)
     }
     
     autoinscribe_items();
-    autopickup();
+    will_autopickup = true;
 
     origin_set(you.x_pos, you.y_pos);
 
@@ -1522,7 +1528,6 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.y      = -1;
     item.link   = freeslot;
 
-    /*** HP CHANGE: do autoinscribe ***/
     autoinscribe_item( item );
     
 
@@ -2934,19 +2939,20 @@ bool can_autopickup()
     return (true);
 }
     
-static void autopickup(void)
+void autopickup()
 {
     //David Loewenstern 6/99
     int result, o, next;
     bool did_pickup = false;
     bool tried_pickup = false;
 
+    will_autopickup = false;
+
     if (!can_autopickup())
         return;
     
     o = igrd[you.x_pos][you.y_pos];
 
-    int unthrown = 0;
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
@@ -2971,9 +2977,6 @@ static void autopickup(void)
                     num_to_take = num_can_take;
             }
 
-            if (!(mitm[o].flags & ISFLAG_THROWN))
-                unthrown++;
-            
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             result = move_item_to_player(o, num_to_take);
@@ -2997,13 +3000,14 @@ static void autopickup(void)
         o = next;
     }
 
-    // move_item_to_player should leave things linked. -- bwr
-    // relink_cell(you.x_pos, you.y_pos);
-
     if (did_pickup)
     {
         you.turn_is_over = true;
-        start_delay( DELAY_AUTOPICKUP, 1, unthrown );
+        const int estop =
+            you.running == RMODE_EXPLORE_GREEDY?
+            ES_GREEDY_PICKUP : ES_PICKUP;
+        if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
+            stop_delay();
     }
     // Greedy explore has no good way to deal with an item that we can't
     // pick up, so the only thing to do is to stop.

@@ -838,6 +838,9 @@ static void input() {
     
     middle_input();
 
+    if ( need_to_autopickup() )
+        autopickup();
+
     handle_delay();
 
     gotoxy(18,9);

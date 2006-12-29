@@ -145,4 +145,7 @@ void origin_set_inventory( void (*oset)(item_def &item) );
 bool item_needs_autopickup(const item_def &);
 bool can_autopickup();
 
+bool need_to_autopickup();
+void autopickup();
+
 #endif
