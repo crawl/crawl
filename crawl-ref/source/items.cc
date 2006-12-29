@@ -2967,14 +2967,20 @@ void autopickup()
                     (carrying_capacity(you.burden_state) - you.burden) /
                     item_mass(mitm[o]);
 
+                if ( num_can_take < num_to_take )
+                {
+                    if (!tried_pickup)
+                        mpr("You can't pick everything up without burdening "
+                            "yourself.");
+                    tried_pickup = true;
+                    num_to_take = num_can_take;
+                }
+
                 if ( num_can_take == 0 )
                 {
                     o = next;
                     continue;
                 }
-
-                if ( num_can_take < num_to_take )
-                    num_to_take = num_can_take;
             }
 
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
