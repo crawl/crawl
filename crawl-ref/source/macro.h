@@ -24,7 +24,7 @@
 #endif
 
 enum KeymapContext {
-    KC_DEFAULT,         // For no-arg getchm().
+    KC_DEFAULT,         // For no-arg getchm(), must be zero.
     KC_LEVELMAP,        // When in the 'X' level map
     KC_TARGETING,       // Only during 'x' and other targeting modes
 

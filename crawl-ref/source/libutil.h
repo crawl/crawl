@@ -19,6 +19,11 @@
 #include <string>
 #include <vector>
 
+// Converts a key to a direction key, converting keypad and other sequences
+// to vi key sequences (shifted/control key directions are also handled). Non
+// direction keys (hopefully) pass through unmangled.
+int unmangle_direction_keys(int keyin, int keymap = 0);
+
 void lowercase(std::string &s);
 void uppercase(std::string &s);
 

@@ -2117,25 +2117,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         redraw_map = true;
         gotoxy(curs_x, curs_y);
 
-        getty = getchm(KC_LEVELMAP);
-        if (getty == 0)
-        {
-            getty = getchm(KC_LEVELMAP);
-            // [dshaligram] DOS madness.
-            getty = dos_direction_unmunge(getty);
-        }
-
-#if defined(WIN32CONSOLE) || defined(DOS)
-        // Translate shifted numpad to shifted vi keys. Yes,
-        // this is horribly hacky.
-        {
-            static int win_keypad[] = { 'B', 'J', 'N', 
-                                        'H', '5', 'L',
-                                        'Y', 'K', 'U' };
-            if (getty >= '1' && getty <= '9')
-                getty = win_keypad[ getty - '1' ];
-        }
-#endif
+        getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP);
 
         switch (getty)
         {

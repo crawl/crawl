@@ -166,7 +166,6 @@ static void input();
 static void middle_input();
 static void world_reacts();
 static command_type get_next_cmd();
-typedef int keycode_type;
 static keycode_type get_next_keycode();
 static command_type keycode_to_command( keycode_type key );
 
@@ -2451,72 +2450,15 @@ command_type keycode_to_command( keycode_type key ) {
     }
 }
 
-#ifdef UNIX
-static keycode_type numpad2vi(keycode_type key)
-{
-    if (key >= '1' && key <= '9')
-    {
-        const char *vikeys = "bjnh.lyku";
-        return keycode_type(vikeys[key - '1']);
-    }
-    return (key);
-}
-#endif
-
 keycode_type get_next_keycode()
 {
-
     keycode_type keyin;
 
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
-    keyin = getch_with_command_macros();
-
-#ifdef UNIX
-    // Kludging running and opening as two character sequences
-    // for Unix systems.  This is an easy way out... all the
-    // player has to do is find a termcap and numlock setting
-    // that will get curses the numbers from the keypad.  This
-    // will hopefully be easy.
-
-    /* can we say yuck? -- haranp */
-    if (keyin == '*')
-    {
-        keyin = getch();
-        // return control-key
-        keyin = CONTROL(toupper(numpad2vi(keyin)));
-    }
-    else if (keyin == '/')
-    {
-        keyin = getch();
-        // return shift-key
-        keyin = toupper(numpad2vi(keyin));
-    }
-#else
-    // Old DOS keypad support
-    if (keyin == 0)
-    {
-        /* FIXME haranp - hackiness */
-        const char DOSidiocy[10]     = { "OPQKSMGHI" };
-        const char DOSunidiocy[10]   = { "bjnh.lyku" };
-        const int DOScontrolidiocy[9] = {
-            117, 145, 118, 115, 76, 116, 119, 141, 132
-        };
-        keyin = getch();
-        for (int j = 0; j < 9; ++j ) {
-            if (keyin == DOSidiocy[j]) {
-                keyin = DOSunidiocy[j];
-                break;
-            }
-            if (keyin == DOScontrolidiocy[j]) {
-                keyin = CONTROL(toupper(DOSunidiocy[j]));
-                break;
-            }
-        }
-    }
-#endif
+    keyin = unmangle_direction_keys(getch_with_command_macros());
     mesclr();
 
-    return keyin;
+    return (keyin);
 }
 
 static void middle_input() {

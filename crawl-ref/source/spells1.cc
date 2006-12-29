@@ -72,6 +72,12 @@ int blink(void)
 
             if (!beam.isValid)
             {
+                if (!yesno("Are you sure you want to cancel this blink?",
+                           false, 'n'))
+                {
+                    mesclr();
+                    continue;
+                }
                 canned_msg(MSG_OK);
                 return (-1);         // early return {dlb}
             }

@@ -78,8 +78,6 @@ static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
 // [dshaligram] Removed . and 5 from dirchars so it's easier to
 // special case them.
 static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
-static const char DOSidiocy[10]     = { "OPQKSMGHI" };
-static const char DOSunidiocy[10]   = { "bjnh.lyku" };
 static const char *aim_prompt = "Aim (move cursor or -/+/=, change mode with CTRL-F, select with . or >)";
 
 static void describe_feature(int mx, int my, bool oos);
@@ -100,10 +98,9 @@ static bool is_mapped(int x, int y)
     return (is_player_mapped(x, y));
 }
 
-int dos_direction_unmunge(int doskey)
+static int read_direction_key()
 {
-    const char *pos = strchr(DOSidiocy, doskey);
-    return (pos? DOSunidiocy[ pos - DOSidiocy ] : doskey);
+    return unmangle_direction_keys(getchm(KC_TARGETING), KC_TARGETING);
 }
 
 //---------------------------------------------------------------
@@ -139,8 +136,8 @@ int dos_direction_unmunge(int doskey)
 
 void direction2( struct dist &moves, int restrict, int mode )
 {
-    bool dirChosen = false;
-    bool targChosen = false;
+    bool dir_chosen = false;
+    bool targ_chosen = false;
     int dir = 0;
 
     // init
@@ -155,114 +152,100 @@ void direction2( struct dist &moves, int restrict, int mode )
     // nonetheless!  --GDL
     gotoxy( VIEW_CX + 1, VIEW_CY );
 
-    int keyin = getchm(KC_TARGETING);
+    int keyin = read_direction_key();
 
-    if (keyin == 0)             // DOS idiocy (emulated by win32 console)
+    if (keyin == 0)
+        return;
+
+    if (strchr( dirchars, keyin ) != NULL)
     {
-        keyin = getchm(KC_TARGETING);        // grrr.
-        if (keyin == '*')
-        {
-            targChosen = true;
-            dir = 0;
-        }
-        else
-        {
-            if (strchr(DOSidiocy, keyin) == NULL)
-                return;
-            dirChosen = true;
-            dir = (int)(strchr(DOSidiocy, keyin) - DOSidiocy);
-        }
+        dir_chosen = true;
+        dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
+    }
+    else if (strchr( dirchars, tolower(keyin) ) != NULL)
+    {
+        dir_chosen = true;
+        dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
     }
     else
     {
-        if (strchr( dirchars, keyin ) != NULL)
+        switch (keyin)
         {
-            dirChosen = true;
-            dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
-        }
-        else
-        {
-            switch (keyin)
-            {
-                case CONTROL('F'):
-                    mode = (mode + 1) % TARG_NUM_MODES;
+        case CONTROL('F'):
+            mode = (mode + 1) % TARG_NUM_MODES;
+            snprintf( info, INFO_SIZE, "Targeting mode is now: %s", 
+                      (mode == TARG_ANY)   ? "any" :
+                      (mode == TARG_ENEMY) ? "enemies" 
+                      : "friends" );
+            mpr( info );
+            targ_chosen = true;
+            dir = 0;
+            break;
+            
+        case '-':
+            targ_chosen = true;
+            dir = -1;
+            break;
+            
+        case '*':
+            targ_chosen = true;
+            dir = 0;
+            break;
+            
+        case ';':
+            targ_chosen = true;
+            dir        = -3;
+            break;
+
+        case '\'':
+            targ_chosen = true;
+            dir        = -2;
+            break;
                     
-                    snprintf( info, INFO_SIZE, "Targeting mode is now: %s", 
-                              (mode == TARG_ANY)   ? "any" :
-                              (mode == TARG_ENEMY) ? "enemies" 
-                                                   : "friends" );
+        case '+':
+        case '=':
+            targ_chosen = true;
+            dir = 1;
+            break;
 
-                    mpr( info );
+        case 't':
+        case 'p':
+        case 'f':
+            targ_chosen = true;
+            dir = 2;
+            break;
 
-                    targChosen = true;
-                    dir = 0;
-                    break;
+        case '.':
+        case '5':
+            dir_chosen = true;
+            dir = 4;
+            break;
 
-                case '-':
-                    targChosen = true;
-                    dir = -1;
-                    break;
+        case ESCAPE:
+            moves.isCancel = true;
+            return;
 
-                case '*':
-                    targChosen = true;
-                    dir = 0;
-                    break;
-
-                case ';':
-                    targChosen = true;
-                    dir        = -3;
-                    break;
-
-                case '\'':
-                    targChosen = true;
-                    dir        = -2;
-                    break;
-                    
-                case '+':
-                case '=':
-                    targChosen = true;
-                    dir = 1;
-                    break;
-
-                case 't':
-                case 'p':
-                case 'f':
-                    targChosen = true;
-                    dir = 2;
-                    break;
-
-                case '.':
-                case '5':
-                    dirChosen = true;
-                    dir = 4;
-                    break;
-
-                case ESCAPE:
-                    moves.isCancel = true;
-                    return;
-
-                default:
-                    break;
-            }
+        default:
+            break;
         }
     }
 
     // at this point, we know exactly the input - validate
-    if (!(targChosen || dirChosen) || (targChosen && restrict == DIR_DIR))
+    if (!(targ_chosen || dir_chosen) || (targ_chosen && restrict == DIR_DIR))
     {
         mpr("What an unusual direction.");
         return;
     }
 
     // special case: they typed a dir key, but they're in target-only mode
-    if (dirChosen && restrict == DIR_TARGET)
+    if (dir_chosen && restrict == DIR_TARGET)
     {
         mpr(aim_prompt);
-        look_around( moves, false, dir, mode );
+        look_around( moves, false, keyin, mode );
         return;
     }
 
-    if (targChosen)
+    if (targ_chosen)
     {
         if (dir < 2)
         {
@@ -401,8 +384,9 @@ static void describe_oos_square(int x, int y)
 void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 {
     int keyin = 0;
-    bool dirChosen = false;
-    bool targChosen = false;
+    bool dir_chosen = false;
+    bool targ_chosen = false;
+    bool shifted_direction = true;
     int dir = 0;
     int cx = VIEW_CX;
     int cy = VIEW_CY;
@@ -419,7 +403,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
 
     // setup initial keystroke
     if (first_move >= 0)
-        keyin = (int)'1' + first_move;
+        keyin = first_move;
     if (moves.prev_target == -1)
         keyin = '-';
     if (moves.prev_target == 1)
@@ -434,8 +418,9 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
     // loop until some exit criteria reached
     while(true)
     {
-        dirChosen = false;
-        targChosen = false;
+        dir_chosen = false;
+        targ_chosen = false;
+        shifted_direction = false;
         newcx = cx;
         newcy = cy;
 
@@ -443,7 +428,7 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         gotoxy(cx+1, cy);
 
         if (keyin == 0)
-            keyin = getchm(KC_TARGETING);
+            keyin = unmangle_direction_keys(getchm(KC_TARGETING), KC_TARGETING);
 
         // [dshaligram] Classic Crawl behaviour was to use space to select
         // targets when targeting. The patch changed the meaning of space
@@ -458,237 +443,225 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         if (!justLooking && keyin == '>')
             keyin = 'X';
 
-        // DOS idiocy
-        if (keyin == 0)
+        if (strchr(dirchars, keyin) != NULL)
         {
-            // get the extended key
-            keyin = getchm(KC_TARGETING);
-
-            // look for CR - change to '5' to indicate selection
-            if (keyin == 13)
-                keyin = 'S';
-
-            if (strchr(DOSidiocy, keyin) == NULL)
-                break;
-            dirChosen = true;
-            dir = (int)(strchr(DOSidiocy, keyin) - DOSidiocy);
+            dir_chosen = true;
+            dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
+        }
+        else if (strchr(dirchars, tolower(keyin)) != NULL)
+        {
+            dir_chosen = true;
+            dir = (int)(strchr(dirchars, tolower(keyin)) - dirchars) / 2;
+            shifted_direction = true;
         }
         else
         {
-            if (strchr(dirchars, keyin) != NULL)
+            // handle non-directional keys
+            switch (keyin)
             {
-                dirChosen = true;
-                dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
-            }
-            else
-            {
-                // handle non-directional keys
-                switch (keyin)
-                {
 #ifdef WIZARD
-                    case 'C':
-                        targChosen = true;
-                        mx = you.x_pos + cx - VIEW_CX;
-                        my = you.y_pos + cy - VIEW_CY;
-                        if (!in_bounds(mx, my))
-                            break;
-                        if (mgrd[mx][my] != NON_MONSTER)
-                        {
-                            mprf("%s won't like that.",
-                                 ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_THE));
-                            break;
-                        }
-                        create_spec_monster_name(mx, my);
-                        viewwindow(true, false);
-                        break;
+            case 'C':
+                targ_chosen = true;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
+                if (!in_bounds(mx, my))
+                    break;
+                if (mgrd[mx][my] != NON_MONSTER)
+                {
+                    mprf("%s won't like that.",
+                         ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_THE));
+                    break;
+                }
+                create_spec_monster_name(mx, my);
+                viewwindow(true, false);
+                break;
                         
-                    case 'D':
-                        targChosen = true;
-                        mx = you.x_pos + cx - VIEW_CX;
-                        my = you.y_pos + cy - VIEW_CY;
-                        if (!in_bounds(mx, my))
-                            break;
-                        mid = mgrd[mx][my];
+            case 'D':
+                targ_chosen = true;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
+                if (!in_bounds(mx, my))
+                    break;
+                mid = mgrd[mx][my];
 
-                        if (mid == NON_MONSTER)
-                            break;
-                        monster_die(&menv[mid], KILL_RESET, 0);
-                        viewwindow(true, false);
-                        break;
+                if (mid == NON_MONSTER)
+                    break;
+                monster_die(&menv[mid], KILL_RESET, 0);
+                viewwindow(true, false);
+                break;
                         
-                    case 'F':
-                        targChosen = true;
-                        mx = you.x_pos + cx - VIEW_CX;
-                        my = you.y_pos + cy - VIEW_CY;
-                        if (!in_bounds(mx, my))
-                            break;
-                        mid = mgrd[mx][my];
+            case 'F':
+                targ_chosen = true;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
+                if (!in_bounds(mx, my))
+                    break;
+                mid = mgrd[mx][my];
 
-                        if (mid == NON_MONSTER)
-                            break;
+                if (mid == NON_MONSTER)
+                    break;
 
-                        mprf("Changing attitude of %s\n",
-                                ptr_monam(&menv[mid], DESC_PLAIN));
-                        menv[mid].attitude =
-                            menv[mid].attitude == ATT_HOSTILE?
-                                ATT_FRIENDLY
-                              : ATT_HOSTILE;
+                mprf("Changing attitude of %s\n",
+                     ptr_monam(&menv[mid], DESC_PLAIN));
+                menv[mid].attitude =
+                    menv[mid].attitude == ATT_HOSTILE?
+                    ATT_FRIENDLY
+                    : ATT_HOSTILE;
 
-                        describe_monsters( menv[ mid ].type, mid );
-                        redraw_screen();
-                        mesclr( true );
-                        // describe the cell again.
-                        describe_cell(view2gridX(cx), view2gridY(cy));
-                        break;
+                describe_monsters( menv[ mid ].type, mid );
+                redraw_screen();
+                mesclr( true );
+                // describe the cell again.
+                describe_cell(view2gridX(cx), view2gridY(cy));
+                break;
 #endif
 
-                    case CONTROL('F'):
-                        mode = (mode + 1) % TARG_NUM_MODES;
+            case CONTROL('F'):
+                mode = (mode + 1) % TARG_NUM_MODES;
                         
-                        snprintf( info, INFO_SIZE, "Targeting mode is now: %s",
-                                  (mode == TARG_ANY)   ? "any" :
-                                  (mode == TARG_ENEMY) ? "enemies" 
-                                                       : "friends" );
+            snprintf( info, INFO_SIZE, "Targeting mode is now: %s",
+                      (mode == TARG_ANY)   ? "any" :
+                      (mode == TARG_ENEMY) ? "enemies" 
+                      : "friends" );
 
-                        mpr( info );
-                        targChosen = true;
-                        break;
+            mpr( info );
+            targ_chosen = true;
+            break;
 
-                    case '^':
-                    case '\t':
-                    case '\\':
-                    case '_':
-                    case '<':
-                    case '>':
-                    {
-                        if (find_square( cx, cy, objfind_pos, 1,
-                                     find_feature, keyin, true,
-                                     Options.target_los_first
-                                        ? LOS_FLIPVH : LOS_ANY))
-                        {
-                            newcx = objfind_pos[0];
-                            newcy = objfind_pos[1];
-                        }
-                        else
-                            flush_input_buffer( FLUSH_ON_FAILURE );
-                        targChosen = true;
-                        break;
-                    }
-                    case ';':
-                    case '/':
-                    case '\'':
-                    case '*':
-                        {
-                            dir = keyin == ';' || keyin == '/'? -1 : 1;
-                            if (find_square( cx, cy, objfind_pos, dir,
-                                     find_object, 0, true,
-                                     Options.target_los_first
-                                        ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                        : LOS_ANY))
+            case '^':
+            case '\t':
+            case '\\':
+            case '_':
+            case '<':
+            case '>':
+            {
+                if (find_square( cx, cy, objfind_pos, 1,
+                                 find_feature, keyin, true,
+                                 Options.target_los_first
+                                 ? LOS_FLIPVH : LOS_ANY))
+                {
+                    newcx = objfind_pos[0];
+                    newcy = objfind_pos[1];
+                }
+                else
+                    flush_input_buffer( FLUSH_ON_FAILURE );
+                targ_chosen = true;
+                break;
+            }
+            case ';':
+            case '/':
+            case '\'':
+            case '*':
+            {
+                dir = keyin == ';' || keyin == '/'? -1 : 1;
+                if (find_square( cx, cy, objfind_pos, dir,
+                                 find_object, 0, true,
+                                 Options.target_los_first
+                                 ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
+                                 : LOS_ANY))
 
-                            {
-                                newcx = objfind_pos[0];
-                                newcy = objfind_pos[1];
-                            }
-                            else
-                                flush_input_buffer( FLUSH_ON_FAILURE );
-                            targChosen = true;
-                            break;
-                        }
+                {
+                    newcx = objfind_pos[0];
+                    newcy = objfind_pos[1];
+                }
+                else
+                    flush_input_buffer( FLUSH_ON_FAILURE );
+                targ_chosen = true;
+                break;
+            }
 
-                    case '-':
-                    case '+':
-                    case '=':
-                        {
-                            dir = keyin == '-'? -1 : 1;
-                            if (find_square( cx, cy, monsfind_pos, dir, 
-                                     find_monster, mode, Options.target_wrap ))
-                            {
-                                newcx = monsfind_pos[0];
-                                newcy = monsfind_pos[1];
-                            }
-                            else
-                                flush_input_buffer( FLUSH_ON_FAILURE );
-                            targChosen = true;
-                            break;
-                        }
+            case '-':
+            case '+':
+            case '=':
+            {
+                dir = keyin == '-'? -1 : 1;
+                if (find_square( cx, cy, monsfind_pos, dir, 
+                                 find_monster, mode, Options.target_wrap ))
+                {
+                    newcx = monsfind_pos[0];
+                    newcy = monsfind_pos[1];
+                }
+                else
+                    flush_input_buffer( FLUSH_ON_FAILURE );
+                targ_chosen = true;
+                break;
+            }
 
-                    case 't':
-                    case 'p':
-                        moves.prev_target = -1;
-                        break;
+            case 't':
+            case 'p':
+                moves.prev_target = -1;
+                break;
 
-                    case '?':
-                        targChosen = true;
-                        mx = you.x_pos + cx - VIEW_CX;
-                        my = you.y_pos + cy - VIEW_CY;
-                        if (!in_bounds(mx, my))
-                            break;
-                        mid = mgrd[mx][my];
+            case '?':
+                targ_chosen = true;
+                mx = you.x_pos + cx - VIEW_CX;
+                my = you.y_pos + cy - VIEW_CY;
+                if (!in_bounds(mx, my))
+                    break;
+                mid = mgrd[mx][my];
 
-                        if (mid == NON_MONSTER)
-                            break;
+                if (mid == NON_MONSTER)
+                    break;
 
 #if (!DEBUG_DIAGNOSTICS)
-                        if (!player_monster_visible( &menv[mid] ))
-                            break;
+                if (!player_monster_visible( &menv[mid] ))
+                    break;
 #endif
 
-                        describe_monsters( menv[ mid ].type, mid );
-                        redraw_screen();
-                        mesclr( true );
-                        // describe the cell again.
-                        describe_cell(view2gridX(cx), view2gridY(cy));
-                        break;
+                describe_monsters( menv[ mid ].type, mid );
+                redraw_screen();
+                mesclr( true );
+                // describe the cell again.
+                describe_cell(view2gridX(cx), view2gridY(cy));
+                break;
 
-                    case '\r':
-                    case '\n':
-                    case '.':
-                    case '5':
-                    case 'X':
-                        // If we're in look-around mode, and the cursor is on
-                        // the character and there's a valid travel target 
-                        // within the viewport, jump to that target.
-                        if (justLooking && cx == VIEW_CX && cy == VIEW_CY)
+            case '\r':
+            case '\n':
+            case '.':
+            case '5':
+            case 'X':
+                // If we're in look-around mode, and the cursor is on
+                // the character and there's a valid travel target 
+                // within the viewport, jump to that target.
+                if (justLooking && cx == VIEW_CX && cy == VIEW_CY)
+                {
+                    if (you.travel_x > 0 && you.travel_y > 0)
+                    {
+                        int nx = grid2viewX(you.travel_x);
+                        int ny = grid2viewY(you.travel_y);
+                        if (in_viewport_bounds(nx, ny))
                         {
-                            if (you.travel_x > 0 && you.travel_y > 0)
-                            {
-                                int nx = grid2viewX(you.travel_x);
-                                int ny = grid2viewY(you.travel_y);
-                                if (in_viewport_bounds(nx, ny))
-                                {
-                                    newcx = nx;
-                                    newcy = ny;
-                                    targChosen = true;
-                                }
-                            }
+                            newcx = nx;
+                            newcy = ny;
+                            targ_chosen = true;
                         }
-                        else
-                        {
-                            dirChosen = true;
-                            dir = keyin == 'X'? -1 : 4;
-                        }
-                        break;
-
-                    case ' ':
-                    case ESCAPE:
-                        moves.isCancel = true;
-                        mesclr( true );
-                        return;
-
-                    default:
-                        break;
+                    }
                 }
+                else
+                {
+                    dir_chosen = true;
+                    dir = keyin == 'X'? -1 : 4;
+                }
+                break;
+
+            case ' ':
+            case ESCAPE:
+                moves.isCancel = true;
+                mesclr( true );
+                return;
+
+            default:
+                break;
             }
         }
 
         // now we have parsed the input character completely. Reset & Evaluate:
         keyin = 0;
-        if (!targChosen && !dirChosen)
+        if (!targ_chosen && !dir_chosen)
             break;
 
         // check for SELECTION
-        if (dirChosen && (dir == 4 || dir == -1))
+        if (dir_chosen && (dir == 4 || dir == -1))
         {
             // [dshaligram] We no longer vet the square coordinates if
             // we're justLooking. By not vetting the coordinates, we make 'x'
@@ -698,7 +671,6 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
                 // RULE: cannot target what you cannot see
                 if (!in_vlos(cx, cy))
                 {
-                    // if (!justLooking)
                     mpr("Sorry, you can't target what you can't see.");
                     return;
                 }
@@ -731,10 +703,17 @@ void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
         }
 
         // check for MOVE
-        if (dirChosen)
+        if (dir_chosen)
         {
-            newcx = cx + xcomp[dir];
-            newcy = cy + ycomp[dir];
+            int xi = xcomp[dir], yi = ycomp[dir];
+            if (shifted_direction)
+            {
+                // TODO: Add .crawlrc option for cursor step
+                xi *= 3;
+                yi *= 3;
+            }
+            newcx = cx + xi;
+            newcy = cy + yi;
         }
 
         // bounds check for newcx, newcy

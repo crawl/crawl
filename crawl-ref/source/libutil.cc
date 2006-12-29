@@ -16,6 +16,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "externs.h"
+#include "macro.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
@@ -43,6 +44,68 @@
     #include <sys/types.h>
     #include <regex.h>
 #endif
+
+#ifdef UNIX
+static keycode_type numpad2vi(keycode_type key)
+{
+    if (key >= '1' && key <= '9')
+    {
+        const char *vikeys = "bjnh.lyku";
+        return keycode_type(vikeys[key - '1']);
+    }
+    return (key);
+}
+#endif
+
+int unmangle_direction_keys(int keyin, int km)
+{
+    const KeymapContext keymap = static_cast<KeymapContext>(km);
+#ifdef UNIX
+    // Kludging running and opening as two character sequences
+    // for Unix systems.  This is an easy way out... all the
+    // player has to do is find a termcap and numlock setting
+    // that will get curses the numbers from the keypad.  This
+    // will hopefully be easy.
+
+    /* can we say yuck? -- haranp */
+    if (keyin == '*')
+    {
+        keyin = getchm(keymap);
+        // return control-key
+        keyin = CONTROL(toupper(numpad2vi(keyin)));
+    }
+    else if (keyin == '/')
+    {
+        keyin = getchm(keymap);
+        // return shift-key
+        keyin = toupper(numpad2vi(keyin));
+    }
+#else
+    // Old DOS keypad support
+    if (keyin == 0)
+    {
+        /* FIXME haranp - hackiness */
+        const char DOSidiocy[10]     = { "OPQKSMGHI" };
+        const char DOSunidiocy[10]   = { "bjnh.lyku" };
+        const int DOScontrolidiocy[9] = {
+            117, 145, 118, 115, 76, 116, 119, 141, 132
+        };
+        keyin = getchm(keymap);
+        for (int j = 0; j < 9; ++j ) {
+            if (keyin == DOSidiocy[j]) {
+                keyin = DOSunidiocy[j];
+                break;
+            }
+            if (keyin == DOScontrolidiocy[j]) {
+                keyin = CONTROL(toupper(DOSunidiocy[j]));
+                break;
+            }
+        }
+    }
+#endif
+
+    return (keyin);
+}
 
 // Should return true if the filename contains nothing that
 // the shell can do damage with.
