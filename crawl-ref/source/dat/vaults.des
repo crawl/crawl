@@ -387,7 +387,7 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
-# Mini-octagon
+# Circular mockup
 
 NAME: david_entry_006
 TAGS: entry no_monster_gen
@@ -395,9 +395,9 @@ ORIENT: float
 
 MAP
 ccccccccccccccccccccc
-ccccc.....[.....ccccc
-cccc.............cccc
-ccc.....T...T.....ccc
+cccccc....[....cccccc
+ccc...............ccc
+cc......T...T......cc
 cc...T.........T...cc
 c.........w.........c
 c...T...........T...c
@@ -405,9 +405,9 @@ c{.....w.....w......@
 c...T...........T...c
 c.........w.........c
 cc...T.........T...cc
-ccc.....T...T.....ccc
-cccc.............cccc
-ccccc.....(.....ccccc
+cc......T...T......cc
+ccc...............ccc
+cccccc....(....cccccc
 ccccccccccccccccccccc
 ENDMAP
 
@@ -495,6 +495,35 @@ c..cc.c.c...cc...ccc...cc...T....ccc...c
 cc..cc.cc.cc....c....c...c.............c
 c(.c..c.cc...c......c..................c
 cccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# twelve chambers mockup
+
+NAME: david_entry_010
+TAGS: entry
+ORIENT: float
+
+MAP
+cccccccccccccc@ccccccccccccccc
+cccc......................cccc
+cc....c.cccc.cccc.cccc.cc...cc
+c..ccc...cc...cc...cc...ccc..c
+c.cccc.T.cc.T.cc.T.cc.T.cccc.c
+c.cccc...cc...cc...cc...cccc.c
+c...ccc.cccc.cccc.cccc.ccc...c
+c.T.ccc.cccc.cccc.cccc.ccc.T.c
+c............................c
+cc.cc...[.....{.....(....cc.cc
+c............................c
+c.T.ccc.cccc.cccc.cccc.ccc.T.c
+c...ccc.cccc.cccc.cccc.ccc...c
+c.cccc...cc...cc...cc...cccc.c
+c.cccc.T.cc.T.cc.T.cc.T.cccc.c
+c..ccc...cc...cc...cc...ccc..c
+cc...cc.cccc.cccc.cccc.cc...cc
+cccc......................cccc
+cccccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
