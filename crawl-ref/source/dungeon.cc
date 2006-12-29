@@ -178,6 +178,12 @@ static bool got_curare_roll(const int item_level)
                          (364 - 7 * item_level) / 25);
 }
 
+static bool got_distortion_roll(const int item_level)
+{
+    return (item_level < 25? random2(600) <= item_level
+            : one_chance_in(25));
+}
+
 static void place_altars()
 {
     // No altars before level 5.
@@ -911,7 +917,7 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(25))
                             set_weapon_special(p, SPWPN_PAIN);
 
-                        if (one_chance_in(25))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(3) &&
@@ -939,7 +945,7 @@ int items( int allow_uniques,       // not just true-false,
 
                     case WPN_SHORT_SWORD:
                     case WPN_SABRE:
-                        if (one_chance_in(25))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(10))
@@ -991,7 +997,7 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_VAMPIRICISM);
 
-                        if (one_chance_in(25))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(5))
@@ -1040,7 +1046,7 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_VAMPIRICISM);
 
-                        if (one_chance_in(25))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(3)
@@ -1067,7 +1073,7 @@ int items( int allow_uniques,       // not just true-false,
                         break;
 
                     case WPN_WHIP:
-                        if (one_chance_in(20))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(6))
@@ -1110,7 +1116,7 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(10))
                             set_weapon_special(p, SPWPN_VAMPIRICISM);
 
-                        if (one_chance_in(20))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(5) &&
@@ -1159,7 +1165,7 @@ int items( int allow_uniques,       // not just true-false,
                         if (one_chance_in(30))
                             set_weapon_special(p, SPWPN_PAIN);
 
-                        if (one_chance_in(20))
+                        if (got_distortion_roll(item_level))
                             set_weapon_special(p, SPWPN_DISTORTION);
 
                         if (one_chance_in(5))
