@@ -926,7 +926,7 @@ bool activate_ability(void)
         break;
 
     case ABIL_TSO_SMITING:
-        cast_smiting( (2 + skill_bump(SK_INVOCATIONS])) * 6 );
+        cast_smiting( (2 + skill_bump(SK_INVOCATIONS)) * 6 );
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 
