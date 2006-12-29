@@ -728,16 +728,22 @@ static void armour_wear_effects(const int item_slot)
     you.redraw_evasion = 1;
 }
 
-static command_type get_running_command() {
-    if ( kbhit() ) {
-	stop_running();
-	return CMD_NO_CMD;
+static command_type get_running_command()
+{
+    if ( kbhit() )
+    {
+        stop_running();
+        return CMD_NO_CMD;
     }
-    if ( is_resting() ) {
-	you.running.rest();
-        if ( !is_resting() )
+    if ( is_resting() )
+    {
+        you.running.rest();
+        if ( !is_resting() && you.running.hp == you.hp
+             && you.running.mp == you.magic_points )
+        {
             mpr("Done searching.");
-	return CMD_MOVE_NOWHERE;
+        }
+        return CMD_MOVE_NOWHERE;
     }
     return direction_to_command( you.running.x, you.running.y );
 }

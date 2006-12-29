@@ -3178,7 +3178,7 @@ void runrest::check_hp()
 {
     if (is_rest() && you.hp == you.hp_max && you.hp > hp)
     {
-        mpr("HP restored.");
+        mpr("Health restored.");
         stop();
     }
 }
@@ -3188,7 +3188,7 @@ void runrest::check_mp()
     if (is_rest() && you.magic_points == you.max_magic_points
             && you.magic_points > mp)
     {
-        mpr("MP restored.");
+        mpr("Magic restored.");
         stop();        
     }
 }
