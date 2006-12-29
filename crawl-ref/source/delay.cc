@@ -44,6 +44,7 @@ extern std::vector<SelItem> items_for_multidrop;
 static void armour_wear_effects(const int item_inv_slot);
 static void handle_run_delays(const delay_queue_item &delay);
 static void handle_macro_delay();
+static void finish_delay(const delay_queue_item &delay);
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
 // other delays can be spawned while this delay is running. If is_parent_delay
@@ -60,7 +61,7 @@ static bool is_parent_delay(int delay)
             || delay == DELAY_MULTIDROP);
 }
 
-static void push_delay(const delay_queue_item &delay)
+static int push_delay(const delay_queue_item &delay)
 {
     for (delay_queue_type::iterator i = you.delay_queue.begin(); 
             i != you.delay_queue.end();
@@ -69,10 +70,11 @@ static void push_delay(const delay_queue_item &delay)
         if (is_parent_delay( i->type ))
         {
             you.delay_queue.insert(i, delay);
-            return;
+            return (i - you.delay_queue.begin());
         }
     }
     you.delay_queue.push_back( delay );
+    return (you.delay_queue.size() - 1);
 }
 
 static void pop_delay()
@@ -97,7 +99,17 @@ void start_delay( int type, int turns, int parm1, int parm2 )
     delay.parm1 = parm1;
     delay.parm2 = parm2;
 
-    switch ( delay.type ) {
+    // Handle zero-turn delays (possible with butchering).
+    if (turns == 0)
+    {
+        // Don't issue startup message.
+        if (push_delay(delay) == 0)
+            finish_delay(delay);
+        return;
+    }
+
+    switch ( delay.type )
+    {
     case DELAY_ARMOUR_ON:
         mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
         break;
@@ -364,223 +376,228 @@ void handle_delay( void )
     }
     else 
     {
-        switch (delay.type)
+        finish_delay(delay);
+    }
+}
+
+static void finish_delay(const delay_queue_item &delay)
+{
+    char  str_pass[ ITEMNAME_SIZE ];
+    switch (delay.type)
+    {
+    case DELAY_AUTOPICKUP:
+    {
+        const int estop =
+            you.running == RMODE_EXPLORE_GREEDY?
+            ES_GREEDY_PICKUP : ES_PICKUP;
+        if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
+            stop_delay();
+        break;
+    }
+
+    case DELAY_WEAPON_SWAP:
+        weapon_switch( delay.parm1 );
+        break;
+
+    case DELAY_JEWELLERY_ON:
+        puton_ring( delay.parm1, false );
+        break;
+
+    case DELAY_ARMOUR_ON:
+        armour_wear_effects( delay.parm1 );
+        break;
+
+    case DELAY_ARMOUR_OFF:
+    {
+        in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
+        snprintf( info, INFO_SIZE, "You finish taking off %s.", str_pass );
+        mpr(info);
+
+        const equipment_type slot = 
+            get_armour_slot( you.inv[delay.parm1] );
+
+        if (slot == EQ_BODY_ARMOUR)
         {
-        case DELAY_AUTOPICKUP:
-        {
-            const int estop =
-                you.running == RMODE_EXPLORE_GREEDY?
-                                        ES_GREEDY_PICKUP : ES_PICKUP;
-            if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
-                stop_delay();
-            break;
+            you.equip[EQ_BODY_ARMOUR] = -1;
         }
-
-        case DELAY_WEAPON_SWAP:
-            weapon_switch( delay.parm1 );
-            break;
-
-        case DELAY_JEWELLERY_ON:
-            puton_ring( delay.parm1, false );
-            break;
-
-        case DELAY_ARMOUR_ON:
-            armour_wear_effects( delay.parm1 );
-            break;
-
-        case DELAY_ARMOUR_OFF:
+        else
         {
-            in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
-            snprintf( info, INFO_SIZE, "You finish taking off %s.", str_pass );
-            mpr(info);
-
-            const equipment_type slot = 
-                    get_armour_slot( you.inv[delay.parm1] );
-
-            if (slot == EQ_BODY_ARMOUR)
+            switch (slot)
             {
-                you.equip[EQ_BODY_ARMOUR] = -1;
-            }
-            else
-            {
-                switch (slot)
-                {
-                case EQ_SHIELD:
-                    if (delay.parm1 == you.equip[EQ_SHIELD])
-                        you.equip[EQ_SHIELD] = -1;
-                    break;
-
-                case EQ_CLOAK:
-                    if (delay.parm1 == you.equip[EQ_CLOAK])
-                        you.equip[EQ_CLOAK] = -1;
-                    break;
-
-                case EQ_HELMET:
-                    if (delay.parm1 == you.equip[EQ_HELMET])
-                        you.equip[EQ_HELMET] = -1;
-                    break;
-
-
-                case EQ_GLOVES:
-                    if (delay.parm1 == you.equip[EQ_GLOVES])
-                        you.equip[EQ_GLOVES] = -1;
-                    break;
-
-                case EQ_BOOTS:
-                    if (delay.parm1 == you.equip[EQ_BOOTS])
-                        you.equip[EQ_BOOTS] = -1;
-                    break;
-
-                default:
-                    break;
-                }
-            }
-
-            unwear_armour( delay.parm1 );
-
-            you.redraw_armour_class = 1;
-            you.redraw_evasion = 1;
-            break;
-        }
-        case DELAY_EAT:
-            mpr( "You finish eating." );
-            // For chunks, warn the player if they're not getting much 
-            // nutrition.
-            if (delay.parm1)
-                chunk_nutrition_message(delay.parm1);
-            break; 
-
-        case DELAY_MEMORISE:
-            mpr( "You finish memorising." );
-            add_spell_to_memory( delay.parm1 );
-            break; 
-
-        case DELAY_PASSWALL:
-            {
-                mpr( "You finish merging with the rock." );
-                more();  // or the above message won't be seen
-
-                const int pass_x = delay.parm1;
-                const int pass_y = delay.parm2;
-
-                if (pass_x != 0 && pass_y != 0)
-                {
-
-                    switch (grd[ pass_x ][ pass_y ])
-                    {
-                    case DNGN_ROCK_WALL:
-                    case DNGN_STONE_WALL:
-                    case DNGN_METAL_WALL:
-                    case DNGN_GREEN_CRYSTAL_WALL:
-                    case DNGN_WAX_WALL:
-                    case DNGN_SILVER_STATUE:
-                    case DNGN_ORANGE_CRYSTAL_STATUE:
-                        ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
-                        break;
-
-                    case DNGN_SECRET_DOOR:      // oughtn't happen
-                    case DNGN_CLOSED_DOOR:      // open the door
-                        grd[ pass_x ][ pass_y ] = DNGN_OPEN_DOOR;
-                        break;
-
-                    default:
-                        break;
-                    }
-
-                    // move any monsters out of the way:
-                    int mon = mgrd[ pass_x ][ pass_y ];
-                    if (mon != NON_MONSTER)
-                    {
-                        // one square, a few squares, anywhere...
-                        if (!shift_monster(&menv[mon]) 
-                            && !monster_blink(&menv[mon]))
-                        {
-                            monster_teleport( &menv[mon], true, true );
-                        }
-                    }
-
-                    move_player_to_grid(pass_x, pass_y, false, true, true);
-                    redraw_screen();
-                }
-            }
-            break; 
-
-        case DELAY_BUTCHER:
-            snprintf(info, INFO_SIZE, "You finish %s the corpse into pieces.",
-                     (you.species == SP_TROLL ||
-                      you.species == SP_GHOUL) ? "ripping" : "chopping" );
-            mpr(info);
-
-            turn_corpse_into_chunks( mitm[ delay.parm1 ] );
-
-            if (you.berserker && you.berserk_penalty != NO_BERSERK_PENALTY)
-            {
-                mpr("You enjoyed that.");
-                you.berserk_penalty = 0;
-            }
-            break;
-
-        case DELAY_DROP_ITEM:
-            // Note:  checking if item is droppable is assumed to 
-            // be done before setting up this delay... this includes
-            // quantity (delay.parm2). -- bwr
-
-            // Make sure item still exists.
-            if (!is_valid_item( you.inv[ delay.parm1 ] ))
+            case EQ_SHIELD:
+                if (delay.parm1 == you.equip[EQ_SHIELD])
+                    you.equip[EQ_SHIELD] = -1;
                 break;
 
-            // Must handle unwield_item before we attempt to copy 
-            // so that temporary brands and such are cleared. -- bwr
-            if (delay.parm1 == you.equip[EQ_WEAPON])
-            {   
-                unwield_item( delay.parm1 );
-                you.equip[EQ_WEAPON] = -1;
-                canned_msg( MSG_EMPTY_HANDED );
+            case EQ_CLOAK:
+                if (delay.parm1 == you.equip[EQ_CLOAK])
+                    you.equip[EQ_CLOAK] = -1;
+                break;
+
+            case EQ_HELMET:
+                if (delay.parm1 == you.equip[EQ_HELMET])
+                    you.equip[EQ_HELMET] = -1;
+                break;
+
+            case EQ_GLOVES:
+                if (delay.parm1 == you.equip[EQ_GLOVES])
+                    you.equip[EQ_GLOVES] = -1;
+                break;
+
+            case EQ_BOOTS:
+                if (delay.parm1 == you.equip[EQ_BOOTS])
+                    you.equip[EQ_BOOTS] = -1;
+                break;
+
+            default:
+                break;
             }
-
-            if (!copy_item_to_grid( you.inv[ delay.parm1 ], 
-                                    you.x_pos, you.y_pos, delay.parm2,
-                                    true ))
-            {
-                mpr("Too many items on this level, not dropping the item.");
-            }
-            else
-            {
-                quant_name( you.inv[ delay.parm1 ], delay.parm2, 
-                            DESC_NOCAP_A, str_pass );
-
-                snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
-                mpr(info);
-
-                dec_inv_item_quantity( delay.parm1, delay.parm2 );
-            }
-            break;
-
-        case DELAY_ASCENDING_STAIRS:
-            up_stairs();
-            untag_followers();
-            break;
-
-        case DELAY_DESCENDING_STAIRS:
-            down_stairs( false, delay.parm1 );
-            untag_followers();
-            break;
-
-        case DELAY_INTERRUPTIBLE:
-        case DELAY_UNINTERRUPTIBLE:
-            // these are simple delays that have no effect when complete
-            break;
-
-        default:
-            mpr( "You finish doing something." );
-            break; 
         }
 
-        you.wield_change = true;
-        print_stats();  // force redraw of the stats
-        you.turn_is_over = true;
-        pop_delay();
+        unwear_armour( delay.parm1 );
+
+        you.redraw_armour_class = 1;
+        you.redraw_evasion = 1;
+        break;
     }
+    case DELAY_EAT:
+        mpr( "You finish eating." );
+        // For chunks, warn the player if they're not getting much
+        // nutrition.
+        if (delay.parm1)
+            chunk_nutrition_message(delay.parm1);
+        break; 
+
+    case DELAY_MEMORISE:
+        mpr( "You finish memorising." );
+        add_spell_to_memory( delay.parm1 );
+        break; 
+
+    case DELAY_PASSWALL:
+    {
+        mpr( "You finish merging with the rock." );
+        more();  // or the above message won't be seen
+
+        const int pass_x = delay.parm1;
+        const int pass_y = delay.parm2;
+
+        if (pass_x != 0 && pass_y != 0)
+        {
+
+            switch (grd[ pass_x ][ pass_y ])
+            {
+            case DNGN_ROCK_WALL:
+            case DNGN_STONE_WALL:
+            case DNGN_METAL_WALL:
+            case DNGN_GREEN_CRYSTAL_WALL:
+            case DNGN_WAX_WALL:
+            case DNGN_SILVER_STATUE:
+            case DNGN_ORANGE_CRYSTAL_STATUE:
+                ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
+                break;
+
+            case DNGN_SECRET_DOOR:      // oughtn't happen
+            case DNGN_CLOSED_DOOR:      // open the door
+                grd[ pass_x ][ pass_y ] = DNGN_OPEN_DOOR;
+                break;
+
+            default:
+                break;
+            }
+
+            // move any monsters out of the way:
+            int mon = mgrd[ pass_x ][ pass_y ];
+            if (mon != NON_MONSTER)
+            {
+                // one square, a few squares, anywhere...
+                if (!shift_monster(&menv[mon]) 
+                    && !monster_blink(&menv[mon]))
+                {
+                    monster_teleport( &menv[mon], true, true );
+                }
+            }
+
+            move_player_to_grid(pass_x, pass_y, false, true, true);
+            redraw_screen();
+        }
+        break; 
+    }
+
+    case DELAY_BUTCHER:
+        snprintf(info, INFO_SIZE, "You finish %s the corpse into pieces.",
+                 (you.species == SP_TROLL ||
+                  you.species == SP_GHOUL) ? "ripping" : "chopping" );
+        mpr(info);
+
+        turn_corpse_into_chunks( mitm[ delay.parm1 ] );
+
+        if (you.berserker && you.berserk_penalty != NO_BERSERK_PENALTY)
+        {
+            mpr("You enjoyed that.");
+            you.berserk_penalty = 0;
+        }
+        break;
+
+    case DELAY_DROP_ITEM:
+        // Note:  checking if item is droppable is assumed to 
+        // be done before setting up this delay... this includes
+        // quantity (delay.parm2). -- bwr
+
+        // Make sure item still exists.
+        if (!is_valid_item( you.inv[ delay.parm1 ] ))
+            break;
+
+        // Must handle unwield_item before we attempt to copy 
+        // so that temporary brands and such are cleared. -- bwr
+        if (delay.parm1 == you.equip[EQ_WEAPON])
+        {   
+            unwield_item( delay.parm1 );
+            you.equip[EQ_WEAPON] = -1;
+            canned_msg( MSG_EMPTY_HANDED );
+        }
+
+        if (!copy_item_to_grid( you.inv[ delay.parm1 ], 
+                                you.x_pos, you.y_pos, delay.parm2,
+                                true ))
+        {
+            mpr("Too many items on this level, not dropping the item.");
+        }
+        else
+        {
+            quant_name( you.inv[ delay.parm1 ], delay.parm2, 
+                        DESC_NOCAP_A, str_pass );
+
+            snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
+            mpr(info);
+
+            dec_inv_item_quantity( delay.parm1, delay.parm2 );
+        }
+        break;
+
+    case DELAY_ASCENDING_STAIRS:
+        up_stairs();
+        untag_followers();
+        break;
+
+    case DELAY_DESCENDING_STAIRS:
+        down_stairs( false, delay.parm1 );
+        untag_followers();
+        break;
+
+    case DELAY_INTERRUPTIBLE:
+    case DELAY_UNINTERRUPTIBLE:
+        // these are simple delays that have no effect when complete
+        break;
+
+    default:
+        mpr( "You finish doing something." );
+        break; 
+    }
+
+    you.wield_change = true;
+    print_stats();  // force redraw of the stats
+    you.turn_is_over = true;
+    pop_delay();
 }
 
 static void armour_wear_effects(const int item_slot)

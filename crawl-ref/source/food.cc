@@ -232,87 +232,90 @@ bool butchery(void)
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
     if ( !can_butcher && you.berserker ) {
-	mpr ("You are too berserk to search for a butchering knife!");
-	return (false);
+        mpr ("You are too berserk to search for a butchering knife!");
+        return (false);
     }
 
     int objl;
 
     for (objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
-	 objl = mitm[objl].link) {
+         objl = mitm[objl].link)
+    {
+        if ( (mitm[objl].base_type != OBJ_CORPSES) ||
+             (mitm[objl].sub_type != CORPSE_BODY) )
+            continue;
 
-	if ( (mitm[objl].base_type != OBJ_CORPSES) ||
-	     (mitm[objl].sub_type != CORPSE_BODY) )
-	    continue;
-
-	// offer the possibility of butchering
-	it_name(objl, DESC_NOCAP_A, str_pass);
-	snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
-	int answer = yesnoquit( info, true, 'n', false );
-	if ( answer == -1 )
-	    break;
-	if ( answer == 0 )
-	    continue;
+        // offer the possibility of butchering
+        it_name(objl, DESC_NOCAP_A, str_pass);
+        snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
+        int answer = yesnoquit( info, true, 'n', false );
+        if ( answer == -1 )
+            break;
+        if ( answer == 0 )
+            continue;
 	
-	if ( Options.easy_butcher && !can_butcher ) {
-
-	    // try to find a butchering implement
-	    wpn_switch = find_butchering_implement();
-	    const int wpn = you.equip[EQ_WEAPON];
-	    if ( wpn_switch ) {
-		new_cursed =
-		    (wpn != -1) &&
-		    (you.inv[wpn].base_type == OBJ_WEAPONS) &&
-		    item_cursed( you.inv[wpn]);
-	    }
+        if ( Options.easy_butcher && !can_butcher )
+        {
+            // try to find a butchering implement
+            wpn_switch = find_butchering_implement();
+            const int wpn = you.equip[EQ_WEAPON];
+            if ( wpn_switch )
+            {
+                new_cursed =
+                    (wpn != -1) &&
+                    (you.inv[wpn].base_type == OBJ_WEAPONS) &&
+                    item_cursed( you.inv[wpn]);
+            }
 	    
-	    // note that barehanded butchery would not reach this
-	    // stage, so if wpn == -1 the user selected '-' when
-	    // switching weapons
+            // note that barehanded butchery would not reach this
+            // stage, so if wpn == -1 the user selected '-' when
+            // switching weapons
 	    
-	    if (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn])) {
+            if (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn]))
+            {
+                // still can't butcher. Early out
+                if ( wpn == -1 ) {
+                    if (you.equip[EQ_GLOVES] == -1)
+                        mpr("What, with your bare hands?");
+                    else
+                        mpr("Your gloves aren't that sharp!");
+                }
+                else
+                    mpr("Maybe you should try using a sharper implement.");
 		
-		// still can't butcher. Early out
-		if ( wpn == -1 ) {
-		    if (you.equip[EQ_GLOVES] == -1)
-			mpr("What, with your bare hands?");
-		    else
-			mpr("Your gloves aren't that sharp!");
-		}
-		else
-		    mpr("Maybe you should try using a sharper implement.");
+                if ( !new_cursed && wpn_switch )
+                    start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
 		
-		if ( !new_cursed && wpn_switch )
-		    start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
-		
-		return false;			
-	    }
+                return false;			
+            }
 	    
-	    // switched to a good butchering knife
-	    can_butcher = true;
-	}
+            // switched to a good butchering knife
+            can_butcher = true;
+        }
 
-	if ( can_butcher ) {
+        if ( can_butcher )
+        {
+            // we actually butcher now
+            if ( barehand_butcher )
+                mpr("You start tearing the corpse apart.");
+            else
+                mpr("You start hacking away.");
 
-	    // we actually butcher now
-	    if ( barehand_butcher )
-		mpr("You start tearing the corpse apart.");
-	    else
-		mpr("You start hacking away.");
+            if (you.duration[DUR_PRAYER] &&
+                (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
+                 you.religion == GOD_TROG))
+            {
+                offer_corpse(objl);
+                destroy_item(objl);
+            }
+            else
+            {
+                int work_req = 4 - (++mitm[objl].plus2);
+                if (work_req < 0)
+                    work_req = 0;
 
-	    if (you.duration[DUR_PRAYER] &&
-		(you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
-		 you.religion == GOD_TROG)) {
-		offer_corpse(objl);
-		destroy_item(objl);
-	    }
-	    else {
-		int work_req = 3 - mitm[objl].plus2;
-		if (work_req < 0)
-		    work_req = 0;
-
-		start_delay(DELAY_BUTCHER, work_req, objl, mitm[objl].special);
-	    }
+                start_delay(DELAY_BUTCHER, work_req, objl, mitm[objl].special);
+            }
         }
 
         // switch weapon back
@@ -320,10 +323,10 @@ bool butchery(void)
             start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
 
         you.turn_is_over = true;
-
+    
         return true;
     }
-
+    
     mpr("There isn't anything to dissect here.");
 
     if (!new_cursed && wpn_switch) { // should never happen
