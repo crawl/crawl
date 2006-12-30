@@ -892,8 +892,12 @@ static int toggle_flag( bool* flag, const char* flagname ) {
 }
 
 static void go_upstairs() {
-    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP) {   
-        shop();
+    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
+    {
+        if ( you.berserker )
+            canned_msg(MSG_TOO_BERSERK);
+        else
+            shop();
         return;
     }
     else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I

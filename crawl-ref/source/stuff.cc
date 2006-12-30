@@ -962,7 +962,7 @@ int element_colour( int element, bool no_random )
 
     // Setting no_random to true will get the first colour in the cases
     // below.  This is potentially useful for calls to this function 
-    // which might want a consistant result.
+    // which might want a consistent result.
     int tmp_rand = (no_random ? 0 : random2(120));
 
     switch (element & 0x007f)   // strip COLFLAGs just in case
