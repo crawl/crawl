@@ -15,6 +15,7 @@
 
 #include "AppHdr.h"
 #include "defines.h"
+#include <cctype>
 #include <string>
 #include <vector>
 
@@ -62,6 +63,32 @@ std::vector<std::string> split_string(
         std::string s, 
         bool trim = true, 
         bool accept_empties = false);
+
+inline std::string lowercase_first(std::string s)
+{
+    if (s.length())
+        s[0] = tolower(s[0]);
+    return (s);
+}
+
+template <class Z>
+std::string comma_separated_line(Z start, Z end)
+{
+    std::string text;
+    for (Z i = start; i != end; ++i)
+    {
+        if (i != start)
+        {
+            if (i + 1 != end)
+                text += ", ";
+            else
+                text += " and ";
+        }
+
+        text += i->name;
+    }
+    return (text);
+}
 
 #ifdef NEED_USLEEP
 void usleep( unsigned long time );

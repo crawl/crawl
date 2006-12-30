@@ -699,11 +699,13 @@ void canned_msg(unsigned char which_message)
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno( const char *str, bool safe, int safeanswer, bool clear_after )
+bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
+            bool interrupt_delays )
 {
     unsigned char tmp;
 
-    interrupt_activity( AI_FORCE_INTERRUPT );
+    if (interrupt_delays)
+        interrupt_activity( AI_FORCE_INTERRUPT );
     for (;;)
     {
         mpr(str, MSGCH_PROMPT);

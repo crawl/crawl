@@ -114,6 +114,7 @@ void clear_map();
 bool is_feature(int feature, int x, int y);
 
 void set_envmap_char( int x, int y, unsigned char chr );
+unsigned get_envmap_char(int x, int y);
 void set_envmap_detected_item(int x, int y, bool detected = true);
 void set_envmap_detected_mons(int x, int y, bool detected = true);
 void set_envmap_col( int x, int y, int colour, int flags );
@@ -125,6 +126,7 @@ void set_terrain_mapped( int x, int y );
 void set_terrain_seen( int x, int y );
 bool is_terrain_known( int x, int y );
 bool is_terrain_seen( int x, int y );
+bool is_terrain_changed( int x, int y );
 
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);

@@ -1269,7 +1269,7 @@ void process_command( command_type cmd ) {
             break;
         }
         // Start exploring
-        start_explore();
+        start_explore(Options.explore_greedy);
         break;
 
     case CMD_DISPLAY_MAP:
@@ -2516,12 +2516,15 @@ keycode_type get_next_keycode() {
     return keyin;
 }
 
-static void middle_input() {
+static void middle_input()
+{
+#ifdef STASH_TRACKING
     if (Options.stash_tracking)
         stashes.update_visible_stashes(
             Options.stash_tracking == STM_ALL? 
             StashTracker::ST_AGGRESSIVE :
             StashTracker::ST_PASSIVE);
+#endif
 }
 
 /*

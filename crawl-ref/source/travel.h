@@ -46,11 +46,14 @@ void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y,
  * Initiates explore - the character runs around the level to map it. Note
  * that the caller has to ensure that the level is mappable before calling
  * start_explore. start_explore may lock up the game on unmappable levels.
+ * If grab_items is true, greedy explore is triggered - in greedy mode, explore
+ * grabs items that are eligible for autopickup and visits (previously
+ * unvisited) shops.
  *
  * ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void start_explore();
+void start_explore(bool grab_items = false);
 
 struct level_pos;
 void start_translevel_travel(const level_pos &pos);
@@ -92,13 +95,15 @@ void arrange_features(std::vector<coord_def> &features);
  * *********************************************************************** */
 extern short point_distance[GXM][GYM];
 
-enum EXPLORE_STOP
+enum explore_stop_type
 {
-    ES_NONE     = 0,
-    ES_ITEM     = 1,
-    ES_STAIR    = 2,
-    ES_SHOP     = 4,
-    ES_ALTAR    = 8
+    ES_NONE               = 0x00,
+    ES_ITEM               = 0x01,
+    ES_PICKUP             = 0x02,
+    ES_GREEDY_PICKUP      = 0x04,
+    ES_STAIR              = 0x08,
+    ES_SHOP               = 0x10,
+    ES_ALTAR              = 0x20
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -185,6 +190,40 @@ struct level_pos
 
     void save(FILE *) const;
     void load(FILE *);
+};
+
+// Tracks items discovered by explore in this turn.
+class LevelStashes;
+class explore_discoveries
+{
+public:
+    explore_discoveries();
+    
+    void found_feature(const coord_def &pos, int grid);
+    void found_item(const coord_def &pos, const item_def &item);
+
+    // Reports discoveries and prompts the player to stop (if necessary).
+    bool prompt_stop() const;
+
+private:
+    template <class C> void say_any(const C &coll, const char *stub) const;
+    std::string cleaned_feature_description(int feature) const;
+    void add_item(const item_def &item);
+    
+private:
+    template <class Z> struct named_thing {
+        std::string name;
+        Z thing;
+
+        named_thing(const std::string &n, Z t) : name(n), thing(t) { }
+    };
+
+    int es_flags;
+    const LevelStashes *current_level;
+    std::vector< named_thing<item_def> > items;
+    std::vector< named_thing<int> > stairs;
+    std::vector< named_thing<int> > shops;
+    std::vector< named_thing<int> > altars;
 };
 
 struct stair_info
@@ -345,6 +384,7 @@ private:
 int level_distance(level_id first, level_id second);
 
 bool can_travel_interlevel();
+bool prompt_stop_explore(int es_why);
 
 extern TravelCache travel_cache;
 

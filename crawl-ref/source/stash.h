@@ -48,6 +48,14 @@ public:
 
     bool show_menu(const std::string &place, bool can_travel) const;
 
+    // Returns true if this Stash contains items that are eligible for
+    // autopickup.
+    bool pickup_eligible() const;
+
+    // Returns true if this Stash is unverified (a visit by the character will
+    // verify the stash).
+    bool unverified() const;
+
     bool matches_search(const std::string &prefix,
                         const base_pattern &search, 
                         stash_search_result &res)
@@ -197,6 +205,7 @@ public:
     LevelStashes();
 
     Stash *find_stash(int x = -1, int y = -1);
+    const Stash *find_stash(int x = -1, int y = -1) const;
     ShopInfo &get_shop(int x, int y);
     const ShopInfo *find_shop(int x, int y) const;
 
@@ -206,6 +215,11 @@ public:
     // Update stash at (x,y) on current level, defaulting to player's current
     // location if no parameters are supplied.
     bool  update_stash(int x = -1, int y = -1);
+
+    // Returns true if the square at (x,y) contains potentially interesting
+    // swag that merits a personal visit (for EXPLORE_GREEDY).
+    bool  needs_visit(int x, int y) const;
+    bool  shop_needs_visit(int x, int y) const;
 
     // Add stash at (x,y), or player's current location if no parameters are 
     // supplied

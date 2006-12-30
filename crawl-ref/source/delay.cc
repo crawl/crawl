@@ -28,6 +28,7 @@
 #include "it_use2.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "monstuff.h"
 #include "mstuff2.h"
 #include "ouch.h"
@@ -369,7 +370,14 @@ void handle_delay( void )
         switch (delay.type)
         {
         case DELAY_AUTOPICKUP:
+        {
+            const int estop =
+                you.running == RMODE_EXPLORE_GREEDY?
+                                        ES_GREEDY_PICKUP : ES_PICKUP;
+            if ((Options.explore_stop & estop) && prompt_stop_explore(estop))
+                stop_delay();
             break;
+        }
 
         case DELAY_WEAPON_SWAP:
             weapon_switch( delay.parm1 );
@@ -889,6 +897,25 @@ static bool should_stop_activity(const delay_queue_item &item,
             (Options.activity_interrupts[item.type][ai]));
 }
 
+inline static void monster_warning(activity_interrupt_type ai,
+                                   const activity_interrupt_data &at,
+                                   int atype)
+{
+    if ( ai == AI_SEE_MONSTER && is_run_delay(atype) )
+    {
+        const monsters* mon = static_cast<const monsters*>(at.data);
+#ifndef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_WARN, "%s comes into view.", ptr_monam(mon, DESC_CAP_A));
+#else
+        mprf(MSGCH_WARN,
+             "%s in view: (%d,%d), see_grid: %s",
+             ptr_monam(mon, DESC_PLAIN),
+             mon->x, mon->y,
+             see_grid(mon->x, mon->y)? "yes" : "no");
+#endif
+    }
+}
+
 void interrupt_activity( activity_interrupt_type ai, 
                          const activity_interrupt_data &at )
 {
@@ -901,6 +928,7 @@ void interrupt_activity( activity_interrupt_type ai,
 
     if (should_stop_activity(item, ai, at))
     {
+        monster_warning(ai, at, item.type);
         stop_delay();
         return;
     }
@@ -920,6 +948,7 @@ void interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
+                    monster_warning(ai, at, you.delay_queue[j].type);
                     stop_delay();
                     return;
                 }

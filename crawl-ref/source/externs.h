@@ -305,6 +305,8 @@ public:
     // Returns true if we're currently resting.
     bool is_rest() const;
 
+    bool is_explore() const;
+
     // Clears run state.
     void clear();
 
@@ -839,6 +841,13 @@ public:
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view
 
+    int         explore_stop_prompt;
+
+    bool        explore_greedy;    // Explore goes after items as well.
+    
+    // How much more eager greedy-explore is for items than to explore.
+    int         explore_item_greed;
+    
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
 
@@ -929,8 +938,9 @@ private:
     void set_activity_interrupt(const std::string &activity_name,
                                 const std::string &interrupt_names,
                                 bool append_interrupts);
-    void add_dump_fields(const std::string &text);
+    void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
+    int  read_explore_stop_conditions(const std::string &) const;
 
     static const std::string interrupt_prefix;
 };

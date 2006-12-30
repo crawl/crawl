@@ -28,6 +28,7 @@ void inc_mitm_item_quantity( int obj, int amount );
 void move_item_to_grid( int *const obj, int x, int y );
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y );
 int  move_item_to_player( int obj, int quant_got, bool quiet = false );
+bool is_stackable_item( const item_def &item );
 bool items_stack( const item_def &item1, const item_def &item2 );
 
 void init_item( int item );
@@ -138,5 +139,8 @@ void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory( void (*oset)(item_def &item) );
+
+bool item_needs_autopickup(const item_def &);
+bool can_autopickup();
 
 #endif

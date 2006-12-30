@@ -59,7 +59,6 @@
 #include "stash.h"
 
 static void autopickup(void);
-static bool is_stackable_item( const item_def &item );
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
                                  int obj, bool force_squelch = false );
@@ -1277,7 +1276,7 @@ void pickup()
     }
 }                               // end pickup()
 
-static bool is_stackable_item( const item_def &item )
+bool is_stackable_item( const item_def &item )
 {
     if (!is_valid_item( item ))
         return (false);
@@ -1287,6 +1286,7 @@ static bool is_stackable_item( const item_def &item )
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
         || item.base_type == OBJ_UNKNOWN_II
+        || item.base_type == OBJ_GOLD
         || (item.base_type == OBJ_MISCELLANY 
             && item.sub_type == MISC_RUNE_OF_ZOT))
     {
@@ -1305,6 +1305,9 @@ bool items_stack( const item_def &item1, const item_def &item2 )
     // base and sub-types must always be the same to stack
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return (false);
+
+    if (item1.base_type == OBJ_GOLD)
+        return (true);
 
     // These classes also require pluses and special
     if (item1.base_type == OBJ_MISSILES
@@ -2914,56 +2917,75 @@ static void autoinscribe_items()
     }
 }    
 
+bool item_needs_autopickup(const item_def &item)
+{
+    return (strstr(item.inscription.c_str(), "=g") != 0
+            || ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
+            || (((Options.autopickups & (1L << item.base_type))
+#ifdef CLUA_BINDINGS
+                 || clua.callbooleanfn(false, "ch_autopickup", "u", &item)
+#endif
+                    )
+                && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
+                && !is_banned(item)));
+}
+
+bool can_autopickup()
+{
+    // [ds] Checking for autopickups == 0 is a bad idea because
+    // autopickup is still possible with inscriptions and
+    // pickup_thrown.
+    if (!Options.autopickup_on)
+        return (false);
+
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR
+            && you.duration[DUR_TRANSFORMATION] > 0)
+        return (false);
+
+    if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
+        return (false);
+
+    if ( Options.safe_autopickup && !i_feel_safe() )
+        return (false);
+
+    return (true);
+}
+
 static void autopickup(void)
 {
     //David Loewenstern 6/99
     int result, o, next;
     bool did_pickup = false;
+    bool tried_pickup = false;
 
-    if (!Options.autopickup_on || Options.autopickups == 0L)
+    if (!can_autopickup())
         return;
-
-    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
-        && you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        return;
-    }
-
-    if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
-        return;
-
-    if ( Options.safe_autopickup && !i_feel_safe() )
-      return;
 
     o = igrd[you.x_pos][you.y_pos];
 
+    int unthrown = 0;
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
 
-        if (
-	    (strstr(mitm[o].inscription.c_str(), "=g") != 0) || (
- 
-	    ((mitm[o].flags & ISFLAG_THROWN) && Options.pickup_thrown) ||
-            ( (Options.autopickups & (1L << mitm[o].base_type) 
-#ifdef CLUA_BINDINGS
-               || clua.callbooleanfn(false, "ch_autopickup", "u", &mitm[o])
-#endif
-              )
-              && (Options.pickup_dropped || !(mitm[o].flags & ISFLAG_DROPPED))
-              && !is_banned(mitm[o]))))
+        if (item_needs_autopickup(mitm[o]))
         {
+            if (!(mitm[o].flags & ISFLAG_THROWN))
+                unthrown++;
+
             mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
             result = move_item_to_player( o, mitm[o].quantity);
 
             if (result == 0)
             {
+                tried_pickup = true;
                 mpr("You can't carry any more.");
                 break;
             }
             else if (result == -1)
             {
+                tried_pickup = true;
                 mpr("Your pack is full.");
                 break;
             }
@@ -2980,8 +3002,12 @@ static void autopickup(void)
     if (did_pickup)
     {
         you.turn_is_over = true;
-        start_delay( DELAY_AUTOPICKUP, 1 );
+        start_delay( DELAY_AUTOPICKUP, 1, unthrown );
     }
+    // Greedy explore has no good way to deal with an item that we can't
+    // pick up, so the only thing to do is to stop.
+    else if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
+        stop_delay();
 }
 
 int inv_count(void)
