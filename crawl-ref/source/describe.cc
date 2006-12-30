@@ -4622,7 +4622,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     case MONS_ANGEL:
         description += "A winged holy being of unnatural beauty. "
-            "It's surrounded by aura of brilliant golden light. ";
+            "It has an aura of brilliant white light. ";
         break;
 
     case MONS_HUMAN: 
@@ -5901,8 +5901,8 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     case MONS_DAEVA:
         description +=
-            "A divine agent of the Shining One. It manifests as a winged "
-            "figure obscured by an aura of brilliant golden light. ";
+            "A divine agent of the Shining One, it is a towering winged "
+            "figure with an aura of brilliant golden light. ";
         break;
 
     case MONS_SPECTRAL_THING:
