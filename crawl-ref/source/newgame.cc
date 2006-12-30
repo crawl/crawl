@@ -106,8 +106,7 @@ static void jobs_stat_init(int which_job);
 static void openingScreen(void);
 static void species_stat_init(unsigned char which_species);
 
-#if 0
-// currently unused -- bwr
+#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
 static void give_random_wand( int slot );
 static void give_random_scroll( int slot );
 #endif
@@ -2185,8 +2184,7 @@ static bool validate_player_name(bool verbose)
     return (true);
 }                               // end validate_player_name()
 
-#if 0
-// currently unused
+#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
 static void give_random_scroll( int slot )
 {
     you.inv[ slot ].quantity = 1;
@@ -2256,8 +2254,7 @@ static void give_random_potion( int slot )
     }
 }
 
-#if 0
-// currently unused
+#ifdef USE_SPELLCASTER_AND_RANGER_WANDERER_TEMPLATES
 static void give_random_wand( int slot )
 {
     you.inv[ slot ].quantity = 1;
