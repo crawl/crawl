@@ -2245,7 +2245,9 @@ void start_explore(bool grab_items)
     if (you.running == RMODE_EXPLORE_GREEDY
         && Options.stash_tracking != STM_ALL)
     {
-        mpr("Explore + pickup is available only if stash_tracking = all");
+        Options.explore_greedy = false;
+        mpr("Greedy explore is available only if stash_tracking = all");
+        more();
         you.running = RMODE_EXPLORE;
     }
     

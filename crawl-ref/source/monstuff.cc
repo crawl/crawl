@@ -699,23 +699,14 @@ void monster_die(struct monsters *monster, char killer, int i)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-	if ( MONST_INTERESTING(monster) ||
-	     // XXX yucky hack
-	     monster->type == MONS_PLAYER_GHOST ||
-	     monster->type == MONS_PANDEMONIUM_DEMON ) {
-	    /* make a note of it */
-	    char namebuf[ITEMNAME_SIZE];
-	    if ( monster->type == MONS_PLAYER_GHOST ) {
-		snprintf( namebuf, sizeof(namebuf), "the ghost of %s",
-			  ghost.name );
-	    }
-	    else if ( monster->type == MONS_PANDEMONIUM_DEMON ) {
-		strncpy( namebuf, ghost.name, sizeof(namebuf) );
-	    }
-	    else
-		moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	    take_note(Note(NOTE_KILL_MONSTER, monster->type, 0, namebuf));
-	}
+        if ( MONST_INTERESTING(monster) ||
+             // XXX yucky hack
+             monster->type == MONS_PLAYER_GHOST ||
+             monster->type == MONS_PANDEMONIUM_DEMON )
+        {
+            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
+                           ptr_monam(monster, DESC_NOCAP_A)));
+        }
 
         you.kills.record_kill(monster, killer, pet_kill);
 
@@ -997,12 +988,10 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 	// If old monster is visible to the player, and is interesting,
 	// then note why the interesting monster went away.
 	if (player_monster_visible(monster) && mons_near(monster)
-	    && MONST_INTERESTING(monster)) {
-
-	    char namebuf[ITEMNAME_SIZE];	    
-	    moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0, namebuf));
-
+	    && MONST_INTERESTING(monster))
+    {
+	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
+                       ptr_monam(monster, DESC_NOCAP_A)));
 	}
 
     // messaging: {dlb}
@@ -5349,7 +5338,7 @@ static int map_wand_to_mspell(int wand_type)
 void seen_monster(struct monsters *monster)
 {
     if ( monster->flags & MF_SEEN )
-	return;
+        return;
     
     // First time we've seen this particular monster
     monster->flags |= MF_SEEN;
@@ -5358,9 +5347,9 @@ void seen_monster(struct monsters *monster)
          monster->type != MONS_PANDEMONIUM_DEMON &&
          monster->type != MONS_PLAYER_GHOST )
     {
-        char namebuf[ITEMNAME_SIZE];
-        moname(monster->type, true, DESC_NOCAP_A, namebuf);
-        take_note(Note(NOTE_SEEN_MONSTER, monster->type, 0, namebuf));
+        take_note(
+            Note(NOTE_SEEN_MONSTER, monster->type, 0,
+                 ptr_monam(monster, DESC_NOCAP_A)) );
     }
 }
 
