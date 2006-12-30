@@ -60,7 +60,7 @@ struct Note {
 extern std::vector<Note> note_list;
 void activate_notes( bool active );
 bool notes_are_active();
-void take_note( const Note& note );
+void take_note( const Note& note, bool force = false );
 void save_notes( FILE* fp );
 void load_notes( FILE* fp );
 void make_user_note();

@@ -352,8 +352,8 @@ bool notes_are_active() {
     return notes_active;
 }
 
-void take_note( const Note& note ) {
-    if ( notes_active && is_noteworthy( note ) )
+void take_note( const Note& note, bool force ) {
+    if ( notes_active && (force || is_noteworthy(note)) )
 	note_list.push_back( note );
 }
 

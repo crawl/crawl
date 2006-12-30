@@ -42,6 +42,7 @@
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
+#include "notes.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
@@ -1221,7 +1222,10 @@ bool activate_ability(void)
             mpr("That doesn't work from Pandemonium.");
             return false;
         }
+
+        activate_notes(false);  // this banishment shouldn't be noted
         banished(DNGN_ENTER_ABYSS);
+        activate_notes(true);
         break;
 
     //jmf: intended as invocations from evil god(s):

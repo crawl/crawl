@@ -30,6 +30,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "randart.h"
@@ -133,6 +134,9 @@ void banished(unsigned char gate_type)
 
     // this is to ensure that you're standing on a suitable space (67)
     grd[you.x_pos][you.y_pos] = gate_type;
+
+    if ( gate_type == DNGN_ENTER_ABYSS )
+        take_note(Note(NOTE_USER_NOTE, 0, 0, "Cast into the Abyss"), true);
 
     down_stairs(true, you.your_level, true);  // heh heh
     untag_followers(); // safety
