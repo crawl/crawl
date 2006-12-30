@@ -600,8 +600,16 @@ bool new_game(void)
             if (!you.inv[i].quantity)
             {
                 you.inv[i].quantity = 1;
-                you.inv[i].base_type = OBJ_FOOD;
-                you.inv[i].sub_type = FOOD_BREAD_RATION;
+                if (you.species == SP_SPRIGGAN)
+                {
+                    you.inv[i].base_type = OBJ_POTIONS;
+                    you.inv[i].sub_type = POT_PORRIDGE;
+                }
+                else
+                {
+                    you.inv[i].base_type = OBJ_FOOD;
+                    you.inv[i].sub_type = FOOD_BREAD_RATION;
+                }
 
                 if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
                     || you.species == SP_OGRE || you.species == SP_TROLL)
@@ -1766,7 +1774,7 @@ static void give_basic_mutations(unsigned char speci)
         you.mutation[MUT_ACUTE_VISION] = 1;
         you.mutation[MUT_FAST] = 3;
         you.mutation[MUT_HERBIVOROUS] = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 2;
+        you.mutation[MUT_SLOW_METABOLISM] = 3;
         break;
     case SP_CENTAUR:
         you.mutation[MUT_FAST] = 1;
