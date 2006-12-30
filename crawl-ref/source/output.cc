@@ -57,6 +57,23 @@ static void dur_colour( int colour, bool running_out )
     }
 }
 
+void update_turn_count()
+{
+    // Don't update turn counter when running/resting/traveling to
+    // prevent pointless screen updates.
+    if (you.running > 0 || (you.running < 0 && Options.travel_delay == -1))
+        return;
+
+    // FIXME: Create some kind of layout manager class so we can
+    // templatise the heads-up display layout and stop hardcoding
+    // these coords.
+    gotoxy(61, 10);
+    textcolor(LIGHTGREY);
+
+    // Show the turn count starting from 1. You can still quit on turn 0.
+    cprintf("%ld", you.num_turns);
+}
+
 void print_stats(void)
 {
     textcolor(LIGHTGREY);

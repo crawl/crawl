@@ -63,12 +63,14 @@
 #
 #  Guidelines for creating new vault maps:
 #
-#  [ds] If your map is not a minivault, make sure the side(s) that form the
-#  border have a rock wall padding at least 6 deep. For instance, if your map
-#  is ORIENT: north, you must have a 6 deep border of rock wall (or any
-#  other kind of wall) along the northern, eastern, and western edges of the
-#  map. If you're doing a fullscreen map (encompass), you must pad all around
-#  the map with 6 layers of wall.
+#  If your map is not a minivault, make sure the side(s) that form the border
+#  have a rock wall padding at least 6 deep. For instance, if your map is
+#  ORIENT: north, you must have a 6 deep border of rock wall (or any other kind
+#  of wall) along the northern, eastern, and western edges of the map. If
+#  you're doing a fullscreen map (encompass), you must pad all around the map
+#  with 6 layers of wall. For ORIENT: encompass maps, you don't need to
+#  explicitly include the padding provided you make the map small enough that
+#  the padding can be provided automatically.
 #
 #  Basically you can just let your creativity run wild. You do not have
 #  to place all of the stairs unless the level is full screen, in which
@@ -87,9 +89,15 @@
 #  ps - remember to add one to the monster array value when placing monsters
 #       on each map (it is 1-7, not 0-6) {dlb}
 #
-#  [dshaligram] All special levels MUST have an ORIENT: attribute; if there's
-#  no ORIENT: attribute, the level is considered to be a minivault, which is
-#  usually not what you want.
+#  All vaults MUST have an ORIENT: attribute; if there's no ORIENT: attribute,
+#  the vault is considered to be a minivault, which is usually not what you
+#  want.
+#
+#  Minivaults are handled very differently from regular vaults and special
+#  levels. They're placed *after* normal map generation, whereas normal vaults
+#  are placed before generating the rest of the level. There's no way to
+#  guarantee generation of a minivault on a particular level, whereas vaults
+#  can be forced to appear using a PLACE: attribute.
 #
 #  Special levels are selected either by PLACE: (for most special levels) or 
 #  TAGS: (for the Pandemonium demon lords). If you want to define alternate
@@ -1179,84 +1187,236 @@ MONS: random, random
 
 
 ##########################################################################
-# Ecumenical temple
+# Circular temple (David Ploog).
 
-NAME: temple
+NAME: circular_temple
 PLACE: Temple
+FLAGS: no_rotate
 ORIENT: encompass
 
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxcc............<............cxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxcc...........................cxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxcc.............................cxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcc...............................cxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxcc.................................cxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxcc...................................cxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxcc.....................................cxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxcc.......................................cxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxcc.........................................cxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcc...........................................cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxcc.............................................cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...............................................cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxcc.................................................cxxxxxxxxxxxxxxx
-xxxxxxxxxxxxcc...................................................cxxxxxxxxxxxxxx
-xxxxxxxxxxxcc..........................B..........................cxxxxxxxxxxxxx
-xxxxxxxxxxcc.......................................................cxxxxxxxxxxxx
-xxxxxxxxxcc.....................B.............B.....................cxxxxxxxxxxx
-xxxxxxxxcc...........................................................cxxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.................B.........................B.................cxxxxxxxxx
-xxxxxxxxc..............................T..............................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc..............B...............................B..............cxxxxxxxxx
-xxxxxxxxc(....................T.................T....................{cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc.............................................................cxxxxxxxxx
-xxxxxxxxc................B...........................B................cxxxxxxxxx
-xxxxxxxxcc...........................................................ccxxxxxxxxx
-xxxxxxxxxcc............................T............................ccxxxxxxxxxx
-xxxxxxxxxxcc.......................................................ccxxxxxxxxxxx
-xxxxxxxxxxxcc.....................................................ccxxxxxxxxxxxx
-xxxxxxxxxxxxcc...................................................ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxcc.................................................ccxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...............B................B..............ccxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxcc.............................................ccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxcc.....................B.....................ccxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxcc.........................................ccxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxcc.....................................ccxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxcc...................................ccxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxcc.................................ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcc...............................ccxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxcc.............................ccxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxcc...........................ccxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxcc............[............ccxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcccc.....<.....ccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
+xxxxxxxxxxccc.......................cccxxxxxxxxxxx
+xxxxxxxxxcc.............B.............ccxxxxxxxxxx
+xxxxxxxxcc.......B.............B.......ccxxxxxxxxx
+xxxxxxxcc...............................ccxxxxxxxx
+xxxxxxxc.................................cxxxxxxxx
+xxxxxxcc.....B.....................B.....ccxxxxxxx
+xxxxxxc...............T...T...............cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc(...B.......T.........T.......B...{cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...................................cxxxxxxx
+xxxxxxc...............T...T...............cxxxxxxx
+xxxxxxcc.....B.....................B.....ccxxxxxxx
+xxxxxxcc.................................cxxxxxxxx
+xxxxxxxcc...............................ccxxxxxxxx
+xxxxxxxxcc.......B.............B.......ccxxxxxxxxx
+xxxxxxxxxcc.............B.............ccxxxxxxxxxx
+xxxxxxxxxxccc.......................cccxxxxxxxxxxx
+xxxxxxxxxxxxcccc.................ccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxcccc.....[.....ccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+# Three leaves temple (David Ploog)
+
+NAME: three_leaves__temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbbbxxxxxxxxxxxxxxxbbbxxxxxxxxxxxxx
+xxxxxxxxxxxxbbb.bbxxxxxxxxxxxxxbb.bbbxxxxxxxxxxx
+xxxxxxxxxxxbb....bbxxxxxxxxxxxbb....bbxxxxxxxxxx
+xxxxxxxxxxbb......bbbxxxxxxxbbb......bbxxxxxxxxx
+xxxxxxxxxbb.....B...bbxxxxxbb...B.....bbxxxxxxxx
+xxxxxxxxbb..B........bbbxbbb........B..bbxxxxxxx
+xxxxxxxxbb.............bbb.............bbxxxxxxx
+xxxxxxxbb....B....B.....b.....B....B....bbxxxxxx
+xxxxxxxbb............{.....[............bbxxxxxx
+xxxxxxxxbbbbbbbb........b........bbbbbbbbxxxxxxx
+xxxxxxxxxxxxxxxbbbbbbbb...bbbbbbbbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbb.(.bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb.....bbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbb.......bbxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxbb....B....bbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxbb...........bbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbb....B...B....bbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbb.......B.......bbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbbb...........bbbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxbbbb.....bbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbbbbbbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Twelve chambers temple (David Ploog). 
+
+NAME: twelve_chambers_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvv..................................vvvvvvvvvxxxxxxx
+xxxxxxvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvv.....vvvvvxxxxxxx
+xxxxxxvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvvv...vvvxxxxxxx
+xxxxxxvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvvv.vvvxxxxxxx
+xxxxxxvv.....vvvvv.......v.......v.......v.......vvvvv.....vvxxxxxx
+xxxxxxv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vxxxxxx
+xxxxxxv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vxxxxxx
+xxxxxxv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vxxxxxx
+xxxxxxvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvxxxxxx
+xxxxxxvvvv.vvvv.....................................vvvv.vvvvxxxxxx
+xxxxxxvvv..vvvv.....................................vvvv..vvvxxxxxx
+xxxxxxvvv.vvvvv......T.......(...{...[.......T......vvvvv.vvvxxxxxx
+xxxxxxvvv..vvvv.....................................vvvv..vvvxxxxxx
+xxxxxxvvvv.vvvv.....................................vvvv.vvvvxxxxxx
+xxxxxxvv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vvxxxxxx
+xxxxxxv........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........vxxxxxx
+xxxxxxv..B....vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv....B..vxxxxxx
+xxxxxxv.......vvvvv.....vvv.....vvv.....vvv.....vvvvv.......vxxxxxx
+xxxxxxvv.....vvvvv.......v.......v.......v.......vvvvv.....vvxxxxxx
+xxxxxxvvvvv.vvvvvv...B...v...B...v...B...v...B...vvvvvv.vvvvxxxxxxx
+xxxxxxvvvvv...vvvvv.....vvv.....vvv.....vvv.....vvvvv...vvvvxxxxxxx
+xxxxxxvvvvvvv.....vvv.vvvvvvv.vvvvvvv.vvvvvvv.vvv.....vvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvv.................................vvvvvvvvvvxxxxxxx
+xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# Another temple (David Ploog)
+
+NAME: triangle_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllll...lllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllll.......lllllllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllllllll.........llllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllll...........lllllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllllll......{......llllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllll...............lllllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllllll.................llllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllll......B.....B......lllllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllllll.....................llllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllll.......................lllllllllllllllllllxxxxxx
+xxxxxxllllllllllllllllll...B.................B...llllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllll.............B.............lllllllllllllllllxxxxxx
+xxxxxxllllllllllllllll.............................llllllllllllllllxxxxxx
+xxxxxxlllllllllllllll...............................lllllllllllllllxxxxxx
+xxxxxxllllllllllllll.................................llllllllllllllxxxxxx
+xxxxxxlllllllllllll.....B.......B.......B.......B.....lllllllllllllxxxxxx
+xxxxxxllllllllllll.....................................llllllllllllxxxxxx
+xxxxxxlllllllllll.......................................lllllllllllxxxxxx
+xxxxxxllllllllll.........................................llllllllllxxxxxx
+xxxxxxlllllllll....(.........B.............B.........[....lllllllllxxxxxx
+xxxxxxllllllll......................B.....................lllllllllxxxxxx
+xxxxxxllllllll............................................lllllllllxxxxxx
+xxxxxxlllllllll..........................................llllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##########################################################################
+# Watery temple
+NAME: water_temple
+PLACE: Temple
+FLAGS: no_rotate
+ORIENT: encompass
+
+MAP
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwww...................B...................wwwwwcx
+xcwww......B.............................B......wwwcx
+xcwww.............B...............B.............wwwcx
+xcww......................(......................wwcx
+xcww.............................................wwcx
+xcww...B..................T..................B...wwcx
+xcww.............................................wwcx
+xcww...................[.....{...................wwcx
+xcwww.............B...............B.............wwwcx
+xcwww......B.............................B......wwwcx
+xcwwwww...................B...................wwwwwcx
+xcwwwwwwww.................................wwwwwwwwcx
+xcwwwwwwwwwwww.........................wwwwwwwwwwwwcx
+xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
+xcccccccccccccccccccccccccccccccccccccccccccccccccccx
+ENDMAP
+
 
 ##############################################################################
 # Tomb:1
