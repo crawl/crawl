@@ -921,7 +921,7 @@ bool activate_ability(void)
         break;
 
     case ABIL_ZIN_SUMMON_GUARDIAN:
-        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_ANGEL);
+        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_ANGEL, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
@@ -953,7 +953,7 @@ bool activate_ability(void)
         break;
 
     case ABIL_TSO_SUMMON_DAEVA:
-        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_DAEVA);
+        summon_ice_beast_etc(you.skills[SK_INVOCATIONS] * 4, MONS_DAEVA, true);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
