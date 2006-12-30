@@ -227,6 +227,9 @@ void stop_delay( void )
     default:
         break;
     }
+
+    if (is_run_delay(delay.type))
+        update_turn_count();
 }
 
 bool you_are_delayed( void )
@@ -760,6 +763,7 @@ static void handle_run_delays(const delay_queue_item &delay)
     // We don't want to send the game into a deadlock.
     if (!you.running)
     {
+        update_turn_count();
         pop_delay();
         return;
     }
@@ -790,7 +794,10 @@ static void handle_run_delays(const delay_queue_item &delay)
     // removed, remove it now. This is needed to clean up after
     // find_travel_pos() function in travel.cc.
     if (!you.running && is_run_delay(current_delay_action()))
+    {
         pop_delay();
+        update_turn_count();
+    }
 }
 
 static void handle_macro_delay()

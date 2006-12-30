@@ -16,15 +16,10 @@
 
 #include "menu.h"
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - player - stuff
- * *********************************************************************** */
+void update_turn_count();
+
 void print_stats(void);
 
-/* ***********************************************************************
- * called from: chardump
- * *********************************************************************** */
 std::vector<formatted_string> get_full_detail(bool calc_unid);
 
 const char *equip_slot_to_name(int equip);

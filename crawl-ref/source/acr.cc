@@ -2089,7 +2089,10 @@ static void world_reacts()
     bool its_quiet;             //jmf: for silence messages
 
     if (you.num_turns != -1)
+    {
         you.num_turns++;
+        update_turn_count();
+    }
 
     run_environment_effects();
 
@@ -2758,6 +2761,7 @@ static bool initialise(void)
 
     draw_border();
     new_level();
+    update_turn_count();
 
     init_new_level(false);
     // Mark items in inventory as of unknown origin.

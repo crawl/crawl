@@ -513,6 +513,7 @@ void redraw_screen(void)
     bool note_status = notes_are_active();
     activate_notes(false);
     new_level();
+    update_turn_count();
     activate_notes(note_status);
 
     viewwindow(1, false);
