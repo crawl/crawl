@@ -3792,6 +3792,19 @@ void give_items_skills()
             you.inv[1].sub_type = WPN_HAND_CROSSBOW;
             you.inv[4].sub_type = MI_DART;
         }
+        else if ( coinflip() )       // 50% chance of curare
+        {
+            you.inv[5].base_type = OBJ_MISSILES;
+            you.inv[5].sub_type = MI_NEEDLE;
+            you.inv[5].quantity = 0;
+            while ( you.inv[4].quantity > 9 )
+            {
+                you.inv[4].quantity -= 7; // 7-1 tradeoff
+                you.inv[5].quantity++;
+            }
+            you.inv[5].plus = 0;
+            set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
+        }
 
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 2;
