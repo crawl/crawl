@@ -1758,8 +1758,9 @@ int trap_at_xy(int which_x, int which_y)
 
     for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
     {
-        if (env.trap[which_trap].x == which_x
-            && env.trap[which_trap].y == which_y)
+        if (env.trap[which_trap].x == which_x &&
+            env.trap[which_trap].y == which_y &&
+            env.trap[which_trap].type != TRAP_UNASSIGNED)
         {
             return (which_trap);
         }
