@@ -3082,61 +3082,26 @@ static int quadrant_blink(int x, int y, int pow, int garbage)
     if (pow > 100)
         pow = 100;
 
-    // setup: Brent's new algorithm
-    // we are interested in two things: distance of a test point from
-    // the ideal 'line', and the distance of a test point from two
-    // actual points, one in the 'correct' direction and one in the
-    // 'incorrect' direction.
-
-    // scale distance by 10 for more interesting numbers.
-    int l,m;        // for line equation lx + my = 0
-    l = (x - you.x_pos);
-    m = (you.y_pos - y);
-
-    int tx, ty;         // test x,y
-    int rx, ry;         // x,y relative to you.
-    int sx, sy;         // test point in the correct direction
-    int bx = x;         // best x
-    int by = y;         // best y
-
-    int best_dist = 10000;
-
-    sx = l;
-    sy = -m;
-
-    // for each point (a,b), distance from the line is | la + mb |
-
-    for(int tries = pow * pow / 500 + 1; tries > 0; tries--)
+    const int dist = random2(6) + 2;  // 2-7
+    const int ox = you.x_pos + (x - you.x_pos) * dist;
+    const int oy = you.y_pos + (y - you.y_pos) * dist;
+   
+    int tx, ty;
+    for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
-        if (!random_near_space(you.x_pos, you.y_pos, tx, ty))
+        // find a space near our target...
+        if ( !random_near_space(ox, oy, tx, ty) )
             return 0;
-
-        rx = tx - you.x_pos;
-        ry = ty - you.y_pos;
-
-        int dist = l * rx + m * ry;
-        dist *= 10 * dist;      // square and multiply by 10
-
-        // check distance to test points
-        int dist1 = distance(rx, ry, sx, sy) * 10;
-        int dist2 = distance(rx, ry, -sx, -sy) * 10;
-
-        // 'good' points will always be closer to test point 1
-        if (dist2 < dist1)
-            dist += 80;          // make the point less attractive
-
-        if (dist < best_dist)
-        {
-            best_dist = dist;
-            bx = tx;
-            by = ty;
-        }
+        
+        // which is close enough, and also far enough from us
+        if ( distance(ox, oy, tx, ty) <= 10 &&
+             distance(you.x_pos, you.y_pos, tx, ty) >= 8 )
+            break;
     }
 
-    you.x_pos = bx;
-    you.y_pos = by;
-
-    return (1);
+    you.x_pos = tx;
+    you.y_pos = ty;
+    return 1;
 }
 
 int cast_semi_controlled_blink(int pow)
