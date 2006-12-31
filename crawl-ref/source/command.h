@@ -61,7 +61,6 @@ void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 void show_levelmap_help();
 void list_commands(bool wizard);
-void browse_file(FILE* fp);
 
 // Actually defined in acr.cc; we may want to move this to command.cc
 void process_command(command_type cmd);

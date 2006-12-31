@@ -71,6 +71,7 @@
 
 #include "abl-show.h"
 #include "branch.h"
+#include "command.h"
 #include "dungeon.h"
 #include "files.h"
 #include "fight.h"
@@ -2950,11 +2951,16 @@ spec_query:
         textcolor( BROWN );
         
         if (you.char_class == JOB_UNKNOWN)
-            cprintf(EOL "SPACE - Choose class first; "
-                        "? - Random Species; * - Random Character; X - Quit" 
+            cprintf(EOL
+                    "SPACE - Choose class first; ? - Random Species; "
+                    "* - Random Character"
+                    EOL
+                    "+ - Help; X - Quit"
                     EOL);
         else
-            cprintf(EOL "? - Random; Bksp - Back to class selection; X - Quit" 
+            cprintf(EOL
+                    "+ - Help ? - Random; "
+                    "Bksp - Back to class selection; X - Quit" 
                     EOL);
 
         if (Options.prev_race)
@@ -2982,6 +2988,12 @@ spec_query:
     else
     {
         keyn = c_getch();
+    }
+
+    if ( keyn == '+' )
+    {
+        list_commands(false);
+        return choose_race();
     }
 
     if ((keyn == '\r' || keyn == '\n') && Options.prev_race && prevraceok)
@@ -3144,11 +3156,16 @@ job_query:
 
         textcolor( BROWN );
         if (!you.species)
-            cprintf(EOL "SPACE - Choose species first; "
-                        "? - Random Class; * - Random Character; X - Quit" 
+            cprintf(EOL
+                    "SPACE - Choose species first; ? - Random Class; "
+                    "* - Random Character"
+                    EOL
+                    "+ - Help; X - Quit" 
                     EOL);
         else
-            cprintf(EOL "? - Random; Bksp - Back to species selection; X - Quit" 
+            cprintf(EOL
+                    "+ - Help; ? - Random; "
+                    "Bksp - Back to species selection; X - Quit" 
                     EOL);
 
         if (Options.prev_cls)
@@ -3176,6 +3193,12 @@ job_query:
     else
     {
         keyn = c_getch();
+    }
+
+    if ( keyn == '+' )
+    {
+        list_commands(false);
+        return choose_class();
     }
 
     if ((keyn == '\r' || keyn == '\n') && Options.prev_cls && prevclassok)

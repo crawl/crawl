@@ -1054,29 +1054,6 @@ void process_command( command_type cmd ) {
     case CMD_DISPLAY_NOTES:
         display_notes();
         break;
-        
-    case CMD_BROWSE_MANUAL:
-    {
-        FILE* fp;
-#ifdef DATA_DIR_PATH
-        fp = fopen(DATA_DIR_PATH "/crawl_manual.txt", "r");
-#else
-        fp = fopen("../docs/crawl_manual.txt", "r");
-        if ( !fp )
-            fp = fopen("./docs/crawl_manual.txt", "r");
-#endif
-        if ( fp )
-        {
-            browse_file(fp);
-            fclose(fp);
-            redraw_screen();
-        }
-        else
-        {
-            mpr("Crawl manual (crawl_manual.txt) not found.");
-        }
-    }
-    break;
 
     case CMD_CLEAR_MAP:
         if (you.level_type != LEVEL_LABYRINTH &&
@@ -2387,7 +2364,6 @@ command_type keycode_to_command( keycode_type key ) {
     case ',': return CMD_PICKUP;
     case ':': return CMD_MAKE_NOTE;
     case '_': return CMD_DISPLAY_NOTES;
-    case '+': return CMD_BROWSE_MANUAL;
     case ';': return CMD_INSPECT_FLOOR;
     case '!': return CMD_SHOUT;
     case '^': return CMD_DISPLAY_RELIGION;

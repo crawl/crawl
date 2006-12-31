@@ -563,25 +563,6 @@ void list_weapons(void)
     mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()
 
-static int cmdhelp_keyfilter(int keyin)
-{
-    switch (keyin)
-    {
-    case CK_DOWN:
-    case '+':
-    case '=':
-        return ('>');
-    case CK_UP:
-    case '-':
-    case '_':
-        return ('<');
-    case 'x':
-        return (CK_ESCAPE);
-    default:
-        return (keyin);
-    }
-}
-
 static bool cmdhelp_textfilter(const std::string &tag)
 {
 #ifdef WIZARD
@@ -626,8 +607,39 @@ static const char *targeting_help =
         "<w>*</w> : enter manual targeting (where <w>Dir.</w>\n"
         "      moves the cursor and <w>.</w> etc. fire)\n"
         "<w>?</w> : describes monster under cursor\n";
+
+// Add the contents of the file fp to the scroller menu m.
+// If first_hotkey is nonzero, that will be the hotkey for the
+// start of the contents of the file.
+// If auto_hotkeys is true, the function will try to identify
+// sections and add appropriate hotkeys.
+static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
+                                 int first_hotkey, bool auto_hotkeys )
+{
+    bool next_is_hotkey = false;
+    bool is_first = true;
+    char buf[200];
+    while (fgets(buf, sizeof buf, fp))
+    {
+        MenuEntry* me = new MenuEntry(buf);
+        if ((next_is_hotkey && isupper(buf[0])) || (is_first && first_hotkey))
+        {
+            me->add_hotkey(is_first ? first_hotkey : tolower(buf[0]));
+            me->level = MEL_TITLE;
+            me->colour = WHITE;
+        }
+        m.add_entry(me);
+        // XXX FIXME: there must be a better way to identify sections
+        next_is_hotkey = auto_hotkeys &&
+            (strstr(buf, "------------------------------------------"
+                    "------------------------------") == buf);
+        is_first = false;
+    }
+}
+
             
-static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
+static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
+                              bool with_manual)
 {
     formatted_scroller cmd_help;
     
@@ -636,14 +648,59 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines)
 
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
-    cmd_help.set_more(
-            formatted_string::parse_string(
-                "<cyan>[ + : Page down.   - : Page up."
-                "                         Esc/x exits.]"));
-    cmd_help.f_keyfilter = cmdhelp_keyfilter;
+    if ( with_manual )
+        cmd_help.set_more( formatted_string::parse_string(
+                               "<cyan>[ + : Page down.   - : Page up."
+                               " ? or letter for manual.   Esc exits.]"));
+    else
+        cmd_help.set_more( formatted_string::parse_string(
+                               "<cyan>[ + : Page down.   - : Page up."
+                               "                           Esc exits.]"));
 
     for (unsigned i = 0; i < lines.size(); ++i )
         cmd_help.add_item_formatted_string(lines[i]);
+
+    if ( with_manual )
+    {
+        FILE* fp;
+#ifdef DATA_DIR_PATH
+        fp = fopen(DATA_DIR_PATH "/crawl_manual.txt", "r");
+#else
+        fp = fopen("../docs/crawl_manual.txt", "r");
+        if ( !fp )
+            fp = fopen("./docs/crawl_manual.txt", "r");
+#endif
+        if ( fp )
+        {
+            // put in a separator
+            cmd_help.add_item_string("");
+            cmd_help.add_item_string(std::string(get_number_of_cols()-1,'-'));
+            add_file_to_scroller(fp, cmd_help, '?', true);
+            fclose(fp);
+        }
+
+#ifdef DATA_DIR_PATH
+        fp = fopen(DATA_DIR_PATH "/tables.txt", "r");
+#else
+        fp = fopen("../docs/tables.txt", "r");
+        if ( !fp )
+            fp = fopen("./docs/tables.txt", "r");
+#endif
+        if ( fp )
+        {
+            // put in a separator
+            for ( int i = 0; i < get_number_of_lines() - 5; ++i )
+                cmd_help.add_item_string("");
+            MenuEntry* me = new MenuEntry("Tables");
+            me->level = MEL_TITLE;
+            me->colour = WHITE;
+            me->add_hotkey('s');
+            cmd_help.add_entry(me);
+            add_file_to_scroller(fp, cmd_help, 0, false);
+            fclose(fp);
+        }
+        
+    }
     cmd_help.show();
 }
 
@@ -656,7 +713,7 @@ void show_levelmap_help()
         formatted_lines.push_back(
                 formatted_string::parse_string(
                     lines[i], true, cmdhelp_textfilter));
-    show_keyhelp_menu(formatted_lines);
+    show_keyhelp_menu(formatted_lines, false);
 }
 
 void list_commands(bool wizard)
@@ -895,7 +952,7 @@ void list_commands(bool wizard)
             "stashes, and <w>Ctrl-E</w> to erase them.\n",
             true, true, cmdhelp_textfilter);
     
-    show_keyhelp_menu(cols.formatted_lines());
+    show_keyhelp_menu(cols.formatted_lines(), true);
 }
 
 static void list_wizard_commands()
@@ -993,28 +1050,3 @@ static const char *wizard_string( int i )
     return ("");
 #endif
 }                               // end wizard_string()
-
-void browse_file( FILE* fp )
-{
-    menu_browser m;
-    bool next_is_hotkey = false;
-    char buf[200];
-    while (fgets(buf, sizeof buf, fp))
-    {
-        MenuEntry* me = new MenuEntry(buf);
-        if ( next_is_hotkey && isupper(buf[0]) )
-        {
-            me->add_hotkey(buf[0]);
-            me->add_hotkey(tolower(buf[0]));
-            me->level = MEL_TITLE;
-            me->colour = WHITE;
-        }
-        m.add_entry(me);
-        // XXX FIXME: there must be some better way to identify sections
-        next_is_hotkey =
-            (strstr(buf,
-                    "--------------------------------------------------"
-                    "----------------------") == buf);
-    }
-    m.show();
-}

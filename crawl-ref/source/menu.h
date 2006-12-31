@@ -414,6 +414,10 @@ private:
     std::vector<formatted_string> flines;
 };
 
+// This class is for when (some of) your items are formatted, and
+// selection is impossible...in other words, you just want a browser.
+// Hotkeys can be set on menu items, in which case you can jump
+// to them by pressing the appropriate key.
 class formatted_scroller : public Menu
 {
 public:
@@ -425,20 +429,11 @@ public:
     virtual ~formatted_scroller();
 protected:
     virtual void draw_index_item(int index, const MenuEntry* me) const;
+    virtual bool process_key( int keyin );
+    bool jump_to( int linenum );
 };
 
 int menu_colour(const std::string &itemtext);
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
-
-// Idea: Menu entries with the hotkey set will jump to that
-// entry when the hotkey is pressed.
-class menu_browser : public Menu
-{
-public:
-    menu_browser() { flags &= (~MF_EASY_EXIT); }
-protected:
-    virtual bool process_key( int keyin );
-    bool jump_to( int linenum );
-};
 
 #endif

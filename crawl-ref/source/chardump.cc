@@ -1055,9 +1055,8 @@ void resists_screen()
     
     formatted_scroller scr;
     for ( unsigned i = 0; i < vfs.size(); ++i )
-    {
         scr.add_item_formatted_string(vfs[i]);
-    }
+
     scr.show();
 #ifdef DOS_TERM
     puttext(1, 1, 80, 25, dosbuffer);

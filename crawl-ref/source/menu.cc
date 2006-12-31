@@ -1397,7 +1397,7 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
     return breakcount;
 }
 
-bool menu_browser::jump_to( int i )
+bool formatted_scroller::jump_to( int i )
 {
     if ( i == first_entry + 1 )
         return false;
@@ -1408,18 +1408,20 @@ bool menu_browser::jump_to( int i )
     return true;
 }
 
-bool menu_browser::process_key( int keyin )
+bool formatted_scroller::process_key( int keyin )
 {
+
+    if (f_keyfilter)
+        keyin = (*f_keyfilter)(keyin);
+
     bool repaint = false;
     switch ( keyin )
     {
     case 0:
         return true;
-    case CK_ENTER:
     case CK_ESCAPE:
         return false;
-        return false;
-    case ' ': case '+': case CK_PGDN: case '>': case '\'':
+    case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
         repaint = page_down();
         break;
     case '-': case CK_PGUP: case '<': case ';':
@@ -1429,6 +1431,7 @@ bool menu_browser::process_key( int keyin )
         repaint = line_up();
         break;
     case CK_DOWN:
+    case CK_ENTER:
         repaint = line_down();
         break;
     case CK_HOME:
