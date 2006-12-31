@@ -860,7 +860,7 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
         pbolt.name = "golden flame";
         pbolt.colour = YELLOW;
         pbolt.range = 7;
-        pbolt.damage = calc_dice( 3, 30 + (power * 3) / 4 );
+        pbolt.damage = calc_dice( 3, 20 + (power * 2) / 3 );
         pbolt.hit = 150;
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_HOLY;
