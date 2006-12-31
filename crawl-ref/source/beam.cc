@@ -3630,7 +3630,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     // note that hurt_final was calculated above, so we don't need it again.
     // just need to apply flavoured specials (since we called with
     // doFlavouredEffects = false above)
-    hurt_final = mons_adjust_flavoured(mon, beam, hurt_final);
+    hurt_final = mons_adjust_flavoured(mon, beam, raw_damage);
 
     // now hurt monster
     hurt_monster( mon, hurt_final );
