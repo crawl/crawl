@@ -796,6 +796,8 @@ public:
     bool        autoprayer_on;
     bool        fizzlecheck_on;
 
+    bool        show_turns;     // Show turns used in HUD.
+
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump

@@ -46,6 +46,7 @@
 ##### 2-  File System ###############################################
 #
 # crawl_dir= <path>
+# morgue_dir = morgues
 # save_dir = saves
 # sound = <regex>:<path to sound file>
 
@@ -157,6 +158,7 @@ stab_brand = hi:blue
 # delay_message_clear = true
 # always_greet = false
 # increasing_skill_progress = false
+# show_turns = false
 #
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
 menu_colour = green:(worn|neck|hand|weapon)\)

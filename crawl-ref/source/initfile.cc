@@ -534,6 +534,8 @@ void game_options::reset_options()
     autoprayer_on = false;
     fizzlecheck_on = false;
 
+    show_turns = true;
+
     prev_race = 0;
     prev_cls  = 0;
     prev_ck   = GOD_NO_GOD;
@@ -1616,6 +1618,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifndef SAVE_DIR_PATH
         save_dir = field;
 #endif
+    }
+    else if (key == "show_turns")
+    {
+        show_turns = read_bool( field, show_turns );
     }
     else if (key == "morgue_dir")
     {

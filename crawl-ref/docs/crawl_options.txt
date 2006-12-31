@@ -11,7 +11,7 @@ The contents of this text are:
 		chaos_knight, death_knight, priest, 
 		race, class, random_pick
 2-  File System and Sound.
-                crawl_dir, save_dir, sound
+                crawl_dir, morgue_dir, save_dir, sound
 3-  Lua files.
 		lua_file,
 		base.lua, stash.lua, wield.lua, kills.lua, runrest.lua, 
@@ -48,7 +48,8 @@ The contents of this text are:
                 easy_exit_menu,	default_autoprayer, sort_menus
 4-i	Message and Display Improvements.
 		hp_warning, hp_colour, mp_colour, always_greet, terse_hand, 
-                delay_message_clear, menu_colour, increasing_skill_progress
+                delay_message_clear, menu_colour, increasing_skill_progress,
+                show_turns
 4-j	Missiles.
 		fire_items_start, fire_order
 4-k	Message Channels.
@@ -153,6 +154,10 @@ random_pick = false
 crawl_dir= <path>
 	Directory for reading macro.txt and init.txt, and dumping characters.
 	It should end with the path delimiter.
+
+morgue_dir = <path>
+        Directory where morgue dumps (morgue*.txt and morgue*.lst) files are
+        written.
 
 save_dir = <path>
         Directory where saves and bones are stored. This option may be ignored
@@ -567,7 +572,7 @@ end
 4-g	Stashes.
 ----------------
 
-stash_tracking = (explicit | dropped | all)
+stash_tracking = (all | explicit | dropped)
         A stash is a heap of items tracked by Crawl. You can search in your
         stashes with Ctrl-F. This options rules how stashes are generated.
         When stash_tracking is set to 'all' (the default), the game marks any 
@@ -714,6 +719,9 @@ increasing_skill_progress = true
         read (0%). With false, you get the old behaviour which counts backwards
         from 10.
 
+show_turns = true
+        This option controls whether the turn counter (of turns elapsed) is
+        displayed in the main view.
 
 4-j	Missiles.
 -----------------

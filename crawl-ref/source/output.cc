@@ -62,8 +62,12 @@ void update_turn_count()
 {
     // Don't update turn counter when running/resting/traveling to
     // prevent pointless screen updates.
-    if (you.running > 0 || (you.running < 0 && Options.travel_delay == -1))
+    if (!Options.show_turns
+        || you.running > 0
+        || (you.running < 0 && Options.travel_delay == -1))
+    {
         return;
+    }
 
     // FIXME: Create some kind of layout manager class so we can
     // templatise the heads-up display layout and stop hardcoding
