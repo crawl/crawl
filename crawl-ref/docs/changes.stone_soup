@@ -1,3 +1,13 @@
+Stone Soup 0.1.7 (20061231)
+---------------------------
+* Fixed missing cursor in controlled-teleport screen.
+* Fixed semi-controlled blink.
+* Fixed the Shining One and Zin being angered by the deaths of their minions 
+  in combat.
+* Fixed friendlies being angered by bolts that they are immune to.
+* Fixed notes not noting zombies correctly.
+* Backported greedy explore from 0.2.
+
 Stone Soup 0.1.6 (20061219)
 ---------------------------
 * Fixed Pandemonium demonlords (Cerebov and friends) not getting the
