@@ -425,7 +425,7 @@ struct player
   FixedVector< item_def, ENDOFPACK > inv;
 
   int burden;
-  char burden_state;
+  burden_state_type burden_state;
   FixedVector<unsigned char, 25> spells;
   char spell_no;
   unsigned char char_direction;          //
@@ -738,6 +738,8 @@ public:
     bool        autoprayer_on;
     bool        fizzlecheck_on;
 
+    bool        show_turns;     // Show turns used in HUD.
+
     long        autopickups;    // items to autopickup
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump
@@ -751,6 +753,7 @@ public:
     bool        increasing_skill_progress; // skills go from 0-10 or 10-0
     bool        confirm_self_target; // require confirmation before selftarget
     bool        safe_autopickup; // don't autopickup when monsters visible
+    bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
     bool        use_notes;	// take (and dump) notes

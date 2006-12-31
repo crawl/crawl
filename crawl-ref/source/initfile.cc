@@ -524,6 +524,8 @@ void game_options::reset_options()
     autoprayer_on = false;
     fizzlecheck_on = false;
 
+    show_turns = true;
+
     prev_race = 0;
     prev_cls  = 0;
     prev_ck   = GOD_NO_GOD;
@@ -568,7 +570,7 @@ void game_options::reset_options()
     note_all_spells        = false;
     note_hp_percent        = 0;
     ood_interesting        = 8;
-    terse_hand             = false;
+    terse_hand             = true;
     increasing_skill_progress = true;
 
     // [ds] Grumble grumble.
@@ -1495,6 +1497,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         save_dir = field;
 #endif
     }
+    else if (key == "show_turns")
+    {
+        show_turns = read_bool( field, show_turns );
+    }
     else if (key == "hp_warning")
     {
         hp_warning = atoi( field.c_str() );
@@ -1570,11 +1576,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "confirm_self_target")
     {
-	confirm_self_target = read_bool( field, confirm_self_target );
+        confirm_self_target = read_bool( field, confirm_self_target );
     }
     else if (key == "safe_autopickup")
     {
-	safe_autopickup = read_bool( field, safe_autopickup );
+        safe_autopickup = read_bool( field, safe_autopickup );
+    }
+    else if (key == "autopickup_no_burden")
+    {
+        autopickup_no_burden = read_bool( field, autopickup_no_burden );
     }
     else if (key == "use_notes")
     {
@@ -1598,7 +1608,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "increasing_skill_progress")
     {
-        increasing_skill_progress = read_bool( field, increasing_skill_progress );
+        increasing_skill_progress =
+            read_bool( field, increasing_skill_progress );
     }
     else if (key == "flush")
     {

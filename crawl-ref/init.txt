@@ -28,6 +28,8 @@
 # Note that all boolean options (i.e. values of 'true' or 'false') have
 # their non-default value commented out. You can toggle these by just
 # uncommenting.
+# Options with several values, e.g stash_tracking = (all | explicit | dropped),
+# usually have the first value as default.
 
 ##### 1- Starting Screen ############################################
 #
@@ -62,39 +64,34 @@ lua_file = lua/trapwalk.lua
 #
 ##### 4-a	Picking up and Dropping ###############
 #	
-autopickup = $?!:"/%
+# autopickup = $?!+"/%
 # default_autopickup = false
-# safe_autopickup = true
+# safe_autopickup = false
+# autopickup_no_burden = true
 # safe_zero_exp = false
-# pickup_thrown = true
-# pickup_dropped = false
+# pickup_thrown = false
+# pickup_dropped = true
 # assign_item_slot = backward
 #
-ban_pickup = degeneration,decay,confusion,potions? of slowing
-ban_pickup = potions? of strong poison,potions? of poison
-ban_pickup = inaccuracy
-ban_pickup = scrolls? of paper,immolation,curse armor,curse weapon
-ban_pickup = forgetfulness,uselessness,noise,torment
+# ban_pickup = scrolls? of random uselessness
 #
-drop_mode = multi
-pickup_mode = auto:5
+# drop_mode = (multi | single)
+# pickup_mode = (single | multi | auto:5)
 # drop_filter = skeleton, rotting, corpse
 
 ##### 4-b	Targetting ############################
 #
 # target_zero_exp = false
-# target_wrap = false
 # target_oos = false
 # target_los_first = false
-# confirm_self_target = true
+# confirm_self_target = false
 # default_fizzlecheck = true
 
 ##### 4-c	Passive Sightings #####################
 #
 detected_monster_colour = lightred
 detected_item_colour = green
-remembered_monster_colour = darkgrey
-# colour_map = true
+# colour_map = false
 # clean_map = true
 
 ##### 4-d	Branding ##############################
@@ -106,65 +103,68 @@ stab_brand = hi:blue
 
 ##### 4-e	Level Map Functions ###################
 #
-level_map_cursor_step = 10
-item_colour = true
-# show_waypoints = false
+# level_map_cursor_step = 7
+# item_colour = false
 
 ##### 4-f	Travel and Exploration #################
 #
 # travel_colour = false
-travel_delay = 20
-travel_stair_cost = 500
+# travel_delay = 10
 # travel_avoid_terrain = shallow water
-travel_exclude_radius2 = 68
+# travel_exclude_radius2 = 68
+#
+# explore_greedy = yes
+# explore_stop = items,stairs,shops,altars
+
+# tc_reachable = blue
+# tc_dangerous = cyan
+# tc_excluded = lightmagenta
+# tc_exclude_circle = red
+
+# The following options are not default. Uncommenting activates them.
 #
 # stop_travel = Something appears
 # stop_travel = god:wrath finds you
-#
-# explore_stop = items,stairs,shops,altars
-#
 # runrest_ignore_message = prayer ends
-#
 # runrest_ignore_message = You feel.*sick
 # runrest_ignore_poison = 4:100
-
 # trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 ##### 4-g	Stashes ###############################
 #
-# stash_tracking = (explicit | dropped | all)
+# stash_tracking = (all | explicit | dropped)
 # stash_filter = 14, 4:21
 
 ##### 4-h	Command Enhancements ##################
 #
-# auto_list = true
-# lowercase_invocations = true
-# easy_open = true
-# easy_butcher = true
-# easy_armour = false
+# auto_list = false
+# lowercase_invocations = false
+# easy_open = false
+# easy_butcher = false
+# easy_unequip = false
 # easy_confirm = (none | safe | all)
-# easy_quit_item_lists = true
+# easy_quit_item_prompts = false
 # easy_exit_menu = true
 # default_autoprayer = true
-# sort_menus = true
+# sort_menus = (auto:5 | true | false)
 
 ##### 4-i	Messages and Display Enhancements #####
 #
-# show_uncursed = false
-hp_warning = 25
+# hp_warning = 10
 # terse_hand = false
 # delay_message_clear = true
-# always_greet = true
-# increasing_skill_progress = true
+# always_greet = false
+# increasing_skill_progress = false
+# show_turns = false
 #
-# menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
-# menu_colour = green:(worn|neck|hand|weapon)\)
-# menu_colour = red: cursed
+menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
+menu_colour = green:(worn|neck|hand|weapon)\)
+menu_colour = red: cursed
 
 ##### 4-j	Firing Commands #######################
 #
-fire_items_start = a
-fire_order = launcher, dart, stone, dagger, spear, handaxe, club
+# fire_items_start = a
+# fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 
 ##### 4-k	Channels ##############################
 #
@@ -187,17 +187,16 @@ fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
-dump_item_origin_price = 100
-dump_message_count = 4
+# dump_item_origin_price = 100
+# dump_message_count = 7
 # dump_order  = header,stats,misc,notes,inventory,skills
 # dump_order += spells,mutations,messages,screenshot,kills
-# verbose_dump = true
 
 ##### 5-b	Notes #################################
 #
 # use_notes = false
-note_items = rod,book,rune
-ood_interesting = 8
+# note_items = rod,book,rune
+# ood_interesting = 8
 # note_hp_percent = 5
 # note_skill_levels = 1,5,10,15,27
 # note_skill_max = true
@@ -211,7 +210,10 @@ ood_interesting = 8
 # colour.yellow    = brown
 #
 # use_ascii = ascii
-wiz_mode = no
+# wiz_mode = no
+#
+# See crawl_options.txt for the options
+# char_set, cset_ascii, cset_ibm, cset_dec, cset_any, feature
 
 ##### 6-b	DOS and Windows #######################
 #

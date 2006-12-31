@@ -2027,10 +2027,15 @@ unsigned char player_sust_abil(bool calc_unid)
     return sa;
 }                               // end player_sust_abil()
 
-int carrying_capacity(void)
+int carrying_capacity( burden_state_type bs )
 {
-    // Originally: 1000 + you.strength * 200 + ( you.levitation ? 1000 : 0 )
-    return (3500 + (you.strength * 100) + (player_is_levitating() ? 1000 : 0));
+    int cap = 3500 + (you.strength * 100) + (player_is_levitating() ? 1000 : 0);
+    if ( bs == BS_UNENCUMBERED )
+        return (cap * 5) / 6;
+    else if ( bs == BS_ENCUMBERED )
+        return (cap * 11) / 12;
+    else
+        return cap;
 }
 
 int burden_change(void)
@@ -2038,8 +2043,6 @@ int burden_change(void)
     char old_burdenstate = you.burden_state;
 
     you.burden = 0;
-
-    int max_carried = carrying_capacity();
 
     if (you.duration[DUR_STONEMAIL])
         you.burden += 800;
@@ -2066,8 +2069,7 @@ int burden_change(void)
     set_redraw_status( REDRAW_BURDEN );
 
     // changed the burdened levels to match the change to max_carried
-    if (you.burden < (max_carried * 5) / 6)
-    // (you.burden < max_carried - 1000)
+    if (you.burden < carrying_capacity(BS_UNENCUMBERED))
     {
         you.burden_state = BS_UNENCUMBERED;
 
@@ -2075,8 +2077,7 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
             mpr("Your possessions no longer seem quite so burdensome.");
     }
-    else if (you.burden < (max_carried * 11) / 12)
-    // (you.burden < max_carried - 500)
+    else if (you.burden < carrying_capacity(BS_ENCUMBERED))
     {
         you.burden_state = BS_ENCUMBERED;
 
