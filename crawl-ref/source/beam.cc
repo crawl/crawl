@@ -3522,22 +3522,18 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         hurt_final = 0;
     }
 
-#if DEBUG_DIAGNOSTICS
-    const int old_hurt = hurt_final;
-#endif 
+    const int raw_damage = hurt_final;
 
     // check monster resists, _without_ side effects (since the
     // beam/missile might yet miss!)
-    hurt_final = mons_adjust_flavoured( mon, beam, hurt_final, false );
+    hurt_final = mons_adjust_flavoured( mon, beam, raw_damage, false );
 
 #if DEBUG_DIAGNOSTICS
     if (!beam.is_tracer)
     {
-        snprintf( info, INFO_SIZE, 
-              "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d", 
-                  ptr_monam( mon, DESC_PLAIN ), hurt, old_hurt, hurt_final );
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d", 
+             ptr_monam( mon, DESC_PLAIN ), hurt, raw_damage, hurt_final );
     }
 #endif
 
@@ -3571,14 +3567,15 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
     // BEGIN real non-enchantment beam
 
-    // player beams which hit friendly MIGHT annoy them and be considered
-    // naughty if they do much damage (this is so as not to penalize
-    // players that fling fireballs into a melee with fire elementals
-    // on their side - the elementals won't give a sh*t, after all)
+    // player beams which hit friendly will annoy them and be
+    // considered naughty if they do damage (this is so as not to
+    // penalize players that fling fireballs into a melee with fire
+    // elementals on their side - the elementals won't give a sh*t,
+    // after all)
 
     if (nasty_beam(mon, beam))
     {
-        if (YOU_KILL(beam.thrower))
+        if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
             if (mons_friendly(mon))
                 did_god_conduct( DID_ATTACK_FRIEND, 5 );
@@ -3587,7 +3584,10 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
                 did_god_conduct( DID_ATTACK_HOLY, mon->hit_dice );
         }
 
-        behaviour_event(mon, ME_ANNOY, beam_source(beam) );
+        // Don't annoy friendlies if the player's beam did no damage.
+        // Hostiles will still take umbrage.
+        if (hurt_final > 0 || !mons_friendly(mon) || !YOU_KILL(beam.thrower))
+            behaviour_event(mon, ME_ANNOY, beam_source(beam) );
     }
 
     // explosions always 'hit'
