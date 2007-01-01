@@ -2397,7 +2397,7 @@ int items( int allow_uniques,       // not just true-false,
                 mitm[p].sub_type = STAFF_AIR + mitm[p].sub_type - 10;  
 
             // spell staves 
-            if (one_chance_in(20))
+            if (one_chance_in(10))
                 mitm[p].sub_type = STAFF_SMITING + random2(10);
 
             if ((mitm[p].sub_type == STAFF_ENERGY 
