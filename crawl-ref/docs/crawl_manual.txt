@@ -291,9 +291,9 @@ proficiency with all areas of endeavour an ambitious adventurer might need in
 the dungeons. They range from different weapon skills (both for close and ranged
 combat) to many magical skills and several additional activities like Dodging or
 Stabbing. See appendix X.3 for a detailed description of all skills present in
-Crawl. It is very important that the learn in which a character learns a skill
-depends solely on race. These so-called aptitudes are hinted at generally in the
-list of species (see appendix X.1).
+Crawl. It is important to note that the ease with which a character learns a
+skill depends solely on race. These aptitudes are hinted at in the list of
+species (see appendix X.1).
 
 You can see your character's skills by pressing the 'm' key; the higher the 
 level of a skill, the better you are at it. Every time your character gains 
