@@ -1399,7 +1399,7 @@ void find_parent_branch(int br, int depth,
     else
     {
         // XXX XXX FIXME Just read this from our data...
-        *pb = find_parent_branch(stair_level[bran].branch);
+        *pb = find_parent_branch(bran);
         *pd = stair_level[bran].depth;
     }
 }
