@@ -664,6 +664,7 @@ void monster_grid(bool do_updates)
                 continue;
             }
             else if (!do_updates
+                     && !mons_is_submerged( monster )
                      && !mons_friendly( monster )
                      && !mons_is_mimic( monster->type )
                      && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))

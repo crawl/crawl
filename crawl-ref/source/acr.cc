@@ -2490,7 +2490,7 @@ static void open_door(int move_x, int move_y, bool check_confused)
 
         const int mon = mgrd[dx][dy];
 
-        if (mon != NON_MONSTER && !mons_has_ench( &menv[mon], ENCH_SUBMERGED ))
+        if (mon != NON_MONSTER && !mons_is_submerged(&menv[mon]))
         {
             you_attack(mgrd[dx][dy], true);
             you.turn_is_over = true;

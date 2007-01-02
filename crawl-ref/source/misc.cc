@@ -1807,6 +1807,7 @@ bool i_feel_safe(bool announce)
                     struct monsters *mon = &menv[targ_monst];
                     if ( !mons_friendly(mon) &&
                          player_monster_visible(mon) &&
+                         !mons_is_submerged(mon) &&
                          !mons_is_mimic(mon->type) &&
                          (!Options.safe_zero_exp ||
                           !mons_class_flag( mon->type, M_NO_EXP_GAIN )))

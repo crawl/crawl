@@ -1630,7 +1630,7 @@ bool mons_friendly(const monsters *m)
     return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
 }
 
-bool mons_is_submerged( struct monsters *mon )
+bool mons_is_submerged( const monsters *mon )
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
     return (mons_has_ench( mon, ENCH_SUBMERGED ));
