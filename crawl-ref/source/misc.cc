@@ -1770,7 +1770,7 @@ int trap_at_xy(int which_x, int which_y)
     return (-1);
 }                               // end trap_at_xy()
 
-bool i_feel_safe()
+bool i_feel_safe(bool announce)
 {
     /* This is probably unnecessary, but I'm not sure that
        you're always at least 9 away from a wall */
@@ -1783,29 +1783,72 @@ bool i_feel_safe()
 
     /* statue check */
     if (you.visible_statue[STATUE_SILVER] ||
-             you.visible_statue[STATUE_ORANGE_CRYSTAL] )
-	return false;
+        you.visible_statue[STATUE_ORANGE_CRYSTAL] )
+    {
+        if (announce)
+            mprf(MSGCH_WARN, "There are scary statues in view.");
 
-    /* monster check */
-    for ( int y = ystart; y < yend; ++y ) {
-	for ( int x = xstart; x < xend; ++x ) {
-	    /* if you can see a nonfriendly monster then you feel
-	       unsafe */
-	    if ( see_grid(x,y) ) {
-		const unsigned char targ_monst = mgrd[x][y];
-		if ( targ_monst != NON_MONSTER ) {
-		    struct monsters *mon = &menv[targ_monst];
-		    if ( !mons_friendly(mon) &&
-			 player_monster_visible(mon) &&
-			 !mons_is_mimic(mon->type) &&
-			 (!Options.safe_zero_exp ||
-			  !mons_class_flag( mon->type, M_NO_EXP_GAIN ))) {
-		      return false;
-		    }
-		}
-	    }
-	}
+        return false;
     }
+
+    std::vector<const monsters *> mons;
+    /* monster check */
+    for ( int y = ystart; y < yend; ++y )
+    {
+        for ( int x = xstart; x < xend; ++x )
+        {
+            /* if you can see a nonfriendly monster then you feel
+               unsafe */
+            if ( see_grid(x,y) )
+            {
+                const unsigned char targ_monst = mgrd[x][y];
+                if ( targ_monst != NON_MONSTER )
+                {
+                    struct monsters *mon = &menv[targ_monst];
+                    if ( !mons_friendly(mon) &&
+                         player_monster_visible(mon) &&
+                         !mons_is_mimic(mon->type) &&
+                         (!Options.safe_zero_exp ||
+                          !mons_class_flag( mon->type, M_NO_EXP_GAIN )))
+                    {
+                        if (announce)
+                            mons.push_back(mon);
+                        else
+                            return false;
+                    }
+                }
+            }
+        }
+    }
+
+    if (announce)
+    {
+        if (mons.size() == 1)
+        {
+            const monsters *m = mons[0];
+            switch (random2(3))
+            {
+            case 0:
+                mprf(MSGCH_WARN, "Not with %s in view!",
+                     ptr_monam(m, DESC_NOCAP_A));
+                break;
+            case 1:
+                mprf(MSGCH_WARN, "There's %s right there!",
+                     ptr_monam(m, DESC_NOCAP_A));
+                break;
+            case 2:
+                mprf(MSGCH_WARN, "Wait, there's %s in sight!",
+                     ptr_monam(m, DESC_NOCAP_A));
+                break;
+            }
+        }
+        else if (mons.size() > 1)
+        {
+            mprf(MSGCH_WARN, "Not with these monsters around!");
+        }
+        return (mons.empty());
+    }
+    
     return true;
 }
 

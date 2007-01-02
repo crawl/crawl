@@ -147,7 +147,7 @@ const char *grid_item_destruction_message( unsigned char grid );
 
 void curare_hits_player(int agent, int degree);
 
-bool i_feel_safe();
+bool i_feel_safe(bool announce = false);
 
 void setup_environment_effects();
 

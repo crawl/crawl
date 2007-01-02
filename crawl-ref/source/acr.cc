@@ -755,7 +755,8 @@ static void handle_wizard_command( void )
 // Set up the running variables for the current run.
 static void start_running( int dir, int mode )
 {
-    you.running.initialise(dir, mode);
+    if (i_feel_safe(true))
+        you.running.initialise(dir, mode);
 }
 
 static bool recharge_rod( item_def &rod, bool wielded )
@@ -1002,12 +1003,15 @@ void process_command( command_type cmd ) {
     case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
 
     case CMD_REST:
-        if ( you.hp == you.hp_max &&
-             you.magic_points == you.max_magic_points )
-            mpr("You start searching.");
-        else
-            mpr("You start resting.");
         start_running( RDIR_REST, RMODE_REST_DURATION );
+        if (you.running)
+        {
+            if ( you.hp == you.hp_max &&
+                 you.magic_points == you.max_magic_points )
+                mpr("You start searching.");
+            else
+                mpr("You start resting.");
+        }
         break;
 
     case CMD_RUN_DOWN_LEFT:
@@ -1240,8 +1244,11 @@ void process_command( command_type cmd ) {
             mpr("Sorry, you can't auto-travel out of here.");
             break;
         }
-        start_translevel_travel();
-        mesclr();
+        if (i_feel_safe(true))
+        {
+            start_translevel_travel();
+            mesclr();
+        }
         break;
 
     case CMD_EXPLORE:
@@ -1251,7 +1258,8 @@ void process_command( command_type cmd ) {
             break;
         }
         // Start exploring
-        start_explore(Options.explore_greedy);
+        if (i_feel_safe(true))
+            start_explore(Options.explore_greedy);
         break;
 
     case CMD_DISPLAY_MAP:
@@ -1265,7 +1273,7 @@ void process_command( command_type cmd ) {
         plox[0] = 0;
         show_map(plox, true);
         redraw_screen();
-        if (plox[0] > 0) 
+        if (plox[0] > 0 && i_feel_safe(true))
             start_travel(plox[0], plox[1]);
         break;
 
