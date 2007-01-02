@@ -1006,7 +1006,8 @@ private:
         const std::string &interrupt);
     void set_activity_interrupt(const std::string &activity_name,
                                 const std::string &interrupt_names,
-                                bool append_interrupts);
+                                bool append_interrupts,
+                                bool remove_interrupts);
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;

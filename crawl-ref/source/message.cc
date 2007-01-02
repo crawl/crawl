@@ -313,17 +313,16 @@ static void base_mpr(const char *inf, int channel, int param)
     std::string imsg = inf;
     
     for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
-	if (Options.note_messages[i].matches(imsg)) {
-	    take_note(Note(NOTE_MESSAGE, channel, param, inf));
-	    break;
-	}
+        if (Options.note_messages[i].matches(imsg)) {
+            take_note(Note(NOTE_MESSAGE, channel, param, inf));
+            break;
+        }
     }
 
     interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
 
-    // If you're travelling, only certain user-specified messages can break 
-    // travel
-    if (you.running < 0)
+    // Check messages for all forms of running now.
+    if (you.running)
     {
         std::string message = inf;
         for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)

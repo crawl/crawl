@@ -493,7 +493,8 @@ void game_options::set_activity_interrupt(
  
 void game_options::set_activity_interrupt(const std::string &activity_name,
                                           const std::string &interrupt_names,
-                                          bool append_interrupts)
+                                          bool append_interrupts,
+                                          bool remove_interrupts)
 {
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
@@ -502,14 +503,28 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
         return;
     }
 
+    std::vector<std::string> interrupts = split_string(",", interrupt_names);
     FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
 
-    if (!append_interrupts)
-        clear_activity_interrupts(eints);
+    if (remove_interrupts)
+    {
+        FixedVector<bool, NUM_AINTERRUPTS> refints;
+        clear_activity_interrupts(refints);
+        for (int i = 0, size = interrupts.size(); i < size; ++i)
+            set_activity_interrupt(refints, interrupts[i]);
 
-    std::vector<std::string> interrupts = split_string(",", interrupt_names);
-    for (int i = 0, size = interrupts.size(); i < size; ++i)
-        set_activity_interrupt(eints, interrupts[i]);
+        for (int i = 0; i < NUM_AINTERRUPTS; ++i)
+            if (refints[i])
+                eints[i] = false;
+    }
+    else
+    {
+        if (!append_interrupts)
+            clear_activity_interrupts(eints);
+        
+        for (int i = 0, size = interrupts.size(); i < size; ++i)
+            set_activity_interrupt(eints, interrupts[i]);
+    }
 
     eints[AI_FORCE_INTERRUPT] = true;
 }
@@ -1484,7 +1499,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()), 
                                field,
-                               plus_equal);
+                               plus_equal,
+                               minus_equal);
     }
     else if (key.find("cset") == 0)
     {
