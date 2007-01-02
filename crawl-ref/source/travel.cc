@@ -1829,6 +1829,9 @@ static level_pos prompt_translevel_target()
 
 void start_translevel_travel(const level_pos &pos)
 {
+    if (!i_feel_safe(true))
+        return;
+    
     if (!can_travel_to(pos.id))
         return;
 
@@ -1858,6 +1861,9 @@ void start_translevel_travel(const level_pos &pos)
 
 void start_translevel_travel(bool prompt_for_destination)
 {
+    if (!i_feel_safe(true))
+        return;
+
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
@@ -2201,8 +2207,12 @@ static int find_transtravel_square(const level_pos &target, bool verbose)
 void start_travel(int x, int y)
 {
     // Redundant target?
-    if (x == you.x_pos && y == you.y_pos) return ;
+    if (x == you.x_pos && y == you.y_pos)
+        return ;
 
+    if (!i_feel_safe(true))
+        return;
+    
     // Start running
     you.running = RMODE_TRAVEL;
     you.running.x   = x;
@@ -2241,6 +2251,9 @@ void start_travel(int x, int y)
 
 void start_explore(bool grab_items)
 {
+    if (!i_feel_safe(true))
+        return;
+
     you.running = grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE;
     if (you.running == RMODE_EXPLORE_GREEDY
         && Options.stash_tracking != STM_ALL)

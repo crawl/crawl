@@ -1243,11 +1243,9 @@ void process_command( command_type cmd ) {
             mpr("Sorry, you can't auto-travel out of here.");
             break;
         }
-        if (i_feel_safe(true))
-        {
-            start_translevel_travel();
+        start_translevel_travel();
+        if (you.running)
             mesclr();
-        }
         break;
 
     case CMD_EXPLORE:
@@ -1257,8 +1255,7 @@ void process_command( command_type cmd ) {
             break;
         }
         // Start exploring
-        if (i_feel_safe(true))
-            start_explore(Options.explore_greedy);
+        start_explore(Options.explore_greedy);
         break;
 
     case CMD_DISPLAY_MAP:
@@ -1272,7 +1269,7 @@ void process_command( command_type cmd ) {
         plox[0] = 0;
         show_map(plox, true);
         redraw_screen();
-        if (plox[0] > 0 && i_feel_safe(true))
+        if (plox[0] > 0)
             start_travel(plox[0], plox[1]);
         break;
 
