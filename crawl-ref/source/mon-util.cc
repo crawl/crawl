@@ -736,7 +736,7 @@ int mons_res_fire( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_POISON );
+        u += scan_mon_inv_randarts( mon, RAP_FIRE );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
@@ -780,7 +780,7 @@ int mons_res_cold( const monsters *mon )
 
     if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += scan_mon_inv_randarts( mon, RAP_POISON );
+        u += scan_mon_inv_randarts( mon, RAP_COLD );
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
