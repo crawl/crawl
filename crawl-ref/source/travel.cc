@@ -1005,7 +1005,7 @@ command_type travel()
     }
 
     if (!you.running && Options.travel_delay == -1)
-        redraw_screen();
+        viewwindow(true, false);
 
     if (!you.running)
         return CMD_NO_CMD;
