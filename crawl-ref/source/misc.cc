@@ -1823,6 +1823,7 @@ bool i_feel_safe(bool announce)
 
     if (announce)
     {
+        // Announce the presence of monsters (Eidolos).
         if (mons.size() == 1)
         {
             const monsters *m = mons[0];
