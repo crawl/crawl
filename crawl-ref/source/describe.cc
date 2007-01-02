@@ -6462,10 +6462,10 @@ void describe_god( int which_god, bool give_title )
     case GOD_ZIN:
         description = "Zin is an ancient and revered God, dedicated to the establishment of order" EOL
                       "and the destruction of the forces of chaos and night. Valued worshippers " EOL
-                      "can gain blessings on their weapons and a variety of powers useful in the" EOL
-                      "fight against the evil, but must abstain from the use of necromancy and other" EOL
-                      "forms of unholy magic. Zin appreciates long-standing faith as well as " EOL
-                      "sacrifices of valued objects.";
+                      "can gain sustenance in times of need, blessings on their weapons, and a " EOL
+                      "variety of powers useful in the fight against the evil, but must abstain " EOL
+                      "from the use of necromancy and other forms of unholy magic. Zin appreciates " EOL
+                      "long-standing faith as well as sacrifices of valued objects.";
         break;
 
     case GOD_SHINING_ONE:
@@ -6708,6 +6708,10 @@ void describe_god( int which_god, bool give_title )
                      (you.piety >= 150) ? "carefully":   // > 4/5
                      (you.piety >=  90) ? "often" :      // > 2/3
                                           "sometimes");  // less than 2:3
+
+            if (which_god == GOD_ZIN)
+                cprintf("Praying to %s will provide sustenance if starving."
+                        EOL, god_name(which_god));
         }
 
         // mv: No abilities (except divine protection) under penance

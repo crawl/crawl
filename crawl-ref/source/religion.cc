@@ -106,7 +106,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { "repel the undead",
       "smite your foes",
       "dispel the undead",
-      "hurl bolts of divine anger",
+      "hurl blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "recall your undead slaves",
@@ -181,7 +181,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { "repel the undead",
       "smite your foes",
       "dispel the undead",
-      "hurl bolts of divine anger",
+      "hurl blasts of cleansing flame",
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "recall your undead slaves",
@@ -434,9 +434,9 @@ void pray(void)
             break;
 
         case GOD_ZIN:
-            //jmf: "good" god will sometimes feed you (a la Nethack)
+            //jmf: "good" god will feed you (a la Nethack)
             if (you.hunger_state == HS_STARVING
-                && random2(250) <= you.piety)
+                && you.piety >= 30)
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);
