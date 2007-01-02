@@ -337,7 +337,7 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
                     int objl = igrd[adx][ady];
                     int hrg = 0;
 
-                    //this searches all the items on the ground for a corpse
+                    // This searches all the items on the ground for a corpse
                     while (objl != NON_ITEM)
                     {
                         if (mitm[objl].base_type == OBJ_CORPSES)
@@ -363,13 +363,6 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
     if (number_raised > 0)
     {
         mpr("The dead are walking!");
-        //else
-        //  mpr("The dark energy consumes the dead!"); - no, this
-        // means that no corpses were found. Better to say:
-        // mpr("You receive no reply.");
-        //jmf: Why do I have to get an uninformative message when some random
-        //jmf: monster fails to do something?
-        // IMHO there's too much noise already.
     }
 
     return number_raised;

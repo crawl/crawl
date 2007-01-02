@@ -802,8 +802,11 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         newy = 10 + random2(GYM - 20);
 
         // don't land on top of another monster
-        if (mgrd[newx][newy] != NON_MONSTER)
+        if (mgrd[newx][newy] != NON_MONSTER
+            || (newx == you.x_pos && newy == you.y_pos))
+        {
             continue;
+        }
 
         if (monster_habitable_grid(monster, grd[newx][newy]))
             break;

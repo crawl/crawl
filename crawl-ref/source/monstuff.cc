@@ -1111,6 +1111,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     while ((!see_grid(tx, ty) && restrict_LOS)
            || grd[tx][ty] < DNGN_SHALLOW_WATER
            || mgrd[tx][ty] != NON_MONSTER
+           || (tx == you.x_pos && ty == you.y_pos)
            || (!allow_adjacent && distance(ox, oy, tx, ty) <= 2));
 
     return (tries < 150);

@@ -1963,53 +1963,54 @@ void update_corpses(double elapsedTime)
 
     for (int c = 0; c < MAX_ITEMS; c++)
     {
-        if (mitm[c].quantity < 1)
+        item_def &it = mitm[c];
+        
+        if (!is_valid_item(it))
             continue;
 
-        if (mitm[c].base_type != OBJ_CORPSES && mitm[c].base_type != OBJ_FOOD)
+        if (it.base_type != OBJ_CORPSES && it.base_type != OBJ_FOOD)
         {
             continue;
         }
 
-        if (mitm[c].base_type == OBJ_CORPSES
-            && mitm[c].sub_type > CORPSE_SKELETON)
+        if (it.base_type == OBJ_CORPSES
+            && it.sub_type > CORPSE_SKELETON)
         {
             continue;
         }
 
-        if (mitm[c].base_type == OBJ_FOOD && mitm[c].sub_type != FOOD_CHUNK)
+        if (it.base_type == OBJ_FOOD && it.sub_type != FOOD_CHUNK)
         {
             continue;
         }
 
-        if (rot_time >= mitm[c].special)
+        if (rot_time >= it.special)
         {
-            if (mitm[c].base_type == OBJ_FOOD)
+            if (it.base_type == OBJ_FOOD)
             {
                 destroy_item(c);
             }
             else
             {
-                if (mitm[c].sub_type == CORPSE_SKELETON
-                    || !mons_skeleton( mitm[c].plus ))
+                if (it.sub_type == CORPSE_SKELETON
+                    || !mons_skeleton( it.plus ))
                 {
                     destroy_item(c);
                 }
                 else
                 {
-                    mitm[c].sub_type = CORPSE_SKELETON;
-                    mitm[c].special = 200;
-                    mitm[c].colour = LIGHTGREY;
+                    it.sub_type = CORPSE_SKELETON;
+                    it.special = 200;
+                    it.colour = LIGHTGREY;
                 }
             }
         }
         else
         {
             ASSERT(rot_time < 256);
-            mitm[c].special -= rot_time;
+            it.special -= rot_time;
         }
     }
-
 
     int fountain_checks = (int)(elapsedTime / 1000.0);
     if (random2(1000) < (int)(elapsedTime) % 1000)
