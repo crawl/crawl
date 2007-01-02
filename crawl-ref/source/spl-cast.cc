@@ -1973,7 +1973,6 @@ static bool send_abyss()
     if (you.level_type != LEVEL_ABYSS)
     {
         mpr("You are cast into the Abyss!");
-        more();
         banished(DNGN_ENTER_ABYSS);     // sends you to the abyss
         return (true);
     }

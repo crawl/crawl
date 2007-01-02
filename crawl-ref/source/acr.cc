@@ -495,8 +495,7 @@ static void handle_wizard_command( void )
             banished( DNGN_ENTER_ABYSS );
         else
         {
-            grd[you.x_pos][you.y_pos] = DNGN_EXIT_ABYSS;
-            down_stairs(true, you.your_level, true);
+            down_stairs(true, you.your_level, DNGN_EXIT_ABYSS);
             untag_followers();
         }
         break;
@@ -2066,6 +2065,20 @@ static void decrement_durations()
     }
 }
 
+static void check_banished()
+{
+    if (you.banished)
+    {
+        you.banished = false;
+
+        if (you.level_type != LEVEL_ABYSS)
+        {
+            mpr("You are cast into the Abyss!");
+            banished(DNGN_ENTER_ABYSS);
+        }
+    }
+}
+
 /* Perhaps we should write functions like: update_repel_undead(),
    update_liquid_flames(), and so on. Even better, we could have a
    vector of callback functions (or objects) which get installed
@@ -2082,6 +2095,7 @@ static void world_reacts()
         you.num_turns++;
         update_turn_count();
     }
+    check_banished();
 
     run_environment_effects();
 
@@ -2162,6 +2176,7 @@ static void world_reacts()
     viewwindow(1, true);
 
     handle_monsters();
+    check_banished();
 
     ASSERT(you.time_taken >= 0);
     // make sure we don't overflow

@@ -128,17 +128,14 @@ void torment(int caster, int tx, int ty)
     apply_area_within_radius(torment_monsters, tx, ty, 0, 8, caster);
 }                               // end torment()
 
-void banished(unsigned char gate_type)
+void banished(int gate_type)
 {
-    you_teleport2( false );
-
-    // this is to ensure that you're standing on a suitable space (67)
-    grd[you.x_pos][you.y_pos] = gate_type;
-
-    if ( gate_type == DNGN_ENTER_ABYSS )
+    if (gate_type == DNGN_ENTER_ABYSS)
+    {
         take_note(Note(NOTE_USER_NOTE, 0, 0, "Cast into the Abyss"), true);
+    }
 
-    down_stairs(true, you.your_level, true);  // heh heh
+    down_stairs(true, you.your_level, gate_type);  // heh heh
     untag_followers(); // safety
 }                               // end banished()
 

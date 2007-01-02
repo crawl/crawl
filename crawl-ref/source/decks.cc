@@ -519,7 +519,10 @@ static void cards(unsigned char which_card)
         else if (you.level_type == LEVEL_LABYRINTH)
             canned_msg(MSG_NOTHING_HAPPENS);
         else
+        {
+            mpr("You are cast into the Abyss!");
             banished(DNGN_ENTER_ABYSS);
+        }
         break;
 
     case CARD_STATUE:

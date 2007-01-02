@@ -3915,6 +3915,10 @@ void handle_monsters(void)
         if (!invalid_monster(monster) 
                 && (monster->x != mx || monster->y != my))
             immobile_monster[i] = true;
+
+        // If the player got banished, discard pending monster actions.
+        if (you.banished)
+            break;
     }                           // end of for loop
 
     // Clear any summoning flags so that lower indiced 

@@ -729,14 +729,14 @@ void up_stairs(void)
     }
 }                               // end up_stairs()
 
-void down_stairs( bool remove_stairs, int old_level, bool force )
+void down_stairs( bool remove_stairs, int old_level, int force_stair )
 {
     int i;
     char old_level_type = you.level_type;
     bool was_a_labyrinth = false;
-    const unsigned char stair_find = grd[you.x_pos][you.y_pos];
+    const int stair_find =
+        force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
-    //int old_level = you.your_level;
     bool leave_abyss_pan = false;
     char old_where = you.where_are_you;
 
@@ -777,7 +777,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         return;
     }
 
-    if (!force && player_is_levitating() 
+    if (!force_stair && player_is_levitating() 
             && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
     {
         mpr("You're floating high up above the floor!");
@@ -841,7 +841,8 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         you.level_type = LEVEL_DUNGEON;
     }
 
-    mpr("Entering...");
+    if (!force_stair)
+        mpr("Entering...");
     you.prev_targ = MHITNOT;
     you.pet_target = MHITNOT;
 
@@ -854,7 +855,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         mpr("Please enjoy your stay.");
 
         // Kill -more- prompt if we're traveling.
-        if (!you.running)
+        if (!you.running && !force_stair)
             more();
 
         you.your_level = 26;
@@ -902,8 +903,7 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
                                           true, false );
 #if DEBUG_DIAGNOSTICS
 	snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
-        mpr( info, MSGCH_DIAGNOSTICS );
-        more();
+    mpr( info, MSGCH_DIAGNOSTICS );
 #endif
         unlink(lname.c_str());
     }
@@ -950,7 +950,8 @@ void down_stairs( bool remove_stairs, int old_level, bool force )
         break;
 
     case LEVEL_ABYSS:
-        mpr("You enter the Abyss!");
+        if (!force_stair)
+            mpr("You enter the Abyss!");
         mpr("To return, you must find a gate leading back.");
         break;
 

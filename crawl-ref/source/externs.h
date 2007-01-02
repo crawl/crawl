@@ -373,6 +373,9 @@ struct player
 {
   bool turn_is_over; // flag signaling that player has performed a timed action
 
+  bool banished;     // flag signaling that the player is due a visit to the
+                     // Abyss.
+    
   unsigned char prev_targ;
   char your_name[kNameLen];
 

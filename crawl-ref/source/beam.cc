@@ -3185,9 +3185,7 @@ static int affect_player( struct bolt &beam )
                 mpr("You feel trapped.");
                 break;
             }
-            mpr("You are cast into the Abyss!");
-            more();
-            banished(DNGN_ENTER_ABYSS);
+            you.banished = true;
             beam.obvious_effect = true;
             break;     // banishment to the abyss
 

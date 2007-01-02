@@ -3002,8 +3002,6 @@ commented out for now
 
 
             case SPWPN_DISTORTION:
-                //if ( !one_chance_in(3) ) break;
-
                 if (one_chance_in(3))
                 {
                     mpr("Your body is twisted painfully.");
@@ -3038,7 +3036,7 @@ commented out for now
 
                 if (coinflip() && you.level_type != LEVEL_ABYSS)
                 {
-                    banished(DNGN_ENTER_ABYSS);
+                    you.banished = true;
                     break;
                 }
                 break;

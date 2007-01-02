@@ -22,7 +22,7 @@
 /* ***********************************************************************
  * called from: ability - acr - beam - decks - fight - religion - spells
  * *********************************************************************** */
-void banished(unsigned char gate_type);
+void banished(int gate_type);
 
 
 // last updated 12may2000 {dlb}
