@@ -1,4 +1,4 @@
-                        DUNGEON CRAWL Stone Soup v0.1.3.
+                        DUNGEON CRAWL Stone Soup
                              - the manual -
 
 Contents
