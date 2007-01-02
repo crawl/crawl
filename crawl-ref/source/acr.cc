@@ -1002,8 +1002,7 @@ void process_command( command_type cmd ) {
     case CMD_MOVE_RIGHT:      move_player( 1,  0); break;
 
     case CMD_REST:
-        start_running( RDIR_REST, RMODE_REST_DURATION );
-        if (you.running)
+        if (i_feel_safe())
         {
             if ( you.hp == you.hp_max &&
                  you.magic_points == you.max_magic_points )
@@ -1011,6 +1010,7 @@ void process_command( command_type cmd ) {
             else
                 mpr("You start resting.");
         }
+        start_running( RDIR_REST, RMODE_REST_DURATION );
         break;
 
     case CMD_RUN_DOWN_LEFT:
