@@ -217,8 +217,8 @@ autopickup = $?!+"/%
 	?	Scrolls
 	" or =  Jewellery
 	!	Potions
-	+ 	Books
-	\ 	Staves
+	+ or :	Books
+	\ or |	Staves
 	0	Orbs
 	}	Misc items
 	X	Corpses
