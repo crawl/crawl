@@ -276,7 +276,7 @@ ban_pickup = <regex>
 	  ban_pickup = degeneration, decay, confusion, potions? of slowing
 	  ban_pickup = potions? of strong poison,potions? of poison
 	  ban_pickup = inaccuracy
-	  ban_pickup = scrolls? of paper, immolation, curse armor, curse weapon
+	  ban_pickup = scrolls? of paper, immolation, curse armour, curse weapon
 	  ban_pickup = forgetfulness, uselessness, noise, torment
 
 drop_mode = (multi | single)
