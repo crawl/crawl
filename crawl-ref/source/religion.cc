@@ -358,6 +358,9 @@ void pray(void)
 
         strcat(info, "life.");
         mpr(info, MSGCH_PRAY);
+
+        // Zen meditation is timeless.
+        you.turn_is_over = false;
         return;
     }
     else if (you.religion == GOD_XOM)
