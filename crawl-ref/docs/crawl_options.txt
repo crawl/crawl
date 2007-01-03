@@ -908,7 +908,7 @@ note_items = <regexes>
         When an item is identified, it will be noted if it is an artifact
         (fixed, unrand, or random) or if its short description matches a regex.
         E.g.
-	  note_items = rod,book,rune,aquirement
+	  note_items = rod,book,rune,acquirement
 
 ood_interesting = 8
         Monsters which are out of depth (OOD for short) for their current level,
