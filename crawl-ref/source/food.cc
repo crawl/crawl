@@ -590,15 +590,21 @@ bool eat_from_floor(void)
     if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
         return (false);
 
+    bool need_more = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type != OBJ_FOOD)
             continue;
 
         it_name( o, DESC_NOCAP_A, str_pass );
-        snprintf( info, INFO_SIZE, "Eat %s%s?", (mitm[o].quantity > 1) ? "one of " : "", 
-                 str_pass );
-        mpr( info, MSGCH_PROMPT );
+        mprf( MSGCH_PROMPT,
+                  "Eat %s%s?", (mitm[o].quantity > 1) ? "one of " : "", 
+                  str_pass );
+
+        // If we're prompting now, we don't need a -more- when
+        // breaking out, because the prompt serves as a -more-. Of
+        // course, the prompt can re-set need_more to true.
+        need_more = false;
 
         unsigned char keyin = tolower( getch() );
 
@@ -614,12 +620,18 @@ bool eat_from_floor(void)
         if (keyin == 'y')
         {
             if (!can_ingest( mitm[o].base_type, mitm[o].sub_type, false ))
-                return (false);
+            {
+                need_more = true;
+                continue;
+            }
 
             eat_floor_item(o);
             return (true);
         }
     }
+
+    if (need_more && Options.auto_list)
+        more();
 
     return (false);
 }
