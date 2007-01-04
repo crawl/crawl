@@ -1517,34 +1517,9 @@ static void describe_cell(int mx, int my)
     {
         const char cloud_inspected = env.cgrid[mx][my];
 
-        const char cloud_type = env.cloud[ cloud_inspected ].type;
+        const cloud_type ctype = (cloud_type) env.cloud[ cloud_inspected ].type;
 
-        strcpy(info, "There is a cloud of ");
-        strcat(info,
-            (cloud_type == CLOUD_FIRE
-              || cloud_type == CLOUD_FIRE_MON) ? "flame" :
-            (cloud_type == CLOUD_STINK
-              || cloud_type == CLOUD_STINK_MON) ? "noxious fumes" :
-            (cloud_type == CLOUD_COLD
-              || cloud_type == CLOUD_COLD_MON) ? "freezing vapour" :
-            (cloud_type == CLOUD_POISON
-              || cloud_type == CLOUD_POISON_MON) ? "poison gases" :
-            (cloud_type == CLOUD_GREY_SMOKE
-              || cloud_type == CLOUD_GREY_SMOKE_MON) ? "grey smoke" :
-            (cloud_type == CLOUD_BLUE_SMOKE
-              || cloud_type == CLOUD_BLUE_SMOKE_MON) ? "blue smoke" :
-            (cloud_type == CLOUD_PURP_SMOKE
-              || cloud_type == CLOUD_PURP_SMOKE_MON) ? "purple smoke" :
-            (cloud_type == CLOUD_STEAM
-              || cloud_type == CLOUD_STEAM_MON) ? "steam" :
-            (cloud_type == CLOUD_MIASMA
-              || cloud_type == CLOUD_MIASMA_MON) ? "foul pestilence" :
-            (cloud_type == CLOUD_BLACK_SMOKE
-              || cloud_type == CLOUD_BLACK_SMOKE_MON) ? "black smoke" :
-            (cloud_type == CLOUD_MIST)?                 "thin mist" :
-                                                        "buggy goodness");
-        strcat(info, " here.");
-        mpr(info);
+        mprf("There is a cloud of %s here.", cloud_name(ctype).c_str());
     }
 
     int targ_item = igrd[ mx ][ my ];

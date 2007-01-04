@@ -1771,6 +1771,69 @@ int trap_at_xy(int which_x, int which_y)
     return (-1);
 }                               // end trap_at_xy()
 
+bool is_damaging_cloud(cloud_type type)
+{
+    switch (type)
+    {
+    case CLOUD_FIRE:
+    case CLOUD_FIRE_MON:
+    case CLOUD_STINK:
+    case CLOUD_STINK_MON:
+    case CLOUD_COLD:
+    case CLOUD_COLD_MON:
+    case CLOUD_POISON:
+    case CLOUD_POISON_MON:
+    case CLOUD_STEAM:
+    case CLOUD_STEAM_MON:
+    case CLOUD_MIASMA:
+    case CLOUD_MIASMA_MON:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+std::string cloud_name(cloud_type type)
+{
+    switch (type)
+    {
+    case CLOUD_FIRE:
+    case CLOUD_FIRE_MON:
+        return "flame";
+    case CLOUD_STINK:
+    case CLOUD_STINK_MON:
+        return "noxious fumes";
+    case CLOUD_COLD:
+    case CLOUD_COLD_MON:
+        return "freezing vapour";
+    case CLOUD_POISON:
+    case CLOUD_POISON_MON:
+        return "poison gases";
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_GREY_SMOKE_MON:
+        return "grey smoke";
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_BLUE_SMOKE_MON:
+        return "blue smoke";
+    case CLOUD_PURP_SMOKE:
+    case CLOUD_PURP_SMOKE_MON:
+        return "purple smoke";
+    case CLOUD_STEAM:
+    case CLOUD_STEAM_MON:
+        return "steam";
+    case CLOUD_MIASMA:
+    case CLOUD_MIASMA_MON:
+        return "foul pestilence";
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_BLACK_SMOKE_MON:
+        return "black smoke";
+    case CLOUD_MIST:
+        return "thin mist";
+    default:
+        return "buggy goodness";
+    }
+}
+
 bool i_feel_safe(bool announce)
 {
     /* This is probably unnecessary, but I'm not sure that
@@ -1789,7 +1852,21 @@ bool i_feel_safe(bool announce)
         if (announce)
             mprf(MSGCH_WARN, "There are scary statues in view.");
 
-        return false;
+        return (false);
+    }
+
+    if (in_bounds(you.x_pos, you.y_pos)
+        && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+    {
+        const cloud_type type = (cloud_type)
+            env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
+        if (is_damaging_cloud(type))
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
+                     cloud_name(type).c_str());
+            return (false);
+        }
     }
 
     std::vector<const monsters *> mons;

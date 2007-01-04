@@ -143,6 +143,9 @@ bool grid_is_branch_stairs( unsigned char grid );
 int grid_secret_door_appearance( int gx, int gy );
 bool grid_destroys_items( int grid );
 
+std::string cloud_name(cloud_type type);
+bool is_damaging_cloud(cloud_type type);
+
 const char *grid_item_destruction_message( unsigned char grid );
 
 void curare_hits_player(int agent, int degree);

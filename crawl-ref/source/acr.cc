@@ -2402,6 +2402,7 @@ command_type keycode_to_command( keycode_type key ) {
     case '\'': return CMD_WEAPON_SWAP;
 
     case '0': return CMD_NO_CMD;
+    case '5': return CMD_REST;
 
     case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
     case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;

@@ -471,16 +471,8 @@ static bool is_safe(int x, int y)
         return true;
 
     // We can also safely run through smoke.
-    const int cloud_type = env.cloud[ cloud ].type;
-    return cloud_type == CLOUD_GREY_SMOKE ||
-        cloud_type == CLOUD_GREY_SMOKE_MON ||
-        cloud_type == CLOUD_BLUE_SMOKE     ||
-        cloud_type == CLOUD_BLUE_SMOKE_MON ||
-        cloud_type == CLOUD_PURP_SMOKE     ||
-        cloud_type == CLOUD_PURP_SMOKE_MON ||
-        cloud_type == CLOUD_BLACK_SMOKE    ||
-        cloud_type == CLOUD_BLACK_SMOKE_MON ||
-        cloud_type == CLOUD_MIST;
+    const cloud_type ctype = (cloud_type) env.cloud[ cloud ].type;
+    return !is_damaging_cloud(ctype);
 }
 
 static bool player_is_permalevitating()
