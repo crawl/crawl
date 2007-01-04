@@ -104,6 +104,30 @@ int unmangle_direction_keys(int keyin, int km)
     }
 #endif
 
+    // [dshaligram] More lovely keypad mangling.
+    switch (keyin)
+    {
+#ifdef UNIX
+    case '1': return 'b';
+    case '2': return 'j';
+    case '3': return 'n';
+    case '4': return 'h';
+    case '6': return 'l';
+    case '7': return 'y';
+    case '8': return 'k';
+    case '9': return 'u';
+#else
+    case '1': return 'B';
+    case '2': return 'J';
+    case '3': return 'N';
+    case '4': return 'H';
+    case '6': return 'L';
+    case '7': return 'Y';
+    case '8': return 'K';
+    case '9': return 'U';
+#endif
+    }
+
     return (keyin);
 }
 
