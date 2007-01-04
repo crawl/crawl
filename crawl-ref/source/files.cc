@@ -754,8 +754,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
         if (!determine_level_version( levelFile, majorVersion, minorVersion ))
         {
-            perror("\nLevel file appears to be invalid.\n");
-            end(-1);
+            end(-1, false, "\nLevel file appears to be invalid.\n");
         }
 
         restore_level_version( levelFile, majorVersion, minorVersion );
@@ -763,9 +762,8 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         // sanity check - EOF
         if (!feof( levelFile ))
         {
-            snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n", cha_fil.c_str());
-            perror(info);
-            end(-1);
+            end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
+                cha_fil.c_str());
         }
 
         fclose( levelFile );
@@ -1142,10 +1140,8 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
 
     if (saveFile == NULL)
     {
-        snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!",
+        end(-1, true, "Unable to open \"%s\" for writing",
                  cha_fil.c_str());
-        perror(info);
-        end(-1);
     }
 
     // nail all items to the ground
@@ -1209,12 +1205,8 @@ void save_game(bool leave_game)
 
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "wb");
-    if (!charf) {
-        snprintf(info, INFO_SIZE, "Unable to open \"%s\" for writing!\n",
-                 charFile.c_str());
-        perror(info);
-        end(-1);
-    }
+    if (!charf)
+        end(-1, true, "Unable to open \"%s\" for writing!\n", charFile.c_str());
 
     write_tagged_file( charf, SAVE_MAJOR_VERSION, 0, TAGTYPE_PLAYER );
 
@@ -1360,12 +1352,7 @@ void restore_game(void)
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "rb");
     if (!charf )
-    {
-        snprintf(info, INFO_SIZE, "Unable to open %s for reading!\n",
-                 charFile.c_str() );
-        perror(info);
-        end(-1);
-    }
+        end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
 
     char majorVersion = 0;
     char minorVersion = 0;
@@ -1380,12 +1367,8 @@ void restore_game(void)
 
     // sanity check - EOF
     if (!feof(charf))
-    {
-        snprintf( info, INFO_SIZE, "\nIncomplete read of \"%s\" - aborting.\n",
-                  charFile.c_str());
-        perror(info);
-        end(-1);
-    }
+        end(-1, false, "\nIncomplete read of \"%s\" - aborting.\n",
+            charFile.c_str());
 
     fclose(charf);
 
@@ -1448,10 +1431,8 @@ static void restore_version( FILE *restoreFile,
     // savefile versions.
     if (majorVersion != SAVE_MAJOR_VERSION)
     {
-        snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d savefile.\n",
+        end(-1, false, "\nSorry, this release cannot read a v%d.%d savefile.\n",
             majorVersion, minorVersion);
-        perror(info);
-        end(-1);
     }
 
     switch(majorVersion)
@@ -1516,10 +1497,9 @@ static void restore_level_version( FILE *levelFile,
     // savefile versions.
     if (majorVersion != SAVE_MAJOR_VERSION)
     {
-        snprintf( info, INFO_SIZE, "\nSorry, this release cannot read a v%d.%d level file.\n",
+        end(-1, false,
+            "\nSorry, this release cannot read a v%d.%d level file.\n",
             majorVersion, minorVersion);
-        perror(info);
-        end(-1);
     }
 
     switch(majorVersion)
@@ -2159,8 +2139,7 @@ std::string readString(FILE *file)
             return (buf);
         }
 
-        fprintf(stderr, "String too long: %d bytes\n", length);
-        end(1);
+        end(1, false, "String too long: %d bytes\n", length);
     }
 
     return ("");

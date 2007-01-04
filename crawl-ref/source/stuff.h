@@ -52,7 +52,8 @@ int skill_bump( int skill );
 unsigned char get_ch(void);
 
 void io_cleanup();
-void end(int end_arg);
+void end(int exit_code, bool print_err = false,
+         const char *message = NULL, ...);
 
 void modify_all_stats(int STmod, int IQmod, int DXmod);
 

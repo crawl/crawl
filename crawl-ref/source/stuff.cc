@@ -479,10 +479,34 @@ void io_cleanup()
 #endif
 }
 
-void end(int end_arg)
+void end(int exit_code, bool print_error, const char *format, ...)
 {
+    std::string error = print_error? strerror(errno) : "";
+    
     io_cleanup();
-    exit(end_arg);
+
+    if (format)
+    {
+        va_list arg;
+        va_start(arg, format);
+        char buffer[500];
+        vsnprintf(buffer, sizeof buffer, format, arg);
+        va_end(arg);
+        
+        if (error.empty())
+            error = std::string(buffer);
+        else
+            error = std::string(buffer) + ": " + error;
+    }
+
+    if (error.length())
+    {
+        if (error[error.length() - 1] != '\n')
+            error += "\n";
+        fprintf(stderr, "%s", error.c_str());
+    }
+    
+    exit(exit_code);
 }
 
 void redraw_screen(void)
