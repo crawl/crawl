@@ -586,15 +586,17 @@ static bool dump_item_origin(const item_def &item, int value)
         return (true);
 
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
-            && item_ident( item, ISFLAG_KNOW_TYPE ))
+        && item_type_known( item ))
     {
         const int spec_ench = get_armour_ego_type( item );
         return (spec_ench != SPARM_NORMAL);
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
-            && item_ident( item, ISFLAG_KNOW_TYPE ))
+        && item_type_known( item ))
+    {
         return (get_weapon_brand(item) != SPWPN_NORMAL);
+    }
 
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return (true);

@@ -1230,7 +1230,7 @@ const char *randart_name( const item_def &item )
     {
         struct unrandart_entry *unrand = seekunrandart( item );
 
-        return (item_ident(item, ISFLAG_KNOW_TYPE) ? unrand->name
+        return (item_type_known(item) ? unrand->name
                                                    : unrand->unid_name);
     }
 
@@ -1247,7 +1247,7 @@ const char *randart_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_type_known(item))
     {
         switch (random5(21))
         {
@@ -1324,7 +1324,7 @@ const char *randart_armour_name( const item_def &item )
     {
         struct unrandart_entry *unrand = seekunrandart( item );
 
-        return (item_ident(item, ISFLAG_KNOW_TYPE) ? unrand->name
+        return (item_type_known(item) ? unrand->name
                                                    : unrand->unid_name);
     }
 
@@ -1344,7 +1344,7 @@ const char *randart_armour_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_type_known(item))
     {
         switch (random5(21))
         {
@@ -1421,8 +1421,8 @@ const char *randart_ring_name( const item_def &item )
     {
         struct unrandart_entry *unrand = seekunrandart( item );
 
-        return (item_ident(item, ISFLAG_KNOW_TYPE) ? unrand->name
-                                                   : unrand->unid_name);
+        return (item_type_known(item) ? unrand->name
+                                      : unrand->unid_name);
     }
 
     char st_p[ITEMNAME_SIZE];
@@ -1440,7 +1440,7 @@ const char *randart_ring_name( const item_def &item )
     push_rng_state();
     seed_rng( seed );
 
-    if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (!item_type_known(item))
     {
         temp_rand = random5(21);
 

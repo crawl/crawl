@@ -787,7 +787,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
             description += "$";
         }
-        else if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        else if (item_type_known(item))
         {
             // We know it's an artefact type weapon, but not what it does.
             description += "$This weapon may have some hidden properties.$";
@@ -1064,7 +1064,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             spec_ench = SPWPN_NORMAL;
 
         // special weapon descrip
-        if (spec_ench != SPWPN_NORMAL && item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (spec_ench != SPWPN_NORMAL && item_type_known(item))
         {
             description += "$";
 
@@ -1177,12 +1177,12 @@ static std::string describe_weapon( const item_def &item, bool verbose)
                 if (description.length() == old_length)
                     description += "$";
             }
-            else if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            else if (item_type_known(item))
             {
                 description += "$This weapon may have some hidden properties.$";
             }
         }
-        else if (spec_ench != SPWPN_NORMAL && item_ident( item, ISFLAG_KNOW_TYPE ))
+        else if (spec_ench != SPWPN_NORMAL && item_type_known(item))
         {
             description += "$";
         }
@@ -1350,7 +1350,7 @@ static std::string describe_ammo( const item_def &item )
         break;
     }
 
-    if (item.special != 0 && item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (item.special != 0 && item_type_known(item))
     {
         switch (item.special)
         {
@@ -1629,7 +1629,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
 
     int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL 
-        && item_ident( item, ISFLAG_KNOW_TYPE ) 
+        && item_type_known(item) 
         && verbose)
     {
         description += "$";
@@ -1711,7 +1711,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
     {
         if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
             randart_descpr( description, item );
-        else if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        else if (item_type_known(item))
             description += "$This armour may have some hidden properties.$";
     }
     else 
@@ -2502,7 +2502,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     else if ((!is_random_artefact( item ) 
             && get_ident_type( OBJ_JEWELLERY, item.sub_type ) != ID_KNOWN_TYPE)
         || (is_random_artefact( item ) 
-            && !item_ident( item, ISFLAG_KNOW_TYPE )))
+            && !item_type_known(item)))
     {
         description += "A piece of jewellery.";
     }
@@ -2812,7 +2812,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     {
         if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
             randart_descpr( description, item );
-        else if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        else if (item_type_known(item))
         {
             if (item.sub_type >= AMU_RAGE)
                 description += "$This amulet may have hidden properties.$";
@@ -2840,7 +2840,7 @@ static std::string describe_staff( const item_def &item )
 
     description.reserve(200);
 
-    if (item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (item_type_known(item))
     {
         // NB: the leading space is here {dlb}
         description += "This " + std::string( item_is_staff( item ) ? "staff " 
@@ -2994,7 +2994,7 @@ static std::string describe_misc_item( const item_def &item )
 
     description.reserve(100);
 
-    if (item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (item_type_known(item))
     {
         switch (item.sub_type)
         {
@@ -3177,7 +3177,7 @@ bool is_dumpable_artifact( const item_def &item, bool verbose)
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
     else if (item.base_type == OBJ_ARMOUR
-        && (verbose && item_ident( item, ISFLAG_KNOW_TYPE )))
+        && (verbose && item_type_known(item)))
     {
         const int spec_ench = get_armour_ego_type( item );
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);

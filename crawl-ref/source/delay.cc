@@ -86,7 +86,14 @@ static void pop_delay()
 static void clear_pending_delays()
 {
     while (you.delay_queue.size() > 1)
+    {
+        const delay_queue_item delay =
+            you.delay_queue[you.delay_queue.size() - 1];
         you.delay_queue.pop_back();
+        
+        if (is_run_delay(delay.type) && you.running)
+            stop_running();
+    }
 }
 
 void start_delay( int type, int turns, int parm1, int parm2 )

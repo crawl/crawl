@@ -1445,7 +1445,7 @@ int weapon_ev_bonus( const item_def &wpn, int skill, size_type body, int dex,
         ret = 2 + (dex / 5);
 
     // weapons of reaching are naturally a bit longer/flexier
-    if (!hide_hidden || item_ident( wpn, ISFLAG_KNOW_TYPE ))
+    if (!hide_hidden || item_type_known( wpn ))
     {
         if (get_weapon_brand( wpn ) == SPWPN_REACHING)
             ret += 1;
@@ -1543,7 +1543,7 @@ bool check_weapon_shape( const item_def &item, bool quiet, bool check_id )
 {
     const int brand = get_weapon_brand( item );
 
-    if ((!check_id || item_ident( item, ISFLAG_KNOW_TYPE )) 
+    if ((!check_id || item_type_known( item )) 
         && ((item.base_type == OBJ_WEAPONS 
                 && item.sub_type == WPN_BLESSED_BLADE)
             || brand == SPWPN_HOLY_WRATH 

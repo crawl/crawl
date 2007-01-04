@@ -1396,7 +1396,7 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (item.base_type != OBJ_STAVES)
         return (-1);
     
-    if (need_id && !item_ident( item, ISFLAG_KNOW_TYPE ))
+    if (need_id && !item_type_known(item))
         return (0);
 
     const int stype = item.sub_type;
@@ -1458,7 +1458,7 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    if (!item_ident( you.inv[staff], ISFLAG_KNOW_TYPE ))
+    if (!item_type_known(you.inv[staff]))
     {
         set_ident_flags( you.inv[staff], ISFLAG_KNOW_TYPE );
         you.wield_change = true;

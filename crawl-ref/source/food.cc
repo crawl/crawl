@@ -159,7 +159,7 @@ static bool find_butchering_implement() {
 	    && can_cut_meat( you.inv[i] )
 	    && you.inv[i].base_type == OBJ_WEAPONS
 	    && item_known_uncursed(you.inv[i])
-	    && item_ident( you.inv[i], ISFLAG_KNOW_TYPE )
+	    && item_type_known(you.inv[i])
 	    && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
 	    && can_wield( &you.inv[i] ))
 	{

@@ -1297,7 +1297,7 @@ static int l_item_artifact(lua_State *ls)
 static int l_item_branded(lua_State *ls)
 {
     LUA_ITEM(item, 1);
-    if (!item || !is_valid_item(*item) || !item_ident(*item, ISFLAG_KNOW_TYPE))
+    if (!item || !is_valid_item(*item) || !item_type_known(*item))
         return (0);
 
     bool branded = false;

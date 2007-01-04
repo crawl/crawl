@@ -2509,7 +2509,7 @@ void zap_wand(void)
 	return;
     }
 
-    if (item_ident( you.inv[item_slot], ISFLAG_KNOW_TYPE ))
+    if (item_type_known( you.inv[item_slot] ))
     {
         if (you.inv[item_slot].sub_type == WAND_HASTING
             || you.inv[item_slot].sub_type == WAND_HEALING

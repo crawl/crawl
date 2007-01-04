@@ -2653,7 +2653,7 @@ void handle_time( long time_delta )
     // and an appropriate other spell skill... is 1/20 too fast?
     if (you.equip[EQ_WEAPON] != -1
         && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-        && !item_ident( you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE )
+        && !item_type_known( you.inv[you.equip[EQ_WEAPON]] )
         && one_chance_in(20))
     {
         int total_skill = you.skills[SK_SPELLCASTING];

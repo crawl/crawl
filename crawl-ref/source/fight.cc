@@ -1332,7 +1332,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             {
                 dec_mp(STAFF_COST);
 
-                if (!item_ident( you.inv[weapon], ISFLAG_KNOW_TYPE ))
+                if (!item_type_known(you.inv[weapon]))
                 {
                     set_ident_flags( you.inv[weapon], ISFLAG_KNOW_TYPE );
                     strcpy(info, "You are wielding ");

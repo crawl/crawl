@@ -459,7 +459,7 @@ int player_equip( int slot, int sub_type, bool calc_unid )
             && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
             && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type
             && (calc_unid ||
-                item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_TYPE)))
+                item_type_known(you.inv[you.equip[EQ_WEAPON]])))
         {
             ret++;
         }
@@ -519,7 +519,7 @@ int player_equip( int slot, int sub_type, bool calc_unid )
         if (you.equip[slot] != -1 
             && you.inv[you.equip[slot]].sub_type == sub_type
             && (calc_unid || 
-                item_ident(you.inv[you.equip[slot]], ISFLAG_KNOW_TYPE)))
+                item_type_known(you.inv[you.equip[slot]])))
         {
             ret++;
         }

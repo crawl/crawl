@@ -504,8 +504,7 @@ bool evoke_wielded( void )
                 pract = (one_chance_in(5) ? 1 : 0);
                 did_work = true;
 
-                if (!item_ident( you.inv[you.equip[EQ_WEAPON]], 
-                                 ISFLAG_KNOW_TYPE ))
+                if (!item_type_known( you.inv[you.equip[EQ_WEAPON]] ))
                 {
                     set_ident_flags( you.inv[you.equip[EQ_WEAPON]], 
                                      ISFLAG_KNOW_TYPE );

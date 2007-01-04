@@ -151,7 +151,7 @@ const char *item_name( const item_def &item, char descrip,
         descrip = DESC_PLAIN;
 
     if (item_clas == OBJ_ORBS
-        || (item_ident( item, ISFLAG_KNOW_TYPE )
+        || (item_type_known( item )
             && ((item_clas == OBJ_MISCELLANY
                     && item_typ == MISC_HORN_OF_GERYON)
                 || (is_fixed_artefact( item )
@@ -393,7 +393,7 @@ static const char *item_name_2(
 
         if (is_fixed_artefact( item ))
         {
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known( item ))
             {
                 strncat(buff, 
                        (item.special == SPWPN_SINGING_SWORD) ? "Singing Sword" :
@@ -471,7 +471,7 @@ static const char *item_name_2(
 
         brand = get_weapon_brand( item );
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ) && !terse)
+        if (item_type_known(item) && !terse)
         {
             if (brand == SPWPN_VAMPIRICISM)
                 strncat(buff, "vampiric ", ITEMNAME_SIZE );
@@ -480,7 +480,7 @@ static const char *item_name_2(
         standard_name_weap( item_typ, tmp_buff );
         strncat( buff, tmp_buff, ITEMNAME_SIZE );
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known( item ))
         {
             switch (brand)
             {
@@ -625,7 +625,7 @@ static const char *item_name_2(
         if (it_quant > 1)
             strncat(buff, "s", ITEMNAME_SIZE );
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known( item ))
         {
             strncat( buff,
               (brand == SPMSL_FLAME)   ? ((terse) ? " (flame)" : " of flame") :
@@ -720,7 +720,7 @@ static const char *item_name_2(
 
         sparm = get_armour_ego_type( item );
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ) && sparm != SPARM_NORMAL)
+        if (item_type_known(item) && sparm != SPARM_NORMAL)
         {
             if (!terse)
             {
@@ -778,8 +778,7 @@ static const char *item_name_2(
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_WANDS:
-        if (id[ IDTYPE_WANDS ][item_typ] == ID_KNOWN_TYPE
-            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             strncat(buff, "wand of ", ITEMNAME_SIZE );
             strncat(buff, (item_typ == WAND_FLAME) ? "flame" :
@@ -860,8 +859,7 @@ static const char *item_name_2(
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_POTIONS:
-        if (id[ IDTYPE_POTIONS ][item_typ] == ID_KNOWN_TYPE
-            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             strncat(buff, "potion", ITEMNAME_SIZE );
             strncat(buff, (it_quant == 1) ? " " : "s ", ITEMNAME_SIZE);
@@ -1026,8 +1024,7 @@ static const char *item_name_2(
         strncat(buff, "scroll", ITEMNAME_SIZE );
         strncat(buff, (it_quant == 1) ? " " : "s ", ITEMNAME_SIZE);
 
-        if (id[ IDTYPE_SCROLLS ][item_typ] == ID_KNOWN_TYPE
-            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             strncat(buff, "of ", ITEMNAME_SIZE );
             strncat(buff, (item_typ == SCR_IDENTIFY) ? "identify" :
@@ -1099,8 +1096,7 @@ static const char *item_name_2(
             break;
         }
 
-        if (id[ IDTYPE_JEWELLERY ][item_typ] == ID_KNOWN_TYPE
-            || item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
 
             if (item_ident( item, ISFLAG_KNOW_PLUSES )
@@ -1470,7 +1466,7 @@ static const char *item_name_2(
             if (it_quant > 1)
                 strncat(buff, "s", ITEMNAME_SIZE );
 
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of Zot", ITEMNAME_SIZE );
             break;
 
@@ -1479,7 +1475,7 @@ static const char *item_name_2(
         case MISC_DECK_OF_TRICKS:
         case MISC_DECK_OF_WONDERS:
             strncat(buff, "deck of ", ITEMNAME_SIZE );
-            strncat(buff, !item_ident( item, ISFLAG_KNOW_TYPE )  ? "cards"  :
+            strncat(buff, !item_type_known(item)  ? "cards"  :
                    (item_typ == MISC_DECK_OF_WONDERS)      ? "wonders" :
                    (item_typ == MISC_DECK_OF_SUMMONINGS)   ? "summonings" :
                    (item_typ == MISC_DECK_OF_TRICKS)       ? "tricks" :
@@ -1492,7 +1488,7 @@ static const char *item_name_2(
         case MISC_CRYSTAL_BALL_OF_FIXATION:
         case MISC_CRYSTAL_BALL_OF_SEEING:
             strncat(buff, "crystal ball", ITEMNAME_SIZE );
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
             {
                 strncat(buff, " of ", ITEMNAME_SIZE );
                 strncat(buff,
@@ -1505,69 +1501,69 @@ static const char *item_name_2(
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, "box of beasts", ITEMNAME_SIZE );
             else
                 strncat(buff, "small ebony casket", ITEMNAME_SIZE );
             break;
 
         case MISC_EMPTY_EBONY_CASKET:
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, "empty ebony casket", ITEMNAME_SIZE );
             else
                 strncat(buff, "small ebony casket", ITEMNAME_SIZE );
             break;
 
         case MISC_AIR_ELEMENTAL_FAN:
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, "air elemental ", ITEMNAME_SIZE );
             strncat(buff, "fan", ITEMNAME_SIZE );
             break;
 
         case MISC_LAMP_OF_FIRE:
             strncat(buff, "lamp", ITEMNAME_SIZE );
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of fire", ITEMNAME_SIZE );
             break;
 
         case MISC_LANTERN_OF_SHADOWS:
-            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_type_known(item))
                 strncat(buff, "bone ", ITEMNAME_SIZE );
             strncat(buff, "lantern", ITEMNAME_SIZE );
 
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of shadows", ITEMNAME_SIZE );
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_type_known(item))
                 strncat(buff, "silver ", ITEMNAME_SIZE );
             strncat(buff, "horn", ITEMNAME_SIZE );
 
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of Geryon", ITEMNAME_SIZE );
             break;
 
         case MISC_DISC_OF_STORMS:
-            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_type_known(item))
                 strncat(buff, "grey ", ITEMNAME_SIZE );
             strncat(buff, "disc", ITEMNAME_SIZE );
 
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of storms", ITEMNAME_SIZE );
             break;
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
-            if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (!item_type_known(item))
                 strncat(buff, "nondescript ", ITEMNAME_SIZE );
             strncat(buff, "stone", ITEMNAME_SIZE );
 
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 strncat(buff, " of earth elementals", ITEMNAME_SIZE );
             break;
 
         case MISC_BOTTLED_EFREET:
-            strncat(buff, (!item_ident( item, ISFLAG_KNOW_TYPE )) 
+            strncat(buff, (!item_type_known(item)) 
                                 ? "sealed bronze flask" : "bottled efreet",
                                 ITEMNAME_SIZE );
             break;
@@ -1584,7 +1580,7 @@ static const char *item_name_2(
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_BOOKS:
-        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_type_known(item))
         {
             char primary = (item.special / 10);
             char secondary = (item.special % 10);
@@ -1681,7 +1677,7 @@ static const char *item_name_2(
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_STAVES:
-        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_type_known(item))
         {
             strncat(buff, (item.special == 0) ? "curved" :
                    (item.special == 1) ? "glowing" :
@@ -1718,7 +1714,7 @@ static const char *item_name_2(
 
         strncat( buff, (item_is_rod( item ) ? "rod" : "staff"), ITEMNAME_SIZE );
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             strncat(buff, " of ", ITEMNAME_SIZE );
 
@@ -1749,7 +1745,7 @@ static const char *item_name_2(
         }
 
         if (item_is_rod( item )
-            && item_ident( item, ISFLAG_KNOW_TYPE ))
+            && item_type_known(item))
         {
             strncat( buff, " (", ITEMNAME_SIZE );
             itoa( item.plus / ROD_CHARGE_MULT, tmp_quant, 10 );
@@ -1822,7 +1818,7 @@ static const char *item_name_2(
     }                           // end of switch?
 
     // Disambiguation
-    if (!terse && item_ident(item, ISFLAG_KNOW_TYPE))
+    if (!terse && item_type_known(item))
     {
 #define name_append(x) strncat(buff, x, ITEMNAME_SIZE)
         switch (item_clas)

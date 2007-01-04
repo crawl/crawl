@@ -786,7 +786,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
         }
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             switch (get_weapon_brand( item ))
             {
@@ -896,12 +896,12 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
 
         if (is_random_artefact( item ))
         {
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 valued += (7 * randart_value( item ));
             else 
                 valued += 50;
         }
-        else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
+        else if (item_type_known(item) 
                 && get_equip_desc(item) != 0)
         {
             valued += 20;
@@ -1062,7 +1062,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             break;
         }
 
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             const int sparm = get_armour_ego_type( item );
             switch (sparm)
@@ -1149,12 +1149,12 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
 
         if (is_random_artefact( item ))
         {
-            if (item_ident( item, ISFLAG_KNOW_TYPE ))
+            if (item_type_known(item))
                 valued += (7 * randart_value( item ));
             else
                 valued += 50;
         }
-        else if (item_ident( item, ISFLAG_KNOW_TYPE ) 
+        else if (item_type_known(item) 
                 && get_equip_desc(item) != 0)
         {
             valued += 20;
@@ -1504,7 +1504,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
 
             if (is_random_artefact(item))
             {
-                if (item_ident(item, ISFLAG_KNOW_TYPE))
+                if (item_type_known(item))
                 {
                     if (valued < 0)
                         valued = randart_value( item ) - 5;
@@ -1522,7 +1522,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_MISCELLANY:
-        if (item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (item_type_known(item))
         {
             switch (item.sub_type)
             {
@@ -1577,12 +1577,12 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
     //case 10: break;
 
     case OBJ_BOOKS:
-        valued = 150 + (item_ident( item, ISFLAG_KNOW_TYPE ) 
+        valued = 150 + (item_type_known(item) 
                                     ? book_rarity(item.sub_type) * 50 : 0);
         break;
 
     case OBJ_STAVES:
-        if (!item_ident( item, ISFLAG_KNOW_TYPE ))
+        if (!item_type_known(item))
             valued = 120;
         else if (item.sub_type == STAFF_SMITING 
                 || item.sub_type == STAFF_STRIKING
