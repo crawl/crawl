@@ -39,14 +39,9 @@
 
 #endif
 
-
-// may need this later for something else {dlb}:
-// required for table_lookup() {dlb}
-//#include <stdarg.h>
-// required for table_lookup() {dlb}
-
 #ifdef DOS
 #include <conio.h>
+#include <errno.h>
 #endif
 
 #ifdef UNIX
