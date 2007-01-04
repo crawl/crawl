@@ -66,7 +66,6 @@ static bool is_tried_type( int basetype, int subtype )
     }
 }
 
-
 bool is_vowel( const char chr )
 {
     const char low = tolower( chr );
@@ -74,11 +73,25 @@ bool is_vowel( const char chr )
     return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
 }
 
+item_type_id_type objtype_to_idtype(int base_type)
+{
+    switch (base_type)
+    {
+    case OBJ_WANDS:     return (IDTYPE_WANDS);
+    case OBJ_SCROLLS:   return (IDTYPE_SCROLLS);
+    case OBJ_JEWELLERY: return (IDTYPE_JEWELLERY);
+    case OBJ_POTIONS:   return (IDTYPE_POTIONS);
+    default:            return (NUM_IDTYPE);
+    }
+}
+
 bool item_type_known( const item_def &item )
 {
-    return item_ident(item, ISFLAG_KNOW_TYPE)
-        || (item.base_type == OBJ_JEWELLERY
-                && id[IDTYPE_JEWELLERY][item.sub_type] == ID_KNOWN_TYPE);
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
+        return (true);
+
+    const item_type_id_type idt = objtype_to_idtype(item.base_type);
+    return (idt != NUM_IDTYPE? id[idt][item.sub_type] == ID_KNOWN_TYPE : false);
 }
 
 // it_name() and in_name() are now somewhat obsolete now that itemname

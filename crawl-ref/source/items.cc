@@ -1308,6 +1308,16 @@ bool is_stackable_item( const item_def &item )
     return (false);
 }
 
+int ident_flags(const item_def &item)
+{
+    int flags = item.flags & full_ident_mask(item);
+
+    if (!(flags & ISFLAG_KNOW_TYPE) && item_type_known(item))
+        flags |= ISFLAG_KNOW_TYPE;
+
+    return (flags);
+}
+
 bool items_stack( const item_def &item1, const item_def &item2 )
 {
     // both items must be stackable
@@ -1334,8 +1344,7 @@ bool items_stack( const item_def &item1, const item_def &item2 )
     }
 
     // Check the ID flags
-    if ( (item1.flags & full_ident_mask(item1)) !=
-         (item2.flags & full_ident_mask(item2)) )
+    if (ident_flags(item1) != ident_flags(item2))
         return false;
 
     // Check the non-ID flags
@@ -1343,14 +1352,14 @@ bool items_stack( const item_def &item1, const item_def &item2 )
         (item2.flags & (~ISFLAG_IDENT_MASK)))
         return false;
 
-
     // Thanks to mummy cursing, we can have potions of decay 
     // that don't look alike... so we don't stack potions 
     // if either isn't identified and they look different.  -- bwr
     if (item1.base_type == OBJ_POTIONS && item1.special != item2.special &&
-        (!item_ident(item1, ISFLAG_KNOW_TYPE) ||
-         !item_ident(item2, ISFLAG_KNOW_TYPE )))
+        (!item_type_known(item1) || !item_type_known(item2)))
+    {
         return false;
+    }
 
     return (true);
 }
