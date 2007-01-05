@@ -312,6 +312,7 @@ void map_def::init()
     name.clear();
     tags.clear();
     place.clear();
+    items.clear();
     depth.reset();
     orient = MAP_NONE;
 
