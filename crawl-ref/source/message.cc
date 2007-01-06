@@ -608,7 +608,8 @@ void replay_messages(void)
 
         cprintf( "-------------------------------------------------------------------------------" );
         cprintf(EOL);
-        cprintf( "<< Lines %d-%d of %d >>", rel_start, rel_end, num_msgs );
+        cprintf( "<< Lines %d-%d of %d (Up: k<-8, Down: j>+2) >>",
+                 rel_start, rel_end, num_msgs );
                  
         keyin = get_ch();
 
@@ -618,7 +619,7 @@ void replay_messages(void)
             int new_line;
             int end_mark;
 
-            if (keyin == 'k' || keyin == '8' || keyin == '-')
+            if (keyin == 'k' || keyin == '8' || keyin == '-' || keyin == '<')
             {
                 new_line = win_start_line - (num_lines - 2);
                 
@@ -642,7 +643,8 @@ void replay_messages(void)
                         new_line = 0;
                 }
             }
-            else if (keyin == 'j' || keyin == '2' || keyin == '+')
+            else if (keyin == 'j' || keyin == '2' || keyin == '+'
+                     || keyin == '>')
             {
                 new_line = win_start_line + (num_lines - 2);
 
@@ -669,7 +671,8 @@ void replay_messages(void)
         else
         {
             if (keyin != 'k' && keyin != '8' && keyin != '-'
-                && keyin != 'j' && keyin != '2' && keyin != '+')
+                && keyin != 'j' && keyin != '2' && keyin != '+'
+                && keyin != '<' && keyin != '>')
             {
                 break;
             }
