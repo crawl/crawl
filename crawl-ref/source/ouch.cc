@@ -798,8 +798,12 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         hiscores_new_entry(se);
         logfile_new_entry(se);
 
-        if (death_type != KILLED_BY_LEAVING && death_type != KILLED_BY_WINNING)
+        if (death_type != KILLED_BY_LEAVING
+            && death_type != KILLED_BY_WINNING
+            && death_type != KILLED_BY_QUITTING)
+        {
             save_ghost();
+        }
     }
 
 #endif
