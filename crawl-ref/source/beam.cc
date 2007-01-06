@@ -1857,13 +1857,15 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         }
 
         // not hasted, slow it
-        if (!mons_has_ench(monster, ENCH_SLOW) 
-                && mons_add_ench(monster, ENCH_SLOW))
+        if (!mons_has_ench(monster, ENCH_SLOW)
+            && !mons_is_stationary(monster)
+            && mons_add_ench(monster, ENCH_SLOW))
         {
-            // put in an exception for fungi, plants and other things you won't
-            // notice slow down.
-            if (simple_monster_message(monster, " seems to slow down."))
+            if (!mons_is_paralysed(monster)
+                && simple_monster_message(monster, " seems to slow down."))
+            {
                 pbolt.obvious_effect = true;
+            }
         }
         return (MON_AFFECTED);
 
@@ -1877,12 +1879,15 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         }
 
         // not slowed, haste it
-        if (mons_add_ench(monster, ENCH_HASTE))
+        if (!mons_has_ench(monster, ENCH_HASTE)
+            && !mons_is_stationary(monster)
+            && mons_add_ench(monster, ENCH_HASTE))
         {
-            // put in an exception for fungi, plants and other things you won't
-            // notice speed up.
-            if (simple_monster_message(monster, " seems to speed up."))
+            if (!mons_is_paralysed(monster)
+                && simple_monster_message(monster, " seems to speed up."))
+            {
                 pbolt.obvious_effect = true;
+            }
         }
         return (MON_AFFECTED);
 
@@ -2014,7 +2019,7 @@ bool curare_hits_monster( const bolt &beam,
 
         if (hurted)
         {
-            simple_monster_message(monster, " appears to choke.");
+            simple_monster_message(monster, " convulses.");
             if ((monster->hit_points -= hurted) < 1)
             {
                 const int thrower = YOU_KILL(beam.thrower) ? 

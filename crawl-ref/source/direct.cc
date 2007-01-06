@@ -1454,10 +1454,22 @@ static void describe_cell(int mx, int my)
         if (menv[i].attitude == ATT_FRIENDLY)
             mprf("%s is friendly.", mons_pronoun(menv[i].type, PRONOUN_CAP));
 
+        const bool paralysed = mons_is_paralysed(&menv[i]);
+        if (paralysed)
+            mprf("%s is paralysed.", mons_pronoun(menv[i].type, PRONOUN_CAP));
+
         for (int p = 0; p < NUM_MON_ENCHANTS; p++)
         {
+            const unsigned ench = menv[i].enchantment[p];
+
+            // Suppress silly-looking combinations, even if they're
+            // internally valid.
+            if (paralysed && (ench == ENCH_SLOW || ench == ENCH_HASTE))
+                continue;
+            
             strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-            switch (menv[i].enchantment[p])
+
+            switch (ench)
             {
             case ENCH_YOUR_ROT_I:
             case ENCH_YOUR_ROT_II:
