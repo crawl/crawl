@@ -1310,10 +1310,14 @@ bool is_stackable_item( const item_def &item )
 
 int ident_flags(const item_def &item)
 {
-    int flags = item.flags & full_ident_mask(item);
+    const int identmask = full_ident_mask(item);
+    int flags = item.flags & identmask;
 
-    if (!(flags & ISFLAG_KNOW_TYPE) && item_type_known(item))
+    if (identmask && (identmask & ISFLAG_KNOW_TYPE)
+        && !(flags & ISFLAG_KNOW_TYPE) && item_type_known(item))
+    {
         flags |= ISFLAG_KNOW_TYPE;
+    }
 
     return (flags);
 }
