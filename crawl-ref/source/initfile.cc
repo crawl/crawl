@@ -1280,10 +1280,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "stop_travel" && key != "sound" 
         && key != "travel_stop_message"
         && key != "drop_filter" && key != "lua_file"
-	&& key != "note_items" && key != "autoinscribe"
-	&& key != "note_monsters" && key != "note_messages"
+        && key != "note_items" && key != "autoinscribe"
+        && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
-        && key != "feature")
+        && key != "feature" && key != "fire_items_start")
     {
         tolower_string( field );
     }
