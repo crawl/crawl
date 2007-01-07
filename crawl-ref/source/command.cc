@@ -651,6 +651,7 @@ help_file help_files[] = {
     { "crawl_manual.txt", '*', true },
     { "tables.txt", '%', false },
     { "readme.txt", '^', false },
+    { "crawl_macros.txt", '~', false },
     { NULL, 0, false }
 };
 
@@ -696,6 +697,7 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>*</w>: Read the manual\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse Notes\n"
+            "<w>~</w>: Macros help\n"
             "<w>%</w>: Table of Aptitudes\n",
             true, true, cmdhelp_textfilter);
         std::vector<formatted_string> blines = cols.formatted_lines();

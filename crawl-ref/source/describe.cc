@@ -1719,7 +1719,6 @@ static std::string describe_armour( const item_def &item, bool verbose )
         switch (get_equip_race( item ))  
         {
         case ISFLAG_ELVEN:
-            //jmf: not light
             description += "$It is well-crafted and unobstructive";
 
             if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
