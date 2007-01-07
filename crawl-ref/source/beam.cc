@@ -1594,6 +1594,9 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
 
             simple_monster_message(monster, " is drained.");
 
+            if (YOU_KILL(pbolt.thrower))
+                did_god_conduct(DID_NECROMANCY, 2 + random2(3));
+
             if (one_chance_in(5))
                 monster->hit_dice--;
 
