@@ -3118,6 +3118,19 @@ void display_char_status(void)
     mpr(info);
     
 
+    // magic resistance
+    const int mr = player_res_magic();
+    snprintf(info, INFO_SIZE, "You are %s resistant to magic.",
+             (mr <  10) ? "not" :
+             (mr <  25) ? "slightly" :
+             (mr <  50) ? "somewhat" :
+             (mr <  75) ? "considerably" :
+             (mr < 100) ? "quite" :
+             (mr < 120) ? "very" :
+             (mr < 140) ? "extremely" :
+             "incredibly");
+    mpr(info);
+
     // character evaluates their ability to sneak around: 
     const int ustealth = check_stealth();
 
