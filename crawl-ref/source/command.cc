@@ -23,6 +23,8 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "chardump.h"
+#include "files.h"
 #include "invent.h"
 #include "itemname.h"
 #include "item_use.h"
@@ -637,7 +639,33 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
     }
 }
 
-            
+
+struct help_file
+{
+    const char* name;
+    int hotkey;
+    bool auto_hotkey;
+};
+
+help_file help_files[] = {
+    { "crawl_manual.txt", '*', true },
+    { "tables.txt", '%', false },
+    { "readme.txt", '^', false },
+    { NULL, 0, false }
+};
+
+static int keyhelp_keyfilter(int ch)
+{
+    switch (ch)
+    {
+    case ':':
+        display_notes();
+        return -1;
+    default:
+        return ch;
+    }
+}
+
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
                               bool with_manual)
 {
@@ -645,61 +673,63 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     
     // Set flags, and don't use easy exit.
     cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
-
+    
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
-    if ( with_manual )
-        cmd_help.set_more( formatted_string::parse_string(
-                               "<cyan>[ + : Page down.   - : Page up."
-                               " ? or letter for manual.   Esc exits.]"));
-    else
-        cmd_help.set_more( formatted_string::parse_string(
-                               "<cyan>[ + : Page down.   - : Page up."
-                               "                           Esc exits.]"));
-
-    for (unsigned i = 0; i < lines.size(); ++i )
-        cmd_help.add_item_formatted_string(lines[i]);
+    cmd_help.set_more( formatted_string::parse_string(
+                           "<cyan>[ + : Page down.   - : Page up."
+                           "                           Esc exits.]"));
 
     if ( with_manual )
     {
-        FILE* fp;
-#ifdef DATA_DIR_PATH
-        fp = fopen(DATA_DIR_PATH "/crawl_manual.txt", "r");
-#else
-        fp = fopen("../docs/crawl_manual.txt", "r");
-        if ( !fp )
-            fp = fopen("./docs/crawl_manual.txt", "r");
-#endif
-        if ( fp )
+        cmd_help.f_keyfilter = keyhelp_keyfilter;
+        column_composer cols(1);
+
+        cols.add_formatted(
+            0,
+            "<h>Dungeon Crawl Help\n"
+            "\n"
+            "Press one of the following keys to obtain more information on a certain\n"
+            "aspect of Dungeon Crawl.\n"
+
+            "<w>?</w>: Key Help Screens\n"
+            "<w>*</w>: Read the manual\n"
+            "<w>^</w>: Quickstart Guide\n"
+            "<w>:</w>: Browse Notes\n"
+            "<w>%</w>: Table of Aptitudes\n",
+            true, true, cmdhelp_textfilter);
+        std::vector<formatted_string> blines = cols.formatted_lines();
+        unsigned i;
+        for (i = 0; i < blines.size(); ++i )
+            cmd_help.add_item_formatted_string(blines[i]);
+
+        while ( static_cast<int>(++i) < get_number_of_lines() )
+            cmd_help.add_item_string("");
+    }
+
+    for (unsigned i = 0; i < lines.size(); ++i )
+        cmd_help.add_item_formatted_string(lines[i], (i == 0 ? '?' : 0) );
+
+    if ( with_manual )
+    {
+        for ( int i = 0; help_files[i].name != NULL; ++i )
         {
+            FILE* fp=fopen(datafile_path(std::string(help_files[i].name)).c_str(),"r");
+            if ( !fp )
+                continue;
+
             // put in a separator
             cmd_help.add_item_string("");
-            cmd_help.add_item_string(std::string(get_number_of_cols()-1,'-'));
-            add_file_to_scroller(fp, cmd_help, '?', true);
-            fclose(fp);
-        }
+            cmd_help.add_item_string(std::string(get_number_of_cols()-1,'='));
+            cmd_help.add_item_string("");
 
-#ifdef DATA_DIR_PATH
-        fp = fopen(DATA_DIR_PATH "/tables.txt", "r");
-#else
-        fp = fopen("../docs/tables.txt", "r");
-        if ( !fp )
-            fp = fopen("./docs/tables.txt", "r");
-#endif
-        if ( fp )
-        {
-            // put in a separator
-            for ( int i = 0; i < get_number_of_lines() - 5; ++i )
-                cmd_help.add_item_string("");
-            MenuEntry* me = new MenuEntry("Tables");
-            me->level = MEL_TITLE;
-            me->colour = WHITE;
-            me->add_hotkey('s');
-            cmd_help.add_entry(me);
-            add_file_to_scroller(fp, cmd_help, 0, false);
+            // and the file itself
+            add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
+                                 help_files[i].auto_hotkey);
+
+            // done with this file
             fclose(fp);
         }
-        
     }
     cmd_help.show();
 }
@@ -723,9 +753,10 @@ void list_commands(bool wizard)
         list_wizard_commands();
         return;
     }
-        
+
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
+
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 

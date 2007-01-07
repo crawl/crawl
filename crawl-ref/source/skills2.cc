@@ -1820,6 +1820,7 @@ void show_skills(void)
     int i;
     int x;
     menu_letter lcount;
+    bool show_aptitudes = false;
 
     const int num_lines = get_number_of_lines();
 
@@ -1919,10 +1920,17 @@ void show_skills(void)
                 if ( percent_done == 0 )
                     ++percent_done;
 
-                if ( !Options.increasing_skill_progress )
-                    cprintf( " (%d)", (100 - percent_done) / 10 );
+                if ( !show_aptitudes )
+                {
+                    if ( !Options.increasing_skill_progress )
+                        cprintf( " (%d)", (100 - percent_done) / 10 );
+                    else
+                        cprintf( " (%2d%%)", (percent_done / 5) * 5 );
+                }
                 else
-                    cprintf( " (%2d%%)", (percent_done / 5) * 5 );
+                {
+                    cprintf(" %3d  ", spec_abil);
+                }
             }
 
             scrln++;
@@ -1930,9 +1938,15 @@ void show_skills(void)
     }
 
     // if any more skills added, must adapt letters to go into caps
-    gotoxy(1, bottom_line);
+    gotoxy(1, bottom_line-1);
     textcolor(LIGHTGREY);
     cprintf("Press the letter of a skill to choose whether you want to practise it.");
+
+    if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
+    {
+        gotoxy(1, bottom_line);
+        cprintf("Press '!' to toggle between aptitude and progress display.");
+    }
 
     char get_thing;
 
@@ -1942,6 +1956,12 @@ void show_skills(void)
         getch();
     else
     {
+        if (get_thing == '!' && (!player_genus(GENPC_DRACONIAN) ||
+                                  you.max_level >= 7))
+        {
+            show_aptitudes = !show_aptitudes;
+            goto reprint_stuff;
+        }
         if ((get_thing >= 'a' && get_thing <= 'z')
             || (get_thing >= 'A' && get_thing <= 'Z'))
         {

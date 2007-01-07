@@ -1317,16 +1317,22 @@ void formatted_scroller::add_text(const std::string& s)
     }    
 }
 
-void formatted_scroller::add_item_formatted_string(const formatted_string& fs)
+void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
+                                                   int hotkey)
 {
     MenuEntry* me = new MenuEntry;
     me->data = new formatted_string(fs);
+    if ( hotkey )
+        me->add_hotkey(hotkey);
     add_entry(me);
 }
 
-void formatted_scroller::add_item_string(const std::string& s)
+void formatted_scroller::add_item_string(const std::string& s, int hotkey)
 {
-    add_entry( new MenuEntry(s) );
+    MenuEntry* me = new MenuEntry(s);
+    if ( hotkey )
+        me->add_hotkey(hotkey);
+    add_entry(me);
 }
 
 void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
@@ -1419,6 +1425,7 @@ bool formatted_scroller::process_key( int keyin )
     {
     case 0:
         return true;
+    case -1:
     case CK_ESCAPE:
         return false;
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':

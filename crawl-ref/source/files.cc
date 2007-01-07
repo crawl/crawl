@@ -367,6 +367,9 @@ std::string datafile_path(const std::string &basename)
         std::string("dat") + FILE_SEPARATOR,
         std::string("data") + FILE_SEPARATOR,
         std::string("crawl-data") + FILE_SEPARATOR,
+        std::string("..")+FILE_SEPARATOR+std::string("docs")+FILE_SEPARATOR,
+        std::string("..") + FILE_SEPARATOR,
+        std::string(".") + FILE_SEPARATOR,
         "",
     };
 
