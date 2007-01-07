@@ -1351,11 +1351,14 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
                   you.religion == GOD_ELYVILON) &&
                  mons_is_unholy(creation) )
             {
-                creation->attitude = ATT_HOSTILE;
+                if ( creation->attitude != ATT_HOSTILE )
+                {
+                    creation->attitude = ATT_HOSTILE;
+                    if ( see_grid(cr_x, cr_y) )
+                        mpr("The monster is enraged by your holy aura!");
+                }
                 creation->behaviour = BEH_HOSTILE;
                 beha = BEH_HOSTILE;
-                if ( see_grid(cr_x, cr_y) )
-                    mpr("The monster is enraged by your holy aura!");
             }
 
             if (beha == BEH_CHARMED)
