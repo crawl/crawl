@@ -1054,10 +1054,6 @@ void process_command( command_type cmd ) {
         make_user_note();
         break;
 
-    case CMD_DISPLAY_NOTES:
-        display_notes();
-        break;
-
     case CMD_CLEAR_MAP:
         if (you.level_type != LEVEL_LABYRINTH &&
             you.level_type != LEVEL_ABYSS) {
@@ -2383,7 +2379,6 @@ command_type keycode_to_command( keycode_type key ) {
     case '%': return CMD_RESISTS_SCREEN;
     case ',': return CMD_PICKUP;
     case ':': return CMD_MAKE_NOTE;
-    case '_': return CMD_DISPLAY_NOTES;
     case ';': return CMD_INSPECT_FLOOR;
     case '!': return CMD_SHOUT;
     case '^': return CMD_DISPLAY_RELIGION;

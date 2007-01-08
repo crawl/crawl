@@ -222,7 +222,7 @@ std::string overview_description_string()
         {
             if ( !branchcount )
             {
-                disp += "\n<white>Branches:</white>\n";
+                disp += "\n<white>Branches:</white> (use <white>Ctrl-G</white> to reach them)\n";
                 seen_anything = true;
             }
             
@@ -249,7 +249,7 @@ std::string overview_description_string()
     // we loop through everything a dozen times, oh well
     if ( !notable_altars.empty() )
     {
-        disp += "\n<white>Altars:</white>\n";
+        disp += "\n<white>Altars:</white> (use <white>Ctrl-F \"altar\"</white> to reach them)\n";
         seen_anything = true;
     }
 
@@ -295,7 +295,7 @@ std::string overview_description_string()
     // print shops
     if (!shops_present.empty())
     {
-        disp += "\n<white>Shops:</white>\n";
+        disp +="\n<white>Shops:</white> (use <white>Ctrl-F \"shop\"</white> to reach them)\n";
         seen_anything = true;
     }
     last_id.depth = 10000;
