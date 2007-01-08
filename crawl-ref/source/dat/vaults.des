@@ -529,7 +529,7 @@ ENDMAP
 ################################################################
 # Circular labyrinths
 
-NAME: david_circular_labyrinth_1
+NAME: david_entry_011
 TAGS: entry no_monster_gen
 ORIENT: float
 
@@ -562,7 +562,7 @@ ENDMAP
 ########################################
 # Another circular labyrinth
 
-NAME: david_circular_labyrinth_2
+NAME: david_entry_012
 TAGS: entry no_monster_gen
 ORIENT: float
 
@@ -595,7 +595,7 @@ ENDMAP
 ########################################
 # Circular labyrinth episode III
 
-NAME: david_circular_labyrinth_3
+NAME: david_entry_013
 TAGS: entry no_monster_gen
 ORIENT: float
 
@@ -628,7 +628,7 @@ ENDMAP
 #####################################################################
 # Cavernosity
 
-NAME: david_cavern 
+NAME: david_entry_014
 TAGS: entry no_monster_gen
 ORIENT: float
 FLAGS: no_rotate
@@ -661,6 +661,459 @@ x.....xxx....xx..xxx..xxxxx3...wwwwwxxwxxx
 xx...xxxxxxxxxxx.....xxxxxxxxx.wwwxxxxxxxx
 xxxxxxxxxxxxxxxxxx..xxxxxxxxxxwwxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# A song of water and fire (David)
+
+# This is another series of entry levels, ten total. Leave the template intact
+# (but commented out). All water is deep.
+# NAME: water_fire_template
+# TAGS: entry no_monster_gen
+# CHANCE: 1
+# ORIENT: float
+# MONS: plant
+# MAP
+# xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+# xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+# xxxxxxxx.........................xxxxxxxx
+# xxxx..........llllllxwwwwww..........xxxx
+# xx......llllllllllllxwwwwwwwwwwww......xx
+# x....lllllllllllllllxwwwwwwwwwwwwwww....x
+# x.llllllxllllllxxxxxxxxxxxwwwwwwxwwwwww.x
+# xlllxlllxllllxxxl...x...wxxxwwwwxwwwxwwxx
+# xlllxlllxlllxxllx...x...xwwxxwwwxwwwxwwwx
+# xlllxlllxlllxll.x...x...x.wwxwwwxwwwxwwwx
+# xlllxlllxlllxl..x...x...x..wxwwwxwwwxwwwx
+# xlllxlllxlllx...x...x...x...xwwwxwwwxwwwx
+# x...x...x...x...x...x...x...x...x...x...x
+# x...x...x...x...x...x...x...x...x...x...x
+# xx+xx...x...x...x...x...x...x...x...xx+xx
+# x..xxx..x...x...x...x...x...x...x..xxx..x
+# x....x+xx...x...x...x...x...x...xx+x....x
+# xx......xx+xxx+xx...x...xx+xxx+xx......xx
+# xxxx...........xxx+xxx+xxx...........xxxx
+# xxxxxxxx.........................xxxxxxxx
+# xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+# xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# ENDMAP
+
+NAME: water_fire_1
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........................xxxxxxxx
+xxxx..........llll..x..w.ww..........xxxx
+xx.......lllllllllllxwwwwwwwww.ww......xx
+x....lllllll.llll.l11wwwwwwwwwwwwwwww...x
+x.ll.lllxll.lllxxx.xx.xxxxwwwwwwxwxwwww.x
+xlx.xll.xxx.lx.xl.xxx.x.wxxxwwwwxwwwxxwxx
+xl.lx..lxxxl.x.lx.1.x...xw.xxwwwxw.wxx.wx
+xl.lx.xlxll.xll.xxx.xwx.x1wwxww.x.xwx.wwx
+x.llxl.lxl.lxl.xx..xxxx.x..wx1wwx.wwx..wx
+x.xlx.llxl.xx...x.x.x...xxx.xw.wx.wwxwwxx
+xl..xx..x.l.x.x.x...x.x.x...xx..xx.wxx..x
+x...x...x...x...xxx.x...x.x.x.x.x...x...x
+xx+xx...x...x...x...x..xx...x...x.x.xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_2
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.......lll...............xxxxxxxx
+xxxx.........lllllllxw.wwww..........xxxx
+xx......ll.lllllllllxwwwwwwwwxwww......xx
+x..l.llll.lllllllllxxwww..wwwxwww.ww....x
+x.lllll..l.llllxx.xxwwxxxx..wwwwxw.ww.w.x
+xll.xl.lxl.llxxxl.1.x.1.wxxx.wwwxw.wxwwxx
+xlx.xl.xxl..xxllx11.11.xxwwxx.wwxwwwxwwwx
+xl.l.ll.x.llxll.x1.11..1x.wwxw.wx.ww..wwx
+x.llx.x.xxl.xl..x..xx.x.x..wxw.wxw..xx.wx
+x.l.xxl.xl.lx...x..xx...x.w.xwx.xwwxxww.x
+x...x.l.xl..x.xx....xx..x..xx..xx..wxw.xx
+x...x...x.l.x.xxxx..x..xx...x..xx...x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x.x.x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_3
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx..............www........xxxxxxxx
+xxxx..........ll.lllxwwwwww..........xxxx
+xx......lll.llllllllx1...www.www.......xx
+x....l.lxl..llll..l11www..wwww..ww.w....x
+x.lllll..llllllxxx.l11.xxxwww.wwxwwwwww.x
+xllxxlllx.lllxxxl.x.xww.wxxxwwwwxw.w.wwxx
+x.llx.llxx.lxxllx...x.x.xw.xxwww..wwx.wwx
+xl.lxllxxl.lxll.xxx.x...x.wwxww.xw.wx.wwx
+xl.lxxl.xll.xl.xx..xxx.xx..wxww.xw.wxx.wx
+xxx.xll.xll.x.x.xx.xxx.xxx.wxx.xxxwxx.wxx
+x...xlx.xl.xx...x.x.xx.xx...x.w.x...x...x
+x...x...x.x.xx..x.x.x...x...x...x...x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_4
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx..........l..............xxxxxxxx
+xxxx..........llllllxwwwwww..ww......xxxx
+xx......xll..llxxlllxwww..wwwwwww......xx
+x....l.lxl..l.lxxlllxww..wwwxwwwwwww....x
+x.llxll.xllll.llllxxwxx.xxwwwwwwxwwwwww.x
+xll.xll.xlll.x1xxl.wxw.xwxxxwwwwxw.wxxwxx
+xl.lx.l.xll.xxl.xx..x11wxwwxx.wwx.wwxww.x
+xlllx.lxxll.xll1x.1.x.11x.wwxx.wxw.wxwx.x
+x..xxx.lxxll.l.1xx.1xw1.x..wxw.wxwwwxw.xx
+xxl.xlx.lllxx..xxx.1xx.111w.xw.wxxw.xww.x
+x...x..lx.l.xl.xx...x...x.xxxwx.xw..x...x
+x...x...x..lxx.xx...x...x...x.w.x...x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_5
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........ll....ww........xxxxxxxx
+xxxx..........llllllxwwwwww..........xxxx
+xx......ll...lllxxllxwwww..ww..ww......xx
+x...llllllllllllllllxw1..wwwxxx..www....x
+x.xl.l.lxlx.l.lxxxxxx1xxxxw.wwx.x.wwwwwwx
+xxllxxx.xllllx.lllww11wwwwxx.wxwx.wwxw.wx
+xll.xx.lxl.lxx..x.w1xww.1111xw.wxw.wx.xwx
+xl.xx.llxl.lx..111..x..xxxwx11.wxw.wx.xxx
+xl..x.lxxxl.x1x1xx.xx.x....wxwwwxww.xw.wx
+xlx.x..lxll.x..xx...x...x...xw.wxxwwxx.wx
+xxx.x...xx.xxx..x.x.x.x.x.wxx.w.x.xxx.wwx
+x...x...x.xxx...x.x.x...xx..x..wx...x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_6
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........l....ww.........xxxxxxxx
+xxxx..........llllllxwwwwww...w......xxxx
+xx..l...llxlll..ll..1..wwwwwwwwww......xx
+x....lllllllllll..lxxxw.wwww...xwwww....x
+x.llllllxllll.lxxxx11x1x1xw.xxx1xwwww.w.x
+xll.xlllxll..x.x1111xw1ww1xx.w.xxw.xxww.x
+xxl.xlllxl.lxx111w11xxw1xww.xwxwxwx..wwwx
+x.ll.lllxl.xx111xw11x.x.x.w.xwxwxwx..wwwx
+x.llx.llxxx.x111xw11x...xx.wxwwwxwwxx..wx
+x.xxxl.lxll.xx11111.xxx.x1.wx.wwxxw.xxx.x
+xl.lxxx.x...x..xxxx.xxx.www.xx.xx.x.x..xx
+x...x...x...x.x.x..xx..wxx.xx...x..xx...x
+xx+xx...x...x...xx.1x...xxx.x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_7
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........111.111.........xxxxxxxx
+xxxx..........llll11.11wwwww.........xxxx
+xx...x..lllllll..........ww.wwwww......xx
+x...xllllxxx.lllllllxwwwwwww.wwwww.w....x
+x.lll..lxl..lllxxxx.xxxxxxww.wwwx.wwwww.x
+xlll.lllx.lllxxxl11wx.wwwxxx1wwwxw..xwwxx
+xll.xlllx.lxxxll.xxxxw..xww1xwwwxww.x..wx
+xll.xxllx.llxll.x.1wxxw.xx.wxwwwx.x.xwwwx
+xx.lxxllx..lxl..x.1.xw.xx..wxwwwx.wwxww.x
+x.xlxllxxx.lx..xxxx.x.xwx.wxxwwwxx.xxx.xx
+x..xxl.xxx.xxx..x1.xx.xwx.xxx...x...x...x
+x...x...x...x...x...xx..x..xx...x.x.x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_8
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx........l......ww........xxxxxxxx
+xxxx..........llllllxww.www..........xxxx
+xx......lllllll.xxxlxww.wwwwwwwww......xx
+x....llllllllllx...lxxww..wwxxwwwwww....x
+x.lllllx..ll.llxxxx11xxxxx.wwwxxx..www..x
+xl.lxll.xl..lxxxl..xx...w1xx1www1ww.xw.xx
+xl.lxll.xlllxxllxx..x.wwxw11x.11xxxxx..wx
+xlxlxl.lxlllxll.11111ww.x.wwx.xxxwwwxwwwx
+xlxlxx.lxlllxl.11www11.wx..wxx.xxwxwxw.wx
+xlxlxlx.xlllxlx11wTw11.wx...x.xwxwwwxw.wx
+x...x..xx...x.x11www11..x...x...x...xxx.x
+x...x...x...x...11111xx.x...x...x.x.x...x
+xx+xx...x...x...xx..x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_9
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........ll...ww.........xxxxxxxx
+xxxx.........xllllllxwwwwwwx.........xxxx
+xx......lllllllllllxxxwwwww.wwwww......xx
+x....llllllxxxllllx111xwww.xxx.wwwww....x
+x.lllll.xllllllxxxx1x1xxxxw...w.x.wwwww.x
+xxxl.lxx.llllxxxllx111xwwxxxwwww.xxw.wxxx
+xlx.xlx.xxllxxllxl..x..wxwwxxwwxx.xwx.xwx
+xll.xlx.xlllxll.x.xxxxx.x.wwxwwwx.xwx.wwx
+xl.xxlx.xlxlxlx.x...x...x.xwxwxwx.xwxx.wx
+xl.lxl.lxlllx...x...x...x...xwwwxw.wxw.wx
+xx.xxx.xxx.xxx.xxx.xxx.xxx.xxx.xxx.xxx.xx
+x...x...x...x...x...x...x...x...x...x...x
+xx+xx...x.x.x.x.x...x...x.x.x.x.x...xx+xx
+x..xxx..x...x...x.x.x.x.x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: water_fire_10
+TAGS: entry no_monster_gen
+CHANCE: 1
+MONS: plant
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........................xxxxxxxx
+xxxx.......l..lll.llxwww.ww..........xxxx
+xx......l.llllll.xxxxw..wwwww..ww......xx
+x....llll.lll.lll..lxwwwwwww..wwwwww.w..x
+x.lllll.ll.ll.lxxxx111xwxxwwwwwwxw.w.ww.x
+xxlxx..xxl.l.xxxll11x1w.11xxw.xwx.xxx.xxx
+xlll.xx.x.lxx.ll..wwwwx.x.wxxx.wxw..xw.xx
+xlx.xll.x.l.x.llxxw.xx.xw.wwxx.wxwx.xwx.x
+xlx.xl.xx.l.xl..x...x.x.xx.wx.xwxwx.xxx.x
+xl.xxx.lllxlx.xxx.T.x...x.w.x.wwxw.wxw.wx
+x...x.xxx...xx..x...xx.xx.wxx.w.xw.xx.xxx
+x...x...x...xx..x...x...xx..xx..xw..x...x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+########################################################################
+# Array of rooms (five variations on the theme).
+
+NAME: david_entry_017_1
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 2
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.(.+.....+.xxxxxxxxx.+.....+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.^..^+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+^.^..+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+...^^+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.[.+...x..+...xxxxxx.+.^.^.+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_entry_017_2
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 2
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.(.+.....+.xxxxxxxxx.+..^.^+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.....+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+^^...+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+.^..^+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.[.+...x..+...xxxxxx.+^.^..+...x
+x...x...xxxx...xxxxxx.xvv=vvx...x
+xxxxxxxxxxxxxxxxxxxxxx=...xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_entry_017_3
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 2
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.[.+.....+.xxxxxxxxx.+^^..^+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+..^.^+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+.....+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+^...^+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.(.+...x..+...xxxxxx.+..^^.+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_entry_017_4
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 2
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.{.+.....+.xxxxxxxxx.+...^^+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.^^..+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.[.+..x.+...+....x.+.+..^.^+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+.....+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.(.+...x..+...xxxxxx.+^..^^+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_entry_017_5
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 2
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.[.+.....+.xxxxxxxxx.+..^.^+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+..^^.+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.(.+..x.+...+....x.+.+^.^..+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+...^^+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.{.+...x..+...xxxxxx.+.....+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
