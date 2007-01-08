@@ -71,14 +71,13 @@ extern int yylineno;
 
 void yyerror(const char *e)
 {
-    io_cleanup();
     fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
     exit(1);
 }
 
 
-#line 22 "levcomp.ypp"
+#line 21 "levcomp.ypp"
 typedef union
 {
     int i;
@@ -167,13 +166,13 @@ static const short yyrhs[] = {    56,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    54,    57,    58,    61,    62,    65,    68,    74,   113,   121,
-   122,   125,   126,   127,   128,   129,   130,   131,   132,   133,
-   136,   139,   140,   148,   149,   155,   156,   159,   160,   163,
-   178,   179,   182,   183,   186,   201,   207,   208,   214,   219,
-   225,   231,   232,   238,   239,   240,   241,   242,   243,   244,
-   245,   246,   247,   250,   253,   254,   270,   271,   272,   275,
-   278,   279,   282
+    53,    56,    57,    60,    61,    64,    67,    73,   112,   120,
+   121,   124,   125,   126,   127,   128,   129,   130,   131,   132,
+   135,   138,   139,   147,   148,   154,   155,   158,   159,   162,
+   177,   178,   181,   182,   185,   200,   206,   207,   213,   218,
+   224,   230,   231,   237,   238,   239,   240,   241,   242,   243,
+   244,   245,   246,   249,   252,   253,   269,   270,   271,   274,
+   277,   278,   281
 };
 #endif
 
@@ -814,33 +813,33 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 54 "levcomp.ypp"
+#line 53 "levcomp.ypp"
 { ;
     break;}
 case 2:
-#line 57 "levcomp.ypp"
+#line 56 "levcomp.ypp"
 {;
     break;}
 case 3:
-#line 58 "levcomp.ypp"
+#line 57 "levcomp.ypp"
 {;
     break;}
 case 4:
-#line 61 "levcomp.ypp"
+#line 60 "levcomp.ypp"
 {;
     break;}
 case 5:
-#line 62 "levcomp.ypp"
+#line 61 "levcomp.ypp"
 {;
     break;}
 case 7:
-#line 69 "levcomp.ypp"
+#line 68 "levcomp.ypp"
 {
                     lc_default_depth = lc_range;
                 ;
     break;}
 case 8:
-#line 75 "levcomp.ypp"
+#line 74 "levcomp.ypp"
 {
                     if (lc_map.orient == MAP_FLOAT
                         || lc_map.is_minivault())
@@ -879,7 +878,7 @@ case 8:
                 ;
     break;}
 case 9:
-#line 114 "levcomp.ypp"
+#line 113 "levcomp.ypp"
 {
                     lc_map.init();
                     lc_map.depth = lc_default_depth;
@@ -887,11 +886,11 @@ case 9:
                 ;
     break;}
 case 21:
-#line 136 "levcomp.ypp"
+#line 135 "levcomp.ypp"
 {;
     break;}
 case 23:
-#line 141 "levcomp.ypp"
+#line 140 "levcomp.ypp"
 {
                     lc_map.tags += " ";
                     lc_map.tags += yyvsp[-1].text;
@@ -899,25 +898,25 @@ case 23:
                 ;
     break;}
 case 24:
-#line 148 "levcomp.ypp"
+#line 147 "levcomp.ypp"
 {;
     break;}
 case 25:
-#line 150 "levcomp.ypp"
+#line 149 "levcomp.ypp"
 {
                     lc_map.random_symbols = yyvsp[0].text;
                 ;
     break;}
 case 26:
-#line 155 "levcomp.ypp"
+#line 154 "levcomp.ypp"
 {;
     break;}
 case 27:
-#line 156 "levcomp.ypp"
+#line 155 "levcomp.ypp"
 {;
     break;}
 case 30:
-#line 164 "levcomp.ypp"
+#line 163 "levcomp.ypp"
 {
                     std::string error = lc_map.items.add_item(yyvsp[0].text);
                     if (error.size())
@@ -933,15 +932,15 @@ case 30:
                 ;
     break;}
 case 31:
-#line 178 "levcomp.ypp"
+#line 177 "levcomp.ypp"
 {;
     break;}
 case 32:
-#line 179 "levcomp.ypp"
+#line 178 "levcomp.ypp"
 {;
     break;}
 case 35:
-#line 187 "levcomp.ypp"
+#line 186 "levcomp.ypp"
 {
                     bool recognised = lc_map.mons.add_mons(yyvsp[0].text);
                     if (!recognised)
@@ -956,95 +955,95 @@ case 35:
                 ;
     break;}
 case 36:
-#line 202 "levcomp.ypp"
+#line 201 "levcomp.ypp"
 {
                     lc_map.place = yyvsp[0].text;
                 ;
     break;}
 case 37:
-#line 207 "levcomp.ypp"
+#line 206 "levcomp.ypp"
 {;
     break;}
 case 38:
-#line 209 "levcomp.ypp"
+#line 208 "levcomp.ypp"
 {
                     lc_map.depth = lc_range;
                 ;
     break;}
 case 39:
-#line 215 "levcomp.ypp"
+#line 214 "levcomp.ypp"
 {
                     lc_range.set(yyvsp[-2].i, yyvsp[0].i);
                 ;
     break;}
 case 40:
-#line 220 "levcomp.ypp"
+#line 219 "levcomp.ypp"
 {
                     lc_range.set(yyvsp[0].i);
                 ;
     break;}
 case 41:
-#line 226 "levcomp.ypp"
+#line 225 "levcomp.ypp"
 {
                     lc_map.chance = yyvsp[0].i;
                 ;
     break;}
 case 42:
-#line 231 "levcomp.ypp"
+#line 230 "levcomp.ypp"
 {;
     break;}
 case 43:
-#line 233 "levcomp.ypp"
+#line 232 "levcomp.ypp"
 {
                     lc_map.orient = (map_section_type) yyvsp[0].i;
                 ;
     break;}
 case 44:
-#line 238 "levcomp.ypp"
+#line 237 "levcomp.ypp"
 { yyval.i = MAP_ENCOMPASS; ;
     break;}
 case 45:
-#line 239 "levcomp.ypp"
+#line 238 "levcomp.ypp"
 { yyval.i = MAP_NORTH; ;
     break;}
 case 46:
-#line 240 "levcomp.ypp"
+#line 239 "levcomp.ypp"
 { yyval.i = MAP_EAST; ;
     break;}
 case 47:
-#line 241 "levcomp.ypp"
+#line 240 "levcomp.ypp"
 { yyval.i = MAP_SOUTH; ;
     break;}
 case 48:
-#line 242 "levcomp.ypp"
+#line 241 "levcomp.ypp"
 { yyval.i = MAP_WEST; ;
     break;}
 case 49:
-#line 243 "levcomp.ypp"
+#line 242 "levcomp.ypp"
 { yyval.i = MAP_NORTHEAST; ;
     break;}
 case 50:
-#line 244 "levcomp.ypp"
+#line 243 "levcomp.ypp"
 { yyval.i = MAP_SOUTHEAST; ;
     break;}
 case 51:
-#line 245 "levcomp.ypp"
+#line 244 "levcomp.ypp"
 { yyval.i = MAP_SOUTHWEST; ;
     break;}
 case 52:
-#line 246 "levcomp.ypp"
+#line 245 "levcomp.ypp"
 { yyval.i = MAP_NORTHWEST; ;
     break;}
 case 53:
-#line 247 "levcomp.ypp"
+#line 246 "levcomp.ypp"
 { yyval.i = MAP_FLOAT; ;
     break;}
 case 54:
-#line 250 "levcomp.ypp"
+#line 249 "levcomp.ypp"
 {;
     break;}
 case 56:
-#line 255 "levcomp.ypp"
+#line 254 "levcomp.ypp"
 {
                     switch (yyvsp[-1].i) {
                     case NO_HMIRROR:
@@ -1060,19 +1059,19 @@ case 56:
                 ;
     break;}
 case 57:
-#line 270 "levcomp.ypp"
+#line 269 "levcomp.ypp"
 { yyval.i = NO_HMIRROR; ;
     break;}
 case 58:
-#line 271 "levcomp.ypp"
+#line 270 "levcomp.ypp"
 { yyval.i = NO_VMIRROR; ;
     break;}
 case 59:
-#line 272 "levcomp.ypp"
+#line 271 "levcomp.ypp"
 { yyval.i = NO_ROTATE;  ;
     break;}
 case 63:
-#line 283 "levcomp.ypp"
+#line 282 "levcomp.ypp"
 {
                     lc_map.map.add_line(yyvsp[0].text);
                 ;
@@ -1299,5 +1298,5 @@ yyerrhandle:
     }
   return 1;
 }
-#line 288 "levcomp.ypp"
+#line 287 "levcomp.ypp"
 

@@ -163,6 +163,7 @@ static void place_altar(void);
 
 // Places where monsters should not be randomly generated.
 static dgn_region_list no_monster_zones;
+static dgn_region_list no_pool_fixup_zones;
 
 static std::string level_name(int subdepth)
 {
@@ -216,6 +217,7 @@ void builder(int level_number, char level_type)
     int x,y;        // generic map loop variables
 
     no_monster_zones.clear();
+    no_pool_fixup_zones.clear();
     
     // blank level with DNGN_ROCK_WALL
     make_box(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,DNGN_ROCK_WALL);
@@ -3573,6 +3575,9 @@ static void prepare_water( int level_number )
     {
         for (j = 10; j < (GYM - 10); j++)
         {
+            if (!unforbidden(coord_def(i, j), no_pool_fixup_zones))
+                continue;
+            
             if (grd[i][j] == DNGN_DEEP_WATER)
             {
                 for (k = -1; k < 2; k++)
@@ -4107,6 +4112,44 @@ static void builder_extras( int level_number, int level_type )
     } 
 }
 
+// Also checks you.where_are_you!
+static int random_trap_for_level(int level_number)
+{
+    int trap_type = TRAP_DART;
+
+    if ((random2(1 + level_number) > 1) && one_chance_in(4))
+        trap_type = TRAP_NEEDLE;
+    if (random2(1 + level_number) > 3)
+        trap_type = TRAP_SPEAR;
+    if (random2(1 + level_number) > 5)
+        trap_type = TRAP_AXE;
+
+    // Note we're boosting arrow trap numbers by moving it
+    // down the list, and making spear and axe traps rarer.
+    if (trap_type == TRAP_DART?
+        random2(1 + level_number) > 2
+        : one_chance_in(7))
+        trap_type = TRAP_ARROW;
+
+    if (random2(1 + level_number) > 7)
+        trap_type = TRAP_BOLT;
+    if (random2(1 + level_number) > 11)
+        trap_type = TRAP_BLADE;
+
+    if ((random2(1 + level_number) > 14 && one_chance_in(3))
+        || (player_in_branch( BRANCH_HALL_OF_ZOT ) && coinflip()))
+    {
+        trap_type = TRAP_ZOT;
+    }
+
+    if (one_chance_in(20))
+        trap_type = TRAP_TELEPORT;
+    if (one_chance_in(40))
+        trap_type = TRAP_AMNESIA;
+
+    return (trap_type);
+}
+
 static void place_traps(int level_number)
 {
     int i;
@@ -4126,37 +4169,7 @@ static void place_traps(int level_number)
         while (grd[env.trap[i].x][env.trap[i].y] != DNGN_FLOOR);
 
         unsigned char &trap_type = env.trap[i].type;
-        trap_type = TRAP_DART;
-
-        if ((random2(1 + level_number) > 1) && one_chance_in(4))
-            trap_type = TRAP_NEEDLE;
-        if (random2(1 + level_number) > 3)
-            trap_type = TRAP_SPEAR;
-        if (random2(1 + level_number) > 5)
-            trap_type = TRAP_AXE;
-
-        // Note we're boosting arrow trap numbers by moving it
-        // down the list, and making spear and axe traps rarer.
-        if (trap_type == TRAP_DART?
-                random2(1 + level_number) > 2
-              : one_chance_in(7))
-            trap_type = TRAP_ARROW;
-
-        if (random2(1 + level_number) > 7)
-            trap_type = TRAP_BOLT;
-        if (random2(1 + level_number) > 11)
-            trap_type = TRAP_BLADE;
-
-        if ((random2(1 + level_number) > 14 && one_chance_in(3))
-            || (player_in_branch( BRANCH_HALL_OF_ZOT ) && coinflip()))
-        {
-            trap_type = TRAP_ZOT;
-        }
-
-        if (one_chance_in(20))
-            trap_type = TRAP_TELEPORT;
-        if (one_chance_in(40))
-            trap_type = TRAP_AMNESIA;
+        trap_type = random_trap_for_level(level_number);
 
         grd[env.trap[i].x][env.trap[i].y] = DNGN_UNDISCOVERED_TRAP;
     }                           // end "for i"
@@ -5266,6 +5279,10 @@ static void build_minivaults(int level_number, int force_vault)
                                       num_runes );
         }
     }
+
+    if (place.map->has_tag("no_pool_fixup"))
+        no_pool_fixup_zones.push_back(
+            dgn_region( place.x, place.y, place.width, place.height ) );
 }                               // end build_minivaults()
 
 static void build_rooms(const dgn_region_list &excluded,
@@ -5510,6 +5527,10 @@ static void build_vaults(int level_number, int force_vault)
         no_monster_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
 
+    if (place.map->has_tag("no_pool_fixup"))
+        no_pool_fixup_zones.push_back(
+            dgn_region( place.x, place.y, place.width, place.height ) );
+
     // If the map takes the whole screen, our work is done.
     if (gluggy == MAP_ENCOMPASS)
         return;
@@ -5700,6 +5721,7 @@ static int vault_grid( const vault_placement &place,
                    (vgrid == '+') ? DNGN_CLOSED_DOOR :
                    (vgrid == '=') ? DNGN_SECRET_DOOR :
                    (vgrid == 'w') ? DNGN_DEEP_WATER :
+                   (vgrid == 'W') ? DNGN_SHALLOW_WATER :
                    (vgrid == 'l') ? DNGN_LAVA :
                    (vgrid == '>') ? DNGN_ROCK_STAIRS_DOWN :
                    (vgrid == '<') ? DNGN_ROCK_STAIRS_UP :
@@ -5739,6 +5761,9 @@ static int vault_grid( const vault_placement &place,
         break;
     case '^':
         place_specific_trap(vx, vy, TRAP_RANDOM);
+        break;
+    case '~':
+        place_specific_trap(vx, vy, random_trap_for_level(level_number));
         break;
     }
 

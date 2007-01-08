@@ -24,6 +24,7 @@
 #  ][ - stairs 84/88
 #  I - orcish idol (does nothing)
 #  ^ - random trap
+#  ~ - random trap suitable for the branch and depth the map is being used.
 #
 #  A - Vestibule gateway (opened by Horn). Can also be put on other levels for 
 #      colour, where it won't do anything.
@@ -38,8 +39,6 @@
 #  U - Magic fountain
 #  V - Permanently dry fountain
 #
-#  Statues can't be walked over and are only destroyed by disintegration
-#
 #  $ - gold
 #  % - normal item
 #  * - higher level item (good)
@@ -48,6 +47,8 @@
 #  P - maybe place a rune here (50%)
 #  R - honeycomb (2/3) or royal jelly (1/3)
 #  Z - the Orb of Zot
+#
+#  d-k - item array item.
 #
 #  0 - normal monster
 #  9 - +5 depth monster
