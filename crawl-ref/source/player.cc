@@ -3122,10 +3122,9 @@ void display_char_status(void)
     const int mr = player_res_magic();
     snprintf(info, INFO_SIZE, "You are %s resistant to magic.",
              (mr <  10) ? "not" :
-             (mr <  25) ? "slightly" :
-             (mr <  50) ? "somewhat" :
-             (mr <  75) ? "considerably" :
-             (mr < 100) ? "quite" :
+             (mr <  30) ? "slightly" :
+             (mr <  60) ? "somewhat" :
+             (mr <  90) ? "quite" :
              (mr < 120) ? "very" :
              (mr < 140) ? "extremely" :
              "incredibly");
