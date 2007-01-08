@@ -527,6 +527,289 @@ cccccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
+# Erik's entry vaults
+##############################################################################
+# Goblin Pantry
+ 
+NAME: erik_entry_001
+TAGS: entry
+ORIENT: southwest
+ 
+# Can't rotate - the aspect ratio makes it look hideous.
+FLAGS: no_rotate
+MONS: goblin, hobgoblin
+ITEM: sausage / beef jerky / cheese / pizza / pizza / pizza
+ 
+MAP
+xxxxxxxxxxxx.@.xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx.x.xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxx...xxxxxx
+xxxxxdx2+.x.....xxxxx
+xxxxx$x2x.x.....xxxxx
+xxxxx.x2x.x.[{(.xxxxx
+xxxxxdx1x.x.....xxxxx
+xxxxxd+1x.+.....xxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# From Cave to Minitemple
+ 
+NAME: erik_entry_002
+TAGS: entry
+ORIENT: float
+
+MAP
+cccccccccccccccccccccccccccccccccccccccc
+c[c..c...cc......c.....................c
+c..ccc.cc..c...c....c....c.............c
+ccc..c..c.c..c..c..cc.c.c...T....ccc...c
+c..cccc.cc..c..cc.......c..............c
+c.cc...c.c..c......c...c....xxxxxxx=...c
+cc.c.ccc..c...c..cc...c....xxxxT.T.x...c
+ccc.ccc.c.c..c...c..c.....xxxxx....x...c
+c{ccc..cc.cc......cc......G.x$x.C..x...@
+c.c...c.cc.c..cc............+0x.9..x...c
+cc.cccccc.c...c..c..cc......+0x.9..x...c
+cccc.c...c..c...c.........G.x$x.C..x...c
+c.cc..ccc.c.......c...c...xxxxx....x...c
+c..cc.c.c...cc...ccc...cc..xxxxT.T.x...c
+cc..cc.cc.cc....c....c......xxxxxxx=...c
+c(.c..c.cc...c......c..................c
+cccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+ 
+##############################################################################
+# Spiral Da Hi
+ 
+NAME: erik_entry_003
+TAGS: entry
+ORIENT: float
+MONS: fungus
+ 
+MAP
+x@xxxxxxxxxxxxxxxxxxxx
+x.=xxxxxxxxxxxxxxxxxxx
+x.x..................x
+x.x.=xxxxxxxxxxxxxx1.x
+x.x.x..............x.x
+x.x.x.=xxxxxxxxxx1.x.x
+x.x.x.x..........x.x.x
+x.x.x.x.=xxxxxx1.x.x.x
+x.x.x.x.x......x.x.x.x
+x.x.x.x.x.=xxx.x.x.x.x
+x.x.x.x.x.x{[x.x.x.x.x
+x.x.x.x.x.xx(x.x.x.x.x
+x.x.x.x.x....x.x.x.x.x
+x.x.x.x.1xxxx=.x.x.x.x
+x.x.x.x........x.x.x.x
+x.x.x.1xxxxxxxx=.x.x.x
+x.x.x............x.x.x
+x.x.1xxxxxxxxxxxx=.x.x
+x.x................x.x
+x.1xxxxxxxxxxxxxxxx=.x
+x....................x
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+ 
+##############################################################################
+# Triangle
+ 
+NAME: erik_entry_004
+TAGS: entry
+ORIENT: float
+ 
+# boo for random conversion of doors to secret doors
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx(x
+xxxxxxxxxxxxx[xxx
+xxxxxxxxxxx.+{+.x
+xxxxxxxxxxx.xxx.xxx
+xxxxxxxxx.+x+.+x+.x
+xxxxxxxxx.xxx.xxx.xxx
+xxxxxxx.+x+.+x+.+x+.x
+xxxxxxx.xxx.xxx.xxx.xxx  
+xxxxx.+x+.+x+.+x+.+x+.x
+xxxxx.xxx.xxx.xxx.xxx.xxx
+xxx.+x+.+x+.+x+.+x+.+x+.x
+xxx.xxx.xxx.xxx.xxx.xxx.xxx
+x.+x+.+x+.+x+.+x+.+x+.+x+.x     
+x@xxx@xxx@xxx@xxx@xxx@xxx@x
+ENDMAP
+ 
+##############################################################################
+# "I hacked my way through thick jungle and then..."
+ 
+NAME: erik_entry_005
+TAGS: entry
+ORIENT: southwest
+MONS: plant, fungus, wandering mushroom, oklob plant, worm, human
+ITEM: wand of digging
+ 
+MAP
+xxxxxx.xxxxxxx...xxxxxxx1xxx.@xxxxx@xxxxx@xxxxxxxx.x.@..xxxxxxxx@.xxx..xxxx
+xxxxxxxxxxxxxxxxxxxxxxxx1xxxxx.xxxx..xxxxx11224xxxxxxx.xxx..1............xx
+xxxxxxxxxx..xxxxx.xxxx.x...xxxxxxxx.xxxx..xxxxxxx..x..x....x..............@
+xxxxxxxxx.xxx.x1xx22xx.xx.xxxx1x..xx...1..xxxxx...x...xx.xx..1xx...x..x...x
+xxxxxxxxxx.xxx.1..xxxx..x11xxxx.1xxxxxx..x1x.xx.xx2xxxxx..2xx.......x.x...x
+xxxxxx.xx..xxx.xxx1xxx11xxx1.x...1xxxxx..1xx....x1xxx.xx..xxx..x....x...x..
+xxxxxxxx.xx.xx.x......xx..xx....x1xx1.xx1x.xxx1.xxx..x.xxx.xxx..x..x......x
+xxxxxx.xxx.xx111xx..x.xx.x.xxx.xxxx1x.x..1xx..x..xx.x1..1..xx..xx.1.......x
+xxxxxxxxxxxxx.xx1...1.2xxx.x.1x.xxx.xxx.x1xx.xxxxxx..xxxx..x..x..x..xx..x.x
+xxxxxx6.61xx1x11.x.xxx11x...xx1x....x..2..x......1xx.xx.x.x..xxx.1xxx.xx..x.
+xxxxxx^^^1xxx1..1x..1xxx.xx1xxx.......2...x..1..xx..xxxx.x.1xx..xx..x.....x
+xxxxxx^^^.x111.1xx11x1xx..1.xx11.xxxx.xxxx1x..xx.xx....xxx....xxx..xx.x...x
+xxxxxx5.x.x11..1..x.1xxx1..xx1xxx.x1xxx..x1xx.xxx1xxxxxx..1xxx.x..xx......@
+xxxxxxxx1x1Gx11x12x1x1....1....x....1xxxx.x1xx..1x.xxx..x.x1x...5.....x...x
+xxxxx{xxx1112.1x.11.x2111...x1...x.x..xxx.xxxx.xx.x.x......x.xx..xx.xx.....
+xxxxxx.x1Gx11x2.1.1...xx1.11.......x.xx2x...xx1x.x.....1.xxxxx....xxxxx...x
+xxxxxx.x1x.1..1xx1x.1....x1xx..11x.x.x1..x.xx..x1xxxxx..x.xxx..1......x....
+xxxxxx.xx1Gx.Gx1.1..11xx.xx.1xx1xxxxxx...1xxxxx1xxx.x.xx1...xxxx....xx....x
+xxxxx[xx.11.111..1.xxx1..1.2xxxx...xxxx12xxxx...xxxx...xxxx..xx22xxx.....xx
+xxxxxx.x..dG.1.x1.x.1xxx1..x.xxx.11x..x.xxxxx.x.x......1xxxxx1xxx.x.xx....x
+xxxxxxx...x1..xG1xxx1x.x1xxxx5xxxxxxxxxxx....xxxx1..xxxxxx.xxxx1xx..xxx.x.@
+xxxxxxx=x.xxG1x11xxxx.xx11xxxxxxxxxx...xxxx1xx.xxxxxx.xxxx.xxx3.x1x..x....x
+xxxxxx$x(.xxx11xxx..xxxxxxxx..xxxxx1xxxx.xxx1xxxxx.x.xxx.xx1xxxxx4xxx.....x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+ 
+##############################################################################
+# Ooh! Treasure!
+ 
+NAME: erik_entry_006
+TAGS: entry no_monster_gen
+ORIENT: float
+ITEM: scroll of paper / weight:190 nothing, potion of water, wand of slowing
+ITEM: club, knife, stone, scroll of teleportation
+
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbb
+b0ddddgidddddddddddddd0b
+bddddddddddddddddddddddb
+bdddedddddigddddeddddddb
+bdddddhdddddddddddddhddb
+bdddddddddddddddgddd$ddb
+bddhddfddddddddddddddddb
+bddddddddddddddddddddddb
+bdddddddddddedddddgddddb
+bddddd$ddddddddddddddddb
+bddddddddddddd.ddddddddb
+bdddddddddddfddddddhdddb
+bddiddd{ddhjdddddddddddb
+bddddddddddddddddddddddb
+bdddddddddd.ddddddddeddb
+bddddddddddddddddddgdddb
+bddddedddddddddddddddddb
+bddddddddddddddddddddddb
+bddddddgddddddddddd$dddb
+bdeddddddddddddddedddddb
+bdddddhdddddgddddddddddb
+bdddddedddddddddddhddddb
+b0ddddddihdddddddddddd0b
+bbbbbbbbbbbbbbbbbbbbbbbb                       
+ENDMAP
+ 
+##############################################################################
+# Deja vu
+ 
+NAME: erik_entry_007
+TAGS: entry
+ORIENT: float
+ITEM: stone
+MONS: rat
+
+MAP
+..........@..........
+.....................
+..........<..........
+...xcXXXXXXXXXXXcx...
+...xXXX...1...XXXx...
+...xXX..1...1..XXx...
+...xX1.........1Xx...
+@(x....1..d..1....x[@
+...xX1.........1Xx...
+...xXX..1...1..XXx...
+...xXXX...1...XXXx...
+...xcXXXXXXXXXXXcx...
+..........{..........
+.....................
+..........@..........
+ENDMAP
+
+##############################################################################
+# Deja vu 2
+ 
+NAME: erik_entry_008
+TAGS: entry no_monster_gen
+FLAGS: no_rotate
+ORIENT: float
+ITEM: stone
+MONS: rat, goblin, kobold, ooze
+ 
+MAP
+xxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+x.........l.l................x
+x.....lllll.lllllllllllll....x
+x.....l.................l....x
+x.....l.cc+ccccccccccc..l....x
+x.....l.cc..........cc..l....x
+x.....l.ccc.........cc..l....x
+x.....ll.cc.....2.3.cc.ll....x
+x.....l..cccccccc+cccc..l....x
+x.....l..cccccccc+cccc..l....x
+x.....ll..cc......cc...ll....x
+x.....l...ccd{[(1.cc.4..l....x
+x.....l...cc......cc....l....x
+x.....ll..cccccccccc...ll....x
+x.....lll.cccccccccc.llll....x
+x.....lll............llll....x
+x.....lllll..4....lllllll....x
+x.....llllll....lllllll......x
+x.....lllllllllllll..........x
+x.........lllllll............x
+x............................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+ 
+
+##############################################################################
+# Being Mean Is Cool #376
+ 
+NAME: erik_entry_009
+TAGS: entry
+ORIENT: float
+ITEM: ring of teleportation
+ 
+MAP
+xxxxxxx
+x.....x
+x.....x
+x..{..x
+x.d...x
+x.....x
+xxxxxxx
+ENDMAP
+
+##############################################################################
 # Regular vaults
 ##############################################################################
 
