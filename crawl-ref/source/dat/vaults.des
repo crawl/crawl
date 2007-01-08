@@ -526,6 +526,143 @@ cccc......................cccc
 cccccccccccccccccccccccccccccc
 ENDMAP
 
+################################################################
+# Circular labyrinths
+
+NAME: david_circular_labyrinth_1
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxx.@.xxxxxxxxxxxx
+xxxxxxxxxxx......=....xxxxxxxxxxx
+xxxxxxxx.........x.......xxxxxxxx
+xxxxx.......xxxx.x=xx.......xxxxx
+xxxx.....xxxx....x..xxxx.....xxxx
+xxx....xxx.......x.....xxx....xxx
+xx....xx.....xxx=x.x.....xx....xx
+xx...xx....xxx...x.xxx....xx...xx
+x....x....xx.....x...xx....x....x
+x...xx...xx...xx.xx...xx...xx...x
+x...x....x...xx...xx...x....x...x
+x...x....x...xx[{(xx...x....x...x
+x...x....x...xx...xx...x....x...x
+x...xx...xx...xxxxx...xx...xx...x
+x....x....xx.........xx....x....x
+xx...xx....xxx.....xxx....xx...xx
+xx....xx.....xxxxxxx.....xx....xx
+xxx....xxx.............xxx....xxx
+xxxx.....xxxx.......xxxx.....xxxx
+xxxxx.......xxxxxxxxx.......xxxxx
+xxxxxxxx.................xxxxxxxx
+xxxxxxxxxxx...........xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+########################################
+# Another circular labyrinth
+
+NAME: david_circular_labyrinth_2
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......x....xxxxxxxxxxx
+xxxxxxxx.........x.......xxxxxxxx
+xxxxx.......xxxx.xxxx.......xxxxx
+xxxx.....xxxx..x....xxxx.....xxxx
+xxx....xxx.....x.......xxx....xxx
+xx....xx.....xxxxxxx.....xx....xx
+xx...xx....xxx.....xxx....xx...xx
+.....x....xx.........xx....x....x
+@...xx...xx...xx.xx...xx...xx...x
+....x........xx...xx...x....x...x
+xxxxxxxxxxxxxxx[{(xx...x........x
+x............xx...xx...xxxxxx...x
+x...xxxxxxx...xxxxx...xx...xx...x
+x....x....xx.........xx....x....x
+xx...xx....xxx.....xxx....xx...xx
+xx...........xxx.xxx.....xx....xx
+xxx....xxx.....x.......x.x....xxx
+xxxx..xx.xxxx..x....xxxx.....xxxx
+xxxxxxx.....xxxxxxxxx.......xxxxx
+xxxxxxxx.................xxxxxxxx
+xxxxxxxxxxx...........xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+########################################
+# Circular labyrinth episode III
+
+NAME: david_circular_labyrinth_3
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.....x.....xxxxxxxxxxx
+xxxxxxxx........x........xxxxxxxx
+xxxxx.......xxxxxxxxx.......xxxxx
+xxxx.....xxxx.......xxxx.....xxxx
+xxx....xxx.............xxx....xxx
+xx....xx.....xxxxxxx...........xx
+xx.........xxx.....xxx....xx...xx
+x...xxxxxxxx.........xx....x....x
+x...x.........xxxxx...xx...xx...x
+x...x....xxxxxx...xx...x....x...x
+x...x....x.....[{(.....xxxxxx...x
+x...x....x...xx...xx...x........x
+x...xx...xx...xxxxx...xx...xxxxxx
+x.........xx...x.....xx....x.....
+xx...xx....xxx.x...xxx....xx....@
+xx....xx.....xxxxxxx.....xx......
+xxx....xxx.....x.......xxx....xxx
+xxxx.....xxxx..x....xxxx.....xxxx
+xxxxx.......xxxxx.xxx.......xxxxx
+xxxxxxxx.......x.........xxxxxxxx
+xxxxxxxxxxx....x......xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#####################################################################
+# Cavernosity
+
+NAME: david_cavern 
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate
+MONS: goblin, hobgoblin, fungus
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxx%xxxxxxxxxxxxx
+xxx...x.....x...xxxxxxxxxxx.2%%xxxxxxxxxxx
+xx..(....xx...x..xxxxxxxxxx.x.xxxxxxxxxxxx
+xx.....xxx..xxx..xxxxxxxxxx...xxxxxxxxxxxx
+xxx...xxxx=xxxxx..xx...xxxxx2xxxxxxxxxxxxx
+xxxxxxxxx=xxxxxx..x..x..xxx.xxxxxxxxxxxx..
+xxxxxxx....xxxxxx...xx..xxxx..xxxxxxx.....
+xxxxx...xx..xxxxxxxxx..xxxxxxx.xxxx.......
+xxxx..xxxx..xxxxxxxx..xxxxxxx1xxxx........
+xxxx..xxxxx..xxxxxx.....xxxx.xxxx.........
+xxxxx...xxxx..xxxx.......xxx1xxxx.........
+xxxx.....xxx..xxx...bbb...x=xxxx..........
+xxxx..{..xx..xxxx..bbbbb....xx...........@
+xxxxx...xxx..xxx...bbbbb..x....x..........
+xxxxxxxxxxxx..x.....bbb...xxx=xxx.........
+xxxxxxxxxxxxx....x.......xxx.xxxx.........
+xxxxxxxxxxxxxxx.xxx.....xxx..xxxxx........
+xxxxxxxxxxxxxx=xxxxxx..xxx..xxxxxxx.......
+xxxxxxxxxxxxx=xxxxxx..xxxx.xxxxxxxxxx.....
+xx...x..xxxxx..xxxxx...xx3.xxxxxxxxxxxxx..
+x..[.......x....xxxxx..xxx..xxxxxwxxwwxxxx
+x.....xxx....xx..xxx..xxxxx3...wwwwwxxwxxx
+xx...xxxxxxxxxxx.....xxxxxxxxx.wwwxxxxxxxx
+xxxxxxxxxxxxxxxxxx..xxxxxxxxxxwwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Erik's entry vaults
 ##############################################################################
