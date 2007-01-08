@@ -1283,7 +1283,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
-        && key != "feature" && key != "fire_items_start")
+        && key != "feature" && key != "fire_items_start"
+        && key != "menu_colour" && key != "menu_color")
     {
         tolower_string( field );
     }
