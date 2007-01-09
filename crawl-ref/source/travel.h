@@ -236,6 +236,7 @@ private:
         Z thing;
 
         named_thing(const std::string &n, Z t) : name(n), thing(t) { }
+        operator std::string () const { return name; }
     };
 
     int es_flags;

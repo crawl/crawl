@@ -951,11 +951,43 @@ inline static void monster_warning(activity_interrupt_type ai,
     }
 }
 
+static void paranoid_option_disable( activity_interrupt_type ai,
+                                     const activity_interrupt_data &at )
+{
+    if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
+    {
+        const monsters* mon = static_cast<const monsters*>(at.data);
+        if (mon && !player_monster_visible(mon))
+        {
+            std::vector<std::string> deactivatees;
+            if (Options.autoprayer_on)
+            {
+                deactivatees.push_back("autoprayer");
+                Options.autoprayer_on = false;
+            }
+
+            if (Options.autopickup_on && Options.safe_autopickup)
+            {
+                deactivatees.push_back("autopickup");
+                Options.autopickup_on = false;
+            }
+
+            if (!deactivatees.empty())
+                mprf(MSGCH_WARN, "Deactivating %s.",
+                      comma_separated_line(deactivatees.begin(),
+                                           deactivatees.end()).c_str());
+        }
+    }
+}
+
 // Returns true if any activity was stopped.
 bool interrupt_activity( activity_interrupt_type ai, 
                          const activity_interrupt_data &at )
 {
+    paranoid_option_disable(ai, at);
+    
     const int delay = current_delay_action();
+    
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 

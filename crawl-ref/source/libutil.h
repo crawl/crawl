@@ -94,7 +94,7 @@ std::string comma_separated_line(Z start, Z end)
                 text += " and ";
         }
 
-        text += i->name;
+        text += *i;
     }
     return (text);
 }
