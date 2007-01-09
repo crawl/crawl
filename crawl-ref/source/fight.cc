@@ -2579,23 +2579,20 @@ void monster_attack(int monster_attacking)
 
             case MONS_SIMULACRUM_SMALL:
             case MONS_SIMULACRUM_LARGE:
-                strcpy(info, ptr_monam(attacker, DESC_CAP_THE));
-
                 resistValue = player_res_cold();
                 if (resistValue > 0)
                     extraDamage = 0;
                 else if (resistValue == 0)
                 {
                     extraDamage += roll_dice( 1, 4 );
-                    strcat(info, " chills you.");
+                    mprf("%s chills you.", ptr_monam(attacker, DESC_CAP_THE));
                 }
                 else if (resistValue < 0)
                 {
                     extraDamage = roll_dice( 2, 4 );
-                    strcat(info, " freezes you.");
+                    mprf("%s freezes you.", ptr_monam(attacker, DESC_CAP_THE));
                 }
                 
-                mpr(info);
                 damage_taken += extraDamage;
                 expose_player_to_element(BEAM_COLD, 1);
                 break;
