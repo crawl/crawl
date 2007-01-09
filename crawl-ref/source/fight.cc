@@ -2031,10 +2031,6 @@ void monster_attack(int monster_attacking)
     if (mons_friendly(attacker))
         return;
 
-    // This should happen after the mons_friendly check so we're 
-    // only disturbed by hostiles. -- bwr
-    interrupt_activity( AI_MONSTER_ATTACKS, attacker );
-
     if (attacker->type == MONS_GIANT_SPORE
         || attacker->type == MONS_BALL_LIGHTNING)
     {
@@ -2053,8 +2049,10 @@ void monster_attack(int monster_attacking)
         && mons_holiness( attacker ) == MH_UNDEAD
         && !check_mons_resist_magic( attacker, you.piety ))
     {
-        simple_monster_message(attacker,
-                   " tries to attack you, but is repelled by your holy aura.");
+        if (simple_monster_message(
+                attacker,
+                " tries to attack you, but is repelled by your holy aura."))
+            interrupt_activity( AI_MONSTER_ATTACKS, attacker );
         return;
     }
 
@@ -2067,8 +2065,10 @@ void monster_attack(int monster_attacking)
             // should be scaled {dlb}
             if (coinflip())
             {
-                simple_monster_message(attacker,
-                                   " tries to attack you, but flinches away.");
+                if (simple_monster_message(
+                        attacker,
+                        " tries to attack you, but flinches away."))
+                    interrupt_activity( AI_MONSTER_ATTACKS, attacker );
                 return;
             }
         }
@@ -2080,7 +2080,8 @@ void monster_attack(int monster_attacking)
         && monster_habitat( attacker->type ) == DNGN_FLOOR 
         && one_chance_in(4))
     {
-        simple_monster_message(attacker, " splashes around in the water.");
+        if (simple_monster_message(attacker, " splashes around in the water."))
+            interrupt_activity( AI_MONSTER_ATTACKS, attacker );
         return;
     }
 
@@ -2094,6 +2095,7 @@ void monster_attack(int monster_attacking)
     }
 
     char runthru;
+    bool player_perceives_attack = false;
 
     for (runthru = 0; runthru < 4; runthru++)
     {
@@ -2188,6 +2190,7 @@ void monster_attack(int monster_attacking)
 
             blocked = true;
             hit = false;
+            player_perceives_attack = true;
 
             if (bearing_shield && one_chance_in(4))
                 exercise(SK_SHIELDS, 1);
@@ -2281,13 +2284,17 @@ void monster_attack(int monster_attacking)
         else if (!blocked)
         {
             hit = false;
-            simple_monster_message(attacker, " misses you.");
+            if (simple_monster_message(attacker, " misses you."))
+                player_perceives_attack = true;
         }
 
+        if ((hit && !blocked) || damage_taken > 0)
+            player_perceives_attack = true;
+        
         if (damage_taken < 1 && hit && !blocked)
         {
-            simple_monster_message(attacker,
-                                    " hits you but doesn't do any damage.");
+            mprf("%s hits you but doesn't do any damage.",
+                 ptr_monam(attacker, DESC_CAP_THE));
         }
 
         if (damage_taken > 0)
@@ -3066,6 +3073,9 @@ commented out for now
             attacker->speed_increment -= (wpn_speed - 10) / 2;
         }
     }                           // end of for runthru
+
+    if (player_perceives_attack)
+        interrupt_activity(AI_MONSTER_ATTACKS, attacker);
 
     return;
 }                               // end monster_attack()
