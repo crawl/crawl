@@ -258,6 +258,21 @@ bool is_run_delay(int delay)
             || delay == DELAY_TRAVEL);
 }
 
+bool is_being_butchered(const item_def &item)
+{
+    if (!you_are_delayed())
+        return (false);
+
+    const delay_queue_item &delay = you.delay_queue.front();
+    if (delay.type == DELAY_BUTCHER)
+    {
+        const item_def &corpse = mitm[ delay.parm1 ];
+        return (&corpse == &item);
+    }
+
+    return (false);
+}
+
 void handle_delay( void )
 /***********************/
 {

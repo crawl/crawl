@@ -21,6 +21,8 @@ int  current_delay_action( void );
 void handle_delay( void );
 
 bool is_run_delay(int delay);
+bool is_being_butchered(const item_def &item);
+
 const char *activity_interrupt_name(activity_interrupt_type ai);
 activity_interrupt_type get_activity_interrupt(const std::string &);
 

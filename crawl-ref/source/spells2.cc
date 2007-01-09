@@ -28,6 +28,7 @@
 
 #include "beam.h"
 #include "cloud.h"
+#include "delay.h"
 #include "direct.h"
 #include "dungeon.h"
 #include "effects.h"
@@ -340,7 +341,8 @@ int animate_dead( int power, int corps_beh, int corps_hit, int actual )
                     // This searches all the items on the ground for a corpse
                     while (objl != NON_ITEM)
                     {
-                        if (mitm[objl].base_type == OBJ_CORPSES)
+                        if (mitm[objl].base_type == OBJ_CORPSES
+                            && !is_being_butchered(mitm[objl]))
                         {
                             number_raised += raise_corpse(objl, adx, ady,
                                                 corps_beh, corps_hit, actual);
