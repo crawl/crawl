@@ -4543,16 +4543,17 @@ static void monster_move(struct monsters *monster)
                 }
             }
 
-            // wandering through a trap is OK if we're pretty healthy, or
-            // really stupid.
-            if (trap_at_xy(targ_x,targ_y) >= 0
-                && mons_intel(monster->type) != I_PLANT)
+            // wandering through a trap is OK if we're pretty healthy,
+            // really stupid, or immune to the trap
+            const int which_trap = trap_at_xy(targ_x,targ_y);
+            if ( which_trap >= 0 &&
+                 mons_intel(monster->type) != I_PLANT &&
+                 monster->hit_points < monster->max_hit_points / 2 &&
+                 (!mons_flies(monster) ||
+                  trap_category(env.trap[which_trap].type) == DNGN_TRAP_MECHANICAL) )
             {
-                if (monster->hit_points < monster->max_hit_points / 2)
-                {
-                    good_move[count_x][count_y] = false;
-                    continue;
-                }
+                good_move[count_x][count_y] = false;
+                continue;
             }
 
             if (targ_cloud_num != EMPTY_CLOUD)
