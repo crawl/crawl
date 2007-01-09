@@ -1835,15 +1835,15 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         if (wepType == MI_LARGE_ROCK)
         {
             pbolt.range = 1 + random2( you.strength / 5 );
-            if (pbolt.range > 9)
-                pbolt.range = 9;
+            if (pbolt.range > 12)
+                pbolt.range = 12;
 
             pbolt.rangeMax = pbolt.range;
         }
         else
         {
-            pbolt.range = 9;
-            pbolt.rangeMax = 9;
+            pbolt.range = 12;
+            pbolt.rangeMax = 12;
 
             exHitBonus += you.dex / 2;
 

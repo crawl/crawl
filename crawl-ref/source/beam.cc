@@ -1242,7 +1242,7 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
     {
         mprf( MSGCH_DIAGNOSTICS,
-             "%s%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d",
+             "%s%s%s (%d,%d) to (%d,%d): ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
                  (pbolt.is_beam) ? "beam" : "missile", 
                  (pbolt.is_explosion) ? "*" : 
                      (pbolt.is_big_cloud) ? "+" : "", 
@@ -1250,7 +1250,8 @@ void fire_beam( struct bolt &pbolt, item_def *item )
                  pbolt.source_x, pbolt.source_y, 
                  pbolt.target_x, pbolt.target_y, 
                  pbolt.type, pbolt.colour, pbolt.flavour, 
-                 pbolt.hit, pbolt.damage.num, pbolt.damage.size );
+                 pbolt.hit, pbolt.damage.num, pbolt.damage.size,
+                 pbolt.range);
     }
 #endif
 
