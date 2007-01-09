@@ -959,6 +959,11 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Activity interrupt: %s",
+         activity_interrupt_name(ai));
+#endif
+    
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
 
@@ -1004,7 +1009,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "statue",
     "hungry", "message", "hp_loss", "burden", "stat",
-    "monster", "monster_attack", "teleport"
+    "monster", "monster_attack", "teleport", "hit_monster"
 };
 
 const char *activity_interrupt_name(activity_interrupt_type ai)

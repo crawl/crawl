@@ -319,7 +319,8 @@ static void base_mpr(const char *inf, int channel, int param)
         }
     }
 
-    interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
+    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
+        interrupt_activity( AI_MESSAGE, channel_to_str(channel) + ":" + inf );
 
     // Check messages for all forms of running now.
     if (you.running)

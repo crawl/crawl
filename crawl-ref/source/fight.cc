@@ -366,7 +366,7 @@ int calc_heavy_armour_penalty( bool random_factor ) {
 // Returns true if you hit the monster.
 bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
-    struct monsters *defender = &menv[monster_attacked];
+    monsters *defender = &menv[monster_attacked];
 
     int your_to_hit;
     int damage_done = 0;
@@ -398,6 +398,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     special_damage_message[0] = 0;
     base_damage_message[0] = 0;
 
+    // We're trying to hit a monster, break out of travel/explore now.
+    interrupt_activity(AI_HIT_MONSTER, defender);
+    
     if (ur_armed && you.inv[weapon].base_type == OBJ_WEAPONS
                  && is_random_artefact( you.inv[weapon] ))
     {

@@ -441,25 +441,17 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
-static bool is_safe(int x, int y)
+static bool is_safe_move(int x, int y)
 {
     unsigned char mon = mgrd[x][y];
     if (mon != NON_MONSTER)
     {
-        // If this is an invisible critter, say we're safe to get here, but 
-        // turn off travel - the result should be that the player bashes into
-        // the monster and stops travelling right there. Same treatment applies
-        // to mimics.
-        if (!player_monster_visible(&menv[mon]) || 
-                mons_is_mimic( menv[mon].type ))
-        {
-            you.running.stop();
-            return true;
-        }
-
         // Stop before wasting energy on plants and fungi.
-        if (mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
-            return false;
+        if (player_monster_visible(&menv[mon])
+            && mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
+        {
+            return (false);
+        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.
@@ -468,11 +460,11 @@ static bool is_safe(int x, int y)
     }
     const int cloud = env.cgrid[x][y];
     if (cloud == EMPTY_CLOUD)
-        return true;
+        return (true);
 
     // We can also safely run through smoke.
     const cloud_type ctype = (cloud_type) env.cloud[ cloud ].type;
-    return !is_damaging_cloud(ctype);
+    return (!is_damaging_cloud(ctype));
 }
 
 static bool player_is_permalevitating()
@@ -1278,7 +1270,7 @@ void find_travel_pos(int youx, int youy,
                 if (dx == dest_x && dy == dest_y)
                 {
                     // Hallelujah, we're home!
-                    if (is_safe(x, y) && move_x && move_y)
+                    if (is_safe_move(x, y) && move_x && move_y)
                     {
                         *move_x = sgn(x - dest_x);
                         *move_y = sgn(y - dest_y);
