@@ -217,7 +217,7 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
-        const int cap = carrying_capacity();
+        const int cap = carrying_capacity(BS_UNENCUMBERED);
 
         char title_buf[200];
         snprintf( title_buf, sizeof title_buf,

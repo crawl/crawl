@@ -1798,7 +1798,7 @@ bool drop_item( int item_dropped, int quant_drop ) {
 static std::string drop_menu_invstatus(const Menu *menu)
 {
     char buf[100];
-    const int cap = carrying_capacity();
+    const int cap = carrying_capacity(BS_UNENCUMBERED);
 
     std::string s_newweight;
     std::vector<MenuEntry*> se = menu->selected_entries();
