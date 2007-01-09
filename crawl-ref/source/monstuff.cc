@@ -4550,7 +4550,7 @@ static void monster_move(struct monsters *monster)
                  mons_intel(monster->type) != I_PLANT &&
                  monster->hit_points < monster->max_hit_points / 2 &&
                  (!mons_flies(monster) ||
-                  trap_category(env.trap[which_trap].type) == DNGN_TRAP_MECHANICAL) )
+                  trap_category(env.trap[which_trap].type) != DNGN_TRAP_MECHANICAL) )
             {
                 good_move[count_x][count_y] = false;
                 continue;
