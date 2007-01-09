@@ -1008,6 +1008,506 @@ MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: random, random
 
+############################################################################
+## alternative elf halls: gauntlets (David)
+
+NAME: elf_hall_gauntlet_moaty
+PLACE: Elf:7
+TAGS: no_pool_fixup
+FLAGS: no_rotate
+ORIENT: float
+CHANCE: 5
+# all water should be shallow, except for the two 2x4 parts (that's deep)
+# flipping is welcome
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: random, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xXXXXXXXXXXXXXXXXXXXXXXXXXx
+xX|$*.....WWW.WWW.....*$*Xx
+xXXX$XXXXcccc+ccccXXXXX$*Xx
+xX2XXXcccc.......ccccXXX$Xx
+xX.Xccc....5...5....cccXXXx
+xX.cc.................ccXXx
+xX.c....3....4....3....c.Xx
+xX.+.........U.........+.Xx
+xX.c......2.2.2.2......c.Xx
+xX.cc.................cc.Xx
+xX.Xcc.cccccc.cccccc.cc..Xx
+xX.XXc.c.3.ww.ww.4.ccc...Xx
+xX3XXc.....ww.ww.........Xx
+xX$$$ccc...ww.ww...cXXXX.Xx
+xX$$$XXc.1.ww.ww.5.cXXXX.Xx
+xX$$$XXcccccc.ccccccX12..Xx
+xXXX+XXXXXXXc.cXXXXXXXXX.Xx
+xX|*|*|**|*XXWXX$|$*$|$|.Xx
+xX**|*|||||XcWcX|$|$*$*$.Xx
+xX5|*||4**|XcWcX$*$*$*$|3Xx
+xX|**|*|||*Xc.cX|$|$|$|$.Xx
+xXXXXXXXXXXXc.cXXXXXXXXXXXX
+xxxxxxxxxxxxx@xxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_gauntlet_fiery
+PLACE: Elf:7
+TAGS: no_pool_fixup
+FLAGS: no_rotate
+ORIENT: float
+CHANCE: 5
+# all water should be shallow
+# flipping is welcome
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: random, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xXXXXXXXXXXXXXXXXXXXXXXXXXx
+xX|$*.....lll.lll.....*$*Xx
+xXXX$XXXXcccc+ccccXXXXX$*Xx
+xX2XXXcccc.......ccccXXX$Xx
+xX.Xccc....5...5....cccXXXx
+xX.cc.................ccXXx
+xX.c....3....4....3....c.Xx
+xX.+.........U.........+.Xx
+xX.c......2.2.2.2......c.Xx
+xX.cc.................cc.Xx
+xX.Xcc.cccccc.cccccc.cc..Xx
+xX.XXc.c.3.WW.WW.4.ccc...Xx
+xX3XXc.....WW.WW.........Xx
+xX$$$ccc...WW.WW...cXXXX.Xx
+xX$$$XXc.1.WW.WW.5.cXXXX.Xx
+xX$$$XXcccccc.ccccccX12..Xx
+xXXX+XXXXXXXc.cXXXXXXXXX.Xx
+xX|*|*|**|*Xc.cX$|$*$|$|.Xx
+xX**|*|||||Xc.cX|$|$*$*$.Xx
+xX5|*||4**|XXlXX$*$*$*$|3Xx
+xX|**|*|||*Xc.cX|$|$|$|$.Xx
+xXXXXXXXXXXXc.cXXXXXXXXXXXX
+xxxxxxxxxxxxx@xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Elf vault, rogue theme (David)
+
+NAME: elf_hall_rogue_1
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd**|||**dxxxxxxxd%*%%%*%dx$$xxx
+xdx$$=....6....xxxxxxx....6....x$$xdx
+x%x$xxxxx...xxxxxxxxx=xxx...xxxxx$x*x
+x%xx=.x.xx.xx.|.xxxxx.|.xx.xx.x.x==|x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$xxxx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*|*x...|.5.x.5.|...x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...xxx...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx*|*=x.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...xxx
+xx=x..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x|xxx.....xxxxx.......xxxxx.....xxx%x
+x*xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP 
+
+#######################################
+
+NAME: elf_hall_rogue_2
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd%*%%%%%dxxxxxx=d**|||**dx$$xxx
+xdx$$x....6....xxxxx=x....6....x$$=dx
+x*x$xxxxx...=xxxxxx=xxxxx...xxxxx$x*x
+x%xx=.x.xx.xx...xxx=x...xx.xx.x.x=x|x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$xxdx
+xx=x$$|*|*x..2x...U...x2..x***|$$xxxx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*|*x.....5.x.5.....x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...x=x...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx*|*xx.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...xxx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x|xxx.....xxxxx.......xxxxx.....xxx%x
+x*x=4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xd=x.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xx...xx.xx..xxx...2..3xxxx
+xxxxx......|^..xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_3
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd%%%%%*%dxxxxxxxd**|||**dx$$=xx
+xdx$$x....6....xxxxxxx....6....=$$xdx
+x|x$xxxxx...xxx=xxxxxxxxx...xxxxx$x*x
+x*=x=.x.xx.xx...xxxxx...xx.xx.x.x=x%x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$xx=x
+xxx$$$x|**3...x...1...x...3*||x$$$x=x
+xxx$$$x*|*x.....5.x.5.....x***x$$$x=x
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$x=x
+xxxxxx...xxxxxx.......xxxxxx...xxxx=x
+xxxx4......xxx...xxx...xxx......4xx=x
+xxxx...3...xx...xx|xx...xx...3...xx=x
+xxx.........+5.xx*|*xx.5+.........x=x
+xxx...2|2...x..xxd|dxx..x...2|2...x=x
+xxxx..x^x..xx..3=x|xx3..xx..x^x..xx=x
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x%xxx.....xxxxx.......xxxxx.....xxx|x
+x%xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx*x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_4
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd%*%%%%%dxxxxxxxd**|||**dx$$xxx
+xd=$$x....6....xxxxxxx....6....x$$xdx
+x%x$xxxxx...xxxxxxxxxxxxx...xxxxx$x*x
+x*xx=.x.xx.xx...xxxxx...xx.xx.x.x=x|x
+xdxx$.x**x=x..x..xxx..x..x=x|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$x=xx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*|*x.....5.x.5.....x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...=xx...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx*|*xx.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...xxx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x%xxx.....xxxxx.......xxxxx.....xxx*x
+x%xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx|x
+xdxx.....22xxxx.......xxxx22.....x=dx
+xxxx3..2...xxx..xx.xx..xxx...2..3=xxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_5
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd%%%%%%%dx==x===d%%%%%%%dx$$xxx
+xdx$$x....6....xxx=xxx....6....x$$xdx
+x|=$xxxxx...xxxxxx=xxxxxx...xxxxx$x*x
+x*xxx.x.xx.xx...xx=xx...xx.xx.x.x=x|x
+xdxx$.x**xxx..x..x=x..x..xxx|*x.$x=dx
+xxxx$$|*|*x..2x...U...x2..x***|$$xxxx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*|*x.....5.x.5.....x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...xxx...xxx......4xxxx
+xxxx...3...xx...x=|xx...xx...3...xxxx
+xxx.........+5.xx|||xx.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...=xx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xx=x
+xdx=xxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x|=xx.....xxxxx.......xxxxx.....xxx|x
+x|xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx|x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_6
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd%%%%%%%dxxxxxxxd**|||**dx$$xxx
+xdx$$x....6....xxxxxx=....6....x$$xdx
+x|x$xxxx=...xxxxxxxx=xxxx...xxxxx$x*x
+x*xx=.x.xx.xx...xxxxx...xx.xx.x.x=x|x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$xxdx
+x=xx$$|*|*x..2x...U...x2..x***|$$x=xx
+x=x$$$x|**3...x...1...x...3*||x$$$xxx
+x=x$$$x*|*x.....5.x.5.....x***x$$$xxx
+x=x$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xx=xxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...xxx...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx*|*xx.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...xxx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x*xxx.....xxxxx.......xxxxx.....xxx%x
+x|xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xx=x3..2...xxx..xx.xx..xxx...2..3xxxx
+x=xxx.......|^.xxx.xxx.^|.......xxxxx
+xx===x...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_7
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$xd|*|||**dxxxxxxxd*||*|**dx$$xxx
+xdx$$x....6....xxxxxxx....6....x$$xdx
+x|x$xxxxx...xxxxxxxxxxxxx...xxxxx$x%x
+x|x=x.x.xx.xx...xxxxx...xx.xx.x.x=x%x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$x=dx
+x=xx$$|*|*x..2x...U...x2..x***|$$xxxx
+x=x$$$x|**3...x...1...x...3*||x$$$xxx
+x=x$$$x*|*x.....5.x.5.....x***x$$$xxx
+x=x$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+x=xxxx...xxxxxx.......xxxxxx...xxxxxx
+x=xx4......xxx...xxx...xxx......4xxxx
+xx=x...3...xx...xx%xx...xx...3...xxxx
+xxx.........+5.xx*|%xx.5+.........xxx
+xxx...2|2...x..xxd%dxx..x...2|2...xxx
+xx=x..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...x=x...xxxxxx+xxxxxdx
+x|xxx.....xxxxx.......xxxxx.....xxx*x
+x|xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx*x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_8
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx=$$xd*|||||*dx==xxx=d*|||||*dx$$xxx
+xdx$$x....6....=xx=x=x....6....=$$xdx
+x%x$xxxxx...xxxxx=x=xxxxx...xxxxx$x|x
+x%xx=.x.xx.xx...xxxxx...xx.xx.x.xx=|x
+xdxx$.x**xxx..x..xxx..x..xxx|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$xx=x
+xxx$$$x|**3...x...1...x...3*||x$$$x=x
+xxx$$$x*|*x.....5.x.5.....x***x$$$x=x
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$x=x
+xxxxxx...xxxxxx.......xxxxxx...xxxx=x
+xxxx4......xxx...xxx...xxx......4==xx
+xxxx...3...xx...xx%xx...xx...3...xxxx
+xxx.........+5.xx*%*xx.5+.........xxx
+xxx...2|2...x..xxd|d=x..x...2|2...xxx
+xx=x..x^x..xx..3xx*xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x%xxx.....xxxxx.......xxxxx.....xxx%x
+x%xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3=xxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_9
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx$$=d**|||**dxxxxxxxd%%|%|%%d=$$xxx
+xdx$$x....6....==xxxxx....6....x$$xdx
+x|x$xxxxx...xxxx=xx=xxxxx...xxxxx$x%x
+x|xxx.x.xx.xx...xx=xx...xx.x=.x.xxx%x
+xdxx$.x|*xxx..x..=xx..x..xxx|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$xxxx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*||x.....5.x.5.....x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...xxx...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx||*xx.5+.........xxx
+xxx...2|2...x..x=d|dxx..x...2|2...xxx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x%xxx.....xxxxx.......xxxxx.....xxx%x
+x%xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#######################################
+
+NAME: elf_hall_rogue_10
+PLACE: Elf:7
+CHANCE: 1
+ORIENT: float
+FLAGS: no_rotate
+ITEM: scroll of teleportation
+
+MONS: deep elf high priest, deep elf demonologist
+MONS: deep elf annihilator, deep elf sorcerer
+MONS: deep elf death mage
+MONS: curse skull, random
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx=======xxxx====xxxxxxxxxxx
+xx=xxxxxxx=xxxxxxx=x==xxxx=xxxxxxxxxx
+x=x$$xd**|||**dxxx=xxxd|*|*|*|dx$$xxx
+xdx$$=....6....xxxxxxx....6....x$$xdx
+x%x$xxxxx...=xxxxxxxxxxxx...xxxxx$x%x
+x%xxx.x.xx.xx...xxxxx...xx.xx.x.xxx%x
+xdxx$.x|*xxx..x..xxx..x..xxx|*x.$xxdx
+xxxx$$|*|*x..2x...U...x2..x***|$$xxxx
+xxx$$$x|**3...x...1...x...3*||x$$$xxx
+xxx$$$x*||x.....5.x.5.....x***x$$$xxx
+xxx$xxxxxxx..xxx+xxx+xxx..xxxxxxx$xxx
+xxxxxx...xxxxxx.......xxxxxx...xxxxxx
+xxxx4......xxx...xxx...xxx......4xxxx
+xxxx...3...xx...xx|xx...xx...3...xxxx
+xxx.........+5.xx||*xx.5+.........xxx
+xxx...2|2...x..xxd|dxx..x...2|2...xxx
+xxxx..x^x..xx..3xx|xx3..xx..x^x..xxxx
+xdxxxxx+xxxxxx...xxx...xxxxxx+xxxxxdx
+x%xxx.....xxxxx.......xxxxx.....xxx%x
+x%xx4.1.3..xxxxxxxxxxxxxxx..3.1.4xx%x
+xdxx.....22xxxx.......xxxx22.....xxdx
+xxxx3..2...xxx..xx.xx..xxx...2..3xxxx
+xxxxx.......|^.xxx.xxx.^|.......xxxxx
+xxxxxx...xxxxxxxxx.xxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # slime_pit
 
