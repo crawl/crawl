@@ -27,7 +27,6 @@
 
 #include "branch.h"
 #include "direct.h"
-// for #definitions of MAX_BRANCHES & MAX_LEVELS
 #include "files.h"
 #include "menu.h"
 #include "misc.h"
@@ -222,7 +221,7 @@ std::string overview_description_string()
         {
             if ( !branchcount )
             {
-                disp += "\n<white>Branches:</white> (use <white>Ctrl-G</white> to reach them)\n";
+                disp += "\n<green>Branches:</green> (use <white>Ctrl-G</white> to reach them)\n";
                 seen_anything = true;
             }
             
@@ -249,7 +248,7 @@ std::string overview_description_string()
     // we loop through everything a dozen times, oh well
     if ( !notable_altars.empty() )
     {
-        disp += "\n<white>Altars:</white> (use <white>Ctrl-F \"altar\"</white> to reach them)\n";
+        disp += "\n<green>Altars:</green> (use <white>Ctrl-F \"altar\"</white> to reach them)\n";
         seen_anything = true;
     }
 
@@ -295,7 +294,7 @@ std::string overview_description_string()
     // print shops
     if (!shops_present.empty())
     {
-        disp +="\n<white>Shops:</white> (use <white>Ctrl-F \"shop\"</white> to reach them)\n";
+        disp +="\n<green>Shops:</green> (use <white>Ctrl-F \"shop\"</white> to reach them)\n";
         seen_anything = true;
     }
     last_id.depth = 10000;
@@ -331,7 +330,7 @@ std::string overview_description_string()
     // print portals
     if ( !portals_present.empty() )
     {
-        disp += "\n<white>Portals:</white>\n";
+        disp += "\n<green>Portals:</green>\n";
         seen_anything = true;
     }
     for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
