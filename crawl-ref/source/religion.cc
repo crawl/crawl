@@ -333,19 +333,18 @@ void pray(void)
     you.turn_is_over = true;
 
     if (you.religion != GOD_NO_GOD
-            && grd[you.x_pos][you.y_pos] == 179 + you.religion)
+        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
     {
         altar_prayer();
     }
-    else if (grd[you.x_pos][you.y_pos] >= 180
-                && grd[you.x_pos][you.y_pos] <= 199)
+    else if (grid_altar_god(grd[you.x_pos][you.y_pos]) != GOD_NO_GOD)
     {
         if (you.species == SP_DEMIGOD)
         {
             mpr("Sorry, a being of your status cannot worship here.");
             return;
         }
-        god_pitch(grd[you.x_pos][you.y_pos] - 179);
+        god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
         return;
     }
 
@@ -2305,18 +2304,6 @@ static bool bless_weapon( int god, int brand, int colour )
 
 void altar_prayer(void)
 {
-    int   i, j, next;
-    char  subst_id[4][50];
-    char str_pass[ ITEMNAME_SIZE ];
-
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 50; j++)
-        {
-            subst_id[i][j] = 1;
-        }
-    }
-
     mpr( "You kneel at the altar and pray." );
 
     if (you.religion == GOD_XOM)
@@ -2373,13 +2360,24 @@ void altar_prayer(void)
             bless_weapon(GOD_LUCY, SPWPN_DISTORTION, RED);
     }
 
-    i = igrd[you.x_pos][you.y_pos];
+    offer_items();
+}                               // end altar_prayer()
+
+void offer_items()
+{
+    if (you.religion == GOD_NO_GOD)
+        return;
+    
+    char subst_id[4][50];
+    memset(subst_id, 1, sizeof subst_id);
+    
+    int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
         if (one_chance_in(1000))
             break;
 
-        next = mitm[i].link;  // in case we can't get it later.
+        const int next = mitm[i].link;  // in case we can't get it later.
 
         const int value = item_value( mitm[i], subst_id, true );
 
@@ -2389,10 +2387,7 @@ void altar_prayer(void)
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_NEMELEX_XOBEH:
-            it_name(i, DESC_CAP_THE, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, sacrifice[you.religion - 1]);
-            mpr(info);
+            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
 
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -2409,10 +2404,7 @@ void altar_prayer(void)
             break;
 
         case GOD_SIF_MUNA:
-            it_name(i, DESC_CAP_THE, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, sacrifice[you.religion - 1]);
-            mpr(info);
+            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
 
             if (value >= 150)
                 gain_piety(1 + random2(3));
@@ -2425,10 +2417,7 @@ void altar_prayer(void)
             if (mitm[i].base_type != OBJ_CORPSES)
                 break;
 
-            it_name(i, DESC_CAP_THE, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, sacrifice[you.religion - 1]);
-            mpr(info);
+            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
 
             gain_piety(1);
             destroy_item(i);
@@ -2441,10 +2430,7 @@ void altar_prayer(void)
                 break;
             }
 
-            it_name(i, DESC_CAP_THE, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, sacrifice[you.religion - 1]);
-            mpr(info);
+            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
 
             if (random2(value) >= random2(50) 
                 || (mitm[i].base_type == OBJ_WEAPONS 
@@ -2462,7 +2448,7 @@ void altar_prayer(void)
 
         i = next;
     }
-}                               // end altar_prayer()
+}
 
 void god_pitch(unsigned char which_god)
 {

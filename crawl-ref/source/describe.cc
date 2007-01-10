@@ -254,7 +254,7 @@ static void randart_descpr( std::string &description, const item_def &item )
     else if (proprt[ RAP_NEGATIVE_ENERGY ] == 2)
         description += "$It protects you from negative energy. ";
     else if (proprt[ RAP_NEGATIVE_ENERGY ] > 2)
-        description += "$It renders you almost immune negative energy. ";
+        description += "$It renders you almost immune to negative energy. ";
 
     if (proprt[ RAP_MAGIC ])
         description += "$It protects you from magic. ";
@@ -1044,7 +1044,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
 
     if (verbose)
     {
-	description += "$Damage rating: ";
+        description += "$Damage rating: ";
         append_value(description, property( item, PWPN_DAMAGE ), false);
 
         description += "$Accuracy rating: ";

@@ -1708,7 +1708,8 @@ bool move_top_item( int src_x, int src_y, int dest_x, int dest_y )
     return (true);
 }
 
-bool drop_item( int item_dropped, int quant_drop ) {
+bool drop_item( int item_dropped, int quant_drop, bool try_offer )
+{
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
         quant_drop = you.inv[item_dropped].quantity;
 
@@ -1774,9 +1775,10 @@ bool drop_item( int item_dropped, int quant_drop ) {
 
     const unsigned char my_grid = grd[you.x_pos][you.y_pos];
 
-    if ( !grid_destroys_items(my_grid) &&
-	 !copy_item_to_grid( you.inv[item_dropped], 
-			     you.x_pos, you.y_pos, quant_drop, true )) {
+    if ( !grid_destroys_items(my_grid)
+         && !copy_item_to_grid( you.inv[item_dropped], 
+                                you.x_pos, you.y_pos, quant_drop, true ))
+    {
         mpr( "Too many items on this level, not dropping the item." );
         return (false);
     }
@@ -1785,12 +1787,19 @@ bool drop_item( int item_dropped, int quant_drop ) {
     quant_name( you.inv[item_dropped], quant_drop, DESC_NOCAP_A, str_pass );
     mprf( "You drop %s.", str_pass );
     
-    if ( grid_destroys_items(my_grid) ) {
+    if ( grid_destroys_items(my_grid) )
         mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
-    }
    
     dec_inv_item_quantity( item_dropped, quant_drop );
     you.turn_is_over = true;
+
+    if (try_offer
+        && you.religion != GOD_NO_GOD
+        && you.duration[DUR_PRAYER]
+        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
+    {
+        offer_items();
+    }
 
     return (true);
 }
@@ -1948,7 +1957,8 @@ void drop(void)
     if ( items_for_multidrop.size() == 1 ) // only one item
     {
         drop_item( items_for_multidrop[0].slot,
-                   items_for_multidrop[0].quantity );
+                   items_for_multidrop[0].quantity,
+                   true );
         items_for_multidrop.clear();
         you.turn_is_over = true;
     }
