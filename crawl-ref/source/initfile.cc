@@ -544,6 +544,10 @@ void game_options::reset_options()
     save_dir.clear();
 #endif
 
+#ifndef SHORT_FILE_NAMES
+    morgue_dir = "morgue/";
+#endif
+
     player_name.clear();
 
     autopickup_on = true;
