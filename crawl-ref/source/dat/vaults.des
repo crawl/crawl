@@ -1108,6 +1108,312 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
+# Tetris
+
+NAME: david_tetris
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxx.@.xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxx..x..xxxxxxxxxx
+xxxxxxxxx..xxx..xxxxxxxxx
+xxxxxxxx..xxxxx..xxxxxxxx
+xxxxxxx..xxxxxxx..xxxxxxx
+xxxxxx..xxxxxxxxx..xxxxxx
+xxxxx..xxxxxxxxxxx..xxxxx
+x.......................x
+x.bb.bb..b..b..bb.bbb.b.x
+x..b.bb.bbb.b.bb..b..bb.x
+x..b........b........b..x
+xx...xxxxxx.b.xxxxxx...xx
+xxx...xxxxx...xxxxx...xxx
+xxxx...xxxx...xxxx...xxxx
+xxxxx...xxx...xxx...xxxxx
+xxxxxx...xx...xx...xxxxxx
+xxxxxxx...x...x...xxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxxxxxx...{...xxxxxxxxx
+xxxxxxxxx.(...[.xxxxxxxxx
+xxxxxxxxx.......xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Central
+
+NAME: david_central
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+xxxxxxxxxxx...........xxxxxxxxxxx
+xxxxxxxxx...xxx...xxx...xxxxxxxxx
+xxxxxxx...xxxx.....xxxx...xxxxxxx
+xxxxxx..xxxxx...<...xxxxx..xxxxxx
+xxxxx..xxxxx.........xxxxx..xxxxx
+xxxx..xxxxx...........xxxxx..xxxx
+xxx..xxxxx......x......xxxxx..xxx
+xx..xxxxx......xxx......xxxxx..xx
+xx.xxxxx......xxxxx......xxxxx.xx
+x..xxxx......xxxxxxx......xxxx..x
+x.xxxx......xxxxxxxxx......xxxx.x
+@.......(..xxxxxxxxxxx..[.......@
+x.xxxx......xxxxxxxxx......xxxx.x
+x..xxxx......xxxxxxx......xxxx..x
+xx.xxxxx......xxxxx......xxxxx.xx
+xx..xxxxx......xxx......xxxxx..xx
+xxx..xxxxx......x......xxxxx..xxx
+xxxx..xxxxx...........xxxxx..xxxx
+xxxxx..xxxxx.........xxxxx..xxxxx
+xxxxxx..xxxxx...{...xxxxx..xxxxxx
+xxxxxxx...xxxx.....xxxx...xxxxxxx
+xxxxxxxxx...xxx...xxx...xxxxxxxxx
+xxxxxxxxxxx...........xxxxxxxxxxx
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# the snail
+
+NAME: david_snail
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.......xxxxxxxxx
+xxxxxxxxxx.......(.....xxxxxxx
+xxxxxxxx.................xxxxx
+xxxxxxx.........xxxx......xxxx
+xxxxxx........xxxxxxxx.....xxx
+xxxxx.......xxxx....xxx.....xx
+xxxxx......xxx........xx....xx
+xxxx.......xx...xxx...xxx....x
+xxxx......xxx..xxxxx...xx..[.x
+xxx.......xx..xxx.{xx..xx....x
+xxx......xxx..xxx.xx..xxx....x
+xxx......xxx...xx.....xx....xx
+xx........xx....xxxxxxx....xxx
+xx........xxx....xxxx......xxx
+xx........xxxx............xxxx
+xx........xxxxxxx......xxxxxxx
+x..........xxxxxxxxxxxxxxxxxxx
+x....@.....xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# stupid boxes
+
+NAME: david_boxorama
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+x.................................x
+x.................................x
+x...xxxxxxx...xxxxx...xxxx...xx...x
+x...xxxxxxx...xxxxx...xxxx...xx...x
+x...xxxxxxx...xxxxx...xxxx........x
+x...xxxxxxx...xxxxx........<..[...x
+x...xxxxxxx.......................x
+x.......................xxxxxxx...x
+x...(..{........xxxxx...xxxxxxx...x
+x........xxxx...xxxxx...xxxxxxx...x
+x...xx...xxxx...xxxxx...xxxxxxx...x
+x...xx...xxxx...xxxxx...xxxxxxx...x
+x.................................x
+x.................................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# two boxes missing
+
+NAME: david_boxes_within_box
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+x.................................x
+x.................................x
+x...xxxxxxx..xxxxxxxxxxx..xxxxx...x
+x...xxxxxxx..xxxxxxxxxxx..xxxxx...x
+x...xxx........xxxxxxxxx..xxxxx...x
+x............{.xxxxx......xxxxx...x
+x...xxx..[........................x
+x...xxx........x........(.xxxxx...x
+x...xxxxxx..xxxx.xxx......xxxxx...x
+x...xxxxxx..xxxx.xxx......xxxxx...x
+x...xxxxxx..xxxx.xxxx...xxxxxxx...x
+x...xxxxxx..xxxx.xxxx...xxxxxxx...x
+x.................................x
+x.................................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# concentric eggs, mostly foul
+
+NAME: david_concentric_eggs
+TAGS: entry no_monster_gen
+ORIENT: float
+MONS: ogre, orc priest
+ITEM: potion of strong poison / potion of decay / potion of magic
+ITEM: ring of hunger / ring of fire resistance / ring of cold resistance
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxvxvx...............xvxvxxxxxx
+xxxxxx.......................xxxxxx
+xxxvxv.......................vxvxxx
+xxx.........xxxxx+xxxxx.........xxx
+xxv......xxxxxxxx+xxxxxxxx......vxx
+xx......xxxxxx.......xxxxxx......xx
+xv.....xxxxx...........xxxxx.....vx
+xx.....xxxx....xxxxx....xxxx.....xx
+xv.....xxx...xxxxxxxxx...xxx.....vx
+x.....xxxx..xx.......xx..xxxx.....x
+x.....xdx...x..xx+xx..x...xex.....x
+......x.x..xx.xx...xx.xx..x.x......
+@.....x1x..xx.xx[({xx.xx..x2x.....@
+......x.x..xx.xx...xx.xx..x.x......
+x.....x.x...x..xxxxx..x...x.x.....x
+x.....xx=x..xx.......xx..x=xx.....x
+xv.....xxx...xxxx+xxxx...xxx.....vx
+xx.....xxxx....xx+xx....xxxx.....xx
+xv.....xxxxx...........xxxxx.....vx
+xx......xxxxxx.......xxxxxx......xx
+xxv......xxxxxxxxxxxxxxxxx......vxx
+xxx.........xxxxxxxxxxx.........xxx
+xxxvxv.......................vxvxxx
+xxxxxx.......................xxxxxx
+xxxxxxvxvx...............xvxvxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# concentric eggs, the baby version
+
+NAME: david_concentric_mini_eggs
+TAGS: entry no_monster_gen
+ITEM: pear / apple / banana
+ORIENT: float
+
+MAP
+xxxxxxxxxx.@.xxxxxxxxxx
+xxxxxxxx.......xxxxxxxx
+xxxx...............xxxx
+xx......xxxxxxx......xx
+xx....xxxx.d.xxxx....xx
+x....xxx.......xxx....x
+x...xxx..xx=xx..xxx...x
+....xx..xx...xx..xx....
+@.[.+=d.x=.{.=x.d+=.(.@
+....xx..xx...xx..xx....
+x...xxx..xx=xx..xxx...x
+x....xxx.......xxx....x
+xx....xxxx.d.xxxx....xx
+xx......xxxxxxx......xx
+xxxx...............xxxx
+xxxxxxxx.......xxxxxxxx
+xxxxxxxxxx.@.xxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Sounds of Crawl: the Slurp
+
+NAME: david_sounds_slurp
+TAGS: entry no_monster_gen
+MONS: jelly
+ITEM: stone
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxx....@.....
+xxxxx......xxxxxxxxxx.........@
+xxx............xxxxxx..........
+xx................xxxxxxxxxxxxx
+xx....vvvv.......xx.....xxxxxxx
+.....vv1dvv......x...{.....xxxx
+@....vddd>v..................xx
+.....vvddvv....x....vvv.......x
+xxx...vvvv....xx...vvvvv..(...x
+xxx..........xx....vvvvv.....xx
+xxx..........xx.....vvv......xx
+xxxx........xx..............xxx
+xxxx.......xxxx....[......xxxxx
+xxxxx...xxxxxxxxx.....xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Sounds of Crawl: the Drone
+
+NAME: david_sounds_drone
+TAGS: entry no_monster_gen
+MONS: boring beetle
+ORIENT: float
+
+MAP
+xxx.....@.....xxx.....@.....xxx
+xx............xxx............xx
+x.............xxx.............x
+..............xxx..............
+..............xxx..............
+@.......(.....xxx.....[.......@
+..............xxx..............
+..............xxx..............
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx1xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+..............xxx..............
+..............xxx..............
+@.......<.....xxx.....{.......@
+..............xxx..............
+..............xxx..............
+x.............xxx.............x
+xx............xxx............xx
+xxx.....@.....xxx.....@.....xxx
+ENDMAP
+
+##############################################################################
+# Freedom of Choice (morbid curiosity)
+
+NAME: david_freedom_to_die
+TAGS: entry
+MONS: hobgoblin, orc sorceror, orc warlord, orc
+ITEM: scroll of blinking / scroll of recharging / scroll of fear
+ITEM: scroll of teleport / scroll of remove curse / scroll of identify
+ORIENT: float
+
+MAP
+xxx.@.xxxxx.@.xxxxx.@.xxx
+xx.....xxx.....xxx.....xx
+xx.....xxx.....xxx.....xx
+x.......x..I.I..x...I...x
+x.......x.......x.......x
+x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x.x.%.x.x.x.d.x.x.x.4.x.x
+x.x.1.x.x.x.2.x.x.x.4.x.x
+x.x.%.x.x.x.3.x.x.x.e.x.x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x=x..x..x+x..x
+x.......x.......x.......x
+x.......x..I.I..x...I...x
+xx.....xxx.....xxx.....xx
+xx.....+.+.....+.+.....xx
+xxx.(.xxxxx.{.xxxxx.[.xxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+
+##############################################################################
 # Erik's entry vaults
 ##############################################################################
 # Goblin Pantry
