@@ -1111,40 +1111,34 @@ ENDMAP
 # Erik's entry vaults
 ##############################################################################
 # Goblin Pantry
- 
+
 NAME: erik_entry_001
 TAGS: entry
-ORIENT: southwest
- 
+ORIENT: float
+
 # Can't rotate - the aspect ratio makes it look hideous.
 FLAGS: no_rotate
 MONS: goblin, hobgoblin
 ITEM: sausage / beef jerky / cheese / pizza / pizza / pizza
  
 MAP
-xxxxxxxxxxxx.@.xxxxxx
-xxxxxxxxxxxx.x.xxxxxx
-xxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxx.x.xxxxxx
-xxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxx.x.xxxxxx
-xxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxx.x.xxxxxx
-xxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxx...xxxxxx
-xxxxxdx2+.x.....xxxxx
-xxxxx$x2x.x.....xxxxx
-xxxxx.x2x.x.[{(.xxxxx
-xxxxxdx1x.x.....xxxxx
-xxxxxd+1x.+.....xxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-ENDMAP
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx...xxxxxx
+xdx2+.x.....xxxxx
+x$x2x.x.....xxxxx
+x.x2x.x.[{(.xxxxx
+xdx1x.x.....xxxxx
+xd+1x.+.....xxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP 
 
 ##############################################################################
 # From Cave to Minitemple
@@ -1314,6 +1308,7 @@ NAME: erik_entry_007
 TAGS: entry
 ORIENT: float
 ITEM: stone
+FLAGS: no_rotate
 MONS: rat
 
 MAP
@@ -1386,7 +1381,460 @@ x.e{..x
 x.d...x
 x.....x
 xxxxxxx
-ENDMAP 
+ENDMAP
+
+##############################################################################
+# Arecibo
+
+NAME: erik_entry_010
+TAGS: entry
+ORIENT: float
+FLAGS: no_rotate no_hmirror
+
+MAP
+.....@.....({[......@....xxx....@...............@....
+.......x.x.x.x...........x.+.....vv....++......v.....
+...x.x.....x.x.......x...x.+....v......+........v....
+.x...x...x...x..x.xx..x..x.+...v.......++........v...
+.x.x.x.x.x.x.x.x..x..x...x.x..v........++........v...
+.........................x.x..v.........+.......v....
+.............xx..........x.x...v.......+.......v.....
+...........xx.x..........x.x....v............vv......
+@..........xx.x..........x.x.....vv........vv.......@
+..........x.x.x..........x.x...v...vvv.x.vv..........
+..........xxxxx..........x.x...v.......x.............
+.........................x.x...v.....xxxxx...........
+.bb....bbb...bb....bb....x.x...v....x.xxx.x..+.++.++.
+.b.............bb..b.....x.x.......x..xxx..x..++++++.
+.bb.b...bb...bb....bb.b..x.x.+.+++....xxx.....++.+++.
+.bbbbb.bbbbb.bbbbb.bbbbb.x.x..........x.x.....+++.++.
+.........................x.x...v......x.x.....++++++.
+....c.................c..x.x...v......x.x.....++.....
+@........................x.x...v.....xx.xx..........@
+.....c.................c.x.x.........................
+.ccccc.............ccccc.x.x...aaa.....a.............
+.cc....cc....ccc...cc....x.x...aaa.a.a...a.a.a.a.a.a.
+.c.......c.........c.....x.x...aaa.........a.a.a.a...
+.cc.c....cc...ccc..cc.c..x.x...............a.a.......
+.ccccc.ccccc.ccccc.ccccc.x.x...............a.a.......
+.........................x.x.........=====...........
+....c......++.........c..x.x.......=========.........
+@..........++............x.x.....===.......===......@
+.....c.....++..........c.x.x....==...........==......
+.ccccc.....++......ccccc.x.x...==.=.........=.==.....
+...v........+........v...x.x..==..==.......==..==....
+....v......++.......v....x.x..=...=.=.....=.=...=....
+.....vv....++......v.....x.x..=...=..=...=..=...=....
+.......vv...+....vv......x.x......=...=.=...=........
+@..........++..vv........x.x......=....=....=.......@
+.......vv...+....vv......+.x......=.........=........
+.........................+.x........x..x.x...........
+.........................+.x..vvvv..xxxxx.x..vvvv....
+....@...............@....xxx....@...............@....
+ENDMAP
+
+##############################################################################
+# Rubicon
+
+NAME: erik_entry_011
+TAGS: entry no_monster_gen
+# damn those fish!
+ORIENT: float
+ITEM: ring of levitation, potion of levitation
+
+MAP
+xxxxccccccccwwwww..wwww..wwwwwww....wwwwwww..wwww...wccccxxxxxx
+ccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwwwwwwwwwccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwccccc
+cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
+ccwcwwwwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwccccc
+ccccccwwwwwww.wwwwwxwwwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwcccccxxx
+xxxxcxx...{e....w..xx........wwwww.<.c......ww.....www.xcxccxxx
+xxxxcx..(cc[.d....<....x....x..w...xcc..cxcx....x......cxxxcxxx
+xxxxccx......xx.......x.....c..............x...........cxcxxxxx
+xxxxxcx.xxxxx.x.xxxx.xx.xcc.xx.xccxx....xxxx.xxxccxx.xcccxxxxxx
+xxxxxccx..xxxxxx.xx.xxxx.xxxx.xxxxxxxxx.xxxx.xxxx...xxcxxxxxxxx
+xxxxxxcxxxxxxxxxxxxxxxxxxxxcccccccxxxxxxccccccccxxxccccxxxxxxxx
+xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Game-of-Life Blinker Ship
+
+NAME: erik_entry_012
+TAGS: entry 
+ORIENT: float
+
+MAP
+................................
+............c..c................
+...........c....................
+...........c...c................
+...cc......cccc.................
+..cccc..........................
+.cc.cc..........................
+..cc.....cc.ccc.................
+........c..[..cc.......c....ccc.
+.......cc.{.....c......c....c.c.
+........c..(..cc.......c....ccc.
+..cc.....cc.ccc.................
+.cc.cc..........................
+..cccc..........................
+...cc......cccc.................
+...........c...c................
+...........c....................
+............c..c................
+................................
+ENDMAP
+
+
+##############################################################################
+# Game-of-Life Cheshire Cat
+
+NAME: erik_entry_013
+TAGS: entry 
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx..........x..........x..........x..........x
+xx..........x..........x..........x..........x
+xx...c..c...x...c..c...x..cc..cc..x..cccccc..x
+xx...cccc...x..cccccc..x..c.cc.c..x..c....c..x
+x(..c....c.....c....c.......cc......c......c.x
+x[..c.cc.c....cc....cc...ccc..ccc...c......c.x
+x{..c....c..x..c....c..x.cc.cc.cc.x.c..cc..c.x
+xx...cccc...x...cccc...x...c..c...x...c..c...x
+xx..........x....cc....x...c..c...x..........x
+xx..........x..........x..........x..........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxx
+xx..........x..........x....cc....x..........x
+xx..........x..........x..c....c..x...cccc...x
+xx..........x..........x.c......c.x..cccccc..x
+xx..........x..........x..........x.cc.cc.cc.x
+xx.....................x............cc....cc.x
+xx......................c........c.ccc....cccx
+xx..........x..........x..c.cc.c..x..c.cc.c..x
+xx...cc.....x...c..c...x...cccc...x....cc....x
+xx...cc.....x....cc....x..........x..........x
+xx..........x..........x..........x..........x
+xxxxx@@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Sometimes You Just Gotta Run
+
+NAME: erik_entry_14
+TAGS: entry
+ORIENT: float
+MONS: ogre
+ITEM: potion of heal wounds
+
+MAP
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxxx1xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxx....[....xxxxxx
+xxxxxx..x(.{x..xxxxxx
+x...x...x...x...x...x
+x....x..xx>xx..x....x
+xxxxxx...xxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# 27 #1
+
+NAME: erik_entry_15
+TAGS: entry
+ORIENT: float
+ITEM: stone
+
+MAP
+bbbbbbbbbbbbbbbbbbbb
+b([................b
+b{.................b
+b..a...............b
+b..................b
+b....aa............b
+b....a.............b
+b......aaa.........b
+b......aaa.........b
+b......aaa.........b
+b..................b
+b..........aaa.aaa.b
+b..........aaa.aaa.b
+b..........aaa.aaa.b
+b..................b
+b..........aaa.....b
+b..........aaa.....b
+b..........aaa...d.b
+b...................
+bbbbbbbbbbbbbbbbbb..
+ENDMAP
+
+
+##############################################################################
+# 27 #2
+
+NAME: erik_entry_16
+TAGS: entry
+ORIENT: float
+ITEM: stone
+
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbb
+b.........................b
+b.........................b
+b.........................b
+b...<...[{(...ccccccccc...b
+b.........................b
+b.........................b
+b.........................b
+bbbbbbbbbbbbbbbbb...bbbbbbb
+b...................bbbbbbb
+b...................bbbbbbb
+b...................bbbbbbb
+b...c.ccc.ccc.ccc...bbbbbbb
+b...c.c.c.c.c.c.c...bbbbbbb
+b...ccc.ccc.ccc.c...bbbbbbb
+b...................bbbbbbb
+b....d..............bbbbbbb
+b...................bbbbbbb
+bbbb...bbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+
+##############################################################################
+# 27 #3
+
+NAME: erik_entry_17
+TAGS: entry no_monster_gen
+# no pillars for dancing, so no_monster_gen
+ORIENT: float
+ITEM: stone
+
+MAP
+cccccccccccccccccccccccccccc
+cccccccbbbbb.c...c.........c
+cccccccb[{(+.+...+.........c
+cccccccbbbbb.c...c.........c
+cccccccccccccccccccccc+ccccc
+c..........................c
+c.d........................c
+c..........................c
+c...cccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Zot Side Story
+
+NAME: erik_entry_18
+TAGS: entry                
+ORIENT: float
+MONS: giant bat, small snake, worm, gnoll, imp, orc
+ITEM: stone, scroll of paper, banana, potion of healing
+
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bb.........................................................b
+b(...xxx...xxx...xxx...xxx..gaaa...vvvvvvvvv...ccccccccc...b
+b[.x.+Cx...+6x..2+ex..3+ex...+fa...+++===4ev...===g5e===...b
+b{...xxx...xxx...xxx...xxx..gaaa...vvvvvvvvv...ccccccccc...b
+bb.........................................................b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb+++bbbbbbbbbbbbbb=b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb.....b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb.bbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb...bbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb+++bbbbbbbbbbbbbbbbbbbb.bbb
+bbbbbbbbbbbbbbbbb...........................bbbb.........bbb
+bbbbbbbbbbbbbbbbb......xbXXXXXXXXXXXbx......bbbb.bbbbbbbbbbb
+bbbbbbbbbbbbbbbbb......xXXX...1...XXXx......bbbb.bbbbbbbbbbb
+bbbbbbbbbbbbbbbbb......xXX..1...1..XXx......bbbb.bb.....bbbb
+bbbbbbbbbbbbbbbbb......xX1.........1Xx......bbbb.bb.bbb.bbbb
+bbbbbbbbbbbbbbbbb..........1..d..1..........bbbb.bb.bbb.bbbb
+bbbbbbbbbbbbbbbbb......xX1.........1Xx......bbbb.bb..bb.bbbb
+bbbbbbbbbbbbbbbbb......xXX..1...1..XXx......bbbb.bbb.bb.bbbb
+bbbbbbbbbbbbbbbbb......xXXX...1...XXXx......bbbb.....bbebbbb
+bbbbbbbbbbbbbbbbb......xbXXXXXXXXXXXbx......bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbb.............<.............bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+
+##############################################################################
+# Ramanujan
+
+NAME: erik_entry_19
+TAGS: entry 
+ORIENT: float
+
+MAP
+ccccccccccccccccccccccccccccccccc
+c([x............................c
+c{.x............................c
+cxx+............................c
+c......x.xxxxxxx.xx.xxxxxxxxx...c
+c...............................c
+c...............................c
+c...x.xxxxxxxxxxxx..............c
+c...............................c
+c...............................c
+c...xxxxxxxxx.xxxxxxxxxx........c
+c...............................c
+c...............................c
+c................................
+ccccccccccccccccccccccccccccccc..
+ENDMAP
+
+
+##############################################################################
+# Kangaroo Pocket Calculator
+
+NAME: erik_entry_20
+TAGS: entry no_monster_gen
+# no pillars for dancing, so no_monster_gen
+ORIENT: float
+
+MAP
+bbbccccccccccccccccccccccccccccccccccccccccccccc
+b{b........................................+..+.
+b[+........................................+..+.
+b(b........................................+..+.
+bbbccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# The Frivolous Dungeonbuilder #1
+
+NAME: erik_entry_21
+TAGS: entry no_monster_gen
+# worried about water creatures getting generated
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+
+MAP
+...............
+.....aa........
+......a...aa...
+..aaaaaa.aa....
+......aawaaaaa.
+....aaabaaa..a.
+...aa..b..a....
+.......b..aa...
+.......b.......
+.......bb......
+........b......
+........b......
+........bb.....
+.........b.....
+..({.xx..b.....
+.x[xxxxxxbbxx..
+.xxxxxxxxxxxxx.
+...............
+ENDMAP
+
+
+##############################################################################
+# The Frivolous Dungeonbuilder #2
+
+NAME: erik_entry_22
+TAGS: entry no_monster_gen
+# worried about water creatures getting generated
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+
+MAP
+...............
+....bbb........
+...x..b...bb...
+..bbbbbbbbb....
+..x...bxxbbbbb.
+....bbbxxbb..b.
+...bb..xx.b..x.
+...x...xx.bb...
+........xx.x...
+........xx.....
+........xx.....
+........xx.....
+........xx.....
+.........xx....
+..({.aa..xx....
+..[aaaaaaxxaaaw
+waaaaaaaaaaaaaw
+wwwwwwwwwwwwwww
+ENDMAP
+
+
+##############################################################################
+# The Frivolous Dungeonbuilder #3 and enough, enough already!
+
+NAME: erik_entry_23
+TAGS: entry no_monster_gen
+# worried about water creatures getting generated
+ORIENT: float
+FLAGS: no_rotate
+
+# Supposed to be an Easter egg. Get it?! Easter egg?! Sigh.
+MAP
+...............
+......aaa......
+....aawwwaa....
+..bwwwwwwwwwb..
+.bbbwwwwwwwbbb.
+.bbbbbbbbbbbbb.
+.wwwwwwwwwwwww.
+.bbbbbbbbbbbbb.
+.bbbwwwwwwwbbb.
+..xwxwxwxwxwx..
+...aaawwwaaa...
+......aaa......
+......({[......
+ENDMAP
+
+
+##############################################################################
+# Yars' Revenge
+
+NAME: erik_entry_24
+TAGS: entry
+ORIENT: float
+MONS: goblin
+CHANCE: 5000
+
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+v.........x.x..................vvv...............................x
+v........x.x.x.........xxx.....vvv.b..b.bbbb.b..b.b..b.bbbb.b..b.x
+v(........x.x.........xxx.....1xxx.b..b.b....b..b.b..b.b....b..b.x
+v{.......x.x.x.......xxx.1.....+.=.bbbb.bbbb.b.cb.b.cb.bbbb.bbbb.x
+v[........x.x.........xxx.....1xxx.b..b....b.b.cb.b.cb....b.b..b.x
+v........x.x.x.........xxx.....vvv.b..b.bbbb.bbbb.bbbb.bbbb.b..b.x
+v.........x.x..................vvv...............................x
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv@@@vvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##############################################################################
 # Regular vaults
