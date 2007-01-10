@@ -1647,8 +1647,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "morgue_dir")
     {
-        if (morgue_dir.empty())
-            morgue_dir = field;
+        morgue_dir = field;
     }
     else if (key == "hp_warning")
     {
