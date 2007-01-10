@@ -2142,6 +2142,379 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvv@@@vvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
+# Hobgoblin Prison
+
+NAME: erik_entry_25
+TAGS: entry
+ORIENT: float
+ITEM: knife, club, stone, wand of digging, hammer
+ITEM: weight:20 potion of confusion / potion of paralysis
+MONS: hobgoblin, kobold, fungus, gnoll, orc, Ijyb, goblin
+
+MAP
+ccccccccccccccccccc...ccccccccccccccccccc
+cxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxc
+cxxx....x........xx...xx........x....xxxc
+cxxx.xx.G........x.....x........G.xx.xxxc
+cxxx...2x........x.1.1.x........x.2..xxxc
+cxxxxxxxx...cc...xx+++xx...cc...xxxxxxxxc
+cxxx....x...cc.............cc...x....=.<c
+cxxx.xx.G.......................G.xx.xxxc
+cxxx..1.x.......................x....xxxc
+cxxxxxxxx.......................xxxxxxxxc
+cxxx....x...cc...cc...cc...cc...x....xxxc
+cxxx.xx.G...cc...cc...cc...cc...G.xx.xxxc
+cxxx.4..x.......................x..5.xxxc
+cxxxxxxxx.......................xxxxxxxxc
+cxxx....x.......................x....xxxc
+cxxx.xx.G...cc...cc...cc...cc...G.xx.xxxc
+cxxx.2..x...cc...cc...cc...cc...x...2xxxc
+c(xxxxxxx.......................xxxxxxxxc
+c[xx..7.x.......................x....xxxc
+c{xx.xx.G.......................G7xx.xxxc
+c.xx....x...cc...cc...cc...cc...x....xxxc
+cdxxxxxxx...cc...cc...cc...cc...xxxxxxxxc
+cexx3..1x.......................x....xxxx
+c.xx.xx..........xx===xx........G.xx6xxxc
+c.f=3...x........x~~~22x........x.g..xxxc
+cxxxxxxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxxxxxc
+cxxxxxxxxxxxxxxxxxx=======hixxxxxxxxxxxxc
+ccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Lazy Man's Vault
+
+NAME: erik_entry_26
+TAGS: entry
+ORIENT: float
+
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+ENDMAP
+
+
+##############################################################################
+# Kaf Zayin
+
+# with my luck, this will be something horribly offensive
+NAME: erik_entry_27
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+   
+MAP
+cccccccccccccccc..cccccccccccccccccc
+c..................................c
+c...x...............xx.............c
+c..xxxxxx..........xxxxxxxx........c
+c.xxxxxxxx.........xxxxxxxxxxx.....c
+c..xxxxxxxx.........xxxxxxxxxxxx...c
+c.....xxxx..............xxxxxxxxx..c
+.......xx........[<..........xxxxx..
+.......xxx.......({............xxx..
+c.......xxx.....................xx.c
+c.......xxx.....................xx.c
+c........xxx...........xxxxxxxxxxx.c
+c........xxx..........xxxxxxxxxxx..c
+c.........xx.........xxxxxxxxxxx...c
+c..................................c
+cccccccccccccccc..cccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Shusaku - Inseki, "ear-reddening move"
+
+NAME: erik_entry_28
+TAGS: entry
+ORIENT: float
+
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.c.c.c.c.c.x.a.a.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.x.c.c.c.c.c.x.a.c.a.c.a.a.x.c.c.
+.......................................
+.c.c.a.a.c.x.c.c.a.x.x.a.a.c.a.x.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.x.x.x.c.c.x.c.c.
+.......................................
+.c.c.c.c.c.x.c.c.c.c.x.c.c.c.c.x.x.c.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.c.c.c.c.c.c.x.a.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.a.a.a.x.x.x.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.x.a.a.a.x.
+.......................................
+.c.c.c.c.c.c.c.c.c.x.c.c.x.a.a.x.x.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.a.a.x.c.x.a.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.c.c.c.c.c.a.x.x.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.a.x.a.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.a.c.a.x.a.a.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.x.c.x.a.c.a.x.c.c.c.
+.......................................
+.c.c.c.c.c.c.x.c.a.c.c.x.a.x.a.x.a.c.c.
+.......................................
+.c.c.x.c.x.c.c.x.c.c.c.x.a.a.x.a.a.c.c.
+.......................................
+.c.c.c.c.c.x.a.x.a.c.a.a.x.x.x.x.a.a.c.
+.......................................
+.c.c.c.c.c.c.x.a.c.a.a.c.a.x.x.c.x.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.a.c.c.a.c.x.c.x.c.x.c.
+.......................................
+ENDMAP
+
+
+##############################################################################
+# Shussai - Go Seigen, infamous tesuji
+
+NAME: erik_entry_29
+TAGS: entry
+ORIENT: float
+
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.x.c.c.c.c.c.c.c.c.c.x.c.c.c.c.
+.......................................
+.c.x.x.x.x.a.a.c.c.c.c.c.a.a.x.c.c.c.c.
+.......................................
+.c.x.a.x.a.x.c.a.a.x.a.c.c.c.c.c.x.c.c.
+.......................................
+.c.a.a.a.a.c.x.x.a.c.a.c.c.x.c.a.x.c.c.
+.......................................
+.c.c.c.c.c.c.x.a.a.a.x.x.x.x.x.a.c.c.c.
+.......................................
+.c.c.c.c.c.x.c.x.c.x.c.c.a.x.a.c.c.x.c.
+.......................................
+.c.c.c.c.c.c.c.x.c.c.c.c.a.a.x.x.x.c.c.
+.......................................
+.c.a.a.c.c.c.a.c.c.c.c.c.c.c.a.a.c.a.c.
+.......................................
+.a.c.c.a.a.c.c.a.c.c.c.c.c.c.c.a.c.c.c.
+.......................................
+.c.a.a.x.x.x.x.c.c.x.c.c.c.a.c.x.a.c.c.
+.......................................
+.x.c.x.c.x.c.c.c.c.c.x.c.c.c.c.x.a.c.c.
+.......................................
+.c.c.x.c.x.c.c.c.c.c.c.x.c.x.c.x.x.a.c.
+.......................................
+.c.c.a.x.a.a.x.c.c.c.c.a.c.x.x.a.x.a.c.
+.......................................
+.c.c.a.c.a.x.c.c.c.c.c.c.a.x.a.a.a.x.c.
+.......................................
+.c.c.a.c.a.x.c.c.c.c.x.x.x.a.c.c.c.x.c.
+.......................................
+.c.a.x.x.x.x.x.x.x.x.a.a.x.c.a.c.x.c.c.
+.......................................
+.c.c.a.a.x.a.a.x.a.a.x.a.a.a.c.a.a.x.c.
+.......................................
+.c.c.c.a.a.x.a.a.c.c.c.c.c.c.c.a.x.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+ENDMAP
+
+
+##############################################################################
+# Rinrii
+
+NAME: erik_entry_30
+TAGS: entry
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c...........................................................c
+c.vvv...vvv....v..............v.....vvv...vvv...............c
+c.vvv...vvv...vvvvv.........vvvv....vvv...vvv...............c
+c.vvv...vvv.....vvvvv......vvvv.....vvv...vvv...............c
+c.vvv...vvv.......vvvvv...vvvv......vvv...vvv..vvvvvvvvvvvv.c
+c.vvv...vvv.........v...vvvv........vvv...vvv..vvvvvvvvvvvv.c
+c.vvv...vvv...........vvvvv.........vvv...vvv...............c
+c.vvv...vvv.........vvvvv...........vvv...vvv...............c
+c......vvv........vvvvv..................vvv................c
+c.....vvv......vvvvv....................vvv.................c
+c....vv.........v..........[({.........vv...................c
+c...........................................................c
+ccccccccccccccccccccccccccc...ccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Mitsuhiro Itakura
+
+NAME: erik_entry_31
+TAGS: entry 
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+   
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+c...............................G...........c
+c...G.....GGGGGGGGGGG..........G.G..........c
+c...G.....G.................GGG...GGG.......c
+c...G.....G..............GGG..GGGGG..GGG....c
+c.GGGGG...G...........GGG...............GGG.c
+c...G.....GGGGGGGGG.......GGGGGGGGGGGGGG....c
+c...G.....G.G.....G.......G............G....c
+c..GGG....G.G.....G.......GGGGGGGGGGGGGG....c
+c..GG.G...G..G...G........G............G....c
+c.G.G.....G..G...G........GGGGGGGGGGGGGG....c
+c.G.G.....G...GGG......G....................c
+c...G.....G...GGG......G...GGGGGGGGGGGGG....c
+c...G....G...G...G....G....G...........G....c
+c...G....G..G.....G..G.....G...........G....c
+....G...G..G.......G.......GGGGGGGGGGGGG.....
+.............................................
+ccccccccccccccccccc([{ccccccccccccccccccccccc
+.............................................
+............G...........G....G.....G.........
+c...........G............G....G....G........c
+c....GGGGGGGGGGGGGGGG.....G...G...G.........c
+c..........G...............GGGGGGGGGGGG.....c
+c.........G.....G......G........G...........c
+c.........G......G......G.......G...........c
+c........G....GGG.G......G...GGGGGGGGG......c
+c.....GGGGGGGGG...G.............G...........c
+c.........G...G.................G...........c
+c.........G...G..........G......G...........c
+c........G....G..........G.GGGGGGGGGGGG.....c
+c........G....G.........G.......G...........c
+c.......G.....G....G....G.......G...........c
+c......G......G....G...G........G...........c
+c....GG........GGGGG...G........G...........c
+c...........................................c
+ccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Yin-Yang
+
+NAME: erik_entry_32
+TAGS: entry 
+ORIENT: float
+FLAGS: no_rotate
+   
+MAP
+xxxxxxxxxxxvvvvvvvvvvvvxxxxxxxxxx
+xxxxxxvvvvv...........vvvxxxxxxxx
+xxxvvvv......GGGG.......vvvvxxxxx
+xxxv.......GGGGG.GGG.......vvvxxx
+xxv.....GGGGGG..G...GGG......vvxx
+xvv...GGGGGGG.GG.......GG.....vvx
+xv...GGGGGGG.G......GG...G.....vx
+vv..GGGGGGG.G.......GG....G....vx
+v...GGGGGGG.G.............G.....v
+v..GGGGGGGG.G..............G....v
+v..GGGGGGGGG.G.............G....v
+v..GGGGGGGGG.G.............G....v
+v..GGGGGGGGGG.G............G....v
+v..GGGGGGGGGGG.GG..........G....v
+v...GGGGGGGGGGG..G........G..[..v
+vv..GGGGG..GGGGGG.G.......G..{..@
+xv...GGGG..GGGGGG.G......G...(..v
+xvv...GGGGGGGGGGGG.G...GG.....vvv
+xxv.....GGGGGGGGGG.GGGG......vvxx
+xxvv.......GGGGGG.GG.......vvvxxx
+xxxvvvvv.................vvvxxxxx
+xxxxxxxvvvv...........vvvvxxxxxxx
+xxxxxxxxxxvvvvvvvvvvvvvxxxxxxxxxx
+ENDMAP
+
+
+##############################################################################
+# Hello? Cthulhu calling!
+
+NAME: erik_entry_33
+TAGS: entry 
+ORIENT: float
+MONS: pit fiend
+# Pan demon would be more appropriate, but they're enormously buggy when used this way. 
+# Shadow fiend would too, but might be too easy for spoiled mummies.
+ITEM: potion of decay / potion of paralysis / potion of poison
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxccccccdccccccxxxx
+x.....xxxxxxxxxcccccccxxccccccxxx
+......xxxxxxxxccccccccxccccccccxx
+x.....xxxxxxxxccccccccxccccccccxx
+x.....xxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxdxxxxxxx1xxxxxxxdxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+....xxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxxcccccccxcccccccxxx
+xx.xxxxxxxxxxxxxccccccdccccccxxxx
+bb.bbbxxxxxxxxxxxxxxxxxxxxxxxxxxx
+b...(bxxx........................
+..b.[...................xxxx.....
+b...{bxxx...............xxxx.....
+bb.bbbxxxxxxxxxxxxxx.xxxxxxx.....
+ENDMAP
+
+##############################################################################
 # Regular vaults
 ##############################################################################
 
