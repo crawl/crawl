@@ -1234,37 +1234,37 @@ ENDMAP
  
 ##############################################################################
 # "I hacked my way through thick jungle and then..."
- 
+
 NAME: erik_entry_005
 TAGS: entry
 ORIENT: southwest
-MONS: plant, fungus, wandering mushroom, oklob plant, worm, human
-ITEM: wand of digging
+MONS: plant, fungus, wandering mushroom, oklob plant, worm, human, killer bee
+ITEM: scroll of paper
  
 MAP
-xxxxxx.xxxxxxx...xxxxxxx1xxx.@xxxxx@xxxxx@xxxxxxxx.x.@..xxxxxxxx@.xxx..xxxx
-xxxxxxxxxxxxxxxxxxxxxxxx1xxxxx.xxxx..xxxxx11224xxxxxxx.xxx..1............xx
-xxxxxxxxxx..xxxxx.xxxx.x...xxxxxxxx.xxxx..xxxxxxx..x..x....x..............@
-xxxxxxxxx.xxx.x1xx22xx.xx.xxxx1x..xx...1..xxxxx...x...xx.xx..1xx...x..x...x
-xxxxxxxxxx.xxx.1..xxxx..x11xxxx.1xxxxxx..x1x.xx.xx2xxxxx..2xx.......x.x...x
-xxxxxx.xx..xxx.xxx1xxx11xxx1.x...1xxxxx..1xx....x1xxx.xx..xxx..x....x...x..
-xxxxxxxx.xx.xx.x......xx..xx....x1xx1.xx1x.xxx1.xxx..x.xxx.xxx..x..x......x
-xxxxxx.xxx.xx111xx..x.xx.x.xxx.xxxx1x.x..1xx..x..xx.x1..1..xx..xx.1.......x
-xxxxxxxxxxxxx.xx1...1.2xxx.x.1x.xxx.xxx.x1xx.xxxxxx..xxxx..x..x..x..xx..x.x
-xxxxxx6.61xx1x11.x.xxx11x...xx1x....x..2..x......1xx.xx.x.x..xxx.1xxx.xx..x.
+xxxxxx.xxxxxxx.@.xxxxxxx1xxx.x11xxx@xxxxx@xxxxxxxx.x.@..xxxxxxxx@.xxx..xxxx
+xxxxxxxxxxxxxxxxdxxxxxxx1xxxx141xxx..xxxxx1x2ccc.xxxxx.xxx..1............xx
+xxxxxxxxxx..xxxxx.xxxx.x...xx121xxx.xxxx..x.xcc1x..x..x....x..............@
+xxxxxxxxx.xxx.x1xd.2xx.xx.xxxx1x..xx...1...ccccc..x...xx.xx..1xx...x..x...x
+xxxxxxxxxx.xxx.1.dxxxx..x11xxxx.1xxxxxx..x1x.cc.xx2xxxxx..2xx.......x.x...x
+xxxxxx.xx..xxx.xxx2xxx11xxx1.x...1xxxxx..1xx....x1xxx.xx..xxx..x....x...x..
+xxxxxxxx.xx.xx.x..d...xx..xc....x1xx1.xx1x.xcc1.xxx..x.xxx.xxx..x..x......x
+xxxxxx.xxx.xx111xxd.x.xx.x.ccx.xxxx1x.x..1xx..x..xx.x1..1..xx..xx.1.......x
+xxxxxxxxxxxxx.xx1...1.2xxx.c.1x.xxx.xxx.x1xx.xxxxxx..xxxx..x..x..x..xx..x.x
+xxxxxx.6.1xx1x11dx.xxx11x...xx1x....x..2..x......1xx.xx.x.x..xxx.1xxx.xx..x
 xxxxxx^^^1xxx1..1x..1xxx.xx1xxx.......2...x..1..xx..xxxx.x.1xx..xx..x.....x
-xxxxxx^^^.x111.1xx11x1xx..1.xx11.xxxx.xxxx1x..xx.xx....xxx....xxx..xx.x...x
-xxxxxx5.x.x11..1..x.1xxx1..xx1xxx.x1xxx..x1xx.xxx1xxxxxx..1xxx.x..xx......@
-xxxxxxxx1x1Gx11x12x1x1....1....x....1xxxx.x1xx..1x.xxx..x.x1x...5.....x...x
-xxxxx{xxx1112.1x.11.x2111...x1...x.x..xxx.xxxx.xx.x.x......x.xx..xx.xx.....
-xxxxxx.x1Gx11x2.1.1...xx1.11.......x.xx2x...xx1x.x.....1.xxxxx....xxxxx...x
-xxxxxx.x1x.1..1xx1x.1....x1xx..11x.x.x1..x.xx..x1xxxxx..x.xxx..1......x....
-xxxxxx.xx1Gx.Gx1.1..11xx.xx.1xx1xxxxxx...1xxxxx1xxx.x.xx1...xxxx....xx....x
-xxxxx[xx.11.111..1.xxx1..1.2xxxx...xxxx12xxxx...xxxx...xxxx..xx22xxx.....xx
-xxxxxx.x..dG.1.x1.x.1xxx1..x.xxx.11x..x.xxxxx.x.x......1xxxxx1xxx.x.xx....x
-xxxxxxx...x1..xG1xxx1x.x1xxxx5xxxxxxxxxxx....xxxx1..xxxxxx.xxxx1xx..xxx.x.@
-xxxxxxx=x.xxG1x11xxxx.xx11xxxxxxxxxx...xxxx1xx.xxxxxx.xxxx.xxx3.x1x..x....x
-xxxxxx$x(.xxx11xxx..xxxxxxxx..xxxxx1xxxx.xxx1xxxxx.x.xxx.xx1xxxxx4xxx.....x
+xxxxxx^^^.x111.1xx11x1xx..1.cx11.xcxx.xxxx1x..xx.xx....xxx....xxx..xx.x...x
+xxxxxx5.x.x11.d1..x.1xxx1..cx1xxx.c1xxx..x1xx.xxx1xxxxxx..1xxx.x..xx......@
+xxxxxxxx1x1Gx12x12x1x1....1....x....1xccx.x1cx..1x.xxx..x.x1x...5.....x...x
+xxxxx{xxx1112d1x.11.x2111...x1...x.x..xcc.xxcx.xx.x.x......x.xx..xx.xx.....
+xxxxxx.x1Gx11.2.1.1...xx1.11.......x.cc2c...xx1x.x.....1.xxxxx....xxxxx..1x
+xxxxxx.x1x.1..1xx1x.1....x1xx..11x.x.c1..x.xx..x1xcccx..x.xxx..1......x....
+xxxxxx.xx1GxdGx1.1..11xx.xx.1xx1xxxxxx...1xxxxx1xxc.x.xx1...xxxx....xx....x
+xxxxx[xx.11d111..1.xxx1..1.2xccx...xxxx12xxxx...xccc...xxxx.aaaaaaxx.....xx
+xxxxxx.x.d.G.1.x1.x.1xxx1..x.xxx.11x..x.xxxxx.x.x......1xxxa177xxaa.xx..2.x
+xxxxxxx.d.x1..xG1xxx1x.x1xxxx5xxxxxxxxxxx....xxxx1..xxxxxx.aa...aa..xxx.x.@
+xxxxx1xxx.xxG1x11xxxx.xx11xxxxxxxxxx...xxxx1xx.xxxxxx.xxxx.xa.34aaa..x....x
+xxxxxx1x(.xxx11xxx..xxxxxxxx..xxxxx1xxxx.xxx1xxxxx.x.xxx.xx1a.xxa.2xx.....x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1272,42 +1272,40 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
  
 ##############################################################################
 # Ooh! Treasure!
- 
+
 NAME: erik_entry_006
 TAGS: entry no_monster_gen
 ORIENT: float
-ITEM: scroll of paper / weight:190 nothing, potion of water, wand of slowing
-ITEM: club, knife, stone, scroll of teleportation
-
+ITEM: scroll of paper, potion of water, wand of slowing
+ITEM: club, knife, stone, ring of teleportation
+ 
 MAP
-bbbbbbbbbbbbbbbbbbbbbbbb
-b0ddddgidddddddddddddd0b
-bddddddddddddddddddddddb
-bdddedddddigddddeddddddb
-bdddddhdddddddddddddhddb
-bdddddddddddddddgddd$ddb
-bddhddfddddddddddddddddb
-bddddddddddddddddddddddb
-bdddddddddddedddddgddddb
-bddddd$ddddddddddddddddb
-bddddddddddddd.ddddddddb
-bdddddddddddfddddddhdddb
-bddiddd{ddhjdddddddddddb
-bddddddddddddddddddddddb
-bdddddddddd.ddddddddeddb
-bddddddddddddddddddgdddb
-bddddedddddddddddddddddb
-bddddddddddddddddddddddb
-bddddddgddddddddddd$dddb
-bdeddddddddddddddedddddb
-bdddddhdddddgddddddddddb
-bdddddedddddddddddhddddb
-b0ddddddihdddddddddddd0b
-bbbbbbbbbbbbbbbbbbbbbbbb                       
-ENDMAP
+bbbbbbbbbbbbbbbbbbbbb
+b0g....d...g.......0b
+b.g..ge...e..d.d....b
+b..d................b
+bh..............g.d.b
+b.........j.........b
+b...................b
+b.........d.........b
+b........ddd......g.b
+b.h.....ddddd.......b
+b..g......d......g..b
+b.........d.........b
+b.........d.........b
+b...f.....d.......e.b
+b...................b
+b..........i........b
+b.....e...........hib
+bh...............h..b
+bh..d...........j...b
+b0........{........0b
+bbbbbbbbbbbbbbbbbbbbb
+ENDMAP 
  
 ##############################################################################
 # Deja vu
@@ -1371,24 +1369,24 @@ x............................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
  
-
 ##############################################################################
-# Being Mean Is Cool #376
+# Being Mean Is Cool #376, Fairer Edition
  
 NAME: erik_entry_009
 TAGS: entry
 ORIENT: float
-ITEM: ring of teleportation
+ITEM: scroll of teleportation, potion of healing
+
  
 MAP
 xxxxxxx
 x.....x
-x.....x
-x..{..x
+x.e...x
+x.e{..x
 x.d...x
 x.....x
 xxxxxxx
-ENDMAP
+ENDMAP 
 
 ##############################################################################
 # Regular vaults
