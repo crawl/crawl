@@ -463,8 +463,29 @@ bool see_grid(unsigned char grx, unsigned char gry)
     return false;
 }                               // end see_grid()
 
-void io_cleanup()
+static bool io_inited = false;
+void cio_init()
 {
+#ifdef UNIX
+    unixcurses_startup();
+#endif
+
+#ifdef WIN32CONSOLE
+    init_libw32c();
+#endif
+
+#ifdef DOS
+    init_libdos();
+#endif
+
+    io_inited = true;
+}
+
+void cio_cleanup()
+{
+    if (!io_inited)
+        return;
+    
 #ifdef UNIX
     unixcurses_shutdown();
 #endif
@@ -472,19 +493,21 @@ void io_cleanup()
 #ifdef WIN32CONSOLE
     deinit_libw32c();
 #endif
+
+    io_inited = false;
 }
 
 void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
     
-    io_cleanup();
+    cio_cleanup();
 
     if (format)
     {
         va_list arg;
         va_start(arg, format);
-        char buffer[500];
+        char buffer[100];
         vsnprintf(buffer, sizeof buffer, format, arg);
         va_end(arg);
         

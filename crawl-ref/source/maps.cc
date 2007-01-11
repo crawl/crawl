@@ -315,11 +315,7 @@ static void parse_maps(const std::string &s)
 {
     FILE *dat = fopen(s.c_str(), "r");
     if (!dat)
-    {
-        fprintf(stderr, "Failed to open %s for reading: %d\n", s.c_str(),
-                errno);
-        exit(1);
-    }
+        end(1, true, "Failed to open %s for reading: %d\n", s.c_str());
 
     reset_map_parser();
 

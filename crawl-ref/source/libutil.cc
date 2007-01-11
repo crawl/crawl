@@ -416,10 +416,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
 
     char *buff = new char [ 10 * size ];  // hopefully enough 
     if (!buff)
-    {
-        fprintf(stderr, "Out of memory\n");
-        exit(1);
-    }
+        end(1, false, "Out of memory\n");
 
     vsprintf( buff, format, argp );
     strncpy( str, buff, size );

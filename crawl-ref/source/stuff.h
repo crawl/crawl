@@ -51,7 +51,8 @@ int stat_div( int stat_level, int value, int div = 20, int shift = 3 );
 int skill_bump( int skill );
 unsigned char get_ch(void);
 
-void io_cleanup();
+void cio_init();
+void cio_cleanup();
 void end(int exit_code, bool print_err = false,
          const char *message = NULL, ...);
 

@@ -160,7 +160,6 @@ static void open_door(int move_x, int move_y, bool check_confused = true);
 static void start_running( int dir, int mode );
 static void close_door(int move_x, int move_y);
 
-static void init_io();
 static void prep_input();
 static void input();
 static void middle_input();
@@ -323,21 +322,6 @@ int main( int argc, char *argv[] )
 
     return 0;
 }                               // end main()
-
-static void init_io()
-{
-#ifdef UNIX
-    unixcurses_startup();
-#endif
-
-#ifdef WIN32CONSOLE
-    init_libw32c();
-#endif
-
-#ifdef DOS
-    init_libdos();
-#endif
-}
 
 #ifdef WIZARD
 static void handle_wizard_command( void )
@@ -2682,7 +2666,7 @@ static bool initialise(void)
     // Read special levels and vaults.
     read_maps();
     
-    init_io();
+    cio_init();
 
 #ifdef USE_MACROS
     // Load macros

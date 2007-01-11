@@ -1176,7 +1176,7 @@ void game_options::read_options(InitLineInput &il, bool runscript)
     
     // Validate save_dir
     if (!check_dir("Save directory", save_dir))
-        exit(1);
+        end(1);
 }
 
 static int str_to_killcategory(const std::string &s)

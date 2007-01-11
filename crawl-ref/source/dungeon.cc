@@ -3717,11 +3717,8 @@ static int builder_by_type(int level_number, char level_type)
 
             ASSERT(vault != -1);
             if (vault == -1)
-            {
-                fprintf(stderr, "Failed to find Pandemonium level %s!\n",
-                        pandemon_level_names[(int) which_demon]);
-                exit(1);
-            }
+                end(1, false, "Failed to find Pandemonium level %s!\n",
+                    pandemon_level_names[(int) which_demon]);
 
             build_vaults(level_number, vault);
         }
@@ -3731,10 +3728,8 @@ static int builder_by_type(int level_number, char level_type)
             int vault = random_map_for_tag("pan", true);
             ASSERT( vault != -1 );
             if (vault == -1) 
-            {
-                fprintf(stderr, "Failed to build Pandemonium minivault!\n");
-                exit(1);
-            }
+                end(1, false, "Failed to build Pandemonium minivault!\n");
+            
             build_minivaults(level_number, vault);
         }
 

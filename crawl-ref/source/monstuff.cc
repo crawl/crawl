@@ -4964,8 +4964,7 @@ static void mons_in_cloud(struct monsters *monster)
     switch (env.cloud[wc].type)
     {
     case CLOUD_DEBUGGING:
-        cprintf("Fatal error: monster steps on nonexistent cloud!");
-        exit(0);
+        end(1, false, "Fatal error: monster steps on nonexistent cloud!");
         return;
 
     case CLOUD_FIRE:

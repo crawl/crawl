@@ -366,7 +366,7 @@ std::string datafile_path(const std::string &basename)
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
         std::string("data") + FILE_SEPARATOR,
-        std::string("crawl-data") + FILE_SEPARATOR,
+        std::string("docs") + FILE_SEPARATOR,
         std::string("..")+FILE_SEPARATOR+std::string("docs")+FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
         std::string(".") + FILE_SEPARATOR,
@@ -400,9 +400,8 @@ std::string datafile_path(const std::string &basename)
     }
 
     // Die horribly.
-    fprintf(stderr, "Cannot find data file '%s' anywhere, aborting\n", 
-            basename.c_str());
-    exit(1);
+    end(1, false, "Cannot find data file '%s' anywhere, aborting\n", 
+        basename.c_str());
 
     return ("");
 }
