@@ -177,7 +177,8 @@ void stop_delay( void )
 
     case DELAY_MULTIDROP:
         // No work lost
-        mpr( "You stop dropping stuff." );
+        if (!items_for_multidrop.empty())
+            mpr( "You stop dropping stuff." );
         pop_delay();
         break;
 
