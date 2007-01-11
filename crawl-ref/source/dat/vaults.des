@@ -1265,7 +1265,7 @@ TAGS: entry no_monster_gen
 ORIENT: float
 MONS: ogre, orc priest
 ITEM: potion of strong poison / potion of decay / potion of magic
-ITEM: ring of hunger / ring of fire resistance / ring of cold resistance
+ITEM: ring of hunger / protection from fire / protection from cold
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1388,7 +1388,7 @@ ENDMAP
 
 NAME: david_freedom_to_die
 TAGS: entry
-MONS: hobgoblin, orc sorceror, orc warlord, orc
+MONS: hobgoblin, orc sorcerer, orc warlord, orc
 ITEM: scroll of blinking / scroll of recharging / scroll of fear
 ITEM: scroll of teleport / scroll of remove curse / scroll of identify
 ORIENT: float
@@ -2127,7 +2127,6 @@ NAME: erik_entry_24
 TAGS: entry
 ORIENT: float
 MONS: goblin
-CHANCE: 5000
 
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
