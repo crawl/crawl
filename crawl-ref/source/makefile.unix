@@ -27,8 +27,8 @@ INSTALLDIR := /usr/games
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
 
-SAVEDIR := /usr/games/crawl-saves/
-DATADIR := /usr/games/crawl-data/
+# SAVEDIR := /usr/games/crawl-saves/
+# DATADIR := /usr/games/crawl-data/
 
 LIB = -lncurses
 
