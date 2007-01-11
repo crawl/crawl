@@ -3962,8 +3962,9 @@ static bool handle_pickup(struct monsters *monster)
         {
             int quant = mitm[item].quantity;
 
-            // don't eat fixed artefacts
-            if (is_fixed_artefact( mitm[item] ))
+            // don't eat artefacts (note that unrandarts are randarts)
+            if (is_fixed_artefact(mitm[item]) ||
+                is_random_artefact(mitm[item]))
                 continue;
 
             // shouldn't eat stone things
