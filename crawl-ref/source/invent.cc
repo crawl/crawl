@@ -307,6 +307,10 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             add_entry( procfn? (*procfn)(ie) : ie );
         }
     }
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (mitems.size() > 52)
+        set_maxpagesize(52);
 }
 
 void InvMenu::do_preselect(InvEntry *ie)

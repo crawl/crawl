@@ -421,8 +421,8 @@ bool Stash::show_menu(const std::string &prefix, bool can_travel) const
     menu.can_travel = can_travel;
     mtitle->quantity = items.size();
     menu.set_title(mtitle);
-
     menu.load_items( InvMenu::xlat_itemvect(items), stash_menu_fixup);
+    
     std::vector<MenuEntry*> sel;
     while (true)
     {
@@ -1453,6 +1453,10 @@ void StashTracker::display_search_results(
     // Abuse of the quantity field.
     mtitle->quantity = results.size();
     stashmenu.set_title(mtitle);
+
+    // Don't make a menu so tall that we recycle hotkeys on the same page.
+    if (results.size() > 52)
+        stashmenu.set_maxpagesize(52);
 
     menu_letter hotkey;
     for (unsigned i = 0; i < results.size(); ++i, ++hotkey)
