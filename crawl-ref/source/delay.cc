@@ -162,7 +162,7 @@ void stop_delay( void )
     case DELAY_MEMORISE:
         // Losing work here is okay... having to start from 
         // scratch is a reasonable behaviour. -- bwr
-        mpr( "Your memorization is interrupted." );
+        mpr( "Your memorisation is interrupted." );
         pop_delay();
         break;
 

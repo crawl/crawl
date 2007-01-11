@@ -6744,7 +6744,8 @@ static int pick_an_altar(void)
             {
                 altar_type = DNGN_ALTAR_ZIN + random2(NUM_GODS - 1);
             }
-            while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH);
+            while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
+                   || altar_type == DNGN_ALTAR_LUCY);
             break;
         }
     }
