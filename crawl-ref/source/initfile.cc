@@ -1173,9 +1173,17 @@ void game_options::read_options(InitLineInput &il, bool runscript)
 #endif
 
     Options.explore_stop |= Options.explore_stop_prompt;
-    
+
+    validate_options();
+}
+
+void game_options::validate_options()
+{
     // Validate save_dir
     if (!check_dir("Save directory", save_dir))
+        end(1);
+
+    if (!check_dir("Morgue directory", morgue_dir))
         end(1);
 }
 

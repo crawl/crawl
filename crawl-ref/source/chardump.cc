@@ -1004,7 +1004,7 @@ static bool write_dump(
         succeeded = true;
     }
     else
-        mpr("Error opening file.");
+        mprf("Error opening file '%s'", file_name.c_str());
     
     return (succeeded);
 }                               // end dump_char()

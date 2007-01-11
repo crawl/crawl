@@ -1013,6 +1013,7 @@ private:
     void new_dump_fields(const std::string &text, bool add = true);
     void do_kill_map(const std::string &from, const std::string &to);
     int  read_explore_stop_conditions(const std::string &) const;
+    void validate_options();
 
     static const std::string interrupt_prefix;
 };

@@ -24,8 +24,11 @@ MCHMOD = 2755
 INSTALLDIR := /usr/games
 
 # If you're installing Crawl for multiple users, you *must* set this to a
-# valid path before building Crawl.
-DATADIR    :=
+# valid path before building Crawl. This is not necessary if you are building
+# Crawl for a single user.
+
+SAVEDIR := /usr/games/crawl-saves/
+DATADIR := /usr/games/crawl-data/
 
 LIB = -lncurses
 
@@ -35,6 +38,10 @@ CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
 
 CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS)
+
+ifneq ($(SAVEDIR),)
+CFOTHERS += '-DSAVE_DIR_PATH="$(SAVEDIR)"'
+endif
 
 ifneq ($(DATADIR),)
 CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
@@ -120,6 +127,7 @@ endif
 #
 
 install: $(GAME)
+	[ -d $(INSTALLDIR) ] || mkdir -p $(INSTALLDIR)
 	$(COPY) $(GAME) ${INSTALLDIR}
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
 ifeq ($(DATADIR),)
@@ -127,6 +135,11 @@ ifeq ($(DATADIR),)
 endif
 	mkdir -p $(DATADIR)/data
 	cp dat/*.des $(DATADIR)/data
+	mkdir -p $(DATADIR)/docs
+	cp ../docs/*.txt $(DATADIR)/docs
+ifneq ($(SAVEDIR),)
+	mkdir -p $(SAVEDIR)
+endif
 
 clean:
 	$(DELETE) *.o

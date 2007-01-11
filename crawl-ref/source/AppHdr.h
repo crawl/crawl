@@ -309,10 +309,14 @@
 
 
 #ifdef MULTIUSER
-    // Define SAVE_DIR to the directory where saves, bones, and score file
-    // will go... end it with a '/'.  Since all player files will be in the
-    // same directory, the players UID will be appended when this option
-    // is set.
+    // If you are installing Crawl for multiple users, define SAVE_DIR
+    // to the directory where saves, bones, and score file will go...
+    // end it with a '/'. Since all player files will be in the same
+    // directory, the players UID will be appended when this option is
+    // set.
+    //
+    // If you want to build Crawl that only one user will use, you do not need
+    // to set SAVE_DIR_PATH (and do not need to run make install).
     //
     // Setting it to nothing or not setting it will cause all game files to
     // be dumped in the current directory.
