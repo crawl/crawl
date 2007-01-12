@@ -23,6 +23,13 @@ void init_libdos()
     tcsetattr (0, TCSANOW, &charmode);
 }
 
+void clear_message_window()
+{
+    window(1, 18, 78, 25);
+    clrscr();
+    window(1, 1, 80, 25);
+}
+
 void set_cursor_enabled(bool enabled)
 {
     cursor_is_enabled = enabled;
@@ -41,4 +48,14 @@ void clear_to_end_of_line()
     const int cols = get_number_of_cols();
     if (pos <= cols)
         cprintf("%*s", cols - pos + 1, "");
+}
+
+int get_number_of_lines()
+{
+    return (25);
+}
+
+int get_number_of_cols()
+{
+    return (80);
 }

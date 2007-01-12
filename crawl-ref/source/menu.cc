@@ -941,11 +941,11 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // formatted_string
 //
 
-formatted_string::formatted_string(const std::string &s, bool init_style)
+formatted_string::formatted_string(const std::string &s, int init_colour)
     : ops()
 {
-    if (init_style)
-        ops.push_back(LIGHTGREY);
+    if (init_colour)
+        ops.push_back(init_colour);
     ops.push_back(s);
 }
 

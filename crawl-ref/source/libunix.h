@@ -9,6 +9,13 @@
 char *strlwr(char *str);
 char getche(void);
 
+void message_out(int mline, int colour, const char *str, int firstcol = 0,
+                 bool newline = true);
+void clear_message_window();
+
+int get_number_of_lines();
+int get_number_of_cols();
+
 int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);
@@ -24,8 +31,6 @@ int window(int x1, int y1, int x2, int y2);
 void update_screen(void);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
-int get_number_of_lines_from_curses(void);
-int get_number_of_cols_from_curses(void);
 void get_input_line_from_curses( char *const buff, int len );
 
 void delay(unsigned long time);

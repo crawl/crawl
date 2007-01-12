@@ -97,43 +97,9 @@ static void set_show_backup( int ex, int ey );
 static unsigned fix_colour(unsigned raw_colour);
 static int get_viewobj_flags(int viewobj);
 
-//---------------------------------------------------------------
-//
-// get_number_of_lines
-//
-// Made this a function instead of a #define.  This should help
-// considering the fact that the curses version is a macro 
-// (curses tends to be implemented with a large number of 
-// preprocessor macros, which can wreak havoc with things
-// like the C++ string class, so we want to isolate that
-// away to keep portability up). 
-//
-// Other OSes might want to hook into reading system environment 
-// variables or player set options to determine the screen size 
-// (see the Options and SysEnv structures, as well as initfile.cc).
-//
-// This might be better to move to the lib*.cc files, but we
-// don't really have a standard API defined for them, or the
-// all important libdos.cc.  It would be a good idea to eventually
-// head that way. -- bwr
-//
-//---------------------------------------------------------------
-int get_number_of_lines(void)
+int get_message_window_height()
 {
-#ifdef UNIX
-    return (get_number_of_lines_from_curses());
-#else
-    return (25);
-#endif
-}
-
-int get_number_of_cols(void)
-{
-#ifdef UNIX
-    return (get_number_of_cols_from_curses());
-#else
-    return (80);
-#endif
+    return (get_number_of_lines() - VIEW_EY);
 }
 
 unsigned get_envmap_char(int x, int y)

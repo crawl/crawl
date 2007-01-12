@@ -881,3 +881,13 @@ bool setBuffering( bool value )
 
    return oldValue;
 }
+
+int get_number_of_lines()
+{
+    return (25);
+}
+
+int get_number_of_cols()
+{
+    return (80);
+}

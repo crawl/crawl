@@ -1609,6 +1609,8 @@ static int prompt_travel_branch()
     int waycount = travel_cache.get_waypoint_count();
     for ( ; ; )
     {
+        mesclr(true);
+
         char buf[100];
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -1685,7 +1687,6 @@ static int prompt_travel_branch()
                 return (-1 - (keyin - '0'));
             return (ID_CANCEL);
         }
-        mesclr();
     }
 }
 

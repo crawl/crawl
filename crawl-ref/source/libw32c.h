@@ -18,6 +18,13 @@ typedef std::basic_string<char> string;
 void init_libw32c(void);
 void deinit_libw32c(void);
 
+void message_out(int mline, int colour, const char *str, int firstcol = 0,
+                 bool newline = true);
+void clear_message_window();
+
+int get_number_of_lines();
+int get_number_of_cols();
+
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
 

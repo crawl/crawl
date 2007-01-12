@@ -39,7 +39,8 @@
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
 int Next_Message = 0;                                 // end of messages
 
-char Message_Line = 0;                // line of next (previous?) message
+int Message_Line = 0;                // line of next (previous?) message
+int New_Message_Count = 0;
 
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, int channel, int param);
@@ -301,6 +302,7 @@ void mpr(const char *inf, int channel, int param)
     }
 }
 
+static bool need_prefix = false;
 static void base_mpr(const char *inf, int channel, int param)
 {
     if (suppress_messages)
@@ -357,33 +359,31 @@ static void base_mpr(const char *inf, int channel, int param)
     window(1, 1, 80, 25);
 #endif
 
-    textcolor(LIGHTGREY);
-
-    const int num_lines = get_number_of_lines();
-
-    if (Message_Line == num_lines - 18) // ( Message_Line == 8 )
+    const int num_lines = get_message_window_height();
+    
+    if (New_Message_Count == num_lines - 1)
         more();
+    
+    if (need_prefix)
+    {
+        message_out( Message_Line, colour, "-", 1, false );
+        need_prefix = false;
+    }
 
-    gotoxy( (Options.delay_message_clear) ? 2 : 1, Message_Line + 18 );
-    textcolor( colour );
-    cprintf("%s", inf);
-    //
+    message_out( Message_Line, colour, inf,
+                 Options.delay_message_clear? 2 : 1 );
+
+    New_Message_Count++;
+    if (Message_Line < num_lines - 1)
+        Message_Line++;
+
     // reset colour
     textcolor(LIGHTGREY);
-
-    Message_Line++;
-
-    if (Options.delay_message_clear 
-            && channel != MSGCH_PROMPT 
-            && Message_Line == num_lines - 18)
-    {
-        more();
-    }
 
     // equipment lists just waste space in the message recall
     if (channel != MSGCH_EQUIPMENT)
     {
-        /* Put the message into Store_Message, and move the '---' line forward */
+        // Put the message into Store_Message, and move the '---' line forward
         Store_Message[ Next_Message ].text = inf;
         Store_Message[ Next_Message ].channel = channel;
         Store_Message[ Next_Message ].param = param;
@@ -401,55 +401,23 @@ bool any_messages(void)
 
 void mesclr( bool force )
 {
+    New_Message_Count = 0;
+
     // if no messages, return.
     if (!any_messages())
         return;
 
     if (!force && Options.delay_message_clear)
     {
-        gotoxy( 1, Message_Line + 18 );
-        textcolor( channel_to_colour( MSGCH_PLAIN, 0 ) );
-        cprintf( ">" );
+        need_prefix = true;
         return;
     }
 
     // turn cursor off -- avoid 'cursor dance'
 
     cursor_control cs(false);
-
-#ifdef DOS_TERM
-    window(1, 18, 78, 25);
-    clrscr();
-    window(1, 1, 80, 25);
-#endif
-
-#ifdef PLAIN_TERM
-    int startLine = 18;
-
-    gotoxy(1, startLine);
-
-#ifdef UNIX
-    clear_to_end_of_screen();
-#else
-
-    int numLines = get_number_of_lines() - startLine + 1;
-
-    char blankline[81];
-    memset(blankline, ' ', sizeof blankline);
-    blankline[80] = 0;
-
-    for (int i = 0; i < numLines; i++)
-    {
-        cprintf( blankline );
-
-        if (i < numLines - 1)
-        {
-            cprintf(EOL);
-        }
-    }
-#endif
-#endif
-
+    clear_message_window();
+    need_prefix = false;
     Message_Line = 0;
 }                               // end mseclr()
 
@@ -457,21 +425,8 @@ void more(void)
 {
     char keypress = 0;
 
-#ifdef PLAIN_TERM
-    gotoxy( 2, get_number_of_lines() );
-#endif
-
-#ifdef DOS_TERM
-    window(1, 18, 80, 25);
-    gotoxy(2, 7);
-#endif
-
-    textcolor(LIGHTGREY);
-
-#ifdef DOS
-    cprintf(EOL);
-#endif
-    cprintf("--more--");
+    message_out(get_message_window_height() - 1,
+                LIGHTGREY, "--more--", 2, false);
 
     do
     {
@@ -479,7 +434,8 @@ void more(void)
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n');
 
-    mesclr( (Message_Line >= get_number_of_lines() - 18) );
+    mesclr( !Options.delay_message_clear &&
+            Message_Line >= get_message_window_height() - 1 );
 }                               // end more()
 
 std::string get_last_messages(int mcount)

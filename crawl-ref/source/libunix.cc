@@ -70,6 +70,9 @@ int Character_Set = CHARACTER_SET;
 short FG_COL = WHITE;
 short BG_COL = BLACK;
 
+static int curs_fg_attr(int col);
+static int curs_bg_attr(int col);
+
 static bool cursor_is_enabled = true;
 
 static unsigned int convert_to_curses_attr( int chattr )
@@ -228,6 +231,50 @@ static void handle_hangup(int)
 
 #endif // USE_UNIX_SIGNALS && SIGHUP_SAVE
 
+static WINDOW *Message_Window;
+static void setup_message_window()
+{
+    extern int get_message_window_height();
+    
+    Message_Window = newwin( get_message_window_height(), get_number_of_cols(),
+                             VIEW_EY, 0 );
+    if (!Message_Window)
+    {
+        fprintf(stderr, "Unable to create message window!");
+        exit(1);
+    }
+    
+    scrollok(Message_Window, true);
+    idlok(Message_Window, true);
+}
+
+void clear_message_window()
+{
+    wattrset( Message_Window, curs_fg_attr(LIGHTGREY) );
+    werase( Message_Window );
+    wrefresh( Message_Window );
+}
+
+void message_out(int which_line, int color, const char *s, int firstcol,
+                 bool newline)
+{
+    extern int get_message_window_height();
+
+    wattrset( Message_Window, curs_fg_attr(color) );
+
+    if (!firstcol)
+        firstcol = Options.delay_message_clear? 1 : 0;
+    else
+        firstcol--;
+    
+    mvwaddstr(Message_Window, which_line, firstcol, s);
+
+    if (newline && which_line == get_message_window_height() - 1)
+        scroll(Message_Window);
+
+    wrefresh(Message_Window);
+}
+
 void unixcurses_startup( void )
 {
     termio_init();
@@ -266,8 +313,9 @@ void unixcurses_startup( void )
     setup_colour_pairs();
 
     scrollok(stdscr, TRUE);
-}
 
+    setup_message_window();
+}
 
 void unixcurses_shutdown()
 {
@@ -406,12 +454,12 @@ void clear_to_end_of_screen(void)
     clrtobot();
 }
 
-int get_number_of_lines_from_curses(void)
+int get_number_of_lines(void)
 {
     return (LINES);
 }
 
-int get_number_of_cols_from_curses(void)
+int get_number_of_cols(void)
 {
     return (COLS);
 }
@@ -464,7 +512,7 @@ void textattr(int col)
     textcolor(col);
 }
 
-void textcolor(int col)
+static int curs_fg_attr(int col)
 {
     short fg, bg;
 
@@ -518,11 +566,15 @@ void textcolor(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | Character_Set );
+    return ( COLOR_PAIR(pair) | flags | Character_Set );
 }
 
+void textcolor(int col)
+{
+    attrset( curs_fg_attr(col) );
+}
 
-void textbackground(int col)
+static int curs_bg_attr(int col)
 {
     short fg, bg;
 
@@ -573,7 +625,12 @@ void textbackground(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    attrset( COLOR_PAIR(pair) | flags | Character_Set );
+    return ( COLOR_PAIR(pair) | flags | Character_Set );
+}
+
+void textbackground(int col)
+{
+    attrset( curs_bg_attr(col) );
 }
 
 

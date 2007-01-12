@@ -48,7 +48,7 @@ class formatted_string
 {
 public:
     formatted_string() : ops() { }
-    formatted_string(const std::string &s, bool init_style = false);
+    formatted_string(const std::string &s, int init_colour = 0);
 
     operator std::string() const;
     void display(int start = 0, int end = -1) const;
