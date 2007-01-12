@@ -493,7 +493,7 @@ void hs_close( FILE *handle, const char *mode, const std::string &scores )
 
 bool hs_read( FILE *scores, scorefile_entry &dest )
 {
-    char inbuf[200];
+    char inbuf[600];
     int c = EOF;
 
     memset(inbuf, 0, sizeof inbuf);
