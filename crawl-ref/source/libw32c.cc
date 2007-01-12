@@ -550,6 +550,87 @@ void textcolor(int c)
    current_color = c;
 }
 
+void clear_message_window()
+{
+   PCHAR_INFO pci = screen + SCREENINDEX(0, VIEW_EY);
+   const int ncols = get_number_of_cols();
+   for (int x = 0; x < ncols; x++)
+   {
+      for (int y = 0; y < get_message_window_height(); y++)
+      {
+         pci->Char.AsciiChar = ' ';
+         pci->Attributes = 0;
+         pci++;
+      }
+   }
+
+   COORD source;
+   SMALL_RECT target;
+
+   source.X = 0;
+   source.Y = VIEW_EY;
+   target.Left = 0;
+   target.Top = VIEW_EY;
+   target.Right = get_number_of_cols() - 1;
+   target.Bottom = get_number_of_lines() - 1;
+
+   WriteConsoleOutput(outbuf, screen, screensize, source, &target);
+}
+
+extern int get_message_window_height();
+static void scroll_message_buffer()
+{
+    memmove( screen + SCREENINDEX(0, VIEW_EY),
+             screen + SCREENINDEX(0, VIEW_EY + 1),
+             get_message_window_height() * get_number_of_cols() 
+                                         * sizeof(*screen) );
+}
+
+static void scroll_message_window()
+{
+    SMALL_RECT scroll_rectangle, clip_rectangle;
+    scroll_rectangle.Left   = 0;
+    scroll_rectangle.Top    = VIEW_EY + 1;
+    scroll_rectangle.Right  = get_number_of_cols() - 1;
+    scroll_rectangle.Bottom = get_number_of_lines() - 1;
+
+    clip_rectangle          = scroll_rectangle;
+    clip_rectangle.Top      = VIEW_EY;
+
+    COORD new_origin;
+    new_origin.X            = 0;
+    new_origin.Y            = VIEW_EY;
+
+    CHAR_INFO fill;
+    fill.Char.AsciiChar     = ' ';
+    fill.Attributes         = WIN32COLOR(LIGHTGREY);
+
+    ::ScrollConsoleScreenBuffer(
+            outbuf, &scroll_rectangle, &clip_rectangle,
+            new_origin, &fill);
+
+    scroll_message_buffer();
+
+    // Cursor also scrolls up so prompts don't look brain-damaged.
+    if (wherey() == get_number_of_lines())
+        gotoxy(wherex(), wherey() - 1);
+}
+
+void message_out(int which_line, int colour, const char *s, int firstcol,
+                 bool newline)
+{
+    if (!firstcol)
+        firstcol = Options.delay_message_clear? 2 : 1;
+
+    gotoxy(firstcol, which_line + VIEW_EY + 1);
+    textcolor(colour);
+
+    cprintf("%s", s);
+
+    if (newline && which_line == get_message_window_height() - 1)
+        scroll_message_window();
+}
+
 static void cprintf_aux(const char *s)
 {
    // early out -- not initted yet
