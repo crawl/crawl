@@ -236,6 +236,122 @@ xxxxxx@xxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
+# lemuel_entrance_river
+
+NAME: lemuel_entrance_river 
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP  
+xxxxxxxxxxxxxxxxxxx  
+xxxxx{...(...[xxxxx  
+xxxxx.........xxxxx  
+xxxxx.........xxxxx  
+xxxxx.........xxxxx  
+xxxxx.........xxxxx  
+xwxxx.........xxxxx  
+xwwxx.........xxxxx  
+xwwwx.........xxxxx  
+xxwwx.........xxxxx  
+xxwwww........xxxxx  
+xxxwwwwww.w...xxxxx  
+xxxxwwwww.wwwwxxxxx  
+xxxxxwwww.wwwwwwxxx  
+xxxxx...w.wwwwwwwxx  
+xxxxx........wwwwxx  
+xxxxx.........xwwwx  
+xxxxx.........xxwwx  
+xxxxx.........xxxwx  
+xxxxx.........xxxxx  
+xxxxx.........xxxxx  
+ENDMAP
+
+##############################################################################
+# lemuel_entrance_river
+
+NAME: lemuel_entrance_tunnels  
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP  
+xxxxxxxxxxxxxxxxxxx  
+x{xxxxxxxxxxxxxxxxx  
+x..xxxxxxxxxxxx[xxx  
+xx.xxxxxx(xxxxx...x  
+xx..xxxx..xxxxxxx.x  
+x...xx...xxxxxxxx.x  
+x.xxx..xxxxxx.....x  
+x..xx.xxxxxxx.xxxxx  
+xx..x.xxxxxx..xxxxx  
+xxx...xxxxx..xxxxxx  
+xxxxx.xx....xxxxxxx  
+xxxxx..x.xxxxxxxxxx  
+xxxxxx.x.xxxxxxxxxx  
+xxxxxx...xxxxxxxxxx  
+xxxxxxxx.xxxxxxxxxx  
+xxxxxxxx.xxxxxxxxxx  
+xxxxxxxx...xxxxxxxx  
+xxxxxxxxxx.xxxxxxxx  
+ENDMAP  
+
+##############################################################################
+# lemuel_entrance_funnel
+
+NAME: lemuel_entrance_funnel  
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP  
+xxxxxxxxxxxxxxxxxxxxxxx  
+xxxxx{.....(.....[xxxxx  
+xxxxx.............xxxxx  
+xxxxxx...........xxxxxx  
+xxxxxx...........xxxxxx  
+xxxxxxx.........xxxxxxx  
+xxxxxxx.........xxxxxxx  
+xxxxxxxx.......xxxxxxxx  
+xxxxxxxx.......xxxxxxxx  
+xxxxxxxxx.....xxxxxxxxx  
+xxxxxxxxx.....xxxxxxxxx  
+xxxxxxxxxx...xxxxxxxxxx  
+xxxxxxxxxx...xxxxxxxxxx  
+xxxxxxxxxx...xxxxxxxxxx  
+xxxxxxxxxx+++xxxxxxxxxx  
+xxxxxxxxxx...xxxxxxxxxx  
+ENDMAP  
+
+##############################################################################
+# lemuel_entrance_muddy
+
+NAME: lemuel_entrance_muddy  
+TAGS: entry no_monster_gen
+ORIENT: float
+MAP  
+xxxxxxxxxxxxxxxxxxxxxxx  
+xxxxx{..1..(.1ww.[xxxxx  
+xxxxx1.........ww.xxxxx  
+xxxxxx..w..1....1.xxxxx  
+xxxxxx........2...xxxxx  
+xxxxxw...1......w.xxxxx  
+xxxxxw...........xxxxxx  
+xxxxx.1....2......xxxxx  
+xxxxx1......w2....xxxxx  
+xxxxx............xxxxxx  
+xxxxxx..........xxxxxxx  
+xxxxxx..........xxxxxxx  
+xxxxxx...2......xxxxxxx  
+xxxxx...........xxxxxxx  
+xxxxx.2.w......xxxxxxxx  
+xxxxxxx..2.....xxxxxxxx  
+xxxxxxx......2xxxxxxxxx  
+xxx.........xxxxxxxxxxx  
+xx..xx......xxxxxxxxxxx  
+...xxxxx.....xxxxxxxxxx  
+xxxxxxxxxx....xxxxxxxxx
+xxxxxxxxxxxx...xxxxxxxx
+ENDMAP
+MONS: plant, fungus
+
+##############################################################################
 # David's entry vaults
 ##############################################################################
 

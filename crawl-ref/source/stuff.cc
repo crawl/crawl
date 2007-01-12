@@ -1261,6 +1261,10 @@ void zap_los_monsters()
             // If we ever allow starting with a friendly monster,
             // we'll have to check here.
             monsters *mon = &menv[imon];
+
+            if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
+                continue;
+            
 #ifdef DEBUG_DIAGNOSTICS
             char mname[ITEMNAME_SIZE];
             moname(mon->type, true, DESC_PLAIN, mname);
