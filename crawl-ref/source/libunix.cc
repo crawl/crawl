@@ -270,7 +270,12 @@ void message_out(int which_line, int color, const char *s, int firstcol,
     mvwaddstr(Message_Window, which_line, firstcol, s);
 
     if (newline && which_line == get_message_window_height() - 1)
+    {
+        int x, y;
+        getyx(Message_Window, y, x);
         scroll(Message_Window);
+        wmove(Message_Window, y - 1, x);
+    }
 
     wrefresh(Message_Window);
 }
