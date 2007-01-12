@@ -17,6 +17,7 @@
 #include "libutil.h"
 #include "externs.h"
 #include "macro.h"
+#include "stuff.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>

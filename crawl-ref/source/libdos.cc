@@ -8,6 +8,7 @@
 
 // Every .cc must include AppHdr or bad things happen.
 #include "AppHdr.h"
+#include "externs.h"
 #include <termios.h>
 #include <conio.h>
 
@@ -25,9 +26,40 @@ void init_libdos()
 
 void clear_message_window()
 {
-    window(1, 18, 78, 25);
+    window(1, VIEW_EY + 1, get_number_of_cols(), get_number_of_lines());
     clrscr();
-    window(1, 1, 80, 25);
+    window(1, 1, get_number_of_cols(), get_number_of_lines());
+}
+
+static void scroll_message_window()
+{
+    const int x = wherex(), y = wherey();
+
+    textcolor(LIGHTGREY);
+    movetext(1, VIEW_EY + 2, get_number_of_cols(), get_number_of_lines(),
+             1, VIEW_EY + 1);
+    gotoxy(1, get_number_of_lines());
+    clreol();
+
+    // Cursor also scrolls up so prompts don't look brain-damaged.
+    if (y == get_number_of_lines())
+        gotoxy(x, y - 1);
+}
+
+extern int get_message_window_height();
+void message_out(int which_line, int colour, const char *s, int firstcol,
+                 bool newline)
+{
+    if (!firstcol)
+        firstcol = Options.delay_message_clear? 2 : 1;
+
+    gotoxy(firstcol, which_line + VIEW_EY + 1);
+    textcolor(colour);
+
+    cprintf("%s", s);
+
+    if (newline && which_line == get_message_window_height() - 1)
+        scroll_message_window();
 }
 
 void set_cursor_enabled(bool enabled)
@@ -44,10 +76,7 @@ bool is_cursor_enabled()
 // This will force the cursor down to the next line.
 void clear_to_end_of_line()
 {
-    const int pos = wherex();
-    const int cols = get_number_of_cols();
-    if (pos <= cols)
-        cprintf("%*s", cols - pos + 1, "");
+    clreol();
 }
 
 int get_number_of_lines()
