@@ -164,6 +164,7 @@ static void place_altar(void);
 // Places where monsters should not be randomly generated.
 static dgn_region_list no_monster_zones;
 static dgn_region_list no_pool_fixup_zones;
+static dgn_region_list no_door_fixup_zones;
 
 static std::string level_name(int subdepth)
 {
@@ -218,6 +219,7 @@ void builder(int level_number, char level_type)
 
     no_monster_zones.clear();
     no_pool_fixup_zones.clear();
+    no_door_fixup_zones.clear();
     
     // blank level with DNGN_ROCK_WALL
     make_box(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,DNGN_ROCK_WALL);
@@ -3506,7 +3508,8 @@ static void hide_doors(void)
         for (dy = 1; dy < GYM-1; dy++)
         {
             // only one out of four doors are candidates for hiding {gdl}:
-            if (grd[dx][dy] == DNGN_CLOSED_DOOR && one_chance_in(4))
+            if (grd[dx][dy] == DNGN_CLOSED_DOOR && one_chance_in(4)
+                && unforbidden(coord_def(dx, dy), no_door_fixup_zones))
             {
                 wall_count = 0;
 
@@ -5275,6 +5278,9 @@ static void build_minivaults(int level_number, int force_vault)
         }
     }
 
+    no_door_fixup_zones.push_back(
+        dgn_region( place.x, place.y, place.width, place.height ) );
+    
     if (place.map->has_tag("no_pool_fixup"))
         no_pool_fixup_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
@@ -5517,6 +5523,9 @@ static void build_vaults(int level_number, int force_vault)
                                       num_runes );
         }
     }
+
+    no_door_fixup_zones.push_back(
+        dgn_region( place.x, place.y, place.width, place.height ) );
 
     if (place.map->has_tag("no_monster_gen"))
         no_monster_zones.push_back(
