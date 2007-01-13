@@ -249,11 +249,10 @@ safe_zero_exp = true
 	also settles whether autoprayer considers such monsters risky.
 
 pickup_thrown = true
-	Pickup_thrown=true causes autopickup to grab thrown/fired missiles. 
-	Many players use this because it eases ranged combat quite a bit. If 
-	following suit, be aware that there are situations when there is no 
-	time for picking up projectiles. Use Ctrl-A for switching off 
-	autopickup altogether in such cases or set safe_autopickup=true.
+	pickup_thrown=true causes autopickup to pick up thrown/fired missiles,
+        which can make life much easier for hunter types. If you use this, be
+        aware that autopickup uses a turn - use Ctrl-A to turn it off while
+        you're fighting, or use safe_autopickup=true.
 
 pickup_dropped = false
 	Pickup_dropped lets autopickup affect objects you've dropped. Set to 
@@ -280,13 +279,13 @@ ban_pickup = <regex>
 	  ban_pickup = forgetfulness, uselessness, noise, torment
 
 drop_mode = (multi | single)
-	Single is the classic behaviour after pressing another key, that item 
-        will be dropped. Multi (the default) makes an inventory menu appear, 
-        allowing the selection of items to be dropped. (You can also switch to 
-        multidrop from the classic drop line using the '@' key).
+	Single is the classic behaviour; when you select an inventory letter,
+        that item will be dropped immediately. Multidrop allows you to select
+        multiple items to be dropped. (You can also switch to multidrop from the
+        classic drop menu using the '@' key).
 
-	Multidrops are highly convenient. Be aware of the fact that every single
-        drop takes one turn. (This is different from picking up.) When selecting
+	Multidrop can be very convenient, but be aware that every item dropped
+        takes one turn. (This is different from picking up.) When selecting
         multidrops, the top right corner shows the estimated number of turns.
 
 	The order in which items get dropped is from top to bottom in the 
@@ -303,18 +302,19 @@ pickup_mode = (multi | single | auto:X)
         square, and will prompt one by one otherwise.
 
 drop_filter = <regex>
-	When selecting items using the global (de)select keys (',' or '-') in 
-	a multidrop listing, you can choose to apply a filter: only items whose 
-        names match the filter will be selected. The filter strings are regexes. 
+	When selecting items using the global (de)select keys (',' or '-') in a
+	multidrop menu, you can choose to select only items that match a 
+        search regex using this option.
+
         For instance, to quickly select carrion and rotting chunks of meat, you 
         could use:
 	  drop_filter = skeleton, rotting, corpse
 	Other choices can come in handy as well, e.g. if you want to sacrifice
 	regularly all weapons except axes, use:
 	  drop_filter = axe, broadaxe
-	Note that if you use this option, you will lose the (de)select all keys. 
-        However, '*' inverts the current selection and so salvages this problem.
-	The default is empty.
+
+        When a drop_filter is set, using the select/deselect keys will set/
+        clear selection of items that match the filter expression(s).
 
 Using a Lua script, you can define a function "ch_autopickup" to select 
 additional items for autopickup. Let's say you want autopickup to only grab food
@@ -412,7 +412,7 @@ See part Technical (6-) for dos_use_background_intensity under Windows and DOS.
 By default, there is no branding activated.
 
 heap_brand
-	Brand heaps of items (more than one item or stack). For, example
+	Brand heaps of items (more than one item or stack). For example
 	  heap_brand = reverse
 
 friend_brand
@@ -475,10 +475,11 @@ travel_stop_message = <list of regexes>
 	teleporting. In	addition, a message containing one of the expressions 
 	in travel_stop_message will stop travel. For example, 
              travel_stop_message = Something appears
-	stops travel if Xom grants us a gift suddenly. To limit a substring 
-	match to a message channel, prefix the substring with the channel name 
-	and a colon. For instance, if you want travel to stop when you're hit 
-	by divine retribution, you could use:
+	stops travel if Xom grants us a gift suddenly. To limit a substring
+	match to a message channel, prefix the substring with the channel name
+	and a colon (see section 4-k below on Message Channels). For instance,
+	if you want travel to stop when you're hit by divine retribution, you
+	could use:
              travel_stop_message = god:wrath finds you
 	If you'd like to stop travel for any message sent to a particular 
         channel, use a travel_stop_message line with that message channel name

@@ -2697,6 +2697,208 @@ bb.bbbxxxxxxxxxxxxxx.xxxxxxx.....
 ENDMAP
 
 ##############################################################################
+# Matt's vaults
+
+##############################################################################
+# Refuge
+#
+
+NAME: mt_002
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxx@xxxxxxxx@xxxx
+x.................x
+x.xxxxxxx+xxxxxxx.x
+x.x.............x.x
+x.x.xxxxxxxxxxx.x.x
+x.x.x.........x.x.x
+x.x.x.xxxxxxx.x.x.x
+x.x.x.x.....x.x.x.x
+@.x...x.([{.x...x.@
+x.x.x.x.....x.x.x.x
+x.x.x.xxx.xxx.x.x.x
+x.x.x.........x.x.x
+x.x.xxxxxxxxxxx.x.x
+x.x.............x.x
+x.xxxxxxx+xxxxxxx.x
+x.................x
+xxxx@xxxxxxxx@xxxxx
+ENDMAP
+
+##############################################################################
+# Grand Opening
+#
+
+NAME: mt_004
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+x..x.............x..x
+x.x...............x.x
+xx.......x.x.......xx
+x......x.x.x.x......x
+x.....xx.x.x.xx.....x
+x.......Tx.xT.......x
+x..xxxxxxx.xxxxxxx..x
+@........({[........@
+x..xxxxxxx.xxxxxxx..x
+x.......Tx.xT.......x
+x.....xx.x.x.xx.....x
+x......x.x.x.x......x
+xx.......x.x.......xx
+x.x...............x.x
+x..x.............x..x
+xxxxxxxxxx@xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Diagonals
+#
+
+NAME: mt_005
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xx.................xx
+x.x........x......x.x
+x..x......x......x..x
+x...x....x.x....x...x
+x....x..x...x..x....x
+x.....xx.....xx.....x
+x.....x...x...x.....x
+x..x.x...x.....x....@
+@...x...x.(.[.x.x...x
+x....x...x.{.x......x
+x.....x...x.x.x.....x
+x....x.x...x...x....x
+x...x...x...x...x...x
+x..x.....x.......x..x
+x.x.......x.......x.x
+xx.................xx
+xxxxxxxxxx@xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Debris
+#
+
+NAME: mt_006
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxx@xxxxxxxxxxxxx@xxxxxxx
+x....x....x.................x
+x.....xxxx............x.....x
+x.................xx..x.....x
+x........x..........xx.xx...x
+x....x.......x.x.....x......x
+x...x.x..............x......x
+x....x.......x.x.........x..x
+x........xxx..{...x......x..x
+@........................x..x
+x........xxx...xx........x..x
+x....x........xx.x...[....x.@
+x........x....x.xx........x.x
+x.....x.......x.x........x..x
+x............xx.x...x....x..x
+x..x.....(...x.xx........x..x
+x......x.........xx......x..x
+x...x...........xx.x..x..x..x
+x........x......x.xx........x
+x................xx.........x
+xxxxxxxxxxx@xxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Spirals
+#
+
+NAME: mt_007
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxx@xxxxxxxxx
+x......x.x.x.....x
+x.xxxx.x.x.x.xxx.x
+x.x{.x.x.x.x..(x.x
+x.xx.x.x.x.xxxxx.x
+x....x.x.x.......x
+xxxxxx.x.x.xxxxxxx
+@................@
+x.xxxxxxxxxxxxxx.x
+x.x..........x...x
+x.x.xxxxxxxx.x.x.x
+x.x.x...[....x.x.x
+x.x.x.xxxxxxxx.x.x
+x...x..........x.x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# More LOS fun
+#
+
+NAME: mt_008
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxx+xxxxxxxxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxx+xxxxxxxxx
+xxx.............xxx
+xxx.xxxxxxxxxxx.xxx
+xxx..x.......x..xxx
+xxx.x.xxxxxxx.x.xxx
+xxx.xx.......xx.xxx
+xxx.x.xxx+xxx.x.xxx
+xxx.x.x.....x.x.xxx
+xxx.x.x..<..x.x.xxx
++.+.x.+..{..+.x.+.+
+xxx.x.x.(.[.x.x.xxx
+xxx.x.x.....x.x.xxx
+xxx.x.xxx+xxx.x.xxx
+xxx.xx.......xx.xxx
+xxx.x.xxxxxxx.x.xxx
+xxx..x.......x..xxx
+xxx.xxxxxxxxxxx.xxx
+xxx.............xxx
+xxxxxxxxx+xxxxxxxxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxx+xxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Tucked-away holy place
+#
+
+NAME: mt_010
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxx@xxx@xxx
+x.........x
+x....(....x
+x..xx=xx..x
+x..x...x..x
+@.[xTCTx<.@
+x..x.T.x..x
+x..xxxxx..x
+x....{....x
+x.........x
+xxx@xxx@xxx
+ENDMAP
+
+##############################################################################
 # Regular vaults
 ##############################################################################
 
