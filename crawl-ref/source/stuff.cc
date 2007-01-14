@@ -117,18 +117,9 @@ void tag_followers( void )
             struct monsters *fmenv = &menv[mgrd[count_x][count_y]];
 
             if ((fmenv->type == MONS_PANDEMONIUM_DEMON)
-                || (fmenv->type == MONS_PLANT)
-                || (fmenv->type == MONS_FUNGUS)
-                || (fmenv->type == MONS_OKLOB_PLANT)
-                || (fmenv->type == MONS_CURSE_SKULL)
                 || (fmenv->type == MONS_PLAYER_GHOST)  // cdl
-                || (fmenv->type == MONS_CURSE_TOE)
-                || (fmenv->type == MONS_POTION_MIMIC)
-                || (fmenv->type == MONS_WEAPON_MIMIC)
-                || (fmenv->type == MONS_ARMOUR_MIMIC)
-                || (fmenv->type == MONS_SCROLL_MIMIC)
-                || (fmenv->type == MONS_GOLD_MIMIC)
-                || (fmenv->type == -1))
+                || (fmenv->type == -1)
+                || mons_is_stationary(fmenv))
             {   
                 continue;
             }

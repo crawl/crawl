@@ -2261,14 +2261,16 @@ void update_level( double elapsedTime )
         if (turns >= 10)
             update_enchantments( mon, turns / 10 );
 
-        // Don't move water or lava monsters around
-        if (monster_habitat( mon->type ) != DNGN_FLOOR)
+        // Don't move water, lava, or stationary monsters around
+        if (monster_habitat( mon->type ) != DNGN_FLOOR
+            || mons_is_stationary( mon ))
+        {
             continue;
+        }
 
         // Let sleeping monsters lie
         if (mon->behaviour == BEH_SLEEP)
             continue;
-
 
         const int range = (turns * mon->speed) / 10;
         const int moves = (range > 50) ? 50 : range;

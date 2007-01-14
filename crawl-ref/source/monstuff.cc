@@ -4308,9 +4308,12 @@ static bool mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
-            || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
-            || mons_is_sleeping(mpusher))
+        || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
+        || mons_is_sleeping(mpusher) || mons_is_stationary(mpusher)
+        || mons_is_stationary(mpushee))
+    {
         return (false);
+    }
 
     // Batty monsters are unpushable
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
