@@ -275,6 +275,7 @@ void message_out(int which_line, int color, const char *s, int firstcol,
         getyx(Message_Window, y, x);
         scroll(Message_Window);
         wmove(Message_Window, y - 1, x);
+        move(y - 1 + VIEW_EY, x);
     }
 
     wrefresh(Message_Window);
