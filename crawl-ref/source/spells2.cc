@@ -1128,6 +1128,18 @@ char burn_freeze(int pow, char flavour)
 
     if (hurted)
     {
+        if (mons_friendly( monster ))
+            did_god_conduct( DID_ATTACK_FRIEND, 5 );
+        
+        if (mons_holiness( monster ) == MH_HOLY)
+            did_god_conduct( DID_ATTACK_HOLY, monster->hit_dice );
+    }
+
+    if (!mons_friendly(monster) || hurted)
+        behaviour_event( monster, ME_ANNOY, MHITYOU );
+
+    if (hurted)
+    {
         hurt_monster(monster, hurted);
 
         if (monster->hit_points < 1)
@@ -1138,8 +1150,11 @@ char burn_freeze(int pow, char flavour)
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                if (mons_class_flag( monster->type, M_COLD_BLOOD )
+                    && coinflip())
+                {
                     mons_add_ench(monster, ENCH_SLOW);
+                }
 
                 const int cold_res = mons_res_cold( monster );
                 if (cold_res <= 0)
