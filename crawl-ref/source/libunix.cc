@@ -275,7 +275,14 @@ void message_out(int which_line, int color, const char *s, int firstcol,
         getyx(Message_Window, y, x);
         scroll(Message_Window);
         wmove(Message_Window, y - 1, x);
-        move(y - 1 + VIEW_EY, x);
+    }
+
+    // Fix stdscr cursor to same place as Message_Window cursor. This
+    // is necessary because when reading input we use stdscr.
+    {
+        int x, y;
+        getyx(Message_Window, y, x);
+        move(y + VIEW_EY, x);
     }
 
     wrefresh(Message_Window);
