@@ -283,7 +283,7 @@ void print_stats(void)
     if (you.redraw_gold)
     {
         gotoxy(46, 10);
-        cprintf( "%d     ", you.gold );
+        cprintf( "%-8d", you.gold );
         you.redraw_gold = 0;
     }
 
