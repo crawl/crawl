@@ -1061,7 +1061,7 @@ static const char *item_name_2(
 
             const unsigned long sseed = 
                 item.special 
-                + static_cast<unsigned long>(it_plus)
+                + (static_cast<unsigned long>(it_plus) << 8)
                 + (static_cast<unsigned long>(item_clas) << 16);
             make_name( sseed, true, buff3 );
             strncat( buff, buff3 , ITEMNAME_SIZE );
