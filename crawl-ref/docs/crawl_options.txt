@@ -32,7 +32,7 @@ The contents of this text are:
 4-d	Branding (Item and Monster Highlighting).
 		heap_brand, friend_brand, stab_brand, may_stab_brand 
 4-e	Level Map Functions.
-		level_map_cursor_step, item_colour
+		level_map_cursor_step, level_map_title, item_colour
 4-f	Travel and Exploration. 
 		travel_delay, travel_avoid_terrain,
                 travel_exclude_radius2, travel_stop_message,
@@ -443,6 +443,9 @@ may_stab_brand
 level_map_cursor_step = 7
 	How many squares the cursor moves on the level map when using 
 	Shift-direction or * direction.
+
+level_map_title = true
+	Whether to show the level name at the top of the level map screen.
 
 item_colour = true
 	Colours items on level-map.

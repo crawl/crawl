@@ -1887,17 +1887,30 @@ static int cset_adjust(int raw)
 }
 #endif
 
+static int get_number_of_lines_levelmap()
+{
+    return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
+}
+
 static void draw_level_map(
         int start_x, int start_y, int screen_y, bool travel_mode)
 {
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];        
-    const int num_lines = get_number_of_lines();
+    const int num_lines = get_number_of_lines_levelmap();
 
     cursor_control cs(false);
 
 #ifdef PLAIN_TERM
-    gotoxy(1, 1);
+    if ( Options.level_map_title )
+    {
+        gotoxy(1,1);
+        textcolor(WHITE);
+        cprintf("Level %s", level_description_string().c_str());
+        gotoxy(1,2);
+    }
+    else
+        gotoxy(1, 1);
 #endif
 
     for (int j = 0; j < num_lines; j++)
@@ -2015,7 +2028,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
     bool found_y = false;
 
-    const int num_lines = get_number_of_lines();
+    const int num_lines = get_number_of_lines_levelmap();
     const int half_screen = num_lines / 2 - 1;
 
     for (j = 0; j < GYM; j++)

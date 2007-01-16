@@ -927,6 +927,7 @@ public:
     // Order of sections in the character dump.
     std::vector<std::string> dump_order;
 
+    bool        level_map_title;    // Show title in level map
     bool        safe_zero_exp; // If true, you feel safe around 0xp monsters
     bool        target_zero_exp;    // If true, targeting targets zero-exp
                                     // monsters.

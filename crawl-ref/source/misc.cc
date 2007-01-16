@@ -1087,10 +1087,34 @@ static char fix_colour(char incol )
         return incol;
 }
 
+std::string level_description_string()
+{
+    if (you.level_type == LEVEL_PANDEMONIUM)
+        return "- Pandemonium";
+
+    if (you.level_type == LEVEL_ABYSS)
+        return "- The Abyss";
+
+    if (you.level_type == LEVEL_LABYRINTH)
+        return "- a Labyrinth";
+
+    // level_type == LEVEL_DUNGEON
+    char buf[200];
+    const int youbranch = you.where_are_you;
+    if ( branches[youbranch].depth == 1 )
+        snprintf(buf, sizeof buf, "- %s", branches[youbranch].longname);
+    else
+    {
+        const int curr_subdungeon_level = player_branch_depth();
+        snprintf(buf, sizeof buf, "%d of %s", curr_subdungeon_level,
+                 branches[youbranch].longname);
+    }
+    return buf;
+}
+
+
 void new_level(void)
 {
-    const int curr_subdungeon_level = player_branch_depth();
-
     textcolor(LIGHTGREY);
 
     gotoxy(46, 12);
@@ -1100,21 +1124,20 @@ void new_level(void)
 #endif
 
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+    cprintf("%s", level_description_string().c_str());
+
     if (you.level_type == LEVEL_PANDEMONIUM)
     {
-        cprintf("- Pandemonium            ");
         env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
         env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
-        cprintf("- The Abyss               ");
         env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
         env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {
-        cprintf("- a Labyrinth           ");
         env.floor_colour = LIGHTGREY;
         env.rock_colour  = BROWN;
     }
@@ -1122,12 +1145,6 @@ void new_level(void)
     {
         // level_type == LEVEL_DUNGEON
         const int youbranch = you.where_are_you;
-        if ( branches[youbranch].depth == 1 )
-            cprintf( "- %s", branches[youbranch].longname );
-        else
-            cprintf( "%d of %s", curr_subdungeon_level,
-                     branches[youbranch].longname );
-
         env.floor_colour = branches[youbranch].floor_colour;
         env.rock_colour = branches[youbranch].rock_colour;
 
@@ -1138,6 +1155,9 @@ void new_level(void)
                                               LIGHTBLUE, MAGENTA };
             const char rockcolours_zot[] = { LIGHTGREY, BLUE, LIGHTBLUE,
                                              MAGENTA, LIGHTMAGENTA };
+
+            const int curr_subdungeon_level = player_branch_depth();
+
             if ( curr_subdungeon_level > 5 || curr_subdungeon_level < 1 )
                 mpr("Odd colouring!");
             else

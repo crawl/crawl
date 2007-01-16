@@ -637,6 +637,8 @@ void game_options::reset_options()
     dos_use_background_intensity = true;
 #endif
 
+    level_map_title        = true;
+
     assign_item_slot       = SS_FORWARD;
 
     macro_meta_entry       = true;
@@ -2168,6 +2170,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         dump_item_origin_price = atoi( field.c_str() );
         if (dump_item_origin_price < -1)
             dump_item_origin_price = -1;
+    }
+    else if (key == "level_map_title")
+    {
+	level_map_title = read_bool(field, level_map_title);
     }
     else if (key == "safe_zero_exp")
     {

@@ -105,6 +105,7 @@ stab_brand = hi:blue
 ##### 4-e	Level Map Functions ###################
 #
 # level_map_cursor_step = 7
+# level_map_title = false
 # item_colour = false
 
 ##### 4-f	Travel and Exploration #################
