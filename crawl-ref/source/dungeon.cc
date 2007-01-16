@@ -1426,7 +1426,9 @@ int items( int allow_uniques,       // not just true-false,
             set_item_ego_type( mitm[p], OBJ_MISSILES, SPMSL_POISONED );
 
         // reduced quantity if special
-        if (get_ammo_brand( mitm[p] ) != SPMSL_NORMAL )
+        if (get_ammo_brand( mitm[p] ) == SPMSL_CURARE)
+            quant = 1 + random2(9) + random2(9);
+        else if (get_ammo_brand( mitm[p] ) != SPMSL_NORMAL )
             quant = 1 + random2(9) + random2(12) + random2(12);
         else
             quant = 1 + random2(9) + random2(12) + random2(15) + random2(12);
