@@ -2856,7 +2856,7 @@ static char species_to_letter(int spec)
 }
 
 // choose_race returns true if the player should also pick a class.
-// This is done because of the '*' option which will pick a random
+// This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
 
 bool choose_race()
@@ -2875,7 +2875,7 @@ bool choose_race()
         printed = true;
 
 spec_query:
-    bool prevraceok = Options.prev_race == '?';
+    bool prevraceok = Options.prev_race == '*';
     if (!printed)
     {
         clrscr();
@@ -2952,14 +2952,14 @@ spec_query:
         
         if (you.char_class == JOB_UNKNOWN)
             cprintf(EOL
-                    "SPACE - Choose class first; ? - Random Species; "
-                    "* - Random Character"
+                    "SPACE - Choose class first; * - Random Species; "
+                    "! - Random Character"
                     EOL
-                    "+ - Help; X - Quit"
+                    "? - Help; X - Quit"
                     EOL);
         else
             cprintf(EOL
-                    "+ - Help ? - Random; "
+                    "? - Help * - Random; "
                     "Bksp - Back to class selection; X - Quit" 
                     EOL);
 
@@ -2990,7 +2990,7 @@ spec_query:
         keyn = c_getch();
     }
 
-    if ( keyn == '+' )
+    if ( keyn == '?' )
     {
         list_commands(false);
         return choose_race();
@@ -3002,7 +3002,7 @@ spec_query:
     if (keyn == '\t' && prev_startup_options_set())
     {
         if (Options.prev_randpick || 
-                (Options.prev_race == '?' && Options.prev_cls == '?'))
+            (Options.prev_race == '*' && Options.prev_cls == '*'))
         {
             Options.random_pick = true;
             ng_random = true;
@@ -3022,15 +3022,15 @@ spec_query:
         return true;
     }
 
-    bool randrace = (keyn == '?');
-    if (keyn == '?')
+    bool randrace = (keyn == '*');
+    if (keyn == '*')
     {
         do
             keyn = 'a' + random2(26);
         while (you.char_class != JOB_UNKNOWN &&
                 !class_allowed(letter_to_species(keyn), you.char_class));
     }
-    else if (keyn == '*')
+    else if (keyn == '!')
     {
         pick_random_species_and_class();
         Options.random_pick = true; // used to give random weapon/god as well
@@ -3061,7 +3061,7 @@ spec_query:
 
     // set to 0 in case we come back from choose_class()
     Options.race = 0;
-    ng_race = randrace? '?' : keyn;
+    ng_race = randrace? '*' : keyn;
 
     return true;
 }
@@ -3084,7 +3084,7 @@ bool choose_class(void)
     ng_cls = 0;
     
 job_query:
-    bool prevclassok = Options.prev_cls == '?';
+    bool prevclassok = Options.prev_cls == '*';
     if (!printed)
     {
         clrscr();
@@ -3157,14 +3157,14 @@ job_query:
         textcolor( BROWN );
         if (!you.species)
             cprintf(EOL
-                    "SPACE - Choose species first; ? - Random Class; "
-                    "* - Random Character"
+                    "SPACE - Choose species first; * - Random Class; "
+                    "! - Random Character"
                     EOL
-                    "+ - Help; X - Quit" 
+                    "? - Help; X - Quit" 
                     EOL);
         else
             cprintf(EOL
-                    "+ - Help; ? - Random; "
+                    "? - Help; * - Random; "
                     "Bksp - Back to species selection; X - Quit" 
                     EOL);
 
@@ -3195,7 +3195,7 @@ job_query:
         keyn = c_getch();
     }
 
-    if ( keyn == '+' )
+    if ( keyn == '?' )
     {
         list_commands(false);
         return choose_class();
@@ -3225,7 +3225,7 @@ job_query:
 
     if ((you.char_class = letter_to_class(keyn)) == JOB_UNKNOWN) 
     {
-        if (keyn == '?')
+        if (keyn == '*')
         {
             // pick a job at random... see god retribution for proof this
             // is uniform. -- bwr
@@ -3245,9 +3245,9 @@ job_query:
             ASSERT( job != -1 );  // at least one class should have been allowed
             you.char_class = job;
 
-            ng_cls = '?';
+            ng_cls = '*';
         }
-        else if (keyn == '*')
+        else if (keyn == '!')
         {
             pick_random_species_and_class();
             // used to give random weapon/god as well
@@ -3287,7 +3287,7 @@ job_query:
         goto job_query;
     }
 
-    if (ng_cls != '?')
+    if (ng_cls != '*')
         ng_cls = keyn;
 
     return you.char_class != JOB_UNKNOWN && you.species;
