@@ -1565,9 +1565,12 @@ static void decrement_durations()
             strcat(info, " stops crackling.");
             break;
         case SPWPN_DISTORTION:
-            strcat( info, " seems straighter." );
+            strcat(info, " seems straighter.");
             // [dshaligram] Makes the brand unusable
             // miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
+            break;
+        case SPWPN_PAIN:
+            strcat(info, " seems less painful.");
             break;
         default:
             strcat(info, " seems inexplicably less special.");

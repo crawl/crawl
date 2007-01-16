@@ -1779,6 +1779,11 @@ int your_spells( int spc2, int powc, bool allow_fail )
         cast_summon_butterflies(powc);
         break;
 
+    case SPELL_EXCRUCIATING_WOUNDS:
+        if (!brand_weapon(SPWPN_PAIN, powc))
+            canned_msg(MSG_SPELL_FIZZLES);
+        break;
+
     case SPELL_WARP_BRAND:
         if (!brand_weapon(SPWPN_DISTORTION, powc))
             canned_msg(MSG_SPELL_FIZZLES);

@@ -621,6 +621,14 @@ bool brand_weapon(int which_brand, int power)
         //                9, 90, 100, "a distortion effect");
         break;
 
+    case SPWPN_PAIN:
+        // well, in theory, we could be silenced, but then how are
+        // we casting the brand spell?
+        strcat(info, " shrieks in agony.");
+        noisy( 15, you.x_pos, you.y_pos );
+        duration_affected = 8;
+        break;
+
     case SPWPN_DUMMY_CRUSHING:  //jmf: added for Maxwell's Silver Hammer
         if (wpn_type != DVORP_CRUSHING)
             return false;

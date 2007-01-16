@@ -3399,7 +3399,8 @@ enum spell_type
     SPELL_STONESKIN,                   // 200
     SPELL_SIMULACRUM,
     SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_CHAIN_LIGHTNING,            // 203 (be wary of 209/210, see below)
+    SPELL_CHAIN_LIGHTNING,
+    SPELL_EXCRUCIATING_WOUNDS,        // 204 (be wary of 209/210, see below)
     NUM_SPELLS,
     SPELL_NO_SPELL = 210              //  210 - added 22jan2000 {dlb}
 };

@@ -1280,6 +1280,13 @@
 },
 
 {
+    SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
+     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPFLAG_NONE,
+     5     // fairly high level - potentially one of the best brands
+},
+
+{
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,

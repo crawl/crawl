@@ -4285,6 +4285,13 @@ void describe_spell(int spelled)
             "creates a shower of colourful butterflies. How pretty!";
         break;
 
+    case SPELL_EXCRUCIATING_WOUNDS:
+        description +=
+            "temporarily infuses the weapon held by the caster with "
+            "the essence of pain itself. It will not affect weapons which "
+            "are otherwise subject to special enchantments.";
+        break;
+
     case SPELL_WARP_BRAND:
         description += "temporarily binds a localized warp field to the "
             "invoker's weapon. This spell is very dangerous to cast, "
