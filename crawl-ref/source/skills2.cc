@@ -150,7 +150,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -163,8 +163,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_ELF (2)
@@ -193,7 +193,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     80,                        // SK_SPELLCASTING
+     (80 * 130) / 100,          // SK_SPELLCASTING
      105,                       // SK_CONJURATIONS
      70,                        // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -206,8 +206,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      70,                        // SK_AIR_MAGIC
      130,                       // SK_EARTH_MAGIC
      110,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     80,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (80 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_HIGH_ELF (3)
@@ -236,7 +236,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     70,                        // SK_SPELLCASTING
+     (70 * 130) / 100,          // SK_SPELLCASTING
      90,                        // SK_CONJURATIONS
      70,                        // SK_ENCHANTMENTS
      110,                       // SK_SUMMONINGS
@@ -249,8 +249,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      70,                        // SK_AIR_MAGIC
      130,                       // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_GREY_ELF (4)
@@ -279,7 +279,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     60,                        // SK_SPELLCASTING
+     (60 * 130) / 100,          // SK_SPELLCASTING
      90,                        // SK_CONJURATIONS
      50,                        // SK_ENCHANTMENTS
      90,                        // SK_SUMMONINGS
@@ -292,8 +292,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      60,                        // SK_AIR_MAGIC
      150,                       // SK_EARTH_MAGIC
      110,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     90,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_DEEP_ELF (5)
@@ -322,7 +322,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     55,                        // SK_SPELLCASTING
+     (55 * 130) / 100,          // SK_SPELLCASTING
      80,                        // SK_CONJURATIONS
      50,                        // SK_ENCHANTMENTS
      80,                        // SK_SUMMONINGS
@@ -335,8 +335,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      80,                        // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      80,                        // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     90,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_SLUDGE_ELF (6)
@@ -365,7 +365,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     70,                        // SK_SPELLCASTING
+     (70 * 130) / 100,          // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      130,                       // SK_ENCHANTMENTS
      90,                        // SK_SUMMONINGS
@@ -378,8 +378,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      80,                        // SK_AIR_MAGIC
      80,                        // SK_EARTH_MAGIC
      80,                        // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     110,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (110 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_HILL_DWARF (7)
@@ -408,7 +408,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     160,                       // SK_SPELLCASTING
+     (160 * 130) / 100,         // SK_SPELLCASTING
      120,                       // SK_CONJURATIONS
      150,                       // SK_ENCHANTMENTS
      150,                       // SK_SUMMONINGS
@@ -421,8 +421,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      150,                       // SK_AIR_MAGIC
      70,                        // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     60,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (60 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_MOUNTAIN_DWARF (8)
@@ -451,7 +451,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     140,                       // SK_SPELLCASTING
+     (140 * 130) / 100,         // SK_SPELLCASTING
      115,                       // SK_CONJURATIONS
      135,                       // SK_ENCHANTMENTS
      150,                       // SK_SUMMONINGS
@@ -464,8 +464,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      150,                       // SK_AIR_MAGIC
      70,                        // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     70,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (70 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_HALFLING (9)
@@ -494,7 +494,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     130,                       // SK_SPELLCASTING
+     (130 * 130) / 100,         // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
      120,                       // SK_SUMMONINGS
@@ -507,8 +507,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      90,                        // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      120,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     90,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_HILL_ORC (10)
@@ -537,7 +537,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     150,                       // SK_SPELLCASTING
+     (150 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      120,                       // SK_SUMMONINGS
@@ -550,8 +550,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      150,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      110,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_KOBOLD (11)
@@ -580,7 +580,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     110,                       // SK_SPELLCASTING
+     (110 * 130) / 100,         // SK_SPELLCASTING
      110,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
      105,                       // SK_SUMMONINGS
@@ -593,8 +593,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     80,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (80 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_MUMMY (12)
@@ -623,7 +623,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      140,                       // undefined
      140,                       // undefined
      140,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      140,                       // SK_CONJURATIONS
      140,                       // SK_ENCHANTMENTS
      140,                       // SK_SUMMONINGS
@@ -636,8 +636,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      140,                       // SK_AIR_MAGIC
      140,                       // SK_EARTH_MAGIC
      140,                       // SK_POISON_MAGIC
-     140,                       // SK_INVOCATIONS
-     140,                       // SK_EVOCATIONS
+     (140 * 75) / 100,          // SK_INVOCATIONS
+     (140 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_NAGA (13)
@@ -666,7 +666,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -679,8 +679,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      60,                        // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_GNOME (14)
@@ -709,7 +709,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     120,                       // SK_SPELLCASTING
+     (120 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      100,                       // SK_ENCHANTMENTS
      110,                       // SK_SUMMONINGS
@@ -722,8 +722,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      170,                       // SK_AIR_MAGIC
      60,                        // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
-     120,                       // SK_INVOCATIONS
-     60,                        // SK_EVOCATIONS
+     (120 * 75) / 100,          // SK_INVOCATIONS
+     (60 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_OGRE (15)
@@ -752,7 +752,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     220,                       // SK_SPELLCASTING
+     (220 * 130) / 100,         // SK_SPELLCASTING
      180,                       // SK_CONJURATIONS
      220,                       // SK_ENCHANTMENTS
      200,                       // SK_SUMMONINGS
@@ -765,8 +765,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      200,                       // SK_AIR_MAGIC
      120,                       // SK_EARTH_MAGIC
      150,                       // SK_POISON_MAGIC
-     130,                       // SK_INVOCATIONS
-     170,                       // SK_EVOCATIONS
+     (130 * 75) / 100,          // SK_INVOCATIONS
+     (170 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_TROLL (16)
@@ -795,7 +795,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     200,                       // SK_SPELLCASTING
+     (200 * 130) / 100,         // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
      200,                       // SK_ENCHANTMENTS
      160,                       // SK_SUMMONINGS
@@ -808,8 +808,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      200,                       // SK_AIR_MAGIC
      120,                       // SK_EARTH_MAGIC
      160,                       // SK_POISON_MAGIC
-     150,                       // SK_INVOCATIONS
-     180,                       // SK_EVOCATIONS
+     (150 * 75) / 100,          // SK_INVOCATIONS
+     (180 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_OGRE_MAGE (17)
@@ -838,7 +838,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     70,                        // SK_SPELLCASTING
+     (70 * 130) / 100,          // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      80,                        // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -851,8 +851,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_RED_DRACONIAN (18)
@@ -881,7 +881,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -894,8 +894,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_WHITE_DRACONIAN (19)
@@ -924,7 +924,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -937,8 +937,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_GREEN_DRACONIAN (20)
@@ -967,7 +967,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -980,8 +980,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      70,                        // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_YELLOW_DRACONIAN (21)
@@ -1010,7 +1010,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1023,8 +1023,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_GREY_DRACONIAN (22)
@@ -1053,7 +1053,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1066,8 +1066,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_BLACK_DRACONIAN (23)
@@ -1096,7 +1096,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1109,8 +1109,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      70,                        // SK_AIR_MAGIC
      135,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_PURPLE_DRACONIAN (24)
@@ -1139,7 +1139,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     70,                        // SK_SPELLCASTING
+     (70 * 130) / 100,          // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      90,                        // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1152,8 +1152,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     90,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_MOTTLED_DRACONIAN (25)
@@ -1182,7 +1182,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1195,8 +1195,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_PALE_DRACONIAN (26)
@@ -1225,7 +1225,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1238,8 +1238,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      90,                        // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     90,                        // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (90 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_UNK0_DRACONAIN (27)
@@ -1268,7 +1268,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1281,8 +1281,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_UNK1_DRACONIAN (28)
@@ -1311,7 +1311,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1324,8 +1324,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_UNK2_DRACONIAN (29)
@@ -1354,7 +1354,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      120,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1367,8 +1367,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // SK_AIR_MAGIC
      100,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_CENTAUR (30)
@@ -1397,7 +1397,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     140,                       // SK_SPELLCASTING
+     (140 * 130) / 100,         // SK_SPELLCASTING
      120,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
      120,                       // SK_SUMMONINGS
@@ -1410,8 +1410,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      120,                       // SK_AIR_MAGIC
      120,                       // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     130,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (130 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_DEMIGOD (31)
@@ -1440,7 +1440,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      110,                       // undefined
      110,                       // undefined
      110,                       // undefined
-     110,                       // SK_SPELLCASTING
+     (110 * 130) / 100,         // SK_SPELLCASTING
      110,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
      110,                       // SK_SUMMONINGS
@@ -1453,8 +1453,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      110,                       // SK_AIR_MAGIC
      110,                       // SK_EARTH_MAGIC
      110,                       // SK_POISON_MAGIC
-     110,                       // SK_INVOCATIONS
-     110,                       // SK_EVOCATIONS
+     (110 * 75) / 100,          // SK_INVOCATIONS
+     (110 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_SPRIGGAN (32)
@@ -1483,7 +1483,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     60,                        // SK_SPELLCASTING
+     (60 * 130) / 100,          // SK_SPELLCASTING
      160,                       // SK_CONJURATIONS
      50,                        // SK_ENCHANTMENTS
      150,                       // SK_SUMMONINGS
@@ -1496,8 +1496,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      120,                       // SK_AIR_MAGIC
      120,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     130,                       // SK_INVOCATIONS
-     70,                        // SK_EVOCATIONS
+     (130 * 75) / 100,          // SK_INVOCATIONS
+     (70 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_MINOTAUR (33)
@@ -1526,7 +1526,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     180,                       // SK_SPELLCASTING
+     (180 * 130) / 100,         // SK_SPELLCASTING
      170,                       // SK_CONJURATIONS
      170,                       // SK_ENCHANTMENTS
      170,                       // SK_SUMMONINGS
@@ -1539,11 +1539,11 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      170,                       // SK_AIR_MAGIC
      170,                       // SK_EARTH_MAGIC
      170,                       // SK_POISON_MAGIC
-     130,                       // SK_INVOCATIONS
-     170,                       // SK_EVOCATIONS
+     (130 * 75) / 100,          // SK_INVOCATIONS
+     (170 * 75) / 100,          // SK_EVOCATIONS
      },
 
-    {                           // SP_DEMONSPAN (34)
+    {                           // SP_DEMONSPAWN (34)
      100,                       // SK_FIGHTING
      110,                       // SK_SHORT_BLADES
      110,                       // SK_LONG_SWORDS
@@ -1569,7 +1569,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      100,                       // SK_CONJURATIONS
      110,                       // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1582,8 +1582,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      110,                       // SK_AIR_MAGIC
      110,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     80,                        // SK_INVOCATIONS
-     110,                       // SK_EVOCATIONS
+     (80 * 75) / 100,           // SK_INVOCATIONS
+     (110 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_GHOUL (35)
@@ -1612,7 +1612,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     120,                       // SK_SPELLCASTING
+     (120 * 130) / 100,         // SK_SPELLCASTING
      130,                       // SK_CONJURATIONS
      130,                       // SK_ENCHANTMENTS
      120,                       // SK_SUMMONINGS
@@ -1625,8 +1625,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      150,                       // SK_AIR_MAGIC
      90,                        // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     110,                       // SK_INVOCATIONS
-     130,                       // SK_EVOCATIONS
+     (110 * 75) / 100,          // SK_INVOCATIONS
+     (130 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_KENKU (36)
@@ -1655,7 +1655,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      60,                        // SK_CONJURATIONS
      160,                       // SK_ENCHANTMENTS
      70,                        // SK_SUMMONINGS
@@ -1668,8 +1668,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      90,                        // SK_AIR_MAGIC
      120,                       // SK_EARTH_MAGIC
      100,                       // SK_POISON_MAGIC
-     160,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (160 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_MERFOLK (37)
@@ -1698,7 +1698,7 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     100,                       // SK_SPELLCASTING
+     (100 * 130) / 100,         // SK_SPELLCASTING
      140,                       // SK_CONJURATIONS
      90,                        // SK_ENCHANTMENTS
      100,                       // SK_SUMMONINGS
@@ -1711,8 +1711,8 @@ const int spec_skills[ NUM_SPECIES ][40] = {
      150,                       // SK_AIR_MAGIC
      150,                       // SK_EARTH_MAGIC
      80,                        // SK_POISON_MAGIC
-     100,                       // SK_INVOCATIONS
-     100,                       // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (100 * 75) / 100,          // SK_EVOCATIONS
      },
 
 
@@ -2307,14 +2307,8 @@ unsigned int skill_exp_needed(int lev)
 
 int species_skills(int skill, int species)
 {
-    // Spellcasting is more expensive, invocations and evocations are cheaper
-    if (skill == SK_SPELLCASTING)
-        return (spec_skills[species - 1][skill] * 130) / 100;
-    else if (skill == SK_INVOCATIONS || skill == SK_EVOCATIONS) 
-        return (spec_skills[species - 1][skill] * 75) / 100;
-    else
-        return (spec_skills[species - 1][skill]);
-}                               // end species_skills()
+    return spec_skills[species - 1][skill];
+}
 
 // new: inform player if they need more throwing skill (GDL)
 void wield_warning(bool newWeapon)
