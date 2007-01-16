@@ -36,7 +36,7 @@ void get_non_ibm_symbol(unsigned int object, unsigned short *ch,
  * called from: bang - beam - direct - effects - fight - monstuff -
  *              mstuff2 - spells1 - spells2
  * *********************************************************************** */
-bool mons_near(struct monsters *monster, unsigned int foe = MHITYOU);
+bool mons_near(const monsters *monster, unsigned int foe = MHITYOU);
 
 
 // last updated 12may2000 {dlb}

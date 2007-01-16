@@ -2116,7 +2116,7 @@ void run_environment_effects()
     const int sfx_chance = Base_Sfx_Chance * you.time_taken / 10;
     const int nseeds = sfx_seeds.size();
 
-    // If there is a large number of seeds, speed things up by fudging the
+    // If there are a large number of seeds, speed things up by fudging the
     // numbers.
     if (nseeds > 100)
     {

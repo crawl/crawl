@@ -1173,9 +1173,7 @@ void shoot_thing(void)
         return;
     }
 
-    in_name( item, DESC_INVENTORY_EQUIP, str_pass );
-    snprintf( info, INFO_SIZE, "Firing: %s", str_pass );
-    mpr( info );
+    mprf("Firing: %s", in_name(item, DESC_INVENTORY_EQUIP, str_pass));
 
     throw_it( beam, item );
 }                               // end shoot_thing()

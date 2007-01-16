@@ -2458,7 +2458,7 @@ void magic_mapping(int map_radius, int proportion)
 
 // realize that this is simply a repackaged version of
 // stuff::see_grid() -- make certain they correlate {dlb}:
-bool mons_near(struct monsters *monster, unsigned int foe)
+bool mons_near(const monsters *monster, unsigned int foe)
 {
     // early out -- no foe!
     if (foe == MHITNOT)
@@ -2476,7 +2476,7 @@ bool mons_near(struct monsters *monster, unsigned int foe)
     }
 
     // must be a monster
-    struct monsters *myFoe = &menv[foe];
+    const monsters *myFoe = &menv[foe];
     if (myFoe->type >= 0)
     {
         if (monster->x > myFoe->x - 9 && monster->x < myFoe->x + 9

@@ -3582,11 +3582,19 @@ static void handle_monster_move(int i, monsters *monster)
         return;
     }
 
-    monster->speed_increment += (monster->speed * you.time_taken) / 10;
+    int energy_gained = (monster->speed * you.time_taken) / 10;
+
+    // Slow monsters might get 0 here. Maybe we should factor in
+    // *how* slow it is...but a 10-to-1 move ratio seems more than
+    // enough.
+    if ( energy_gained == 0 && monster->speed != 0 )
+        energy_gained = 1;
+
+    monster->speed_increment += energy_gained;
 
     if (you.slow > 0)
     {
-        monster->speed_increment += (monster->speed * you.time_taken) / 10;
+        monster->speed_increment += energy_gained;
     }
 
     // Handle enchantments and clouds on nonmoving monsters:
