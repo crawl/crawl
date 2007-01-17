@@ -1140,6 +1140,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         case FOOD_GRAPE:
         case FOOD_SULTANA:
         case FOOD_LYCHEE:
+        case FOOD_CHEESE:
             if (ur_carnivorous)
             {
                 survey_says = false;
