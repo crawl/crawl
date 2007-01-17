@@ -1914,18 +1914,15 @@ void generate_random_demon(void)
 
     if (!one_chance_in(3))
     {
-        ghost.values[ GVAL_BRAND ] = random2(17);
-
+        do {
+            ghost.values[ GVAL_BRAND ] = random2(17);
         /* some brands inappropriate (eg holy wrath) */
-        if (ghost.values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
-            || ghost.values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
-            || ghost.values[ GVAL_BRAND ] == SPWPN_PROTECTION 
-            || ghost.values[ GVAL_BRAND ] == SPWPN_FLAME 
-            || ghost.values[ GVAL_BRAND ] == SPWPN_FROST 
-            || ghost.values[ GVAL_BRAND ] == SPWPN_DISRUPTION)
-        {
-            ghost.values[ GVAL_BRAND ] = SPWPN_SPEED;
-        }
+        } while (ghost.values[ GVAL_BRAND ] == SPWPN_HOLY_WRATH 
+                 || ghost.values[ GVAL_BRAND ] == SPWPN_ORC_SLAYING
+                 || ghost.values[ GVAL_BRAND ] == SPWPN_PROTECTION 
+                 || ghost.values[ GVAL_BRAND ] == SPWPN_FLAME 
+                 || ghost.values[ GVAL_BRAND ] == SPWPN_FROST 
+                 || ghost.values[ GVAL_BRAND ] == SPWPN_DISRUPTION);
     }
 
     // is demon a spellcaster?
@@ -1963,79 +1960,26 @@ void generate_random_demon(void)
        Some special monster-only spells are at the end. */
     if (ghost.values[ GVAL_DEMONLORD_SPELLCASTER ] == 1)
     {
+        mpr("making pan lord spells");
+#define RANDOM_ARRAY_ELEMENT(x) x[random2(sizeof(x) / sizeof(x[0]))]
+        
         if (coinflip())
-        {
-            for (;;)
-            {
-                if (one_chance_in(3))
-                    break;
+            ghost.values[GVAL_SPELL_1]=RANDOM_ARRAY_ELEMENT(search_order_conj);
 
-                ghost.values[ GVAL_SPELL_1 ] = search_order_conj[i];
-                i++;
-
-                if (search_order_conj[i] == SPELL_NO_SPELL)
-                    break;
-            }
-        } 
-
+        // Might duplicate the first spell, but that isn't a problem.
         if (coinflip())
-        {
-            for (;;)
-            {
-                if (one_chance_in(3))
-                    break;
-
-                ghost.values[ GVAL_SPELL_2 ] = search_order_conj[i];
-
-                if (search_order_conj[i] == SPELL_NO_SPELL)
-                    break;
-            }
-        }
+            ghost.values[GVAL_SPELL_2]=RANDOM_ARRAY_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-        {
-            for (;;)
-            {
-                if (one_chance_in(3))
-                    break;
-
-                ghost.values[ GVAL_SPELL_3 ] = search_order_third[i];
-                i++;
-
-                if (search_order_third[i] == SPELL_NO_SPELL)
-                    break;
-            }
-        }
+            ghost.values[GVAL_SPELL_3]=RANDOM_ARRAY_ELEMENT(search_order_third);
 
         if (coinflip())
-        {
-            for (;;)
-            {
-                if (one_chance_in(3))
-                    break;
-
-                ghost.values[ GVAL_SPELL_4 ] = search_order_misc[i];
-                i++;
-
-                if (search_order_misc[i] == SPELL_NO_SPELL)
-                    break;
-            }
-        }
+            ghost.values[GVAL_SPELL_4]=RANDOM_ARRAY_ELEMENT(search_order_misc);
 
         if (coinflip())
-        {
-            for(;;)
-            {
-                if (one_chance_in(3))
-                    break;
+            ghost.values[GVAL_SPELL_5]=RANDOM_ARRAY_ELEMENT(search_order_misc);
 
-                ghost.values[ GVAL_SPELL_5 ] = search_order_misc[i];
-                i++;
-
-                if (search_order_misc[i] == SPELL_NO_SPELL)
-                    break;
-            }
-        }
+#undef RANDOM_ARRAY_ELEMENT
 
         if (coinflip())
             ghost.values[ GVAL_SPELL_6 ] = SPELL_BLINK;
@@ -2077,11 +2021,13 @@ void generate_random_demon(void)
             ghost.values[GVAL_SPELL_4] = MS_SUMMON_DEMON;
 
         /* at least they can summon demons */
-        if (ghost.values[17] == SPELL_NO_SPELL)
+        if (ghost.values[GVAL_SPELL_4] == SPELL_NO_SPELL)
             ghost.values[GVAL_SPELL_4] = MS_SUMMON_DEMON;
 
         if (one_chance_in(15))
             ghost.values[GVAL_SPELL_5] = MS_DIG;
+
+        mons_load_spells(&menv[rdem], MST_GHOST);
     }
 }                               // end generate_random_demon()
 
