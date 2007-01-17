@@ -1960,7 +1960,6 @@ void generate_random_demon(void)
        Some special monster-only spells are at the end. */
     if (ghost.values[ GVAL_DEMONLORD_SPELLCASTER ] == 1)
     {
-        mpr("making pan lord spells");
 #define RANDOM_ARRAY_ELEMENT(x) x[random2(sizeof(x) / sizeof(x[0]))]
         
         if (coinflip())
