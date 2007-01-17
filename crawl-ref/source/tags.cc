@@ -837,9 +837,9 @@ static void tag_construct_you_items(struct tagHeader &th)
 
     // this is really dumb. We copy the id[] array from itemname
     // to the stack, for no good reason that I can see.
-    char identy[4][50];
+    id_arr identy;
 
-    save_id(identy);
+    save_id(identy, true);
 
     for (i = 0; i < 4; ++i)
     {

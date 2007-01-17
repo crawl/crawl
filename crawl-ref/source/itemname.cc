@@ -38,7 +38,11 @@
 #include "view.h"
 #include "items.h"
 
-char id[NUM_IDTYPE][MAX_SUBTYPES];
+id_arr id;
+
+// Backup of the id array used to save ids if the game receives SIGHUP
+// when the character is in a shop.
+id_arr shop_backup_id;
 
 static bool is_random_name_space( char let );
 static bool is_random_name_vowel( char let);
@@ -1903,17 +1907,11 @@ static const char *item_name_2(
     return (buff);
 }                               // end item_name_2()
 
-void save_id(char identy[4][50])
+void save_id(id_arr identy, bool saving_game)
 {
-    int x = 0, jx = 0;
-
-    for (x = 0; x < 4; x++)
-    {
-        for (jx = 0; jx < 50; jx++)
-        {
-            identy[x][jx] = id[x][jx];
-        }
-    }
+    memcpy(identy,
+           (!saving_game || !crawl_state.shopping)? id : shop_backup_id,
+           sizeof id);
 }                               // end save_id()
 
 void clear_ids(void)

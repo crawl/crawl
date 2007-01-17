@@ -99,7 +99,7 @@ int make_name( unsigned long seed, bool all_caps, char buff[ ITEMNAME_SIZE ] );
 /* ***********************************************************************
  * called from: files - shopping
  * *********************************************************************** */
-void save_id(char identy[4][50]);
+void save_id(id_arr identy, bool saving_game = false);
 
 
 /* ***********************************************************************

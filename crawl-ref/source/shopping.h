@@ -16,9 +16,6 @@
 
 #include "externs.h"
 
-typedef FixedArray < int, 4, 50 > id_fix_arr;
-typedef char id_arr[4][50];
-
 void shop_init_id_type(int shoptype, id_fix_arr &shop_id);
 void shop_uninit_id_type(int shoptype, const id_fix_arr &shop_id);
 

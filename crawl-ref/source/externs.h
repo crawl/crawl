@@ -688,11 +688,12 @@ struct game_state
     bool need_save;         // Set to true when game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
+    bool shopping;          // Set if id has been munged for shopping.
 
     int seen_hups;          // Set to true if SIGHUP received.
 
     game_state() : need_save(false), saving_game(false),
-                   updating_scores(false), seen_hups(0)
+                   updating_scores(false), shopping(false), seen_hups(0)
     {
     }
 };
@@ -1110,5 +1111,8 @@ extern const struct coord_def Compass[8];
 extern const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
 typedef int keycode_type;
+
+typedef FixedArray < int, 4, 50 > id_fix_arr;
+typedef char id_arr[4][50];
 
 #endif // EXTERNS_H
