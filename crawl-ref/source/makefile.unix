@@ -90,6 +90,20 @@ PKG_EXCLUDES  := $(PWD)/misc/src-pkg-excludes.lst
 all: $(GAME)
 
 ##########################################################################
+# Dependencies
+
+DEPENDENCY_MKF := makefile.dependencies
+
+depend: $(OBJECTS:.o=.cc)
+	rm -f $(DEPENDENCY_MKF)
+	@for i in $^; do \
+	    echo "Updating dependencies for $$i"; \
+	    $(CXX) -MM $(CFLAGS) $$i >>$(DEPENDENCY_MKF) 2>/dev/null; \
+	done 
+
+-include $(DEPENDENCY_MKF)
+
+##########################################################################
 # The level compiler
 #
 
@@ -157,6 +171,7 @@ distclean: clean
 	$(DELETE) core
 	$(DELETE) *.0*
 	$(DELETE) *.lab
+	[ -f $(DEPENDENCY_MKF) ] && $(DELETE) $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
@@ -186,7 +201,7 @@ $(UTIL)%.o: $(UTIL)%.cc
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 ifeq ($(DOYACC),y)
-package-source: distclean prebuildyacc pkgtidy removeold vlink pkgtarbz2 pkgzip
+package-source: distclean prebuildyacc pkgtidy depend removeold vlink pkgtarbz2 pkgzip
 
 pkgtidy:
 	$(DELETE) $(PKG_TIDY_LIST)
