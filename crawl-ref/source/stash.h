@@ -149,7 +149,8 @@ private:
     std::string shop_item_desc(const shop_item &si) const;
     void describe_shop_item(const shop_item &si) const;
 
-    class ShopId {
+    class ShopId : public shopping_hup_protect
+    {
     public:
         ShopId(int stype);
         ~ShopId();

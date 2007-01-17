@@ -1612,27 +1612,6 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
     return (valued);
 }                               // end item_value()
 
-// Protect the id array against being clobbered by a SIGHUP with the
-// character in a shop.
-extern id_arr shop_backup_id;
-class shopping_hup_protect
-{
-public:
-    shopping_hup_protect() : shopping(crawl_state.shopping)
-    {
-        save_id(shop_backup_id);
-        crawl_state.shopping = true;
-    }
-
-    ~shopping_hup_protect()
-    {
-        crawl_state.shopping = shopping;
-    }
-
-private:
-    bool shopping;
-};
-
 void shop(void)
 {
     unsigned char i = 0;

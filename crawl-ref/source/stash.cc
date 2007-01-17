@@ -627,7 +627,8 @@ ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),
         shoptype = sh->type;
 }
 
-ShopInfo::ShopId::ShopId(int stype) : shoptype(stype), id()
+ShopInfo::ShopId::ShopId(int stype)
+    : shopping_hup_protect(), shoptype(stype), id()
 {
     shop_init_id_type( shoptype, id );
 }

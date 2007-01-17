@@ -15,6 +15,7 @@
 #define SHOPPING_H
 
 #include "externs.h"
+#include "itemname.h"
 
 void shop_init_id_type(int shoptype, id_fix_arr &shop_id);
 void shop_uninit_id_type(int shoptype, const id_fix_arr &shop_id);
@@ -44,5 +45,26 @@ const shop_struct *get_shop(int sx, int sy);
  * called from: items direct
  * *********************************************************************** */
 const char *shop_name(int sx, int sy);
+
+// Protect the id array against being clobbered by a SIGHUP with the
+// character in a shop.
+extern id_arr shop_backup_id;
+class shopping_hup_protect
+{
+public:
+    shopping_hup_protect() : shopping(crawl_state.shopping)
+    {
+        save_id(shop_backup_id);
+        crawl_state.shopping = true;
+    }
+
+    ~shopping_hup_protect()
+    {
+        crawl_state.shopping = shopping;
+    }
+
+private:
+    bool shopping;
+};
 
 #endif
