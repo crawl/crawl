@@ -742,9 +742,8 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
         if (you.level_type == LEVEL_PANDEMONIUM)
             generate_random_demon();
-
-        if (you.your_level > 1 && one_chance_in(3))
-            load_ghost();
+        else if (you.your_level > 1 && one_chance_in(3))
+            load_ghost();       // no ghosts in Pan
     }
     else
     {
