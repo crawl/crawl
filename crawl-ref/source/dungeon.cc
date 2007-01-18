@@ -147,10 +147,9 @@ static void jelly_pit(int level_number, spec_room &sr);
 // VAULT FUNCTIONS
 static void build_vaults(int level_number, int vault_number);
 static void build_minivaults(int level_number, int force_vault);
-static int vault_grid( const vault_placement &,
+static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
-                       FixedVector < int, 7 > &mons_array,
                        char vgrid, std::vector<coord_def> &targets,
                        int &num_runes );
 
@@ -5187,17 +5186,9 @@ static void build_minivaults(int level_number, int force_vault)
     acq_item_class[5] = OBJ_STAVES;
     acq_item_class[6] = OBJ_MISCELLANY;
 
-    FixedVector < int, 7 > mons_array(RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER);
-
     map_type vgrid;
     vault_placement place;
-    vault_main(vgrid, mons_array, place, force_vault, level_number);
+    vault_main(vgrid, place, force_vault, level_number);
 
     int vx, vy;
     int v1x, v1y;
@@ -5274,7 +5265,7 @@ static void build_minivaults(int level_number, int force_vault)
         {
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
-                                      acq_item_class, mons_array, 
+                                      acq_item_class,
                                       grd[vx][vy], dummy, 
                                       num_runes );
         }
@@ -5283,7 +5274,7 @@ static void build_minivaults(int level_number, int force_vault)
     no_door_fixup_zones.push_back(
         dgn_region( place.x, place.y, place.width, place.height ) );
     
-    if (place.map->has_tag("no_pool_fixup"))
+    if (place.map.has_tag("no_pool_fixup"))
         no_pool_fixup_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
 }                               // end build_minivaults()
@@ -5370,7 +5361,7 @@ static void build_rooms(const dgn_region_list &excluded,
     }
 }
 
-static coord_def dig_away_dir(const vault_placement &place,
+static coord_def dig_away_dir(vault_placement &place,
                               const coord_def &pos)
 {
     // Figure out which way we need to go to dig our way out of the vault.
@@ -5389,7 +5380,7 @@ static coord_def dig_away_dir(const vault_placement &place,
     return (dig_dir);
 }
 
-static void dig_away_from(const vault_placement &place, const coord_def &pos)
+static void dig_away_from(vault_placement &place, const coord_def &pos)
 {
     coord_def dig_dir = dig_away_dir(place, pos);
     coord_def dig_at = pos;
@@ -5434,14 +5425,14 @@ static void dig_away_from(const vault_placement &place, const coord_def &pos)
 }
 
 static void dig_vault_loose(
-    const vault_placement &place,
+    vault_placement &place,
     std::vector<coord_def> &targets)
 {
     for (int i = 0, size = targets.size(); i < size; ++i)
         dig_away_from(place, targets[i]);
 }
 
-static void pick_float_exits(const vault_placement &place,
+static void pick_float_exits(vault_placement &place,
                              std::vector<coord_def> &targets)
 {
     std::vector<coord_def> possible_exits;
@@ -5494,19 +5485,10 @@ static void build_vaults(int level_number, int force_vault)
     acq_item_class[5] = OBJ_STAVES;
     acq_item_class[6] = OBJ_MISCELLANY;
 
-    FixedVector < int, 7 > mons_array(RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER,
-                                      RANDOM_MONSTER);
-
     map_type vgrid;
     vault_placement place;
 
-    int gluggy = 
-        vault_main(vgrid, mons_array, place, force_vault, level_number);
+    int gluggy = vault_main(vgrid, place, force_vault, level_number);
 
     int vx, vy;
     int  num_runes = 0;
@@ -5519,7 +5501,7 @@ static void build_vaults(int level_number, int force_vault)
         {
             altar_count = vault_grid( place,
                                       level_number, vx, vy, altar_count, 
-                                      acq_item_class, mons_array, 
+                                      acq_item_class,
                                       vgrid[vy][vx],
                                       target_connections,
                                       num_runes );
@@ -5529,11 +5511,11 @@ static void build_vaults(int level_number, int force_vault)
     no_door_fixup_zones.push_back(
         dgn_region( place.x, place.y, place.width, place.height ) );
 
-    if (place.map->has_tag("no_monster_gen"))
+    if (place.map.has_tag("no_monster_gen"))
         no_monster_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
 
-    if (place.map->has_tag("no_pool_fixup"))
+    if (place.map.has_tag("no_pool_fixup"))
         no_pool_fixup_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );
 
@@ -5547,7 +5529,7 @@ static void build_vaults(int level_number, int force_vault)
     // Does this level require Dis treatment (metal wallification)?
     // XXX: Change this so the level definition can explicitly state what
     // kind of wallification it wants.
-    const bool dis_wallify = place.map->has_tag("dis");
+    const bool dis_wallify = place.map.has_tag("dis");
 
     const int v1x = place.x;
     const int v1y = place.y;
@@ -5644,55 +5626,33 @@ static void build_vaults(int level_number, int force_vault)
     }
 }                               // end build_vaults()
 
-static const item_spec *dngn_item_by_weight(const item_spec_list &specs)
-{
-    int cumulative = 0;
-    const item_spec *spec = NULL;
-    for (item_spec_list::const_iterator i = specs.begin();
-         i != specs.end(); ++i)
-    {
-        const int weight = i->genweight;
-        if (random2(cumulative += weight) < weight)
-            spec = &*i;
-    }
-    return (spec);
-}
-
 static void dngn_place_item_explicit(int index, int x, int y,
-                                     const vault_placement &place,
+                                     vault_placement &place,
                                      int level)
 {
-    const map_def *map = place.map;
-    const std::vector<item_spec_list> &itemlist = map->items.get_items();
-    if (index < 0 || index >= (int) itemlist.size())
+    item_list &sitems = place.map.items;
+    
+    if (index < 0 || index >= (int) sitems.size())
     {
         // Non-fatal, but we warn even in non-debug mode so there's incentive
         // to fix the problem.
         mprf(MSGCH_DIAGNOSTICS, "Map '%s' requested invalid item index: %d",
-             map->name.c_str(),
-             index);
+             place.map.name.c_str(), index);
         return;
     }
 
-    const item_spec *spec = dngn_item_by_weight(itemlist[index]);
-    if (!spec)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Map '%s' bad item spec for %d",
-             map->name.c_str(),
-             index);
-        return;
-    }
+    const item_spec spec = sitems.get_item(index);
 
     // Dummy object?
-    if (spec->base_type == OBJ_UNASSIGNED)
+    if (spec.base_type == OBJ_UNASSIGNED)
         return;
 
-    if (spec->level >= 0)
-        level = spec->level;
+    if (spec.level >= 0)
+        level = spec.level;
 
     const int item_made =
-        items( spec->allow_uniques, spec->base_type, spec->sub_type, true, 
-               level, spec->race );
+        items( spec.allow_uniques, spec.base_type, spec.sub_type, true, 
+               level, spec.race );
     
     if (item_made != NON_ITEM)
     {
@@ -5704,12 +5664,11 @@ static void dngn_place_item_explicit(int index, int x, int y,
 // returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb}
-static int vault_grid( const vault_placement &place,
+static int vault_grid( vault_placement &place,
                        int level_number,
                        int vx, int vy,
                        int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
-                       FixedVector < int, 7 > &mons_array,
                        char vgrid,
                        std::vector<coord_def> &targets,
                        int &num_runes)
@@ -5828,13 +5787,13 @@ static int vault_grid( const vault_placement &place,
 
                 if (you.level_type == LEVEL_PANDEMONIUM)
                 {
-                    if (place.map->has_tag("mnoleg"))
+                    if (place.map.has_tag("mnoleg"))
                         spec = RUNE_MNOLEG;
-                    else if (place.map->has_tag("lom_lobon"))
+                    else if (place.map.has_tag("lom_lobon"))
                         spec = RUNE_LOM_LOBON;
-                    else if (place.map->has_tag("gloorx_vloq"))
+                    else if (place.map.has_tag("gloorx_vloq"))
                         spec = RUNE_GLOORX_VLOQ;
-                    else if (place.map->has_tag("cerebov"))
+                    else if (place.map.has_tag("cerebov"))
                         spec = RUNE_CEREBOV;
                     else
                         spec = RUNE_DEMONIC;
@@ -5898,7 +5857,7 @@ static int vault_grid( const vault_placement &place,
         monster_type_thing = ((vgrid == '8'
                                || vgrid == '9'
                                || vgrid == '0') ? RANDOM_MONSTER
-                                                : mons_array[(vgrid - '1')]);
+                                    : place.map.mons.get_monster(vgrid - '1'));
 
         place_monster( not_used, monster_type_thing, monster_level, BEH_SLEEP,
                        MHITNOT, true, vx, vy, false);

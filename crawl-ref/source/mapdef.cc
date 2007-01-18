@@ -7,6 +7,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "monplace.h"
 #include "mon-util.h"
 #include "stuff.h"
 #include "dungeon.h"
@@ -557,26 +558,105 @@ bool map_def::has_tag(const std::string &tagwanted) const
 // mons_list
 //
 
-mons_list::mons_list() : mons_ids()
+mons_list::mons_list() : mons()
 {
 }
 
-const std::vector<int> &mons_list::get_ids() const
+int mons_list::fix_demon(int demon) const
 {
-    return (mons_ids);
+    demon = -100 - demon;
+    if (demon == DEMON_RANDOM)
+        demon = random2(DEMON_RANDOM);
+    return (summon_any_demon( demon ));
+}
+
+int mons_list::pick_monster(mons_spec_slot &slot)
+{
+    int totweight = 0;
+    int pick = RANDOM_MONSTER;
+    
+    for (mons_spec_list::iterator i = slot.mlist.begin();
+         i != slot.mlist.end(); ++i)
+    {
+        const int weight = i->genweight;
+        if (random2(totweight += weight) < weight)
+        {
+            pick = i->mid;
+
+            if (pick < 0 && i->fix_mons)
+                pick = i->mid = fix_demon(pick);
+        }
+    }
+
+    if (pick < 0)
+        pick = fix_demon(pick);
+
+    if (slot.fix_slot)
+    {
+        slot.mlist.clear();
+        slot.mlist.push_back( mons_spec(pick) );
+        slot.fix_slot = false;
+    }
+    
+    return (pick);
+}
+
+int mons_list::get_monster(int index)
+{
+    if (index < 0 || index >= (int) mons.size())
+        return (RANDOM_MONSTER);
+    
+    return (pick_monster( mons[index] ));
 }
 
 void mons_list::clear()
 {
-    mons_ids.clear();
+    mons.clear();
 }
 
-bool mons_list::add_mons(const std::string &s)
+mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 {
-    const int mid = mons_by_name(s);
-    if (mid != MONS_PROGRAM_BUG)
-        mons_ids.push_back(mid);
-    return (mid != MONS_PROGRAM_BUG);
+    mons_spec_slot slot;
+
+    slot.fix_slot = strip_tag(spec, "fix_slot");
+
+    std::vector<std::string> specs = split_string("/", spec);
+
+    for (int i = 0, ssize = specs.size(); i < ssize; ++i)
+    {
+        std::string s = specs[i];
+        int weight = strip_number_tag(s, "weight:");
+        if (weight == TAG_UNFOUND || weight <= 0)
+            weight = 10;
+
+        const bool fixmons = strip_tag(s, "fix_mons");
+
+        trim_string(s);
+        const int mid = mons_by_name(s);
+
+        if (mid == MONS_PROGRAM_BUG)
+        {
+            error = make_stringf("unrecognised monster \"%s\"", s.c_str());
+            return (slot);
+        }
+
+        slot.mlist.push_back( mons_spec(mid, weight, fixmons) );
+    }
+
+    return (slot);
+}
+
+std::string mons_list::add_mons(const std::string &s)
+{
+    error.clear();
+
+    mons_spec_slot slotmons = parse_mons_spec(s);
+    if (!error.empty())
+        return (error);
+
+    mons.push_back( slotmons );
+
+    return (error);
 }
 
 int mons_list::mons_by_name(std::string name) const
@@ -642,16 +722,41 @@ void item_list::clear()
     items.clear();
 }
 
-const std::vector<item_spec_list> &item_list::get_items() const
+item_spec item_list::pick_item(item_spec_slot &slot)
 {
-    return (items);
+    int cumulative = 0;
+    item_spec spec;
+    for (item_spec_list::const_iterator i = slot.ilist.begin();
+         i != slot.ilist.end(); ++i)
+    {
+        const int weight = i->genweight;
+        if (random2(cumulative += weight) < weight)
+            spec = *i;
+    }
+
+    if (slot.fix_slot)
+    {
+        slot.ilist.clear();
+        slot.ilist.push_back(spec);
+        slot.fix_slot = false;
+    }
+    
+    return (spec);
+}
+    
+item_spec item_list::get_item(int index)
+{
+    if (index < 0 || index >= (int) items.size())
+        return (item_spec());
+    
+    return (pick_item(items[index]));
 }
 
 std::string item_list::add_item(const std::string &spec)
 {
     error.clear();
 
-    item_spec_list sp = parse_item_spec(spec);
+    item_spec_slot sp = parse_item_spec(spec);
     if (error.empty())
         items.push_back(sp);
     
@@ -777,16 +882,18 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
     error = make_stringf("Bad item name: '%s'", name.c_str());
 }
 
-item_spec_list item_list::parse_item_spec(std::string spec)
+item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
 {
     lowercase(spec);
 
-    item_spec_list list;
+    item_spec_slot list;
+
+    list.fix_slot = strip_tag(spec, "fix_slot");
     std::vector<std::string> specifiers = split_string( "/", spec );
 
     for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
     {
-        list.push_back( parse_single_spec(specifiers[i]) );
+        list.ilist.push_back( parse_single_spec(specifiers[i]) );
     }
 
     return (list);

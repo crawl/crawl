@@ -29,12 +29,10 @@
 #include "levcomp.h"
 
 static int write_vault(const map_def &mdef, map_type mt, 
-                        FixedVector<int,7> &marray,
                         vault_placement &);
 static int apply_vault_definition(
                         map_def &def,
                         map_type map,
-                        FixedVector<int,7> &marray,
                         vault_placement &);
 
 static void resolve_map(map_def &def);
@@ -56,7 +54,6 @@ static std::vector<map_def> vdefs;
 // anywhere, while other vault names are for specific level ranges, etc.
 int vault_main( 
         map_type vgrid, 
-        FixedVector<int, 7>& mons_array, 
         vault_placement &place,
         int which_vault, 
         int many_many )
@@ -77,20 +74,18 @@ int vault_main(
     }
 
     // NB - a return value of zero is not handled well by dungeon.cc (but there it is) 10mar2000 {dlb}
-    return write_vault( vdefs[which_vault], vgrid, mons_array, place );
+    return write_vault( vdefs[which_vault], vgrid, place );
 }          // end vault_main()
 
 static int write_vault(const map_def &mdef, map_type map, 
-                       FixedVector<int, 7> &marray,
                        vault_placement &place)
 {
-    place.map = &mdef;
-
     // Copy the map so we can monkey with it.
-    map_def def = mdef;
-    resolve_map(def);
+    place.map = mdef;
+    resolve_map(place.map);
 
-    return (place.orient = apply_vault_definition(def, map, marray, place));
+    return (place.orient =
+            apply_vault_definition(place.map, map, place));
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
@@ -107,28 +102,6 @@ static void resolve_map(map_def &map)
     // The map may also refuse to be rotated.
     if (coinflip())
         map.rotate( coinflip() );
-}
-
-static void apply_monsters(
-        const map_def &def,
-        FixedVector<int,7> &marray)
-{
-    const std::vector<int> &mids = def.mons.get_ids();
-    size_t ndx = 0;
-    for (int i = 0, size = mids.size(); i < size; ++i)
-    {
-        int mid = mids[i];
-        if (mid < 0)
-        {
-            mid = -100 - mid;
-            if (mid == DEMON_RANDOM)
-                mid = random2(DEMON_RANDOM);
-            mid = summon_any_demon( mid );
-        }
-
-        if (ndx < marray.size())
-            marray[ndx++] = mid;
-    }
 }
 
 static void apply_vault_grid(map_def &def, map_type map, 
@@ -192,10 +165,8 @@ static void apply_vault_grid(map_def &def, map_type map,
 static int apply_vault_definition(
         map_def &def,
         map_type map,
-        FixedVector<int,7> &marray,
         vault_placement &place)
 {
-    apply_monsters(def, marray);
     apply_vault_grid(def, map, place);
 
     int orient = def.orient;

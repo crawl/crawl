@@ -14,6 +14,7 @@
 
 #include "FixVec.h"
 #include "dungeon.h"
+#include "mapdef.h"
 
 class map_def;
 struct vault_placement
@@ -21,16 +22,15 @@ struct vault_placement
     int x, y;
     int width, height;
     int orient;
-    const map_def *map;
+    map_def map;
 
     vault_placement()
-        : x(-1), y(-1), width(0), height(0), map(NULL)
+        : x(-1), y(-1), width(0), height(0), map()
     {
     }
 };
 
 int vault_main(map_type vgrid, 
-                FixedVector<int, 7>& mons_array, 
                 vault_placement &vp,
                 int vault_force, 
                 int many_many);

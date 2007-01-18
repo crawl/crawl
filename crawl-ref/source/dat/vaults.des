@@ -368,23 +368,23 @@ TAGS: entry no_monster_gen
 ORIENT: float
 
 MAP  
-xxxxxxxxxxxxxxxxxxxxxxx  
-xxxxx{.....(.....[xxxxx  
-xxxxx.............xxxxx  
-xxxxxx...........xxxxxx  
-xxxxxx...........xxxxxx  
-xxxxxxx.........xxxxxxx  
-xxxxxxx.........xxxxxxx  
-xxxxxxxx.......xxxxxxxx  
-xxxxxxxx.......xxxxxxxx  
-xxxxxxxxx.....xxxxxxxxx  
-xxxxxxxxx.....xxxxxxxxx  
-xxxxxxxxxx...xxxxxxxxxx  
-xxxxxxxxxx...xxxxxxxxxx  
-xxxxxxxxxx...xxxxxxxxxx  
-xxxxxxxxxx+++xxxxxxxxxx  
-xxxxxxxxxx...xxxxxxxxxx  
-ENDMAP  
+xxxxxxxxxxxxxxx
+x{.....(.....[x
+x.............x
+xx...........xx
+xx...........xx
+xxx.........xxx
+xxx.........xxx
+xxxx.......xxxx
+xxxx.......xxxx
+xxxxx.....xxxxx
+xxxxx.....xxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx+++xxxxxx
+xxxxxx...xxxxxx
+ENDMAP
 
 ##############################################################################
 # lemuel_entrance_muddy
@@ -393,30 +393,105 @@ NAME: lemuel_entrance_muddy
 TAGS: entry no_monster_gen
 ORIENT: float
 MAP  
-xxxxxxxxxxxxxxxxxxxxxxx  
-xxxxx{..1..(.1ww.[xxxxx  
-xxxxx1.........ww.xxxxx  
-xxxxxx..w..1....1.xxxxx  
-xxxxxx........2...xxxxx  
-xxxxxw...1......w.xxxxx  
-xxxxxw...........xxxxxx  
-xxxxx.1....2......xxxxx  
-xxxxx1......w2....xxxxx  
-xxxxx............xxxxxx  
-xxxxxx..........xxxxxxx  
-xxxxxx..........xxxxxxx  
-xxxxxx...2......xxxxxxx  
-xxxxx...........xxxxxxx  
-xxxxx.2.w......xxxxxxxx  
-xxxxxxx..2.....xxxxxxxx  
-xxxxxxx......2xxxxxxxxx  
-xxx.........xxxxxxxxxxx  
-xx..xx......xxxxxxxxxxx  
-...xxxxx.....xxxxxxxxxx  
-xxxxxxxxxx....xxxxxxxxx
-xxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxx{..1..(.1ww.[x
+xxxxx1.........ww.x
+xxxxxx..w..1....1.x
+xxxxxx........2...x
+xxxxxw...1......w.x
+xxxxxw...........xx
+xxxxx.1....2......x
+xxxxx1......w2....x
+xxxxx............xx
+xxxxxx..........xxx
+xxxxxx..........xxx
+xxxxxx...2......xxx
+xxxxx...........xxx
+xxxxx.2.w......xxxx
+xxxxxxx..2.....xxxx
+xxxxxxx......2xxxxx
+xxx.........xxxxxxx
+xx..xx......xxxxxxx
+...xxxxx.....xxxxxx
+xxxxxxxxxx....xxxxx
+xxxxxxxxxxxx...xxxx
 ENDMAP
 MONS: plant, fungus
+
+###################################
+# broad hall
+NAME: lemuel_hall
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxx
+x{...(...[x
+x.........x
+x.x.....x.x
+x.........x
+x.........x
+x.x.....x.x
+x.........x
+x.........x
+x.x.....x.x
+x.........x
+x.........x
+x.x.....x.x
+x.........x
+x.........x
+x.x.....x.x
+x.........x
+x@...@...@x
+ENDMAP
+
+###################################
+# broad hall with supply closet
+NAME: lemuel_hall2
+TAGS: entry
+ORIENT: float
+ITEM: meat ration / bread ration / beef jerky / spear / potion of water / apple / club / hammer / knife
+
+MAP
+xxxxxxxxxxxx
+x{...(...[xx
+x.........xx
+x.x.....x.xx
+x.........xx
+x.........xx
+x.x.....x.xx
+x.........xx
+x.........xxxxxx
+x.x.....x.xxxddx
+x.........=..ddx
+x.........xxxxxx
+x.x.....x.xx
+x.........xx
+x.........xx
+x.x.....x.xx
+x.........xx
+x@...@...@xx
+ENDMAP
+
+###################################
+# behind the green door
+NAME: lemuel_green
+TAGS: entry
+ORIENT: float
+
+MAP
+xxxxxxxxxxx
+x{...(...[x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+x.........x
+xbbbb+bbbbx
+x....@....x
+ENDMAP
 
 ##############################################################################
 # David's entry vaults
@@ -2901,6 +2976,99 @@ ENDMAP
 ##############################################################################
 # Regular vaults
 ##############################################################################
+
+###################################
+# Hellmouth (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME: hellmouth_1
+FLAGS: no_rotate
+MONS: imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM: good_item demon blade / good_item demon whip / good_item demon trident / wand of draining / wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxlllxxxxxxxx
+xxxxxxlllAlllxxxxxx
+xxxlllll.d.llll.xxx
+xlllllll121lllll..x
+x.lllllll1llll....x
+x...llllllll......x
+x....llllll.......x
+x.....lllll.......x
+xxx....lll......xxx
+xxxx...lll.....xxxx
+xxxxx..ll.....xxxxx
+xxxxx.lll.....xxxxx
+xxxxxxlll....xxxxxx
+xxxxxxxlll...xxxxxx
+xxxxxxxxll..xxxxxxx
+xxxxxxxxll..xxxxxxx
+xxxxxxxxl.@xxxxxxxx
+ENDMAP
+
+###################################
+# Hellmouth 2 (Lemuel)
+# note that other than the imps, the demons here cannot fly
+NAME: hellmouth_2
+TAGS: no_monster_gen
+FLAGS: no_rotate
+MONS: imp / quasit / shadow imp / manes / lemure
+MONS: hellion / rotting devil / iron devil / hairy devil / hell hound
+ITEM: good_item demon blade / good_item demon whip / good_item demon trident / wand of draining / wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+ITEM: good_item demon blade / good_item demon whip / good_item demon trident
+ORIENT: float
+
+MAP
+.......bbbbbbbbbbbb.......
+....bbbb..........bbbb....
+..bbb....llllllll....bbb..
+.bb....llllllllllll....bb.
+.b....llllllllllllll....b.
+.b....llllll..llllll....b.
+.b....lll........lll....b.
+.b....ll....111...ll....b.
+.+....l....11211d..l....b.
+.+....l....12A21|e.l....b.
+.b....ll...11211d.ll....b.
+.b....lll...111..lll....b.
+.b....llll......llll....b.
+.b....llllll..llllll....b.
+.bb....llllllllllll....bb.
+..bbb....llllllll....bbb..
+....bbbb..........bbbb....
+.......bbbbbbbbbbbb.......
+ENDMAP
+
+###################################
+# Hellmouth 3 (Lemuel)
+NAME: hellmouth_3
+MONS: weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
+ITEM: good_item demon blade / good_item demon whip / good_item demon trident
+ORIENT: float
+
+MAP
+................l.............
+..............................
+................l.............
+....ll..........l.............
+...lll..........l.............
+....l..........l..............
+.............lll..............
+..........lllllll.............
+........llllllllll............
+.......lll111111llll..........
+.......llll12Ad1lll...........
+........lll11111ll............
+.........lllll1ll.............
+...........llllll.............
+............llll......ll......
+.............ll........ll.....
+..............................
+...................l..........
+ENDMAP
+
+#############################################################################
 
 NAME: vault_1
 ORIENT: north

@@ -15,7 +15,8 @@
 #include "enum.h"
 #include "externs.h"
 
-enum map_flags {
+enum map_flags
+{
     MAPF_PANDEMONIUM_VAULT = 0x01,     // A pandemonium minivault.
 
     MAPF_MIRROR_VERTICAL   = 0x10,     // The map may be mirrored vertically
@@ -23,7 +24,8 @@ enum map_flags {
     MAPF_ROTATE            = 0x40      // may be rotated
 };
 
-class level_range {
+class level_range
+{
 public:
     int shallowest, deepest;
 
@@ -38,7 +40,8 @@ public:
     int span() const;
 };
 
-class map_lines {
+class map_lines
+{
 public:
     map_lines();
 
@@ -81,26 +84,63 @@ private:
     bool solid_checked;
 };
 
-class mons_list {
+class mons_list
+{
 public:
     mons_list();
 
     void clear();
-    const std::vector<int> &get_ids() const;
 
-    // Returns false if the monster is unrecognised.
-    bool add_mons(const std::string &s);
+    int get_monster(int index);
 
-    size_t size() const { return mons_ids.size(); }
+    // Returns an error string if the monster is unrecognised.
+    std::string add_mons(const std::string &s);
+
+    size_t size() const { return mons.size(); }
+
+private:
+    struct mons_spec
+    {
+        int mid;
+        int genweight;
+        bool fix_mons;
+
+        mons_spec(int id = RANDOM_MONSTER, int gw = 10, bool _fixmons = false)
+            : mid(id), genweight(gw), fix_mons(_fixmons)
+        {
+        }
+    };
+    typedef std::vector<mons_spec> mons_spec_list;
+
+    struct mons_spec_slot
+    {
+        mons_spec_list mlist;
+        bool fix_slot;
+
+        mons_spec_slot(const mons_spec_list &list, bool fix = false)
+            : mlist(list), fix_slot(fix)
+        {
+        }
+
+        mons_spec_slot()
+            : mlist(), fix_slot(false)
+        {
+        }
+    };
 
 private:
     int mons_by_name(std::string name) const;
+    mons_spec_slot parse_mons_spec(std::string spec);
+    int pick_monster(mons_spec_slot &slot);
+    int fix_demon(int id) const;
 
 private:
-    std::vector<int> mons_ids;
+    std::vector< mons_spec_slot > mons;
+    std::string error;
 };
 
-struct item_spec {
+struct item_spec
+{
     int genweight;
     
     int base_type, sub_type;
@@ -113,34 +153,47 @@ struct item_spec {
     {
     }
 };
-
 typedef std::vector<item_spec> item_spec_list;
 
-class item_list {
+class item_list
+{
 public:
     item_list() : items() { }
 
     void clear();
-    const std::vector<item_spec_list> &get_items() const;
 
-    std::string add_item(const std::string &spec);
-    
+    item_spec get_item(int index);
     size_t size() const { return items.size(); }
 
+    std::string add_item(const std::string &spec);
+
+private:
+    struct item_spec_slot
+    {
+        item_spec_list ilist;
+        bool fix_slot;
+
+        item_spec_slot() : ilist(), fix_slot(false)
+        {
+        }
+    };
+    
 private:
     item_spec item_by_specifier(const std::string &spec);
-    item_spec_list parse_item_spec(std::string spec);
+    item_spec_slot parse_item_spec(std::string spec);
     item_spec parse_single_spec(std::string s);
     void parse_raw_name(std::string name, item_spec &spec);
     void parse_random_by_class(std::string c, item_spec &spec);
+    item_spec pick_item(item_spec_slot &slot);
 
 private:
-    std::vector<item_spec_list> items;
+    std::vector<item_spec_slot> items;
     std::string error;
 };
 
 // Not providing a constructor to make life easy for C-style initialisation.
-class map_def {
+class map_def
+{
 public:
     std::string     name;
     std::string     tags;
@@ -175,14 +228,16 @@ public:
     bool has_tag(const std::string &tag) const;
 };
 
-class monster_chance {
+class monster_chance
+{
 public:
     int mclass;
     int level;
     int rarity;
 };
 
-class level_def {
+class level_def
+{
 public:
     // The range of levels to which this def applies.
     level_range range;
@@ -204,7 +259,8 @@ public:
     std::vector<monster_chance> monsters;
 };
 
-class dungeon_def {
+class dungeon_def
+{
 public:
     std::string idstr;
     int id;

@@ -184,12 +184,13 @@ mnames          : mname COMMA mnames
 
 mname           : MONSTER_NAME
                 {
-                    bool recognised = lc_map.mons.add_mons($1);
-                    if (!recognised)
+                    std::string err = lc_map.mons.add_mons($1);
+                    if (!err.empty())
                     {
                         char buf[300];
-                        snprintf(buf, sizeof buf, "unknown monster '%s'",
-                                 $1);
+                        snprintf(buf, sizeof buf, 
+                                 "bad monster spec '%s' (%s)",
+                                 $1, err.c_str());
                         yyerror(buf);
                     }
                     if (lc_map.mons.size() > 7)
