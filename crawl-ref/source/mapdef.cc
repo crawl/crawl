@@ -564,6 +564,9 @@ mons_list::mons_list() : mons()
 
 int mons_list::fix_demon(int demon) const
 {
+    if (demon >= -1)
+        return (demon);
+    
     demon = -100 - demon;
     if (demon == DEMON_RANDOM)
         demon = random2(DEMON_RANDOM);
@@ -665,6 +668,9 @@ int mons_list::mons_by_name(std::string name) const
 
     name = replace_all_of( name, "_", " " );
 
+    if (name == "nothing")
+        return (-1);
+    
     // Special casery:
     if (name == "pandemonium demon")
         return (MONS_PANDEMONIUM_DEMON);

@@ -78,14 +78,13 @@
 #  instance, if your map is ORIENT: north, you must have a 6 deep border of
 #  rock wall (or any other kind of wall) along the northern, eastern, and
 #  western edges of the map.
-#  encompass: the vault completely occupies the entire level. Padding is neede
+#  encompass: the vault completely occupies the entire level. Padding is needed
 #  on all 4 sides.
-# 
 # 
 #  "ITEM:" LINES:
 #  These are used to help place specified items at specific places within a
 #  vault. They create an array with up to 8 positions. What's in the first
-#  position in the array will be used when the dungeon builder sees a "d" in t
+#  position in the array will be used when the dungeon builder sees a "d" in the
 #  vault definition, the second will be used for "e"s, etc. Positions are
 #  comma-separated. Positions can contain multiple possibilities, one of which
 #  the builder will choose randomly. Separate such multiple possibilities usin
@@ -108,8 +107,7 @@
 #  position in the array will be used when the dungeon builder sees a "1"
 #  in the vault definition, the second for "2," etc. Note that if, for
 #  example, you place a 3 on the map, but your MONS: line has no third
-#  position, the 3 will be filled with RANDOM_MONSTER. Unlike in ITEM: lines,
-#  positions in MONS: lines cannot contain multiple possibilities.
+#  position, the 3 will be filled with RANDOM_MONSTER.
 # 
 #  "CHANCE:" LINES
 #  For entry vaults and any other vaults randomly picked from among a set,
@@ -143,13 +141,13 @@
 #  find in Angband (not that there's anything wrong with that)
 # 
 #  Guidelines for creating new vault maps:
-# 
-#  If your map is not a minivault, make sure the side(s) that form the border
-#  have a rock wall padding at least 6 deep. For instance, if your map is
-#  ORIENT: north, you must have a 6 deep border of rock wall (or any other kind
-#  of wall) along the northern, eastern, and western edges of the map. If
-#  you're doing a fullscreen map (encompass), you must pad all around the map
-#  with 6 layers of wall. For ORIENT: encompass maps, you don't need to
+#
+#  If your map is not a minivault or a floating vault, make sure the side(s)
+#  that form the border have a rock wall padding at least 6 deep. For instance,
+#  if your map is ORIENT: north, you must have a 6 deep border of rock wall (or
+#  any other kind of wall) along the northern, eastern, and western edges of the
+#  map. If you're doing a fullscreen map (encompass), you must pad all around
+#  the map with 6 layers of wall. For ORIENT: encompass maps, you don't need to
 #  explicitly include the padding provided you make the map small enough that
 #  the padding can be provided automatically.
 # 

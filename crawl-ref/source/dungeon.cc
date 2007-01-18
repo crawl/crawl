@@ -5859,8 +5859,9 @@ static int vault_grid( vault_placement &place,
                                || vgrid == '0') ? RANDOM_MONSTER
                                     : place.map.mons.get_monster(vgrid - '1'));
 
-        place_monster( not_used, monster_type_thing, monster_level, BEH_SLEEP,
-                       MHITNOT, true, vx, vy, false);
+        if (monster_type_thing != -1)
+            place_monster( not_used, monster_type_thing, monster_level,
+                           BEH_SLEEP, MHITNOT, true, vx, vy, false );
     }
 
     // again, this seems odd, given that this is just one of many
