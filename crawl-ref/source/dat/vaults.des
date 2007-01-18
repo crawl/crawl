@@ -1245,6 +1245,130 @@ xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+# The Chase
+
+NAME: david_entry_chase
+TAGS: entry no_monster_gen no_pool_fixup
+MONS: kobold, hobgoblin
+ITEM: stone, dart
+ORIENT: float
+FLAGS: no_rotate 
+
+MAP
+xxxxxxxxxxxxx..........@
+xxxxxwwwwwwww2..........
+xxxxxxxxwwwwwww........x
+xxxxx.......wwww..wwwwwx
+xxww...(.......wwwwwwwwx
+xwwww....[.{....wwww...x
+xwwwwww.................
+xwwwwwwwwwwwwwww.......@
+x1wwwwwwwwwwwwwwww......
+x1e1...wwwwwwwwwwwwwww.x
+x1d1...........wwwwwwwwx
+x>...................wwx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# The humble fractal
+
+NAME: david_entry_fractal
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate 
+
+MAP
+xxxxx+xxxxx+xxxxxxxxxxx@x
+xxxxx.xxxxx.xxxxxxxxxxx.x
+xxxx..xxxx..xxxxxxxxxx..x
+xxx...xxx...xxxxxxxxx...x
+xx..(.xx..{.xxxxxxxx....x
++.....+.....xxxxxxx.....x
+xxxxx+xxxxx+xxxxxx......x
+xxxxx.xxxxx.xxxxx.......x
+xxxx..xxxx..xxxx........x
+xxx...xxx...xxx.........x
+xx..[.xx....xx..........x
+@.....+.....+...........x
+xxxxx+xxxxx+............x
+xx.xx.xx.xx.............x
+x..+..x..x..............x
+xx+xxxxxx...............x
+xx.xx.xx................x
+x..x..x.................x
+xx+xxx..................x
+xx.xx...................x
+x..x....................x
+xxx.....................x
+xx......................x
+@.......................x
+xxxxxxxxxxxxxxxxxxxxxxxxx
+
+##############################################################################
+# Painted rooms 1
+
+NAME: david_entry_paint_1
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxx@.xxxxxx
+xvvvvvvvx..xbbbbx
+xv.....vx..xb..bx
+xv..(..+...xb.[bx
+xv.....vx..xb..bx
+xvvvvvvvx...+..bx
+xxxxxxxxx..xb..bx
+@..........xb.{bx
+.........T.xb..bx
+xxxxxxxx...xbbbbx
+xxxxxxxx.@.xxxxxx
+ENDMAP
+
+##############################################################################
+# Painted rooms 2
+
+NAME: david_entry_paint_2
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxx
+xcccccccx.....x
+xc.....cx..[..x
+xc..(..cx.....x
+xc.....cxxxx+xx
+xc..{..cx......
+xc.....+......@
+xcccccccx......
+xxxxxxxxx..@...
+ENDMAP
+
+##############################################################################
+# Painted rooms 3
+
+NAME: david_entry_paint_3
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxx
+xvcvcvcvcvcx
+xc........vx
+xv........cx
+xc.(....[.vx
+xv........cx
+xc........vx
+xvcvcv+vcvcx
+xxxxxx.xxxxx
+x..........x
+x.{..wwww..x
+x..........x
+xxxxxxxxxx@x
+ENDMAP
+
 ########################################################################
 # Array of rooms (five variations on the theme).
 
@@ -1513,12 +1637,14 @@ x.................................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-# concentric eggs, mostly foul
+############################################################################
+# Concentric eggs (David)
 
 NAME: david_concentric_eggs
 TAGS: entry no_monster_gen
 ORIENT: float
+MONS: worm / giant beetle
+ITEM: ring of hunger / protection from fire / protection from cold
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1532,12 +1658,12 @@ xv.....xxxxx...........xxxxx.....vx
 xx.....xxxx....xxxxx....xxxx.....xx
 xv.....xxx...xxxxxxxxx...xxx.....vx
 x.....xxxx..xx.......xx..xxxx.....x
-x.....xxx...x..xx+xx..x...xxx.....x
-......xxx..xx.xx...xx.xx..xxx......
-@.....xxx..xx.xx[({xx.xx..xxx.....@
-......xxx..xx.xx...xx.xx..xxx......
-x.....xxx...x..xxxxx..x...xxx.....x
-x.....xxxx..xx.......xx..xxxx.....x
+x.....xdx...x..xx+xx..x...x.x.....x
+......x.x..xx.xx...xx.xx..x.x......
+@.....x1x..xx.xx[({xx.xx..x1x.....@
+......x.x..xx.xx...xx.xx..x.x......
+x.....x.x...x..xxxxx..x...x.x.....x
+x.....xx=x..xx.......xx..x=xx.....x
 xv.....xxx...xxxx+xxxx...xxx.....vx
 xx.....xxxx....xx+xx....xxxx.....xx
 xv.....xxxxx...........xxxxx.....vx
@@ -1577,7 +1703,6 @@ xxxx...............xxxx
 xxxxxxxx.......xxxxxxxx
 xxxxxxxxxx.@.xxxxxxxxxx
 ENDMAP
-
 
 ##############################################################################
 # Sounds of Crawl: the Slurp
