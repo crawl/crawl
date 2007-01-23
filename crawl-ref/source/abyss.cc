@@ -141,7 +141,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
 
                 if (items_placed < 150 && one_chance_in(200))
                 {
-                    if (one_chance_in(500))
+                    if (one_chance_in(200))
                     {
                         thing_created = items(1, OBJ_MISCELLANY, 
                                               MISC_RUNE_OF_ZOT, true, 51, 51);
