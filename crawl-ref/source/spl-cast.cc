@@ -1667,7 +1667,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SYMBOL_OF_TORMENT:
-        if (you.is_undead || you.mutation[MUT_TORMENT_RESISTANCE])
+        if (player_res_torment())
         {
             mpr("To torment others, one must first know what torment means. ");
             return (-1);

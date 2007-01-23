@@ -2856,6 +2856,18 @@ static bool affix_weapon_enchantment( void )
         cast_toxic_radiance();
         break;
 
+    case SPWPN_PAIN:
+        strcat(info, " shrieks out in eternal agony!");
+        mpr(info);
+
+        torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
+
+        // is only naughty if you know you're doing it
+        if (get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE)
+            did_god_conduct(DID_UNHOLY, 10);
+
+        break;
+
     case SPWPN_DISTORTION:
         // [dshaligram] Attempting to fix a distortion brand gets you a free
         // distortion effect, and no permabranding. Sorry, them's the breaks.
@@ -3382,10 +3394,9 @@ void read_scroll(void)
     case SCR_ENCHANT_WEAPON_III:
         if (you.equip[ EQ_WEAPON ] != -1) 
         {
+            in_name( you.equip[EQ_WEAPON], DESC_CAP_YOUR, info );
             if (!affix_weapon_enchantment())
             {
-                in_name( you.equip[EQ_WEAPON], DESC_CAP_YOUR, str_pass );
-                strcpy( info, str_pass );
                 strcat( info, " glows bright yellow for a while." );
                 mpr( info );
 
