@@ -189,4 +189,8 @@ int player_branch_depth();
 int absdungeon_depth(unsigned char branch, int subdepth);
 //////////////////////////////////////////////////////////////////////
 
+// Set floor/wall colour based on the mons_alloc array. Used for
+// Abyss and Pan.
+void set_colours_from_monsters();
+
 #endif

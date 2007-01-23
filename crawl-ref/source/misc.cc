@@ -1079,12 +1079,18 @@ void init_new_level(bool transit)
         stash_init_new_level();
 }
 
-static char fix_colour(char incol )
+static char fix_colour(char incol)
 {
     if ( incol == BLACK )
         return LIGHTGREY;
     else
         return incol;
+}
+
+void set_colours_from_monsters()
+{
+    env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
+    env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
 }
 
 std::string level_description_string()
@@ -1126,15 +1132,9 @@ void new_level(void)
     take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
     cprintf("%s", level_description_string().c_str());
 
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
     {
-        env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
-        env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
-    }
-    else if (you.level_type == LEVEL_ABYSS)
-    {
-        env.floor_colour = fix_colour(mcolour[env.mons_alloc[9]]);
-        env.rock_colour = fix_colour(mcolour[env.mons_alloc[8]]);
+        set_colours_from_monsters();
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {

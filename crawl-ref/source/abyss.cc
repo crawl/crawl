@@ -19,6 +19,7 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "misc.h"
 #include "monplace.h"
 #include "dungeon.h"
 #include "items.h"
@@ -180,6 +181,10 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
                 while (grd[i][j] == DNGN_ALTAR_YREDELEMNUL
                        || grd[i][j] == DNGN_ALTAR_VEHUMET
                        || grd[i][j] == DNGN_ALTAR_NEMELEX_XOBEH);
+
+                // Lucy has a flat 50% chance of corrupting the altar
+                if ( one_chance_in(2) )
+                    grd[i][j] = DNGN_ALTAR_LUCY;
             }
         }
     }
@@ -328,13 +333,8 @@ void abyss_teleport( bool new_area )
 
     // teleport to a new area of the abyss:
 
-    init_pandemonium();                         /* changes colours */
-
-    env.floor_colour = (mcolour[env.mons_alloc[9]] == BLACK)
-                                ? LIGHTGREY : mcolour[env.mons_alloc[9]];
-
-    env.rock_colour = (mcolour[env.mons_alloc[8]] == BLACK)
-                                ? LIGHTGREY : mcolour[env.mons_alloc[8]];
+    init_pandemonium();          // get new monsters
+    set_colours_from_monsters(); // and new colours
 
     // Orbs and fixed artefacts are marked as "lost in the abyss"
     for (k = 0; k < MAX_ITEMS; k++)
