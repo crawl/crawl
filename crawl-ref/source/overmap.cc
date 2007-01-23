@@ -99,33 +99,36 @@ static const char* portaltype_to_string(portal_type p)
     }
 }
 
-static char shoptype_to_char(shop_type s)
+static std::string shoptype_to_string(shop_type s)
 {
     switch ( s )
     {
     case SHOP_WEAPON:
+        return "(";
     case SHOP_WEAPON_ANTIQUE:
-        return '(';
+        return "<yellow>(</yellow>";
     case SHOP_ARMOUR:
+        return "[";
     case SHOP_ARMOUR_ANTIQUE:
-        return '[';
-    case SHOP_GENERAL_ANTIQUE:
+        return "<yellow>[</yellow>";
     case SHOP_GENERAL:
-        return '*';
+        return "*";
+    case SHOP_GENERAL_ANTIQUE:
+        return "<yellow>*</yellow>";
     case SHOP_JEWELLERY:
-        return '=';
+        return "=";
     case SHOP_WAND:
-        return '/';
+        return "/";
     case SHOP_BOOK:
-        return '+';
+        return "+";
     case SHOP_FOOD:
-        return '%';
+        return "%";
     case SHOP_DISTILLERY:
-        return '!';
+        return "!";
     case SHOP_SCROLL:
-        return '?';
+        return "?";
     default:
-        return 'x';
+        return "x";
     }
 }
 
@@ -299,31 +302,44 @@ std::string overview_description_string()
     }
     last_id.depth = 10000;
     std::map<level_pos, shop_type>::const_iterator ci_shops;
-    int placecount = 0;
+
+    // there are at most 5 shops per level, plus 7 chars for the level
+    // name, plus 4 for the spacing; that makes a total of 17
+    // characters per shop.
+    const int maxcolumn = get_number_of_cols() - 17;
+    int column_count = 0;
+
     for ( ci_shops = shops_present.begin();
           ci_shops != shops_present.end();
           ++ci_shops )
     {
         if ( ci_shops->first.id != last_id )
         {
-            if ( placecount )
+            if ( column_count > maxcolumn )
             {
-                // there are at most 5 shops per level, plus 7 chars for
-                // the level name, plus 4 for the spacing; that makes
-                // a total of 16 chars per shop or exactly 5 per line.
-                if ( placecount % 5 == 0 )
-                    disp += "\n";
-                else
-                    disp += "  ";
+                disp += "\n";
+                column_count = 0;
             }
-            ++placecount;
+            else if ( column_count != 0 )
+            {
+                disp += "  ";
+                ++column_count;
+            }
             disp += "<brown>";
-            disp += ci_shops->first.id.describe(false, true);
+
+            const std::string loc = ci_shops->first.id.describe(false, true);
+            disp += loc;
+            column_count += loc.length();
+
             disp += "</brown>";
+
             disp += ": ";
+            column_count += 2;
+
             last_id = ci_shops->first.id;
         }
-        disp += shoptype_to_char(ci_shops->second);
+        disp += shoptype_to_string(ci_shops->second);
+        ++column_count;
     }
     disp += "\n";
 

@@ -597,7 +597,7 @@ int randart_value( const item_def &item )
 unsigned int item_value( item_def item, id_arr id, bool ident )
 {
     // Note that we pass item in by value, since we want a local
-    // copy to mangle as neccessary... maybe that should be fixed,
+    // copy to mangle as necessary... maybe that should be fixed,
     // but this function isn't called too often.
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
