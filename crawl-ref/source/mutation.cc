@@ -915,7 +915,7 @@ formatted_string describe_mutations()
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
         else
-            result += "<lightred>You can exhale a cloud of poison.</lightred>" EOL;
+            result += "<lightred>You can exhale a cloud of poison.</lightred>" EOL "<lightblue>";
 
         // slowness can be overriden
         if ( you.mutation[MUT_FAST] )
@@ -932,7 +932,7 @@ formatted_string describe_mutations()
             result += "<lightred>";
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         if ( you.mutation[MUT_CLAWS] )
-            result += "</lightred";
+            result += "</lightred><lightblue>";
         result += EOL;
         have_any = true;
         break;

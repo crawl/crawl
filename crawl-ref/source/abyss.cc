@@ -183,7 +183,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
                        || grd[i][j] == DNGN_ALTAR_NEMELEX_XOBEH);
 
                 // Lucy has a flat 50% chance of corrupting the altar
-                if ( one_chance_in(2) )
+                if ( coinflip() )
                     grd[i][j] = DNGN_ALTAR_LUCY;
             }
         }
