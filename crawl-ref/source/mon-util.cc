@@ -1328,7 +1328,7 @@ void define_monster(int index)
 
 
 /* ------------------------- monam/moname ------------------------- */
-const char *ptr_monam( const monsters *mon, char desc )
+const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
 {
     // We give an item type description for mimics now, note that 
     // since gold mimics only have one description (to match the
@@ -1338,14 +1338,15 @@ const char *ptr_monam( const monsters *mon, char desc )
     {
         static char mimic_name_buff[ ITEMNAME_SIZE ];
 
-        item_def  item;
+        item_def item;
         get_mimic_item( mon, item );
         item_name( item, desc, mimic_name_buff );
 
         return (mimic_name_buff);
     }
 
-    return (monam( mon->number, mon->type, player_monster_visible( mon ), 
+    return (monam( mon->number, mon->type,
+                   force_seen || player_monster_visible( mon ), 
                    desc, mon->inv[MSLOT_WEAPON] ));
 }
 

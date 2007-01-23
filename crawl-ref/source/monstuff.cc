@@ -705,7 +705,7 @@ void monster_die(struct monsters *monster, char killer, int i)
              monster->type == MONS_PANDEMONIUM_DEMON )
         {
             take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
-                           ptr_monam(monster, DESC_NOCAP_A)));
+                           ptr_monam(monster, DESC_NOCAP_A, true)));
         }
 
         you.kills.record_kill(monster, killer, pet_kill);
@@ -991,7 +991,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 	    && MONST_INTERESTING(monster))
     {
 	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
-                       ptr_monam(monster, DESC_NOCAP_A)));
+                       ptr_monam(monster, DESC_NOCAP_A, true)));
 	}
 
     // messaging: {dlb}
