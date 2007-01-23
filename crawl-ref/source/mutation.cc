@@ -1938,11 +1938,12 @@ void demonspawn(void)
             if (one_chance_in(12))
             {
                 whichm = MUT_SHOCK_RESISTANCE;
-                howm = 1;
+                howm = 3;
             }
 
             if (!you.mutation[MUT_CALL_TORMENT] && one_chance_in(15))
             {
+                // Must keep this at 1. OK since it never happens randomly.
                 whichm = MUT_TORMENT_RESISTANCE;
                 howm = 1;
             }
@@ -2033,7 +2034,7 @@ void demonspawn(void)
             if (one_chance_in(4))
             {
                 whichm = MUT_POISON_RESISTANCE;
-                howm = 1;
+                howm = 3;
             }
 
             if (one_chance_in(4))
