@@ -1980,6 +1980,9 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     case BEAM_CHARM:             /* 9 = charm */
         if (mons_add_ench(monster, ENCH_CHARM))
         {
+            // break fleeing and suchlike
+            monster->behaviour = BEH_SEEK;
+
             // put in an exception for fungi, plants and other things you won't
             // notice becoming charmed.
             if (simple_monster_message(monster, " is charmed."))
