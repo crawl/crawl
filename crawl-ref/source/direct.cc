@@ -78,7 +78,7 @@ static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
 // [dshaligram] Removed . and 5 from dirchars so it's easier to
 // special case them.
 static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
-static const char *aim_prompt = "Aim (move cursor or -/+/=, change mode with CTRL-F, select with . or >)";
+static const char *aim_prompt = "Aim (move cursor or -/+, change mode with CTRL-F, select with . or >)";
 
 static void describe_feature(int mx, int my, bool oos);
 static void describe_cell(int mx, int my);
@@ -86,31 +86,76 @@ static void describe_cell(int mx, int my);
 static bool find_object( int x, int y, int mode );
 static bool find_monster( int x, int y, int mode );
 static bool find_feature( int x, int y, int mode );
+
+static char find_square_wrapper( int tx, int ty, 
+                                 FixedVector<char, 2> &mfp, char direction,
+                                 bool (*targ)(int, int, int),
+                                 int mode = TARG_ANY,
+                                 bool wrap = false,
+                                 int los = LOS_ANY);
+
 static char find_square( unsigned char xps, unsigned char yps, 
-                       FixedVector<char, 2> &mfp, char direction,
-                       bool (*targ)(int, int, int),
-                       int mode = TARG_ANY,
-                       bool wrap = false,
-                       int los = LOS_ANY);
+                         FixedVector<char, 2> &mfp, char direction,
+                         bool (*targ)(int, int, int),
+                         int mode = TARG_ANY,
+                         bool wrap = false,
+                         int los = LOS_ANY);
+
+static int targeting_cmd_to_compass( command_type command );
 
 static bool is_mapped(int x, int y)
 {
     return (is_player_mapped(x, y));
 }
 
-static int read_direction_key()
+static command_type read_direction_key()
 {
-    return unmangle_direction_keys(getchm(KC_TARGETING), KC_TARGETING);
+    flush_input_buffer( FLUSH_BEFORE_COMMAND );
+    const int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
+    switch ( key )
+    {
+
+    case ESCAPE: return CMD_TARGET_CANCEL;
+    case '?': return CMD_TARGET_DESCRIBE;
+    case ' ': case '.': return CMD_TARGET_SELECT;
+
+    case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
+    case 'p': case 'f': case 't': return CMD_TARGET_PREV_TARGET;
+        
+    case '-': return CMD_TARGET_CYCLE_BACK;
+    case '+': return CMD_TARGET_CYCLE_FORWARD;
+    case ';': return CMD_TARGET_OBJ_CYCLE_BACK;
+    case '/': return CMD_TARGET_OBJ_CYCLE_FORWARD;
+
+    case 'b': return CMD_TARGET_DOWN_LEFT;
+    case 'h': return CMD_TARGET_LEFT;
+    case 'j': return CMD_TARGET_DOWN;
+    case 'k': return CMD_TARGET_UP;
+    case 'l': return CMD_TARGET_RIGHT;
+    case 'n': return CMD_TARGET_DOWN_RIGHT;
+    case 'u': return CMD_TARGET_UP_RIGHT;
+    case 'y': return CMD_TARGET_UP_LEFT;
+
+    case 'B': return CMD_TARGET_DIR_DOWN_LEFT;
+    case 'H': return CMD_TARGET_DIR_LEFT;
+    case 'J': return CMD_TARGET_DIR_DOWN;
+    case 'K': return CMD_TARGET_DIR_UP;
+    case 'L': return CMD_TARGET_DIR_RIGHT;
+    case 'N': return CMD_TARGET_DIR_DOWN_RIGHT;
+    case 'U': return CMD_TARGET_DIR_UP_RIGHT;
+    case 'Y': return CMD_TARGET_DIR_UP_LEFT;
+
+    default: return CMD_NO_CMD;
+    }
 }
 
 //---------------------------------------------------------------
 //
 // direction
 //
-// input: restricts : DIR_NONE      accepts keypad dir or targetting
-//                    DIR_TARGET    must use targetting.
-//                    DIR_DIR       must use keypad direction
-//
+// use restrict == DIR_DIR to allow only a compass direction;
+//              == DIR_TARGET to allow only choosing a square;
+//              == DIR_NONE to allow either.
 //
 // outputs: dist structure:
 //
@@ -134,11 +179,69 @@ static int read_direction_key()
 // targetting mode is handled by look_around()
 //---------------------------------------------------------------
 
-void direction2( struct dist &moves, int restrict, int mode )
+void direction_choose_compass( struct dist& moves )
 {
-    bool dir_chosen = false;
-    bool targ_chosen = false;
+    moves.isValid       = true;
+    moves.isTarget      = false;
+    moves.isMe          = false;
+    moves.isCancel      = false;
+    moves.dx = moves.dy = 0;
+
+    do {
+        const command_type key_command = read_direction_key();
+        const int i = targeting_cmd_to_compass(key_command);
+        if ( i != -1 )
+        {
+            moves.dx = Compass[i].x;
+            moves.dy = Compass[i].y;
+        }
+        else if ( key_command == CMD_TARGET_CANCEL )
+        {
+            moves.isCancel = true;
+            moves.isValid = false;
+        }
+    } while ( !moves.isCancel && moves.dx == 0 && moves.dy == 0 );
+    
+    return;
+}
+
+static int targeting_cmd_to_compass( command_type command )
+{
+    switch ( command )
+    {
+    case CMD_TARGET_UP:         case CMD_TARGET_DIR_UP:
+        return 0;
+    case CMD_TARGET_UP_RIGHT:   case CMD_TARGET_DIR_UP_RIGHT:
+        return 1;
+    case CMD_TARGET_RIGHT:      case CMD_TARGET_DIR_RIGHT:
+        return 2;
+    case CMD_TARGET_DOWN_RIGHT: case CMD_TARGET_DIR_DOWN_RIGHT:
+        return 3;
+    case CMD_TARGET_DOWN:       case CMD_TARGET_DIR_DOWN:
+        return 4;
+    case CMD_TARGET_DOWN_LEFT:  case CMD_TARGET_DIR_DOWN_LEFT:
+        return 5;
+    case CMD_TARGET_LEFT:       case CMD_TARGET_DIR_LEFT:
+        return 6;
+    case CMD_TARGET_UP_LEFT:    case CMD_TARGET_DIR_UP_LEFT:
+        return 7;
+    default:
+        return -1;
+    }
+}
+
+void direction( struct dist &moves, int restricts, int mode )
+{
+    if ( restricts == DIR_DIR )
+    {
+        direction_choose_compass( moves );
+        return;
+    }
+
     int dir = 0;
+
+    FixedVector < char, 2 > objfind_pos;
+    FixedVector < char, 2 > monsfind_pos;
 
     // init
     moves.isValid       = false;
@@ -146,203 +249,231 @@ void direction2( struct dist &moves, int restrict, int mode )
     moves.isMe          = false;
     moves.isCancel      = false;
     moves.dx = moves.dy = 0;
-    moves.tx = moves.ty = 0;
+
+    // XXX change this for default target
+    moves.tx = you.x_pos;
+    moves.ty = you.y_pos;
+
+    // XXX Add: ability to cycle between appropriate rays!
 
     // XXX.  this is ALWAYS in relation to the player. But a bit of a hack
     // nonetheless!  --GDL
-    gotoxy( VIEW_CX + 1, VIEW_CY );
 
-    int keyin = read_direction_key();
+    mpr(aim_prompt);
 
-    if (keyin == 0)
-        return;
+    while (1)
+    {
+        // I'm sure there's a perfectly good reason for the +1.
+        gotoxy( grid2viewX(moves.tx) + 1, grid2viewY(moves.ty) );
 
-    if (strchr( dirchars, keyin ) != NULL)
-    {
-        dir_chosen = true;
-        dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
-    }
-    else if (strchr( dirchars, tolower(keyin) ) != NULL)
-    {
-        dir_chosen = true;
-        dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
-    }
-    else
-    {
-        switch (keyin)
+        command_type key_command = read_direction_key();
+
+        bool need_redraw = true;
+        bool loop_done = false;
+
+        const int old_tx = moves.tx;
+        const int old_ty = moves.ty;
+
+        int i, mid;
+
+        switch ( key_command )
         {
-        case CONTROL('F'):
+            // standard movement
+        case CMD_TARGET_DOWN_LEFT:
+        case CMD_TARGET_DOWN:
+        case CMD_TARGET_DOWN_RIGHT:
+        case CMD_TARGET_LEFT:
+        case CMD_TARGET_RIGHT:
+        case CMD_TARGET_UP_LEFT:
+        case CMD_TARGET_UP:
+        case CMD_TARGET_UP_RIGHT:
+            i = targeting_cmd_to_compass(key_command);
+            moves.tx += Compass[i].x;
+            moves.ty += Compass[i].y;
+            break;
+
+        case CMD_TARGET_DIR_DOWN_LEFT:
+        case CMD_TARGET_DIR_DOWN:
+        case CMD_TARGET_DIR_DOWN_RIGHT:
+        case CMD_TARGET_DIR_LEFT:
+        case CMD_TARGET_DIR_RIGHT:
+        case CMD_TARGET_DIR_UP_LEFT:
+        case CMD_TARGET_DIR_UP:
+        case CMD_TARGET_DIR_UP_RIGHT:
+            i = targeting_cmd_to_compass(key_command);
+
+            if ( restricts != DIR_TARGET )
+            {
+                // A direction is allowed, and we've selected it.
+                moves.dx = Compass[i].x;
+                moves.dy = Compass[i].y;
+                // Needed for now...eventually shouldn't be necessary
+                moves.tx = you.x_pos + moves.dx;
+                moves.ty = you.y_pos + moves.dy;
+                moves.isValid = true;
+                moves.isTarget = false;
+                loop_done = true;
+            }
+            else
+            {
+                // Direction not allowed, so just move in that direction.
+                // Maybe make this a bigger jump?
+                moves.tx += Compass[i].x;
+                moves.ty += Compass[i].y;
+            }
+            break;
+
+        case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = (mode + 1) % TARG_NUM_MODES;
-            snprintf( info, INFO_SIZE, "Targeting mode is now: %s", 
-                      (mode == TARG_ANY)   ? "any" :
-                      (mode == TARG_ENEMY) ? "enemies" 
-                      : "friends" );
-            mpr( info );
-            targ_chosen = true;
-            dir = 0;
+            mprf( "Targeting mode is now: %s",
+                  (mode == TARG_ANY)   ? "any" :
+                  (mode == TARG_ENEMY) ? "enemies" :
+                  "friends" );
+            need_redraw = false;
             break;
             
-        case '-':
-            targ_chosen = true;
-            dir = -1;
-            break;
-            
-        case '*':
-            targ_chosen = true;
-            dir = 0;
-            break;
-            
-        case ';':
-            targ_chosen = true;
-            dir        = -3;
-            break;
+        case CMD_TARGET_PREV_TARGET:
+            // Do we have a previous target?
+            if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
+            {
+                mpr("You haven't got a previous target.");
+                need_redraw = false;
+                break;
+            }
 
-        case '\'':
-            targ_chosen = true;
-            dir        = -2;
-            break;
-                    
-        case '+':
-        case '=':
-            targ_chosen = true;
-            dir = 1;
-            break;
+            // we have a valid previous target (maybe)
+            {
+                const monsters *montarget = &menv[you.prev_targ];
+                
+                if (!mons_near(montarget) ||
+                    !player_monster_visible( montarget ))
+                {
+                    mpr("You can't see that creature any more.");
+                    need_redraw = false;
+                }
+                else
+                {
+                    // We have all the information we need
+                    moves.isValid = true;
+                    moves.isTarget = true;
+                    moves.tx = montarget->x;
+                    moves.ty = montarget->y;
+                    loop_done = true;
+                }
+                break;
+            }
 
-        case 't':
-        case 'p':
-        case 'f':
-            targ_chosen = true;
-            dir = 2;
-            break;
-
-        case '.':
-        case '5':
-            dir_chosen = true;
-            dir = 4;
-            break;
-
-        case ESCAPE:
-            moves.isCancel = true;
-            return;
-
-        default:
-            break;
-        }
-    }
-
-    // at this point, we know exactly the input - validate
-    if (!(targ_chosen || dir_chosen) || (targ_chosen && restrict == DIR_DIR))
-    {
-        mpr("What an unusual direction.");
-        return;
-    }
-
-    // special case: they typed a dir key, but they're in target-only mode
-    if (dir_chosen && restrict == DIR_TARGET)
-    {
-        mpr(aim_prompt);
-        look_around( moves, false, keyin, mode );
-        return;
-    }
-
-    if (targ_chosen)
-    {
-        if (dir < 2)
-        {
-            mpr(aim_prompt);
-            moves.prev_target = dir;
-            look_around( moves, false, -1, mode );
-            if (moves.prev_target != -1)      // -1 means they pressed 'p'
-                return;
-        }
-
-        // chose to aim at previous target.  do we have one?
-        if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
-        {
-            mpr("You haven't got a target.");
-            return;
-        }
-
-        // we have a valid previous target (maybe)
-        struct monsters *montarget = &menv[you.prev_targ];
-
-        if (!mons_near(montarget) || !player_monster_visible( montarget ))
-        {
-            mpr("You can't see that creature any more.");
-            return;
-        }
-        else
-        {
+        case CMD_TARGET_SELECT: // finalize current choice
             moves.isValid = true;
             moves.isTarget = true;
-            moves.tx = montarget->x;
-            moves.ty = montarget->y;
-        }
-        return;
-    }
-
-    // at this point, we have a direction, and direction is allowed.
-    moves.isValid = true;
-    moves.isTarget = false;
-    moves.dx = xcomp[dir];
-    moves.dy = ycomp[dir];
-    if (xcomp[dir] == 0 && ycomp[dir] == 0)
-        moves.isMe = true;
-
-    // now the tricky bit - extend the target x,y out to map edge.
-    int mx, my;
-    mx = my = 0;
-
-    if (moves.dx > 0)
-        mx = (GXM  - 1) - you.x_pos;
-    if (moves.dx < 0)
-        mx = you.x_pos;
-
-    if (moves.dy > 0)
-        my = (GYM - 1) - you.y_pos;
-    if (moves.dy < 0)
-        my = you.y_pos;
-
-    if (!(mx == 0 || my == 0))
-    {
-        if (mx < my)
-            my = mx;
-        else
-            mx = my;
-    }
-    moves.tx = you.x_pos + moves.dx * mx;
-    moves.ty = you.y_pos + moves.dy * my;
-}
-
-/* safe version of direction */
-void direction( struct dist &moves, int restrict, int mode,
-                bool confirm_fizzle )
-{
-    while ( 1 )
-    {
-        direction2( moves, restrict, mode );
-        if ( moves.isMe && Options.confirm_self_target == true &&
-             mode != TARG_FRIEND )
-        {
-            if ( yesno("Really target yourself? ", false, 'n') )
-                return;
+            loop_done = true;
+            mid = mgrd[moves.tx][moves.ty];
+            if ( mid != NON_MONSTER )
+                you.prev_targ = mid;
+            break;
+            
+        case CMD_TARGET_OBJ_CYCLE_BACK:
+        case CMD_TARGET_OBJ_CYCLE_FORWARD:
+            dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
+            if (find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
+                                     find_object, 0, true,
+                                     Options.target_los_first
+                                     ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
+                                     : LOS_ANY))
+            {
+                moves.tx = objfind_pos[0];
+                moves.ty = objfind_pos[1];
+            }
             else
-                mpr("Choose a better target.", MSGCH_PROMPT);
-        }
-        else if ( confirm_fizzle && !moves.isValid && Options.fizzlecheck_on )
-        {
-            if ( yesno("Really fizzle? ", false, 'n') )
-                return;
+            {
+                flush_input_buffer(FLUSH_ON_FAILURE);
+                need_redraw = false;
+            }
+            break;
+        
+        case CMD_TARGET_CYCLE_FORWARD:
+        case CMD_TARGET_CYCLE_BACK:
+            dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
+            if (find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir, 
+                                     find_monster, mode, Options.target_wrap ))
+            {
+                moves.tx = monsfind_pos[0];
+                moves.ty = monsfind_pos[1];
+            }
             else
-                mpr("Try again.", MSGCH_PROMPT);
+            {
+                flush_input_buffer(FLUSH_ON_FAILURE);
+                need_redraw = false;
+            }
+            break;
+
+        case CMD_TARGET_CANCEL:
+            loop_done = true;
+            moves.isCancel = true;
+            break;
+            
+        case CMD_TARGET_DESCRIBE:
+            // Maybe we can skip this check...but it can't hurt
+            if (!in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER)
+            {
+                // XXX we can put in code for describing terrain here
+                need_redraw = false;
+                break;
+            }
+            
+#if (!DEBUG_DIAGNOSTICS)
+            if (!player_monster_visible( &menv[mid] ))
+            {
+                need_redraw = false;
+                break;
+            }
+#endif
+            describe_monsters(menv[mid].type, mid);
+            redraw_screen();
+            mesclr(true);
+            break;
+        default:
+            need_redraw = false;
+            break;
         }
-        else
+        
+        if ( loop_done == true )
         {
-            return;
+            if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
+            {
+                mpr("Sorry, you can't target what you can't see.");
+                need_redraw = false;
+            }
+            // Ask for confirmation if we're quitting for some odd reason
+            else if ( moves.isValid || moves.isCancel ||
+                 yesno("Are you sure you want to fizzle?") )
+            {
+                break;
+            }
+        }
+
+        // Tried to step out of bounds
+        if ( !in_bounds(moves.tx, moves.ty) )
+        {
+            moves.tx = old_tx;
+            moves.ty = old_ty;
+            need_redraw = true; // not sure this is necessary
+        }
+        
+        if ( need_redraw )
+        {
+            // XXX : put in beam redrawing code here
+            mesclr(true);
+            describe_cell(moves.tx, moves.ty);
         }
     }
-}
 
+    moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
+
+}
 
 // Attempts to describe a square that's not in line-of-sight. If
 // there's a stash on the square, announces the top item and number
@@ -870,10 +1001,13 @@ bool in_los_bounds(int x, int y)
 //
 //---------------------------------------------------------------
 static char find_square( unsigned char xps, unsigned char yps,
-                  FixedVector<char, 2> &mfp, char direction,
-                  bool (*find_targ)( int x, int y, int mode ),
-                  int mode, bool wrap, int los )
+                         FixedVector<char, 2> &mfp, char direction,
+                         bool (*find_targ)( int x, int y, int mode ),
+                         int mode, bool wrap, int los )
 {
+    // the day will come when [unsigned] chars will be consigned to
+    // the fires of Gehenna. Not quite yet, though.
+
     int temp_xps = xps;
     int temp_yps = yps;
     char x_change = 0;
@@ -892,8 +1026,8 @@ static char find_square( unsigned char xps, unsigned char yps,
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            bool vis = (env.show[xps - 8][yps] 
-                            || (xps == VIEW_CX && yps == VIEW_CY));
+            const bool vis = (env.show[xps - 8][yps] 
+                              || (xps == VIEW_CX && yps == VIEW_CY));
             
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
@@ -1074,6 +1208,19 @@ static char find_square( unsigned char xps, unsigned char yps,
                     next_los(direction, los, wrap)));
 }
 
+// XXX Unbelievably hacky. And to think that my goal was to clean up the code.
+static char find_square_wrapper( int tx, int ty,
+                                 FixedVector<char, 2> &mfp, char direction,
+                                 bool (*find_targ)( int x, int y, int mode ),
+                                 int mode, bool wrap, int los )
+{
+    unsigned char r =  find_square(grid2viewX(tx), grid2viewY(ty),
+                                   mfp, direction, find_targ, mode, wrap, los);
+    mfp[0] = view2gridX(mfp[0]);
+    mfp[1] = view2gridY(mfp[1]);
+    return r;
+}
+
 static void describe_feature(int mx, int my, bool oos)
 {
     if (oos && !is_terrain_seen(mx, my))
@@ -1087,6 +1234,8 @@ static void describe_feature(int mx, int my, bool oos)
         mpr(desc.c_str());
     }
 }
+
+
 
 // Returns a vector of features matching the given pattern.
 std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)

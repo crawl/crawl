@@ -688,15 +688,14 @@ void modify_all_stats(int STmod, int IQmod, int DXmod)
     return;
 }                               // end modify_stat()
 
-void canned_msg(unsigned char which_message)
+void canned_msg(canned_message_type which_message)
 {
     switch (which_message)
     {
     case MSG_SOMETHING_APPEARS:
-        snprintf(info, INFO_SIZE, "Something appears %s!",
-                 (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                 ? "before you" : "at your feet");
-        mpr(info);
+        mprf("Something appears %s!",
+             (you.species == SP_NAGA || you.species == SP_CENTAUR)
+             ? "before you" : "at your feet");
         break;
 
     case MSG_NOTHING_HAPPENS:

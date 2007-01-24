@@ -68,7 +68,7 @@ int blink(void)
         {
             mpr("Blink to where?", MSGCH_PROMPT);
 
-            direction( beam, DIR_TARGET, TARG_ANY, true );
+            direction(beam, DIR_TARGET, TARG_ANY);
 
             if (!beam.isValid)
             {
@@ -180,7 +180,7 @@ int fireball(int power)
 
     message_current_target();
 
-    direction( fire_ball, DIR_NONE, TARG_ENEMY, true );
+    direction( fire_ball, DIR_NONE, TARG_ENEMY );
 
     if (!fire_ball.isValid)
     {
@@ -208,7 +208,7 @@ int cast_fire_storm(int powc)
 
     mpr("Where?");
 
-    direction( targ, DIR_TARGET, TARG_ENEMY, true );
+    direction( targ, DIR_TARGET, TARG_ENEMY );
 
     beam.set_target(targ);
 
@@ -452,7 +452,7 @@ int conjure_flame(int pow)
             done_first_message = true;
         }
 
-        direction( spelld, DIR_TARGET, TARG_ENEMY, true );
+        direction( spelld, DIR_TARGET, TARG_ENEMY );
 
         if (!spelld.isValid)
         {
@@ -495,7 +495,7 @@ int stinking_cloud( int pow )
 
     message_current_target();
 
-    direction( spelld, DIR_NONE, TARG_ENEMY, true );
+    direction( spelld, DIR_NONE, TARG_ENEMY );
 
     if (!spelld.isValid)
     {
@@ -533,7 +533,7 @@ int cast_big_c(int pow, char cty)
     struct dist cdis;
 
     mpr("Where do you want to put it?", MSGCH_PROMPT);
-    direction( cdis, DIR_TARGET, TARG_ENEMY, true );
+    direction( cdis, DIR_TARGET, TARG_ENEMY );
 
     if (!cdis.isValid)
     {
@@ -557,7 +557,7 @@ static int healing_spell( int healed )
     struct dist bmove;
 
     mpr("Which direction?", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_FRIEND, true );
+    direction( bmove, DIR_DIR, TARG_FRIEND );
 
     if (!bmove.isValid)
     {

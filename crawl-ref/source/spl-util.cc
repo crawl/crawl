@@ -467,7 +467,7 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
     struct dist bmove;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction( bmove, DIR_DIR, TARG_ENEMY, true );
+    direction( bmove, DIR_DIR, TARG_ENEMY );
 
     if (!bmove.isValid)
     {
@@ -684,7 +684,7 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
 
     message_current_target();
 
-    direction( spelld, restrict, mode, true );
+    direction( spelld, restrict, mode );
 
     if (!spelld.isValid)
     {

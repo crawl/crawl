@@ -60,7 +60,7 @@ void modify_all_stats(int STmod, int IQmod, int DXmod);
 
 void redraw_screen(void);
 
-void canned_msg(unsigned char which_message);
+void canned_msg(canned_message_type which_message);
 
 bool yesno( const char * str, bool safe = true, int safeanswer = 0, 
             bool clear_after = true, bool interrupt_delays = true,

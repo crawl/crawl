@@ -1927,7 +1927,7 @@ void cast_evaporate(int pow)
 
     message_current_target();
 
-    direction( spelld, DIR_NONE, TARG_ENEMY, true );
+    direction( spelld, DIR_NONE, TARG_ENEMY );
 
     if (!spelld.isValid)
     {
@@ -2373,7 +2373,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     const char *what = NULL;
 
     mpr("Fragment what (e.g. a wall)?", MSGCH_PROMPT);
-    direction( beam, DIR_TARGET, TARG_ENEMY, true );
+    direction( beam, DIR_TARGET, TARG_ENEMY );
 
     if (!beam.isValid)
     {
@@ -2901,7 +2901,7 @@ int cast_apportation(int pow)
 
     mpr("Pull items from where?");
 
-    direction( beam, DIR_TARGET, TARG_ANY, true );
+    direction( beam, DIR_TARGET, TARG_ANY );
 
     if (!beam.isValid)
     {

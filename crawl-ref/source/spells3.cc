@@ -195,7 +195,7 @@ int cast_smiting(int power)
 
     mpr("Smite whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY, true );
+    direction( beam, DIR_TARGET, TARG_ENEMY );
 
     if (!beam.isValid)
     {
@@ -239,7 +239,7 @@ int airstrike(int power)
 
     mpr("Strike whom?", MSGCH_PROMPT);
 
-    direction( beam, DIR_TARGET, TARG_ENEMY, true );
+    direction( beam, DIR_TARGET, TARG_ENEMY );
 
     if (!beam.isValid)
     {
