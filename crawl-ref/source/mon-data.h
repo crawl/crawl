@@ -627,7 +627,7 @@
 {
     MONS_PLANT, 'P', GREEN, "plant",
     M_NO_EXP_GAIN,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_PLANT, MH_PLANT, MAG_IMMUNE,
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
