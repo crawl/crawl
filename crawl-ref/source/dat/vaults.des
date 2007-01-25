@@ -1856,6 +1856,182 @@ xxx.....@.....xxx.....@.....xxx
 ENDMAP
 
 ##############################################################################
+# Arbitrary 1
+
+NAME: david_entry_315
+TAGS: entry 
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxx..xx......xx..xx
+xxxx.......xxx..x...x
+xxxx..(...xx........x
+xxx......x....[....xx
+xxx...............xxx
+xxx............xxxxxx
+xx..........xxxxxxxxx
+xx.........xxxxxxxxx.
+x.......xxxxxxxxxxx..
+x.....xxxxxxxxxxxxx.@
+x..xxxxxxxxxxxxxx....
+x...xxxxxx....x...xxx
+x.......x..xx...xxxxx
+x...........xxxxxxxxx
+xx...{.xxx.......xxxx
+xxx.....xxxx.......xx
+xxxxxx...xxxxx......x
+xxxxxxxxxxxxxxx..@..x
+ENDMAP
+
+##############################################################################
+# Arbitrary 2
+
+NAME: david_entry_316
+TAGS: entry 
+ORIENT: float
+
+MAP
+xxxxxxx..@..xxxxx
+xxxxxx........xxx
+xxxx....xxxx..xxx
+xxx....xxxxx...xx
+xxx.(..xxxxxx..xx
+xx......xxxxx...x
+xx.......xxxxx...
+x....xx....xx...@
+...xxxxx........x
+@..xxxx......[..x
+....x..........xx
+x......{..xxx...x
+xx.......xxxx..xx
+xxxxx..xxxxxxx.xx
+xxxxx.x.xxxxx..xx
+xxxx...@..xx.@..x
+ENDMAP
+
+##############################################################################
+# subterranean lakeside camping
+
+NAME: david_entry_317
+TAGS: entry no_monster_gen
+ORIENT: float
+MONS: goblin, rat, giant bat
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx.xx1..xxxxxxxx..33x
+xxxx.....xxx.xxx.x.x..xxxx
+xx....w...........x..xxx.x
+x...www.....www..xx...2x..
+x..www....w.wwww......xx.@
+xx......wwww.www..ww..x...
+xxx....wwww...wwwww..xx.xx
+..xx...www.[({.www..xx.xxx
+@..xx.wwwww...wwwww...xx.x
+..xx...wwwww.wwwww...x..xx
+x..xxx...wwww.ww......xxxx
+xx..x......www......xxxx.x
+xxx............xx..x.....x
+xxxx.....xxxxxxx......x.2x
+xxx..xxxxx...xxxxxx..xx1xx
+xxxxxxxxxx.@.xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# subterranean lakeside camping II
+
+NAME: david_entry_318
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwww.................
+xwwwwww......w.............
+xwww......w.www......x.....
+xww......ww.w.ww....xx.....
+xw......ww[www..w..........
+xw..(..wwwwwwwww..........@
+xw.....ww{wwww..w.....x....
+xww......wwww..ww.....x....
+xww.........wwww...x.......
+xwww..............x....xx..
+xwwwwwwww..................
+xxxxxxxxxxxxxxxxx..@.......
+ENDMAP
+
+##############################################################################
+# 319 vertical vandalism
+
+NAME: david_entry_319_a
+TAGS: entry 
+ORIENT: float
+CHANCE: 5
+
+MAP
+xxxx..@..xxxx
+xxx...x...xxx
+xx...xxx...xx
+xx...xxx...xx
+xx..xxxxx..xx
+x...........x
+x.....(.....x
+x.U...[...U.x
+x.....{.....x
+x...........x
+xxxx..x..xxxx
+xxxxx...xxxxx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# 319 horizontal hypocrisy
+
+NAME: david_entry_319_b
+TAGS: entry 
+ORIENT: float
+CHANCE: 5
+
+MAP
+xxxx..@..xxxx
+xxx...x...xxx
+xx...xxx...xx
+xx...xxx...xx
+xx..xxxxx..xx
+x...........x
+x...........x
+x.T..([{..T.x
+x...........x
+x...........x
+xxxx..x..xxxx
+xxxxx...xxxxx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# 320, and done
+
+NAME: david_entry_320
+TAGS: entry 
+ORIENT: float
+
+MAP
+xxxxxxx.@.xxxxxxx
+x.....x...x.....x
+x..(..x...+..[..x
+x.....xx.xx.....x
+xxx+xxxx.xxxxxxxx
+@....xx...xx....@
+.....xx...xx.....
+xxx+xxxx.xxxx+xxx
+x.....xx.xx.....x
+x..{..x...x..>..x
+x.....x...x.....x
+xxxxxxx.@.xxxxxxx
+ENDMAP
+
+##############################################################################
 # Erik's entry vaults
 ##############################################################################
 # Goblin Pantry
