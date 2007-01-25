@@ -30,7 +30,6 @@
 
 #include "AppHdr.h"
 
-#ifdef USE_MACROS
 #define MACRO_CC
 #include "macro.h"
 
@@ -738,6 +737,4 @@ void macro_userfn(const char *keys, const char *regname)
     // requires a mapping of key names to whatever getch() spits back, unlikely
     // to happen in a hurry.
 }
-#endif
-
 #endif

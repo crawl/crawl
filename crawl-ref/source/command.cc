@@ -716,7 +716,9 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     {
         for ( int i = 0; help_files[i].name != NULL; ++i )
         {
-            FILE* fp=fopen(datafile_path(std::string(help_files[i].name)).c_str(),"r");
+            FILE* fp =
+                fopen(
+                    datafile_path(help_files[i].name, false).c_str(), "r");
             if ( !fp )
                 continue;
 
@@ -993,13 +995,6 @@ static void list_wizard_commands()
     const char *line;
     int j = 0;
 
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    window(1, 1, 80, 25);
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
     clrscr();
 
     // BCR - Set to screen length - 1 to display the "more" string
@@ -1029,10 +1024,6 @@ static void list_wizard_commands()
     }
 
     getch();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 
     return;
 }                               // end list_commands()

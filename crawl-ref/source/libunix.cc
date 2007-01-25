@@ -494,7 +494,7 @@ int clrscr()
 #ifndef DGAMELAUNCH
     refresh();
 #else
-    printf(DGL_CLEAR_SCREEN);
+    printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
     return (retval);

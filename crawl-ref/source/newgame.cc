@@ -348,18 +348,18 @@ static unsigned char random_potion_description()
 // Determine starting depths of branches
 static void initialise_branch_depths()
 {
-    branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = 3 + random2(4);
-    branches[BRANCH_ORCISH_MINES].startdepth = 5 + random2(6);
-    branches[BRANCH_ELVEN_HALLS].startdepth = coinflip() ? 4 : 3;
-    branches[BRANCH_LAIR].startdepth = 7 + random2(6);
-    branches[BRANCH_HIVE].startdepth = 10 + random2(6);
-    branches[BRANCH_SLIME_PITS].startdepth = 3 + random2(4);
-    branches[BRANCH_SWAMP].startdepth = 2 + random2(6);
-    branches[BRANCH_SNAKE_PIT].startdepth = coinflip() ? 7 : 6;
-    branches[BRANCH_VAULTS].startdepth = 13 + random2(6);
-    branches[BRANCH_CRYPT].startdepth = 2 + random2(3);
-    branches[BRANCH_HALL_OF_BLADES].startdepth = 4;
-    branches[BRANCH_TOMB].startdepth = coinflip() ? 3 : 2;
+    branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = random_range(4, 7);
+    branches[BRANCH_ORCISH_MINES].startdepth = random_range(6, 11);
+    branches[BRANCH_ELVEN_HALLS].startdepth = random_range(3, 4);
+    branches[BRANCH_LAIR].startdepth = random_range(8, 13);
+    branches[BRANCH_HIVE].startdepth = random_range(11, 16);
+    branches[BRANCH_SLIME_PITS].startdepth = random_range(3, 9);
+    branches[BRANCH_SWAMP].startdepth = random_range(2, 7);
+    branches[BRANCH_SNAKE_PIT].startdepth = random_range(3, 8);
+    branches[BRANCH_VAULTS].startdepth = random_range(14, 19);
+    branches[BRANCH_CRYPT].startdepth = random_range(2, 4);
+    branches[BRANCH_HALL_OF_BLADES].startdepth = random_range(4, 6);
+    branches[BRANCH_TOMB].startdepth = random_range(2, 3);
 }
 
 bool new_game(void)

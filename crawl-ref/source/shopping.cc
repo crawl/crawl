@@ -125,15 +125,6 @@ char in_a_shop( char shoppy, id_arr id )
     unsigned char ft;
     std::string purchasable;
 
-#ifdef DOS_TERM
-    char buffer[4800];
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
-
     clrscr();
     int itty = 0;
 
@@ -292,9 +283,6 @@ char in_a_shop( char shoppy, id_arr id )
         shop_uninit_id(shoppy, shop_id);
         invent(-1, false);
         shop_init_id(shoppy, shop_id);
-#ifdef DOS_TERM
-        window(1, 1, 80, 25);
-#endif
         goto print_stock;
     }
 
@@ -342,12 +330,6 @@ char in_a_shop( char shoppy, id_arr id )
     //clear_line();
     shop_print("Goodbye!", 20);
     more3();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-    gotoxy(1, 1);
-    cprintf(" ");
-#endif
 
     shop_uninit_id( shoppy, shop_id );
     activate_notes(true);

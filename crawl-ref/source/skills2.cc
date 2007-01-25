@@ -1824,13 +1824,6 @@ void show_skills(void)
 
     const int num_lines = get_number_of_lines();
 
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-    char buffer[4600];
-
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
     clrscr();
 
   reprint_stuff:
@@ -1989,9 +1982,6 @@ void show_skills(void)
         }
     }
 
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
     return;
 }
 

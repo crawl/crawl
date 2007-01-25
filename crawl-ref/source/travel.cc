@@ -87,17 +87,16 @@ inline int sgn(int x)
 // would have to travel to get there. Negative distances imply that the point
 // is a) a trap or hostile terrain or b) only reachable by crossing a trap or
 // hostile terrain.
-short point_distance[GXM][GYM];
+travel_distance_grid_t travel_point_distance;
 
-unsigned char curr_waypoints[GXM][GYM];
-
-signed char curr_traps[GXM][GYM];
+static unsigned char curr_waypoints[GXM][GYM];
+static signed char curr_traps[GXM][GYM];
 
 static FixedArray< unsigned short, GXM, GYM >  mapshadow;
 
-#define TRAVERSABLE  1
-#define IMPASSABLE   0
-#define FORBIDDEN   -1
+const signed char TRAVERSABLE = 1;
+const signed char IMPASSABLE = 0;
+const signed char FORBIDDEN = -1;
 
 // Map of terrain types that are traversable.
 static signed char traversable_terrain[256];
@@ -165,8 +164,8 @@ bool is_altar(const coord_def &c)
 inline bool is_player_altar(unsigned char grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return you.religion 
-        && grid == DNGN_ALTAR_ZIN - 1 + you.religion;
+    return you.religion != GOD_NO_GOD
+        && grid_altar_god(grid) == you.religion;
 }
 
 inline bool is_player_altar(const coord_def &c)
@@ -253,25 +252,6 @@ static bool is_exclude_root(int x, int y)
             return true;
     }
     return false;
-}
-
-// Determines if the level is fully explored. Clobbers you.run_x/y.
-static bool fully_explored()
-{
-    const int oldrun = you.running;
-    
-    if (!you.running.is_explore())
-        you.running = RMODE_EXPLORE;
-    
-    // Do a second floodfill to check if the level is fully explored.
-    // Note we're passing in a features vector to force find_travel_pos to
-    // reseed past traps/deep water/lava. Icky.
-    
-    std::vector<coord_def> features_dummy;
-    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features_dummy);
-    you.running = oldrun;
-
-    return !(you.running.x > 0 && you.running.y > 0);
 }
 
 const char *run_mode_name(int runmode)
@@ -372,7 +352,7 @@ void forget_square(int x, int y)
 static bool is_reseedable(int x, int y)
 {
     if (is_excluded(x, y))
-        return true;
+        return (true);
     unsigned char grid = grd[x][y];
     return (grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER ||
              grid == DNGN_LAVA || is_trap(x, y));
@@ -385,10 +365,10 @@ static bool is_reseedable(int x, int y)
  */
 static bool is_travel_ok(int x, int y, bool ignore_hostile)
 {
-    const int grid = grd[x][y];
-
     if (!is_terrain_known(x, y))
         return (false);
+
+    const int grid = grd[x][y];
 
     // Special-case secret doors so that we don't run into awkwardness when
     // a monster opens a secret door without the hero seeing it, but the travel
@@ -413,14 +393,7 @@ static bool is_travel_ok(int x, int y, bool ignore_hostile)
         if (player_monster_visible(&menv[mon])
             && mons_class_flag( menv[mon].type, M_NO_EXP_GAIN ))
         {
-            extern short point_distance[GXM][GYM];
-
-            // We have to set the point_distance array if the level map is
-            // to be properly coloured. The caller isn't going to do it because
-            // we say this square is inaccessible, so in a horrible hack, we 
-            // do it ourselves. Ecch.
-            point_distance[x][y] = ignore_hostile? -42 : 42;
-            return false;
+            return (false);
         }
     }
 
@@ -486,16 +459,17 @@ static void set_pass_feature(unsigned char grid, signed char pass)
  */
 static void init_terrain_check()
 {
-    // Merfolk get deep water.
-    signed char water = you.species == SP_MERFOLK? TRAVERSABLE : IMPASSABLE;
+    // Swimmers get deep water.
+    signed char water = player_can_swim()? TRAVERSABLE : IMPASSABLE;
+    
     // If the player has overridden deep water already, we'll respect that.
     set_pass_feature(DNGN_DEEP_WATER, water);
 
     // Permanently levitating players can cross most hostile terrain.
     signed char trav = player_is_permalevitating()? 
                     TRAVERSABLE : IMPASSABLE;
-    if (you.species != SP_MERFOLK)
-        set_pass_feature(DNGN_DEEP_WATER, trav);
+    
+    set_pass_feature(DNGN_DEEP_WATER, trav);
     set_pass_feature(DNGN_LAVA, trav);
     set_pass_feature(DNGN_TRAP_MECHANICAL, trav);
 }
@@ -706,7 +680,7 @@ bool is_travelable_stair(unsigned gridc)
 bool prompt_stop_explore(int es_why)
 {
     return (!(Options.explore_stop_prompt & es_why)
-            || yesno("Stop exploring?", true, 'n', true, false));
+            || yesno("Stop exploring?", true, 'y', true, false));
 }
 
 #define ES_item  (Options.explore_stop & ES_ITEM)
@@ -794,6 +768,79 @@ static bool is_valid_explore_target(int x, int y)
     return (false);
 }
 
+enum explore_status_type
+{
+    EST_FULLY_EXPLORED    = 0,
+
+    // Could not explore because of hostile terrain
+    EST_PARTLY_EXPLORED   = 1,
+
+    // Could not pick up interesting items because of hostile terrain. Note
+    // that this and EST_PARTLY_EXPLORED are not mutually exclusive.
+    EST_GREED_UNFULFILLED = 2
+};
+
+// Determines if the level is fully explored.
+static int find_explore_status(const travel_pathfind &tp)
+{
+    int explore_status = 0;
+
+    const coord_def greed = tp.greedy_square();
+    if (greed.x || greed.y)
+        explore_status |= EST_GREED_UNFULFILLED;
+
+    const coord_def unexplored = tp.unexplored_square();
+    if (unexplored.x || unexplored.y)
+        explore_status |= EST_PARTLY_EXPLORED;
+
+    return (explore_status);
+}
+
+static void explore_find_target_square()
+{
+    travel_pathfind tp;
+    tp.set_floodseed(coord_def(you.x_pos, you.y_pos), true);
+
+    coord_def whereto =
+        tp.pathfind( static_cast<run_mode_type>(you.running.runmode) );
+
+    if (whereto.x || whereto.y)
+    {
+        // Make sure this is a square that is reachable, since we asked
+        // travel_pathfind to give us even unreachable squares.
+        if (travel_point_distance[whereto.x][whereto.y] <= 0)
+            whereto.reset();
+    }
+
+    if (whereto.x || whereto.y)
+    {
+        you.running.x = whereto.x;
+        you.running.y = whereto.y;
+    }
+    else
+    {
+        // No place to go? Report to the player.
+        const int estatus = find_explore_status(tp);
+
+        if (!estatus)
+            mpr("Done exploring.");
+        else
+        {
+            std::vector<std::string> inacc;
+            if (estatus & EST_GREED_UNFULFILLED)
+                inacc.push_back("items");
+            if (estatus & EST_PARTLY_EXPLORED)
+                inacc.push_back("places");
+                    
+            mprf("Partly explored, can't reach some %s.",
+                 comma_separated_line(
+                     inacc.begin(),
+                     inacc.end()).c_str());
+        }
+        stop_running();
+    }
+}
+
 /*
  * Top-level travel control (called from input() in acr.cc).
  *
@@ -865,18 +912,7 @@ command_type travel()
             || (you.running.x == you.x_pos && you.running.y == you.y_pos)
             || !is_valid_explore_target(you.running.x, you.running.y))
         {
-            you.running.x = 0;
-            find_travel_pos(you.x_pos, you.y_pos, NULL, NULL);
-            // No place to go?
-            if (!you.running.x)
-            {
-                // Do fully_explored() *before* stop_running!
-                if (fully_explored())
-                    mpr("Done exploring.");
-                else
-                    mpr("Partly explored, some areas are inaccessible.");
-                stop_running();
-            }
+            explore_find_target_square();
         }
     }
 
@@ -1028,308 +1064,223 @@ static void fill_exclude_radius(const coord_def &c)
         for (int x = c.x - radius; x <= c.x + radius; ++x)
         {
             if (!map_bounds(x, y) || !is_terrain_known(x, y)
-                    || point_distance[x][y])
+                    || travel_point_distance[x][y])
                 continue;
 
             if (is_exclude_root(x, y))
-                point_distance[x][y] = PD_EXCLUDED;
+                travel_point_distance[x][y] = PD_EXCLUDED;
             else if (is_excluded(x, y))
-                point_distance[x][y] = PD_EXCLUDED_RADIUS;
+                travel_point_distance[x][y] = PD_EXCLUDED_RADIUS;
         }
     }
 }
 
-static bool is_greed_inducing_square(const LevelStashes *ls, int x, int y)
+/////////////////////////////////////////////////////////////////////////////
+// travel_pathfind
+
+FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
+
+const int travel_pathfind::UNFOUND_DIST;
+const int travel_pathfind::INFINITE_DIST;
+
+travel_pathfind::travel_pathfind()
+    : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
+      floodout(false), double_flood(false), ignore_hostile(false),
+      annotate_map(false), ls(NULL), need_for_greed(false),
+      unexplored_place(), greedy_place(), unexplored_dist(0),
+      greedy_dist(0), refdist(NULL), reseed_points(),
+      features(NULL), point_distance(travel_point_distance),
+      points(0), next_iter_points(0), traveled_distance(0),
+      circ_index(0)
 {
-    return (ls && ls->needs_visit(x, y));
+}
+
+bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
+{
+    return (ls && ls->needs_visit(c.x, c.y));
+}
+
+void travel_pathfind::set_src_dst(const coord_def &src, const coord_def &dst)
+{
+    // Yes, this is backwards - for travel, we always start from the destination
+    // and search outwards for the starting position.
+    start = dst;
+    dest  = src;
+
+    floodout = double_flood = false;
+}
+
+void travel_pathfind::set_floodseed(const coord_def &seed, bool dblflood)
+{
+    start = seed;
+    dest.reset();
+
+    floodout = true;
+    double_flood = dblflood;
+}
+
+void travel_pathfind::set_annotate_map(bool annotate)
+{
+    annotate_map = annotate;
+}
+
+void travel_pathfind::set_distance_grid(travel_distance_grid_t grid)
+{
+    point_distance = grid;
+}
+
+void travel_pathfind::set_feature_vector(std::vector<coord_def> *feats)
+{
+    features = feats;
+
+    if (features)
+    {
+        double_flood = true;
+        annotate_map = true;
+    }
+}
+
+const coord_def travel_pathfind::travel_move() const
+{
+    return (next_travel_move);
+}
+
+const coord_def travel_pathfind::explore_target() const
+{
+    if (unexplored_dist != UNFOUND_DIST && greedy_dist != UNFOUND_DIST)
+        return (unexplored_dist < greedy_dist? unexplored_place : greedy_place);
+    else if (unexplored_dist != UNFOUND_DIST)
+        return (unexplored_place);
+    else if (greedy_dist != UNFOUND_DIST)
+        return (greedy_place);
+
+    return coord_def(0, 0);
+}
+
+const coord_def travel_pathfind::greedy_square() const
+{
+    return (greedy_place);
+}
+
+const coord_def travel_pathfind::unexplored_square() const
+{
+    return (unexplored_place);
 }
 
 /*
  * The travel algorithm is based on the NetHack travel code written by Warwick
  * Allison - used with his permission.
  */
-void find_travel_pos(int youx, int youy, 
-                     char *move_x, char *move_y,
-                     std::vector<coord_def>* features)
+const coord_def travel_pathfind::pathfind(run_mode_type rmode)
 {
+    if (rmode == RMODE_INTERLEVEL)
+        rmode = RMODE_TRAVEL;
+    
+    runmode = rmode;
+
+    // Check whether species or levitation permits travel through terrain such
+    // as deep water.
     init_terrain_check();
 
-    int start_x = you.running.x, start_y = you.running.y;
-    int dest_x  = youx, dest_y  = youy;
-    bool floodout = false;
-    unsigned char feature;
-    const LevelStashes *lev = stashes.find_current_level();
-    const bool need_for_greed =
-        you.running == RMODE_EXPLORE_GREEDY && can_autopickup();
+    need_for_greed =
+        (rmode == RMODE_EXPLORE_GREEDY && can_autopickup());
 
-    // For greedy explore, keep track of the closest unexplored
-    // territory and the closest greedy square.
-    int e_x = 0, e_y = 0;     // Unexplored
-    int i_x = 0, i_y = 0;     // Square with interesting item.
-    // Use these weird defaults to handle negative item greeds.
-    int ex_dist = -10000, ix_dist = -10000;
+    if (!ls && (annotate_map || need_for_greed))
+        ls = stashes.find_current_level();
 
-    // Normally we start from the destination and floodfill outwards, looking
-    // for the character's current position. If we're merely trying to populate
-    // the point_distance array (or exploring), we'll want to start from the 
-    // character's current position and fill outwards
-    if (!move_x || !move_y)
+    next_travel_move.reset();
+    
+    // For greedy explore, keep track of the closest unexplored territory and
+    // the closest greedy square. Exploring to the nearest (unexplored / greedy)
+    // square is easier, but it produces unintuitive explore behaviour where
+    // grabbing items is not favoured over simple exploring.
+    //
+    // Greedy explore instead uses the explore_item_greed option to weight
+    // greedy explore towards grabbing items over exploring. An
+    // explore_item_greed set to 10, for instance, forces explore to prefer
+    // items that are less than 10 squares farther away from the player than the
+    // nearest unmapped square. Negative explore_item_greed values force greedy
+    // explore to favour unexplored territory over picking up items. For the
+    // most natural greedy explore behaviour, explore_item_greed should be set
+    // to 10 or more.
+    // 
+    unexplored_place = greedy_place = coord_def(0, 0);
+    unexplored_dist  = greedy_dist  = UNFOUND_DIST;
+
+    refdist = Options.explore_item_greed > 0? &unexplored_dist: &greedy_dist;
+    
+    // Abort run if we're trying to go someplace evil. Travel to traps is
+    // specifically allowed here if the player insists on it.
+    if (!floodout
+        && !is_travel_ok(start.x, start.y, false)
+        && !is_trap(start.x, start.y))              // The player likes pain
     {
-        start_x = youx;
-        start_y = youy;
-
-        dest_x = dest_y = -1;
-
-        floodout = true;
+        return coord_def(0, 0);
     }
 
-    // Abort run if we're trying to go someplace evil
-    if (dest_x != -1 && !is_travel_ok(start_x, start_y, false) &&
-            !is_trap(start_x, start_y))
-    {
-        you.running = RMODE_NOT_RUNNING;
-        return ;
-    }
-
-    // Abort run if we're going nowhere.
-    if (start_x == dest_x && start_y == dest_y)
-    {
-        you.running = RMODE_NOT_RUNNING;
-        return ;
-    }
+    // Nothing to do?
+    if (!floodout && start == dest)
+        return (start);
 
     // How many points are we currently considering? We start off with just one
     // point, and spread outwards like a flood-filler.
-    int points                  = 1;
+    points = 1;
 
     // How many points we'll consider next iteration.
-    int next_iter_points        = 0;
+    next_iter_points = 0;
 
     // How far we've traveled from (start_x, start_y), in moves (a diagonal move
     // is no longer than an orthogonal move).
-    int traveled_distance       = 1;
+    traveled_distance = 1;
 
     // Which index of the circumference array are we currently looking at?
-    int circ_index              = 0;
-
-    // The circumference points of the floodfilled area, for this iteration
-    // and the next (this iteration's points being circ_index amd the next one's
-    // being !circ_index).
-    static FixedVector<coord_def, GXM * GYM> circumference[2];
-
-    // Coordinates of all discovered traps. If we're exploring instead of
-    // travelling, we'll reseed from these points after we've explored the map
-    std::vector<coord_def> trap_seeds;
-
-    // When set to true, the travel code ignores features, traps and hostile
-    // terrain, and simply tries to map contiguous floorspace. Will only be set
-    // to true if we're exploring, instead of travelling.
-    bool ignore_hostile = false;
+    circ_index = 0;
+    
+    ignore_hostile = false;
 
     // Set the seed point
-    circumference[circ_index][0].x = start_x;
-    circumference[circ_index][0].y = start_y;
+    circumference[circ_index][0] = start;
 
     // Zap out previous distances array
-    memset(point_distance, 0, sizeof point_distance);
+    memset(point_distance, 0, sizeof(travel_distance_grid_t));
 
     for ( ; points > 0; ++traveled_distance, circ_index = !circ_index,
                         points = next_iter_points, next_iter_points = 0)
     {
         for (int i = 0; i < points; ++i)
         {
-            int x = circumference[circ_index][i].x,
-                y = circumference[circ_index][i].y;
-
-            // (x,y) is a known (explored) location - we never put unknown 
-            // points in the circumference vector, so we don't need to examine 
-            // the map array, just the grid array.
-            feature = grd[x][y];
-
-            // If this is a feature that'll take time to travel past, we
-            // simulate that extra turn by taking this feature next turn,
-            // thereby artificially increasing traveled_distance. 
-            //
-            // Note: I don't know how slow walking through shallow water and
-            //       opening closed doors is - right now it's considered to have
-            //       the cost of two normal moves.
-            int feat_cost = feature_traverse_cost(feature);
-            if (feat_cost > 1
-                    && point_distance[x][y] > traveled_distance - feat_cost)
+            if (path_examine_point(circumference[circ_index][i]))
             {
-                circumference[!circ_index][next_iter_points].x = x;
-                circumference[!circ_index][next_iter_points].y = y;
-                next_iter_points++;
-                continue;
+                return (runmode == RMODE_TRAVEL? travel_move()
+                        : explore_target()); 
+            }
+        }
+
+        if (next_iter_points == 0)
+        {
+            // Don't reseed unless we've found no target for explore, OR
+            // we're doing map annotation or feature tracking.
+            if ((runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY)
+                && double_flood
+                && !ignore_hostile
+                && !features
+                && !annotate_map
+                && (unexplored_dist != UNFOUND_DIST
+                    || greedy_dist != UNFOUND_DIST))
+            {
+                break;
             }
 
-            // For each point, we look at all surrounding points. Take them
-            // orthogonals first so that the travel path doesn't zigzag all over
-            // the map. Note the (dir = 1) is intentional assignment.
-            for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
+            if (double_flood
+                && !ignore_hostile 
+                && !reseed_points.empty())
             {
-                int dx = x + Compass[dir].x, dy = y + Compass[dir].y;
-
-                if (!in_bounds(dx, dy))
-                    continue;
-
-                unsigned char envf = env.map[dx - 1][dy - 1];
-
-                if (floodout && you.running.is_explore())
-                {
-                    if (!is_player_mapped(envf))
-                    {
-                        if (!need_for_greed)
-                        {
-                            you.running.x = x;
-                            you.running.y = y;
-                            return;
-                        }
-
-                        if (ex_dist == -10000)
-                        {
-                            e_x = x;
-                            e_y = y;
-                            ex_dist = 
-                                traveled_distance + Options.explore_item_greed;
-                        }
-                    }
-                    else if (need_for_greed
-                             && ix_dist == -10000
-                             && is_greed_inducing_square(lev, dx, dy)
-                             && is_travel_ok(dx, dy, ignore_hostile))
-                    {
-                        i_x = dx;
-                        i_y = dy;
-                        ix_dist = traveled_distance + 1;
-                    }
-
-                    // Short-circuit if we can.
-                    if (need_for_greed)
-                    {
-                        const int refdist =
-                            Options.explore_item_greed > 0? ex_dist: ix_dist;
-                    
-                        if (refdist != -10000
-                            && traveled_distance > refdist)
-                        {
-                            if (Options.explore_item_greed > 0)
-                                ix_dist = 10000;
-                            else
-                                ex_dist = 10000;
-                        }
-                    }
-                    
-                    // ex_dist/ix_dist are only ever set in
-                    // greedy-explore so this check implies
-                    // greedy-explore.
-                    if (ex_dist != -10000 && ix_dist != -10000)
-                    {
-                        if (ex_dist < ix_dist)
-                        {
-                            you.running.x = e_x;
-                            you.running.y = e_y;
-                        }
-                        else
-                        {
-                            you.running.x = i_x;
-                            you.running.y = i_y;
-                        }
-                        return;
-                    }
-                    
-                }
-
-                if ((dx != dest_x || dy != dest_y) 
-                        && !is_travel_ok(dx, dy, ignore_hostile)) 
-                {
-                    // This point is not okay to travel on, but if this is a 
-                    // trap, we'll want to put it on the feature vector anyway.
-                    if (is_reseedable(dx, dy) 
-                            && !point_distance[dx][dy]
-                            && (dx != start_x || dy != start_y))
-                    {
-                        if (features)
-                        {
-                            const coord_def c(dx, dy);
-                            if (is_trap(dx, dy) || is_exclude_root(dx, dy))
-                                features->push_back(c);
-                            trap_seeds.push_back(c);
-                        }
-
-                        // Appropriate mystic number. Nobody else should check
-                        // this number, since this square is unsafe for travel.
-                        point_distance[dx][dy] = 
-                            is_exclude_root(dx, dy)? PD_EXCLUDED :
-                            is_excluded(dx, dy)    ? PD_EXCLUDED_RADIUS :
-                                                     PD_TRAP;
-                    }
-                    continue;
-                }
-
-                if (dx == dest_x && dy == dest_y)
-                {
-                    // Hallelujah, we're home!
-                    if (is_safe_move(x, y) && move_x && move_y)
-                    {
-                        *move_x = sgn(x - dest_x);
-                        *move_y = sgn(y - dest_y);
-                    }
-                    return ;
-                }
-                else if (!point_distance[dx][dy])
-                {
-                    // This point is going to be on the agenda for the next
-                    // iteration
-                    circumference[!circ_index][next_iter_points].x = dx;
-                    circumference[!circ_index][next_iter_points].y = dy;
-                    next_iter_points++;
-
-                    point_distance[dx][dy] = traveled_distance;
-
-                    // Negative distances here so that show_map can colour
-                    // the map differently for these squares.
-                    if (ignore_hostile)
-                    {
-                        point_distance[dx][dy] = -point_distance[dx][dy];
-                        if (is_exclude_root(dx, dy))
-                            point_distance[dx][dy] = PD_EXCLUDED;
-                        else if (is_excluded(dx, dy))
-                            point_distance[dx][dy] = PD_EXCLUDED_RADIUS;
-                    }
-
-                    feature = grd[dx][dy];
-                    if (features && !ignore_hostile 
-                            && ((feature != DNGN_FLOOR 
-                                && feature != DNGN_SHALLOW_WATER
-                                && feature != DNGN_DEEP_WATER
-                                && feature != DNGN_LAVA)
-                                || is_waypoint(dx, dy)
-                                || is_stash(lev, dx, dy))
-                            && (dx != start_x || dy != start_y))
-                    {
-                        const coord_def c(dx, dy);
-                        features->push_back(c);
-                    }
-
-                    if (features && is_exclude_root(dx, dy) && dx != start_x
-                            && dy != start_y)
-                    {
-                        const coord_def c(dx, dy);
-                        features->push_back(c);
-                    }
-                }
-            } // for (dir = 0; dir < 8 ...
-        } // for (i = 0; i < points ...
-
-        if (!next_iter_points && features && !move_x && !ignore_hostile 
-                && trap_seeds.size())
-        {
-            // Reseed here
-            for (unsigned i = 0; i < trap_seeds.size(); ++i)
-                circumference[!circ_index][i] = trap_seeds[i];
-            next_iter_points = trap_seeds.size();
-            ignore_hostile = true;
+                // Reseed here
+                for (unsigned i = 0, size = reseed_points.size(); i < size; ++i)
+                    circumference[!circ_index][i] = reseed_points[i];
+                next_iter_points = reseed_points.size();
+                ignore_hostile = true;
+            }
         }
     } // for ( ; points > 0 ...
 
@@ -1347,16 +1298,226 @@ void find_travel_pos(int youx, int youy,
         }
     }
 
-    if (need_for_greed && (ex_dist != -10000 || ix_dist != -10000))
+    return (rmode == RMODE_TRAVEL? travel_move()
+            : explore_target()); 
+}
+
+bool travel_pathfind::square_slows_movement(const coord_def &c)
+{
+    // c is a known (explored) location - we never put unknown points in the
+    // circumference vector, so we don't need to examine the map array, just the
+    // grid array.
+    const int feature = grd(c);
+
+    // If this is a feature that'll take time to travel past, we simulate that
+    // extra turn by taking this feature next turn, thereby artificially
+    // increasing traveled_distance.
+    //
+    // Walking through shallow water and opening closed doors is considered to
+    // have the cost of two normal moves for travel purposes.
+    const int feat_cost = feature_traverse_cost(feature);
+    if (feat_cost > 1
+        && point_distance[c.x][c.y] > traveled_distance - feat_cost)
     {
-        if (ix_dist != -10000)
+        circumference[!circ_index][next_iter_points++] = c;
+        return (true);
+    }
+
+    return (false);
+}
+
+void travel_pathfind::check_square_greed(const coord_def &c)
+{
+    if (greedy_dist == UNFOUND_DIST
+        && is_greed_inducing_square(c)
+        && is_travel_ok(c.x, c.y, ignore_hostile))
+    {
+        greedy_place = c;
+        greedy_dist  = traveled_distance;
+    }
+}
+
+bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
+{
+    if (!in_bounds(dc))
+        return (false);
+
+    if (floodout
+        && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
+    {
+        if (!is_terrain_seen(dc))
         {
-            e_x = i_x;
-            e_y = i_y;
+            if (!need_for_greed)
+            {
+                // Found explore target!
+                unexplored_place = c;
+                unexplored_dist  = traveled_distance;
+                return (true);
+            }
+            
+            if (unexplored_dist == UNFOUND_DIST)
+            {
+                unexplored_place = c;
+                unexplored_dist  =
+                    traveled_distance + Options.explore_item_greed;
+            }
         }
 
-        you.running.x = e_x;
-        you.running.y = e_y;
+        // Short-circuit if we can. If traveled_distance (the current
+        // distance from the center of the floodfill) is greater
+        // than the adjusted distance to the nearest greedy explore
+        // target, we have a target. Note the adjusted distance is
+        // the distance with explore_item_greed applied (if
+        // explore_item_greed > 0, it is added to the distance to
+        // unexplored terrain, if explore_item_greed < 0, it is
+        // added to the distance to interesting items.
+        //
+        // We never short-circuit if ignore_hostile is true. This is
+        // important so we don't need to do multiple floods to work out
+        // whether explore is complete.
+        if (need_for_greed
+            && !ignore_hostile
+            && *refdist != UNFOUND_DIST
+            && traveled_distance > *refdist)
+        {
+            if (Options.explore_item_greed > 0)
+                greedy_dist = INFINITE_DIST;
+            else
+                unexplored_dist = INFINITE_DIST;
+        }
+                    
+        // greedy_dist is only ever set in greedy-explore so this check
+        // implies greedy-explore.
+        if (unexplored_dist != UNFOUND_DIST && greedy_dist != UNFOUND_DIST)
+            return (true);
+    }
+
+    if (dc != dest && !is_travel_ok(dc.x, dc.y, ignore_hostile)) 
+    {
+        // This point is not okay to travel on, but if this is a 
+        // trap, we'll want to put it on the feature vector anyway.
+        if (is_reseedable(dc.x, dc.y) 
+            && !point_distance[dc.x][dc.y]
+            && dc != start)
+        {
+            if (features &&
+                (is_trap(dc.x, dc.y) || is_exclude_root(dc.x, dc.y)))
+            {
+                features->push_back(dc);
+            }
+
+            if (double_flood)
+                reseed_points.push_back(dc);
+
+            // Appropriate mystic number. Nobody else should check
+            // this number, since this square is unsafe for travel.
+            point_distance[dc.x][dc.y] = 
+                is_exclude_root(dc.x, dc.y)? PD_EXCLUDED :
+                is_excluded(dc.x, dc.y)    ? PD_EXCLUDED_RADIUS :
+                PD_TRAP;
+        }
+        return (false);
+    }
+
+    if (dc == dest)
+    {
+        // Hallelujah, we're home!
+        if (is_safe_move(c.x, c.y))
+            next_travel_move = c;
+        return (true);
+    }
+    else if (!point_distance[dc.x][dc.y])
+    {
+        // This point is going to be on the agenda for the next
+        // iteration
+        circumference[!circ_index][next_iter_points++] = dc;
+        point_distance[dc.x][dc.y] = traveled_distance;
+
+        // Negative distances here so that show_map can colour
+        // the map differently for these squares.
+        if (ignore_hostile)
+        {
+            point_distance[dc.x][dc.y] = -point_distance[dc.x][dc.y];
+            if (is_exclude_root(dc.x, dc.y))
+                point_distance[dc.x][dc.y] = PD_EXCLUDED;
+            else if (is_excluded(dc.x, dc.y))
+                point_distance[dc.x][dc.y] = PD_EXCLUDED_RADIUS;
+        }
+
+        if (features && !ignore_hostile)
+        {
+            const int feature = grd(dc);
+
+            if (((feature != DNGN_FLOOR 
+                  && feature != DNGN_SHALLOW_WATER
+                  && feature != DNGN_DEEP_WATER
+                  && feature != DNGN_LAVA)
+                 || is_waypoint(dc.x, dc.y)
+                 || is_stash(ls, dc.x, dc.y))
+                && dc != start)
+            {
+                features->push_back(dc);
+            }
+        }
+
+        if (features && dc != start && is_exclude_root(dc.x, dc.y))
+            features->push_back(dc);
+    }
+
+    return (false);
+}
+
+bool travel_pathfind::path_examine_point(const coord_def &c)
+{
+    if (square_slows_movement(c))
+        return (false);
+
+    // Greedy explore check should happen on (x,y), not (dx,dy) as for
+    // regular explore.
+    if (need_for_greed)
+        check_square_greed(c);
+
+    // For each point, we look at all surrounding points. Take them orthogonals
+    // first so that the travel path doesn't zigzag all over the map. Note the
+    // (dir = 1) is intentional assignment.
+    for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
+    {
+        if (path_flood(c, c + Compass[dir]))
+            return (true);
+    }
+    
+    return (false);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void find_travel_pos(int youx, int youy, 
+                     char *move_x, char *move_y,
+                     std::vector<coord_def>* features)
+{
+    travel_pathfind tp;
+
+    if (move_x && move_y)
+        tp.set_src_dst(coord_def(youx, youy),
+                       coord_def(you.running.x, you.running.y));
+    else
+        tp.set_floodseed(coord_def(youx, youy));
+
+    tp.set_feature_vector(features);
+
+    run_mode_type rmode = move_x && move_y? RMODE_TRAVEL : RMODE_NOT_RUNNING;
+    
+    const coord_def dest = tp.pathfind( rmode );
+
+    if (dest.x == 0 && dest.y == 0)
+    {
+        if (move_x && move_y)
+            you.running = RMODE_NOT_RUNNING;
+    }
+    else if (move_x && move_y)
+    {
+        *move_x = dest.x - youx;
+        *move_y = dest.y - youy;
     }
 }
 
@@ -1915,8 +2076,9 @@ static int target_distance_from(const coord_def &pos)
  * travel-safe path between the player's current level and the target level OR
  * the player's current level *is* the target level.
  *
- * This function relies on the point_distance array being correctly populated
- * with a floodout call to find_travel_pos starting from the player's location.
+ * This function relies on the travel_point_distance array being correctly
+ * populated with a floodout call to find_travel_pos starting from the player's
+ * location.
  */
 static int find_transtravel_stair(  const level_id &cur,
                                     const level_pos &target,
@@ -1958,8 +2120,8 @@ static int find_transtravel_stair(  const level_id &cur,
             // populate_stair_distances.  Assuming we're not on stairs, that
             // situation can arise only if interlevel travel has been triggered
             // for a location on the same level. If that's the case, we can get
-            // the distance off the point_distance matrix.
-            deltadist = point_distance[target.pos.x][target.pos.y];
+            // the distance off the travel_point_distance matrix.
+            deltadist = travel_point_distance[target.pos.x][target.pos.y];
             if (!deltadist && 
                     (stair.x != target.pos.x || stair.y != target.pos.y))
                 deltadist = -1;
@@ -2012,7 +2174,7 @@ static int find_transtravel_stair(  const level_id &cur,
         int deltadist = li.distance_between(this_stair, &si);
         if (!this_stair)
         {
-            deltadist = point_distance[si.position.x][si.position.y];
+            deltadist = travel_point_distance[si.position.x][si.position.y];
             if (!deltadist && 
                     (you.x_pos != si.position.x || you.y_pos != si.position.y))
                 deltadist = -1;
@@ -2128,7 +2290,7 @@ static bool loadlev_populate_stair_distances(const level_pos &target)
 
 static void populate_stair_distances(const level_pos &target)
 {
-    // Populate point_distance.
+    // Populate travel_point_distance.
     find_travel_pos(target.pos.x, target.pos.y, NULL, NULL, NULL);
 
     LevelInfo &li = travel_cache.get_level_info(target.id);
@@ -2138,7 +2300,7 @@ static void populate_stair_distances(const level_pos &target)
     for (int i = 0, count = stairs.size(); i < count; ++i)
     {
         stair_info si = stairs[i];
-        si.distance = point_distance[si.position.x][si.position.y];
+        si.distance = travel_point_distance[si.position.x][si.position.y];
         if (!si.distance && target.pos != si.position)
             si.distance = -1;
         if (si.distance < -1)
@@ -2200,8 +2362,8 @@ void start_travel(int x, int y)
     
     // Start running
     you.running = RMODE_TRAVEL;
-    you.running.x   = x;
-    you.running.y   = y;
+    you.running.x = x;
+    you.running.y = y;
 
     // Remember where we're going so we can easily go back if interrupted.
     you.travel_x = x;
@@ -2210,7 +2372,7 @@ void start_travel(int x, int y)
     // Check whether we can get to the square.
     find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
     
-    if (point_distance[x][y] == 0
+    if (travel_point_distance[x][y] == 0
         && (x != you.x_pos || you.running.y != you.y_pos)
         && is_travel_ok(x, y, false)
         && can_travel_interlevel())
@@ -2462,7 +2624,7 @@ void LevelInfo::update_stair_distances()
         {
             int ox = stairs[other].position.x,
                 oy = stairs[other].position.y;
-            int dist = point_distance[ox][oy];
+            int dist = travel_point_distance[ox][oy];
 
             // Note dist == 0 is illegal because we can't have two stairs on
             // the same square.
@@ -3225,7 +3387,9 @@ void explore_discoveries::found_feature(const coord_def &pos, int grid)
                 cleaned_feature_description(grid), grid ) );
         es_flags |= ES_STAIR;
     }
-    else if (is_altar(grid) && ES_altar)
+    else if (is_altar(grid)
+             && ES_altar
+             && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
         altars.push_back(
             named_thing<int>(
@@ -3290,9 +3454,9 @@ bool explore_discoveries::prompt_stop() const
         return (false);
 
     say_any(items, "Found %u items.");
-    say_any(stairs, "Found %u stairs.");
-    say_any(altars, "Found %u altars.");
     say_any(shops, "Found %u shops.");
+    say_any(altars, "Found %u altars.");
+    say_any(stairs, "Found %u stairs.");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || prompt_stop_explore(es_flags));

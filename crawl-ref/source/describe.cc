@@ -98,14 +98,7 @@ static void print_description( const std::string &d )
     while(currentPos < d.length())
     {
         if (currentPos != 0)
-        {
-#ifdef PLAIN_TERM
             gotoxy(1, wherey() + 1);
-#endif
-#ifdef DOS_TERM
-            cprintf(EOL);
-#endif
-        }
 
         // see if $ sign is within one lineWidth
         if (nlSearch)
@@ -3348,12 +3341,6 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
 //---------------------------------------------------------------
 void describe_item( const item_def &item )
 {
-#ifdef DOS_TERM
-    char buffer[4000];
-    gettext(1, 1, 80, 25, buffer);
-    // window(25, 1, 80, 25);
-#endif
-
     clrscr();
 
     std::string description = get_item_description( item, 1 );
@@ -3377,10 +3364,6 @@ void describe_item( const item_def &item )
 
     if (getch() == 0)
         getch();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 }                               // end describe_item()
 
 
@@ -3396,12 +3379,6 @@ void describe_spell(int spelled)
     std::string description;
 
     description.reserve(500);
-
-#ifdef DOS_TERM
-    char buffer[4000];
-    gettext(1, 1, 80, 25, buffer);
-    // window(25, 1, 80, 25);
-#endif
 
     clrscr();
     description += spell_title( spelled );
@@ -4495,11 +4472,6 @@ void describe_spell(int spelled)
 
     if (getch() == 0)
         getch();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
 }                               // end describe_spell()
 
 static std::string describe_draconian_role(const monsters *mon)
@@ -4598,12 +4570,6 @@ void describe_monsters(int class_described, unsigned char which_mons)
     std::string description;
 
     description.reserve(200);
-
-#ifdef DOS_TERM
-    char buffer[4000];
-    gettext(1, 1, 80, 25, buffer);
-    // window(25, 1, 80, 25);
-#endif
 
     clrscr();
 
@@ -6306,11 +6272,6 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
     if (getch() == 0)
         getch();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
 }                               // end describe_monsters
 
 //---------------------------------------------------------------
@@ -6430,12 +6391,6 @@ void describe_god( int which_god, bool give_title )
 
     const char *description; // mv: tmp string used for printing description
     int         colour;      // mv: colour used for some messages
-
-#ifdef DOS_TERM
-    char buffer[4000];
-    gettext( 1, 1, 80, 25, buffer );
-    window( 1, 1, 80, 25 );
-#endif
 
     clrscr();
 
@@ -6737,11 +6692,4 @@ void describe_god( int which_god, bool give_title )
 end_god_info: //end of everything (life, world, universe etc.)
 
     getch(); // wait until keypressed
-
-#ifdef DOS_TERM //mv: if DOS_TERM is defined than buffer is returned to screen
-                //if not redraw_screen() is called everytime when this function is
-                //called
-    puttext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
 }          //mv: That's all folks.

@@ -62,13 +62,6 @@
 #include "skills2.h"
 #include "view.h"
 
-
-// required for stuff::coinflip() and cf_setseed()
-unsigned long cfseed;
-
-// unfortunately required for near_stairs(ugh!):
-extern unsigned char (*mapch) (unsigned char);
-
 // Crude, but functional.
 char *const make_time_string( time_t abs_time, char *const buff, int buff_size,
                               bool terse )
@@ -171,12 +164,8 @@ unsigned char get_ch(void)
 
 void seed_rng(long seed)
 {
-#ifdef USE_SYSTEM_RAND
-    srand(seed);
-#else
     // MT19937 -- see mt19937ar.cc for details/licence
     init_genrand(seed);
-#endif
 }
 
 void seed_rng()
@@ -188,132 +177,7 @@ void seed_rng()
 #endif
 
     seed_rng(seed);
-#ifdef USE_SYSTEM_RAND
-    cf_setseed();
-#endif
 }
-
-#ifdef USE_SYSTEM_RAND
-int random2(int max)
-{
-#ifdef USE_NEW_RANDOM
-    //return (int) ((((float) max) * rand()) / RAND_MAX); - this is bad!
-    // Uses FP, so is horribly slow on computers without coprocessors.
-    // Taken from comp.lang.c FAQ. May have problems as max approaches
-    // RAND_MAX, but this is rather unlikely.
-    // We've used rand() rather than random() for the portability, I think.
-
-    if (max < 1 || max >= RAND_MAX)
-        return 0;
-    else
-        return (int) rand() / (RAND_MAX / max + 1);
-#else
-
-    if (max < 1)
-        return 0;
-
-    return rand() % max;
-#endif
-}
-
-// required for stuff::coinflip()
-#define IB1 1
-#define IB2 2
-#define IB5 16
-#define IB18 131072
-#define MASK (IB1 + IB2 + IB5)
-// required for stuff::coinflip()
-
-// I got to thinking a bit more about how much people talk
-// about RNGs and RLs and also about the issue of performance
-// when it comes to Crawl's RNG ... turning to *Numerical
-// Recipies in C* (Chapter 7-4, page 298), I hit upon what
-// struck me as a fine solution.
-
-// You can read all the details about this function (pretty
-// much stolen shamelessly from NRinC) elsewhere, but having
-// tested it out myself I think it satisfies Crawl's incessant
-// need to decide things on a 50-50 flip of the coin. No call
-// to random2() required -- along with all that wonderful math
-// and type casting -- and only a single variable its pointer,
-// and some bitwise operations to randomly generate 1s and 0s!
-// No parameter passing, nothing. Too good to be true, but it
-// works as long as cfseed is not set to absolute zero when it
-// is initialized ... good for 2**n-1 random bits before the
-// pattern repeats (n = long's bitlength on your platform).
-// It also avoids problems with poor implementations of rand()
-// on some platforms in regards to low-order bits ... a big
-// problem if one is only looking for a 1 or a 0 with random2()!
-
-// Talk about a hard sell! Anyway, it returns bool, so please
-// use appropriately -- I set it to bool to prevent such
-// tomfoolery, as I think that pure RNG and quickly grabbing
-// either a value of 1 or 0 should be separated where possible
-// to lower overhead in Crawl ... at least until it assembles
-// itself into something a bit more orderly :P 16jan2000 {dlb}
-
-// NB(1): cfseed is defined atop stuff.cc
-// NB(2): IB(foo) and MASK are defined somewhere in defines.h
-// NB(3): the function assumes that cf_setseed() has been called
-//        beforehand - the call is presently made in acr::initialise()
-//        right after srandom() and srand() are called (note also
-//        that cf_setseed() requires rand() - random2 returns int
-//        but a long can't hurt there).
-bool coinflip(void)
-{
-    extern unsigned long cfseed;        // defined atop stuff.cc
-    unsigned long *ptr_cfseed = &cfseed;
-
-    if (*ptr_cfseed & IB18)
-    {
-        *ptr_cfseed = ((*ptr_cfseed ^ MASK) << 1) | IB1;
-        return true;
-    }
-    else
-    {
-        *ptr_cfseed <<= 1;
-        return false;
-    }
-}                               // end coinflip()
-
-// cf_setseed should only be called but once in all of Crawl!!! {dlb}
-void cf_setseed(void)
-{
-    extern unsigned long cfseed;        // defined atop stuff.cc
-    unsigned long *ptr_cfseed = &cfseed;
-
-    do
-    {
-        // using rand() here makes these predictable -- bwr
-        *ptr_cfseed = rand();
-    }
-    while (*ptr_cfseed == 0);
-}
-
-static std::stack<long> rng_states;
-void push_rng_state()
-{
-    // XXX: Does this even work? randart.cc uses it, but I can't find anything
-    // that says this will restore the RNG to its original state. Anyway, we're
-    // now using MT with a deterministic push/pop.
-    rng_states.push(rand());
-}
-
-void pop_rng_state()
-{
-    if (!rng_states.empty())
-    {
-        seed_rng(rng_states.top());
-        rng_states.pop();
-    }
-}
-
-unsigned long random_int( void )
-{
-    return rand();
-}
-
-#else   // USE_SYSTEM_RAND
 
 // MT19937 -- see mt19937ar.cc for details
 unsigned long random_int( void )
@@ -349,8 +213,6 @@ void pop_rng_state()
 {
     pop_mt_state();
 }
-
-#endif  // USE_SYSTEM_RAND
 
 // Attempts to make missile weapons nicer to the player by
 // reducing the extreme variance in damage done.
@@ -508,7 +370,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
             error = std::string(buffer) + ": " + error;
     }
 
-    if (error.length())
+    if (!error.empty())
     {
         if (error[error.length() - 1] != '\n')
             error += "\n";
@@ -520,9 +382,6 @@ void end(int exit_code, bool print_error, const char *format, ...)
 
 void redraw_screen(void)
 {
-#ifdef PLAIN_TERM
-// this function is used for systems without gettext/puttext to redraw the
-// playing screen after a call to for example inventory.
     draw_border();
 
     you.redraw_hit_points = 1;
@@ -536,7 +395,8 @@ void redraw_screen(void)
     you.redraw_experience = 1;
     you.wield_change = true;
 
-    set_redraw_status( REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
+    set_redraw_status(
+        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );
 
     print_stats();
 
@@ -550,7 +410,6 @@ void redraw_screen(void)
     activate_notes(note_status);
 
     viewwindow(1, false);
-#endif
 }                               // end redraw_screen()
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
@@ -902,59 +761,6 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr, bool empty, bool excl )
     while (!done);
 }
 
-// takes rectangle (x1,y1)-(x2,y2) and shifts it somewhere randomly in bounds
-void random_place_rectangle( int &x1, int &y1, int &x2, int &y2, bool excl )
-{
-    const unsigned int dx = abs( x2 - x1 );
-    const unsigned int dy = abs( y2 - y1 );
-
-    x1 = X_BOUND_1 + random2( X_WIDTH - dx - 2 * excl ) + excl;
-    y1 = Y_BOUND_1 + random2( Y_WIDTH - dy - 2 * excl ) + excl;
-
-    x2 = x1 + dx;
-    y2 = y1 + dy;
-}
-
-// returns true if point (px,py) is in rectangle (rx1, ry1) - (rx2, ry2)
-bool in_rectangle( int px, int py, int rx1, int ry1, int rx2, int ry2, 
-                   bool excl )
-{
-    ASSERT( rx1 < rx2 - 1 && ry1 < ry2 - 1 );
-
-    if (excl)
-    {
-        rx1++;
-        rx2--;
-        ry1++;
-        ry2--;
-    }
-
-    return (px >= rx1 && px <= rx2 && py >= ry1 && py <= ry2);
-}
-
-// XXX: this can be done better
-// returns true if rectables a and b overlap
-bool rectangles_overlap( int ax1, int ay1, int ax2, int ay2,
-                         int bx1, int by1, int bx2, int by2,
-                         bool excl )
-{
-    ASSERT( ax1 < ax2 - 1 && ay1 < ay2 - 1 );
-    ASSERT( bx1 < bx2 - 1 && by1 < by2 - 1 );
-
-    if (excl)
-    {
-        ax1++;
-        ax2--;
-        ay1++;
-        ay2--;
-    }
-
-    return (in_rectangle( ax1, ay1, bx1, by1, bx2, by2, excl )
-            || in_rectangle( ax1, ay2, bx1, by1, bx2, by2, excl )
-            || in_rectangle( ax2, ay1, bx1, by1, bx2, by2, excl )
-            || in_rectangle( ax2, ay2, bx1, by1, bx2, by2, excl ));
-}
-
 unsigned char random_colour(void)
 {
     return (1 + random2(15));
@@ -1256,9 +1062,8 @@ void zap_los_monsters()
                 continue;
             
 #ifdef DEBUG_DIAGNOSTICS
-            char mname[ITEMNAME_SIZE];
-            moname(mon->type, true, DESC_PLAIN, mname);
-            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s", mname);
+            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
+                 ptr_monam(mon, DESC_PLAIN) );
 #endif
             monster_die(mon, KILL_DISMISSED, 0);
         }

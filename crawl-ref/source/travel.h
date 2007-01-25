@@ -71,19 +71,26 @@ void prevent_travel_to(const std::string &dungeon_feature_name);
 // Sort dungeon features as appropriate.
 void arrange_features(std::vector<coord_def> &features);
 
+struct level_id;
+int level_distance(level_id first, level_id second);
+
+bool can_travel_to(const level_id &lid);
+bool can_travel_interlevel();
+bool prompt_stop_explore(int es_why);
+
 // Magic numbers for point_distance:
 
 // This square is a trap
-#define PD_TRAP             -42
+const int PD_TRAP = -42;
 
 // The user never wants to travel this square
-#define PD_EXCLUDED         -20099
+const int PD_EXCLUDED = -20099;
 
 // This square is within LOS radius of an excluded square
-#define PD_EXCLUDED_RADIUS  -20100
+const int PD_EXCLUDED_RADIUS = -20100;
 
-// This square is a waypoint
-#define PD_WAYPOINT         -20200
+typedef int travel_distance_col[GYM];
+typedef travel_distance_col travel_distance_grid_t[GXM];
 
 /* ***********************************************************************
  * Array of points on the map, each value being the distance the character
@@ -93,7 +100,7 @@ void arrange_features(std::vector<coord_def> &features);
  * ***********************************************************************
  * referenced in: travel - view
  * *********************************************************************** */
-extern short point_distance[GXM][GYM];
+extern travel_distance_grid_t travel_point_distance;
 
 enum explore_stop_type
 {
@@ -345,7 +352,7 @@ private:
     friend class TravelCache;
 };
 
-#define TRAVEL_WAYPOINT_COUNT 10
+const int TRAVEL_WAYPOINT_COUNT = 10;
 // Tracks all levels that the player has seen.
 class TravelCache
 {
@@ -408,11 +415,127 @@ private:
     level_pos waypoints[TRAVEL_WAYPOINT_COUNT];
 };
 
-int level_distance(level_id first, level_id second);
+// Handles travel and explore floodfill pathfinding. Does not do interlevel
+// travel pathfinding directly (but is used internally by interlevel travel).
+// * All coordinates are grid coords.
+// * Do not reuse one travel_pathfind for different runmodes.
+class travel_pathfind
+{
+public:
+    travel_pathfind();
 
-bool can_travel_to(const level_id &lid);
-bool can_travel_interlevel();
-bool prompt_stop_explore(int es_why);
+    // Finds travel direction or explore target.
+    const coord_def pathfind(run_mode_type rt);
+
+    // For flood-fills (explore), sets starting (seed) square.
+    void set_floodseed(const coord_def &seed, bool double_flood = false);
+
+    // For regular travel, set starting point (usually the character's current
+    // position) and destination.
+    void set_src_dst(const coord_def &src, const coord_def &dst);
+
+    // Request that the point distance array be annotated with magic numbers for
+    // excludes and waypoints.
+    void set_annotate_map(bool annotate);
+
+    // Sets the travel_distance_grid_t to use instead of travel_point_distance.
+    void set_distance_grid(travel_distance_grid_t distgrid);
+
+    // Set feature vector to use; if non-NULL, also sets annotate_map to true.
+    void set_feature_vector(std::vector<coord_def> *features);
+
+    // The next square to go to to move towards the travel destination. Return
+    // value is undefined if pathfind was not called with RMODE_TRAVEL.
+    const coord_def travel_move() const;
+    
+    // Square to go to for (greedy) explore. Return value is undefined if
+    // pathfind was not called with RMODE_EXPLORE or RMODE_EXPLORE_GREEDY.
+    const coord_def explore_target() const;
+
+    // Nearest greed-inducing square. Return value is undefined if
+    // pathfind was not called with RMODE_EXPLORE_GREEDY.
+    const coord_def greedy_square() const;
+
+    // Nearest unexplored territory. Return value is undefined if
+    // pathfind was not called with RMODE_EXPLORE or
+    // RMODE_EXPLORE_GREEDY.
+    const coord_def unexplored_square() const;
+
+private:
+    bool is_greed_inducing_square(const coord_def &c) const;
+    bool path_examine_point(const coord_def &c);
+    bool path_flood(const coord_def &c, const coord_def &dc);
+    bool square_slows_movement(const coord_def &c);
+    void check_square_greed(const coord_def &c);
+
+private:
+    static const int UNFOUND_DIST  = -10000;
+    static const int INFINITE_DIST =  10000;
+    
+private:
+    run_mode_type runmode;
+    
+    // Where pathfinding starts, and the destination. Note that dest is not
+    // relevant for explore!
+    coord_def start, dest;
+
+    // This is the square adjacent to the starting position to move
+    // along the shortest path to the destination. Does *not* apply
+    // for explore!
+    coord_def next_travel_move;
+
+    // True if flooding outwards from start square for explore.
+    bool floodout, double_flood;
+
+    // Set true in the second part of a double floodfill to completely ignore
+    // hostile squares.
+    bool ignore_hostile;
+
+    // If true, use magic numbers in point distance array which can be
+    // used to colour the level-map.
+    bool annotate_map;
+
+    // Stashes on this level (needed for greedy explore and to populate the
+    // feature vector with stashes on the X level-map).
+    const LevelStashes *ls;
+
+    // Are we greedy exploring?
+    bool need_for_greed;
+    
+    // Targets for explore and greedy explore.
+    coord_def unexplored_place, greedy_place;
+
+    // How far from player's location unexplored_place and greedy_place are.
+    int unexplored_dist, greedy_dist;
+
+    const int *refdist;
+
+    // For double-floods, the points to restart floodfill from at the end of
+    // the first flood.
+    std::vector<coord_def> reseed_points;
+
+    std::vector<coord_def> *features;
+
+    travel_distance_col *point_distance;
+
+    // How many points are we currently considering? We start off with just one
+    // point, and spread outwards like a flood-filler.
+    int points;
+
+    // How many points we'll consider next iteration.
+    int next_iter_points;
+
+    // How far we've traveled from (start_x, start_y), in moves (a diagonal move
+    // is no longer than an orthogonal move).
+    int traveled_distance;
+
+    // Which index of the circumference array are we currently looking at?
+    int circ_index;
+
+    // Used by all instances of travel_pathfind. Happily, we do not need to be
+    // re-entrant or thread-safe.
+    static FixedVector<coord_def, GXM * GYM> circumference[2];
+};
 
 extern TravelCache travel_cache;
 

@@ -355,10 +355,6 @@ static void base_mpr(const char *inf, int channel, int param)
 
     flush_input_buffer( FLUSH_ON_MESSAGE );
 
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
-
     const int num_lines = get_message_window_height();
     
     if (New_Message_Count == num_lines - 1)
@@ -373,7 +369,12 @@ static void base_mpr(const char *inf, int channel, int param)
     message_out( Message_Line, colour, inf,
                  Options.delay_message_clear? 2 : 1 );
 
-    New_Message_Count++;
+    // Prompt lines are presumably shown to / seen by the player accompanied
+    // by a request for input, which should do the equivalent of a more(); to
+    // save annoyance, don't bump New_Message_Count for prompts.
+    if (channel != MSGCH_PROMPT)
+        New_Message_Count++;
+    
     if (Message_Line < num_lines - 1)
         Message_Line++;
 
@@ -490,13 +491,6 @@ void replay_messages(void)
     int last_message = Next_Message - 1;
     if (last_message < 0)
         last_message += NUM_STORED_MESSAGES;
-
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    window(1, 1, 80, 25);
-    gettext(1, 1, 80, 25, buffer);
-#endif
 
     // track back a screen's worth of messages from the end
     win_start_line = Next_Message - (num_lines - 2);
@@ -635,11 +629,6 @@ void replay_messages(void)
             }
         }
     }
-
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 
     return;
 }                               // end replay_messages()

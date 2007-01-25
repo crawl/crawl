@@ -92,16 +92,6 @@ char list_spells(void)
     const int num_lines = get_number_of_lines();
     cursor_control coff(false);
     
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
-
     clrscr();
 
     cprintf( " Your Spells                      Type            Power         Success   Level" );
@@ -118,17 +108,11 @@ char list_spells(void)
 
             if (ki == ESCAPE)
             {
-#ifdef DOS_TERM
-                puttext(1, 1, 80, 25, buffer);
-#endif
                 return (ESCAPE);
             }
 
             if (isalpha( ki ))
             {
-#ifdef DOS_TERM
-                puttext(1, 1, 80, 25, buffer);
-#endif
                 return (ki);
             }
 
@@ -195,25 +179,15 @@ char list_spells(void)
 
         if (ki >= 'A' && ki <= 'z')
         {
-#ifdef DOS_TERM
-            puttext(1, 1, 80, 25, buffer);
-#endif
             return (ki);
         }
 
         if (ki == 0)
             ki = getch();
 
-#ifdef DOS_TERM
-        puttext(1, 1, 80, 25, buffer);
-#endif
-
         return (anything);
     }
 
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
     // was 35
     ki = getch();
 

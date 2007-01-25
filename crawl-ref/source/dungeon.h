@@ -17,7 +17,7 @@
 #include "FixVec.h"
 #include "externs.h"
 
-#define MAKE_GOOD_ITEM          351
+const int MAKE_GOOD_ITEM = 351;
 
 // Should be the larger of GXM/GYM
 #define MAP_SIDE  GXM

@@ -351,7 +351,7 @@ static bool create_dirs(const std::string &dir)
     return (true);
 }
 
-std::string datafile_path(const std::string &basename)
+std::string datafile_path(const std::string &basename, bool croak_on_fail)
 {
     std::string cdir = SysEnv.crawl_dir? SysEnv.crawl_dir : "";
 
@@ -400,8 +400,9 @@ std::string datafile_path(const std::string &basename)
     }
 
     // Die horribly.
-    end(1, false, "Cannot find data file '%s' anywhere, aborting\n", 
-        basename.c_str());
+    if (croak_on_fail)
+        end(1, false, "Cannot find data file '%s' anywhere, aborting\n", 
+            basename.c_str());
 
     return ("");
 }
@@ -628,10 +629,6 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
     int val;
 
     bool just_created_level = false;
-
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
 
     std::string cha_fil = make_filename( you.your_name, you.your_level,
                                          you.where_are_you,
@@ -1221,10 +1218,6 @@ void save_game(bool leave_game)
     // must be exiting -- save level & goodbye!
     save_level(you.your_level, (you.level_type != LEVEL_DUNGEON),
                you.where_are_you);
-
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
 
     clrscr();
 

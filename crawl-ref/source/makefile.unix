@@ -1,4 +1,4 @@
-# -*- Makefile -*- for Dungeon Crawl (linux)
+# -*- Makefile -*- for Dungeon Crawl (unix)
 
 #
 # Modified for Crawl Reference by $Author$ on $Date$
@@ -20,8 +20,19 @@ OS_TYPE = UNIX
 # Include path for curses or ncurses.
 INCLUDES = -I/usr/include/ncurses
 
-MCHMOD = 2755
-INSTALLDIR := /usr/games
+# If you have lex and yacc, set DOYACC to y (lowercase y).
+DOYACC := y
+
+# Permissions to set on the game executable.
+MCHMOD := 2755
+
+# Permissions to set on the save directory.
+MCHMOD_SAVEDIR := 775
+
+# The user:group to install the game as. 
+INSTALL_UGRP := games:games
+
+INSTALLDIR   := /usr/games
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
@@ -49,10 +60,6 @@ endif
 
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
-
-
-# If you have lex and yacc, set DOYACC to y (lowercase y).
-DOYACC := y
 
 UTIL = util/
 
@@ -143,6 +150,7 @@ endif
 install: $(GAME)
 	[ -d $(INSTALLDIR) ] || mkdir -p $(INSTALLDIR)
 	$(COPY) $(GAME) ${INSTALLDIR}
+	chown $(INSTALL_UGRP) $(INSTALLDIR)/$(GAME)
 	chmod ${MCHMOD} ${INSTALLDIR}/$(GAME)
 ifeq ($(DATADIR),)
 	$(error DATADIR not set! Set DATADIR and run make clean install again)
@@ -151,8 +159,11 @@ endif
 	cp dat/*.des $(DATADIR)/data
 	mkdir -p $(DATADIR)/docs
 	cp ../docs/*.txt $(DATADIR)/docs
+	chown -R $(INSTALL_UGRP) $(DATADIR)
 ifneq ($(SAVEDIR),)
 	mkdir -p $(SAVEDIR)
+	chown $(INSTALL_UGRP) $(SAVEDIR)
+	chmod $(MCHMOD_SAVEDIR) $(SAVEDIR)
 endif
 
 clean:
@@ -191,9 +202,6 @@ profile: $(GAME_DEPENDS)
 # test.
 $(UTIL)%.o: $(UTIL)%.cc
 	$(CXX) $(YCFLAGS) -o $@ -c $<
-
-.h.cc:
-	touch $@
 
 #############################################################################
 # Packaging a source tarball for release

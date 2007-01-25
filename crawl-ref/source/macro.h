@@ -11,8 +11,6 @@
  *               <1>     -/--/--        JS              Created
  */
 
-#ifdef USE_MACROS
-
 #ifndef MACRO_H
 #define MACRO_H
 
@@ -49,17 +47,5 @@ void macro_buf_add(int key);
 bool is_userfunction(int key);
 
 const char *get_userfunction(int key);
-
-#endif
-
-#else 
-
-#define getch_with_command_macros()     getch()
-#define getchm(x)                       getch()
-#define flush_input_buffer(XXX)         ;
-#define macro_buf_add(x)                
-#define is_userfunction(x)              false
-#define get_userfunction(x)             NULL
-#define call_userfunction(x)            
 
 #endif

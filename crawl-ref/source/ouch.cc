@@ -914,14 +914,9 @@ void end_game( struct scorefile_entry &se )
         clrscr();
     }
 
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
-
     clrscr();
     cprintf( "Goodbye, %s.", you.your_name );
     cprintf( EOL EOL "    " ); // Space padding where # would go in list format
-
 
     std::string hiscore = hiscores_format_single_long( se, true );
 

@@ -3183,9 +3183,6 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
 
     print_it[40] = 0;
 
-#ifdef DOS_TERM
-    window(1, 1, 80, 25);
-#endif
     gotoxy(40, 1);
 
     textcolor( LIGHTGREY );

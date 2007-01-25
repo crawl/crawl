@@ -1129,23 +1129,12 @@ formatted_string describe_mutations()
 
 void display_mutations()
 {
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    window(1, 1, 80, 25);
-    gettext(1, 1, 80, 25, buffer);
-#endif
-
     clrscr();
     gotoxy(1,1);
     describe_mutations().display();
     
     if (getch() == 0)
         getch();
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 }
 
 bool mutate(int which_mutation, bool failMsg)

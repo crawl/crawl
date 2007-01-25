@@ -1327,11 +1327,9 @@ void process_command( command_type cmd ) {
             mpr("Char dump unsuccessful! Sorry about that.");
         break;
 
-#ifdef USE_MACROS
     case CMD_MACRO_ADD:
         macro_add_query();
         break;
-#endif
 
     case CMD_LIST_WEAPONS:
         list_weapons();
@@ -2671,10 +2669,8 @@ static bool initialise(void)
     
     cio_init();
 
-#ifdef USE_MACROS
     // Load macros
     macro_init();
-#endif
 
     // system initialisation stuff:
     textbackground(0);

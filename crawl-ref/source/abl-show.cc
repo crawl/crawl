@@ -1352,13 +1352,6 @@ char show_abilities( void )
     }
 
 
-#ifdef DOS_TERM
-    char buffer[4800];
-
-    gettext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
-
     clrscr();
     cprintf("  Ability                           Cost                    Success");
     lines++;
@@ -1385,17 +1378,11 @@ char show_abilities( void )
 
                 if (ki == ESCAPE)
                 {
-#ifdef DOS_TERM
-                    puttext(1, 1, 80, 25, buffer);
-#endif
                     return (ESCAPE);
                 }
 
                 if (ki >= 'A' && ki <= 'z')
                 {
-#ifdef DOS_TERM
-                    puttext(1, 1, 80, 25, buffer);
-#endif
                     return (ki);
                 }
 
@@ -1447,25 +1434,14 @@ char show_abilities( void )
 
         if (ki >= 'A' && ki <= 'z')
         {
-#ifdef DOS_TERM
-            puttext(1, 1, 80, 25, buffer);
-#endif
             return (ki);
         }
 
         if (ki == 0)
             ki = getch();
 
-#ifdef DOS_TERM
-        puttext(1, 1, 80, 25, buffer);
-#endif
-
         return (ki);
     }
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 
     ki = getch();
 

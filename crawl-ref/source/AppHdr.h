@@ -98,7 +98,6 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
-    #define PLAIN_TERM
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
 
@@ -164,7 +163,6 @@
     #include "libunix.h"
 
 #elif defined(DOS)
-    #define DOS_TERM
     #define SHORT_FILE_NAMES
     #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
@@ -184,7 +182,6 @@
 
 #elif defined(WIN32CONSOLE)
     #include "libw32c.h"
-    #define PLAIN_TERM
     #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         getConsoleString(X,Y)
@@ -246,15 +243,9 @@
 // number of back messages saved during play (currently none saved into files)
 #define NUM_STORED_MESSAGES   1000
 
-// if this works out okay, eventually we can change this to USE_OLD_RANDOM
-#define USE_NEW_RANDOM
-
 // Uncomment this if you find the labyrinth to be buggy and want to
 // remove it from the game.
 // #define SHUT_LABYRINTH
-
-// Define USE_MACRO if you want to use the macro patch in macro.cc.
-#define USE_MACROS
 
 // Set this to the number of runes that will be required to enter Zot's
 // domain.  You shouldn't set this really high unless you want to

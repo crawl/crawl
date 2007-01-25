@@ -109,19 +109,8 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
 
-#ifdef DOS_TERM
-    char buffer[4600];
-
-    gettext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
-
     do_menu();
     
-#ifdef DOS_TERM    
-    puttext(1, 1, 80, 25, buffer);
-#endif
-
     return (sel);
 }
 

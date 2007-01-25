@@ -913,11 +913,6 @@ unsigned char spellbook_contents( item_def &book, int action,
     if (update_screen)
     {
         cursor_control coff(false);
-#ifdef DOS_TERM
-        char buffer[4800];
-        gettext(1, 1, 80, 25, buffer);
-        window(1, 1, 80, 25);
-#endif
         clrscr();
 
         out.display();
@@ -925,11 +920,6 @@ unsigned char spellbook_contents( item_def &book, int action,
         keyn = getch();
         if (keyn == 0)
             getch();
-
-#ifdef DOS_TERM
-        puttext(1, 1, 80, 25, buffer);
-        window(1, 18, 80, 25);
-#endif
     }
 
     return (keyn);     // try to figure out that for which this is used {dlb}

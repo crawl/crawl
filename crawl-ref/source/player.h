@@ -158,7 +158,7 @@ bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true);
 
 bool player_can_smell();
-
+bool player_can_swim();
 
 /* ***********************************************************************
  * called from: fight - files - ouch

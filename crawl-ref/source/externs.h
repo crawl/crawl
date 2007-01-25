@@ -109,13 +109,17 @@ struct coord_def
     int         x;
     int         y;
 
-    coord_def( int x_in, int y_in ) : x(x_in), y(y_in) { }
-    coord_def() : x(0), y(0) { }
+    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
 
     void set(int xi, int yi)
     {
         x = xi;
         y = yi;
+    }
+
+    void reset()
+    {
+        set(0, 0);
     }
     
     bool operator == (const coord_def &other) const {
@@ -123,7 +127,7 @@ struct coord_def
     }
 
     bool operator != (const coord_def &other) const {
-        return x != other.x || y != other.y;
+        return !operator == (other);
     }
 
     bool operator <  (const coord_def &other) const {

@@ -26,7 +26,8 @@
 // referenced in files - newgame - ouch:
 extern FixedArray<bool, MAX_LEVELS, NUM_BRANCHES> tmp_file_pairs;
 
-std::string datafile_path(const std::string &basename);
+std::string datafile_path(const std::string &basename,
+                          bool croak_on_fail = true);
 
 bool check_dir(const std::string &what, std::string &dir);
 

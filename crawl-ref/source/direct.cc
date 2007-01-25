@@ -43,9 +43,7 @@
 #include "travel.h"
 #include "view.h"
 
-#ifdef USE_MACROS
 #include "macro.h"
-#endif
 
 enum LOSSelect
 {

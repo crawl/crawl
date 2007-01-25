@@ -70,13 +70,7 @@
 
 static FixedVector<feature_def, NUM_FEATURES> Feature;
 
-#if defined(DOS_TERM)
-// DOS functions like gettext() and puttext() can only
-// work with arrays of characters, not shorts.
-typedef unsigned char screen_buffer_t;
-#else
 typedef unsigned short screen_buffer_t;
-#endif
 
 FixedArray < unsigned int, 20, 19 > Show_Backup;
 
@@ -240,7 +234,7 @@ void clear_envmap( void )
     }
 }
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+#if defined(WIN32CONSOLE) || defined(DOS)
 static unsigned colflag2brand(int colflag)
 {
     switch (colflag)
@@ -264,7 +258,7 @@ static unsigned fix_colour(unsigned raw_colour)
     // This order is important - is_element_colour() doesn't want to see the
     // munged colours returned by dos_brand, so it should always be done 
     // before applying DOS brands.
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+#if defined(WIN32CONSOLE) || defined(DOS)
     const int colflags = raw_colour & 0xFF00;
 #endif
 
@@ -272,7 +266,7 @@ static unsigned fix_colour(unsigned raw_colour)
     if (is_element_colour( raw_colour ))
         raw_colour = element_colour( raw_colour );
 
-#if defined(WIN32CONSOLE) || defined(DOS) || defined(DOS_TERM)
+#if defined(WIN32CONSOLE) || defined(DOS)
     if (colflags)
     {
         unsigned brand = colflag2brand(colflags);
@@ -352,7 +346,7 @@ static char get_travel_colour( int x, int y )
     if (is_waypoint(x + 1, y + 1))
         return LIGHTGREEN;
 
-    short dist = point_distance[x + 1][y + 1];
+    short dist = travel_point_distance[x + 1][y + 1];
     return dist > 0?                    Options.tc_reachable        :
            dist == PD_EXCLUDED?         Options.tc_excluded         :
            dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
@@ -1661,7 +1655,7 @@ bool is_feature(int feature, int x, int y) {
 
     switch (feature) {
     case 'X':
-        return (point_distance[x][y] == PD_EXCLUDED);
+        return (travel_point_distance[x][y] == PD_EXCLUDED);
     case 'F':
     case 'W':
         return is_waypoint(x, y);
@@ -1892,57 +1886,50 @@ static int get_number_of_lines_levelmap()
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
-static void draw_level_map(
-        int start_x, int start_y, int screen_y, bool travel_mode)
+static void draw_level_map(int start_x, int start_y, bool travel_mode)
 {
     int bufcount2 = 0;
     screen_buffer_t buffer2[GYM * GXM * 2];        
     const int num_lines = get_number_of_lines_levelmap();
+    const int num_cols  = get_number_of_cols();
 
     cursor_control cs(false);
 
-#ifdef PLAIN_TERM
+    int top = 1 + Options.level_map_title;
     if ( Options.level_map_title )
     {
-        gotoxy(1,1);
+        gotoxy(1, 1);
         textcolor(WHITE);
         cprintf("Level %s", level_description_string().c_str());
-        gotoxy(1,2);
     }
-    else
-        gotoxy(1, 1);
-#endif
 
-    for (int j = 0; j < num_lines; j++)
+    gotoxy(1, top);
+
+    for (int screen_y = 0; screen_y < num_lines; screen_y++)
     {
-        for (int i = 0; i < 80; i++)
+        for (int screen_x = 0; screen_x < num_cols - 1; screen_x++)
         {
             screen_buffer_t colour = DARKGREY;
-            if (start_y + j >= 65 || start_y + j <= 3 
-                || start_x + i < 0 || start_x + i >= GXM - 1)
+
+            coord_def c(start_x + screen_x, start_y + screen_y);
+
+            if (!in_bounds(c + coord_def(1, 1)))
             {
                 buffer2[bufcount2 + 1] = DARKGREY;
                 buffer2[bufcount2] = 0;
                 bufcount2 += 2;
 
-#ifdef PLAIN_TERM
                 goto print_it;
-#endif
-
-#ifdef DOS_TERM
-                continue;
-#endif
             }
 
-            colour = colour_code_map(start_x + i, start_y + j,
+            colour = colour_code_map(c.x, c.y,
                             Options.item_colour, 
                             travel_mode && Options.travel_colour);
 
             buffer2[bufcount2 + 1] = colour;
-            buffer2[bufcount2] = 
-                        (unsigned char) env.map[start_x + i][start_y + j];
+            buffer2[bufcount2] = (unsigned char) env.map(c);
             
-            if (start_x + i + 1 == you.x_pos && start_y + j + 1 == you.y_pos)
+            if (c.x + 1 == you.x_pos && c.y + 1 == you.y_pos)
             {
                 // [dshaligram] Draw the @ symbol on the level-map. It's no
                 // longer saved into the env.map, so we need to draw it 
@@ -1951,15 +1938,16 @@ static void draw_level_map(
                 buffer2[bufcount2]     = you.symbol;
             }
 
-            // If we've a waypoint on the current square, *and* the square is
-            // a normal floor square with nothing on it, show the waypoint
-            // number.
+            // If we've a waypoint on the current square, *and* the
+            // square is a normal floor square with nothing on it,
+            // show the waypoint number.
             if (Options.show_waypoints)
             {
                 // XXX: This is a horrible hack.
                 screen_buffer_t &bc = buffer2[bufcount2];
-                int gridx = start_x + i + 1, gridy = start_y + j + 1;
-                unsigned char ch = is_waypoint(gridx, gridy);
+                const coord_def gridc = c + coord_def(1, 1);
+                
+                unsigned char ch = is_waypoint(gridc.x, gridc.y);
                 if (ch && (bc == get_sightmap_char(DNGN_FLOOR) ||
                            bc == get_magicmap_char(DNGN_FLOOR)))
                     bc = ch;
@@ -1967,16 +1955,10 @@ static void draw_level_map(
             
             bufcount2 += 2;
 
-#ifdef PLAIN_TERM
-
-          print_it:
-            // avoid line wrap
-            if (i == 79)
-                continue;
-
+        print_it:
             // newline
-            if (i == 0 && j > 0)
-                gotoxy( 1, j + 1 );
+            if (screen_x == 0 && screen_y > 0)
+                gotoxy( 1, screen_y + top );
 
             int ch = buffer2[bufcount2 - 2];
 #ifdef USE_CURSES
@@ -1984,16 +1966,11 @@ static void draw_level_map(
 #endif
             textcolor( buffer2[bufcount2 - 1] );
             putch(ch);
-#endif
         }
     }
 
 #ifdef USE_CURSES
     set_altcharset(false);
-#endif
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer2);
 #endif
 }
 
@@ -2010,10 +1987,6 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     char move_y = 0;
     char getty = 0;
 
-#ifdef DOS_TERM
-    char buffer[4800];
-#endif
-
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
     if (travel_mode)
@@ -2029,7 +2002,9 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     bool found_y = false;
 
     const int num_lines = get_number_of_lines_levelmap();
-    const int half_screen = num_lines / 2 - 1;
+    const int half_screen = (num_lines - 1) / 2;
+
+    const int top    = 1 + Options.level_map_title;
 
     for (j = 0; j < GYM; j++)
     {
@@ -2084,11 +2059,6 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     bool map_alive  = true;
     bool redraw_map = true;
 
-#ifdef DOS_TERM
-    gettext(1, 1, 80, 25, buffer);
-    window(1, 1, 80, 25);
-#endif
-
     clrscr();
     textcolor(DARKGREY);
 
@@ -2097,10 +2067,10 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
         start_y = screen_y - half_screen;
 
         if (redraw_map)
-            draw_level_map(start_x, start_y, screen_y, travel_mode);
+            draw_level_map(start_x, start_y, travel_mode);
 
         redraw_map = true;
-        gotoxy(curs_x, curs_y);
+        gotoxy(curs_x, curs_y + top - 1);
 
         getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP);
 
@@ -2350,10 +2320,10 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
             if (curs_y + move_y < 1)
             {
-                // screen_y += (curs_y + move_y) - 1;
                 screen_y += move_y;
 
-                if (screen_y < min_y + half_screen) {
+                if (screen_y < min_y + half_screen)
+                {
                     move_y   = screen_y - (min_y + half_screen);
                     screen_y = min_y + half_screen;
                 }
@@ -2361,12 +2331,12 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
                     move_y = 0;
             }
 
-            if (curs_y + move_y > num_lines - 1)
+            if (curs_y + move_y > num_lines)
             {
-                // screen_y += (curs_y + move_y) - num_lines + 1;
                 screen_y += move_y;
 
-                if (screen_y > max_y - half_screen) {
+                if (screen_y > max_y - half_screen)
+                {
                     move_y   = screen_y - (max_y - half_screen);
                     screen_y = max_y - half_screen;
                 }
@@ -2380,10 +2350,6 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
         curs_y += move_y;
     }
-
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, buffer);
-#endif
 
     return;
 }                               // end show_map()
@@ -2453,17 +2419,30 @@ void magic_mapping(int map_radius, int proportion)
             if (empty_count > 0)
             {
                 if (!get_envmap_char(i, j))
+                {
                     set_envmap_char(i, j, get_magicmap_char(grd[i][j]));
+
+#ifdef WIZARD
+                    if (map_radius == 1000)
+                        set_envmap_char(i, j, get_sightmap_char(grd[i][j]));
+#endif
+                }
 
                 // Hack to give demonspawn Pandemonium mutation the ability
                 // to detect exits magically.
                 if ((you.mutation[MUT_PANDEMONIUM] > 1
                         && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
-                        // Wizmode
-                        || map_radius == 1000)
+#ifdef WIZARD
+                    || map_radius == 1000
+#endif
+                    )
+                {
                     set_terrain_seen( i, j );
+                }
                 else
+                {
                     set_terrain_mapped( i, j );
+                }
             }
         }
     }
@@ -3460,11 +3439,6 @@ void viewwindow(bool draw_it, bool do_updates)
         // and this simply works without requiring a stack.
         you.flash_colour = BLACK;
 
-#ifdef DOS_TERM
-        puttext( 2, 1, X_SIZE + 1, Y_SIZE, buffy.buffer() );
-#endif
-
-#ifdef PLAIN_TERM
         // avoiding unneeded draws when running
         if (!you.running || (you.running < 0 && Options.travel_delay > -1))
         {
@@ -3489,8 +3463,6 @@ void viewwindow(bool draw_it, bool do_updates)
 
 #ifdef USE_CURSES
         set_altcharset( false );
-#endif
-
 #endif
     }
 }                               // end viewwindow()

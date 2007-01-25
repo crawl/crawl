@@ -1011,11 +1011,6 @@ static bool write_dump(
 
 void display_notes()
 {
-#ifdef DOS_TERM
-    char dosbuffer[4000];
-    gettext( 1, 1, 80, 25, dosbuffer );
-    window( 1, 1, 80, 25 );
-#endif
     Menu scr;
     scr.set_title( new MenuEntry("| Turn  |Location | Note"));
     for ( unsigned int i = 0; i < note_list.size(); ++i )
@@ -1036,20 +1031,11 @@ void display_notes()
 
     }
     scr.show();
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, dosbuffer);
-    window(1, 1, 80, 25);
-#endif
     redraw_screen();
 }
 
 void resists_screen()
 {
-#ifdef DOS_TERM
-    char dosbuffer[4000];
-    gettext( 1, 1, 80, 25, dosbuffer );
-    window( 1, 1, 80, 25 );
-#endif
     std::vector<formatted_string> vfs = get_full_detail(false);
     clrscr();
     gotoxy(1,1);
@@ -1060,9 +1046,5 @@ void resists_screen()
         scr.add_item_formatted_string(vfs[i]);
 
     scr.show();
-#ifdef DOS_TERM
-    puttext(1, 1, 80, 25, dosbuffer);
-    window(1, 1, 80, 25);
-#endif
     redraw_screen();
 }

@@ -127,6 +127,11 @@ bool is_terrain_known( int x, int y );
 bool is_terrain_seen( int x, int y );
 bool is_terrain_changed( int x, int y );
 
+inline bool is_terrain_seen(const coord_def &c)
+{
+    return (is_terrain_seen(c.x, c.y));
+}
+
 void clear_feature_overrides();
 void add_feature_override(const std::string &text);
 void clear_cset_overrides();

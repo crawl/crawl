@@ -80,8 +80,10 @@ inline std::string lowercase_first(std::string s)
     return (s);
 }
 
-template <class Z>
-std::string comma_separated_line(Z start, Z end)
+template <typename Z>
+std::string comma_separated_line(Z start, Z end,
+                                 const std::string &andc = " and ",
+                                 const std::string &comma = ", ")
 {
     std::string text;
     for (Z i = start; i != end; ++i)
@@ -89,9 +91,9 @@ std::string comma_separated_line(Z start, Z end)
         if (i != start)
         {
             if (i + 1 != end)
-                text += ", ";
+                text += comma;
             else
-                text += " and ";
+                text += andc;
         }
 
         text += *i;
