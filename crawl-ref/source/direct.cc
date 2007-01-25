@@ -100,6 +100,7 @@ static char find_square( unsigned char xps, unsigned char yps,
                          int los = LOS_ANY);
 
 static int targeting_cmd_to_compass( command_type command );
+static void describe_oos_square(int x, int y);
 
 static bool is_mapped(int x, int y)
 {
@@ -116,12 +117,19 @@ static command_type read_direction_key()
     case ESCAPE: return CMD_TARGET_CANCEL;
     case '?': return CMD_TARGET_DESCRIBE;
     case ' ': case '.': return CMD_TARGET_SELECT;
+    case '!': return CMD_TARGET_SELECT_ENDPOINT;
+
+    case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
+    case '^': return CMD_TARGET_FIND_TRAP;
+    case '_': return CMD_TARGET_FIND_ALTAR;
+    case '<': return CMD_TARGET_FIND_UPSTAIR;
+    case '>': return CMD_TARGET_FIND_DOWNSTAIR;
 
     case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
     case 'p': case 'f': case 't': return CMD_TARGET_PREV_TARGET;
         
     case '-': return CMD_TARGET_CYCLE_BACK;
-    case '+': return CMD_TARGET_CYCLE_FORWARD;
+    case '+': case '=': return CMD_TARGET_CYCLE_FORWARD;
     case ';': return CMD_TARGET_OBJ_CYCLE_BACK;
     case '/': return CMD_TARGET_OBJ_CYCLE_FORWARD;
 
@@ -174,7 +182,6 @@ static command_type read_direction_key()
 // t,p,f   auto-select previous target
 //
 //
-// targetting mode is handled by look_around()
 //---------------------------------------------------------------
 
 void direction_choose_compass( struct dist& moves )
@@ -228,8 +235,31 @@ static int targeting_cmd_to_compass( command_type command )
     }
 }
 
-void direction( struct dist &moves, int restricts, int mode )
+static int targeting_cmd_to_feature( command_type command )
 {
+    switch ( command )
+    {
+    case CMD_TARGET_FIND_TRAP:
+        return '^';
+    case CMD_TARGET_FIND_PORTAL:
+        return '\\';
+    case CMD_TARGET_FIND_ALTAR:
+        return  '_';
+    case CMD_TARGET_FIND_UPSTAIR:
+        return '<';
+    case CMD_TARGET_FIND_DOWNSTAIR:
+        return '>';
+    default:
+        return 0;
+    }
+}
+
+void direction(struct dist& moves, targeting_type restricts,
+               int mode, bool just_looking)
+{
+    // NOTE: Even if just_looking is set, moves is still interesting,
+    // because we can travel there!
+
     if ( restricts == DIR_DIR )
     {
         direction_choose_compass( moves );
@@ -246,6 +276,7 @@ void direction( struct dist &moves, int restricts, int mode )
     moves.isTarget      = false;
     moves.isMe          = false;
     moves.isCancel      = false;
+    moves.isEndpoint    = false;
     moves.dx = moves.dy = 0;
 
     // XXX change this for default target
@@ -321,6 +352,35 @@ void direction( struct dist &moves, int restricts, int mode )
             }
             break;
 
+        case CMD_TARGET_FIND_YOU:
+            moves.tx = you.x_pos;
+            moves.ty = you.y_pos;
+            moves.dx = 0;
+            moves.dy = 0;
+            break;
+
+        case CMD_TARGET_FIND_TRAP:
+        case CMD_TARGET_FIND_PORTAL:
+        case CMD_TARGET_FIND_ALTAR:
+        case CMD_TARGET_FIND_UPSTAIR:
+        case CMD_TARGET_FIND_DOWNSTAIR:
+            int thing_to_find;
+            thing_to_find = targeting_cmd_to_feature(key_command);
+            if (find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
+                                    find_feature, thing_to_find, true,
+                                    Options.target_los_first ?
+                                    LOS_FLIPVH : LOS_ANY))
+            {
+                moves.tx = objfind_pos[0];
+                moves.ty = objfind_pos[1];
+            }
+            else
+            {
+                flush_input_buffer(FLUSH_ON_FAILURE);
+                need_redraw = false;
+            }
+            break;
+
         case CMD_TARGET_CYCLE_TARGET_MODE:
             mode = (mode + 1) % TARG_NUM_MODES;
             mprf( "Targeting mode is now: %s",
@@ -356,19 +416,25 @@ void direction( struct dist &moves, int restricts, int mode )
                     moves.isTarget = true;
                     moves.tx = montarget->x;
                     moves.ty = montarget->y;
-                    loop_done = true;
+                    if ( !just_looking )
+                        loop_done = true;
                 }
                 break;
             }
 
+        case CMD_TARGET_SELECT_ENDPOINT:
+            moves.isEndpoint = true;
+            // intentional fall-through
         case CMD_TARGET_SELECT: // finalize current choice
             moves.isValid = true;
             moves.isTarget = true;
             loop_done = true;
+            // maybe we should except just_looking here?
             mid = mgrd[moves.tx][moves.ty];
             if ( mid != NON_MONSTER )
                 you.prev_targ = mid;
             break;
+
             
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
@@ -440,6 +506,9 @@ void direction( struct dist &moves, int restricts, int mode )
         
         if ( loop_done == true )
         {
+            if ( just_looking ) // easy out
+                break;
+
             if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
                 mpr("Sorry, you can't target what you can't see.");
@@ -465,12 +534,16 @@ void direction( struct dist &moves, int restricts, int mode )
         {
             // XXX : put in beam redrawing code here
             mesclr(true);
-            describe_cell(moves.tx, moves.ty);
+            if ( !in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
+                describe_oos_square(moves.tx, moves.ty);
+            else if ( in_bounds(moves.tx, moves.ty) )
+                describe_cell(moves.tx, moves.ty);
         }
+
+        moves.isEndpoint = false; // only relevant at the last step
     }
 
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
-
 }
 
 // Attempts to describe a square that's not in line-of-sight. If
@@ -485,397 +558,6 @@ static void describe_oos_square(int x, int y)
     describe_stash(x, y);
     describe_feature(x, y, true);
 }
-
-//---------------------------------------------------------------
-//
-// look_around
-//
-// Accessible by the x key and when using cursor aiming. Lets you
-// find out what symbols mean, and is the way to access monster
-// descriptions.
-//
-// input: dist.prev_target : -1 is last monster
-//                          0 is no monster selected
-//                          1 is next monster
-//
-// input: first_move is -1 if no initial cursor move, otherwise
-// make 1 move in that direction.
-//
-//
-// output: if dist.prev_target is -1 on OUTPUT, it means that
-//   player selected 'p' ot 't' for last targetted monster.
-//
-//   otherwise, usual dist fields are filled in (dx and dy are
-//   always zero coming back from this function)
-//
-//---------------------------------------------------------------
-
-void look_around(struct dist &moves, bool justLooking, int first_move, int mode)
-{
-    int keyin = 0;
-    bool dir_chosen = false;
-    bool targ_chosen = false;
-    bool shifted_direction = true;
-    int dir = 0;
-    int cx = VIEW_CX;
-    int cy = VIEW_CY;
-    int newcx, newcy;
-    int mx, my;         // actual map x,y (scratch)
-    int mid;            // monster id (scratch)
-    FixedVector < char, 2 > monsfind_pos;
-    FixedVector < char, 2 > objfind_pos;
-
-    monsfind_pos[0] = objfind_pos[0] = you.x_pos;
-    monsfind_pos[1] = objfind_pos[1] = you.y_pos;
-
-    message_current_target();
-
-    // setup initial keystroke
-    if (first_move >= 0)
-        keyin = first_move;
-    if (moves.prev_target == -1)
-        keyin = '-';
-    if (moves.prev_target == 1)
-        keyin = '+';
-    if (moves.prev_target == -2)
-        keyin = '\'';
-    if (moves.prev_target == -3)
-        keyin = ';';
-    // reset
-    moves.prev_target = 0;
-
-    // loop until some exit criteria reached
-    while(true)
-    {
-        dir_chosen = false;
-        targ_chosen = false;
-        shifted_direction = false;
-        newcx = cx;
-        newcy = cy;
-
-        // move cursor to current position
-        gotoxy(cx+1, cy);
-
-        if (keyin == 0)
-            keyin = unmangle_direction_keys(getchm(KC_TARGETING), KC_TARGETING);
-
-        // [dshaligram] Classic Crawl behaviour was to use space to select
-        // targets when targeting. The patch changed the meaning of space
-        // from 'confirm' to 'cancel', which surprised some folks. I'm now
-        // arbitrarily defining space as 'cancel' for look-around, and 
-        // 'confirm' for targeting.
-        if (!justLooking && keyin == ' ')
-            keyin = '\r';
-
-        // [dshaligram] Fudge: in targeting mode, '>' says shoot a missile
-        // that lands here.
-        if (!justLooking && keyin == '>')
-            keyin = 'X';
-
-        if (strchr(dirchars, keyin) != NULL)
-        {
-            dir_chosen = true;
-            dir = (int)(strchr(dirchars, keyin) - dirchars) / 2;
-        }
-        else if (strchr(dirchars, tolower(keyin)) != NULL)
-        {
-            dir_chosen = true;
-            dir = (int)(strchr(dirchars, tolower(keyin)) - dirchars) / 2;
-            shifted_direction = true;
-        }
-        else
-        {
-            // handle non-directional keys
-            switch (keyin)
-            {
-#ifdef WIZARD
-            case 'C':
-                targ_chosen = true;
-                mx = you.x_pos + cx - VIEW_CX;
-                my = you.y_pos + cy - VIEW_CY;
-                if (!in_bounds(mx, my))
-                    break;
-                if (mgrd[mx][my] != NON_MONSTER)
-                {
-                    mprf("%s won't like that.",
-                         ptr_monam(&menv[mgrd[mx][my]], DESC_CAP_THE));
-                    break;
-                }
-                create_spec_monster_name(mx, my);
-                viewwindow(true, false);
-                break;
-                        
-            case 'D':
-                targ_chosen = true;
-                mx = you.x_pos + cx - VIEW_CX;
-                my = you.y_pos + cy - VIEW_CY;
-                if (!in_bounds(mx, my))
-                    break;
-                mid = mgrd[mx][my];
-
-                if (mid == NON_MONSTER)
-                    break;
-                monster_die(&menv[mid], KILL_RESET, 0);
-                viewwindow(true, false);
-                break;
-                        
-            case 'F':
-                targ_chosen = true;
-                mx = you.x_pos + cx - VIEW_CX;
-                my = you.y_pos + cy - VIEW_CY;
-                if (!in_bounds(mx, my))
-                    break;
-                mid = mgrd[mx][my];
-
-                if (mid == NON_MONSTER)
-                    break;
-
-                mprf("Changing attitude of %s\n",
-                     ptr_monam(&menv[mid], DESC_PLAIN));
-                menv[mid].attitude =
-                    menv[mid].attitude == ATT_HOSTILE?
-                    ATT_FRIENDLY
-                    : ATT_HOSTILE;
-
-                describe_monsters( menv[ mid ].type, mid );
-                redraw_screen();
-                mesclr( true );
-                // describe the cell again.
-                describe_cell(view2gridX(cx), view2gridY(cy));
-                break;
-#endif
-
-            case CONTROL('F'):
-                mode = (mode + 1) % TARG_NUM_MODES;
-                        
-            snprintf( info, INFO_SIZE, "Targeting mode is now: %s",
-                      (mode == TARG_ANY)   ? "any" :
-                      (mode == TARG_ENEMY) ? "enemies" 
-                      : "friends" );
-
-            mpr( info );
-            targ_chosen = true;
-            break;
-
-            case '^':
-            case '\t':
-            case '\\':
-            case '_':
-            case '<':
-            case '>':
-            {
-                if (find_square( cx, cy, objfind_pos, 1,
-                                 find_feature, keyin, true,
-                                 Options.target_los_first
-                                 ? LOS_FLIPVH : LOS_ANY))
-                {
-                    newcx = objfind_pos[0];
-                    newcy = objfind_pos[1];
-                }
-                else
-                    flush_input_buffer( FLUSH_ON_FAILURE );
-                targ_chosen = true;
-                break;
-            }
-            case ';':
-            case '/':
-            case '\'':
-            case '*':
-            {
-                dir = keyin == ';' || keyin == '/'? -1 : 1;
-                if (find_square( cx, cy, objfind_pos, dir,
-                                 find_object, 0, true,
-                                 Options.target_los_first
-                                 ? (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
-                                 : LOS_ANY))
-
-                {
-                    newcx = objfind_pos[0];
-                    newcy = objfind_pos[1];
-                }
-                else
-                    flush_input_buffer( FLUSH_ON_FAILURE );
-                targ_chosen = true;
-                break;
-            }
-
-            case '-':
-            case '+':
-            case '=':
-            {
-                dir = keyin == '-'? -1 : 1;
-                if (find_square( cx, cy, monsfind_pos, dir, 
-                                 find_monster, mode, Options.target_wrap ))
-                {
-                    newcx = monsfind_pos[0];
-                    newcy = monsfind_pos[1];
-                }
-                else
-                    flush_input_buffer( FLUSH_ON_FAILURE );
-                targ_chosen = true;
-                break;
-            }
-
-            case 't':
-            case 'p':
-                moves.prev_target = -1;
-                break;
-
-            case '?':
-                targ_chosen = true;
-                mx = you.x_pos + cx - VIEW_CX;
-                my = you.y_pos + cy - VIEW_CY;
-                if (!in_bounds(mx, my))
-                    break;
-                mid = mgrd[mx][my];
-
-                if (mid == NON_MONSTER)
-                    break;
-
-#if (!DEBUG_DIAGNOSTICS)
-                if (!player_monster_visible( &menv[mid] ))
-                    break;
-#endif
-
-                describe_monsters( menv[ mid ].type, mid );
-                redraw_screen();
-                mesclr( true );
-                // describe the cell again.
-                describe_cell(view2gridX(cx), view2gridY(cy));
-                break;
-
-            case '\r':
-            case '\n':
-            case '.':
-            case '5':
-            case 'X':
-                // If we're in look-around mode, and the cursor is on
-                // the character and there's a valid travel target 
-                // within the viewport, jump to that target.
-                if (justLooking && cx == VIEW_CX && cy == VIEW_CY)
-                {
-                    if (you.travel_x > 0 && you.travel_y > 0)
-                    {
-                        int nx = grid2viewX(you.travel_x);
-                        int ny = grid2viewY(you.travel_y);
-                        if (in_viewport_bounds(nx, ny))
-                        {
-                            newcx = nx;
-                            newcy = ny;
-                            targ_chosen = true;
-                        }
-                    }
-                }
-                else
-                {
-                    dir_chosen = true;
-                    dir = keyin == 'X'? -1 : 4;
-                }
-                break;
-
-            case ' ':
-            case ESCAPE:
-                moves.isCancel = true;
-                mesclr( true );
-                return;
-
-            default:
-                break;
-            }
-        }
-
-        // now we have parsed the input character completely. Reset & Evaluate:
-        keyin = 0;
-        if (!targ_chosen && !dir_chosen)
-            break;
-
-        // check for SELECTION
-        if (dir_chosen && (dir == 4 || dir == -1))
-        {
-            // [dshaligram] We no longer vet the square coordinates if
-            // we're justLooking. By not vetting the coordinates, we make 'x'
-            // look_around() nicer for travel purposes.
-            if (!justLooking || !in_bounds(view2gridX(cx), view2gridY(cy)))
-            {
-                // RULE: cannot target what you cannot see
-                if (!in_vlos(cx, cy))
-                {
-                    mpr("Sorry, you can't target what you can't see.");
-                    return;
-                }
-            }
-
-            moves.isValid = true;
-            moves.isTarget = true;
-            moves.isEndpoint = (dir == -1);
-            moves.tx = you.x_pos + cx - VIEW_CX;
-            moves.ty = you.y_pos + cy - VIEW_CY;
-
-            if (moves.tx == you.x_pos && moves.ty == you.y_pos)
-                moves.isMe = true;
-            else
-            {
-                // try to set you.previous target
-                mx = you.x_pos + cx - VIEW_CX;
-                my = you.y_pos + cy - VIEW_CY;
-                mid = mgrd[mx][my];
-
-                if (mid == NON_MONSTER)
-                    break;
-
-                if (!player_monster_visible( &(menv[mid]) ))
-                    break;
-
-                you.prev_targ = mid;
-            }
-            break;
-        }
-
-        // check for MOVE
-        if (dir_chosen)
-        {
-            int xi = xcomp[dir], yi = ycomp[dir];
-            if (shifted_direction)
-            {
-                // TODO: Add .crawlrc option for cursor step
-                xi *= 3;
-                yi *= 3;
-            }
-            newcx = cx + xi;
-            newcy = cy + yi;
-        }
-
-        // bounds check for newcx, newcy
-        if (newcx < VIEW_SX) newcx = VIEW_SX;
-        if (newcx > VIEW_EX) newcx = VIEW_EX;
-        if (newcy < VIEW_SY) newcy = VIEW_SY;
-        if (newcy > VIEW_EY) newcy = VIEW_EY;
-
-        // no-op if the cursor doesn't move.
-        if (newcx == cx && newcy == cy)
-            continue;
-
-        // CURSOR MOVED - describe new cell.
-        cx = newcx;
-        cy = newcy;
-        mesclr( true );
-
-        const int gridX = view2gridX(cx),
-                  gridY = view2gridY(cy);
-
-        if (!in_vlos(cx, cy))
-        {
-            mpr("You can't see that place.");
-            describe_oos_square(gridX, gridY);
-            continue;
-        }
-        
-        if (in_bounds(gridX, gridY))
-            describe_cell(gridX, gridY);
-    } // end WHILE
-
-    mesclr( true );
-}                               // end look_around()
 
 bool in_vlos(int x, int y)
 {

@@ -1184,9 +1184,8 @@ void process_command( command_type cmd ) {
         mpr("Move the cursor around to observe a square.", MSGCH_PROMPT);
         mpr("Press '?' for a monster description.", MSGCH_PROMPT);
 
-        struct dist lmove;
-        lmove.isValid = lmove.isTarget = lmove.isCancel = false;
-        look_around( lmove, true );
+        struct dist lmove;      // will be initialized by direction()
+        direction(lmove, DIR_TARGET, TARG_ANY, true);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
             start_travel( lmove.tx, lmove.ty );
         break;

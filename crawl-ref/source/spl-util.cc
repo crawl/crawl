@@ -675,7 +675,7 @@ void apply_area_cloud( int (*func) (int, int, int, int), int x, int y,
 }                               // end apply_area_cloud()
 
 char spell_direction( struct dist &spelld, struct bolt &pbolt, 
-                      int restrict, int mode )
+                      targeting_type restrict, int mode )
 {
     if (restrict == DIR_TARGET)
         mpr( "Choose a target (+/- for next/prev monster)", MSGCH_PROMPT );

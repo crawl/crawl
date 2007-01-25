@@ -695,6 +695,7 @@ enum command_type
     CMD_TARGET_CYCLE_TARGET_MODE,
     CMD_TARGET_PREV_TARGET,
     CMD_TARGET_SELECT,
+    CMD_TARGET_SELECT_ENDPOINT,
     CMD_TARGET_OBJ_CYCLE_BACK,
     CMD_TARGET_OBJ_CYCLE_FORWARD,
     CMD_TARGET_CYCLE_FORWARD,
@@ -3570,6 +3571,13 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_GHOST,              // bones.xxx
 
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
+};
+
+enum targeting_type
+{
+    DIR_NONE,
+    DIR_TARGET,
+    DIR_DIR
 };
 
 enum torment_source_type

@@ -2038,7 +2038,6 @@ int mons_hallblade_rare(int mcls)
 //    - down/up stairs (to and back) misc.cc
 //    - new_level (2 places) (misc.cc)
 //    - item_check items.cc
-//    - look_around (direct.cc)
 //    - ouch ouch.cc (death message)
 //    - and here...
 

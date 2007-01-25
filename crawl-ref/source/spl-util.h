@@ -82,7 +82,8 @@ int apply_area_within_radius(int (*func) (int, int, int, int),
                               int x, int y, int pow, int radius, int ctype);
 
 char spell_direction( struct dist &spelld, struct bolt &pbolt,
-                              int restrict = DIR_NONE, int mode = TARG_ENEMY );
+                      targeting_type restrict = DIR_NONE,
+                      int mode = TARG_ENEMY );
 
 void apply_area_cloud(int (*func) (int, int, int, int), int x, int y,
                       int pow, int number, int ctype);

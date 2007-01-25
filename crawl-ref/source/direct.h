@@ -25,19 +25,8 @@
  *              spells2 - spells3 - spells4
  * *********************************************************************** */
 
-#define DIR_NONE    0
-#define DIR_TARGET  1
-#define DIR_DIR     2
-
-void direction( struct dist &moves, int restricts = DIR_NONE, 
-                int mode = TARG_ANY );
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - direct
- * *********************************************************************** */
-void look_around( struct dist &moves, bool justLooking, int first_move = -1,
-                  int mode = TARG_ANY );
+void direction( struct dist &moves, targeting_type restricts = DIR_NONE,
+                int mode = TARG_ANY, bool just_looking = false );
 
 bool in_los_bounds(int x, int y);
 bool in_viewport_bounds(int x, int y);
