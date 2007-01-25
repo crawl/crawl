@@ -753,7 +753,10 @@ item_spec item_list::pick_item(item_spec_slot &slot)
 item_spec item_list::get_item(int index)
 {
     if (index < 0 || index >= (int) items.size())
-        return (item_spec());
+    {
+        const item_spec none;
+        return (none);
+    }
     
     return (pick_item(items[index]));
 }
