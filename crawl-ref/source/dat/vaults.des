@@ -491,6 +491,100 @@ xbbbb+bbbbx
 x....@....x
 ENDMAP
 
+###################################
+# pick a door
+NAME: lemuel_pick_a_door
+TAGS: entry
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxxxx.xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.xxx.x.x.x.x.x.x.x.x.x.x
+x...x.x.x.x.xxx.x.x.x.x.x
+xxx.x.x.x.x.x...x.x.x.x.x
+xxx.x.x.x.x.x.xxx.x.x.x.x
+xxx.x.x.xxx.x.xxx.x.x.x.x
+xxx.x.x.x.x.x.xxx.x.x.x.x
+xxx.x.x.x.x.x.xxx...x.x.x
+x.x.x.x.x.x.x.xxxxxxx.x.x
+x.x.x.x.x.x.x.xxx...x.x.x
+x.x.xxx.x.x.x...x.x.x.x.x
+x.x.xxx.x.x.xxx.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.xxx
+x.x.x.x.x.x.x.x.x.x.x...x
+x.x.x.x.x.x.x.x.x.x.xxx.x
+x.x.x.x.x.x.x.x.x.x.xxx.x
+x.x.x.x.x.x.x.x.x.x.xxx.x
+x.x.x.x.x.x.x.x.x.x.xxx.x
+x.x.x.x.x.x.x.x.x.x.xxx.x
+x.x.x...x.x.x.x.x.x.xxx.x
+x.x.xxxxx.x.x.x.x.xxxxx.x
+x...xxxxx.x.x.x.x.x.....x
+xxxxxxxxx.x.x.x.x.x.xxxxx
+xxxxxxxxx...x.x...x...xxx
+xxxxxxxxxxxxxxxxxxxxx+xxx
+xxxxxxxxxxxxxxxxxxxxx@xxx
+ENDMAP
+
+#########################
+# if bats scare you, close the door!
+# minus entry, could be a good standalone vault for low levels
+NAME: lemuel_batcave
+TAGS: entry
+ORIENT: float
+MONS: giant bat
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x{x[x(xxxxxxxxxxx..........xxxx
+x.x.x.xxxxxxxx...............xx
+x.x.x.xxxxxx..................x
+x.x.x.xxxx....1.1.1.1.1......*x
+x.x.x.xx.......1.1.1.1.1.....xx
+x.....+.......1.1.1.1.1......xx
+xxx.xxx........1.1.1.1.1....xxx
+xxx.xxxx.................xxxxxx
+xxx.xxxxx.............xxxxxxxxx
+@...xxxxxxx.......xxxxxxxxxxxxx
+xxx.xxxxxxxxx...xxxxxxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx@xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################
+NAME: lemuel_lava_pool
+TAGS: entry no_monster_gen
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxx
+xxxxx..{..xxxxx
+xxxx(.....[xxxx
+xxxx.......xxxx
+xxxx.......xxxx
+xxxx.......xxxx
+xxxx..lll..xxxx
+xxxx.lllll.xxxx
+xxxx.ll*ll.xxxx
+xxxx.ll*ll.xxxx
+xxxx.lllll.xxxx
+xxxx..lll..xxxx
+xxxx.......xxxx
+xxxx.......xxxx
+xxx.........xxx
+x.............x
+x@.....@.....@x
+ENDMAP
+
 ##############################################################################
 # David's entry vaults
 ##############################################################################
