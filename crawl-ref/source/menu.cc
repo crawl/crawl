@@ -1286,9 +1286,15 @@ void column_composer::compose_formatted_column(
     }
 }
 
+formatted_scroller::formatted_scroller() : Menu()
+{
+    set_highlighter(NULL);
+}
+
 formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
     Menu(_flags)
 {
+    set_highlighter(NULL);
     add_text(s);
 }
 

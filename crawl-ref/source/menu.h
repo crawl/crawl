@@ -421,7 +421,7 @@ private:
 class formatted_scroller : public Menu
 {
 public:
-    formatted_scroller() {}
+    formatted_scroller();
     formatted_scroller(int flags, const std::string& s);
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
