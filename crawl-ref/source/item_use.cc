@@ -1316,7 +1316,6 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     }
     else
     {
-        mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
         message_current_target();
         direction( thr, DIR_NONE, TARG_ENEMY );
     }
@@ -2521,9 +2520,7 @@ void zap_wand(void)
         }
     }
 
-    mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
     message_current_target();
-
     direction( zap_wand, DIR_NONE, targ_mode );
 
     if (!zap_wand.isValid)

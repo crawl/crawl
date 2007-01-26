@@ -68,15 +68,7 @@ enum LOSSelect
     LOS_NONE     = 0xFFFF
 };
 
-// x and y offsets in the following order:
-// SW, S, SE, W, E, NW, N, NE
-static const char xcomp[9] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
-static const char ycomp[9] = { 1, 1, 1, 0, 0, 0, -1, -1, -1 };
-
-// [dshaligram] Removed . and 5 from dirchars so it's easier to
-// special case them.
-static const char dirchars[19] = { "b1j2n3h4bbl6y7k8u9" };
-static const char *aim_prompt = "Aim (move cursor or -/+, change mode with CTRL-F, select with . or >)";
+static const char *aim_prompt = "Aim (move cursor or -/+, change mode with CTRL-F, select with . or !)";
 
 static void describe_feature(int mx, int my, bool oos);
 static void describe_cell(int mx, int my);
@@ -155,35 +147,6 @@ static command_type read_direction_key()
     }
 }
 
-//---------------------------------------------------------------
-//
-// direction
-//
-// use restrict == DIR_DIR to allow only a compass direction;
-//              == DIR_TARGET to allow only choosing a square;
-//              == DIR_NONE to allow either.
-//
-// outputs: dist structure:
-//
-//           isValid        a valid target or direction was chosen
-//           isCancel       player hit 'escape'
-//           isTarget       targetting was used
-//           tx,ty          target x,y or logical beam extension to
-//                             edge of map if keypad direction used.
-//           dx,dy          direction delta if keypad used {-1,0,1}
-//
-// SYNOPSIS:
-//
-// gets a direction, or any of the follwing:
-//
-// *     go to targetting mode
-// +,=   go to targetting mode, next monster
-// -               "          , prev monster
-// t,p,f   auto-select previous target
-//
-//
-//---------------------------------------------------------------
-
 void direction_choose_compass( struct dist& moves )
 {
     moves.isValid       = true;
@@ -254,12 +217,29 @@ static int targeting_cmd_to_feature( command_type command )
     }
 }
 
+//---------------------------------------------------------------
+//
+// direction
+//
+// use restrict == DIR_DIR to allow only a compass direction;
+//              == DIR_TARGET to allow only choosing a square;
+//              == DIR_NONE to allow either.
+//
+// outputs: dist structure:
+//
+//           isValid        a valid target or direction was chosen
+//           isCancel       player hit 'escape'
+//           isTarget       targetting was used
+//           isEndpoint     player wants the ray to stop on the dime
+//           tx,ty          target x,y
+//           dx,dy          direction delta for DIR_DIR
+//
+//---------------------------------------------------------------
 void direction(struct dist& moves, targeting_type restricts,
                int mode, bool just_looking)
 {
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
-
     if ( restricts == DIR_DIR )
     {
         direction_choose_compass( moves );
@@ -285,10 +265,7 @@ void direction(struct dist& moves, targeting_type restricts,
 
     // XXX Add: ability to cycle between appropriate rays!
 
-    // XXX.  this is ALWAYS in relation to the player. But a bit of a hack
-    // nonetheless!  --GDL
-
-    mpr(aim_prompt);
+    mpr(aim_prompt, MSGCH_PROMPT);
 
     while (1)
     {
@@ -889,13 +866,15 @@ static char find_square( unsigned char xps, unsigned char yps,
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
+// Identical to find_square, except that input (tx, ty) and output
+// (mfp) are in grid coordinates rather than view coordinates.
 static char find_square_wrapper( int tx, int ty,
                                  FixedVector<char, 2> &mfp, char direction,
                                  bool (*find_targ)( int x, int y, int mode ),
                                  int mode, bool wrap, int los )
 {
-    unsigned char r =  find_square(grid2viewX(tx), grid2viewY(ty),
-                                   mfp, direction, find_targ, mode, wrap, los);
+    const char r =  find_square(grid2viewX(tx), grid2viewY(ty),
+                                mfp, direction, find_targ, mode, wrap, los);
     mfp[0] = view2gridX(mfp[0]);
     mfp[1] = view2gridY(mfp[1]);
     return r;

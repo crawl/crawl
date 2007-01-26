@@ -176,10 +176,7 @@ int fireball(int power)
 {
     struct dist fire_ball;
 
-    mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
-
     message_current_target();
-
     direction( fire_ball, DIR_NONE, TARG_ENEMY );
 
     if (!fire_ball.isValid)
@@ -491,10 +488,7 @@ int stinking_cloud( int pow )
     struct dist spelld;
     struct bolt beem;
 
-    mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
-
     message_current_target();
-
     direction( spelld, DIR_NONE, TARG_ENEMY );
 
     if (!spelld.isValid)

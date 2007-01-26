@@ -1923,10 +1923,7 @@ void cast_evaporate(int pow)
         return;
     }
 
-    mpr( STD_DIRECTION_PROMPT, MSGCH_PROMPT );
-
     message_current_target();
-
     direction( spelld, DIR_NONE, TARG_ENEMY );
 
     if (!spelld.isValid)

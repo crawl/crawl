@@ -17,8 +17,6 @@
 #include "externs.h"
 #include "enum.h"
 
-#define STD_DIRECTION_PROMPT    "Which direction ([*+-] to target)? "
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr - debug - effects - it_use3 - item_use - spells1 -
