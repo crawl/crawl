@@ -911,7 +911,7 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
         leave_abyss_pan = true;
-        mpr("You pass through the gate, and find yourself at the top of a staircase.");
+        mpr("You pass through the gate.");
         more();
     }
 

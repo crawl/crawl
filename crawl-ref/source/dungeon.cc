@@ -389,7 +389,8 @@ void builder(int level_number, char level_type)
     // Top level of branch levels - replaces up stairs
     // with stairs back to dungeon or wherever:
     if ( branches[(int)you.where_are_you].exit_stairs != NUM_FEATURES &&
-         player_branch_depth() == 1 )
+         player_branch_depth() == 1 &&
+         you.level_type == LEVEL_DUNGEON )
     {
         for (x = 1; x < GXM; x++)
             for (y = 1; y < GYM; y++)
@@ -399,7 +400,8 @@ void builder(int level_number, char level_type)
     }
 
     // bottom level of branch - replaces down stairs with up ladders:
-    if ( player_branch_depth() == branches[(int)you.where_are_you].depth )
+    if ( player_branch_depth() == branches[(int)you.where_are_you].depth &&
+         you.level_type == LEVEL_DUNGEON)
     {
         for (x = 1; x < GXM; x++)
             for (y = 1; y < GYM; y++)
@@ -4193,7 +4195,7 @@ static void place_branch_entrances(int dlevel, char level_type)
 {
     int sx, sy;
 
-    if (!level_type == LEVEL_DUNGEON)
+    if (level_type != LEVEL_DUNGEON)
         return;
 
     if (player_in_branch( BRANCH_MAIN_DUNGEON ))
