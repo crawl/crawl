@@ -1235,6 +1235,7 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 
             case SP_HILL_ORC:
             case SP_OGRE:
+            case SP_OGRE_MAGE:
                 if (!one_chance_in(15))
                     this_chunk_effect = CE_CLEAN;
                 break;

@@ -102,7 +102,7 @@ const char *mutation_descrip[][3] = {
 
     {"Your digestive system is specialised to digest meat.",
      "Your digestive system is specialised to digest meat.",
-     "You are carnivorous."},
+     "You are carnivorous and can eat meat at any time."},
 
     {"You digest meat inefficiently.", "You digest meat very inefficiently.",
      "You are primarily a herbivore."},
@@ -934,6 +934,7 @@ formatted_string describe_mutations()
         if ( you.mutation[MUT_CLAWS] )
             result += "</lightred><lightblue>";
         result += EOL;
+        result += "You can eat rotten meat." EOL;
         have_any = true;
         break;
 
@@ -1056,7 +1057,21 @@ formatted_string describe_mutations()
             have_any = true;
         }
         break;
+
+    case SP_KOBOLD:
+        result += "You can eat rotten meat." EOL;
+        have_any = true;
+        break;
+
+    case SP_HILL_ORC:
+    case SP_OGRE:
+    case SP_OGRE_MAGE:
+        result += "You can tolerate rotten meat." EOL;
+        have_any = true;
+        break;
     }                           //end switch - innate abilities
+    
+     
 
     // a bit more stuff
     if ( (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE) ||
