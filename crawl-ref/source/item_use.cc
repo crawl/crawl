@@ -2854,10 +2854,12 @@ static bool affix_weapon_enchantment( void )
         break;
 
     case SPWPN_PAIN:
-        strcat(info, " shrieks out in eternal agony!");
+        // Can't fix pain brand (balance)...you just get tormented.
+        strcat(info, " shrieks out in agony!");
         mpr(info);
 
         torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
+        success = false;
 
         // is only naughty if you know you're doing it
         if (get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III)==ID_KNOWN_TYPE)
