@@ -147,7 +147,7 @@ unsigned char get_magicmap_char(int feature);
 void viewwindow(bool draw_it, bool do_updates);
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
-               bool allow_fallback, ray_def& ray );
+               bool allow_fallback, ray_def& ray, int cycle_dir = 0 );
 
 dungeon_char_type dchar_by_name(const std::string &name);
 

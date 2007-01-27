@@ -597,20 +597,13 @@ bool acquirement(unsigned char force_class, int agent)
                 continue;
 
             // Adding a small constant allows for the occasional
-            // weapon in an untrained skill.  Since the game 
-            // doesn't allow for much in the way of good launchers, 
-            // we'll lower their weight.
+            // weapon in an untrained skill.
 
-            int weight = 0;
+            const int weight = you.skills[i] + 1;
+            count += weight;
 
-            weight = you.skills[i] + 1;
-            if (weight)
-            {
-                count += weight;
-
-                if (random2(count) < weight)
-                    skill = i;
-            }
+            if (random2(count) < weight)
+                skill = i;
         }
 
         if (skill == SK_STAVES)

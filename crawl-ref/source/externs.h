@@ -167,6 +167,25 @@ struct dice_def
     dice_def( int n = 0, int s = 0 ) : num(n), size(s) {}
 };
 
+struct ray_def
+{
+    double accx;
+    double accy;
+    double slope;
+    // Quadrant 1: down-right
+    // Quadrant 2: down-left
+    // Quadrant 3: up-left
+    // Quadrant 4: up-right
+    int quadrant;
+    int fullray_idx;            // for cycling: where did we come from?
+    
+    int x() const { return (int)(accx); }
+    int y() const { return (int)(accy); }
+    int advance();              // returns the direction taken (0,1,2)
+    void advance_and_bounce();
+    void regress();
+};
+
 // output from direction() function:
 struct dist
 {
@@ -176,13 +195,14 @@ struct dist
                         // ty == you.y_pos)
     bool isEndpoint;    // Does the player want the attack to stop at (tx,ty)?
     bool isCancel;      // user cancelled (usually <ESC> key)
+    bool choseRay;      // user wants a specific beam
     int  tx,ty;         // target x,y or logical extension of beam to map edge
     int  dx,dy;         // delta x and y if direction - always -1,0,1
+    ray_def ray;        // ray chosen if necessary
 
     // internal use - ignore
     int  prev_target;   // previous target
 };
-
 
 struct bolt
 {
@@ -200,7 +220,7 @@ struct bolt
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
     std::string name;
-    bool        is_beam;                // beams? (can hits multiple targets?)
+    bool        is_beam;               // beams? (can hits multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        is_enchant;            // no block/dodge, but mag resist
@@ -225,6 +245,8 @@ struct bolt
     bool        can_see_invis;   // tracer firer can see invisible?
     bool        is_friendly;    // tracer firer is enslaved or pet
     int         foe_ratio;      // 100* foe ratio (see mons_should_fire())
+    bool        chose_ray;      // do we want a specific ray?
+    ray_def     ray;            // shoot on this specific ray
 
 public:
     // A constructor to try and fix some of the bugs that occur because
@@ -233,24 +255,6 @@ public:
     bolt();
 
     void set_target(const dist &);
-};
-
-struct ray_def
-{
-    double accx;
-    double accy;
-    double slope;
-    // Quadrant 1: down-right
-    // Quadrant 2: down-left
-    // Quadrant 3: up-left
-    // Quadrant 4: up-right
-    int quadrant;
-    
-    int x() const { return (int)(accx); }
-    int y() const { return (int)(accy); }
-    int advance();              // returns the direction taken (0,1,2)
-    void advance_and_bounce();
-    void regress();
 };
 
 struct run_check_dir

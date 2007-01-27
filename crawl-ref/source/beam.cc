@@ -1263,8 +1263,11 @@ void fire_beam( struct bolt &pbolt, item_def *item )
 
     ray_def ray;
 
-    find_ray( pbolt.source_x, pbolt.source_y, pbolt.target_x, pbolt.target_y,
-              true, ray);
+    if ( pbolt.chose_ray )
+        ray = pbolt.ray;
+    else
+        find_ray( pbolt.source_x, pbolt.source_y,
+                  pbolt.target_x, pbolt.target_y, true, ray);
 
     if ( !pbolt.aimed_at_feet )
         ray.advance();
@@ -4398,7 +4401,8 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                fr_power(0), foe_power(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), is_friendly(false), foe_ratio(0) 
+               can_see_invis(false), is_friendly(false), foe_ratio(0),
+               chose_ray(false)
 { }
 
 void bolt::set_target(const dist &d)
@@ -4408,6 +4412,10 @@ void bolt::set_target(const dist &d)
 
     target_x = d.tx;
     target_y = d.ty;
+
+    chose_ray = d.choseRay;
+    if ( d.choseRay )
+        ray = d.ray;
 
     if (d.isEndpoint)
         aimed_at_spot = true;

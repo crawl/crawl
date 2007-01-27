@@ -108,7 +108,9 @@ static command_type read_direction_key()
 
     case ESCAPE: return CMD_TARGET_CANCEL;
     case '?': return CMD_TARGET_DESCRIBE;
-    case ' ': case '.': return CMD_TARGET_SELECT;
+    case ' ': return CMD_TARGET_CYCLE_BEAM;
+    case ':': return CMD_TARGET_HIDE_BEAM;
+    case '.': return CMD_TARGET_SELECT;
     case '!': return CMD_TARGET_SELECT_ENDPOINT;
 
     case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
@@ -230,6 +232,8 @@ static int targeting_cmd_to_feature( command_type command )
 //           isValid        a valid target or direction was chosen
 //           isCancel       player hit 'escape'
 //           isTarget       targetting was used
+//           choseRay       player wants a specific ray
+//           ray            ...this one
 //           isEndpoint     player wants the ray to stop on the dime
 //           tx,ty          target x,y
 //           dx,dy          direction delta for DIR_DIR
@@ -247,6 +251,8 @@ void direction(struct dist& moves, targeting_type restricts,
     }
 
     int dir = 0;
+    bool show_beam = false;
+    ray_def ray;
 
     FixedVector < char, 2 > objfind_pos;
     FixedVector < char, 2 > monsfind_pos;
@@ -257,13 +263,12 @@ void direction(struct dist& moves, targeting_type restricts,
     moves.isMe          = false;
     moves.isCancel      = false;
     moves.isEndpoint    = false;
+    moves.choseRay      = false;
     moves.dx = moves.dy = 0;
 
     // XXX change this for default target
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
-
-    // XXX Add: ability to cycle between appropriate rays!
 
     mpr(aim_prompt, MSGCH_PROMPT);
 
@@ -274,7 +279,7 @@ void direction(struct dist& moves, targeting_type restricts,
 
         command_type key_command = read_direction_key();
 
-        bool need_redraw = true;
+        bool need_beam_redraw = false;
         bool loop_done = false;
 
         const int old_tx = moves.tx;
@@ -329,6 +334,17 @@ void direction(struct dist& moves, targeting_type restricts,
             }
             break;
 
+        case CMD_TARGET_CYCLE_BEAM:
+            show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+                                 true, ray, (show_beam ? 1 : 0));
+            need_beam_redraw = true;
+            break;
+            
+        case CMD_TARGET_HIDE_BEAM:
+            show_beam = false;
+            need_beam_redraw = true;
+            break;
+            
         case CMD_TARGET_FIND_YOU:
             moves.tx = you.x_pos;
             moves.ty = you.y_pos;
@@ -354,7 +370,6 @@ void direction(struct dist& moves, targeting_type restricts,
             else
             {
                 flush_input_buffer(FLUSH_ON_FAILURE);
-                need_redraw = false;
             }
             break;
 
@@ -364,7 +379,6 @@ void direction(struct dist& moves, targeting_type restricts,
                   (mode == TARG_ANY)   ? "any" :
                   (mode == TARG_ENEMY) ? "enemies" :
                   "friends" );
-            need_redraw = false;
             break;
             
         case CMD_TARGET_PREV_TARGET:
@@ -372,7 +386,6 @@ void direction(struct dist& moves, targeting_type restricts,
             if (you.prev_targ == MHITNOT || you.prev_targ == MHITYOU)
             {
                 mpr("You haven't got a previous target.");
-                need_redraw = false;
                 break;
             }
 
@@ -384,7 +397,6 @@ void direction(struct dist& moves, targeting_type restricts,
                     !player_monster_visible( montarget ))
                 {
                     mpr("You can't see that creature any more.");
-                    need_redraw = false;
                 }
                 else
                 {
@@ -428,7 +440,6 @@ void direction(struct dist& moves, targeting_type restricts,
             else
             {
                 flush_input_buffer(FLUSH_ON_FAILURE);
-                need_redraw = false;
             }
             break;
         
@@ -444,7 +455,6 @@ void direction(struct dist& moves, targeting_type restricts,
             else
             {
                 flush_input_buffer(FLUSH_ON_FAILURE);
-                need_redraw = false;
             }
             break;
 
@@ -458,26 +468,18 @@ void direction(struct dist& moves, targeting_type restricts,
             if (!in_bounds(moves.tx, moves.ty))
                 break;
             mid = mgrd[moves.tx][moves.ty];
-            if (mid == NON_MONSTER)
-            {
-                // XXX we can put in code for describing terrain here
-                need_redraw = false;
+            if (mid == NON_MONSTER) // can put in terrain description here
                 break;
-            }
             
 #if (!DEBUG_DIAGNOSTICS)
             if (!player_monster_visible( &menv[mid] ))
-            {
-                need_redraw = false;
                 break;
-            }
 #endif
             describe_monsters(menv[mid].type, mid);
             redraw_screen();
             mesclr(true);
             break;
         default:
-            need_redraw = false;
             break;
         }
         
@@ -489,12 +491,13 @@ void direction(struct dist& moves, targeting_type restricts,
             if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
                 mpr("Sorry, you can't target what you can't see.");
-                need_redraw = false;
             }
             // Ask for confirmation if we're quitting for some odd reason
             else if ( moves.isValid || moves.isCancel ||
                  yesno("Are you sure you want to fizzle?") )
             {
+                moves.choseRay = show_beam;
+                moves.ray = ray;
                 break;
             }
         }
@@ -504,12 +507,22 @@ void direction(struct dist& moves, targeting_type restricts,
         {
             moves.tx = old_tx;
             moves.ty = old_ty;
-            need_redraw = true; // not sure this is necessary
+        }
+
+        bool have_moved = false;
+
+        if ( old_tx != moves.tx || old_ty != moves.ty )
+        {
+            have_moved = true;
+            show_beam = show_beam &&
+                find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
         }
         
-        if ( need_redraw )
+        if ( have_moved )
         {
-            // XXX : put in beam redrawing code here
+            if ( show_beam )
+                need_beam_redraw = true;
+
             mesclr(true);
             if ( !in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
                 describe_oos_square(moves.tx, moves.ty);
@@ -517,6 +530,30 @@ void direction(struct dist& moves, targeting_type restricts,
                 describe_cell(moves.tx, moves.ty);
         }
 
+        if ( need_beam_redraw )
+        {
+            viewwindow(true, false);
+            if ( show_beam &&
+                 in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
+            {
+                // Draw the new ray
+                ray_def raycopy = ray;
+                textcolor(MAGENTA);
+                while ( raycopy.x() != moves.tx || raycopy.y() != moves.ty )
+                {
+                    if ( raycopy.x() != you.x_pos || raycopy.y() != you.y_pos )
+                    {
+                        if ( !in_los(raycopy.x(), raycopy.y()) )
+                            break;
+                        gotoxy( grid2viewX(raycopy.x() + 1),
+                                grid2viewY(raycopy.y()));
+                        cprintf("*");
+                    }
+                    raycopy.advance();
+                }
+                textcolor(LIGHTGREY);
+            }
+        }
         moves.isEndpoint = false; // only relevant at the last step
     }
 

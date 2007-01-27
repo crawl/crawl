@@ -1434,14 +1434,34 @@ static void set_ray_quadrant( ray_def& ray, int sx, int sy, int tx, int ty )
         mpr("Bad ray quadrant!", MSGCH_DIAGNOSTICS);
 }
 
+static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
+                          int maxvalue )
+{
+    const int i = (int)ui;
+    if ( startpoint < 0 )
+        return i;
+    switch ( cycle_dir )
+    {
+    case 1:
+        return (i + startpoint + 1) % maxvalue;
+    case -1:
+        return (i - 1 - startpoint + maxvalue) % maxvalue;
+    case 0:
+    default:
+        return i;
+    }
+}
 
 // Find a nonblocked ray from sx, sy to tx, ty. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
 // If allow_fallback is true, fall back to a center-to-center ray
 // if range is too great or all rays are blocked.
+// If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
+// assume that ray is appropriately filled in, and look for the next
+// ray in that cycle direction.
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
-               bool allow_fallback, ray_def& ray )
+               bool allow_fallback, ray_def& ray, int cycle_dir )
 {
     
     int cellray, inray;
@@ -1450,17 +1470,25 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
     const int absx = signx * (targetx - sourcex);
     const int absy = signy * (targety - sourcey);
     int cur_offset = 0;
-    for ( unsigned int fullray = 0; fullray < fullrays.size();
-          cur_offset += raylengths[fullray++] ) {
+    for ( unsigned int fray = 0; fray < fullrays.size(); ++fray )
+    {
+        const int fullray = cyclic_offset( fray, cycle_dir, ray.fullray_idx,
+                                           fullrays.size() );
+        // yeah, yeah, this is O(n^2). I know.
+        cur_offset = 0;
+        for ( int i = 0; i < fullray; ++i )
+            cur_offset += raylengths[i];
 
         for ( cellray = 0; cellray < raylengths[fullray]; ++cellray )
         {
             if ( ray_coord_x[cellray + cur_offset] == absx &&
-                 ray_coord_y[cellray + cur_offset] == absy ) {
+                 ray_coord_y[cellray + cur_offset] == absy )
+            {
 
                 // check if we're blocked so far
                 bool blocked = false;
-                for ( inray = 0; inray < cellray; ++inray ) {
+                for ( inray = 0; inray < cellray; ++inray )
+                {
                     if (grid_is_solid(grd[sourcex + signx * ray_coord_x[inray + cur_offset]][sourcey + signy * ray_coord_y[inray + cur_offset]]))
                     {
                         blocked = true;                   
@@ -1472,6 +1500,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 {
                     // success!
                     ray = fullrays[fullray];
+                    ray.fullray_idx = fullray;
                     if ( sourcex > targetx )
                         ray.accx = 1.0 - ray.accx;
                     if ( sourcey > targety )
@@ -1496,6 +1525,7 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 ray.slope = -ray.slope;
         }
         set_ray_quadrant(ray, sourcex, sourcey, targetx, targety);
+        ray.fullray_idx = -1;
         return true;
     }
     return false;
