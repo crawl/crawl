@@ -14,7 +14,7 @@
 
 #include "AppHdr.h"
 #include "message.h"
-#include "religion.h"
+#include "menu.h"
 
 #include <cstdarg>
 #include <cstring>
@@ -25,6 +25,7 @@
 
 #include "externs.h"
 
+#include "menu.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"
@@ -34,6 +35,7 @@
 #include "view.h"
 #include "notes.h"
 #include "stash.h"
+#include "religion.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
@@ -394,6 +396,122 @@ static void base_mpr(const char *inf, int channel, int param)
             Next_Message = 0;
     }
 }                               // end mpr()
+
+
+// Line wrapping is not available here!
+// Note that the colour will be first set to the appropriate channel
+// colour before displaying the formatted_string.
+// XXX This code just reproduces base_mpr(). There must be a better
+// way to do this.
+void formatted_mpr(const formatted_string& fs, int channel, int param)
+{
+    if (suppress_messages)
+        return;
+
+    int colour = channel_to_colour( channel, param );
+    if (colour == MSGCOL_MUTED)
+        return;
+
+    const std::string imsg = fs.tostring();
+    
+    for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
+        if (Options.note_messages[i].matches(imsg)) {
+            take_note(Note(NOTE_MESSAGE, channel, param, imsg.c_str()));
+            break;
+        }
+    }
+
+    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
+        interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + imsg);
+
+    // Check messages for all forms of running now.
+    if (you.running)
+    {
+        for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)
+        {
+            if (Options.travel_stop_message[i].is_filtered(channel, imsg))
+            {
+                stop_running();
+                break;
+            }
+        }
+    }
+
+    if (Options.sound_mappings.size() > 0) 
+    {
+        for (unsigned i = 0; i < Options.sound_mappings.size(); i++) 
+        {
+            // Maybe we should allow message channel matching as for 
+            // travel_stop_message?
+            if (Options.sound_mappings[i].pattern.matches(imsg))
+            {
+                play_sound(Options.sound_mappings[i].soundfile.c_str());
+                break;
+            }
+        }
+    }
+
+    flush_input_buffer( FLUSH_ON_MESSAGE );
+
+    const int num_lines = get_message_window_height();
+    
+    if (New_Message_Count == num_lines - 1)
+        more();
+    
+    int curcol = 1;
+
+    if (need_prefix)
+    {
+        message_out( Message_Line, colour, "-", 1, false );
+        ++curcol;
+        need_prefix = false;
+    }
+
+
+    for ( unsigned i = 0; i < fs.ops.size(); ++i )
+    {
+        switch ( fs.ops[i].type )
+        {
+        case FSOP_COLOUR:
+            colour = fs.ops[i].x;
+            break;
+        case FSOP_TEXT:
+            message_out(Message_Line, colour, fs.ops[i].text.c_str(), curcol,
+                        false);
+            curcol += fs.ops[i].text.length();
+            break;
+        case FSOP_CURSOR:
+            break;
+        }
+    }
+    message_out( Message_Line, colour, "", Options.delay_message_clear? 2 : 1);
+
+    // Prompt lines are presumably shown to / seen by the player accompanied
+    // by a request for input, which should do the equivalent of a more(); to
+    // save annoyance, don't bump New_Message_Count for prompts.
+    if (channel != MSGCH_PROMPT)
+        New_Message_Count++;
+    
+    if (Message_Line < num_lines - 1)
+        Message_Line++;
+
+    // reset colour
+    textcolor(LIGHTGREY);
+
+    // equipment lists just waste space in the message recall
+    if (channel != MSGCH_EQUIPMENT)
+    {
+        // Put the message into Store_Message, and move the '---' line forward
+        Store_Message[ Next_Message ].text = imsg.c_str();
+        Store_Message[ Next_Message ].channel = channel;
+        Store_Message[ Next_Message ].param = param;
+        Next_Message++;
+
+        if (Next_Message >= NUM_STORED_MESSAGES)
+            Next_Message = 0;
+    }
+}
+
 
 bool any_messages(void)
 {

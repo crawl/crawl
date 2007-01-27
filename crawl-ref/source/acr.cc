@@ -729,7 +729,7 @@ static void handle_wizard_command( void )
         break;
 
     default:
-        mpr("Not a Wizard Command.");
+        formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
         break;
     }
 }

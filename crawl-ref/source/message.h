@@ -55,6 +55,11 @@ void more(void);
  * *********************************************************************** */
 void mpr(const char *inf, int channel = MSGCH_PLAIN, int param = 0);
 
+class formatted_string;
+
+void formatted_mpr(const formatted_string& fs, int channel = MSGCH_PLAIN,
+                   int param = 0);
+
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf( int channel, const char *format, ... );
 void mprf( const char *format, ... );

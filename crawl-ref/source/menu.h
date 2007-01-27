@@ -44,6 +44,13 @@ struct menu_letter
     }
 };
 
+enum fs_op_type
+{
+    FSOP_COLOUR,
+    FSOP_CURSOR,
+    FSOP_TEXT
+};
+
 class formatted_string
 {
 public:
@@ -72,17 +79,10 @@ public:
             bool  eol_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
 
-private:
-    enum fs_op_type
-    {
-        FSOP_COLOUR,
-        FSOP_CURSOR,
-        FSOP_TEXT
-    };
-
+public:
     static int get_colour(const std::string &tag);
 
-private:
+public:
     struct fs_op
     {
         fs_op_type type;
