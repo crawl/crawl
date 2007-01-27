@@ -1137,7 +1137,7 @@ formatted_string describe_mutations()
     }
 
     if (!have_any)
-        result +=  "You are not a mutant." EOL;
+        result +=  "You are rather mundane." EOL;
 
     return formatted_string::parse_string(result);
 }
