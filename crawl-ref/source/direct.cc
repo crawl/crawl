@@ -259,10 +259,23 @@ void direction(struct dist& moves, targeting_type restricts,
 
     // init
     moves.dx = moves.dy = 0;
-
-    // XXX change this for default target
     moves.tx = you.x_pos;
     moves.ty = you.y_pos;
+
+    bool skip_iter = false;
+
+    // Find a default target
+    if ( mode == TARG_ENEMY &&
+         you.prev_targ != MHITNOT && you.prev_targ != MHITYOU )
+    {
+        const monsters *montarget = &menv[you.prev_targ];
+        if (mons_near(montarget) && player_monster_visible(montarget))
+        {
+            skip_iter = true;   // skip first iteration...XXX mega-hack
+            moves.tx = montarget->x;
+            moves.ty = montarget->y;
+        }
+    }
 
     mpr(aim_prompt, MSGCH_PROMPT);
 
@@ -280,13 +293,20 @@ void direction(struct dist& moves, targeting_type restricts,
         // I'm sure there's a perfectly good reason for the +1.
         gotoxy( grid2viewX(moves.tx) + 1, grid2viewY(moves.ty) );
 
-        command_type key_command = read_direction_key();
+        command_type key_command;
+
+        if ( skip_iter )
+            key_command = CMD_NO_CMD;
+        else
+            key_command = read_direction_key();
 
         bool need_beam_redraw = false;
         bool loop_done = false;
 
-        const int old_tx = moves.tx;
+        const int old_tx = moves.tx + (skip_iter ? 1 : 0); // hmmm...hack
         const int old_ty = moves.ty;
+
+        skip_iter = false;      // skip at most once
 
         int i, mid;
 
