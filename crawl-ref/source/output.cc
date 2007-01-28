@@ -907,7 +907,6 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
 
     case SP_HILL_ORC:
     case SP_OGRE:
-    case SP_OGRE_MAGE:
         saplevel = 1;
         break;
     default:

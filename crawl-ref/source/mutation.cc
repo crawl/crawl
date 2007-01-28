@@ -1065,7 +1065,6 @@ formatted_string describe_mutations()
 
     case SP_HILL_ORC:
     case SP_OGRE:
-    case SP_OGRE_MAGE:
         result += "You can tolerate rotten meat." EOL;
         have_any = true;
         break;
