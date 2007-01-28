@@ -930,12 +930,19 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // formatted_string
 //
 
+formatted_string::formatted_string(int init_colour)
+    : ops()
+{
+    if (init_colour)
+        textcolor(init_colour);
+}
+
 formatted_string::formatted_string(const std::string &s, int init_colour)
     : ops()
 {
     if (init_colour)
-        ops.push_back(init_colour);
-    ops.push_back(s);
+        textcolor(init_colour);
+    cprintf(s);
 }
 
 int formatted_string::get_colour(const std::string &tag)
@@ -1116,8 +1123,44 @@ void formatted_string::movexy(int x, int y)
     ops.push_back( fs_op(x, y, true) );
 }
 
+int formatted_string::find_last_colour() const
+{
+    if (!ops.empty())
+    {
+        for (int i = ops.size() - 1; i >= 0; --i)
+        {
+            if (ops[i].type == FSOP_COLOUR)
+                return (ops[i].x);
+        }
+    }
+    return (LIGHTGREY);
+}
+
+void formatted_string::add_glyph(const item_def *item)
+{
+    const int last_col = find_last_colour();
+    unsigned short ch, col;
+    get_item_glyph(item, &ch, &col);
+    this->textcolor(col);
+    this->cprintf("%c", ch);
+    this->textcolor(last_col);
+}
+
+void formatted_string::add_glyph(const monsters *mons)
+{
+    const int last_col = find_last_colour();
+    unsigned short ch, col;
+    get_mons_glyph(mons, &ch, &col);
+    this->textcolor(col);
+    this->cprintf("%c", ch);
+    this->textcolor(last_col);
+}
+
 void formatted_string::textcolor(int color)
 {
+    if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
+        ops.erase( ops.end() - 1 );
+    
     ops.push_back(color);
 }
 

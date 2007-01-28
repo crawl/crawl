@@ -99,4 +99,6 @@ bool any_messages(void);
  * *********************************************************************** */
 std::string get_last_messages(int mcount);
 
+int channel_to_colour( int channel, int param = 0 );
+
 #endif

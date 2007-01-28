@@ -114,7 +114,7 @@ static char god_message_altar_colour( char god )
 #ifdef USE_COLOUR_MESSAGES
 
 // returns a colour or MSGCOL_MUTED
-static char channel_to_colour( int channel, int param )
+int channel_to_colour( int channel, int param )
 {
     char        ret;
 
@@ -229,7 +229,7 @@ static char channel_to_colour( int channel, int param )
 
 #else // don't use colour messages
 
-static char channel_to_colour( int channel, int param )
+int channel_to_colour( int channel, int param )
 {
     return (LIGHTGREY);
 }

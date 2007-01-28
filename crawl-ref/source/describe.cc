@@ -85,11 +85,7 @@ static void print_description( const std::string &d )
     unsigned int  nextLine = std::string::npos;
     unsigned int  currentPos = 0;
 
-#ifdef DOS
-    const unsigned int lineWidth = 52;
-#else
     const unsigned int lineWidth = 70;
-#endif
 
     bool nlSearch = true;       // efficiency
 

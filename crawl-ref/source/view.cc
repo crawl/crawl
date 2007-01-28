@@ -501,6 +501,28 @@ void clear_map()
     }
 }
 
+static int get_mons_colour(const monsters *mons)
+{
+    int col = mons->colour;
+
+    if (mons_friendly(mons))
+    {
+        col |= COLFLAG_FRIENDLY_MONSTER;
+    }
+    else if (Options.stab_brand != CHATTR_NORMAL
+             && mons_looks_stabbable(mons))
+    {
+        col |= COLFLAG_WILLSTAB;
+    }
+    else if (Options.may_stab_brand != CHATTR_NORMAL
+             && mons_looks_distracted(mons))
+    {
+        col |= COLFLAG_MAYSTAB;
+    }
+
+    return (col);
+}
+
 void monster_grid(bool do_updates)
 {
     struct monsters *monster = 0;       // NULL {dlb}
@@ -638,22 +660,7 @@ void monster_grid(bool do_updates)
                 set_show_backup(ex, ey);
 
             env.show[ex][ey] = monster->type + DNGN_START_OF_MONSTERS;
-            env.show_col[ex][ey] = monster->colour;
-
-            if (mons_friendly(monster))
-            {
-                env.show_col[ex][ey] |= COLFLAG_FRIENDLY_MONSTER;
-            }
-            else if (Options.stab_brand != CHATTR_NORMAL
-                    && mons_looks_stabbable(monster))
-            {
-                env.show_col[ex][ey] |= COLFLAG_WILLSTAB;
-            }
-            else if (Options.may_stab_brand != CHATTR_NORMAL
-                    && mons_looks_distracted(monster))
-            {
-                env.show_col[ex][ey] |= COLFLAG_MAYSTAB;
-            }
+            env.show_col[ex][ey] = get_mons_colour( monster );
         }                       // end "if (monster->type != -1 && mons_ner)"
     }                           // end "for s"
 }                               // end monster_grid()
@@ -799,6 +806,19 @@ void item_grid()
     }
 }                               // end item()
 
+void get_item_glyph( const item_def *item, unsigned short *glych,
+                     unsigned short *glycol )
+{
+    *glycol = item->colour;
+    get_symbol( 0, 0, get_item_dngn_code( *item ), glych, glycol );
+}
+
+void get_mons_glyph( const monsters *mons, unsigned short *glych,
+                     unsigned short *glycol )
+{
+    *glycol = get_mons_colour( mons );
+    get_symbol( 0, 0, mons->type + DNGN_START_OF_MONSTERS, glych, glycol );
+}
 
 void cloud_grid(void)
 {

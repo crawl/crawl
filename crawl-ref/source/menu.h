@@ -54,7 +54,7 @@ enum fs_op_type
 class formatted_string
 {
 public:
-    formatted_string() : ops() { }
+    formatted_string(int init_colour = 0);
     formatted_string(const std::string &s, int init_colour = 0);
 
     operator std::string() const;
@@ -65,6 +65,8 @@ public:
     void cprintf(const std::string &s);
     void gotoxy(int x, int y);
     void movexy(int delta_x, int delta_y);
+    void add_glyph(const monsters *mons);
+    void add_glyph(const item_def *item);
     void textcolor(int color);
 
     void clear();
@@ -79,8 +81,10 @@ public:
             bool  eol_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
 
-public:
     static int get_colour(const std::string &tag);
+
+private:
+    int find_last_colour() const;
 
 public:
     struct fs_op

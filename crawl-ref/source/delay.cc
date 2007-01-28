@@ -944,11 +944,13 @@ inline static void monster_warning(activity_interrupt_type ai,
 #ifndef DEBUG_DIAGNOSTICS
         mprf(MSGCH_WARN, "%s comes into view.", ptr_monam(mon, DESC_CAP_A));
 #else
-        mprf(MSGCH_WARN,
-             "%s in view: (%d,%d), see_grid: %s",
-             ptr_monam(mon, DESC_PLAIN),
+        formatted_string fs( channel_to_colour(MSGCH_WARN) );
+        fs.cprintf("%s (", ptr_monam(mon, DESC_PLAIN));
+        fs.add_glyph( mon );
+        fs.cprintf(") in view: (%d,%d), see_grid: %s",
              mon->x, mon->y,
              see_grid(mon->x, mon->y)? "yes" : "no");
+        formatted_mpr(fs, MSGCH_WARN);
 #endif
     }
 }
