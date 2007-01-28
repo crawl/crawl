@@ -5229,20 +5229,18 @@ bool monster_descriptor(int which_class, unsigned char which_descriptor)
     return (false);
 }                               // end monster_descriptor()
 
-bool message_current_target(void)
+bool message_current_target()
 {
     if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
     {
-        struct monsters *montarget = &menv[you.prev_targ];
+        const monsters *montarget = &menv[you.prev_targ];
 
-        if (mons_near(montarget) && player_monster_visible( montarget ))
+        if (mons_near(montarget) && player_monster_visible(montarget))
         {
-            snprintf( info, INFO_SIZE, 
-                      "You are currently targeting %s (use p/t to fire).",
-                      ptr_monam(montarget, DESC_NOCAP_THE) );
-
-            mpr(info);
-            return (true);        // early return {dlb}
+            mprf( MSGCH_PROMPT, "You are currently targeting %s "
+                  "(use p/t/f to fire at it again.)",
+                  ptr_monam(montarget, DESC_NOCAP_THE) );
+            return (true);
         }
 
         mpr("You have no current target.");

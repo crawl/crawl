@@ -258,12 +258,6 @@ void direction(struct dist& moves, targeting_type restricts,
     FixedVector < char, 2 > monsfind_pos;
 
     // init
-    moves.isValid       = false;
-    moves.isTarget      = false;
-    moves.isMe          = false;
-    moves.isCancel      = false;
-    moves.isEndpoint    = false;
-    moves.choseRay      = false;
     moves.dx = moves.dy = 0;
 
     // XXX change this for default target
@@ -274,6 +268,15 @@ void direction(struct dist& moves, targeting_type restricts,
 
     while (1)
     {
+        // Reinit...this needs to be done every loop iteration
+        // because moves is more persistent than loop_done.
+        moves.isValid       = false;
+        moves.isTarget      = false;
+        moves.isMe          = false;
+        moves.isCancel      = false;
+        moves.isEndpoint    = false;
+        moves.choseRay      = false;
+
         // I'm sure there's a perfectly good reason for the +1.
         gotoxy( grid2viewX(moves.tx) + 1, grid2viewY(moves.ty) );
 
@@ -424,7 +427,6 @@ void direction(struct dist& moves, targeting_type restricts,
                 you.prev_targ = mid;
             break;
 
-            
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
@@ -485,10 +487,24 @@ void direction(struct dist& moves, targeting_type restricts,
         
         if ( loop_done == true )
         {
+            // This is where we either finalize everything, or else
+            // decide that we're not really done and continue looping.
+
             if ( just_looking ) // easy out
                 break;
 
-            if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
+            // A bunch of confirmation tests; if we survive them all,
+            // then break out.
+
+            // Conceivably we might want to confirm on TARG_ANY too.
+            if ( moves.isTarget &&
+                 moves.tx == you.x_pos && moves.ty == you.y_pos &&
+                 mode == TARG_ENEMY && Options.confirm_self_target &&
+                 !yesno("Really target yourself?"))
+            {
+                canned_msg(MSG_OK);
+            }
+            else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
                 mpr("Sorry, you can't target what you can't see.");
             }
@@ -496,6 +512,8 @@ void direction(struct dist& moves, targeting_type restricts,
             else if ( moves.isValid || moves.isCancel ||
                  yesno("Are you sure you want to fizzle?") )
             {
+                // Finalize whatever is inside the loop
+                // (moves-internal finalizations can be done later)
                 moves.choseRay = show_beam;
                 moves.ray = ray;
                 break;
@@ -520,10 +538,12 @@ void direction(struct dist& moves, targeting_type restricts,
         
         if ( have_moved )
         {
+            // If the target x,y has changed, the beam must have changed.
             if ( show_beam )
                 need_beam_redraw = true;
 
-            mesclr(true);
+            mesclr(true);       // maybe not completely necessary
+
             if ( !in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
                 describe_oos_square(moves.tx, moves.ty);
             else if ( in_bounds(moves.tx, moves.ty) )
@@ -536,13 +556,15 @@ void direction(struct dist& moves, targeting_type restricts,
             if ( show_beam &&
                  in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
             {
-                // Draw the new ray
-                ray_def raycopy = ray;
+                // Draw the new ray with magenta '*'s, not including
+                // your square or the target square.
+                ray_def raycopy = ray; // temporary copy to work with
                 textcolor(MAGENTA);
                 while ( raycopy.x() != moves.tx || raycopy.y() != moves.ty )
                 {
                     if ( raycopy.x() != you.x_pos || raycopy.y() != you.y_pos )
                     {
+                        // Sanity: don't loop forever if the ray is problematic
                         if ( !in_los(raycopy.x(), raycopy.y()) )
                             break;
                         gotoxy( grid2viewX(raycopy.x() + 1),
@@ -554,9 +576,7 @@ void direction(struct dist& moves, targeting_type restricts,
                 textcolor(LIGHTGREY);
             }
         }
-        moves.isEndpoint = false; // only relevant at the last step
     }
-
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
 }
 
