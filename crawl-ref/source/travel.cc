@@ -77,12 +77,6 @@ static level_pos travel_hell_entry;
 
 static bool traps_inited = false;
 
-// TODO: Do we need this or would a different header be better?
-inline int sgn(int x)
-{
-    return x < 0? -1 : (x > 0);
-}
-
 // Array of points on the map, each value being the distance the character
 // would have to travel to get there. Negative distances imply that the point
 // is a) a trap or hostile terrain or b) only reachable by crossing a trap or

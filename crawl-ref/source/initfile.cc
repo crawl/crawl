@@ -598,7 +598,7 @@ void game_options::reset_options()
     use_notes              = true;
     note_skill_max         = false;
     note_all_spells        = false;
-    note_hp_percent        = 0;
+    note_hp_percent        = 5;
     ood_interesting        = 8;
     terse_hand             = true;
     increasing_skill_progress = true;
@@ -681,12 +681,13 @@ void game_options::reset_options()
     // Note: These fire options currently match the old behaviour. -- bwr
     fire_items_start       = 0;           // start at slot 'a'
 
+    // Clear fire_order and set up the defaults.
+    for (int i = 0; i < NUM_FIRE_TYPES; i++)
+        fire_order[i] = FIRE_NONE;
+    
     fire_order[0] = FIRE_LAUNCHER;      // fire first from bow...
     fire_order[1] = FIRE_DART;          // then only consider darts
-
-    // clear the rest of the list
-    for (int i = 2; i < NUM_FIRE_TYPES; i++)
-        fire_order[i] = FIRE_NONE;
+    fire_order[2] = FIRE_STONE;         // and then chuck stones
 
 #ifdef WIZARD
     fsim_rounds = 40000L;
