@@ -706,7 +706,7 @@ void game_options::reset_options()
     heap_brand      = CHATTR_NORMAL;
     stab_brand      = CHATTR_NORMAL;
     may_stab_brand  = CHATTR_NORMAL;
-    no_dark_brand = 0;
+    no_dark_brand   = true;
 
 #ifdef WIZARD
     wiz_mode      = WIZ_NO;
