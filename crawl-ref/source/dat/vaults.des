@@ -1803,8 +1803,8 @@ ENDMAP
 
 NAME: david_sounds_slurp
 TAGS: entry no_monster_gen
-MONS: jelly
-ITEM: stone
+MONS: generate_awake jelly
+ITEM: scroll of paper
 ORIENT: float
 
 MAP
@@ -1830,7 +1830,7 @@ ENDMAP
 
 NAME: david_sounds_drone
 TAGS: entry no_monster_gen
-MONS: boring beetle
+MONS: generate_awake boring beetle
 ORIENT: float
 
 MAP

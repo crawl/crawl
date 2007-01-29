@@ -84,6 +84,20 @@ private:
     bool solid_checked;
 };
 
+struct mons_spec
+{
+    int mid;
+    int genweight;
+    bool fix_mons;
+    bool generate_awake;
+
+    mons_spec(int id = RANDOM_MONSTER, int gw = 10, bool _fixmons = false,
+              bool awaken = false)
+        : mid(id), genweight(gw), fix_mons(_fixmons), generate_awake(awaken)
+    {
+    }
+};
+
 class mons_list
 {
 public:
@@ -91,7 +105,7 @@ public:
 
     void clear();
 
-    int get_monster(int index);
+    mons_spec get_monster(int index);
 
     // Returns an error string if the monster is unrecognised.
     std::string add_mons(const std::string &s);
@@ -99,17 +113,6 @@ public:
     size_t size() const { return mons.size(); }
 
 private:
-    struct mons_spec
-    {
-        int mid;
-        int genweight;
-        bool fix_mons;
-
-        mons_spec(int id = RANDOM_MONSTER, int gw = 10, bool _fixmons = false)
-            : mid(id), genweight(gw), fix_mons(_fixmons)
-        {
-        }
-    };
     typedef std::vector<mons_spec> mons_spec_list;
 
     struct mons_spec_slot
@@ -131,7 +134,7 @@ private:
 private:
     int mons_by_name(std::string name) const;
     mons_spec_slot parse_mons_spec(std::string spec);
-    int pick_monster(mons_spec_slot &slot);
+    mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
 
 private:

@@ -110,6 +110,7 @@ static command_type read_direction_key()
     case '?': return CMD_TARGET_HELP;
     case ' ': return CMD_TARGET_CYCLE_BEAM;
     case ':': return CMD_TARGET_HIDE_BEAM;
+    case '\r': return CMD_TARGET_SELECT;
     case '.': return CMD_TARGET_SELECT;
     case '!': return CMD_TARGET_SELECT_ENDPOINT;
 

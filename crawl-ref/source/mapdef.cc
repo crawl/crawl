@@ -573,10 +573,10 @@ int mons_list::fix_demon(int demon) const
     return (summon_any_demon( demon ));
 }
 
-int mons_list::pick_monster(mons_spec_slot &slot)
+mons_spec mons_list::pick_monster(mons_spec_slot &slot)
 {
     int totweight = 0;
-    int pick = RANDOM_MONSTER;
+    mons_spec pick;
     
     for (mons_spec_list::iterator i = slot.mlist.begin();
          i != slot.mlist.end(); ++i)
@@ -584,30 +584,30 @@ int mons_list::pick_monster(mons_spec_slot &slot)
         const int weight = i->genweight;
         if (random2(totweight += weight) < weight)
         {
-            pick = i->mid;
+            pick = *i;
 
-            if (pick < 0 && i->fix_mons)
-                pick = i->mid = fix_demon(pick);
+            if (pick.mid < 0 && pick.fix_mons)
+                pick.mid = i->mid = fix_demon(pick.mid);
         }
     }
 
-    if (pick < 0)
-        pick = fix_demon(pick);
+    if (pick.mid < 0)
+        pick = fix_demon(pick.mid);
 
     if (slot.fix_slot)
     {
         slot.mlist.clear();
-        slot.mlist.push_back( mons_spec(pick) );
+        slot.mlist.push_back( pick );
         slot.fix_slot = false;
     }
     
     return (pick);
 }
 
-int mons_list::get_monster(int index)
+mons_spec mons_list::get_monster(int index)
 {
     if (index < 0 || index >= (int) mons.size())
-        return (RANDOM_MONSTER);
+        return mons_spec(RANDOM_MONSTER);
     
     return (pick_monster( mons[index] ));
 }
@@ -633,6 +633,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             weight = 10;
 
         const bool fixmons = strip_tag(s, "fix_mons");
+        const bool generate_awake = strip_tag(s, "generate_awake");
 
         trim_string(s);
         const int mid = mons_by_name(s);
@@ -643,7 +644,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             return (slot);
         }
 
-        slot.mlist.push_back( mons_spec(mid, weight, fixmons) );
+        slot.mlist.push_back( mons_spec(mid, weight, fixmons, generate_awake) );
     }
 
     return (slot);

@@ -5848,22 +5848,22 @@ static int vault_grid( vault_placement &place,
     if (vgrid >= '0' && vgrid <= '9')
     {
         int monster_level;
-        int monster_type_thing;
+        mons_spec monster_type_thing(RANDOM_MONSTER);
 
         monster_level = ((vgrid == '8') ? (4 + (level_number * 2)) :
-                         (vgrid == '9') ? (5 + level_number) : level_number);
+                          (vgrid == '9') ? (5 + level_number) : level_number);
 
         if (monster_level > 30) // very high level monsters more common here
             monster_level = 30;
 
-        monster_type_thing = ((vgrid == '8'
-                               || vgrid == '9'
-                               || vgrid == '0') ? RANDOM_MONSTER
-                                    : place.map.mons.get_monster(vgrid - '1'));
+        if (vgrid != '8' && vgrid != '9' && vgrid != '0')
+            monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
-        if (monster_type_thing != -1)
-            place_monster( not_used, monster_type_thing, monster_level,
-                           BEH_SLEEP, MHITNOT, true, vx, vy, false );
+        if (monster_type_thing.mid != -1)
+            place_monster( not_used, monster_type_thing.mid, monster_level,
+                           monster_type_thing.generate_awake?
+                               BEH_WANDER : BEH_SLEEP,
+                           MHITNOT, true, vx, vy, false );
     }
 
     // again, this seems odd, given that this is just one of many
