@@ -244,6 +244,7 @@ void direction(struct dist& moves, targeting_type restricts,
 {
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
+
     if ( restricts == DIR_DIR )
     {
         direction_choose_compass( moves );
@@ -263,21 +264,26 @@ void direction(struct dist& moves, targeting_type restricts,
     moves.ty = you.y_pos;
 
     bool skip_iter = false;
+    bool found_autotarget = false;
 
     // Find a default target
-    if ( mode == TARG_ENEMY &&
-         you.prev_targ != MHITNOT && you.prev_targ != MHITYOU )
+    if ( Options.default_target && mode == TARG_ENEMY )
     {
-        const monsters *montarget = &menv[you.prev_targ];
-        if (mons_near(montarget) && player_monster_visible(montarget))
+        skip_iter = true;   // skip first iteration...XXX mega-hack
+        if ( you.prev_targ != MHITNOT && you.prev_targ != MHITYOU )
         {
-            skip_iter = true;   // skip first iteration...XXX mega-hack
-            moves.tx = montarget->x;
-            moves.ty = montarget->y;
+            const monsters *montarget = &menv[you.prev_targ];
+            if (mons_near(montarget) && player_monster_visible(montarget))
+            {
+                found_autotarget = true;
+                moves.tx = montarget->x;
+                moves.ty = montarget->y;
+            }
         }
     }
 
-    mpr(aim_prompt, MSGCH_PROMPT);
+    // Prompts get scrolled off. Argh - another hack. XXX
+    mpr(aim_prompt, (skip_iter ? MSGCH_PLAIN : MSGCH_PROMPT));
 
     while (1)
     {
@@ -296,17 +302,20 @@ void direction(struct dist& moves, targeting_type restricts,
         command_type key_command;
 
         if ( skip_iter )
-            key_command = CMD_NO_CMD;
+        {
+            if ( found_autotarget )
+                key_command = CMD_NO_CMD;
+            else
+                key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
+        }
         else
             key_command = read_direction_key();
 
         bool need_beam_redraw = false;
         bool loop_done = false;
 
-        const int old_tx = moves.tx + (skip_iter ? 1 : 0); // hmmm...hack
+        const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
         const int old_ty = moves.ty;
-
-        skip_iter = false;      // skip at most once
 
         int i, mid;
 
@@ -540,6 +549,8 @@ void direction(struct dist& moves, targeting_type restricts,
             }
         }
 
+        // We'll go on looping. Redraw whatever is necessary.
+
         // Tried to step out of bounds
         if ( !in_bounds(moves.tx, moves.ty) )
         {
@@ -562,7 +573,8 @@ void direction(struct dist& moves, targeting_type restricts,
             if ( show_beam )
                 need_beam_redraw = true;
 
-            mesclr(true);       // maybe not completely necessary
+            if ( !skip_iter )   // don't clear before we get a chance to see
+                mesclr(true);   // maybe not completely necessary
 
             if ( !in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
                 describe_oos_square(moves.tx, moves.ty);
@@ -596,6 +608,7 @@ void direction(struct dist& moves, targeting_type restricts,
                 textcolor(LIGHTGREY);
             }
         }
+        skip_iter = false;      // only skip one iteration at most
     }
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
 }
@@ -1256,9 +1269,7 @@ static void describe_cell(int mx, int my)
         const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
 
-        strcpy(info, ptr_monam( &(menv[i]), DESC_CAP_A ));
-        strcat(info, ".");
-        mpr(info);
+        mprf("%s.", ptr_monam(&(menv[i]), DESC_CAP_A));
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
@@ -1287,25 +1298,16 @@ static void describe_cell(int mx, int my)
         }
 
         if (mon_arm != NON_ITEM)
-        {
-            it_name( mon_arm, DESC_NOCAP_A, str_pass );
-            snprintf( info, INFO_SIZE, "%s is wearing %s.", 
-                      mons_pronoun( menv[i].type, PRONOUN_CAP ),
-                      str_pass );
-
-            mpr( info );
-        }
+            mprf("%s is wearing %s.",
+                 mons_pronoun(menv[i].type, PRONOUN_CAP),
+                 it_name(mon_arm, DESC_NOCAP_A, str_pass));
 
 
         if (menv[i].type == MONS_HYDRA)
-        {
-            snprintf( info, INFO_SIZE, "It has %d head%s.", 
-                    menv[i].number, (menv[i].number > 1? "s" : "") );
-            mpr( info );
-        }
+            mprf("It has %d head%s.", menv[i].number,
+                 (menv[i].number > 1? "s" : ""));;
 
         print_wounds(&menv[i]);
-
 
         if (mons_is_mimic( menv[i].type ))
             mimic_item = true;
@@ -1314,16 +1316,14 @@ static void describe_cell(int mx, int my)
         {
             if (menv[i].behaviour == BEH_SLEEP)
             {
-                strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-                strcat(info, " doesn't appear to have noticed you.");
-                mpr(info);
+                mprf("%s doesn't appear to have noticed you.",
+                     mons_pronoun(menv[i].type, PRONOUN_CAP));
             }
             // Applies to both friendlies and hostiles
             else if (menv[i].behaviour == BEH_FLEE)
             {
-                strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-                strcat(info, " is retreating.");
-                mpr(info);
+                mprf("%s is retreating.",
+                     mons_pronoun(menv[i].type, PRONOUN_CAP));
             }
             // hostile with target != you
             else if (!mons_friendly(&menv[i]) && menv[i].foe != MHITYOU)
@@ -1414,7 +1414,7 @@ static void describe_cell(int mx, int my)
     {
         const char cloud_inspected = env.cgrid[mx][my];
 
-        const cloud_type ctype = (cloud_type) env.cloud[ cloud_inspected ].type;
+        const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf("There is a cloud of %s here.", cloud_name(ctype).c_str());
     }

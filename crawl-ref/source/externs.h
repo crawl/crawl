@@ -805,7 +805,6 @@ public:
 
     bool        autopickup_on;
     bool        autoprayer_on;
-    bool        fizzlecheck_on;
 
     bool        show_turns;     // Show turns used in HUD.
 
@@ -821,6 +820,7 @@ public:
     bool        easy_butcher;   // open doors with movement
     bool        increasing_skill_progress; // skills go from 0-10 or 10-0
     bool        confirm_self_target; // require confirmation before selftarget
+    bool        default_target;  // start targeting on a real target
     bool        safe_autopickup; // don't autopickup when monsters visible
     bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_skill_max; // take note when skills reach new max

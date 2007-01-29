@@ -25,7 +25,7 @@ The contents of this text are:
 		lua: ch_autopickup (advanced autopickup exceptions)
 4-b	Targeting. 
 		target_zero_exp, target_oos, target_los_first,
-		confirm_self_target, default_fizzlecheck
+		confirm_self_target, default_target
 4-c	Passive Sightings (Detection and Rememberance).
 		detected_monster_colour, detected_item_colour, 
 		remembered_monster_colour, colour_map, clean_map
@@ -360,18 +360,18 @@ target_oos = true
 target_los_first = true
 	When cycling through items/features with the 'x' look-around command, 
 	setting	target_los_first to true will force the cursor to squares in 
-	line-of-sight before going to squares outside LOS. Defaults to true.
+	line-of-sight before going to squares outside LOS.
 
 confirm_self_target = true
 	Setting this to true will make Crawl ask for confirmation whenever
 	selecting the character as the target of a non-friendly-targeted spell 
 	(i.e., something other than haste, healing or invisibility.)
 
-default_fizzlecheck = false
-	If set to true, this will require a confirmation when cancelling 
-	target mode in a way which will make the activated ability or spell 
-	fizzle (e.g., when casting Magic Dart and cancelling targeting.) 
-	It can be further toggled during play with the key Ctrl+T.
+default_target = false
+	If set to true, targeting will start on either your previous target
+	(if it is still visible) or the closest monster (if not) rather
+	than on the character. If no monsters are in view, targeting will
+	start on the character regardless.
 
 4-c	Passive Sightings (via detection and rememberance).
 -----------------------------------------------------------

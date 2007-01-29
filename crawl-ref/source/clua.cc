@@ -1884,6 +1884,7 @@ static option_handler handlers[] =
     { "terse_hand", &Options.terse_hand, option_hboolean },
     { "increasing_skill_progress", &Options.increasing_skill_progress, option_hboolean },
     { "confirm_self_target", &Options.confirm_self_target, option_hboolean },
+    { "default_target", &Options.default_target, option_hboolean },
     { "safe_autopickup", &Options.safe_autopickup, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max", &Options.note_skill_max, option_hboolean },

@@ -84,7 +84,9 @@ static bool traps_inited = false;
 travel_distance_grid_t travel_point_distance;
 
 static unsigned char curr_waypoints[GXM][GYM];
+#ifdef CLUA_BINDINGS
 static signed char curr_traps[GXM][GYM];
+#endif
 
 static FixedArray< unsigned short, GXM, GYM >  mapshadow;
 

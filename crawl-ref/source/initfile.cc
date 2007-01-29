@@ -552,7 +552,6 @@ void game_options::reset_options()
 
     autopickup_on = true;
     autoprayer_on = false;
-    fizzlecheck_on = false;
 
     show_turns = true;
 
@@ -593,6 +592,7 @@ void game_options::reset_options()
     easy_quit_item_prompts = true;
     hp_warning             = 10;
     confirm_self_target    = true;
+    default_target         = false;
     safe_autopickup        = true;
     autopickup_no_burden   = false;
     use_notes              = true;
@@ -1394,11 +1394,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 	// should autoprayer default to on or off?
 	autoprayer_on = read_bool( field, autoprayer_on );
     }
-    else if (key == "default_fizzlecheck")
-    {
-	// should fizzlecheck default to on or off?
-	fizzlecheck_on = read_bool( field, fizzlecheck_on );
-    }
     else if (key == "detailed_stat_dump")
     {
         detailed_stat_dump = 
@@ -1726,6 +1721,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "confirm_self_target")
     {
 	confirm_self_target = read_bool( field, confirm_self_target );
+    }
+    else if (key == "default_target")
+    {
+        default_target = read_bool( field, default_target );
     }
     else if (key == "safe_autopickup")
     {
