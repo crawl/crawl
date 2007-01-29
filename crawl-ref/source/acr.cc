@@ -1178,7 +1178,8 @@ void process_command( command_type cmd ) {
 
     case CMD_LOOK_AROUND:
         mpr("Move the cursor around to observe a square.", MSGCH_PROMPT);
-        mpr("Press '?' for a monster description.", MSGCH_PROMPT);
+        mpr("Press 'v' for a monster description or '?' for help.",
+            MSGCH_PROMPT);
 
         struct dist lmove;      // will be initialized by direction()
         direction(lmove, DIR_TARGET, TARG_ANY, true);

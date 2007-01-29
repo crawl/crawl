@@ -30,6 +30,7 @@
 
 #include "externs.h"
 
+#include "command.h"
 #include "debug.h"
 #include "describe.h"
 #include "itemname.h"
@@ -68,8 +69,6 @@ enum LOSSelect
     LOS_NONE     = 0xFFFF
 };
 
-static const char *aim_prompt = "Aim (move cursor or -/+, change mode with CTRL-F, select with . or !)";
-
 static void describe_feature(int mx, int my, bool oos);
 static void describe_cell(int mx, int my);
 
@@ -107,7 +106,8 @@ static command_type read_direction_key()
     {
 
     case ESCAPE: return CMD_TARGET_CANCEL;
-    case '?': return CMD_TARGET_DESCRIBE;
+    case 'v': return CMD_TARGET_DESCRIBE;
+    case '?': return CMD_TARGET_HELP;
     case ' ': return CMD_TARGET_CYCLE_BEAM;
     case ':': return CMD_TARGET_HIDE_BEAM;
     case '.': return CMD_TARGET_SELECT;
@@ -124,8 +124,8 @@ static command_type read_direction_key()
         
     case '-': return CMD_TARGET_CYCLE_BACK;
     case '+': case '=': return CMD_TARGET_CYCLE_FORWARD;
-    case ';': return CMD_TARGET_OBJ_CYCLE_BACK;
-    case '/': return CMD_TARGET_OBJ_CYCLE_FORWARD;
+    case ';': case '/': return CMD_TARGET_OBJ_CYCLE_BACK;
+    case '*': return CMD_TARGET_OBJ_CYCLE_FORWARD;
 
     case 'b': return CMD_TARGET_DOWN_LEFT;
     case 'h': return CMD_TARGET_LEFT;
@@ -282,8 +282,10 @@ void direction(struct dist& moves, targeting_type restricts,
         }
     }
 
-    // Prompts get scrolled off. Argh - another hack. XXX
-    mpr(aim_prompt, (skip_iter ? MSGCH_PLAIN : MSGCH_PROMPT));
+    // Prompts might get scrolled off if you have too few lines available.
+    // We'll live with that.
+    if ( !just_looking )
+        mpr("Aim (press '?' for help.)", MSGCH_PROMPT);
 
     while (1)
     {
@@ -312,6 +314,7 @@ void direction(struct dist& moves, targeting_type restricts,
             key_command = read_direction_key();
 
         bool need_beam_redraw = false;
+        bool force_redraw = false;
         bool loop_done = false;
 
         const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
@@ -507,9 +510,18 @@ void direction(struct dist& moves, targeting_type restricts,
                 break;
 #endif
             describe_monsters(menv[mid].type, mid);
+            force_redraw = true;
             redraw_screen();
             mesclr(true);
             break;
+
+        case CMD_TARGET_HELP:
+            show_targeting_help();
+            force_redraw = true;
+            redraw_screen();
+            mesclr(true);
+            break;
+            
         default:
             break;
         }
@@ -566,6 +578,9 @@ void direction(struct dist& moves, targeting_type restricts,
             show_beam = show_beam &&
                 find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
         }
+
+        if ( force_redraw )
+            have_moved = true;
         
         if ( have_moved )
         {

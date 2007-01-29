@@ -596,19 +596,27 @@ static const char *level_map_help =
         "<w>Ctrl-W</w> : set Waypoint\n"
         "<w>Ctrl-C</w> : Clear level and main maps\n";
 
-static const char *targeting_help =         
+static const char *targeting_help =
         "<h>Targeting (like zapping wands/spells):\n"
-        "<w>Esc</w>  : stop targeting\n"
-        "<w>Dir.</w> : shoots straight in that direction\n"
-        "<w>p</w> : fires at Previous target (also <w>t</w>, <w>f</w>)\n"
+        "<w>Dir</w>       : move in that direction\n"
+        "<w>Shift-Dir</w> : shoot straight-line beam\n"
+        "<w>Space</w>     : cycle through beams\n"
+        "<w>:</w>         : hide beam\n"
+        "<w>Esc</w>       : cancel targeting\n"
+        "<w>Ctrl-F</w>    : cycle monster cycle mode\n"
+        "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
         "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
         "<w>-</w> : cycle monsters backward\n"
-	"<w>.</w> : fires at target (also <w>Enter</w> or <w>Del</w>)\n"
-	"<w>></w> : fires at target and stops there\n"
-        "<w>Ctrl-F</w> : toggles cycle mode\n"
-        "<w>*</w> : enter manual targeting (where <w>Dir.</w>\n"
-        "      moves the cursor and <w>.</w> etc. fire)\n"
-        "<w>?</w> : describes monster under cursor\n";
+	"<w>.</w> : fire at target (also <w>Enter</w> or <w>Del</w>)\n"
+	"<w>!</w> : fire at target and stop there\n"
+        "<w>;</w> : cycle objects forward\n"
+        "<w>/</w> : cycle objects backward\n"
+        "<w>v</w> : describe monster under cursor\n"
+        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+        "<w>^</w>   : cycle through traps\n"
+        "<w>Tab</w> : cycle through shops and portals\n"
+        "<w>_</w>   : cycle through altars\n"
+        "<w>?</w> : targeting help\n";
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
@@ -738,17 +746,27 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     cmd_help.show();
 }
 
-void show_levelmap_help()
+void show_specific_help( const char* help )
 {
-    std::vector<std::string> lines =
-        split_string("\n", level_map_help, false, true);
+    std::vector<std::string> lines = split_string("\n", help, false, true);
     std::vector<formatted_string> formatted_lines;
     for (int i = 0, size = lines.size(); i < size; ++i)
         formatted_lines.push_back(
-                formatted_string::parse_string(
-                    lines[i], true, cmdhelp_textfilter));
+            formatted_string::parse_string(
+                lines[i], true, cmdhelp_textfilter));
     show_keyhelp_menu(formatted_lines, false);
 }
+
+void show_levelmap_help()
+{
+    show_specific_help( level_map_help );
+}
+
+void show_targeting_help()
+{
+    show_specific_help( targeting_help );
+}
+
 
 void list_commands(bool wizard)
 {
@@ -934,21 +952,6 @@ void list_commands(bool wizard)
             "<w>~</w> : add macro\n"
             "<w>=</w> : reassign inventory/spell letters\n"
             " \n",
-            true, true, cmdhelp_textfilter);
-
-    cols.add_formatted(
-            1,
-            "<h>Examine Surroundings ('<w>x</w><h>' in main):\n"
-            " <w>x</w>  : back to map (also <w>Esc</w> and <w>Space</w>)\n"
-            " <w>+</w>  : cycle monsters forward (also <w>=</w>)\n"
-            " <w>-</w>  : cycle monsters backward\n"
-            " <w>*</w>  : cycle objects forward (also <w>'</w>)\n"
-            " <w>/</w>  : cycle objects backward (also <w>;</w>)\n"
-            " <w>_</w>  : cycle through altars\n"
-            " <w>.</w>  : travel to cursor (also <w>Enter</w>)\n"
-            " <w>?</w>  : describe monster under cursor\n"
-            "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
-            "<w>Tab</w> : cycle dungeon features\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
