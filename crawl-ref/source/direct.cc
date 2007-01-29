@@ -285,7 +285,7 @@ void direction(struct dist& moves, targeting_type restricts,
     // Prompts might get scrolled off if you have too few lines available.
     // We'll live with that.
     if ( !just_looking )
-        mpr("Aim (press '?' for help.)", MSGCH_PROMPT);
+        mpr("Aim (press '?' for help, Shift-Dir to shoot in a  straight line.)", MSGCH_PROMPT);
 
     while (1)
     {
