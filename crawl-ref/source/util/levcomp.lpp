@@ -121,6 +121,7 @@ TAGS:               { BEGIN(KEYWORDS); return TAGS; }
 SYMBOL:             { BEGIN(ARGUMENT); return SYMBOL; }
 MONS:               { BEGIN(MNAME); return MONS; }
 ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
+SHUFFLE:            { BEGIN(ARGUMENT); return SHUFFLE; }
 
 BRANCHDEF:          return BRANCH;
 DEFAULT             return DEFAULT;

@@ -229,6 +229,72 @@ void map_lines::resolve(const std::string &fillins)
         resolve(lines[i], fillins);
 }
 
+void map_lines::calc_symbol_frequencies(symbol_frequency_t &f)
+{
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        const std::string &s = lines[i];
+        for (int j = 0, len = s.length(); j < len; ++j)
+            f[ s[j] ]++;
+    }
+}
+
+std::string map_lines::remove_unreferenced(const symbol_frequency_t &freq,
+                                           std::string s)
+{
+    for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i)
+    {
+        if (!freq[ s[i] ])
+            s.erase( i, 1 );
+    }
+
+    return (s);
+}
+
+std::string map_lines::shuffle(std::string s)
+{
+    std::string result;
+
+    // Inefficient brute-force shuffle.
+    while (!s.empty())
+    {
+        const int c = random2( s.length() );
+        result += s[c];
+        s.erase(c, 1);
+    }
+
+    return (result);
+}
+
+void map_lines::resolve_shuffle(const symbol_frequency_t &freq,
+                                const std::string &shufflage)
+{
+    std::string toshuffle = remove_unreferenced(freq, shufflage);
+    std::string shuffled = shuffle(toshuffle);
+
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        std::string &s = lines[i];
+
+        for (int j = 0, len = s.length(); j < len; ++j)
+        {
+            const char c = s[j];
+            std::string::size_type pos = toshuffle.find(c);
+            if (pos != std::string::npos)
+                s[j] = shuffled[pos];
+        }
+    }
+}
+
+void map_lines::resolve_shuffles(const std::vector<std::string> &shuffles)
+{
+    symbol_frequency_t freq(0);
+    calc_symbol_frequencies(freq);
+
+    for (int i = 0, size = shuffles.size(); i < size; ++i)
+        resolve_shuffle( freq, shuffles[i] );
+}
+
 void map_lines::normalise(char fillch)
 {
     for (int i = 0, size = lines.size(); i < size; ++i)
@@ -314,6 +380,7 @@ void map_def::init()
     tags.clear();
     place.clear();
     items.clear();
+    shuffles.clear();
     depth.reset();
     orient = MAP_NONE;
 
@@ -328,6 +395,11 @@ void map_def::init()
 
     map.clear();
     mons.clear();
+}
+
+void map_def::add_shuffle(const std::string &s)
+{
+    shuffles.push_back(s);
 }
 
 bool map_def::is_minivault() const
@@ -540,12 +612,12 @@ void map_def::normalise()
 void map_def::resolve()
 {
     map.resolve( random_symbols );
+    map.resolve_shuffles( shuffles );
 }
 
 void map_def::fixup()
 {
     normalise();
-    resolve();
 }
 
 bool map_def::has_tag(const std::string &tagwanted) const

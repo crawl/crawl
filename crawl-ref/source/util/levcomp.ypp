@@ -25,7 +25,7 @@ void yyerror(const char *e)
 }
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
-%token <i>      DEFAULT_DEPTH SYMBOL TAGS
+%token <i>      DEFAULT_DEPTH SYMBOL TAGS SHUFFLE
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS ITEM
 %token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
 %token <i>      ROCK_COLOUR FLOOR_COLOUR
@@ -130,7 +130,14 @@ metaline        : place
                 | items
                 | symbol
                 | tags
+                | shuffle
                 ;
+
+shuffle         : SHUFFLE { }
+                | SHUFFLE STRING
+                {
+                    lc_map.add_shuffle($2);
+                }
 
 tags            : TAGS tagstrings {}
                 ;

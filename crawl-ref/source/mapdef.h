@@ -45,9 +45,6 @@ class map_lines
 public:
     map_lines();
 
-    // NULL-terminated list of map lines.
-    map_lines(int nlines, ...);
-
     void add_line(const std::string &s);
     void set_orientation(const std::string &s);
 
@@ -60,6 +57,7 @@ public:
     bool solid_borders(map_section_type border);
     
     void resolve(const std::string &fillins);
+    void resolve_shuffles(const std::vector<std::string> &shuffles);
 
     // Make all lines the same length.
     void normalise(char fillc = 'x');
@@ -74,8 +72,16 @@ public:
     const std::vector<std::string> &get_lines() const;
 
 private:
+    typedef FixedVector<short, 128> symbol_frequency_t;
+    
+    void resolve_shuffle(const symbol_frequency_t &,
+                         const std::string &shuffle);
     void resolve(std::string &s, const std::string &fill);
     void check_borders();
+    void calc_symbol_frequencies(symbol_frequency_t &f);
+    std::string remove_unreferenced(const symbol_frequency_t &freq,
+                                    std::string s);
+    std::string shuffle(std::string s);
 
 private:
     std::vector<std::string> lines;
@@ -211,6 +217,7 @@ public:
     item_list       items;
 
     std::string     random_symbols;
+    std::vector<std::string> shuffles;
 
 public:
     void init();
@@ -220,6 +227,8 @@ public:
     void normalise();
     void resolve();
     void fixup();
+
+    void add_shuffle(const std::string &s);
 
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;

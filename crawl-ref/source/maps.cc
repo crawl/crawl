@@ -91,6 +91,8 @@ static int write_vault(const map_def &mdef, map_type map,
 // Mirror the map if appropriate, resolve substitutable symbols (?),
 static void resolve_map(map_def &map)
 {
+    map.resolve();
+    
     // Mirroring is possible for any map that does not explicitly forbid it.
     // Note that mirroring also flips the orientation.
     if (coinflip())
