@@ -18,10 +18,10 @@ The contents of this text are:
 		gearset.lua, eat.lua, trapwalk.lua
 4-  Interface. 
 4-a	Dropping and Picking up.
-		autopickup, default_autopickup, safe_autopickup,
-		autopickup_no_burden, safe_zero_exp, pickup_thrown,
-		pickup_dropped, assign_item_slot, ban_pickup, drop_mode,
-		pickup_mode, drop_filter;
+		autopickup, autopickup_exceptions, default_autopickup,
+		safe_autopickup, autopickup_no_burden, safe_zero_exp,
+		pickup_thrown, pickup_dropped, assign_item_slot,
+		ban_pickup, drop_mode, pickup_mode, drop_filter;
 		lua: ch_autopickup (advanced autopickup exceptions)
 4-b	Targeting. 
 		target_zero_exp, target_oos, target_los_first,
@@ -229,6 +229,32 @@ autopickup = $?!+"/%
         If you teleport or blink onto a square with interesting items, these
         will not be picked up.
 
+autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
+        A set of regexes that force matching items to be picked up (if prefixed
+        with <), or never picked up (if prefixed with >). Excludes (>) take
+        precedence over includes (<), so if the same item is matched by both
+        an exclude and an include, it will not be subject to autopickup.
+
+        An example:
+          autopickup_exceptions = <(poisoned|curare-tipped) needle
+        Forces autopickup to grab all poisoned and curare-tipped needles, even
+        if missiles are not set in the "autopickup" option.
+
+        Whitespace between <> and the match expression is significant, so this
+        is a mistake:
+          autopickup_exceptions = <   ebony casket
+
+        autopickup_exceptions is a superset of ban_pickup (see below). Using
+          autopickup_exceptions = >decay, >degeneration
+        is the same as using
+          ban_pickup = decay, degeneration
+
+        If the regexes are not prefixed with < or >, > is implied. So the option
+        setting above can also be written as
+          autopickup_exceptions = decay, degeneration
+
+        You can use multiple autopickup_exceptions lines.
+
 default_autopickup = true
 	When set false, the game starts with autopickup turned off. You can
 	still toggle autopickup in-game with Ctrl-A.
@@ -277,6 +303,8 @@ ban_pickup = <regex>
 	  ban_pickup = inaccuracy
 	  ban_pickup = scrolls? of paper, immolation, curse armour, curse weapon
 	  ban_pickup = forgetfulness, uselessness, noise, torment
+
+        See also autopickup_exceptions, which is a superset of ban_pickup.
 
 drop_mode = (multi | single)
 	Single is the classic behaviour; when you select an inventory letter,

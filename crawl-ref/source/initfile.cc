@@ -741,7 +741,8 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(100, LIGHTGREY));
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
-    banned_objects.clear();
+    never_pickup.clear();
+    always_pickup.clear();
     note_monsters.clear(); 
     note_messages.clear(); 
     autoinscriptions.clear();
@@ -1802,22 +1803,39 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
-        append_vector(banned_objects, split_string(",", field));
+        append_vector(never_pickup, split_string(",", field));
+    }
+    else if (key == "autopickup_exceptions")
+    {
+        std::vector<std::string> args = split_string(",", field);
+        for (int i = 0, size = args.size(); i < size; ++i)
+        {
+            const std::string &s = args[i];
+            if (s.empty())
+                continue;
+
+            if (s[0] == '>')
+                never_pickup.push_back( s.substr(1) );
+            else if (s[0] == '<')
+                always_pickup.push_back( s.substr(1) );
+            else
+                never_pickup.push_back( s );
+        }
     }
     else if (key == "note_items")
     {
-	append_vector(note_items, split_string(",", field));
+        append_vector(note_items, split_string(",", field));
     }
     else if (key == "autoinscribe")
     {
-	std::vector<std::string> thesplit = split_string(":", field);
-	autoinscriptions.push_back(
-	    std::pair<text_pattern,std::string>(thesplit[0],
-						thesplit[1]));
+        std::vector<std::string> thesplit = split_string(":", field);
+        autoinscriptions.push_back(
+            std::pair<text_pattern,std::string>(thesplit[0],
+                                                thesplit[1]));
     }
     else if (key == "map_file_name")
     {
-	map_file_name = field;
+        map_file_name = field;
     }
     else if (key == "hp_colour" || key == "hp_color")
     {

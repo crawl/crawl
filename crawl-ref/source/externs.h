@@ -874,7 +874,8 @@ public:
     std::vector<std::pair<int, int> > mp_colour;
 
     std::string map_file_name;	// name of mapping file to use
-    std::vector<text_pattern> banned_objects;  // Objects we'll never pick up
+    std::vector<text_pattern> never_pickup;   // Objects we'll never pick up
+    std::vector<text_pattern> always_pickup;  // Stuff we always pick up
     std::vector<text_pattern> note_monsters;  // Interesting monsters
     std::vector<text_pattern> note_messages;  // Interesting messages
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;

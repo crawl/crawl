@@ -2897,23 +2897,35 @@ static void autoinscribe_item( item_def& item )
     
     /* if there's an inscription already do nothing */
     if ( item.inscription.size() > 0 )
-	return;
+        return;
 
-    for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i ) {
-	if ( Options.autoinscriptions[i].first.matches(iname) ) {
-	    item.inscription += Options.autoinscriptions[i].second;
-	}
+    for ( unsigned i = 0; i < Options.autoinscriptions.size(); ++i )
+    {
+        if ( Options.autoinscriptions[i].first.matches(iname) )
+        {
+            item.inscription += Options.autoinscriptions[i].second;
+        }
     }
 }
 
-static bool is_banned(const item_def &item) {
-    static char name[ITEMNAME_SIZE];
-    item_name(item, DESC_INVENTORY, name, false);
+static bool is_denied_autopickup(const item_def &item)
+{
+    std::string iname = item_name(item, DESC_PLAIN);
+    for (unsigned i = 0, size = Options.never_pickup.size(); i < size; ++i)
+    {
+        if (Options.never_pickup[i].matches(iname))
+            return (true);
+    }
+    return false;
+}
 
-    std::string iname = name;
-    for (unsigned i = 0; i < Options.banned_objects.size(); ++i) {
-        if (Options.banned_objects[i].matches(iname))
-            return true;
+static bool is_forced_autopickup(const item_def &item)
+{
+    std::string iname = item_name(item, DESC_PLAIN);
+    for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
+    {
+        if (Options.always_pickup[i].matches(iname))
+            return (true);
     }
     return false;
 }
@@ -2933,15 +2945,20 @@ static void autoinscribe_items()
 
 bool item_needs_autopickup(const item_def &item)
 {
-    return (strstr(item.inscription.c_str(), "=g") != 0
-            || ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
-            || (((Options.autopickups & (1L << item.base_type))
+    if (strstr(item.inscription.c_str(), "=g") != 0)
+        return (true);
+
+    if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
+        return (true);
+
+    return (((Options.autopickups & (1L << item.base_type))
+                 || is_forced_autopickup(item)
 #ifdef CLUA_BINDINGS
                  || clua.callbooleanfn(false, "ch_autopickup", "u", &item)
 #endif
                     )
                 && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
-                && !is_banned(item)));
+                && !is_denied_autopickup(item));
 }
               
 bool can_autopickup()
