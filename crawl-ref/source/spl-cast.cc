@@ -342,10 +342,6 @@ int spell_fail(int spell)
     default: chance += 750; break;
     }
 
-    //if (chance < 1 ) chance = 0;
-    if (chance > 100)
-        chance = 100;
-
     chance2 = chance;
 
     if (chance < 45)
@@ -409,13 +405,13 @@ int spell_fail(int spell)
             chance2 += 10;
             break;
         }
-
-        if (chance2 > 100)
-            chance2 = 100;
     }
 
     // Apply the effects of Vehumet prayer and items of wizardry.
     chance2 = apply_vehumet_wizardry_boost(spell, chance2);
+
+    if (chance2 > 100)
+        chance2 = 100;
 
     return (chance2);
 }                               // end spell_fail()
