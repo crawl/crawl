@@ -1815,7 +1815,6 @@ bolt mons_spells( int spell_cast, int power )
 
 static unsigned char monster_abjuration(int pow, bool test)
 {
-
     unsigned char result = 0;
     struct monsters *monster = 0;       // NULL {dlb}
 
@@ -1846,7 +1845,7 @@ static unsigned char monster_abjuration(int pow, bool test)
         if (pow > 60)
             pow = 60;
 
-        abjLevel -= 1 + (random2(pow) / 3);
+        abjLevel -= 1 + (random2(pow / 3) / 3);
 
         if (abjLevel < ENCH_ABJ_I)
             monster_die(monster, KILL_RESET, 0);
@@ -1856,6 +1855,9 @@ static unsigned char monster_abjuration(int pow, bool test)
             mons_del_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI);
             mons_add_ench(monster, abjLevel);
         }
+
+        if (!(pow /= 2))
+            break;
     }
 
     return result;

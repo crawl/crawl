@@ -4372,23 +4372,10 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
         return (false);
 
     // Okay, do the swap!
-#ifdef DEBUG_DIAGNOSTICS
-    char mname[ITEMNAME_SIZE];
-    moname(mon->type, true, DESC_PLAIN, mname);
-    mprf(MSGCH_DIAGNOSTICS,
-        "Swap: %s (%d,%d)->(%d,%d) (%d;%d)", 
-            mname, mon->x, mon->y, nx, ny, mon->speed_increment, mon->speed);
-#endif
     mon->x = nx;
     mon->y = ny;
     mgrd[nx][ny] = monster_index(mon);
 
-#ifdef DEBUG_DIAGNOSTICS
-    moname(m2->type, true, DESC_PLAIN, mname);
-    mprf(MSGCH_DIAGNOSTICS,
-        "Swap: %s (%d,%d)->(%d,%d) (%d;%d)",
-            mname, m2->x, m2->y, cx, cy, mon->speed_increment, mon->speed);
-#endif
     m2->x  = cx;
     m2->y  = cy;
     const int m2i = monster_index(m2);

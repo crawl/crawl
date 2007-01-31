@@ -1564,21 +1564,20 @@ void summon_undead(int pow)
 void summon_things( int pow )
 {
     int big_things = 0;
+
     int numsc = 2 + (random2(pow) / 10) + (random2(pow) / 10);
 
-    if (one_chance_in(3) && !lose_stat( STAT_INTELLIGENCE, 1, true ))
+    if (one_chance_in(5) && !lose_stat( STAT_INTELLIGENCE, 1, true ))
         mpr("Your call goes unanswered.");
     else
     {
         numsc = stepdown_value( numsc, 2, 2, 6, -1 );
 
-        while (numsc > 2)
+        // No more than 2 tentacled monstrosities
+        while (numsc > 2 && big_things < 2 && one_chance_in(3))
         {
-            if (one_chance_in(4))
-                break;
-
             numsc -= 2;
-            big_things++;
+            ++big_things;
         }
 
         if (numsc > 8)
@@ -1589,14 +1588,15 @@ void summon_things( int pow )
 
         while (big_things > 0)
         {
-            create_monster( MONS_TENTACLED_MONSTROSITY, 0, BEH_FRIENDLY,
+            create_monster( MONS_TENTACLED_MONSTROSITY, ENCH_ABJ_VI,
+                            BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
             big_things--;
         }
 
         while (numsc > 0)
         {
-            create_monster( MONS_ABOMINATION_LARGE, 0, BEH_FRIENDLY,
+            create_monster( MONS_ABOMINATION_LARGE, ENCH_ABJ_VI, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
             numsc--;
         }
