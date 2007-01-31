@@ -1845,7 +1845,7 @@ static unsigned char monster_abjuration(int pow, bool test)
         if (pow > 60)
             pow = 60;
 
-        abjLevel -= 1 + (random2(pow / 3) / 3);
+        abjLevel -= 1 + (random2(pow / 3) * 60 / 100);
 
         if (abjLevel < ENCH_ABJ_I)
             monster_die(monster, KILL_RESET, 0);
@@ -1856,7 +1856,7 @@ static unsigned char monster_abjuration(int pow, bool test)
             mons_add_ench(monster, abjLevel);
         }
 
-        if (!(pow /= 2))
+        if (!(pow = 2 * pow / 3))
             break;
     }
 
