@@ -687,7 +687,7 @@
 {
     MONS_UNSEEN_HORROR, 'x', MAGENTA, "unseen horror",
     M_LEVITATE | M_SEE_INVIS | M_INVIS,
-    MR_RES_ELEC,
+    MR_NO_FLAGS,
     0, 12, MONS_UNSEEN_HORROR, MONS_UNSEEN_HORROR, MH_NATURAL, -3,
     { 12, 0, 0, 0 },
     { 7, 3, 5, 0 },
