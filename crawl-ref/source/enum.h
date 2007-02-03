@@ -2440,6 +2440,9 @@ enum mon_spell_type
     MS_POISON_ARROW,                    //   60
     MS_SUMMON_SMALL_MAMMALS,
     MS_SUMMON_MUSHROOMS,
+    MS_ICE_BOLT,
+    MS_MAGMA,
+    MS_SHOCK,
 
     MS_BERSERK_RAGE,
     MS_MIGHT,

@@ -90,7 +90,6 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
    when finding spells to be remembered by a player's ghost:
  */
 unsigned char search_order_conj[] = {
-/* 0 */
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
@@ -98,11 +97,12 @@ unsigned char search_order_conj[] = {
     SPELL_LIGHTNING_BOLT,
     SPELL_STICKY_FLAME,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_BOLT_OF_MAGMA,
+    SPELL_ICE_BOLT,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_FIREBALL,
     SPELL_DELAYED_FIREBALL,
-/* 10 */
     SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_IRON,
     SPELL_STONE_ARROW,
@@ -110,6 +110,7 @@ unsigned char search_order_conj[] = {
     SPELL_THROW_FROST,
     SPELL_PAIN,
     SPELL_STING,
+    SPELL_SHOCK,
     SPELL_MAGIC_DART,
     SPELL_NO_SPELL,                        // end search
 };
@@ -1754,7 +1755,12 @@ unsigned char translate_spell(unsigned char spel)
     {
     case SPELL_TELEPORT_SELF:
         return (MS_TELEPORT);
-
+    case SPELL_ICE_BOLT:
+        return (MS_ICE_BOLT);
+    case SPELL_SHOCK:
+        return (MS_SHOCK);
+    case SPELL_BOLT_OF_MAGMA:
+        return (MS_MAGMA);
     case SPELL_MAGIC_DART:
         return (MS_MMISSILE);
     case SPELL_FIREBALL:

@@ -1417,9 +1417,22 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = beam.rangeMax = 8;
         break;
 
+    case MS_MAGMA:
+        beam.name = "bolt of magma";
+        beam.range = 5;
+        beam.rangeMax = 13;
+        beam.damage = dice_def( 3, 8 + power / 11 );
+        beam.colour = RED;
+        beam.type = SYM_ZAP;
+        beam.thrower = KILL_MON;
+        beam.flavour = BEAM_LAVA;
+        beam.hit = 12 + power / 25;
+        beam.is_beam = true;
+        break;
+        
     case MS_FIRE_BOLT:
         beam.name = "bolt of fire";
-        beam.range = 4;
+        beam.range = 5;
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = RED;
@@ -1430,9 +1443,22 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
+    case MS_ICE_BOLT:
+        beam.name = "bolt of ice";
+        beam.range = 5;
+        beam.rangeMax = 13;
+        beam.damage = dice_def( 3, 8 + power / 11 );
+        beam.colour = WHITE;
+        beam.type = SYM_ZAP;
+        beam.thrower = KILL_MON;
+        beam.flavour = BEAM_ICE;
+        beam.hit     = 12 + power / 25;
+        beam.is_beam = true;
+        break;
+        
     case MS_COLD_BOLT:
         beam.name = "bolt of cold";
-        beam.range = 4;
+        beam.range = 5;
         beam.rangeMax = 13;
         beam.damage = dice_def( 3, 8 + power / 11 );
         beam.colour = WHITE;
@@ -1443,6 +1469,19 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
+    case MS_SHOCK:
+        beam.name = "zap";
+        beam.range = 8;
+        beam.rangeMax = 16;
+        beam.damage = dice_def( 1, 8 + (power / 20) );
+        beam.colour = LIGHTCYAN;
+        beam.type   = SYM_ZAP;
+        beam.thrower = KILL_MON;
+        beam.flavour = BEAM_ELECTRICITY;
+        beam.hit = 12 + power / 20;
+        beam.is_beam = true;
+        break;
+        
     case MS_LIGHTNING_BOLT:
         beam.name = "bolt of lightning";
         beam.range = 7;

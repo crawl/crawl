@@ -1909,6 +1909,9 @@ bool ms_requires_tracer(int monspell)
     {
         case MS_BANISHMENT:
         case MS_COLD_BOLT:
+        case MS_ICE_BOLT:
+        case MS_SHOCK:
+        case MS_MAGMA:
         case MS_CONFUSE:
         case MS_CRYSTAL_SPEAR:
         case MS_DISINTEGRATE:
