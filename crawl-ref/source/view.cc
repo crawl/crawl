@@ -645,15 +645,6 @@ void monster_grid(bool do_updates)
                 }
                 continue;
             }
-            else if (!do_updates
-                     && !mons_is_submerged( monster )
-                     && !mons_friendly( monster )
-                     && !mons_is_mimic( monster->type )
-                     && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
-            {
-                interrupt_activity( AI_SEE_MONSTER, monster );
-                seen_monster( monster );
-            }
 
             // mimics are always left on map
             if (!mons_is_mimic( monster->type ))
@@ -665,6 +656,26 @@ void monster_grid(bool do_updates)
     }                           // end "for s"
 }                               // end monster_grid()
 
+void fire_monster_alerts()
+{
+    for (int s = 0; s < MAX_MONSTERS; s++)
+    {
+        monsters *monster = &menv[s];
+
+        if (monster->type != -1 && mons_near(monster))
+        {
+            if (player_monster_visible( monster )
+                && !mons_is_submerged( monster )
+                && !mons_friendly( monster )
+                && !mons_is_mimic( monster->type )
+                && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+            {
+                interrupt_activity( AI_SEE_MONSTER, monster );
+                seen_monster( monster );
+            }
+        }
+    }
+}
 
 bool check_awaken(int mons_aw)
 {

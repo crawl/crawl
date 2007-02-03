@@ -809,10 +809,12 @@ bool apply_berserk_penalty = false;
   This function handles the player's input. It's called from main(), from
   inside an endless loop.
  */
-static void input() {
-
+static void input()
+{
     you.turn_is_over = false;
     prep_input();
+
+    fire_monster_alerts();
 
     if ( you.paralysis )
     {

@@ -150,6 +150,7 @@ unsigned char get_sightmap_char(int feature);
 unsigned char get_magicmap_char(int feature);
 
 void viewwindow(bool draw_it, bool do_updates);
+void fire_monster_alerts();
 
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0 );
