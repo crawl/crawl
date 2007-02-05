@@ -1664,6 +1664,16 @@ bool mons_is_batty(const monsters *m)
     return testbits(m->flags, MF_BATTY);
 }
 
+bool mons_was_seen(const monsters *m)
+{
+    return testbits(m->flags, MF_SEEN);
+}
+
+bool mons_is_known_mimic(const monsters *m)
+{
+    return mons_is_mimic(m->type) && testbits(m->flags, MF_KNOWN_MIMIC);
+}
+
 bool mons_looks_stabbable(const monsters *m)
 {
     // Make sure oklob plants are never highlighted. That'll defeat the

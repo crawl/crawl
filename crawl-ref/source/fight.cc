@@ -2045,6 +2045,10 @@ void monster_attack(int monster_attacking)
     if (mons_has_ench( attacker, ENCH_SUBMERGED ))
         return;
 
+    // If a mimic is attacking the player, it is thereafter known.
+    if (mons_is_mimic(attacker->type))
+        attacker->flags |= MF_KNOWN_MIMIC;
+
     if (you.duration[DUR_REPEL_UNDEAD] 
         && mons_holiness( attacker ) == MH_UNDEAD
         && !check_mons_resist_magic( attacker, you.piety ))
@@ -3129,6 +3133,13 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
     if (mons_near(attacker) && mons_near(defender))
         sees = true;
+
+    // Any objects seen in combat are thereafter known mimics.
+    if (mons_is_mimic(attacker->type) && mons_near(attacker))
+        attacker->flags |= MF_KNOWN_MIMIC;
+
+    if (mons_is_mimic(defender->type) && mons_near(defender))
+        defender->flags |= MF_KNOWN_MIMIC;
 
     // now disturb defender, regardless
     behaviour_event(defender, ME_WHACK, monster_attacking);

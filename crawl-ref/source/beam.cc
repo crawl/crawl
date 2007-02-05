@@ -2241,7 +2241,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
    and changes its appearance - the appearance change is in monster_teleport
    in mstuff2.
  */
-void mimic_alert(struct monsters *mimic)
+void mimic_alert(monsters *mimic)
 {
     if (mons_has_ench( mimic, ENCH_TP_I, ENCH_TP_IV ))
         return;

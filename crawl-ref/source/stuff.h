@@ -102,7 +102,7 @@ int letter_to_index(int the_letter);
 
 int near_stairs(int px, int py, int max_dist, unsigned char &stair_gfx);
 
-inline bool testbits(unsigned int flags, unsigned int test)
+inline bool testbits(unsigned long flags, unsigned long test)
 {
     return ((flags & test) == test);
 }

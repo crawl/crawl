@@ -2306,8 +2306,7 @@ enum mon_flight_type
     FLY_LEVITATION                      // doesn't require physical effort
 };
 
-// Note: These are currently stored in chars!!!
-// Need to fix struct monsters and the savefile if you want more.
+// These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
     MF_CREATED_FRIENDLY   = 0x01,  // no benefit from killing
@@ -2318,7 +2317,10 @@ enum monster_flag_type
 
     MF_INTERESTING        = 0x20,  // Player finds monster interesting
     MF_SEEN               = 0x40,  // Player already seen monster
-    MF_DIVINE_PROTECTION  = 0x80   // Monster has divine protection.
+    MF_DIVINE_PROTECTION  = 0x80,  // Monster has divine protection.
+    
+    MF_KNOWN_MIMIC        = 0x100  // Mimic that has taken a swing at the PC,
+                                   // or that the player has inspected with ?
 };
 
 enum mon_dam_level_type

@@ -824,7 +824,8 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         monster->colour = get_mimic_colour( monster );
     }
 
-    if (!silent)
+    const bool now_visible = mons_near(monster);
+    if (!silent && now_visible)
     {
         if (was_seen)
             simple_monster_message(monster, " reappears nearby!");
@@ -832,8 +833,18 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
             simple_monster_message(monster, " appears out of thin air!");
     }
 
-    if (player_monster_visible(monster) && mons_near(monster))
+    if (player_monster_visible(monster) && now_visible)
         seen_monster(monster);
+
+    // Teleporting mimics change form - if they reappear out of LOS, they are
+    // no longer known.
+    if (mons_is_mimic(monster->type))
+    {
+        if (now_visible)
+            monster->flags |= MF_KNOWN_MIMIC;
+        else
+            monster->flags &= ~MF_KNOWN_MIMIC;
+    }
 }                               // end monster_teleport()
 
 void setup_dragon(struct monsters *monster, struct bolt &pbolt)

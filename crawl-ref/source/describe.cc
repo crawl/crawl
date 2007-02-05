@@ -4572,6 +4572,10 @@ void describe_monsters(int class_described, unsigned char which_mons)
     description = ptr_monam( &(menv[ which_mons ]), DESC_CAP_A );
     description += "$$";
 
+    // Now that the player has examined it, he knows it's a mimic.
+    if (mons_is_mimic(menv[which_mons].type))
+        menv[which_mons].flags |= MF_KNOWN_MIMIC;
+
     switch (class_described)
     {
         // (missing) case 423 - MONS_ANOTHER_LAVA_THING ??? 15jan2000 {dlb}

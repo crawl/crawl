@@ -815,7 +815,7 @@ static void tag_construct_you_items(struct tagHeader &th)
         marshallShort(th,you.inv[i].plus2);
         marshallShort(th, you.inv[i].orig_place);
         marshallShort(th, you.inv[i].orig_monnum);
-	marshallString(th, you.inv[i].inscription.c_str(), 80);
+        marshallString(th, you.inv[i].inscription.c_str(), 80);
     }
 
     // item descrip for each type & subtype

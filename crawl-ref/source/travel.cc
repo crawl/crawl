@@ -21,6 +21,7 @@
 #include "items.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "overmap.h"
 #include "player.h"
 #include "stash.h"
@@ -102,6 +103,8 @@ static int find_transtravel_square(const level_pos &pos, bool verbose = true);
 
 static bool loadlev_populate_stair_distances(const level_pos &target);
 static void populate_stair_distances(const level_pos &target);
+static bool is_greed_inducing_square(const LevelStashes *ls,
+                                     const coord_def &c);
 
 bool is_player_mapped(int grid_x, int grid_y)
 {
@@ -694,8 +697,24 @@ inline static void check_interesting_square(int x, int y,
 {
     const coord_def pos(x + 1, y + 1);
     
-    if (ES_item && igrd(pos) != NON_ITEM)
-        ed.found_item( pos, mitm[ igrd(pos) ] );
+    if (ES_item)
+    {
+        if (mgrd(pos) != NON_MONSTER)
+        {
+            const monsters *mons = &menv[ mgrd(pos) ];
+            if (mons_is_mimic(mons->type)
+                && !mons_is_known_mimic(mons))
+            {
+                item_def item;
+                get_mimic_item(mons, item);
+
+                ed.found_item(pos, item);
+            }
+        }
+        
+        if (igrd(pos) != NON_ITEM)
+            ed.found_item( pos, mitm[ igrd(pos) ] );
+    }
 
     ed.found_feature( pos, grd(pos) );
 }
@@ -1091,9 +1110,31 @@ travel_pathfind::travel_pathfind()
 {
 }
 
+static bool is_greed_inducing_square(const LevelStashes *ls, const coord_def &c)
+{
+    if (ls && ls->needs_visit(c.x, c.y))
+        return (true);
+
+    const int m_ind = mgrd(c);
+    if (m_ind != NON_MONSTER)
+    {
+        const monsters *mons = &menv[ m_ind ];
+        if (mons_is_mimic(mons->type)
+            && mons_was_seen(mons)
+            && !mons_is_known_mimic(mons))
+        {
+            item_def mimic_item;
+            get_mimic_item(mons, mimic_item);
+            if (item_needs_autopickup(mimic_item))
+                return (true);
+        }
+    }
+    return (false);
+}
+
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
 {
-    return (ls && ls->needs_visit(c.x, c.y));
+    return ::is_greed_inducing_square(ls, c);
 }
 
 void travel_pathfind::set_src_dst(const coord_def &src, const coord_def &dst)
@@ -3421,7 +3462,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
         if (!current_level)
             current_level = stashes.find_current_level();
 
-        if (current_level && current_level->needs_visit(pos.x, pos.y))
+        if (current_level && is_greed_inducing_square(current_level, pos))
             return;
     }
 

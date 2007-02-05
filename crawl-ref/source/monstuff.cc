@@ -77,7 +77,7 @@ static bool immobile_monster[MAX_MONSTERS];
 // This function creates an artificial item to represent a mimic's appearance.
 // Eventually, mimics could be redone to be more like Dancing wepaons...
 // there'd only be one type and it would look like the item it carries. -- bwr
-void get_mimic_item( const struct monsters *mimic, item_def &item )
+void get_mimic_item( const monsters *mimic, item_def &item )
 {
     ASSERT( mimic != NULL && mons_is_mimic( mimic->type ) );
 
@@ -1769,7 +1769,7 @@ bool simple_monster_message(struct monsters *monster, const char *event,
 {
     char buff[INFO_SIZE];
 
-    if (mons_near( monster ) 
+    if (mons_near( monster )
         && (channel == MSGCH_MONSTER_SPELL || player_monster_visible(monster)))
     {
         snprintf( buff, sizeof(buff), "%s%s", 
@@ -5337,7 +5337,7 @@ static int map_wand_to_mspell(int wand_type)
     return (mzap);
 }
 
-void seen_monster(struct monsters *monster)
+void seen_monster(monsters *monster)
 {
     if ( monster->flags & MF_SEEN )
         return;
@@ -5345,9 +5345,10 @@ void seen_monster(struct monsters *monster)
     // First time we've seen this particular monster
     monster->flags |= MF_SEEN;
     
-    if ( MONST_INTERESTING(monster) &&
-         monster->type != MONS_PANDEMONIUM_DEMON &&
-         monster->type != MONS_PLAYER_GHOST )
+    if ( !mons_is_mimic(monster->type)
+         && MONST_INTERESTING(monster)
+         && monster->type != MONS_PANDEMONIUM_DEMON
+         && monster->type != MONS_PLAYER_GHOST )
     {
         take_note(
             Note(NOTE_SEEN_MONSTER, monster->type, 0,
