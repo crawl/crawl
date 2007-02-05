@@ -242,18 +242,53 @@ void map_lines::calc_symbol_frequencies(symbol_frequency_t &f)
 std::string map_lines::remove_unreferenced(const symbol_frequency_t &freq,
                                            std::string s)
 {
-    for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i)
+    if (s.find(',') == std::string::npos)
     {
-        if (!freq[ s[i] ])
-            s.erase( i, 1 );
+        for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i)
+        {
+            if (!freq[ s[i] ])
+                s.erase( i, 1 );
+        }
+    }
+    else
+    {
+        s = replace_all_of(s, " \t", "");
     }
 
     return (s);
 }
 
+std::string map_lines::block_shuffle(const std::string &s)
+{
+    std::vector<std::string> segs = split_string(",", s);
+    unsigned seglen = 0;
+
+    std::vector<std::string> shuffled;
+    for (int i = 0, size = segs.size(); i < size; ++i)
+    {
+        const int sel = random2(segs.size());
+        
+        shuffled.push_back( segs[ sel ] );
+        segs.erase( segs.begin() + sel );
+        
+        if (!seglen)
+            seglen = shuffled[i].length();
+        else if (seglen != shuffled[i].length())
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Bad shuffle parameter: %s", s.c_str());
+            return ("");
+        }
+    }
+
+    return comma_separated_line(shuffled.begin(), shuffled.end(), ",", ",");
+}
+
 std::string map_lines::shuffle(std::string s)
 {
     std::string result;
+
+    if (s.find(',') != std::string::npos)
+        return block_shuffle(s);
 
     // Inefficient brute-force shuffle.
     while (!s.empty())
@@ -272,6 +307,9 @@ void map_lines::resolve_shuffle(const symbol_frequency_t &freq,
     std::string toshuffle = remove_unreferenced(freq, shufflage);
     std::string shuffled = shuffle(toshuffle);
 
+    if (toshuffle.empty() || shuffled.empty())
+        return;
+    
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         std::string &s = lines[i];

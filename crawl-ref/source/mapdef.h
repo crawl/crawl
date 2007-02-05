@@ -82,6 +82,7 @@ private:
     std::string remove_unreferenced(const symbol_frequency_t &freq,
                                     std::string s);
     std::string shuffle(std::string s);
+    std::string block_shuffle(const std::string &s);
 
 private:
     std::vector<std::string> lines;
