@@ -33,7 +33,7 @@ void item_colour( item_def &item );
 /* ***********************************************************************
  * called from: files
  * *********************************************************************** */
-void builder(int level_number, char level_type);
+void builder(int level_number, int level_type);
 
 
 // last updated 12may2000 {dlb}

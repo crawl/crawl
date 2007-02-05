@@ -42,6 +42,9 @@ bool is_player_mapped(int grid_x, int grid_y);
 void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y, 
                      std::vector<coord_def>* coords = NULL);
 
+bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
+                          bool ignore_terrain_knowledge = false);
+
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note
  * that the caller has to ensure that the level is mappable before calling
@@ -423,6 +426,7 @@ class travel_pathfind
 {
 public:
     travel_pathfind();
+    virtual ~travel_pathfind();
 
     // Finds travel direction or explore target.
     const coord_def pathfind(run_mode_type rt);
@@ -461,18 +465,19 @@ public:
     // RMODE_EXPLORE_GREEDY.
     const coord_def unexplored_square() const;
 
-private:
+protected:
     bool is_greed_inducing_square(const coord_def &c) const;
     bool path_examine_point(const coord_def &c);
-    bool path_flood(const coord_def &c, const coord_def &dc);
+    virtual bool path_flood(const coord_def &c, const coord_def &dc);
     bool square_slows_movement(const coord_def &c);
     void check_square_greed(const coord_def &c);
+    void good_square(const coord_def &c);
 
-private:
+protected:
     static const int UNFOUND_DIST  = -10000;
     static const int INFINITE_DIST =  10000;
     
-private:
+protected:
     run_mode_type runmode;
     
     // Where pathfinding starts, and the destination. Note that dest is not

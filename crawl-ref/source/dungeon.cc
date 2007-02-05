@@ -52,6 +52,7 @@
 #include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "travel.h"
 
 #define MAX_PIT_MONSTERS   10
 
@@ -72,6 +73,9 @@ struct spec_t {
 typedef struct spec_t spec_room;
 
 // DUNGEON BUILDERS
+static void build_dungeon_level(int level_number, int level_type);
+static bool valid_dungeon_level(int level_number, int level_type);
+
 static bool find_in_area(int sx, int sy, int ex, int ey, unsigned char feature);
 static bool make_box(int room_x1, int room_y1, int room_x2, int room_y2,
     unsigned char floor=0, unsigned char wall=0, unsigned char avoid=0);
@@ -165,6 +169,8 @@ static dgn_region_list no_monster_zones;
 static dgn_region_list no_pool_fixup_zones;
 static dgn_region_list no_door_fixup_zones;
 
+static std::vector<vault_placement> level_vaults;
+
 static std::string level_name(int subdepth)
 {
     return place_name(
@@ -211,11 +217,132 @@ static void place_altars()
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-void builder(int level_number, char level_type)
+void builder(int level_number, int level_type)
+{
+    do
+        build_dungeon_level(level_number, level_type);
+    while (!valid_dungeon_level(level_number, level_type));
+}
+
+static coord_def find_level_feature(int feat)
+{
+    for (int y = 1; y < GYM; ++y)
+    {
+        for (int x = 1; x < GXM; ++x)
+        {
+            if (grd[x][y] == feat)
+                return coord_def(x, y);
+        }
+    }
+    return coord_def(0, 0);
+}
+
+class feature_find : public travel_pathfind
+{
+public:
+    feature_find();
+
+    void add_feat(int feat);
+    coord_def find_first_from(const coord_def &c);
+
+    bool did_leave_vault() const { return left_vault; }
+    
+protected:
+    bool path_flood(const coord_def &c, const coord_def &dc);
+protected:
+    bool needed_features[NUM_FEATURES];
+    bool left_vault;
+    dgn_region_list vaults;
+};
+
+feature_find::feature_find()
+    : travel_pathfind(), needed_features(), left_vault(false), vaults()
+{
+    memset(needed_features, false, sizeof needed_features);
+}
+
+void feature_find::add_feat(int feat)
+{
+    if (feat >= 0 && feat < NUM_FEATURES)
+        needed_features[feat] = true;
+}
+
+coord_def feature_find::find_first_from(const coord_def &c)
+{
+    set_floodseed(c);
+
+    for (int i = 0, size = level_vaults.size(); i < size; ++i)
+    {
+        const vault_placement &p = level_vaults[i];
+        vaults.push_back( dgn_region(p.x, p.y, p.width, p.height) );
+    }
+    
+    return pathfind(RMODE_EXPLORE);
+}
+
+bool feature_find::path_flood(const coord_def &c, const coord_def &dc)
+{
+    if (!in_bounds(dc))
+        return (false);
+    
+    const int grid = grd(dc);
+    if (needed_features[ grid ])
+    {
+        unexplored_place = dc;
+        unexplored_dist  = traveled_distance;
+        return (true);
+    }
+
+    if (!is_travelsafe_square(dc.x, dc.y, false, true)
+        && grid != DNGN_SECRET_DOOR
+        && !grid_is_trap(grid))
+    {
+        return (false);
+    }
+
+    if (unforbidden(dc, vaults))
+        left_vault = true;
+
+    good_square(dc);
+    
+    return (false);
+}
+
+static bool has_connected_downstairs_from(const coord_def &c)
+{
+    feature_find ff;
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_I);
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_II);
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_III);
+    ff.add_feat(DNGN_ROCK_STAIRS_DOWN);
+
+    coord_def where = ff.find_first_from(c);
+    return (where.x || !ff.did_leave_vault());
+}
+
+static bool is_level_stair_connected()
+{
+    coord_def up = find_level_feature(DNGN_STONE_STAIRS_UP_I);
+    if (up.x && up.y)
+        return has_connected_downstairs_from(up);
+
+    return (false);
+}
+
+static bool valid_dungeon_level(int level_number, int level_type)
+{
+    if (level_number == 0 && level_type == LEVEL_DUNGEON)
+        return is_level_stair_connected();
+
+    return (true);
+}
+
+static void build_dungeon_level(int level_number, int level_type)
 {
     int i;          // generic loop variable
     int x,y;        // generic map loop variables
 
+    level_vaults.clear();
     no_monster_zones.clear();
     no_pool_fixup_zones.clear();
     no_door_fixup_zones.clear();
@@ -5192,6 +5319,8 @@ static void build_minivaults(int level_number, int force_vault)
     vault_placement place;
     vault_main(vgrid, place, force_vault, level_number);
 
+    level_vaults.push_back(place);
+
     int vx, vy;
     int v1x, v1y;
 
@@ -5491,6 +5620,8 @@ static void build_vaults(int level_number, int force_vault)
     vault_placement place;
 
     int gluggy = vault_main(vgrid, place, force_vault, level_number);
+
+    level_vaults.push_back(place);
 
     int vx, vy;
     int  num_runes = 0;

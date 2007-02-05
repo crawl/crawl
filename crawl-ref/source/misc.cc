@@ -173,6 +173,12 @@ bool grid_is_solid(const coord_def &c)
     return (grid_is_solid(grd(c)));
 }
 
+bool grid_is_trap(int grid)
+{
+    return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
+              || grid == DNGN_TRAP_III);
+}
+
 bool grid_is_water( int grid )
 {
     return (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);

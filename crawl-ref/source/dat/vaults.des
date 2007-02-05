@@ -2323,6 +2323,7 @@ TAGS: entry no_monster_gen
 # damn those fish!
 ORIENT: float
 ITEM: ring of levitation, potion of levitation
+FLAGS: no_rotate
 
 MAP
 xxxxccccccccwwwww..wwww..wwwwwww....wwwwwww..wwww...wccccxxxxxx
@@ -2535,6 +2536,7 @@ ENDMAP
 NAME: erik_entry_18
 TAGS: entry                
 ORIENT: float
+FLAGS: no_rotate
 MONS: giant bat, small snake, worm, gnoll, imp, orc
 ITEM: stone, scroll of paper, banana, potion of healing
 

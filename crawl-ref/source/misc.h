@@ -136,6 +136,7 @@ bool grid_is_opaque(int grid);
 bool grid_is_solid(int grid);
 bool grid_is_solid(int x, int y);
 bool grid_is_solid(const coord_def &c);
+bool grid_is_trap(int grid);
 
 bool grid_is_water(int grid);
 bool grid_is_watery( int grid );

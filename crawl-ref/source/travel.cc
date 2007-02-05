@@ -128,25 +128,19 @@ bool is_player_mapped(unsigned char envch)
     return envch && envch != get_magicmap_char(DNGN_FLOOR) && envch != '~';
 }
 
-inline bool is_trap(unsigned char grid)
-{
-    return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-              || grid == DNGN_TRAP_III);
-}
-
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
 //
 inline bool is_trap(int x, int y)
 {
-    return is_trap( grd[x][y] );
+    return grid_is_trap( grd[x][y] );
 }
 
 // Returns true if this feature takes extra time to cross.
 inline int feature_traverse_cost(unsigned char feature)
 {
     return (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR? 2 :
-            is_trap(feature) ? 3 : 1);
+            grid_is_trap(feature) ? 3 : 1);
 }
 
 // Returns true if the dungeon feature supplied is an altar.
@@ -362,9 +356,10 @@ static bool is_reseedable(int x, int y)
  * is true, returns true even for dungeon features the character can normally
  * not cross safely (deep water, lava, traps).
  */
-static bool is_travel_ok(int x, int y, bool ignore_hostile)
+bool is_travelsafe_square(int x, int y, bool ignore_hostile,
+                          bool ignore_terrain_knowledge)
 {
-    if (!is_terrain_known(x, y))
+    if (!ignore_terrain_knowledge && !is_terrain_known(x, y))
         return (false);
 
     const int grid = grd[x][y];
@@ -1110,6 +1105,10 @@ travel_pathfind::travel_pathfind()
 {
 }
 
+travel_pathfind::~travel_pathfind()
+{
+}
+
 static bool is_greed_inducing_square(const LevelStashes *ls, const coord_def &c)
 {
     if (ls && ls->needs_visit(c.x, c.y))
@@ -1249,7 +1248,7 @@ const coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !is_travel_ok(start.x, start.y, false)
+        && !is_travelsafe_square(start.x, start.y, false)
         && !is_trap(start.x, start.y))              // The player likes pain
     {
         return coord_def(0, 0);
@@ -1367,7 +1366,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && is_travel_ok(c.x, c.y, ignore_hostile))
+        && is_travelsafe_square(c.x, c.y, ignore_hostile))
     {
         greedy_place = c;
         greedy_dist  = traveled_distance;
@@ -1429,7 +1428,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             return (true);
     }
 
-    if (dc != dest && !is_travel_ok(dc.x, dc.y, ignore_hostile)) 
+    if (dc != dest && !is_travelsafe_square(dc.x, dc.y, ignore_hostile)) 
     {
         // This point is not okay to travel on, but if this is a 
         // trap, we'll want to put it on the feature vector anyway.
@@ -1502,6 +1501,17 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     }
 
     return (false);
+}
+
+void travel_pathfind::good_square(const coord_def &c)
+{
+    if (!point_distance[c.x][c.y])
+    {
+        // This point is going to be on the agenda for the next
+        // iteration
+        circumference[!circ_index][next_iter_points++] = c;
+        point_distance[c.x][c.y] = traveled_distance;
+    }
 }
 
 bool travel_pathfind::path_examine_point(const coord_def &c)
@@ -2411,7 +2421,7 @@ void start_travel(int x, int y)
     
     if (travel_point_distance[x][y] == 0
         && (x != you.x_pos || you.running.y != you.y_pos)
-        && is_travel_ok(x, y, false)
+        && is_travelsafe_square(x, y, false)
         && can_travel_interlevel())
     {
         // We'll need interlevel travel to get here.
