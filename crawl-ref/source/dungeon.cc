@@ -300,7 +300,7 @@ bool feature_find::path_flood(const coord_def &c, const coord_def &dc)
         return (false);
     }
 
-    if (unforbidden(dc, vaults))
+    if (!left_vault && unforbidden(dc, vaults))
         left_vault = true;
 
     good_square(dc);
