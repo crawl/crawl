@@ -2704,6 +2704,7 @@ NAME: erik_entry_24
 TAGS: entry
 ORIENT: float
 MONS: goblin
+FLAGS: no_rotate
 
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
