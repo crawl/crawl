@@ -1,13 +1,3 @@
-Allow individual interrupts to be disabled for an activity using -=. For
-instance, interrupt_rest -= message will disable the
-stop-resting-for-any-silly-message behaviour (and also make stop_travel
-relevant to resting).
-
-What are the possible values for xxx and yyy in 
-interrupt_xxx -= yyy?
-
-----------------
-
 This document explains all of the options in the latest version of Dungeon 
 Crawl Stone Soup. These options are set in the init.txt file located in the 
 Crawl directory (the directory containing crawl.exe on Windows and DOS). On
@@ -257,7 +247,7 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
         is the same as using
           ban_pickup = decay, degeneration
 
-        If the regexes are not prefixed with < or >, > is implied. So the option
+        If the regexes are not prefixed with < or >, > is implied, so the option
         setting above can also be written as
           autopickup_exceptions = decay, degeneration
 
