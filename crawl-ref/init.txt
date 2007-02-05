@@ -166,7 +166,7 @@ stab_brand = hi:blue
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
 menu_colour = green:(worn|neck|hand|weapon)\)
 menu_colour = red: cursed
-menu_colour = red: rotten
+menu_colour = red: rotting
 
 # Colouring for the notes
 menu_colour = white:Reached XP level
