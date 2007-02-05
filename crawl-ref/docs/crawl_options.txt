@@ -1,8 +1,18 @@
+Allow individual interrupts to be disabled for an activity using -=. For
+instance, interrupt_rest -= message will disable the
+stop-resting-for-any-silly-message behaviour (and also make stop_travel
+relevant to resting).
+
+What are the possible values for xxx and yyy in 
+interrupt_xxx -= yyy?
+
+----------------
+
 This document explains all of the options in the latest version of Dungeon 
 Crawl Stone Soup. These options are set in the init.txt file located in the 
-Crawl directory (the directory containing crawl.exe on Windows and DOS). On Unix
-systems, you need to set options in the ~/.crawlrc file (a file named .crawlrc 
-in your home directory).
+Crawl directory (the directory containing crawl.exe on Windows and DOS). On
+Unix systems, you need to set options in the ~/.crawlrc file (a file named 
+.crawlrc in your home directory).
 
 The contents of this text are:
 
@@ -21,8 +31,7 @@ The contents of this text are:
 		autopickup, autopickup_exceptions, default_autopickup,
 		safe_autopickup, autopickup_no_burden, safe_zero_exp,
 		pickup_thrown, pickup_dropped, assign_item_slot,
-		ban_pickup, drop_mode, pickup_mode, drop_filter;
-		lua: ch_autopickup (advanced autopickup exceptions)
+		drop_mode, pickup_mode, drop_filter
 4-b	Targeting. 
 		target_zero_exp, target_oos, target_los_first,
 		confirm_self_target, default_target
@@ -38,8 +47,7 @@ The contents of this text are:
                 travel_exclude_radius2, travel_stop_message,
                 explore_greedy, explore_stop, runrest_ignore_message,
                 runrest_ignore_poison, trapwalk_safe_hp, tc_reachable,
-                tc_dangerous, tc_excluded, tc_exclude_circle; 
-                lua: ch_stop_run (ignoring monsters)
+                tc_dangerous, tc_excluded, tc_exclude_circle
 4-g	Stashes.
 		stash_tracking, stash_filter
 4-h	Command Enhancements.
@@ -80,24 +88,24 @@ The contents of this text are:
 --------------------------------------------------------------------------------
 
 There are basically three types of Crawl options: true/false values (booleans),
-numbers, and lists. An option is most often specified with its default value (if
-there is one); this should also explain which of the above-mentioned types it
-is. Each option should have some remarks on how it's typically used - beware
+numbers, and lists. An option is most often specified with its default value 
+(if there is one); this should also explain which of the above-mentioned types 
+it is. Each option should have some remarks on how it's typically used - beware
 that this depends strongly on your playing style and sometimes also on hardware
 or operating system.
 
-Note that the init.txt coming with regular distributions has all boolean options
-commented out. The commented-out values are always the _non-defaults_, so you
-can toggle boolean options by just uncommenting them.
+Note that the init.txt coming with regular distributions has all boolean 
+options commented out. The commented-out values are always the _non-defaults_, 
+so you can toggle boolean options by just uncommenting them.
 
 Some options need a path as an argument; here you have to use a filesystem path
 suitable for your system. Other options accept regular expressions (regexes):
 here you can simply use ordinary strings, adapt the suggested regexes to your
 needs or search the internet for regex syntax.
 
-If you get stuck or some things just won't seem to work properly, please ask for
-help on the newsgroup rec.games.roguelike.misc. Flag queries with '-crawl-', as
-other roguelikes are also discussed there.
+If you get stuck or some things just won't seem to work properly, please ask 
+for help on the newsgroup rec.games.roguelike.misc. Please flag queries with 
+'-crawl-', as other roguelikes are also discussed there.
 
 1-  Starting Screen.
 ====================
@@ -189,7 +197,7 @@ The currently available lua's are
 		   Searching for 'Long blades' will also turn up all weapons
 		   with the long blade skill. Similarly, you can use 'altar',
                    'portal' etc. Also, you can now look for spellbooks 
-                   ('book'), artifacts ('\{art'), ego items ('ego').	
+                   ('book'), artifacts ('artifact'), ego items ('ego').	
   wield.lua	-- shows more intelligent options when using 'w?'
   kills.lua	-- improves the Vanquished Creatures list in dump files; 
 		   currently gives three lists (Vanquished, Friendly, Others)
@@ -236,15 +244,15 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
         an exclude and an include, it will not be subject to autopickup.
 
         An example:
-          autopickup_exceptions = <(poisoned|curare-tipped) needle
-        Forces autopickup to grab all poisoned and curare-tipped needles, even
-        if missiles are not set in the "autopickup" option.
+          autopickup_exceptions = <curare-tipped needle
+        Forces autopickup to grab all curare-tipped needles, even if missiles 
+        are not set in the "autopickup" option.
 
         Whitespace between <> and the match expression is significant, so this
         is a mistake:
           autopickup_exceptions = <   ebony casket
 
-        autopickup_exceptions is a superset of ban_pickup (see below). Using
+        autopickup_exceptions replace the older ban_pickup. Using
           autopickup_exceptions = >decay, >degeneration
         is the same as using
           ban_pickup = decay, degeneration
@@ -253,7 +261,14 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
         setting above can also be written as
           autopickup_exceptions = decay, degeneration
 
-        You can use multiple autopickup_exceptions lines.
+        You can use multiple autopickup_exceptions lines. Some examples:
+	  autopickup_exceptions = degeneration, decay, confusion, 
+          autopickup_exceptions = potions? of slowing, potions? of paralysis
+	  autopickup_exceptions = potions? of strong poison,potions? of poison
+	  autopickup_exceptions = inaccuracy
+	  autopickup_exceptions = scrolls? of paper, immolation, curse armour, 
+          autopickup_exceptions = curse weapon, forgetfulness, uselessness, 
+          autopickup_exceptions = noise, torment
 
 default_autopickup = true
 	When set false, the game starts with autopickup turned off. You can
@@ -295,17 +310,6 @@ assign_item_slot = (forward | backward)
 	With "backward", items dropped/fired and picked up later are more 
 	likely to get their old slot back.
 
-ban_pickup = <regex>
-	List of item name regexes for items which autopickup will never touch. 
-	You can use multiple ban_pickup lines. Some typical examples are
-	  ban_pickup = degeneration, decay, confusion, potions? of slowing
-	  ban_pickup = potions? of strong poison,potions? of poison
-	  ban_pickup = inaccuracy
-	  ban_pickup = scrolls? of paper, immolation, curse armour, curse weapon
-	  ban_pickup = forgetfulness, uselessness, noise, torment
-
-        See also autopickup_exceptions, which is a superset of ban_pickup.
-
 drop_mode = (multi | single)
 	Single is the classic behaviour; when you select an inventory letter,
         that item will be dropped immediately. Multidrop allows you to select
@@ -343,32 +347,6 @@ drop_filter = <regex>
 
         When a drop_filter is set, using the select/deselect keys will set/
         clear selection of items that match the filter expression(s).
-
-Using a Lua script, you can define a function "ch_autopickup" to select 
-additional items for autopickup. Let's say you want autopickup to only grab food
-if your character can eat it (let's say you're playing a kobold and you want to
-stop picking up vegetables). You could use the following (if '%' is not in the
-autopickup option):
-
-{
-function ch_autopickup(it)
-    -- The "false" suppresses hunger checks to see if your character is hungry
-    -- enough to eat food/chunks.
-    return food.can_eat(it, false)
-end
-}
-
-Here's a ch_autopickup that a mummy might find useful:
-
-{
--- The mummy special. Remove % and ! from your autopickup option if you use
--- this.
-function ch_autopickup(it)
-    return food.can_eat(it, false)
-        or ( item.class(it) == "Potions" and you.race() ~= "Mummy" )
-end
-}
-
 
 4-b	Targeting.
 -------------------
@@ -576,31 +554,6 @@ tc_exclude_circle = red
 	excluded_circle: the colour for travel exclusions apart from centre 
 
 
-Using small scripts in init.txt, travel can get even more convenient.
-
-* Deciding whether monsters are worth stopping for:
-
-Defining a "ch_stop_run" function affects the monster stop condition for *all*
-run modes: shift-running, travel, explore and interlevel travel.
-
-{
-function ch_stop_run(mons)
-    local name = mons.name
-
-    -- Stop running only if these monsters get closer than 3 squares
-    if name == "swamp worm" or name == "big fish" 
-            or name == "giant goldfish" or name == "lava worm"
-            or name == "butterfly" then
-        -- mons.x and y coords are relative to the player.
-        local dist = mons.x * mons.x + mons.y * mons.y
-        if dist >= 9 then return false end
-    end
-    
-    return true
-end
-}
-
-
 4-g	Stashes.
 ----------------
 
@@ -677,8 +630,7 @@ default_autoprayer = false
 	Letting Crawl pray throughout and automatically can be useful for gods 
         like Trog and Makhleb, who constantly demand kills from their followers.
 
-        Automatic prayers take a turn like manual prayers and will only happen
-        if
+        Automatic prayers take a turn like manual prayers and happen only if
 	- there is no hostile monster in sight
 	- some further conditions (like not standing at an altar)
 	Note that even when you're praying, you can renew prayer anytime.
@@ -743,6 +695,13 @@ menu_colour = <colour>:<regex>
 
 	To quickly check what potions were trashed by a mummy curse, use
 	  menu_colour = lightred:potions? of (degeneration|decay)
+
+        If you like to see rotten chunks and corpses at a glance, use
+	  menu_colour = red: rotten.
+
+        menu_colour can also be applied to colour the in-game notes (to be
+        read with '?:'). The following line will show level ups in white:
+          menu_colour = white:Reached XP level
 
 increasing_skill_progress = true
         This affects the appearance of the skills screen ('m'). With the 
@@ -953,7 +912,7 @@ ood_interesting = 8
 note_hp_percent = 5
 	If your HP falls below a certain note_hp_percentage of your max HP, a 
 	note will be taken. There is some code to avoid repetitions of notes
-	based on the same incident. The default is 0, which means no noting.
+	based on the same incident.
 
 note_skill_levels = 1,5,13,27
 	This sets which skill levels are noteworthy. You can have multiple 
