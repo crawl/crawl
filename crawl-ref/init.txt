@@ -1,7 +1,7 @@
 # Crawl Init file
 #
-# On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy init.txt
-# to ~/.crawlrc as:
+# On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy 
+# init.txt to ~/.crawlrc as:
 #   cp init.txt ~/.crawlrc
 #
 # Lines begining with '#' are comments.  The basic syntax is:
@@ -14,22 +14,21 @@
 # cases (the character's name and specifying files or directories when
 # on a system that has case-sensitive filenames).
 #
-# White space is stripped from the begining and end of the line, as well as
-# imediately before and after the '='. If the option allows multiple
+# White space is stripped from the begining and end of the line, as well 
+# as imediately before and after the '='. If the option allows multiple
 # comma/semicolon-separated terms (such as autopickup_exceptions), all
-# whitespace around the separator is also trimmed. All other whitespace is left
-# intact.
+# whitespace around the separator is also trimmed. All other whitespace 
+# is left intact.
 #
 # For descriptions concerning the option consult the file 
 #    crawl_options.txt 
-# in your crawl/doc directory. Also note that the ordering of the 
-# options is taken from that file; this is for presentational reasons 
-# only.
+# in your crawl/doc directory. Also note that the ordering of the options
+# is taken from that file; this is for presentational reasons only.
 #
 # Note that all boolean options (i.e. values of 'true' or 'false') have
 # their non-default value commented out. You can toggle these by just
 # uncommenting.
-# Options with several values, e.g stash_tracking = (all | explicit | dropped),
+# Options with several values, e.g. drop_mode = (multi | single),
 # usually have the first value as default.
 
 ##### 1- Starting Screen ############################################
@@ -76,6 +75,7 @@ lua_file = lua/trapwalk.lua
 # assign_item_slot = backward
 #
 # autopickup_exceptions = scrolls? of random uselessness
+# autopickup_exceptions = <deck of cards
 #
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
@@ -116,7 +116,7 @@ stab_brand = hi:blue
 # travel_avoid_terrain = shallow water
 # travel_exclude_radius2 = 68
 #
-# explore_greedy = yes
+# explore_greedy = true
 # explore_stop = items,stairs,shops,altars
 
 # tc_reachable = blue
@@ -161,10 +161,15 @@ stab_brand = hi:blue
 # always_greet = false
 # increasing_skill_progress = false
 # show_turns = false
-#
+
+# Colouring for the inventory
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
 menu_colour = green:(worn|neck|hand|weapon)\)
 menu_colour = red: cursed
+menu_colour = red: rotten
+
+# Colouring for the notes
+menu_colour = white:Reached XP level
 
 ##### 4-j	Firing Commands #######################
 #
@@ -173,7 +178,7 @@ menu_colour = red: cursed
 
 ##### 4-k	Channels ##############################
 #
-#channel.multiturn = mute
+# channel.multiturn = mute
 
 ##### 4-l	Inscriptions ##########################
 #
@@ -205,6 +210,9 @@ menu_colour = red: cursed
 # note_hp_percent = 5
 # note_skill_levels = 1,5,10,15,27
 # note_skill_max = true
+
+# The following takes a note whenever the Abyss is left: 
+# note_messages = You pass through the gate 
 
 ##### 6-  Miscellaneous #################################################
 #
