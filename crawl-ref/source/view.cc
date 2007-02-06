@@ -259,13 +259,11 @@ static unsigned fix_colour(unsigned raw_colour)
     // This order is important - is_element_colour() doesn't want to see the
     // munged colours returned by dos_brand, so it should always be done 
     // before applying DOS brands.
-#if defined(WIN32CONSOLE) || defined(DOS)
     const int colflags = raw_colour & 0xFF00;
-#endif
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
     if (is_element_colour( raw_colour ))
-        raw_colour = element_colour( raw_colour );
+        raw_colour = colflags | element_colour( raw_colour );
 
 #if defined(WIN32CONSOLE) || defined(DOS)
     if (colflags)
@@ -1501,6 +1499,7 @@ static int cyclic_offset( unsigned int ui, int cycle_dir, int startpoint,
 // If cycle_dir is 0, find the first fitting ray. If it is 1 or -1,
 // assume that ray is appropriately filled in, and look for the next
 // ray in that cycle direction.
+
 bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                bool allow_fallback, ray_def& ray, int cycle_dir )
 {
@@ -1530,7 +1529,11 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
                 bool blocked = false;
                 for ( inray = 0; inray < cellray; ++inray )
                 {
-                    if (grid_is_solid(grd[sourcex + signx * ray_coord_x[inray + cur_offset]][sourcey + signy * ray_coord_y[inray + cur_offset]]))
+                    if (grid_is_solid(
+                            grd[sourcex
+                                + signx * ray_coord_x[inray + cur_offset]]
+                               [sourcey
+                                + signy * ray_coord_y[inray + cur_offset]]))
                     {
                         blocked = true;                   
                         break;

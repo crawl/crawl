@@ -711,6 +711,7 @@ enum command_type
     CMD_TARGET_FIND_DOWNSTAIR,
     CMD_TARGET_FIND_YOU,
     CMD_TARGET_DESCRIBE,
+    CMD_TARGET_WIZARD_MAKE_FRIENDLY,
     CMD_TARGET_HELP,
 
     // [ds] Silently ignored, requests another round of input.

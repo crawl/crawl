@@ -104,11 +104,13 @@ static command_type read_direction_key()
     const int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
     switch ( key )
     {
-
     case ESCAPE: return CMD_TARGET_CANCEL;
+#ifdef WIZARD
+    case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
+#endif
     case 'v': return CMD_TARGET_DESCRIBE;
     case '?': return CMD_TARGET_HELP;
-    case ' ': return CMD_TARGET_CYCLE_BEAM;
+    case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
     case ':': return CMD_TARGET_HIDE_BEAM;
     case '\r': return CMD_TARGET_SELECT;
     case '.': return CMD_TARGET_SELECT;
@@ -497,6 +499,23 @@ void direction(struct dist& moves, targeting_type restricts,
             loop_done = true;
             moves.isCancel = true;
             break;
+
+#ifdef WIZARD
+        case CMD_TARGET_WIZARD_MAKE_FRIENDLY:
+            // Maybe we can skip this check...but it can't hurt
+            if (!in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            {
+                monsters &m = menv[mid];
+                m.attitude = m.attitude == ATT_FRIENDLY?
+                    ATT_HOSTILE : ATT_FRIENDLY;
+            }
+            break;
+#endif
             
         case CMD_TARGET_DESCRIBE:
             // Maybe we can skip this check...but it can't hurt
