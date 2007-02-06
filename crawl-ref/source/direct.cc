@@ -98,7 +98,7 @@ static bool is_mapped(int x, int y)
     return (is_player_mapped(x, y));
 }
 
-static command_type read_direction_key()
+static command_type read_direction_key(bool just_looking = false)
 {
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
     const int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
@@ -110,6 +110,7 @@ static command_type read_direction_key()
 #endif
     case 'v': return CMD_TARGET_DESCRIBE;
     case '?': return CMD_TARGET_HELP;
+    case ' ': return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
     case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
     case ':': return CMD_TARGET_HIDE_BEAM;
     case '\r': return CMD_TARGET_SELECT;
@@ -314,7 +315,7 @@ void direction(struct dist& moves, targeting_type restricts,
                 key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
         }
         else
-            key_command = read_direction_key();
+            key_command = read_direction_key(just_looking);
 
         bool need_beam_redraw = false;
         bool force_redraw = false;
