@@ -504,7 +504,7 @@ void direction(struct dist& moves, targeting_type restricts,
 #ifdef WIZARD
         case CMD_TARGET_WIZARD_MAKE_FRIENDLY:
             // Maybe we can skip this check...but it can't hurt
-            if (!in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
                 break;
             mid = mgrd[moves.tx][moves.ty];
             if (mid == NON_MONSTER) // can put in terrain description here
