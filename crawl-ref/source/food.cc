@@ -237,21 +237,26 @@ bool butchery(void)
         return (false);
     }
 
-    int objl;
-
-    for (objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
+    bool canceled_butcher = false;
+    bool found_nonzero_corpses = false;
+    for (int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
          objl = mitm[objl].link)
     {
         if ( (mitm[objl].base_type != OBJ_CORPSES) ||
              (mitm[objl].sub_type != CORPSE_BODY) )
             continue;
 
+        found_nonzero_corpses = true;
+        
         // offer the possibility of butchering
         it_name(objl, DESC_NOCAP_A, str_pass);
         snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
         int answer = yesnoquit( info, true, 'n', false );
         if ( answer == -1 )
+        {
+            canceled_butcher = true;
             break;
+        }
         if ( answer == 0 )
             continue;
 	
@@ -327,10 +332,15 @@ bool butchery(void)
     
         return true;
     }
-    
-    mpr("There isn't anything to dissect here.");
 
-    if (!new_cursed && wpn_switch) { // should never happen
+    if (canceled_butcher)
+        canned_msg(MSG_OK);
+    else
+        mprf("There isn't anything %sto dissect here.",
+             found_nonzero_corpses? "else " : "");
+
+    if (!new_cursed && wpn_switch) // should never happen
+    {
         weapon_switch( old_weapon );
     }
     

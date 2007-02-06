@@ -833,7 +833,8 @@ static void explore_find_target_square()
         // No place to go? Report to the player.
         const int estatus = find_explore_status(tp);
 
-        if (!estatus) {
+        if (!estatus)
+        {
             mpr("Done exploring.");
             learned_something_new(TUT_DONE_EXPLORE);
         }    
@@ -1049,7 +1050,8 @@ command_type travel()
     return direction_to_command( *move_x, *move_y );
 }
 
-command_type direction_to_command( char x, char y ) {
+command_type direction_to_command( char x, char y )
+{
     if ( x == -1 && y == -1 ) return CMD_MOVE_UP_LEFT;
     if ( x == -1 && y ==  0 ) return CMD_MOVE_LEFT;
     if ( x == -1 && y ==  1 ) return CMD_MOVE_DOWN_LEFT;
