@@ -54,6 +54,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "view.h"
 
 /*
@@ -2069,8 +2070,10 @@ int burden_change(void)
     {
         you.burden_state = BS_ENCUMBERED;
 
-        if (old_burdenstate != you.burden_state)
+        if (old_burdenstate != you.burden_state) {
             mpr("You are being weighed down by all of your possessions.");
+            learned_something_new(TUT_HEAVY_LOAD);
+        }    
     }
     else
     {
@@ -2155,6 +2158,8 @@ void gain_exp( unsigned int exp_gained )
         you.exp_available += exp_gained;
 
     level_change();
+   	if (Options.tutorial_left && you.experience_level == 5)
+       		tutorial_finished();
 }                               // end gain_exp()
 
 void level_change(void)
@@ -2732,9 +2737,13 @@ void level_change(void)
 
         if (you.religion == GOD_XOM)
             Xom_acts(true, you.experience_level, true);
+            
+        learned_something_new(TUT_NEW_LEVEL); 	
+            
     }
 
     redraw_skill( you.your_name, player_title() );
+
 }                               // end level_change()
 
 // here's a question for you: does the ordering of mods make a difference?
@@ -4174,6 +4183,7 @@ void poison_player( int amount, bool force )
 
         // XXX: which message channel for this message?
         mpr( info );
+       	learned_something_new(TUT_YOU_POISON);
     }
 }
 
@@ -4219,6 +4229,7 @@ void confuse_player( int amount, bool resistable )
 
         // XXX: which message channel for this message?
         mpr( info );
+        learned_something_new(TUT_YOU_ENCHANTED);
     }
 }
 
@@ -4256,6 +4267,7 @@ void slow_player( int amount )
 
         if (you.slow > 100)
             you.slow = 100;
+        learned_something_new(TUT_YOU_ENCHANTED);
     }
 }
 
@@ -4339,6 +4351,7 @@ void disease_player( int amount )
 
     const int tmp = you.disease + amount;
     you.disease = (tmp > 210) ? 210 : tmp;
+    learned_something_new(TUT_YOU_SICK);    
 }
 
 void dec_disease_player( void )

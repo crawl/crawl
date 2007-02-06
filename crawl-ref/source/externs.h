@@ -996,6 +996,22 @@ public:
     int         prev_book;
     bool        prev_randpick;
 
+    ///////////////////////////////////////////////////////////////////////
+    // tutorial
+    FixedVector<bool, 45> tutorial_events;
+//    bool tut_made_note;
+    bool tut_explored;
+    bool tut_stashes;
+    bool tut_travel;
+    unsigned int tut_spell_counter;
+    unsigned int tut_throw_counter;
+    unsigned int tut_berserk_counter;
+    unsigned tut_last_healed;
+    
+    bool tut_just_triggered;
+    unsigned int tutorial_type;
+    unsigned int tutorial_left;
+
 public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;

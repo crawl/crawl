@@ -66,6 +66,7 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "tutorial.h"
 #include "view.h"
 
 bool drink_fountain(void);
@@ -599,8 +600,8 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
     else
     {
         slot = prompt_invent_item( mesg.c_str(), MT_INVSELECT, OBJ_ARMOUR,
-				   true, true, true, 0, NULL,
-				   oper );
+                                   true, true, true, 0, NULL,
+                                   oper );
 
         if (slot != PROMPT_ABORT)
         {
@@ -1020,7 +1021,7 @@ void throw_anything(void)
     throw_slot = prompt_invent_item( "Throw which item? (* to show all)",
                                      MT_INVSELECT,
                                      OBJ_MISSILES, true, true, true, 0, NULL,
-				     OPER_THROW );
+                                     OPER_THROW );
     if (throw_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -2054,8 +2055,11 @@ void jewellery_wear_effects(item_def &item)
         set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
 
     if (item_cursed( item ))
+    {
         mprf("Oops, that %s feels deathly cold.", 
                 jewellery_is_amulet(item)? "amulet" : "ring");
+        learned_something_new(TUT_YOU_CURSED);
+    }
 
     // cursed or not, we know that since we've put the ring on
     set_ident_flags( item, ISFLAG_KNOW_CURSE );
@@ -2373,8 +2377,8 @@ bool remove_ring(int slot, bool announce)
         int equipn = 
             slot == -1? prompt_invent_item( "Remove which piece of jewellery?",
                                             MT_INVSELECT,
-					    OBJ_JEWELLERY, true, true, true,
-					    0, NULL, OPER_REMOVE)
+                                            OBJ_JEWELLERY, true, true, true,
+                                            0, NULL, OPER_REMOVE)
                       : slot;
 
         if (equipn == PROMPT_ABORT)
@@ -2469,8 +2473,8 @@ void zap_wand(void)
     item_slot = prompt_invent_item( "Zap which item?",
                                     MT_INVSELECT,
                                     OBJ_WANDS,
-				    true, true, true, 0, NULL,
-				    OPER_ZAP );
+                                    true, true, true, 0, NULL,
+                                    OPER_ZAP );
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -2488,22 +2492,22 @@ void zap_wand(void)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    if ( you.inv[item_slot].plus < 1 ) {
-	// it's an empty wand, inscribe it that way
+    if ( you.inv[item_slot].plus < 1 )
+    {
+        // it's an empty wand, inscribe it that way
         canned_msg(MSG_NOTHING_HAPPENS);
         you.turn_is_over = true;
-	if ( !item_ident(you.inv[item_slot], ISFLAG_KNOW_PLUSES) ) {
-
-	    if ( you.inv[item_slot].inscription.find("empty") ==
-		 std::string::npos ) {
-
-		if ( !you.inv[item_slot].inscription.empty() )
-		    you.inv[item_slot].inscription += ' ';
-		you.inv[item_slot].inscription += "empty";
-		
-	    }
-	}
-	return;
+        if ( !item_ident(you.inv[item_slot], ISFLAG_KNOW_PLUSES) )
+        {
+            if ( you.inv[item_slot].inscription.find("empty") ==
+                 std::string::npos )
+            {
+                if ( !you.inv[item_slot].inscription.empty() )
+                    you.inv[item_slot].inscription += ' ';
+                you.inv[item_slot].inscription += "empty";
+            }
+        }
+        return;
     }
 
     if (item_type_known( you.inv[item_slot] ))
@@ -2620,8 +2624,8 @@ void inscribe_item()
     char buf[79];
     if (inv_count() < 1)
     {
-	mpr("You don't have anything to inscribe.");
-	return;
+        mpr("You don't have anything to inscribe.");
+        return;
     }
     item_slot = prompt_invent_item(
                     "Inscribe which item? ", 
@@ -2669,8 +2673,8 @@ void drink(void)
 
     item_slot = prompt_invent_item( "Drink which item?",
                                     MT_INVSELECT, OBJ_POTIONS,
-				    true, true, true, 0, NULL,
-				    OPER_QUAFF );
+                                    true, true, true, 0, NULL,
+                                    OPER_QUAFF );
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );
@@ -3243,8 +3247,8 @@ void read_scroll(void)
     case SCR_PAPER:
         // remember paper scrolls handled as special case above, too:
         mpr("This scroll appears to be blank.");
-	if (you.mutation[MUT_BLURRY_VISION] == 3)
-	    id_the_scroll = false;
+        if (you.mutation[MUT_BLURRY_VISION] == 3)
+            id_the_scroll = false;
         break;
 
     case SCR_RANDOM_USELESSNESS:
@@ -3324,7 +3328,7 @@ void read_scroll(void)
 
     case SCR_IMMOLATION:
         mpr("The scroll explodes in your hands!");
-	// we do this here to prevent it from blowing itself up
+        // we do this here to prevent it from blowing itself up
         dec_inv_item_quantity( item_slot, 1 );
 
         beam.type = SYM_BURST;
@@ -3345,7 +3349,8 @@ void read_scroll(void)
         break;
 
     case SCR_IDENTIFY:
-        if ( get_ident_type( OBJ_SCROLLS, scroll_type ) != ID_KNOWN_TYPE ) {
+        if ( get_ident_type( OBJ_SCROLLS, scroll_type ) != ID_KNOWN_TYPE )
+        {
             mpr("This is a scroll of identify!");
             more();
         }
@@ -3519,8 +3524,8 @@ void examine_object(void)
 {
     int item_slot = prompt_invent_item( "Examine which item?", 
                                         MT_INVSELECT, -1,
-					true, true, true, 0, NULL,
-					OPER_EXAMINE );
+                                        true, true, true, 0, NULL,
+                                        OPER_EXAMINE );
     if (item_slot == PROMPT_ABORT)
     {
         canned_msg( MSG_OK );

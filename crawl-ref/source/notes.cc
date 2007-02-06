@@ -35,7 +35,8 @@ static int real_god_power( int religion, int idx )
     return count;
 }
 
-static bool is_noteworthy_skill_level( int level ) {
+static bool is_noteworthy_skill_level( int level )
+{
     unsigned i;
     for ( i = 0; i < Options.note_skill_levels.size(); ++i )
 	if ( level == Options.note_skill_levels[i] )
@@ -43,8 +44,10 @@ static bool is_noteworthy_skill_level( int level ) {
     return false;
 }
 
-static bool is_highest_skill( int skill ) {
-    for ( int i = 0; i < NUM_SKILLS; ++i ) {
+static bool is_highest_skill( int skill )
+{
+    for ( int i = 0; i < NUM_SKILLS; ++i )
+    {
 	if ( i == skill )
 	    continue;
 	if ( you.skills[i] >= you.skills[skill] )
@@ -53,18 +56,21 @@ static bool is_highest_skill( int skill ) {
     return true;
 }
 
-static bool is_noteworthy_hp( int hp, int maxhp ) {
+static bool is_noteworthy_hp( int hp, int maxhp )
+{
     return (hp > 0 && Options.note_hp_percent &&
 	    hp <= (maxhp * Options.note_hp_percent) / 100);
 }
 
-static int dungeon_branch_depth( unsigned char branch ) {
+static int dungeon_branch_depth( unsigned char branch )
+{
     if ( branch >= NUM_BRANCHES )
         return -1;
     return branches[branch].depth;
 }
 
-static bool is_noteworthy_dlevel( unsigned short place ) {
+static bool is_noteworthy_dlevel( unsigned short place )
+{
     unsigned const char branch = (unsigned char) ((place >> 8) & 0xFF);
     const int lev = (place & 0xFF);
 
@@ -84,8 +90,8 @@ static bool is_noteworthy_dlevel( unsigned short place ) {
    This function assumes that game state has not changed since
    the note was taken, e.g. you.* is valid.
  */
-static bool is_noteworthy( const Note& note ) {
-
+static bool is_noteworthy( const Note& note )
+{
     /* always noteworthy */
     if ( note.type == NOTE_XP_LEVEL_CHANGE ||
 	 note.type == NOTE_GET_GOD ||
@@ -143,11 +149,13 @@ static bool is_noteworthy( const Note& note ) {
     if ( note.type == NOTE_LEARN_SPELL && Options.note_all_spells )
 	return true;
 
-    for ( unsigned i = 0; i < note_list.size(); ++i ) {
+    for ( unsigned i = 0; i < note_list.size(); ++i )
+    {
 	if ( note_list[i].type != note.type )
 	    continue;
 	const Note& rnote( note_list[i] );
-	switch ( note.type ) {
+	switch ( note.type )
+        {
 	case NOTE_DUNGEON_LEVEL_CHANGE:
 	    if ( rnote.packed_place == note.packed_place )
 		return false;
@@ -183,7 +191,8 @@ static bool is_noteworthy( const Note& note ) {
     return true;
 }
 
-const char* number_to_ordinal( int number ) {
+const char* number_to_ordinal( int number )
+{
     const char* ordinals[5] = { "first", "second", "third", "fourth",
 				"fifth" };
     if ( number < 1)
@@ -193,7 +202,8 @@ const char* number_to_ordinal( int number ) {
     return ordinals[number-1];
 }
 
-std::string Note::describe( bool when, bool where, bool what ) const {
+std::string Note::describe( bool when, bool where, bool what ) const
+{
 
     std::string result;
 
@@ -215,7 +225,8 @@ std::string Note::describe( bool when, bool where, bool what ) const {
     if ( what )
     {
         char buf[200];
-        switch ( type ) {
+        switch ( type )
+        {
         case NOTE_HP_CHANGE:
             // [ds] Shortened HP change note from "Had X hitpoints" to
             // accommodate the cause for the loss of hitpoints.
@@ -311,13 +322,15 @@ std::string Note::describe( bool when, bool where, bool what ) const {
     return result;
 }
 
-Note::Note() {
+Note::Note()
+{
     turn = you.num_turns;
     packed_place = get_packed_place();
 }
 
 Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
-    type(t), first(f), second(s) {
+    type(t), first(f), second(s)
+{
     if (n)
 	name = std::string(n);
     if (d)
@@ -326,7 +339,8 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
     packed_place = get_packed_place();
 }
 
-void Note::save( FILE* fp ) const {
+void Note::save( FILE* fp ) const
+{
     writeLong( fp, type );
     writeLong( fp, turn );
     writeShort( fp, packed_place );
@@ -336,7 +350,8 @@ void Note::save( FILE* fp ) const {
     writeString( fp, desc );
 }
 
-void Note::load( FILE* fp ) {
+void Note::load( FILE* fp )
+{
     type = (NOTE_TYPES)(readLong( fp ));
     turn = readLong( fp );
     packed_place = readShort( fp );
@@ -348,39 +363,46 @@ void Note::load( FILE* fp ) {
 
 bool notes_active = false;
 
-bool notes_are_active() {
+bool notes_are_active() 
+{
     return notes_active;
 }
 
-void take_note( const Note& note, bool force ) {
+void take_note( const Note& note, bool force )
+{
     if ( notes_active && (force || is_noteworthy(note)) )
 	note_list.push_back( note );
 }
 
-void activate_notes( bool active ) {
+void activate_notes( bool active ) 
+{
     notes_active = active;
 }
 
-void save_notes( FILE* fp ) {
+void save_notes( FILE* fp ) 
+{
     writeLong( fp, NOTES_VERSION_NUMBER );
     writeLong( fp, note_list.size() );
     for ( unsigned i = 0; i < note_list.size(); ++i )
 	note_list[i].save(fp);
 }
 
-void load_notes( FILE* fp ) {
+void load_notes( FILE* fp ) 
+{
     if ( readLong(fp) != NOTES_VERSION_NUMBER )
 	return;
 
     const long num_notes = readLong(fp);
-    for ( long i = 0; i < num_notes; ++i ) {
+    for ( long i = 0; i < num_notes; ++i )
+    {
 	Note new_note;
 	new_note.load(fp);
 	note_list.push_back(new_note);
     }
 }
 
-void make_user_note() {
+void make_user_note()
+{
     mpr("Enter note: ", MSGCH_PROMPT);
     char buf[400];
     bool validline = !cancelable_get_line(buf, sizeof(buf));

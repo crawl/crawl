@@ -57,22 +57,26 @@ std::string channel_to_str(int ch);
 
 int str_to_channel(const std::string &);
 
-class InitLineInput {
+class InitLineInput
+{
 public:
     virtual ~InitLineInput() { }
     virtual bool eof() = 0;
     virtual std::string getline() = 0;
 };
 
-class FileLineInput : public InitLineInput {
+class FileLineInput : public InitLineInput
+{
 public:
     FileLineInput(FILE *f) : file(f) { }
 
-    bool eof() {
+    bool eof()
+    {
         return !file || feof(file);
     }
 
-    std::string getline() {
+    std::string getline()
+    {
         char s[256] = "";
         if (!eof())
             fgets(s, sizeof s, file);
@@ -82,15 +86,18 @@ private:
     FILE *file;
 };
 
-class StringLineInput : public InitLineInput {
+class StringLineInput : public InitLineInput
+{
 public:
     StringLineInput(const std::string &s) : str(s), pos(0) { }
 
-    bool eof() {
+    bool eof()
+    {
         return pos >= str.length();
     }
 
-    std::string getline() {
+    std::string getline()
+    {
         if (eof())
             return "";
         std::string::size_type newl = str.find("\n", pos);

@@ -993,6 +993,71 @@ void list_commands(bool wizard)
     show_keyhelp_menu(cols.formatted_lines(), true);
 }
 
+void list_tutorial_help()
+{
+    // 2 columns, split at column 40.
+    column_composer cols(2, 41);
+    // Page size is number of lines - one line for --more-- prompt.
+    cols.set_pagesize(get_number_of_lines());
+
+    cols.add_formatted(
+            0,
+            "<h>Item types (and common commands)\n"
+            "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
+            "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
+            "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
+            "<brown>%</brown> : food and corpses (<w>e</w>at and <w>D</w>issect)\n"
+            "<w>?</w> : scrolls (<w>r</w>ead)\n"
+            "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
+            "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
+            "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
+            "<darkgrey>/</darkgrey> : wands (<w>z</w>ap)\n" 
+            // is it possible to replace that with e.g. Options.char_table[DNGN_ITEM_BOOK]
+            "<lightcyan>+</lightcyan>, <lightcyan>:</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"   
+            "<brown>\\</brown>, <brown>|</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
+            "\n"
+            "<h>Movement and attacking\n"
+            "Use the <w>numpad</w> for movement (try both\n"
+            "Numlock on and off). You can also use\n"
+            "     <w>hjkl</w> : left, down, up, right and\n"
+            "     <w>yubn</w> : diagonal movement.\n"
+            "Walking into a monster will attack it\n"
+            "with the wielded weapon or barehanded.\n"
+            "For ranged attacks use either\n" 
+            "<w>f</w> to launch missiles (like arrows)\n"
+            "<w>t</w> to throw items by hand (like darts)\n"
+            "<w>Z</w> to cast spells (<w>Z?</w> lists spells).\n",
+            true, true, cmdhelp_textfilter);
+
+    cols.add_formatted(
+            1,
+            "<h>Additional important commands\n"
+            "<w>S</w> : Save the game and exit\n"
+            "<w>s</w> : search for one turn (also <w>.</w> and <w>Del</w>)\n"
+            "<w>5</w> : rest full/search longer (<w>Shift-Num 5</w>)\n"
+            "<w>x</w> : examine surroundings\n"
+            "<w>v</w> : examine object in inventory\n"
+            "<w>i</w> : list inventory\n"
+            "<w>g</w> : pick up item from ground (also <w>,</w>)\n"
+            "<w>d</w> : drop item\n"
+            "<w>X</w> : show map of the whole level\n"
+            "<w><<</w> or <w>></w> : ascend/descend the stairs\n"
+            "<w>Ctrl-P</w> : show previous messages\n"
+            "\n"
+            "<h>Targeting (for spells and missiles)\n"
+            "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
+            "hostile monsters. <w>Enter</w> or <w>.</w> or <w>Del</w>\n"
+            "all fire at the selected target.\n"
+            "If the previous target is still alive\n"
+            "and in sight, one of <w>f</w>, <w>p</w>, <w>t</w> fires\n"
+            "at it again (without selecting anything).\n"
+            "Any movement key fires straight away in\n"
+            "the chosen direction.\n",
+            true, true, cmdhelp_textfilter,40);
+
+    show_keyhelp_menu(cols.formatted_lines(), false);
+}
+ 
 static void list_wizard_commands()
 {
     const char *line;

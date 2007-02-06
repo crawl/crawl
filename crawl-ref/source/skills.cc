@@ -27,6 +27,7 @@
 #include "player.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "tutorial.h"
 
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
@@ -416,6 +417,7 @@ static int exercise2( int exsk )
         }
 
         mpr( info, MSGCH_INTRINSIC_GAIN );
+        learned_something_new(TUT_SKILL_RAISE);
 
         // Recalculate this skill's order for tie breaking skills 
         // at its new level.   See skills2.cc::init_skill_order()

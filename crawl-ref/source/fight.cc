@@ -69,6 +69,7 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 
 #define HIT_WEAK 7
@@ -130,7 +131,8 @@ int effective_stat_bonus( int wepType )
 
 // returns random2(x) is random_factor is true, otherwise
 // the mean.
-static int maybe_random2( int x, bool random_factor ) {
+static int maybe_random2( int x, bool random_factor )
+{
     if ( random_factor )
 	return random2(x);
     else
@@ -139,8 +141,8 @@ static int maybe_random2( int x, bool random_factor ) {
 
 // Returns the to-hit for your extra unarmed.attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
-static int calc_your_to_hit_unarmed() {
-
+static int calc_your_to_hit_unarmed()
+{
     int your_to_hit;
 
     your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
@@ -162,14 +164,16 @@ static int calc_your_to_hit_unarmed() {
 int calc_your_to_hit( int heavy_armour,
 		      bool hand_and_a_half_bonus,
 		      bool water_attack,
-		      bool random_factor ) {
+		      bool random_factor )
+{
 
     const int weapon = you.equip[EQ_WEAPON];
     const bool ur_armed = (weapon != -1);   // compacts code a bit {dlb}
 
     int wpn_skill = SK_UNARMED_COMBAT;
 
-    if (weapon != -1) {
+    if (weapon != -1)
+    {
         wpn_skill = weapon_skill( you.inv[weapon].base_type, 
                                   you.inv[weapon].sub_type );
     }
@@ -193,13 +197,16 @@ int calc_your_to_hit( int heavy_armour,
     your_to_hit += maybe_random2(1 + you.skills[SK_FIGHTING], random_factor);
 
     // weapon skill contribution
-    if (ur_armed) {
-        if (wpn_skill != SK_FIGHTING) {
+    if (ur_armed)
+    {
+        if (wpn_skill != SK_FIGHTING)
+        {
             your_to_hit += maybe_random2(you.skills[wpn_skill] + 1,
 					 random_factor);
 	}
     }
-    else {                       // ...you must be unarmed
+    else
+    {                       // ...you must be unarmed
         your_to_hit +=
 	    (you.species == SP_TROLL || you.species == SP_GHOUL) ? 4 : 2;
 
@@ -261,12 +268,14 @@ int calc_your_to_hit( int heavy_armour,
 	     you.sure_blade / 2);
 
     // other stuff
-    if (!ur_armed) {
+    if (!ur_armed)
+    {
 	if ( you.confusing_touch )
             // just trying to touch is easier that trying to damage
 	    your_to_hit += maybe_random2(you.dex, random_factor);
 
-	switch ( you.attribute[ATTR_TRANSFORMATION] ) {
+	switch ( you.attribute[ATTR_TRANSFORMATION] )
+        {
 	case TRAN_NONE:
 	    break;
 	case TRAN_SPIDER:
@@ -301,8 +310,8 @@ int calc_your_to_hit( int heavy_armour,
 
 // Calculates your heavy armour penalty. If random_factor is true,
 // be stochastic; if false, deterministic (e.g. for chardumps.)
-int calc_heavy_armour_penalty( bool random_factor ) {
-
+int calc_heavy_armour_penalty( bool random_factor )
+{
     const bool ur_armed = (you.equip[EQ_WEAPON] != -1);
     int heavy_armour = 0;
 
@@ -350,12 +359,15 @@ int calc_heavy_armour_penalty( bool random_factor ) {
 
     // ??? what is the reasoning behind this ??? {dlb}
     // My guess is that its supposed to encourage monk-style play -- bwr
-    if (!ur_armed) {
-	if ( random_factor ) {
+    if (!ur_armed)
+    {
+	if ( random_factor )
+        {
 	    heavy_armour *= (coinflip() ? 3 : 2);
 	}
 	// (2+3)/2
-	else {
+	else
+        {
 	    heavy_armour *= 5;
 	    heavy_armour /= 2;
 	}
@@ -400,6 +412,10 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     // We're trying to hit a monster, break out of travel/explore now.
     interrupt_activity(AI_HIT_MONSTER, defender);
+    
+    if (ur_armed && (you.inv[weapon].base_type != OBJ_WEAPONS 
+    		|| you.inv[weapon].sub_type == WPN_BOW || you.inv[weapon].sub_type == WPN_SLING))
+    	learned_something_new(TUT_WIELD_WEAPON);
     
     if (ur_armed && you.inv[weapon].base_type == OBJ_WEAPONS
                  && is_random_artefact( you.inv[weapon] ))
@@ -2567,9 +2583,10 @@ void monster_attack(int monster_attacking)
                     if (you.paralysis > 0)
                         mpr("You still can't move!", MSGCH_WARN);
                     else
-                        mpr("You suddenly lose the ability to move!", MSGCH_WARN);
-		    if ( you.paralysis == 0 || mclas == MONS_RED_WASP )
-			you.paralysis += 1 + random2(3);
+                        mpr("You suddenly lose the ability to move!",
+                            MSGCH_WARN);
+                    if ( you.paralysis == 0 || mclas == MONS_RED_WASP )
+                        you.paralysis += 1 + random2(3);
                 }
                 break;
 
@@ -2743,15 +2760,16 @@ void monster_attack(int monster_attacking)
                 }
                 break;
 
-	    case MONS_MOTH_OF_WRATH:
-		if (one_chance_in(3)) {
-		    simple_monster_message(attacker, " infuriates you!");
-		    go_berserk(false);
-		}
-		break;
+            case MONS_MOTH_OF_WRATH:
+                if (one_chance_in(3))
+                {
+                    simple_monster_message(attacker, " infuriates you!");
+                    go_berserk(false);
+                }
+                break;
 		    
-	    default:
-		break;
+            default:
+                break;
             }                   // end of switch for special attacks.
             /* use break for level drain, maybe with beam variables,
                because so many creatures use it. */

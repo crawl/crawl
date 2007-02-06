@@ -53,6 +53,7 @@
 #include "spells4.h"
 #include "stash.h"
 #include "travel.h"
+#include "tutorial.h"
 
 // These are hidden from the rest of the world... use the functions
 // below to get information about the map grid.
@@ -1016,7 +1017,8 @@ bool get_bit_in_long_array( const unsigned long* data, int where )
     return ((data[wordloc] & (1UL << bitloc)) != 0);
 }
 
-static void set_bit_in_long_array( unsigned long* data, int where ) {
+static void set_bit_in_long_array( unsigned long* data, int where )
+{
     int wordloc = where / LONGSIZE;
     int bitloc = where % LONGSIZE;
     data[wordloc] |= (1UL << bitloc);
@@ -1053,13 +1055,16 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
     const double distdiff = (xdistance * slope - ydistance);
 
     // exact corner
-    if ( double_is_zero( distdiff ) ) {
+    if ( double_is_zero( distdiff ) )
+    {
         // move somewhat away from the corner
-        if ( slope > 1.0 ) {
+        if ( slope > 1.0 )
+        {
             *accx = xtarget + EPSILON_VALUE * 2;
             *accy = ytarget + EPSILON_VALUE * 2 * slope;
         }
-        else {
+        else
+        {
             *accx = xtarget + EPSILON_VALUE * 2 / slope;
             *accy = ytarget + EPSILON_VALUE * 2;
         }
@@ -1068,11 +1073,13 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
 
     double traveldist;
     int rc = -1;
-    if ( distdiff > 0.0 ) {
+    if ( distdiff > 0.0 )
+    {
         traveldist = ydistance / slope;
         rc = 1;
     }
-    else {
+    else
+    {
         traveldist = xdistance;
         rc = 0;
     }
@@ -1087,7 +1094,8 @@ static int find_next_intercept(double* accx, double* accy, const double slope)
 void ray_def::advance_and_bounce()
 {
     // 0 = down-right, 1 = down-left, 2 = up-left, 3 = up-right
-    int bouncequad[4][3] = {
+    int bouncequad[4][3] =
+    {
         { 1, 3, 2 }, { 0, 2, 3 }, { 3, 1, 0 }, { 2, 0, 1 }
     };
     int oldx = x(), oldy = y();
@@ -1425,15 +1433,17 @@ void raycast()
     // of x/y: in that case, every step on the X axis means an increase
     // of 1 in the Y axis at the intercept point. We can assume gcd(x,y)=1,
     // so we look at steps of 1/y.
-    for ( xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle ) {
-        for ( yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle ) {
-
+    for ( xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
+    {
+        for ( yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
+        {
             if ( gcd(xangle, yangle) != 1 )
                 continue;
 
             const double slope = ((double)(yangle)) / xangle;
             const double rslope = ((double)(xangle)) / yangle;
-            for ( int intercept = 0; intercept <= yangle; ++intercept ) {
+            for ( int intercept = 0; intercept <= yangle; ++intercept )
+            {
                 double xstart = ((double)(intercept)) / yangle;
                 if ( intercept == 0 )
                     xstart += EPSILON_VALUE / 10.0;
@@ -1544,12 +1554,14 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
             }
         }
     }
-    if ( allow_fallback ) {
+    if ( allow_fallback )
+    {
         ray.accx = sourcex + 0.5;
         ray.accy = sourcey + 0.5;
         if ( targetx == sourcex )
             ray.slope = 10000.0;
-        else {
+        else
+        {
             ray.slope = targety - sourcey;
             ray.slope /= targetx - sourcex;
             if ( ray.slope < 0 )
@@ -1612,7 +1624,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
     const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
-    for ( int quadrant = 0; quadrant < 4; ++quadrant ) {
+    for ( int quadrant = 0; quadrant < 4; ++quadrant )
+    {
         const int xmult = quadrant_x[quadrant];
         const int ymult = quadrant_y[quadrant];
 
@@ -1621,9 +1634,11 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
 
         // kill all blocked rays
         const unsigned long* inptr = los_blockrays;
-        for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff ) {
+        for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff )
+        {
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
-                 ++ydiff, inptr += num_words ) {
+                 ++ydiff, inptr += num_words )
+            {
                 
                 const int realx = x_p + xdiff * xmult;
                 const int realy = y_p + ydiff * ymult;
@@ -1632,7 +1647,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy])) {
+                if ( grid_is_opaque(gr[realx][realy]))
+                {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
                         dead_rays[i] |= inptr[i];
@@ -1643,12 +1659,15 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
         // ray calculation done, now work out which cells in this
         // quadrant are visible
         unsigned int rayidx = 0;
-        for ( unsigned int wordloc = 0; wordloc < num_words; ++wordloc ) {
+        for ( unsigned int wordloc = 0; wordloc < num_words; ++wordloc )
+        {
             const unsigned long curword = dead_rays[wordloc];
             // Note: the last word may be incomplete
-            for ( unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc) {
+            for ( unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+            {
                 // make the cells seen by this ray at this point visible
-                if ( ((curword >> bitloc) & 1UL) == 0 ) {
+                if ( ((curword >> bitloc) & 1UL) == 0 )
+                {
                     // this ray is alive!
                     const int realx = xmult * compressed_ray_x[rayidx];
                     const int realy = ymult * compressed_ray_y[rayidx];
@@ -1705,7 +1724,8 @@ void draw_border(void)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(int feature, int x, int y) {
+bool is_feature(int feature, int x, int y)
+{
     unsigned char envfeat = (unsigned char) env.map[x - 1][y - 1];
     if (!envfeat)
         return false;
@@ -1714,7 +1734,8 @@ bool is_feature(int feature, int x, int y) {
     // warnings about out-of-range case values.
     short grid = grd[x][y];
 
-    switch (feature) {
+    switch (feature)
+    {
     case 'X':
         return (travel_point_distance[x][y] == PD_EXCLUDED);
     case 'F':
@@ -1723,7 +1744,8 @@ bool is_feature(int feature, int x, int y) {
     case 'I':
         return is_stash(x, y);
     case '_':
-        switch (grid) {
+        switch (grid)
+        {
         case DNGN_ALTAR_ZIN:
         case DNGN_ALTAR_SHINING_ONE:
         case DNGN_ALTAR_KIKUBAAQUDGHA:
@@ -1743,7 +1765,8 @@ bool is_feature(int feature, int x, int y) {
         }
     case '\t':
     case '\\':
-        switch (grid) {
+        switch (grid)
+        {
         case DNGN_ENTER_HELL:
         case DNGN_ENTER_LABYRINTH:
         case DNGN_ENTER_SHOP:
@@ -1764,7 +1787,8 @@ bool is_feature(int feature, int x, int y) {
             return false;
         }
     case '<':
-        switch (grid) {
+        switch (grid)
+        {
         case DNGN_ROCK_STAIRS_UP:
         case DNGN_STONE_STAIRS_UP_I:
         case DNGN_STONE_STAIRS_UP_II:
@@ -1786,7 +1810,8 @@ bool is_feature(int feature, int x, int y) {
             return false;
         }
     case '>':
-        switch (grid) {
+        switch (grid)
+        {
         case DNGN_ROCK_STAIRS_DOWN:
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
@@ -1808,7 +1833,8 @@ bool is_feature(int feature, int x, int y) {
             return false;
         }
     case '^':
-        switch (grid) {
+        switch (grid)
+        {
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_III:
@@ -1823,7 +1849,8 @@ bool is_feature(int feature, int x, int y) {
 
 static int find_feature(unsigned char feature, int curs_x, int curs_y, 
                          int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, char *move_x, char *move_y) {
+                         int ignore_count, char *move_x, char *move_y)
+{
     int cx = anchor_x,
         cy = anchor_y;
 
@@ -1832,30 +1859,38 @@ static int find_feature(unsigned char feature, int curs_x, int curs_y,
 
     // Find the first occurrence of feature 'feature', spiralling around (x,y)
     int maxradius = GXM > GYM? GXM : GYM;
-    for (int radius = 1; radius < maxradius; ++radius) {
-        for (int axis = -2; axis < 2; ++axis) {
+    for (int radius = 1; radius < maxradius; ++radius)
+    {
+        for (int axis = -2; axis < 2; ++axis)
+        {
             int rad = radius - (axis < 0);
-            for (int var = -rad; var <= rad; ++var) {
+            for (int var = -rad; var <= rad; ++var)
+            {
                 int dx = radius, dy = var;
                 if (axis % 2)
                     dx = -dx;
-                if (axis < 0) {
+                if (axis < 0)
+                {
                     int temp = dx;
                     dx = dy;
                     dy = temp;
                 }
 
                 int x = cx + dx, y = cy + dy;
-                if (x < 0 || y < 0 || x >= GXM || y >= GYM) continue;
-                if (is_feature(feature, x + 1, y + 1)) {
+                if (x < 0 || y < 0 || x >= GXM || y >= GYM)
+                    continue;
+                if (is_feature(feature, x + 1, y + 1))
+                {
                     ++matchcount;
-                    if (!ignore_count--) {
+                    if (!ignore_count--)
+                    {
                         // We want to cursor to (x,y)
                         *move_x = x - (start_x + curs_x - 1);
                         *move_y = y - (start_y + curs_y - 1);
                         return matchcount;
                     }
-                    else if (firstx == -1) {
+                    else if (firstx == -1)
+                    {
                         firstx = x;
                         firsty = y;
                     }
@@ -1865,7 +1900,8 @@ static int find_feature(unsigned char feature, int curs_x, int curs_y,
     }
 
     // We found something, but ignored it because of an ignorecount
-    if (firstx != -1) {
+    if (firstx != -1)
+    {
         *move_x = firstx - (start_x + curs_x - 1);
         *move_y = firsty - (start_y + curs_y - 1);
         return 1;
@@ -1874,8 +1910,10 @@ static int find_feature(unsigned char feature, int curs_x, int curs_y,
 }
 
 void find_features(const std::vector<coord_def>& features,
-        unsigned char feature, std::vector<coord_def> *found) {
-    for (unsigned feat = 0; feat < features.size(); ++feat) {
+        unsigned char feature, std::vector<coord_def> *found)
+{
+    for (unsigned feat = 0; feat < features.size(); ++feat)
+    {
         const coord_def& coord = features[feat];
         if (is_feature(feature, coord.x, coord.y))
             found->push_back(coord);
@@ -1887,22 +1925,27 @@ static int find_feature( const std::vector<coord_def>& features,
                          int start_x, int start_y, 
                          int ignore_count, 
                          char *move_x, char *move_y,
-                         bool forward) {
+                         bool forward)
+{
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
 
-    for (unsigned feat = 0; feat < features.size(); ++feat) {
+    for (unsigned feat = 0; feat < features.size(); ++feat)
+    {
         const coord_def& coord = features[feat];
 
-        if (is_feature(feature, coord.x, coord.y)) {
+        if (is_feature(feature, coord.x, coord.y))
+        {
             ++matchcount;
-            if (forward? !ignore_count-- : --ignore_count == 1) {
+            if (forward? !ignore_count-- : --ignore_count == 1)
+            {
                 // We want to cursor to (x,y)
                 *move_x = coord.x - (start_x + curs_x);
                 *move_y = coord.y - (start_y + curs_y);
                 return matchcount;
             }
-            else if (!forward || firstx == -1) {
+            else if (!forward || firstx == -1)
+            {
                 firstx = coord.x;
                 firsty = coord.y;
                 firstmatch = matchcount;
@@ -1911,7 +1954,8 @@ static int find_feature( const std::vector<coord_def>& features,
     }
 
     // We found something, but ignored it because of an ignorecount
-    if (firstx != -1) {
+    if (firstx != -1)
+    {
         *move_x = firstx - (start_x + curs_x);
         *move_y = firsty - (start_y + curs_y);
         return firstmatch;
@@ -2295,11 +2339,13 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 
             move_x = 0;
             move_y = 0;
-            if (anchor_x == -1) {
+            if (anchor_x == -1)
+            {
                 anchor_x = start_x + curs_x - 1;
                 anchor_y = start_y + curs_y - 1;
             }
-            if (search_feat != getty) {
+            if (search_feat != getty)
+            {
                 search_feat         = getty;
                 search_found        = 0;
             }
@@ -2325,13 +2371,15 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             int x = start_x + curs_x, y = start_y + curs_y;
             if (travel_mode && x == you.x_pos && y == you.y_pos)
             {
-                if (you.travel_x > 0 && you.travel_y > 0) {
+                if (you.travel_x > 0 && you.travel_y > 0)
+                {
                     move_x = you.travel_x - x;
                     move_y = you.travel_y - y;
                 }
                 break;
             }
-            else {
+            else
+            {
                 spec_place[0] = x;
                 spec_place[1] = y;
                 map_alive = false;
@@ -3168,7 +3216,7 @@ void init_feature_table( void )
     }
 }
 
-static int get_screen_glyph( int x, int y ) 
+int get_screen_glyph( int x, int y ) 
 {
     const int ex = x - you.x_pos + 9;
     const int ey = y - you.y_pos + 9;
@@ -3356,6 +3404,18 @@ void viewwindow(bool draw_it, bool do_updates)
                 // in grid coords
                 const int gx = count_x + you.x_pos - 16;
                 const int gy = count_y + you.y_pos - 8;
+
+                if (Options.tutorial_left && in_bounds(gx, gy))
+                {
+                    if (is_feature('>',gx,gy))
+                        learned_something_new(TUT_SEEN_STAIRS);
+                    else if (is_feature('_',gx,gy))
+                        learned_something_new(TUT_SEEN_ALTAR);
+                    else if (grd[gx][gy] == DNGN_CLOSED_DOOR)
+                        learned_something_new(TUT_SEEN_DOOR,gx,gy);
+                    else if (grd[gx][gy] == DNGN_ENTER_SHOP)
+                        learned_something_new(TUT_SEEN_SHOP,gx,gy);
+                }
 
                 // order is important here
                 if (!map_bounds( gx, gy ))

@@ -22,7 +22,8 @@
 //    class FixedVector
 // ==========================================================================
 
-template <class TYPE, int SIZE> class FixedVector {
+template <class TYPE, int SIZE> class FixedVector
+{
 
 //-----------------------------------
 //    Types
@@ -48,7 +49,8 @@ public:
 
     FixedVector()                            {}
 
-    FixedVector(TYPE def) : mData() {
+    FixedVector(TYPE def) : mData()
+    {
         init(def);
     }
 
@@ -112,10 +114,10 @@ FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
     va_list ap;
     va_start(ap, value1);   // second argument is last fixed parameter
 
-    for (int index = 2; index < SIZE; index++) {
-            TYPE value = va_arg(ap, TYPE);
-
-            mData[index] = value;
+    for (int index = 2; index < SIZE; index++)
+    {
+        TYPE value = va_arg(ap, TYPE);
+        mData[index] = value;
     }
 
     va_end(ap);

@@ -26,6 +26,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "travel.h"
+#include "tutorial.h"
 
 #include <cctype>
 #include <cstdio>
@@ -282,6 +283,12 @@ void Stash::update()
 
         // There's something on this square. Take a squint at it.
         const item_def &item = mitm[objl];
+
+        // note item when first entering field of vision
+        // (only works with stashes enabled)        
+//        learned_something_new(TUT_SEEN_FIRST_OBJECT, x, y);
+//        learned_something_new(TUT_SEEN_FIRST_OBJECT, item);
+		tutorial_first_item(item);
 
         if (item.link == NON_ITEM)
             items.clear();

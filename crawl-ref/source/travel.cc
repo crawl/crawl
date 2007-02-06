@@ -27,6 +27,7 @@
 #include "stash.h"
 #include "stuff.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "view.h"
 
 #include <algorithm>
@@ -832,8 +833,10 @@ static void explore_find_target_square()
         // No place to go? Report to the player.
         const int estatus = find_explore_status(tp);
 
-        if (!estatus)
+        if (!estatus) {
             mpr("Done exploring.");
+            learned_something_new(TUT_DONE_EXPLORE);
+        }    
         else
         {
             std::vector<std::string> inacc;
@@ -3462,6 +3465,10 @@ void explore_discoveries::add_item(const item_def &i)
     }
 
     items.push_back( named_thing<item_def>(item_name(i, DESC_NOCAP_A), i) );
+
+    // first item of this type?
+    // only works when travelling
+    tutorial_first_item(i);
 }
 
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)

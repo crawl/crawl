@@ -67,6 +67,7 @@ stuff.o \
 tags.o \
 transfor.o \
 travel.o \
+tutorial.o \
 view.o \
 Kills.o \
 mt19937ar.o \

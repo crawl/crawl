@@ -88,16 +88,20 @@ int unmangle_direction_keys(int keyin, int km)
         /* FIXME haranp - hackiness */
         const char DOSidiocy[10]     = { "OPQKSMGHI" };
         const char DOSunidiocy[10]   = { "bjnh.lyku" };
-        const int DOScontrolidiocy[9] = {
+        const int DOScontrolidiocy[9] =
+        {
             117, 145, 118, 115, 76, 116, 119, 141, 132
         };
         keyin = getchm(keymap);
-        for (int j = 0; j < 9; ++j ) {
-            if (keyin == DOSidiocy[j]) {
+        for (int j = 0; j < 9; ++j )
+        {
+            if (keyin == DOSidiocy[j])
+            {
                 keyin = DOSunidiocy[j];
                 break;
             }
-            if (keyin == DOScontrolidiocy[j]) {
+            if (keyin == DOScontrolidiocy[j])
+            {
                 keyin = CONTROL(toupper(DOSunidiocy[j]));
                 break;
             }

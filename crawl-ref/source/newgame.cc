@@ -87,6 +87,7 @@
 #include "skills2.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "version.h"
 #include "view.h"
 
@@ -117,8 +118,6 @@ static void give_random_secondary_armour( int slot );
 static bool give_wanderer_weapon( int slot, int wpn_skill );
 static void create_wanderer(void);
 static void give_items_skills(void);
-static bool choose_race(void);
-static bool choose_class(void);
 static char letter_to_species(int keyn);
 static char letter_to_class(int keyn);
 
@@ -326,7 +325,8 @@ static unsigned char random_potion_description()
 {
     int desc, nature, colour;
 
-    do {
+    do
+    {
         desc = random2( PDQ_NQUALS * PDC_NCOLOURS );
 
         if (coinflip())
@@ -1423,68 +1423,69 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
     // fire books, CONJ_II and MINOR_MAGIC_II are both ice books
     if ( Options.book && Options.book <= numbooks )
     {
-	book.sub_type = firstbook + Options.book - 1;
-	ng_book = Options.book;
-	return;
+        book.sub_type = firstbook + Options.book - 1;
+        ng_book = Options.book;
+        return;
     }
 
     if ( Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM )
-	Options.prev_book = SBT_NO_SELECTION;
+        Options.prev_book = SBT_NO_SELECTION;
 
     if ( !Options.random_pick )
     {
-	textcolor( CYAN );
-	cprintf(EOL " You have a choice of books:" EOL);
-	textcolor( LIGHTGREY );
+        textcolor( CYAN );
+        cprintf(EOL " You have a choice of books:" EOL);
+        textcolor( LIGHTGREY );
 
-	for (int i=0; i < numbooks; ++i)
-	{
-	    char buf[ITEMNAME_SIZE];
-	    book.sub_type = firstbook + i;
-	    item_name( book, DESC_PLAIN, buf );
-	    cprintf("%c - %s" EOL, 'a' + i, buf);
-	}
+        for (int i=0; i < numbooks; ++i)
+        {
+            char buf[ITEMNAME_SIZE];
+            book.sub_type = firstbook + i;
+            item_name( book, DESC_PLAIN, buf );
+            cprintf("%c - %s" EOL, 'a' + i, buf);
+        }
 
-	textcolor(BROWN);
-	cprintf(EOL "? - Random" );
-	if ( Options.prev_book != SBT_NO_SELECTION ) {
+        textcolor(BROWN);
+        cprintf(EOL "? - Random" );
+        if ( Options.prev_book != SBT_NO_SELECTION )
+    {
             cprintf("; Enter - %s",
-		    Options.prev_book == SBT_FIRE   ? "Fire"      :
-		    Options.prev_book == SBT_COLD   ? "Cold"      :
-		    Options.prev_book == SBT_SUMM   ? "Summoning" :
+                    Options.prev_book == SBT_FIRE   ? "Fire"      :
+                    Options.prev_book == SBT_COLD   ? "Cold"      :
+                    Options.prev_book == SBT_SUMM   ? "Summoning" :
                     Options.prev_book == SBT_RANDOM ? "Random"    :
-		    "Buggy Book");
-	}
-	cprintf(EOL);
+                    "Buggy Book");
+        }
+        cprintf(EOL);
             
-	do
-	{
-	    textcolor( CYAN );
-	    cprintf(EOL "Which book? ");
-	    textcolor( LIGHTGREY );
+        do
+        {
+            textcolor( CYAN );
+            cprintf(EOL "Which book? ");
+            textcolor( LIGHTGREY );
 
-	    keyin = get_ch();
-	} while (keyin != '?' && 
-		 ((keyin != '\r' && keyin != '\n') ||
-		  Options.prev_book == SBT_NO_SELECTION ) &&
-		 (keyin < 'a' || keyin > ('a' + numbooks)));
+            keyin = get_ch();
+        } while (keyin != '?' && 
+                 ((keyin != '\r' && keyin != '\n') ||
+                  Options.prev_book == SBT_NO_SELECTION ) &&
+                 (keyin < 'a' || keyin > ('a' + numbooks)));
 
-	if ( keyin == '\r' || keyin == '\n' )
-	{
-	    if ( Options.prev_book == SBT_RANDOM )
-		keyin = '?';
-	    else
-		keyin = ('a' +  Options.prev_book - 1);
-	}
+        if ( keyin == '\r' || keyin == '\n' )
+        {
+            if ( Options.prev_book == SBT_RANDOM )
+                keyin = '?';
+            else
+                keyin = ('a' +  Options.prev_book - 1);
+        }
     }
 
     if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '?')
-	ng_book = SBT_RANDOM;
+        ng_book = SBT_RANDOM;
     else
-	ng_book = keyin - 'a' + 1;
+        ng_book = keyin - 'a' + 1;
     
     if ( Options.random_pick || keyin == '?' )
-	keyin = random2(numbooks) + 'a';
+        keyin = random2(numbooks) + 'a';
 
     book.sub_type = firstbook + keyin - 'a';
 }
@@ -2595,12 +2596,12 @@ static void create_wanderer( void )
         // Could only have learned spells in common schools...
         const int school_list[5] =
             { SK_CONJURATIONS,
-		       SK_ENCHANTMENTS, SK_ENCHANTMENTS,
-		       SK_TRANSLOCATIONS, SK_NECROMANCY };
+              SK_ENCHANTMENTS, SK_ENCHANTMENTS,
+              SK_TRANSLOCATIONS, SK_NECROMANCY };
 
-	    //jmf: Two of those spells are gone due to their munchkinicity.
-	    //     crush() and arc() are like having good melee capability.
-	    //     Therefore giving them to "harder" class makes less-than-
+        //jmf: Two of those spells are gone due to their munchkinicity.
+        //     crush() and arc() are like having good melee capability.
+        //     Therefore giving them to "harder" class makes less-than-
         //     zero sense, and they're now gone.
         const int spell_list[5] =
            { SPELL_MAGIC_DART,
@@ -2910,9 +2911,11 @@ spec_query:
             textcolor( WHITE );
             cprintf("You must be new here!");
         }
+        cprintf("  (Press T to enter a tutorial.)");
         cprintf(EOL EOL);
         textcolor( CYAN );
         cprintf("You can be:");
+        cprintf("  (Press ? for more information)"); 
         cprintf(EOL EOL);
 
         textcolor( LIGHTGREY );
@@ -2955,12 +2958,11 @@ spec_query:
                     "SPACE - Choose class first; * - Random Species; "
                     "! - Random Character"
                     EOL
-                    "? - Help; X - Quit"
+                    "X - Quit"
                     EOL);
         else
             cprintf(EOL
-                    "? - Help * - Random; "
-                    "Bksp - Back to class selection; X - Quit" 
+                    "* - Random; Bksp - Back to class selection; X - Quit" 
                     EOL);
 
         if (Options.prev_race)
@@ -3036,6 +3038,10 @@ spec_query:
         Options.random_pick = true; // used to give random weapon/god as well
         ng_random = true;
         return false;
+    }
+    else if (keyn == 'T')
+    {
+        return !pick_tutorial();
     }
 
     if (!(you.species = letter_to_species(keyn)))
@@ -3119,10 +3125,12 @@ job_query:
             textcolor( WHITE );
             cprintf("You must be new here!");
         }
+        cprintf("  (Press T to enter a tutorial.)");
 
         cprintf(EOL EOL);
         textcolor( CYAN );
         cprintf("You can be:");
+        cprintf("  (Press ? for more information)"); 
         cprintf(EOL EOL);
 
         textcolor( LIGHTGREY );
@@ -3160,12 +3168,11 @@ job_query:
                     "SPACE - Choose species first; * - Random Class; "
                     "! - Random Character"
                     EOL
-                    "? - Help; X - Quit" 
+                    "X - Quit" 
                     EOL);
         else
             cprintf(EOL
-                    "? - Help; * - Random; "
-                    "Bksp - Back to species selection; X - Quit" 
+                    "* - Random; Bksp - Back to species selection; X - Quit" 
                     EOL);
 
         if (Options.prev_cls)
@@ -3255,6 +3262,10 @@ job_query:
             ng_random = true;
             return true;
         }
+        else if (keyn == 'T')
+        {
+            return pick_tutorial();
+        }        
         else if ((keyn == ' ' && !you.species) ||
                     keyn == 'x' || keyn == ESCAPE || keyn == CK_BKSP)
         {
@@ -3483,7 +3494,7 @@ void give_items_skills()
         you.equip[EQ_BODY_ARMOUR] = 1;
 
         // extra items being tested:
-	choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 );
+        choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 );
 
         you.skills[SK_DODGING] = 1;
         you.skills[SK_STEALTH] = 1;
@@ -4072,14 +4083,14 @@ void give_items_skills()
         you.equip[EQ_WEAPON] = 0;
         you.equip[EQ_BODY_ARMOUR] = 1;
 
-	if ( you.char_class == JOB_CONJURER )
-	    choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 );
-	else
-	{
-	    you.inv[2].base_type = OBJ_BOOKS;
-	    // subtype will always be overridden
-	    you.inv[2].plus = 0;
-	}
+        if ( you.char_class == JOB_CONJURER )
+            choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 );
+        else
+        {
+            you.inv[2].base_type = OBJ_BOOKS;
+            // subtype will always be overridden
+            you.inv[2].plus = 0;
+        }
 
         switch (you.char_class)
         {

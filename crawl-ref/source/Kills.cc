@@ -694,14 +694,17 @@ void kill_monster_desc::load(FILE *file)
 //
 
 #define KILLEXP_ACCESS(name, type, field) \
-    static int kill_lualc_##name(lua_State *ls) { \
-        if (!lua_islightuserdata(ls, 1)) { \
+    static int kill_lualc_##name(lua_State *ls) \
+    { \
+        if (!lua_islightuserdata(ls, 1)) \
+        { \
             luaL_argerror(ls, 1, "Unexpected argument type"); \
             return 0; \
         } \
           \
         kill_exp *ke = static_cast<kill_exp*>( lua_touserdata(ls, 1) ); \
-        if (ke) { \
+        if (ke) \
+        { \
             lua_push##type(ls, ke->field); \
             return 1; \
         } \

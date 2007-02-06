@@ -15,7 +15,8 @@
 #include <vector>
 #include <stdio.h>
 
-enum NOTE_TYPES {
+enum NOTE_TYPES
+{
     NOTE_HP_CHANGE = 0,		/* needs: new hp, max hp */
     NOTE_MAXHP_CHANGE,		/* needs: new maxhp */
     NOTE_MP_CHANGE,		/* needs: new mp, max mp */
@@ -41,7 +42,8 @@ enum NOTE_TYPES {
     NOTE_NUM_TYPES
 };
 
-struct Note {
+struct Note
+{
     Note();
     Note( NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
 		  const char* d = 0);

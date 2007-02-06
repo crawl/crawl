@@ -38,6 +38,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "travel.h"
+#include "tutorial.h"
 
 extern std::vector<SelItem> items_for_multidrop;
 
@@ -751,8 +752,10 @@ static void armour_wear_effects(const int item_slot)
     if (is_random_artefact( arm ))
         use_randart( item_slot );
 
-    if (item_cursed( arm ))
+    if (item_cursed( arm )) {
         mpr( "Oops, that feels deathly cold." );
+        learned_something_new(TUT_YOU_CURSED);
+    }
 
     if (eq_slot == EQ_SHIELD)
         warn_shield_penalties();

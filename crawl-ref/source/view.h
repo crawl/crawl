@@ -116,6 +116,7 @@ void get_item_glyph(const item_def *item, unsigned short *glych,
                     unsigned short *glycol);
 void get_mons_glyph(const monsters *mons, unsigned short *glych,
                     unsigned short *glycol);
+int get_screen_glyph( int x, int y ); 
 
 void set_envmap_char( int x, int y, unsigned char chr );
 unsigned get_envmap_char(int x, int y);

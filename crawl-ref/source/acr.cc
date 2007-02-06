@@ -122,6 +122,7 @@
 #include "tags.h"
 #include "transfor.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "view.h"
 #include "stash.h"
 
@@ -223,12 +224,15 @@ int main( int argc, char *argv[] )
 
     bool game_start = initialise();
 
+     // override some options for tutorial
+     init_tutorial_options();
+
     if (game_start || Options.always_greet)
     {
-        snprintf( info, INFO_SIZE, "Welcome, %s the %s %s.", 
-                  you.your_name, species_name( you.species,you.experience_level ), you.class_name );
-
-        mpr( info );
+        mprf( "Welcome, %s the %s %s.", 
+              you.your_name,
+              species_name( you.species,you.experience_level ),
+              you.class_name );
 
         // Starting messages can go here as this should only happen
         // at the start of a new game -- bwr
@@ -295,6 +299,19 @@ int main( int argc, char *argv[] )
         wield_warning(false);
     }
 
+    if (Options.tutorial_left)
+    {
+        // print stats and everything
+        prep_input();
+        char ch = 'x';    
+        mpr("Press any key to start the tutorial intro, or Escape to skip it.",
+            MSGCH_TUTORIAL);
+        ch = c_getch();
+        
+        if (ch != ESCAPE)
+            tut_starting_screen();
+    }    
+    
     if ( game_start )
     {
         snprintf(info, INFO_SIZE,
@@ -311,7 +328,6 @@ int main( int argc, char *argv[] )
     while (true)
     {
         input();
-        //      cprintf("x");
     }
 
     // Should never reach this stage, right?
@@ -738,6 +754,8 @@ static void handle_wizard_command( void )
 // Set up the running variables for the current run.
 static void start_running( int dir, int mode )
 {
+    if (Options.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
+        Options.tutorial_events[TUT_SHIFT_RUN] = 0;
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
 }
@@ -816,6 +834,30 @@ static void input()
 
     fire_monster_alerts();
 
+ 
+    if (Options.tut_just_triggered)
+        Options.tut_just_triggered = false;
+    
+    bool help; 
+    if (Options.tutorial_events[TUT_SEEN_MONSTER])
+        help = i_feel_safe();
+        
+    if (Options.tutorial_events[TUT_RUN_AWAY]
+        && 2*you.hp < you.hp_max && !i_feel_safe())
+    {
+        learned_something_new(TUT_RUN_AWAY);
+    }
+            
+    if (Options.tutorial_left && i_feel_safe())
+    {
+        if ( 2*you.hp < you.hp_max || 2*you.magic_points < you.max_magic_points )
+            tutorial_healing_reminder();
+        else if (Options.tutorial_events[TUT_SHIFT_RUN] && you.num_turns >= 200)
+                learned_something_new(TUT_SHIFT_RUN);
+        else if (Options.tutorial_events[TUT_MAP_VIEW] && you.num_turns >= 500)
+                learned_something_new(TUT_MAP_VIEW);    
+    }
+ 
     if ( you.paralysis )
     {
         world_reacts();
@@ -868,7 +910,8 @@ static void input()
         viewwindow(true, false);
 }
 
-static int toggle_flag( bool* flag, const char* flagname ) {
+static int toggle_flag( bool* flag, const char* flagname )
+{
     char buf[INFO_SIZE];
     *flag = !(*flag);
     sprintf( buf, "%s is now %s.", flagname,
@@ -877,7 +920,8 @@ static int toggle_flag( bool* flag, const char* flagname ) {
     return *flag;
 }
 
-static void go_upstairs() {
+static void go_upstairs()
+{
     if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
     {
         if ( you.berserker )
@@ -889,7 +933,8 @@ static void go_upstairs() {
     else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
               || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
              && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
-                 || grd[you.x_pos][you.y_pos] >= 150)) {   
+                 || grd[you.x_pos][you.y_pos] >= 150))
+    {
         mpr( "You can't go up here!" );
         return;
     }
@@ -899,8 +944,8 @@ static void go_upstairs() {
                  1 + (you.burden_state > BS_UNENCUMBERED) );
 }
 
-static void go_downstairs() {
-
+static void go_downstairs()
+{
     if ((grd[you.x_pos][you.y_pos] < DNGN_ENTER_LABYRINTH
          || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_DOWN)
         && grd[you.x_pos][you.y_pos] != DNGN_ENTER_HELL
@@ -908,7 +953,8 @@ static void go_downstairs() {
              || grd[you.x_pos][you.y_pos] > DNGN_TRANSIT_PANDEMONIUM)
             && grd[you.x_pos][you.y_pos] != DNGN_STONE_ARCH)
         && !(grd[you.x_pos][you.y_pos] >= DNGN_ENTER_ORCISH_MINES
-             && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES)) {
+             && grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES))
+    {
         mpr( "You can't go down here!" );
         return;
     }
@@ -919,14 +965,16 @@ static void go_downstairs() {
                  you.your_level );
 }
 
-static void experience_check() {
+static void experience_check()
+{
     snprintf( info, INFO_SIZE, "You are a level %d %s %s.",
               you.experience_level,
               species_name(you.species,you.experience_level),
               you.class_name);
     mpr(info);
 
-    if (you.experience_level < 27) {
+    if (you.experience_level < 27)
+    {
         int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
         snprintf( info, INFO_SIZE,
                   "Level %d requires %ld experience (%d point%s to go!)",
@@ -936,12 +984,14 @@ static void experience_check() {
                   (xp_needed > 1) ? "s" : "");
         mpr(info);
     }
-    else {
+    else
+    {
         mpr( "I'm sorry, level 27 is as high as you can go." );
         mpr( "With the way you've been playing, I'm surprised you got this far." );
     }
 
-    if (you.real_time != -1) {
+    if (you.real_time != -1)
+    {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
         char buff[200];
 
@@ -962,13 +1012,14 @@ static void experience_check() {
 /* note that in some actions, you don't want to clear afterwards.
    e.g. list_jewellery, etc. */
 
-void process_command( command_type cmd ) {
+void process_command( command_type cmd )
+{
 
     FixedVector < int, 2 > plox;
     apply_berserk_penalty = true;
 
-    switch ( cmd ) {
-
+    switch (cmd)
+    {
     case CMD_OPEN_DOOR_UP_RIGHT:   open_door(-1, -1); break;
     case CMD_OPEN_DOOR_UP:         open_door( 0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    open_door( 1, -1); break;
@@ -1033,12 +1084,14 @@ void process_command( command_type cmd ) {
         break;
    
     case CMD_MAKE_NOTE:
+//        Options.tut_made_note = 0;
         make_user_note();
         break;
 
     case CMD_CLEAR_MAP:
         if (you.level_type != LEVEL_LABYRINTH &&
-            you.level_type != LEVEL_ABYSS) {
+            you.level_type != LEVEL_ABYSS)
+        {
             mpr("Clearing level map.");
             clear_map();
         }
@@ -1057,6 +1110,8 @@ void process_command( command_type cmd ) {
         break;
         
     case CMD_SEARCH_STASHES:
+        if (Options.tut_stashes)
+            Options.tut_stashes = 0;
         stashes.search_stashes();
         break;
 
@@ -1096,10 +1151,14 @@ void process_command( command_type cmd ) {
         break;
 
     case CMD_THROW:
+        if (Options.tutorial_left)
+            Options.tut_throw_counter++;
         throw_anything();
         break;
 
     case CMD_FIRE:
+        if (Options.tutorial_left)
+            Options.tut_throw_counter++;
         shoot_thing();
         break;
 
@@ -1198,6 +1257,8 @@ void process_command( command_type cmd ) {
             break;
         }
 
+        if (Options.tutorial_left)
+            Options.tut_spell_counter++;
         if (!cast_a_spell())
             flush_input_buffer( FLUSH_ON_FAILURE );
         break;
@@ -1216,6 +1277,8 @@ void process_command( command_type cmd ) {
         break;
         
     case CMD_INTERLEVEL_TRAVEL:
+        if (Options.tut_travel)
+            Options.tut_travel = 0;
         if (!can_travel_interlevel())
         {
             mpr("Sorry, you can't auto-travel out of here.");
@@ -1227,6 +1290,8 @@ void process_command( command_type cmd ) {
         break;
 
     case CMD_EXPLORE:
+        if (Options.tut_explored)
+            Options.tut_explored = 0;
         if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         {
             mpr("It would help if you knew where you were, first.");
@@ -1237,6 +1302,8 @@ void process_command( command_type cmd ) {
         break;
 
     case CMD_DISPLAY_MAP:
+        if (Options.tutorial_events[TUT_MAP_VIEW])
+            Options.tutorial_events[TUT_MAP_VIEW] = 0;
 #if (!DEBUG_DIAGNOSTICS)
         if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
         {
@@ -1289,7 +1356,10 @@ void process_command( command_type cmd ) {
 #endif
 
     case CMD_DISPLAY_COMMANDS:
-        list_commands(false);
+        if (Options.tutorial_left)
+            list_tutorial_help();
+        else
+            list_commands(false);
         redraw_screen();
         break;
 
@@ -1372,7 +1442,8 @@ void process_command( command_type cmd ) {
     }
 }
 
-static void prep_input() {
+static void prep_input()
+{
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
 #ifdef UNIX
@@ -1847,7 +1918,8 @@ static void decrement_durations()
         chances[1] = you.mutation[MUT_BERSERK] * 25;
         chances[2] = (wearing_amulet( AMU_RAGE ) ? 10 : 0);
         chances[3] = (player_has_spell( SPELL_BERSERKER_RAGE ) ? 5 : 0);
-        const char* reasons[4] = {
+        const char* reasons[4] =
+        {
             "You struggle, and manage to stay standing.",
             "Your mutated body refuses to collapse.",
             "You feel your neck pulse as blood rushes through your body.",
@@ -1897,6 +1969,9 @@ static void decrement_durations()
 
         int dur = 12 + roll_dice( 2, 12 );
         you.exhausted += dur;
+        // for tutorial
+        unsigned tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
+        Options.tutorial_events[TUT_YOU_ENCHANTED] = 0;
         slow_player( dur );
 
         make_hungry(700, true);
@@ -1905,6 +1980,9 @@ static void decrement_durations()
             you.hunger = 50;
 
         calc_hp();
+        
+        learned_something_new(TUT_POSTBERSERK);
+        Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
     if (you.confusing_touch > 1)
@@ -2297,8 +2375,10 @@ static command_type get_next_cmd()
 }
 
 /* for now, this is an extremely yucky hack */
-command_type keycode_to_command( keycode_type key ) {
-    switch ( key ) {
+command_type keycode_to_command( keycode_type key )
+{
+    switch ( key )
+    {
     case 'b': return CMD_MOVE_DOWN_LEFT;
     case 'h': return CMD_MOVE_LEFT;
     case 'j': return CMD_MOVE_DOWN;
@@ -2423,7 +2503,8 @@ keycode_type get_next_keycode()
     return (keyin);
 }
 
-static void middle_input() {
+static void middle_input()
+{
     if (Options.stash_tracking)
         stashes.update_visible_stashes(
             Options.stash_tracking == STM_ALL? 

@@ -59,6 +59,7 @@
 #include "spl-cast.h"
 #include "stuff.h"
 #include "stash.h"
+#include "tutorial.h"
 
 static bool invisible_to_player( const item_def& item );
 static void item_list_on_square( std::vector<const item_def*>& items,
@@ -826,8 +827,10 @@ void item_check(char keyin)
         }
     }
 
-    if (counter_max > 5 && keyin != ';')
+    if (counter_max > 5 && keyin != ';') {
         mpr("There are several objects here.");
+        learned_something_new(TUT_MULTI_PICKUP);
+    }  		
 }
 
 void show_items()
@@ -873,11 +876,13 @@ void pickup_menu(int item_link)
                 if (result == 0)
                 {
                     mpr("You can't carry that much weight.");
+                    learned_something_new(TUT_HEAVY_LOAD);
                     return;
                 }
                 else if (result == -1)
                 {
                     mpr("You can't carry that many items.");
+                    learned_something_new(TUT_HEAVY_LOAD);
                     return;
                 }
                 break;
@@ -1142,11 +1147,13 @@ bool pickup_single_item(int link, int qty)
     if (num == -1)
     {
         mpr("You can't carry that many items.");
+        learned_something_new(TUT_HEAVY_LOAD);
         return (false);
     }
     else if (num == 0)
     {
         mpr("You can't carry that much weight.");
+        learned_something_new(TUT_HEAVY_LOAD);
         return (false);
     }
     
@@ -1179,7 +1186,8 @@ void pickup()
     {
         if (inv_count() >= ENDOFPACK)
         {
-            mpr("There is a portable altar here, but you can't carry anything else.");
+            mpr("There is a portable altar here, "
+                "but you can't carry anything else.");
             return;
         }
 
@@ -1225,8 +1233,8 @@ void pickup()
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
-	// deliberately allowing the player to pick up
-	// a killed item here
+        // deliberately allowing the player to pick up
+        // a killed item here
         pickup_single_item(o, mitm[o].quantity);
     }
     else if (Options.pickup_mode != -1 &&
@@ -1243,9 +1251,10 @@ void pickup()
             // must save this because pickup can destroy the item
             next = mitm[o].link;
 
-	    if ( num_nonsquelched && invisible_to_player(mitm[o]) ) {
+            if ( num_nonsquelched && invisible_to_player(mitm[o]) )
+            {
                 o = next;
-		continue;
+                continue;
             }
 
             if (keyin != 'a')
@@ -1542,7 +1551,6 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     item.link   = freeslot;
 
     autoinscribe_item( item );
-    
 
     origin_freeze(item, you.x_pos, you.y_pos);
 
@@ -1555,7 +1563,14 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         in_name( freeslot, DESC_INVENTORY, info );
         mpr(info);
     }
-
+    
+    if (Options.tutorial_left)
+    {
+        taken_new_item(item.base_type);
+        if (is_random_artefact(you.inv[freeslot]))
+            learned_something_new(TUT_SEEN_RANDART);
+    }
+    
     if (item.base_type == OBJ_ORBS
         && you.char_direction == DIR_DESCENDING)
     {
@@ -2856,6 +2871,7 @@ void handle_time( long time_delta )
                 MSGCH_ROTTEN_MEAT );
             break;
         }
+        learned_something_new(TUT_ROTTEN_FOOD);
     }
 
     // exercise armour *xor* stealth skill: {dlb}

@@ -69,7 +69,8 @@ private:
     void add_class_hotkeys(const item_def &i);
 };
 
-class InvShowPrices {
+class InvShowPrices
+{
 public:
     InvShowPrices(bool doshow = true);
     ~InvShowPrices();

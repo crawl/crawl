@@ -53,6 +53,7 @@
 #include "spells2.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 #include "stash.h"
 
@@ -323,6 +324,8 @@ static void place_monster_corpse(const monsters *monster)
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
+    if (you.hunger_state < HS_SATIATED)
+    	learned_something_new(TUT_MAKE_CHUNKS);    
 }                               // end place_monster_corpse()
 
 void monster_die(struct monsters *monster, char killer, int i)
@@ -445,6 +448,13 @@ void monster_die(struct monsters *monster, char killer, int i)
                 if (death_message)
                     mpr("That felt strangely unrewarding.");
             }
+
+            // killing triggers tutorial lesson
+            if (Options.tutorial_events[TUT_KILLED_MONSTER])
+            	learned_something_new(TUT_KILLED_MONSTER);
+           	else if (Options.tutorial_left && (you.religion == GOD_TROG || you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB)
+           			 && !you.duration[DUR_PRAYER])
+           		tutorial_prayer_reminder();	 
 
             // Xom doesn't care who you killed:
             if (you.religion == GOD_XOM 

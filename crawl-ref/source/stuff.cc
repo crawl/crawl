@@ -50,7 +50,7 @@
 
 #include "delay.h"
 #include "externs.h"
-
+#include "items.h"
 #include "macro.h"
 #include "misc.h"
 #include "monstuff.h"
@@ -60,6 +60,7 @@
 #include "output.h"
 #include "player.h"
 #include "skills2.h"
+#include "tutorial.h"
 #include "view.h"
 
 // Crude, but functional.
@@ -643,9 +644,9 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool clear_after )
 
         tmp = (unsigned char) getch();
 
-	if ( tmp == 27 || tmp == 'q' || tmp == 'Q' )
-	    return -1;
-	
+        if ( tmp == 27 || tmp == 'q' || tmp == 'Q' )
+            return -1;
+        
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
             tmp = safeanswer;
 
@@ -769,9 +770,9 @@ unsigned char random_colour(void)
 unsigned char random_uncommon_colour()
 {
     unsigned char result;
-    do {
+    do
         result = random_colour();
-    } while ( result == LIGHTCYAN || result == CYAN || result == BROWN );
+    while ( result == LIGHTCYAN || result == CYAN || result == BROWN );
     return result;
 }
 
@@ -1051,6 +1052,16 @@ void zap_los_monsters()
                 continue;
 
             int imon = mgrd[gx][gy];
+            
+            // at tutorial beginning disallow items in line of sight
+            if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
+            {
+                int item = igrd[gx][gy];
+            
+                if (item != NON_ITEM && is_valid_item(mitm[item]) )
+                    destroy_item(item);
+            }
+
             if (imon == NON_MONSTER || imon == MHITYOU)
                 continue;
 

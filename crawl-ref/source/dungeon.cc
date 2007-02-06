@@ -56,12 +56,14 @@
 
 #define MAX_PIT_MONSTERS   10
 
-struct pit_mons_def {
+struct pit_mons_def
+{
     int type;
     int rare;
 };
 
-struct spec_t {
+struct spec_t
+{
     bool created;
     bool hooked_up;
     int x1;
@@ -3838,7 +3840,8 @@ static int builder_by_type(int level_number, char level_type)
 
         if (which_demon >= 0)
         {
-            const char *pandemon_level_names[] = {
+            const char *pandemon_level_names[] =
+            {
                 "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
             };
             you.unique_creatures[40 + which_demon] = 1;
@@ -3895,6 +3898,9 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
     {
         vault = random_map_for_tag("entry", wantmini);
     }
+
+    if (Options.tutorial_left)
+    	vault = -1;
 
     return (vault);
 }

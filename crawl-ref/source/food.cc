@@ -44,6 +44,7 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "stuff.h"
+#include "tutorial.h"
 
 static int   determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
 static void  eat_chunk( int chunk_effect );
@@ -506,9 +507,11 @@ static bool food_change(bool suppress_message)
             {
             case HS_STARVING:
                 mpr("You are starving!", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_STARVING);
                 break;
             case HS_HUNGRY:
                 mpr("You are feeling hungry.", MSGCH_FOOD);
+                learned_something_new(TUT_YOU_HUNGRY);
                 break;
             default:
                 break;

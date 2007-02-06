@@ -70,6 +70,7 @@
 #include "skills2.h"
 #include "spells4.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 
 
@@ -871,7 +872,7 @@ void end_game( struct scorefile_entry &se )
 #ifdef PACKAGE_SUFFIX
 	PACKAGE_SUFFIX ,
 #endif
-	".st", ".kil", ".tc", ".nts", ".sav"
+	".st", ".kil", ".tc", ".nts", ".tut", ".sav"
     };
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
@@ -888,6 +889,9 @@ void end_game( struct scorefile_entry &se )
         viewwindow(1, false);   // don't do this for leaving/winning characters
     }
 
+    if (Options.tutorial_left)
+    	tutorial_death_screen();
+    	
     if (!crawl_state.seen_hups)
         more();
 

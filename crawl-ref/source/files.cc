@@ -76,6 +76,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "travel.h"
+#include "tutorial.h"
 
 #ifdef SHARED_FILES_CHMOD_PRIVATE
 #define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
@@ -1202,6 +1203,16 @@ void save_game(bool leave_game)
         DO_CHMOD_PRIVATE(notesFile.c_str());
     }
 
+    /* tutorial */
+    
+    std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
+    FILE *tutorf = fopen(tutorFile.c_str(), "wb");
+    if (tutorf) {
+        save_tutorial(tutorf);
+        fclose(tutorf);
+        DO_CHMOD_PRIVATE(tutorFile.c_str());
+    }
+
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "wb");
     if (!charf)
@@ -1398,6 +1409,15 @@ void restore_game(void)
     if (notesf) {
         load_notes(notesf);
         fclose(notesf);
+    }
+
+    /* tutorial */
+    
+    std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
+    FILE *tutorf = fopen(tutorFile.c_str(), "rb");
+    if (tutorf) {
+        load_tutorial(tutorf);
+        fclose(tutorf);
     }
 }
 

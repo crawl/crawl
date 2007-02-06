@@ -43,8 +43,10 @@
 #include <cctype>
 
 #define CL_RESETSTACK_RETURN(ls, oldtop, retval) \
-    if (true) {\
-        if (oldtop != lua_gettop(ls)) { \
+    if (true) \
+    {\
+        if (oldtop != lua_gettop(ls)) \
+        { \
             lua_settop(ls, oldtop); \
         } \
         return (retval); \
@@ -318,13 +320,15 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
         format = cs + 1;
 
     int argc = 0;
-    for (const char *run = format; *run; run++) {
+    for (const char *run = format; *run; run++)
+    {
         if (*run == '>')
             break;
 
         char argtype = *run;
         ++argc;
-        switch (argtype) {
+        switch (argtype)
+        {
         case 'u':       // Light userdata
             lua_pushlightuserdata(ls, va_arg(args, void*));
             break;
@@ -1065,7 +1069,8 @@ static int l_item_class(lua_State *ls)
 }
 
 // FIXME: Fold this back into itemname.cc.
-static const char *ring_types[] = {
+static const char *ring_types[] =
+{
     "regeneration",
     "protection",
     "protection from fire",
@@ -1092,7 +1097,8 @@ static const char *ring_types[] = {
     "teleport control",
 };
 
-static const char *amulet_types[] = {
+static const char *amulet_types[] =
+{
     "rage", "resist slowing", "clarity", "warding", "resist corrosion",
     "gourmand", "conservation", "controlled flight", "inaccuracy",
     "resist mutation"
@@ -2013,7 +2019,8 @@ static int l_mons_y(lua_State *ls, monsters *mons, const char *attr)
     return (1);
 }
 
-struct MonsAccessor {
+struct MonsAccessor
+{
     const char *attribute;
     int (*accessor)(lua_State *ls, monsters *mons, const char *attr);
 };
@@ -2159,7 +2166,8 @@ void lua_open_globals(lua_State *ls)
 // We could simplify this a great deal by just using lex and yacc, but I
 // don't know if we want to introduce them.
 
-struct lua_pat_op {
+struct lua_pat_op
+{
     const char *token;
     const char *luatok;
     
@@ -2167,7 +2175,8 @@ struct lua_pat_op {
     bool posttext;      // Is this followed by a pattern?
 };
 
-static lua_pat_op pat_ops[] = {
+static lua_pat_op pat_ops[] =
+{
     { "<<", " ( ",   false, true },
     { ">>", " ) ",   true,  false },
     { "!!", " not ", false, true },

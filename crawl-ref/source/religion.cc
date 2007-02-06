@@ -61,6 +61,7 @@
 #include "spells3.h"
 #include "spl-cast.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 
 const char *sacrifice[] = {
@@ -1605,6 +1606,7 @@ void gain_piety(char pgn)
                     god_speaks(you.religion, info);
                 }
             }
+            learned_something_new(TUT_NEW_ABILITY);
         }
     }
 

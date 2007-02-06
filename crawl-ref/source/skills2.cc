@@ -48,7 +48,8 @@
 // the character's race will be listed on the next line.  Its only really
 // intended for cases where things might be really awkward without it. -- bwr
 
-const char *skills[50][6] = {
+const char *skills[50][6] =
+{
     {"Fighting", "Skirmisher", "Grunt", "Veteran", "Warrior", "Slayer"},      // 0
     {"Short Blades", "Stabber", "Cutter", "Knifefighter", "Eviscerator", "Blademaster"},
     {"Long Blades", "Slasher", "Slicer", "Fencer", "Swordfighter", "Swordmaster"},
@@ -123,7 +124,8 @@ const char *martial_arts_titles[6] =
    3.10: but it never is, and CLASSES is probably broken now. Anyway,
    the Spellcasting skill (25) is actually about 130% of what is shown here.
  */
-const int spec_skills[ NUM_SPECIES ][40] = {
+const int spec_skills[ NUM_SPECIES ][40] =
+{
     {                           // SP_HUMAN (1)
      100,                       // SK_FIGHTING
      100,                       // SK_SHORT_BLADES
@@ -1788,7 +1790,8 @@ JOB_PALADIN:
 
 ************************************************************* */
 
-static const int skill_display_order[] = {
+static const int skill_display_order[] =
+{
     SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
     SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
 

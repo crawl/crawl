@@ -36,6 +36,7 @@
 #include "notes.h"
 #include "stash.h"
 #include "religion.h"
+#include "tutorial.h"
 
 // circular buffer for keeping past messages
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
@@ -136,7 +137,7 @@ int channel_to_colour( int channel, int param )
         switch (channel)
         {
         case MSGCH_GOD:
-	case MSGCH_PRAY:
+        case MSGCH_PRAY:
             ret = (Options.channels[ channel ] == MSGCOL_DEFAULT)
                                     ? god_colour( param )
                                     : god_message_altar_colour( param );
@@ -168,6 +169,10 @@ int channel_to_colour( int channel, int param )
 
         case MSGCH_TALK:
             ret = WHITE;
+            break;
+
+        case MSGCH_TUTORIAL:
+            ret = MAGENTA;
             break;
 
         case MSGCH_MONSTER_SPELL:
@@ -316,8 +321,10 @@ static void base_mpr(const char *inf, int channel, int param)
 
     std::string imsg = inf;
     
-    for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
-        if (Options.note_messages[i].matches(imsg)) {
+    for (unsigned i = 0; i < Options.note_messages.size(); ++i)
+    {
+        if (Options.note_messages[i].matches(imsg))
+        {
             take_note(Note(NOTE_MESSAGE, channel, param, inf));
             break;
         }
@@ -414,8 +421,10 @@ void formatted_mpr(const formatted_string& fs, int channel, int param)
 
     const std::string imsg = fs.tostring();
     
-    for (unsigned i = 0; i < Options.note_messages.size(); ++i) {
-        if (Options.note_messages[i].matches(imsg)) {
+    for (unsigned i = 0; i < Options.note_messages.size(); ++i)
+    {
+        if (Options.note_messages[i].matches(imsg))
+        {
             take_note(Note(NOTE_MESSAGE, channel, param, imsg.c_str()));
             break;
         }
@@ -544,13 +553,18 @@ void more(void)
 {
     char keypress = 0;
 
-    message_out(get_message_window_height() - 1,
-                LIGHTGREY, "--more--", 2, false);
+    if (Options.tutorial_left)
+        message_out(get_message_window_height() - 1,
+                    LIGHTGREY,
+                    "--more--                        "
+                    "Press Ctrl-P to reread old messages",
+                    2, false);
+    else
+        message_out(get_message_window_height() - 1,
+                    LIGHTGREY, "--more--", 2, false);
 
     do
-    {
         keypress = getch();
-    }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n');
 
     mesclr( !Options.delay_message_clear &&
@@ -650,6 +664,14 @@ void replay_messages(void)
 #if DEBUG_DIAGNOSTICS
             cprintf( "%d: %s", line, Store_Message[ line ].text.c_str() );
 #else
+    /* TODO: allow colour changes in previous messages, as well
+    if (Store_Message[ line ].channel == MSGCH_TUTORIAL)
+    {
+        formatted_string help = formatted_string::parse_string(Store_Message[ line ].text);
+        help.display();
+    }       
+    else
+    */
             cprintf( "%s", Store_Message[ line ].text.c_str() );
 #endif
 

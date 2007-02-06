@@ -162,7 +162,8 @@ static void addcall(int i, LARGE_INTEGER &tm1, LARGE_INTEGER &tm2)
 #define CLOCKOUT(x) {QueryPerformanceCounter(&t2); \
                      addcall((x), t1, t2);}
 
-static char *descrip[] = {
+static char *descrip[] =
+{
     "bflush:WriteConsoleOutput",
     "_setCursorType:SetConsoleCursorInfo",
     "gotoxy:SetConsoleCursorPosition",
@@ -314,12 +315,14 @@ void setStringInput(bool value)
       outmodes = 0;
    }
 
-   if ( SetConsoleMode( inbuf, inmodes ) == 0) {
+   if ( SetConsoleMode( inbuf, inmodes ) == 0)
+   {
       fputs("Error initialising console input mode.", stderr);
       exit(0);
    }
 
-   if ( SetConsoleMode( outbuf, outmodes ) == 0) {
+   if ( SetConsoleMode( outbuf, outmodes ) == 0)
+   {
       fputs("Error initialising console output mode.", stderr);
       exit(0);
    }
@@ -354,7 +357,8 @@ void init_libw32c(void)
    inbuf = GetStdHandle( STD_INPUT_HANDLE );
    outbuf = GetStdHandle( STD_OUTPUT_HANDLE );
 
-   if (inbuf == INVALID_HANDLE_VALUE || outbuf == INVALID_HANDLE_VALUE) {
+   if (inbuf == INVALID_HANDLE_VALUE || outbuf == INVALID_HANDLE_VALUE)
+   {
       fputs("Could not initialise libw32c console support.", stderr);
       exit(0);
    }
@@ -370,7 +374,8 @@ void init_libw32c(void)
 
    // by default, set string input to false:  use char-input only
    setStringInput( false );
-   if (SetConsoleMode( outbuf, 0 ) == 0) {
+   if (SetConsoleMode( outbuf, 0 ) == 0)
+   {
       fputs("Error initialising console output mode.", stderr);
       exit(0);
    }
@@ -715,7 +720,8 @@ static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, contro
    { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT, CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT },
    };
 
-static int ck_tr[] = {
+static int ck_tr[] =
+{
     'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n',
     // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u' ,
     '8', '2', '4', '6', '0', '7', '1', '5', '9', '3',
@@ -724,7 +730,8 @@ static int ck_tr[] = {
     // 2, 10, 14, 8, 0, 12, 25, 11, 21 ,
 };
 
-int key_to_command( int keyin ) {
+int key_to_command( int keyin )
+{
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
         return ck_tr[ keyin - CK_UP ];
     
@@ -772,7 +779,8 @@ int vk_translate( WORD VirtCode, CHAR c, DWORD cKeys)
       if (VirtCode == vk_tr[0][mkey]) break;
 
    // step 4 - just return the damn key.
-   if (mkey == VKEY_MAPPINGS) {
+   if (mkey == VKEY_MAPPINGS)
+   {
       if (c)
           return c;
       
@@ -884,9 +892,11 @@ int kbhit()
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
     PeekConsoleInput(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
-    if (read_count > 0) {
+    if (read_count > 0)
+    {
         for (unsigned i = 0; i < read_count; ++i)
-            if (ir[i].EventType == KEY_EVENT) {
+            if (ir[i].EventType == KEY_EVENT)
+            {
                 KEY_EVENT_RECORD *kr;
                 kr = &(ir[i].Event.KeyEvent);
 

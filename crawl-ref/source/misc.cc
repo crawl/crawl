@@ -61,6 +61,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #include "travel.h"
+#include "tutorial.h"
 #include "view.h"
 
 extern FixedVector<char, 10>  Visible_Statue;        // defined in acr.cc
@@ -1370,6 +1371,7 @@ void handle_traps(char trt, int i, bool trap_known)
                         75 + random2(100), 3, "a Zot trap" );
         break;
     }
+    learned_something_new(TUT_SEEN_TRAPS);
 }                               // end handle_traps()
 
 void disarm_trap( struct dist &disa )
@@ -1687,6 +1689,8 @@ bool go_berserk(bool intentional)
         return false;
     }
 
+    if (Options.tutorial_left)
+    	Options.tut_berserk_counter++;
     mpr("A red film seems to cover your vision as you go berserk!");
     mpr("You feel yourself moving faster!");
     mpr("You feel mighty!");
@@ -1918,12 +1922,14 @@ bool i_feel_safe(bool announce)
                     {
                         if (announce)
                             mons.push_back(mon);
-                        else
+                        else {
+                        	tutorial_first_monster(*mon);
                             return false;
                     }
                 }
             }
         }
+    }
     }
 
     if (announce)
