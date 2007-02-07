@@ -43,7 +43,8 @@
 #  % - normal item
 #  * - higher level item (good)
 #  | - acquirement-level item (almost guaranteed excellent)
-#  O - place an appropriate rune here
+#  O - place an appropriate rune here. In portal vaults, place the portal or
+#      branch stair here.
 #  P - maybe place a rune here (50%)
 #  R - honeycomb (2/3) or royal jelly (1/3)
 #  Z - the Orb of Zot
@@ -2230,3 +2231,143 @@ ENDMAP
 
 MONS: swamp dragon, swamp drake, hydra
 MONS: random, random, random, random
+
+
+##############################################################################
+# Portal vaults
+##############################################################################
+# These vaults are used when the dungeon builder tries to place a portal/stair
+# to a branch. There's no guarantee that one of these will be used because
+# portal vaults are placed last, after the rest of the level is generated, and 
+# will not be placed if they can't fit on the level without clobbering 
+# something.
+#
+# With portal vaults (as with minivaults), smaller is better, since the dungeon
+# builder will frequently not be able to fit large vaults in anywhere (it
+# doesn't try very hard).
+#
+# Note that the rune symbol (O) is used for the portal in portal vaults. If you
+# do not put an O anywhere in the vault, there will be no portal for that 
+# branch!
+#
+##############################################################################
+# Freedom of Choice (Orc entry)
+
+NAME: david_orc_choice
+TAGS: orc_entry
+MONS: hobgoblin, orc sorcerer, orc warrior, orc
+ITEM: scroll of blinking / scroll of recharging / scroll of fear
+ITEM: scroll of teleport / scroll of remove curse / scroll of identify
+ORIENT: float
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx.........xxxxxxxx
+xxxxx.......O.......xxxxx
+xxxx.................xxxx
+xxxx....x.......x....xxxx
+xxx....xxx.....xxx....xxx
+xxx...xxxxx...xxxxx...xxx
+xx.....xxx.....xxx.....xx
+xx.....xxx.....xxx.....xx
+x.......x..I.I..x...I...x
+x.......x.......x.......x
+x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x.x.%.x.x.x.d.x.x.x.4.x.x
+x.x.1.x.x.x.2.x.x.x.4.x.x
+x.x.%.x.x.x.3.x.x.x.e.x.x
+x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x=x..x..x+x..x
+x.......x.......x.......x
+x.......x..I.I..x...I...x
+xx.....xxx.....xxx.....xx
+xx.....+.+.....+.+.....xx
+xxx...xxxxx...xxxxx...xxx
+xxx.@.xxxxxxxxxxxxx.@.xxx
+ENDMAP
+
+##############################################################################
+# Generic Orc entry
+
+NAME: david_orc_1
+TAGS: orc_entry
+MONS: orc
+ORIENT: float
+FLAGS: no_rotate
+
+MAP
+xxxx..@..xxxx
+x.....I.....x
+x...........x
+.....111.....
+@I...1O1...I@
+.....111.....
+x...........x
+x.....I.....x
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Generic Vaults entry
+
+NAME: david_vaults_1
+TAGS: vault_entry
+MONS: human
+ORIENT: float
+FLAGS: no_rotate
+
+MAP
+xxxxx.@.xxxxx
+x...+...x...x
+x...x...x...x
+xxx=x111x...x
+@.x.x111+.O.x
+x.x.x111x...x
+x.x.x...x...x
+x.+.x...x...x
+xxxxx.@.xxxxx
+ENDMAP
+
+##############################################################################
+# Generic Lair entry
+
+NAME: david_lair_1
+TAGS: lair_entry
+MONS: giant lizard, giant snail, yak, plant
+ORIENT: float
+FLAGS: no_rotate
+CHANCE: 5000
+
+MAP
+xxxx..@..xxxx
+xx.........xx
+x...2...44..x
+...4..1......
+@....1O3....@
+..........4..
+x...4..2....x
+xx.........xx
+xxxx..@..xxxx
+ENDMAP
+
+##############################################################################
+# Shrubbed Lair entry
+
+NAME: david_lair_2
+TAGS: lair_entry
+MONS: plant, lindwurm
+ORIENT: float
+FLAGS: no_rotate
+
+MAP
+xxxxxxxxxxxxx
+xx111111111xx
+x112..111111x
+x11.O..111...
+x11...111...@
+x111111......
+x1..11......x
+xx.........xx
+xxxx..@..xxxx
+ENDMAP

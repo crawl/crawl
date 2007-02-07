@@ -2521,7 +2521,7 @@ void magic_mapping(int map_radius, int proportion)
                             continue;
                         }
 
-                        if (grid_is_solid( grd[i + k][j + l] )
+                        if (grid_is_opaque( grd[i + k][j + l] )
                                 && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
                             empty_count--;
                     }
@@ -2535,7 +2535,7 @@ void magic_mapping(int map_radius, int proportion)
                     set_envmap_char(i, j, get_magicmap_char(grd[i][j]));
 
 #ifdef WIZARD
-                    if (map_radius == 1000)
+                    if (map_radius == 1000 && you.wizard)
                         set_envmap_char(i, j, get_sightmap_char(grd[i][j]));
 #endif
                 }
@@ -2545,7 +2545,7 @@ void magic_mapping(int map_radius, int proportion)
                 if ((you.mutation[MUT_PANDEMONIUM] > 1
                         && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
 #ifdef WIZARD
-                    || map_radius == 1000
+                    || (map_radius == 1000 && you.wizard)
 #endif
                     )
                 {

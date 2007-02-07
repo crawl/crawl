@@ -186,7 +186,6 @@ distclean: clean
 
 $(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
-	chmod ${MCHMOD} $(GAME)
 
 debug: $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)

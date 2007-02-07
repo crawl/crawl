@@ -48,7 +48,7 @@
 #  % - normal item
 #  * - higher level item (good)
 #  | - acquirement-level item (almost guaranteed excellent)
-#  O - place an appropriate rune here
+#  O - place an appropriate rune here. For portal vaults, place the portal here.
 #  P - maybe place a rune here (50%)
 #  R - honeycomb (2/3) or royal jelly (1/3)
 #  Z - the Orb of Zot

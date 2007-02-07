@@ -24,16 +24,19 @@
 #include "files.h"
 #include "monplace.h"
 #include "mapdef.h"
+#include "misc.h"
 #include "stuff.h"
 
 #include "levcomp.h"
 
 static int write_vault(const map_def &mdef, map_type mt, 
-                        vault_placement &);
+                       vault_placement &,
+                       std::vector<vault_placement> *);
 static int apply_vault_definition(
                         map_def &def,
                         map_type map,
-                        vault_placement &);
+                        vault_placement &,
+                        std::vector<vault_placement> *);
 
 static void resolve_map(map_def &def);
 
@@ -55,8 +58,8 @@ static std::vector<map_def> vdefs;
 int vault_main( 
         map_type vgrid, 
         vault_placement &place,
-        int which_vault, 
-        int many_many )
+        int which_vault,
+        std::vector<vault_placement> *avoid)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s", 
@@ -74,18 +77,26 @@ int vault_main(
     }
 
     // NB - a return value of zero is not handled well by dungeon.cc (but there it is) 10mar2000 {dlb}
-    return write_vault( vdefs[which_vault], vgrid, place );
+    return write_vault( vdefs[which_vault], vgrid, place, avoid );
 }          // end vault_main()
 
 static int write_vault(const map_def &mdef, map_type map, 
-                       vault_placement &place)
+                       vault_placement &place,
+                       std::vector<vault_placement> *avoid)
 {
     // Copy the map so we can monkey with it.
     place.map = mdef;
-    resolve_map(place.map);
 
-    return (place.orient =
-            apply_vault_definition(place.map, map, place));
+    // Try so many times to place the map. This will always succeed
+    // unless there are conflicting map placements in 'avoid'.
+    int tries = 10;
+    do
+        resolve_map(place.map);
+    while ((place.orient =
+            apply_vault_definition(place.map, map, place, avoid)) == MAP_NONE
+           && tries-- > 0);
+
+    return (place.orient);
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
@@ -106,8 +117,53 @@ static void resolve_map(map_def &map)
         map.rotate( coinflip() );
 }
 
-static void apply_vault_grid(map_def &def, map_type map, 
-                             vault_placement &place)
+static bool is_grid_clobbered(int sx, int sy, int width, int height)
+{
+    for (int y = sy; y < sy + height; ++y)
+    {
+        for (int x = sx; x < sx + width; ++x)
+        {
+            int grid = grd[x][y];
+
+            if (!grid_is_opaque(grid)
+                && grid != DNGN_FLOOR
+                && grid != DNGN_CLOSED_DOOR
+                && grid != DNGN_OPEN_DOOR
+                && grid != DNGN_SECRET_DOOR)
+            {
+                return (true);
+            }
+        }
+    }
+
+    return (false);
+}
+
+// Determines if the region specified by (x, y, x + width - 1, y + height - 1)
+// is a bad place to build a vault.
+static bool bad_map_place(int x, int y, int width, int height,
+                         std::vector<vault_placement> *avoid)
+{
+    if (!avoid)
+        return (false);
+    
+    const dgn_region thisvault(x, y, width, height);
+
+    for (int i = 0, size = avoid->size(); i < size; ++i)
+    {
+        const vault_placement &vp = (*avoid)[i];
+        const dgn_region vault(vp.x, vp.y, vp.width, vp.height);
+
+        if (thisvault.overlaps(vault))
+            return (true);
+    }
+
+    return (is_grid_clobbered(x, y, width, height));
+}
+
+static bool apply_vault_grid(map_def &def, map_type map, 
+                             vault_placement &place,
+                             std::vector<vault_placement> *avoid)
 {
     const map_lines &ml = def.map;
     const int orient = def.orient;
@@ -146,6 +202,15 @@ static void apply_vault_grid(map_def &def, map_type map,
         starty = where.y;
     }
 
+    if (bad_map_place(startx, starty, width, height, avoid))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
+             startx, starty, width, height);
+#endif
+        return (false);
+    }
+
     const std::vector<std::string> &lines = ml.get_lines();
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d,%d), dimensions (%d,%d)",
@@ -162,18 +227,23 @@ static void apply_vault_grid(map_def &def, map_type map,
     place.y = starty;
     place.width = width;
     place.height = height;
+
+    return (true);
 }
 
 static int apply_vault_definition(
         map_def &def,
         map_type map,
-        vault_placement &place)
+        vault_placement &place,
+        std::vector<vault_placement> *avoid)
 {
-    apply_vault_grid(def, map, place);
+    if (!apply_vault_grid(def, map, place, avoid))
+        return (MAP_NONE);
 
     int orient = def.orient;
     if (orient == MAP_NONE)
         orient = MAP_NORTH;
+    
     return (orient);
 }
 
