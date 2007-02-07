@@ -3586,10 +3586,7 @@ void describe_spell(int spelled)
     case SPELL_SELECTIVE_AMNESIA:
         description += "allows the caster to selectively erase one spell "
             "from memory to recapture the magical energy bound "
-            "up with it. Casters will be able to memorise this "
-            "spell should even their minds be otherwise full of "
-            "magic (i.e., already possessing the maximum number "
-            "of spells). ";
+            "up with it. ";
         break;
 
     case SPELL_MASS_CONFUSION:
