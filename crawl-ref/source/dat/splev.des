@@ -2337,7 +2337,6 @@ TAGS: lair_entry
 MONS: giant lizard, giant snail, yak, plant
 ORIENT: float
 FLAGS: no_rotate
-CHANCE: 5000
 
 MAP
 xxxx..@..xxxx
