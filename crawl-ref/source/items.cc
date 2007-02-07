@@ -577,8 +577,6 @@ static void describe_floor() {
                 break;
             case DNGN_ENTER_ORCISH_MINES:
                 mpr("There is a staircase to the Orcish Mines here.");
-		mpr("Reaching the bottom shouldn't be too hard...");
-		mpr("But getting back might take some resources.");
                 break;
             case DNGN_ENTER_HIVE:
                 mpr("There is a staircase to the Hive here.");
