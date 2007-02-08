@@ -127,6 +127,8 @@ static bool is_grid_clobbered(int sx, int sy, int width, int height)
 
             if (!grid_is_opaque(grid)
                 && grid != DNGN_FLOOR
+                && !grid_is_water(grid)
+                && grid != DNGN_LAVA
                 && grid != DNGN_CLOSED_DOOR
                 && grid != DNGN_OPEN_DOOR
                 && grid != DNGN_SECRET_DOOR)
