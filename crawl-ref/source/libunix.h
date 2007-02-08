@@ -4,9 +4,10 @@
 
 // Some replacement routines missing in gcc
 
+#ifndef O_BINARY
 #define O_BINARY O_RDWR
+#endif
 
-char *strlwr(char *str);
 char getche(void);
 
 void message_out(int mline, int colour, const char *str, int firstcol = 0,
@@ -56,6 +57,7 @@ extern "C"
     int getch(void);
     int noecho(void);
     int echo(void);
+    char *strlwr(char *str);
 }
 #endif
 
