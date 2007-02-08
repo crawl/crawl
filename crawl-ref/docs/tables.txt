@@ -1,8 +1,10 @@
+TABLES OF APTITUDES
+
 The following three tables describe all aptitudes of the various races for the
 various skills. These are not necessary for winning in Crawl, neither explicit
 nor implicit. The qualitative information behind this sheet (ie. which species
 is good at which tasks) can be obtained in two other, less sophisticated ways:
-- read the species section in the manual about strenghts and weaknesses
+- read the species section in the manual about strengths and weaknesses
 - look which combinations of race and class are possible.
 
 If you consider figuring out such things yourself to be fun, stop reading now.
@@ -71,7 +73,7 @@ Merfolk         160  60  90  70 100 120   100 100                 120
                 Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
 
 
-        	Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+                Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
 ---------------------------------------------------------------------
 Human           100 100 100 100 100 100 100 100   100 100 100 100 100
 Elf             120  80  80 120 130 130 100 110    80 120  60 100  90
@@ -108,7 +110,7 @@ Ghoul            80 110 110 110 110 110 110  80   130 130 130 130 130
 Kenku           100  75  75  75  75  75  75  80    90 100  80  80  90
 Merfolk          80  70  90 140 150  50 130  90   100 150 140 140 100
 ---------------------------------------------------------------------
-		Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
+                Fgt SBl LBl Axs M&F Pla Stv U C   Ran Slg Bws Crb Drt
 
 
                 Spc Coj Enc Sum Nec Trl Trm Div   Fir Ice Air Ear Poi
