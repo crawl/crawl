@@ -57,8 +57,42 @@
 #include "tutorial.h"
 #include "view.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// Actor stuff - generic functions that can be called with a monster pointer,
+// or NULL for the player.
+
+std::string pronoun_you(description_level_type desc)
+{
+    return (desc == DESC_CAP_A || desc == DESC_CAP_THE? "You" : "you");
+}
+
+std::string actor_name(const monsters *actor, description_level_type desc)
+{
+    return (actor? ptr_monam(actor, desc) : pronoun_you(desc));
+}
+
+// actor_verb(NULL, "chop") == chop, as in "You chop"
+// actor_verb(monster, "chop") == chops, as in "The skeletal warrior chops".
+std::string actor_verb(const monsters *actor, const std::string &verb)
+{
+    // Simplistic - we really should be conjugating the verb
+    // appropriately. We'll special-case as necessary.
+    return (actor? verb + "s" : verb);
+}
+
+int actor_damage_type(const monsters *actor)
+{
+    return (actor? mons_damage_type(actor) : player_damage_type());
+}
+
+int actor_damage_brand(const monsters *actor)
+{
+    return (actor? mons_damage_brand(actor) : player_damage_brand());
+}
+
 /*
    you.duration []: //jmf: obsolete, see enum.h instead
+                    //[ds] Well, can we lose it yet?
    0 - liquid flames
    1 - icy armour
    2 - repel missiles
@@ -600,13 +634,17 @@ int player_damage_type( void )
         return (get_vorpal_type(you.inv[wpn]));
     }
     else if (you.equip[EQ_GLOVES] == -1 &&
-        (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-            || you.mutation[MUT_CLAWS] 
-            || you.species == SP_TROLL
-            || you.species == SP_GHOUL))
+             you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
     {
         return (DVORP_SLICING);
+    }
+    else if (you.equip[EQ_GLOVES] == -1 &&
+             (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+              || you.mutation[MUT_CLAWS] 
+              || you.species == SP_TROLL
+              || you.species == SP_GHOUL))
+    {
+        return (DVORP_CLAWING);
     }
 
     return (DVORP_CRUSHING);

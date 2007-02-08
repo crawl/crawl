@@ -16,6 +16,11 @@
 
 #include "externs.h"
 
+std::string actor_name(const monsters *actor, description_level_type desc);
+std::string actor_verb(const monsters *actor, const std::string &verb);
+int actor_damage_type(const monsters *actor);
+int actor_damage_brand(const monsters *actor);
+
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                           bool force );
 

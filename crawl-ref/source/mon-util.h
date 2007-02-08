@@ -134,6 +134,8 @@ const char *monam(int mons_num, int mons, bool vis, char desc, int mons_wpn = NO
 
 // these front for monam
 const char *ptr_monam(const monsters *mon, char desc, bool force_seen = false);
+std::string str_monam(const monsters *mon, description_level_type desc,
+                      bool force_seen = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -226,6 +228,9 @@ bool mons_is_statue(int mc);
 bool mons_is_demon( int mc );
 bool mons_is_humanoid( int mc );
 
+bool mons_wields_two_weapons(const monsters *m);
+int mons_damage_type(const monsters *m);
+int mons_damage_brand(const monsters *m);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

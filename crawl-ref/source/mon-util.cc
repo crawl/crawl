@@ -1326,6 +1326,11 @@ void define_monster(int index)
         mons.enchantment[i] = ENCH_NONE;
 }                               // end define_monster()
 
+std::string str_monam(const monsters *mon, description_level_type desc,
+                      bool force_seen)
+{
+    return (ptr_monam(mon, desc, force_seen));
+}
 
 /* ------------------------- monam/moname ------------------------- */
 const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
@@ -1624,6 +1629,61 @@ bool mons_aligned(int m1, int m2)
     }
 
     return (fr1 == fr2);
+}
+
+bool mons_wields_two_weapons(const monsters *m)
+{
+    return (m->type == MONS_TWO_HEADED_OGRE || m->type == MONS_ETTIN);
+}
+
+// Does not check whether the monster can dual-wield - that is the
+// caller's responsibility.
+int mons_offhand_weapon_index(const monsters *m)
+{
+    return (m->inv[1]);
+}
+
+int mons_weapon_index(const monsters *m)
+{
+    // This randomly picks one of the wielded weapons for monsters that can use
+    // two weapons. Not ideal, but better than nothing. fight.cc does it right,
+    // for various values of right.
+    int weap = m->inv[MSLOT_WEAPON];
+
+    if (mons_wields_two_weapons(m))
+    {
+        const int offhand = mons_offhand_weapon_index(m);
+        if (offhand != NON_ITEM && (weap == NON_ITEM || coinflip()))
+            weap = offhand;
+    }
+
+    return (weap);
+}
+
+int mons_base_damage_type(const monsters *m)
+{
+    return (mons_class_flag(m->type, M_CLAWS)? DVORP_CLAWING : DVORP_CRUSHING);
+}
+
+int mons_damage_type(const monsters *m)
+{
+    const int mweap = mons_weapon_index(m);
+
+    if (mweap == NON_ITEM)
+        return (mons_base_damage_type(m));
+
+    return (get_vorpal_type(mitm[mweap]));
+}
+
+int mons_damage_brand(const monsters *m)
+{
+    const int mweap = mons_weapon_index(m);
+
+    if (mweap == NON_ITEM)
+        return (SPWPN_NORMAL);
+
+    const item_def &weap = mitm[mweap];
+    return (!is_range_weapon(weap)? get_weapon_brand(weap) : SPWPN_NORMAL);
 }
 
 bool mons_friendly(const monsters *m)

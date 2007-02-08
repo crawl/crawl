@@ -375,6 +375,112 @@ int calc_heavy_armour_penalty( bool random_factor )
     return heavy_armour;
 }
 
+// Returns true if a head got lopped off.
+static bool chop_hydra_head( const monsters *attacker,
+                             monsters *defender,
+                             int damage_done,
+                             int dam_type,
+                             int wpn_brand )
+{
+    const bool defender_visible = mons_near(defender);
+
+    // Monster attackers have only a 25% chance of making the
+    // chop-check to prevent runaway head inflation.
+    if (attacker && !one_chance_in(4))
+        return (false);
+    
+    if ((dam_type == DVORP_SLICING || dam_type == DVORP_CHOPPING
+         || dam_type == DVORP_CLAWING)
+        && damage_done > 0
+        && (damage_done >= 4 || wpn_brand == SPWPN_VORPAL || coinflip()))
+    {
+        defender->number--;
+
+        const char *verb = NULL;
+
+        if (dam_type == DVORP_CLAWING)
+        {
+            static const char *claw_verbs[] = { "rip", "tear", "claw" };
+            verb =
+                claw_verbs[
+                    random2( sizeof(claw_verbs) / sizeof(*claw_verbs) ) ];
+        }
+        else
+        {
+            static const char *slice_verbs[] =
+            {
+                "slice", "lop", "chop", "hack"
+            };
+            verb =
+                slice_verbs[
+                    random2( sizeof(slice_verbs) / sizeof(*slice_verbs) ) ];
+        }
+
+        if (defender->number < 1)
+        {
+            if (defender_visible)
+                mprf( "%s %s %s's last head off!",
+                      actor_name(attacker, DESC_CAP_THE).c_str(),
+                      actor_verb(attacker, verb).c_str(),
+                      str_monam(defender, DESC_NOCAP_THE).c_str() );
+
+            defender->hit_points = -1;
+        }
+        else
+        {
+            if (defender_visible)
+                mprf( "%s %s one of %s's heads off!",
+                      actor_name(attacker, DESC_CAP_THE).c_str(),
+                      actor_verb(attacker, verb).c_str(),
+                      str_monam(defender, DESC_NOCAP_THE).c_str() );
+
+            if (wpn_brand == SPWPN_FLAMING)
+            {
+                if (defender_visible)
+                    mpr( "The flame cauterises the wound!" );
+            }
+            else if (defender->number < 19)
+            {
+                simple_monster_message( defender, " grows two more!" );
+                defender->number += 2;
+                heal_monster( defender, 8 + random2(8), true );
+            }
+        }
+
+        return (true);
+    }
+
+    return (false);
+}
+
+static bool actor_decapitates_hydra(monsters *attacker, monsters *defender,
+                                    int damage_done)
+{
+    if (defender->type == MONS_HYDRA)
+    {
+        const int dam_type = actor_damage_type(attacker);
+        const int wpn_brand = actor_damage_brand(attacker);
+
+        return chop_hydra_head(attacker, defender, damage_done,
+                               dam_type, wpn_brand);
+    }
+    return (false);
+}
+
+static bool player_fumbles_attack()
+{
+    // fumbling in shallow water <early return>:
+    if (player_in_water() && !player_is_swimming())
+    {
+        if (random2(you.dex) < 4 || one_chance_in(5))
+        {
+            mpr("Unstable footing causes you to fumble your attack.");
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // Returns true if you hit the monster.
 bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
@@ -485,23 +591,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     if (you.pet_target == MHITNOT) 
         you.pet_target = monster_attacked;
 
-    // fumbling in shallow water <early return>:
-    if (player_in_water() && !player_is_swimming())
-    {
-        if (random2(you.dex) < 4 || one_chance_in(5))
-        {
-            mpr("Unstable footing causes you to fumble your attack.");
-            return (false);
-        }
-    }
+    if (player_fumbles_attack())
+        return (false);
 
-    // wet merfolk
-    if (player_is_swimming()
-        // monster not a water creature, but is in water
-        && monster_floundering(defender))
-    {
-        water_attack = true;
-    }
+    // Swimmers get bonus against non-swimmers wading in water.
+    water_attack = player_is_swimming() && monster_floundering(defender);
 
     // new unified to-hit calculation
     your_to_hit = calc_your_to_hit( heavy_armour, use_hand_and_a_half_bonus,
@@ -509,7 +603,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     //jmf: check for backlight enchantment
     if (mons_has_ench(defender, ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_IV))
-	your_to_hit += 2 + random2(8);
+        your_to_hit += 2 + random2(8);
 
     // energy expenditure in terms of food:
     make_hungry(3, true);
@@ -517,10 +611,10 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     if (ur_armed &&
         you.inv[ weapon ].base_type == OBJ_WEAPONS &&
         is_random_artefact( you.inv[ weapon ] ) &&
-	art_proprt[RAP_ANGRY] >= 1 &&
-	random2(1 + art_proprt[RAP_ANGRY]))
+        art_proprt[RAP_ANGRY] >= 1 &&
+        random2(1 + art_proprt[RAP_ANGRY]))
     {
-	go_berserk(false);
+        go_berserk(false);
     }
 
     switch (you.special_wield)
@@ -1136,16 +1230,16 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     /* remember, damage_done is still useful! */
     if (hit)
     {
-	if (defender->type == MONS_JELLY
-	    || defender->type == MONS_BROWN_OOZE
-	    || defender->type == MONS_ACID_BLOB
-	    || defender->type == MONS_ROYAL_JELLY)
-	{
-	    weapon_acid(5);
-	}
-
+        if (defender->type == MONS_JELLY
+            || defender->type == MONS_BROWN_OOZE
+            || defender->type == MONS_ACID_BLOB
+            || defender->type == MONS_ROYAL_JELLY)
+        {
+            weapon_acid(5);
+        }
+        
         int specdam = 0;
-
+        
         if (ur_armed 
             && you.inv[ weapon ].base_type == OBJ_WEAPONS
             && is_demonic( you.inv[ weapon ] ))
@@ -1156,56 +1250,9 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         if (mons_holiness(defender) == MH_HOLY)
             did_god_conduct(DID_ATTACK_HOLY, defender->hit_dice);
 
-        if (defender->type == MONS_HYDRA)
-        {
-            const int dam_type = player_damage_type();
-            const int wpn_brand = player_damage_brand();
-
-            if ((dam_type == DVORP_SLICING || dam_type == DVORP_CHOPPING)
-                && damage_done > 0
-                && (damage_done >= 4 || wpn_brand == SPWPN_VORPAL || coinflip()))
-            {
-                defender->number--;
-
-                temp_rand = random2(4);
-                const char *const verb = (temp_rand == 0) ? "slice" :
-                                         (temp_rand == 1) ? "lop" :
-                                         (temp_rand == 2) ? "chop" : "hack";
-
-                if (defender->number < 1)
-                {
-                    snprintf( info, INFO_SIZE, "You %s %s's last head off!",
-                              verb, ptr_monam(defender, DESC_NOCAP_THE) );
-                    mpr( info );
-                              
-                    defender->hit_points = -1; 
-                }
-                else
-                {
-                    snprintf( info, INFO_SIZE, "You %s one of %s's heads off!",
-                              verb, ptr_monam(defender, DESC_NOCAP_THE) );
-                    mpr( info );
-
-                    if (wpn_brand == SPWPN_FLAMING) 
-                        mpr( "The flame cauterises the wound!" );
-                    else if (defender->number < 19)
-                    {
-                        simple_monster_message( defender, " grows two more!" );
-                        defender->number += 2;
-                        heal_monster( defender, 8 + random2(8), true );
-                    }
-                }
-
-                // if the hydra looses a head:
-                // - it's dead if it has none remaining (HP set to -1)
-                // - flame used to cauterise doesn't do extra damage
-                // - ego weapons do their additional damage to the 
-                //   hydra's decapitated head, so it's ignored.
-                //
-                // ... and so we skip the special damage.
-                goto mons_dies;
-            }
-        }
+        // If decapitation, extra damage is bypassed.
+        if (actor_decapitates_hydra(NULL, defender, damage_done))
+            goto mons_dies;
 
         // jmf: BEGIN STAFF HACK
         // How much bonus damage will a staff of <foo> do?
@@ -2014,6 +2061,20 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     return (hit);
 }                               // end you_attack()
+
+static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
+                                    int which_attack)
+{
+    // speed adjustment for weapon using monsters
+    if (wpn_speed > 0)
+    {
+        // only get one third penalty/bonus for second weapons.
+        if (which_attack > 0)
+            wpn_speed = (20 + wpn_speed) / 3;
+
+        attacker->speed_increment -= (wpn_speed - 10) / 2;
+    }
+}
 
 void monster_attack(int monster_attacking)
 {
@@ -3085,15 +3146,7 @@ commented out for now
             }
         }
 
-        // adjust time taken if monster used weapon
-        if (wpn_speed > 0)
-        {
-            // only get one third penalty/bonus for second weapons.
-            if (runthru > 0)
-                wpn_speed = (20 + wpn_speed) / 3;
-
-            attacker->speed_increment -= (wpn_speed - 10) / 2;
-        }
+        mons_lose_attack_energy(attacker, wpn_speed, runthru);
     }                           // end of for runthru
 
     if (player_perceives_attack)
@@ -3162,11 +3215,21 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
     // now disturb defender, regardless
     behaviour_event(defender, ME_WHACK, monster_attacking);
 
-    char runthru;
+    int heads = 0;
 
-    for (runthru = 0; runthru < 4; runthru++)
+    if (attacker->type == MONS_HYDRA)
+        heads = attacker->number;
+    
+    for (int runthru = 0; runthru < 4; runthru++)
     {
-        char mdam = mons_damage(attacker->type, runthru);
+        if (attacker->type == MONS_HYDRA)
+        {
+            runthru = 0;
+            if (heads-- < 1)
+                break;
+        }
+        
+        int mdam = mons_damage(attacker->type, runthru);
         wpn_speed = 0;
 
         if (attacker->type == MONS_ZOMBIE_SMALL
@@ -3194,8 +3257,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
         if (mdam == 0)
             break;
 
-        if ((attacker->type == MONS_TWO_HEADED_OGRE 
-                    || attacker->type == MONS_ETTIN)
+        if (mons_wields_two_weapons(attacker)
             && runthru == 1 && attacker->inv[MSLOT_MISSILE] != NON_ITEM)
         {
             hand_used = 1;
@@ -3223,8 +3285,8 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
         mons_to_hit = random2(mons_to_hit);
 
         if (mons_to_hit >= defender->evasion ||
-	    ((mons_is_paralysed(defender) || defender->behaviour == BEH_SLEEP)
-	     && !one_chance_in(20)))
+            ((mons_is_paralysed(defender) || defender->behaviour == BEH_SLEEP)
+             && !one_chance_in(20)))
         {
             hit = true;
 
@@ -3335,6 +3397,20 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 
                 strcat(info, "! ");
                 mpr(info);
+            }
+
+            if (actor_decapitates_hydra(attacker, defender, damage_taken))
+            {
+                mons_lose_attack_energy(attacker, wpn_speed, runthru);
+                
+                if (defender->hit_points < 1)
+                {
+                    monster_die(defender, KILL_MON, monster_attacking);
+                    return (true);
+                }
+
+                // Skip rest of attack.
+                continue;
             }
 
             // special attacks:
@@ -3883,15 +3959,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
             }
         }
 
-        // speed adjustment for weapon using monsters
-        if (wpn_speed > 0)
-        {
-            // only get one third penalty/bonus for second weapons.
-            if (runthru > 0)
-                wpn_speed = (20 + wpn_speed) / 3;
-
-            attacker->speed_increment -= (wpn_speed - 10) / 2;
-        }
+        mons_lose_attack_energy(attacker, wpn_speed, runthru);
     }                           // end of for runthru
 
     return true;

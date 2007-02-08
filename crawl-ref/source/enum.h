@@ -1830,15 +1830,12 @@ enum mons_class_flags
     M_EVIL              = (1<<19),        // monster vulnerable to holy spells
 
     M_UNIQUE            = (1<<20),        // monster is a unique
-    M_FROZEN            = (1<<21),        // XXX: Potentially ditchable
-    
+
+    M_CLAWS             = (1<<21),        // Chops off hydra heads in combat.
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
-    M_COLOUR_SHIFT      = (1<<27),        // flag for element colour shifters
-    M_DCHAR_SYMBOL      = (1<<28),        // monster looks like a DCHAR terrain
 
     M_NO_SKELETON       = (1<<29),        // boneless corpses
-    M_NO_WOUNDS         = (1<<30),        // doesn't show would level
     M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
 };
 
@@ -3765,6 +3762,8 @@ enum vorpal_damage_type
     DVORP_CHOPPING      = 0x4000,       // used for axes
     DVORP_SLASHING      = 0x5000,       // used for whips
     DVORP_STABBING      = 0x6000,       // used for knives/daggers
+    
+    DVORP_CLAWING       = 0x7000,       // claw damage
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
     // as above, setting more than one vorpal type is trouble.
