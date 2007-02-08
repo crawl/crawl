@@ -17,7 +17,7 @@ syn case match
 setlocal iskeyword+=:
 setlocal iskeyword+=-
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: SYMBOL: default-depth: TAGS: CHANCE: ITEM:
+syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: SYMBOL: default-depth: TAGS: CHANCE: ITEM: SHUFFLE:
 syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
 
 syn match desComment "^\s*#.*$"

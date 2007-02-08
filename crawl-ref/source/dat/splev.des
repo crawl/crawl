@@ -364,10 +364,94 @@ MONS: Asmodeus, Fiend, Balrug, molten gargoyle
 MONS: Serpent of Hell, random, random
 
 ############################################################################
-# Antaeus; bottom of Cocytus. This needs work.
+# Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
 #
 
-NAME: antaeus
+NAME: antaeus_david_1
+PLACE: Coc:7
+ORIENT: encompass
+MONS: Antaeus, Ice Fiend, ice dragon / nothing
+MONS: random, random, random, random
+ITEM: any, any misc, any misc, any misc
+SHUFFLE: O1d,e0%,f9*,g8|
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww....wwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwww...wwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwxxxxxxxxx
+xxxxxxxxxwww.wwww......wwwwww..wwwwwwwwwwwwwwwwwwwww.......ccccc...wwwwxxxxxxxxx
+xxxxxxxxxww..ww....cc......www.3wwwwwwwwwwwww..........ccccccccccc..wwwxxxxxxxxx
+xxxxxxxxxw...ww..cccccc.....www.wwwwwwwwwww3..........cc....9.2..cc..wwxxxxxxxxx
+xxxxxxxxxw..ww..ccccccc+c....ww.wwwwwwwwwwwwww........ccf********cc..wwxxxxxxxxx
+xxxxxxxxxw..ww..cc.%%%%.cc...ww..wwwwwwwwwwwwwwwwww....ccccccc+ccc...wwxxxxxxxxx
+xxxxxxxxxw..ww..cc2.e0.2cc...ww..wwwwwwwwwwwwwwwwwwwww......c...c.....wxxxxxxxxx
+xxxxxxxxxw..ww..cc.%%%%.cc..www.wwwwwwwwwwwwwwwwwwwwwwwwwww.cc+cc.....wxxxxxxxxx
+xxxxxxxxxw..www..c+cccccc...ww..wwwwwwwwwwwwwwwwwwwwwwwwwww..........wwxxxxxxxxx
+xxxxxxxxxww..ww....cccc....www.wwwwwwwwwwwwwwwwwwwwwwwwwwwww........wwwxxxxxxxxx
+xxxxxxxxxww..www..........www..wwwwwwwwwwwwwwwwwwwwwwwwwwwww..2....w..wxxxxxxxxx
+xxxxxxxxxwww..wwww......wwww..wwwwwwwwwwwwwwwwwwwwwwwwwwww............wxxxxxxxxx
+xxxxxxxxxwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwww..............wwxxxxxxxxx
+xxxxxxxxxwwwww...wwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwww............wwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwww........wwwwwwwwwwwwwwwwwwwwwwwwww3..wwww....wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwww...3wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww........wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww............wwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww...ccc+ccc...wwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...cc.....cc...wwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...c.......c...wwwwwwwwwwwww3wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...+.[.{.(.+...wwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...c.......c...wwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...cc.....cc...wwwwwwwwwww.....wwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww...ccc+ccc...wwwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww3wwwwwwwwwwwwwwwwww............wwwwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwwwww.3wwwwwwww.........wwwwwwwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwwww.3.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwwww..wwwwwwwwwwwwwwwwwwwwww3wwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...w.wwwww..wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....www...w.wwwwwwwxxxxxxxxx
+xxxxxxxxxwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..ccccccc.c.wwwwwwwwxxxxxxxxx
+xxxxxxxxxwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..cc$$$$$$.c..wwwwwwwxxxxxxxxx
+xxxxxxxxxwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..c.$dddd$.c...wwwwwwxxxxxxxxx
+xxxxxxxxxwww..cc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...$$$$$$cc....wwwwwxxxxxxxxx
+xxxxxxxxxwww.cccc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.ccccccc....wwwwwwxxxxxxxxx
+xxxxxxxxxwww.cg.cc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww........ww..wwwwwwwxxxxxxxxx
+xxxxxxxxxwww.c||.cc...wwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwww.c||.8cc......wwwwwwwwwwwwwwwwwwwwwwwww...w..wwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxww..c||2.2cc........wwwwwwwwwwwwwwwwwww....wwww..wwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxww..c||....cc..............3wwwwwwwwww...wwwwwww.....wwccccwwwxxxxxxxxx
+xxxxxxxxxww..cccc+ccccc..........wwwwwwwwwwww3...wwwwwwwwwww.2.cc2dccwwxxxxxxxxx
+xxxxxxxxxwww..ccc...........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.+dd1Ocwwxxxxxxxxx
+xxxxxxxxxwwww......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcc2dccwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Old Antaeus level
+
+NAME: antaeus_in_days_of_yore
 PLACE: Coc:7
 ORIENT: encompass
 

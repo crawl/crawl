@@ -5360,7 +5360,7 @@ static void build_minivaults(int level_number, int force_vault)
 
     map_type vgrid;
     vault_placement place;
-    vault_main(vgrid, place, force_vault, &level_vaults);
+    vault_main(vgrid, place, force_vault);
 
     level_vaults.push_back(place);
 
