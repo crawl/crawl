@@ -2355,7 +2355,7 @@ ENDMAP
 
 NAME: david_lair_2
 TAGS: lair_entry
-MONS: plant, lindwurm
+MONS: plant, firedrake
 ORIENT: float
 FLAGS: no_rotate
 
