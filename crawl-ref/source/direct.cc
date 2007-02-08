@@ -115,6 +115,7 @@ static command_type read_direction_key(bool just_looking = false)
     case ':': return CMD_TARGET_HIDE_BEAM;
     case '\r': return CMD_TARGET_SELECT;
     case '.': return CMD_TARGET_SELECT;
+    case '5': return CMD_TARGET_SELECT;
     case '!': return CMD_TARGET_SELECT_ENDPOINT;
 
     case '\\': case '\t': return CMD_TARGET_FIND_PORTAL;
@@ -163,6 +164,14 @@ void direction_choose_compass( struct dist& moves )
 
     do {
         const command_type key_command = read_direction_key();
+
+        if (key_command == CMD_TARGET_SELECT)
+        {
+            moves.dx = moves.dy = 0;
+            moves.isMe = true;
+            break;
+        }
+        
         const int i = targeting_cmd_to_compass(key_command);
         if ( i != -1 )
         {
