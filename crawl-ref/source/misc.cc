@@ -676,8 +676,9 @@ void up_stairs(void)
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
-    // Tell the travel code that we're now on a new level
-    init_new_level(true);
+    // Tell stash-tracker and travel that we've changed levels.
+    trackers_init_new_level(true);
+    
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just ascended, and the
@@ -1045,7 +1046,7 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     if (you.skills[SK_TRANSLOCATIONS] > 0 && !allow_control_teleport( true ))
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
-    init_new_level(true);
+    trackers_init_new_level(true);
     if (collect_travel_data)
     {
         // Update stair information for the stairs we just descended, and the
@@ -1079,7 +1080,7 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     }
 }                               // end down_stairs()
 
-void init_new_level(bool transit)
+void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
     if (transit)

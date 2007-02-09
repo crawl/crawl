@@ -677,8 +677,9 @@ static void wizard_go_to_level(const level_pos &pos)
     save_game_state();
     new_level();
     viewwindow(1, true);
-    // Tell the travel code that we're now on a new level
-    init_new_level(true);
+
+    // Tell stash-tracker and travel that we've changed levels.
+    trackers_init_new_level(true);
 }
 
 void wizard_interlevel_travel()

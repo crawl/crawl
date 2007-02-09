@@ -88,7 +88,7 @@ void new_level(void);
 
 std::string level_description_string();
 
-void init_new_level(bool transit);
+void trackers_init_new_level(bool transit);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

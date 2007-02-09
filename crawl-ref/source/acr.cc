@@ -2798,7 +2798,7 @@ static bool initialise(void)
     new_level();
     update_turn_count();
 
-    init_new_level(false);
+    trackers_init_new_level(false);
     // Mark items in inventory as of unknown origin.
     origin_set_inventory(origin_set_unknown);
 
