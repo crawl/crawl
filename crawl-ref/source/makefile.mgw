@@ -114,7 +114,8 @@ ifneq ($(OPATH),$(INSTALLDIR))
 		$(COPY) $(APPNAME) ${INSTALLDIR}
 endif
 		mkdir $(INSTALLDIR)\dat 2>nul || echo "" >nul
-		copy dat\*.des $(INSTALLDIR)\dat
+		copy /y dat\*.des $(INSTALLDIR)\dat
+		copy /y ..\init.txt $(INSTALLDIR)
 
 clean:
 		$(DELETE) $(OPATH)\*.o
