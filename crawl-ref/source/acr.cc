@@ -301,6 +301,8 @@ int main( int argc, char *argv[] )
 
     if (Options.tutorial_left)
     {
+        // don't allow triggering at game start 
+        Options.tut_just_triggered = true;
         // print stats and everything
         prep_input();
         char ch = 'x';    
@@ -852,9 +854,9 @@ static void input()
     {
         if ( 2*you.hp < you.hp_max || 2*you.magic_points < you.max_magic_points )
             tutorial_healing_reminder();
-        else if (Options.tutorial_events[TUT_SHIFT_RUN] && you.num_turns >= 200)
+        else if (you.running < RMODE_REST_DURATION && Options.tutorial_events[TUT_SHIFT_RUN] && you.num_turns >= 200)
                 learned_something_new(TUT_SHIFT_RUN);
-        else if (Options.tutorial_events[TUT_MAP_VIEW] && you.num_turns >= 500)
+        else if (you.running < RMODE_REST_DURATION && Options.tutorial_events[TUT_MAP_VIEW] && you.num_turns >= 500)
                 learned_something_new(TUT_MAP_VIEW);    
     }
  

@@ -1446,7 +1446,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         }
 
         textcolor(BROWN);
-        cprintf(EOL "? - Random" );
+        cprintf(EOL "* - Random" );
         if ( Options.prev_book != SBT_NO_SELECTION )
     {
             cprintf("; Enter - %s",
@@ -1465,7 +1465,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
             textcolor( LIGHTGREY );
 
             keyin = get_ch();
-        } while (keyin != '?' && 
+        } while (keyin != '*' && 
                  ((keyin != '\r' && keyin != '\n') ||
                   Options.prev_book == SBT_NO_SELECTION ) &&
                  (keyin < 'a' || keyin > ('a' + numbooks)));
@@ -1473,18 +1473,18 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         if ( keyin == '\r' || keyin == '\n' )
         {
             if ( Options.prev_book == SBT_RANDOM )
-                keyin = '?';
+                keyin = '*';
             else
                 keyin = ('a' +  Options.prev_book - 1);
         }
     }
 
-    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '?')
+    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*')
         ng_book = SBT_RANDOM;
     else
         ng_book = keyin - 'a' + 1;
     
-    if ( Options.random_pick || keyin == '?' )
+    if ( Options.random_pick || keyin == '*' )
         keyin = random2(numbooks) + 'a';
 
     book.sub_type = firstbook + keyin - 'a';
@@ -1546,7 +1546,7 @@ static void choose_weapon( void )
             Options.prev_weapon = WPN_UNKNOWN;
 
         textcolor(BROWN);
-        cprintf(EOL "? - Random" );
+        cprintf(EOL "* - Random" );
         if (Options.prev_weapon != WPN_UNKNOWN)
         {
             char weapbuf[ITEMNAME_SIZE];
@@ -1566,7 +1566,7 @@ static void choose_weapon( void )
 
             keyin = get_ch();
         }
-        while (keyin != '?' && 
+        while (keyin != '*' && 
                 ((keyin != '\r' && keyin != '\n') 
                     || Options.prev_weapon == WPN_UNKNOWN) &&
                 (keyin < 'a' || keyin > ('a' + num_choices)));
@@ -1574,7 +1574,7 @@ static void choose_weapon( void )
         if (keyin == '\r' || keyin == '\n')
         {
             if (Options.prev_weapon == WPN_RANDOM)
-                keyin = '?';
+                keyin = '*';
             else
             {
                 for (int i = 0; i < num_choices; ++i)
@@ -1583,14 +1583,14 @@ static void choose_weapon( void )
             }
         }
 
-        if (keyin != '?' && effective_stat_bonus(startwep[keyin-'a']) > -4)
+        if (keyin != '*' && effective_stat_bonus(startwep[keyin-'a']) > -4)
         {
             cprintf(EOL "A fine choice. " EOL);
             delay(1000);
         }
     }
 
-    if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '?')
+    if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '*')
     {
         Options.weapon = WPN_RANDOM;
         // try to choose a decent weapon
@@ -1607,7 +1607,7 @@ static void choose_weapon( void )
     you.inv[0].sub_type = startwep[keyin-'a'];
     ng_weapon = (Options.random_pick || 
                 Options.weapon == WPN_RANDOM || 
-                keyin == '?')
+                keyin == '*')
         ? WPN_RANDOM : you.inv[0].sub_type;
 }
 
@@ -1946,7 +1946,7 @@ static void openingScreen(void)
     textcolor( YELLOW );
     cprintf("Hello, welcome to " CRAWL " " VERSION "!");
     textcolor( BROWN );
-    cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell");
+    cprintf(EOL "(c) Copyright 1997-2002 Linley Henzell, 2002-2007 Crawl DevTeam");
     cprintf(EOL 
         "Please consult crawl_manual.txt for instructions and legal details."
         EOL);

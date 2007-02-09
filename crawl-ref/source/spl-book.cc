@@ -1363,7 +1363,7 @@ bool learn_spell(void)
                             "reading the book of Annihilations" );
         }
 
-#if WIZARD
+#ifdef WIZARD
         if (!you.wizard)
             return (false);
         else if (!yesno("Memorise anyway?"))

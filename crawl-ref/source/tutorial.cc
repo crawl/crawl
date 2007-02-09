@@ -746,6 +746,8 @@ void tutorial_finished()
 
 void tutorial_prayer_reminder()
 {
+    if (Options.tut_just_triggered)
+     	return;
     if (coinflip())
     {// always would be too annoying
         snprintf(info, INFO_SIZE, "Remember to <w>p<magenta>ray before battle, so as to dedicate your kills to %s. ", god_name(you.religion));
@@ -771,6 +773,8 @@ void tutorial_healing_reminder()
             learned_something_new(TUT_NEED_HEALING);
         else if (you.num_turns - Options.tut_last_healed >= 50 && !you.poison)
         {
+     	    if (Options.tut_just_triggered)
+     		return;
             snprintf(info, INFO_SIZE, "Remember to rest between fights and to enter unexplored terrain with full");
             mpr(info, MSGCH_TUTORIAL);
             snprintf(info, INFO_SIZE, "hitpoints and/or magic. To do this, press <w>5<magenta>.");
@@ -1004,6 +1008,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
 
         if (Options.tutorial_type == TUT_RANGER_CHAR)
         {
+            more();	
             snprintf(info, INFO_SIZE, "However, as a hunter you might want to deal with it using your bow. Do this");
             mpr(info, MSGCH_TUTORIAL);  
             snprintf(info, INFO_SIZE, "with the following keypresses: <w>wbf+.<magenta> Here, <w>wb<magenta> wields the bow, <w>f<magenta> fires");
@@ -1017,6 +1022,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
         }       
         else if (Options.tutorial_type == TUT_MAGIC_CHAR)
         {
+            more();	
             snprintf(info, INFO_SIZE, "However, as a conjurer you might want to deal with it using magic. Do this");
             mpr(info, MSGCH_TUTORIAL);
             snprintf(info, INFO_SIZE, "with the following key presses: <w>Za+.<magenta> Here, <w>Za<magenta> zaps the first spell you know,");
@@ -1059,8 +1065,10 @@ void learned_something_new(unsigned int seen_what, int x, int y)
     case TUT_SEEN_DOOR:
         snprintf(info, INFO_SIZE, "The <w>%c<magenta> is a closed door. You can open it by walking into it.", get_screen_glyph(x,y));
         formatted_mpr(formatted_string::parse_string(info), MSGCH_TUTORIAL);
-        snprintf(info, INFO_SIZE, "Sometimes it is useful to close a door. Do so by pressing <w>c<magenta>, followed by the direction.");
+        snprintf(info, INFO_SIZE, "Sometimes it is useful to close a door. Do so by pressing <w>c<magenta>, followed by the");
         formatted_mpr(formatted_string::parse_string(info), MSGCH_TUTORIAL);
+        snprintf(info, INFO_SIZE, "direction.");
+        mpr(info, MSGCH_TUTORIAL);
         break;
     case TUT_KILLED_MONSTER:
         snprintf(info, INFO_SIZE, "Congratulations, your character just gained some experience by killing this "
@@ -1175,9 +1183,10 @@ void learned_something_new(unsigned int seen_what, int x, int y)
         mpr(info, MSGCH_TUTORIAL);
         break;
     case TUT_ROTTEN_FOOD:
-        snprintf(info, INFO_SIZE, "One or more of the chunks or corpses you carry has started to rot. Few races can digest these safely, so you might "
-                 "just as well <w>d<magenta>rop them now.");
+        snprintf(info, INFO_SIZE, "One or more of the chunks or corpses you carry has started to rot. Few races");
         mpr(info, MSGCH_TUTORIAL);
+        snprintf(info, INFO_SIZE, "can digest these safely, so you might just as well <w>d<magenta>rop them now.");
+        formatted_mpr(formatted_string::parse_string(info), MSGCH_TUTORIAL);
         if (you.religion == GOD_TROG || you.religion == GOD_MAKHLEB || you.religion == GOD_OKAWARU)
         {
             snprintf(info, INFO_SIZE, "Also, if it is a rotting corpse you carry now might be a good time to <w>d<magenta>rop");
@@ -1200,9 +1209,9 @@ void learned_something_new(unsigned int seen_what, int x, int y)
         if (you.duration[DUR_PRAYER] && 
             (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB || you.religion == GOD_TROG || you.religion == GOD_ELYVILON))
         {
-            snprintf(info, INFO_SIZE, "Note that doing this while praying will instead sacrifice it to %s, ", god_name(you.religion));
+            snprintf(info, INFO_SIZE, "Note that doing this while praying will instead sacrifice it to %s.", god_name(you.religion));
             mpr(info, MSGCH_TUTORIAL);
-            snprintf(info, INFO_SIZE, "which a god may or may not like. (Type <w>^<magenta> to get a hint about that.)");
+            snprintf(info, INFO_SIZE, "You can figure out your god's opinion about this with <w>^<magenta>.)");
             formatted_mpr(formatted_string::parse_string(info), MSGCH_TUTORIAL);
         }           
         break;
