@@ -31,6 +31,7 @@
 #include "view.h"
 
 #include <algorithm>
+#include <set>
 #include <cstdarg>
 #include <cctype>
 #include <cstdio>
@@ -40,7 +41,7 @@
 #endif
 
 #define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 5)
+#define TC_MINOR_VERSION ((unsigned char) 6)
 
 enum IntertravelDestination
 {
@@ -2600,6 +2601,7 @@ void level_pos::load(FILE *file)
 void stair_info::save(FILE *file) const
 {
     writeCoord(file, position);
+    writeShort(file, grid);
     destination.save(file);
     writeByte(file, guessed_pos? 1 : 0);
 }
@@ -2607,6 +2609,7 @@ void stair_info::save(FILE *file) const
 void stair_info::load(FILE *file)
 {
     readCoord(file, position);
+    grid = readShort(file);
     destination.load(file);
     guessed_pos = readByte(file) != 0;
 }
@@ -2658,6 +2661,7 @@ void LevelInfo::update()
     // Make sure our stair list is correct.
     correct_stair_list(stair_positions);
 
+    sync_all_branch_stairs();
     update_stair_distances();
 }
 
@@ -2711,6 +2715,45 @@ void LevelInfo::update_stair(int x, int y, const level_pos &p, bool guess)
         if (!guess && p.id.branch == BRANCH_VESTIBULE_OF_HELL
                 && id.branch == BRANCH_MAIN_DUNGEON)
             travel_hell_entry = p;
+
+        // All branch stairs land on the same place on the destination level,
+        // update the cache accordingly (but leave guessed_pos = true). This
+        // applies for both branch exits (the usual case) and branch entrances.
+        if (si->destination.id.branch != id.branch)
+            sync_branch_stairs(si);
+    }
+}
+
+// If a stair leading out of or into a branch has a known destination, all
+// stairs of the same type on this level should have the same destination set
+// as guessed_pos == true.
+void LevelInfo::sync_all_branch_stairs()
+{
+    std::set<int> synced;
+
+    for (int i = 0, size = stairs.size(); i < size; ++i)
+    {
+        const stair_info &si = stairs[i];
+        if (si.destination.id.branch != id.branch && si.destination.is_valid()
+            && synced.find(si.grid) == synced.end())
+        {
+            synced.insert( si.grid );
+            sync_branch_stairs( &si );
+        }
+    }
+}
+
+void LevelInfo::sync_branch_stairs(const stair_info *si)
+{
+    for (int i = 0, size = stairs.size(); i < size; ++i)
+    {
+        stair_info &sother = stairs[i];
+        if (si == &sother || !sother.guessed_pos || si->grid != sother.grid
+            || sother.destination.is_valid())
+        {
+            continue;
+        }
+        sother.destination = si->destination;
     }
 }
 
@@ -2820,6 +2863,7 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
         {
             stair_info si;
             si.position = s[i];
+            si.grid     = grd(si.position);
             si.destination.id = level_id::get_next_level_id(s[i]);
             if (si.destination.id.branch == BRANCH_VESTIBULE_OF_HELL
                     && id.branch == BRANCH_MAIN_DUNGEON
@@ -2856,8 +2900,8 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     {
         for (int x = 0; x < GXM - 1; ++x)
         {
-            unsigned char grid = grd[x + 1][y + 1];
-            unsigned char envc = (unsigned char) env.map[x][y];
+            int grid = grd[x + 1][y + 1];
+            int envc = (unsigned char) env.map[x][y];
 
             if ((x + 1 == you.x_pos && y + 1 == you.y_pos)
                     || (envc 
@@ -3159,6 +3203,9 @@ void TravelCache::save(FILE *file) const
                 levels.begin();
     for ( ; i != levels.end(); ++i)
     {
+        // LevelInfos will also be created for levels in the Abyss and
+        // Pandemonium, but they shouldn't be saved because the
+        // information in them is useless.
         if (i->first.level_type != LEVEL_DUNGEON)
             continue;
 

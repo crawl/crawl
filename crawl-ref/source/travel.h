@@ -260,18 +260,17 @@ private:
 struct stair_info
 {
     coord_def position;     // Position of stair
-
+    int       grid;         // Grid feature of the stair.
     level_pos destination;  // The level and the position on the level this
                             // stair leads to. This may be a guess.
-
     int       distance;     // The distance traveled to reach this stair.
-
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
 
-    stair_info() : destination(), distance(-1), guessed_pos(true)
+    stair_info()
+        : position(-1, -1), grid(DNGN_FLOOR), destination(),
+          distance(-1), guessed_pos(true)
     {
-        position.x = position.y = -1;
     }
 
     void reset_distance()
@@ -341,6 +340,8 @@ private:
 
     void correct_stair_list(const std::vector<coord_def> &s);
     void update_stair_distances();
+    void sync_all_branch_stairs();
+    void sync_branch_stairs(const stair_info *si);
     void fixup();
 
 private:
