@@ -1234,8 +1234,7 @@ void define_monster(int index)
 
         col = (temp_rand >= 5 ? LIGHTRED :                   // 2/7
                temp_rand >= 3 ? LIGHTMAGENTA :               // 2/7
-               temp_rand == 2 ? RED :                        // 1/7
-               temp_rand == 1 ? MAGENTA                      // 1/7
+               temp_rand >= 1 ? MAGENTA                      // 1/7
                               : YELLOW);                     // 1/7
         break;
 
