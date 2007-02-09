@@ -542,7 +542,7 @@ static void handle_wizard_command( void )
 
     case '\"':
     case '~':
-        level_travel(0);
+        wizard_interlevel_travel();
         break;
 
     case 'd':

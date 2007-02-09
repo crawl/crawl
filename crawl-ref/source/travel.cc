@@ -1772,60 +1772,75 @@ static char trans_travel_dest[30];
 
 // Returns true if the player character knows of the existence of the given
 // branch (which would make the branch a valid target for interlevel travel).
-static bool is_known_branch(int branch)
+static bool is_known_branch_id(int branch)
 {
     // The main dungeon is always known.
-    if (branch == BRANCH_MAIN_DUNGEON) return true;
+    if (branch == BRANCH_MAIN_DUNGEON)
+        return true;
 
     // If we're in the branch, it darn well is known.
-    if (you.where_are_you == branch) return true;
+    if (you.where_are_you == branch)
+        return true;
 
-    // The Vestibule is special: there are no stairs to it, just
-    // a portal
+    // The Vestibule is special: there are no stairs to it, just a
+    // portal
     if (branch == BRANCH_VESTIBULE_OF_HELL)
-    {
-        // XXX There must be a better way to do this...
-        std::vector<stash_search_result> tmp;
-        get_matching_features(text_pattern("gateway to Hell"), tmp);
-        return !tmp.empty();
-    }
+        return overmap_knows_portal( DNGN_ENTER_HELL );
 
     // If the overmap knows the stairs to this branch, we know the branch.
     return ( stair_level.find(static_cast<branch_type>(branch)) !=
              stair_level.end() );
 }
 
+static bool is_known_branch(const Branch &br)
+{
+    return (is_known_branch_id(br.id));
+}
+
 /*
  * Returns a list of the branches that the player knows the location of the
  * stairs to, in the same order as overmap.cc lists them.
  */
-static std::vector<branch_type> get_known_branches()
+static std::vector<branch_type> get_branches(bool (*selector)(const Branch &))
 {
     std::vector<branch_type> result;
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
-        if (is_known_branch(branches[i].id))
+        if (selector(branches[i]))
             result.push_back(branches[i].id);
 
     return result;
 }
 
-static int prompt_travel_branch()
+static bool is_valid_branch(const Branch &br)
+{
+    return (!!br.shortname);
+}
+
+static int prompt_travel_branch(int prompt_flags)
 {
     unsigned char branch = BRANCH_MAIN_DUNGEON;     // Default
-    std::vector<branch_type> br = get_known_branches();
+    std::vector<branch_type> br =
+        get_branches(
+            (prompt_flags & TPF_SHOW_ALL_BRANCHES)?
+            is_valid_branch : is_known_branch );
 
     // Don't kill the prompt even if the only branch we know is the main dungeon
     // This keeps things consistent for the player.
-    if (br.size() < 1) return branch;
+    if (br.size() < 1)
+        return branch;
 
+    const bool allow_waypoints = (prompt_flags & TPF_ALLOW_WAYPOINTS);
+    const bool allow_updown    = (prompt_flags & TPF_ALLOW_UPDOWN);
+    const bool remember_targ   = (prompt_flags & TPF_REMEMBER_TARGET);
+    
     bool waypoint_list = false;
-    int waycount = travel_cache.get_waypoint_count();
+    const int waycount = allow_waypoints? travel_cache.get_waypoint_count() : 0;
+    
     for ( ; ; )
     {
         mesclr(true);
 
-        char buf[100];
         if (waypoint_list)
             travel_cache.list_waypoints();
         else
@@ -1840,38 +1855,35 @@ static int prompt_travel_branch()
                     mpr(line.c_str());
                     line = "";
                 }
-                snprintf(buf, sizeof buf, "(%c) %-14s ",
-                         branches[br[i]].travel_shortcut,
-                         branches[br[i]].shortname);
-                line += buf;
+                line += make_stringf("(%c) %-14s ",
+                                     branches[br[i]].travel_shortcut,
+                                     branches[br[i]].shortname);
             }
             if (line.length())
                 mpr(line.c_str());
         }
 
-        char shortcuts[100];
-        *shortcuts = 0;
-        if (*trans_travel_dest || waycount || waypoint_list)
+        std::string shortcuts;
+        if ((*trans_travel_dest && remember_targ)
+            || (allow_waypoints && (waycount || waypoint_list)))
         {
-            strncpy(shortcuts, "(", sizeof shortcuts);
+            shortcuts = "(";
             if (waypoint_list)
-                strncat(shortcuts, "[*] lists branches", sizeof shortcuts);
+                shortcuts += "[*] lists branches";
             else if (waycount)
-                strncat(shortcuts, "[*] lists waypoints", sizeof shortcuts);
+                shortcuts += "[*] lists waypoints";
             
-            if (*trans_travel_dest)
+            if (*trans_travel_dest && remember_targ)
             {
-                char travel_dest[60];
-                snprintf(travel_dest, sizeof travel_dest, "[Enter] for %s",
-                        trans_travel_dest);
                 if (waypoint_list || waycount)
-                    strncat( shortcuts, ", ", sizeof shortcuts);
-                strncat(shortcuts, travel_dest, sizeof shortcuts);
+                    shortcuts += ", ";
+
+                shortcuts += make_stringf("[Enter] for %s",
+                                          trans_travel_dest);
             }
-            strncat(shortcuts, ") ", sizeof shortcuts);
+            shortcuts += ") ";
         }
-        snprintf(buf, sizeof buf, "Where do you want to go? %s", shortcuts);
-        mpr(buf, MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Where do you want to go? %s", shortcuts.c_str());
 
         int keyin = get_ch();
         switch (keyin)
@@ -1881,9 +1893,9 @@ static int prompt_travel_branch()
         case '\n': case '\r':
             return (ID_REPEAT);
         case '<':
-            return (ID_UP);
+            return (allow_updown? ID_UP : ID_CANCEL);
         case '>':
-            return (ID_DOWN);
+            return (allow_updown? ID_DOWN : ID_CANCEL);
         case '*':
             if (waypoint_list || waycount)
                 waypoint_list = !waypoint_list;
@@ -1897,8 +1909,9 @@ static int prompt_travel_branch()
             }
 
             // Possibly a waypoint number?
-            if (keyin >= '0' && keyin <= '9')
+            if ((keyin >= '0' && keyin <= '9') && allow_waypoints)
                 return (-1 - (keyin - '0'));
+            
             return (ID_CANCEL);
         }
     }
@@ -1975,10 +1988,11 @@ static level_pos find_down_level()
     return (curr);
 }
 
-static level_pos prompt_translevel_target()
+level_pos prompt_translevel_target(int prompt_flags)
 {
     level_pos target;
-    int branch = prompt_travel_branch();
+    int branch = prompt_travel_branch(prompt_flags);
+    const bool remember_targ = (prompt_flags & TPF_REMEMBER_TARGET);
   
     if (branch == ID_CANCEL)
         return (target);
@@ -1990,7 +2004,7 @@ static level_pos prompt_translevel_target()
     if (branch == ID_UP)
     {
         target = find_up_level();
-        if (target.id.depth > -1)
+        if (target.id.depth > -1 && remember_targ)
             set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest,
                                     target);
         return (target);
@@ -1999,7 +2013,7 @@ static level_pos prompt_translevel_target()
     if (branch == ID_DOWN)
     {
         target = find_down_level();
-        if (target.id.depth > -1)
+        if (target.id.depth > -1 && remember_targ)
             set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest,
                                     target);
         return (target);
@@ -2019,9 +2033,9 @@ static level_pos prompt_translevel_target()
     if (target.id.depth < 1 || target.id.depth >= MAX_LEVELS)
         target.id.depth = -1;
 
-    if (target.id.depth > -1)
+    if (target.id.depth > -1 && remember_targ)
         set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest, 
-                target);
+                              target);
 
     return target;
 }
@@ -3041,8 +3055,10 @@ void TravelCache::travel_to_waypoint(int num)
     if (waypoints[num].id.depth == -1) return;
 
     travel_target = waypoints[num];
+    
     set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest, 
-                        travel_target);
+                          travel_target);
+    
     LevelInfo &li = get_level_info(travel_target.id);
     li.travel_to_waypoint(travel_target.pos);
 }

@@ -2273,6 +2273,7 @@ MONS: random, random
 NAME: swamp
 PLACE: Swamp:5
 ORIENT: southeast
+FLAGS: no_rotate
 
 # NB - most of the 'x's here will be set to water in dungeon.cc
 

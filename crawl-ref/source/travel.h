@@ -81,6 +81,21 @@ bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
 bool prompt_stop_explore(int es_why);
 
+enum translevel_prompt_flags
+{
+    TPF_NO_FLAGS          = 0,
+    
+    TPF_ALLOW_WAYPOINTS   = 0x1,
+    TPF_ALLOW_UPDOWN      = 0x2,
+    TPF_REMEMBER_TARGET   = 0x4,
+    TPF_SHOW_ALL_BRANCHES = 0x8,
+
+    TPF_DEFAULT_OPTIONS   = TPF_ALLOW_WAYPOINTS | TPF_ALLOW_UPDOWN
+                                                | TPF_REMEMBER_TARGET
+};
+
+level_pos prompt_translevel_target(int prompt_flags = TPF_DEFAULT_OPTIONS);
+
 // Magic numbers for point_distance:
 
 // This square is a trap

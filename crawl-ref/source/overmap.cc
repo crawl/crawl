@@ -197,6 +197,17 @@ static void get_matching_portals(
     }
 }
 
+bool overmap_knows_portal(dungeon_feature_type portal)
+{
+    for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
+          pl_iter != portals_present.end(); ++pl_iter )
+    {
+        if (portal_to_feature(pl_iter->second) == portal)
+            return (true);
+    }
+    return (false);
+}
+
 void get_matching_features(
     const base_pattern &pattern, std::vector<stash_search_result> &results)
 {

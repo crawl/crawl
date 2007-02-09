@@ -34,10 +34,12 @@
 
 #include "externs.h"
 
+#include "branch.h"
 #include "direct.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "fight.h"
+#include "files.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -58,6 +60,7 @@
 #include "stuff.h"
 #include "travel.h"
 #include "version.h"
+#include "view.h"
 
 #if DEBUG && WIN
 #define MyDebugBreak() _asm {int 3}
@@ -654,6 +657,44 @@ void level_travel( int delta )
     down_stairs(true, old_level);
     untag_followers();
 }                               // end level_travel()
+
+static void wizard_go_to_level(const level_pos &pos)
+{
+    const int abs_depth = absdungeon_depth(pos.id.branch, pos.id.depth);
+    const int stair_taken =
+        abs_depth > you.your_level? DNGN_STONE_STAIRS_DOWN_I
+                                  : DNGN_STONE_STAIRS_UP_I;
+
+    const int old_level = you.your_level;
+    const int old_where = you.where_are_you;
+    const bool was_a_labyrinth = you.level_type == LEVEL_LABYRINTH;
+
+    you.level_type    = LEVEL_DUNGEON;
+    you.where_are_you = pos.id.branch;
+    you.your_level    = abs_depth;
+
+    load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);
+    save_game_state();
+    new_level();
+    viewwindow(1, true);
+    // Tell the travel code that we're now on a new level
+    init_new_level(true);
+}
+
+void wizard_interlevel_travel()
+{
+    const level_pos pos =
+        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES);
+    
+    if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    wizard_go_to_level(pos);
+}
+
 #endif
 
 #ifdef WIZARD

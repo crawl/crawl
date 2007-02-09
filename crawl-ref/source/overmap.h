@@ -16,6 +16,7 @@
 #include <vector>
 
 void seen_notable_thing( int which_thing, int x, int y );
+bool overmap_knows_portal(dungeon_feature_type portal);
 void display_overmap();
 void unnotice_labyrinth_portal();
 void unnotice_altar();
