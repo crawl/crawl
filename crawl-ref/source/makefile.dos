@@ -55,6 +55,9 @@ GAME_DEPENDS := $(OBJECTS)
 
 all:            $(APPNAME)
 
+DEPENDENCY_MKF := makefile.dep
+-include $(DEPENDENCY_MKF)
+
 ##########################################################################
 # The level compiler
 #

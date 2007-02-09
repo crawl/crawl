@@ -99,7 +99,7 @@ all: $(GAME)
 ##########################################################################
 # Dependencies
 
-DEPENDENCY_MKF := makefile.dependencies
+DEPENDENCY_MKF := makefile.dep
 
 depend: $(OBJECTS:.o=.cc)
 	rm -f $(DEPENDENCY_MKF)
