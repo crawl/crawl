@@ -1693,13 +1693,12 @@ bool mons_friendly(const monsters *m)
 bool mons_is_submerged( const monsters *mon )
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    return (mons_has_ench( mon, ENCH_SUBMERGED ));
+    return (mons_has_ench(mon, ENCH_SUBMERGED));
 }
 
 bool mons_is_paralysed(const monsters *m)
 {
-    // maybe this should be 70
-    return (m->speed_increment <= 60);
+    return (mons_has_ench(m, ENCH_PARALYSIS));
 }
 
 bool mons_is_confused(const monsters *m)
@@ -1844,6 +1843,14 @@ int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
             mon->speed *= 2;
     }
 
+    if (ench == ENCH_PARALYSIS)
+    {
+        if (!quiet)
+            simple_monster_message(mon, " is no longer paralysed.");
+
+        behaviour_event(mon, ME_EVAL);
+    }
+    
     if (ench == ENCH_FEAR)
     {
         if (!quiet)

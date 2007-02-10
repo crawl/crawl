@@ -1221,7 +1221,10 @@ enum enchant_type
     ENCH_CREATED_FRIENDLY,             //   no longer used
     ENCH_SLEEP_WARY,
     ENCH_SUBMERGED,                    //   73 (includes air elementals in air)
-    ENCH_SHORT_LIVED,                  //   74 for ball lightning 
+    ENCH_SHORT_LIVED,                  //   74 for ball lightning
+
+    ENCH_PARALYSIS,
+    
     NUM_ENCHANTMENTS
 };
 

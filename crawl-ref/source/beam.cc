@@ -81,6 +81,7 @@ static int  affect_player(struct bolt &beam);
 static void affect_items(struct bolt &beam, int x, int y);
 static int  affect_monster(struct bolt &beam, struct monsters *mon);
 static int  affect_monster_enchantment(struct bolt &beam, struct monsters *mon);
+static void beam_paralyses_monster( bolt &pbolt, monsters *monster );
 static int  range_used_on_hit(struct bolt &beam);
 static void explosion1(struct bolt &pbolt);
 static void explosion_map(struct bolt &beam, int x, int y,
@@ -89,6 +90,7 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly);
 
 static void ench_animation( int flavour, const monsters *mon = NULL, bool force = false);
 static void zappy(char z_type, int power, struct bolt &pbolt);
+static void monster_die(monsters *mons, const bolt &beam);
 
 static std::set<std::string> beam_message_cache;
 
@@ -101,6 +103,7 @@ static bool beam_is_blockable( struct bolt &pbolt )
             && pbolt.flavour != BEAM_ELECTRICITY);
 }
 
+// Kludge to suppress multiple redundant messages for a single beam.
 static void beam_mpr(int channel, const char *s, ...)
 {
     va_list args;
@@ -116,6 +119,11 @@ static void beam_mpr(int channel, const char *s, ...)
         mpr(message.c_str(), channel);
 
     beam_message_cache.insert( message );
+}
+
+static void monster_die(monsters *mons, const bolt &beam)
+{
+    monster_die(mons, beam.killer(), beam.beam_source);
 }
 
 // simple animated flash from Rupert Smith (and expanded to be more generic):
@@ -1848,9 +1856,6 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
  */
 int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
 {
-    bool is_near = mons_near(monster);  // single caluclation permissible {dlb}
-    char buff[ ITEMNAME_SIZE ];
-
     switch (pbolt.flavour)      /* put in magic resistance */
     {
     case BEAM_SLOW:         /* 0 = slow monster */
@@ -1904,7 +1909,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
             if (monster->hit_points == monster->max_hit_points)
             {
                 if (simple_monster_message(monster,
-                                        "'s wounds heal themselves!"))
+                                           "'s wounds heal themselves!"))
                     pbolt.obvious_effect = true;
             }
             else
@@ -1916,38 +1921,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_PARALYSIS:                  /* 3 = paralysis */
-        monster->speed_increment = 0;
-
-        if (simple_monster_message(monster, " suddenly stops moving!"))
-            pbolt.obvious_effect = true;
-
-        if (grd[monster->x][monster->y] == DNGN_LAVA
-            || grid_is_water(grd[monster->x][monster->y]))
-        {
-            if (mons_flies(monster) == 1)
-            {
-                // don't worry about invisibility - you should be able to
-                // see if something has fallen into the lava
-                if (is_near)
-                    mprf("%s falls into the %s!",
-                         ptr_monam(monster, DESC_CAP_THE),
-                         (grd[monster->x][monster->y] == DNGN_LAVA) ? "lava" :
-                         "water");
-
-                switch (pbolt.thrower)
-                {
-                case KILL_YOU:
-                case KILL_YOU_MISSILE:
-                    monster_die(monster, KILL_YOU, pbolt.beam_source);
-                    break;      /*  "    " */
-
-                case KILL_MON:
-                case KILL_MON_MISSILE:
-                    monster_die(monster, KILL_MON_MISSILE, pbolt.beam_source);
-                    break;      /* dragon breath &c */
-                }
-            }
-        }
+        beam_paralyses_monster(pbolt, monster);
         return (MON_AFFECTED);
 
     case BEAM_CONFUSION:                   /* 4 = confusion */
@@ -1962,24 +1936,26 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
 
     case BEAM_INVISIBILITY:               /* 5 = invisibility */
         // Store the monster name before it becomes an "it" -- bwr
-        strncpy( buff, ptr_monam( monster, DESC_CAP_THE ), sizeof(buff) );
-
-        if (mons_add_ench(monster, ENCH_INVIS))
+    {
+        const std::string monster_name = ptr_monam(monster, DESC_CAP_THE);
+        
+        if (!mons_has_ench(monster, ENCH_INVIS)
+            && mons_add_ench(monster, ENCH_INVIS))
         {
             // Can't use simple_monster_message here, since it checks
             // for visibility of the monster (and its now invisible) -- bwr
             if (mons_near( monster ))
             {
-                snprintf( info, INFO_SIZE, "%s flickers %s", 
-                          buff, player_see_invis() ? "for a moment." 
-                                                   : "and vanishes!" );
-                mpr( info );
+                mprf("%s flickers %s",
+                     monster_name.c_str(),
+                     player_see_invis() ? "for a moment." 
+                                        : "and vanishes!" );
             }
 
             pbolt.obvious_effect = true;
         }
         return (MON_AFFECTED);
-
+    }
     case BEAM_CHARM:             /* 9 = charm */
         if (mons_add_ench(monster, ENCH_CHARM))
         {
@@ -2001,11 +1977,38 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
 }                               // end mons_ench_f2()
 
 // degree is ignored.
-static void slow_monster(monsters *mon, int degree)
+static void slow_monster(monsters *mon, int /* degree */)
 {
     bolt beam;
     beam.flavour = BEAM_SLOW;
     mons_ench_f2(mon, beam);
+}
+
+static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
+{
+    if (!mons_has_ench(monster, ENCH_PARALYSIS)
+        && mons_add_ench(monster, ENCH_PARALYSIS))
+    {
+        if (simple_monster_message(monster, " suddenly stops moving!"))
+            pbolt.obvious_effect = true;
+
+        const int grid = grd(monster->pos());
+
+        if (grid == DNGN_LAVA || grid_is_water(grid))
+        {
+            if (mons_flies(monster) == 1)
+            {
+                // don't worry about invisibility - you should be able to
+                // see if something has fallen into the lava
+                if (mons_near(monster))
+                    mprf("%s falls into the %s!",
+                         ptr_monam(monster, DESC_CAP_THE),
+                         (grid == DNGN_LAVA ? "lava" : "water"));
+
+                monster_die(monster, pbolt);
+            }
+        }
+    }
 }
 
 // Returns true if the curare killed the monster.
@@ -2032,9 +2035,7 @@ bool curare_hits_monster( const bolt &beam,
             simple_monster_message(monster, " convulses.");
             if ((monster->hit_points -= hurted) < 1)
             {
-                const int thrower = YOU_KILL(beam.thrower) ? 
-                                    KILL_YOU_MISSILE : KILL_MON_MISSILE;
-                monster_die(monster, thrower, beam.beam_source);
+                monster_die(monster, beam);
                 mondied = true;
             }
         }
@@ -3429,7 +3430,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         }
         beam.obvious_effect = true;
         mon->hit_points = 0;
-        monster_die(mon, thrower, beam.beam_source);
+        monster_die(mon, beam);
         return (BEAM_STOP);
     }
 
@@ -3647,7 +3648,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
     if (mon->hit_points < 1)
     {
-        monster_die(mon, thrower, beam.beam_source);
+        monster_die(mon, beam);
     }
     else
     {
@@ -3754,7 +3755,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
             simple_monster_message(mon, " wobbles for a moment.");
         }
         else
-            monster_die(mon, KILL_RESET, beam.beam_source);
+            monster_die(mon, beam);
 
         beam.obvious_effect = true;
         return (MON_AFFECTED);
@@ -3913,12 +3914,8 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
 
 deathCheck:
 
-    int thrower = KILL_YOU_MISSILE;
-    if (MON_KILL(beam.thrower))
-        thrower = KILL_MON_MISSILE;
-
     if (mon->hit_points < 1)
-        monster_die(mon, thrower, beam.beam_source);
+        monster_die(mon, beam);
     else
     {
         print_wounds(mon);
@@ -4404,6 +4401,26 @@ bolt::bolt() : range(0), rangeMax(0), type(SYM_ZAP), colour(BLACK),
                can_see_invis(false), is_friendly(false), foe_ratio(0),
                chose_ray(false)
 { }
+
+int bolt::killer() const
+{
+    if (flavour == BEAM_BANISH)
+        return (KILL_RESET);
+    
+    switch (thrower)
+    {
+    case KILL_YOU:
+    case KILL_YOU_MISSILE:
+        return (flavour == BEAM_PARALYSIS? KILL_YOU : KILL_YOU_MISSILE);
+
+    case KILL_MON:
+    case KILL_MON_MISSILE:
+        return (KILL_MON_MISSILE);
+
+    default:
+        return (KILL_MON_MISSILE);
+    }
+}
 
 void bolt::set_target(const dist &d)
 {

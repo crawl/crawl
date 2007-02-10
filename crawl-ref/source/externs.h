@@ -255,6 +255,9 @@ public:
     bolt();
 
     void set_target(const dist &);
+
+    // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
+    int  killer() const;
 };
 
 struct run_check_dir
@@ -621,6 +624,11 @@ struct monsters
                                        // once they go out of sight
 
     god_type god;                      // Usually GOD_NO_GOD.
+
+    coord_def pos() const
+    {
+        return coord_def(x, y);
+    }
 };
 
 struct cloud_struct

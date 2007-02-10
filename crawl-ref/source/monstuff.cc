@@ -328,7 +328,7 @@ static void place_monster_corpse(const monsters *monster)
     	learned_something_new(TUT_MAKE_CHUNKS);    
 }                               // end place_monster_corpse()
 
-void monster_die(struct monsters *monster, char killer, int i)
+void monster_die(monsters *monster, char killer, int i)
 {
     int dmi;                    // dead monster's inventory
     int xom_will_act = 0;
@@ -1855,6 +1855,11 @@ static bool handle_enchantment(struct monsters *monster)
                 mons_del_ench(monster, ENCH_FEAR);
             break;
 
+        case ENCH_PARALYSIS:
+            if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
+                mons_del_ench(monster, ENCH_PARALYSIS);
+            break;
+            
         case ENCH_CONFUSION:
             if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
             {
@@ -3576,6 +3581,48 @@ static bool handle_monster_spell(monsters *monster, bolt &beem)
     return (false);
 }
 
+// Give the monster its action energy (aka speed_increment).
+static void monster_add_energy(monsters *monster)
+{
+    int energy_gained = (monster->speed * you.time_taken) / 10;
+
+    // Slow monsters might get 0 here. Maybe we should factor in
+    // *how* slow it is...but a 10-to-1 move ratio seems more than
+    // enough.
+    if ( energy_gained == 0 && monster->speed != 0 )
+        energy_gained = 1;
+
+    monster->speed_increment += energy_gained;
+
+    if (you.slow > 0)
+        monster->speed_increment += energy_gained;
+}
+
+// Do natural regeneration for monster.
+static void monster_regenerate(monsters *monster)
+{
+    // regenerate:
+    if (monster_descriptor(monster->type, MDSC_REGENERATES)
+        
+        || (monster->type == MONS_FIRE_ELEMENTAL 
+            && (grd[monster->x][monster->y] == DNGN_LAVA
+                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE
+                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE_MON))
+
+        || (monster->type == MONS_WATER_ELEMENTAL 
+            && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
+                || grd[monster->x][monster->y] == DNGN_DEEP_WATER))
+
+        || (monster->type == MONS_AIR_ELEMENTAL
+            && env.cgrid[monster->x][monster->y] == EMPTY_CLOUD
+            && one_chance_in(3))
+
+        || one_chance_in(25))
+    {
+        heal_monster(monster, 1, false);
+    }
+}
+
 static void handle_monster_move(int i, monsters *monster)
 {
     bool brkk = false;
@@ -3592,20 +3639,7 @@ static void handle_monster_move(int i, monsters *monster)
         return;
     }
 
-    int energy_gained = (monster->speed * you.time_taken) / 10;
-
-    // Slow monsters might get 0 here. Maybe we should factor in
-    // *how* slow it is...but a 10-to-1 move ratio seems more than
-    // enough.
-    if ( energy_gained == 0 && monster->speed != 0 )
-        energy_gained = 1;
-
-    monster->speed_increment += energy_gained;
-
-    if (you.slow > 0)
-    {
-        monster->speed_increment += energy_gained;
-    }
+    monster_add_energy(monster);
 
     // Handle enchantments and clouds on nonmoving monsters:
     if (monster->speed == 0) 
@@ -3666,37 +3700,21 @@ static void handle_monster_move(int i, monsters *monster)
             }
         }
 
-        handle_behaviour(monster);
-
         if (handle_enchantment(monster))
             continue;
+
+        monster_regenerate(monster);
+
+        if (mons_is_paralysed(monster))
+            continue;
+        
+        handle_behaviour(monster);
 
         // submerging monsters will hide from clouds
         if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
             mons_add_ench( monster, ENCH_SUBMERGED );
-        }
-
-        // regenerate:
-        if (monster_descriptor(monster->type, MDSC_REGENERATES)
-
-            || (monster->type == MONS_FIRE_ELEMENTAL 
-                && (grd[monster->x][monster->y] == DNGN_LAVA
-                    || env.cgrid[monster->x][monster->y] == CLOUD_FIRE
-                    || env.cgrid[monster->x][monster->y] == CLOUD_FIRE_MON))
-
-            || (monster->type == MONS_WATER_ELEMENTAL 
-                && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
-                    || grd[monster->x][monster->y] == DNGN_DEEP_WATER))
-
-            || (monster->type == MONS_AIR_ELEMENTAL
-                && env.cgrid[monster->x][monster->y] == EMPTY_CLOUD
-                && one_chance_in(3))
-
-            || one_chance_in(25))
-        {
-            heal_monster(monster, 1, false);
         }
 
         if (monster->speed >= 100)
