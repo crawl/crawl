@@ -111,6 +111,8 @@ struct monsterentry
     char intel;          // 0=none, 1=worst...4=best
 
     char gmon_use;
+
+    size_type size;
 };    // mondata[] - again, no idea why this was externed {dlb}
 
 
@@ -229,8 +231,6 @@ bool mons_is_demon( int mc );
 bool mons_is_humanoid( int mc );
 
 bool mons_wields_two_weapons(const monsters *m);
-int mons_damage_type(const monsters *m);
-int mons_damage_brand(const monsters *m);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

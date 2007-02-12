@@ -147,4 +147,6 @@ int launcher_final_speed(const item_def &launcher,
 
 void warn_shield_penalties();
 
+int item_special_wield_effect(const item_def &item);
+
 #endif

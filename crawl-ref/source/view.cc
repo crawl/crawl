@@ -3408,16 +3408,25 @@ void viewwindow(bool draw_it, bool do_updates)
                 const int gx = count_x + you.x_pos - 16;
                 const int gy = count_y + you.y_pos - 8;
 
-                if (Options.tutorial_left && in_bounds(gx, gy))
+                if (Options.tutorial_left && in_bounds(gx, gy)
+                    && count_x >= 8 && count_x <= 24)
                 {
-                    if (is_feature('>',gx,gy))
-                        learned_something_new(TUT_SEEN_STAIRS);
-                    else if (is_feature('_',gx,gy))
-                        learned_something_new(TUT_SEEN_ALTAR);
-                    else if (grd[gx][gy] == DNGN_CLOSED_DOOR)
-                        learned_something_new(TUT_SEEN_DOOR,gx,gy);
-                    else if (grd[gx][gy] == DNGN_ENTER_SHOP)
-                        learned_something_new(TUT_SEEN_SHOP,gx,gy);
+                    const int ex = gx - you.x_pos + 9;
+                    const int ey = gy - you.y_pos + 9;
+
+                    int object = env.show[ex][ey];
+
+                    if (object)
+                    {
+                        if (is_feature('>',gx,gy))
+                            learned_something_new(TUT_SEEN_STAIRS);
+                        else if (is_feature('_',gx,gy))
+                            learned_something_new(TUT_SEEN_ALTAR);
+                        else if (grd[gx][gy] == DNGN_CLOSED_DOOR)
+                            learned_something_new(TUT_SEEN_DOOR,gx,gy);
+                        else if (grd[gx][gy] == DNGN_ENTER_SHOP)
+                            learned_something_new(TUT_SEEN_SHOP,gx,gy);
+                    }
                 }
 
                 // order is important here

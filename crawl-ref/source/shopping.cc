@@ -485,8 +485,7 @@ int randart_value( const item_def &item )
     ASSERT( is_random_artefact( item ) );
 
     int ret = 10;
-    FixedVector< char, RA_PROPERTIES >  prop;
-
+    randart_properties_t prop;
     randart_wpn_properties( item, prop );
 
     // Brands are already accounted for via existing ego checks

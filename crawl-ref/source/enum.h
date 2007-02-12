@@ -169,6 +169,13 @@ enum activity_interrupt_payload_type
     AIP_HP_LOSS
 };
 
+enum actor_type
+{
+    ACT_NONE = -1,
+    ACT_PLAYER,
+    ACT_MONSTER
+};
+
 enum ammunition_description_type
 {
     DAMMO_ORCISH = 3,                  //    3
@@ -1835,6 +1842,7 @@ enum mons_class_flags
     M_UNIQUE            = (1<<20),        // monster is a unique
 
     M_CLAWS             = (1<<21),        // Chops off hydra heads in combat.
+    M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
 

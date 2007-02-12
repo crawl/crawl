@@ -18,8 +18,13 @@
 
 std::string actor_name(const monsters *actor, description_level_type desc);
 std::string actor_verb(const monsters *actor, const std::string &verb);
+int actor_size(const monsters *actor);
 int actor_damage_type(const monsters *actor);
 int actor_damage_brand(const monsters *actor);
+bool actor_swimming(const monsters *actor);
+bool actor_floundering(const monsters *actor);
+item_def *actor_weapon(const monsters *actor, int which_attack = -1);
+item_def *actor_shield(const monsters *actor);
 
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                           bool force );
@@ -52,6 +57,7 @@ bool player_light_armour(bool with_skill = false);
  * *********************************************************************** */
 bool player_in_water(void);
 bool player_is_swimming(void);
+bool player_floundering();
 bool player_is_levitating(void);
 
 /* ***********************************************************************

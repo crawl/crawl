@@ -527,7 +527,7 @@ void unuse_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
-    FixedVector< char, RA_PROPERTIES > proprt;
+    randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])

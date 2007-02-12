@@ -90,9 +90,14 @@ static bool check_for_cursed_equipment( FixedVector < char, 8 > &remove_stuff )
 }                               // end check_for_cursed_equipment()
 
 // FIXME: Switch to 4.1 transforms handling.
-size_type transform_size(int)
+size_type transform_size(int psize)
 {
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
+    return you.transform_size(psize);
+}
+
+size_type player::transform_size(int psize) const
+{
+    const int transform = attribute[ATTR_TRANSFORMATION];
     switch (transform)
     {
     case TRAN_SPIDER:

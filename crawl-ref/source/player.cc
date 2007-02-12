@@ -35,11 +35,13 @@
 #include "clua.h"
 #include "delay.h"
 #include "fight.h"
+#include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "misc.h"
+#include "monstuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -57,39 +59,12 @@
 #include "tutorial.h"
 #include "view.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// Actor stuff - generic functions that can be called with a monster pointer,
-// or NULL for the player.
-
 std::string pronoun_you(description_level_type desc)
 {
     return (desc == DESC_CAP_A || desc == DESC_CAP_THE? "You" : "you");
 }
 
-std::string actor_name(const monsters *actor, description_level_type desc)
-{
-    return (actor? ptr_monam(actor, desc) : pronoun_you(desc));
-}
-
-// actor_verb(NULL, "chop") == chop, as in "You chop"
-// actor_verb(monster, "chop") == chops, as in "The skeletal warrior chops".
-std::string actor_verb(const monsters *actor, const std::string &verb)
-{
-    // Simplistic - we really should be conjugating the verb
-    // appropriately. We'll special-case as necessary.
-    return (actor? verb + "s" : verb);
-}
-
-int actor_damage_type(const monsters *actor)
-{
-    return (actor? mons_damage_type(actor) : player_damage_type());
-}
-
-int actor_damage_brand(const monsters *actor)
-{
-    return (actor? mons_damage_brand(actor) : player_damage_brand());
-}
-
+//////////////////////////////////////////////////////////////////////////
 /*
    you.duration []: //jmf: obsolete, see enum.h instead
                     //[ds] Well, can we lose it yet?
@@ -331,7 +306,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
 bool player_can_swim()
 {
-    return (you.species == SP_MERFOLK);
+    return you.can_swim();
 }
 
 bool is_grid_dangerous(int grid)
@@ -362,13 +337,17 @@ bool player_in_hell( void )
 bool player_in_water(void)
 {
     return (!player_is_levitating()
-            && (grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-                || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER));
+            && grid_is_water(grd[you.x_pos][you.y_pos]));
 }
 
 bool player_is_swimming(void)
 {
-    return (player_in_water() && player_can_swim());
+    return you.swimming();
+}
+
+bool player_floundering()
+{
+    return (player_in_water() && !player_can_swim());
 }
 
 bool player_under_penance(void)
@@ -422,16 +401,13 @@ bool player_genus(unsigned char which_genus, unsigned char species)
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player_slot_item(equipment_type eq)
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
-
-    const int item = you.equip[eq];
-    return (item == -1? NULL : &you.inv[item]);
+    return you.slot_item(eq);
 }
 
 // Returns the item in the player's weapon slot.
 item_def *player_weapon()
 {
-    return player_slot_item(EQ_WEAPON);
+    return you.weapon();
 }
 
 bool player_weapon_wielded()
@@ -627,66 +603,13 @@ int player_equip_ego_type( int slot, int special )
 
 int player_damage_type( void )
 {
-    const int wpn = you.equip[ EQ_WEAPON ];
-
-    if (wpn != -1)
-    {
-        return (get_vorpal_type(you.inv[wpn]));
-    }
-    else if (you.equip[EQ_GLOVES] == -1 &&
-             you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-    {
-        return (DVORP_SLICING);
-    }
-    else if (you.equip[EQ_GLOVES] == -1 &&
-             (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-              || you.mutation[MUT_CLAWS] 
-              || you.species == SP_TROLL
-              || you.species == SP_GHOUL))
-    {
-        return (DVORP_CLAWING);
-    }
-
-    return (DVORP_CRUSHING);
+    return you.damage_type();
 }
 
 // returns band of player's melee damage
 int player_damage_brand( void )
 {
-    int ret = SPWPN_NORMAL;
-    const int wpn = you.equip[ EQ_WEAPON ];
-
-    if (wpn != -1) 
-    {
-        if ( !is_range_weapon(you.inv[wpn]) )
-            ret = get_weapon_brand( you.inv[wpn] );
-    }
-    else if (you.confusing_touch)
-        ret = SPWPN_CONFUSE;
-    else if (you.mutation[MUT_DRAIN_LIFE])
-        ret = SPWPN_DRAINING;
-    else
-    {
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_SPIDER:
-            ret = SPWPN_VENOM;
-            break;
-
-        case TRAN_ICE_BEAST:
-            ret = SPWPN_FREEZING;
-            break;
-
-        case TRAN_LICH:
-            ret = SPWPN_DRAINING;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    return (ret);
+    return you.damage_brand();
 }
 
 int player_teleport(bool calc_unid)
@@ -1803,48 +1726,7 @@ bool player_is_shapechanged(void)
 // natural one.
 size_type player_size( int psize, bool base )
 {
-    size_type  ret = (base) ? SIZE_CHARACTER : transform_size( psize );
-
-    if (ret == SIZE_CHARACTER)
-    {
-        // transformation has size of character's species:
-        switch (you.species)
-        {
-        case SP_OGRE:
-        case SP_OGRE_MAGE:
-        case SP_TROLL:
-            ret = SIZE_LARGE;
-            break;
-
-        case SP_NAGA:
-            // Most of their body is on the ground giving them a low profile.
-            if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
-                ret = SIZE_MEDIUM;
-            else
-                ret = SIZE_BIG;
-            break;
-
-        case SP_CENTAUR:
-            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_BIG;
-            break;
-
-        case SP_SPRIGGAN:
-            ret = SIZE_LITTLE;
-            break;
-
-        case SP_HALFLING:
-        case SP_GNOME:
-        case SP_KOBOLD:
-            ret = SIZE_SMALL;
-            break;
-
-        default:
-            ret = SIZE_MEDIUM;
-            break;
-        }
-    }
-
-    return (ret);
+    return you.body_size(psize, base);
 }
 
 int player_evasion(void)
@@ -1966,7 +1848,7 @@ int player_mag_abil(bool is_weighted)
 // Returns the shield the player is wearing, or NULL if none.
 item_def *player_shield()
 {
-    return player_slot_item(EQ_SHIELD);
+    return you.shield();
 }
 
 int player_shield_class(void)   //jmf: changes for new spell
@@ -3134,9 +3016,7 @@ void display_char_status(void)
                                 : "very slow" );
     mpr(info);
 
-    // XXX Assumes no hand-and-a-half bonus. Oh well.
-    const int to_hit = calc_your_to_hit( calc_heavy_armour_penalty(false),
-					 false, false, false ) * 2;
+    const int to_hit = calc_your_to_hit( false ) * 2;
     // Messages based largely on percentage chance of missing the 
     // average EV 10 humanoid, and very agile EV 30 (pretty much
     // max EV for monsters currently).
@@ -3471,18 +3351,12 @@ bool wearing_amulet(char amulet, bool calc_unid)
 
 bool player_is_levitating(void)
 {
-    return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON || you.levitation);
+    return you.is_levitating();
 }
 
 bool player_has_spell( int spell )
 {
-    for (int i = 0; i < 25; i++)
-    {
-        if (you.spells[i] == spell)
-            return (true);
-    }
-
-    return (false);
+    return you.has_spell(spell);
 }
 
 int species_exp_mod(char species)
@@ -4625,4 +4499,237 @@ bool player::operator < (const player &p) const
     return (experience > p.experience
         || (experience == p.experience &&
                 stricmp(your_name, p.your_name) < 0));
+}
+
+coord_def player::pos() const
+{
+    return coord_def(x_pos, y_pos);
+}
+
+bool player::is_levitating() const
+{
+    return (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON || levitation);
+}
+
+bool player::in_water() const
+{
+    return !is_levitating()
+        && grid_is_water(grd[you.x_pos][you.y_pos]);
+}
+
+bool player::can_swim() const
+{
+    return (species == SP_MERFOLK);
+}
+
+bool player::swimming() const
+{
+    return in_water() && can_swim();
+}
+
+bool player::has_spell(int spell) const
+{
+    for (int i = 0; i < 25; i++)
+    {
+        if (spells[i] == spell)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool player::floundering() const
+{
+    return in_water() && !can_swim();
+}
+
+size_type player::body_size(int psize, bool base) const
+{
+    size_type ret = (base) ? SIZE_CHARACTER : transform_size( psize );
+
+    if (ret == SIZE_CHARACTER)
+    {
+        // transformation has size of character's species:
+        switch (species)
+        {
+        case SP_OGRE:
+        case SP_OGRE_MAGE:
+        case SP_TROLL:
+            ret = SIZE_LARGE;
+            break;
+
+        case SP_NAGA:
+            // Most of their body is on the ground giving them a low profile.
+            if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
+                ret = SIZE_MEDIUM;
+            else
+                ret = SIZE_BIG;
+            break;
+
+        case SP_CENTAUR:
+            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_BIG;
+            break;
+
+        case SP_SPRIGGAN:
+            ret = SIZE_LITTLE;
+            break;
+
+        case SP_HALFLING:
+        case SP_GNOME:
+        case SP_KOBOLD:
+            ret = SIZE_SMALL;
+            break;
+
+        default:
+            ret = SIZE_MEDIUM;
+            break;
+        }
+    }
+
+    return (ret);
+}
+
+int player::damage_type(int)
+{
+    const int wpn = equip[ EQ_WEAPON ];
+
+    if (wpn != -1)
+    {
+        return (get_vorpal_type(inv[wpn]));
+    }
+    else if (equip[EQ_GLOVES] == -1 &&
+             attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    {
+        return (DVORP_SLICING);
+    }
+    else if (equip[EQ_GLOVES] == -1 &&
+             (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+              || mutation[MUT_CLAWS] 
+              || species == SP_TROLL
+              || species == SP_GHOUL))
+    {
+        return (DVORP_CLAWING);
+    }
+
+    return (DVORP_CRUSHING);
+}
+
+int player::damage_brand(int)
+{
+    int ret = SPWPN_NORMAL;
+    const int wpn = equip[ EQ_WEAPON ];
+
+    if (wpn != -1) 
+    {
+        if ( !is_range_weapon(inv[wpn]) )
+            ret = get_weapon_brand( inv[wpn] );
+    }
+    else if (confusing_touch)
+        ret = SPWPN_CONFUSE;
+    else if (mutation[MUT_DRAIN_LIFE])
+        ret = SPWPN_DRAINING;
+    else
+    {
+        switch (attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_SPIDER:
+            ret = SPWPN_VENOM;
+            break;
+
+        case TRAN_ICE_BEAST:
+            ret = SPWPN_FREEZING;
+            break;
+
+        case TRAN_LICH:
+            ret = SPWPN_DRAINING;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return (ret);
+}
+
+item_def *player::slot_item(equipment_type eq)
+{
+    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+
+    const int item = equip[eq];
+    return (item == -1? NULL : &inv[item]);
+}
+
+// Returns the item in the player's weapon slot.
+item_def *player::weapon(int /* which_attack */)
+{
+    return slot_item(EQ_WEAPON);
+}
+
+item_def *player::shield()
+{
+    return slot_item(EQ_SHIELD);
+}
+
+std::string player::name(description_level_type type) const
+{
+    return (pronoun_you(type));
+}
+
+std::string player::conj_verb(const std::string &verb) const
+{
+    return (verb);
+}
+
+int player::id() const
+{
+    return (-1);
+}
+
+bool player::fumbles_attack(bool verbose)
+{
+    // fumbling in shallow water <early return>:
+    if (floundering())
+    {
+        if (random2(dex) < 4 || one_chance_in(5))
+        {
+            if (verbose)
+                mpr("Unstable footing causes you to fumble your attack.");
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool player::cannot_fight() const
+{
+    return (false);
+}
+
+void player::attacking(actor *other)
+{
+    if (other && other->atype() == ACT_MONSTER)
+    {
+        const monsters *mons = dynamic_cast<monsters*>(other);
+        if (mons_friendly(mons))
+            did_god_conduct(DID_ATTACK_FRIEND, 5);
+        else
+            pet_target = monster_index(mons);
+    }
+
+    if (mutation[MUT_BERSERK] &&
+        (random2(100) < (mutation[MUT_BERSERK] * 10) - 5))
+    {
+        go_berserk(false);
+    }
+}
+
+void player::go_berserk(bool intentional)
+{
+    ::go_berserk(intentional);
+}
+
+void player::make_hungry(int hunger_increase, bool silent)
+{
+    ::make_hungry(hunger_increase, silent);
 }

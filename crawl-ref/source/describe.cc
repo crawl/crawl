@@ -154,7 +154,7 @@ static void randart_descpr( std::string &description, const item_def &item )
 {
     unsigned int old_length = description.length();
 
-    FixedVector< char, RA_PROPERTIES > proprt;
+    randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
     if (proprt[ RAP_AC ])
@@ -4523,7 +4523,7 @@ static std::string describe_draconian(const monsters *mon)
     if (subsp == MONS_DRACONIAN)
         description += "A ";
     else
-        description += "An enormous, muscular ";
+        description += "A muscular ";
 
     switch (subsp)
     {

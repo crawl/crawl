@@ -338,6 +338,54 @@ void warn_shield_penalties()
         warn_launcher_shield_slowdown(*weapon);
 }
 
+int item_special_wield_effect(const item_def &item)
+{
+    if (item.base_type != OBJ_WEAPONS || !is_artefact(item))
+        return (SPWLD_NONE);
+    
+    int i_eff = SPWPN_NORMAL;
+    if (is_random_artefact( item ))
+        i_eff = randart_wpn_property(item, RAP_BRAND);
+    else 
+        i_eff = item.special;
+
+    switch (i_eff)
+    {
+    case SPWPN_SINGING_SWORD:
+        return (SPWLD_SING);
+        
+    case SPWPN_WRATH_OF_TROG:
+        return (SPWLD_TROG);
+
+    case SPWPN_SCYTHE_OF_CURSES:
+        return (SPWLD_CURSE);
+
+    case SPWPN_MACE_OF_VARIABILITY:
+        return (SPWLD_VARIABLE);
+
+    case SPWPN_GLAIVE_OF_PRUNE:
+        return (SPWLD_NONE);
+
+    case SPWPN_SCEPTRE_OF_TORMENT:
+        return (SPWLD_TORMENT);
+
+    case SPWPN_SWORD_OF_ZONGULDROK:
+        return (SPWLD_ZONGULDROK);
+
+    case SPWPN_SWORD_OF_POWER:
+        return (SPWLD_POWER);
+
+    case SPWPN_STAFF_OF_OLGREB:
+        return (SPWLD_OLGREB);
+
+    case SPWPN_STAFF_OF_WUCAD_MU:
+        return (SPWLD_WUCAD_MU);
+
+    default:
+        return (SPWLD_NONE);
+    }
+}
+
 // provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*    {gdl}
@@ -3546,7 +3594,7 @@ void use_randart(const item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
 
-    FixedVector< char, RA_PROPERTIES >  proprt;
+    randart_properties_t proprt;
     randart_wpn_properties( item, proprt );
 
     if (proprt[RAP_AC])

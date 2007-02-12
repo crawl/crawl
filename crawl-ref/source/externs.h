@@ -96,6 +96,46 @@ struct activity_interrupt_data
     }
 };
 
+class item_def;
+class melee_attack;
+class coord_def;
+
+class actor
+{
+public:
+    virtual ~actor() { }
+
+    virtual int       id() const = 0;
+    virtual actor_type atype() const = 0;
+
+    virtual coord_def pos() const = 0;
+    virtual bool      swimming() const = 0;
+    virtual bool      floundering() const = 0;
+    
+    virtual size_type body_size(int psize = PSIZE_TORSO,
+                                bool base = false) const = 0;
+    
+    virtual int       damage_type(int which_attack = -1) = 0;
+    virtual int       damage_brand(int which_attack = -1) = 0;
+    virtual item_def *weapon(int which_attack = -1) = 0;
+    virtual item_def *shield() = 0;
+
+    virtual void make_hungry(int nutrition, bool silent)
+    {
+    }
+    
+    virtual std::string name(description_level_type type) const = 0;
+    virtual std::string conj_verb(const std::string &verb) const = 0;
+
+    virtual bool fumbles_attack(bool verbose = true) = 0;
+
+    // Returns true if the actor has no way to attack (plants, statues).
+    // (statues have only indirect attacks).
+    virtual bool cannot_fight() const = 0;
+    virtual void attacking(actor *other) = 0;
+    virtual void go_berserk(bool intentional) = 0;
+};
+
 struct ait_hp_loss
 {
     int hp;
@@ -380,8 +420,9 @@ private:
 
 typedef std::vector<delay_queue_item> delay_queue_type;
 
-struct player
+class player : public actor
 {
+public:
   bool turn_is_over; // flag signaling that player has performed a timed action
 
   bool banished;     // flag signaling that the player is due a visit to the
@@ -574,17 +615,52 @@ struct player
   FixedVector<int, 52>  ability_letter_table; // ref to ability by enum
 
 public:
-  player();
-  void init();
+    player();
+    void init();
+    
+    bool is_valid() const;
+    std::string short_desc() const;
+    
+    // For sorting
+    bool operator < (const player &p) const;
 
-  bool is_valid() const;
-  std::string short_desc() const;
+public:
+    bool in_water() const;
+    bool can_swim() const;
+    bool is_levitating() const;
 
-  // For sorting
-  bool operator < (const player &p) const;
+    bool has_spell(int spell) const;
+
+    size_type transform_size(int psize = PSIZE_TORSO) const;
+
+    item_def *slot_item(equipment_type eq);
+
+    // actor
+    int id() const;
+    coord_def pos() const;
+    bool      swimming() const;
+    bool      floundering() const;
+    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       damage_type(int attk = -1);
+    int       damage_brand(int attk = -1);
+    item_def *weapon(int which_attack = -1);
+    item_def *shield();
+    
+    std::string name(description_level_type type) const;
+    std::string conj_verb(const std::string &verb) const;
+
+    bool fumbles_attack(bool verbose = true);
+    bool cannot_fight() const;
+
+    void attacking(actor *other);
+    void go_berserk(bool intentional);
+
+    void make_hungry(int nutrition, bool silent);
+
+    actor_type atype() const { return ACT_PLAYER; }
 };
 
-extern struct player you;
+extern player you;
 
 class monster_spells : public FixedVector<int, NUM_MONSTER_SPELL_SLOTS>
 {
@@ -595,8 +671,9 @@ public:
     void clear() { init(MS_NO_SPELL); }
 };
 
-struct monsters
+class monsters : public actor
 {
+public:
     int type;
     int hit_points;
     int max_hit_points;
@@ -625,10 +702,27 @@ struct monsters
 
     god_type god;                      // Usually GOD_NO_GOD.
 
-    coord_def pos() const
-    {
-        return coord_def(x, y);
-    }
+public:
+    // actor interface
+    int id() const;
+    coord_def pos() const;
+    bool      swimming() const;
+    bool      floundering() const;
+    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    int       damage_type(int attk = -1);
+    int       damage_brand(int attk = -1);
+    item_def *weapon(int which_attack = -1);
+    item_def *shield();
+    std::string name(description_level_type type) const;
+    std::string conj_verb(const std::string &verb) const;
+
+    bool fumbles_attack(bool verbose = true);
+    bool cannot_fight() const;
+
+    void attacking(actor *other);
+    void go_berserk(bool intentional);
+
+    actor_type atype() const { return ACT_MONSTER; }
 };
 
 struct cloud_struct

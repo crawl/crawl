@@ -23,6 +23,7 @@
 #define RANDART_SEED_MASK  0x00ffffff
 
 
+bool is_artefact( const item_def &item );
 bool is_random_artefact( const item_def &item );
 bool is_unrandom_artefact( const item_def &item );
 bool is_fixed_artefact( const item_def &item );
@@ -61,14 +62,15 @@ char does_unrandart_exist(int whun);
  * *********************************************************************** */
 int find_okay_unrandart(unsigned char aclass, unsigned char atype = OBJ_RANDOM);
 
+typedef FixedVector< int, RA_PROPERTIES > randart_properties_t;
 
 /* ***********************************************************************
  * called from: describe - fight - it_use2 - item_use - player
  * *********************************************************************** */
 void randart_wpn_properties( const item_def &item, 
-                             FixedVector< char, RA_PROPERTIES > &proprt );
+                             randart_properties_t &proprt );
 
-int randart_wpn_property( const item_def &item, char prop );
+int randart_wpn_property( const item_def &item, int prop );
 
 
 /* ***********************************************************************

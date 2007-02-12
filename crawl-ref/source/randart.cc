@@ -674,6 +674,11 @@ char does_unrandart_exist(int whun)
     return (unrandart_exist[whun]);
 }
 
+bool is_artefact( const item_def &item )
+{
+    return (is_random_artefact(item) || is_fixed_artefact(item));
+}
+
 // returns true is item is a pure randart or an unrandart
 bool is_random_artefact( const item_def &item )
 {
@@ -745,7 +750,7 @@ static long calc_seed( const item_def &item )
 }
 
 void randart_wpn_properties( const item_def &item, 
-                             FixedVector< char, RA_PROPERTIES > &proprt )
+                             randart_properties_t &proprt )
 {
     ASSERT( is_random_artefact( item ) ); 
 
@@ -1213,9 +1218,9 @@ finished_curses:
 
 }
 
-int randart_wpn_property( const item_def &item, char prop )
+int randart_wpn_property( const item_def &item, int prop )
 {
-    FixedVector< char, RA_PROPERTIES > proprt;
+    randart_properties_t proprt;
 
     randart_wpn_properties( item, proprt );
 

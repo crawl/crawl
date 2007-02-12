@@ -100,13 +100,7 @@ bool monster_habitable_grid(int monster_class, int actual_grid, bool flies)
 // extra damage from water-natives.
 bool monster_floundering(const monsters *m)
 {
-    const int grid = grd[m->x][m->y];
-    return ((grid == DNGN_DEEP_WATER || grid == DNGN_SHALLOW_WATER)
-            // Can't use monster_habitable_grid because that'll return true
-            // for non-water monsters in shallow water.
-            && monster_habitat(m->type) != DNGN_DEEP_WATER
-            && !mons_class_flag(m->type, M_AMPHIBIOUS)
-            && !mons_flies(m));
+    return (m->floundering());
 }
 
 // Returns true if the monster can submerge in the given grid

@@ -1770,6 +1770,16 @@ static void handle_behaviour(struct monsters *mon)
     }
 }                               // end handle_behaviour()
 
+std::string str_simple_monster_message(monsters *mons, const char *event)
+{
+    if (mons_near(mons) && player_monster_visible(mons))
+        return make_stringf("%s%s",
+                            ptr_monam(mons, DESC_CAP_THE),
+                            event );
+
+    return ("");
+}
+
 // note that this function *completely* blocks messaging for monsters
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}

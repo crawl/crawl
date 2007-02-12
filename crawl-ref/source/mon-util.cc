@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "misc.h"
 #include "monplace.h"
 #include "mstuff2.h"
 #include "player.h"
@@ -635,7 +636,6 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
     return ((mrch2 < mrchance) ? true : false);
 }                               // end check_mons_resist_magic()
 
-
 int mons_res_elec( const monsters *mon )
 {
     int mc = mon->type;
@@ -711,7 +711,6 @@ int mons_res_poison( const monsters *mon )
 
     return (u);
 }                               // end mons_res_poison()
-
 
 int mons_res_fire( const monsters *mon )
 {
@@ -1642,47 +1641,14 @@ int mons_offhand_weapon_index(const monsters *m)
     return (m->inv[1]);
 }
 
-int mons_weapon_index(const monsters *m)
-{
-    // This randomly picks one of the wielded weapons for monsters that can use
-    // two weapons. Not ideal, but better than nothing. fight.cc does it right,
-    // for various values of right.
-    int weap = m->inv[MSLOT_WEAPON];
-
-    if (mons_wields_two_weapons(m))
-    {
-        const int offhand = mons_offhand_weapon_index(m);
-        if (offhand != NON_ITEM && (weap == NON_ITEM || coinflip()))
-            weap = offhand;
-    }
-
-    return (weap);
-}
-
 int mons_base_damage_type(const monsters *m)
 {
     return (mons_class_flag(m->type, M_CLAWS)? DVORP_CLAWING : DVORP_CRUSHING);
 }
 
-int mons_damage_type(const monsters *m)
+int mons_size(const monsters *m)
 {
-    const int mweap = mons_weapon_index(m);
-
-    if (mweap == NON_ITEM)
-        return (mons_base_damage_type(m));
-
-    return (get_vorpal_type(mitm[mweap]));
-}
-
-int mons_damage_brand(const monsters *m)
-{
-    const int mweap = mons_weapon_index(m);
-
-    if (mweap == NON_ITEM)
-        return (SPWPN_NORMAL);
-
-    const item_def &weap = mitm[mweap];
-    return (!is_range_weapon(weap)? get_weapon_brand(weap) : SPWPN_NORMAL);
+    return m->body_size();
 }
 
 bool mons_friendly(const monsters *m)
@@ -2499,4 +2465,126 @@ bool monster_senior(const monsters *m1, const monsters *m2)
         return (false);
 
     return (mchar1 == mchar2 && m1->hit_dice > m2->hit_dice);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// monsters methods
+
+coord_def monsters::pos() const
+{
+    return coord_def(x, y);
+}
+
+bool monsters::swimming() const
+{
+    const int grid = grd[x][y];
+    return (grid_is_watery(grid) && monster_habitat(type) == DNGN_DEEP_WATER);
+}
+
+bool monsters::floundering() const
+{
+    const int grid = grd[x][y];
+    return (grid_is_water(grid)
+            // Can't use monster_habitable_grid because that'll return true
+            // for non-water monsters in shallow water.
+            && monster_habitat(type) != DNGN_DEEP_WATER
+            && !mons_class_flag(type, M_AMPHIBIOUS)
+            && !mons_flies(this));
+}
+
+size_type monsters::body_size(int /* psize */, bool /* base */) const
+{
+    const monsterentry *e = seekmonster(type);
+    return (e? e->size : SIZE_MEDIUM);
+}
+
+int monsters::damage_type(int which_attack)
+{
+    const item_def *mweap = weapon(which_attack);
+
+    if (!mweap)
+        return (mons_base_damage_type(this));
+
+    return (get_vorpal_type(*mweap));
+}
+
+int monsters::damage_brand(int which_attack)
+{
+    const item_def *mweap = weapon(which_attack);
+
+    if (!mweap)
+        return (SPWPN_NORMAL);
+
+    return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
+}
+
+item_def *monsters::weapon(int which_attack)
+{
+    if (which_attack > 1)
+        which_attack &= 1;
+    
+    // This randomly picks one of the wielded weapons for monsters that can use
+    // two weapons. Not ideal, but better than nothing. fight.cc does it right,
+    // for various values of right.
+    int weap = inv[MSLOT_WEAPON];
+
+    if (which_attack && mons_wields_two_weapons(this))
+    {
+        const int offhand = mons_offhand_weapon_index(this);
+        if (offhand != NON_ITEM
+            && (weap == NON_ITEM || which_attack == 1 || coinflip()))
+        {
+            weap = offhand;
+        }
+    }
+
+    return (weap == NON_ITEM? NULL : &mitm[weap]);
+}
+
+item_def *monsters::shield()
+{
+    return (NULL);
+}
+
+std::string monsters::name(description_level_type desc) const
+{
+    return (ptr_monam(this, desc));
+}
+
+std::string monsters::conj_verb(const std::string &verb) const
+{
+    return (verb + "s");
+}
+
+int monsters::id() const
+{
+    return (type);
+}
+
+bool monsters::fumbles_attack(bool verbose)
+{
+    if (floundering() && one_chance_in(4))
+    {
+        if (verbose && !silenced(you.x_pos, you.y_pos)
+            && !silenced(x, y))
+        {
+            mprf(MSGCH_SOUND, "You hear a splashing noise.");
+        }
+    }
+    return (false);
+}
+
+bool monsters::cannot_fight() const
+{
+    return mons_class_flag(type, M_NO_EXP_GAIN)
+        || mons_is_statue(type);
+}
+
+void monsters::attacking(actor * /* other */)
+{
+}
+
+void monsters::go_berserk(bool /* intentional */)
+{
 }

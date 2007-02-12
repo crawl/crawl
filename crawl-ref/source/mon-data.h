@@ -23,12 +23,13 @@
  - Here are the rows:
     - row 1: monster id, display character, display colour, name
     - row 2: monster flags
-    - row 3: mass, experience modifier, charclass, holiness, resist magic
-    - row 4: damage for each of four attacks
-    - row 5: hit dice, described by four parameters
-    - row 6: AC, evasion, speed, speed_inc, sec(spell), corpse_thingy,
+    - row 3: monster resistance flags
+    - row 4: mass, experience modifier, charclass, holiness, resist magic
+    - row 5: damage for each of four attacks
+    - row 6: hit dice, described by four parameters
+    - row 7: AC, evasion, speed, speed_inc, sec(spell), corpse_thingy,
              zombie size, shouts, intel
-    - row 6: gmon_use class
+    - row 8: gmon_use class, body size
 
  - Some further explanations:
 
@@ -115,7 +116,7 @@
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_HUGE
 }
 ,
 
@@ -128,7 +129,7 @@
     { 8, 0, 0, 0 },
     { 3, 3, 5, 0 },
     4, 10, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -140,7 +141,7 @@
     { 1, 0, 0, 0 },
     { 1, 2, 3, 0 },
     1, 14, 30, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -152,7 +153,7 @@
     { 10, 0, 0, 0 },
     { 4, 3, 5, 0 },
     3, 7, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -164,7 +165,7 @@
     { 18, 0, 0, 0 },
     { 5, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -176,7 +177,7 @@
     { 18, 12, 0, 0 },
     { 7, 3, 5, 0 },
     3, 4, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT2, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
 }
 ,
 
@@ -188,7 +189,7 @@
     { 0, 0, 0, 0 },
     { 8, 3, 5, 0 },
     1, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -200,7 +201,7 @@
     { 4, 0, 0, 0 },
     { 1, 2, 4, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -212,7 +213,7 @@
     { 6, 0, 0, 0 },
     { 3, 3, 5, 0 },
     2, 13, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -225,7 +226,7 @@
     { 4, 0, 0, 0 },
     { 3, 3, 3, 0 },
     3, 14, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE
 }
 ,
 
@@ -237,7 +238,7 @@
     { 3, 0, 0, 0 },
     { 1, 3, 5, 0 },
     2, 12, 14, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -249,7 +250,7 @@
     { 10, 0, 0, 0 },
     { 3, 3, 5, 0 },
     2, 18, 20, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -261,7 +262,7 @@
     { 3, 0, 0, 0 },
     { 1, 3, 5, 0 },
     1, 5, 5, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -273,7 +274,7 @@
     { 14, 8, 8, 0 },
     { 9, 3, 5, 0 },
     5, 7, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -286,7 +287,7 @@
     { 8, 0, 0, 0 },
     { 5, 3, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -298,7 +299,7 @@
     { 5, 0, 0, 0 },
     { 1, 4, 6, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -312,7 +313,7 @@
     { 10, 0, 0, 0 },
     { 7, 3, 5, 0 },
     3, 13, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -324,7 +325,7 @@
     { 3, 2, 2, 0 },
     { 3, 2, 6, 0 },
     5, 17, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -336,7 +337,7 @@
     { 3, 0, 0, 0 },
     { 1, 1, 3, 0 },
     1, 10, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -348,7 +349,7 @@
     { 10, 0, 0, 0 },
     { 3, 3, 5, 0 },
     5, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -363,7 +364,7 @@
     { 50, 0, 0, 0 },
     { 10, 5, 5, 0 },
     3, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_HUGE
 }
 ,
 ****************************************************************** */
@@ -376,7 +377,7 @@
     { 12, 0, 0, 0 },
     { 8, 3, 5, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -388,7 +389,7 @@
     { 30, 0, 0, 0 },
     { 3, 3, 5, 0 },
     0, 5, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -400,7 +401,7 @@
     { 12, 0, 0, 0 },
     { 5, 3, 5, 0 },
     1, 5, 6, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -413,7 +414,7 @@
     { 23, 0, 0, 0 },
     { 6, 2, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -425,7 +426,7 @@
     { 13, 0, 0, 0 },
     { 4, 3, 5, 0 },
     5, 14, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -438,7 +439,7 @@
     { 10, 0, 0, 0 },
     { 1, 5, 5, 0 },
     0, 4, 5, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -450,7 +451,7 @@
     { 25, 0, 0, 0 },
     { 12, 6, 5, 0 },
     10, 20, 15, 7, MST_ANGEL, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -462,7 +463,7 @@
     { 20, 0, 0, 0 },
     { 5, 7, 6, 0 },
     10, 3, 5, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -474,7 +475,7 @@
     { 35, 0, 0, 0 },
     { 9, 3, 5, 0 },
     5, 3, 7, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
 }
 ,
 
@@ -486,7 +487,7 @@
     { 20, 13, 13, 0 },
     { 12, 5, 5, 0 },
     10, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -500,7 +501,7 @@
     { 17, 13, 0, 0 },
     { 6, 3, 5, 0 },
     1, 4, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT2, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE
 }
 ,
 
@@ -512,7 +513,7 @@
     { 25, 15, 15, 0 },
     { 18, 3, 5, 0 },
       15, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -524,7 +525,7 @@
     { 1, 0, 0, 0 },
     { 1, 0, 0, 1 },
     0, 10, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -536,7 +537,7 @@
     { 5, 0, 0, 0 },
     { 1, 4, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -548,19 +549,19 @@
     { 5, 0, 0, 0 },
     { 5, 3, 5, 0 },
     5, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
 {
     MONS_JELLY, 'J', LIGHTRED, "jelly",
-    M_SEE_INVIS | M_SPLITS | M_AMPHIBIOUS,
+    M_SEE_INVIS | M_SPLITS | M_AMPHIBIOUS | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 13, MONS_JELLY, MONS_JELLY, MH_NATURAL, -3,
     { 8, 0, 0, 0 },
     { 3, 5, 5, 0 },
     0, 2, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_MEDIUM
 }
 ,
 
@@ -572,7 +573,7 @@
     { 4, 0, 0, 0 },
     { 1, 2, 3, 0 },
     2, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -584,7 +585,7 @@
     { 15, 0, 0, 0 },
     { 20, 2, 4, 0 },
     10, 10, 10, 7, MST_LICH_I, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -596,7 +597,7 @@
     { 20, 0, 0, 0 },
     { 3, 5, 3, 0 },
     3, 6, 6, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -608,7 +609,7 @@
     { 19, 0, 0, 0 },
     { 8, 3, 5, 0 },
     6, 14, 15, 7, MST_GUARDIAN_NAGA, CE_MUTAGEN_RANDOM, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -620,7 +621,7 @@
     { 17, 0, 0, 0 },
     { 5, 3, 5, 0 },
     1, 6, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE
 }
 ,
 
@@ -632,7 +633,7 @@
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
     10, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -644,7 +645,7 @@
     { 20, 0, 0, 0 },
     { 7, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -656,7 +657,7 @@
     { 20, 0, 0, 0 },
     { 10, 3, 5, 0 },
     10, 14, 10, 7, MST_RAKSHASA, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -668,7 +669,7 @@
     { 5, 0, 0, 0 },
     { 2, 3, 5, 0 },
     1, 15, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -680,7 +681,7 @@
     { 20, 15, 15, 0 },
     { 7, 3, 5, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -692,7 +693,7 @@
     { 12, 0, 0, 0 },
     { 7, 3, 5, 0 },
     5, 10, 30, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -704,7 +705,7 @@
     { 22, 0, 0, 0 },
     { 6, 3, 5, 0 },
     10, 10, 10, 7, MST_VAMPIRE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -716,7 +717,7 @@
     { 13, 0, 0, 0 },
     { 6, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -729,7 +730,7 @@
     { 40, 0, 0, 0 },
     { 11, 2, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -741,7 +742,7 @@
     { 18, 0, 0, 0 },
     { 7, 3, 5, 0 },
     4, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -754,7 +755,7 @@
     { 23, 0, 0, 0 },
     { 6, 3, 5, 0 },
     8, 5, 5, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -766,7 +767,7 @@
     { 20, 0, 0, 0 },
     { 4, 4, 6, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -778,7 +779,7 @@
     { 4, 0, 0, 0 },
     { 4, 3, 5, 0 },
     2, 13, 10, 7, MST_KOBOLD_DEMONOLOGIST, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -790,7 +791,7 @@
     { 5, 0, 0, 0 },
     { 3, 3, 4, 0 },
     1, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -802,7 +803,7 @@
     { 25, 0, 0, 0 },
     { 9, 4, 7, 0 },
     2, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -817,7 +818,7 @@
     { 0, 0, 0, 0 },
     { 10, 5, 5, 0 },
     3, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_HUGE
 }
 ,
 ****************************************************************** */
@@ -830,7 +831,7 @@
     { 20, 0, 0, 0 },
     { 5, 3, 5, 0 },
     5, 10, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -842,7 +843,7 @@
     { 7, 0, 0, 0 },
     { 5, 3, 5, 0 },
     3, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -854,7 +855,7 @@
     { 0, 0, 0, 0 },
     { 3, 3, 5, 0 },
     0, 1, 3, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -866,7 +867,7 @@
     { 8, 0, 0, 0 },
     { 3, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -878,7 +879,7 @@
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
     10, 0, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -890,7 +891,7 @@
     { 20, 0, 0, 0 },
     { 8, 3, 5, 0 },
     3, 10, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -902,7 +903,7 @@
     { 5, 0, 0, 0 },
     { 3, 3, 5, 0 },
     12, 10, 10, 7, BLACK, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -914,7 +915,7 @@
     { 5, 0, 0, 0 },
     { 7, 3, 5, 0 },
     0, 17, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -926,7 +927,7 @@
     { 0, 0, 0, 0 },
     { 7, 3, 5, 0 },
     3, 1, 5, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -938,7 +939,7 @@
     { 0, 0, 0, 0 },
     { 1, 3, 5, 0 },
     0, 25, 25, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -950,7 +951,7 @@
     { 20, 0, 0, 0 },
     { 8, 3, 5, 0 },
     5, 0, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -962,7 +963,7 @@
     { 12, 0, 0, 0 },
     { 7, 3, 5, 0 },
     10, 5, 10, 7, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -974,7 +975,7 @@
     { 0, 0, 0, 0 },
     { 5, 3, 3, 0 },
     1, 5, 10, 7, MST_BRAIN_WORM, CE_POISONOUS, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -986,7 +987,7 @@
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
     2, 4, 10, 7, MST_GIANT_ORANGE_BRAIN, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -998,7 +999,7 @@
     { 35, 0, 0, 0 },
     { 9, 3, 5, 0 },
     20, 2, 3, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -1010,7 +1011,7 @@
     { 7, 0, 0, 0 },
     { 2, 3, 5, 0 },
     10, 17, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1022,7 +1023,7 @@
     { 13, 0, 0, 0 },
     { 5, 3, 5, 0 },
     6, 13, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_BARK, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -1034,7 +1035,7 @@
     { 35, 0, 0, 0 },
     { 13, 3, 5, 0 },
     5, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_BELLOW, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1046,7 +1047,7 @@
     { 17, 17, 17, 0 },
     { 12, 5, 5, 0 },
     10, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -1058,7 +1059,7 @@
     { 22, 0, 0, 0 },
     { 11, 3, 5, 0 },
     1, 4, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -1070,7 +1071,7 @@
     { 19, 0, 0, 0 },
     { 8, 3, 5, 0 },
     12, 10, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1083,7 +1084,7 @@
     { 0, 0, 0, 0 },
     { 1, 0, 0, 1 },
     0, 30, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -1095,7 +1096,7 @@
     { 20, 0, 0, 0 },
     { 12, 3, 5, 0 },
     10, 3, 10, 7, MST_GREAT_ORB_OF_EYES, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1107,7 +1108,7 @@
     { 10, 0, 0, 0 },
     { 7, 3, 5, 0 },
     5, 10, 13, 7, MST_BURNING_DEVIL, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1119,7 +1120,7 @@
     { 8, 0, 0, 0 },
     { 5, 3, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1131,7 +1132,7 @@
     { 8, 8, 0, 0 },
     { 7, 3, 5, 0 },
     12, 12, 13, 7, MST_TORMENTOR, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1143,7 +1144,7 @@
     { 32, 0, 0, 0 },
     { 8, 3, 5, 0 },
     15, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -1155,7 +1156,7 @@
     { 25, 0, 0, 0 },
     { 11, 3, 5, 0 },
     18, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1167,7 +1168,7 @@
     { 9, 9, 0, 0 },
     { 6, 3, 5, 0 },
     7, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -1179,7 +1180,7 @@
     { 16, 0, 0, 0 },
     { 11, 3, 5, 0 },
     12, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1191,7 +1192,7 @@
     { 21, 0, 0, 0 },
     { 7, 3, 5, 0 },
     14, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1204,7 +1205,7 @@
     { 12, 0, 0, 0 },
     { 5, 3, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_RANDOM, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1216,7 +1217,7 @@
     { 14, 14, 0, 0 },
     { 8, 3, 5, 0 },
     16, 8, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREECH, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1228,7 +1229,7 @@
     { 15, 0, 0, 0 },
     { 10, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1240,7 +1241,7 @@
     { 5, 0, 0, 0 },
     { 7, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1252,7 +1253,7 @@
     { 5, 0, 0, 0 },
     { 2, 3, 5, 0 },
     1, 7, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1264,7 +1265,7 @@
     { 12, 0, 0, 0 },
     { 4, 5, 5, 0 },
     5, 10, 10, 7, MST_STEAM_DRAGON, CE_CLEAN, Z_BIG, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -1276,7 +1277,7 @@
     { 17, 0, 0, 0 },
     { 12, 3, 5, 0 },
     4, 8, 8, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1288,7 +1289,7 @@
     { 7, 0, 0, 0 },
     { 8, 2, 3, 0 },
     5, 12, 10, 7, MST_ORC_SORCERER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1300,7 +1301,7 @@
     { 10, 8, 8, 0 },
     { 7, 3, 5, 0 },
     2, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SCREECH, I_ANIMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1312,7 +1313,7 @@
     { 18, 10, 10, 0 },
     { 12, 3, 5, 0 },
     4, 6, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SCREECH, I_ANIMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1324,7 +1325,7 @@
     { 18, 0, 0, 0 },
     { 13, 3, 5, 0 },
     0, 5, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_ROAR, I_REPTILE, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1337,7 +1338,7 @@
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -1350,7 +1351,7 @@
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -1363,7 +1364,7 @@
     { 13, 0, 0, 0 },
     { 10, 3, 6, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1375,7 +1376,7 @@
     { 6, 0, 0, 0 },
     { 10, 2, 4, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1387,7 +1388,7 @@
     { 6, 0, 0, 0 },
     { 10, 2, 4, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1399,7 +1400,7 @@
     { 6, 0, 0, 0 },
     { 3, 3, 4, 0 },
     1, 10, 10, 7, MST_ORC_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1411,7 +1412,7 @@
     { 7, 0, 0, 0 },
     { 11, 3, 4, 0 },
     1, 12, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1428,7 +1429,7 @@
     { 10, 0, 0, 0 },
     { 1, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1440,7 +1441,7 @@
     { 9, 0, 0, 0 },
     { 2, 4, 5, 0 },
     2, 9, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1452,7 +1453,7 @@
     { 11, 11, 0, 0 },
     { 8, 7, 3, 0 },
     7, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1464,7 +1465,7 @@
     { 10, 0, 0, 0 },
     { 6, 6, 3, 0 },
     5, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1476,7 +1477,7 @@
     { 28, 0, 0, 0 },
     { 12, 7, 4, 0 },
     12, 4, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1488,7 +1489,7 @@
     { 35, 0, 0, 0 },
     { 15, 7, 4, 0 },
     15, 3, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1500,7 +1501,7 @@
     { 40, 0, 0, 0 },
     { 13, 7, 4, 0 },
     22, 3, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1512,7 +1513,7 @@
     { 13, 0, 0, 0 },
     { 9, 5, 3, 0 },
     8, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1524,7 +1525,7 @@
     { 15, 0, 0, 0 },
     { 5, 3, 5, 0 },
     5, 10, 10, 7, MST_MOTTLED_DRAGON, CE_POISONOUS, Z_BIG, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -1536,7 +1537,7 @@
     { 40, 0, 0, 0 },
     { 6, 5, 5, 0 },
     14, 4, 6, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1548,7 +1549,7 @@
     { 5, 0, 0, 0 },
     { 6, 3, 5, 0 },
     4, 12, 13, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1560,7 +1561,7 @@
     { 15, 0, 0, 0 },
     { 6, 3, 5, 0 },
     2, 18, 25, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -1574,7 +1575,7 @@
     { 25, 25, 0, 0 },
     { 18, 3, 5, 0 },
     15, 6, 10, 7, MST_ICE_FIEND, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1586,7 +1587,7 @@
     { 25, 15, 15, 0 },
     { 18, 3, 5, 0 },
     15, 6, 10, 7, MST_SHADOW_FIEND, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1598,7 +1599,7 @@
     { 10, 0, 0, 0 },
     { 4, 3, 5, 0 },
     2, 15, 14, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -1610,7 +1611,7 @@
     { 20, 0, 0, 0 },
     { 5, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -1622,7 +1623,7 @@
     { 18, 0, 0, 0 },
     { 9, 3, 5, 0 },
     12, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1634,7 +1635,7 @@
     { 13, 0, 0, 0 },
     { 10, 3, 5, 0 },
     2, 6, 5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -1646,7 +1647,7 @@
     { 25, 15, 15, 0 },
     { 14, 5, 5, 0 },
     13, 10, 12, 7, MST_STORM_DRAGON, CE_CLEAN, Z_BIG, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -1658,7 +1659,7 @@
     { 15, 0, 0, 0 },
     { 8, 3, 5, 0 },
     4, 4, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -1670,7 +1671,7 @@
     { 30, 0, 0, 0 },
     { 14, 3, 5, 0 },
     9, 5, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -1682,7 +1683,7 @@
     { 30, 20, 20, 0 },
     { 11, 3, 5, 0 },
     13, 6, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -1694,7 +1695,7 @@
     { 45, 0, 0, 0 },
     { 16, 3, 5, 0 },
     12, 2, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
 }
 ,
 
@@ -1706,7 +1707,7 @@
     { 30, 0, 0, 0 },
     { 11, 3, 5, 0 },
     0, 14, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1718,7 +1719,7 @@
     { 20, 0, 0, 0 },
     { 7, 3, 5, 0 },
     4, 15, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1730,7 +1731,7 @@
     { 18, 0, 0, 0 },
     { 6, 3, 5, 0 },
     2, 12, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1742,7 +1743,7 @@
     { 12, 0, 0, 0 },
     { 6, 1, 2, 0 },
     20, 20, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1754,7 +1755,7 @@
     { 0, 0, 0, 0 },
     { 12, 2, 3, 0 },
     0, 12, 10, 7, MST_STORM_DRAGON, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -1766,7 +1767,7 @@
     { 12, 0, 0, 0 },
     { 10, 3, 5, 0 },
     1, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -1778,7 +1779,7 @@
     { 32, 0, 0, 0 },
     { 12, 3, 5, 0 },
     10, 6, 9, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -1804,7 +1805,7 @@
     { 55, 0, 0, 0 },
     { 20, 3, 5, 0 },
     10, 3, 10, 7, MST_TITAN, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -1816,7 +1817,7 @@
     { 40, 20, 20, 0 },
     { 18, 4, 4, 0 },
     15, 7, 10, 7, MST_GOLDEN_DRAGON, CE_POISONOUS, Z_BIG, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -1830,7 +1831,7 @@
     { 10, 0, 0, 0 },
     { 3, 3, 3, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_NORMAL,
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -1846,7 +1847,7 @@
     { 20, 10, 10, 0 },
     { 9, 3, 5, 0 },
     8, 6, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_ROAR, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_GIANT
 }
 ,
 
@@ -1858,7 +1859,7 @@
     { 40, 0, 0, 0 },
     { 20, 5, 3, 0 },
     2, 1, 4, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -1870,7 +1871,7 @@
     { 12, 0, 0, 0 },
     { 4, 3, 5, 0 },
     4, 15, 17, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -1882,7 +1883,7 @@
     { 5, 0, 0, 0 },
     { 1, 3, 6, 0 },
     2, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1894,7 +1895,7 @@
     { 10, 0, 0, 0 },
     { 2, 3, 5, 0 },
     5, 11, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1906,7 +1907,7 @@
     { 20, 0, 0, 0 },
     { 3, 3, 5, 0 },
     7, 10, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_ROAR, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -1918,7 +1919,7 @@
     { 20, 0, 0, 0 },
     { 7, 3, 5, 0 },
     4, 15, 18, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -1930,7 +1931,7 @@
     { 13, 0, 0, 0 },
     { 3, 3, 5, 0 },
     2, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -1942,7 +1943,7 @@
     { 9, 0, 0, 0 },
     { 4, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -1954,7 +1955,7 @@
     { 14, 0, 0, 0 },
     { 6, 3, 5, 0 },
     2, 9, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -1966,7 +1967,7 @@
     { 10, 0, 0, 0 },
     { 1, 3, 5, 0 },
     0, 13, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_WHINE, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1978,7 +1979,7 @@
     { 2, 0, 0, 0 },
     { 2, 3, 3, 0 },
     2, 14, 13, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -1992,7 +1993,7 @@
     { 35, 25, 25, 0 },
     { 16, 3, 5, 0 },
     20, 4, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2004,7 +2005,7 @@
     { 13, 0, 0, 0 },
     { 5, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -2016,7 +2017,7 @@
     { 30, 0, 0, 0 },
     { 16, 3, 6, 0 },
     8, 4, 10, 7, MST_EFREET, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
 }
 ,
 
@@ -2028,7 +2029,7 @@
     { 35, 0, 0, 0 },
     { 16, 4, 5, 0 },
     9, 3, 10, 7, MST_FROST_GIANT, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
 }
 ,
 
@@ -2052,7 +2053,7 @@
     { 20, 15, 15, 0 },
     { 17, 5, 5, 0 },
     15, 10, 10, 7, MST_SHADOW_DRAGON, CE_CLEAN, Z_BIG, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 {
@@ -2063,7 +2064,7 @@
     { 15, 0, 0, 0 },
     { 6, 3, 5, 0 },
     4, 14, 13, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -2075,7 +2076,7 @@
     { 30, 0, 0, 0 },
     { 11, 3, 5, 0 },
     4, 16, 18, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -2087,7 +2088,7 @@
     { 27, 20, 20, 0 },
     { 10, 3, 5, 0 },
     6, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -2099,7 +2100,7 @@
     { 13, 0, 0, 0 },
     { 5, 3, 5, 0 },
     2, 15, 19, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_BUZZ, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -2111,7 +2112,7 @@
     { 23, 0, 0, 0 },
     { 8, 3, 5, 0 },
     7, 14, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_BUZZ, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -2123,7 +2124,7 @@
     { 18, 9, 9, 0 },
     { 9, 5, 5, 0 },
     7, 7, 10, 7, MST_SWAMP_DRAGON, CE_CONTAMINATED, Z_BIG, S_ROAR, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -2135,7 +2136,7 @@
     { 14, 0, 0, 0 },
     { 4, 5, 5, 0 },
     3, 11, 11, 7, MST_SWAMP_DRAKE, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -2147,7 +2148,7 @@
     { 12, 0, 0, 0 },
     { 9, 5, 7, 0 },
     6, 14, 13, 10, MST_DEATH_DRAKE, CE_HCL, Z_BIG, S_ROAR, I_ANIMAL_LIKE,
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -2159,7 +2160,7 @@
     { 14, 0, 0, 0 },
     { 6, 3, 5, 0 },
     8, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -2171,7 +2172,7 @@
     { 30, 0, 0, 0 },
     { 11, 3, 5, 0 },
     3, 4, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -2183,7 +2184,7 @@
     { 20, 0, 0, 0 },
     { 13, 3, 5, 0 },
     14, 3, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -2195,7 +2196,7 @@
     { 5, 0, 0, 0 },
     { 2, 3, 5, 0 },
     2, 6, 6, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -2208,7 +2209,7 @@
     { 9, 0, 0, 0 },
     { 4, 3, 5, 0 },
     0, 12, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -2220,7 +2221,7 @@
     { 14, 0, 0, 0 },
     { 8, 3, 5, 0 },
     2, 11, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -2232,7 +2233,7 @@
     { 26, 0, 0, 0 },
     { 7, 3, 5, 0 },
     6, 9, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -2244,7 +2245,7 @@
     { 20, 0, 0, 0 },
     { 6, 3, 5, 0 },
     3, 12, 14, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 {
@@ -2255,7 +2256,7 @@
     { 2, 0, 0, 0 },
     { 1, 3, 4, 0 },
     3, 10, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 {
@@ -2266,7 +2267,7 @@
     { 2, 0, 0, 0 },
     { 1, 2, 3, 0 },
     0, 11, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -2278,7 +2279,7 @@
     { 4, 0, 0, 0 },
     { 2, 3, 5, 0 },
     4, 10, 10, 7, MST_WHITE_IMP, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LITTLE
 }
 ,
 
@@ -2290,7 +2291,7 @@
     { 12, 0, 0, 0 },
     { 2, 3, 5, 0 },
     1, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -2302,7 +2303,7 @@
     { 5, 5, 0, 0 },
     { 1, 4, 6, 0 },
     2, 15, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2314,7 +2315,7 @@
     { 5, 3, 3, 0 },
     { 3, 3, 5, 0 },
     2, 8, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -2326,7 +2327,7 @@
     { 8, 0, 0, 0 },
     { 2, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -2338,7 +2339,7 @@
     { 15, 0, 0, 0 },
     { 6, 3, 5, 0 },
     4, 12, 10, 7, MST_NEQOXEC, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2350,7 +2351,7 @@
     { 10, 5, 0, 0 },
     { 8, 4, 5, 0 },
     3, 7, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SCREECH, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -2362,7 +2363,7 @@
     { 17, 10, 0, 0 },
     { 7, 4, 5, 0 },
     8, 10, 10, 7, MST_HELLWING, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2374,7 +2375,7 @@
     { 8, 5, 5, 0 },
     { 7, 3, 5, 0 },
     5, 9, 9, 7, MST_SMOKE_DEMON, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -2386,7 +2387,7 @@
     { 12, 0, 0, 0 },
     { 6, 3, 5, 0 },
     3, 10, 10, 7, MST_YNOXINUL, CE_CONTAMINATED, Z_NOZOMBIE, S_BELLOW, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2398,7 +2399,7 @@
     { 30, 10, 10, 0 },
     { 12, 3, 5, 0 },
     10, 15, 20, 7, MST_HELL_KNIGHT_I, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2410,7 +2411,7 @@
     { 32, 0, 0, 0 },
     { 13, 3, 5, 0 },
     5, 7, 12, 7, MST_GREEN_DEATH, CE_POISONOUS, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2422,7 +2423,7 @@
     { 20, 20, 0, 0 },
     { 12, 3, 5, 0 },
     10, 10, 12, 7, MST_BLUE_DEATH, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2434,7 +2435,7 @@
     { 25, 0, 0, 0 },
     { 14, 3, 5, 0 },
     5, 12, 12, 7, MST_BALRUG, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -2446,7 +2447,7 @@
     { 22, 0, 0, 0 },
     { 13, 3, 5, 0 },
     11, 10, 10, 7, MST_CACODEMON, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2459,7 +2460,7 @@
     { 13, 13, 13, 13 },
     { 9, 3, 5, 0 },
     10, 6, 9, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -2471,7 +2472,7 @@
     { 30, 0, 0, 0 },
     { 10, 3, 5, 0 },
     10, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2483,7 +2484,7 @@
     { 6, 0, 0, 0 },
     { 2, 3, 5, 0 },
     3, 11, 10, 7, MST_SHADOW_IMP, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LITTLE
 }
 ,
 
@@ -2495,7 +2496,7 @@
     { 21, 0, 0, 0 },
     { 6, 3, 5, 0 },
     7, 12, 11, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_CROAK, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_SMALL
 }
 ,
 
@@ -2507,7 +2508,7 @@
     { 25, 25, 0, 0 },
     { 12, 3, 5, 0 },
     10, 12, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2519,7 +2520,7 @@
     { 20, 0, 0, 0 },
     { 10, 3, 5, 0 },
     7, 7, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2531,7 +2532,7 @@
     { 25, 0, 0, 0 },
     { 12, 3, 5, 0 },
     0, 4, 10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -2543,7 +2544,7 @@
     { 23, 0, 0, 0 },
     { 10, 5, 3, 0 },
     0, 2, 6, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -2555,7 +2556,7 @@
     { 18, 0, 0, 0 },
     { 14, 5, 3, 0 },
     7, 2, 4, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -2567,7 +2568,7 @@
     { 50, 0, 0, 0 },
     { 6, 6, 6, 0 },
     0, 5, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -2579,7 +2580,7 @@
     { 28, 21, 21, 0 },
     { 19, 4, 5, 0 },
     17, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2591,7 +2592,7 @@
     { 26, 0, 0, 0 },
     { 8, 3, 5, 0 },
     13, 4, 6, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -2603,7 +2604,7 @@
     { 10, 6, 6, 0 },
     { 4, 3, 5, 0 },
     18, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2616,7 +2617,7 @@
     { 19, 10, 10, 0 },
     { 8, 3, 5, 0 },
     20, 4, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2629,7 +2630,7 @@
     { 12, 8, 8, 0 },
     { 5, 3, 5, 0 },
     14, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -2645,7 +2646,7 @@
     { 23, 23, 0, 0 },
     { 17, 0, 0, 199 },
     10, 13, 13, 7, MST_MNOLEG, CE_CONTAMINATED, Z_NOZOMBIE, S_BUZZ, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2657,7 +2658,7 @@
     { 40, 0, 0, 0 },
     { 19, 0, 0, 223 },
     10, 7, 8, 7, MST_LOM_LOBON, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2669,7 +2670,7 @@
     { 50, 0, 0, 0 },
     { 21, 0, 0, 253 },
     15, 8, 10, 7, MST_CEREBOV, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
 }
 ,
 
@@ -2681,7 +2682,7 @@
     { 20, 0, 0, 0 },
     { 16, 0, 0, 234 },
     10, 10, 10, 7, MST_GLOORX_VLOQ, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -2700,7 +2701,7 @@
     { 10, 0, 0, 0 },
     { 7, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA_MAGE, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -2712,7 +2713,7 @@
     { 20, 0, 0, 0 },
     { 10, 5, 5, 0 },
     6, 10, 8, 7, MST_NAGA, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -2724,7 +2725,7 @@
     { 32, 0, 0, 0 },
     { 15, 4, 7, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2736,7 +2737,7 @@
     { 6, 0, 0, 0 },
     { 3, 3, 3, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2748,7 +2749,7 @@
     { 9, 0, 0, 0 },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2760,7 +2761,7 @@
     { 14, 0, 0, 0 },
     { 11, 3, 3, 0 },
     0, 15, 11, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2772,7 +2773,7 @@
     { 5, 0, 0, 0 },
     { 4, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2784,7 +2785,7 @@
     { 5, 0, 0, 0 },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_SUMMONER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2796,7 +2797,7 @@
     { 5, 0, 0, 0 },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2808,7 +2809,7 @@
     { 9, 0, 0, 0 },
     { 5, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2820,7 +2821,7 @@
     { 14, 0, 0, 0 },
     { 11, 3, 3, 0 },
     3, 13, 10, 7, MST_DEEP_ELF_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2832,7 +2833,7 @@
     { 12, 0, 0, 0 },
     { 12, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_DEMONOLOGIST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2844,7 +2845,7 @@
     { 12, 0, 0, 0 },
     { 15, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_ANNIHILATOR, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2856,7 +2857,7 @@
     { 12, 0, 0, 0 },
     { 14, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_SORCERER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2868,19 +2869,19 @@
     { 12, 0, 0, 0 },
     { 15, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_DEATH_MAGE, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
 {
     MONS_BROWN_OOZE, 'J', BROWN, "brown ooze",
-    M_NO_SKELETON | M_SEE_INVIS,
+    M_NO_SKELETON | M_SEE_INVIS | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 11, MONS_JELLY, MONS_BROWN_OOZE, MH_NATURAL, -7,
     { 25, 0, 0, 0 },
     { 7, 3, 5, 0 },
     10, 1, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_LITTLE
 }
 ,
 
@@ -2892,7 +2893,7 @@
     { 12, 12, 12, 12 },
     { 15, 3, 5, 0 },
     5, 10, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_LITTLE
 }
 ,
 
@@ -2904,31 +2905,31 @@
     { 32, 32, 0, 0 },
     { 11, 3, 3, 0 },
     2, 4, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_LITTLE
 }
 ,
 
 {
     MONS_ACID_BLOB, 'J', LIGHTGREEN, "acid blob",
-    M_NO_SKELETON | M_SEE_INVIS | M_SPECIAL_ABILITY,
+    M_NO_SKELETON | M_SEE_INVIS | M_SPECIAL_ABILITY | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
     { 42, 0, 0, 0 },
     { 18, 3, 5, 0 },
     1, 3, 14, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_LITTLE
 }
 ,
 
 {
     MONS_ROYAL_JELLY, 'J', YELLOW, "royal jelly",
-    M_NO_SKELETON | M_SEE_INVIS,
+    M_NO_SKELETON | M_SEE_INVIS | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 20, MONS_JELLY, MONS_ROYAL_JELLY, MH_NATURAL, -7,
     { 50, 0, 0, 0 },
     { 21, 0, 0, 111 },
     8, 4, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS
+    MONUSE_EATS_ITEMS, SIZE_SMALL
 }
 ,
 
@@ -2940,7 +2941,7 @@
     { 3, 0, 0, 0 },
     { 1, 0, 0, 14 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2952,7 +2953,7 @@
     { 4, 0, 0, 0 },
     { 1, 0, 0, 10 },
     0, 10, 10, 7, MST_ORC_WIZARD_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2964,7 +2965,7 @@
     { 4, 0, 0, 0 },
     { 3, 0, 0, 28 },
     2, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
 }
 ,
 
@@ -2976,7 +2977,7 @@
     { 5, 0, 0, 0 },
     { 3, 0, 0, 25 },
     0, 11, 10, 7, MST_ORC_WIZARD_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -2988,7 +2989,7 @@
     { 7, 0, 0, 0 },
     { 3, 0, 0, 32 },
     0, 9, 8, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3000,7 +3001,7 @@
     { 6, 0, 0, 0 },
     { 4, 0, 0, 27 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3012,7 +3013,7 @@
     { 7, 0, 0, 0 },
     { 5, 0, 0, 24 },
     0, 12, 13, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3025,7 +3026,7 @@
     { 20, 0, 0, 0 },
     { 6, 0, 0, 45 },
     3, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -3037,7 +3038,7 @@
     { 8, 0, 0, 0 },
     { 5, 0, 0, 33 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3049,7 +3050,7 @@
     { 12, 0, 0, 0 },
     { 6, 0, 0, 38 },
     0, 11, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3061,7 +3062,7 @@
     { 9, 0, 0, 0 },
     { 6, 0, 0, 36 },
     0, 10, 10, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3073,7 +3074,7 @@
     { 9, 0, 0, 0 },
     { 7, 0, 0, 42 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3085,7 +3086,7 @@
     { 20, 15, 15, 0 },
     { 8, 0, 0, 45 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -3097,7 +3098,7 @@
     { 10, 0, 0, 0 },
     { 9, 0, 0, 43 },
     0, 11, 11, 7, MST_WIZARD_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3109,7 +3110,7 @@
     { 11, 0, 0, 0 },
     { 9, 0, 0, 47 },
     0, 10, 10, 7, MST_NECROMANCER_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3121,7 +3122,7 @@
     { 12, 0, 0, 0 },
     { 9, 0, 0, 51 },
     0, 8, 10, 7, MST_HELL_KNIGHT_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3133,7 +3134,7 @@
     { 14, 0, 0, 0 },
     { 10, 0, 0, 53 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3145,7 +3146,7 @@
     { 14, 0, 0, 0 },
     { 11, 0, 0, 60 },
     0, 9, 10, 7, MST_GUARDIAN_NAGA, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3157,7 +3158,7 @@
     { 11, 0, 0, 0 },
     { 11, 0, 0, 64 },
     0, 10, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3169,7 +3170,7 @@
     { 14, 0, 0, 0 },
     { 13, 0, 0, 55 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3181,7 +3182,7 @@
     { 12, 0, 0, 0 },
     { 13, 0, 0, 52 },
     0, 10, 10, 7, MST_WIZARD_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3194,7 +3195,7 @@
     { 12, 0, 0, 0 },
     { 14, 0, 0, 67 },
     0, 10, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3207,7 +3208,7 @@
     { 11, 0, 0, 0 },
     { 14, 0, 0, 70 },
     0, 10, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3220,7 +3221,7 @@
     { 13, 0, 0, 0 },
     { 16, 0, 0, 80 },
     0, 10, 10, 7, MST_WIZARD_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3233,7 +3234,7 @@
     { 14, 0, 0, 0 },
     { 17, 0, 0, 78 },
     1, 10, 7, 7, MST_ORC_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3246,7 +3247,7 @@
     { 14, 0, 0, 0 },
     { 18, 0, 0, 83 },
     0, 10, 10, 7, MST_ORC_WIZARD_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3258,7 +3259,7 @@
     { 29, 17, 17, 0 },
     { 19, 0, 0, 133 },
     15, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -3271,7 +3272,7 @@
     { 16, 0, 0, 0 },
     { 20, 0, 0, 95 },
     1, 9, 9, 7, MST_MYSTIC, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3284,7 +3285,7 @@
     { 17, 0, 0, 0 },
     { 21, 0, 0, 105 },
     0, 10, 10, 7, MST_LICH_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3297,7 +3298,7 @@
     { 18, 0, 0, 0 },
     { 22, 0, 0, 119 },
     0, 10, 10, 7, MST_EFREET, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3310,7 +3311,7 @@
     { 15, 0, 0, 0 },
     { 22, 0, 0, 99 },
     12, 10, 10, 7, MST_LICH_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3323,7 +3324,7 @@
     { 30, 0, 0, 0 },
     { 15, 0, 0, 240 },
     15, 6, 10, 7, MST_GERYON, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
 }
 ,
 
@@ -3335,7 +3336,7 @@
     { 15, 0, 0, 0 },
     { 16, 0, 0, 222 },
     15, 3, 6, 7, MST_DISPATER, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -3347,7 +3348,7 @@
     { 20, 0, 0, 0 },
     { 17, 0, 0, 245 },
     12, 7, 9, 7, MST_ASMODEUS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -3360,7 +3361,7 @@
     { 30, 0, 0, 0 },
     { 22, 0, 0, 250 },
     10, 4, 7, 7, MST_ANTAEUS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
 }
 ,
 
@@ -3372,7 +3373,7 @@
     { 20, 0, 0, 0 },
     { 18, 0, 0, 238 },
     15, 6, 9, 7, MST_ERESHKIGAL, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
 }
 ,
 
@@ -3384,7 +3385,7 @@
     { 20, 0, 0, 0 },
     { 27, 2, 4, 0 },
     20, 10, 12, 7, MST_LICH_I, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 /* number is set in define_monster */
@@ -3397,7 +3398,7 @@
     { 5, 0, 0, 0 },
     { 3, 3, 5, 0 },
     1, 3, 8, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -3409,7 +3410,7 @@
     { 20, 0, 0, 0 },
     { 13, 3, 5, 0 },
     1, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3423,7 +3424,7 @@
     { 0, 0, 0, 0 },
     { 13, 0, 0, 66 },
     40, 3, 10, 7, MST_CURSE_SKULL, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3435,7 +3436,7 @@
     { 33, 0, 0, 0 },
     { 11, 3, 7, 0 },
     10, 10, 10, 7, MST_VAMPIRE_KNIGHT, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3447,7 +3448,7 @@
     { 22, 0, 0, 0 },
     { 8, 3, 4, 0 },
     10, 10, 10, 7, MST_VAMPIRE_MAGE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3459,7 +3460,7 @@
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
     3, 1, 7, 7, MST_SHINING_EYE, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -3471,7 +3472,7 @@
     { 45, 0, 0, 0 },
     { 15, 3, 5, 0 },
     13, 13, 14, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -3483,7 +3484,7 @@
     { 25, 10, 10, 0 },
     { 14, 6, 5, 0 },
     10, 13, 10, 7, MST_DAEVA, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3496,7 +3497,7 @@
     { 20, 0, 0, 0 },
     { 8, 3, 5, 0 },
     8, 5, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -3508,7 +3509,7 @@
     { 24, 0, 0, 0 },
     { 15, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA_MAGE, CE_POISONOUS, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -3520,7 +3521,7 @@
     { 30, 20, 20, 0 },
     { 20, 8, 8, 0 },
     20, 4, 8, 7, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -3532,7 +3533,7 @@
     { 22, 17, 13, 19 },
     { 25, 3, 5, 0 },
     5, 5, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -3544,7 +3545,7 @@
     { 25, 12, 12, 0 },
     { 16, 3, 5, 0 },
     5, 5, 13, 7, MST_SPHINX, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -3556,7 +3557,7 @@
     { 25, 0, 0, 0 },
     { 10, 3, 5, 0 },
     5, 7, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -3568,7 +3569,7 @@
     { 30, 0, 0, 0 },
     { 7, 5, 3, 0 },
     6, 9, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -3580,7 +3581,7 @@
     { 35, 0, 0, 0 },
     { 15, 5, 3, 100 },
     10, 6, 10, 7, MST_MUMMY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3592,7 +3593,7 @@
     { 30, 0, 0, 0 },
     { 10, 5, 3, 0 },
     8, 7, 9, 7, MST_MUMMY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3604,7 +3605,7 @@
     { 16, 0, 0, 0 },
     { 9, 3, 5, 0 },
     4, 8, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 }
 ,
 
@@ -3616,7 +3617,7 @@
     { 23, 0, 0, 0 },
     { 14, 3, 5, 0 },
     5, 5, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -3630,7 +3631,7 @@
     { 15, 0, 0, 0 },
     { 3, 6, 4, 0 },
     7, 8, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3642,7 +3643,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3654,7 +3655,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3666,7 +3667,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 14, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3678,7 +3679,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3690,7 +3691,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     8, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3702,7 +3703,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3714,7 +3715,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3726,7 +3727,7 @@
     { 20, 0, 0, 0 },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH,
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3738,7 +3739,7 @@
     { 20, 0, 0, 0 },
     { 16, 4, 3, 0 },
     9, 10, 10, 10, MST_DRAC_CALLER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3750,7 +3751,7 @@
     { 35, 20, 15, 0 },
     { 16, 6, 3, 0 },
     6, 20, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3762,7 +3763,7 @@
     { 15, 0, 0, 0 },
     { 16, 4, 2, 0 },
     12, 10, 10, 10, MST_DEEP_ELF_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3774,7 +3775,7 @@
     { 15, 0, 0, 0 },
     { 16, 4, 4, 0 },
     8, 16, 10, 10, MST_DRAC_SHIFTER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3786,7 +3787,7 @@
     { 15, 0, 0, 0 },
     { 16, 4, 2, 0 },
     8, 10, 10, 10, MST_DEEP_ELF_ANNIHILATOR, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3798,7 +3799,7 @@
     { 15, 0, 0, 0 },
     { 16, 6, 4, 0 },
     12, 12, 10, 6, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3810,7 +3811,7 @@
     { 15, 0, 0, 0 },
     { 16, 4, 2, 0 },
     8, 12, 10, 10, MST_DRAC_SCORCHER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
 }
 ,
 
@@ -3822,7 +3823,7 @@
     { 30, 0, 0, 0 },
     { 20, 5, 5, 0 },
     10, 15, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -3834,7 +3835,7 @@
     { 12, 12, 12, 12 },
     { 15, 7, 4, 0 },
     5, 20, 20, 7, MST_ELECTRIC_GOLEM, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -3846,7 +3847,7 @@
     { 5, 0, 0, 0 },
     { 12, 0, 0, 1 },
     0, 10, 20, 7, MST_STORM_DRAGON, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LITTLE
 }
 ,
 
@@ -3858,7 +3859,7 @@
     { 0, 0, 0, 0 },
     { 30, 0, 0, 150 },
     20, 20, 20, 7, MST_ORB_OF_FIRE, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LITTLE
 }
 ,
 
@@ -3870,7 +3871,7 @@
     { 5, 0, 0, 0 },
     { 1, 3, 5, 0 },
     2, 13, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3882,7 +3883,7 @@
     { 0, 0, 0, 0 },
     { 10, 3, 5, 0 },
     12, 1, 7, 7, MST_EYE_OF_DEVASTATION, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -3894,7 +3895,7 @@
     { 25, 0, 0, 0 },
     { 9, 3, 5, 0 },
     0, 10, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -3906,7 +3907,7 @@
     { 20, 0, 0, 0 },
     { 10, 4, 5, 0 },
     10, 15, 25, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_TINY
 }
 ,
 
@@ -3918,7 +3919,7 @@
     { 0, 0, 0, 0 },
     { 14, 0, 0, 77 },
     50, 1, 12, 7, MST_CURSE_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3931,7 +3932,7 @@
     { 12, 12, 12, 0 },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3943,7 +3944,7 @@
     { 17, 17, 17, 0 },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -3955,7 +3956,7 @@
     { 12, 12, 12, 0 },
     { 8, 3, 5, 0 },
     15, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -3967,7 +3968,7 @@
     { 12, 12, 12, 0 },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3979,7 +3980,7 @@
     { 12, 12, 12, 0 },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -3991,7 +3992,7 @@
     { 20, 0, 0, 0 },
     { 11, 3, 5, 0 },
     2, 9, 14, 7, MST_HELL_HOG, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -4003,7 +4004,7 @@
     { 35, 15, 15, 0 },
     { 20, 4, 4, 0 },
     12, 9, 14, 7, MST_SERPENT_OF_HELL, CE_CLEAN, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -4015,7 +4016,7 @@
     { 5, 0, 0, 0 },
     { 2, 3, 5, 0 },
     0, 12, 12, 7, MST_BOGGART, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE
 }
 ,
 
@@ -4027,7 +4028,7 @@
     { 45, 0, 0, 0 },
     { 16, 3, 5, 0 },
     10, 15, 15, 7, MST_QUICKSILVER_DRAGON, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_GIANT
 }
 ,
 
@@ -4039,7 +4040,7 @@
     { 25, 25, 25, 0 },
     { 18, 5, 3, 0 },
     20, 6, 8, 7, MST_IRON_DRAGON, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE
 }
 ,
 
@@ -4051,7 +4052,7 @@
     { 25, 0, 0, 0 },
     { 10, 5, 3, 0 },
     15, 10, 10, 7, MST_SKELETAL_WARRIOR, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 ,
 
@@ -4065,7 +4066,7 @@
     { 5, 0, 0, 0 },
     { 4, 2, 3, 0 },
     1, 2, 10, 7, MST_GHOST, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM
 }
 ,
 
@@ -4078,7 +4079,7 @@
     { 5, 0, 0, 0 },
     { 4, 2, 3, 0 },
     1, 2, 10, 7, MST_GHOST, CE_CONTAMINATED, Z_NOZOMBIE, S_RANDOM, I_HIGH, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_LARGE
 }
 ,
 
@@ -4091,7 +4092,7 @@
     { 15, 0, 0, 0 },
     { 6, 3, 5, 0 },
     1, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4103,7 +4104,7 @@
     { 10, 0, 0, 0 },
     { 4, 3, 5, 0 },
     4, 15, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -4115,7 +4116,7 @@
     { 7, 0, 0, 0 },
     { 3, 3, 5, 0 },
     2, 17, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_HISS, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -4127,7 +4128,7 @@
     { 23, 0, 0, 0 },
     { 14, 3, 5, 0 },
     5, 5, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 }
 
 ,
@@ -4142,7 +4143,7 @@
     { 8, 0, 0, 0 },
     { 4, 3, 5, 0 },
     1, 12, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -4154,7 +4155,7 @@
     { 15, 0, 0, 0 },
     { 7, 3, 5, 0 },
     5, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -4166,7 +4167,7 @@
     { 0, 0, 0, 0 },
     { 3, 3, 5, 0 },
     1, 15, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -4178,7 +4179,7 @@
     { 1, 1, 0, 0 },
     { 4, 3, 5, 0 },
     0, 5, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -4190,7 +4191,7 @@
     { 25, 0, 0, 0 },
     { 6, 5, 3, 0 },
     0, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_BIG
 }
 ,
 
@@ -4202,34 +4203,9 @@
     { 20, 0, 0, 0 },
     { 5, 5, 5, 0 },
     3, 12, 12, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 },
 // end water monsters {dlb}
-
-/* ************************************************************************
-Josh added the following, but they just won't work in the game just yet ...
-besides, four bear types !?!?! isn't that a *bit* excessive given the
-limited diversity of existing monster types?
-
-I'm still far from happy about the inclusion of "Shuggoths" -- I just do
-not think it fits into Crawl ... {dlb}
-************************************************************************ */
-  //jmf: it's never created anywhere yet, so you can save the punctuation.
-  //     as to bears & wolves: the lair needs more variety.
-
-#if 0 
-{
-    MONS_SHUGGOTH, 'A', LIGHTGREEN, "shuggoth",
-    M_NO_SKELETON | M_SEE_INVIS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD,
-    1000, 10, MONS_SHUGGOTH, MONS_SHUGGOTH, MH_DEMONIC, 300,
-    { 5, 5, 5, 0 },
-    { 10, 4, 4, 0 },
-    10, 10, 20, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, -1, I_NORMAL, 
-    MONUSE_NOTHING
-}
-,
-#endif
 
 {
     MONS_WOLF, 'h', LIGHTGREY, "wolf",
@@ -4239,7 +4215,7 @@ not think it fits into Crawl ... {dlb}
     { 8, 2, 2, 0 },
     { 4, 3, 5, 0 },
     3, 15, 17, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -4251,7 +4227,7 @@ not think it fits into Crawl ... {dlb}
     { 12, 3, 3, 0 },
     { 4, 4, 5, 0 },
     4, 12, 13, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4263,7 +4239,7 @@ not think it fits into Crawl ... {dlb}
     { 10, 6, 6, 0 },
     { 7, 3, 3, 0 },
     4, 4, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4275,7 +4251,7 @@ not think it fits into Crawl ... {dlb}
     { 12, 8, 8, 0 },
     { 7, 4, 4, 0 },
     5, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4287,7 +4263,7 @@ not think it fits into Crawl ... {dlb}
     { 20, 5, 5, 0 },    //jmf: polar bears have very strong jaws & necks
     { 7, 5, 3, 0 },
     7, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_BIG
 }
 ,
 
@@ -4299,7 +4275,7 @@ not think it fits into Crawl ... {dlb}
     { 4, 4, 4, 0 },
     { 6, 3, 3, 0 },
     2, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -4312,7 +4288,7 @@ not think it fits into Crawl ... {dlb}
     { 6, 0, 0, 0 },
     { 2, 3, 5, 0 },
     10, 4, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL
 }
 ,
 
@@ -4325,7 +4301,7 @@ not think it fits into Crawl ... {dlb}
     { 14, 0, 0, 0 },
     { 5, 3, 5, 0 },
     10, 5, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4337,7 +4313,7 @@ not think it fits into Crawl ... {dlb}
     { 3, 0, 0, 0 },
     { 1, 1, 2, 0 },
     0, 15, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -4349,7 +4325,7 @@ not think it fits into Crawl ... {dlb}
     { 5, 0, 0, 0 },
     { 1, 3, 5, 0 },
     1, 14, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_TINY
 }
 ,
 
@@ -4361,7 +4337,7 @@ not think it fits into Crawl ... {dlb}
     { 15, 0, 0, 0 },
     { 3, 3, 5, 0 },
     5, 9, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -4374,7 +4350,7 @@ not think it fits into Crawl ... {dlb}
     { 20, 0, 0, 0 },
     { 5, 4, 4, 0 },
     3, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LITTLE
 }
 ,
 
@@ -4386,7 +4362,7 @@ not think it fits into Crawl ... {dlb}
     { 30, 0, 0, 0 },
     { 8, 3, 5, 0 },
     7, 8, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_MEDIUM
 }
 ,
 
@@ -4398,7 +4374,7 @@ not think it fits into Crawl ... {dlb}
     { 0, 0, 0, 0 },
     { 12, 0, 0, 160 },
     30, 1, 6, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
@@ -4410,7 +4386,7 @@ not think it fits into Crawl ... {dlb}
     { 0, 0, 0, 0 },
     { 12, 0, 0, 150 },
     30, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_LARGE
 }
 ,
 
