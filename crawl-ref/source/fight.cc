@@ -1682,6 +1682,7 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     case STAFF_POISON:
+    {
         // cap chance at 30% -- let staff of Olgreb shine
         int temp_rand = damage_done + you.skills[SK_POISON_MAGIC];
 
@@ -1695,6 +1696,7 @@ void melee_attack::player_apply_staff_damage()
             poison_monster(def, true);
         }
         break;
+    }
 
     case STAFF_DEATH:
         if (mons_res_negative_energy(def) > 0)
