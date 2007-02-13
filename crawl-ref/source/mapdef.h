@@ -72,15 +72,10 @@ public:
     const std::vector<std::string> &get_lines() const;
 
 private:
-    typedef FixedVector<short, 128> symbol_frequency_t;
-    
-    void resolve_shuffle(const symbol_frequency_t &,
-                         const std::string &shuffle);
+    void resolve_shuffle(const std::string &shuffle);
     void resolve(std::string &s, const std::string &fill);
     void check_borders();
-    void calc_symbol_frequencies(symbol_frequency_t &f);
-    std::string remove_unreferenced(const symbol_frequency_t &freq,
-                                    std::string s);
+    std::string clean(std::string s);
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
 

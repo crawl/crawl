@@ -229,33 +229,9 @@ void map_lines::resolve(const std::string &fillins)
         resolve(lines[i], fillins);
 }
 
-void map_lines::calc_symbol_frequencies(symbol_frequency_t &f)
+std::string map_lines::clean(std::string s)
 {
-    for (int i = 0, size = lines.size(); i < size; ++i)
-    {
-        const std::string &s = lines[i];
-        for (int j = 0, len = s.length(); j < len; ++j)
-            f[ s[j] ]++;
-    }
-}
-
-std::string map_lines::remove_unreferenced(const symbol_frequency_t &freq,
-                                           std::string s)
-{
-    if (s.find(',') == std::string::npos)
-    {
-        for (int i = static_cast<int>(s.length()) - 1; i >= 0; --i)
-        {
-            if (!freq[ s[i] ])
-                s.erase( i, 1 );
-        }
-    }
-    else
-    {
-        s = replace_all_of(s, " \t", "");
-    }
-
-    return (s);
+    return replace_all_of(s, " \t", "");
 }
 
 std::string map_lines::block_shuffle(const std::string &s)
@@ -301,10 +277,9 @@ std::string map_lines::shuffle(std::string s)
     return (result);
 }
 
-void map_lines::resolve_shuffle(const symbol_frequency_t &freq,
-                                const std::string &shufflage)
+void map_lines::resolve_shuffle(const std::string &shufflage)
 {
-    std::string toshuffle = remove_unreferenced(freq, shufflage);
+    std::string toshuffle = clean(shufflage);
     std::string shuffled = shuffle(toshuffle);
 
     if (toshuffle.empty() || shuffled.empty())
@@ -326,11 +301,8 @@ void map_lines::resolve_shuffle(const symbol_frequency_t &freq,
 
 void map_lines::resolve_shuffles(const std::vector<std::string> &shuffles)
 {
-    symbol_frequency_t freq(0);
-    calc_symbol_frequencies(freq);
-
     for (int i = 0, size = shuffles.size(); i < size; ++i)
-        resolve_shuffle( freq, shuffles[i] );
+        resolve_shuffle( shuffles[i] );
 }
 
 void map_lines::normalise(char fillch)

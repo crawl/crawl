@@ -16,8 +16,7 @@
 #  @ - entry point - must be on outside and, except in ORIENT:float layouts,
 #      must always be on a particular side or sides - see templates
 #  W - shallow water
-#  w - deep water - Entry vault makers, note that this may receive water 
-#      creatures!
+#  w - deep water - Entry vault makers: this may receive water creatures!
 #  l - lava - Entry vault makers, note that this may receive lava creatures!
 #      (Use the no_monster_gen tag to prevent both of these effects.)
 #  >< - extra stairs - you can leave level by these but will never be placed o
@@ -31,8 +30,7 @@
 #  ^ - random trap
 #  ~ - random trap suitable for the branch and depth the map is being used.
 #
-#  A - Vestibule gateway (opened by Horn). Can also be put on other levels for
-#      colour, where it won't do anything.
+#  A - Vestibule gateway (opened by Horn). 
 #  B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc,
 #      in order.
 #  C - Random Altar.
@@ -43,7 +41,7 @@
 #  T - Water fountain
 #  U - Magic fountain
 #  V - Permanently dry fountain
-#  #
+#  
 #  $ - gold
 #  % - normal item
 #  * - higher level item (good)
@@ -59,13 +57,20 @@
 #  9 - +5 depth monster
 #  8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
 #      this way.
-#  1-7 - monster array monster. See section below on MONS: arrays for more inf
+#  1-7 - monster array monster. See section below on MONS: arrays for more 
+#      information
+#
+#  A vault always has its body between MAP and ENDMAP commands. Furthermore,
+#  several other additional commands are possible (some of them mandatory).
 # 
-#  ORIENT: LINES:
-#  Some kind of orient: line is mandatory, unless you want the vault to be a
-#  minivault, which is usually not what you want. Valid orient: lines are:
-#  float: The dungeon builder will put your vault wherever it wants to.
-#  some_direction: The vault will lie along the mentioned side of the map:
+#  NAME
+#  Each vault/level/map must have a unique name. Underscores and digits are ok.
+#
+#  ORIENT: (north | northwest | ... | float | encompass)
+#  Some kind of ORIENT: line is mandatory, unless you want the vault to be a
+#  minivault, which is usually not what you want. Valid values are:
+#  "float": The dungeon builder will put your vault wherever it wants to.
+#  "some_direction": The vault will lie along the mentioned side of the map:
 #         xxxxxxxxxx       xxxxxxxxxxxxx
 #         xORIENT:Nx       xORIENT:NW|..
 #         x.VAULT..x       x.VAULT...|..
@@ -73,43 +78,48 @@
 #         xrest....x       xrest........
 #         x...of...x       x.....of.....
 #         x...levelx       x.......level
-#  ...which brings us to padding. With any some_direction orientation, you nee
+#  ...which brings us to padding. With any some_direction orientation, you need
 #  6 layers of x-padding along any level-edge that the vault borders. For
 #  instance, if your map is ORIENT: north, you must have a 6 deep border of
 #  rock wall (or any other kind of wall) along the northern, eastern, and
 #  western edges of the map.
-#  encompass: the vault completely occupies the entire level. Padding is needed
-#  on all 4 sides.
+#  "encompass": the vault completely occupies the entire level. Padding is 
+#  needed on all 4 sides.
 # 
-#  "ITEM:" LINES:
+#  ITEM
 #  These are used to help place specified items at specific places within a
-#  vault. They create an array with up to 8 positions. What's in the first
-#  position in the array will be used when the dungeon builder sees a "d" in the
-#  vault definition, the second will be used for "e"s, etc. Positions are
-#  comma-separated. Positions can contain multiple possibilities, one of which
-#  the builder will choose randomly. Separate such multiple possibilities usin
-#  a slash. Note that "nothing" (without the quotes) is a valid possibility.
+#  vault. They create an array with up to 8 positions. What's in the first 
+#  position in the array will be used when the dungeon builder sees a "d" in 
+#  the vault definition, the second will be used for "e"s, etc. Positions are
+#  comma-separated; several ITEM lines are possible as well. 
+#  Positions can contain multiple possibilities, one of which the builder will
+#  choose randomly. Separate such multiple possibilities using a slash. Note 
+#  that "nothing" (without the quotes) is a valid possibility. The random 
+#  choice is done for each individual occurence of the letter.
 #  You can also give possibilities a "weight," which affects their chance of
 #  being picked. The default weight is 10. The chance to pick a possibility is
 #  [possibility's weight: / sum of all weight:s in that array position]
-#  Modifiers: "good_item" makes the builder try to make the item a good one.
-#  "any" by itself lets it plop down any object -- and you can combine "any"
-#  with "good_item." "any" plus an item class gives a random item of that clas
-#  (e.g. "any book").
+#  Modifiers: 
+#  "good_item" makes the builder try to make the item a good one.
+#  "any" by itself gives random choice; you can combine "any" with "good_item."
+#  "any book", "any misc" etc. gives a random item of that class.
 #
 #  Limitations: You can't affect stack quantity for stackable items, nor can you
 #  affect curse status nor item race, nor can you give specific egos, nor can
 #  give fixedarts. You also can't lay down corpses, skeletons, or chunks.
 # 
-#  "MONS:" LINES:
+#  MONS
 #  These are used to help place specific monsters at specific places in a
 #  vault. They create an array with up to 7 positions. What's in the first
 #  position in the array will be used when the dungeon builder sees a "1"
 #  in the vault definition, the second for "2," etc. Note that if, for
 #  example, you place a 3 on the map, but your MONS: line has no third
 #  position, the 3 will be filled with RANDOM_MONSTER.
+#  Individual monsters may be prefixed with the "generate_awake" (without
+#  the quotes). Use this sparingly.
+#  Note that 8, 9, 0 also place monsters (see the table above).
 # 
-#  "CHANCE:" LINES
+#  CHANCE
 #  For entry vaults and any other vaults randomly picked from among a set,
 #  this type of line affects the likelihood of the given vault being picked in
 #  a given game. The default CHANCE: is 10. The likelihood of a vault getting
@@ -121,54 +131,66 @@
 # 
 #  TAGS
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
-#  entry: this tag MUST be there for a vault to be pickable as an entry vault.
-#  no_monster_gen: this tag prevents monster generation at the time of
-#                  the vault's creation. Highly advised for entry vaults with
-#                  a player-hostile geography, MUST-HAVE for those with water
-#                  or lava.
-#  no_pool_fixup: prevents water squares next to land from being randomly conv
-#                 from deep water (the default) to shallow.
+#  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
+#  "no_monster_gen": this tag prevents monster generation at the time of
+#                   the vault's creation. Highly advised for entry vaults with
+#                   a player-hostile geography, MUST-HAVE for those with water
+#                   or lava.
+#  "no_pool_fixup": prevents water squares next to land from being randomly 
+#                   converted from deep water (the default) to shallow.
+#  "branch_entry" eg. "orc_entry", "lair_entry" etc. If chosen, these maps
+#                   will contain the stairs for that branch. Use "O" to place
+#                   the stairs. Branch entries should go to splev.des.
 # 
 #  FLAGS
 #  Flags go on a FLAGS: line and are space-separated. Valid flags are:
-#  no_rotate: Normally, the dungeon builder can, at its whim, rotate your vault
-#             This flag tells it, "hey, don't do that to my vault!"
-#  no_hmirror: Like no_rotate, but for horizontal mirroring.
-#  no_vmirror: Like no_rotate, but for vertical mirroring.
+#  "no_rotate":  Normally, the dungeon builder can, at its whim, rotate your 
+#                vault. This flag tells it, "hey, don't do that to my vault!"
+#  "no_hmirror": Like no_rotate, but for horizontal mirroring.
+#  "no_vmirror": Like no_rotate, but for vertical mirroring.
 # 
-#  note that a lot of the vaults are in there mainly to add some
+#  SHUFFLE
+#  This allows to randomly permute glyphs on the map. There are two ways:
+#  SHUFFLE: 123w     (i.e. list of glyphs, NOT comma-separated)
+#           could, for example, swap all occurences of "1" with "2", 
+#           as well as swapping all "3" with "w" (or any other of the 23
+#           possibilities).
+#  SHUFFLE: 12,3w    (i.e. list of comma-separated blocks of same size)
+#           will either do nothing or swap all "1" with "3" and then also
+#           swap "2" with "w" everywhere.
+#  Several SHUFFLE lines are possible.
+#
+#  Note that a lot of the vaults are in there mainly to add some
 #  interest to the scenery, and are not the lethal treasure-fests you
 #  find in Angband (not that there's anything wrong with that)
 # 
 #  Guidelines for creating new vault maps:
 #
 #  If your map is not a minivault or a floating vault, make sure the side(s)
-#  that form the border have a rock wall padding at least 6 deep. For instance,
-#  if your map is ORIENT: north, you must have a 6 deep border of rock wall (or
-#  any other kind of wall) along the northern, eastern, and western edges of the
-#  map. If you're doing a fullscreen map (encompass), you must pad all around
-#  the map with 6 layers of wall. For ORIENT: encompass maps, you don't need to
-#  explicitly include the padding provided you make the map small enough that
-#  the padding can be provided automatically.
+#  forming the border have a rock wall padding at least 6 deep. For instance,
+#  if your map is ORIENT: north, you must have a 6 deep border of rock wall 
+#  (or any other kind of wall) along the northern, eastern, and western edges 
+#  of the map. If you're doing a fullscreen map (encompass), you must pad all 
+#  around the map with 6 layers of wall. For ORIENT: encompass maps, you 
+#  don't need to explicitly include the padding provided you make the map 
+#  small enough that the padding can be provided automatically.
 # 
-#  You do not have to place all of the stairs unless the level is full
-#  screen, in which case you must place all except the extra stairs (>
-#  and <). The <> stairs can be put anywhere and in any quantities but
-#  do not have to be there. Any of the other stairs which are not
-#  present in the vault will be randomly placed outside it. Also
-#  generally try to avoid rooms with no exit.
+#  You do not have to place all of the stairs unless the level is full screen,
+#  in which case you must place all except the extra stairs (> and <). The <>
+#  stairs can be put anywhere and in any quantities but do not have to be 
+#  there. Any of the other stairs which are not present in the vault will be 
+#  randomly placed outside it. Also generally try to avoid rooms with no exit.
 #
-#  You can use the templates below to build vaults. The entry point
-#  '@' must be present (except full-screen vaults where it must not
-#  and orient:float maps, where it is optional - the builder will
-#  randomly convert '.' spaces on edges to entry points if needed) and
-#  be on an edge of the vault.
+#  You can use the templates below to build vaults. The entry point '@' must 
+#  be present (except full-screen vaults where it must not and orient:float 
+#  maps, where it is optional - the builder will randomly convert '.' spaces 
+#  on edges to entry points if needed) and be on an edge of the vault.
 #
 #  Minivaults are handled very differently from regular vaults and special
-#  levels. They're placed *after* normal map generation, whereas normal vaults
-#  are placed before generating the rest of the level. There's no way to
-#  guarantee generation of a minivault on a particular level, whereas vaults
-#  can be forced to appear using a PLACE: attribute.
+#  levels. They're placed *after* normal map generation, whereas normal 
+#  vaults are placed before generating the rest of the level. There's no way 
+#  to guarantee generation of a minivault on a particular level, whereas 
+#  vaults can be forced to appear using a PLACE: attribute.
 #
 # I think that's all. Have fun!
 #
