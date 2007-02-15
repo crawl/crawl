@@ -5535,21 +5535,55 @@ static void build_rooms(const dgn_region_list &excluded,
     }
 }
 
+static int away_from_edge(int x, int left_edge, int right_edge)
+{
+    if (x < left_edge)
+        return (1);
+    else if (x > right_edge)
+        return (-1);
+    else
+        return (coinflip()? 1 : -1);
+}
+
 static coord_def dig_away_dir(const vault_placement &place,
                               const coord_def &pos)
 {
     // Figure out which way we need to go to dig our way out of the vault.
-    const bool x_edge = 
+    bool x_edge = 
         pos.x == place.x || pos.x == place.x + place.width - 1;
-    const bool y_edge =
+    bool y_edge =
         pos.y == place.y || pos.y == place.y + place.height - 1;
 
+    if (x_edge && y_edge)
+    {
+        if (coinflip())
+            x_edge = false;
+        else
+            y_edge = false;
+    }
+        
     coord_def dig_dir;
     if (x_edge)
-        dig_dir.x = pos.x == place.x? -1 : 1;
+    {
+        if (place.width == 1)
+            dig_dir.x =
+                away_from_edge(pos.x,
+                               MAPGEN_BORDER * 2,
+                               GXM - MAPGEN_BORDER * 2);
+        else
+            dig_dir.x = pos.x == place.x? -1 : 1;
+    }
 
     if (y_edge)
-        dig_dir.y = pos.y == place.y? -1 : 1;
+    {
+        if (place.height == 1)
+            dig_dir.y =
+                away_from_edge(pos.y,
+                               MAPGEN_BORDER * 2,
+                               GYM - MAPGEN_BORDER * 2);
+        else
+            dig_dir.y = pos.y == place.y? -1 : 1;
+    }
 
     return (dig_dir);
 }

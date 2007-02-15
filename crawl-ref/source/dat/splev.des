@@ -2358,7 +2358,6 @@ ENDMAP
 MONS: swamp dragon, swamp drake, hydra
 MONS: random, random, random, random
 
-
 ##############################################################################
 # Portal vaults
 ##############################################################################
@@ -2376,6 +2375,20 @@ MONS: random, random, random, random
 # do not put an O anywhere in the vault, there will be no portal for that 
 # branch!
 #
+
+##############################################################################
+# Orcish Mines entries
+##############################################################################
+# Dummy Orc entry
+
+NAME: david_orc_0_dummy
+TAGS: orc_entry
+CHANCE: 60
+ORIENT: float
+MAP
+O
+ENDMAP
+
 ##############################################################################
 # Freedom of Choice (Orc entry)
 
@@ -2415,6 +2428,7 @@ NAME: david_orc_2
 TAGS: orc_entry
 MONS: weight:50 orc / orc warrior
 ORIENT: float
+CHANCE: 20
 MAP
 xxxx..@..xxxx
 x.....I.....x
@@ -2435,6 +2449,7 @@ TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / orc sorcerer / orc priest
 ORIENT: float
+CHANCE: 30
 MAP
 1.....@....11
 1............
@@ -2449,6 +2464,17 @@ ENDMAP
 
 ##############################################################################
 # Vaults entries
+##############################################################################
+# Dummy Vaults entry
+
+NAME: david_vaults_0_dummy
+TAGS: orc_vaults
+CHANCE: 60
+ORIENT: float
+MAP
+O
+ENDMAP
+
 ##############################################################################
 # Generic Vaults entry
 
@@ -2469,7 +2495,41 @@ xxxxx.@.xxxxx
 ENDMAP
 
 ##############################################################################
+# Vault monsters near stair 
+
+NAME: david_vaults_2
+TAGS: vault_entry
+MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
+MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre-mage
+MONS: weight:100 nothing / shapeshifter
+SHUFFLE: 123
+ORIENT: float
+CHANCE: 30
+MAP
+1111..@......
+111..........
+111..........
+1............
+@.....O.....@
+.............
+.............
+.............
+....@........
+ENDMAP
+
+##############################################################################
 # Lair entries
+##############################################################################
+# Dummy Lair entry
+
+NAME: david_lair_0_dummy
+TAGS: orc_lair
+CHANCE: 60
+ORIENT: float
+MAP
+O
+ENDMAP
+
 ##############################################################################
 # Generic Lair entry
 
@@ -2520,6 +2580,7 @@ MONS: green rat / grey rat / orange rat / quokka / rat
 MONS: weight:90 nothing / weight:30 giant frog / blink frog / giant brown frog / spiny frog
 SHUFFLE: 12345
 ORIENT: float
+CHANCE: 40
 MAP
 111...@......
 111..........
@@ -2530,4 +2591,57 @@ MAP
 ........2....
 .............
 ....@........
+ENDMAP
+
+##############################################################################
+# Hive entries
+##############################################################################
+# Beehive entry
+
+NAME: david_hive_0
+TAGS: hive_entry
+ORIENT: float
+CHANCE: 60
+MAP
+O
+ENDMAP
+
+NAME: david_hive_1
+TAGS: hive_entry
+MONS: queen bee, killer bee, killer bee larva
+ORIENT: float
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aaRa3a2a..
+.aa2aRa2aaa.
+.a3aOa1aRa2.
+.aa3aRaRa2a.
+.aaa2a2a3aa.
+..a3aRa2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP
+
+##############################################################################
+# Hive monsters near stair
+
+NAME: david_hive_2
+TAGS: hive_entry
+MONS: nothing / killer bee / killer bee larva
+MONS: queen bee
+ORIENT: float
+CHANCE: 20
+MAP
+1111..@.....1
+1211.........
+1111.........
+.............
+@.....O.....@
+.............
+.............
+.............
+1...@.......1
 ENDMAP
