@@ -14,7 +14,7 @@
 
 #include "AppHdr.h"
 #include "message.h"
-#include "menu.h"
+#include "format.h"
 
 #include <cstdarg>
 #include <cstring>
@@ -25,7 +25,6 @@
 
 #include "externs.h"
 
-#include "menu.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "macro.h"

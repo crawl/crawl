@@ -7,6 +7,7 @@
 #include <time.h>
 #include "AppHdr.h"
 #include "externs.h"
+#include "format.h"
 #include "defines.h"
 #include "libutil.h"
 
@@ -44,82 +45,8 @@ struct menu_letter
     }
 };
 
-enum fs_op_type
-{
-    FSOP_COLOUR,
-    FSOP_CURSOR,
-    FSOP_TEXT
-};
-
-class formatted_string
-{
-public:
-    formatted_string(int init_colour = 0);
-    formatted_string(const std::string &s, int init_colour = 0);
-
-    operator std::string() const;
-    void display(int start = 0, int end = -1) const;
-    std::string tostring(int start = 0, int end = -1) const;
-
-    void cprintf(const char *s, ...);
-    void cprintf(const std::string &s);
-    void gotoxy(int x, int y);
-    void movexy(int delta_x, int delta_y);
-    void add_glyph(const monsters *mons);
-    void add_glyph(const item_def *item);
-    void textcolor(int color);
-
-    void clear();
-
-    std::string::size_type length() const;
-
-    const formatted_string &operator += (const formatted_string &other);
-
-public:
-    static formatted_string parse_string(
-            const std::string &s,
-            bool  eol_ends_format = true,
-            bool (*process_tag)(const std::string &tag) = NULL );
-
-    static int get_colour(const std::string &tag);
-
-private:
-    int find_last_colour() const;
-
-public:
-    struct fs_op
-    {
-        fs_op_type type;
-        int x, y;
-        bool relative;
-        std::string text;
-        
-        fs_op(int color)
-            : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
-        {
-        }
-        
-        fs_op(int cx, int cy, bool rel = false)
-            : type(FSOP_CURSOR), x(cx), y(cy), relative(rel), text()
-        {
-        }
-        
-        fs_op(const std::string &s)
-            : type(FSOP_TEXT), x(-1), y(-1), relative(false), text(s)
-        {
-        }
-
-        operator fs_op_type () const
-        {
-            return type;
-        }
-        void display() const;
-    };
-
-    std::vector<fs_op> ops;
-};
-
 struct item_def;
+
 struct MenuEntry
 {
     std::string text;

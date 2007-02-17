@@ -22,10 +22,10 @@
 
 #include "externs.h"
 
+#include "format.h"
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
-#include "menu.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"

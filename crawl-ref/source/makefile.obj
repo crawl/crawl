@@ -19,6 +19,7 @@ effects.o \
 fight.o \
 files.o \
 food.o \
+format.o \
 hiscores.o \
 initfile.o \
 insult.o \
