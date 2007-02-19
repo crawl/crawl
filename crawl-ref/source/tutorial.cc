@@ -499,9 +499,6 @@ static void tutorial_movement_info()
 // copied from display_mutations and adapted    
 void tut_starting_screen()
 {
-#ifdef DOS_TERM
-    char buffer[4800];
-#endif
     int x1, x2, y1, y2;
     int MAX_INFO = 4;
 #ifdef TUTORIAL_DEBUG
@@ -524,10 +521,6 @@ void tut_starting_screen()
             y2 = 18;
         }    
         
-#ifdef DOS_TERM
-        window(x1, y1, x2, y2);
-        gettext(x1, y1, x2, y2, buffer);
-#endif
         if (i==0)
             clrscr();
         
@@ -556,9 +549,6 @@ void tut_starting_screen()
             
         ch = c_getch();
         
-#ifdef DOS_TERM
-        puttext(x1, y1, x2, y2, buffer);
-#endif
         redraw_screen();
         if (ch == ESCAPE)
             break;

@@ -136,7 +136,12 @@ metaline        : place
 shuffle         : SHUFFLE { }
                 | SHUFFLE STRING
                 {
-                    lc_map.add_shuffle($2);
+                    std::string err = lc_map.add_shuffle($2);
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf(
+                                "Bad shuffle argument: '%s' (%s)",
+                                $2, err.c_str() ).c_str() );
                 }
 
 tags            : TAGS tagstrings {}

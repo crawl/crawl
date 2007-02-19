@@ -47,7 +47,7 @@ static void settext()
 
 %}
 
-%s MAPDEF
+%x MAPDEF
 %s ARGUMENT
 %s MNAME
 %s KEYWORDS
@@ -62,13 +62,16 @@ NSPACE [^\ \t\r\n]
 
 <MAPDEF>^\s*ENDMAP  { BEGIN(INITIAL); }
 
-<MAPDEF>^#.*\r?\n   ;
-
-<MAPDEF>[a-zA-Z_&0-9|$+.@^~#()\[\]=<>{}%*\-?]* {
+<MAPDEF>^[a-zA-Z_&0-9|$+.@^~()\[\]=<>{}%*\-?]+ {
                         settext();
                         return MAP_LINE;
                     }
+
+<MAPDEF>^[ ]*\r?\n      return CHARACTER;
+<MAPDEF>#               return CHARACTER;
 <MAPDEF>[\ ][^\ \r\n]   return CHARACTER;
+
+<MAPDEF>[ ]*\r?\n       ;
 
 <KEYWORDS>[A-Za-z_0-9\-]+   {
                         settext();

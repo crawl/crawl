@@ -385,8 +385,3 @@ void add_parsed_map( const map_def &md )
     map.fixup();
     vdefs.push_back( map );
 }
-
-//////////////////////////////////////////////////////////////////
-// map_lines
-
-

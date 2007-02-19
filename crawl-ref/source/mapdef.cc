@@ -229,15 +229,9 @@ void map_lines::resolve(const std::string &fillins)
         resolve(lines[i], fillins);
 }
 
-std::string map_lines::clean(std::string s)
-{
-    return replace_all_of(s, " \t", "");
-}
-
 std::string map_lines::block_shuffle(const std::string &s)
 {
-    std::vector<std::string> segs = split_string(",", s);
-    unsigned seglen = 0;
+    std::vector<std::string> segs = split_string("/", s);
 
     std::vector<std::string> shuffled;
     for (int i = 0, size = segs.size(); i < size; ++i)
@@ -246,24 +240,16 @@ std::string map_lines::block_shuffle(const std::string &s)
         
         shuffled.push_back( segs[ sel ] );
         segs.erase( segs.begin() + sel );
-        
-        if (!seglen)
-            seglen = shuffled[i].length();
-        else if (seglen != shuffled[i].length())
-        {
-            mprf(MSGCH_DIAGNOSTICS, "Bad shuffle parameter: %s", s.c_str());
-            return ("");
-        }
     }
 
-    return comma_separated_line(shuffled.begin(), shuffled.end(), ",", ",");
+    return comma_separated_line(shuffled.begin(), shuffled.end(), "/", "/");
 }
 
 std::string map_lines::shuffle(std::string s)
 {
     std::string result;
 
-    if (s.find(',') != std::string::npos)
+    if (s.find('/') != std::string::npos)
         return block_shuffle(s);
 
     // Inefficient brute-force shuffle.
@@ -279,7 +265,7 @@ std::string map_lines::shuffle(std::string s)
 
 void map_lines::resolve_shuffle(const std::string &shufflage)
 {
-    std::string toshuffle = clean(shufflage);
+    std::string toshuffle = shufflage;
     std::string shuffled = shuffle(toshuffle);
 
     if (toshuffle.empty() || shuffled.empty())
@@ -407,9 +393,47 @@ void map_def::init()
     mons.clear();
 }
 
-void map_def::add_shuffle(const std::string &s)
+std::string map_def::clean_shuffle(std::string s)
 {
-    shuffles.push_back(s);
+    return replace_all_of(s, " \t", "");
+}
+
+std::string map_def::check_block_shuffle(const std::string &s)
+{
+    const std::vector<std::string> segs = split_string("/", s);
+    const unsigned seglen = segs[0].length();
+    
+    for (int i = 1, size = segs.size(); i < size; ++i)
+    {
+        if (seglen != segs[i].length())
+            return ("block shuffle segment length mismatch");
+    }
+    
+    return ("");
+}
+
+std::string map_def::check_shuffle(std::string &s)
+{
+    if (s.find(',') != std::string::npos)
+        return ("use / for block shuffle, or multiple SHUFFLE: lines");
+
+    s = clean_shuffle(s);
+    
+    if (s.find('/') != std::string::npos)
+        return check_block_shuffle(s);
+
+    return ("");
+}
+
+std::string map_def::add_shuffle(const std::string &raws)
+{
+    std::string s = raws;
+    const std::string err = check_shuffle(s);
+    
+    if (err.empty())
+        shuffles.push_back(s);
+
+    return (err);
 }
 
 bool map_def::is_minivault() const

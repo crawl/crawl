@@ -75,7 +75,6 @@ private:
     void resolve_shuffle(const std::string &shuffle);
     void resolve(std::string &s, const std::string &fill);
     void check_borders();
-    std::string clean(std::string s);
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
 
@@ -224,7 +223,7 @@ public:
     void resolve();
     void fixup();
 
-    void add_shuffle(const std::string &s);
+    std::string add_shuffle(const std::string &s);
 
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
@@ -234,6 +233,11 @@ public:
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;
+
+private:
+    std::string check_shuffle(std::string &s);
+    std::string check_block_shuffle(const std::string &s);
+    std::string clean_shuffle(std::string s);
 };
 
 class monster_chance

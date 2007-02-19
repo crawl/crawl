@@ -414,7 +414,7 @@ ORIENT: encompass
 MONS: Antaeus, Ice Fiend, ice dragon / nothing
 MONS: random, random, random, random
 ITEM: any, any misc, any misc, any misc
-SHUFFLE: O1d,e0%,f9*,g8|
+SHUFFLE: O1d/e0%/f9*/g8|
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
