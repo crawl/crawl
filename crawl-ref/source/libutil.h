@@ -67,6 +67,8 @@ int cancelable_get_line( char *buf,
                          int (*keyproc)(int &c) = NULL );
 
 std::string & trim_string( std::string &str );
+std::string trimmed_string( std::string s );
+
 std::vector<std::string> split_string(
         const char *sep, 
         std::string s, 

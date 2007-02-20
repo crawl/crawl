@@ -193,9 +193,11 @@ void lowercase(std::string &s)
         s[i] = tolower(s[i]);
 }
 
+// Replaces all occurrences of any of the characters in tofind with the
+// replacement string.
 std::string replace_all_of(std::string s,
-                        const std::string &tofind,
-                        const std::string &replacement)
+                           const std::string &tofind,
+                           const std::string &replacement)
 {
     std::string::size_type start = 0;
     std::string::size_type found;
@@ -347,6 +349,12 @@ int cancelable_get_line( char *buf, int len, int maxcol,
     reader.set_keyproc(keyproc);
 
     return reader.read_line();
+}
+
+std::string trimmed_string( std::string s )
+{
+    trim_string(s);
+    return (s);
 }
 
 // also used with macros

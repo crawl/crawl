@@ -1,10 +1,9 @@
-" levdes.vim: 
-"
-" Basic Vim syntax highlighting for Dungeon Crawl Stone Soup level design
-" (.des) files.
-"
-" This syntax highlighting script is distributed under the terms of the
-" Crawl Public License. See licence.txt for details.
+" Vim syntax file
+" Language:	Dungeon Crawl level design (.des) files.
+" Maintainer:	Darshan Shaligram <scintilla@gmail.com>
+" Last Change:	2007 Feb 20
+" Remark:	Basic Vim syntax highlighting for Dungeon Crawl Stone Soup 
+"               level design (.des) files.
 
 if version < 600
   syntax clear
@@ -17,8 +16,15 @@ syn case match
 setlocal iskeyword+=:
 setlocal iskeyword+=-
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: SYMBOL: default-depth: TAGS: CHANCE: ITEM: SHUFFLE:
-syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float
+syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desSubstDec,desSubstArg,desSubstSep,@desMapElements keepend
+
+syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
+
+syn keyword desSubstDec SUBST: contained
+syn keyword desShuffleDec SHUFFLE: contained
+
+syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: ITEM:
+syn keyword desOrientation encompass north south east west northeast northwest southeast southwest float no_hmirror no_vmirror no_rotate entry pan no_pool_fixup no_monster_gen generate_awake
 
 syn match desComment "^\s*#.*$"
 
@@ -33,7 +39,7 @@ syn match desMapWaxWall /a/ contained
 syn match desMapMonst /[0-9]/ contained
 syn match desMapGold /\$/ contained
 syn match desMapLava /l/ contained
-syn match desMapWater /w/ contained
+syn match desMapWater /[wW]/ contained
 syn match desMapEntry /@/ contained
 syn match desMapTrap  /\^/ contained
 
@@ -49,12 +55,20 @@ syn cluster desMapElements add=desMapEntry,desMapWaxWall
 
 syn cluster desMapElements add=desMapRune,desMapOrb,desMapValuable
 
+syn match desSubstArg /\S/ contained nextgroup=desSubstSep skipwhite
+syn match desSubstSep /[:=]/ contained nextgroup=desMapFrag skipwhite
+syn region desMapFrag start=/./ end=/$/ contains=@desMapElements contained
+
 syn region desMap start=/^\s*\<MAP\>\s*$/ end=/^\s*\<ENDMAP\>\s*$/ contains=@desMapElements keepend
 
 hi link desDeclarator Statement
+hi link desSubstDec   Statement
+hi link desShuffleDec Statement
 hi link desMapBookend Statement
 hi link desComment    Comment
 hi link desMap        String
+hi link desSubstArg   String
+hi link desSubstSep   Type
 hi link desOrientation Type
 
 hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown

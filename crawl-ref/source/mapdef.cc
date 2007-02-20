@@ -142,6 +142,111 @@ void map_lines::add_line(const std::string &s)
         map_width = s.length();
 }
 
+std::string map_lines::clean_shuffle(std::string s)
+{
+    return replace_all_of(s, " \t", "");
+}
+
+std::string map_lines::check_block_shuffle(const std::string &s)
+{
+    const std::vector<std::string> segs = split_string("/", s);
+    const unsigned seglen = segs[0].length();
+    
+    for (int i = 1, size = segs.size(); i < size; ++i)
+    {
+        if (seglen != segs[i].length())
+            return ("block shuffle segment length mismatch");
+    }
+    
+    return ("");
+}
+
+std::string map_lines::check_shuffle(std::string &s)
+{
+    if (s.find(',') != std::string::npos)
+        return ("use / for block shuffle, or multiple SHUFFLE: lines");
+
+    s = clean_shuffle(s);
+    
+    if (s.find('/') != std::string::npos)
+        return check_block_shuffle(s);
+
+    return ("");
+}
+
+std::string map_lines::parse_glyph_replacements(std::string s,
+                                                glyph_replacements_t &gly)
+{
+    s = replace_all_of(s, "\t", " ");
+    std::vector<std::string> segs = split_string(" ", s);
+
+    for (int i = 0, size = segs.size(); i < size; ++i)
+    {
+        const std::string &is = segs[i];
+        if (is.length() > 2 && is[1] == ':')
+        {
+            const int glych = is[0];
+            int weight = atoi( is.substr(2).c_str() );
+            if (weight < 1)
+                weight = 10;
+
+            gly.push_back( glyph_weighted_replacement_t(glych, weight) );
+        }
+        else
+        {
+            for (int c = 0, cs = is.length(); c < cs; ++c)
+                gly.push_back( glyph_weighted_replacement_t(is[c], 10) );
+        }
+    }
+
+    return ("");
+}
+
+std::string map_lines::add_subst(const std::string &sub)
+{
+    std::string s = trimmed_string(sub);
+
+    if (s.empty())
+        return ("");
+    
+    std::string::size_type
+        norm = s.find("="),
+        fixe = s.find(":");
+
+    const std::string::size_type sep = norm < fixe? norm : fixe;
+    if (sep == std::string::npos)
+        return ("malformed SUBST declaration - must use = or :");
+
+    const bool fixed = (sep == fixe);
+    std::string what_to_subst = trimmed_string(sub.substr(0, sep));
+    std::string substitute    = trimmed_string(sub.substr(sep + 1));
+
+    if (what_to_subst.length() != 1)
+        return make_stringf("selector '%s' must be exactly one character",
+                            what_to_subst.c_str());
+
+    glyph_replacements_t repl;
+    std::string err = parse_glyph_replacements(substitute, repl);
+    if (!err.empty())
+        return (err);
+
+    substitutions.push_back(
+        subst_spec( what_to_subst[0], fixed, repl ) );
+
+    return ("");
+}
+
+std::string map_lines::add_shuffle(const std::string &raws)
+{
+    std::string s = raws;
+    const std::string err = check_shuffle(s);
+    
+    if (err.empty())
+        shuffles.push_back(s);
+
+    return (err);
+}
+
 int map_lines::width() const
 {
     return map_width;
@@ -209,24 +314,26 @@ bool map_lines::solid_borders(map_section_type border)
 
 void map_lines::clear()
 {
+    substitutions.clear();
+    shuffles.clear();
     lines.clear();
     map_width = 0;
 }
 
-void map_lines::resolve(std::string &s, const std::string &fill)
+void map_lines::subst(std::string &s, subst_spec &spec)
 {
-    std::string::size_type pos;
-    while ((pos = s.find('?')) != std::string::npos)
-        s[pos] = fill[ random2(fill.length()) ];
+    std::string::size_type pos = 0;
+    while ((pos = s.find(spec.key(), pos)) != std::string::npos)
+        s[pos++] = spec.value();
 }
 
-void map_lines::resolve(const std::string &fillins)
+void map_lines::subst()
 {
-    if (fillins.empty() || fillins.find('?') != std::string::npos)
-        return;
-
-    for (int i = 0, size = lines.size(); i < size; ++i)
-        resolve(lines[i], fillins);
+    for (int i = 0, size = substitutions.size(); i < size; ++i)
+    {
+        for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+            subst(lines[y], substitutions[i]);
+    }
 }
 
 std::string map_lines::block_shuffle(const std::string &s)
@@ -285,7 +392,7 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
     }
 }
 
-void map_lines::resolve_shuffles(const std::vector<std::string> &shuffles)
+void map_lines::resolve_shuffles()
 {
     for (int i = 0, size = shuffles.size(); i < size; ++i)
         resolve_shuffle( shuffles[i] );
@@ -376,7 +483,6 @@ void map_def::init()
     tags.clear();
     place.clear();
     items.clear();
-    shuffles.clear();
     depth.reset();
     orient = MAP_NONE;
 
@@ -387,53 +493,8 @@ void map_def::init()
     flags = MAPF_MIRROR_VERTICAL | MAPF_MIRROR_HORIZONTAL
             | MAPF_ROTATE;
 
-    random_symbols.clear();
-
     map.clear();
     mons.clear();
-}
-
-std::string map_def::clean_shuffle(std::string s)
-{
-    return replace_all_of(s, " \t", "");
-}
-
-std::string map_def::check_block_shuffle(const std::string &s)
-{
-    const std::vector<std::string> segs = split_string("/", s);
-    const unsigned seglen = segs[0].length();
-    
-    for (int i = 1, size = segs.size(); i < size; ++i)
-    {
-        if (seglen != segs[i].length())
-            return ("block shuffle segment length mismatch");
-    }
-    
-    return ("");
-}
-
-std::string map_def::check_shuffle(std::string &s)
-{
-    if (s.find(',') != std::string::npos)
-        return ("use / for block shuffle, or multiple SHUFFLE: lines");
-
-    s = clean_shuffle(s);
-    
-    if (s.find('/') != std::string::npos)
-        return check_block_shuffle(s);
-
-    return ("");
-}
-
-std::string map_def::add_shuffle(const std::string &raws)
-{
-    std::string s = raws;
-    const std::string err = check_shuffle(s);
-    
-    if (err.empty())
-        shuffles.push_back(s);
-
-    return (err);
 }
 
 bool map_def::is_minivault() const
@@ -645,8 +706,8 @@ void map_def::normalise()
 
 void map_def::resolve()
 {
-    map.resolve( random_symbols );
-    map.resolve_shuffles( shuffles );
+    map.resolve_shuffles();
+    map.subst();
 }
 
 void map_def::fixup()
@@ -1013,4 +1074,31 @@ item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
     }
 
     return (list);
+}
+
+/////////////////////////////////////////////////////////////////////////
+// subst_spec
+
+subst_spec::subst_spec(int torepl, bool dofix, const glyph_replacements_t &g)
+    : foo(torepl), fix(dofix), frozen_value(0), repl(g)
+{
+}
+
+int subst_spec::value()
+{
+    if (frozen_value)
+        return (frozen_value);
+
+    int cumulative = 0;
+    int chosen = 0;
+    for (int i = 0, size = repl.size(); i < size; ++i)
+    {
+        if (random2(cumulative += repl[i].second) < repl[i].second)
+            chosen = repl[i].first;
+    }
+
+    if (fix)
+        frozen_value = chosen;
+
+    return (chosen);
 }

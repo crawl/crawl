@@ -40,12 +40,38 @@ public:
     int span() const;
 };
 
+typedef std::pair<int,int> glyph_weighted_replacement_t;
+typedef std::vector<glyph_weighted_replacement_t> glyph_replacements_t;
+
+class subst_spec
+{
+public:
+    subst_spec(int torepl, bool fix, const glyph_replacements_t &repls);
+
+    int key() const
+    {
+        return (foo);
+    }
+    
+    int value();
+
+private:
+    int foo;        // The thing to replace.
+    bool fix;       // If true, the first replacement fixes the value.
+    int frozen_value;
+    
+    glyph_replacements_t repl;
+};
+
 class map_lines
 {
 public:
     map_lines();
 
     void add_line(const std::string &s);
+    std::string add_subst(const std::string &st);
+    std::string add_shuffle(const std::string &s);
+
     void set_orientation(const std::string &s);
 
     int width() const;
@@ -56,8 +82,8 @@ public:
     
     bool solid_borders(map_section_type border);
     
-    void resolve(const std::string &fillins);
-    void resolve_shuffles(const std::vector<std::string> &shuffles);
+    void subst();
+    void resolve_shuffles();
 
     // Make all lines the same length.
     void normalise(char fillc = 'x');
@@ -73,12 +99,19 @@ public:
 
 private:
     void resolve_shuffle(const std::string &shuffle);
-    void resolve(std::string &s, const std::string &fill);
+    void subst(std::string &s, subst_spec &spec);
     void check_borders();
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
+    std::string check_shuffle(std::string &s);
+    std::string check_block_shuffle(const std::string &s);
+    std::string clean_shuffle(std::string s);
+    std::string parse_glyph_replacements(std::string s,
+                                         glyph_replacements_t &gly);
 
 private:
+    std::vector<subst_spec>  substitutions;
+    std::vector<std::string> shuffles;
     std::vector<std::string> lines;
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;
@@ -211,9 +244,6 @@ public:
     mons_list       mons;
     item_list       items;
 
-    std::string     random_symbols;
-    std::vector<std::string> shuffles;
-
 public:
     void init();
     void hmirror();
@@ -223,8 +253,6 @@ public:
     void resolve();
     void fixup();
 
-    std::string add_shuffle(const std::string &s);
-
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
     coord_def float_dock();
@@ -233,11 +261,6 @@ public:
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;
-
-private:
-    std::string check_shuffle(std::string &s);
-    std::string check_block_shuffle(const std::string &s);
-    std::string clean_shuffle(std::string s);
 };
 
 class monster_chance

@@ -25,7 +25,7 @@ void yyerror(const char *e)
 }
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
-%token <i>      DEFAULT_DEPTH SYMBOL TAGS SHUFFLE
+%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS ITEM
 %token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
 %token <i>      ROCK_COLOUR FLOOR_COLOUR
@@ -136,7 +136,7 @@ metaline        : place
 shuffle         : SHUFFLE { }
                 | SHUFFLE STRING
                 {
-                    std::string err = lc_map.add_shuffle($2);
+                    std::string err = lc_map.map.add_shuffle($2);
                     if (!err.empty())
                         yyerror(
                             make_stringf(
@@ -156,10 +156,15 @@ tagstrings      : /* empty */
                 }
                 ;
 
-symbol          : SYMBOL {}
-                | SYMBOL STRING
+symbol          : SUBST {}
+                | SUBST STRING
                 {
-                    lc_map.random_symbols = $2;
+                    std::string err = lc_map.map.add_subst($2);
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf(
+                                "Bad SUBST argument: '%s' (%s)",
+                                $2, err.c_str() ).c_str() );
                 }
                 ;
 

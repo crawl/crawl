@@ -86,12 +86,12 @@
 #  "encompass": the vault completely occupies the entire level. Padding is 
 #  needed on all 4 sides.
 # 
-#  ITEM
+#  ITEM:
 #  These are used to help place specified items at specific places within a
 #  vault. They create an array with up to 8 positions. What's in the first 
 #  position in the array will be used when the dungeon builder sees a "d" in 
 #  the vault definition, the second will be used for "e"s, etc. Positions are
-#  comma-separated; several ITEM lines are possible as well. 
+#  comma-separated; several ITEM: lines are possible as well. 
 #  Positions can contain multiple possibilities, one of which the builder will
 #  choose randomly. Separate such multiple possibilities using a slash. Note 
 #  that "nothing" (without the quotes) is a valid possibility. The random 
@@ -108,7 +108,7 @@
 #  affect curse status nor item race, nor can you give specific egos, nor can
 #  give fixedarts. You also can't lay down corpses, skeletons, or chunks.
 # 
-#  MONS
+#  MONS:
 #  These are used to help place specific monsters at specific places in a
 #  vault. They create an array with up to 7 positions. What's in the first
 #  position in the array will be used when the dungeon builder sees a "1"
@@ -119,7 +119,7 @@
 #  the quotes). Use this sparingly.
 #  Note that 8, 9, 0 also place monsters (see the table above).
 # 
-#  CHANCE
+#  CHANCE:
 #  For entry vaults and any other vaults randomly picked from among a set,
 #  this type of line affects the likelihood of the given vault being picked in
 #  a given game. The default CHANCE: is 10. The likelihood of a vault getting
@@ -129,7 +129,7 @@
 #  almost guarantee that a vault will be picked, and thus are great
 #  for testing. !!!
 # 
-#  TAGS
+#  TAGS:
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
 #  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
 #  "no_monster_gen": this tag prevents monster generation at the time of
@@ -149,16 +149,42 @@
 #  "no_hmirror": Like no_rotate, but for horizontal mirroring.
 #  "no_vmirror": Like no_rotate, but for vertical mirroring.
 # 
-#  SHUFFLE
-#  This allows to randomly permute glyphs on the map. There are two ways:
+#  SHUFFLE:
+#  This allows you to randomly permute glyphs on the map. There are two ways:
 #  SHUFFLE: 123w     (i.e. list of glyphs, NOT comma-separated)
 #           could, for example, swap all occurences of "1" with "2", 
 #           as well as swapping all "3" with "w" (or any other of the 23
 #           possibilities).
-#  SHUFFLE: 12,3w    (i.e. list of comma-separated blocks of same size)
+#  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
 #           will either do nothing or swap all "1" with "3" and then also
 #           swap "2" with "w" everywhere.
-#  Several SHUFFLE lines are possible.
+#  Several SHUFFLE: lines can be used, and the shuffles will be applied in
+#  order.
+#
+#  SUBST:
+#  The SUBST: directive allows you to specify a placeholder symbol that is
+#  replaced with a random glyph from a set. For instance:
+#  SUBST:  ? = TUV
+#          will replace occurrences of ? with one of TUV.
+#  SUBST:  ? = T U V
+#          does the same thing - whitespace is not significant.
+#  SUBST:  ? = T:20 U V
+#          makes T twice as likely to be used as U or V (the default weight 
+#          is 10). Note that there has to be at least one space after T:20
+#          and that whitespace in T:20 is not permitted.
+#  SUBST:  ? : TUV
+#          replaces occurrences of ? with one of TUV, and guarantees that all
+#          occurrences of ? will get the same replacement symbol.
+#  The placeholder symbol can be any non-space, printable character apart from
+#  : and =. The replacement symbols can be any non-space printable character,
+#  including : and = ("SUBST: ? = +=:123def" is valid).
+#
+#  SUBST: lines can safely replace symbols with themselves:
+#
+#  SUBST: w = wW
+#
+#  Multiple SUBST: lines can be used, and will be applied in order. 
+#  Substitutions are performed after any declared shuffles.
 #
 #  Note that a lot of the vaults are in there mainly to add some
 #  interest to the scenery, and are not the lethal treasure-fests you
@@ -3277,7 +3303,7 @@ ENDMAP
 NAME: david_entry_061_a_altar
 TAGS: entry no_monster_gen
 ORIENT: northwest 
-SYMBOL: l.
+SUBST: ?=l.
 CHANCE: 6
 SHUFFLE: Cc
 MAP
@@ -3494,9 +3520,11 @@ ORIENT: float
 FLAGS: no_rotate
 SHUFFLE: {[(
 SHUFFLE: def
+
 # A test run with 50 tries had precisely one level without shallow water
 # access to surroundings. This is intended and I like the low chance for this.
-# Using SYMBOL: wW this chance could bew decreased even more.
+# Using SUBST: w=wW this chance could be decreased even more.
+
 MAP
 .............................
 .............................
@@ -5826,7 +5854,7 @@ ENDMAP
 ###################################
 # Solitary fountain
 NAME: solitary_fountain
-SYMBOL: TUV
+SUBST: ?=TUV
 
 MAP
 .....
@@ -5840,7 +5868,7 @@ ENDMAP
 # Fountainhead
 
 NAME: fountainhead
-SYMBOL: TUV
+SUBST: ?=TUV
 
 MAP
 ..............
