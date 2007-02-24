@@ -875,8 +875,8 @@ enum description_level_type
     DESC_NOCAP_YOUR,                   // 5
     DESC_PLAIN,                        // 6
     DESC_NOCAP_ITS,                    // 7
-    DESC_INVENTORY_EQUIP,                    // 8
-    DESC_INVENTORY               // 8
+    DESC_INVENTORY_EQUIP,              // 8
+    DESC_INVENTORY                     // 9
 };
 
 enum dragon_class_type
@@ -1841,7 +1841,6 @@ enum mons_class_flags
 
     M_UNIQUE            = (1<<20),        // monster is a unique
 
-    M_CLAWS             = (1<<21),        // Chops off hydra heads in combat.
     M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
 
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
@@ -2288,6 +2287,46 @@ enum beh_type
     BEH_HOSTILE,                       //  creation only
     BEH_GOD_GIFT,                      //  creation only
     BEH_GUARD                          //  creation only - monster is guard
+};
+
+enum mon_attack_type
+{
+    AT_NONE,
+    AT_HIT,         // including weapon attacks
+    AT_BITE,
+    AT_STING,
+    AT_SPORE,
+    AT_TOUCH,
+    AT_ENGULF,
+    AT_CLAW,
+    AT_TAIL_SLAP
+};
+
+enum mon_attack_flavour
+{
+    AF_PLAIN,
+    AF_ACID,
+    AF_BLINK,
+    AF_COLD,
+    AF_CONFUSE,
+    AF_DISEASE,
+    AF_DRAIN_DEX,
+    AF_DRAIN_STR,
+    AF_DRAIN_XP,
+    AF_ELEC,
+    AF_FIRE,
+    AF_HUNGER,
+    AF_MUTATE,
+    AF_BAD_MUTATE,
+    AF_PARALYSE,
+    AF_POISON,
+    AF_POISON_NASTY,
+    AF_POISON_MEDIUM,
+    AF_POISON_STRONG,
+    AF_POISON_STR,
+    AF_ROT,
+    AF_VAMPIRIC,
+    AF_KLOWN
 };
 
 enum mon_attitude_type

@@ -1206,7 +1206,7 @@ void stethoscope(int mwh)
     snprintf( info, INFO_SIZE,"HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%04lx",
              menv[i].hit_dice, 
              menv[i].hit_points, menv[i].max_hit_points, 
-             menv[i].armour_class, menv[i].evasion,
+             menv[i].ac, menv[i].ev,
              mons_resist_magic( &menv[i] ),
              menv[i].speed, menv[i].speed_increment,
              menv[i].number, menv[i].flags );
@@ -1943,8 +1943,8 @@ static void fsim_mon_stats(FILE *o, const monsters &mon)
     fprintf(o, "Monster   : %s\n",
             moname(mon.type, true, DESC_PLAIN, buf));
     fprintf(o, "HD        : %d\n", mon.hit_dice);
-    fprintf(o, "AC        : %d\n", mon.armour_class);
-    fprintf(o, "EV        : %d\n", mon.evasion);
+    fprintf(o, "AC        : %d\n", mon.ac);
+    fprintf(o, "EV        : %d\n", mon.ev);
 }
 
 static void fsim_title(FILE *o, int mon, int ms)

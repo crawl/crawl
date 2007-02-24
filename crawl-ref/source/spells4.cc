@@ -258,7 +258,7 @@ static int shatter_monsters(int x, int y, int pow, int garbage)
         break;
     }
 
-    int damage = roll_dice( dam_dice ) - random2( menv[monster].armour_class );
+    int damage = roll_dice( dam_dice ) - random2( menv[monster].ac );
 
     if (damage > 0)
         player_hurt_monster( monster, damage );
@@ -1186,7 +1186,7 @@ void cast_ignite_poison(int pow)
     }
 
     // player is poisoned
-    damage += roll_dice( you.poison, 6 );
+    damage += roll_dice( you.poisoning, 6 );
 
     if (damage)
     {
@@ -1209,10 +1209,10 @@ void cast_ignite_poison(int pow)
 
         ouch( damage, 0, KILLED_BY_TARGETTING );
 
-        if (you.poison > 0)
+        if (you.poisoning > 0)
         {
             mpr( "You feel that the poison has left your system." );
-            you.poison = 0;
+            you.poisoning = 0;
         }
     }
 
@@ -2859,8 +2859,8 @@ void cast_far_strike(int pow)
     struct monsters *monster = &menv[ mgrd[targ.tx][targ.ty] ];
 
     // apply monster's AC
-    if (monster->armour_class > 0)
-        damage -= random2( 1 + monster->armour_class );
+    if (monster->ac > 0)
+        damage -= random2( 1 + monster->ac );
 
 #if 0
     // Removing damage limiter since it's categorized at level 4 right now.

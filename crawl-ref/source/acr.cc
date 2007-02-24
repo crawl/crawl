@@ -522,7 +522,7 @@ static void handle_wizard_command( void )
 
     case 'h':
         you.rotting = 0;
-        you.poison = 0;
+        you.poisoning = 0;
         you.disease = 0;
         set_hp( abs(you.hp_max), false );
         set_hunger( 5000 + abs(you.hunger), true );
@@ -530,7 +530,7 @@ static void handle_wizard_command( void )
 
     case 'H':
         you.rotting = 0;
-        you.poison = 0;
+        you.poisoning = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
@@ -2068,16 +2068,16 @@ static void decrement_durations()
 
     dec_disease_player();
 
-    if (you.poison > 0)
+    if (you.poisoning > 0)
     {
-        if (random2(5) <= (you.poison - 1))
+        if (random2(5) <= (you.poisoning - 1))
         {
-            if (you.poison > 10 && random2(you.poison) >= 8)
+            if (you.poisoning > 10 && random2(you.poisoning) >= 8)
             {
                 ouch(random2(10) + 5, 0, KILLED_BY_POISON);
                 mpr("You feel extremely sick.", MSGCH_DANGER);
             }
-            else if (you.poison > 5 && coinflip())
+            else if (you.poisoning > 5 && coinflip())
             {
                 ouch((coinflip()? 3 : 2), 0, KILLED_BY_POISON);
                 mpr("You feel very sick.", MSGCH_WARN);

@@ -537,12 +537,12 @@ void print_stats(void)
             cprintf( "Fire " );
         }
 
-        if (you.poison)
+        if (you.poisoning)
         {
             // We skip marking "quite" poisoned and instead mark the 
             // levels where the rules for dealing poison damage change
             // significantly.  See acr.cc for that code. -- bwr
-            textcolor( bad_ench_colour( you.poison, 5, 10 ) );
+            textcolor( bad_ench_colour( you.poisoning, 5, 10 ) );
             cprintf( "Pois " );
         }
 

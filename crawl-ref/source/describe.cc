@@ -307,7 +307,7 @@ static void randart_descpr( std::string &description, const item_def &item )
     if (proprt[ RAP_MUTAGENIC ] > 3)
         description += "$It glows with mutagenic radiation.";
     else if (proprt[ RAP_MUTAGENIC ])
-        description += "$It emits mutagenic radiations.";
+        description += "$It emits mutagenic radiation.";
 
     if (old_length != description.length())
         description += "$";

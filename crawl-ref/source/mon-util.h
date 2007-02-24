@@ -54,15 +54,12 @@
 #define I_ANIMAL_LIKE 5
 #define I_REPTILE 6
 
-
-// [dshaligram] PACKED is *not* relevant; the amount of padding space it
-// saves is not enough to merit it.
 struct monsterentry
 {
     short mc;            // monster number
 
     unsigned char showchar, colour;
-    const char *name /*[32]*/; //longest is 23 till now (31 is max alowed here)
+    const char *name;
 
     unsigned long bitfields;
     unsigned long resists;
@@ -82,16 +79,15 @@ struct monsterentry
     short resist_magic;  // (positive is ??)
     // max damage in a turn is total of these four?
 
-    unsigned char damage[4];
+    mon_attack_def attack[4];
 
-// hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
-// min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
-// example: the Iron Golem, hpdice={15,7,4,0}
-//      15*7 < hp < 15*(7+4),
-//       105 < hp < 165
-// hp will be around 135 each time. (assuming an good random number generator)
-// !!!!!!! The system is exactly the same as before, only the way of writing changed !!!!
-    unsigned char hpdice[4];     // until we have monsters with 32767 hp,this is easily possible
+    // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
+    // min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
+    // example: the Iron Golem, hpdice={15,7,4,0}
+    //      15*7 < hp < 15*(7+4),
+    //       105 < hp < 165
+    // hp will be around 135 each time.
+    unsigned       hpdice[4];
 
     char AC;             // armour class
 
@@ -202,7 +198,7 @@ int mons_resist_turn_undead( const monsters *mon );
  * called from: fight - monstuff
  * *********************************************************************** */
 int mons_damage(int mc, int rt);
-
+mon_attack_def mons_attack_spec(const monsters *, int rt);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -231,6 +227,7 @@ bool mons_is_demon( int mc );
 bool mons_is_humanoid( int mc );
 
 bool mons_wields_two_weapons(const monsters *m);
+bool mons_is_summoned(const monsters *m);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

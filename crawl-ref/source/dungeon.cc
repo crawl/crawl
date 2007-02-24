@@ -3351,7 +3351,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
 
 
     if (get_weapon_brand( mitm[thing_created] ) == SPWPN_PROTECTION )
-        menv[mid].armour_class += 5;
+        menv[mid].ac += 5;
 
     if (!force_item || mitm[thing_created].colour == BLACK) 
         item_colour( mitm[thing_created] );
@@ -3576,19 +3576,19 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
     if (force_colour) 
         mitm[thing_created].colour = force_colour;
 
-    menv[mid].armour_class += property( mitm[thing_created], PARM_AC );
+    menv[mid].ac += property( mitm[thing_created], PARM_AC );
 
     const int armour_plus = mitm[thing_created].plus;
 
     ASSERT(abs(armour_plus) < 20);
 
     if (abs(armour_plus) < 20) 
-        menv[mid].armour_class += armour_plus;
+        menv[mid].ac += armour_plus;
 
-    menv[mid].evasion += property( mitm[thing_created], PARM_EVASION ) / 2;
+    menv[mid].ev += property( mitm[thing_created], PARM_EVASION ) / 2;
 
-    if (menv[mid].evasion < 1)
-        menv[mid].evasion = 1;   // This *shouldn't* happen.
+    if (menv[mid].ev < 1)
+        menv[mid].ev = 1;   // This *shouldn't* happen.
 }                               // end give_item()
 
 //---------------------------------------------------------------------------
@@ -8932,15 +8932,15 @@ void define_zombie( int mid, int ztype, int cs, int power )
     menv[mid].hit_points = hit_points( menv[mid].hit_dice, 6, 5 );
     menv[mid].max_hit_points = menv[mid].hit_points;
 
-    menv[mid].armour_class -= 2;
+    menv[mid].ac -= 2;
 
-    if (menv[mid].armour_class < 0)
-        menv[mid].armour_class = 0;
+    if (menv[mid].ac < 0)
+        menv[mid].ac = 0;
 
-    menv[mid].evasion -= 5;
+    menv[mid].ev -= 5;
 
-    if (menv[mid].evasion < 0)
-        menv[mid].evasion = 0;
+    if (menv[mid].ev < 0)
+        menv[mid].ev = 0;
 
     menv[mid].speed -= 2;
 
@@ -8960,15 +8960,15 @@ void define_zombie( int mid, int ztype, int cs, int power )
         menv[mid].hit_points = hit_points( menv[mid].hit_dice, 5, 4 );
         menv[mid].max_hit_points = menv[mid].hit_points;
 
-        menv[mid].armour_class -= 4;
+        menv[mid].ac -= 4;
 
-        if (menv[mid].armour_class < 0)
-            menv[mid].armour_class = 0;
+        if (menv[mid].ac < 0)
+            menv[mid].ac = 0;
 
-        menv[mid].evasion -= 2;
+        menv[mid].ev -= 2;
 
-        if (menv[mid].evasion < 0)
-            menv[mid].evasion = 0;
+        if (menv[mid].ev < 0)
+            menv[mid].ev = 0;
 
         menv[mid].type = ((mons_zombie_size( menv[mid].number ) == 2)
                             ? MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
@@ -8985,7 +8985,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
     {
         menv[mid].hit_points = hit_points( menv[mid].hit_dice, 4, 4 );
         menv[mid].max_hit_points = menv[mid].hit_points;
-        menv[mid].armour_class += 4;
+        menv[mid].ac += 4;
         menv[mid].type = MONS_SPECTRAL_THING;
     }
 

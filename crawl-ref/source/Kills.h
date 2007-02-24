@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include "enum.h"
 
+std::string pluralize(const std::string &name, 
+                      const char *no_of[] = NULL);
+
 struct monsters;
 
 // Not intended for external use!

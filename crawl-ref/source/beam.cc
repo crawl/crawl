@@ -2328,6 +2328,8 @@ static void beam_explodes(struct bolt &beam, int x, int y)
         return;
     }
 
+    if (beam.is_tracer)
+        return;
 
     // cloud producer -- POISON BLAST
     if (beam.name == "blast of poison")
@@ -3518,14 +3520,14 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     hurt_final = hurt;
 
     if (beam.is_tracer)
-        hurt_final -= mon->armour_class / 2;
+        hurt_final -= mon->ac / 2;
     else
-        hurt_final -= random2(1 + mon->armour_class);
+        hurt_final -= random2(1 + mon->ac);
 
     if (beam.flavour == BEAM_FRAG)
     {
-        hurt_final -= random2(1 + mon->armour_class);
-        hurt_final -= random2(1 + mon->armour_class);
+        hurt_final -= random2(1 + mon->ac);
+        hurt_final -= random2(1 + mon->ac);
     }
 
     if (hurt_final < 1)
@@ -3607,7 +3609,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     // FIXME We're randomising mon->evasion, which is further
     // randomised inside test_hit. This is so we stay close to the 4.0
     // to-hit system (which had very little love for monsters).
-    if (!engulfs && !test_hit(beam.hit, random2(mon->evasion)))
+    if (!engulfs && !test_hit(beam.hit, random2(mon->ev)))
     {
         // if the PLAYER cannot see the monster, don't tell them anything!
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))
@@ -3674,11 +3676,11 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         {
             // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
             if (beam.ench_power == AUTOMATIC_HIT
-                && random2(100) < 90 - (3 * mon->armour_class))
+                && random2(100) < 90 - (3 * mon->ac))
             {
                 poison_monster( mon, YOU_KILL(beam.thrower), 2 );
             } 
-            else if (random2(hurt_final) - random2(mon->armour_class) > 0)
+            else if (random2(hurt_final) - random2(mon->ac) > 0)
             {
                 poison_monster( mon, YOU_KILL(beam.thrower) );
             }

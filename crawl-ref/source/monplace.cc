@@ -160,15 +160,17 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
             lev_mons = random2(power);
         }
 
-        if (player_in_branch( BRANCH_MAIN_DUNGEON ) && lev_mons < 28)
+        if (player_in_branch( BRANCH_MAIN_DUNGEON )
+            && lev_mons < 28
+            && lev_mons > 0)
         {
             // potentially nasty surprise, but very rare
             if (one_chance_in(5000))
-                lev_mons = random2(27);
+                lev_mons += random2(12);
 
             // slightly out of depth monsters are more common:
             if (one_chance_in(50))
-                lev_mons += random2(6);
+                lev_mons += random2(5);
 
             if (lev_mons > 27)
                 lev_mons = 27;

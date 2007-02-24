@@ -163,7 +163,7 @@ void mons_trap(struct monsters *monster)
             }
             return;             // early return {dlb}
         }
-        else if (random2(monster->evasion) > 8)
+        else if (random2(monster->ev) > 8)
         {
             if (monsterNearby && !simple_monster_message(monster,
                                            " avoids a huge, swinging blade."))
@@ -190,7 +190,7 @@ void mons_trap(struct monsters *monster)
             }
 
             damage_taken = 10 + random2avg(29, 2);
-            damage_taken -= random2(1 + monster->armour_class);
+            damage_taken -= random2(1 + monster->ac);
 
             if (damage_taken < 0)
                 damage_taken = 0;
@@ -266,17 +266,17 @@ void mons_trap(struct monsters *monster)
 
         // determine whether projectile hits, calculate damage: {dlb}
         if (((20 + (you.your_level * 2)) * random2(200)) / 100
-                                                    >= monster->evasion)
+                                                    >= monster->ev)
         {
             damage_taken = roll_dice( beem.damage );
-            damage_taken -= random2(1 + monster->armour_class);
+            damage_taken -= random2(1 + monster->ac);
 
             if (damage_taken < 0)
                 damage_taken = 0;
 
             if (beem.colour == OBJ_MISSILES
                 && beem.type == MI_NEEDLE
-                && random2(100) < 50 - (3*monster->armour_class/2))
+                && random2(100) < 50 - (3*monster->ac/2))
             {
                 apply_poison = true;
             }

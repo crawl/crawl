@@ -34,6 +34,7 @@
 
 #include "clua.h"
 #include "delay.h"
+#include "effects.h"
 #include "fight.h"
 #include "food.h"
 #include "itemname.h"
@@ -51,6 +52,8 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "spells1.h"
+#include "spells3.h"
 #include "spl-util.h"
 #include "spells4.h"
 #include "stuff.h"
@@ -61,7 +64,18 @@
 
 std::string pronoun_you(description_level_type desc)
 {
-    return (desc == DESC_CAP_A || desc == DESC_CAP_THE? "You" : "you");
+    switch (desc)
+    {
+    case DESC_CAP_A: case DESC_CAP_THE:
+        return "You";
+    case DESC_NOCAP_A: case DESC_NOCAP_THE:
+    default:
+        return "you";
+    case DESC_CAP_YOUR:
+        return "Your";
+    case DESC_NOCAP_YOUR:
+        return "your";
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2931,12 +2945,12 @@ void display_char_status(void)
     if (player_is_levitating())
         mpr( "You are hovering above the floor." );
 
-    if (you.poison)
+    if (you.poisoning)
     { 
         snprintf( info, INFO_SIZE, "You are %s poisoned.",
-                  (you.poison > 10) ? "extremely" :
-                  (you.poison > 5)  ? "very" :
-                  (you.poison > 3)  ? "quite"
+                  (you.poisoning > 10) ? "extremely" :
+                  (you.poisoning > 5)  ? "very" :
+                  (you.poisoning > 3)  ? "quite"
                                     : "mildly" );
         mpr(info);
     }
@@ -4082,13 +4096,13 @@ void poison_player( int amount, bool force )
     if ((!force && player_res_poison()) || amount <= 0)
         return;
 
-    const int old_value = you.poison;
-    you.poison += amount;
+    const int old_value = you.poisoning;
+    you.poisoning += amount;
 
-    if (you.poison > 40)
-        you.poison = 40;
+    if (you.poisoning > 40)
+        you.poisoning = 40;
 
-    if (you.poison > old_value)
+    if (you.poisoning > old_value)
     {
         snprintf( info, INFO_SIZE, "You are %spoisoned.",
                   (old_value > 0) ? "more " : "" );
@@ -4101,14 +4115,14 @@ void poison_player( int amount, bool force )
 
 void reduce_poison_player( int amount )
 {
-    if (you.poison == 0 || amount <= 0)
+    if (you.poisoning == 0 || amount <= 0)
         return;
 
-    you.poison -= amount;
+    you.poisoning -= amount;
 
-    if (you.poison <= 0)
+    if (you.poisoning <= 0)
     {
-        you.poison = 0;
+        you.poisoning = 0;
         mpr( "You feel better.", MSGCH_RECOVERY );
     }
     else
@@ -4303,6 +4317,13 @@ void rot_player( int amount )
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// actor
+
+actor::~actor()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // player
 
 player::player()
@@ -4339,7 +4360,7 @@ void player::init()
     levitation = 0;
     might = 0;
     paralysis = 0;
-    poison = 0;
+    poisoning = 0;
     rotting = 0;
     fire_shield = 0;
     slow = 0;
@@ -4676,6 +4697,19 @@ std::string player::name(description_level_type type) const
     return (pronoun_you(type));
 }
 
+std::string player::pronoun(pronoun_type pro) const
+{
+    switch (pro)
+    {
+    default:
+    case PRONOUN_CAP:   return "You";
+    case PRONOUN_NOCAP: return "you";
+    case PRONOUN_CAP_POSSESSIVE: return "Your";
+    case PRONOUN_NOCAP_POSSESSIVE: return "your";
+    case PRONOUN_REFLEXIVE: return "yourself";
+    }
+}
+
 std::string player::conj_verb(const std::string &verb) const
 {
     return (verb);
@@ -4684,6 +4718,13 @@ std::string player::conj_verb(const std::string &verb) const
 int player::id() const
 {
     return (-1);
+}
+
+bool player::alive() const
+{
+    // Simplistic, but if the player dies the game is over anyway, so
+    // nobody can ask further questions.
+    return (true);
 }
 
 bool player::fumbles_attack(bool verbose)
@@ -4729,7 +4770,249 @@ void player::go_berserk(bool intentional)
     ::go_berserk(intentional);
 }
 
+void player::god_conduct(int thing_done, int level)
+{
+    ::did_god_conduct(thing_done, level);
+}
+
+void player::banish()
+{
+    banished = true;
+}
+
 void player::make_hungry(int hunger_increase, bool silent)
 {
-    ::make_hungry(hunger_increase, silent);
+    if (hunger_increase > 0)
+        ::make_hungry(hunger_increase, silent);
+    else if (hunger_increase < 0)
+        ::lessen_hunger(-hunger_increase, silent);
+}
+
+int player::holy_aura() const
+{
+    return (duration[DUR_REPEL_UNDEAD]? piety : 0);
+}
+
+int player::warding() const
+{
+    if (wearing_amulet(AMU_WARDING))
+        return (30);
+
+    if (religion == GOD_VEHUMET && duration[DUR_PRAYER]
+        && !player_under_penance() && piety >= piety_breakpoint(2))
+    {
+        // Clamp piety at 160 and scale that down to a max of 30.
+        const int wardpiety = piety > 160? 160 : piety;
+        return (wardpiety * 3 / 16);
+    }
+
+    return (0);
+}
+
+bool player::paralysed() const
+{
+    return (paralysis);
+}
+
+bool player::confused() const
+{
+    return (conf);
+}
+
+int player::shield_block_penalty() const
+{
+    return (5 * shield_blocks * shield_blocks);
+}
+
+int player::shield_bonus() const
+{
+    return random2(player_shield_class()) 
+        + (random2(dex) / 4) 
+        + (random2(skill_bump(SK_SHIELDS)) / 4)
+        - 1;
+}
+
+int player::shield_bypass_ability(int tohit) const
+{
+    return (10 + tohit * 2);
+}
+
+void player::shield_block_succeeded()
+{
+    shield_blocks++;
+
+    if (one_chance_in(4))
+        exercise(SK_SHIELDS, 1);
+}
+
+bool player::wearing_light_armour(bool with_skill) const
+{
+    return (player_light_armour(with_skill));
+}
+
+void player::exercise(skill_type sk, int qty)
+{
+    ::exercise(sk, qty);
+}
+
+int player::skill(skill_type sk, bool bump) const
+{
+    return (bump? skill_bump(sk) : skills[sk]);
+}
+
+int player::armour_class() const
+{
+    return (player_AC());
+}
+
+int player::melee_evasion(const actor *act) const
+{
+    return (random2limit(player_evasion(), 40)
+            + random2(you.dex) / 3
+            - (act->visible()? 2 : 14)
+            - (you_are_delayed()? 5 : 0));
+}
+
+void player::heal(int amount, bool max_too)
+{
+    ::inc_hp(amount, max_too);
+}
+
+int player::holiness() const
+{
+    if (is_undead)
+        return (MH_UNDEAD);
+
+    if (species == SP_DEMONSPAWN)
+        return (MH_DEMONIC);
+
+    return (MH_NATURAL);
+}
+
+int player::res_fire() const
+{
+    return (player_res_fire());
+}
+
+int player::res_cold() const
+{
+    return (player_res_cold());
+}
+
+int player::res_elec() const
+{
+    return (player_res_electricity());
+}
+
+int player::res_poison() const
+{
+    return (player_res_poison());
+}
+
+int player::res_negative_energy() const
+{
+    return (player_prot_life());
+}
+
+bool player::levitates() const
+{
+    return (player_is_levitating());
+}
+
+int player::mons_species() const
+{
+    switch (species)
+    {
+    case SP_HILL_ORC:
+        return (MONS_ORC);
+    case SP_ELF: case SP_HIGH_ELF: case SP_GREY_ELF:
+    case SP_DEEP_ELF: case SP_SLUDGE_ELF:
+        return (MONS_ELF);
+    default:
+        return (MONS_HUMAN);
+    }
+}
+
+void player::poison(actor*, int amount)
+{
+    ::poison_player(amount);
+}
+
+void player::expose_to_element(beam_type element, int st)
+{
+    ::expose_player_to_element(element, st);
+}
+
+void player::blink()
+{
+    random_blink(true);
+}
+
+void player::teleport(bool now, bool abyss_shift)
+{
+    if (now)
+        you_teleport2(true, abyss_shift);
+    else
+        you_teleport();
+}
+
+void player::hurt(actor *agent, int amount)
+{
+    if (agent->atype() == ACT_MONSTER)
+        ouch(amount, monster_index( dynamic_cast<monsters*>(agent) ),
+             KILLED_BY_MONSTER);
+    else
+    {
+        // Should never happen!
+        ASSERT(false);
+        ouch(amount, 0, KILLED_BY_SOMETHING);
+    }
+
+    if (religion == GOD_XOM && hp <= hp_max / 3
+        && one_chance_in(10))
+    {
+        Xom_acts(true, experience_level, false);
+    }
+}
+
+void player::drain_stat(int stat, int amount)
+{
+    lose_stat(stat, amount);
+}
+
+void player::rot(actor *who, int rotlevel, int immed_rot)
+{
+    if (is_undead)
+        return;
+
+    if (rotlevel)
+        rot_player( rotlevel );
+    
+    if (immed_rot)
+        rot_hp(immed_rot);
+
+    if (rotlevel && one_chance_in(4))
+        disease_player( 50 + random2(100) );
+}
+
+void player::confuse(int str)
+{
+    confuse_player(str);
+}
+
+void player::paralyse(int str)
+{
+    mprf( "You %s the ability to move!",
+          (paralysis) ? "still haven't" : "suddenly lose" );
+    
+    if (str > paralysis)
+        paralysis = str;
+    
+    if (paralysis > 13)
+        paralysis = 13;
+}
+
+void player::slow_down(int str)
+{
+    ::slow_player( str );
 }

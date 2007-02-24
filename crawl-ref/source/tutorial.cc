@@ -751,7 +751,7 @@ void tutorial_prayer_reminder()
 
 void tutorial_healing_reminder()
 {
-    if (you.poison)
+    if (you.poisoning)
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
             return;
@@ -761,7 +761,7 @@ void tutorial_healing_reminder()
     {
         if (Options.tutorial_events[TUT_NEED_HEALING]) 
             learned_something_new(TUT_NEED_HEALING);
-        else if (you.num_turns - Options.tut_last_healed >= 50 && !you.poison)
+        else if (you.num_turns - Options.tut_last_healed >= 50 && !you.poisoning)
         {
      	    if (Options.tut_just_triggered)
      		return;

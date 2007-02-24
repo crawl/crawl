@@ -662,10 +662,10 @@ static void tag_construct_you(struct tagHeader &th)
 
     marshallByte(th,you.levitation);
 
-    if (you.poison > 215)
-        you.poison = 215;
+    if (you.poisoning > 215)
+        you.poisoning = 215;
 
-    marshallByte(th,you.poison);
+    marshallByte(th,you.poisoning);
 
     marshallShort(th, you.hunger);
 
@@ -930,7 +930,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.haste = unmarshallByte(th);
     you.might = unmarshallByte(th);
     you.levitation = unmarshallByte(th);
-    you.poison = unmarshallByte(th);
+    you.poisoning = unmarshallByte(th);
     you.hunger = unmarshallShort(th);
 
     // how many you.equip?
@@ -1301,8 +1301,8 @@ static void tag_construct_level_monsters(struct tagHeader &th)
     {
         const monsters &m = menv[i];
 
-        marshallByte(th, m.armour_class);
-        marshallByte(th, m.evasion);
+        marshallByte(th, m.ac);
+        marshallByte(th, m.ev);
         marshallByte(th, m.hit_dice);
         marshallByte(th, m.speed);
         marshallByte(th, m.speed_increment);
@@ -1473,8 +1473,8 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
 
     for (i = 0; i < count; i++)
     {
-        menv[i].armour_class = unmarshallByte(th);
-        menv[i].evasion = unmarshallByte(th);
+        menv[i].ac = unmarshallByte(th);
+        menv[i].ev = unmarshallByte(th);
         menv[i].hit_dice = unmarshallByte(th);
         menv[i].speed = unmarshallByte(th);
         // Avoid sign extension when loading files (Elethiomel's hang)

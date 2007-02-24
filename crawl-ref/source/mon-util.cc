@@ -28,9 +28,11 @@
 
 #include "externs.h"
 
+#include "beam.h"
 #include "debug.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "Kills.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mstuff2.h"
@@ -560,18 +562,104 @@ int mons_colour(const monsters *monster)
     return (monster->colour);
 }
 
+int mons_zombie_base(const monsters *monster)
+{
+    return (monster->number);
+}
+
+bool mons_is_zombified(const monsters *monster)
+{
+    switch (monster->type)
+    {
+    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
+    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
+    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
+    case MONS_SPECTRAL_THING:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+int downscale_zombie_damage(int damage)
+{
+    // these are cumulative, of course: {dlb}
+    if (damage > 1)
+        damage--;
+    if (damage > 4)
+        damage--;
+    if (damage > 11)
+        damage--;
+    if (damage > 14)
+        damage--;
+
+    return (damage);
+}
+
+mon_attack_def downscale_zombie_attack(const monsters *mons,
+                                       mon_attack_def attk)
+{
+    switch (attk.type)
+    {
+    case AT_STING: case AT_SPORE:
+    case AT_TOUCH: case AT_ENGULF:
+        attk.type = AT_HIT;
+        break;
+    default:
+        break;
+    }
+
+    if (mons->type == MONS_SIMULACRUM_LARGE
+        || mons->type == MONS_SIMULACRUM_SMALL)
+    {
+        attk.flavour = AF_COLD;
+    }
+    else
+    {
+        attk.flavour =  AF_PLAIN;
+    }
+    
+    attk.damage = downscale_zombie_damage(attk.damage);
+
+    return (attk);
+}
+
+mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
+{
+    int mc = mons->type;
+    const bool zombified = mons_is_zombified(mons);
+    
+    if ((attk_number < 0 || attk_number > 3) || mc == MONS_HYDRA)
+        attk_number = 0;
+
+    if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
+        return mon_attack_def::attk(ghost.values[GVAL_DAMAGE]);
+
+    if (zombified)
+        mc = mons_zombie_base(mons);
+
+    mon_attack_def attk = smc->attack[attk_number];
+    if (attk.flavour == AF_KLOWN)
+    {
+        switch (random2(6))
+        {
+        case 0: attk.flavour = AF_POISON_NASTY; break;
+        case 1: attk.flavour = AF_ROT; break;
+        case 2: attk.flavour = AF_DRAIN_XP; break;
+        case 3: attk.flavour = AF_FIRE; break;
+        case 4: attk.flavour = AF_COLD; break;
+        case 5: attk.flavour = AF_BLINK; break;
+        }
+    }
+    
+    return (zombified? downscale_zombie_attack(mons, attk) : attk);
+}
+
 int mons_damage(int mc, int rt)
 {
-    ASSERT(rt >= 0);
-    ASSERT(rt <= 3);
-
-    if (rt < 0 || rt > 3)       // make it fool-proof
-        return (0);
-
-    if (rt == 0 && (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON))
-        return (ghost.values[ GVAL_DAMAGE ]);
-
-    return (smc->damage[rt]);
+    if (rt < 0 || rt > 3)
+        rt = 0;
+    return smc->attack[rt].damage;
 }                               // end mons_damage()
 
 int mons_resist_magic( const monsters *mon )
@@ -580,7 +668,7 @@ int mons_resist_magic( const monsters *mon )
 
     // negative values get multiplied with mhd
     if (u < 0)
-        u = mon->hit_dice * (-u * 2);
+        u = mon->hit_dice * -u;
 
     u += scan_mon_inv_randarts( mon, RAP_MAGIC );
 
@@ -603,7 +691,7 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
 {
     int mrs = mons_resist_magic(monster);
 
-    if (mrs == 5000)
+    if (mrs == MAG_IMMUNE)
         return (true);
 
     // Evil, evil hack to make weak one hd monsters easier for first
@@ -633,7 +721,7 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-    return ((mrch2 < mrchance) ? true : false);
+    return (mrch2 < mrchance);
 }                               // end check_mons_resist_magic()
 
 int mons_res_elec( const monsters *mon )
@@ -1310,8 +1398,8 @@ void define_monster(int index)
     mons.hit_dice = hd;
     mons.hit_points = hp;
     mons.max_hit_points = hp_max;
-    mons.armour_class = ac;
-    mons.evasion = ev;
+    mons.ac = ac;
+    mons.ev = ev;
     mons.speed = speed;
     mons.speed_increment = 70;
     mons.number = monnumber;
@@ -1493,6 +1581,12 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
         case DESC_PLAIN:
             strcpy(glog, "it");
             break;
+        case DESC_NOCAP_YOUR:
+            strcpy(glog, "its");
+            break;
+        case DESC_CAP_YOUR:
+            strcpy(glog, "Its");
+            break;
         }
 
         strcpy(gmon_name, glog);
@@ -1504,9 +1598,11 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
         switch (descrip)
         {
         case DESC_CAP_THE:
+        case DESC_CAP_YOUR:
             strcpy(glog, "The ");
             break;
         case DESC_NOCAP_THE:
+        case DESC_NOCAP_YOUR:
             strcpy(glog, "the ");
             break;
         case DESC_CAP_A:
@@ -1540,6 +1636,15 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
     }
 
     strcat(glog, gmon_name);
+
+    if ((descrip == DESC_CAP_YOUR || descrip == DESC_NOCAP_YOUR) && *glog)
+    {
+        const int lastch = glog[ strlen(glog) - 1 ];
+        if (lastch == 's' || lastch == 'x')
+            strcat(glog, "'");
+        else
+            strcat(glog, "'s");
+    }
 
     return (glog);
 }                               // end moname()
@@ -1634,6 +1739,11 @@ bool mons_wields_two_weapons(const monsters *m)
     return (m->type == MONS_TWO_HEADED_OGRE || m->type == MONS_ETTIN);
 }
 
+bool mons_is_summoned(const monsters *m)
+{
+    return (mons_has_ench(m, ENCH_ABJ_I, ENCH_ABJ_VI));
+}
+
 // Does not check whether the monster can dual-wield - that is the
 // caller's responsibility.
 int mons_offhand_weapon_index(const monsters *m)
@@ -1641,9 +1751,12 @@ int mons_offhand_weapon_index(const monsters *m)
     return (m->inv[1]);
 }
 
-int mons_base_damage_type(const monsters *m)
+int mons_base_damage_brand(const monsters *m)
 {
-    return (mons_class_flag(m->type, M_CLAWS)? DVORP_CLAWING : DVORP_CRUSHING);
+    if (m->type == MONS_PLAYER_GHOST || m->type == MONS_PANDEMONIUM_DEMON)
+        return ghost.values[ GVAL_BRAND ];
+
+    return (SPWPN_NORMAL);
 }
 
 int mons_size(const monsters *m)
@@ -2504,8 +2617,11 @@ int monsters::damage_type(int which_attack)
     const item_def *mweap = weapon(which_attack);
 
     if (!mweap)
-        return (mons_base_damage_type(this));
-
+    {
+        const mon_attack_def atk = mons_attack_spec(this, which_attack);
+        return (atk.type == AT_CLAW? DVORP_CLAWING : DVORP_CRUSHING);
+    }
+ 
     return (get_vorpal_type(*mweap));
 }
 
@@ -2515,7 +2631,7 @@ int monsters::damage_brand(int which_attack)
 
     if (!mweap)
         return (SPWPN_NORMAL);
-
+    
     return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
@@ -2542,6 +2658,23 @@ item_def *monsters::weapon(int which_attack)
     return (weap == NON_ITEM? NULL : &mitm[weap]);
 }
 
+static int equip_slot_to_mslot(equipment_type eq)
+{
+    switch (eq)
+    {
+    case EQ_WEAPON: return MSLOT_WEAPON;
+    case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
+    default: return (-1);
+    }
+}
+
+item_def *monsters::slot_item(equipment_type eq)
+{
+    int mslot = equip_slot_to_mslot(eq);
+    int mindex = mslot == -1? NON_ITEM : inv[mslot];
+    return (mindex == NON_ITEM? NULL: &mitm[mindex]);
+}
+
 item_def *monsters::shield()
 {
     return (NULL);
@@ -2552,9 +2685,20 @@ std::string monsters::name(description_level_type desc) const
     return (ptr_monam(this, desc));
 }
 
+std::string monsters::pronoun(pronoun_type pro) const
+{
+    return (mons_pronoun(type, pro));
+}
+
 std::string monsters::conj_verb(const std::string &verb) const
 {
-    return (verb + "s");
+    if (!verb.empty() && verb[0] == '!')
+        return (verb.substr(1));
+    
+    if (verb == "are")
+        return ("is");
+    
+    return (pluralize(verb));
 }
 
 int monsters::id() const
@@ -2571,7 +2715,12 @@ bool monsters::fumbles_attack(bool verbose)
         {
             mprf(MSGCH_SOUND, "You hear a splashing noise.");
         }
+        return (true);
     }
+
+    if (mons_is_submerged(this))
+        return (true);
+    
     return (false);
 }
 
@@ -2587,4 +2736,225 @@ void monsters::attacking(actor * /* other */)
 
 void monsters::go_berserk(bool /* intentional */)
 {
+}
+
+void monsters::expose_to_element(beam_type, int)
+{
+}
+
+void monsters::banish()
+{
+    // [dshaligram] FIXME: We should really put these monsters on a
+    // queue and load them when the player enters the Abyss.
+    monster_die(this, KILL_RESET, 0);
+}
+
+int monsters::holy_aura() const
+{
+    return ((type == MONS_DAEVA || type == MONS_ANGEL)? hit_dice : 0);
+}
+
+bool monsters::visible() const
+{
+    return (mons_near(this) && player_monster_visible(this));
+}
+
+bool monsters::confused() const
+{
+    return (mons_is_confused(this));
+}
+
+bool monsters::paralysed() const
+{
+    return (mons_is_paralysed(this));
+}
+
+bool monsters::asleep() const
+{
+    return (mons_is_sleeping(this));
+}
+
+int monsters::shield_bonus() const
+{
+    // XXX: Monsters don't actually get shields yet.
+    const item_def *shld = const_cast<monsters*>(this)->shield();
+    if (shld)
+    {
+        const int shld_c = property(*shld, PARM_AC);
+        return (random2(shld_c + random2(hit_dice / 2)) / 2);
+    }
+    return (0);
+}
+
+int monsters::shield_block_penalty() const
+{
+    return (0);
+}
+
+int monsters::shield_bypass_ability(int) const
+{
+    return (15 + hit_dice / 2);
+}
+
+int monsters::armour_class() const
+{
+    return (ac);
+}
+
+int monsters::melee_evasion(const actor *act) const
+{
+    int evasion = ev;
+    if (paralysed() || asleep() || one_chance_in(20))
+        evasion = 0;
+    else if (confused())
+        evasion /= 2;
+    return (evasion);
+}
+
+void monsters::heal(int amount, bool max_too)
+{
+    hit_points += amount;
+    if (max_too)
+        max_hit_points += amount;
+    if (hit_points > max_hit_points)
+        hit_points = max_hit_points;
+}
+
+int monsters::holiness() const
+{
+    return (mons_holiness(this));
+}
+
+int monsters::res_fire() const
+{
+    return (mons_res_fire(this));
+}
+
+int monsters::res_cold() const
+{
+    return (mons_res_cold(this));
+}
+
+int monsters::res_elec() const
+{
+    return (mons_res_elec(this));
+}
+
+int monsters::res_poison() const
+{
+    return (mons_res_poison(this));
+}
+
+int monsters::res_negative_energy() const
+{
+    return (mons_res_negative_energy(this));
+}
+
+bool monsters::levitates() const
+{
+    return (mons_flies(this));
+}
+
+int monsters::mons_species() const
+{
+    return ::mons_species(type);
+}
+
+void monsters::poison(actor *agent, int amount)
+{
+    if (amount <= 0)
+        return;
+
+    // Scale poison down for monsters.
+    if (!(amount /= 2))
+        amount = 1;
+    
+    poison_monster(this, agent->atype() == ACT_PLAYER, amount);
+}
+
+int monsters::skill(skill_type sk, bool) const
+{
+    switch (sk)
+    {
+    case SK_NECROMANCY:
+        return (holiness() == MH_UNDEAD? hit_dice / 2 : hit_dice / 3);
+        
+    default:
+        return (0);
+    }
+}
+
+void monsters::blink()
+{
+    monster_blink(this);
+}
+
+void monsters::teleport(bool now, bool)
+{
+    monster_teleport(this, now, false);
+}
+
+bool monsters::alive() const
+{
+    return (hit_points > 0 && type != -1);
+}
+
+void monsters::hurt(actor *agent, int amount)
+{
+    if (amount <= 0)
+        return;
+    
+    hit_points -= amount;
+    if ((hit_points < 1 || hit_dice < 1) && type != -1)
+    {
+        if (agent->atype() == ACT_PLAYER)
+            monster_die(this, KILL_YOU, 0);
+        else
+            monster_die(this, KILL_MON,
+                        monster_index( dynamic_cast<monsters*>(agent) ));
+    }
+}
+
+void monsters::rot(actor *agent, int rotlevel, int immed_rot)
+{
+    if (mons_holiness(this) != MH_NATURAL)
+        return;
+    
+    // Apply immediate damage because we can't handle rotting for monsters yet.
+    const int damage = immed_rot + random2(rotlevel * 3);
+    if (damage)
+    {
+        if (mons_near(this) && player_monster_visible(this))
+            mprf("%s %s!",
+                 name(DESC_CAP_THE).c_str(),
+                 rotlevel == 0? "looks less resilient" : "rots");
+        hurt(agent, damage);
+        if (alive())
+        {
+            max_hit_points -= immed_rot * 2;
+            if (hit_points > max_hit_points)
+                hit_points = max_hit_points;
+        }
+    }
+}
+
+void monsters::confuse(int strength)
+{
+    bolt beam_temp;
+    beam_temp.flavour = BEAM_CONFUSION;
+    mons_ench_f2( this, beam_temp );
+}
+
+void monsters::paralyse(int strength)
+{
+    bolt paralysis;
+    paralysis.flavour = BEAM_PARALYSIS;
+    mons_ench_f2(this, paralysis);
+}
+
+void monsters::slow_down(int strength)
+{
+    bolt slow;
+    slow.flavour = BEAM_SLOW;
+    mons_ench_f2(this, slow);
 }

@@ -521,7 +521,7 @@ void cast_twisted(int power, int corps_beh, int corps_hit)
             menv[mon].max_hit_points = menv[mon].hit_points;
 
             if (colour == LIGHTRED)
-                menv[mon].armour_class += total_mass / 1000;
+                menv[mon].ac += total_mass / 1000;
         }
     }
 }                               // end cast_twisted()

@@ -64,7 +64,11 @@ public:
     // If attacker and/or defender are monsters, these are set.
     monsters  *atk, *def;
 
-    bool      did_hit;
+    bool      did_hit, perceived_attack;
+
+    // If all or part of the action is visible to the player, we need a message.
+    bool      needs_message;
+    bool      attacker_visible, defender_visible;
     
     bool      unarmed_ok;
     int       attack_number;
@@ -100,6 +104,7 @@ public:
     std::string unarmed_attack;
 
     item_def  *shield;
+    item_def  *defender_shield;
 
     // Armour penalties?
     int       heavy_armour_penalty;
@@ -125,16 +130,47 @@ private:
     void check_autoberserk();
     void check_special_wield_effects();
     void emit_nodmg_hit_message();
+    void identify_mimic(monsters *mon);
 
     std::string debug_damage_number();
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
+
+    bool attack_shield_blocked(bool verbose);
+    bool apply_damage_brand();
+    void calc_elemental_brand_damage(int res, const char *verb);
+    int resist_adjust_damage(int res, int rawdamage);
+    int fire_res_apply_cerebov_downgrade(int res);
+    void drain_defender();
+    void drain_player();
+    void drain_monster();
+    void check_defender_train_armour();
+    void check_defender_train_dodging();
+    void splash_defender_with_acid(int strength);
+    void splash_monster_with_acid(int strength);
 
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
     bool mons_attack_mons();
     int  mons_to_hit();
+    bool mons_self_destructs();
+    bool mons_attack_warded_off();
+    int mons_attk_delay();
+    int mons_calc_damage(const mon_attack_def &attk);
+    void mons_apply_attack_flavour(const mon_attack_def &attk);
+    int mons_apply_defender_ac(int damage, int damage_max);
+    bool mons_perform_attack();
+    void mons_perform_attack_rounds();
+    void mons_check_attack_perceived();
+    std::string mons_attack_verb(const mon_attack_def &attk);
+    std::string mons_weapon_desc();
+    void mons_announce_hit(const mon_attack_def &attk);
+    void mons_announce_dud_hit(const mon_attack_def &attk);
+    void mons_set_weapon(const mon_attack_def &attk);
+    void mons_do_poison(const mon_attack_def &attk);
+    std::string mons_defender_name();
+    void wasp_paralyse_defender();
 
 private:
     // Player-attack specific stuff
@@ -162,8 +198,6 @@ private:
     bool player_hurt_monster();
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects(bool mondied);
-    void player_calc_brand_damage(int res, const char *message_format);
-    bool player_apply_damage_brand();
     void player_sustain_passive_damage();
     int  player_staff_damage(int skill);
     void player_apply_staff_damage();

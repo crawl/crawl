@@ -652,7 +652,7 @@ bool cast_revivification(int power)
 
 void cast_cure_poison(int mabil)
 {
-    if (!you.poison)
+    if (!you.poisoning)
         canned_msg(MSG_NOTHING_HAPPENS);
     else
         reduce_poison_player( 2 + random2(mabil) + random2(3) );
@@ -664,7 +664,7 @@ void purification(void)
 {
     mpr("You feel purified!");
 
-    you.poison = 0;
+    you.poisoning = 0;
     you.rotting = 0;
     you.conf = 0;
     you.slow = 0;

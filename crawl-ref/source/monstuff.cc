@@ -330,6 +330,9 @@ static void place_monster_corpse(const monsters *monster)
 
 void monster_die(monsters *monster, char killer, int i)
 {
+    if (monster->type == -1)
+        return;
+    
     int dmi;                    // dead monster's inventory
     int xom_will_act = 0;
     int monster_killed = monster_index(monster);
@@ -773,8 +776,8 @@ void monster_cleanup(monsters *monster)
     monster->hit_points = 0;
     monster->max_hit_points = 0;
     monster->hit_dice = 0;
-    monster->armour_class = 0;
-    monster->evasion = 0;
+    monster->ac = 0;
+    monster->ev = 0;
     monster->speed_increment = 0;
     monster->attitude = ATT_HOSTILE;
     monster->behaviour = BEH_SLEEP;
@@ -857,8 +860,8 @@ static bool jelly_divide(struct monsters * parent)
     child->hit_dice = parent->hit_dice;
     child->hit_points = parent->hit_points;
     child->max_hit_points = child->hit_points;
-    child->armour_class = parent->armour_class;
-    child->evasion = parent->evasion;
+    child->ac = parent->ac;
+    child->ev = parent->ev;
     child->speed = parent->speed;
     child->speed_increment = 70 + random2(5);
     child->behaviour = parent->behaviour; /* Look at this! */
@@ -3084,7 +3087,12 @@ static int get_draconian_breath_spell( struct monsters *monster )
             // [ds] Check line-of-fire here. It won't happen elsewhere.
             bolt beem;
             setup_mons_cast(monster, beem, draco_breath);
+
             fire_tracer(monster, beem);
+
+            mprf(MSGCH_DIAGNOSTICS, "tracer: foes: %d, friends: %d",
+                 beem.foe_count, beem.fr_count);
+
             if (!mons_should_fire(beem))
                 draco_breath = MS_NO_SPELL;
         }
@@ -3807,6 +3815,7 @@ static void handle_monster_move(int i, monsters *monster)
                 // [ds] Special abilities shouldn't overwhelm spellcasting
                 // in monsters that have both. This aims to give them both
                 // roughly the same weight.
+
                 if (coinflip()?
                         handle_special_ability(monster, beem)
                             || handle_monster_spell(monster, beem)
@@ -4123,7 +4132,7 @@ static bool handle_pickup(struct monsters *monster)
 
         if (get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]) == SPWPN_PROTECTION)
         {
-            monster->armour_class += 3;
+            monster->ac += 3;
         }
 
         if (monsterNearby)
@@ -5024,7 +5033,7 @@ static void mons_in_cloud(struct monsters *monster)
             hurted += (random2(15) * 10) / speed;
 
         // remember that the above is in addition to the other you.damage.
-        hurted -= random2(1 + monster->armour_class);
+        hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_STINK:
@@ -5055,7 +5064,7 @@ static void mons_in_cloud(struct monsters *monster)
             hurted += (random2(15) * 10) / speed;
 
         // remember that the above is in addition to the other damage.
-        hurted -= random2(1 + monster->armour_class);
+        hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
     // what of armour of poison resistance here? {dlb}
@@ -5094,7 +5103,7 @@ static void mons_in_cloud(struct monsters *monster)
         if (mons_res_fire(monster) < 0)
             hurted += (random2(6) * 10) / speed;
 
-        hurted -= random2(1 + monster->armour_class);
+        hurted -= random2(1 + monster->ac);
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_MIASMA:

@@ -63,7 +63,7 @@ bool potion_effect( char pot_eff, int pow )
             set_hp(you.hp_max, false);
         }
 
-        you.poison = 0;
+        you.poisoning = 0;
         you.rotting = 0;
         you.disease = 0;
         you.conf = 0;
@@ -166,18 +166,7 @@ bool potion_effect( char pot_eff, int pow )
         break;
 
     case POT_PARALYSIS:
-        snprintf( info, INFO_SIZE, "You %s the ability to move!",
-                    (you.paralysis) ? "still haven't" : "suddenly lose" );
-
-        mpr( info, MSGCH_WARN );
-
-        new_value = 2 + random2( 6 + you.paralysis );
-
-        if (new_value > you.paralysis)
-            you.paralysis = new_value;
-
-        if (you.paralysis > 13)
-            you.paralysis = 13;
+        you.paralyse(2 + random2( 6 + you.paralysis ));
         break;
 
     case POT_CONFUSION:

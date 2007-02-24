@@ -1322,8 +1322,8 @@ void load_ghost(void)
         menv[imn].hit_dice = ghost.values[ GVAL_EXP_LEVEL ];
         menv[imn].hit_points = ghost.values[ GVAL_MAX_HP ];
         menv[imn].max_hit_points = ghost.values[ GVAL_MAX_HP ];
-        menv[imn].armour_class = ghost.values[ GVAL_AC];
-        menv[imn].evasion = ghost.values[ GVAL_EV ];
+        menv[imn].ac = ghost.values[ GVAL_AC];
+        menv[imn].ev = ghost.values[ GVAL_EV ];
         menv[imn].speed = 10;
         menv[imn].speed_increment = 70;
         menv[imn].attitude = ATT_HOSTILE;
@@ -1966,8 +1966,8 @@ void generate_random_demon(void)
     menv[rdem].hit_dice = ghost.values[ GVAL_DEMONLORD_HIT_DICE ];
     menv[rdem].hit_points = ghost.values[ GVAL_MAX_HP ];
     menv[rdem].max_hit_points = ghost.values[ GVAL_MAX_HP ];
-    menv[rdem].armour_class = ghost.values[ GVAL_AC ];
-    menv[rdem].evasion = ghost.values[ GVAL_EV ];
+    menv[rdem].ac = ghost.values[ GVAL_AC ];
+    menv[rdem].ev = ghost.values[ GVAL_EV ];
     menv[rdem].speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
     menv[rdem].speed_increment = 70;
     menv[rdem].colour = random_colour();        // demon's colour

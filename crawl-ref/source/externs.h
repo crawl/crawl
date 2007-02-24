@@ -103,11 +103,13 @@ class coord_def;
 class actor
 {
 public:
-    virtual ~actor() { }
+    virtual ~actor();
 
     virtual int       id() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual bool      alive() const = 0;
+    
     virtual coord_def pos() const = 0;
     virtual bool      swimming() const = 0;
     virtual bool      floundering() const = 0;
@@ -119,12 +121,15 @@ public:
     virtual int       damage_brand(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) = 0;
     virtual item_def *shield() = 0;
+    virtual item_def *slot_item(equipment_type eq) = 0;
 
-    virtual void make_hungry(int nutrition, bool silent)
+    virtual int hunger_level() const { return HS_ENGORGED; }
+    virtual void make_hungry(int nutrition, bool silent = true)
     {
     }
     
     virtual std::string name(description_level_type type) const = 0;
+    virtual std::string pronoun(pronoun_type which_pronoun) const = 0;
     virtual std::string conj_verb(const std::string &verb) const = 0;
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
@@ -134,6 +139,73 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other) = 0;
     virtual void go_berserk(bool intentional) = 0;
+    virtual void hurt(actor *attacker, int amount) = 0;
+    virtual void heal(int amount, bool max_too = false) = 0;
+    virtual void banish() = 0;
+    virtual void blink() = 0;
+    virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
+    virtual void poison(actor *attacker, int amount = 1) = 0;
+    virtual void paralyse(int strength) = 0;
+    virtual void slow_down(int strength) = 0;
+    virtual void confuse(int strength) = 0;
+    virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
+    virtual void expose_to_element(beam_type element, int strength = 0) = 0;
+    virtual void drain_stat(int stat, int amount) { }
+
+    virtual bool wearing_light_armour(bool = true) const { return (true); }
+    virtual int  skill(skill_type sk, bool skill_bump = false) const
+    {
+        return (0);
+    }
+    
+    virtual void exercise(skill_type sk, int qty) { }
+
+    virtual int stat_hp() const = 0;
+    virtual int stat_maxhp() const = 0;
+    virtual int armour_class() const = 0;
+    virtual int melee_evasion(const actor *attacker) const = 0;
+    virtual int shield_bonus() const = 0;
+    virtual int shield_block_penalty() const = 0;
+    virtual int shield_bypass_ability(int tohit) const = 0;
+
+    virtual void shield_block_succeeded() { }
+
+    virtual int mons_species() const = 0;
+    
+    virtual int holiness() const = 0;
+    virtual int res_fire() const = 0;
+    virtual int res_cold() const = 0;
+    virtual int res_elec() const = 0;
+    virtual int res_poison() const = 0;
+    virtual int res_negative_energy() const = 0;
+
+    virtual bool levitates() const = 0;
+    
+    virtual bool paralysed() const = 0;
+    virtual bool confused() const = 0;
+    virtual bool asleep() const { return (false); }
+
+    virtual void god_conduct(int thing_done, int level) { }
+
+    virtual bool incapacitated() const
+    {
+        return paralysed() || confused();
+    }
+
+    virtual int holy_aura() const
+    {
+        return (0);
+    }
+
+    virtual int warding() const
+    {
+        return (0);
+    }
+
+    virtual bool visible() const
+    {
+        return (true);
+    }
 };
 
 struct ait_hp_loss
@@ -536,7 +608,7 @@ public:
   int might;
   int levitation;
 
-  int poison;
+  int poisoning;
   int rotting;
   int berserker;
 
@@ -637,6 +709,10 @@ public:
 
     // actor
     int id() const;
+    actor_type atype() const { return ACT_PLAYER; }
+
+    bool      alive() const;
+    
     coord_def pos() const;
     bool      swimming() const;
     bool      floundering() const;
@@ -647,6 +723,7 @@ public:
     item_def *shield();
     
     std::string name(description_level_type type) const;
+    std::string pronoun(pronoun_type pro) const;
     std::string conj_verb(const std::string &verb) const;
 
     bool fumbles_attack(bool verbose = true);
@@ -654,10 +731,56 @@ public:
 
     void attacking(actor *other);
     void go_berserk(bool intentional);
+    void banish();
+    void blink();
+    void teleport(bool right_now = false, bool abyss_shift = false);
+    void drain_stat(int stat, int amount);
 
-    void make_hungry(int nutrition, bool silent);
+    void expose_to_element(beam_type element, int strength = 0);
+    void god_conduct(int thing_done, int level);
 
-    actor_type atype() const { return ACT_PLAYER; }
+    int hunger_level() const { return hunger_state; }
+    void make_hungry(int nutrition, bool silent = true);
+    void poison(actor *agent, int amount = 1);
+    void paralyse(int str);
+    void slow_down(int str);
+    void confuse(int strength);
+    void rot(actor *agent, int rotlevel, int immed_rot);
+    void heal(int amount, bool max_too = false);
+    void hurt(actor *agent, int amount);
+
+    int holy_aura() const;
+    int warding() const;
+
+    int mons_species() const;
+
+    int holiness() const;
+    int res_fire() const;
+    int res_cold() const;
+    int res_elec() const;
+    int res_poison() const;
+    int res_negative_energy() const;
+
+    bool levitates() const;
+
+    bool paralysed() const;
+    bool confused() const;
+
+    int armour_class() const;
+    int melee_evasion(const actor *attacker) const;
+
+    int stat_hp() const     { return hp; }
+    int stat_maxhp() const  { return hp_max; }
+    
+    int shield_bonus() const;
+    int shield_block_penalty() const;
+    int shield_bypass_ability(int tohit) const;
+
+    void shield_block_succeeded();
+
+    bool wearing_light_armour(bool with_skill = true) const;
+    void exercise(skill_type skill, int qty);
+    int  skill(skill_type skill, bool skill_bump = false) const;
 };
 
 extern player you;
@@ -671,6 +794,21 @@ public:
     void clear() { init(MS_NO_SPELL); }
 };
 
+struct mon_attack_def
+{
+    mon_attack_type     type;
+    mon_attack_flavour  flavour;
+    int                 damage;
+
+    static mon_attack_def attk(int damage,
+                               mon_attack_type type = AT_HIT,
+                               mon_attack_flavour flav = AF_PLAIN)
+    {
+        mon_attack_def def = { type, flav, damage };
+        return (def);
+    }
+};
+
 class monsters : public actor
 {
 public:
@@ -678,8 +816,8 @@ public:
     int hit_points;
     int max_hit_points;
     int hit_dice;
-    int armour_class;
-    int evasion;
+    int ac;
+    int ev;
     unsigned int speed;
     unsigned int speed_increment;
     unsigned char x;
@@ -705,22 +843,68 @@ public:
 public:
     // actor interface
     int id() const;
+    bool      alive() const;
     coord_def pos() const;
     bool      swimming() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
+
+    item_def *slot_item(equipment_type eq);
     item_def *weapon(int which_attack = -1);
     item_def *shield();
     std::string name(description_level_type type) const;
+    std::string pronoun(pronoun_type pro) const;
     std::string conj_verb(const std::string &verb) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
+    int  skill(skill_type skill, bool skill_bump = false) const;
+
     void attacking(actor *other);
     void go_berserk(bool intentional);
+    void banish();
+    void expose_to_element(beam_type element, int strength = 0);
+    bool visible() const;
+
+    int mons_species() const;
+
+    int holiness() const;
+    int res_fire() const;
+    int res_cold() const;
+    int res_elec() const;
+    int res_poison() const;
+    int res_negative_energy() const;
+
+    bool levitates() const;
+
+    bool paralysed() const;
+    bool confused() const;
+    bool asleep() const;
+
+    int holy_aura() const;
+
+    int armour_class() const;
+    int melee_evasion(const actor *attacker) const;
+
+    void poison(actor *agent, int amount = 1);
+    void paralyse(int str);
+    void slow_down(int str);
+    void confuse(int strength);
+    void rot(actor *agent, int rotlevel, int immed_rot);
+    void hurt(actor *agent, int amount);
+    void heal(int amount, bool max_too = false);
+    void blink();
+    void teleport(bool right_now = false, bool abyss_shift = false);
+
+    int stat_hp() const    { return hit_points; }
+    int stat_maxhp() const { return max_hit_points; }
+    
+    int shield_bonus() const;
+    int shield_block_penalty() const;
+    int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
 };

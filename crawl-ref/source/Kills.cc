@@ -363,8 +363,8 @@ static const char *modifier_suffixes[] =
 
 // Pluralizes a monster name. This'll need to be updated for correctness
 // whenever new monsters are added.
-static std::string pluralize(const std::string &name, 
-                             const char *no_of[] = NULL)
+std::string pluralize(const std::string &name, 
+                      const char *no_of[])
 {
     std::string::size_type pos;
 
