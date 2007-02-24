@@ -1,3 +1,84 @@
+Stone Soup 0.2
+--------------
+* Save and bones files formats changed, incompatible with 0.1.x.
+* Added a game tutorial.
+* New entry level designs.
+* New special levels (Elf:7, Coc:7).
+* Targeting interface keymaps changed.
+* -macro option now specifies a directory, not the macro file.
+* Item colours changed.
+* Rods of striking now also get magic reservoirs.
+* Removed unpoisoned needles and blowguns of venom.
+* Stash search also finds altars and portals.
+* Some mutations cleanup.
+* Fixed Pandemonium demons getting only magic dart.
+* Character names can now includes spaces, dashes and periods.
+* Adjusted beam to-hit calculation.
+* Weapons animated by Tukima's Dance are now considered thrown for autopickup
+  purposes.
+* Crawl now tries to show error messages after curses cleanup, or before
+  initialisation so that the user can see the error. :-)
+* Reduced orange statue attack speed.
+* Windows builds no longer use SHORT_FILE_NAMES.
+* In-game help browser.
+* Greedy explore now works in Pandemonium.
+* Stash tracker now also tracks item inscriptions.
+* Many item stacking bugs fixed.
+* Artifacts are described as such when (v)iewed.
+* The Hat of the Alchemist is now a real wizard hat, not a helmet.
+* Fixed identify not clearing empty inscription.
+* Fixed broken fear behaviour for monsters.
+* Shop purchase now asks for confirmation.
+* Minor tweaks to some unrand artifacts.
+* Gourmand contaminated -> clean effect is also gradual now.
+* Searching is more effective.
+* Abyssal god.
+* Armour training tweaks.
+* Full herbivorousness now happens only at level 3 of the mutation.
+* Incremental butchering works now.
+* Poisoned arrows are more likely to give snakes than before with
+  sticks-to-snakes.
+* Cannot shop while berserk.
+* Fixed some monster movement bugs.
+* Spriggans now start with slow metabolism and extra food, but are herbivores.
+* Assassins have a chance of starting with a few curare-tipped needles.
+* Rods are more common.
+* stop_travel messages can also stop run/rest, if the message interrupt is
+  disabled for run/rest.
+* Better handling of monster-comes-into-view messages.
+* Zin will reliably feed you if you have sufficient piety and are starving.
+* Travel is no longer interrupted by submerged monsters.
+* Travel is no longer interrupted by an invisible monster missing you.
+* Blinking/teleporting monsters can no longer land on the player's square.
+* Fix Abyss banishment crash.
+* Monster resists were not taking randarts into account in some cases.
+* Better handling for travel_delay = -1.
+* Monsters using draining or hellfire are M_EVIL and take damage from cleansing
+  flame.
+* Show monster paralysis status when examined.
+* Carrying capacity shown in inventory menus is now maximum unburdened carrying
+  capacity, not absolute maximum.
+* Flying monsters no longer avoid mechanical traps.
+* Items dropped onto an altar while praying will be sacrificed.
+* Jellies can no longer eat artifacts.
+* Enabling delay_message_clear uses a scrolling message window.
+* Fixed bug where statues could move around.
+* Added temporary pain-brand spell "Excruciating Wounds".
+* Fixed duplicated scroll labels.
+* Friendly monsters should not flee from the player.
+* Fixed detect creatures revealing monster identities in notes.
+* no_dark_brand defaults to true.
+* Summon horrible things now produces temporary summons.
+* Monster abjuration is weaker.
+* Unseen horrors no longer resist electricity.
+* Greedy explore now tries to handle mimics like the items they imitate.
+* Dungeon builder guarantees that at least one downstair is reachable
+  from the upstair on D:1.
+* Hydras get their full attack round vs other monsters.
+* Monsters fighting hydras can chop off heads if using suitable weapons/claws.
+* Interlevel travel handles branch entries and exits more intelligently.
+* Added wizmode &~ to instant travel to any level to test special levels.
+
 Stone Soup 0.1.7 (20061231)
 ---------------------------
 * Fixed missing cursor in controlled-teleport screen.
@@ -7,6 +88,7 @@ Stone Soup 0.1.7 (20061231)
 * Fixed friendlies being angered by bolts that they are immune to.
 * Fixed notes not noting zombies correctly.
 * Backported greedy explore from 0.2.
+* New Temple levels.
 
 Stone Soup 0.1.6 (20061219)
 ---------------------------

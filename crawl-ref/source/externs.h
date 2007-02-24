@@ -152,7 +152,7 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount) { }
 
-    virtual bool wearing_light_armour(bool = true) const { return (true); }
+    virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {
         return (0);
@@ -778,7 +778,7 @@ public:
 
     void shield_block_succeeded();
 
-    bool wearing_light_armour(bool with_skill = true) const;
+    bool wearing_light_armour(bool with_skill = false) const;
     void exercise(skill_type skill, int qty);
     int  skill(skill_type skill, bool skill_bump = false) const;
 };
