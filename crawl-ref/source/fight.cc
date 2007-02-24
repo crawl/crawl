@@ -757,8 +757,10 @@ bool melee_attack::player_apply_aux_unarmed()
     if (aux_damage < 1)
         aux_damage = 0;
     else
-        hurt_monster(def, damage_done);
+        hurt_monster(def, aux_damage);
 
+    damage_done = aux_damage;
+    
     if (damage_done > 0)
     {
         player_exercise_combat_skills();
@@ -804,12 +806,10 @@ std::string melee_attack::debug_damage_number()
 
 std::string melee_attack::special_attack_punctuation()
 {
-    if (special_damage < 3)
+    if (special_damage < 6)
         return ".";
-    else if (special_damage < 7)
-        return "!";
     else
-        return "!!";
+        return "!";
 }
 
 std::string melee_attack::attack_strength_punctuation()

@@ -633,7 +633,12 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
         attk_number = 0;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return mon_attack_def::attk(ghost.values[GVAL_DAMAGE]);
+    {
+        if (attk_number == 0)
+            return mon_attack_def::attk(ghost.values[GVAL_DAMAGE]);
+        else
+            return mon_attack_def::attk(0, AT_NONE);
+    }
 
     if (zombified)
         mc = mons_zombie_base(mons);

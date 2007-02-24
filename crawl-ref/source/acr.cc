@@ -191,7 +191,7 @@ int main( int argc, char *argv[] )
         puts("  -dir <path>      crawl directory");
         puts("  -rc <file>       init file name");
         puts("  -morgue <dir>    directory to save character dumps");
-        puts("  -macro <file>    macro file name");
+        puts("  -macro <dir>     directory to save/find macro.txt");
         puts("");
         puts("Command line options override init file options, which override");
         puts("environment options (CRAWL_NAME, CRAWL_PIZZA, CRAWL_DIR, CRAWL_RC).");
