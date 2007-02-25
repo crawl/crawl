@@ -903,10 +903,10 @@ bool mons_speaks(struct monsters *monster)
                     strcat(info, " grins evilly.");
                     break;
                 case 2:
-                    strcat(info, " breathes a bit of smoke at you.");
+                    strcat(info, " breathes smoke at you.");
                     break;
                 case 3:
-                    strcat(info, " lashes with his tail.");
+                    strcat(info, " lashes his tail.");
                     break;
                 case 4:
                     strcat(info, " grinds his teeth.");
@@ -915,7 +915,7 @@ bool mons_speaks(struct monsters *monster)
                     strcat(info, " sputters.");
                     break;
                 case 6:
-                    strcat(info, " breathes some steam toward you.");
+                    strcat(info, " breathes steam at you.");
                     break;
                 case 7:
                     strcat(info, " spits at you.");
@@ -927,7 +927,7 @@ bool mons_speaks(struct monsters *monster)
                     strcat(info, " summons a swarm of flies.");
                     break;
                 case 10:
-                    strcat(info, " picks up some beetle and eats it.");
+                    strcat(info, " picks up a beetle and eats it.");
                     break;
                 }
             }
