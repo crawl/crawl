@@ -2299,7 +2299,8 @@ enum mon_attack_type
     AT_TOUCH,
     AT_ENGULF,
     AT_CLAW,
-    AT_TAIL_SLAP
+    AT_TAIL_SLAP,
+    AT_BUTT
 };
 
 enum mon_attack_flavour

@@ -2469,7 +2469,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "touch",
         "engulf",
         "claw",
-        "tail slap"
+        "tail slap",
+        "butt"
     };
 
     return attack_types[ attk.type ];
