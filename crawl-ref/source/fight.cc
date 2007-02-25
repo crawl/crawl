@@ -2496,22 +2496,24 @@ void melee_attack::mons_announce_hit(const mon_attack_def &attk)
     if (water_attack && attacker_visible && attacker != defender)
         mprf("%s uses the watery terrain to its advantage.",
              attacker->name(DESC_CAP_THE).c_str());
-    
-    mprf("%s %s %s%s%s%s",
-         attacker->name(DESC_CAP_THE).c_str(),
-         attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
-         mons_defender_name().c_str(),
-         debug_damage_number().c_str(),
-         mons_weapon_desc().c_str(),
-         attack_strength_punctuation().c_str());
+
+    if (needs_message)
+        mprf("%s %s %s%s%s%s",
+             attacker->name(DESC_CAP_THE).c_str(),
+             attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
+             mons_defender_name().c_str(),
+             debug_damage_number().c_str(),
+             mons_weapon_desc().c_str(),
+             attack_strength_punctuation().c_str());
 }
 
 void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
 {
-    mprf("%s %s %s but doesn't do any damage.",
-         attacker->name(DESC_CAP_THE).c_str(),
-         attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
-         mons_defender_name().c_str());
+    if (needs_message)
+        mprf("%s %s %s but doesn't do any damage.",
+             attacker->name(DESC_CAP_THE).c_str(),
+             attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
+             mons_defender_name().c_str());
 }
 
 void melee_attack::check_defender_train_dodging()

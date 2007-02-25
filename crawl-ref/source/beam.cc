@@ -1992,22 +1992,7 @@ static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
         if (simple_monster_message(monster, " suddenly stops moving!"))
             pbolt.obvious_effect = true;
 
-        const int grid = grd(monster->pos());
-
-        if (grid == DNGN_LAVA || grid_is_water(grid))
-        {
-            if (mons_flies(monster) == 1)
-            {
-                // don't worry about invisibility - you should be able to
-                // see if something has fallen into the lava
-                if (mons_near(monster))
-                    mprf("%s falls into the %s!",
-                         ptr_monam(monster, DESC_CAP_THE),
-                         (grid == DNGN_LAVA ? "lava" : "water"));
-
-                monster_die(monster, pbolt);
-            }
-        }
+        mons_check_pool(monster);
     }
 }
 

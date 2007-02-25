@@ -328,7 +328,7 @@ static void place_monster_corpse(const monsters *monster)
     	learned_something_new(TUT_MAKE_CHUNKS);    
 }                               // end place_monster_corpse()
 
-void monster_die(monsters *monster, char killer, int i)
+void monster_die(monsters *monster, char killer, int i, bool silent)
 {
     if (monster->type == -1)
         return;
@@ -336,7 +336,8 @@ void monster_die(monsters *monster, char killer, int i)
     int dmi;                    // dead monster's inventory
     int xom_will_act = 0;
     int monster_killed = monster_index(monster);
-    bool death_message = mons_near(monster) && player_monster_visible(monster);
+    bool death_message =
+        !silent && mons_near(monster) && player_monster_visible(monster);
 
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
@@ -380,8 +381,9 @@ void monster_die(monsters *monster, char killer, int i)
     else if (monster->type == MONS_FIRE_VORTEX
              || monster->type == MONS_SPATIAL_VORTEX)
     {
-        simple_monster_message( monster, " dissipates!", MSGCH_MONSTER_DAMAGE,
-                                MDAM_DEAD );
+        if (!silent)
+            simple_monster_message( monster, " dissipates!",
+                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
         {
@@ -397,8 +399,10 @@ void monster_die(monsters *monster, char killer, int i)
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
     {
-        simple_monster_message( monster, " vaporizes!", MSGCH_MONSTER_DAMAGE,
-                                MDAM_DEAD );
+        if (!silent)
+            simple_monster_message(
+                monster, " vaporizes!", MSGCH_MONSTER_DAMAGE,
+                MDAM_DEAD );
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
         {
@@ -412,8 +416,9 @@ void monster_die(monsters *monster, char killer, int i)
     }
     else if (monster->type == MONS_DANCING_WEAPON)
     {
-        simple_monster_message(monster, " falls from the air.",
-                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        if (!silent)
+            simple_monster_message(monster, " falls from the air.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
         {
@@ -433,11 +438,15 @@ void monster_die(monsters *monster, char killer, int i)
             bool created_friendly = 
                         testbits(monster->flags, MF_CREATED_FRIENDLY);
 
-            strcpy(info, "You ");
-            strcat(info, (wounded_damaged(monster->type)) ? "destroy" : "kill");
-            strcat(info, " ");
-            strcat(info, ptr_monam(monster, DESC_NOCAP_THE));
-            strcat(info, "!");
+            if (!silent)
+            {
+                strcpy(info, "You ");
+                strcat(info,
+                       (wounded_damaged(monster->type)) ? "destroy" : "kill");
+                strcat(info, " ");
+                strcat(info, ptr_monam(monster, DESC_NOCAP_THE));
+                strcat(info, "!");
+            }
 
             if (death_message)
                 mpr(info, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
@@ -545,8 +554,9 @@ void monster_die(monsters *monster, char killer, int i)
 
         case KILL_MON:          /* Monster kills in combat */
         case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
-            simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
-                                   MDAM_DEAD);
+            if (!silent)
+                simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
+                                       MDAM_DEAD);
 
             // no piety loss if god gifts killed by other monsters
             if (mons_friendly(monster) && !testbits(monster->flags,MF_GOD_GIFT))
@@ -633,16 +643,18 @@ void monster_die(monsters *monster, char killer, int i)
 
         /* Monster killed by trap/inanimate thing/itself/poison not from you */
         case KILL_MISC:
-            simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
-                                   MDAM_DEAD);
+            if (!silent)
+                simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
+                                       MDAM_DEAD);
             break;
 
         case KILL_RESET:
         /* Monster doesn't die, just goes back to wherever it came from
            This must only be called by monsters running out of time (or
            abjuration), because it uses the beam variables! Or does it??? */
-            simple_monster_message( monster,
-                                    " disappears in a puff of smoke!" );
+            if (!silent)
+                simple_monster_message( monster,
+                                        " disappears in a puff of smoke!" );
 
             place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
                          monster->y, 1 + random2(3) );
@@ -3763,37 +3775,60 @@ static void handle_monster_move(int i, monsters *monster)
 
         brkk = false;
 
-        if (mons_has_ench( monster, ENCH_CONFUSION )
+        if (mons_is_confused( monster )
             || (monster->type == MONS_AIR_ELEMENTAL 
                 && mons_has_ench( monster, ENCH_SUBMERGED )))
         {
-            mmov_x = random2(3) - 1;
-            mmov_y = random2(3) - 1;
+            std::vector<coord_def> moves;
+
+            int pfound = 0;
+            for (int yi = -1; yi <= 1; ++yi)
+            {
+                for (int xi = -1; xi <= 1; ++xi)
+                {
+                    coord_def c = monster->pos() + coord_def(xi, yi);
+                    if (in_bounds(c) && !grid_is_solid(grd(c))
+                        && one_chance_in(++pfound))
+                    {
+                        mmov_x = xi;
+                        mmov_y = yi;
+                    }
+                }
+            }
+
+            if (one_chance_in(3))
+                mmov_x = mmov_y = 0;
 
             // bounds check: don't let confused monsters try to run
             // off the map
-            if (monster->target_x + mmov_x < 0 
-                    || monster->target_x + mmov_x >= GXM)
+            if (monster->x + mmov_x < 0 
+                    || monster->x + mmov_x >= GXM)
             {
                 mmov_x = 0;
             }
 
-            if (monster->target_y + mmov_y < 0 
-                    || monster->target_y + mmov_y >= GYM)
+            if (monster->y + mmov_y < 0 
+                    || monster->y + mmov_y >= GYM)
             {
                 mmov_y = 0;
+            }
+
+            if (grid_is_solid(
+                    grd[ monster->x + mmov_x ][ monster->y + mmov_y ]))
+            {
+                mmov_x = mmov_y = 0;
             }
 
             if (mgrd[monster->x + mmov_x][monster->y + mmov_y] != NON_MONSTER
                 && (mmov_x != 0 || mmov_y != 0))
             {
+                monsters_fight(
+                    i,
+                    mgrd[monster->x + mmov_x][monster->y + mmov_y]);
+                
+                brkk = true;
                 mmov_x = 0;
                 mmov_y = 0;
-
-                if (monsters_fight(i, mgrd[monster->x + mmov_x][monster->y + mmov_y]))
-                {
-                    brkk = true;
-                }
             }
         }
 
@@ -4436,6 +4471,93 @@ static bool monster_swaps_places( monsters *mon, int mx, int my )
     return (false);
 }
 
+static void do_move_monster(monsters *monster, int xi, int yi)
+{
+    const int fx = monster->x + xi,
+        fy = monster->y + yi;
+
+    if (!in_bounds(fx, fy))
+        return;
+
+    if (fx == you.x_pos && fy == you.y_pos)
+    {
+        monster_attack( monster_index(monster) );
+        return;
+    }
+    
+    if (!xi && !yi)
+    {
+        const int mx = monster_index(monster);
+        monsters_fight( mx, mx );
+        return;
+    }
+
+    if (mgrd[fx][fy] != NON_MONSTER)
+    {
+        monsters_fight( monster_index(monster), mgrd[fx][fy] );
+        return;
+    }
+
+    if (!xi && !yi)
+        return;
+
+    mgrd[monster->x][monster->y] = NON_MONSTER;
+    
+    /* this appears to be the real one, ie where the movement occurs: */
+    monster->x = fx;
+    monster->y = fy;
+    
+    if (monster->type == MONS_CURSE_TOE)
+    {
+        // Curse toes are a special case; they can only move at half their
+        // attack rate. To simulate that, the toe loses more energy.
+        monster->speed_increment -= 5;
+    }
+    
+    /* need to put in something so that monster picks up multiple
+       items (eg ammunition) identical to those it's carrying. */
+    mgrd[monster->x][monster->y] = monster_index(monster);
+
+    // monsters stepping on traps:
+    mons_trap(monster);
+    mons_check_pool(monster);
+}
+
+void mons_check_pool(monsters *mons, int killer)
+{
+    // Levitating/flying monsters don't make contact with the terrain.
+    const int lev = mons->levitates();
+    if (lev == 2 || (lev && !mons->paralysed()))
+        return;
+    
+    const int grid = grd(mons->pos());
+    if (grid == DNGN_LAVA || grid_is_water(grid))
+    {
+        const bool message = mons_near(mons);
+        
+        // don't worry about invisibility - you should be able to
+        // see if something has fallen into the lava
+        if (message)
+            mprf("%s falls into the %s!",
+                 ptr_monam(mons, DESC_CAP_THE),
+                 (grid == DNGN_LAVA ? "lava" : "water"));
+
+        // Even fire resistant monsters perish in lava!
+        if (!monster_habitable_grid(mons, grid))
+        {
+            if (message)
+            {
+                if (grid == DNGN_LAVA)
+                    simple_monster_message(mons, " is incinerated!");
+                else
+                    simple_monster_message(mons, " drowns.");
+            }
+            
+            monster_die(mons, killer, 0, true);
+        }
+    }
+}
+
 static void monster_move(struct monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
@@ -4445,6 +4567,13 @@ static void monster_move(struct monsters *monster)
     const int habitat = monster_habitat( monster->type ); 
     bool deep_water_available = false;
 
+    if (monster->confused())
+    {
+        if (mmov_x || mmov_y || one_chance_in(15))
+            do_move_monster(monster, mmov_x, mmov_y);
+        return;
+    }
+    
     // let's not even bother with this if mmov_x and mmov_y are zero.
     if (mmov_x == 0 && mmov_y == 0)
         return;
@@ -4867,8 +4996,6 @@ forget_it:
         }
     }
 
-    mgrd[monster->x][monster->y] = NON_MONSTER;
-
     if (good_move[mmov_x + 1][mmov_y + 1] && !(mmov_x == 0 && mmov_y == 0))
     {
         // check for attacking player
@@ -4921,38 +5048,20 @@ forget_it:
             place_cloud( CLOUD_MIASMA_MON, monster->x, monster->y, 
                          2 + random2(3) );
         }
-
-        /* this appears to be the real one, ie where the movement occurs: */
-        monster->x += mmov_x;
-        monster->y += mmov_y;
-
-        if (monster->type == MONS_CURSE_TOE)
-        {
-            // Curse toes are a special case; they can only move at half their
-            // attack rate. To simulate that, the toe loses another action's
-            // worth of energy when moving.
-            monster->speed_increment -= 10;
-        }
     }
     else
     {
+        mmov_x = mmov_y = 0;
+        
         // fleeing monsters that can't move will panic and possibly
         // turn to face their attacker
         if (monster->behaviour == BEH_FLEE)
             behaviour_event(monster, ME_CORNERED);
     }
 
-    /* need to put in something so that monster picks up multiple
-       items (eg ammunition) identical to those it's carrying. */
-    mgrd[monster->x][monster->y] = monster_index(monster);
-
-    // monsters stepping on traps:
-    if (mmov_x != 0 || mmov_y != 0)
-    {
-        mons_trap(monster);
-    }
+    if (mmov_x || mmov_y || (monster->confused() && one_chance_in(6)))
+        do_move_monster(monster, mmov_x, mmov_y);
 }                               // end monster_move()
-
 
 static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
 {

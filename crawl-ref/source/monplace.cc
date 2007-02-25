@@ -59,7 +59,7 @@ bool grid_compatible(int grid_wanted, int actual_grid, bool generation)
                     || actual_grid == DNGN_BLUE_FOUNTAIN)));
 }
 
-// Can this monster happily on actual_grid?
+// Can this monster survive on actual_grid?
 //
 // If you have an actual monster, use this instead of the overloaded function
 // that uses only the monster class to make decisions.
