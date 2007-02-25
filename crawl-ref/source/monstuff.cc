@@ -4531,7 +4531,7 @@ void mons_check_pool(monsters *mons, int killer)
         return;
     
     const int grid = grd(mons->pos());
-    if (grid == DNGN_LAVA || grid_is_water(grid))
+    if (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
     {
         const bool message = mons_near(mons);
         
