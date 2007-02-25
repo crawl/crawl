@@ -4548,9 +4548,13 @@ void mons_check_pool(monsters *mons, int killer)
             if (message)
             {
                 if (grid == DNGN_LAVA)
-                    simple_monster_message(mons, " is incinerated!");
+                    simple_monster_message(
+                        mons, " is incinerated!",
+                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 else
-                    simple_monster_message(mons, " drowns.");
+                    simple_monster_message(
+                        mons, " drowns.",
+                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             }
             
             monster_die(mons, killer, 0, true);
