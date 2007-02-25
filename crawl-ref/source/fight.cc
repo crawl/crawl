@@ -2326,7 +2326,7 @@ bool melee_attack::mons_attack_warded_off()
     {
         if (needs_message)
         {
-            mprf("%s tries to attack %s, but is repelled by %s holy auro.",
+            mprf("%s tries to attack %s, but is repelled by %s holy aura.",
                  atk->name(DESC_CAP_THE).c_str(),
                  defender->name(DESC_NOCAP_THE).c_str(),
                  defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
@@ -2798,12 +2798,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = atk->type == MONS_HYDRA? atk->number : 4;
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s gets %d attacks",
-         attacker->name(DESC_CAP_THE).c_str(),
-         nrounds);
-#endif
-
     const coord_def pos = defender->pos();
     
     for (attack_number = 0; attack_number < nrounds; ++attack_number)
@@ -2895,6 +2889,7 @@ void melee_attack::mons_perform_attack_rounds()
                 return;
 
             special_damage = 0;
+            special_damage_message.clear();
             apply_damage_brand();
 
             if (!special_damage_message.empty())

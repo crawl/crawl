@@ -3796,7 +3796,7 @@ static void handle_monster_move(int i, monsters *monster)
                 }
             }
 
-            if (one_chance_in(3))
+            if (random2(2 + pfound) < 2)
                 mmov_x = mmov_y = 0;
 
             // bounds check: don't let confused monsters try to run
