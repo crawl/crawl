@@ -1992,7 +1992,7 @@ static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
         if (simple_monster_message(monster, " suddenly stops moving!"))
             pbolt.obvious_effect = true;
 
-        mons_check_pool(monster);
+        mons_check_pool(monster, pbolt.killer());
     }
 }
 
