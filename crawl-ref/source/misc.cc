@@ -396,8 +396,7 @@ void in_a_cloud(void)
             if (hurted < 0)
                 hurted = 0;
 
-            ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD, 
-                  "freezing vapour" );
+            ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
         }
         else
         {
