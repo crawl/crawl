@@ -376,6 +376,15 @@ void read_maps()
 {
     parse_maps( lc_desfile = datafile_path( "splev.des" ) );
     parse_maps( lc_desfile = datafile_path( "vaults.des" ) );
+
+    for (int i = 0, size = Options.extra_levels.size(); i < size; ++i)
+    {
+        lc_desfile = datafile_path( Options.extra_levels[i] + ".des", false );
+        if (lc_desfile.empty())
+            continue;
+
+        parse_maps( lc_desfile );
+    }
 }
 
 void add_parsed_map( const map_def &md )

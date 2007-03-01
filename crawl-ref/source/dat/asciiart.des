@@ -1,0 +1,526 @@
+##############################################################################
+# ASCIIart entry vaults
+# This file contains a number of entries which may not suit all players - they
+# contain ASCII art in the sense of pictures of things and being, or words etc.
+# By default, they are not used. If you want to try them, set in the init.txt
+# entries += asciiart
+##############################################################################
+
+##############################################################################
+# Arecibo
+
+NAME: erik_asciiartentry_001
+TAGS: entry
+ORIENT: float
+FLAGS: no_rotate no_hmirror
+SHUFFLE: {[(
+MAP
+.....@.....({[......@....xxx....@...............@....
+.......x.x.x.x...........x.+.....vv....++......v.....
+...x.x.....x.x.......x...x.+....v......+........v....
+.x...x...x...x..x.xx..x..x.+...v.......++........v...
+.x.x.x.x.x.x.x.x..x..x...x.x..v........++........v...
+.........................x.x..v.........+.......v....
+.............xx..........x.x...v.......+.......v.....
+...........xx.x..........x.x....v............vv......
+@..........xx.x..........x.x.....vv........vv.......@
+..........x.x.x..........x.x...v...vvv.x.vv..........
+..........xxxxx..........x.x...v.......x.............
+.........................x.x...v.....xxxxx...........
+.bb....bbb...bb....bb....x.x...v....x.xxx.x..+.++.++.
+.b.............bb..b.....x.x.......x..xxx..x..++++++.
+.bb.b...bb...bb....bb.b..x.x.+.+++....xxx.....++.+++.
+.bbbbb.bbbbb.bbbbb.bbbbb.x.x..........x.x.....+++.++.
+.........................x.x...v......x.x.....++++++.
+....c.................c..x.x...v......x.x.....++.....
+@........................x.x...v.....xx.xx..........@
+.....c.................c.x.x.........................
+.ccccc.............ccccc.x.x...aaa.....a.............
+.cc....cc....ccc...cc....x.x...aaa.a.a...a.a.a.a.a.a.
+.c.......c.........c.....x.x...aaa.........a.a.a.a...
+.cc.c....cc...ccc..cc.c..x.x...............a.a.......
+.ccccc.ccccc.ccccc.ccccc.x.x...............a.a.......
+.........................x.x.........=====...........
+....c......++.........c..x.x.......=========.........
+@..........++............x.x.....===.......===......@
+.....c.....++..........c.x.x....==...........==......
+.ccccc.....++......ccccc.x.x...==.=.........=.==.....
+...v........+........v...x.x..==..==.......==..==....
+....v......++.......v....x.x..=...=.=.....=.=...=....
+.....vv....++......v.....x.x..=...=..=...=..=...=....
+.......vv...+....vv......x.x......=...=.=...=........
+@..........++..vv........x.x......=....=....=.......@
+.......vv...+....vv......+.x......=.........=........
+.........................+.x........x..x.x...........
+.........................+.x..vvvv..xxxxx.x..vvvv....
+....@...............@....xxx....@...............@....
+ENDMAP
+
+##############################################################################
+# Game-of-Life Cheshire Cat
+
+NAME: erik_asciiartentry_002
+TAGS: entry 
+ORIENT: float
+SHUFFLE: {[(
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx..........x..........x..........x..........x
+xx..........x..........x..........x..........x
+xx...c..c...x...c..c...x..cc..cc..x..cccccc..x
+xx...cccc...x..cccccc..x..c.cc.c..x..c....c..x
+x(..c....c.....c....c.......cc......c......c.x
+x[..c.cc.c....cc....cc...ccc..ccc...c......c.x
+x{..c....c..x..c....c..x.cc.cc.cc.x.c..cc..c.x
+xx...cccc...x...cccc...x...c..c...x...c..c...x
+xx..........x....cc....x...c..c...x..........x
+xx..........x..........x..........x..........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxx
+xx..........x..........x....cc....x..........x
+xx..........x..........x..c....c..x...cccc...x
+xx..........x..........x.c......c.x..cccccc..x
+xx..........x..........x..........x.cc.cc.cc.x
+xx.....................x............cc....cc.x
+xx......................c........c.ccc....cccx
+xx..........x..........x..c.cc.c..x..c.cc.c..x
+xx...cc.....x...c..c...x...cccc...x....cc....x
+xx...cc.....x....cc....x..........x..........x
+xx..........x..........x..........x..........x
+xxxxx@@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Zot Side Story
+
+NAME: erik_asciiartentry_003
+TAGS: entry                
+ORIENT: float
+MONS: giant bat, small snake, worm, gnoll, imp, orc
+ITEM: stone, scroll of paper, banana, potion of healing
+SHUFFLE: {[(
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bb.........................................................b
+b(...xxx...xxx...xxx...xxx..gaaa...vvvvvvvvv...ccccccccc...b
+b[.x.+Cx...+6x..2+ex..3+ex...+fa...+++===4ev...===g5e===...b
+b{...xxx...xxx...xxx...xxx..gaaa...vvvvvvvvv...ccccccccc...b
+bb.........................................................b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb+++bbbbbbbbbbbbbb=b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb.....b
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb.bbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...+...+...bbbbbbbbbb...bbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb+++bbbbbbbbbbbbbbbbbbbb.bbb
+bbbbbbbbbbbbbbbbb...........................bbbb.........bbb
+bbbbbbbbbbbbbbbbb......xbXXXXXXXXXXXbx......bbbb.bbbbbbbbbbb
+bbbbbbbbbbbbbbbbb......xXXX...1...XXXx......bbbb.bbbbbbbbbbb
+bbbbbbbbbbbbbbbbb......xXX..1...1..XXx......bbbb.bb.....bbbb
+bbbbbbbbbbbbbbbbb......xX1.........1Xx......bbbb.bb.bbb.bbbb
+bbbbbbbbbbbbbbbbb..........1..d..1..........bbbb.bb.bbb.bbbb
+bbbbbbbbbbbbbbbbb......xX1.........1Xx......bbbb.bb..bb.bbbb
+bbbbbbbbbbbbbbbbb......xXX..1...1..XXx......bbbb.bbb.bb.bbbb
+bbbbbbbbbbbbbbbbb......xXXX...1...XXXx......bbbb.....bbebbbb
+bbbbbbbbbbbbbbbbb......xbXXXXXXXXXXXbx......bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbb.............<.............bbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+ENDMAP
+
+##############################################################################
+# The Frivolous Dungeonbuilder #1
+
+NAME: erik_asciiartentry_004
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+SHUFFLE: {[(
+MAP
+...............
+.....aa........
+......a...aa...
+..aaaaaa.aa....
+......aawaaaaa.
+....aaabaaa..a.
+...aa..b..a....
+.......b..aa...
+.......b.......
+.......bb......
+........b......
+........b......
+........bb.....
+.........b.....
+..({.xx..b.....
+.x[xxxxxxbbxx..
+.xxxxxxxxxxxxx.
+...............
+ENDMAP
+
+
+##############################################################################
+# The Frivolous Dungeonbuilder #2
+
+NAME: erik_asciiartentry_005
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+SHUFFLE: {[(
+MAP
+...............
+....bbb........
+...x..b...bb...
+..bbbbbbbbb....
+..x...bxxbbbbb.
+....bbbxxbb..b.
+...bb..xx.b..x.
+...x...xx.bb...
+........xx.x...
+........xx.....
+........xx.....
+........xx.....
+........xx.....
+.........xx....
+..({.aa..xx....
+..[aaaaaaxxaaaw
+waaaaaaaaaaaaaw
+wwwwwwwwwwwwwww
+ENDMAP
+
+
+##############################################################################
+# The Frivolous Dungeonbuilder #3 and enough, enough already!
+
+NAME: erik_asciiartentry_006
+TAGS: entry no_monster_gen
+ORIENT: float
+FLAGS: no_rotate
+SHUFFLE: {[(
+# Supposed to be an Easter egg. Get it?! Easter egg?! Sigh.
+MAP
+...............
+......aaa......
+....aawwwaa....
+..bwwwwwwwwwb..
+.bbbwwwwwwwbbb.
+.bbbbbbbbbbbbb.
+.wwwwwwwwwwwww.
+.bbbbbbbbbbbbb.
+.bbbwwwwwwwbbb.
+..xwxwxwxwxwx..
+...aaawwwaaa...
+......aaa......
+......({[......
+ENDMAP
+
+
+##############################################################################
+# Yars' Revenge
+
+NAME: erik_asciiartentry_007
+TAGS: entry
+ORIENT: float
+MONS: goblin
+SHUFFLE: {[(
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+v.........x.x..................vvv...............................x
+v........x.x.x.........xxx.....vvv.b..b.bbbb.b..b.b..b.bbbb.b..b.x
+v(........x.x.........xxx.....1xxx.b..b.b....b..b.b..b.b....b..b.x
+v{.......x.x.x.......xxx.1.....+.=.bbbb.bbbb.b.cb.b.cb.bbbb.bbbb.x
+v[........x.x.........xxx.....1xxx.b..b....b.b.cb.b.cb....b.b..b.x
+v........x.x.x.........xxx.....vvv.b..b.bbbb.bbbb.bbbb.bbbb.b..b.x
+v.........x.x..................vvv...............................x
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv@@@vvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Lazy Man's Vault
+
+NAME: erik_asciiartentry_008
+TAGS: entry
+ORIENT: float
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+ENDMAP
+
+##############################################################################
+# Shusaku - Inseki, "ear-reddening move"
+
+NAME: erik_asciiartentry_009
+TAGS: entry
+ORIENT: float
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.c.c.c.c.c.x.a.a.c.c.c.c.c.c.c.
+.......................................
+.c.c.c.x.c.c.c.c.c.x.a.c.a.c.a.a.x.c.c.
+.......................................
+.c.c.a.a.c.x.c.c.a.x.x.a.a.c.a.x.c.c.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.x.x.x.c.c.x.c.c.
+.......................................
+.c.c.c.c.c.x.c.c.c.c.x.c.c.c.c.x.x.c.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.c.c.c.c.c.c.x.a.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.a.a.a.x.x.x.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.x.a.a.a.x.
+.......................................
+.c.c.c.c.c.c.c.c.c.x.c.c.x.a.a.x.x.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.a.a.x.c.x.a.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.c.c.c.c.c.a.x.x.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.a.x.a.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.a.c.a.x.a.a.c.
+.......................................
+.c.c.a.c.c.c.c.c.c.x.c.x.a.c.a.x.c.c.c.
+.......................................
+.c.c.c.c.c.c.x.c.a.c.c.x.a.x.a.x.a.c.c.
+.......................................
+.c.c.x.c.x.c.c.x.c.c.c.x.a.a.x.a.a.c.c.
+.......................................
+.c.c.c.c.c.x.a.x.a.c.a.a.x.x.x.x.a.a.c.
+.......................................
+.c.c.c.c.c.c.x.a.c.a.a.c.a.x.x.c.x.a.c.
+.......................................
+.c.c.c.c.c.c.c.c.a.c.c.a.c.x.c.x.c.x.c.
+.......................................
+ENDMAP
+
+
+##############################################################################
+# Shussai - Go Seigen, infamous tesuji
+
+NAME: erik_asciiartentry_010
+TAGS: entry
+ORIENT: float
+# deliberately has no stairs
+MAP
+.......................................
+.c.c.c.c.x.c.c.c.c.c.c.c.c.c.x.c.c.c.c.
+.......................................
+.c.x.x.x.x.a.a.c.c.c.c.c.a.a.x.c.c.c.c.
+.......................................
+.c.x.a.x.a.x.c.a.a.x.a.c.c.c.c.c.x.c.c.
+.......................................
+.c.a.a.a.a.c.x.x.a.c.a.c.c.x.c.a.x.c.c.
+.......................................
+.c.c.c.c.c.c.x.a.a.a.x.x.x.x.x.a.c.c.c.
+.......................................
+.c.c.c.c.c.x.c.x.c.x.c.c.a.x.a.c.c.x.c.
+.......................................
+.c.c.c.c.c.c.c.x.c.c.c.c.a.a.x.x.x.c.c.
+.......................................
+.c.a.a.c.c.c.a.c.c.c.c.c.c.c.a.a.c.a.c.
+.......................................
+.a.c.c.a.a.c.c.a.c.c.c.c.c.c.c.a.c.c.c.
+.......................................
+.c.a.a.x.x.x.x.c.c.x.c.c.c.a.c.x.a.c.c.
+.......................................
+.x.c.x.c.x.c.c.c.c.c.x.c.c.c.c.x.a.c.c.
+.......................................
+.c.c.x.c.x.c.c.c.c.c.c.x.c.x.c.x.x.a.c.
+.......................................
+.c.c.a.x.a.a.x.c.c.c.c.a.c.x.x.a.x.a.c.
+.......................................
+.c.c.a.c.a.x.c.c.c.c.c.c.a.x.a.a.a.x.c.
+.......................................
+.c.c.a.c.a.x.c.c.c.c.x.x.x.a.c.c.c.x.c.
+.......................................
+.c.a.x.x.x.x.x.x.x.x.a.a.x.c.a.c.x.c.c.
+.......................................
+.c.c.a.a.x.a.a.x.a.a.x.a.a.a.c.a.a.x.c.
+.......................................
+.c.c.c.a.a.x.a.a.c.c.c.c.c.c.c.a.x.x.c.
+.......................................
+.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.
+.......................................
+ENDMAP
+
+
+##############################################################################
+# Rinrii
+
+NAME: erik_asciiartentry_011
+TAGS: entry
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+SHUFFLE: {[(
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c...........................................................c
+c.vvv...vvv....v..............v.....vvv...vvv...............c
+c.vvv...vvv...vvvvv.........vvvv....vvv...vvv...............c
+c.vvv...vvv.....vvvvv......vvvv.....vvv...vvv...............c
+c.vvv...vvv.......vvvvv...vvvv......vvv...vvv..vvvvvvvvvvvv.c
+c.vvv...vvv.........v...vvvv........vvv...vvv..vvvvvvvvvvvv.c
+c.vvv...vvv...........vvvvv.........vvv...vvv...............c
+c.vvv...vvv.........vvvvv...........vvv...vvv...............c
+c......vvv........vvvvv..................vvv................c
+c.....vvv......vvvvv....................vvv.................c
+c....vv.........v..........[({.........vv...................c
+c...........................................................c
+ccccccccccccccccccccccccccc...ccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Mitsuhiro Itakura
+
+NAME: erik_asciiartentry_012
+TAGS: entry 
+ORIENT: float
+FLAGS: no_rotate no_hmirror no_vmirror
+SHUFFLE: {[(   
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+c...............................G...........c
+c...G.....GGGGGGGGGGG..........G.G..........c
+c...G.....G.................GGG...GGG.......c
+c...G.....G..............GGG..GGGGG..GGG....c
+c.GGGGG...G...........GGG...............GGG.c
+c...G.....GGGGGGGGG.......GGGGGGGGGGGGGG....c
+c...G.....G.G.....G.......G............G....c
+c..GGG....G.G.....G.......GGGGGGGGGGGGGG....c
+c..GG.G...G..G...G........G............G....c
+c.G.G.....G..G...G........GGGGGGGGGGGGGG....c
+c.G.G.....G...GGG......G....................c
+c...G.....G...GGG......G...GGGGGGGGGGGGG....c
+c...G....G...G...G....G....G...........G....c
+c...G....G..G.....G..G.....G...........G....c
+....G...G..G.......G.......GGGGGGGGGGGGG.....
+.............................................
+ccccccccccccccccccc([{ccccccccccccccccccccccc
+.............................................
+............G...........G....G.....G.........
+c...........G............G....G....G........c
+c....GGGGGGGGGGGGGGGG.....G...G...G.........c
+c..........G...............GGGGGGGGGGGG.....c
+c.........G.....G......G........G...........c
+c.........G......G......G.......G...........c
+c........G....GGG.G......G...GGGGGGGGG......c
+c.....GGGGGGGGG...G.............G...........c
+c.........G...G.................G...........c
+c.........G...G..........G......G...........c
+c........G....G..........G.GGGGGGGGGGGG.....c
+c........G....G.........G.......G...........c
+c.......G.....G....G....G.......G...........c
+c......G......G....G...G........G...........c
+c....GG........GGGGG...G........G...........c
+c...........................................c
+ccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+
+##############################################################################
+# Yin-Yang
+
+NAME: erik_asciiartentry_013
+TAGS: entry 
+ORIENT: float
+FLAGS: no_rotate
+SHUFFLE: {[(
+# I am worried about getting ported into the 2x2 closet   
+# IF we replace G with c, we could place a secret door
+MAP
+xxxxxxxxxxxvvvvvvvvvvvvxxxxxxxxxx
+xxxxxxvvvvv...........vvvxxxxxxxx
+xxxvvvv......GGGG.......vvvvxxxxx
+xxxv.......GGGGG.GGG.......vvvxxx
+xxv.....GGGGGG..G...GGG......vvxx
+xvv...GGGGGGG.GG.......GG.....vvx
+xv...GGGGGGG.G......GG...G.....vx
+vv..GGGGGGG.G.......GG....G....vx
+v...GGGGGGG.G.............G.....v
+v..GGGGGGGG.G..............G....v
+v..GGGGGGGGG.G.............G....v
+v..GGGGGGGGG.G.............G....v
+v..GGGGGGGGGG.G............G....v
+v..GGGGGGGGGGG.GG..........G....v
+v...GGGGGGGGGGG..G........G..[..v
+vv..GGGGG..GGGGGG.G.......G..{..@
+xv...GGGG}.GGGGGG.G......G...(..v
+xvv...GGGGGGGGGGGG.G...GG.....vvv
+xxv.....GGGGGGGGGG.GGGG......vvxx
+xxvv.......GGGGGG.GG.......vvvxxx
+xxxvvvvv.................vvvxxxxx
+xxxxxxxvvvv...........vvvvxxxxxxx
+xxxxxxxxxxvvvvvvvvvvvvvxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Hello? Cthulhu calling!
+
+NAME: erik_asciiartentry_014 
+TAGS: entry 
+ORIENT: float
+MONS: pit fiend
+# Pan demon would be more appropriate, but they're enormously buggy when used this way. 
+# Shadow fiend would too, but might be too easy for spoiled mummies.
+ITEM: potion of decay / potion of paralysis / potion of poison
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxccccccdccccccxxxx
+x.....xxxxxxxxxcccccccxxccccccxxx
+......xxxxxxxxccccccccxccccccccxx
+x.....xxxxxxxxccccccccxccccccccxx
+x.....xxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxdxxxxxxx1xxxxxxxdxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+....xxxxxxxxxxccccccccxccccccccxx
+x...xxxxxxxxxxccccccccxccccccccxx
+xx.xxxxxxxxxxxxcccccccxcccccccxxx
+xx.xxxxxxxxxxxxxccccccdccccccxxxx
+bb.bbbxxxxxxxxxxxxxxxxxxxxxxxxxxx
+b...(bxxx........................
+..b.[...................xxxx.....
+b...{bxxx...............xxxx.....
+bb.bbbxxxxxxxxxxxxxx.xxxxxxx.....
+ENDMAP

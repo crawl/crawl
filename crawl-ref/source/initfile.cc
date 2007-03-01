@@ -728,6 +728,7 @@ void game_options::reset_options()
         channels[i] = MSGCOL_DEFAULT;
 
     // Clear vector options.
+    extra_levels.clear();
     dump_order.clear();
     new_dump_fields("header,stats,misc,inventory,skills,"
                    "spells,,overview,mutations,messages,screenshot,"
@@ -1301,7 +1302,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
-        && key != "menu_colour" && key != "menu_color")
+        && key != "menu_colour" && key != "menu_color"
+        && key != "levels" && key != "level" && key != "entries")
     {
         tolower_string( field );
     }
@@ -1387,13 +1389,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "default_autopickup")
     {
-	// should autopickup default to on or off?
-	autopickup_on = read_bool( field, autopickup_on );
+        // should autopickup default to on or off?
+        autopickup_on = read_bool( field, autopickup_on );
     }
     else if (key == "default_autoprayer")
     {
-	// should autoprayer default to on or off?
-	autoprayer_on = read_bool( field, autoprayer_on );
+        // should autoprayer default to on or off?
+        autoprayer_on = read_bool( field, autoprayer_on );
     }
     else if (key == "detailed_stat_dump")
     {
@@ -1544,6 +1546,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // Some may look bad on some terminals.
         // As a suggestion, try "rxvt -rv -fn 10x20" under Un*xes
         friend_brand = curses_attribute(field);
+    }
+    else if (key == "levels" || key == "level" || key == "entries")
+    {
+        extra_levels.push_back(field);
     }
     else if (key == "stab_brand")
     {
@@ -1885,19 +1891,19 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "note_skill_levels")
     {
-	std::vector<std::string> thesplit = split_string(",", field);
-	for ( unsigned i = 0; i < thesplit.size(); ++i )
+        std::vector<std::string> thesplit = split_string(",", field);
+        for ( unsigned i = 0; i < thesplit.size(); ++i )
         {
-	    int num = atoi(thesplit[i].c_str());
-	    if ( num > 0 && num <= 27 )
-		note_skill_levels.push_back(num);
-	    else
+            int num = atoi(thesplit[i].c_str());
+            if ( num > 0 && num <= 27 )
+                note_skill_levels.push_back(num);
+            else
             {
-		fprintf(stderr, "Bad skill level to note -- %s\n",
-			thesplit[i].c_str());
-		continue;
-	    }
-	}
+                fprintf(stderr, "Bad skill level to note -- %s\n",
+                        thesplit[i].c_str());
+                continue;
+            }
+        }
     }
     else if (key == "pickup_thrown")
     {

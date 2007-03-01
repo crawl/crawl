@@ -4542,8 +4542,10 @@ void mons_check_pool(monsters *mons, int killer)
                  ptr_monam(mons, DESC_CAP_THE),
                  (grid == DNGN_LAVA ? "lava" : "water"));
 
-        // Even fire resistant monsters perish in lava!
-        if (!monster_habitable_grid(mons, grid))
+        // Even fire resistant monsters perish in lava, but undead can survive
+        // deep water.
+        if (!monster_habitable_grid(mons, grid)
+            && (grid == DNGN_LAVA || mons->holiness() != MH_UNDEAD))
         {
             if (message)
             {

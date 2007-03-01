@@ -1,0 +1,784 @@
+##############################################################################
+# Tricky entry vaults
+# This file contains a number of entries which may not be appropriate for
+# certain players, like newbies. These entries may require the use of certain
+# item, or demand searching for hidden passages, or may be plain more risky.
+# By default, they are not used. If you want to try them, set in the init.txt
+# entries += tricky 
+##############################################################################
+
+###################################
+# pick a door
+
+NAME: lemuel_trickyentry_001_a
+TAGS: entry
+ORIENT: float
+SHUFFLE: [{
+CHANCE: 2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.xxx.x.x.x.x.x
+x.xxx.x.x.x.x...x.x.x.x.x
+x...x.x.xxx.x.xxx.x.x.x.x
+xxx.x.x.x.x.x.xxx.x.x.x.x
+xxx.x.x.x.x.x.x.....x.x.x
+x.x.x.x.x.x.x.x.xxxxx.x.x
+x.x.x.x.x.x.x.xxx...x.x.x
+x.x.xxx.x.x.x...x.x.x.x.x
+x.x.xxx.x.x.xxx.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.xxx
+x.x.x.x.x.x.x.x.x.x.x...x
+x.x.x.x.x.x.x.x.x.x.x=x.x
+x.x.x...x.x.x.x.x.x.=.x.x
+x.x.xxx=x.x.x.x.x.xxxxx.x
+x...x...x.x.x.x.x.x.....x
+xxxxx=xxx.x.x.x.x.x.xxxxx
+.......==...x.x...x...xxx
+.......xxxxxxxxxxxxxx+xxx
+@......xxxxxxxxxxxxxx@xxx
+ENDMAP
+
+NAME: lemuel_trickyentry_001_b
+TAGS: entry
+ORIENT: float
+SHUFFLE: [{
+CHANCE: 2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x...x.x...x.x.x.x.x.x.x
+x.xxx.x.x.xxx.x.x.x...x.x
+x...x.x.xxx...x...xxxxx.x
+xxx.x.x.x.x.xxx=xxx.....x
+x.x.x.x.x.x.x...xxx.xxxxx
+x.x.x.x.....x.x.xxx.x...x
+x.x.x.xxx.x.x.x.....x.x.x
+x.x.x=x.x.x.x.xxxxx.x.x.x
+x.....x.x.xxx.x...x...x.x
+x.xxxxx...x.x...x.xxxxxxx
+x.x...x.xxx.xxxxx.x...x.@
+x.x.x.x.x...x.x.x.x.x.x..
+x.x.x.....xxx.x.x...x.x+x
+x=xxxxxxx.x...x.x=xxx.x.x
+x.....x.x.x.x.x.x.x.....x
+x..]..x.x.x.x...x.x.xxxxx
+x.....x.....x.x...x.....x
+xxx+xxxxxxxxx=xxxxxxxxxxx
+@......................@.
+ENDMAP
+
+NAME: lemuel_trickyentry_001_c
+TAGS: entry
+ORIENT: float
+SHUFFLE: [{
+CHANCE: 2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x...x.x.....x.x.x.x.x.x
+x.xxx.x.x.xxxxxxx.x.x.x.x
+x...x.x.x.x.......x.xxx.x
+xxx.x.x.x.x.xxx.xxx...x.x
+x.x.x.x.x.x.xxx.xxx.xxx.x
+x.xxx.x...x.xxx.xxx.x...x
+x.....x.x.x.....x...x.xxx
+x.xxxxx.x.xxxxxxxxx.x.xxx
+x.....x.x.xxx%x.....x...x
+x.xxxxx...x.x%x.x.xxxxxxx
+x.x...xxxxx.x=x.x.x.....x
+x.x.x.xxx...x0x.xxx.x.x.x
+x...x.....x.x0x.....x.x.x
+xxxxxxxxxxx+x=xxxxxxx.x.x
+x.................=.....x
+x.xxxxxxxxxxxxxxx.x.xxxxx
+x.................x.....x
+xxxx=xxxxxxxxxxx=xxxxx..x
+@......................@.
+ENDMAP
+
+NAME: lemuel_trickyentry_001_d
+TAGS: entry
+ORIENT: float
+SHUFFLE: [{
+CHANCE: 2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.....x.x.....x.x.x.x.x.x
+xxx+xxx.x.xxxxxxx.x.x.x.x
+x...x...x.x.x.....x.x.x.x
+x.x.x.xxx.x.x.xxxxx...x.x
+x.x.x.xxx...x...xxx.xxx.x
+x.xxx.x...xxxxx.xxx.x...x
+x...x.x.x.x.....x...xxxxx
+xxxxx.x.x.x.xxxxxxx.xxxxx
+x.x...x.x.x.xxxxxxx.....x
+x.x.xxx=x.x.......xxxxx.x
+x.x.x...x.xxxxxxx.x.....x
+x.x.x.b.x...x.xxx.x.xxx.x
+x...x...xxxxxxxxx.x.x.x.x
+xx=xx=xxx.........xxx.x.x
+xx=x....x.xxxxxxxxx.....x
+xx=x.>..x.xxxxxxxxxxx=x.x
+...x....x.............x.x
+...x....xxxxxxxxxxxxx+xxx
+@..xx=xxxxxxxxxxxxxxx..@.
+ENDMAP
+
+NAME: lemuel_trickyentry_001_e
+TAGS: entry
+MONS: nothing
+ORIENT: float
+SHUFFLE: [{
+SHUFFLE: 1cv=
+CHANCE: 2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx{([xxxxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+x.......................x
+x+x+x+x+x+x+x+x+x+x+x+x+x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.x.x.x.x=xcx.x.x.x.x.x
+x.x.x.x.x.1.x.1.x.x.x.x.x
+x.x.x.xxxcx.x.xvxxx.x.x.x
+x.x.x.x.v.x.x.x.=.x.x.x.x
+x.x.x.x.x.x.x.x.x.x.x.x.x
+x.x.xxx1x.x.x.x.x=xxx.x.x
+x.x.xxx.c.x.x.x.v.xxx.x.x
+x.x.xxx.xvx.x.xcx.xxx.x.x
+x.xxxxx.x.=.x.1.x.xxxxx.x
+x.xxxxx.x.xxxxx.x.xxxxx.x
+x.xxxxx.x.x...x.x.xxxxx.x
+xxxxxxx.x.xvxvx.x.xxxxxxx
+xxxxxxx.....=.....xxxxxxx
+xxxxxxxvxxcxxx=xx1xxxxxxx
+@......................@.
+ENDMAP
+
+#########################
+# if bats scare you, close the door!
+# minus entry, could be a good standalone vault for low levels
+
+NAME: lemuel_trickyentry_002_batcave
+TAGS: entry
+ORIENT: float
+SHUFFLE: {[(
+MONS: giant bat
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x{x[x(xxxxxxxxxxx.........%xxxx
+x.x.x.xxxxxxxx...............xx
+x.x.x.xxxxxx..................x
+x.x.x.xxxx....1.1.1.1.1......%x
+x.x.x.xx.......1.1.1.1.1....%xx
+x.....+.......1.1.1.1.1.....%xx
+xxx.xxx........1.1.1.1.1....xxx
+xxx.xxxx.................xxxxxx
+xxx.xxxxx.............xxxxxxxxx
+@...xxxxxxx.......xxxxxxxxxxxxx
+xxx.xxxxxxxxx...xxxxxxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx@xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# the eight (infinity)
+
+NAME: david_trickyentry_001_infinity
+TAGS: entry
+FLAGS: no_rotate
+ORIENT: float
+SHUFFLE: {[
+SHUFFLE: bcva
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx..........xx(xx..........xxxxx
+xxx...c=cccccc.......ccc=cccc...xxx
+xx..ccc......c=ccccccc......ccc..xx
+xx.cc...cccc...ccccc...cccc...cc.xx
+x..c..cccccccc..ccc..cccccccc..=..x
+x.cc.cc..........ccc........cc.cc.x
+x.c..c....bb..cc...cc..bb.{..c..c.x
+x.=..c..[.bb..cc...cc..bb....c..c.x
+x.cc.cc........ccc..........cc.cc.x
+x..=..cccccccc..ccc..cccccccc..c..x
+xx.cc...cccc...cccc....cccc...cc.xx
+xx..ccc......ccccccccc......ccc..xx
+xxx...cc=ccccc.......ccccc=cc...xxx
+xxxxx..........xx.xx..........xxxxx
+xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
+ENDMAP
+
+########################################################################
+# Array of rooms (five variations on the theme).
+
+NAME: david_trickyentry_002_a
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(
+SHUFFLE: wWl
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.(.+.....+.xxxxxxxxx.+.....+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.~..~+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+~.~..+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+...~~+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.[.+...x..+...xxxxxx.+.~.~.+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_trickyentry_002_b
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(
+SHUFFLE: wWl
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.(.+.....+.xxxxxxxxx.+..~.~+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.....+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+~~...+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+.~..~+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.[.+...x..+...xxxxxx.+~.~..+...x
+x...x...xxxx...xxxxxx.xvv=vvx...x
+xxxxxxxxxxxxxxxxxxxxxx=...xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_trickyentry_002_c
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(
+SHUFFLE: wWl
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.[.+.....+.xxxxxxxxx.+~~..~+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+..~.~+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.{.+..x.+...+....x.+.+.....+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+~...~+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.(.+...x..+...xxxxxx.+..~~.+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_trickyentry_002_d
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(
+SHUFFLE: wWl
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.{.+.....+.xxxxxxxxx.+...~~+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+.~~..+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.[.+..x.+...+....x.+.+..~.~+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+.....+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.(.+...x..+...xxxxxx.+~..~~+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: david_trickyentry_002_e
+TAGS: entry no_monster_gen no_pool_fixup
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(
+SHUFFLE: wWl
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxx.+...xxxxx.xvvvvvx...x
+x.[.+.....+.xxxxxxxxx.+..~.~+...x
+x...xxxxxxx.xx....x.+.xvvvvvx...x
+xxxxx..x.xx.xx.ww.+.x.+..~~.+...x
+x...x..+.xx+xx.ww.xxx.xvvvvvx...x
+x.(.+..x.+...+....x.+.+~.~..+...@
+x...xxxxxxxx+xxx+xx.x.xvvvvvx...x
+xxxxx...x..x...x..xxx.+...~~+...x
+x...x...+..xxx+x..+.+.xvvvvvx...x
+x.{.+...x..+...xxxxxx.+.....+...x
+x...x...xxxx...xxxxxx.xvvvvvx...x
+xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# concentric eggs, the baby version
+
+NAME: david_trickyentry_003_concentric_mini_eggs
+TAGS: entry no_monster_gen
+ITEM: pear / apple / banana
+ORIENT: float
+SHUFFLE: =+
+MAP
+xxxxxxxxxx.@.xxxxxxxxxx
+xxxxxxxx.......xxxxxxxx
+xxxx...............xxxx
+xx......xxx=xxx......xx
+xx....xxxx.d.xxxx....xx
+x....xxx.......xxx....x
+x...xxx..xxxxx..xxx...x
+....xx..xx...xx..xx....
+@.[.+=d.=+.{.=+.d+=.(.@
+....xx..xx...xx..xx....
+x...xxx..xxxxx..xxx...x
+x....xxx.......xxx....x
+xx....xxxx.d.xxxx....xx
+xx......xxx=xxx......xx
+xxxx...............xxxx
+xxxxxxxx.......xxxxxxxx
+xxxxxxxxxx.@.xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Evil foreboding
+
+NAME: david_trickyentry_004_a
+TAGS: entry no_monster_gen
+MONS: troll
+ORIENT: float
+CHANCE: 2
+SHUFFLE: {[(<
+MAP
+{...............[
+......lll........
+...lll.lll.......
+..l.llll.llll..l.
+...lll]..1lllll..
+..ll.ll...ll.....
+.....lll.ll......
+....ll.lll.......
+<...............(
+ENDMAP
+
+NAME: david_trickyentry_004_b
+TAGS: entry no_monster_gen
+MONS: giant bat
+ORIENT: float
+CHANCE: 8
+SHUFFLE: {[(<
+MAP
+{...............<
+......lll........
+...lll.lll.......
+..l.l.lllllll..l.
+...lll].11lllll..
+..ll.ll.11ll.....
+.....lll.ll......
+....ll.lll.......
+[...............(
+ENDMAP
+
+##############################################################################
+# The pits are prepared
+
+NAME: david_trickyentry_005_a
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 3
+MAP
+@..................@
+..wwww........llll..
+.w.wwww......llllll.
+.ww{}ww......llllll.
+.wwwwww......llllll.
+..wwww..bbbb..llll..
+.......bbbbbb.......
+.......bbbbbb.......
+.......bbbbbb.......
+........bbbb........
+@..................@
+ENDMAP
+
+NAME: david_trickyentry_005_b
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 3
+MAP
+@..................@
+..wwww........llll..
+.wwwwww......llllll.
+.wwwwww......ll}{ll.
+.wwwwww......llll.l.
+..wwww..bbbb..llll..
+.......bbbbbb.......
+.......bbbbbb.......
+.......bbbbbb.......
+........bbbb........
+@..................@
+ENDMAP
+
+NAME: david_trickyentry_005_c
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 3
+MAP
+@..................@
+..wwww........llll..
+.wwwwww......llllll.
+.wwwwww......llllll.
+.wwwwww......llllll.
+..wwww..b=bb..llll..
+.......bb.bbb.......
+.......bb{}bb.......
+.......bb.b=b.......
+........b=bb........
+@..................@
+ENDMAP
+
+NAME: david_trickyentry_005_d
+TAGS: entry no_monster_gen
+ORIENT: float
+CHANCE: 1
+MAP
+@..................@
+..wwww........llll..
+.wwwwww..{}..llllll.
+.wwwwww......llllll.
+.wwwwww......llllll.
+..wwww..bbbb..llll..
+.......bbbbbb.......
+.......bbbbbb.......
+.......bbbbbb.......
+........bbbb........
+@..................@
+ENDMAP
+
+##############################################################################
+# Caged fury
+
+NAME: david_trickyentry_006
+TAGS: entry
+MONS: weight:30 nothing / worm 
+MONS: weight:30 nothing / ooze / weight:2 jelly
+MONS: weight:30 nothing / jackal / rat
+FLAGS: no_rotate
+ORIENT: float
+SUBST: ?=Gx
+SHUFFLE: xc
+SHUFFLE: 123
+MAP
+.................
+.xxxxxxxxxxxxxxx.
+.x123132>332213x.
+.x2312132211321x.
+.x3123213123132x.
+.x?????G+G?????x.
+.x.............x.
+.=T....xxx....T=.
+.x.....({[.....x.
+.x..T.......T..x.
+.xxx=xxxxxxx=xxx.
+.................
+ENDMAP
+
+##############################################################################
+# Morbid curiosity
+
+NAME: david_trickyentry_007
+TAGS: entry 
+MONS: goblin, kobold, orc priest
+ITEM: needle, dart, stone
+ORIENT: float
+MAP
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxx...........xxxxxxxxx
+xxxxxx...xxxxx+xxxxx...xxxxxx
+xxxx..xxxxxlllllllxxxxx..xxxx
+xxx.xxxxxlll..3..lllxxxxx.xxx
+xx.xxxxxx...........xxxxxx.xx
+xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
+xx.xxxxxxxxx.....xxxxxxxxx.xx
+x.xx...xxx..G.G.G..xxx..lxx.x
+x.x....xx...........xx1fllx.x
+x.x....x.............x...lx.x
+..+...........{....G.=..1l+..
+x.x....x.............x...lx.x
+x.x....xx...........xx..llx.x
+x.xx...xxx...G.G...xxx..lxx.x
+xx.xxxxxxxxx.....xxxxxxxxxx.x
+xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
+xx.xxxxxx2d....2..e2xxxxxx.xx
+xxx.xxxxxlll2....lllxxxxx.xxx
+xxxx..xxxxxlllllllxxxxx..xxxx
+xxxxxx...xxxxx+xxxxx...xxxxxx
+xxxxxxxxx...........xxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Stupid exit shuffling
+
+NAME: david_trickyentry_008
+TAGS: entry 
+ITEM: nothing
+ORIENT: float
+SHUFFLE: [{(
+SHUFFLE: GIcbv=
+MAP
+xxxxxxxxxxxxx
+x[....{....(x
+x...........x
+x+x+x+x+x+x+x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+x.x.x.x.x.x.x
+xGxIxcxbxvx=x
+x.....@.....x
+ENDMAP
+
+##############################################################################
+# Water fire reprise
+
+NAME: david_trickyentry_009_water_fire
+TAGS: entry no_monster_gen no_pool_fixup
+FLAGS: no_rotate
+CHANCE: 1
+MONS: plant, plant / nothing
+ITEM: bread ration / weight:20 meat ration, weight:20 any food / nothing
+ORIENT: float
+SHUFFLE: {[(
+SHUFFLE: lw
+MAP
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...............xxxxxxxxxxxxx
+xxxxxxxx.........ll....ww........xxxxxxxx
+xxxx..........llllllxwwwwww..........xxxx
+xx......ll...lllxxllxwwww..ww..ww......xx
+x...llllllllll.dllllxw..2wwwxxx..www....x
+x.xl.lel.lx.l.lxxxxxx.xxxxw.wwx.x21wwwwwx
+xxllxxx.x.l.lx.1llww21wwwwxx.wxwx.1w..wwx
+x.l.xx.lxl.lxx22x.w.xww.1111xw.wxw.2xx.wx
+xl.xx..lxl.lx..111..x..xxxwx11.wxw.wx.xxx
+xll.xll.xxll.1x1xx.xx.x....wxxx.xxw.xw.wx
+xlx.x..lxll.x..xxe..x...x...xw.xx.wwxxw.x
+x.x.x...xx.xxx..x.x.x.x.x.wxxww.x.xxxw.wx
+x...x...x.xxx...x.x.x...xx..x..wx...xw..x
+xx+xx...x...x...x...x...x...x...x...xx+xx
+x..xxx..x...x...x...x...x...x...x..xxx..x
+x....x+xx...x...x...x...x...x...xx+x....x
+xx......xx+xxx+xx...x...xx+xxx+xx......xx
+xxxx...........xxx+xxx+xxx...........xxxx
+xxxxxxxx.........................xxxxxxxx
+xxxxxxxxxxxxx.....[.{.(.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# The zoo
+
+NAME: david_trickyentry_010
+TAGS: entry no_monster_gen no_pool_fixup
+MONS: nothing / hobgoblin / warg / war dog / hog / hound / wolf
+MONS: nothing / giant gecko / giant iguana / giant lizard / giant newt
+MONS: nothing / orc / generate_awake orc priest / generate_awake orc warrior / generate_awake orc wizard
+MONS: nothing / generate_awake brain worm / generate_awake lava worm / generate_awake swamp worm / worm
+ITEM: any food
+ORIENT: float
+SHUFFLE: {[(
+SHUFFLE: lw
+SHUFFLE: 1234d
+MAP
+xxxxxx@xxxxxx
+x...........x
+x.v+v+v+v+v.x
+x.v=v=v=v=v.x
+x.v=v=v=v=v.x
+x.v1v2v3v4v.x
+x.vwvwvwvwv.x
+x.v+v+v+v+v.x
+x...........x
+x..I.I.I.I..x
+x...........x
+x...{.[.(...x
+xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Goblin Pantry
+
+NAME: erik_trickyentry_001
+TAGS: entry
+ORIENT: float
+FLAGS: no_rotate
+MONS: goblin, hobgoblin
+ITEM: sausage / beef jerky / cheese / pizza / pizza / pizza
+SHUFFLE: {[( 
+MAP
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx.x.xxxxxx
+xxxxxxxx...xxxxxx
+xxxxxxxx...xxxxxx
+xdx2+.x.....xxxxx
+x$x2x.x.....xxxxx
+x.x2x.x.[{(.xxxxx
+xdx1x.x.....xxxxx
+xd+1x.+.....xxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP 
+
+##############################################################################
+# Spiral Da Hi
+ 
+NAME: erik_trickyentry_002
+TAGS: entry
+ORIENT: float
+MONS: fungus
+MAP
+x@xxxxxxxxxxxxxxxxxxxx
+x.=xxxxxxxxxxxxxxxxxxx
+x.x..................x
+x.x.=xxxxxxxxxxxxxx1.x
+x.x.x..............x.x
+x.x.x.=xxxxxxxxxx1.x.x
+x.x.x.x..........x.x.x
+x.x.x.x.=xxxxxx1.x.x.x
+x.x.x.x.x......x.x.x.x
+x.x.x.x.x.=xxx.x.x.x.x
+x.x.x.x.x.x{[x.x.x.x.x
+x.x.x.x.x.xx(x.x.x.x.x
+x.x.x.x.x....x.x.x.x.x
+x.x.x.x.1xxxx=.x.x.x.x
+x.x.x.x........x.x.x.x
+x.x.x.1xxxxxxxx=.x.x.x
+x.x.x............x.x.x
+x.x.1xxxxxxxxxxxx=.x.x
+x.x................x.x
+x.1xxxxxxxxxxxxxxxx=.x
+x....................x
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Ooh! Treasure!, Low Noise Edition Now with Added Exity Goodness
+
+NAME: erik_trickyentry_003
+TAGS: entry no_monster_gen
+ORIENT: float
+ITEM: scroll of paper, potion of water, wand of slowing
+ITEM: club, knife, stone, ring of teleportation
+SHUFFLE: {[(< 
+MAP
+bbbbbbbbbbbbbbbbbbbbb
+b0g....d..}g.......0b
+b.g..ge...e..d.d....b
+b..d................b
+bh..............g.d.b
+b.........j.........b
+b...................b
+b.........d.........b
+b........ddd......g.b
+b.h.....ddddd.......b
+b..g......d......g..b
+b.........d.........b
+b.........d.........b
+b...f.....d.......e.b
+b...................b
+b..........i........b
+b.....e...........hib
+bh........(......h..b
+bh..d....<[<....j...b
+b0........{........0b
+bbbbbbbbbbbbbbbbbbbbb
+ENDMAP 
+
+##############################################################################
+# Being Mean Is Cool
+ 
+NAME: erik_trickyentry_004_a
+TAGS: entry
+ORIENT: float
+CHANCE: 5
+ITEM: scroll of curse armour, scroll of teleportation
+MAP
+xxxxx
+xxexx
+xd{ex
+xxdxx
+xxxxx
+ENDMAP
+
+NAME: erik_trickyentry_004_b
+TAGS: entry
+ORIENT: float
+CHANCE: 5
+ITEM: scroll of curse armour / scroll of random uselessness / scroll of identify
+ITEM: scroll of curse armour / scroll of fear / scroll of teleportation
+MAP
+@.....@
+.xx=xx.
+.xxexx.
+.=d{e=.
+.xxdxx.
+.xx=xx.
+@.....@
+ENDMAP
