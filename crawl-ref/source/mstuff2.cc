@@ -1419,7 +1419,7 @@ bolt mons_spells( int spell_cast, int power )
 
     case MS_POISON_ARROW:
         beam.name = "poison arrow";
-        beam.damage = dice_def( 4, 5 + power / 12 );
+        beam.damage = dice_def( 3, 7 + power / 12 );
         beam.colour = LIGHTGREEN;
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
@@ -1569,7 +1569,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.name = "crystal spear";
         beam.range = 7;
         beam.rangeMax = 16;
-        beam.damage = dice_def( 3, 12 + power / 10 );
+        beam.damage = dice_def( 3, 16 + power / 10 );
         beam.colour = WHITE;
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
