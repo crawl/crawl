@@ -2286,7 +2286,6 @@ int mons_standard_level(int mcls)
     case MONS_GILA_MONSTER:
     case MONS_MANTICORE:
     case MONS_PLANT:
-    case MONS_UNSEEN_HORROR:
     case MONS_WYVERN:
         return 12;
 
@@ -2305,6 +2304,7 @@ int mons_standard_level(int mcls)
     case MONS_SOLDIER_ANT:
     case MONS_WOLF_SPIDER:
     case MONS_WRAITH:
+    case MONS_UNSEEN_HORROR:
         return 14;
 
     case MONS_ARMOUR_MIMIC:
