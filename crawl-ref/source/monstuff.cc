@@ -4520,7 +4520,9 @@ static void do_move_monster(monsters *monster, int xi, int yi)
 
     // monsters stepping on traps:
     mons_trap(monster);
-    mons_check_pool(monster);
+
+    if (monster->alive())
+        mons_check_pool(monster);
 }
 
 void mons_check_pool(monsters *mons, int killer)
