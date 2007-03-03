@@ -1186,7 +1186,7 @@ bool mons_speaks(struct monsters *monster)
                 strcat(info, " screams, \"I was here first!\"");
                 break;
             case 5:
-                strcat(info, " frowns.\"");
+                strcat(info, " frowns.");
                 break;
             case 6:
                 strcat(info, " looks very upset.");
