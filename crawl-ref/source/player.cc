@@ -4610,6 +4610,29 @@ size_type player::body_size(int psize, bool base) const
     return (ret);
 }
 
+bool player::cannot_speak() const
+{
+    if (silenced(x_pos, y_pos))
+        return (true);
+
+    // No transform that prevents the player from speaking yet.
+    return (false);
+}
+
+std::string player::shout_verb() const
+{
+    const int transform = attribute[ATTR_TRANSFORMATION];
+    switch (transform)
+    {
+    case TRAN_DRAGON:
+        return "roar";
+    case TRAN_SPIDER:
+        return "hiss";
+    default:
+        return "yell";
+    }
+}
+
 int player::damage_type(int)
 {
     const int wpn = equip[ EQ_WEAPON ];

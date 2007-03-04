@@ -1506,14 +1506,26 @@ void yell(void)
     int mons_targd = MHITNOT;
     struct dist targ;
 
-    if (silenced(you.x_pos, you.y_pos))
+    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
     {
         mpr("You are unable to make a sound!");
         return;
     }
 
+    const std::string shout_verb = you.shout_verb();
+    std::string cap_shout = shout_verb;
+    cap_shout[0] = toupper(cap_shout[0]);
+
+    int noise_level = 12;
+
+    // Tweak volume for different kinds of vocalisation.
+    if (shout_verb == "roar")
+        noise_level = 18;
+    else if (shout_verb == "hiss")
+        noise_level = 8;
+
     mpr("What do you say?", MSGCH_PROMPT);
-    mpr(" ! - Yell");
+    mprf(" ! - %s", cap_shout.c_str());
     mpr(" a - Order allies to attack a monster");
 
     if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
@@ -1527,21 +1539,17 @@ void yell(void)
         }
     }
 
-    strcpy(info, " Anything else - Stay silent");
-
-    if (one_chance_in(20))
-        strcat(info, " (and be thought a fool)");
-
-    mpr(info);
+    mprf(" Anything else - Stay silent%s",
+         one_chance_in(20)? " (and be thought a fool)" : "");
 
     unsigned char keyn = get_ch();
 
     switch (keyn)
     {
     case '!':
-        mpr("You yell for attention!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
         you.turn_is_over = true;
-        noisy( 12, you.x_pos, you.y_pos );
+        noisy( noise_level, you.x_pos, you.y_pos );
         return;
 
     case 'a':

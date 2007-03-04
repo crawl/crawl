@@ -1055,10 +1055,8 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
         damage = mons_adjust_flavoured( mon, beam, damage );
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Dice: %dd%d; Damage: %d", 
-                  dam_dice.num, dam_dice.size, damage );    
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "Dice: %dd%d; Damage: %d", 
+             dam_dice.num, dam_dice.size, damage );    
 #endif
 
         if (!player_hurt_monster( mon_index, damage ))

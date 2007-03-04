@@ -700,10 +700,12 @@ public:
     bool in_water() const;
     bool can_swim() const;
     bool is_levitating() const;
+    bool cannot_speak() const;
 
     bool has_spell(int spell) const;
 
     size_type transform_size(int psize = PSIZE_TORSO) const;
+    std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq);
 
