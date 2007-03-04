@@ -387,6 +387,8 @@ void untransform(void)
     you.attribute[ ATTR_TRANSFORMATION ] = TRAN_NONE;
     you.duration[ DUR_TRANSFORMATION ] = 0;
 
+    int hp_downscale = 10;
+    
     switch (old_form)
     {
     case TRAN_SPIDER:
@@ -411,6 +413,9 @@ void untransform(void)
 
         if (you.duration[DUR_STONESKIN])
             you.duration[DUR_STONESKIN] = 1;
+
+        hp_downscale = 15;
+        
         break;
 
     case TRAN_ICE_BEAST:
@@ -420,6 +425,9 @@ void untransform(void)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
+
+        hp_downscale = 12;
+        
         break;
 
     case TRAN_DRAGON:
@@ -428,6 +436,9 @@ void untransform(void)
 
         // re-check terrain now that be may no longer be flying.
         move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
+
+        hp_downscale = 16;
+        
         break;
 
     case TRAN_LICH:
@@ -444,6 +455,7 @@ void untransform(void)
     case TRAN_SERPENT_OF_HELL:
         mpr( "Your transformation has ended.", MSGCH_DURATION );
         modify_stat(STAT_STRENGTH, -13, true);
+        hp_downscale = 17;
         break;
     }
 
@@ -459,6 +471,14 @@ void untransform(void)
     }
 
     calc_hp();
+    if (hp_downscale != 10)
+    {
+        you.hp = you.hp * 10 / hp_downscale;
+        if (you.hp < 1)
+            you.hp = 1;
+        else if (you.hp > you.hp_max)
+            you.hp = you.hp_max;
+    }
 }                               // end untransform()
 
 // XXX: This whole system is a mess as it still relies on special
