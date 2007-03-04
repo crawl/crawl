@@ -1066,6 +1066,8 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
             // Monster survived, remove any poison.
             mons_del_ench( mon, ENCH_POISON_I, ENCH_POISON_IV );
             mons_del_ench( mon, ENCH_YOUR_POISON_I, ENCH_YOUR_POISON_IV );
+
+            behaviour_event( mon, ME_ALERT );
         }
 
         return (1);
@@ -1079,7 +1081,6 @@ void cast_ignite_poison(int pow)
     int damage = 0, strength = 0, pcount = 0, acount = 0, totalstrength = 0;
     char item;
     bool wasWielding = false;
-    char str_pass[ ITEMNAME_SIZE ];
 
     // temp weapon of venom => temp fire brand
     const int wpn = you.equip[EQ_WEAPON];
@@ -1090,10 +1091,7 @@ void cast_ignite_poison(int pow)
     {
         if (set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_FLAMING ))
         {
-            in_name( wpn, DESC_CAP_YOUR, str_pass );
-            strcpy( info, str_pass );
-            strcat( info, " bursts into flame!" );
-            mpr(info);
+            mprf("%s bursts into flame!", in_name(wpn, DESC_CAP_YOUR));
 
             you.wield_change = true;
             you.duration[DUR_WEAPON_BRAND] += 1 + you.duration[DUR_WEAPON_BRAND] / 2;
@@ -1153,7 +1151,7 @@ void cast_ignite_poison(int pow)
     }
 
     if (acount > 0)
-        mpr("Some ammo you are carrying burns!");
+        mpr("Some ammunition you are carrying burns!");
 
     if (pcount > 0)
     {
