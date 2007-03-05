@@ -3934,7 +3934,8 @@ enum weapon_property_type
 {
     PWPN_DAMAGE,                       //    0
     PWPN_HIT,
-    PWPN_SPEED
+    PWPN_SPEED,
+    PWPN_ACQ_WEIGHT
 };
 
 #ifdef WIZARD

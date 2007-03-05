@@ -606,43 +606,25 @@ bool acquirement(unsigned char force_class, int agent)
                 skill = i;
         }
 
-        if (skill == SK_STAVES)
-            type_wanted = WPN_QUARTERSTAFF;    // only one in this class
-        else
+        count = 0;
+
+        item_def item_considered;
+        item_considered.base_type = OBJ_WEAPONS;
+        for (int i = 0; i < NUM_WEAPONS; ++i)
         {
-            count = 0;
+            item_considered.sub_type = i;
 
-            // skipping clubs, knives, blowguns
-            for (int i = WPN_MACE; i < NUM_WEAPONS; i++)
-            {
-                // FIXME: Add a flag to itemprop.cc to do these exclusions
-                // skipping giant clubs
-                if (i == WPN_GIANT_CLUB || i == WPN_GIANT_SPIKED_CLUB)
-                    continue;
+            const int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
+            
+            if (!acqweight)
+                continue;
 
-                // skipping knife and blowgun
-                if (i == WPN_KNIFE || i == WPN_BLOWGUN)
-                    continue;
+            int wskill = range_skill(OBJ_WEAPONS, i);
+            if (wskill == SK_RANGED_COMBAT)
+                wskill = weapon_skill(OBJ_WEAPONS, i);
 
-                // blessed blades can only be created by the player, never found
-                if (i == WPN_BLESSED_BLADE)
-                    continue;
-
-                // "rare" weapons are only considered some of the time...
-                // still, the chance is higher than actual random creation
-                int wskill = range_skill(OBJ_WEAPONS, i);
-                if (wskill == SK_RANGED_COMBAT)
-                    wskill = weapon_skill(OBJ_WEAPONS, i);
-                if (wskill == skill
-                    && (i < WPN_EVENINGSTAR || i > WPN_BROAD_AXE 
-                        || (i >= WPN_HAMMER && i <= WPN_SABRE) 
-                        || one_chance_in(4)))
-                {
-                    count++;
-                    if (one_chance_in( count ))
-                        type_wanted = i;
-                }
-            }
+            if (wskill == skill && random2(count += acqweight) < acqweight)
+                type_wanted = i;
         }
     }
     else if (class_wanted == OBJ_MISSILES)
@@ -1184,10 +1166,10 @@ bool acquirement(unsigned char force_class, int agent)
         // easier to read this way
         item_def& thing(mitm[thing_created]);
 
-	// give some more gold
-	if ( class_wanted == OBJ_GOLD )
-	    thing.quantity += 150;
-
+        // give some more gold
+        if ( class_wanted == OBJ_GOLD )
+            thing.quantity += 150;
+    
         // remove curse flag from item
         do_uncurse_item( thing );
 
