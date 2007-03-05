@@ -62,7 +62,7 @@ NSPACE [^\ \t\r\n]
 
 <MAPDEF>^\s*ENDMAP  { BEGIN(INITIAL); }
 
-<MAPDEF>^[a-zA-Z_&0-9|$+.@^~()\[\]=<>{}%*\-?]+ {
+<MAPDEF>^[^ \r\n\t]+ {
                         settext();
                         return MAP_LINE;
                     }

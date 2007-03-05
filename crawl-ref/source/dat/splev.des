@@ -1190,83 +1190,69 @@ PLACE: Elf:7
 TAGS: no_pool_fixup
 FLAGS: no_rotate
 ORIENT: float
-CHANCE: 5
-# all water should be shallow, except for the two 2x4 parts (that's deep)
-# flipping is welcome
-
+CHANCE: 7
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: random, random
-
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xXXXXXXXXXXXXXXXXXXXXXXXXXx
-xX|$*.....WWW.WWW.....*$*Xx
-xXXX$XXXXcccc+ccccXXXXX$*Xx
-xX2XXXcccc.......ccccXXX$Xx
-xX.Xccc....5...5....cccXXXx
-xX.cc.................ccXXx
-xX.c....3....4....3....c.Xx
-xX.+.........U.........+.Xx
-xX.c......2.2.2.2......c.Xx
-xX.cc.................cc.Xx
-xX.Xcc.cccccc.cccccc.cc..Xx
-xX.XXc.c.3.ww.ww.4.ccc...Xx
-xX3XXc.....ww.ww.........Xx
-xX$$$ccc...ww.ww...cXXXX.Xx
-xX$$$XXc.1.ww.ww.5.cXXXX.Xx
-xX$$$XXcccccc.ccccccX12..Xx
-xXXX+XXXXXXXc.cXXXXXXXXX.Xx
-xX|*|*|**|*XXWXX$|$*$|$|.Xx
-xX**|*|||||XcWcX|$|$*$*$.Xx
-xX5|*||4**|XcWcX$*$*$*$|3Xx
-xX|**|*|||*Xc.cX|$|$|$|$.Xx
-xXXXXXXXXXXXc.cXXXXXXXXXXXX
-xxxxxxxxxxxxx@xxxxxxxxxxxxx
+ccccccccccccccccccccccccc
+c2ccccccc.......ccccccccc
+c.cccc....5...5....cccccc
+c.cc.................cccc
+c.c....3....4....3....c.c
+c.+.........U.........+.c
+c.c......2.2.2.2......c.c
+c.cc.................cc.c
+c.ccc.cccccc.cccccc.cc..c
+c.ccc.c.3.ww.ww.4.ccc...c
+c3ccc.....ww.ww.........c
+c$$$ccc...ww.ww...ccccc.c
+c$$$ccc.1.ww.ww.5.ccccc.c
+c$$$cccccccc.ccccccc12..c
+ccc+cccccccc.cccccccccc.c
+c|*|*|**|*ccWcc$|$*$|$|.c
+c**|*|||||ccWcc|$|$*$*$.c
+c5|*||4**|ccWcc$*$*$*$|3c
+c|**|*|||*cc.cc|$|$|$|$.c
+cccccccccccc.cccccccccccc
+xxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
 #######################################
 
 NAME: elf_hall_gauntlet_fiery
 PLACE: Elf:7
-TAGS: no_pool_fixup
 FLAGS: no_rotate
 ORIENT: float
-CHANCE: 5
-# all water should be shallow
-# flipping is welcome
-
+CHANCE: 3
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: random, random
-
+SUBST: l = l w W
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xXXXXXXXXXXXXXXXXXXXXXXXXXx
-xX|$*.....lll.lll.....*$*Xx
-xXXX$XXXXcccc+ccccXXXXX$*Xx
-xX2XXXcccc.......ccccXXX$Xx
-xX.Xccc....5...5....cccXXXx
-xX.cc.................ccXXx
-xX.c....3....4....3....c.Xx
-xX.+.........U.........+.Xx
-xX.c......2.2.2.2......c.Xx
-xX.cc.................cc.Xx
-xX.Xcc.cccccc.cccccc.cc..Xx
-xX.XXc.c.3.WW.WW.4.ccc...Xx
-xX3XXc.....WW.WW.........Xx
-xX$$$ccc...WW.WW...cXXXX.Xx
-xX$$$XXc.1.WW.WW.5.cXXXX.Xx
-xX$$$XXcccccc.ccccccX12..Xx
-xXXX+XXXXXXXc.cXXXXXXXXX.Xx
-xX|*|*|**|*Xc.cX$|$*$|$|.Xx
-xX**|*|||||Xc.cX|$|$*$*$.Xx
-xX5|*||4**|XXlXX$*$*$*$|3Xx
-xX|**|*|||*Xc.cX|$|$|$|$.Xx
-xXXXXXXXXXXXc.cXXXXXXXXXXXX
-xxxxxxxxxxxxx@xxxxxxxxxxxxx
+ccccccccccccccccccccccccc
+c2ccccccc.......ccccccccc
+c.cccc....5...5....cccccc
+c.cc.................cccc
+c.c....3....4....3....c.c
+c.+.........U.........+.c
+c.c......2.2.2.2......c.c
+c.cc.................cc.c
+c.ccc.cccccc.cccccc.cc..c
+c.ccc.c.3.ww.ww.4.ccc...c
+c3ccc.....ww.ww.........c
+c$$$ccc...ww.ww...ccccc.c
+c$$$ccc.1.ww.ww.5.ccccc.c
+c$$$cccccccc.ccccccc12..c
+ccc+cccccccc.cccccccccc.c
+c|*|*|**|*cc.cc$|$*$|$|.c
+c**|*|||||cc.cc|$|$*$*$.c
+c5|*||4**|cclcc$*$*$*$|3c
+c|**|*|||*cclcc|$|$|$|$.c
+cccccccccccc.cccccccccccc
+xxxxxxxxxxxx@xxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1277,36 +1263,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ~ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce**|||**eccccccce%*%%%*%ec$$ccccxc
-cxc..c$$=....6....ccccccc....7....c$$c..cxc
+cxc..c$$=....7....ccccccc....7....c$$c..cxc
 cx.d%c$ccccc...ccccccccc=ccc...ccccc$c*e.xc
 cx.d%cc=.c.cc.cc.|.ccccc.|.cc.cc.c.c==|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*|*c...|.5.c.5.|...c***c$$$ccccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c*|*c...|...c...|...c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...ccc...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc*|*=c.5+.........ccccxc
-cxcccc...2|2...c..cce|ecc..c...2|2...ccccxc
-cxccc=c..c^c..cc..3cc|cc3..cc..c^c..cccccxc
-cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.e|ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.e*cc4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*|*=c4.+.........ccccxc
+cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxcccc=..c~c..cc...cc|cc...cc..c~c..cccccxc
+cxc..=cccc+cccccc...ccc...cccccc+ccccc..cxc
+cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.e*cc.......ccccccccccccccc.......cc%d.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP 
@@ -1318,36 +1307,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%ecccccc=e**|||**ec$$ccccxc
-cxc..c$$c....6....ccccc=c....7....c$$=..cxc
+cxc..c$$c....7....ccccc=c....7....c$$=..cxc
 cx.e*c$ccccc...=cccccc=ccccc...ccccc$c*e.xc
 cx.e%cc=.c.cc.cc...ccc=c...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxccc=c$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*|*c.....5.c.5.....c***c$$$ccccxc
+cxccc=c$$|*|*c...c...U...c...c***|$$cccccxc
+cxcccc$$$c|**...4c...!...c4..3*||c$$$ccccxc
+cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...c=c...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc*|*cc.5+.........ccccxc
-cxcccc...2|2...c..cce|ecc..c...2|2...ccccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...c=c...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*|*cc4.+.........ccccxc
+cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.e|ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.e*c=4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..=c.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...cc...cc.cc..ccc...2..3cccccxc
-cxcccccc......|^..ccc.ccc.^|.......ccccccxc
+cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.e*c=.......ccccccccccccccc.......cc%d.xc
+cxc..=c...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1359,36 +1351,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%*%eccccccce**|||**ec$$=cccxc
-cxc..c$$c....6....ccccccc....7....=$$c..cxc
+cxc..c$$c....7....ccccccc....7....=$$c..cxc
 cx.e|c$ccccc...ccc=ccccccccc...ccccc$c*e.xc
 cx.e*=c=.c.cc.cc...ccccc...cc.cc.c.c=c%e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cc=ccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$c=ccxc
-cxcccc$$$c*|*c.....5.c.5.....c***c$$$c=ccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cc=ccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$c=ccxc
+cxcccc$$$c*|*c.......c.......c***c$$$c=ccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$c=ccxc
-cxccccccc...cccccc.......cccccc...cccc=ccxc
-cxccccc4......ccc...ccc...ccc......4cc=ccxc
-cxccccc...3...cc...cc|cc...cc...3...cc=ccxc
-cxcccc.........+5.cc*|*cc.5+.........c=ccxc
-cxcccc...2|2...c..cce|ecc..c...2|2...c=ccxc
-cxccccc..c^c..cc..3=c|cc3..cc..c^c..cc=ccxc
+cxccccccc...cccccc...?...cccccc...cccc=ccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cc=ccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cc=ccxc
+cxcccc.........+.4cc*|*cc4.+.........c=ccxc
+cxcccc....|....c.6cce|ecc6.c....|....c=ccxc
+cxccccc..c~c..cc...=c|cc...cc..c~c..cc=ccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.d%ccc.....ccccc.......ccccc.....ccc|e.xc
-cx.d%cc4.1.3..ccccccccccccccc..3.1.4cc*e.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc|e.xc
+cx.d%cc.......ccccccccccccccc.......cc*e.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1400,36 +1395,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%eccccccce**|||**ec$$ccccxc
-cxc..=$$c....6....ccccccc....7....c$$c..cxc
+cxc..=$$c....7....ccccccc....7....c$$c..cxc
 cx.e%c$ccccc...ccccccccccccc...ccccc$c*e.xc
 cx.e*cc=.c.cc.cc...ccccc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**c=c..c..ccc..c..c=c|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$c=cccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*|*c.....5.c.5.....c***c$$$ccccxc
+cxccccc$$|*|*c...c...U...c...c***|$$c=cccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...=cc...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc*|*cc.5+.........ccccxc
-cxcccc...2|2...c..cce|ecc..c...2|2...ccccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...=cc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*|*cc4.+.........ccccxc
+cxcccc....|....c.6cce|ecc6.c....|....ccccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.d%ccc.....ccccc.......ccccc.....ccc*e.xc
-cx.d%cc4.1.3..ccccccccccccccc..3.1.4cc|e.xc
-cxc..cc.....22cccc.......cccc22.....c=..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3=ccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc*e.xc
+cx.d%cc.......ccccccccccccccc.......cc|e.xc
+cxc..cc...!...cccc.......cccc...!...c=..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......=ccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1441,36 +1439,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd%%%%%%%dc==c===e%%%%%%%ec$$ccccxc
-cxc..c$$c....6....ccc=ccc....7....c$$c..cxc
+cxc..c$$c....7....ccc=ccc....7....c$$c..cxc
 cx.e|=$ccccc...cccccc=cccccc...ccccc$c*e.xc
 cx.e*ccc.c.cc.cc...cc=cc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..c=c..c..ccc|*c.$c=..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*|*c.....5.c.5.....c***c$$$ccccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c*|*c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...ccc...ccc......4cccccxc
-cxccccc...3...cc...c=|cc...cc...3...cccccxc
-cxcccc.........+5.cc|||cc.5+.........ccccxc
-cxcccc...2|2...c..cce|ecc..c...2|2...=cccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cc=ccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.c=|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc|||cc4.+.........ccccxc
+cxcccc....|....c.6cce|ecc6.c....|....=cccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cc=ccxc
 cxc..c=ccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.e|=cc.....ccccc.......ccccc.....ccc|e.xc
-cx.e|cc4.1.3..ccccccccccccccc..3.1.4cc|e.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.e|=cc.~~~.ccccc.......ccccc.~~~.ccc|e.xc
+cx.e|cc.......ccccccccccccccc.......cc|e.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1482,36 +1483,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%%%eccccccce**|||**ec$$ccccxc
-cxc..c$$c....6....cccccc=....7....c$$c..cxc
+cxc..c$$c....7....cccccc=....7....c$$c..cxc
 cx.e|c$cccc=...cccccccc=cccc...ccccc$c*e.xc
 cx.e*cc=.c.cc.cc...ccccc...cc.cc.c.c=c|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxcc=cc$$|*|*c..2c...U...c2..c***|$$c=cccxc
-cxcc=c$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcc=c$$$c*|*c.....5.c.5.....c***c$$$ccccxc
+cxcc=cc$$|*|*c...c...U...c...c***|$$c=cccxc
+cxcc=c$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcc=c$$$c*|*c.......c.......c***c$$$ccccxc
 cxcc=c$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccc=ccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...ccc...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc*|*cc.5+.........ccccxc
-cxcccc...2|2...c..ccd|dcc..c...2|2...ccccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxccc=ccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*|*cc4.+.........ccccxc
+cxcccc....|....c.6ccd|dcc6.c....|....ccccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.e*ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.e|cc4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccc=c3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcc=ccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.e*ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.e|cc.......ccccccccccccccc.......cc%d.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccc=c.......ccc~6cc?cc6~ccc.......cccccxc
+cxcc=ccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccc===c...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1523,36 +1527,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd|*|||**dcccccccd*||*|**dc$$ccccxc
-cxc..c$$c....6....ccccccc....7....c$$c..cxc
+cxc..c$$c....7....ccccccc....7....c$$c..cxc
 cx.e|c$ccccc...ccccccccccccc...ccccc$c%e.xc
 cx.e|c=c.c.cc.cc...ccccc...cc.cc.c.c=c%e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$c=..cxc
-cxcc=cc$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcc=c$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcc=c$$$c*|*c.....5.c.5.....c***c$$$ccccxc
+cxcc=cc$$|*|*c...c...U...c...c***|$$cccccxc
+cxcc=c$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcc=c$$$c*|*c.......c.......c***c$$$ccccxc
 cxcc=c$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxcc=cccc...cccccc.......cccccc...cccccccxc
-cxcc=cc4......ccc...ccc...ccc......4cccccxc
-cxccc=c...3...cc...cc%cc...cc...3...cccccxc
-cxcccc.........+5.cc*|%cc.5+.........ccccxc
-cxcccc...2|2...c..cce%ecc..c...2|2...ccccxc
-cxccc=c..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxcc=cccc...cccccc...?...cccccc...cccccccxc
+cxcc=cc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccc=c.2.!.?.cc.6.cc%cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*|%cc4.+.........ccccxc
+cxcccc....|....c.6cce%ecc6.c....|....ccccxc
+cxccc=c..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...c=c...cccccc+ccccc..cxc
-cx.e|ccc.....ccccc.......ccccc.....ccc*e.xc
-cx.e|cc4.1.3..ccccccccccccccc..3.1.4cc*e.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.e|ccc.~~~.ccccc.......ccccc.~~~.ccc*e.xc
+cx.e|cc.......ccccccccccccccc.......cc*e.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1564,36 +1571,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce*|||||*ec==ccc=e*|||||*ec$$ccccxc
-cxc..=$$c....6....=cc=c=c....7....=$$c..cxc
+cxc..=$$c....7....=cc=c=c....7....=$$c..cxc
 cx.e%c$ccccc...ccccc=c=ccccc...ccccc$c|e.xc
 cx.e%cc=.c.cc.cc...ccccc...cc.cc.c.cc=|e.xc
 cxc..cc$.c**ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cc=ccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$c=ccxc
-cxcccc$$$c*|*c.....5.c.5.....c***c$$$c=ccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cc=ccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$c=ccxc
+cxcccc$$$c*|*c.......c.......c***c$$$c=ccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$c=ccxc
-cxccccccc...cccccc.......cccccc...cccc=ccxc
-cxccccc4......ccc...ccc...ccc......4==cccxc
-cxccccc...3...cc...cc%cc...cc...3...cccccxc
-cxcccc.........+5.cc*%*cc.5+.........ccccxc
-cxcccc...2|2...c..cce|e=c..c...2|2...ccccxc
-cxccc=c..c^c..cc..3cc*cc3..cc..c^c..cccccxc
+cxccccccc...cccccc...?...cccccc...cccc=ccxc
+cxccccc.....?.ccc...ccc...ccc.?.....==cccxc
+cxccccc.2.!.?.cc.6.cc%cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc*%*cc4.+.........ccccxc
+cxcccc....|....c.6cce|e=c6.c....|....ccccxc
+cxccc=c..c~c..cc...cc*cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.e%ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.e%cc4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3=ccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.e%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.e%cc.......ccccccccccccccc.......cc%d.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......=ccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1605,36 +1615,39 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$=e**|||**eccccccce%%|%|%%e=$$ccccxc
-cxc..c$$c....6....==ccccc....7....c$$c..cxc
+cxc..c$$c....7....==ccccc....7....c$$c..cxc
 cx.d|c$ccccc...cccc=cc=ccccc...ccccc$c%d.xc
 cx.d|ccc.c.cc.cc...cc=cc...cc.c=.c.ccc%d.xc
 cxc..cc$.c|*ccc..c..=cc..c..ccc|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*||c.....5.c.5.....c***c$$$ccccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c*||c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...ccc...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc||*cc.5+.........ccccxc
-cxcccc...2|2...c..c=e|ecc..c...2|2...ccccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc||*cc4.+.........ccccxc
+cxcccc....|....c.6c=e|ecc6.c....|....ccccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.d%ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.d%cc4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
+cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.d%cc.......ccccccccccccccc.......cc%d.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
 cxccccccc...ccccccccc.ccccccccc...cccccccxc
 ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
@@ -1646,40 +1659,43 @@ PLACE: Elf:7
 CHANCE: 1
 ORIENT: float
 FLAGS: no_rotate
-ITEM: scroll of teleportation, scroll of paper
-
+ITEM: scroll of teleportation, any scroll
 MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
-MONS: curse skull, curse toe
-
+MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
+MONS: curse skull / curse toe / oklob plant / azure jelly / acid blob
+SUBST: ~ = ^ .:30
+SUBST: ! = 1 5
+SUBST: ? = . ?
+SUBST: ? : 2 3
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxccc====ccccc=======cccc====ccccccccccccxc
 cxcc=cccc=ccc=ccccccc=c==cccc=cccccccccccxc
 cxcc=c$$ce**|||**eccc=ccce|*|*|*|ec$$ccccxc
-cxc..c$$=....6....ccccccc....7....c$$c..cxc
+cxc..c$$=....7....ccccccc....7....c$$c..cxc
 cx.e%c$ccccc...=cccccccccccc...ccccc$c%d.xc
 cx.e%ccc.c.cc.cc...ccccc...cc.cc.c.ccc%d.xc
 cxc..cc$.c|*ccc..c..ccc..c..ccc|*c.$cc..cxc
-cxccccc$$|*|*c..2c...U...c2..c***|$$cccccxc
-cxcccc$$$c|**3...c...1...c...3*||c$$$ccccxc
-cxcccc$$$c*||c.....5.c.5.....c***c$$$ccccxc
+cxccccc$$|*|*c...c...U...c...c***|$$cccccxc
+cxcccc$$$c|**...4c...!...c4...*||c$$$ccccxc
+cxcccc$$$c*||c.......c.......c***c$$$ccccxc
 cxcccc$ccccccc..ccc+ccc+ccc..ccccccc$ccccxc
-cxccccccc...cccccc.......cccccc...cccccccxc
-cxccccc4......ccc...ccc...ccc......4cccccxc
-cxccccc...3...cc...cc|cc...cc...3...cccccxc
-cxcccc.........+5.cc||*cc.5+.........ccccxc
-cxcccc...2|2...c..ccd|dcc..c...2|2...ccccxc
-cxccccc..c^c..cc..3cc|cc3..cc..c^c..cccccxc
+cxccccccc...cccccc...?...cccccc...cccccccxc
+cxccccc.....?.ccc...ccc...ccc.?.....cccccxc
+cxccccc.2.!.?.cc.6.cc|cc.6.cc.?.!.3.cccccxc
+cxcccc.........+.4cc||*cc4.+.........ccccxc
+cxcccc....|....c.6ccd|dcc6.c....|....ccccxc
+cxccccc..c~c..cc...cc|cc...cc..c~c..cccccxc
 cxc..ccccc+cccccc...ccc...cccccc+ccccc..cxc
-cx.d%ccc.....ccccc.......ccccc.....ccc%d.xc
-cx.d%cc4.1.3..ccccccccccccccc..3.1.4cc%d.xc
-cxc..cc.....22cccc.......cccc22.....cc..cxc
-cxccccc3..2...ccc..cc.cc..ccc...2..3cccccxc
-cxcccccc.......|^.ccc.ccc.^|.......ccccccxc
-cxccc...ccccccccc.ccccccccc...cccccccccccxc
-ccccccccccccccccc@ccccccccccccccccccccccccc
+cx.d%ccc.~~~.ccccc.......ccccc.~~~.ccc%d.xc
+cx.d%cc.......ccccccccccccccc.......cc%d.xc
+cxc..cc...!...cccc.......cccc...!...cc..cxc
+cxccccc.......ccc~6cc?cc6~ccc.......cccccxc
+cxcccccc.3..6..|~~ccc.ccc~~|..6..2.ccccccxc
+cxccccccc...ccccccccc.ccccccccc...cccccccxc
+ccccccccccccccccccccc@ccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################

@@ -4013,7 +4013,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels
     if (vault == -1
             && player_in_branch( BRANCH_MAIN_DUNGEON ) 
-            && level_number > 10 && level_number < 26 && one_chance_in(9))
+            && one_chance_in(9))
         vault = random_map_for_depth(level_number);
 
     if (vault != -1)
@@ -4056,7 +4056,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
     {
         plan_main(level_number, 0);
 
-        if (one_chance_in(3) && level_number > 6)
+        if (one_chance_in(3))
         {
             int mvault = random_map_for_depth(level_number, true);
             if (mvault != -1)
@@ -4075,8 +4075,7 @@ static int builder_normal(int level_number, char level_type, spec_room &sr)
         // sometimes roguey_levels generate a special room
         roguey_level(level_number, sr);
 
-        if (level_number > 6
-            && player_in_branch( BRANCH_MAIN_DUNGEON )
+        if (player_in_branch( BRANCH_MAIN_DUNGEON )
             && one_chance_in(4))
         {
             int mvault = random_map_for_depth(level_number, true);
@@ -4212,8 +4211,7 @@ static void builder_extras( int level_number, int level_type )
     if (level_number >= 11 && level_number <= 23 && one_chance_in(15))
         place_specific_stair(DNGN_ENTER_LABYRINTH);
 
-    if (level_number > 6 
-        && player_in_branch( BRANCH_MAIN_DUNGEON )
+    if (player_in_branch( BRANCH_MAIN_DUNGEON )
         && one_chance_in(3))
     {
         int mvault = random_map_for_depth(level_number, true);

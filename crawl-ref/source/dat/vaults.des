@@ -222,7 +222,8 @@
 #
 ###############################################################################
 
-default-depth: 1-27
+# Set the default depth for vaults.
+default-depth: 12-26
 
 ##############################################################################
 # Entry vaults
@@ -4514,6 +4515,77 @@ MAP
 ...................l..........
 ENDMAP
 
+##############################################################################
+# Rats! (Lemuel)
+NAME: RatsNest
+ORIENT: float
+DEPTH: 3-8
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx343.xx.xxxxxxxx.334433xxxxxxxxx23...x
+xx.222...xxxxxxxx..224422xxxxxx1111...xx
+x..111..xxxxxxxxx..111111.xxx.111...xxxx
+xx.111..xxxxxxxxxx.11111..x......xxxxxxx
+xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxx
+xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxx
+xxxxx...x.xxx.x33xx.xxxx.xxxxxxxxxxxxxxx
+xxxxxxx.x.xxxx221x.xxx...xxxxxxxxxxxxxxx
+xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxx..xxx.x.x.xxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxx..x.xx.x.xx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx..xx.xx.x.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxx.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+MONS: rat, grey rat, green rat, orange rat
+
+##############################################################################
+# Beware the mummy's curse (Lemuel)
+NAME: MiniTomb
+ORIENT: float
+DEPTH: 10-26
+
+MAP
+xxxxcccccxxxx
+xxxxc$|$cxxxx
+xxxxc$|$cxxxx
+xxxxc$4$cxxxx
+xxcccc=ccccxx
+xxc$55155$cxx
+xxc1211121cxx
+xxc...F...cxx
+xxc.......cxx
+xxc.......cxx
+xxcccc=ccccxx
+xxc.......cxx
+xxc.......cxx
+x$=.12321.=$x
+x$c.......c$x
+x3c.......c3x
+xxcccc+ccccxx
+xxxxxc.cxxxxx
+xxxxxc.cxxxxx
+xxxxxc.cxxxxx
+xxxx.=.=.xxxx
+xxxx$c.c$xxxx
+xxxx2c1c2xxxx
+xxxxxc1cxxxxx
+xxxccc1cccxxx
+xxccFc+cFccxx
+ENDMAP
+
+MONS: large zombie, mummy, guardian mummy, greater mummy
+MONS: large zombie
+
 #############################################################################
 
 NAME: vault_1
@@ -5284,6 +5356,9 @@ ENDMAP
 # NOTE: Minivaults must NOT have an ORIENT: attribute. Including an ORIENT:
 # attribute makes the map a normal vault, and mayhem can result.
 
+# Default depth for minivaults.
+default-depth: 8-27
+
 NAME: minivault_1
 
 MAP
@@ -5947,6 +6022,26 @@ MAP
 .bbbbbbbbbbbbb.
 ...............
 ENDMAP
+
+##############################################################################
+# Things aren't always what they seem (Lemuel)
+NAME: fake_naga_vault
+
+# Intentionally moved this deeper because explore will gladly run into the
+# room, and being hit by multiple mimics is un-fun.
+
+DEPTH: 15-26
+
+MAP
+xxxxxxxxx
+x1111111x
+x1111111x
+x1111111x
+x11.2.11x
+xxxx+xxxx
+ENDMAP
+
+MONS: mimic, guardian naga
 
 #############################################################################
 # Pandemonium lesser demon vaults

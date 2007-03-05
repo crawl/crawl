@@ -305,11 +305,12 @@ int random_map_for_depth(int depth, bool want_minivault)
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].depth.contains(depth) 
-                // Tagged levels cannot be selected by depth. This is
-                // the only thing preventing Pandemonium demon vaults from
-                // showing up in the main dungeon.
-                && vdefs[i].tags.empty()
-                && vdefs[i].is_minivault() == want_minivault)
+            // Tagged levels cannot be selected by depth. This is
+            // the only thing preventing Pandemonium demon vaults from
+            // showing up in the main dungeon.
+            && !vdefs[i].has_tag("entry")
+            && !vdefs[i].has_tag("pan")
+            && vdefs[i].is_minivault() == want_minivault)
         {
             rollsize += vdefs[i].chance;
 

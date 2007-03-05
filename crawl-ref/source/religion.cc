@@ -319,6 +319,54 @@ static int random_undead_servant(int religion)
     return (thing_called);
 }
 
+static const item_def *find_missile_launcher(int skill)
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!is_valid_item(you.inv[i]))
+            continue;
+
+        const item_def &item = you.inv[i];
+        if (is_range_weapon(item)
+            && range_skill(item) == skill_type(skill))
+        {
+            return (&item);
+        }
+    }
+    return (NULL);
+}
+
+static int ammo_count(const item_def *launcher)
+{
+    int count = 0;
+    const missile_type mt = launcher? fires_ammo_type(*launcher) : MI_DART;
+    
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!is_valid_item(you.inv[i]))
+            continue;
+
+        const item_def &item = you.inv[i];
+        if (item.base_type == OBJ_MISSILES && item.sub_type == mt)
+            count += item.quantity;
+    }
+    
+    return (count);
+}
+
+static bool need_missile_gift()
+{
+    const int best_missile_skill = best_skill(SK_SLINGS, SK_RANGED_COMBAT);
+    const item_def *launcher = find_missile_launcher(best_missile_skill);
+    return (you.piety > 80
+            && random2( you.piety ) > 70
+            && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
+            && one_chance_in(8)
+            && you.skills[ best_missile_skill ] >= 8
+            && (launcher || best_missile_skill == SK_DARTS)
+            && ammo_count(launcher) < 20 + random2(35));
+}
+
 void pray(void)
 {
     unsigned char  was_praying = you.duration[DUR_PRAYER];
@@ -526,11 +574,7 @@ void pray(void)
             }
 
             if (you.religion == GOD_OKAWARU
-                && you.piety > 80
-                && random2( you.piety ) > 70
-                && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
-                && one_chance_in(8)
-                && you.skills[ best_skill(SK_SLINGS, SK_RANGED_COMBAT) ] >= 9)
+                && need_missile_gift())
             {
                 success = acquirement( OBJ_MISSILES, you.religion );
                 if (success)
