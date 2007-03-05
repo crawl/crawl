@@ -2948,6 +2948,9 @@ int melee_attack::mons_to_hit()
     if (weapon && weapon->base_type == OBJ_WEAPONS)
         mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
+    if (attacker->confused())
+        mhit -= 5;
+
     return (mhit);
 }
 

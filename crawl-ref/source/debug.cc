@@ -2287,6 +2287,7 @@ void debug_set_stats()
     you.redraw_strength = true;
     you.redraw_dexterity = true;
     you.redraw_intelligence = true;
+    you.redraw_evasion = true;
 }
 
 #endif

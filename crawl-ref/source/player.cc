@@ -1743,7 +1743,123 @@ size_type player_size( int psize, bool base )
     return you.body_size(psize, base);
 }
 
-int player_evasion(void)
+// New and improved 4.1 evasion model, courtesy Brent Ross.
+int player_evasion()
+{
+    // XXX: player_size() implementations are incomplete, fix.
+    const size_type size  = player_size(PSIZE_BODY);
+    const size_type torso = player_size(PSIZE_TORSO);
+
+    const int size_factor = SIZE_MEDIUM - size;
+    int ev = 10 + 2 * size_factor;
+
+    // Repulsion fields and size are all that matters when paralysed.
+    if (you.paralysed())
+    {
+        ev = 2 + size_factor;
+        if (you.mutation[MUT_REPULSION_FIELD] > 0)
+            ev += (you.mutation[MUT_REPULSION_FIELD] * 2) - 1;
+        return ((ev < 1) ? 1 : ev);
+    }
+
+    // Calculate the base bonus here, but it may be reduced by heavy 
+    // armour below.
+    int dodge_bonus = (skill_bump(SK_DODGING) * you.dex + 10) 
+                      / (20 - size_factor);
+
+    // Limit on bonus from dodging:
+    const int max_bonus = (you.skills[SK_DODGING] * (10 + size_factor)) / 9;
+    if (dodge_bonus > max_bonus)
+        dodge_bonus = max_bonus;
+
+    // Some lesser armours have small penalties now (shields, barding)
+    for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
+    {
+        if (you.equip[i] == -1)
+            continue;
+
+        int pen = property( you.inv[ you.equip[i] ], PARM_EVASION );
+
+        // reducing penalty of larger shields for larger characters
+        if (i == EQ_SHIELD && torso > SIZE_MEDIUM)
+            pen += (torso - SIZE_MEDIUM);
+
+        if (pen < 0)
+            ev += pen;
+    }
+
+    // handle main body armour penalty
+    if (you.equip[EQ_BODY_ARMOUR] != -1)
+    {
+        // XXX: magnify arm_penalty for weak characters?
+        // Remember: arm_penalty and ev_change are negative.
+        int arm_penalty = property( you.inv[ you.equip[EQ_BODY_ARMOUR] ],
+                                          PARM_EVASION );
+
+        // The very large races take a penalty to AC for not being able
+        // to fully cover, and in compensation we give back some freedom
+        // of movement here.  Likewise, the very small are extra encumbered
+        // by armour (which partially counteracts their size bonus above).
+        if (size < SIZE_SMALL || size > SIZE_LARGE)
+        {
+            arm_penalty -= ((size - SIZE_MEDIUM) * arm_penalty) / 4;
+
+            if (arm_penalty > 0)
+                arm_penalty = 0;
+        }
+
+        int ev_change = arm_penalty;
+        ev_change += (you.skills[SK_ARMOUR] * you.strength) / 60;
+
+        if (ev_change > arm_penalty / 2)
+            ev_change = arm_penalty / 2;
+
+        ev += ev_change;
+
+        // This reduces dodging ability in heavy armour.
+        if (!player_light_armour())
+            dodge_bonus += (arm_penalty * 30 + 15) / you.strength;
+    }
+
+    if (dodge_bonus > 0)                // always a bonus
+        ev += dodge_bonus;
+
+    if (you.duration[DUR_FORESCRY])
+        ev += 8;
+
+    if (you.duration[DUR_STONEMAIL])
+        ev -= 2;
+
+    ev += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+    ev += scan_randarts( RAP_EVASION );
+
+    if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS ))
+        ev -= 2;
+
+    if (you.mutation[MUT_REPULSION_FIELD] > 0)
+        ev += (you.mutation[MUT_REPULSION_FIELD] * 2) - 1;
+
+    // transformation penalties/bonuses not covered by size alone:
+    switch (you.attribute[ATTR_TRANSFORMATION])
+    {
+    case TRAN_STATUE:
+        ev -= 5;                // stiff
+        break;
+        
+    case TRAN_AIR:
+        ev += 20;               // vapourous
+        break;
+
+    default:
+        break;
+    }
+
+    return (ev);
+}
+
+// Obsolete evasion calc.
+#if 0
+int old_player_evasion(void)
 {
     int ev = 10;
 
@@ -1833,6 +1949,7 @@ int player_evasion(void)
 
     return ev;
 }                               // end player_evasion()
+#endif
 
 int player_magical_power( void )
 {
@@ -4890,9 +5007,8 @@ int player::armour_class() const
 
 int player::melee_evasion(const actor *act) const
 {
-    return (random2limit(player_evasion(), 40)
-            + random2(you.dex) / 3
-            - (act->visible()? 2 : 14)
+    return (player_evasion()
+            - (act->visible()? 0 : 10)
             - (you_are_delayed()? 5 : 0));
 }
 
