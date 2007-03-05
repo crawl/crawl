@@ -582,7 +582,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                                         monster->hit_dice);
                 }
                 else if (you.religion == GOD_VEHUMET
-                        || testbits( menv[i].flags, MF_GOD_GIFT ))
+                         || you.religion == GOD_MAKHLEB
+                         || testbits( menv[i].flags, MF_GOD_GIFT ))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necomancy vs Summoning (ignoring
