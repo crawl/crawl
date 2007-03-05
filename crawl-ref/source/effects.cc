@@ -1153,9 +1153,36 @@ bool acquirement(unsigned char force_class, int agent)
     }
     else
     {
-        // BCR - unique is now used for food quantity.
-        thing_created = items( unique, class_wanted, type_wanted, true, 
-                               MAKE_GOOD_ITEM, 250 );
+        int item_tries = 0;
+		randart_properties_t  proprt;
+
+		for(item_tries = 0; item_tries < 50; item_tries++)
+		{
+			// BCR - unique is now used for food quantity.
+			thing_created = items( unique, class_wanted, type_wanted, true, 
+				                   MAKE_GOOD_ITEM, 250 );
+			
+			// MT - Check: god-gifted weapons and armor shouldn't kill you. Except Xom.
+			if(agent != GOD_TROG && agent != GOD_OKAWARU)
+				break;
+			else
+			{
+				    randart_wpn_properties( mitm[thing_created], proprt );
+
+					//check vs stats. positive stats will automatically fall through. 
+					//As will negative stats that won't kill you.
+					if((proprt[RAP_STRENGTH] * -1 >= you.strength ||
+					   proprt[RAP_INTELLIGENCE] * -1 >= you.intel ||
+					   proprt[RAP_DEXTERITY] * -1 >= you.dex) && item_tries < 50)
+					{
+						//try again
+						destroy_item(thing_created);
+						thing_created = NON_ITEM;
+					}
+					else
+						break;
+			}
+		}
 
         if (thing_created == NON_ITEM)
         {
