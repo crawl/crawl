@@ -1871,7 +1871,14 @@ static unsigned char monster_abjuration(int pow, bool test)
     if (!test)
         mpr("Send 'em back where they came from!");
 
-    for (int ab = 0; ab < MAX_MONSTERS; ab++)
+    if (pow > 60)
+        pow = 60;
+
+    int abjure_str = 1 + (random2(pow / 3));
+    if (abjure_str > 6)
+        abjure_str = 6;
+    
+    for (int ab = 0; ab < MAX_MONSTERS && abjure_str; ab++)
     {
         int abjLevel;
 
@@ -1892,10 +1899,7 @@ static unsigned char monster_abjuration(int pow, bool test)
         if (test)
             continue;
 
-        if (pow > 60)
-            pow = 60;
-
-        abjLevel -= 1 + (random2(pow / 3) * 60 / 100);
+        abjLevel -= abjure_str;
 
         if (abjLevel < ENCH_ABJ_I)
             monster_die(monster, KILL_RESET, 0);
@@ -1906,7 +1910,7 @@ static unsigned char monster_abjuration(int pow, bool test)
             mons_add_ench(monster, abjLevel);
         }
 
-        if (!(pow = 2 * pow / 3))
+        if (!(abjure_str = div_rand_round(abjure_str, 2)))
             break;
     }
 
