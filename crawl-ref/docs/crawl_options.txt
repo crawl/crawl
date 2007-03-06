@@ -45,9 +45,9 @@ The contents of this text are:
 		easy_unequip, easy_confirm, easy_quit_item_prompts, 
                 easy_exit_menu,	default_autoprayer, sort_menus
 4-i	Message and Display Improvements.
-		hp_warning, hp_colour, mp_colour, always_greet, terse_hand, 
-                delay_message_clear, menu_colour, increasing_skill_progress,
-                show_turns
+		hp_warning, magic_point_warninghp_colour, mp_colour, always_greet,
+                terse_hand, delay_message_clear, menu_colour, 
+                increasing_skill_progress, show_turns
 4-j	Missiles.
 		fire_items_start, fire_order
 4-k	Message Channels.
@@ -642,8 +642,13 @@ sort_menus = (true | false | auto:X)
 
 hp_warning = 10
 	hp_warning gives "* * * LOW HITPOINT WARNING * * *" on the danger 
-        channel when the player takens damage and their hitpoints are less than
+        channel when the player takes damage and their hitpoints are less than
         this percentage of their maximum (use 0 to turn off these messages).
+
+mp_warning = 10
+	mp_warning gives "* * * LOW MAGIC WARNING * * *" on the danger
+		channel when the player's magic points drop below this percentage of
+		their maximum (use 0 to turn off these messages).
 
 hp_colour = lightgrey, 50:yellow, 25:red
 	hp_colour colours your HP appropriately in the display. In the default 

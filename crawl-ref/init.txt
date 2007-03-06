@@ -154,6 +154,7 @@ stab_brand = hi:blue
 ##### 4-i	Messages and Display Enhancements #####
 #
 # hp_warning = 10
+# mp_warning = 10
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
 # terse_hand = false

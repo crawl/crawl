@@ -148,7 +148,8 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "plain", "prompt", "god", "pray", "duration", "danger", "warning", "food",
     "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
     "monster_enchant", "monster_damage", "monster_target", 
-    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic",
+    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic","tutorial",
+    "magic_warning",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -591,6 +592,7 @@ void game_options::reset_options()
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
+    magic_point_warning    = 10;
     confirm_self_target    = true;
     default_target         = false;
     safe_autopickup        = true;
@@ -1669,6 +1671,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
             hp_warning = 0;
             fprintf( stderr, "Bad HP warning percentage -- %s\n",
+                     field.c_str() );
+        }
+    }
+    else if (key == "mp_warning")
+    {
+        magic_point_warning = atoi( field.c_str() );
+        if (magic_point_warning < 0 || magic_point_warning > 100)
+        {
+            magic_point_warning = 0;
+            fprintf( stderr, "Bad MP warning percentage -- %s\n",
                      field.c_str() );
         }
     }

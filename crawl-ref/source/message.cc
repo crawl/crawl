@@ -190,6 +190,10 @@ int channel_to_colour( int channel, int param )
             ret = CYAN;
             break;
 
+        case MSGCH_DANGER_MAGIC:
+            ret = LIGHTCYAN;
+            break;
+
         case MSGCH_DIAGNOSTICS:
         case MSGCH_MULTITURN_ACTION:
             ret = DARKGREY;     // makes it easier to ignore at times -- bwr

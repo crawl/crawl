@@ -1751,6 +1751,7 @@ enum msg_channel_type
     MSGCH_MULTITURN_ACTION,  // delayed action messages
     MSGCH_DIAGNOSTICS,    // various diagnostic messages 
     MSGCH_TUTORIAL,		  // messages for tutorial
+	MSGCH_DANGER_MAGIC,   // low magic warning
     NUM_MESSAGE_CHANNELS  // always last
 };
 

@@ -1130,6 +1130,7 @@ public:
     int         priest;         // choice of god for priests (Zin/Yred)
     bool        random_pick;    // randomly generate character
     int         hp_warning;     // percentage hp for danger warning
+    int         magic_point_warning;    // percentage mp for danger warning
     char        race;           // preselected race
     char        cls;            // preselected class
     bool        terse_hand;     // use terse description for wielded item
