@@ -1149,40 +1149,43 @@ bool acquirement(unsigned char force_class, int agent)
     {
         // how sad (and stupid)
         mprf(MSGCH_SOUND, 
-	     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+             grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
     }
     else
     {
-        int item_tries = 0;
-		randart_properties_t  proprt;
+        randart_properties_t  proprt;
 
-		for(item_tries = 0; item_tries < 50; item_tries++)
-		{
-			// BCR - unique is now used for food quantity.
-			thing_created = items( unique, class_wanted, type_wanted, true, 
-				                   MAKE_GOOD_ITEM, 250 );
-			
-			// MT - Check: god-gifted weapons and armor shouldn't kill you. Except Xom.
-			if(agent != GOD_TROG && agent != GOD_OKAWARU)
-				break;
-			else
-			{
-				    randart_wpn_properties( mitm[thing_created], proprt );
+        for (int item_tries = 0; item_tries < 50; item_tries++)
+        {
+            // BCR - unique is now used for food quantity.
+            thing_created = items( unique, class_wanted, type_wanted, true, 
+                    MAKE_GOOD_ITEM, 250 );
 
-					//check vs stats. positive stats will automatically fall through. 
-					//As will negative stats that won't kill you.
-					if((proprt[RAP_STRENGTH] * -1 >= you.strength ||
-					   proprt[RAP_INTELLIGENCE] * -1 >= you.intel ||
-					   proprt[RAP_DEXTERITY] * -1 >= you.dex) && item_tries < 50)
-					{
-						//try again
-						destroy_item(thing_created);
-						thing_created = NON_ITEM;
-					}
-					else
-						break;
-			}
-		}
+            if (thing_created == NON_ITEM)
+                continue;
+
+            // MT - Check: god-gifted weapons and armor shouldn't kill you.
+            // Except Xom.
+            if (agent == GOD_TROG || agent == GOD_OKAWARU)
+                break;
+            else
+            {
+                randart_wpn_properties( mitm[thing_created], proprt );
+
+                // check vs stats. positive stats will automatically fall
+                // through.  As will negative stats that won't kill you.
+                if (-proprt[RAP_STRENGTH] >= you.strength ||
+                    -proprt[RAP_INTELLIGENCE] >= you.intel ||
+                    -proprt[RAP_DEXTERITY] >= you.dex)
+                {
+                    // try again
+                    destroy_item(thing_created);
+                    thing_created = NON_ITEM;
+                }
+                else
+                    break;
+            }
+        }
 
         if (thing_created == NON_ITEM)
         {
@@ -1448,7 +1451,7 @@ bool recharge_wand(void)
         case WAND_INVISIBILITY:
         case WAND_FIREBALL:
         case WAND_HEALING:
-	case WAND_HASTING:
+        case WAND_HASTING:
             charge_gain = 3;
             break;
 

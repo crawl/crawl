@@ -282,8 +282,8 @@ static void monster_drop_ething(struct monsters *monster,
     }
 
     if (destroyed) {
-	mprf(MSGCH_SOUND,
-	     grid_item_destruction_message(grd[monster->x][monster->y]));
+        mprf(MSGCH_SOUND,
+             grid_item_destruction_message(grd[monster->x][monster->y]));
     }
 }                               // end monster_drop_ething()
 
@@ -325,7 +325,7 @@ static void place_monster_corpse(const monsters *monster)
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
     if (you.hunger_state < HS_SATIATED)
-    	learned_something_new(TUT_MAKE_CHUNKS);    
+        learned_something_new(TUT_MAKE_CHUNKS);    
 }                               // end place_monster_corpse()
 
 void monster_die(monsters *monster, char killer, int i, bool silent)
@@ -463,10 +463,10 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
             // killing triggers tutorial lesson
             if (Options.tutorial_events[TUT_KILLED_MONSTER])
-            	learned_something_new(TUT_KILLED_MONSTER);
-           	else if (Options.tutorial_left && (you.religion == GOD_TROG || you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB)
-           			 && !you.duration[DUR_PRAYER])
-           		tutorial_prayer_reminder();	 
+                learned_something_new(TUT_KILLED_MONSTER);
+                else if (Options.tutorial_left && (you.religion == GOD_TROG || you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB)
+                                 && !you.duration[DUR_PRAYER])
+                        tutorial_prayer_reminder();      
 
             // Xom doesn't care who you killed:
             if (you.religion == GOD_XOM 
@@ -884,7 +884,7 @@ static bool jelly_divide(struct monsters * parent)
 
     // duplicate enchantments
     for ( int i = 0; i < NUM_MON_ENCHANTS; ++i )
-	child->enchantment[i] = parent->enchantment[i];
+        child->enchantment[i] = parent->enchantment[i];
 
     child->x = parent->x + jex;
     child->y = parent->y + jey;
@@ -1011,19 +1011,19 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
         return (player_messaged);
     }
 
-	// If old monster is visible to the player, and is interesting,
-	// then note why the interesting monster went away.
-	if (player_monster_visible(monster) && mons_near(monster)
-	    && MONST_INTERESTING(monster))
+        // If old monster is visible to the player, and is interesting,
+        // then note why the interesting monster went away.
+        if (player_monster_visible(monster) && mons_near(monster)
+            && MONST_INTERESTING(monster))
     {
-	    take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
+            take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
                        ptr_monam(monster, DESC_NOCAP_A, true)));
-	}
+        }
 
     // messaging: {dlb}
     bool invis = (mons_class_flag( targetc, M_INVIS ) 
-		  || mons_has_ench( monster, ENCH_INVIS )) &&
-	(!player_see_invis());
+                  || mons_has_ench( monster, ENCH_INVIS )) &&
+        (!player_see_invis());
 
     if (mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER ))
         strcat( str_polymon, " changes into " );
@@ -1082,12 +1082,12 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 
     monster_drop_ething(monster);
 
-	// New monster type might be interesting
-	mark_interesting_monst(monster);
+        // New monster type might be interesting
+        mark_interesting_monst(monster);
 
-	// If new monster is visible to player, then we've seen it
-	if (player_monster_visible(monster) && mons_near(monster))
-		seen_monster(monster);
+        // If new monster is visible to player, then we've seen it
+        if (player_monster_visible(monster) && mons_near(monster))
+                seen_monster(monster);
 
     return (player_messaged);
 }                                        // end monster_polymorph()
@@ -2950,7 +2950,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         beem.flavour = theBeam.flavour;
         beem.thrower = theBeam.thrower;
         beem.is_beam = theBeam.is_beam;
-	beem.is_explosion = theBeam.is_explosion;
+        beem.is_explosion = theBeam.is_explosion;
 
         item_def item = mitm[ monster->inv[MSLOT_WAND] ];
 
@@ -4817,7 +4817,7 @@ static void monster_move(struct monsters *monster)
     if (grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_CLOSED_DOOR
         || (grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_SECRET_DOOR
             && (mons_intel(monster_index(monster)) == I_HIGH
-            	|| mons_intel(monster_index(monster)) == I_NORMAL)))
+                || mons_intel(monster_index(monster)) == I_NORMAL)))
     {
         if (monster->type == MONS_ZOMBIE_SMALL
             || monster->type == MONS_ZOMBIE_LARGE

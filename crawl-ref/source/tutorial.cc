@@ -737,7 +737,7 @@ void tutorial_finished()
 void tutorial_prayer_reminder()
 {
     if (Options.tut_just_triggered)
-     	return;
+        return;
     if (coinflip())
     {// always would be too annoying
         snprintf(info, INFO_SIZE, "Remember to <w>p<magenta>ray before battle, so as to dedicate your kills to %s. ", god_name(you.religion));
@@ -763,8 +763,8 @@ void tutorial_healing_reminder()
             learned_something_new(TUT_NEED_HEALING);
         else if (you.num_turns - Options.tut_last_healed >= 50 && !you.poisoning)
         {
-     	    if (Options.tut_just_triggered)
-     		return;
+            if (Options.tut_just_triggered)
+                return;
             snprintf(info, INFO_SIZE, "Remember to rest between fights and to enter unexplored terrain with full");
             mpr(info, MSGCH_TUTORIAL);
             snprintf(info, INFO_SIZE, "hitpoints and/or magic. To do this, press <w>5<magenta>.");
@@ -998,7 +998,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
 
         if (Options.tutorial_type == TUT_RANGER_CHAR)
         {
-            more();	
+            more();     
             snprintf(info, INFO_SIZE, "However, as a hunter you might want to deal with it using your bow. Do this");
             mpr(info, MSGCH_TUTORIAL);  
             snprintf(info, INFO_SIZE, "with the following keypresses: <w>wbf+.<magenta> Here, <w>wb<magenta> wields the bow, <w>f<magenta> fires");
@@ -1012,7 +1012,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
         }       
         else if (Options.tutorial_type == TUT_MAGIC_CHAR)
         {
-            more();	
+            more();     
             snprintf(info, INFO_SIZE, "However, as a conjurer you might want to deal with it using magic. Do this");
             mpr(info, MSGCH_TUTORIAL);
             snprintf(info, INFO_SIZE, "with the following key presses: <w>Za+.<magenta> Here, <w>Za<magenta> zaps the first spell you know,");

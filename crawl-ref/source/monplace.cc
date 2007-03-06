@@ -607,7 +607,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     mark_interesting_monst(&menv[id], behaviour);
     
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
-	seen_monster(&menv[id]);
+        seen_monster(&menv[id]);
 
     return (id);
 }                               // end place_monster_aux()
@@ -1137,35 +1137,35 @@ void mark_interesting_monst(struct monsters* monster, char behaviour)
     
     // Unique monsters are always intersting
     if ( mons_is_unique(monster->type) )
-	interesting = true;
+        interesting = true;
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY || behaviour == BEH_GOD_GIFT)
-	interesting = false;
+        interesting = false;
     // Don't waste time on moname() if user isn't using this option
     else if ( Options.note_monsters.size() > 0 )
     {
         char namebuf[ITEMNAME_SIZE];
-	moname(monster->type, true, DESC_NOCAP_A, namebuf);
-	
-	std::string iname = namebuf;
-	
-	for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
-	    if (Options.note_monsters[i].matches(iname)) {
-		interesting = true;
-		break;
-	    }    
-	}
+        moname(monster->type, true, DESC_NOCAP_A, namebuf);
+        
+        std::string iname = namebuf;
+        
+        for (unsigned i = 0; i < Options.note_monsters.size(); ++i) {
+            if (Options.note_monsters[i].matches(iname)) {
+                interesting = true;
+                break;
+            }    
+        }
     }
     else if ( you.where_are_you == BRANCH_MAIN_DUNGEON &&
-	      you.level_type == LEVEL_DUNGEON &&
-	      mons_level(monster->type) >= you.your_level + ood_limit() &&
-	      mons_level(monster->type) < 99 &&
-	      !(monster->type >= MONS_EARTH_ELEMENTAL &&
-		monster->type <= MONS_AIR_ELEMENTAL) )
-	interesting = true;
+              you.level_type == LEVEL_DUNGEON &&
+              mons_level(monster->type) >= you.your_level + ood_limit() &&
+              mons_level(monster->type) < 99 &&
+              !(monster->type >= MONS_EARTH_ELEMENTAL &&
+                monster->type <= MONS_AIR_ELEMENTAL) )
+        interesting = true;
 
     if ( interesting )
-	monster->flags |= MF_INTERESTING;
+        monster->flags |= MF_INTERESTING;
 }
 
 // PUBLIC FUNCTION -- mons_place().

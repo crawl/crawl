@@ -288,7 +288,7 @@ void Stash::update()
         // (only works with stashes enabled)        
 //        learned_something_new(TUT_SEEN_FIRST_OBJECT, x, y);
 //        learned_something_new(TUT_SEEN_FIRST_OBJECT, item);
-		tutorial_first_item(item);
+                tutorial_first_item(item);
 
         if (item.link == NON_ITEM)
             items.clear();

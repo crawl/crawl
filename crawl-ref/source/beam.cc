@@ -2425,7 +2425,7 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
             copy_item_to_grid( *item, x, y, 1 );
     }
     else if (MON_KILL(beam.thrower) // monster threw it.
-	     && !grid_destroys_items(grd[x][y]) && coinflip())
+             && !grid_destroys_items(grd[x][y]) && coinflip())
     {
         copy_item_to_grid( *item, x, y, 1 );
     }                           // if (thing_throw == 2) ...

@@ -461,14 +461,14 @@ void set_ident_flags( item_def &item, unsigned long flags )
     bool known_before = fully_identified(item);
     item.flags |= flags;
     if ( !known_before && fully_identified(item) ) {
-	/* make a note of it */
-	if ( is_interesting_item(item) ) {
-	    char buf[ITEMNAME_SIZE];
- 	    char buf2[ITEMNAME_SIZE];
-	    item_name( item, DESC_NOCAP_A, buf );
-	    strcpy(buf2, origin_desc(item).c_str());
- 	    take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
-	}
+        /* make a note of it */
+        if ( is_interesting_item(item) ) {
+            char buf[ITEMNAME_SIZE];
+            char buf2[ITEMNAME_SIZE];
+            item_name( item, DESC_NOCAP_A, buf );
+            strcpy(buf2, origin_desc(item).c_str());
+            take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
+        }
     }
 }
 

@@ -396,12 +396,12 @@ static int exercise2( int exsk )
 */
 
     if (you.skill_points[exsk] >
-	(skill_exp_needed(you.skills[exsk] + 2) 
-	 * species_skills(exsk, you.species) / 100))
+        (skill_exp_needed(you.skills[exsk] + 2) 
+         * species_skills(exsk, you.species) / 100))
     {
-	
+        
         you.skills[exsk]++;
-	take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
+        take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
 
         if (you.skills[exsk] == 27) {
             snprintf( info, INFO_SIZE, "You have mastered %s!", 

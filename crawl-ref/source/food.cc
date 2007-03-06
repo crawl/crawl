@@ -152,30 +152,31 @@ void weapon_switch( int targ )
 
 // look for a butchering implement, prompting user if no obvious
 // options exist. Returns whether a weapon was switched.
-static bool find_butchering_implement() {
-
+static bool find_butchering_implement()
+{
     // look for a butchering implement in your pack
-    for (int i = 0; i < ENDOFPACK; ++i) {
-	if (is_valid_item( you.inv[i] )
-	    && can_cut_meat( you.inv[i] )
-	    && you.inv[i].base_type == OBJ_WEAPONS
-	    && item_known_uncursed(you.inv[i])
-	    && item_type_known(you.inv[i])
-	    && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
-	    && can_wield( &you.inv[i] ))
-	{
-	    mpr("Switching to a butchering implement.");
-	    wield_weapon( true, i, false );
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (is_valid_item( you.inv[i] )
+            && can_cut_meat( you.inv[i] )
+            && you.inv[i].base_type == OBJ_WEAPONS
+            && item_known_uncursed(you.inv[i])
+            && item_type_known(you.inv[i])
+            && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
+            && can_wield( &you.inv[i] ))
+        {
+            mpr("Switching to a butchering implement.");
+            wield_weapon( true, i, false );
 
-	    // Account for the weapon switch...we're doing this here
-	    // since the above switch may reveal information about the
-	    // weapon (curse status, ego type).  So even if the
-	    // character fails to or decides not to butcher past this
-	    // point, they have achieved something and there should be
-	    // a cost.
-	    start_delay( DELAY_UNINTERRUPTIBLE, 1 );
-	    return true;
-	}
+            // Account for the weapon switch...we're doing this here
+            // since the above switch may reveal information about the
+            // weapon (curse status, ego type).  So even if the
+            // character fails to or decides not to butcher past this
+            // point, they have achieved something and there should be
+            // a cost.
+            start_delay( DELAY_UNINTERRUPTIBLE, 1 );
+            return true;
+        }
     }
     
     // if we didn't swap above, then we still can't cut...let's call
@@ -201,11 +202,11 @@ bool butchery(void)
 
     bool barehand_butcher = (you.equip[ EQ_GLOVES ] == -1)
       && (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ||
-	  you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
-	  (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE &&
-	   (you.species == SP_TROLL ||
-	    you.species == SP_GHOUL ||
-	    you.mutation[MUT_CLAWS])));
+          you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON ||
+          (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE &&
+           (you.species == SP_TROLL ||
+            you.species == SP_GHOUL ||
+            you.mutation[MUT_CLAWS])));
 
     can_butcher = barehand_butcher ||
         (you.equip[EQ_WEAPON] != -1 &&
@@ -259,7 +260,7 @@ bool butchery(void)
         }
         if ( answer == 0 )
             continue;
-	
+        
         if ( Options.easy_butcher && !can_butcher )
         {
             // try to find a butchering implement
@@ -272,11 +273,11 @@ bool butchery(void)
                     (you.inv[wpn].base_type == OBJ_WEAPONS) &&
                     item_cursed( you.inv[wpn]);
             }
-	    
+            
             // note that barehanded butchery would not reach this
             // stage, so if wpn == -1 the user selected '-' when
             // switching weapons
-	    
+            
             if (!wpn_switch || wpn == -1 || !can_cut_meat(you.inv[wpn]))
             {
                 // still can't butcher. Early out
@@ -288,13 +289,13 @@ bool butchery(void)
                 }
                 else
                     mpr("Maybe you should try using a sharper implement.");
-		
+                
                 if ( !new_cursed && wpn_switch )
                     start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
-		
-                return false;			
+                
+                return false;                   
             }
-	    
+            
             // switched to a good butchering knife
             can_butcher = true;
         }

@@ -512,7 +512,7 @@ static const char * insults3(void)
         "ratsbane",
         "scavenger",
         "scut",
-	"serf",
+        "serf",
         "simpleton",
         "skainsmate",
         "slime mold",

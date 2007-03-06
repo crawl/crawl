@@ -156,11 +156,11 @@ char list_spells(void)
 
             char sval[16];
 
-	    // 35--48 is the spell schools
-	    
-	    gotoxy(51, wherey());
-	    cprintf("%s",spell_power_to_string(calc_spell_power(spell,true)));
-		     
+            // 35--48 is the spell schools
+            
+            gotoxy(51, wherey());
+            cprintf("%s",spell_power_to_string(calc_spell_power(spell,true)));
+                     
             //gotoxy(58, wherey());
             gotoxy(65, wherey());
 
@@ -726,7 +726,7 @@ void spellcasting_side_effects(int spc2, bool idonly = false)
         {
             char str_pass[ ITEMNAME_SIZE ];
 
-	    // changed from ISFLAG_KNOW_TYPE
+            // changed from ISFLAG_KNOW_TYPE
             set_ident_flags( you.inv[you.equip[EQ_WEAPON]], ISFLAG_IDENT_MASK);
 
             strcpy(info, "You are wielding ");
@@ -2107,7 +2107,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = 1;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -2137,7 +2137,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
     
                 explosion(beam);
                 break;
@@ -2186,8 +2186,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                     mpr("You hear something strange.", MSGCH_SOUND);
                 else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
                     mpr("Your skull vibrates slightly.");
-		 		else
-		 		    canned_msg(MSG_NOTHING_HAPPENS);
+                else
+                    canned_msg(MSG_NOTHING_HAPPENS);
                 break;
             }
             break;
@@ -3027,7 +3027,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = 1;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3061,7 +3061,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = coinflip()?1:2;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3165,7 +3165,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = 1;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3296,7 +3296,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = 1;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;
@@ -3362,8 +3362,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 1:
                 snprintf( info, INFO_SIZE, "The wind %s around you!",
-		 		 		 silenced(you.x_pos, you.y_pos) ? "whips" : "howls");
-		 	    mpr(info);
+                                                 silenced(you.x_pos, you.y_pos) ? "whips" : "howls");
+                            mpr(info);
                 break;
             }
             break;
@@ -3406,7 +3406,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 if (cause)
                     beam.aux_source = cause;
                 beam.ex_size = one_chance_in(4)?1:2;
-		beam.is_explosion = true;
+                beam.is_explosion = true;
 
                 explosion(beam);
                 break;

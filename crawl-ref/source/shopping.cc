@@ -137,7 +137,7 @@ char in_a_shop( char shoppy, id_arr id )
 
     more3();
     
-    activate_notes(false);	/* should do a better job here */
+    activate_notes(false);      /* should do a better job here */
     shop_init_id(shoppy, shop_id);
 
     /* *************************************
@@ -189,13 +189,13 @@ char in_a_shop( char shoppy, id_arr id )
         if (gp_value <= 1)
             gp_value = 1;
 
-	const bool can_afford = (you.gold >= gp_value);
-	textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
+        const bool can_afford = (you.gold >= gp_value);
+        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
 
         if (can_afford)
             purchasable += c;
 
-	cprintf("%c - ", c);
+        cprintf("%c - ", c);
 
         textcolor((i % 2) ? WHITE : LIGHTGREY);
 
@@ -444,17 +444,17 @@ static void purchase( int shop, int item_got, int cost )
     origin_purchased(mitm[item_got]);
 
     if ( fully_identified(mitm[item_got]) &&
-	 is_interesting_item(mitm[item_got]) ) {
+         is_interesting_item(mitm[item_got]) ) {
 
-	activate_notes(true);
+        activate_notes(true);
 
-	char buf[ITEMNAME_SIZE];
-	char buf2[ITEMNAME_SIZE];
-	item_name( mitm[item_got], DESC_NOCAP_A, buf );
-	strcpy(buf2, origin_desc(mitm[item_got]).c_str());
-	take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
+        char buf[ITEMNAME_SIZE];
+        char buf2[ITEMNAME_SIZE];
+        item_name( mitm[item_got], DESC_NOCAP_A, buf );
+        strcpy(buf2, origin_desc(mitm[item_got]).c_str());
+        take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
 
-	activate_notes(false);
+        activate_notes(false);
     }
 
     int num = move_item_to_player( item_got, mitm[item_got].quantity, true );

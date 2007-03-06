@@ -382,9 +382,9 @@ void item_corrode( char itco )
         }
         break;
     default:
-	/* items which aren't missiles, etc...Could happen
-	   if we're wielding a deck, say */
-	return;
+        /* items which aren't missiles, etc...Could happen
+           if we're wielding a deck, say */
+        return;
     }
 
     // determine chance of corrosion {dlb}:
@@ -605,7 +605,7 @@ void lose_level(void)
 
     char buf[200];
     sprintf(buf, "HP: %d/%d MP: %d/%d",
-	    you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+            you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
     you.redraw_experience = 1;
@@ -732,7 +732,7 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
         {
             mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
         }
-	take_note(
+        take_note(
                 Note(
                     NOTE_HP_CHANGE, 
                     you.hp, 
@@ -867,12 +867,12 @@ void end_game( struct scorefile_entry &se )
 
     const char* suffixes[] = {
 #ifdef CLUA_BINDINGS
-	".lua",
+        ".lua",
 #endif
 #ifdef PACKAGE_SUFFIX
-	PACKAGE_SUFFIX ,
+        PACKAGE_SUFFIX ,
 #endif
-	".st", ".kil", ".tc", ".nts", ".tut", ".sav"
+        ".st", ".kil", ".tc", ".nts", ".tut", ".sav"
     };
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);
@@ -890,8 +890,8 @@ void end_game( struct scorefile_entry &se )
     }
 
     if (Options.tutorial_left)
-    	tutorial_death_screen();
-    	
+        tutorial_death_screen();
+        
     if (!crawl_state.seen_hups)
         more();
 

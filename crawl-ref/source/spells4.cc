@@ -900,7 +900,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
 
     // 50% bonus for dogs, add cats if they get implemented
     if (monster->type == MONS_HOUND || monster->type == MONS_WAR_DOG
-		 || monster->type == MONS_BLACK_BEAR)
+                 || monster->type == MONS_BLACK_BEAR)
     {
         pow += (pow / 2);
     }
@@ -1265,8 +1265,8 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
         mpr( "You are struck by lightning." );
         damage = 3 + random2( 5 + pow / 10 );
         damage = check_your_resists( damage, BEAM_ELECTRICITY );
-	if ( player_is_levitating() )
-	    damage /= 2;
+        if ( player_is_levitating() )
+            damage /= 2;
         ouch( damage, 0, KILLED_BY_WILD_MAGIC );
     } 
     else if (mon == NON_MONSTER)

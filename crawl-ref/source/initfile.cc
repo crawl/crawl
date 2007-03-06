@@ -176,13 +176,13 @@ std::string channel_to_str( int channel )
 static int str_to_book( const std::string& str )
 {
     if ( str == "fire" || str == "flame" )
-	return SBT_FIRE;
+        return SBT_FIRE;
     if ( str == "cold" || str == "ice" )
-	return SBT_COLD;
+        return SBT_COLD;
     if ( str == "summ" || str == "summoning" )
-	return SBT_SUMM;
+        return SBT_SUMM;
     if ( str == "random" )
-	return SBT_RANDOM;
+        return SBT_RANDOM;
     return SBT_NO_SELECTION;
 }
 
@@ -981,11 +981,11 @@ static void write_newgame_options(FILE *f)
 
     if (Options.prev_book != SBT_NO_SELECTION )
     {
-	fprintf(f, "book = %s\n",
-		Options.prev_book == SBT_FIRE ? "fire" :
-		Options.prev_book == SBT_COLD ? "cold" :
-		Options.prev_book == SBT_SUMM ? "summ" :
-		"random");
+        fprintf(f, "book = %s\n",
+                Options.prev_book == SBT_FIRE ? "fire" :
+                Options.prev_book == SBT_COLD ? "cold" :
+                Options.prev_book == SBT_SUMM ? "summ" :
+                "random");
     }
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
@@ -1584,8 +1584,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "book")
     {
-	// choose this book for classes that get choice
-	book = str_to_book( field );
+        // choose this book for classes that get choice
+        book = str_to_book( field );
     }
     else if (key == "chaos_knight")
     {
@@ -1674,7 +1674,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "ood_interesting")
     {
-	ood_interesting = atoi( field.c_str() );
+        ood_interesting = atoi( field.c_str() );
     }
     else if (key == "note_monsters")
     {
@@ -1727,7 +1727,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "confirm_self_target")
     {
-	confirm_self_target = read_bool( field, confirm_self_target );
+        confirm_self_target = read_bool( field, confirm_self_target );
     }
     else if (key == "default_target")
     {
@@ -1735,11 +1735,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "safe_autopickup")
     {
-	safe_autopickup = read_bool( field, safe_autopickup );
+        safe_autopickup = read_bool( field, safe_autopickup );
     }
     else if (key == "autopickup_no_burden")
     {
-	autopickup_no_burden = read_bool( field, autopickup_no_burden );
+        autopickup_no_burden = read_bool( field, autopickup_no_burden );
     }   
     else if (key == "use_notes")
     {
@@ -2197,11 +2197,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "level_map_title")
     {
-	level_map_title = read_bool(field, level_map_title);
+        level_map_title = read_bool(field, level_map_title);
     }
     else if (key == "safe_zero_exp")
     {
-	safe_zero_exp = read_bool(field, safe_zero_exp);
+        safe_zero_exp = read_bool(field, safe_zero_exp);
     }
     else if (key == "target_zero_exp")
     {

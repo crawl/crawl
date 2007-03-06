@@ -280,7 +280,7 @@ void Kills::save(FILE *file) const
     writeLong(file, kills.size());
 
     for ( kill_map::const_iterator iter = kills.begin();
-	  iter != kills.end(); ++iter)
+          iter != kills.end(); ++iter)
     {
         iter->first.save(file);
         iter->second.save(file);
@@ -289,7 +289,7 @@ void Kills::save(FILE *file) const
     // How many ghosts do we have?
     writeShort(file, ghosts.size());
     for (ghost_vec::const_iterator iter = ghosts.begin(); 
-	 iter != ghosts.end(); ++iter)
+         iter != ghosts.end(); ++iter)
     {
         iter->save(file);
     }

@@ -2703,19 +2703,19 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
         if (thing_created == NON_ITEM)
             return;
 
-	// don't give top-tier wands before 5 HD
-	if ( menv[mid].hit_dice < 5 )
-	{
-	    // technically these wands will be undercharged, but it
-	    // doesn't really matter
-	    if ( mitm[thing_created].sub_type == WAND_FIRE )
-		mitm[thing_created].sub_type = WAND_FLAME;
-	    if ( mitm[thing_created].sub_type == WAND_COLD )
-		mitm[thing_created].sub_type = WAND_FROST;
-	    if ( mitm[thing_created].sub_type == WAND_LIGHTNING )
-		mitm[thing_created].sub_type = (coinflip() ?
-						WAND_FLAME : WAND_FROST);
-	}
+        // don't give top-tier wands before 5 HD
+        if ( menv[mid].hit_dice < 5 )
+        {
+            // technically these wands will be undercharged, but it
+            // doesn't really matter
+            if ( mitm[thing_created].sub_type == WAND_FIRE )
+                mitm[thing_created].sub_type = WAND_FLAME;
+            if ( mitm[thing_created].sub_type == WAND_COLD )
+                mitm[thing_created].sub_type = WAND_FROST;
+            if ( mitm[thing_created].sub_type == WAND_LIGHTNING )
+                mitm[thing_created].sub_type = (coinflip() ?
+                                                WAND_FLAME : WAND_FROST);
+        }
 
         mitm[thing_created].flags = 0;
         menv[mid].inv[MSLOT_WAND] = thing_created;
@@ -3924,7 +3924,7 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
     }
 
     if (Options.tutorial_left)
-    	vault = -1;
+        vault = -1;
 
     return (vault);
 }
@@ -5119,7 +5119,7 @@ static void special_room(int level_number, spec_room &sr)
 
         if ((level_number > 13 && spec_room_type == SROOM_LAIR_KOBOLD)
             || (level_number < 16 && spec_room_type == SROOM_MORGUE)
-	    || (level_number < 14 && spec_room_type == SROOM_JELLY_PIT)
+            || (level_number < 14 && spec_room_type == SROOM_JELLY_PIT)
             || (level_number < 17 && one_chance_in(4)))
         {
             spec_room_type = SROOM_LAIR_ORC;
@@ -5129,9 +5129,9 @@ static void special_room(int level_number, spec_room &sr)
             spec_room_type = SROOM_MORGUE;
 
         if (level_number > 13 &&
-	    one_chance_in(6 - (level_number > 23) - (level_number > 18)))
+            one_chance_in(6 - (level_number > 23) - (level_number > 18)))
         {
-	    spec_room_type = SROOM_JELLY_PIT;
+            spec_room_type = SROOM_JELLY_PIT;
         }
     }
 

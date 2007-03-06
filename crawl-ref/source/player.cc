@@ -1081,8 +1081,8 @@ bool player_res_asphyx()
 
 bool player_control_teleport(bool calc_unid) {
     return ( you.duration[DUR_CONTROL_TELEPORT] ||
-	     player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid) ||
-	     you.mutation[MUT_TELEPORT_CONTROL] );
+             player_equip(EQ_RINGS, RING_TELEPORT_CONTROL, calc_unid) ||
+             you.mutation[MUT_TELEPORT_CONTROL] );
 }
 
 int player_res_torment(bool)
@@ -2209,8 +2209,8 @@ void gain_exp( unsigned int exp_gained )
         you.exp_available += exp_gained;
 
     level_change();
-   	if (Options.tutorial_left && you.experience_level == 5)
-       		tutorial_finished();
+        if (Options.tutorial_left && you.experience_level == 5)
+                tutorial_finished();
 }                               // end gain_exp()
 
 void level_change(void)
@@ -2780,16 +2780,16 @@ void level_change(void)
 
         if (you.experience_level > you.max_level)
             you.max_level = you.experience_level;
-	
-	char buf[200];
-	sprintf(buf, "HP: %d/%d MP: %d/%d",
-		you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-	take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+        
+        char buf[200];
+        sprintf(buf, "HP: %d/%d MP: %d/%d",
+                you.hp, you.hp_max, you.magic_points, you.max_magic_points);
+        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
         if (you.religion == GOD_XOM)
             Xom_acts(true, you.experience_level, true);
             
-        learned_something_new(TUT_NEW_LEVEL); 	
+        learned_something_new(TUT_NEW_LEVEL);   
             
     }
 
@@ -3116,7 +3116,7 @@ void display_char_status(void)
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
     if ( you.slow )
-	move_cost *= 2;
+        move_cost *= 2;
 
     const bool water  = player_in_water();
     const bool swim   = player_is_swimming();
@@ -3125,7 +3125,7 @@ void display_char_status(void)
     const bool fly    = (lev && you.duration[DUR_CONTROLLED_FLIGHT]);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
     snprintf( info, INFO_SIZE,
-	      "Your %s speed is %s%s%s.",
+              "Your %s speed is %s%s%s.",
               // order is important for these:
               (swim)    ? "swimming" :
               (water)   ? "wading" :
@@ -3156,17 +3156,17 @@ void display_char_status(void)
     // "difficult"  - worse than 2 in 3
     // "hard"       - worse than fair chance
     snprintf( info, INFO_SIZE, 
-	      "%s in your current equipment.",
-	      (to_hit <   1) ? "You are completely incapable of fighting" :
-	      (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
-	      (to_hit <  10) ? "Hitting average monsters is awkward" :
-	      (to_hit <  15) ? "Hitting average monsters is difficult" :
-	      (to_hit <  20) ? "Hitting average monsters is hard" :
-	      (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
-	      (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
-	      (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
-	      (to_hit < 100) ? "You feel comfortable with your ability to fight" 
-	      : "You feel confident with your ability to fight" );
+              "%s in your current equipment.",
+              (to_hit <   1) ? "You are completely incapable of fighting" :
+              (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
+              (to_hit <  10) ? "Hitting average monsters is awkward" :
+              (to_hit <  15) ? "Hitting average monsters is difficult" :
+              (to_hit <  20) ? "Hitting average monsters is hard" :
+              (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
+              (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
+              (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
+              (to_hit < 100) ? "You feel comfortable with your ability to fight" 
+              : "You feel confident with your ability to fight" );
     
 #if DEBUG_DIAGNOSTICS
     char str_pass[INFO_SIZE];
@@ -3193,15 +3193,15 @@ void display_char_status(void)
 
     // XXX: made these values up, probably could be better.
     snprintf( info, INFO_SIZE, "You feel %sstealthy.",
-	      (ustealth <  10) ? "extremely un" :
-	      (ustealth <  20) ? "very un" :
-	      (ustealth <  30) ? "un" :
-	      (ustealth <  50) ? "fairly " :
-	      (ustealth <  80) ? "" :
-	      (ustealth < 120) ? "quite " :
-	      (ustealth < 160) ? "very " : 
-	      (ustealth < 200) ? "extremely " 
-	      : "incredibly " );
+              (ustealth <  10) ? "extremely un" :
+              (ustealth <  20) ? "very un" :
+              (ustealth <  30) ? "un" :
+              (ustealth <  50) ? "fairly " :
+              (ustealth <  80) ? "" :
+              (ustealth < 120) ? "quite " :
+              (ustealth < 160) ? "very " : 
+              (ustealth < 200) ? "extremely " 
+              : "incredibly " );
 
 #if DEBUG_DIAGNOSTICS
     snprintf( str_pass, INFO_SIZE, " (%d)", ustealth );
@@ -4226,7 +4226,7 @@ void poison_player( int amount, bool force )
 
         // XXX: which message channel for this message?
         mpr( info );
-       	learned_something_new(TUT_YOU_POISON);
+        learned_something_new(TUT_YOU_POISON);
     }
 }
 

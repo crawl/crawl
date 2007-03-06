@@ -765,10 +765,10 @@ void item_check(char keyin)
 
 
     for ( int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
-	  objl = mitm[objl].link )
+          objl = mitm[objl].link )
     {
-	if ( invisible_to_player(mitm[objl]) )
-	    continue;
+        if ( invisible_to_player(mitm[objl]) )
+            continue;
 
         counter++;
 
@@ -828,7 +828,7 @@ void item_check(char keyin)
     if (counter_max > 5 && keyin != ';') {
         mpr("There are several objects here.");
         learned_something_new(TUT_MULTI_PICKUP);
-    }  		
+    }           
 }
 
 void show_items()
@@ -839,8 +839,8 @@ void show_items()
     if ( items.empty() )
         mpr("There are no items here.");
     else {
-	select_items( items, "Things that are here:", true );
-	redraw_screen();
+        select_items( items, "Things that are here:", true );
+        redraw_screen();
     }
     
     describe_floor();
@@ -2952,7 +2952,7 @@ static void autoinscribe_items()
     while (o != NON_ITEM)
     {
         next = mitm[o].link;
-	autoinscribe_item( mitm[o] );
+        autoinscribe_item( mitm[o] );
         o = next;
     }
 }

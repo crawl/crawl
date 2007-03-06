@@ -134,9 +134,9 @@ int effective_stat_bonus( int wepType )
 static int maybe_random2( int x, bool random_factor )
 {
     if ( random_factor )
-	return random2(x);
+        return random2(x);
     else
-	return x / 2;
+        return x / 2;
 }
 
 // Returns the to-hit for your extra unarmed.attacks.
@@ -149,10 +149,10 @@ static int calc_your_to_hit_unarmed()
         + you.skills[SK_FIGHTING] / 5;
     
     if (wearing_amulet(AMU_INACCURACY))
-	your_to_hit -= 5;
+        your_to_hit -= 5;
     
     if (you.hunger_state == HS_STARVING)
-	your_to_hit -= 3;
+        your_to_hit -= 3;
     
     your_to_hit += slaying_bonus(PWPN_HIT);
 
@@ -195,7 +195,7 @@ int calc_heavy_armour_penalty( bool random_factor )
                 for (int i = 0; i < 3; i++)
                 {
                     if (you.skills[SK_SHIELDS] < maybe_random2(13,
-							       random_factor))
+                                                               random_factor))
                         heavy_armour += maybe_random2(3, random_factor);
                 }
             }
@@ -212,7 +212,7 @@ int calc_heavy_armour_penalty( bool random_factor )
                                      PARM_EVASION );
 
         if (ev_pen < 0 &&
-	    maybe_random2(you.skills[SK_ARMOUR], random_factor) < abs(ev_pen))
+            maybe_random2(you.skills[SK_ARMOUR], random_factor) < abs(ev_pen))
             heavy_armour += maybe_random2( abs(ev_pen), random_factor );
     }
 
@@ -2198,8 +2198,8 @@ int melee_attack::player_unarmed_speed()
         && one_chance_in(heavy_armour_penalty + 1))
     {
         unarmed_delay = 10 - you.skills[SK_UNARMED_COMBAT] / 5;
-	    
-	    /* this shouldn't happen anyway...sanity */
+            
+        /* this shouldn't happen anyway...sanity */
         if (unarmed_delay < min_delay)
             unarmed_delay = min_delay;
     }
@@ -2962,7 +2962,7 @@ static void tutorial_weapon_check(const item_def *weapon)
         (weapon->base_type != OBJ_WEAPONS
          || is_range_weapon(*weapon)))
     {
-    	learned_something_new(TUT_WIELD_WEAPON);
+        learned_something_new(TUT_WIELD_WEAPON);
     }
 }
 

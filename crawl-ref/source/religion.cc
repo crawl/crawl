@@ -539,7 +539,7 @@ void pray(void)
                     you.attribute[ATTR_CARD_COUNTDOWN] = 10;
                     inc_gift_timeout(5 + random2avg(9, 2));
                     you.num_gifts[you.religion]++;
-		    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }
             break;
@@ -602,7 +602,7 @@ void pray(void)
                     more();
                     inc_gift_timeout(4 + random2avg(7, 2));
                     you.num_gifts[you.religion]++;
-		    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }
             break;
@@ -681,7 +681,7 @@ void pray(void)
 
                         inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_gifts[ you.religion ]++;
-			take_note(Note(NOTE_GOD_GIFT, you.religion));
+                        take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
 
                     // Vehumet gives books less readily
@@ -1102,8 +1102,8 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
 
             if (grid_destroys_items(grd[you.x_pos][you.y_pos])) {
                 // How unfortunate. I'll bet Xom feels sorry for you.
-		mprf(MSGCH_SOUND,
-		     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+                mprf(MSGCH_SOUND,
+                     grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
             }
             else
             {
@@ -1138,10 +1138,10 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                     (temp_rand == 1) ? "Xom grants you a demonic servitor."
                                      : "Xom opens a gate.");
             }
-	    else
-	    {
-		god_speaks(GOD_XOM, "You hear Xom cackling.");
-	    }
+            else
+            {
+                god_speaks(GOD_XOM, "You hear Xom cackling.");
+            }
 
             done_good = true;   // well, for Xom, trying == doing {dlb}
         }
@@ -1215,10 +1215,10 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
     }                           // end "Good Things"
 
     if (done_bad || done_good )
-	return;
+        return;
     if ( one_chance_in(4) ) {
-	god_speaks(GOD_XOM, "Xom's attention is distracted from you.");
-	return;
+        god_speaks(GOD_XOM, "Xom's attention is distracted from you.");
+        return;
     }
     goto okay_try_again;
 }                               // end Xom_acts()
@@ -1760,10 +1760,10 @@ void divine_retribution( int god )
                 {
                     simple_god_message( " sends the divine host to punish you for your evil ways!", god );
                 }
-		else
-		{
-		    simple_god_message("'s divine host fails to appear.", god);
-		}
+                else
+                {
+                    simple_god_message("'s divine host fails to appear.", god);
+                }
             }
             else
             {
@@ -1812,10 +1812,10 @@ void divine_retribution( int god )
                 {
                     simple_god_message(" sends the divine host to punish you for your evil ways!", god);
                 }
-		else
-		{
-		    simple_god_message("'s divine host fails to appear.", god);
-		}
+                else
+                {
+                    simple_god_message("'s divine host fails to appear.", god);
+                }
             }
             else
             {
@@ -1838,10 +1838,10 @@ void divine_retribution( int god )
                 simple_god_message(" sends a greater servant after you!",
                                    god);
             }
-	    else
-	    {
-		simple_god_message("'s greater servant is unavoidably detained.", god);
-	    }
+            else
+            {
+                simple_god_message("'s greater servant is unavoidably detained.", god);
+            }
         }
         else
         {
@@ -1859,8 +1859,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends minions to punish you.", god);
-	    else
-		simple_god_message("'s minions fail to arrive.", god);
+            else
+                simple_god_message("'s minions fail to arrive.", god);
         }
         break;
 
@@ -1882,8 +1882,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" unleashes Death upon you!", god);
-	    else
-		god_speaks(god, "Death has been delayed...for now.");
+            else
+                god_speaks(god, "Death has been delayed...for now.");
         }
         else
         {
@@ -1925,8 +1925,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends a servant to punish you.", god);
-	    else
-		simple_god_message("'s servant fails to arrive.", god);
+            else
+                simple_god_message("'s servant fails to arrive.", god);
         }
         else
         {
@@ -2010,8 +2010,8 @@ void divine_retribution( int god )
 
                 if (success)
                     simple_god_message(" sends monsters to punish you.", god);
-		else
-		    simple_god_message(" has no time to punish you...now.", god);
+                else
+                    simple_god_message(" has no time to punish you...now.", god);
             }
             break;
 
@@ -2098,8 +2098,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends forces against you!", god);
-	    else
-		simple_god_message("'s forces are busy with other wars.", god);
+            else
+                simple_god_message("'s forces are busy with other wars.", god);
         }
         break;
 
@@ -2171,10 +2171,10 @@ void divine_retribution( int god )
             {
                 simple_god_message(" sends a demon after you!", god);
             }
-	    else
-	    {
-		simple_god_message("'s demon is unavoidably detained.", god);
-	    }
+            else
+            {
+                simple_god_message("'s demon is unavoidably detained.", god);
+            }
         }
         else
         {
@@ -2192,8 +2192,8 @@ void divine_retribution( int god )
 
             if (success)
                 simple_god_message(" sends minions to punish you.", god);
-	    else
-		simple_god_message("'s minions fail to arrive.", god);
+            else
+                simple_god_message("'s minions fail to arrive.", god);
         }
         break;
 
@@ -2205,10 +2205,10 @@ void divine_retribution( int god )
     // Sometimes divine experiences are overwhelming...
     if (one_chance_in(5) && you.experience_level < random2(37))
     {
-	if (coinflip()) {
-	    mpr( "The divine experience confuses you!", MSGCH_WARN);
+        if (coinflip()) {
+            mpr( "The divine experience confuses you!", MSGCH_WARN);
             confuse_player( 3 + random2(10) );
-	}
+        }
         else
         {
             if (you.slow < 90)
@@ -2329,7 +2329,7 @@ static bool bless_weapon( int god, int brand, int colour )
 
         you.wield_change = true;
         you.num_gifts[god]++;
-	take_note(Note(NOTE_GOD_GIFT, you.religion));
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
 
         you.flash_colour = colour;
         viewwindow( true, false );

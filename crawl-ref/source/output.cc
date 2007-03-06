@@ -83,6 +83,10 @@ void print_stats(void)
 {
     textcolor(LIGHTGREY);
 
+    // Displayed evasion is now tied to dex.
+    if (you.redraw_dexterity)
+        you.redraw_evasion = true;
+
     if (you.redraw_hit_points)
     {
         const int max_max_hp = you.hp_max + player_rotted();
@@ -609,8 +613,8 @@ const char* itosym3(int stat)
              (stat ==  2) ? "+ + ." :
              (stat ==  1) ? "+ . ." :
              (stat ==  0) ? ". . ." :
-	     (stat == -1) ? "x . ." :
-	     (stat == -2) ? "x x ." :
+             (stat == -1) ? "x . ." :
+             (stat == -2) ? "x x ." :
                             "x x x");
 }
 
@@ -651,7 +655,7 @@ static const char* determine_color_string( int level ) {
     switch ( level ) {
     case 3:
     case 2:
-	return "<lightgreen>";
+        return "<lightgreen>";
     case 1:
         return "<green>";
     case -1:

@@ -1847,8 +1847,8 @@ static std::string describe_stick( const item_def &item )
 
         case WAND_DISINTEGRATION:
             description += "disrupts the physical structure of "
-		"anything but the hardest walls -- even rigid "
-		"statues, to say nothing of flesh. ";
+                "anything but the hardest walls -- even rigid "
+                "statues, to say nothing of flesh. ";
             break;
 
         default:
@@ -4152,7 +4152,7 @@ void describe_spell(int spelled)
         description +=
             "causes the air around a creature to twist itself into "
             "a whirling vortex of meteorological fury. This spell "
-	    "is especially effective against flying enemies.";
+            "is especially effective against flying enemies.";
         break;
 
     case SPELL_SHADOW_CREATURES:
@@ -4428,9 +4428,9 @@ void describe_spell(int spelled)
                        "This spell will only deliver the impact of the blow; "
                        "magical side-effects and enchantments cannot be "
                        "transferred in this way.  The force transferred by "
-	                   "this spell has little to do with one's skill with "
-	                   "weapons, and more to do with personal strength, "
-	                   "translocation skill, and magic ability. ";
+                           "this spell has little to do with one's skill with "
+                           "weapons, and more to do with personal strength, "
+                           "translocation skill, and magic ability. ";
         break;
 
     case SPELL_SWAP:
@@ -4958,8 +4958,8 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_DEATH_DRAKE:
-	description += "A small dragon, radiating evil.";
-	break;
+        description += "A small dragon, radiating evil.";
+        break;
 
     case MONS_FIREDRAKE:
         description += "A small dragon, puffing clouds of smoke.";

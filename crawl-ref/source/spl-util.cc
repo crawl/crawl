@@ -725,7 +725,7 @@ const char* spelltype_short_name( int which_spelltype ) {
     case SPTYP_AIR:
         return ("Air");
     default:
-	return "Bug";
+        return "Bug";
     }
 }
 

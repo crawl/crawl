@@ -582,7 +582,7 @@ void up_stairs(void)
 
     // Interlevel travel data:
     bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
-        	    && you.level_type != LEVEL_ABYSS 
+                    && you.level_type != LEVEL_ABYSS 
                 && you.level_type != LEVEL_PANDEMONIUM;
 
     level_id  old_level_id    = level_id::current();
@@ -826,7 +826,7 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
 
     // Interlevel travel data:
     bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
-        	    && you.level_type != LEVEL_ABYSS
+                    && you.level_type != LEVEL_ABYSS
                 && you.level_type != LEVEL_PANDEMONIUM;
 
     level_id  old_level_id    = level_id::current();
@@ -909,7 +909,7 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
                                           you.where_are_you,
                                           true, false );
 #if DEBUG_DIAGNOSTICS
-	snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
+        snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
         unlink(lname.c_str());
@@ -1690,7 +1690,7 @@ bool go_berserk(bool intentional)
     }
 
     if (Options.tutorial_left)
-    	Options.tut_berserk_counter++;
+        Options.tut_berserk_counter++;
     mpr("A red film seems to cover your vision as you go berserk!");
     mpr("You feel yourself moving faster!");
     mpr("You feel mighty!");
@@ -1923,7 +1923,7 @@ bool i_feel_safe(bool announce)
                         if (announce)
                             mons.push_back(mon);
                         else {
-                        	tutorial_first_monster(*mon);
+                                tutorial_first_monster(*mon);
                             return false;
                     }
                 }

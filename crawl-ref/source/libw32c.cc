@@ -50,7 +50,7 @@
 #define NOKANJI           /* Kanji support stuff. */
 #define NOMCX             /* Modem Configuration Extensions */
 #ifndef _X86_
-#define _X86_			  /* target architecture */
+#define _X86_                     /* target architecture */
 #endif
 
 #include <excpt.h>

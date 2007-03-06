@@ -626,8 +626,8 @@ void you_teleport(void)
 void you_teleport2( bool allow_control, bool new_abyss_area )
 {
     bool is_controlled = (allow_control && !you.conf
-			  && player_control_teleport()
-			  && allow_control_teleport());
+                          && player_control_teleport()
+                          && allow_control_teleport());
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
     {

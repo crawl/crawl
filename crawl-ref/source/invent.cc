@@ -719,16 +719,16 @@ static int digit_to_index( char digit, operation_types oper ) {
 
     for ( i = 0; i < ENDOFPACK; ++i ) {
         if (is_valid_item(you.inv[i])) {
-	    const std::string& r(you.inv[i].inscription);
-	    /* note that r.size() is unsigned */
-	    for ( j = 0; j + 2 < r.size(); ++j ) {
-		if ( r[j] == '@' &&
-		     (r[j+1] == iletter || r[j+1] == '*') &&
-		     r[j+2] == digit ) {
-		    return i;
-		}
-	    }
-	}
+            const std::string& r(you.inv[i].inscription);
+            /* note that r.size() is unsigned */
+            for ( j = 0; j + 2 < r.size(); ++j ) {
+                if ( r[j] == '@' &&
+                     (r[j+1] == iletter || r[j+1] == '*') &&
+                     r[j+2] == digit ) {
+                    return i;
+                }
+            }
+        }
     }
     return -1;
 }
@@ -743,8 +743,8 @@ static bool has_warning_inscription(const item_def& item,
     
     const std::string& r(item.inscription);
     for ( i = 0; i + 1 < r.size(); ++i )
-	if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
-	    return true;
+        if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
+            return true;
     return false;
 }    
 

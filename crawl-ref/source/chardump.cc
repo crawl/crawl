@@ -508,13 +508,13 @@ static void dump_stats2( std::string & text, bool calc_unid)
 static void sdump_notes(const std::string &, std::string& text)
 {
     if ( note_list.size() == 0 || Options.use_notes == false )
-	return;
+        return;
 
     text += "\nNotes\n| Turn  |Location | Note\n";
     text += "--------------------------------------------------------------\n";
     for ( unsigned i = 0; i < note_list.size(); ++i ) {
-	text += note_list[i].describe();
-	text += "\n";
+        text += note_list[i].describe();
+        text += "\n";
     }
     text += "\n";
 }
@@ -864,7 +864,7 @@ static void sdump_spells(const std::string &, std::string & text)
         text += "You know the following spells:" "\n";
         text += "\n";
 
-	text += " Your Spells              Type           Power          Success   Level" "\n";
+        text += " Your Spells              Type           Power          Success   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -879,11 +879,11 @@ static void sdump_spells(const std::string &, std::string & text)
                 spell_line += " - ";
                 spell_line += spell_title( spell );
 
-		if ( spell_line.length() > 24 )
-		    spell_line = spell_line.substr(0, 24);
-		
-		for (int i = spell_line.length(); i < 26; i++) 
-		    spell_line += ' ';
+                if ( spell_line.length() > 24 )
+                    spell_line = spell_line.substr(0, 24);
+                
+                for (int i = spell_line.length(); i < 26; i++) 
+                    spell_line += ' ';
 
                 bool already = false;
 
@@ -892,18 +892,18 @@ static void sdump_spells(const std::string &, std::string & text)
                     if (spell_typematch( spell, spell_type_index[i] ))
                     {
                         spell_line += spell_type_shortname(spell_type_index[i],
-							   already);
+                                                           already);
                         already = true;
                     }
                 }
 
-		for (int i = spell_line.length(); i < 41; ++i )
-		    spell_line += ' ';
+                for (int i = spell_line.length(); i < 41; ++i )
+                    spell_line += ' ';
 
-		spell_line += spell_power_to_string(calc_spell_power(spell,true));
+                spell_line += spell_power_to_string(calc_spell_power(spell,true));
 
-		for (int i = spell_line.length(); i < 56; ++i )
-		    spell_line += ' ';
+                for (int i = spell_line.length(); i < 56; ++i )
+                    spell_line += ' ';
 
                 spell_line += failure_rate_to_string(spell_fail(spell));
 

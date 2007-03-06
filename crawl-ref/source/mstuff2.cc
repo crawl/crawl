@@ -368,10 +368,10 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
     {
     case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
-	if ( spell_cast == MS_SUMMON_SMALL_MAMMALS )
-	    sumcount2 = 1 + random2(4);
-	else
-	    sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
+        if ( spell_cast == MS_SUMMON_SMALL_MAMMALS )
+            sumcount2 = 1 + random2(4);
+        else
+            sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -935,7 +935,7 @@ void throw_type( int lnchClass, int lnchType, int wepClass, int wepType,
     if (wepClass == OBJ_MISSILES
         && lnchClass == OBJ_WEAPONS
         && is_range_weapon_type((weapon_type) lnchType)
-	&& wepType == fires_ammo_type((weapon_type) lnchType))
+        && wepType == fires_ammo_type((weapon_type) lnchType))
     {
         launched = true;
     }

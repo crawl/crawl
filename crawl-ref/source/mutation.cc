@@ -1177,7 +1177,7 @@ bool mutate(int which_mutation, bool failMsg)
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (you.is_undead && !demonspawn) 
     {
-	if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
+        if ((!wearing_amulet(AMU_RESIST_MUTATION) && coinflip())
                 || one_chance_in(10))
         {
             mpr( "Your body decomposes!" );
@@ -1506,8 +1506,8 @@ bool mutate(int which_mutation, bool failMsg)
             mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
             if (you.equip[EQ_HELMET] != -1 &&
-		(get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_CAP ||
-		 get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_WIZARD_HAT))
+                (get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_CAP ||
+                 get_helmet_type(you.inv[you.equip[EQ_HELMET]]) == THELM_WIZARD_HAT))
             {
                 break;          // horns don't push caps/wizard hats off
             }
@@ -1555,8 +1555,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
-	/* special-case check */
-	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+        /* special-case check */
+        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1568,8 +1568,8 @@ bool mutate(int which_mutation, bool failMsg)
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         you.mutation[mutat]++;
         calc_hp();
-	/* special-case check */
-	take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
+        /* special-case check */
+        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
@@ -1739,8 +1739,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
-	/* special-case check */
-	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
+        /* special-case check */
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_ROBUST:
@@ -1748,8 +1748,8 @@ bool delete_mutation(int which_mutation)
         if (you.mutation[mutat] > 0)
             you.mutation[mutat]--;
         calc_hp();
-	/* special-case check */
-	take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
+        /* special-case check */
+        take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
         return true;
 
     case MUT_BLACK_SCALES:
