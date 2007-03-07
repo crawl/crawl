@@ -4534,7 +4534,9 @@ void mons_check_pool(monsters *mons, int killer)
         return;
     
     const int grid = grd(mons->pos());
-    if (grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
+    const int native_habitat = monster_habitat(mons->type);
+    if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
+        && grid != native_habitat)
     {
         const bool message = mons_near(mons);
         
