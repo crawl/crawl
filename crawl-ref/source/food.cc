@@ -1316,9 +1316,9 @@ static int determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     {
         if (you.species == SP_GHOUL)
         {
-            // [dshaligram] Leaving rotting chunk effect intact for ghouls.
+            // [dshaligram] Ghouls relish contaminated meat.
             if (this_chunk_effect == CE_CLEAN)
-                this_chunk_effect = CE_ROTTEN;
+                this_chunk_effect = CE_CONTAMINATED;
         }
         else
         {
