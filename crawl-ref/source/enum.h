@@ -1731,7 +1731,7 @@ enum msg_channel_type
     MSGCH_PLAIN,          // regular text
     MSGCH_PROMPT,         // various prompts
     MSGCH_GOD,            // god/religion (param is god)
-    MSGCH_PRAY,		  // praying messages (param is god)
+    MSGCH_PRAY,           // praying messages (param is god)
     MSGCH_DURATION,       // effect down/warnings
     MSGCH_DANGER,         // serious life threats (ie very large HP attacks)
     MSGCH_WARN,           // much less serious threats
@@ -1750,8 +1750,8 @@ enum msg_channel_type
     MSGCH_FLOOR_ITEMS,    // like equipment, but lists of floor items
     MSGCH_MULTITURN_ACTION,  // delayed action messages
     MSGCH_DIAGNOSTICS,    // various diagnostic messages 
-    MSGCH_TUTORIAL,		  // messages for tutorial
-	MSGCH_DANGER_MAGIC,   // low magic warning
+    MSGCH_TUTORIAL,       // messages for tutorial
+    MSGCH_DANGER_MAGIC,   // low magic warning
     NUM_MESSAGE_CHANNELS  // always last
 };
 

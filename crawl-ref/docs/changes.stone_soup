@@ -73,7 +73,7 @@ Stone Soup 0.2
 * Unseen horrors no longer resist electricity.
 * Greedy explore now tries to handle mimics like the items they imitate.
 * Dungeon builder guarantees that at least one downstair is reachable
-  from the upstair on D:1.
+  from the upstair on D:1, unless there is an enclosed entry vault.
 * Hydras get their full attack round vs other monsters.
 * Monsters fighting hydras can chop off heads if using suitable weapons/claws.
 * Interlevel travel handles branch entries and exits more intelligently.

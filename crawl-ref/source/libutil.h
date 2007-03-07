@@ -263,8 +263,8 @@ public:
     }
 
     text_pattern(const text_pattern &tp)
-        : 	base_pattern(tp),
-	pattern(tp.pattern),
+        : base_pattern(tp),
+          pattern(tp.pattern),
           compiled_pattern(NULL),
           isvalid(tp.isvalid),
           ignore_case(tp.ignore_case)

@@ -8,11 +8,6 @@
 #define WIN_NUMBER_OF_LINES     25
 
 #include <string>
-// I think the following definition is all we need from STD namespace..
-#ifdef __IBMCPP__			// Borland 5.01 doesn't seem to need this
-typedef std::basic_string<char> string;
-#endif
-
 #include <stdarg.h>
 
 void init_libw32c(void);

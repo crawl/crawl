@@ -592,7 +592,7 @@ void game_options::reset_options()
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     hp_warning             = 10;
-    magic_point_warning    = 10;
+    magic_point_warning    = 0;
     confirm_self_target    = true;
     default_target         = false;
     safe_autopickup        = true;

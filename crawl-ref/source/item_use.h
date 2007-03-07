@@ -26,7 +26,7 @@
  * called from: acr - item_use
  * *********************************************************************** */
 bool armour_prompt(const std::string & mesg, int *index,
-		   operation_types oper);
+                   operation_types oper);
 
 
 // last updated 12may2000 {dlb}

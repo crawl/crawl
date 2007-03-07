@@ -1115,7 +1115,7 @@ public:
     bool        autopickup_no_burden; // don't autopickup if it changes burden
     bool        note_skill_max; // take note when skills reach new max
     bool        note_all_spells; // take note when learning any spell
-    bool        use_notes;	// take (and dump) notes
+    bool        use_notes;      // take (and dump) notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
     int         easy_confirm;   // make yesno() confirming easier
@@ -1124,7 +1124,7 @@ public:
     int         background;     // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     int         weapon;         // auto-choose weapon for character
-    int         book;		// auto-choose book for character
+    int         book;           // auto-choose book for character
     int         chaos_knight;   // choice of god for Chaos Knights (Xom/Makleb)
     int         death_knight;   // choice of god/necromancy for Death Knights
     int         priest;         // choice of god for priests (Zin/Yred)
@@ -1164,7 +1164,7 @@ public:
     std::vector<std::pair<int, int> > hp_colour;
     std::vector<std::pair<int, int> > mp_colour;
 
-    std::string map_file_name;	// name of mapping file to use
+    std::string map_file_name;  // name of mapping file to use
     std::vector<text_pattern> never_pickup;   // Objects we'll never pick up
     std::vector<text_pattern> always_pickup;  // Stuff we always pick up
     std::vector<text_pattern> note_monsters;  // Interesting monsters

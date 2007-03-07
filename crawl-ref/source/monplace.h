@@ -89,7 +89,7 @@ monster_type rand_dragon( dragon_class_type type );
  * called from: monplace monstuff
  * *********************************************************************** */
 void mark_interesting_monst(struct monsters* monster,
-							char behaviour = BEH_SLEEP);
+                            char behaviour = BEH_SLEEP);
 
 bool grid_compatible(int grid_wanted, int actual_grid, bool generation = false);
 bool monster_habitable_grid(int monster_class, int actual_grid, 

@@ -52,7 +52,7 @@ void draw_border(void);
 void item(void);
 
 void find_features(const std::vector<coord_def>& features,
-	unsigned char feature, std::vector<coord_def> *found);
+        unsigned char feature, std::vector<coord_def> *found);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
