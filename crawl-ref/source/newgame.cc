@@ -2956,9 +2956,7 @@ spec_query:
         if (you.char_class == JOB_UNKNOWN)
             cprintf(EOL
                     "SPACE - Choose class first; * - Random Species; "
-                    "! - Random Character"
-                    EOL
-                    "X - Quit"
+                    "! - Random Character; X - Quit"
                     EOL);
         else
             cprintf(EOL
@@ -3166,9 +3164,7 @@ job_query:
         if (!you.species)
             cprintf(EOL
                     "SPACE - Choose species first; * - Random Class; "
-                    "! - Random Character"
-                    EOL
-                    "X - Quit" 
+                    "! - Random Character; X - Quit"
                     EOL);
         else
             cprintf(EOL
