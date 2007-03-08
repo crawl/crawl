@@ -2877,6 +2877,8 @@ int check_stealth(void)
         else
             stealth /= 2;       // splashy-splashy
     }
+    else
+        stealth -= you.mutation[MUT_HOOVES] * 10; // clippety-clop
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going

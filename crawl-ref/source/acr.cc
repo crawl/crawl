@@ -839,10 +839,9 @@ static void input()
  
     if (Options.tut_just_triggered)
         Options.tut_just_triggered = false;
-    
-    bool help; 
+
     if (Options.tutorial_events[TUT_SEEN_MONSTER])
-        help = i_feel_safe();
+        i_feel_safe();          // can trigger tutorial as side effect
         
     if (Options.tutorial_events[TUT_RUN_AWAY]
         && 2*you.hp < you.hp_max && !i_feel_safe())
@@ -853,11 +852,21 @@ static void input()
     if (Options.tutorial_left && i_feel_safe())
     {
         if ( 2*you.hp < you.hp_max || 2*you.magic_points < you.max_magic_points )
+        {
             tutorial_healing_reminder();
-        else if (you.running < RMODE_REST_DURATION && Options.tutorial_events[TUT_SHIFT_RUN] && you.num_turns >= 200)
-                learned_something_new(TUT_SHIFT_RUN);
-        else if (you.running < RMODE_REST_DURATION && Options.tutorial_events[TUT_MAP_VIEW] && you.num_turns >= 500)
-                learned_something_new(TUT_MAP_VIEW);    
+        }
+        else if (you.running < RMODE_REST_DURATION &&
+                 Options.tutorial_events[TUT_SHIFT_RUN] &&
+                 you.num_turns >= 200)
+        {
+            learned_something_new(TUT_SHIFT_RUN);
+        }
+        else if (you.running < RMODE_REST_DURATION &&
+                 Options.tutorial_events[TUT_MAP_VIEW] &&
+                 you.num_turns >= 500)
+        {
+            learned_something_new(TUT_MAP_VIEW);
+        }
     }
  
     if ( you.paralysis )
