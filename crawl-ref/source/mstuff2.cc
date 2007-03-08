@@ -1424,7 +1424,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON_ARROW;
-        beam.hit = 14 + power / 25;
+        beam.hit = 12 + power / 25;
         beam.range = beam.rangeMax = 8;
         break;
 

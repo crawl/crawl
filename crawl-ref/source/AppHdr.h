@@ -84,20 +84,6 @@
     //
     // #define DGAMELAUNCH
 
-    // DGL_CLEAR_SCREEN specifies the escape sequence to use to clear
-    // the screen (used only when DGAMELAUNCH is defined). We make no
-    // attempt to discover an appropriate escape sequence for the
-    // term, assuming that dgamelaunch admins can adjust this as
-    // needed.
-    //
-    // Why this is necessary: dgamelaunch's ttyplay initialises
-    // playback by jumping to the last screen clear and playing back
-    // from there. For that to work, ttyplay must be able to recognise
-    // the clear screen sequence, and ncurses clear()+refresh()
-    // doesn't do the trick.
-    //
-    #define DGL_CLEAR_SCREEN "\033[2J"
-
     #define MULTIUSER
     #define USE_UNIX_SIGNALS
 
@@ -199,6 +185,31 @@
     #error Missing platform #define or unsupported compiler.
 #endif
 
+// =========================================================================
+//  Defines for dgamelaunch-specific things.
+// =========================================================================
+
+#ifdef DGAMELAUNCH
+    // DGL_CLEAR_SCREEN specifies the escape sequence to use to clear
+    // the screen (used only when DGAMELAUNCH is defined). We make no
+    // attempt to discover an appropriate escape sequence for the
+    // term, assuming that dgamelaunch admins can adjust this as
+    // needed.
+    //
+    // Why this is necessary: dgamelaunch's ttyplay initialises
+    // playback by jumping to the last screen clear and playing back
+    // from there. For that to work, ttyplay must be able to recognise
+    // the clear screen sequence, and ncurses clear()+refresh()
+    // doesn't do the trick.
+    //
+    #define DGL_CLEAR_SCREEN "\033[2J"
+
+    // If defined, the hiscores code dumps preformatted verbose and terse
+    // death message strings in the logfile for the convenience of logfile
+    // parsers.
+    #define DGL_EXTENDED_LOGFILES
+
+#endif
 
 // =========================================================================
 //  Debugging Defines

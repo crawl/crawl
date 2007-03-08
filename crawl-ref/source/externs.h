@@ -19,8 +19,8 @@
 #include <vector>
 #include <list>
 #include <string>
-
 #include <map>
+#include <memory>
 
 #include <time.h>
 
@@ -721,6 +721,7 @@ public:
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);
     int       damage_brand(int attk = -1);
+    bool      has_usable_claws() const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();
     
@@ -1350,19 +1351,19 @@ public:
     char        version;
     char        release;
     long        points;
-    char        name[kNameLen];
+    std::string name;
     long        uid;                // for multiuser systems
     char        race;
     char        cls;
-    char        race_class_name[5]; // overrides race & cls if non-null
+    std::string race_class_name;    // overrides race & cls if non-empty.
     char        lvl;                // player level.
     char        best_skill;         // best skill #
     char        best_skill_lvl;     // best skill level
     int         death_type;
     int         death_source;       // 0 or monster TYPE
     int         mon_num;            // sigh...
-    char        death_source_name[40];    // overrides death_source
-    char        auxkilldata[ITEMNAME_SIZE]; // weapon wielded, spell cast, etc
+    std::string death_source_name;  // overrides death_source
+    std::string auxkilldata;        // weapon wielded, spell cast, etc
     char        dlvl;               // dungeon level (relative)
     char        level_type;         // what kind of level died on..
     char        branch;             // dungeon branch
@@ -1388,7 +1389,10 @@ public:
     scorefile_entry();
     scorefile_entry(int damage, int death_source, int death_type,
                     const char *aux, bool death_cause_only = false);
+    scorefile_entry(const scorefile_entry &se);
 
+    scorefile_entry &operator = (const scorefile_entry &other);
+    
     void init_death_cause(int damage, int death_source, int death_type,
                           const char *aux);
     void init();
@@ -1398,29 +1402,63 @@ public:
         DDV_TERSE,
         DDV_ONELINE,
         DDV_NORMAL,
-        DDV_VERBOSE
+        DDV_VERBOSE,
+        DDV_LOGVERBOSE     // Semi-verbose for logging purposes
     };
 
+    std::string raw_string() const;
+    bool parse(const std::string &line);
+    
     std::string hiscore_line(death_desc_verbosity verbosity) const;
 
     std::string character_description(death_desc_verbosity) const;
     // Full description of death: Killed by an xyz wielding foo
     std::string death_description(death_desc_verbosity) const;
-
     std::string death_place(death_desc_verbosity) const;
-
     std::string game_time(death_desc_verbosity) const;
 
+private:
+    typedef std::vector< std::pair<std::string, std::string> > hs_fields;
+    typedef std::map<std::string, std::string> hs_map;
+
+    mutable std::auto_ptr<hs_fields> fields;
+    mutable std::auto_ptr<hs_map> fieldmap;
+    
 private:
     std::string single_cdesc() const;
     std::string strip_article_a(const std::string &s) const;
     std::string terse_missile_cause() const;
+    std::string terse_missile_name() const;
     std::string terse_beam_cause() const;
     std::string terse_wild_magic() const;
     std::string terse_trap() const;
     const char *damage_verb() const;
     const char *death_source_desc() const;
     std::string damage_string(bool terse = false) const;
+
+    bool parse_obsolete_scoreline(const std::string &line);
+    bool parse_scoreline(const std::string &line);
+
+    void init_with_fields();
+    void add_field(const std::string &key,
+                   const char *format, ...) const;
+    void add_auxkill_field() const;
+    void set_score_fields() const;
+
+    std::string short_kill_message() const;
+    std::string long_kill_message() const;
+    std::string make_oneline(const std::string &s) const;
+    
+    std::string str_field(const std::string &key) const;
+    int int_field(const std::string &key) const;
+    long long_field(const std::string &key) const;
+    std::string xlog_escape(const std::string &s) const;
+    std::string xlog_unescape(const std::string &s) const;
+    void read_auxkill_field();
+    void map_fields();
+    void init_from(const scorefile_entry &other);
+
+    int kludge_branch(int branch_01) const;
 };
 
 extern const struct coord_def Compass[8];

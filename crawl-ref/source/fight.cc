@@ -693,7 +693,6 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "punch";
-
             /* applied twice */
             aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
 
@@ -702,6 +701,12 @@ bool melee_attack::player_aux_unarmed()
                 unarmed_attack = "slash";
                 aux_damage += 6;
             }
+            else if (you.has_usable_claws())
+            {
+                unarmed_attack = "claw";
+                aux_damage += roll_dice(1, 3);
+            }
+
             break;
 
             /* To add more, add to while part of loop below as well */
@@ -1218,7 +1223,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         break;
 
     case -1: // unarmed
-        if (you.species == SP_TROLL || you.mutation[MUT_CLAWS])
+        if (you.damage_type() == DVORP_CLAWING)
         {
             if (damage < HIT_MED)
                 attack_verb = "claw";

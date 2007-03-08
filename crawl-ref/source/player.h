@@ -79,7 +79,7 @@ bool wearing_amulet(char which_am, bool calc_unid = true);
  * called from: acr - chardump - describe - newgame - view
  * *********************************************************************** */
 char *species_name( int speci, int level, bool genus = false, bool adj = false, bool cap = true );
-
+int str_to_species(const std::string &species);
 
 /* ***********************************************************************
  * called from: beam
@@ -438,7 +438,6 @@ int get_class_index_by_abbrev( const char *abbrev );
 int get_class_index_by_name( const char *name );
 const char *get_class_abbrev( int which_job );
 const char *get_class_name( int which_job );
-
 
 // last updated 19apr2001 {gdl}
 /* ***********************************************************************

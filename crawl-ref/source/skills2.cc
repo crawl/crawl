@@ -1994,6 +1994,15 @@ const char *skill_name(int which_skill)
     return (skills[which_skill][0]);
 }                               // end skill_name()
 
+int str_to_skill(const std::string &skill)
+{
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        if (skills[i][0] && skill == skills[i][0])
+            return (i);
+    }
+    return (SK_FIGHTING);
+}
 
 const char *skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )

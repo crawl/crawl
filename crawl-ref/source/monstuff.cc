@@ -1167,18 +1167,23 @@ static bool habitat_okay( struct monsters *monster, int targ )
 // swap pets to their death, we can let that go). -- bwr
 bool swap_places(struct monsters *monster)
 {
-    bool swap;
-
     int loc_x = you.x_pos;
     int loc_y = you.y_pos;
 
     const int mgrid = grd[monster->x][monster->y];
 
-    swap = habitat_okay( monster, grd[loc_x][loc_y] )
-        && !is_grid_dangerous(mgrid);
+    const bool mon_dest_okay = habitat_okay( monster, grd[loc_x][loc_y] );
+    const bool you_dest_okay =
+        !is_grid_dangerous(mgrid)
+        || yesno("Do you really want to step there?", false, 'n');
+
+    if (!you_dest_okay)
+        return (false);
+
+    bool swap = mon_dest_okay;
 
     // chose an appropiate habitat square at random around the target.
-    if (!swap && !is_grid_dangerous(mgrid))
+    if (!swap)
     {
         int num_found = 0;
         int temp_x, temp_y;
@@ -4534,9 +4539,8 @@ void mons_check_pool(monsters *mons, int killer)
         return;
     
     const int grid = grd(mons->pos());
-    const int native_habitat = monster_habitat(mons->type);
     if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
-        && grid != native_habitat)
+        && !monster_habitable_grid(mons, grid))
     {
         const bool message = mons_near(mons);
         
@@ -4549,8 +4553,7 @@ void mons_check_pool(monsters *mons, int killer)
 
         // Even fire resistant monsters perish in lava, but undead can survive
         // deep water.
-        if (!monster_habitable_grid(mons, grid)
-            && (grid == DNGN_LAVA || mons->holiness() != MH_UNDEAD))
+        if (grid == DNGN_LAVA || mons->holiness() != MH_UNDEAD)
         {
             if (message)
             {

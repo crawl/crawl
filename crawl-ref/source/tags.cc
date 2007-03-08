@@ -350,22 +350,25 @@ bool unmarshallBoolean(struct tagHeader &th)
 }
 
 // Saving the date as a string so we're not reliant on a particular epoch.
-void make_date_string( time_t in_date, char buff[20] )
+std::string make_date_string( time_t in_date )
 {
+    char buff[20];
+    
     if (in_date <= 0)
     {
         buff[0] = 0;
-        return;
+        return (buff);
     }
-
 
     struct tm *date = localtime( &in_date );
 
-    snprintf( buff, 20, 
+    snprintf( buff, sizeof buff, 
               "%4d%02d%02d%02d%02d%02d%s",
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
               ((date->tm_isdst > 0) ? "D" : "S") );
+
+    return (buff);
 }
 
 static int get_val_from_string( const char *ptr, int len )
@@ -613,7 +616,6 @@ void tag_set_expected(char tags[], int fileType)
 // --------------------------- player tags (foo.sav) -------------------- //
 static void tag_construct_you(struct tagHeader &th)
 {
-    char buff[20];      // used for date string
     int i,j;
 
     marshallString(th, you.your_name, 30);
@@ -776,8 +778,7 @@ static void tag_construct_you(struct tagHeader &th)
     marshallByte(th, you.wizard);
 
     // time of game start
-    make_date_string( you.birth_time, buff );
-    marshallString(th, buff, 20);
+    marshallString(th, make_date_string( you.birth_time ).c_str(), 20);
 
     // real_time == -1 means game was started before this feature
     if (you.real_time != -1)

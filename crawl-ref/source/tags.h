@@ -52,7 +52,7 @@ float unmarshallFloat(struct tagHeader &th);
 bool unmarshallBoolean(struct tagHeader &th);
 void unmarshallString(struct tagHeader &th, char *data, int maxSize);
 
-void make_date_string( time_t in_date, char buff[20] );
+std::string make_date_string( time_t in_date );
 time_t parse_date_string( char[20] );
 
 // last updated 22jan2001 {gdl}

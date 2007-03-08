@@ -327,7 +327,7 @@ bool is_grid_dangerous(int grid)
 {
     return (!player_is_levitating()
             && (grid == DNGN_LAVA
-                || grid == DNGN_DEEP_WATER && !player_can_swim()));
+                || (grid == DNGN_DEEP_WATER && !player_can_swim())));
 }
 
 bool player_in_mappable_area( void )
@@ -3247,6 +3247,27 @@ void redraw_skill(const char your_name[kNameLen], const char class_name[80])
     cprintf( "%s", print_it );
 }                               // end redraw_skill()
 
+// Does a case-sensitive lookup of the species name supplied.
+int str_to_species(const std::string &species)
+{
+    if (species.empty())
+        return SP_HUMAN;
+
+    for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
+    {
+        if (species == species_name(i, 10))
+            return (i);
+    }
+
+    for (int i = SP_HUMAN; i < NUM_SPECIES; ++i)
+    {
+        if (species == species_name(i, 1))
+            return (i);
+    }
+
+    return (SP_HUMAN);
+}
+
 // Note that this function only has the one static buffer, so if you
 // want to use the results, you'll want to make a copy.
 char *species_name( int  speci, int level, bool genus, bool adj, bool cap )
@@ -4770,11 +4791,7 @@ int player::damage_type(int)
     {
         return (DVORP_SLICING);
     }
-    else if (equip[EQ_GLOVES] == -1 &&
-             (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-              || mutation[MUT_CLAWS] 
-              || species == SP_TROLL
-              || species == SP_GHOUL))
+    else if (has_usable_claws())
     {
         return (DVORP_CLAWING);
     }
@@ -5161,4 +5178,13 @@ void player::paralyse(int str)
 void player::slow_down(int str)
 {
     ::slow_player( str );
+}
+
+bool player::has_usable_claws() const
+{
+    return (equip[EQ_GLOVES] == -1 &&
+            (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+             || mutation[MUT_CLAWS] 
+             || species == SP_TROLL
+             || species == SP_GHOUL));
 }

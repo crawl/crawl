@@ -143,6 +143,13 @@ public:
     int level_type;
 
 public:
+    // Returns the level_id of the current level.
+    static level_id current();
+
+    // Returns the level_id of the level that the stair/portal/whatever at
+    // 'pos' on the current level leads to.
+    static level_id get_next_level_id(const coord_def &pos);
+
     level_id() : branch(0), depth(-1), level_type(LEVEL_DUNGEON) { }
     level_id(int br, int dep, int ltype = LEVEL_DUNGEON)
         : branch(br), depth(dep), level_type(ltype)
@@ -159,13 +166,6 @@ public:
     {
         return (branch != -1 && depth != -1) || level_type != LEVEL_DUNGEON;
     }
-
-    // Returns the level_id of the current level.
-    static level_id current();
-
-    // Returns the level_id of the level that the stair/portal/whatever at
-    // 'pos' on the current level leads to.
-    static level_id get_next_level_id(const coord_def &pos);
 
     bool operator == ( const level_id &id ) const
     {

@@ -1574,7 +1574,8 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         {
             // back out the way we came in, if possible
             if (grid_distance( you.x_pos, you.y_pos, entry_x, entry_y ) == 1
-                && (entry_x != empty[0] || entry_y != empty[1]))
+                && (entry_x != empty[0] || entry_y != empty[1])
+                && mgrd[entry_x][entry_y] == NON_MONSTER)
             {
                 escape = true;
                 empty[0] = entry_x;
@@ -1991,13 +1992,13 @@ unsigned short get_packed_place()
 bool single_level_branch( int branch )
 {
     return
-        branch == BRANCH_VESTIBULE_OF_HELL ||
-        branch == BRANCH_HALL_OF_BLADES ||
-        branch == BRANCH_ECUMENICAL_TEMPLE;
+        branch >= 0 && branch < NUM_BRANCHES
+        && branches[branch].depth == 1;
 }
 
 std::string place_name( unsigned short place, bool long_name,
-                        bool include_number ) {
+                        bool include_number )
+{
 
     unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
     int lev = place & 0xFF;

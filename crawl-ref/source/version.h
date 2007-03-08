@@ -37,11 +37,14 @@
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
+#define VER_NUM  "0.2"
+#define VER_QUAL "-svn"
+
 // last updated 07august2001 {mv}
 /* ***********************************************************************
  * called from: chardump - command - newgame
  * *********************************************************************** */
-#define VERSION "0.2-svn (crawl-ref)"
+#define VERSION  VER_NUM VER_QUAL " (crawl-ref)"
 
 // last updated 20feb2001 {GDL}
 /* ***********************************************************************

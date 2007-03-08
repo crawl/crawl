@@ -290,7 +290,7 @@ static char str_to_race( const std::string &str )
     return ((index != -1) ? index_to_letter( index - 1 ) : 0); 
 }
 
-static char str_to_class( const std::string &str )
+static int str_to_class( const std::string &str )
 {
     int index = -1;
 
@@ -702,7 +702,7 @@ void game_options::reset_options()
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
     sc_entries             = 0;
-    sc_format              = SCORE_REGULAR;
+    sc_format              = -1;
 
     friend_brand    = CHATTR_NORMAL;
     heap_brand      = CHATTR_NORMAL;
@@ -2406,6 +2406,8 @@ bool parse_args( int argc, char **argv, bool rc_only )
                     Options.sc_format = SCORE_TERSE;
                 else if (o == CLO_VSCORES)
                     Options.sc_format = SCORE_VERBOSE;
+                else if (o == CLO_SCORES)
+                    Options.sc_format = SCORE_REGULAR;
             }
             break;
 

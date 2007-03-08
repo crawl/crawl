@@ -35,6 +35,7 @@
 #include "AppHdr.h"
 #include "externs.h"
 
+#include "branch.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -47,9 +48,12 @@
 #include "shopping.h"
 #include "stuff.h"
 #include "tags.h"
+#include "version.h"
 #include "view.h"
 
 #include "skills2.h"
+
+#define SCORE_VERSION "0.1"
 
 #ifdef MULTIUSER
     // includes to get passwd file access:
@@ -68,21 +72,11 @@ static FILE *hs_open(const char *mode, const std::string &filename);
 static void hs_close(FILE *handle, const char *mode,
                      const std::string &filename);
 static bool hs_read(FILE *scores, scorefile_entry &dest);
-static void hs_parse_numeric(char *inbuf, scorefile_entry &dest);
-static void hs_parse_string(char *inbuf, scorefile_entry &dest);
 static void hs_write(FILE *scores, scorefile_entry &entry);
-static void hs_nextstring(char *&inbuf, char *dest, size_t bufsize);
-static int hs_nextint(char *&inbuf);
-static long hs_nextlong(char *&inbuf);
-
-// functions dealing with old scorefile entries
-static void hs_parse_generic_1(char *&inbuf, char *outbuf, size_t outsz,
-                               const char *stopvalues);
-static void hs_parse_generic_2(char *&inbuf, char *outbuf, size_t outsz, 
-                               const char *continuevalues);
-static void hs_stripblanks(char *buf);
-static void hs_search_death(char *inbuf, struct scorefile_entry &se);
-static void hs_search_where(char *inbuf, struct scorefile_entry &se);
+static void hs_nextstring(const char *&inbuf, char *dest, size_t bufsize);
+static int hs_nextint(const char *&inbuf);
+static long hs_nextlong(const char *&inbuf);
+static time_t parse_time(const std::string &st);
 
 // file locking stuff
 #ifdef USE_FILE_LOCKING
@@ -245,7 +239,10 @@ void hiscores_print_all(int display_count, int format)
         if (!hs_read(scores, se))
             break;
 
-        hiscores_print_entry(se, entry, format, printf);
+        if (format == -1)
+            printf("%s\n", se.raw_string().c_str());
+        else
+            hiscores_print_entry(se, entry, format, printf);
     }
 
     hs_close( scores, "r", score_file_name() );
@@ -493,42 +490,31 @@ void hs_close( FILE *handle, const char *mode, const std::string &scores )
 
 bool hs_read( FILE *scores, scorefile_entry &dest )
 {
-    char inbuf[600];
-    int c = EOF;
+    char inbuf[1300];
+    if (!scores || feof(scores))
+        return (false);
 
     memset(inbuf, 0, sizeof inbuf);
     dest.reset();
 
-    // get a character..
-    if (scores != NULL)
-        c = fgetc(scores);
+    if (!fgets(inbuf, sizeof inbuf, scores))
+        return (false);
 
-    // check for NULL scores file or EOF
-    if (scores == NULL || c == EOF)
-        return false;
-
-    // get a line - this is tricky.  "Lines" come in three flavors:
-    // 1) old-style lines which were 80 character blocks
-    // 2) 4.0 pr1 through pr7 versions which were newline terminated
-    // 3) 4.0 pr8 and onwards which are 'current' ASCII format, and
-    //    may exceed 80 characters!
-
-    // put 'c' in first spot
-    inbuf[0] = c;
-
-    if (fgets(&inbuf[1], (c==':') ? (sizeof(inbuf) - 2) : 81, scores) == NULL)
-        return false;
-
-    // check type;  lines starting with a colon are new-style scores.
-    if (c == ':')
-        hs_parse_numeric(inbuf, dest);
-    else
-        hs_parse_string(inbuf, dest);
-
-    return true;
+    return (dest.parse(inbuf));
 }
 
-static void hs_nextstring(char *&inbuf, char *dest, size_t destsize)
+static std::string hs_nextstring(const char *&inbuf, size_t destsize = 800)
+{
+    char *buf = new char[destsize];
+    if (!buf)
+        return ("");
+    hs_nextstring(inbuf, buf, destsize);
+    const std::string res = buf;
+    delete [] buf;
+    return (res);
+}
+
+static void hs_nextstring(const char *&inbuf, char *dest, size_t destsize)
 {
     ASSERT(destsize > 0);
 
@@ -554,7 +540,7 @@ static void hs_nextstring(char *&inbuf, char *dest, size_t destsize)
     *p = 0;
 }
 
-static int hs_nextint(char *&inbuf)
+static int hs_nextint(const char *&inbuf)
 {
     char num[20];
     hs_nextstring(inbuf, num, sizeof num);
@@ -562,7 +548,7 @@ static int hs_nextint(char *&inbuf)
     return (num[0] == 0 ? 0 : atoi(num));
 }
 
-static long hs_nextlong(char *&inbuf)
+static long hs_nextlong(const char *&inbuf)
 {
     char num[20];
     hs_nextstring(inbuf, num, sizeof num);
@@ -575,134 +561,39 @@ static int val_char( char digit )
     return (digit - '0');
 }
 
-static time_t hs_nextdate(char *&inbuf)
+static time_t hs_nextdate(const char *&inbuf)
 {
     char       buff[20];
-    struct tm  date;
-
     hs_nextstring(inbuf, buff, sizeof buff);
 
-    if (strlen( buff ) < 15)
+    return parse_time(buff);
+}
+
+static time_t parse_time(const std::string &st)
+{
+    struct tm  date;
+
+    if (st.length() < 15)
         return (static_cast<time_t>(0));
 
-    date.tm_year = val_char( buff[0] ) * 1000 + val_char( buff[1] ) * 100
-                    + val_char( buff[2] ) * 10 + val_char( buff[3] ) - 1900;
+    date.tm_year = val_char( st[0] ) * 1000 + val_char( st[1] ) * 100
+                    + val_char( st[2] ) * 10 + val_char( st[3] ) - 1900;
 
-    date.tm_mon   = val_char( buff[4] ) * 10 + val_char( buff[5] );
-    date.tm_mday  = val_char( buff[6] ) * 10 + val_char( buff[7] );
-    date.tm_hour  = val_char( buff[8] ) * 10 + val_char( buff[9] );
-    date.tm_min   = val_char( buff[10] ) * 10 + val_char( buff[11] );
-    date.tm_sec   = val_char( buff[12] ) * 10 + val_char( buff[13] );
-    date.tm_isdst = (buff[14] == 'D');
+    date.tm_mon   = val_char( st[4] ) * 10 + val_char( st[5] );
+    date.tm_mday  = val_char( st[6] ) * 10 + val_char( st[7] );
+    date.tm_hour  = val_char( st[8] ) * 10 + val_char( st[9] );
+    date.tm_min   = val_char( st[10] ) * 10 + val_char( st[11] );
+    date.tm_sec   = val_char( st[12] ) * 10 + val_char( st[13] );
+    date.tm_isdst = (st[14] == 'D');
 
     return (mktime( &date ));
 }
 
-static void hs_parse_numeric(char *inbuf, struct scorefile_entry &se)
-{
-    se.version = hs_nextint(inbuf);
-    se.release = hs_nextint(inbuf);
-
-    // this would be a good point to check for version numbers and branch
-    // appropriately
-
-    // acceptable versions are 0 (converted from old hiscore format) and 4
-    if (se.version != 0 && se.version != 4)
-        return;
-
-    se.points = hs_nextlong(inbuf);
-
-    hs_nextstring(inbuf, se.name, sizeof se.name);
-
-    se.uid = hs_nextlong(inbuf);
-    se.race = hs_nextint(inbuf);
-    se.cls = hs_nextint(inbuf);
-
-    hs_nextstring(inbuf, se.race_class_name, sizeof se.race_class_name);
-
-    se.lvl = hs_nextint(inbuf);
-    se.best_skill = hs_nextint(inbuf);
-    se.best_skill_lvl = hs_nextint(inbuf);
-    se.death_type = hs_nextint(inbuf);
-    se.death_source = hs_nextint(inbuf);
-    se.mon_num = hs_nextint(inbuf);
-
-    hs_nextstring(inbuf, se.death_source_name, sizeof se.death_source_name);
-
-    // To try and keep the scorefile backwards compatible,
-    // we'll branch on version > 4.0 to read the auxkilldata
-    // text field.  
-    if (se.version == 4 && se.release >= 1)
-        hs_nextstring( inbuf, se.auxkilldata, sizeof se.auxkilldata );
-    else
-        se.auxkilldata[0] = 0;
-
-    se.dlvl = hs_nextint(inbuf);
-    se.level_type = hs_nextint(inbuf);
-    se.branch = hs_nextint(inbuf);
-
-    // Trying to fix some bugs that have been around since at 
-    // least pr19, if not longer.  From now on, dlvl should
-    // be calculated on death and need no further modification.
-    if (se.version < 4 || se.release < 2)
-    {
-        if (se.level_type == LEVEL_DUNGEON)
-        {
-            if (se.branch == BRANCH_MAIN_DUNGEON)
-                se.dlvl += 1;
-            else if (se.branch < BRANCH_ORCISH_MINES)  // ie the hells
-                se.dlvl -= 1;
-        }
-    }
-
-    se.final_hp = hs_nextint(inbuf);
-    if (se.version == 4 && se.release >= 2)
-    {
-        se.final_max_hp = hs_nextint(inbuf);
-        se.final_max_max_hp = hs_nextint(inbuf);
-        se.damage = hs_nextint(inbuf);
-        se.str = hs_nextint(inbuf);
-        se.intel = hs_nextint(inbuf);
-        se.dex = hs_nextint(inbuf);
-        se.god = hs_nextint(inbuf);
-        se.piety = hs_nextint(inbuf);
-        se.penance = hs_nextint(inbuf);
-    }
-    else
-    {
-        se.final_max_hp = -1;
-        se.final_max_max_hp = -1;
-        se.damage = -1;
-        se.str = -1;
-        se.intel = -1;
-        se.dex = -1;
-        se.god = -1;
-        se.piety = -1;
-        se.penance = -1;
-    }
-
-    se.wiz_mode = hs_nextint(inbuf);
-
-    se.birth_time = hs_nextdate(inbuf);
-    se.death_time = hs_nextdate(inbuf);
-
-    if (se.version == 4 && se.release >= 2)
-    {
-        se.real_time = hs_nextint(inbuf);
-        se.num_turns = hs_nextint(inbuf);
-    }
-    else
-    {
-        se.real_time = -1;
-        se.num_turns = -1;
-    }
-
-    se.num_diff_runes = hs_nextint(inbuf);
-    se.num_runes = hs_nextint(inbuf);
-}
-
 static void hs_write( FILE *scores, scorefile_entry &se )
 {
+    fprintf(scores, "%s\n", se.raw_string().c_str());
+
+    /*
     char buff[80];  // should be more than enough for date stamps
 
     se.version = 4;
@@ -730,361 +621,42 @@ static void hs_write( FILE *scores, scorefile_entry &se )
 
     fprintf( scores, ":%ld:%ld:%d:%d:\n", 
              se.real_time, se.num_turns, se.num_diff_runes, se.num_runes );
-} 
-// -------------------------------------------------------------------------
-// functions dealing with old-style scorefile entries.
-// -------------------------------------------------------------------------
-
-static void hs_parse_string(char *inbuf, struct scorefile_entry &se)
-{
-    /* old entries are of the following format (Brent introduced some
-       spacing at one point, we have to take this into account):
-
-   // Actually, I believe it might have been Brian who added the spaces, 
-   // I was quite happy with the condensed version, given the 80 column
-   // restriction. -- bwr
-
-6263    BoBo       - DSD10 Wiz, killed by an acid blob on L1 of the Slime Pits.
-5877    Aldus-DGM10, killed by a lethal dose of poison on L10.
-5419    Yarf       - Koa10, killed by a warg on L1 of the Mines.
-
-    1. All numerics up to the first non-numeric are the score
-    2. All non '-' characters are the name.  Strip spaces.
-    3. All alphabetics up to the first numeric are race/class
-    4. All numerics up to the comma are the clevel
-    5. From the comma, search for known fixed substrings and
-       translate to death_type.  Leave death source = 0 for old
-       scores, and just copy in the monster name.
-    6. Look for the branch type (again, substring search for
-       fixed strings) and level.
-
-    Very ugly and time consuming.
-
     */
-
-    char scratch[80];
-    const int inlen = strlen(inbuf);
-    char *start = inbuf;
-
-    // 1. get score
-    hs_parse_generic_2(inbuf, scratch, sizeof scratch, "0123456789");
-
-    se.version = 0;         // version # of converted score
-    se.release = 0;
-    se.points = atoi(scratch);
-
-    // 2. get name
-    hs_parse_generic_1(inbuf, scratch, sizeof scratch, "-");
-    hs_stripblanks(scratch);
-    strncpy(se.name, scratch, sizeof se.name);
-    se.name[ sizeof(se.name) - 1 ] = 0;
-
-    // 3. get race, class
-    // skip '-'
-    if (++inbuf - start >= inlen)
-        return;
-
-    hs_parse_generic_1(inbuf, scratch, sizeof scratch, "0123456789");
-    hs_stripblanks(scratch);
-    strncpy(se.race_class_name, scratch, sizeof se.race_class_name);
-    se.race_class_name[ sizeof(se.race_class_name) - 1 ] = 0;
-    se.race = 0;
-    se.cls = 0;
-
-    // 4. get clevel
-    hs_parse_generic_2(inbuf, scratch, sizeof scratch, "0123456789");
-    se.lvl = atoi(scratch);
-
-    // 4a. get wizard mode
-    hs_parse_generic_1(inbuf, scratch, sizeof scratch, ",");
-    if (strstr(scratch, "Wiz") != NULL)
-        se.wiz_mode = 1;
-    else
-        se.wiz_mode = 0;
-
-    // Skip comma
-    if (++inbuf - start >= inlen)
-        return;
-
-    // 5. get death type
-    hs_search_death(inbuf, se);
-
-    // 6. get branch, level
-    hs_search_where(inbuf, se);
-
-    // set things that can't be picked out of old scorefile entries
-    se.uid = 0;
-    se.best_skill = 0;
-    se.best_skill_lvl = 0;
-    se.final_hp = 0;
-    se.final_max_hp = -1;
-    se.final_max_max_hp = -1;
-    se.damage = -1;
-    se.str = -1;
-    se.intel = -1;
-    se.dex = -1;
-    se.god = -1;
-    se.piety = -1;
-    se.penance = -1;
-    se.birth_time = 0;
-    se.death_time = 0;
-    se.real_time = -1;
-    se.num_turns = -1;
-    se.num_runes = 0; 
-    se.num_diff_runes = 0; 
-    se.auxkilldata[0] = 0;
 }
 
-static void hs_parse_generic_1(char *&inbuf, char *outbuf, size_t outsz, const char *stopvalues)
+static const char *kill_method_names[] =
 {
-    ASSERT(outsz > 0);
+    "mon", "pois", "cloud", "beam", "deaths_door", "lava", "water",
+    "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
+    "quitting", "draining", "starvation", "freezing", "burning", "wild_magic",
+    "xom", "statue", "rotting", "targetting", "spore", "tso_smiting",
+    "petrification", "unknown", "something", "falling_down_stairs", "acid",
+    "curare", "melting", "bleeding",
+};
 
-    char *p = outbuf;
+const char *kill_method_name(kill_method_type kmt)
+{
+    ASSERT(NUM_KILLBY ==
+           (int) sizeof(kill_method_names) / sizeof(*kill_method_names));
 
-    if (!*inbuf)
-    {
-        *p = 0;
-        return;
-    }
+    if (kmt == NUM_KILLBY)
+        return ("");
 
-    while (strchr(stopvalues, *inbuf) == NULL 
-                && *inbuf != 0
-                && (p - outbuf) < (int) outsz - 1)
-        *p++ = *inbuf++;
-
-    while (strchr(stopvalues, *inbuf) == NULL 
-                && *inbuf != 0)
-        inbuf++;
-
-    *p = 0;
+    return kill_method_names[kmt];
 }
 
-static void hs_parse_generic_2(
-        char *&inbuf, char *outbuf, size_t outsz, const char *continuevalues)
+kill_method_type str_to_kill_method(const std::string &s)
 {
-    ASSERT(outsz > 0);
-
-    char *p = outbuf;
-
-    if (!*inbuf)
+    ASSERT(NUM_KILLBY ==
+           (int) sizeof(kill_method_names) / sizeof(*kill_method_names));
+    
+    for (int i = 0; i < NUM_KILLBY; ++i)
     {
-        *p = 0;
-        return;
+        if (s == kill_method_names[i])
+            return static_cast<kill_method_type>(i);
     }
 
-    while (strchr(continuevalues, *inbuf) != NULL 
-            && *inbuf
-            && (p - outbuf) < (int) outsz - 1)
-        *p++ = *inbuf++;
-
-    while (strchr(continuevalues, *inbuf) != NULL 
-            && *inbuf)
-        inbuf++;
-
-    *p = 0;
-}
-
-static void hs_stripblanks(char *buf)
-{
-    char *p = buf;
-    char *q = buf;
-
-    // strip leading
-    while(*p == ' ')
-        p++;
-
-    while(*p != 0 && p != q)
-        *q++ = *p++;
-
-    *q-- = 0;
-    // strip trailing
-    while (q >= buf && *q == ' ')
-        *q-- = 0;
-}
-
-static void hs_search_death(char *inbuf, struct scorefile_entry &se)
-{
-    // assume killed by monster
-    se.death_type = KILLED_BY_MONSTER;
-
-    // sigh..
-    if (strstr(inbuf, "killed by a lethal dose of poison") != NULL)
-        se.death_type = KILLED_BY_POISON;
-    else if (strstr(inbuf, "killed by a cloud") != NULL)
-        se.death_type = KILLED_BY_CLOUD;
-    else if (strstr(inbuf, "killed from afar by") != NULL)
-        se.death_type = KILLED_BY_BEAM;
-    else if (strstr(inbuf, "took a swim in molten lava") != NULL)
-        se.death_type = KILLED_BY_LAVA;
-    else if (strstr(inbuf, "asphyxiated"))
-        se.death_type = KILLED_BY_CURARE;
-    else if (strstr(inbuf, "soaked and fell apart") != NULL)
-    {
-        se.death_type = KILLED_BY_WATER;
-        se.race = SP_MUMMY;
-    }
-    else if (strstr(inbuf, "drowned") != NULL)
-        se.death_type = KILLED_BY_WATER;
-    else if (strstr(inbuf, "died of stupidity") != NULL)
-        se.death_type = KILLED_BY_STUPIDITY;
-    else if (strstr(inbuf, "too weak to continue adventuring") != NULL)
-        se.death_type = KILLED_BY_WEAKNESS;
-    else if (strstr(inbuf, "slipped on a banana peel") != NULL)
-        se.death_type = KILLED_BY_CLUMSINESS;
-    else if (strstr(inbuf, "killed by a trap") != NULL)
-        se.death_type = KILLED_BY_TRAP;
-    else if (strstr(inbuf, "got out of the dungeon alive") != NULL)
-        se.death_type = KILLED_BY_LEAVING;
-    else if (strstr(inbuf, "escaped with the Orb") != NULL)
-        se.death_type = KILLED_BY_WINNING;
-    else if (strstr(inbuf, "quit") != NULL)
-        se.death_type = KILLED_BY_QUITTING;
-    else if (strstr(inbuf, "was drained of all life") != NULL)
-        se.death_type = KILLED_BY_DRAINING;
-    else if (strstr(inbuf, "starved to death") != NULL)
-        se.death_type = KILLED_BY_STARVATION;
-    else if (strstr(inbuf, "froze to death") != NULL)
-        se.death_type = KILLED_BY_FREEZING;
-    else if (strstr(inbuf, "burnt to a crisp") != NULL)
-        se.death_type = KILLED_BY_BURNING;
-    else if (strstr(inbuf, "killed by wild magic") != NULL)
-        se.death_type = KILLED_BY_WILD_MAGIC;
-    else if (strstr(inbuf, "killed by Xom") != NULL)
-        se.death_type = KILLED_BY_XOM;
-    else if (strstr(inbuf, "killed by a statue") != NULL)
-        se.death_type = KILLED_BY_STATUE;
-    else if (strstr(inbuf, "rotted away") != NULL)
-        se.death_type = KILLED_BY_ROTTING;
-    else if (strstr(inbuf, "killed by bad target") != NULL)
-        se.death_type = KILLED_BY_TARGETTING;
-    else if (strstr(inbuf, "killed by an exploding spore") != NULL)
-        se.death_type = KILLED_BY_SPORE;
-    else if (strstr(inbuf, "smote by The Shining One") != NULL)
-        se.death_type = KILLED_BY_TSO_SMITING;
-    else if (strstr(inbuf, "turned to stone") != NULL)
-        se.death_type = KILLED_BY_PETRIFICATION;
-    else if (strstr(inbuf, "melted into a puddle") != NULL)
-        se.death_type = KILLED_BY_MELTING;
-    else if (strstr(inbuf, "bled to death") != NULL)
-        se.death_type = KILLED_BY_BLEEDING;
-
-    // whew!
-
-    // now, if we're still KILLED_BY_MONSTER, make sure that there is
-    // a "killed by" somewhere, or else we're setting it to UNKNOWN.
-    if (se.death_type == KILLED_BY_MONSTER)
-    {
-        if (strstr(inbuf, "killed by") == NULL)
-            se.death_type = KILLED_BY_SOMETHING;
-    }
-
-    // set some fields
-    se.death_source = 0;
-    se.mon_num = 0;
-    *se.death_source_name = 0;
-
-    // now try to pull the monster out.
-    // [dshaligram] Holy brain damage, Batman.
-    if (se.death_type == KILLED_BY_MONSTER || se.death_type == KILLED_BY_BEAM)
-    {
-        char *p = strstr(inbuf, " by ");
-        if (p)
-        {
-            p += 4;
-            char *q = strstr(inbuf, " on ");
-            if (q == NULL)
-                q = strstr(inbuf, " in ");
-
-            if (q && q > p)
-            {
-                char *d = se.death_source_name;
-                const int maxread = sizeof(se.death_source_name) - 1;
-
-                while (p < q && (d - se.death_source_name) < maxread)
-                    *d++ = *p++;
-
-                *d = 0;
-            }
-        }
-    }
-}
-
-static void hs_search_where(char *inbuf, struct scorefile_entry &se)
-{
-    char scratch[6];
-
-    se.level_type = LEVEL_DUNGEON;
-    se.branch = BRANCH_MAIN_DUNGEON;
-    se.dlvl = 0;
-
-    // early out
-    if (se.death_type == KILLED_BY_LEAVING 
-            || se.death_type == KILLED_BY_WINNING)
-        return;
-
-    // here we go again.
-    if (strstr(inbuf, "in the Abyss") != NULL)
-        se.level_type = LEVEL_ABYSS;
-    else if (strstr(inbuf, "in Pandemonium") != NULL)
-        se.level_type = LEVEL_PANDEMONIUM;
-    else if (strstr(inbuf, "in a labyrinth") != NULL)
-        se.level_type = LEVEL_LABYRINTH;
-
-    // early out for special level types
-    if (se.level_type != LEVEL_DUNGEON)
-        return;
-
-    // check for vestibule
-    if (strstr(inbuf, "in the Vestibule") != NULL)
-    {
-        se.branch = BRANCH_VESTIBULE_OF_HELL;
-        return;
-    }
-
-    // from here, we have branch and level.
-    char *p = strstr(inbuf, "on L");
-    if (p != NULL)
-    {
-        p += 4;
-        hs_parse_generic_2(p, scratch, sizeof scratch, "0123456789");
-        se.dlvl = atoi( scratch );
-    }
-
-    // get branch.
-    if (strstr(inbuf, "of Dis") != NULL)
-        se.branch = BRANCH_DIS;
-    else if (strstr(inbuf, "of Gehenna") != NULL)
-        se.branch = BRANCH_GEHENNA;
-    else if (strstr(inbuf, "of Cocytus") != NULL)
-        se.branch = BRANCH_COCYTUS;
-    else if (strstr(inbuf, "of Tartarus") != NULL)
-        se.branch = BRANCH_TARTARUS;
-    else if (strstr(inbuf, "of the Mines") != NULL)
-        se.branch = BRANCH_ORCISH_MINES;
-    else if (strstr(inbuf, "of the Hive") != NULL)
-        se.branch = BRANCH_HIVE;
-    else if (strstr(inbuf, "of the Lair") != NULL)
-        se.branch = BRANCH_LAIR;
-    else if (strstr(inbuf, "of the Slime Pits") != NULL)
-        se.branch = BRANCH_SLIME_PITS;
-    else if (strstr(inbuf, "of the Vaults") != NULL)
-        se.branch = BRANCH_VAULTS;
-    else if (strstr(inbuf, "of the Crypt") != NULL)
-        se.branch = BRANCH_CRYPT;
-    else if (strstr(inbuf, "of the Hall") != NULL)
-        se.branch = BRANCH_HALL_OF_BLADES;
-    else if (strstr(inbuf, "of Zot's Hall") != NULL)
-        se.branch = BRANCH_HALL_OF_ZOT;
-    else if (strstr(inbuf, "of the Temple") != NULL)
-        se.branch = BRANCH_ECUMENICAL_TEMPLE;
-    else if (strstr(inbuf, "of the Snake Pit") != NULL)
-        se.branch = BRANCH_SNAKE_PIT;
-    else if (strstr(inbuf, "of the Elf Hall") != NULL)
-        se.branch = BRANCH_ELVEN_HALLS;
-    else if (strstr(inbuf, "of the Tomb") != NULL)
-        se.branch = BRANCH_TOMB;
-    else if (strstr(inbuf, "of the Swamp") != NULL)
-        se.branch = BRANCH_SWAMP;
+    return (NUM_KILLBY);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1106,6 +678,522 @@ scorefile_entry::scorefile_entry()
     reset();
 }
 
+scorefile_entry::scorefile_entry(const scorefile_entry &se)
+{
+    init_from(se);
+}
+
+scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
+{
+    init_from(se);
+    return (*this);
+}
+
+void scorefile_entry::init_from(const scorefile_entry &se)
+{
+    version = se.version;
+    release = se.release;
+    points = se.points;
+    name = se.name;
+    uid = se.uid;
+    race = se.race;
+    cls = se.cls;
+    race_class_name = se.race_class_name;
+    lvl = se.lvl;
+    best_skill = se.best_skill;
+    best_skill_lvl = se.best_skill_lvl;
+    death_type = se.death_type;
+    death_source = se.death_source;
+    mon_num = se.mon_num;
+    death_source_name = se.death_source_name;
+    auxkilldata = se.auxkilldata;
+    dlvl = se.dlvl;
+    level_type = se.level_type;
+    branch = se.branch;
+    final_hp = se.final_hp;
+    final_max_hp = se.final_max_hp;
+    final_max_max_hp = se.final_max_max_hp;
+    damage = se.damage;
+    str = se.str;
+    intel = se.intel;
+    dex = se.dex;
+    god = se.god;
+    piety = se.piety;
+    penance = se.penance;
+    wiz_mode = se.wiz_mode;
+    birth_time = se.birth_time;
+    death_time = se.death_time;
+    real_time = se.real_time;
+    num_turns = se.num_turns;
+    num_diff_runes = se.num_diff_runes;
+    num_runes = se.num_runes;
+}
+
+bool scorefile_entry::parse(const std::string &line)
+{
+    // Scorefile formats down the ages:
+    //
+    // 1) old-style lines which were 80 character blocks
+    // 2) 4.0 pr1 through pr7 versions which were newline terminated
+    // 3) 4.0 pr8 and onwards which are colon-separated fields (and
+    //    start with a colon), and may exceed 80 characters!
+    // 4) 0.2 and onwards, which are xlogfile format - no leading
+    //    colon, fields separated by colons, each field specified as
+    //    key=value. Colons are not allowed in key names, must be escaped to
+    //    | in values. Literal | must be escaped as || in values.
+    //
+    // 0.2 only reads entries of type (3) and (4), and only writes entries of
+    // type (4).
+
+    // Leading colon implies 4.0 style line:
+    if (line[0] == ':')
+        return (parse_obsolete_scoreline(line));
+    else
+        return (parse_scoreline(line));
+}
+
+// xlogfile escape: s/\\/\\\\/g, s/|/\\|/g, s/:/|/g, 
+std::string scorefile_entry::xlog_escape(const std::string &s) const
+{
+    return
+        replace_all_of(
+            replace_all_of(
+                replace_all_of(s, "\\", "\\\\"),
+                "|", "\\|" ),
+            ":", "|" );
+}
+
+// xlogfile unescape: s/\\(.)/$1/g, s/|/:/g
+std::string scorefile_entry::xlog_unescape(const std::string &s) const
+{
+    std::string unesc = s;
+    bool escaped = false;
+    for (int i = 0, size = unesc.size(); i < size; ++i)
+    {
+        const char c = unesc[i];
+        if (escaped)
+        {
+            escaped = false;
+            continue;
+        }
+        
+        if (c == '|')
+            unesc[i] = ':';
+        else if (c == '\\')
+        {
+            escaped = true;
+            unesc.erase(i--, 1);
+            size--;
+        }
+    }
+    return (unesc);
+}
+
+std::string scorefile_entry::raw_string() const
+{
+    set_score_fields();
+    
+    if (!fields.get())
+        return ("");
+    
+    std::string line;
+    for (int i = 0, size = fields->size(); i < size; ++i)
+    {
+        const std::pair<std::string, std::string> &f = (*fields)[i];
+
+        // Don't write empty fields.
+        if (f.second.empty())
+            continue;
+        
+        if (!line.empty())
+            line += ":";
+
+        line += f.first;
+        line += "=";
+        line += xlog_escape(f.second);
+    }
+
+    return (line);
+}
+
+bool scorefile_entry::parse_scoreline(const std::string &line)
+{
+    std::vector<std::string> rawfields = split_string(":", line);
+    fields.reset(new hs_fields);
+    for (int i = 0, size = rawfields.size(); i < size; ++i)
+    {
+        const std::string field = rawfields[i];
+        std::string::size_type st = field.find('=');
+        if (st == std::string::npos)
+            continue;
+
+        fields->push_back(
+            std::pair<std::string, std::string>(
+                field.substr(0, st),
+                xlog_unescape(field.substr(st + 1)) ) );
+    }
+
+    init_with_fields();
+    
+    return (true);
+}
+
+void scorefile_entry::add_field(const std::string &key,
+                                const char *format,
+                                ...) const
+{
+    char buf[400];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buf, sizeof buf, format, args);
+    va_end(args);
+
+    fields->push_back(
+        std::pair<std::string, std::string>( key, buf ) );
+}
+
+void scorefile_entry::add_auxkill_field() const
+{
+    const char *what =
+        death_type == KILLED_BY_MONSTER? "kweap" :
+        death_type == KILLED_BY_BEAM?    "kbeam" :
+        "kaux";
+    
+    add_field(what, "%s", auxkilldata.c_str());
+}
+
+void scorefile_entry::read_auxkill_field()
+{
+    const char *what =
+        death_type == KILLED_BY_MONSTER? "kweap" :
+        death_type == KILLED_BY_BEAM?    "kbeam" :
+        "kaux";
+
+    auxkilldata = str_field(what);
+}
+
+std::string scorefile_entry::str_field(const std::string &s) const
+{
+    hs_map::const_iterator i = fieldmap->find(s);
+    if (i == fieldmap->end())
+        return ("");
+
+    return i->second;
+}
+
+int scorefile_entry::int_field(const std::string &s) const
+{
+    std::string field = str_field(s);
+    return atoi(field.c_str());
+}
+
+long scorefile_entry::long_field(const std::string &s) const
+{
+    std::string field = str_field(s);
+    return atol(field.c_str());
+}
+
+void scorefile_entry::map_fields()
+{
+    fieldmap.reset(new hs_map);
+    for (int i = 0, size = fields->size(); i < size; ++i)
+    {
+        const std::pair<std::string, std::string> f = (*fields)[i];
+        
+        (*fieldmap)[f.first] = f.second;
+    }
+}
+
+static const char *short_branch_name(int branch)
+{
+    if (branch >= 0 && branch < NUM_BRANCHES)
+        return branches[branch].abbrevname;
+    return ("");
+}
+
+static int str_to_branch(const std::string &branch)
+{
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        if (branches[i].abbrevname && branches[i].abbrevname == branch)
+            return (i);
+    }
+    return (BRANCH_MAIN_DUNGEON);
+}
+
+static const char *level_type_names[] =
+{
+    "D", "Lab", "Abyss", "Pan"
+};
+
+static const char *level_area_type_name(int level_type)
+{
+    if (level_type >= 0 && level_type < NUM_LEVEL_AREA_TYPES)
+        return level_type_names[level_type];
+    return ("");
+}
+
+static int str_to_level_area_type(const std::string &s)
+{
+    for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
+        if (s == level_type_names[i])
+            return (i);
+    return (LEVEL_DUNGEON);
+}
+
+static int str_to_god(const std::string &god)
+{
+    if (god.empty())
+        return GOD_NO_GOD;
+    
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (god_name(i) == god)
+            return (i);
+    }
+    return (GOD_NO_GOD);
+}
+
+void scorefile_entry::init_with_fields()
+{
+    map_fields();
+    points = long_field("sc");
+    name   = str_field("name");
+    uid    = int_field("uid");
+
+    race   = str_to_species(str_field("race"));
+    cls    = get_class_index_by_name(str_field("cls").c_str());
+
+    lvl    = int_field("xl");
+
+    best_skill = str_to_skill(str_field("sk"));
+    best_skill_lvl = int_field("sklev");
+    death_type = str_to_kill_method(str_field("ktyp"));
+    death_source_name = str_field("killer");
+
+    read_auxkill_field();
+
+    branch = str_to_branch(str_field("br"));
+    dlvl   = int_field("lvl");
+    level_type = str_to_level_area_type(str_field("ltyp"));
+
+    final_hp = int_field("hp");
+    final_max_hp = int_field("mhp");
+    final_max_max_hp = int_field("mmhp");
+    damage = int_field("dam");
+    str = int_field("str");
+    intel = int_field("int");
+    dex = int_field("dex");
+
+    god = str_to_god(str_field("god"));
+    piety = int_field("piety");
+    penance = int_field("pen");
+    wiz_mode = int_field("wiz");
+    birth_time = parse_time(str_field("start"));
+    death_time = parse_time(str_field("end"));
+    real_time  = long_field("dur");
+    num_turns  = long_field("turn");
+    num_diff_runes = int_field("urune");
+    num_runes = int_field("nrune");
+}
+
+void scorefile_entry::set_score_fields() const
+{
+    fields.reset(new hs_fields());
+
+    if (!fields.get())
+        return;
+
+    add_field("v", VER_NUM);
+    add_field("lv", SCORE_VERSION);
+    add_field("sc", "%ld", points);
+    add_field("name", "%s", name.c_str());
+    add_field("uid", "%d", uid);
+    add_field("race", "%s", species_name(race, lvl));
+    add_field("cls", "%s", get_class_name(cls));
+    add_field("xl", "%d", lvl);
+    add_field("sk", "%s", skill_name(best_skill));
+    add_field("sklev", "%d", best_skill_lvl);
+    add_field("title", "%s", skill_title( best_skill, best_skill_lvl, 
+                                                  race, str, dex, god ) );
+    add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
+    add_field("killer", death_source_desc());
+
+    add_auxkill_field();
+
+    add_field("place", "%s",
+              place_name(get_packed_place(branch, dlvl, level_type),
+                         false, true).c_str());
+    add_field("br", "%s", short_branch_name(branch));
+    add_field("lvl", "%d", dlvl);
+    add_field("ltyp", "%s", level_area_type_name(level_type));
+
+    add_field("hp", "%d", final_hp);
+    add_field("mhp", "%d", final_max_hp);
+    add_field("mmhp", "%d", final_max_max_hp);
+    add_field("dam", "%d", damage);
+    add_field("str", "%d", str);
+    add_field("int", "%d", intel);
+    add_field("dex", "%d", dex);
+
+    // Don't write No God to save some space.
+    if (god != -1)
+        add_field("god", "%s", god == GOD_NO_GOD? "" : god_name(god));
+    if (piety > 0)
+        add_field("piety", "%d", piety);
+    if (penance > 0)
+        add_field("pen", "%d", penance);
+    if (wiz_mode)
+        add_field("wiz", "%d", wiz_mode);
+    
+    add_field("start", "%s", make_date_string(birth_time).c_str());
+    add_field("end", "%s", make_date_string(death_time).c_str());
+    add_field("dur", "%ld", real_time);
+    add_field("turn", "%ld", num_turns);
+
+    if (num_diff_runes)
+        add_field("urune", "%d", num_diff_runes);
+
+    if (num_runes)
+        add_field("nrune", "%d", num_runes);
+
+#ifdef DGL_EXTENDED_LOGFILES
+    const std::string short_msg = short_kill_message();
+    add_field("tmsg", "%s", short_msg.c_str());
+    const std::string long_msg = long_kill_message();
+    if (long_msg != short_msg)
+        add_field("vmsg", "%s", long_msg.c_str());
+#endif
+}
+
+std::string scorefile_entry::make_oneline(const std::string &ml) const
+{
+    std::vector<std::string> lines = split_string(EOL, ml);
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        std::string &s = lines[i];
+        if (s.find("...") == 0)
+        {
+            s = s.substr(3);
+            trim_string(s);
+        }
+    }
+    return comma_separated_line(lines.begin(), lines.end(), " ", " ");
+}
+
+std::string scorefile_entry::long_kill_message() const
+{
+    std::string msg = death_description(DDV_LOGVERBOSE);
+    msg = make_oneline(msg);
+    msg[0] = tolower(msg[0]);
+    trim_string(msg);
+    return (msg);
+}
+
+std::string scorefile_entry::short_kill_message() const
+{
+    std::string msg = death_description(DDV_ONELINE);
+    msg = make_oneline(msg);
+    msg[0] = tolower(msg[0]);
+    trim_string(msg);
+    return (msg);
+}
+
+// Maps a 0.1.x branch id to a 0.2 branch id. Ugh. Fortunately we need this
+// only to read old logfiles/scorefiles.
+int scorefile_entry::kludge_branch(int branch_01) const
+{
+    static int branch_map[] = {
+        BRANCH_MAIN_DUNGEON, BRANCH_DIS, BRANCH_GEHENNA,
+        BRANCH_VESTIBULE_OF_HELL, BRANCH_COCYTUS, BRANCH_TARTARUS,
+        BRANCH_INFERNO, BRANCH_THE_PIT, BRANCH_MAIN_DUNGEON,
+        BRANCH_MAIN_DUNGEON, BRANCH_ORCISH_MINES, BRANCH_HIVE,
+        BRANCH_LAIR, BRANCH_SLIME_PITS, BRANCH_VAULTS, BRANCH_CRYPT,
+        BRANCH_HALL_OF_BLADES, BRANCH_HALL_OF_ZOT, BRANCH_ECUMENICAL_TEMPLE,
+        BRANCH_SNAKE_PIT, BRANCH_ELVEN_HALLS, BRANCH_TOMB, BRANCH_SWAMP,
+        BRANCH_CAVERNS
+    };
+
+    if (branch_01 < 0
+        || branch_01 > (int) (sizeof(branch_map) / sizeof(*branch_map)))
+    {
+        return (BRANCH_MAIN_DUNGEON);
+    }
+    return branch_map[branch_01];
+}
+
+// [ds] This is the 4.0 b26 logfile parser. Old-style logs are now deprecated;
+// support for reading them may be discontinued in the next version.
+bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
+{
+    const char *inbuf = line.c_str();
+    
+    version = hs_nextint(inbuf);
+    release = hs_nextint(inbuf);
+
+    // this would be a good point to check for version numbers and branch
+    // appropriately
+
+    // acceptable versions are 0 (converted from old hiscore format) and 4
+    if (version != 4 || release < 2)
+        return (false);
+
+    points = hs_nextlong(inbuf);
+
+    name = hs_nextstring(inbuf);
+
+    uid = hs_nextlong(inbuf);
+    race = hs_nextint(inbuf);
+    cls = hs_nextint(inbuf);
+
+    race_class_name = hs_nextstring(inbuf, 6);
+
+    lvl = hs_nextint(inbuf);
+    best_skill = hs_nextint(inbuf);
+    best_skill_lvl = hs_nextint(inbuf);
+    death_type = hs_nextint(inbuf);
+    death_source = hs_nextint(inbuf);
+    mon_num = hs_nextint(inbuf);
+
+    death_source_name = hs_nextstring(inbuf);
+
+    // To try and keep the scorefile backwards compatible,
+    // we'll branch on version > 4.0 to read the auxkilldata
+    // text field.  
+    if (version == 4 && release >= 1)
+        auxkilldata = hs_nextstring( inbuf, ITEMNAME_SIZE );
+    else
+        auxkilldata[0] = 0;
+
+    dlvl = hs_nextint(inbuf);
+    level_type = hs_nextint(inbuf);
+    branch = kludge_branch( hs_nextint(inbuf) );
+
+    final_hp = hs_nextint(inbuf);
+    final_max_hp = hs_nextint(inbuf);
+    final_max_max_hp = hs_nextint(inbuf);
+    damage = hs_nextint(inbuf);
+    str = hs_nextint(inbuf);
+    intel = hs_nextint(inbuf);
+    dex = hs_nextint(inbuf);
+    god = hs_nextint(inbuf);
+    piety = hs_nextint(inbuf);
+    penance = hs_nextint(inbuf);
+
+    wiz_mode = hs_nextint(inbuf);
+
+    birth_time = hs_nextdate(inbuf);
+    death_time = hs_nextdate(inbuf);
+
+    real_time = hs_nextint(inbuf);
+    num_turns = hs_nextint(inbuf);
+
+    num_diff_runes = hs_nextint(inbuf);
+    num_runes = hs_nextint(inbuf);
+
+    return (true);
+}
+
 void scorefile_entry::init_death_cause(int dam, int dsrc, 
                                        int dtype, const char *aux)
 {
@@ -1116,15 +1204,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     // Set the default aux data value... 
     // If aux is passed in (ie for a trap), we'll default to that.
     if (aux == NULL)
-        auxkilldata[0] = 0;
+        auxkilldata.clear();
     else
-    {
-        strncpy( auxkilldata, aux, ITEMNAME_SIZE );
-        auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
-    }
+        auxkilldata = aux;
 
     // for death by monster
-    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)  
+    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)
         && death_source >= 0 && death_source < MAX_MONSTERS)
     {
         const monsters *monster = &menv[death_source];
@@ -1167,21 +1252,13 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                 // Setting this is redundant for dancing weapons, however
                 // we do care about the above indentification. -- bwr
                 if (monster->type != MONS_DANCING_WEAPON) 
-                {
-                    it_name( monster->inv[MSLOT_WEAPON], 
-                            DESC_NOCAP_A, 
-                            info );
-                    strncpy( auxkilldata, info, ITEMNAME_SIZE );
-                    auxkilldata[ ITEMNAME_SIZE - 1 ] = 0;
-                }
+                    auxkilldata = it_name( monster->inv[MSLOT_WEAPON], 
+                                           DESC_NOCAP_A );
             }
-            
-            strcpy( info,
-                    monam( monster->number, monster->type, true, DESC_NOCAP_A, 
-                           monster->inv[MSLOT_WEAPON] ) );
 
-            strncpy( death_source_name, info, 40 );
-            death_source_name[39] = 0;
+            death_source_name =
+                monam( monster->number, monster->type, true, DESC_NOCAP_A, 
+                       monster->inv[MSLOT_WEAPON] );
         }
     }
     else
@@ -1244,8 +1321,7 @@ void scorefile_entry::init()
     version = 4;
     release = 2;
 
-    strncpy( name, you.your_name, sizeof name );
-    name[ sizeof(name) - 1 ] = 0;
+    name = you.your_name;
 
 #ifdef MULTIUSER
     uid = (int) getuid();
@@ -1416,9 +1492,9 @@ const char *scorefile_entry::death_source_desc() const
     if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
         return ("");
 
-    return (*death_source_name? 
-                death_source_name
-              : monam( mon_num, death_source, true, DESC_PLAIN ) );
+    return (!death_source_name.empty()? 
+            death_source_name.c_str()
+            : monam( mon_num, death_source, true, DESC_NOCAP_A ) );
 }
 
 std::string scorefile_entry::damage_string(bool terse) const
@@ -1438,26 +1514,15 @@ std::string scorefile_entry::strip_article_a(const std::string &s) const
     return (s);
 }
 
-std::string scorefile_entry::terse_missile_cause() const
+std::string scorefile_entry::terse_missile_name() const
 {
-    std::string cause;
-    std::string aux = auxkilldata;
-
-    std::string monster_prefix = " by ";
-    // We're looking for Shot with a%s %s by %s/ Hit by a%s %s thrown by %s
-    std::string::size_type by = aux.rfind(monster_prefix);
-    if (by == std::string::npos)
-        return ("???");
-
-    std::string mcause = aux.substr(by + monster_prefix.length());
-    mcause = strip_article_a(mcause);
-
-    std::string missile;
     const std::string pre_post[][2] = {
         { "Shot with a", " by " },
         { "Hit by a",    " thrown by " }
     };
-
+    const std::string &aux = auxkilldata;
+    std::string missile;
+    
     for (unsigned i = 0; i < sizeof(pre_post) / sizeof(*pre_post); ++i)
     {
         if (aux.find(pre_post[i][0]) != 0)
@@ -1475,6 +1540,24 @@ std::string scorefile_entry::terse_missile_cause() const
         if (missile.find("n ") == 0)
             missile = missile.substr(2);
     }
+    return (missile);
+}
+
+std::string scorefile_entry::terse_missile_cause() const
+{
+    std::string cause;
+    const std::string &aux = auxkilldata;
+
+    std::string monster_prefix = " by ";
+    // We're looking for Shot with a%s %s by %s/ Hit by a%s %s thrown by %s
+    std::string::size_type by = aux.rfind(monster_prefix);
+    if (by == std::string::npos)
+        return ("???");
+
+    std::string mcause = aux.substr(by + monster_prefix.length());
+    mcause = strip_article_a(mcause);
+
+    std::string missile = terse_missile_name();
 
     if (missile.length())
         mcause += "/" + missile;
@@ -1497,7 +1580,7 @@ std::string scorefile_entry::terse_wild_magic() const
 
 std::string scorefile_entry::terse_trap() const
 {
-    std::string trap = *auxkilldata? std::string(auxkilldata) + " trap"
+    std::string trap = !auxkilldata.empty()? auxkilldata + " trap"
                                    : "trap";
     if (trap.find("n ") == 0)
         trap = trap.substr(2);
@@ -1508,29 +1591,27 @@ std::string scorefile_entry::terse_trap() const
 
 std::string scorefile_entry::single_cdesc() const
 {
-    char  scratch[INFO_SIZE];
-    char  buf[INFO_SIZE];
+    std::string char_desc;
 
-    if (!*race_class_name)
+    if (race_class_name.empty())
     {
-        snprintf( scratch, sizeof(scratch), "%s%s", 
-                  get_species_abbrev( race ), get_class_abbrev( cls ) );
+        char_desc =
+            make_stringf("%s%s", 
+                         get_species_abbrev( race ),
+                         get_class_abbrev( cls ) );
     }
     else
     {
-        strncpy( scratch, race_class_name, sizeof scratch );
-        scratch[ sizeof(scratch) - 1 ] = 0;
+        char_desc = race_class_name;
     }
 
     std::string scname = name;
     if (scname.length() > 10)
         scname = scname.substr(0, 10);
 
-    snprintf( buf, sizeof buf, 
+    return make_stringf(
              "%8ld %-10s %s-%02d%s", points, scname.c_str(),
-             scratch, lvl, (wiz_mode == 1) ? "W" : "" );
-
-    return (buf);
+             char_desc.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
 }
 
 std::string
@@ -1554,14 +1635,14 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                  INFO_SIZE );
 
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s (level %d",
-                  points, name, scratch, lvl );
+                  points, name.c_str(), scratch, lvl );
 
         desc = buf;
     }
     else 
     {
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
-                  points, name, species_name(race, lvl), 
+                  points, name.c_str(), species_name(race, lvl), 
                   get_class_name(cls), lvl );
         desc = buf;
     }
@@ -1690,9 +1771,10 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     bool needs_called_by_monster_line = false;
     bool needs_damage = false;
 
-    bool terse   = verbosity == DDV_TERSE;
-    bool verbose = verbosity == DDV_VERBOSE;
-    bool oneline = verbosity == DDV_ONELINE;
+    const bool terse   = verbosity == DDV_TERSE;
+    const bool semiverbose = verbosity == DDV_LOGVERBOSE;
+    const bool verbose = verbosity == DDV_VERBOSE || semiverbose;
+    const bool oneline = verbosity == DDV_ONELINE;
 
     char scratch[INFO_SIZE];
 
@@ -1733,20 +1815,29 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             snprintf( scratch, sizeof(scratch), "%scloud of %s",
                       terse? "" : "Engulfed by a ",
-                      auxkilldata );
+                      auxkilldata.c_str() );
             desc += scratch;
         }
         needs_damage = true;
         break;
 
     case KILLED_BY_BEAM:
-        if (oneline)
+        if (oneline || semiverbose)
         {
             // keeping this short to leave room for the deep elf spellcasters:
             snprintf( scratch, sizeof(scratch), "%s by ", 
-                      range_type_verb( auxkilldata ) );  
+                      range_type_verb( auxkilldata.c_str() ) );
             desc += scratch;
             desc += death_source_desc();
+
+            if (semiverbose)
+            {
+                std::string beam = terse_missile_name();
+                if (beam.empty())
+                    beam = terse_beam_cause();
+                if (!beam.empty())
+                    desc += make_stringf(" (%s)", beam.c_str());
+            }
         }
         else if (isupper( auxkilldata[0] ))  // already made (ie shot arrows)
         {
@@ -1755,24 +1846,27 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += terse? terse_missile_cause() : auxkilldata;
             needs_damage = true;
         }
-        else if (verbose && strncmp( auxkilldata, "by ", 3 ) == 0)
+        else if (verbose && auxkilldata.find("by ") == 0)
         {
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
             needs_called_by_monster_line = true;
-            snprintf( scratch, sizeof(scratch), "Killed %s", auxkilldata );
+            snprintf( scratch, sizeof(scratch), "Killed %s",
+                      auxkilldata.c_str() );
             desc += scratch;
         }
         else
         {
             // Note: This is also used for the "by" cases in non-verbose
             //       mode since listing the monster is more imporatant.
-            if (!terse)
+            if (semiverbose)
+                desc += "Killed by ";
+            else if (!terse)
                 desc += "Killed from afar by ";
 
             desc += death_source_desc();
 
-            if (*auxkilldata)
+            if (!auxkilldata.empty())
                 needs_beam_cause_line = true;
 
             needs_damage = true;
@@ -1822,8 +1916,9 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += terse_trap();
         else
         {
-            snprintf( scratch, sizeof(scratch), "Killed by triggering a%s trap", 
-                     (*auxkilldata) ? auxkilldata : "" );
+            snprintf( scratch, sizeof(scratch),
+                      "Killed by triggering a%s trap", 
+                      auxkilldata.c_str() );
             desc += scratch;
         }
         needs_damage = true;
@@ -1870,7 +1965,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_WILD_MAGIC:
-        if (!*auxkilldata)
+        if (auxkilldata.empty())
             desc += terse? "wild magic" : "Killed by wild magic";
         else
         {
@@ -1880,8 +1975,8 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 // A lot of sources for this case... some have "by" already.
                 snprintf( scratch, sizeof(scratch), "Killed %s%s", 
-                      (strncmp( auxkilldata, "by ", 3 ) != 0) ? "by " : "",
-                      auxkilldata );
+                          (auxkilldata.find("by ") != 0) ? "by " : "",
+                          auxkilldata.c_str() );
                 desc += scratch;
             }
         }
@@ -1925,7 +2020,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     /* case 26 */
 
     case KILLED_BY_SOMETHING:
-        if (auxkilldata)
+        if (!auxkilldata.empty())
             desc += auxkilldata;
         else
             desc += terse? "died" : "Died";
@@ -1965,7 +2060,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     // TODO: Eventually, get rid of "..." for cases where the text fits.
     if (terse)
     {
-        if (death_type == KILLED_BY_MONSTER && *auxkilldata)
+        if (death_type == KILLED_BY_MONSTER && !auxkilldata.empty())
         {
             desc += "/";
             desc += strip_article_a(auxkilldata);
@@ -1983,7 +2078,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     {
         bool done_damage = false;  // paranoia
 
-        if (needs_damage && damage > 0)
+        if (!semiverbose && needs_damage && damage > 0)
         {
             desc += " " + damage_string();
             needs_damage = false;
@@ -2001,14 +2096,15 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
                       num_runes, (num_runes > 1) ? "s" : "" );
             desc += scratch;
 
-            if (num_diff_runes > 1)
+            if (!semiverbose && num_diff_runes > 1)
             {
                 snprintf( scratch, INFO_SIZE, " (of %d types)",
                           num_diff_runes );
                 desc += scratch;
             }
 
-            if (death_time > 0 
+            if (!semiverbose
+                && death_time > 0 
                 && !hiscore_same_day( birth_time, death_time ))
             {
                 desc += " on ";
@@ -2025,30 +2121,40 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
             if (death_type == KILLED_BY_MONSTER && auxkilldata[0])
             {
-                snprintf(scratch, INFO_SIZE, "... wielding %s", auxkilldata);
-                desc += scratch;
-                needs_damage = true;
+                if (!semiverbose)
+                {
+                    snprintf(scratch, INFO_SIZE, "... wielding %s",
+                             auxkilldata.c_str());
+                    desc += scratch;
+                    needs_damage = true;
+                }
             }
             else if (needs_beam_cause_line)
             {
-                desc += (is_vowel( auxkilldata[0] )) ? "... with an " 
-                                                        : "... with a ";
-                desc += auxkilldata;
-                needs_damage = true;
+                if (!semiverbose)
+                {
+                    desc += (is_vowel( auxkilldata[0] )) ? "... with an " 
+                        : "... with a ";
+                    desc += auxkilldata;
+                    needs_damage = true;
+                }
             }
             else if (needs_called_by_monster_line)
             {
-                snprintf( scratch, sizeof(scratch), "... called down by %s",
-                          death_source_name );
+                snprintf( scratch, sizeof(scratch), "... invoked by %s",
+                          death_source_name.c_str() );
                 desc += scratch;
                 needs_damage = true;
             }
 
-            if (needs_damage && !done_damage && damage > 0) 
-                desc += " " + damage_string();
+            if (!semiverbose)
+            {
+                if (needs_damage && !done_damage && damage > 0) 
+                    desc += " " + damage_string();
 
-            if (needs_damage)
-                desc += hiscore_newline_string();
+                if (needs_damage)
+                    desc += hiscore_newline_string();
+            }
         }
     }
 

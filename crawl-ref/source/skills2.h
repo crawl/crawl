@@ -24,7 +24,7 @@
  * called from: chardump - it_use3 - itemname - skills
  * *********************************************************************** */
 const char *skill_name(int which_skill);
-
+int str_to_skill(const std::string &skill);
 
 // last_updated 24may2000 {dlb}
 /* ***********************************************************************

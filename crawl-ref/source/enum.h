@@ -1684,7 +1684,9 @@ enum level_area_type                   // you.level_type
     LEVEL_DUNGEON,                     //    0
     LEVEL_LABYRINTH,
     LEVEL_ABYSS,
-    LEVEL_PANDEMONIUM
+    LEVEL_PANDEMONIUM,
+
+    NUM_LEVEL_AREA_TYPES
 };
 
 enum load_mode_type
