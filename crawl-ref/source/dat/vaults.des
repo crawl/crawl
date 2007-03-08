@@ -1,7 +1,8 @@
 ##############################################################################
-# Entry vaults, random vaults and minivaults; special levels (including V:8!)
-# should go to splev.des. Do NOT put special levels here, or they could be
-# selected when the game looks for random vaults.
+# Random vaults, minivaults and canonical entry vaults go here; asciiart 
+# entry vaults go in asciiart.des and "edgy" entry vaults go in tricky.des.  
+# Special levels (including V:8!) should go to splev.des. Do NOT put special 
+# levels here, or they could be selected when the game seeks random vaults.
 #
 #  key:
 #  x - DNGN_ROCK_WALL
@@ -4519,7 +4520,7 @@ ENDMAP
 # Rats! (Lemuel)
 NAME: RatsNest
 ORIENT: float
-DEPTH: 3-8
+DEPTH: 4-8
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
