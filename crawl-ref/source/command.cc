@@ -635,7 +635,7 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
         if ((next_is_hotkey && isupper(buf[0])) || (is_first && first_hotkey))
         {
             me->add_hotkey(is_first ? first_hotkey : tolower(buf[0]));
-            me->level = MEL_TITLE;
+            me->level = MEL_SUBTITLE;
             me->colour = WHITE;
         }
         m.add_entry(me);

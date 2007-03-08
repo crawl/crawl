@@ -1448,7 +1448,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         textcolor(BROWN);
         cprintf(EOL "* - Random" );
         if ( Options.prev_book != SBT_NO_SELECTION )
-    {
+        {
             cprintf("; Enter - %s",
                     Options.prev_book == SBT_FIRE   ? "Fire"      :
                     Options.prev_book == SBT_COLD   ? "Cold"      :
@@ -1468,7 +1468,7 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
         } while (keyin != '*' && 
                  ((keyin != '\r' && keyin != '\n') ||
                   Options.prev_book == SBT_NO_SELECTION ) &&
-                 (keyin < 'a' || keyin > ('a' + numbooks)));
+                 (keyin < 'a' || keyin >= ('a' + numbooks)));
 
         if ( keyin == '\r' || keyin == '\n' )
         {
