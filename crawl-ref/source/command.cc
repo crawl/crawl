@@ -629,6 +629,14 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
     bool next_is_hotkey = false;
     bool is_first = true;
     char buf[200];
+
+    // bracket with MEL_TITLES, so that you won't scroll
+    // into it or above it
+    m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
+    for ( int i = 0; i < get_number_of_lines(); ++i )
+        m.add_entry(new MenuEntry(std::string()));
+    m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
+    
     while (fgets(buf, sizeof buf, fp))
     {
         MenuEntry* me = new MenuEntry(buf);

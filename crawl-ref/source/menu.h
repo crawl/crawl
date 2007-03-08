@@ -360,6 +360,11 @@ public:
     virtual void add_text(const std::string& s);
     virtual ~formatted_scroller();
 protected:
+    virtual bool page_down();
+    virtual bool line_down();
+    virtual bool page_up();
+    virtual bool line_up();
+
     virtual void draw_index_item(int index, const MenuEntry* me) const;
     virtual bool process_key( int keyin );
     bool jump_to( int linenum );

@@ -1161,6 +1161,67 @@ bool formatted_scroller::jump_to( int i )
     return true;
 }
 
+// Don't scroll past MEL_TITLE entries
+bool formatted_scroller::page_down()
+{
+    const int old_first = first_entry;
+
+    if ( (int)items.size() <= first_entry + pagesize )
+        return false;
+
+    // If, when scrolling forward, we encounter a MEL_TITLE
+    // somewhere in the newly displayed page, stop scrolling
+    // just before it becomes visible
+    int target;
+    for (target = first_entry; target < first_entry + pagesize; ++target )
+    {
+        const int offset = target + pagesize - 1;
+        if (offset < (int)items.size() && items[offset]->level == MEL_TITLE)
+            break;
+    }
+    first_entry = target;
+    return (old_first != first_entry);
+}
+
+bool formatted_scroller::page_up()
+{
+    int old_first = first_entry;
+
+    // If, when scrolling backward, we encounter a MEL_TITLE
+    // somewhere in the newly displayed page, stop scrolling
+    // just before it becomes visible
+
+
+    for ( int i = 0; i < pagesize; ++i )
+    {
+        if (first_entry == 0 || items[first_entry-1]->level == MEL_TITLE)
+            break;
+        --first_entry;
+    }
+    return (old_first != first_entry);
+}
+
+bool formatted_scroller::line_down()
+{
+    if (first_entry + pagesize < (int) items.size() &&
+        items[first_entry + pagesize]->level != MEL_TITLE )
+    {
+        ++first_entry;
+        return true;
+    }
+    return false;
+}
+
+bool formatted_scroller::line_up()
+{
+    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE)
+    {
+        --first_entry;
+        return true;
+    }
+    return false;
+}
+
 bool formatted_scroller::process_key( int keyin )
 {
 
