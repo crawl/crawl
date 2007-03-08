@@ -508,6 +508,8 @@ bool melee_attack::player_attack()
         if (player_check_monster_died())
             return (true);
 
+        player_sustain_passive_damage();
+
         if (damage_done < 1)
             no_damage_message =
                 make_stringf("You %s %s.",
@@ -2609,7 +2611,10 @@ void melee_attack::splash_monster_with_acid(int strength)
 void melee_attack::splash_defender_with_acid(int strength)
 {
     if (defender->atype() == ACT_PLAYER)
+    {
+        mpr("You are splashed with acid!");
         splash_with_acid(strength);
+    }
     else
         splash_monster_with_acid(strength);
 }
