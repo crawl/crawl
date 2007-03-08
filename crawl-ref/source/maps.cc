@@ -318,6 +318,9 @@ int random_map_for_depth(int depth, bool want_minivault)
                 mapindex = i;
         }
 
+    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
+        mapindex = -1;
+
     return (mapindex);
 }
 

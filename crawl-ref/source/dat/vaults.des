@@ -4425,6 +4425,27 @@ ENDMAP
 # Regular vaults
 ##############################################################################
 
+##############################################################################
+# Dummy probability balancer vault for depths 1-11.
+#
+# Why this is necessary: there are very few vaults in the 1-11 range (entries
+# are not considered here); to avoid too much repetition of the existing vaults,
+# we use this dummy vault. 
+
+NAME: dummy_balancer
+
+DEPTH: 1-11
+# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
+# by depth.
+TAGS: dummy
+
+ORIENT: float
+CHANCE: 80
+
+MAP
+x
+ENDMAP
+
 ###################################
 # Hellmouth (Lemuel)
 # note that other than the imps, the demons here cannot fly
