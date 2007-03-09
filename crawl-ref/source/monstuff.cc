@@ -934,7 +934,8 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
     // suggests.
     if (mons_genus(new_mclass) == MONS_DRACONIAN
         && new_mclass != MONS_DRACONIAN
-        && !one_chance_in(4))
+        && !player_in_branch(BRANCH_HALL_OF_ZOT)
+        && !one_chance_in(10))
     {
         return (false);
     }
