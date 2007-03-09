@@ -642,7 +642,14 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
         MenuEntry* me = new MenuEntry(buf);
         if ((next_is_hotkey && isupper(buf[0])) || (is_first && first_hotkey))
         {
-            me->add_hotkey(is_first ? first_hotkey : tolower(buf[0]));
+            int hotkey = is_first ? first_hotkey : tolower(buf[0]);
+            if ( !is_first && buf[0] == 'X' &&
+                 strlen(buf) >= 3 && isdigit(buf[2]) )
+            {
+                // X.# is hotkeyed to the #
+                hotkey = buf[2];
+            }
+            me->add_hotkey(hotkey);
             me->level = MEL_SUBTITLE;
             me->colour = WHITE;
         }
@@ -668,6 +675,7 @@ help_file help_files[] = {
     { "tables.txt", '%', false },
     { "readme.txt", '^', false },
     { "crawl_macros.txt", '~', false },
+    { "crawl_options.txt", '!', false },
     { NULL, 0, false }
 };
 
@@ -700,22 +708,49 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     if ( with_manual )
     {
         cmd_help.f_keyfilter = keyhelp_keyfilter;
-        column_composer cols(1);
+        column_composer cols(2, 40);
 
         cols.add_formatted(
             0,
             "<h>Dungeon Crawl Help\n"
             "\n"
-            "Press one of the following keys to obtain more information on a certain\n"
+            "Press one of the following keys to\n"
+            "obtain more information on a certain\n"
             "aspect of Dungeon Crawl.\n"
 
-            "<w>?</w>: Key Help Screens\n"
-            "<w>*</w>: Read the manual\n"
+            "<w>?</w>: List of keys\n"
             "<w>^</w>: Quickstart Guide\n"
-            "<w>:</w>: Browse Notes\n"
+            "<w>:</w>: Browse character notes\n"
             "<w>~</w>: Macros help\n"
-            "<w>%</w>: Table of Aptitudes\n",
+            "<w>!</w>: Options help\n"
+            "<w>%</w>: Table of aptitudes\n"
+            "<w>Home</w>: This screen\n",
             true, true, cmdhelp_textfilter);
+
+        cols.add_formatted(
+            1,
+            "Manual Contents\n\n"
+            "<w>*</w>       Table of contents\n"
+            "<w>A</w>.      Overview\n"
+            "<w>B</w>.      Starting Screen\n"
+            "<w>C</w>.      Abilities and Stats\n"
+            "<w>D</w>.      Dungeon Exploration\n"
+            "<w>E</w>.      Experience and Skills\n"
+            "<w>F</w>.      Monsters\n"
+            "<w>G</w>.      Items\n"
+            "<w>H</w>.      Spellcasting\n"
+            "<w>I</w>.      Religion\n"
+            "<w>J</w>.      Mutations\n"
+            "<w>K</w>.      Keymaps, Macros, Options\n"
+            "<w>L</w>.      Licence, Contact, History\n"
+            "<w>M</w>.      Philosophy\n"
+            "<w>1</w>.      List of Species\n"
+            "<w>2</w>.      List of Classes\n"
+            "<w>3</w>.      List of Skills\n"
+            "<w>4</w>.      Keys and Commands\n"
+            "<w>5</w>.      List of Enchantments\n",
+            true, true, cmdhelp_textfilter);
+        
         std::vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
         for (i = 0; i < blines.size(); ++i )
@@ -723,6 +758,8 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
         while ( static_cast<int>(++i) < get_number_of_lines() )
             cmd_help.add_item_string("");
+        // unscrollable
+        cmd_help.add_entry(new MenuEntry(std::string(), MEL_TITLE));
     }
 
     for (unsigned i = 0; i < lines.size(); ++i )
@@ -732,9 +769,9 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
     {
         for ( int i = 0; help_files[i].name != NULL; ++i )
         {
+            // attempt to open this file, skip it if unsuccessful
             FILE* fp =
-                fopen(
-                    datafile_path(help_files[i].name, false).c_str(), "r");
+                fopen(datafile_path(help_files[i].name, false).c_str(), "r");
             if ( !fp )
                 continue;
 

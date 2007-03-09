@@ -1175,7 +1175,7 @@ bool formatted_scroller::page_down()
     int target;
     for (target = first_entry; target < first_entry + pagesize; ++target )
     {
-        const int offset = target + pagesize - 1;
+        const int offset = target + pagesize;
         if (offset < (int)items.size() && items[offset]->level == MEL_TITLE)
             break;
     }
@@ -1191,6 +1191,8 @@ bool formatted_scroller::page_up()
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
 
+    if ( items[first_entry]->level == MEL_TITLE )
+        return false;
 
     for ( int i = 0; i < pagesize; ++i )
     {
@@ -1198,6 +1200,7 @@ bool formatted_scroller::page_up()
             break;
         --first_entry;
     }
+
     return (old_first != first_entry);
 }
 
@@ -1214,7 +1217,8 @@ bool formatted_scroller::line_down()
 
 bool formatted_scroller::line_up()
 {
-    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE)
+    if (first_entry > 0 && items[first_entry-1]->level != MEL_TITLE &&
+        items[first_entry]->level != MEL_TITLE)
     {
         --first_entry;
         return true;
