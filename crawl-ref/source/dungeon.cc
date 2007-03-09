@@ -4222,9 +4222,10 @@ static void builder_extras( int level_number, int level_type )
         }
     }
 
-    if (level_number > 5 && one_chance_in(10))
+    if (level_number > 6 && one_chance_in(10))
     {
-        many_pools( (coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA) );
+        many_pools( level_number < 11 || coinflip() ?
+                    DNGN_DEEP_WATER : DNGN_LAVA );
         return;
     }
 

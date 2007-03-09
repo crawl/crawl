@@ -1835,6 +1835,7 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 std::string beam = terse_missile_name();
                 if (beam.empty())
                     beam = terse_beam_cause();
+                trim_string(beam);
                 if (!beam.empty())
                     desc += make_stringf(" (%s)", beam.c_str());
             }
@@ -2128,6 +2129,8 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
                     desc += scratch;
                     needs_damage = true;
                 }
+                else
+                    desc += make_stringf(" (%s)", auxkilldata.c_str());
             }
             else if (needs_beam_cause_line)
             {
