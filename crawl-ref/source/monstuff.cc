@@ -3108,9 +3108,6 @@ static int get_draconian_breath_spell( struct monsters *monster )
 
             fire_tracer(monster, beem);
 
-            mprf(MSGCH_DIAGNOSTICS, "tracer: foes: %d, friends: %d",
-                 beem.foe_count, beem.fr_count);
-
             if (!mons_should_fire(beem))
                 draco_breath = MS_NO_SPELL;
         }
