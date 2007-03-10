@@ -1166,9 +1166,8 @@ bool acquirement(unsigned char force_class, int agent)
 
             // MT - Check: god-gifted weapons and armor shouldn't kill you.
             // Except Xom.
-            if (agent == GOD_TROG || agent == GOD_OKAWARU)
-                break;
-            else
+            if ((agent == GOD_TROG || agent == GOD_OKAWARU)
+                && is_random_artefact(mitm[thing_created]))
             {
                 randart_wpn_properties( mitm[thing_created], proprt );
 
@@ -1181,10 +1180,10 @@ bool acquirement(unsigned char force_class, int agent)
                     // try again
                     destroy_item(thing_created);
                     thing_created = NON_ITEM;
+                    continue;
                 }
-                else
-                    break;
             }
+            break;
         }
 
         if (thing_created == NON_ITEM)
