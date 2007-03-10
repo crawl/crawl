@@ -2811,7 +2811,7 @@ int monsters::shield_block_penalty() const
 
 int monsters::shield_bypass_ability(int) const
 {
-    return (15 + hit_dice / 2);
+    return (15 + hit_dice * 2 / 3);
 }
 
 int monsters::armour_class() const

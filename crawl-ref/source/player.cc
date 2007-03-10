@@ -4992,8 +4992,17 @@ int player::shield_block_penalty() const
 
 int player::shield_bonus() const
 {
+    const item_def *sh = const_cast<player*>(this)->shield();
+    if (!sh)
+        return (0);
+
+    const int stat =
+        sh->sub_type == ARM_BUCKLER?      dex :
+        sh->sub_type == ARM_LARGE_SHIELD? (3 * strength + dex) / 4:
+        (dex + strength) / 2;
+    
     return random2(player_shield_class()) 
-        + (random2(dex) / 4) 
+        + (random2(stat) / 4)
         + (random2(skill_bump(SK_SHIELDS)) / 4)
         - 1;
 }
@@ -5006,9 +5015,7 @@ int player::shield_bypass_ability(int tohit) const
 void player::shield_block_succeeded()
 {
     shield_blocks++;
-
-    if (one_chance_in(4))
-        exercise(SK_SHIELDS, 1);
+    exercise(SK_SHIELDS, 1);
 }
 
 bool player::wearing_light_armour(bool with_skill) const

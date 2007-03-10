@@ -3059,18 +3059,15 @@ static int affect_player( struct bolt &beam )
                         && player_shield_class() > 0)
                 {
                     int exer = one_chance_in(3) ? 1 : 0;
-                    // [dshaligram] beam.hit multiplier lowered to 3 - was 5.
-                    // In favour of blocking, dex multiplier changed to .25
-                    // (was .2), added shield skill into the equation with a 
-                    // skill bump.
-                    const int hit = random2( beam.hit * 3
-                                + 5 * you.shield_blocks * you.shield_blocks );
+                    const int hit = random2( beam.hit * 130 / 100
+                                             + you.shield_block_penalty() );
 
-                    const int block = random2(player_shield_class()) 
-                                        + (random2(you.dex) / 4) 
-                                        + (random2(skill_bump(SK_SHIELDS)) / 4)
-                                        - 1;
+                    const int block = you.shield_bonus();
 
+#ifdef DEBUG_DIAGNOSTICS
+                    mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
+                         hit, block);
+#endif
                     if (hit < block)
                     {
                         you.shield_blocks++;
