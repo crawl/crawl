@@ -1621,9 +1621,9 @@ void gain_piety(char pgn)
     }
     else
     {
-        // Sif Muna has a gentler taper off because training because
+        // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
-        if ((you.piety > 220) ||
+        if ((you.piety > 199) ||
             (you.piety > 150 && one_chance_in(5)))
             return;
     }
@@ -2585,6 +2585,12 @@ void offer_corpse(int corpse)
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 }                               // end offer_corpse()
 
+// Returns true if the player can use the good gods' passive piety gain.
+static bool need_free_piety()
+{
+    return (you.piety < 150 || you.gift_timeout || you.penance[you.religion]);
+}
+
 //jmf: moved stuff from items::handle_time()
 void handle_god_time(void)
 {
@@ -2645,12 +2651,12 @@ void handle_god_time(void)
 
         case GOD_ZIN:           // These gods like long-standing worshippers
         case GOD_ELYVILON:
-            if (you.piety < 150 && one_chance_in(20))
+            if (need_free_piety() && one_chance_in(20))
                 gain_piety(1);
             break;
 
         case GOD_SHINING_ONE:
-            if (you.piety < 150 && one_chance_in(15))
+            if (need_free_piety() && one_chance_in(15))
                 gain_piety(1);
             break;
 
