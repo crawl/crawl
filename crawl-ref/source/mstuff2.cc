@@ -1413,7 +1413,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
-        beam.hit = 8 + power / 20;
+        beam.hit = 11 + power / 20;
         beam.is_beam = true;
         break;
 
@@ -1424,7 +1424,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON_ARROW;
-        beam.hit = 12 + power / 25;
+        beam.hit = 16 + power / 25;
         beam.range = beam.rangeMax = 8;
         break;
 
@@ -1437,7 +1437,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_LAVA;
-        beam.hit = 12 + power / 25;
+        beam.hit = 14 + power / 25;
         beam.is_beam = true;
         break;
         
@@ -1450,7 +1450,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_FIRE;
-        beam.hit = 12 + power / 25;
+        beam.hit = 14 + power / 25;
         beam.is_beam = true;
         break;
 
@@ -1463,7 +1463,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_ICE;
-        beam.hit     = 12 + power / 25;
+        beam.hit     = 14 + power / 25;
         beam.is_beam = true;
         break;
         
@@ -1476,7 +1476,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_COLD;
-        beam.hit = 12 + power / 25;
+        beam.hit = 14 + power / 25;
         beam.is_beam = true;
         break;
 
@@ -1489,7 +1489,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type   = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_ELECTRICITY;
-        beam.hit = 12 + power / 20;
+        beam.hit = 14 + power / 20;
         beam.is_beam = true;
         break;
         
@@ -1574,7 +1574,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MMISSILE;
-        beam.hit = 14 + power / 20;
+        beam.hit = 18 + power / 20;
         beam.is_beam = false;
         break;
 
@@ -1597,7 +1597,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_NEG;
-        beam.hit = 11 + power / 35;
+        beam.hit = 13 + power / 35;
         beam.is_beam = true;
         break;
 
@@ -1609,7 +1609,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 6;
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 7 + (power / 14) );
-        beam.hit = 12 + (power / 20);
+        beam.hit = 16 + (power / 20);
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
@@ -1624,7 +1624,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 6;
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 7 + (power / 15) );
-        beam.hit = 11 + power / 20;
+        beam.hit = 15 + power / 20;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_STEAM;
@@ -1655,7 +1655,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 6;
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 3 + power / 50 );
-        beam.hit = 10 + power / 15;
+        beam.hit = 13 + power / 15;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_FIRE;
@@ -1671,7 +1671,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
-        beam.hit = 11 + power / 25;
+        beam.hit = 13 + power / 25;
         beam.is_beam = true;
         beam.is_big_cloud = true;
         break;
@@ -1682,7 +1682,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 6;
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 10 + power / 15 );
-        beam.hit = 11 + power / 25;
+        beam.hit = 16 + power / 25;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
@@ -1696,7 +1696,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 9;
         beam.rangeMax = 23;
         beam.damage = dice_def( 3, 20 );
-        beam.hit = 11 + power / 30;
+        beam.hit = 13 + power / 30;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_NUKE;     // a magical missile which destroys walls
@@ -1722,7 +1722,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 4;
         beam.rangeMax = 8;
         beam.damage = dice_def( 3, 8 + (power / 9) );
-        beam.hit = 12 + (power / 25);
+        beam.hit = 16 + (power / 25);
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
@@ -1735,7 +1735,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 8;
         beam.rangeMax = 12;
         beam.damage = dice_def( 3, 5 + (power / 10) );
-        beam.hit = 8 + power / 35;
+        beam.hit = 10 + power / 35;
         beam.type = SYM_MISSILE;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;   // similarly unresisted thing
@@ -1748,7 +1748,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 5;
         beam.rangeMax = 10;
         beam.damage = dice_def( 1, 4 + power / 10 );
-        beam.hit = 9 + power / 20;
+        beam.hit = 11 + power / 20;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_POISON;
@@ -1777,7 +1777,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_POISON;
-        beam.hit = 12 + power / 30;
+        beam.hit = 14 + power / 30;
         beam.is_beam = true;
         beam.is_big_cloud = true;
         break;
@@ -1789,7 +1789,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON;
         beam.flavour = BEAM_MIASMA;
-        beam.hit = 12 + power / 20;
+        beam.hit = 14 + power / 20;
         beam.is_beam = true;
         beam.is_big_cloud = true;
         beam.range = beam.rangeMax = 8;
@@ -1801,7 +1801,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 9;
         beam.rangeMax = 23;
         beam.damage = dice_def( 3, 25 );
-        beam.hit = 9 + power / 25;
+        beam.hit = 12 + power / 25;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;
