@@ -381,6 +381,7 @@ bool ms_low_hitpoint_cast( struct monsters *mon, int monspell );
 
 bool mons_has_ranged_spell( struct monsters *mon );
 bool mons_has_ranged_attack( struct monsters *mon );
+bool mons_is_magic_user( const monsters *mon );
 
 // last updated 06mar2001 (gdl)
 /* ***********************************************************************

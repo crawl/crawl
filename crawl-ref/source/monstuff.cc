@@ -496,7 +496,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                                         monster->hit_dice);
 
                     //jmf: Trog hates wizards
-                    if (mons_class_flag(monster->type, M_ACTUAL_SPELLS))
+                    if (mons_is_magic_user(monster))
                         did_god_conduct(DID_DEDICATED_KILL_WIZARD,
                                         monster->hit_dice);
 

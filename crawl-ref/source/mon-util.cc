@@ -2392,6 +2392,19 @@ static bool ms_ranged_spell( int monspell )
     return (true);
 }
 
+bool mons_is_magic_user( const monsters *mon )
+{
+    if (mons_class_flag(mon->type, M_ACTUAL_SPELLS))
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            if (mon->spells[i] != MS_NO_SPELL)
+                return (true);
+        }
+    }
+    return (false);
+}
+
 bool mons_has_ranged_spell( struct monsters *mon )
 {
     const int  mclass = mon->type;
