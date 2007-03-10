@@ -367,117 +367,14 @@ static bool need_missile_gift()
             && ammo_count(launcher) < 20 + random2(35));
 }
 
-void pray(void)
+static void do_god_gift()
 {
-    unsigned char  was_praying = you.duration[DUR_PRAYER];
-    bool           success = false;
-
-    if (silenced(you.x_pos, you.y_pos))
-    {
-        mpr("You are unable to make a sound!");
-        return;
-    }
-
-    // all prayers take time
-    you.turn_is_over = true;
-
-    if (you.religion != GOD_NO_GOD
-        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
-    {
-        altar_prayer();
-    }
-    else if (grid_altar_god(grd[you.x_pos][you.y_pos]) != GOD_NO_GOD)
-    {
-        if (you.species == SP_DEMIGOD)
-        {
-            mpr("Sorry, a being of your status cannot worship here.");
-            return;
-        }
-        god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
-        return;
-    }
-
-    if (you.religion == GOD_NO_GOD)
-    {
-        strcpy(info, "You spend a moment contemplating the meaning of ");
-
-        if (you.is_undead)
-            strcat(info, "un");
-
-        strcat(info, "life.");
-        mpr(info, MSGCH_PRAY);
-
-        // Zen meditation is timeless.
-        you.turn_is_over = false;
-        return;
-    }
-    else if (you.religion == GOD_XOM)
-    {
-        if (one_chance_in(100))
-        {
-            // Every now and then, Xom listens
-            // This is for flavour, not effect, so praying should not be
-            // encouraged.
-
-            // Xom is nicer to experienced players
-            bool nice = (27 <= random2( 27 + you.experience_level ));
-
-            // and he's not very nice even then
-            int sever = (nice) ? random2( random2( you.experience_level ) )
-                               : you.experience_level;
-
-            // bad results are enforced, good are not
-            bool force = !nice;
-
-            Xom_acts( nice, 1 + sever, force );
-        }
-        else
-            mpr("Xom ignores you.");
-
-        return;
-    }
-
-    strcpy( info, "You offer a prayer to " );
-    strcat( info, god_name( you.religion ) );
-    strcat( info, "." );
-    mpr(info, MSGCH_PRAY);
-
-    you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
-                                            + (random2(you.piety) / 20);
-
-    if (player_under_penance())
-        simple_god_message(" demands penance!");
-    else
-    {
-        strcpy(info, god_name(you.religion));
-        strcat(info, " is ");
-
-        strcat(info, (you.piety > 130) ? "exalted by your worship" :
-                     (you.piety > 100) ? "extremely pleased with you" :
-                     (you.piety >  70) ? "greatly pleased with you" :
-                     (you.piety >  40) ? "most pleased with you" :
-                     (you.piety >  20) ? "pleased with you" :
-                     (you.piety >   5) ? "noncommittal"
-                                       : "displeased");
-
-        strcat(info, ".");
-        mpr( info, MSGCH_PRAY, you.religion );
-
-        if (you.piety > 130)
-            you.duration[DUR_PRAYER] *= 3;
-        else if (you.piety > 70)
-            you.duration[DUR_PRAYER] *= 2;
-    }
-
-#if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "piety: %d", you.piety );
-    mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
-    if (!you.penance[you.religion] && !you.gift_timeout && !was_praying)
+    if (!you.penance[you.religion] && !you.gift_timeout)
     {
+        bool success = false;
+        
         //   Remember to check for water/lava
         switch (you.religion)
         {
@@ -692,6 +589,116 @@ void pray(void)
             break;
         } 
     }                           // end of gift giving
+}
+
+void pray(void)
+{
+    unsigned char  was_praying = you.duration[DUR_PRAYER];
+
+    if (silenced(you.x_pos, you.y_pos))
+    {
+        mpr("You are unable to make a sound!");
+        return;
+    }
+
+    // all prayers take time
+    you.turn_is_over = true;
+
+    if (you.religion != GOD_NO_GOD
+        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
+    {
+        altar_prayer();
+    }
+    else if (grid_altar_god(grd[you.x_pos][you.y_pos]) != GOD_NO_GOD)
+    {
+        if (you.species == SP_DEMIGOD)
+        {
+            mpr("Sorry, a being of your status cannot worship here.");
+            return;
+        }
+        god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
+        return;
+    }
+
+    if (you.religion == GOD_NO_GOD)
+    {
+        strcpy(info, "You spend a moment contemplating the meaning of ");
+
+        if (you.is_undead)
+            strcat(info, "un");
+
+        strcat(info, "life.");
+        mpr(info, MSGCH_PRAY);
+
+        // Zen meditation is timeless.
+        you.turn_is_over = false;
+        return;
+    }
+    else if (you.religion == GOD_XOM)
+    {
+        if (one_chance_in(100))
+        {
+            // Every now and then, Xom listens
+            // This is for flavour, not effect, so praying should not be
+            // encouraged.
+
+            // Xom is nicer to experienced players
+            bool nice = (27 <= random2( 27 + you.experience_level ));
+
+            // and he's not very nice even then
+            int sever = (nice) ? random2( random2( you.experience_level ) )
+                               : you.experience_level;
+
+            // bad results are enforced, good are not
+            bool force = !nice;
+
+            Xom_acts( nice, 1 + sever, force );
+        }
+        else
+            mpr("Xom ignores you.");
+
+        return;
+    }
+
+    strcpy( info, "You offer a prayer to " );
+    strcat( info, god_name( you.religion ) );
+    strcat( info, "." );
+    mpr(info, MSGCH_PRAY);
+
+    you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
+                                            + (random2(you.piety) / 20);
+
+    if (player_under_penance())
+        simple_god_message(" demands penance!");
+    else
+    {
+        strcpy(info, god_name(you.religion));
+        strcat(info, " is ");
+
+        strcat(info, (you.piety > 130) ? "exalted by your worship" :
+                     (you.piety > 100) ? "extremely pleased with you" :
+                     (you.piety >  70) ? "greatly pleased with you" :
+                     (you.piety >  40) ? "most pleased with you" :
+                     (you.piety >  20) ? "pleased with you" :
+                     (you.piety >   5) ? "noncommittal"
+                                       : "displeased");
+
+        strcat(info, ".");
+        mpr( info, MSGCH_PRAY, you.religion );
+
+        if (you.piety > 130)
+            you.duration[DUR_PRAYER] *= 3;
+        else if (you.piety > 70)
+            you.duration[DUR_PRAYER] *= 2;
+    }
+
+#if DEBUG_DIAGNOSTICS
+    snprintf( info, INFO_SIZE, "piety: %d", you.piety );
+    mpr( info, MSGCH_DIAGNOSTICS );
+#endif
+
+    if (!was_praying)
+        do_god_gift();
 }                               // end pray()
 
 char *god_name( int which_god, bool long_name ) // mv - rewritten
@@ -1658,6 +1665,9 @@ void gain_piety(char pgn)
          (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||
           you.religion == GOD_LUCY) && you.num_gifts[you.religion] == 0 )
         simple_god_message( " will now bless your weapon at an altar...once.");
+
+    if (you.religion == GOD_SIF_MUNA)
+        do_god_gift();
 }
 
 void lose_piety(char pgn)
