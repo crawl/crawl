@@ -19,6 +19,8 @@
 
 dice_def calc_dice( int num_dice, int max_damage );
 
+// Test if the to-hit (attack) beats evasion (defence).
+bool test_hit(int attack, int defence);
 
 /* ***********************************************************************
  * called from: bang - it_use2 - monstuff - mstuff2

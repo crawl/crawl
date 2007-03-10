@@ -2852,7 +2852,7 @@ void melee_attack::mons_perform_attack_rounds()
         if (!shield_blocked)
         {
             const int defender_evasion = defender->melee_evasion(attacker);
-            if (attacker == defender || random2(to_hit) >= defender_evasion)
+            if (attacker == defender || test_hit(to_hit, defender_evasion))
             {
                 this_round_hit = did_hit = true;
                 perceived_attack = true;

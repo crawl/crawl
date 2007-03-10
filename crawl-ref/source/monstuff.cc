@@ -2510,7 +2510,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         beem.colour = LIGHTCYAN;
         beem.type = SYM_ZAP;
         beem.flavour = BEAM_ELECTRICITY;
-        beem.hit = 150;
+        beem.hit = 50;
         beem.beam_source = monster_index(monster);
         beem.thrower = KILL_MON;
         beem.aux_source = "bolt of electricity";
