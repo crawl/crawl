@@ -665,6 +665,8 @@ void game_options::reset_options()
     target_wrap            = true;
     target_oos             = true;
     target_los_first       = true;
+    target_unshifted_dirs  = false;
+    
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 7;
     dump_item_origins      = IODS_ARTIFACTS | IODS_RODS;
@@ -2226,6 +2228,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "target_los_first")
     {
         target_los_first = read_bool(field, target_los_first);
+    }
+    else if (key == "target_unshifted_dirs")
+    {
+        target_unshifted_dirs = read_bool(field, target_unshifted_dirs);
     }
     else if (key == "drop_mode")
     {

@@ -98,10 +98,19 @@ static bool is_mapped(int x, int y)
     return (is_player_mapped(x, y));
 }
 
-static command_type read_direction_key(bool just_looking = false)
+static command_type read_direction_key(
+    bool just_looking = false,
+    bool target_unshifted = false,
+    coord_def where = coord_def())
 {
+    const bool unshifted_dir = target_unshifted && where == you.pos();
+    
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
-    const int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
+    
+    int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
+    if (unshifted_dir && strchr("hjklyubn", key))
+        key = toupper(key);
+    
     switch ( key )
     {
     case ESCAPE: return CMD_TARGET_CANCEL;
@@ -278,6 +287,7 @@ void direction(struct dist& moves, targeting_type restricts,
 
     bool skip_iter = false;
     bool found_autotarget = false;
+    bool target_unshifted = Options.target_unshifted_dirs;
 
     // Find a default target
     if ( Options.default_target && mode == TARG_ENEMY )
@@ -325,7 +335,18 @@ void direction(struct dist& moves, targeting_type restricts,
                 key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
         }
         else
-            key_command = read_direction_key(just_looking);
+            key_command = read_direction_key(just_looking,
+                                             target_unshifted,
+                                             coord_def(moves.tx, moves.ty));
+
+        if (target_unshifted &&
+            (key_command == CMD_TARGET_CYCLE_FORWARD
+             || key_command == CMD_TARGET_CYCLE_BACK
+             || key_command == CMD_TARGET_OBJ_CYCLE_FORWARD
+             || key_command == CMD_TARGET_OBJ_CYCLE_BACK))
+        {
+            target_unshifted = false;
+        }
 
         bool need_beam_redraw = false;
         bool force_redraw = false;

@@ -1238,6 +1238,8 @@ public:
     bool        target_los_first;   // 'x' look around first goes to visible
                                     // objects/features, then goes to stuff
                                     // outside LOS.
+    bool        target_unshifted_dirs; // Unshifted keys target if cursor is
+                                       // on player.
 
     int         drop_mode;          // Controls whether single or multidrop
                                     // is the default.
