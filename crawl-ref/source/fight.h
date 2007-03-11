@@ -64,6 +64,7 @@ public:
     // If attacker and/or defender are monsters, these are set.
     monsters  *atk, *def;
 
+    bool      cancel_attack;
     bool      did_hit, perceived_attack;
 
     // If all or part of the action is visible to the player, we need a message.

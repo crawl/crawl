@@ -343,6 +343,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                            bool allow_unarmed, int which_attack)
     : attacker(attk), defender(defn),
       atk(NULL), def(NULL),
+      cancel_attack(false),
       did_hit(false), perceived_attack(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
       unarmed_ok(allow_unarmed),
@@ -490,6 +491,9 @@ bool melee_attack::player_attack()
 
     player_apply_attack_delay();
     player_stab_check();
+
+    if (cancel_attack)
+        return (false);
 
     if (player_hits_monster())
     {
@@ -2118,6 +2122,15 @@ void melee_attack::player_stab_check()
     // see if we need to roll against dexterity / stabbing
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(200) <= you.skills[SK_STABBING] + you.dex);
+
+    if (stab_attempt && you.religion == GOD_SHINING_ONE)
+    {
+        if (!yesno("Really attack this helpless creature?", false, 'n'))
+        {
+            stab_attempt  = false;
+            cancel_attack = true;
+        }
+    }
 
     // check for invisibility - no stabs on invisible monsters.
     if (!player_monster_visible( def ))
