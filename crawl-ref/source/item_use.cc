@@ -1585,7 +1585,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         if (determines_ammo_brand(bow_brand, ammo_brand))
         {
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
-            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+            if (ammo_brand != SPMSL_NORMAL)
+                set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
         }
 
         // removed 2 random2(2)s from each of the learning curves, but
