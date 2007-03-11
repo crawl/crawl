@@ -2121,7 +2121,7 @@ void melee_attack::player_stab_check()
 
     // see if we need to roll against dexterity / stabbing
     if (stab_attempt && roll_needed)
-        stab_attempt = (random2(200) <= you.skills[SK_STABBING] + you.dex);
+        stab_attempt = (random2(130) <= you.skills[SK_STABBING] + you.dex);
 
     if (stab_attempt && you.religion == GOD_SHINING_ONE)
     {
