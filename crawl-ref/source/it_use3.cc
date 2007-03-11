@@ -725,18 +725,23 @@ static bool efreet_flask(void)
 
     mpr("You open the flask...");
 
-    dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
-
-    if (create_monster( MONS_EFREET, ENCH_ABJ_V, behaviour, 
-                        you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
+    const int efreet = create_monster( MONS_EFREET, ENCH_ABJ_V, behaviour, 
+                                       you.x_pos, you.y_pos, MHITYOU, 250,
+                                       false, false, true );
+    if (efreet != -1)
     {
+        monsters *mon = &menv[efreet];
+        
         mpr( "...and a huge efreet comes out." );
-
-        mpr( (behaviour == BEH_FRIENDLY) ? "\"Thank you for releasing me!\""
-                                         : "It howls insanely!" );
+        player_angers_monster(mon);
+        mpr( (mon->attitude == ATT_FRIENDLY)?
+             "\"Thank you for releasing me!\""
+             : "It howls insanely!" );
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );    
 
     return (true);
 }                               // end efreet_flask()

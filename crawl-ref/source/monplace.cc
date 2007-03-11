@@ -1295,9 +1295,33 @@ coord_def find_newmons_square(int mons_class, int x, int y)
     return (pos);
 }
 
+bool player_angers_monster(monsters *creation)
+{
+    // get the drawbacks, not the benefits...
+    // (to prevent demon-scumming)
+    if ( (you.religion == GOD_ZIN ||
+          you.religion == GOD_SHINING_ONE ||
+          you.religion == GOD_ELYVILON) &&
+         mons_is_unholy(creation) )
+    {
+        if ( creation->attitude != ATT_HOSTILE )
+        {
+            creation->attitude = ATT_HOSTILE;
+            if ( see_grid(creation->x, creation->y)
+                 && player_monster_visible(creation) )
+            {
+                mprf("%s is enraged by your holy aura!",
+                     ptr_monam(creation, DESC_CAP_THE));
+            }
+        }
+        return (true);
+    }
+    return (false);
+}
+
 int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
                     int hitting, int zsec, bool permit_bands,
-                    bool force_place )
+                    bool force_place, bool force_behaviour )
 {
     int summd = -1;
     coord_def pos = find_newmons_square(cls, cr_x, cr_y);
@@ -1338,24 +1362,10 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
 
             if (beha == BEH_GOD_GIFT)
                 creation->flags |= MF_GOD_GIFT;
-            
-            // get the drawbacks, not the benefits...
-            // (to prevent demon-scumming)
-            if ( (you.religion == GOD_ZIN ||
-                  you.religion == GOD_SHINING_ONE ||
-                  you.religion == GOD_ELYVILON) &&
-                 mons_is_unholy(creation) )
-            {
-                if ( creation->attitude != ATT_HOSTILE )
-                {
-                    creation->attitude = ATT_HOSTILE;
-                    if ( see_grid(cr_x, cr_y) )
-                        mpr("The monster is enraged by your holy aura!");
-                }
-                creation->behaviour = BEH_HOSTILE;
-                beha = BEH_HOSTILE;
-            }
 
+            if (!force_behaviour && player_angers_monster(creation))
+                beha = BEH_HOSTILE;
+            
             if (beha == BEH_CHARMED)
             {
                 creation->attitude = ATT_HOSTILE;

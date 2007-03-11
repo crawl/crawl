@@ -147,10 +147,10 @@ void zap_animation( int colour, const monsters *mon, bool force )
     if (!see_grid( x, y ))
         return;
     
-    const int drawx = x - you.x_pos + 18;
-    const int drawy = y - you.y_pos + 9;
+    const int drawx = grid2viewX(x);
+    const int drawy = grid2viewY(y);
 
-    if (drawx > 8 && drawx < 26 && drawy > 0 && drawy < 18)
+    if (in_los_bounds(drawx, drawy))
     {
         textcolor( colour );
         gotoxy( drawx, drawy );
@@ -1402,10 +1402,10 @@ void fire_beam( struct bolt &pbolt, item_def *item )
             // respect to killed monsters, cloud trails, etc.
 
             // draw new position
-            int drawx = tx - you.x_pos + 18;
-            int drawy = ty - you.y_pos + 9;
+            int drawx = grid2viewX(tx);
+            int drawy = grid2viewY(ty);
             // bounds check
-            if (drawx > 8 && drawx < 26 && drawy > 0 && drawy < 18)
+            if (in_los_bounds(drawx, drawy))
             {
                 if (pbolt.colour == BLACK)
                     textcolor(random_colour());
@@ -4251,13 +4251,13 @@ static void explosion_cell(struct bolt &beam, int x, int y, bool drawOnly)
 
     if (drawOnly)
     {
-        int drawx = realx - you.x_pos + 18;
-        int drawy = realy - you.y_pos + 9;
+        int drawx = grid2viewX(realx);
+        int drawy = grid2viewY(realy);
 
         if (see_grid(realx, realy) || (realx == you.x_pos && realy == you.y_pos))
         {
             // bounds check
-            if (drawx > 8 && drawx < 26 && drawy > 0 && drawy < 18)
+            if (in_los_bounds(drawx, drawy))
             {
                 if (beam.colour == BLACK)
                     textcolor(random_colour());
