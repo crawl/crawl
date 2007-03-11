@@ -996,6 +996,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
 void melee_attack::player_weapon_auto_id()
 {
     if (weapon
+        && weapon->base_type == OBJ_WEAPONS
         && !is_range_weapon( *weapon )
         && !item_ident( *weapon, ISFLAG_KNOW_PLUSES )
         && random2(100) < you.skills[ wpn_skill ])
