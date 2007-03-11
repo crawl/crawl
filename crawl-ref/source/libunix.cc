@@ -640,6 +640,44 @@ int gotoxy(int x, int y)
     return (move(y - 1, x - 1));
 }
 
+static unsigned oldch, oldmangledch;
+static int faked_x = -1, faked_y;
+
+void fakecursorxy(int x, int y)
+{
+    if (oldch && faked_x != -1
+        && mvinch(faked_y, faked_x) == oldmangledch)
+    {
+        if (faked_x != x - 1 || faked_y != y - 1)
+            mvaddch(faked_y, faked_x, oldch);
+        else
+            return;
+    }
+    
+    const unsigned c      = mvinch(y - 1, x - 1);
+    const int ch          = c & A_CHARTEXT;
+    const unsigned colour = c & A_COLOR;
+    const int pair        = PAIR_NUMBER(colour);
+
+    faked_x = x - 1;
+    faked_y = y - 1;
+    oldch   = c;
+
+    int fg     = pair & 7;
+    int bg     = (pair >> 3) & 7;
+
+    if (pair == 63)
+    {
+        fg    = COLOR_WHITE;
+        bg    = COLOR_BLACK;
+    }
+
+    const int newpair = (fg * 8 + bg);
+    
+    mvaddch( y - 1, x - 1,  oldmangledch = ((ch & 127) | COLOR_PAIR(newpair)) );
+
+    move(y - 1, x - 1);
+}
 
 int wherex()
 {

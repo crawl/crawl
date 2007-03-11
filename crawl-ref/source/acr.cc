@@ -882,7 +882,7 @@ static void input()
 
     handle_delay();
 
-    gotoxy(18,9);
+    gotoxy(VIEW_CX, VIEW_CY);
 
     if ( you_are_delayed() )
     {

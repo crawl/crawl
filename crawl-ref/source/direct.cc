@@ -273,6 +273,8 @@ void direction(struct dist& moves, targeting_type restricts,
         return;
     }
 
+    cursor_control con(!Options.use_fake_cursor);
+    
     int dir = 0;
     bool show_beam = false;
     ray_def ray;
@@ -322,8 +324,7 @@ void direction(struct dist& moves, targeting_type restricts,
         moves.isEndpoint    = false;
         moves.choseRay      = false;
 
-        // I'm sure there's a perfectly good reason for the +1.
-        gotoxy( grid2viewX(moves.tx) + 1, grid2viewY(moves.ty) );
+        cursorxy( grid2viewX(moves.tx), grid2viewY(moves.ty) );
 
         command_type key_command;
 
@@ -616,7 +617,7 @@ void direction(struct dist& moves, targeting_type restricts,
         // We'll go on looping. Redraw whatever is necessary.
 
         // Tried to step out of bounds
-        if ( !in_bounds(moves.tx, moves.ty) )
+        if ( !in_viewport_bounds(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
         {
             moves.tx = old_tx;
             moves.ty = old_ty;
@@ -686,6 +687,8 @@ void direction(struct dist& moves, targeting_type restricts,
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void describe_oos_square(int x, int y)
 {
+    mpr("You can't see that place.");
+    
     if (!in_bounds(x, y) || !is_mapped(x, y))
         return;
 

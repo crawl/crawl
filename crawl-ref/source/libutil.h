@@ -19,6 +19,8 @@
 #include <string>
 #include <vector>
 
+void cursorxy(int x, int y);
+
 // Converts a key to a direction key, converting keypad and other sequences
 // to vi key sequences (shifted/control key directions are also handled). Non
 // direction keys (hopefully) pass through unmangled.
@@ -307,12 +309,8 @@ public:
 
     bool compile() const
     {
-        // This function is const because compiled_pattern is not really part of
-        // the state of the object.
-        
-        void *&cp = const_cast<text_pattern*>( this )->compiled_pattern;
         return !empty()?
-            !!(cp = compile_pattern(pattern.c_str(), ignore_case))
+            !!(compiled_pattern = compile_pattern(pattern.c_str(), ignore_case))
           : false;
     }
 
@@ -324,8 +322,7 @@ public:
     bool valid() const
     {
         return isvalid &&
-            (compiled_pattern ||
-                (const_cast<text_pattern*>( this )->isvalid = compile()));
+            (compiled_pattern || (isvalid = compile()));
     }
 
     bool matches(const char *s, int length) const
@@ -350,8 +347,8 @@ public:
     
 private:
     std::string pattern;
-    void *compiled_pattern;
-    bool isvalid;
+    mutable void *compiled_pattern;
+    mutable bool isvalid;
     bool ignore_case;
 };
 

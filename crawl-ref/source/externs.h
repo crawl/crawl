@@ -1258,6 +1258,9 @@ public:
     bool        remember_name;      // Remember and reprompt with last name
 
     bool        dos_use_background_intensity;
+    
+    bool        use_fake_cursor;    // Draw a fake cursor instead of relying
+                                    // on the term's own cursor.
 
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.

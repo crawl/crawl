@@ -140,7 +140,7 @@ int unmangle_direction_keys(int keyin, int km)
 // the shell can do damage with.
 bool shell_safe(const char *file)
 {
-    int match = strcspn(file, "`$*?|><&\n");
+    int match = strcspn(file, "\\`$*?|><&\n!");
     return !(match >= 0 && file[match]);
 }
 
@@ -299,6 +299,20 @@ int c_getch()
     return getch_ck();
 #else
     return getch();
+#endif
+}
+
+// Wrapper around gotoxy that can draw a fake cursor for Unix terms where
+// cursoring over darkgray or black causes problems.
+void cursorxy(int x, int y)
+{
+#ifdef UNIX
+    if (Options.use_fake_cursor)
+        fakecursorxy(x, y);
+    else
+        gotoxy(x, y);
+#else
+    gotoxy(x, y);
 #endif
 }
 

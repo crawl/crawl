@@ -24,7 +24,8 @@ The contents of this text are:
                 drop_mode, pickup_mode, drop_filter
 4-b     Targeting. 
                 target_zero_exp, target_oos, target_los_first,
-                confirm_self_target, default_target
+                confirm_self_target, default_target,
+                target_unshifted_dirs
 4-c     Passive Sightings (Detection and Rememberance).
                 detected_monster_colour, detected_item_colour, 
                 remembered_monster_colour, colour_map, clean_map
@@ -73,7 +74,7 @@ The contents of this text are:
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix
-                background
+                background, use_fake_cursor
 
 --------------------------------------------------------------------------------
 
@@ -368,6 +369,13 @@ default_target = false
         (if it is still visible) or the closest monster (if not) rather
         than on the character. If no monsters are in view, targeting will
         start on the character regardless.
+
+target_unshifted_dirs = false
+        If set to true, targeting will use the old Stone Soup 0.1 / Crawl 4.0
+        targeting keymap where unshifted direction keys fire in that direction
+        immediately. The default is to use the new targeting keymap where
+        unshifted direction keys move the targeting cursor (and shifted
+        directions fire in the given direction immediately).
 
 4-c     Passive Sightings (via detection and rememberance).
 -----------------------------------------------------------
@@ -1047,3 +1055,9 @@ background = <colour>
         may be useful if you're using a terminal with a background colour other
         than black (such as an xterm), but this option is still experimental
         and the results may not be very good.
+
+use_fake_cursor = false
+        If true, Crawl draws the cursor explicitly on the level-map and
+        targeting screens instead of relying on the term to draw the cursor.
+        Use this if your term cannot show a cursor over darkgrey/black
+        squares.

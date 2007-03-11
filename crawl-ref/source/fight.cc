@@ -1501,7 +1501,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ORC_SLAYING:
-        if (def->mons_species() == MONS_ORC)
+        if (defender->mons_species() == MONS_ORC)
         {
             special_damage = 1 + random2(damage_done);
             special_damage_message =

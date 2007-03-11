@@ -647,6 +647,7 @@ void game_options::reset_options()
 
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
+    use_fake_cursor        = false;
 
     stash_tracking         = STM_ALL;
 
@@ -1981,6 +1982,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             level_map_cursor_step = 1;
         if (level_map_cursor_step > 50)
             level_map_cursor_step = 50;
+    }
+    else if (key == "use_fake_cursor")
+    {
+        use_fake_cursor = read_bool(field, use_fake_cursor);
     }
     else if (key == "macro_meta_entry")
     {

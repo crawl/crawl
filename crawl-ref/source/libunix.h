@@ -21,6 +21,7 @@ int getch_ck(void);
 int clrscr(void);
 int cprintf(const char *format,...);
 int gotoxy(int x, int y);
+void fakecursorxy(int x, int y);
 int itoa(int value, char *strptr, int radix);
 int kbhit(void);
 int putch(unsigned char chr);

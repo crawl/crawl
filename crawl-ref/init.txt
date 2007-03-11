@@ -83,11 +83,12 @@ lua_file = lua/trapwalk.lua
 
 ##### 4-b	Targetting ############################
 #
-# target_zero_exp = false
+# target_zero_exp = true
 # target_oos = false
 # target_los_first = false
 # confirm_self_target = false
 # default_target = true
+# target_unshifted_dirs = true
 
 ##### 4-c	Passive Sightings #####################
 #
@@ -232,3 +233,8 @@ menu_colour = white:Reached XP level
 ##### 6-b	DOS and Windows #######################
 #
 # dos_use_background_intensity = true
+
+
+##### 6-c   Unix ##################################
+#
+# use_fake_cursor = true

@@ -2088,7 +2088,7 @@ static void draw_level_map(int start_x, int start_y, bool travel_mode)
 // to get that.  This function is still a mess, though. -- bwr
 void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
 {
-    cursor_control con(true);
+    cursor_control ccon(!Options.use_fake_cursor);
     int i, j;
 
     char move_x = 0;
@@ -2178,7 +2178,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
             draw_level_map(start_x, start_y, travel_mode);
 
         redraw_map = true;
-        gotoxy(curs_x, curs_y + top - 1);
+        cursorxy(curs_x, curs_y + top - 1);
 
         getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP);
 
@@ -3583,7 +3583,7 @@ void viewwindow(bool draw_it, bool do_updates)
         // avoiding unneeded draws when running
         if (!you.running || (you.running < 0 && Options.travel_delay > -1))
         {
-            gotoxy( 2, 1 );
+            gotoxy( 1, 1 );
 
             bufcount = 0;
             for (count_y = 0; count_y < Y_SIZE; count_y++)
@@ -3598,7 +3598,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     bufcount += 2;
                 }
 
-                gotoxy( 2, count_y + 2 );
+                gotoxy( 1, count_y + 2 );
             }
         }
 
