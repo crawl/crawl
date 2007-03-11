@@ -873,7 +873,7 @@ bool melee_attack::player_hits_monster()
 #endif
 
     return (to_hit >= def->ev
-            || one_chance_in(3)
+            || one_chance_in(20)
             || ((mons_is_paralysed(def) || def->behaviour == BEH_SLEEP)
                 && !one_chance_in(10 + you.skills[SK_STABBING])));
 }
