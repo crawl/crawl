@@ -836,7 +836,6 @@ static void input()
 
     fire_monster_alerts();
 
- 
     if (Options.tut_just_triggered)
         Options.tut_just_triggered = false;
 
@@ -851,7 +850,8 @@ static void input()
             
     if (Options.tutorial_left && i_feel_safe())
     {
-        if ( 2*you.hp < you.hp_max || 2*you.magic_points < you.max_magic_points )
+        if ( 2*you.hp < you.hp_max
+             || 2*you.magic_points < you.max_magic_points )
         {
             tutorial_healing_reminder();
         }
@@ -877,7 +877,7 @@ static void input()
     
     middle_input();
 
-    if ( need_to_autopickup() )
+    if (need_to_autopickup())
         autopickup();
 
     handle_delay();
@@ -1154,7 +1154,8 @@ void process_command( command_type cmd )
         break;
 
     case CMD_INSPECT_FLOOR:
-        item_check(';');
+        // item_check(';');
+        request_autopickup();
         break;
 
     case CMD_WIELD_WEAPON:
@@ -2979,7 +2980,8 @@ static void move_player(int move_x, int move_y)
         move_y = 0;
 
         you.turn_is_over = true;
-        item_check( false );
+        // item_check( false );
+        request_autopickup();
     }
 
     // BCR - Easy doors single move

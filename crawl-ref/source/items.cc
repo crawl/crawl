@@ -738,6 +738,11 @@ bool need_to_autopickup()
     return will_autopickup;
 }
 
+void request_autopickup(bool do_pickup)
+{
+    will_autopickup = do_pickup;
+}
+
 /*
  * Takes keyin as an argument because it will only display a long list of items
  * if ; is pressed.
@@ -759,10 +764,8 @@ void item_check(char keyin)
     }
     
     autoinscribe_items();
-    will_autopickup = true;
 
     origin_set(you.x_pos, you.y_pos);
-
 
     for ( int objl = igrd[you.x_pos][you.y_pos]; objl != NON_ITEM;
           objl = mitm[objl].link )
@@ -809,7 +812,6 @@ void item_check(char keyin)
 
         counter++;
         counter_max = 0;        // to skip next part.
-
     }
 
     if ((counter_max > 0 && counter_max < 6)
@@ -825,7 +827,8 @@ void item_check(char keyin)
         }
     }
 
-    if (counter_max > 5 && keyin != ';') {
+    if (counter_max > 5 && keyin != ';')
+    {
         mpr("There are several objects here.");
         learned_something_new(TUT_MULTI_PICKUP);
     }           
@@ -2995,8 +2998,8 @@ bool can_autopickup()
 
     return (true);
 }
-    
-void autopickup()
+
+static void do_autopickup()
 {
     //David Loewenstern 6/99
     int result, o, next;
@@ -3004,7 +3007,7 @@ void autopickup()
     bool tried_pickup = false;
 
     will_autopickup = false;
-
+    
     if (!can_autopickup())
         return;
     
@@ -3076,6 +3079,12 @@ void autopickup()
     // pick up, so the only thing to do is to stop.
     else if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
         stop_delay();
+}
+
+void autopickup()
+{
+    do_autopickup();
+    item_check(false);
 }
 
 int inv_count(void)

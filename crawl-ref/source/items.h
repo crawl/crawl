@@ -70,7 +70,7 @@ void destroy_item_stack( int x, int y );
  * called from: acr
  * *********************************************************************** */
 void item_check(char keyin);
-
+void request_autopickup(bool do_pickup = true);
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
