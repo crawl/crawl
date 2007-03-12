@@ -120,7 +120,7 @@ void handle_monsters(void);
  * called from: acr - bang - beam - direct - dungeon - fight - files -
  *              monplace - mstuff2 - spells3 - view
  * *********************************************************************** */
-unsigned char monster_habitat(int which_class);
+int monster_habitat(int which_class);
 
 
 /* ***********************************************************************

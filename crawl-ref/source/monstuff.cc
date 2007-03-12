@@ -5296,7 +5296,7 @@ static void mons_in_cloud(struct monsters *monster)
     }
 }                               // end mons_in_cloud()
 
-unsigned char monster_habitat(int which_class)
+int monster_habitat(int which_class)
 {
     switch (which_class)
     {

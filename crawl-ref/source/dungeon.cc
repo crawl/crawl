@@ -47,6 +47,7 @@
 #include "mon-util.h"
 #include "mon-pick.h"
 #include "monplace.h"
+#include "monstuff.h"
 #include "notes.h"
 #include "player.h"
 #include "randart.h"
@@ -6210,10 +6211,21 @@ static int vault_grid( vault_placement &place,
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
         if (monster_type_thing.mid != -1)
+        {
+            const int mid = monster_type_thing.mid;
+
+            if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
+            {
+                const int habitat = monster_habitat(mid);
+                if (habitat != DNGN_FLOOR)
+                    grd[vx][vy] = habitat;
+            }
+            
             place_monster( not_used, monster_type_thing.mid, monster_level,
                            monster_type_thing.generate_awake?
                                BEH_WANDER : BEH_SLEEP,
                            MHITNOT, true, vx, vy, false );
+        }
     }
 
     // again, this seems odd, given that this is just one of many
