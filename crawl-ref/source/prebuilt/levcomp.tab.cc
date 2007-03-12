@@ -74,51 +74,54 @@
      SHUFFLE = 263,
      SUBST = 264,
      TAGS = 265,
-     NAME = 266,
-     DEPTH = 267,
-     ORIENT = 268,
-     PLACE = 269,
-     CHANCE = 270,
-     FLAGS = 271,
-     MONS = 272,
-     ITEM = 273,
-     ROOT_DEPTH = 274,
-     ENTRY_MSG = 275,
-     EXIT_MSG = 276,
-     ROCK_COLOUR = 277,
-     FLOOR_COLOUR = 278,
-     ENCOMPASS = 279,
-     FLOAT = 280,
-     NORTH = 281,
-     EAST = 282,
-     SOUTH = 283,
-     WEST = 284,
-     NORTHEAST = 285,
-     SOUTHEAST = 286,
-     SOUTHWEST = 287,
-     NORTHWEST = 288,
-     LEVEL = 289,
-     END = 290,
-     PVAULT = 291,
-     PMINIVAULT = 292,
-     MONSTERS = 293,
-     ENDMONSTERS = 294,
-     CHARACTER = 295,
-     NO_HMIRROR = 296,
-     NO_VMIRROR = 297,
-     NO_ROTATE = 298,
-     PANDEMONIC = 299,
-     DASH = 300,
-     COMMA = 301,
-     QUOTE = 302,
-     OPAREN = 303,
-     CPAREN = 304,
-     INTEGER = 305,
-     STRING = 306,
-     MAP_LINE = 307,
-     MONSTER_NAME = 308,
-     ITEM_INFO = 309,
-     IDENTIFIER = 310
+     KFEAT = 266,
+     KITEM = 267,
+     KMONS = 268,
+     NAME = 269,
+     DEPTH = 270,
+     ORIENT = 271,
+     PLACE = 272,
+     CHANCE = 273,
+     FLAGS = 274,
+     MONS = 275,
+     ITEM = 276,
+     ROOT_DEPTH = 277,
+     ENTRY_MSG = 278,
+     EXIT_MSG = 279,
+     ROCK_COLOUR = 280,
+     FLOOR_COLOUR = 281,
+     ENCOMPASS = 282,
+     FLOAT = 283,
+     NORTH = 284,
+     EAST = 285,
+     SOUTH = 286,
+     WEST = 287,
+     NORTHEAST = 288,
+     SOUTHEAST = 289,
+     SOUTHWEST = 290,
+     NORTHWEST = 291,
+     LEVEL = 292,
+     END = 293,
+     PVAULT = 294,
+     PMINIVAULT = 295,
+     MONSTERS = 296,
+     ENDMONSTERS = 297,
+     CHARACTER = 298,
+     NO_HMIRROR = 299,
+     NO_VMIRROR = 300,
+     NO_ROTATE = 301,
+     PANDEMONIC = 302,
+     DASH = 303,
+     COMMA = 304,
+     QUOTE = 305,
+     OPAREN = 306,
+     CPAREN = 307,
+     INTEGER = 308,
+     STRING = 309,
+     MAP_LINE = 310,
+     MONSTER_NAME = 311,
+     ITEM_INFO = 312,
+     IDENTIFIER = 313
    };
 #endif
 /* Tokens.  */
@@ -130,51 +133,54 @@
 #define SHUFFLE 263
 #define SUBST 264
 #define TAGS 265
-#define NAME 266
-#define DEPTH 267
-#define ORIENT 268
-#define PLACE 269
-#define CHANCE 270
-#define FLAGS 271
-#define MONS 272
-#define ITEM 273
-#define ROOT_DEPTH 274
-#define ENTRY_MSG 275
-#define EXIT_MSG 276
-#define ROCK_COLOUR 277
-#define FLOOR_COLOUR 278
-#define ENCOMPASS 279
-#define FLOAT 280
-#define NORTH 281
-#define EAST 282
-#define SOUTH 283
-#define WEST 284
-#define NORTHEAST 285
-#define SOUTHEAST 286
-#define SOUTHWEST 287
-#define NORTHWEST 288
-#define LEVEL 289
-#define END 290
-#define PVAULT 291
-#define PMINIVAULT 292
-#define MONSTERS 293
-#define ENDMONSTERS 294
-#define CHARACTER 295
-#define NO_HMIRROR 296
-#define NO_VMIRROR 297
-#define NO_ROTATE 298
-#define PANDEMONIC 299
-#define DASH 300
-#define COMMA 301
-#define QUOTE 302
-#define OPAREN 303
-#define CPAREN 304
-#define INTEGER 305
-#define STRING 306
-#define MAP_LINE 307
-#define MONSTER_NAME 308
-#define ITEM_INFO 309
-#define IDENTIFIER 310
+#define KFEAT 266
+#define KITEM 267
+#define KMONS 268
+#define NAME 269
+#define DEPTH 270
+#define ORIENT 271
+#define PLACE 272
+#define CHANCE 273
+#define FLAGS 274
+#define MONS 275
+#define ITEM 276
+#define ROOT_DEPTH 277
+#define ENTRY_MSG 278
+#define EXIT_MSG 279
+#define ROCK_COLOUR 280
+#define FLOOR_COLOUR 281
+#define ENCOMPASS 282
+#define FLOAT 283
+#define NORTH 284
+#define EAST 285
+#define SOUTH 286
+#define WEST 287
+#define NORTHEAST 288
+#define SOUTHEAST 289
+#define SOUTHWEST 290
+#define NORTHWEST 291
+#define LEVEL 292
+#define END 293
+#define PVAULT 294
+#define PMINIVAULT 295
+#define MONSTERS 296
+#define ENDMONSTERS 297
+#define CHARACTER 298
+#define NO_HMIRROR 299
+#define NO_VMIRROR 300
+#define NO_ROTATE 301
+#define PANDEMONIC 302
+#define DASH 303
+#define COMMA 304
+#define QUOTE 305
+#define OPAREN 306
+#define CPAREN 307
+#define INTEGER 308
+#define STRING 309
+#define MAP_LINE 310
+#define MONSTER_NAME 311
+#define ITEM_INFO 312
+#define IDENTIFIER 313
 
 
 
@@ -243,7 +249,7 @@ typedef union YYSTYPE
     const char *text;
 }
 /* Line 193 of yacc.c.  */
-#line 247 "levcomp.tab.c"
+#line 253 "levcomp.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -256,7 +262,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 260 "levcomp.tab.c"
+#line 266 "levcomp.tab.c"
 
 #ifdef short
 # undef short
@@ -471,20 +477,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  13
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   49
+#define YYLAST   66
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  56
+#define YYNTOKENS  59
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  32
+#define YYNNTS  35
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  67
+#define YYNRULES  76
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  81
+#define YYNSTATES  90
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   310
+#define YYMAXUTOK   313
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -523,7 +529,7 @@ static const yytype_uint8 yytranslate[] =
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
       45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55
+      55,    56,    57,    58
 };
 
 #if YYDEBUG
@@ -533,32 +539,35 @@ static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     6,     9,    11,    13,    15,    18,
       23,    26,    27,    30,    32,    34,    36,    38,    40,    42,
-      44,    46,    48,    50,    52,    55,    58,    59,    62,    64,
-      67,    69,    72,    76,    78,    80,    82,    85,    89,    91,
-      93,    96,    98,   101,   105,   107,   110,   112,   115,   117,
-     119,   121,   123,   125,   127,   129,   131,   133,   135,   138,
-     139,   142,   144,   146,   148,   150,   152,   155
+      44,    46,    48,    50,    52,    54,    56,    58,    61,    63,
+      66,    68,    71,    73,    76,    79,    80,    83,    85,    88,
+      90,    93,    97,    99,   101,   103,   106,   110,   112,   114,
+     117,   119,   122,   126,   128,   131,   133,   136,   138,   140,
+     142,   144,   146,   148,   150,   152,   154,   156,   159,   160,
+     163,   165,   167,   169,   171,   173,   176
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      57,     0,    -1,    58,    -1,    -1,    59,    58,    -1,    60,
-      -1,    62,    -1,    61,    -1,     7,    78,    -1,    63,    64,
-      85,    64,    -1,    11,    51,    -1,    -1,    65,    64,    -1,
-      76,    -1,    77,    -1,    79,    -1,    80,    -1,    82,    -1,
-      73,    -1,    70,    -1,    69,    -1,    67,    -1,    66,    -1,
-       8,    -1,     8,    51,    -1,    10,    68,    -1,    -1,    51,
-      68,    -1,     9,    -1,     9,    51,    -1,    18,    -1,    18,
-      71,    -1,    72,    46,    71,    -1,    72,    -1,    54,    -1,
-      17,    -1,    17,    74,    -1,    75,    46,    74,    -1,    75,
-      -1,    53,    -1,    14,    51,    -1,    12,    -1,    12,    78,
-      -1,    50,    45,    50,    -1,    50,    -1,    15,    50,    -1,
-      13,    -1,    13,    81,    -1,    24,    -1,    26,    -1,    27,
-      -1,    28,    -1,    29,    -1,    30,    -1,    31,    -1,    32,
-      -1,    33,    -1,    25,    -1,    16,    83,    -1,    -1,    84,
-      83,    -1,    41,    -1,    42,    -1,    43,    -1,    86,    -1,
-      87,    -1,    87,    86,    -1,    52,    -1
+      60,     0,    -1,    61,    -1,    -1,    62,    61,    -1,    63,
+      -1,    65,    -1,    64,    -1,     7,    84,    -1,    66,    67,
+      91,    67,    -1,    14,    54,    -1,    -1,    68,    67,    -1,
+      82,    -1,    83,    -1,    85,    -1,    86,    -1,    88,    -1,
+      79,    -1,    76,    -1,    75,    -1,    73,    -1,    72,    -1,
+      69,    -1,    71,    -1,    70,    -1,    11,    -1,    11,    54,
+      -1,    13,    -1,    13,    54,    -1,    12,    -1,    12,    54,
+      -1,     8,    -1,     8,    54,    -1,    10,    74,    -1,    -1,
+      54,    74,    -1,     9,    -1,     9,    54,    -1,    21,    -1,
+      21,    77,    -1,    78,    49,    77,    -1,    78,    -1,    57,
+      -1,    20,    -1,    20,    80,    -1,    81,    49,    80,    -1,
+      81,    -1,    56,    -1,    17,    54,    -1,    15,    -1,    15,
+      84,    -1,    53,    48,    53,    -1,    53,    -1,    18,    53,
+      -1,    16,    -1,    16,    87,    -1,    27,    -1,    29,    -1,
+      30,    -1,    31,    -1,    32,    -1,    33,    -1,    34,    -1,
+      35,    -1,    36,    -1,    28,    -1,    19,    89,    -1,    -1,
+      90,    89,    -1,    44,    -1,    45,    -1,    46,    -1,    92,
+      -1,    93,    -1,    93,    92,    -1,    55,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
@@ -566,11 +575,12 @@ static const yytype_uint16 yyrline[] =
 {
        0,    69,    69,    72,    73,    76,    77,    80,    83,    89,
      128,   151,   152,   155,   156,   157,   158,   159,   160,   161,
-     162,   163,   164,   167,   168,   178,   181,   182,   190,   191,
-     202,   203,   206,   207,   210,   225,   226,   229,   230,   233,
-     249,   255,   256,   262,   267,   273,   279,   280,   286,   287,
-     288,   289,   290,   291,   292,   293,   294,   295,   298,   301,
-     302,   318,   319,   320,   323,   326,   327,   330
+     162,   163,   164,   165,   166,   167,   170,   171,   180,   181,
+     190,   191,   200,   201,   211,   214,   215,   223,   224,   235,
+     236,   239,   240,   243,   258,   259,   262,   263,   266,   282,
+     288,   289,   295,   300,   306,   312,   313,   319,   320,   321,
+     322,   323,   324,   325,   326,   327,   328,   331,   334,   335,
+     351,   352,   353,   356,   359,   360,   363
 };
 #endif
 
@@ -580,20 +590,21 @@ static const yytype_uint16 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "BRANCHDEF", "BRANCH", "DESC", "DEFAULT",
-  "DEFAULT_DEPTH", "SHUFFLE", "SUBST", "TAGS", "NAME", "DEPTH", "ORIENT",
-  "PLACE", "CHANCE", "FLAGS", "MONS", "ITEM", "ROOT_DEPTH", "ENTRY_MSG",
-  "EXIT_MSG", "ROCK_COLOUR", "FLOOR_COLOUR", "ENCOMPASS", "FLOAT", "NORTH",
-  "EAST", "SOUTH", "WEST", "NORTHEAST", "SOUTHEAST", "SOUTHWEST",
-  "NORTHWEST", "LEVEL", "END", "PVAULT", "PMINIVAULT", "MONSTERS",
-  "ENDMONSTERS", "CHARACTER", "NO_HMIRROR", "NO_VMIRROR", "NO_ROTATE",
-  "PANDEMONIC", "DASH", "COMMA", "QUOTE", "OPAREN", "CPAREN", "INTEGER",
-  "STRING", "MAP_LINE", "MONSTER_NAME", "ITEM_INFO", "IDENTIFIER",
-  "$accept", "file", "definitions", "definition", "def", "defdepth",
-  "level", "name", "metalines", "metaline", "shuffle", "tags",
-  "tagstrings", "symbol", "items", "item_specifiers", "item_specifier",
-  "mons", "mnames", "mname", "place", "depth", "depth_range", "chance",
-  "orientation", "orient_name", "flags", "flagnames", "flagname",
-  "map_def", "map_lines", "map_line", 0
+  "DEFAULT_DEPTH", "SHUFFLE", "SUBST", "TAGS", "KFEAT", "KITEM", "KMONS",
+  "NAME", "DEPTH", "ORIENT", "PLACE", "CHANCE", "FLAGS", "MONS", "ITEM",
+  "ROOT_DEPTH", "ENTRY_MSG", "EXIT_MSG", "ROCK_COLOUR", "FLOOR_COLOUR",
+  "ENCOMPASS", "FLOAT", "NORTH", "EAST", "SOUTH", "WEST", "NORTHEAST",
+  "SOUTHEAST", "SOUTHWEST", "NORTHWEST", "LEVEL", "END", "PVAULT",
+  "PMINIVAULT", "MONSTERS", "ENDMONSTERS", "CHARACTER", "NO_HMIRROR",
+  "NO_VMIRROR", "NO_ROTATE", "PANDEMONIC", "DASH", "COMMA", "QUOTE",
+  "OPAREN", "CPAREN", "INTEGER", "STRING", "MAP_LINE", "MONSTER_NAME",
+  "ITEM_INFO", "IDENTIFIER", "$accept", "file", "definitions",
+  "definition", "def", "defdepth", "level", "name", "metalines",
+  "metaline", "kfeat", "kmons", "kitem", "shuffle", "tags", "tagstrings",
+  "symbol", "items", "item_specifiers", "item_specifier", "mons", "mnames",
+  "mname", "place", "depth", "depth_range", "chance", "orientation",
+  "orient_name", "flags", "flagnames", "flagname", "map_def", "map_lines",
+  "map_line", 0
 };
 #endif
 
@@ -607,20 +618,21 @@ static const yytype_uint16 yytoknum[] =
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
      295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308,   309,   310
+     305,   306,   307,   308,   309,   310,   311,   312,   313
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    56,    57,    58,    58,    59,    59,    60,    61,    62,
-      63,    64,    64,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    66,    66,    67,    68,    68,    69,    69,
-      70,    70,    71,    71,    72,    73,    73,    74,    74,    75,
-      76,    77,    77,    78,    78,    79,    80,    80,    81,    81,
-      81,    81,    81,    81,    81,    81,    81,    81,    82,    83,
-      83,    84,    84,    84,    85,    86,    86,    87
+       0,    59,    60,    61,    61,    62,    62,    63,    64,    65,
+      66,    67,    67,    68,    68,    68,    68,    68,    68,    68,
+      68,    68,    68,    68,    68,    68,    69,    69,    70,    70,
+      71,    71,    72,    72,    73,    74,    74,    75,    75,    76,
+      76,    77,    77,    78,    79,    79,    80,    80,    81,    82,
+      83,    83,    84,    84,    85,    86,    86,    87,    87,    87,
+      87,    87,    87,    87,    87,    87,    87,    88,    89,    89,
+      90,    90,    90,    91,    92,    92,    93
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -628,11 +640,12 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     0,     2,     1,     1,     1,     2,     4,
        2,     0,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     2,     2,     0,     2,     1,     2,
-       1,     2,     3,     1,     1,     1,     2,     3,     1,     1,
-       2,     1,     2,     3,     1,     2,     1,     2,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     2,     0,
-       2,     1,     1,     1,     1,     1,     2,     1
+       1,     1,     1,     1,     1,     1,     1,     2,     1,     2,
+       1,     2,     1,     2,     2,     0,     2,     1,     2,     1,
+       2,     3,     1,     1,     1,     2,     3,     1,     1,     2,
+       1,     2,     3,     1,     2,     1,     2,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     2,     0,     2,
+       1,     1,     1,     1,     1,     2,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -641,48 +654,48 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        3,     0,     0,     0,     2,     3,     5,     7,     6,    11,
-      44,     8,    10,     1,     4,    23,    28,    26,    41,    46,
-       0,     0,    59,    35,    30,     0,    11,    22,    21,    20,
-      19,    18,    13,    14,    15,    16,    17,     0,    24,    29,
-      26,    25,    42,    48,    57,    49,    50,    51,    52,    53,
-      54,    55,    56,    47,    40,    45,    61,    62,    63,    58,
-      59,    39,    36,    38,    34,    31,    33,    67,    11,    64,
-      65,    12,    43,    27,    60,     0,     0,     9,    66,    37,
-      32
+      53,     8,    10,     1,     4,    32,    37,    35,    26,    30,
+      28,    50,    55,     0,     0,    68,    44,    39,     0,    11,
+      23,    25,    24,    22,    21,    20,    19,    18,    13,    14,
+      15,    16,    17,     0,    33,    38,    35,    34,    27,    31,
+      29,    51,    57,    66,    58,    59,    60,    61,    62,    63,
+      64,    65,    56,    49,    54,    70,    71,    72,    67,    68,
+      48,    45,    47,    43,    40,    42,    76,    11,    73,    74,
+      12,    52,    36,    69,     0,     0,     9,    75,    46,    41
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,     5,     6,     7,     8,     9,    25,    26,
-      27,    28,    41,    29,    30,    65,    66,    31,    62,    63,
-      32,    33,    11,    34,    35,    53,    36,    59,    60,    68,
-      69,    70
+      -1,     3,     4,     5,     6,     7,     8,     9,    28,    29,
+      30,    31,    32,    33,    34,    47,    35,    36,    74,    75,
+      37,    71,    72,    38,    39,    11,    40,    41,    62,    42,
+      68,    69,    77,    78,    79
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -47
+#define YYPACT_NINF -49
 static const yytype_int8 yypact[] =
 {
-      15,   -46,   -24,    28,   -47,    15,   -47,   -47,   -47,    -7,
-     -16,   -47,   -47,   -47,   -47,   -21,   -20,   -19,   -46,   -12,
-     -17,   -15,   -18,   -14,   -13,    -9,    -7,   -47,   -47,   -47,
-     -47,   -47,   -47,   -47,   -47,   -47,   -47,   -10,   -47,   -47,
-     -19,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
-     -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
-     -18,   -47,   -47,    -8,   -47,   -47,    -2,   -47,    -7,   -47,
-      -9,   -47,   -47,   -47,   -47,   -14,   -13,   -47,   -47,   -47,
-     -47
+      18,   -46,   -25,    30,   -49,    18,   -49,   -49,   -49,    -7,
+     -17,   -49,   -49,   -49,   -49,   -21,   -20,   -19,   -16,   -15,
+     -14,   -46,   -12,   -13,   -11,   -18,   -10,    -8,    -5,    -7,
+     -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,
+     -49,   -49,   -49,    -9,   -49,   -49,   -19,   -49,   -49,   -49,
+     -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,
+     -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -18,
+     -49,   -49,    -6,   -49,   -49,    -4,   -49,    -7,   -49,    -5,
+     -49,   -49,   -49,   -49,   -10,    -8,   -49,   -49,   -49,   -49
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -47,   -47,    31,   -47,   -47,   -47,   -47,   -47,   -26,   -47,
-     -47,   -47,    -3,   -47,   -47,   -43,   -47,   -47,   -30,   -47,
-     -47,   -47,    29,   -47,   -47,   -47,   -47,   -11,   -47,   -47,
-     -22,   -47
+     -49,   -49,    31,   -49,   -49,   -49,   -49,   -49,   -29,   -49,
+     -49,   -49,   -49,   -49,   -49,     1,   -49,   -49,   -48,   -49,
+     -49,   -33,   -49,   -49,   -49,    32,   -49,   -49,   -49,   -49,
+      -3,   -49,   -49,   -27,   -49
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -692,35 +705,39 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      71,    15,    16,    17,    10,    18,    19,    20,    21,    22,
-      23,    24,    43,    44,    45,    46,    47,    48,    49,    50,
-      51,    52,     1,    56,    57,    58,     2,    12,    13,    37,
-      38,    39,    40,    80,    54,    55,    14,    73,    75,    61,
-      72,    64,    77,    67,    76,    79,     0,    42,    78,    74
+      80,    15,    16,    17,    18,    19,    20,    10,    21,    22,
+      23,    24,    25,    26,    27,    52,    53,    54,    55,    56,
+      57,    58,    59,    60,    61,     1,    65,    66,    67,    12,
+      13,    43,     2,    44,    45,    46,    14,    89,    48,    49,
+      50,    63,    64,    84,    81,    85,    70,    82,    86,    73,
+      76,    88,    87,    51,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    83
 };
 
 static const yytype_int8 yycheck[] =
 {
-      26,     8,     9,    10,    50,    12,    13,    14,    15,    16,
-      17,    18,    24,    25,    26,    27,    28,    29,    30,    31,
-      32,    33,     7,    41,    42,    43,    11,    51,     0,    45,
-      51,    51,    51,    76,    51,    50,     5,    40,    46,    53,
-      50,    54,    68,    52,    46,    75,    -1,    18,    70,    60
+      29,     8,     9,    10,    11,    12,    13,    53,    15,    16,
+      17,    18,    19,    20,    21,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,     7,    44,    45,    46,    54,
+       0,    48,    14,    54,    54,    54,     5,    85,    54,    54,
+      54,    54,    53,    49,    53,    49,    56,    46,    77,    57,
+      55,    84,    79,    21,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    69
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     7,    11,    57,    58,    59,    60,    61,    62,    63,
-      50,    78,    51,     0,    58,     8,     9,    10,    12,    13,
-      14,    15,    16,    17,    18,    64,    65,    66,    67,    69,
-      70,    73,    76,    77,    79,    80,    82,    45,    51,    51,
-      51,    68,    78,    24,    25,    26,    27,    28,    29,    30,
-      31,    32,    33,    81,    51,    50,    41,    42,    43,    83,
-      84,    53,    74,    75,    54,    71,    72,    52,    85,    86,
-      87,    64,    50,    68,    83,    46,    46,    64,    86,    74,
-      71
+       0,     7,    14,    60,    61,    62,    63,    64,    65,    66,
+      53,    84,    54,     0,    61,     8,     9,    10,    11,    12,
+      13,    15,    16,    17,    18,    19,    20,    21,    67,    68,
+      69,    70,    71,    72,    73,    75,    76,    79,    82,    83,
+      85,    86,    88,    48,    54,    54,    54,    74,    54,    54,
+      54,    84,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    87,    54,    53,    44,    45,    46,    89,    90,
+      56,    80,    81,    57,    77,    78,    55,    91,    92,    93,
+      67,    53,    74,    89,    49,    49,    67,    92,    80,    77
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1630,13 +1647,61 @@ yyreduce:
                 }
     break;
 
-  case 23:
-#line 167 "levcomp.ypp"
+  case 26:
+#line 170 "levcomp.ypp"
     { }
     break;
 
-  case 24:
-#line 169 "levcomp.ypp"
+  case 27:
+#line 172 "levcomp.ypp"
+    {
+                    std::string err = lc_map.add_key_feat((yyvsp[(2) - (2)].text));
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KFEAT: '%s' (%s)",
+                                (yyvsp[(2) - (2)].text), err.c_str()).c_str());
+                }
+    break;
+
+  case 28:
+#line 180 "levcomp.ypp"
+    { }
+    break;
+
+  case 29:
+#line 182 "levcomp.ypp"
+    {
+                    std::string err = lc_map.add_key_mons((yyvsp[(2) - (2)].text));
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KMONS: '%s' (%s)",
+                                (yyvsp[(2) - (2)].text), err.c_str()).c_str());
+                }
+    break;
+
+  case 30:
+#line 190 "levcomp.ypp"
+    { }
+    break;
+
+  case 31:
+#line 192 "levcomp.ypp"
+    {
+                    std::string err = lc_map.add_key_item((yyvsp[(2) - (2)].text));
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KITEM: '%s' (%s)",
+                                (yyvsp[(2) - (2)].text), err.c_str()).c_str());
+                }
+    break;
+
+  case 32:
+#line 200 "levcomp.ypp"
+    { }
+    break;
+
+  case 33:
+#line 202 "levcomp.ypp"
     {
                     std::string err = lc_map.map.add_shuffle((yyvsp[(2) - (2)].text));
                     if (!err.empty())
@@ -1647,13 +1712,13 @@ yyreduce:
                 }
     break;
 
-  case 25:
-#line 178 "levcomp.ypp"
+  case 34:
+#line 211 "levcomp.ypp"
     {}
     break;
 
-  case 27:
-#line 183 "levcomp.ypp"
+  case 36:
+#line 216 "levcomp.ypp"
     {
                     lc_map.tags += " ";
                     lc_map.tags += (yyvsp[(1) - (2)].text);
@@ -1661,13 +1726,13 @@ yyreduce:
                 }
     break;
 
-  case 28:
-#line 190 "levcomp.ypp"
+  case 37:
+#line 223 "levcomp.ypp"
     {}
     break;
 
-  case 29:
-#line 192 "levcomp.ypp"
+  case 38:
+#line 225 "levcomp.ypp"
     {
                     std::string err = lc_map.map.add_subst((yyvsp[(2) - (2)].text));
                     if (!err.empty())
@@ -1678,18 +1743,18 @@ yyreduce:
                 }
     break;
 
-  case 30:
-#line 202 "levcomp.ypp"
+  case 39:
+#line 235 "levcomp.ypp"
     {}
     break;
 
-  case 31:
-#line 203 "levcomp.ypp"
+  case 40:
+#line 236 "levcomp.ypp"
     {}
     break;
 
-  case 34:
-#line 211 "levcomp.ypp"
+  case 43:
+#line 244 "levcomp.ypp"
     {
                     std::string error = lc_map.items.add_item((yyvsp[(1) - (1)].text));
                     if (error.size())
@@ -1705,18 +1770,18 @@ yyreduce:
                 }
     break;
 
-  case 35:
-#line 225 "levcomp.ypp"
+  case 44:
+#line 258 "levcomp.ypp"
     {}
     break;
 
-  case 36:
-#line 226 "levcomp.ypp"
+  case 45:
+#line 259 "levcomp.ypp"
     {}
     break;
 
-  case 39:
-#line 234 "levcomp.ypp"
+  case 48:
+#line 267 "levcomp.ypp"
     {
                     std::string err = lc_map.mons.add_mons((yyvsp[(1) - (1)].text));
                     if (!err.empty())
@@ -1732,115 +1797,115 @@ yyreduce:
                 }
     break;
 
-  case 40:
-#line 250 "levcomp.ypp"
+  case 49:
+#line 283 "levcomp.ypp"
     {
                     lc_map.place = (yyvsp[(2) - (2)].text);
                 }
     break;
 
-  case 41:
-#line 255 "levcomp.ypp"
+  case 50:
+#line 288 "levcomp.ypp"
     {}
     break;
 
-  case 42:
-#line 257 "levcomp.ypp"
+  case 51:
+#line 290 "levcomp.ypp"
     {
                     lc_map.depth = lc_range;
                 }
     break;
 
-  case 43:
-#line 263 "levcomp.ypp"
+  case 52:
+#line 296 "levcomp.ypp"
     {
                     lc_range.set((yyvsp[(1) - (3)].i), (yyvsp[(3) - (3)].i));
                 }
     break;
 
-  case 44:
-#line 268 "levcomp.ypp"
+  case 53:
+#line 301 "levcomp.ypp"
     {
                     lc_range.set((yyvsp[(1) - (1)].i));
                 }
     break;
 
-  case 45:
-#line 274 "levcomp.ypp"
+  case 54:
+#line 307 "levcomp.ypp"
     {
                     lc_map.chance = (yyvsp[(2) - (2)].i);
                 }
     break;
 
-  case 46:
-#line 279 "levcomp.ypp"
+  case 55:
+#line 312 "levcomp.ypp"
     {}
     break;
 
-  case 47:
-#line 281 "levcomp.ypp"
+  case 56:
+#line 314 "levcomp.ypp"
     {
                     lc_map.orient = (map_section_type) (yyvsp[(2) - (2)].i);
                 }
     break;
 
-  case 48:
-#line 286 "levcomp.ypp"
+  case 57:
+#line 319 "levcomp.ypp"
     { (yyval.i) = MAP_ENCOMPASS; }
     break;
 
-  case 49:
-#line 287 "levcomp.ypp"
+  case 58:
+#line 320 "levcomp.ypp"
     { (yyval.i) = MAP_NORTH; }
     break;
 
-  case 50:
-#line 288 "levcomp.ypp"
+  case 59:
+#line 321 "levcomp.ypp"
     { (yyval.i) = MAP_EAST; }
     break;
 
-  case 51:
-#line 289 "levcomp.ypp"
+  case 60:
+#line 322 "levcomp.ypp"
     { (yyval.i) = MAP_SOUTH; }
     break;
 
-  case 52:
-#line 290 "levcomp.ypp"
+  case 61:
+#line 323 "levcomp.ypp"
     { (yyval.i) = MAP_WEST; }
     break;
 
-  case 53:
-#line 291 "levcomp.ypp"
+  case 62:
+#line 324 "levcomp.ypp"
     { (yyval.i) = MAP_NORTHEAST; }
     break;
 
-  case 54:
-#line 292 "levcomp.ypp"
+  case 63:
+#line 325 "levcomp.ypp"
     { (yyval.i) = MAP_SOUTHEAST; }
     break;
 
-  case 55:
-#line 293 "levcomp.ypp"
+  case 64:
+#line 326 "levcomp.ypp"
     { (yyval.i) = MAP_SOUTHWEST; }
     break;
 
-  case 56:
-#line 294 "levcomp.ypp"
+  case 65:
+#line 327 "levcomp.ypp"
     { (yyval.i) = MAP_NORTHWEST; }
     break;
 
-  case 57:
-#line 295 "levcomp.ypp"
+  case 66:
+#line 328 "levcomp.ypp"
     { (yyval.i) = MAP_FLOAT; }
     break;
 
-  case 58:
-#line 298 "levcomp.ypp"
+  case 67:
+#line 331 "levcomp.ypp"
     {}
     break;
 
-  case 60:
-#line 303 "levcomp.ypp"
+  case 69:
+#line 336 "levcomp.ypp"
     {
                     switch ((yyvsp[(1) - (2)].i)) {
                     case NO_HMIRROR:
@@ -1856,23 +1921,23 @@ yyreduce:
                 }
     break;
 
-  case 61:
-#line 318 "levcomp.ypp"
+  case 70:
+#line 351 "levcomp.ypp"
     { (yyval.i) = NO_HMIRROR; }
     break;
 
-  case 62:
-#line 319 "levcomp.ypp"
+  case 71:
+#line 352 "levcomp.ypp"
     { (yyval.i) = NO_VMIRROR; }
     break;
 
-  case 63:
-#line 320 "levcomp.ypp"
+  case 72:
+#line 353 "levcomp.ypp"
     { (yyval.i) = NO_ROTATE;  }
     break;
 
-  case 67:
-#line 331 "levcomp.ypp"
+  case 76:
+#line 364 "levcomp.ypp"
     {
                     lc_map.map.add_line((yyvsp[(1) - (1)].text));
                 }
@@ -1880,7 +1945,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1884 "levcomp.tab.c"
+#line 1949 "levcomp.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2094,6 +2159,6 @@ yyreturn:
 }
 
 
-#line 336 "levcomp.ypp"
+#line 369 "levcomp.ypp"
 
 

@@ -47,51 +47,54 @@
      SHUFFLE = 263,
      SUBST = 264,
      TAGS = 265,
-     NAME = 266,
-     DEPTH = 267,
-     ORIENT = 268,
-     PLACE = 269,
-     CHANCE = 270,
-     FLAGS = 271,
-     MONS = 272,
-     ITEM = 273,
-     ROOT_DEPTH = 274,
-     ENTRY_MSG = 275,
-     EXIT_MSG = 276,
-     ROCK_COLOUR = 277,
-     FLOOR_COLOUR = 278,
-     ENCOMPASS = 279,
-     FLOAT = 280,
-     NORTH = 281,
-     EAST = 282,
-     SOUTH = 283,
-     WEST = 284,
-     NORTHEAST = 285,
-     SOUTHEAST = 286,
-     SOUTHWEST = 287,
-     NORTHWEST = 288,
-     LEVEL = 289,
-     END = 290,
-     PVAULT = 291,
-     PMINIVAULT = 292,
-     MONSTERS = 293,
-     ENDMONSTERS = 294,
-     CHARACTER = 295,
-     NO_HMIRROR = 296,
-     NO_VMIRROR = 297,
-     NO_ROTATE = 298,
-     PANDEMONIC = 299,
-     DASH = 300,
-     COMMA = 301,
-     QUOTE = 302,
-     OPAREN = 303,
-     CPAREN = 304,
-     INTEGER = 305,
-     STRING = 306,
-     MAP_LINE = 307,
-     MONSTER_NAME = 308,
-     ITEM_INFO = 309,
-     IDENTIFIER = 310
+     KFEAT = 266,
+     KITEM = 267,
+     KMONS = 268,
+     NAME = 269,
+     DEPTH = 270,
+     ORIENT = 271,
+     PLACE = 272,
+     CHANCE = 273,
+     FLAGS = 274,
+     MONS = 275,
+     ITEM = 276,
+     ROOT_DEPTH = 277,
+     ENTRY_MSG = 278,
+     EXIT_MSG = 279,
+     ROCK_COLOUR = 280,
+     FLOOR_COLOUR = 281,
+     ENCOMPASS = 282,
+     FLOAT = 283,
+     NORTH = 284,
+     EAST = 285,
+     SOUTH = 286,
+     WEST = 287,
+     NORTHEAST = 288,
+     SOUTHEAST = 289,
+     SOUTHWEST = 290,
+     NORTHWEST = 291,
+     LEVEL = 292,
+     END = 293,
+     PVAULT = 294,
+     PMINIVAULT = 295,
+     MONSTERS = 296,
+     ENDMONSTERS = 297,
+     CHARACTER = 298,
+     NO_HMIRROR = 299,
+     NO_VMIRROR = 300,
+     NO_ROTATE = 301,
+     PANDEMONIC = 302,
+     DASH = 303,
+     COMMA = 304,
+     QUOTE = 305,
+     OPAREN = 306,
+     CPAREN = 307,
+     INTEGER = 308,
+     STRING = 309,
+     MAP_LINE = 310,
+     MONSTER_NAME = 311,
+     ITEM_INFO = 312,
+     IDENTIFIER = 313
    };
 #endif
 /* Tokens.  */
@@ -103,51 +106,54 @@
 #define SHUFFLE 263
 #define SUBST 264
 #define TAGS 265
-#define NAME 266
-#define DEPTH 267
-#define ORIENT 268
-#define PLACE 269
-#define CHANCE 270
-#define FLAGS 271
-#define MONS 272
-#define ITEM 273
-#define ROOT_DEPTH 274
-#define ENTRY_MSG 275
-#define EXIT_MSG 276
-#define ROCK_COLOUR 277
-#define FLOOR_COLOUR 278
-#define ENCOMPASS 279
-#define FLOAT 280
-#define NORTH 281
-#define EAST 282
-#define SOUTH 283
-#define WEST 284
-#define NORTHEAST 285
-#define SOUTHEAST 286
-#define SOUTHWEST 287
-#define NORTHWEST 288
-#define LEVEL 289
-#define END 290
-#define PVAULT 291
-#define PMINIVAULT 292
-#define MONSTERS 293
-#define ENDMONSTERS 294
-#define CHARACTER 295
-#define NO_HMIRROR 296
-#define NO_VMIRROR 297
-#define NO_ROTATE 298
-#define PANDEMONIC 299
-#define DASH 300
-#define COMMA 301
-#define QUOTE 302
-#define OPAREN 303
-#define CPAREN 304
-#define INTEGER 305
-#define STRING 306
-#define MAP_LINE 307
-#define MONSTER_NAME 308
-#define ITEM_INFO 309
-#define IDENTIFIER 310
+#define KFEAT 266
+#define KITEM 267
+#define KMONS 268
+#define NAME 269
+#define DEPTH 270
+#define ORIENT 271
+#define PLACE 272
+#define CHANCE 273
+#define FLAGS 274
+#define MONS 275
+#define ITEM 276
+#define ROOT_DEPTH 277
+#define ENTRY_MSG 278
+#define EXIT_MSG 279
+#define ROCK_COLOUR 280
+#define FLOOR_COLOUR 281
+#define ENCOMPASS 282
+#define FLOAT 283
+#define NORTH 284
+#define EAST 285
+#define SOUTH 286
+#define WEST 287
+#define NORTHEAST 288
+#define SOUTHEAST 289
+#define SOUTHWEST 290
+#define NORTHWEST 291
+#define LEVEL 292
+#define END 293
+#define PVAULT 294
+#define PMINIVAULT 295
+#define MONSTERS 296
+#define ENDMONSTERS 297
+#define CHARACTER 298
+#define NO_HMIRROR 299
+#define NO_VMIRROR 300
+#define NO_ROTATE 301
+#define PANDEMONIC 302
+#define DASH 303
+#define COMMA 304
+#define QUOTE 305
+#define OPAREN 306
+#define CPAREN 307
+#define INTEGER 308
+#define STRING 309
+#define MAP_LINE 310
+#define MONSTER_NAME 311
+#define ITEM_INFO 312
+#define IDENTIFIER 313
 
 
 
@@ -160,7 +166,7 @@ typedef union YYSTYPE
     const char *text;
 }
 /* Line 1529 of yacc.c.  */
-#line 164 "levcomp.tab.h"
+#line 170 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
