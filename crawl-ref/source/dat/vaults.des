@@ -4502,6 +4502,106 @@ MAP
 x
 ENDMAP
 
+##############################################################################
+# Rubicon
+
+NAME: erik_rubicon_a
+DEPTH: 10-16
+ORIENT: float
+FLAGS: no_rotate
+CHANCE: 6
+ITEM: ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM: nothing, nothing, nothing
+SHUFFLE: {[(
+SHUFFLE: wl
+SHUFFLE: )gh
+MAP
+xxxxccccccccwwwww.@wwww.@wwwwwww...@wwwwwww.@wwww@..wccccxxxxxx
+ccccwwwwwwwww..wwwww.wwwwwwww.wwwwwww.wwwwwwwwwwwwwwwwwwccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwwwwwwwwwwwwwwwcccwwwwwwwwwcwwwwwwwwwwwwwwwwwwwwwwcccwccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwccccc
+cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
+ccwcwwwwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwccccc
+ccccccwwwwwww.wwwwwxwwwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwcccccxxx
+xxxxcxx.........w..xx........wwwww...c......ww.....www..cxccxxx
+xxxxcx..(cc[......xx...x....x..wxx.xcc..cxcx...xxx.....chxxcxxx
+xxxxcx..cc{c..xx.....xx...cc..xx....xcc......xxx..x.xxc...cxxxx
+xxxxccx....e.xx....x..x.....c....cx..x...x......c......cxcxxxxx
+xxxxxcxexxx.x.x.xx.x.xx.xcc.xx.xccxx....xx.x.xxxccxx.xcccxxxxxx
+xxxxxccx.gxxx..x..xdx..x.xxxx.x...xx.xx...xx.xxxx)..xxcxxxxxxxx
+xxxxxxcxxxxxxxx...xxxxxxxxxccccccc..xxxxccccccccxxxccccxxxxxxxx
+xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+ENDMAP
+
+NAME: erik_rubicon_b
+DEPTH: 10-16
+TAGS: no_pool_fixup
+ORIENT: float
+FLAGS: no_rotate
+CHANCE: 4
+ITEM: ring of levitation / potion of levitation / nothing, potion of levitation
+ITEM: nothing, nothing, nothing, nothing
+SHUFFLE: {[(
+SHUFFLE: fgW
+SHUFFLE: )hi
+MAP
+xxxxccccccccwgwwf.@wgfw.@wwwgwfw...@gwfwwww.@wwww@..wccccxxxxxx
+ccccwwwwwwwww..fwwww.wwwwwwww.wwwwwww.wwwwwwwwwwwffggwwwccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+ccwwwwwwwwwwwwwwwgwwwcccwwwfwwwwwcwwwwgwwwwwwwwwwwwwwwwwcccwccc
+cwwwwwwwwwwwwwwgwwwwwwwwwwwwfwwwwwwwwwwwwwfwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwccwwwwwwwwwcwcwwwwwwwwwwwwwwwwwwwwwwccccc
+cwwwwwwwwwwwwxwwwwwwwwwwwwwwwwwwwcwwwww.wwwwwwwwwwwwwwwwwwwwwwc
+ccwcwwwwwgwwwwfwwwwxwwwwwwwwwwwwwwwwwwwfgwwwgwwwww.wwwwwwwccccc
+ccccccwffwgwwfwwwwgxwwwwww...wwwwwwwwwfwgwwfwgwwwfgwwwgcccccxxx
+xxxxcxx.........w..xx........wwwww...c......ww.....wgg.xcxccxxx
+xxxxcx..(cc[.....xx....x....x..w...xcc..cxcx.x..x......cxhxcxxx
+xxxxxcc..c{c..x.x...c.xxx.x.xx....xx..cc..c.xx...cc..xxx...xxxx
+xxxxccx....e.xx...x...x.....c...c....cc....x...x....x....cxxxxx
+xxxxxcxexxxxx.x.xxxx.x..xcc.xx..cc.x....xx.x.x.xccxx.xcccxxxxxx
+xxxxxccx..xi.x.x.xxdxxxx...x..xx..xxxxx...x).xx..xc.xxcxxxxxxxx
+xxxxxxcxxxxxx...x....xxxxxxcccccccxxxxxxccccccccx..ccccxxxxxxxx
+xxxxxxcccccccccccccccccccccccccccccccccccxxxxxcccccccxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Sometimes You Just Gotta Run
+
+NAME: erik_ogre
+DEPTH: 4-9
+ORIENT: float
+MONS: ogre / iron devil
+ITEM: potion of heal wounds / speed / berserk rage
+SHUFFLE: {(
+MAP
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxxx1xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx.d.xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxxxxx...xxxxxxxxx
+xxxxxx....[....xxxxxx
+xxxxxx..x(.{x..xxxxxx
+x...x...x...x...x...x
+x....x..xx]xx..x....x
+xxxxxx...xxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###################################
 # Hellmouth (Lemuel)
 # note that other than the imps, the demons here cannot fly
@@ -5436,6 +5536,49 @@ ENDMAP
 
 # Default depth for minivaults.
 default-depth: 8-27
+
+##############################################################################
+# Greed's colour
+
+NAME: david_greed
+DEPTH: 10-26
+ITEM: nothing
+SHUFFLE: d|
+SHUFFLE: HS
+MAP
+xxxxxxxxx
+xbbbbbbbx
+xbH...Sbx
+xb.....bx
+xb.....bx
+xbb.|.bbx
+xxb.d.bxx
+xxb...bxx
+xxb...bxx
+xxb.*.bxx
+xxb...bxx
+xxx@I@xxx
+ENDMAP
+
+##############################################################################
+# Defended altar
+
+NAME: david_defended_altar
+DEPTH: 6-20
+ITEM: nothing
+MONS: orc priest, deep elf priest / nothing
+SUBST: 1 : 1 2
+MAP
+.........
+.ccccc...
+.c1..c...
+.c1C.+.T.
+.c1..c...
+.ccccc...
+.........
+ENDMAP
+
+##############################################################################
 
 NAME: minivault_1
 
