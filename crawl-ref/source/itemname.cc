@@ -2379,6 +2379,8 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     case OBJ_MISSILES:
         flagset = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
+        if (get_ammo_brand(item) == SPMSL_NORMAL)
+            flagset &= ~ISFLAG_KNOW_TYPE;
         break;
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
@@ -2386,9 +2388,10 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     }
     if ( is_random_artefact(item) ||
-         is_fixed_artefact(item) ||
-         is_unrandom_artefact(item) )
+         is_fixed_artefact(item) )
+    {
         flagset |= ISFLAG_KNOW_PROPERTIES;
+    }
     return flagset;
 }
 
