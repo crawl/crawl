@@ -747,7 +747,7 @@ void tutorial_prayer_reminder()
         snprintf(info, INFO_SIZE, "%s, as well.", god_name(you.religion));
         mpr(info, MSGCH_TUTORIAL);
     }       
-}    
+}
 
 void tutorial_healing_reminder()
 {

@@ -49,7 +49,7 @@ static void dur_colour( int colour, bool running_out )
     else
     {
         switch (colour)
-        { 
+        {
         case GREEN:     textcolor( LIGHTGREEN );        break;
         case BLUE:      textcolor( LIGHTBLUE );         break;
         case MAGENTA:   textcolor( LIGHTMAGENTA );      break;
@@ -105,7 +105,7 @@ void print_stats(void)
                 break;
             }
         }
-        
+
         gotoxy(44, 3);
 
         cprintf( "%d", you.hp );
@@ -170,7 +170,7 @@ void print_stats(void)
         gotoxy(45, 7);
 
         if (you.might)
-            textcolor(LIGHTBLUE);  // no end of effect warning 
+            textcolor(LIGHTBLUE);  // no end of effect warning
         else if (you.strength < you.max_strength)
             textcolor(YELLOW);
 
@@ -296,11 +296,11 @@ void print_stats(void)
         gotoxy(52, 11);
 
 #if DEBUG_DIAGNOSTICS
-        cprintf( "%d/%lu  (%d/%d)", 
-                 you.experience_level, you.experience, 
+        cprintf( "%d/%lu  (%d/%d)",
+                 you.experience_level, you.experience,
                  you.skill_cost_level, you.exp_available );
 #else
-        cprintf( "%d/%lu  (%d)", 
+        cprintf( "%d/%lu  (%d)",
                  you.experience_level, you.experience, you.exp_available );
 #endif
 
@@ -332,7 +332,7 @@ void print_stats(void)
             if (prefcol != -1)
                 textcolor(prefcol);
 
-            in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass, 
+            in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass,
                      Options.terse_hand );
             str_pass[39] = 0;
 
@@ -422,7 +422,7 @@ void print_stats(void)
         textcolor( LIGHTGREY );
 
 #if DEBUG_DIAGNOSTICS
-        // debug mode hunger-o-meter 
+        // debug mode hunger-o-meter
         cprintf( " (%d:%d) ", you.hunger - you.old_hunger, you.hunger );
 #endif
     }
@@ -478,7 +478,7 @@ void print_stats(void)
 
         if (player_is_levitating())
         {
-            bool perm = (you.species == SP_KENKU && you.experience_level >= 15) 
+            bool perm = (you.species == SP_KENKU && you.experience_level >= 15)
                         || (player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION ))
                         || (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
 
@@ -500,7 +500,7 @@ void print_stats(void)
             cprintf( "Invis " );
         }
 
-        // Perhaps this should be reversed to show when it can be used? 
+        // Perhaps this should be reversed to show when it can be used?
         // In that case, it should be probably be GREEN, and we'd have
         // to check to see if the player does have a breath weapon. -- bwr
         if (you.duration[DUR_BREATH_WEAPON])
@@ -525,8 +525,8 @@ void print_stats(void)
         // Max length of this line = 7 * 5 + 3 - 1 = 37
 
         // Note the usage of bad_ench_colour() correspond to levels that
-        // can be found in player.cc, ie those that the player can tell by 
-        // using the '@' command.  Things like confusion and sticky flame 
+        // can be found in player.cc, ie those that the player can tell by
+        // using the '@' command.  Things like confusion and sticky flame
         // hide their amounts and are thus always the same colour (so
         // we're not really exposing any new information). --bwr
         if (you.conf)
@@ -543,7 +543,7 @@ void print_stats(void)
 
         if (you.poisoning)
         {
-            // We skip marking "quite" poisoned and instead mark the 
+            // We skip marking "quite" poisoned and instead mark the
             // levels where the rules for dealing poison damage change
             // significantly.  See acr.cc for that code. -- bwr
             textcolor( bad_ench_colour( you.poisoning, 5, 10 ) );
@@ -618,9 +618,9 @@ const char* itosym3(int stat)
                             "x x x");
 }
 
-static const char *s_equip_slot_names[] = 
+static const char *s_equip_slot_names[] =
 {
-    "Weapon", 
+    "Weapon",
     "Cloak",
     "Helmet",
     "Gloves",
@@ -721,7 +721,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     }
     else
         cols.add_formatted(0, "\n\n", false);
-       
+
     snprintf(buf, sizeof buf,
              "Spls.Left  : %7d\n"
              "Gold       : %7d\n",
@@ -738,13 +738,13 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     }
     else
     {
-        snprintf(buf, sizeof buf, "HP         : %3d/%d (%d)", 
+        snprintf(buf, sizeof buf, "HP         : %3d/%d (%d)",
                  you.hp, you.hp_max, you.hp_max + player_rotted() );
     }
     cols.add_formatted(0, buf, true);
 
     if (you.magic_points < you.max_magic_points)
-        snprintf(buf, sizeof buf, "MP         : %3d/%d", 
+        snprintf(buf, sizeof buf, "MP         : %3d/%d",
                  you.magic_points, you.max_magic_points);
     else
         snprintf(buf, sizeof buf, "MP         : %3d", you.magic_points);
@@ -756,14 +756,14 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
         snprintf(buf, sizeof buf, "Str        : <yellow>%3d</yellow> (%d)",
                  you.strength, you.max_strength);
     cols.add_formatted(0, buf, false);
-    
+
     if (you.intel == you.max_intel)
         snprintf(buf, sizeof buf, "Int        : %3d", you.intel);
     else
         snprintf(buf, sizeof buf, "Int        : <yellow>%3d</yellow> (%d)",
                  you.intel, you.max_intel);
     cols.add_formatted(0, buf, false);
-    
+
     if (you.dex == you.max_dex)
         snprintf(buf, sizeof buf, "Dex        : %3d", you.dex);
     else
@@ -799,7 +799,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
 
-    snprintf(buf, sizeof buf, "\n\n"             
+    snprintf(buf, sizeof buf, "\n\n"
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
@@ -830,7 +830,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
 
     {
         char str_pass[ITEMNAME_SIZE];
-        const int e_order[] = 
+        const int e_order[] =
         {
             EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
             EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
@@ -891,11 +891,11 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
              determine_color_string(rward), itosym1(rward),
              determine_color_string(rcons), itosym1(rcons),
              determine_color_string(rcorr), itosym1(rcorr));
-    cols.add_formatted(2, buf, false);    
-             
+    cols.add_formatted(2, buf, false);
+
     int saplevel = 0;
     switch (you.species)
-    {            
+    {
     case SP_GHOUL:
         saplevel = 3;
         snprintf(buf, sizeof buf, "%sSaprovore  : %s",
@@ -966,13 +966,13 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
 // TODO: add abilities
 void print_overview_screen()
 {
-	clrscr();
-		
-	formatted_string fs = get_full_detail2(false);
-	gotoxy(1, 1);
+    clrscr();
+
+    formatted_string fs = get_full_detail2(false);
+    gotoxy(1, 1);
     fs.display();
-	    
-	getch();    
+
+    getch();
     redraw_screen();
 }
 
@@ -983,14 +983,14 @@ formatted_string get_full_detail2(bool calc_unid)
 
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title());
-    
+
     char race_class[50];
     snprintf(race_class, sizeof race_class,
              "(%s %s)",
              species_name(you.species, you.experience_level), you.class_name);
-    
+
     char time_turns[50] = "";
-    
+
     if (you.real_time != -1)
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
@@ -1001,9 +1001,9 @@ formatted_string get_full_detail2(bool calc_unid)
                  " Turns: %ld, Time: %s",
                  you.num_turns, buff );
     }
-    
-    int linelength = strlen(you.your_name) + strlen(title) 
-    				 + strlen(race_class) + strlen(time_turns);
+
+    int linelength = strlen(you.your_name) + strlen(title)
+                     + strlen(race_class) + strlen(time_turns);
     for (int count = 0; linelength >= 80 && count < 2; count++ )
     {
         switch (count)
@@ -1014,15 +1014,15 @@ formatted_string get_full_detail2(bool calc_unid)
                      get_species_abbrev(you.species),
                      get_class_abbrev(you.char_class) );
             break;
-        case 1: 
+        case 1:
             strcpy(title, "");
             break;
         default:
             break;
-        }    
-        linelength = strlen(you.your_name) + strlen(title) 
-            + strlen(race_class) + strlen(time_turns);   	
-    } 
+        }
+        linelength = strlen(you.your_name) + strlen(title)
+            + strlen(race_class) + strlen(time_turns);
+    }
 
     output.textcolor(YELLOW);
     output.cprintf("%s%s%s", you.your_name, title, race_class);
@@ -1038,19 +1038,19 @@ formatted_string get_full_detail2(bool calc_unid)
         output += formatted_string::parse_string("\n");
     }
     output += formatted_string::parse_string("\n");
-    
+
     vfs = get_res_info(calc_unid);
     for (unsigned int i = 0; i < vfs.size(); i++)
     {
         output += vfs[i];
         output += formatted_string::parse_string("\n");
     }
-    
+
     //----------------------------
     // print status information
     //----------------------------
     text = "\n<w>@:</w> ";
-    
+
     if (you.burden_state == BS_ENCUMBERED)
         text += "burdened, ";
     else if (you.burden_state == BS_OVERLOADED)
@@ -1084,7 +1084,7 @@ formatted_string get_full_detail2(bool calc_unid)
 
     if (you.duration[DUR_STONEMAIL])
         text += "stone mail, ";
-    
+
     if (you.duration[DUR_STONESKIN])
         text += "stone skin, ";
 
@@ -1131,7 +1131,7 @@ formatted_string get_full_detail2(bool calc_unid)
         text += "levitating, ";
 
     if (you.poisoning)
-    { 
+    {
         text +=   (you.poisoning > 10) ? "extremely" :
                   (you.poisoning > 5)  ? "very" :
                   (you.poisoning > 3)  ? "quite"
@@ -1148,7 +1148,7 @@ formatted_string get_full_detail2(bool calc_unid)
     }
 
     if (you.rotting || you.species == SP_GHOUL)
-    	text += "rotting, ";
+        text += "rotting, ";
 //    contaminate_player( 0, true );
 
     if (you.confusing_touch)
@@ -1159,11 +1159,11 @@ formatted_string get_full_detail2(bool calc_unid)
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
     if ( you.slow )
-	    move_cost *= 2;
+        move_cost *= 2;
 
     text +=   (move_cost <   8) ? "very quick, " :
               (move_cost <  10) ? "quick, " :
-              (move_cost == 10) ? "" : 
+              (move_cost == 10) ? "" :
               (move_cost <  13) ? "slow, " : "";
 
     if (you.slow && !you.haste)
@@ -1182,41 +1182,41 @@ formatted_string get_full_detail2(bool calc_unid)
              (mr < 120) ? "very" :
              (mr < 140) ? "extremely" :
              "incredibly");
-	text += info;
+    text += info;
 
-    // character evaluates their ability to sneak around: 
+    // character evaluates their ability to sneak around:
     const int ustealth = check_stealth();
 
     snprintf( info, INFO_SIZE, "%sstealthy",
-	      (ustealth <  10) ? "extremely un" :
-	      (ustealth <  20) ? "very un" :
-	      (ustealth <  30) ? "un" :
-	      (ustealth <  50) ? "fairly " :
-	      (ustealth <  80) ? "" :
-	      (ustealth < 120) ? "quite " :
-	      (ustealth < 160) ? "very " : 
-	      (ustealth < 200) ? "extremely " 
-	      : "incredibly " );
+          (ustealth <  10) ? "extremely un" :
+          (ustealth <  20) ? "very un" :
+          (ustealth <  30) ? "un" :
+          (ustealth <  50) ? "fairly " :
+          (ustealth <  80) ? "" :
+          (ustealth < 120) ? "quite " :
+          (ustealth < 160) ? "very " :
+          (ustealth < 200) ? "extremely "
+          : "incredibly " );
 
-	text += info;
-       
-    size_t start = 0, pos = 0, oldpos = 0;    
+    text += info;
+
+    size_t start = 0, pos = 0, oldpos = 0;
     for (; pos < strlen(text.c_str()); oldpos++) {
 
         // get next "word"
         pos = text.find(' ', oldpos);
         if (pos - start >= 80 && pos < strlen(text.c_str())) {
-        	output += formatted_string::parse_string(
+            output += formatted_string::parse_string(
                 text.substr(start, oldpos-start));
-        	output += formatted_string::parse_string(EOL);
-        	start = oldpos;
-       	}   	
-       	oldpos = pos;
+            output += formatted_string::parse_string(EOL);
+            start = oldpos;
+        }
+        oldpos = pos;
     }
 
     output += formatted_string::parse_string(text.substr(start, pos-start));
     text = "";
-       
+
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_SPIDER:
@@ -1238,47 +1238,47 @@ formatted_string get_full_detail2(bool calc_unid)
         text += "\nYou are in lich-form.";
         break;
     case TRAN_SERPENT_OF_HELL:
-    	text += "\nYou are a huge demonic serpent.";
+        text += "\nYou are a huge demonic serpent.";
         break;
     case TRAN_AIR:
         text += "\nYou are a cloud of diffuse gas.";
         break;
     }
-    
-    text += EOL; 
+
+    text += EOL;
     const int to_hit = calc_your_to_hit( false ) * 2;
 
-    snprintf( info, INFO_SIZE, 
-	      "%s in your current equipment.",
-	      (to_hit <   1) ? "You are completely incapable of fighting" :
-	      (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
-	      (to_hit <  10) ? "Hitting average monsters is awkward" :
-	      (to_hit <  15) ? "Hitting average monsters is difficult" :
-	      (to_hit <  20) ? "Hitting average monsters is hard" :
-	      (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
-	      (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
-	      (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
-	      (to_hit < 100) ? "You feel comfortable with your ability to fight" 
-	      : "You feel confident with your ability to fight" );
-	text += info;      
+    snprintf( info, INFO_SIZE,
+          "%s in your current equipment.",
+          (to_hit <   1) ? "You are completely incapable of fighting" :
+          (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
+          (to_hit <  10) ? "Hitting average monsters is awkward" :
+          (to_hit <  15) ? "Hitting average monsters is difficult" :
+          (to_hit <  20) ? "Hitting average monsters is hard" :
+          (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
+          (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
+          (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
+          (to_hit < 100) ? "You feel comfortable with your ability to fight"
+          : "You feel confident with your ability to fight" );
+    text += info;
 
     if (you.deaths_door)
         text += "\nYou are standing in death's doorway.";
 
     output += formatted_string::parse_string(text);
-    
+
     //----------------------------
     // print mutation information
     //----------------------------
     text = "\n<w>A:</w> ";
-    
+
     bool have_any = false;
     int AC_change = 0;
     int EV_change = 0;
     int Str_change = 0;
     int Int_change = 0;
     int Dex_change = 0;
-    
+
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
     case SP_MERFOLK:
@@ -1339,7 +1339,7 @@ formatted_string get_full_detail2(bool calc_unid)
 
 //        if (you.experience_level > 12)
 //            text += "You can restore your body by infusing magical energy." EOL;
-            
+
         have_any = true;
         break;
 
@@ -1434,535 +1434,535 @@ formatted_string get_full_detail2(bool calc_unid)
          you.species == SP_SPRIGGAN )
     {
         if (have_any)
-        	text += ", ";
+            text += ", ";
         text += "unfitting armour";
         have_any = true;
     }
 
     for (unsigned i = 0; i < 100; i++) {
         if (!you.mutation[i])
-        	continue;
-        	
-       	int level = you.mutation[ i ];
-       	
-       	switch(i) {
-       	    case MUT_TOUGH_SKIN:
-       	        AC_change += level;
-       	        break;
-       	    case MUT_STRONG:
-       	        Str_change += level;
-       	        break;
-       	    case MUT_CLEVER:
-       	        Int_change += level;
-       	        break;
-       	    case MUT_AGILE:
-       	        Dex_change += level;
-       	        break;
-       	    case MUT_GREEN_SCALES:
-       	        AC_change += 2*level-1;
-       	        break;
-       	    case MUT_BLACK_SCALES:
-       	        AC_change += 3*level;
-       	        Dex_change -= level;
-       	        break;
-       	    case MUT_GREY_SCALES:
-       	        AC_change += level;
-       	        break;
-       	    case MUT_BONEY_PLATES:
-       	        AC_change += level+1;
-       	        Dex_change -= level;
-       	        break;
-       	    case MUT_REPULSION_FIELD:
-       	        EV_change += 2*level-1;
-       	        if (level == 3) {
-       	        	if (have_any)
-       	        		text += ", ";
-       	        	text += "repel missiles";
-       	        	have_any = true;
-  	        	}   	
-       	        break;
-       	    case MUT_POISON_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "poison resistance";
-       	        have_any = true;
-       	        break;
-       	    case MUT_CARNIVOROUS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "carnivore %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_HERBIVOROUS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "herbivore %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_HEAT_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "fire resistance %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_COLD_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "cold resistance %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_SHOCK_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "electricity resistance";
-       	        have_any = true;
-       	        break;
-       	    case MUT_REGENERATION:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "regeneration %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_FAST_METABOLISM:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "fast metabolism %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_SLOW_METABOLISM:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "slow metabolism %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_WEAK:
-       	        Str_change -= level;
-       	        break;
-       	    case MUT_DOPEY:
-       	        Int_change -= level;
-       	        break;
-       	    case MUT_CLUMSY:
-       	        Dex_change -= level;
-       	        break;
-       	    case MUT_TELEPORT_CONTROL:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "teleport control";
-       	        have_any = true;
-       	        break;
-       	    case MUT_TELEPORT:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "teleportitis %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_MAGIC_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "magic resistance %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_FAST:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "speed %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_ACUTE_VISION:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "see invisible";
-       	        have_any = true;
-       	        break;
-       	    case MUT_DEFORMED:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "deformed body %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_TELEPORT_AT_WILL:
-       	        snprintf(info, INFO_SIZE, "teleport at will %d", level);
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_SPIT_POISON:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "spit poison";
-       	        have_any = true;
-       	        break;
-       	    case MUT_MAPPING:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "sense surroundings %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_BREATHE_FLAMES:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "breathe flames %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_BLINK:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "blink";
-       	        have_any = true;
-       	        break;
-       	    case MUT_HORNS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "horns %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_STRONG_STIFF:
-       	        Str_change += level;
-       	        Dex_change -= level;
-       	        break;
-       	    case MUT_FLEXIBLE_WEAK:
-       	        Str_change -= level;
-       	        Dex_change += level;
-       	        break;
-       	    case MUT_LOST:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "forgetfulness %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_CLARITY:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "clarity %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_BERSERK:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "berserk %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_DETERIORATION:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "deteriotation %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_BLURRY_VISION:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "blurry vision %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_MUTATION_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "mutation resistance %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_FRAIL:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "-%d hp", level*10);
-       	        text += info;
-       	        have_any = true;
-       	        break;       	        
-       	    case MUT_ROBUST:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "+%d hp", level*10);
-       	        text += info;
-       	        have_any = true;
-       	        break;       	        
-       	    case MUT_TORMENT_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "torment resistance";
-       	        have_any = true;
-       	        break;
-       	    case MUT_NEGATIVE_ENERGY_RESISTANCE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "life protection %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_SUMMON_MINOR_DEMONS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "summon minor demons";
-       	        have_any = true;
-       	        break;
-       	    case MUT_SUMMON_DEMONS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "summon demons";
-       	        have_any = true;
-       	        break;
-       	    case MUT_HURL_HELLFIRE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "hurl hellfire";
-       	        have_any = true;
-       	        break;
-       	    case MUT_CALL_TORMENT:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "call torment";
-       	        have_any = true;
-       	        break;
-       	    case MUT_RAISE_DEAD:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "raise dead";
-       	        have_any = true;
-       	        break;
-       	    case MUT_CONTROL_DEMONS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "control demons";
-       	        have_any = true;
-       	        break;
-       	    case MUT_PANDEMONIUM:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "portal to Pandemonium";
-       	        have_any = true;
-       	        break;
-       	    case MUT_DEATH_STRENGTH:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "draw strength from death and destruction";
-       	        have_any = true;
-       	        break;
-       	    case MUT_CHANNEL_HELL:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "channel magical energy from Hell";
-       	        have_any = true;
-       	        break;
-       	    case MUT_DRAIN_LIFE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "drain life";
-       	        have_any = true;
-       	        break;
-       	    case MUT_THROW_FLAMES:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "throw flames of Gehenna";
-       	        have_any = true;
-       	        break;
-       	    case MUT_THROW_FROST:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "throw frost of Cocytus";
-       	        have_any = true;
-       	        break;
-       	    case MUT_SMITE:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "invoke powers of Tartarus";
-       	        have_any = true;
-       	        break;
-       	    case MUT_CLAWS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "claws %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_HOOVES:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "hooves";
-       	        have_any = true;
-       	        break;
-       	    case MUT_BREATHE_POISON:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "breathe poison";
-       	        have_any = true;
-       	        break;
-       	    case MUT_STINGER:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "stinger %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_BIG_WINGS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        text += "large and strong wings";
-       	        have_any = true;
-       	        break;
-       	    case MUT_BLUE_MARKS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "blue evil mark %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_GREEN_MARKS:
-       	        if (have_any)
-       	        	text += ", ";
-       	        snprintf(info, INFO_SIZE, "green evil mark %d", level);
-       	        text += info;
-       	        have_any = true;
-       	        break;
-       	    case MUT_RED_SCALES:
-       	        AC_change += level;
-       	        if (level == 3)
-       	        	AC_change++;
-       	        break;
-       	    case MUT_NACREOUS_SCALES:
-       	        AC_change += 2*level-1;
-       	        break;
-       	    case MUT_GREY2_SCALES:
-       	        AC_change += 2*level;
-       	        Dex_change -= 1;
-       	        if (level == 3)
-       	        	Dex_change--;
-       	        break;
-       	    case MUT_METALLIC_SCALES:
-       	        AC_change += 3*level+1;
-       	        if (level == 1)
-       	        	AC_change--;
-  	        	Dex_change -= level + 1;
-       	        break;
-       	    case MUT_BLACK2_SCALES:
-       	        AC_change += 2*level-1;
-       	        break;
-       	    case MUT_WHITE_SCALES:
-       	        AC_change += 2*level-1;
-       	        break;
-       	    case MUT_YELLOW_SCALES:
-       	        AC_change += 2*level;
-       	        Dex_change -= level-1;
-       	        break;
-       	    case MUT_BROWN_SCALES:
-       	        AC_change += 2*level;
-       	        if (level == 3)
-       	        	AC_change--;
-       	        break;
-       	    case MUT_BLUE_SCALES:
-       	        AC_change += level;
-       	        break;
-       	    case MUT_PURPLE_SCALES:
-       	        AC_change += 2*level;
-       	        break;
-       	    case MUT_SPECKLED_SCALES:
-       	        AC_change += level;
-       	        break;
-       	    case MUT_ORANGE_SCALES:
-       	        AC_change += level;
-       	        if (level > 1)
-       	        	AC_change++;
-       	        break;
-       	    case MUT_INDIGO_SCALES:
-       	        AC_change += 2*level-1;
-       	        if (level == 1)
-       	        	AC_change++;
-       	        break;
-       	    case MUT_RED2_SCALES:
-       	        AC_change += 2*level;
-       	        if (level > 1)
-       	        	AC_change++;
-       	        Dex_change -= level - 1;	
-       	        break;
-       	    case MUT_IRIDESCENT_SCALES:
-       	        AC_change += level;
-       	        break;
-       	    case MUT_PATTERNED_SCALES:
-       	        AC_change += level;
-       	        break;
-           	default: break;       	    
-       	}    
-    }    
-    
-    if (AC_change) 
+            continue;
+
+        int level = you.mutation[ i ];
+
+        switch(i) {
+            case MUT_TOUGH_SKIN:
+                AC_change += level;
+                break;
+            case MUT_STRONG:
+                Str_change += level;
+                break;
+            case MUT_CLEVER:
+                Int_change += level;
+                break;
+            case MUT_AGILE:
+                Dex_change += level;
+                break;
+            case MUT_GREEN_SCALES:
+                AC_change += 2*level-1;
+                break;
+            case MUT_BLACK_SCALES:
+                AC_change += 3*level;
+                Dex_change -= level;
+                break;
+            case MUT_GREY_SCALES:
+                AC_change += level;
+                break;
+            case MUT_BONEY_PLATES:
+                AC_change += level+1;
+                Dex_change -= level;
+                break;
+            case MUT_REPULSION_FIELD:
+                EV_change += 2*level-1;
+                if (level == 3) {
+                    if (have_any)
+                        text += ", ";
+                    text += "repel missiles";
+                    have_any = true;
+                }
+                break;
+            case MUT_POISON_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                text += "poison resistance";
+                have_any = true;
+                break;
+            case MUT_CARNIVOROUS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "carnivore %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_HERBIVOROUS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "herbivore %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_HEAT_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "fire resistance %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_COLD_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "cold resistance %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_SHOCK_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                text += "electricity resistance";
+                have_any = true;
+                break;
+            case MUT_REGENERATION:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "regeneration %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_FAST_METABOLISM:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "fast metabolism %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_SLOW_METABOLISM:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "slow metabolism %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_WEAK:
+                Str_change -= level;
+                break;
+            case MUT_DOPEY:
+                Int_change -= level;
+                break;
+            case MUT_CLUMSY:
+                Dex_change -= level;
+                break;
+            case MUT_TELEPORT_CONTROL:
+                if (have_any)
+                    text += ", ";
+                text += "teleport control";
+                have_any = true;
+                break;
+            case MUT_TELEPORT:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "teleportitis %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_MAGIC_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "magic resistance %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_FAST:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "speed %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_ACUTE_VISION:
+                if (have_any)
+                    text += ", ";
+                text += "see invisible";
+                have_any = true;
+                break;
+            case MUT_DEFORMED:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "deformed body %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_TELEPORT_AT_WILL:
+                snprintf(info, INFO_SIZE, "teleport at will %d", level);
+                if (have_any)
+                    text += ", ";
+                text += info;
+                have_any = true;
+                break;
+            case MUT_SPIT_POISON:
+                if (have_any)
+                    text += ", ";
+                text += "spit poison";
+                have_any = true;
+                break;
+            case MUT_MAPPING:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "sense surroundings %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_BREATHE_FLAMES:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "breathe flames %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_BLINK:
+                if (have_any)
+                    text += ", ";
+                text += "blink";
+                have_any = true;
+                break;
+            case MUT_HORNS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "horns %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_STRONG_STIFF:
+                Str_change += level;
+                Dex_change -= level;
+                break;
+            case MUT_FLEXIBLE_WEAK:
+                Str_change -= level;
+                Dex_change += level;
+                break;
+            case MUT_LOST:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "forgetfulness %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_CLARITY:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "clarity %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_BERSERK:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "berserk %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_DETERIORATION:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "deteriotation %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_BLURRY_VISION:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "blurry vision %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_MUTATION_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "mutation resistance %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_FRAIL:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "-%d hp", level*10);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_ROBUST:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "+%d hp", level*10);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_TORMENT_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                text += "torment resistance";
+                have_any = true;
+                break;
+            case MUT_NEGATIVE_ENERGY_RESISTANCE:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "life protection %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_SUMMON_MINOR_DEMONS:
+                if (have_any)
+                    text += ", ";
+                text += "summon minor demons";
+                have_any = true;
+                break;
+            case MUT_SUMMON_DEMONS:
+                if (have_any)
+                    text += ", ";
+                text += "summon demons";
+                have_any = true;
+                break;
+            case MUT_HURL_HELLFIRE:
+                if (have_any)
+                    text += ", ";
+                text += "hurl hellfire";
+                have_any = true;
+                break;
+            case MUT_CALL_TORMENT:
+                if (have_any)
+                    text += ", ";
+                text += "call torment";
+                have_any = true;
+                break;
+            case MUT_RAISE_DEAD:
+                if (have_any)
+                    text += ", ";
+                text += "raise dead";
+                have_any = true;
+                break;
+            case MUT_CONTROL_DEMONS:
+                if (have_any)
+                    text += ", ";
+                text += "control demons";
+                have_any = true;
+                break;
+            case MUT_PANDEMONIUM:
+                if (have_any)
+                    text += ", ";
+                text += "portal to Pandemonium";
+                have_any = true;
+                break;
+            case MUT_DEATH_STRENGTH:
+                if (have_any)
+                    text += ", ";
+                text += "draw strength from death and destruction";
+                have_any = true;
+                break;
+            case MUT_CHANNEL_HELL:
+                if (have_any)
+                    text += ", ";
+                text += "channel magical energy from Hell";
+                have_any = true;
+                break;
+            case MUT_DRAIN_LIFE:
+                if (have_any)
+                    text += ", ";
+                text += "drain life";
+                have_any = true;
+                break;
+            case MUT_THROW_FLAMES:
+                if (have_any)
+                    text += ", ";
+                text += "throw flames of Gehenna";
+                have_any = true;
+                break;
+            case MUT_THROW_FROST:
+                if (have_any)
+                    text += ", ";
+                text += "throw frost of Cocytus";
+                have_any = true;
+                break;
+            case MUT_SMITE:
+                if (have_any)
+                    text += ", ";
+                text += "invoke powers of Tartarus";
+                have_any = true;
+                break;
+            case MUT_CLAWS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "claws %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_HOOVES:
+                if (have_any)
+                    text += ", ";
+                text += "hooves";
+                have_any = true;
+                break;
+            case MUT_BREATHE_POISON:
+                if (have_any)
+                    text += ", ";
+                text += "breathe poison";
+                have_any = true;
+                break;
+            case MUT_STINGER:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "stinger %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_BIG_WINGS:
+                if (have_any)
+                    text += ", ";
+                text += "large and strong wings";
+                have_any = true;
+                break;
+            case MUT_BLUE_MARKS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "blue evil mark %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_GREEN_MARKS:
+                if (have_any)
+                    text += ", ";
+                snprintf(info, INFO_SIZE, "green evil mark %d", level);
+                text += info;
+                have_any = true;
+                break;
+            case MUT_RED_SCALES:
+                AC_change += level;
+                if (level == 3)
+                    AC_change++;
+                break;
+            case MUT_NACREOUS_SCALES:
+                AC_change += 2*level-1;
+                break;
+            case MUT_GREY2_SCALES:
+                AC_change += 2*level;
+                Dex_change -= 1;
+                if (level == 3)
+                    Dex_change--;
+                break;
+            case MUT_METALLIC_SCALES:
+                AC_change += 3*level+1;
+                if (level == 1)
+                    AC_change--;
+                Dex_change -= level + 1;
+                break;
+            case MUT_BLACK2_SCALES:
+                AC_change += 2*level-1;
+                break;
+            case MUT_WHITE_SCALES:
+                AC_change += 2*level-1;
+                break;
+            case MUT_YELLOW_SCALES:
+                AC_change += 2*level;
+                Dex_change -= level-1;
+                break;
+            case MUT_BROWN_SCALES:
+                AC_change += 2*level;
+                if (level == 3)
+                    AC_change--;
+                break;
+            case MUT_BLUE_SCALES:
+                AC_change += level;
+                break;
+            case MUT_PURPLE_SCALES:
+                AC_change += 2*level;
+                break;
+            case MUT_SPECKLED_SCALES:
+                AC_change += level;
+                break;
+            case MUT_ORANGE_SCALES:
+                AC_change += level;
+                if (level > 1)
+                    AC_change++;
+                break;
+            case MUT_INDIGO_SCALES:
+                AC_change += 2*level-1;
+                if (level == 1)
+                    AC_change++;
+                break;
+            case MUT_RED2_SCALES:
+                AC_change += 2*level;
+                if (level > 1)
+                    AC_change++;
+                Dex_change -= level - 1;
+                break;
+            case MUT_IRIDESCENT_SCALES:
+                AC_change += level;
+                break;
+            case MUT_PATTERNED_SCALES:
+                AC_change += level;
+                break;
+            default: break;
+        }
+    }
+
+    if (AC_change)
     {
         if (have_any)
-        	text += ", ";
-    	snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
-    	text += info;
+            text += ", ";
+        snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
+        text += info;
         have_any = true;
-   	}    
-    if (EV_change) 
+    }
+    if (EV_change)
     {
         if (have_any)
-        	text += ", ";
-    	snprintf(info, INFO_SIZE, "EV +%d", EV_change);
-    	text += info;
+            text += ", ";
+        snprintf(info, INFO_SIZE, "EV +%d", EV_change);
+        text += info;
         have_any = true;
-   	}    
-    if (Str_change) 
+    }
+    if (Str_change)
     {
         if (have_any)
-        	text += ", ";
-    	snprintf(info, INFO_SIZE, "Str %s%d", (Str_change > 0 ? "+" : ""), Str_change);
-    	text += info;
+            text += ", ";
+        snprintf(info, INFO_SIZE, "Str %s%d", (Str_change > 0 ? "+" : ""), Str_change);
+        text += info;
         have_any = true;
-   	}    
-    if (Int_change) 
+    }
+    if (Int_change)
     {
         if (have_any)
-        	text += ", ";
-    	snprintf(info, INFO_SIZE, "Int %s%d", (Int_change > 0 ? "+" : ""), Int_change);
-    	text += info;
+            text += ", ";
+        snprintf(info, INFO_SIZE, "Int %s%d", (Int_change > 0 ? "+" : ""), Int_change);
+        text += info;
         have_any = true;
-   	}    
-    if (Dex_change) 
+    }
+    if (Dex_change)
     {
         if (have_any)
-        	text += ", ";
-     	snprintf(info, INFO_SIZE, "Dex %s%d", (Dex_change > 0 ? "+" : ""), Dex_change);
-    	text += info;
+            text += ", ";
+        snprintf(info, INFO_SIZE, "Dex %s%d", (Dex_change > 0 ? "+" : ""), Dex_change);
+        text += info;
         have_any = true;
-   	}    
-   	
+    }
+
     if (!have_any)
         text +=  "no striking features";
 
     start = 0;
-    oldpos = 0;    
-    for (pos = 0; pos < strlen(text.c_str()); oldpos++) 
+    oldpos = 0;
+    for (pos = 0; pos < strlen(text.c_str()); oldpos++)
     {
         // get next "word"
         pos = text.find(' ', oldpos);
-        if (pos - start >= 80 && pos < strlen(text.c_str())) 
+        if (pos - start >= 80 && pos < strlen(text.c_str()))
         {
-        	output += formatted_string::parse_string(text.substr(start, oldpos-start));
-        	output += formatted_string::parse_string(EOL);
-        	start = oldpos;
-       	}   	
-       	oldpos = pos;
+            output += formatted_string::parse_string(text.substr(start, oldpos-start));
+            output += formatted_string::parse_string(EOL);
+            start = oldpos;
+        }
+        oldpos = pos;
     }
 
     output += formatted_string::parse_string(text.substr(start, pos-start));
-    
+
     //----------------------------
     // print ability information
     //----------------------------
@@ -1979,51 +1979,51 @@ formatted_string get_full_detail2(bool calc_unid)
                 const struct ability_def abil = get_ability_def( Curr_abil[loopy].which );
 
                 if (have_any)
-                	text += ", ";
+                    text += ", ";
                 snprintf(info, INFO_SIZE, "%s", abil.name );
                 text += info;
-            }    
+            }
 
     }
     if (!have_any)
         text +=  "no special abilities";
 
     start = 0;
-    oldpos = 0;    
-    for (pos = 0; pos < strlen(text.c_str()); oldpos++) 
+    oldpos = 0;
+    for (pos = 0; pos < strlen(text.c_str()); oldpos++)
     {
         // get next "word"
         pos = text.find(' ', oldpos);
-        if (pos - start >= 80 && pos < strlen(text.c_str())) 
+        if (pos - start >= 80 && pos < strlen(text.c_str()))
         {
-        	output += formatted_string::parse_string(text.substr(start, oldpos-start));
-        	output += formatted_string::parse_string(EOL);
-        	start = oldpos;
-       	}   	
-       	oldpos = pos;
+            output += formatted_string::parse_string(text.substr(start, oldpos-start));
+            output += formatted_string::parse_string(EOL);
+            start = oldpos;
+        }
+        oldpos = pos;
     }
 
     output += formatted_string::parse_string(text.substr(start, pos-start));
 */
 
-    return output;    
+    return output;
 }
- 
-std::vector<formatted_string> get_stat_info() 
-{    
+
+std::vector<formatted_string> get_stat_info()
+{
     char buf[1000];
     // 3 columns, splits at columns 32, 52
     column_composer cols(4, 16, 27, 38);
-    
+
     if (!player_rotted())
         snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
     else
-        snprintf(buf, sizeof buf, "HP %3d/%d (%d)", 
+        snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
                  you.hp, you.hp_max, you.hp_max + player_rotted() );
-                 
+
     cols.add_formatted(0, buf, false);
 
-    snprintf(buf, sizeof buf, "MP %3d/%d", 
+    snprintf(buf, sizeof buf, "MP %3d/%d",
              you.magic_points, you.max_magic_points);
 
     cols.add_formatted(0, buf, false);
@@ -2034,14 +2034,14 @@ std::vector<formatted_string> get_stat_info()
         snprintf(buf, sizeof buf, "Str <yellow>%3d</yellow> (%d)",
                  you.strength, you.max_strength);
     cols.add_formatted(1, buf, false);
-    
+
     if (you.intel == you.max_intel)
         snprintf(buf, sizeof buf, "Int %3d", you.intel);
     else
         snprintf(buf, sizeof buf, "Int <yellow>%3d</yellow> (%d)",
                  you.intel, you.max_intel);
     cols.add_formatted(1, buf, false);
-    
+
     if (you.dex == you.max_dex)
         snprintf(buf, sizeof buf, "Dex %3d", you.dex);
     else
@@ -2092,8 +2092,8 @@ std::vector<formatted_string> get_stat_info()
     return cols.formatted_lines();
 }
 
-std::vector<formatted_string> get_res_info(bool calc_unid) 
-{    
+std::vector<formatted_string> get_res_info(bool calc_unid)
+{
     char buf[1000];
     // 3 columns, splits at columns 21, 38
     column_composer cols(3, 21, 38);
@@ -2107,7 +2107,7 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
     const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
     const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
 
-    snprintf(buf, sizeof buf,              
+    snprintf(buf, sizeof buf,
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
@@ -2129,7 +2129,7 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
 
     int saplevel = 0;
     switch (you.species)
-    {            
+    {
     case SP_GHOUL:
         saplevel = 3;
         snprintf(buf, sizeof buf, "%sSaprovore : %s",
@@ -2176,7 +2176,7 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
     const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
     const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
     const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
-    snprintf(buf, sizeof buf, 
+    snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
              "%sWarding    : %s\n"
              "%sConserve   : %s\n"
@@ -2188,8 +2188,8 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
              determine_color_string(rcons), itosym1(rcons),
              determine_color_string(rcorr), itosym1(rcorr),
              determine_color_string(rclar), itosym1(rclar));
-    cols.add_formatted(1, buf, false);    
-             
+    cols.add_formatted(1, buf, false);
+
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
         snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
                  determine_color_string(-1), itosym1(1));
@@ -2216,7 +2216,7 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
 
     {
         char str_pass[ITEMNAME_SIZE];
-        const int e_order[] = 
+        const int e_order[] =
         {
             EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
             EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
@@ -2263,4 +2263,3 @@ std::vector<formatted_string> get_res_info(bool calc_unid)
 
     return cols.formatted_lines();
 }
-
