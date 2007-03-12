@@ -332,9 +332,29 @@ static const char *trap_names[] =
 
 const char *trap_name(trap_type trap)
 {
+    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
+    
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
         return trap_names[ static_cast<int>( trap ) ];
     return (NULL);
+}
+
+int str_to_trap(const std::string &s)
+{
+    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
+    
+    if (s == "random")
+        return (TRAP_RANDOM);
+    else if (s == "suitable")
+        return (TRAP_INDEPTH);
+
+    for (int i = 0; i < NUM_TRAPS; ++i)
+    {
+        if (trap_names[i] == s)
+            return (i);
+    }
+
+    return (-1);
 }
 
 //---------------------------------------------------------------

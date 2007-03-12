@@ -2195,21 +2195,6 @@ void debug_make_trap()
             trap_name(trap));
 }
 
-static const char *shop_types[] = {
-    "weapon",
-    "armour",
-    "antique weapon",
-    "antique armour",
-    "antiques",
-    "jewellery",
-    "wand",
-    "book",
-    "food",
-    "distillery",
-    "scroll",
-    "general"
-};
-
 void debug_make_shop()
 {
     char requested_shop[80];
@@ -2245,16 +2230,10 @@ void debug_make_shop()
         return;
 
     strlwr(requested_shop);
-    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
-    {
-        if (strstr(requested_shop, shop_types[i]))
-        {
-            new_shop_type = i;
-            break;
-        }
-    }
+    std::string s = replace_all_of(requested_shop, "*", "");
+    new_shop_type = str_to_shoptype(s);
 
-    if (new_shop_type == SHOP_UNASSIGNED)
+    if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
     {
         mprf("Bad shop type: \"%s\"", requested_shop);
         return;

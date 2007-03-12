@@ -65,5 +65,6 @@ void describe_spell(int spelled);
 std::string ghost_description(bool concise = false);
 
 const char *trap_name(trap_type trap);
+int str_to_trap(const std::string &s);
 
 #endif

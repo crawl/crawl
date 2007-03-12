@@ -162,8 +162,8 @@ static void build_minivaults(int level_number, int force_vault);
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
-                       char vgrid, std::vector<coord_def> &targets,
-                       int &num_runes, int rune_subst = -1);
+                       int vgrid, std::vector<coord_def> &targets,
+                       int &num_runes, int rune_subst = -1, bool foll = false);
 
 // ALTAR FUNCTIONS
 static int pick_an_altar(void);
@@ -5972,6 +5972,27 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     return (true);
 }                               // end build_vaults()
 
+static void dngn_place_item_explicit(const item_spec &spec,
+                                     int x, int y, int level)
+{
+    // Dummy object?
+    if (spec.base_type == OBJ_UNASSIGNED)
+        return;
+
+    if (spec.level >= 0)
+        level = spec.level;
+
+    const int item_made =
+        items( spec.allow_uniques, spec.base_type, spec.sub_type, true, 
+               level, spec.race );
+    
+    if (item_made != NON_ITEM && item_made != -1)
+    {
+        mitm[item_made].x = x;
+        mitm[item_made].y = y;
+    }
+}
+
 static void dngn_place_item_explicit(int index, int x, int y,
                                      vault_placement &place,
                                      int level)
@@ -5988,22 +6009,30 @@ static void dngn_place_item_explicit(int index, int x, int y,
     }
 
     const item_spec spec = sitems.get_item(index);
+    dngn_place_item_explicit(spec, x, y, level);
+}
 
-    // Dummy object?
-    if (spec.base_type == OBJ_UNASSIGNED)
-        return;
-
-    if (spec.level >= 0)
-        level = spec.level;
-
-    const int item_made =
-        items( spec.allow_uniques, spec.base_type, spec.sub_type, true, 
-               level, spec.race );
-    
-    if (item_made != NON_ITEM)
+static void dngn_make_monster(
+    const mons_spec &monster_type_thing,
+    int monster_level,
+    int vx, int vy)
+{
+    if (monster_type_thing.mid != -1)
     {
-        mitm[item_made].x = x;
-        mitm[item_made].y = y;
+        const int mid = monster_type_thing.mid;
+        int not_used;
+        
+        if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
+        {
+            const int habitat = monster_habitat(mid);
+            if (habitat != DNGN_FLOOR)
+                grd[vx][vy] = habitat;
+        }
+            
+        place_monster( not_used, mid, monster_level,
+                       monster_type_thing.generate_awake?
+                       BEH_WANDER : BEH_SLEEP,
+                       MHITNOT, true, vx, vy, false );
     }
 }
 
@@ -6015,16 +6044,57 @@ static int vault_grid( vault_placement &place,
                        int vx, int vy,
                        int altar_count,
                        FixedVector < char, 7 > &acq_item_class, 
-                       char vgrid,
+                       int vgrid,
                        std::vector<coord_def> &targets,
                        int &num_runes,
-                       int rune_subst )
+                       int rune_subst,
+                       bool following )
 {
     int not_used;
 
+    keyed_mapspec *mapsp = following? NULL : place.map.mapspec_for_key(vgrid);
+    if (mapsp)
+    {
+        const feature_spec f = mapsp->get_feat();
+        if (f.feat >= 0)
+        {
+            grd[vx][vy] = f.feat;
+            vgrid = -1;
+        }
+        else if (f.glyph >= 0)
+        {
+            altar_count = vault_grid( place, level_number, vx, vy,
+                                      altar_count, acq_item_class,
+                                      f.glyph, targets, num_runes,
+                                      rune_subst, true );
+        }
+        else if (f.shop >= 0)
+            place_spec_shop(level_number, vx, vy, f.shop);
+        else if (f.trap >= 0)
+        {
+            const int trap =
+                f.trap == TRAP_INDEPTH? random_trap_for_level(level_number)
+                : f.trap;
+            
+            place_specific_trap(vx, vy, trap);
+        }
+        else
+            grd[vx][vy] = DNGN_FLOOR;
+
+        mons_spec mons = mapsp->get_mons();
+        dngn_make_monster(mons, level_number, vx, vy);
+
+        item_spec item = mapsp->get_item();
+        dngn_place_item_explicit(item, vx, vy, level_number);
+
+        return (altar_count);
+    }
+    
     // first, set base tile for grids {dlb}:
     const int grid =
-        grd[vx][vy] = ((vgrid == 'x') ? DNGN_ROCK_WALL :
+        grd[vx][vy] =
+                  ((vgrid == -1)  ? grd[vx][vy] : 
+                   (vgrid == 'x') ? DNGN_ROCK_WALL :
                    (vgrid == 'X') ? DNGN_PERMAROCK_WALL :
                    (vgrid == 'c') ? DNGN_STONE_WALL :
                    (vgrid == 'v') ? DNGN_METAL_WALL :
@@ -6210,22 +6280,8 @@ static int vault_grid( vault_placement &place,
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
-        if (monster_type_thing.mid != -1)
-        {
-            const int mid = monster_type_thing.mid;
-
-            if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
-            {
-                const int habitat = monster_habitat(mid);
-                if (habitat != DNGN_FLOOR)
-                    grd[vx][vy] = habitat;
-            }
-            
-            place_monster( not_used, mid, monster_level,
-                           monster_type_thing.generate_awake?
-                               BEH_WANDER : BEH_SLEEP,
-                           MHITNOT, true, vx, vy, false );
-        }
+        dngn_make_monster(monster_type_thing, monster_level,
+                         vx, vy);
     }
 
     // again, this seems odd, given that this is just one of many

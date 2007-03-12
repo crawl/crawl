@@ -41,7 +41,7 @@ void yyerror(const char *e)
 }
 
 %token <i>      BRANCHDEF BRANCH DESC DEFAULT
-%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS
+%token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE FLAGS MONS ITEM
 %token <i>      ROOT_DEPTH ENTRY_MSG EXIT_MSG
 %token <i>      ROCK_COLOUR FLOOR_COLOUR
@@ -162,7 +162,40 @@ metaline        : place
                 | symbol
                 | tags
                 | shuffle
+                | kfeat
+                | kitem
+                | kmons
                 ;
+
+kfeat           : KFEAT { }
+                | KFEAT STRING
+                {
+                    std::string err = lc_map.add_key_feat($2);
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KFEAT: '%s' (%s)",
+                                $2, err.c_str()).c_str());
+                }
+
+kmons           : KMONS { }
+                | KMONS STRING
+                {
+                    std::string err = lc_map.add_key_mons($2);
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KMONS: '%s' (%s)",
+                                $2, err.c_str()).c_str());
+                }
+
+kitem           : KITEM { }
+                | KITEM STRING
+                {
+                    std::string err = lc_map.add_key_item($2);
+                    if (!err.empty())
+                        yyerror(
+                            make_stringf("Bad arg to KITEM: '%s' (%s)",
+                                $2, err.c_str()).c_str());
+                }
 
 shuffle         : SHUFFLE { }
                 | SHUFFLE STRING

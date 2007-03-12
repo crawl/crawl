@@ -126,6 +126,10 @@ MONS:               { BEGIN(MNAME); return MONS; }
 ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
 SHUFFLE:            { BEGIN(ARGUMENT); return SHUFFLE; }
 
+KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
+KITEM:              { BEGIN(ARGUMENT); return KITEM; }
+KMONS:              { BEGIN(ARGUMENT); return KMONS; }
+
 BRANCHDEF:          return BRANCH;
 DEFAULT             return DEFAULT;
 DESC:               return DESC;

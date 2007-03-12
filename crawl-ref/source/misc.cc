@@ -2171,3 +2171,31 @@ void run_environment_effects()
         }
     }
 }
+
+static const char *shop_types[] = {
+    "weapon",
+    "armour",
+    "antique weapon",
+    "antique armour",
+    "antiques",
+    "jewellery",
+    "wand",
+    "book",
+    "food",
+    "distillery",
+    "scroll",
+    "general"
+};
+
+int str_to_shoptype(const std::string &s)
+{
+    if (s == "random")
+        return (SHOP_RANDOM);
+    
+    for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)
+    {
+        if (s == shop_types[i])
+            return (i);
+    }
+    return (-1);
+}

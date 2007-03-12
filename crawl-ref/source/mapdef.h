@@ -142,7 +142,7 @@ public:
     mons_spec get_monster(int index);
 
     // Returns an error string if the monster is unrecognised.
-    std::string add_mons(const std::string &s);
+    std::string add_mons(const std::string &s, bool fix_slot = false);
 
     size_t size() const { return mons.size(); }
 
@@ -202,7 +202,7 @@ public:
     item_spec get_item(int index);
     size_t size() const { return items.size(); }
 
-    std::string add_item(const std::string &spec);
+    std::string add_item(const std::string &spec, bool fix = false);
 
 private:
     struct item_spec_slot
@@ -228,6 +228,61 @@ private:
     std::string error;
 };
 
+struct feature_spec
+{
+    int genweight;
+    int feat;
+    int shop;
+    int trap;
+    int glyph;
+
+    feature_spec(int f, int wt = 10)
+        : genweight(wt), feat(f), shop(-1),
+          trap(-1), glyph(-1)
+    { }
+    feature_spec() : genweight(0), feat(0), shop(-1), trap(-1), glyph(-1) { }
+};
+
+typedef std::vector<feature_spec> feature_spec_list;
+struct feature_slot
+{
+    feature_spec_list feats;
+    bool fix_slot;
+
+    feature_slot();
+    feature_spec get_feat();
+};
+
+struct keyed_mapspec
+{
+public:
+    feature_slot feat;
+    item_list    item;
+    mons_list    mons;
+
+public:
+    keyed_mapspec();
+
+    std::string set_feat(const std::string &s, bool fix);
+    std::string set_mons(const std::string &s, bool fix);
+    std::string set_item(const std::string &s, bool fix);
+
+    feature_spec get_feat();
+    mons_spec get_mons();
+    item_spec get_item();
+
+private:
+    std::string err;
+
+private:
+    void parse_features(const std::string &);
+    feature_spec_list parse_feature(const std::string &s);
+    feature_spec parse_shop(std::string s, int weight);
+    feature_spec parse_trap(std::string s, int weight);
+};
+
+typedef std::map<int, keyed_mapspec> keyed_specs;
+
 // Not providing a constructor to make life easy for C-style initialisation.
 class map_def
 {
@@ -244,6 +299,8 @@ public:
     mons_list       mons;
     item_list       items;
 
+    keyed_specs     keyspecs;
+
 public:
     void init();
     void hmirror();
@@ -253,6 +310,12 @@ public:
     void resolve();
     void fixup();
 
+    keyed_mapspec *mapspec_for_key(int key);
+    
+    std::string add_key_item(const std::string &s);
+    std::string add_key_mons(const std::string &s);
+    std::string add_key_feat(const std::string &s);
+    
     bool can_dock(map_section_type) const;
     coord_def dock_pos(map_section_type) const;
     coord_def float_dock();
@@ -261,6 +324,12 @@ public:
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;
+
+private:
+    std::string add_key_field(
+        const std::string &s,
+        std::string (keyed_mapspec::*set_field)(
+            const std::string &s, bool fixed));
 };
 
 class monster_chance
@@ -279,8 +348,7 @@ public:
 
     // Can be empty, in which case the default colours are applied.
     std::string floor_colour, rock_colour;
-    
-    std::string tags;
+        std::string tags;
 
     // The probability of requesting a random vault.
     int p_vault;

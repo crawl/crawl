@@ -4,7 +4,8 @@
 # Special levels (including V:8!) should go to splev.des. Do NOT put special 
 # levels here, or they could be selected when the game seeks random vaults.
 #
-#  key:
+#  Key:
+#  ----
 #  x - DNGN_ROCK_WALL
 #  X - DNGN_PERMAROCK_WALL -> should always be undiggable! -- bwr
 #  c - DNGN_STONE_WALL
@@ -64,10 +65,12 @@
 #  A vault always has its body between MAP and ENDMAP commands. Furthermore,
 #  several other additional commands are possible (some of them mandatory).
 # 
-#  NAME
+#  NAME:
+#  ----
 #  Each vault/level/map must have a unique name. Underscores and digits are ok.
 #
 #  ORIENT: (north | northwest | ... | float | encompass)
+#  ------
 #  Some kind of ORIENT: line is mandatory, unless you want the vault to be a
 #  minivault, which is usually not what you want. Valid values are:
 #  "float": The dungeon builder will put your vault wherever it wants to.
@@ -88,6 +91,7 @@
 #  needed on all 4 sides.
 # 
 #  ITEM:
+#  ----
 #  These are used to help place specified items at specific places within a
 #  vault. They create an array with up to 8 positions. What's in the first 
 #  position in the array will be used when the dungeon builder sees a "d" in 
@@ -110,6 +114,7 @@
 #  give fixedarts. You also can't lay down corpses, skeletons, or chunks.
 # 
 #  MONS:
+#  ----
 #  These are used to help place specific monsters at specific places in a
 #  vault. They create an array with up to 7 positions. What's in the first
 #  position in the array will be used when the dungeon builder sees a "1"
@@ -121,6 +126,7 @@
 #  Note that 8, 9, 0 also place monsters (see the table above).
 # 
 #  CHANCE:
+#  ------
 #  For entry vaults and any other vaults randomly picked from among a set,
 #  this type of line affects the likelihood of the given vault being picked in
 #  a given game. The default CHANCE: is 10. The likelihood of a vault getting
@@ -131,6 +137,7 @@
 #  for testing. !!!
 # 
 #  TAGS:
+#  ----
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
 #  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
 #  "no_monster_gen": this tag prevents monster generation at the time of
@@ -143,7 +150,8 @@
 #                   will contain the stairs for that branch. Use "O" to place
 #                   the stairs. Branch entries should go to splev.des.
 # 
-#  FLAGS
+#  FLAGS:
+#  -----
 #  Flags go on a FLAGS: line and are space-separated. Valid flags are:
 #  "no_rotate":  Normally, the dungeon builder can, at its whim, rotate your 
 #                vault. This flag tells it, "hey, don't do that to my vault!"
@@ -151,6 +159,7 @@
 #  "no_vmirror": Like no_rotate, but for vertical mirroring.
 # 
 #  SHUFFLE:
+#  -------
 #  This allows you to randomly permute glyphs on the map. There are two ways:
 #  SHUFFLE: 123w     (i.e. list of glyphs, NOT comma-separated)
 #           could, for example, swap all occurences of "1" with "2", 
@@ -163,6 +172,7 @@
 #  order.
 #
 #  SUBST:
+#  ------
 #  The SUBST: directive allows you to specify a placeholder symbol that is
 #  replaced with a random glyph from a set. For instance:
 #  SUBST:  ? = TUV
@@ -187,11 +197,57 @@
 #  Multiple SUBST: lines can be used, and will be applied in order. 
 #  Substitutions are performed after any declared shuffles.
 #
+#  KFEAT:
+#  -----
+#  The KFEAT: directive allows you to specify a placeholder symbol that is
+#  replaced with another symbol, named feature, trap, or shop. Eg.:
+#  
+#  KFEAT: Z = C / needle trap / antique armour shop / altar of Zin
+#
+#  Replaces occurrences of Z with C (random altar), a needle trap, an
+#  antique armour shop, or an altar of Zin. Different instances of Z may
+#  receive different replacements. To force a single replacement for all Z,
+#  use:
+#
+#  KFEAT: Z : C / needle trap / antique armour shop
+#
+#  You'll notice that 'Z' is the symbol of the Orb of Zot. Kxxx directives
+#  allow you to assign arbitrary definitions to any symbol.
+#
+#  The placeholder used by KFEAT can be shared by KITEM and KMONS. See below.
+#  If the placeholder is shared, all defined Kxxxx operations for the
+#  placeholder are performed.
+#
+#  KMONS:
+#  -----
+#  KMONS: allows you to specify a placeholder symbol that indicates the 
+#  position of a monster (or monsters).
+#
+#  KMONS: ? = orc priest / deep elf priest
+#
+#  Using KMONS: allows you to exceed the 7 slot limit for monsters. It is also
+#  useful if you want to place a monster on a non-floor square (used in 
+#  association with a KFEAT:). Eg:
+#
+#  KFEAT: Z = W
+#  KMONS: Z = rat
+#
+#  (Places a rat on a shallow water square for all occurrences of Z.)
+#
+#  KITEM:
+#  -----
+#  KITEM: places the specified item at all occurrences of the placeholder. It
+#  can be combined with KFEAT and KMONS for the same placeholder. Eg:
+#
+#  KITEM: ? = potion of healing / potion of restore abilities
+#
+#
 #  Note that a lot of the vaults are in there mainly to add some
 #  interest to the scenery, and are not the lethal treasure-fests you
 #  find in Angband (not that there's anything wrong with that)
 # 
 #  Guidelines for creating new vault maps:
+#  ---------------------------------------
 #
 #  If your map is not a minivault or a floating vault, make sure the side(s)
 #  forming the border have a rock wall padding at least 6 deep. For instance,

@@ -193,4 +193,6 @@ int absdungeon_depth(unsigned char branch, int subdepth);
 // Abyss and Pan.
 void set_colours_from_monsters();
 
+int str_to_shoptype(const std::string &s);
+
 #endif

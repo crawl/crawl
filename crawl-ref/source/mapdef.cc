@@ -3,10 +3,13 @@
 #include <cctype>
 
 #include "AppHdr.h"
+#include "describe.h"
+#include "direct.h"
 #include "invent.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "misc.h"
 #include "monplace.h"
 #include "mon-util.h"
 #include "stuff.h"
@@ -78,6 +81,33 @@ int strip_number_tag(std::string &s, const std::string &tagprefix)
     s.erase(pos, ns - pos + 1);
 
     return atoi(argument.c_str());
+}
+
+static std::string split_key_item(const std::string &s,
+                                  int *key,
+                                  int *separator,
+                                  std::string *arg)
+{
+    std::string::size_type
+        norm = s.find("="),
+        fixe = s.find(":");
+
+    const std::string::size_type sep = norm < fixe? norm : fixe;
+    if (sep == std::string::npos)
+        return ("malformed declaration - must use = or :");
+
+    std::string what_to_subst = trimmed_string(s.substr(0, sep));
+    std::string substitute    = trimmed_string(s.substr(sep + 1));
+
+    if (what_to_subst.length() != 1)
+        return make_stringf("selector '%s' must be exactly one character",
+                            what_to_subst.c_str());
+
+    *key = what_to_subst[0];
+    *arg = substitute;
+    *separator = s[sep];
+    
+    return ("");
 }
 
 ///////////////////////////////////////////////
@@ -209,29 +239,21 @@ std::string map_lines::add_subst(const std::string &sub)
     if (s.empty())
         return ("");
     
-    std::string::size_type
-        norm = s.find("="),
-        fixe = s.find(":");
+    int sep = 0;
+    int key = 0;
+    std::string substitute;
 
-    const std::string::size_type sep = norm < fixe? norm : fixe;
-    if (sep == std::string::npos)
-        return ("malformed SUBST declaration - must use = or :");
-
-    const bool fixed = (sep == fixe);
-    std::string what_to_subst = trimmed_string(sub.substr(0, sep));
-    std::string substitute    = trimmed_string(sub.substr(sep + 1));
-
-    if (what_to_subst.length() != 1)
-        return make_stringf("selector '%s' must be exactly one character",
-                            what_to_subst.c_str());
+    std::string err = split_key_item(sub, &key, &sep, &substitute);
+    if (!err.empty())
+        return (err);
 
     glyph_replacements_t repl;
-    std::string err = parse_glyph_replacements(substitute, repl);
+    err = parse_glyph_replacements(substitute, repl);
     if (!err.empty())
         return (err);
 
     substitutions.push_back(
-        subst_spec( what_to_subst[0], fixed, repl ) );
+        subst_spec( key, sep == ':', repl ) );
 
     return ("");
 }
@@ -483,6 +505,7 @@ void map_def::init()
     tags.clear();
     place.clear();
     items.clear();
+    keyspecs.clear();
     depth.reset();
     orient = MAP_NONE;
 
@@ -721,6 +744,43 @@ bool map_def::has_tag(const std::string &tagwanted) const
         && tags.find(" " + tagwanted + " ") != std::string::npos;
 }
 
+keyed_mapspec *map_def::mapspec_for_key(int key)
+{
+    keyed_specs::iterator i = keyspecs.find(key);
+    return i != keyspecs.end()? &i->second : NULL;
+}
+
+std::string map_def::add_key_field(
+    const std::string &s,
+    std::string (keyed_mapspec::*set_field)(const std::string &s, bool fixed))
+{
+    int key = 0;
+    int separator = 0;
+    std::string arg;
+
+    std::string err = split_key_item(s, &key, &separator, &arg);
+    if (!err.empty())
+        return (err);
+
+    keyed_mapspec &km = keyspecs[key];
+    return ((km.*set_field)(arg, separator == ':'));
+}
+
+std::string map_def::add_key_item(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_item);
+}
+
+std::string map_def::add_key_feat(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_feat);
+}
+
+std::string map_def::add_key_mons(const std::string &s)
+{
+    return add_key_field(s, &keyed_mapspec::set_mons);
+}
+
 ///////////////////////////////////////////////////////////////////
 // mons_list
 //
@@ -817,7 +877,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
     return (slot);
 }
 
-std::string mons_list::add_mons(const std::string &s)
+std::string mons_list::add_mons(const std::string &s, bool fix)
 {
     error.clear();
 
@@ -825,6 +885,9 @@ std::string mons_list::add_mons(const std::string &s)
     if (!error.empty())
         return (error);
 
+    if (fix)
+        slotmons.fix_slot = true;
+    
     mons.push_back( slotmons );
 
     return (error);
@@ -929,13 +992,17 @@ item_spec item_list::get_item(int index)
     return (pick_item(items[index]));
 }
 
-std::string item_list::add_item(const std::string &spec)
+std::string item_list::add_item(const std::string &spec, bool fix)
 {
     error.clear();
 
     item_spec_slot sp = parse_item_spec(spec);
     if (error.empty())
+    {
+        if (fix)
+            sp.fix_slot = true;
         items.push_back(sp);
+    }
     
     return (error);
 }
@@ -1101,4 +1168,170 @@ int subst_spec::value()
         frozen_value = chosen;
 
     return (chosen);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// keyed_mapspec
+
+keyed_mapspec::keyed_mapspec()
+    : feat(), item(), mons()
+{
+}
+
+std::string keyed_mapspec::set_feat(const std::string &s, bool fix)
+{
+    err.clear();
+    parse_features(s);
+    feat.fix_slot = fix;
+    return (err);
+}
+
+void keyed_mapspec::parse_features(const std::string &s)
+{
+    feat.feats.clear();
+    std::vector<std::string> specs = split_string("/", s);
+    for (int i = 0, size = specs.size(); i < size; ++i)
+    {
+        const std::string &spec = specs[i];
+
+        feature_spec_list feats = parse_feature(spec);
+        if (!err.empty())
+            return;
+        feat.feats.insert( feat.feats.end(),
+                           feats.begin(),
+                           feats.end() );
+    }
+}
+
+feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
+{
+    strip_tag(s, "trap");
+    trim_string(s);
+    lowercase(s);
+
+    const int trap = str_to_trap(s);
+    if (trap == -1)
+        err = make_stringf("bad trap name: '%s'", s.c_str());
+
+    feature_spec fspec(-1, weight);
+    fspec.trap = trap;
+    return (fspec);
+}
+
+feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
+{
+    strip_tag(s, "shop");
+    trim_string(s);
+    lowercase(s);
+
+    const int shop = str_to_shoptype(s);
+    if (shop == -1)
+        err = make_stringf("bad shop type: '%s'", s.c_str());
+
+    feature_spec fspec(-1, weight);
+    fspec.shop = shop;
+    return (fspec);
+}
+
+feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
+{
+    std::string s = str;
+    int weight = strip_number_tag(s, "weight:");
+    if (weight == TAG_UNFOUND || weight <= 0)
+        weight = 10;
+    trim_string(s);
+
+    feature_spec_list list;
+    if (s.length() == 1)
+    {
+        feature_spec fsp(-1, weight);
+        fsp.glyph = s[0];
+        list.push_back( fsp );
+        return (list);
+    }
+
+    if (s.find("trap") != std::string::npos)
+    {
+        list.push_back( parse_trap(s, weight) );
+        return (list);
+    }
+
+    if (s.find("shop") != std::string::npos
+        || s.find("store") != std::string::npos)
+    {
+        list.push_back( parse_shop(s, weight) );
+        return (list);
+    }
+    
+    std::vector<dungeon_feature_type> feats = features_by_desc(s);
+    for (int i = 0, size = feats.size(); i < size; ++i)
+        list.push_back( feature_spec(feats[i], weight) );
+
+    if (feats.empty())
+        err = make_stringf("no features matching \"%s\"",
+                           str.c_str());
+    
+    return (list);
+}
+
+std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
+{
+    err.clear();
+    mons.clear();
+
+    return (mons.add_mons(s, fix));
+}
+
+std::string keyed_mapspec::set_item(const std::string &s, bool fix)
+{
+    err.clear();
+    item.clear();
+    
+    return (item.add_item(s, fix));
+}
+
+feature_spec keyed_mapspec::get_feat()
+{
+    return feat.get_feat();
+}
+
+mons_spec keyed_mapspec::get_mons()
+{
+    return (mons.size()? mons.get_monster(0) : mons_spec(-1));
+}
+
+item_spec keyed_mapspec::get_item()
+{
+    if (item.size())
+        return item.get_item(0);
+
+    item_spec spec;
+    spec.base_type = OBJ_UNASSIGNED;
+    return (spec);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// feature_slot
+
+feature_slot::feature_slot() : feats(), fix_slot(false)
+{
+}
+
+feature_spec feature_slot::get_feat()
+{
+    int tweight = 0;
+    feature_spec chosen_feat = feature_spec(DNGN_FLOOR);
+    for (int i = 0, size = feats.size(); i < size; ++i)
+    {
+        const feature_spec &feat = feats[i];
+        if (random2(tweight += feat.genweight) < feat.genweight)
+            chosen_feat = feat;
+    }
+
+    if (fix_slot)
+    {
+        feats.clear();
+        feats.push_back( chosen_feat );
+    }
+    return (chosen_feat);
 }
