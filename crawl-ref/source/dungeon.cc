@@ -6221,7 +6221,7 @@ static int vault_grid( vault_placement &place,
                     grd[vx][vy] = habitat;
             }
             
-            place_monster( not_used, monster_type_thing.mid, monster_level,
+            place_monster( not_used, mid, monster_level,
                            monster_type_thing.generate_awake?
                                BEH_WANDER : BEH_SLEEP,
                            MHITNOT, true, vx, vy, false );

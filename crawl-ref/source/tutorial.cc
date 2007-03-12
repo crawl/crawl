@@ -754,8 +754,7 @@ void tutorial_healing_reminder()
     if (you.poisoning)
     {
         if (Options.tutorial_events[TUT_NEED_POISON_HEALING])
-            return;
-        learned_something_new(TUT_NEED_POISON_HEALING);
+            learned_something_new(TUT_NEED_POISON_HEALING);
     }    
     else
     {

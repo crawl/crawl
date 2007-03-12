@@ -1388,7 +1388,7 @@ void process_command( command_type cmd )
         break;
         
     case CMD_RESISTS_SCREEN:
-        resists_screen();
+        print_overview_screen();
         break;
 
     case CMD_DISPLAY_SKILLS:

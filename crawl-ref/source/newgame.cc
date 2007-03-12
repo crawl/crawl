@@ -2111,6 +2111,17 @@ static void enter_player_name(bool blankOK)
     if (blankOK && (ask_name || !is_good_name(you.your_name, false, false)))
     {
         existing_chars = find_saved_characters();
+        if (existing_chars.size() == 0) 
+        {
+             gotoxy(1,12);
+             cprintf("  If you've never been here before, you might want to try out\n");
+             cprintf("  the Dungeon Crawl tutorial. To do this, press ");
+             textcolor(WHITE);
+             cprintf("T");
+             textcolor(LIGHTGREY);
+             cprintf(" on the next\n");
+             cprintf("  screen.");
+        }    
 
         MenuEntry *title = new MenuEntry("Or choose an existing character:");
         title->colour = LIGHTCYAN;

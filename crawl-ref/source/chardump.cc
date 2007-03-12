@@ -928,7 +928,11 @@ static void sdump_kills(const std::string &, std::string & text)
 
 static void sdump_overview(const std::string&, std::string& text)
 {
-    text += formatted_string::parse_string(overview_description_string());
+    std::string overview =
+        formatted_string::parse_string(overview_description_string());
+    trim_string(overview);
+    text += overview;
+    text += "\n\n";
 }
 
 static void sdump_mutations(const std::string &, std::string & text)
