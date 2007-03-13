@@ -695,26 +695,8 @@ int player_hunger_rate(void)
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
         return 0;
 
-    switch (you.species)
-    {
-    case SP_HALFLING:
-        hunger--;
-        break;
-
-    case SP_OGRE:
-    case SP_OGRE_MAGE:
-    case SP_DEMIGOD:
-        hunger++;
-        break;
-
-    case SP_CENTAUR:
-        hunger += 2;
-        break;
-
-    case SP_TROLL:
+    if ( you.species == SP_TROLL )
         hunger += 3;            // in addition to the +3 for fast metabolism
-        break;
-    }
 
     if (you.duration[DUR_REGENERATION] > 0)
         hunger += 4;

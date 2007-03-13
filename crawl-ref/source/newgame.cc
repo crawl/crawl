@@ -1766,8 +1766,22 @@ static void jobs_stat_init(int which_job)
 
 static void give_basic_mutations(unsigned char speci)
 {
+    // We should switch over to a size-based system
+    // for the fast/slow metabolism when we get around to it.
     switch ( speci )
     {
+    case SP_OGRE:
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        break;
+    case SP_OGRE_MAGE:
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        break;
+    case SP_HALFLING:
+        you.mutation[MUT_SLOW_METABOLISM] = 1;
+        break;
+    case SP_DEMIGOD:
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        break;
     case SP_MINOTAUR:
         you.mutation[MUT_HORNS] = 2;
         break;
@@ -1780,6 +1794,7 @@ static void give_basic_mutations(unsigned char speci)
     case SP_CENTAUR:
         you.mutation[MUT_FAST] = 1;
         you.mutation[MUT_DEFORMED] = 1;
+        you.mutation[MUT_FAST_METABOLISM] = 2;
         break;
     case SP_NAGA:
         you.mutation[MUT_ACUTE_VISION] = 1;
