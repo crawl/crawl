@@ -2008,9 +2008,15 @@ static int get_number_of_lines_levelmap()
 static void draw_level_map(int start_x, int start_y, bool travel_mode)
 {
     int bufcount2 = 0;
-    screen_buffer_t buffer2[GYM * GXM * 2];        
-    const int num_lines = get_number_of_lines_levelmap();
-    const int num_cols  = get_number_of_cols();
+    screen_buffer_t buffer2[GYM * GXM * 2];
+
+    int num_lines = get_number_of_lines_levelmap();
+    if ( num_lines > GYM )
+        num_lines = GYM;
+
+    int num_cols = get_number_of_cols();
+    if ( num_cols > GXM )
+        num_cols = GXM;
 
     cursor_control cs(false);
 
