@@ -667,7 +667,7 @@ void direction(struct dist& moves, targeting_type restricts,
                         // Sanity: don't loop forever if the ray is problematic
                         if ( !in_los(raycopy.x(), raycopy.y()) )
                             break;
-                        gotoxy( grid2viewX(raycopy.x() + 1),
+                        gotoxy( grid2viewX(raycopy.x()),
                                 grid2viewY(raycopy.y()));
                         cprintf("*");
                     }

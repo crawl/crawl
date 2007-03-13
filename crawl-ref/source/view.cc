@@ -1408,6 +1408,12 @@ static int gcd( int x, int y )
     return x;
 }
 
+bool complexity_lt( const std::pair<int,int>& lhs,
+                    const std::pair<int,int>& rhs )
+{
+    return lhs.first * lhs.second < rhs.first * rhs.second;
+}
+
 // Cast all rays
 void raycast()
 {
@@ -1419,8 +1425,6 @@ void raycast()
     // We have a considerable amount of overkill.   
     done_raycast = true;
 
-    int xangle, yangle;
-
     // register perpendiculars FIRST, to make them top choice
     // when selecting beams
     register_ray( 0.5, 0.5, 1000.0 );
@@ -1431,27 +1435,34 @@ void raycast()
     // of x/y: in that case, every step on the X axis means an increase
     // of 1 in the Y axis at the intercept point. We can assume gcd(x,y)=1,
     // so we look at steps of 1/y.
-    for ( xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
-    {
-        for ( yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
-        {
-            if ( gcd(xangle, yangle) != 1 )
-                continue;
 
-            const double slope = ((double)(yangle)) / xangle;
-            const double rslope = ((double)(xangle)) / yangle;
-            for ( int intercept = 0; intercept <= yangle; ++intercept )
-            {
-                double xstart = ((double)(intercept)) / yangle;
-                if ( intercept == 0 )
-                    xstart += EPSILON_VALUE / 10.0;
-                if ( intercept == yangle )
-                    xstart -= EPSILON_VALUE / 10.0;
-                // y should be "about to change"            
-                register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
-                // also draw the identical ray in octant 2
-                register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
-            }
+    // Changing the order a bit. We want to order by the complexity
+    // of the beam, which is log(x) + log(y) ~ xy.
+    std::vector<std::pair<int,int> > xyangles;
+    for ( int xangle = 1; xangle <= LOS_MAX_RANGE; ++xangle )
+        for ( int yangle = 1; yangle <= LOS_MAX_RANGE; ++yangle )
+            if ( gcd(xangle, yangle) == 1 )
+                xyangles.push_back(std::pair<int,int>(xangle, yangle));
+
+    std::sort( xyangles.begin(), xyangles.end(), complexity_lt );
+    for ( unsigned int i = 0; i < xyangles.size(); ++i )
+    {
+        const int xangle = xyangles[i].first;
+        const int yangle = xyangles[i].second;
+
+        const double slope = ((double)(yangle)) / xangle;
+        const double rslope = ((double)(xangle)) / yangle;
+        for ( int intercept = 0; intercept <= yangle; ++intercept )
+        {
+            double xstart = ((double)(intercept)) / yangle;
+            if ( intercept == 0 )
+                xstart += EPSILON_VALUE / 10.0;
+            if ( intercept == yangle )
+                xstart -= EPSILON_VALUE / 10.0;
+            // y should be "about to change"            
+            register_ray( xstart, 1.0 - EPSILON_VALUE / 10.0, slope );
+            // also draw the identical ray in octant 2
+            register_ray( 1.0 - EPSILON_VALUE / 10.0, xstart, rslope );
         }
     }
 
