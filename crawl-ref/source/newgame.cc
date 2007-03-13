@@ -3018,7 +3018,7 @@ spec_query:
 
     if ( keyn == '?' )
     {
-        list_commands(false);
+        list_commands(false, '1');
         return choose_race();
     }
 
@@ -3226,7 +3226,7 @@ job_query:
 
     if ( keyn == '?' )
     {
-        list_commands(false);
+        list_commands(false, '2');
         return choose_class();
     }
 

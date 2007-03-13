@@ -1226,6 +1226,15 @@ bool formatted_scroller::line_up()
     return false;
 }
 
+bool formatted_scroller::jump_to_hotkey( int keyin )
+{    
+    for ( unsigned int i = 0; i < items.size(); ++i )
+        if ( items[i]->is_hotkey(keyin) )
+            return jump_to(i);
+    return false;
+}
+
+
 bool formatted_scroller::process_key( int keyin )
 {
 
@@ -1264,16 +1273,7 @@ bool formatted_scroller::process_key( int keyin )
         break;
     }
     default:
-        // look for it as a hotkey
-        for ( unsigned int i = 0; i < items.size(); ++i )
-        {
-            // found it
-            if ( items[i]->is_hotkey(keyin) )
-            {
-                repaint = jump_to(i);
-                break;
-            }
-        }
+        repaint = jump_to_hotkey(keyin);
         break;
     }
 

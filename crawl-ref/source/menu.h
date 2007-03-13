@@ -358,6 +358,7 @@ public:
                                            int hotkey = 0);
     virtual void add_item_string(const std::string& s, int hotkey = 0);
     virtual void add_text(const std::string& s);
+    virtual bool jump_to_hotkey( int keyin );
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();

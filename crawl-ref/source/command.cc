@@ -692,7 +692,7 @@ static int keyhelp_keyfilter(int ch)
 }
 
 static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
-                              bool with_manual)
+                              bool with_manual, int hotkey = 0)
 {
     formatted_scroller cmd_help;
     
@@ -788,6 +788,10 @@ static void show_keyhelp_menu(const std::vector<formatted_string> &lines,
             fclose(fp);
         }
     }
+
+    if ( hotkey )
+        cmd_help.jump_to_hotkey(hotkey);
+
     cmd_help.show();
 }
 
@@ -813,7 +817,7 @@ void show_targeting_help()
 }
 
 
-void list_commands(bool wizard)
+void list_commands(bool wizard, int hotkey)
 {
     if (wizard)
     {
@@ -1035,7 +1039,7 @@ void list_commands(bool wizard)
             "stashes, and <w>Ctrl-E</w> to erase them.\n",
             true, true, cmdhelp_textfilter);
     
-    show_keyhelp_menu(cols.formatted_lines(), true);
+    show_keyhelp_menu(cols.formatted_lines(), true, hotkey);
 }
 
 void list_tutorial_help()
