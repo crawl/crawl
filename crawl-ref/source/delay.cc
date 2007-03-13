@@ -288,6 +288,10 @@ void handle_delay( void )
     // Run delays and Lua delays don't have a specific end time.
     if (is_run_delay(delay.type))
     {
+        // Hack - allow autoprayer to trigger during run delays
+        if ( do_autopray() )
+            return;
+            
         handle_run_delays(delay);
         return;
     }

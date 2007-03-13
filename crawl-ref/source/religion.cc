@@ -593,7 +593,7 @@ static void do_god_gift()
 
 void pray(void)
 {
-    unsigned char  was_praying = you.duration[DUR_PRAYER];
+    const bool was_praying = (you.duration[DUR_PRAYER] != 0);
 
     if (silenced(you.x_pos, you.y_pos))
     {
@@ -601,15 +601,15 @@ void pray(void)
         return;
     }
 
-    // all prayers take time
+    // almost all prayers take time
     you.turn_is_over = true;
 
-    if (you.religion != GOD_NO_GOD
-        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
+    const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
+    if (you.religion != GOD_NO_GOD && altar_god == you.religion)
     {
         altar_prayer();
     }
-    else if (grid_altar_god(grd[you.x_pos][you.y_pos]) != GOD_NO_GOD)
+    else if (altar_god != GOD_NO_GOD)
     {
         if (you.species == SP_DEMIGOD)
         {
@@ -622,13 +622,9 @@ void pray(void)
 
     if (you.religion == GOD_NO_GOD)
     {
-        strcpy(info, "You spend a moment contemplating the meaning of ");
-
-        if (you.is_undead)
-            strcat(info, "un");
-
-        strcat(info, "life.");
-        mpr(info, MSGCH_PRAY);
+        mprf(MSGCH_PRAY,
+             "You spend a moment contemplating the meaning of %slife.",
+             you.is_undead ? "un" : "");
 
         // Zen meditation is timeless.
         you.turn_is_over = false;
@@ -660,14 +656,11 @@ void pray(void)
         return;
     }
 
-    strcpy( info, "You offer a prayer to " );
-    strcat( info, god_name( you.religion ) );
-    strcat( info, "." );
-    mpr(info, MSGCH_PRAY);
+    mprf(MSGCH_PRAY, "You offer a prayer to %s.", god_name(you.religion));
 
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
                                             + (random2(you.piety) / 20);
-
+    
     if (player_under_penance())
         simple_god_message(" demands penance!");
     else
@@ -693,8 +686,7 @@ void pray(void)
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "piety: %d", you.piety );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "piety: %d", you.piety );
 #endif
 
     if (!was_praying)

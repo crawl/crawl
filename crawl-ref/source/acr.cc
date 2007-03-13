@@ -138,9 +138,6 @@ char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 int stealth;                    // externed in view.cc
 char use_colour = 1;
 
-bool just_autoprayed = false;
-bool about_to_autopray = false;
-
 // set to true once a new game starts or an old game loads
 bool game_has_started = false;
 
@@ -839,33 +836,30 @@ static void input()
     if (Options.tut_just_triggered)
         Options.tut_just_triggered = false;
 
-    if (Options.tutorial_events[TUT_SEEN_MONSTER])
-        i_feel_safe();          // can trigger tutorial as side effect
-        
-    if (Options.tutorial_events[TUT_RUN_AWAY]
-        && 2*you.hp < you.hp_max && !i_feel_safe())
+    if ( i_feel_safe() )
     {
-        learned_something_new(TUT_RUN_AWAY);
-    }
+        if (Options.tutorial_events[TUT_RUN_AWAY] && 2*you.hp < you.hp_max )
+            learned_something_new(TUT_RUN_AWAY);
             
-    if (Options.tutorial_left && i_feel_safe())
-    {
-        if ( 2*you.hp < you.hp_max
-             || 2*you.magic_points < you.max_magic_points )
+        if (Options.tutorial_left)
         {
-            tutorial_healing_reminder();
-        }
-        else if (you.running < RMODE_REST_DURATION &&
-                 Options.tutorial_events[TUT_SHIFT_RUN] &&
-                 you.num_turns >= 200)
-        {
-            learned_something_new(TUT_SHIFT_RUN);
-        }
-        else if (you.running < RMODE_REST_DURATION &&
-                 Options.tutorial_events[TUT_MAP_VIEW] &&
-                 you.num_turns >= 500)
-        {
-            learned_something_new(TUT_MAP_VIEW);
+            if ( 2*you.hp < you.hp_max
+                 || 2*you.magic_points < you.max_magic_points )
+            {
+                tutorial_healing_reminder();
+            }
+            else if (you.running < RMODE_REST_DURATION &&
+                     Options.tutorial_events[TUT_SHIFT_RUN] &&
+                     you.num_turns >= 200)
+            {
+                learned_something_new(TUT_SHIFT_RUN);
+            }
+            else if (you.running < RMODE_REST_DURATION &&
+                     Options.tutorial_events[TUT_MAP_VIEW] &&
+                     you.num_turns >= 500)
+            {
+                learned_something_new(TUT_MAP_VIEW);
+            }
         }
     }
  
@@ -889,6 +883,8 @@ static void input()
         world_reacts();
         return;
     }
+
+    do_autopray();              // this might set you.turn_is_over
 
     if ( you.turn_is_over )
     {
@@ -1601,7 +1597,6 @@ static void decrement_durations()
     else if (you.duration[DUR_PRAYER] == 1)
     {
         mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
-        about_to_autopray = true;
         you.duration[DUR_PRAYER] = 0;
     }
 
@@ -2342,30 +2337,6 @@ static void world_reacts()
 
 static command_type get_next_cmd()
 {
-    if (Options.autoprayer_on && you.duration[DUR_PRAYER] == 0 &&
-        just_autoprayed == false && you.religion != GOD_NO_GOD &&
-        grid_altar_god( grd[you.x_pos][you.y_pos] ) == GOD_NO_GOD &&
-        i_feel_safe())
-    {
-        just_autoprayed = true;
-        about_to_autopray = false;
-        return CMD_PRAY;
-    }
-    if ( just_autoprayed && you.duration[DUR_PRAYER] == 0 )
-    {
-        /* oops */
-        mpr("Autoprayer failed, deactivating.", MSGCH_WARN);
-        Options.autoprayer_on = false;
-    }
-    just_autoprayed = false;
-    if ( Options.autoprayer_on && about_to_autopray &&
-         you.religion != GOD_NO_GOD &&
-         you.duration[DUR_PRAYER] == 0 )
-    {
-        mpr("Autoprayer not resuming prayer.", MSGCH_WARN);
-        about_to_autopray = false;
-    }
-
 #if DEBUG_DIAGNOSTICS
     // save hunger at start of round
     // for use with hunger "delta-meter" in  output.cc

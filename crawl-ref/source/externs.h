@@ -499,6 +499,8 @@ public:
 
   bool banished;     // flag signaling that the player is due a visit to the
                      // Abyss.
+
+  bool just_autoprayed;         // autopray just kicked in
     
   unsigned char prev_targ;
   char your_name[kNameLen];

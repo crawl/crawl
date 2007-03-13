@@ -4476,6 +4476,7 @@ void player::init()
     your_name[0] = 0;
 
     banished = false;
+    just_autoprayed = false;
     berserk_penalty = 0;
     berserker = 0;
     conf = 0;

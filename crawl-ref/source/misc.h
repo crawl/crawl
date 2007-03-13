@@ -195,4 +195,6 @@ void set_colours_from_monsters();
 
 int str_to_shoptype(const std::string &s);
 
+bool do_autopray();
+
 #endif
