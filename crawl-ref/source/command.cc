@@ -594,29 +594,35 @@ static const char *level_map_help =
         "<w>Ctrl-X</w> : set travel eXclusion\n"
         "<w>Ctrl-E</w> : Erase all travel exclusions\n"
         "<w>Ctrl-W</w> : set Waypoint\n"
-        "<w>Ctrl-C</w> : Clear level and main maps\n";
+        "<w>Ctrl-C</w> : Clear level and main maps\n"
+        " \n"
+        " \n"
+        " \n";
 
 static const char *targeting_help =
-        "<h>Targeting (like zapping wands/spells):\n"
-        "<w>Dir</w>       : move in that direction\n"
-        "<w>Shift-Dir</w> : shoot straight-line beam\n"
-        "<w>Space</w>     : cycle through beams\n"
-        "<w>:</w>         : hide beam\n"
-        "<w>Esc</w>       : cancel targeting\n"
-        "<w>Ctrl-F</w>    : cycle monster cycle mode\n"
-        "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
+        "<h>Examine surroundings ('<w>x</w><h> in main):\n"
+        "<w>Esc</w> : cancel (also <w>Space</w>)\n"
+        "<w>Dir.</w>: move cursor in that direction\n"
+        "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
+        "<w>v</w> : describe monster under cursor\n"
         "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
         "<w>-</w> : cycle monsters backward\n"
-        "<w>.</w> : fire at target (also <w>Enter</w> or <w>Del</w>)\n"
-        "<w>!</w> : fire at target and stop there\n"
-        "<w>;</w> : cycle objects forward\n"
-        "<w>/</w> : cycle objects backward\n"
-        "<w>v</w> : describe monster under cursor\n"
-        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+        "<w>*</w> : cycle objects forward\n"
+        "<w>/</w> : cycle objects backward (also <w>;</w>)\n"
         "<w>^</w>   : cycle through traps\n"
-        "<w>Tab</w> : cycle through shops and portals\n"
         "<w>_</w>   : cycle through altars\n"
-        "<w>?</w> : targeting help\n";
+        "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
+        "<w>Tab</w> : cycle through shops and portals\n"
+        "<w>Ctrl-F</w> : cycle monster cycle mode\n"
+        " \n"
+        "<h>Targeting (like zapping wands/spells):\n"
+        "The keys from examining surroundings\n"
+        "work here, too. Additional keys are\n"
+        "<w>.</w> : fire at target (<w>Enter</w>, <w>Del</w>, <w>Space</w>)\n" 
+        "<w>!</w> : fire at target and stop there\n"
+        "<w>p</w> : fire at Previous target (also <w>t</w>, <w>f</w>)\n"
+        "<w>:</w> : hide beam\n"
+        "<w>Shift-Dir</w> : shoot straight-line beam\n";
 
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
@@ -850,20 +856,21 @@ void list_commands(bool wizard, int hotkey)
             "<h>Rest/Search:\n"
             "<w>s</w> : rest one turn and search adjacent\n"
             "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n"
-            "<w>5</w> : fully rest HP/MP or search; stop after \n"
-            "    100 turns (also <w>Shift-numpad-5</w>)\n",
+            "<w>5</w> : fully rest HP/MP and long search\n"
+            "    (max 100 turns, also <w>Shift-numpad-5</w>)\n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
             "<h>Extended Movement:\n"
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : untrap, attack\n"
-            "           without move, open door\n"
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : untrap, open door,\n"
+            "         attack without move\n"
             "<w>Ctrl-G</w> : interlevel travel\n"
             "<w>Ctrl-O</w> : auto-explore\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
-            "<w>Ctrl-F</w> : Find items\n",
+            "<w>Ctrl-F</w> : Find items\n"
+            " \n",
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -892,8 +899,7 @@ void list_commands(bool wizard, int hotkey)
             0,
             "<h>In-game Toggles:\n"
             "<w>Ctrl-A</w> : toggle Autopickup\n"
-            "<w>Ctrl-V</w> : toggle auto-prayer\n"
-            " \n"
+            "<w>Ctrl-V</w> : toggle auto-prayer"
             " \n"
             " \n",
             true, true, cmdhelp_textfilter);
@@ -965,7 +971,8 @@ void list_commands(bool wizard, int hotkey)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map\n"
-            "<w>O</w>   : show dungeon Overview\n",
+            "<w>O</w>   : show dungeon Overview\n"
+            " \n",
             true, true, cmdhelp_textfilter,45);
 
     cols.add_formatted(
@@ -996,10 +1003,9 @@ void list_commands(bool wizard, int hotkey)
             "<w>Ctrl-R</w> : Redraw screen\n"
             "<w>Ctrl-C</w> : Clear main and level maps\n"
             "<w>#</w> : dump character to file\n"
-            "<w>:</w> : add note to dump file\n"
-            "<w>_</w> : show notes\n"
+            "<w>:</w> : add note (use <w>?:</w> to read notes)\n"
             "<w>~</w> : add macro\n"
-            "<w>=</w> : reassign inventory/spell letters\n"
+            "<w>=</w> : reassign inventory/spell letters"
             " \n",
             true, true, cmdhelp_textfilter);
 
@@ -1099,9 +1105,7 @@ void list_tutorial_help()
             "all fire at the selected target.\n"
             "If the previous target is still alive\n"
             "and in sight, one of <w>f</w>, <w>p</w>, <w>t</w> fires\n"
-            "at it again (without selecting anything).\n"
-            "Any movement key fires straight away in\n"
-            "the chosen direction.\n",
+            "at it again (without selecting anything).\n",
             true, true, cmdhelp_textfilter,40);
 
     show_keyhelp_menu(cols.formatted_lines(), false);
