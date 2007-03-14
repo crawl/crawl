@@ -637,11 +637,12 @@ default_autoprayer = false
 
 sort_menus = (true | false | auto:X)
         When set to true, items are sorted by description in inventory and
-        pickup menus. When set to false, items are ordered by equipment slot. 
+        pickup menus. When set to false (the default), items are ordered by
+        equipment slot. 
         When set to a number - using a syntax of the form 
-         sort_menus = auto:5 (the default) 
+         sort_menus = auto:5
         - items are sorted by their description if the total number of items in 
-        that category is at least that number; in the default case, having 4 
+        that category is at least that number; in the example, having 4 
         kinds of potions would not sort them, but having 5 would.
         
 

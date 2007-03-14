@@ -854,22 +854,12 @@ void scorefile_entry::add_field(const std::string &key,
 
 void scorefile_entry::add_auxkill_field() const
 {
-    const char *what =
-        death_type == KILLED_BY_MONSTER? "kweap" :
-        death_type == KILLED_BY_BEAM?    "kbeam" :
-        "kaux";
-    
-    add_field(what, "%s", auxkilldata.c_str());
+    add_field("kaux", "%s", auxkilldata.c_str());
 }
 
 void scorefile_entry::read_auxkill_field()
 {
-    const char *what =
-        death_type == KILLED_BY_MONSTER? "kweap" :
-        death_type == KILLED_BY_BEAM?    "kbeam" :
-        "kaux";
-
-    auxkilldata = str_field(what);
+    auxkilldata = str_field("kaux");
 }
 
 std::string scorefile_entry::str_field(const std::string &s) const

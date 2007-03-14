@@ -1567,7 +1567,7 @@ void summon_things( int pow )
 
     int numsc = 2 + (random2(pow) / 10) + (random2(pow) / 10);
 
-    if (one_chance_in(5) && !lose_stat( STAT_INTELLIGENCE, 1, true ))
+    if (one_chance_in(3) && !lose_stat( STAT_INTELLIGENCE, 1, true ))
         mpr("Your call goes unanswered.");
     else
     {

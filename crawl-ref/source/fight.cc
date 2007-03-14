@@ -2499,7 +2499,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 
 std::string melee_attack::mons_weapon_desc()
 {
-    if (weapon)
+    if (weapon && attacker->id() != MONS_DANCING_WEAPON)
         return make_stringf(" with %s", item_name(*weapon, DESC_NOCAP_A));
 
     return ("");

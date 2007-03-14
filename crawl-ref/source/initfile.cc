@@ -617,7 +617,8 @@ void game_options::reset_options()
     travel_stair_cost      = 500;
     travel_exclude_radius2 =  68;
 
-    sort_menus             = 5;
+    // Don't sort menus by default.
+    sort_menus             = -1;
 
     tc_reachable           = BLUE;
     tc_excluded            = LIGHTMAGENTA;

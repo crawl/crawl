@@ -2,8 +2,9 @@ Stone Soup 0.2
 --------------
 * Save and bones files formats changed, incompatible with 0.1.x.
 * Added a game tutorial.
-* New entry level designs.
+* New entry levels.
 * New special levels (Elf:7, Coc:7).
+* New evasion model (from 4.1.2).
 * Targeting interface keymaps changed.
 * -macro option now specifies a directory, not the macro file.
 * Item colours changed.
