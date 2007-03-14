@@ -230,22 +230,11 @@ int cast_smiting(int power)
     return (success);
 }                               // end cast_smiting()
 
-int airstrike(int power)
+int airstrike(int power, dist &beam)
 {
     bool success = false;
-    struct dist beam;
     struct monsters *monster = 0;       // NULL {dlb}
     int hurted = 0;
-
-    mpr("Strike whom?", MSGCH_PROMPT);
-
-    direction( beam, DIR_TARGET, TARG_ENEMY );
-
-    if (!beam.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
 
     if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)

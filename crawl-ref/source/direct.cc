@@ -92,25 +92,19 @@ static char find_square( unsigned char xps, unsigned char yps,
 
 static int targeting_cmd_to_compass( command_type command );
 static void describe_oos_square(int x, int y);
+static void extend_move_to_edge(dist &moves);
 
 static bool is_mapped(int x, int y)
 {
     return (is_player_mapped(x, y));
 }
 
-static command_type read_direction_key(
-    bool just_looking = false,
-    bool target_unshifted = false,
-    coord_def where = coord_def())
+static command_type read_direction_key(bool just_looking = false)
 {
-    const bool unshifted_dir = target_unshifted && where == you.pos();
-    
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
     
     int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
-    if (unshifted_dir && strchr("hjklyubn", key))
-        key = toupper(key);
-    
+
     switch ( key )
     {
     case ESCAPE: return CMD_TARGET_CANCEL;
@@ -241,6 +235,35 @@ static int targeting_cmd_to_feature( command_type command )
     }
 }
 
+static command_type shift_direction(command_type cmd)
+{
+    switch (cmd)
+    {
+    case CMD_TARGET_DOWN_LEFT:  return CMD_TARGET_DIR_DOWN_LEFT;
+    case CMD_TARGET_LEFT:       return CMD_TARGET_DIR_LEFT;
+    case CMD_TARGET_DOWN:       return CMD_TARGET_DIR_DOWN;
+    case CMD_TARGET_UP:         return CMD_TARGET_DIR_UP;
+    case CMD_TARGET_RIGHT:      return CMD_TARGET_DIR_RIGHT;
+    case CMD_TARGET_DOWN_RIGHT: return CMD_TARGET_DIR_DOWN_RIGHT;
+    case CMD_TARGET_UP_RIGHT:   return CMD_TARGET_DIR_UP_RIGHT;
+    case CMD_TARGET_UP_LEFT:    return CMD_TARGET_DIR_UP_LEFT;
+    default: return (cmd);
+    }
+}
+
+static const char *target_mode_help_text(int mode)
+{
+    switch (mode)
+    {
+    case DIR_NONE:
+        return "? - help, Shift-Dir - shoot in a straight line";
+    case DIR_TARGET:
+        return "? - help, Dir - move target cursor";
+    default:
+        return "? - help";
+    }
+}
+
 //---------------------------------------------------------------
 //
 // direction
@@ -262,7 +285,7 @@ static int targeting_cmd_to_feature( command_type command )
 //
 //---------------------------------------------------------------
 void direction(struct dist& moves, targeting_type restricts,
-               int mode, bool just_looking)
+               int mode, bool just_looking, const char *prompt)
 {
     // NOTE: Even if just_looking is set, moves is still interesting,
     // because we can travel there!
@@ -310,8 +333,8 @@ void direction(struct dist& moves, targeting_type restricts,
     // Prompts might get scrolled off if you have too few lines available.
     // We'll live with that.
     if ( !just_looking )
-        mpr("Aim (press '?' for help, Shift-Dir to shoot in a straight line.)",
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
+             target_mode_help_text(restricts));
 
     while (1)
     {
@@ -336,10 +359,14 @@ void direction(struct dist& moves, targeting_type restricts,
                 key_command = CMD_TARGET_CYCLE_FORWARD; // find closest enemy
         }
         else
-            key_command = read_direction_key(just_looking,
-                                             target_unshifted,
-                                             coord_def(moves.tx, moves.ty));
+            key_command = read_direction_key(just_looking);
 
+        if (target_unshifted && moves.tx == you.x_pos && moves.ty == you.y_pos
+            && restricts != DIR_TARGET)
+        {
+            key_command = shift_direction(key_command);
+        }
+        
         if (target_unshifted &&
             (key_command == CMD_TARGET_CYCLE_FORWARD
              || key_command == CMD_TARGET_CYCLE_BACK
@@ -400,8 +427,16 @@ void direction(struct dist& moves, targeting_type restricts,
             {
                 // Direction not allowed, so just move in that direction.
                 // Maybe make this a bigger jump?
-                moves.tx += Compass[i].x;
-                moves.ty += Compass[i].y;
+                if (restricts == DIR_TARGET)
+                {
+                    moves.tx += Compass[i].x * 3;
+                    moves.ty += Compass[i].y * 3;
+                }
+                else
+                {
+                    moves.tx += Compass[i].x;
+                    moves.ty += Compass[i].y;
+                }
             }
             break;
 
@@ -679,6 +714,39 @@ void direction(struct dist& moves, targeting_type restricts,
         skip_iter = false;      // only skip one iteration at most
     }
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
+
+    // We need this for directional explosions, otherwise they'll explode one
+    // square away from the player.
+    extend_move_to_edge(moves);
+}
+
+static void extend_move_to_edge(dist &moves)
+{
+    if (!moves.dx && !moves.dy)
+        return;
+
+    // now the tricky bit - extend the target x,y out to map edge.
+    int mx = 0, my = 0;
+
+    if (moves.dx > 0)
+        mx = (GXM  - 1) - you.x_pos;
+    if (moves.dx < 0)
+        mx = you.x_pos;
+
+    if (moves.dy > 0)
+        my = (GYM - 1) - you.y_pos;
+    if (moves.dy < 0)
+        my = you.y_pos;
+
+    if (!(mx == 0 || my == 0))
+    {
+        if (mx < my)
+            my = mx;
+        else
+            mx = my;
+    }
+    moves.tx = you.x_pos + moves.dx * mx;
+    moves.ty = you.y_pos + moves.dy * my;
 }
 
 // Attempts to describe a square that's not in line-of-sight. If

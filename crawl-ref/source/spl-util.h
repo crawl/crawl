@@ -25,6 +25,7 @@ struct playerspell
   unsigned int disciplines; // bitfield
   unsigned int flags;       // bitfield
   unsigned int level;
+  const char *target_prompt;
 };
 
 
@@ -46,6 +47,7 @@ int spell_mana(int which_spell);
 // * called from: chardump - it_use3 - player - spell - spl-book -
 // *              spells0 - spells3
 int spell_difficulty(int which_spell);
+const char *get_spell_target_prompt( int which_spell );
 
 int spell_levels_required(int which_spell);
 
@@ -83,7 +85,8 @@ int apply_area_within_radius(int (*func) (int, int, int, int),
 
 char spell_direction( struct dist &spelld, struct bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
-                      int mode = TARG_ENEMY );
+                      int mode = TARG_ENEMY,
+                      const char *prompt = NULL );
 
 void apply_area_cloud(int (*func) (int, int, int, int), int x, int y,
                       int pow, int number, int ctype);

@@ -561,12 +561,17 @@ bool activate_ability(void)
     }
 
     case ABIL_DELAYED_FIREBALL:
+    {
+        if (spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) == -1)
+            return (false);
+        
         // Note: power level of ball calculated at release -- bwr
-        fireball( calc_spell_power( SPELL_DELAYED_FIREBALL, true ) );
+        fireball( calc_spell_power( SPELL_DELAYED_FIREBALL, true ), beam );
 
         // only one allowed since this is instantaneous -- bwr
         you.attribute[ ATTR_DELAYED_FIREBALL ] = 0;
         break;
+    }
 
     case ABIL_GLAMOUR:
         if (you.duration[DUR_GLAMOUR])
@@ -784,7 +789,7 @@ bool activate_ability(void)
 
     case ABIL_HELLFIRE:
         if (your_spells(SPELL_HELLFIRE, 
-                        20 + you.experience_level, false) == -1)
+                        20 + you.experience_level, false) == SPRET_ABORT)
             return (false);
         break;
 
@@ -1252,7 +1257,7 @@ bool activate_ability(void)
         }
 
         if (your_spells( SPELL_HELLFIRE, 
-                        20 + you.experience_level, false ) == -1)
+                        20 + you.experience_level, false ) == SPRET_ABORT)
             return (false);
 
         you.duration[DUR_BREATH_WEAPON] +=

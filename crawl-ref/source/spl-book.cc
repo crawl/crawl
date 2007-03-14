@@ -1534,7 +1534,7 @@ int staff_spell( int staff )
         return (-1);
     }
 
-    if (your_spells(specspell, powc, false) == -1)
+    if (your_spells(specspell, powc, false) == SPRET_ABORT)
         return (-1);
 
     you.inv[staff].plus -= mana;

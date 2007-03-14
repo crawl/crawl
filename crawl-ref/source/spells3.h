@@ -13,6 +13,8 @@
 #define SPELLS3_H
 
 
+struct dist;
+
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: spells1 - spells3
@@ -24,7 +26,7 @@ bool allow_control_teleport( bool silent = false );
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int airstrike(int power);
+int airstrike(int power, dist &beam);
 
 
 // updated 24may2000 {dlb}

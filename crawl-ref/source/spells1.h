@@ -69,19 +69,19 @@ int blink(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int cast_big_c(int pow, char cty);
+int cast_big_c(int pow, char cty, bolt &beam);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
 int  allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
-int cast_fire_storm(int powc);
+int cast_fire_storm(int powc, bolt &beam);
 bool cast_revivification(int power);
 void cast_berserk(void);
 void cast_ring_of_flames(int power);
 int conjure_flame(int pow);
 void extension(int pow);
-int fireball(int power);
-int stinking_cloud(int pow);
+int fireball(int power, bolt &beam);
+int stinking_cloud(int pow, bolt &beam);
 void abjuration(int pow);
 
 // last updated 24may2000 {dlb}

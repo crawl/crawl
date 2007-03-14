@@ -172,49 +172,14 @@ void random_blink(bool allow_partial_control)
     return;
 }                               // end random_blink()
 
-int fireball(int power)
+int fireball(int power, bolt &beam)
 {
-    struct dist fire_ball;
-
-    message_current_target();
-    direction( fire_ball, DIR_NONE, TARG_ENEMY );
-
-    if (!fire_ball.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-    else
-    {
-        struct bolt beam;
-
-        beam.source_x = you.x_pos;
-        beam.source_y = you.y_pos;
-        beam.set_target(fire_ball);
-
-        zapping(ZAP_FIREBALL, power, beam);
-    }
-
+    zapping(ZAP_FIREBALL, power, beam);
     return (1);
 }                               // end fireball()
 
-int cast_fire_storm(int powc)
+int cast_fire_storm(int powc, bolt &beam)
 {
-    struct bolt beam;
-    struct dist targ;
-
-    mpr("Where?");
-
-    direction( targ, DIR_TARGET, TARG_ENEMY );
-
-    beam.set_target(targ);
-
-    if (!targ.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
     beam.ex_size = 2 + (random2(powc) > 75);
     beam.flavour = BEAM_LAVA;
     beam.type = SYM_ZAP;
@@ -483,25 +448,8 @@ int conjure_flame(int pow)
     return (1);
 }                               // end cast_conjure_flame()
 
-int stinking_cloud( int pow )
+int stinking_cloud( int pow, bolt &beem )
 {
-    struct dist spelld;
-    struct bolt beem;
-
-    message_current_target();
-    direction( spelld, DIR_NONE, TARG_ENEMY );
-
-    if (!spelld.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
-    beem.set_target(spelld);
-
-    beem.source_x = you.x_pos;
-    beem.source_y = you.y_pos;
-
     beem.name = "ball of vapour";
     beem.colour = GREEN;
     beem.range = 6;
@@ -522,20 +470,9 @@ int stinking_cloud( int pow )
     return (1);
 }                               // end stinking_cloud()
 
-int cast_big_c(int pow, char cty)
+int cast_big_c(int pow, char cty, bolt &beam)
 {
-    struct dist cdis;
-
-    mpr("Where do you want to put it?", MSGCH_PROMPT);
-    direction( cdis, DIR_TARGET, TARG_ENEMY );
-
-    if (!cdis.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
-    big_cloud( cty, cdis.tx, cdis.ty, pow, 8 + random2(3) );
+    big_cloud( cty, beam.target_x, beam.target_y, pow, 8 + random2(3) );
     return (1);
 }                               // end cast_big_c()
 

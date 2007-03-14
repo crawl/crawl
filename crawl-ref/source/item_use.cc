@@ -2533,7 +2533,6 @@ void zap_wand(void)
     if (you.inv[item_slot].base_type != OBJ_WANDS)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        you.turn_is_over = true;
         return;
     }
 

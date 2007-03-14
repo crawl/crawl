@@ -140,373 +140,426 @@
     SPELL_IDENTIFY, "Identify",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_CAUSE_FEAR, "Cause Fear",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_CREATE_NOISE, "Create Noise",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_REMOVE_CURSE, "Remove Curse",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_MAGIC_DART, "Magic Dart",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_FIREBALL, "Fireball",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     6
+     6,
+     NULL
 },
 
 {
   SPELL_SWAP, "Swap",
     SPTYP_TRANSLOCATION,
     SPFLAG_NONE,
-    4
+    4,
+     NULL
 },
 
 {
   SPELL_APPORTATION, "Apportation",
     SPTYP_TRANSLOCATION,
     SPFLAG_NONE,
-    1
+    1,
+     NULL
 },
 
 {
   SPELL_TWIST, "Twist",
     SPTYP_TRANSLOCATION,
     SPFLAG_DIR_OR_TARGET,
-    1
+    1,
+     NULL
 },
 
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_GRID | SPFLAG_NOT_SELF,
-     3
+     SPFLAG_NONE,
+     3,
+     NULL
 },
 
 {
     SPELL_DIG, "Dig",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_FIRE, "Bolt of Fire",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_COLD, "Bolt of Cold",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_LIGHTNING_BOLT, "Lightning Bolt",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
      SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_POLYMORPH_OTHER, "Polymorph Other",
      SPTYP_TRANSMIGRATION,  // removed enchantment, wasn't needed -- bwr
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_SLOW, "Slow",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_HASTE, "Haste",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
-     6  // lowered to 6 from 8, since its easily available from various items
+     6,  // lowered to 6 from 8, since its easily available from various items
         // and Swiftness is level 2 (and gives a similar effect).  Its also
         // not that much better than Invisibility.  -- bwr
+     NULL
 },
 
 {
     SPELL_PARALYZE, "Paralyze",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_CONFUSE, "Confuse",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_INVISIBILITY, "Invisibility",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_THROW_FLAME, "Throw Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_THROW_FROST, "Throw Frost",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_CONTROLLED_BLINK, "Controlled Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
      SPFLAG_GRID,
-     7
+     7,
+     "Where do you want to put it?"
 },
 
 {
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_RING_OF_FLAMES, "Ring of Flames",
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_RESTORE_STRENGTH, "Restore Strength",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_RESTORE_INTELLIGENCE, "Restore Intelligence",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_RESTORE_DEXTERITY, "Restore Dexterity",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_VENOM_BOLT, "Venom Bolt",
      SPTYP_CONJURATION | SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_OLGREBS_TOXIC_RADIANCE, "Olgreb's Toxic Radiance",
      SPTYP_POISON,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_TELEPORT_OTHER, "Teleport Other",
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_LESSER_HEALING, "Lesser Healing",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_GREATER_HEALING, "Greater Healing",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_CURE_POISON_I, "Cure Poison",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_PURIFICATION, "Purification",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_DEATHS_DOOR, "Death's Door",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_SMITING, "Smiting",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_REPEL_UNDEAD, "Repel Undead",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_HOLY_WORD, "Holy Word",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DETECT_CURSE, "Detect Curse",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_SUMMON_SMALL_MAMMAL, "Summon Small Mammals",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_ABJURATION_I, "Abjuration",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
      SPTYP_SUMMONING | SPTYP_POISON,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_LEVITATION, "Levitation",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_LEHUDIBS_CRYSTAL_SPEAR, "Lehudib's Crystal Spear",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_GRID,
-     6
+     6,
+     "Where do you want to put it?"
 }
 ,
 
@@ -514,21 +567,24 @@
     SPELL_FIRE_STORM, "Fire Storm",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID,
-     9
+     9,
+     "Where?" 
 },
 
 {
     SPELL_DETECT_TRAPS, "Detect Traps",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 
@@ -538,196 +594,224 @@
     SPELL_ISKENDERUNS_MYSTIC_BLAST, "Iskenderun's Mystic Blast",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_ENSLAVEMENT, "Enslavement",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_MAGIC_MAPPING, "Magic Mapping",
      SPTYP_DIVINATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
      SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_NOT_SELF,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_PAIN, "Pain",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_EXTENSION, "Extension",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
      SPFLAG_DIR | SPFLAG_NOT_SELF,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_SUMMON_WRAITHS, "Summon Wraiths",
      SPTYP_NECROMANCY | SPTYP_SUMMONING,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DETECT_ITEMS, "Detect Items",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_BURN, "Burn", // used by wanderers
      SPTYP_FIRE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
-     1
+     SPFLAG_NONE,
+     1,
+     NULL
 },
 
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
-     1
+     SPFLAG_NONE,
+     1,
+     NULL
 },
 
 {
     SPELL_SUMMON_ELEMENTAL, "Summon Elemental",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
      SPTYP_ICE,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_STICKY_FLAME, "Sticky Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
      SPTYP_ICE | SPTYP_SUMMONING,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_OZOCUBUS_ARMOUR, "Ozocubu's Armour",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_CALL_IMP, "Call Imp",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_GUARDIAN, "Guardian",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_PESTILENCE, "Pestilence",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
@@ -742,168 +826,192 @@
     SPELL_FLAME_OF_CLEANSING, "Flame of Cleansing",
      SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_SHINING_LIGHT, "Shining Light",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_SUMMON_DAEVA, "Summon Daeva",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_ABJURATION_II, "Abjuration",
      SPTYP_HOLY,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_TWISTED_RESURRECTION, "Twisted Resurrection",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_REGENERATION, "Regeneration",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_BONE_SHARDS, "Bone Shards",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_BANISHMENT, "Banishment",
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_CIGOTUVIS_DEGENERATION, "Cigotuvi's Degeneration",
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_STING, "Sting",
      SPTYP_CONJURATION | SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_SUBLIMATION_OF_BLOOD, "Sublimation of Blood",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_HELLFIRE, "Hellfire",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_DEMONIC_HORDE, "Demonic Horde",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_FIRE_BRAND, "Fire Brand",
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_FREEZING_AURA, "Freezing Aura",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_LETHAL_INFUSION, "Lethal Infusion",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_CRUSH, "Crush",
      SPTYP_EARTH,
      SPFLAG_DIR | SPFLAG_NOT_SELF,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_BOLT_OF_IRON, "Bolt of Iron",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_STONE_ARROW, "Stone Arrow",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
-     3
+     3,
+     NULL
 },
 
 {
@@ -918,49 +1026,56 @@
     SPELL_STONEMAIL, "Stonemail",
      SPTYP_ENCHANTMENT | SPTYP_EARTH,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_SHOCK, "Shock",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_SWIFTNESS, "Swiftness",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_FLY, "Fly",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_INSULATION, "Insulation",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_ORB_OF_ELECTROCUTION, "Orb of Electrocution",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DETECT_CREATURES, "Detect Creatures",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
@@ -975,7 +1090,8 @@
     SPELL_CONTROL_TELEPORT, "Control Teleport",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
@@ -990,168 +1106,192 @@
     SPELL_POISON_WEAPON, "Poison Weapon",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_RESIST_POISON, "Resist Poison",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_PROJECTED_NOISE, "Projected Noise",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_ALTER_SELF, "Alter Self",
      SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_RECALL, "Recall",
      SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_PORTAL, "Portal",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_AGONY, "Agony",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_SPIDER_FORM, "Spider Form",
      SPTYP_TRANSMIGRATION | SPTYP_POISON,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_DISRUPT, "Disrupt",
      SPTYP_TRANSMIGRATION,
      SPFLAG_DIR_OR_TARGET,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_DISINTEGRATE, "Disintegrate",
      SPTYP_TRANSMIGRATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_BLADE_HANDS, "Blade Hands",
      SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     5  // only removes weapon, so I raised this from 4 -- bwr
+     5,  // only removes weapon, so I raised this from 4 -- bwr
+     NULL
 },
 
 {
     SPELL_STATUE_FORM, "Statue Form",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_ICE_FORM, "Ice Form",
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     4 // doesn't allow for equipment, so I lowered this from 5 -- bwr
+     4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
+     NULL
 },
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_NECROMUTATION, "Necromutation",
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     8
+     8,
+     NULL
 },
 
 {
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_SYMBOL_OF_TORMENT, "Symbol of Torment",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     6
+     6,
+     NULL
 },
 
 {
     SPELL_ORB_OF_FRAGMENTATION, "Orb of Fragmentation",
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_ICE_BOLT, "Ice Bolt",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_ICE_STORM, "Ice Storm",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_ARC, "Arc",
      SPTYP_AIR,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
-     1
+     SPFLAG_NONE,
+     1,
+     NULL
 },
 
 {
     SPELL_AIRSTRIKE, "Airstrike",
      SPTYP_AIR,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
-     4
+     4,
+     NULL
 },
 
 {
@@ -1166,14 +1306,16 @@
     SPELL_CONFUSING_TOUCH, "Confusing Touch",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_SURE_BLADE, "Sure Blade",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 
@@ -1185,287 +1327,328 @@
     SPELL_FLAME_TONGUE, "Flame Tongue",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
      SPTYP_TRANSMIGRATION | SPTYP_SUMMONING,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_SUMMON_LARGE_MAMMAL, "Call Canine Familiar",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
     SPELL_SUMMON_DRAGON, "Summon Dragon",
      SPTYP_FIRE | SPTYP_SUMMONING,
      SPFLAG_NONE,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_TAME_BEASTS, "Tame Beasts",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_SLEEP, "Ensorcelled Hibernation",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_MASS_SLEEP, "Metabolic Englaciation",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DETECT_MAGIC, "Detect Magic",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_ENCHANTMENT | SPTYP_DIVINATION,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_FORESCRY, "Forescry",
      SPTYP_DIVINATION,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5     // fairly high level - potentially one of the best brands
+     5,     // fairly high level - potentially one of the best brands
+     NULL
 },
 
 {
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     7     // this is high for a reason - Warp brands are very powerful.
+     7,     // this is high for a reason - Warp brands are very powerful.
+     NULL
 },
 
 {
     SPELL_SILENCE, "Silence",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_SHATTER, "Shatter",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_DISPERSAL, "Dispersal",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     7
+     7,
+     NULL
 },
 
 {
     SPELL_DISCHARGE, "Static Discharge",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_BEND, "Bend",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_BACKLIGHT, "Corona",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_INTOXICATE, "Alistair's Intoxication",
      SPTYP_TRANSMIGRATION | SPTYP_POISON,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_GLAMOUR, "Glamour",
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     2   // XXX: level 2 or 3, what should it be now? -- bwr
+     2,   // XXX: level 2 or 3, what should it be now? -- bwr
+     NULL
 },
 
 {
     SPELL_ERINGYAS_SURPRISING_BOUQUET, "Eringya's Surprising Bouquet",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_AIR_WALK, "Air Walk",
      SPTYP_TRANSMIGRATION | SPTYP_AIR,
      SPFLAG_NONE,
-     9
+     9,
+     NULL
 },
 
 {
     SPELL_SANDBLAST, "Sandblast",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-     1
+     1,
+     NULL
 },
 
 {
     SPELL_ROTTING, "Rotting",
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5
+     5,
+     NULL
 },
 
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
-     2
+     2,
+     NULL
 },
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
-     4
+     4,
+     NULL
 },
 
 {
     SPELL_SEMI_CONTROLLED_BLINK, "Semi-Controlled Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
-     3
+     3,
+     NULL
 },
 
 {
   SPELL_STONESKIN, "Stoneskin",
     SPTYP_EARTH | SPTYP_TRANSMIGRATION, // was ench -- bwr
     SPFLAG_NONE,
-    2
+    2,
+     NULL
 },
 
 {
   SPELL_SIMULACRUM, "Simulacrum",
     SPTYP_ICE | SPTYP_NECROMANCY,
     SPFLAG_NONE,
-    6
+    6,
+     NULL
 },
 
 {
   SPELL_CONJURE_BALL_LIGHTNING, "Conjure Ball Lightning",
     SPTYP_AIR | SPTYP_CONJURATION,
     SPFLAG_NONE,
-    8
+    8,
+     NULL
 },
 
 {
   SPELL_CHAIN_LIGHTNING, "Chain Lightning",
     SPTYP_AIR | SPTYP_CONJURATION,
     SPFLAG_NONE,
-    8
+    8,
+     NULL
 },
 
 {
   SPELL_DELAYED_FIREBALL, "Delayed Fireball",
     SPTYP_FIRE | SPTYP_CONJURATION,
     SPFLAG_NONE,
-    7 
+    7,
+     NULL
 },
 
 {
   SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
     SPFLAG_NONE,
-    1 
+    1,
+     NULL
 },
 
 {
   SPELL_POISON_ARROW, "Poison Arrow",
     SPTYP_CONJURATION | SPTYP_POISON,
     SPFLAG_DIR_OR_TARGET,
-    6 
+    6,
+     NULL
 },
 
 {
   SPELL_STRIKING, "Striking",
     0,
     SPFLAG_DIR_OR_TARGET,
-    1 
+    1,
+     NULL
 },
 
 {
@@ -1473,6 +1656,7 @@
      0,
      0,
      0,
+     NULL
 },
 
 

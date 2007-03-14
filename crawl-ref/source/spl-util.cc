@@ -211,6 +211,11 @@ unsigned int get_spell_flags( int which_spell )
     return (seekspell(which_spell)->flags);
 }
 
+const char *get_spell_target_prompt( int which_spell )
+{
+    return (seekspell(which_spell)->target_prompt);
+}
+
 bool spell_typematch(int which_spell, unsigned int which_discipline)
 {
     return (seekspell(which_spell)->disciplines & which_discipline);
@@ -675,11 +680,12 @@ void apply_area_cloud( int (*func) (int, int, int, int), int x, int y,
 }                               // end apply_area_cloud()
 
 char spell_direction( struct dist &spelld, struct bolt &pbolt, 
-                      targeting_type restrict, int mode )
+                      targeting_type restrict, int mode,
+                      const char *prompt )
 {
     message_current_target();
 
-    direction( spelld, restrict, mode );
+    direction( spelld, restrict, mode, false, prompt );
 
     if (!spelld.isValid)
     {

@@ -54,7 +54,6 @@ void load_tutorial( FILE* fp )
 void init_tutorial_options()
 {
     if (!Options.tutorial_left) {
-        mpr("return from tutorial check");
         return;
     }    
         
@@ -889,6 +888,7 @@ void tutorial_first_item(item_def item)
     Options.tut_just_triggered = 1;
 }     
 
+#if 0
 static void tutorial_first_stairs(int x, int y) {
         std::string text = 	"<magenta>The ";
         
@@ -903,7 +903,8 @@ static void tutorial_first_stairs(int x, int y) {
                 "this level again, press <w><<<magenta> while standing on the "
                 "upstairs.";
     print_formatted_paragraph(text, 80, MSGCH_TUTORIAL);
-}    
+}
+#endif
 
 void learned_something_new(unsigned int seen_what, int x, int y)
 { 
