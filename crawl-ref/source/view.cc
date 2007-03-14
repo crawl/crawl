@@ -3444,9 +3444,9 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (object)
                     {
                         if (is_feature('>',gx,gy))
-                            learned_something_new(TUT_SEEN_STAIRS);
+                            learned_something_new(TUT_SEEN_STAIRS,gx,gy);
                         else if (is_feature('_',gx,gy))
-                            learned_something_new(TUT_SEEN_ALTAR);
+                            learned_something_new(TUT_SEEN_ALTAR,gx,gy);
                         else if (grd[gx][gy] == DNGN_CLOSED_DOOR && see_grid( gx, gy ))
                             learned_something_new(TUT_SEEN_DOOR,gx,gy);
                         else if (grd[gx][gy] == DNGN_ENTER_SHOP && see_grid( gx, gy ))

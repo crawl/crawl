@@ -373,5 +373,7 @@ protected:
 
 int menu_colour(const std::string &itemtext);
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
+int linebreak_string2( std::string& s, int maxcol );
+void print_formatted_paragraph( std::string &s, int maxcol, int channel = 0);
 
 #endif

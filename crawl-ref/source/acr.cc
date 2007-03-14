@@ -848,13 +848,13 @@ static void input()
             {
                 tutorial_healing_reminder();
             }
-            else if (you.running < RMODE_REST_DURATION &&
+            else if (!you.running &&
                      Options.tutorial_events[TUT_SHIFT_RUN] &&
                      you.num_turns >= 200)
             {
                 learned_something_new(TUT_SHIFT_RUN);
             }
-            else if (you.running < RMODE_REST_DURATION &&
+            else if (!you.running &&
                      Options.tutorial_events[TUT_MAP_VIEW] &&
                      you.num_turns >= 500)
             {

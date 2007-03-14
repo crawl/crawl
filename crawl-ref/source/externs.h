@@ -1305,6 +1305,7 @@ public:
     unsigned int tut_spell_counter;
     unsigned int tut_throw_counter;
     unsigned int tut_berserk_counter;
+    unsigned int tut_melee_counter;
     unsigned tut_last_healed;
     
     bool tut_just_triggered;

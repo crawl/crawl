@@ -498,6 +498,8 @@ bool melee_attack::player_attack()
     if (player_hits_monster())
     {
         did_hit = true;
+        if (Options.tutorial_left)
+            Options.tut_melee_counter++;        
 
         // This actually does more than calculate damage - it also sets up
         // messages, etc.

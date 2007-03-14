@@ -3966,15 +3966,13 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
     if (vault == -1)
         vault = random_map_for_place(altname, wantmini);
     
+    // disallow entry vaults for tutorial (complicates things)
     if (vault == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
-        && level_number == 0)
+        && level_number == 0 && !Options.tutorial_left)
     {
         vault = random_map_for_tag("entry", wantmini);
     }
-
-    if (Options.tutorial_left)
-        vault = -1;
 
     return (vault);
 }

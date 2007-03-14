@@ -1150,6 +1150,82 @@ int linebreak_string( std::string& s, int wrapcol, int maxcol )
     return breakcount;
 }
 
+int linebreak_string2( std::string& s, int maxcol )
+{
+    size_t loc = 0;
+    int xpos = 0, spacepos = 0;
+    int breakcount = 0;
+    while ( loc < s.size() )
+    {
+        if ( s[loc] == '<' )    // tag
+        {
+            // << escape
+            if ( loc + 1 < s.size() && s[loc+1] == '<' )
+            {
+                ++xpos;
+                loc += 2;
+                // Um, we never break on <<. That's a feature. Right.
+                continue;
+            }
+            // skip tag
+            while ( loc < s.size() && s[loc] != '>' )
+                ++loc;
+            ++loc;
+        }
+        else
+        {
+            // user-forced newline
+            if ( s[loc] == '\n' )
+                xpos = 0;
+            // hard linebreak
+            else if ( xpos > maxcol )
+            {
+                if (spacepos >= xpos-maxcol) 
+                {
+                	loc = spacepos;
+                	s.replace(loc, 1, "\n");
+               	}   	
+               	else
+                	s.insert(loc, "\n");
+                xpos = 0;
+                ++breakcount;
+            }
+            // soft linebreak
+            else if ( s[loc] == ' ' && xpos > 0)
+            {
+                spacepos = loc;
+                ++xpos;
+            }
+            // bog-standard
+            else
+                ++xpos;
+
+            ++loc;
+        }
+    }
+    return breakcount;
+}
+
+// takes a (possibly tagged) string, breaks it into lines and 
+// prints it into the given message channel
+void print_formatted_paragraph(std::string &s, int maxcol, int channel) 
+{
+    linebreak_string2(s,maxcol);
+    std::string text;
+    
+    size_t loc = 0, oldloc = 0;
+    while ( loc < s.size() )
+    {
+        if (s[loc] == '\n') {
+            	text = s.substr(oldloc, loc-oldloc);
+  		        formatted_mpr( formatted_string::parse_string(text), channel );
+  		        oldloc = ++loc;
+        }    
+        loc++;
+    }    
+   	formatted_mpr( formatted_string::parse_string( s.substr(oldloc, loc-oldloc) ), channel );
+}    
+
 bool formatted_scroller::jump_to( int i )
 {
     if ( i == first_entry + 1 )
