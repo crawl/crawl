@@ -547,6 +547,7 @@ bool melee_attack::player_aux_unarmed()
 {
     damage_brand  = SPWPN_NORMAL;
     int uattack = UNAT_NO_ATTACK;
+    bool simple_miss_message = false;
 
     if (can_do_unarmed)
     {
@@ -708,11 +709,13 @@ bool melee_attack::player_aux_unarmed()
             {
                 unarmed_attack = "slash";
                 aux_damage += 6;
+                simple_miss_message = true;
             }
             else if (you.has_usable_claws())
             {
                 unarmed_attack = "claw";
                 aux_damage += roll_dice(1, 3);
+                simple_miss_message = true;
             }
 
             break;
@@ -739,9 +742,13 @@ bool melee_attack::player_aux_unarmed()
         }
         else
         {
-            mprf("Your %s misses %s.",
-                 unarmed_attack.c_str(),
-                 defender->name(DESC_NOCAP_THE).c_str());
+            if (simple_miss_message)
+                mprf("You miss %s.",
+                     defender->name(DESC_NOCAP_THE).c_str());
+            else
+                mprf("Your %s misses %s.",
+                     unarmed_attack.c_str(),
+                     defender->name(DESC_NOCAP_THE).c_str());
         }
     }
 
