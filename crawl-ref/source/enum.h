@@ -2745,6 +2745,7 @@ enum operation_types
     OPER_ZAP = 'z',
     OPER_THROW = 't',
     OPER_EXAMINE = 'v',
+    OPER_FIRE = 'f',
     OPER_ANY = 0
 };
 

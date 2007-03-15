@@ -1130,9 +1130,15 @@ static int try_finding_missile( int sub_type )
         if (!is_valid_item( you.inv[i] ))
             continue;
 
+        // In theory, we should do two passes, first trying
+        // to find a non-warning-inscribed item, then looping
+        // through the warning-inscribed ones. Seems unlikely
+        // to matter much.
+
         // consider melee weapons that can also be thrown
-        if (you.inv[i].base_type == OBJ_MISSILES
-            && you.inv[i].sub_type == sub_type)
+        if (you.inv[i].base_type == OBJ_MISSILES &&
+            you.inv[i].sub_type == sub_type &&
+            check_warning_inscriptions(you.inv[i], OPER_FIRE))
         {
             break;
         }
