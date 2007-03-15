@@ -915,24 +915,24 @@ formatted_string describe_mutations()
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison." EOL;
         else
-            result += "<lightred>You can exhale a cloud of poison.</lightred>" EOL "<lightblue>";
+            result += "<cyan>You can exhale a cloud of poison.</cyan>" EOL "<lightblue>";
 
         // slowness can be overriden
         if ( you.mutation[MUT_FAST] )
-            result += "<lightred>";
+            result += "<cyan>";
         result += naga_speed_descrip[you.mutation[MUT_FAST]];
         if ( you.mutation[MUT_FAST] )
-            result += "</lightred>";
+            result += "</cyan>";
         result += EOL;
         have_any = true;
         break;
 
     case SP_TROLL:
         if ( you.mutation[MUT_CLAWS] )
-            result += "<lightred>";
+            result += "<cyan>";
         result += troll_claw_descrip[you.mutation[MUT_CLAWS]];
         if ( you.mutation[MUT_CLAWS] )
-            result += "</lightred><lightblue>";
+            result += "</cyan><lightblue>";
         result += EOL;
         result += "You can eat rotten meat." EOL;
         have_any = true;
@@ -1081,7 +1081,7 @@ formatted_string describe_mutations()
         have_any = true;
     }
     
-    result += "</lightcyan>";
+    result += "</lightblue>";
 
     textcolor(LIGHTGREY);
 
@@ -1112,7 +1112,7 @@ formatted_string describe_mutations()
                 else            // innate ability
                 {
                     if ( you.demon_pow[i] < you.mutation[i] )
-                        colourname = "lightred";
+                        colourname = "cyan";
                     else
                         colourname = "lightblue";
                 }
