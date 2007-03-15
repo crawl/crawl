@@ -364,14 +364,17 @@ int str_to_trap(const std::string &s)
 // Describes the random demons you find in Pandemonium.
 //
 //---------------------------------------------------------------
-static std::string describe_demon(void)
+static std::string describe_demon(const monsters &mons)
 {
+    ASSERT(mons.ghost.get());
+    
     long globby = 0;
-
-    for (unsigned int i = 0; i < strlen( ghost.name ); i++)
+    const ghost_demon &ghost = *mons.ghost;
+    
+    for (unsigned i = 0; i < ghost.name.length(); i++)
         globby += ghost.name[i];
 
-    globby *= strlen( ghost.name );
+    globby *= ghost.name.length();
 
     push_rng_state();
     seed_rng( globby );
@@ -4581,17 +4584,18 @@ static std::string describe_draconian(const monsters *mon)
 void describe_monsters(int class_described, unsigned char which_mons)
 {
     std::string description;
+    monsters &mons = menv[which_mons];
 
     description.reserve(200);
 
     clrscr();
 
-    description = ptr_monam( &(menv[ which_mons ]), DESC_CAP_A );
+    description = ptr_monam( &mons, DESC_CAP_A );
     description += "$$";
 
     // Now that the player has examined it, he knows it's a mimic.
-    if (mons_is_mimic(menv[which_mons].type))
-        menv[which_mons].flags |= MF_KNOWN_MIMIC;
+    if (mons_is_mimic(mons.type))
+        mons.flags |= MF_KNOWN_MIMIC;
 
     switch (class_described)
     {
@@ -5974,12 +5978,12 @@ void describe_monsters(int class_described, unsigned char which_mons)
     }
     case MONS_PLAYER_GHOST:
         description += "The apparition of ";
-        description += ghost_description();
+        description += ghost_description(mons);
         description += ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        description += describe_demon();
+        description += describe_demon(mons);
         break;
 
     // mimics -- I'm not considering these descriptions a bug. -- bwr
@@ -6253,8 +6257,9 @@ void describe_monsters(int class_described, unsigned char which_mons)
                     found_spell = true;
                 }
 
-                snprintf( info, INFO_SIZE, "    %d: %s$", i, 
-                         mons_spell_name( hspell_pass[i] ) );
+                snprintf( info, INFO_SIZE, "    %d: %s (%d)$", i, 
+                          mons_spell_name( hspell_pass[i] ),
+                          hspell_pass[i] );
 
                 description += info;
             }
@@ -6300,9 +6305,12 @@ void describe_monsters(int class_described, unsigned char which_mons)
 // punctuation that's wanted.
 //
 //---------------------------------------------------------------
-std::string ghost_description(bool concise)
+std::string ghost_description(const monsters &mons, bool concise)
 {
+    ASSERT(mons.ghost.get());
     char tmp_buff[ INFO_SIZE ];
+
+    const ghost_demon &ghost = *mons.ghost;
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact 
@@ -6312,34 +6320,34 @@ std::string ghost_description(bool concise)
     int str;
     switch (ghost.values[GVAL_SPECIES])
     {
-      case SP_HILL_DWARF:
-      case SP_MOUNTAIN_DWARF:
-      case SP_TROLL:
-      case SP_OGRE:
-      case SP_OGRE_MAGE:
-      case SP_MINOTAUR:
-      case SP_HILL_ORC:
-      case SP_CENTAUR:
-      case SP_NAGA:
-      case SP_MUMMY:
-      case SP_GHOUL:
-      str = 15;
-      break;
+    case SP_HILL_DWARF:
+    case SP_MOUNTAIN_DWARF:
+    case SP_TROLL:
+    case SP_OGRE:
+    case SP_OGRE_MAGE:
+    case SP_MINOTAUR:
+    case SP_HILL_ORC:
+    case SP_CENTAUR:
+    case SP_NAGA:
+    case SP_MUMMY:
+    case SP_GHOUL:
+        str = 15;
+        break;
 
-      case SP_HUMAN:
-      case SP_DEMIGOD:
-      case SP_DEMONSPAWN:
-      str = 10;
-      break;
+    case SP_HUMAN:
+    case SP_DEMIGOD:
+    case SP_DEMONSPAWN:
+        str = 10;
+        break;
 
-      default:
-      str = 5;
-      break;
+    default:
+        str = 5;
+        break;
     }
 
     snprintf( tmp_buff, sizeof(tmp_buff), 
             "%s the %s, a%s %s %s",
-            ghost.name, 
+              ghost.name.c_str(), 
 
             skill_title( ghost.values[GVAL_BEST_SKILL], 
                 ghost.values[GVAL_SKILL_LEVEL],

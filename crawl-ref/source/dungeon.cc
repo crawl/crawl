@@ -6010,7 +6010,7 @@ static void dngn_place_item_explicit(int index, int x, int y,
     dngn_place_item_explicit(spec, x, y, level);
 }
 
-static void dngn_make_monster(
+static void dngn_place_monster(
     const mons_spec &monster_type_thing,
     int monster_level,
     int vx, int vy)
@@ -6080,7 +6080,7 @@ static int vault_grid( vault_placement &place,
             grd[vx][vy] = DNGN_FLOOR;
 
         mons_spec mons = mapsp->get_mons();
-        dngn_make_monster(mons, level_number, vx, vy);
+        dngn_place_monster(mons, level_number, vx, vy);
 
         item_spec item = mapsp->get_item();
         dngn_place_item_explicit(item, vx, vy, level_number);
@@ -6278,8 +6278,8 @@ static int vault_grid( vault_placement &place,
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
 
-        dngn_make_monster(monster_type_thing, monster_level,
-                         vx, vy);
+        dngn_place_monster(monster_type_thing, monster_level,
+                           vx, vy);
     }
 
     // again, this seems odd, given that this is just one of many

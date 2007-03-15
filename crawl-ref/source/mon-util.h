@@ -128,7 +128,9 @@ void init_monsters( FixedVector<unsigned short, 1000>& colour );
  *              spells4
  * *********************************************************************** */
 // mons_wpn only important for dancing weapons -- bwr
-const char *monam(int mons_num, int mons, bool vis, char desc, int mons_wpn = NON_ITEM);
+const char *monam(const monsters *mon,
+                  int mons_num, int mons, bool vis, char desc,
+                  int mons_wpn = NON_ITEM);
 
 // these front for monam
 const char *ptr_monam(const monsters *mon, char desc, bool force_seen = false);

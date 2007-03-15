@@ -1192,7 +1192,8 @@ void stethoscope(int mwh)
 
     // print type of monster
     snprintf( info, INFO_SIZE, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-              monam( menv[i].number, menv[i].type, true, DESC_CAP_THE ),
+              monam( &menv[i], menv[i].number, menv[i].type, true,
+                     DESC_CAP_THE ),
               i, menv[i].type,
               menv[i].x, menv[i].y,
               ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
@@ -1233,8 +1234,9 @@ void stethoscope(int mwh)
              ((menv[i].foe == MHITYOU)            ? "you" :
               (menv[i].foe == MHITNOT)            ? "none" :
               (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
-                 : monam( menv[menv[i].foe].number, menv[menv[i].foe].type,
-                          true, DESC_PLAIN )),
+              : monam( &menv[menv[i].foe],
+                       menv[menv[i].foe].number, menv[menv[i].foe].type,
+                       true, DESC_PLAIN )),
              menv[i].foe, 
              menv[i].foe_memory, 
 
@@ -1276,9 +1278,11 @@ void stethoscope(int mwh)
     if (menv[i].type == MONS_PLAYER_GHOST 
         || menv[i].type == MONS_PANDEMONIUM_DEMON)
     {
-        snprintf( info, INFO_SIZE, "Ghost damage: %d; brand: %d", 
-                  ghost.values[ GVAL_DAMAGE ], ghost.values[ GVAL_BRAND ] );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        ASSERT(menv[i].ghost.get());
+        const ghost_demon &ghost = *menv[i].ghost;
+        mprf( MSGCH_DIAGNOSTICS,
+              "Ghost damage: %d; brand: %d", 
+              ghost.values[ GVAL_DAMAGE ], ghost.values[ GVAL_BRAND ] );
     }
 }                               // end stethoscope()
 #endif

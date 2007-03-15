@@ -47,6 +47,9 @@
 // minimum value for strength required on armour and weapons
 #define STR_REQ_THRESHOLD       10
 
+// Max ghosts on a level.
+#define MAX_GHOSTS   10
+
 // max size of monter array {dlb}:
 #define MAX_MONSTERS 200
 // number of monster enchantments

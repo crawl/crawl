@@ -474,4 +474,6 @@ bool is_grid_dangerous(int grid);
 
 void run_macro(const char *macroname = NULL);
 
+int player_ghost_base_movement_speed();
+
 #endif

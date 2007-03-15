@@ -772,39 +772,15 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     monster_cleanup(monster);
 
     if ( xom_will_act )
-        Xom_acts(true, xom_will_act, false);
-    
+        Xom_acts(true, xom_will_act, false);    
 }                                                   // end monster_die
 
 void monster_cleanup(monsters *monster)
 {
     unsigned int monster_killed = monster_index(monster);
-    int dmi = 0;
+    monster->reset();
 
-    for (unsigned char j = 0; j < NUM_MON_ENCHANTS; j++)
-        monster->enchantment[j] = ENCH_NONE;
-
-    monster->flags = 0;
-    monster->type = -1;
-    monster->hit_points = 0;
-    monster->max_hit_points = 0;
-    monster->hit_dice = 0;
-    monster->ac = 0;
-    monster->ev = 0;
-    monster->speed_increment = 0;
-    monster->attitude = ATT_HOSTILE;
-    monster->behaviour = BEH_SLEEP;
-    monster->foe = MHITNOT;
-
-    if (in_bounds(monster->x, monster->y))
-        mgrd[monster->x][monster->y] = NON_MONSTER;
-
-    for (dmi = MSLOT_GOLD; dmi >= MSLOT_WEAPON; dmi--)
-    {
-        monster->inv[dmi] = NON_ITEM;
-    }
-
-    for (dmi = 0; dmi < MAX_MONSTERS; dmi++)
+    for (int dmi = 0; dmi < MAX_MONSTERS; dmi++)
     {
         if (menv[dmi].foe == monster_killed)
             menv[dmi].foe = MHITNOT;
@@ -812,7 +788,6 @@ void monster_cleanup(monsters *monster)
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
-
 }                               // end monster_cleanup()
 
 static bool jelly_divide(struct monsters * parent)
@@ -1037,7 +1012,7 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
         strcat( str_polymon, "something you cannot see!" );
     else
     {
-        strcat( str_polymon, monam( 250, targetc, true, DESC_NOCAP_A ) );
+        strcat( str_polymon, monam( NULL, 250, targetc, true, DESC_NOCAP_A ) );
 
         if (targetc == MONS_PULSATING_LUMP)
             strcat( str_polymon, " of flesh" );
@@ -2371,7 +2346,7 @@ static void handle_nearby_ability(struct monsters *monster)
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        if (ghost.values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
+        if (monster->ghost->values[ GVAL_DEMONLORD_CYCLE_COLOUR ])
             monster->colour = random_colour();
         break;
     }
@@ -3164,7 +3139,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
         return (false);
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON 
-            && !ghost.values[ GVAL_DEMONLORD_SPELLCASTER ])
+            && !monster->ghost->values[ GVAL_DEMONLORD_SPELLCASTER ])
     {
         return (false);
     }
@@ -4313,13 +4288,10 @@ static bool handle_pickup(struct monsters *monster)
     case OBJ_GOLD: //mv - monsters now pick up gold (19 May 2001)
         if (monsterNearby)
         {
-
-            strcpy(info, monam( monster->number, monster->type, 
-                                player_monster_visible( monster ), 
-                                DESC_CAP_THE ));
-
-            strcat(info, " picks up some gold.");
-            mpr(info);
+            mprf("%s picks up some gold.",
+                 monam( monster, monster->number, monster->type, 
+                        player_monster_visible( monster ), 
+                        DESC_CAP_THE ));
         }
 
         if (monster->inv[MSLOT_GOLD] != NON_ITEM)

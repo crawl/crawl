@@ -136,6 +136,11 @@ static const char *monster_spell_name[] = {
     "Poison Arrow",
     "Summon Small Mammals",
     "Summon Mushrooms",
+    "Ice Bolt",
+    "Magma",
+    "Shock",
+    "Berserk Rage",
+    "Might"
 };
 #endif
 
@@ -495,7 +500,7 @@ bool mons_is_unique( int mc )
 char mons_see_invis( struct monsters *mon )
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
-        return (ghost.values[ GVAL_SEE_INVIS ]);
+        return (mon->ghost->values[ GVAL_SEE_INVIS ]);
     else if (((seekmonster(mon->type))->bitfields & M_SEE_INVIS) != 0)
         return (1);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
@@ -635,7 +640,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
     {
         if (attk_number == 0)
-            return mon_attack_def::attk(ghost.values[GVAL_DAMAGE]);
+            return mon_attack_def::attk(mons->ghost->values[GVAL_DAMAGE]);
         else
             return mon_attack_def::attk(0, AT_NONE);
     }
@@ -734,7 +739,7 @@ int mons_res_elec( const monsters *mon )
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (ghost.values[ GVAL_RES_ELEC ]);
+        return (mon->ghost->values[ GVAL_RES_ELEC ]);
 
     /* this is a variable, not a player_xx() function, so can be above 1 */
     int u = 0;
@@ -810,7 +815,7 @@ int mons_res_fire( const monsters *mon )
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (ghost.values[ GVAL_RES_FIRE ]);
+        return (mon->ghost->values[ GVAL_RES_FIRE ]);
 
     int u = 0, f = get_mons_resists(mon);
 
@@ -858,7 +863,7 @@ int mons_res_cold( const monsters *mon )
     int mc = mon->type;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
-        return (ghost.values[ GVAL_RES_COLD ]);
+        return (mon->ghost->values[ GVAL_RES_COLD ]);
 
     int u = 0, f = get_mons_resists(mon);
 
@@ -961,9 +966,6 @@ int mons_skeleton(int mc)
 
 int mons_class_flies(int mc)
 {
-    if (mc == MONS_PANDEMONIUM_DEMON)
-        return (ghost.values[ GVAL_DEMONLORD_FLY ]);
-
     int f = smc->bitfields;
 
     if (f & M_FLIES)
@@ -977,6 +979,12 @@ int mons_class_flies(int mc)
 
 int mons_flies( const monsters *mon )
 {
+    if (mon->type == MONS_PANDEMONIUM_DEMON
+        && mon->ghost->values[ GVAL_DEMONLORD_FLY ])
+    {
+        return (1);
+    }
+    
     int ret = mons_class_flies( mon->type );
     return (ret ? ret : (scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? 2 : 0);
 }                               // end mons_flies()
@@ -1165,48 +1173,7 @@ int exper_value( const struct monsters *monster )
 
 void mons_load_spells( monsters *mon, int book )
 {
-    int x, y;
-
-    if (book == MST_NO_SPELLS)
-    {
-        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
-            mon->spells[y] = MS_NO_SPELL;
-        return;
-    }
-
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
-            ptr_monam( mon, DESC_PLAIN ), book );
-#endif
-
-    for (x = 0; x < 6; x++)
-        mon->spells[x] = MS_NO_SPELL;
-
-    if (book == MST_GHOST)
-    {
-        for (y = 0; y < NUM_MONSTER_SPELL_SLOTS; y++)
-        {
-            mon->spells[y] = ghost.values[ GVAL_SPELL_1 + y ];
-#if DEBUG_DIAGNOSTICS
-            mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", y, mon->spells[y] );
-#endif
-        }
-    }
-    else 
-    {
-        // this needs to be rewritten a la the monsterseek rewrite {dlb}:
-        for (x = 0; x < NUM_MSTYPES; x++)
-        {
-            if (mspell_list[x][0] == book)
-                break;
-        }
-
-        if (x < NUM_MSTYPES)
-        {
-            for (y = 0; y < 6; y++)
-                mon->spells[y] = mspell_list[x][y + 1];
-        }
-    }
+    mon->load_spells(book);
 }
 
 #if DEBUG_DIAGNOSTICS
@@ -1441,12 +1408,13 @@ const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
         return (mimic_name_buff);
     }
 
-    return (monam( mon->number, mon->type,
+    return (monam( mon, mon->number, mon->type,
                    force_seen || player_monster_visible( mon ), 
                    desc, mon->inv[MSLOT_WEAPON] ));
 }
 
-const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
+const char *monam( const monsters *mon,
+                   int mons_num, int mons, bool vis, char desc, int mons_wpn )
 {
     static char gmo_n[ ITEMNAME_SIZE ];
     char gmo_n2[ ITEMNAME_SIZE ] = "";
@@ -1550,12 +1518,12 @@ const char *monam( int mons_num, int mons, bool vis, char desc, int mons_wpn )
         break;
 
     case MONS_PLAYER_GHOST:
-        strcpy(gmo_n, ghost.name);
+        strcpy(gmo_n, mon->ghost->name.c_str());
         strcat(gmo_n, "'s ghost");
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        strcpy(gmo_n, ghost.name);
+        strcpy(gmo_n, mon->ghost->name.c_str());
         break;
 
     default:
@@ -1759,7 +1727,7 @@ int mons_offhand_weapon_index(const monsters *m)
 int mons_base_damage_brand(const monsters *m)
 {
     if (m->type == MONS_PLAYER_GHOST || m->type == MONS_PANDEMONIUM_DEMON)
-        return ghost.values[ GVAL_BRAND ];
+        return m->ghost->values[ GVAL_BRAND ];
 
     return (SPWPN_NORMAL);
 }
@@ -2602,6 +2570,57 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 ///////////////////////////////////////////////////////////////////////////////
 // monsters methods
 
+monsters::monsters()
+    : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
+      ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
+      target_x(0), target_y(0), inv(), spells(), attitude(ATT_NEUTRAL),
+      behaviour(BEH_WANDER), foe(MHITYOU), enchantment(), flags(0L),
+      number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
+      ghost()
+{
+}
+
+monsters::monsters(const monsters &mon)
+{
+    init_with(mon);
+}
+
+monsters &monsters::operator = (const monsters &mon)
+{
+    init_with(mon);
+    return (*this);
+}
+
+void monsters::init_with(const monsters &mon)
+{
+    type              = mon.type;
+    hit_points        = mon.hit_points;
+    max_hit_points    = mon.max_hit_points;
+    hit_dice          = mon.hit_dice;
+    ac                = mon.ac;
+    ev                = mon.ev;
+    speed             = mon.speed;
+    speed_increment   = mon.speed_increment;
+    x                 = mon.x;
+    y                 = mon.y;
+    target_x          = mon.target_x;
+    target_y          = mon.target_y;
+    inv               = mon.inv;
+    spells            = mon.spells;
+    attitude          = mon.attitude;
+    behaviour         = mon.behaviour;
+    foe               = mon.foe;
+    enchantment       = mon.enchantment;
+    flags             = mon.flags;
+    number            = mon.number;
+    colour            = mon.colour;
+    foe_memory        = mon.foe_memory;
+    god               = mon.god;
+    
+    if (mon.ghost.get())
+        ghost.reset( new ghost_demon( *mon.ghost ) );
+}
+
 coord_def monsters::pos() const
 {
     return coord_def(x, y);
@@ -2975,4 +2994,118 @@ void monsters::slow_down(int strength)
     bolt slow;
     slow.flavour = BEAM_SLOW;
     mons_ench_f2(this, slow);
+}
+
+void monsters::set_ghost(const ghost_demon &g)
+{
+    ghost.reset( new ghost_demon(g) );
+}
+
+void monsters::pandemon_init()
+{
+    hit_dice = ghost->values[ GVAL_DEMONLORD_HIT_DICE ];
+    hit_points = ghost->values[ GVAL_MAX_HP ];
+    max_hit_points = ghost->values[ GVAL_MAX_HP ];
+    ac = ghost->values[ GVAL_AC ];
+    ev = ghost->values[ GVAL_EV ];
+    speed = (one_chance_in(3) ? 10 : 6 + roll_dice(2, 9));
+    speed_increment = 70;
+    colour = random_colour();        // demon's colour
+    load_spells(MST_GHOST);
+}
+
+void monsters::ghost_init()
+{
+    type = MONS_PLAYER_GHOST;
+    hit_dice = ghost->values[ GVAL_EXP_LEVEL ];
+    hit_points = ghost->values[ GVAL_MAX_HP ];
+    max_hit_points = ghost->values[ GVAL_MAX_HP ];
+    ac = ghost->values[ GVAL_AC];
+    ev = ghost->values[ GVAL_EV ];
+    speed = ghost->values[ GVAL_SPEED ];
+    speed_increment = 70;
+    attitude = ATT_HOSTILE;
+    behaviour = BEH_WANDER;
+    flags = 0;
+    foe = MHITNOT;
+    foe_memory = 0;
+    colour = mons_class_colour(MONS_PLAYER_GHOST);
+    number = 250;
+    load_spells(MST_GHOST);
+
+    inv.init(NON_ITEM);
+    enchantment.init(ENCH_NONE);
+
+    do
+    {
+        x = random2(GXM - 20) + 10;
+        y = random2(GYM - 20) + 10;
+    }
+    while ((grd[x][y] != DNGN_FLOOR)
+           || (mgrd[x][y] != NON_MONSTER));
+
+    mgrd[x][y] = monster_index(this);
+}
+
+void monsters::reset()
+{
+    enchantment.init(ENCH_NONE);
+    inv.init(NON_ITEM);
+
+    flags = 0;
+    type = -1;
+    hit_points = 0;
+    max_hit_points = 0;
+    hit_dice = 0;
+    ac = 0;
+    ev = 0;
+    speed_increment = 0;
+    attitude = ATT_HOSTILE;
+    behaviour = BEH_SLEEP;
+    foe = MHITNOT;
+
+    if (in_bounds(x, y))
+        mgrd[x][y] = NON_MONSTER;
+
+    x = y = 0;
+    ghost.reset(NULL);
+}
+
+void monsters::load_spells(int book)
+{
+    spells.init(MS_NO_SPELL);
+    if (book == MST_NO_SPELLS || (book == MST_GHOST && !ghost.get()))
+        return;
+
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d", 
+          name(DESC_PLAIN).c_str(), book );
+#endif
+
+    if (book == MST_GHOST)
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        {
+            spells[i] = ghost->values[ GVAL_SPELL_1 + i ];
+#if DEBUG_DIAGNOSTICS
+            mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", i, spells[i] );
+#endif
+        }
+    }
+    else 
+    {
+        int i = 0;
+        // this needs to be rewritten a la the monsterseek rewrite {dlb}:
+        for (; i < NUM_MSTYPES; i++)
+        {
+            if (mspell_list[i][0] == book)
+                break;
+        }
+
+        if (i < NUM_MSTYPES)
+        {
+            for (int z = 0; z < NUM_MONSTER_SPELL_SLOTS; z++)
+                spells[z] = mspell_list[i][z + 1];
+        }
+    }
 }

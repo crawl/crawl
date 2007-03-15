@@ -1362,6 +1362,7 @@ enum ghost_value_type
     GVAL_SPELL_4,
     GVAL_SPELL_5,
     GVAL_SPELL_6,       // 19
+    GVAL_SPEED,
     NUM_GHOST_VALUES,   // should always be last value
 
     // these values are for demonlords, which override the above:

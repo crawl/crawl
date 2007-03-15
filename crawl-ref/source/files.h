@@ -91,4 +91,7 @@ void writeLong(FILE* file, long num);
 
 long readLong(FILE *file);
 
+FILE *lk_open(const char *mode, const std::string &file);
+void lk_close(FILE *handle, const char *mode, const std::string &file);
+
 #endif

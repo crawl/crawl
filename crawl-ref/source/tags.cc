@@ -116,6 +116,9 @@ static void tag_missing_level_attitude();
 static void tag_construct_ghost(struct tagHeader &th);
 static void tag_read_ghost(struct tagHeader &th, char minorVersion);
 
+static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
+static ghost_demon unmarshallGhost( tagHeader &th );
+
 // provide a wrapper for file writing, just in case.
 int write2(FILE * file, const char *buffer, unsigned int count)
 {
@@ -322,6 +325,21 @@ void unmarshallString(struct tagHeader &th, char *data, int maxSize)
     data[copylen] = 0;
 
     th.offset += len;
+}
+
+std::string unmarshallString(tagHeader &th, int maxSize)
+{
+    if (maxSize <= 0)
+        return ("");    
+    char *buffer = new char [maxSize];
+    if (!buffer)
+        return ("");    
+    *buffer = 0;
+    unmarshallString(th, buffer, maxSize);
+    const std::string res = buffer;
+    delete [] buffer;
+
+    return (res);
 }
 
 // boolean (to avoid system-dependant bool implementations)
@@ -592,7 +610,7 @@ void tag_set_expected(char tags[], int fileType)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
-                if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE)
+                if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE && i != TAG_GHOST)
                     tags[i] = 1;
                 break;
             case TAGTYPE_GHOST:
@@ -1330,6 +1348,13 @@ static void tag_construct_level_monsters(struct tagHeader &th)
             marshallShort(th, m.spells[j]);
 
         marshallByte(th, m.god);
+
+        if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
+        {
+            // *Must* have ghost field set.
+            ASSERT(m.ghost.get());
+            marshallGhost(th, *m.ghost);
+        }
     }
 }
 
@@ -1474,40 +1499,45 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
 
     for (i = 0; i < count; i++)
     {
-        menv[i].ac = unmarshallByte(th);
-        menv[i].ev = unmarshallByte(th);
-        menv[i].hit_dice = unmarshallByte(th);
-        menv[i].speed = unmarshallByte(th);
+        monsters &m = menv[i];
+        
+        m.ac = unmarshallByte(th);
+        m.ev = unmarshallByte(th);
+        m.hit_dice = unmarshallByte(th);
+        m.speed = unmarshallByte(th);
         // Avoid sign extension when loading files (Elethiomel's hang)
-        menv[i].speed_increment = (unsigned char) unmarshallByte(th);
-        menv[i].behaviour = unmarshallByte(th);
-        menv[i].x = unmarshallByte(th);
-        menv[i].y = unmarshallByte(th);
-        menv[i].target_x = unmarshallByte(th);
-        menv[i].target_y = unmarshallByte(th);
-        menv[i].flags = unmarshallLong(th);
+        m.speed_increment = (unsigned char) unmarshallByte(th);
+        m.behaviour = unmarshallByte(th);
+        m.x = unmarshallByte(th);
+        m.y = unmarshallByte(th);
+        m.target_x = unmarshallByte(th);
+        m.target_y = unmarshallByte(th);
+        m.flags = unmarshallLong(th);
 
         for (j = 0; j < ecount; j++)
-            menv[i].enchantment[j] = unmarshallByte(th);
+            m.enchantment[j] = unmarshallByte(th);
 
-        menv[i].type = unmarshallShort(th);
-        menv[i].hit_points = unmarshallShort(th);
-        menv[i].max_hit_points = unmarshallShort(th);
-        menv[i].number = unmarshallShort(th);
+        m.type = unmarshallShort(th);
+        m.hit_points = unmarshallShort(th);
+        m.max_hit_points = unmarshallShort(th);
+        m.number = unmarshallShort(th);
 
-        menv[i].colour = unmarshallShort(th);
+        m.colour = unmarshallShort(th);
 
         for (j = 0; j < icount; j++)
-            menv[i].inv[j] = unmarshallShort(th);
+            m.inv[j] = unmarshallShort(th);
 
         for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-            menv[i].spells[j] = unmarshallShort(th);
+            m.spells[j] = unmarshallShort(th);
 
-        menv[i].god = (god_type) unmarshallByte(th);
+        m.god = (god_type) unmarshallByte(th);
+
+        if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
+            m.set_ghost( unmarshallGhost(th) );
 
         // place monster
-        if (menv[i].type != -1)
-            mgrd[menv[i].x][menv[i].y] = i;
+        if (m.type != -1)
+            mgrd[m.x][m.y] = i;
     }
 }
 
@@ -1579,28 +1609,51 @@ void tag_missing_level_attitude()
 
 // ------------------------------- ghost tags ---------------------------- //
 
-static void tag_construct_ghost(struct tagHeader &th)
+static void marshallGhost(tagHeader &th, const ghost_demon &ghost)
 {
-    int i;
-
-    marshallString(th, ghost.name, 20);
+    marshallString(th, ghost.name.c_str(), 20);
 
     // how many ghost values?
-    marshallByte(th, 20);
+    marshallByte(th, NUM_GHOST_VALUES);
 
-    for (i = 0; i < 20; i++)
+    for (int i = 0; i < NUM_GHOST_VALUES; i++)
         marshallShort( th, ghost.values[i] );
+}
+
+static void tag_construct_ghost(struct tagHeader &th)
+{
+    // How many ghosts?
+    marshallShort(th, ghosts.size());
+
+    for (int i = 0, size = ghosts.size(); i < size; ++i)
+        marshallGhost(th, ghosts[i]);
+}
+
+static ghost_demon unmarshallGhost( tagHeader &th )
+{
+    ghost_demon ghost;
+    
+    ghost.name = unmarshallString(th, 20);
+
+    // how many ghost values?
+    int count_c = unmarshallByte(th);
+
+    if (count_c > NUM_GHOST_VALUES)
+        count_c = NUM_GHOST_VALUES;
+    
+    for (int i = 0; i < count_c; i++)
+        ghost.values[i] = unmarshallShort(th);
+
+    return (ghost);
 }
 
 static void tag_read_ghost(struct tagHeader &th, char minorVersion)
 {
-    int i, count_c;
+    int nghosts = unmarshallShort(th);
 
-    unmarshallString(th, ghost.name, 20);
+    if (nghosts < 1 || nghosts > MAX_GHOSTS)
+        return;
 
-    // how many ghost values?
-    count_c = unmarshallByte(th);
-
-    for (i = 0; i < count_c; i++)
-        ghost.values[i] = unmarshallShort(th);
+    for (int i = 0; i < nghosts; ++i)
+        ghosts.push_back( unmarshallGhost(th) );
 }

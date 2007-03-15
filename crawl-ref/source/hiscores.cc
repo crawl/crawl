@@ -36,6 +36,7 @@
 #include "externs.h"
 
 #include "branch.h"
+#include "files.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -77,12 +78,6 @@ static void hs_nextstring(const char *&inbuf, char *dest, size_t bufsize);
 static int hs_nextint(const char *&inbuf);
 static long hs_nextlong(const char *&inbuf);
 static time_t parse_time(const std::string &st);
-
-// file locking stuff
-#ifdef USE_FILE_LOCKING
-static bool lock_file_handle( FILE *handle, int type );
-static bool unlock_file_handle( FILE *handle );
-#endif // USE_FILE_LOCKING
 
 std::string score_file_name()
 {
@@ -363,129 +358,18 @@ std::string hiscores_format_single_long( const scorefile_entry &se,
 // BEGIN private functions
 // --------------------------------------------------------------------------
 
-// first, some file locking stuff for multiuser crawl
-#ifdef USE_FILE_LOCKING
-
-static bool lock_file_handle( FILE *handle, int type )
-{
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = type;
-
-#ifdef USE_BLOCKING_LOCK
-
-    status = fcntl( fileno( handle ), F_SETLKW, &lock );
-
-#else
-
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl( fileno( handle ), F_SETLK, &lock );
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror( "Problems locking file... retrying..." );
-        delay( 1000 );
-    }
-
-#endif
-
-    return (status == 0);
-}
-
-static bool unlock_file_handle( FILE *handle )
-{
-    struct flock  lock;
-    int           status;
-
-    lock.l_whence = SEEK_SET;
-    lock.l_start = 0;
-    lock.l_len = 0;
-    lock.l_type = F_UNLCK;
-
-#ifdef USE_BLOCKING_LOCK
-
-    status = fcntl( fileno( handle ), F_SETLKW, &lock );
-
-#else
-
-    for (int i = 0; i < 30; i++)
-    {
-        status = fcntl( fileno( handle ), F_SETLK, &lock );
-
-        // success
-        if (status == 0)
-            break;
-
-        // known failure
-        if (status == -1 && (errno != EACCES && errno != EAGAIN))
-            break;
-
-        perror( "Problems unlocking file... retrying..." );
-        delay( 1000 );
-    }
-
-#endif
-
-    return (status == 0);
-}
-
-#endif
-
 FILE *hs_open( const char *mode, const std::string &scores )
 {
     // allow reading from standard input
     if ( scores == "-" )
         return stdin;
 
-    FILE *handle = fopen(scores.c_str(), mode);
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
-#endif
-
-#ifdef USE_FILE_LOCKING
-    int locktype = F_RDLCK;
-    if (stricmp(mode, "r"))
-        locktype = F_WRLCK;
-
-    if (handle && !lock_file_handle( handle, locktype ))
-    {
-        perror( "Could not lock scorefile... " );
-        fclose( handle );
-        handle = NULL;
-    }
-#endif
-    return handle;
+    return lk_open( mode, scores );
 }
 
 void hs_close( FILE *handle, const char *mode, const std::string &scores )
 {
-    UNUSED( mode );
-
-    if (handle == NULL || handle == stdin)
-        return;
-
-#ifdef USE_FILE_LOCKING
-    unlock_file_handle( handle );
-#endif
-
-    // actually close
-    fclose(handle);
-
-#ifdef SHARED_FILES_CHMOD_PUBLIC
-    if (stricmp(mode, "w") == 0)
-        chmod(scores.c_str(), SHARED_FILES_CHMOD_PUBLIC);
-#endif
+    lk_close(handle, mode, scores);
 }
 
 bool hs_read( FILE *scores, scorefile_entry &dest )
@@ -1247,8 +1131,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             }
 
             death_source_name =
-                monam( monster->number, monster->type, true, DESC_NOCAP_A, 
-                       monster->inv[MSLOT_WEAPON] );
+                monam( monster, monster->number, monster->type, true,
+                       DESC_NOCAP_A, monster->inv[MSLOT_WEAPON] );
         }
     }
     else
@@ -1484,7 +1368,7 @@ const char *scorefile_entry::death_source_desc() const
 
     return (!death_source_name.empty()? 
             death_source_name.c_str()
-            : monam( mon_num, death_source, true, DESC_NOCAP_A ) );
+            : monam( NULL, mon_num, death_source, true, DESC_NOCAP_A ) );
 }
 
 std::string scorefile_entry::damage_string(bool terse) const

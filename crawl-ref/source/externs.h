@@ -814,8 +814,16 @@ struct mon_attack_def
     }
 };
 
+class ghost_demon;
+
 class monsters : public actor
 {
+public:
+    monsters();
+    monsters(const monsters &other);
+
+    monsters &operator = (const monsters &other);
+
 public:
     int type;
     int hit_points;
@@ -845,7 +853,15 @@ public:
 
     god_type god;                      // Usually GOD_NO_GOD.
 
+    std::auto_ptr<ghost_demon> ghost;  // Ghost information.
+
 public:
+    void set_ghost(const ghost_demon &ghost);
+    void ghost_init();
+    void pandemon_init();
+    void reset();
+    void load_spells(int spellbook);
+    
     // actor interface
     int id() const;
     bool      alive() const;
@@ -912,6 +928,9 @@ public:
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
+
+private:
+    void init_with(const monsters &mons);
 };
 
 struct cloud_struct
@@ -998,14 +1017,31 @@ struct game_state
 };
 extern game_state crawl_state;
 
-struct ghost_struct
+struct ghost_demon
 {
-    char name[20];
+public:
+    std::string name;
     FixedVector< short, NUM_GHOST_VALUES > values;
+
+public:
+    ghost_demon();
+    void reset();
+    void init_random_demon();
+    void init_player_ghost();
+
+public:
+    static std::vector<ghost_demon> find_ghosts();
+
+private:
+    static int n_extra_ghosts();
+    static void find_extra_ghosts(std::vector<ghost_demon> &ghosts, int n);
+    
+private:
+    void add_spells();
+    int  translate_spell(int playerspell) const;
 };
 
-
-extern struct ghost_struct ghost;
+extern std::vector<ghost_demon> ghosts;
 
 struct system_environment
 {

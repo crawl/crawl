@@ -612,16 +612,16 @@ void kill_def::load(FILE *file)
     }
 }
 
-kill_ghost::kill_ghost(const struct monsters *mon)
+kill_ghost::kill_ghost(const monsters *mon)
 {
     exp = exper_value(mon);
     place = get_packed_place();
-    ghost_name = ghost.name;
+    ghost_name = mon->ghost->name;
 
     // Check whether this is really a ghost, since we also have to handle
     // the Pandemonic demons.
     if (mon->type == MONS_PLAYER_GHOST)
-        ghost_name = "The ghost of " + ghost_description(true);
+        ghost_name = "The ghost of " + ghost_description(*mon, true);
 }
 
 std::string kill_ghost::info() const

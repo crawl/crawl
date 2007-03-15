@@ -1331,6 +1331,28 @@ int player_prot_life(bool calc_unid)
     return (pl);
 }
 
+// Returns the movement speed for a player ghost. Note that this is a real
+// speed, not a movement cost, so higher is better.
+int player_ghost_base_movement_speed()
+{
+    int speed = you.species == SP_NAGA? 8 : 10;
+
+    if (you.mutation[MUT_FAST])
+        speed += you.mutation[MUT_FAST] + 1;
+
+    if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
+        speed += 2;
+
+    // Cap speeds.
+    if (speed < 6)
+        speed = 6;
+    
+    if (speed > 13)
+        speed = 13;
+
+    return (speed);
+}
+
 // New player movement speed system... allows for a bit more that
 // "player runs fast" and "player walks slow" in that the speed is
 // actually calculated (allowing for centaurs to get a bonus from
@@ -4552,11 +4574,6 @@ void player::init()
         worshipped[i] = 0;
         num_gifts[i] = 0;
     }
-
-    ghost.name[0] = 0;
-
-    for (int i = 0; i < NUM_GHOST_VALUES; i++)
-        ghost.values[i] = 0;
 
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
         equip[i] = -1;

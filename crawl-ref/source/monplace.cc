@@ -571,7 +571,6 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         }
     }
 
-
     // give manticores 8 to 16 spike volleys.
     // they're not spellcasters so this doesn't screw anything up.
     if (mon_type == MONS_MANTICORE)
@@ -603,6 +602,15 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         mons_add_ench(&menv[id], dur );
 
     menv[id].foe = target;
+
+    // Initialise pandemonium demons
+    if (menv[id].type == MONS_PANDEMONIUM_DEMON)
+    {
+        ghost_demon ghost;
+        ghost.init_random_demon();
+        menv[id].set_ghost(ghost);
+        menv[id].pandemon_init();
+    }
 
     mark_interesting_monst(&menv[id], behaviour);
     

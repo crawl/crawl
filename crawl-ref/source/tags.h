@@ -51,6 +51,7 @@ long unmarshallLong(struct tagHeader &th);
 float unmarshallFloat(struct tagHeader &th);
 bool unmarshallBoolean(struct tagHeader &th);
 void unmarshallString(struct tagHeader &th, char *data, int maxSize);
+std::string unmarshallString(tagHeader &th, int maxSize);
 
 std::string make_date_string( time_t in_date );
 time_t parse_date_string( char[20] );
