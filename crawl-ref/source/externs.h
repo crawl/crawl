@@ -1350,6 +1350,9 @@ public:
     unsigned int tutorial_type;
     unsigned int tutorial_left;
 
+private:
+    std::map<std::string, std::string> aliases;
+    
 public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
@@ -1359,6 +1362,9 @@ public:
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
 private:
+    std::string unalias(const std::string &key) const;
+    void add_alias(const std::string &alias, const std::string &name);
+    
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(char_set_type set, const std::string &overrides);

@@ -1049,6 +1049,8 @@ void game_options::read_options(InitLineInput &il, bool runscript)
 
     bool l_init        = false;
 
+    aliases.clear();
+    
     std::string luacond;
     std::string luacode;
     while (!il.eof())
@@ -1244,53 +1246,75 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
     return (conditions);
 }
 
+void game_options::add_alias(const std::string &key, const std::string &val)
+{
+    aliases[key] = val;
+}
+
+std::string game_options::unalias(const std::string &key) const
+{
+    std::map<std::string, std::string>::const_iterator i = aliases.find(key);
+    return (i == aliases.end()? key : i->second);
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
     std::string key = "";
     std::string subkey = "";
     std::string field = "";
 
-    int first_equals = str.find('=');
-    int first_dot = str.find('.');
-
     bool plus_equal = false;
     bool minus_equal = false;
+
+    const int first_equals = str.find('=');
 
     // all lines with no equal-signs we ignore
     if (first_equals < 0)
         return;
 
-    if (first_dot > 0 && first_dot < first_equals)
+    field  = str.substr( first_equals + 1 );
+    
+    std::string prequal = trimmed_string( str.substr(0, first_equals) );
+
+    // Is this a case of key += val?
+    if (prequal.length() && prequal[prequal.length() - 1] == '+')
     {
-        key    = str.substr( 0, first_dot );
-        subkey = str.substr( first_dot + 1, first_equals - first_dot - 1 );
-        field  = str.substr( first_equals + 1 );
+        plus_equal = true;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
+    else if (prequal.length() && prequal[prequal.length() - 1] == '-')
+    {
+        minus_equal = true;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
+    else if (prequal.length() && prequal[prequal.length() - 1] == ':')
+    {
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+        trim_string(field);
+
+        add_alias(prequal, field);
+        return;
+    }
+
+    prequal = unalias(prequal);
+
+    const std::string::size_type first_dot = prequal.find('.');
+    if (first_dot != std::string::npos)
+    {
+        key    = prequal.substr( 0, first_dot );
+        subkey = prequal.substr( first_dot + 1 );
     }
     else
     {
         // no subkey (dots are okay in value field)
-        key    = str.substr( 0, first_equals );
-        subkey = "";
-        field  = str.substr( first_equals + 1 );
+        key    = prequal;
     }
 
     // Clean up our data...
     tolower_string( trim_string( key ) );
-
-    // Is this a case of key += val?
-    if (key.length() && key[key.length() - 1] == '+')
-    {
-        plus_equal = true;
-        key = key.substr(0, key.length() - 1);
-        trim_string(key);
-    }
-    else if (key.length() && key[key.length() - 1] == '-')
-    {
-        minus_equal = true;
-        key = key.substr(0, key.length() - 1);
-        trim_string(key);
-    }
-
     tolower_string( trim_string( subkey ) );
 
     // some fields want capitals... none care about external spaces
