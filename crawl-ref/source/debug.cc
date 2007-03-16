@@ -608,7 +608,7 @@ void create_spec_monster_name(int x, int y)
 {
     int mon = debug_prompt_for_monster();
 
-    if (mon == -1)
+    if (mon == -1 || mon == MONS_PROGRAM_BUG)
     {
         mpr("I couldn't find that monster.");
 
