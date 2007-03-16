@@ -116,7 +116,7 @@ int player_AC(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-unsigned char player_energy(void);
+int player_energy(void);
 
 
 /* ***********************************************************************
@@ -202,64 +202,16 @@ bool player_res_asphyx();
 int player_shield_class(void);
 
 
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_air(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_cold(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_conj(void);
-
-
-/* ***********************************************************************
- * called from: it_use3 - spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_death(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_earth(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_ench(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_fire(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_holy(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_poison(void);
-
-
-/* ***********************************************************************
- * called from: spell - spells0
- * *********************************************************************** */
-unsigned char player_spec_summ(void);
+int player_spec_air(void);
+int player_spec_cold(void);
+int player_spec_conj(void);
+int player_spec_death(void);
+int player_spec_earth(void);
+int player_spec_ench(void);
+int player_spec_fire(void);
+int player_spec_holy(void);
+int player_spec_poison(void);
+int player_spec_summ(void);
 
 
 /* ***********************************************************************
@@ -278,7 +230,7 @@ int player_spell_levels(void);
 /* ***********************************************************************
  * called from: effects
  * *********************************************************************** */
-unsigned char player_sust_abil(bool calc_unid = true);
+int player_sust_abil(bool calc_unid = true);
 
 
 /* ***********************************************************************
@@ -304,7 +256,7 @@ int slaying_bonus(char which_affected);
  *              items - monstuff - mon-util - mstuff2 - spells1 - spells2 -
  *              spells3
  * *********************************************************************** */
-unsigned char player_see_invis(bool calc_unid = true);
+int player_see_invis(bool calc_unid = true);
 bool player_monster_visible( const monsters *mon );
 
 

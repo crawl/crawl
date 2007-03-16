@@ -1127,7 +1127,7 @@ int player_res_poison(bool calc_unid)
     return (rp);
 }                               // end player_res_poison()
 
-unsigned char player_spec_death(void)
+int player_spec_death()
 {
     int sd = 0;
 
@@ -1154,14 +1154,14 @@ unsigned char player_spec_death(void)
     return sd;
 }
 
-unsigned char player_spec_holy(void)
+int player_spec_holy()
 {
     //if ( you.char_class == JOB_PRIEST || you.char_class == JOB_PALADIN )
     //  return 1;
     return 0;
 }
 
-unsigned char player_spec_fire(void)
+int player_spec_fire()
 {
     int sf = 0;
 
@@ -1177,7 +1177,7 @@ unsigned char player_spec_fire(void)
     return sf;
 }
 
-unsigned char player_spec_cold(void)
+int player_spec_cold()
 {
     int sc = 0;
 
@@ -1190,7 +1190,7 @@ unsigned char player_spec_cold(void)
     return sc;
 }
 
-unsigned char player_spec_earth(void)
+int player_spec_earth()
 {
     int se = 0;
 
@@ -1203,7 +1203,7 @@ unsigned char player_spec_earth(void)
     return se;
 }
 
-unsigned char player_spec_air(void)
+int player_spec_air()
 {
     int sa = 0;
 
@@ -1216,7 +1216,7 @@ unsigned char player_spec_air(void)
     return sa;
 }
 
-unsigned char player_spec_conj(void)
+int player_spec_conj()
 {
     int sc = 0;
 
@@ -1230,7 +1230,7 @@ unsigned char player_spec_conj(void)
     return sc;
 }
 
-unsigned char player_spec_ench(void)
+int player_spec_ench()
 {
     int se = 0;
 
@@ -1244,7 +1244,7 @@ unsigned char player_spec_ench(void)
     return se;
 }
 
-unsigned char player_spec_summ(void)
+int player_spec_summ()
 {
     int ss = 0;
 
@@ -1258,7 +1258,7 @@ unsigned char player_spec_summ(void)
     return ss;
 }
 
-unsigned char player_spec_poison(void)
+int player_spec_poison()
 {
     int sp = 0;
 
@@ -1275,9 +1275,9 @@ unsigned char player_spec_poison(void)
     return sp;
 }
 
-unsigned char player_energy(void)
+int player_energy()
 {
-    unsigned char pe = 0;
+    int pe = 0;
 
     // Staves
     pe += player_equip( EQ_STAFF, STAFF_ENERGY );
@@ -2023,9 +2023,9 @@ int player_shield_class(void)   //jmf: changes for new spell
     return (base_shield);
 }                               // end player_shield_class()
 
-unsigned char player_see_invis(bool calc_unid)
+int player_see_invis(bool calc_unid)
 {
-    unsigned char si = 0;
+    int si = 0;
 
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );
 
@@ -2062,9 +2062,9 @@ bool player_monster_visible( const monsters *mon )
     return (true);
 }
 
-unsigned char player_sust_abil(bool calc_unid)
+int player_sust_abil(bool calc_unid)
 {
-    unsigned char sa = 0;
+    int sa = 0;
 
     sa += player_equip( EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid );
 
