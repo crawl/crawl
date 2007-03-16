@@ -2655,11 +2655,6 @@ static int affect_wall(struct bolt &beam, int x, int y)
                     mpr("The statue twists and shakes as its substance crumbles away!");
             }
 
-            if (targ_grid == DNGN_SILVER_STATUE)
-                you.visible_statue[ STATUE_SILVER ] = 0;
-            else if (targ_grid == DNGN_ORANGE_CRYSTAL_STATUE)
-                you.visible_statue[ STATUE_ORANGE_CRYSTAL ] = 0;
-
             beam.obvious_effect = 1;
         }
 

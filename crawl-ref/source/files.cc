@@ -94,6 +94,7 @@ void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
 #define GHOST_MINOR_VERSION 1
 #define LEVEL_MINOR_VERSION 1
+#define YOU_MINOR_VERSION   1
 
 static void redraw_all(void)
 {
@@ -1138,7 +1139,8 @@ void save_game(bool leave_game)
     if (!charf)
         end(-1, true, "Unable to open \"%s\" for writing!\n", charFile.c_str());
 
-    write_tagged_file( charf, SAVE_MAJOR_VERSION, 0, TAGTYPE_PLAYER );
+    write_tagged_file( charf, SAVE_MAJOR_VERSION,
+                       YOU_MINOR_VERSION, TAGTYPE_PLAYER );
 
     fclose(charf);
     DO_CHMOD_PRIVATE(charFile.c_str());

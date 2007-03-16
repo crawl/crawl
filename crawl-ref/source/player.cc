@@ -5197,3 +5197,8 @@ bool player::has_usable_claws() const
              || species == SP_TROLL
              || species == SP_GHOUL));
 }
+
+god_type player::deity() const
+{
+    return (religion);
+}

@@ -5914,7 +5914,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_ROTTING_HULK:
-        description += "A shambling undead, related to the ghoul.";
+        description += "A shambling undead creature, related to the ghoul.";
         break;
 
     case MONS_KILLER_KLOWN:
@@ -6228,6 +6228,10 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_SILVER_STATUE:
         description += "A beautiful statue of silver. Its eyes "
             "glow with an otherworldly radiance.";
+        break;
+
+    case MONS_MURRAY:
+        description += "A demonic skull rolling along the dungeon floor.";
         break;
 
     case MONS_PROGRAM_BUG:

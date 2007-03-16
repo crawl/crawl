@@ -3882,7 +3882,7 @@ static int builder_by_type(int level_number, char level_type)
         // Could do spotty_level, but that doesn't always put all paired
         // stairs reachable from each other which isn't a problem in normal
         // dungeon but could be in Pandemonium
-        if (one_chance_in(15))
+        if (one_chance_in(4))
         {
             do
             {
@@ -3895,7 +3895,7 @@ static int builder_by_type(int level_number, char level_type)
                     break;
                 }
             }
-            while (you.unique_creatures[40 + which_demon] == 1);
+            while (you.unique_creatures[MONS_MNOLEG + which_demon]);
         }
 
         if (which_demon >= 0)
@@ -3904,7 +3904,7 @@ static int builder_by_type(int level_number, char level_type)
             {
                 "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
             };
-            you.unique_creatures[40 + which_demon] = 1;
+            you.unique_creatures[MONS_MNOLEG + which_demon] = true;
 
             const int vault = 
                 random_map_for_tag(
@@ -4723,6 +4723,26 @@ static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return true;
 }                               //end make_room()
 
+static int pick_unique(int lev)
+{
+    int which_unique =
+        ((lev > 19) ? random_range(MONS_LOUISE, MONS_BORIS) :
+         (lev > 16) ? random_range(MONS_ERICA, MONS_FRANCES) :
+         (lev > 13) ? random_range(MONS_URUG, MONS_JOZEF) :
+         (lev >  9) ? random_range(MONS_PSYCHE, MONS_MICHAEL) :
+         (lev >  7) ? random_range(MONS_BLORK_THE_ORC, MONS_EROLCHA) :
+         (lev >  3) ? random_range(MONS_IJYB, MONS_EDMUND) :
+                      random_range(MONS_TERENCE, MONS_SIGMUND));
+
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+        && one_chance_in(7))
+    {
+        which_unique = MONS_MURRAY;
+    }
+    
+    return (which_unique);
+}
+
 static void builder_monsters(int level_number, char level_type, int mon_wanted)
 {
     int i = 0;
@@ -4772,13 +4792,7 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
                     break;
                 }
 
-                which_unique = ((level_number > 19) ? 20 + random2(11) :
-                                (level_number > 16) ? 13 + random2(10) :
-                                (level_number > 13) ?  9 + random2( 9) :
-                                (level_number >  9) ?  6 + random2( 5) :
-                                (level_number >  7) ?  4 + random2( 4) :
-                                (level_number >  3) ?  2 + random2( 4)
-                                                    : random2(4));
+                which_unique = pick_unique(level_number);
             }
 
             // usually, we'll have quit after a few tries. Make sure we don't
@@ -4787,7 +4801,7 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
                 break;
 
             // note: unique_creatures 40 + used by unique demons
-            if (place_monster( not_used, 280 + which_unique, level_number, 
+            if (place_monster( not_used, which_unique, level_number, 
                                BEH_SLEEP, MHITNOT, false, 1, 1, true,
                                PROX_ANYWHERE, 250, 0, no_monster_zones ))
             {

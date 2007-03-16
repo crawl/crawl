@@ -3398,9 +3398,6 @@ void viewwindow(bool draw_it, bool do_updates)
 
     losight( env.show, grd, you.x_pos, you.y_pos ); // must be done first
 
-    for (count_x = 0; count_x < NUM_STATUE_TYPES; count_x++)
-        you.visible_statue[count_x] = 0;
-
     for (count_x = 0; count_x < 18; count_x++)
     {
         for (count_y = 0; count_y < 18; count_y++)

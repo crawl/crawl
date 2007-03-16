@@ -717,6 +717,8 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
                 return;
             }
             break;
+        default:
+            break;
         }
 
         // Damage applied here:

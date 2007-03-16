@@ -3569,7 +3569,7 @@ void give_items_skills()
         you.skills[SK_INVOCATIONS] = 4;
 
         if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-            ng_pr = you.religion = Options.priest;
+            ng_pr = you.religion = static_cast<god_type>( Options.priest );
         else if (Options.random_pick || Options.priest == GOD_RANDOM)
         {
             you.religion = coinflip() ? GOD_YREDELEMNUL : GOD_ZIN;
@@ -4568,7 +4568,8 @@ void give_items_skills()
         if (Options.chaos_knight != GOD_NO_GOD
             && Options.chaos_knight != GOD_RANDOM)
         {
-            ng_ck = you.religion = Options.chaos_knight;
+            ng_ck = you.religion =
+                static_cast<god_type>( Options.chaos_knight );
         }
         else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
         {

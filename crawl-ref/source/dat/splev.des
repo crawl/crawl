@@ -329,13 +329,13 @@ xxxxxxxxxxx............................{............................xxxxxxxxxxxx
 xxxxxxxxxxx.........................................................xxxxxxxxxxxx
 xxxxxxxxxx...l.l.....................................................xxxxxxxxxxx
 xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l...................f.............................xxxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
 xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
-xxxxxxxxx.l.l.l.A.l.l.................}1].............................=Axxxxxxxx
+xxxxxxxxx.l.l.l.A.l.l..............e..}1]..2..........................=Axxxxxxxx
 xxxxxxxxxl.l.l.l.l.l.l.................)..............................xxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l.l.................................................xxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l.l...............................................xxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.l.................d.............................xxxxxxxxxxx
 xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
 xxxxxxxxxx.....l.l...................................................xxxxxxxxxxx
 xxxxxxxxxxx......................[...........(......................xxxxxxxxxxxx
@@ -370,8 +370,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Geryon
-MONS: random, random, random, random, random, random
+MONS: Geryon, Murray
+MONS: random, random, random, random, random
+
+SHUFFLE: 2def
+ITEM: nothing, nothing, nothing
 
 #############################################################################
 # Dispater's castle - rest of level filled up with plan_4 (irregular city)

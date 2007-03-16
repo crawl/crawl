@@ -720,7 +720,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
         // Now that Boris is dead, he's a valid target for monster 
         // creation again. -- bwr
-        you.unique_creatures[ monster->type - 280 ] = 0;
+        you.unique_creatures[ monster->type ] = false;
     }
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)

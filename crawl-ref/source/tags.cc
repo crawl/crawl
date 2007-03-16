@@ -886,8 +886,8 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
     int i,j;
 
     // how many unique creatures?
-    marshallByte(th, 50);
-    for (j = 0; j < 50; ++j)
+    marshallShort(th, NUM_MONSTERS);
+    for (j = 0; j < NUM_MONSTERS; ++j)
         marshallByte(th,you.unique_creatures[j]); /* unique beasties */
 
     // how many branches?
@@ -919,7 +919,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
 
     unmarshallString(th, you.your_name, 30);
 
-    you.religion = unmarshallByte(th);
+    you.religion = static_cast<god_type>(unmarshallByte(th));
     you.piety = unmarshallByte(th);
     you.invis = unmarshallByte(th);
     you.conf = unmarshallByte(th);
@@ -1173,26 +1173,28 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
 static void tag_read_you_dungeon(struct tagHeader &th)
 {
     int i,j;
-    char count_c;
+    int count_c;
     short count_s;
 
     // how many unique creatures?
-    count_c = unmarshallByte(th);
+    count_c = unmarshallShort(th);
+    you.unique_creatures.init(false);
     for (j = 0; j < count_c; ++j)
-        you.unique_creatures[j] = unmarshallByte(th);
+    {
+        const bool created = static_cast<bool>(unmarshallByte(th));
+
+        if (j < NUM_MONSTERS)
+            you.unique_creatures[j] = created;
+    }
 
     // how many branches?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         branches[j].startdepth = unmarshallLong(th);
 
-    cprintf("found %d branches\n", (int)count_c);
-
     count_s = unmarshallShort(th);
-    cprintf("found %d maxlevel\n", (int)count_s);
     for (i = 0; i < count_s; ++i)
     {
-//        cprintf("i = %d\n", i);
         for (j = 0; j < count_c; ++j)
             tmp_file_pairs[i][j] = unmarshallBoolean(th);
     }

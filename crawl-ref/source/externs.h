@@ -108,6 +108,8 @@ public:
     virtual int       id() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual god_type  deity() const = 0;
+    
     virtual bool      alive() const = 0;
     
     virtual coord_def pos() const = 0;
@@ -558,8 +560,6 @@ public:
   int symbol;
   int colour;
 
-  FixedVector< char, NUM_STATUE_TYPES >  visible_statue;
-
   char redraw_hit_points;
   char redraw_magic_points;
   char redraw_strength;
@@ -634,7 +634,7 @@ public:
 
   FixedArray<unsigned char, 5, 50> item_description;
   FixedVector<unsigned char, 50> unique_items;
-  FixedVector<unsigned char, 50> unique_creatures;
+  FixedVector<bool, NUM_MONSTERS> unique_creatures;
 
   KillMaster kills;
 
@@ -644,7 +644,7 @@ public:
 
   FixedVector<unsigned char, 30> branch_stairs;
 
-  char religion;
+  god_type religion;
   unsigned char piety;
   unsigned char gift_timeout;
   FixedVector<unsigned char, MAX_NUM_GODS>  penance;
@@ -715,6 +715,7 @@ public:
     int id() const;
     actor_type atype() const { return ACT_PLAYER; }
 
+    god_type  deity() const;
     bool      alive() const;
     
     coord_def pos() const;
@@ -864,6 +865,7 @@ public:
     
     // actor interface
     int id() const;
+    god_type  deity() const;
     bool      alive() const;
     coord_def pos() const;
     bool      swimming() const;

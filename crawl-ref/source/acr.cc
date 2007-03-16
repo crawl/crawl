@@ -2713,14 +2713,8 @@ static bool initialise(void)
         }
     }
 
-    for (i = 0; i < 50; i++)
-    {
-        you.unique_creatures[i] = 0;
-        you.unique_items[i] = UNIQ_NOT_EXISTS;
-    }
-
-    for (i = 0; i < NUM_STATUE_TYPES; i++)
-        you.visible_statue[i] = 0;
+    you.unique_creatures.init(false);
+    you.unique_items.init(UNIQ_NOT_EXISTS);
 
     // initialize tag system before we try loading anything!
     tag_init();

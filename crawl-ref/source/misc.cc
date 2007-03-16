@@ -65,8 +65,6 @@
 #include "tutorial.h"
 #include "view.h"
 
-extern FixedVector<char, 10>  Visible_Statue;        // defined in acr.cc
-
 bool scramble(void);
 bool trap_item(char base_type, char sub_type, char beam_x, char beam_y);
 static void dart_trap(bool trap_known, int trapped, struct bolt &pbolt, bool poison);
@@ -1876,16 +1874,6 @@ bool i_feel_safe(bool announce)
     if ( ystart < 0 ) ystart = 0;
     if ( xend >= GXM ) xend = 0;
     if ( ystart >= GYM ) yend = 0;
-
-    /* statue check */
-    if (you.visible_statue[STATUE_SILVER] ||
-        you.visible_statue[STATUE_ORANGE_CRYSTAL] )
-    {
-        if (announce)
-            mprf(MSGCH_WARN, "There are scary statues in view.");
-
-        return (false);
-    }
 
     if (in_bounds(you.x_pos, you.y_pos)
         && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)

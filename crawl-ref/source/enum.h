@@ -2192,6 +2192,8 @@ enum monster_type                      // (int) menv[].type
     MONS_DRACONIAN_ANNIHILATOR,
     MONS_DRACONIAN_KNIGHT,              // 325
     MONS_DRACONIAN_SCORCHER,
+    
+    MONS_MURRAY,
 
     // The Lords of Hell:
     MONS_GERYON = 340,                 //  340

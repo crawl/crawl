@@ -523,8 +523,8 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     // The return of Boris is now handled in monster_die()...
     // not setting this for Boris here allows for multiple Borises
     // in the dungeon at the same time.  -- bwr
-    if (mon_type >= MONS_TERENCE && mon_type <= MONS_BORIS)
-        you.unique_creatures[mon_type - 280] = 1;
+    if (mons_is_unique(mon_type))
+        you.unique_creatures[mon_type] = true;
 
     if (extra != 250)
         menv[id].number = extra;

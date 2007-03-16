@@ -2936,6 +2936,11 @@ bool monsters::alive() const
     return (hit_points > 0 && type != -1);
 }
 
+god_type monsters::deity() const
+{
+    return (god);
+}
+
 void monsters::hurt(actor *agent, int amount)
 {
     if (amount <= 0)

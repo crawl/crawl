@@ -549,6 +549,8 @@ static void do_god_gift()
                             gift = BOOK_DEMONOLOGY; // summoning bks
                     }
                     break;
+                default:
+                    break;
                 }
 
                 if (gift != NUM_BOOKS
@@ -1247,6 +1249,8 @@ bool did_god_conduct( int thing_done, int level )
             penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
             ret = true;
             break;
+        default:
+            break;
         }
         break;
 
@@ -1271,6 +1275,8 @@ bool did_god_conduct( int thing_done, int level )
             penance = level * 3;
             ret = true;
             break;
+        default:
+            break;
         }
         break;
 
@@ -1285,6 +1291,8 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_OKAWARU:
             piety_change = -level;
             ret = true;
+            break;
+        default:
             break;
         }
         break;
@@ -1307,6 +1315,9 @@ bool did_god_conduct( int thing_done, int level )
             ret = true;
             if (random2(level + 10) > 5)
                 piety_change = 1;
+            break;
+            
+        default:
             break;
         }
         break;
@@ -1333,6 +1344,9 @@ bool did_god_conduct( int thing_done, int level )
             if (random2(level + 18) > 5)
                 piety_change = 1;
             break;
+
+        default:
+            break;
         }
         break;
 
@@ -1350,6 +1364,9 @@ bool did_god_conduct( int thing_done, int level )
             if (random2(level + 18) > 4)
                 piety_change = 1;
             break;
+
+        default:
+            break;
         }
         break;
 
@@ -1363,6 +1380,9 @@ bool did_god_conduct( int thing_done, int level )
             ret = true;
             if (random2(level + 18) > 3)
                 piety_change = 1;
+            break;
+
+        default:
             break;
         }
         break;
@@ -1407,6 +1427,9 @@ bool did_god_conduct( int thing_done, int level )
             if (random2(level + 18) > 2)
                 piety_change = 1;
             break;
+
+        default:
+            break;
         }
         break;
 
@@ -1421,6 +1444,8 @@ bool did_god_conduct( int thing_done, int level )
             ret = true;
             if (random2(level + 10) > 5)
                 piety_change = 1;
+            break;
+        default:
             break;
         }
         break;
@@ -1440,6 +1465,8 @@ bool did_god_conduct( int thing_done, int level )
             if (random2(level + 10) > 5)
                 piety_change = 1;
             break;
+        default:
+            break;
         }
         break;
 
@@ -1456,6 +1483,8 @@ bool did_god_conduct( int thing_done, int level )
             if (random2(level + 10) > 5)
                 piety_change = 1;
             break;
+        default:
+            break;
         }
         break;
 
@@ -1468,6 +1497,8 @@ bool did_god_conduct( int thing_done, int level )
             ret = true;
             if (random2(level + 10) > 5)
                 piety_change = 1;
+            break;
+        default:
             break;
         }
         break;
@@ -2540,7 +2571,8 @@ void god_pitch(unsigned char which_god)
     if (you.religion != GOD_NO_GOD)
         excommunication();
 
-    you.religion = which_god;   //jmf: moved up so god_speaks gives right colour
+    //jmf: moved up so god_speaks gives right colour
+    you.religion = static_cast<god_type>(which_god);
     you.piety = 15;             // to prevent near instant excommunication
     you.gift_timeout = 0; 
     set_god_ability_slots();    // remove old god's slots, reserve new god's
