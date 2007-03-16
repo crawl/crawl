@@ -834,14 +834,21 @@ std::string melee_attack::special_attack_punctuation()
 
 std::string melee_attack::attack_strength_punctuation()
 {
-    if (damage_done < HIT_WEAK)
-        return ".";
-    else if (damage_done < HIT_MED)
-        return "!";
-    else if (damage_done < HIT_STRONG)
-        return "!!";
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        if (damage_done < HIT_WEAK)
+            return ".";
+        else if (damage_done < HIT_MED)
+            return "!";
+        else if (damage_done < HIT_STRONG)
+            return "!!";
+        else
+            return "!!!";
+    }
     else
-        return "!!!";
+    {
+        return (damage_done < HIT_WEAK? "." : "!");
+    }
 }
 
 void melee_attack::player_announce_hit()
