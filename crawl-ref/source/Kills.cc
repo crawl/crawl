@@ -234,7 +234,7 @@ void Kills::merge(const Kills &k)
 void Kills::record_kill(const struct monsters *mon)
 {
     // Handle player ghosts separately.
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
+    if (mon->type == MONS_PLAYER_GHOST)
     {
         record_ghost_kill(mon);
         return ;
@@ -497,7 +497,11 @@ void kill_def::add_place(unsigned short place, bool force)
 std::string kill_def::base_name(const kill_monster_desc &md) const
 {
     char monnamebuf[ITEMNAME_SIZE];     // Le sigh.
-    moname(md.monnum, true, DESC_PLAIN, monnamebuf);
+
+    if (md.monnum == MONS_PANDEMONIUM_DEMON)
+        strcpy(monnamebuf, "demon lord");
+    else
+        moname(md.monnum, true, DESC_PLAIN, monnamebuf);
 
     std::string name = monnamebuf;
     switch (md.modifier)

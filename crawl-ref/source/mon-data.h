@@ -4074,7 +4074,7 @@
 /* random demon in pan - only one per level. stats are stored in ghost struct */
 {
     MONS_PANDEMONIUM_DEMON, '&', BLACK, "&",
-    M_SPELLCASTER | M_SPEAKS | M_EVIL | M_UNIQUE,
+    M_SPELLCASTER | M_SPEAKS | M_EVIL,
     MR_RES_POISON,
     0, 14, MONS_PANDEMONIUM_DEMON, MONS_PANDEMONIUM_DEMON, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
