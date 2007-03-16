@@ -329,7 +329,7 @@ xxxxxxxxxxx............................{............................xxxxxxxxxxxx
 xxxxxxxxxxx.........................................................xxxxxxxxxxxx
 xxxxxxxxxx...l.l.....................................................xxxxxxxxxxx
 xxxxxxxxxx..l.l.l.l..................................................xxxxxxxxxxx
-xxxxxxxxxx.l.l.l.l.l...................f.............................xxxxxxxxxxx
+xxxxxxxxxx.l.l.l.l.l.................................................xxxxxxxxxxx
 xxxxxxxxx.l.l.l.l.l...................................................xxxxxxxxxx
 xxxxxxxxxl.l.l.l.l.l..................................................xxxxxxxxxx
 xxxxxxxxx.l.l.l.A.l.l..............e..}1]..2..........................=Axxxxxxxx
@@ -370,10 +370,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: Geryon, Murray
+MONS: Geryon, Murray / nothing
 MONS: random, random, random, random, random
 
-SHUFFLE: 2def
+SHUFFLE: 2de
 ITEM: nothing, nothing, nothing
 
 #############################################################################
