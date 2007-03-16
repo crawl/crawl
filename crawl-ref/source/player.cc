@@ -3821,7 +3821,7 @@ void dec_mp(int mp_loss)
         && you.magic_points < (you.max_magic_points 
                                * Options.magic_point_warning) / 100)
     {
-        mpr( "* * * LOW MAGIC WARNING * * *", MSGCH_DANGER_MAGIC );
+        mpr( "* * * LOW MAGIC WARNING * * *", MSGCH_DANGER );
     }
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));

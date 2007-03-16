@@ -1092,6 +1092,12 @@ struct colour_mapping
     int colour;
 };
 
+struct message_colour_mapping
+{
+    message_filter message;
+    int colour;
+};
+
 struct feature_def
 {
     unsigned short      symbol;          // symbol used for seen terrain
@@ -1256,6 +1262,7 @@ public:
     
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
+    std::vector<message_colour_mapping> message_colour_mappings;
 
     int        sort_menus;        // 0 = always, -1 = never, number = beyond
                                   // that size.
@@ -1371,6 +1378,10 @@ private:
     void add_cset_override(char_set_type set, dungeon_char_type dc,
                            unsigned char symbol);
     void add_feature_override(const std::string &);
+
+    void add_message_colour_mappings(const std::string &);
+    void add_message_colour_mapping(const std::string &);
+    message_filter parse_message_filter(const std::string &s);
     
     void set_default_activity_interrupts();
     void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);

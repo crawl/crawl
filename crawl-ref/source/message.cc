@@ -190,10 +190,6 @@ int channel_to_colour( int channel, int param )
             ret = CYAN;
             break;
 
-        case MSGCH_DANGER_MAGIC:
-            ret = LIGHTCYAN;
-            break;
-
         case MSGCH_DIAGNOSTICS:
         case MSGCH_MULTITURN_ACTION:
             ret = DARKGREY;     // makes it easier to ignore at times -- bwr
@@ -350,7 +346,7 @@ static void base_mpr(const char *inf, int channel, int param)
         }
     }
 
-    if (Options.sound_mappings.size() > 0) 
+    if (!Options.sound_mappings.empty()) 
     {
         std::string message = inf;
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++) 
@@ -360,6 +356,22 @@ static void base_mpr(const char *inf, int channel, int param)
             if (Options.sound_mappings[i].pattern.matches(message))
             {
                 play_sound(Options.sound_mappings[i].soundfile.c_str());
+                break;
+            }
+        }
+    }
+
+    if (!Options.message_colour_mappings.empty())
+    {
+        std::string message = inf;
+        for (int i = 0, size = Options.message_colour_mappings.size();
+             i < size; ++i)
+        {
+            const message_colour_mapping &m =
+                Options.message_colour_mappings[i];
+            if (m.message.is_filtered(channel, message))
+            {
+                colour = m.colour;
                 break;
             }
         }

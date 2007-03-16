@@ -71,11 +71,17 @@ int cancelable_get_line( char *buf,
 std::string & trim_string( std::string &str );
 std::string trimmed_string( std::string s );
 
+// Splits string 's' on the separator 'sep'. If trim == true, trims each
+// segment. If accept_empties == true, accepts empty segments. If nsplits >= 0,
+// splits on the first nsplits occurrences of the separator, and stores the
+// remainder of the string as the last segment; negative values of nsplits
+// split on all occurrences of the separator.
 std::vector<std::string> split_string(
         const char *sep, 
         std::string s, 
         bool trim = true, 
-        bool accept_empties = false);
+        bool accept_empties = false,
+        int nsplits = -1);
 
 inline std::string lowercase_first(std::string s)
 {

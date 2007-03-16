@@ -148,8 +148,7 @@ static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
     "plain", "prompt", "god", "pray", "duration", "danger", "warning", "food",
     "recovery", "sound", "talk", "intrinsic_gain", "mutation", "monster_spell",
     "monster_enchant", "monster_damage", "monster_target", 
-    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic","tutorial",
-    "magic_warning",
+    "rotten_meat", "equipment", "floor", "multiturn", "diagnostic","tutorial"
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -758,6 +757,7 @@ void game_options::reset_options()
     travel_stop_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
+    message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
     named_options.clear();
@@ -1257,6 +1257,46 @@ std::string game_options::unalias(const std::string &key) const
     return (i == aliases.end()? key : i->second);
 }
 
+void game_options::add_message_colour_mappings(const std::string &field)
+{
+    std::vector<std::string> fragments = split_string(",", field);
+    for (int i = 0, count = fragments.size(); i < count; ++i)
+        add_message_colour_mapping(fragments[i]);
+}
+
+message_filter game_options::parse_message_filter(const std::string &filter)
+{
+    std::string::size_type pos = filter.find(":");
+    if (pos && pos != std::string::npos)
+    {
+        std::string prefix = filter.substr(0, pos);
+        int channel = str_to_channel( prefix );
+        if (channel != -1 || prefix == "any")
+        {
+            std::string s = filter.substr( pos + 1 );
+            trim_string( s );
+            return message_filter( channel, s );
+        }
+    }
+
+    return message_filter( filter );
+}
+
+void game_options::add_message_colour_mapping(const std::string &field)
+{
+    std::vector<std::string> cmap = split_string(":", field, true, true, 1);
+
+    if (cmap.size() != 2)
+        return;
+
+    const int col = str_to_colour( cmap[0] );
+    if (col == -1)
+        return;
+
+    message_colour_mapping m = { parse_message_filter( cmap[1] ), col };
+    message_colour_mappings.push_back( m );
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
     std::string key = "";
@@ -1333,6 +1373,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
         && key != "menu_colour" && key != "menu_color"
+        && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries")
     {
         tolower_string( field );
@@ -2158,10 +2199,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "menu_colour" || key == "menu_color")
     {
         std::vector<std::string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i) {
+        for (int i = 0, count = seg.size(); i < count; ++i)
+        {
             const std::string &sub = seg[i];
             std::string::size_type cpos = sub.find(":", 0);
-            if (cpos != std::string::npos) {
+            if (cpos != std::string::npos)
+            {
                 colour_mapping mapping;
                 mapping.pattern = sub.substr(cpos + 1);
                 mapping.colour  = str_to_colour(sub.substr(0, cpos));
@@ -2169,6 +2212,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                     menu_colour_mappings.push_back(mapping);
             }
         }
+    }
+    else if (key == "message_colour" || key == "message_color")
+    {
+        add_message_colour_mappings(field);
     }
     else if (key == "dump_order")
     {

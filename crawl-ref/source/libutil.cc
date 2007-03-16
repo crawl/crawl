@@ -380,30 +380,43 @@ std::string & trim_string( std::string &str )
     return (str);
 }
 
+static void add_segment(std::vector<std::string> &segs,
+                        std::string s,
+                        bool trim,
+                        bool accept_empty)
+{
+    if (trim && !s.empty())
+        trim_string(s);
+
+    if (accept_empty || !s.empty())
+        segs.push_back(s);
+}
+
 std::vector<std::string> split_string(
         const char *sep, 
         std::string s,
         bool trim_segments,
-        bool accept_empty_segments)
+        bool accept_empty_segments,
+        int nsplits)
 {
     std::vector<std::string> segments;
     int separator_length = strlen(sep);
 
     std::string::size_type pos;
-    while ((pos = s.find(sep, 0)) != std::string::npos)
+    while (nsplits && (pos = s.find(sep)) != std::string::npos)
     {
-        if (pos > 0 || accept_empty_segments)
-            segments.push_back(s.substr(0, pos));
+        add_segment(segments, s.substr(0, pos),
+                    trim_segments, accept_empty_segments);
+        
         s.erase(0, pos + separator_length);
+        
+        if (nsplits > 0)
+            --nsplits;
     }
-    if (s.length() > 0)
-        segments.push_back(s);
-    
-    if (trim_segments)
-    {
-        for (int i = 0, count = segments.size(); i < count; ++i)
-            trim_string(segments[i]);
-    }
+
+    if (!s.empty())
+        add_segment(segments, s, trim_segments, accept_empty_segments);
+
     return segments;
 }
 

@@ -156,6 +156,7 @@ stab_brand = hi:blue
 #
 # hp_warning = 10
 # mp_warning = 10
+
 # hp_colour = lightgrey, 50:yellow, 25:red
 # mp_colour = lightgrey, 50:yellow, 25:red
 # terse_hand = false
@@ -172,6 +173,9 @@ menu_colour = red: rotting
 
 # Colouring for the notes
 menu_colour = white:Reached XP level
+
+# Message colours
+message_colour = lightcyan:LOW MAGIC WARNING
 
 ##### 4-j	Firing Commands #######################
 #
