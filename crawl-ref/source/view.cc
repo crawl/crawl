@@ -324,6 +324,21 @@ static void get_symbol( int x, int y,
     *colour = fix_colour(*colour);
 }
 
+void get_item_symbol(unsigned int object, unsigned short *ch,
+                        unsigned short *colour)
+{
+    if (object < NUM_FEATURES)
+    {
+        *ch = Feature[object].symbol;
+
+        // Don't clobber with BLACK, because the colour should be already set.
+        if (Feature[object].colour != BLACK)
+            *colour = Feature[object].colour;
+    }
+    *colour = fix_colour(*colour);
+
+}
+
 unsigned char get_sightmap_char( int feature )
 {
     if (feature < NUM_FEATURES)

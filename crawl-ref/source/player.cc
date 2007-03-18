@@ -2213,8 +2213,8 @@ void gain_exp( unsigned int exp_gained )
         you.exp_available += exp_gained;
 
     level_change();
-        if (Options.tutorial_left && you.experience_level == 5)
-                tutorial_finished();
+    if (Options.tutorial_left && you.experience_level == 5)
+        tutorial_finished();
 }                               // end gain_exp()
 
 void level_change(void)

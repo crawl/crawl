@@ -1055,8 +1055,8 @@ void list_tutorial_help()
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines());
 
-    cols.add_formatted(
-            0,
+    unsigned short ch, colour;
+    std::string text =
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
@@ -1066,10 +1066,17 @@ void list_tutorial_help()
             "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
             "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
             "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-            "<darkgrey>/</darkgrey> : wands (<w>z</w>ap)\n" 
-            // is it possible to replace that with e.g. Options.char_table[DNGN_ITEM_BOOK]
-            "<lightcyan>+</lightcyan>, <lightcyan>:</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"   
-            "<brown>\\</brown>, <brown>|</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
+            "<darkgrey>/</darkgrey> : wands (<w>z</w>ap)\n"
+            "<lightcyan>";
+    get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
+    snprintf(info, INFO_SIZE, "%c", ch);
+    text += info;
+    text += "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"
+            "<brown>";
+    get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
+    snprintf(info, INFO_SIZE, "%c", ch);
+    text += info;
+    text += "</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
             "\n"
             "<h>Movement and attacking\n"
             "Use the <w>numpad</w> for movement (try both\n"
@@ -1078,10 +1085,13 @@ void list_tutorial_help()
             "     <w>yubn</w> : diagonal movement.\n"
             "Walking into a monster will attack it\n"
             "with the wielded weapon or barehanded.\n"
-            "For ranged attacks use either\n" 
+            "For ranged attacks use either\n"
             "<w>f</w> to launch missiles (like arrows)\n"
             "<w>t</w> to throw items by hand (like darts)\n"
             "<w>Z</w> to cast spells (<w>Z?</w> lists spells).\n",
+
+    cols.add_formatted(
+            0, text.c_str(),
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(

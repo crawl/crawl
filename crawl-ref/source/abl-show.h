@@ -42,6 +42,7 @@ const std::string   make_cost_description( const struct ability_def &abil );
 bool activate_ability( void );     // handles all special abilities now
 char show_abilities( void );
 bool generate_abilities( void );
+std::string print_abilities( void );
 
 std::vector<const char *> get_ability_names( void );
 

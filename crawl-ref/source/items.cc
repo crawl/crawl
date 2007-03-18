@@ -1568,7 +1568,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (Options.tutorial_left)
     {
         taken_new_item(item.base_type);
-        if (is_random_artefact(you.inv[freeslot]))
+        if (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC)
             learned_something_new(TUT_SEEN_RANDART);
     }
     

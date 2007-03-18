@@ -22,10 +22,12 @@
 
 #include "externs.h"
 
+#include "abl-show.h"
 #include "format.h"
 #include "fight.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "menu.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
@@ -962,25 +964,20 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     return cols.formatted_lines();
 }
 
-// new status overview screen, including stats, mutations etc.
-// TODO: add abilities
+static std::string status_mut_abilities(void);
+
+// new scrollable status overview screen,
+// including stats, mutations etc.
 void print_overview_screen()
 {
-    clrscr();
+    bool calc_unid = false;
+    formatted_scroller cmd_help;
+    // Set flags, and don't use easy exit.
+    cmd_help.set_flags(MF_NOSELECT | MF_NOWRAP, false);
+    cmd_help.set_more( formatted_string::parse_string(
+                       "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
 
-    formatted_string fs = get_full_detail2(false);
-    gotoxy(1, 1);
-    fs.display();
-
-    getch();
-    redraw_screen();
-}
-
-formatted_string get_full_detail2(bool calc_unid)
-{
     std::string text;
-    formatted_string output;
-
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title());
 
@@ -1004,52 +1001,305 @@ formatted_string get_full_detail2(bool calc_unid)
 
     int linelength = strlen(you.your_name) + strlen(title)
                      + strlen(race_class) + strlen(time_turns);
-    for (int count = 0; linelength >= 80 && count < 2; count++ )
+    for (int count = 0; linelength >= get_number_of_cols() && count < 2; count++ )
     {
         switch (count)
         {
-        case 0:
-            snprintf(race_class, sizeof race_class,
-                     "(%s%s)",
-                     get_species_abbrev(you.species),
-                     get_class_abbrev(you.char_class) );
-            break;
-        case 1:
-            strcpy(title, "");
-            break;
-        default:
-            break;
+          case 0:
+              snprintf(race_class, sizeof race_class,
+                       "(%s%s)",
+                       get_species_abbrev(you.species),
+                       get_class_abbrev(you.char_class) );
+              break;
+          case 1:
+              strcpy(title, "");
+              break;
+          default:
+              break;
         }
         linelength = strlen(you.your_name) + strlen(title)
             + strlen(race_class) + strlen(time_turns);
     }
 
-    output.textcolor(YELLOW);
-    output.cprintf("%s%s%s", you.your_name, title, race_class);
-    output.gotoxy(get_number_of_cols() - strlen(time_turns), -1);
-    output.cprintf("%s", time_turns);
-    output.textcolor(LIGHTGREY);
-    output.cprintf(EOL);
+    text = "<yellow>";
+    snprintf(info, INFO_SIZE, "%s%s%s", you.your_name, title, race_class);
+    text += info;
+    int k = get_number_of_cols() - linelength -1;
+    text += std::string(k, ' ');
+    snprintf(info, INFO_SIZE, "%s", time_turns);
+    text += info;
+    text += "</yellow>\n\n";
+    
+    cmd_help.add_text(text);
+    
+    char buf[1000];
+    // 3 columns, splits at columns 32, 52
+    column_composer cols1(4, 16, 27, 38);
 
-    std::vector<formatted_string> vfs = get_stat_info();
-    for (unsigned int i = 0; i < vfs.size(); i++)
+    if (!player_rotted())
+        snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
+    else
+        snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
+                 you.hp, you.hp_max, you.hp_max + player_rotted() );
+
+    cols1.add_formatted(0, buf, false);
+
+    snprintf(buf, sizeof buf, "MP %3d/%d",
+             you.magic_points, you.max_magic_points);
+
+    cols1.add_formatted(0, buf, false);
+
+    if (you.strength == you.max_strength)
+        snprintf(buf, sizeof buf, "Str %3d", you.strength);
+    else
+        snprintf(buf, sizeof buf, "Str <yellow>%3d</yellow> (%d)",
+                 you.strength, you.max_strength);
+    cols1.add_formatted(1, buf, false);
+
+    if (you.intel == you.max_intel)
+        snprintf(buf, sizeof buf, "Int %3d", you.intel);
+    else
+        snprintf(buf, sizeof buf, "Int <yellow>%3d</yellow> (%d)",
+                 you.intel, you.max_intel);
+    cols1.add_formatted(1, buf, false);
+
+    if (you.dex == you.max_dex)
+        snprintf(buf, sizeof buf, "Dex %3d", you.dex);
+    else
+        snprintf(buf, sizeof buf, "Dex <yellow>%3d</yellow> (%d)",
+                 you.dex, you.max_dex);
+    cols1.add_formatted(1, buf, false);
+
+    snprintf(buf, sizeof buf,
+             "AC %3d\n"
+             "EV %3d\n"
+             "Sh %3d\n",
+             player_AC(),
+             player_evasion(),
+             player_shield_class());
+    cols1.add_formatted(2, buf, false);
+
+    char god_colour_tag[20];
+    god_colour_tag[0] = 0;
+    std::string godpowers(god_name(you.religion));
+    if ( you.religion != GOD_NO_GOD )
     {
-        output += vfs[i];
-        output += formatted_string::parse_string("\n");
+        if ( player_under_penance() )
+            strcpy(god_colour_tag, "<red>*");
+        else
+        {
+            snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
+                     colour_to_str(god_colour(you.religion)));
+            // piety rankings
+            int prank = piety_rank() - 1;
+            if ( prank < 0 )
+                prank = 0;
+            // Careful about overflow. We erase some of the god's name
+            // if necessary.
+            godpowers = godpowers.substr(0, 17 - prank) +
+                std::string(prank, '*');
+        }
     }
-    output += formatted_string::parse_string("\n");
 
-    vfs = get_res_info(calc_unid);
-    for (unsigned int i = 0; i < vfs.size(); i++)
+    snprintf(buf, sizeof buf,
+             "Experience: %d/%lu (%d)\n"
+             "Spells: %2d memorised, %2d level%s left\n"
+             "God: %s%s<lightgrey>        Gold: %d\n",
+             you.experience_level, you.experience, you.exp_available,
+             you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s",
+             god_colour_tag, godpowers.c_str(), you.gold);
+    cols1.add_formatted(3, buf, false);
+
+    std::vector<formatted_string> blines = cols1.formatted_lines();
+    unsigned i;
+    for (i = 0; i < blines.size(); ++i )
+        cmd_help.add_item_formatted_string(blines[i]);
+    cmd_help.add_text("\n");
+
+    // 3 columns, splits at columns 21, 38
+    column_composer cols(3, 21, 38);
+
+    const int rfire = player_res_fire(calc_unid);
+    const int rcold = player_res_cold(calc_unid);
+    const int rlife = player_prot_life(calc_unid);
+    const int rpois = player_res_poison(calc_unid);
+    const int relec = player_res_electricity(calc_unid);
+    const int rsust = player_sust_abil(calc_unid);
+    const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
+    const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
+
+    snprintf(buf, sizeof buf,
+             "%sRes.Fire  : %s\n"
+             "%sRes.Cold  : %s\n"
+             "%sLife Prot.: %s\n"
+             "%sRes.Poison: %s\n"
+             "%sRes.Elec. : %s\n"
+             "\n"
+             "%sSust.Abil.: %s\n"
+             "%sRes.Mut.  : %s\n"
+             "%sRes.Slow  : %s\n",
+             determine_color_string(rfire), itosym3(rfire),
+             determine_color_string(rcold), itosym3(rcold),
+             determine_color_string(rlife), itosym3(rlife),
+             determine_color_string(rpois), itosym1(rpois),
+             determine_color_string(relec), itosym1(relec),
+             determine_color_string(rsust), itosym1(rsust),
+             determine_color_string(rmuta), itosym1(rmuta),
+             determine_color_string(rslow), itosym1(rslow));
+    cols.add_formatted(0, buf, false);
+
+    int saplevel = 0;
+    switch (you.species)
     {
-        output += vfs[i];
-        output += formatted_string::parse_string("\n");
+      case SP_GHOUL:
+          saplevel = 3;
+          snprintf(buf, sizeof buf, "%sSaprovore : %s",
+                   determine_color_string(3), itosym3(3) );
+          break;
+
+      case SP_KOBOLD:
+      case SP_TROLL:
+          saplevel = 2;
+          snprintf(buf, sizeof buf, "%sSaprovore : %s",
+                   determine_color_string(2), itosym3(2) );
+          break;
+
+      case SP_HILL_ORC:
+      case SP_OGRE:
+          saplevel = 1;
+          break;
+      default:
+          saplevel = 0;
+          break;
+    }
+    const char* pregourmand;
+    const char* postgourmand;
+    if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
+    {
+        pregourmand = "Gourmand  : ";
+        postgourmand = itosym1(1);
+        saplevel = 1;
+    }
+    else
+    {
+        pregourmand = "Saprovore : ";
+        postgourmand = itosym3(saplevel);
+    }
+    snprintf(buf, sizeof buf, "%s%s%s",
+             determine_color_string(saplevel), pregourmand, postgourmand);
+    cols.add_formatted(0, buf, false);
+
+
+    const int rinvi = player_see_invis(calc_unid);
+    const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
+        (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
+         !player_under_penance() && you.piety >= piety_breakpoint(2));
+    const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
+    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
+    const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
+    snprintf(buf, sizeof buf,
+             "%sSee Invis. : %s\n"
+             "%sWarding    : %s\n"
+             "%sConserve   : %s\n"
+             "%sRes.Corr.  : %s\n"
+             "%sClarity    : %s\n"
+             "\n",
+             determine_color_string(rinvi), itosym1(rinvi),
+             determine_color_string(rward), itosym1(rward),
+             determine_color_string(rcons), itosym1(rcons),
+             determine_color_string(rcorr), itosym1(rcorr),
+             determine_color_string(rclar), itosym1(rclar));
+    cols.add_formatted(1, buf, false);
+
+    if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
+        snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
+                 determine_color_string(-1), itosym1(1));
+    else
+    {
+        const int rrtel = player_teleport(calc_unid);
+        snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
+                 determine_color_string(rrtel), itosym1(rrtel));
+    }
+    cols.add_formatted(1, buf, false);
+
+    const int rctel = player_control_teleport(calc_unid);
+    const int rlevi = player_is_levitating();
+    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
+    snprintf(buf, sizeof buf,
+             "%sCtrl.Telep.: %s\n"
+             "%sLevitation : %s\n"
+             "%sCtrl.Flight: %s\n",
+             determine_color_string(rctel), itosym1(rctel),
+             determine_color_string(rlevi), itosym1(rlevi),
+             determine_color_string(rcfli), itosym1(rcfli));
+    cols.add_formatted(1, buf, false);
+
+    {
+        char str_pass[ITEMNAME_SIZE];
+        const int e_order[] =
+        {
+            EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
+            EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+        };
+
+        for(i = 0; i < NUM_EQUIP; i++)
+        {
+            int eqslot = e_order[i];
+            const char *slot = equip_slot_to_name( eqslot );
+            if (eqslot == EQ_LEFT_RING || eqslot == EQ_RIGHT_RING)
+                slot = "Ring";
+            else if (eqslot == EQ_BOOTS &&
+                     (you.species == SP_CENTAUR || you.species == SP_NAGA))
+                slot = "Barding";
+
+            if ( you.equip[ e_order[i] ] != -1)
+            {
+                const int inum = you.equip[e_order[i]];
+                in_name( inum, DESC_PLAIN, str_pass, true );
+                str_pass[38] = 0; // truncate
+                const char* colname = colour_to_str(you.inv[inum].colour);
+                snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
+                         slot, colname, str_pass, colname);
+            }
+            else
+            {
+                if (e_order[i] == EQ_WEAPON)
+                {
+                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+                        snprintf(buf, sizeof buf, "%-7s: Blade Hands", slot);
+                    else if (you.skills[SK_UNARMED_COMBAT])
+                        snprintf(buf, sizeof buf, "%-7s: Unarmed", slot);
+                    else
+                        snprintf(buf, sizeof buf, "%-7s:", slot);
+                }
+                else
+                {
+                    snprintf(buf, sizeof buf, "%-7s:", slot);
+                }
+            }
+            cols.add_formatted(2, buf, false);
+        }
     }
 
+    blines = cols.formatted_lines();
+
+    for (i = 0; i < blines.size(); ++i )
+        cmd_help.add_item_formatted_string(blines[i]);
+    cmd_help.add_text("\n");
+
+    cmd_help.add_text(status_mut_abilities());
+    cmd_help.show();
+    redraw_screen();
+}
+
+// creates rows of short descriptions for current
+// status, mutations and abilities
+std::string status_mut_abilities()
+{
     //----------------------------
     // print status information
     //----------------------------
-    text = "\n<w>@:</w> ";
+    std::string text = "<w>@:</w> ";
 
     if (you.burden_state == BS_ENCUMBERED)
         text += "burdened, ";
@@ -1079,6 +1329,7 @@ formatted_string get_full_detail2(bool calc_unid)
     if (you.duration[DUR_REGENERATION])
         text += "regenerating, ";
 
+// not used as resistance part already says so
 //    if (you.duration[DUR_INSULATION])
 //        text += "insulated, ";
 
@@ -1088,24 +1339,27 @@ formatted_string get_full_detail2(bool calc_unid)
     if (you.duration[DUR_STONESKIN])
         text += "stone skin, ";
 
+// resistance part already says so
 //    if (you.duration[DUR_CONTROLLED_FLIGHT])
 //        text += "control flight, ";
 
     if (you.duration[DUR_TELEPORT])
         text += "about to teleport, ";
 
+// resistance part already says so
 //    if (you.duration[DUR_CONTROL_TELEPORT])
 //        text += "control teleport, ";
 
     if (you.duration[DUR_DEATH_CHANNEL])
         text += "death channel, ";
 
-    if (you.duration[DUR_FORESCRY])     //jmf: added 19mar2000
+    if (you.duration[DUR_FORESCRY]) 
         text += "forewarned, ";
 
-    if (you.duration[DUR_SILENCE])      //jmf: added 27mar2000
+    if (you.duration[DUR_SILENCE])  
         text += "radiating silence, ";
 
+// resistance part already says so
 //    if (you.duration[DUR_SEE_INVISIBLE])
 //        text += "see invisible, ";
 
@@ -1135,7 +1389,7 @@ formatted_string get_full_detail2(bool calc_unid)
         text +=   (you.poisoning > 10) ? "extremely" :
                   (you.poisoning > 5)  ? "very" :
                   (you.poisoning > 3)  ? "quite"
-                                    : "mildly";
+                                       : "mildly";
         text += " poisoned, ";
     }
 
@@ -1149,7 +1403,6 @@ formatted_string get_full_detail2(bool calc_unid)
 
     if (you.rotting || you.species == SP_GHOUL)
         text += "rotting, ";
-//    contaminate_player( 0, true );
 
     if (you.confusing_touch)
         text += "confusing touch, ";
@@ -1200,56 +1453,38 @@ formatted_string get_full_detail2(bool calc_unid)
 
     text += info;
 
-    size_t start = 0, pos = 0, oldpos = 0;
-    for (; pos < strlen(text.c_str()); oldpos++) {
-
-        // get next "word"
-        pos = text.find(' ', oldpos);
-        if (pos - start >= 80 && pos < strlen(text.c_str())) {
-            output += formatted_string::parse_string(
-                text.substr(start, oldpos-start));
-            output += formatted_string::parse_string(EOL);
-            start = oldpos;
-        }
-        oldpos = pos;
-    }
-
-    output += formatted_string::parse_string(text.substr(start, pos-start));
-    text = "";
-
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
-    case TRAN_SPIDER:
-        text += "\nYou are in spider-form.";
-        break;
-    case TRAN_BLADE_HANDS:
-        text += "\nYou have blades for hands.";
-        break;
-    case TRAN_STATUE:
-        text += "\nYou are a statue.";
-        break;
-    case TRAN_ICE_BEAST:
-        text += "\nYou are an ice creature.";
-        break;
-    case TRAN_DRAGON:
-        text += "\nYou are in dragon-form.";
-        break;
-    case TRAN_LICH:
-        text += "\nYou are in lich-form.";
-        break;
-    case TRAN_SERPENT_OF_HELL:
-        text += "\nYou are a huge demonic serpent.";
-        break;
-    case TRAN_AIR:
-        text += "\nYou are a cloud of diffuse gas.";
-        break;
+      case TRAN_SPIDER:
+          text += "\nYou are in spider-form.";
+          break;
+      case TRAN_BLADE_HANDS:
+          text += "\nYou have blades for hands.";
+          break;
+      case TRAN_STATUE:
+          text += "\nYou are a statue.";
+          break;
+      case TRAN_ICE_BEAST:
+          text += "\nYou are an ice creature.";
+          break;
+      case TRAN_DRAGON:
+          text += "\nYou are in dragon-form.";
+          break;
+      case TRAN_LICH:
+          text += "\nYou are in lich-form.";
+          break;
+      case TRAN_SERPENT_OF_HELL:
+          text += "\nYou are a huge demonic serpent.";
+          break;
+      case TRAN_AIR:
+          text += "\nYou are a cloud of diffuse gas.";
+          break;
     }
 
-    text += EOL;
     const int to_hit = calc_your_to_hit( false ) * 2;
 
     snprintf( info, INFO_SIZE,
-          "%s in your current equipment.",
+          "\n%s in your current equipment.",
           (to_hit <   1) ? "You are completely incapable of fighting" :
           (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
           (to_hit <  10) ? "Hitting average monsters is awkward" :
@@ -1259,18 +1494,16 @@ formatted_string get_full_detail2(bool calc_unid)
           (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
           (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
           (to_hit < 100) ? "You feel comfortable with your ability to fight"
-          : "You feel confident with your ability to fight" );
+                         : "You feel confident with your ability to fight" );
     text += info;
 
     if (you.deaths_door)
         text += "\nYou are standing in death's doorway.";
 
-    output += formatted_string::parse_string(text);
-
     //----------------------------
     // print mutation information
     //----------------------------
-    text = "\n<w>A:</w> ";
+    text += "\n<w>A:</w> ";
 
     bool have_any = false;
     int AC_change = 0;
@@ -1281,151 +1514,148 @@ formatted_string get_full_detail2(bool calc_unid)
 
     switch (you.species)   //mv: following code shows innate abilities - if any
     {
-    case SP_MERFOLK:
-        text += "change form in water";
-        have_any = true;
-        break;
+      case SP_MERFOLK:
+          text += "change form in water";
+          have_any = true;
+          break;
 
-    case SP_NAGA:
-        // breathe poison replaces spit poison:
-        if (!you.mutation[MUT_BREATHE_POISON])
-            text += "spit poison" EOL;
-        else
-            text += "breathe poison";
+      case SP_NAGA:
+          // breathe poison replaces spit poison:
+          if (!you.mutation[MUT_BREATHE_POISON])
+              text += "spit poison";
+          else
+              text += "breathe poison";
 
-        have_any = true;
-        break;
+          have_any = true;
+          break;
 
-    case SP_TROLL:
-        text += "saprovore 2";
-        have_any = true;
-        break;
+      case SP_TROLL:
+          text += "saprovore 2";
+          have_any = true;
+          break;
 
-    case SP_GHOUL:
-        text += "saprovore 3";
-        text += ", deterioriation";
-        have_any = true;
-        break;
+      case SP_GHOUL:
+          text += "saprovore 3";
+          text += ", deterioriation";
+          have_any = true;
+          break;
 
-    case SP_GREY_ELF:
-        if (you.experience_level > 4)
-        {
-            text += "charming";
-            have_any = true;
-        }
-        break;
+      case SP_GREY_ELF:
+          if (you.experience_level > 4)
+          {
+              text += "charming";
+              have_any = true;
+          }
+          break;
 
-    case SP_HIGH_ELF:
-        if (you.experience_level > 14)
-        {
-            text += "charming";
-            have_any = true;
-        }
-        break;
+      case SP_HIGH_ELF:
+          if (you.experience_level > 14)
+          {
+              text += "charming";
+              have_any = true;
+          }
+          break;
 
-    case SP_KENKU:
-        text += "cannot wear helmets";
-        if (you.experience_level > 4)
-        {
-            text += ", able to fly";
-            if (you.experience_level > 14)
-                text += " continuously";
-            have_any = true;
-        }
-        break;
+      case SP_KENKU:
+          text += "cannot wear helmets";
+          if (you.experience_level > 4)
+          {
+              text += ", able to fly";
+              if (you.experience_level > 14)
+                  text += " continuously";
+              have_any = true;
+          }
+          break;
 
-    case SP_MUMMY:
-        text += "in touch with death";
+      case SP_MUMMY:
+          text += "in touch with death";
 
-//        if (you.experience_level > 12)
-//            text += "You can restore your body by infusing magical energy." EOL;
+          have_any = true;
+          break;
 
-        have_any = true;
-        break;
+      case SP_GREY_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "spiky tail";
+              have_any = true;
+          }
+          break;
 
-    case SP_GREY_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "spiky tail";
-            have_any = true;
-        }
-        break;
+      case SP_GREEN_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe poison";
+              have_any = true;
+          }
+          break;
 
-    case SP_GREEN_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe poison";
-            have_any = true;
-        }
-        break;
+      case SP_RED_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe fire";
+              have_any = true;
+          }
+          break;
 
-    case SP_RED_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe fire";
-            have_any = true;
-        }
-        break;
+      case SP_WHITE_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe frost";
+              have_any = true;
+          }
+          break;
 
-    case SP_WHITE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe frost";
-            have_any = true;
-        }
-        break;
+      case SP_BLACK_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe lightning";
+              have_any = true;
+          }
+          break;
 
-    case SP_BLACK_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe lightning";
-            have_any = true;
-        }
-        break;
+      case SP_GOLDEN_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "spit acid";
+              text += ", acid resistance";
+              have_any = true;
+          }
+          break;
 
-    case SP_GOLDEN_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "spit acid";
-            text += ", acid resistance";
-            have_any = true;
-        }
-        break;
+      case SP_PURPLE_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe power";
+              have_any = true;
+          }
+          break;
 
-    case SP_PURPLE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe power";
-            have_any = true;
-        }
-        break;
+      case SP_MOTTLED_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe sticky flames";
+              have_any = true;
+          }
+          break;
 
-    case SP_MOTTLED_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe sticky flames";
-            have_any = true;
-        }
-        break;
+      case SP_PALE_DRACONIAN:
+          if (you.experience_level > 6)
+          {
+              text += "breathe steam";
+              have_any = true;
+          }
+          break;
 
-    case SP_PALE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            text += "breathe steam";
-            have_any = true;
-        }
-        break;
+      case SP_KOBOLD:
+          text += "saprovore 2";
+          have_any = true;
+          break;
 
-    case SP_KOBOLD:
-        text += "saprovore 2" EOL;
-        have_any = true;
-        break;
-
-    case SP_HILL_ORC:
-    case SP_OGRE:
-        text += "saprovore 1" EOL;
-        have_any = true;
-        break;
+      case SP_HILL_ORC:
+      case SP_OGRE:
+          text += "saprovore 1";
+          have_any = true;
+          break;
     }                           //end switch - innate abilities
 
     // a bit more stuff
@@ -1439,13 +1669,15 @@ formatted_string get_full_detail2(bool calc_unid)
         have_any = true;
     }
 
-    for (unsigned i = 0; i < 100; i++) {
+    for (unsigned i = 0; i < 100; i++)
+    {
         if (!you.mutation[i])
             continue;
 
         int level = you.mutation[ i ];
 
-        switch(i) {
+        switch(i)
+        {
             case MUT_TOUGH_SKIN:
                 AC_change += level;
                 break;
@@ -1474,7 +1706,8 @@ formatted_string get_full_detail2(bool calc_unid)
                 break;
             case MUT_REPULSION_FIELD:
                 EV_change += 2*level-1;
-                if (level == 3) {
+                if (level == 3)
+                {
                     if (have_any)
                         text += ", ";
                     text += "repel missiles";
@@ -1946,320 +2179,13 @@ formatted_string get_full_detail2(bool calc_unid)
     if (!have_any)
         text +=  "no striking features";
 
-    start = 0;
-    oldpos = 0;
-    for (pos = 0; pos < strlen(text.c_str()); oldpos++)
-    {
-        // get next "word"
-        pos = text.find(' ', oldpos);
-        if (pos - start >= 80 && pos < strlen(text.c_str()))
-        {
-            output += formatted_string::parse_string(text.substr(start, oldpos-start));
-            output += formatted_string::parse_string(EOL);
-            start = oldpos;
-        }
-        oldpos = pos;
-    }
-
-    output += formatted_string::parse_string(text.substr(start, pos-start));
-
     //----------------------------
     // print ability information
     //----------------------------
-/*
-    text = "\n<w>a:</w> ";
+    
+    text += print_abilities();
+    linebreak_string2(text, get_number_of_cols());
 
-    have_any = false;
-    for (unsigned int loopy = 0; loopy < 52; loopy++)
-    {
-            if (Curr_abil[loopy].which != ABIL_NON_ABILITY)
-            {
-               have_any = true;
-
-                const struct ability_def abil = get_ability_def( Curr_abil[loopy].which );
-
-                if (have_any)
-                    text += ", ";
-                snprintf(info, INFO_SIZE, "%s", abil.name );
-                text += info;
-            }
-
-    }
-    if (!have_any)
-        text +=  "no special abilities";
-
-    start = 0;
-    oldpos = 0;
-    for (pos = 0; pos < strlen(text.c_str()); oldpos++)
-    {
-        // get next "word"
-        pos = text.find(' ', oldpos);
-        if (pos - start >= 80 && pos < strlen(text.c_str()))
-        {
-            output += formatted_string::parse_string(text.substr(start, oldpos-start));
-            output += formatted_string::parse_string(EOL);
-            start = oldpos;
-        }
-        oldpos = pos;
-    }
-
-    output += formatted_string::parse_string(text.substr(start, pos-start));
-*/
-
-    return output;
+    return text;
 }
 
-std::vector<formatted_string> get_stat_info()
-{
-    char buf[1000];
-    // 3 columns, splits at columns 32, 52
-    column_composer cols(4, 16, 27, 38);
-
-    if (!player_rotted())
-        snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
-    else
-        snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
-                 you.hp, you.hp_max, you.hp_max + player_rotted() );
-
-    cols.add_formatted(0, buf, false);
-
-    snprintf(buf, sizeof buf, "MP %3d/%d",
-             you.magic_points, you.max_magic_points);
-
-    cols.add_formatted(0, buf, false);
-
-    if (you.strength == you.max_strength)
-        snprintf(buf, sizeof buf, "Str %3d", you.strength);
-    else
-        snprintf(buf, sizeof buf, "Str <yellow>%3d</yellow> (%d)",
-                 you.strength, you.max_strength);
-    cols.add_formatted(1, buf, false);
-
-    if (you.intel == you.max_intel)
-        snprintf(buf, sizeof buf, "Int %3d", you.intel);
-    else
-        snprintf(buf, sizeof buf, "Int <yellow>%3d</yellow> (%d)",
-                 you.intel, you.max_intel);
-    cols.add_formatted(1, buf, false);
-
-    if (you.dex == you.max_dex)
-        snprintf(buf, sizeof buf, "Dex %3d", you.dex);
-    else
-        snprintf(buf, sizeof buf, "Dex <yellow>%3d</yellow> (%d)",
-                 you.dex, you.max_dex);
-    cols.add_formatted(1, buf, false);
-
-    snprintf(buf, sizeof buf,
-             "AC %3d\n"
-             "EV %3d\n"
-             "Sh %3d\n",
-             player_AC(),
-             player_evasion(),
-             player_shield_class());
-    cols.add_formatted(2, buf, false);
-
-    char god_colour_tag[20];
-    god_colour_tag[0] = 0;
-    std::string godpowers(god_name(you.religion));
-    if ( you.religion != GOD_NO_GOD )
-    {
-        if ( player_under_penance() )
-            strcpy(god_colour_tag, "<red>*");
-        else
-        {
-            snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
-                     colour_to_str(god_colour(you.religion)));
-            // piety rankings
-            int prank = piety_rank() - 1;
-            if ( prank < 0 )
-                prank = 0;
-            // Careful about overflow. We erase some of the god's name
-            // if necessary.
-            godpowers = godpowers.substr(0, 17 - prank) +
-                std::string(prank, '*');
-        }
-    }
-
-    snprintf(buf, sizeof buf,
-             "Experience: %d/%lu (%d)\n"
-             "Spells: %2d memorised, %2d level%s left\n"
-             "God: %s%s<lightgrey>        Gold: %d\n",
-             you.experience_level, you.experience, you.exp_available,
-             you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s",
-             god_colour_tag, godpowers.c_str(), you.gold);
-    cols.add_formatted(3, buf, false);
-
-    return cols.formatted_lines();
-}
-
-std::vector<formatted_string> get_res_info(bool calc_unid)
-{
-    char buf[1000];
-    // 3 columns, splits at columns 21, 38
-    column_composer cols(3, 21, 38);
-
-    const int rfire = player_res_fire(calc_unid);
-    const int rcold = player_res_cold(calc_unid);
-    const int rlife = player_prot_life(calc_unid);
-    const int rpois = player_res_poison(calc_unid);
-    const int relec = player_res_electricity(calc_unid);
-    const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
-    const int rslow = wearing_amulet(AMU_RESIST_SLOW, calc_unid);
-
-    snprintf(buf, sizeof buf,
-             "%sRes.Fire  : %s\n"
-             "%sRes.Cold  : %s\n"
-             "%sLife Prot.: %s\n"
-             "%sRes.Poison: %s\n"
-             "%sRes.Elec. : %s\n"
-             "\n"
-             "%sSust.Abil.: %s\n"
-             "%sRes.Mut.  : %s\n"
-             "%sRes.Slow  : %s\n",
-             determine_color_string(rfire), itosym3(rfire),
-             determine_color_string(rcold), itosym3(rcold),
-             determine_color_string(rlife), itosym3(rlife),
-             determine_color_string(rpois), itosym1(rpois),
-             determine_color_string(relec), itosym1(relec),
-             determine_color_string(rsust), itosym1(rsust),
-             determine_color_string(rmuta), itosym1(rmuta),
-             determine_color_string(rslow), itosym1(rslow));
-    cols.add_formatted(0, buf, false);
-
-    int saplevel = 0;
-    switch (you.species)
-    {
-    case SP_GHOUL:
-        saplevel = 3;
-        snprintf(buf, sizeof buf, "%sSaprovore : %s",
-                 determine_color_string(3), itosym3(3) );
-        break;
-
-    case SP_KOBOLD:
-    case SP_TROLL:
-        saplevel = 2;
-        snprintf(buf, sizeof buf, "%sSaprovore : %s",
-                 determine_color_string(2), itosym3(2) );
-        break;
-
-    case SP_HILL_ORC:
-    case SP_OGRE:
-        saplevel = 1;
-        break;
-    default:
-        saplevel = 0;
-        break;
-    }
-    const char* pregourmand;
-    const char* postgourmand;
-    if ( wearing_amulet(AMU_THE_GOURMAND, calc_unid) )
-    {
-        pregourmand = "Gourmand  : ";
-        postgourmand = itosym1(1);
-        saplevel = 1;
-    }
-    else
-    {
-        pregourmand = "Saprovore : ";
-        postgourmand = itosym3(saplevel);
-    }
-    snprintf(buf, sizeof buf, "%s%s%s",
-             determine_color_string(saplevel), pregourmand, postgourmand);
-    cols.add_formatted(0, buf, false);
-
-
-    const int rinvi = player_see_invis(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid) ||
-        (you.religion == GOD_VEHUMET && you.duration[DUR_PRAYER] &&
-         !player_under_penance() && you.piety >= piety_breakpoint(2));
-    const int rcons = wearing_amulet(AMU_CONSERVATION, calc_unid);
-    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
-    const int rclar = wearing_amulet(AMU_CLARITY, calc_unid);
-    snprintf(buf, sizeof buf,
-             "%sSee Invis. : %s\n"
-             "%sWarding    : %s\n"
-             "%sConserve   : %s\n"
-             "%sRes.Corr.  : %s\n"
-             "%sClarity    : %s\n"
-             "\n",
-             determine_color_string(rinvi), itosym1(rinvi),
-             determine_color_string(rward), itosym1(rward),
-             determine_color_string(rcons), itosym1(rcons),
-             determine_color_string(rcorr), itosym1(rcorr),
-             determine_color_string(rclar), itosym1(rclar));
-    cols.add_formatted(1, buf, false);
-
-    if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
-        snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
-                 determine_color_string(-1), itosym1(1));
-    else
-    {
-        const int rrtel = player_teleport(calc_unid);
-        snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
-                 determine_color_string(rrtel), itosym1(rrtel));
-    }
-    cols.add_formatted(1, buf, false);
-
-    const int rctel = player_control_teleport(calc_unid);
-    const int rlevi = player_is_levitating();
-    const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
-    snprintf(buf, sizeof buf,
-             "%sCtrl.Telep.: %s\n"
-             "%sLevitation : %s\n"
-             "%sCtrl.Flight: %s\n",
-             determine_color_string(rctel), itosym1(rctel),
-             determine_color_string(rlevi), itosym1(rlevi),
-             determine_color_string(rcfli), itosym1(rcfli));
-    cols.add_formatted(1, buf, false);
-
-
-    {
-        char str_pass[ITEMNAME_SIZE];
-        const int e_order[] =
-        {
-            EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-            EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
-        };
-
-        for(int i = 0; i < NUM_EQUIP; i++)
-        {
-            int eqslot = e_order[i];
-            const char *slot = equip_slot_to_name( eqslot );
-            if (eqslot == EQ_LEFT_RING || eqslot == EQ_RIGHT_RING)
-                slot = "Ring";
-            else if (eqslot == EQ_BOOTS &&
-                     (you.species == SP_CENTAUR || you.species == SP_NAGA))
-                slot = "Barding";
-
-            if ( you.equip[ e_order[i] ] != -1)
-            {
-                const int inum = you.equip[e_order[i]];
-                in_name( inum, DESC_PLAIN, str_pass, true );
-                str_pass[38] = 0; // truncate
-                const char* colname = colour_to_str(you.inv[inum].colour);
-                snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
-                         slot, colname, str_pass, colname);
-            }
-            else
-            {
-                if (e_order[i] == EQ_WEAPON)
-                {
-                    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-                        snprintf(buf, sizeof buf, "%-7s: Blade Hands", slot);
-                    else if (you.skills[SK_UNARMED_COMBAT])
-                        snprintf(buf, sizeof buf, "%-7s: Unarmed", slot);
-                    else
-                        snprintf(buf, sizeof buf, "%-7s:", slot);
-                }
-                else
-                {
-                    snprintf(buf, sizeof buf, "%-7s:", slot);
-                }
-            }
-            cols.add_formatted(2, buf, false);
-        }
-    }
-
-    return cols.formatted_lines();
-}

@@ -1178,7 +1178,7 @@ int linebreak_string2( std::string& s, int maxcol )
             if ( s[loc] == '\n' )
                 xpos = 0;
             // hard linebreak
-            else if ( xpos > maxcol )
+            else if ( xpos >= maxcol )
             {
                 if (spacepos >= xpos-maxcol) 
                 {

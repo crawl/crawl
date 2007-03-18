@@ -294,6 +294,27 @@ const char * get_ability_name_by_index( char index )
     return (abil.name);
 }
 
+std::string print_abilities()
+{
+    std::string text = "\n<w>a:</w> ";
+
+    bool have_any = false;
+    if (generate_abilities())
+    {
+        for (int i = 0; i < 52; ++i)
+            if (Curr_abil[i].which != ABIL_NON_ABILITY)
+            {
+                if (have_any)
+                    text += ", ";
+                text += get_ability_name_by_index(i);
+                have_any = true;
+            }
+    }
+    if (!have_any)
+        text +=  "no special abilities";
+
+    return text;
+}
  
 const std::string make_cost_description( const struct ability_def &abil )
 /***********************************************************************/

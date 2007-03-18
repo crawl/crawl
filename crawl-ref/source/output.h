@@ -29,8 +29,5 @@ int equip_name_to_slot(const char *s);
 const char *equip_slot_to_name(int equip);
 
 void print_overview_screen(void);
-formatted_string get_full_detail2(bool calc_unid);
-std::vector<formatted_string> get_stat_info(void);    
-std::vector<formatted_string> get_res_info(bool calc_unid);    
 
 #endif
