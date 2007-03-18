@@ -3087,7 +3087,7 @@ static int affect_player( struct bolt &beam )
 
 
                 // miss message
-                if (!test_hit(beamHit, dodge) || you.duration[DUR_DEFLECT_MISSILES])
+                if (!test_hit(beamHit, dodge))
                 {
                     mprf("The %s misses you.", beam.name.c_str());
                     return (0);

@@ -99,18 +99,6 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
  **************************************************
 */
 
-#if 0
-#define GUARANTEED_HIT_PERCENTAGE       5
-
-bool test_hit( int to_hit, int ev, int bonus )
-{
-    if (random2(100) < 2 * GUARANTEED_HIT_PERCENTAGE)
-        return (coinflip());
-
-    return (random2( to_hit ) + bonus >= ev);
-}
-#endif
-
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
 // weilds a less than ideal weapon.
