@@ -2374,8 +2374,9 @@ enum monster_flag_type
     MF_SEEN               = 0x40,  // Player already seen monster
     MF_DIVINE_PROTECTION  = 0x80,  // Monster has divine protection.
     
-    MF_KNOWN_MIMIC        = 0x100  // Mimic that has taken a swing at the PC,
+    MF_KNOWN_MIMIC        = 0x100, // Mimic that has taken a swing at the PC,
                                    // or that the player has inspected with ?
+    MF_BANISHED           = 0x200  // Monster that has been banished.
 };
 
 enum mon_dam_level_type
@@ -3624,6 +3625,7 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_LEVEL_MONSTERS,                 // monsters
     TAG_GHOST,                          // ghost
     TAG_LEVEL_ATTITUDE,                 // monster attitudes
+    TAG_LOST_MONSTERS,                  // monsters in transit
     NUM_TAGS
 };
 

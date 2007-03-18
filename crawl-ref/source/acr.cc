@@ -2981,8 +2981,7 @@ static void move_player(int move_x, int move_y)
                 ig2++;
         }
 
-        snprintf( info, INFO_SIZE, "Number of items present: %d", ig2 );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", ig2 );
 
         ig2 = 0;
         for (igly = 0; igly < MAX_MONSTERS; igly++)

@@ -169,14 +169,15 @@ public:
 
     bool operator == ( const level_id &id ) const
     {
-        return branch == id.branch && depth == id.depth
-            && level_type == id.level_type;
+        return (level_type == LEVEL_DUNGEON?
+                branch == id.branch && depth == id.depth
+                && level_type == id.level_type
+                : level_type == id.level_type);
     }
 
     bool operator != ( const level_id &id ) const
     {
-        return branch != id.branch || depth != id.depth
-            || level_type != id.level_type;
+        return !operator == (id);
     }
 
     bool operator <( const level_id &id ) const

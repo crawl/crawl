@@ -1417,7 +1417,7 @@ static int distortion_monsters(int x, int y, int pow, int message)
     }
     else if (one_chance_in(3))
     {
-        monster_die(defender, KILL_RESET, 0);
+        defender->banish();
         return 1;
     }
     else if (message)

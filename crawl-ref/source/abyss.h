@@ -33,5 +33,6 @@ void area_shift(void);
  * *********************************************************************** */
 void abyss_teleport( bool new_area );
 
+void save_abyss_uniques();
 
 #endif

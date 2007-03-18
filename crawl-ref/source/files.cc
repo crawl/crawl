@@ -68,6 +68,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "mtransit.h"
 #include "notes.h"
 #include "player.h"
 #include "randart.h"
@@ -540,14 +541,6 @@ bool travel_load_map( char branch, int absdepth )
     return true;
 }
 
-struct follower {
-    monsters mons;
-    std::vector<item_def> items;
-
-    follower() : mons(), items() { }
-    follower(const monsters &m) : mons(m), items() { }
-};
-
 void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
            char old_level, char where_were_you2 )
 {
@@ -623,21 +616,8 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 #endif
 
                 follower f(*fmenv);
-
-                for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; ++minvc)
-                {
-                    const int item = fmenv->inv[minvc];
-                    if (item == NON_ITEM)
-                    {
-                        f.items.push_back(item_def());
-                        continue;
-                    }
-
-                    f.items.push_back(mitm[item]);
-                    destroy_item( item );
-                }
-
                 followers.push_back(f);
+                fmenv->destroy_inventory();
                 monster_cleanup(fmenv);
             }
         }                        // end of grabbing followers
@@ -887,88 +867,22 @@ found_stair:
     if (mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
         monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true);
 
-    int following = 0;
-
     // actually "move" the followers if applicable
     if ((you.level_type == LEVEL_DUNGEON
             || you.level_type == LEVEL_PANDEMONIUM)
         && load_mode == LOAD_ENTER_LEVEL)
     {
-        for (int ic = 0; ic < 2; ic++)
+        while (!followers.empty())
         {
-            for (count_x = you.x_pos - 6; count_x < you.x_pos + 7;
-                 count_x++)
-            {
-                for (count_y = you.y_pos - 6; count_y < you.y_pos + 7;
-                     count_y++)
-                {
-                    if (ic == 0
-                        && ((count_x < you.x_pos - 1)
-                            || (count_x > you.x_pos + 1)
-                            || (count_y < you.y_pos - 1)
-                            || (count_y > you.y_pos + 1)))
-                    {
-                        continue;
-                    }
-
-                    if (count_x == you.x_pos && count_y == you.y_pos)
-                        continue;
-
-                    if (mgrd[count_x][count_y] != NON_MONSTER
-                        || grd[count_x][count_y] < DNGN_FLOOR)
-                    {
-                        continue;
-                    }
-
-                    while (menv[following].type != -1)
-                    {
-                        following++;
-
-                        if (following >= MAX_MONSTERS)
-                            goto out_of_foll;
-                    }
-
-                    if (followers.size())
-                    {
-                        follower f = followers.front();
-                        followers.erase(followers.begin());
-
-                        menv[following] = f.mons;
-                        menv[following].x = count_x;
-                        menv[following].y = count_y;
-                        menv[following].target_x = 0;
-                        menv[following].target_y = 0;
-                        menv[following].flags |= MF_JUST_SUMMONED;
-
-                        for (int minvc = 0; minvc < NUM_MONSTER_SLOTS; minvc++)
-                        {
-                            menv[following].inv[minvc] = NON_ITEM;
-
-                            const item_def &minvitem = f.items[minvc];
-                            if (minvitem.base_type != OBJ_UNASSIGNED)
-                            {
-                                int itmf = get_item_slot(0);
-                                if (itmf == NON_ITEM)
-                                {
-                                    menv[following].inv[minvc] = NON_ITEM;
-                                    continue;
-                                }
-
-                                mitm[itmf] = minvitem;
-                                mitm[itmf].x = 0;
-                                mitm[itmf].y = 0;
-                                mitm[itmf].link = NON_ITEM;
-                                menv[following].inv[minvc] = itmf;
-                            }
-                        }
-                        mgrd[count_x][count_y] = following;
-                    } // followers.size()
-                }
-            }
+            follower f = followers.front();
+            followers.erase(followers.begin());
+            f.place(true);
         }
     }                       // end of moving followers
 
-  out_of_foll:
+    // Load monsters in transit.
+    place_transiting_monsters();
+
     redraw_all();
 
     // Sanity forcing of monster inventory items (required?)
@@ -1252,7 +1166,6 @@ void load_ghost(void)
         ghosts.erase(ghosts.begin());        
     }
 }
-
 
 void restore_game(void)
 {

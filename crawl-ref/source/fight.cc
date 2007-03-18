@@ -495,6 +495,8 @@ bool melee_attack::player_attack()
     if (cancel_attack)
         return (false);
 
+    coord_def where = defender->pos();
+    
     if (player_hits_monster())
     {
         did_hit = true;
@@ -533,11 +535,14 @@ bool melee_attack::player_attack()
 
     const bool did_primary_hit = did_hit;
     
-    if (unarmed_ok && player_aux_unarmed())
+    if (unarmed_ok && where == defender->pos() && player_aux_unarmed())
         return (true);
 
-    if ((did_primary_hit || did_hit) && def->type != -1)
+    if ((did_primary_hit || did_hit) && def->alive()
+        && where == defender->pos())
+    {
         print_wounds(def);
+    }
 
     return (did_primary_hit || did_hit);
 }
@@ -1691,7 +1696,7 @@ bool melee_attack::apply_damage_brand()
             break;
         }
 
-        if (coinflip())
+        if (you.level_type != LEVEL_ABYSS && coinflip())
         {
             emit_nodmg_hit_message();
             defender->banish();

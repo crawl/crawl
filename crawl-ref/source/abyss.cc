@@ -21,6 +21,7 @@
 #include "cloud.h"
 #include "misc.h"
 #include "monplace.h"
+#include "mtransit.h"
 #include "dungeon.h"
 #include "items.h"
 #include "lev-pand.h"
@@ -190,35 +191,27 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
     }
 }
 
+static void abyss_lose_monster(monsters &mons)
+{
+    if (mons.needs_transit())
+        mons.set_transit( level_id(LEVEL_ABYSS) );
+    
+    mons.reset();
+}
 
 void area_shift(void)
 /*******************/
 {
     for (unsigned int i = 0; i < MAX_MONSTERS; i++)
     {
-        if (menv[i].type == -1)
-        {
+        monsters &m = menv[i];
+        
+        if (!m.alive())
             continue;
-        }
 
         // remove non-nearby monsters
-        if (menv[i].x < you.x_pos - 10
-            || menv[i].x >= you.x_pos + 11
-            || menv[i].y < you.y_pos - 10 || menv[i].y >= you.y_pos + 11)
-        {
-            menv[i].type = -1;
-
-            mgrd[menv[i].x][menv[i].y] = NON_MONSTER;
-
-            for (unsigned int j = 0; j < NUM_MONSTER_SLOTS; j++)
-            {
-                if (menv[i].inv[j] != NON_ITEM)
-                {
-                    destroy_item( menv[i].inv[j] );
-                    menv[i].inv[j] = NON_ITEM;
-                }
-            }
-        }
+        if (grid_distance(m.x, m.y, you.x_pos, you.y_pos) > 10)
+            abyss_lose_monster(m);
     }
 
     for (int i = 5; i < (GXM - 5); i++)
@@ -226,17 +219,17 @@ void area_shift(void)
         for (int j = 5; j < (GYM - 5); j++)
         {
             // don't modify terrain by player
-            if (i >= you.x_pos - 10 && i < you.x_pos + 11
-                && j >= you.y_pos - 10 && j < you.y_pos + 11)
-            {
+            if (grid_distance(i, j, you.x_pos, you.y_pos) <= 10)
                 continue;
-            }
 
             // nuke terrain otherwise
             grd[i][j] = DNGN_UNSEEN;
 
             // nuke items
             destroy_item_stack( i, j );
+
+            if (mgrd[i][j] != NON_MONSTER)
+                abyss_lose_monster( menv[ mgrd[i][j] ] );
         }
     }
 
@@ -298,8 +291,20 @@ void area_shift(void)
         mons_place( RANDOM_MONSTER, BEH_HOSTILE, MHITNOT, false, 1, 1, 
                     LEVEL_ABYSS, PROX_AWAY_FROM_PLAYER ); // PROX_ANYWHERE?
     }
+
+    // And allow monsters in transit another chance to return.
+    place_transiting_monsters();
 }
 
+void save_abyss_uniques()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters &m = menv[i];
+        if (m.alive() && m.needs_transit())
+            m.set_transit( level_id(LEVEL_ABYSS) );
+    }
+}
 
 void abyss_teleport( bool new_area )
 /**********************************/
@@ -336,6 +341,12 @@ void abyss_teleport( bool new_area )
     init_pandemonium();          // get new monsters
     set_colours_from_monsters(); // and new colours
 
+    for (i = 0; i < MAX_MONSTERS; i++)
+    {
+        if (menv[i].alive())
+            abyss_lose_monster(menv[i]);
+    }
+    
     // Orbs and fixed artefacts are marked as "lost in the abyss"
     for (k = 0; k < MAX_ITEMS; k++)
     {
@@ -355,9 +366,6 @@ void abyss_teleport( bool new_area )
             destroy_item( k );
         }
     }
-
-    for (i = 0; i < MAX_MONSTERS; i++)
-        menv[i].type = -1;
 
     for (i = 0; i < MAX_CLOUDS; i++)
         delete_cloud( i );
@@ -384,4 +392,5 @@ void abyss_teleport( bool new_area )
     if ( one_chance_in(5) )
         grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUCY;
 
+    place_transiting_monsters();
 }

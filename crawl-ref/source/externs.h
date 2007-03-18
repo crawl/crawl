@@ -816,6 +816,7 @@ struct mon_attack_def
 };
 
 class ghost_demon;
+class level_id;
 
 class monsters : public actor
 {
@@ -857,9 +858,17 @@ public:
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
 public:
+    bool needs_transit() const;
+    void set_transit(level_id destination);
+    bool find_place_to_live(bool near_player = false);
+    bool find_place_near_player();
+    bool find_home_in(coord_def s, coord_def e);
+    bool find_home_anywhere();
+        
     void set_ghost(const ghost_demon &ghost);
     void ghost_init();
     void pandemon_init();
+    void destroy_inventory();
     void reset();
     void load_spells(int spellbook);
     

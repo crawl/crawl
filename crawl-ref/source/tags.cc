@@ -76,6 +76,7 @@
 #include "itemprop.h"
 #include "monstuff.h"
 #include "mon-util.h"
+#include "mtransit.h"
 #include "randart.h"
 #include "skills.h"
 #include "skills2.h"
@@ -99,9 +100,11 @@ FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
 static void tag_construct_you(struct tagHeader &th);
 static void tag_construct_you_items(struct tagHeader &th);
 static void tag_construct_you_dungeon(struct tagHeader &th);
+static void tag_construct_lost_monsters(tagHeader &th);
 static void tag_read_you(struct tagHeader &th, char minorVersion);
 static void tag_read_you_items(struct tagHeader &th, char minorVersion);
 static void tag_read_you_dungeon(struct tagHeader &th);
+static void tag_read_lost_monsters(tagHeader &th, int minorVersion);
 
 static void tag_construct_level(struct tagHeader &th);
 static void tag_construct_level_items(struct tagHeader &th);
@@ -118,6 +121,10 @@ static void tag_read_ghost(struct tagHeader &th, char minorVersion);
 
 static void marshallGhost(tagHeader &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost( tagHeader &th );
+static void marshall_monster(tagHeader &th, const monsters &m);
+static void unmarshall_monster(tagHeader &th, monsters &m);
+static void marshall_item(tagHeader &th, const item_def &item);
+static void unmarshall_item(tagHeader &th, item_def &item);
 
 // provide a wrapper for file writing, just in case.
 int write2(FILE * file, const char *buffer, unsigned int count)
@@ -219,10 +226,11 @@ void marshallMap(struct tagHeader &th, const std::map<key,value>& data,
     }
 }
 
-void marshall_level_id( struct tagHeader& th, const level_id& id )
+void marshall_level_id( tagHeader& th, const level_id& id )
 {
     marshallByte(th, id.branch );
     marshallLong(th, id.depth );
+    marshallByte(th, id.level_type);
 }
 
 void marshall_level_pos( struct tagHeader& th, const level_pos& lpos )
@@ -234,17 +242,15 @@ void marshall_level_pos( struct tagHeader& th, const level_pos& lpos )
 
 template<typename key, typename value>
 void unmarshallMap(struct tagHeader& th, std::map<key,value>& data,
-                   key   (*key_unmarshall)  (struct tagHeader&),
-                   value (*value_unmarshall)(struct tagHeader&) )
+                   key   (*key_unmarshall)  (tagHeader&),
+                   value (*value_unmarshall)(tagHeader&) )
 {
     long i, len = unmarshallLong(th);
     key k;
-    value v;
     for ( i = 0; i < len; ++i )
     {
         k = key_unmarshall(th);
-        v = value_unmarshall(th);
-        data[k] = v;
+        data[k] = value_unmarshall(th);
     }
 }
 
@@ -254,12 +260,13 @@ T unmarshall_long_as( struct tagHeader& th )
     return static_cast<T>(unmarshallLong(th));
 }
 
-level_id unmarshall_level_id( struct tagHeader& th )
+level_id unmarshall_level_id( tagHeader& th )
 {
     level_id id;
     id.branch = unmarshallByte(th);
     id.depth = unmarshallLong(th);
-    return id;
+    id.level_type = unmarshallByte(th);
+    return (id);
 }
 
 level_pos unmarshall_level_pos( struct tagHeader& th )
@@ -267,7 +274,7 @@ level_pos unmarshall_level_pos( struct tagHeader& th )
     level_pos lpos;
     lpos.pos.x = unmarshallLong(th);
     lpos.pos.y = unmarshallLong(th);
-    lpos.id = unmarshall_level_id(th);
+    lpos.id    = unmarshall_level_id(th);
     return lpos;
 }
 
@@ -459,6 +466,9 @@ void tag_construct(struct tagHeader &th, int tagID)
         case TAG_GHOST:
             tag_construct_ghost(th);
             break;
+        case TAG_LOST_MONSTERS:
+            tag_construct_lost_monsters(th);
+            break;
         default:
             // I don't know how to make that!
             break;
@@ -557,6 +567,9 @@ int tag_read(FILE *fp, char minorVersion)
         case TAG_GHOST:
             tag_read_ghost(th, minorVersion);
             break;
+        case TAG_LOST_MONSTERS:
+            tag_read_lost_monsters(th, minorVersion);
+            break;
         default:
             // I don't know how to read that!
             return 0;
@@ -602,8 +615,11 @@ void tag_set_expected(char tags[], int fileType)
         switch(fileType)
         {
             case TAGTYPE_PLAYER:
-                if (i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
+                if ((i >= TAG_YOU && i <=TAG_YOU_DUNGEON)
+                    || i == TAG_LOST_MONSTERS)
+                {
                     tags[i] = 1;
+                }
                 break;
             case TAGTYPE_PLAYER_NAME:
                 if (i == TAG_YOU)
@@ -910,6 +926,53 @@ static void tag_construct_you_dungeon(struct tagHeader &th)
                 marshall_level_pos, marshall_as_long<portal_type>);
 }
 
+static void marshall_follower(tagHeader &th, const follower &f)
+{
+    marshall_monster(th, f.mons);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        marshall_item(th, f.items[i]);    
+}
+
+static void unmarshall_follower(tagHeader &th, follower &f)
+{
+    unmarshall_monster(th, f.mons);
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+        unmarshall_item(th, f.items[i]);
+}
+
+static void marshall_follower_list(tagHeader &th, const m_transit_list &mlist)
+{
+    marshallShort( th, mlist.size() );
+    
+    for (m_transit_list::const_iterator mi = mlist.begin();
+         mi != mlist.end(); ++mi)
+    {
+        marshall_follower( th, *mi );
+    }
+}
+
+static m_transit_list unmarshall_follower_list(tagHeader &th)
+{
+    m_transit_list mlist;
+    
+    const int size = unmarshallShort(th);
+
+    for (int i = 0; i < size; ++i)
+    {
+        follower f;
+        unmarshall_follower(th, f);
+        mlist.push_back(f);
+    }
+
+    return (mlist);
+}
+
+static void tag_construct_lost_monsters(tagHeader &th)
+{
+    marshallMap( th, the_lost_ones, marshall_level_id,
+                 marshall_follower_list );
+}
+
 static void tag_read_you(struct tagHeader &th, char minorVersion)
 {
     char buff[20];      // For birth date
@@ -1200,13 +1263,22 @@ static void tag_read_you_dungeon(struct tagHeader &th)
     }
     
     unmarshallMap(th, stair_level,
-                  unmarshall_long_as<branch_type>, unmarshall_level_id);
+                  unmarshall_long_as<branch_type>,
+                  unmarshall_level_id);
     unmarshallMap(th, shops_present,
                   unmarshall_level_pos, unmarshall_long_as<shop_type>);
     unmarshallMap(th, altars_present,
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+}
+
+static void tag_read_lost_monsters(tagHeader &th, int minorVersion)
+{
+    the_lost_ones.clear();
+    
+    unmarshallMap(th, the_lost_ones,
+                  unmarshall_level_id, unmarshall_follower_list);
 }
 
 // ------------------------------- level tags ---------------------------- //
@@ -1262,6 +1334,62 @@ static void tag_construct_level(struct tagHeader &th)
     }
 }
 
+static void marshall_item(tagHeader &th, const item_def &item)
+{
+    marshallByte(th, item.base_type);
+    marshallByte(th, item.sub_type);
+    marshallShort(th, item.plus);
+    marshallShort(th, item.plus2);
+    marshallLong(th, item.special);
+    marshallShort(th, item.quantity);
+
+    marshallByte(th, item.colour);
+    marshallShort(th, item.x);
+    marshallShort(th, item.y);
+    marshallLong(th, item.flags);
+
+    marshallShort(th, item.link);                //  unused
+    marshallShort(th, igrd[item.x][item.y]);  //  unused
+
+    marshallByte(th, item.slot);
+
+    marshallShort(th, item.orig_place);
+    marshallShort(th, item.orig_monnum);
+    marshallString(th, item.inscription.c_str(), 80);
+}
+
+static void unmarshall_item(tagHeader &th, item_def &item)
+{
+    item.base_type = (unsigned char) unmarshallByte(th);
+    item.sub_type = (unsigned char) unmarshallByte(th);
+    item.plus = unmarshallShort(th);
+    item.plus2 = unmarshallShort(th);
+    item.special = unmarshallLong(th);
+    item.quantity = unmarshallShort(th);
+    item.colour = (unsigned char) unmarshallByte(th);
+    item.x = unmarshallShort(th);
+    item.y = unmarshallShort(th);
+    item.flags = (unsigned long) unmarshallLong(th);
+        
+    // [dshaligram] FIXME, remove this kludge when ARM_CAP is fully
+    // integrated.
+    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_CAP)
+        item.sub_type = ARM_HELMET;
+
+    unmarshallShort(th);  // mitm[].link -- unused
+    unmarshallShort(th);  // igrd[item.x][item.y] -- unused
+
+    item.slot = unmarshallByte(th);
+    item.inscription.clear();
+
+    item.orig_place  = unmarshallShort(th);
+    item.orig_monnum = unmarshallShort(th);
+        
+    char insstring[80];
+    unmarshallString(th, insstring, 80);
+    item.inscription = std::string(insstring);
+}
+
 static void tag_construct_level_items(struct tagHeader &th)
 {
     int i;
@@ -1278,37 +1406,53 @@ static void tag_construct_level_items(struct tagHeader &th)
     // how many items?
     marshallShort(th, MAX_ITEMS);
     for (i = 0; i < MAX_ITEMS; ++i)
+        marshall_item(th, mitm[i]);
+}
+
+static void marshall_monster(tagHeader &th, const monsters &m)
+{
+    marshallByte(th, m.ac);
+    marshallByte(th, m.ev);
+    marshallByte(th, m.hit_dice);
+    marshallByte(th, m.speed);
+    marshallByte(th, m.speed_increment);
+    marshallByte(th, m.behaviour);
+    marshallByte(th, m.x);
+    marshallByte(th, m.y);
+    marshallByte(th, m.target_x);
+    marshallByte(th, m.target_y);
+    marshallLong(th, m.flags);
+
+    for (int j = 0; j < NUM_MON_ENCHANTS; j++)
+        marshallByte(th, m.enchantment[j]);
+
+    marshallShort(th, m.type);
+    marshallShort(th, m.hit_points);
+    marshallShort(th, m.max_hit_points);
+    marshallShort(th, m.number);
+    marshallShort(th, m.colour);
+
+    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+        marshallShort(th, m.inv[j]);
+
+    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        marshallShort(th, m.spells[j]);
+
+    marshallByte(th, m.god);
+
+    if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
     {
-        marshallByte(th, mitm[i].base_type);
-        marshallByte(th, mitm[i].sub_type);
-        marshallShort(th, mitm[i].plus);
-        marshallShort(th, mitm[i].plus2);
-        marshallLong(th, mitm[i].special);
-        marshallShort(th, mitm[i].quantity);
-
-        marshallByte(th, mitm[i].colour);
-        marshallShort(th, mitm[i].x);
-        marshallShort(th, mitm[i].y);
-        marshallLong(th, mitm[i].flags);
-
-        marshallShort(th, mitm[i].link);                //  unused
-        marshallShort(th, igrd[mitm[i].x][mitm[i].y]);  //  unused
-
-        marshallByte(th, mitm[i].slot);
-
-        marshallShort(th, mitm[i].orig_place);
-        marshallShort(th, mitm[i].orig_monnum);
-        marshallString(th, mitm[i].inscription.c_str(), 80);
+        // *Must* have ghost field set.
+        ASSERT(m.ghost.get());
+        marshallGhost(th, *m.ghost);
     }
 }
 
 static void tag_construct_level_monsters(struct tagHeader &th)
 {
-    int i,j;
-
     // how many mons_alloc?
     marshallByte(th, 20);
-    for (i = 0; i < 20; ++i)
+    for (int i = 0; i < 20; ++i)
         marshallShort(th, env.mons_alloc[i]);
 
     // how many monsters?
@@ -1318,46 +1462,8 @@ static void tag_construct_level_monsters(struct tagHeader &th)
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
 
-    for (i = 0; i < MAX_MONSTERS; i++)
-    {
-        const monsters &m = menv[i];
-
-        marshallByte(th, m.ac);
-        marshallByte(th, m.ev);
-        marshallByte(th, m.hit_dice);
-        marshallByte(th, m.speed);
-        marshallByte(th, m.speed_increment);
-        marshallByte(th, m.behaviour);
-        marshallByte(th, m.x);
-        marshallByte(th, m.y);
-        marshallByte(th, m.target_x);
-        marshallByte(th, m.target_y);
-        marshallLong(th, m.flags);
-
-        for (j = 0; j < NUM_MON_ENCHANTS; j++)
-            marshallByte(th, m.enchantment[j]);
-
-        marshallShort(th, m.type);
-        marshallShort(th, m.hit_points);
-        marshallShort(th, m.max_hit_points);
-        marshallShort(th, m.number);
-        marshallShort(th, m.colour);
-
-        for (j = 0; j < NUM_MONSTER_SLOTS; j++)
-            marshallShort(th, m.inv[j]);
-
-        for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-            marshallShort(th, m.spells[j]);
-
-        marshallByte(th, m.god);
-
-        if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
-        {
-            // *Must* have ghost field set.
-            ASSERT(m.ghost.get());
-            marshallGhost(th, *m.ghost);
-        }
-    }
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        marshall_monster(th, menv[i]);
 }
 
 void tag_construct_level_attitude(struct tagHeader &th)
@@ -1450,41 +1556,49 @@ static void tag_read_level_items(struct tagHeader &th, char minorVersion)
     // how many items?
     count = unmarshallShort(th);
     for (i = 0; i < count; ++i)
-    {
-        mitm[i].base_type = (unsigned char) unmarshallByte(th);
-        mitm[i].sub_type = (unsigned char) unmarshallByte(th);
-        mitm[i].plus = unmarshallShort(th);
-        mitm[i].plus2 = unmarshallShort(th);
-        mitm[i].special = unmarshallLong(th);
-        mitm[i].quantity = unmarshallShort(th);
-        mitm[i].colour = (unsigned char) unmarshallByte(th);
-        mitm[i].x = unmarshallShort(th);
-        mitm[i].y = unmarshallShort(th);
-        mitm[i].flags = (unsigned long) unmarshallLong(th);
-        
-        // [dshaligram] FIXME, remove this kludge when ARM_CAP is fully
-        // integrated.
-        if (mitm[i].base_type == OBJ_ARMOUR && mitm[i].sub_type == ARM_CAP)
-            mitm[i].sub_type = ARM_HELMET;
+        unmarshall_item(th, mitm[i]);
+}
 
-        unmarshallShort(th);  // mitm[].link -- unused
-        unmarshallShort(th);  // igrd[mitm[i].x][mitm[i].y] -- unused
+static void unmarshall_monster(tagHeader &th, monsters &m)
+{
+    m.ac = unmarshallByte(th);
+    m.ev = unmarshallByte(th);
+    m.hit_dice = unmarshallByte(th);
+    m.speed = unmarshallByte(th);
+    // Avoid sign extension when loading files (Elethiomel's hang)
+    m.speed_increment = (unsigned char) unmarshallByte(th);
+    m.behaviour = unmarshallByte(th);
+    m.x = unmarshallByte(th);
+    m.y = unmarshallByte(th);
+    m.target_x = unmarshallByte(th);
+    m.target_y = unmarshallByte(th);
+    m.flags = unmarshallLong(th);
 
-        mitm[i].slot = unmarshallByte(th);
-        mitm[i].inscription.clear();
+    for (int j = 0; j < NUM_MON_ENCHANTS; j++)
+        m.enchantment[j] = unmarshallByte(th);
 
-        mitm[i].orig_place  = unmarshallShort(th);
-        mitm[i].orig_monnum = unmarshallShort(th);
-        
-        char insstring[80];
-        unmarshallString(th, insstring, 80);
-        mitm[i].inscription = std::string(insstring);
-    }
+    m.type = unmarshallShort(th);
+    m.hit_points = unmarshallShort(th);
+    m.max_hit_points = unmarshallShort(th);
+    m.number = unmarshallShort(th);
+
+    m.colour = unmarshallShort(th);
+
+    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+        m.inv[j] = unmarshallShort(th);
+
+    for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        m.spells[j] = unmarshallShort(th);
+
+    m.god = (god_type) unmarshallByte(th);
+
+    if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
+        m.set_ghost( unmarshallGhost(th) );
 }
 
 static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
 {
-    int i,j;
+    int i;
     int count, ecount, icount;
 
     // how many mons_alloc?
@@ -1502,41 +1616,7 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
     for (i = 0; i < count; i++)
     {
         monsters &m = menv[i];
-        
-        m.ac = unmarshallByte(th);
-        m.ev = unmarshallByte(th);
-        m.hit_dice = unmarshallByte(th);
-        m.speed = unmarshallByte(th);
-        // Avoid sign extension when loading files (Elethiomel's hang)
-        m.speed_increment = (unsigned char) unmarshallByte(th);
-        m.behaviour = unmarshallByte(th);
-        m.x = unmarshallByte(th);
-        m.y = unmarshallByte(th);
-        m.target_x = unmarshallByte(th);
-        m.target_y = unmarshallByte(th);
-        m.flags = unmarshallLong(th);
-
-        for (j = 0; j < ecount; j++)
-            m.enchantment[j] = unmarshallByte(th);
-
-        m.type = unmarshallShort(th);
-        m.hit_points = unmarshallShort(th);
-        m.max_hit_points = unmarshallShort(th);
-        m.number = unmarshallShort(th);
-
-        m.colour = unmarshallShort(th);
-
-        for (j = 0; j < icount; j++)
-            m.inv[j] = unmarshallShort(th);
-
-        for (j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-            m.spells[j] = unmarshallShort(th);
-
-        m.god = (god_type) unmarshallByte(th);
-
-        if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
-            m.set_ghost( unmarshallGhost(th) );
-
+        unmarshall_monster(th, m);
         // place monster
         if (m.type != -1)
             mgrd[m.x][m.y] = i;

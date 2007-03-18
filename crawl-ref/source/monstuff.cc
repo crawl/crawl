@@ -338,6 +338,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     int monster_killed = monster_index(monster);
     bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
+    bool in_transit = false;
 
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
@@ -660,6 +661,13 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
                          monster->y, 1 + random2(3) );
 
+            if (monster->needs_transit())
+            {
+                monster->flags |= MF_BANISHED;
+                monster->set_transit( level_id(LEVEL_ABYSS) );
+                in_transit = true;
+            }
+
             // fall-through
 
         case KILL_DISMISSED:
@@ -697,7 +705,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                             random2avg(88, 3), 100, "a mummy death curse" );
         }
     }
-    else if (monster->type == MONS_BORIS)
+    else if (monster->type == MONS_BORIS && !in_transit)
     {
         // XXX: actual blood curse effect for Boris? -- bwr
 
@@ -2091,6 +2099,7 @@ static bool handle_enchantment(struct monsters *monster)
 
             if (monster->enchantment[p] < ENCH_ABJ_I)
             {
+                monster->enchantment[p] = ENCH_ABJ_I;
                 monster_die(monster, KILL_RESET, 0);
                 died = true;
             }

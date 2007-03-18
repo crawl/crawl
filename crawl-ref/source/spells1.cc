@@ -667,7 +667,10 @@ void abjuration(int pow)
             abjLevel -= 1 + (random2(pow) / 8);
 
             if (abjLevel < ENCH_ABJ_I)
+            {
+                mons_add_ench(monster, ENCH_ABJ_I);
                 monster_die(monster, KILL_RESET, 0);
+            }
             else
             {
                 simple_monster_message(monster, " shudders.");

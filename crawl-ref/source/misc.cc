@@ -35,6 +35,7 @@
 
 #include "externs.h"
 
+#include "abyss.h"
 #include "branch.h"
 #include "cloud.h"
 #include "delay.h"
@@ -834,6 +835,10 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     if (collect_travel_data)
         old_level_info.update();
 
+    // Preserve abyss uniques now, since this Abyss level will be deleted.
+    if (you.level_type == LEVEL_ABYSS)
+        save_abyss_uniques();
+    
     if (you.level_type == LEVEL_PANDEMONIUM
             && stair_find == DNGN_TRANSIT_PANDEMONIUM)
     {

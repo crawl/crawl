@@ -249,7 +249,7 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
 {
     int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
-    int wiz_factor = 86;
+    int wiz_factor = 87;
 
     if (you.religion == GOD_VEHUMET 
         && you.duration[DUR_PRAYER]
@@ -258,8 +258,8 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
             || spell_typematch(spell, SPTYP_SUMMONING)))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
-        // back to 60%.
-        fail_reduce = fail_reduce * 60 / 100;
+        // back to 67%.
+        fail_reduce = fail_reduce * 67 / 100;
     }
 
     // [dshaligram] Apply wizardry factor here, rather than mixed into the
@@ -267,12 +267,12 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
     while (wizardry-- > 0)
     {
         fail_reduce  = fail_reduce * wiz_factor / 100;
-        wiz_factor  += (100 - wiz_factor) / 5;
+        wiz_factor  += (100 - wiz_factor) / 3;
     }
 
     // Hard cap on fail rate reduction.
-    if (fail_reduce < 40)
-        fail_reduce = 40;
+    if (fail_reduce < 50)
+        fail_reduce = 50;
 
     return (chance * fail_reduce / 100);
 }

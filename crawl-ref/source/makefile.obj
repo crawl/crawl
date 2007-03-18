@@ -45,6 +45,7 @@ monstuff.o \
 monspeak.o \
 mon-util.o \
 mstuff2.o \
+mtransit.o \
 mutation.o \
 newgame.o \
 notes.o \

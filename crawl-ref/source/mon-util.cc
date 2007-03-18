@@ -32,10 +32,12 @@
 #include "debug.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "Kills.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mstuff2.h"
+#include "mtransit.h"
 #include "player.h"
 #include "randart.h"
 #include "stuff.h"
@@ -2781,8 +2783,6 @@ void monsters::expose_to_element(beam_type, int)
 
 void monsters::banish()
 {
-    // [dshaligram] FIXME: We should really put these monsters on a
-    // queue and load them when the player enters the Abyss.
     monster_die(this, KILL_RESET, 0);
 }
 
@@ -3041,19 +3041,84 @@ void monsters::ghost_init()
     inv.init(NON_ITEM);
     enchantment.init(ENCH_NONE);
 
+    find_place_to_live();
+}
+
+bool monsters::find_home_in(coord_def s, coord_def e)
+{
+    for (int iy = s.y; iy <= e.y; ++iy)
+    {
+        for (int ix = s.x; ix <= e.x; ++ix)
+        {
+            if (!in_bounds(ix, iy))
+                continue;
+
+            if (ix == you.x_pos && iy == you.y_pos)
+                continue;
+
+            if (mgrd[ix][iy] != NON_MONSTER || grd[ix][iy] < DNGN_FLOOR)
+                continue;
+
+            x = ix;
+            y = iy;
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+bool monsters::find_place_near_player()
+{
+    return (find_home_in( you.pos() - coord_def(1, 1),
+                          you.pos() + coord_def(1, 1) )
+            || find_home_in( you.pos() - coord_def(6, 6),
+                             you.pos() + coord_def(6, 6) ));
+}
+
+bool monsters::find_home_anywhere()
+{
+    int tries = 600;
     do
     {
-        x = random2(GXM - 20) + 10;
-        y = random2(GYM - 20) + 10;
+        x = random_range(6, GXM - 7);
+        y = random_range(6, GYM - 7);
     }
-    while ((grd[x][y] != DNGN_FLOOR)
-           || (mgrd[x][y] != NON_MONSTER));
+    while ((grd[x][y] != DNGN_FLOOR
+           || mgrd[x][y] != NON_MONSTER)
+           && tries-- > 0);
 
-    mgrd[x][y] = monster_index(this);
+    return (tries >= 0);
+}
+
+bool monsters::find_place_to_live(bool near_player)
+{
+    if ((near_player && find_place_near_player())
+        || find_home_anywhere())
+    {
+        mgrd[x][y] = monster_index(this);
+        return (true);
+    }
+
+    return (false);
+}
+
+void monsters::destroy_inventory()
+{
+    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+    {
+        if (inv[j] != NON_ITEM)
+        {
+            destroy_item( inv[j] );
+            inv[j] = NON_ITEM;
+        }
+    }
 }
 
 void monsters::reset()
 {
+    destroy_inventory();
+    
     enchantment.init(ENCH_NONE);
     inv.init(NON_ITEM);
 
@@ -3074,6 +3139,19 @@ void monsters::reset()
 
     x = y = 0;
     ghost.reset(NULL);
+}
+
+bool monsters::needs_transit() const
+{
+    return ((mons_is_unique(type)
+             || (flags & MF_BANISHED)
+             || (you.level_type == LEVEL_DUNGEON && hit_dice > 8 + random2(25)))
+            && !mons_has_ench(this, ENCH_ABJ_I, ENCH_ABJ_VI));
+}
+
+void monsters::set_transit(level_id dest)
+{
+    add_monster_to_transit(dest, *this);
 }
 
 void monsters::load_spells(int book)

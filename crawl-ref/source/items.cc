@@ -2182,12 +2182,16 @@ static void update_enchantments( struct monsters *mon, int levels )
         case ENCH_ABJ_VI:
             if (remove_enchant_levels( mon, i, ENCH_ABJ_I, levels ))
             {
+                // Re-add ABJ_I so that monster_die doesn't try to send the
+                // monster to the Abyss on KILL_RESET.
+                mons_add_ench( mon, ENCH_ABJ_I );
                 monster_die( mon, KILL_RESET, 0 );
             }
             break;
 
 
         case ENCH_SHORT_LIVED:
+            mons_add_ench( mon, ENCH_ABJ_I );
             monster_die( mon, KILL_RESET, 0 );
             break;
 
