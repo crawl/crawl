@@ -631,7 +631,9 @@ void direction(struct dist& moves, targeting_type restricts,
                  mode == TARG_ENEMY && Options.confirm_self_target &&
                  !yesno("Really target yourself?"))
             {
-                canned_msg(MSG_OK);
+                mesclr();
+                mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
+                     target_mode_help_text(restricts));
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
             {
@@ -714,6 +716,7 @@ void direction(struct dist& moves, targeting_type restricts,
         skip_iter = false;      // only skip one iteration at most
     }
     moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
+    mesclr();
 
     // We need this for directional explosions, otherwise they'll explode one
     // square away from the player.
