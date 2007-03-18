@@ -22,16 +22,14 @@ static void place_lost_monsters(m_transit_list &m);
 static void cull_lost(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
-    m_transit_list::iterator i = mlist.begin();
-
-    for ( ; i != mlist.end(); )
+    for (m_transit_list::iterator i = mlist.begin(); i != mlist.end(); )
     {
         m_transit_list::iterator finger = i++;
         if (!mons_is_unique(finger->mons.type))
         {
             mlist.erase(finger);
 
-            if (--how_many <= 0)
+            if (--how_many <= MAX_LOST)
                 return;
         }
     }
