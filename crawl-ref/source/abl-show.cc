@@ -133,7 +133,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
       ABIL_ELYVILON_GREATER_HEALING },
-    // Lucy
+    // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
       ABIL_LUGONU_SUMMON_DEMONS, ABIL_NON_ABILITY,
       ABIL_LUGONU_ABYSS_ENTER }
@@ -260,7 +260,7 @@ static const struct ability_def Ability_List[] =
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_NONE },
     { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 4, ABFLAG_NONE },
 
-    // Lucy
+    // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
     { ABIL_LUGONU_BEND_SPACE, "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
     { ABIL_LUGONU_SUMMON_DEMONS, "Summon Abyssal Servants", 7, 0, 100, 5, ABFLAG_NONE },
@@ -2151,9 +2151,12 @@ static int lugonu_warp_monster(int x, int y, int pow, int)
         return (1);
     }
 
-    if (!check_mons_resist_magic(&mon, pow))
+    const int damage = 1 + random2(pow / 6);
+    if (mon.type == MONS_BLINK_FROG)
+        mon.heal(damage, false);
+    else if (!check_mons_resist_magic(&mon, pow))
     {
-        mon.hurt(&you, 1 + random2(pow / 6));
+        mon.hurt(&you, damage);
         if (!mon.alive())
             return (1);
     }

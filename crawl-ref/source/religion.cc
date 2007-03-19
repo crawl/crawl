@@ -816,7 +816,7 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
         sprintf(godname_buff, "Elyvilon%s", long_name ? " the Healer" : "");
         break;
     case GOD_LUGONU:
-        sprintf(godname_buff, "Lugonu");
+        sprintf(godname_buff, "Lugonu%s", long_name? " the Unformed" : "");
         break;
     default:
         sprintf(godname_buff, "The Buggy One (%d)", which_god);

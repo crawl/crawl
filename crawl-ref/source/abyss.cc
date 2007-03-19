@@ -179,11 +179,11 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
                 {
                     grd[i][j] = DNGN_ALTAR_ZIN + random2(12);
                 }
-                while (grd[i][j] == DNGN_ALTAR_YREDELEMNUL
-                       || grd[i][j] == DNGN_ALTAR_VEHUMET
-                       || grd[i][j] == DNGN_ALTAR_NEMELEX_XOBEH);
+                while (grd[i][j] == DNGN_ALTAR_ZIN
+                       || grd[i][j] == DNGN_ALTAR_SHINING_ONE
+                       || grd[i][j] == DNGN_ALTAR_ELYVILON);
 
-                // Lucy has a flat 50% chance of corrupting the altar
+                // Lugonu has a flat 50% chance of corrupting the altar
                 if ( coinflip() )
                     grd[i][j] = DNGN_ALTAR_LUGONU;
             }
