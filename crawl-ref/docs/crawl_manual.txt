@@ -44,7 +44,7 @@ B.                      STARTING SCREEN
 
 After starting Crawl, you'll be asked to type in a name. If there is a saved
 game of that character, it will be restored, otherwise you proceed choosing race
-and class (this can be done in either order). The choice ofspecies affects
+and class (this can be done in either order). The choice of species affects
 several important characteristics, in particular the speed with which the
 different skills are learned. This is very important, and helps to differentiate
 clearly the 26 available races. To be complete, the following factors are
@@ -87,10 +87,10 @@ e.g. of starting god for Chaos Knights, or of starting weapon for Fighters.
 C.                      ATTRIBUTES AND STATS 
 --------------------------------------------------------------------------------
 
-The stat area tp the right of the playing map shows a lot of numbers. These
+The stat area to the right of the playing map shows a lot of numbers. These
 describe different aspects of the hero. The most basic ones are
 
-Hit points:     A measure of life force. Death results from hitpoints dropping 
+Hit points:     A measure of life force. Death results from hit-points dropping 
 -----------     to zero or less (although there are additional ways to die). 
                 The main screen shows hit points in the format HP: 8/10
                 which means that the number of maximal hit points is 10, from 
@@ -117,7 +117,7 @@ Level:          Starting characters have experience level 1; the highest level
 
 The following primary attributes describe the abilities of a character to fight,
 dodge, learn spells etc. They grow permanently from gaining levels, and 
-temporary from using appropriate artefacts or abilities. Crawl has only three:
+temporary from using appropriate artifacts or abilities. Crawl has only three:
 
 Strength:       Affects the amount of damage you do in combat, as well as how
 ---------       much stuff you can carry.
@@ -235,7 +235,7 @@ Automated Travel and Exploration:
 ---------------------------------
 Crawl has an extensive automated travel command: pressing Ctrl-G lets you chose 
 any dungeon level, the game will then take the shortest path to reach this
-destination. You can use autotravel also on the level map: move the cursor to 
+destination. You can also use autotravel also on the level map: move the cursor to 
 the place where you want to go and hit Enter. There are several shortcuts when
 choosing destinations: try '<' and '>' to quickly reach the staircases. When
 your autotravel gets interrupted, Crawl will remember the previous destination.
@@ -261,7 +261,7 @@ the search are (or have been) located; you can then travel there.
 The Goal:
 ---------
 You goal is to locate the Orb of Zot, which is held somewhere deep beneath the
-world's surface. The Orb is an ancient and incredibly powerful artefact, and
+world's surface. The Orb is an ancient and incredibly powerful artifact, and
 the legends promise great things for anyone brave enough to extract it from
 the fearsome Dungeon. Some say it will grant immortality or even godhood to
 the one who carries it into the sunlight; many undead creatures seek it in the
@@ -280,9 +280,9 @@ default commands (in the various modes) also appears in appendix X.4.
 E.                      EXPERIENCE AND SKILLS
 --------------------------------------------------------------------------------
 
-When you kill monsters, you gain experience points (xp) and you also receive one
+When you kill monsters, you gain experience points (XP) and you also receive one
 half experience for monsters killed by friendly creatures. When you get enough
-xp, you gain an experience level, making your character more powerful. As they
+XP, you gain an experience level, making your character more powerful. As they
 gain levels, characters gain more hit points, magic points, and spell levels.
 
 Additionally, the experience you gain is used for your experience pool. This
@@ -346,7 +346,7 @@ interest) to really dreadful ones. Be alert whenever seeing such a statue. The
 best method to destroy statues is by means of wands of disintegration; you can
 also bash one by brute force, however.
 
-When playing Crawl, you will undoubtely want to develop a feeling for the 
+When playing Crawl, you will undoubtedly want to develop a feeling for the 
 different monster types. For example, some monster leave edible corpses, others
 don't, and still others are sometimes. Guided by intuition, you will soon figure
 out which monsters make the best meals. Likewise, ranged or magic attackers will
@@ -360,7 +360,7 @@ G.                      ITEMS
 --------------------------------------------------------------------------------
 
 In the dungeons of Crawl there are many different kinds of normal and magical
-artefacts to be found and used. Some of them are useful, some are nasty, and 
+artifacts to be found and used. Some of them are useful, some are nasty, and 
 some give great power, but at a price. Some items are unique; these have
 interesting properties which can make your life rather bizarre for a while.
 They all fall into several classes of items, each of which is used in a
@@ -379,7 +379,7 @@ them:
 "       amulets         (use 'P'ut on and 'R'emove)
 \       staves, rods    (use 'w'ield for staves; 'E'voke for rods)
 +       spellbooks      (use 'r'ead and 'M'emorise and 'Z'ap)
-}       miscelleneous   (use generally 'w'ield and 'E'voke)
+}       miscellaneous   (use generally 'w'ield and 'E'voke)
 
 There are several general keys for item management:
 'd'     drop item
@@ -434,8 +434,8 @@ Item usage:
   items.
 
   Another useful command is the '{' key which lets you inscribe items with a
-  comment. You can also inscribe commands; in particular inscripting '=k'
-  will cause the item to be completely ingnored from now on (it can only be
+  comment. You can also inscribe commands; in particular inscribing '=k'
+  will cause the item to be completely ignored from now on (it can only be
   picked up if all items on that square have the '=k' mark). An item with '@w9'
   can be wielded with the command 'w9', i.e. regardless of their actual item
   slot (here 'w'ield could be replaced by any sensible command key, using '*'
@@ -447,7 +447,7 @@ Item usage:
 ----------
   These are rather important. You will find a variety of weapons in the
   dungeon, ranging from small and quick daggers to huge, cumbersome
-  battleaxes and pole-arms. Each type of weapon does a differing amount of
+  battle-axes and pole-arms. Each type of weapon does a differing amount of
   damage, has a different chance of hitting its target, and takes a
   different amount of time to swing. You should choose your weapons
   carefully; trying to hit a bat with a greatsword is about as clever as
@@ -507,7 +507,7 @@ Item usage:
   This is also rather important. When worn, most armour improves your Armour
   Class, which decreases the amount of damage you take when something
   injures you. Unfortunately the heavier types of armour also hamper your
-  movement, making it easier for monsters to hit you (ie reducing your
+  movement, making it easier for monsters to hit you (i.e., reducing your
   evasion score) and making it harder for you to hit monsters. These effects
   can be mitigated by a high Armour skill. Wearing heavy armour also
   increases your chances of miscasting spells, an effect which is not
@@ -540,7 +540,7 @@ Item usage:
 
 ? Magical Scrolls:
 ------------------
-  Scrolls have many different magical spells enscribed on them, some good
+  Scrolls have many different magical spells inscribed on them, some good
   and some bad. One of the most useful scrolls is the scroll of Identify,
   which will tell you the function of any item you have in your inventory;
   save these up for the more powerful and inscrutable magic items, like
@@ -597,7 +597,7 @@ Item usage:
   description of each spell, or memorise spells from it with the 'M' command.
   Some books have other special effects, and powerful spellbooks have been
   known to punish the attentions of incompetent magicians.
-  Occassionally you will find manuals of some skill. Reading these will cause
+  Occasionally you will find manuals of some skill. Reading these will cause
   to go your free experience straight into that skill.
 
 % Carrion:
@@ -608,7 +608,7 @@ Item usage:
   food, you can't eat them without first cutting them into pieces with the
   'D' command, and being extremely hungry helps as well. Even then, you
   should choose your homemade food with great care.
-  Some classes are less restricted about selfmade food: Trolls can use their
+  Some classes are less restricted about self-made food: Trolls can use their
   claws, so do not need a cutting device. Also Trolls, Orcs, Ogres, and Kobolds
   care less (in different degrees) about the quality of the corpse. Ogres and
   Trolls are happy to have corpse-snacks anytime. This does not apply to Ogre
@@ -779,7 +779,7 @@ It is much more difficult to get rid of bad mutations. Am lucky mutation
 attempt can actually remove mutations. However, the only sure fire way is to
 quaff a potion of cure mutation, which will remove three random mutations.
 
-A special case are Demonspawns. Characters of this species get certain special
+A special case are Demonspawn. Characters of this species get certain special
 powers during their career; these are listed in red. They are permanent and 
 can never be removed. If one of your Demonspawn powers has been augmented by a 
 mutation, it is displayed in a lighter red colour.
@@ -802,7 +802,7 @@ information on both and for examples, see the crawl_macros.txt.
 
 Crawl supports over 100 options which allows for great flexibility in the
 interface. The decisive account on these is in the file crawl_options.txt. 
-The options themselves are set in the file .crawlrc (for unix systems) or
+The options themselves are set in the file .crawlrc (for UNIX systems) or
 init.txt (for Windows).
 
 Several interface routines are outsourced to external Lua scripts. The standard
@@ -815,7 +815,7 @@ L.                      LICENCE, CONTACT, HISTORY
 --------------------------------------------------------------------------------
 
 Licence:        Read Licence.txt for information about the Crawl licence (which 
-                is practically identical to the nethack GPL).
+                is practically identical to the Nethack GPL).
 
 Disclaimer:     This software is provided as is, with absolutely no warranty 
                 express or implied. Use of it is at the sole risk of the user. 
@@ -825,7 +825,7 @@ Disclaimer:     This software is provided as is, with absolutely no warranty
 If you want to discuss Crawl, it's best to stick to the long-standing newsgroup 
                 rec.games.roguelike.misc.
 Flag queries with -crawl- as other games are discussed there, as well. All 
-topics related to this game usually meet a warm reponse there, including tales
+topics related to this game usually meet a warm response there, including tales
 of victories (going under 'YAVP', i.e. 'Yet Another Victory Post'), especially
 first victories (YAFVP) as well as sad stories of deceased characters (being
 'YAAD' or 'YASD', i.e. 'Yet Another Annoying/Stupid Death'). 
@@ -874,7 +874,7 @@ One basic design principle is avoidance of grinding. This explains why shops
 don't buy: otherwise players would hoover the dungeon for items to sell. Of
 course, there are gods accepting all kinds of sacrifices (and thus altar
 grinding) but there are generally better ways to increase piety there. Another
-instance: there's no infinite commidity available: food, monster and item
+instance: there's no infinite commodity available: food, monster and item
 generation is generally not enough to support infinite play. Not messing with
 lighting also falls into this category.
 
@@ -902,7 +902,7 @@ acquirement produce random items in general) or sure-fire means of life saving
 The branch system of Crawl is devised with replayability in mind: even veteran 
 players will find the Hells exciting (which themselves are construed such that 
 life endangering situations can always pop up - this tries to avoid the walking 
-tank phenomon occurring in many games), and the Tomb is particularly easy only 
+tank phenomenon occurring in many games), and the Tomb is particularly easy only 
 for special playing styles.
 
 The deep tactical gameplay Crawl aims for necessitates permanent dungeon levels.
@@ -998,7 +998,7 @@ Dwarves:
   Hill dwarves are extremely robust but are poor at using magic. They are
   excellent at hand combat, especially favouring axes or bludgeoning weapons,
   and are good at using armour and shields, but are poor at missile combat or
-  at using polearms (which are usually too big for them to wield comfortably).
+  at using pole-arms (which are usually too big for them to wield comfortably).
   The only forms of magic which they can use with even a minimal degree of
   aptitude are earth, fire and conjurations. They advance in levels at a
   similar rate to common elves.
@@ -1146,7 +1146,7 @@ Draconians:
   approximately human-sized, with wings, tails and scaly skins. Draconians
   start out in an immature form with brown scales, but as they grow in
   power they take on a variety of colours. This happens at an early stage in 
-  their career, and the colour is determined by chrosomes, not by behaviour.
+  their career, and the colour is determined by chromosomes, not by behaviour.
 
   Some types of draconians have breath weapons or special resistances. 
   Draconians advance very slowly in level, but are reasonably good at all 
@@ -1157,8 +1157,8 @@ Draconians:
   Red Draconians feel at home in fiery surroundings. They're bad with ice magic.
   White Draconians stem from frost-bitten lands, and are bad at fire magic.
   Green Draconians are well-versed in the arts of poison.
-  Golden Draconians have sulphuritic odem.
-  Grey Draconians 
+  Golden Draconians have sulphuric breath.
+  Grey Draconians are better at combat and can take more punishment.
   Black Draconians command lightning and feel cumbersome with earth magic.
   Mottled Draconians are somewhat in touch with fire, yet not weak at ice.
   Purple Draconians are highly adapted to magics in general, with no specialty.
@@ -1193,7 +1193,7 @@ Demigods:
 Spriggans:
 ----------
   Spriggans are small magical creatures distantly related to elves. They
-  love to frolic and cast mischevious spells.
+  love to frolic and cast mischievous spells.
 
   They are poor fighters, have little physical resilience, and are terrible at
   destructive magic - conjurations, summonings, necromancy and elemental
@@ -1253,7 +1253,7 @@ Merfolk:
 
   The Merfolk have developed their martial arts strongly on thrusting
   and grappling, since those are the most efficient ways to fight
-  underwater.  They, therefore, prefer polearms and short swords above
+  underwater.  They, therefore, prefer pole-arms and short swords above
   all other weapons, although they can also use longer swords quite well.
 
   As spellcasters, they tend to be quite good in specific areas.  Their
@@ -1625,7 +1625,7 @@ Movement:
         Ctrl-G          Interlevel travel (to arbitrary dungeon levels or
                         waypoints). Remembers old destinations if interrupted.
         Ctrl-O          Auto-explore.
-        Ctrl-W          Det waypoint (check the option show_waypoints).
+        Ctrl-W          Set waypoint (check the option show_waypoints).
 
 Resting and Searching:
         s, Del          Rests and searches (these are the same) for one turn,
@@ -1637,7 +1637,7 @@ Resting and Searching:
 Dungeon interaction:
         o               Open door.
         c               Close door.
-     Ctrl-direction     Tries untrapping a known trap on the specified square,
+     Ctrl-direction     Tries to untrap a known trap on the specified square,
      or * direction     else opens door if there is one,
                         else attacks without move (even if no monster is seen).
         <               Use staircase to go higher. 
@@ -1667,13 +1667,13 @@ Item interaction (inventory):
         t               Throw/shoot an item.
         f               Fire first available missile.
         q               Quaff a potion.       
-        e               Eat food (tries floor first, invorenty next).
+        e               Eat food (tries floor first, inventory next).
         z               Zap a wand.
         r               Read a scroll or book.
         M               Memorise a spell from a book.
         w               Wield an item ( - for none).       
         '               Wield item a, or switch to b.
-        E               E       voke power of wielded item.
+        E               Evoke power of wielded item.
         W               Wear armour.
         T               Take off armour.
         P               Put on jewellery.
@@ -1746,7 +1746,7 @@ Ctrl-G. Check the option show_waypoints. The commands are
 Travel exclusions mark certain spots of the map as no-go areas for autotravel
 and explore (the radius is set by the option travel_exclude_radius2).
         Ctrl-X          Set travel exclusion.
-        Cltr-E          Erase all travel exclusions at once.
+        Ctrl-E          Erase all travel exclusions at once.
         X               Cycle through travel exclusions.
 
 
@@ -1754,7 +1754,7 @@ Examining surroundings ('x')
 ----------------------------
 When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
 have a look at items or monsters in line of sight. You may also examine stashed 
-items outside current view using the options target_oos=true (if using this, 
+items outside current view using the option target_oos=true (if using this, 
 check target_los_first).
         x, Esc, Space   Return to playing mode.
         ' or *          Cycle objects forward.
@@ -1784,7 +1784,7 @@ you fire projectiles, zap a wand or cast spells which uses targets.
                         submerged water creatures.
         Ctrl-F          Toggle target modes (between enemies, all, friends; see
                         also option target_zero_exp).
-        *               Manually targeting: the direction keys will now move 
+        *               Manual targeting: the direction keys will now move 
                         the cursor, the keys '+' and '-' work as above, and '.'
                         and Enter fire.
 
@@ -1818,7 +1818,7 @@ Below the amount of carried gold, the stats area has room for showing the
 enchantments which you currently enjoy or have to suffer. Quite generally, these
 are only shown for temporary effects. So that Kenku can fly is not noted,
 neither is the wearing of a ring of regeneration. Here is a list of these, as
-some are abbrevations or may be not obvious:
+some are abbreviations or may be not obvious:
 
 General enchantments: satiation, velocity, encumbrance, poison
 ---------------------
