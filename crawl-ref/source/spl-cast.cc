@@ -1668,11 +1668,15 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SHADOW_CREATURES:
+    {
         mpr( "Wisps of shadow whirl around you..." );
-        create_monster( RANDOM_MONSTER, ENCH_ABJ_II, BEH_FRIENDLY, 
-                        you.x_pos, you.y_pos, you.pet_target, 250 );
+        const int which_mons =
+            create_monster( RANDOM_MONSTER, ENCH_ABJ_II, BEH_FRIENDLY, 
+                            you.x_pos, you.y_pos, you.pet_target, 250 );
+        if (which_mons != -1 && which_mons != NON_MONSTER)
+            menv[which_mons].flags |= MF_HARD_RESET;
         break;
-
+    }
     //jmf: new spells 19mar2000
     case SPELL_FLAME_TONGUE:
         zapping(ZAP_FLAME_TONGUE, powc, beam);

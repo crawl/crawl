@@ -2376,7 +2376,8 @@ enum monster_flag_type
     
     MF_KNOWN_MIMIC        = 0x100, // Mimic that has taken a swing at the PC,
                                    // or that the player has inspected with ?
-    MF_BANISHED           = 0x200  // Monster that has been banished.
+    MF_BANISHED           = 0x200, // Monster that has been banished.
+    MF_HARD_RESET         = 0x400  // Summoned, should not drop gear on reset
 };
 
 enum mon_dam_level_type

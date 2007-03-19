@@ -328,17 +328,31 @@ static void place_monster_corpse(const monsters *monster)
         learned_something_new(TUT_MAKE_CHUNKS);    
 }                               // end place_monster_corpse()
 
+static void tutorial_inspect_kill()
+{
+    if (Options.tutorial_events[TUT_KILLED_MONSTER])
+        learned_something_new(TUT_KILLED_MONSTER);
+    else if (Options.tutorial_left
+             && (you.religion == GOD_TROG
+                 || you.religion == GOD_OKAWARU
+                 || you.religion == GOD_MAKHLEB)
+             && !you.duration[DUR_PRAYER])
+    {
+        tutorial_prayer_reminder();
+    }
+}
+
 void monster_die(monsters *monster, char killer, int i, bool silent)
 {
     if (monster->type == -1)
         return;
     
-    int dmi;                    // dead monster's inventory
     int xom_will_act = 0;
     int monster_killed = monster_index(monster);
     bool death_message =
         !silent && mons_near(monster) && player_monster_visible(monster);
     bool in_transit = false;
+    const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
 
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
@@ -418,8 +432,19 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     else if (monster->type == MONS_DANCING_WEAPON)
     {
         if (!silent)
-            simple_monster_message(monster, " falls from the air.",
-                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        {
+            if (hard_reset)
+                simple_monster_message( monster,
+                                        " disappears in a puff of smoke!" );
+            else
+                simple_monster_message(monster, " falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        }
+
+        if (hard_reset)
+            place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
+                         monster->y, 1 + random2(3) );
+
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
         {
@@ -441,12 +466,10 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
             if (!silent)
             {
-                strcpy(info, "You ");
-                strcat(info,
-                       (wounded_damaged(monster->type)) ? "destroy" : "kill");
-                strcat(info, " ");
-                strcat(info, ptr_monam(monster, DESC_NOCAP_THE));
-                strcat(info, "!");
+                snprintf(info, INFO_SIZE,
+                         "You %s %s!",
+                         wounded_damaged(monster->type) ? "destroy" : "kill",
+                         ptr_monam(monster, DESC_NOCAP_THE));
             }
 
             if (death_message)
@@ -463,11 +486,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             }
 
             // killing triggers tutorial lesson
-            if (Options.tutorial_events[TUT_KILLED_MONSTER])
-                learned_something_new(TUT_KILLED_MONSTER);
-                else if (Options.tutorial_left && (you.religion == GOD_TROG || you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB)
-                                 && !you.duration[DUR_PRAYER])
-                        tutorial_prayer_reminder();      
+            tutorial_inspect_kill();
 
             // Xom doesn't care who you killed:
             if (you.religion == GOD_XOM 
@@ -671,13 +690,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             // fall-through
 
         case KILL_DISMISSED:
-            for (dmi = MSLOT_GOLD; dmi >= MSLOT_WEAPON; dmi--)
-            {                   /* takes whatever it's carrying back home */
-                if (monster->inv[dmi] != NON_ITEM)
-                    destroy_item(monster->inv[dmi]);
-
-                monster->inv[dmi] = NON_ITEM;
-            }
+            monster->destroy_inventory();
             break;
         }
     }
@@ -773,8 +786,9 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         }
     }
 
-    monster_drop_ething(monster, 
-                        killer == KILL_YOU_MISSILE 
+    if (!hard_reset)
+        monster_drop_ething(monster, 
+                            killer == KILL_YOU_MISSILE 
                             || killer == KILL_YOU
                             || pet_kill);
     monster_cleanup(monster);
