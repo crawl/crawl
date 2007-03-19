@@ -3798,8 +3798,11 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-        if (mon->hit_dice * 4 >= random2(beam.ench_power))
+        if (mon->hit_dice * 7 >= random2(beam.ench_power)
+            || mons_is_unique(mon->type))
+        {
             return (MON_RESIST);
+        }
 
         simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
