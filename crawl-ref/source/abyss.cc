@@ -50,7 +50,7 @@ void generate_abyss(void)
 
     grd[45][35] = DNGN_FLOOR;
     if ( one_chance_in(5) )
-        grd[46][35] = DNGN_ALTAR_LUCY;
+        grd[46][35] = DNGN_ALTAR_LUGONU;
 }                               // end generate_abyss()
 
 
@@ -185,7 +185,7 @@ static void generate_area(unsigned char gx1, unsigned char gy1,
 
                 // Lucy has a flat 50% chance of corrupting the altar
                 if ( coinflip() )
-                    grd[i][j] = DNGN_ALTAR_LUCY;
+                    grd[i][j] = DNGN_ALTAR_LUGONU;
             }
         }
     }
@@ -390,7 +390,7 @@ void abyss_teleport( bool new_area )
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
     if ( one_chance_in(5) )
-        grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUCY;
+        grd[you.x_pos + 1][you.y_pos] = DNGN_ALTAR_LUGONU;
 
     place_transiting_monsters();
 }

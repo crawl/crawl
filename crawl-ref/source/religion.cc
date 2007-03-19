@@ -89,7 +89,7 @@ const char *sacrifice[] = {
     " glows with a rainbow of weird colours and disappears.",
     // Elyvilon
     " evaporates.",
-    // Lucy
+    // Lugonu
     " is consumed by the void."
 };
 
@@ -160,7 +160,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for moderate healing",
       "call upon Elyvilon to restore your abilities",
       "call upon Elyvilon for incredible healing" },
-    // Lucy
+    // Lugonu
     { "depart the Abyss - at a permanent cost",
       "",
       "summon the demons of the Abyss to your aid",
@@ -236,7 +236,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for moderate healing",
       "call upon Elyvilon to restore your abilities",
       "call upon Elyvilon for incredible healing" },
-    // Lucy
+    // Lugonu
     { "depart the Abyss at will",
       "",
       "summon the demons of the Abyss to your aid",
@@ -258,7 +258,7 @@ static bool is_evil_god(int god)
         god == GOD_MAKHLEB ||
         god == GOD_YREDELEMNUL ||
         god == GOD_VEHUMET ||
-        god == GOD_LUCY;
+        god == GOD_LUGONU;
 }
 
 void dec_penance(int god, int val)
@@ -815,8 +815,8 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
     case GOD_ELYVILON:
         sprintf(godname_buff, "Elyvilon%s", long_name ? " the Healer" : "");
         break;
-    case GOD_LUCY:
-        sprintf(godname_buff, "Lucy");
+    case GOD_LUGONU:
+        sprintf(godname_buff, "Lugonu");
         break;
     default:
         sprintf(godname_buff, "The Buggy One (%d)", which_god);
@@ -1310,7 +1310,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_TROG:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             simple_god_message(" accepts your offering.");
             ret = true;
             if (random2(level + 10) > 5)
@@ -1338,7 +1338,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_TROG:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
             if (random2(level + 18) > 5)
@@ -1358,7 +1358,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_OKAWARU:
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
             if (random2(level + 18) > 4)
@@ -1417,7 +1417,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_KIKUBAAQUDGHA:
         case GOD_YREDELEMNUL:
         case GOD_MAKHLEB:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             snprintf( info, INFO_SIZE, " accepts your %skill.",
                       (thing_done == DID_KILL_ANGEL) ? "" : "collateral " );
 
@@ -1459,7 +1459,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
             if (random2(level + 10) > 5)
@@ -1477,7 +1477,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_SHINING_ONE:
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
             if (random2(level + 10) > 5)
@@ -1686,7 +1686,7 @@ void gain_piety(char pgn)
 
     if ( you.piety > 160 && old_piety <= 160 &&
          (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||
-          you.religion == GOD_LUCY) && you.num_gifts[you.religion] == 0 )
+          you.religion == GOD_LUGONU) && you.num_gifts[you.religion] == 0 )
         simple_god_message( " will now bless your weapon at an altar...once.");
 
     if (you.religion == GOD_SIF_MUNA)
@@ -1709,7 +1709,7 @@ void lose_piety(char pgn)
     {
         if (you.piety <= 160 && old_piety > 160 &&
             (you.religion == GOD_SHINING_ONE || you.religion == GOD_ZIN ||
-             you.religion == GOD_LUCY) && you.num_gifts[you.religion] == 0)
+             you.religion == GOD_LUGONU) && you.num_gifts[you.religion] == 0)
             simple_god_message(" is no longer ready to bless your weapon.");
 
         for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
@@ -2194,7 +2194,7 @@ void divine_retribution( int god )
         }
         break;
 
-    case GOD_LUCY:
+    case GOD_LUGONU:
         // abyssal servant theme
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
@@ -2323,7 +2323,7 @@ void excommunication(void)
         inc_penance( old_god, 50 );
         break;
 
-    case GOD_LUCY:
+    case GOD_LUGONU:
         if ( you.level_type == LEVEL_DUNGEON )
         {
             simple_god_message(" casts you back into the Abyss!", old_god);
@@ -2370,7 +2370,7 @@ static bool bless_weapon( int god, int brand, int colour )
         mprf( MSGCH_GOD, "Your weapon shines brightly!" );
         simple_god_message( " booms: Use this gift wisely!" );
 
-        if ( god != GOD_LUCY )
+        if ( god != GOD_LUGONU )
             holy_word( 100, true );
 
         delay(1000);
@@ -2427,16 +2427,16 @@ void altar_prayer(void)
         }
     }
 
-    // Lucy blesses weapons with distortion
-    if (you.religion == GOD_LUCY
-        && !you.num_gifts[GOD_LUCY]
+    // Lugonu blesses weapons with distortion
+    if (you.religion == GOD_LUGONU
+        && !you.num_gifts[GOD_LUGONU]
         && !player_under_penance()
         && you.piety > 160)
     {
         const int wpn = get_player_wielded_weapon();
         
         if (wpn != -1 && get_weapon_brand(you.inv[wpn]) != SPWPN_DISTORTION)
-            bless_weapon(GOD_LUCY, SPWPN_DISTORTION, RED);
+            bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, RED);
     }
 
     offer_items();
@@ -2602,7 +2602,7 @@ void god_pitch(unsigned char which_god)
         }
     }
 
-    if ( you.religion == GOD_LUCY )
+    if ( you.religion == GOD_LUGONU )
         gain_piety(20);         // allow instant access to first power
 
     redraw_skill( you.your_name, player_title() );
@@ -2712,7 +2712,7 @@ void handle_god_time(void)
             break;
 
         case GOD_MAKHLEB:
-        case GOD_LUCY:
+        case GOD_LUGONU:
             if (one_chance_in(16))
                 lose_piety(1);
             if (you.piety < 1)
@@ -2772,7 +2772,7 @@ char god_colour( char god ) //mv - added
     case GOD_MAKHLEB:
     case GOD_VEHUMET:
     case GOD_TROG:
-    case GOD_LUCY:
+    case GOD_LUGONU:
         return(LIGHTRED);
 
     case GOD_XOM:

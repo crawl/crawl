@@ -555,7 +555,7 @@ void initialise_travel()
     traversable_terrain[DNGN_ALTAR_TROG] =
     traversable_terrain[DNGN_ALTAR_NEMELEX_XOBEH] =
     traversable_terrain[DNGN_ALTAR_ELYVILON] =
-    traversable_terrain[DNGN_ALTAR_LUCY] =
+    traversable_terrain[DNGN_ALTAR_LUGONU] =
     traversable_terrain[DNGN_BLUE_FOUNTAIN] =
     traversable_terrain[DNGN_DRY_FOUNTAIN_I] =
     traversable_terrain[DNGN_SPARKLING_FOUNTAIN] =

@@ -675,8 +675,8 @@ static void describe_floor() {
             case DNGN_ALTAR_ELYVILON:
                 mpr("There is a silver altar of Elyvilon here.");
                 break;
-            case DNGN_ALTAR_LUCY:
-                mpr("There is a corrupted altar of Lucy here.");
+            case DNGN_ALTAR_LUGONU:
+                mpr("There is a corrupted altar of Lugonu here.");
                 break;
             case DNGN_BLUE_FOUNTAIN:
                 mpr("There is a fountain here (q to drink).");

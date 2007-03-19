@@ -1787,7 +1787,7 @@ bool is_feature(int feature, int x, int y)
         case DNGN_ALTAR_TROG:
         case DNGN_ALTAR_NEMELEX_XOBEH:
         case DNGN_ALTAR_ELYVILON:
-        case DNGN_ALTAR_LUCY:
+        case DNGN_ALTAR_LUGONU:
             return true;
         default:
             return false;
@@ -3148,7 +3148,7 @@ void init_feature_table( void )
             Feature[i].seen_colour = LIGHTGREY;
             break;
 
-        case DNGN_ALTAR_LUCY:
+        case DNGN_ALTAR_LUGONU:
             Feature[i].colour = GREEN;
             Feature[i].symbol = Options.char_table[ DCHAR_ALTAR ];
             Feature[i].notable = true;
