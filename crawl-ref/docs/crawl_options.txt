@@ -525,7 +525,7 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
         defined a runrest_ignore_poison = x:y option. Running here means 
         shift-running and resting only. Only one runrest_ignore_poison line is
         considered.  Note that for this work, you should also tell Crawl to
-        ignore the "You feel sick messages". For example,
+        ignore the "You feel sick" messages. For example,
           runrest_ignore_message = You feel.*sick
           runrest_ignore_poison = 4:100 
 
@@ -717,8 +717,8 @@ message_colour = <colour>:[<channel>:]<regex>
 
 increasing_skill_progress = true
         This affects the appearance of the skills screen ('m'). With the 
-        default true, the progress for getting ew levels is shown with
-        increasing percentiles; so that immediately after level up it will
+        default true, the progress for getting new levels is shown with
+        increasing percentiles, so that immediately after level up it will
         read (0%). With false, you get the old behaviour which counts backwards
         from 10.
 

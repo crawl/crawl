@@ -43,11 +43,11 @@ B.                      STARTING SCREEN
 --------------------------------------------------------------------------------
 
 After starting Crawl, you'll be asked to type in a name. If there is a saved
-game of that character, it will be restored, otherwise you proceed choosing race
+game of that character, it will be restored, otherwise you proceed to choose a race
 and class (this can be done in either order). The choice of species affects
 several important characteristics, in particular the speed with which the
-different skills are learned. This is very important, and helps to differentiate
-clearly the 26 available races. To be complete, the following factors are
+different skills are learned. This is very important, and helps to clearly
+differentiate the 26 available races. To be complete, the following factors are
 species-dependent:
 
 Major:  o  Your choice of classes
@@ -93,10 +93,10 @@ describe different aspects of the hero. The most basic ones are
 Hit points:     A measure of life force. Death results from hit-points dropping 
 -----------     to zero or less (although there are additional ways to die). 
                 The main screen shows hit points in the format HP: 8/10
-                which means that the number of maximal hit points is 10, from 
+                which means that the number of maximal hit points is 10, of 
                 which the character currently has 8. Resting (by pressing 's', 
-                '.', Del will slowly restore hit points; for longer resting use 
-                '5' or Shift-Num-5).
+                '.', Del) will slowly restore hit points; for longer resting use 
+                '5' or Shift-Num-5.
 
                 Some very battle-fixated characters may end up with more than 
                 250 hit points, yet some spellcasters are known to have finished 
@@ -117,7 +117,7 @@ Level:          Starting characters have experience level 1; the highest level
 
 The following primary attributes describe the abilities of a character to fight,
 dodge, learn spells etc. They grow permanently from gaining levels, and 
-temporary from using appropriate artifacts or abilities. Crawl has only three:
+temporarily from using appropriate artifacts or abilities. Crawl has only three:
 
 Strength:       Affects the amount of damage you do in combat, as well as how
 ---------       much stuff you can carry.
@@ -140,7 +140,8 @@ Armour Class:   Also called AC, when something injures you, your AC reduces the
                 In both cases, more is better.
 
 Evasion:        Also called EV, this helps you to avoid being hit by unpleasant 
---------        things.
+--------        things (but will not reduce the amount of damage you suffer if
+                you do get hit).
 
 Gold:           This is how much money you're carrying. Money adds to your 
 -----           final score, and can be used to purchase items in shops.
@@ -151,7 +152,7 @@ Magic Resistance: Affects your ability to resist the effects of enchantments and
                 character's species, the creatures you will meet deeper in the 
                 dungeon are better at casting spells and are more likely to be 
                 able to affect you. MR is an internal variable, so you can't see 
-                what yours is.
+                what yours is, but you can get a rough idea by pressing '@'.
 
 Sometimes characters will be able to use special abilities, for example the 
 Naga's ability to spit poison or the magical power to turn invisible granted by
@@ -170,8 +171,8 @@ D.                      EXPLORING THE DUNGEON
 Movement:
 ---------
 You can make your character walk around with the numeric keypad (try both 
-Numlock on and off) or the "Rogue" keys (hjklbnyu). If this is too slow, you can
-make your character walk repeatedly by typing shift and a direction. They will 
+Numlock on and off) or the "Rogue" keys (hjklyubn). If this is too slow, you can
+make your character walk repeatedly by pressing Shift and a direction. They will
 walk in that direction until any of a number of things happen: a hostile monster
 is visible on the screen, a message is sent to the message window for any
 reason, you type a key, or you are about to step on anything other than normal
@@ -181,7 +182,7 @@ several times.
 
 Resting and Searching:
 ----------------------
-If you press shift and '5' on the numeric keypad (or just the number '5' on the
+If you press Shift and '5' on the numeric keypad (or just the number '5' on the
 keyboard) you rest for 100 turns or until your hit points or magic return to 
 full, whichever is sooner. You can rest for just one turn by pressing '.', 
 Delete, 's', or '5' on the keypad. Whenever you are resting, you are assumed to 
@@ -212,7 +213,7 @@ enter it by typing '<' or '>'.
 Doors and Traps:
 ----------------
 Doors can be opened with the 'o' command and closed with the 'c' command. 
-Pressing control plus a direction also opens doors. If there is no closed door
+Pressing Control plus a direction also opens doors. If there is no closed door
 in the indicated space, you will attempt to attack any monster which may be
 standing there (this is the only way to attack a friendly creature hand-to-
 hand). If there is no creature there, you will attempt to disarm any trap in
@@ -224,18 +225,17 @@ control-direction commands.
 
 Shops:
 ------
-When you are in a shop, you are given a list of the shopkeeper's stock from 
-which to choose, and a list of instructions. Unfortunately the shopkeepers all
-have an enterprise bargaining agreement with the dungeon teamsters union which
-prevents them using non-union labour to obtain stock, so you can't sell
-anything in a shop (but what shopkeeper would buy goods from a disreputable
-adventurer like you, anyway?).
+When you are in a shop, you are given a list of the shopkeeper's stock from
+which to choose. Unfortunately the shopkeepers all have an enterprise bargaining
+agreement with the dungeon teamsters union which prevents them using non-union
+labour to obtain stock, so you can't sell anything in a shop (but what
+shopkeeper would buy goods from a disreputable adventurer like you, anyway?)
 
 Automated Travel and Exploration:
 ---------------------------------
 Crawl has an extensive automated travel command: pressing Ctrl-G lets you chose 
-any dungeon level, the game will then take the shortest path to reach this
-destination. You can also use autotravel also on the level map: move the cursor to 
+any dungeon level; the game will then take the shortest path to reach this
+destination. You can also use autotravel on the level map: move the cursor to 
 the place where you want to go and hit Enter. There are several shortcuts when
 choosing destinations: try '<' and '>' to quickly reach the staircases. When
 your autotravel gets interrupted, Crawl will remember the previous destination.
@@ -244,19 +244,19 @@ See appendix X.4 for all commands and shortcuts in level-map mode.
 Another use of autotravel is exploration: Ctrl-O makes your character move
 to the nearest unexplored area. This can be dangerous - do not use it when known
 hostiles are around! Also note that this algorithm is not optimal: by manual
-exploration you can save turns; yet auto-explore will probably save real-time.
+exploration you can save turns, but auto-explore will probably save real-time.
 
 Stashes and Searching:
 ----------------------
 Since you can only carry 52 items, you will want to safely stash things away
 at some time. Pressing Ctrl-S tells Crawl to consider all items on the square
-as a Stash (this is only necessary with the option stash_tracking=explicit,
-which is the default; with the other two values manually declaring stashes is
-not necessary). You can use the Find command Ctrl-F to search among your 
-stashes; the parser accepts even regular expressions, although you will mostly
-just need strings like 'mutation', 'heal wounds' etc. Ctrl-F also looks among
-items in shops. A list with all places is presented, where objects matching
-the search are (or have been) located; you can then travel there.
+as a Stash (this is only necessary with the option stash_tracking=explicit;
+with the other two values - including stash_trackin =all, the default - manually
+declaring stashes is not necessary). You can use the Find command, Ctrl-F, to
+search among your stashes; the parser even accepts regular expressions, although
+you will mostly just need strings like 'mutation', 'heal wounds' etc. Ctrl-F also
+looks at items in shops. A list with all places is presented, where objects
+matching the search are (or have been) located; you can then travel there.
 
 The Goal:
 ---------
@@ -281,9 +281,9 @@ E.                      EXPERIENCE AND SKILLS
 --------------------------------------------------------------------------------
 
 When you kill monsters, you gain experience points (XP) and you also receive one
-half experience for monsters killed by friendly creatures. When you get enough
-XP, you gain an experience level, making your character more powerful. As they
-gain levels, characters gain more hit points, magic points, and spell levels.
+half of the experience for monsters killed by friendly creatures. When you get
+enough XP, you gain an experience level, making your character more powerful. As
+they gain levels, characters gain more hit points, magic points, and spell levels.
 
 Additionally, the experience you gain is used for your experience pool. This
 pool of points is used up whenever you practice a skill. These skills represent
@@ -303,7 +303,7 @@ fight with a certain type of weapon, cast a certain type of spell, or walk
 around wearing light armour to practise stealth). The amount of unassigned 
 experience points is shown next to your experience total on the main screen as 
 well as on the skills screen, and the number in blue next to each skill counts 
-down from 9 to 0 as you get closer to gaining a level in that skill.
+up from 0% to 100% as you get closer to gaining a level in that skill.
 
 You can elect not to practise a particular skill by selecting it in the skill
 screen (making it turn dark grey). This means that you will be less likely to
@@ -315,8 +315,8 @@ Spellcasting.
 
 Occasionally you fill a manual of a skill which allows to make quick progress in
 this area. Whenever you read it, all free experience is transferred into 
-exercising this particular skill. This can be done until a fixed amount of 
-experience has been spent that way.
+exercising this particular skill. This can be done until the manual crumbles,
+after a random number of uses.
 
 
 --------------------------------------------------------------------------------
@@ -437,9 +437,9 @@ Item usage:
   comment. You can also inscribe commands; in particular inscribing '=k'
   will cause the item to be completely ignored from now on (it can only be
   picked up if all items on that square have the '=k' mark). An item with '@w9'
-  can be wielded with the command 'w9', i.e. regardless of their actual item
-  slot (here 'w'ield could be replaced by any sensible command key, using '*'
-  signifies all keys at once; and the '9' could be substituted by any digit). 
+  can be wielded with the command 'w9', regardless of its actual item slot
+  (here 'w'ield could be replaced by any sensible command key, using '*'
+  signifies all keys at once; and any digit could be substituted for '9'). 
   An item with '!w' demands confirmation before wielding. For more on this, and
   especially auto-inscription, see crawl-options.txt.
 
@@ -447,7 +447,7 @@ Item usage:
 ----------
   These are rather important. You will find a variety of weapons in the
   dungeon, ranging from small and quick daggers to huge, cumbersome
-  battle-axes and pole-arms. Each type of weapon does a differing amount of
+  battle-axes and pole-arms. Each type of weapon does a different amount of
   damage, has a different chance of hitting its target, and takes a
   different amount of time to swing. You should choose your weapons
   carefully; trying to hit a bat with a greatsword is about as clever as
@@ -480,27 +480,26 @@ Item usage:
   If you would rather pick off monsters from a safe distance, you will need
   ammunition for your sling or bow. Darts are effective when simply thrown;
   other kinds of ammunition require you to wield an appropriate device to
-  inflict worthwhile damage. Ammunition has only one "plus" value, which
-  affects both accuracy and damage. If you have ammunition suitable for
-  what you are wielding, the 'f' command will choose the first lot in your
-  inventory, or you can use the 't' command to throw anything. If you are
-  using the right kind of hand weapon, you will "shoot" the ammunition,
-  otherwise you "throw" it. At times it also sensible to throw weapons like
-  spears, daggers, or hand axes.
+  inflict worthwhile damage. (Examining a missile launcher with the 'v'
+  command will tell you what kind of ammunition is uses.) Ammunition has only
+  one "plus" value, which affects both accuracy and damage. If you have
+  ammunition suitable for what you are wielding, the 'f' command will choose
+  the first lot in your inventory, or you can use the 't' command to throw
+  anything. If you are using the right kind of hand weapon, you will "shoot"
+  the ammunition, otherwise you "throw" it. At times it also sensible to throw
+  weapons like spears, daggers, or hand axes.
 
-  When throwing something, you are asked for a direction. You can either
-  enter one of the directions on your keypad, or type '*' and move the
-  cursor over your target if they are not in a direct line with you. When
-  the cursor is on them, press '.' (period) or Delete to target them (you
+  When throwing something, you are asked for a target. You can use Shift
+  and a direction to throw in that direction (for as far as possible), or
+  move the cursor over your target if it is not in a direct line with you.
+  When the cursor is on it, press '.' (period) or Delete to target it (you
   can also target an empty space if you want). If you press '>' instead of
   '.', the missile will stop at that space even if it misses, and if the
   target space is water, it may hit anything which might be lurking beneath
-  the surface (which would otherwise be missed completely). If you type '.'
-  (or Del) instead of a direction or '*', or if you target yourself as
-  described above, you throw whatever it is at yourself (this can be useful
-  when zapping some wands; see later). Also, if you type 'p' instead of a
-  direction or '*', you will target your previous target (if still
-  possible).
+  the surface (which would otherwise be missed completely). If you target
+  yourself, you throw whatever it is at yourself (this can be useful when
+  zapping some wands; see later). Also, if you type 'p' or 't', you will target
+  your previous target (if still possible).
 
 [ Armour:
 ---------
@@ -509,11 +508,11 @@ Item usage:
   injures you. Unfortunately the heavier types of armour also hamper your
   movement, making it easier for monsters to hit you (i.e., reducing your
   evasion score) and making it harder for you to hit monsters. These effects
-  can be mitigated by a high Armour skill. Wearing heavy armour also
-  increases your chances of miscasting spells, an effect which is not
-  reduced by your Armour skill.
+  can be mitigated by a high Armour skill. Wearing heavy armour increases your
+  chances of miscasting spells, an effect which is also reduced by your Armour
+  skill.
 
-  A Shield normally affects neither your AC or your evasion, but it lets you
+  A Shield normally affects neither your AC nor your evasion, but it lets you
   block some of the attacks aimed at you and absorbs some of the damage you
   would otherwise receive from things like dragon breath and lightning
   bolts. Wearing a shield (especially a large shield) makes you less
@@ -598,7 +597,7 @@ Item usage:
   Some books have other special effects, and powerful spellbooks have been
   known to punish the attentions of incompetent magicians.
   Occasionally you will find manuals of some skill. Reading these will cause
-  to go your free experience straight into that skill.
+  your free experience to go straight into that skill.
 
 % Carrion:
 ----------
@@ -692,7 +691,10 @@ the spell description (obtained by reading the spellbook in which you found
 the spell) before casting anything.
 
 There is a completely different way to the usage of spells: via rods. These
-are magical staves holding a number of spells. 
+are magical staves holding a number of spells. Rods store a certain number
+of magic points, which are used for powering the spells they contain; when
+not fully charged, they regenerate magic points from their holder's pool
+(this happens much more quickly if the rod is wielded.)
 
 Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
@@ -760,10 +762,10 @@ she undergoes physiological change, you can use the 'A' command to see how
 much of a freak they've become and the 'a' command to activate any mutations
 which can be controlled. Many mutations are actually beneficial to the 
 characters, but there are plenty of nasty ones, as well. Many mutations have
-three levels, each of which counts as a single mutation. All changes to the
+three levels, each of which counts as a single mutation. Some changes to the
 primary attributes Strength, Intelligence, and Dexterity (apart from those by
-levelling) are handled as mutations - in particular, these are not necessarily
-permanent.
+levelling) are also handled as mutations - in particular, these are not
+necessarily permanent.
 
 You can also become mutated by overusing certain powerful enchantments,
 particularly Haste (not the kind you get from being berserk) and Invisibility,
@@ -775,9 +777,10 @@ not, the mutations caused by magical radiations express harmfully.
 Furthermore, certain corpses are mutagenic, and there are traps with mutation
 effects. There are some spells invoking mutations.
 
-It is much more difficult to get rid of bad mutations. Am lucky mutation 
-attempt can actually remove mutations. However, the only sure fire way is to
-quaff a potion of cure mutation, which will remove three random mutations.
+It is much more difficult to get rid of bad mutations. A lucky mutation 
+attempt can actually remove mutations. However, the only sure-fire way is to
+quaff a potion of cure mutation, which will attept to remove three random
+mutations.
 
 A special case are Demonspawn. Characters of this species get certain special
 powers during their career; these are listed in red. They are permanent and 
@@ -796,13 +799,13 @@ that mapping 'a' to some other key will treat almost all pressings of 'a' in
 that new way (including dropping and wielding etc.), so is not recommended.
 Macroing 'a' to some other key will only change the command key 'a'.
 
-You can set up key maps and macros in-game with the ` key, and save them with 
-the ~ key. Alternatively, you can directly edit the macros.txt file. For more
-information on both and for examples, see the crawl_macros.txt.
+You can set up key maps and macros in-game with the ~ key, including saving
+them for future use. Alternatively, you can directly edit the macros.txt file.
+For more information on both and for examples, see the crawl_macros.txt.
 
 Crawl supports over 100 options which allows for great flexibility in the
-interface. The decisive account on these is in the file crawl_options.txt. 
-The options themselves are set in the file .crawlrc (for UNIX systems) or
+interface. They are fully documented in the file crawl_options.txt. 
+The options themselves are set in the file ~/.crawlrc (for UNIX systems) or
 init.txt (for Windows).
 
 Several interface routines are outsourced to external Lua scripts. The standard
@@ -911,7 +914,7 @@ carefulness is a virtue in Crawl as it is in many other roguelikes, there are
 strong forces driving characters deeper.
 
 Finally, there are deliberate choices that allow different playing styles. For
-example, Mummies do not need to eat and so are principally suited for a infinite
+example, Mummies do not need to eat and so are principally suited for infinite
 play. Draconians, on the other hand, develop their final form (including
 aptitudes, and sometimes resistances) only at level 7. These are a deviation
 from the usual rule that after choosing a race, the complete future of that
@@ -1067,8 +1070,8 @@ Kobolds:
 The Undead:
 -----------
   As creatures brought back from beyond the grave they are naturally immune to
-  poisons and negative energy, have little warmth left to be affected by cold,
-  and are not susceptible to reductions in their physical or mental abilities.
+  poisons, negative energy and torment, have little warmth left to be affected
+  by cold, and are not susceptible to mutations.
 
   There are two type of undead available to players: Mummies and Ghouls.
 
@@ -1077,7 +1080,7 @@ The Undead:
   Mummies are undead creatures who travel into the depths in search of
   revenge, redemption, or just because they want to.
 
-  Mummies progress very slowly in level, half again as slow as humans, and in
+  Mummies progress very slowly in level, half again as slowly as humans, and in
   all skills except fighting, spellcasting and necromancy. As they increase in
   level they become increasingly in touch with the powers of death, but cannot
   use some types of necromancy which only affect living creatures. The side
@@ -1451,7 +1454,7 @@ of magicians.
 Wanderers:
 ----------
   Wanderers are people who have not learned a specific trade.  Instead,
-  they've travelled around becoming "Jacks-of-all-trades, master of none".
+  they've travelled around becoming a "jack-of-all-trades, master of none".
   They start the game with a large assortment of skills and maybe some
   small items they picked up along the way, but other than that they're
   pretty much on their own.  Non-human wanderers might not even know which
@@ -1750,43 +1753,32 @@ and explore (the radius is set by the option travel_exclude_radius2).
         X               Cycle through travel exclusions.
 
 
-Examining surroundings ('x')
-----------------------------
-When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
-have a look at items or monsters in line of sight. You may also examine stashed 
-items outside current view using the option target_oos=true (if using this, 
-check target_los_first).
+Targeting
+---------
+Targeting mode is, as the name says, used to select a target. It is activated
+whenever you fire projectiles, zap a wand or cast spells which uses targets.
+You can also trigger targeting mode manually using 'x' if you want to look
+around you.
         x, Esc, Space   Return to playing mode.
         ' or *          Cycle objects forward.
         ; or /          Cycle objects backward.
         +               Cycle monsters forward.
         -               Cycle monsters backward.
         direction       Move cursor.
-        . or Enter      Travel to cursor.
+        . or Enter      Select target. If in 'x' mode, this will travel to the
+                        selected map square.
         ?               Describe monster under cursor (also shows weapons, 
                         wounding and enchantments).
         >               Cycle downstairs.
         <               Cycle upstairs.
         Tab             Cycle shops and portals.
-
-Targeting
----------
-Targeting mode is similar to examining surroundings. It is activated whenever
-you fire projectiles, zap a wand or cast spells which uses targets. 
-        x, Esc, Space   Stop targeting.
-        direction       Fire straight in this direction.
-        + or =          Cycle monsters forward (see option target_wrap).
-        -               Cycle monsters backward.
-        . or Enter      Fire in cursor direction.
+        Shift-Direction Fire straight in this direction.
         p or t          Fire at previous target (if still in sight).
         >               Fire in cursor direction, but stop at cursor. This can
                         be useful to avoid damaging pets, or to attack 
                         submerged water creatures.
         Ctrl-F          Toggle target modes (between enemies, all, friends; see
                         also option target_zero_exp).
-        *               Manual targeting: the direction keys will now move 
-                        the cursor, the keys '+' and '-' work as above, and '.'
-                        and Enter fire.
 
 
 Shortcuts in lists (like multidrop):
@@ -1825,9 +1817,9 @@ General enchantments: satiation, velocity, encumbrance, poison
 Hungry          Most races can eat chunks of corpses only if hungry.
 Starving        You should really eat something: death is not far away.
 Full            You have eaten a lot.
-Engorged        You couldn't eat anymore.
+Engorged        You can't eat any more for now.
 Sick            You are sick (usually from bad food). Hit points don't
-                regenerate until cured (wait it out or potion of healing).
+                regenerate until cured (wait it out or quaff a potion of healing).
 Poison          You are poisoned and continually lose hit points. There are
                 several levels of poisoning. Cure with potions of healing or
                 by waiting it out.
@@ -1835,34 +1827,34 @@ Pray            You are praying. Any action taken under prayer is done in the
                 name of your god. For example, Dissecting a corpse offers it.
                 Depending on the scope of your religion, this may or may not 
                 be a good idea.
-Encumbered      You load it heavy enough to slow you down. You also need more 
+Encumbered      Your load is heavy enough to slow you down. You also need more
                 food then walking around encumbered. Try to avoid this!
 Overloaded      You carry way too much to do anything sensible. Drop stuff!
-Conf            You are confused. Actions may not properly work.
-Fast            All actions have greatly increased speed (this can cause 
-                magic contamination).
-Swift           You move at a somewhat higher speed.
+Conf            You are confused. Actions may not work properly.
+Fast            Your actions are twice as fast (this can cause magic
+                contamination).
+Swift           You move at a somewhat higher speed. (Only affects movement.)
 Slow            All actions are slowed. Note that ending berserking will slow.
 Paralyze        You are unable to move. Beware of the wasps!
 
 Special enchantments:
 ---------------------
 BWpn            Some characters have a breath weapon (like Nagas or experienced
-                Draconians), which will show "BWpn". Further breathings have to
+                Draconians), which will show "BWpn". Further breaths have to
                 wait until this disappears.
 Invis           You are invisible (this can cause glowing, if used too much).
 Holy            You repel undead.
 Lev             You levitate, i.e. hover a few inches above the ground. While
                 enough to cross water and lava, movement is not completely
-                controlled. It will time out. Levitation provides a speed bonus
-                to swiftness.
+                controlled. It will usually time out. Levitation provides a speed
+                bonus to swiftness.
 Fly             You fly, gaining the benefits of levitation with none of the 
                 drawbacks. This is only accessible for experienced kenku, lucky
                 draconians, characters using Dragon form, or levitating with an
                 amulet of controlled flight.
 Fire            You are plagued with sticky fire. It will time out.
 Regen           You regenerate: health points will increase at an unnaturally
-                fast rate. This is only shown for temporary 
+                fast rate. This is only shown for temporary regeneration.
 Glow            You glow from mutagenic radiations: you'll mutate anytime soon.
 RMsl            You repel missiles, i.e. there's a good chance to evade them.
 DMsl            You deflect missiles, i.e. there's a great chance to evade them.
