@@ -121,14 +121,15 @@ int blink(void)
     return (1);
 }                               // end blink()
 
-void random_blink(bool allow_partial_control)
+void random_blink(bool allow_partial_control, bool override_abyss)
 {
     int tx, ty;
     bool succ = false;
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
         mpr("You feel a weird sense of stasis.");
-    else if (you.level_type == LEVEL_ABYSS && !one_chance_in(3))
+    else if (you.level_type == LEVEL_ABYSS
+             && !override_abyss && !one_chance_in(3))
     {
         mpr("The power of the Abyss keeps you in your place!");
     }

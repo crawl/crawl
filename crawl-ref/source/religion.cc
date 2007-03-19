@@ -162,7 +162,7 @@ const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for incredible healing" },
     // Lugonu
     { "depart the Abyss - at a permanent cost",
-      "",
+      "bend space around yourself",
       "summon the demons of the Abyss to your aid",
       "",
       "gate yourself to the Abyss" }
@@ -238,7 +238,7 @@ const char* god_lose_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for incredible healing" },
     // Lugonu
     { "depart the Abyss at will",
-      "",
+      "bend space around yourself",
       "summon the demons of the Abyss to your aid",
       "",
       "gate yourself to the Abyss" }

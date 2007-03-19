@@ -41,8 +41,11 @@
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "monplace.h"
+#include "monstuff.h"
 #include "notes.h"
+#include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
@@ -80,6 +83,7 @@ struct talent
 static FixedVector< talent, 52 >  Curr_abil;
 
 static bool insert_ability( int which_ability );
+static void lugonu_bends_space();
 
 // declaring this const messes up externs later, so don't do it
 ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
@@ -130,7 +134,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
       ABIL_ELYVILON_GREATER_HEALING },
     // Lucy
-    { ABIL_LUGONU_ABYSS_EXIT, ABIL_NON_ABILITY,
+    { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
       ABIL_LUGONU_SUMMON_DEMONS, ABIL_NON_ABILITY,
       ABIL_LUGONU_ABYSS_ENTER }
 };
@@ -258,6 +262,7 @@ static const struct ability_def Ability_List[] =
 
     // Lucy
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
+    { ABIL_LUGONU_BEND_SPACE, "Bend Space", 1, 0, 50, 0, ABFLAG_PAIN },
     { ABIL_LUGONU_SUMMON_DEMONS, "Summon Abyssal Servants", 7, 0, 100, 5, ABFLAG_NONE },
     { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 200, 40, ABFLAG_NONE },
 
@@ -1231,6 +1236,11 @@ bool activate_ability(void)
             set_mp(random2(you.magic_points), false);
         break;
 
+    case ABIL_LUGONU_BEND_SPACE:
+        lugonu_bends_space();
+        exercise(SK_INVOCATIONS, 2 + random2(3));
+        break;
+
     case ABIL_LUGONU_SUMMON_DEMONS:
     {
         int ndemons = 1 + you.skills[SK_INVOCATIONS] / 4;
@@ -2122,3 +2132,54 @@ static bool insert_ability( int which_ability )
 
     return (true);
 }                               // end insert_ability()
+
+////////////////////////////////////////////////////////////////////////////
+
+static int lugonu_warp_monster(int x, int y, int pow, int)
+{
+    if (!in_bounds(x, y) || mgrd[x][y] == NON_MONSTER)
+        return (0);
+
+    monsters &mon = menv[ mgrd[x][y] ];
+
+    if (!mons_friendly(&mon))
+        behaviour_event( &mon, ME_ANNOY, MHITYOU );
+    
+    if (check_mons_resist_magic(&mon, pow * 2))
+    {
+        mprf("%s resists.", mon.name(DESC_CAP_THE).c_str());
+        return (1);
+    }
+
+    if (!check_mons_resist_magic(&mon, pow))
+    {
+        mon.hurt(&you, 1 + random2(pow / 6));
+        if (!mon.alive())
+            return (1);
+    }
+
+    mon.blink();
+
+    return (1);
+}
+
+static void lugonu_warp_area(int pow)
+{
+    apply_area_around_square( lugonu_warp_monster, you.x_pos, you.y_pos, pow );
+}
+
+static void lugonu_bends_space()
+{
+    const int pow = 4 + skill_bump(SK_INVOCATIONS);
+    const bool area_warp = random2(pow) > 9;
+
+    mprf("Space bends %saround you!", area_warp? "sharply " : "");
+
+    if (area_warp)
+        lugonu_warp_area(pow);
+
+    random_blink(false, true);
+    
+    const int damage = roll_dice(1, 4);
+    ouch(damage, 0, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+}

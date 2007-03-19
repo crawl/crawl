@@ -136,7 +136,7 @@ void purification(void);
 /* ***********************************************************************
  * called from: ability - decks - fight - spell - spells - spells1
  * *********************************************************************** */
-void random_blink(bool);
+void random_blink(bool, bool override_abyss = false);
 
 
 #endif
