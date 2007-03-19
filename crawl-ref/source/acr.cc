@@ -927,9 +927,19 @@ static int toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
+static void go_downstairs();
 static void go_upstairs()
 {
-    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP)
+    const int ygrd = grd(you.pos());
+
+    // Allow both < and > to work for Abyss exits.
+    if (ygrd == DNGN_EXIT_ABYSS)
+    {
+        go_downstairs();
+        return;
+    }
+    
+    if (ygrd == DNGN_ENTER_SHOP)
     {
         if ( you.berserker )
             canned_msg(MSG_TOO_BERSERK);
@@ -937,10 +947,10 @@ static void go_upstairs()
             shop();
         return;
     }
-    else if ((grd[you.x_pos][you.y_pos] < DNGN_STONE_STAIRS_UP_I
-              || grd[you.x_pos][you.y_pos] > DNGN_ROCK_STAIRS_UP)
-             && (grd[you.x_pos][you.y_pos] < DNGN_RETURN_FROM_ORCISH_MINES 
-                 || grd[you.x_pos][you.y_pos] >= 150))
+    else if ((ygrd < DNGN_STONE_STAIRS_UP_I
+              || ygrd > DNGN_ROCK_STAIRS_UP)
+             && (ygrd < DNGN_RETURN_FROM_ORCISH_MINES 
+                 || ygrd >= 150))
     {
         mpr( "You can't go up here!" );
         return;
