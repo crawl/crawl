@@ -4496,7 +4496,7 @@ DEPTH: 1-11
 TAGS: dummy
 
 ORIENT: float
-CHANCE: 80
+CHANCE: 100
 
 MAP
 x
@@ -5537,6 +5537,17 @@ ENDMAP
 
 # Default depth for minivaults.
 default-depth: 8-27
+
+##############################################################################
+# Minivault balancer
+NAME: mini_dummy
+DEPTH: 1-7
+TAGS: dummy
+CHANCE: 100
+
+MAP
+.
+ENDMAP
 
 ##############################################################################
 # Greed's colour
