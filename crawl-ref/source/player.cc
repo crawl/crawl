@@ -5015,7 +5015,8 @@ int player::shield_bypass_ability(int tohit) const
 void player::shield_block_succeeded()
 {
     shield_blocks++;
-    exercise(SK_SHIELDS, 1);
+    if (coinflip())
+        exercise(SK_SHIELDS, 1);
 }
 
 bool player::wearing_light_armour(bool with_skill) const
