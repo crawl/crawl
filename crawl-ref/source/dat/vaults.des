@@ -4362,7 +4362,7 @@ ORIENT: float
 MONS: rat, hobgoblin, goblin
 SHUFFLE: {[(
 MAP
-xxxxxxxxxx.xxxxxxxxxx
+xxxxxxxxxx@xxxxxxxxxx
 xxxxxxxxxx.xxxxxxxxxx
 xxxxxxxccc+cccxxxxxxx
 xxxxxxxc.G.G.cxxxxxxx
