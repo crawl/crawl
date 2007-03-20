@@ -31,6 +31,29 @@ int formatted_string::get_colour(const std::string &tag)
     return (colour != -1? colour : LIGHTGREY);
 }
 
+formatted_string formatted_string::parse_block(
+        const std::string &s,
+        bool  eol_ends_format,
+        bool (*process)(const std::string &tag))
+{
+    std::vector<std::string> lines = split_string("\n", s, false, true);
+
+    formatted_string fs;
+    for (int i = 0, size = lines.size(); i < size; ++i)
+    {
+        if (i)
+        {
+            // Artificial newline - some terms erase to eol when printing a
+            // newline.
+            fs.gotoxy(1, -1); // CR
+            fs.movexy(0, 1);  // LF
+        }
+        fs += parse_string(lines[i], eol_ends_format, process);
+    }
+
+    return (fs);
+}
+
 formatted_string formatted_string::parse_string(
         const std::string &s,
         bool  eol_ends_format,
@@ -103,12 +126,12 @@ formatted_string formatted_string::parse_string(
         }
 
         const int new_colour = invert_colour? LIGHTGREY : get_colour(tagtext);
-        if (new_colour != curr_colour)
+        if (!currs.empty())
         {
             fs.cprintf(currs);
             currs.clear();
-            fs.textcolor( curr_colour = new_colour );
         }
+        fs.textcolor( curr_colour = new_colour );
         tag += tagtext.length() + 1;
     }
     if (currs.length())

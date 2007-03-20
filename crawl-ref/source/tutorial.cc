@@ -22,7 +22,11 @@
 //#define TUTORIAL_DEBUG
 #define TUTORIAL_VERSION 110
 
-int COLS = (get_number_of_cols() > 80) ? 80 : get_number_of_cols();
+static int get_tutorial_cols()
+{
+    int ncols = get_number_of_cols();
+    return (ncols > 80? 80 : ncols);
+}
 
 void save_tutorial( FILE* fp )
 {
@@ -349,7 +353,7 @@ static formatted_string tutorial_debug()
     bool lbreak = false;
     snprintf(info, INFO_SIZE, "Tutorial Debug Screen");
     
-    int i = COLS/2-1 - strlen(info) / 2;
+    int i = get_tutorial_cols()/2-1 - strlen(info) / 2;
     result += std::string(i, ' ');
     result += "<white>";
     result += info;
@@ -363,14 +367,14 @@ static formatted_string tutorial_debug()
         result += info;
         
         // break text into 2 columns where possible
-        if (strlen(info) >= COLS/2 || lbreak)
+        if (strlen(info) >= get_tutorial_cols()/2 || lbreak)
         {
             result += EOL;
             lbreak = false;
         }
         else
         {
-            result += std::string(COLS/2-1 - strlen(info), ' ');
+            result += std::string(get_tutorial_cols()/2-1 - strlen(info), ' ');
             lbreak = true;
         }
     }
@@ -402,7 +406,7 @@ static formatted_string tutorial_map_intro()
               "</magenta>" EOL;
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
-    linebreak_string2(result,COLS);
+    linebreak_string2(result,get_tutorial_cols());
     return formatted_string::parse_string(result);
 }
 
@@ -411,33 +415,34 @@ static formatted_string tutorial_stats_intro()
     std::string result;
     result += "<magenta>";
 
-    result += "To the right, important properties of " EOL;
-    result += "the character are displayed. The most " EOL;
-    result += "basic one is your health, measured as " EOL;
-    snprintf(info, INFO_SIZE, "<white>HP: %d/%d<magenta>. ", you.hp, you.hp_max);
+    result += "To the right, important properties of \n";
+    result += "the character are displayed. The most \n";
+    result += "basic one is your health, measured as \n";
+    snprintf(info, INFO_SIZE, "<white>HP: %d/%d<magenta>. ",
+             you.hp, you.hp_max);
     result += info; 
     if (Options.tutorial_type==TUT_MAGIC_CHAR)
         result += "  ";
-    result += "These are your current out " EOL;
-    result += "of maximum health points. When health " EOL;
-    result += "drops to zero, you die.               " EOL;
+    result += "These are your current out \n";
+    result += "of maximum health points. When health \n";
+    result += "drops to zero, you die.               \n";
     snprintf(info, INFO_SIZE, "<white>Magic: %d/%d<magenta>", you.magic_points, you.max_magic_points);
     result += info; 
-    result += " is your energy for casting " EOL;
-    result += "spells, although more mundane actions " EOL;
-    result += "often draw from Magic, too.           " EOL;
-    result += "Further down, <white>Str<magenta>ength, <white>Dex<magenta>terity and " EOL;
-    result += "<white>Int<magenta>elligence are shown and provide an " EOL;
-    result += "all-around account of the character's " EOL;
-    result += "attributes.                           " EOL;
+    result += " is your energy for casting \n";
+    result += "spells, although more mundane actions \n";
+    result += "often draw from Magic, too.           \n";
+    result += "Further down, <white>Str<magenta>ength, <white>Dex<magenta>terity and \n";
+    result += "<white>Int<magenta>elligence are shown and provide an \n";
+    result += "all-around account of the character's \n";
+    result += "attributes.                           \n";
 
-    result += "</magenta>";
-    result += "                                      " EOL;
-    result += " --more--                               Press <white>Escape</white> to skip the basics" EOL;
-    result += "                                      " EOL;
-    result += "                                      " EOL;
+    result += "<lightgrey>";
+    result += "                                      \n";
+    result += " --more--                               Press <white>Escape</white> to skip the basics\n";
+    result += "                                      \n";
+    result += "                                      \n";
 
-    return formatted_string::parse_string(result);
+    return formatted_string::parse_block(result, false);
 }
 
 static formatted_string tutorial_message_intro()
@@ -452,7 +457,7 @@ static formatted_string tutorial_message_intro()
               "</magenta>" EOL;
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
-    linebreak_string2(result,COLS);
+    linebreak_string2(result,get_tutorial_cols());
     return formatted_string::parse_string(result);
 }
 
@@ -464,7 +469,8 @@ static void tutorial_movement_info()
             "keys, movement is also possible with <w>hjklyubn<magenta>. A basic "
             "command list can be found under <w>?<magenta>, and the most important "
             "commands will be explained to you as it becomes necessary. ";
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    mesclr();
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 }
 
 // copied from display_mutations and adapted
@@ -481,7 +487,7 @@ void tut_starting_screen()
     for (int i=0; i<=MAX_INFO; i++)
     {
         x1 = 1; y1 = 1;
-        x2 = COLS; y2 = get_number_of_lines();
+        x2 = get_tutorial_cols(); y2 = get_number_of_lines();
 
         if (i==1 || i==3)
         {
@@ -604,7 +610,7 @@ void tutorial_death_screen()
             text =  "Sorry, no hint this time, though there should have been one.";
       }
     }
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     more();
 
     mpr( "See you next game!", MSGCH_TUTORIAL);
@@ -624,7 +630,7 @@ void tutorial_finished()
     text =  "Congrats! You survived until the end of this tutorial - be sure to "
             "try the other ones as well. Note that the help screen (<w>?<magenta>) "
             "will look different from now on. Here's a last playing hint:";
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     more();
 
     if (Options.tut_explored)
@@ -682,7 +688,7 @@ void tutorial_finished()
               text =  "Oops... No hint for now. Better luck next time!";
         } 
     }
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     more();
 
     for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
@@ -705,7 +711,7 @@ void tutorial_prayer_reminder()
                 "<w>D<magenta>issecting it as a sacrifice to ";
         text += god_name(you.religion);
         text += ", as well.";
-        print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+        print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
 }
 
@@ -730,7 +736,7 @@ void tutorial_healing_reminder()
             text =  "Remember to rest between fights and to enter unexplored "
                     "terrain with full hitpoints and/or magic. For resting, "
                     "press <w>5<magenta> or <w>Shift-numpad 5<magenta>.";
-            print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+            print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
         }
         Options.tut_last_healed = you.num_turns;
     }
@@ -859,7 +865,7 @@ void tutorial_first_monster(monsters mon)
             "information about it by pressing <w>x<magenta>, moving the cursor "
             "on the monster and then pressing <w>v<magenta>. To attack it with "
             "your wielded weapon, just move into it.";
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 
     more();
 
@@ -872,7 +878,7 @@ void tutorial_first_monster(monsters mon)
                 "<w>-<magenta> allow you to select the proper monster. Finally, "
                 "<w>Enter<magenta> or <w>.<magenta> fire. If you miss, "
                 "<w>ff<magenta> fires at the previous target again.";
-        print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+        print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
     else if (Options.tutorial_type == TUT_MAGIC_CHAR)
     {
@@ -884,7 +890,7 @@ void tutorial_first_monster(monsters mon)
                 "allow you to select the proper target. Finally, <w>Enter<magenta> "
                 "or <w>.<magenta> fire. If you miss, <w>Zap<magenta> will "
                 "fire at the previous target again.";
-        print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+        print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
     }
 
     Options.tutorial_events[TUT_SEEN_MONSTER] = 0;
@@ -905,10 +911,10 @@ void tutorial_first_item(item_def item)
     text += ch;
     text += "<magenta> is an item. If you move there and press <w>g<magenta> or "
             "<w>,<magenta> you will pick it up. Generally, items are shown by "
-            "non-letter symbols like <w>%%?!\"=()[<magenta>. Once it is in your "
+            "non-letter symbols like <w>%?!\"=()[<magenta>. Once it is in your "
             "inventory, you can drop it again with <w>d<magenta>. Several types "
             "of objects will usually be picked up automatically.";
-    print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+    print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 
     Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = 0;
     Options.tutorial_left--;
@@ -1014,11 +1020,11 @@ void learned_something_new(unsigned int seen_what, int x, int y)
                   "the greater the potential value of an item.";
           break;
       case TUT_SEEN_FOOD:
-          text =  "You have picked up some food ('<w>%%<magenta>'). You can eat it "
+          text =  "You have picked up some food ('<w>%<magenta>'). You can eat it "
                   "by typing <w>e<magenta>.";
           break;
       case TUT_SEEN_CARRION:
-          text =  "You have picked up a corpse ('<w>%%<magenta>'). When a corpse "
+          text =  "You have picked up a corpse ('<w>%<magenta>'). When a corpse "
                   "is lying on the ground, you can <w>D<magenta>issect with a "
                   "sharp implement. Once hungry you can <w>e<magenta>at the "
                   "resulting chunks (though they may not be healthy).";
@@ -1326,7 +1332,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           text += "You've found something new (but I don't know what)!";
     }
     if (seen_what != TUT_SEEN_MONSTER && seen_what != TUT_SEEN_FIRST_OBJECT)
-       print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
+       print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 
 //    more();
 

@@ -653,12 +653,7 @@ static void cprintf_aux(const char *s)
    char *p = (char *)s;
    while(*p)
    {
-      if (p[0] == '%' && p[1] == '%')
-      {
-         p++;
-         continue;
-      }
-      writeChar(*p++);
+       writeChar(*p++);
    }
 
    // reset buffering

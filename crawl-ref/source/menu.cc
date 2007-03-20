@@ -1218,13 +1218,11 @@ void print_formatted_paragraph(std::string &s, int maxcol, int channel)
     {
         if (s[loc] == '\n') {
             text = s.substr(oldloc, loc-oldloc);
-//            formatted_mpr( formatted_string::parse_string(text), channel );
             formatted_message_history( text, channel );
             oldloc = ++loc;
         }
         loc++;
     }    
-//    formatted_mpr( formatted_string::parse_string( s.substr(oldloc, loc-oldloc) ), channel );
     formatted_message_history( s.substr(oldloc, loc-oldloc), channel );
 }
 

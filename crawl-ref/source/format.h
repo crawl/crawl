@@ -44,6 +44,11 @@ public:
             const std::string &s,
             bool  eol_ends_format = true,
             bool (*process_tag)(const std::string &tag) = NULL );
+    
+    static formatted_string parse_block(
+            const std::string &s,
+            bool  eol_ends_format = true,
+            bool (*process_tag)(const std::string &tag) = NULL );
 
     static int get_colour(const std::string &tag);
 
