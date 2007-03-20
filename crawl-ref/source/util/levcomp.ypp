@@ -6,6 +6,8 @@
 #include "stuff.h"
 #include <map>
 
+#define YYERROR_VERBOSE 1
+
 int yylex();
 
 extern int yylineno;

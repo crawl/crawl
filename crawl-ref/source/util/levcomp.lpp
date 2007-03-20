@@ -1,6 +1,6 @@
 %{
 
-// levcomp.l:
+// levcomp.lpp:
 //      Level compiler lexer for Dungeon Crawl Stone Soup.
 // 
 // Based loosely on NetHack's lev_comp.l
