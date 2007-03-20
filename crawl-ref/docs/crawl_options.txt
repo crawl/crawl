@@ -70,7 +70,7 @@ The contents of this text are:
 6-  Miscellaneous.
 6-a     All OS.
                 macro_meta_entry, wiz_mode, colours, char_set, cset_ascii,
-                cset_ibm, cset_dec, feature
+                cset_ibm, cset_dec, feature, classic_item_colours
 6-b     DOS and Windows.
                 dos_use_background_intensity
 6-c     Unix
@@ -1045,6 +1045,11 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
             feature = rock wall { , , red }  # shows rock walls in red
             feature = metal wall {#}         # use '#' for metal walls
 
+classic_item_colours = false
+        Crawl uses 4.0 b26/0.1.x-like item colours if classic_item_colours is
+        set to true. The default (false) is to use the new 0.2 item colours.
+        This option will not affect the colour of existing items, only items
+        generated after the option is set.
 
 6-b     DOS and Windows.
 ------------------------

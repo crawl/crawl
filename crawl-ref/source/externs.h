@@ -1250,6 +1250,7 @@ public:
     int         travel_exclude_radius2; // Square of the travel exclude radius
     bool        show_waypoints;
 
+    bool        classic_item_colours;   // Use old-style item colours
     bool        item_colour;    // Colour items on level map
 
     unsigned    detected_monster_colour;    // Colour of detected monsters

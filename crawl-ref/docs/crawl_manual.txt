@@ -43,8 +43,8 @@ B.                      STARTING SCREEN
 --------------------------------------------------------------------------------
 
 After starting Crawl, you'll be asked to type in a name. If there is a saved
-game of that character, it will be restored, otherwise you proceed to choose a race
-and class (this can be done in either order). The choice of species affects
+game of that character, it will be restored, otherwise you proceed to choose a
+race and class (this can be done in either order). The choice of species affects
 several important characteristics, in particular the speed with which the
 different skills are learned. This is very important, and helps to clearly
 differentiate the 26 available races. To be complete, the following factors are

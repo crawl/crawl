@@ -6484,6 +6484,267 @@ static void many_pools(unsigned char pool_type)
     while (pools < no_pools);
 }                               // end many_pools()
 
+static int newwave_weapon_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    if (is_range_weapon( item ))
+    {
+        switch (range_skill(item))
+        {
+        case SK_BOWS:
+            item_colour = BLUE;
+            break;
+        case SK_CROSSBOWS:
+            item_colour = RED;
+            break;
+        case SK_DARTS:
+            item_colour = WHITE;
+            break;
+        case SK_SLINGS:
+            item_colour = BROWN;
+            break;
+        default:
+            // huh?
+            item_colour = MAGENTA;
+            break;
+        }
+    }
+    else
+    {
+        switch (weapon_skill(item))
+        {
+        case SK_SHORT_BLADES:
+            item_colour = CYAN;
+            break;
+        case SK_LONG_SWORDS:
+            item_colour = LIGHTCYAN;
+            break;
+        case SK_AXES:
+            item_colour = DARKGREY;
+            break;
+        case SK_MACES_FLAILS:
+            item_colour = LIGHTGREY;
+            break;
+        case SK_POLEARMS:
+            item_colour = LIGHTGREEN;
+            break;
+        case SK_STAVES:
+            item_colour = GREEN;
+            break;
+        default:
+            // huh?
+            item_colour = random_colour();
+            break;
+        }
+    }
+    return (item_colour);
+}
+
+static int classic_weapon_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    
+    if (is_range_weapon( item ))
+        item_colour = BROWN;
+    else
+    {
+        switch (item.sub_type)
+        {
+        case WPN_CLUB:
+        case WPN_GIANT_CLUB:
+        case WPN_GIANT_SPIKED_CLUB:
+        case WPN_ANCUS:
+        case WPN_WHIP:
+        case WPN_QUARTERSTAFF:
+            item_colour = BROWN;
+            break;
+        case WPN_QUICK_BLADE:
+            item_colour = LIGHTBLUE;
+            break;
+        case WPN_EXECUTIONERS_AXE:
+            item_colour = RED;
+            break;
+        default:
+            item_colour = LIGHTCYAN;
+            if (get_equip_race(item) == ISFLAG_DWARVEN)
+                item_colour = CYAN;
+            break;
+        }
+    }
+
+    return (item_colour);
+}
+
+static int weapon_colour(const item_def &item)
+{
+    return (Options.classic_item_colours?
+            classic_weapon_colour(item) : newwave_weapon_colour(item));
+}
+
+static int newwave_missile_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    switch (item.sub_type)
+    {
+    case MI_STONE:
+    case MI_LARGE_ROCK:
+        item_colour = BROWN;
+        break;
+    case MI_ARROW:
+        item_colour = BLUE;
+        break;
+    case MI_NEEDLE:
+        item_colour = WHITE;
+        break;
+    case MI_BOLT:
+        item_colour = RED;
+        break;
+    case MI_DART:
+        item_colour = LIGHTRED;
+        break;
+    default:
+        // huh?
+        item_colour = LIGHTCYAN;
+        if (get_equip_race(item) == ISFLAG_DWARVEN)
+            item_colour = CYAN;
+        break;
+    }
+    return (item_colour);
+}
+
+static int classic_missile_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    switch (item.sub_type)
+    {
+    case MI_STONE:
+    case MI_LARGE_ROCK:
+    case MI_ARROW:
+        item_colour = BROWN;
+        break;
+    case MI_NEEDLE:
+        item_colour = WHITE;
+        break;
+    default:
+        item_colour = LIGHTCYAN;
+        if (get_equip_race(item) == ISFLAG_DWARVEN)
+            item_colour = CYAN;
+        break;
+    }
+    return (item_colour);
+}
+
+static int missile_colour(const item_def &item)
+{
+    return (Options.classic_item_colours?
+            classic_missile_colour(item) : newwave_missile_colour(item));
+}
+
+static int newwave_armour_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    switch (item.sub_type)
+    {
+    case ARM_CLOAK:
+        item_colour = WHITE;
+        break;
+    case ARM_NAGA_BARDING:
+        item_colour = LIGHTGREEN;
+        break;
+    case ARM_CENTAUR_BARDING:
+        item_colour = GREEN;
+        break;
+    case ARM_ROBE:
+    case ARM_CAP:
+        item_colour = random_uncommon_colour();
+        break;
+
+    case ARM_HELMET:
+        //caps and wizard's hats are random coloured
+        if (get_helmet_type(item) == THELM_CAP
+            || get_helmet_type(item) == THELM_WIZARD_HAT)
+        {
+            item_colour = random_uncommon_colour();
+        } 
+        else
+            item_colour = DARKGREY;
+        break;
+
+    case ARM_BOOTS:
+        item_colour = BLUE;
+        break;
+    case ARM_GLOVES:
+        item_colour = LIGHTBLUE;
+        break;
+    case ARM_LEATHER_ARMOUR:
+        item_colour = BROWN;
+        break;
+    case ARM_CRYSTAL_PLATE_MAIL:
+        item_colour = WHITE;
+        break;
+    case ARM_ANIMAL_SKIN:
+        item_colour = YELLOW;
+        break;
+    default:
+        item_colour = LIGHTCYAN;
+        if (get_equip_race(item) == ISFLAG_DWARVEN)
+            item_colour = CYAN;
+        break;
+    }
+
+    return (item_colour);
+}
+
+static int classic_armour_colour(const item_def &item)
+{
+    int item_colour = BLACK;
+    switch (item.sub_type)
+    {
+    case ARM_CLOAK:
+    case ARM_ROBE:
+    case ARM_NAGA_BARDING:
+    case ARM_CENTAUR_BARDING:
+    case ARM_CAP:
+        item_colour = random_colour();
+        break;
+
+    case ARM_HELMET:
+        // caps and wizard's hats are random coloured
+        if (get_helmet_type(item) == THELM_CAP
+            || get_helmet_type(item) == THELM_WIZARD_HAT)
+        {
+            item_colour = random_colour();
+        } 
+        else
+            item_colour = LIGHTCYAN;
+        break;
+
+    case ARM_BOOTS: // maybe more interesting boot colours?
+    case ARM_GLOVES:
+    case ARM_LEATHER_ARMOUR:
+        item_colour = BROWN;
+        break;
+    case ARM_CRYSTAL_PLATE_MAIL:
+        item_colour = LIGHTGREY;
+        break;
+    case ARM_ANIMAL_SKIN:
+        item_colour = BROWN;
+        break;
+    default:
+        item_colour = LIGHTCYAN;
+        if (get_equip_race(item) == ISFLAG_DWARVEN)
+            item_colour = CYAN;
+        break;
+    }
+    return (item_colour);
+}
+
+static int armour_colour(const item_def &item)
+{
+    return (Options.classic_item_colours?
+            classic_armour_colour(item) : newwave_armour_colour(item));
+}
+
 void item_colour( item_def &item )
 {
     int switchnum = 0;
@@ -6537,56 +6798,8 @@ void item_colour( item_def &item )
 
         if (is_demonic( item ))
             item.colour = random_uncommon_colour();
-        else if (is_range_weapon( item ))
-        {
-            switch (range_skill(item))
-            {
-            case SK_BOWS:
-                item.colour = BLUE;
-                break;
-            case SK_CROSSBOWS:
-                item.colour = RED;
-                break;
-            case SK_DARTS:
-                item.colour = WHITE;
-                break;
-            case SK_SLINGS:
-                item.colour = BROWN;
-                break;
-            default:
-                // huh?
-                item.colour = MAGENTA;
-                break;
-            }
-        }
         else
-        {
-            switch (weapon_skill(item))
-            {
-            case SK_SHORT_BLADES:
-                item.colour = CYAN;
-                break;
-            case SK_LONG_SWORDS:
-                item.colour = LIGHTCYAN;
-                break;
-            case SK_AXES:
-                item.colour = DARKGREY;
-                break;
-            case SK_MACES_FLAILS:
-                item.colour = LIGHTGREY;
-                break;
-            case SK_POLEARMS:
-                item.colour = LIGHTGREEN;
-                break;
-            case SK_STAVES:
-                item.colour = GREEN;
-                break;
-            default:
-                // huh?
-                item.colour = random_colour();
-                break;
-            }
-        }
+            item.colour = weapon_colour(item);
 
         if (is_random_artefact( item ) && one_chance_in(5))
             item.colour = random_colour();
@@ -6594,31 +6807,7 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_MISSILES:
-        switch (item.sub_type)
-        {
-        case MI_STONE:
-        case MI_LARGE_ROCK:
-            item.colour = BROWN;
-            break;
-        case MI_ARROW:
-            item.colour = BLUE;
-            break;
-        case MI_NEEDLE:
-            item.colour = WHITE;
-            break;
-        case MI_BOLT:
-            item.colour = RED;
-            break;
-        case MI_DART:
-            item.colour = LIGHTRED;
-            break;
-        default:
-            // huh?
-            item.colour = LIGHTCYAN;
-            if (get_equip_race(item) == ISFLAG_DWARVEN)
-                item.colour = CYAN;
-            break;
-        }
+        item.colour = missile_colour(item);
         break;
 
     case OBJ_ARMOUR:
@@ -6627,40 +6816,6 @@ void item_colour( item_def &item )
 
         switch (item.sub_type)
         {
-        case ARM_CLOAK:
-            item.colour = WHITE;
-            break;
-        case ARM_NAGA_BARDING:
-            item.colour = LIGHTGREEN;
-            break;
-        case ARM_CENTAUR_BARDING:
-            item.colour = GREEN;
-            break;
-        case ARM_ROBE:
-        case ARM_CAP:
-            item.colour = random_uncommon_colour();
-            break;
-
-        case ARM_HELMET:
-            //caps and wizard's hats are random coloured
-            if (get_helmet_type(item) == THELM_CAP
-                    || get_helmet_type(item) == THELM_WIZARD_HAT)
-            {
-                item.colour = random_uncommon_colour();
-            } 
-            else
-                item.colour = DARKGREY;
-            break;
-
-        case ARM_BOOTS:
-            item.colour = BLUE;
-            break;
-        case ARM_GLOVES:
-            item.colour = LIGHTBLUE;
-            break;
-        case ARM_LEATHER_ARMOUR:
-            item.colour = BROWN;
-            break;
         case ARM_DRAGON_HIDE:
         case ARM_DRAGON_ARMOUR:
             item.colour = mons_class_colour( MONS_DRAGON );
@@ -6668,9 +6823,6 @@ void item_colour( item_def &item )
         case ARM_TROLL_HIDE:
         case ARM_TROLL_LEATHER_ARMOUR:
             item.colour = mons_class_colour( MONS_TROLL );
-            break;
-        case ARM_CRYSTAL_PLATE_MAIL:
-            item.colour = WHITE;
             break;
         case ARM_ICE_DRAGON_HIDE:
         case ARM_ICE_DRAGON_ARMOUR:
@@ -6692,17 +6844,12 @@ void item_colour( item_def &item )
         case ARM_GOLD_DRAGON_ARMOUR:
             item.colour = mons_class_colour( MONS_GOLDEN_DRAGON );
             break;
-        case ARM_ANIMAL_SKIN:
-            item.colour = YELLOW;
-            break;
         case ARM_SWAMP_DRAGON_HIDE:
         case ARM_SWAMP_DRAGON_ARMOUR:
             item.colour = mons_class_colour( MONS_SWAMP_DRAGON );
             break;
         default:
-            item.colour = LIGHTCYAN;
-            if (get_equip_race(item) == ISFLAG_DWARVEN)
-                item.colour = CYAN;
+            item.colour = armour_colour(item);
             break;
         }
 

@@ -632,6 +632,8 @@ void game_options::reset_options()
     detected_item_colour   = LIGHTGREEN;
     detected_monster_colour= LIGHTRED;
 
+    classic_item_colours   = false;
+
     easy_exit_menu         = true;
 #ifdef DOS
     dos_use_background_intensity = false;
@@ -734,6 +736,7 @@ void game_options::reset_options()
 
     // Clear vector options.
     extra_levels.clear();
+    
     dump_order.clear();
     new_dump_fields("header,stats,misc,inventory,skills,"
                    "spells,,overview,mutations,messages,screenshot,"
@@ -2122,6 +2125,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tc_disconnected")
     {
         tc_disconnected = str_to_colour(field, tc_disconnected);
+    }
+    else if (key == "classic_item_colours")
+    {
+        classic_item_colours = read_bool(field, classic_item_colours);
     }
     else if (key == "item_colour" || key == "item_color")
     {

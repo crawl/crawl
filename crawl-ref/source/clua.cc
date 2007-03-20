@@ -2268,6 +2268,12 @@ bool lua_text_pattern::translate() const
 {
     if (translated || !isvalid)
         return false;
+
+    if (pattern.find("]]") != std::string::npos
+        || pattern.find("[[") != std::string::npos)
+    {
+        return (false);
+    }
     
     std::string textp;
     std::string luafn;

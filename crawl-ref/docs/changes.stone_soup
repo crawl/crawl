@@ -8,6 +8,7 @@ Stone Soup 0.2
 * Targeting interface keymaps changed.
 * -macro option now specifies a directory, not the macro file.
 * Item colours changed.
+* Deeper dungeon levels can have multiple player ghosts.
 * Rods of striking now also get magic reservoirs.
 * Removed unpoisoned needles and blowguns of venom.
 * Stash search also finds altars and portals.
@@ -68,6 +69,7 @@ Stone Soup 0.2
 * Fixed duplicated scroll labels.
 * Friendly monsters should not flee from the player.
 * Fixed detect creatures revealing monster identities in notes.
+* Fixed level-map crashes on large terms.
 * no_dark_brand defaults to true.
 * Summon horrible things now produces temporary summons.
 * Monster abjuration is weaker.
@@ -79,6 +81,8 @@ Stone Soup 0.2
 * Monsters fighting hydras can chop off heads if using suitable weapons/claws.
 * Interlevel travel handles branch entries and exits more intelligently.
 * Added wizmode &~ to instant travel to any level to test special levels.
+* Messages can be coloured individually using pattern matches with the
+  message_colour option.
 
 Stone Soup 0.1.7 (20061231)
 ---------------------------
