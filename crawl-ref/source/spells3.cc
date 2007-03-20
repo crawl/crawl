@@ -212,12 +212,11 @@ int cast_smiting(int power)
     {
         monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        strcpy(info, "You smite ");
-        strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-        strcat(info, "!");
-        mpr(info);
+        mprf("You smite %s!", ptr_monam( monster, DESC_NOCAP_THE ));
 
-        hurt_monster(monster, random2(8) + (random2(power) / 3));
+        // Maxes out at around 40 damage at 27 Invocations, which is plenty
+        // in my book (the old max damage was around 70, which seems excessive.
+        hurt_monster(monster, 7 + (random2(power) * 33 / 191));
 
         if (monster->hit_points < 1)
             monster_die(monster, KILL_YOU, 0);
@@ -245,14 +244,11 @@ int airstrike(int power, dist &beam)
     {
         monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        strcpy(info, "The air twists around and strikes ");
-        strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-        strcat(info, "!");
-        mpr(info);
+        mprf("The air twists around and strikes %s!",
+             ptr_monam( monster, DESC_NOCAP_THE ));
 
-        hurted = random2( random2(12) + (random2(power) / 6)
-                                      + (random2(power) / 7) );
-        hurted -= random2(1 + monster->ac);
+        hurted = 8 + random2( random2(4) + (random2(power) / 6)
+                              + (random2(power) / 7) );
         
         if ( mons_flies(monster) )
         {
@@ -260,6 +256,8 @@ int airstrike(int power, dist &beam)
             hurted /= 2;
         }
 
+        hurted -= random2(1 + monster->ac);
+        
         if (hurted < 0)
             hurted = 0;
         else
