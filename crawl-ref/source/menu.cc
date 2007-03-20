@@ -1180,13 +1180,13 @@ int linebreak_string2( std::string& s, int maxcol )
             // hard linebreak
             else if ( xpos >= maxcol )
             {
-                if (spacepos >= xpos-maxcol) 
+                if (spacepos >= xpos-maxcol)
                 {
-                	loc = spacepos;
-                	s.replace(loc, 1, "\n");
-               	}   	
-               	else
-                	s.insert(loc, "\n");
+                    loc = spacepos;
+                    s.replace(loc, 1, "\n");
+                }
+                else
+                    s.insert(loc, "\n");
                 xpos = 0;
                 ++breakcount;
             }
@@ -1212,19 +1212,21 @@ void print_formatted_paragraph(std::string &s, int maxcol, int channel)
 {
     linebreak_string2(s,maxcol);
     std::string text;
-    
+
     size_t loc = 0, oldloc = 0;
     while ( loc < s.size() )
     {
         if (s[loc] == '\n') {
-            	text = s.substr(oldloc, loc-oldloc);
-  		        formatted_mpr( formatted_string::parse_string(text), channel );
-  		        oldloc = ++loc;
-        }    
+            text = s.substr(oldloc, loc-oldloc);
+//            formatted_mpr( formatted_string::parse_string(text), channel );
+            formatted_message_history( text, channel );
+            oldloc = ++loc;
+        }
         loc++;
     }    
-   	formatted_mpr( formatted_string::parse_string( s.substr(oldloc, loc-oldloc) ), channel );
-}    
+//    formatted_mpr( formatted_string::parse_string( s.substr(oldloc, loc-oldloc) ), channel );
+    formatted_message_history( s.substr(oldloc, loc-oldloc), channel );
+}
 
 bool formatted_scroller::jump_to( int i )
 {

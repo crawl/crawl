@@ -973,7 +973,7 @@ void print_overview_screen()
     bool calc_unid = false;
     formatted_scroller cmd_help;
     // Set flags, and don't use easy exit.
-    cmd_help.set_flags(MF_NOSELECT | MF_NOWRAP, false);
+    cmd_help.set_flags(MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP, false);
     cmd_help.set_more( formatted_string::parse_string(
                        "<cyan>[ + : Page down.   - : Page up.   Esc exits.]"));
 
@@ -1563,8 +1563,8 @@ std::string status_mut_abilities()
               text += ", able to fly";
               if (you.experience_level > 14)
                   text += " continuously";
-              have_any = true;
           }
+          have_any = true;
           break;
 
       case SP_MUMMY:

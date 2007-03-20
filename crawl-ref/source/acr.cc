@@ -221,8 +221,8 @@ int main( int argc, char *argv[] )
 
     bool game_start = initialise();
 
-     // override some options for tutorial
-     init_tutorial_options();
+    // override some options for tutorial
+    init_tutorial_options();
 
     if (game_start || Options.always_greet)
     {

@@ -22,7 +22,7 @@
 //#define TUTORIAL_DEBUG
 #define TUTORIAL_VERSION 110
 
-int COLS = get_number_of_cols();
+int COLS = (get_number_of_cols() > 80) ? 80 : get_number_of_cols();
 
 void save_tutorial( FILE* fp )
 {
@@ -226,7 +226,7 @@ static formatted_string tut_starting_info(unsigned int width)
     linebreak_string2(text, width);
     result += formatted_string::parse_string(text);
                 
-    result += "For the moment, just remember the following two keys and their functions:" EOL;
+    result += "For the moment, just remember the following keys and their functions:" EOL;
     result += "  <white>?</white> - shows the items and the commands" EOL;
     result += "  <white>S</white> - saves the game, to be resumed later (but note that death is permanent)" EOL;
     result += "  <white>x</white> - examine something in your vicinity" EOL EOL;
@@ -257,7 +257,7 @@ static std::string tut_debug_list(int event)
       case TUT_SEEN_FIRST_OBJECT:
           return "seen first object";
       case TUT_SEEN_POTION:
-            return "seen first potion";
+          return "seen first potion";
       case TUT_SEEN_SCROLL:
           return "seen first scroll";
       case TUT_SEEN_WAND:
@@ -781,23 +781,84 @@ void taken_new_item(unsigned char item_type)
     }
 }
 
+static std::string colour_to_tag(int col, bool closed = false)
+{
+    std::string tag = "<";
+    if (closed)
+        tag += "/";
+    switch(col)
+    {
+        case WHITE:
+            tag += "w";
+            break;
+        case YELLOW:
+            tag += "yellow";
+            break;
+        case RED:
+            tag += "red";
+            break;
+        case LIGHTRED:
+            tag += "lightred";
+            break;
+        case MAGENTA:
+            tag += "magenta";
+            break;
+        case LIGHTMAGENTA:
+            tag += "lightmagenta";
+            break;
+        case GREEN:
+            tag += "green";
+            break;
+        case LIGHTGREEN:
+            tag += "lightgreen";
+            break;
+        case BLUE:
+            tag += "blue";
+            break;
+        case LIGHTBLUE:
+            tag += "lightblue";
+            break;
+        case CYAN:
+            tag += "cyan";
+            break;
+        case LIGHTCYAN:
+            tag += "lightcyan";
+            break;
+        case BLACK:
+            tag += "black";
+            break;
+        case BROWN:
+            tag += "brown";
+            break;
+        case DARKGREY:
+            tag += "darkgrey";
+            break;
+        default:
+            tag += "lightgrey";
+    }
+    tag += ">";
+    
+    return tag;
+    
+}
+
 void tutorial_first_monster(monsters mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
         return;
 
-    std::string text = "<magenta>That ";
-    formatted_string st = formatted_string::parse_string(text);
-    st.formatted_string::textcolor(channel_to_colour(MSGCH_TUTORIAL));
-    st.formatted_string::add_glyph(&mon);
-    text = " is a monster, usually depicted by a letter. Some typical early monsters ";
-    st += formatted_string::parse_string(text);
-    formatted_mpr(st, MSGCH_TUTORIAL);
+    unsigned short ch, col;
+    get_mons_glyph(&mon, &ch, &col);
 
-    text = "look like <brown>r<magenta>, <w>g<magenta>, <lightgray>b<magenta> or "
-           "<brown>K<magenta>. You can gain information about it by pressing "
-           "<w>x<magenta>, moving the cursor on the monster and then pressing "
-           "<w>v<magenta>. To attack it with your wielded weapon, just move into it.";
+    std::string text = "<magenta>That ";
+    text += colour_to_tag(col);
+    text += ch;
+    text += "<magenta> is a monster, usually depicted by a letter. Some typical "
+            "early monsters look like <brown>r<magenta>, <w>g<magenta>, "
+            "<lightgray>b<magenta> or <brown>K<magenta>. You can gain "
+            "information about it by pressing <w>x<magenta>, moving the cursor "
+            "on the monster and then pressing <w>v<magenta>. To attack it with "
+            "your wielded weapon, just move into it.";
     print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
 
     more();
@@ -836,19 +897,17 @@ void tutorial_first_item(item_def item)
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] || Options.tut_just_triggered)
         return;
 
-    std::string text = "<magenta>That ";
-    formatted_string st = formatted_string::parse_string(text);
-    st.formatted_string::textcolor(channel_to_colour(MSGCH_TUTORIAL));
-    st.formatted_string::add_glyph(&item);
-    text = " is an item. If you move there and press <w>g<magenta> or "
-           "<w>,<magenta> you will pick it up.";
-    st += formatted_string::parse_string(text);
-    formatted_mpr(st, MSGCH_TUTORIAL);
+    unsigned short ch, col;
+    get_item_glyph(&item, &ch, &col);
 
-    text = "Generally, items are shown by non-letter symbols like "
-           "<w>%%?!\"=()[<magenta>. Once it is in your inventory, you can drop "
-           "it again with <w>d<magenta>. Several types of objects will usually "
-           "be picked up automatically.";
+    std::string text = "<magenta>That ";
+    text += colour_to_tag(col);
+    text += ch;
+    text += "<magenta> is an item. If you move there and press <w>g<magenta> or "
+            "<w>,<magenta> you will pick it up. Generally, items are shown by "
+            "non-letter symbols like <w>%%?!\"=()[<magenta>. Once it is in your "
+            "inventory, you can drop it again with <w>d<magenta>. Several types "
+            "of objects will usually be picked up automatically.";
     print_formatted_paragraph(text, COLS, MSGCH_TUTORIAL);
 
     Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = 0;
@@ -869,6 +928,9 @@ void learned_something_new(unsigned int seen_what, int x, int y)
 
     std::string text;
     unsigned short ch, colour;
+    const int ex = x - you.x_pos + 9;
+    const int ey = y - you.y_pos + 9;
+    int object;
 
     switch(seen_what)
     {
@@ -886,9 +948,8 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           break;
       case TUT_SEEN_SPBOOK:
           get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
-          snprintf(info, INFO_SIZE, "%c", ch);
           text =  "You have picked up a spellbook ('<w>";
-          text += info;
+          text += ch;
           text += "'<magenta>). You can read it by typing <w>r<magenta>, "
                   "memorise spells via <w>M<magenta> and cast a memorised spell "
                   "with <w>Z<magenta>.";
@@ -982,10 +1043,9 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           break;
       case TUT_SEEN_STAFF:
           get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
-          snprintf(info, INFO_SIZE, "%c", ch);
           text =  "You have picked up a magic staff or a rod, both of which are "
                   "represented by '<w>";
-          text += info;
+          text += ch;
           text += "<magenta>'. Both must be <w>i<magenta>elded to be of use. "
                   "Magicians use staves to increase their power in certain spell "
                   "schools. By contrast, a rod allows the casting of certain "
@@ -997,8 +1057,13 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           if (you.num_turns < 1)
           	return;
 
+          object = env.show[ex][ey];
+          colour = env.show_col[ex][ey];
+          get_item_symbol( object, &ch, &colour );
+
           text =  "The <w>";
-          text += get_screen_glyph(x,y);
+          text += colour_to_tag(colour);
+          text += ch;
           text += "<magenta> are some downstairs. You can enter the next (deeper) "
                   "level by following them down (<w>><magenta>). To get back to "
                   "this level again, press <w><<<magenta> while standing on the "
@@ -1013,8 +1078,13 @@ void learned_something_new(unsigned int seen_what, int x, int y)
                   "effects, like teleportation.";
           break;
       case TUT_SEEN_ALTAR:
-          text =  "The <blue>";
-          text += get_screen_glyph(x,y);
+          object = env.show[ex][ey];
+          colour = env.show_col[ex][ey];
+          get_item_symbol( object, &ch, &colour );
+          
+          text =  "The ";
+          text += colour_to_tag(colour);
+          text += ch;
           text += "<magenta> is an altar. You can get information about it by pressing "
                   "<w>p<magenta> while standing on the square. Before taking up "
                   "the responding faith you'll be asked for confirmation.";
@@ -1103,7 +1173,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           text =  "There are two ways to overcome hunger: food you started "
                   "with or found, and selfmade chunks from corpses. To get the "
                   "latter, all you need to do is <w>D<magenta> a corpse with a "
-                  "sharp implement. Your starting weapon will do nicely."
+                  "sharp implement. Your starting weapon will do nicely. "
                   "Try to dine on chunks in order to save permanent food.";
           break;
       case TUT_YOU_STARVING:
@@ -1217,7 +1287,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
                   "danger of dying, check your options carefully. Often, retreat or "
                   "use of some item might be a viable alternative to fighting on.";
           if (you.species == SP_CENTAUR)
-              text += "As a four-legged centaur you are particularly quick - "
+              text += " As a four-legged centaur you are particularly quick - "
                       "running is an option! ";
           if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.berserker)
           {
