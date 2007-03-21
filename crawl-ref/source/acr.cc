@@ -571,6 +571,10 @@ static void handle_wizard_command( void )
         debug_make_shop();
         break;
 
+    case CONTROL('F'):
+        debug_fight_statistics(false, true);
+        break;
+    
     case 'f':
         debug_fight_statistics(false);
         break;

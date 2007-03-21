@@ -62,17 +62,6 @@
 #include "version.h"
 #include "view.h"
 
-#if DEBUG && WIN
-#define MyDebugBreak() _asm {int 3}
-#endif
-
-//-----------------------------------
-//      Internal Variables
-//
-#if WIN
-static HANDLE sConsole = NULL;
-#endif
-
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -92,220 +81,10 @@ static void BreakStrToDebugger(const char *mesg)
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
 
-#elif WIN
-    MSG msg;    // remove pending quit messages so the message box displays
-
-    bool quitting = (bool)::PeekMessage(&msg, NULL, WM_QUIT, WM_QUIT, PM_REMOVE);
-
-    char text[2500];
-
-    int flags = MB_YESNO +   // want abort and ignore buttons
-                             // (too bad we can't ditch the retry button...)
-        MB_ICONERROR +       // display the icon for errors
-        MB_TASKMODAL +       // don't let the user do anything else in the app
-        MB_SETFOREGROUND;    // bring the app to the front
-
-    strcpy(text, mesg);
-    strcat(text, "\nDo you want to drop into the debugger?");
-
-    int result = MessageBoxA(NULL, text, "Debug Break", flags);
-
-    if (result == IDYES)
-        MyDebugBreak();
-
-    if (quitting)
-        PostQuitMessage(msg.wParam);
-
 #else
     fprintf(stderr, "%s\n", mesg);
     abort();
 #endif
-}
-#endif
-
-
-//---------------------------------------------------------------
-//
-// IsDebuggerPresent95
-//
-// From March 1999 Windows Developer's Journal. This should only
-// be called if we're running on Win 95 (normally I'd add an
-// ASSERT, but that's a bit dicy since this is called by ASSERT...)
-//
-//---------------------------------------------------------------
-#if WIN
-static bool IsDebuggerPresent95()
-{
-    bool present = false;
-
-    const DWORD kDebuggerPresentFlag = 0x000000001;
-    const DWORD kProcessDatabaseBytes = 190;
-    const DWORD kOffsetFlags = 8;
-
-    DWORD threadID = GetCurrentThreadId();
-    DWORD processID = GetCurrentProcessId();
-    DWORD obfuscator = 0;
-
-#if __MWERKS__
-    asm
-    {
-        mov ax, fs
-            mov es, ax
-            mov eax, 0x18
-            mov eax, es:[eax]
-            sub eax, 0x10 xor eax,[threadID] mov[obfuscator], eax
-    }
-
-#else
-    _asm
-    {
-        mov ax, fs
-            mov es, ax
-            mov eax, 18 h
-            mov eax, es:[eax]
-            sub eax, 10 h xor eax,[threadID] mov[obfuscator], eax
-    }
-#endif
-
-    const DWORD *processDatabase =
-                    reinterpret_cast< const DWORD * >(processID ^ obfuscator);
-
-    if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes))
-    {
-        DWORD flags = processDatabase[kOffsetFlags];
-
-        present = (flags & kDebuggerPresentFlag) != 0;
-    }
-
-    return present;
-}
-#endif
-
-
-//---------------------------------------------------------------
-//
-// IsDebuggerPresent
-//
-//---------------------------------------------------------------
-#if WIN
-bool IsDebuggerPresent()
-{
-    bool present = false;
-
-    typedef BOOL(WINAPI * IsDebuggerPresentProc) ();
-
-    HINSTANCE kernelH = LoadLibrary("KERNEL32.DLL");
-
-    if (kernelH != NULL)
-    {                           // should never fail
-
-        IsDebuggerPresentProc proc =
-            (IsDebuggerPresentProc)::GetProcAddress( kernelH,
-                                                     "IsDebuggerPresent" );
-
-        if (proc != NULL)       // only present in NT and Win 98
-            present = proc() != 0;
-        else
-            present = IsDebuggerPresent95();
-    }
-
-    return present;
-}
-#endif
-
-
-//---------------------------------------------------------------
-//
-// CreateConsoleWindow
-//
-//---------------------------------------------------------------
-#if WIN
-static void CreateConsoleWindow()
-{
-    ASSERT(sConsole == NULL);
-
-    // Create the console window
-    if (::AllocConsole())
-    {
-        // Get the console window's handle
-        sConsole =::GetStdHandle(STD_ERROR_HANDLE);
-        if (sConsole == INVALID_HANDLE_VALUE)
-            sConsole = NULL;
-
-        // Set some options
-        if (sConsole != NULL)
-        {
-            VERIFY(::SetConsoleTextAttribute(sConsole, FOREGROUND_GREEN));
-            // green text on a black background (there doesn't appear to
-            // be a way to get black text)
-
-            VERIFY(::SetConsoleTitle("Debug Log"));
-
-            COORD size = { 80, 120 };
-
-            VERIFY(::SetConsoleScreenBufferSize(sConsole, size));
-        }
-        else
-            DEBUGSTR(L "Couldn't get the console window's handle!");
-    }
-    else
-        DEBUGSTR(L "Couldn't allocate the console window!");
-}
-#endif
-
-
-#if DEBUG
-//---------------------------------------------------------------
-//
-// TraceString
-//
-//---------------------------------------------------------------
-static void TraceString(const char *mesg)
-{
-    // Write the string to the debug window
-#if WIN
-    if (IsDebuggerPresent())
-    {
-        OutputDebugStringA(mesg);       // if you're using CodeWarrior you'll need to enable the "Log System Messages" checkbox to get this working
-    }
-    else
-    {
-        if (sConsole == NULL)   // otherwise we'll use a console window
-            CreateConsoleWindow();
-
-        if (sConsole != NULL)
-        {
-            unsigned long written;
-
-            VERIFY(WriteConsoleA(sConsole, mesg, strlen(mesg), &written, NULL));
-        }
-    }
-#else
-    fprintf(stderr, "%s", mesg);
-#endif
-
-    // Write the string to the debug log
-    static bool inited = false;
-    static FILE *file = NULL;
-
-    if (!inited)
-    {
-        ASSERT(file == NULL);
-
-        const char *fileName = "DebugLog.txt";
-
-        file = fopen(fileName, "w");
-        ASSERT(file != NULL);
-
-        inited = true;
-    }
-
-    if (file != NULL)
-    {
-        fputs(mesg, file);
-        fflush(file);           // make sure all the output makes it to the file
-
-    }
 }
 #endif
 
@@ -355,27 +134,6 @@ void DEBUGSTR(const char *format, ...)
     BreakStrToDebugger(mesg);
 }
 #endif
-
-
-//---------------------------------------------------------------
-//
-// TRACE
-//
-//---------------------------------------------------------------
-#if DEBUG
-void TRACE(const char *format, ...)
-{
-    char mesg[2048];
-
-    va_list args;
-
-    va_start(args, format);
-    vsprintf(mesg, format, args);
-    va_end(args);
-
-    TraceString(mesg);
-}
-#endif // DEBUG
 
 #ifdef WIZARD
 
@@ -1254,7 +1012,6 @@ void stethoscope(int mwh)
 
     mpr( info, MSGCH_DIAGNOSTICS );
 
-
     // print enchantments
     strncpy( info, "ench: ", INFO_SIZE );
     for (j = 0; j < 6; j++) 
@@ -1767,15 +1524,18 @@ static void fsim_set_ranged_skill(int skill, const item_def *item)
 }
 
 static void fsim_item(FILE *out, 
-                            bool melee,
-                            const item_def *weap,
-                            int wskill, unsigned long damage,
-                            long iterations, long hits,
-                            int maxdam, unsigned long time)
+                      bool melee,
+                      const item_def *weap,
+                      const char *wskill,
+                      unsigned long damage,
+                      long iterations, long hits,
+                      int maxdam, unsigned long time)
 {
     double hitdam = hits? double(damage) / hits : 0.0;
     int avspeed = (int) (time / iterations);
-    fprintf(out, " %2d   |  %3ld%%    |  %5.2f |    %5.2f  |   %5.2f |   %3d   |   %2ld\n",
+    fprintf(out,
+            " %-5s|  %3ld%%    |  %5.2f |    %5.2f  |"
+            "   %5.2f |   %3d   |   %2ld\n",
             wskill,
             100 * hits / iterations,
             double(damage) / iterations,
@@ -1784,6 +1544,25 @@ static void fsim_item(FILE *out,
             maxdam,
             time / iterations);
 }
+
+static void fsim_defence_item(FILE *out, long cum, int hits, int max,
+                              int speed, long iters)
+{
+    // AC | EV | Arm | Dod | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
+    fprintf(out, "%2d   %2d    %2d   %2d   %3ld%%   %5.2f      %5.2f      %5.2f      %3d"
+            "       %2d\n",
+            player_AC(),
+            player_evasion(),
+            you.skills[SK_DODGING],
+            you.skills[SK_ARMOUR],
+            100 * hits / iters,
+            double(cum) / iters,
+            hits? double(cum) / hits : 0.0,
+            double(cum) / iters * speed / 10,
+            max,
+            100 / speed);
+}
+                              
 
 static bool fsim_ranged_combat(FILE *out, int wskill, int mi, 
                              const item_def *item, int missile_slot)
@@ -1821,9 +1600,41 @@ static bool fsim_ranged_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    fsim_item(out, false, item, wskill, cumulative_damage, 
-                    iter_limit, hits, maxdam, time_taken);
+    fsim_item(out, false, item, make_stringf("%2d", wskill).c_str(),
+              cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
+    return (true);
+}
+
+static bool fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
+{
+    you.skills[SK_DODGING] = dodge;
+    you.skills[SK_ARMOUR]  = armour;
+
+    const int yhp  = you.hp;
+    const int ymhp = you.hp_max;
+    unsigned long cumulative_damage = 0L;
+    long hits = 0L;
+    int maxdam = 0;
+    no_messages mx;
+        
+    for (long i = 0; i < Options.fsim_rounds; ++i)
+    {
+        you.hp = you.hp_max = 5000;
+        monster_attack(mi);
+        const int damage = you.hp_max - you.hp;
+        if (damage)
+            hits++;
+        cumulative_damage += damage;
+        if (damage > maxdam)
+            maxdam = damage;
+    }
+
+    you.hp = yhp;
+    you.hp_max = ymhp;
+
+    fsim_defence_item(out, cumulative_damage, hits, maxdam, menv[mi].speed,
+                      Options.fsim_rounds);
     return (true);
 }
 
@@ -1833,7 +1644,7 @@ static bool fsim_melee_combat(FILE *out, int wskill, int mi,
     monsters &mon = menv[mi];
     unsigned long cumulative_damage = 0L;
     unsigned long time_taken = 0L;
-    long hits = 0L;    
+    long hits = 0L;
     int maxdam = 0;
 
     fsim_set_melee_skill(wskill, item);
@@ -1856,8 +1667,8 @@ static bool fsim_melee_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    fsim_item(out, true, item, wskill, cumulative_damage, iter_limit, hits,
-                   maxdam, time_taken);
+    fsim_item(out, true, item, make_stringf("%2d", wskill).c_str(),
+              cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
     return (true);
 }
@@ -1975,6 +1786,26 @@ static void fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
+static void fsim_defence_title(FILE *o, int mon)
+{
+    fprintf(o, CRAWL " version " VERSION "\n\n");
+    fprintf(o, "Combat simulation: %s vs. %s %s (%ld rounds) (%s)\n",
+            menv[mon].name(DESC_PLAIN).c_str(),
+            species_name(you.species, you.experience_level),
+            you.class_name,
+            Options.fsim_rounds,
+            fsim_time_string().c_str());
+    fprintf(o, "Experience: %d\n", you.experience_level);
+    fprintf(o, "Strength  : %d\n", you.strength);
+    fprintf(o, "Intel.    : %d\n", you.intel);
+    fprintf(o, "Dexterity : %d\n", you.dex);
+    fprintf(o, "Base speed: %d\n", player_speed());
+    fprintf(o, "\n");
+    fsim_mon_stats(o, menv[mon]);
+    fprintf(o, "\n");
+    fprintf(o, "AC | EV | Dod | Arm | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
+}
+
 static int cap_stat(int stat)
 {
     return (stat <  1 ? 1  :
@@ -1982,7 +1813,82 @@ static int cap_stat(int stat)
                         stat);
 }
 
-static bool debug_fight_sim(int mindex, int missile_slot)
+static bool fsim_mon_hit_you(FILE *ostat, int mindex, int)
+{
+    fsim_defence_title(ostat, mindex);
+
+    for (int sk = 0; sk <= 27; ++sk)
+    {
+        mesclr();
+        mprf("Calculating average damage for %s at dodging %d",
+             menv[mindex].name(DESC_PLAIN).c_str(),
+             sk);
+
+        if (!fsim_mon_melee(ostat, sk, 0, mindex))
+            return (false);
+
+        fflush(ostat);
+        // Not checking in the combat loop itself; that would be more responsive
+        // for the user, but slow down the sim with all the calls to kbhit().
+        if (kbhit() && getch() == 27)
+        {
+            mprf("Canceling simulation\n");
+            return (false);
+        }
+    }
+
+    for (int sk = 0; sk <= 27; ++sk)
+    {
+        mesclr();
+        mprf("Calculating average damage for %s at armour %d",
+             menv[mindex].name(DESC_PLAIN).c_str(),
+             sk);
+
+        if (!fsim_mon_melee(ostat, 0, sk, mindex))
+            return (false);
+
+        fflush(ostat);
+        // Not checking in the combat loop itself; that would be more responsive
+        // for the user, but slow down the sim with all the calls to kbhit().
+        if (kbhit() && getch() == 27)
+        {
+            mprf("Canceling simulation\n");
+            return (false);
+        }
+    }
+
+    mprf("Done defence simulation with %s",
+         menv[mindex].name(DESC_PLAIN).c_str());
+    
+    return (true);
+}
+
+static bool fsim_you_hit_mon(FILE *ostat, int mindex, int missile_slot)
+{
+    fsim_title(ostat, mindex, missile_slot);
+    for (int wskill = 0; wskill <= 27; ++wskill)
+    {
+        mesclr();
+        mprf("Calculating average damage for %s at skill %d",
+                fsim_weapon(missile_slot).c_str(), wskill);
+        if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
+            return (false);
+        
+        fflush(ostat);
+        // Not checking in the combat loop itself; that would be more responsive
+        // for the user, but slow down the sim with all the calls to kbhit().
+        if (kbhit() && getch() == 27)
+        {
+            mprf("Canceling simulation\n");
+            return (false);
+        }
+    }
+    mprf("Done fight simulation with %s", fsim_weapon(missile_slot).c_str());
+    return (true);
+}
+
+static bool debug_fight_sim(int mindex, int missile_slot,
+                            bool (*combat)(FILE *, int mind, int mslot))
 {
     FILE *ostat = fopen("fight.stat", "a");
     if (!ostat)
@@ -2016,34 +1922,14 @@ static bool debug_fight_sim(int mindex, int missile_slot)
     you.intel    = cap_stat(Options.fsim_int);
     you.dex      = cap_stat(Options.fsim_dex);
 
-    fsim_title(ostat, mindex, missile_slot);
-    for (int wskill = 0; wskill <= 27; ++wskill)
-    {
-        mesclr();
-        mprf("Calculating average damage for %s at skill %d",
-                fsim_weapon(missile_slot).c_str(), wskill);
-        if (!debug_fight_simulate(ostat, wskill, mindex, missile_slot))
-            goto done_combat_sim;
-        
-        fflush(ostat);
-        // Not checking in the combat loop itself; that would be more responsive
-        // for the user, but slow down the sim with all the calls to kbhit().
-        if (kbhit() && getch() == 27)
-        {
-            success = false;
-            mprf("Canceling simulation\n");
-            goto done_combat_sim;
-        }
-    }
+    combat(ostat, mindex, missile_slot);
+
     you.skills = skill_backup;
     you.strength = ystr;
     you.intel    = yint;
     you.dex      = ydex;
     you.experience_level = yxp;
 
-    mprf("Done fight simulation with %s", fsim_weapon(missile_slot).c_str());
-
-done_combat_sim:
     fprintf(ostat, "-----------------------------------\n\n");
     fclose(ostat);
 
@@ -2108,7 +1994,7 @@ int fsim_kit_equip(const std::string &kit)
 // average damage the player does to the p. bag over 10000 hits is noted, 
 // advancing the weapon skill from 0 to 27, and keeping fighting skill to 2/5
 // of current weapon skill.
-void debug_fight_statistics(bool use_defaults)
+void debug_fight_statistics(bool use_defaults, bool defence)
 {
     int punching_bag = get_monster_by_name(Options.fsim_mons);
     if (punching_bag == -1 || punching_bag == MONS_PROGRAM_BUG)
@@ -2120,25 +2006,26 @@ void debug_fight_statistics(bool use_defaults)
         mprf("Failed to create punching bag");
         return;
     }
-    
-    if (!use_defaults)
-    {
-        debug_fight_sim(mindex, -1);
-        goto fsim_mcleanup;
-    }
 
-    for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
+    you.exp_available = 0;
+    
+    if (!use_defaults || defence)
+        debug_fight_sim(mindex, -1,
+                        defence? fsim_mon_hit_you : fsim_you_hit_mon);
+    else
     {
-        int missile = fsim_kit_equip(Options.fsim_kit[i]);
-        if (missile == -100)
+        for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
         {
-            mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
-            goto fsim_mcleanup;
+            int missile = fsim_kit_equip(Options.fsim_kit[i]);
+            if (missile == -100)
+            {
+                mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+                break;
+            }
+            if (!debug_fight_sim(mindex, missile, fsim_you_hit_mon))
+                break;
         }
-        if (!debug_fight_sim(mindex, missile))
-            break;
     }
-fsim_mcleanup:
     monster_die(&menv[mindex], KILL_DISMISSED, 0);    
 }
 

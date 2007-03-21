@@ -143,6 +143,8 @@
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 
+#define MIN_HIT_MISS_PERCENTAGE  5
+
 // grids that monsters can see
 #define MONSTER_LOS_RANGE       8
 

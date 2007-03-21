@@ -818,6 +818,18 @@ struct mon_attack_def
 class ghost_demon;
 class level_id;
 
+struct mon_enchant
+{
+    enchant_type  ench;
+    kill_category who;      // Who set this enchantment?
+    int           degree;
+
+    mon_enchant(enchant_type e, int deg = 1, kill_category whose = KC_OTHER)
+        : ench(e), who(whose), degree(deg)
+    {
+    }
+};
+
 class monsters : public actor
 {
 public:

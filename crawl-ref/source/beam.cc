@@ -2977,7 +2977,7 @@ static bool fuzz_invis_tracer(bolt &beem)
 // A first step towards to-hit sanity for beams. We're still being
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
-bool test_hit(int attack, int defence)
+bool test_beam_hit(int attack, int defence)
 {
     return (random2(attack) >= random2avg(defence, 2));
 }
@@ -3040,7 +3040,7 @@ static int affect_player( struct bolt &beam )
                          you.mutation[MUT_REPULSION_FIELD] == 3)
                     beamHit -= random2(beamHit / 2);
 
-                if (!test_hit(beamHit, dodge))
+                if (!test_beam_hit(beamHit, dodge))
                 {
                     mprf("The %s misses you.", beam.name.c_str());
                     return (0);           // no extra used by miss!
@@ -3087,7 +3087,7 @@ static int affect_player( struct bolt &beam )
 
 
                 // miss message
-                if (!test_hit(beamHit, dodge))
+                if (!test_beam_hit(beamHit, dodge))
                 {
                     mprf("The %s misses you.", beam.name.c_str());
                     return (0);
@@ -3581,9 +3581,9 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
 
     // FIXME We're randomising mon->evasion, which is further
-    // randomised inside test_hit. This is so we stay close to the 4.0
+    // randomised inside test_beam_hit. This is so we stay close to the 4.0
     // to-hit system (which had very little love for monsters).
-    if (!engulfs && !test_hit(beam.hit, random2(mon->ev)))
+    if (!engulfs && !test_beam_hit(beam.hit, random2(mon->ev)))
     {
         // if the PLAYER cannot see the monster, don't tell them anything!
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))

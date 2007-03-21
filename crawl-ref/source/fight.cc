@@ -99,6 +99,44 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
  **************************************************
 */
 
+bool test_melee_hit(int to_hit, int ev)
+{
+    int   roll = -1;
+    int margin = AUTOMATIC_HIT;
+
+    ev *= 2;
+
+    if (to_hit >= AUTOMATIC_HIT)
+        return (true);
+    else if (random2(1000) < 10 * MIN_HIT_MISS_PERCENTAGE)
+        margin = (coinflip() ? 1 : -1) * AUTOMATIC_HIT;
+    else
+    {
+        roll = random2( to_hit + 1 );
+        margin = (roll - random2avg(ev, 2));
+    }
+
+#if DEBUG_DIAGNOSTICS
+    float miss;
+
+    if (to_hit < ev)
+        miss = 100.0 - static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0;
+    else
+    {
+        miss = static_cast<float>( MIN_HIT_MISS_PERCENTAGE ) / 2.0
+              + static_cast<float>( (100 - MIN_HIT_MISS_PERCENTAGE) * ev ) 
+                  / static_cast<float>( to_hit );
+    }
+
+    mprf( MSGCH_DIAGNOSTICS,
+          "to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
+              to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss", 
+              (roll == -1) ? "!!!" : "", margin );
+#endif
+
+    return (margin >= 0);
+}
+
 // This function returns the "extra" stats the player gets because of
 // choice of weapon... it's used only for giving warnings when a player
 // weilds a less than ideal weapon.
@@ -2875,7 +2913,8 @@ void melee_attack::mons_perform_attack_rounds()
         if (!shield_blocked)
         {
             const int defender_evasion = defender->melee_evasion(attacker);
-            if (attacker == defender || test_hit(to_hit, defender_evasion))
+            if (attacker == defender
+                || test_melee_hit(to_hit, defender_evasion))
             {
                 this_round_hit = did_hit = true;
                 perceived_attack = true;
@@ -2974,7 +3013,8 @@ bool melee_attack::mons_attack_you()
 
 int melee_attack::mons_to_hit()
 {
-    int mhit = 16 + atk->hit_dice;
+    const int hd_mult = mons_class_flag(atk->type, M_FIGHTER)? 25 : 15;
+    int mhit = 18 + atk->hit_dice * hd_mult / 10;
     if (water_attack)
         mhit += 5;
 
