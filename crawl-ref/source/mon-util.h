@@ -415,14 +415,6 @@ bool mons_has_lifeforce( const monsters *mon );
 monster_type mons_genus( int mc );
 monster_type mons_species( int mc );
 
-int mons_has_ench( const monsters *mon, unsigned int ench, 
-                   unsigned int ench2 = ENCH_NONE );
-
-int mons_del_ench( struct monsters *mon, unsigned int ench, 
-                   unsigned int ench2 = ENCH_NONE, bool quiet = false );
-
-bool mons_add_ench( struct monsters *mon, unsigned int ench );
-
 bool mons_looks_stabbable(const monsters *m);
 
 bool mons_looks_distracted(const monsters *m);

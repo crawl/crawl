@@ -2053,8 +2053,8 @@ int player_see_invis(bool calc_unid)
 // to find if the square the monster is in is visible see mons_near().
 bool player_monster_visible( const monsters *mon )
 {
-    if (mons_has_ench( mon, ENCH_SUBMERGED )
-        || (mons_has_ench( mon, ENCH_INVIS ) && !player_see_invis()))
+    if (mon->has_ench(ENCH_SUBMERGED)
+        || (mon->has_ench(ENCH_INVIS) && !player_see_invis()))
     {
         return (false);
     }
@@ -5202,4 +5202,9 @@ bool player::has_usable_claws() const
 god_type player::deity() const
 {
     return (religion);
+}
+
+kill_category player::kill_alignment() const
+{
+    return (KC_YOU);
 }

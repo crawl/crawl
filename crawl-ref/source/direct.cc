@@ -1382,6 +1382,54 @@ std::string feature_description(int mx, int my)
     return (desc);
 }
 
+static void describe_mons_enchantment(const monsters &mons,
+                                      const mon_enchant &ench,
+                                      bool paralysed)
+{
+    // Suppress silly-looking combinations, even if they're
+    // internally valid.
+    if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE))
+        return;
+            
+    strcpy(info, mons_pronoun(mons.type, PRONOUN_CAP));
+
+    switch (ench.ench)
+    {
+    case ENCH_POISON:
+        strcat(info, " is poisoned.");
+        break;
+    case ENCH_ROT:
+        strcat(info, " is rotting away."); //jmf: "covered in sores"?
+        break;
+    case ENCH_BACKLIGHT:
+        strcat(info, " is softly glowing.");
+        break;
+    case ENCH_SLOW:
+        strcat(info, " is moving slowly.");
+        break;
+    case ENCH_HASTE:
+        strcat(info, " is moving very quickly.");
+        break;
+    case ENCH_CONFUSION:
+        strcat(info, " appears to be bewildered and confused.");
+        break;
+    case ENCH_INVIS:
+        strcat(info, " is slightly transparent.");
+        break;
+    case ENCH_CHARM:
+        strcat(info, " is in your thrall.");
+        break;
+    case ENCH_STICKY_FLAME:
+        strcat(info, " is covered in liquid flames.");
+        break;
+    default:
+        info[0] = 0;
+        break;
+    } // end switch
+    if (info[0])
+        mpr(info);
+}
+
 static void describe_cell(int mx, int my)
 {
     char  str_pass[ ITEMNAME_SIZE ];
@@ -1484,62 +1532,10 @@ static void describe_cell(int mx, int my)
         if (paralysed)
             mprf("%s is paralysed.", mons_pronoun(menv[i].type, PRONOUN_CAP));
 
-        for (int p = 0; p < NUM_MON_ENCHANTS; p++)
+        for (mon_enchant_list::const_iterator e = menv[i].enchantments.begin();
+             e != menv[i].enchantments.end(); ++e)
         {
-            const unsigned ench = menv[i].enchantment[p];
-
-            // Suppress silly-looking combinations, even if they're
-            // internally valid.
-            if (paralysed && (ench == ENCH_SLOW || ench == ENCH_HASTE))
-                continue;
-            
-            strcpy(info, mons_pronoun(menv[i].type, PRONOUN_CAP));
-
-            switch (ench)
-            {
-            case ENCH_YOUR_ROT_I:
-            case ENCH_YOUR_ROT_II:
-            case ENCH_YOUR_ROT_III:
-            case ENCH_YOUR_ROT_IV:
-                strcat(info, " is rotting away."); //jmf: "covered in sores"?
-                break;
-            case ENCH_BACKLIGHT_I:
-            case ENCH_BACKLIGHT_II:
-            case ENCH_BACKLIGHT_III:
-            case ENCH_BACKLIGHT_IV:
-                strcat(info, " is softly glowing.");
-                break;
-            case ENCH_SLOW:
-                strcat(info, " is moving slowly.");
-                break;
-            case ENCH_HASTE:
-                strcat(info, " is moving very quickly.");
-                break;
-            case ENCH_CONFUSION:
-                strcat(info, " appears to be bewildered and confused.");
-                break;
-            case ENCH_INVIS:
-                strcat(info, " is slightly transparent.");
-                break;
-            case ENCH_CHARM:
-                strcat(info, " is in your thrall.");
-                break;
-            case ENCH_YOUR_STICKY_FLAME_I:
-            case ENCH_YOUR_STICKY_FLAME_II:
-            case ENCH_YOUR_STICKY_FLAME_III:
-            case ENCH_YOUR_STICKY_FLAME_IV:
-            case ENCH_STICKY_FLAME_I:
-            case ENCH_STICKY_FLAME_II:
-            case ENCH_STICKY_FLAME_III:
-            case ENCH_STICKY_FLAME_IV:
-                strcat(info, " is covered in liquid flames.");
-                break;
-            default:
-                info[0] = 0;
-                break;
-            } // end switch
-            if (info[0])
-                mpr(info);
+            describe_mons_enchantment(menv[i], *e, paralysed);
         }
 
 #if DEBUG_DIAGNOSTICS

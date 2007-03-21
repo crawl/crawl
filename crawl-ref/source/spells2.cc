@@ -749,7 +749,7 @@ void turn_undead(int pow)
                 continue;
             }
 
-            if (!mons_add_ench(monster, ENCH_FEAR))
+            if (!monster->add_ench(ENCH_FEAR))
                 continue;
 
             simple_monster_message( monster, " is repelled!" );
@@ -800,7 +800,7 @@ void holy_word(int pow, bool silent)
             if (monster->speed_increment >= 25)
                 monster->speed_increment -= 20;
 
-            mons_add_ench(monster, ENCH_FEAR);
+            monster->add_ench(ENCH_FEAR);
         }                       // end "if mons_holiness"
     }                           // end "for tu"
 }                               // end holy_word()
@@ -837,12 +837,12 @@ void cast_toxic_radiance(void)
 
         if (monster->type != -1 && mons_near(monster))
         {
-            if (!mons_has_ench(monster, ENCH_INVIS))
+            if (!monster->has_ench(ENCH_INVIS))
             {
-                poison_monster(monster, true);
+                poison_monster(monster, KC_YOU);
 
                 if (coinflip()) // 50-50 chance for a "double hit" {dlb}
-                    poison_monster(monster, true);
+                    poison_monster(monster, KC_YOU);
 
             }
             else if (player_see_invis())
@@ -920,7 +920,7 @@ void cast_refrigeration(int pow)
 
                     //jmf: "slow snakes" finally available
                     if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
-                        mons_add_ench(monster, ENCH_SLOW);
+                        monster->add_ench(ENCH_SLOW);
                 }
             }
         }
@@ -1157,7 +1157,7 @@ char burn_freeze(int pow, char flavour)
                 if (mons_class_flag( monster->type, M_COLD_BLOOD )
                     && coinflip())
                 {
-                    mons_add_ench(monster, ENCH_SLOW);
+                    monster->add_ench(ENCH_SLOW);
                 }
 
                 const int cold_res = mons_res_cold( monster );
@@ -1189,10 +1189,7 @@ int summon_elemental(int pow, int restricted_type,
     int targ_x;
     int targ_y;
 
-    int numsc = ENCH_ABJ_II + (random2(pow) / 5);
-
-    if (numsc > ENCH_ABJ_VI)
-        numsc = ENCH_ABJ_VI;
+    int numsc = cap_int(2 + (random2(pow) / 5), 6);
 
     for (;;) 
     {
@@ -1356,7 +1353,7 @@ void summon_small_mammals(int pow)
             break;
         }
 
-        create_monster( thing_called, ENCH_ABJ_III, BEH_FRIENDLY,
+        create_monster( thing_called, 3, BEH_FRIENDLY,
                         you.x_pos, you.y_pos, you.pet_target, 250 );
     }
 }                               // end summon_small_mammals()
@@ -1371,7 +1368,7 @@ void summon_scorpions(int pow)
     {
         if (random2(pow) <= 3)
         {
-            if (create_monster( MONS_SCORPION, ENCH_ABJ_III, BEH_HOSTILE,
+            if (create_monster( MONS_SCORPION, 3, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
             {
                 mpr("A scorpion appears. It doesn't look very happy.");
@@ -1379,7 +1376,7 @@ void summon_scorpions(int pow)
         }
         else
         {
-            if (create_monster( MONS_SCORPION, ENCH_ABJ_III, BEH_FRIENDLY,
+            if (create_monster( MONS_SCORPION, 3, BEH_FRIENDLY,
                                 you.x_pos, you.y_pos, 
                                 you.pet_target, 250 ) != -1)
             {
@@ -1391,11 +1388,8 @@ void summon_scorpions(int pow)
 
 void summon_ice_beast_etc(int pow, int ibc, bool divine_gift)
 {
-    int numsc = ENCH_ABJ_II + (random2(pow) / 4);
+    int numsc = cap_int(2 + (random2(pow) / 4), 6);
     int beha = divine_gift? BEH_GOD_GIFT : BEH_FRIENDLY;
-
-    if (numsc > ENCH_ABJ_VI)
-        numsc = ENCH_ABJ_VI;
 
     switch (ibc)
     {
@@ -1504,7 +1498,7 @@ bool summon_swarm( int pow, bool unfriendly, bool god_gift )
         else if (!unfriendly && random2(pow) > 7)
             behaviour = BEH_FRIENDLY;
 
-        if (create_monster( thing_called, ENCH_ABJ_III, behaviour, 
+        if (create_monster( thing_called, 3, behaviour, 
                             you.x_pos, you.y_pos, MHITYOU, 250 ))
         {
             summoned = true;
@@ -1534,7 +1528,7 @@ void summon_undead(int pow)
 
         if (random2(pow) < 6)
         {
-            if (create_monster( thing_called, ENCH_ABJ_V, BEH_HOSTILE,
+            if (create_monster( thing_called, 5, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
             {
                 mpr("You sense a hostile presence.");
@@ -1542,7 +1536,7 @@ void summon_undead(int pow)
         }
         else
         {
-            if (create_monster( thing_called, ENCH_ABJ_V, BEH_FRIENDLY,
+            if (create_monster( thing_called, 5, BEH_FRIENDLY,
                                 you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
             {
                 mpr("An insubstantial figure forms in the air.");
@@ -1588,7 +1582,7 @@ void summon_things( int pow )
 
         while (big_things > 0)
         {
-            create_monster( MONS_TENTACLED_MONSTROSITY, ENCH_ABJ_VI,
+            create_monster( MONS_TENTACLED_MONSTROSITY, 6,
                             BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
             big_things--;
@@ -1596,7 +1590,7 @@ void summon_things( int pow )
 
         while (numsc > 0)
         {
-            create_monster( MONS_ABOMINATION_LARGE, ENCH_ABJ_VI, BEH_FRIENDLY,
+            create_monster( MONS_ABOMINATION_LARGE, 6, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
             numsc--;
         }

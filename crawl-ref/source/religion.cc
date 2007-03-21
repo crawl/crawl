@@ -965,23 +965,23 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 dancing_weapon(100, true);      // nasty, but fun
             else
             {
-                create_monster(MONS_NEQOXEC + random2(5), ENCH_ABJ_III,
+                create_monster(MONS_NEQOXEC + random2(5), 3,
                     BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
 
                 if (one_chance_in(3))
-                    create_monster(MONS_NEQOXEC + random2(5), ENCH_ABJ_III,
+                    create_monster(MONS_NEQOXEC + random2(5), 3,
                         BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
 
                 if (one_chance_in(4))
-                    create_monster(MONS_NEQOXEC + random2(5), ENCH_ABJ_III,
+                    create_monster(MONS_NEQOXEC + random2(5), 3,
                         BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
 
                 if (one_chance_in(3))
-                    create_monster(MONS_HELLION + random2(10), ENCH_ABJ_III,
+                    create_monster(MONS_HELLION + random2(10), 3,
                         BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
 
                 if (one_chance_in(4))
-                    create_monster(MONS_HELLION + random2(10), ENCH_ABJ_III,
+                    create_monster(MONS_HELLION + random2(10), 3,
                         BEH_HOSTILE, you.x_pos, you.y_pos, MHITNOT, 250);
             }
 
@@ -1061,31 +1061,31 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 (temp_rand == 1) ? "Xom grants you some temporary aid."
                                  : "Xom opens a gate.");
 
-            create_monster( MONS_NEQOXEC + random2(5), ENCH_ABJ_III, 
+            create_monster( MONS_NEQOXEC + random2(5), 3, 
                             BEH_FRIENDLY, you.x_pos, you.y_pos, 
                             you.pet_target, 250 );
 
-            create_monster( MONS_NEQOXEC + random2(5), ENCH_ABJ_III, 
+            create_monster( MONS_NEQOXEC + random2(5), 3, 
                             BEH_FRIENDLY, you.x_pos, you.y_pos, 
                             you.pet_target, 250 );
 
             if (random2( you.experience_level ) >= 8)
             {
-                create_monster( MONS_NEQOXEC + random2(5), ENCH_ABJ_III, 
+                create_monster( MONS_NEQOXEC + random2(5), 3, 
                                 BEH_FRIENDLY, you.x_pos, you.y_pos, 
                                 you.pet_target, 250 );
             }
 
             if (random2( you.experience_level ) >= 8)
             {
-                create_monster( MONS_HELLION + random2(10), ENCH_ABJ_III,
+                create_monster( MONS_HELLION + random2(10), 3,
                                 BEH_FRIENDLY, you.x_pos, you.y_pos,
                                 you.pet_target, 250 );
             }
 
             if (random2( you.experience_level ) >= 8)
             {
-                create_monster( MONS_HELLION + random2(10), ENCH_ABJ_III,
+                create_monster( MONS_HELLION + random2(10), 3,
                                 BEH_FRIENDLY, you.x_pos, you.y_pos,
                                 you.pet_target, 250 );
             }

@@ -401,7 +401,7 @@ void simulacrum(int power)
 
         for (int i = 0; i < max_num; i++)
         {
-            if (create_monster( MONS_SIMULACRUM_SMALL, ENCH_ABJ_VI,
+            if (create_monster( MONS_SIMULACRUM_SMALL, 6,
                                 BEH_FRIENDLY, you.x_pos, you.y_pos,
                                 you.pet_target, mons_type ) != -1)
             {
@@ -428,11 +428,8 @@ void simulacrum(int power)
 
 void dancing_weapon(int pow, bool force_hostile)
 {
-    int numsc = ENCH_ABJ_II + (random2(pow) / 5);
+    int numsc = cap_int(2 + (random2(pow) / 5), 6);
     char str_pass[ ITEMNAME_SIZE ];
-
-    if (numsc > ENCH_ABJ_VI)
-        numsc = ENCH_ABJ_VI;
 
     int i;
     int summs = 0;

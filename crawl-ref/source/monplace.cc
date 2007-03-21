@@ -447,13 +447,9 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     if (id == MAX_MONSTERS)
         return -1;
 
-    // scrap monster inventory
-    for (i = 0; i < NUM_MONSTER_SLOTS; i++)
-        menv[id].inv[i] = NON_ITEM;
-
+    menv[id].inv.init(NON_ITEM);
     // scrap monster enchantments
-    for (i = 0; i < NUM_MON_ENCHANTS; i++)
-        menv[id].enchantment[i] = ENCH_NONE;
+    menv[id].enchantments.clear();
 
     // setup habitat and placement
     if (first_band_member)
@@ -530,16 +526,16 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         menv[id].number = extra;
 
     if (mons_class_flag(mon_type, M_INVIS))
-        mons_add_ench(&menv[id], ENCH_INVIS);
+        menv[id].add_ench(ENCH_INVIS);
 
     if (mons_class_flag(mon_type, M_CONFUSED))
-        mons_add_ench(&menv[id], ENCH_CONFUSION);
+        menv[id].add_ench(ENCH_CONFUSION);
 
     if (mon_type == MONS_SHAPESHIFTER)
-        mons_add_ench(&menv[id], ENCH_SHAPESHIFTER);
+        menv[id].add_ench(ENCH_SHAPESHIFTER);
 
     if (mon_type == MONS_GLOWING_SHAPESHIFTER)
-        mons_add_ench(&menv[id], ENCH_GLOWING_SHAPESHIFTER);
+        menv[id].add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
     if (mon_type == MONS_GIANT_BAT || mon_type == MONS_UNSEEN_HORROR
         || mon_type == MONS_GIANT_BLOWFLY)
@@ -549,7 +545,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
 
     if (monster_can_submerge(mon_type, grd[fx][fy])
             && !one_chance_in(5))
-        mons_add_ench( &menv[id], ENCH_SUBMERGED );
+        menv[id].add_ench(ENCH_SUBMERGED);
     
     menv[id].flags |= MF_JUST_SUMMONED;
 
@@ -597,9 +593,9 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
         menv[id].behaviour = BEH_WANDER;
     }
 
-    // dur should always be ENCH_ABJ_xx
-    if (dur >= ENCH_ABJ_I && dur <= ENCH_ABJ_VI)
-        mons_add_ench(&menv[id], dur );
+    // dur should always be 1-6 for monsters that can be abjured.
+    if (dur >= 1 && dur <= 6)
+        menv[id].add_ench( mon_enchant(ENCH_ABJ, dur) );
 
     menv[id].foe = target;
 
@@ -1266,7 +1262,7 @@ int mons_place( int mon_type, char behaviour, int target, bool summoned,
             if (behaviour == BEH_CHARMED)
             {
                 creation->attitude = ATT_HOSTILE;
-                mons_add_ench(creation, ENCH_CHARM);
+                creation->add_ench(ENCH_CHARM);
             }
 
             // make summoned being aware of player's presence
@@ -1358,8 +1354,8 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
         struct monsters *const creation = &menv[summd];
 
         // dur should always be ENCH_ABJ_xx
-        if (dur >= ENCH_ABJ_I && dur <= ENCH_ABJ_VI)
-            mons_add_ench(creation, dur );
+        if (dur >= 1 && dur <= 6)
+            creation->add_ench( mon_enchant(ENCH_ABJ, dur) );
 
         // look at special cases: CHARMED, FRIENDLY, HOSTILE, GOD_GIFT
         // alert summoned being to player's presence
@@ -1377,7 +1373,7 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
             if (beha == BEH_CHARMED)
             {
                 creation->attitude = ATT_HOSTILE;
-                mons_add_ench(creation, ENCH_CHARM);
+                creation->add_ench(ENCH_CHARM);
             }
 
             // make summoned being aware of player's presence
@@ -1385,7 +1381,7 @@ int create_monster( int cls, int dur, int beha, int cr_x, int cr_y,
         }
 
         if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
-            mons_add_ench(creation, ENCH_INVIS);
+            creation->add_ench(ENCH_INVIS);
     }
 
     // the return value is either -1 (failure of some sort)

@@ -6072,7 +6072,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_PSYCHE:
-        description += "A fair-haired magess.";
+        description += "A fair-haired mage.";
         break;
 
     case MONS_DONALD:
@@ -6160,7 +6160,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_EROLCHA:
-        description += "An especially cunning ogre magess.";
+        description += "An especially cunning ogre mage.";
         break;
 
     case MONS_URUG:

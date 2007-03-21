@@ -654,30 +654,18 @@ void abjuration(int pow)
     {
         monster = &menv[ab];
 
-        int abjLevel;
-
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
         if (mons_friendly(monster))
             continue;
 
-        abjLevel = mons_del_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI);
-        if (abjLevel != ENCH_NONE)
-        {
-            abjLevel -= 1 + (random2(pow) / 8);
-
-            if (abjLevel < ENCH_ABJ_I)
-            {
-                mons_add_ench(monster, ENCH_ABJ_I);
-                monster_die(monster, KILL_RESET, 0);
-            }
-            else
-            {
-                simple_monster_message(monster, " shudders.");
-                mons_add_ench(monster, abjLevel);
-            }
-        }
+        mon_enchant abj = monster->get_ench(ENCH_ABJ);
+        if (abj.ench != ENCH_NONE)
+            monster->lose_ench_levels(abj, 1 + (random2(pow) / 8));
+        
+        if (monster->has_ench(ENCH_ABJ))
+            simple_monster_message(monster, " shudders.");
     }
 }                               // end abjuration()
 

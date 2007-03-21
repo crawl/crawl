@@ -616,7 +616,7 @@ void cast_summon_butterflies(int pow)
 
     for (int scount = 1; scount < num; scount++)
     {
-        create_monster( MONS_BUTTERFLY, ENCH_ABJ_III, BEH_FRIENDLY,
+        create_monster( MONS_BUTTERFLY, 3, BEH_FRIENDLY,
                         you.x_pos, you.y_pos, MHITYOU, 250 );
     }
 }
@@ -654,22 +654,16 @@ void cast_summon_large_mammal(int pow)
         }
     }
 
-    create_monster( mon, ENCH_ABJ_III, BEH_FRIENDLY, you.x_pos, you.y_pos, 
+    create_monster( mon, 3, BEH_FRIENDLY, you.x_pos, you.y_pos, 
                     you.pet_target, 250 );
 }
 
 void cast_sticks_to_snakes(int pow)
 {
     int mon, i, behaviour;
-
     int how_many = 0;
-
     int max = 1 + random2( 1 + you.skills[SK_TRANSMIGRATION] ) / 4;
-
-    int dur = ENCH_ABJ_III + random2(pow) / 20;
-    if (dur > ENCH_ABJ_V)
-        dur = ENCH_ABJ_V;
-
+    int dur = cap_int(3 + random2(pow) / 20, 5);
     const int weapon = you.equip[EQ_WEAPON];
 
     if (weapon == -1)
@@ -790,7 +784,7 @@ void cast_summon_dragon(int pow)
     // a very high level spell so it might be okay).  -- bwr
     happy = (random2(pow) > 5);
 
-    if (create_monster( MONS_DRAGON, ENCH_ABJ_III,
+    if (create_monster( MONS_DRAGON, 3,
                         (happy ? BEH_FRIENDLY : BEH_HOSTILE),
                         you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
     {
@@ -844,7 +838,7 @@ void cast_conjure_ball_lightning( int pow )
 
         if (mon != -1)
         {
-            mons_add_ench( &menv[mon], ENCH_SHORT_LIVED );
+            menv[mon].add_ench(ENCH_SHORT_LIVED);
             summoned = true;
         }
     }
@@ -869,13 +863,13 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
 
     //jmf: now that sleep == hibernation:
     if (mons_res_cold( &menv[mnstr] ) > 0 && coinflip())        return 0;
-    if (mons_has_ench( &menv[mnstr], ENCH_SLEEP_WARY ))         return 0;
+    if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))         return 0;
 
     menv[mnstr].behaviour = BEH_SLEEP;
-    mons_add_ench( &menv[mnstr], ENCH_SLEEP_WARY );
+    menv[mnstr].add_ench(ENCH_SLEEP_WARY);
 
     if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
-        mons_add_ench( &menv[mnstr], ENCH_SLOW );
+        menv[mnstr].add_ench(ENCH_SLOW);
 
     return 1;
 }                               // end sleep_monsters()
@@ -919,7 +913,7 @@ static int tame_beast_monsters(int x, int y, int pow, int garbage)
     if (random2(100) < random2(pow / 10))
         monster->attitude = ATT_FRIENDLY;       // permanent, right?
     else
-        mons_add_ench(monster, ENCH_CHARM);
+        monster->add_ench(ENCH_CHARM);
 
     return 1;
 }                               // end tame_beast_monsters()
@@ -1036,15 +1030,10 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
     int strength = 0;
 
     // first check for player poison:
-    int ench = mons_has_ench( mon, ENCH_YOUR_POISON_I, ENCH_YOUR_POISON_IV );
-    if (ench != ENCH_NONE)
-        strength += ench - ENCH_YOUR_POISON_I + 1;
+    mon_enchant ench = mon->get_ench(ENCH_POISON);
+    if (ench.ench != ENCH_NONE)
+        strength += ench.degree;
 
-    // ... now monster poison:
-    ench = mons_has_ench( mon, ENCH_POISON_I, ENCH_POISON_IV );
-    if (ench != ENCH_NONE)
-        strength += ench - ENCH_POISON_I + 1;
-    
     // strength is now the sum of both poison types (although only 
     // one should actually be present at a given time):
     dam_dice.num += strength;
@@ -1062,9 +1051,7 @@ static int ignite_poison_monsters(int x, int y, int pow, int garbage)
         if (!player_hurt_monster( mon_index, damage ))
         {
             // Monster survived, remove any poison.
-            mons_del_ench( mon, ENCH_POISON_I, ENCH_POISON_IV );
-            mons_del_ench( mon, ENCH_YOUR_POISON_I, ENCH_YOUR_POISON_IV );
-
+            mon->del_ench(ENCH_POISON);
             behaviour_event( mon, ME_ALERT );
         }
 
@@ -1720,7 +1707,7 @@ static int intoxicate_monsters(int x, int y, int pow, int garbage)
     if (mons_res_poison(&menv[mon]) > 0)
         return 0;
 
-    mons_add_ench(&menv[mon], ENCH_CONFUSION);
+    menv[mon].add_ench(ENCH_CONFUSION);
     return 1;
 }                               // end intoxicate_monsters()
 
@@ -1782,15 +1769,15 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
     switch (random2(6))
     {
     case 0:
-        mons_add_ench(&menv[mon], ENCH_FEAR);
+        menv[mon].add_ench(ENCH_FEAR);
         break;
     case 1:
     case 4:
-        mons_add_ench(&menv[mon], ENCH_CONFUSION);
+        menv[mon].add_ench(ENCH_CONFUSION);
         break;
     case 2:
     case 5:
-        mons_add_ench(&menv[mon], ENCH_CHARM);
+        menv[mon].add_ench(ENCH_CHARM);
         break;
     case 3:
         menv[mon].behaviour = BEH_SLEEP;
@@ -1874,22 +1861,23 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
         break;
     }
 
-    int lvl = mons_has_ench( &menv[mon], ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_IV );
+    mon_enchant bklt = menv[mon].get_ench(ENCH_BACKLIGHT);
+    int lvl = bklt.degree;
 
-    if (lvl == ENCH_NONE)
+    if (lvl == 0)
         simple_monster_message( &menv[mon], " is outlined in light." );
-    else if (lvl == ENCH_BACKLIGHT_IV)
+    else if (lvl == 4)
         simple_monster_message( &menv[mon], " glows brighter for a moment." );
     else 
     {
         // remove old level
-        mons_del_ench( &menv[mon], ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_III, true );
+        menv[mon].del_ench(ENCH_BACKLIGHT, true);
         simple_monster_message( &menv[mon], " glows brighter." );
     }
 
     // this enchantment wipes out invisibility (neat)
-    mons_del_ench( &menv[mon], ENCH_INVIS );
-    mons_add_ench( &menv[mon], ENCH_BACKLIGHT_IV );
+    menv[mon].del_ench(ENCH_INVIS);
+    menv[mon].add_ench(ENCH_BACKLIGHT);
 
     return (true);
 }                               // end backlight_monsters()
@@ -2220,17 +2208,9 @@ static int rot_living(int x, int y, int pow, int message)
         return 0;
 
     ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
+    ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    if (ench >= 50)
-        ench = ENCH_YOUR_ROT_IV;
-    else if (ench >= 35)
-        ench = ENCH_YOUR_ROT_III;
-    else if (ench >= 20)
-        ench = ENCH_YOUR_ROT_II;
-    else
-        ench = ENCH_YOUR_ROT_I;
-
-    mons_add_ench(&menv[mon], ench);
+    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench) );
 
     return 1;
 }                               // end rot_living()
@@ -2286,17 +2266,9 @@ static int rot_undead(int x, int y, int pow, int garbage)
     }
 
     ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
+    ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    if (ench >= 50)
-        ench = ENCH_YOUR_ROT_IV;
-    else if (ench >= 35)
-        ench = ENCH_YOUR_ROT_III;
-    else if (ench >= 20)
-        ench = ENCH_YOUR_ROT_II;
-    else
-        ench = ENCH_YOUR_ROT_I;
-
-    mons_add_ench(&menv[mon], ench);
+    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench) );
 
     return 1;
 }                               // end rot_undead()

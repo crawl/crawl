@@ -100,7 +100,8 @@ std::string comma_separated_line(Z start, Z end,
     {
         if (i != start)
         {
-            if (i + 1 != end)
+            Z tmp = i;
+            if (++tmp != end)
                 text += comma;
             else
                 text += andc;

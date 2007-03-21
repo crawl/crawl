@@ -107,8 +107,12 @@ inline bool testbits(unsigned long flags, unsigned long test)
     return ((flags & test) == test);
 }
 
-bool is_trap_square(int x, int y);
+inline int cap_int(int val, int cap)
+{
+    return (val > cap? cap : val);
+}
 
+bool is_trap_square(int x, int y);
 void zap_los_monsters();
 
 #endif

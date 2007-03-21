@@ -823,7 +823,7 @@ bool melee_attack::player_apply_aux_unarmed()
              attack_strength_punctuation().c_str());
                      
         if (damage_brand == SPWPN_VENOM && coinflip())
-            poison_monster( def, true );
+            poison_monster( def, KC_YOU );
                     
         if (mons_holiness(def) == MH_HOLY)
             did_god_conduct(DID_KILL_ANGEL, 1);
@@ -1870,7 +1870,7 @@ void melee_attack::player_apply_staff_damage()
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
-            poison_monster(def, true);
+            poison_monster(def, KC_YOU);
         }
         break;
     }
@@ -2120,7 +2120,7 @@ int melee_attack::player_to_hit(bool random_factor)
     // Check for backlight (Corona).
     if (defender
         && defender->atype() == ACT_MONSTER
-        && mons_has_ench(def, ENCH_BACKLIGHT_I, ENCH_BACKLIGHT_IV))
+        && def->has_ench(ENCH_BACKLIGHT))
     {
         your_to_hit += 2 + random2(8);
     }
@@ -2141,7 +2141,7 @@ void melee_attack::player_stab_check()
     }
 
     // confused (but not perma-confused)
-    if (mons_has_ench(def, ENCH_CONFUSION) 
+    if (def->has_ench(ENCH_CONFUSION) 
         && !mons_class_flag(def->type, M_CONFUSED))
     {
         stab_attempt = true;

@@ -516,8 +516,8 @@ char mons_see_invis( struct monsters *mon )
 // with respect to mon's perception, but doesn't do walls or range.
 bool mons_monster_visible( struct monsters *mon, struct monsters *targ )
 {
-    if (mons_has_ench(targ, ENCH_SUBMERGED)
-        || (mons_has_ench(targ, ENCH_INVIS) && !mons_see_invis(mon)))
+    if (targ->has_ench(ENCH_SUBMERGED)
+        || (targ->has_ench(ENCH_INVIS) && !mons_see_invis(mon)))
     {
         return (false);
     }
@@ -952,7 +952,7 @@ bool mons_has_lifeforce( const monsters *mon )
     const int holy = mons_holiness( mon );
 
     return (holy == MH_NATURAL || holy == MH_PLANT);
-             // && !mons_has_ench( mon, ENCH_PETRIFY ));
+             // && !mon->has_ench(ENCH_PETRIFY));
 }
 
 int mons_skeleton(int mc)
@@ -1382,8 +1382,7 @@ void define_monster(int index)
     mons_load_spells( &mons, spells );
 
     // reset monster enchantments
-    for (int i = 0; i < NUM_MON_ENCHANTS; i++)
-        mons.enchantment[i] = ENCH_NONE;
+    mons.enchantments.clear();
 }                               // end define_monster()
 
 std::string str_monam(const monsters *mon, description_level_type desc,
@@ -1695,7 +1694,7 @@ bool mons_aligned(int m1, int m2)
     else
     {
         mon1 = &menv[m1];
-        fr1 = (mon1->attitude == ATT_FRIENDLY) || mons_has_ench(mon1, ENCH_CHARM);
+        fr1 = (mon1->attitude == ATT_FRIENDLY) || mon1->has_ench(ENCH_CHARM);
     }
 
     if (m2 == MHITYOU)
@@ -1703,7 +1702,7 @@ bool mons_aligned(int m1, int m2)
     else
     {
         mon2 = &menv[m2];
-        fr2 = (mon2->attitude == ATT_FRIENDLY) || mons_has_ench(mon2, ENCH_CHARM);
+        fr2 = (mon2->attitude == ATT_FRIENDLY) || mon2->has_ench(ENCH_CHARM);
     }
 
     return (fr1 == fr2);
@@ -1716,7 +1715,7 @@ bool mons_wields_two_weapons(const monsters *m)
 
 bool mons_is_summoned(const monsters *m)
 {
-    return (mons_has_ench(m, ENCH_ABJ_I, ENCH_ABJ_VI));
+    return (m->has_ench(ENCH_ABJ));
 }
 
 // Does not check whether the monster can dual-wield - that is the
@@ -1741,23 +1740,23 @@ int mons_size(const monsters *m)
 
 bool mons_friendly(const monsters *m)
 {
-    return (m->attitude == ATT_FRIENDLY || mons_has_ench(m, ENCH_CHARM));
+    return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
 }
 
 bool mons_is_submerged( const monsters *mon )
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    return (mons_has_ench(mon, ENCH_SUBMERGED));
+    return (mon->has_ench(ENCH_SUBMERGED));
 }
 
 bool mons_is_paralysed(const monsters *m)
 {
-    return (mons_has_ench(m, ENCH_PARALYSIS));
+    return (m->has_ench(ENCH_PARALYSIS));
 }
 
 bool mons_is_confused(const monsters *m)
 {
-    return (mons_has_ench(m, ENCH_CONFUSION) &&
+    return (m->has_ench(ENCH_CONFUSION) &&
                             !mons_class_flag(m->type, M_CONFUSED));
 }
 
@@ -1834,194 +1833,6 @@ bool mons_should_fire(struct bolt &beam)
         return (true);
 
     return (false);
-}
-
-int mons_has_ench(const monsters *mon, unsigned int ench, unsigned int ench2)
-{
-    // silliness
-    if (ench == ENCH_NONE)
-        return (ench);
-
-    if (ench2 == ENCH_NONE)
-        ench2 = ench;
-
-    for (int p = 0; p < NUM_MON_ENCHANTS; p++)
-    {
-        if (mon->enchantment[p] >= ench && mon->enchantment[p] <= ench2)
-            return (mon->enchantment[p]);
-    }
-
-    return (ENCH_NONE);
-}
-
-// Returning the deleted enchantment is important!  See abjuration. -- bwr
-int mons_del_ench( struct monsters *mon, unsigned int ench, unsigned int ench2,
-                   bool quiet )
-{
-    unsigned int p;
-    int ret_val = ENCH_NONE;
-
-    // silliness
-    if (ench == ENCH_NONE)
-        return (ENCH_NONE);
-
-    if (ench2 == ENCH_NONE)
-        ench2 = ench;
-
-    for (p = 0; p < NUM_MON_ENCHANTS; p++)
-    {
-        if (mon->enchantment[p] >= ench && mon->enchantment[p] <= ench2)
-            break;
-    }
-
-    if (p == NUM_MON_ENCHANTS)
-        return (ENCH_NONE);
-
-    ret_val = mon->enchantment[p];
-    mon->enchantment[p] = ENCH_NONE;
-
-    // check for slow/haste
-    if (ench == ENCH_HASTE)
-    {
-        if (mon->speed >= 100)
-            mon->speed = 100 + ((mon->speed - 100) / 2);
-        else
-            mon->speed /= 2;
-    }
-
-    if (ench == ENCH_SLOW)
-    {
-        if (mon->speed >= 100)
-            mon->speed = 100 + ((mon->speed - 100) * 2);
-        else
-            mon->speed *= 2;
-    }
-
-    if (ench == ENCH_PARALYSIS)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " is no longer paralysed.");
-
-        behaviour_event(mon, ME_EVAL);
-    }
-    
-    if (ench == ENCH_FEAR)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " seems to regain its courage.");
-
-        // reevaluate behaviour
-        behaviour_event(mon, ME_EVAL);
-    }
-
-    if (ench == ENCH_CONFUSION)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " seems less confused.");
-
-        // reevaluate behaviour
-        behaviour_event(mon, ME_EVAL);
-    }
-
-    if (ench == ENCH_INVIS)
-    {
-        // invisible monsters stay invisible
-        if (mons_class_flag(mon->type, M_INVIS))
-        {
-            mon->enchantment[p] = ENCH_INVIS;
-        }
-        else if (mons_near(mon) && !player_see_invis() 
-                    && !mons_has_ench( mon, ENCH_SUBMERGED ))
-        {
-            if (!quiet)
-            {
-                strcpy( info, ptr_monam( mon, DESC_CAP_A ) );
-                strcat( info, " appears!" );
-                mpr( info );
-            }
-            seen_monster(mon);
-        }
-    }
-
-    if (ench == ENCH_CHARM)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " is no longer charmed.");
-
-        // reevaluate behaviour
-        behaviour_event(mon, ME_EVAL);
-    }
-
-    if (ench == ENCH_BACKLIGHT_I)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " stops glowing.");
-    }
-
-    if (ench == ENCH_STICKY_FLAME_I || ench == ENCH_YOUR_STICKY_FLAME_I)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " stops burning.");
-    }
-
-    if (ench == ENCH_POISON_I || ench == ENCH_YOUR_POISON_I)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " looks more healthy.");
-    }
-
-    if (ench == ENCH_YOUR_ROT_I)
-    {
-        if (!quiet)
-            simple_monster_message(mon, " is no longer rotting.");
-    }
-
-    return (ret_val);
-}
-
-bool mons_add_ench(struct monsters *mon, unsigned int ench)
-{
-    // silliness
-    if (ench == ENCH_NONE)
-        return (false);
-
-    int newspot = -1;
-
-    // don't double-add
-    for (int p = 0; p < NUM_MON_ENCHANTS; p++)
-    {
-        if (mon->enchantment[p] == ench)
-            return (true);
-
-        if (mon->enchantment[p] == ENCH_NONE && newspot < 0)
-            newspot = p;
-    }
-
-    if (newspot < 0)
-        return (false);
-
-    mon->enchantment[newspot] = ench;
-//    if ench == ENCH_FEAR //mv: withou this fear & repel undead spell doesn't work
-
-
-    // check for slow/haste
-    if (ench == ENCH_HASTE)
-    {
-        if (mon->speed >= 100)
-            mon->speed = 100 + ((mon->speed - 100) * 2);
-        else
-            mon->speed *= 2;
-    }
-
-    if (ench == ENCH_SLOW)
-    {
-        if (mon->speed >= 100)
-            mon->speed = 100 + ((mon->speed - 100) / 2);
-        else
-            mon->speed /= 2;
-    }
-
-    return (true);
 }
 
 // used to determine whether or not a monster should always
@@ -2251,12 +2062,12 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
     switch (monspell)
     {
     case MS_HASTE:
-        if (mons_has_ench( mon, ENCH_HASTE ))
+        if (mon->has_ench(ENCH_HASTE))
             ret = true;
         break;
 
     case MS_INVIS:
-        if (mons_has_ench( mon, ENCH_INVIS ) ||
+        if (mon->has_ench(ENCH_INVIS) ||
             (mons_friendly(mon) && !player_see_invis(false)))
             ret = true;
         break;
@@ -2268,7 +2079,7 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
 
     case MS_TELEPORT:
         // Monsters aren't smart enough to know when to cancel teleport.
-        if (mons_has_ench( mon, ENCH_TP_I, ENCH_TP_IV ))
+        if (mon->has_ench( ENCH_TP ))
             ret = true;
         break;
 
@@ -2281,7 +2092,7 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
         }
         else if (mon->foe != MHITNOT)
         {
-            if (mons_has_ench( &menv[mon->foe], ENCH_TP_I, ENCH_TP_IV))
+            if (menv[mon->foe].has_ench(ENCH_TP))
                 return (true);
         }
         // intentional fall-through
@@ -2576,7 +2387,7 @@ monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
       ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
       target_x(0), target_y(0), inv(), spells(), attitude(ATT_NEUTRAL),
-      behaviour(BEH_WANDER), foe(MHITYOU), enchantment(), flags(0L),
+      behaviour(BEH_WANDER), foe(MHITYOU), enchantments(), flags(0L),
       number(0), colour(BLACK), foe_memory(0), god(GOD_NO_GOD),
       ghost()
 {
@@ -2612,7 +2423,7 @@ void monsters::init_with(const monsters &mon)
     attitude          = mon.attitude;
     behaviour         = mon.behaviour;
     foe               = mon.foe;
-    enchantment       = mon.enchantment;
+    enchantments      = mon.enchantments;
     flags             = mon.flags;
     number            = mon.number;
     colour            = mon.colour;
@@ -2905,8 +2716,8 @@ void monsters::poison(actor *agent, int amount)
     // Scale poison down for monsters.
     if (!(amount /= 2))
         amount = 1;
-    
-    poison_monster(this, agent->atype() == ACT_PLAYER, amount);
+
+    poison_monster(this, agent->kill_alignment(), amount);
 }
 
 int monsters::skill(skill_type sk, bool) const
@@ -3039,7 +2850,7 @@ void monsters::ghost_init()
     load_spells(MST_GHOST);
 
     inv.init(NON_ITEM);
-    enchantment.init(ENCH_NONE);
+    enchantments.clear();
 
     find_place_to_live();
 }
@@ -3119,7 +2930,7 @@ void monsters::reset()
 {
     destroy_inventory();
     
-    enchantment.init(ENCH_NONE);
+    enchantments.clear();
     inv.init(NON_ITEM);
 
     flags = 0;
@@ -3133,6 +2944,7 @@ void monsters::reset()
     attitude = ATT_HOSTILE;
     behaviour = BEH_SLEEP;
     foe = MHITNOT;
+    number = 0;
 
     if (in_bounds(x, y))
         mgrd[x][y] = NON_MONSTER;
@@ -3146,7 +2958,7 @@ bool monsters::needs_transit() const
     return ((mons_is_unique(type)
              || (flags & MF_BANISHED)
              || (you.level_type == LEVEL_DUNGEON && hit_dice > 8 + random2(25)))
-            && !mons_has_ench(this, ENCH_ABJ_I, ENCH_ABJ_VI));
+            && !mons_is_summoned(this));
 }
 
 void monsters::set_transit(level_id dest)
@@ -3191,4 +3003,629 @@ void monsters::load_spells(int book)
                 spells[z] = mspell_list[i][z + 1];
         }
     }
+}
+
+bool monsters::has_ench(enchant_type ench,
+                        enchant_type ench2) const
+{
+    if (ench2 == ENCH_NONE)
+        ench2 = ench;
+
+    for (int i = ench; i <= ench2; ++i)
+    {
+        if (enchantments.find( static_cast<enchant_type>(i) ) !=
+            enchantments.end())
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
+mon_enchant monsters::get_ench(enchant_type ench1,
+                               enchant_type ench2) const
+{
+    if (ench2 == ENCH_NONE)
+        ench2 = ench1;
+
+    for (int e = ench1; e <= ench2; ++e)
+    {
+        mon_enchant_list::const_iterator i =
+            enchantments.find(static_cast<enchant_type>(e));
+        if (i != enchantments.end())
+            return (*i);
+    }
+
+    return (mon_enchant());
+}
+
+void monsters::update_ench(const mon_enchant &ench)
+{
+    if (ench.ench != ENCH_NONE)
+    {
+        mon_enchant_list::iterator i = enchantments.find(ench);
+        if (i != enchantments.end())
+            enchantments.erase(i);
+        enchantments.insert(ench);
+    }
+}
+
+bool monsters::add_ench(const mon_enchant &ench)
+{
+    // silliness
+    if (ench.ench == ENCH_NONE)
+        return (false);
+
+    mon_enchant_list::iterator i = enchantments.find(ench);
+    if (i == enchantments.end())
+        enchantments.insert(ench);
+    else
+    {
+        mon_enchant new_ench = *i + ench;
+        enchantments.erase(i);
+        enchantments.insert(new_ench);
+    }
+
+    // check for slow/haste
+    if (ench.ench == ENCH_HASTE)
+    {
+        if (speed >= 100)
+            speed = 100 + ((speed - 100) * 2);
+        else
+            speed *= 2;
+    }
+
+    if (ench.ench == ENCH_SLOW)
+    {
+        if (speed >= 100)
+            speed = 100 + ((speed - 100) / 2);
+        else
+            speed /= 2;
+    }
+
+    return (true);
+}
+
+bool monsters::del_ench(enchant_type ench, bool quiet)
+{
+    mon_enchant_list::iterator i = enchantments.find(ench);
+    if (i == enchantments.end())
+        return (false);
+
+    mon_enchant me = *i;
+    enchantments.erase(i);
+
+    remove_enchantment_effect(me, quiet);
+    return (true);
+}
+
+void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
+{
+    switch (me.ench)
+    {
+    case ENCH_HASTE:
+        if (speed >= 100)
+            speed = 100 + ((speed - 100) / 2);
+        else
+            speed /= 2;
+        break;
+
+    case ENCH_SLOW:
+        if (speed >= 100)
+            speed = 100 + ((speed - 100) * 2);
+        else
+            speed *= 2;
+        break;
+
+    case ENCH_PARALYSIS:
+        if (!quiet)
+            simple_monster_message(this, " is no longer paralysed.");
+
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_FEAR:
+        if (!quiet)
+            simple_monster_message(this, " seems to regain its courage.");
+
+        // reevaluate behaviour
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_CONFUSION:
+        if (!quiet)
+            simple_monster_message(this, " seems less confused.");
+
+        // reevaluate behaviour
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_INVIS:
+        // invisible monsters stay invisible
+        if (mons_class_flag(type, M_INVIS))
+            add_ench( mon_enchant(ENCH_INVIS) );
+        else if (mons_near(this) && !player_see_invis() 
+                    && !has_ench( ENCH_SUBMERGED ))
+        {
+            if (!quiet)
+                mprf("%s appears!", name(DESC_CAP_A).c_str() );
+            
+            seen_monster(this);
+        }
+        break;
+
+    case ENCH_CHARM:
+        if (!quiet)
+            simple_monster_message(this, " is no longer charmed.");
+
+        // reevaluate behaviour
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_BACKLIGHT:
+        if (!quiet)
+            simple_monster_message(this, " stops glowing.");
+        break;
+
+    case ENCH_STICKY_FLAME:
+        if (!quiet)
+            simple_monster_message(this, " stops burning.");
+        break;
+
+    case ENCH_POISON:
+        if (!quiet)
+            simple_monster_message(this, " looks more healthy.");
+        break;
+
+    case ENCH_ROT:
+        if (!quiet)
+            simple_monster_message(this, " is no longer rotting.");
+        break;
+
+    case ENCH_ABJ:
+    case ENCH_SHORT_LIVED:
+        add_ench( mon_enchant(ENCH_ABJ) );
+        monster_die( this, quiet? KILL_DISMISSED : KILL_RESET, 0 );
+        break;
+
+    default:
+        break;
+    }
+}
+
+void monsters::lose_ench_levels(const mon_enchant &e, int levels)
+{
+    if (!levels)
+        return;
+
+    mon_enchant me(e);
+    me.degree -= levels;
+
+    if (me.degree < 1)
+        del_ench(e.ench);
+    else
+        update_ench(me);
+}
+
+//---------------------------------------------------------------
+//
+// timeout_enchantments
+//
+// Update a monster's enchantments when the player returns
+// to the level.
+//
+// Management for enchantments... problems with this are the oddities 
+// (monster dying from poison several thousands of turns later), and 
+// game balance.  
+//
+// Consider: Poison/Sticky Flame a monster at range and leave, monster 
+// dies but can't leave level to get to player (implied game balance of 
+// the delayed damage is that the monster could be a danger before 
+// it dies).  This could be fixed by keeping some monsters active 
+// off level and allowing them to take stairs (a very serious change).
+//
+// Compare this to the current abuse where the player gets 
+// effectively extended duration of these effects (although only 
+// the actual effects only occur on level, the player can leave 
+// and heal up without having the effect disappear).  
+//
+// This is a simple compromise between the two... the enchantments
+// go away, but the effects don't happen off level.  -- bwr
+//
+//---------------------------------------------------------------
+void monsters::timeout_enchantments(int levels)
+{
+    for (mon_enchant_list::iterator i = enchantments.begin();
+         i != enchantments.end(); )
+    {
+        mon_enchant_list::iterator cur = i++;
+
+        switch (cur->ench)
+        {
+        case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
+        case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
+        case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
+        case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
+            lose_ench_levels(*cur, levels);
+            break;
+
+        case ENCH_TP:
+            teleport(true);
+            break;
+
+        case ENCH_CONFUSION:
+            blink();
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+// used to adjust time durations in handle_enchantment() for monster speed
+static inline int mod_speed( int val, int speed )
+{
+    return (speed ? (val * 10) / speed : val);
+}
+
+void monsters::apply_enchantment(mon_enchant me, int spd)
+{
+    switch (me.ench)
+    {
+    case ENCH_SLOW:
+        if (random2(250) <= mod_speed( hit_dice + 10, spd ))
+            del_ench(me.ench);
+        break;
+
+    case ENCH_HASTE:
+        if (random2(1000) < mod_speed( 25, spd ))
+            del_ench(ENCH_HASTE);
+        break;
+
+    case ENCH_FEAR:
+        if (random2(150) <= mod_speed( hit_dice + 5, spd ))
+            del_ench(ENCH_FEAR);
+        break;
+
+    case ENCH_PARALYSIS:
+        if (random2(120) < mod_speed( hit_dice + 5, spd ))
+            del_ench(ENCH_PARALYSIS);
+        break;
+
+    case ENCH_CONFUSION:
+        if (random2(120) < mod_speed( hit_dice + 5, spd ))
+        {
+            // don't delete perma-confusion
+            if (!mons_class_flag(type, M_CONFUSED))
+                del_ench(ENCH_CONFUSION);
+        }
+        break;
+
+    case ENCH_INVIS:
+        if (random2(1000) < mod_speed( 25, spd ))
+        {
+            // don't delete perma-invis
+            if (!mons_class_flag( type, M_INVIS ))
+                del_ench(ENCH_INVIS);
+        }
+        break;
+
+    case ENCH_SUBMERGED:
+    {
+        // not even air elementals unsubmerge into clouds
+        if (env.cgrid[x][y] != EMPTY_CLOUD)
+            break;
+
+        // Air elementals are a special case, as their
+        // submerging in air isn't up to choice. -- bwr
+        if (type == MONS_AIR_ELEMENTAL) 
+        {
+            heal_monster( this, 1, one_chance_in(5) );
+
+            if (one_chance_in(5))
+                del_ench(ENCH_SUBMERGED);
+
+            break;
+        }
+
+        // Now we handle the others:
+        int grid = grd[x][y];
+
+        // Badly injured monsters prefer to stay submerged...
+        // electrical eels and lava snakes have ranged attacks
+        // and are more likely to surface.  -- bwr
+        if (!monster_can_submerge(type, grid))
+            del_ench(ENCH_SUBMERGED); // forced to surface
+        else if (hit_points <= max_hit_points / 2)
+            break;
+        else if (((type == MONS_ELECTRICAL_EEL
+                   || type == MONS_LAVA_SNAKE)
+                  && (random2(1000) < mod_speed( 20, spd )
+                      || (mons_near(this) 
+                          && hit_points == max_hit_points
+                          && !one_chance_in(10))))
+                 || random2(2000) < mod_speed(10, spd)
+                 || (mons_near(this)
+                     && hit_points == max_hit_points
+                     && !one_chance_in(5)))
+        {
+            del_ench(ENCH_SUBMERGED);
+        }
+        break;
+    }
+    case ENCH_POISON:
+    {
+        int poisonval = me.degree;
+        int dam = (poisonval >= 4) ? 1 : 0;
+
+        if (coinflip())
+            dam += roll_dice( 1, poisonval + 1 );
+
+        if (mons_res_poison(this) < 0)
+            dam += roll_dice( 2, poisonval ) - 1;
+
+        // We adjust damage for monster speed (since this is applied 
+        // only when the monster moves), and we handle the factional
+        // part as well (so that speed 30 creatures will take damage).
+        dam *= 10;
+        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
+
+        if (dam > 0)
+        {
+            hurt_monster( this, dam );
+
+#if DEBUG_DIAGNOSTICS
+            // for debugging, we don't have this silent.
+            simple_monster_message( this, " takes poison damage.", 
+                                    MSGCH_DIAGNOSTICS );
+            snprintf( info, INFO_SIZE, "poison damage: %d", dam );
+            mpr( info, MSGCH_DIAGNOSTICS );
+#endif
+
+            if (hit_points < 1)
+            {
+                monster_die(this, me.killer(), me.kill_agent());
+                break;
+            }
+        }
+
+        // chance to get over poison (1 in 8, modified for speed)
+        if (random2(1000) < mod_speed( 125, spd ))
+            lose_ench_levels(me, 1);
+        break;
+    }
+    case ENCH_ROT:
+        if (hit_points > 1 
+                 && random2(1000) < mod_speed( 333, spd ))
+        {
+            hurt_monster(this, 1);
+        }
+
+        if (random2(1000) < mod_speed( me.degree == 1? 250 : 333, spd ))
+            lose_ench_levels(me, 1);
+        
+        break;
+
+    case ENCH_BACKLIGHT:
+        if (random2(1000) < mod_speed( me.degree == 1? 100 : 200, spd ))
+            lose_ench_levels(me, 1);
+        break;
+
+        // assumption: mons_res_fire has already been checked
+    case ENCH_STICKY_FLAME:
+    {
+        int dam = roll_dice( 2, 4 ) - 1;
+
+        if (mons_res_fire( this ) < 0)
+            dam += roll_dice( 2, 5 ) - 1;
+
+        // We adjust damage for monster speed (since this is applied 
+        // only when the monster moves), and we handle the factional
+        // part as well (so that speed 30 creatures will take damage).
+        dam *= 10;
+        dam = (dam / spd) + ((random2(spd) < (dam % spd)) ? 1 : 0);
+
+        if (dam > 0)
+        {
+            hurt_monster( this, dam );
+            simple_monster_message(this, " burns!");
+
+#if DEBUG_DIAGNOSTICS
+            mprf( MSGCH_DIAGNOSTICS, "sticky flame damage: %d", dam );
+#endif
+
+            if (hit_points < 1)
+            {
+                monster_die(this, me.killer(), me.kill_agent());
+                break;
+            }
+        }
+
+        // chance to get over sticky flame (1 in 5, modified for speed)
+        if (random2(1000) < mod_speed( 200, spd ))
+            lose_ench_levels(me, 1);
+        break;
+    }
+
+    case ENCH_SHORT_LIVED:
+        // This should only be used for ball lightning -- bwr
+        if (random2(1000) < mod_speed( 200, spd ))
+            hit_points = -1;
+        break;
+
+        // 19 is taken by summoning:
+        // If these are changed, must also change abjuration
+    case ENCH_ABJ:
+    {
+        const int mspd =
+            me.degree == 6? 10 :
+            me.degree == 5? 20 : 100;
+        
+        if (random2(1000) < mod_speed( mspd, spd ))
+            lose_ench_levels(me, 1);
+        break;
+    }
+
+    case ENCH_CHARM:
+        if (random2(500) <= mod_speed( hit_dice + 10, spd ))
+            del_ench(ENCH_CHARM);
+        break;
+
+    case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
+        // number of actions is fine for shapeshifters
+        if (type == MONS_GLOWING_SHAPESHIFTER 
+            || random2(1000) < mod_speed( 250, spd ))
+        {
+            monster_polymorph(this, RANDOM_MONSTER, 0);
+        }
+        break;
+
+    case ENCH_SHAPESHIFTER:     // this ench never runs out
+        if (type == MONS_SHAPESHIFTER 
+            || random2(1000) < mod_speed( 1000 / ((15 * hit_dice) / 5), spd ))
+        {
+            monster_polymorph(this, RANDOM_MONSTER, 0);
+        }
+        break;
+
+    case ENCH_TP:
+        if (me.degree <= 1)
+        {
+            del_ench(ENCH_TP);
+            monster_teleport( this, true );
+        }
+        else
+        {
+            int tmp = mod_speed( 1000, spd );
+
+            if (tmp < 1000 && random2(1000) < tmp)
+                lose_ench_levels(me, 1);
+            else if (me.degree - tmp / 1000 >= 1)
+            {
+                lose_ench_levels(me, tmp / 1000);
+                tmp %= 1000;
+
+                if (random2(1000) < tmp)
+                {
+                    if (me.degree > 1)
+                        lose_ench_levels(me, 1);
+                    else
+                    {
+                        del_ench( ENCH_TP );
+                        monster_teleport( this, true );
+                    }
+                }
+            }
+            else
+            {
+                del_ench( ENCH_TP );
+                monster_teleport( this, true );
+            }
+        }
+        break;
+
+    case ENCH_SLEEP_WARY:
+        if (random2(1000) < mod_speed( 50, spd ))
+            del_ench(ENCH_SLEEP_WARY);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void monsters::apply_enchantments(int spd)
+{
+    for (mon_enchant_list::iterator i = enchantments.begin();
+         i != enchantments.end(); )
+    {
+        mon_enchant_list::iterator cur = i++;
+        apply_enchantment(*cur, spd);
+    }
+}
+
+kill_category monsters::kill_alignment() const
+{
+    return (attitude == ATT_FRIENDLY? KC_FRIENDLY : KC_OTHER);
+}
+
+/////////////////////////////////////////////////////////////////////////
+// mon_enchant
+
+static const char *enchant_names[] = 
+{
+    "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
+    "rot", "summon", "abj", "backlit", "charm", "fire",
+    "gloshifter", "shifter", "tp", "wary", "submerged",
+    "short lived", "paralysis", "bug"
+};
+
+const char *mons_enchantment_name(enchant_type ench)
+{
+    ASSERT(NUM_ENCHANTMENTS ==
+           (sizeof(enchant_names) / sizeof(*enchant_names)) - 1);
+    
+    if (ench > NUM_ENCHANTMENTS)
+        ench = NUM_ENCHANTMENTS;
+
+    return (enchant_names[ench]);
+}
+
+mon_enchant::operator std::string () const
+{
+    return make_stringf("%s (%d%s)",
+                        mons_enchantment_name(ench),
+                        degree,
+                        kill_category_desc(who));
+}
+
+const char *mon_enchant::kill_category_desc(kill_category k) const
+{
+    return (k == KC_YOU?      "you" :
+            k == KC_FRIENDLY? "pet" : "");
+}
+
+void mon_enchant::merge_killer(kill_category k)
+{
+    who = who < k? who : k;
+}
+
+void mon_enchant::cap_degree()
+{
+    // Hard cap to simulate old enum behaviour, we should really throw this
+    // out entirely.
+    const int max = ench == ENCH_ABJ? 6 : 4;
+    if (degree > max)
+        degree = max;
+}
+
+mon_enchant &mon_enchant::operator += (const mon_enchant &other)
+{
+    if (ench == other.ench)
+    {
+        degree += other.degree;
+        cap_degree();
+        merge_killer(other.who);
+    }
+    return (*this);
+}
+
+mon_enchant mon_enchant::operator + (const mon_enchant &other) const
+{
+    mon_enchant tmp(*this);
+    tmp += other;
+    return (tmp);
+}
+
+int mon_enchant::killer() const
+{
+    return (who == KC_YOU?       KILL_YOU :
+            who == KC_FRIENDLY?  KILL_MON :
+            KILL_MISC);
+}
+
+int mon_enchant::kill_agent() const
+{
+    return (who == KC_FRIENDLY? ANON_FRIENDLY_MONSTER : 0);
 }

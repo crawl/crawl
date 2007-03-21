@@ -3343,7 +3343,7 @@ void read_scroll(void)
         break;
 
     case SCR_SUMMONING:
-        if (create_monster( MONS_ABOMINATION_SMALL, ENCH_ABJ_VI, BEH_FRIENDLY,
+        if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
             mpr("A horrible Thing appears!");

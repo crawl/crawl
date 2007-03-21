@@ -1409,6 +1409,22 @@ static void tag_construct_level_items(struct tagHeader &th)
         marshall_item(th, mitm[i]);
 }
 
+static void marshall_mon_enchant(tagHeader &th, const mon_enchant &me)
+{
+    marshallShort(th, me.ench);
+    marshallShort(th, me.degree);
+    marshallShort(th, me.who);
+}
+
+static mon_enchant unmarshall_mon_enchant(tagHeader &th)
+{
+    mon_enchant me;
+    me.ench   = static_cast<enchant_type>( unmarshallShort(th) );
+    me.degree = unmarshallShort(th);
+    me.who    = static_cast<kill_category>( unmarshallShort(th) );
+    return (me);
+}
+
 static void marshall_monster(tagHeader &th, const monsters &m)
 {
     marshallByte(th, m.ac);
@@ -1423,8 +1439,12 @@ static void marshall_monster(tagHeader &th, const monsters &m)
     marshallByte(th, m.target_y);
     marshallLong(th, m.flags);
 
-    for (int j = 0; j < NUM_MON_ENCHANTS; j++)
-        marshallByte(th, m.enchantment[j]);
+    marshallShort(th, m.enchantments.size());
+    for (mon_enchant_list::const_iterator i = m.enchantments.begin();
+         i != m.enchantments.end(); ++i)
+    {
+        marshall_mon_enchant(th, *i);
+    }
 
     marshallShort(th, m.type);
     marshallShort(th, m.hit_points);
@@ -1457,8 +1477,6 @@ static void tag_construct_level_monsters(struct tagHeader &th)
 
     // how many monsters?
     marshallShort(th, MAX_MONSTERS);
-    // how many monster enchantments?
-    marshallByte(th, NUM_MON_ENCHANTS);
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
 
@@ -1574,8 +1592,9 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.target_y = unmarshallByte(th);
     m.flags = unmarshallLong(th);
 
-    for (int j = 0; j < NUM_MON_ENCHANTS; j++)
-        m.enchantment[j] = unmarshallByte(th);
+    const int nenchs = unmarshallShort(th);
+    for (int i = 0; i < nenchs; ++i)
+        m.enchantments.insert( unmarshall_mon_enchant(th) );
 
     m.type = unmarshallShort(th);
     m.hit_points = unmarshallShort(th);
@@ -1599,7 +1618,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
 static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
 {
     int i;
-    int count, ecount, icount;
+    int count, icount;
 
     // how many mons_alloc?
     count = unmarshallByte(th);
@@ -1608,8 +1627,6 @@ static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)
 
     // how many monsters?
     count = unmarshallShort(th);
-    // how many monster enchantments?
-    ecount = unmarshallByte(th);
     // how many monster inventory slots?
     icount = unmarshallByte(th);
 
@@ -1675,7 +1692,7 @@ void tag_missing_level_attitude()
                 new_beh = BEH_SEEK;
                 break;
             case 7:         // old BEH_ENSLAVED
-                if (!mons_has_ench(&menv[i], ENCH_CHARM))
+                if (!menv[i].has_ench(ENCH_CHARM))
                     isFriendly = true;
                 break;
             default:

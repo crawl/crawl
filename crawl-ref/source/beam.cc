@@ -68,7 +68,7 @@ static FixedArray < bool, 19, 19 > explode_map;
 
 // helper functions (some of these, esp. affect(), should probably
 // be public):
-static void sticky_flame_monster( int mn, bool source, int hurt_final );
+static void sticky_flame_monster( int mn, kill_category who, int hurt_final );
 static bool affectsWall(const bolt &beam, int wall_feature);
 static bool isBouncy(struct bolt &beam, unsigned char gridtype);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
@@ -124,6 +124,22 @@ static void beam_mpr(int channel, const char *s, ...)
 static void monster_die(monsters *mons, const bolt &beam)
 {
     monster_die(mons, beam.killer(), beam.beam_source);
+}
+
+static kill_category whose_kill(const bolt &beam)
+{
+    if (YOU_KILL(beam.thrower))
+        return (KC_YOU);
+    else if (MON_KILL(beam.thrower))
+    {
+        if (beam.beam_source >= 0 && beam.beam_source < MAX_MONSTERS)
+        {
+            const monsters &mons = menv[beam.beam_source];
+            if (mons.attitude == ATT_FRIENDLY)
+                return (KC_FRIENDLY);
+        }
+    }
+    return (KC_OTHER);
 }
 
 // simple animated flash from Rupert Smith (and expanded to be more generic):
@@ -1565,7 +1581,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         else if (doFlavouredEffects && !one_chance_in(3))
         {
-            poison_monster( monster, YOU_KILL(pbolt.thrower) );
+            poison_monster( monster, whose_kill(pbolt) );
         }
         break;
 
@@ -1579,14 +1595,14 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
                 // Poison arrow can poison any living thing regardless of 
                 // poison resistance. -- bwr
                 if (mons_has_lifeforce(monster))
-                    poison_monster( monster, YOU_KILL(pbolt.thrower), 2, true );
+                    poison_monster( monster, whose_kill(pbolt), 2, true );
             }
 
             hurted /= 2;
         }
         else if (doFlavouredEffects)
         {
-            poison_monster( monster, YOU_KILL(pbolt.thrower), 4 );
+            poison_monster( monster, whose_kill(pbolt), 4 );
         }
         break;
 
@@ -1638,7 +1654,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
                 return (hurted);
 
             if (mons_res_poison( monster ) <= 0)
-                poison_monster( monster, YOU_KILL(pbolt.thrower) );
+                poison_monster( monster, whose_kill(pbolt) );
 
             if (one_chance_in( 3 + 2 * mons_res_negative_energy(monster) ))
             {
@@ -1806,10 +1822,10 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
             continue;
         }
 
-        if (mons_has_ench(monster, wh_enchant))
+        if (monster->has_ench(static_cast<enchant_type>(wh_enchant)))
             continue;
 
-        if (mons_add_ench(monster, wh_enchant))
+        if (monster->add_ench(static_cast<enchant_type>(wh_enchant)))
         {
             if (player_monster_visible( monster ))
             {
@@ -1860,7 +1876,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     {
     case BEAM_SLOW:         /* 0 = slow monster */
         // try to remove haste, if monster is hasted
-        if (mons_del_ench(monster, ENCH_HASTE))
+        if (monster->del_ench(ENCH_HASTE))
         {
             if (simple_monster_message(monster, " is no longer moving quickly."))
                 pbolt.obvious_effect = true;
@@ -1869,9 +1885,9 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         }
 
         // not hasted, slow it
-        if (!mons_has_ench(monster, ENCH_SLOW)
+        if (!monster->has_ench(ENCH_SLOW)
             && !mons_is_stationary(monster)
-            && mons_add_ench(monster, ENCH_SLOW))
+            && monster->add_ench(ENCH_SLOW))
         {
             if (!mons_is_paralysed(monster)
                 && simple_monster_message(monster, " seems to slow down."))
@@ -1882,7 +1898,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_HASTE:                  // 1 = haste
-        if (mons_del_ench(monster, ENCH_SLOW))
+        if (monster->del_ench(ENCH_SLOW))
         {
             if (simple_monster_message(monster, " is no longer moving slowly."))
                 pbolt.obvious_effect = true;
@@ -1891,9 +1907,9 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         }
 
         // not slowed, haste it
-        if (!mons_has_ench(monster, ENCH_HASTE)
+        if (!monster->has_ench(ENCH_HASTE)
             && !mons_is_stationary(monster)
-            && mons_add_ench(monster, ENCH_HASTE))
+            && monster->add_ench(ENCH_HASTE))
         {
             if (!mons_is_paralysed(monster)
                 && simple_monster_message(monster, " seems to speed up."))
@@ -1925,7 +1941,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         return (MON_AFFECTED);
 
     case BEAM_CONFUSION:                   /* 4 = confusion */
-        if (mons_add_ench(monster, ENCH_CONFUSION))
+        if (monster->add_ench(ENCH_CONFUSION))
         {
             // put in an exception for fungi, plants and other things you won't
             // notice becoming confused.
@@ -1939,8 +1955,8 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
     {
         const std::string monster_name = ptr_monam(monster, DESC_CAP_THE);
         
-        if (!mons_has_ench(monster, ENCH_INVIS)
-            && mons_add_ench(monster, ENCH_INVIS))
+        if (!monster->has_ench(ENCH_INVIS)
+            && monster->add_ench(ENCH_INVIS))
         {
             // Can't use simple_monster_message here, since it checks
             // for visibility of the monster (and its now invisible) -- bwr
@@ -1957,7 +1973,7 @@ int mons_ench_f2(struct monsters *monster, struct bolt &pbolt)
         return (MON_AFFECTED);
     }
     case BEAM_CHARM:             /* 9 = charm */
-        if (mons_add_ench(monster, ENCH_CHARM))
+        if (monster->add_ench(ENCH_CHARM))
         {
             // break fleeing and suchlike
             monster->behaviour = BEH_SEEK;
@@ -1986,8 +2002,8 @@ static void slow_monster(monsters *mon, int /* degree */)
 
 static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
 {
-    if (!mons_has_ench(monster, ENCH_PARALYSIS)
-        && mons_add_ench(monster, ENCH_PARALYSIS))
+    if (!monster->has_ench(ENCH_PARALYSIS)
+        && monster->add_ench(ENCH_PARALYSIS))
     {
         if (simple_monster_message(monster, " suddenly stops moving!"))
             pbolt.obvious_effect = true;
@@ -1998,14 +2014,14 @@ static void beam_paralyses_monster(bolt &pbolt, monsters *monster)
 
 // Returns true if the curare killed the monster.
 bool curare_hits_monster( const bolt &beam,
-                          monsters *monster, 
-                          bool fromPlayer, 
+                          monsters *monster,
+                          kill_category who,
                           int levels )
 {
     const bool res_poison = mons_res_poison(monster);
     bool mondied = false;
 
-    poison_monster(monster, fromPlayer, levels, false);
+    poison_monster(monster, who, levels, false);
 
     if (!mons_res_asphyx(monster))
     {
@@ -2030,134 +2046,55 @@ bool curare_hits_monster( const bolt &beam,
     }
 
     // Deities take notice.
-    if (fromPlayer)
+    if (who == KC_YOU)
         did_god_conduct( DID_POISON, 5 + random2(3) );
 
     return (mondied);
 }
 
 // actually poisons a monster (w/ message)
-void poison_monster( struct monsters *monster, bool fromPlayer, int levels,
+void poison_monster( monsters *monster,
+                     kill_category from_whom,
+                     int levels,
                      bool force )
 {
-    bool yourPoison = false;
-    int ench = ENCH_NONE;
-    int old_strength = 0;
-
-    if (monster->type == -1)
+    if (!monster->alive())
         return;
 
     if (!force && mons_res_poison(monster) > 0)
         return;
 
-    // who gets the credit if monster dies of poison?
-    ench = mons_has_ench( monster, ENCH_POISON_I, ENCH_POISON_IV );
-    if (ench != ENCH_NONE)
-    {
-        old_strength = ench - ENCH_POISON_I;
-    }
-    else
-    {
-        ench = mons_has_ench(monster, ENCH_YOUR_POISON_I, ENCH_YOUR_POISON_IV);
-        if (ench != ENCH_NONE)
-        {
-            old_strength = ench - ENCH_YOUR_POISON_I;
-            yourPoison = true;
-        }
-    }
-
-    // delete old poison
-    mons_del_ench( monster, ENCH_POISON_I, ENCH_POISON_IV, true );
-    mons_del_ench( monster, ENCH_YOUR_POISON_I, ENCH_YOUR_POISON_IV, true );
-
-    // Calculate new strength:
-    int new_strength = old_strength + levels;
-    if (new_strength > 3)
-        new_strength = 3;
-
-    // now, if player poisons the monster at ANY TIME, they should
-    // get credit for the kill if the monster dies from poison.  This
-    // really isn't that abusable -- GDL.
-    if (fromPlayer || yourPoison)
-        ench = ENCH_YOUR_POISON_I + new_strength;
-    else
-        ench = ENCH_POISON_I + new_strength;
+    const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
+    monster->add_ench( mon_enchant(ENCH_POISON, levels, from_whom) );
+    const mon_enchant new_pois = monster->get_ench(ENCH_POISON);
 
     // actually do the poisoning
     // note: order important here
-    if (mons_add_ench( monster, ench ) && new_strength > old_strength)
+    if (new_pois.degree > old_pois.degree)
     {
         simple_monster_message( monster, 
-                                (old_strength == 0) ? " looks ill." 
-                                                    : " looks even sicker." );
+                                !old_pois.degree? " looks ill." 
+                                                : " looks even sicker." );
     }
 
     // finally, take care of deity preferences
-    if (fromPlayer)
+    if (from_whom == KC_YOU)
         did_god_conduct( DID_POISON, 5 + random2(3) );
 }                               // end poison_monster()
 
 // actually napalms a monster (w/ message)
-void sticky_flame_monster( int mn, bool fromPlayer, int levels )
+void sticky_flame_monster( int mn, kill_category who, int levels )
 {
-    bool yourFlame = fromPlayer;
-    int currentFlame;
-    int currentStrength = 0;
+    monsters *monster = &menv[mn];
 
-    struct monsters *monster = &menv[mn];
-
-    if (monster->type == -1)
+    if (!monster->alive())
         return;
 
     if (mons_res_fire(monster) > 0)
         return;
 
-    // who gets the credit if monster dies of napalm?
-    currentFlame = mons_has_ench( monster, ENCH_STICKY_FLAME_I, 
-                                           ENCH_STICKY_FLAME_IV );
-
-    if (currentFlame != ENCH_NONE)
-    {
-        currentStrength = currentFlame - ENCH_STICKY_FLAME_I;
-        yourFlame = false;
-    }
-    else
-    {
-        currentFlame = mons_has_ench( monster, ENCH_YOUR_STICKY_FLAME_I,
-                                               ENCH_YOUR_STICKY_FLAME_IV );
-
-        if (currentFlame != ENCH_NONE)
-        {
-            currentStrength = currentFlame - ENCH_YOUR_STICKY_FLAME_I;
-            yourFlame = true;
-        }
-        else
-            currentStrength = -1;           // no flame yet!
-    }
-
-    // delete old flame
-    mons_del_ench( monster, ENCH_STICKY_FLAME_I, ENCH_STICKY_FLAME_IV, true );
-    mons_del_ench( monster, ENCH_YOUR_STICKY_FLAME_I, ENCH_YOUR_STICKY_FLAME_IV,
-                   true );
-
-    // increase sticky flame strength, cap at 3 (level is 0..3)
-    currentStrength += levels;
-
-    if (currentStrength > 3)
-        currentStrength = 3;
-
-    // now, if player flames the monster at ANY TIME, they should
-    // get credit for the kill if the monster dies from napalm.  This
-    // really isn't that abusable -- GDL.
-    if (fromPlayer || yourFlame)
-        currentStrength += ENCH_YOUR_STICKY_FLAME_I;
-    else
-        currentStrength += ENCH_STICKY_FLAME_I;
-
-    // actually do flame
-    if (mons_add_ench( monster, currentStrength ))
+    if (monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who)))
         simple_monster_message(monster, " is covered in liquid fire!");
-
 }                               // end sticky_flame_monster
 
 /*
@@ -2229,7 +2166,7 @@ bool check_line_of_sight( int sx, int sy, int tx, int ty )
  */
 void mimic_alert(monsters *mimic)
 {
-    if (mons_has_ench( mimic, ENCH_TP_I, ENCH_TP_IV ))
+    if (mimic->has_ench(ENCH_TP))
         return;
 
     monster_teleport( mimic, !one_chance_in(3) );
@@ -2492,7 +2429,7 @@ int affect(struct bolt &beam, int x, int y)
     // if there is a monster at this location, affect it
     // submerged monsters aren't really there -- bwr
     int mid = mgrd[x][y];
-    if (mid != NON_MONSTER && !mons_has_ench( &menv[mid], ENCH_SUBMERGED ))
+    if (mid != NON_MONSTER && !menv[mid].has_ench( ENCH_SUBMERGED ))
     {
         if (!beam.is_big_cloud
             && (!beam.is_explosion || beam.in_explosion_phase))
@@ -3381,7 +3318,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     if (beam.is_tracer)
     {
         // check can see other monster
-        if (!beam.can_see_invis && mons_has_ench(&menv[tid], ENCH_INVIS))
+        if (!beam.can_see_invis && menv[tid].has_ench(ENCH_INVIS))
         {
             // can't see this monster, ignore it
             return 0;
@@ -3482,7 +3419,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
 
 
     // BEGIN non-enchantment (could still be tracer)
-    if (mons_has_ench( mon, ENCH_SUBMERGED ) && !beam.aimed_at_feet)
+    if (mon->has_ench(ENCH_SUBMERGED) && !beam.aimed_at_feet)
         return (0);                   // missed me!
 
     // we need to know how much the monster _would_ be hurt by this, before
@@ -3638,7 +3575,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
             if (levels > 4)
                 levels = 4;
 
-            sticky_flame_monster( tid, YOU_KILL(beam.thrower), levels );
+            sticky_flame_monster( tid, whose_kill(beam), levels );
         }
 
 
@@ -3652,18 +3589,18 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
             if (beam.ench_power == AUTOMATIC_HIT
                 && random2(100) < 90 - (3 * mon->ac))
             {
-                poison_monster( mon, YOU_KILL(beam.thrower), 2 );
+                poison_monster( mon, whose_kill(beam), 2 );
             } 
             else if (random2(hurt_final) - random2(mon->ac) > 0)
             {
-                poison_monster( mon, YOU_KILL(beam.thrower) );
+                poison_monster( mon, whose_kill(beam) );
             }
         }
 
         bool wake_mimic = true;
         if (beam.name.find("curare") != std::string::npos)
         {
-            if (curare_hits_monster( beam, mon, YOU_KILL(beam.thrower), 2 ))
+            if (curare_hits_monster( beam, mon, whose_kill(beam), 2 ))
                 wake_mimic = false;
         }
 
@@ -3863,7 +3800,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
 
     if (beam.flavour == BEAM_SLEEP)
     {
-        if (mons_has_ench( mon, ENCH_SLEEP_WARY ))  // slept recently
+        if (mon->has_ench(ENCH_SLEEP_WARY))  // slept recently
             return (MON_RESIST);        
 
         if (mons_holiness(mon) != MH_NATURAL) // no unnatural 
@@ -3873,7 +3810,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
             beam.obvious_effect = true;
 
         mon->behaviour = BEH_SLEEP;
-        mons_add_ench( mon, ENCH_SLEEP_WARY );
+        mon->add_ench(ENCH_SLEEP_WARY);
 
         return (MON_AFFECTED);
     }

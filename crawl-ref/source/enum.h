@@ -1174,64 +1174,25 @@ enum enchant_type
 {
     ENCH_NONE = 0,                     //    0
     ENCH_SLOW,
-    ENCH_HASTE,                        //    2
-    ENCH_FEAR = 4,                     //    4
-    ENCH_CONFUSION,                    //    5
-    ENCH_INVIS,
-    ENCH_YOUR_POISON_I,
-    ENCH_YOUR_POISON_II,
-    ENCH_YOUR_POISON_III,
-    ENCH_YOUR_POISON_IV,               //   10
-    ENCH_BERSERK_I,
-    ENCH_BERSERK_II,
-    ENCH_BERSERK_III,
-    ENCH_BERSERK_IV,
-    ENCH_YOUR_ROT_I, //   15 //jmf: rotting effect for monsters
-    ENCH_YOUR_ROT_II,
-    ENCH_YOUR_ROT_III,
-    ENCH_YOUR_ROT_IV,
-    ENCH_SUMMON = 19,                  //   19
-    ENCH_ABJ_I,                        //   20
-    ENCH_ABJ_II,
-    ENCH_ABJ_III,
-    ENCH_ABJ_IV,
-    ENCH_ABJ_V,
-    ENCH_ABJ_VI,                       //   25
-    ENCH_BACKLIGHT_I,                  //jmf: backlight for Corona spell
-    ENCH_BACKLIGHT_II,
-    ENCH_BACKLIGHT_III,
-    ENCH_BACKLIGHT_IV,
-    ENCH_CHARM = 30,                   //   30
-    ENCH_YOUR_STICKY_FLAME_I,
-    ENCH_YOUR_STICKY_FLAME_II,
-    ENCH_YOUR_STICKY_FLAME_III,
-    ENCH_YOUR_STICKY_FLAME_IV,         //   34
-    ENCH_GLOWING_SHAPESHIFTER = 38,    //   38
-    ENCH_SHAPESHIFTER,
-    ENCH_TP_I,                         //   40
-    ENCH_TP_II,
-    ENCH_TP_III,
-    ENCH_TP_IV,                        //   43
-    ENCH_POISON_I = 57,                //   57
-    ENCH_POISON_II,
-    ENCH_POISON_III,
-    ENCH_POISON_IV,                    //   60
-    ENCH_STICKY_FLAME_I,
-    ENCH_STICKY_FLAME_II,
-    ENCH_STICKY_FLAME_III,
-    ENCH_STICKY_FLAME_IV,
-    ENCH_FRIEND_ABJ_I,                 //   no longer used
-    ENCH_FRIEND_ABJ_II,                //   no longer used
-    ENCH_FRIEND_ABJ_III,               //   no longer used
-    ENCH_FRIEND_ABJ_IV,                //   no longer used
-    ENCH_FRIEND_ABJ_V,                 //   no longer used
-    ENCH_FRIEND_ABJ_VI,                //   no longer used
-    ENCH_CREATED_FRIENDLY,             //   no longer used
+    ENCH_HASTE,
+    ENCH_FEAR,
+    ENCH_CONFUSION,
+    ENCH_INVIS,                        //    5
+    ENCH_POISON,
+    ENCH_BERSERK,
+    ENCH_ROT,
+    ENCH_SUMMON,
+    ENCH_ABJ,                          //   10
+    ENCH_BACKLIGHT,
+    ENCH_CHARM,
+    ENCH_STICKY_FLAME,
+    ENCH_GLOWING_SHAPESHIFTER,
+    ENCH_SHAPESHIFTER,                 //   15
+    ENCH_TP,
     ENCH_SLEEP_WARY,
-    ENCH_SUBMERGED,                    //   73 (includes air elementals in air)
-    ENCH_SHORT_LIVED,                  //   74 for ball lightning
-
-    ENCH_PARALYSIS,
+    ENCH_SUBMERGED,
+    ENCH_SHORT_LIVED,
+    ENCH_PARALYSIS,                    //   20
     
     NUM_ENCHANTMENTS
 };
@@ -1652,6 +1613,7 @@ enum kill_method_type
     NUM_KILLBY
 };
 
+// This order is *critical*. Don't mess with it (see mon_enchant)
 enum kill_category
 {
     KC_YOU,

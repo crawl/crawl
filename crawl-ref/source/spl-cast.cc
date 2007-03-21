@@ -1465,7 +1465,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         if (dem_hor == BEH_CHARMED)
             mpr("You don't feel so good about this...");
 
-        create_monster( summon_any_demon(DEMON_GREATER), ENCH_ABJ_V, dem_hor,
+        create_monster( summon_any_demon(DEMON_GREATER), 5, dem_hor,
                         you.x_pos, you.y_pos, MHITYOU, 250 );
 
         break;
@@ -1671,7 +1671,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
     {
         mpr( "Wisps of shadow whirl around you..." );
         const int which_mons =
-            create_monster( RANDOM_MONSTER, ENCH_ABJ_II, BEH_FRIENDLY, 
+            create_monster( RANDOM_MONSTER, 2, BEH_FRIENDLY, 
                             you.x_pos, you.y_pos, you.pet_target, 250 );
         if (which_mons != -1 && which_mons != NON_MONSTER)
             menv[which_mons].flags |= MF_HARD_RESET;
@@ -2287,7 +2287,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
             case 5:
                 mpr("Space twists in upon itself!");
-                create_monster( MONS_SPATIAL_VORTEX, ENCH_ABJ_III, BEH_HOSTILE,
+                create_monster( MONS_SPATIAL_VORTEX, 3, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU, 250 );
                 break;
             }
@@ -2319,7 +2319,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
                 for (loopj = 0; loopj < 2 + random2(3); loopj++)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, ENCH_ABJ_III, 
+                    create_monster( MONS_SPATIAL_VORTEX, 3, 
                                     BEH_HOSTILE, you.x_pos, you.y_pos, 
                                     MHITYOU, 250 );
                 }
@@ -2411,13 +2411,13 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
             case 3:
                 mpr("Space twists in upon itself!");
-                create_monster( MONS_SPATIAL_VORTEX, ENCH_ABJ_III, BEH_HOSTILE,
+                create_monster( MONS_SPATIAL_VORTEX, 3, BEH_HOSTILE,
                                 you.x_pos, you.y_pos, MHITYOU, 250 );
                 break;
 
             case 4:
             case 5:
-                if (create_monster( summon_any_demon(DEMON_LESSER), ENCH_ABJ_V,
+                if (create_monster( summon_any_demon(DEMON_LESSER), 5,
                                     BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, 250 ) != -1)
                 {
@@ -2434,7 +2434,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
                 for (loopj = 0; loopj < 2 + random2(3); loopj++)
                 {
-                    create_monster( MONS_SPATIAL_VORTEX, ENCH_ABJ_III, 
+                    create_monster( MONS_SPATIAL_VORTEX, 3, 
                                     BEH_HOSTILE, you.x_pos, you.y_pos, 
                                     MHITYOU, 250 );
                 }
@@ -2442,7 +2442,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
             case 1:
             case 2:
-                if (create_monster( summon_any_demon(DEMON_COMMON), ENCH_ABJ_V,
+                if (create_monster( summon_any_demon(DEMON_COMMON), 5,
                                     BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, 250) != -1)
                 {
@@ -2454,24 +2454,24 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 4:
             case 5:
                 mpr("A chorus of chattering voices calls out to you!");
-                create_monster( summon_any_demon(DEMON_LESSER), ENCH_ABJ_V,
+                create_monster( summon_any_demon(DEMON_LESSER), 5,
                                 BEH_HOSTILE, you.x_pos, you.y_pos, 
                                 MHITYOU, 250 );
 
-                create_monster( summon_any_demon(DEMON_LESSER), ENCH_ABJ_V,
+                create_monster( summon_any_demon(DEMON_LESSER), 5,
                                 BEH_HOSTILE, you.x_pos, you.y_pos, 
                                 MHITYOU, 250 );
 
                 if (coinflip())
                 {
-                    create_monster( summon_any_demon(DEMON_LESSER), ENCH_ABJ_V,
+                    create_monster( summon_any_demon(DEMON_LESSER), 5,
                                     BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, 250 );
                 }
 
                 if (coinflip())
                 {
-                    create_monster( summon_any_demon(DEMON_LESSER), ENCH_ABJ_V,
+                    create_monster( summon_any_demon(DEMON_LESSER), 5,
                                     BEH_HOSTILE, you.x_pos, you.y_pos,
                                     MHITYOU, 250 );
                 }
@@ -2502,17 +2502,17 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 2:
                 mpr("Something turns its malign attention towards you...");
 
-                create_monster( summon_any_demon(DEMON_COMMON), ENCH_ABJ_III,
+                create_monster( summon_any_demon(DEMON_COMMON), 3,
                                 BEH_HOSTILE, you.x_pos, you.y_pos, 
                                 MHITYOU, 250 );
 
-                create_monster( summon_any_demon(DEMON_COMMON), ENCH_ABJ_III,
+                create_monster( summon_any_demon(DEMON_COMMON), 3,
                                 BEH_HOSTILE, you.x_pos, you.y_pos, 
                                 MHITYOU, 250);
 
                 if (coinflip())
                 {
-                    create_monster(summon_any_demon(DEMON_COMMON), ENCH_ABJ_III,
+                    create_monster(summon_any_demon(DEMON_COMMON), 3,
                                    BEH_HOSTILE, you.x_pos, you.y_pos,
                                    MHITYOU, 250);
                 }
@@ -2711,18 +2711,18 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
             case 0:
                 mpr("Flickering shadows surround you.");
 
-                create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_HOSTILE, 
+                create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
                                 you.x_pos, you.y_pos, MHITYOU, 250 );
 
                 if (coinflip())
                 {
-                    create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_HOSTILE, 
+                    create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
                                     you.x_pos, you.y_pos, MHITYOU, 250 ); 
                 }
 
                 if (coinflip())
                 {
-                    create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_HOSTILE, 
+                    create_monster( MONS_SHADOW, 2, BEH_HOSTILE, 
                                     you.x_pos, you.y_pos, MHITYOU, 250 );
                 }
                 break;
@@ -2783,7 +2783,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 4:
-                if (create_monster( MONS_SOUL_EATER, ENCH_ABJ_IV, BEH_HOSTILE,
+                if (create_monster( MONS_SOUL_EATER, 4, BEH_HOSTILE,
                                     you.x_pos, you.y_pos, MHITYOU, 250) != -1)
                 {
                     mpr("Something reaches out for you...");
@@ -2791,7 +2791,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 5:
-                if (create_monster( MONS_REAPER, ENCH_ABJ_IV, BEH_HOSTILE,
+                if (create_monster( MONS_REAPER, 4, BEH_HOSTILE,
                                     you.x_pos, you.y_pos, MHITYOU, 250) != -1)
                 {
                     mpr("Death has come for you...");

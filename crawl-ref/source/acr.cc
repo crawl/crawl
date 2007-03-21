@@ -2698,23 +2698,7 @@ static bool initialise(void)
     strcpy(info, "");
 
     for (i = 0; i < MAX_MONSTERS; i++)
-    {
-        menv[i].type = -1;
-        menv[i].speed_increment = 10;
-        menv[i].flags = 0;
-        menv[i].behaviour = BEH_SLEEP;
-
-        menv[i].foe = NON_MONSTER;
-        menv[i].attitude = ATT_HOSTILE;
-
-        for (j = 0; j < NUM_MON_ENCHANTS; j++)
-            menv[i].enchantment[j] = ENCH_NONE;
-
-        for (j = 0; j < NUM_MONSTER_SLOTS; j++)
-            menv[i].inv[j] = NON_ITEM;
-
-        menv[i].number = 0;
-    }
+        menv[i].reset();
 
     for (i = 0; i < GXM; i++)
     {

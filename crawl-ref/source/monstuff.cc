@@ -294,9 +294,9 @@ static void place_monster_corpse(const monsters *monster)
     if (corpse_class == MONS_DRACONIAN)
         corpse_class = draco_subspecies(monster);
 
-    if (mons_has_ench(monster, ENCH_SHAPESHIFTER))
+    if (monster->has_ench(ENCH_SHAPESHIFTER))
         corpse_class = MONS_SHAPESHIFTER;
-    else if (mons_has_ench(monster, ENCH_GLOWING_SHAPESHIFTER))
+    else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
     if (mons_weight(corpse_class) == 0
@@ -384,8 +384,11 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     if (you.prev_targ == monster_killed)
         you.prev_targ = MHITNOT;
 
-    const bool pet_kill = (MON_KILL(killer) && ((i >= 0 && i < 200) 
-                            && mons_friendly(&menv[i])));
+    const bool pet_kill =
+        (MON_KILL(killer)
+         && (i == ANON_FRIENDLY_MONSTER ||
+             ((i >= 0 && i < 200) 
+              && mons_friendly(&menv[i]))));
 
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
@@ -588,11 +591,11 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             if (!testbits(monster->flags, MF_CREATED_FRIENDLY) && pet_kill)
             {
                 bool notice = false;
-
+                const bool anon = (i == ANON_FRIENDLY_MONSTER);
                 gain_exp(exper_value( monster ) / 2 + 1);
 
                 int targ_holy   = mons_holiness(monster),
-                    attacker_holy = mons_holiness(&menv[i]);
+                    attacker_holy = anon? MH_NATURAL : mons_holiness(&menv[i]);
 
                 if (attacker_holy == MH_UNDEAD)
                 {
@@ -603,7 +606,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 }
                 else if (you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
-                         || testbits( menv[i].flags, MF_GOD_GIFT ))
+                         || (!anon && testbits( menv[i].flags, MF_GOD_GIFT )))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necomancy vs Summoning (ignoring
@@ -757,7 +760,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
         you.kills.record_kill(monster, killer, pet_kill);
 
-        if (mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI))
+        if (monster->has_ench(ENCH_ABJ))
         {
             if (mons_weight(mons_species(monster->type)))
             {
@@ -878,11 +881,7 @@ static bool jelly_divide(struct monsters * parent)
     child->foe = parent->foe;
     child->attitude = parent->attitude;
     child->colour = parent->colour;
-
-    // duplicate enchantments
-    for ( int i = 0; i < NUM_MON_ENCHANTS; ++i )
-        child->enchantment[i] = parent->enchantment[i];
-
+    child->enchantments = parent->enchantments;
     child->x = parent->x + jex;
     child->y = parent->y + jey;
 
@@ -1009,21 +1008,21 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
         return (player_messaged);
     }
 
-        // If old monster is visible to the player, and is interesting,
-        // then note why the interesting monster went away.
-        if (player_monster_visible(monster) && mons_near(monster)
+    // If old monster is visible to the player, and is interesting,
+    // then note why the interesting monster went away.
+    if (player_monster_visible(monster) && mons_near(monster)
             && MONST_INTERESTING(monster))
     {
-            take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
-                       ptr_monam(monster, DESC_NOCAP_A, true)));
-        }
+        take_note(Note(NOTE_POLY_MONSTER, monster->type, 0,
+                    ptr_monam(monster, DESC_NOCAP_A, true)));
+    }
 
     // messaging: {dlb}
     bool invis = (mons_class_flag( targetc, M_INVIS ) 
-                  || mons_has_ench( monster, ENCH_INVIS )) &&
+                  || monster->has_ench(ENCH_INVIS)) &&
         (!player_see_invis());
 
-    if (mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER ))
+    if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         strcat( str_polymon, " changes into " );
     else if (targetc == MONS_PULSATING_LUMP)
         strcat( str_polymon, " degenerates into " );
@@ -1052,22 +1051,18 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
     monster->type = targetc;
     monster->number = 250;
 
-    int abj = mons_has_ench( monster, ENCH_ABJ_I, ENCH_ABJ_VI );
-    int shifter = mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER, 
-                                          ENCH_SHAPESHIFTER );
+    mon_enchant abj = monster->get_ench(ENCH_ABJ);
+    mon_enchant shifter = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                            ENCH_SHAPESHIFTER);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
 
-    // put back important enchantments:
-    if (abj != ENCH_NONE)
-        mons_add_ench( monster, abj );
-
-    if (shifter != ENCH_NONE)
-        mons_add_ench( monster, shifter );
+    monster->add_ench(abj);
+    monster->add_ench(shifter);
 
     if (mons_class_flag( monster->type, M_INVIS ))
-        mons_add_ench( monster, ENCH_INVIS );
+        monster->add_ench(ENCH_INVIS);
 
     monster->hit_points = monster->max_hit_points
                                 * ((old_hp * 100) / old_hp_max) / 100
@@ -1402,7 +1397,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     case ME_CORNERED:
         // just set behaviour.. foe doesn't change.
-        if (mon->behaviour != BEH_CORNERED && !mons_has_ench(mon,ENCH_FEAR))
+        if (mon->behaviour != BEH_CORNERED && !mon->has_ench(ENCH_FEAR))
             simple_monster_message(mon, " turns to fight!");
 
         mon->behaviour = BEH_CORNERED;
@@ -1430,7 +1425,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 
     // now, break charms if appropriate
     if (breakCharm)
-        mons_del_ench( mon, ENCH_CHARM );
+        mon->del_ench(ENCH_CHARM);
 
     // do any resultant foe or state changes
     handle_behaviour( mon );
@@ -1453,11 +1448,11 @@ static void handle_behaviour(struct monsters *mon)
     bool isHurt = (mon->hit_points <= mon->max_hit_points / 4 - 1);
     bool isHealthy = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
-    bool isScared = mons_has_ench(mon, ENCH_FEAR);
+    bool isScared = mon->has_ench(ENCH_FEAR);
     bool isMobile = !mons_is_stationary(mon);
 
     // check for confusion -- early out.
-    if (mons_has_ench(mon, ENCH_CONFUSION))
+    if (mon->has_ench(ENCH_CONFUSION))
     {
         mon->target_x = 10 + random2(GXM - 10);
         mon->target_y = 10 + random2(GYM - 10);
@@ -1821,20 +1816,8 @@ bool simple_monster_message(struct monsters *monster, const char *event,
     return (false);
 }                               // end simple_monster_message()
 
-// used to adjust time durations in handle_enchantment() for monster speed
-static inline int mod_speed( int val, int speed )
-{
-    return (speed ? (val * 10) / speed : val);
-}
-
 static bool handle_enchantment(struct monsters *monster)
 {
-    bool died = false;
-    int grid;
-    int poisonval;
-    int dam;
-    int tmp;
-
     // Yes, this is the speed we want.  This function will be called in
     // two circumstances: (1) the monster can move and has enough energy, 
     // and (2) the monster cannot move (speed == 0) and the monster loop 
@@ -1864,336 +1847,8 @@ static bool handle_enchantment(struct monsters *monster)
     //
     // -- bwr
     const int speed = (monster->speed == 0) ? you.time_taken : monster->speed;
-
-    for (int p = 0; p < NUM_MON_ENCHANTS && !died; p++)
-    {
-        switch (monster->enchantment[p])
-        {
-        case ENCH_SLOW:
-            if (random2(250) <= mod_speed( monster->hit_dice + 10, speed ))
-                mons_del_ench(monster, ENCH_SLOW);
-            break;
-
-        case ENCH_HASTE:
-            if (random2(1000) < mod_speed( 25, speed ))
-                mons_del_ench(monster, ENCH_HASTE);
-            break;
-
-        case ENCH_FEAR:
-            if (random2(150) <= mod_speed( monster->hit_dice + 5, speed ))
-                mons_del_ench(monster, ENCH_FEAR);
-            break;
-
-        case ENCH_PARALYSIS:
-            if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
-                mons_del_ench(monster, ENCH_PARALYSIS);
-            break;
-            
-        case ENCH_CONFUSION:
-            if (random2(120) < mod_speed( monster->hit_dice + 5, speed ))
-            {
-                // don't delete perma-confusion
-                if (!mons_class_flag(monster->type, M_CONFUSED))
-                    mons_del_ench(monster, ENCH_CONFUSION);
-            }
-            break;
-
-        case ENCH_INVIS:
-            if (random2(1000) < mod_speed( 25, speed ))
-            {
-                // don't delete perma-invis
-                if (!mons_class_flag( monster->type, M_INVIS ))
-                    mons_del_ench(monster, ENCH_INVIS);
-            }
-            break;
-
-        case ENCH_SUBMERGED:
-            // not even air elementals unsubmerge into clouds
-            if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
-                break;
-
-            // Air elementals are a special case, as their
-            // submerging in air isn't up to choice. -- bwr
-            if (monster->type == MONS_AIR_ELEMENTAL) 
-            {
-                heal_monster( monster, 1, one_chance_in(5) );
-
-                if (one_chance_in(5))
-                    mons_del_ench( monster, ENCH_SUBMERGED );
-
-                break;
-            }
-
-            // Now we handle the others:
-            grid = grd[monster->x][monster->y];
-
-            // Badly injured monsters prefer to stay submerged...
-            // electrical eels and lava snakes have ranged attacks
-            // and are more likely to surface.  -- bwr
-            if (!monster_can_submerge(monster->type, grid))
-                mons_del_ench( monster, ENCH_SUBMERGED ); // forced to surface
-            else if (monster->hit_points <= monster->max_hit_points / 2)
-                break;
-            else if (((monster->type == MONS_ELECTRICAL_EEL
-                        || monster->type == MONS_LAVA_SNAKE)
-                    && (random2(1000) < mod_speed( 20, speed )
-                        || (mons_near(monster) 
-                            && monster->hit_points == monster->max_hit_points
-                            && !one_chance_in(10))))
-                    || random2(2000) < mod_speed(10, speed)
-                    || (mons_near(monster)
-                            && monster->hit_points == monster->max_hit_points
-                            && !one_chance_in(5)))
-            {
-                mons_del_ench( monster, ENCH_SUBMERGED );
-            }
-            break;
-
-        case ENCH_POISON_I:
-        case ENCH_POISON_II:
-        case ENCH_POISON_III:
-        case ENCH_POISON_IV:
-        case ENCH_YOUR_POISON_I:
-        case ENCH_YOUR_POISON_II:
-        case ENCH_YOUR_POISON_III:
-        case ENCH_YOUR_POISON_IV:
-            poisonval = monster->enchantment[p] - ENCH_POISON_I;
-
-            if (poisonval < 0 || poisonval > 3)
-                poisonval = monster->enchantment[p] - ENCH_YOUR_POISON_I;
-
-            dam = (poisonval >= 3) ? 1 : 0;
-
-            if (coinflip())
-                dam += roll_dice( 1, poisonval + 2 );
-
-            if (mons_res_poison(monster) < 0)
-                dam += roll_dice( 2, poisonval ) - 1;
-
-            // We adjust damage for monster speed (since this is applied 
-            // only when the monster moves), and we handle the factional
-            // part as well (so that speed 30 creatures will take damage).
-            dam *= 10;
-            dam = (dam / speed) + ((random2(speed) < (dam % speed)) ? 1 : 0);
-
-            if (dam > 0)
-            {
-                hurt_monster( monster, dam );
-
-#if DEBUG_DIAGNOSTICS
-                // for debugging, we don't have this silent.
-                simple_monster_message( monster, " takes poison damage.", 
-                                        MSGCH_DIAGNOSTICS );
-                snprintf( info, INFO_SIZE, "poison damage: %d", dam );
-                mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
-                if (monster->hit_points < 1)
-                {
-                    monster_die(monster,
-                                ((monster->enchantment[p] < ENCH_POISON_I)
-                                            ? KILL_YOU : KILL_MISC), 0);
-                    died = true;
-                }
-            }
-
-            // chance to get over poison (1 in 8, modified for speed)
-            if (random2(1000) < mod_speed( 125, speed ))
-            {
-                if (monster->enchantment[p] == ENCH_POISON_I)
-                    mons_del_ench(monster, ENCH_POISON_I);
-                else if (monster->enchantment[p] == ENCH_YOUR_POISON_I)
-                    mons_del_ench(monster, ENCH_YOUR_POISON_I);
-                else
-                    monster->enchantment[p]--;
-            }
-            break;
-
-        case ENCH_YOUR_ROT_I:
-            if (random2(1000) < mod_speed( 250, speed ))
-                mons_del_ench(monster, ENCH_YOUR_ROT_I);
-            else if (monster->hit_points > 1 
-                    && random2(1000) < mod_speed( 333, speed ))
-            {
-                hurt_monster(monster, 1);
-            }
-            break;
-
-        //jmf: FIXME: if (undead) make_small_rot_cloud();
-        case ENCH_YOUR_ROT_II:
-        case ENCH_YOUR_ROT_III:
-        case ENCH_YOUR_ROT_IV:
-            if (monster->hit_points > 1 
-                && random2(1000) < mod_speed( 333, speed ))
-            {
-                hurt_monster(monster, 1);
-            }
-
-            if (random2(1000) < mod_speed( 250, speed ))
-                monster->enchantment[p]--;
-            break;
-
-        case ENCH_BACKLIGHT_I:
-            if (random2(1000) < mod_speed( 100, speed ))
-                mons_del_ench( monster, ENCH_BACKLIGHT_I );
-            break;
-
-        case ENCH_BACKLIGHT_II:
-        case ENCH_BACKLIGHT_III:
-        case ENCH_BACKLIGHT_IV:
-            if (random2(1000) < mod_speed( 200, speed ))
-                monster->enchantment[p]--;
-            break;
-
-        // assumption: mons_res_fire has already been checked
-        case ENCH_STICKY_FLAME_I:
-        case ENCH_STICKY_FLAME_II:
-        case ENCH_STICKY_FLAME_III:
-        case ENCH_STICKY_FLAME_IV:
-        case ENCH_YOUR_STICKY_FLAME_I:
-        case ENCH_YOUR_STICKY_FLAME_II:
-        case ENCH_YOUR_STICKY_FLAME_III:
-        case ENCH_YOUR_STICKY_FLAME_IV:
-            dam = roll_dice( 2, 4 ) - 1;
-
-            if (mons_res_fire( monster ) < 0)
-                dam += roll_dice( 2, 5 ) - 1;
-
-            // We adjust damage for monster speed (since this is applied 
-            // only when the monster moves), and we handle the factional
-            // part as well (so that speed 30 creatures will take damage).
-            dam *= 10;
-            dam = (dam / speed) + ((random2(speed) < (dam % speed)) ? 1 : 0);
-
-            if (dam > 0)
-            {
-                hurt_monster( monster, dam );
-                simple_monster_message(monster, " burns!");
-
-#if DEBUG_DIAGNOSTICS
-                snprintf( info, INFO_SIZE, "sticky flame damage: %d", dam );
-                mpr( info, MSGCH_DIAGNOSTICS );
-#endif
-
-                if (monster->hit_points < 1)
-                {
-                    monster_die(monster,
-                            ((monster->enchantment[p] < ENCH_STICKY_FLAME_I)
-                                        ? KILL_YOU : KILL_MISC), 0);
-                    died = true;
-                }
-            }
-
-            // chance to get over sticky flame (1 in 5, modified for speed)
-            if (random2(1000) < mod_speed( 200, speed ))
-            {
-                if (monster->enchantment[p] == ENCH_STICKY_FLAME_I)
-                    mons_del_ench( monster, ENCH_STICKY_FLAME_I );
-                else if (monster->enchantment[p] == ENCH_YOUR_STICKY_FLAME_I)
-                    mons_del_ench( monster, ENCH_YOUR_STICKY_FLAME_I );
-                else
-                    monster->enchantment[p]--;
-            }
-            break;
-
-        case ENCH_SHORT_LIVED:
-            // This should only be used for ball lightning -- bwr
-            if (random2(1000) < mod_speed( 200, speed ))
-               monster->hit_points = -1;
-            break;
-
-        // 19 is taken by summoning:
-        // If these are changed, must also change abjuration
-        case ENCH_ABJ_I:
-        case ENCH_ABJ_II:
-        case ENCH_ABJ_III:
-        case ENCH_ABJ_IV:
-            if (random2(1000) < mod_speed( 100, speed ))
-                monster->enchantment[p]--;
-
-            if (monster->enchantment[p] < ENCH_ABJ_I)
-            {
-                monster->enchantment[p] = ENCH_ABJ_I;
-                monster_die(monster, KILL_RESET, 0);
-                died = true;
-            }
-            break;
-
-        case ENCH_ABJ_V:
-            if (random2(1000) < mod_speed( 20, speed ))
-                monster->enchantment[p] = ENCH_ABJ_IV;
-            break;
-
-        case ENCH_ABJ_VI:
-            if (random2(1000) < mod_speed( 10, speed ))
-                monster->enchantment[p] = ENCH_ABJ_V;
-            break;
-
-        case ENCH_CHARM:
-            if (random2(500) <= mod_speed( monster->hit_dice + 10, speed ))
-                mons_del_ench(monster, ENCH_CHARM);
-            break;
-
-        case ENCH_GLOWING_SHAPESHIFTER:     // this ench never runs out
-            // number of actions is fine for shapeshifters
-            if (monster->type == MONS_GLOWING_SHAPESHIFTER 
-                || random2(1000) < mod_speed( 250, speed ))
-            {
-                monster_polymorph(monster, RANDOM_MONSTER, 0);
-            }
-            break;
-
-        case ENCH_SHAPESHIFTER:     // this ench never runs out
-            if (monster->type == MONS_SHAPESHIFTER 
-                || random2(1000) < mod_speed( 1000 / ((15 * monster->hit_dice) / 5), speed ))
-            {
-                monster_polymorph(monster, RANDOM_MONSTER, 0);
-            }
-            break;
-
-        case ENCH_TP_I:
-            mons_del_ench( monster, ENCH_TP_I );
-            monster_teleport( monster, true );
-            break;
-
-        case ENCH_TP_II:
-        case ENCH_TP_III:
-        case ENCH_TP_IV:
-            tmp = mod_speed( 1000, speed );
-
-            if (tmp < 1000 && random2(1000) < tmp)
-                monster->enchantment[p]--;
-            else if (monster->enchantment[p] - tmp / 1000 >= ENCH_TP_I)
-            {
-                monster->enchantment[p] -= tmp / 1000;
-                tmp %= 1000;
-
-                if (random2(1000) < tmp)
-                {
-                    if (monster->enchantment[p] > ENCH_TP_I)
-                        monster->enchantment[p]--;
-                    else
-                    {
-                        mons_del_ench( monster, ENCH_TP_I, ENCH_TP_IV );
-                        monster_teleport( monster, true );
-                    }
-                }
-            }
-            else
-            {
-                mons_del_ench( monster, ENCH_TP_I, ENCH_TP_IV );
-                monster_teleport( monster, true );
-            }
-            break;
-
-        case ENCH_SLEEP_WARY:
-            if (random2(1000) < mod_speed( 50, speed ))
-                mons_del_ench(monster, ENCH_SLEEP_WARY);
-            break;
-        }
-    }
-
-    return (died);
+    monster->apply_enchantments(speed);
+    return (!monster->alive());
 }                               // end handle_enchantment()
 
 //---------------------------------------------------------------
@@ -2277,7 +1932,7 @@ static void handle_nearby_ability(struct monsters *monster)
 {
     if (!mons_near( monster )
         || monster->behaviour == BEH_SLEEP
-        || mons_has_ench( monster, ENCH_SUBMERGED ))
+        || monster->has_ench(ENCH_SUBMERGED))
     {
         return;
     }
@@ -2332,7 +1987,7 @@ static void handle_nearby_ability(struct monsters *monster)
         // XXX: We're being a bit player-centric here right now...
         // really we should replace the grid_distance() check
         // with one that checks for unaligned monsters as well. -- bwr
-        if (mons_has_ench( monster, ENCH_SUBMERGED))
+        if (monster->has_ench(ENCH_SUBMERGED))
         {
             if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
                 || grd[monster->x][monster->y] == DNGN_BLUE_FOUNTAIN
@@ -2343,7 +1998,7 @@ static void handle_nearby_ability(struct monsters *monster)
                         || (monster->hit_points > monster->max_hit_points / 2
                             && coinflip()))))
             {
-                mons_del_ench( monster, ENCH_SUBMERGED );
+                monster->del_ench(ENCH_SUBMERGED);
             }
         }
         else if (monster_can_submerge(monster->type,
@@ -2359,13 +2014,13 @@ static void handle_nearby_ability(struct monsters *monster)
                      || monster->hit_points <= monster->max_hit_points / 2)
                      || env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
-            mons_add_ench( monster, ENCH_SUBMERGED );
+            monster->add_ench(ENCH_SUBMERGED);
         }
         break;
 
     case MONS_AIR_ELEMENTAL:
         if (one_chance_in(5))
-            mons_add_ench( monster, ENCH_SUBMERGED );
+            monster->add_ench(ENCH_SUBMERGED);
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -2394,7 +2049,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
     if (!mons_near( monster )
         || monster->behaviour == BEH_SLEEP
-        || mons_has_ench( monster, ENCH_SUBMERGED ))
+        || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
     }
@@ -2458,7 +2113,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         break;
 
     case MONS_LAVA_SNAKE:
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         if (!mons_player_visible( monster ))
@@ -2493,7 +2148,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         break;
 
     case MONS_ELECTRICAL_EEL:
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         if (!mons_player_visible( monster ))
@@ -2531,7 +2186,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
     case MONS_YELLOW_DRACONIAN:
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         if (!mons_player_visible( monster ))
@@ -2547,7 +2202,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             break;
         // deliberate fall through
     case MONS_FIEND:
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         // friendly fiends won't use torment, preferring hellfire
@@ -2610,7 +2265,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         if (!mons_near(monster))
@@ -2664,7 +2319,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
             break;
 
         if ((monster->type != MONS_HELL_HOUND && random2(13) < 3)
@@ -2786,7 +2441,7 @@ static bool handle_reaching(struct monsters *monster)
     if (mons_aligned(monster_index(monster), monster->foe))
         return (false);
 
-    if (mons_has_ench( monster, ENCH_SUBMERGED ))
+    if (monster->has_ench(ENCH_SUBMERGED))
         return (false);
 
     if (wpn != NON_ITEM && get_weapon_brand( mitm[wpn] ) == SPWPN_REACHING )
@@ -2837,9 +2492,9 @@ static bool handle_reaching(struct monsters *monster)
 static bool handle_scroll(struct monsters *monster)
 {
     // yes, there is a logic to this ordering {dlb}:
-    if (mons_has_ench(monster, ENCH_CONFUSION) 
+    if (monster->has_ench(ENCH_CONFUSION) 
         || monster->behaviour == BEH_SLEEP
-        || mons_has_ench( monster, ENCH_SUBMERGED ))
+        || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
     }
@@ -2855,7 +2510,7 @@ static bool handle_scroll(struct monsters *monster)
         switch (mitm[monster->inv[MSLOT_SCROLL]].sub_type)
         {
         case SCR_TELEPORTATION:
-            if (!mons_has_ench(monster, ENCH_TP_I, ENCH_TP_IV))
+            if (!monster->has_ench(ENCH_TP))
             {
                 if (monster->behaviour == BEH_FLEE)
                 {
@@ -2883,7 +2538,7 @@ static bool handle_scroll(struct monsters *monster)
             if (mons_near(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
-                create_monster( MONS_ABOMINATION_SMALL, ENCH_ABJ_II,
+                create_monster( MONS_ABOMINATION_SMALL, 2,
                                 SAME_ATTITUDE(monster), monster->x, monster->y,
                                 monster->foe, 250 );
                 read = true;
@@ -2916,7 +2571,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         return (false);
     else if (!mons_near(monster))
         return (false);
-    else if (mons_has_ench( monster, ENCH_SUBMERGED ))
+    else if (monster->has_ench(ENCH_SUBMERGED))
         return (false);
     else if (monster->inv[MSLOT_WAND] == NON_ITEM
              || mitm[monster->inv[MSLOT_WAND]].plus <= 0)
@@ -2980,7 +2635,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
         // these are wands that monsters will aim at themselves {dlb}:
         case WAND_HASTING:
-            if (!mons_has_ench(monster, ENCH_HASTE))
+            if (!monster->has_ench(ENCH_HASTE))
             {
                 beem.target_x = monster->x;
                 beem.target_y = monster->y;
@@ -3002,8 +2657,8 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
             return (false);
 
         case WAND_INVISIBILITY:
-            if (!mons_has_ench( monster, ENCH_INVIS ) 
-                && !mons_has_ench( monster, ENCH_SUBMERGED )
+            if (!monster->has_ench(ENCH_INVIS) 
+                && !monster->has_ench(ENCH_SUBMERGED)
                 && (!mons_friendly(monster) || player_see_invis(false)))
             {
                 beem.target_x = monster->x;
@@ -3017,7 +2672,7 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
         case WAND_TELEPORTATION:
             if (monster->hit_points <= monster->max_hit_points / 2)
             {
-                if (!mons_has_ench(monster, ENCH_TP_I, ENCH_TP_IV)
+                if (!monster->has_ench(ENCH_TP)
                     && !one_chance_in(20))
                 {
                     beem.target_x = monster->x;
@@ -3144,19 +2799,19 @@ static bool handle_spell( monsters *monster, bolt & beem )
     if (monster->behaviour == BEH_SLEEP
         || (!mons_class_flag(monster->type, M_SPELLCASTER)
                 && draco_breath == MS_NO_SPELL)
-        || mons_has_ench( monster, ENCH_SUBMERGED ))
+        || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
     }
 
     if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
             || mons_class_flag(monster->type, M_PRIEST))
-        && (mons_has_ench(monster, ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
+        && (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER)))
     {
         return (false);           //jmf: shapeshiftes don't get spells, just
                                   //     physical powers.
     }
-    else if (mons_has_ench(monster, ENCH_CONFUSION) 
+    else if (monster->has_ench(ENCH_CONFUSION) 
             && !mons_class_flag(monster->type, M_CONFUSED))
     {
         return (false);
@@ -3467,7 +3122,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
                     break;
 
                 case MONS_VAPOUR:
-                    mons_add_ench( monster, ENCH_SUBMERGED );
+                    monster->add_ench(ENCH_SUBMERGED);
                     break;
 
                 case MONS_BRAIN_WORM:
@@ -3537,9 +3192,9 @@ static bool handle_spell( monsters *monster, bolt & beem )
 static bool handle_throw(struct monsters *monster, bolt & beem)
 {
     // yes, there is a logic to this ordering {dlb}:
-    if (mons_has_ench(monster, ENCH_CONFUSION) 
+    if (monster->has_ench(ENCH_CONFUSION) 
         || monster->behaviour == BEH_SLEEP
-        || mons_has_ench( monster, ENCH_SUBMERGED ))
+        || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
     }
@@ -3603,8 +3258,8 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
 static bool handle_monster_spell(monsters *monster, bolt &beem)
 {
     // shapeshifters don't get spells
-    if (!mons_has_ench( monster, ENCH_GLOWING_SHAPESHIFTER,
-                                 ENCH_SHAPESHIFTER )
+    if (!monster->has_ench( ENCH_GLOWING_SHAPESHIFTER,
+                            ENCH_SHAPESHIFTER )
         || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
     {
         if (handle_spell(monster, beem))
@@ -3677,7 +3332,7 @@ static void handle_monster_move(int i, monsters *monster)
     if (monster->speed == 0) 
     {
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD
-            && !mons_has_ench( monster, ENCH_SUBMERGED ))
+            && !monster->has_ench(ENCH_SUBMERGED))
         {
             mons_in_cloud( monster );
         }
@@ -3691,11 +3346,11 @@ static void handle_monster_move(int i, monsters *monster)
         monster->foe_memory--;
 
     if (monster->type == MONS_GLOWING_SHAPESHIFTER)
-        mons_add_ench( monster, ENCH_GLOWING_SHAPESHIFTER );
+        monster->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
     // otherwise there are potential problems with summonings
     if (monster->type == MONS_SHAPESHIFTER)
-        mons_add_ench( monster, ENCH_SHAPESHIFTER );
+        monster->add_ench(ENCH_SHAPESHIFTER);
 
     // We reset batty monsters from wander to seek here, instead 
     // of in handle_behaviour() since that will be called with
@@ -3717,7 +3372,7 @@ static void handle_monster_move(int i, monsters *monster)
 
         if (env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
-            if (mons_has_ench( monster, ENCH_SUBMERGED ))
+            if (monster->has_ench(ENCH_SUBMERGED))
                 break;
 
             if (monster->type == -1)
@@ -3746,7 +3401,7 @@ static void handle_monster_move(int i, monsters *monster)
         if (monster_can_submerge(monster->type, grd[monster->x][monster->y])
             && env.cgrid[monster->x][monster->y] != EMPTY_CLOUD)
         {
-            mons_add_ench( monster, ENCH_SUBMERGED );
+            monster->add_ench(ENCH_SUBMERGED);
         }
 
         if (monster->speed >= 100)
@@ -3779,7 +3434,7 @@ static void handle_monster_move(int i, monsters *monster)
 
         if (mons_is_confused( monster )
             || (monster->type == MONS_AIR_ELEMENTAL 
-                && mons_has_ench( monster, ENCH_SUBMERGED )))
+                && monster->has_ench(ENCH_SUBMERGED)))
         {
             std::vector<coord_def> moves;
 
@@ -4036,7 +3691,7 @@ static bool handle_pickup(struct monsters *monster)
     bool monsterNearby = mons_near(monster);
     int  item = NON_ITEM;
 
-    if (mons_has_ench( monster, ENCH_SUBMERGED ))
+    if (monster->has_ench(ENCH_SUBMERGED))
         return (false);
 
     if (monster->behaviour == BEH_SLEEP)
@@ -5191,7 +4846,8 @@ static void mons_in_cloud(struct monsters *monster)
         if (mons_res_poison(monster) > 0)
             return;
 
-        poison_monster(monster, (env.cloud[wc].type == CLOUD_POISON));
+        poison_monster(monster,
+                       env.cloud[wc].type == CLOUD_POISON? KC_YOU : KC_OTHER);
         // If the monster got poisoned, wake it up.
         wake = true;
 
@@ -5230,7 +4886,8 @@ static void mons_in_cloud(struct monsters *monster)
                 || monster->type == MONS_DEATH_DRAKE)
             return;
 
-        poison_monster(monster, (env.cloud[wc].type == CLOUD_MIASMA));
+        poison_monster(monster,
+                       (env.cloud[wc].type == CLOUD_MIASMA? KC_YOU : KC_OTHER));
 
         if (monster->max_hit_points > 4 && coinflip())
             monster->max_hit_points--;

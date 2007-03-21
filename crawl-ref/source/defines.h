@@ -140,6 +140,9 @@
 // lowest grid value which can be seen through
 #define MINSEE 11
 
+// Can be passed to monster_die to indicate that a friendly did the killing.
+#define ANON_FRIENDLY_MONSTER   -1
+
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
 

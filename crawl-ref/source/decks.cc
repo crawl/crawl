@@ -323,9 +323,9 @@ static void cards(unsigned char which_card)
     case CARD_BUTTERFLY:
         mpr("You have drawn the Butterfly.");
 
-        summ_dur = ENCH_ABJ_I + random2(3) + you.skills[SK_EVOCATIONS] / 2;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
+        summ_dur = 1 + random2(3) + you.skills[SK_EVOCATIONS] / 2;
+        if (summ_dur > 6)
+            summ_dur = 6;
 
         if (create_monster( MONS_BUTTERFLY, summ_dur, BEH_FRIENDLY, 
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
@@ -545,9 +545,7 @@ static void cards(unsigned char which_card)
     case CARD_DEMON_LESSER:
         mpr("On the card is a picture of a little demon.");
 
-        summ_dur = ENCH_ABJ_I + random2(3) + you.skills[SK_EVOCATIONS] / 3;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
+        summ_dur = cap_int(1 + random2(3) + you.skills[SK_EVOCATIONS] / 3, 6);
 
         if (create_monster( summon_any_demon( DEMON_LESSER ), summ_dur, 
                             BEH_FRIENDLY, you.x_pos, you.y_pos, you.pet_target,
@@ -560,9 +558,7 @@ static void cards(unsigned char which_card)
     case CARD_DEMON_COMMON:
         mpr("On the card is a picture of a demon.");
 
-        summ_dur = ENCH_ABJ_I + random2(3) + you.skills[SK_EVOCATIONS] / 4;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
+        summ_dur = cap_int(1 + random2(3) + you.skills[SK_EVOCATIONS] / 4, 6);
 
         if (create_monster( summon_any_demon( DEMON_COMMON ), summ_dur, 
                             BEH_FRIENDLY, you.x_pos, you.y_pos, you.pet_target,
@@ -581,7 +577,7 @@ static void cards(unsigned char which_card)
         if (summ_beh == BEH_CHARMED)
             mpr( "You don't feel so good about this..." );
 
-        if (create_monster( summon_any_demon( DEMON_GREATER ), ENCH_ABJ_V,
+        if (create_monster( summon_any_demon( DEMON_GREATER ), 5,
                             summ_beh, you.x_pos, you.y_pos, 
                             you.pet_target, 250 ) != -1)
         {
@@ -598,7 +594,7 @@ static void cards(unsigned char which_card)
 
         for (loopy = 0; loopy < summ_num; loopy++)
         {
-            if (create_monster( summon_any_demon( DEMON_LESSER ), ENCH_ABJ_VI, 
+            if (create_monster( summon_any_demon( DEMON_LESSER ), 6, 
                                 BEH_HOSTILE, you.x_pos, you.y_pos, 
                                 MHITYOU, 250 ) != -1) 
             {
@@ -613,10 +609,7 @@ static void cards(unsigned char which_card)
     case CARD_YAK:
         mpr("On the card is a picture of a huge shaggy yak.");
 
-        summ_dur = ENCH_ABJ_II + you.skills[SK_EVOCATIONS] / 2;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(2 + you.skills[SK_EVOCATIONS] / 2, 6);
         if (create_monster( MONS_DEATH_YAK, summ_dur, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
@@ -627,10 +620,7 @@ static void cards(unsigned char which_card)
     case CARD_FIEND:
         mpr("On the card is a picture of a huge scaly devil.");
 
-        summ_dur = ENCH_ABJ_II + you.skills[SK_EVOCATIONS] / 6;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(2 + you.skills[SK_EVOCATIONS] / 6, 6);
         if (create_monster( MONS_FIEND, summ_dur, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
@@ -641,10 +631,7 @@ static void cards(unsigned char which_card)
     case CARD_DRAGON:
         mpr("On the card is a picture of a huge scaly dragon.");
 
-        summ_dur = ENCH_ABJ_III + you.skills[SK_EVOCATIONS] / 6;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(3 + you.skills[SK_EVOCATIONS] / 6, 6);
         if (create_monster( (coinflip() ? MONS_DRAGON : MONS_ICE_DRAGON),
                             summ_dur, BEH_FRIENDLY, you.x_pos, you.y_pos, 
                             you.pet_target, 250 ) != -1)
@@ -656,10 +643,7 @@ static void cards(unsigned char which_card)
     case CARD_GOLEM:
         mpr("On the card is a picture of a statue.");
 
-        summ_dur = ENCH_ABJ_II + you.skills[SK_EVOCATIONS] / 4;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(2 + you.skills[SK_EVOCATIONS] / 4, 6);
         if (create_monster( MONS_CLAY_GOLEM + random2(6), summ_dur, 
                             BEH_FRIENDLY, you.x_pos, you.y_pos, 
                             you.pet_target, 250 ) != -1)
@@ -671,10 +655,7 @@ static void cards(unsigned char which_card)
     case CARD_THING_FUGLY:
         mpr("On the card is a picture of a very ugly thing.");
 
-        summ_dur = ENCH_ABJ_II + you.skills[SK_EVOCATIONS] / 4;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(2 + you.skills[SK_EVOCATIONS] / 4, 6);
         if (create_monster( MONS_VERY_UGLY_THING, summ_dur, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {
@@ -699,10 +680,7 @@ static void cards(unsigned char which_card)
         else
             mpr("On the card is a picture of a hideous abomination.");
 
-        summ_dur = ENCH_ABJ_II + you.skills[SK_EVOCATIONS] / 4;
-        if (summ_dur > ENCH_ABJ_VI)
-            summ_dur = ENCH_ABJ_VI;
-
+        summ_dur = cap_int(2 + you.skills[SK_EVOCATIONS] / 4, 6);
         if (create_monster( MONS_UNSEEN_HORROR, summ_dur, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 ) != -1)
         {

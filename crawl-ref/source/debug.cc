@@ -878,34 +878,11 @@ void tweak_object(void)
 //---------------------------------------------------------------
 #if DEBUG_DIAGNOSTICS
 
-static const char *enchant_names[] = 
-{
-    "None", 
-    "Slow", "Haste", "*BUG-3*", "Fear", "Conf", "Invis", 
-    "YPois-1", "YPois-2", "YPois-3", "YPois-4",
-    "YShug-1", "YShug-2", "YShug-3", "YShug-4",
-    "YRot-1", "YRot-2", "YRot-3", "YRot-4",
-    "Summon", "Abj-1", "Abj-2", "Abj-3", "Abj-4", "Abj-5", "Abj-6",
-    "Corona-1", "Corona-2", "Corona-3", "Corona-4", 
-    "Charm", "YSticky-1", "YSticky-2", "YSticky-3", "YSticky-4", 
-    "*BUG-35*", "*BUG-36*", "*BUG-37*",
-    "GlowShapeshifter", "Shapeshifter", 
-    "Tele-1", "Tele-2", "Tele-3", "Tele-4",
-    "*BUG-44*", "*BUG-45*", "*BUG-46*", "*BUG-47*", "*BUG-48*", "*BUG-49*",
-    "*BUG-50*", "*BUG-51*", "*BUG-52*", "*BUG-53*", "*BUG-54*", "*BUG-55*",
-    "*BUG-56*",
-    "Pois-1", "Pois-2", "Pois-3", "Pois-4",
-    "Sticky-1", "Sticky-2", "Sticky-3", "Sticky-4",
-    "OldAbj-1", "OldAbj-2", "OldAbj-3", "OldAbj-4", "OldAbj-5", "OldAbj-6",
-    "OldCreatedFriendly", "SleepWary", "Submerged", "Short Lived",
-    "*BUG-too big*"
-};
-
 void stethoscope(int mwh)
 {
     struct dist stth;
     int steth_x, steth_y;
-    int i, j;
+    int i;
 
     if (mwh != RANDOM_MONSTER)
         i = mwh;
@@ -1012,25 +989,10 @@ void stethoscope(int mwh)
 
     mpr( info, MSGCH_DIAGNOSTICS );
 
-    // print enchantments
-    strncpy( info, "ench: ", INFO_SIZE );
-    for (j = 0; j < 6; j++) 
-    {
-        if (menv[i].enchantment[j] >= NUM_ENCHANTMENTS)
-            strncat( info, enchant_names[ NUM_ENCHANTMENTS ], INFO_SIZE );
-        else
-            strncat( info, enchant_names[ menv[i].enchantment[j] ], INFO_SIZE );
-
-        if (strlen( info ) <= 70)
-            strncat( info, " ", INFO_SIZE );
-        else if (j < 5)
-        {
-            mpr( info, MSGCH_DIAGNOSTICS );
-            strncpy( info, "ench: ", INFO_SIZE );
-        }
-    }
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "ench: %s",
+         comma_separated_line(menv[i].enchantments.begin(),
+                              menv[i].enchantments.end(),
+                              ", ").c_str());
 
     if (menv[i].type == MONS_PLAYER_GHOST 
         || menv[i].type == MONS_PANDEMONIUM_DEMON)

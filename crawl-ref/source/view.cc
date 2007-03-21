@@ -729,7 +729,7 @@ bool check_awaken(int mons_aw)
         if (mon_holy == MH_NATURAL)
         {
             // monster is "hibernating"... reduce chance of waking
-            if (mons_has_ench( monster, ENCH_SLEEP_WARY ))
+            if (monster->has_ench(ENCH_SLEEP_WARY))
                 mons_perc -= 10;
         }
         else // unnatural creature

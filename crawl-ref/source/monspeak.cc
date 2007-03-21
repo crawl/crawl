@@ -53,7 +53,7 @@ bool mons_speaks(struct monsters *monster)
     const char *m_name = ptr_monam(monster, DESC_CAP_THE);
     strcpy(info, m_name);
 
-    if (mons_has_ench(monster, ENCH_INVIS))
+    if (monster->has_ench(ENCH_INVIS))
         return false;
     // invisible monster tries to remain unnoticed
 
@@ -63,7 +63,7 @@ bool mons_speaks(struct monsters *monster)
         if (!one_chance_in(3))
             return false;       // while silenced, don't bother so often
 
-        if (mons_has_ench(monster, ENCH_CONFUSION))
+        if (monster->has_ench(ENCH_CONFUSION))
         {
             temp_rand = random2(10);
             strcat(info, (temp_rand <  4) ? " gestures wildly." :
@@ -111,10 +111,10 @@ bool mons_speaks(struct monsters *monster)
     }                           // end silenced monster
 
     // charmed monsters aren't too expressive
-    if (mons_has_ench(monster, ENCH_CHARM))
+    if (monster->has_ench(ENCH_CHARM))
         return false;
 
-    if (mons_has_ench(monster, ENCH_CONFUSION))
+    if (monster->has_ench(ENCH_CONFUSION))
     {
         if (mons_holiness( monster ) == MH_DEMONIC
             && monster->type != MONS_IMP)

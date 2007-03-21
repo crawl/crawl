@@ -20,6 +20,7 @@
 #include <list>
 #include <string>
 #include <map>
+#include <set>
 #include <memory>
 
 #include <time.h>
@@ -108,6 +109,7 @@ public:
     virtual int       id() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual kill_category kill_alignment() const = 0;
     virtual god_type  deity() const = 0;
     
     virtual bool      alive() const = 0;
@@ -704,6 +706,8 @@ public:
     bool is_levitating() const;
     bool cannot_speak() const;
 
+    kill_category kill_alignment() const;
+
     bool has_spell(int spell) const;
 
     size_type transform_size(int psize = PSIZE_TORSO) const;
@@ -821,14 +825,39 @@ class level_id;
 struct mon_enchant
 {
     enchant_type  ench;
-    kill_category who;      // Who set this enchantment?
     int           degree;
+    kill_category who;      // Who set this enchantment?
 
-    mon_enchant(enchant_type e, int deg = 1, kill_category whose = KC_OTHER)
-        : ench(e), who(whose), degree(deg)
+    mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
+                kill_category whose = KC_OTHER)
+        : ench(e), degree(deg), who(whose)
     {
     }
+
+    int killer() const;
+    int kill_agent() const;
+    
+    operator std::string () const;
+    const char *kill_category_desc(kill_category) const;
+    void merge_killer(kill_category who);
+    void cap_degree();
+
+    bool operator < (const mon_enchant &other) const
+    {
+        return (ench < other.ench);
+    }
+
+    bool operator == (const mon_enchant &other) const
+    {
+        // NOTE: This does *not* check who/degree.
+        return (ench == other.ench);
+    }
+
+    mon_enchant &operator += (const mon_enchant &other);
+    mon_enchant operator + (const mon_enchant &other) const;
 };
+
+typedef std::set<mon_enchant> mon_enchant_list;
 
 class monsters : public actor
 {
@@ -856,7 +885,7 @@ public:
     unsigned char attitude;            // from MONS_ATTITUDE
     unsigned int behaviour;
     unsigned int foe;
-    FixedVector<unsigned int, NUM_MON_ENCHANTS> enchantment;
+    mon_enchant_list enchantments;
     unsigned long flags;               // bitfield of boolean flags
 
     unsigned int number;               // #heads (hydra), etc.
@@ -870,6 +899,23 @@ public:
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
 public:
+    kill_category kill_alignment() const;
+    
+    bool        has_ench(enchant_type ench,
+                         enchant_type ench2 = ENCH_NONE) const;
+    mon_enchant get_ench(enchant_type ench,
+                         enchant_type ench2 = ENCH_NONE) const;
+    bool        add_ench(const mon_enchant &);
+    void        update_ench(const mon_enchant &);
+    bool        del_ench(enchant_type ench, bool quiet = false);
+
+    void lose_ench_levels(const mon_enchant &e, int levels);
+    void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
+    void apply_enchantments(int speed);
+    void apply_enchantment(mon_enchant me, int speed);
+
+    void timeout_enchantments(int levels);
+    
     bool needs_transit() const;
     void set_transit(level_id destination);
     bool find_place_to_live(bool near_player = false);

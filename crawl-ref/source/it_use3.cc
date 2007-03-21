@@ -189,7 +189,7 @@ void special_wielded(void)
         if (random2(8) <= player_spec_death())
         {
             did_god_conduct( DID_NECROMANCY, 1 );
-            create_monster( MONS_SHADOW, ENCH_ABJ_II, BEH_FRIENDLY,
+            create_monster( MONS_SHADOW, 2, BEH_FRIENDLY,
                             you.x_pos, you.y_pos, you.pet_target, 250 );
         }
 
@@ -404,7 +404,7 @@ bool evoke_wielded( void )
                                                  : MONS_HELLION + random2(10));
 
                     bool good_summon = (create_monster( spell_casted, 
-                                            ENCH_ABJ_VI, BEH_HOSTILE,
+                                            6, BEH_HOSTILE,
                                             you.x_pos, you.y_pos, 
                                             MHITYOU, 250) != -1);
 
@@ -630,7 +630,7 @@ bool evoke_wielded( void )
             else
             {
                 mpr("You produce a hideous howling noise!");
-                int midx = create_monster( MONS_BEAST, ENCH_ABJ_IV,
+                int midx = create_monster( MONS_BEAST, 4,
                                            BEH_HOSTILE, you.x_pos, you.y_pos,
                                            MHITYOU, 250 );
                 // avoid scumming; also prevents it from showing up on notes
@@ -725,7 +725,7 @@ static bool efreet_flask(void)
 
     mpr("You open the flask...");
 
-    const int efreet = create_monster( MONS_EFREET, ENCH_ABJ_V, behaviour, 
+    const int efreet = create_monster( MONS_EFREET, 5, behaviour, 
                                        you.x_pos, you.y_pos, MHITYOU, 250,
                                        false, false, true );
     if (efreet != -1)
@@ -923,7 +923,7 @@ void tome_of_power(char sc_read_2)
 
 
     case 10:
-        if (create_monster( MONS_ABOMINATION_SMALL, ENCH_ABJ_VI, BEH_HOSTILE,
+        if (create_monster( MONS_ABOMINATION_SMALL, 6, BEH_HOSTILE,
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
         {
             mpr("A horrible Thing appears!");
@@ -1023,7 +1023,7 @@ static bool box_of_beasts(void)
         int beh = (one_chance_in(you.skills[SK_EVOCATIONS] + 5) ? BEH_HOSTILE
                                                                 : BEH_FRIENDLY);
 
-        if (create_monster( beasty, ENCH_ABJ_II + random2(4), beh,
+        if (create_monster( beasty, 2 + random2(4), beh,
                             you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
         {
             mpr("...and something leaps out!");

@@ -296,7 +296,7 @@ void mons_trap(struct monsters *monster)
         }
 
         if (apply_poison)
-            poison_monster( monster, false );
+            poison_monster( monster, KC_OTHER );
 
         // generate "fallen" projectile, where appropriate: {dlb}
         if (random2(10) < 7)
@@ -400,7 +400,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
                 }
             }
 
-            create_monster( mons, ENCH_ABJ_V, SAME_ATTITUDE(monster), 
+            create_monster( mons, 5, SAME_ATTITUDE(monster), 
                             monster->x, monster->y, monster->foe, 250 );
         }
         return;
@@ -417,7 +417,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster( RANDOM_MONSTER, ENCH_ABJ_V, SAME_ATTITUDE(monster),
+            create_monster( RANDOM_MONSTER, 5, SAME_ATTITUDE(monster),
                             monster->x, monster->y, monster->foe, 250 );
         }
         return;
@@ -427,7 +427,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            create_monster( MONS_RAKSHASA_FAKE, ENCH_ABJ_III, 
+            create_monster( MONS_RAKSHASA_FAKE, 3, 
                             SAME_ATTITUDE(monster), monster->x, monster->y, 
                             monster->foe, 250 );
         }
@@ -443,10 +443,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 10;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
-
+        duration  = cap_int(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_COMMON), duration,
@@ -463,10 +460,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
     case MS_SUMMON_DEMON_LESSER: // class 5 demons
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 5;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
-
+        duration  = cap_int(2 + monster->hit_dice / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_LESSER), duration,
@@ -478,9 +472,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
     case MS_SUMMON_UFETUBUS:
         sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 5;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
+        duration  = cap_int(2 + monster->hit_dice / 5, 6);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -490,7 +482,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         return;
 
     case MS_SUMMON_BEAST:       // Geryon
-        create_monster( MONS_BEAST, ENCH_ABJ_IV, SAME_ATTITUDE(monster),
+        create_monster( MONS_BEAST, 4, SAME_ATTITUDE(monster),
                         monster->x, monster->y, monster->foe, 250 );
         return;
 
@@ -504,10 +496,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 5;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
-
+        duration  = cap_int(2 + monster->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
             create_monster(MONS_WANDERING_MUSHROOM, duration, 
                     SAME_ATTITUDE(monster),
@@ -526,10 +515,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 4 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 5;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
-
+        duration  = cap_int(2 + monster->hit_dice / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             do
@@ -539,7 +525,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
             while (mons_class_holiness(summonik) != MH_UNDEAD);
 
             create_monster(summonik, duration, SAME_ATTITUDE(monster),
-                           you.x_pos, you.y_pos, monster->foe, 250);
+                           monster->x, monster->y, monster->foe, 250);
         }
         return;
 
@@ -562,10 +548,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 1 + random2( monster->hit_dice / 10 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 10;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
-
+        duration  = cap_int(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster( summon_any_demon(DEMON_GREATER), duration,
@@ -585,9 +568,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
-        duration  = ENCH_ABJ_II + monster->hit_dice / 10;
-        if (duration > ENCH_ABJ_VI)
-            duration = ENCH_ABJ_VI;
+        duration  = cap_int(2 + monster->hit_dice / 10, 6);
 
         {
             std::vector<int> monsters;
@@ -776,13 +757,13 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
 {
     if (!instan)
     {
-        if (mons_del_ench(monster, ENCH_TP_I, ENCH_TP_IV))
+        if (monster->del_ench(ENCH_TP))
         {
             if (!silent)
                 simple_monster_message(monster, " seems more stable.");
         }
         else
-            mons_add_ench(monster, (coinflip() ? ENCH_TP_III : ENCH_TP_IV ));
+            monster->add_ench( mon_enchant(ENCH_TP, coinflip()? 3 : 4) );
 
         return;
     }
@@ -1880,8 +1861,6 @@ static unsigned char monster_abjuration(int pow, bool test)
     
     for (int ab = 0; ab < MAX_MONSTERS && abjure_str; ab++)
     {
-        int abjLevel;
-
         monster = &menv[ab];
 
         if (monster->type == -1 || !mons_near(monster))
@@ -1890,8 +1869,8 @@ static unsigned char monster_abjuration(int pow, bool test)
         if (!mons_friendly(monster))
             continue;
 
-        abjLevel = mons_has_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI);
-        if (abjLevel == ENCH_NONE)
+        mon_enchant abjLevel = monster->get_ench(ENCH_ABJ);
+        if (abjLevel.ench == ENCH_NONE)
             continue;
 
         result++;
@@ -1899,15 +1878,14 @@ static unsigned char monster_abjuration(int pow, bool test)
         if (test)
             continue;
 
-        abjLevel -= abjure_str;
+        abjLevel.degree -= abjure_str;
 
-        if (abjLevel < ENCH_ABJ_I)
+        if (abjLevel.degree <= 0)
             monster_die(monster, KILL_RESET, 0);
         else
         {
             simple_monster_message(monster, " shudders.");
-            mons_del_ench(monster, ENCH_ABJ_I, ENCH_ABJ_VI);
-            mons_add_ench(monster, abjLevel);
+            monster->update_ench(abjLevel);
         }
 
         if (!(abjure_str = div_rand_round(abjure_str, 2)))
@@ -1930,7 +1908,7 @@ bool silver_statue_effects(monsters *mons)
 
         create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
                                                      : DEMON_LESSER)),
-                                 ENCH_ABJ_V, BEH_HOSTILE,
+                                 5, BEH_HOSTILE,
                                  you.x_pos, you.y_pos,
                                  MHITYOU, 250 );
         return (true);
