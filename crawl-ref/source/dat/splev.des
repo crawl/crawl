@@ -2807,6 +2807,52 @@ MAP
 ...........?...@......
 ENDMAP
 
+########################################################################
+# Dragon's Lair, for generous values of Dragon
+
+NAME: erik_lair_4
+TAGS: lair_entry
+MONS: steam dragon/mottled dragon/swamp drake
+MONS: weight:20 giant iguana/komodo dragon/giant gecko/giant lizard
+FLAGS: no_rotate
+SUBST: ? = x.c
+SHUFFLE: %*RO
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx??xx?x*?xxx?.2.xxxx
+xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
+xxxxxxxxxxxxx?....xxx...2....??????..??x?x..%xxxx
+xx?xx???xxxxx..xx??xx??..........?...???..??x=.?x
+@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.xxx.?x
+xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?xxx$xx
+xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??xx?x
+xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?xxx
+xxxxxxxxxxxxxxxxxxxxx?R?xxxxxxxxxx.xxx?xxx?xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Orcish Takeover!
+ 
+NAME: erik_lair_5
+TAGS: lair_entry
+MONS: orc, warg/giant snail, orc warrior/warg, orc priest/orc wizard/plant
+ORIENT: float
+MAP
+xxxx..@..xxxx
+xx.........xx
+x...2...44..x
+...4..1......
+@....1O3....@
+..........4..
+x...4..2....x
+xx.........xx
+xxxx..@..xxxx
+ENDMAP
+
 ##############################################################################
 # Hive entries
 ##############################################################################
