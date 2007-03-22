@@ -1004,10 +1004,11 @@ private:
 
 struct cloud_struct
 {
-    unsigned char       x;
-    unsigned char       y;
-    unsigned char       type;
-    int                 decay;
+    int           x;
+    int           y;
+    int           type;
+    int           decay;
+    kill_category whose;
 };
 
 struct shop_struct

@@ -412,7 +412,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         }
 
         if (monster->type == MONS_FIRE_VORTEX)
-            place_cloud(CLOUD_FIRE_MON, monster->x, monster->y, 2 + random2(4));
+            place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
+                        monster->kill_alignment());
     }
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
@@ -430,7 +431,8 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 gain_exp( exper_value( monster ) / 2 + 1 );
         }
 
-        place_cloud(CLOUD_COLD_MON, monster->x, monster->y, 2 + random2(4));
+        place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
+                    monster->kill_alignment());
     }
     else if (monster->type == MONS_DANCING_WEAPON)
     {
@@ -445,8 +447,9 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         }
 
         if (hard_reset)
-            place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
-                         monster->y, 1 + random2(3) );
+            place_cloud( CLOUD_GREY_SMOKE + random2(3),
+                         monster->x, monster->y, 1 + random2(3),
+                         monster->kill_alignment() );
 
 
         if (!testbits(monster->flags, MF_CREATED_FRIENDLY))
@@ -680,8 +683,9 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 simple_monster_message( monster,
                                         " disappears in a puff of smoke!" );
 
-            place_cloud( CLOUD_GREY_SMOKE_MON + random2(3), monster->x,
-                         monster->y, 1 + random2(3) );
+            place_cloud( CLOUD_GREY_SMOKE + random2(3), monster->x,
+                         monster->y, 1 + random2(3),
+                         monster->kill_alignment() );
 
             if (monster->needs_transit())
             {
@@ -769,16 +773,17 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 {
                     simple_monster_message( monster, " vaporizes!" );
 
-                    place_cloud( CLOUD_COLD_MON, monster->x, monster->y,
-                                 1 + random2(3) );
+                    place_cloud( CLOUD_COLD, monster->x, monster->y,
+                                 1 + random2(3), monster->kill_alignment() );
                 }
                 else
                 {
                     simple_monster_message(monster,
                                 "'s corpse disappears in a puff of smoke!");
 
-                    place_cloud( CLOUD_GREY_SMOKE_MON + random2(3),
-                                 monster->x, monster->y, 1 + random2(3) );
+                    place_cloud( CLOUD_GREY_SMOKE + random2(3),
+                                 monster->x, monster->y, 1 + random2(3),
+                                 monster->kill_alignment() );
                 }
             }
         }
@@ -3293,8 +3298,7 @@ static void monster_regenerate(monsters *monster)
         
         || (monster->type == MONS_FIRE_ELEMENTAL 
             && (grd[monster->x][monster->y] == DNGN_LAVA
-                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE
-                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE_MON))
+                || env.cgrid[monster->x][monster->y] == CLOUD_FIRE))
 
         || (monster->type == MONS_WATER_ELEMENTAL 
             && (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
@@ -4325,9 +4329,7 @@ static void monster_move(struct monsters *monster)
             if (monster->type == MONS_WATER_ELEMENTAL
                 && (target_grid == DNGN_LAVA
                     || targ_cloud_type == CLOUD_FIRE 
-                    || targ_cloud_type == CLOUD_FIRE_MON
-                    || targ_cloud_type == CLOUD_STEAM 
-                    || targ_cloud_type == CLOUD_STEAM_MON))
+                    || targ_cloud_type == CLOUD_STEAM))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4338,8 +4340,7 @@ static void monster_move(struct monsters *monster)
                 && (target_grid == DNGN_DEEP_WATER
                     || target_grid == DNGN_SHALLOW_WATER
                     || target_grid == DNGN_BLUE_FOUNTAIN
-                    || targ_cloud_type == CLOUD_COLD
-                    || targ_cloud_type == CLOUD_COLD_MON))
+                    || targ_cloud_type == CLOUD_COLD))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4404,7 +4405,6 @@ static void monster_move(struct monsters *monster)
                 switch (targ_cloud_type)
                 {
                 case CLOUD_FIRE:
-                case CLOUD_FIRE_MON:
                     if (mons_res_fire(monster) > 0)
                         continue;
 
@@ -4413,7 +4413,6 @@ static void monster_move(struct monsters *monster)
                     break;
 
                 case CLOUD_STINK:
-                case CLOUD_STINK_MON:
                     if (mons_res_poison(monster) > 0)
                         continue;
                     if (1 + random2(5) < monster->hit_dice)
@@ -4423,7 +4422,6 @@ static void monster_move(struct monsters *monster)
                     break;
 
                 case CLOUD_COLD:
-                case CLOUD_COLD_MON:
                     if (mons_res_cold(monster) > 0)
                         continue;
 
@@ -4432,7 +4430,6 @@ static void monster_move(struct monsters *monster)
                     break;
 
                 case CLOUD_POISON:
-                case CLOUD_POISON_MON:
                     if (mons_res_poison(monster) > 0)
                         continue;
 
@@ -4442,7 +4439,6 @@ static void monster_move(struct monsters *monster)
 
                 // this isn't harmful, but dumb critters might think so.
                 case CLOUD_GREY_SMOKE:
-                case CLOUD_GREY_SMOKE_MON:
                     if (mons_intel(monster->type) > I_ANIMAL || coinflip())
                         continue;
 
@@ -4700,15 +4696,15 @@ forget_it:
         if (monster->type == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
         {
-            place_cloud( CLOUD_FIRE_MON, monster->x, monster->y, 
-                         2 + random2(4) );
+            place_cloud( CLOUD_FIRE, monster->x, monster->y, 
+                         2 + random2(4), monster->kill_alignment() );
         }
 
         if (monster->type == MONS_ROTTING_DEVIL 
                 || monster->type == MONS_CURSE_TOE)
         {
-            place_cloud( CLOUD_MIASMA_MON, monster->x, monster->y, 
-                         2 + random2(3) );
+            place_cloud( CLOUD_MIASMA, monster->x, monster->y, 
+                         2 + random2(3), monster->kill_alignment() );
         }
     }
     else
@@ -4785,7 +4781,6 @@ static void mons_in_cloud(struct monsters *monster)
         return;
 
     case CLOUD_FIRE:
-    case CLOUD_FIRE_MON:
         if (monster->type == MONS_FIRE_VORTEX
             || monster->type == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
@@ -4808,7 +4803,6 @@ static void mons_in_cloud(struct monsters *monster)
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_STINK:
-    case CLOUD_STINK_MON:
         simple_monster_message(monster, " is engulfed in noxious gasses!");
 
         if (mons_res_poison(monster) > 0)
@@ -4823,7 +4817,6 @@ static void mons_in_cloud(struct monsters *monster)
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_COLD:
-    case CLOUD_COLD_MON:
         simple_monster_message(monster, " is engulfed in freezing vapours!");
 
         if (mons_res_cold(monster) > 0)
@@ -4840,14 +4833,12 @@ static void mons_in_cloud(struct monsters *monster)
 
     // what of armour of poison resistance here? {dlb}
     case CLOUD_POISON:
-    case CLOUD_POISON_MON:
         simple_monster_message(monster, " is engulfed in a cloud of poison!");
 
         if (mons_res_poison(monster) > 0)
             return;
 
-        poison_monster(monster,
-                       env.cloud[wc].type == CLOUD_POISON? KC_YOU : KC_OTHER);
+        poison_monster(monster, env.cloud[wc].whose);
         // If the monster got poisoned, wake it up.
         wake = true;
 
@@ -4858,7 +4849,6 @@ static void mons_in_cloud(struct monsters *monster)
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_STEAM:
-    case CLOUD_STEAM_MON:
         // couldn't be bothered coding for armour of res fire
 
         // what of whether it is wearing steam dragon armour? {dlb}
@@ -4879,15 +4869,13 @@ static void mons_in_cloud(struct monsters *monster)
         break;                  // to damage routine at end {dlb}
 
     case CLOUD_MIASMA:
-    case CLOUD_MIASMA_MON:
         simple_monster_message(monster, " is engulfed in a dark miasma!");
 
         if (mons_holiness(monster) != MH_NATURAL 
                 || monster->type == MONS_DEATH_DRAKE)
             return;
 
-        poison_monster(monster,
-                       (env.cloud[wc].type == CLOUD_MIASMA? KC_YOU : KC_OTHER));
+        poison_monster(monster, env.cloud[wc].whose);
 
         if (monster->max_hit_points > 4 && coinflip())
             monster->max_hit_points--;
@@ -4920,30 +4908,8 @@ static void mons_in_cloud(struct monsters *monster)
 
         if (monster->hit_points < 1)
         {
-            switch (env.cloud[wc].type)
-            {
-            case CLOUD_FIRE_MON:
-            case CLOUD_STINK_MON:
-            case CLOUD_COLD_MON:
-            case CLOUD_POISON_MON:
-            case CLOUD_STEAM_MON:
-            case CLOUD_MIASMA_MON:
-                monster_die(monster, KILL_MISC, 0);
-                break;
-            default:
-                monster_die(monster, KILL_YOU, 0);
-            }
-
-            switch (env.cloud[wc].type)
-            {
-            case CLOUD_FIRE:
-            case CLOUD_FIRE_MON:
-            case CLOUD_COLD:
-            case CLOUD_COLD_MON:
-            case CLOUD_STEAM:
-            case CLOUD_STEAM_MON:
-                monster->speed_increment = 1;
-            }
+            mon_enchant death_ench( ENCH_NONE, 0, env.cloud[wc].whose );
+            monster_die(monster, death_ench.killer(), death_ench.kill_agent());
         }
     }
 }                               // end mons_in_cloud()

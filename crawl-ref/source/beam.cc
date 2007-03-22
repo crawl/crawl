@@ -2256,19 +2256,15 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     // cloud producer -- POISON BLAST
     if (beam.name == "blast of poison")
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_POISON : CLOUD_POISON_MON;
-        big_cloud( cloud_type, x, y, 0, 7 + random2(5) );
+        big_cloud( CLOUD_POISON, whose_kill(beam), x, y, 0, 7 + random2(5) );
         return;
     }
 
     // cloud producer -- FOUL VAPOR (SWAMP DRAKE?)
     if (beam.name == "foul vapour")
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STINK : CLOUD_STINK_MON;
-        if (beam.flavour == BEAM_MIASMA)
-            cloud_type = YOU_KILL(beam.thrower) ? 
-                                CLOUD_MIASMA : CLOUD_MIASMA_MON;
-        big_cloud( cloud_type, x, y, 0, 9 );
+        cloud_type = beam.flavour == BEAM_MIASMA? CLOUD_MIASMA : CLOUD_STINK;
+        big_cloud( cloud_type, whose_kill(beam), x, y, 0, 9 );
         return;
     }
 
@@ -2546,9 +2542,7 @@ static int affect_wall(struct bolt &beam, int x, int y)
         else if (player_can_smell())
             beam_mpr(MSGCH_PLAIN, "You smell burning wax.");
 
-        place_cloud( 
-                YOU_KILL(beam.thrower)? CLOUD_FIRE : CLOUD_FIRE_MON, 
-                x, y, random2(10) + 15 );
+        place_cloud(CLOUD_FIRE, x, y, random2(10) + 15, whose_kill(beam));
 
         beam.obvious_effect = true;
 
@@ -2603,8 +2597,6 @@ static int affect_wall(struct bolt &beam, int x, int y)
 
 static int affect_place_clouds(struct bolt &beam, int x, int y)
 {
-    int cloud_type;
-
     if (beam.in_explosion_phase)
     {
         affect_place_explosion_clouds( beam, x, y );
@@ -2625,13 +2617,11 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
         int clouty = env.cgrid[x][y];
 
         // fire cancelling cold & vice versa
-        if (((env.cloud[clouty].type == CLOUD_COLD
-                || env.cloud[clouty].type == CLOUD_COLD_MON)
-            && (beam.flavour == BEAM_FIRE
-                || beam.flavour == BEAM_LAVA))
-            || ((env.cloud[clouty].type == CLOUD_FIRE
-                || env.cloud[clouty].type == CLOUD_FIRE_MON)
-            && beam.flavour == BEAM_COLD))
+        if ((env.cloud[clouty].type == CLOUD_COLD
+             && (beam.flavour == BEAM_FIRE
+                 || beam.flavour == BEAM_LAVA))
+            || (env.cloud[clouty].type == CLOUD_FIRE
+                && beam.flavour == BEAM_COLD))
         {
             if (!silenced(x, y)
                 && !silenced(you.x_pos, you.y_pos))
@@ -2646,60 +2636,50 @@ static int affect_place_clouds(struct bolt &beam, int x, int y)
 
     // POISON BLAST
     if (beam.name == "blast of poison")
-    {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_POISON : CLOUD_POISON_MON;
-
-        place_cloud( cloud_type, x, y, random2(4) + 2 );
-    }
+        place_cloud( CLOUD_POISON, x, y, random2(4) + 2, whose_kill(beam) );
 
     // FIRE/COLD over water/lava
     if ( (grd[x][y] == DNGN_LAVA && beam.flavour == BEAM_COLD)
         || (grid_is_watery(grd[x][y]) && beam.flavour == BEAM_FIRE) )
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STEAM : CLOUD_STEAM_MON;
-        place_cloud( cloud_type, x, y, 2 + random2(5) );
+        place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), whose_kill(beam) );
     }
 
     if (beam.flavour == BEAM_COLD && grid_is_watery(grd[x][y]))
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_COLD : CLOUD_COLD_MON;
-        place_cloud( cloud_type, x, y, 2 + random2(5) );
+        place_cloud( CLOUD_COLD, x, y, 2 + random2(5), whose_kill(beam) );
     }
 
     // ORB OF ENERGY
     if (beam.name == "orb of energy")
-        place_cloud( CLOUD_PURP_SMOKE, x, y, random2(5) + 1 );
+        place_cloud( CLOUD_PURP_SMOKE, x, y, random2(5) + 1, whose_kill(beam) );
 
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
-        place_cloud( CLOUD_COLD, x, y, random2(5) + 3 );
+        place_cloud( CLOUD_COLD, x, y, random2(5) + 3, whose_kill(beam) );
 
 
     // BALL OF STEAM
     if (beam.name == "ball of steam")
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STEAM : CLOUD_STEAM_MON;
-        place_cloud( cloud_type, x, y, random2(5) + 2 );
+        place_cloud( CLOUD_STEAM, x, y, random2(5) + 2, whose_kill(beam) );
     }
 
     if (beam.flavour == BEAM_MIASMA)
     {
-        cloud_type = YOU_KILL( beam.thrower ) ? CLOUD_MIASMA : CLOUD_MIASMA_MON;
-        place_cloud( cloud_type, x, y, random2(5) + 2 );
+        place_cloud( CLOUD_MIASMA, x, y, random2(5) + 2, whose_kill(beam) );
     }
 
     // STICKY FLAME
     if (beam.name == "sticky flame")
     {
-        place_cloud( CLOUD_BLACK_SMOKE, x, y, random2(4) + 2 );
+        place_cloud( CLOUD_BLACK_SMOKE, x, y, random2(4) + 2,
+                     whose_kill(beam) );
     }
 
     // POISON GAS
     if (beam.name == "poison gas")
-    {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_POISON : CLOUD_POISON_MON;
-        place_cloud( cloud_type, x, y, random2(4) + 3 );
-    }
+        place_cloud( CLOUD_POISON, x, y, random2(4) + 3, whose_kill(beam) );
 
     return (0);
 }
@@ -2715,8 +2695,7 @@ static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
         || ((grd[x][y] == DNGN_DEEP_WATER || grd[x][y] == DNGN_SHALLOW_WATER)
               && beam.flavour == BEAM_FIRE) )
     {
-        cloud_type = YOU_KILL(beam.thrower) ? CLOUD_STEAM : CLOUD_STEAM_MON;
-        place_cloud( cloud_type, x, y, 2 + random2(5) );
+        place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), whose_kill(beam) );
         return;
     }
 
@@ -2779,19 +2758,19 @@ static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
             break;
         }
 
-        place_cloud( cloud_type, x, y, duration );
+        place_cloud( cloud_type, x, y, duration, whose_kill(beam) );
     }
 
     // then check for more specific explosion cloud types.
     if (beam.name == "ice storm")
     {
-        place_cloud( CLOUD_COLD, x, y, 2 + random2avg(5, 2) );
+        place_cloud( CLOUD_COLD, x, y, 2 + random2avg(5, 2), whose_kill(beam) );
     }
 
     if (beam.name == "stinking cloud")
     {
         duration =  1 + random2(4) + random2( (beam.ench_power / 50) + 1 );
-        place_cloud( CLOUD_STINK, x, y, duration );
+        place_cloud( CLOUD_STINK, x, y, duration, whose_kill(beam) );
     }
 
     if (beam.name == "great blast of fire")
@@ -2801,7 +2780,7 @@ static void affect_place_explosion_clouds(struct bolt &beam, int x, int y)
         if (duration > 20)
             duration = 20 + random2(4);
 
-        place_cloud( CLOUD_FIRE, x, y, duration );
+        place_cloud( CLOUD_FIRE, x, y, duration, whose_kill(beam) );
 
         if (grd[x][y] == DNGN_FLOOR && mgrd[x][y] == NON_MONSTER
             && one_chance_in(4))

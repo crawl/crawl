@@ -56,7 +56,8 @@ int cast_healing(int power);
 /* ***********************************************************************
  * called from: beam - it_use3 - spells - spells1
  * *********************************************************************** */
-void big_cloud(char clouds, char cl_x, char cl_y, int pow, int size);
+void big_cloud(int clouds, kill_category whose, int cl_x, int cl_y,
+               int pow, int size);
 
 
 // last updated 24may2000 {dlb}
@@ -69,7 +70,7 @@ int blink(void);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int cast_big_c(int pow, char cty, bolt &beam);
+int cast_big_c(int pow, int cty, kill_category whose, bolt &beam);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
 int  allowed_deaths_door_hp(void);

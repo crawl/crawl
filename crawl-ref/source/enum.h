@@ -512,31 +512,20 @@ enum char_set_type
 
 enum cloud_type 
 {
-    CLOUD_NONE,                        //    0
-    CLOUD_FIRE,                        //    1
-    CLOUD_STINK,                       //    2
-    CLOUD_COLD,                        //    3
-    CLOUD_POISON,                      //    4
-    CLOUD_GREY_SMOKE = 5,              //    5: found 11jan2000 {dlb}
-    CLOUD_BLUE_SMOKE = 6,              //    6: found 11jan2000 {dlb}
-    CLOUD_PURP_SMOKE = 7, // was: CLOUD_ENERGY and wrong 19jan2000 {dlb}
-    CLOUD_STEAM,                       //    8
-    CLOUD_MIASMA = 9,                  //    9: found 11jan2000 {dlb}
-    CLOUD_BLACK_SMOKE = 10, //was: CLOUD_STICKY_FLAME and wrong 19jan2000 {dlb}
+    CLOUD_NONE,
+    CLOUD_FIRE,
+    CLOUD_STINK,
+    CLOUD_COLD,
+    CLOUD_POISON,
+    CLOUD_GREY_SMOKE,
+    CLOUD_BLUE_SMOKE,
+    CLOUD_PURP_SMOKE,
+    CLOUD_STEAM,
+    CLOUD_MIASMA,
+    CLOUD_BLACK_SMOKE,
     CLOUD_MIST,
     CLOUD_RANDOM = 98, 
-    CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
-// if env.cloud_type > 100, it is a monster's cloud {dlb}
-    CLOUD_FIRE_MON = 101,              //  101: found 11jan2000 {dlb}
-    CLOUD_STINK_MON = 102,             //  102: found 11jan2000 {dlb}
-    CLOUD_COLD_MON = 103,              //  103: added 11jan2000 {dlb}
-    CLOUD_POISON_MON = 104,            //  104
-    CLOUD_GREY_SMOKE_MON = 105,        //  105: found 11jan2000 {dlb}
-    CLOUD_BLUE_SMOKE_MON = 106,        //  106: found 11jan2000 {dlb}
-    CLOUD_PURP_SMOKE_MON = 107,        //  107:
-    CLOUD_STEAM_MON = 108,             //  108: added 11jan2000 {dlb}
-    CLOUD_MIASMA_MON = 109,            //  109: added 11jan2000 {dlb}
-    CLOUD_BLACK_SMOKE_MON = 110        //  110: added 19jan2000 {dlb}
+    CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
 
 enum command_type

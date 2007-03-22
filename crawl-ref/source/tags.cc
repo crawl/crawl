@@ -1317,6 +1317,7 @@ static void tag_construct_level(struct tagHeader &th)
         marshallByte(th, env.cloud[i].y);
         marshallByte(th, env.cloud[i].type);
         marshallShort(th, env.cloud[i].decay);
+        marshallShort(th, env.cloud[i].whose);
     }
 
     // how many shops?
@@ -1540,6 +1541,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
         env.cloud[i].y = unmarshallByte(th);
         env.cloud[i].type = unmarshallByte(th);
         env.cloud[i].decay = unmarshallShort(th);
+        env.cloud[i].whose = static_cast<kill_category>(unmarshallShort(th));
     }
 
     // how many shops?

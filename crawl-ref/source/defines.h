@@ -65,7 +65,7 @@
 #define NON_ITEM 501
 
 // max size of cloud array {dlb}:
-#define MAX_CLOUDS 100
+#define MAX_CLOUDS 180
 
 // empty cloud -- (CLOUDS + 1) {dlb}:
 #define EMPTY_CLOUD 101

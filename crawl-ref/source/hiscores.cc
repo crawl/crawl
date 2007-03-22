@@ -203,8 +203,8 @@ static void hiscores_print_entry(const scorefile_entry &se,
     {
         entry = hiscores_format_single( se );
         // truncate if we want short format
-        if (entry.length() > 75)
-            entry = entry.substr(0, 75);
+        if (entry.length() > 80)
+            entry = entry.substr(0, 80);
     }
     else
     {

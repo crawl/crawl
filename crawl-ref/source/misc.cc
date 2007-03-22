@@ -326,7 +326,6 @@ void in_a_cloud(void)
     switch (env.cloud[cl].type)
     {
     case CLOUD_FIRE:
-    case CLOUD_FIRE_MON:
         if (you.fire_shield)
             return;
 
@@ -359,7 +358,6 @@ void in_a_cloud(void)
         break;
 
     case CLOUD_STINK:
-    case CLOUD_STINK_MON:
         // If you don't have to breathe, unaffected
         mpr("You are engulfed in noxious fumes!");
         if (player_res_poison())
@@ -380,7 +378,6 @@ void in_a_cloud(void)
         break;
 
     case CLOUD_COLD:
-    case CLOUD_COLD_MON:
         mpr("You are engulfed in freezing vapours!");
 
         resist = player_res_cold();
@@ -409,7 +406,6 @@ void in_a_cloud(void)
         break;
 
     case CLOUD_POISON:
-    case CLOUD_POISON_MON:
         // If you don't have to breathe, unaffected
         mpr("You are engulfed in poison gas!");
         if (!player_res_poison())
@@ -424,15 +420,10 @@ void in_a_cloud(void)
     case CLOUD_BLUE_SMOKE:
     case CLOUD_PURP_SMOKE:
     case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE_MON:
-    case CLOUD_BLUE_SMOKE_MON:
-    case CLOUD_PURP_SMOKE_MON:
-    case CLOUD_BLACK_SMOKE_MON:
         mpr("You are engulfed in a cloud of smoke!");
         break;
 
     case CLOUD_STEAM:
-    case CLOUD_STEAM_MON:
         mpr("You are engulfed in a cloud of scalding steam!");
         if (player_res_steam() > 0)
         {
@@ -444,11 +435,11 @@ void in_a_cloud(void)
         if (hurted < 0 || player_res_fire() > 0)
             hurted = 0;
 
-        ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD, "poison gas" );
+        ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+              "steam" );
         break;
 
     case CLOUD_MIASMA:
-    case CLOUD_MIASMA_MON:
         mpr("You are engulfed in a dark miasma.");
 
         if (player_prot_life() > random2(3))
@@ -1811,17 +1802,11 @@ bool is_damaging_cloud(cloud_type type)
     switch (type)
     {
     case CLOUD_FIRE:
-    case CLOUD_FIRE_MON:
     case CLOUD_STINK:
-    case CLOUD_STINK_MON:
     case CLOUD_COLD:
-    case CLOUD_COLD_MON:
     case CLOUD_POISON:
-    case CLOUD_POISON_MON:
     case CLOUD_STEAM:
-    case CLOUD_STEAM_MON:
     case CLOUD_MIASMA:
-    case CLOUD_MIASMA_MON:
         return (true);
     default:
         return (false);
@@ -1833,34 +1818,24 @@ std::string cloud_name(cloud_type type)
     switch (type)
     {
     case CLOUD_FIRE:
-    case CLOUD_FIRE_MON:
         return "flame";
     case CLOUD_STINK:
-    case CLOUD_STINK_MON:
         return "noxious fumes";
     case CLOUD_COLD:
-    case CLOUD_COLD_MON:
         return "freezing vapour";
     case CLOUD_POISON:
-    case CLOUD_POISON_MON:
         return "poison gases";
     case CLOUD_GREY_SMOKE:
-    case CLOUD_GREY_SMOKE_MON:
         return "grey smoke";
     case CLOUD_BLUE_SMOKE:
-    case CLOUD_BLUE_SMOKE_MON:
         return "blue smoke";
     case CLOUD_PURP_SMOKE:
-    case CLOUD_PURP_SMOKE_MON:
         return "purple smoke";
     case CLOUD_STEAM:
-    case CLOUD_STEAM_MON:
         return "steam";
     case CLOUD_MIASMA:
-    case CLOUD_MIASMA_MON:
         return "foul pestilence";
     case CLOUD_BLACK_SMOKE:
-    case CLOUD_BLACK_SMOKE_MON:
         return "black smoke";
     case CLOUD_MIST:
         return "thin mist";
@@ -2125,11 +2100,11 @@ static void apply_environment_effect(const coord_def &c)
 {
     const int grid = grd[c.x][c.y];
     if (grid == DNGN_LAVA)
-        check_place_cloud( CLOUD_BLACK_SMOKE_MON, 
-                           c.x, c.y, random_range( 4, 8 ) );
+        check_place_cloud( CLOUD_BLACK_SMOKE, 
+                           c.x, c.y, random_range( 4, 8 ), KC_OTHER );
     else if (grid == DNGN_SHALLOW_WATER)
         check_place_cloud( CLOUD_MIST, 
-                           c.x, c.y, random_range( 2, 5 ) );
+                           c.x, c.y, random_range( 2, 5 ), KC_OTHER );
 }
 
 static const int Base_Sfx_Chance = 5;

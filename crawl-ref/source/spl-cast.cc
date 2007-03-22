@@ -1123,7 +1123,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_FREEZING_CLOUD:
-        cast_big_c(powc, CLOUD_COLD, beam);
+        cast_big_c(powc, CLOUD_COLD, KC_YOU, beam);
         break;
 
     case SPELL_MEPHITIC_CLOUD:
@@ -1236,7 +1236,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_POISONOUS_CLOUD:
-        cast_big_c(powc, CLOUD_POISON, beam);
+        cast_big_c(powc, CLOUD_POISON, KC_YOU, beam);
         break;
 
     case SPELL_POISON_ARROW:
@@ -2052,7 +2052,8 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true));
                 mpr(info);
 
-                big_cloud( CLOUD_GREY_SMOKE, you.x_pos, you.y_pos, 20,
+                big_cloud( CLOUD_GREY_SMOKE, KC_YOU,
+                           you.x_pos, you.y_pos, 20,
                            7 + random2(7) );
                 break;
             case 1:
@@ -2962,7 +2963,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true) );
                 mpr(info);
 
-                big_cloud( CLOUD_GREY_SMOKE + random2(3), 
+                big_cloud( CLOUD_GREY_SMOKE + random2(3), KC_YOU,
                            you.x_pos, you.y_pos, 20, 7 + random2(7) );
                 break;
 
@@ -3167,7 +3168,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true));
                 mpr(info);
 
-                big_cloud(CLOUD_COLD, you.x_pos, you.y_pos, 20,
+                big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20,
                           8 + random2(4));
                 break;
             }
@@ -3360,7 +3361,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true));
                 mpr(info);
 
-                big_cloud(CLOUD_STINK, you.x_pos, you.y_pos, 20,
+                big_cloud(CLOUD_STINK, KC_YOU, you.x_pos, you.y_pos, 20,
                           9 + random2(4));
                 break;
             }
@@ -3394,7 +3395,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true));
                 mpr(info);
 
-                big_cloud( CLOUD_POISON, you.x_pos, you.y_pos, 20,
+                big_cloud( CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
                            8 + random2(5) );
                 break;
             }
@@ -3466,7 +3467,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 mpr(info);
 
                 place_cloud(CLOUD_STINK, you.x_pos, you.y_pos,
-                            2 + random2(4));
+                            2 + random2(4), KC_YOU);
                 break;
             }
             break;
@@ -3487,7 +3488,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
 
             case 1:
                 mpr("Noxious gasses pour from your hands!");
-                big_cloud(CLOUD_STINK, you.x_pos, you.y_pos, 20,
+                big_cloud(CLOUD_STINK, KC_YOU, you.x_pos, you.y_pos, 20,
                           8 + random2(5));
                 break;
 
@@ -3520,7 +3521,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                           your_hand(true));
                 mpr(info);
 
-                big_cloud(CLOUD_POISON, you.x_pos, you.y_pos, 20,
+                big_cloud(CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
                           7 + random2(7));
                 break;
             case 2:

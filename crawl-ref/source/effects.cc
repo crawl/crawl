@@ -254,7 +254,6 @@ void direct_effect(struct bolt &pbolt)
     switch (pbolt.type)
     {
     case DMNBM_HELLFIRE:
-        mpr( "You are engulfed in a burst of hellfire!" );
         pbolt.name = "hellfire";
         pbolt.ex_size = 1;
         pbolt.flavour = BEAM_HELLFIRE;

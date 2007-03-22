@@ -878,19 +878,20 @@ void tome_of_power(char sc_read_2)
     case 8:
     case 9:
         mpr("A cloud of weird smoke pours from the book's pages!");
-        big_cloud( CLOUD_GREY_SMOKE + random2(3), you.x_pos, you.y_pos, 20,
-                                                          10 + random2(8) );
+        big_cloud( CLOUD_GREY_SMOKE + random2(3), KC_YOU,
+                   you.x_pos, you.y_pos, 20, 10 + random2(8) );
         return;
     case 1:
     case 14:
         mpr("A cloud of choking fumes pours from the book's pages!");
-        big_cloud(CLOUD_POISON, you.x_pos, you.y_pos, 20, 7 + random2(5));
+        big_cloud(CLOUD_POISON, KC_YOU,
+                  you.x_pos, you.y_pos, 20, 7 + random2(5));
         return;
 
     case 2:
     case 13:
         mpr("A cloud of freezing gas pours from the book's pages!");
-        big_cloud(CLOUD_COLD, you.x_pos, you.y_pos, 20, 8 + random2(5));
+        big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20, 8 + random2(5));
         return;
 
     case 5:

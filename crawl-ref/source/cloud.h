@@ -17,8 +17,10 @@
 void delete_cloud( int cloud );
 void move_cloud( int cloud, int new_x, int new_y );
 
-void check_place_cloud( int cl_type, int x, int y, int lifetime );
-void place_cloud(unsigned char cl_type, unsigned char ctarget_x, unsigned char ctarget_y, unsigned char cl_range);
+void check_place_cloud( int cl_type, int x, int y, int lifetime,
+                        kill_category whose );
+void place_cloud(int cl_type, int ctarget_x, int ctarget_y, int cl_range,
+                 kill_category whose);
 
 void manage_clouds(void);
 

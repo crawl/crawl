@@ -25,18 +25,16 @@ static bool cloud_spreads(const cloud_struct &cloud)
     switch (cloud.type)
     {
     case CLOUD_STEAM:
-    case CLOUD_STEAM_MON:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE_MON:
-    case CLOUD_BLACK_SMOKE_MON:
         return (true);
     default:
         return (false);
     }
 }
 
-static void new_cloud( int cloud, int type, int x, int y, int decay )
+static void new_cloud( int cloud, int type, int x, int y, int decay,
+                       kill_category whose )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
 
@@ -44,11 +42,13 @@ static void new_cloud( int cloud, int type, int x, int y, int decay )
     env.cloud[ cloud ].decay = decay;
     env.cloud[ cloud ].x = x;
     env.cloud[ cloud ].y = y;
+    env.cloud[ cloud ].whose = whose;
     env.cgrid[ x ][ y ] = cloud;
     env.cloud_no++;
 }
 
-static void place_new_cloud(int cltype, int x, int y, int decay)
+static void place_new_cloud(int cltype, int x, int y, int decay,
+                            kill_category whose)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -58,7 +58,7 @@ static void place_new_cloud(int cltype, int x, int y, int decay)
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
         {
-            new_cloud( ci, cltype, x, y, decay );
+            new_cloud( ci, cltype, x, y, decay, whose );
             break;
         }
     }
@@ -90,7 +90,7 @@ static int spread_cloud(const cloud_struct &cloud)
             if (newdecay >= cloud.decay)
                 newdecay = cloud.decay - 1;
 
-            place_new_cloud( cloud.type, x, y, newdecay );
+            place_new_cloud( cloud.type, x, y, newdecay, cloud.whose );
 
             extra_decay += 8;
         }
@@ -126,14 +126,12 @@ void manage_clouds(void)
 
         // water -> flaming clouds:
         // lava -> freezing clouds:
-        if ((env.cloud[cc].type == CLOUD_FIRE
-                || env.cloud[cc].type == CLOUD_FIRE_MON)
+        if (env.cloud[cc].type == CLOUD_FIRE
             && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_DEEP_WATER)
         {
             dissipate *= 4;
         }
-        else if ((env.cloud[cc].type == CLOUD_COLD
-                    || env.cloud[cc].type == CLOUD_COLD_MON)
+        else if (env.cloud[cc].type == CLOUD_COLD
                 && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_LAVA)
         {
             dissipate *= 4;
@@ -160,6 +158,7 @@ void delete_cloud( int cloud )
         env.cloud[ cloud ].decay = 0;
         env.cloud[ cloud ].x = 0;
         env.cloud[ cloud ].y = 0;
+        env.cloud[ cloud ].whose = KC_OTHER;
         env.cgrid[ cloud_x ][ cloud_y ] = EMPTY_CLOUD;
         env.cloud_no--;
     }
@@ -183,24 +182,26 @@ void move_cloud( int cloud, int new_x, int new_y )
 
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
-void check_place_cloud( int cl_type, int x, int y, int lifetime )
+void check_place_cloud( int cl_type, int x, int y, int lifetime,
+                        kill_category whose )
 {
     if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, x, y, lifetime );
+    place_cloud( cl_type, x, y, lifetime, whose );
 }
 
-//   Places a cloud with the given stats. May delete old clouds to make way
-//   if there are too many (MAX_CLOUDS == 30) on level. Will overwrite an old
+//   Places a cloud with the given stats. May delete old clouds to
+//   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
-void place_cloud(unsigned char cl_type, unsigned char ctarget_x,
-                 unsigned char ctarget_y, unsigned char cl_range)
+void place_cloud(int cl_type, int ctarget_x,
+                 int ctarget_y, int cl_range,
+                 kill_category whose)
 {
     int cl_new = -1;
 
     // more compact {dlb}
-    const unsigned char target_cgrid = env.cgrid[ctarget_x][ctarget_y];
+    const int target_cgrid = env.cgrid[ctarget_x][ctarget_y];
 
     // that is, another cloud already there {dlb}
     if (target_cgrid != EMPTY_CLOUD)
@@ -247,7 +248,8 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x,
 
     // create new cloud
     if (cl_new != -1)
-        new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10 );
+        new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+                   whose );
     else
     {
         // find slot for cloud
@@ -255,7 +257,8 @@ void place_cloud(unsigned char cl_type, unsigned char ctarget_x,
         {
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
-                new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10 );
+                new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+                           whose );
                 break;
             }
         }

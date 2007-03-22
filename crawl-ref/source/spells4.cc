@@ -962,7 +962,9 @@ static int ignite_poison_objects(int x, int y, int pow, int garbage)
     }
 
     if (strength > 0)
-        place_cloud(CLOUD_FIRE, x, y, strength + roll_dice(3, strength / 4) );
+        place_cloud(CLOUD_FIRE, x, y, strength + roll_dice(3, strength / 4),
+                    KC_YOU
+            );
 
     return (strength);
 }                               // end ignite_poison_objects()
@@ -978,8 +980,7 @@ static int ignite_poison_clouds( int x, int y, int pow, int garbage )
 
     if (cloud != EMPTY_CLOUD)
     {
-        if (env.cloud[ cloud ].type == CLOUD_STINK
-            || env.cloud[ cloud ].type == CLOUD_STINK_MON)
+        if (env.cloud[ cloud ].type == CLOUD_STINK)
         {
             did_anything = true;
             env.cloud[ cloud ].type = CLOUD_FIRE;
@@ -989,8 +990,7 @@ static int ignite_poison_clouds( int x, int y, int pow, int garbage )
             if (env.cloud[ cloud ].decay < 1)
                 env.cloud[ cloud ].decay = 1;
         }
-        else if (env.cloud[ cloud ].type == CLOUD_POISON
-                 || env.cloud[ cloud ].type == CLOUD_POISON_MON)
+        else if (env.cloud[ cloud ].type == CLOUD_POISON)
         {
             did_anything = true;
             env.cloud[ cloud ].type = CLOUD_FIRE;
@@ -1152,9 +1152,11 @@ void cast_ignite_poison(int pow)
 
     if (totalstrength)
     {
-        place_cloud(CLOUD_FIRE, you.x_pos, you.y_pos,
-                    random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
-                    random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1);
+        place_cloud(
+            CLOUD_FIRE, you.x_pos, you.y_pos,
+            random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
+            random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
+            KC_YOU);
     }
 
     // player is poisonous
@@ -1540,7 +1542,8 @@ static int make_a_rot_cloud(int x, int y, int pow, int ctype)
 
             place_cloud(ctype, x, y,
                         (3 + random2(pow / 4) + random2(pow / 4) +
-                         random2(pow / 4)));
+                         random2(pow / 4)),
+                        KC_YOU);
             return 1;
         }
 
@@ -1550,10 +1553,11 @@ static int make_a_rot_cloud(int x, int y, int pow, int ctype)
     return 0;
 }                               // end make_a_rot_cloud()
 
-int make_a_normal_cloud(int x, int y, int pow, int ctype)
+int make_a_normal_cloud(int x, int y, int pow, int ctype, kill_category whose)
 {
     place_cloud( ctype, x, y, 
-                (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)) );
+                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
+                 whose );
 
     return 1;
 }                               // end make_a_normal_cloud()
@@ -2210,7 +2214,7 @@ static int rot_living(int x, int y, int pow, int message)
     ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
     ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench) );
+    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
 
     return 1;
 }                               // end rot_living()
@@ -2268,7 +2272,7 @@ static int rot_undead(int x, int y, int pow, int garbage)
     ench = ((random2(pow) + random2(pow) + random2(pow) + random2(pow)) / 4);
     ench = 1 + (ench >= 20) + (ench >= 35) + (ench >= 50);
 
-    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench) );
+    menv[mon].add_ench( mon_enchant(ENCH_ROT, ench, KC_YOU) );
 
     return 1;
 }                               // end rot_undead()
@@ -2295,7 +2299,7 @@ void do_monster_rot(int mon)
     if (mons_holiness(&menv[mon]) == MH_UNDEAD && random2(5))
     {
         apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
-                         10, 1, CLOUD_MIASMA);
+                         10, 1, CLOUD_MIASMA, KC_YOU);
     }
 
     player_hurt_monster( mon, damage );

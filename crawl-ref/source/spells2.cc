@@ -268,7 +268,7 @@ int corpse_rot(int power)
                         }
 
                         place_cloud(CLOUD_MIASMA, adx, ady,
-                                    4 + random2avg(16, 3));
+                                    4 + random2avg(16, 3), KC_YOU);
 
                         goto out_of_raise;
                     }
@@ -1225,8 +1225,7 @@ int summon_elemental(int pow, int restricted_type,
             grd[ targ_x ][ targ_y ] = DNGN_FLOOR;
     }
     else if ((env.cgrid[ targ_x ][ targ_y ] != EMPTY_CLOUD
-            && (env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE
-             || env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE_MON))
+            && env.cloud[env.cgrid[ targ_x ][ targ_y ]].type == CLOUD_FIRE)
         && (restricted_type == 0 || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         type_summoned = MONS_FIRE_ELEMENTAL;

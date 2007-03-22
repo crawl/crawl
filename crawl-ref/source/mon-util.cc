@@ -2774,8 +2774,8 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
         return;
     
     // Apply immediate damage because we can't handle rotting for monsters yet.
-    const int damage = immed_rot + random2(rotlevel * 3);
-    if (damage)
+    const int damage = immed_rot;
+    if (damage > 0)
     {
         if (mons_near(this) && player_monster_visible(this))
             mprf("%s %s!",
@@ -2789,6 +2789,10 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
                 hit_points = max_hit_points;
         }
     }
+
+    if (rotlevel > 0)
+        add_ench( mon_enchant(ENCH_ROT, cap_int(rotlevel, 4),
+                              agent->kill_alignment()) );
 }
 
 void monsters::confuse(int strength)
@@ -3400,6 +3404,8 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
                  && random2(1000) < mod_speed( 333, spd ))
         {
             hurt_monster(this, 1);
+            if (hit_points < max_hit_points && coinflip())
+                --max_hit_points;
         }
 
         if (random2(1000) < mod_speed( me.degree == 1? 250 : 333, spd ))

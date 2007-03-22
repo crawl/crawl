@@ -871,7 +871,6 @@ void cloud_grid(void)
                 switch (env.cloud[s].type)
                 {
                 case CLOUD_FIRE:
-                case CLOUD_FIRE_MON:
                     if (env.cloud[s].decay <= 20)
                         which_colour = RED;
                     else if (env.cloud[s].decay <= 40)
@@ -885,12 +884,10 @@ void cloud_grid(void)
                     break;
 
                 case CLOUD_STINK:
-                case CLOUD_STINK_MON:
                     which_colour = GREEN;
                     break;
 
                 case CLOUD_COLD:
-                case CLOUD_COLD_MON:
                     if (env.cloud[s].decay <= 20)
                         which_colour = BLUE;
                     else if (env.cloud[s].decay <= 40)
@@ -904,24 +901,19 @@ void cloud_grid(void)
                     break;
 
                 case CLOUD_POISON:
-                case CLOUD_POISON_MON:
                     which_colour = (one_chance_in(3) ? LIGHTGREEN : GREEN);
                     break;
 
                 case CLOUD_BLUE_SMOKE:
-                case CLOUD_BLUE_SMOKE_MON:
                     which_colour = LIGHTBLUE;
                     break;
 
                 case CLOUD_PURP_SMOKE:
-                case CLOUD_PURP_SMOKE_MON:
                     which_colour = MAGENTA;
                     break;
 
                 case CLOUD_MIASMA:
-                case CLOUD_MIASMA_MON:
                 case CLOUD_BLACK_SMOKE:
-                case CLOUD_BLACK_SMOKE_MON:
                     which_colour = DARKGREY;
                     break;
 
