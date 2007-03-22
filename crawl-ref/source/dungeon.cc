@@ -6036,6 +6036,9 @@ static void dngn_place_monster(
         
         if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
         {
+            if (mons_is_unique(mid) && you.unique_creatures[mid])
+                return;
+            
             const int habitat = monster_habitat(mid);
             if (habitat != DNGN_FLOOR)
                 grd[vx][vy] = habitat;

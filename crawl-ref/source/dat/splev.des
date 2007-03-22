@@ -2517,7 +2517,7 @@ ENDMAP
 
 NAME: david_orc_1_choice
 TAGS: orc_entry
-MONS: orc, orc sorcerer / orc priest / orc warrior, orc warrior / orc
+MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
 ITEM: scroll of blinking / scroll of recharging / scroll of fear
 ITEM: scroll of teleport / scroll of remove curse / scroll of identify
 ORIENT: float
@@ -2570,7 +2570,7 @@ ENDMAP
 NAME: david_orc_3
 TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
-MONS: nothing / orc warrior / orc sorcerer / orc priest
+MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
 CHANCE: 30
 MAP
@@ -2778,6 +2778,33 @@ xxx??x111xxx?x
 xxxxxxxx??xxxx
 x?xxxx?xxxxx?x
 xxxxxxxxx?xxxx
+ENDMAP
+
+########################################################################
+# Welcome to Lair Island. We make great pancakes.
+
+NAME: erik_lair_3
+TAGS: lair_entry
+MONS: weight:50 troll / Snorg, weight:30 hound / jackal / weight:20 war dog
+ORIENT: float
+SUBST: ? = w.
+
+MAP
+.@........ww?www?.....
+..?.?.?..wwwwwww.?..?.
+..??w..wwwwwwwww?.??..
+...??w.wwwwwww??www?..
+...wwwwwwwwwwwwwww??..
+..wwwwww?wwwww2wwww..@
+..wwwwwwww....wwww???.
+......1..2.2O2.wwww...
+..?wwwww???2.2www.ww?.
+.....wwww2..w.2www....
+..wwwwwwwww?.wwww???..
+@..wwwwwwwwwwwwwww....
+....?ww..ww?www..w....
+....?......??.w..???..
+...........?...@......
 ENDMAP
 
 ##############################################################################
