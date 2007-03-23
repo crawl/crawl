@@ -250,12 +250,14 @@ struct feature_slot
     bool fix_slot;
 
     feature_slot();
-    feature_spec get_feat();
+    feature_spec get_feat(int default_glyph);
 };
 
 struct keyed_mapspec
 {
 public:
+    int          key_glyph;
+    
     feature_slot feat;
     item_list    item;
     mons_list    mons;
@@ -269,7 +271,7 @@ public:
 
     feature_spec get_feat();
     mons_spec get_mons();
-    item_spec get_item();
+    item_list &get_items();
 
 private:
     std::string err;

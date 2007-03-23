@@ -2628,36 +2628,6 @@ void stair_info::load(FILE *file)
     guessed_pos = readByte(file) != 0;
 }
 
-LevelInfo::LevelInfo(const LevelInfo &other)
-{
-    stairs = other.stairs;
-    excludes = other.excludes;
-    int sz = stairs.size() * stairs.size();
-    stair_distances = new short [ sz ];
-    if (other.stair_distances)
-        memcpy(stair_distances, other.stair_distances, sz * sizeof(int));
-}
-
-const LevelInfo &LevelInfo::operator = (const LevelInfo &other)
-{
-    if (&other == this)
-        return *this;
-
-    stairs = other.stairs;
-    excludes = other.excludes;
-    int sz = stairs.size() * stairs.size();
-    delete [] stair_distances;
-    stair_distances = new short [ sz ];
-    if (other.stair_distances)
-        memcpy(stair_distances, other.stair_distances, sz * sizeof(short));
-    return *this;
-}
-
-LevelInfo::~LevelInfo()
-{
-    delete [] stair_distances;
-}
-
 void LevelInfo::set_level_excludes()
 {
     curr_excludes = excludes;
@@ -2688,7 +2658,7 @@ void LevelInfo::update_stair_distances()
         // For each stair, we need to ask travel to populate the distance
         // array.
         find_travel_pos(stairs[s].position.x, stairs[s].position.y, 
-                NULL, NULL, NULL);
+                        NULL, NULL, NULL);
 
         for (int other = 0; other < end; ++other)
         {
@@ -2793,58 +2763,14 @@ int LevelInfo::get_stair_index(const coord_def &pos) const
     return -1;
 }
 
-void LevelInfo::add_waypoint(const coord_def &pos)
-{
-    if (pos.x < 0 || pos.y < 0) return;
-        
-    // First, make sure we don't already have this position in our stair list.
-    for (int i = 0, sz = stairs.size(); i < sz; ++i)
-        if (stairs[i].position == pos)
-            return;
-
-    stair_info si;
-    si.position = pos;
-    si.destination.id.depth = -2;   // Magic number for waypoints.
-
-    stairs.push_back(si);
-
-    delete [] stair_distances;
-    stair_distances = new short [ stairs.size() * stairs.size() ];
-
-    update_stair_distances();
-}
-
-void LevelInfo::remove_waypoint(const coord_def &pos)
-{
-    for (std::vector<stair_info>::iterator i = stairs.begin(); 
-            i != stairs.end(); ++i)
-    {
-        if (i->position == pos && i->destination.id.depth == -2)
-        {
-            stairs.erase(i);
-            break;
-        }
-    }
-
-    delete [] stair_distances;
-    stair_distances = new short [ stairs.size() * stairs.size() ];
-
-    update_stair_distances();
-}
-
 void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
 {
-    // If we have a waypoint on this level, we'll always delete stair_distances 
-    delete [] stair_distances;
-    stair_distances = NULL;
+    stair_distances.clear();
 
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (std::vector<stair_info>::iterator i = stairs.begin(); 
             i != stairs.end(); ++i)
     {
-        // Waypoints are not stairs, so we skip them.
-        if (i->destination.id.depth == -2) continue;
-        
         bool found = false;
         for (int j = s.size() - 1; j >= 0; --j)
         {
@@ -2891,7 +2817,7 @@ void LevelInfo::correct_stair_list(const std::vector<coord_def> &s)
         }
     }
 
-    stair_distances = new short [ stairs.size() * stairs.size() ];
+    stair_distances.reserve( stairs.size() * stairs.size() );
 }
 
 int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2) 
@@ -2950,25 +2876,6 @@ bool LevelInfo::is_known_branch(unsigned char branch) const
     return false;
 }
 
-void LevelInfo::travel_to_waypoint(const coord_def &pos)
-{
-    stair_info *target = get_stair(pos);
-    if (!target) return;
-
-    curr_stairs.clear();
-    for (int i = 0, sz = stairs.size(); i < sz; ++i)
-    {
-        if (stairs[i].destination.id.depth == -2) continue;
-        
-        stair_info si = stairs[i];
-        si.distance   = distance_between(target, &stairs[i]);
-
-        curr_stairs.push_back(si);
-    }
-    
-    start_translevel_travel(false);
-}
-
 void LevelInfo::save(FILE *file) const
 {
     int stair_count = stairs.size();
@@ -2979,10 +2886,14 @@ void LevelInfo::save(FILE *file) const
 
     if (stair_count)
     {
-        // XXX Assert stair_distances != NULL?
         // Save stair distances as short ints.
         for (int i = stair_count * stair_count - 1; i >= 0; --i)
-            writeShort(file, stair_distances[i]);
+        {
+            if (i >= (int) stair_distances.size())
+                writeShort(file, -1);
+            else
+                writeShort(file, stair_distances[i]);
+        }
     }
 
     writeShort(file, excludes.size());
@@ -3015,10 +2926,10 @@ void LevelInfo::load(FILE *file)
 
     if (stair_count)
     {
-        delete [] stair_distances;
-        stair_distances = new short [ stair_count * stair_count ];
+        stair_distances.clear();
+        stair_distances.reserve(stair_count * stair_count);
         for (int i = stair_count * stair_count - 1; i >= 0; --i)
-            stair_distances[i] = readShort(file);
+            stair_distances.push_back( readShort(file) );
     }
 
     excludes.clear();
@@ -3054,13 +2965,7 @@ void TravelCache::travel_to_waypoint(int num)
     if (num < 0 || num >= TRAVEL_WAYPOINT_COUNT) return;
     if (waypoints[num].id.depth == -1) return;
 
-    travel_target = waypoints[num];
-    
-    set_trans_travel_dest(trans_travel_dest, sizeof trans_travel_dest, 
-                          travel_target);
-    
-    LevelInfo &li = get_level_info(travel_target.id);
-    li.travel_to_waypoint(travel_target.pos);
+    start_translevel_travel(waypoints[num]);
 }
 
 void TravelCache::list_waypoints() const
@@ -3142,26 +3047,6 @@ void TravelCache::add_waypoint(int x, int y)
 
     int waynum = keyin - '0';
 
-    if (waypoints[waynum].is_valid())
-    {
-        bool unique_waypoint = true;
-        for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        {
-            if (i == waynum) continue;
-            if (waypoints[waynum] == waypoints[i])
-            {
-                unique_waypoint = false;
-                break;
-            }
-        }
-
-        if (unique_waypoint)
-        {
-            LevelInfo &li = get_level_info(waypoints[waynum].id);
-            li.remove_waypoint(waypoints[waynum].pos);
-        }
-    }
-    
     if (x == -1 || y == -1)
     {
         x = you.x_pos;
@@ -3169,9 +3054,6 @@ void TravelCache::add_waypoint(int x, int y)
     }
     const coord_def pos(x, y);
     const level_id &lid = level_id::current();
-
-    LevelInfo &li = get_level_info(lid);
-    li.add_waypoint(pos);
 
     waypoints[waynum].id  = lid;
     waypoints[waynum].pos = pos;

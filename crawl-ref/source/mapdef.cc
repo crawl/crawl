@@ -763,6 +763,7 @@ std::string map_def::add_key_field(
         return (err);
 
     keyed_mapspec &km = keyspecs[key];
+    km.key_glyph = key;
     return ((km.*set_field)(arg, separator == ':'));
 }
 
@@ -1174,7 +1175,7 @@ int subst_spec::value()
 // keyed_mapspec
 
 keyed_mapspec::keyed_mapspec()
-    : feat(), item(), mons()
+    :  key_glyph(-1), feat(), item(), mons()
 {
 }
 
@@ -1292,7 +1293,7 @@ std::string keyed_mapspec::set_item(const std::string &s, bool fix)
 
 feature_spec keyed_mapspec::get_feat()
 {
-    return feat.get_feat();
+    return feat.get_feat(key_glyph);
 }
 
 mons_spec keyed_mapspec::get_mons()
@@ -1300,14 +1301,9 @@ mons_spec keyed_mapspec::get_mons()
     return (mons.size()? mons.get_monster(0) : mons_spec(-1));
 }
 
-item_spec keyed_mapspec::get_item()
+item_list &keyed_mapspec::get_items()
 {
-    if (item.size())
-        return item.get_item(0);
-
-    item_spec spec;
-    spec.base_type = OBJ_UNASSIGNED;
-    return (spec);
+    return (item);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1317,10 +1313,17 @@ feature_slot::feature_slot() : feats(), fix_slot(false)
 {
 }
 
-feature_spec feature_slot::get_feat()
+feature_spec feature_slot::get_feat(int def_glyph)
 {
     int tweight = 0;
     feature_spec chosen_feat = feature_spec(DNGN_FLOOR);
+
+    if (def_glyph != -1)
+    {
+        chosen_feat.feat = -1;
+        chosen_feat.glyph = def_glyph;
+    }
+    
     for (int i = 0, size = feats.size(); i < size; ++i)
     {
         const feature_spec &feat = feats[i];

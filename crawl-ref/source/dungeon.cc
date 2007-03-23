@@ -6005,6 +6005,14 @@ static void dngn_place_item_explicit(const item_spec &spec,
     }
 }
 
+static void dngn_place_multiple_items(item_list &list,
+                                      int x, int y, int level)
+{
+    const int size = list.size();
+    for (int i = 0; i < size; ++i)
+        dngn_place_item_explicit(list.get_item(i), x, y, level);
+}
+
 static void dngn_place_item_explicit(int index, int x, int y,
                                      vault_placement &place,
                                      int level)
@@ -6099,8 +6107,8 @@ static int vault_grid( vault_placement &place,
         mons_spec mons = mapsp->get_mons();
         dngn_place_monster(mons, level_number, vx, vy);
 
-        item_spec item = mapsp->get_item();
-        dngn_place_item_explicit(item, vx, vy, level_number);
+        item_list &items = mapsp->get_items();
+        dngn_place_multiple_items(items, vx, vy, level_number);
 
         return (altar_count);
     }

@@ -2586,6 +2586,125 @@ MAP
 ENDMAP
 
 ##############################################################################
+# Caught partying
+
+NAME: erik_orc_1
+TAGS: orc_entry
+MONS: orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
+# The drake's name is Bobby. Since you did ask.
+KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / weight:2 potion of speed / weight:2 potion of might
+ITEM: club, potion of confusion, slice of pizza, sausage / weight:40 nothing, potion of confusion / potion of water
+SHUFFLE: defO
+FLAGS: no_rotate
+ORIENT: float
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........g..........2x...w4xxx
+x.....1...32...1......x1...wxxx
+x.........xx.....e..........xxx
+@.......f...1g............3.x$x
+x..x1.................O...x.xhx
+x..x1...1........2..1....gx.xhx
+x......2....g.........d.1.x1+hx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# C'mon, you *gotta* have a *fort*!
+
+NAME: erik_orc_2
+TAGS: orc_entry no_pool_fixup
+MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior, weight:100 orc knight / orc warrior
+ORIENT: float
+FLAGS: no_rotate
+SUBST: c = c:1000 x
+MAP
+.............................
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.ww2ccccccccccccccccccccccww.
+.ww.c.......3.3.3......w2cww.
+.wwxx........3.3.......wwcww.
+.122........3.I.3......4Ocww.
+.wwxx........3.3.......wwcww.
+.ww.c.......3.3.3......w2cww.
+.ww2ccccccccccccccccccccccww.
+.wIwwwwwwwwwwwwwwwwwwwwwwwww.
+.Iwwwwwwwwwwwwwwwwwwwwwwwwww.
+.............................
+ENDMAP
+
+
+##############################################################################
+# Just like home
+
+NAME: erik_orc_3
+TAGS: orc_entry
+MONS: orc / weight:2 goblin / weight:2 hobgoblin / nothing, orc warrior / orc priest / orc wizard / nothing, warg / ogre / nothing
+ORIENT: float
+SUBST: ? = x . $:1
+# too bad there's no no_item_gen tag
+
+MAP
+xxx.xxxxxxxxxxxxxxxxxxx
+xxx?.x?x?xx?xxx??xx?xxx
+xx..xxx..1.xxx....13xxx
+xx.x??x.x1xx?x.21xx?..x
+xx...x..xxx.2..1.x.x??.
+xx?x.....?x.x..x.x1?.xx
+xx..??12x?x.1.1?x.x??xx
+xxx..x..x??O<x..x.xx.xx
+x?..?x......x?.x.??x.xx
+xx.x??.x.x..?x..xx.x?xx
+x?xx?xx.x??...x.1x.1??x
+xx..xxx...x.x.x.1?1.xxx
+x?.2....xx2.x...xx.x??x
+xxx??xx..xx.xx.x?..xxxx
+xx..1.x.x.3...x2.x1..xx
+..x??x.xxx..xxxx??.??xx
+xx?.??.11.x?xxx..x..xxx
+x??xxxx???xx?xxx??x.?xx
+xxxxxxxxxxxxxxxxxxxx.xx
+ENDMAP
+
+##############################################################################
+# Orc-henge
+
+NAME: erik_orc_4
+TAGS: orc_entry
+MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
+MONS: orc priest/orc wizard/weight:2 goblin/nothing, orc warrior/warg
+ORIENT: float
+SUBST: ? : c:20 .
+SUBST: Z : c:20 .
+SUBST: X : c:20 .
+SUBST: v : c:20 .
+SUBST: b : c:20 .
+KITEM: 2 = knife
+
+MAP
+..............................
+...............ZZ.............
+.........??....ZZ....vv.......
+.........??..........vv.......
+....XX.......33533............
+....XX........1.2........bb...
+.........4....xxx...4....bb...
+.............33533............
+..bb..........................
+..bb...........O..........??..
+........4.............4...??..
+..................4...........
+...ZZ.........................
+...ZZ......4............vv....
+........................vv....
+.......cc..........vv.........
+.......cc....??....vv.........
+.............??...............
+..............................
+ENDMAP
+
+##############################################################################
 # Vaults entries
 ##############################################################################
 # Dummy Vaults entry
@@ -2727,7 +2846,6 @@ ORIENT: float
 SHUFFLE: 124w
 SHUFFLE: cG
 SUBST: ? = %.
-KFEAT: O = O
 KMONS: O = oklob plant
 
 MAP
@@ -2904,4 +3022,82 @@ MAP
 .............
 .............
 1...@.......1
+ENDMAP
+
+##############################################################################
+# Bears Won't Share
+
+NAME: erik_hive_1
+TAGS: hive_entry
+MONS: weight:200 bear/polar bear, grizzly bear, black bear, killer bee, queen bee, killer bee larva
+ITEM: honeycomb, royal jelly
+SHUFFLE: 123
+SHUFFLE: deO
+ORIENT: float
+
+MAP
+.......................
+.............aaa.......
+...........aaa4aaaaa...
+...........a4e6d564a...
+......2....a6.4.4O6a...
+............a64aa4a....
+....1.......aaaaaa.....
+.......3...............
+.......................
+ENDMAP
+
+
+##############################################################################
+# Bucolic
+NAME: erik_hive_2
+TAGS: hive_entry
+MONS: plant, killer bee
+SUBST: 1 = 1.
+SUBST: 2 = 2.
+ORIENT: float
+MAP
+.....................
+.1.....2.......1.1...
+...1.....1...2..1....
+.....2.........1.....
+.1.2....1....2.....2.
+......2.....1....21..
+.1...1...1...........
+.....2.....1.21...2..
+.......1.O......21...
+...1.......1.........
+...2.....1....1..2...
+.....11.2....2...11..
+...1..1....1.........
+....2.......2....1...
+....1...1.....1......
+.....................
+ENDMAP
+
+
+##############################################################################
+# Object lesson
+NAME: erik_hive_3
+TAGS: hive_entry
+MONS: killer bee larva, killer bee, queen bee, firedrake
+SUBST: l = l.
+ORIENT: float
+
+MAP
+..................
+...aaaaa..........
+..aaRa....a...a...
+..a2.a.aaa=.aa....
+.aa.1aaa.1aaa...a.
+..aa21.2O2aaa4.aa.
+...aaa2131aaaaa...
+..aaaaaRaaa..aa...
+..aa.4aaa.a...a...
+.aa...aaa.aa......
+.a..aaaa..........
+......a..a.llllll.
+.......aaa.llllll.
+...........llllll.
+..................
 ENDMAP

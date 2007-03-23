@@ -301,15 +301,9 @@ struct stair_info
 // Information on a level that interlevel travel needs.
 struct LevelInfo
 {
-    LevelInfo() : stairs()
+    LevelInfo() : stairs(), excludes(), stair_distances(), id()
     {
-        stair_distances = NULL;
     }
-    LevelInfo(const LevelInfo &li);
-
-    ~LevelInfo();
-
-    const LevelInfo &operator = (const LevelInfo &other);
 
     void save(FILE *) const;
     void load(FILE *);
@@ -345,10 +339,6 @@ struct LevelInfo
     // current level.
     bool is_known_branch(unsigned char branch) const;
 
-    void add_waypoint(const coord_def &pos);
-    void remove_waypoint(const coord_def &pos);
-
-    void travel_to_waypoint(const coord_def &pos);
 private:
     // Gets a list of coordinates of all player-known stairs on the current
     // level.
@@ -366,7 +356,7 @@ private:
     // Squares that are not safe to travel to.
     std::vector<coord_def> excludes;
 
-    short *stair_distances;       // Distances between the various stairs
+    std::vector<short> stair_distances;  // Dist between stairs
     level_id id;
 
     friend class TravelCache;
@@ -491,8 +481,8 @@ protected:
     void good_square(const coord_def &c);
 
 protected:
-    static const int UNFOUND_DIST  = -10000;
-    static const int INFINITE_DIST =  10000;
+    static const int UNFOUND_DIST  = -30000;
+    static const int INFINITE_DIST =  30000;
     
 protected:
     run_mode_type runmode;
