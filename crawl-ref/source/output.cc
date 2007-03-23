@@ -1028,13 +1028,13 @@ void print_overview_screen()
     text += std::string(k, ' ');
     snprintf(info, INFO_SIZE, "%s", time_turns);
     text += info;
-    text += "</yellow>\n\n";
+    text += "</yellow>\n";
     
     cmd_help.add_text(text);
     
     char buf[1000];
-    // 3 columns, splits at columns 32, 52
-    column_composer cols1(4, 16, 27, 38);
+    // 4 columns
+    column_composer cols1(4, 18, 30, 40);
 
     if (!player_rotted())
         snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
@@ -1050,30 +1050,30 @@ void print_overview_screen()
     cols1.add_formatted(0, buf, false);
 
     if (you.strength == you.max_strength)
-        snprintf(buf, sizeof buf, "Str %3d", you.strength);
+        snprintf(buf, sizeof buf, "Str %2d", you.strength);
     else
-        snprintf(buf, sizeof buf, "Str <yellow>%3d</yellow> (%d)",
+        snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
                  you.strength, you.max_strength);
     cols1.add_formatted(1, buf, false);
 
     if (you.intel == you.max_intel)
-        snprintf(buf, sizeof buf, "Int %3d", you.intel);
+        snprintf(buf, sizeof buf, "Int %2d", you.intel);
     else
-        snprintf(buf, sizeof buf, "Int <yellow>%3d</yellow> (%d)",
+        snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
                  you.intel, you.max_intel);
     cols1.add_formatted(1, buf, false);
 
     if (you.dex == you.max_dex)
-        snprintf(buf, sizeof buf, "Dex %3d", you.dex);
+        snprintf(buf, sizeof buf, "Dex %2d", you.dex);
     else
-        snprintf(buf, sizeof buf, "Dex <yellow>%3d</yellow> (%d)",
+        snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
                  you.dex, you.max_dex);
     cols1.add_formatted(1, buf, false);
 
     snprintf(buf, sizeof buf,
-             "AC %3d\n"
-             "EV %3d\n"
-             "Sh %3d\n",
+             "AC %2d\n"
+             "EV %2d\n"
+             "Sh %2d\n",
              player_AC(),
              player_evasion(),
              player_shield_class());
@@ -1101,20 +1101,21 @@ void print_overview_screen()
         }
     }
 
+    int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
     snprintf(buf, sizeof buf,
-             "Experience: %d/%lu (%d)\n"
-             "Spells: %2d memorised, %2d level%s left\n"
-             "God: %s%s<lightgrey>        Gold: %d\n",
-             you.experience_level, you.experience, you.exp_available,
-             you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s",
-             god_colour_tag, godpowers.c_str(), you.gold);
+             "Exp: %d/%lu (%d), need: %d\n"
+             "God: %s%s<lightgrey>      Gold: %d\n"
+             "Spells: %2d memorised, %2d level%s left\n",
+             you.experience_level, you.experience, you.exp_available, xp_needed,
+             god_colour_tag, godpowers.c_str(), you.gold,
+             you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
 
     std::vector<formatted_string> blines = cols1.formatted_lines();
     unsigned i;
     for (i = 0; i < blines.size(); ++i )
         cmd_help.add_item_formatted_string(blines[i]);
-    cmd_help.add_text("\n");
+    cmd_help.add_text(" ");
 
     // 3 columns, splits at columns 21, 38
     column_composer cols(3, 21, 38);
@@ -1285,7 +1286,7 @@ void print_overview_screen()
 
     for (i = 0; i < blines.size(); ++i )
         cmd_help.add_item_formatted_string(blines[i]);
-    cmd_help.add_text("\n");
+    cmd_help.add_text(" ");
 
     cmd_help.add_text(status_mut_abilities());
     cmd_help.show();

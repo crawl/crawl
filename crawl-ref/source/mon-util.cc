@@ -3040,7 +3040,7 @@ mon_enchant monsters::get_ench(enchant_type ench1,
             return (*i);
     }
 
-    return (mon_enchant());
+    return mon_enchant();
 }
 
 void monsters::update_ench(const mon_enchant &ench)

@@ -1335,13 +1335,13 @@ static std::string describe_ammo( const item_def &item )
     switch (item.sub_type)
     {
     case MI_STONE:
-        description += "A stone. ";
+        description += "A stone. It can be thrown by hand or fired with a sling. ";
         break;
     case MI_ARROW:
-        description += "An arrow. ";
+        description += "An arrow, to be shot with a bow. ";
         break;
     case MI_NEEDLE:
-        description += "A needle. ";
+        description += "A needle. It can be thrown by hand or fired with a blowgun. ";
         break;
     case MI_BOLT:
         description += "A crossbow bolt. ";

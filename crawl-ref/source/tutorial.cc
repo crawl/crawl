@@ -7,6 +7,7 @@
 
 #include "command.h"
 #include "files.h"
+#include "initfile.h"
 #include "itemprop.h"
 #include "menu.h"
 #include "message.h"
@@ -681,7 +682,7 @@ void tutorial_finished()
                       "explained in the file <w>crawl_options.txt<magenta> which "
                       "can be found in the <w>/docs<magenta> directory. The "
                       "options themselves are set in <w>init.txt<magenta> or "
-                      "<w>.crawlrc<magenta>. Crawl will complain when it can't "
+                      "<w>.crawlrc<magenta>. Crawl will complain if it can't "
                       "find either file.\n";
                break;
           default:
@@ -734,7 +735,7 @@ void tutorial_healing_reminder()
 
             std::string text;
             text =  "Remember to rest between fights and to enter unexplored "
-                    "terrain with full hitpoints and/or magic. For resting, "
+                    "terrain with full hitpoints and magic. For resting, "
                     "press <w>5<magenta> or <w>Shift-numpad 5<magenta>.";
             print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
         }
@@ -792,60 +793,10 @@ static std::string colour_to_tag(int col, bool closed = false)
     std::string tag = "<";
     if (closed)
         tag += "/";
-    switch(col)
-    {
-        case WHITE:
-            tag += "w";
-            break;
-        case YELLOW:
-            tag += "yellow";
-            break;
-        case RED:
-            tag += "red";
-            break;
-        case LIGHTRED:
-            tag += "lightred";
-            break;
-        case MAGENTA:
-            tag += "magenta";
-            break;
-        case LIGHTMAGENTA:
-            tag += "lightmagenta";
-            break;
-        case GREEN:
-            tag += "green";
-            break;
-        case LIGHTGREEN:
-            tag += "lightgreen";
-            break;
-        case BLUE:
-            tag += "blue";
-            break;
-        case LIGHTBLUE:
-            tag += "lightblue";
-            break;
-        case CYAN:
-            tag += "cyan";
-            break;
-        case LIGHTCYAN:
-            tag += "lightcyan";
-            break;
-        case BLACK:
-            tag += "black";
-            break;
-        case BROWN:
-            tag += "brown";
-            break;
-        case DARKGREY:
-            tag += "darkgrey";
-            break;
-        default:
-            tag += "lightgrey";
-    }
+    tag += colour_to_str(col);
     tag += ">";
     
     return tag;
-    
 }
 
 void tutorial_first_monster(monsters mon)
@@ -1333,8 +1284,6 @@ void learned_something_new(unsigned int seen_what, int x, int y)
     }
     if (seen_what != TUT_SEEN_MONSTER && seen_what != TUT_SEEN_FIRST_OBJECT)
        print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
-
-//    more();
 
     Options.tut_just_triggered = true;
     Options.tutorial_events[seen_what] = 0;

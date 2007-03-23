@@ -296,23 +296,23 @@ int main( int argc, char *argv[] )
         wield_warning(false);
     }
 
-    if (Options.tutorial_left)
-    {
-        // don't allow triggering at game start 
-        Options.tut_just_triggered = true;
-        // print stats and everything
-        prep_input();
-        char ch = 'x';    
-        mpr("Press any key to start the tutorial intro, or Escape to skip it.",
+    if ( game_start )   
+    {    
+        if (Options.tutorial_left)
+        {
+            // don't allow triggering at game start 
+            Options.tut_just_triggered = true;
+            // print stats and everything
+            prep_input();
+            char ch = 'x';    
+            mpr("Press any key to start the tutorial intro, or Escape to skip it.",
             MSGCH_TUTORIAL);
-        ch = c_getch();
+            ch = c_getch();
         
-        if (ch != ESCAPE)
-            tut_starting_screen();
-    }    
-    
-    if ( game_start )
-    {
+            if (ch != ESCAPE)
+                tut_starting_screen();
+        }    
+
         snprintf(info, INFO_SIZE,
                  "%s, the %s %s, began the quest for the Orb.",
                  you.your_name,

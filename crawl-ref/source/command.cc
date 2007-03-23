@@ -1117,7 +1117,7 @@ void list_tutorial_help()
             "and in sight, one of <w>f</w>, <w>p</w>, <w>t</w> fires\n"
             "at it again (without selecting anything).\n",
             true, true, cmdhelp_textfilter,40);
-
+            
     show_keyhelp_menu(cols.formatted_lines(), false);
 }
  
