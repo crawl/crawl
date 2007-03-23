@@ -646,9 +646,10 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
     while (fgets(buf, sizeof buf, fp))
     {
         MenuEntry* me = new MenuEntry(buf);
-        if ((next_is_hotkey && isupper(buf[0])) || (is_first && first_hotkey))
+        if ((next_is_hotkey && (isupper(buf[0]) || isdigit(buf[0]))) ||
+            (is_first && first_hotkey))
         {
-            int hotkey = is_first ? first_hotkey : tolower(buf[0]);
+            int hotkey = is_first ? first_hotkey : buf[0];
             if ( !is_first && buf[0] == 'X' &&
                  strlen(buf) >= 3 && isdigit(buf[2]) )
             {
@@ -656,6 +657,8 @@ static void add_file_to_scroller(FILE* fp, formatted_scroller& m,
                 hotkey = buf[2];
             }
             me->add_hotkey(hotkey);
+            if ( isupper(hotkey) )
+                me->add_hotkey(tolower(hotkey));
             me->level = MEL_SUBTITLE;
             me->colour = WHITE;
         }
