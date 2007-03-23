@@ -2996,7 +2996,7 @@ static int affect_player( struct bolt &beam )
                     exercise(SK_DODGING, 1);
 
                 if (you.duration[DUR_DEFLECT_MISSILES])
-                    beamHit = random2(beamHit * 2) / 3;
+                    beamHit = random2(beamHit / 2);
                 else if (you.duration[DUR_REPEL_MISSILES] ||
                          you.mutation[MUT_REPULSION_FIELD] == 3)
                     beamHit = random2(beamHit);
