@@ -743,7 +743,7 @@ char *god_name( int which_god, bool long_name ) // mv - rewritten
                 strcat(godname_buff, "the Tricky"); 
                 break;
             case 3:
-                sprintf( godname_buff, "Xom the %sredictible", coinflip() ? "Less-P" 
+                sprintf( godname_buff, "Xom the %sredictable", coinflip() ? "Less-P" 
                                                                     : "Unp" );
                 break;
             case 4:
