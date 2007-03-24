@@ -1121,8 +1121,8 @@ int player_res_poison(bool calc_unid)
         break;
     }
 
-    if (rp > 3)
-        rp = 3;
+    if (rp > 1)
+        rp = 1;
 
     return (rp);
 }                               // end player_res_poison()
@@ -2044,6 +2044,9 @@ int player_see_invis(bool calc_unid)
 
     if (artefacts > 0)
         si += artefacts;
+
+    if ( si > 1 )
+        si = 1;
 
     return si;
 }
