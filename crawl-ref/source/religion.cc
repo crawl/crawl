@@ -261,6 +261,14 @@ static bool is_evil_god(int god)
         god == GOD_LUGONU;
 }
 
+static bool is_good_god(int god)
+{
+    return
+        god == GOD_SHINING_ONE ||
+        god == GOD_ZIN ||
+        god == GOD_ELYVILON;
+}
+
 void dec_penance(int god, int val)
 {
     if (you.penance[god] > 0)
@@ -1341,7 +1349,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
-            if (random2(level + 18) > 5)
+            if (random2(level + 18 - you.experience_level / 2) > 5)
                 piety_change = 1;
             break;
 
@@ -1361,7 +1369,9 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_LUGONU:
             simple_god_message(" accepts your kill.");
             ret = true;
-            if (random2(level + 18) > 4)
+            // Holy gods are easier to please this way
+            if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
+                                      you.experience_level / 2)) > 4)
                 piety_change = 1;
             break;
 
@@ -1378,7 +1388,9 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_OKAWARU:
             simple_god_message(" accepts your kill.");
             ret = true;
-            if (random2(level + 18) > 3)
+            // Holy gods are easier to please this way
+            if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
+                                      you.experience_level / 2)) > 3)
                 piety_change = 1;
             break;
 
@@ -1442,7 +1454,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_YREDELEMNUL:
             simple_god_message(" accepts your slave's kill.");
             ret = true;
-            if (random2(level + 10) > 5)
+            if (random2(level + 10 - you.experience_level/3) > 5)
                 piety_change = 1;
             break;
         default:
@@ -1462,7 +1474,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_LUGONU:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
-            if (random2(level + 10) > 5)
+            if (random2(level + 10 - you.experience_level/3) > 5)
                 piety_change = 1;
             break;
         default:
@@ -1480,7 +1492,8 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_LUGONU:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
-            if (random2(level + 10) > 5)
+            if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
+                                      you.experience_level/3)) > 5)
                 piety_change = 1;
             break;
         default:
@@ -1495,6 +1508,7 @@ bool did_god_conduct( int thing_done, int level )
         case GOD_SHINING_ONE:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
+            // only holy gods care about this, so no XP level deduction
             if (random2(level + 10) > 5)
                 piety_change = 1;
             break;
