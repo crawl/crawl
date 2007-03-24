@@ -152,6 +152,13 @@
 		7BC222E80ABBB286003A7D9A /* itemprop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BC222E60ABBB286003A7D9A /* itemprop.h */; };
 		7BD75A350AC214A200B74F6E /* notes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BD75A330AC214A200B74F6E /* notes.cc */; };
 		7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BD75A340AC214A200B74F6E /* notes.h */; };
+		7BDEBB290BB4CB0B008DF39F /* mtransit.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB280BB4CB0B008DF39F /* mtransit.cc */; };
+		7BDEBB2B0BB4CB1D008DF39F /* ghost.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */; };
+		7BDEBB2D0BB4CB32008DF39F /* mtransit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB2C0BB4CB32008DF39F /* mtransit.h */; };
+		7BDEBB310BB4CB5C008DF39F /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */; };
+		7BDEBB320BB4CB5C008DF39F /* tutorial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB300BB4CB5C008DF39F /* tutorial.h */; };
+		7BDEBB360BB4CB93008DF39F /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEBB340BB4CB93008DF39F /* format.cc */; };
+		7BDEBB370BB4CB93008DF39F /* format.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7BDEBB350BB4CB93008DF39F /* format.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -231,6 +238,9 @@
 				7BD75A360AC214A200B74F6E /* notes.h in CopyFiles */,
 				7B352EA10B00183400CABB32 /* mapdef.h in CopyFiles */,
 				7BA3DBBC0B3D90A700B5B3D7 /* branch.h in CopyFiles */,
+				7BDEBB2D0BB4CB32008DF39F /* mtransit.h in CopyFiles */,
+				7BDEBB320BB4CB5C008DF39F /* tutorial.h in CopyFiles */,
+				7BDEBB370BB4CB93008DF39F /* format.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -384,6 +394,13 @@
 		7BC222E60ABBB286003A7D9A /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
 		7BD75A330AC214A200B74F6E /* notes.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = notes.cc; sourceTree = "<group>"; };
 		7BD75A340AC214A200B74F6E /* notes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = notes.h; sourceTree = "<group>"; };
+		7BDEBB280BB4CB0B008DF39F /* mtransit.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = mtransit.cc; sourceTree = "<group>"; };
+		7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ghost.cc; sourceTree = "<group>"; };
+		7BDEBB2C0BB4CB32008DF39F /* mtransit.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = mtransit.h; sourceTree = "<group>"; };
+		7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = tutorial.cc; sourceTree = "<group>"; };
+		7BDEBB300BB4CB5C008DF39F /* tutorial.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tutorial.h; sourceTree = "<group>"; };
+		7BDEBB340BB4CB93008DF39F /* format.cc */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = format.cc; sourceTree = "<group>"; };
+		7BDEBB350BB4CB93008DF39F /* format.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -487,6 +504,9 @@
 				7B237E500A8EC9D000580F30 /* files.h */,
 				7B237E540A8EC9D000580F30 /* food.cc */,
 				7B237E550A8EC9D000580F30 /* food.h */,
+				7BDEBB340BB4CB93008DF39F /* format.cc */,
+				7BDEBB350BB4CB93008DF39F /* format.h */,
+				7BDEBB2A0BB4CB1D008DF39F /* ghost.cc */,
 				7B237DF30A8EC9D000580F30 /* hiscores.cc */,
 				7B237DF20A8EC9D000580F30 /* hiscores.h */,
 				7B237DF10A8EC9D000580F30 /* initfile.cc */,
@@ -537,6 +557,8 @@
 				7B237E400A8EC9D000580F30 /* monstuff.h */,
 				7B237E3F0A8EC9D000580F30 /* mstuff2.cc */,
 				7B237E6B0A8EC9D000580F30 /* mstuff2.h */,
+				7BDEBB280BB4CB0B008DF39F /* mtransit.cc */,
+				7BDEBB2C0BB4CB32008DF39F /* mtransit.h */,
 				7B237E6A0A8EC9D000580F30 /* mt19937ar.cc */,
 				7B237E690A8EC9D000580F30 /* mt19937ar.h */,
 				7B237DFB0A8EC9D000580F30 /* mutation.cc */,
@@ -587,6 +609,8 @@
 				7B237E210A8EC9D000580F30 /* transfor.h */,
 				7B237DF50A8EC9D000580F30 /* travel.cc */,
 				7B237DF40A8EC9D000580F30 /* travel.h */,
+				7BDEBB2F0BB4CB5C008DF39F /* tutorial.cc */,
+				7BDEBB300BB4CB5C008DF39F /* tutorial.h */,
 				7B237E140A8EC9D000580F30 /* view.cc */,
 				7B237E130A8EC9D000580F30 /* view.h */,
 			);
@@ -741,6 +765,10 @@
 				7BD75A350AC214A200B74F6E /* notes.cc in Sources */,
 				7B352EA00B00183400CABB32 /* mapdef.cc in Sources */,
 				7BA3DBBB0B3D90A700B5B3D7 /* branch.cc in Sources */,
+				7BDEBB290BB4CB0B008DF39F /* mtransit.cc in Sources */,
+				7BDEBB2B0BB4CB1D008DF39F /* ghost.cc in Sources */,
+				7BDEBB310BB4CB5C008DF39F /* tutorial.cc in Sources */,
+				7BDEBB360BB4CB93008DF39F /* format.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
