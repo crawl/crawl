@@ -1037,7 +1037,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         switch (lnchType)
         {
         case WPN_BLOWGUN:
-            baseHit = 2;
+            baseHit = 12;
             hitMult = 60;
             damMult = 0;
             lnchDamBonus = 0;
