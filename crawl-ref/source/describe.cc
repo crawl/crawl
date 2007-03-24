@@ -6143,7 +6143,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         description += "A tan, fit and thoroughly evil surfer.";
         break;
 
-    case MONS_ADOLF:
+    case MONS_FREDERICK:
         description += "A svelte fighter-mage with unfortunate facial hair.";
         break;
 

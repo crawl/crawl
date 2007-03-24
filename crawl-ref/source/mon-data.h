@@ -3277,7 +3277,7 @@
 ,
 
 {
-    MONS_ADOLF, '@', DARKGREY, "Adolf",
+    MONS_FREDERICK, '@', DARKGREY, "Frederick",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS | M_WARM_BLOOD
         | M_SEE_INVIS | M_EVIL | M_UNIQUE,
     MR_NO_FLAGS,

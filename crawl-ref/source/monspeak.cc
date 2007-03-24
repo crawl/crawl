@@ -516,7 +516,7 @@ bool mons_speaks(struct monsters *monster)
         case MONS_LOUISE:
         case MONS_FRANCES:
         case MONS_DUANE:
-        case MONS_ADOLF:
+        case MONS_FREDERICK:
             switch (random2(17))
             {
             case 0:
@@ -1115,7 +1115,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
             case 6:
                 strcat(info,
-                       " says, \"I'm bad girl. But I can't do anything about it.\"");
+                       " says, \"I'm a bad girl. But I can't do anything about it.\"");
                 break;
             case 7:
                 strcat(info,
@@ -1219,7 +1219,7 @@ bool mons_speaks(struct monsters *monster)
                 strcat(info, " screams, \"I want to be alone!\"");
                 break;
             case 3:
-                strcat(info, " says, \"You are really nuisance.\"");
+                strcat(info, " says, \"You are really a nuisance.\"");
                 break;
             case 4:
                 strcat(info,
@@ -1589,7 +1589,7 @@ bool mons_speaks(struct monsters *monster)
                 strcat(info, " ponders the situation.");
                 break;
             case 4:
-                strcat(info, " looks for scalpel.");
+                strcat(info, " looks for a scalpel.");
                 break;
 
             case 5:
@@ -1610,7 +1610,7 @@ bool mons_speaks(struct monsters *monster)
                 strcat(info, " says, \"I want you in my laboratory!\"");
                 break;
             case 9:
-                strcat(info, " says, \"What about little dissection?\"");
+                strcat(info, " says, \"What about a little dissection?\"");
                 break;
             case 10:
                 strcat(info,
@@ -1723,7 +1723,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
 
             case 12:
-                strcat(info, " says, \"Breath deeply.\"");
+                strcat(info, " says, \"Breathe deeply.\"");
                 break;
             case 13:
                 strcat(info, " screams, \"Love! Eternal love!\"");

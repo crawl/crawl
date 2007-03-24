@@ -2122,7 +2122,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DUANE,                        //  305
     MONS_XTAHUA,
     MONS_NORRIS,
-    MONS_ADOLF,
+    MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,                        //  310
 // BCR - end second batch of uniques.

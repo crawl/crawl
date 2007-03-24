@@ -108,7 +108,7 @@ struct MenuEntry
         return selected_qty > 0 && quantity;
     }
 
-    void select( int qty = -1 )
+    virtual void select( int qty = -1 )
     {
         if (selected())
             selected_qty = 0;

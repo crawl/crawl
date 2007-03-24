@@ -3222,7 +3222,7 @@ static int give_weapon(monsters *mon, int level)
 
     case MONS_HELL_KNIGHT:
     case MONS_MAUD:
-    case MONS_ADOLF:
+    case MONS_FREDERICK:
     case MONS_MARGERY:
     {
         force_item = true;
@@ -3532,7 +3532,7 @@ void give_armour(monsters *mon, int level)
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
-    case MONS_ADOLF:
+    case MONS_FREDERICK:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_MARGERY:
