@@ -193,6 +193,22 @@ void lowercase(std::string &s)
         s[i] = tolower(s[i]);
 }
 
+std::string replace_all(std::string s,
+                        const std::string &find,
+                        const std::string &repl)
+{
+    std::string::size_type start = 0;
+    std::string::size_type found;
+   
+    while ((found = s.find(find, start)) != std::string::npos)
+    {
+        s.replace( found, find.length(), repl );
+        start = found + repl.length();
+    }
+
+    return (s);
+}
+
 // Replaces all occurrences of any of the characters in tofind with the
 // replacement string.
 std::string replace_all_of(std::string s,

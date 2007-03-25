@@ -624,10 +624,10 @@ bool scorefile_entry::parse(const std::string &line)
     // 4) 0.2 and onwards, which are xlogfile format - no leading
     //    colon, fields separated by colons, each field specified as
     //    key=value. Colons are not allowed in key names, must be escaped to
-    //    | in values. Literal | must be escaped as || in values.
+    //    :: in values.
     //
     // 0.2 only reads entries of type (3) and (4), and only writes entries of
-    // type (4).
+    // type (4). 0.3 or 0.4 may discontinue read support for (3).
 
     // Leading colon implies 4.0 style line:
     if (line[0] == ':')
@@ -636,146 +636,22 @@ bool scorefile_entry::parse(const std::string &line)
         return (parse_scoreline(line));
 }
 
-// xlogfile escape: s/\\/\\\\/g, s/|/\\|/g, s/:/|/g, 
-std::string scorefile_entry::xlog_escape(const std::string &s) const
-{
-    return
-        replace_all_of(
-            replace_all_of(
-                replace_all_of(s, "\\", "\\\\"),
-                "|", "\\|" ),
-            ":", "|" );
-}
-
-// xlogfile unescape: s/\\(.)/$1/g, s/|/:/g
-std::string scorefile_entry::xlog_unescape(const std::string &s) const
-{
-    std::string unesc = s;
-    bool escaped = false;
-    for (int i = 0, size = unesc.size(); i < size; ++i)
-    {
-        const char c = unesc[i];
-        if (escaped)
-        {
-            escaped = false;
-            continue;
-        }
-        
-        if (c == '|')
-            unesc[i] = ':';
-        else if (c == '\\')
-        {
-            escaped = true;
-            unesc.erase(i--, 1);
-            size--;
-        }
-    }
-    return (unesc);
-}
-
 std::string scorefile_entry::raw_string() const
 {
     set_score_fields();
     
     if (!fields.get())
         return ("");
-    
-    std::string line;
-    for (int i = 0, size = fields->size(); i < size; ++i)
-    {
-        const std::pair<std::string, std::string> &f = (*fields)[i];
 
-        // Don't write empty fields.
-        if (f.second.empty())
-            continue;
-        
-        if (!line.empty())
-            line += ":";
-
-        line += f.first;
-        line += "=";
-        line += xlog_escape(f.second);
-    }
-
-    return (line);
+    return fields->xlog_line();
 }
 
 bool scorefile_entry::parse_scoreline(const std::string &line)
 {
-    std::vector<std::string> rawfields = split_string(":", line);
-    fields.reset(new hs_fields);
-    for (int i = 0, size = rawfields.size(); i < size; ++i)
-    {
-        const std::string field = rawfields[i];
-        std::string::size_type st = field.find('=');
-        if (st == std::string::npos)
-            continue;
-
-        fields->push_back(
-            std::pair<std::string, std::string>(
-                field.substr(0, st),
-                xlog_unescape(field.substr(st + 1)) ) );
-    }
-
+    fields.reset(new xlog_fields(line));
     init_with_fields();
     
     return (true);
-}
-
-void scorefile_entry::add_field(const std::string &key,
-                                const char *format,
-                                ...) const
-{
-    char buf[400];
-    va_list args;
-    va_start(args, format);
-    vsnprintf(buf, sizeof buf, format, args);
-    va_end(args);
-
-    fields->push_back(
-        std::pair<std::string, std::string>( key, buf ) );
-}
-
-void scorefile_entry::add_auxkill_field() const
-{
-    add_field("kaux", "%s", auxkilldata.c_str());
-}
-
-void scorefile_entry::read_auxkill_field()
-{
-    auxkilldata = str_field("kaux");
-}
-
-std::string scorefile_entry::str_field(const std::string &s) const
-{
-    hs_map::const_iterator i = fieldmap->find(s);
-    if (i == fieldmap->end())
-        return ("");
-
-    return i->second;
-}
-
-int scorefile_entry::int_field(const std::string &s) const
-{
-    std::string field = str_field(s);
-    return atoi(field.c_str());
-}
-
-long scorefile_entry::long_field(const std::string &s) const
-{
-    std::string field = str_field(s);
-    return atol(field.c_str());
-}
-
-void scorefile_entry::map_fields()
-{
-    fieldmap.reset(new hs_map);
-    for (int i = 0, size = fields->size(); i < size; ++i)
-    {
-        const std::pair<std::string, std::string> f = (*fields)[i];
-        
-        (*fieldmap)[f.first] = f.second;
-    }
 }
 
 static const char *short_branch_name(int branch)
@@ -830,113 +706,110 @@ static int str_to_god(const std::string &god)
 
 void scorefile_entry::init_with_fields()
 {
-    map_fields();
-    points = long_field("sc");
-    name   = str_field("name");
-    uid    = int_field("uid");
+    points = fields->long_field("sc");
+    name   = fields->str_field("name");
+    uid    = fields->int_field("uid");
 
-    race   = str_to_species(str_field("race"));
-    cls    = get_class_index_by_name(str_field("cls").c_str());
+    race   = str_to_species(fields->str_field("race"));
+    cls    = get_class_index_by_name(fields->str_field("cls").c_str());
 
-    lvl    = int_field("xl");
+    lvl    = fields->int_field("xl");
 
-    best_skill = str_to_skill(str_field("sk"));
-    best_skill_lvl = int_field("sklev");
-    death_type = str_to_kill_method(str_field("ktyp"));
-    death_source_name = str_field("killer");
+    best_skill = str_to_skill(fields->str_field("sk"));
+    best_skill_lvl = fields->int_field("sklev");
+    death_type = str_to_kill_method(fields->str_field("ktyp"));
+    death_source_name = fields->str_field("killer");
+    auxkilldata = fields->str_field("kaux");
+    branch = str_to_branch(fields->str_field("br"));
+    dlvl   = fields->int_field("lvl");
+    level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
-    read_auxkill_field();
+    final_hp = fields->int_field("hp");
+    final_max_hp = fields->int_field("mhp");
+    final_max_max_hp = fields->int_field("mmhp");
+    damage = fields->int_field("dam");
+    str = fields->int_field("str");
+    intel = fields->int_field("int");
+    dex = fields->int_field("dex");
 
-    branch = str_to_branch(str_field("br"));
-    dlvl   = int_field("lvl");
-    level_type = str_to_level_area_type(str_field("ltyp"));
-
-    final_hp = int_field("hp");
-    final_max_hp = int_field("mhp");
-    final_max_max_hp = int_field("mmhp");
-    damage = int_field("dam");
-    str = int_field("str");
-    intel = int_field("int");
-    dex = int_field("dex");
-
-    god = str_to_god(str_field("god"));
-    piety = int_field("piety");
-    penance = int_field("pen");
-    wiz_mode = int_field("wiz");
-    birth_time = parse_time(str_field("start"));
-    death_time = parse_time(str_field("end"));
-    real_time  = long_field("dur");
-    num_turns  = long_field("turn");
-    num_diff_runes = int_field("urune");
-    num_runes = int_field("nrune");
+    god = str_to_god(fields->str_field("god"));
+    piety = fields->int_field("piety");
+    penance = fields->int_field("pen");
+    wiz_mode = fields->int_field("wiz");
+    birth_time = parse_time(fields->str_field("start"));
+    death_time = parse_time(fields->str_field("end"));
+    real_time  = fields->long_field("dur");
+    num_turns  = fields->long_field("turn");
+    num_diff_runes = fields->int_field("urune");
+    num_runes = fields->int_field("nrune");
 }
 
 void scorefile_entry::set_score_fields() const
 {
-    fields.reset(new hs_fields());
+    fields.reset(new xlog_fields);
 
     if (!fields.get())
         return;
 
-    add_field("v", VER_NUM);
-    add_field("lv", SCORE_VERSION);
-    add_field("sc", "%ld", points);
-    add_field("name", "%s", name.c_str());
-    add_field("uid", "%d", uid);
-    add_field("race", "%s", species_name(race, lvl));
-    add_field("cls", "%s", get_class_name(cls));
-    add_field("xl", "%d", lvl);
-    add_field("sk", "%s", skill_name(best_skill));
-    add_field("sklev", "%d", best_skill_lvl);
-    add_field("title", "%s", skill_title( best_skill, best_skill_lvl, 
+    fields->add_field("v", VER_NUM);
+    fields->add_field("lv", SCORE_VERSION);
+    fields->add_field("sc", "%ld", points);
+    fields->add_field("name", "%s", name.c_str());
+    fields->add_field("uid", "%d", uid);
+    fields->add_field("race", "%s", species_name(race, lvl));
+    fields->add_field("cls", "%s", get_class_name(cls));
+    fields->add_field("xl", "%d", lvl);
+    fields->add_field("sk", "%s", skill_name(best_skill));
+    fields->add_field("sklev", "%d", best_skill_lvl);
+    fields->add_field("title", "%s", skill_title( best_skill, best_skill_lvl, 
                                                   race, str, dex, god ) );
-    add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
-    add_field("killer", death_source_desc());
+    fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
+    fields->add_field("killer", death_source_desc());
 
-    add_auxkill_field();
+    fields->add_field("kaux", "%s", auxkilldata.c_str());
 
-    add_field("place", "%s",
+    fields->add_field("place", "%s",
               place_name(get_packed_place(branch, dlvl, level_type),
                          false, true).c_str());
-    add_field("br", "%s", short_branch_name(branch));
-    add_field("lvl", "%d", dlvl);
-    add_field("ltyp", "%s", level_area_type_name(level_type));
+    fields->add_field("br", "%s", short_branch_name(branch));
+    fields->add_field("lvl", "%d", dlvl);
+    fields->add_field("ltyp", "%s", level_area_type_name(level_type));
 
-    add_field("hp", "%d", final_hp);
-    add_field("mhp", "%d", final_max_hp);
-    add_field("mmhp", "%d", final_max_max_hp);
-    add_field("dam", "%d", damage);
-    add_field("str", "%d", str);
-    add_field("int", "%d", intel);
-    add_field("dex", "%d", dex);
+    fields->add_field("hp", "%d", final_hp);
+    fields->add_field("mhp", "%d", final_max_hp);
+    fields->add_field("mmhp", "%d", final_max_max_hp);
+    fields->add_field("dam", "%d", damage);
+    fields->add_field("str", "%d", str);
+    fields->add_field("int", "%d", intel);
+    fields->add_field("dex", "%d", dex);
 
     // Don't write No God to save some space.
     if (god != -1)
-        add_field("god", "%s", god == GOD_NO_GOD? "" : god_name(god));
+        fields->add_field("god", "%s", god == GOD_NO_GOD? "" : god_name(god));
     if (piety > 0)
-        add_field("piety", "%d", piety);
+        fields->add_field("piety", "%d", piety);
     if (penance > 0)
-        add_field("pen", "%d", penance);
+        fields->add_field("pen", "%d", penance);
     if (wiz_mode)
-        add_field("wiz", "%d", wiz_mode);
+        fields->add_field("wiz", "%d", wiz_mode);
     
-    add_field("start", "%s", make_date_string(birth_time).c_str());
-    add_field("end", "%s", make_date_string(death_time).c_str());
-    add_field("dur", "%ld", real_time);
-    add_field("turn", "%ld", num_turns);
+    fields->add_field("start", "%s", make_date_string(birth_time).c_str());
+    fields->add_field("end", "%s", make_date_string(death_time).c_str());
+    fields->add_field("dur", "%ld", real_time);
+    fields->add_field("turn", "%ld", num_turns);
 
     if (num_diff_runes)
-        add_field("urune", "%d", num_diff_runes);
+        fields->add_field("urune", "%d", num_diff_runes);
 
     if (num_runes)
-        add_field("nrune", "%d", num_runes);
+        fields->add_field("nrune", "%d", num_runes);
 
 #ifdef DGL_EXTENDED_LOGFILES
     const std::string short_msg = short_kill_message();
-    add_field("tmsg", "%s", short_msg.c_str());
+    fields->add_field("tmsg", "%s", short_msg.c_str());
     const std::string long_msg = long_kill_message();
     if (long_msg != short_msg)
-        add_field("vmsg", "%s", long_msg.c_str());
+        fields->add_field("vmsg", "%s", long_msg.c_str());
 #endif
 }
 
@@ -2057,4 +1930,144 @@ scorefile_entry::death_description(death_desc_verbosity verbosity) const
     }
 
     return (desc);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// xlog_fields
+
+xlog_fields::xlog_fields() : fields(), fieldmap()
+{
+}
+
+xlog_fields::xlog_fields(const std::string &line) : fields(), fieldmap()
+{
+    init(line);
+}
+
+std::string::size_type
+xlog_fields::next_separator(const std::string &s,
+                            std::string::size_type start) const
+{
+    std::string::size_type p = s.find(':', start);
+    if (p != std::string::npos && p < s.length() - 1 && s[p + 1] == ':')
+        return next_separator(s, p + 2);
+
+    return (p);
+}
+
+std::vector<std::string>
+xlog_fields::split_fields(const std::string &s) const
+{
+    std::string::size_type start = 0, end = 0;
+    std::vector<std::string> fs;
+
+    for ( ; (end = next_separator(s, start)) != std::string::npos;
+          start = end + 1  )
+    {
+        fs.push_back( s.substr(start, end - start) );
+    }
+
+    if (start < s.length())
+        fs.push_back( s.substr(start) );
+
+    return (fs);
+}
+
+void xlog_fields::init(const std::string &line)
+{
+    std::vector<std::string> rawfields = split_fields(line);
+    for (int i = 0, size = rawfields.size(); i < size; ++i)
+    {
+        const std::string field = rawfields[i];
+        std::string::size_type st = field.find('=');
+        if (st == std::string::npos)
+            continue;
+
+        fields.push_back(
+            std::pair<std::string, std::string>(
+                field.substr(0, st),
+                xlog_unescape(field.substr(st + 1)) ) );
+    }
+
+    map_fields();
+}
+
+// xlogfile escape: s/:/::/g
+std::string xlog_fields::xlog_escape(const std::string &s) const
+{
+    return replace_all(s, ":", "::");
+}
+
+// xlogfile unescape: s/::/:/g
+std::string xlog_fields::xlog_unescape(const std::string &s) const
+{
+    return replace_all(s, "::", ":");
+}
+
+void xlog_fields::add_field(const std::string &key,
+                            const char *format,
+                            ...)
+{
+    char buf[500];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buf, sizeof buf, format, args);
+    va_end(args);
+
+    fields.push_back(
+        std::pair<std::string, std::string>( key, buf ) );
+    fieldmap[key] = buf;
+}
+
+std::string xlog_fields::str_field(const std::string &s) const
+{
+    xl_map::const_iterator i = fieldmap.find(s);
+    if (i == fieldmap.end())
+        return ("");
+
+    return i->second;
+}
+
+int xlog_fields::int_field(const std::string &s) const
+{
+    std::string field = str_field(s);
+    return atoi(field.c_str());
+}
+
+long xlog_fields::long_field(const std::string &s) const
+{
+    std::string field = str_field(s);
+    return atol(field.c_str());
+}
+
+void xlog_fields::map_fields() const
+{
+    fieldmap.clear();
+    for (int i = 0, size = fields.size(); i < size; ++i)
+    {
+        const std::pair<std::string, std::string> &f = fields[i];
+        fieldmap[f.first] = f.second;
+    }
+}
+
+std::string xlog_fields::xlog_line() const
+{
+    std::string line;
+    for (int i = 0, size = fields.size(); i < size; ++i)
+    {
+        const std::pair<std::string, std::string> &f = fields[i];
+
+        // Don't write empty fields.
+        if (f.second.empty())
+            continue;
+        
+        if (!line.empty())
+            line += ":";
+
+        line += f.first;
+        line += "=";
+        line += xlog_escape(f.second);
+    }
+
+    return (line);
 }
