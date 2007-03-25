@@ -3041,6 +3041,7 @@ static int give_weapon(monsters *mon, int level)
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
+    case MONS_TIAMAT:
     {
         item.base_type = OBJ_WEAPONS;
 
@@ -3579,6 +3580,7 @@ void give_armour(monsters *mon, int level)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
+    case MONS_TIAMAT:
     case MONS_ORC_WIZARD:
     case MONS_WIZARD:
     case MONS_BLORK_THE_ORC:
@@ -4739,6 +4741,9 @@ static int pick_unique(int lev)
     {
         which_unique = MONS_MURRAY;
     }
+
+    if (player_in_branch(BRANCH_HALL_OF_ZOT) && one_chance_in(3))
+        which_unique = MONS_TIAMAT;
     
     return (which_unique);
 }

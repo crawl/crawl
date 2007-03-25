@@ -874,6 +874,11 @@ static int choose_band( int mon_type, int power, int &band_size )
            band_size = random_range(3, 6);
         }
         break;
+    case MONS_TIAMAT:
+        band = BAND_DRACONIAN;
+        // yup, scary
+        band_size = random_range(3,6) + random_range(3,6) + 2;
+        break;
     } // end switch
 
     if (band != BAND_NO_BAND && band_size == 0)

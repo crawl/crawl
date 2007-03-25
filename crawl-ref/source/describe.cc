@@ -4540,7 +4540,7 @@ static std::string describe_draconian_colour(int species)
 
 static std::string describe_draconian(const monsters *mon)
 {
-    std::string description;
+    std::string description;      
     const int subsp = draco_subspecies( mon );
 
     if (subsp == MONS_DRACONIAN)
@@ -5954,6 +5954,11 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_ELECTRICAL_EEL:
         description +=
             "A small and slimy eel, crackling with electrical discharge.";
+        break;
+
+    case MONS_TIAMAT:
+        description += "A powerful draconian. Her scales seem to shimmer "
+            "and change colour as you watch.";
         break;
 
     case MONS_DRACONIAN:

@@ -476,6 +476,25 @@ monster_type draco_subspecies( const monsters *mon )
 {
     ASSERT( mons_genus( mon->type ) == MONS_DRACONIAN );
 
+    if ( mon->type == MONS_TIAMAT )
+    {
+        switch ( mon->colour )
+        {
+        case RED:
+            return MONS_RED_DRACONIAN;
+        case WHITE:
+            return MONS_WHITE_DRACONIAN;
+        case DARKGREY:          // black
+            return MONS_BLACK_DRACONIAN;
+        case GREEN:
+            return MONS_GREEN_DRACONIAN;
+        case MAGENTA:
+            return MONS_PURPLE_DRACONIAN;
+        default:
+            break;
+        }
+    }
+
     monster_type ret = mons_species( mon->type );
 
     if (ret == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
@@ -2250,6 +2269,7 @@ const char *mons_pronoun(int mon_type, int variant)
             case MONS_MARGERY:
             case MONS_EROLCHA:
             case MONS_ERICA:
+            case MONS_TIAMAT:
                 gender = GENDER_FEMALE;
                 break;
             default:

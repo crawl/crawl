@@ -2758,19 +2758,19 @@ static int get_draconian_breath_spell( struct monsters *monster )
         default:
             break;
         }
+    }
 
-        if (draco_breath != MS_NO_SPELL)
-        {
-            // [ds] Check line-of-fire here. It won't happen elsewhere.
-            bolt beem;
-            setup_mons_cast(monster, beem, draco_breath);
 
-            fire_tracer(monster, beem);
-
-            if (!mons_should_fire(beem))
-                draco_breath = MS_NO_SPELL;
-        }
-
+    if (draco_breath != MS_NO_SPELL)
+    {
+        // [ds] Check line-of-fire here. It won't happen elsewhere.
+        bolt beem;
+        setup_mons_cast(monster, beem, draco_breath);
+        
+        fire_tracer(monster, beem);
+        
+        if (!mons_should_fire(beem))
+            draco_breath = MS_NO_SPELL;
     }
 
     return (draco_breath);
@@ -3389,6 +3389,13 @@ static void handle_monster_move(int i, monsters *monster)
                 monster->speed_increment = 1;
                 break;
             }
+        }
+
+        if (monster->type == MONS_TIAMAT && one_chance_in(3) )
+        {
+            int cols[] = { RED, WHITE, DARKGREY, GREEN, MAGENTA };
+            int newcol = cols[random2(sizeof(cols) / sizeof(cols[0]))];
+            monster->colour = newcol;
         }
 
         if (handle_enchantment(monster))
