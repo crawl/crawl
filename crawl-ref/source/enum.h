@@ -135,7 +135,8 @@ enum ability_flag_type
     ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
     ABFLAG_INSTANT      = 0x00000010, // doesn't take time to use
     ABFLAG_PERMANENT_HP = 0x00000020, // costs permanent HPs
-    ABFLAG_PERMANENT_MP = 0x00000040  // costs permanent MPs
+    ABFLAG_PERMANENT_MP = 0x00000040, // costs permanent MPs
+    ABFLAG_CONF_OK      = 0x00000080  // can use even if confused.
 };
 
 enum activity_interrupt_type

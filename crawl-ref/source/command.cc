@@ -312,7 +312,7 @@ static void adjust_ability(void)
 
     bool needs_redraw = false;
 
-    if (!generate_abilities())
+    if (!generate_abilities(false))
     {
         mpr( "You don't currently have any abilities." );
         return;

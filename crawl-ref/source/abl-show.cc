@@ -82,7 +82,7 @@ struct talent
 
 static FixedVector< talent, 52 >  Curr_abil;
 
-static bool insert_ability( int which_ability );
+static bool insert_ability( int which_ability, bool check_conf );
 static void lugonu_bends_space();
 
 // declaring this const messes up externs later, so don't do it
@@ -254,11 +254,14 @@ static const struct ability_def Ability_List[] =
     { ABIL_TROG_HASTE_SELF, "Haste Self", 0, 0, 250, 3, ABFLAG_NONE },
 
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1, ABFLAG_NONE },
-    { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_NONE },
-    { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_NONE },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 4, ABFLAG_NONE },
+    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing", 1, 0, 100, 0,
+      ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
+      ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 4,
+      ABFLAG_CONF_OK },
 
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss", 0, 0, 100, 10, ABFLAG_PAIN },
@@ -304,7 +307,7 @@ std::string print_abilities()
     std::string text = "\n<w>a:</w> ";
 
     bool have_any = false;
-    if (generate_abilities())
+    if (generate_abilities(false))
     {
         for (int i = 0; i < 52; ++i)
             if (Curr_abil[i].which != ABIL_NON_ABILITY)
@@ -414,7 +417,7 @@ const std::string make_cost_description( const struct ability_def &abil )
 std::vector<const char *> get_ability_names()
 {
     std::vector<const char *> abils;
-    if (generate_abilities())
+    if (generate_abilities(false))
     {
         for (int i = 0; i < 52; ++i)
         {
@@ -444,13 +447,6 @@ bool activate_ability(void)
 
     unsigned char abil_used;
 
-    // early returns prior to generation of ability list {dlb}:
-    if (you.conf)
-    {
-        mpr("You're too confused!");
-        return (false);
-    }
-
     if (you.berserker)
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -458,9 +454,15 @@ bool activate_ability(void)
     }
 
     // populate the array of structs {dlb}:
-    if (!generate_abilities())
+    if (!generate_abilities(false))
     {
         mpr("Sorry, you're not good enough to have a special ability.");
+        return (false);
+    }
+
+    if (!generate_abilities(you.conf))
+    {
+        mpr("You're too confused!");
         return (false);
     }
 
@@ -1493,7 +1495,7 @@ char show_abilities( void )
 }                               // end show_abilities()
 
 
-bool generate_abilities( void )
+bool generate_abilities( bool check_confused )
 /*****************************/
 {
     int loopy;
@@ -1512,7 +1514,7 @@ bool generate_abilities( void )
     // costs permanent MP (and those can never be recovered).  -- bwr
     if (you.species == SP_MUMMY && you.experience_level >= 13)
     {
-        insert_ability( ABIL_MUMMY_RESTORATION );
+        insert_ability( ABIL_MUMMY_RESTORATION, check_confused );
     }
 
     // checking for species-related abilities and mutagenic counterparts {dlb}:
@@ -1520,19 +1522,19 @@ bool generate_abilities( void )
         && ((you.species == SP_GREY_ELF && you.experience_level >= 5)
             || (you.species == SP_HIGH_ELF && you.experience_level >= 15)))
     {
-        insert_ability( ABIL_GLAMOUR );
+        insert_ability( ABIL_GLAMOUR, check_confused );
     }
 
     if (you.species == SP_NAGA)
     {
         if (you.mutation[MUT_BREATHE_POISON])
-            insert_ability( ABIL_BREATHE_POISON );
+            insert_ability( ABIL_BREATHE_POISON, check_confused );
         else
-            insert_ability( ABIL_SPIT_POISON );
+            insert_ability( ABIL_SPIT_POISON, check_confused );
     }
     else if (you.mutation[MUT_SPIT_POISON])
     {
-        insert_ability( ABIL_SPIT_POISON );
+        insert_ability( ABIL_SPIT_POISON, check_confused );
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -1550,7 +1552,7 @@ bool generate_abilities( void )
                 (you.species == SP_MOTTLED_DRACONIAN)? ABIL_BREATHE_STICKY_FLAME:
                                                      -1);
             if (ability != -1)
-                insert_ability( ability );
+                insert_ability( ability, check_confused );
         }
     }
 
@@ -1558,7 +1560,7 @@ bool generate_abilities( void )
     if ((you.level_type == LEVEL_DUNGEON && you.mutation[MUT_MAPPING]) ||
         (you.level_type == LEVEL_PANDEMONIUM && you.mutation[MUT_MAPPING]==3))
     {
-        insert_ability( ABIL_MAPPING );
+        insert_ability( ABIL_MAPPING, check_confused );
     }
 
     if (!you.duration[DUR_CONTROLLED_FLIGHT] && !player_is_levitating())
@@ -1567,53 +1569,53 @@ bool generate_abilities( void )
         // (until level 15, when it becomes permanent until revoked)
         //jmf: "upgrade" for draconians -- expensive flight
         if (you.species == SP_KENKU && you.experience_level >= 5)
-            insert_ability( ABIL_FLY );
+            insert_ability( ABIL_FLY, check_confused );
         else if (player_genus(GENPC_DRACONIAN) && you.mutation[MUT_BIG_WINGS])
-            insert_ability( ABIL_FLY_II );
+            insert_ability( ABIL_FLY_II, check_confused );
     }
 
     // demonic powers {dlb}:
     if (you.mutation[MUT_SUMMON_MINOR_DEMONS])
-        insert_ability( ABIL_SUMMON_MINOR_DEMON );
+        insert_ability( ABIL_SUMMON_MINOR_DEMON, check_confused );
 
     if (you.mutation[MUT_SUMMON_DEMONS])
-        insert_ability( ABIL_SUMMON_DEMONS );
+        insert_ability( ABIL_SUMMON_DEMONS, check_confused );
 
     if (you.mutation[MUT_HURL_HELLFIRE])
-        insert_ability( ABIL_HELLFIRE );
+        insert_ability( ABIL_HELLFIRE, check_confused );
 
     if (you.mutation[MUT_CALL_TORMENT])
-        insert_ability( ABIL_TORMENT );
+        insert_ability( ABIL_TORMENT, check_confused );
 
     if (you.mutation[MUT_RAISE_DEAD])
-        insert_ability( ABIL_RAISE_DEAD );
+        insert_ability( ABIL_RAISE_DEAD, check_confused );
 
     if (you.mutation[MUT_CONTROL_DEMONS])
-        insert_ability( ABIL_CONTROL_DEMON );
+        insert_ability( ABIL_CONTROL_DEMON, check_confused );
 
     if (you.mutation[MUT_PANDEMONIUM])
-        insert_ability( ABIL_TO_PANDEMONIUM );
+        insert_ability( ABIL_TO_PANDEMONIUM, check_confused );
 
     if (you.mutation[MUT_CHANNEL_HELL])
-        insert_ability( ABIL_CHANNELING );
+        insert_ability( ABIL_CHANNELING, check_confused );
 
     if (you.mutation[MUT_THROW_FLAMES])
-        insert_ability( ABIL_THROW_FLAME );
+        insert_ability( ABIL_THROW_FLAME, check_confused );
 
     if (you.mutation[MUT_THROW_FROST])
-        insert_ability( ABIL_THROW_FROST );
+        insert_ability( ABIL_THROW_FROST, check_confused );
 
     if (you.mutation[MUT_SMITE])
-        insert_ability( ABIL_BOLT_OF_DRAINING );
+        insert_ability( ABIL_BOLT_OF_DRAINING, check_confused );
 
     if (you.duration[DUR_TRANSFORMATION])
-        insert_ability( ABIL_END_TRANSFORMATION );
+        insert_ability( ABIL_END_TRANSFORMATION, check_confused );
 
     if (you.mutation[MUT_BLINK]) 
-        insert_ability( ABIL_BLINK );
+        insert_ability( ABIL_BLINK, check_confused );
 
     if (you.mutation[MUT_TELEPORT_AT_WILL])
-        insert_ability( ABIL_TELEPORTATION );
+        insert_ability( ABIL_TELEPORTATION, check_confused );
 
     // gods take abilities away until penance completed -- bwr
     if (!player_under_penance() && !silenced( you.x_pos, you.y_pos ))
@@ -1624,42 +1626,42 @@ bool generate_abilities( void )
             {
                 ability_type abil = god_abilities[(int)you.religion][i];
                 if ( abil != ABIL_NON_ABILITY )
-                    insert_ability(abil);
+                    insert_ability(abil, check_confused);
             }
         }
     }
 
     // and finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced( you.x_pos, you.y_pos ))
-        insert_ability( ABIL_RENOUNCE_RELIGION );
+        insert_ability( ABIL_RENOUNCE_RELIGION, check_confused );
 
     //jmf: check for breath weapons -- they're exclusive of each other I hope!
     //     better make better ones first.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL)
     {
-        insert_ability( ABIL_BREATHE_HELLFIRE );
+        insert_ability( ABIL_BREATHE_HELLFIRE, check_confused );
     }
     else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
                                         || you.mutation[MUT_BREATHE_FLAMES])
     {
-        insert_ability( ABIL_BREATHE_FIRE );
+        insert_ability( ABIL_BREATHE_FIRE, check_confused );
     }
 
     // checking for unreleased delayed fireball
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
     {
-        insert_ability( ABIL_DELAYED_FIREBALL );
+        insert_ability( ABIL_DELAYED_FIREBALL, check_confused );
     }
 
     // evocations from items:
     if (scan_randarts(RAP_BLINK))
-        insert_ability( ABIL_EVOKE_BLINK );
+        insert_ability( ABIL_EVOKE_BLINK, check_confused );
 
     if (wearing_amulet(AMU_RAGE) || scan_randarts(RAP_BERSERK))
-        insert_ability( ABIL_EVOKE_BERSERK );
+        insert_ability( ABIL_EVOKE_BERSERK, check_confused );
 
     if (scan_randarts( RAP_MAPPING ))
-        insert_ability( ABIL_EVOKE_MAPPING );
+        insert_ability( ABIL_EVOKE_MAPPING, check_confused );
 
     if (player_equip( EQ_RINGS, RING_INVISIBILITY )
         || player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_DARKNESS )
@@ -1669,9 +1671,9 @@ bool generate_abilities( void )
         // activatable item.  Wands and potions allow will have 
         // to time out. -- bwr
         if (you.invis)
-            insert_ability( ABIL_EVOKE_TURN_VISIBLE );
+            insert_ability( ABIL_EVOKE_TURN_VISIBLE, check_confused );
         else
-            insert_ability( ABIL_EVOKE_TURN_INVISIBLE );
+            insert_ability( ABIL_EVOKE_TURN_INVISIBLE, check_confused );
     }
 
     //jmf: "upgrade" for draconians -- expensive flight
@@ -1685,15 +1687,15 @@ bool generate_abilities( void )
         // have to time out (this makes the miscast effect actually
         // a bit annoying). -- bwr
         if (you.levitation) 
-            insert_ability( ABIL_EVOKE_STOP_LEVITATING );
+            insert_ability( ABIL_EVOKE_STOP_LEVITATING, check_confused );
         else
-            insert_ability( ABIL_EVOKE_LEVITATE );
+            insert_ability( ABIL_EVOKE_LEVITATE, check_confused );
     }
 
     if (player_equip( EQ_RINGS, RING_TELEPORTATION )
         || scan_randarts( RAP_CAN_TELEPORT ))
     {
-        insert_ability( ABIL_EVOKE_TELEPORTATION );
+        insert_ability( ABIL_EVOKE_TELEPORTATION, check_confused );
     }
 
     // this is a shameless kludge for the time being {dlb}:
@@ -1828,7 +1830,7 @@ static int find_ability_slot( int which_ability )
     return (slot);
 }
 
-static bool insert_ability( int which_ability ) 
+static bool insert_ability( int which_ability, bool check_conf ) 
 /**********************************************/
 {
     ASSERT( which_ability != ABIL_NON_ABILITY );
@@ -1842,6 +1844,13 @@ static bool insert_ability( int which_ability )
     const int slot = find_ability_slot( which_ability );
     if (slot == -1)
         return (false);
+
+    if (check_conf)
+    {
+        const ability_def &abil = get_ability_def(which_ability);
+        if (you.conf && !testbits(abil.flags, ABFLAG_CONF_OK))
+            return (false);
+    }
 
     Curr_abil[slot].which = which_ability;
 
