@@ -2506,7 +2506,7 @@ MONS: random, random, random, random
 
 NAME: david_orc_0_dummy
 TAGS: orc_entry
-CHANCE: 60
+CHANCE: 50
 ORIENT: float
 MAP
 O
@@ -2551,7 +2551,7 @@ NAME: david_orc_2
 TAGS: orc_entry
 MONS: weight:50 orc / orc warrior
 ORIENT: float
-CHANCE: 20
+
 MAP
 xxxx..@..xxxx
 x.....I.....x
@@ -2572,7 +2572,7 @@ TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
-CHANCE: 30
+
 MAP
 1.....@....11
 1............
@@ -2583,6 +2583,78 @@ MAP
 .............
 .............
 11..@......11
+ENDMAP
+
+#############################################################################
+# The Orc Outfitter
+
+NAME: orc_david_3
+TAGS: orc_entry
+ORIENT: float
+MONS: weight:30 orc / orc warrior / weight:1 orc knight
+KFEAT: X = armour shop / ~ / .
+KFEAT: Y = weapon shop / ~ / .
+SUBST: ? = 1 $
+MAP
+@.........@
+...??..??..
+.?.........
+.?.X.O.Y.?.
+.........?.
+...??...?..
+@.........@
+ENDMAP
+
+#############################################################################
+# Wary orcs
+#
+
+NAME: david_orc_4
+TAGS: orc_entry
+ORIENT: float
+FLAGS: no_rotate
+SUBST: ? = I:11 G F:1
+SUBST: a = ~:4  .
+SUBST: b = ~:8  .
+SUBST: c = ~:12 .
+SUBST: d = ~:16 .
+KFEAT: X = .
+KFEAT: Y = blade trap
+KFEAT: Z = blade trap
+SHUFFLE: XYZ
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xx?xxx?xxx?xxx?xxxxxxx
+xaaaxbbbxcccxdddx.lllx
+.aaaabbbbccccdddx.Xllx
+@aaaabbbbccccddd+.YOlx
+.aaaabbbbccccdddx.Zllx
+xaaaxbbbxcccxdddx.lllx
+xx?xxx?xxx?xxx?xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+#############################################################################
+# The Mess
+#
+NAME: david_orc_5
+TAGS: orc_entry
+ORIENT: float
+KFEAT: C = altar of Yredelemnul / altar of Makhleb / altar of Trog
+MONS: orc priest
+MONS: orc / weight:5 orc warrior / weight:1 orc knight
+SHUFFLE: cxv
+SUBST: ( = ( .
+SUBST: ) = ) . 
+MAP
+xxxxxxxxxxxxxxx
+x.....)O(.....x
+x......1......x
+x2..T.1C1.T..2x
+x2222..1..2222x
+x22222.I.22222x
+xxI+IxxxxxI+Ixx
+...@.......@...
 ENDMAP
 
 ##############################################################################
@@ -2822,7 +2894,7 @@ MONS: green rat / grey rat / orange rat / quokka / rat
 MONS: weight:90 nothing / weight:30 giant frog / blink frog / giant brown frog / spiny frog
 SHUFFLE: 12345
 ORIENT: float
-CHANCE: 40
+
 MAP
 111...@......
 111..........
@@ -3011,7 +3083,7 @@ TAGS: hive_entry
 MONS: nothing / killer bee / killer bee larva
 MONS: queen bee
 ORIENT: float
-CHANCE: 20
+
 MAP
 1111..@.....1
 1211.........
@@ -3022,6 +3094,33 @@ MAP
 .............
 .............
 1...@.......1
+ENDMAP
+
+#############################################################################
+# Cooperation Not Competition (Rot)
+#
+NAME: hive_david_3
+TAGS: hive_entry
+ORIENT: float
+ITEM: honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
+MONS: killer bee larva / killer bee, queen bee
+MONS: giant ant / soldier ant, queen ant
+MONS: bumblebee, yellow wasp
+SHUFFLE: defgOR
+SHUFFLE: 34 / 56
+MAP
+............................
+................aaa..aaa....
+....aaa........aaOaaaadaa...
+..aaa4aa........aa=.aa=eaa..
+.aa33a.aaa.......a.a11aaa...
+.aaR3a..=...T...a.1aea1.a...
+..a.3..aaa......aa.1a2a1aa..
+..aa.3aa.......aaaaa1a1a=aa.
+...aaaa.........aag=..aafaa.
+.................aaaaaaaaa..
+...................aaa.a....
+............................
 ENDMAP
 
 ##############################################################################
