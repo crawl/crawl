@@ -6144,7 +6144,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_FREDERICK:
-        description += "A svelte fighter-mage with unfortunate facial hair.";
+        description += "A svelte fighter-mage, wearing a gold-rimmed monocle.";
         break;
 
     case MONS_MARGERY:
