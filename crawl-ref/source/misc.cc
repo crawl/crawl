@@ -1948,7 +1948,7 @@ int place_branch(unsigned short place)
 {
     const unsigned branch = (unsigned) ((place >> 8) & 0xFF);
     const int lev = place & 0xFF;
-    return lev == 0xFF? -1 : branch;
+    return lev == 0xFF? -1 : (int) branch;
 }
 
 int place_depth(unsigned short place)
