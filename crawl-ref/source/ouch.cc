@@ -893,7 +893,14 @@ void end_game( struct scorefile_entry &se )
 
     if (Options.tutorial_left)
         tutorial_death_screen();
-        
+
+#ifdef DGL_WHEREIS
+    whereis_record( se.death_type == KILLED_BY_QUITTING? "quit" :
+                    se.death_type == KILLED_BY_WINNING? "won"  :
+                    se.death_type == KILLED_BY_LEAVING? "bailed out" :
+                    "dead" );
+#endif
+
     if (!crawl_state.seen_hups)
         more();
 

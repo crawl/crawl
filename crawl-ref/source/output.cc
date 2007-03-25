@@ -60,7 +60,7 @@ static void dur_colour( int colour, bool running_out )
     }
 }
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
 void update_message_status()
 {
     textcolor(LIGHTBLUE);

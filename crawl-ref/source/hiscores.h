@@ -41,8 +41,12 @@ std::string hiscores_format_single( const scorefile_entry &se );
 std::string hiscores_format_single_long( const scorefile_entry &se, 
                                          bool verbose = false );
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
 void mark_milestone(const std::string &type, const std::string &milestone);
+#endif
+
+#ifdef DGL_WHEREIS
+std::string xlog_status_line();
 #endif
 
 class xlog_fields

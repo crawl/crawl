@@ -1124,7 +1124,7 @@ struct system_environment
     char *home;                    // only used by MULTIUSER systems
     bool  board_with_nail;         // Easter Egg silliness
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     std::string messagefile;       // File containing messages from other users.
     bool have_messages;            // There are messages waiting to be read.
     unsigned  message_check_tick;
@@ -1216,7 +1216,7 @@ public:
 
     std::string player_name;
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
 #endif
 

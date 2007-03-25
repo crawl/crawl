@@ -960,7 +960,7 @@ static int first_corpse_monnum(int x, int y)
     return (0);
 }
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
 static std::string milestone_rune(const item_def &item)
 {
     return std::string("found ") + item_name( item, DESC_NOCAP_A ) + ".";
@@ -978,7 +978,7 @@ static void milestone_check(const item_def &item)
         mark_milestone("orb", "found the Orb of Zot!");
     }
 }
-#endif // MILESTONES
+#endif // DGL_MILESTONES
 
 void origin_set(int x, int y)
 {
@@ -994,7 +994,7 @@ void origin_set(int x, int y)
             item.orig_monnum = static_cast<short>( monnum );
         item.orig_place  = pplace;
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
         milestone_check(item);
 #endif
     }
@@ -1012,7 +1012,7 @@ void origin_freeze(item_def &item, int x, int y)
         if (!item.orig_monnum && x != -1 && y != -1)
             origin_set_monstercorpse(item, x, y);
         item.orig_place = get_packed_place();
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
         milestone_check(item);
 #endif
     }

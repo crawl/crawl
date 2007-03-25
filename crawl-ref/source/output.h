@@ -16,7 +16,7 @@
 
 #include "menu.h"
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
 #endif
 

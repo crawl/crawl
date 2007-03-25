@@ -2087,7 +2087,7 @@ std::string xlog_fields::xlog_line() const
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
 
 void mark_milestone(const std::string &type, const std::string &milestone)
 {
@@ -2105,4 +2105,13 @@ void mark_milestone(const std::string &type, const std::string &milestone)
     }
 }
 
-#endif // MILESTONES
+#endif // DGL_MILESTONES
+
+#ifdef DGL_WHEREIS
+std::string xlog_status_line()
+{
+    const scorefile_entry se(0, 0, KILL_MISC, NULL);
+    se.set_base_xlog_fields();
+    return (se.fields->xlog_line());
+}
+#endif // DGL_WHEREIS

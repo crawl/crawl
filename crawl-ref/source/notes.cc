@@ -340,8 +340,9 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
     packed_place = get_packed_place();
 }
 
-void Note::check_milestone() const {
-#ifdef MILESTONES
+void Note::check_milestone() const
+{
+#ifdef DGL_MILESTONES
     if (type == NOTE_DUNGEON_LEVEL_CHANGE) {
         const int br = place_branch(packed_place),
             dep = place_depth(packed_place);

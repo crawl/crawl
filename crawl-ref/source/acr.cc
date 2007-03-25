@@ -166,7 +166,7 @@ static command_type get_next_cmd();
 static keycode_type get_next_keycode();
 static command_type keycode_to_command( keycode_type key );
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
 static void read_messages();
 #endif
 
@@ -984,7 +984,7 @@ static void go_downstairs()
         return;
     }
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
     // Not entirely accurate - the player could die before reaching the Abyss.
     if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
         mark_milestone("abyss.enter", "entered the Abyss!");
@@ -1122,7 +1122,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_READ_MESSAGES:
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
         if (SysEnv.have_messages)
             read_messages();
 #endif
@@ -2368,7 +2368,7 @@ static void world_reacts()
     return;
 }
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
 
 static struct stat mfilestat;
 
@@ -2475,7 +2475,7 @@ static void check_messages()
         || SysEnv.have_messages
         || SysEnv.messagefile.empty()
         || kbhit()
-        || (SysEnv.message_check_tick++ % MESSAGE_CHECK_INTERVAL))
+        || (SysEnv.message_check_tick++ % DGL_MESSAGE_CHECK_INTERVAL))
     {
         return;
     }
@@ -2505,7 +2505,7 @@ static void check_messages()
 
 static command_type get_next_cmd()
 {
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     check_messages();
 #endif
 

@@ -55,6 +55,7 @@
 
 #include "externs.h"
 
+#include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
 #include "debug.h"
@@ -1077,6 +1078,9 @@ void save_game(bool leave_game)
 #endif
 
     cprintf( "See you soon, %s!" EOL , you.your_name );
+#ifdef DGL_WHEREIS
+    whereis_record("saved");
+#endif
     end(0);
 }                               // end save_game()
 

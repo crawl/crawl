@@ -550,7 +550,7 @@ void game_options::reset_options()
 
     player_name.clear();
 
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     messaging = true;
 #endif
 
@@ -1829,7 +1829,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         autopickup_no_burden = read_bool( field, autopickup_no_burden );
     }
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     else if (key == "messaging")
     {
         messaging = read_bool(field, messaging);
@@ -2372,8 +2372,8 @@ void get_system_environment(void)
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = getenv("CRAWL_DIR");
 
-#ifdef SIMPLE_MESSAGING
-    // Enable SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
+#ifdef DGL_SIMPLE_MESSAGING
+    // Enable DGL_SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
     const char *simplemail = getenv("SIMPLEMAIL");
     if (simplemail && strcmp(simplemail, "0"))
     {

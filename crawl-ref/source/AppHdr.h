@@ -212,15 +212,19 @@
     // Basic messaging for dgamelaunch, based on SIMPLE_MAIL for
     // NetHack and Slash'EM. I'm calling this "messaging" because that's
     // closer to reality.
-    #define SIMPLE_MESSAGING
+    #define DGL_SIMPLE_MESSAGING
 
     // How often we check for messages. This is not once per turn, but once
     // per player-input. Message checks are not performed if the keyboard
     // buffer is full, so messages should not interrupt macros.
-    #define MESSAGE_CHECK_INTERVAL 1
+    #define DGL_MESSAGE_CHECK_INTERVAL 1
 
     // Record game milestones in an xlogfile.
-    #define MILESTONES
+    #define DGL_MILESTONES
+
+    // Record where players are currently.
+    #define DGL_WHEREIS
+
 #endif
 
 // =========================================================================
@@ -379,8 +383,8 @@
 
 #endif
 
-#if defined(SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
-#   error Must define USE_FILE_LOCKING for SIMPLE_MESSAGING
+#if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
+#   error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
 #endif
 
 // Uncomment these if you can't find these functions on your system

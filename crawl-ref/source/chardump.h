@@ -20,12 +20,13 @@
 bool dump_char(const std::string &fname, 
                bool show_prices, 
                bool full_id = false);
-
 void resists_screen();
 void display_notes();
-
 std::string munge_description(const std::string &inStr);
-
 const char *hunger_level(void);
+
+#ifdef DGL_WHEREIS
+void whereis_record(const char *status = "active");
+#endif
 
 #endif

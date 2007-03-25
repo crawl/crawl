@@ -37,6 +37,7 @@
 
 #include "abyss.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "delay.h"
 #include "fight.h"
@@ -1170,6 +1171,9 @@ void new_level(void)
         }
     }
     clear_to_end_of_line();
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
 }
 
 static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt, 

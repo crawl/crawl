@@ -344,7 +344,7 @@ static void tutorial_inspect_kill()
     }
 }
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
 static std::string milestone_kill_verb(int killer)
 {
     return (killer == KILL_RESET? "banished " : "killed ");
@@ -367,7 +367,7 @@ static void check_kill_milestone(const monsters *mons, int killer, int i)
                        + ".");
     }
 }
-#endif // MILESTONES
+#endif // DGL_MILESTONES
 
 void monster_die(monsters *monster, char killer, int i, bool silent)
 {
@@ -381,7 +381,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
 
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
 #endif
     

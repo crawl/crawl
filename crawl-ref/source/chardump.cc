@@ -37,6 +37,7 @@
 
 #include "debug.h"
 #include "describe.h"
+#include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1052,3 +1053,19 @@ void resists_screen()
     scr.show();
     redraw_screen();
 }
+
+#ifdef DGL_WHEREIS
+///////////////////////////////////////////////////////////////////////////
+// whereis player
+void whereis_record(const char *status)
+{
+    const std::string file_name =
+        morgue_directory() + you.your_name + std::string(".where");
+
+    FILE *handle = fopen(file_name.c_str(), "w");
+    fprintf(handle, "%s:status=%s\n",
+            xlog_status_line().c_str(),
+            status? status : "");
+    fclose(handle);
+}
+#endif

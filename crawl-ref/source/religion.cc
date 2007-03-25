@@ -35,6 +35,7 @@
 
 #include "abl-show.h"
 #include "beam.h"
+#include "chardump.h"
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
@@ -2590,10 +2591,12 @@ void god_pitch(unsigned char which_god)
     you.piety = 15;             // to prevent near instant excommunication
     you.gift_timeout = 0; 
     set_god_ability_slots();    // remove old god's slots, reserve new god's
-
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
     snprintf( info, INFO_SIZE, " welcomes you%s!", 
               (you.worshipped[which_god]) ? " back" : "" );
-
+    
     simple_god_message( info );
     more();
 

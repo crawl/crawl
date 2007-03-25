@@ -407,7 +407,7 @@ void redraw_screen(void)
     bool note_status = notes_are_active();
     activate_notes(false);
     new_level();
-#ifdef SIMPLE_MESSAGING
+#ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
     update_turn_count();

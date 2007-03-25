@@ -136,7 +136,7 @@ static std::string who_banished(const std::string &who)
 
 void banished(int gate_type, const std::string &who)
 {
-#ifdef MILESTONES
+#ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
         mark_milestone("abyss.enter", who_banished(who));
     else if (gate_type == DNGN_EXIT_ABYSS)
