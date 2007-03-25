@@ -57,6 +57,7 @@ struct Note
     void save( FILE* fp ) const;
     std::string describe( bool when = true, bool where = true,
                           bool what = true ) const;
+    void check_milestone() const;
 };
 
 extern std::vector<Note> note_list;

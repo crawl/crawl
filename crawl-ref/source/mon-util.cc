@@ -2555,6 +2555,16 @@ std::string monsters::name(description_level_type desc) const
     return (ptr_monam(this, desc));
 }
 
+std::string monsters::name(description_level_type desc, bool force_vis) const
+{
+    if (!force_vis || !has_ench(ENCH_INVIS))
+        return (name(desc));
+
+    monsters m = *this;
+    m.del_ench(ENCH_INVIS, true);
+    return (m.name(desc));
+}
+
 std::string monsters::pronoun(pronoun_type pro) const
 {
     return (mons_pronoun(type, pro));
@@ -2612,7 +2622,7 @@ void monsters::expose_to_element(beam_type, int)
 {
 }
 
-void monsters::banish()
+void monsters::banish(const std::string &)
 {
     monster_die(this, KILL_RESET, 0);
 }

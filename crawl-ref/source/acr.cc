@@ -166,6 +166,10 @@ static command_type get_next_cmd();
 static keycode_type get_next_keycode();
 static command_type keycode_to_command( keycode_type key );
 
+#ifdef SIMPLE_MESSAGING
+static void read_messages();
+#endif
+
 /*
    It all starts here. Some initialisations are run first, then straight to
    new_game and then input.
@@ -980,6 +984,14 @@ static void go_downstairs()
         return;
     }
 
+#ifdef MILESTONES
+    // Not entirely accurate - the player could die before reaching the Abyss.
+    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
+        mark_milestone("abyss.enter", "entered the Abyss!");
+    else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)
+        mark_milestone("abyss.exit", "escaped from the Abyss!");
+#endif
+
     tag_followers();  // only those beside us right now can follow
     start_delay( DELAY_DESCENDING_STAIRS,
                  1 + (you.burden_state > BS_UNENCUMBERED),
@@ -1107,6 +1119,13 @@ void process_command( command_type cmd )
     case CMD_MAKE_NOTE:
 //        Options.tut_made_note = 0;
         make_user_note();
+        break;
+
+    case CMD_READ_MESSAGES:
+#ifdef SIMPLE_MESSAGING
+        if (SysEnv.have_messages)
+            read_messages();
+#endif
         break;
 
     case CMD_CLEAR_MAP:
@@ -2145,12 +2164,12 @@ static void check_banished()
     if (you.banished)
     {
         you.banished = false;
-
         if (you.level_type != LEVEL_ABYSS)
         {
             mpr("You are cast into the Abyss!");
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, you.banished_by);
         }
+        you.banished_by.clear();
     }
 }
 
@@ -2349,8 +2368,147 @@ static void world_reacts()
     return;
 }
 
+#ifdef SIMPLE_MESSAGING
+
+static struct stat mfilestat;
+
+static void show_message_line(std::string line)
+{
+    const std::string::size_type sender_pos = line.find(":");
+    if (sender_pos == std::string::npos)
+        mpr(line.c_str());
+    else
+    {
+        std::string sender = line.substr(0, sender_pos);
+        line = line.substr(sender_pos + 1);
+        trim_string(line);
+        // XXX: Eventually fix mpr so it can do a different colour for
+        // the sender.
+        mprf("%s: %s", sender.c_str(), line.c_str());
+    }
+}
+
+static void read_each_message()
+{
+    bool say_got_msg = true;
+    FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
+    if (!mf)
+    {
+        mprf(MSGCH_WARN, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
+             strerror(errno));
+        goto kill_messaging;
+    }
+
+    // Read messages, code borrowed from the SIMPLEMAIL patch.
+    char line[120];
+    
+    if (!lock_file_handle(mf, F_RDLCK))
+    {
+        mprf(MSGCH_WARN, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
+             strerror(errno));
+        goto kill_messaging;
+    }
+
+    while (fgets(line, sizeof line, mf))
+    {
+        unlock_file_handle(mf);
+
+        const int len = strlen(line);
+        if (len)
+        {
+            if (line[len - 1] == '\n')
+                line[len - 1] = 0;
+
+            if (say_got_msg)
+            {
+                mprf(MSGCH_PROMPT, "Your messages:");
+                say_got_msg = false;
+            }
+
+            show_message_line(line);
+        }
+
+        if (!lock_file_handle(mf, F_RDLCK))
+        {
+            mprf(MSGCH_WARN, "Failed to lock %s: %s",
+                 SysEnv.messagefile.c_str(),
+                 strerror(errno));
+            goto kill_messaging;
+        }
+    }
+    if (!lock_file_handle(mf, F_WRLCK))
+    {
+        mprf(MSGCH_WARN, "Unable to write lock %s: %s",
+             SysEnv.messagefile.c_str(),
+             strerror(errno));
+    }
+    if (!ftruncate(fileno(mf), 0))
+        mfilestat.st_mtime = 0;
+    unlock_file_handle(mf);
+    fclose(mf);
+
+    SysEnv.have_messages = false;
+    return;
+
+kill_messaging:
+    if (mf)
+        fclose(mf);
+    SysEnv.have_messages = false;
+    Options.messaging = false;
+}
+
+static void read_messages()
+{
+    read_each_message();
+    update_message_status();
+}
+
+static void announce_messages()
+{
+    // XXX: We could do a NetHack-like mail daemon here at some point.
+    mprf("Beep! Your pager goes off! Use _ to check your messages.");
+}
+
+static void check_messages()
+{
+    if (!Options.messaging
+        || SysEnv.have_messages
+        || SysEnv.messagefile.empty()
+        || kbhit()
+        || (SysEnv.message_check_tick++ % MESSAGE_CHECK_INTERVAL))
+    {
+        return;
+    }
+
+    const bool had_messages = SysEnv.have_messages;
+    struct stat st;
+    if (stat(SysEnv.messagefile.c_str(), &st))
+    {
+        mfilestat.st_mtime = 0;
+        return;
+    }
+
+    if (st.st_mtime > mfilestat.st_mtime)
+    {
+        if (st.st_size)
+            SysEnv.have_messages = true;
+        mfilestat.st_mtime = st.st_mtime;
+    }
+    
+    if (SysEnv.have_messages && !had_messages)
+    {
+        announce_messages();
+        update_message_status();
+    }
+}
+#endif
+
 static command_type get_next_cmd()
 {
+#ifdef SIMPLE_MESSAGING
+    check_messages();
+#endif
+
 #if DEBUG_DIAGNOSTICS
     // save hunger at start of round
     // for use with hunger "delta-meter" in  output.cc
@@ -2439,6 +2597,7 @@ command_type keycode_to_command( keycode_type key )
     case '%': return CMD_RESISTS_SCREEN;
     case ',': return CMD_PICKUP;
     case ':': return CMD_MAKE_NOTE;
+    case '_': return CMD_READ_MESSAGES;
     case ';': return CMD_INSPECT_FLOOR;
     case '!': return CMD_SHOUT;
     case '^': return CMD_DISPLAY_RELIGION;

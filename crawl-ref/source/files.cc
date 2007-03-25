@@ -85,12 +85,6 @@
 #define DO_CHMOD_PRIVATE(x) // empty command
 #endif
 
-// file locking stuff
-#ifdef USE_FILE_LOCKING
-static bool lock_file_handle( FILE *handle, int type );
-static bool unlock_file_handle( FILE *handle );
-#endif // USE_FILE_LOCKING
-
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
 #define GHOST_MINOR_VERSION 1
@@ -1526,7 +1520,7 @@ long readLong(FILE *file)
 // first, some file locking stuff for multiuser crawl
 #ifdef USE_FILE_LOCKING
 
-static bool lock_file_handle( FILE *handle, int type )
+bool lock_file_handle( FILE *handle, int type )
 {
     struct flock  lock;
     int           status;
@@ -1537,11 +1531,8 @@ static bool lock_file_handle( FILE *handle, int type )
     lock.l_type = type;
 
 #ifdef USE_BLOCKING_LOCK
-
     status = fcntl( fileno( handle ), F_SETLKW, &lock );
-
 #else
-
     for (int i = 0; i < 30; i++)
     {
         status = fcntl( fileno( handle ), F_SETLK, &lock );
@@ -1557,13 +1548,12 @@ static bool lock_file_handle( FILE *handle, int type )
         perror( "Problems locking file... retrying..." );
         delay( 1000 );
     }
-
 #endif
 
     return (status == 0);
 }
 
-static bool unlock_file_handle( FILE *handle )
+bool unlock_file_handle( FILE *handle )
 {
     struct flock  lock;
     int           status;

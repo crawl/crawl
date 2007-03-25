@@ -60,6 +60,20 @@ static void dur_colour( int colour, bool running_out )
     }
 }
 
+#ifdef SIMPLE_MESSAGING
+void update_message_status()
+{
+    textcolor(LIGHTBLUE);
+
+    gotoxy(75, 2);
+    if (SysEnv.have_messages)
+        cprintf("(msg)");
+    else
+        cprintf("     ");
+    textcolor(LIGHTGREY);
+}
+#endif
+
 void update_turn_count()
 {
     // Don't update turn counter when running/resting/traveling to

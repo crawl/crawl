@@ -38,6 +38,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "effects.h"
+#include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
@@ -959,6 +960,26 @@ static int first_corpse_monnum(int x, int y)
     return (0);
 }
 
+#ifdef MILESTONES
+static std::string milestone_rune(const item_def &item)
+{
+    return std::string("found ") + item_name( item, DESC_NOCAP_A ) + ".";
+}
+
+static void milestone_check(const item_def &item)
+{
+    if (item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_RUNE_OF_ZOT)
+    {
+        mark_milestone("rune", milestone_rune(item));
+    }
+    else if (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT)
+    {
+        mark_milestone("orb", "found the Orb of Zot!");
+    }
+}
+#endif // MILESTONES
+
 void origin_set(int x, int y)
 {
     int monnum = first_corpse_monnum(x, y);
@@ -968,9 +989,14 @@ void origin_set(int x, int y)
         item_def &item = mitm[link];
         if (origin_known(item))
             continue;
+
         if (!item.orig_monnum)
             item.orig_monnum = static_cast<short>( monnum );
         item.orig_place  = pplace;
+
+#ifdef MILESTONES
+        milestone_check(item);
+#endif
     }
 }
 
@@ -986,6 +1012,9 @@ void origin_freeze(item_def &item, int x, int y)
         if (!item.orig_monnum && x != -1 && y != -1)
             origin_set_monstercorpse(item, x, y);
         item.orig_place = get_packed_place();
+#ifdef MILESTONES
+        milestone_check(item);
+#endif
     }
 }
 

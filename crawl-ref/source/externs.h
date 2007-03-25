@@ -145,7 +145,7 @@ public:
     virtual void go_berserk(bool intentional) = 0;
     virtual void hurt(actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
-    virtual void banish() = 0;
+    virtual void banish(const std::string &who = "") = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
@@ -501,8 +501,9 @@ class player : public actor
 public:
   bool turn_is_over; // flag signaling that player has performed a timed action
 
-  bool banished;     // flag signaling that the player is due a visit to the
-                     // Abyss.
+  // If true, player is headed to the Abyss.
+  bool banished;
+  std::string banished_by;
 
   bool just_autoprayed;         // autopray just kicked in
     
@@ -731,7 +732,7 @@ public:
     bool      has_usable_claws() const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();
-    
+
     std::string name(description_level_type type) const;
     std::string pronoun(pronoun_type pro) const;
     std::string conj_verb(const std::string &verb) const;
@@ -741,7 +742,7 @@ public:
 
     void attacking(actor *other);
     void go_berserk(bool intentional);
-    void banish();
+    void banish(const std::string &who = "");
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);
     void drain_stat(int stat, int amount);
@@ -945,6 +946,7 @@ public:
     item_def *weapon(int which_attack = -1);
     item_def *shield();
     std::string name(description_level_type type) const;
+    std::string name(description_level_type type, bool force_visible) const;
     std::string pronoun(pronoun_type pro) const;
     std::string conj_verb(const std::string &verb) const;
 
@@ -955,7 +957,7 @@ public:
 
     void attacking(actor *other);
     void go_berserk(bool intentional);
-    void banish();
+    void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
     bool visible() const;
 
@@ -1119,8 +1121,14 @@ struct system_environment
     char *crawl_pizza;
     char *crawl_rc;
     char *crawl_dir;
-    char *home;                 // only used by MULTIUSER systems
-    bool  board_with_nail;      // Easter Egg silliness
+    char *home;                    // only used by MULTIUSER systems
+    bool  board_with_nail;         // Easter Egg silliness
+
+#ifdef SIMPLE_MESSAGING
+    std::string messagefile;       // File containing messages from other users.
+    bool have_messages;            // There are messages waiting to be read.
+    unsigned  message_check_tick;
+#endif
 
     std::string scorefile;
 };
@@ -1207,6 +1215,10 @@ public:
     std::vector<std::string> extra_levels;
 
     std::string player_name;
+
+#ifdef SIMPLE_MESSAGING
+    bool        messaging;      // Check for messages.
+#endif
 
     bool        autopickup_on;
     bool        autoprayer_on;

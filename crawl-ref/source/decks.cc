@@ -512,16 +512,15 @@ static void cards(unsigned char which_card)
 
     case CARD_GATE:
         mpr("You have drawn the Gate!");
-        more();
 
         if (you.level_type == LEVEL_ABYSS)
-            banished(DNGN_EXIT_ABYSS);
+            banished(DNGN_EXIT_ABYSS, "drew the Gate");
         else if (you.level_type == LEVEL_LABYRINTH)
             canned_msg(MSG_NOTHING_HAPPENS);
         else
         {
             mpr("You are cast into the Abyss!");
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "drew the Gate");
         }
         break;
 

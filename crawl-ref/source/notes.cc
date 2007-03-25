@@ -10,6 +10,7 @@
 #include "branch.h"
 #include "files.h"
 #include "Kills.h"
+#include "hiscores.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-pick.h"
@@ -339,8 +340,37 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
     packed_place = get_packed_place();
 }
 
-void Note::save( FILE* fp ) const
-{
+void Note::check_milestone() const {
+#ifdef MILESTONES
+    if (type == NOTE_DUNGEON_LEVEL_CHANGE) {
+        const int br = place_branch(packed_place),
+            dep = place_depth(packed_place);
+
+        if (br != -1)
+        {
+            std::string branch = place_name(packed_place, true, false).c_str();
+            if (branch.find("The ") == 0)
+                branch[0] = tolower(branch[0]);
+            
+            if (dep == 1)
+                mark_milestone("enter", "entered " + branch + ".");
+            else if (dep == dungeon_branch_depth(br))
+            {
+                char branch_finale[500];
+                std::string level = place_name(packed_place, true, true);
+                if (level.find("Level ") == 0)
+                    level[0] = tolower(level[0]);
+                
+                snprintf(branch_finale, sizeof branch_finale,
+                         "reached %s.", level.c_str());
+                mark_milestone("branch-finale", branch_finale);
+            }
+        }
+    }
+#endif
+}
+
+void Note::save( FILE* fp ) const {
     writeLong( fp, type );
     writeLong( fp, turn );
     writeShort( fp, packed_place );
@@ -371,7 +401,10 @@ bool notes_are_active()
 void take_note( const Note& note, bool force )
 {
     if ( notes_active && (force || is_noteworthy(note)) )
+    {
         note_list.push_back( note );
+        note.check_milestone();
+    }
 }
 
 void activate_notes( bool active ) 

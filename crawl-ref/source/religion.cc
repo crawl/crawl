@@ -1005,7 +1005,7 @@ void Xom_acts(bool niceness, int sever, bool force_sever)
                 (temp_rand == 1) ? "Xom casts you into the Abyss!"
                                  : "The world seems to spin as Xom's maniacal laughter rings in your ears.");
 
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "Xom");
 
             done_bad = true;
         }

@@ -744,16 +744,13 @@ void scorefile_entry::init_with_fields()
     num_runes = fields->int_field("nrune");
 }
 
-void scorefile_entry::set_score_fields() const
+void scorefile_entry::set_base_xlog_fields() const
 {
-    fields.reset(new xlog_fields);
-
     if (!fields.get())
-        return;
+        fields.reset(new xlog_fields);
 
     fields->add_field("v", VER_NUM);
     fields->add_field("lv", SCORE_VERSION);
-    fields->add_field("sc", "%ld", points);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid", "%d", uid);
     fields->add_field("race", "%s", species_name(race, lvl));
@@ -763,10 +760,6 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("sklev", "%d", best_skill_lvl);
     fields->add_field("title", "%s", skill_title( best_skill, best_skill_lvl, 
                                                   race, str, dex, god ) );
-    fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
-    fields->add_field("killer", death_source_desc());
-
-    fields->add_field("kaux", "%s", auxkilldata.c_str());
 
     fields->add_field("place", "%s",
               place_name(get_packed_place(branch, dlvl, level_type),
@@ -778,7 +771,6 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("hp", "%d", final_hp);
     fields->add_field("mhp", "%d", final_max_hp);
     fields->add_field("mmhp", "%d", final_max_max_hp);
-    fields->add_field("dam", "%d", damage);
     fields->add_field("str", "%d", str);
     fields->add_field("int", "%d", intel);
     fields->add_field("dex", "%d", dex);
@@ -786,15 +778,11 @@ void scorefile_entry::set_score_fields() const
     // Don't write No God to save some space.
     if (god != -1)
         fields->add_field("god", "%s", god == GOD_NO_GOD? "" : god_name(god));
-    if (piety > 0)
-        fields->add_field("piety", "%d", piety);
-    if (penance > 0)
-        fields->add_field("pen", "%d", penance);
+
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
     
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
-    fields->add_field("end", "%s", make_date_string(death_time).c_str());
     fields->add_field("dur", "%ld", real_time);
     fields->add_field("turn", "%ld", num_turns);
 
@@ -802,7 +790,30 @@ void scorefile_entry::set_score_fields() const
         fields->add_field("urune", "%d", num_diff_runes);
 
     if (num_runes)
-        fields->add_field("nrune", "%d", num_runes);
+        fields->add_field("nrune", "%d", num_runes);    
+}
+
+void scorefile_entry::set_score_fields() const
+{
+    fields.reset(new xlog_fields);
+
+    if (!fields.get())
+        return;
+
+    set_base_xlog_fields();
+    
+    fields->add_field("sc", "%ld", points);
+    fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
+    fields->add_field("killer", death_source_desc());
+
+    fields->add_field("kaux", "%s", auxkilldata.c_str());
+
+    if (piety > 0)
+        fields->add_field("piety", "%d", piety);
+    if (penance > 0)
+        fields->add_field("pen", "%d", penance);
+    
+    fields->add_field("end", "%s", make_date_string(death_time).c_str());
 
 #ifdef DGL_EXTENDED_LOGFILES
     const std::string short_msg = short_kill_message();
@@ -1099,33 +1110,34 @@ void scorefile_entry::init()
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         rune_array[i] = 0;
 
+    const bool calc_item_values =
+        (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING);
+    
     // Calculate value of pack and runes when character leaves dungeon
-    if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
+    for (int d = 0; d < ENDOFPACK; d++)
     {
-        for (int d = 0; d < ENDOFPACK; d++)
+        if (is_valid_item( you.inv[d] ))
         {
-            if (is_valid_item( you.inv[d] ))
-            {
+            if (calc_item_values)
                 points += item_value( you.inv[d], temp_id, true );
 
-                if (you.inv[d].base_type == OBJ_MISCELLANY
-                    && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
-                {
-                    if (rune_array[ you.inv[d].plus ] == 0)
-                        num_diff_runes++;
+            if (you.inv[d].base_type == OBJ_MISCELLANY
+                && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
+            {
+                if (rune_array[ you.inv[d].plus ] == 0)
+                    num_diff_runes++;
 
-                    num_runes += you.inv[d].quantity;
-                    rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
-                }
+                num_runes += you.inv[d].quantity;
+                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
             }
         }
-
-        // Bonus for exploring different areas, not for collecting a 
-        // huge stack of demonic runes in Pandemonium (gold value 
-        // is enough for those). -- bwr
-        if (num_diff_runes >= 3)
-            points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
     }
+
+    // Bonus for exploring different areas, not for collecting a 
+    // huge stack of demonic runes in Pandemonium (gold value 
+    // is enough for those). -- bwr
+    if (calc_item_values && num_diff_runes >= 3)
+        points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
 
     // Players will have a hard time getting 1/10 of this (see XP cap):
     if (points > 99999999)
@@ -2071,3 +2083,26 @@ std::string xlog_fields::xlog_line() const
 
     return (line);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Milestones
+
+#ifdef MILESTONES
+
+void mark_milestone(const std::string &type, const std::string &milestone)
+{
+    const std::string milestone_file = Options.save_dir + "milestones.txt";
+    if (FILE *fp = lk_open("a", milestone_file))
+    {
+        const scorefile_entry se(0, 0, KILL_MISC, NULL);
+        se.set_base_xlog_fields();
+        xlog_fields xl = *se.fields;
+        xl.add_field("time", "%s", make_date_string(se.death_time).c_str());
+        xl.add_field("type", "%s", type.c_str());
+        xl.add_field("milestone", "%s", milestone.c_str());
+        fprintf(fp, "%s\n", xl.xlog_line().c_str());
+        lk_close(fp, "a", milestone_file);
+    }
+}
+
+#endif // MILESTONES

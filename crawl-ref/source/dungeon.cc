@@ -4736,11 +4736,8 @@ static int pick_unique(int lev)
          (lev >  3) ? random_range(MONS_IJYB, MONS_EDMUND) :
                       random_range(MONS_TERENCE, MONS_SIGMUND));
 
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-        && one_chance_in(7))
-    {
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL) && one_chance_in(7))
         which_unique = MONS_MURRAY;
-    }
 
     if (player_in_branch(BRANCH_HALL_OF_ZOT) && one_chance_in(3))
         which_unique = MONS_TIAMAT;

@@ -1940,6 +1940,19 @@ std::string short_place_name(level_id id)
     return id.describe();
 }
 
+int place_branch(unsigned short place)
+{
+    const unsigned branch = (unsigned) ((place >> 8) & 0xFF);
+    const int lev = place & 0xFF;
+    return lev == 0xFF? -1 : branch;
+}
+
+int place_depth(unsigned short place)
+{
+    const int lev = place & 0xFF;
+    return lev == 0xFF? -1 : lev;
+}
+
 unsigned short get_packed_place( unsigned char branch, int subdepth,
                                  char level_type )
 {

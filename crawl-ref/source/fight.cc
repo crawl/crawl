@@ -1725,7 +1725,8 @@ bool melee_attack::apply_damage_brand()
         if (you.level_type != LEVEL_ABYSS && coinflip())
         {
             emit_nodmg_hit_message();
-            defender->banish();
+            defender->banish( atk? atk->name(DESC_PLAIN, true)
+                              : attacker->name(DESC_PLAIN) );
             return (true);
         }
         break;

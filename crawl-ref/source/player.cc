@@ -4501,6 +4501,8 @@ void player::init()
     your_name[0] = 0;
 
     banished = false;
+    banished_by.clear();
+    
     just_autoprayed = false;
     berserk_penalty = 0;
     berserker = 0;
@@ -4944,9 +4946,10 @@ void player::god_conduct(int thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish()
+void player::banish(const std::string &who)
 {
-    banished = true;
+    banished    = true;
+    banished_by = who;
 }
 
 void player::make_hungry(int hunger_increase, bool silent)

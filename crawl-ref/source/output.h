@@ -16,6 +16,10 @@
 
 #include "menu.h"
 
+#ifdef SIMPLE_MESSAGING
+void update_message_status();
+#endif
+
 void update_turn_count();
 
 void print_stats(void);

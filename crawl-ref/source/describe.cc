@@ -6355,7 +6355,7 @@ std::string ghost_description(const monsters &mons, bool concise)
     }
 
     snprintf( tmp_buff, sizeof(tmp_buff), 
-            "%s the %s, a%s %s %s",
+              "%s the %s, a%s %s%s%s",
               ghost.name.c_str(), 
 
             skill_title( ghost.values[GVAL_BEST_SKILL], 
@@ -6375,7 +6375,9 @@ std::string ghost_description(const monsters &mons, bool concise)
             ( concise? get_species_abbrev(ghost.values[GVAL_SPECIES]) :
                 species_name( ghost.values[GVAL_SPECIES], 
                     ghost.values[GVAL_EXP_LEVEL] ) ),
-
+              
+            ( concise? "" : " " ),
+              
             ( concise? get_class_abbrev(ghost.values[GVAL_CLASS]) :
                 get_class_name( ghost.values[GVAL_CLASS] ) ) );
 

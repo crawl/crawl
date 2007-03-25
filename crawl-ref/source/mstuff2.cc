@@ -1303,7 +1303,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = 6;
         beam.rangeMax = 10;
         beam.damage = dice_def( 3, 4 + (power / 100) );
-        beam.hit = 1500;
+        beam.hit = AUTOMATIC_HIT;
         beam.type = SYM_ZAP;
         beam.thrower = KILL_MON_MISSILE;
         beam.flavour = BEAM_MMISSILE;

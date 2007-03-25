@@ -34,8 +34,10 @@
 #include "beam.h"
 #include "cloud.h"
 #include "debug.h"
+#include "describe.h"
 #include "dungeon.h"
 #include "fight.h"
+#include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
@@ -342,6 +344,31 @@ static void tutorial_inspect_kill()
     }
 }
 
+#ifdef MILESTONES
+static std::string milestone_kill_verb(int killer)
+{
+    return (killer == KILL_RESET? "banished " : "killed ");
+}
+
+static void check_kill_milestone(const monsters *mons, int killer, int i)
+{
+    if (mons->type == MONS_PLAYER_GHOST)
+    {
+        std::string milestone = milestone_kill_verb(killer) + "the ghost of ";
+        milestone += ghost_description(*mons, true);
+        milestone += ".";
+        mark_milestone("ghost", milestone);
+    }
+    else if (mons_is_unique(mons->type))
+    {
+        mark_milestone("unique",
+                       milestone_kill_verb(killer)
+                       + mons->name(DESC_NOCAP_THE, true)
+                       + ".");
+    }
+}
+#endif // MILESTONES
+
 void monster_die(monsters *monster, char killer, int i, bool silent)
 {
     if (monster->type == -1)
@@ -354,6 +381,10 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
     bool in_transit = false;
     const bool hard_reset = testbits(monster->flags, MF_HARD_RESET);
 
+#ifdef MILESTONES
+    check_kill_milestone(monster, killer, i);
+#endif
+    
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
     {

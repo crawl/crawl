@@ -21,6 +21,7 @@
 #include "beam.h"
 #include "direct.h"
 #include "dungeon.h"
+#include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -128,11 +129,24 @@ void torment(int caster, int tx, int ty)
     apply_area_within_radius(torment_monsters, tx, ty, 0, 8, caster);
 }                               // end torment()
 
-void banished(int gate_type)
+static std::string who_banished(const std::string &who)
 {
+    return (who.empty()? who : " (" + who + ")");
+}
+
+void banished(int gate_type, const std::string &who)
+{
+#ifdef MILESTONES
+    if (gate_type == DNGN_ENTER_ABYSS)
+        mark_milestone("abyss.enter", who_banished(who));
+    else if (gate_type == DNGN_EXIT_ABYSS)
+        mark_milestone("abyss.exit", who_banished(who));
+#endif
+
     if (gate_type == DNGN_ENTER_ABYSS)
     {
-        take_note(Note(NOTE_USER_NOTE, 0, 0, "Cast into the Abyss"), true);
+        const std::string what = "Cast into the Abyss" + who_banished(who);
+        take_note(Note(NOTE_USER_NOTE, 0, 0, what.c_str()), true);
     }
 
     down_stairs(true, you.your_level, gate_type);  // heh heh

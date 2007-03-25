@@ -41,6 +41,10 @@ std::string hiscores_format_single( const scorefile_entry &se );
 std::string hiscores_format_single_long( const scorefile_entry &se, 
                                          bool verbose = false );
 
+#ifdef MILESTONES
+void mark_milestone(const std::string &type, const std::string &milestone);
+#endif
+
 class xlog_fields
 {
 public:
@@ -113,6 +117,8 @@ public:
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
 
+    mutable std::auto_ptr<xlog_fields> fields;
+
 public:
     scorefile_entry();
     scorefile_entry(int damage, int death_source, int death_type,
@@ -145,9 +151,8 @@ public:
     std::string death_place(death_desc_verbosity) const;
     std::string game_time(death_desc_verbosity) const;
 
-private:
-    mutable std::auto_ptr<xlog_fields> fields;
-    
+    void set_base_xlog_fields() const;
+                                                
 private:
     std::string single_cdesc() const;
     std::string strip_article_a(const std::string &s) const;

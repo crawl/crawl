@@ -71,6 +71,8 @@ static FixedArray < bool, 19, 19 > explode_map;
 static void sticky_flame_monster( int mn, kill_category who, int hurt_final );
 static bool affectsWall(const bolt &beam, int wall_feature);
 static bool isBouncy(struct bolt &beam, unsigned char gridtype);
+static int beam_source(const bolt &beam);
+static std::string beam_zapper(const bolt &beam);
 static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y );
 static bool beam_term_on_target(struct bolt &beam, int x, int y);
 static void beam_explodes(struct bolt &beam, int x, int y);
@@ -2895,7 +2897,19 @@ static bool fuzz_invis_tracer(bolt &beem)
 // 4.0.
 bool test_beam_hit(int attack, int defence)
 {
-    return (random2(attack) >= random2avg(defence, 2));
+    return (attack == AUTOMATIC_HIT
+            || random2(attack) >= random2avg(defence, 2));
+}
+
+static std::string beam_zapper(const bolt &beam)
+{
+    const int bsrc = beam_source(beam);
+    if (bsrc == MHITYOU)
+        return ("self");
+    else if (bsrc == MHITNOT)
+        return ("");
+    else
+        return ptr_monam( &menv[bsrc], DESC_PLAIN );
 }
 
 // return amount of extra range used up by affectation of the player
@@ -3091,6 +3105,7 @@ static int affect_player( struct bolt &beam )
                 break;
             }
             you.banished = true;
+            you.banished_by = beam_zapper(beam);
             beam.obvious_effect = true;
             break;     // banishment to the abyss
 

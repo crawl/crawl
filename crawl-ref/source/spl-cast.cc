@@ -1922,12 +1922,12 @@ void exercise_spell( int spell, bool spc, bool success )
         did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
 }                               // end exercise_spell()
 
-static bool send_abyss()
+static bool send_abyss(const char *cause)
 {
     if (you.level_type != LEVEL_ABYSS)
     {
         mpr("You are cast into the Abyss!");
-        banished(DNGN_ENTER_ABYSS);     // sends you to the abyss
+        banished(DNGN_ENTER_ABYSS, cause? cause : "");
         return (true);
     }
     else
@@ -2326,7 +2326,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 }
                 break;
             case 6:
-                send_abyss();
+                send_abyss(cause);
                 break;
             }
             break;
@@ -2347,7 +2347,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 potion_effect(POT_CONFUSION, 60);
                 break;
             case 2:
-                send_abyss();
+                send_abyss(cause);
                 break;
             case 3:
                 mpr("You feel saturated with unharnessed energies!");
@@ -2520,7 +2520,7 @@ bool miscast_effect( unsigned int sp_type, int mag_pow, int mag_fail,
                 break;
 
             case 3:
-                send_abyss();
+                send_abyss(cause);
                 break;
             }
             break;

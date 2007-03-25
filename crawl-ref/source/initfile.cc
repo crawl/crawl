@@ -550,6 +550,10 @@ void game_options::reset_options()
 
     player_name.clear();
 
+#ifdef SIMPLE_MESSAGING
+    messaging = true;
+#endif
+
     autopickup_on = true;
     autoprayer_on = false;
 
@@ -1824,7 +1828,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "autopickup_no_burden")
     {
         autopickup_no_burden = read_bool( field, autopickup_no_burden );
-    }   
+    }
+#ifdef SIMPLE_MESSAGING
+    else if (key == "messaging")
+    {
+        messaging = read_bool(field, messaging);
+    }
+#endif
     else if (key == "use_notes")
     {
         use_notes = read_bool( field, use_notes );
@@ -2361,6 +2371,16 @@ void get_system_environment(void)
     // The directory which contians init.txt, macro.txt, morgue.txt
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = getenv("CRAWL_DIR");
+
+#ifdef SIMPLE_MESSAGING
+    // Enable SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
+    const char *simplemail = getenv("SIMPLEMAIL");
+    if (simplemail && strcmp(simplemail, "0"))
+    {
+        const char *mail = getenv("MAIL");
+        SysEnv.messagefile = mail? mail : "";
+    }
+#endif
 
     // The full path to the init file -- this over-rides CRAWL_DIR
     SysEnv.crawl_rc = getenv("CRAWL_RC");

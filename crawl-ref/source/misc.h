@@ -168,6 +168,8 @@ unsigned short get_packed_place();
 unsigned short get_packed_place( unsigned char branch, int subdepth,
                           char level_type );
 
+int place_branch(unsigned short place);
+int place_depth(unsigned short place);
 std::string short_place_name(unsigned short place);
 std::string short_place_name(level_id id);
 std::string place_name( unsigned short place, bool long_name = false,
