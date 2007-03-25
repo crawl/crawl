@@ -1343,13 +1343,9 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
         {
-            //Change formula to max(24, fangs_level*2 + 2*XL/3 + int/2 - 6)
+            //Change formula to fangs_level*2 + 2*XL/3
             aux_damage -= str_bite_damage;
-            aux_damage += div_rand_round(2 * you.get_experience_level(),
-                                         3)
-                          + div_rand_round(you.intel(), 2)
-                          - 6;
-            aux_damage = min(24, aux_damage);
+            aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
             damage_brand = SPWPN_ANTIMAGIC;
         }
 
@@ -1628,8 +1624,16 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             if (!defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
-                inc_mp(random2(damage_done) + 1);
-                mpr("You feel invigorated.");
+                int drain = random2(damage_done) + 1;
+                //Augment mana drain--1.25 "standard" effectiveness at 0 mp,
+                //.25 at mana == max_mana
+                drain = (int)((1.25 - you.magic_points / you.max_magic_points)
+                              * drain);
+                if (drain && you.magic_points != you.max_magic_points)
+                {
+                    mpr("You feel invigorated.");
+                    inc_mp(drain);
+                }
             }
         }
 
