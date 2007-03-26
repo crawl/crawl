@@ -2782,7 +2782,7 @@ ENDMAP
 # Dummy Vaults entry
 
 NAME: david_vaults_0_dummy
-TAGS: orc_vaults
+TAGS: vault_entry
 CHANCE: 60
 ORIENT: float
 MAP
@@ -2829,6 +2829,85 @@ MAP
 .............
 .............
 ....@........
+ENDMAP
+
+##############################################################################
+# Vaults patterns 0: vanguard
+#
+NAME: david_vaults_3
+TAGS: vault_entry
+ORIENT: float
+MONS: human, human / Donald, human / Michael, human / Norris, human / Wayne
+# are these uniques all human? -- Yes [ds]
+SHUFFLE: 2345
+MAP
+@..........@
+....1131....
+...1....1...
+..1......1..
+..2..O{..1..
+..1..()..4..
+..1......1..
+...1....1...
+....1511....
+@..........@
+ENDMAP
+
+##############################################################################
+# Vaults patterns I
+#
+NAME: david_vaults_4
+TAGS: vault_entry
+ORIENT: float
+MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
+MONS: freezing wraith / shadow wraith / wight / wraith
+MONS: deep troll / iron troll / rock troll / troll
+MONS: cyclops / ettin / fire giant / frost giant / hill giant / stone giant / titan
+MONS: necromancer / shapeshifter / vault guard / wizard
+MONS: nothing
+MONS: shapeshifter / weight:30 nothing
+SUBST: 1 = 1 .
+SUBST: 2 = 2 .
+SUBST: 3 = 3 .
+SUBST: 4 = 4 .
+SUBST: 5 = 5 .
+SUBST: * : * % .
+SHUFFLE: 12345
+MAP
+@..........@
+.xxxxxxxxxx.
+.x..12345.x.
+.x.xxxxx..x.
+.x.x.**x..x.
+.x.+.*Ox..x.
+.xxxxxxx..x.
+...777....x.
+.xx...xxxxx.
+@..........@
+ENDMAP
+
+##############################################################################
+# Vaults patterns II
+#
+NAME: david_vaults_5
+TAGS: vault_entry
+ORIENT: float
+SUBST: ! : ! .
+SUBST: ? : ? .
+SUBST: ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+SUBST: ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+# half of the !? are nothing, a quarter are monsters, another quarter items
+MAP
+xxxxxxxxxxxxxx
+xOx!x!x?x!x?xx
+xx!x?x!x!x?x!x
+x!x!x!x?x!x?xx
+xx?x!x?x?x?x!x
+x!x?x.x.x.x.xx
+xx?x?x.x.x.x.x
+x?x?x!x?x.x.xx
+xx!x!x!x?x.x.x
+xxxxxxxxxxxxx@
 ENDMAP
 
 ##############################################################################
