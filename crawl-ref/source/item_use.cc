@@ -2508,8 +2508,8 @@ void zap_wand(void)
     char str_pass[ ITEMNAME_SIZE ];
 
     // Unless the character knows the type of the wand, the targeting
-    // system will default to cycling through all monsters. -- bwr
-    int targ_mode = TARG_ANY;
+    // system will default to enemies. -- [ds]
+    int targ_mode = TARG_ENEMY;
 
     beam.obvious_effect = false;
 
