@@ -27,45 +27,6 @@ const int MAKE_GOOD_ITEM = 351;
 // brain-damage. [dshaligram]
 typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
 
-void item_colour( item_def &item );
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
-void builder(int level_number, int level_type);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: abyss - debug - dungeon - effects - religion - spells4
- * *********************************************************************** */
-int items( int allow_uniques, int force_class, int force_type, 
-           bool dont_place, int item_level, int item_race );
-
-// last updated 13mar2001 {gdl}
-/* ***********************************************************************
- * called from: dungeon monplace
- * *********************************************************************** */
-void give_item(int mid, int level_number);
-
-void init_rod_mp(item_def &item);
-
-// last updated 13mar2001 {gdl}
-/* ***********************************************************************
- * called from: dungeon monplace
- * *********************************************************************** */
-void define_zombie(int mid, int ztype, int cs, int power);
-
-bool is_wall(int feature);
-
-bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
-                         unsigned char spec_type);
-
-void place_spec_shop(int level_number, unsigned char shop_x,
-                         unsigned char shop_y, unsigned char force_s_type,
-                         bool representative = false );
-
 class dgn_region;
 typedef std::vector<dgn_region> dgn_region_list;
 
@@ -115,6 +76,46 @@ struct dgn_region
     bool overlaps(const dgn_region &other) const;
     bool overlaps_any(const dgn_region_list &others) const;
 };
+
+void item_colour( item_def &item );
+
+// last updated 12may2000 {dlb}
+/* ***********************************************************************
+ * called from: files
+ * *********************************************************************** */
+void builder(int level_number, int level_type);
+
+
+// last updated 12may2000 {dlb}
+/* ***********************************************************************
+ * called from: abyss - debug - dungeon - effects - religion - spells4
+ * *********************************************************************** */
+int items( int allow_uniques, int force_class, int force_type, 
+           bool dont_place, int item_level, int item_race,
+           const dgn_region_list &forbidden = dgn_region_list() );
+
+// last updated 13mar2001 {gdl}
+/* ***********************************************************************
+ * called from: dungeon monplace
+ * *********************************************************************** */
+void give_item(int mid, int level_number);
+
+void init_rod_mp(item_def &item);
+
+// last updated 13mar2001 {gdl}
+/* ***********************************************************************
+ * called from: dungeon monplace
+ * *********************************************************************** */
+void define_zombie(int mid, int ztype, int cs, int power);
+
+bool is_wall(int feature);
+
+bool place_specific_trap(unsigned char spec_x, unsigned char spec_y,
+                         unsigned char spec_type);
+
+void place_spec_shop(int level_number, unsigned char shop_x,
+                         unsigned char shop_y, unsigned char force_s_type,
+                         bool representative = false );
 
 bool unforbidden(const coord_def &c, const dgn_region_list &forbidden);
 

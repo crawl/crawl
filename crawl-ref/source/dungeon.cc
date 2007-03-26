@@ -174,6 +174,7 @@ static void place_altar(void);
 
 // Places where monsters should not be randomly generated.
 static dgn_region_list no_monster_zones;
+static dgn_region_list no_item_zones;
 static dgn_region_list no_pool_fixup_zones;
 static dgn_region_list no_door_fixup_zones;
 
@@ -349,6 +350,7 @@ static void reset_level()
 {
     level_vaults.clear();
     no_monster_zones.clear();
+    no_item_zones.clear();
     no_pool_fixup_zones.clear();
     no_door_fixup_zones.clear();
     
@@ -621,7 +623,8 @@ int items( int allow_uniques,       // not just true-false,
            int force_type,          // desired SUBTYPE - enum varies by OBJ
            bool dont_place,         // don't randomly place item on level
            int item_level,          // level of the item, can differ from global
-           int item_race )          // weapon / armour racial categories
+           int item_race,           // weapon / armour racial categories
+           const dgn_region_list &forbidden) 
                                     // item_race also gives type of rune!
 {
     int temp_rand = 0;             // probability determination {dlb}
@@ -2644,12 +2647,20 @@ int items( int allow_uniques,       // not just true-false,
     }
     else
     {
+        int tries = 500;
         do
         {
+            if (tries-- <= 0)
+            {
+                destroy_item(p);
+                return (NON_ITEM);
+            }
+            
             x_pos = random2(GXM);
             y_pos = random2(GYM);
         }
-        while (grd[x_pos][y_pos] != DNGN_FLOOR);
+        while (grd[x_pos][y_pos] != DNGN_FLOOR
+               || !unforbidden(coord_def(x_pos, y_pos), forbidden));
 
         move_item_to_grid( &p, x_pos, y_pos );
     }
@@ -4937,7 +4948,8 @@ static void builder_items(int level_number, char level_type, int items_wanted)
     else
     {
         for (i = 0; i < items_wanted; i++)
-            items( 1, specif_type, OBJ_RANDOM, false, items_levels, 250 );
+            items( 1, specif_type, OBJ_RANDOM, false, items_levels, 250,
+                   no_item_zones );
 
         // Make sure there's a very good chance of a knife being placed
         // in the first five levels, but not a guarantee of one.  The
@@ -4946,7 +4958,8 @@ static void builder_items(int level_number, char level_type, int items_wanted)
         if (player_in_branch( BRANCH_MAIN_DUNGEON )
             && level_number < 5 && coinflip())
         {
-            item_no = items( 0, OBJ_WEAPONS, WPN_KNIFE, false, 0, 250 );
+            item_no = items( 0, OBJ_WEAPONS, WPN_KNIFE, false, 0, 250,
+                             no_item_zones );
 
             // Guarantee that the knife is uncursed and non-special
             if (item_no != NON_ITEM)
@@ -5819,8 +5832,6 @@ static bool build_secondary_vault(int level_number, int vault, int rune_subst)
 static bool build_vaults(int level_number, int force_vault, int rune_subst,
                          bool build_only)
 {
-    // for some weird reason can't put a vault on level 1, because monster equip
-    // isn't generated.
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
@@ -5873,6 +5884,10 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
 
     if (place.map.has_tag("no_monster_gen"))
         no_monster_zones.push_back(
+            dgn_region( place.x, place.y, place.width, place.height ) );
+
+    if (place.map.has_tag("no_item_gen"))
+        no_item_zones.push_back( 
             dgn_region( place.x, place.y, place.width, place.height ) );
 
     if (place.map.has_tag("no_pool_fixup"))
@@ -6107,6 +6122,8 @@ static int vault_grid( vault_placement &place,
             grd[vx][vy] = DNGN_FLOOR;
 
         mons_spec mons = mapsp->get_mons();
+        if (place.map.has_tag("generate_awake"))
+            mons.generate_awake = true;
         dngn_place_monster(mons, level_number, vx, vy);
 
         item_list &items = mapsp->get_items();
@@ -6304,6 +6321,9 @@ static int vault_grid( vault_placement &place,
 
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
+
+        if (place.map.has_tag("generate_awake"))
+            monster_type_thing.generate_awake = true;
 
         dngn_place_monster(monster_type_thing, monster_level,
                            vx, vy);
