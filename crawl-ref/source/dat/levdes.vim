@@ -4,6 +4,13 @@
 " Last Change:	2007 Feb 20
 " Remark:	Basic Vim syntax highlighting for Dungeon Crawl Stone Soup 
 "               level design (.des) files.
+"
+" How to use this:
+" * Put levdes.vim (this file) under ~/.vim/syntax (or similar directory for
+"   your system - usually C:\Program Files\Vim\vimfiles\syntax on Windows).
+" * In your .vimrc, add this line: 
+"     au BufRead,BufNewFile *.des set syntax=levdes
+" Thereafter, any .des files you edit in (g)vim will use syntax highlighting.
 
 if version < 600
   syntax clear
