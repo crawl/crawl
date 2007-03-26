@@ -285,8 +285,9 @@ unsigned long get_mons_class_resists(int mc)
 unsigned long get_mons_resists(const monsters *mon)
 {
     unsigned long resists = get_mons_class_resists(mon->type);
-    if (mons_genus(mon->type) == MONS_DRACONIAN 
-            && mon->type != MONS_DRACONIAN)
+    if ((mons_genus(mon->type) == MONS_DRACONIAN &&
+         mon->type != MONS_DRACONIAN) ||
+        mon->type == MONS_TIAMAT)
     {
         monster_type draco_species = draco_subspecies(mon);
         if (draco_species != mon->type)
