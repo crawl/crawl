@@ -389,6 +389,7 @@ void map_lines::clear()
     release_transforms();
     lines.clear();
     map_width = 0;
+    solid_checked = false;
 }
 
 void map_lines::subst(std::string &s, subst_spec &spec)
