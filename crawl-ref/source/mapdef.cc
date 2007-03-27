@@ -83,6 +83,11 @@ int strip_number_tag(std::string &s, const std::string &tagprefix)
     return atoi(argument.c_str());
 }
 
+static int find_weight(std::string &s)
+{
+    return strip_number_tag(s, "weight:");
+}
+
 static std::string split_key_item(const std::string &s,
                                   int *key,
                                   int *separator,
@@ -150,14 +155,60 @@ int level_range::span() const
     return (deepest - shallowest);
 }
 
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+// map_transformer
+
+map_transformer::~map_transformer()
+{
+}
+
+////////////////////////////////////////////////////////////////////////
 // map_lines
-//
 
 map_lines::map_lines()
-    : lines(), map_width(0), solid_north(false), solid_east(false),
-      solid_south(false), solid_west(false), solid_checked(false)
+    : transforms(), lines(), map_width(0), solid_north(false),
+      solid_east(false), solid_south(false), solid_west(false),
+      solid_checked(false)
 {
+}
+
+map_lines::map_lines(const map_lines &map)
+{
+    init_from(map);
+}
+
+map_lines &map_lines::operator = (const map_lines &map)
+{
+    if (this != &map)
+        init_from(map);
+    return (*this);
+}
+
+map_lines::~map_lines()
+{
+    release_transforms();
+}
+
+void map_lines::init_from(const map_lines &map)
+{
+    release_transforms();
+    lines         = map.lines;
+    map_width     = map.map_width;
+    solid_north   = map.solid_north;
+    solid_east    = map.solid_east;
+    solid_south   = map.solid_south;
+    solid_west    = map.solid_west;
+    solid_checked = map.solid_checked;
+
+    for (int i = 0, size = map.transforms.size(); i < size; ++i)
+        transforms.push_back( map.transforms[i]->clone() );
+}
+
+void map_lines::release_transforms()
+{
+    for (int i = 0, size = transforms.size(); i < size; ++i)
+        delete transforms[i];
+    transforms.clear();
 }
 
 const std::vector<std::string> &map_lines::get_lines() const
@@ -252,8 +303,7 @@ std::string map_lines::add_subst(const std::string &sub)
     if (!err.empty())
         return (err);
 
-    substitutions.push_back(
-        subst_spec( key, sep == ':', repl ) );
+    transforms.push_back( new subst_spec( key, sep == ':', repl ) );
 
     return ("");
 }
@@ -264,7 +314,7 @@ std::string map_lines::add_shuffle(const std::string &raws)
     const std::string err = check_shuffle(s);
     
     if (err.empty())
-        shuffles.push_back(s);
+        transforms.push_back( new shuffle_spec(s) );
 
     return (err);
 }
@@ -336,8 +386,7 @@ bool map_lines::solid_borders(map_section_type border)
 
 void map_lines::clear()
 {
-    substitutions.clear();
-    shuffles.clear();
+    release_transforms();
     lines.clear();
     map_width = 0;
 }
@@ -349,13 +398,10 @@ void map_lines::subst(std::string &s, subst_spec &spec)
         s[pos++] = spec.value();
 }
 
-void map_lines::subst()
+void map_lines::subst(subst_spec &spec)
 {
-    for (int i = 0, size = substitutions.size(); i < size; ++i)
-    {
-        for (int y = 0, ysize = lines.size(); y < ysize; ++y)
-            subst(lines[y], substitutions[i]);
-    }
+    for (int y = 0, ysize = lines.size(); y < ysize; ++y)
+        subst(lines[y], spec);
 }
 
 std::string map_lines::block_shuffle(const std::string &s)
@@ -414,10 +460,10 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
     }
 }
 
-void map_lines::resolve_shuffles()
+void map_lines::apply_transforms()
 {
-    for (int i = 0, size = shuffles.size(); i < size; ++i)
-        resolve_shuffle( shuffles[i] );
+    for (int i = 0, size = transforms.size(); i < size; ++i)
+        transforms[i]->apply_transform(*this);
 }
 
 void map_lines::normalise(char fillch)
@@ -729,8 +775,7 @@ void map_def::normalise()
 
 void map_def::resolve()
 {
-    map.resolve_shuffles();
-    map.subst();
+    map.apply_transforms();
 }
 
 void map_def::fixup()
@@ -856,7 +901,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
     for (int i = 0, ssize = specs.size(); i < ssize; ++i)
     {
         std::string s = specs[i];
-        int weight = strip_number_tag(s, "weight:");
+        int weight = find_weight(s);
         if (weight == TAG_UNFOUND || weight <= 0)
             weight = 10;
 
@@ -1013,7 +1058,7 @@ item_spec item_list::parse_single_spec(std::string s)
     item_spec result;
 
     // If there's a colon, this must be a generation weight.
-    int weight = strip_number_tag(s, "weight:");
+    int weight = find_weight(s);
     if (weight != TAG_UNFOUND)
     {
         result.genweight = weight;
@@ -1171,6 +1216,29 @@ int subst_spec::value()
     return (chosen);
 }
 
+void subst_spec::apply_transform(map_lines &map)
+{
+    map.subst(*this);
+}
+
+map_transformer *subst_spec::clone() const
+{
+    return new subst_spec(*this);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// shuffle_spec
+
+void shuffle_spec::apply_transform(map_lines &map)
+{
+    map.resolve_shuffle(shuffle);
+}
+
+map_transformer *shuffle_spec::clone() const
+{
+    return new shuffle_spec(*this);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // keyed_mapspec
 
@@ -1237,7 +1305,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
 {
     std::string s = str;
-    int weight = strip_number_tag(s, "weight:");
+    int weight = find_weight(s);
     if (weight == TAG_UNFOUND || weight <= 0)
         weight = 10;
     trim_string(s);

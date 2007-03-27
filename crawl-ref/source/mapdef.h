@@ -43,7 +43,16 @@ public:
 typedef std::pair<int,int> glyph_weighted_replacement_t;
 typedef std::vector<glyph_weighted_replacement_t> glyph_replacements_t;
 
-class subst_spec
+class map_lines;
+class map_transformer
+{
+public:
+    virtual ~map_transformer() = 0;
+    virtual void apply_transform(map_lines &map) = 0;
+    virtual map_transformer *clone() const = 0;
+};
+
+class subst_spec : public map_transformer
 {
 public:
     subst_spec(int torepl, bool fix, const glyph_replacements_t &repls);
@@ -54,6 +63,9 @@ public:
     }
     
     int value();
+    
+    void apply_transform(map_lines &map);
+    map_transformer *clone() const;
 
 private:
     int foo;        // The thing to replace.
@@ -63,10 +75,27 @@ private:
     glyph_replacements_t repl;
 };
 
+struct shuffle_spec : public map_transformer
+{
+    std::string shuffle;
+
+    shuffle_spec(const std::string &spec)
+        : shuffle(spec)
+    {
+    }
+    
+    void apply_transform(map_lines &map);
+    map_transformer *clone() const;
+};
+
 class map_lines
 {
 public:
     map_lines();
+    map_lines(const map_lines &);
+    ~map_lines();
+
+    map_lines &operator = (const map_lines &);
 
     void add_line(const std::string &s);
     std::string add_subst(const std::string &st);
@@ -81,9 +110,8 @@ public:
     bool is_solid(int gly) const;
     
     bool solid_borders(map_section_type border);
-    
-    void subst();
-    void resolve_shuffles();
+
+    void apply_transforms();
 
     // Make all lines the same length.
     void normalise(char fillc = 'x');
@@ -98,8 +126,12 @@ public:
     const std::vector<std::string> &get_lines() const;
 
 private:
+    void init_from(const map_lines &map);
+    void release_transforms();
+    
     void resolve_shuffle(const std::string &shuffle);
     void subst(std::string &s, subst_spec &spec);
+    void subst(subst_spec &);
     void check_borders();
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
@@ -109,9 +141,11 @@ private:
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
 
+    friend class subst_spec;
+    friend class shuffle_spec;
+    
 private:
-    std::vector<subst_spec>  substitutions;
-    std::vector<std::string> shuffles;
+    std::vector<map_transformer *> transforms;
     std::vector<std::string> lines;
     int map_width;
     bool solid_north, solid_east, solid_south, solid_west;

@@ -168,8 +168,8 @@
 #  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
 #           will either do nothing or swap all "1" with "3" and then also
 #           swap "2" with "w" everywhere.
-#  Several SHUFFLE: lines can be used, and the shuffles will be applied in
-#  order.
+#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
+#  and substitutions will be applied in order.
 #
 #  SUBST:
 #  ------
@@ -194,8 +194,8 @@
 #
 #  SUBST: w = wW
 #
-#  Multiple SUBST: lines can be used, and will be applied in order. 
-#  Substitutions are performed after any declared shuffles.
+#  Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and will be
+#  applied in order. 
 #
 #  KFEAT:
 #  -----
