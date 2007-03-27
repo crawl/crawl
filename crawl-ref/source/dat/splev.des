@@ -1137,6 +1137,69 @@ ENDMAP
 MONS: vault guard
 MONS: random, random, random, random, random, random
 
+##########################################################################
+# Snakes' Hunt
+
+NAME:    snake_hunt
+PLACE:   Snake:5
+FLAGS:   no_rotate
+ORIENT:  northwest
+KFEAT:   Z = weight:2 teleport trap / .
+KFEAT:   z = teleport trap
+MONS:    naga / nothing, greater naga / nothing, guardian naga / nothing
+MONS:    naga warrior / nothing, naga mage / nothing
+SHUFFLE: 123
+SHUFFLE: 45
+SUBST:   ' : ' x
+SUBST:   " : " x
+SUBST:   ' = .:250 1 2 3 4:15 5:5
+SUBST:   " = .:250 1 2 3 4:5  5:15
+SUBST:   X = x c + .
+SUBST:   Y = x c +
+SUBST:   T : T  U  V  .:30 b
+SUBST:   _ : ! .
+SUBST:   ! : ! . x
+SUBST:   ! = x .:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx''''''x4O4x""""""xxxxxxxxxxx
+xxxxxxxxxxx''''''xxxx..4z4..xxxx""""""xxxxxx
+xxxxxxxx''''xxxxxxxx.5..5..5.xxxxxxxx""""xxx
+xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
+xxxxxx''xxx''''''''xxx.....xxx""""""""xxx""x
+xxxxxx'xxx''''''''''xxxcXcxxx""""""""""xxx"x
+xxxxxx''x''''''''''''xx.3.xx""""""""""""x""x
+xxxxxxx'Y'''''''''''''45354"""""""""""""Y"xx
+xxxxxxxxxx''''''''''xx.....xx""""""""""xxxxx
+xxxxxxxxxxx''''''''xxxxx.xxxxx""""""""xxxxxx
+xxxxxxxxxxxxx''''xxxxxxx.xxxxxxx""""xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx!.!xxxxxx.....xxxxxx!.!xxxxxxxx
+xxxxxxxxxx!....._xx...43335...xx_...!!!xxxxx
+xxxxxxxx!......_x.11.4..3..5.22.x_......!xxx
+xxxxxxx!...2...x..11.........22..x...1...!xx
+xxxxxxx!..2..._x......T...T......x_...1..!xx
+xxxxxx!...2...x..2.............1..x...1...!x
+xxxxxx!..2....x.........}.........x....1...!
+xxxxxx!.......x....T...).]...T.............@
+xxxxxx!..2....x.......ZZZZZ.......x....1...!
+xxxxxxx!..2..._x.................x_...1..!xx
+xxxxxxx!...2..._xx....T.<.T....xx_...1...!xx
+xxxxxxx!........._xx.........xx_.........!xx
+xxxxxxxx!.........._xxx...xxx_..........!xxx
+xxxxxxxxx!.............x.x.............!xxxx
+xxxxxxxxxx!!.........................!!xxxxx
+xxxxxxxxxxxx!!!.....3.......3.....!!!xxxxxxx
+xxxxxxxxxxxxxxx!!!!!..3...3..!!!!!xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ############################################################################
 # snake_pit
 
@@ -2908,6 +2971,47 @@ xx?x?x.x.x.x.x
 x?x?x!x?x.x.xx
 xx!x!x!x?x.x.x
 xxxxxxxxxxxxx@
+ENDMAP
+
+##############################################################################
+# The Guard of Blades
+ 
+NAME: erik_vaults_1
+TAGS: vault_entry
+MONS: dancing weapon
+ORIENT: float
+ 
+MAP
+.............
+.............
+.....v.v.....
+....vvvvv....
+.....1O1.....
+....vvvvv....
+.....v.v.....
+.............
+.............
+ENDMAP
+ 
+ 
+##############################################################################
+# Above As Below
+ 
+NAME: erik_vaults_2
+TAGS: vault_entry
+MONS: vault guard
+ORIENT: float
+
+MAP
+vvvvvv.vvvvvv
+vvvvvv.vvvvvv
+vvvvbb.bbvvvv
+vvvvb111bvvvv
+.....1O1.....
+vvvvb111bvvvv
+vvvvbb.bbvvvv
+vvvvvv.vvvvvv
+vvvvvv.vvvvvv
 ENDMAP
 
 ##############################################################################

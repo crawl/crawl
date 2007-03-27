@@ -4503,6 +4503,59 @@ x
 ENDMAP
 
 ##############################################################################
+# Cavepeople
+
+NAME: erik_1
+ORIENT: float
+TAGS: no_monster_gen
+DEPTH: 5-9
+
+SHUFFLE: ZT/nN
+SUBST: n=., N=@
+SHUFFLE: YS/nN
+SUBST: n=., N=@
+SHUFFLE: XR/nN
+SUBST: n=., N=@
+SHUFFLE: WQ/nN
+SUBST: n=., N=@
+SHUFFLE: VP/nN
+SUBST: n=., N=@
+SHUFFLE: UO/nN
+SUBST: n=., N=@
+SUBST: Z=x,Y=x,X=x,W=x,V=x,U=x,T=x,S=x,R=x,Q=x,P=x,O=x
+
+SUBST: 1 = 1:20 .
+SUBST: 2 = 2.
+SUBST: 3 = 23
+SUBST: 4 = 24
+MONS: jackal/hound, human, Edmund/Jessica/Sigmund, Michael/Ijyb/Psyche
+MONS: sheep/nothing
+ 
+MAP
+xxxxxxxxxx@xxxxxxxxxxxxxxxxxxxOxxxxxxxxx
+xxxxxxxxxxx..xxxxxxxxx1xxxxxxUxxxxxxxxxx
+xxxxxxxxxxxxx..xxxxxx111xxxxxUxxxxxxxxxx
+xxxZZZxxxxxxxxx.xxxxxx1xxxxxxUxxxxxxxxxx
+TZZxZxZxx555xx.xxxxxxx1xxxxxUxxxxxxxxxxx
+xxxxxxxZxx5xxx.xxx..x1xxxxxUxxxxxxxxxxxx
+xxxxxxxZxx5xxxx......xxxxxUUxxxxxxxxxxxx
+xxxxxxxZxxx5xx...2...cccxxxUxxxxxxxxxxxx
+xxxxxxZxxxx....2224..+$cxxUxxxxxxxxxxxxx
+xxxxxxxZ.......2ll22.cccxxxUxxxxxxxxxxxx
+xxxxxxxxx......3222.xxxxxxxUxxxxxxxxxxxx
+xxxxxxxxxYxxxx2.......xx...xVVVVxxxxxxxx
+xxxxxxxxYxxxx.......xx..xxxxxxxxVxxxxxxx
+xxxxxxYYxxxxxXxxxxx.xxWxxxxxxxxxxVVxxxxx
+xxxYxYxxxxxxXxxxxxxx.xxWxxxxxxxxxVxxxxxx
+xYYYYxxxxxxxxXXXXXxxxxxxWxxxxxxxVxxxxxxx
+xYxxxxxxxxxxxxxxxXXxxxxxxWWxxxxxxVVxxxxx
+SxxxxxxxxxxxxxxxxxXxxxxxxxxWxxxxxxxVVVVP
+xxxxxxxxxxxxxxxxXXxxxxxxxxxxWxxxxxxxxxxx
+xxxxxxxxxxxxXXXXxxxxxxxxxxxxWxxxxxxxxxxx
+xxxxxxxxxxxRxxxxxxxxxxxxxxxxQxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
 # Rubicon
 
 NAME: erik_rubicon_a
