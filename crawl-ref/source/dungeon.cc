@@ -5523,7 +5523,15 @@ static void build_minivaults(int level_number, int force_vault)
 
     no_door_fixup_zones.push_back(
         dgn_region( place.x, place.y, place.width, place.height ) );
-    
+
+    if (place.map.has_tag("no_monster_gen"))
+        no_monster_zones.push_back(
+            dgn_region( place.x, place.y, place.width, place.height ) );
+
+    if (place.map.has_tag("no_item_gen"))
+        no_item_zones.push_back( 
+            dgn_region( place.x, place.y, place.width, place.height ) );
+
     if (place.map.has_tag("no_pool_fixup"))
         no_pool_fixup_zones.push_back(
             dgn_region( place.x, place.y, place.width, place.height ) );

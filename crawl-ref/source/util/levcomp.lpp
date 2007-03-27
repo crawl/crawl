@@ -51,7 +51,7 @@ static void settext()
 %s ARGUMENT
 %s MNAME
 %s KEYWORDS
-%s ITEM_LIST
+%x ITEM_LIST
 
 %option yylineno
 %option never-interactive
@@ -81,7 +81,12 @@ NSPACE [^\ \t\r\n]
 <KEYWORDS>[ \t]+    ;
 <KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
 
-<ITEM_LIST>[^, \t\r\n][^,\r\n]+[^, \t\r\n] { 
+<ITEM_LIST>[^, \t\r\n][^,\r\n]*[^, \t\r\n] { 
+                        settext();
+                        return ITEM_INFO;
+                    }
+
+<ITEM_LIST>[^, \t\r\n] {
                         settext();
                         return ITEM_INFO;
                     }
@@ -121,10 +126,10 @@ PLACE:              { BEGIN(ARGUMENT); return PLACE; }
 CHANCE:             return CHANCE;
 FLAGS:              return FLAGS;
 TAGS:               { BEGIN(KEYWORDS); return TAGS; }
-SUBST:              { BEGIN(ARGUMENT); return SUBST; }
+SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
 MONS:               { BEGIN(MNAME); return MONS; }
 ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
-SHUFFLE:            { BEGIN(ARGUMENT); return SHUFFLE; }
+SHUFFLE:            { BEGIN(ITEM_LIST); return SHUFFLE; }
 
 KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
 KITEM:              { BEGIN(ARGUMENT); return KITEM; }

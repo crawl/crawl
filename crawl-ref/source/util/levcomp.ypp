@@ -161,7 +161,7 @@ metaline        : place
                 | flags
                 | mons
                 | items
-                | symbol
+                | subst
                 | tags
                 | shuffle
                 | kfeat
@@ -199,15 +199,21 @@ kitem           : KITEM { }
                                 $2, err.c_str()).c_str());
                 }
 
-shuffle         : SHUFFLE { }
-                | SHUFFLE STRING
+shuffle         : SHUFFLE shuffle_specifiers {} 
+                ;
+
+shuffle_specifiers : shuffle_spec
+                   | shuffle_spec COMMA shuffle_specifiers
+                   ;
+
+shuffle_spec    : ITEM_INFO
                 {
-                    std::string err = lc_map.map.add_shuffle($2);
+                    std::string err = lc_map.map.add_shuffle($1);
                     if (!err.empty())
                         yyerror(
                             make_stringf(
                                 "Bad shuffle argument: '%s' (%s)",
-                                $2, err.c_str() ).c_str() );
+                                $1, err.c_str() ).c_str() );
                 }
 
 tags            : TAGS tagstrings {}
@@ -222,15 +228,21 @@ tagstrings      : /* empty */
                 }
                 ;
 
-symbol          : SUBST {}
-                | SUBST STRING
+subst           : SUBST subst_specifiers { }
+                ;
+
+subst_specifiers : subst_spec
+                 | subst_spec COMMA subst_specifiers
+                 ;
+
+subst_spec      : ITEM_INFO
                 {
-                    std::string err = lc_map.map.add_subst($2);
+                    std::string err = lc_map.map.add_subst($1);
                     if (!err.empty())
                         yyerror(
                             make_stringf(
                                 "Bad SUBST argument: '%s' (%s)",
-                                $2, err.c_str() ).c_str() );
+                                $1, err.c_str() ).c_str() );
                 }
                 ;
 
