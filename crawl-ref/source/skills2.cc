@@ -1839,8 +1839,11 @@ void show_skills(void)
     cprintf( "You have %d points of unallocated experience (cost lvl %d; total %d)." EOL EOL, 
              you.exp_available, you.skill_cost_level, you.total_skill_points );
 #else
-    cprintf(" You have %d points of unallocated experience." EOL EOL, 
-            you.exp_available );
+    cprintf(" You have %s unallocated experience." EOL EOL, 
+            you.exp_available == 0? "no" :
+            make_stringf("%d point%s of",
+                         you.exp_available,
+                         you.exp_available == 1? "" : "s").c_str());
 #endif
 
     char scrln = 3, scrcol = 1;
