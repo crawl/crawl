@@ -6318,6 +6318,32 @@ MAP
 ENDMAP
 
 ##############################################################################
+# Dispersion (David)
+#
+NAME: dispersion
+SUBST: Y = 89
+KITEM: 8 = % / * / w:1 |
+KITEM: 9 = % / * / w:1 |
+KFEAT: X = teleport trap
+KFEAT: Z = teleport trap / w:30 x
+SHUFFLE: xcvb
+DEPTH: 13-26
+MAP
+............
+............
+...xxxxxx...
+..x......x..
+..x.ZXXZ.x..
+..x.XYYX.x..
+..x.XYYX.x..
+..x.ZXXZ.x..
+..x......x..
+...xxxxxx...
+............
+............
+ENDMAP
+
+##############################################################################
 # Things aren't always what they seem (Lemuel)
 NAME: fake_naga_vault
 
