@@ -2256,7 +2256,7 @@ const char *mons_pronoun(int mon_type, int variant)
 {
     int gender = GENDER_NEUTER;         
 
-    if (mons_is_unique( mon_type ))
+    if (mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST)
     {
         switch(mon_type)
         {
