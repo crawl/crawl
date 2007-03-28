@@ -140,7 +140,9 @@
 #  ----
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
 #  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
-#  "no_monster_gen": this tag prevents monster generation at the time of
+#  "no_item_gen":   Prevents random item generation in the vault. Items 
+#                   explicitly placed by the vault are not affected.
+#  "no_monster_gen": Prevents random monster generation at the time of
 #                   the vault's creation. Highly advised for entry vaults with
 #                   a player-hostile geography, MUST-HAVE for those with water
 #                   or lava.
@@ -161,16 +163,19 @@
 #  SHUFFLE:
 #  -------
 #  This allows you to randomly permute glyphs on the map. There are two ways:
-#  SHUFFLE: 123w     (i.e. list of glyphs, NOT comma-separated)
+#  SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
 #           could, for example, swap all occurences of "1" with "2", 
 #           as well as swapping all "3" with "w" (or any other of the 23
 #           possibilities).
 #  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
 #           will either do nothing or swap all "1" with "3" and then also
 #           swap "2" with "w" everywhere.
-#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
-#  and substitutions will be applied in order.
 #
+#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
+#  and substitutions will be applied in order. You can also put multiple 
+#  SHUFFLEs on one line, comma-separated. Shuffles cannot use , or /. All spaces
+#  are stripped before shuffling.
+#  
 #  SUBST:
 #  ------
 #  The SUBST: directive allows you to specify a placeholder symbol that is
@@ -195,7 +200,8 @@
 #  SUBST: w = wW
 #
 #  Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and will be
-#  applied in order. 
+#  applied in order. Multiple substitutions can be performed on one line, using
+#  commas.
 #
 #  KFEAT:
 #  -----
@@ -425,12 +431,12 @@ ENDMAP
 NAME: lemuel_entry_005_b
 TAGS: entry no_monster_gen
 ORIENT: float
-SHUFFLE: {[(
 CHANCE: 5
-
-# Although it is extremely likely that the dungeon builder will provide
-# a shallow water path out, we take steps to ensure this is always the case.
-
+SHUFFLE: {[(
+SHUFFLE: XYZ
+SUBST: X = W
+SUBST: Y = w
+SUBST: Z = w
 MAP  
 xxxxxxxxxxxxxxxxxxx  
 xxxxx{...(...[xxxxx  
@@ -439,11 +445,11 @@ xwxxx.........xxxxx
 xwwxx.........xxxxx  
 xwwwx.........xxxxx  
 xxwwx.........xxxxx  
-xxwwww........xxxxx  
-xxxwwwwwWww...xxxxx  
-xxxxwwwwwWwwwwxxxxx  
-xxxxxwwwWwwwwwwwxxx  
-xxxxx...wwwwwwwwwxx  
+xxwwXw........xxxxx  
+xxxXwwwwwww...xxxxx  
+xxxxXwwwwYYwwZxxxxx  
+xxxxxXwwYwwwwwZwxxx  
+xxxxx...wwwwwZwwwxx  
 xxxxx........wwwwxx  
 xxxxx.........xwwwx  
 xxxxx.........xxwwx  

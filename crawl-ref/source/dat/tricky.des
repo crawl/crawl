@@ -2,7 +2,7 @@
 # Tricky entry vaults
 # This file contains a number of entries which may not be appropriate for
 # certain players, like newbies. These entries may require the use of certain
-# item, or demand searching for hidden passages, or may be plain more risky.
+# items, or demand searching for hidden passages, or may be plain more risky.
 # By default, they are not used. If you want to try them, set in the init.txt
 # entries += tricky 
 ##############################################################################
@@ -207,6 +207,39 @@ xxx.xxxxxxxxx...xxxxxxxxxxxxxxx
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx@xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Tricky river
+
+NAME: lemuel_trickyentry_river
+TAGS: entry no_monster_gen
+ORIENT: float
+SHUFFLE: {[(
+SHUFFLE: ABC
+SUBST: A = =
+SUBST: B = x
+SUBST: C = x
+CHANCE: 1
+MAP  
+xxxxxxxxxxxxxxxxxxx  
+xxxWA{...(...[xxxxx  
+xxwWx.........xxxxx  
+xwwWB.........xxxxx  
+xwwWx.........xxxxx  
+xwwWC.........xxxxx  
+xxWwx.........xxxxx  
+xxWwww........xxxxx
+xWxwwwwwwww...xxxxx  
+xWxxwwwwwwwwwwxxxxx  
+xxWxxwwwwwwwwwwwxxx  
+xxWxx...wwwwwwwwwxx  
+xxwWx........wwwwxx  
+xwxw+.........xwwwx  
+xwxxx.........xxwwx  
+xxxxx.........xxxwx  
+xxxxx.........xxxxx  
+xxxxx.........xxxxx  
 ENDMAP
 
 ##############################################################################

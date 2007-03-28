@@ -5957,8 +5957,8 @@ void describe_monsters(int class_described, unsigned char which_mons)
         break;
 
     case MONS_TIAMAT:
-        description += "A powerful draconian. Her scales seem to shimmer "
-            "and change colour as you watch.";
+        description += "A powerful draconian with mighty wings. $"
+            "Her scales seem to shimmer and change colour as you watch.$";
         break;
 
     case MONS_DRACONIAN:

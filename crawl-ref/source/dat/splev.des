@@ -140,7 +140,9 @@
 #  ----
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
 #  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
-#  "no_monster_gen": this tag prevents monster generation at the time of
+#  "no_item_gen":   Prevents random item generation in the vault. Items 
+#                   explicitly placed by the vault are not affected.
+#  "no_monster_gen": Prevents random monster generation at the time of
 #                   the vault's creation. Highly advised for entry vaults with
 #                   a player-hostile geography, MUST-HAVE for those with water
 #                   or lava.
@@ -161,16 +163,19 @@
 #  SHUFFLE:
 #  -------
 #  This allows you to randomly permute glyphs on the map. There are two ways:
-#  SHUFFLE: 123w     (i.e. list of glyphs, NOT comma-separated)
+#  SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
 #           could, for example, swap all occurences of "1" with "2", 
 #           as well as swapping all "3" with "w" (or any other of the 23
 #           possibilities).
 #  SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
 #           will either do nothing or swap all "1" with "3" and then also
 #           swap "2" with "w" everywhere.
-#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
-#  and substitutions will be applied in order.
 #
+#  Several SHUFFLE: lines can be used, and mixed with SUBST:, and the shuffles
+#  and substitutions will be applied in order. You can also put multiple 
+#  SHUFFLEs on one line, comma-separated. Shuffles cannot use , or /. All spaces
+#  are stripped before shuffling.
+#  
 #  SUBST:
 #  ------
 #  The SUBST: directive allows you to specify a placeholder symbol that is
@@ -195,7 +200,8 @@
 #  SUBST: w = wW
 #
 #  Multiple SUBST: lines can be used, and mixed with SHUFFLE:, and will be
-#  applied in order. 
+#  applied in order. Multiple substitutions can be performed on one line, using
+#  commas.
 #
 #  KFEAT:
 #  -----
@@ -521,7 +527,7 @@ ORIENT: encompass
 MONS: Antaeus, Ice Fiend, ice dragon / nothing
 MONS: random, random, random, random
 ITEM: any, any misc, any misc, any misc
-SHUFFLE: O1d/e0%/f9*/g8|
+SHUFFLE: O1d / e0% / f9* / g8|
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2567,8 +2573,8 @@ MONS: random, random, random, random
 ##############################################################################
 # Dummy Orc entry
 
-NAME: david_orc_0_dummy
-TAGS: orc_entry
+NAME:   orc_0_dummy
+TAGS:   orc_entry
 CHANCE: 50
 ORIENT: float
 MAP
@@ -2576,29 +2582,28 @@ O
 ENDMAP
 
 ##############################################################################
-# Freedom of Choice (Orc entry)
-
+# Freedom of Choice 
+#
 NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
-ITEM: scroll of blinking / scroll of recharging / scroll of fear
-ITEM: scroll of teleport / scroll of remove curse / scroll of identify
+ITEM: % / scroll of teleport / scroll of remove curse / scroll of identify
+ITEM: % / weight:2 * / scroll of blinking / scroll of recharging / scroll of fear
+SHUFFLE: %1
 ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.........xxxxxxxx
-xxxxx.......O.......xxxxx
+xxxxxxxxxxxxOxxxxxxxxxxxx
+xxxxxxxxx.......xxxxxxxxx
+xxxxxx.............xxxxxx
 xxxx....x.......x....xxxx
-xxxx...xxx.....xxx...xxxx
-xxx...xxxxx...xxxxx...xxx
 xxx....xxx.....xxx....xxx
 xx.....xxx.I.I.xxx..I..xx
 xx......x.......x......xx
 x..x.x..x..x=x..x..x+x..x
 x.xx.xx.x.xx=xx.x.xx~xx.x
-x.x.%.x.x.x2.2x.x.x.3.x.x
-x.x.1.x.x.xdddx.x.x.e.x.x
-x.x.%.x.x.x2.2x.x.x.3.x.x
+x.x%1.x.x.x2e2x.x.x3d3x.x
+x.x.%1x.x.x2e2x.x.xd3dx.x
 x.xx.xx.x.xx=xx.x.xx~xx.x
 x..x.x..x..x=x..x..x+x..x
 x.......+.......+.......x
@@ -2609,12 +2614,11 @@ ENDMAP
 
 ##############################################################################
 # Generic Orc entry
-
+#
 NAME: david_orc_2
 TAGS: orc_entry
-MONS: weight:50 orc / orc warrior
+MONS: weight:50 orc / orc warrior / nothing
 ORIENT: float
-
 MAP
 xxxx..@..xxxx
 x.....I.....x
@@ -2629,13 +2633,12 @@ ENDMAP
 
 ##############################################################################
 # Orcish monsters near stair
-
+#
 NAME: david_orc_3
 TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
-
 MAP
 1.....@....11
 1............
@@ -2650,7 +2653,7 @@ ENDMAP
 
 #############################################################################
 # The Orc Outfitter
-
+#
 NAME: orc_david_3
 TAGS: orc_entry
 ORIENT: float
@@ -2671,11 +2674,11 @@ ENDMAP
 #############################################################################
 # Wary orcs
 #
-
 NAME: david_orc_4
 TAGS: orc_entry
 ORIENT: float
 FLAGS: no_rotate
+SHUFFLE: XYZ
 SUBST: ? = I:11 G F:1
 SUBST: a = ~:4  .
 SUBST: b = ~:8  .
@@ -2684,7 +2687,6 @@ SUBST: d = ~:16 .
 KFEAT: X = .
 KFEAT: Y = blade trap
 KFEAT: Z = blade trap
-SHUFFLE: XYZ
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
@@ -2704,9 +2706,8 @@ NAME: david_orc_5
 TAGS: orc_entry
 ORIENT: float
 KFEAT: C = altar of Yredelemnul / altar of Makhleb / altar of Trog
-MONS: orc priest
-MONS: orc / weight:5 orc warrior / weight:1 orc knight
-SHUFFLE: cxv
+MONS:  orc priest, orc / weight:5 orc warrior / weight:1 orc knight
+SUBST: x : cxv
 SUBST: ( = ( .
 SUBST: ) = ) . 
 MAP
@@ -2722,13 +2723,14 @@ ENDMAP
 
 ##############################################################################
 # Caught partying
-
-NAME: erik_orc_1
-TAGS: orc_entry
-MONS: orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
+#
+NAME:  erik_orc_1
+TAGS:  orc_entry
+MONS:  orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / weight:2 potion of speed / weight:2 potion of might
-ITEM: club, potion of confusion, slice of pizza, sausage / weight:40 nothing, potion of confusion / potion of water
+ITEM:  club, potion of confusion, slice of pizza, sausage / weight:40 nothing
+ITEM:  potion of confusion / potion of water
 SHUFFLE: defO
 FLAGS: no_rotate
 ORIENT: float
@@ -2746,10 +2748,11 @@ ENDMAP
 
 ##############################################################################
 # C'mon, you *gotta* have a *fort*!
-
+#
 NAME: erik_orc_2
 TAGS: orc_entry no_pool_fixup
-MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior, weight:100 orc knight / orc warrior
+MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
+MONS: weight:100 orc knight / orc warrior
 ORIENT: float
 FLAGS: no_rotate
 SUBST: c = c:1000 x
@@ -2772,14 +2775,14 @@ ENDMAP
 
 ##############################################################################
 # Just like home
-
-NAME: erik_orc_3
-TAGS: orc_entry
-MONS: orc / weight:2 goblin / weight:2 hobgoblin / nothing, orc warrior / orc priest / orc wizard / nothing, warg / ogre / nothing
+#
+NAME:   erik_orc_3
+TAGS:   orc_entry no_item_gen
+MONS:   orc / weight:2 goblin / weight:2 hobgoblin / nothing
+MONS:   orc warrior / orc priest / orc wizard / nothing
+MONS:   warg / ogre / nothing
 ORIENT: float
-SUBST: ? = x . $:1
-# too bad there's no no_item_gen tag
-
+SUBST:  ? = x . $:1
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
@@ -2804,7 +2807,7 @@ ENDMAP
 
 ##############################################################################
 # Orc-henge
-
+#
 NAME: erik_orc_4
 TAGS: orc_entry
 MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
@@ -2816,7 +2819,7 @@ SUBST: X : c:20 .
 SUBST: v : c:20 .
 SUBST: b : c:20 .
 KITEM: 2 = knife
-
+#
 MAP
 ..............................
 ...............ZZ.............
@@ -2844,8 +2847,8 @@ ENDMAP
 ##############################################################################
 # Dummy Vaults entry
 
-NAME: david_vaults_0_dummy
-TAGS: vault_entry
+NAME:   vaults_0_dummy
+TAGS:   vault_entry
 CHANCE: 60
 ORIENT: float
 MAP
@@ -2854,16 +2857,18 @@ ENDMAP
 
 ##############################################################################
 # Generic Vaults entry
-
-NAME: david_vaults_1
-TAGS: vault_entry
-MONS: human
-ORIENT: float
+#
+NAME:    david_vaults_1
+TAGS:    vault_entry
+MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
+ORIENT:  float
+SHUFFLE: !=
+SUBST:   ! = x
 MAP
 xxxxx.@.xxxxx
 x...+...x...x
 x...x...x...x
-xxx=x111x...x
+x!x=x111x...x
 @.x.x111+.O.x
 x.x.x111x...x
 x.x.x...x...x
@@ -2873,7 +2878,7 @@ ENDMAP
 
 ##############################################################################
 # Vault monsters near stair 
-
+#
 NAME: david_vaults_2
 TAGS: vault_entry
 MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
@@ -2901,7 +2906,6 @@ NAME: david_vaults_3
 TAGS: vault_entry
 ORIENT: float
 MONS: human, human / Donald, human / Michael, human / Norris, human / Wayne
-# are these uniques all human? -- Yes [ds]
 SHUFFLE: 2345
 MAP
 @..........@
@@ -2922,6 +2926,7 @@ ENDMAP
 NAME: david_vaults_4
 TAGS: vault_entry
 ORIENT: float
+SHUFFLE: 12345
 MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
 MONS: freezing wraith / shadow wraith / wight / wraith
 MONS: deep troll / iron troll / rock troll / troll
@@ -2935,14 +2940,14 @@ SUBST: 3 = 3 .
 SUBST: 4 = 4 .
 SUBST: 5 = 5 .
 SUBST: * : * % .
-SHUFFLE: 12345
+
 MAP
 @..........@
 .xxxxxxxxxx.
 .x..12345.x.
 .x.xxxxx..x.
-.x.x.**x..x.
-.x.+.*Ox..x.
+.x.x***x..x.
+.x.+**Ox..x.
 .xxxxxxx..x.
 ...777....x.
 .xx...xxxxx.
@@ -2959,7 +2964,6 @@ SUBST: ! : ! .
 SUBST: ? : ? .
 SUBST: ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
 SUBST: ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
-# half of the !? are nothing, a quarter are monsters, another quarter items
 MAP
 xxxxxxxxxxxxxx
 xOx!x!x?x!x?xx
@@ -3018,9 +3022,8 @@ ENDMAP
 # Lair entries
 ##############################################################################
 # Dummy Lair entry
-
-NAME: david_lair_0_dummy
-TAGS: orc_lair
+NAME:   lair_0_dummy
+TAGS:   orc_lair
 CHANCE: 60
 ORIENT: float
 MAP
@@ -3029,11 +3032,13 @@ ENDMAP
 
 ##############################################################################
 # Generic Lair entry
-
-NAME: david_lair_1
-TAGS: lair_entry
-MONS: giant lizard, giant snail, yak, plant
-ORIENT: float
+#
+NAME:    david_lair_1
+TAGS:    lair_entry
+MONS:    giant lizard, giant snail / elephant slug
+MONS:    yak / weight:2 death yak, plant / fungus
+SHUFFLE: 12
+ORIENT:  float
 MAP
 xxxx..@..xxxx
 xx.........xx
@@ -3048,7 +3053,7 @@ ENDMAP
 
 ##############################################################################
 # Shrubbed Lair entry
-
+#
 NAME: david_lair_2
 TAGS: lair_entry
 MONS: plant, firedrake
@@ -3067,7 +3072,7 @@ ENDMAP
 
 ##############################################################################
 # Lair monsters near stair 
-
+#
 NAME: david_lair_3
 TAGS: lair_entry
 MONS: weight:50 nothing / weight:30 giant slug / weight:30 giant snail
@@ -3077,7 +3082,6 @@ MONS: green rat / grey rat / orange rat / quokka / rat
 MONS: weight:90 nothing / weight:30 giant frog / blink frog / giant brown frog / spiny frog
 SHUFFLE: 12345
 ORIENT: float
-
 MAP
 111...@......
 111..........
@@ -3093,7 +3097,7 @@ ENDMAP
 ########################################################################
 # Obligatory Oklob Plant Lair Entry Vault,
 # a.k.a. let's see just how many new-in-DCSS vault-features we can use at once
-
+#
 NAME: erik_lair_1
 TAGS: lair_entry no_monster_gen no_pool_fixup
 MONS: plant, fungus, oklob plant, boulder beetle
@@ -3102,7 +3106,6 @@ SHUFFLE: 124w
 SHUFFLE: cG
 SUBST: ? = %.
 KMONS: O = oklob plant
-
 MAP
 ..............@.........
 ..........x.............
@@ -3133,14 +3136,13 @@ ENDMAP
 
 ##############################################################################
 # A boring Lair entry vault.
- 
+# 
 NAME: erik_lair_2
 TAGS: lair_entry
 MONS: generate_awake boring beetle / nothing / rat, generate_awake boring beetle
 # Rats are boring.
 ORIENT: float
 SUBST: ? = c x $ .
- 
 MAP
 xxxxxxxxx?xxxx
 xxxxxx?xxxx?xx
@@ -3155,13 +3157,12 @@ ENDMAP
 
 ########################################################################
 # Welcome to Lair Island. We make great pancakes.
-
+#
 NAME: erik_lair_3
 TAGS: lair_entry
 MONS: weight:50 troll / Snorg, weight:30 hound / jackal / weight:20 war dog
 ORIENT: float
 SUBST: ? = w.
-
 MAP
 .@........ww?www?.....
 ..?.?.?..wwwwwww.?..?.
@@ -3182,7 +3183,7 @@ ENDMAP
 
 ########################################################################
 # Dragon's Lair, for generous values of Dragon
-
+#
 NAME: erik_lair_4
 TAGS: lair_entry
 MONS: steam dragon/mottled dragon/swamp drake
@@ -3209,7 +3210,7 @@ ENDMAP
 
 ##############################################################################
 # Orcish Takeover!
- 
+# 
 NAME: erik_lair_5
 TAGS: lair_entry
 MONS: orc, warg/giant snail, orc warrior/warg, orc priest/orc wizard/plant
@@ -3229,9 +3230,9 @@ ENDMAP
 ##############################################################################
 # Hive entries
 ##############################################################################
-# Beehive entry
-
-NAME: david_hive_0
+# Dummy entry
+#
+NAME: hive_0
 TAGS: hive_entry
 ORIENT: float
 CHANCE: 60
@@ -3239,6 +3240,9 @@ MAP
 O
 ENDMAP
 
+##############################################################################
+# Standard hive
+#
 NAME: david_hive_1
 TAGS: hive_entry
 MONS: queen bee, killer bee, killer bee larva
@@ -3260,13 +3264,12 @@ ENDMAP
 
 ##############################################################################
 # Hive monsters near stair
-
+#
 NAME: david_hive_2
-TAGS: hive_entry
+TAGS: hive_entry 
 MONS: nothing / killer bee / killer bee larva
 MONS: queen bee
 ORIENT: float
-
 MAP
 1111..@.....1
 1211.........
@@ -3288,35 +3291,45 @@ ORIENT: float
 ITEM: honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
 MONS: killer bee larva / killer bee, queen bee
 MONS: giant ant / soldier ant, queen ant
-MONS: bumblebee, yellow wasp
+MONS: yellow wasp / nothing, red wasp / yellow wasp
+MONS: bumblebee
+SHUFFLE: XY
+SHUFFLE: VW
 SHUFFLE: defgOR
 SHUFFLE: 34 / 56
+SUBST: V = =
+SUBST: W = a
+SUBST: X = =
+SUBST: Y = a
+SUBST: ? = a .:20
+SUBST: 1 : 1 7:2
+SUBST: 7 = 7 .
 MAP
 ............................
-................aaa..aaa....
-....aaa........aaOaaaadaa...
-..aaa4aa........aa=.aa=eaa..
-.aa33a.aaa.......a.a11aaa...
-.aaR3a..=...T...a.1aea1.a...
-..a.3..aaa......aa.1a2a1aa..
-..aa.3aa.......aaaaa1a1a=aa.
-...aaaa.........aag=..aafaa.
-.................aaaaaaaaa..
-...................aaa.a....
+.....??........??aaa?aaa???.
+...?aaa?......?aaOaaaadaa?..
+.?aaa.aa??.....?aa=.aa=eaa?.
+.aa333.aaa.......a?a11aaa?..
+.aaR43..=...T...a.1aea1.a?..
+.?a.33.aaa......aa.1a2a1aa?.
+.?aa.3aa??.....aaaVa1a1aYaa.
+..?aaaa?.......?aagW..aXfaa.
+...????.........?aaaaaaaaa?.
+.................??aaa?a??..
 ............................
 ENDMAP
 
 ##############################################################################
 # Bears Won't Share
-
+#
 NAME: erik_hive_1
 TAGS: hive_entry
-MONS: weight:200 bear/polar bear, grizzly bear, black bear, killer bee, queen bee, killer bee larva
+MONS: weight:200 bear/polar bear, grizzly bear, black bear
+MONS: killer bee, queen bee, killer bee larva
 ITEM: honeycomb, royal jelly
 SHUFFLE: 123
 SHUFFLE: deO
 ORIENT: float
-
 MAP
 .......................
 .............aaa.......
@@ -3329,9 +3342,9 @@ MAP
 .......................
 ENDMAP
 
-
 ##############################################################################
 # Bucolic
+#
 NAME: erik_hive_2
 TAGS: hive_entry
 MONS: plant, killer bee
@@ -3357,15 +3370,14 @@ MAP
 .....................
 ENDMAP
 
-
 ##############################################################################
 # Object lesson
+#
 NAME: erik_hive_3
 TAGS: hive_entry
 MONS: killer bee larva, killer bee, queen bee, firedrake
 SUBST: l = l.
 ORIENT: float
-
 MAP
 ..................
 ...aaaaa..........

@@ -1104,8 +1104,19 @@ item_spec item_list::parse_single_spec(std::string s)
     trim_string(s);
     
     // Completely random?
-    if (s == "random" || s == "any")
+    if (s == "random" || s == "any" || s == "%")
         return (result);
+
+    if (s == "*")
+    {
+        result.level = ISPEC_GOOD;
+        return (result);
+    }
+    else if (s == "|")
+    {
+        result.level = ISPEC_SUPERB;
+        return (result);
+    }
 
     if (s == "nothing")
     {

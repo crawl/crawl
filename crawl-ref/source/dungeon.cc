@@ -6018,6 +6018,18 @@ static void dngn_place_item_explicit(const item_spec &spec,
 
     if (spec.level >= 0)
         level = spec.level;
+    else
+    {
+        switch (spec.level)
+        {
+        case ISPEC_GOOD:
+            level = 5 + level * 2;
+            break;
+        case ISPEC_SUPERB:
+            level = MAKE_GOOD_ITEM;
+            break;
+        }
+    }
 
     const int item_made =
         items( spec.allow_uniques, spec.base_type, spec.sub_type, true, 

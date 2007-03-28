@@ -210,6 +210,12 @@ private:
     std::string error;
 };
 
+enum item_spec_type
+{
+    ISPEC_GOOD   = -2,
+    ISPEC_SUPERB = -3
+};
+
 struct item_spec
 {
     int genweight;
