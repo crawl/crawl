@@ -984,14 +984,6 @@ static void go_downstairs()
         return;
     }
 
-#ifdef DGL_MILESTONES
-    // Not entirely accurate - the player could die before reaching the Abyss.
-    if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
-        mark_milestone("abyss.enter", "entered the Abyss!");
-    else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)
-        mark_milestone("abyss.exit", "escaped from the Abyss!");
-#endif
-
     tag_followers();  // only those beside us right now can follow
     start_delay( DELAY_DESCENDING_STAIRS,
                  1 + (you.burden_state > BS_UNENCUMBERED),

@@ -138,9 +138,11 @@ void banished(int gate_type, const std::string &who)
 {
 #ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
-        mark_milestone("abyss.enter", who_banished(who));
+        mark_milestone("abyss.enter",
+                       "is cast into the Abyss!" + who_banished(who));
     else if (gate_type == DNGN_EXIT_ABYSS)
-        mark_milestone("abyss.exit", who_banished(who));
+        mark_milestone("abyss.exit",
+                       "escaped from the Abyss!" + who_banished(who));
 #endif
 
     if (gate_type == DNGN_ENTER_ABYSS)

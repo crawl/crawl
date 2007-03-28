@@ -43,6 +43,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "hiscores.h"
 #include "it_use2.h"
 #include "items.h"
 #include "itemname.h"
@@ -782,6 +783,18 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
         mpr("You're floating high up above the floor!");
         return;
     }
+
+#ifdef DGL_MILESTONES
+    if (!force_stair)
+    {
+        // Not entirely accurate - the player could die before
+        // reaching the Abyss.
+        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
+            mark_milestone("abyss.enter", "entered the Abyss!");
+        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)
+            mark_milestone("abyss.exit", "escaped from the Abyss!");
+    }
+#endif
 
     if (stair_find == DNGN_ENTER_ZOT)
     {
