@@ -1989,7 +1989,9 @@ static void show_name_prompt(int where, bool blankOK,
     if (blankOK)
     {
         if (Options.prev_name.length() && Options.remember_name)
-            cprintf(EOL "Press <Enter> for \"%s\"." EOL,
+            cprintf(EOL
+                    "Press <Enter> for \"%s\", or . to be prompted later."
+                    EOL,
                     Options.prev_name.c_str());
         else
             cprintf(EOL 

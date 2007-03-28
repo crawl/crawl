@@ -85,7 +85,10 @@ int strip_number_tag(std::string &s, const std::string &tagprefix)
 
 static int find_weight(std::string &s)
 {
-    return strip_number_tag(s, "weight:");
+    int weight = strip_number_tag(s, "weight:");
+    if (weight == TAG_UNFOUND)
+        weight = strip_number_tag(s, "w:");
+    return (weight);
 }
 
 static std::string split_key_item(const std::string &s,

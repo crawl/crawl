@@ -140,6 +140,8 @@
 #  ----
 #  Tags go an a TAGS: line and are space-separated. Valid tags are:
 #  "entry": this tag MUST be there for a vault to be pickable as an entry vault.
+#  "generate_awake": Monsters placed (using MONS, KMONS) in this vault will be
+#                    generated awake.
 #  "no_item_gen":   Prevents random item generation in the vault. Items 
 #                   explicitly placed by the vault are not affected.
 #  "no_monster_gen": Prevents random monster generation at the time of
