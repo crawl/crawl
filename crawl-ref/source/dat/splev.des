@@ -1398,7 +1398,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ~ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1442,7 +1442,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1486,7 +1486,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1530,7 +1530,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1574,7 +1574,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1618,7 +1618,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1662,7 +1662,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1706,7 +1706,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1750,7 +1750,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant /  azure jelly / acid blob 
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
@@ -1794,7 +1794,7 @@ MONS: deep elf high priest, deep elf demonologist
 MONS: deep elf annihilator, deep elf sorcerer
 MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
-MONS: curse skull / curse toe / oklob plant / azure jelly / acid blob
+MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
 SUBST: ! = 1 5
 SUBST: ? = . ?
