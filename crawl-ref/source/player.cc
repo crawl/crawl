@@ -1768,7 +1768,7 @@ int player_evasion()
 
     // Calculate the base bonus here, but it may be reduced by heavy 
     // armour below.
-    int dodge_bonus = (skill_bump(SK_DODGING) * you.dex + 10) 
+    int dodge_bonus = (you.skills[SK_DODGING] * you.dex + 10) 
                       / (20 - size_factor);
 
     // Limit on bonus from dodging:

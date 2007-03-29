@@ -1969,7 +1969,7 @@ void melee_attack::player_calc_hit_damage()
     //  are stupidly powerful) -- GDL
     potential_damage += slaying_bonus(PWPN_DAMAGE);
     damage_done =
-        potential_damage > 0? coinflip() + random2(potential_damage) : 0;
+        potential_damage > 0? one_chance_in(3) + random2(potential_damage) : 0;
     damage_done = player_apply_weapon_skill(damage_done);
     damage_done = player_apply_fighting_skill(damage_done, false);
     damage_done = player_apply_misc_modifiers(damage_done);
