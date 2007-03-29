@@ -2888,7 +2888,6 @@ MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre-mage
 MONS: weight:100 nothing / shapeshifter
 SHUFFLE: 123
 ORIENT: float
-CHANCE: 30
 MAP
 1111..@......
 111..........
