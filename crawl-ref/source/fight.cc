@@ -2630,7 +2630,7 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
     
     if (attk.flavour == AF_POISON_NASTY
         || one_chance_in( 15 + 5 * (attk.flavour == AF_POISON) )
-        || (damage_done > 2
+        || (damage_done > 1
             && one_chance_in( attk.flavour == AF_POISON? 4 : 3 )))
     {
         if (needs_message)
