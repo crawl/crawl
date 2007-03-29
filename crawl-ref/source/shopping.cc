@@ -1177,29 +1177,29 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 break;
 
             case WAND_DISINTEGRATION:
-                valued += 120;
+                valued += 160;
                 break;
 
             case WAND_DIGGING:
+            case WAND_PARALYSIS:
                 valued += 100;
                 break;
 
             case WAND_FLAME:
             case WAND_FROST:
-            case WAND_PARALYSIS:
                 valued += 75;
                 break;
 
             case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH_OTHER:
-                valued += 63;
+                valued += 90;
                 break;
-
-            case WAND_SLOWING:
-                valued += 50;
-                break;
-
+                
             case WAND_CONFUSION:
+            case WAND_SLOWING:
+                valued += 70;
+                break;
+
             case WAND_MAGIC_DARTS:
             case WAND_RANDOM_EFFECTS:
             default:
