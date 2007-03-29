@@ -2,19 +2,23 @@ Stone Soup 0.2
 --------------
 * Save and bones files formats changed, incompatible with 0.1.x.
 * Added a game tutorial.
-* New entry levels.
-* New special levels (Elf:7, Coc:7).
+* More vaults and special level layouts.
 * New evasion model (from 4.1.2).
+* Revamped dungeon overview and character information screens.
 * Targeting interface keymaps changed.
+* 'v' examines monsters, items, etc., '?' gives help.
 * -macro option now specifies a directory, not the macro file.
 * Item colours changed.
 * Deeper dungeon levels can have multiple player ghosts.
-* Rods of striking now also get magic reservoirs.
+* Rods of striking also get magic reservoirs.
 * Removed unpoisoned needles and blowguns of venom.
 * Stash search also finds altars and portals.
-* Some mutations cleanup.
+* Mutation and species abilities cleanup.
+* Sif Muna gives gifts on piety gain; Sif Munites do not need to pray.
+* Low-HD monsters are less likely to give piety when killed.
 * Fixed Pandemonium demons getting only magic dart.
-* Character names can now includes spaces, dashes and periods.
+* Character names can now include spaces, dashes and periods. On Unix,
+  character names can also end with a digit.
 * Adjusted beam to-hit calculation.
 * Weapons animated by Tukima's Dance are now considered thrown for autopickup
   purposes.
@@ -30,7 +34,7 @@ Stone Soup 0.2
 * The Hat of the Alchemist is now a real wizard hat, not a helmet.
 * Fixed identify not clearing empty inscription.
 * Fixed broken fear behaviour for monsters.
-* Shop purchase now asks for confirmation.
+* Shop purchase asks for confirmation.
 * Minor tweaks to some unrand artifacts.
 * Gourmand contaminated -> clean effect is also gradual now.
 * Searching is more effective.
@@ -52,7 +56,7 @@ Stone Soup 0.2
 * Travel is no longer interrupted by submerged monsters.
 * Travel is no longer interrupted by an invisible monster missing you.
 * Blinking/teleporting monsters can no longer land on the player's square.
-* Fix Abyss banishment crash.
+* Fixed Abyss banishment crash.
 * Monster resists were not taking randarts into account in some cases.
 * Better handling for travel_delay = -1.
 * Monsters using draining or hellfire are M_EVIL and take damage from cleansing
@@ -70,9 +74,13 @@ Stone Soup 0.2
 * Friendly monsters should not flee from the player.
 * Fixed detect creatures revealing monster identities in notes.
 * Fixed level-map crashes on large terms.
-* no_dark_brand defaults to true.
+* no_dark_brand defaults to true, since the option is otherwise too obscure to
+  find (and the problem it addresses is widespread on Unix terms).
+* Added a synthetic cursor (use_fake_cursor = yes) for terms that cannot draw
+  cursors on black/darkgrey spaces.
 * Summon horrible things now produces temporary summons.
 * Monster abjuration is weaker.
+* Deflect missiles is less effective.
 * Unseen horrors no longer resist electricity.
 * Greedy explore now tries to handle mimics like the items they imitate.
 * Dungeon builder guarantees that at least one downstair is reachable
@@ -83,6 +91,8 @@ Stone Soup 0.2
 * Added wizmode &~ to instant travel to any level to test special levels.
 * Messages can be coloured individually using pattern matches with the
   message_colour option.
+* Monsters dying to friendlies' poison, or damaging clouds are now
+  correctly attributed as collateral kills.
 
 Stone Soup 0.1.7 (20061231)
 ---------------------------

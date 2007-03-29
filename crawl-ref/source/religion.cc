@@ -1670,7 +1670,10 @@ void gain_piety(char pgn)
         // naturally slower as the player gains in spell skills.
         if ((you.piety > 199) ||
             (you.piety > 150 && one_chance_in(5)))
+        {
+            do_god_gift();
             return;
+        }
     }
 
     int old_piety = you.piety;
@@ -1746,6 +1749,63 @@ void lose_piety(char pgn)
                 }
             }
         }
+    }
+}
+
+static void lugonu_retribution(int god)
+{
+    if (coinflip())
+    {
+        simple_god_message("'s wrath finds you!", god);
+        miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "Lugonu's touch" );
+
+        // No return - Lugonu's touch is independent of other effects.
+    }
+    else if (coinflip())
+    {
+        // Give extra opportunities for embarrassing teleports.
+        simple_god_message("'s wrath finds you!", god);
+        mpr("Space warps around you!");
+        if (!one_chance_in(3))
+            you_teleport2(false);
+        else
+            random_blink(false);
+
+        // No return.
+    }
+    
+    // abyssal servant theme
+    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    {
+        if (create_monster(MONS_GREEN_DEATH + random2(3), 0,
+                           BEH_HOSTILE, you.x_pos, you.y_pos,
+                           MHITYOU, 250) != -1)
+        {
+            simple_god_message(" sends a demon after you!", god);
+        }
+        else
+        {
+            simple_god_message("'s demon is unavoidably detained.", god);
+        }
+    }
+    else
+    {
+        bool success = false;
+        int how_many = 1 + (you.experience_level / 7);
+
+        for (int loopy = 0; loopy < how_many; loopy++)
+        {
+            if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
+                               you.x_pos, you.y_pos, MHITYOU, 250) != -1)
+            {
+                success = true;
+            }
+        }
+
+        if (success)
+            simple_god_message(" sends minions to punish you.", god);
+        else
+            simple_god_message("'s minions fail to arrive.", god);
     }
 }
 
@@ -2210,39 +2270,7 @@ void divine_retribution( int god )
         break;
 
     case GOD_LUGONU:
-        // abyssal servant theme
-        if (random2(you.experience_level) > 7 && !one_chance_in(5))
-        {
-            if (create_monster(MONS_GREEN_DEATH + random2(3), 0,
-                               BEH_HOSTILE, you.x_pos, you.y_pos,
-                               MHITYOU, 250) != -1)
-            {
-                simple_god_message(" sends a demon after you!", god);
-            }
-            else
-            {
-                simple_god_message("'s demon is unavoidably detained.", god);
-            }
-        }
-        else
-        {
-            success = false;
-            how_many = 1 + (you.experience_level / 7);
-
-            for (loopy = 0; loopy < how_many; loopy++)
-            {
-                if (create_monster(MONS_NEQOXEC + random2(5), 0, BEH_HOSTILE,
-                                    you.x_pos, you.y_pos, MHITYOU, 250) != -1)
-                {
-                    success = true;
-                }
-            }
-
-            if (success)
-                simple_god_message(" sends minions to punish you.", god);
-            else
-                simple_god_message("'s minions fail to arrive.", god);
-        }
+        lugonu_retribution(god);
         break;
 
     case GOD_ELYVILON:  // Elyvilon doesn't seek revenge
@@ -2253,7 +2281,8 @@ void divine_retribution( int god )
     // Sometimes divine experiences are overwhelming...
     if (one_chance_in(5) && you.experience_level < random2(37))
     {
-        if (coinflip()) {
+        if (coinflip())
+        {
             mpr( "The divine experience confuses you!", MSGCH_WARN);
             confuse_player( 3 + random2(10) );
         }
@@ -2342,7 +2371,7 @@ void excommunication(void)
         if ( you.level_type == LEVEL_DUNGEON )
         {
             simple_god_message(" casts you back into the Abyss!", old_god);
-            banished(DNGN_ENTER_ABYSS);
+            banished(DNGN_ENTER_ABYSS, "Lugonu's wrath");
         }
         inc_penance(old_god, 50);
         break;

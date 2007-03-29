@@ -513,7 +513,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "deaths_door", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning", "wild_magic",
-    "xom", "statue", "rotting", "targetting", "spore", "tso_smiting",
+    "xom", "statue", "rotting", "targeting", "spore", "tso_smiting",
     "petrification", "unknown", "something", "falling_down_stairs", "acid",
     "curare", "melting", "bleeding",
 };

@@ -2288,7 +2288,8 @@ enum mon_attack_flavour
     AF_POISON_STR,
     AF_ROT,
     AF_VAMPIRIC,
-    AF_KLOWN
+    AF_KLOWN,
+    AF_DISTORT
 };
 
 enum mon_attitude_type

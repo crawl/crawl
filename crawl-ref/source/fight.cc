@@ -1493,6 +1493,76 @@ void melee_attack::drain_monster()
     attacker->god_conduct(DID_NECROMANCY, 2);
 }
 
+bool melee_attack::distortion_affects_defender()
+{
+    //jmf: blink frogs *like* distortion
+    // I think could be amended to let blink frogs "grow" like
+    // jellies do {dlb}
+    if (defender->id() == MONS_BLINK_FROG)
+    {
+        if (one_chance_in(5))
+        {
+            emit_nodmg_hit_message();
+            special_damage_message =
+                make_stringf("%s %s in the translocular energy.",
+                             defender->name(DESC_CAP_THE).c_str(),
+                             defender->conj_verb("bask").c_str());
+                
+            defender->heal(1 + random2avg(7, 2), true); // heh heh
+        }
+        return (false);
+    }
+        
+    if (one_chance_in(3))
+    {
+        special_damage_message =
+            make_stringf(
+                "Space bends around %s.",
+                defender->name(DESC_NOCAP_THE).c_str());
+        special_damage += 1 + random2avg(7, 2);
+        return (false);
+    }
+
+    if (one_chance_in(3))
+    {
+        special_damage_message =
+            make_stringf(
+                "Space warps horribly around %s!",
+                defender->name(DESC_NOCAP_THE).c_str());
+            
+        special_damage += 3 + random2avg(24, 2);
+        return (false);
+    }
+
+    if (one_chance_in(3))
+    {
+        emit_nodmg_hit_message();
+        defender->blink();
+        return (false);
+    }
+
+    // Used to be coinflip() || coinflip() for players, just coinflip()
+    // for monsters; this is a compromise. Note that it makes banishment
+    // a touch more likely for players, and a shade less likely for
+    // monsters.
+    if (!one_chance_in(3))
+    {
+        emit_nodmg_hit_message();
+        defender->teleport(coinflip(), one_chance_in(5));
+        return (false);
+    }
+
+    if (you.level_type != LEVEL_ABYSS && coinflip())
+    {
+        emit_nodmg_hit_message();
+        defender->banish( atk? atk->name(DESC_PLAIN, true)
+                          : attacker->name(DESC_PLAIN) );
+        return (true);
+    }
+
+    return (false);
+}
+
 bool melee_attack::apply_damage_brand()
 {
     // Monster resistance to the brand.
@@ -1665,70 +1735,8 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_DISTORTION:
-        //jmf: blink frogs *like* distortion
-        // I think could be amended to let blink frogs "grow" like
-        // jellies do {dlb}
-        if (defender->id() == MONS_BLINK_FROG)
-        {
-            if (one_chance_in(5))
-            {
-                emit_nodmg_hit_message();
-                special_damage_message =
-                    make_stringf("%s %s in the translocular energy.",
-                                 defender->name(DESC_CAP_THE).c_str(),
-                                 defender->conj_verb("bask").c_str());
-                
-                defender->heal(1 + random2avg(7, 2), true); // heh heh
-            }
-            break;
-        }
-        
-        if (one_chance_in(3))
-        {
-            special_damage_message =
-                make_stringf(
-                     "Space bends around %s.",
-                     defender->name(DESC_NOCAP_THE).c_str());
-            special_damage += 1 + random2avg(7, 2);
-            break;
-        }
-
-        if (one_chance_in(3))
-        {
-            special_damage_message =
-                make_stringf(
-                    "Space warps horribly around %s!",
-                    defender->name(DESC_NOCAP_THE).c_str());
-            
-            special_damage += 3 + random2avg(24, 2);
-            break;
-        }
-
-        if (one_chance_in(3))
-        {
-            emit_nodmg_hit_message();
-            defender->blink();
-            break;
-        }
-
-        // Used to be coinflip() || coinflip() for players, just coinflip()
-        // for monsters; this is a compromise. Note that it makes banishment
-        // a touch more likely for players, and a shade less likely for
-        // monsters.
-        if (!one_chance_in(3))
-        {
-            emit_nodmg_hit_message();
-            defender->teleport(coinflip(), one_chance_in(5));
-            break;
-        }
-
-        if (you.level_type != LEVEL_ABYSS && coinflip())
-        {
-            emit_nodmg_hit_message();
-            defender->banish( atk? atk->name(DESC_PLAIN, true)
-                              : attacker->name(DESC_PLAIN) );
+        if (distortion_affects_defender())
             return (true);
-        }
         break;
 
     case SPWPN_CONFUSE:
@@ -2864,6 +2872,10 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (attacker->id() == MONS_SPINY_WORM && defender->res_poison() <= 0)
             defender->poison( attacker, 2 + random2(4) );
         splash_defender_with_acid(3);
+        break;
+
+    case AF_DISTORT:
+        distortion_affects_defender();
         break;
     }
 }

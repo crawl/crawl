@@ -150,6 +150,9 @@ private:
     void splash_defender_with_acid(int strength);
     void splash_monster_with_acid(int strength);
 
+    // Returns true if the defender is banished.
+    bool distortion_affects_defender();
+
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
