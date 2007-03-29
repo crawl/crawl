@@ -1907,7 +1907,9 @@ Non-game playing commands:
 
 In-game toggles:
         Ctrl-A          Toggle autopickup.
-        Ctrl-V          Toggle auto-prayer.
+        Ctrl-V          Toggle auto-prayer. (You might want to set
+                        runrest_ignore_message to ignore the prayer
+                        message if you are using autoprayer.)
 
 Stashes:
         Ctrl-F          Find (this searches in stashes and shops, you can use

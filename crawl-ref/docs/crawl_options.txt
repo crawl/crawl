@@ -641,6 +641,9 @@ default_autoprayer = false
         Note that even when you're praying, you can renew prayer anytime.
         Also note the option safe_zero_exp (see 4-a) decides whether zero 
         experience monsters (like plants) are considered hostile.
+        If you use autoprayer, you might want to set runrest_ignore_message
+        to ignore the prayer messages (see the documentation for
+        runrest_ignore_message).
 
 sort_menus = (true | false | auto:X)
         When set to true, items are sorted by description in inventory and
