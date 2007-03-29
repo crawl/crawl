@@ -624,7 +624,6 @@ bool activate_ability(void)
         }
         else if (spell_direction(abild, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
         else
@@ -685,7 +684,6 @@ bool activate_ability(void)
         }
         else if (spell_direction( abild, beam ) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -838,7 +836,6 @@ bool activate_ability(void)
     case ABIL_CONTROL_DEMON:
         if (spell_direction(abild, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -864,7 +861,6 @@ bool activate_ability(void)
     case ABIL_THROW_FROST:
         if (spell_direction(abild, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -877,7 +873,6 @@ bool activate_ability(void)
     case ABIL_BOLT_OF_DRAINING:
         if (spell_direction(abild, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -967,7 +962,6 @@ bool activate_ability(void)
     case ABIL_TSO_ANNIHILATE_UNDEAD:
         if (spell_direction(spd, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -978,7 +972,6 @@ bool activate_ability(void)
     case ABIL_TSO_CLEANSING_FLAME:
         if (spell_direction(spd, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -999,7 +992,6 @@ bool activate_ability(void)
     case ABIL_KIKU_ENSLAVE_UNDEAD:
         if (spell_direction(spd, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -1073,7 +1065,6 @@ bool activate_ability(void)
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
         if (spell_direction(spd, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -1103,7 +1094,6 @@ bool activate_ability(void)
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
         if (spell_direction(spd, beam) == -1)
         {
-            canned_msg(MSG_OK);
             return (false);
         }
 

@@ -19,11 +19,11 @@
 #include "stuff.h"
 #include "view.h"
 
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
 #include <time.h>
 
 #include <stack>
@@ -41,7 +41,6 @@
 
 #ifdef DOS
 #include <conio.h>
-#include <errno.h>
 #endif
 
 #ifdef UNIX
