@@ -577,7 +577,7 @@ int ghost_demon::n_extra_ghosts()
     if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
         return (0);
     
-    // No multiple ghosts until level 14 of the Main Dungeon.
+    // No multiple ghosts until level 9 of the Main Dungeon.
     if ((lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON)
         || (subdepth < 2 && you.where_are_you == BRANCH_LAIR)
         || (subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES))

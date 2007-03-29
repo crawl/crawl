@@ -2125,13 +2125,8 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
                 continue;
 
             // faking LOS by checking the neighbouring square
-            int dx = targ->x - monster->x;
-            if (dx) 
-                dx /= dx;
-
-            int dy = targ->y - monster->y;
-            if (dy) 
-                dy /= dy;
+            int dx = sgn(targ->x - monster->x);
+            int dy = sgn(targ->y - monster->y);
 
             const int tx = monster->x + dx;
             const int ty = monster->y + dy;

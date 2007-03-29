@@ -112,6 +112,11 @@ inline int cap_int(int val, int cap)
     return (val > cap? cap : val);
 }
 
+template <typename Z> inline Z sgn(Z x)
+{
+    return (x < 0? -1 : (x > 0? 1 : 0));
+}
+
 bool is_trap_square(int x, int y);
 void zap_los_monsters();
 
