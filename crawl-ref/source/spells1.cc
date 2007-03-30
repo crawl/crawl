@@ -70,7 +70,7 @@ int blink(void)
 
             direction(beam, DIR_TARGET, TARG_ANY);
 
-            if (!beam.isValid)
+            if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
             {
                 if (!yesno("Are you sure you want to cancel this blink?",
                            false, 'n'))
