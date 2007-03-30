@@ -2663,10 +2663,14 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
 void melee_attack::wasp_paralyse_defender()
 {
     // [dshaligram] Adopted 4.1.2's wasp mechanics, in slightly modified form.
-    if (attacker->id() == MONS_RED_WASP)
+    if (attacker->id() == MONS_RED_WASP || one_chance_in(3))
         defender->poison( attacker, coinflip()? 2 : 1 );
 
-    if (!defender->res_poison() && one_chance_in( damage_done > 4? 3 : 20 ))
+    int paralyse_roll = (damage_done > 4? 3 : 20);
+    if (attacker->id() == MONS_YELLOW_WASP)
+        paralyse_roll += 3;
+
+    if (!defender->res_poison() && one_chance_in(paralyse_roll))
         defender->paralyse( roll_dice(1, 3) );
     else
         defender->slow_down( roll_dice(1, 3) );
