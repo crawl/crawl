@@ -1881,7 +1881,7 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
 
     // this enchantment wipes out invisibility (neat)
     menv[mon].del_ench(ENCH_INVIS);
-    menv[mon].add_ench(ENCH_BACKLIGHT);
+    menv[mon].add_ench(mon_enchant(ENCH_BACKLIGHT, 1));
 
     return (true);
 }                               // end backlight_monsters()
