@@ -4833,7 +4833,7 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
     {
         for (y = 0; y < GYM; y++)
         {
-            if (grd[x][y] == DNGN_LAVA)
+            if (grd[x][y] == DNGN_LAVA && level_number > 6)
             {
                 lava_spaces++;
             }
