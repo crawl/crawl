@@ -2668,7 +2668,7 @@ void melee_attack::wasp_paralyse_defender()
 
     int paralyse_roll = (damage_done > 4? 3 : 20);
     if (attacker->id() == MONS_YELLOW_WASP)
-        paralyse_roll += 7;
+        paralyse_roll += 3;
 
     if (!defender->res_poison() && one_chance_in(paralyse_roll))
         defender->paralyse( roll_dice(1, 3) );
