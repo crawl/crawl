@@ -476,36 +476,6 @@ static time_t parse_time(const std::string &st)
 static void hs_write( FILE *scores, scorefile_entry &se )
 {
     fprintf(scores, "%s\n", se.raw_string().c_str());
-
-    /*
-    char buff[80];  // should be more than enough for date stamps
-
-    se.version = 4;
-    se.release = 2;
-
-    fprintf( scores, ":%d:%d:%ld:%s:%ld:%d:%d:%s:%d:%d:%d",
-             se.version, se.release, se.points, se.name,
-             se.uid, se.race, se.cls, se.race_class_name, se.lvl,
-             se.best_skill, se.best_skill_lvl );
-
-    // XXX: need damage
-    fprintf( scores, ":%d:%d:%d:%s:%s:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d",
-             se.death_type, se.death_source, se.mon_num,
-             se.death_source_name, se.auxkilldata, 
-             se.dlvl, se.level_type, se.branch, 
-             se.final_hp, se.final_max_hp, se.final_max_max_hp, se.damage,
-             se.str, se.intel, se.dex, 
-             se.god, se.piety, se.penance, se.wiz_mode );
-
-    make_date_string( se.birth_time, buff );
-    fprintf( scores, ":%s", buff );
-
-    make_date_string( se.death_time, buff );
-    fprintf( scores, ":%s", buff );
-
-    fprintf( scores, ":%ld:%ld:%d:%d:\n", 
-             se.real_time, se.num_turns, se.num_diff_runes, se.num_runes );
-    */
 }
 
 static const char *kill_method_names[] =
