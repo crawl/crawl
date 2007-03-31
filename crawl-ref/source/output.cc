@@ -1122,7 +1122,7 @@ void print_overview_screen()
              "Spells: %2d memorised, %2d level%s left\n",
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
-              make_stringf(", need: %d\n", xp_needed).c_str() : ""),
+              make_stringf(", need: %d", xp_needed).c_str() : ""),
              god_colour_tag, godpowers.c_str(), you.gold,
              you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
