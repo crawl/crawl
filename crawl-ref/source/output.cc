@@ -1115,12 +1115,14 @@ void print_overview_screen()
         }
     }
 
-    int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
+    int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
-             "Exp: %d/%lu (%d), need: %d\n"
+             "Exp: %d/%lu (%d)%s\n"
              "God: %s%s<lightgrey>      Gold: %d\n"
              "Spells: %2d memorised, %2d level%s left\n",
-             you.experience_level, you.experience, you.exp_available, xp_needed,
+             you.experience_level, you.experience, you.exp_available,
+             (you.experience_level < 27?
+              make_stringf(", need: %d\n", xp_needed).c_str() : ""),
              god_colour_tag, godpowers.c_str(), you.gold,
              you.spell_no, player_spell_levels(), (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
