@@ -242,9 +242,9 @@ static formatted_string tut_starting_info(unsigned int width)
     linebreak_string2(text, width);
     result += formatted_string::parse_string(text);
 
-    result += "  <darkgray>readme.txt</darkgray>         - A very short guide to Crawl." EOL;
-    result += "  <darkgray>manual.txt</darkgray>         - This contains all details on races, magic, skills, etc." EOL;
-    result += "  <darkgray>crawl_options.txt</darkgray>  - Crawl's interface is highly configurable. This document " EOL;
+    result += "  <lightblue>readme.txt</lightblue>         - A very short guide to Crawl." EOL;
+    result += "  <lightblue>manual.txt</lightblue>         - This contains all details on races, magic, skills, etc." EOL;
+    result += "  <lightblue>crawl_options.txt</lightblue>  - Crawl's interface is highly configurable. This document " EOL;
     result += "                       explains all the options." EOL;
     result += EOL;        
     result += "Press <white>Space</white> to proceed to the basics (the screen division and movement)." EOL;
@@ -360,7 +360,7 @@ static formatted_string tutorial_debug()
     result += info;
     result += "</white>" EOL EOL;
 
-    result += "<darkgray>";
+    result += "<lightblue>";
     for (i=0; i < TUT_EVENTS_NUM; i++)
     {
         snprintf(info, INFO_SIZE, "%d: %d (%s)", 
@@ -379,7 +379,7 @@ static formatted_string tutorial_debug()
             lbreak = true;
         }
     }
-    result += "</darkgray>" EOL EOL;
+    result += "</lightblue>" EOL EOL;
  
     snprintf(info, INFO_SIZE, "tutorial_left: %d\n", Options.tutorial_left);
     result += info;
