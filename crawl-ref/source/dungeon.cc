@@ -5724,23 +5724,28 @@ static void dig_vault_loose(
         dig_away_from(place, targets[i]);
 }
 
+static bool grid_needs_exit(int x, int y)
+{
+    return (!grid_is_solid(x, y) || grd[x][y] == DNGN_CLOSED_DOOR);
+}
+
 static void pick_float_exits(vault_placement &place,
                              std::vector<coord_def> &targets)
 {
     std::vector<coord_def> possible_exits;
     for (int y = place.y; y < place.y + place.height; ++y)
     {
-        if (!grid_is_solid(place.x, y))
+        if (grid_needs_exit(place.x, y))
             possible_exits.push_back( coord_def(place.x, y) );
-        if (!grid_is_solid(place.x + place.width - 1, y))
+        if (grid_needs_exit(place.x + place.width - 1, y))
             possible_exits.push_back( coord_def(place.x + place.width - 1, y) );
     }
 
     for (int x = place.x + 1; x < place.x + place.width - 1; ++x)
     {
-        if (!grid_is_solid(x, place.y))
+        if (grid_needs_exit(x, place.y))
             possible_exits.push_back( coord_def(x, place.y) );
-        if (!grid_is_solid(x, place.y + place.height - 1))
+        if (grid_needs_exit(x, place.y + place.height - 1))
             possible_exits.push_back(
                 coord_def(x, place.y + place.height - 1) );
     }
