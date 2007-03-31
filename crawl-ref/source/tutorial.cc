@@ -1101,17 +1101,17 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           break;
       case TUT_YOU_ENCHANTED:
           text =  "Enchantments of all types can befall you temporarily. "
-                  "Abbreviated signalisation appears at the lower end of the stats "
+                  "Brief descriptions of these appear at the lower end of the stats "
                   "area. Press <w>@<magenta> for more details. A list of all "
-                  "possible enchantments is given in the manual.";
+                  "possible enchantments is in the manual.";
           break;
       case TUT_YOU_SICK:
           learned_something_new(TUT_YOU_ENCHANTED);
-          text =  "Corpses can be spoiled or inedible, resulting in sickness. "
+          text =  "Corpses can be spoiled or inedible, making you sick. "
                   "Also, some monsters' flesh is less palatable than others'. "
-                  "During sickness your hitpoints won't regenerate and sometimes "
+                  "While sick, your hitpoints won't regenerate and sometimes "
                   "an attribute may decrease. It wears off with time (wait with "
-                  "<w>5<magenta>) or you could quaff a potion of healing.";
+                  "<w>5<magenta>) or you can quaff a potion of healing.";
           break;
       case TUT_YOU_POISON:
           learned_something_new(TUT_YOU_ENCHANTED);
