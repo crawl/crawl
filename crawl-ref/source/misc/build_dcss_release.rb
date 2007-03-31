@@ -6,7 +6,7 @@ require 'fileutils'
 require 'zip/zipfilesystem'
 
 SVN_BASE_URL    = 'https://svn.sourceforge.net/svnroot/crawl-ref/'
-SVN_BRANCH      = 'branches/stone_soup-0.1.5'
+SVN_BRANCH      = 'branches/stone_soup-0.2'
 SVN_URL         = SVN_BASE_URL + SVN_BRANCH + '/crawl-ref'
 
 # If empty, nothing is done. Useful to sync svk mirrors.
@@ -137,12 +137,13 @@ def release_version
   if not $release_version
     raise "Can't find version.h" unless File.file? 'version.h'
     IO.readlines('version.h').each do |line|
-      if line =~ /VERSION\s+"(\d\.\d(?:\.\d)?)/
+      if line =~ /VER_NUM\s+"(\d\.\d(?:\.\d)?)/
         $release_version = $1
-        if line =~ /-svn/
-          raise "Version number is #$1-svn! Remove the -svn suffix."
+      end
+      if line =~ /VER_QUAL\s+"(.*)"/
+        if $1 =~ /-svn/
+          raise "Version number has -svn suffix! Remove it to proceed"
         end
-        break
       end
     end
   end
