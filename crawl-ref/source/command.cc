@@ -693,8 +693,13 @@ static int keyhelp_keyfilter(int ch)
     switch (ch)
     {
     case ':':
-        display_notes();
-        return -1;
+        // If the game has begun, show notes.
+        if (crawl_state.need_save)
+        {
+            display_notes();
+            return -1;
+        }
+        // fall through
     default:
         return ch;
     }
