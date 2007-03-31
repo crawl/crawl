@@ -1,11 +1,11 @@
 Install instructions for Dungeon Crawl Stone Soup (DCSS)
 --------------------------------------------------------
-(Last updated on 20061107 for Dungeon Crawl Stone Soup 0.1.3.)
+(Last updated on 20060331 for Dungeon Crawl Stone Soup 0.2.)
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
 Crawl Stone Soup is known to compile successfully on the following platforms as
-of version 0.1:
+of version 0.2:
 
 - Any Unix with a recent gcc (and g++), GNU make and libncurses, including
   Linux and Mac OS X.
@@ -92,8 +92,8 @@ byacc are also fine (edit your makefile appropriately).
 
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
-  then add -llua to your LIB = line in makefile.unix, and rebuild to compile with
-  Lua support.
+  then add -llua to your LIB = line in makefile.unix, and rebuild to
+  compile with Lua support.
 
 
 Building on Mac OS X
@@ -116,7 +116,8 @@ install Xcode to get gcc and make), or alternatively you can use Xcode.
   configurations are intended for development and may not result in a binary
   that can be distributed to others.
 
-* You can also use makefile.osx, which will run xcodebuild from the command line.
+* You can also use makefile.osx, which will run xcodebuild from the
+  command line.
 
 * If you have Lua installed, you can add your lua headers and liblua library to
   the 'Crawl' target in the Xcode project, uncomment the '#define CLUA_BINDINGS'

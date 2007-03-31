@@ -168,7 +168,7 @@ def build_win32
   puts "\nBuilding stone_soup (non-debug) for #{release_version} release!"
   system( %{#{W32MAKE} -f makefile.mgw DOYACC=y "EXTRA_FLAGS=-O2 } +
          %{-DCLUA_BINDINGS -DREGEX_PCRE" } +
-         %{"LIB=-lwinmm -static -llua -llualib -lpcre"} ) or
+         %{"LIB=-lwinmm -static -llua -lpcre"} ) or
             raise "#{W32MAKE} failed: #$?"
 
   clean_w32build_area
@@ -176,7 +176,7 @@ def build_win32
   puts "\nBuilding stone_soup (debug) for #{release_version}!"
   system( %{#{W32MAKE} -f makefile.mgw debug DEBUG_CRAWL=y "EXTRA_FLAGS=-O2 } +
          %{-DCLUA_BINDINGS -DREGEX_PCRE -DFULLDEBUG -DWIZARD" } +
-         %{"LIB=-lwinmm -static -llua -llualib -lpcre" } +
+         %{"LIB=-lwinmm -static -llua -lpcre" } +
          %{DOYACC=y} ) or
             raise "#{W32MAKE} failed: #$?"
 
