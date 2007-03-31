@@ -380,7 +380,8 @@ static void do_god_gift()
 {
     // Consider a gift if we don't have a timeout and weren't
     // already praying when we prayed.
-    if (!you.penance[you.religion] && !you.gift_timeout)
+    if (!you.penance[you.religion]
+        && (!you.gift_timeout || you.religion == GOD_ZIN))
     {
         bool success = false;
         
@@ -397,7 +398,7 @@ static void do_god_gift()
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);
-                lose_piety(5 + random2avg(10, 2));
+                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout? 5 : 0));
                 inc_gift_timeout(30 + random2avg(10, 2));
             }
             break;
