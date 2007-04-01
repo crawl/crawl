@@ -82,7 +82,7 @@ endif
 
 GAME_DEPENDS := $(OBJECTS)
 SRC_PKG_BASE := stone_soup
-SRC_VERSION  := $(shell egrep 'VERSION ".*"' version.h | \
+SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | \
 			egrep -o '[0-9]\.[0-9](\.[0-9])?')
 PKG_SRC_DIR  := $(SRC_PKG_BASE)-$(SRC_VERSION)-src
 SRC_PKG_TAR  := $(PKG_SRC_DIR).tbz2
