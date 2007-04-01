@@ -2131,12 +2131,13 @@ static void enter_player_name(bool blankOK)
         if (existing_chars.size() == 0) 
         {
              gotoxy(1,12);
-             cprintf("  If you've never been here before, you might want to try out\n");
+             cprintf("  If you've never been here before, "
+                     "you might want to try out" EOL);
              cprintf("  the Dungeon Crawl tutorial. To do this, press ");
              textcolor(WHITE);
              cprintf("T");
              textcolor(LIGHTGREY);
-             cprintf(" on the next\n");
+             cprintf(" on the next" EOL);
              cprintf("  screen.");
         }    
 

@@ -251,7 +251,7 @@ static formatted_string tut_starting_info(unsigned int width)
     result += "Press <white>Esc</white> to fast forward to the game start.";
 
 
-    return formatted_string::parse_string(result);
+    return formatted_string::parse_block(result);
 }
 
 #ifdef TUTORIAL_DEBUG
@@ -408,7 +408,7 @@ static formatted_string tutorial_map_intro()
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
     linebreak_string2(result,get_tutorial_cols());
-    return formatted_string::parse_string(result);
+    return formatted_string::parse_block(result, false);
 }
 
 static formatted_string tutorial_stats_intro()
@@ -459,7 +459,7 @@ static formatted_string tutorial_message_intro()
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
     linebreak_string2(result,get_tutorial_cols());
-    return formatted_string::parse_string(result);
+    return formatted_string::parse_block(result, false);
 }
 
 static void tutorial_movement_info()
