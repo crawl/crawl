@@ -38,11 +38,117 @@
 #include "stuff.h"
 #include "view.h"
 
+struct mon_dialogue
+{
+    monster_type speaker;
+    const char **silenced;
+    const char **confused;
+    const char **confused_friend;
+    const char **fleeing;
+    const char **fleeing_friend;
+    const char **friendly;
+    const char **hostile;   // Most common.
+};
+
+static const char *murray_silenced[] =
+{
+    "%s rolls in a circle.",
+    "%s rolls around.",
+    "%s spins like a top.",
+    "%s grins evilly.",
+    "%s seems to say something.",
+    "%s says something you can't hear. It was probably not a compliment.",
+    NULL
+};
+
+static const char *murray_hostile[] =
+{
+    "%s rolls in a circle.",
+    "%s rolls around.",
+    "%s spins like a top.",
+    "%s grins evilly.",
+    "%s laughs evilly.",
+    "%s cackles, \"I will rule the world!\"",
+    "%s shouts, \"Give me your head, so I can impale it on a pike!\"",
+    "%s's teeth chatter loudly.",
+    "%s yells, \"I'm a mighty demonic power!\"",
+    "%s asks, \"How could you choose the Orb over me, your best friend?\"",
+    "%s shouts, \"Let the forces of evil and voodoo overcome you!\"",
+    "%s screams, \"If I had legs, you would be dead twenty times over!\"",
+    "%s yells, \"My visage is famous all over the dungeon!\"",
+    "%s says, \"You're the second biggest fool I've ever met!\"",
+    NULL    
+};
+
+static mon_dialogue vox_populi[] =
+{
+    { MONS_MURRAY, murray_silenced, NULL, NULL, NULL, NULL, NULL,
+      murray_hostile },
+};
+
+static const mon_dialogue *find_dialogue(const monsters *monster)
+{
+    for (unsigned i = 0; i < sizeof(vox_populi) / sizeof(*vox_populi); ++i)
+        if (vox_populi[i].speaker == monster->type)
+            return (&vox_populi[i]);
+    return (NULL);
+}
+
+static bool say_dialogue(const monsters *monster,
+                         const char **dialogue)
+{
+    if (!dialogue)
+        return (false);
+
+    int nitems = 0;
+    for (const char **run = dialogue; *run; ++run, ++nitems)
+        ;
+
+    const char *chosen = nitems? dialogue[random2(nitems)] : NULL;
+
+    if (chosen && *chosen)
+    {
+        mprf(MSGCH_TALK, chosen, monster->name(DESC_CAP_THE).c_str());
+        return (true);
+    }
+
+    return (false);
+}
+
+static bool say_specific_dialogue(const monsters *monster,
+                                  const mon_dialogue *dialogue)
+{
+    if (silenced(monster->x, monster->y))
+        return (say_dialogue(monster, dialogue->silenced));
+
+    if (monster->has_ench(ENCH_CHARM))
+        return (false);
+
+    const bool friendly = (monster->attitude == ATT_FRIENDLY);
+    
+    if (mons_is_confused(monster))
+        return (say_dialogue(
+                    monster,
+                    friendly? dialogue->confused_friend
+                    : dialogue->confused));
+
+    if (monster->behaviour == BEH_FLEE)
+        return (say_dialogue(
+                    monster,
+                    friendly? dialogue->fleeing_friend
+                    : dialogue->fleeing));
+
+    if (monster->attitude == ATT_FRIENDLY)
+        return (say_dialogue(monster, dialogue->friendly));
+
+    return (say_dialogue(monster, dialogue->hostile));
+}
+
 // returns true if something is said
-bool mons_speaks(struct monsters *monster)
+bool mons_speaks(const monsters *monster)
 {
     int temp_rand;              // probability determination
-
+    
     // This function is a little bit of a problem for the message channels
     // since some of the messages it generates are "fake" warning to
     // scare the player.  In order to accomidate this intent, we're
@@ -57,6 +163,10 @@ bool mons_speaks(struct monsters *monster)
         return false;
     // invisible monster tries to remain unnoticed
 
+    const mon_dialogue *dialogue = find_dialogue(monster);
+    if (dialogue)
+        return (say_specific_dialogue(monster, dialogue));
+    
     //mv: if it's also invisible, program never gets here
     if (silenced(monster->x, monster->y))
     {
@@ -82,7 +192,7 @@ bool mons_speaks(struct monsters *monster)
                      (temp_rand == 4) ? " looks around." :
                      (temp_rand == 5) ? " appears indecisive." :
                      (temp_rand == 6) ? " ponders the situation."
-                                      : " seems to says something.");
+                                      : " seems to say something.");
         }
         // disregard charmed critters.. they're not too expressive
         else if (monster->attitude == ATT_FRIENDLY)
@@ -191,7 +301,7 @@ bool mons_speaks(struct monsters *monster)
             switch (random2(23))  // speaks for unfriendly confused monsters
             {
             case 0:
-                strcat(info, " yells, \"Get them off of me!\"");
+                strcat(info, " yells, \"Get them off me!\"");
                 break;
             case 1:
                 strcat(info, " screams, \"I will kill you anyway!\"");

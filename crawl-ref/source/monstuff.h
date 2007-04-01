@@ -87,7 +87,7 @@ bool random_near_space( int ox, int oy, int &tx, int &ty,
  * called from: beam - effects - fight - monstuff - mstuff2 - spells1 -
  *              spells2 - spells4
  * *********************************************************************** */
-bool simple_monster_message(struct monsters *monster, const char *event,
+bool simple_monster_message(const monsters *monster, const char *event,
                             int channel = MSGCH_PLAIN, int param = 0);
 
 std::string str_simple_monster_message(monsters *mons, const char *event);

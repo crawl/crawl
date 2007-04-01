@@ -3,8 +3,8 @@
 
 #include "externs.h"
 
-void imp_taunt( struct monsters *mons );
-void demon_taunt( struct monsters *mons );
+void imp_taunt( const monsters *mons );
+void demon_taunt( const monsters *mons );
 const char * generic_insult(void);
 const char * racial_insult(void);
 

@@ -1834,7 +1834,7 @@ std::string str_simple_monster_message(monsters *mons, const char *event)
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. -- bwr
-bool simple_monster_message(struct monsters *monster, const char *event,
+bool simple_monster_message(const monsters *monster, const char *event,
                             int channel, int param)
 {
     char buff[INFO_SIZE];

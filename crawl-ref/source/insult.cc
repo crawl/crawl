@@ -38,7 +38,7 @@ void init_cap(char * str)
         str[0] = toupper( str[0] );
 }
 
-void imp_taunt( struct monsters *mons )
+void imp_taunt( const monsters *mons )
 {
     char buff[80];
     const char *mon_name = ptr_monam( mons, DESC_CAP_THE );
@@ -65,7 +65,7 @@ void imp_taunt( struct monsters *mons )
     }
 }
 
-void demon_taunt( struct monsters *mons )
+void demon_taunt( const monsters *mons )
 {
     static const char * sound_list[] = 
     {
