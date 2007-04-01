@@ -314,7 +314,6 @@ void marshallString(struct tagHeader &th, const char *data, int maxSize)
     // put in the actual string -- we'll null terminate on
     // unmarshall.
     memcpy(&tagBuffer[th.offset], data, len);
-
     th.offset += len;
 }
 
@@ -324,6 +323,7 @@ void unmarshallString(struct tagHeader &th, char *data, int maxSize)
     // get length
     short len = unmarshallShort(th);
     int copylen = len;
+
     if (len >= maxSize && maxSize > 0)
         copylen = maxSize - 1;
 
@@ -1137,8 +1137,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.num_turns = unmarshallLong(th);
 
     you.magic_contamination = unmarshallShort(th);
-    unmarshallString( th, buff, 80 );
-    you.last_altar_inscription = buff;
+    you.last_altar_inscription = unmarshallString(th, 80);
 }
 
 static void tag_read_you_items(struct tagHeader &th, char minorVersion)
