@@ -590,7 +590,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
             case 3:
                 strcat(info,
-                       " says, \"It's nothing personal but I have kill you.\"");
+                       " says, \"It's nothing personal but I have to kill you.\"");
                 break;
             case 5:
                 strcat(info, " says, \"You will never get the Orb, sorry.\"");
@@ -795,7 +795,7 @@ bool mons_speaks(struct monsters *monster)
                 break;
             case 7:
                 strcat(info,
-                        " shouts, \"You're disturbing me.  I'll have kill you.\"");
+                        " shouts, \"You're disturbing me.  I'll have to kill you.\"");
                 break;
             case 8:
                 strcat(info, " screams, \"You are a ghastly nuisance!\"");
@@ -1140,7 +1140,7 @@ bool mons_speaks(struct monsters *monster)
                        " cries, \"You want to steal my orb collection?!\"");
                 break;
             case 13:
-                strcat(info, " sings some strange song.");
+                strcat(info, " sings a strange song.");
                 break;
             case 14:
                 strcat(info, " bursts in tears.");
