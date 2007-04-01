@@ -691,6 +691,8 @@ bool evoke_wielded( void )
             else
             {
                 mpr("You unfold the altar and place it on the floor.");
+                you.last_altar_inscription =
+                    you.inv[you.equip[EQ_WEAPON]].inscription;
                 grd[you.x_pos][you.y_pos] = DNGN_ALTAR_NEMELEX_XOBEH;
                 dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
                 seen_notable_thing(
