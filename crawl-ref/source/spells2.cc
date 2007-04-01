@@ -990,30 +990,13 @@ void drain_life(int pow)
     }
 }                               // end drain_life()
 
-int vampiric_drain(int pow)
+int vampiric_drain(int pow, dist &vmove)
 {
     int inflicted = 0;
     int mgr = 0;
     struct monsters *monster = 0;       // NULL
-    struct dist vmove;
-
-  dirc:
-    mpr("Which direction?", MSGCH_PROMPT);
-    direction( vmove, DIR_DIR, TARG_ENEMY );
-
-    if (!vmove.isValid)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return -1;
-    }
 
     mgr = mgrd[you.x_pos + vmove.dx][you.y_pos + vmove.dy];
-
-    if (vmove.dx == 0 && vmove.dy == 0)
-    {
-        mpr("You can't do that.");
-        goto dirc;
-    }
 
     if (mgr == NON_MONSTER)
     {

@@ -880,6 +880,9 @@ int your_spells( int spc2, int powc, bool allow_fail )
              testbits( flags, SPFLAG_GRID )   ? DIR_TARGET : 
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
+        if (dir == DIR_DIR)
+            mpr("Which direction? ", MSGCH_PROMPT);
+        
         if (spell_direction( spd, beam, dir, targ,
                              get_spell_target_prompt(spc2) ) == -1)
             return (SPRET_ABORT);
@@ -1315,7 +1318,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_VAMPIRIC_DRAINING:
-        vampiric_drain(powc);
+        vampiric_drain(powc, spd);
         break;
 
     case SPELL_SUMMON_WRAITHS:

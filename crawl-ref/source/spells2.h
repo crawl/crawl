@@ -56,11 +56,12 @@ int corpse_rot(int power);
 int summon_elemental(int pow, int restricted_type, unsigned char unfriendly);
 
 
+class dist;
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int vampiric_drain(int pow);
+int vampiric_drain(int pow, dist &);
 
 
 // last updated 24may2000 {dlb}
