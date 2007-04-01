@@ -3367,7 +3367,8 @@ static void handle_monster_move(int i, monsters *monster)
             mons_in_cloud( monster );
         }
 
-        handle_enchantment( monster );
+        if (handle_enchantment( monster ))
+            return;
     }
 
     // memory is decremented here for a reason -- we only want it
@@ -3395,7 +3396,7 @@ static void handle_monster_move(int i, monsters *monster)
 
     while (monster->speed_increment >= 80)
     {                   // The continues & breaks are WRT this.
-        if (monster->type != -1 && monster->hit_points < 1)
+        if (!monster->alive())
             break;
 
         monster->speed_increment -= 10;
@@ -3425,7 +3426,7 @@ static void handle_monster_move(int i, monsters *monster)
         }
 
         if (handle_enchantment(monster))
-            continue;
+            break;
 
         monster_regenerate(monster);
 
