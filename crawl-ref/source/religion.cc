@@ -2595,6 +2595,13 @@ void god_pitch(unsigned char which_god)
         return;
     }
 
+    if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
+    {
+        simple_god_message(" is most displeased with you!", which_god);
+        lugonu_retribution(which_god);
+        return;
+    }
+
     describe_god( which_god, false );
 
     snprintf( info, INFO_SIZE, "Do you wish to %sjoin this religion?", 
