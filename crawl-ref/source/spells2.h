@@ -61,7 +61,7 @@ class dist;
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int vampiric_drain(int pow, dist &);
+int vampiric_drain(int pow, const dist &);
 
 
 // last updated 24may2000 {dlb}

@@ -990,7 +990,7 @@ void drain_life(int pow)
     }
 }                               // end drain_life()
 
-int vampiric_drain(int pow, dist &vmove)
+int vampiric_drain(int pow, const dist &vmove)
 {
     int inflicted = 0;
     int mgr = 0;
