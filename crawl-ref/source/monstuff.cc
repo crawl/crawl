@@ -326,8 +326,8 @@ static void place_monster_corpse(const monsters *monster)
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
-    if (you.hunger_state < HS_SATIATED)
-        learned_something_new(TUT_MAKE_CHUNKS);    
+    if (you.hunger_state < HS_SATIATED && see_grid(monster->x, monster->y))
+        learned_something_new(TUT_MAKE_CHUNKS);
 }                               // end place_monster_corpse()
 
 static void tutorial_inspect_kill()
