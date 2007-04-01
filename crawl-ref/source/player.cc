@@ -3165,7 +3165,7 @@ void display_char_status(void)
     // "difficult"  - worse than 2 in 3
     // "hard"       - worse than fair chance
     snprintf( info, INFO_SIZE, 
-              "%s in your current equipment.",
+              "%s given your current equipment.",
               (to_hit <   1) ? "You are completely incapable of fighting" :
               (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
               (to_hit <  10) ? "Hitting average monsters is awkward" :

@@ -681,6 +681,10 @@ public:
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
+  // Hard-coded to store and restore the inscription of any altar
+  // you 'E'voke. Got to do this better sometime.
+  std::string last_altar_inscription;
+
   // Warning: these two are quite different.
   //
   // The spell table is an index to a specific spell slot (you.spells).

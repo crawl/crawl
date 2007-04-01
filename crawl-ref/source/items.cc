@@ -1234,6 +1234,7 @@ void pickup()
                     you.inv[m].special = 0;
                     you.inv[m].colour = LIGHTMAGENTA;
                     you.inv[m].quantity = 1;
+                    you.inv[m].inscription = you.last_altar_inscription;
                     set_ident_flags( you.inv[m], ISFLAG_IDENT_MASK );
 
                     you.inv[m].x = -1;

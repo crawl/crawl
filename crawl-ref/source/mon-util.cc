@@ -1324,12 +1324,6 @@ void define_monster(int index)
         hd += random2(10);
         ac += random2(5);
         ev += random2(5);
-
-        if (hd >= 7)
-        {
-            mons.type = MONS_BLACK_DRACONIAN + random2(8);
-            col = mons_class_colour( mons.type );
-        }
         break;
 
     case MONS_DRACONIAN_CALLER:

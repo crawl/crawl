@@ -226,8 +226,8 @@ static formatted_string tut_starting_info(unsigned int width)
     text += info;
     text += "safely through the depths of the dungeon, retrieving the fabled orb of Zot and "
             "returning it to the surface. In the beginning, however, let discovery be your "
-            "main goal: try to delve as deeply as possible but beware as death lurks around "
-            "every corner here." EOL EOL;
+            "main goal. Try to delve as deeply as possible but beware; death lurks around "
+            "every corner." EOL EOL;
     linebreak_string2(text, width);
     result += formatted_string::parse_string(text);
                 
@@ -236,7 +236,7 @@ static formatted_string tut_starting_info(unsigned int width)
     result += "  <white>S</white> - saves the game, to be resumed later (but note that death is permanent)" EOL;
     result += "  <white>x</white> - examine something in your vicinity" EOL EOL;
 
-    text = "This tutorial will help you playing Crawl without reading any documentation. "
+    text = "This tutorial will help you play Crawl without reading any documentation. "
            "If you feel intrigued, there is more information available in these files "
            "(all of which can also be read in-game):" EOL;
     linebreak_string2(text, width);
@@ -539,7 +539,7 @@ void tutorial_death_screen()
     Options.tutorial_left = 0;
     std::string text;
 
-    mpr( "Condolences! Your character's premature perishing is a sad, but "
+    mpr( "Condolences! Your character's premature death is a sad, but "
          "common occurence in Crawl. Rest assured that with diligence and "
          "playing experience your characters will last longer.\n", MSGCH_TUTORIAL);
     mpr( "Perhaps the following advice can improve your playing style:", MSGCH_TUTORIAL);
@@ -603,7 +603,7 @@ void tutorial_death_screen()
                     "potion of speed can really save your bacon.";
             break;
         case 5:
-            text =  "Never fight more than one monster if you can help it. Always "
+            text =  "Never fight more than one monster, if you can help it. Always "
                     "back into a corridor so that they are forced to fight you one "
                     "on one.";
             break;
@@ -1028,7 +1028,7 @@ void learned_something_new(unsigned int seen_what, int x, int y)
 
           break;
       case TUT_SEEN_TRAPS:
-          text =  "Oops... you just entered a trap. An unwary adventurer will "
+          text =  "Oops... you just triggered a trap. An unwary adventurer will "
                   "occasionally stumble into one of these nasty constructions "
                   "depicted by <w>^<magenta>. They can do physical damage (with "
                   "darts or needles, for example) or have other, more magical "
@@ -1101,17 +1101,17 @@ void learned_something_new(unsigned int seen_what, int x, int y)
           break;
       case TUT_YOU_ENCHANTED:
           text =  "Enchantments of all types can befall you temporarily. "
-                  "Abbreviated signalisation appears at the lower end of the stats "
+                  "Brief descriptions of these appear at the lower end of the stats "
                   "area. Press <w>@<magenta> for more details. A list of all "
-                  "possible enchantments is given in the manual.";
+                  "possible enchantments is in the manual.";
           break;
       case TUT_YOU_SICK:
           learned_something_new(TUT_YOU_ENCHANTED);
-          text =  "Corpses can be spoiled or inedible, resulting in sickness. "
+          text =  "Corpses can be spoiled or inedible, making you sick. "
                   "Also, some monsters' flesh is less palatable than others'. "
-                  "During sickness your hitpoints won't regenerate and sometimes "
+                  "While sick, your hitpoints won't regenerate and sometimes "
                   "an attribute may decrease. It wears off with time (wait with "
-                  "<w>5<magenta>) or you could quaff a potion of healing.";
+                  "<w>5<magenta>) or you can quaff a potion of healing.";
           break;
       case TUT_YOU_POISON:
           learned_something_new(TUT_YOU_ENCHANTED);
