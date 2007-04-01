@@ -225,6 +225,8 @@
     // Record where players are currently.
     #define DGL_WHEREIS
 
+    // Uses <playername>-macro.txt as the macro file if uncommented.
+    // #define DGL_NAMED_MACRO_FILE
 #endif
 
 // =========================================================================

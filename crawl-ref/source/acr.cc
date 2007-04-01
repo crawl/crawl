@@ -2873,9 +2873,6 @@ static bool initialise(void)
     
     cio_init();
 
-    // Load macros
-    macro_init();
-
     // system initialisation stuff:
     textbackground(0);
 
@@ -2891,6 +2888,9 @@ static bool initialise(void)
 
     if (!newc)
         restore_game();
+    
+    // Load macros
+    macro_init();
 
     game_has_started = true;
 
