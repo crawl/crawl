@@ -182,7 +182,7 @@ distclean: clean
 	$(DELETE) core
 	$(DELETE) *.0*
 	$(DELETE) *.lab
-	[ -f $(DEPENDENCY_MKF) ] && $(DELETE) $(DEPENDENCY_MKF)
+	$(DELETE) $(DEPENDENCY_MKF)
 
 $(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
