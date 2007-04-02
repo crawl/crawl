@@ -3275,6 +3275,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
+        case ENCH_SICK:
             lose_ench_levels(*cur, levels);
             break;
 
@@ -3339,6 +3340,14 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
                 del_ench(ENCH_INVIS);
         }
         break;
+
+    case ENCH_SICK:
+    {
+        const int lost = !spd? 1 : div_rand_round(10, spd);
+        if (lost > 0)
+            lose_ench_levels(me, lost);
+        break;
+    }
 
     case ENCH_SUBMERGED:
     {
@@ -3585,6 +3594,21 @@ kill_category monsters::kill_alignment() const
     return (attitude == ATT_FRIENDLY? KC_FRIENDLY : KC_OTHER);
 }
 
+void monsters::sicken(int amount)
+{
+    if (holiness() != MH_NATURAL || (amount /= 2) < 1)
+        return;
+
+    if (!has_ench(ENCH_SICK)
+        && mons_near(this) && player_monster_visible(this))
+    {
+        // Yes, could be confused with poisoning.
+        mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
+    }
+
+    add_ench(mon_enchant(ENCH_SICK, amount));
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 
@@ -3593,7 +3617,7 @@ static const char *enchant_names[] =
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short lived", "paralysis", "bug"
+    "short lived", "paralysis", "sick", "bug"
 };
 
 const char *mons_enchantment_name(enchant_type ench)
@@ -3628,6 +3652,10 @@ void mon_enchant::merge_killer(kill_category k)
 
 void mon_enchant::cap_degree()
 {
+    // Sickness is not capped.
+    if (ench == ENCH_SICK)
+        return;
+    
     // Hard cap to simulate old enum behaviour, we should really throw this
     // out entirely.
     const int max = ench == ENCH_ABJ? 6 : 4;

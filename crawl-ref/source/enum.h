@@ -1185,6 +1185,7 @@ enum enchant_type
     ENCH_SUBMERGED,
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,                    //   20
+    ENCH_SICK,
     
     NUM_ENCHANTMENTS
 };

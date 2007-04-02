@@ -4424,14 +4424,7 @@ void dec_haste_player( void )
 
 void disease_player( int amount )
 {
-    if (you.is_undead || amount <= 0)
-        return;
-
-    mpr( "You feel ill." );
-
-    const int tmp = you.disease + amount;
-    you.disease = (tmp > 210) ? 210 : tmp;
-    learned_something_new(TUT_YOU_SICK);    
+    you.sicken(amount);
 }
 
 void dec_disease_player( void )
@@ -5213,4 +5206,16 @@ god_type player::deity() const
 kill_category player::kill_alignment() const
 {
     return (KC_YOU);
+}
+
+void player::sicken(int amount)
+{
+    if (is_undead || amount <= 0)
+        return;
+
+    mpr( "You feel ill." );
+
+    const int tmp = disease + amount;
+    disease = (tmp > 210) ? 210 : tmp;
+    learned_something_new(TUT_YOU_SICK);    
 }

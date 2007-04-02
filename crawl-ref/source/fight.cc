@@ -2727,8 +2727,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_DISEASE:
-        if (defender->atype() == ACT_PLAYER)
-            disease_player( 50 + random2(100) );
+        defender->sicken( 50 + random2(100) );
         break;
 
     case AF_FIRE:

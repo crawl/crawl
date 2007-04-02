@@ -1398,6 +1398,9 @@ static void describe_mons_enchantment(const monsters &mons,
     case ENCH_POISON:
         strcat(info, " is poisoned.");
         break;
+    case ENCH_SICK:
+        strcat(info, " is sick.");
+        break;
     case ENCH_ROT:
         strcat(info, " is rotting away."); //jmf: "covered in sores"?
         break;

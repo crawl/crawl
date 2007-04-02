@@ -2403,7 +2403,8 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
     {
         bool imbibed = false;
 
-        switch (mitm[monster->inv[MSLOT_POTION]].sub_type)
+        const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
+        switch (potion_type)
         {
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
@@ -2421,6 +2422,12 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
                                                     == POT_HEAL_WOUNDS)
                 {
                     heal_monster(monster, 10 + random2avg(28, 3), false);
+                }
+
+                if (potion_type == POT_HEALING)
+                {
+                    monster->del_ench(ENCH_POISON);
+                    monster->del_ench(ENCH_SICK);
                 }
 
                 imbibed = true;
@@ -3319,6 +3326,9 @@ static void monster_add_energy(monsters *monster)
 // Do natural regeneration for monster.
 static void monster_regenerate(monsters *monster)
 {
+    if (monster->has_ench(ENCH_SICK))
+        return;
+    
     // regenerate:
     if (monster_descriptor(monster->type, MDSC_REGENERATES)
         
