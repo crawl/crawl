@@ -227,6 +227,10 @@
 
     // Uses <playername>-macro.txt as the macro file if uncommented.
     // #define DGL_NAMED_MACRO_FILE
+
+    // Uses Options.macro_dir as the full path to the macro file. Mutually
+    // exclusive with DGL_NAMED_MACRO_FILE.
+    #define DGL_MACRO_ABSOLUTE_PATH
 #endif
 
 // =========================================================================
