@@ -1111,12 +1111,12 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 
     monster_drop_ething(monster);
 
-        // New monster type might be interesting
-        mark_interesting_monst(monster);
+    // New monster type might be interesting
+    mark_interesting_monst(monster);
 
-        // If new monster is visible to player, then we've seen it
-        if (player_monster_visible(monster) && mons_near(monster))
-                seen_monster(monster);
+    // If new monster is visible to player, then we've seen it
+    if (player_monster_visible(monster) && mons_near(monster))
+        seen_monster(monster);
 
     return (player_messaged);
 }                                        // end monster_polymorph()

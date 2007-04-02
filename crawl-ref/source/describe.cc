@@ -2861,8 +2861,8 @@ static std::string describe_staff( const item_def &item )
         {
         case STAFF_WIZARDRY:
             description +=
-                "increases the magical proficiency of its wielder by "
-                "a considerable degree, increasing the power of their spells. ";
+                "significantly increases the ability of its wielder to use "
+                "magical spells. ";
             break;
 
         case STAFF_POWER:
