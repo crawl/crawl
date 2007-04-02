@@ -1,15 +1,17 @@
-Stone Soup 0.2.1
-----------------
+Stone Soup 0.2.1 (20070402)
+---------------------------
 * Fixed electric golems getting too much damage against shock-resistant
-  charactes.
-* Fixed Vampiric draining targeting.
+  characters.
+* Fixed vampiric draining targeting.
 * Fixed monster dialogue grammar.
 * Fixed EV penalty for nagas and centaurs.
 * Fixed tutorial reporting corpse availability for corpses not in view.
 * Fixed a possible buffer overflow when reading saves.
-* Fixed crash when a poisoned monster with other enchantments dies from
-  poison.
+* Fixed sporadic crash when a poisoned monster with other enchantments dies
+  from poison.
 * Fixed description for staff of wizardry.
+* Reinstated old behaviour of -macro option for Crawl compiled with
+  -DDGAMELAUNCH (DGL_MACRO_ABSOLUTE_PATH).
 
 Stone Soup 0.2 (20070401)
 -------------------------
