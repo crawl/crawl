@@ -175,11 +175,19 @@ static std::string get_macro_file()
     
     if (!dir.empty())
     {
+#ifndef DGL_MACRO_ABSOLUTE_PATH
         if (dir[dir.length() - 1] != FILE_SEPARATOR)
             dir += FILE_SEPARATOR;
+#endif
     }
-    
+
+#if defined(DGL_MACRO_ABSOLUTE_PATH)
+    return (dir.empty()? "macro.txt" : dir);
+#elif defined(DGL_NAMED_MACRO_FILE)
+    return (dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt");
+#else
     return (dir + "macro.txt");
+#endif
 }
 
 static void buf2keyseq(const char *buff, keyseq &k)

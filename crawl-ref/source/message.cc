@@ -572,6 +572,13 @@ void more(void)
             Message_Line >= get_message_window_height() - 1 );
 }                               // end more()
 
+static bool is_channel_dumpworthy(int channel)
+{
+    return (channel != MSGCH_EQUIPMENT
+            && channel != MSGCH_DIAGNOSTICS
+            && channel != MSGCH_TUTORIAL);
+}
+
 std::string get_last_messages(int mcount)
 {
     if (mcount <= 0) return std::string();
@@ -586,9 +593,11 @@ std::string get_last_messages(int mcount)
     int count = 0;
     for (int i = initial; i != Next_Message; )
     {
-        if (Store_Message[i].text.length())
+        const message_item &msg = Store_Message[i];
+        
+        if (msg.text.length() && is_channel_dumpworthy(msg.channel))
         {
-            text += Store_Message[i].text;
+            text += msg.text;
             text += EOL;
             count++;
         }

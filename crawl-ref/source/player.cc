@@ -4736,11 +4736,11 @@ size_type player::body_size(int psize, bool base) const
             if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
                 ret = SIZE_MEDIUM;
             else
-                ret = SIZE_BIG;
+                ret = SIZE_LARGE;
             break;
 
         case SP_CENTAUR:
-            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_BIG;
+            ret = (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE;
             break;
 
         case SP_SPRIGGAN:
@@ -5080,7 +5080,7 @@ int player::res_cold() const
 
 int player::res_elec() const
 {
-    return (player_res_electricity());
+    return (player_res_electricity() * 2);
 }
 
 int player::res_poison() const

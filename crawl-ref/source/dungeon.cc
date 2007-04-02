@@ -6542,9 +6542,26 @@ static void many_pools(unsigned char pool_type)
     while (pools < no_pools);
 }                               // end many_pools()
 
+static int exciting_colour()
+{
+    switch(random2(4))
+    {
+        case 0: return YELLOW;
+        case 1: return LIGHTGREEN;
+        case 2: return LIGHTRED;
+        case 3: return LIGHTMAGENTA;
+        default: return MAGENTA;
+    }
+}
+
+
 static int newwave_weapon_colour(const item_def &item)
 {
     int item_colour = BLACK;
+    // unrandom artefacts get predefined colours
+    if ( is_random_artefact(item) )
+        return exciting_colour();
+
     if (is_range_weapon( item ))
     {
         switch (range_skill(item))
@@ -6553,7 +6570,7 @@ static int newwave_weapon_colour(const item_def &item)
             item_colour = BLUE;
             break;
         case SK_CROSSBOWS:
-            item_colour = RED;
+            item_colour = LIGHTBLUE;
             break;
         case SK_DARTS:
             item_colour = WHITE;
@@ -6584,7 +6601,7 @@ static int newwave_weapon_colour(const item_def &item)
             item_colour = LIGHTGREY;
             break;
         case SK_POLEARMS:
-            item_colour = LIGHTGREEN;
+            item_colour = RED;
             break;
         case SK_STAVES:
             item_colour = GREEN;
@@ -6655,10 +6672,10 @@ static int newwave_missile_colour(const item_def &item)
         item_colour = WHITE;
         break;
     case MI_BOLT:
-        item_colour = RED;
+        item_colour = LIGHTBLUE;
         break;
     case MI_DART:
-        item_colour = LIGHTRED;
+        item_colour = CYAN;
         break;
     default:
         // huh?

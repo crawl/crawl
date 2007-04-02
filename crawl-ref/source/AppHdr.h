@@ -225,6 +225,10 @@
     // Record where players are currently.
     #define DGL_WHEREIS
 
+
+    // Uses Options.macro_dir as the full path to the macro file. Mutually
+    // exclusive with DGL_NAMED_MACRO_FILE.
+    #define DGL_MACRO_ABSOLUTE_PATH
 #endif
 
 // =========================================================================

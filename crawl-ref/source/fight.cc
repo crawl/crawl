@@ -2760,8 +2760,10 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_ELEC:
         special_damage =
-            resist_adjust_damage(defender->res_elec(),
-                                 atk->hit_dice + random2( 2 * atk->hit_dice ));
+            resist_adjust_damage(
+                defender->res_elec(),
+                atk->hit_dice + random2( atk->hit_dice / 2 ));
+
         if (defender->levitates())
             special_damage = special_damage * 2 / 3;
 
@@ -2770,6 +2772,10 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                  attacker->name(DESC_CAP_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
                  defender->name(DESC_NOCAP_THE).c_str());
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Shock damage: %d", special_damage);
+#endif
         break;
 
     case AF_VAMPIRIC:

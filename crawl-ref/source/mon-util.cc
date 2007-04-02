@@ -3573,6 +3573,10 @@ void monsters::apply_enchantments(int spd)
     {
         mon_enchant_list::iterator cur = i++;
         apply_enchantment(*cur, spd);
+
+        // If the monster died, the iterator will be invalid!
+        if (!alive())
+            break;
     }
 }
 

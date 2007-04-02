@@ -27,7 +27,7 @@ static void flush_free_queue(unsigned int max_allowed)
 static void add_to_queue(const char *s)
 {
     free_queue.push(s);
-    flush_free_queue(20);
+    flush_free_queue(100);
 }
 
 static void clean()

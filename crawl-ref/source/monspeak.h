@@ -3,6 +3,6 @@
 
 #include "externs.h"
 
-bool mons_speaks(struct monsters *monster);
+bool mons_speaks(const monsters *monster);
 
 #endif

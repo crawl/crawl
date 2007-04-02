@@ -1873,11 +1873,7 @@ bool backlight_monsters(int x, int y, int pow, int garbage)
     else if (lvl == 4)
         simple_monster_message( &menv[mon], " glows brighter for a moment." );
     else 
-    {
-        // remove old level
-        menv[mon].del_ench(ENCH_BACKLIGHT, true);
         simple_monster_message( &menv[mon], " glows brighter." );
-    }
 
     // this enchantment wipes out invisibility (neat)
     menv[mon].del_ench(ENCH_INVIS);

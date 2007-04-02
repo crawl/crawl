@@ -326,8 +326,8 @@ static void place_monster_corpse(const monsters *monster)
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack)
     move_item_to_grid( &o, monster->x, monster->y );
-    if (you.hunger_state < HS_SATIATED)
-        learned_something_new(TUT_MAKE_CHUNKS);    
+    if (you.hunger_state < HS_SATIATED && see_grid(monster->x, monster->y))
+        learned_something_new(TUT_MAKE_CHUNKS);
 }                               // end place_monster_corpse()
 
 static void tutorial_inspect_kill()
@@ -1111,12 +1111,12 @@ bool monster_polymorph( struct monsters *monster, int targetc, int power )
 
     monster_drop_ething(monster);
 
-        // New monster type might be interesting
-        mark_interesting_monst(monster);
+    // New monster type might be interesting
+    mark_interesting_monst(monster);
 
-        // If new monster is visible to player, then we've seen it
-        if (player_monster_visible(monster) && mons_near(monster))
-                seen_monster(monster);
+    // If new monster is visible to player, then we've seen it
+    if (player_monster_visible(monster) && mons_near(monster))
+        seen_monster(monster);
 
     return (player_messaged);
 }                                        // end monster_polymorph()
@@ -1834,7 +1834,7 @@ std::string str_simple_monster_message(monsters *mons, const char *event)
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. -- bwr
-bool simple_monster_message(struct monsters *monster, const char *event,
+bool simple_monster_message(const monsters *monster, const char *event,
                             int channel, int param)
 {
     char buff[INFO_SIZE];
@@ -3367,7 +3367,8 @@ static void handle_monster_move(int i, monsters *monster)
             mons_in_cloud( monster );
         }
 
-        handle_enchantment( monster );
+        if (handle_enchantment( monster ))
+            return;
     }
 
     // memory is decremented here for a reason -- we only want it
@@ -3395,7 +3396,7 @@ static void handle_monster_move(int i, monsters *monster)
 
     while (monster->speed_increment >= 80)
     {                   // The continues & breaks are WRT this.
-        if (monster->type != -1 && monster->hit_points < 1)
+        if (!monster->alive())
             break;
 
         monster->speed_increment -= 10;
@@ -3425,7 +3426,7 @@ static void handle_monster_move(int i, monsters *monster)
         }
 
         if (handle_enchantment(monster))
-            continue;
+            break;
 
         monster_regenerate(monster);
 

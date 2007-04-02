@@ -207,11 +207,11 @@ static void randart_descpr( std::string &description, const item_def &item )
     }
 
     if (proprt[ RAP_FIRE ] < -2)
-        description += "$It makes you highly vulnerable to fire. ";
+        description += "$It makes you extremely vulnerable to fire. ";
     else if (proprt[ RAP_FIRE ] == -2)
-        description += "$It makes you greatly susceptible to fire. ";
+        description += "$It makes you very vulnerable to fire. ";
     else if (proprt[ RAP_FIRE ] == -1)
-        description += "$It makes you susceptible to fire. ";
+        description += "$It makes you vulnerable to fire. ";
     else if (proprt[ RAP_FIRE ] == 1)
         description += "$It protects you from fire. ";
     else if (proprt[ RAP_FIRE ] == 2)
@@ -220,11 +220,11 @@ static void randart_descpr( std::string &description, const item_def &item )
         description += "$It renders you almost immune to fire. ";
 
     if (proprt[ RAP_COLD ] < -2)
-        description += "$It makes you highly susceptible to cold. ";
+        description += "$It makes you extremely vulnerable to cold. ";
     else if (proprt[ RAP_COLD ] == -2)
-        description += "$It makes you greatly susceptible to cold. ";
+        description += "$It makes you very vulnerable to cold. ";
     else if (proprt[ RAP_COLD ] == -1)
-        description += "$It makes you susceptible to cold. ";
+        description += "$It makes you vulnerable to cold. ";
     else if (proprt[ RAP_COLD ] == 1)
         description += "$It protects you from cold. ";
     else if (proprt[ RAP_COLD ] == 2)
@@ -2861,8 +2861,8 @@ static std::string describe_staff( const item_def &item )
         {
         case STAFF_WIZARDRY:
             description +=
-                "increases the magical proficiency of its wielder by "
-                "a considerable degree, increasing the power of their spells. ";
+                "significantly increases the ability of its wielder to use "
+                "magical spells. ";
             break;
 
         case STAFF_POWER:
