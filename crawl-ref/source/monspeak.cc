@@ -292,7 +292,7 @@ bool mons_speaks(const monsters *monster)
             case 17:
                 strcat(info, " says, \"");
                 strcat(info, you.your_name);
-                strcat(info, ", I'm little bit confused.\"");
+                strcat(info, ", I'm a little confused.\"");
                 break;
             }
         }
@@ -339,7 +339,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " mumbles something.");
                 break;
             case 14:
-                strcat(info, " says, \"I'm little bit confused.\"");
+                strcat(info, " says, \"I'm a little confused.\"");
                 break;
             case 15:
                 strcat(info, " asks, \"Where am I?\"");
@@ -360,7 +360,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " says, \"Why is everything spinning?\"");
                 break;
             case 21:
-                strcat(info, " screams, \"NO! I can't bear up that noise!\"");
+                strcat(info, " screams, \"NO! I can't bear that much noise!\"");
                 break;
             case 22:
                 strcat(info, " is trying to cover his eyes.");
@@ -675,7 +675,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " says, \"It's nothing personal...\"");
                 break;
             case 14:
-                strcat(info, " says, \"A dead adventurer is good adventurer.\"");
+                strcat(info, " says, \"A dead adventurer is a good adventurer.\"");
                 break;
             case 15:
                 strcat(info, " says, \"Coming here was your last mistake.\"");
@@ -700,7 +700,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 3:
                 strcat(info,
-                       " says, \"It's nothing personal but I have to kill you.\"");
+                       " says, \"It's nothing personal, but I have to kill you.\"");
                 break;
             case 5:
                 strcat(info, " says, \"You will never get the Orb, sorry.\"");
@@ -855,12 +855,12 @@ bool mons_speaks(const monsters *monster)
                 mpr(info, MSGCH_MONSTER_SPELL);
 
                 strcpy(info, m_name);
-                strcat(info, "'s fingertips starts to glow.");
+                strcat(info, "'s fingertips start to glow.");
                 msg_type = MSGCH_MONSTER_ENCHANT;
                 break;
 
             case 16:
-                strcat(info, "'s eyes starts to glow.");
+                strcat(info, "'s eyes start to glow.");
                 msg_type = MSGCH_MONSTER_SPELL;
                 break;
 
@@ -948,12 +948,12 @@ bool mons_speaks(const monsters *monster)
                 simple_monster_message( monster, " casts a spell.", 
                                         MSGCH_MONSTER_SPELL );
 
-                strcat(info, "'s eyes starts to glow with a red light. ");
+                strcat(info, "'s eyes start to glow with a red light. ");
                 msg_type = MSGCH_MONSTER_ENCHANT;
                 break;
 
             case 10:
-                strcat(info, " says, \"Look in to my eyes.\"");
+                strcat(info, " says, \"Look into my eyes.\"");
                 break;
             case 11:
                 strcat(info, " says, \"I'm your fate.\"");
@@ -1090,7 +1090,7 @@ bool mons_speaks(const monsters *monster)
                     break;
                 case 11:
                     strcat(info,
-                           " says, \"I know thousand and one way to kill you.\"");
+                           " says, \"I know a thousand and one ways to kill you.\"");
                     break;
                 case 12:
                     strcat(info,
@@ -1253,7 +1253,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " sings a strange song.");
                 break;
             case 14:
-                strcat(info, " bursts in tears.");
+                strcat(info, " bursts into tears.");
                 break;
             case 15:
                 strcat(info, " sucks her thumb.");
@@ -1471,7 +1471,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 6:
                 strcat(info,
-                       " says, \"Only few hits and it's over.\".");
+                       " says, \"Only a few hits and it's over.\".");
                 break;
             case 7:
                 strcat(info, " says, \"You know, I'm in a hurry.\"");
@@ -1522,7 +1522,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " screams, \"Blood and destruction!\"");
                 break;
             case 9:
-                strcat(info, " says, \"You know, it's honour to die by my hand.\"");
+                strcat(info, " says, \"You know, it's an honour to die by my hand.\"");
                 break;
             case 10:
                 strcat(info, " shouts, \"Your time has come!\"");
@@ -1555,7 +1555,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 4:
                 strcat(info,
-                       " says, \"You don't look worth for that money.\"");
+                       " says, \"You don't look worth it for that money.\"");
                 break;
             case 5:
                 strcat(info,
@@ -1618,7 +1618,7 @@ bool mons_speaks(const monsters *monster)
                 break;
             case 5:
                 strcat(info,
-                       " says, \"I need new robe. I'll buy it from your money.\"");
+                       " says, \"I need a new robe. I'll buy it with your money.\"");
                 break;
             case 6:
                 strcat(info,
@@ -1706,7 +1706,7 @@ bool mons_speaks(const monsters *monster)
                 simple_monster_message( monster, " casts a spell", 
                                         MSGCH_MONSTER_SPELL );
 
-                strcat(info, "'s hands started to glow with soft light.");
+                strcat(info, "'s hands start to glow with a soft light.");
                 msg_type = MSGCH_MONSTER_ENCHANT;
                 break;
 
@@ -1728,7 +1728,7 @@ bool mons_speaks(const monsters *monster)
                     break;
             case 11:
                 strcat(info,
-                       " screams, \"Don't move! I want to cut your ear!\"");
+                       " screams, \"Don't move! I want to cut off your ear!\"");
                 break;
             case 12:
                 strcat(info,
@@ -1755,10 +1755,10 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " screams, \"Die, monster!\"");
                 break;
             case 2:
-                strcat(info, " screams, \"Give me Holy Grail!\"");
+                strcat(info, " screams, \"Give me the Holy Grail!\"");
                 break;
             case 3:
-                strcat(info, " screams, \"Red!  No, blue!\"");
+                strcat(info, " screams, \"Red! No, blue!\"");
                 break;
             case 4:
                 strcat(info, " looks confused.");
@@ -1767,7 +1767,7 @@ bool mons_speaks(const monsters *monster)
                 strcat(info, " looks excited.");
                 break;
             case 6:
-                strcat(info, " shouts, \"I'm great and powerful hero!\"");
+                strcat(info, " shouts, \"I'm a great and powerful hero!\"");
                 break;
             case 7:
                 strcat(info,
@@ -1900,14 +1900,14 @@ bool mons_speaks(const monsters *monster)
                 break;
 
             case 5:
-                strcat(info, "'s eyes starts to glow with a red light.");
+                strcat(info, "'s eyes start to glow with a red light.");
                 break;
             case 6:
                 strcat(info,
-                       "'s eyes starts to glow with a green light.");
+                       "'s eyes start to glow with a green light.");
                     break;
             case 7:
-                strcat(info, "'s eyes starts to glow with a blue light.");
+                strcat(info, "'s eyes start to glow with a blue light.");
                 break;
             case 8:
                 strcat(info, " screams, \"All trespassers must die!\"");
@@ -2342,13 +2342,13 @@ bool mons_speaks(const monsters *monster)
             case 15:
                 strcat(info, " casts a spell.");
                 mpr(info, MSGCH_MONSTER_SPELL);
-                mpr("Suddenly you are surrounded with pale green light.", MSGCH_WARN);
+                mpr("Suddenly you are surrounded with a pale green light.", MSGCH_WARN);
                 return (true);
 
             case 16:
                 strcat(info, " casts a spell.");
                 mpr(info, MSGCH_MONSTER_SPELL);
-                mpr("You have terrible head-ache.", MSGCH_WARN);
+                mpr("You have a terrible headache.", MSGCH_WARN);
                 return (true);
 
             case 17:
