@@ -384,6 +384,20 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
 #endif
+
+    // Take note!
+    if (killer != KILL_RESET && killer != KILL_DISMISSED)
+    {
+        if ( MONST_INTERESTING(monster) ||
+             // XXX yucky hack
+             monster->type == MONS_PLAYER_GHOST ||
+             monster->type == MONS_PANDEMONIUM_DEMON )
+        {
+            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
+                           ptr_monam(monster, DESC_NOCAP_A, true)));
+        }
+    }
+
     
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
@@ -784,15 +798,6 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        if ( MONST_INTERESTING(monster) ||
-             // XXX yucky hack
-             monster->type == MONS_PLAYER_GHOST ||
-             monster->type == MONS_PANDEMONIUM_DEMON )
-        {
-            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
-                           ptr_monam(monster, DESC_NOCAP_A, true)));
-        }
-
         you.kills.record_kill(monster, killer, pet_kill);
 
         if (monster->has_ench(ENCH_ABJ))
