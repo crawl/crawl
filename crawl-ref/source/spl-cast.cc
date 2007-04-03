@@ -939,7 +939,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
                     && you.piety >= 100 && random2(150) <= you.piety))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
-                return (0);
+                return SPRET_FAIL;
             }
 
             unsigned int sptype = 0;
