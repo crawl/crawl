@@ -3335,6 +3335,13 @@ static void monster_regenerate(monsters *monster)
 {
     if (monster->has_ench(ENCH_SICK))
         return;
+
+    // Water/lava creatures out of their element cannot regenerate.
+    if (monster_habitat(monster->type) != DNGN_FLOOR
+        && !monster_habitable_grid(monster, grd(monster->pos())))
+    {
+        return;
+    }
     
     // regenerate:
     if (monster_descriptor(monster->type, MDSC_REGENERATES)
