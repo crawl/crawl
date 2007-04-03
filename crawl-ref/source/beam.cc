@@ -1292,8 +1292,11 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     if ( pbolt.chose_ray )
         ray = pbolt.ray;
     else
+    {
+        ray.fullray_idx = -1;   // to quiet valgrind
         find_ray( pbolt.source_x, pbolt.source_y,
                   pbolt.target_x, pbolt.target_y, true, ray);
+    }
 
     if ( !pbolt.aimed_at_feet )
         ray.advance();
