@@ -942,8 +942,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         const monsters *monster = &menv[death_source];
 
-        if (monster->type > 0 || monster->type <= NUM_MONSTERS) 
-        { 
+        if (monster->type >= 0 && monster->type < NUM_MONSTERS) 
+        {
             death_source = monster->type;
             mon_num = monster->number;
 
