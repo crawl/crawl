@@ -3290,6 +3290,9 @@ void monsters::timeout_enchantments(int levels)
         default:
             break;
         }
+
+        if (!alive())
+            break;
     }
 }
 
