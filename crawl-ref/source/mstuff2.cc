@@ -595,6 +595,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         break;
 
     case MS_CANTRIP:
+    {
+        const bool friendly = mons_friendly(monster);
+        bool need_friendly_stub = false;
         // Monster spell of uselessness, just prints a message. 
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
@@ -607,10 +610,16 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
                                     MSGCH_MONSTER_ENCHANT );
             break;
         case 1:
-            mpr( "You feel troubled." );
+            if (friendly)
+                need_friendly_stub = true;
+            else
+                mpr( "You feel troubled." );
             break;
         case 2:
-            mpr( "You feel a wave of unholy energy pass over you." );
+            if (friendly)
+                need_friendly_stub = true;
+            else
+                mpr( "You feel a wave of unholy energy pass over you." );
             break;
         case 3:
             simple_monster_message( monster, " looks stronger.", 
@@ -626,13 +635,21 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
             break;
         case 6:
         default:
-            if (one_chance_in(20))
+            if (friendly)
+                need_friendly_stub = true;
+            else if (one_chance_in(20))
                 mpr( "You resist (whatever that was supposed to do)." );
             else
                 mpr( "You resist." );
             break;
         }
+
+        if (need_friendly_stub)
+            simple_monster_message(monster, " shimmers for a moment.",
+                                   MSGCH_MONSTER_ENCHANT);
+        
         return;
+    }
     }
 
     fire_beam( pbolt );
