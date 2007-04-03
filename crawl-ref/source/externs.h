@@ -943,6 +943,7 @@ public:
     bool      alive() const;
     coord_def pos() const;
     bool      swimming() const;
+    bool      can_drown() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);

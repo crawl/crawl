@@ -2767,10 +2767,11 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             special_damage = special_damage * 2 / 3;
 
         if (needs_message && special_damage)
-            mprf("%s %s %s!",
+            mprf("%s %s %s%s",
                  attacker->name(DESC_CAP_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
-                 defender->name(DESC_NOCAP_THE).c_str());
+                 defender->name(DESC_NOCAP_THE).c_str(),
+                 special_attack_punctuation().c_str());
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Shock damage: %d", special_damage);

@@ -2433,6 +2433,8 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
                 {
                     monster->del_ench(ENCH_POISON);
                     monster->del_ench(ENCH_SICK);
+                    monster->del_ench(ENCH_CONFUSION);
+                    monster->del_ench(ENCH_ROT);
                 }
 
                 imbibed = true;
@@ -4239,7 +4241,7 @@ void mons_check_pool(monsters *mons, int killer)
     if (lev == 2 || (lev && !mons->paralysed()))
         return;
     
-    const int grid = grd(mons->pos());
+    int grid = grd(mons->pos());
     if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
         && !monster_habitable_grid(mons, grid))
     {
@@ -4252,9 +4254,12 @@ void mons_check_pool(monsters *mons, int killer)
                  ptr_monam(mons, DESC_CAP_THE),
                  (grid == DNGN_LAVA ? "lava" : "water"));
 
+        if (grid == DNGN_LAVA && mons_res_fire(mons) > 0)
+            grid = DNGN_DEEP_WATER;
+
         // Even fire resistant monsters perish in lava, but undead can survive
         // deep water.
-        if (grid == DNGN_LAVA || mons->holiness() != MH_UNDEAD)
+        if (grid == DNGN_LAVA || mons->can_drown())
         {
             if (message)
             {

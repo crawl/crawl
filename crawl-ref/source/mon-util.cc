@@ -2477,6 +2477,11 @@ bool monsters::floundering() const
             && !mons_flies(this));
 }
 
+bool monsters::can_drown() const
+{
+    return (!mons_res_asphyx(this));
+}
+
 size_type monsters::body_size(int /* psize */, bool /* base */) const
 {
     const monsterentry *e = seekmonster(type);
