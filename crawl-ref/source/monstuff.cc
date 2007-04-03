@@ -4297,7 +4297,15 @@ static void monster_move(struct monsters *monster)
     if (monster->confused())
     {
         if (mmov_x || mmov_y || one_chance_in(15))
-            do_move_monster(monster, mmov_x, mmov_y);
+        {
+            coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
+            if (in_bounds(newpos)
+                && (monster_habitat(monster->type) == DNGN_FLOOR
+                    || monster_habitable_grid(monster, grd(newpos))))
+            {
+                do_move_monster(monster, mmov_x, mmov_y);
+            }
+        }
         return;
     }
     
