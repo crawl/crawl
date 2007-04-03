@@ -468,6 +468,9 @@ void map_lines::apply_transforms()
 {
     for (int i = 0, size = transforms.size(); i < size; ++i)
         transforms[i]->apply_transform(*this);
+
+    // Release the transforms so we don't try them again.
+    release_transforms();
 }
 
 void map_lines::normalise(char fillch)
