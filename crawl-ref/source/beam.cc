@@ -1572,6 +1572,15 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         break;
 
+    case BEAM_ACID:
+        if (mons_res_acid(monster))
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " appears unharmed.");
+
+            hurted = 0;
+        }
+        break;
 
     case BEAM_POISON:
         if (mons_res_poison(monster) > 0)

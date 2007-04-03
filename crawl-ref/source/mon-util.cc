@@ -796,11 +796,17 @@ bool mons_res_asphyx( const monsters *mon )
                 || mons_resist(mon, MR_RES_ASPHYX));
 }
 
+int mons_res_acid( const monsters *mon )
+{
+    const unsigned long f = get_mons_resists(mon);
+    return ((f & MR_RES_ACID) != 0);
+}
+
 int mons_res_poison( const monsters *mon )
 {
     int mc = mon->type;
 
-    int u = 0, f = get_mons_resists(mon);
+    unsigned long u = 0, f = get_mons_resists(mon);
 
     if (f & MR_RES_POISON)
         u++;

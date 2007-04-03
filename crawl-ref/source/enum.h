@@ -1808,6 +1808,7 @@ enum mons_class_flags
     M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
 };
 
+// now saved in an unsigned long.
 enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,
@@ -1823,22 +1824,23 @@ enum mon_resist_flags
     MR_RES_HELLFIRE      = (1<< 3),
     MR_RES_COLD          = (1<< 4),
     MR_RES_ASPHYX        = (1<< 5),
+    MR_RES_ACID          = (1<< 6),
 
     // vulnerabilities
-    MR_VUL_ELEC          = (1<< 6),
-    MR_VUL_POISON        = (1<< 7),
-    MR_VUL_FIRE          = (1<< 8),
-    MR_VUL_COLD          = (1<< 9),
+    MR_VUL_ELEC          = (1<< 7),
+    MR_VUL_POISON        = (1<< 8),
+    MR_VUL_FIRE          = (1<< 9),
+    MR_VUL_COLD          = (1<<10),
 
     // melee armour resists/vulnerabilities 
     // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
-    MR_RES_PIERCE        = (1<<10),
-    MR_RES_SLICE         = (1<<11),
-    MR_RES_BLUDGEON      = (1<<12),
+    MR_RES_PIERCE        = (1<<11),
+    MR_RES_SLICE         = (1<<12),
+    MR_RES_BLUDGEON      = (1<<13),
 
-    MR_VUL_PIERCE        = (1<<13),
-    MR_VUL_SLICE         = (1<<14),
-    MR_VUL_BLUDGEON      = (1<<15)
+    MR_VUL_PIERCE        = (1<<14),
+    MR_VUL_SLICE         = (1<<15),
+    MR_VUL_BLUDGEON      = (1<<16)
 };
 
 enum targ_mode_type

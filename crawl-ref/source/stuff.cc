@@ -376,6 +376,14 @@ void end(int exit_code, bool print_error, const char *format, ...)
             error += "\n";
         fprintf(stderr, "%s", error.c_str());
     }
+
+#if defined(WIN32CONSOLE) || defined(DOS)
+    if (exit_code)
+    {
+        fprintf(stderr, "Hit Enter to continue...\n");
+        getchar();
+    }
+#endif
     
     exit(exit_code);
 }
