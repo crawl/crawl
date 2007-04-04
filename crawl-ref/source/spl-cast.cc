@@ -668,7 +668,7 @@ bool cast_a_spell(void)
         random_uselessness( 2 + random2(7), 0 );
     else
     {
-        const int cast_result = your_spells( spell );
+        const spret_type cast_result = your_spells( spell );
         if (cast_result == SPRET_ABORT)
             return (false);
 
@@ -852,7 +852,7 @@ static bool spell_is_uncastable(int spell)
 // returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
-int your_spells( int spc2, int powc, bool allow_fail )
+spret_type your_spells( int spc2, int powc, bool allow_fail )
 {
     int dem_hor = 0;
     int dem_hor2 = 0;
