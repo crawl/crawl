@@ -3744,6 +3744,43 @@ void handle_monsters(void)
     }
 }                               // end handle_monster()
 
+static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
+{
+    if (is_fixed_artefact( weap ))
+        return (false);
+
+    if (is_random_artefact( weap ))
+        return (false);
+
+    // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
+    // of course, this also block knives {dlb}:
+    if ((mons_species(monster->type) == MONS_KOBOLD
+         || mons_species(monster->type) == MONS_GOBLIN)
+        && property( weap, PWPN_HIT ) <= 0)
+    {
+        return (false);
+    }
+
+    // Nobody picks up giant clubs:
+    if (weap.sub_type == WPN_GIANT_CLUB
+        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
+    {
+        return (false);
+    }
+
+    const int brand = get_weapon_brand(weap);
+    const int holiness = monster->holiness();
+    if (brand == SPWPN_DISRUPTION && holiness == MH_UNDEAD)
+        return (false);
+
+    if (brand == SPWPN_HOLY_WRATH
+        && (holiness == MH_DEMONIC || holiness == MH_UNDEAD))
+    {
+        return (false);
+    }
+
+    return (true);
+}
 
 //---------------------------------------------------------------
 //
@@ -3866,27 +3903,8 @@ static bool handle_pickup(struct monsters *monster)
         if (monster->inv[MSLOT_WEAPON] != NON_ITEM)
             return (false);
 
-        if (is_fixed_artefact( mitm[item] ))
+        if (!monster_wants_weapon(monster, mitm[item]))
             return (false);
-
-        if (is_random_artefact( mitm[item] ))
-            return (false);
-
-        // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
-        // of course, this also block knives {dlb}:
-        if ((mons_species(monster->type) == MONS_KOBOLD
-                || mons_species(monster->type) == MONS_GOBLIN)
-            && property( mitm[item], PWPN_HIT ) <= 0)
-        {
-            return (false);
-        }
-
-        // Nobody picks up giant clubs:
-        if (mitm[item].sub_type == WPN_GIANT_CLUB
-            || mitm[item].sub_type == WPN_GIANT_SPIKED_CLUB)
-        {
-            return (false);
-        }
 
         monster->inv[MSLOT_WEAPON] = item;
 
