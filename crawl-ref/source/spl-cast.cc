@@ -1710,7 +1710,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SLEEP:
-        zapping(ZAP_SLEEP, powc, beam);
+        zapping(ZAP_SLEEP, powc * 83 / 100, beam);
         break;
 
     case SPELL_MASS_SLEEP:

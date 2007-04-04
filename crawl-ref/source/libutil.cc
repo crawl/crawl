@@ -58,7 +58,7 @@ static keycode_type numpad2vi(keycode_type key)
 }
 #endif
 
-int unmangle_direction_keys(int keyin, int km)
+int unmangle_direction_keys(int keyin, int km, bool fake_ctrl, bool fake_shift)
 {
     const KeymapContext keymap = static_cast<KeymapContext>(km);
 #ifdef UNIX
@@ -69,13 +69,13 @@ int unmangle_direction_keys(int keyin, int km)
     // will hopefully be easy.
 
     /* can we say yuck? -- haranp */
-    if (keyin == '*')
+    if (fake_ctrl && keyin == '*')
     {
         keyin = getchm(keymap);
         // return control-key
         keyin = CONTROL(toupper(numpad2vi(keyin)));
     }
-    else if (keyin == '/')
+    else if (fake_shift && keyin == '/')
     {
         keyin = getchm(keymap);
         // return shift-key

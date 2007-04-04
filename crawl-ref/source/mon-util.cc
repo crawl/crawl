@@ -700,7 +700,7 @@ int mons_resist_magic( const monsters *mon )
 
     // negative values get multiplied with mhd
     if (u < 0)
-        u = mon->hit_dice * -u;
+        u = mon->hit_dice * -u * 4 / 3;
 
     u += scan_mon_inv_randarts( mon, RAP_MAGIC );
 
@@ -2421,7 +2421,8 @@ monsters::monsters(const monsters &mon)
 
 monsters &monsters::operator = (const monsters &mon)
 {
-    init_with(mon);
+    if (this != &mon)
+        init_with(mon);
     return (*this);
 }
 
