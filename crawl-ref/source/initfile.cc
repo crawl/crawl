@@ -1296,7 +1296,7 @@ void game_options::add_message_colour_mapping(const std::string &field)
     if (cmap.size() != 2)
         return;
 
-    const int col = str_to_colour( cmap[0] );
+    const int col = (cmap[0]=="mute") ? MSGCOL_MUTED : str_to_colour(cmap[0]);
     if (col == -1)
         return;
 

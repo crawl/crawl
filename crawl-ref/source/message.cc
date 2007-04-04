@@ -310,7 +310,8 @@ void mpr(const char *inf, int channel, int param)
 
 // checks whether a given message contains patterns relevant for
 // notes, stop_running or sounds and handles these cases
-static void mpr_check_patterns(std::string message, int channel, int param)
+static void mpr_check_patterns(const std::string& message, int channel,
+                               int param)
 {
     for (unsigned i = 0; i < Options.note_messages.size(); ++i)
     {
@@ -354,7 +355,8 @@ static void mpr_check_patterns(std::string message, int channel, int param)
 }
 
 // adds a given message to the message history
-static void mpr_store_messages(std::string message, int channel, int param)
+static void mpr_store_messages(const std::string& message,
+                               int channel, int param)
 {
     const int num_lines = get_message_window_height();
 
@@ -374,7 +376,7 @@ static void mpr_store_messages(std::string message, int channel, int param)
     if (channel != MSGCH_EQUIPMENT)
     {
         // Put the message into Store_Message, and move the '---' line forward
-        Store_Message[ Next_Message ].text = message.c_str();
+        Store_Message[ Next_Message ].text = message;
         Store_Message[ Next_Message ].channel = channel;
         Store_Message[ Next_Message ].param = param;
         Next_Message++;
@@ -385,42 +387,50 @@ static void mpr_store_messages(std::string message, int channel, int param)
 }
 
 static bool need_prefix = false;
-static void base_mpr(const char *inf, int channel, int param)
+
+// Does the work common to base_mpr and formatted_mpr.
+// Returns the default colour of the message, or MSGCOL_MUTED if
+// the message should be suppressed.
+static int prepare_message(const std::string& imsg, int channel, int param)
 {
     if (suppress_messages)
-        return;
+        return MSGCOL_MUTED;    
 
     int colour = channel_to_colour( channel, param );
-    if (colour == MSGCOL_MUTED)
-        return;
 
-    std::string imsg = inf;
-    
-    mpr_check_patterns(imsg, channel, param);
-    
-    if (!Options.message_colour_mappings.empty())
+    const std::vector<message_colour_mapping>& mcm =
+        Options.message_colour_mappings;
+    typedef std::vector<message_colour_mapping>::const_iterator mcmci;
+
+    for ( mcmci ci = mcm.begin(); ci != mcm.end(); ++ci )
     {
-        std::string message = inf;
-        for (int i = 0, size = Options.message_colour_mappings.size();
-             i < size; ++i)
+        if (ci->message.is_filtered(channel, imsg))
         {
-            const message_colour_mapping &m =
-                Options.message_colour_mappings[i];
-            if (m.message.is_filtered(channel, message))
-            {
-                colour = m.colour;
-                break;
-            }
+            colour = ci->colour;
+            break;
         }
     }
 
-    flush_input_buffer( FLUSH_ON_MESSAGE );
+    if ( colour != MSGCOL_MUTED )
+    {
+        mpr_check_patterns(imsg, channel, param);
+        flush_input_buffer( FLUSH_ON_MESSAGE );
+        const int num_lines = get_message_window_height();
+    
+        if (New_Message_Count == num_lines - 1)
+            more();
+    }
+    return colour;
+}
 
-    const int num_lines = get_message_window_height();
+static void base_mpr(const char *inf, int channel, int param)
+{
+    const std::string imsg = inf;
+    const int colour = prepare_message( imsg, channel, param );
     
-    if (New_Message_Count == num_lines - 1)
-        more();
-    
+    if ( colour == MSGCOL_MUTED )
+        return;
+   
     if (need_prefix)
     {
         message_out( Message_Line, colour, "-", 1, false );
@@ -472,26 +482,12 @@ static void mpr_formatted_output(formatted_string fs, int colour)
 // way to do this.
 void formatted_mpr(const formatted_string& fs, int channel, int param)
 {
-    if (suppress_messages)
-        return;
-
-    int colour = channel_to_colour( channel, param );
+    const std::string imsg = fs.tostring();
+    const int colour = prepare_message(imsg, channel, param);
     if (colour == MSGCOL_MUTED)
         return;
 
-    const std::string imsg = fs.tostring();
-    
-    mpr_check_patterns(imsg, channel, param);
-
-    flush_input_buffer( FLUSH_ON_MESSAGE );
-
-    const int num_lines = get_message_window_height();
-    
-    if (New_Message_Count == num_lines - 1)
-        more();
-    
     mpr_formatted_output(fs, colour);
-
     mpr_store_messages(imsg, channel, param);
 }
 
