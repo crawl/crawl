@@ -724,6 +724,8 @@ message_colour = <colour>:[<channel>:]<regex>
           message_colour = yellow:LOW HITPOINT WARNING
         You can also narrow the message match to a specific channel:
           message_colour = lightred:god:xom
+        If you don't want to see a message at all, you can mute it:
+          message_colour = mute:You start resting
 
 increasing_skill_progress = true
         This affects the appearance of the skills screen ('m'). With the 
