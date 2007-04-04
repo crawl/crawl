@@ -1853,7 +1853,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
 
     spellcasting_side_effects(spc2);
 
-    return (true);
+    return (SPRET_SUCCESS);
 }                               // end you_spells()
 
 void exercise_spell( int spell, bool spc, bool success )
