@@ -3287,8 +3287,14 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     // ok, we'll try it.
     setup_generic_throw( monster, beem );
 
+    // set fake damage for the tracer.
+    beem.damage = dice_def(10, 10);
+    
     // fire tracer
     fire_tracer( monster, beem );
+
+    // clear fake damage (will be set correctly in mons_throw).
+    beem.damage = 0;
 
     // good idea?
     if (mons_should_fire( beem ))
