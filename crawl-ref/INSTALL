@@ -4,62 +4,70 @@ Install instructions for Dungeon Crawl Stone Soup (DCSS)
 
 Building Dungeon Crawl Stone Soup
 ---------------------------------
-Crawl Stone Soup is known to compile successfully on the following platforms as
-of version 0.2:
 
-- Any Unix with a recent gcc (and g++), GNU make and libncurses, including
-  Linux and Mac OS X.
-- Microsoft Windows NT/2000/XP. The game will also run on Windows 9X and ME.
-  DOS binaries can also be compiled on Windows NT+.
+Crawl Stone Soup is known to compile successfully on the following
+platforms as of version 0.2:
 
-The only supported compiler is gcc (available on almost all Unixes, and as djgpp
-for DOS, and MinGW for Windows).
+- Any Unix with a recent gcc (and g++), GNU make and libncurses,
+  including Linux and Mac OS X. "Recent" is defined as gcc 3.3 or
+  newer.
+- Microsoft Windows NT/2000/XP. The game will also run on Windows 9X
+  and ME. DOS binaries can also be compiled on Windows NT+.
 
-Other platforms are unsupported, but you should be able to build Crawl on
-pretty much any operating system with a modern C++ compiler (full support for
-the standard C++ library, in particular <string>, the collection classes and
-<algorithm> is necessary) and the curses library.
+The only supported compiler is gcc (available on almost all Unixes,
+and as djgpp for DOS, and MinGW for Windows).
+
+Other platforms are unsupported, but you should be able to build Crawl
+on pretty much any operating system with a modern C++ compiler (full
+support for the standard C++ library, in particular <string>, the
+collection classes and <algorithm> is necessary) and the curses
+library.
 
 
 Optional libraries
 ------------------
+
 Crawl can be built with some optional features:
+
 * Sounds
 * Regular expressions
 * Lua support
 
 Crawl Stone Soup also uses a level compiler to compile special level
-definitions; to make changes to the level compiler, you'll need the flex and
-bison/byacc tools (Other lex/yaccs may also work). More details are available
-below.
+definitions; to make changes to the level compiler, you'll need the
+flex and bison/byacc tools (Other lex/yaccs may also work). More
+details are available below.
 
-Sounds must be enabled by editing AppHdr.h (uncomment SOUND_PLAY_COMMAND on
-Unixes or WINMM_PLAY_SOUNDS on Windows).
+Sounds must be enabled by editing AppHdr.h (uncomment
+SOUND_PLAY_COMMAND on Unixes or WINMM_PLAY_SOUNDS on Windows).
 
-Regular expressions require libpcre on non-Unix operating systems. On Unixes,
-the standard POSIX regular expression support is adequate for Crawl's needs.
+Regular expressions require libpcre on non-Unix operating systems. On
+Unixes, the standard POSIX regular expression support is adequate for
+Crawl's needs.
 
-Lua support requires liblua, which you can build by downloading the sources from
-www.lua.org. On most Unixes, you can also use the native package management
-system to easily install lua.
+Lua support requires liblua, which you can build by downloading the
+sources from www.lua.org. On most Unixes, you can also use the native
+package management system to easily install lua.
 
 
 Makefile system
 ---------------
-Crawl uses a selector makefile (under source/makefile) to control what platform
-it's building for. Your first step in building Crawl should be to edit
-source/makefile and point it at the correct platform makefile. For instance, if
-you're building for Windows, you'd use MAKEFILE=makefile.mgw to build with MinGW
-for Windows (# is used for comments in makefiles).
 
-Consult the operating-system specific sections for detailed information on
-building Crawl.
+Crawl uses a selector makefile (under source/makefile) to control what
+platform it's building for. Your first step in building Crawl should
+be to edit source/makefile and point it at the correct platform
+makefile. For instance, if you're building for Windows, you'd use
+MAKEFILE=makefile.mgw to build with MinGW for Windows (# is used for
+comments in makefiles).
+
+Consult the operating-system specific sections for detailed
+information on building Crawl.
 
 
 Building on Unix (Linux, *BSD, Solaris, etc.)
 ---------------------------------------------
 
-* Prerequisites:
+Prerequisites:
 
 GNU gcc and g++, GNU make, libncurses or libcurses. You need the
 development headers for ncurses - they may not be installed by default
@@ -68,27 +76,39 @@ on some Unixes.
 flex and bison are optional but highly recommended. Recent versions of
 byacc are also fine (edit your makefile appropriately).
 
-* Building:
+Building:
 
 * cd to the source directory (you can safely ignore the dolinks.sh and
   domake.sh scripts).
 
-* Edit makefile and make sure that MAKEFILE=makefile.unix is uncommented and
-  all other MAKEFILE= lines are commented out.
+* Edit makefile and make sure that MAKEFILE=makefile.unix is
+  uncommented and all other MAKEFILE= lines are commented out.
 
-* Edit AppHdr.h and check that SAVE_DIR_PATH, SAVE_PACKAGE_CMD and
-  LOAD_UNPACKAGE_CMD are set correctly for your system. If you do not want your
-  saves packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD and
-  LOAD_UNPACKAGE_CMD.
+* If you want to install Crawl for multiple users, edit makefile.unix
+  and set SAVEDIR and DATADIR to appropriate directories. This is not
+  necessary if only one user is going to play Crawl. Also check
+  INSTALLDIR and change it if necessary.
+  
+* Edit AppHdr.h and check that SAVE_PACKAGE_CMD and LOAD_UNPACKAGE_CMD
+  are set correctly for your system. If you do not want your saves
+  packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD
+  and LOAD_UNPACKAGE_CMD.
 
-* If you don't have flex or bison, edit makefile.unix and set DOYACC := n. If
-  you want to use byacc instead of bison, edit makefile.unix and set YACC :=
-  byacc. On some Linuxes you may not have lex symlinked to flex, in which case
-  you'll have to set LEX := flex in makefile.unix.
+* If you don't have flex or bison, edit makefile.unix and set DOYACC
+  := n. If you want to use byacc instead of bison, edit makefile.unix
+  and set YACC := byacc. On some Linuxes you may not have lex
+  symlinked to flex, in which case you'll have to set LEX := flex in
+  makefile.unix.
 
-* Run make to build the normal (non-wizard) Crawl. On systems such as Solaris,
-  you may have to use gmake for GNU make. Make sure your make identifies itself
-  as GNU make when you do make --version.
+* Run make to build the normal (non-wizard) Crawl. On systems such as
+  Solaris, you may have to use gmake for GNU make. Make sure your make
+  identifies itself as GNU make when you do make --version.
+
+* If you're installing Crawl for multiple users, run make install.
+  Crawl will be copied into the directory specified by INSTALLDIR. The
+  save and data directories will be created if necessary, and the
+  level layout (.des) and help files will be copied to the data
+  directory.
 
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
@@ -98,46 +118,58 @@ byacc are also fine (edit your makefile appropriately).
 
 Building on Mac OS X
 --------------------
-You can follow the Linux instructions to build Crawl (but note you still need to
-install Xcode to get gcc and make), or alternatively you can use Xcode.
 
-* Crawl has been tested with Xcode 2.4 under OS X 10.4.7 on both PPC and Intel
-  machines, but is likely to be buildable with earlier versions.
+You can follow the Unix instructions to build Crawl (but note you
+still need to install Xcode to get gcc and make), or alternatively you
+can use Xcode.
 
-* Make sure Xcode is installed. Xcode should be available on the OS X install
-  DVD if you haven't already installed it.
+Note that the Unix instructions will build Crawl assuming that your
+terminal can display 16 colours. If you're planning to use
+Terminal.app (which supports only 8 colours), you should follow the
+Mac build instructions below.
 
-* Open the Xcode project (Crawl.xcodeproj) under the "source" directory.
+* Crawl has been tested with Xcode 2.4 under OS X 10.4.7 on both PPC
+  and Intel machines, but is likely to be buildable with earlier
+  versions.
+
+* Make sure Xcode is installed. Xcode should be available on the OS X
+  install DVD if you haven't already installed it.
+
+* Open the Xcode project (Crawl.xcodeproj) under the "source"
+  directory.
 
 * Hit Build in Xcode.
 
-* The default build configuration, Release, will build a ppc/i386 Universal
-  binary suitable for play on all OS X 10.3.9 or newer systems. The other build
-  configurations are intended for development and may not result in a binary
-  that can be distributed to others.
+* The default build configuration, Release, will build a ppc/i386
+  Universal binary suitable for play on all OS X 10.3.9 or newer
+  systems. The other build configurations are intended for development
+  and may not result in a binary that can be distributed to others.
 
 * You can also use makefile.osx, which will run xcodebuild from the
   command line.
 
-* If you have Lua installed, you can add your lua headers and liblua library to
-  the 'Crawl' target in the Xcode project, uncomment the '#define CLUA_BINDINGS'
-  line in AppHdr.h, and rebuild to compile with Lua support.
+* If you have Lua installed, you can add your lua headers and liblua
+  library to the 'Crawl' target in the Xcode project, uncomment the
+  '#define CLUA_BINDINGS' line in AppHdr.h, and rebuild to compile
+  with Lua support.
 
 
 Building on Windows
 -------------------
 
-NOTE: Building for Windows+MinGW on Windows 9x/ME may work, but we've not tested
-it. You may be better off using the DOS build instructions if you're on 9x/ME.
+NOTE: Building for Windows+MinGW on Windows 9x/ME may work, but we've
+not tested it. You may be better off using the DOS build instructions
+if you're on 9x/ME.
 
-We've also not tested or updated the makefile for Borland C++. We strongly
-recommend using MinGW if possible.
+We've also not tested or updated the makefile for Borland C++. We
+strongly recommend using MinGW if possible.
 
-* Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer is best so
-  you don't have to fiddle with individual packages (you can mess with the
-  individual packages if you like to, of course). If you want to edit the level
-  compiler, also get the flex and bison packages (available from the GnuWin32
-  project on Sourceforge: http://gnuwin32.sourceforge.net/).
+* Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer
+  is best so you don't have to fiddle with individual packages (you
+  can mess with the individual packages if you like to, of course). If
+  you want to edit the level compiler, also get the flex and bison
+  packages (available from the GnuWin32 project on Sourceforge:
+  http://gnuwin32.sourceforge.net/).
 
 * Make sure you have g++ and mingw32-make in your path.
 
@@ -151,8 +183,8 @@ recommend using MinGW if possible.
         // #define CLUA_BINDINGS
   and
         // #define REGEX_PCRE
-  Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h - find
-  the one in the Windows-specific section.
+  Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h
+  - find the one in the Windows-specific section.
 
 * If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
@@ -160,22 +192,23 @@ recommend using MinGW if possible.
         LIB = -lwinmm -static -llua -lpcre
   and build Crawl to include Lua and regex support.
 
-* When you're done, you should have crawl.exe under a "rel" subdirectory.
+* When you're done, you should have crawl.exe under a "rel"
+  subdirectory.
 
 
 Building on DOS
 ---------------
 
-* Install djgpp from http://www.delorie.com/djgpp/. Don't forget to include C++
-  support when the Zip picker asks for what you want. You may also have to
-  download GNU make as a separate package. It's important to follow the install
-  instructions carefully, because bad installs can produce rather confusing
-  error messages.
+* Install djgpp from http://www.delorie.com/djgpp/. Don't forget to
+  include C++ support when the Zip picker asks for what you want. You
+  may also have to download GNU make as a separate package. It's
+  important to follow the install instructions carefully, because bad
+  installs can produce rather confusing error messages.
 
 * Make sure gxx and make are in your PATH.
 
-* If you want to modify the level compiler, install the djgpp flex, bison and m4
-  packages and set DOYACC := y in makefile.dos.
+* If you want to modify the level compiler, install the djgpp flex,
+  bison and m4 packages and set DOYACC := y in makefile.dos.
 
 * cd to the Crawl source directory.
 
@@ -203,8 +236,9 @@ the source/dat directory.
 If you're using one of the standard makefiles, the steps described in
 this section are performed automatically:
 
-The level compiler source is in the source/util directory (levcomp.lpp and
-levcomp.ypp). The steps involved in building the level compiler are:
+The level compiler source is in the source/util directory (levcomp.lpp
+and levcomp.ypp). The steps involved in building the level compiler
+are:
 
 * Run flex on levcomp.lpp to produce the levcomp.lex.cc lexer.
 * Run bison on levcomp.ypp to produce the levcomp.tab.cc parser and
@@ -218,17 +252,19 @@ provided with the Crawl source distribution will use these
 pre-generated files automatically if flex/bison is not available.
 
 *****************************************************************************
-Optional Libraries
-------------------
+Optional Libraries (Lua and PCRE)
+---------------------------------
 
 Lua
 ---
-NOTE: When linking in Lua, the makefile LIB line usually looks like this:
+
+NOTE: When linking in Lua, the makefile LIB line usually looks like
+this:
 
 LIB = -llua
 
-If you're using Lua older than 5.1, though, the Lua library comprises of *two*
-libraries: liblua and liblualib (yes, confusing), so you need
+If you're using Lua older than 5.1, though, the Lua library comprises
+of *two* libraries: liblua and liblualib (yes, confusing), so you need
 
 LIB = -llua -llualib
 
@@ -245,26 +281,31 @@ LIB = -llua50
 
 Getting Lua:
 
-On Unixes your package management system is the best way to get Lua. Make
-sure to install the development headers and not just the naked library.
+On Unixes your package management system is the best way to get Lua.
+Make sure to install the development headers and not just the naked
+library.
 
-On Windows, Lua binaries are available on luaforge.net. You should find links to
-get binaries from www.lua.org.
+On Windows, Lua binaries are available on luaforge.net. You should
+find links to get binaries from www.lua.org.
 
-On DOS, you get the joy of compiling Lua yourself. It's not hard, and you can
-use the existing Windows support in the Lua makefiles with some minor
-modifications, but you may be better served using the official Crawl Stone Soup
-binaries if you want Lua with your Crawl and don't want to compile Lua.
+On DOS, you get the joy of compiling Lua yourself. It's not hard, and
+you can use the existing Windows support in the Lua makefiles with
+some minor modifications, but you may be better served using the
+official Crawl Stone Soup binaries if you want Lua with your Crawl and
+don't want to compile Lua.
 
 
 PCRE
 ----
-On Unixes, you're better served by the existing POSIX regular expression
-support. If you want PCRE, your package management system is again your best
-bet. Remember to install development headers, not just the plain library.
+
+On Unixes, you're better served by the existing POSIX regular
+expression support. If you want PCRE, your package management system
+is again your best bet. Remember to install development headers, not
+just the plain library.
 
 On Windows, PCRE binaries are available from 
 http://gnuwin32.sourceforge.net/packages/pcre.htm
 
-On DOS you get the joy of building PCRE yourself. It's a little more annoying
-than building Lua (you have to roll your own makefile), but not by much.
+On DOS you get the joy of building PCRE yourself. It's a little more
+annoying than building Lua (you have to roll your own makefile), but
+not by much.
