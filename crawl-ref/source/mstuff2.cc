@@ -851,8 +851,6 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
                             ? draco_subspecies( monster ) : monster->type;
     int scaling = 100;
 
-    pbolt.name = ptr_monam( monster, DESC_PLAIN );
-
     switch (type)
     {
     case MONS_FIREDRAKE:
@@ -860,21 +858,21 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     case MONS_DRAGON:
     case MONS_LINDWURM:
     case MONS_XTAHUA:
-        pbolt.name += "'s blast of flame";
+        pbolt.name += "blast of flame";
         pbolt.flavour = BEAM_FIRE;
         pbolt.colour = RED;
         pbolt.aux_source = "blast of fiery breath";
         break;
 
     case MONS_ICE_DRAGON:
-        pbolt.name += "'s blast of cold";
+        pbolt.name += "blast of cold";
         pbolt.flavour = BEAM_COLD;
         pbolt.colour = WHITE;
         pbolt.aux_source = "blast of icy breath";
         break;
 
     case MONS_RED_DRACONIAN:
-        pbolt.name += "'s searing breath";
+        pbolt.name += "searing breath";
 #ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
 #endif
@@ -885,7 +883,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         break;
 
     case MONS_WHITE_DRACONIAN:
-        pbolt.name += "'s chilling breath";
+        pbolt.name += "chilling breath";
 #ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
 #endif
