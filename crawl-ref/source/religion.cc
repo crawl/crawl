@@ -603,7 +603,26 @@ static void do_god_gift()
     }                           // end of gift giving
 }
 
-void pray(void)
+std::string god_prayer_reaction()
+{
+    std::string result;
+    result += god_name(you.religion);
+    result += " is ";
+
+    result +=
+        (you.piety > 130) ? "exalted by your worship" :
+        (you.piety > 100) ? "extremely pleased with you" :
+        (you.piety >  70) ? "greatly pleased with you" :
+        (you.piety >  40) ? "most pleased with you" :
+        (you.piety >  20) ? "pleased with you" :
+        (you.piety >   5) ? "noncommittal"
+        : "displeased";
+
+    result += ".";
+    return result;
+}
+
+void pray()
 {
     const bool was_praying = (you.duration[DUR_PRAYER] != 0);
 
@@ -677,19 +696,7 @@ void pray(void)
         simple_god_message(" demands penance!");
     else
     {
-        strcpy(info, god_name(you.religion));
-        strcat(info, " is ");
-
-        strcat(info, (you.piety > 130) ? "exalted by your worship" :
-                     (you.piety > 100) ? "extremely pleased with you" :
-                     (you.piety >  70) ? "greatly pleased with you" :
-                     (you.piety >  40) ? "most pleased with you" :
-                     (you.piety >  20) ? "pleased with you" :
-                     (you.piety >   5) ? "noncommittal"
-                                       : "displeased");
-
-        strcat(info, ".");
-        mpr( info, MSGCH_PRAY, you.religion );
+        mpr( god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion );
 
         if (you.piety > 130)
             you.duration[DUR_PRAYER] *= 3;

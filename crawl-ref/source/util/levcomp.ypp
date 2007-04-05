@@ -31,7 +31,7 @@ void yyerror(const char *e)
 {
     fprintf(stderr, "%s:%d: %s\n", lc_desfile.c_str(), yylineno, e);
     // Bail bail bail.
-    exit(1);
+    end(1);
 }
 
 %}

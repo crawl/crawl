@@ -190,17 +190,17 @@ NAME: lemuel_trickyentry_002_batcave
 TAGS: entry
 ORIENT: float
 SHUFFLE: {[(
-MONS: giant bat
+MONS: giant bat / nothing
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x{x[x(xxxxxxxxxxx.........%xxxx
 x.x.x.xxxxxxxx...............xx
-x.x.x.xxxxxx..................x
-x.x.x.xxxx....1.1.1.1.1......%x
+x.x.x.xxxxxx...1.1.1..........x
+x.x.x.xxxx....1.1.1.1.1.1....%x
 x.x.x.xx.......1.1.1.1.1....%xx
-x.....+.......1.1.1.1.1.....%xx
+x.....+.......1.1.1.1.1.1...%xx
 xxx.xxx........1.1.1.1.1....xxx
-xxx.xxxx.................xxxxxx
+xxx.xxxx..........1.1.1..xxxxxx
 xxx.xxxxx.............xxxxxxxxx
 @...xxxxxxx.......xxxxxxxxxxxxx
 xxx.xxxxxxxxx...xxxxxxxxxxxxxxx
@@ -215,11 +215,8 @@ ENDMAP
 NAME: lemuel_trickyentry_river
 TAGS: entry no_monster_gen
 ORIENT: float
-SHUFFLE: {[(
-SHUFFLE: ABC
-SUBST: A = =
-SUBST: B = x
-SUBST: C = x
+SHUFFLE: {[(, ABC
+SUBST: A:=, B:x, C:x
 CHANCE: 1
 MAP  
 xxxxxxxxxxxxxxxxxxx  
@@ -277,8 +274,7 @@ NAME: david_trickyentry_002_a
 TAGS: entry no_monster_gen no_pool_fixup
 ORIENT: float
 CHANCE: 2
-SHUFFLE: {[(
-SHUFFLE: wWl
+SHUFFLE: {[(, wWl
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -301,8 +297,7 @@ NAME: david_trickyentry_002_b
 TAGS: entry no_monster_gen no_pool_fixup
 ORIENT: float
 CHANCE: 2
-SHUFFLE: {[(
-SHUFFLE: wWl
+SHUFFLE: {[(, wWl
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -325,8 +320,7 @@ NAME: david_trickyentry_002_c
 TAGS: entry no_monster_gen no_pool_fixup
 ORIENT: float
 CHANCE: 2
-SHUFFLE: {[(
-SHUFFLE: wWl
+SHUFFLE: {[(, wWl
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
@@ -349,8 +343,7 @@ NAME: david_trickyentry_002_d
 TAGS: entry no_monster_gen no_pool_fixup
 ORIENT: float
 CHANCE: 2
-SHUFFLE: {[(
-SHUFFLE: wWl
+SHUFFLE: {[(, wWl
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx=.....=xxxx
@@ -373,8 +366,7 @@ NAME: david_trickyentry_002_e
 TAGS: entry no_monster_gen no_pool_fixup
 ORIENT: float
 CHANCE: 2
-SHUFFLE: {[(
-SHUFFLE: wWl
+SHUFFLE: {[(, wWl
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -424,40 +416,22 @@ ENDMAP
 ##############################################################################
 # Evil foreboding
 
-NAME: david_trickyentry_004_a
+NAME: david_trickyentry_004
 TAGS: entry no_monster_gen
-MONS: troll
+MONS: troll / w:40 giant bat
 ORIENT: float
-CHANCE: 2
 SHUFFLE: {[(<
+SUBST: ?:?.l, ?=l.
 MAP
 {...............[
-......lll........
-...lll.lll.......
-..l.llll.llll..l.
-...lll]..1lllll..
-..ll.ll...ll.....
-.....lll.ll......
-....ll.lll.......
+....?.lll?.......
+...lll?lll??.....
+..l.llll.llll?.l.
+..?lll]..1lllll?.
+.?ll?ll...ll.??..
+...?.lll.ll??....
+....ll.lll?......
 <...............(
-ENDMAP
-
-NAME: david_trickyentry_004_b
-TAGS: entry no_monster_gen
-MONS: giant bat
-ORIENT: float
-CHANCE: 8
-SHUFFLE: {[(<
-MAP
-{...............<
-......lll........
-...lll.lll.......
-..l.l.lllllll..l.
-...lll].11lllll..
-..ll.ll.11ll.....
-.....lll.ll......
-....ll.lll.......
-[...............(
 ENDMAP
 
 ##############################################################################
@@ -540,19 +514,18 @@ ENDMAP
 
 NAME: david_trickyentry_006
 TAGS: entry
-MONS: weight:30 nothing / worm 
-MONS: weight:30 nothing / ooze / weight:2 jelly
-MONS: weight:30 nothing / jackal / rat
+MONS: w:30 nothing / worm 
+MONS: w:30 nothing / ooze / weight:2 jelly
+MONS: w:30 nothing / jackal / rat
 FLAGS: no_rotate
 ORIENT: float
 SUBST: ?=Gx
-SHUFFLE: xc
-SHUFFLE: 123
+SHUFFLE: xc, 123
 MAP
 .................
 .xxxxxxxxxxxxxxx.
-.x123132>332213x.
-.x2312132211321x.
+.x1231321332212x.
+.x2312132211323x.
 .x3123213123132x.
 .x?????G+G?????x.
 .x.............x.
@@ -604,8 +577,7 @@ NAME: david_trickyentry_008
 TAGS: entry 
 ITEM: nothing
 ORIENT: float
-SHUFFLE: [{(
-SHUFFLE: GIcbv=
+SHUFFLE: [{(, GIcbv=, Iw, Gl
 MAP
 xxxxxxxxxxxxx
 x[....{....(x
@@ -631,7 +603,7 @@ TAGS: entry no_monster_gen no_pool_fixup
 FLAGS: no_rotate
 CHANCE: 1
 MONS: plant, plant / nothing
-ITEM: bread ration / weight:20 meat ration, weight:20 any food / nothing
+ITEM: bread ration / w:20 meat ration, w:20 any food / nothing
 ORIENT: float
 SHUFFLE: {[(
 SHUFFLE: lw
@@ -666,14 +638,15 @@ ENDMAP
 NAME: david_trickyentry_010
 TAGS: entry no_monster_gen no_pool_fixup
 MONS: nothing / hobgoblin / warg / war dog / hog / hound / wolf
-MONS: nothing / giant gecko / giant iguana / giant lizard / giant newt
-MONS: nothing / orc / generate_awake orc priest / generate_awake orc warrior / generate_awake orc wizard
-MONS: nothing / generate_awake brain worm / generate_awake lava worm / generate_awake swamp worm / worm
+MONS: giant gecko / giant iguana / giant lizard / giant newt
+MONS: orc / generate_awake orc priest / generate_awake orc warrior / generate_awake orc wizard
+MONS: generate_awake brain worm / generate_awake lava worm / generate_awake swamp worm / worm
 ITEM: any food
 ORIENT: float
-SHUFFLE: {[(
-SHUFFLE: lw
-SHUFFLE: 1234d
+SUBST: 2 = 2:40 .
+SUBST: 3 = 3:40 .
+SUBST: 4 = 4:40 .
+SHUFFLE: {[(, lw, 1234d
 MAP
 xxxxxx@xxxxxx
 x...........x
@@ -786,12 +759,14 @@ ENDMAP
 
 ##############################################################################
 # Being Mean Is Cool
- 
+# (Has anyone a good guess on proper CHANCEs?)
+
 NAME: erik_trickyentry_004_a
 TAGS: entry
 ORIENT: float
-CHANCE: 5
-ITEM: scroll of curse armour, scroll of teleportation
+CHANCE: 10
+ITEM: scroll of curse armour
+ITEM: scroll of teleportation
 MAP
 xxxxx
 xxexx
@@ -803,15 +778,35 @@ ENDMAP
 NAME: erik_trickyentry_004_b
 TAGS: entry
 ORIENT: float
-CHANCE: 5
-ITEM: scroll of curse armour / scroll of random uselessness / scroll of identify
-ITEM: scroll of curse armour / scroll of fear / scroll of teleportation
+CHANCE: 10
+ITEM: scroll of curse armour, scroll of random uselessness, scroll of identify
+ITEM: scroll of curse armour, scroll of fear, scroll of teleportation
+SHUFFLE: def, ghi
 MAP
 @.....@
 .xx=xx.
-.xxexx.
-.=d{e=.
+.xxgxx.
+.=d{g=.
 .xxdxx.
 .xx=xx.
 @.....@
+ENDMAP
+
+NAME: erik_trickyentry_004_c
+TAGS: entry
+ORIENT: float
+CHANCE: 10
+SHUFFLE: uU / vV / wW / zZ
+SUBST: u==, v==, V=~, w=x, W=x, z==, Z=~.
+ITEM: scroll of curse armour, scroll of random uselessness, scroll of identify
+ITEM: scroll of curse armour, scroll of fear, scroll of teleportation
+KFEAT: U = teleport trap
+MAP
+xxxxxxx
+xZxxxWx
+xxzgwxx
+xxd{gxx
+xxudvxx
+xUxxxVx
+xxxxxxx
 ENDMAP

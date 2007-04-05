@@ -97,8 +97,8 @@ static std::string split_key_item(const std::string &s,
                                   std::string *arg)
 {
     std::string::size_type
-        norm = s.find("="),
-        fixe = s.find(":");
+        norm = s.find("=", 1),
+        fixe = s.find(":", 1);
 
     const std::string::size_type sep = norm < fixe? norm : fixe;
     if (sep == std::string::npos)
@@ -468,6 +468,9 @@ void map_lines::apply_transforms()
 {
     for (int i = 0, size = transforms.size(); i < size; ++i)
         transforms[i]->apply_transform(*this);
+
+    // Release the transforms so we don't try them again.
+    release_transforms();
 }
 
 void map_lines::normalise(char fillch)

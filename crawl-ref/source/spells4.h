@@ -39,7 +39,7 @@ void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);
 void cast_passwall(int pow);
 void cast_rotting(int pow);
-void cast_sandblast(int powc);
+void cast_sandblast(int powc, bolt &beam);
 void cast_see_invisible(int pow);
 
 void cast_shatter(int pow);

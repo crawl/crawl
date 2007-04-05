@@ -540,7 +540,7 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
         pbolt.colour = LIGHTMAGENTA;
         pbolt.range = random2(5) + 8;
         pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
-        pbolt.hit = 1500;                               // hits always
+        pbolt.hit = AUTOMATIC_HIT;                      // hits always
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;
@@ -1292,8 +1292,11 @@ void fire_beam( struct bolt &pbolt, item_def *item )
     if ( pbolt.chose_ray )
         ray = pbolt.ray;
     else
+    {
+        ray.fullray_idx = -1;   // to quiet valgrind
         find_ray( pbolt.source_x, pbolt.source_y,
                   pbolt.target_x, pbolt.target_y, true, ray);
+    }
 
     if ( !pbolt.aimed_at_feet )
         ray.advance();
@@ -1572,6 +1575,15 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         break;
 
+    case BEAM_ACID:
+        if (mons_res_acid(monster))
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " appears unharmed.");
+
+            hurted = 0;
+        }
+        break;
 
     case BEAM_POISON:
         if (mons_res_poison(monster) > 0)
@@ -3800,10 +3812,16 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (mons_holiness(mon) != MH_NATURAL) // no unnatural 
             return (MON_UNAFFECTED);
 
+        // Cold res monsters resist hibernation (for consistency
+        // with mass sleep).
+        if (mons_res_cold(mon) > 0)
+            return (MON_UNAFFECTED);
+
         if (simple_monster_message(mon, " looks drowsy..."))
             beam.obvious_effect = true;
 
         mon->behaviour = BEH_SLEEP;
+        mon->add_ench(ENCH_SLEEPY);
         mon->add_ench(ENCH_SLEEP_WARY);
 
         return (MON_AFFECTED);

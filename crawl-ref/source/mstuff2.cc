@@ -595,6 +595,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         break;
 
     case MS_CANTRIP:
+    {
+        const bool friendly = mons_friendly(monster);
+        bool need_friendly_stub = false;
         // Monster spell of uselessness, just prints a message. 
         // This spell exists so that some monsters with really strong
         // spells (ie orc priest) can be toned down a bit. -- bwr
@@ -607,10 +610,16 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
                                     MSGCH_MONSTER_ENCHANT );
             break;
         case 1:
-            mpr( "You feel troubled." );
+            if (friendly)
+                need_friendly_stub = true;
+            else
+                mpr( "You feel troubled." );
             break;
         case 2:
-            mpr( "You feel a wave of unholy energy pass over you." );
+            if (friendly)
+                need_friendly_stub = true;
+            else
+                mpr( "You feel a wave of unholy energy pass over you." );
             break;
         case 3:
             simple_monster_message( monster, " looks stronger.", 
@@ -626,13 +635,21 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
             break;
         case 6:
         default:
-            if (one_chance_in(20))
+            if (friendly)
+                need_friendly_stub = true;
+            else if (one_chance_in(20))
                 mpr( "You resist (whatever that was supposed to do)." );
             else
                 mpr( "You resist." );
             break;
         }
+
+        if (need_friendly_stub)
+            simple_monster_message(monster, " shimmers for a moment.",
+                                   MSGCH_MONSTER_ENCHANT);
+        
         return;
+    }
     }
 
     fire_beam( pbolt );
@@ -834,8 +851,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
                             ? draco_subspecies( monster ) : monster->type;
     int scaling = 100;
 
-    pbolt.name = ptr_monam( monster, DESC_PLAIN );
-
+    pbolt.name.clear();
     switch (type)
     {
     case MONS_FIREDRAKE:
@@ -843,21 +859,21 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     case MONS_DRAGON:
     case MONS_LINDWURM:
     case MONS_XTAHUA:
-        pbolt.name += "'s blast of flame";
+        pbolt.name += "blast of flame";
         pbolt.flavour = BEAM_FIRE;
         pbolt.colour = RED;
         pbolt.aux_source = "blast of fiery breath";
         break;
 
     case MONS_ICE_DRAGON:
-        pbolt.name += "'s blast of cold";
+        pbolt.name += "blast of cold";
         pbolt.flavour = BEAM_COLD;
         pbolt.colour = WHITE;
         pbolt.aux_source = "blast of icy breath";
         break;
 
     case MONS_RED_DRACONIAN:
-        pbolt.name += "'s searing breath";
+        pbolt.name += "searing blast";
 #ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
 #endif
@@ -868,7 +884,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         break;
 
     case MONS_WHITE_DRACONIAN:
-        pbolt.name += "'s chilling breath";
+        pbolt.name += "chilling blast";
 #ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
 #endif

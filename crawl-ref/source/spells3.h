@@ -14,6 +14,7 @@
 
 
 struct dist;
+struct bolt;
 
 // updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -33,7 +34,7 @@ int airstrike(int power, dist &beam);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int cast_bone_shards(int power);
+int cast_bone_shards(int power, bolt &);
 
 
 // updated 24may2000 {dlb}
@@ -61,7 +62,7 @@ bool cast_selective_amnesia(bool force);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-int cast_smiting(int power);
+int cast_smiting(int power, dist &);
 
 
 // updated 24may2000 {dlb}

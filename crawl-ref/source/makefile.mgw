@@ -1,4 +1,4 @@
-# Make file for Dungeon Crawl (Win32, MinGW)
+# -*- Makefile -*- for Dungeon Crawl (Win32, MinGW)
 
 # makefile.obj includes a list of object files needed to build Crawl.
 include makefile.obj

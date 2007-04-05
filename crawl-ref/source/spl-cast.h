@@ -14,6 +14,8 @@
 #ifndef SPL_CAST_H
 #define SPL_CAST_H
 
+#include "enum.h"
+
 char list_spells( void );
 int spell_fail( int spell );
 int calc_spell_power( int spell, bool apply_intel, bool fail_rate_chk = false );
@@ -37,7 +39,7 @@ bool cast_a_spell( void );
 /* ***********************************************************************
  * called from: ability - debug - it_use3 - spell
  * *********************************************************************** */
-int your_spells( int spc2, int powc = 0, bool allow_fail = true );
+spret_type your_spells( int spc2, int powc = 0, bool allow_fail = true );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

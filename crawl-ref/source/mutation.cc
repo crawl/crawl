@@ -967,8 +967,8 @@ formatted_string describe_mutations()
             if (you.experience_level > 14)
                 result += " continuously";
             result += "." EOL;
-            have_any = true;
         }
+        have_any = true;
         break;
 
     case SP_MUMMY:

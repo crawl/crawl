@@ -1792,7 +1792,7 @@ static void give_basic_mutations(unsigned char speci)
         you.mutation[MUT_SLOW_METABOLISM] = 3;
         break;
     case SP_CENTAUR:
-        you.mutation[MUT_FAST] = 1;
+        you.mutation[MUT_FAST] = 2;
         you.mutation[MUT_DEFORMED] = 1;
         you.mutation[MUT_FAST_METABOLISM] = 2;
         break;

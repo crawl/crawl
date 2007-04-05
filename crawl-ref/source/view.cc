@@ -450,6 +450,9 @@ unsigned short dos_brand( unsigned short colour,
 screen_buffer_t colour_code_map( int x, int y, bool item_colour, 
                                  bool travel_colour )
 {
+    if (!is_terrain_known(x + 1, y + 1))
+        return (BLACK);
+    
     // XXX: Yes, the map array and the grid array are off by one. -- bwr
     const unsigned short map_flags = env.map[x][y];
     const int grid_value = grd[x + 1][y + 1];
@@ -696,6 +699,11 @@ bool check_awaken(int mons_aw)
     int mons_perc = 0;
     struct monsters *monster = &menv[mons_aw];
     const int mon_holy = mons_holiness(monster);
+
+    // Monsters put to sleep by ensorcelled hibernation will sleep
+    // at least one turn.
+    if (monster->has_ench(ENCH_SLEEPY))
+        return (false);
 
     // berserkers aren't really concerned about stealth
     if (you.berserker)

@@ -866,6 +866,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))         return 0;
 
     menv[mnstr].behaviour = BEH_SLEEP;
+    menv[mnstr].add_ench(ENCH_SLEEPY);
     menv[mnstr].add_ench(ENCH_SLEEP_WARY);
 
     if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
@@ -2356,6 +2357,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     blast.set_target(beam);
     blast.is_tracer = false;
     blast.flavour = BEAM_FRAG;
+    blast.hit = AUTOMATIC_HIT;
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     blast.damage = dice_def( 0, 5 + pow / 10 ); 
@@ -2972,11 +2974,9 @@ int cast_apportation(int pow)
     return (done);
 }
 
-void cast_sandblast(int pow)
+void cast_sandblast(int pow, bolt &beam)
 {
     bool big = true;
-    struct dist spd;
-    struct bolt beam;
 
     // this type of power manipulation should be done with the others,
     // currently over in it_use2.cc (ack) -- bwr
@@ -2988,17 +2988,9 @@ void cast_sandblast(int pow)
     {
         int wep = you.equip[EQ_WEAPON];
         if (you.inv[wep].base_type == OBJ_MISSILES
-           && (you.inv[wep].sub_type == MI_STONE || you.inv[wep].sub_type == MI_LARGE_ROCK))
+           && (you.inv[wep].sub_type == MI_STONE
+               || you.inv[wep].sub_type == MI_LARGE_ROCK))
            big = true;
-    }
-
-    if (spell_direction(spd, beam) == -1)
-        return;
-
-    if (spd.isMe)
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return;
     }
 
     if (big)

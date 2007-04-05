@@ -668,7 +668,7 @@ bool cast_a_spell(void)
         random_uselessness( 2 + random2(7), 0 );
     else
     {
-        const int cast_result = your_spells( spell );
+        const spret_type cast_result = your_spells( spell );
         if (cast_result == SPRET_ABORT)
             return (false);
 
@@ -852,7 +852,7 @@ static bool spell_is_uncastable(int spell)
 // returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
-int your_spells( int spc2, int powc, bool allow_fail )
+spret_type your_spells( int spc2, int powc, bool allow_fail )
 {
     int dem_hor = 0;
     int dem_hor2 = 0;
@@ -880,11 +880,11 @@ int your_spells( int spc2, int powc, bool allow_fail )
              testbits( flags, SPFLAG_GRID )   ? DIR_TARGET : 
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
+        const char *prompt = get_spell_target_prompt(spc2);
         if (dir == DIR_DIR)
-            mpr("Which direction? ", MSGCH_PROMPT);
+            mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
         
-        if (spell_direction( spd, beam, dir, targ,
-                             get_spell_target_prompt(spc2) ) == -1)
+        if (spell_direction( spd, beam, dir, targ, prompt ) == -1)
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
@@ -939,7 +939,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
                     && you.piety >= 100 && random2(150) <= you.piety))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
-                return (0);
+                return SPRET_FAIL;
             }
 
             unsigned int sptype = 0;
@@ -1194,8 +1194,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SMITING:
-        if (cast_smiting(powc) == -1)
-            return (SPRET_ABORT);
+        cast_smiting(powc, spd);
         break;
 
     case SPELL_REPEL_UNDEAD:
@@ -1416,8 +1415,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BONE_SHARDS:
-        if (cast_bone_shards(powc) == -1)
-            return (SPRET_ABORT);
+        cast_bone_shards(powc, beam);
         break;
 
     case SPELL_BANISHMENT:
@@ -1710,8 +1708,16 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SLEEP:
-        zapping(ZAP_SLEEP, powc, beam);
+    {
+        const int sleep_power =
+            stepdown_value( powc * 9 / 10, 5, 35, 45, 50 );
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
+             powc, sleep_power);
+#endif
+        zapping(ZAP_SLEEP, sleep_power, beam);
         break;
+    }
 
     case SPELL_MASS_SLEEP:
         cast_mass_sleep(powc);
@@ -1796,7 +1802,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SANDBLAST:
-        cast_sandblast(powc);
+        cast_sandblast(powc, beam);
         break;
 
     case SPELL_ROTTING:
@@ -1853,7 +1859,7 @@ int your_spells( int spc2, int powc, bool allow_fail )
 
     spellcasting_side_effects(spc2);
 
-    return (true);
+    return (SPRET_SUCCESS);
 }                               // end you_spells()
 
 void exercise_spell( int spell, bool spc, bool success )

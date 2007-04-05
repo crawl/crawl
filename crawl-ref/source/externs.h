@@ -149,6 +149,7 @@ public:
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
+    virtual void sicken(int amount) = 0;
     virtual void paralyse(int strength) = 0;
     virtual void slow_down(int strength) = 0;
     virtual void confuse(int strength) = 0;
@@ -757,6 +758,7 @@ public:
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1);
+    void sicken(int amount);
     void paralyse(int str);
     void slow_down(int str);
     void confuse(int strength);
@@ -941,6 +943,7 @@ public:
     bool      alive() const;
     coord_def pos() const;
     bool      swimming() const;
+    bool      can_drown() const;
     bool      floundering() const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       damage_type(int attk = -1);
@@ -986,6 +989,7 @@ public:
     int melee_evasion(const actor *attacker) const;
 
     void poison(actor *agent, int amount = 1);
+    void sicken(int strength);
     void paralyse(int str);
     void slow_down(int str);
     void confuse(int strength);

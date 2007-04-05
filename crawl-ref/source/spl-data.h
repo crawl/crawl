@@ -291,7 +291,7 @@
 },
 
 {
-    SPELL_PARALYZE, "Paralyze",
+    SPELL_PARALYZE, "Paralyse",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
      4,
@@ -469,9 +469,9 @@
 {
     SPELL_SMITING, "Smiting",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
-     NULL
+     "Smite whom?"
 },
 
 {
@@ -677,7 +677,7 @@
      1,
      NULL
 },
-
+  
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
@@ -873,7 +873,7 @@
 {
     SPELL_BONE_SHARDS, "Bone Shards",
      SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_DIR_OR_TARGET,
      3,
      NULL
 },

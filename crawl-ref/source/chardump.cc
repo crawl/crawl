@@ -549,18 +549,9 @@ static void sdump_religion(const std::string &, std::string & text)
 
         if (!player_under_penance())
         {
-            if (you.religion != GOD_XOM)
-            {                   // Xom doesn't care
-                text += god_name(you.religion);
-                text += " is ";
-                text += ((you.piety <= 5) ? "displeased" :
-                         (you.piety <= 20) ? "noncommittal" :
-                         (you.piety <= 40) ? "pleased with you" :
-                         (you.piety <= 70) ? "most pleased with you" :
-                         (you.piety <= 100) ? "greatly pleased with you" :
-                         (you.piety <= 130) ? "extremely pleased with you"
-                         : "exalted by your worship");
-                text += ".";
+            if (you.religion != GOD_XOM) // Xom doesn't care
+            {
+                text += god_prayer_reaction();
                 text += "\n";
             }
         }

@@ -384,6 +384,20 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 #ifdef DGL_MILESTONES
     check_kill_milestone(monster, killer, i);
 #endif
+
+    // Take note!
+    if (killer != KILL_RESET && killer != KILL_DISMISSED)
+    {
+        if ( MONST_INTERESTING(monster) ||
+             // XXX yucky hack
+             monster->type == MONS_PLAYER_GHOST ||
+             monster->type == MONS_PANDEMONIUM_DEMON )
+        {
+            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
+                           ptr_monam(monster, DESC_NOCAP_A, true)));
+        }
+    }
+
     
     // From time to time Trog gives you a little bonus
     if (killer == KILL_YOU && you.berserker)
@@ -784,15 +798,6 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        if ( MONST_INTERESTING(monster) ||
-             // XXX yucky hack
-             monster->type == MONS_PLAYER_GHOST ||
-             monster->type == MONS_PANDEMONIUM_DEMON )
-        {
-            take_note(Note(NOTE_KILL_MONSTER, monster->type, 0,
-                           ptr_monam(monster, DESC_NOCAP_A, true)));
-        }
-
         you.kills.record_kill(monster, killer, pet_kill);
 
         if (monster->has_ench(ENCH_ABJ))
@@ -2403,7 +2408,8 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
     {
         bool imbibed = false;
 
-        switch (mitm[monster->inv[MSLOT_POTION]].sub_type)
+        const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
+        switch (potion_type)
         {
         case POT_HEALING:
         case POT_HEAL_WOUNDS:
@@ -2421,6 +2427,14 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
                                                     == POT_HEAL_WOUNDS)
                 {
                     heal_monster(monster, 10 + random2avg(28, 3), false);
+                }
+
+                if (potion_type == POT_HEALING)
+                {
+                    monster->del_ench(ENCH_POISON);
+                    monster->del_ench(ENCH_SICK);
+                    monster->del_ench(ENCH_CONFUSION);
+                    monster->del_ench(ENCH_ROT);
                 }
 
                 imbibed = true;
@@ -3273,8 +3287,14 @@ static bool handle_throw(struct monsters *monster, bolt & beem)
     // ok, we'll try it.
     setup_generic_throw( monster, beem );
 
+    // set fake damage for the tracer.
+    beem.damage = dice_def(10, 10);
+    
     // fire tracer
     fire_tracer( monster, beem );
+
+    // clear fake damage (will be set correctly in mons_throw).
+    beem.damage = 0;
 
     // good idea?
     if (mons_should_fire( beem ))
@@ -3319,6 +3339,16 @@ static void monster_add_energy(monsters *monster)
 // Do natural regeneration for monster.
 static void monster_regenerate(monsters *monster)
 {
+    if (monster->has_ench(ENCH_SICK))
+        return;
+
+    // Water/lava creatures out of their element cannot regenerate.
+    if (monster_habitat(monster->type) != DNGN_FLOOR
+        && !monster_habitable_grid(monster, grd(monster->pos())))
+    {
+        return;
+    }
+    
     // regenerate:
     if (monster_descriptor(monster->type, MDSC_REGENERATES)
         
@@ -3714,6 +3744,43 @@ void handle_monsters(void)
     }
 }                               // end handle_monster()
 
+static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
+{
+    if (is_fixed_artefact( weap ))
+        return (false);
+
+    if (is_random_artefact( weap ))
+        return (false);
+
+    // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
+    // of course, this also block knives {dlb}:
+    if ((mons_species(monster->type) == MONS_KOBOLD
+         || mons_species(monster->type) == MONS_GOBLIN)
+        && property( weap, PWPN_HIT ) <= 0)
+    {
+        return (false);
+    }
+
+    // Nobody picks up giant clubs:
+    if (weap.sub_type == WPN_GIANT_CLUB
+        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
+    {
+        return (false);
+    }
+
+    const int brand = get_weapon_brand(weap);
+    const int holiness = monster->holiness();
+    if (brand == SPWPN_DISRUPTION && holiness == MH_UNDEAD)
+        return (false);
+
+    if (brand == SPWPN_HOLY_WRATH
+        && (holiness == MH_DEMONIC || holiness == MH_UNDEAD))
+    {
+        return (false);
+    }
+
+    return (true);
+}
 
 //---------------------------------------------------------------
 //
@@ -3836,27 +3903,8 @@ static bool handle_pickup(struct monsters *monster)
         if (monster->inv[MSLOT_WEAPON] != NON_ITEM)
             return (false);
 
-        if (is_fixed_artefact( mitm[item] ))
+        if (!monster_wants_weapon(monster, mitm[item]))
             return (false);
-
-        if (is_random_artefact( mitm[item] ))
-            return (false);
-
-        // wimpy monsters (Kob, gob) shouldn't pick up halberds etc
-        // of course, this also block knives {dlb}:
-        if ((mons_species(monster->type) == MONS_KOBOLD
-                || mons_species(monster->type) == MONS_GOBLIN)
-            && property( mitm[item], PWPN_HIT ) <= 0)
-        {
-            return (false);
-        }
-
-        // Nobody picks up giant clubs:
-        if (mitm[item].sub_type == WPN_GIANT_CLUB
-            || mitm[item].sub_type == WPN_GIANT_SPIKED_CLUB)
-        {
-            return (false);
-        }
 
         monster->inv[MSLOT_WEAPON] = item;
 
@@ -4224,7 +4272,7 @@ void mons_check_pool(monsters *mons, int killer)
     if (lev == 2 || (lev && !mons->paralysed()))
         return;
     
-    const int grid = grd(mons->pos());
+    int grid = grd(mons->pos());
     if ((grid == DNGN_LAVA || grid == DNGN_DEEP_WATER)
         && !monster_habitable_grid(mons, grid))
     {
@@ -4237,9 +4285,12 @@ void mons_check_pool(monsters *mons, int killer)
                  ptr_monam(mons, DESC_CAP_THE),
                  (grid == DNGN_LAVA ? "lava" : "water"));
 
+        if (grid == DNGN_LAVA && mons_res_fire(mons) > 0)
+            grid = DNGN_DEEP_WATER;
+
         // Even fire resistant monsters perish in lava, but undead can survive
         // deep water.
-        if (grid == DNGN_LAVA || mons->holiness() != MH_UNDEAD)
+        if (grid == DNGN_LAVA || mons->can_drown())
         {
             if (message)
             {
@@ -4270,7 +4321,15 @@ static void monster_move(struct monsters *monster)
     if (monster->confused())
     {
         if (mmov_x || mmov_y || one_chance_in(15))
-            do_move_monster(monster, mmov_x, mmov_y);
+        {
+            coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
+            if (in_bounds(newpos)
+                && (monster_habitat(monster->type) == DNGN_FLOOR
+                    || monster_habitable_grid(monster, grd(newpos))))
+            {
+                do_move_monster(monster, mmov_x, mmov_y);
+            }
+        }
         return;
     }
     
@@ -5044,9 +5103,9 @@ bool message_current_target()
 
         if (mons_near(montarget) && player_monster_visible(montarget))
         {
-            mprf( MSGCH_PROMPT, "You are currently targeting %s "
+            mprf( MSGCH_PROMPT, "Current target: %s "
                   "(use p/t/f to fire at it again.)",
-                  ptr_monam(montarget, DESC_NOCAP_THE) );
+                  ptr_monam(montarget, DESC_PLAIN) );
             return (true);
         }
 

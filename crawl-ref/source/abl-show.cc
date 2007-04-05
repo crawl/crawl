@@ -955,7 +955,9 @@ bool activate_ability(void)
         break;
 
     case ABIL_TSO_SMITING:
-        cast_smiting( (2 + skill_bump(SK_INVOCATIONS)) * 6 );
+        if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
+                         false ) == SPRET_ABORT)
+            return (false);
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 

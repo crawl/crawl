@@ -421,6 +421,9 @@ static void build_dungeon_level(int level_number, int level_type)
     reset_level();
     build_layout_skeleton(level_number, level_type, sr);
 
+    if (you.level_type == LEVEL_LABYRINTH)
+        return;
+    
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
     place_special_minivaults(level_number, level_type);

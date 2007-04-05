@@ -103,7 +103,9 @@ static command_type read_direction_key(bool just_looking = false)
 {
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
     
-    int key = unmangle_direction_keys(getchm(KC_TARGETING),KC_TARGETING);
+    const int key =
+        unmangle_direction_keys(
+            getchm(KC_TARGETING), KC_TARGETING, false, false);
 
     switch ( key )
     {
@@ -131,9 +133,9 @@ static command_type read_direction_key(bool just_looking = false)
     case 'p': case 'f': case 't': return CMD_TARGET_PREV_TARGET;
         
     case '-': return CMD_TARGET_CYCLE_BACK;
-    case '+': case '=': return CMD_TARGET_CYCLE_FORWARD;
-    case ';': case '/': return CMD_TARGET_OBJ_CYCLE_BACK;
-    case '*': return CMD_TARGET_OBJ_CYCLE_FORWARD;
+    case '+': case '=':  return CMD_TARGET_CYCLE_FORWARD;
+    case ';': case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
+    case '*': case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
 
     case 'b': return CMD_TARGET_DOWN_LEFT;
     case 'h': return CMD_TARGET_LEFT;
@@ -1397,6 +1399,9 @@ static void describe_mons_enchantment(const monsters &mons,
     {
     case ENCH_POISON:
         strcat(info, " is poisoned.");
+        break;
+    case ENCH_SICK:
+        strcat(info, " is sick.");
         break;
     case ENCH_ROT:
         strcat(info, " is rotting away."); //jmf: "covered in sores"?
