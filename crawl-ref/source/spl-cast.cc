@@ -1708,8 +1708,16 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SLEEP:
-        zapping(ZAP_SLEEP, powc * 83 / 100, beam);
+    {
+        const int sleep_power =
+            stepdown_value( powc * 9 / 10, 5, 35, 45, 50 );
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Sleep power stepdown: %d -> %d",
+             powc, sleep_power);
+#endif
+        zapping(ZAP_SLEEP, sleep_power, beam);
         break;
+    }
 
     case SPELL_MASS_SLEEP:
         cast_mass_sleep(powc);
