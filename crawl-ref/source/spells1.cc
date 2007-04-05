@@ -66,9 +66,7 @@ int blink(void)
         // query for location {dlb}:
         for (;;)
         {
-            mpr("Blink to where?", MSGCH_PROMPT);
-
-            direction(beam, DIR_TARGET, TARG_ANY);
+            direction(beam, DIR_TARGET, TARG_ANY, false, "Blink to where?");
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
             {

@@ -187,21 +187,10 @@ bool detect_curse(bool suppress_msg)
     return (success);
 }                               // end detect_curse()
 
-int cast_smiting(int power)
+int cast_smiting(int power, dist &beam)
 {
     bool success = false;
-    struct dist beam;
-    struct monsters *monster = 0;       // NULL {dlb}
-
-    mpr("Smite whom?", MSGCH_PROMPT);
-
-    direction( beam, DIR_TARGET, TARG_ENEMY );
-
-    if (!beam.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
+    monsters *monster = 0;       // NULL {dlb}
 
     if (mgrd[beam.tx][beam.ty] == NON_MONSTER
         || beam.isMe)
@@ -276,11 +265,9 @@ int airstrike(int power, dist &beam)
     return (success);
 }                               // end airstrike()
 
-int cast_bone_shards(int power)
+int cast_bone_shards(int power, bolt &beam)
 {
     bool success = false;
-    struct bolt beam;
-    struct dist spelld;
 
     if (you.equip[EQ_WEAPON] == -1
                     || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_CORPSES)
@@ -291,9 +278,6 @@ int cast_bone_shards(int power)
         mpr("The corpse collapses into a mass of pulpy flesh.");
     else
     {
-        if (spell_direction(spelld, beam) == -1)
-            return (-1);
-
         // practical max of 100 * 15 + 3000 = 4500
         // actual max of    200 * 15 + 3000 = 6000
         power *= 15;

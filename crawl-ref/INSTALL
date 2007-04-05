@@ -94,11 +94,11 @@ Building:
   packaged in a zip archive, it's safe to comment out SAVE_PACKAGE_CMD
   and LOAD_UNPACKAGE_CMD.
 
-* If you don't have flex or bison, edit makefile.unix and set DOYACC
-  := n. If you want to use byacc instead of bison, edit makefile.unix
-  and set YACC := byacc. On some Linuxes you may not have lex
-  symlinked to flex, in which case you'll have to set LEX := flex in
-  makefile.unix.
+* If you don't have (or don't want to use) flex or bison, edit
+  makefile.unix and set DOYACC := n. If you want to use byacc instead
+  of bison, edit makefile.unix and set YACC := byacc. On some Unixes,
+  you may not have flex (but have some other lex), in which case
+  you'll have to set LEX := lex in makefile.unix.
 
 * Run make to build the normal (non-wizard) Crawl. On systems such as
   Solaris, you may have to use gmake for GNU make. Make sure your make
@@ -113,7 +113,8 @@ Building:
 * If you have Lua, you can edit AppHdr.h and uncomment
         // #define CLUA_BINDINGS
   then add -llua to your LIB = line in makefile.unix, and rebuild to
-  compile with Lua support.
+  compile with Lua support. See the section on Lua (below) for more
+  information.
 
 
 Building on Mac OS X
@@ -154,15 +155,13 @@ Mac build instructions below.
   with Lua support.
 
 
-Building on Windows
--------------------
+Building on Windows (MinGW)
+---------------------------
 
-NOTE: Building for Windows+MinGW on Windows 9x/ME may work, but we've
-not tested it. You may be better off using the DOS build instructions
-if you're on 9x/ME.
-
-We've also not tested or updated the makefile for Borland C++. We
-strongly recommend using MinGW if possible.
+NOTE: You cannot build Windows binaries on Windows 9x/ME using the
+MinGW makefile supplied. If you're on 9x/ME, you can choose to use the
+Cygwin build instructions, or build a binary on a Windows NT/2k/XP
+system (the binary will run on 9x), or build a DOS binary.
 
 * Install MinGW from http://www.mingw.org. The MinGW 5.0.2 installer
   is best so you don't have to fiddle with individual packages (you
@@ -196,8 +195,24 @@ strongly recommend using MinGW if possible.
   subdirectory.
 
 
-Building on DOS
----------------
+Building on Windows (cygwin)
+----------------------------
+
+* Get Cygwin from http://www.cygwin.com/. When installing, ensure that
+  the following packages are selected: gcc, g++, make, flex, bison. If
+  you'd like to build from svn, install the svn client. You may also
+  want to install diff and patch if you'd like to apply third party
+  patches, or create your own.
+
+* Once Cygwin is installed, open a Cygwin bash shell (use the Start
+  menu, do not double-click bash.exe in Explorer). cd to the Crawl
+  source directory.
+
+* Follow the Linux build instructions to build Crawl.
+
+
+Building for DOS (djgpp)
+------------------------
 
 * Install djgpp from http://www.delorie.com/djgpp/. Don't forget to
   include C++ support when the Zip picker asks for what you want. You
@@ -272,11 +287,26 @@ This also depends on how you install Lua - some package management
 systems build just the plain old liblua.so even for pre 5.1 Lua. If in
 doubt, try both "-llua -llualib" and "-llua".
 
-On many Linuxes, the package management system installs Lua libraries
-including the version number, so the linker option becomes something
-like:
+On many Linuxes (Debian, for instance), the package management system
+installs Lua libraries including the version number, so the linker
+option becomes something like:
 
 LIB = -llua50
+
+
+Lua include path:
+
+On Unix, Lua headers may be installed in /usr/include (unlikely), or
+in a subdirectory of /usr/include (such as /usr/include/lua50/). If
+the headers are in a subdirectory, you need to add this directory to
+the include path in your makefile.unix:
+
+INCLUDES = -I/usr/include/ncurses -I/usr/include/lua50
+
+On other platforms, the Lua headers should usually be installed in
+your compiler's include directory, or a subdirectory. If it's in a
+subdirectory, you'll need to add the full directory path to your
+includes line.
 
 
 Getting Lua:

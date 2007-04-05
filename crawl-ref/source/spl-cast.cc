@@ -880,11 +880,11 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
              testbits( flags, SPFLAG_GRID )   ? DIR_TARGET : 
              testbits( flags, SPFLAG_DIR )    ? DIR_DIR    : DIR_NONE);
 
+        const char *prompt = get_spell_target_prompt(spc2);
         if (dir == DIR_DIR)
-            mpr("Which direction? ", MSGCH_PROMPT);
+            mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
         
-        if (spell_direction( spd, beam, dir, targ,
-                             get_spell_target_prompt(spc2) ) == -1)
+        if (spell_direction( spd, beam, dir, targ, prompt ) == -1)
             return (SPRET_ABORT);
 
         if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
@@ -1194,8 +1194,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SMITING:
-        if (cast_smiting(powc) == -1)
-            return (SPRET_ABORT);
+        cast_smiting(powc, spd);
         break;
 
     case SPELL_REPEL_UNDEAD:
@@ -1416,8 +1415,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_BONE_SHARDS:
-        if (cast_bone_shards(powc) == -1)
-            return (SPRET_ABORT);
+        cast_bone_shards(powc, beam);
         break;
 
     case SPELL_BANISHMENT:
@@ -1796,7 +1794,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_SANDBLAST:
-        cast_sandblast(powc);
+        cast_sandblast(powc, beam);
         break;
 
     case SPELL_ROTTING:

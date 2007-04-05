@@ -63,7 +63,7 @@ YCFLAGS := $(INCLUDES) $(CFOTHERS)
 
 UTIL = util/
 
-LEX  := lex
+LEX  := flex
 YACC := bison -y
 
 YTABC  := levcomp.tab.c

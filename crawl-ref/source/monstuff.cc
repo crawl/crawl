@@ -5103,9 +5103,9 @@ bool message_current_target()
 
         if (mons_near(montarget) && player_monster_visible(montarget))
         {
-            mprf( MSGCH_PROMPT, "You are currently targeting %s "
+            mprf( MSGCH_PROMPT, "Current target: %s "
                   "(use p/t/f to fire at it again.)",
-                  ptr_monam(montarget, DESC_NOCAP_THE) );
+                  ptr_monam(montarget, DESC_PLAIN) );
             return (true);
         }
 

@@ -540,7 +540,7 @@ static void zappy( char z_type, int power, struct bolt &pbolt )
         pbolt.colour = LIGHTMAGENTA;
         pbolt.range = random2(5) + 8;
         pbolt.damage = dice_def( 1, 3 + power / 5 );    // 25: 1d8
-        pbolt.hit = 1500;                               // hits always
+        pbolt.hit = AUTOMATIC_HIT;                      // hits always
         pbolt.type = SYM_ZAP;
         pbolt.flavour = BEAM_MMISSILE;                  // unresistable
         pbolt.obvious_effect = true;

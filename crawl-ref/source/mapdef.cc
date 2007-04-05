@@ -97,8 +97,8 @@ static std::string split_key_item(const std::string &s,
                                   std::string *arg)
 {
     std::string::size_type
-        norm = s.find("="),
-        fixe = s.find(":");
+        norm = s.find("=", 1),
+        fixe = s.find(":", 1);
 
     const std::string::size_type sep = norm < fixe? norm : fixe;
     if (sep == std::string::npos)

@@ -685,7 +685,8 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
                       targeting_type restrict, int mode,
                       const char *prompt )
 {
-    message_current_target();
+    if (restrict != DIR_DIR)
+        message_current_target();
 
     direction( spelld, restrict, mode, false, prompt );
 

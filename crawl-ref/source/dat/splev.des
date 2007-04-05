@@ -188,14 +188,15 @@
 #          does the same thing - whitespace is not significant.
 #  SUBST:  ? = T:20 U V
 #          makes T twice as likely to be used as U or V (the default weight 
-#          is 10). Note that there has to be at least one space after T:20
-#          and that whitespace in T:20 is not permitted.
+#          is 10). Note that there has to be at least one space before and after
+#          T:20 and that whitespace in T:20 is not permitted.
 #  SUBST:  ? : TUV
 #          replaces occurrences of ? with one of TUV, and guarantees that all
 #          occurrences of ? will get the same replacement symbol.
-#  The placeholder symbol can be any non-space, printable character apart from
-#  : and =. The replacement symbols can be any non-space printable character,
-#  including : and = ("SUBST: ? = +=:123def" is valid).
+#
+#  The placeholder and replacement symbols can be any non-space, printable
+#  character, including : and =, apart from commas - "SUBST: = = +=:123def" is
+#  valid.
 #
 #  SUBST: lines can safely replace symbols with themselves:
 #
@@ -1156,18 +1157,13 @@ KFEAT:   Z = weight:2 teleport trap / .
 KFEAT:   z = teleport trap
 MONS:    naga / nothing, greater naga / nothing, guardian naga / nothing
 MONS:    naga warrior / nothing, naga mage / nothing
-SHUFFLE: 123
-SHUFFLE: 45
-SUBST:   ' : ' x
-SUBST:   " : " x
+SUBST:   ':'x, ":"x
 SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
-SUBST:   X = x c + .
-SUBST:   Y = x c +
-SUBST:   T : T  U  V  .:30 b
-SUBST:   _ : ! .
-SUBST:   ! : ! . x
-SUBST:   ! = x .:2
+SUBST:   X=xc.+, Y=xc+
+SUBST:   T : T U V .:30 b
+SUBST:   _:.!, !:!.x, !=x .:2
+SHUFFLE: 123, 45
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1210,40 +1206,40 @@ ENDMAP
 
 ############################################################################
 # snake_pit
+# now slightly randomised (dp) - changes welcome
 
-NAME: snake_pit
-PLACE: Snake:5
+NAME:   snake_pit
+PLACE:  Snake:5
 ORIENT: southwest
-
-# Rotation makes this look really bad if the console font is not square.
-FLAGS: no_rotate
-
-# Hey, this looks a bit like a face ...
-
+FLAGS:  no_rotate
+MONS:   greater naga / nothing, naga, naga mage / nothing, naga warrior / nothing
+SUBST:  c = c .:1
+SUBST:  v = v .:1
+SUBST:  v = x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
-xxxxxxxxxxxxxx....x.............x..xxxxx
-xxxxxxxxxxxx....2.x.............x.2..xxx
-xxxxxxxxxxx.....2.x....x.....x..x..3.xxx
-xxxxxxxxxxx.....22x.............xx.2..xx
-xxxxxxxxxxx.......xx..x........xx..3..xx
-xxxxxxxxxx.....x23.xx....T...xxx.44...xx
-xxxxxxxxxx......4.4.x.........x.333....x
-xxxxxxxxxx......3.x4...x.......4x4.....x
-xxxxxxxxxx.......3.......x.............x
-xxxxxxxxxx..c......3.........x.......c.x
-xxxxxxxxx...cc...................3..cc.x
-xxxxxxxxx...cc..........4.4.........cc.x
-xxxxxxxxx...cc...3...x........2.....cc.x
+xxxxxxxxxxxxxx....v.............v..xxxxx
+xxxxxxxxxxxx....2.v.............v.2..xxx
+xxxxxxxxxxx.....2.v....v.....v..v.33.xxx
+xxxxxxxxxxx.....22v.............vv.2..xx
+xxxxxxxxxxx.......vv..v........vv.33..xx
+xxxxxxxxxx.....x233vv....T...vvv4444..xx
+xxxxxxxxxx......4444v.........v.333....x
+xxxxxxxxxx......33v4...v.......4x4.....x
+xxxxxxxxxx.......334.....v.....4333....x
+xxxxxxxxxx..c......3.3..4.4..v.......c.x
+xxxxxxxxx...cc.....1...1.1.1...133..cc.x
+xxxxxxxxx...cc....3.....4.4.........cc.x
+xxxxxxxxx...cc...3...v........2.....cc.x
 xxxxxxxxx...cc.........1...1.......cc..x
 xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
-xxxxxxxxxx...ccc..................cc..xx
+xxxxxxxxxx...ccc......3333333.....cc..xx
 xxxxxxxxxx....cccc....3333333.....cc..xx
-xxxxxxxxxx.....ccccccc...........cc...xx
-xxxxxxxxxx........cccccccO...ccccc....xx
+xxxxxxxxxx.....cccccc............cc...xx
+xxxxxxxxxx........ccccc..O....cccc....xx
 xxxxxxxxxxx........cccccccccccccc....xxx
-xxxxxxxxxxx.........cccccccccccc.....xxx
+xxxxxxxxxxx..........ccccccccccc.....xxx
 xxxxxxxxxxxxx.......................xxxx
 xxxxxxxxxxxxxxxx..................xxxxxx
 xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
@@ -1257,17 +1253,27 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: greater naga, naga, naga mage, naga warrior
-MONS: random, random, random
 
 ############################################################################
 # elf_hall
+# now slightly randomised (dp) - changes welcome
 
-NAME: elf_hall
-PLACE: Elf:7
-ORIENT: northwest
-FLAGS: no_rotate
-
+NAME:    elf_hall
+PLACE:   Elf:7
+ORIENT:  northwest
+FLAGS:   no_rotate
+MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
+MONS:    deep elf sorcerer, deep elf death mage
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45
+KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator 
+KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
+KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
+SUBST:   v = v .:2
+SUBST:   v : xvb
+SUBST:   | = | *:2 
+SUBST:   $ = $:20 *:4 |:1
+SUBST:   * = * |:3
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1281,36 +1287,32 @@ xxxxxxxxxxxxxxxxxcc*|*|*|**|||||c$ccxxxx
 xxxxxxxxxxxxxxxxcc*$*|*|*|*|||||c$$ccxxx
 xxxxxxxxxxxxxxxcc*$|*$***$$|||||c|$$ccxx
 xxxxxxxxxxxxxxcc*$*|**ccccccccccc$$$$ccx
-xxxxxxxxxxxxxxc*|*$*$ccc.....2..c+$|$$cx
+xxxxxxxxxxxxxxc*|*$*$ccc..2..2..c+$|$$cx
 xxxxxxxxxxxxxxc$*$*ccc...........c$$$$cx
-xxxxxxxxxxxxxxc||**cc...5.......4cc$|$cx
-xxxxxxxxxxxxxxc*$$cc........3..ccccccccx
+xxxxxxxxxxxxxxc||**cc...5.5...4.4cc$|$cx
+xxxxxxxxxxxxxxc*$$cc..3.....3..ccccccccx
 xxxxxxxxxxxxxxc$+ccc.....2....cc.....5cx
-xxxxxxxxxxxxxxc$c....5.......cc.......cx
+xxxxxxxxxxxxxxc$c....5.....5.cc....5..cx
 xxxxxxxxxxxxxxccc......5....cc..2....ccx
-xxxxxxxxxxxxxxxxc..........cc.......ccxx
-xxxxxxxxxxxxxxxcc..1..U..........4..ccxx
+xxxxxxxxxxxxxxxxc....5...2.cc.......ccxx
+xxxxxxxxxxxxxxxcc..1..U.....3.4..4..ccxx
 xxxxxxxxxxxxxxcc.....................ccx
-xxxxxxxxxxxxxxc...........3...........cx
-xxxxxxxxxxxxxxc.......2.......3.......cx
+xxxxxxxxxxxxxxc..2........3........5..cx
+xxxxxxxxxxxxxxc.......2..2....3.......cx
 xxxxxxxxxxxxxxc..2................2..5cx
-xxxxxxxxxxxxxxc......x.........x......cx
-xxxxxxxxxxxxxxc.....xx.........xx.....cx
-xxxxxxxxxxxxxxc2...xxx....1....xxx.4..cx
-xxxxxxxxxxxxxxc..xxxx...........xxxx..cx
-xxxxxxxxxxxxxxc.xxx.....cc.cc.....xxx.cx
-xxxxxxxxxxxxxxc.x.....cccc.cccc.....x.cx
-xxxxxxxxxxxxxxc.3...cccxxc.cxxccc.3...cx
+xxxxxxxxxxxxxxc......v.........v..2...cx
+xxxxxxxxxxxxxxc..2..vv..1...1..vv.....cx
+xxxxxxxxxxxxxxc2...vvv....1....vvv.4.4cx
+xxxxxxxxxxxxxxc..vvvv...........vvvv..cx
+xxxxxxxxxxxxxxc.vvv.....cc.cc.....vvv.cx
+xxxxxxxxxxxxxxc.v.3...cccc.cccc.3...v.cx
+xxxxxxxxxxxxxxc.3...cccxxc.cxxccc.3.3.cx
 xxxxxxxxxxxxxxc...cccxxxxc.cxxxxccc...cx
 xxxxxxxxxxxxxxc.cccxxxxxxc.cxxxxxxccc.cx
 xxxxxxxxxxxxxxcccxxxxxxxxc.cxxxxxxxxcccx
 xxxxxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxx
 ENDMAP
 
-MONS: deep elf high priest, deep elf demonologist
-MONS: deep elf annihilator, deep elf sorcerer
-MONS: deep elf death mage
-MONS: random, random
 
 ############################################################################
 ## alternative elf halls: gauntlets (David)
@@ -1400,9 +1402,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ~ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce**|||**eccccccce%*%%%*%ec$$ccccxc
@@ -1444,9 +1444,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%ecccccc=e**|||**ec$$ccccxc
@@ -1488,9 +1486,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%*%eccccccce**|||**ec$$=cccxc
@@ -1532,9 +1528,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%*%%%%%eccccccce**|||**ec$$ccccxc
@@ -1576,9 +1570,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd%%%%%%%dc==c===e%%%%%%%ec$$ccccxc
@@ -1620,9 +1612,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce%%%%%%%eccccccce**|||**ec$$ccccxc
@@ -1664,9 +1654,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$cd|*|||**dcccccccd*||*|**dc$$ccccxc
@@ -1708,9 +1696,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$ce*|||||*ec==ccc=e*|||||*ec$$ccccxc
@@ -1752,9 +1738,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxcccc$$=e**|||**eccccccce%%|%|%%e=$$ccccxc
@@ -1796,9 +1780,7 @@ MONS: deep elf death mage
 MONS: deep elf conjurer / deep elf fighter / deep elf summoner / deep elf knight / nothing
 MONS: curse skull / curse toe
 SUBST: ~ = ^ .:30
-SUBST: ! = 1 5
-SUBST: ? = . ?
-SUBST: ? : 2 3
+SUBST: !=15, ?=.?, ?:23
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cxccc====ccccc=======cccc====ccccccccccccxc
@@ -1830,14 +1812,16 @@ ENDMAP
 
 ##############################################################################
 # slime_pit
+# now slightly randomised (dp) - changes welcome
 
-NAME: slime_pit
-PLACE: Slime:$
-ORIENT: encompass
-
-# Slime pit take is reduced pending an increase in difficulty of this 
-# subdungeon. -- bwr
-
+NAME:    slime_pit
+PLACE:   Slime:$
+ORIENT:  encompass
+MONS:    royal jelly, acid blob, great orb of eyes / nothing
+SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x
+SUBST:   " : " .:3,  " = .c
+SHUFFLE: ([{ 
+# of what use are the exits?
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1846,62 +1830,62 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx....................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx..........................x.xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx.............................xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx.................................xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..................................xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx....(................................xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx..........................................xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx..........................................xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx............................................xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx............................................xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.....................ccc..ccc............]......xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx...................cccc2ccccc...................xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx...................cc*cc..cc*cc....................xxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx..................cc***cc4c***cc..................xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx..................cc*|*cc..cc*|*cc..................xxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.................cc*|P|*c4cc*|P|*cc.................xxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.................cc**|*cc..cc*|**cc....................xxxxxxxxxxxx
-xxxxxxxxxxxx..................ccc**c|cc4c|c**ccc...................xxxxxxxxxxxxx
-xxxxxxxxxxxx..................cccccccc..cccccccc....................xxxxxxxxxxxx
-xxxxxxxxxxx...................c.4.c.4.1..4.c.4.c.....................xxxxxxxxxxx
-xxxxxxxxxxx...................2.c.4.c..3.c.4.c.2.....................xxxxxxxxxxx
-xxxxxxxxxxx..........)........cccccccc..cccccccc.....................xxxxxxxxxxx
-xxxxxxxxxxx...................ccc**c|cc4c|c**ccc.....................xxxxxxxxxxx
-xxxxxxxxxx....................cc**|*cc..cc*|**cc....................xxxxxxxxxxxx
-xxxxxxxxxx....................cc*|P|*c4cc*|P|*cc....................xxxxxxxxxxxx
-xxxxxxxxxx.....................cc*|*cc..cc*|*cc....................xxxxxxxxxxxxx
-xxxxxxxxxxx.....................cc***cc4c***cc.....................xxxxxxxxxxxxx
-xxxxxxxxxxxx.....................cc*cc..cc*cc......................xxxxxxxxxxxxx
-xxxxxxxxxxxxx.....................cccc2ccccc......................xxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.....................ccc..ccc.......................xxxxxxxxxxxxxx
-xxxxxxxxxxxxxx...........................................[.........xxxxxxxxxxxxx
-xxxxxxxxxxxxx......................................................xxxxxxxxxxxxx
-xxxxxxxxxxxxx..............................................xxxxx...xxxxxxxxxxxxx
-xxxxxxxxxxxxxx...........................................xxxxxxxx.xxxxxxxxxxxxxx
-xxxxxxxxxxxxxx..........................................xxxxxxxxx.xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx........................................xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.........................................xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx......................................xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx.............................}......xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx.................................xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxx..............................xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx............................xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx...........{........xxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''xxxx''''...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx'''..'''''........'''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx'.....................'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx'.......................''x'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx'..........................'.xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'............................'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................'''xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'...............................''xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx''..(..............................''xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx'''....................................''xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx'.........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx''.........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'...........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx''xx'..........................................'xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'..''................""""."""""...........]....''xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'x.................."cccc2ccccc".................'xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
+xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
+xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
+xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.c....c.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
+xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
+xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
+xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
+xxxxxxxxxxxx'..................."cc*cc..cc*cc"....................'xxxxxxxxxxxxx
+xxxxxxxxxxxx'...................."cccc2ccccc"....................'xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'...................."""".""""".....................'xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'...........................................[........'xxxxxxxxxxxxx
+xxxxxxxxxxxx''..............................................'''....'xxxxxxxxxxxx
+xxxxxxxxxxxx'.............................................''xxx''.'xxxxxxxxxxxxx
+xxxxxxxxxxxxx'..........................................''xxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxx'''.......................................'xxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'......................................'xxxxxxxxx'xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx'.......................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx''.....................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx'.....................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx''....................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx'...................................'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx'............................}......'xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx''................................'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................''xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx'.............................'xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx'......................''...'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx'''''........{.......'xx'..xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''............'xxxx''xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''....'....'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''x...''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1911,9 +1895,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: royal jelly, acid blob, great orb of eyes
-MONS: random, random, random, random
-
 
 ##############################################################################
 # The Hall of Blades
@@ -1921,7 +1902,8 @@ MONS: random, random, random, random
 NAME: hall_of_blades
 PLACE: Blade
 ORIENT: north
-
+MONS: dancing weapon
+SHUFFLE: cvx
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1961,8 +1943,6 @@ xxxxxxxxcccc.............................cccccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxxxxxxx
 ENDMAP
 
-MONS: dancing weapon
-MONS: random, random, random, random, random, random
 
 ##############################################################################
 # hall_of_Zot
@@ -2504,35 +2484,37 @@ MONS: random, random
 
 #############################################################################
 # Swamp:5
+# now slightly randomised (dp) - changes welcome
 
-NAME: swamp
-PLACE: Swamp:5
-ORIENT: southeast
-FLAGS: no_rotate
-
+NAME:    swamp
+PLACE:   Swamp:5
+ORIENT:  southeast
+FLAGS:   no_rotate
+MONS:    swamp dragon / nothing, swamp drake / nothing, hydra / nothing
+SHUFFLE: 12
+SUBST:   ' = xc
 # NB - most of the 'x's here will be set to water in dungeon.cc
-
 MAP
 xxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx2xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx2xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx2x.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx2x2xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxcc.ccxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcc...ccxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxcc3.2..ccxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxcc.1.3.2.ccxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxccc....1.1cccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxcc.1.32....ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxcc...3..1.3ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxcc2.1.3..2.ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxccc33..1..cccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxcccc3O3ccccxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxcccccccccxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcc3.2ccxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx'c3.2.3c'xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx'c11.3322c''xxxxxxxxxxxxxxxxxxxxxx
+xxxxx'cc...21.1cccxxxxxxxxxxxxxxxxxxxxxx
+xxxxx'c.13321.1.cc'xxxxxxxxxxxxxxxxxxxxx
+xxxx'cc31333.113cc'xxxxxxxxxxxxxxxxxxxxx
+xxxx'cc22113.223ccxxxxxxxxxxxxxxxxxxxxxx
+xxxxx'cc3333113cc'xxxxxxxxxxxxxxxxxxxxxx
+xxxxx'cccc3O3ccc'xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx'cccccccc'xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx''ccccc'xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx''cc'xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx'xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2549,8 +2531,37 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-MONS: swamp dragon, swamp drake, hydra
-MONS: random, random, random, random
+#############################################################################
+# Swamp:5 alternative (dp)
+
+NAME:    swamp_alternative
+PLACE:   Swamp:5
+ORIENT:  float
+MONS:    swamp dragon, swamp drake, hydra, firedrake
+ITEM:    nothing
+SUBST:   1=1., 2=2., 3=3., 4=4.
+SHUFFLE: Od, 123
+SUBST:   l=l .:2, '=.x, "=cx, _=c.
+# NB - most of the 'x's here will be set to water in dungeon.cc
+MAP
+xxx@xxxxxxx@xxxxxxxxxxx
+xxx1'xxxxxxx2'xxxxxxxxx
+xxxx1xxxxxx2'xxxxxxxxxx
+xxxx.xxxxxx.xxxxxxxxxxx
+xx'2x3.x''3xxxxxxxxxxxx
+xx''x"c..1""""xxxxxxxxx
+xxxx""c".ccccc""xxx'3xx
+xxx"cc_.2lll.ccc""2.'3x
+xx"cc..33ll..2._c1'xxx@
+x"cc.1..lll...1..""xxxx
+x"c....llllll.1.2c"xxxx
+x"cc..l4llllll..cc"xxxx
+xx"ccll.llll.4lcc"xxxxx
+xxx"cccO.lld.ccc"xxxxxx
+xxxx""cccccccc""xxxxxxx
+xxxxxx""""""""xxxxxxxxx
+ENDMAP
+
 
 ##############################################################################
 # Portal vaults
@@ -2590,7 +2601,7 @@ NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
 ITEM: % / scroll of teleport / scroll of remove curse / scroll of identify
-ITEM: % / weight:2 * / scroll of blinking / scroll of recharging / scroll of fear
+ITEM: % / w:2 * / scroll of blinking / scroll of recharging / scroll of fear
 SHUFFLE: %1
 ORIENT: float
 MAP
@@ -2708,7 +2719,7 @@ NAME: david_orc_5
 TAGS: orc_entry
 ORIENT: float
 KFEAT: C = altar of Yredelemnul / altar of Makhleb / altar of Trog
-MONS:  orc priest, orc / weight:5 orc warrior / weight:1 orc knight
+MONS:  orc priest / nothing, orc / w:5 orc warrior / w:1 orc knight
 SUBST: x : cxv
 SUBST: ( = ( .
 SUBST: ) = ) . 
@@ -2730,7 +2741,7 @@ NAME:  erik_orc_1
 TAGS:  orc_entry
 MONS:  orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / weight:2 potion of speed / weight:2 potion of might
+KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / w:2 potion of speed / w:2 potion of might
 ITEM:  club, potion of confusion, slice of pizza, sausage / weight:40 nothing
 ITEM:  potion of confusion / potion of water
 SHUFFLE: defO
@@ -2866,16 +2877,17 @@ MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
 ORIENT:  float
 SHUFFLE: !=
 SUBST:   ! = x
+SUBST:   ' : cxv
 MAP
-xxxxx.@.xxxxx
-x...+...x...x
-x...x...x...x
-x!x=x111x...x
-@.x.x111+.O.x
-x.x.x111x...x
-x.x.x...x...x
-x.+.x...x...x
-xxxxx.@.xxxxx
+xxxxx.@.'''''
+x...+...'...'
+x...x...'...'
+x!x=x111'...'
+@.x.x111+.O.'
+x.x.x111'...'
+x.x.x...'...'
+x.+.x...'...'
+xxxxx.@.'''''
 ENDMAP
 
 ##############################################################################
@@ -2927,7 +2939,7 @@ ENDMAP
 NAME: david_vaults_4
 TAGS: vault_entry
 ORIENT: float
-SHUFFLE: 12345
+SHUFFLE: 123456
 MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
 MONS: freezing wraith / shadow wraith / wight / wraith
 MONS: deep troll / iron troll / rock troll / troll
@@ -2935,13 +2947,8 @@ MONS: cyclops / ettin / fire giant / frost giant / hill giant / stone giant / ti
 MONS: necromancer / shapeshifter / vault guard / wizard
 MONS: nothing
 MONS: shapeshifter / weight:30 nothing
-SUBST: 1 = 1 .
-SUBST: 2 = 2 .
-SUBST: 3 = 3 .
-SUBST: 4 = 4 .
-SUBST: 5 = 5 .
-SUBST: * : * % .
-
+SUBST: 1=.1, 2=.2, 3=.3, 4=.4, 5=.5, *:*.%
+SUBST: x : xcv
 MAP
 @..........@
 .xxxxxxxxxx.
@@ -2985,7 +2992,7 @@ NAME: erik_vaults_1
 TAGS: vault_entry
 MONS: dancing weapon
 ORIENT: float
- 
+SHUFFLE: vc 
 MAP
 .............
 .............
@@ -3006,7 +3013,7 @@ NAME: erik_vaults_2
 TAGS: vault_entry
 MONS: vault guard
 ORIENT: float
-
+SHUFFLE: vx
 MAP
 vvvvvv.vvvvvv
 vvvvvv.vvvvvv
@@ -3036,17 +3043,17 @@ ENDMAP
 #
 NAME:    david_lair_1
 TAGS:    lair_entry
-MONS:    giant lizard, giant snail / elephant slug
-MONS:    yak / weight:2 death yak, plant / fungus
+MONS:    giant lizard / sheep, giant snail / elephant slug / nothing
+MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 SHUFFLE: 12
 ORIENT:  float
 MAP
 xxxx..@..xxxx
 xx.........xx
-x...2...44..x
-...4..1......
+x..42...44..x
+..44..1......
 @....1O3....@
-..........4..
+...4......4..
 x...4..2....x
 xx.........xx
 xxxx..@..xxxx
@@ -3055,19 +3062,20 @@ ENDMAP
 ##############################################################################
 # Shrubbed Lair entry
 #
-NAME: david_lair_2
-TAGS: lair_entry
-MONS: plant, firedrake
+NAME:   david_lair_2
+TAGS:   lair_entry
+MONS:   plant, firedrake
+SUBST:  ' = 1.
 ORIENT: float
 MAP
 xxxxxxxxxxxxx
 xx111111111xx
-x112..111111x
-x11.O..111...
-x11...111...@
-x111111......
-x1..11......x
-xx.........xx
+x112.'111111x
+x11.O.'111''.
+x11'..111'..@
+x111111''....
+x1''11......x
+xx.''..'...xx
 xxxx..@..xxxx
 ENDMAP
 
@@ -3076,11 +3084,11 @@ ENDMAP
 #
 NAME: david_lair_3
 TAGS: lair_entry
-MONS: weight:50 nothing / weight:30 giant slug / weight:30 giant snail
-MONS: weight:100 nothing / weight:40 yak / sheep / death yak
-MONS: weight:100 nothing / weight:20 giant iguana / weight:20 giant lizard / gila monster / komodo dragon
+MONS: w:50 nothing / w:30 giant slug / w:30 giant snail
+MONS: w:100 nothing / w:40 yak / sheep / death yak
+MONS: w:100 nothing / w:20 giant iguana / w:20 giant lizard / gila monster / komodo dragon
 MONS: green rat / grey rat / orange rat / quokka / rat
-MONS: weight:90 nothing / weight:30 giant frog / blink frog / giant brown frog / spiny frog
+MONS: w:90 nothing / w:30 giant frog / blink frog / giant brown frog / spiny frog
 SHUFFLE: 12345
 ORIENT: float
 MAP
@@ -3161,17 +3169,17 @@ ENDMAP
 #
 NAME: erik_lair_3
 TAGS: lair_entry
-MONS: weight:50 troll / Snorg, weight:30 hound / jackal / weight:20 war dog
+MONS: w:50 troll / Snorg, w:30 hound / jackal / w:20 war dog
 ORIENT: float
 SUBST: ? = w.
 MAP
-.@........ww?www?.....
+.@........wwwwww?.....
 ..?.?.?..wwwwwww.?..?.
 ..??w..wwwwwwwww?.??..
-...??w.wwwwwww??www?..
-...wwwwwwwwwwwwwww??..
-..wwwwww?wwwww2wwww..@
-..wwwwwwww....wwww???.
+...??w.wwwwwwww?www?..
+...wwww?wwwwwwwwww??..
+..wwwwww??w??w2wwww..@
+..wwwwww??....wwww???.
 ......1..2.2O2.wwww...
 ..?wwwww???2.2www.ww?.
 .....wwww2..w.2www....
@@ -3187,8 +3195,8 @@ ENDMAP
 #
 NAME: erik_lair_4
 TAGS: lair_entry
-MONS: steam dragon/mottled dragon/swamp drake
-MONS: weight:20 giant iguana/komodo dragon/giant gecko/giant lizard
+MONS: steam dragon / mottled dragon / swamp drake
+MONS: w:20 giant iguana / komodo dragon / giant gecko / giant lizard / nothing
 FLAGS: no_rotate
 SUBST: ? = x.c
 SHUFFLE: %*RO
@@ -3196,9 +3204,9 @@ ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx??xx?x*?xxx?.2.xxxx
+xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
 xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
-xxxxxxxxxxxxx?....xxx...2....??????..??x?x..%xxxx
+xxxxxxxxxxxxx?....xxx...2....??????..????x..%xxxx
 xx?xx???xxxxx..xx??xx??..........?...???..??x=.?x
 @......xxx.2.xx?xxxxxx?x?x??.......1...2.x.xxx.?x
 xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?xxx$xx
@@ -3267,7 +3275,7 @@ ENDMAP
 # Hive monsters near stair
 #
 NAME: david_hive_2
-TAGS: hive_entry 
+TAGS: hive_entry generate_awake
 MONS: nothing / killer bee / killer bee larva
 MONS: queen bee
 ORIENT: float
@@ -3294,14 +3302,8 @@ MONS: killer bee larva / killer bee, queen bee
 MONS: giant ant / soldier ant, queen ant
 MONS: yellow wasp / nothing, red wasp / yellow wasp
 MONS: bumblebee
-SHUFFLE: XY
-SHUFFLE: VW
-SHUFFLE: defgOR
-SHUFFLE: 34 / 56
-SUBST: V = =
-SUBST: W = a
-SUBST: X = =
-SUBST: Y = a
+SHUFFLE: XY, VW, defgOR, 34/56
+SUBST: V==, W=a, X==, Y=a
 SUBST: ? = a .:20
 SUBST: 1 : 1 7:2
 SUBST: 7 = 7 .
@@ -3325,21 +3327,21 @@ ENDMAP
 #
 NAME: erik_hive_1
 TAGS: hive_entry
-MONS: weight:200 bear/polar bear, grizzly bear, black bear
+MONS: w:200 bear / polar bear, grizzly bear, black bear
 MONS: killer bee, queen bee, killer bee larva
 ITEM: honeycomb, royal jelly
-SHUFFLE: 123
-SHUFFLE: deO
+SUBST: ? = a.
+SHUFFLE: 123, deO
 ORIENT: float
 MAP
 .......................
-.............aaa.......
+............?aaa???....
 ...........aaa4aaaaa...
-...........a4e6d564a...
-......2....a6.4.4O6a...
-............a64aa4a....
-....1.......aaaaaa.....
-.......3...............
+..........?a4e6d564a?..
+......2...?a6?4?4O6a?..
+...........?a64?a4a....
+....1......?aaaaaa?....
+.......3.....????......
 .......................
 ENDMAP
 
@@ -3377,17 +3379,18 @@ ENDMAP
 NAME: erik_hive_3
 TAGS: hive_entry
 MONS: killer bee larva, killer bee, queen bee, firedrake
-SUBST: l = l.
+SHUFFLE: UVWXYZ
+SUBST: l=.l, U==, V=a, W=a, X=a, Y=a, Z=a
 ORIENT: float
 MAP
 ..................
 ...aaaaa..........
 ..aaRa....a...a...
-..a2.a.aaa=.aa....
-.aa.1aaa.1aaa...a.
+..a2.Y.aaaX.aa....
+.aV.1aaa.1aaa...a.
 ..aa21.2O2aaa4.aa.
-...aaa2131aaaaa...
-..aaaaaRaaa..aa...
+...Zaa2131Waaaa...
+..aaaaaRaUa..aa...
 ..aa.4aaa.a...a...
 .aa...aaa.aa......
 .a..aaaa..........
