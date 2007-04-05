@@ -260,7 +260,7 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
           autopickup_exceptions = decay, degeneration
 
         You can use multiple autopickup_exceptions lines. Some examples:
-          autopickup_exceptions = degeneration, decay, confusion, 
+          autopickup_exceptions = degeneration, decay, potions? of confusion, 
           autopickup_exceptions = potions? of slowing, potions? of paralysis
           autopickup_exceptions = potions? of strong poison,potions? of poison
           autopickup_exceptions = inaccuracy
