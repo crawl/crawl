@@ -1186,6 +1186,7 @@ enum enchant_type
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,                    //   20
     ENCH_SICK,
+    ENCH_SLEEPY,         // Monster can't wake until this wears off.
     
     NUM_ENCHANTMENTS
 };

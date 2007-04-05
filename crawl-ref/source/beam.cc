@@ -3812,10 +3812,16 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (mons_holiness(mon) != MH_NATURAL) // no unnatural 
             return (MON_UNAFFECTED);
 
+        // Cold res monsters resist hibernation (for consistency
+        // with mass sleep).
+        if (mons_res_cold(mon) > 0)
+            return (MON_UNAFFECTED);
+
         if (simple_monster_message(mon, " looks drowsy..."))
             beam.obvious_effect = true;
 
         mon->behaviour = BEH_SLEEP;
+        mon->add_ench(ENCH_SLEEPY);
         mon->add_ench(ENCH_SLEEP_WARY);
 
         return (MON_AFFECTED);

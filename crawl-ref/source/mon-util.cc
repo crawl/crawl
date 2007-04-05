@@ -3287,7 +3287,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
-        case ENCH_SICK:
+        case ENCH_SICK: case ENCH_SLEEPY:
             lose_ench_levels(*cur, levels);
             break;
 
@@ -3585,6 +3585,10 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
             del_ench(ENCH_SLEEP_WARY);
         break;
 
+    case ENCH_SLEEPY:
+        del_ench(ENCH_SLEEPY);
+        break;
+
     default:
         break;
     }
@@ -3632,7 +3636,7 @@ static const char *enchant_names[] =
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short lived", "paralysis", "sick", "bug"
+    "short lived", "paralysis", "sick", "sleep", "bug"
 };
 
 const char *mons_enchantment_name(enchant_type ench)

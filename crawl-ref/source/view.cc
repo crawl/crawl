@@ -700,6 +700,11 @@ bool check_awaken(int mons_aw)
     struct monsters *monster = &menv[mons_aw];
     const int mon_holy = mons_holiness(monster);
 
+    // Monsters put to sleep by ensorcelled hibernation will sleep
+    // at least one turn.
+    if (monster->has_ench(ENCH_SLEEPY))
+        return (false);
+
     // berserkers aren't really concerned about stealth
     if (you.berserker)
         return (true);

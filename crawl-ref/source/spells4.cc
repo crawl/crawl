@@ -866,6 +866,7 @@ static int sleep_monsters(int x, int y, int pow, int garbage)
     if (menv[mnstr].has_ench(ENCH_SLEEP_WARY))         return 0;
 
     menv[mnstr].behaviour = BEH_SLEEP;
+    menv[mnstr].add_ench(ENCH_SLEEPY);
     menv[mnstr].add_ench(ENCH_SLEEP_WARY);
 
     if (mons_class_flag( menv[mnstr].type, M_COLD_BLOOD ) && coinflip())
