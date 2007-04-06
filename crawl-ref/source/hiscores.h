@@ -84,8 +84,7 @@ private:
 struct scorefile_entry 
 {
 public:
-    char        version;
-    char        release;
+    std::string version;
     long        points;
     std::string name;
     long        uid;                // for multiuser systems
