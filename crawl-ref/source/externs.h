@@ -881,8 +881,8 @@ public:
     int hit_dice;
     int ac;
     int ev;
-    unsigned int speed;
-    unsigned int speed_increment;
+    int speed;
+    int speed_increment;
     unsigned char x;
     unsigned char y;
     unsigned char target_x;
@@ -1007,6 +1007,12 @@ public:
     int shield_bypass_ability(int tohit) const;
 
     actor_type atype() const { return ACT_MONSTER; }
+
+    // Hack, with a capital H.
+    void fix_speed();
+    void check_speed();
+
+    static int base_speed(int mcls);
 
 private:
     void init_with(const monsters &mons);

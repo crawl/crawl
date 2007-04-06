@@ -1233,7 +1233,7 @@ void define_monster(int index)
     ac = m->AC;
     ev = m->ev;
 
-    speed = m->speed;
+    speed = monsters::base_speed(mcls);
 
     mons.god = GOD_NO_GOD;
 
@@ -1243,7 +1243,6 @@ void define_monster(int index)
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-        speed = 7 + random2avg(9, 2);
 
         if (monnumber == 250)
             col = random_colour();
@@ -1261,7 +1260,6 @@ void define_monster(int index)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-        speed = 6 + random2avg(7, 2);
 
         if (monnumber == 250)
             col = random_colour();
@@ -1271,7 +1269,6 @@ void define_monster(int index)
         hd = 4 + random2(4);
         ac = 2 + random2(5);
         ev = 7 + random2(5);
-        speed = 8 + random2(5);
         break;
 
     case MONS_HYDRA:
@@ -3626,6 +3623,82 @@ void monsters::sicken(int amount)
     }
 
     add_ench(mon_enchant(ENCH_SICK, amount));
+}
+
+int monsters::base_speed(int mcls)
+{
+    const monsterentry *m = seekmonster(mcls);
+    if (!m)
+        return (10);
+
+    int speed = m->speed;
+
+    switch (mcls)
+    {
+    case MONS_ABOMINATION_SMALL:
+        speed = 7 + random2avg(9, 2);
+        break;
+    case MONS_ABOMINATION_LARGE:
+        speed = 6 + random2avg(7, 2);
+        break;
+    case MONS_BEAST:
+        speed = 8 + random2(5);
+        break;
+    }
+
+    return (speed);
+}
+
+// Recalculate movement speed.
+void monsters::fix_speed()
+{
+    if (mons_is_zombified(this))
+        speed = base_speed(number) - 2;
+    else
+        speed = base_speed(type);
+
+    if (has_ench(ENCH_HASTE))
+        speed *= 2;
+    else if (has_ench(ENCH_SLOW))
+        speed /= 2;
+}
+
+// Check speed and speed_increment sanity.
+void monsters::check_speed()
+{
+    // FIXME: If speed is borked, recalculate. Need to figure out how speed
+    // is getting borked.
+    if (speed < 0 || speed > 130)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
+             name(DESC_PLAIN).c_str(),
+             speed, speed_increment, hit_dice,
+             comma_separated_line(enchantments.begin(),
+                                  enchantments.end()).c_str());
+#endif
+        
+        fix_speed();
+        
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
+             name(DESC_PLAIN).c_str(), speed);
+#endif
+    }
+
+    if (speed_increment < 0)
+        speed_increment = 0;
+
+    if (speed_increment > 200)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "Clamping speed increment on %s: %d",
+             name(DESC_PLAIN).c_str(), speed_increment);
+#endif
+        speed_increment = 140;
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////
