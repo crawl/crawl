@@ -713,7 +713,7 @@ menu_colour = <colour>:<regex>
           menu_colour = lightred:potions? of (degeneration|decay)
 
         If you like to see rotten chunks and corpses at a glance, use
-          menu_colour = red: rotten.
+          menu_colour = red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to be
         read with '?:'). The following line will show level ups in white:
