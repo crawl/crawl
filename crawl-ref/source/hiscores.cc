@@ -546,7 +546,6 @@ scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
 void scorefile_entry::init_from(const scorefile_entry &se)
 {
     version = se.version;
-    release = se.release;
     points = se.points;
     name = se.name;
     uid = se.uid;
@@ -676,6 +675,7 @@ static int str_to_god(const std::string &god)
 
 void scorefile_entry::init_with_fields()
 {
+    version = fields->str_field("v");
     points = fields->long_field("sc");
     name   = fields->str_field("name");
     uid    = fields->int_field("uid");
@@ -719,7 +719,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (!fields.get())
         fields.reset(new xlog_fields);
 
-    fields->add_field("v", VER_NUM);
+    fields->add_field("v", "%s", version.empty()? VER_NUM : version.c_str());
     fields->add_field("lv", SCORE_VERSION);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid", "%d", uid);
@@ -856,14 +856,14 @@ bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
 {
     const char *inbuf = line.c_str();
     
-    version = hs_nextint(inbuf);
-    release = hs_nextint(inbuf);
+    const int ver = hs_nextint(inbuf);
+    const int rel = hs_nextint(inbuf);
 
     // this would be a good point to check for version numbers and branch
     // appropriately
 
     // acceptable versions are 0 (converted from old hiscore format) and 4
-    if (version != 4 || release < 2)
+    if (ver != 4 || rel < 2)
         return (false);
 
     points = hs_nextlong(inbuf);
@@ -888,7 +888,7 @@ bool scorefile_entry::parse_obsolete_scoreline(const std::string &line)
     // To try and keep the scorefile backwards compatible,
     // we'll branch on version > 4.0 to read the auxkilldata
     // text field.  
-    if (version == 4 && release >= 1)
+    if (ver == 4 && rel >= 1)
         auxkilldata = hs_nextstring( inbuf, ITEMNAME_SIZE );
     else
         auxkilldata[0] = 0;
@@ -1000,8 +1000,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 void scorefile_entry::reset()
 {
     // simple init
-    version = 0;
-    release = 0;
+    version.clear();
     points = -1;
     name[0] = 0;
     uid = 0;
@@ -1046,10 +1045,8 @@ void scorefile_entry::init()
     // 4.1      - added real_time and num_turn fields
     // 4.2      - stats and god info
 
-    version = 4;
-    release = 2;
-
-    name = you.your_name;
+    version = VER_NUM;
+    name    = you.your_name;
 
 #ifdef MULTIUSER
     uid = (int) getuid();
