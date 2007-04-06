@@ -4,7 +4,6 @@
 crawl - play the roguelike game of crawl
 .SH SYNOPSIS
 .BR crawl
-[-scores [N]]
 [-name <string>]
 [-race <letter>]
 [-class <letter>]
@@ -12,6 +11,8 @@ crawl - play the roguelike game of crawl
 [-plain]
 [-dir <path>]
 [-rc <file>]
+[-scores [N]]
+[-scorefile <file>]
 .SH DESCRIPTION
 Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
 Moria. Your objective is to travel deep into a subterranean cave complex and
@@ -25,9 +26,6 @@ should probably just dive into the game and use the '?' command to give a list
 of keys to use.
 .PP
 .SH OPTIONS
-.TP
-\fB-scores\fR [N]
-show highscore list [first N entries]
 .TP
 \fB-name\fR <string>
 set character name
@@ -47,8 +45,19 @@ don't use IBM extended characters (needed when playing in a xterm)
 \fB-dir\fR <path>
 crawl directory
 .TP
+\fB-macro\fR <path>
+directory for crawl macro file
+.TP
 \fB-rc\fR <file>
 init file name
+.TP
+\fB-scores\fR [N]
+show highscore list [first N entries]
+.TP
+\fB-scorefile\fR <file>
+scorefile name. If used without -scores, converts the scorefile to Crawl's
+native format and writes it to stdout (useful to convert logfiles from previous
+releases). If the filename is -, reads the scorefile on stdin.
 .PP
 .SH THE GAME
 .IP "CHARACTER SPECIES"

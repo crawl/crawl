@@ -37,21 +37,22 @@ macros at all three levels (main, level map, targeting).]
 
 How to create macros?
 ---------------------
-The simplest way is in-game: press the '~' key (this may be a bit awkward
-on certain keyboard layouts). Then choose a key to assign for your macro,
-and enter the command sequence. Observe how Crawl spits out a funny number
-in some cases. These are the key codes for certain (non-alpanumeric) keys,
-and these can vary between different systems.
+The simplest way is in-game: press the '~' key (this may be a bit
+awkward on certain keyboard layouts). Then choose a key to assign
+for your macro, and enter the command sequence. In some cases, Crawl
+will display a funny number.  These numbers are the key codes for
+certain (non-alpanumeric) keys, and can vary between different
+systems.
 
 The following keys and combinations are sensible to use:
 - The function keys are good choices, possibly modified by Shift, Ctrl, 
   or Shift-Ctrl.
 - On some systems, it is possible to also incorporate the Alt (meta) key.
-- All alphanumerical keys, these also in combination with Shift or Ctrl 
-  keys (note that usually Ctrl-Shift-A is the same thing as Ctrl-A). 
-  Be careful that you do not redefine important game keys. 
-- All special keys: digits, punctation, etc. These also in combination 
-  with Ctrl. Try if Alt works. Again check for vital game commands.
+- All alphanumerical keys. Alphanumerical keys can also be combined with 
+  Shift or Ctrl keys (note that usually Ctrl-Shift-A is the same thing as 
+  Ctrl-A). Be careful that you do not redefine important game keys. 
+- All special keys: digits, punctation, etc. These can also be combined 
+  with Ctrl. Alt may also work. Again, do not redefine vital game commands.
 
 For example, on my home system (Windows), I get key codes
  F1		    \{368}		A		  A
@@ -63,33 +64,37 @@ For example, on my home system (Windows), I get key codes
  Shift-Alt-F1	    \{3440}
  Ctrl-Shift-Alt-F1  \{3952}
 
-After defining such a macro, you should test it. Saving of all macros
-and keymaps is done with the '~' command (use s to save macros at the
-prompt).
+After defining such a macro, you should test it. If you are comfortable
+with the macro you have defined, you should then save the macro.
+To save all macros and keymaps, press '~' and then 's' to save
+macros at the tilde prompt).
 
 The macros are stored in the file macro.txt in your main Crawl directory. 
-This file is human readable and editable, you just have to figure out the
-magic numbers, as shown above for F1 and Ctrl-A etc. When using strange 
-keys as triggers for a macro, it might actually be necessary to edit this 
-manually in macro.txt.
-Note that you can make comments in macro.txt using lines with a leading 
-'#'. In this manner, you can recall which keys the numbers belong to (on 
-your system). 
-See below for examples for macro definitions.
+(You can change where the file is read from and written to by specifying an
+alternate directory on the command line with -macro <dir>.)
+This file is human readable and editablel you just have to figure out the
+magic numbers as shown above for F1, Ctrl-A, etc. When using strange 
+keys as triggers for a macro, you may need to edit macro.txt manually.
 
-Keymaps work in exactly the same way. There are three different keymaps 
-actually, one for the main view, one for the level map, and another one
+Note that you can make comments in macro.txt using lines with a
+leading '#'. In this manner, you can remind yourself which keys the
+numbers belong to (on your system).
+
+See below for examples of macro definitions.
+
+Keymaps work in exactly the same way. There are three different keymaps:
+one for the main view, one for the level map, and one
 for the targeting map. In macro.txt, these are differentiated by
  K  - main screen
  K1 - level map
  K2 - targeting
-However, you should not map alphabet letters to something; otherwise you
+However, you should not keymap alphabet letters; otherwise you
 will meet difficulties accessing your inventory!
 
-Next follow some macros and keymaps that have been considered useful by 
+Here are some macros and keymaps that have been considered useful by 
 at least a few players. For the sake of completeness, both key line and 
 command line are given, but you should really substitute your own keys 
-here :)
+here; these may not always work for you :)
 
 Spellcasting.
 -------------
@@ -101,10 +106,12 @@ A:Zap
 M:\{1392}
 A:Za+.	 
 
-Note that you can assign new letters to your spells with '='. So you can
-always have you primary attack spell on a. You may want to set the option 
- target_zero_exp = false 
-when using macros like this.
+Note that you can assign new letters to your spells with '=' so,
+if you like, you can always have you primary attack spell on a. You
+may want to set the option
+ target_zero_exp = false
+when using macros like this so that you do not accidentally crystal spear
+a plant.
 
 Easier Nemelex hoovering.
 -------------------------
@@ -116,7 +123,8 @@ This sets up your portable altar, prays there, confirms, and picks it up
 again. The sequence assumes that the altar carries the inscription {@w0}. 
 Actually, this can be achieved automatically with the init.txt line
  autoinscribe = portable altar:@w0
-If you have your weapon on slot a, feel free to add 'wa' to the sequence.
+If you have your weapon on slot a, feel free to add 'wa' to the end of
+the sequence.
 
 Easy surroundings mode.
 -----------------------
@@ -129,7 +137,7 @@ A:*
 Here I use '0' for the numpad, but 'x' would also be a good choice (then 
 you should set K2:x A:* only).
 This makes going through items in the surroundings very easy. You can use
-Enter to go directly to item under the cursor. 
+Enter to go directly to the item under the cursor. 
 Options you may want to check here are
  target_wrap, target_oos, target_los_first.
 If you want to cycle through items out of sight, set 
@@ -146,7 +154,9 @@ A:\{32}\{15}
 
 I find the Ctrl-O key awkward to type, so I have mapped it to F5. The 
 second keymap makes F5 in target mode do two things: leave target mode 
-(\{32} is the Escape key) and then starts exploring.
+(\{32} is the Escape key) and then starts exploring. 
+Users of BSD terminals will definitely want to remap Ctrl-O, as the terminal
+intercepts it by default.
 
 General Keybindings.
 --------------------
