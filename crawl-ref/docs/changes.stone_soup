@@ -1,5 +1,5 @@
-Stone Soup 0.2.2
-----------------
+Stone Soup 0.2.2 (20070406)
+---------------------------
 * Fixed crashes (enchantment timeout and bouncing beams).
 * Monsters with AF_DISEASE can now sicken other monsters, not just the player.
 * Jellies resist acid spit.
