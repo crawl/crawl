@@ -1,9 +1,3 @@
-Missing/wrong information or comments denoted by '>>':
-*	Find author names for Axcrawl and Tile Crawl
-*	Unarmed combat will necessarily stay fuzzy for a while
-*	Ranged combat likewise, but _needs_ text.
-.............................................................................
-
                         DUNGEON CRAWL Stone Soup
                              - the manual -
 
@@ -200,8 +194,8 @@ The following numbers provide additional information about your character.
 
 Armour Class:   Also called AC; when something injures you, your AC reduces the 
 -------------   amount of damage you suffer. The number next to your AC is a 
-                measure of how good your shield (if any) is at blocking attacks. 
-                In both cases, more is better.
+                measure of how good your shield (if any) is at blocking
+                attacks. In both cases, more is better.
 
 Evasion:        Also called EV, this helps you to avoid being hit by unpleasant 
 --------        things (but will not reduce the amount of damage you suffer if
@@ -272,15 +266,11 @@ representing you at the centre) is what you can see around you. The
 dark grey around it is the parts of the level which you have visited,
 but cannot currently see. The 'x' command lets you move the cursor
 around to get a description of the various dungeon features, and
-typing '?' when the cursor is over a monster brings up a short
+typing 'v' when the cursor is over a monster brings up a short
 description of that monster. You can get a map of the whole level
 (which shows where you've already been) by typing the 'X' key. This
 map specially colour-codes stairs and known traps, even if something
 is on top of them.
-
->> This is not true anymore. As I've said before, the optimal default
-IMO would be to treat the '>' and '<' as on top of a pile, where
-the pile is shown per the heap_brand setting. <<
 
 Staircases and Portals:
 -----------------------
@@ -564,21 +554,21 @@ You can use the adjust command (the '=' key) to change the letters
 to which your possessions are assigned. This command can be used
 to change spell letters, too.
 
-Some items can be stickycursed, in which case they weld themselves
-to your body when you use them. Such items usually carry some kind
-of disadvantage: a weapon or armour may be damaged or negatively
-enchanted, while rings can have all manner of unpleasant effects
-on you. If you are lucky, you might find magic which can rid you
-of cursedness for welded items.
+Some items can be sticky-cursed, in which case they weld themselves to
+your body when you use them. Such items usually carry some kind of
+disadvantage: a weapon or armour may be damaged or negatively
+enchanted, while rings can have all manner of unpleasant effects on
+you. If you are lucky, you might find magic which can rid you of
+cursedness for welded items.
 
 Items like scrolls, potions, and some other types each have a
-characteristic, like a label or a colour, which will let you tell
-them apart on the basis of their function. However, these characteristics
-change between each game, so while in one game every potion of
-healing may be yellow, in another game they might all be purple and
-bubbly. Once you have discovered the function of such an item, you
-will remember it for the rest of the current game. You can access
-your item discoveries with the '\' key.
+characteristic, like a label or a colour, which will let you tell them
+apart on the basis of their function. However, these characteristics
+change between each game, so while in one game every potion of healing
+may be yellow, in another game they might all be purple and bubbly.
+Once you have discovered the function of such an item, you will
+remember it for the rest of the current game. You can access your item
+discoveries with the '\' key.
 
 The 'v' key, which gives you a description of what an item does,
 is very useful. Try this when comparing different types of armours
@@ -1040,51 +1030,45 @@ Disclaimer:     This software is provided as is, with absolutely no warranty
                 No liability is accepted for any damage to the user or to any 
                 of the user's possessions.
 
-If you want to discuss Crawl, it's best to stick to the long-standing newsgroup 
-                rec.games.roguelike.misc.
-Flag queries with -crawl- as other games are discussed there, as well. All 
-topics related to this game usually meet a warm response there, including tales
-of victories (going under 'YAVP', i.e. 'Yet Another Victory Post'), especially
-first victories (YAFVP) as well as sad stories of deceased characters (being
-'YAAD' or 'YASD', i.e. 'Yet Another Annoying/Stupid Death'). 
-Some players, especially those on crawl.akrasiac.org, also frequent ##crawl
-on IRC's freenode network.
+If you'd like to discuss Crawl, the Usenet newsgroup
+rec.games.roguelike.misc is a good place to do so. Flag queries with
+-crawl- as other games are also discussed there. All topics related to
+this game usually meet a warm response there, including tales of
+victories (going under 'YAVP', i.e. 'Yet Another Victory Post'),
+especially first victories (YAFVP) as well as sad stories of deceased
+characters (being 'YAAD' or 'YASD', i.e. 'Yet Another Annoying/Stupid
+Death'). Some players, especially those on crawl.akrasiac.org, also
+frequent ##crawl on IRC's freenode network.
 
-The Stone Soup branch of Dungeon Crawl has its own homepage located at
-                http://crawl-ref.sourceforge.net
-Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports and feature requests there. Be sure to make sure that 
-your bug/feature isn't already in the list. For more complicated requests, it 
-might be a good idea to discuss them in the newsgroup first.
+Stone Soup's homepage is at
+      http://crawl-ref.sourceforge.net
+Use this page for direct links to downloads of the most recent
+version. You can also submit bug reports and feature requests there.
+Be sure to make sure that your bug/feature isn't already in the list.
+For more complicated requests, it might be a good idea to discuss them
+in the newsgroup first.
 
-The history of Crawl is somewhat twisted, as is the case with many
-open-source projects of this size. It started in 1995, when Australian
-based Linley Henzell decided to create a game that takes its cue
-from Angband and Nethack but avoids several things annoying him in
-both these games. Progress was made rapidly, and Linley produced
-Crawl versions up to 3.30 in March 1999. During this time all of
-the basic design principles discussed in the next section were
-already established. Further work was then carried out by a group
-of developers who released 3.40 in February 2000. Of them, Brent
-Ross emerged as the single maintainer, producing versions until
-4.0.0.beta26 in 2002. After a long period of silent work, he went
-a great step by releasing 4.1.2alpha in August 2005.  This version
-is generally considered unplayable due to severe balancing issues.
-It is likewise accepted, however, that 4.1.2 contained many valuable
-ideas for future progress. In the meantime, several patchers appeared,
-improving Crawl's interface tremendously. Several of them formed a
-new devteam; after figuring out that rebalancing 4.1.2 threatened
-to become an impossible task, they created a new branch. This was
-coined Stone Soup for some reason, and is the game this manual
-describes.
+The history of Crawl is somewhat convoluted: Crawl was created in 1995
+by Linley Henzell. Linley based Crawl loosely on Angband and Nethack,
+but avoided several annoying aspects of these games, and added a lot
+of original ideas of his own. Crawl was a hit, and Linley produced
+Crawl versions up to 3.30 in March 1999. Further work was then carried
+out by a group of developers who released 3.40 in February 2000. Of
+them, Brent Ross emerged as the single maintainer, producing versions
+until 4.0 beta 26 in 2002. After a long period of silent work, he went
+a great step by releasing 4.1.2 alpha in August 2005. This alpha
+contained a lot of good ideas, but was nearly unplayable due to
+balance issues. In the meantime, several patchers appeared, improving
+Crawl's interface tremendously. Several of them formed a new devteam;
+reasoning that rebalancing 4.1.2 was a very difficult task, they
+decided to fork Crawl 4.0 beta 26 and selectively include good ideas
+from 4.1.2 and other sources. This fork is Stone Soup, and is the game
+this manual describes. Stone Soup's release versions were restarted at
+0.1 to avoid confusion with the existing plethora of Crawl versions.
 
-It should be mentioned that there have been other Crawl variants
-over the years, among them Ax-Crawl by... and Tile Crawl by....
-
->> Find names and dates (I think it shows generosity if we allude to the other 
->> branches. We are creating the Right Crawl, of course :)
->> Mention the current TileCrawl adaption of Stone Soup.
->> [r] Is there any reason not to explain the name "Stone Soup?"
+It should be mentioned that there have been other Crawl variants over
+the years, among them Ax-Crawl, Tile Crawl, and Dungeon Crawl
+Alternative.
 
 The object of your quest in Crawl (the Orb of Zot) was taken from
 Wizard's Castle, a text adventure written in BASIC.
@@ -1105,7 +1089,7 @@ to Linley's first versions.
  o avoidance of grinding (a.k.a. scumming)
  o in particular, permalevels, shops won't buy, food clock
  o clarity, i.e. playability without access to spoilers
->> o consistency
+ o consistency
  o class/race differentiation using skills and aptitudes
  o killing no-brainers (well, we try), in particular, no permanent intrinsics
  o replayability (using branches, extended endgames, different styles, and gods)
@@ -1140,8 +1124,6 @@ if you feel you need to/must read spoilers - a legitimate feeling.)
 The joy of dealing with ever-changing, unexpected, and challenging
 strategic and tactical situations that arise out of transparent
 rules, on the other hand, is nice again and again.
-
->> Consistency: this ws brought up by Erik, but the paragraph is still missing.
 
 The skills and aptitude system is one factor encouraging strategic
 play. It also serves to clearly differentiate the many species,
@@ -1864,9 +1846,6 @@ missile weapons as well:
      o  Crossbows
      o  Slings
 
->> There must be more here, but I seriously do not know what to write.
->> Time crunch for this release, but I can write more soon [r]
-
 Magic skills:
 -------------
 Spellcasting is the basic skill for magic use, and affects your
@@ -2019,7 +1998,7 @@ Dungeon interaction:
         >               Use staircase to go deeper, or enters shop/branch.  
         ;               Examine occupied tile, also causes auto-pickup.
         x               Examine surroundings mode (see below for its commands).
-        X               Examine level map (see below for level map commands).                  
+        X               Examine level map (see below for level map commands).
         O               Show dungeon overview (branches, shops, altars etc.).
 
 Character information:
@@ -2027,7 +2006,7 @@ Character information:
 'show' means usage of the whole screen.
         @               Display character status.
         [               Display worn armour.
-        ( or )          Display wielded and secondary weapon, and first missiles.
+        ( or )          Display wielded and secondary weapon, and missiles.
         "               Display worn jewellery.
         C               Display experience info.
         ^               Show religion screen.
@@ -2036,13 +2015,12 @@ Character information:
         \               Show item knowledge.
         m               Show skill screen.
         i               Show inventory list.
-	%               Show resistances and general character
-			overview, including health, experience,
-			gear, status, mutations, abilities (the
-			latter three more  terse than with the
-			command @, A, a).  This is a highly condensed
-			conglomeration of the commands [, (, ", C,
-			^, @, A, a, usually fitting on one screen.
+	    %               Show resistances and general character overview,
+                        including health, experience, gear, status,
+                        mutations, abilities (the latter three more terse
+                        than with the command @, A, a).  This is a highly
+                        condensed conglomeration of the commands [, (, ",
+                        C, ^, @, A, a, usually fitting on one screen.
 
 Item interaction (inventory):
         v               View item description.
@@ -2114,15 +2092,16 @@ show the dungeon.
   Shift-Direction       Moves cursor in bigger steps (check the option 
   or / Direction        level_map_cursor_step).
         .               Travels to cursor (also Enter and Del and , and ;)   
-                        (if the cursor is on the character, moves cursor to last 
-                        travel destination instead).
+                        (if the cursor is on the character, moves cursor
+                        to last travel destination instead).
         <               Cycle through up stairs.
         >               Cycle through down stairs.
         ^               Cycle through traps.
         _               Cycle through altars.
         Tab             Cycle through shops and portals.
-        *               Cycle forwards through stashes (if the  option stash_tracking 
-                        is  set to all, this cycles through all items and piles).
+        *               Cycle forwards through stashes (if the option
+                        stash_tracking is set to all, this cycles through
+                        all items and piles).
         /               Cycles backward through stashes.
         Ctrl-C          Clear level and main maps (from temporarily seen
                         monsters, clouds etc.).
@@ -2205,8 +2184,8 @@ shortcuts.
         }               Selects all miscellaneous items.
         ,               Global select (subject to the drop_filter option).
         -               Global deselect (subject to the drop_filter option).
-        *               Invert selection. This will allow you to select all items
-                        even if you use the drop_filter option.
+        *               Invert selection. This will allow you to select
+                        all items even if you use the drop_filter option.
 
 
 --------------------------------------------------------------------------------
@@ -2244,7 +2223,7 @@ Fast            Your actions are twice as fast (this can cause magic
                 contamination).
 Swift           You move at a somewhat higher speed. (Only affects movement.)
 Slow            All actions are slowed. Note that ending berserking will slow.
-Paralyze        You are unable to move. Beware of the wasps!
+Paralyse        You are unable to move. Beware of wasps!
 
 Special enchantments:
 ---------------------
