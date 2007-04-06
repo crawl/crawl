@@ -1120,7 +1120,7 @@ int melee_attack::player_stab(int damage)
             // Sleeping moster wakes up when stabbed but may be groggy
             if (random2(200) <= you.skills[SK_STABBING] + you.dex)
             {
-                unsigned int stun = random2( you.dex + 1 );
+                int stun = random2( you.dex + 1 );
                 
                 if (def->speed_increment > stun)
                     def->speed_increment -= stun;

@@ -3424,6 +3424,8 @@ static void handle_monster_move(int i, monsters *monster)
         monster->behaviour = BEH_SEEK;    
     }
 
+    monster->check_speed();
+    
     while (monster->speed_increment >= 80)
     {                   // The continues & breaks are WRT this.
         if (!monster->alive())

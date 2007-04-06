@@ -1,3 +1,23 @@
+Stone Soup 0.2.2 (20070406)
+---------------------------
+* Fixed crashes (enchantment timeout and bouncing beams).
+* Monsters with AF_DISEASE can now sicken other monsters, not just the player.
+* Jellies resist acid spit.
+* DOS and Windows builds pause after displaying fatal error message.
+* Monster kills are noted before the player is awarded experience for the kill.
+* Monster-quaffed healing now cures confusion, rotting, poison and disease.
+* Fixed buggy labyrinths.
+* Bogus cantrips could be used by friendly monsters, fixed.
+* Fixed bugs in spellcasting skill training.
+* message_colour can now mute individual messages.
+* Fixed item-jump hotkeys in targeting.
+* Fixed buggy monster missile tracers.
+* Undead/demonic monsters can't pick up holy brands.
+* Player centaurs are faster (close to monster centaurs).
+* Fixed bogus beam names for uniques' breath weapons.
+* Fixed buggy targeting for Sandblast and Bone Shards.
+* Ensorcelled hibernation lasts at least one turn.
+
 Stone Soup 0.2.1 (20070402)
 ---------------------------
 * Fixed electric golems getting too much damage against shock-resistant

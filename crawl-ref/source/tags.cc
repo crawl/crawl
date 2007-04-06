@@ -1617,6 +1617,8 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
 
     if (m.type == MONS_PLAYER_GHOST || m.type == MONS_PANDEMONIUM_DEMON)
         m.set_ghost( unmarshallGhost(th) );
+
+    m.check_speed();
 }
 
 static void tag_read_level_monsters(struct tagHeader &th, char minorVersion)

@@ -825,12 +825,13 @@ static std::string morgue_name()
     if (tm *loc = localtime(&when_crawl_got_even))
     {
         char buf[25];
-        snprintf(buf, sizeof buf, "-%04d%02d%02d-%02d%02d",
+        snprintf(buf, sizeof buf, "-%04d%02d%02d-%02d%02d%02d",
                  loc->tm_year + 1900,
                  loc->tm_mon + 1,
                  loc->tm_mday,
                  loc->tm_hour,
-                 loc->tm_min);
+                 loc->tm_min,
+                 loc->tm_sec);
         name += buf;
     }
     return (name);
