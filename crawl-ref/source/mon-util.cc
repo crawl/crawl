@@ -3600,7 +3600,7 @@ void monsters::apply_enchantments(int spd)
     
     const mon_enchant_list ec = enchantments;
     for (mon_enchant_list::const_iterator i = ec.begin();
-         i != ec.end(); )
+         i != ec.end(); ++i)
     {
         apply_enchantment(*i, spd);
         if (!alive())
