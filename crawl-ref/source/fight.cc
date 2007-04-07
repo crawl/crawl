@@ -311,7 +311,7 @@ static bool chop_hydra_head( const actor *attacker,
                       attacker->conj_verb(verb).c_str(),
                       defender->name(DESC_NOCAP_THE).c_str() );
 
-            defender->hit_points = -1;
+            defender->hurt(attacker, defender->hit_points);
         }
         else
         {

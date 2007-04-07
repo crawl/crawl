@@ -144,7 +144,7 @@ public:
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual void go_berserk(bool intentional) = 0;
-    virtual void hurt(actor *attacker, int amount) = 0;
+    virtual void hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
     virtual void blink() = 0;
@@ -769,7 +769,7 @@ public:
     void confuse(int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
     void heal(int amount, bool max_too = false);
-    void hurt(actor *agent, int amount);
+    void hurt(const actor *agent, int amount);
 
     int holy_aura() const;
     int warding() const;
@@ -1006,7 +1006,7 @@ public:
     void slow_down(int str);
     void confuse(int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
-    void hurt(actor *agent, int amount);
+    void hurt(const actor *agent, int amount);
     void heal(int amount, bool max_too = false);
     void blink();
     void teleport(bool right_now = false, bool abyss_shift = false);

@@ -2808,7 +2808,7 @@ god_type monsters::deity() const
     return (god);
 }
 
-void monsters::hurt(actor *agent, int amount)
+void monsters::hurt(const actor *agent, int amount)
 {
     if (amount <= 0)
         return;
@@ -2820,7 +2820,7 @@ void monsters::hurt(actor *agent, int amount)
             monster_die(this, KILL_YOU, 0);
         else
             monster_die(this, KILL_MON,
-                        monster_index( dynamic_cast<monsters*>(agent) ));
+                        monster_index( dynamic_cast<const monsters*>(agent) ));
     }
 }
 
