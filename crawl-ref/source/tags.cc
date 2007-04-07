@@ -1529,7 +1529,7 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
             env.map_col[i][j].flags  = unmarshallShort(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.cgrid[i][j] = unmarshallByte(th);
+            env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
         }
     }
 
