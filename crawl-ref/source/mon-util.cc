@@ -3273,19 +3273,21 @@ void monsters::lose_ench_levels(const mon_enchant &e, int levels)
 //---------------------------------------------------------------
 void monsters::timeout_enchantments(int levels)
 {
-    for (mon_enchant_list::iterator i = enchantments.begin();
-         i != enchantments.end(); )
+    if (enchantments.empty())
+        return;
+    
+    const mon_enchant_list ec = enchantments;
+    for (mon_enchant_list::const_iterator i = ec.begin();
+         i != ec.end(); ++i)
     {
-        mon_enchant_list::iterator cur = i++;
-
-        switch (cur->ench)
+        switch (i->ench)
         {
         case ENCH_POISON: case ENCH_ROT: case ENCH_BACKLIGHT:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM: case ENCH_SLEEP_WARY:
         case ENCH_SICK: case ENCH_SLEEPY:
-            lose_ench_levels(*cur, levels);
+            lose_ench_levels(*i, levels);
             break;
 
         case ENCH_TP:
@@ -3593,13 +3595,14 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
 
 void monsters::apply_enchantments(int spd)
 {
-    for (mon_enchant_list::iterator i = enchantments.begin();
-         i != enchantments.end(); )
+    if (enchantments.empty())
+        return;
+    
+    const mon_enchant_list ec = enchantments;
+    for (mon_enchant_list::const_iterator i = ec.begin();
+         i != ec.end(); )
     {
-        mon_enchant_list::iterator cur = i++;
-        apply_enchantment(*cur, spd);
-
-        // If the monster died, the iterator will be invalid!
+        apply_enchantment(*i, spd);
         if (!alive())
             break;
     }
