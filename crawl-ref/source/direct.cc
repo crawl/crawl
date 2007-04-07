@@ -1554,8 +1554,7 @@ static void describe_cell(int mx, int my)
 #endif
     if (env.cgrid[mx][my] != EMPTY_CLOUD)
     {
-        const char cloud_inspected = env.cgrid[mx][my];
-
+        const int cloud_inspected = env.cgrid[mx][my];
         const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf("There is a cloud of %s here.", cloud_name(ctype).c_str());
