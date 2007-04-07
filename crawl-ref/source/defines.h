@@ -68,7 +68,7 @@
 #define MAX_CLOUDS 180
 
 // empty cloud -- (CLOUDS + 1) {dlb}:
-#define EMPTY_CLOUD 101
+#define EMPTY_CLOUD (MAX_CLOUDS + 1)
 
 // max x-bound for level generation {dlb}
 #define GXM 80
