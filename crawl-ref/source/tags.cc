@@ -1530,6 +1530,10 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
+
+            // Ugh! Backward compatibility. 101 was the old (buggy) EMPTY_CLOUD
+            if (minorVersion < 2 && env.cgrid[i][j] == 101)
+                env.cgrid[i][j] = EMPTY_CLOUD;
         }
     }
 
