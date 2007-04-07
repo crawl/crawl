@@ -62,6 +62,7 @@
 #define MAP_CHANGED_FLAG        0x0400
 #define MAP_DETECTED_MONSTER    0x0800
 #define MAP_DETECTED_ITEM       0x1000
+#define MAP_GRID_KNOWN          0xFF00
 
 #define MAP_CHARACTER_MASK      0x00ff
 
@@ -450,11 +451,11 @@ unsigned short dos_brand( unsigned short colour,
 screen_buffer_t colour_code_map( int x, int y, bool item_colour, 
                                  bool travel_colour )
 {
-    if (!is_terrain_known(x + 1, y + 1))
+    const unsigned short map_flags = env.map[x][y];
+    if (!(map_flags & MAP_GRID_KNOWN))
         return (BLACK);
     
     // XXX: Yes, the map array and the grid array are off by one. -- bwr
-    const unsigned short map_flags = env.map[x][y];
     const int grid_value = grd[x + 1][y + 1];
 
     unsigned tc = travel_colour? 
