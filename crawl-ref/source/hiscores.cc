@@ -725,6 +725,9 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("uid", "%d", uid);
     fields->add_field("race", "%s", species_name(race, lvl));
     fields->add_field("cls", "%s", get_class_name(cls));
+    fields->add_field("char", "%s%s",
+                      get_species_abbrev(race),
+                      get_class_abbrev(cls));
     fields->add_field("xl", "%d", lvl);
     fields->add_field("sk", "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
