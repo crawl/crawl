@@ -29,7 +29,7 @@ int mons_level(int mcls)
     else if (you.level_type == LEVEL_PANDEMONIUM)
         monster_level = ((mons_pan(mcls)) ? 52 : 0);
     else
-        monster_level=branches[(int)you.where_are_you].mons_level_function(mcls);
+        monster_level = your_branch().mons_level_function(mcls);
 
     return monster_level;
 }
@@ -42,7 +42,7 @@ int mons_rarity(int mcls)
     if (you.level_type == LEVEL_ABYSS)
         return mons_rare_abyss(mcls);
     else
-        return branches[(int)you.where_are_you].mons_rarity_function(mcls);
+        return your_branch().mons_rarity_function(mcls);
 }
 
 bool mons_abyss(int mcls)

@@ -72,7 +72,7 @@ static int dungeon_branch_depth( unsigned char branch )
 
 static bool is_noteworthy_dlevel( unsigned short place )
 {
-    unsigned const char branch = (unsigned char) ((place >> 8) & 0xFF);
+    const unsigned char branch = (unsigned char) ((place >> 8) & 0xFF);
     const int lev = (place & 0xFF);
 
     /* Special levels (Abyss, etc.) are always interesting */

@@ -4,7 +4,13 @@
 
 #include "AppHdr.h"
 #include "branch.h"
+#include "externs.h"
 #include "mon-pick.h"
+
+Branch& your_branch()
+{
+    return branches[static_cast<int>(you.where_are_you)];
+}
 
 Branch branches[] = {
 

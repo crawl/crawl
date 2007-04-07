@@ -38,4 +38,6 @@ struct Branch
 
 extern Branch branches[];
 
+Branch& your_branch();
+
 #endif

@@ -207,7 +207,7 @@ static void place_altars()
 
     if ( you.level_type == LEVEL_DUNGEON )
     {
-        int prob = branches[(int)you.where_are_you].altar_chance;
+        int prob = your_branch().altar_chance;
         while (prob)
         {
             if (random2(100) >= prob)
@@ -474,7 +474,7 @@ static void fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs
     // with stairs back to dungeon or wherever:
-    if ( branches[(int)you.where_are_you].exit_stairs != NUM_FEATURES &&
+    if ( your_branch().exit_stairs != NUM_FEATURES &&
          player_branch_depth() == 1 &&
          you.level_type == LEVEL_DUNGEON )
     {
@@ -482,11 +482,11 @@ static void fixup_branch_stairs()
             for (int y = 1; y < GYM; y++)
                 if (grd[x][y] >= DNGN_STONE_STAIRS_UP_I
                     && grd[x][y] <= DNGN_ROCK_STAIRS_UP)
-                    grd[x][y] = branches[(int)you.where_are_you].exit_stairs;
+                    grd[x][y] = your_branch().exit_stairs;
     }
 
     // bottom level of branch - replaces down stairs with up ladders:
-    if ( player_branch_depth() == branches[(int)you.where_are_you].depth &&
+    if ( player_branch_depth() == your_branch().depth &&
          you.level_type == LEVEL_DUNGEON)
     {
         for (int x = 1; x < GXM; x++)
@@ -529,7 +529,7 @@ static void build_dungeon_level(int level_number, int level_type)
     place_special_minivaults(level_number, level_type);
 
     // hook up the special room (if there is one, and it hasn't
-    // been hooked up already in roguey_level()
+    // been hooked up already in roguey_level())
     if (sr.created && !sr.hooked_up)
         specr_2(sr);
 
@@ -567,20 +567,11 @@ static void build_dungeon_level(int level_number, int level_type)
     builder_monsters(level_number, level_type, num_mons_wanted(level_type));
 
     // place shops, if appropriate
-    if ( branches[(int)you.where_are_you].has_shops )
+    if ( your_branch().has_shops )
         place_shops(level_number);
 
     fixup_walls();
     fixup_branch_stairs();
-
-    if (player_in_branch( BRANCH_CRYPT ))
-    {
-        if (one_chance_in(3))
-            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
-
-        if (one_chance_in(7))
-            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
-    }
 
     place_altars();
 
@@ -3967,7 +3958,7 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
 
     // This dodge allows designers to specify PLACE: as Elf:$ or Slime:$ or
     // whatever:$ to say "last level in branch 'whatever'".
-    if (subdepth == branches[(int)you.where_are_you].depth)
+    if (subdepth == your_branch().depth)
         altname = level_name(0);
 
     int vault = random_map_for_place(name, wantmini);
@@ -3986,8 +3977,9 @@ static int random_map_for_dlevel(int level_number, bool wantmini = false)
     return (vault);
 }
 
-// returns 1 if we should skip further generation,
-// -1 if we should immediately quit, and 0 otherwise.
+// returns BUILD_SKIP if we should skip further generation,
+// BUILD_QUIT if we should immediately quit, and BUILD_CONTINUE
+// otherwise.
 static builder_rc_type builder_by_branch(int level_number)
 {
     const int vault = random_map_for_dlevel(level_number);
@@ -4000,25 +3992,14 @@ static builder_rc_type builder_by_branch(int level_number)
 
     switch (you.where_are_you)
     {
+    case BRANCH_LAIR:
+        if (!one_chance_in(3))
+            break;
     case BRANCH_HIVE:
-        spotty_level(false, 100 + random2(500), false);
-        return BUILD_SKIP;
-
     case BRANCH_SLIME_PITS:
-        spotty_level(false, 100 + random2(500), false);
-        return BUILD_SKIP;
-
     case BRANCH_ORCISH_MINES:
         spotty_level(false, 100 + random2(500), false);
         return BUILD_SKIP;
-
-    case BRANCH_LAIR:
-        if (!one_chance_in(3))
-        {
-            spotty_level(false, 100 + random2(500), false);
-            return BUILD_SKIP;
-        }
-        break;
 
     default:
         break;
@@ -4751,129 +4732,107 @@ static int pick_unique(int lev)
     return (which_unique);
 }
 
-static void builder_monsters(int level_number, char level_type, int mon_wanted)
+// Place uniques on the level.
+// There is a hidden dependency on the player's actual
+// location (through your_branch().)
+// Return the number of uniques placed.
+static int place_uniques(int level_number, char level_type)
 {
-    int i = 0;
-    int totalplaced = 0;
     int not_used = 0;
-    int x,y;
-    int lava_spaces, water_spaces;
-    int aq_creatures;
-    int swimming_things[4];
+    // Unique beasties:
+    if (level_number <= 0 || level_type != LEVEL_DUNGEON ||
+        !your_branch().has_uniques)
+        return 0;
 
-    if (level_type == LEVEL_PANDEMONIUM 
-            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-        return;
+    int num_placed = 0;
 
-    for (i = 0; i < mon_wanted; i++)
+    while(one_chance_in(3))
     {
-        if (place_monster( not_used, RANDOM_MONSTER, level_number, BEH_SLEEP,
-                           MHITNOT, false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+        int which_unique = -1;   //     30 in total
+
+        while(which_unique < 0 || you.unique_creatures[which_unique])
+        {
+            // sometimes, we just quit if a unique is already placed.
+            if (which_unique >= 0 && !one_chance_in(3))
+            {
+                which_unique = -1;
+                break;
+            }
+
+            which_unique = pick_unique(level_number);
+        }
+
+        // usually, we'll have quit after a few tries. Make sure we don't
+        // create unique[-1] by accident.
+        if (which_unique == -1)
+            break;
+
+        // note: unique_creatures 40 + used by unique demons
+        if (place_monster( not_used, which_unique, level_number, 
+                           BEH_SLEEP, MHITNOT, false, 1, 1, true,
+                           PROX_ANYWHERE, 250, 0, no_monster_zones ))
+        {
+            ++num_placed;
+        }
+    }
+    return num_placed;
+}
+
+static int place_monster_vector(int* montypes, int numtypes,
+                                int level_number, int num_to_place)
+{
+    int result = 0;
+    int not_used = 0;
+    for (int i = 0; i < num_to_place; i++)
+    {
+        if (place_monster( not_used, montypes[random2(numtypes)],
+                           level_number, BEH_SLEEP, MHITNOT, 
+                           false, 1, 1, true, PROX_ANYWHERE, 250, 0,
                            no_monster_zones ))
         {
-            totalplaced++;
+            ++result;
         }
     }
+    return result;
+}
+                                
 
-    // Unique beasties:
-    if (level_number > 0
-        && you.level_type == LEVEL_DUNGEON  // avoid generating on temp levels
-        && branches[(int)you.where_are_you].has_uniques)
-    {
-        while(one_chance_in(3))
-        {
-            int which_unique = -1;   //     30 in total
-
-            while(which_unique < 0 || you.unique_creatures[which_unique])
-            {
-                // sometimes, we just quit if a unique is already placed.
-                if (which_unique >= 0 && !one_chance_in(3))
-                {
-                    which_unique = -1;
-                    break;
-                }
-
-                which_unique = pick_unique(level_number);
-            }
-
-            // usually, we'll have quit after a few tries. Make sure we don't
-            // create unique[-1] by accident.
-            if (which_unique == -1)
-                break;
-
-            // note: unique_creatures 40 + used by unique demons
-            if (place_monster( not_used, which_unique, level_number, 
-                               BEH_SLEEP, MHITNOT, false, 1, 1, true,
-                               PROX_ANYWHERE, 250, 0, no_monster_zones ))
-            {
-                totalplaced++;
-            }
-        }
-    }
-
-    // do aquatic and lava monsters:
+static void place_aquatic_monsters(int level_number, char level_type)
+{
+    int lava_spaces = 0, water_spaces = 0;
+    int swimming_things[4];
 
     // count the number of lava and water tiles {dlb}:
-    lava_spaces = 0;
-    water_spaces = 0;
-
-    for (x = 0; x < GXM; x++)
+    for (int x = 0; x < GXM; x++)
     {
-        for (y = 0; y < GYM; y++)
+        for (int y = 0; y < GYM; y++)
         {
-            if (grd[x][y] == DNGN_LAVA && level_number > 6)
-            {
+            if (grd[x][y] == DNGN_LAVA)
                 lava_spaces++;
-            }
-            else if (grd[x][y] == DNGN_DEEP_WATER
-                     || grd[x][y] == DNGN_SHALLOW_WATER)
-            {
+            if (grd[x][y]==DNGN_DEEP_WATER || grd[x][y]==DNGN_SHALLOW_WATER)
                 water_spaces++;
-            }
         }
     }
 
-    if (lava_spaces > 49)
+    if (lava_spaces > 49 && level_number > 6)
     {
-        for (i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             swimming_things[i] = MONS_LAVA_WORM + random2(3);
-
-            //mv: this is really ugly, but easiest
-            //IMO generation of water/lava beasts should be changed,
-            //because we want data driven code and not things like it
             if (one_chance_in(30)) 
                 swimming_things[i] = MONS_SALAMANDER;
         }
 
-        aq_creatures = random2avg(9, 2) + (random2(lava_spaces) / 10);
-
-        if (aq_creatures > 15)
-            aq_creatures = 15;
-
-        for (i = 0; i < aq_creatures; i++)
-        {
-            if (place_monster( not_used, swimming_things[ random2(4) ],
-                               level_number, BEH_SLEEP, MHITNOT, 
-                               false, 1, 1, true, PROX_ANYWHERE, 250, 0,
-                               no_monster_zones ))
-            {
-                totalplaced++;
-            }
-
-            if (totalplaced > 99)
-                break;
-        }
+        place_monster_vector(swimming_things, 4, level_number,
+                             std::min(random2avg(9, 2) +
+                                      (random2(lava_spaces) / 10), 15));
     }
 
     if (water_spaces > 49)
     {
-        for (i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
-            // mixing enums and math ticks me off !!! 15jan2000 {dlb}
             swimming_things[i] = MONS_BIG_FISH + random2(4);
-
-            // swamp worms and h2o elementals generated below: {dlb}
             if (player_in_branch( BRANCH_SWAMP ) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
         }
@@ -4884,24 +4843,36 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
         if (player_in_branch( BRANCH_COCYTUS ))
             swimming_things[3] = MONS_WATER_ELEMENTAL;
 
-        aq_creatures = random2avg(9, 2) + (random2(water_spaces) / 10);
+        place_monster_vector(swimming_things, 4, level_number,
+                             std::min(random2avg(9, 2) +
+                                      (random2(water_spaces) / 10), 15));
+    }
+}
 
-        if (aq_creatures > 15)
-            aq_creatures = 15;
 
-        for (i = 0; i < aq_creatures; i++)
-        {
-            if (place_monster( not_used, swimming_things[ random2(4) ],
-                               level_number, BEH_SLEEP, MHITNOT, 
-                               false, 1, 1, true, PROX_ANYWHERE, 250, 0,
-                               no_monster_zones ))
-            {
-                totalplaced++;
-            }
+static void builder_monsters(int level_number, char level_type, int mon_wanted)
+{
+    int not_used = 0;
+    if (level_type == LEVEL_PANDEMONIUM ||
+        player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        return;
 
-            if (totalplaced > 99)
-                break;
-        }
+    for (int i = 0; i < mon_wanted; i++)
+        place_monster( not_used, RANDOM_MONSTER, level_number, BEH_SLEEP,
+                       MHITNOT, false, 1, 1, true, PROX_ANYWHERE, 250, 0,
+                       no_monster_zones );
+
+    place_uniques(level_number, level_type);
+    place_aquatic_monsters(level_number, level_type);
+
+    // Special handling
+    if (player_in_branch( BRANCH_CRYPT ))
+    {
+        if (one_chance_in(3))
+            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
+
+        if (one_chance_in(7))
+            mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
     }
 }
 
