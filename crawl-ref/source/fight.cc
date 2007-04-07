@@ -2674,10 +2674,13 @@ void melee_attack::wasp_paralyse_defender()
     if (attacker->id() == MONS_YELLOW_WASP)
         paralyse_roll += 3;
 
-    if (!defender->res_poison() && one_chance_in(paralyse_roll))
-        defender->paralyse( roll_dice(1, 3) );
-    else
-        defender->slow_down( roll_dice(1, 3) );
+    if (defender->res_poison() <= 0)
+    {
+        if (one_chance_in(paralyse_roll))
+            defender->paralyse( roll_dice(1, 3) );
+        else
+            defender->slow_down( roll_dice(1, 3) );
+    }
 }
 
 void melee_attack::splash_monster_with_acid(int strength)
@@ -2845,7 +2848,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_CONFUSE:
         if (attk.type == AT_SPORE)
         {
-            if (defender->res_poison())
+            if (defender->res_poison() > 0)
                 break;
 
             if (--atk->hit_dice <= 0)

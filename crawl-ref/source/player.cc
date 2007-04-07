@@ -5089,9 +5089,6 @@ int player::holiness() const
     if (is_undead)
         return (MH_UNDEAD);
 
-    if (species == SP_DEMONSPAWN)
-        return (MH_DEMONIC);
-
     return (MH_NATURAL);
 }
 
