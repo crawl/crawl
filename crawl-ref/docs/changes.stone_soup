@@ -1,3 +1,8 @@
+Stone Soup 0.2.3 (20070407)
+---------------------------
+* Fixed shapeshifter enchantment crash.
+* Cleaned up monster enchantment handling loop to prevent further crashes.
+
 Stone Soup 0.2.2 (20070406)
 ---------------------------
 * Fixed crashes (enchantment timeout and bouncing beams).
