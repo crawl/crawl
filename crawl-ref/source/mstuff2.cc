@@ -366,6 +366,10 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
     switch (spell_cast)
     {
+    case MS_BERSERK_RAGE:
+        monster->go_berserk(true);
+        return;
+            
     case MS_SUMMON_SMALL_MAMMALS:
     case MS_VAMPIRE_SUMMON:
         if ( spell_cast == MS_SUMMON_SMALL_MAMMALS )
@@ -719,6 +723,8 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     case MS_TORMENT:
     case MS_SUMMON_DEMON_GREATER:
     case MS_CANTRIP:
+    case MS_BERSERK_RAGE:
+    case MS_MIGHT:
         return;
     default:
         break;
@@ -1942,6 +1948,69 @@ bool orange_statue_effects(monsters *mons)
         miscast_effect( SPTYP_DIVINATION, random2(15), random2(150), 100,
                         "an orange crystal statue" );
         return (true);
+    }
+
+    return (false);
+}
+
+static bool make_monster_angry(const monsters *mon, monsters *targ)
+{
+    if (mon->attitude != targ->attitude)
+        return (false);
+
+    // targ is guaranteed to have a foe (needs_berserk checks this).
+    // Now targ needs to be closer to *its* foe than mon is (otherwise
+    // mon might be in the way).
+
+    coord_def victim;
+    if (targ->foe == MHITYOU)
+        victim = you.pos();
+    else if (targ->foe != MHITNOT)
+    {
+        const monsters *vmons = &menv[targ->foe];
+        if (!vmons->alive())
+            return (false);
+        victim = vmons->pos();
+    }
+    else
+    {
+        // Should be impossible. needs_berserk should find this case.
+        ASSERT(false);
+        return (false);
+    }
+
+    // If mon may be blocking targ from its victim, don't try.
+    if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
+        return (false);
+
+    const bool need_message = mons_near(mon) && player_monster_visible(mon);
+    if (need_message)
+        mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
+             targ->name(DESC_NOCAP_THE).c_str());
+    
+    targ->go_berserk(false);
+
+    return (true);
+}
+
+bool moth_incite_monsters(const monsters *mon)
+{
+    int goaded = 0;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *targ = &menv[i];
+        if (targ == mon || !targ->alive() || !targ->needs_berserk())
+            continue;
+
+        if (mon->pos().distance_from(targ->pos()) > 3)
+            continue;
+
+        // Cannot goad other moths of wrath!
+        if (targ->type == MONS_MOTH_OF_WRATH)
+            continue;
+
+        if (make_monster_angry(mon, targ) && !one_chance_in(3 * ++goaded))
+            return (true);
     }
 
     return (false);

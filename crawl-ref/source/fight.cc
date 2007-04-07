@@ -2494,6 +2494,10 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
     damage_max += attk.damage;
     damage     += 1 + random2(attk.damage);
 
+    // Berserk monsters get bonus damage.
+    if (atk->has_ench(ENCH_BERSERK))
+        damage = damage * 3 / 2;
+
     if (water_attack)
         damage *= 2;
 
@@ -2886,6 +2890,19 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_DISTORT:
         distortion_affects_defender();
+        break;
+
+    case AF_RAGE:
+        if (!one_chance_in(3) || !defender->can_go_berserk())
+            break;
+        
+        if (needs_message)
+            mprf("%s %s %s!",
+                 attacker->name(DESC_CAP_THE).c_str(),
+                 attacker->conj_verb("infuriate").c_str(),
+                 defender->name(DESC_NOCAP_THE).c_str());
+
+        defender->go_berserk(false);
         break;
     }
 }

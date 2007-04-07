@@ -522,6 +522,9 @@ static int get_mons_colour(const monsters *mons)
 {
     int col = mons->colour;
 
+    if (mons->has_ench(ENCH_BERSERK))
+        col = RED;
+    
     if (mons_friendly(mons))
     {
         col |= COLFLAG_FRIENDLY_MONSTER;

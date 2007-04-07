@@ -1090,3 +1090,11 @@ void zap_los_monsters()
         }
     }
 }
+
+//////////////////////////////////////////////////////////////////////////
+// coord_def
+int coord_def::distance_from(const coord_def &other) const
+{
+    return (grid_distance(x, y, other.x, other.y));
+}
+

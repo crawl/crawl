@@ -482,7 +482,7 @@ protected:
 
 protected:
     static const int UNFOUND_DIST  = -30000;
-    static const int INFINITE_DIST =  30000;
+    static const int INFINITE_DIST =  INFINITE_DISTANCE;
     
 protected:
     run_mode_type runmode;

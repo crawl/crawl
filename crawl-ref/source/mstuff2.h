@@ -102,5 +102,6 @@ void throw_type(int lnchClass, int lnchType, int wepClass, int wepType,
 
 bool orange_statue_effects(monsters *mons);
 bool silver_statue_effects(monsters *mons);
+bool moth_incite_monsters(const monsters *mon);
 
 #endif

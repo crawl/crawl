@@ -1392,6 +1392,9 @@ static void describe_mons_enchantment(const monsters &mons,
     // internally valid.
     if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE))
         return;
+
+    if (ench.ench == ENCH_HASTE && mons.has_ench(ENCH_BERSERK))
+        return;
             
     strcpy(info, mons_pronoun(mons.type, PRONOUN_CAP));
 
@@ -1411,6 +1414,9 @@ static void describe_mons_enchantment(const monsters &mons,
         break;
     case ENCH_SLOW:
         strcat(info, " is moving slowly.");
+        break;
+    case ENCH_BERSERK:
+        strcat(info, " is berserk!");
         break;
     case ENCH_HASTE:
         strcat(info, " is moving very quickly.");

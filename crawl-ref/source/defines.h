@@ -75,6 +75,8 @@
 // max y-bound for level generation {dlb}
 #define GYM 70
 
+#define INFINITE_DISTANCE       30000
+
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
 

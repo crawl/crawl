@@ -142,6 +142,7 @@ public:
     // (statues have only indirect attacks).
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other) = 0;
+    virtual bool can_go_berserk() const = 0;
     virtual void go_berserk(bool intentional) = 0;
     virtual void hurt(actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
@@ -238,6 +239,8 @@ struct coord_def
     {
         set(0, 0);
     }
+
+    int distance_from(const coord_def &b) const;
     
     bool operator == (const coord_def &other) const {
         return x == other.x && y == other.y;
@@ -746,6 +749,8 @@ public:
     bool cannot_fight() const;
 
     void attacking(actor *other);
+    bool can_go_berserk() const;
+    bool can_go_berserk(bool verbose) const;
     void go_berserk(bool intentional);
     void banish(const std::string &who = "");
     void blink();
@@ -907,16 +912,22 @@ public:
 
 public:
     kill_category kill_alignment() const;
+
+    int  foe_distance() const;
+    bool needs_berserk(bool check_spells = true) const;
     
-    bool        has_ench(enchant_type ench,
-                         enchant_type ench2 = ENCH_NONE) const;
+    bool has_ench(enchant_type ench) const;
+    bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
-    bool        add_ench(const mon_enchant &);
-    void        update_ench(const mon_enchant &);
-    bool        del_ench(enchant_type ench, bool quiet = false);
+    bool add_ench(const mon_enchant &);
+    void update_ench(const mon_enchant &);
+    bool del_ench(enchant_type ench, bool quiet = false);
+
+    void scale_hp(int num, int den);
 
     void lose_ench_levels(const mon_enchant &e, int levels);
+    void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments(int speed);
     void apply_enchantment(mon_enchant me, int speed);
@@ -963,6 +974,7 @@ public:
     int  skill(skill_type skill, bool skill_bump = false) const;
 
     void attacking(actor *other);
+    bool can_go_berserk() const;
     void go_berserk(bool intentional);
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);

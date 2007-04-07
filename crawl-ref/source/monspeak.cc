@@ -224,6 +224,10 @@ bool mons_speaks(const monsters *monster)
     if (monster->has_ench(ENCH_CHARM))
         return false;
 
+    // berserk monsters just want your hide.
+    if (monster->has_ench(ENCH_BERSERK))
+        return false;
+    
     if (monster->has_ench(ENCH_CONFUSION))
     {
         if (mons_holiness( monster ) == MH_DEMONIC

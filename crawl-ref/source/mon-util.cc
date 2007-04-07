@@ -1865,75 +1865,75 @@ bool ms_requires_tracer(int monspell)
 
     switch(monspell)
     {
-        case MS_BANISHMENT:
-        case MS_COLD_BOLT:
-        case MS_ICE_BOLT:
-        case MS_SHOCK:
-        case MS_MAGMA:
-        case MS_CONFUSE:
-        case MS_CRYSTAL_SPEAR:
-        case MS_DISINTEGRATE:
-        case MS_ENERGY_BOLT:
-        case MS_FIRE_BOLT:
-        case MS_FIREBALL:
-        case MS_FLAME:
-        case MS_FROST:
-        case MS_HELLFIRE:
-        case MS_IRON_BOLT:
-        case MS_LIGHTNING_BOLT:
-        case MS_MARSH_GAS:
-        case MS_MIASMA:
-        case MS_METAL_SPLINTERS:
-        case MS_MMISSILE:
-        case MS_NEGATIVE_BOLT:
-        case MS_ORB_ENERGY:
-        case MS_PAIN:
-        case MS_PARALYSIS:
-        case MS_POISON_BLAST:
-        case MS_POISON_ARROW:
-        case MS_POISON_SPLASH:
-        case MS_QUICKSILVER_BOLT:
-        case MS_SLOW:
-        case MS_STEAM_BALL:
-        case MS_STICKY_FLAME:
-        case MS_STING:
-        case MS_STONE_ARROW:
-        case MS_TELEPORT_OTHER:
-        case MS_VENOM_BOLT:
-            requires = true;
-            break;
+    case MS_BANISHMENT:
+    case MS_COLD_BOLT:
+    case MS_ICE_BOLT:
+    case MS_SHOCK:
+    case MS_MAGMA:
+    case MS_CONFUSE:
+    case MS_CRYSTAL_SPEAR:
+    case MS_DISINTEGRATE:
+    case MS_ENERGY_BOLT:
+    case MS_FIRE_BOLT:
+    case MS_FIREBALL:
+    case MS_FLAME:
+    case MS_FROST:
+    case MS_HELLFIRE:
+    case MS_IRON_BOLT:
+    case MS_LIGHTNING_BOLT:
+    case MS_MARSH_GAS:
+    case MS_MIASMA:
+    case MS_METAL_SPLINTERS:
+    case MS_MMISSILE:
+    case MS_NEGATIVE_BOLT:
+    case MS_ORB_ENERGY:
+    case MS_PAIN:
+    case MS_PARALYSIS:
+    case MS_POISON_BLAST:
+    case MS_POISON_ARROW:
+    case MS_POISON_SPLASH:
+    case MS_QUICKSILVER_BOLT:
+    case MS_SLOW:
+    case MS_STEAM_BALL:
+    case MS_STICKY_FLAME:
+    case MS_STING:
+    case MS_STONE_ARROW:
+    case MS_TELEPORT_OTHER:
+    case MS_VENOM_BOLT:
+        requires = true;
+        break;
 
-        // self-niceties and direct effects
-        case MS_ANIMATE_DEAD:
-        case MS_BLINK:
-        case MS_BRAIN_FEED:
-        case MS_DIG:
-        case MS_FAKE_RAKSHASA_SUMMON:
-        case MS_HASTE:
-        case MS_HEAL:
-        case MS_HELLFIRE_BURST:
-        case MS_INVIS:
-        case MS_LEVEL_SUMMON:
-        case MS_MUTATION:
-        case MS_SMITE:
-        case MS_SUMMON_BEAST:
-        case MS_SUMMON_DEMON_LESSER:
-        case MS_SUMMON_DEMON:
-        case MS_SUMMON_DEMON_GREATER:
-        case MS_SUMMON_UFETUBUS:
-        case MS_TELEPORT:
-        case MS_TORMENT:
-        case MS_SUMMON_SMALL_MAMMALS:
-        case MS_VAMPIRE_SUMMON:
-        case MS_CANTRIP:
+    // self-niceties and direct effects
+    case MS_ANIMATE_DEAD:
+    case MS_BLINK:
+    case MS_BRAIN_FEED:
+    case MS_DIG:
+    case MS_FAKE_RAKSHASA_SUMMON:
+    case MS_HASTE:
+    case MS_HEAL:
+    case MS_HELLFIRE_BURST:
+    case MS_INVIS:
+    case MS_LEVEL_SUMMON:
+    case MS_MUTATION:
+    case MS_SMITE:
+    case MS_SUMMON_BEAST:
+    case MS_SUMMON_DEMON_LESSER:
+    case MS_SUMMON_DEMON:
+    case MS_SUMMON_DEMON_GREATER:
+    case MS_SUMMON_UFETUBUS:
+    case MS_TELEPORT:
+    case MS_TORMENT:
+    case MS_SUMMON_SMALL_MAMMALS:
+    case MS_VAMPIRE_SUMMON:
+    case MS_CANTRIP:
+    case MS_BERSERK_RAGE:
 
-        // meaningless, but sure, why not?
-        case MS_NO_SPELL:
-            break;
+    // meaningless, but sure, why not?
+    case MS_NO_SPELL:
+        break;
 
-        default:
-            break;
-
+    default:
+        break;
     }
 
     return (requires);
@@ -1949,39 +1949,39 @@ bool ms_direct_nasty(int monspell)
 
     switch(monspell)
     {
-        // self-niceties/summonings
-        case MS_ANIMATE_DEAD:
-        case MS_BLINK:
-        case MS_DIG:
-        case MS_FAKE_RAKSHASA_SUMMON:
-        case MS_HASTE:
-        case MS_HEAL:
-        case MS_INVIS:
-        case MS_LEVEL_SUMMON:
-        case MS_SUMMON_BEAST:
-        case MS_SUMMON_DEMON_LESSER:
-        case MS_SUMMON_DEMON:
-        case MS_SUMMON_DEMON_GREATER:
-        case MS_SUMMON_UFETUBUS:
-        case MS_TELEPORT:
-        case MS_SUMMON_SMALL_MAMMALS:
-        case MS_VAMPIRE_SUMMON:
-            nasty = false;
-            break;
+    // self-niceties/summonings
+    case MS_ANIMATE_DEAD:
+    case MS_BLINK:
+    case MS_DIG:
+    case MS_FAKE_RAKSHASA_SUMMON:
+    case MS_HASTE:
+    case MS_HEAL:
+    case MS_INVIS:
+    case MS_LEVEL_SUMMON:
+    case MS_SUMMON_BEAST:
+    case MS_SUMMON_DEMON_LESSER:
+    case MS_SUMMON_DEMON:
+    case MS_SUMMON_DEMON_GREATER:
+    case MS_SUMMON_UFETUBUS:
+    case MS_TELEPORT:
+    case MS_SUMMON_SMALL_MAMMALS:
+    case MS_VAMPIRE_SUMMON:
+        nasty = false;
+        break;
 
-        case MS_BRAIN_FEED:
-        case MS_HELLFIRE_BURST:
-        case MS_MUTATION:
-        case MS_SMITE:
-        case MS_TORMENT:
+    case MS_BRAIN_FEED:
+    case MS_HELLFIRE_BURST:
+    case MS_MUTATION:
+    case MS_SMITE:
+    case MS_TORMENT:
+    case MS_BERSERK_RAGE:
 
         // meaningless, but sure, why not?
-        case MS_NO_SPELL:
-            break;
+    case MS_NO_SPELL:
+        break;
 
-        default:
-            break;
-
+    default:
+        break;
     }
 
     return (nasty);
@@ -2072,12 +2072,16 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
     int intel, est_magic_resist, power, diff;
     struct monsters *targ;
 
-
     // Eventually, we'll probably want to be able to have monsters 
     // learn which of their elemental bolts were resisted and have those 
     // handled here as well. -- bwr
     switch (monspell)
     {
+    case MS_BERSERK_RAGE:
+        if (!mon->needs_berserk(false))
+            ret = true;
+        break;
+        
     case MS_HASTE:
         if (mon->has_ench(ENCH_HASTE))
             ret = true;
@@ -2620,6 +2624,24 @@ void monsters::attacking(actor * /* other */)
 
 void monsters::go_berserk(bool /* intentional */)
 {
+    if (holiness() != MH_NATURAL || has_ench(ENCH_FATIGUE))
+        return;
+
+    if (has_ench(ENCH_SLOW))
+    {
+        del_ench(ENCH_SLOW);
+        simple_monster_message(
+            this,
+            make_stringf(" shakes off %s lethargy.",
+                         name(DESC_NOCAP_YOUR).c_str()).c_str());
+    }
+    del_ench(ENCH_HASTE);
+    del_ench(ENCH_FATIGUE);
+
+    const int duration = 20 + random2avg(20, 2);
+    add_ench(mon_enchant(ENCH_BERSERK, duration));
+    add_ench(mon_enchant(ENCH_HASTE, duration));
+    simple_monster_message( this, " goes berserk!" );
 }
 
 void monsters::expose_to_element(beam_type, int)
@@ -3043,19 +3065,20 @@ void monsters::load_spells(int book)
     }
 }
 
-bool monsters::has_ench(enchant_type ench,
-                        enchant_type ench2) const
+bool monsters::has_ench(enchant_type ench) const
+{
+    return (enchantments.find(ench) != enchantments.end());
+}
+
+bool monsters::has_ench(enchant_type ench, enchant_type ench2) const
 {
     if (ench2 == ENCH_NONE)
         ench2 = ench;
 
     for (int i = ench; i <= ench2; ++i)
     {
-        if (enchantments.find( static_cast<enchant_type>(i) ) !=
-            enchantments.end())
-        {
+        if (has_ench(static_cast<enchant_type>(i)))
             return (true);
-        }
     }
     return (false);
 }
@@ -3083,8 +3106,10 @@ void monsters::update_ench(const mon_enchant &ench)
     {
         mon_enchant_list::iterator i = enchantments.find(ench);
         if (i != enchantments.end())
+        {
             enchantments.erase(i);
-        enchantments.insert(ench);
+            enchantments.insert(ench);
+        }
     }
 }
 
@@ -3095,8 +3120,12 @@ bool monsters::add_ench(const mon_enchant &ench)
         return (false);
 
     mon_enchant_list::iterator i = enchantments.find(ench);
+    bool new_enchantment = false;
     if (i == enchantments.end())
+    {
+        new_enchantment = true;
         enchantments.insert(ench);
+    }
     else
     {
         mon_enchant new_ench = *i + ench;
@@ -3104,24 +3133,39 @@ bool monsters::add_ench(const mon_enchant &ench)
         enchantments.insert(new_ench);
     }
 
+    if (new_enchantment)
+        add_enchantment_effect(ench);
+
+    return (true);
+}
+
+void monsters::add_enchantment_effect(const mon_enchant &ench, bool)
+{
     // check for slow/haste
-    if (ench.ench == ENCH_HASTE)
+    switch (ench.ench)
     {
+    case ENCH_BERSERK:
+        // Inflate hp.
+        scale_hp(3, 2);
+        break;
+    
+    case ENCH_HASTE:
         if (speed >= 100)
             speed = 100 + ((speed - 100) * 2);
         else
             speed *= 2;
-    }
+        break;
 
-    if (ench.ench == ENCH_SLOW)
-    {
+    case ENCH_SLOW:
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
         else
             speed /= 2;
-    }
+        break;
 
-    return (true);
+    default:
+        break;
+    }
 }
 
 bool monsters::del_ench(enchant_type ench, bool quiet)
@@ -3141,6 +3185,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 {
     switch (me.ench)
     {
+    case ENCH_BERSERK:
+        scale_hp(2, 3);
+        break;
+
     case ENCH_HASTE:
         if (speed >= 100)
             speed = 100 + ((speed - 100) / 2);
@@ -3290,11 +3338,23 @@ void monsters::timeout_enchantments(int levels)
             lose_ench_levels(*i, levels);
             break;
 
+        case ENCH_BERSERK:
+            del_ench(i->ench);
+            del_ench(ENCH_HASTE);
+            break;
+
+        case ENCH_FATIGUE:
+            del_ench(i->ench);
+            del_ench(ENCH_SLOW);
+            break;
+
         case ENCH_TP:
+            del_ench(i->ench);
             teleport(true);
             break;
 
         case ENCH_CONFUSION:
+            del_ench(i->ench);
             blink();
             break;
 
@@ -3317,13 +3377,38 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
 {
     switch (me.ench)
     {
+    case ENCH_BERSERK:
+        lose_ench_levels(me, 1);
+        if (me.degree <= 1)
+        {
+            simple_monster_message(this, " is no longer berserk.");
+            del_ench(ENCH_HASTE);
+            const int duration = random_range(7, 13);
+            add_ench(mon_enchant(ENCH_FATIGUE, duration));
+            add_ench(mon_enchant(ENCH_SLOW, duration));
+        }
+        break;
+
+    case ENCH_FATIGUE:
+        lose_ench_levels(me, 1);
+        if (me.degree <= 1)
+        {
+            simple_monster_message(this, " looks more energetic.");
+            del_ench(ENCH_SLOW);
+        }
+        break;
+
     case ENCH_SLOW:
-        if (random2(250) <= mod_speed( hit_dice + 10, spd ))
+        if (me.degree > 0)
+            lose_ench_levels(me, 1);
+        else if (random2(250) <= mod_speed( hit_dice + 10, spd ))
             del_ench(me.ench);
         break;
 
     case ENCH_HASTE:
-        if (random2(1000) < mod_speed( 25, spd ))
+        if (me.degree > 0)
+            lose_ench_levels(me, 1);
+        else if (random2(1000) < mod_speed( 25, spd ))
             del_ench(ENCH_HASTE);
         break;
 
@@ -3608,6 +3693,19 @@ void monsters::apply_enchantments(int spd)
     }
 }
 
+void monsters::scale_hp(int num, int den)
+{
+    hit_points     = hit_points * num / den;
+    max_hit_points = max_hit_points * num / den;
+    
+    if (hit_points < 1)
+        hit_points = 1;
+    if (max_hit_points < 1)
+        max_hit_points = 1;
+    if (hit_points > max_hit_points)
+        hit_points = max_hit_points;
+}
+
 kill_category monsters::kill_alignment() const
 {
     return (attitude == ATT_FRIENDLY? KC_FRIENDLY : KC_OTHER);
@@ -3704,6 +3802,63 @@ void monsters::check_speed()
     }
 }
 
+int monsters::foe_distance() const
+{
+    // early out -- no foe!
+    if (foe == MHITNOT)
+        return (INFINITE_DISTANCE);
+
+    if (foe == MHITYOU)
+        return grid_distance(x, y, you.x_pos, you.y_pos);
+
+    // must be a monster
+    const monsters *my_foe = &menv[foe];
+    if (my_foe->alive())
+        return grid_distance(x, y, my_foe->x, my_foe->y);
+
+    return (INFINITE_DISTANCE);
+}
+
+bool monsters::can_go_berserk() const
+{
+    if (holiness() != MH_NATURAL)
+        return (false);
+    
+    if (has_ench(ENCH_FATIGUE) || has_ench(ENCH_BERSERK))
+        return (false);
+
+    // If we have no melee attack, going berserk is pointless.
+    const mon_attack_def attk = mons_attack_spec(this, 0);
+    if (attk.type == AT_NONE || attk.damage == 0)
+        return (false);
+    
+    return (true);
+}
+
+bool monsters::needs_berserk(bool check_spells) const
+{
+    if (!can_go_berserk())
+        return (false);
+    
+    if (has_ench(ENCH_HASTE) || has_ench(ENCH_TP))
+        return (false);
+
+    if (foe_distance() > 3)
+        return (false);
+
+    if (check_spells)
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            const int spell = spells[i];
+            if (spell != MS_NO_SPELL && spell != MS_BERSERK_RAGE)
+                return (false);
+        }
+    }
+
+    return (true);
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 
@@ -3712,7 +3867,7 @@ static const char *enchant_names[] =
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short lived", "paralysis", "sick", "sleep", "bug"
+    "short lived", "paralysis", "sick", "sleep", "fatigue", "bug"
 };
 
 const char *mons_enchantment_name(enchant_type ench)

@@ -4934,6 +4934,40 @@ void player::go_berserk(bool intentional)
     ::go_berserk(intentional);
 }
 
+bool player::can_go_berserk() const
+{
+    return can_go_berserk(false);
+}
+
+bool player::can_go_berserk(bool verbose) const
+{
+    if (you.berserker)
+    {
+        if (verbose)
+            mpr("You're already berserk!");
+        // or else you won't notice -- no message here.
+        return (false);
+    }
+
+    if (you.exhausted)
+    {
+        if (verbose)
+            mpr("You're too exhausted to go berserk.");
+        // or else they won't notice -- no message here
+        return (false);
+    }
+
+    if (you.is_undead)
+    {
+        if (verbose)
+            mpr("You cannot raise a blood rage in your lifeless body.");
+        // or else you won't notice -- no message here
+        return (false);
+    }
+
+    return (true);
+}
+
 void player::god_conduct(int thing_done, int level)
 {
     ::did_god_conduct(thing_done, level);

@@ -1194,6 +1194,7 @@ enum enchant_type
     ENCH_PARALYSIS,                    //   20
     ENCH_SICK,
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
+    ENCH_FATIGUE,        // Post-berserk fatigue.
     
     NUM_ENCHANTMENTS
 };
@@ -2300,7 +2301,8 @@ enum mon_attack_flavour
     AF_ROT,
     AF_VAMPIRIC,
     AF_KLOWN,
-    AF_DISTORT
+    AF_DISTORT,
+    AF_RAGE
 };
 
 enum mon_attitude_type
@@ -2581,6 +2583,7 @@ enum mon_spellbook_type
     MST_DRAC_CALLER,
     MST_DRAC_SHIFTER,
     MST_CURSE_TOE,
+    MST_RUPERT,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };

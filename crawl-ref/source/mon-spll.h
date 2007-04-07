@@ -784,4 +784,13 @@
        MS_SUMMON_UNDEAD,
        MS_TORMENT  },
 
+    // Crusader theme.
+    {  MST_RUPERT,
+       MS_PARALYSIS,
+       MS_CONFUSE,
+       MS_BERSERK_RAGE,
+       MS_NO_SPELL,
+       MS_NO_SPELL,
+       MS_BERSERK_RAGE },
+
 #endif

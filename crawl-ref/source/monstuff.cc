@@ -2233,6 +2233,11 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
         break;
 
+    case MONS_MOTH_OF_WRATH:
+        if (one_chance_in(3))
+            used = moth_incite_monsters(monster);
+        break;
+        
     case MONS_PIT_FIEND:
         if (one_chance_in(3))
             break;
@@ -3568,7 +3573,11 @@ static void handle_monster_move(int i, monsters *monster)
         beem.target_y = monster->target_y;
 
         if (monster->behaviour != BEH_SLEEP
-            && monster->behaviour != BEH_WANDER)
+            && monster->behaviour != BEH_WANDER
+
+            // berserking monsters are limited to running up and
+            // hitting their foes.
+            && !monster->has_ench(ENCH_BERSERK))
         {
             // prevents unfriendlies from nuking you from offscreen.
             // How nice!
