@@ -25,6 +25,8 @@ struct Branch
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"
     const char* entry_message;
+    bool has_shops;
+    bool has_uniques;
     char floor_colour;          // Zot needs special handling
     char rock_colour;
     int (*mons_rarity_function)(int);
