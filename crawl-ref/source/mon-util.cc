@@ -519,16 +519,21 @@ bool mons_is_unique( int mc )
     return (mons_class_flag(mc, M_UNIQUE));
 }
 
-char mons_see_invis( struct monsters *mon )
+bool mons_sense_invis(const monsters *mon)
+{
+    return (mons_class_flag(mon->type, M_SENSE_INVIS));
+}
+
+bool mons_see_invis(const monsters *mon)
 {
     if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PANDEMONIUM_DEMON)
         return (mon->ghost->values[ GVAL_SEE_INVIS ]);
     else if (((seekmonster(mon->type))->bitfields & M_SEE_INVIS) != 0)
-        return (1);
+        return (true);
     else if (scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
-        return (1);
+        return (true);
 
-    return (0);
+    return (false);
 }                               // end mons_see_invis()
 
 
@@ -554,7 +559,7 @@ bool mons_player_visible( struct monsters *mon )
         if (player_in_water())
             return (true);
 
-        if (mons_see_invis( mon ))
+        if (mons_see_invis( mon ) || mons_sense_invis(mon))
             return (true);
 
         return (false);
@@ -567,7 +572,6 @@ unsigned char mons_char(int mc)
 {
     return (unsigned char) smc->showchar;
 }                               // end mons_char()
-
 
 char mons_itemuse(int mc)
 {
@@ -3857,6 +3861,16 @@ bool monsters::needs_berserk(bool check_spells) const
     }
 
     return (true);
+}
+
+bool monsters::can_see_invisible() const
+{
+    return (mons_see_invis(this));
+}
+
+bool monsters::invisible() const
+{
+    return (has_ench(ENCH_INVIS));
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -143,6 +143,8 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
+    virtual bool can_see_invisible() const = 0;
+    virtual bool invisible() const = 0;
     virtual void go_berserk(bool intentional) = 0;
     virtual void hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
@@ -714,6 +716,8 @@ public:
     bool can_swim() const;
     bool is_levitating() const;
     bool cannot_speak() const;
+    bool invisible() const;
+    bool can_see_invisible() const;
 
     kill_category kill_alignment() const;
 
@@ -990,7 +994,8 @@ public:
     int res_negative_energy() const;
 
     bool levitates() const;
-
+    bool invisible() const;
+    bool can_see_invisible() const;
     bool paralysed() const;
     bool confused() const;
     bool asleep() const;

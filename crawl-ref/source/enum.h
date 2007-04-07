@@ -1794,20 +1794,21 @@ enum mons_class_flags
     M_LEVITATE          = (1<< 5),        // ... but not if this is set
     M_INVIS             = (1<< 6),        // is created invis
     M_SEE_INVIS         = (1<< 7),        // can see invis
-    M_SPEAKS            = (1<< 8),        // uses talking code
-    M_CONFUSED          = (1<< 9),        // monster is perma-confused,
-    M_BATTY             = (1<<10),        // monster is batty
-    M_SPLITS            = (1<<11),        // monster can split
-    M_AMPHIBIOUS        = (1<<12),        // monster can swim in water,
-    M_THICK_SKIN        = (1<<13),        // monster has more effective AC,
-    M_HUMANOID          = (1<<14),        // for Glamour 
-    M_COLD_BLOOD        = (1<<15),        // susceptible to cold
-    M_WARM_BLOOD        = (1<<16),        // no effect currently
-    M_REGEN             = (1<<17),        // regenerates quickly
-    M_BURROWS           = (1<<18),        // monster digs through rock
-    M_EVIL              = (1<<19),        // monster vulnerable to holy spells
+    M_SENSE_INVIS       = (1<< 8),        // can sense invisible things
+    M_SPEAKS            = (1<< 9),        // uses talking code
+    M_CONFUSED          = (1<<10),        // monster is perma-confused,
+    M_BATTY             = (1<<11),        // monster is batty
+    M_SPLITS            = (1<<12),        // monster can split
+    M_AMPHIBIOUS        = (1<<13),        // monster can swim in water,
+    M_THICK_SKIN        = (1<<14),        // monster has more effective AC,
+    M_HUMANOID          = (1<<15),        // for Glamour 
+    M_COLD_BLOOD        = (1<<16),        // susceptible to cold
+    M_WARM_BLOOD        = (1<<17),        // no effect currently
+    M_REGEN             = (1<<18),        // regenerates quickly
+    M_BURROWS           = (1<<19),        // monster digs through rock
+    M_EVIL              = (1<<20),        // monster vulnerable to holy spells
 
-    M_UNIQUE            = (1<<20),        // monster is a unique
+    M_UNIQUE            = (1<<21),        // monster is a unique
 
     M_ACID_SPLASH       = (1<<22),        // Passive acid splash when hit.
 

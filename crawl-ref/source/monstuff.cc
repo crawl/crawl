@@ -1527,7 +1527,7 @@ static void handle_behaviour(struct monsters *mon)
 
         // [dshaligram] Very smart monsters have a chance of cluing in to
         // invisible players in various ways.
-        else if ((intel == I_NORMAL && one_chance_in(10))
+        else if ((intel == I_NORMAL && one_chance_in(13))
                 || (intel == I_HIGH && one_chance_in(6)))
             proxPlayer = true;
     }

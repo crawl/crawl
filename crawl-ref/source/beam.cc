@@ -2886,6 +2886,15 @@ static bool fuzz_invis_tracer(bolt &beem)
     if (dist > 2)
         return (false);
 
+    const int beam_src = beam_source(beem);
+    if (beam_src != MHITNOT && beam_src != MHITYOU)
+    {
+        // Monsters that can sense invisible 
+        const monsters *mon = &menv[beam_src];
+        if (mons_sense_invis(mon))
+            return (!dist);
+    }
+
     // Apply fuzz now.
     int xfuzz = random_range(-2, 2),
         yfuzz = random_range(-2, 2);
@@ -2959,6 +2968,10 @@ static int affect_player( struct bolt &beam )
 
     // use beamHit, NOT beam.hit, for modification of tohit.. geez!
     beamHit = beam.hit;
+
+    // Monsters shooting at an invisible player are very inaccurate.
+    if (you.invis && !beam.can_see_invis)
+        beamHit /= 2;
 
     if (beam.name[0] != '0') 
     {
@@ -3523,10 +3536,14 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
     // explosions always 'hit'
     const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
 
+    int beam_hit = beam.hit;
+    if (menv[tid].invisible() && !beam.can_see_invis)
+        beam_hit /= 2;
+
     // FIXME We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit. This is so we stay close to the 4.0
     // to-hit system (which had very little love for monsters).
-    if (!engulfs && !test_beam_hit(beam.hit, random2(mon->ev)))
+    if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
         // if the PLAYER cannot see the monster, don't tell them anything!
         if (player_monster_visible( &menv[tid] ) && mons_near(mon))

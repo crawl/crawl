@@ -721,9 +721,9 @@ bool check_awaken(int mons_aw)
         return (true);
     }
 
-    // I assume that creatures who can see invisible are very perceptive
+    // I assume that creatures who can sense invisible are very perceptive
     mons_perc = 10 + (mons_intel(monster->type) * 4) + monster->hit_dice
-                   + mons_see_invis(monster) * 5;
+                   + mons_sense_invis(monster) * 5;
 
     // critters that are wandering still have MHITYOU as their foe are
     // still actively on guard for the player, even if they can't see

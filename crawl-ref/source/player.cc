@@ -5250,3 +5250,13 @@ void player::sicken(int amount)
     disease = (tmp > 210) ? 210 : tmp;
     learned_something_new(TUT_YOU_SICK);    
 }
+
+bool player::can_see_invisible() const
+{
+    return (player_see_invis() > 0);
+}
+
+bool player::invisible() const
+{
+    return (invis);
+}

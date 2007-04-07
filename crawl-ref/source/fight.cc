@@ -2014,8 +2014,9 @@ int melee_attack::player_to_hit(bool random_factor)
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
 
+    const bool see_invis = player_see_invis();
     // if you can't see yourself, you're a little less acurate.
-    if (you.invis && !player_see_invis())
+    if (you.invis && !see_invis)
         your_to_hit -= 5;
 
     // fighting contribution
@@ -2128,11 +2129,13 @@ int melee_attack::player_to_hit(bool random_factor)
     }
 
     // Check for backlight (Corona).
-    if (defender
-        && defender->atype() == ACT_MONSTER
-        && def->has_ench(ENCH_BACKLIGHT))
+    if (defender && defender->atype() == ACT_MONSTER)
     {
-        your_to_hit += 2 + random2(8);
+        if (def->has_ench(ENCH_BACKLIGHT))
+            your_to_hit += 2 + random2(8);
+        // Invisible monsters are hard to hit.
+        else if (def->invisible() && !see_invis)
+            your_to_hit -= 6;
     }
 
     return (your_to_hit);
@@ -3067,6 +3070,13 @@ int melee_attack::mons_to_hit()
 
     if (attacker->confused())
         mhit -= 5;
+
+    // Invisible defender is hard to hit if you can't see invis. Note
+    // that this applies only to monsters vs monster and monster vs
+    // player. Does not apply to a player fighting an invisible
+    // monster.
+    if (defender->invisible() && !attacker->can_see_invisible())
+        mhit = mhit * 65 / 100;
 
     return (mhit);
 }

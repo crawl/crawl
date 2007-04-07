@@ -156,8 +156,8 @@ char mons_itemuse(int mc);
 /* ***********************************************************************
  * called from: beam - fight - monstuff - view
  * *********************************************************************** */
-char mons_see_invis( struct monsters *mon );
-
+bool mons_see_invis(const monsters *mon);
+bool mons_sense_invis(const monsters *mon);
 bool mons_monster_visible( struct monsters *mon, struct monsters *targ );
 bool mons_player_visible( struct monsters *mon );
 
