@@ -109,7 +109,8 @@ static command_type read_direction_key(bool just_looking = false)
 
     switch ( key )
     {
-    case ESCAPE: return CMD_TARGET_CANCEL;
+    case ESCAPE: case 'x': return CMD_TARGET_CANCEL;
+        
 #ifdef WIZARD
     case 'F': return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
 #endif
