@@ -2455,7 +2455,12 @@ bool parse_args( int argc, char **argv, bool rc_only )
         // arg MUST begin with '-'
         char c = arg[0];
         if (c != '-')
+        {
+            fprintf(stderr,
+                    "Option '%s' is invalid; options must be prefixed "
+                    "with -\n\n", arg);
             return (false);
+        }
 
         // look for match (now we also except --scores)
         if (arg[1] == '-')
@@ -2471,7 +2476,11 @@ bool parse_args( int argc, char **argv, bool rc_only )
         }
 
         if (o == num_cmd_ops)
+        {
+            fprintf(stderr,
+                    "Unknown option: %s\n\n", argv[current]);
             return (false);
+        }
 
         // disallow options specified more than once.
         if (arg_seen[o] == true)
