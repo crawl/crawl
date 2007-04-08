@@ -2458,7 +2458,9 @@ void monsters::init_with(const monsters &mon)
     god               = mon.god;
     
     if (mon.ghost.get())
-        ghost.reset( new ghost_demon( *mon.ghost ) );
+        ghost.reset(new ghost_demon( *mon.ghost ));
+    else
+        ghost.reset(NULL);
 }
 
 coord_def monsters::pos() const
