@@ -1,3 +1,10 @@
+Stone Soup 0.2.4 (20070408)
+---------------------------
+* Fixed another instance of monsters inheriting enchantments from other 
+  monsters.
+* Fixed detect creatures and items not working.
+* Fixed hydra decapitation not being credited correctly.
+
 Stone Soup 0.2.3 (20070407)
 ---------------------------
 * Fixed shapeshifter enchantment crash.
