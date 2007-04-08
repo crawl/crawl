@@ -1318,6 +1318,8 @@ bool formatted_scroller::process_key( int keyin )
         keyin = (*f_keyfilter)(keyin);
 
     bool repaint = false;
+    // Any key is assumed to be a movement key for now...
+    bool moved = true;
     switch ( keyin )
     {
     case 0:
@@ -1355,5 +1357,8 @@ bool formatted_scroller::process_key( int keyin )
 
     if (repaint)
         draw_menu();
+    else if (moved && is_set(MF_EASY_EXIT))
+        return (false);
+            
     return true;
 }
