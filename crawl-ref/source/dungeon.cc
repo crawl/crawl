@@ -6517,8 +6517,14 @@ static int exciting_colour()
 static int newwave_weapon_colour(const item_def &item)
 {
     int item_colour = BLACK;
-    // unrandom artefacts get predefined colours
-    if ( is_random_artefact(item) )
+    // fixed artefacts get predefined colours
+
+    char *itname = (char*) item_name( item, DESC_PLAIN );
+    char *item_runed = strstr( strlwr(itname), strlwr((char*) "runed") );
+    char *heav_runed = strstr( strlwr(itname), strlwr((char*) "heavily") );
+
+    if ( is_random_artefact(item) &&
+         (item_runed == NULL || heav_runed != NULL) )
         return exciting_colour();
 
     if (is_range_weapon( item ))
@@ -6835,7 +6841,8 @@ void item_colour( item_def &item )
         else
             item.colour = weapon_colour(item);
 
-        if (is_random_artefact( item ) && one_chance_in(5))
+        if (is_random_artefact( item ) && one_chance_in(5)
+              && Options.classic_item_colours)
             item.colour = random_colour();
 
         break;
