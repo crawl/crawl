@@ -1600,6 +1600,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
     m.target_y = unmarshallByte(th);
     m.flags = unmarshallLong(th);
 
+    m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
     for (int i = 0; i < nenchs; ++i)
         m.enchantments.insert( unmarshall_mon_enchant(th) );
