@@ -796,6 +796,13 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     }
 #endif
 
+    // [ds] Descending into the Labyrinth increments your_level. Going
+    // downstairs from a labyrinth implies that you've been banished (or been
+    // sent to Pandemonium somehow). Decrementing your_level here is needed
+    // to fix this buggy sequence: D:n -> Labyrinth -> Abyss -> D:(n+1).
+    if (you.level_type == LEVEL_LABYRINTH)
+        you.your_level--;
+
     if (stair_find == DNGN_ENTER_ZOT)
     {
         int num_runes = 0;

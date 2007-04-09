@@ -138,10 +138,12 @@
 
 {
     SPELL_IDENTIFY, "Identify",
-     SPTYP_DIVINATION,
-     SPFLAG_NONE,
-     6,
-     NULL
+    SPTYP_DIVINATION,
+    SPFLAG_NONE,
+    6,
+    NULL,
+    false,
+    true
 },
 
 {
@@ -149,7 +151,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+     false
 },
 
 {
@@ -157,7 +161,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+     false
 },
 
 {
@@ -165,7 +171,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -173,7 +181,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -181,7 +191,9 @@
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
      1,
-     NULL
+     NULL,
+     true,
+     false
 },
 
 {
@@ -189,7 +201,9 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
      6,
-     NULL
+     NULL,
+     true,
+     false
 },
 
 {
@@ -197,7 +211,9 @@
     SPTYP_TRANSLOCATION,
     SPFLAG_NONE,
     4,
-     NULL
+    NULL,
+    false,
+    false
 },
 
 {
@@ -205,7 +221,9 @@
     SPTYP_TRANSLOCATION,
     SPFLAG_NONE,
     1,
-     NULL
+    NULL,
+    false,
+    false
 },
 
 {
@@ -213,7 +231,8 @@
     SPTYP_TRANSLOCATION,
     SPFLAG_DIR_OR_TARGET,
     1,
-     NULL
+    NULL,
+    true
 },
 
 {
@@ -221,7 +240,9 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -229,7 +250,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -237,7 +260,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -245,7 +269,8 @@
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -253,7 +278,8 @@
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
      6,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -261,7 +287,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -269,7 +296,8 @@
      SPTYP_TRANSMIGRATION,  // removed enchantment, wasn't needed -- bwr
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -277,7 +305,8 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
      3,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -287,15 +316,18 @@
      6,  // lowered to 6 from 8, since its easily available from various items
         // and Swiftness is level 2 (and gives a similar effect).  Its also
         // not that much better than Invisibility.  -- bwr
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
-    SPELL_PARALYZE, "Paralyse",
+    SPELL_PARALYSE, "Paralyse",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -303,7 +335,8 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,
      3,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -311,7 +344,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -319,7 +354,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
      2,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -327,7 +363,8 @@
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      2,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -335,7 +372,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -343,7 +382,8 @@
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
      SPFLAG_GRID,
      7,
-     "Where do you want to put it?"
+     "Where do you want to put it?",
+     true
 },
 
 {
@@ -351,7 +391,8 @@
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
      3,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -359,7 +400,9 @@
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -367,7 +410,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -375,7 +420,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -383,7 +430,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -391,7 +440,8 @@
      SPTYP_CONJURATION | SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -399,7 +449,8 @@
      SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -407,7 +458,8 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -415,7 +467,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -423,7 +477,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -431,7 +487,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -439,7 +497,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -447,7 +507,9 @@
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -455,7 +517,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -463,7 +527,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -471,7 +537,9 @@
      SPTYP_HOLY,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
-     "Smite whom?"
+     "Smite whom?",
+     false,
+    false
 },
 
 {
@@ -479,7 +547,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -487,7 +557,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -495,7 +567,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -503,7 +577,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -511,7 +587,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -519,7 +597,9 @@
      SPTYP_SUMMONING | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -527,7 +607,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -535,7 +617,8 @@
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
      6,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -543,7 +626,8 @@
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      8,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -551,7 +635,8 @@
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
      2,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -559,7 +644,8 @@
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_GRID,
      6,
-     "Where do you want to put it?"
+     "Where do you want to put it?",
+     true
 }
 ,
 
@@ -568,7 +654,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID,
      9,
-     "Where?" 
+     "Where?",
+     true
 },
 
 {
@@ -576,7 +663,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -584,7 +673,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 
@@ -595,7 +686,8 @@
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -603,7 +695,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -611,7 +705,9 @@
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -619,7 +715,8 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -627,7 +724,9 @@
      SPTYP_DIVINATION | SPTYP_EARTH,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+     false
 },
 
 {
@@ -635,7 +734,9 @@
      SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_NOT_SELF,
      3,
-     NULL
+     NULL,
+     true,
+     false
 },
 
 {
@@ -643,7 +744,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+     true
 },
 
 {
@@ -651,7 +754,8 @@
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
      1,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -659,7 +763,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -667,7 +773,8 @@
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -675,7 +782,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
   
 {
@@ -683,7 +792,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -691,7 +802,9 @@
      SPTYP_NECROMANCY | SPTYP_SUMMONING,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -699,7 +812,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -707,7 +822,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -715,7 +832,9 @@
      SPTYP_FIRE,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -723,7 +842,9 @@
      SPTYP_ICE,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -731,7 +852,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -739,7 +862,8 @@
      SPTYP_ICE,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -747,7 +871,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -755,7 +880,9 @@
      SPTYP_ICE | SPTYP_SUMMONING,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -763,7 +890,9 @@
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -771,7 +900,9 @@
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -779,7 +910,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -787,7 +920,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -795,7 +930,8 @@
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -803,7 +939,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -811,14 +949,18 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
     SPELL_THUNDERBOLT, "Thunderbolt",
      SPTYP_HOLY | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
-     6         // why is this the only holy spell with a secondary? {dlb}
+     6,         // why is this the only holy spell with a secondary? {dlb}
+     NULL,
+     true
 }
 ,
 
@@ -827,7 +969,8 @@
      SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET,
      8,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -835,7 +978,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -843,7 +988,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -851,7 +998,9 @@
      SPTYP_HOLY,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -859,7 +1008,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -867,7 +1018,9 @@
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -875,7 +1028,8 @@
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
      3,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -883,7 +1037,8 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
      5,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -891,7 +1046,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -899,7 +1056,8 @@
      SPTYP_CONJURATION | SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET,
      1,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -907,7 +1065,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -915,7 +1075,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -923,7 +1085,8 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
      9,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -931,7 +1094,9 @@
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -939,7 +1104,9 @@
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -947,7 +1114,9 @@
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -955,7 +1124,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -963,7 +1134,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -971,7 +1144,9 @@
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -979,7 +1154,9 @@
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -987,7 +1164,9 @@
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -995,7 +1174,9 @@
      SPTYP_EARTH,
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1003,7 +1184,8 @@
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      6,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1011,14 +1193,18 @@
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      3,
-     NULL
+     NULL,
+     true
 },
 
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
      SPTYP_CONJURATION | SPTYP_EARTH, // conj makes more sense than tmig -- bwr
      SPFLAG_NONE,
-     7 
+     7,
+     NULL,
+     false,
+    false
 }
 ,
 
@@ -1027,7 +1213,9 @@
      SPTYP_ENCHANTMENT | SPTYP_EARTH,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1035,7 +1223,8 @@
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
      1,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1043,7 +1232,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1051,7 +1242,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1059,7 +1252,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1067,7 +1262,8 @@
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET,
      7,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1075,14 +1271,19 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
     SPELL_CURE_POISON_II, "Cure Poison",
      SPTYP_POISON,
      SPFLAG_NONE,
-     2
+     2,
+     NULL,
+     false,
+    false
 }
 ,
 
@@ -1091,14 +1292,19 @@
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
     SPELL_POISON_AMMUNITION, "Poison Ammunition",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
-     4 // jmf: SPTYP_TRANSMIGRATION vs SPTYP_ENCHANTMENT?
+     4, // jmf: SPTYP_TRANSMIGRATION vs SPTYP_ENCHANTMENT?
+     NULL,
+     false,
+    false
 }
 ,
 
@@ -1107,7 +1313,9 @@
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1115,7 +1323,9 @@
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1123,7 +1333,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1131,7 +1343,9 @@
      SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1139,7 +1353,9 @@
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1147,7 +1363,9 @@
      SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1155,7 +1373,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1163,7 +1383,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1171,7 +1393,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_POISON,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1179,7 +1403,9 @@
      SPTYP_TRANSMIGRATION,
      SPFLAG_DIR_OR_TARGET,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1187,7 +1413,8 @@
      SPTYP_TRANSMIGRATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      6,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1195,7 +1422,9 @@
      SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      5,  // only removes weapon, so I raised this from 4 -- bwr
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1203,7 +1432,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1211,7 +1442,9 @@
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1219,7 +1452,9 @@
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1227,7 +1462,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1235,7 +1472,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      9,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1243,7 +1482,9 @@
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1251,7 +1492,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1259,7 +1502,8 @@
      SPTYP_CONJURATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,
      7,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1267,7 +1511,8 @@
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      4,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1275,7 +1520,8 @@
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET,
      9,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1283,7 +1529,9 @@
      SPTYP_AIR,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1291,14 +1539,18 @@
      SPTYP_AIR,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
      SPTYP_SUMMONING,  // jmf: or SPTYP_SUMMONING | SPTYP_CONJURATION
      SPFLAG_NONE,
-     5
+     5,
+     NULL,
+     false
 }
 ,
 
@@ -1307,7 +1559,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1315,7 +1569,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 
@@ -1328,7 +1584,9 @@
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1336,7 +1594,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1344,7 +1604,9 @@
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1352,7 +1614,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_SUMMONING,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1360,7 +1624,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1368,7 +1634,9 @@
      SPTYP_FIRE | SPTYP_SUMMONING,
      SPFLAG_NONE,
      9,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1376,7 +1644,9 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1384,7 +1654,8 @@
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      2,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1392,7 +1663,9 @@
      SPTYP_ENCHANTMENT | SPTYP_ICE,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1400,7 +1673,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1408,7 +1683,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1416,7 +1693,9 @@
      SPTYP_ENCHANTMENT | SPTYP_DIVINATION,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1424,7 +1703,9 @@
      SPTYP_DIVINATION,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1432,7 +1713,9 @@
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1440,7 +1723,9 @@
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      5,     // fairly high level - potentially one of the best brands
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1448,7 +1733,9 @@
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      7,     // this is high for a reason - Warp brands are very powerful.
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1456,7 +1743,9 @@
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1464,7 +1753,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      9,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1472,7 +1763,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1480,7 +1773,9 @@
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1488,7 +1783,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1496,7 +1793,8 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1504,7 +1802,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1520,7 +1820,8 @@
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1528,7 +1829,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1536,7 +1839,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1544,7 +1849,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_AIR,
      SPFLAG_NONE,
      9,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1552,7 +1859,8 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
-     NULL
+     NULL,
+     true
 },
 
 {
@@ -1560,7 +1868,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
      SPFLAG_NONE,
      5,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1568,7 +1878,9 @@
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
      SPFLAG_NONE,
      2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1576,7 +1888,9 @@
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
      SPFLAG_NONE,
      4,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1584,7 +1898,9 @@
      SPTYP_TRANSLOCATION,
      SPFLAG_NONE,
      3,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1592,7 +1908,9 @@
     SPTYP_EARTH | SPTYP_TRANSMIGRATION, // was ench -- bwr
     SPFLAG_NONE,
     2,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1600,7 +1918,9 @@
     SPTYP_ICE | SPTYP_NECROMANCY,
     SPFLAG_NONE,
     6,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1608,7 +1928,9 @@
     SPTYP_AIR | SPTYP_CONJURATION,
     SPFLAG_NONE,
     8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1616,7 +1938,9 @@
     SPTYP_AIR | SPTYP_CONJURATION,
     SPFLAG_NONE,
     8,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1624,7 +1948,9 @@
     SPTYP_FIRE | SPTYP_CONJURATION,
     SPFLAG_NONE,
     7,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1632,7 +1958,9 @@
     SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
     SPFLAG_NONE,
     1,
-     NULL
+     NULL,
+     false,
+    false
 },
 
 {
@@ -1640,7 +1968,8 @@
     SPTYP_CONJURATION | SPTYP_POISON,
     SPFLAG_DIR_OR_TARGET,
     6,
-     NULL
+    NULL,
+    true
 },
 
 {
@@ -1648,7 +1977,169 @@
     0,
     SPFLAG_DIR_OR_TARGET,
     1,
-     NULL
+    NULL,
+    true
+},
+
+{
+    SPELL_HELLFIRE_BURST, "Hellfire Burst",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
+     9,
+     NULL,
+     false,
+    false 
+},
+
+{
+    SPELL_VAMPIRE_SUMMON, "Vampire Summon",
+    SPTYP_SUMMONING,
+    SPFLAG_UNHOLY,
+    3,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BRAIN_FEED, "Brain Feed",
+    SPTYP_NECROMANCY,
+    SPFLAG_UNHOLY,
+    3,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_FAKE_RAKSHASA_SUMMON, "Rakshasa Summon",
+    SPTYP_SUMMONING | SPTYP_NECROMANCY,
+    SPFLAG_UNHOLY,
+    3,
+    NULL,
+    false
+},
+
+{
+    SPELL_STEAM_BALL, "Steam Ball",
+    SPTYP_CONJURATION | SPTYP_FIRE,
+    SPFLAG_DIR_OR_TARGET,
+    4,
+    NULL,
+    true
+},
+
+{
+    SPELL_SUMMON_UFETUBUS, "Summon Ufetubus",
+    SPTYP_SUMMONING,
+    SPFLAG_UNHOLY,
+    4,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_SUMMON_BEAST, "Summon Beast",
+    SPTYP_SUMMONING,
+    SPFLAG_NONE,
+    4,
+    NULL,
+    false
+},
+
+{
+    SPELL_ENERGY_BOLT, "Energy Bolt",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET,
+    4,
+    NULL,
+    true
+},
+
+{
+    SPELL_POISON_SPLASH, "Poison Splash",
+    SPTYP_POISON,
+    SPFLAG_DIR_OR_TARGET,
+    2,
+    NULL,
+    true
+},
+
+{
+    SPELL_SUMMON_UNDEAD, "Summon Undead",
+    SPTYP_SUMMONING | SPTYP_NECROMANCY,
+    SPFLAG_NONE,
+    7,
+    NULL,
+    false,
+    false,
+},
+
+{
+    SPELL_CANTRIP, "Cantrip",
+    SPTYP_NONE,
+    SPFLAG_NONE,
+    1,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET,
+    5,
+    NULL,
+    true
+},
+
+{
+    SPELL_METAL_SPLINTERS, "Metal Splinters",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET,
+    5,
+    NULL,
+    true
+},
+
+{
+    SPELL_MIASMA, "Miasma",
+    SPTYP_CONJURATION | SPTYP_NECROMANCY,
+    SPFLAG_DIR_OR_TARGET,
+    6,
+    NULL,
+    true
+},
+
+{
+    SPELL_SUMMON_DRAKES, "Summon Drakes",
+    SPTYP_SUMMONING,
+    SPFLAG_NONE,
+    6,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BLINK_OTHER, "Blink Other",
+    SPTYP_TRANSLOCATION,
+    SPFLAG_NONE,
+    2,
+    NULL,
+    true
+},
+
+{
+    SPELL_SUMMON_MUSHROOMS, "Summon Mushrooms",
+    SPTYP_SUMMONING,
+    SPFLAG_NONE,
+    4,
+    NULL,
+    false,
+    false
 },
 
 {
@@ -1656,8 +2147,9 @@
      0,
      0,
      0,
-     NULL
+     NULL,
+     false,
+     false
 },
-
 
 #endif

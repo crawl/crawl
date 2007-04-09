@@ -2239,6 +2239,7 @@ enum monster_type                      // (int) menv[].type
     // Statuary
     MONS_ORANGE_STATUE,
     MONS_SILVER_STATUE,
+    MONS_ICE_STATUE,
 
     NUM_MONSTERS,                      // used for polymorph 
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
@@ -2403,89 +2404,6 @@ enum mon_itemuse_type
     MONUSE_MAGIC_ITEMS
 };
 
-// XXX: someday merge these into SPELL_
-// If changing this list, keep mon-util.cc spell names in sync.
-enum mon_spell_type
-{
-    MS_MMISSILE,                       //    0
-    MS_FLAME,
-    MS_FROST,
-    MS_PARALYSIS,
-    MS_SLOW,
-    MS_HASTE,                          //    5
-    MS_CONFUSE,    //    6 - do not deprecate!!! 13jan2000 {dlb}
-    MS_VENOM_BOLT,
-    MS_FIRE_BOLT,
-    MS_COLD_BOLT,
-    MS_LIGHTNING_BOLT,                 //   10
-    MS_INVIS,
-    MS_FIREBALL,
-    MS_HEAL,
-    MS_TELEPORT,
-    MS_TELEPORT_OTHER,                 //   15
-    MS_BLINK,
-    MS_CRYSTAL_SPEAR,
-    MS_DIG,
-    MS_NEGATIVE_BOLT,
-    MS_HELLFIRE_BURST,                 //   20
-    MS_VAMPIRE_SUMMON,
-    MS_ORB_ENERGY,
-    MS_BRAIN_FEED,
-    MS_LEVEL_SUMMON,
-    MS_FAKE_RAKSHASA_SUMMON,           //   25
-    MS_STEAM_BALL,
-    MS_SUMMON_DEMON,
-    MS_ANIMATE_DEAD,
-    MS_PAIN,
-    MS_SMITE,                          //   30
-    MS_STICKY_FLAME,
-    MS_POISON_BLAST,
-    MS_SUMMON_DEMON_LESSER,
-    MS_SUMMON_UFETUBUS,
-    MS_PURPLE_BLAST,                   //   35
-    MS_SUMMON_BEAST, // MS_GERYON was not descriptive - renamed 13jan2000 {dlb}
-    MS_ENERGY_BOLT,
-    MS_STING,
-    MS_IRON_BOLT,
-    MS_STONE_ARROW,                    //   40
-    MS_POISON_SPLASH,
-    MS_SUMMON_UNDEAD,
-    MS_MUTATION,                       //   43
-    MS_CANTRIP,
-    MS_DISINTEGRATE,                   //   45
-    MS_MARSH_GAS,
-    MS_QUICKSILVER_BOLT,
-    MS_TORMENT,
-    MS_HELLFIRE,
-    MS_METAL_SPLINTERS,                //   50
-    MS_SUMMON_DEMON_GREATER, // [foo]_1 was confusing - renamed 13jan2000 {dlb}
-    MS_BANISHMENT,
-    MS_CONTROLLED_BLINK,
-    MS_CONTROL_UNDEAD,
-    MS_MIASMA,                          //   55
-    MS_SUMMON_DRAKES,
-    MS_BLINK_OTHER,
-    MS_DISPEL_UNDEAD,
-    MS_HELLFROST,
-    MS_POISON_ARROW,                    //   60
-    MS_SUMMON_SMALL_MAMMALS,
-    MS_SUMMON_MUSHROOMS,
-    MS_ICE_BOLT,
-    MS_MAGMA,
-    MS_SHOCK,
-
-    MS_BERSERK_RAGE,
-    MS_MIGHT,
-    MS_MAKHLEB_MINOR_DESTRUCTION,
-    MS_MAKHLEB_MAJOR_DESTRUCTION,
-    
-    // XXX: before adding more monster versions of player spells we should
-    // consider merging the two lists into one and just having monsters 
-    // fail to implement the ones that are impractical.
-    NUM_MONSTER_SPELLS,
-    MS_NO_SPELL = 100
-};
-
 // XXX: These still need to be applied in mon-data.h
 enum mon_spellbook_type
 {
@@ -2585,6 +2503,7 @@ enum mon_spellbook_type
     MST_DRAC_SHIFTER,
     MST_CURSE_TOE,
     MST_RUPERT,
+    MST_ICE_STATUE,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };
@@ -3277,7 +3196,7 @@ enum spell_type
     SPELL_POLYMORPH_OTHER = 20,        //   20
     SPELL_SLOW,
     SPELL_HASTE,
-    SPELL_PARALYZE,
+    SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_INVISIBILITY,                //   25
     SPELL_THROW_FLAME,
@@ -3444,9 +3363,29 @@ enum spell_type
     SPELL_SIMULACRUM,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_CHAIN_LIGHTNING,
-    SPELL_EXCRUCIATING_WOUNDS,        // 204 (be wary of 209/210, see below)
+    SPELL_EXCRUCIATING_WOUNDS,
+
+    // Mostly monster-only spells after this point:
+    SPELL_HELLFIRE_BURST,             // 205
+    SPELL_VAMPIRE_SUMMON,
+    SPELL_BRAIN_FEED,
+    SPELL_FAKE_RAKSHASA_SUMMON,
+    SPELL_STEAM_BALL,
+    SPELL_SUMMON_UFETUBUS,            // 210
+    SPELL_SUMMON_BEAST,
+    SPELL_ENERGY_BOLT,
+    SPELL_POISON_SPLASH,
+    SPELL_SUMMON_UNDEAD,
+    SPELL_CANTRIP,                    // 215
+    SPELL_QUICKSILVER_BOLT,
+    SPELL_METAL_SPLINTERS,
+    SPELL_MIASMA,
+    SPELL_SUMMON_DRAKES,
+    SPELL_BLINK_OTHER,                // 220
+    SPELL_SUMMON_MUSHROOMS,
+    
     NUM_SPELLS,
-    SPELL_NO_SPELL = 210              //  210 - added 22jan2000 {dlb}
+    SPELL_NO_SPELL = 250               //  255 - added 22jan2000 {dlb}
 };
 
 enum spflag_type

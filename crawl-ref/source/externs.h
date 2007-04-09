@@ -599,7 +599,7 @@ public:
 
   int burden;
   burden_state_type burden_state;
-  FixedVector<unsigned char, 25> spells;
+  FixedVector<spell_type, 25> spells;
   char spell_no;
   unsigned char char_direction;          //
 
@@ -811,13 +811,13 @@ public:
 
 extern player you;
 
-class monster_spells : public FixedVector<int, NUM_MONSTER_SPELL_SLOTS>
+class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
 {
 public:
     monster_spells() 
-        : FixedVector<int, NUM_MONSTER_SPELL_SLOTS>(MS_NO_SPELL)
+        : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
     { }
-    void clear() { init(MS_NO_SPELL); }
+    void clear() { init(SPELL_NO_SPELL); }
 };
 
 struct mon_attack_def

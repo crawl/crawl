@@ -300,7 +300,7 @@ void cast_spec_spell(void)
     if (spell == -1)
         canned_msg( MSG_OK );
     else
-        your_spells( spell, 0, false );
+        your_spells( static_cast<spell_type>(spell), 0, false );
 }
 #endif
 
@@ -313,20 +313,21 @@ void cast_spec_spell(void)
 #ifdef WIZARD
 void cast_spec_spell_name(void)
 {
-    int i = 0;
     char specs[80];
     char spname[80];
 
     mpr( "Cast which spell by name? ", MSGCH_PROMPT );
     get_input_line( specs, sizeof( specs ) );
     
-    for (i = 0; i < NUM_SPELLS; i++)
+    for (int i = 0; i < NUM_SPELLS; i++)
     {
-        strncpy( spname, spell_title(i), sizeof( spname ) );
+        strncpy( spname,
+                 spell_title(static_cast<spell_type>(i)),
+                 sizeof( spname ) );
 
         if (strstr( strlwr(spname), strlwr(specs) ) != NULL)
         {
-            your_spells(i, 0, false);
+            your_spells(static_cast<spell_type>(i), 0, false);
             return;
         }
     }

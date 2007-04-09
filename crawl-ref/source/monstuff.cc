@@ -52,6 +52,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "spells2.h"
 #include "spells4.h"
 #include "stuff.h"
@@ -991,6 +992,7 @@ static bool valid_morph( struct monsters *monster, int new_mclass )
         || new_mclass == MONS_ROYAL_JELLY
         || new_mclass == MONS_ORANGE_STATUE
         || new_mclass == MONS_SILVER_STATUE
+        || new_mclass == MONS_ICE_STATUE
         || (new_mclass >= MONS_GERYON && new_mclass <= MONS_ERESHKIGAL))
     {
         return (false);
@@ -2251,14 +2253,14 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
         // badly they'll damage the player with torment) -- GDL
         if (one_chance_in(4))
         {
-            int spell_cast;
+            spell_type spell_cast = SPELL_NO_SPELL;
 
             switch (random2(4))
             {
             case 0:
                 if (!mons_friendly(monster))
                 {
-                    spell_cast = MS_TORMENT;
+                    spell_cast = SPELL_SYMBOL_OF_TORMENT;
                     mons_cast(monster, beem, spell_cast);
                     used = true;
                     break;
@@ -2267,7 +2269,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
             case 1:
             case 2:
             case 3:
-                spell_cast = MS_HELLFIRE;
+                spell_cast = SPELL_HELLFIRE;
                 setup_mons_cast(monster, beem, spell_cast);
 
                 // fire tracer
@@ -2768,32 +2770,32 @@ static bool handle_wand(struct monsters *monster, bolt &beem)
 
 // Returns a suitable breath weapon for the draconian; does not handle all
 // draconians, does fire a tracer.
-static int get_draconian_breath_spell( struct monsters *monster )
+static spell_type get_draconian_breath_spell( const monsters *monster )
 {
-    int draco_breath = MS_NO_SPELL;
+    spell_type draco_breath = SPELL_NO_SPELL;
 
     if (mons_genus( monster->type ) == MONS_DRACONIAN)
     {
         switch (draco_subspecies( monster ))
         {
         case MONS_BLACK_DRACONIAN:
-            draco_breath = MS_LIGHTNING_BOLT;
+            draco_breath = SPELL_LIGHTNING_BOLT;
             break;
 
         case MONS_PALE_DRACONIAN:
-            draco_breath = MS_STEAM_BALL;
+            draco_breath = SPELL_STEAM_BALL;
             break;
 
         case MONS_GREEN_DRACONIAN:
-            draco_breath = MS_POISON_BLAST;
+            draco_breath = SPELL_POISONOUS_CLOUD;
             break;
 
         case MONS_PURPLE_DRACONIAN:
-            draco_breath = MS_ORB_ENERGY;
+            draco_breath = SPELL_ISKENDERUNS_MYSTIC_BLAST;
             break;
 
         case MONS_MOTTLED_DRACONIAN:
-            draco_breath = MS_STICKY_FLAME;
+            draco_breath = SPELL_STICKY_FLAME;
             break;
 
         case MONS_DRACONIAN:
@@ -2806,7 +2808,7 @@ static int get_draconian_breath_spell( struct monsters *monster )
     }
 
 
-    if (draco_breath != MS_NO_SPELL)
+    if (draco_breath != SPELL_NO_SPELL)
     {
         // [ds] Check line-of-fire here. It won't happen elsewhere.
         bolt beem;
@@ -2815,7 +2817,7 @@ static int get_draconian_breath_spell( struct monsters *monster )
         fire_tracer(monster, beem);
         
         if (!mons_should_fire(beem))
-            draco_breath = MS_NO_SPELL;
+            draco_breath = SPELL_NO_SPELL;
     }
 
     return (draco_breath);
@@ -2831,6 +2833,165 @@ static bool is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
+static bool mons_announce_cast(monsters *monster, bool nearby,
+                               spell_type spell_cast,
+                               spell_type draco_breath)
+{
+    if (nearby)      // handle monsters within range of player
+    {
+        if (monster->type == MONS_GERYON)
+        {
+            if (silenced(monster->x, monster->y))
+                return (false);
+
+            simple_monster_message( monster, " winds a great silver horn.",
+                                    MSGCH_MONSTER_SPELL );
+        }
+        else if (mons_is_demon( monster->type ))
+        {
+            simple_monster_message( monster, " gestures.", 
+                                    MSGCH_MONSTER_SPELL );
+        }
+        else
+        {
+            switch (monster->type)
+            {
+            default:
+                if (spell_cast == draco_breath)
+                {
+                    if (!simple_monster_message(monster, " breathes.",
+                                                MSGCH_MONSTER_SPELL))
+                    {
+                        if (!silenced(monster->x, monster->y)
+                            && !silenced(you.x_pos, you.y_pos))
+                        {
+                            mpr("You hear a roar.", MSGCH_SOUND);
+                        }
+                    }
+                    break;
+                }
+
+                if (silenced(monster->x, monster->y))
+                    return (false);
+
+                if (mons_class_flag(monster->type, M_PRIEST))
+                {
+                    switch (random2(3))
+                    {
+                    case 0:
+                        simple_monster_message( monster, 
+                                                " prays.",
+                                                MSGCH_MONSTER_SPELL );
+                        break;
+                    case 1:
+                        simple_monster_message( monster, 
+                                                " mumbles some strange prayers.",
+                                                MSGCH_MONSTER_SPELL );
+                        break;
+                    case 2:
+                    default:
+                        simple_monster_message( monster, 
+                                                " utters an invocation.",
+                                                MSGCH_MONSTER_SPELL );
+                        break;
+                    }
+                }
+                else
+                {
+                    switch (random2(3))
+                    {
+                    case 0:
+                        // XXX: could be better, chosen to match the
+                        // ones in monspeak.cc... has the problem 
+                        // that it doesn't suggest a vocal component. -- bwr
+                        if (player_monster_visible(monster))
+                            simple_monster_message( monster, 
+                                                    " gestures wildly.",
+                                                    MSGCH_MONSTER_SPELL );
+                        break;
+                    case 1:
+                        simple_monster_message( monster, 
+                                                " mumbles some strange words.",
+                                                MSGCH_MONSTER_SPELL );
+                        break;
+                    case 2:
+                    default:
+                        simple_monster_message( monster, 
+                                                " casts a spell.",
+                                                MSGCH_MONSTER_SPELL );
+                        break;
+                    }
+                }
+                break;
+
+            case MONS_BALL_LIGHTNING:
+                monster->hit_points = -1;
+                break;
+
+            case MONS_STEAM_DRAGON:
+            case MONS_MOTTLED_DRAGON:
+            case MONS_STORM_DRAGON:
+            case MONS_GOLDEN_DRAGON:
+            case MONS_SHADOW_DRAGON:
+            case MONS_SWAMP_DRAGON:
+            case MONS_SWAMP_DRAKE:
+            case MONS_DEATH_DRAKE:
+            case MONS_HELL_HOG:
+            case MONS_SERPENT_OF_HELL:
+            case MONS_QUICKSILVER_DRAGON:
+            case MONS_IRON_DRAGON:
+                if (!simple_monster_message(monster, " breathes.",
+                                            MSGCH_MONSTER_SPELL))
+                {
+                    if (!silenced(monster->x, monster->y)
+                        && !silenced(you.x_pos, you.y_pos))
+                    {
+                        mpr("You hear a roar.", MSGCH_SOUND);
+                    }
+                }
+                break;
+
+            case MONS_VAPOUR:
+                monster->add_ench(ENCH_SUBMERGED);
+                break;
+
+            case MONS_BRAIN_WORM:
+            case MONS_ELECTRIC_GOLEM:
+            case MONS_ICE_STATUE:
+                // These don't show any signs that they're casting a spell.
+                break;
+
+            case MONS_GREAT_ORB_OF_EYES:
+            case MONS_SHINING_EYE:
+            case MONS_EYE_OF_DEVASTATION:
+                simple_monster_message(monster, " gazes.", MSGCH_MONSTER_SPELL);
+                break;
+
+            case MONS_GIANT_ORANGE_BRAIN:
+                simple_monster_message(monster, " pulsates.",
+                                       MSGCH_MONSTER_SPELL);
+                break;
+
+            case MONS_NAGA:
+            case MONS_NAGA_WARRIOR:
+                simple_monster_message(monster, " spits poison.",
+                                       MSGCH_MONSTER_SPELL);
+                break;
+            }
+        }
+    }
+    else                    // handle far-away monsters
+    {
+        if (monster->type == MONS_GERYON
+            && !silenced(you.x_pos, you.y_pos))
+        {
+            mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
+        }
+    }
+
+    return (true);
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -2843,12 +3004,12 @@ static bool handle_spell( monsters *monster, bolt & beem )
 {
     bool monsterNearby = mons_near(monster);
     bool finalAnswer = false;   // as in: "Is that your...?" {dlb}
-    const int draco_breath = get_draconian_breath_spell(monster);
+    const spell_type draco_breath = get_draconian_breath_spell(monster);
 
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP
         || (!mons_class_flag(monster->type, M_SPELLCASTER)
-                && draco_breath == MS_NO_SPELL)
+                && draco_breath == SPELL_NO_SPELL)
         || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
@@ -2878,23 +3039,23 @@ static bool handle_spell( monsters *monster, bolt & beem )
     }
     else
     {
-        int spell_cast = MS_NO_SPELL;
+        spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass = monster->spells;
 
         // forces the casting of dig when player not visible - this is EVIL!
         if (!monsterNearby)
         {
-            if (hspell_pass[4] == MS_DIG && monster->behaviour == BEH_SEEK)
+            if (hspell_pass[4] == SPELL_DIG && monster->behaviour == BEH_SEEK)
             {
-                spell_cast = MS_DIG;
+                spell_cast = SPELL_DIG;
                 finalAnswer = true;
             }
-            else if (hspell_pass[2] == MS_HEAL 
+            else if (hspell_pass[2] == SPELL_LESSER_HEALING
                         && monster->hit_points < monster->max_hit_points)
             {
                 // The player's out of sight!  
                 // Quick, let's take a turn to heal ourselves. -- bwr
-                spell_cast = MS_HEAL;
+                spell_cast = SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
             else if (monster->behaviour == BEH_FLEE)
@@ -2943,25 +3104,25 @@ static bool handle_spell( monsters *monster, bolt & beem )
         if (!finalAnswer)
         {
             // should monster not have selected dig by now, it never will:
-            if (hspell_pass[4] == MS_DIG)
-                hspell_pass[4] = MS_NO_SPELL;
+            if (hspell_pass[4] == SPELL_DIG)
+                hspell_pass[4] = SPELL_NO_SPELL;
 
             // remove healing/invis/haste if we don't need them
             int num_no_spell = 0;
 
             for (int i = 0; i < 6; i++)
             {
-                if (hspell_pass[i] == MS_NO_SPELL)
+                if (hspell_pass[i] == SPELL_NO_SPELL)
                     num_no_spell++;    
                 else if (ms_waste_of_time( monster, hspell_pass[i] ))
                 {
-                    hspell_pass[i] = MS_NO_SPELL;
+                    hspell_pass[i] = SPELL_NO_SPELL;
                     num_no_spell++;
                 }
             }
 
             // If no useful spells... cast no spell.
-            if (num_no_spell == 6 && draco_breath == MS_NO_SPELL)
+            if (num_no_spell == 6 && draco_breath == SPELL_NO_SPELL)
                 return (false);
 
             // up to four tries to pick a spell.
@@ -2973,7 +3134,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
                 // choose their emergency spell.
                 if (monster->behaviour == BEH_FLEE)
                 {
-                    spell_cast = (one_chance_in(5) ? MS_NO_SPELL 
+                    spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL 
                                                    : hspell_pass[5]);
                 }
                 else
@@ -2982,7 +3143,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
                     spell_cast = hspell_pass[random2(5)];
                 }
 
-                if (spell_cast == MS_NO_SPELL)
+                if (spell_cast == SPELL_NO_SPELL)
                     continue;
 
                 // setup the spell
@@ -3028,17 +3189,17 @@ static bool handle_spell( monsters *monster, bolt & beem )
 
                 // if not okay, then maybe we'll cast a defensive spell
                 if (!spellOK)
-                    spell_cast = (coinflip() ? hspell_pass[2] : MS_NO_SPELL);
+                    spell_cast = (coinflip() ? hspell_pass[2] : SPELL_NO_SPELL);
 
-                if (spell_cast != MS_NO_SPELL)
+                if (spell_cast != SPELL_NO_SPELL)
                     break;
             }
         }
 
         // If there's otherwise no ranged attack use the breath weapon.
         // The breath weapon is also occasionally used.
-        if (draco_breath != MS_NO_SPELL 
-                && (spell_cast == MS_NO_SPELL 
+        if (draco_breath != SPELL_NO_SPELL 
+                && (spell_cast == SPELL_NO_SPELL 
                     || (!is_emergency_spell(hspell_pass, spell_cast)
                         && one_chance_in(4))))
         {
@@ -3047,169 +3208,22 @@ static bool handle_spell( monsters *monster, bolt & beem )
         }
 
         // should the monster *still* not have a spell, well, too bad {dlb}:
-        if (spell_cast == MS_NO_SPELL)
+        if (spell_cast == SPELL_NO_SPELL)
             return (false);
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it
-        if (spell_cast == MS_ANIMATE_DEAD
+        if (spell_cast == SPELL_ANIMATE_DEAD
             && !animate_dead( 100, SAME_ATTITUDE(monster), monster->foe, 0 ))
         {
             return (false);
         }
 
-        if (monsterNearby)      // handle monsters within range of player
-        {
-            if (monster->type == MONS_GERYON)
-            {
-                if (silenced(monster->x, monster->y))
-                    return (false);
-
-                simple_monster_message( monster, " winds a great silver horn.",
-                                        MSGCH_MONSTER_SPELL );
-            }
-            else if (mons_is_demon( monster->type ))
-            {
-                simple_monster_message( monster, " gestures.", 
-                                        MSGCH_MONSTER_SPELL );
-            }
-            else
-            {
-                switch (monster->type)
-                {
-                default:
-                    if (spell_cast == draco_breath)
-                    {
-                        if (!simple_monster_message(monster, " breathes.",
-                                                    MSGCH_MONSTER_SPELL))
-                        {
-                            if (!silenced(monster->x, monster->y)
-                                && !silenced(you.x_pos, you.y_pos))
-                            {
-                                mpr("You hear a roar.", MSGCH_SOUND);
-                            }
-                        }
-                        break;
-                    }
-
-                    if (silenced(monster->x, monster->y))
-                        return (false);
-
-                    if (mons_class_flag(monster->type, M_PRIEST))
-                    {
-                        switch (random2(3))
-                        {
-                        case 0:
-                            simple_monster_message( monster, 
-                                                    " prays.",
-                                                    MSGCH_MONSTER_SPELL );
-                            break;
-                        case 1:
-                            simple_monster_message( monster, 
-                                                    " mumbles some strange prayers.",
-                                                    MSGCH_MONSTER_SPELL );
-                            break;
-                        case 2:
-                        default:
-                            simple_monster_message( monster, 
-                                                    " utters an invocation.",
-                                                    MSGCH_MONSTER_SPELL );
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        switch (random2(3))
-                        {
-                        case 0:
-                            // XXX: could be better, chosen to match the
-                            // ones in monspeak.cc... has the problem 
-                            // that it doesn't suggest a vocal component. -- bwr
-                            if (player_monster_visible(monster))
-                                simple_monster_message( monster, 
-                                                        " gestures wildly.",
-                                                        MSGCH_MONSTER_SPELL );
-                            break;
-                        case 1:
-                            simple_monster_message( monster, 
-                                                    " mumbles some strange words.",
-                                                    MSGCH_MONSTER_SPELL );
-                            break;
-                        case 2:
-                        default:
-                            simple_monster_message( monster, 
-                                                    " casts a spell.",
-                                                    MSGCH_MONSTER_SPELL );
-                            break;
-                        }
-                    }
-                    break;
-
-                case MONS_BALL_LIGHTNING:
-                    monster->hit_points = -1;
-                    break;
-
-                case MONS_STEAM_DRAGON:
-                case MONS_MOTTLED_DRAGON:
-                case MONS_STORM_DRAGON:
-                case MONS_GOLDEN_DRAGON:
-                case MONS_SHADOW_DRAGON:
-                case MONS_SWAMP_DRAGON:
-                case MONS_SWAMP_DRAKE:
-                case MONS_DEATH_DRAKE:
-                case MONS_HELL_HOG:
-                case MONS_SERPENT_OF_HELL:
-                case MONS_QUICKSILVER_DRAGON:
-                case MONS_IRON_DRAGON:
-                    if (!simple_monster_message(monster, " breathes.",
-                                                MSGCH_MONSTER_SPELL))
-                    {
-                        if (!silenced(monster->x, monster->y)
-                            && !silenced(you.x_pos, you.y_pos))
-                        {
-                            mpr("You hear a roar.", MSGCH_SOUND);
-                        }
-                    }
-                    break;
-
-                case MONS_VAPOUR:
-                    monster->add_ench(ENCH_SUBMERGED);
-                    break;
-
-                case MONS_BRAIN_WORM:
-                case MONS_ELECTRIC_GOLEM:
-                    // These don't show any signs that they're casting a spell.
-                    break;
-
-                case MONS_GREAT_ORB_OF_EYES:
-                case MONS_SHINING_EYE:
-                case MONS_EYE_OF_DEVASTATION:
-                    simple_monster_message(monster, " gazes.", MSGCH_MONSTER_SPELL);
-                    break;
-
-                case MONS_GIANT_ORANGE_BRAIN:
-                    simple_monster_message(monster, " pulsates.",
-                                           MSGCH_MONSTER_SPELL);
-                    break;
-
-                case MONS_NAGA:
-                case MONS_NAGA_WARRIOR:
-                    simple_monster_message(monster, " spits poison.",
-                                           MSGCH_MONSTER_SPELL);
-                    break;
-                }
-            }
-        }
-        else                    // handle far-away monsters
-        {
-            if (monster->type == MONS_GERYON
-                && !silenced(you.x_pos, you.y_pos))
-            {
-                mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
-            }
-        }
-
+        if (!mons_announce_cast(monster, monsterNearby,
+                                spell_cast, draco_breath))
+            return (false);
+        
         // FINALLY! determine primary spell effects {dlb}:
-        if (spell_cast == MS_BLINK)
+        if (spell_cast == SPELL_BLINK)
         {
             // why only cast blink if nearby? {dlb}
             if (monsterNearby)
@@ -5178,46 +5192,46 @@ static int map_wand_to_mspell(int wand_type)
     switch (wand_type)
     {
         case WAND_FLAME:
-            mzap = MS_FLAME;
+            mzap = SPELL_THROW_FLAME;
             break;
         case WAND_FROST:
-            mzap = MS_FROST;
+            mzap = SPELL_THROW_FROST;
             break;
         case WAND_SLOWING:
-            mzap = MS_SLOW;
+            mzap = SPELL_SLOW;
             break;
         case WAND_HASTING:
-            mzap = MS_HASTE;
+            mzap = SPELL_HASTE;
             break;
         case WAND_MAGIC_DARTS:
-            mzap = MS_MMISSILE;
+            mzap = SPELL_MAGIC_DART;
             break;
         case WAND_HEALING:
-            mzap = MS_HEAL;
+            mzap = SPELL_LESSER_HEALING;
             break;
         case WAND_PARALYSIS:
-            mzap = MS_PARALYSIS;
+            mzap = SPELL_PARALYSE;
             break;
         case WAND_FIRE:
-            mzap = MS_FIRE_BOLT;
+            mzap = SPELL_BOLT_OF_FIRE;
             break;
         case WAND_COLD:
-            mzap = MS_COLD_BOLT;
+            mzap = SPELL_BOLT_OF_COLD;
             break;
         case WAND_CONFUSION:
-            mzap = MS_CONFUSE;
+            mzap = SPELL_CONFUSE;
             break;
         case WAND_INVISIBILITY:
-            mzap = MS_INVIS;
+            mzap = SPELL_INVISIBILITY;
             break;
         case WAND_TELEPORTATION:
-            mzap = MS_TELEPORT_OTHER;
+            mzap = SPELL_TELEPORT_OTHER;
             break;
         case WAND_LIGHTNING:
-            mzap = MS_LIGHTNING_BOLT;
+            mzap = SPELL_LIGHTNING_BOLT;
             break;
         case WAND_DRAINING:
-            mzap = MS_NEGATIVE_BOLT;
+            mzap = SPELL_BOLT_OF_DRAINING;
             break;
         default:
             mzap = 0;

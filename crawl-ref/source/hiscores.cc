@@ -2082,6 +2082,7 @@ std::string xlog_status_line()
 {
     const scorefile_entry se(0, 0, KILL_MISC, NULL);
     se.set_base_xlog_fields();
+    se.fields->add_field("time", "%s", make_date_string(time(NULL)).c_str());
     return (se.fields->xlog_line());
 }
 #endif // DGL_WHEREIS

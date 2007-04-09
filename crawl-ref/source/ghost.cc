@@ -57,8 +57,8 @@ static int search_order_third[] = {
 /* 0 */
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
-    SPELL_SUMMON_WRAITHS,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_WRAITHS,
     SPELL_SUMMON_DEMON,
     SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
@@ -81,7 +81,7 @@ static int search_order_misc[] = {
 /* 0 */
     SPELL_AGONY,
     SPELL_BANISHMENT,
-    SPELL_PARALYZE,
+    SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_SLOW,
     SPELL_POLYMORPH_OTHER,
@@ -221,39 +221,39 @@ void ghost_demon::init_random_demon()
         /* give demon a chance for some monster-only spells: */
         /* and demon-summoning should be fairly common: */
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = MS_HELLFIRE_BURST;
+            values[GVAL_SPELL_1] = SPELL_HELLFIRE_BURST;
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = MS_METAL_SPLINTERS;
+            values[GVAL_SPELL_1] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
-            values[GVAL_SPELL_1] = MS_ENERGY_BOLT;  /* eye of devas */
+            values[GVAL_SPELL_1] = SPELL_ENERGY_BOLT;  /* eye of devas */
 
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = MS_STEAM_BALL;
+            values[GVAL_SPELL_2] = SPELL_STEAM_BALL;
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = MS_PURPLE_BLAST;
+            values[GVAL_SPELL_2] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
         if (one_chance_in(25))
-            values[GVAL_SPELL_2] = MS_HELLFIRE;
+            values[GVAL_SPELL_2] = SPELL_HELLFIRE;
 
         if (one_chance_in(25))
-            values[GVAL_SPELL_3] = MS_SMITE;
+            values[GVAL_SPELL_3] = SPELL_SMITING;
         if (one_chance_in(25))
-            values[GVAL_SPELL_3] = MS_HELLFIRE_BURST;
+            values[GVAL_SPELL_3] = SPELL_HELLFIRE_BURST;
         if (one_chance_in(12))
-            values[GVAL_SPELL_3] = MS_SUMMON_DEMON_GREATER;
+            values[GVAL_SPELL_3] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
-            values[GVAL_SPELL_3] = MS_SUMMON_DEMON;
+            values[GVAL_SPELL_3] = SPELL_SUMMON_DEMON;
 
         if (one_chance_in(20))
-            values[GVAL_SPELL_4] = MS_SUMMON_DEMON_GREATER;
+            values[GVAL_SPELL_4] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(20))
-            values[GVAL_SPELL_4] = MS_SUMMON_DEMON;
+            values[GVAL_SPELL_4] = SPELL_SUMMON_DEMON;
 
         /* at least they can summon demons */
         if (values[GVAL_SPELL_4] == SPELL_NO_SPELL)
-            values[GVAL_SPELL_4] = MS_SUMMON_DEMON;
+            values[GVAL_SPELL_4] = SPELL_SUMMON_DEMON;
 
         if (one_chance_in(15))
-            values[GVAL_SPELL_5] = MS_DIG;
+            values[GVAL_SPELL_5] = SPELL_DIG;
     }
 }
 
@@ -429,103 +429,19 @@ int ghost_demon::translate_spell(int spel) const
 {
     switch (spel)
     {
-    case SPELL_TELEPORT_SELF:
-        return (MS_TELEPORT);
-    case SPELL_ICE_BOLT:
-        return (MS_ICE_BOLT);
-    case SPELL_SHOCK:
-        return (MS_SHOCK);
-    case SPELL_BOLT_OF_MAGMA:
-        return (MS_MAGMA);
-    case SPELL_MAGIC_DART:
-        return (MS_MMISSILE);
-    case SPELL_FIREBALL:
-    case SPELL_DELAYED_FIREBALL:
-        return (MS_FIREBALL);
-    case SPELL_DIG:
-        return (MS_DIG);
-    case SPELL_BOLT_OF_FIRE:
-        return (MS_FIRE_BOLT);
-    case SPELL_BOLT_OF_COLD:
-        return (MS_COLD_BOLT);
-    case SPELL_LIGHTNING_BOLT:
-        return (MS_LIGHTNING_BOLT);
-    case SPELL_POLYMORPH_OTHER:
-        return (MS_MUTATION);
-    case SPELL_SLOW:
-        return (MS_SLOW);
-    case SPELL_HASTE:
-        return (MS_HASTE);
-    case SPELL_PARALYZE:
-        return (MS_PARALYSIS);
-    case SPELL_CONFUSE:
-        return (MS_CONFUSE);
-    case SPELL_INVISIBILITY:
-        return (MS_INVIS);
-    case SPELL_THROW_FLAME:
-        return (MS_FLAME);
-    case SPELL_THROW_FROST:
-        return (MS_FROST);
     case SPELL_CONTROLLED_BLINK:
-        return (MS_BLINK);        /* approximate */
-/*  case FREEZING_CLOUD: return ; no freezing/mephitic cloud yet
-   case MEPHITIC_CLOUD: return ; */
-    case SPELL_VENOM_BOLT:
-        return (MS_VENOM_BOLT);
-    case SPELL_POISON_ARROW:
-        return (MS_POISON_ARROW);
-    case SPELL_TELEPORT_OTHER:
-        return (MS_TELEPORT_OTHER);
-    case SPELL_SUMMON_SMALL_MAMMAL:
-        return (MS_SUMMON_SMALL_MAMMALS);
-    case SPELL_BOLT_OF_DRAINING:
-        return (MS_NEGATIVE_BOLT);
-    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-        return (MS_CRYSTAL_SPEAR);
-    case SPELL_BLINK:
-        return (MS_BLINK);
-    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return (MS_ORB_ENERGY);
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-        return (MS_LEVEL_SUMMON); /* approximate */
-    case SPELL_SHADOW_CREATURES:
-        return (MS_LEVEL_SUMMON); /* approximate */
-    case SPELL_ANIMATE_DEAD:
-        return (MS_ANIMATE_DEAD);
-    case SPELL_PAIN:
-        return (MS_PAIN);
-    case SPELL_SUMMON_WRAITHS:
-        return (MS_SUMMON_UNDEAD);        /* approximate */
-    case SPELL_STICKY_FLAME:
-        return (MS_STICKY_FLAME);
-    case SPELL_CALL_IMP:
-        return (MS_SUMMON_DEMON_LESSER);
-    case SPELL_BANISHMENT:
-        return (MS_BANISHMENT);
-    case SPELL_STING:
-        return (MS_STING);
-    case SPELL_SUMMON_DEMON:
-        return (MS_SUMMON_DEMON);
+        return (SPELL_BLINK);        /* approximate */
     case SPELL_DEMONIC_HORDE:
-        return (MS_SUMMON_DEMON_LESSER);
-    case SPELL_SUMMON_GREATER_DEMON:
-        return (MS_SUMMON_DEMON_GREATER);
-    case SPELL_BOLT_OF_IRON:
-        return (MS_IRON_BOLT);
-    case SPELL_STONE_ARROW:
-        return (MS_STONE_ARROW);
-    case SPELL_DISINTEGRATE:
-        return (MS_DISINTEGRATE);
+        return (SPELL_CALL_IMP);
     case SPELL_AGONY:
-        /* Too powerful to give ghosts Torment for Agony? Nah. */
-        return (MS_TORMENT);
     case SPELL_SYMBOL_OF_TORMENT:
-        return (MS_TORMENT);
+        /* Too powerful to give ghosts Torment for Agony? Nah. */
+        return (SPELL_SYMBOL_OF_TORMENT);
     default:
         break;
     }
 
-    return (MS_NO_SPELL);
+    return (spel);
 }
 
 std::vector<ghost_demon> ghost_demon::find_ghosts()

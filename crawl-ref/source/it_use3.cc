@@ -432,7 +432,8 @@ bool evoke_wielded( void )
                     spell_casted = SPELL_HELLFIRE;          //  12 in 240
 
                 power = you.skills[SK_EVOCATIONS] * 8;
-                your_spells( spell_casted, power, false );
+                your_spells( static_cast<spell_type>(spell_casted),
+                             power, false );
                 did_work = true;
                 break;
 
@@ -840,7 +841,7 @@ void tome_of_power(char sc_read_2)
     int powc = 5 + you.skills[SK_EVOCATIONS] 
                  + roll_dice( 5, you.skills[SK_EVOCATIONS] ); 
 
-    int spell_casted = 0;
+    spell_type spell_casted = SPELL_NO_SPELL;
     struct bolt beam;
 
     strcpy(info, "The book opens to a page covered in ");

@@ -231,7 +231,7 @@ static void adjust_spells(void)
     }
 
     index_1 = letter_to_index( input_1 );
-    int spell = get_spell_by_letter( input_1 ); 
+    spell_type spell = get_spell_by_letter( input_1 ); 
 
     if (spell == SPELL_NO_SPELL)
     {
@@ -241,8 +241,7 @@ static void adjust_spells(void)
     }
 
     // print out targeted spell:
-    snprintf( info, INFO_SIZE, "%c - %s", input_1, spell_title( spell ) );
-    mpr(info);
+    mprf( "%c - %s", input_1, spell_title( spell ) );
 
     mpr( "Adjust to which letter?", MSGCH_PROMPT );
 

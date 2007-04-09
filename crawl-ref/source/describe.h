@@ -56,7 +56,7 @@ void describe_monsters(int class_described, unsigned char which_mons);
 /* ***********************************************************************
  * called from: item_use
  * *********************************************************************** */
-void describe_spell(int spelled);
+void describe_spell(spell_type spelled);
 
 // last updated 13oct2003 {darshan}
 /* ***********************************************************************

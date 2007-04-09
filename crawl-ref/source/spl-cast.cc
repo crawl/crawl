@@ -177,7 +177,7 @@ char list_spells(void)
         }
 
         const char letter = index_to_letter(j);
-        const int  spell  = get_spell_by_letter(letter); 
+        const spell_type spell  = get_spell_by_letter(letter); 
 
         if (spell != SPELL_NO_SPELL)
         {
@@ -277,7 +277,7 @@ static int apply_vehumet_wizardry_boost(int spell, int chance)
     return (chance * fail_reduce / 100);
 }
 
-int spell_fail(int spell)
+int spell_fail(spell_type spell)
 {
     int chance = 60;
     int chance2 = 0, armour = 0;
@@ -640,7 +640,7 @@ bool cast_a_spell(void)
         return (false);
     }
 
-    const int spell = get_spell_by_letter( spc );
+    const spell_type spell = get_spell_by_letter( spc );
 
     spc2 = letter_to_index(spc);
 
@@ -699,18 +699,18 @@ bool cast_a_spell(void)
 
 // "Utility" spells for the sake of simplicity are currently ones with 
 // enchantments, translocations, or divinations. 
-bool spell_is_utility_spell( int spell_id )
+bool spell_is_utility_spell( spell_type spell_id )
 {
     return (spell_typematch( spell_id, 
                 SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION ));
 }
 
-bool spell_is_unholy( int spell_id )
+bool spell_is_unholy( spell_type spell_id )
 {
     return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
 }
 
-void spellcasting_side_effects(int spc2, bool idonly = false)
+void spellcasting_side_effects(spell_type spc2, bool idonly = false)
 {
     int total_skill = 0;
 
@@ -852,7 +852,7 @@ static bool spell_is_uncastable(int spell)
 // returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
-spret_type your_spells( int spc2, int powc, bool allow_fail )
+spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
 {
     int dem_hor = 0;
     int dem_hor2 = 0;
@@ -1092,7 +1092,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
         zapping(ZAP_HASTING, powc, beam);
         break;
 
-    case SPELL_PARALYZE:
+    case SPELL_PARALYSE:
         zapping(ZAP_PARALYSIS, powc, beam);
         break;
 
@@ -1862,7 +1862,7 @@ spret_type your_spells( int spc2, int powc, bool allow_fail )
     return (SPRET_SUCCESS);
 }                               // end you_spells()
 
-void exercise_spell( int spell, bool spc, bool success )
+void exercise_spell( spell_type spell, bool spc, bool success )
 {
     // (!success) reduces skill increase for miscast spells
     int ndx = 0;

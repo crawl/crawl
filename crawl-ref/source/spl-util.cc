@@ -41,15 +41,15 @@
 #endif
 
 
-static struct playerspell spelldata[] = {
+static struct spell_desc spelldata[] = {
 #include "spl-data.h"
 };
 
-static int plyrspell_list[NUM_SPELLS];
+static int spell_list[NUM_SPELLS];
 
-#define PLYRSPELLDATASIZE (sizeof(spelldata)/sizeof(struct playerspell))
+#define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
-static struct playerspell *seekspell(int spellid);
+static struct spell_desc *seekspell(int spellid);
 static bool cloud_helper( int (*func) (int, int, int, int, kill_category),
                           int x, int y, 
                           int pow, int ctype, kill_category );
@@ -59,27 +59,27 @@ static bool cloud_helper( int (*func) (int, int, int, int, kill_category),
  */
 
 // all this does is merely refresh the internal spell list {dlb}:
-void init_playerspells(void)
+void init_spell_descs(void)
 {
     unsigned int x = 0;
 
     for (x = 0; x < NUM_SPELLS; x++)
-        plyrspell_list[x] = -1;
+        spell_list[x] = -1;
 
-    // can only use up to PLYRSPELLDATASIZE _MINUS ONE_, or the
-    // last entry tries to set plyrspell_list[SPELL_NO_SPELL] 
+    // can only use up to SPELLDATASIZE _MINUS ONE_, or the
+    // last entry tries to set spell_list[SPELL_NO_SPELL] 
     // which corrupts the heap.
-    for (x = 0; x < PLYRSPELLDATASIZE - 1; x++)
-        plyrspell_list[spelldata[x].id] = x;
+    for (x = 0; x < SPELLDATASIZE - 1; x++)
+        spell_list[spelldata[x].id] = x;
 
     for (x = 0; x < NUM_SPELLS; x++)
     {
-        if (plyrspell_list[x] == -1)
-            plyrspell_list[x] = plyrspell_list[SPELL_NO_SPELL];
+        if (spell_list[x] == -1)
+            spell_list[x] = spell_list[SPELL_NO_SPELL];
     }
 
     return;                     // return value should not matter here {dlb}
-}                               // end init_playerspells()
+}                               // end init_spell_descs()
 
 int get_spell_slot_by_letter( char letter )
 {
@@ -93,7 +93,7 @@ int get_spell_slot_by_letter( char letter )
     return (you.spell_letter_table[index]);
 }
 
-int get_spell_by_letter( char letter )
+spell_type get_spell_by_letter( char letter )
 {
     ASSERT( isalpha( letter ) );
 
@@ -102,7 +102,7 @@ int get_spell_by_letter( char letter )
     return ((slot == -1) ? SPELL_NO_SPELL : you.spells[slot]);
 }
 
-bool add_spell_to_memory( int spell )
+bool add_spell_to_memory( spell_type spell )
 {
     int i, j;
 
@@ -150,7 +150,7 @@ bool del_spell_from_memory_by_slot( int slot )
 }
 
 
-int spell_hunger(int which_spell)
+int spell_hunger(spell_type which_spell)
 {
     int level = seekspell(which_spell)->level;
 
@@ -175,21 +175,31 @@ int spell_hunger(int which_spell)
     }
 }                               // end spell_hunger();
 
+bool spell_needs_tracer(spell_type spell)
+{
+    return (seekspell(spell)->ms_needs_tracer);
+}
+
+bool spell_needs_foe(spell_type spell)
+{
+    return (!seekspell(spell)->ms_utility);
+}
+
 // applied to spell misfires (more power = worse) and triggers
 // for Xom acting (more power = more likely to grab his attention) {dlb}
-int spell_mana(int which_spell)
+int spell_mana(spell_type which_spell)
 {
     return (seekspell(which_spell)->level);
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)
 // and triggers for Sif acting (same reasoning as above, just good) {dlb}
-int spell_difficulty(int which_spell)
+int spell_difficulty(spell_type which_spell)
 {
     return (seekspell(which_spell)->level);
 }
 
-int spell_levels_required( int which_spell )
+int spell_levels_required( spell_type which_spell )
 {
     int levels = spell_difficulty( which_spell );
 
@@ -207,12 +217,12 @@ int spell_levels_required( int which_spell )
     return (levels);
 }
 
-unsigned int get_spell_flags( int which_spell )
+unsigned int get_spell_flags( spell_type which_spell )
 {
     return (seekspell(which_spell)->flags);
 }
 
-const char *get_spell_target_prompt( int which_spell )
+const char *get_spell_target_prompt( spell_type which_spell )
 {
     return (seekspell(which_spell)->target_prompt);
 }
@@ -223,7 +233,7 @@ bool spell_typematch(int which_spell, unsigned int which_discipline)
 }
 
 //jmf: next two for simple bit handling
-unsigned int spell_type(int spell)
+unsigned int get_spell_type(int spell)
 {
     return (seekspell(spell)->disciplines);
 }
@@ -256,7 +266,7 @@ int count_bits(unsigned int bits)
   }         // end spell_title()
 */
 
-const char *spell_title(int spell)      //jmf: ah the joys of driving ms. data
+const char *spell_title(spell_type spell)
 {
     return (seekspell(spell)->title);
 }
@@ -815,10 +825,10 @@ int spell_type2skill(unsigned int spelltype)
  **************************************************
  */
 
-//jmf: simplified; moved init code to top function, init_playerspells()
-static struct playerspell *seekspell(int spell)
+//jmf: simplified; moved init code to top function, init_spell_descs()
+static struct spell_desc *seekspell(int spell)
 {
-    return (&spelldata[plyrspell_list[spell]]);
+    return (&spelldata[spell_list[spell]]);
 }
 
 static bool cloud_helper( int (*func) (int, int, int, int, kill_category),

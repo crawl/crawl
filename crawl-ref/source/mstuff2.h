@@ -50,13 +50,13 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast);
+void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
 
 // last updated 7jan2001 {gdl}
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast);
+void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast);
 
 // last updated 28july2000 (gdl)
 /* ***********************************************************************

@@ -350,12 +350,12 @@ void define_monster(int mid);
 const char *moname(int mcl, bool vis, char descrip, char glog[ ITEMNAME_SIZE ]);
 
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
 // last updated 25sep2001 {dlb}
 /* ***********************************************************************
  * called from: describe
  * *********************************************************************** */
-const char *mons_spell_name( int spell );
+extern const char *mons_spell_name(spell_type);
 #endif
 
 // last updated 4jan2001 (gdl)
@@ -369,20 +369,20 @@ bool mons_should_fire(struct bolt &beam);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool ms_direct_nasty(int monspell);
+bool ms_direct_nasty(spell_type monspell);
 
 // last updated 14jan2001 (gdl)
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-bool ms_requires_tracer(int mons_spell);
+bool ms_requires_tracer(spell_type mons_spell);
 
-bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell );
-bool ms_waste_of_time( struct monsters *mon, int monspell );
-bool ms_low_hitpoint_cast( struct monsters *mon, int monspell );
+bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell );
+bool ms_waste_of_time( const monsters *mon, spell_type monspell );
+bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell );
 
-bool mons_has_ranged_spell( struct monsters *mon );
-bool mons_has_ranged_attack( struct monsters *mon );
+bool mons_has_ranged_spell( const monsters *mon );
+bool mons_has_ranged_attack( const monsters *mon );
 bool mons_is_magic_user( const monsters *mon );
 
 // last updated 06mar2001 (gdl)

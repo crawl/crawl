@@ -45,6 +45,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
@@ -1522,7 +1523,8 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         {
             if (monster->type == MONS_ICE_BEAST
                 || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE)
+                || monster->type == MONS_SIMULACRUM_LARGE
+                || monster->type == MONS_ICE_STATUE)
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -1732,7 +1734,8 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         {
             if (monster->type == MONS_ICE_BEAST
                 || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE)
+                || monster->type == MONS_SIMULACRUM_LARGE
+                || monster->type == MONS_ICE_STATUE)
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -1768,7 +1771,8 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         {
             if (monster->type == MONS_ICE_BEAST
                 || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE)
+                || monster->type == MONS_SIMULACRUM_LARGE
+                || monster->type == MONS_ICE_STATUE)
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -2125,7 +2129,7 @@ void sticky_flame_monster( int mn, kill_category who, int levels )
  * into account, as well as the monster's intelligence.
  *
  */
-void fire_tracer(struct monsters *monster, struct bolt &pbolt)
+void fire_tracer(const monsters *monster, struct bolt &pbolt)
 {
     // don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer = true;
@@ -2279,6 +2283,13 @@ static void beam_explodes(struct bolt &beam, int x, int y)
     {
         cloud_type = beam.flavour == BEAM_MIASMA? CLOUD_MIASMA : CLOUD_STINK;
         big_cloud( cloud_type, whose_kill(beam), x, y, 0, 9 );
+        return;
+    }
+
+    if (beam.name == "freezing blast")
+    {
+        big_cloud( CLOUD_COLD, whose_kill(beam), x, y,
+                   random_range(10, 15), 9 );
         return;
     }
 
@@ -3056,6 +3067,7 @@ static int affect_player( struct bolt &beam )
         if (beam.flavour != BEAM_HASTE 
             && beam.flavour != BEAM_INVISIBILITY
             && beam.flavour != BEAM_HEALING
+            && beam.flavour != BEAM_POLYMORPH
             && ((beam.flavour != BEAM_TELEPORT && beam.flavour != BEAM_BANISH)
                 || !beam.aimed_at_feet)
             && you_resist_magic( beam.ench_power ))
@@ -3069,6 +3081,22 @@ static int affect_player( struct bolt &beam )
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
         {
+        case BEAM_POLYMORPH:
+            if (MON_KILL(beam.thrower))
+            {
+                mpr("Strange energies course through your body.");
+                if (one_chance_in(5))
+                    mutate(100);
+                else
+                    give_bad_mutation();
+            }
+            else
+            {
+                mpr("This is polymorph other only!");
+            }
+            beam.obvious_effect = true;
+            break;
+
         case BEAM_SLOW:
             potion_effect( POT_SLOWING, beam.ench_power );
             beam.obvious_effect = true;
@@ -3109,12 +3137,7 @@ static int affect_player( struct bolt &beam )
             break;
 
         case BEAM_BLINK:
-            random_blink(0);
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_POLYMORPH:
-            mpr("This is polymorph other only!");
+            random_blink(false);
             beam.obvious_effect = true;
             break;
 
@@ -4042,7 +4065,7 @@ static void explosion1(struct bolt &pbolt)
     }
 
 
-    if (!pbolt.is_tracer)
+    if (!pbolt.is_tracer && *seeMsg && *hearMsg)
     {
         // check for see/hear/no msg
         if (see_grid(x,y) || (x == you.x_pos && y == you.y_pos))

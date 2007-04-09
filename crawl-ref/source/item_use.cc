@@ -3157,7 +3157,7 @@ static bool enchant_armour( void )
 
 static void handle_read_book( int item_slot )
 {
-    int spell, spell_index, nthing;
+    int spell, spell_index;
 
     if (you.inv[item_slot].sub_type == BOOK_DESTRUCTION)
     {
@@ -3189,7 +3189,8 @@ static void handle_read_book( int item_slot )
 
     spell_index = letter_to_index( spell );
 
-    nthing = which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
+    spell_type nthing =
+        which_spell_in_book(you.inv[item_slot].sub_type, spell_index);
     if (nthing == SPELL_NO_SPELL)
     {
         mesclr( true );

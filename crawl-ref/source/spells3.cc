@@ -82,7 +82,7 @@ bool cast_selective_amnesia(bool force)
         }
 
         // actual handling begins here {dlb}:
-        const int spell = get_spell_by_letter( keyin );
+        const spell_type spell = get_spell_by_letter( keyin );
         const int slot  = get_spell_slot_by_letter( keyin );
 
         if (spell == SPELL_NO_SPELL)

@@ -491,7 +491,7 @@ static void finish_delay(const delay_queue_item &delay)
 
     case DELAY_MEMORISE:
         mpr( "You finish memorising." );
-        add_spell_to_memory( delay.parm1 );
+        add_spell_to_memory( static_cast<spell_type>( delay.parm1 ) );
         break; 
 
     case DELAY_PASSWALL:

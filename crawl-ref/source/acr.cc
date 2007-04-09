@@ -2839,7 +2839,7 @@ static bool initialise(void)
 
     init_properties();
     init_monsters(mcolour);     // this needs to be way up top {dlb}
-    init_playerspells();        // this needs to be way up top {dlb}
+    init_spell_descs();        // this needs to be way up top {dlb}
 
     // init item array:
     for (i = 0; i < MAX_ITEMS; i++)

@@ -162,8 +162,11 @@ static bool is_noteworthy( const Note& note )
                 return false;
             break;
         case NOTE_LEARN_SPELL:
-            if (spell_difficulty(rnote.first) >= spell_difficulty(note.first))
+            if (spell_difficulty(static_cast<spell_type>(rnote.first)) >=
+                spell_difficulty(static_cast<spell_type>(note.first)))
+            {
                 return false;
+            }
             break;
         case NOTE_GOD_POWER:
             if ( rnote.first == note.first && rnote.second == note.second )
@@ -253,7 +256,8 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_LEARN_SPELL:
             snprintf(buf, sizeof buf, "Learned a level %d spell: %s",
-                     spell_difficulty(first), spell_title(first));
+                     spell_difficulty(static_cast<spell_type>(first)),
+                     spell_title(static_cast<spell_type>(first)));
             break;
         case NOTE_GET_GOD:
             snprintf(buf, sizeof buf, "Became a worshipper of %s",

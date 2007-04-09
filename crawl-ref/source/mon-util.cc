@@ -18,6 +18,7 @@
 // some routines snatched from former monsstat.cc
 
 #include "AppHdr.h"
+#include "enum.h"
 #include "mon-util.h"
 #include "monstuff.h"
 
@@ -40,6 +41,7 @@
 #include "mtransit.h"
 #include "player.h"
 #include "randart.h"
+#include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -72,79 +74,6 @@ static struct monsterentry mondata[] = {
 static int mspell_list[][7] = {
 #include "mon-spll.h"
 };
-
-#if DEBUG_DIAGNOSTICS
-static const char *monster_spell_name[] = {
-    "Magic Missile",
-    "Throw Flame",
-    "Throw Frost",
-    "Paralysis",
-    "Slow",
-    "Haste",
-    "Confuse",
-    "Venom Bolt",
-    "Fire Bolt",
-    "Cold Bolt",
-    "Lightning Bolt", 
-    "Invisibility",
-    "Fireball",
-    "Heal",
-    "Teleport",
-    "Teleport Other",
-    "Blink",
-    "Crystal Spear",
-    "Dig",
-    "Negative Bolt",
-    "Hellfire Burst",
-    "Vampire Summon",
-    "Orb Energy",
-    "Brain Feed",
-    "Level Summon",
-    "Fake Rakshasa Summon",
-    "Steam Ball",
-    "Summon Demon",
-    "Animate Dead",
-    "Pain",
-    "Smite",
-    "Sticky Flame",
-    "Poison Blast",
-    "Summon Demon Lesser",
-    "Summon Ufetubus",
-    "Purple Blast",
-    "Summon Beast",
-    "Energy Bolt",
-    "Sting",
-    "Iron Bolt",
-    "Stone Arrow",
-    "Poison Splash",
-    "Summon Undead",
-    "Mutation",
-    "Cantrip",
-    "Disintegrate", 
-    "Marsh Gas",
-    "Quicksilver Bolt",
-    "Torment",
-    "Hellfire",
-    "Metal Splinters",
-    "Summon Demon Greater",
-    "Banishment",
-    "Controlled Blink",
-    "Control Undead",
-    "Miasma",
-    "Summon Drakes",
-    "Blink Other",
-    "Dispel Undead",
-    "Hellfrost",
-    "Poison Arrow",
-    "Summon Small Mammals",
-    "Summon Mushrooms",
-    "Ice Bolt",
-    "Magma",
-    "Shock",
-    "Berserk Rage",
-    "Might"
-};
-#endif
 
 static int mons_exp_mod(int mclass);
 static monsterentry *seekmonster(int p_monsterid);
@@ -392,7 +321,9 @@ bool invalid_monster_class(int mclass)
 
 bool mons_is_statue(int mc)
 {
-    return (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE);
+    return (mc == MONS_ORANGE_STATUE
+            || mc == MONS_SILVER_STATUE
+            || mc == MONS_ICE_STATUE);
 }
 
 bool mons_is_mimic( int mc )
@@ -1070,10 +1001,8 @@ int exper_value( const struct monsters *monster )
     if (mons_class_flag(mclass, M_NO_EXP_GAIN))
         return (0);
 
-    // no experience for destroying furniture, even if the furniture started
-    // the fight.
     if (mons_is_statue(mclass))
-        return (0);
+        return (mHD * 15);
 
     // These undead take damage to maxhp, so we use only HD. -- bwr
     if (mclass == MONS_ZOMBIE_SMALL
@@ -1103,25 +1032,25 @@ int exper_value( const struct monsters *monster )
         {
             switch (hspell_pass[i])
             {
-            case MS_PARALYSIS:
-            case MS_SMITE:
-            case MS_HELLFIRE_BURST:
-            case MS_HELLFIRE:
-            case MS_TORMENT:
+            case SPELL_PARALYSE:
+            case SPELL_SMITING:
+            case SPELL_HELLFIRE_BURST:
+            case SPELL_HELLFIRE:
+            case SPELL_SYMBOL_OF_TORMENT:
                 diff += 25;
                 break;
 
-            case MS_LIGHTNING_BOLT:
-            case MS_NEGATIVE_BOLT:
-            case MS_VENOM_BOLT:
-            case MS_STICKY_FLAME:
-            case MS_DISINTEGRATE:
-            case MS_SUMMON_DEMON_GREATER:
-            case MS_BANISHMENT:
-            case MS_CRYSTAL_SPEAR:
-            case MS_IRON_BOLT:
-            case MS_TELEPORT:
-            case MS_TELEPORT_OTHER:
+            case SPELL_LIGHTNING_BOLT:
+            case SPELL_BOLT_OF_DRAINING:
+            case SPELL_VENOM_BOLT:
+            case SPELL_STICKY_FLAME:
+            case SPELL_DISINTEGRATE:
+            case SPELL_SUMMON_GREATER_DEMON:
+            case SPELL_BANISHMENT:
+            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+            case SPELL_BOLT_OF_IRON:
+            case SPELL_TELEPORT_SELF:
+            case SPELL_TELEPORT_OTHER:
                 diff += 10;
                 break;
 
@@ -1208,14 +1137,13 @@ void mons_load_spells( monsters *mon, int book )
     mon->load_spells(book);
 }
 
-#if DEBUG_DIAGNOSTICS
-const char *mons_spell_name( int spell )
-{
-    if (spell == MS_NO_SPELL || spell >= NUM_MONSTER_SPELLS || spell < 0)
-        return ("No spell");
+#ifdef DEBUG_DIAGNOSTICS
 
-    return (monster_spell_name[ spell ]);
+const char *mons_spell_name( spell_type spell )
+{
+    return (spell_title(spell));
 }
+
 #endif
 
 // generate a shiny new and unscarred monster
@@ -1863,175 +1791,47 @@ bool mons_should_fire(struct bolt &beam)
 // note - this function assumes that the monster is "nearby"
 // its target!
 
-bool ms_requires_tracer(int monspell)
+bool ms_requires_tracer(spell_type monspell)
 {
-    bool requires = false;
-
-    switch(monspell)
-    {
-    case MS_BANISHMENT:
-    case MS_COLD_BOLT:
-    case MS_ICE_BOLT:
-    case MS_SHOCK:
-    case MS_MAGMA:
-    case MS_CONFUSE:
-    case MS_CRYSTAL_SPEAR:
-    case MS_DISINTEGRATE:
-    case MS_ENERGY_BOLT:
-    case MS_FIRE_BOLT:
-    case MS_FIREBALL:
-    case MS_FLAME:
-    case MS_FROST:
-    case MS_HELLFIRE:
-    case MS_IRON_BOLT:
-    case MS_LIGHTNING_BOLT:
-    case MS_MARSH_GAS:
-    case MS_MIASMA:
-    case MS_METAL_SPLINTERS:
-    case MS_MMISSILE:
-    case MS_NEGATIVE_BOLT:
-    case MS_ORB_ENERGY:
-    case MS_PAIN:
-    case MS_PARALYSIS:
-    case MS_POISON_BLAST:
-    case MS_POISON_ARROW:
-    case MS_POISON_SPLASH:
-    case MS_QUICKSILVER_BOLT:
-    case MS_SLOW:
-    case MS_STEAM_BALL:
-    case MS_STICKY_FLAME:
-    case MS_STING:
-    case MS_STONE_ARROW:
-    case MS_TELEPORT_OTHER:
-    case MS_VENOM_BOLT:
-        requires = true;
-        break;
-
-    // self-niceties and direct effects
-    case MS_ANIMATE_DEAD:
-    case MS_BLINK:
-    case MS_BRAIN_FEED:
-    case MS_DIG:
-    case MS_FAKE_RAKSHASA_SUMMON:
-    case MS_HASTE:
-    case MS_HEAL:
-    case MS_HELLFIRE_BURST:
-    case MS_INVIS:
-    case MS_LEVEL_SUMMON:
-    case MS_MUTATION:
-    case MS_SMITE:
-    case MS_SUMMON_BEAST:
-    case MS_SUMMON_DEMON_LESSER:
-    case MS_SUMMON_DEMON:
-    case MS_SUMMON_DEMON_GREATER:
-    case MS_SUMMON_UFETUBUS:
-    case MS_TELEPORT:
-    case MS_TORMENT:
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-    case MS_CANTRIP:
-    case MS_BERSERK_RAGE:
-
-    // meaningless, but sure, why not?
-    case MS_NO_SPELL:
-        break;
-
-    default:
-        break;
-    }
-
-    return (requires);
+    return (spell_needs_tracer(monspell));
 }
 
 // returns true if the spell is something you wouldn't want done if
 // you had a friendly target..  only returns a meaningful value for
 // non-beam spells
 
-bool ms_direct_nasty(int monspell)
+bool ms_direct_nasty(spell_type monspell)
 {
-    bool nasty = true;
-
-    switch(monspell)
-    {
-    // self-niceties/summonings
-    case MS_ANIMATE_DEAD:
-    case MS_BLINK:
-    case MS_DIG:
-    case MS_FAKE_RAKSHASA_SUMMON:
-    case MS_HASTE:
-    case MS_HEAL:
-    case MS_INVIS:
-    case MS_LEVEL_SUMMON:
-    case MS_SUMMON_BEAST:
-    case MS_SUMMON_DEMON_LESSER:
-    case MS_SUMMON_DEMON:
-    case MS_SUMMON_DEMON_GREATER:
-    case MS_SUMMON_UFETUBUS:
-    case MS_TELEPORT:
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-        nasty = false;
-        break;
-
-    case MS_BRAIN_FEED:
-    case MS_HELLFIRE_BURST:
-    case MS_MUTATION:
-    case MS_SMITE:
-    case MS_TORMENT:
-    case MS_BERSERK_RAGE:
-
-        // meaningless, but sure, why not?
-    case MS_NO_SPELL:
-        break;
-
-    default:
-        break;
-    }
-
-    return (nasty);
+    return (spell_needs_foe(monspell));
 }
 
 // Spells a monster may want to cast if fleeing from the player, and 
 // the player is not in sight.
-bool ms_useful_fleeing_out_of_sight( struct monsters *mon, int monspell )
+bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 {
     if (ms_waste_of_time( mon, monspell ))
         return (false);
 
     switch (monspell)
     {
-    case MS_HASTE:
-    case MS_INVIS:
-    case MS_HEAL:
-    case MS_ANIMATE_DEAD:
+    case SPELL_HASTE:
+    case SPELL_INVISIBILITY:
+    case SPELL_LESSER_HEALING:
+    case SPELL_ANIMATE_DEAD:
         return (true);
 
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-    case MS_SUMMON_UFETUBUS:
-    case MS_FAKE_RAKSHASA_SUMMON:
-    case MS_LEVEL_SUMMON:
-    case MS_SUMMON_DEMON:
-    case MS_SUMMON_DEMON_LESSER:
-    case MS_SUMMON_BEAST:
-    case MS_SUMMON_UNDEAD:
-    case MS_SUMMON_MUSHROOMS:
-    case MS_SUMMON_DEMON_GREATER:
-        if (one_chance_in(10))    // only summon friends some of the time
-            return (true);
-        break;
-
     default:
+        if ((get_spell_flags(monspell) & SPTYP_SUMMONING) && one_chance_in(4))
+            return (true);
         break;
     }
 
     return (false);
 }
 
-bool ms_low_hitpoint_cast( struct monsters *mon, int monspell )
+bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 {
     bool ret = false;
-
     bool targ_adj = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT) 
@@ -2046,22 +1846,20 @@ bool ms_low_hitpoint_cast( struct monsters *mon, int monspell )
 
     switch (monspell)
     {
-    case MS_TELEPORT:
-    case MS_TELEPORT_OTHER:
-    case MS_HEAL:
+    case SPELL_TELEPORT_SELF:
+    case SPELL_TELEPORT_OTHER:
+    case SPELL_LESSER_HEALING:
         ret = true;
         break;
 
-    case MS_BLINK:
+    case SPELL_BLINK:
+    case SPELL_BLINK_OTHER:
         if (targ_adj)
             ret = true;
         break;
 
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-    case MS_SUMMON_UFETUBUS:
-    case MS_FAKE_RAKSHASA_SUMMON:
-        if (!targ_adj)
+    default:
+        if (!targ_adj && (get_spell_flags(monspell) & SPTYP_SUMMONING))
             ret = true;
         break;
     }
@@ -2070,7 +1868,7 @@ bool ms_low_hitpoint_cast( struct monsters *mon, int monspell )
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
-bool ms_waste_of_time( struct monsters *mon, int monspell )
+bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 {
     bool  ret = false;
     int intel, est_magic_resist, power, diff;
@@ -2081,34 +1879,34 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
     // handled here as well. -- bwr
     switch (monspell)
     {
-    case MS_BERSERK_RAGE:
+    case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
             ret = true;
         break;
         
-    case MS_HASTE:
+    case SPELL_HASTE:
         if (mon->has_ench(ENCH_HASTE))
             ret = true;
         break;
 
-    case MS_INVIS:
+    case SPELL_INVISIBILITY:
         if (mon->has_ench(ENCH_INVIS) ||
             (mons_friendly(mon) && !player_see_invis(false)))
             ret = true;
         break;
 
-    case MS_HEAL:
+    case SPELL_LESSER_HEALING:
         if (mon->hit_points > mon->max_hit_points / 2)
             ret = true;
         break;
 
-    case MS_TELEPORT:
+    case SPELL_TELEPORT_SELF:
         // Monsters aren't smart enough to know when to cancel teleport.
         if (mon->has_ench( ENCH_TP ))
             ret = true;
         break;
 
-    case MS_TELEPORT_OTHER:
+    case SPELL_TELEPORT_OTHER:
         // Monsters aren't smart enough to know when to cancel teleport.
         if (mon->foe == MHITYOU)
         {
@@ -2122,12 +1920,12 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
         }
         // intentional fall-through
 
-    case MS_SLOW:
-    case MS_CONFUSE:
-    case MS_PAIN:
-    case MS_BANISHMENT:
-    case MS_DISINTEGRATE:
-    case MS_PARALYSIS:
+    case SPELL_SLOW:
+    case SPELL_CONFUSE:
+    case SPELL_PAIN:
+    case SPELL_BANISHMENT:
+    case SPELL_DISINTEGRATE:
+    case SPELL_PARALYSE:
         // occasionally we don't estimate... just fire and see:
         if (one_chance_in(5))
             return (false);
@@ -2158,15 +1956,15 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
                 est_magic_resist += random2(30) - 15;  
         }
 
-        power = 12 * mon->hit_dice * (monspell == MS_PAIN ? 2 : 1);
+        power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
         power = stepdown_value( power, 30, 40, 100, 120 );
 
         // Determine the amount of chance allowed by the benefit from
         // the spell.  The estimated difficulty is the probability
         // of rolling over 100 + diff on 2d100. -- bwr
-        diff = (monspell == MS_PAIN 
-                || monspell == MS_SLOW 
-                || monspell == MS_CONFUSE) ? 0 : 50;
+        diff = (monspell == SPELL_PAIN 
+                || monspell == SPELL_SLOW 
+                || monspell == SPELL_CONFUSE) ? 0 : 50;
 
         if (est_magic_resist - power > diff)
             ret = true;
@@ -2180,15 +1978,15 @@ bool ms_waste_of_time( struct monsters *mon, int monspell )
     return (ret);    
 }
 
-static bool ms_ranged_spell( int monspell )
+static bool ms_ranged_spell( spell_type monspell )
 {
     switch (monspell)
     {
-    case MS_HASTE:
-    case MS_HEAL:
-    case MS_TELEPORT:
-    case MS_INVIS:
-    case MS_BLINK:
+    case SPELL_HASTE:
+    case SPELL_LESSER_HEALING:
+    case SPELL_TELEPORT_SELF:
+    case SPELL_INVISIBILITY:
+    case SPELL_BLINK:
         return (false);
 
     default:
@@ -2204,14 +2002,14 @@ bool mons_is_magic_user( const monsters *mon )
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            if (mon->spells[i] != MS_NO_SPELL)
+            if (mon->spells[i] != SPELL_NO_SPELL)
                 return (true);
         }
     }
     return (false);
 }
 
-bool mons_has_ranged_spell( struct monsters *mon )
+bool mons_has_ranged_spell( const monsters *mon )
 {
     const int  mclass = mon->type;
 
@@ -2227,7 +2025,7 @@ bool mons_has_ranged_spell( struct monsters *mon )
     return (false);
 }
 
-bool mons_has_ranged_attack( struct monsters *mon )
+bool mons_has_ranged_attack( const monsters *mon )
 {
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int ammo = mon->inv[MSLOT_MISSILE];
@@ -2321,7 +2119,9 @@ static bool mons_can_smite(const monsters *monster)
 
     const monster_spells &hspell_pass = monster->spells;
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
-        if (hspell_pass[i] == MS_TORMENT || hspell_pass[i] == MS_SMITE)
+        if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
+            || hspell_pass[i] == SPELL_SMITING
+            || hspell_pass[i] == SPELL_HELLFIRE_BURST)
             return (true);
 
     return (false);
@@ -3034,7 +2834,7 @@ void monsters::set_transit(level_id dest)
 
 void monsters::load_spells(int book)
 {
-    spells.init(MS_NO_SPELL);
+    spells.init(SPELL_NO_SPELL);
     if (book == MST_NO_SPELLS || (book == MST_GHOST && !ghost.get()))
         return;
 
@@ -3047,7 +2847,8 @@ void monsters::load_spells(int book)
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
-            spells[i] = ghost->values[ GVAL_SPELL_1 + i ];
+            spells[i] =
+                static_cast<spell_type>( ghost->values[ GVAL_SPELL_1 + i ] );
 #if DEBUG_DIAGNOSTICS
             mprf( MSGCH_DIAGNOSTICS, "spell #%d: %d", i, spells[i] );
 #endif
@@ -3066,7 +2867,7 @@ void monsters::load_spells(int book)
         if (i < NUM_MSTYPES)
         {
             for (int z = 0; z < NUM_MONSTER_SPELL_SLOTS; z++)
-                spells[z] = mspell_list[i][z + 1];
+                spells[z] = static_cast<spell_type>( mspell_list[i][z + 1] );
         }
     }
 }
@@ -3857,7 +3658,7 @@ bool monsters::needs_berserk(bool check_spells) const
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
             const int spell = spells[i];
-            if (spell != MS_NO_SPELL && spell != MS_BERSERK_RAGE)
+            if (spell != SPELL_NO_SPELL && spell != SPELL_BERSERKER_RAGE)
                 return (false);
         }
     }

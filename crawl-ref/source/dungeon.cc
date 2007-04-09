@@ -6519,12 +6519,13 @@ static int newwave_weapon_colour(const item_def &item)
     int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
-    char *itname = (char*) item_name( item, DESC_PLAIN );
-    char *item_runed = strstr( strlwr(itname), strlwr((char*) "runed") );
-    char *heav_runed = strstr( strlwr(itname), strlwr((char*) "heavily") );
+    std::string itname = item_name( item, DESC_PLAIN );
+    lowercase(itname);
+    
+    const bool item_runed = itname.find(" runed ") != std::string::npos;
+    const bool heav_runed = itname.find(" heavily ") != std::string::npos;
 
-    if ( is_random_artefact(item) &&
-         (item_runed == NULL || heav_runed != NULL) )
+    if ( is_random_artefact(item) && (!item_runed || heav_runed) )
         return exciting_colour();
 
     if (is_range_weapon( item ))

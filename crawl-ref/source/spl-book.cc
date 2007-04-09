@@ -40,10 +40,10 @@
 #include "spl-util.h"
 #include "stuff.h"
 
-static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] = 
+static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] = 
 {
     // 0 - Minor Magic I
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAGIC_DART,
      SPELL_SUMMON_SMALL_MAMMAL,
      SPELL_THROW_FLAME,
@@ -54,7 +54,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 1 - Minor Magic II
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAGIC_DART,
      SPELL_THROW_FROST,
      SPELL_BLINK,
@@ -65,7 +65,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 2 - Minor Magic III
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAGIC_DART,
      SPELL_SUMMON_SMALL_MAMMAL,
      SPELL_BLINK,
@@ -76,7 +76,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 3 - Book of Conjurations I - Fire and Earth
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAGIC_DART,
      SPELL_THROW_FLAME,
      SPELL_STONE_ARROW,
@@ -87,7 +87,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 4 - Book of Conjurations II - Air and Ice
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAGIC_DART,
      SPELL_THROW_FROST,
      SPELL_MEPHITIC_CLOUD,
@@ -98,7 +98,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 5 - Book of Flames
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FLAME_TONGUE,
      SPELL_THROW_FLAME,
      SPELL_CONJURE_FLAME,
@@ -109,7 +109,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 6 - Book of Frost
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FREEZE,
      SPELL_THROW_FROST,
      SPELL_OZOCUBUS_ARMOUR,
@@ -120,7 +120,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 7 - Book of Summonings
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_SUMMON_LARGE_MAMMAL,
@@ -131,7 +131,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 8 - Book of Fire
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_EVAPORATE,
      SPELL_FIRE_BRAND,
      SPELL_SUMMON_ELEMENTAL,
@@ -142,7 +142,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 9 - Book of Ice
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FREEZING_AURA,
      SPELL_SLEEP,
      SPELL_CONDENSATION_SHIELD,
@@ -154,7 +154,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 10 - Book of Surveyances
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
@@ -165,7 +165,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL
      },
     // 11 - Book of Spatial Translocations
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_APPORTATION,
      SPELL_BLINK,
      SPELL_RECALL,
@@ -176,7 +176,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 12 - Book of Enchantments (fourth one)
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_LEVITATION,
      SPELL_SELECTIVE_AMNESIA,
      SPELL_REMOVE_CURSE,
@@ -187,7 +187,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 13 - Young Poisoner's Handbook
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_STING,
      SPELL_CURE_POISON_II,
      SPELL_MEPHITIC_CLOUD,
@@ -198,7 +198,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 14 - Book of the Tempests
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_DISCHARGE,
      SPELL_LIGHTNING_BOLT,
      SPELL_FIREBALL,
@@ -209,7 +209,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 15 - Book of Death
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_CORPSE_ROT,
      SPELL_BONE_SHARDS,
      SPELL_LETHAL_INFUSION,
@@ -220,18 +220,18 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 16 - Book of Hinderance
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_CONFUSING_TOUCH,
      SPELL_SLOW,
      SPELL_CONFUSE,
-     SPELL_PARALYZE,
+     SPELL_PARALYSE,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
     // 17 - Book of Changes
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FULSOME_DISTILLATION,
      SPELL_STICKS_TO_SNAKES,
      SPELL_EVAPORATE,
@@ -242,7 +242,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 18 - Book of Transfigurations
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SANDBLAST,
      SPELL_POLYMORPH_OTHER,
      SPELL_STATUE_FORM,
@@ -253,7 +253,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 19 - Book of Practical Magic
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_PROJECTED_NOISE,
      SPELL_SELECTIVE_AMNESIA,
      SPELL_DETECT_CURSE,
@@ -265,7 +265,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 20 - Book of War Chants
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FIRE_BRAND,
      SPELL_FREEZING_AURA,
      SPELL_REPEL_MISSILES,
@@ -276,7 +276,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 21 - Book of Clouds
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_EVAPORATE,
      SPELL_MEPHITIC_CLOUD,
      SPELL_CONJURE_FLAME,
@@ -287,7 +287,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 22 - Book of Healing
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_CURE_POISON_I,
      SPELL_LESSER_HEALING,
      SPELL_GREATER_HEALING,
@@ -298,7 +298,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 23 - Book of Necromancy 
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_PAIN,
      SPELL_ANIMATE_SKELETON,
      SPELL_VAMPIRIC_DRAINING,
@@ -309,7 +309,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 24 - Necronomicon -- Kikubaaqudgha special
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SYMBOL_OF_TORMENT,
      SPELL_CONTROL_UNDEAD,
      SPELL_SUMMON_WRAITHS,
@@ -320,7 +320,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 25 - Book of Callings
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SUMMON_SMALL_MAMMAL,
      SPELL_STICKS_TO_SNAKES,
      SPELL_CALL_IMP,
@@ -331,7 +331,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 26 - Book of Charms
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_BACKLIGHT,
      SPELL_REPEL_MISSILES,
      SPELL_SLEEP,
@@ -342,7 +342,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 27 - Book of Demonology  -- Vehumet special
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_CALL_IMP,
@@ -353,7 +353,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 28 - Book of Air
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SHOCK,
      SPELL_SWIFTNESS,
      SPELL_REPEL_MISSILES,
@@ -380,7 +380,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     //   two books!)
 
     // 29 - Book of the Sky
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SUMMON_ELEMENTAL,
      SPELL_INSULATION,
      SPELL_AIRSTRIKE,
@@ -392,7 +392,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 30 - Book of Divinations
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_CREATURES,
      SPELL_DETECT_ITEMS,
@@ -403,7 +403,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 31 - Book of the Warp
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_BANISHMENT,
      SPELL_WARP_BRAND,
      SPELL_DISPERSAL,
@@ -414,7 +414,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 32 - Book of Envenomations
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SPIDER_FORM,
      SPELL_POISON_AMMUNITION,
      SPELL_SUMMON_SCORPIONS,
@@ -425,7 +425,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 33 - Book of Annihilations -- Vehumet special
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
      SPELL_CHAIN_LIGHTNING,
@@ -436,7 +436,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 34 - Book of Unlife
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SUBLIMATION_OF_BLOOD,
      SPELL_ANIMATE_DEAD,
      SPELL_TWISTED_RESURRECTION,
@@ -448,7 +448,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 35 - Tome of Destruction
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -459,7 +459,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 36 - Book of Control
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ENSLAVEMENT,
      SPELL_TAME_BEASTS,
      SPELL_MASS_CONFUSION,
@@ -470,7 +470,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 37 - Book of Mutations //jmf: now Morphology
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_FRAGMENTATION,
      SPELL_POLYMORPH_OTHER,
      SPELL_ALTER_SELF,
@@ -483,7 +483,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 38 - Book of Tukima
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SURE_BLADE,
      SPELL_TUKIMAS_VORPAL_BLADE,
      SPELL_TUKIMAS_DANCE,
@@ -494,7 +494,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 39 - Book of Geomancy
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SANDBLAST,
      SPELL_STONESKIN,
      SPELL_PASSWALL,
@@ -506,7 +506,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 40 - Book of Earth
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_MAXWELLS_SILVER_HAMMER,
      SPELL_MAGIC_MAPPING,
      SPELL_DIG,
@@ -517,7 +517,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL
      },
     // 41 - manuals of all kinds
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -528,7 +528,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 42 - Book of Wizardry
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_DETECT_CREATURES,
      SPELL_SUMMON_ELEMENTAL,
      SPELL_MAGIC_MAPPING,
@@ -539,7 +539,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 43 - Book of Power
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ANIMATE_DEAD,
      SPELL_TELEPORT_OTHER,
      SPELL_VENOM_BOLT,
@@ -550,7 +550,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 44 - Book of Cantrips      //jmf: added 04jan2000
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_CONFUSING_TOUCH,
      SPELL_ANIMATE_SKELETON,
      SPELL_SUMMON_SMALL_MAMMAL,
@@ -562,7 +562,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 45 - Book of Party Tricks  //jmf: added 04jan2000
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SUMMON_BUTTERFLIES,
      SPELL_APPORTATION,
      SPELL_PROJECTED_NOISE,
@@ -574,7 +574,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 46 - Book of Beasts //jmf: added 19mar2000
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SUMMON_SMALL_MAMMAL,
      SPELL_STICKS_TO_SNAKES,
      SPELL_DETECT_CREATURES,
@@ -586,19 +586,19 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 47 - Book of Stalking //jmf: 24jun2000
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_STING,
      SPELL_SURE_BLADE,
      SPELL_PROJECTED_NOISE,
      SPELL_MEPHITIC_CLOUD,
      SPELL_POISON_WEAPON,
-     SPELL_PARALYZE,
+     SPELL_PARALYSE,
      SPELL_INVISIBILITY,
      SPELL_NO_SPELL,
      },
 
     // 48 -- unused
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -610,7 +610,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 49 - unused
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -622,7 +622,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 
     // 50 - Staff of Smiting //jmf: totally obsolete --- no longer looks here.
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_SMITING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -633,7 +633,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 51 - Staff of Summoning
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_SUMMON_ELEMENTAL,
@@ -644,7 +644,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 52 - Staff of Destruction
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_THROW_FLAME,
      SPELL_BOLT_OF_FIRE,
      SPELL_FIREBALL,
@@ -655,7 +655,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 53 - Staff of Destruction
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_THROW_FROST,
      SPELL_ICE_BOLT,
      SPELL_FREEZING_CLOUD,
@@ -666,7 +666,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 54 - Staff of Destruction
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_BOLT_OF_IRON,
      SPELL_FIREBALL,
      SPELL_LIGHTNING_BOLT,
@@ -677,7 +677,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 55 - Staff of Destruction
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_BOLT_OF_INACCURACY,
      SPELL_BOLT_OF_MAGMA,
      SPELL_BOLT_OF_COLD,
@@ -688,7 +688,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 56 - Staff of Warding
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ABJURATION_I,
      SPELL_CONDENSATION_SHIELD,
      SPELL_CAUSE_FEAR,
@@ -699,7 +699,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 57 - Staff of Exploration
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_DETECT_SECRET_DOORS,
      SPELL_DETECT_TRAPS,
      SPELL_DETECT_ITEMS,
@@ -710,7 +710,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 58 - Staff of Demonology
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_ABJURATION_I,
      SPELL_RECALL,
      SPELL_CALL_IMP,
@@ -721,7 +721,7 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 59 - Staff of Striking -- unused like Smiting
-    {0,
+    {SPELL_NO_SPELL,
      SPELL_STRIKING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -733,8 +733,9 @@ static int spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      },
 };
 
-static void spellbook_template( int sbook_type,
-                         FixedVector < int, SPELLBOOK_SIZE > &sbtemplate_pass )
+static void spellbook_template(
+    int sbook_type,
+    FixedVector < spell_type, SPELLBOOK_SIZE > &sbtemplate_pass )
 {
     ASSERT( sbook_type >= 0 );
     ASSERT( sbook_type < NUMBER_SPELLBOOKS );
@@ -749,9 +750,9 @@ static void spellbook_template( int sbook_type,
     }
 }                               // end spellbook_template()
 
-int which_spell_in_book(int sbook_type, int spl)
+spell_type which_spell_in_book(int sbook_type, int spl)
 {
-    FixedVector < int, SPELLBOOK_SIZE > wsib_pass;      // was 10 {dlb}
+    FixedVector < spell_type, SPELLBOOK_SIZE > wsib_pass;      // was 10 {dlb}
 
     spellbook_template(sbook_type, wsib_pass);
 
@@ -763,7 +764,7 @@ int which_spell_in_book(int sbook_type, int spl)
 unsigned char spellbook_contents( item_def &book, int action,
                                   formatted_string *fs )
 {
-    FixedVector<int, SPELLBOOK_SIZE> spell_types;    // was 10 {dlb}
+    FixedVector<spell_type, SPELLBOOK_SIZE> spell_types;    // was 10 {dlb}
     int spelcount = 0;
     int i, j;
     bool update_screen = !fs;
@@ -1019,7 +1020,7 @@ char book_rarity(unsigned char which_book)
 
 bool is_valid_spell_in_book( unsigned int splbook, int spell )
 {
-    FixedVector< int, SPELLBOOK_SIZE >  spells;
+    FixedVector< spell_type, SPELLBOOK_SIZE >  spells;
 
     spellbook_template( you.inv[ splbook ].sub_type, spells );
 
@@ -1252,7 +1253,7 @@ bool learn_spell(void)
         return (false);
     }
 
-    unsigned int specspell = which_spell_in_book(you.inv[book].sub_type,index);
+    spell_type specspell = which_spell_in_book(you.inv[book].sub_type,index);
 
     if (specspell == SPELL_NO_SPELL)
     {
@@ -1394,7 +1395,7 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (stype < STAFF_SMITING || stype >= STAFF_AIR)
         return (0);
 
-    FixedVector< int, SPELLBOOK_SIZE >  spell_list;
+    FixedVector< spell_type, SPELLBOOK_SIZE >  spell_list;
     spellbook_template( type, spell_list );
 
     int num_spells = 0;
@@ -1427,9 +1428,9 @@ int rod_shield_leakage()
 int staff_spell( int staff )
 {
     int spell;
-    unsigned char specspell;
+    spell_type specspell;
     int mana, diff, food, energy;
-    FixedVector< int, SPELLBOOK_SIZE >  spell_list;
+    FixedVector< spell_type, SPELLBOOK_SIZE >  spell_list;
 
     // converting sub_type into book index type
     const int type = you.inv[staff].sub_type + 40;

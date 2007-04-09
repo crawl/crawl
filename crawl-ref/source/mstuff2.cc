@@ -43,7 +43,7 @@
 #include "stuff.h"
 #include "view.h"
 
-static unsigned char monster_abjuration(int pow, bool test);
+static int monster_abjuration(bool friendly, int pow, bool test);
 
 // XXX: must fix species abils to not use duration 15
 // -- ummm ... who wrote this? {dlb}
@@ -329,7 +329,69 @@ void mons_trap(struct monsters *monster)
     return;
 }                               // end mons_trap()
 
-void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
+static bool mons_abjured(monsters *monster, bool nearby)
+{
+    const bool friendly = mons_friendly(monster);
+    if (nearby && monster_abjuration(friendly, 1, true) > 0
+        && coinflip())
+    {
+        monster_abjuration( friendly, monster->hit_dice * 10, false );
+        return (true);
+    }
+
+    return (false);
+}
+
+static monster_type pick_random_wraith()
+{
+    static monster_type wraiths[] =
+    {
+        MONS_WRAITH, MONS_FREEZING_WRAITH, MONS_SHADOW_WRAITH
+    };
+
+    return wraiths[ random2(sizeof(wraiths) / sizeof(*wraiths)) ];
+}
+
+static monster_type pick_horrible_thing()
+{
+    return (one_chance_in(4)? MONS_TENTACLED_MONSTROSITY
+            : MONS_ABOMINATION_LARGE);
+}
+
+static monster_type pick_undead_summon()
+{
+    int summonik = MONS_PROGRAM_BUG;
+
+    // FIXME: This is ridiculous.
+    do
+    {
+        summonik = random2(241);        // hmmmm ... {dlb}
+    }
+    while (mons_class_holiness(summonik) != MH_UNDEAD);
+
+    return static_cast<monster_type>(summonik);
+}
+
+static void do_high_level_summon(monsters *monster, bool monsterNearby,
+                                 monster_type (*mpicker)(),
+                                 int nsummons)
+{
+    if (mons_abjured(monster, monsterNearby))
+        return;
+
+    const int duration  = cap_int(2 + monster->hit_dice / 5, 6);
+    for (int i = 0; i < nsummons; ++i)
+    {
+        const monster_type which_mons = mpicker();
+        if (which_mons == MONS_PROGRAM_BUG)
+            continue;
+        create_monster( which_mons, duration,
+                        SAME_ATTITUDE(monster), monster->x, monster->y,
+                        monster->foe, 250 );
+    }
+}
+
+void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
     // always do setup.  It might be done already, but it doesn't
     // hurt to do it again (cheap).
@@ -340,7 +402,6 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
     int sumcount = 0;
     int sumcount2;
-    int summonik = 0;
     int duration = 0;
 
 #if DEBUG_DIAGNOSTICS
@@ -350,8 +411,8 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
     mpr( info, MSGCH_DIAGNOSTICS );
 #endif
 
-    if (spell_cast == MS_HELLFIRE_BURST || spell_cast == MS_BRAIN_FEED
-        || spell_cast == MS_SMITE || spell_cast == MS_MUTATION)
+    if (spell_cast == SPELL_HELLFIRE_BURST || spell_cast == SPELL_BRAIN_FEED
+        || spell_cast == SPELL_SMITING)
     {                           // etc.
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
         {
@@ -366,13 +427,16 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
 
     switch (spell_cast)
     {
-    case MS_BERSERK_RAGE:
+    default:
+        break;
+
+    case SPELL_BERSERKER_RAGE:
         monster->go_berserk(true);
         return;
             
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-        if ( spell_cast == MS_SUMMON_SMALL_MAMMALS )
+    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_VAMPIRE_SUMMON:
+        if ( spell_cast == SPELL_SUMMON_SMALL_MAMMAL )
             sumcount2 = 1 + random2(4);
         else
             sumcount2 = 3 + random2(3) + monster->hit_dice / 5;
@@ -409,13 +473,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_LEVEL_SUMMON:       // summon anything appropriate for level
-        if (!mons_friendly(monster) && monsterNearby
-            && monster_abjuration(1, true) > 0 && coinflip())
-        {
-            monster_abjuration( monster->hit_dice * 10, false );
+    case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
+        if (mons_abjured(monster, monsterNearby))
             return;
-        }
 
         sumcount2 = 1 + random2(4) + random2( monster->hit_dice / 7 + 1 );
 
@@ -426,7 +486,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_FAKE_RAKSHASA_SUMMON:
+    case SPELL_FAKE_RAKSHASA_SUMMON:
         sumcount2 = (coinflip() ? 2 : 3);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
@@ -437,13 +497,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_SUMMON_DEMON: // class 2-4 demons
-        if (!mons_friendly(monster) && monsterNearby
-            && monster_abjuration(1, true) > 0 && coinflip())
-        {
-            monster_abjuration(monster->hit_dice * 10, false);
+    case SPELL_SUMMON_DEMON: // class 2-4 demons
+        if (mons_abjured(monster, monsterNearby))
             return;
-        }
 
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 10 + 1 );
 
@@ -456,12 +512,12 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_ANIMATE_DEAD:
+    case SPELL_ANIMATE_DEAD:
         // see special handling in monstuff::handle_spell {dlb}
         animate_dead( 5 + random2(5), SAME_ATTITUDE(monster), monster->foe, 1 );
         return;
 
-    case MS_SUMMON_DEMON_LESSER: // class 5 demons
+    case SPELL_CALL_IMP: // class 5 demons
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
         duration  = cap_int(2 + monster->hit_dice / 5, 6);
@@ -473,7 +529,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_SUMMON_UFETUBUS:
+    case SPELL_SUMMON_UFETUBUS:
         sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 5 + 1 );
 
         duration  = cap_int(2 + monster->hit_dice / 5, 6);
@@ -485,19 +541,20 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         return;
 
-    case MS_SUMMON_BEAST:       // Geryon
+    case SPELL_SUMMON_BEAST:       // Geryon
         create_monster( MONS_BEAST, 4, SAME_ATTITUDE(monster),
                         monster->x, monster->y, monster->foe, 250 );
         return;
 
-    case MS_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
-        if (!mons_friendly(monster) && monsterNearby
-            && monster_abjuration(1, true) > 0 && coinflip())
-        {
-            monster_abjuration( monster->hit_dice * 10, false );
-            return;
-        }
+    case SPELL_SUMMON_ICE_BEAST:
+        create_monster( MONS_ICE_BEAST, 5, SAME_ATTITUDE(monster),
+                        monster->x, monster->y, monster->foe, 250 );
+        return;
 
+    case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
+        if (mons_abjured(monster, monsterNearby))
+            return;
+        
         sumcount2 = 1 + random2(2) + random2( monster->hit_dice / 4 + 1 );
 
         duration  = cap_int(2 + monster->hit_dice / 5, 6);
@@ -509,31 +566,23 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
                     250);
         return;
 
-    case MS_SUMMON_UNDEAD:      // summon undead around player
-        if (!mons_friendly(monster) && monsterNearby
-            && monster_abjuration(1, true) > 0 && coinflip())
-        {
-            monster_abjuration( monster->hit_dice * 10, false );
-            return;
-        }
-
-        sumcount2 = 2 + random2(2) + random2( monster->hit_dice / 4 + 1 );
-
-        duration  = cap_int(2 + monster->hit_dice / 5, 6);
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            do
-            {
-                summonik = random2(241);        // hmmmm ... {dlb}
-            }
-            while (mons_class_holiness(summonik) != MH_UNDEAD);
-
-            create_monster(summonik, duration, SAME_ATTITUDE(monster),
-                           monster->x, monster->y, monster->foe, 250);
-        }
+    case SPELL_SUMMON_WRAITHS:
+        do_high_level_summon(monster, monsterNearby, pick_random_wraith,
+                             random_range(3, 6));
         return;
 
-    case MS_TORMENT:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+        do_high_level_summon(monster, monsterNearby, pick_horrible_thing,
+                             random_range(3, 5));
+        return;
+
+    case SPELL_SUMMON_UNDEAD:      // summon undead around player
+        do_high_level_summon(monster, monsterNearby, pick_undead_summon,
+                             2 + random2(2)
+                             + random2( monster->hit_dice / 4 + 1 ));
+        return;
+
+    case SPELL_SYMBOL_OF_TORMENT:
         if (!monsterNearby || mons_friendly(monster))
             return;
 
@@ -542,13 +591,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         torment(monster_index(monster), monster->x, monster->y);
         return;
 
-    case MS_SUMMON_DEMON_GREATER:
-        if (!mons_friendly(monster) && !monsterNearby &&
-            monster_abjuration(1, true) > 0 && coinflip())
-        {
-            monster_abjuration(monster->hit_dice * 10, false);
+    case SPELL_SUMMON_GREATER_DEMON:
+        if (mons_abjured(monster, monsterNearby))
             return;
-        }
 
         sumcount2 = 1 + random2( monster->hit_dice / 10 + 1 );
 
@@ -562,13 +607,9 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         return;
 
     // Journey -- Added in Summon Lizards and Draconian
-    case MS_SUMMON_DRAKES:
-        if (!mons_friendly( monster ) && !monsterNearby &&
-            monster_abjuration( 1, true ) > 0 && coinflip())
-        {
-            monster_abjuration( monster->hit_dice * 10, false );
+    case SPELL_SUMMON_DRAKES:
+        if (mons_abjured(monster, monsterNearby))
             return;
-        }
 
         sumcount2 = 1 + random2(3) + random2( monster->hit_dice / 5 + 1 );
 
@@ -598,7 +639,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
         }
         break;
 
-    case MS_CANTRIP:
+    case SPELL_CANTRIP:
     {
         const bool friendly = mons_friendly(monster);
         bool need_friendly_stub = false;
@@ -665,7 +706,7 @@ void mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
  *
  */
 
-void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cast)
+void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast)
 {
     // always set these -- used by things other than fire_beam()
 
@@ -674,31 +715,28 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     // squashed.
     pbolt.ench_power = 4 * monster->hit_dice;
 
-    if (spell_cast == MS_TELEPORT)
+    if (spell_cast == SPELL_TELEPORT_SELF)
         pbolt.ench_power = 2000;
-    else if (spell_cast == MS_PAIN) // this is cast by low HD monsters
+    else if (spell_cast == SPELL_PAIN) // this is cast by low HD monsters
         pbolt.ench_power *= 2;
 
     pbolt.beam_source = monster_index(monster);
 
     // set bolt type
-    if (spell_cast == MS_HELLFIRE_BURST
-        || spell_cast == MS_BRAIN_FEED
-        || spell_cast == MS_SMITE || spell_cast == MS_MUTATION)
+    if (spell_cast == SPELL_HELLFIRE_BURST
+        || spell_cast == SPELL_BRAIN_FEED
+        || spell_cast == SPELL_SMITING)
     {                           // etc.
         switch (spell_cast)
         {
-        case MS_HELLFIRE_BURST:
+        case SPELL_HELLFIRE_BURST:
             pbolt.type = DMNBM_HELLFIRE;
             break;
-        case MS_BRAIN_FEED:
+        case SPELL_BRAIN_FEED:
             pbolt.type = DMNBM_BRAIN_FEED;
             break;
-        case MS_SMITE:
+        case SPELL_SMITING:
             pbolt.type = DMNBM_SMITING;
-            break;
-        case MS_MUTATION:
-            pbolt.type = DMNBM_MUTATION;
             break;
         }
         return;
@@ -708,23 +746,25 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     // fire_tracer, or beam.
     switch (spell_cast)
     {
-    case MS_SUMMON_SMALL_MAMMALS:
-    case MS_VAMPIRE_SUMMON:
-    case MS_LEVEL_SUMMON:       // summon anything appropriate for level
-    case MS_FAKE_RAKSHASA_SUMMON:
-    case MS_SUMMON_DEMON:
-    case MS_ANIMATE_DEAD:
-    case MS_SUMMON_DEMON_LESSER:
-    case MS_SUMMON_UFETUBUS:
-    case MS_SUMMON_BEAST:       // Geryon
-    case MS_SUMMON_UNDEAD:      // summon undead around player
-    case MS_SUMMON_MUSHROOMS:
-    case MS_SUMMON_DRAKES:
-    case MS_TORMENT:
-    case MS_SUMMON_DEMON_GREATER:
-    case MS_CANTRIP:
-    case MS_BERSERK_RAGE:
-    case MS_MIGHT:
+    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_VAMPIRE_SUMMON:
+    case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
+    case SPELL_FAKE_RAKSHASA_SUMMON:
+    case SPELL_SUMMON_DEMON:
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_UFETUBUS:
+    case SPELL_SUMMON_BEAST:       // Geryon
+    case SPELL_SUMMON_UNDEAD:      // summon undead around player
+    case SPELL_SUMMON_ICE_BEAST:
+    case SPELL_SUMMON_MUSHROOMS:
+    case SPELL_SUMMON_DRAKES:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SUMMON_WRAITHS:
+    case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_SUMMON_GREATER_DEMON:
+    case SPELL_CANTRIP:
+    case SPELL_BERSERKER_RAGE:
         return;
     default:
         break;
@@ -733,7 +773,7 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     // Need to correct this for power of spellcaster
     int power = 12 * monster->hit_dice;
 
-    struct bolt theBeam = mons_spells(spell_cast, power);
+    bolt theBeam = mons_spells(spell_cast, power);
 
     pbolt.colour = theBeam.colour;
     pbolt.range = theBeam.range;
@@ -758,9 +798,10 @@ void setup_mons_cast(struct monsters *monster, struct bolt &pbolt, int spell_cas
     else 
         pbolt.aux_source.clear();
 
-    if (spell_cast == MS_HASTE
-        || spell_cast == MS_INVIS
-        || spell_cast == MS_HEAL || spell_cast == MS_TELEPORT)
+    if (spell_cast == SPELL_HASTE
+        || spell_cast == SPELL_INVISIBILITY
+        || spell_cast == SPELL_LESSER_HEALING
+        || spell_cast == SPELL_TELEPORT_SELF)
     {
         pbolt.target_x = monster->x;
         pbolt.target_y = monster->y;
@@ -1319,7 +1360,7 @@ bolt mons_spells( int spell_cast, int power )
 
     switch (spell_cast)
     {
-    case MS_MMISSILE:
+    case SPELL_MAGIC_DART:
         beam.colour = LIGHTMAGENTA;     //inv_colour [throw_2];
         beam.name = "magic dart";       // inv_name [throw_2]);
         beam.range = 6;
@@ -1332,7 +1373,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_FLAME:
+    case SPELL_THROW_FLAME:
         beam.colour = RED;
         beam.name = "puff of flame";
         beam.range = 6;
@@ -1350,14 +1391,14 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_FROST:
+    case SPELL_THROW_FROST:
         beam.colour = WHITE;
         beam.name = "puff of frost";
         beam.range = 6;
         beam.rangeMax = 10;
 
         // should this be the same as magic missile?
-        // see MS_FLAME -- bwr
+        // see SPELL_FLAME -- bwr
         beam.damage = dice_def( 3, 5 + (power / 40) );
 
         beam.hit = 25 + power / 40;
@@ -1367,7 +1408,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_PARALYSIS:
+    case SPELL_PARALYSE:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1377,7 +1418,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_SLOW:
+    case SPELL_SLOW:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1387,7 +1428,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_HASTE:              // (self)
+    case SPELL_HASTE:              // (self)
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1397,7 +1438,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_CONFUSE:
+    case SPELL_CONFUSE:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1407,7 +1448,17 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_VENOM_BOLT:
+    case SPELL_POLYMORPH_OTHER:
+        beam.name = "0";
+        beam.range = 6;
+        beam.rangeMax = 9;
+        beam.type = 0;
+        beam.flavour = BEAM_POLYMORPH;
+        beam.thrower = KILL_MON_MISSILE;
+        beam.is_beam = true;
+        break;
+
+    case SPELL_VENOM_BOLT:
         beam.name = "bolt of poison";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1420,7 +1471,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_POISON_ARROW:
+    case SPELL_POISON_ARROW:
         beam.name = "poison arrow";
         beam.damage = dice_def( 3, 7 + power / 12 );
         beam.colour = LIGHTGREEN;
@@ -1431,7 +1482,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = beam.rangeMax = 8;
         break;
 
-    case MS_MAGMA:
+    case SPELL_BOLT_OF_MAGMA:
         beam.name = "bolt of magma";
         beam.range = 5;
         beam.rangeMax = 13;
@@ -1444,7 +1495,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
         
-    case MS_FIRE_BOLT:
+    case SPELL_BOLT_OF_FIRE:
         beam.name = "bolt of fire";
         beam.range = 5;
         beam.rangeMax = 13;
@@ -1457,7 +1508,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_ICE_BOLT:
+    case SPELL_ICE_BOLT:
         beam.name = "bolt of ice";
         beam.range = 5;
         beam.rangeMax = 13;
@@ -1470,7 +1521,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
         
-    case MS_COLD_BOLT:
+    case SPELL_BOLT_OF_COLD:
         beam.name = "bolt of cold";
         beam.range = 5;
         beam.rangeMax = 13;
@@ -1483,7 +1534,21 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_SHOCK:
+    case SPELL_FREEZING_CLOUD:
+        beam.name = "freezing blast";
+        beam.range = 5;
+        beam.rangeMax = 12;
+        beam.damage = dice_def( 2, 9 + power / 11 );
+        beam.colour = WHITE;
+        beam.type = SYM_ZAP;
+        beam.thrower = KILL_MON;
+        beam.flavour = BEAM_COLD;
+        beam.hit = 17 + power / 25;
+        beam.is_beam = true;
+        beam.is_big_cloud = true;
+        break;
+
+    case SPELL_SHOCK:
         beam.name = "zap";
         beam.range = 8;
         beam.rangeMax = 16;
@@ -1496,7 +1561,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
         
-    case MS_LIGHTNING_BOLT:
+    case SPELL_LIGHTNING_BOLT:
         beam.name = "bolt of lightning";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1509,7 +1574,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_INVIS:
+    case SPELL_INVISIBILITY:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1519,7 +1584,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_FIREBALL:
+    case SPELL_FIREBALL:
         beam.colour = RED;
         beam.name = "fireball";
         beam.range = 6;
@@ -1533,7 +1598,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_explosion = true;
         break;
 
-    case MS_HEAL:
+    case SPELL_LESSER_HEALING:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1544,7 +1609,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_TELEPORT:
+    case SPELL_TELEPORT_SELF:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1554,7 +1619,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_TELEPORT_OTHER:
+    case SPELL_TELEPORT_OTHER:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1564,11 +1629,11 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_BLINK:
+    case SPELL_BLINK:
         beam.is_beam = false;
         break;
 
-    case MS_CRYSTAL_SPEAR:      // was splinters
+    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
         beam.name = "crystal spear";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1581,7 +1646,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_DIG:
+    case SPELL_DIG:
         beam.name = "0";
         beam.range = 3;
         beam.rangeMax = 7 + random2(power) / 10;
@@ -1591,7 +1656,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_NEGATIVE_BOLT:      // negative energy
+    case SPELL_BOLT_OF_DRAINING:      // negative energy
         beam.name = "bolt of negative energy";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1606,7 +1671,7 @@ bolt mons_spells( int spell_cast, int power )
 
     // 20, 21 are used
 
-    case MS_ORB_ENERGY: // mystic blast
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST: // mystic blast
         beam.colour = LIGHTMAGENTA;
         beam.name = "orb of energy";
         beam.range = 6;
@@ -1621,7 +1686,7 @@ bolt mons_spells( int spell_cast, int power )
 
     // 23 is brain feed
 
-    case MS_STEAM_BALL:
+    case SPELL_STEAM_BALL:
         beam.colour = LIGHTGREY;
         beam.name = "ball of steam";
         beam.range = 6;
@@ -1637,7 +1702,7 @@ bolt mons_spells( int spell_cast, int power )
     // 27 is summon devils
     // 28 is animate dead
 
-    case MS_PAIN:
+    case SPELL_PAIN:
         beam.name = "0";
         beam.range = 7;
         beam.rangeMax = 14;
@@ -1652,7 +1717,7 @@ bolt mons_spells( int spell_cast, int power )
 
     // 30 is smiting
 
-    case MS_STICKY_FLAME:
+    case SPELL_STICKY_FLAME:
         beam.colour = RED;
         beam.name = "sticky flame";
         beam.range = 6;
@@ -1665,7 +1730,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_POISON_BLAST:       // demon
+    case SPELL_POISONOUS_CLOUD:       // demon
         beam.name = "blast of poison";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1679,21 +1744,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_big_cloud = true;
         break;
 
-    case MS_PURPLE_BLAST:       // purple bang thing
-        beam.colour = LIGHTMAGENTA;
-        beam.name = "orb of energy";
-        beam.range = 6;
-        beam.rangeMax = 10;
-        beam.damage = dice_def( 3, 10 + power / 15 );
-        beam.hit = 20 + power / 25;
-        beam.type = SYM_ZAP;
-        beam.thrower = KILL_MON_MISSILE;
-        beam.flavour = BEAM_MMISSILE;
-        beam.is_beam = false;
-        beam.is_explosion = true;
-        break;
-
-    case MS_ENERGY_BOLT:        // eye of devastation
+    case SPELL_ENERGY_BOLT:        // eye of devastation
         beam.colour = YELLOW;
         beam.name = "bolt of energy";
         beam.range = 9;
@@ -1706,7 +1757,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_STING:              // sting
+    case SPELL_STING:              // sting
         beam.colour = GREEN;
         beam.name = "sting";
         beam.range = 8;
@@ -1719,7 +1770,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_IRON_BOLT:
+    case SPELL_BOLT_OF_IRON:
         beam.colour = LIGHTCYAN;
         beam.name = "iron bolt";
         beam.range = 4;
@@ -1732,7 +1783,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_STONE_ARROW:
+    case SPELL_STONE_ARROW:
         beam.colour = LIGHTGREY;
         beam.name = "stone arrow";
         beam.range = 8;
@@ -1745,7 +1796,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_POISON_SPLASH:
+    case SPELL_POISON_SPLASH:
         beam.colour = GREEN;
         beam.name = "splash of poison";
         beam.range = 5;
@@ -1758,7 +1809,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_DISINTEGRATE:
+    case SPELL_DISINTEGRATE:
         beam.name = "0";
         beam.range = 7;
         beam.rangeMax = 14;
@@ -1771,7 +1822,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_MARSH_GAS:          // swamp drake
+    case SPELL_MEPHITIC_CLOUD:          // swamp drake
         beam.name = "foul vapour";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1785,7 +1836,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_big_cloud = true;
         break;
 
-    case MS_MIASMA:            // death drake
+    case SPELL_MIASMA:            // death drake
         beam.name = "foul vapour";
         beam.damage = dice_def( 3, 5 + power / 24 );
         beam.colour = DARKGREY;
@@ -1798,7 +1849,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.range = beam.rangeMax = 8;
         break;
         
-    case MS_QUICKSILVER_BOLT:   // Quicksilver dragon
+    case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon
         beam.colour = random_colour();
         beam.name = "bolt of energy";
         beam.range = 9;
@@ -1811,7 +1862,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = false;
         break;
 
-    case MS_HELLFIRE:           // fiend's hellfire
+    case SPELL_HELLFIRE:           // fiend's hellfire
         beam.name = "hellfire";
         beam.colour = RED;
         beam.range = 4;
@@ -1825,7 +1876,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_explosion = true;
         break;
 
-    case MS_METAL_SPLINTERS:
+    case SPELL_METAL_SPLINTERS:
         beam.name = "spray of metal splinters";
         beam.range = 7;
         beam.rangeMax = 16;
@@ -1838,7 +1889,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_BANISHMENT:
+    case SPELL_BANISHMENT:
         beam.name = "0";
         beam.range = 5;
         beam.rangeMax = 9;
@@ -1848,7 +1899,7 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
-    case MS_BLINK_OTHER:
+    case SPELL_BLINK_OTHER:
         beam.name = "0";
         beam.type = 0;
         beam.flavour = BEAM_BLINK;
@@ -1866,10 +1917,10 @@ bolt mons_spells( int spell_cast, int power )
     return (beam);
 }                               // end mons_spells()
 
-static unsigned char monster_abjuration(int pow, bool test)
+static int monster_abjuration(bool friendly, int pow, bool test)
 {
-    unsigned char result = 0;
-    struct monsters *monster = 0;       // NULL {dlb}
+    int result = 0;
+    monsters *monster = NULL;
 
     if (!test)
         mpr("Send 'em back where they came from!");
@@ -1885,10 +1936,10 @@ static unsigned char monster_abjuration(int pow, bool test)
     {
         monster = &menv[ab];
 
-        if (monster->type == -1 || !mons_near(monster))
+        if (!monster->alive() || !mons_near(monster))
             continue;
 
-        if (!mons_friendly(monster))
+        if (friendly == mons_friendly(monster))
             continue;
 
         mon_enchant abjLevel = monster->get_ench(ENCH_ABJ);

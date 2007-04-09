@@ -57,7 +57,7 @@ bool learn_spell(void);
 /* ***********************************************************************
  * called from: it_use3 - item_use - spl-book
  * *********************************************************************** */
-int which_spell_in_book(int sbook_type, int spl);
+spell_type which_spell_in_book(int sbook_type, int spl);
 
 int staff_spell( int zap_device_2 );
 

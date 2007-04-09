@@ -1872,7 +1872,7 @@ static void give_basic_spells(int which_job)
     if (which_job == JOB_WANDERER)
         return;
 
-    unsigned char which_spell = SPELL_NO_SPELL;
+    spell_type which_spell = SPELL_NO_SPELL;
 
     switch (which_job)
     {

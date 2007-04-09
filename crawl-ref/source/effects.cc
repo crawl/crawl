@@ -300,14 +300,6 @@ void direct_effect(struct bolt &pbolt)
         else
             mpr("Something tries to feed on your intellect!");
         break;
-
-    case DMNBM_MUTATION:
-        mpr("Strange energies course through your body.");
-        if (one_chance_in(5))
-            mutate(100);
-        else
-            give_bad_mutation();
-        break;
     }
 
     // apply damage and handle death, where appropriate {dlb}

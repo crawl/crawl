@@ -861,7 +861,7 @@ static void sdump_spells(const std::string &, std::string & text)
         for (int j = 0; j < 52; j++)
         {
             const char letter = index_to_letter( j );
-            const int  spell  = get_spell_by_letter( letter );
+            const spell_type spell  = get_spell_by_letter( letter );
 
             if (spell != SPELL_NO_SPELL)
             {
@@ -1051,7 +1051,9 @@ void resists_screen()
 void whereis_record(const char *status)
 {
     const std::string file_name =
-        morgue_directory() + you.your_name + std::string(".where");
+        morgue_directory()
+        + strip_filename_unsafe_chars(you.your_name)
+        + std::string(".where");
 
     if (FILE *handle = fopen(file_name.c_str(), "w"))
     {

@@ -1061,7 +1061,8 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
     {
-        you.spells[i] = unmarshallByte(th);
+        you.spells[i] =
+            static_cast<spell_type>( (unsigned char) unmarshallByte(th) );
         if (you.spells[i] != SPELL_NO_SPELL)
             you.spell_no++;
     }
@@ -1616,7 +1617,7 @@ static void unmarshall_monster(tagHeader &th, monsters &m)
         m.inv[j] = unmarshallShort(th);
 
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        m.spells[j] = unmarshallShort(th);
+        m.spells[j] = static_cast<spell_type>( unmarshallShort(th) );
 
     m.god = (god_type) unmarshallByte(th);
 

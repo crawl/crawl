@@ -3393,7 +3393,7 @@ void describe_item( const item_def &item )
 // Describes (most) every spell in the game.
 //
 //---------------------------------------------------------------
-void describe_spell(int spelled)
+void describe_spell(spell_type spelled)
 {
     std::string description;
 
@@ -3487,7 +3487,7 @@ void describe_spell(int spelled)
         description += "speeds the actions of a creature. ";
         break;
 
-    case SPELL_PARALYZE:
+    case SPELL_PARALYSE:
         description += "prevents a creature from moving. ";
         break;
 
@@ -6235,6 +6235,11 @@ void describe_monsters(int class_described, unsigned char which_mons)
             "glow with an otherworldly radiance.";
         break;
 
+    case MONS_ICE_STATUE:
+        description += "An imposing statue carved in glistening ice. "
+            "Freezing vapours swirl about it.";
+        break;
+
     case MONS_MURRAY:
         description += "A demonic skull rolling along the dungeon floor.";
         break;
@@ -6258,7 +6263,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
         for (int i = 0; i < 6; i++)
         {
-            if (hspell_pass[i] != MS_NO_SPELL)
+            if (hspell_pass[i] != SPELL_NO_SPELL)
             {
                 if (!found_spell)
                 {

@@ -18,48 +18,56 @@
 #include "enum.h"    // just for NUM_SPELL_TYPES and TARG_ENEMY
 #include "direct.h"  // just for DIR_NONE 
 
-struct playerspell
+struct spell_desc
 {
-  int id;
-  const char *title;
-  unsigned int disciplines; // bitfield
-  unsigned int flags;       // bitfield
-  unsigned int level;
-  const char *target_prompt;
+    int id;
+    const char  *title;
+    unsigned int disciplines; // bitfield
+    unsigned int flags;       // bitfield
+    unsigned int level;
+    const char  *target_prompt;
+
+    // If a monster is casting this, does it need a tracer?
+    bool         ms_needs_tracer;
+
+    // The spell can be used no matter what the monster's foe is.
+    bool         ms_utility;
 };
 
 
 //* * called from: acr
-void init_playerspells(void);
+void init_spell_descs(void);
 
 int get_spell_slot_by_letter( char letter );
-int get_spell_by_letter( char letter );
+spell_type get_spell_by_letter( char letter );
 
-bool add_spell_to_memory( int spell );
+bool add_spell_to_memory( spell_type spell );
 bool del_spell_from_memory_by_slot( int slot );
 
 // * called from: spell
-int spell_hunger(int which_spell);
+int spell_hunger(spell_type which_spell);
 
 // * called from: it_use3 - spell - spells3
-int spell_mana(int which_spell);
+int spell_mana(spell_type which_spell);
 
 // * called from: chardump - it_use3 - player - spell - spl-book -
 // *              spells0 - spells3
-int spell_difficulty(int which_spell);
-const char *get_spell_target_prompt( int which_spell );
+int spell_difficulty(spell_type which_spell);
+const char *get_spell_target_prompt( spell_type which_spell );
 
-int spell_levels_required(int which_spell);
+bool spell_needs_tracer(spell_type spell);
+bool spell_needs_foe(spell_type spell);
+int spell_levels_required(spell_type which_spell);
 
-unsigned int get_spell_flags( int which_spell );
+unsigned int get_spell_flags( spell_type which_spell );
 
 // * called from: chardump - spell - spl-book - spells0
 bool spell_typematch(int which_spell, unsigned int which_discipline);
-unsigned int spell_type( int which_spell ); //jmf: simplification of above
+unsigned int get_spell_type( int which_spell ); //jmf: simplification of above
 int count_bits( unsigned int bits );
 
 // * called from: chardump - command - debug - spl-book - spells0
-const char *spell_title(int which_spell);
+const char *spell_title(spell_type which_spell);
 
 const char* spelltype_short_name( int which_spelltype );
 

@@ -704,7 +704,7 @@ static int l_you_spells(lua_State *ls)
     int index = 0;
     for (int i = 0; i < 52; ++i)
     {
-        const int spell = get_spell_by_letter( index_to_letter(i) );
+        const spell_type spell = get_spell_by_letter( index_to_letter(i) );
         if (spell == SPELL_NO_SPELL)
             continue;
 

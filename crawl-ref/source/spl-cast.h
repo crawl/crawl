@@ -17,7 +17,7 @@
 #include "enum.h"
 
 char list_spells( void );
-int spell_fail( int spell );
+int spell_fail( spell_type spell );
 int calc_spell_power( int spell, bool apply_intel, bool fail_rate_chk = false );
 int spell_enhancement( unsigned int typeflags );
 
@@ -25,7 +25,7 @@ int spell_enhancement( unsigned int typeflags );
 /* ***********************************************************************
  * called from: it_use3 - spell
  * *********************************************************************** */
-void exercise_spell( int spell_ex, bool spc, bool divide );
+void exercise_spell( spell_type spell_ex, bool spc, bool divide );
 
 
 // last updaetd 12may2000 {dlb}
@@ -39,7 +39,7 @@ bool cast_a_spell( void );
 /* ***********************************************************************
  * called from: ability - debug - it_use3 - spell
  * *********************************************************************** */
-spret_type your_spells( int spc2, int powc = 0, bool allow_fail = true );
+spret_type your_spells( spell_type spc2, int powc = 0, bool allow_fail = true );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
