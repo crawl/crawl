@@ -2017,7 +2017,7 @@ static void decrement_durations()
         Options.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.backlight > 0 && !--you.backlight)
+    if (you.backlight > 0 && !--you.backlight && !you.backlit())
         mpr("You are no longer glowing.", MSGCH_DURATION);
     
     if (you.confusing_touch > 1)
