@@ -19,7 +19,7 @@ Branch branches[] = {
       "Dungeon", "the Dungeon", "D",
       NULL,
       true, true, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level, NULL,
+      mons_standard_rare, mons_standard_level,
       8, 'D'
     },
 
@@ -28,7 +28,7 @@ Branch branches[] = {
       "Temple", "the Ecumenical Temple", "Temple",
       NULL,
       false, false, LIGHTGREY, LIGHTGREY,
-      mons_standard_rare, mons_standard_level, NULL, 
+      mons_standard_rare, mons_standard_level, 
       0, 'T' },
 
     { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 4, 6,
@@ -36,7 +36,7 @@ Branch branches[] = {
       "Orcish Mines", "the Orcish Mines", "Orc",
       NULL,
       true, false, BROWN, BROWN,
-      mons_mineorc_rare, mons_mineorc_level, NULL,
+      mons_mineorc_rare, mons_mineorc_level,
       20, 'O' },
 
     { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 7, 4,
@@ -44,7 +44,7 @@ Branch branches[] = {
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
       true, true, DARKGREY, LIGHTGREY,
-      mons_hallelf_rare, mons_hallelf_level, NULL,
+      mons_hallelf_rare, mons_hallelf_level,
       8, 'E' },
 
     { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 10, 8,
@@ -52,7 +52,7 @@ Branch branches[] = {
       "Lair", "the Lair of Beasts", "Lair",
       NULL,
       true, false, GREEN, BROWN,
-      mons_lair_rare, mons_lair_level, NULL,
+      mons_lair_rare, mons_lair_level,
       5, 'L' },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 5, 3,
@@ -60,7 +60,7 @@ Branch branches[] = {
       "Swamp", "the Swamp", "Swamp",
       NULL,
       true, true, BROWN, BROWN,
-      mons_swamp_rare, mons_swamp_level, NULL, 
+      mons_swamp_rare, mons_swamp_level, 
       0, 'S' },
 
     { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 4,
@@ -68,7 +68,7 @@ Branch branches[] = {
       "Slime Pits", "the Pits of Slime", "Slime",
       NULL,
       false, false, GREEN, LIGHTGREEN,
-      mons_pitslime_rare, mons_pitslime_level, NULL,
+      mons_pitslime_rare, mons_pitslime_level,
       5, 'M' },
 
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 5, 7,
@@ -76,7 +76,7 @@ Branch branches[] = {
       "Snake Pit", "the Snake Pit", "Snake",
       NULL,
       true, true, LIGHTGREEN, YELLOW,
-      mons_pitsnake_rare, mons_pitsnake_level, NULL,
+      mons_pitsnake_rare, mons_pitsnake_level,
       10, 'P' },
 
     { BRANCH_HIVE, BRANCH_MAIN_DUNGEON, 4, 15,
@@ -84,7 +84,7 @@ Branch branches[] = {
       "Hive", "the Hive", "Hive",
       "You hear a buzzing sound coming from all directions.",
       false, false, YELLOW, BROWN,
-      mons_hive_rare, mons_hive_level, NULL, 
+      mons_hive_rare, mons_hive_level, 
       0, 'H' },
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 8, 17,
@@ -92,7 +92,7 @@ Branch branches[] = {
       "Vaults", "the Vaults", "Vault",
       NULL,
       true, true, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level, NULL,
+      mons_standard_rare, mons_standard_level,
       5, 'V' },
 
 
@@ -101,7 +101,7 @@ Branch branches[] = {
       "Hall of Blades", "the Hall of Blades", "Blade",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
-      mons_hallblade_rare, mons_hallblade_level, NULL, 
+      mons_hallblade_rare, mons_hallblade_level, 
       0, 'B' },
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 5, 3,
@@ -109,7 +109,7 @@ Branch branches[] = {
       "Crypt", "the Crypt", "Crypt",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
-      mons_crypt_rare, mons_crypt_level, NULL,
+      mons_crypt_rare, mons_crypt_level,
       5, 'C' },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 5,
@@ -117,7 +117,7 @@ Branch branches[] = {
       "Tomb", "the Tomb of the Ancients", "Tomb",
       NULL,
       false, true, YELLOW, LIGHTGREY,
-      mons_tomb_rare, mons_tomb_level, NULL, 
+      mons_tomb_rare, mons_tomb_level, 
       0, 'G' },
 
     { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 1, -1,
@@ -125,7 +125,7 @@ Branch branches[] = {
       "Hell", "The Vestibule of Hell", "Hell",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,
-      mons_standard_rare, mons_standard_level, NULL,
+      mons_standard_rare, mons_standard_level,
       0, 'U'
     },
 
@@ -134,7 +134,7 @@ Branch branches[] = {
       "Dis", "the Iron City of Dis", "Dis",
       NULL,
       false, false, CYAN, CYAN,
-      mons_dis_rare, mons_dis_level, NULL,
+      mons_dis_rare, mons_dis_level,
       0, 'I'
     },
 
@@ -143,7 +143,7 @@ Branch branches[] = {
       "Gehenna", "Gehenna", "Geh",
       NULL,
       false, false, DARKGREY, RED,
-      mons_gehenna_rare, mons_gehenna_level, NULL,
+      mons_gehenna_rare, mons_gehenna_level,
       0, 'N'
     },
 
@@ -152,7 +152,7 @@ Branch branches[] = {
       "Cocytus", "Cocytus", "Coc",
       NULL,
       false, false, LIGHTBLUE, LIGHTCYAN,
-      mons_cocytus_rare, mons_cocytus_level, NULL,
+      mons_cocytus_rare, mons_cocytus_level,
       0, 'X'
     },
 
@@ -161,7 +161,7 @@ Branch branches[] = {
       "Tartarus", "Tartarus", "Tar",
       NULL,
       false, false, DARKGREY, DARKGREY,
-      mons_tartarus_rare, mons_tartarus_level, NULL,
+      mons_tartarus_rare, mons_tartarus_level,
       0, 'Y'
     },
 
@@ -170,7 +170,7 @@ Branch branches[] = {
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
-      NULL, NULL, NULL,
+      NULL, NULL,
       0, 'R'
     },
 
@@ -179,7 +179,7 @@ Branch branches[] = {
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
-      NULL, NULL, NULL,
+      NULL, NULL,
       0, '0'
     },
 
@@ -188,7 +188,7 @@ Branch branches[] = {
       "Zot", "the Realm of Zot", "Zot",
       NULL,
       false, true, BLACK, BLACK,
-      mons_hallzot_rare, mons_hallzot_level, NULL,
+      mons_hallzot_rare, mons_hallzot_level,
       1, 'Z' },
 
     { BRANCH_CAVERNS, BRANCH_MAIN_DUNGEON, -1, -1,
@@ -196,7 +196,7 @@ Branch branches[] = {
       NULL, NULL, NULL,
       NULL,
       false, false, BLACK, BLACK,
-      NULL, NULL, NULL,
+      NULL, NULL,
       0, 0
     }
 };

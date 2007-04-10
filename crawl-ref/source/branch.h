@@ -31,7 +31,6 @@ struct Branch
     char rock_colour;
     int (*mons_rarity_function)(int);
     int (*mons_level_function)(int);
-    void (*level_builder_function)(int);
     int altar_chance;           // in percent
     int travel_shortcut;        // which key to press for travel
 };

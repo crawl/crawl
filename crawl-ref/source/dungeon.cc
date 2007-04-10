@@ -136,7 +136,7 @@ static void diamond_rooms(int level_number);
 
 // ITEM & SHOP FUNCTIONS
 static void place_shops(int level_number);
-static unsigned char item_in_shop(unsigned char shop_type);
+static object_class_type item_in_shop(unsigned char shop_type);
 static bool treasure_area(int level_number, unsigned char ta1_x,
                           unsigned char ta2_x, unsigned char ta1_y,
                           unsigned char ta2_y);
@@ -166,7 +166,7 @@ static int vault_grid( vault_placement &,
                        int &num_runes, int rune_subst = -1, bool foll = false);
 
 // ALTAR FUNCTIONS
-static int pick_an_altar(void);
+static dungeon_feature_type pick_an_altar(void);
 static void place_altar(void);
 
 //////////////////////////////////////////////////////////////////////////
@@ -415,6 +415,15 @@ static void build_layout_skeleton(int level_number, int level_type,
     }
 }
 
+static int num_items_wanted(int level_number)
+{
+    if (level_number > 5 && one_chance_in(500 - 5 * level_number))
+        return 10 + random2avg( 90, 2 );  // rich level!
+    else
+        return 3 + roll_dice( 3, 11 );
+}
+
+
 static int num_mons_wanted(int level_type)
 {
     if (level_type == LEVEL_ABYSS ||
@@ -551,17 +560,12 @@ static void build_dungeon_level(int level_number, int level_type)
     if (!player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
         place_traps(level_number);
 
-    int items_wanted = 3 + roll_dice( 3, 11 );
-
-    if (level_number > 5 && one_chance_in(500 - 5 * level_number))
-        items_wanted = 10 + random2avg( 90, 2 );  // rich level!
-
     // change pre-rock (105) to rock, and pre-floor (106) to floor
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_WALL, DNGN_ROCK_WALL );
     replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR );
 
     // place items
-    builder_items(level_number, level_type, items_wanted);
+    builder_items(level_number, level_type, num_items_wanted(level_number));
 
     // place monsters
     builder_monsters(level_number, level_type, num_mons_wanted(level_type));
@@ -591,7 +595,7 @@ void init_rod_mp(item_def &item)
     else
         item.plus2 = random_range(9, 14) * ROD_CHARGE_MULT;
     
-    item.plus  = item.plus2;
+    item.plus = item.plus2;
 }
 
 static bool weapon_is_visibly_special(const item_def &item)
@@ -620,8 +624,8 @@ int items( int allow_uniques,       // not just true-false,
            bool dont_place,         // don't randomly place item on level
            int item_level,          // level of the item, can differ from global
            int item_race,           // weapon / armour racial categories
-           const dgn_region_list &forbidden) 
                                     // item_race also gives type of rune!
+           const dgn_region_list &forbidden) 
 {
     int temp_rand = 0;             // probability determination {dlb}
     int range_charges = 0;         // for OBJ_WANDS charge count {dlb}
@@ -2729,7 +2733,7 @@ static void give_monster_item(monsters *mon, int thing, bool force_item = false)
         break;
     }
 
-    const int mholy = mons_holiness(mon);
+    const mon_holy_type mholy = mons_holiness(mon);
     
     if (get_weapon_brand( mthing ) == SPWPN_PROTECTION )
         mon->ac += 5;
@@ -4778,14 +4782,14 @@ static int place_uniques(int level_number, char level_type)
     return num_placed;
 }
 
-static int place_monster_vector(int* montypes, int numtypes,
+static int place_monster_vector(std::vector<int> montypes,
                                 int level_number, int num_to_place)
 {
     int result = 0;
     int not_used = 0;
     for (int i = 0; i < num_to_place; i++)
     {
-        if (place_monster( not_used, montypes[random2(numtypes)],
+        if (place_monster( not_used, montypes[random2((int)montypes.size())],
                            level_number, BEH_SLEEP, MHITNOT, 
                            false, 1, 1, true, PROX_ANYWHERE, 250, 0,
                            no_monster_zones ))
@@ -4800,7 +4804,7 @@ static int place_monster_vector(int* montypes, int numtypes,
 static void place_aquatic_monsters(int level_number, char level_type)
 {
     int lava_spaces = 0, water_spaces = 0;
-    int swimming_things[4];
+    std::vector<int> swimming_things(4u, NON_MONSTER);
 
     // count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
@@ -4823,7 +4827,7 @@ static void place_aquatic_monsters(int level_number, char level_type)
                 swimming_things[i] = MONS_SALAMANDER;
         }
 
-        place_monster_vector(swimming_things, 4, level_number,
+        place_monster_vector(swimming_things, level_number,
                              std::min(random2avg(9, 2) +
                                       (random2(lava_spaces) / 10), 15));
     }
@@ -4843,7 +4847,7 @@ static void place_aquatic_monsters(int level_number, char level_type)
         if (player_in_branch( BRANCH_COCYTUS ))
             swimming_things[3] = MONS_WATER_ELEMENTAL;
 
-        place_monster_vector(swimming_things, 4, level_number,
+        place_monster_vector(swimming_things, level_number,
                              std::min(random2avg(9, 2) +
                                       (random2(water_spaces) / 10), 15));
     }
@@ -7278,9 +7282,9 @@ void item_colour( item_def &item )
 }                               // end item_colour()
 
 //jmf: generate altar based on where you are, or possibly randomly
-static int pick_an_altar(void)
+static dungeon_feature_type pick_an_altar(void)
 {
-    int altar_type = 0;
+    dungeon_feature_type altar_type;
     int temp_rand;              // probability determination {dlb}
 
     if (player_in_branch( BRANCH_SLIME_PITS ) 
@@ -7339,7 +7343,9 @@ static int pick_an_altar(void)
         default:
             do
             {
-                altar_type = DNGN_ALTAR_ZIN + random2(NUM_GODS - 1);
+                altar_type =
+                    static_cast<dungeon_feature_type>(DNGN_ALTAR_ZIN +
+                                                      random2(NUM_GODS - 1));
             }
             while (altar_type == DNGN_ALTAR_NEMELEX_XOBEH
                    || altar_type == DNGN_ALTAR_LUGONU);
@@ -7348,7 +7354,7 @@ static int pick_an_altar(void)
     }
     else
     {
-        // Note: this case includes the pandemonium or the abyss.
+        // Note: this case includes Pandemonium or the Abyss.
         temp_rand = random2(9);
 
         altar_type = ((temp_rand == 0) ? DNGN_ALTAR_ZIN :
@@ -7370,7 +7376,7 @@ static void place_altar(void)
     int px, py;
     int i, j;
     int k = 0, l = 0;
-    int altar_type = pick_an_altar();
+    const dungeon_feature_type altar_type = pick_an_altar();
 
     while(true)
     {
@@ -7579,7 +7585,7 @@ void place_spec_shop( int level_number,
     activate_notes(note_status);
 }                               // end place_spec_shop()
 
-static unsigned char item_in_shop(unsigned char shop_type)
+static object_class_type item_in_shop(unsigned char shop_type)
 {
     switch (shop_type)
     {
