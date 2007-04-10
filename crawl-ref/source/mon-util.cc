@@ -1802,7 +1802,8 @@ bool ms_requires_tracer(spell_type monspell)
 
 bool ms_direct_nasty(spell_type monspell)
 {
-    return (spell_needs_foe(monspell));
+    return (spell_needs_foe(monspell)
+            && !(get_spell_flags(monspell) & SPTYP_SUMMONING));
 }
 
 // Spells a monster may want to cast if fleeing from the player, and 
