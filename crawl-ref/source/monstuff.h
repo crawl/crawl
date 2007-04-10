@@ -90,8 +90,6 @@ bool random_near_space( int ox, int oy, int &tx, int &ty,
 bool simple_monster_message(const monsters *monster, const char *event,
                             int channel = MSGCH_PLAIN, int param = 0);
 
-std::string str_simple_monster_message(monsters *mons, const char *event);
-
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */

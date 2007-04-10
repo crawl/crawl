@@ -324,15 +324,6 @@ void toggle_exclude(int x, int y)
     }
 }
 
-void forget_square(int x, int y)
-{
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
-        return;
-    
-    if (is_exclude_root(x, y))
-        toggle_exclude(x, y);
-}
-
 /*
  * Returns true if the square at (x,y) is a dungeon feature the character
  * can't (under normal circumstances) safely cross.
@@ -1917,10 +1908,10 @@ static int prompt_travel_branch(int prompt_flags)
     }
 }
 
-static int prompt_travel_depth(int branch)
+static int prompt_travel_depth(branch_type branch)
 {
     // Handle one-level branches by not prompting.
-    if ( branches[branch].depth == 1 )
+    if (single_level_branch(branch))
         return 1;
 
     char buf[100];
@@ -2028,7 +2019,8 @@ level_pos prompt_translevel_target(int prompt_flags)
     target.id.branch = branch;
 
     // User's chosen a branch, so now we ask for a level.
-    target.id.depth = prompt_travel_depth(target.id.branch);
+    target.id.depth =
+        prompt_travel_depth(static_cast<branch_type>(target.id.branch));
 
     if (target.id.depth < 1 || target.id.depth >= MAX_LEVELS)
         target.id.depth = -1;
@@ -3312,11 +3304,6 @@ bool runrest::is_rest() const
 bool runrest::is_explore() const
 {
     return (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY);
-}
-
-void runrest::rundown()
-{
-    rest();
 }
 
 void runrest::rest()

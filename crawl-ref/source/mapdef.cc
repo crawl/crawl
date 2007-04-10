@@ -909,6 +909,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
     {
         std::string s = specs[i];
         int weight = find_weight(s);
+        int mlevel = 0;
         if (weight == TAG_UNFOUND || weight <= 0)
             weight = 10;
 
@@ -916,15 +917,26 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         const bool generate_awake = strip_tag(s, "generate_awake");
 
         trim_string(s);
-        const int mid = mons_by_name(s);
 
-        if (mid == MONS_PROGRAM_BUG)
+        int mid = RANDOM_MONSTER;
+
+        if (s == "8")
+            mlevel = -8;
+        else if (s == "9")
+            mlevel = -9;
+        else if (s != "0")
         {
-            error = make_stringf("unrecognised monster \"%s\"", s.c_str());
-            return (slot);
+            mid = mons_by_name(s);
+
+            if (mid == MONS_PROGRAM_BUG)
+            {
+                error = make_stringf("unrecognised monster \"%s\"", s.c_str());
+                return (slot);
+            }
         }
 
-        slot.mlist.push_back( mons_spec(mid, weight, fixmons, generate_awake) );
+        slot.mlist.push_back(
+            mons_spec(mid, weight, mlevel, fixmons, generate_awake) );
     }
 
     return (slot);
@@ -1350,7 +1362,8 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
     
-    std::vector<dungeon_feature_type> feats = features_by_desc(s);
+    std::vector<dungeon_feature_type> feats =
+        features_by_desc( text_pattern(s, true) );
     for (int i = 0, size = feats.size(); i < size; ++i)
         list.push_back( feature_spec(feats[i], weight) );
 

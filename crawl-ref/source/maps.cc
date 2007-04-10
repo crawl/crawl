@@ -283,21 +283,6 @@ int random_map_for_place(const std::string &place, bool want_minivault)
     return (mapindex);
 }
 
-int find_map_named(const std::string &name)
-{
-    if (name.empty())
-        return (-1);
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Looking for map named \"%s\"", name.c_str());
-#endif
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name == name)
-            return (i);
-
-    return (-1);
-}
-
 int random_map_for_depth(int depth, bool want_minivault)
 {
     int mapindex = -1;

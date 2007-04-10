@@ -155,13 +155,14 @@ private:
 struct mons_spec
 {
     int mid;
-    int genweight;
+    int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
 
-    mons_spec(int id = RANDOM_MONSTER, int gw = 10, bool _fixmons = false,
-              bool awaken = false)
-        : mid(id), genweight(gw), fix_mons(_fixmons), generate_awake(awaken)
+    mons_spec(int id = RANDOM_MONSTER, int gw = 10, int ml = 0,
+              bool _fixmons = false, bool awaken = false)
+        : mid(id), genweight(gw), mlevel(ml), fix_mons(_fixmons),
+          generate_awake(awaken)
     {
     }
 };

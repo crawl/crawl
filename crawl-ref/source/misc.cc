@@ -1975,7 +1975,7 @@ unsigned short get_packed_place()
                       you.level_type );
 }
 
-bool single_level_branch( int branch )
+bool single_level_branch( branch_type branch )
 {
     return
         branch >= 0 && branch < NUM_BRANCHES
@@ -2175,7 +2175,7 @@ static const char *shop_types[] = {
 
 int str_to_shoptype(const std::string &s)
 {
-    if (s == "random")
+    if (s == "random" || s == "any")
         return (SHOP_RANDOM);
     
     for (unsigned i = 0; i < sizeof(shop_types) / sizeof (*shop_types); ++i)

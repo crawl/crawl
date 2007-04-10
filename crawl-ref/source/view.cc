@@ -224,18 +224,6 @@ void clear_envmap_grid( int x, int y )
     env.map_col[x - 1][y - 1].clear();
 }
 
-void clear_envmap( void )
-{
-    for (int i = 0; i < GXM; i++)
-    {
-        for (int j = 0; j < GYM; j++)
-        {
-            env.map[i][j] = 0;
-            env.map_col[i][j].clear();
-        }
-    }
-}
-
 #if defined(WIN32CONSOLE) || defined(DOS)
 static unsigned colflag2brand(int colflag)
 {

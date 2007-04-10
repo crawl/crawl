@@ -6046,6 +6046,17 @@ static void dngn_place_monster(
     {
         const int mid = monster_type_thing.mid;
         int not_used;
+
+        const int mlev = monster_type_thing.mlevel;
+        if (mlev)
+        {
+            if (mlev > 0)
+                monster_level = mlev;
+            else if (mlev == -8)
+                monster_level = 4 + monster_level * 2;
+            else if (mlev == -9)
+                monster_level += 5;
+        }
         
         if (mid != RANDOM_MONSTER && mid < NUM_MONSTERS)
         {

@@ -1003,19 +1003,6 @@ bool LevelStashes::is_current() const
     return (place == level_id::current());
 }
 
-bool LevelStashes::in_hell() const
-{
-    return place.branch >= BRANCH_DIS
-            && place.branch <= BRANCH_THE_PIT
-            && place.branch != BRANCH_VESTIBULE_OF_HELL;
-}
-
-bool LevelStashes::in_branch(int branchid) const
-{
-    return place.branch == branchid;
-}
-
-
 std::string LevelStashes::level_name() const
 {
     return place.describe(true, true);

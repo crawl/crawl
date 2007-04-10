@@ -484,9 +484,6 @@ public:
     // Take one off the rest counter.
     void rest();
 
-    // Decrements the run counter. Identical to rest.
-    void rundown();
-
     // Checks if shift-run should be aborted and aborts the run if necessary.
     // Returns true if you were running and are now no longer running.
     bool check_stop_running();

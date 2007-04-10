@@ -239,8 +239,6 @@ public:
     void  write(std::ostream &os, bool identify = false) const;
     std::string level_name() const;
     std::string short_level_name() const;
-    bool  in_hell() const;
-    bool  in_branch(int) const;
 
     int   stash_count() const { return stashes.size() + shops.size(); }
     int   visible_stash_count() const { return count_stashes() + shops.size(); }

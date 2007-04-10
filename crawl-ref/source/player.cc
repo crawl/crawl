@@ -359,11 +359,6 @@ bool player_is_swimming(void)
     return you.swimming();
 }
 
-bool player_floundering()
-{
-    return (player_in_water() && !player_can_swim());
-}
-
 bool player_under_penance(void)
 {
     if (you.religion != GOD_NO_GOD)

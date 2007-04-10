@@ -343,7 +343,7 @@ int str_to_trap(const std::string &s)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
     
-    if (s == "random")
+    if (s == "random" || s == "any")
         return (TRAP_RANDOM);
     else if (s == "suitable")
         return (TRAP_INDEPTH);

@@ -189,6 +189,8 @@ int player_branch_depth();
 
 // Get absolute depth given the displayable depth in the branch.
 int absdungeon_depth(unsigned char branch, int subdepth);
+
+bool single_level_branch(branch_type branch);
 //////////////////////////////////////////////////////////////////////
 
 // Set floor/wall colour based on the mons_alloc array. Used for
