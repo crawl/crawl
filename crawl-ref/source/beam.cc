@@ -3081,6 +3081,22 @@ static int affect_player( struct bolt &beam )
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
         {
+        case BEAM_BACKLIGHT:
+            if (!you.invis)
+            {
+                if (you.backlight)
+                    mpr("You glow brighter.");
+                else
+                    mpr("You are outlined in light.");
+                
+                you.backlight += random_range(15, 35);
+                if (you.backlight > 250)
+                    you.backlight = 250;
+
+                beam.obvious_effect = true;
+            }
+            break;
+            
         case BEAM_POLYMORPH:
             if (MON_KILL(beam.thrower))
             {

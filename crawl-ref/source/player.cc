@@ -4513,6 +4513,9 @@ void player::init()
     sure_blade = 0;
     synch_time = 0;
 
+    magic_contamination = 0;
+    backlight = 0;
+
     base_hp = 5000;
     base_hp2 = 5000;
     base_magic_points = 5000;
@@ -5257,4 +5260,9 @@ bool player::can_see_invisible() const
 bool player::invisible() const
 {
     return (invis);
+}
+
+bool player::backlit() const
+{
+    return (magic_contamination >= 5 || backlight);
 }

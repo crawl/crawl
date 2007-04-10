@@ -1879,6 +1879,13 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. -- bwr
     switch (monspell)
     {
+    case SPELL_BACKLIGHT:
+    {
+        const actor *foe = mon->get_foe();
+        ret = !foe || foe->backlit() || foe->invisible();
+        break;
+    }
+        
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
             ret = true;
@@ -2482,6 +2489,11 @@ bool monsters::paralysed() const
 bool monsters::asleep() const
 {
     return (mons_is_sleeping(this));
+}
+
+bool monsters::backlit() const
+{
+    return (has_ench(ENCH_BACKLIGHT));
 }
 
 int monsters::shield_bonus() const
@@ -3609,21 +3621,22 @@ void monsters::check_speed()
     }
 }
 
-int monsters::foe_distance() const
+actor *monsters::get_foe() const
 {
-    // early out -- no foe!
     if (foe == MHITNOT)
-        return (INFINITE_DISTANCE);
-
-    if (foe == MHITYOU)
-        return grid_distance(x, y, you.x_pos, you.y_pos);
+        return (NULL);
+    else if (foe == MHITYOU)
+        return (&you);
 
     // must be a monster
-    const monsters *my_foe = &menv[foe];
-    if (my_foe->alive())
-        return grid_distance(x, y, my_foe->x, my_foe->y);
+    monsters *my_foe = &menv[foe];
+    return (my_foe->alive()? my_foe : NULL);
+}
 
-    return (INFINITE_DISTANCE);
+int monsters::foe_distance() const
+{
+    const actor *afoe = get_foe();
+    return (afoe? pos().distance_from(afoe->pos()) : INFINITE_DISTANCE);
 }
 
 bool monsters::can_go_berserk() const

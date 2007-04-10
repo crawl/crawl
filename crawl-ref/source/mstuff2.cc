@@ -1438,6 +1438,16 @@ bolt mons_spells( int spell_cast, int power )
         beam.is_beam = true;
         break;
 
+    case SPELL_BACKLIGHT:
+        beam.name = "0";
+        beam.range = 5;
+        beam.rangeMax = 9;
+        beam.type = 0;
+        beam.flavour = BEAM_BACKLIGHT;
+        beam.thrower = KILL_MON_MISSILE;
+        beam.is_beam = true;
+        break;
+        
     case SPELL_CONFUSE:
         beam.name = "0";
         beam.range = 5;

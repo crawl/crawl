@@ -185,6 +185,8 @@ bool potion_effect( char pot_eff, int pow )
 
         if (you.invis > 100)
             you.invis = 100;
+
+        you.backlight = 0;
         break;
 
     // carnivore check here? {dlb}

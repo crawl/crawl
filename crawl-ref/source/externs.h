@@ -192,6 +192,7 @@ public:
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
     virtual bool asleep() const { return (false); }
+    virtual bool backlit() const = 0;
 
     virtual void god_conduct(int thing_done, int level) { }
 
@@ -661,6 +662,7 @@ public:
   FixedVector<unsigned char, 100> mutation;
   FixedVector<unsigned char, 100> demon_pow;
   unsigned char magic_contamination;
+  short backlight;
 
   char confusing_touch;
   char sure_blade;
@@ -788,6 +790,7 @@ public:
 
     bool paralysed() const;
     bool confused() const;
+    bool backlit() const;
 
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
@@ -948,6 +951,8 @@ public:
     void destroy_inventory();
     void reset();
     void load_spells(int spellbook);
+
+    actor *get_foe() const;
     
     // actor interface
     int id() const;
@@ -996,6 +1001,7 @@ public:
     bool paralysed() const;
     bool confused() const;
     bool asleep() const;
+    bool backlit() const;
 
     int holy_aura() const;
 

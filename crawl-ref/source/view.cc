@@ -741,9 +741,8 @@ bool check_awaken(int mons_aw)
         }
     }
 
-    // glowing with magical contamination isn't very stealthy
-    if (you.magic_contamination > 10)
-        mons_perc += you.magic_contamination - 10;
+    if (you.backlit())
+        mons_perc += 15;
 
     if (mons_perc < 0)
         mons_perc = 0;

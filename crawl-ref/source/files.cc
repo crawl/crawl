@@ -89,7 +89,7 @@
 void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
 
 #define GHOST_MINOR_VERSION 1
-#define LEVEL_MINOR_VERSION 2
+#define LEVEL_MINOR_VERSION 1
 #define YOU_MINOR_VERSION   1
 
 static void redraw_all(void)

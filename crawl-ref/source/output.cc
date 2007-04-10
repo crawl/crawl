@@ -578,9 +578,12 @@ void print_stats(void)
             cprintf( "Rot " );
         }
 
-        if (you.magic_contamination >= 5)
+        if (you.backlit())
         {
-            textcolor( bad_ench_colour( you.magic_contamination, 15, 25 ) );
+            textcolor(
+                you.magic_contamination >= 5?
+                bad_ench_colour( you.magic_contamination, 15, 25 )
+                : LIGHTBLUE );
             cprintf( "Glow " );
         }
 

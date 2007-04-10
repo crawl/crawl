@@ -828,8 +828,8 @@ static void tag_construct_you(struct tagHeader &th)
     marshallLong( th, you.real_time );
     marshallLong( th, you.num_turns );
 
-    // you.magic_contamination 05/03/05
     marshallShort(th, you.magic_contamination);
+    marshallShort(th, you.backlight);
     marshallString(th, you.last_altar_inscription.c_str(), 80);
 }
 
@@ -1138,6 +1138,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.num_turns = unmarshallLong(th);
 
     you.magic_contamination = unmarshallShort(th);
+    you.backlight = unmarshallShort(th);
     you.last_altar_inscription = unmarshallString(th, 80);
 }
 
@@ -1531,10 +1532,6 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned char) unmarshallByte(th);
-
-            // Ugh! Backward compatibility. 101 was the old (buggy) EMPTY_CLOUD
-            if (minorVersion < 2 && env.cgrid[i][j] == 101)
-                env.cgrid[i][j] = EMPTY_CLOUD;
         }
     }
 
