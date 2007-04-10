@@ -5083,9 +5083,12 @@ int player::res_negative_energy() const
     return (player_prot_life());
 }
 
-bool player::levitates() const
+int player::levitates() const
 {
-    return (player_is_levitating());
+    if ( !player_is_levitating() )
+        return 0;
+    else
+        return (you.duration[DUR_CONTROLLED_FLIGHT] ? 1 : 2);
 }
 
 int player::mons_species() const

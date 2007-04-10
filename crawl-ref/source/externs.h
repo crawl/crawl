@@ -184,7 +184,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
 
-    virtual bool levitates() const = 0;
+    virtual int levitates() const = 0;
     
     virtual bool paralysed() const = 0;
     virtual bool confused() const = 0;
@@ -778,7 +778,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    bool levitates() const;
+    int levitates() const;
 
     bool paralysed() const;
     bool confused() const;
@@ -977,7 +977,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
 
-    bool levitates() const;
+    int levitates() const;
 
     bool paralysed() const;
     bool confused() const;

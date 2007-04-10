@@ -2734,7 +2734,7 @@ int monsters::res_negative_energy() const
     return (mons_res_negative_energy(this));
 }
 
-bool monsters::levitates() const
+int monsters::levitates() const
 {
     return (mons_flies(this));
 }
