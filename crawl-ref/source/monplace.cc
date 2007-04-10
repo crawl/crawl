@@ -96,13 +96,6 @@ bool monster_habitable_grid(int monster_class, int actual_grid, bool flies)
                 && grid_compatible(DNGN_FLOOR, actual_grid)));
 }
 
-// Returns true if the monster is floundering in water and susceptible to 
-// extra damage from water-natives.
-bool monster_floundering(const monsters *m)
-{
-    return (m->floundering());
-}
-
 // Returns true if the monster can submerge in the given grid
 bool monster_can_submerge(int monster_class, int grid)
 {
