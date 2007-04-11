@@ -6075,6 +6075,17 @@ static void dngn_place_monster(
     }
 }
 
+static monster_type random_evil_statue()
+{
+    switch (random2(3))
+    {
+    case 0: return MONS_ORANGE_STATUE;
+    case 1: return MONS_SILVER_STATUE;
+    case 2: return MONS_ICE_STATUE;
+    }
+    return (MONS_PROGRAM_BUG);
+}
+
 // returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb}
@@ -6130,6 +6141,13 @@ static int vault_grid( vault_placement &place,
 
         return (altar_count);
     }
+
+    if (vgrid == 'F' && one_chance_in(100))
+    {
+        vgrid = '.';
+        place_monster( not_used, random_evil_statue(), 30, BEH_HOSTILE,
+                       MHITNOT, true, vx, vy, false);
+    }
     
     // first, set base tile for grids {dlb}:
     const int grid =
@@ -6157,12 +6175,7 @@ static int vault_grid( vault_placement &place,
                    (vgrid == 'A') ? DNGN_STONE_ARCH :
                    (vgrid == 'B') ? (DNGN_ALTAR_ZIN + altar_count) :// see below
                    (vgrid == 'C') ? pick_an_altar() :   // f(x) elsewhere {dlb}
-
-                   (vgrid == 'F') ? (one_chance_in(100) 
-                                     ? (coinflip() ? DNGN_SILVER_STATUE
-                                                   : DNGN_ORANGE_CRYSTAL_STATUE)
-                                     : DNGN_GRANITE_STATUE) :
-
+                   (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
                    (vgrid == 'S') ? DNGN_SILVER_STATUE :
                    (vgrid == 'G') ? DNGN_GRANITE_STATUE :
