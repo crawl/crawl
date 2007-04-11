@@ -5266,3 +5266,11 @@ bool player::backlit() const
 {
     return (magic_contamination >= 5 || backlight);
 }
+
+void player::mutate()
+{
+    if (one_chance_in(5))
+        ::mutate(100);
+    else
+        give_bad_mutation();
+}

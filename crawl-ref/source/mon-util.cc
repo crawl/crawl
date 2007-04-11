@@ -3703,6 +3703,14 @@ bool monsters::invisible() const
     return (has_ench(ENCH_INVIS));
 }
 
+void monsters::mutate()
+{
+    if (holiness() != MH_NATURAL)
+        return;
+
+    monster_polymorph(this, RANDOM_MONSTER, 100);
+}
+
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 

@@ -3092,15 +3092,10 @@ static int affect_player( struct bolt &beam )
             if (MON_KILL(beam.thrower))
             {
                 mpr("Strange energies course through your body.");
-                if (one_chance_in(5))
-                    mutate(100);
-                else
-                    give_bad_mutation();
+                you.mutate();
             }
             else
-            {
                 mpr("This is polymorph other only!");
-            }
             beam.obvious_effect = true;
             break;
 
