@@ -1521,10 +1521,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         else if (resist < 0)
         {
-            if (monster->type == MONS_ICE_BEAST
-                || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE
-                || monster->type == MONS_ICE_STATUE)
+            if (mons_is_icy(monster))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -1732,10 +1729,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         else if (resist < 0)
         {
-            if (monster->type == MONS_ICE_BEAST
-                || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE
-                || monster->type == MONS_ICE_STATUE)
+            if (mons_is_icy(monster))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -1769,10 +1763,7 @@ int mons_adjust_flavoured( struct monsters *monster, struct bolt &pbolt,
         }
         else if (resist < 0)
         {
-            if (monster->type == MONS_ICE_BEAST
-                || monster->type == MONS_SIMULACRUM_SMALL
-                || monster->type == MONS_SIMULACRUM_LARGE
-                || monster->type == MONS_ICE_STATUE)
+            if (mons_is_icy(monster))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -3383,7 +3374,7 @@ static int affect_monster(struct bolt &beam, struct monsters *mon)
         }
     }
     else if ((beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
-            && mons_is_statue(mons_type))
+             && mons_is_statue(mons_type) && !mons_is_icy(mons_type))
     {
         if (!silenced(you.x_pos, you.y_pos))
         {

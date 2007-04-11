@@ -306,6 +306,19 @@ bool mons_is_stationary(const monsters *mons)
     return (mons_class_is_stationary(mons->type));
 }
 
+bool mons_is_icy(const monsters *mons)
+{
+    return (mons_is_icy(mons->type));
+}
+
+bool mons_is_icy(int mtype)
+{
+    return (mtype == MONS_ICE_BEAST
+            || mtype == MONS_SIMULACRUM_SMALL
+            || mtype == MONS_SIMULACRUM_LARGE
+            || mtype == MONS_ICE_STATUE);
+}
+
 bool invalid_monster(const monsters *mons)
 {
     return (!mons || mons->type == -1);
