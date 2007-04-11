@@ -3016,6 +3016,44 @@ void TravelCache::update_waypoints() const
     }
 }
 
+void TravelCache::delete_waypoint()
+{
+    if (!get_waypoint_count())
+        return;
+    
+    while (get_waypoint_count())
+    {
+        mesclr();
+        mpr("Existing waypoints:");
+        list_waypoints();
+        mpr("Delete which waypoint? (* - delete all, Esc - exit) ",
+            MSGCH_PROMPT);
+
+        int key = getch();
+        if (key >= '0' && key <= '9')
+        {
+            key -= '0';
+            if (waypoints[key].is_valid())
+            {
+                waypoints[key].reset();
+                continue;
+            }
+        }
+        else if (key == '*')
+        {
+            for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+                waypoints[i].reset();
+            break;
+        }
+
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    mesclr();
+    mpr("All waypoints deleted. Have a nice day!");
+}
+
 void TravelCache::add_waypoint(int x, int y)
 {
     if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS
@@ -3026,16 +3064,27 @@ void TravelCache::add_waypoint(int x, int y)
     }
     
     mesclr();
-    if (get_waypoint_count())
+
+    const bool waypoints_exist = get_waypoint_count();
+    if (waypoints_exist)
     {
-        mpr("Existing waypoints");
+        mpr("Existing waypoints:");
         list_waypoints();
     }
     
-    mpr("Assign waypoint to what number? (0-9) ", MSGCH_PROMPT);
-    int keyin = get_ch();
+    mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
+         waypoints_exist? ", D - delete waypoint" : "");
     
-    if (keyin < '0' || keyin > '9') return;
+    int keyin = tolower(get_ch());
+
+    if (waypoints_exist && keyin == 'd')
+    {
+        delete_waypoint();
+        return;
+    }
+    
+    if (keyin < '0' || keyin > '9')
+        return;
 
     int waynum = keyin - '0';
 
