@@ -1874,6 +1874,67 @@ int mons_tomb_rare(int mcls)
     }
 }                               // end mons_tomb_rare()
 
+int mons_islands_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_ISLANDS, 1);
+    switch (mcls)
+    {
+    case MONS_BUTTERFLY:
+    case MONS_PLANT:
+        break;
+
+    case MONS_CENTAUR:
+    case MONS_ETTIN:
+    case MONS_SHEEP:
+        mlev++;
+        break;
+    case MONS_CENTAUR_WARRIOR:
+    case MONS_CYCLOPS:          // will have a sheep band
+    case MONS_YAKTAUR:
+        mlev += 2;
+        break;
+    case MONS_STONE_GIANT:
+    case MONS_YAKTAUR_CAPTAIN:
+    case MONS_OKLOB_PLANT:
+        mlev += 4;
+        break;
+    default:
+        mlev += 99;
+    }
+    return mlev;
+}
+
+int mons_islands_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_PLANT:
+        return 150;
+
+    case MONS_ETTIN:
+    case MONS_CENTAUR:
+        return 50;
+
+    case MONS_SHEEP:
+    case MONS_BUTTERFLY:
+    case MONS_YAKTAUR:
+        return 35;
+
+    case MONS_CYCLOPS:
+    case MONS_CENTAUR_WARRIOR:
+        return 20;
+
+    case MONS_STONE_GIANT:
+    case MONS_YAKTAUR_CAPTAIN:
+        return 10;
+        
+    case MONS_OKLOB_PLANT:
+        return 5;
+    default:
+        return 0;
+    }
+}
+
 int mons_swamp_level(int mcls)
 {
     int mlev = absdungeon_depth(BRANCH_SWAMP, 1);

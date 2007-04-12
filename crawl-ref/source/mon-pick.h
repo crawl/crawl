@@ -75,6 +75,8 @@ int mons_standard_level(int mcls);
 int mons_standard_rare(int mcls);
 int mons_swamp_level(int mcls);
 int mons_swamp_rare(int mcls);
+int mons_islands_level(int mcls);
+int mons_islands_rare(int mcls);
 int mons_tartarus_level(int mcls);
 int mons_tartarus_rare(int mcls);
 int mons_tomb_level(int mcls);

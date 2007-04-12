@@ -354,7 +354,16 @@ static void initialise_branch_depths()
     branches[BRANCH_LAIR].startdepth = random_range(8, 13);
     branches[BRANCH_HIVE].startdepth = random_range(11, 16);
     branches[BRANCH_SLIME_PITS].startdepth = random_range(3, 9);
-    branches[BRANCH_SWAMP].startdepth = random_range(2, 7);
+    if ( coinflip() )
+    {
+        branches[BRANCH_SWAMP].startdepth = random_range(2, 7);
+        branches[BRANCH_ISLANDS].startdepth = -1;
+    }
+    else
+    {
+        branches[BRANCH_SWAMP].startdepth = -1;
+        branches[BRANCH_ISLANDS].startdepth = random_range(2, 7);
+    }
     branches[BRANCH_SNAKE_PIT].startdepth = random_range(3, 8);
     branches[BRANCH_VAULTS].startdepth = random_range(14, 19);
     branches[BRANCH_CRYPT].startdepth = random_range(2, 4);

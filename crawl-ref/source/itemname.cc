@@ -1451,6 +1451,7 @@ static const char *item_name_2(
                           (it_plus == RUNE_ELVEN_HALLS)  ? "elven" :
                           (it_plus == RUNE_TOMB)         ? "golden" :
                           (it_plus == RUNE_SWAMP)        ? "decaying" :
+                          (it_plus == RUNE_ISLANDS)      ? "liquid" :
  
                           // pandemonium and abyss runes:
                           (it_plus == RUNE_DEMONIC)      ? "demonic" :

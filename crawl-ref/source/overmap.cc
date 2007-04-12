@@ -425,68 +425,16 @@ void seen_staircase( unsigned char which_staircase, const coord_def& pos )
     //   - stairs returning to dungeon - predictable
     //   - entrances to the hells - always in vestibule
 
-    branch_type which_branch = BRANCH_MAIN_DUNGEON;
-
-    switch ( which_staircase )
+    int i;
+    for ( i = 0; i < NUM_BRANCHES; ++i )
     {
-    case DNGN_ENTER_ORCISH_MINES:
-        which_branch = BRANCH_ORCISH_MINES;
-        break;
-    case DNGN_ENTER_HIVE:
-        which_branch = BRANCH_HIVE;
-        break;
-    case DNGN_ENTER_LAIR:
-        which_branch = BRANCH_LAIR;
-        break;
-    case DNGN_ENTER_SLIME_PITS:
-        which_branch = BRANCH_SLIME_PITS;
-        break;
-    case DNGN_ENTER_VAULTS:
-        which_branch = BRANCH_VAULTS;
-        break;
-    case DNGN_ENTER_CRYPT:
-        which_branch = BRANCH_CRYPT;
-        break;
-    case DNGN_ENTER_HALL_OF_BLADES:
-        which_branch = BRANCH_HALL_OF_BLADES;
-        break;
-    case DNGN_ENTER_ZOT:
-        which_branch = BRANCH_HALL_OF_ZOT;
-        break;
-    case DNGN_ENTER_TEMPLE:
-        which_branch = BRANCH_ECUMENICAL_TEMPLE;
-        break;
-    case DNGN_ENTER_SNAKE_PIT:
-        which_branch = BRANCH_SNAKE_PIT;
-        break;
-    case DNGN_ENTER_ELVEN_HALLS:
-        which_branch = BRANCH_ELVEN_HALLS;
-        break;
-    case DNGN_ENTER_TOMB:
-        which_branch = BRANCH_TOMB;
-        break;
-    case DNGN_ENTER_SWAMP:
-        which_branch = BRANCH_SWAMP;
-        break;
-    case DNGN_ENTER_DIS:
-        which_branch = BRANCH_DIS;
-        break;
-    case DNGN_ENTER_GEHENNA:
-        which_branch = BRANCH_GEHENNA;
-        break;
-    case DNGN_ENTER_COCYTUS:
-        which_branch = BRANCH_COCYTUS;
-        break;
-    case DNGN_ENTER_TARTARUS:
-        which_branch = BRANCH_TARTARUS;
-        break;
-    default:
-        break;
+        if ( branches[i].entry_stairs == which_staircase )
+        {
+            stair_level[branches[i].id] = level_id::current();
+            break;
+        }
     }
-
-    ASSERT(which_branch != BRANCH_MAIN_DUNGEON);
-
-    stair_level[which_branch] = level_id::current();
+    ASSERT( i != NUM_BRANCHES );
 }
 
 // if player has seen an altar; record it

@@ -462,6 +462,7 @@ enum branch_type                // you.where_are_you
     BRANCH_ELVEN_HALLS,
     BRANCH_LAIR,
     BRANCH_SWAMP,
+    BRANCH_ISLANDS,
     BRANCH_SLIME_PITS,
     BRANCH_SNAKE_PIT,
     BRANCH_HIVE,
@@ -1017,7 +1018,7 @@ enum dungeon_feature_type
     DNGN_ENTER_ELVEN_HALLS,            //  120
     DNGN_ENTER_TOMB,
     DNGN_ENTER_SWAMP,                  //  122
-    DNGN_ENTER_RESERVED_1,
+    DNGN_ENTER_ISLANDS,
     DNGN_ENTER_RESERVED_2,
     DNGN_ENTER_RESERVED_3,
     DNGN_ENTER_RESERVED_4,             // 126 
@@ -1035,7 +1036,7 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_ELVEN_HALLS,      //  140
     DNGN_RETURN_FROM_TOMB,
     DNGN_RETURN_FROM_SWAMP,               //  142
-    DNGN_RETURN_RESERVED_1,
+    DNGN_RETURN_FROM_ISLANDS,
     DNGN_RETURN_RESERVED_2,
     DNGN_RETURN_RESERVED_3,
     DNGN_RETURN_RESERVED_4,             // 146 
@@ -2842,6 +2843,7 @@ enum rune_type
     RUNE_ELVEN_HALLS = BRANCH_ELVEN_HALLS, // unused
     RUNE_TOMB        = BRANCH_TOMB,
     RUNE_SWAMP       = BRANCH_SWAMP,
+    RUNE_ISLANDS     = BRANCH_ISLANDS,
 
     // Runes 50 and 51 are for Pandemonium (general demon) and the Abyss
     RUNE_DEMONIC                = 50,

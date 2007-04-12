@@ -97,10 +97,11 @@ static void place_specific_stair(int stair, const std::string &tag = "", int dl 
 static void place_branch_entrances(int dlevel, char level_type);
 static void place_special_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
-static void prepare_swamp(void);
+static void prepare_swamp();
+static void prepare_islands();
 static void prepare_water( int level_number );
-static void check_doors(void);
-static void hide_doors(void);
+static void check_doors();
+static void hide_doors();
 static void make_trail(int xs, int xr, int ys, int yr,int corrlength, int intersect_chance,
     int no_corr, unsigned char begin, unsigned char end=0);
 static bool make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel);
@@ -118,14 +119,14 @@ static void build_river(unsigned char river_type); //mv
 static void build_lake(unsigned char lake_type); //mv
 
 static void spotty_level(bool seeded, int iterations, bool boxy);
-static void bigger_room(void);
+static void bigger_room();
 static void plan_main(int level_number, char force_plan);
-static char plan_1(void);
-static char plan_2(void);
-static char plan_3(void);
+static char plan_1();
+static char plan_2();
+static char plan_3();
 static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
                    char forbid_y2, unsigned char force_wall);
-static char plan_5(void);
+static char plan_5();
 static char plan_6(int level_number);
 static bool octa_room(spec_room &sr, int oblique_max, unsigned char type_floor);
 static void labyrinth_level(int level_number);
@@ -166,8 +167,8 @@ static int vault_grid( vault_placement &,
                        int &num_runes, int rune_subst = -1, bool foll = false);
 
 // ALTAR FUNCTIONS
-static dungeon_feature_type pick_an_altar(void);
-static void place_altar(void);
+static dungeon_feature_type pick_an_altar();
+static void place_altar();
 
 //////////////////////////////////////////////////////////////////////////
 // Static data
@@ -403,7 +404,8 @@ static void build_layout_skeleton(int level_number, int level_type,
     if (skip_build == BUILD_CONTINUE)
     {
         // do 'normal' building.  Well, except for the swamp.
-        if (!player_in_branch( BRANCH_SWAMP ))
+        if (!player_in_branch(BRANCH_SWAMP) &&
+            !player_in_branch(BRANCH_ISLANDS))
             skip_build = builder_normal(level_number, level_type, sr);
 
         if (skip_build == BUILD_CONTINUE)
@@ -549,6 +551,8 @@ static void build_dungeon_level(int level_number, int level_type)
     // time to make the swamp {dlb}:
     if (player_in_branch( BRANCH_SWAMP ))
         prepare_swamp();
+    else if (player_in_branch(BRANCH_ISLANDS))
+        prepare_islands();
 
     place_branch_entrances( level_number, level_type );
 
@@ -581,7 +585,9 @@ static void build_dungeon_level(int level_number, int level_type)
 
     link_items();
 
-    if (!player_in_branch(BRANCH_COCYTUS) && !player_in_branch(BRANCH_SWAMP))
+    if (!player_in_branch(BRANCH_COCYTUS) &&
+        !player_in_branch(BRANCH_SWAMP) &&
+        !player_in_branch(BRANCH_ISLANDS))
         prepare_water( level_number );
 }                               // end builder()
 
@@ -3074,13 +3080,13 @@ static int give_weapon(monsters *mon, int level)
         break;
     }
     case MONS_ORC_WARLORD:
-        // being at the top has it's priviledges
+        // being at the top has its privileges
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall-through
     case MONS_ORC_KNIGHT:
         item_race = MAKE_ITEM_ORCISH;
-        // deliberate fall-through, I guess {dlb}
+        // deliberate fall-through
     case MONS_NORBERT:
     case MONS_JOZEF:
     case MONS_URUG:
@@ -3668,7 +3674,7 @@ static void set_weapon_special(int the_weapon, int spwpn)
     set_item_ego_type( mitm[the_weapon], OBJ_WEAPONS, spwpn );
 }                               // end set_weapon_special()
 
-static void check_doors(void)
+static void check_doors()
 {
     for (int x = 1; x < GXM-1; x++)
     {
@@ -3696,7 +3702,7 @@ static void check_doors(void)
     }
 }                               // end check_doors()
 
-static void hide_doors(void)
+static void hide_doors()
 {
     unsigned char dx = 0, dy = 0;     // loop variables
     unsigned char wall_count = 0;     // clarifies inner loop {dlb}
@@ -3731,16 +3737,145 @@ static void hide_doors(void)
     }
 }                               // end hide_doors()
 
-static void prepare_swamp(void)
+// Places a randomized ellipse with centre (x,y) and half axes a and b
+static void place_ellipse(int x, int y, int a, int b, int feat, int margin)
 {
-    int i, j;                   // loop variables
-    int temp_rand;              // probability determination {dlb}
+    for (int i = std::max(x-a,margin); i <= std::min(x+a,GXM-margin); ++i)
+        for (int j = std::max(y-b,margin); j <= std::min(y+b, GYM-margin); ++j)
+            if ( (x-i)*(x-i)*b*b + (y-j)*(y-j)*a*a <=
+                 a*a*b*b/2 + roll_dice(2, a*a*b*b)/4 + random2(3) )
+                grd[i][j] = feat;
+}
 
+// count how many neighbours of grd[x][y] are the feature feat.
+static int count_neighbours(int x, int y, int feat)
+{
+    int result = 0;
+    for ( int i = -1; i <= 1; ++i )
+        for ( int j = -1; j <= 1; ++j )
+            if ( grd[x+i][y+j] == feat )
+                ++result;
+    return result;
+}
+
+
+static void prepare_islands()
+{
+    // dpeg's algorithm.
+    // We could have just used spotty_level() and changed rock to
+    // water, but this is much cooler. Right?
+    const int margin = 6;
+    coord_def centres[10];
+
+    // It seems very difficult to get these numbers right, so I'm
+    // fixing them for now.
+    // const int estradius = std::max(50 - num_islands*10, 10);
+    // const int num_islands = std::min(player_branch_depth(), 10);
+    const int num_islands = 4;
+    const int estradius = 12;
+
+    for (int x = margin; x < GXM-margin; ++x)
+        for (int y = margin; y < GYM-margin; ++y)
+            grd[x][y] = DNGN_DEEP_WATER;
+    
+    for (int i = 0; i < num_islands; ++i)
+    {
+        // smaller axis
+        int b = (2 * estradius + roll_dice(3, estradius)) / 4;
+        b = std::max(b,4);
+        b = std::min(b, (GYM - margin) / 2);
+
+        int a = b + roll_dice(2,b)/3; // more wide than tall
+        a = std::min(a, (GXM - margin) / 2);       
+        
+        int island_distance = estradius*estradius * (2 + num_islands/3);
+        
+        bool centre_ok;
+        do
+        {
+            centre_ok = true;
+
+            centres[i].x = a + random2(GXM-2*a-1);
+            centres[i].y = b + random2(GYM-2*b-1);          
+            
+            for (int j = 0; j < i; ++j)
+            {
+                // calculate the distance from the centers of
+                // previous islands
+                if ( distance(centres[i].x, centres[i].y,
+                              centres[j].x, centres[j].y) < island_distance )
+                {
+                    centre_ok = false;
+                    break;
+                }                   
+            }
+            if ( random2(num_islands) && island_distance )
+                --island_distance;
+        } while ( !centre_ok );
+        
+        // place an ellipse around the new coordinate
+        place_ellipse( centres[i].x, centres[i].y, a, b, DNGN_FLOOR, margin);
+    }
+
+
+    // Adding shallow water at deep water adjacent to floor.
+    // Randomisation: place shallow water if at least 1d(1d3) floor neighbours
+    for ( int i = margin; i < GXM - margin; ++i)
+        for ( int j = margin; j < GYM - margin; ++j)
+            if (grd[i][j] == DNGN_DEEP_WATER &&
+                count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
+                grd[i][j] = DNGN_SHALLOW_WATER;
+
+    // Placing sandbanks
+    for (int banks = 0; banks < 8; ++banks)
+    {
+        int xsize = 3+random2(3);  // random rectangle
+        int ysize = 3+random2(3);  
+        int xb = random2(GXM - 2 * margin - 10) + margin + 2;
+        int yb = random2(GYM - 2 * margin - 10) + margin + 2;
+
+        bool ok_place = true;
+        for ( int i = xb; i < xb + xsize; ++i )
+            for ( int j = yb; j < yb + ysize; ++j )
+                if ( grd[i][j] != DNGN_DEEP_WATER )
+                    ok_place = false;
+
+        if (ok_place)
+        {
+            for ( int i = xb; i < xb + xsize; ++i )
+                for ( int j = yb; j < yb + ysize; ++j )
+                    if ( !one_chance_in(3) )
+                        grd[i][j] = DNGN_SHALLOW_WATER;
+        }
+    }
+
+    // XXX TODO: fractalisation
+
+    // Place stairs randomly. No elevators.
+    for ( int i = 0; i < 3; ++i )
+    {
+        int x, y;
+        do {
+            x = random2(GXM);
+            y = random2(GYM);
+        } while ( grd[x][y] != DNGN_FLOOR );
+        grd[x][y] = DNGN_STONE_STAIRS_DOWN_I + i;
+
+        do {
+            x = random2(GXM);
+            y = random2(GYM);
+        } while ( grd[x][y] != DNGN_FLOOR );
+        grd[x][y] = DNGN_STONE_STAIRS_UP_I + i;
+    }
+}
+
+static void prepare_swamp()
+{
     const int margin = 10;
 
-    for (i = margin; i < (GXM - margin); i++)
+    for (int i = margin; i < (GXM - margin); i++)
     {
-        for (j = margin; j < (GYM - margin); j++)
+        for (int j = margin; j < (GYM - margin); j++)
         {
             // doors -> floors {dlb}
             if (grd[i][j] == DNGN_CLOSED_DOOR || grd[i][j] == DNGN_SECRET_DOOR)
@@ -3753,7 +3888,7 @@ static void prepare_swamp(void)
             // walls -> deep/shallow water or remain unchanged {dlb}
             if (grd[i][j] == DNGN_ROCK_WALL)
             {
-                temp_rand = random2(6);
+                const int temp_rand = random2(6);
 
                 if (temp_rand > 0)      // 17% chance unchanged {dlb}
                 {
@@ -7251,6 +7386,9 @@ void item_colour( item_def &item )
             case RUNE_SWAMP:                    // decaying
                 item.colour = BROWN;
                 break;
+                
+            case RUNE_ISLANDS:
+                item.colour = BLUE;             // liquid
 
             // These two are hardly unique, but since colour isn't used for 
             // stacking, so we don't have to worry to much about this. -- bwr
@@ -7306,7 +7444,7 @@ void item_colour( item_def &item )
 }                               // end item_colour()
 
 //jmf: generate altar based on where you are, or possibly randomly
-static dungeon_feature_type pick_an_altar(void)
+static dungeon_feature_type pick_an_altar()
 {
     dungeon_feature_type altar_type;
     int temp_rand;              // probability determination {dlb}
@@ -7395,7 +7533,7 @@ static dungeon_feature_type pick_an_altar(void)
     return (altar_type);
 }                               // end pick_an_altar()
 
-static void place_altar(void)
+static void place_altar()
 {
     int px, py;
     int i, j;
@@ -7742,7 +7880,7 @@ static void spotty_level(bool seeded, int iterations, bool boxy)
     }
 }                               // end spotty_level()
 
-static void bigger_room(void)
+static void bigger_room()
 {
     unsigned char i, j;
 
@@ -7823,7 +7961,7 @@ static void plan_main(int level_number, char force_plan)
         replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,special_grid);
 }                               // end plan_main()
 
-static char plan_1(void)
+static char plan_1()
 {
     int temp_rand = 0;          // probability determination {dlb}
 
@@ -7890,7 +8028,7 @@ static char plan_1(void)
 }                               // end plan_1()
 
 // just a cross:
-static char plan_2(void)
+static char plan_2()
 {
     char width2 = (5 - random2(5));     // value range of [1,5] {dlb}
 
@@ -7902,7 +8040,7 @@ static char plan_2(void)
     return (one_chance_in(4) ? 2 : 3);
 }                               // end plan_2()
 
-static char plan_3(void)
+static char plan_3()
 {
 
     /* Draws a room, then another and links them together, then another and etc
@@ -8113,7 +8251,7 @@ static char plan_4(char forbid_x1, char forbid_y1, char forbid_x2,
     return 2;
 }                               // end plan_4()
 
-static char plan_5(void)
+static char plan_5()
 {
     unsigned char imax = 5 + random2(20);       // value range of [5,24] {dlb}
 

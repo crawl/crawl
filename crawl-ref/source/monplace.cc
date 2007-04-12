@@ -36,8 +36,8 @@
 
 #define BIG_BAND        20
 
-static int band_member(int band, int power);
-static int choose_band( int mon_type, int power, int &band_size );
+static int band_member(band_type band, int power);
+static band_type choose_band( int mon_type, int power, int &band_size );
 static int place_monster_aux(int mon_type, char behaviour, int target,
     int px, int py, int power, int extra, bool first_band_member,
     int dur = 0);
@@ -235,7 +235,7 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
 
     if (allow_bands)
     {
-        int band = choose_band(mon_type, power, band_size);
+        const band_type band = choose_band(mon_type, power, band_size);
         band_size ++;
 
         for (i = 1; i < band_size; i++)
@@ -569,7 +569,7 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
     menv[id].attitude = ATT_HOSTILE;
     menv[id].behaviour = behaviour;
 
-    if (mon_type == MONS_ORANGE_STATUE || mon_type == MONS_SILVER_STATUE)
+    if (mons_is_statue(mon_type))
         menv[id].behaviour = BEH_WANDER;
 
     menv[id].foe_memory = 0;
@@ -610,11 +610,11 @@ static int place_monster_aux( int mon_type, char behaviour, int target,
 }                               // end place_monster_aux()
 
 
-static int choose_band( int mon_type, int power, int &band_size )
+static band_type choose_band( int mon_type, int power, int &band_size )
 {
     // init
     band_size = 0;
-    int band = BAND_NO_BAND;
+    band_type band = BAND_NO_BAND;
 
     switch (mon_type)
     {
@@ -623,7 +623,7 @@ static int choose_band( int mon_type, int power, int &band_size )
             break;
         // intentional fall-through {dlb}
     case MONS_ORC_WARRIOR:
-        band = BAND_ORCS;       // orcs
+        band = BAND_ORCS;
         band_size = 2 + random2(3);
         break;
 
@@ -644,62 +644,62 @@ static int choose_band( int mon_type, int power, int &band_size )
         break;
 
     case MONS_KILLER_BEE:
-        band = BAND_KILLER_BEES;       // killer bees
+        band = BAND_KILLER_BEES;
         band_size = 2 + random2(4);
         break;
 
     case MONS_FLYING_SKULL:
-        band = BAND_FLYING_SKULLS;       // flying skulls
+        band = BAND_FLYING_SKULLS;
         band_size = 2 + random2(4);
         break;
     case MONS_SLIME_CREATURE:
-        band = BAND_SLIME_CREATURES;       // slime creatures
+        band = BAND_SLIME_CREATURES;
         band_size = 2 + random2(4);
         break;
     case MONS_YAK:
-        band = BAND_YAKS;       // yaks
+        band = BAND_YAKS;
         band_size = 2 + random2(4);
         break;
     case MONS_UGLY_THING:
-        band = BAND_UGLY_THINGS;       // ugly things
+        band = BAND_UGLY_THINGS;
         band_size = 2 + random2(4);
         break;
     case MONS_HELL_HOUND:
-        band = BAND_HELL_HOUNDS;       // hell hound
+        band = BAND_HELL_HOUNDS;
         band_size = 2 + random2(3);
         break;
     case MONS_JACKAL:
-        band = BAND_JACKALS;      // jackal
+        band = BAND_JACKALS;
         band_size = 1 + random2(3);
         break;
     case MONS_HELL_KNIGHT:
     case MONS_MARGERY:
-        band = BAND_HELL_KNIGHTS;      // hell knight
+        band = BAND_HELL_KNIGHTS;
         band_size = 4 + random2(4);
         break;
     case MONS_JOSEPHINE:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
-        band = BAND_NECROMANCER;      // necromancer
+        band = BAND_NECROMANCER;
         band_size = 4 + random2(4);
         break;
     case MONS_ORC_HIGH_PRIEST:
-        band = BAND_ORC_HIGH_PRIEST;      // orc high priest
+        band = BAND_ORC_HIGH_PRIEST;
         band_size = 4 + random2(4);
         break;
     case MONS_GNOLL:
-        band = BAND_GNOLLS;      // gnoll
+        band = BAND_GNOLLS;
         band_size = ((coinflip())? 3 : 2);
         break;
     case MONS_BUMBLEBEE:
-        band = BAND_BUMBLEBEES;      // bumble bees
+        band = BAND_BUMBLEBEES;
         band_size = 2 + random2(4);
         break;
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
         if (power > 9 && one_chance_in(3))
         {
-            band = BAND_CENTAURS;  // centaurs
+            band = BAND_CENTAURS;
             band_size = 2 + random2(4);
         }
         break;
@@ -708,21 +708,21 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_YAKTAUR_CAPTAIN:
         if (coinflip())
         {
-            band = BAND_YAKTAURS;  // yaktaurs
+            band = BAND_YAKTAURS;
             band_size = 2 + random2(3);
         }
         break;
 
     case MONS_DEATH_YAK:
-        band = BAND_DEATH_YAKS;      // death yaks
+        band = BAND_DEATH_YAKS;
         band_size = 2 + random2(4);
         break;
     case MONS_INSUBSTANTIAL_WISP:
-        band = BAND_INSUBSTANTIAL_WISPS;      // wisps
+        band = BAND_INSUBSTANTIAL_WISPS;
         band_size = 4 + random2(5);
         break;
     case MONS_OGRE_MAGE:
-        band = BAND_OGRE_MAGE;      // ogre mage
+        band = BAND_OGRE_MAGE;
         band_size = 4 + random2(4);
         break;
     case MONS_BALRUG:
@@ -753,7 +753,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_DEEP_ELF_FIGHTER:
         if (coinflip())
         {
-            band = BAND_DEEP_ELF_FIGHTER;  // deep elf warrior
+            band = BAND_DEEP_ELF_FIGHTER;
             band_size = 3 + random2(4);
         }
         break;
@@ -761,7 +761,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_DEEP_ELF_KNIGHT:
         if (coinflip())
         {
-            band = BAND_DEEP_ELF_KNIGHT;  // deep elf knight
+            band = BAND_DEEP_ELF_KNIGHT;
             band_size = 3 + random2(4);
         }
         break;
@@ -769,7 +769,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_DEEP_ELF_HIGH_PRIEST:
         if (coinflip())
         {
-            band = BAND_DEEP_ELF_HIGH_PRIEST;  // deep elf high priest
+            band = BAND_DEEP_ELF_HIGH_PRIEST;
             band_size = 3 + random2(4);
         }
         break;
@@ -777,67 +777,74 @@ static int choose_band( int mon_type, int power, int &band_size )
     case MONS_KOBOLD_DEMONOLOGIST:
         if (coinflip())
         {
-            band = BAND_KOBOLD_DEMONOLOGIST;  // kobold demonologist
+            band = BAND_KOBOLD_DEMONOLOGIST;
             band_size = 3 + random2(6);
         }
         break;
 
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
-        band = BAND_NAGAS;      // Nagas
+        band = BAND_NAGAS;
         band_size = 3 + random2(4);
         break;
     case MONS_WAR_DOG:
-        band = BAND_WAR_DOGS;      // war dogs
+        band = BAND_WAR_DOGS;
         band_size = 2 + random2(4);
         break;
     case MONS_GREY_RAT:
-        band = BAND_GREY_RATS;      // grey rats
+        band = BAND_GREY_RATS;
         band_size = 4 + random2(6);
         break;
     case MONS_GREEN_RAT:
-        band = BAND_GREEN_RATS;      // green rats
+        band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
         break;
     case MONS_ORANGE_RAT:
-        band = BAND_ORANGE_RATS;      // orange rats
+        band = BAND_ORANGE_RATS;
         band_size = 3 + random2(4);
         break;
     case MONS_SHEEP:
-        band = BAND_SHEEP;      // sheep
+        band = BAND_SHEEP;
         band_size = 3 + random2(5);
         break;
     case MONS_GHOUL:
-        band = BAND_GHOULS;      // ghoul
+        band = BAND_GHOULS;
         band_size = 2 + random2(3);
         break;
     case MONS_HOG:
-        band = BAND_HOGS;      // hog
+        band = BAND_HOGS;
         band_size = 1 + random2(3);
         break;
     case MONS_GIANT_MOSQUITO:
-        band = BAND_GIANT_MOSQUITOES;      // mosquito
+        band = BAND_GIANT_MOSQUITOES;
         band_size = 1 + random2(3);
         break;
     case MONS_DEEP_TROLL:
-        band = BAND_DEEP_TROLLS;      // deep troll
+        band = BAND_DEEP_TROLLS;
         band_size = 3 + random2(3);
         break;
     case MONS_HELL_HOG:
-        band = BAND_HELL_HOGS;      // hell-hog
+        band = BAND_HELL_HOGS;
         band_size = 1 + random2(3);
         break;
     case MONS_BOGGART:
-        band = BAND_BOGGARTS;      // boggart
+        band = BAND_BOGGARTS;
         band_size = 2 + random2(3);
         break;
     case MONS_BLINK_FROG:
-        band = BAND_BLINK_FROGS;      // blink frog
+        band = BAND_BLINK_FROGS;
         band_size = 2 + random2(3);
         break;
     case MONS_SKELETAL_WARRIOR:
-        band = BAND_SKELETAL_WARRIORS;      // skeletal warrior
+        band = BAND_SKELETAL_WARRIORS;
         band_size = 2 + random2(3);
+        break;
+    case MONS_CYCLOPS:
+        if ( one_chance_in(5) || player_in_branch(BRANCH_ISLANDS) )
+        {
+            band = BAND_SHEEP;  // Odyssey reference
+            band_size = 2 + random2(3);
+        }
         break;
     // Journey -- Added Draconian Packs  
     case MONS_WHITE_DRACONIAN:
@@ -883,7 +890,7 @@ static int choose_band( int mon_type, int power, int &band_size )
     return (band);
 }
 
-static int band_member(int band, int power)
+static int band_member(band_type band, int power)
 {
     int mon_type = -1;
     int temp_rand;
@@ -1124,6 +1131,8 @@ static int band_member(int band, int power)
                                     MONS_RED_DRACONIAN );       // 3 in 34
         break;
     }
+    default:
+        break;
     }
 
     return (mon_type);
