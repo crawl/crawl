@@ -556,6 +556,9 @@ bool allow_control_teleport( bool silent )
                 ret = false;
             }
             break;
+
+        default:
+            break;
         }
     }
 

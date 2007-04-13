@@ -646,9 +646,9 @@ public:
 
   KillMaster kills;
 
-  char level_type;
+  level_area_type level_type;
 
-  char where_are_you;
+  branch_type where_are_you;
 
   FixedVector<unsigned char, 30> branch_stairs;
 
@@ -941,7 +941,7 @@ public:
     void timeout_enchantments(int levels);
     
     bool needs_transit() const;
-    void set_transit(level_id destination);
+    void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_place_near_player();
     bool find_home_in(coord_def s, coord_def e);
@@ -1145,6 +1145,7 @@ private:
     static int n_extra_ghosts();
     static void find_extra_ghosts(std::vector<ghost_demon> &ghosts, int n);
     static void find_transiting_ghosts(std::vector<ghost_demon> &gs, int n);
+    static void announce_ghost(const ghost_demon &g);
     
 private:
     void add_spells();

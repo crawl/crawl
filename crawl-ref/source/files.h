@@ -43,8 +43,8 @@ std::string get_savedir_filename(const std::string &pre,
 
 std::string get_prefs_filename();
 
-void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth, 
-           char old_level, char where_were_you2 );
+void load( int stair_taken, int load_mode, bool was_a_labyrinth, 
+           int old_level, branch_type where_were_you2 );
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -72,8 +72,8 @@ void save_ghost( bool force = false );
 /* ***********************************************************************
  * called from: files hiscores
  * *********************************************************************** */
-std::string make_filename( const char *prefix, int level, int where,
-                           bool isLabyrinth, bool isGhost );
+std::string make_filename( const char *prefix, int level, int branch,
+                           level_area_type lt, bool isGhost );
 
 void writeShort(FILE *file, short s);
 

@@ -857,13 +857,17 @@ void end_game( struct scorefile_entry &se )
             if (tmp_file_pairs[level][dungeon])
             {
                 unlink(make_filename( you.your_name, level, dungeon,
-                                      false, false ).c_str());
+                                      LEVEL_DUNGEON, false ).c_str());
             }
         }
     }
 
-    // temp level, if any
-    unlink( make_filename( you.your_name, 0, 0, true, false ).c_str() );
+    // temp levels, if any
+    unlink( make_filename( you.your_name, 0, 0, LEVEL_ABYSS, false ).c_str() );
+    unlink( make_filename( you.your_name, 0, 0,
+                           LEVEL_PANDEMONIUM, false ).c_str() );
+    unlink( make_filename( you.your_name, 0, 0,
+                           LEVEL_LABYRINTH, false ).c_str() );
 
     // create base file name
     std::string basename = get_savedir_filename( you.your_name, "", "" );

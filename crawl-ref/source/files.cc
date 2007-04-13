@@ -86,7 +86,8 @@
 #define DO_CHMOD_PRIVATE(x) // empty command
 #endif
 
-void save_level(int level_saved, bool was_a_labyrinth, char where_were_you);
+void save_level(int level_saved, level_area_type lt,
+                branch_type where_were_you);
 
 #define GHOST_MINOR_VERSION 1
 #define LEVEL_MINOR_VERSION 1
@@ -467,16 +468,27 @@ std::string get_prefs_filename()
     return get_savedir_filename("start", "ns", "prf");
 }
 
-std::string make_filename( const char *prefix, int level, int where,
-                           bool isLabyrinth, bool isGhost )
+static std::string get_level_suffix(int level, int where, level_area_type lt)
 {
-    char suffix[4], lvl[5];
-    strcpy(suffix, (level < 10) ? "0" : "");
-    itoa(level, lvl, 10);
-    strcat(suffix, lvl);
-    suffix[2] = where + 97;
-    suffix[3] = 0;
-    return get_savedir_filename( prefix, "", isLabyrinth ? "lab" : suffix,
+    switch (lt)
+    {
+    default:
+    case LEVEL_DUNGEON:
+        return (make_stringf("%02d%c", level, where + 'a'));
+    case LEVEL_LABYRINTH:
+        return ("lab");
+    case LEVEL_ABYSS:
+        return ("abs");
+    case LEVEL_PANDEMONIUM:
+        return ("pan");
+    }
+}
+
+std::string make_filename( const char *prefix, int level, int where,
+                           level_area_type ltype, bool isGhost )
+{
+    return get_savedir_filename( prefix, "",
+                                 get_level_suffix(level, where, ltype),
                                  isGhost );
 }
 
@@ -512,7 +524,7 @@ bool travel_load_map( char branch, int absdepth )
 {
     // Try to open level savefile.
     FILE *levelFile = fopen(make_filename(you.your_name, absdepth, branch,
-                                          false, false).c_str(), "rb");
+                                          LEVEL_DUNGEON, false).c_str(), "rb");
     if (!levelFile)
         return false;
 
@@ -536,8 +548,8 @@ bool travel_load_map( char branch, int absdepth )
     return true;
 }
 
-void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
-           char old_level, char where_were_you2 )
+void load( int stair_taken, int load_mode, bool was_a_labyrinth,
+           int old_level, branch_type where_were_you2 )
 {
     int j = 0;
     int i = 0, count_x = 0, count_y = 0;
@@ -550,7 +562,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
 
     std::string cha_fil = make_filename( you.your_name, you.your_level,
                                          you.where_are_you,
-                                         you.level_type != LEVEL_DUNGEON,
+                                         you.level_type,
                                          false );
 
     if (you.level_type == LEVEL_DUNGEON)
@@ -605,9 +617,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
                     continue;
 
 #if DEBUG_DIAGNOSTICS
-                snprintf( info, INFO_SIZE, "%s is following.", 
-                          ptr_monam( fmenv, DESC_CAP_THE ) );
-                mpr( info, MSGCH_DIAGNOSTICS );
+                mprf( "%s is following.", ptr_monam( fmenv, DESC_CAP_THE ) );
 #endif
 
                 follower f(*fmenv);
@@ -618,7 +628,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         }                        // end of grabbing followers
 
         if (!was_a_labyrinth)
-            save_level( old_level, false, where_were_you2 );
+            save_level( old_level, LEVEL_DUNGEON, where_were_you2 );
 
         was_a_labyrinth = false;
     }
@@ -632,7 +642,7 @@ void load( unsigned char stair_taken, int load_mode, bool was_a_labyrinth,
         builder( you.your_level, you.level_type );
         just_created_level = true;
 
-        if (you.your_level > 1
+        if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
             && one_chance_in(3)
             && you.level_type != LEVEL_LABYRINTH)
         {
@@ -951,16 +961,16 @@ found_stair:
     }
 
     // Save the created/updated level out to disk:
-    save_level( you.your_level, (you.level_type != LEVEL_DUNGEON),
-                you.where_are_you );
+    save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
 }                               // end load()
 
-void save_level(int level_saved, bool was_a_labyrinth, char where_were_you)
+void save_level(int level_saved, level_area_type old_ltype,
+                branch_type where_were_you)
 {
     std::string cha_fil = make_filename( you.your_name, level_saved,
-                                         where_were_you, was_a_labyrinth,
+                                         where_were_you, old_ltype,
                                          false );
 
     you.prev_targ = MHITNOT;
@@ -1059,8 +1069,7 @@ void save_game(bool leave_game)
         return;
 
     // must be exiting -- save level & goodbye!
-    save_level(you.your_level, (you.level_type != LEVEL_DUNGEON),
-               you.where_are_you);
+    save_level(you.your_level, you.level_type, you.where_are_you);
 
     clrscr();
 
@@ -1099,7 +1108,7 @@ void load_ghost(void)
 
     std::string cha_fil = make_filename("bones", you.your_level,
                                         you.where_are_you,
-                                        (you.level_type != LEVEL_DUNGEON),
+                                        you.level_type,
                                         true );
 
     FILE *gfile = fopen(cha_fil.c_str(), "rb");
@@ -1386,7 +1395,7 @@ void save_ghost( bool force )
 
     std::string cha_fil = make_filename( "bones", you.your_level,
                                          you.where_are_you,
-                                         (you.level_type != LEVEL_DUNGEON),
+                                         you.level_type,
                                          true );
 
     FILE *gfile = fopen(cha_fil.c_str(), "rb");

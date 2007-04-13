@@ -40,13 +40,13 @@ static void cull_lost(m_transit_list &mlist, int how_many)
         mlist.erase( mlist.begin() );
 }
 
-m_transit_list *get_transit_list(level_id lid)
+m_transit_list *get_transit_list(const level_id &lid)
 {
     monsters_in_transit::iterator i = the_lost_ones.find(lid);
     return (i != the_lost_ones.end()? &i->second : NULL);
 }
 
-void add_monster_to_transit(level_id lid, const monsters &m)
+void add_monster_to_transit(const level_id &lid, const monsters &m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);

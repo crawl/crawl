@@ -998,14 +998,14 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.pet_target = unmarshallByte(th);
 
     you.max_level = unmarshallByte(th);
-    you.where_are_you = unmarshallByte(th);
+    you.where_are_you = static_cast<branch_type>( unmarshallByte(th) );
     you.char_direction = unmarshallByte(th);
     you.your_level = unmarshallByte(th);
     you.is_undead = unmarshallByte(th);
     you.special_wield = unmarshallByte(th);
     you.berserker = unmarshallByte(th);
     you.berserk_penalty = unmarshallByte(th);
-    you.level_type = unmarshallByte(th);
+    you.level_type = static_cast<level_area_type>( unmarshallByte(th) );
     you.synch_time = unmarshallByte(th);
     you.disease = unmarshallByte(th);
     you.species = unmarshallByte(th);

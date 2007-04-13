@@ -520,9 +520,9 @@ void merfolk_start_swimming(void)
 
 void up_stairs(void)
 {
-    unsigned char stair_find = grd[you.x_pos][you.y_pos];
-    char old_where = you.where_are_you;
-    bool was_a_labyrinth = false;
+    int stair_find = grd[you.x_pos][you.y_pos];
+    const branch_type old_where = you.where_are_you;
+    const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
 
     if (stair_find == DNGN_ENTER_SHOP)
     {
@@ -571,7 +571,7 @@ void up_stairs(void)
         return;
     }
 
-    unsigned char old_level  = you.your_level;
+    int old_level  = you.your_level;
 
     // Interlevel travel data:
     bool collect_travel_data = you.level_type != LEVEL_LABYRINTH 
@@ -588,10 +588,7 @@ void up_stairs(void)
     // in the abyss or pandemonium a bit trouble (well the labyrinth does
     // provide a way out of those places, its really not that bad I suppose)
     if (you.level_type == LEVEL_LABYRINTH)
-    {
         you.level_type = LEVEL_DUNGEON;
-        was_a_labyrinth = true;
-    }
 
     you.your_level--;
 
@@ -733,12 +730,12 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
 {
     int i;
     char old_level_type = you.level_type;
-    bool was_a_labyrinth = false;
+    const bool was_a_labyrinth = you.level_type != LEVEL_DUNGEON;
     const int stair_find =
         force_stair? force_stair : grd[you.x_pos][you.y_pos];
 
     bool leave_abyss_pan = false;
-    char old_where = you.where_are_you;
+    branch_type old_where = you.where_are_you;
 
 #ifdef SHUT_LABYRINTH
     if (stair_find == DNGN_ENTER_LABYRINTH)
@@ -851,16 +848,10 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     if (you.level_type == LEVEL_ABYSS)
         save_abyss_uniques();
     
-    if (you.level_type == LEVEL_PANDEMONIUM
-            && stair_find == DNGN_TRANSIT_PANDEMONIUM)
+    if (you.level_type != LEVEL_DUNGEON
+        && (you.level_type != LEVEL_PANDEMONIUM
+            || stair_find != DNGN_TRANSIT_PANDEMONIUM))
     {
-        was_a_labyrinth = true;
-    }
-    else
-    {
-        if (you.level_type != LEVEL_DUNGEON)
-            was_a_labyrinth = true;
-
         you.level_type = LEVEL_DUNGEON;
     }
 
@@ -923,10 +914,9 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
     {
         std::string lname = make_filename(you.your_name, you.your_level,
                                           you.where_are_you,
-                                          true, false );
+                                          you.level_type, false );
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Deleting: %s", lname.c_str() );
-    mpr( info, MSGCH_DIAGNOSTICS );
+        mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
 #endif
         unlink(lname.c_str());
     }

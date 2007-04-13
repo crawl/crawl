@@ -74,6 +74,7 @@ std::string pronoun_you(description_level_type desc)
     case DESC_CAP_YOUR:
         return "Your";
     case DESC_NOCAP_YOUR:
+    case DESC_NOCAP_ITS:
         return "your";
     }
 }

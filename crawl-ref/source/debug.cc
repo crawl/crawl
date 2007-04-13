@@ -425,11 +425,11 @@ static void wizard_go_to_level(const level_pos &pos)
                                   : DNGN_STONE_STAIRS_UP_I;
 
     const int old_level = you.your_level;
-    const int old_where = you.where_are_you;
+    const branch_type old_where = you.where_are_you;
     const bool was_a_labyrinth = you.level_type == LEVEL_LABYRINTH;
 
     you.level_type    = LEVEL_DUNGEON;
-    you.where_are_you = pos.id.branch;
+    you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.your_level    = abs_depth;
 
     load(stair_taken, LOAD_ENTER_LEVEL, was_a_labyrinth, old_level, old_where);

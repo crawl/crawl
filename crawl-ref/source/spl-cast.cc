@@ -957,14 +957,12 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
             int nastiness = spell_mana(spc2) * spell_mana(spc2)
                                     * (spell_fail(spc2) - spfl) + 250;
 
-            int cont_points = nastiness / 500;
-            // handle fraction
-            if (random2(500) < (nastiness % 500))
-                cont_points++;
+            const int cont_points = div_rand_round(nastiness, 500);
 
             contaminate_player( cont_points );
 
-            miscast_effect( sptype, spell_mana(spc2), spell_fail(spc2) - spfl, 100 );
+            miscast_effect( sptype, spell_mana(spc2),
+                            spell_fail(spc2) - spfl, 100 );
 
             if (you.religion == GOD_XOM && random2(75) < spell_mana(spc2))
                 Xom_acts(coinflip(), spell_mana(spc2), false);
