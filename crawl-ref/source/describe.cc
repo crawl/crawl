@@ -1639,7 +1639,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
         description += "$";
     }
 
-    int ego = get_armour_ego_type( item );
+    const int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL 
         && item_type_known(item) 
         && verbose)

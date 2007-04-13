@@ -960,7 +960,7 @@ formatted_string describe_mutations()
         break;
 
     case SP_KENKU:
-        result += "You cannot wear helmets." EOL;
+        result += "You cannot wear boots or helmets." EOL;
         if (you.experience_level > 4)
         {
             result += "You can fly";
