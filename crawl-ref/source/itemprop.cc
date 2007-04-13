@@ -2085,3 +2085,24 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
             && !item_is_rod(weapon) 
             && !is_range_weapon(weapon);
 }
+
+const char* item_base_name(const item_def &item)
+{
+    return item_base_name(static_cast<object_class_type>(item.base_type),
+                          item.sub_type);
+}
+
+const char* item_base_name(object_class_type basetype, unsigned char subtype)
+{
+    switch (basetype)
+    {
+    case OBJ_WEAPONS:
+        return Weapon_prop[Weapon_index[subtype]].name;
+    case OBJ_ARMOUR:
+        return Armour_prop[Armour_index[subtype]].name;
+    case OBJ_MISSILES:
+        return Missile_prop[Missile_index[subtype]].name;
+    default:
+        return "";
+    }
+}

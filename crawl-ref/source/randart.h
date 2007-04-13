@@ -51,11 +51,7 @@ const char *randart_ring_name( const item_def &item );
  * *********************************************************************** */
 const char *unrandart_descrip( char which_descrip, const item_def &item );
 
-/* ***********************************************************************
- * called from: files
- * *********************************************************************** */
-char does_unrandart_exist(int whun);
-
+bool does_unrandart_exist(int whun);
 
 /* ***********************************************************************
  * called from: dungeon
@@ -85,20 +81,13 @@ bool make_item_unrandart( item_def &item, int unrand_index );
 /* ***********************************************************************
  * called from: files - newgame
  * *********************************************************************** */
-void set_unrandart_exist(int whun, char is_exist);
+void set_unrandart_exist(int whun, bool is_exist);
 
 
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
 void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] );
-
-
-/* ***********************************************************************
- * called from: itemname
- * *********************************************************************** */
-void standard_name_weap(unsigned char item_typ, char glog[ITEMNAME_SIZE]);
-
 
 /* ***********************************************************************
  * called from: items

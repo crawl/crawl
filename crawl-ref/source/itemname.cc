@@ -481,8 +481,7 @@ static const char *item_name_2(
                 strncat(buff, "vampiric ", ITEMNAME_SIZE );
         }                       // end if
 
-        standard_name_weap( item_typ, tmp_buff );
-        strncat( buff, tmp_buff, ITEMNAME_SIZE );
+        strncat(buff, item_base_name(item), ITEMNAME_SIZE);
 
         if (item_type_known( item ))
         {

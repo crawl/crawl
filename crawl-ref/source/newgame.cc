@@ -1500,12 +1500,11 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
 }
     
 
-static char startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
+static const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
     WPN_HAND_AXE, WPN_SPEAR, WPN_TRIDENT };
 
 static void choose_weapon( void )
 {
-    char wepName[ ITEMNAME_SIZE ];
     unsigned char keyin = 0;
     int num_choices = 4;
     int temp_rand;              // probability determination {dlb}
@@ -1543,9 +1542,8 @@ static void choose_weapon( void )
         for(int i=0; i<num_choices; i++)
         {
             int x = effective_stat_bonus(startwep[i]);
-            standard_name_weap(startwep[i], wepName);
-
-            cprintf("%c - %s%s" EOL, 'a' + i, wepName,
+            cprintf("%c - %s%s" EOL, 'a' + i,
+                    item_base_name(OBJ_WEAPONS, startwep[i]),
                     (x <= -4) ? " (not ideal)" : "" );
 
             if (Options.prev_weapon == startwep[i])
@@ -1558,12 +1556,9 @@ static void choose_weapon( void )
         cprintf(EOL "* - Random" );
         if (Options.prev_weapon != WPN_UNKNOWN)
         {
-            char weapbuf[ITEMNAME_SIZE];
-            if (Options.prev_weapon != WPN_RANDOM)
-                standard_name_weap(Options.prev_weapon, weapbuf);
             cprintf("; Enter - %s",
-                    Options.prev_weapon == WPN_RANDOM? "Random" :
-                                                       weapbuf);
+                    Options.prev_weapon == WPN_RANDOM ? "Random" :
+                    item_base_name(OBJ_WEAPONS, Options.prev_weapon));
         }
         cprintf(EOL);
             

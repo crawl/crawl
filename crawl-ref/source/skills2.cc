@@ -2320,7 +2320,6 @@ void wield_warning(bool newWeapon)
 {
     // hold weapon name
     char wepstr[ITEMNAME_SIZE];
-    char wepstr2[ITEMNAME_SIZE];
 
     // early out - no weapon
     if (you.equip[EQ_WEAPON] == -1)
@@ -2331,18 +2330,17 @@ void wield_warning(bool newWeapon)
     else
         strcpy(wepstr, "your ");
 
-    int wepType  = you.inv[you.equip[EQ_WEAPON]].sub_type;
+    const item_def& wep = you.inv[you.equip[EQ_WEAPON]];
 
     // early out - don't warn for non-weapons
-    if (you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_WEAPONS)
+    if (wep.base_type != OBJ_WEAPONS)
         return;
 
     // put the standard wep name in.
-    standard_name_weap(wepType, wepstr2);
-    strcat(wepstr, wepstr2);
+    strcat(wepstr, item_base_name(wep));
 
     // only warn about str/dex for non-launcher weapons
-    if (!is_range_weapon( you.inv[you.equip[EQ_WEAPON]] ))
+    if (!is_range_weapon( wep ))
     {
 #ifdef USE_NEW_COMBAT_STATS
         const int stat_bonus = effective_stat_bonus();
