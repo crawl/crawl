@@ -3758,6 +3758,14 @@ static int count_neighbours(int x, int y, int feat)
     return result;
 }
 
+static void replace_in_grid(int x1, int y1, int x2, int y2,
+                            int oldfeat, int newfeat)
+{
+    for ( int x = x1; x < x2; ++x )
+        for ( int y = y1; y < y2; ++y )
+            if ( grd[x][y] == oldfeat )
+                grd[x][y] = newfeat;
+}
 
 static void prepare_islands()
 {
@@ -3849,7 +3857,33 @@ static void prepare_islands()
         }
     }
 
-    // XXX TODO: fractalisation
+    // Fractalisation
+
+    // LAVA is a placeholder for cells which will become shallow water
+    // at the end of the current iteration.
+    // WATER_STUCK is a placeholder for last iteration's generated water.
+    replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+                    DNGN_SHALLOW_WATER, DNGN_WATER_STUCK);
+
+    for ( int i = 0; i < 6; ++i )
+    {
+        for ( int x = margin; x < GXM - margin; ++x )
+        {
+            for ( int y = margin; y < GYM - margin; ++y )
+            {
+                if ( grd[x][y] == DNGN_DEEP_WATER )
+                {
+                    int badness = count_neighbours(x, y, DNGN_WATER_STUCK);
+                    if ( random2(badness) >= 2 && coinflip() )
+                        grd[x][y] = DNGN_LAVA;
+                }
+            }
+        }
+        replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+                        DNGN_LAVA, DNGN_WATER_STUCK);
+    }
+    replace_in_grid(margin, margin, GXM-margin, GYM-margin,
+                    DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
 
     // Place stairs randomly. No elevators.
     for ( int i = 0; i < 3; ++i )
