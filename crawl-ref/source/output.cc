@@ -516,10 +516,17 @@ void print_stats(void)
             cprintf( "Invis " );
         }
 
+        if (you.duration[DUR_SILENCE])
+        {
+            dur_colour( BLUE, (you.duration[DUR_SILENCE] <= 5) );
+            cprintf( "Sil " );
+        }
+
         // Perhaps this should be reversed to show when it can be used?
         // In that case, it should be probably be GREEN, and we'd have
         // to check to see if the player does have a breath weapon. -- bwr
-        if (you.duration[DUR_BREATH_WEAPON])
+        if (you.duration[DUR_BREATH_WEAPON] &&
+            wherex() < get_number_of_cols() - 4)
         {
             textcolor( YELLOW );  // no warning
             cprintf( "BWpn" );
