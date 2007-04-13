@@ -595,6 +595,7 @@ bool cast_a_spell(void)
     if (silenced(you.x_pos, you.y_pos))
     {
         mpr("You cannot cast spells when silenced!");
+        more();
         return (false);
     }
 
