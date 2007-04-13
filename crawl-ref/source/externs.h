@@ -1144,6 +1144,7 @@ public:
 private:
     static int n_extra_ghosts();
     static void find_extra_ghosts(std::vector<ghost_demon> &ghosts, int n);
+    static void find_transiting_ghosts(std::vector<ghost_demon> &gs, int n);
     
 private:
     void add_spells();

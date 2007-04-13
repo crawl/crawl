@@ -15,6 +15,7 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "misc.h"
+#include "mtransit.h"
 #include "player.h"
 #include <vector>
 
@@ -459,6 +460,31 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
     return (gs);
 }
 
+void ghost_demon::find_transiting_ghosts(
+    std::vector<ghost_demon> &gs, int n)
+{
+    if (n <= 0)
+        return;
+
+    const m_transit_list *mt = get_transit_list(level_id::current());
+    if (mt)
+    {
+        for (m_transit_list::const_iterator i = mt->begin();
+             i != mt->end() && n > 0; ++i)
+        {
+            if (i->mons.type == MONS_PLAYER_GHOST)
+            {
+                const monsters &m = i->mons;
+                if (m.ghost.get())
+                {
+                    gs.push_back(*m.ghost);
+                    --n;
+                }
+            }
+        }
+    }
+}
+
 void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 {
     for (int i = 0; n > 0 && i < MAX_MONSTERS; ++i)
@@ -473,6 +499,9 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
             --n;
         }
     }
+
+    // Check the transit list for the current level.
+    find_transiting_ghosts(gs, n);
 }
 
 int ghost_demon::n_extra_ghosts()

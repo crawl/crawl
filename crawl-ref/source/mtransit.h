@@ -31,6 +31,7 @@ typedef std::map<level_id, m_transit_list> monsters_in_transit;
 
 extern monsters_in_transit the_lost_ones;
 
+m_transit_list *get_transit_list(level_id where);
 void add_monster_to_transit(level_id dest, const monsters &m);
 
 // Places (some of the) monsters eligible to be placed on this level.
