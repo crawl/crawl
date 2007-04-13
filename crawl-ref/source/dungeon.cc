@@ -645,7 +645,6 @@ int items( int allow_uniques,       // not just true-false,
 
     int quant = 0;
 
-    FixedVector < int, SPELLBOOK_SIZE > fpass;
     int icky = 0;
     int p = 0;
 

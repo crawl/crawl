@@ -18,13 +18,6 @@
 #include "menu.h"
 #include "FixVec.h"
 
-
-// used in dungeon.cc, it_use3.cc, spl-book.cc, spl-book.h - {dlb}
-#define SPELLBOOK_SIZE 9
-// used in spl-book.cc, spl-book.h - {dlb}
-#define NUMBER_SPELLBOOKS 60
-
-
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: dungeon - effects - shopping
@@ -32,10 +25,6 @@
 char book_rarity(unsigned char which_book);
 
 
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - item_use - spl-book
- * *********************************************************************** */
 bool is_valid_spell_in_book( unsigned int splbook, int spell );
 
 
@@ -52,13 +41,9 @@ unsigned char read_book( item_def &item, int action );
  * *********************************************************************** */
 bool learn_spell(void);
 
-
-// updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - item_use - spl-book
- * *********************************************************************** */
 spell_type which_spell_in_book(int sbook_type, int spl);
 
+// returns amount practised (or -1 for abort)
 int staff_spell( int zap_device_2 );
 
 bool undead_cannot_memorise(unsigned char spell, unsigned char being);
