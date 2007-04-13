@@ -1048,7 +1048,7 @@ void randart_wpn_properties( const item_def &item,
     if (one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC))
     {
-        proprt[RAP_MAGIC] = 20 + random2(40);
+        proprt[RAP_MAGIC] = 35 + random2(65);
         power_level++;
     }
 

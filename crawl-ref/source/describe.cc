@@ -75,7 +75,7 @@ static void append_value( std::string & description, int valu, bool plussed )
 //
 // print_description
 //
-// Takes a descpr string filled up with stuff from other functions,
+// Takes a descrip string filled up with stuff from other functions,
 // and displays it with minor formatting to avoid cut-offs in mid
 // word and such. The character $ is interpreted as a CR.
 //
@@ -144,13 +144,13 @@ static void print_description( const std::string &d )
 
 //---------------------------------------------------------------
 //
-// randart_descpr
+// randart_descrip
 //
 // Appends the various powers of a random artefact to the description
 // string.
 //
 //---------------------------------------------------------------
-static void randart_descpr( std::string &description, const item_def &item )
+static void randart_descrip( std::string &description, const item_def &item )
 {
     unsigned int old_length = description.length();
 
@@ -246,7 +246,7 @@ static void randart_descpr( std::string &description, const item_def &item )
         description += "$It renders you almost immune to negative energy. ";
 
     if (proprt[ RAP_MAGIC ])
-        description += "$It protects you from magic. ";
+        description += "$It amplifies your intrinsic magic resistance. ";
 
     if (proprt[ RAP_STEALTH ] < 0)
     {
@@ -1184,7 +1184,7 @@ static std::string describe_weapon( const item_def &item, bool verbose)
             if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
             {
                 unsigned int old_length = description.length();
-                randart_descpr( description, item );
+                randart_descrip( description, item );
 
                 if (description.length() == old_length)
                     description += "$";
@@ -1722,7 +1722,7 @@ static std::string describe_armour( const item_def &item, bool verbose )
     if (is_random_artefact( item ))
     {
         if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            randart_descpr( description, item );
+            randart_descrip( description, item );
         else if (item_type_known(item))
             description += "$This armour may have some hidden properties.$";
     }
@@ -2822,7 +2822,7 @@ static std::string describe_jewellery( const item_def &item, bool verbose)
     if (is_random_artefact( item ))
     {
         if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
-            randart_descpr( description, item );
+            randart_descrip( description, item );
         else if (item_type_known(item))
         {
             if (item.sub_type >= AMU_RAGE)

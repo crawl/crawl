@@ -801,14 +801,16 @@ int player_res_magic(void)
         break;
     }
 
+    /* randarts - multiplicative effect */
+    rm *= (scan_randarts(RAP_MAGIC) + 100);
+    rm /= 100;
+
     /* armour  */
     rm += 30 * player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE );
 
     /* rings of magic resistance */
     rm += 40 * player_equip( EQ_RINGS, RING_PROTECTION_FROM_MAGIC );
 
-    /* randarts */
-    rm += scan_randarts(RAP_MAGIC);
 
     /* Enchantment skill */
     rm += 2 * you.skills[SK_ENCHANTMENTS];

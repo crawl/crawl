@@ -523,9 +523,9 @@ int randart_value( const item_def &item )
     if (prop[ RAP_ELECTRICITY ])
         ret += 30;
 
-    // magic resistance is from 20-120
+    // magic resistance is from 35-100
     if (prop[ RAP_MAGIC ])
-        ret += 5 + prop[ RAP_MAGIC ] / 10;
+        ret += 5 + prop[ RAP_MAGIC ] / 15;
 
     if (prop[ RAP_EYESIGHT ])
         ret += 10;

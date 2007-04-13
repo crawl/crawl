@@ -438,7 +438,7 @@
         OBJ_JEWELLERY, AMU_CLARITY, +0, 0, LIGHTGREEN,
     {
         0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 1, 60,      // life prot, magic resistance
+        0, 0, 0, 0, 1, 100,      // life prot, magic resistance
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,
         0, 0, 0, 0, 0,

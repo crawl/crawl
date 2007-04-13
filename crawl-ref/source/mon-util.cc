@@ -650,7 +650,9 @@ int mons_resist_magic( const monsters *mon )
     if (u < 0)
         u = mon->hit_dice * -u * 4 / 3;
 
-    u += scan_mon_inv_randarts( mon, RAP_MAGIC );
+    // randarts have a multiplicative effect
+    u *= (scan_mon_inv_randarts( mon, RAP_MAGIC ) + 100);
+    u /= 100;
 
     // ego armour resistance
     const int armour = mon->inv[MSLOT_ARMOUR];
