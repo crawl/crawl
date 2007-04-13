@@ -2086,23 +2086,57 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
             && !is_range_weapon(weapon);
 }
 
-const char* item_base_name(const item_def &item)
+std::string item_base_name(const item_def &item)
 {
-    return item_base_name(static_cast<object_class_type>(item.base_type),
-                          item.sub_type);
-}
-
-const char* item_base_name(object_class_type basetype, unsigned char subtype)
-{
-    switch (basetype)
+    switch ( item.base_type )
     {
     case OBJ_WEAPONS:
-        return Weapon_prop[Weapon_index[subtype]].name;
-    case OBJ_ARMOUR:
-        return Armour_prop[Armour_index[subtype]].name;
+        return Weapon_prop[Weapon_index[item.sub_type]].name;
     case OBJ_MISSILES:
-        return Missile_prop[Missile_index[subtype]].name;
+        return Missile_prop[Missile_index[item.sub_type]].name;
+    case OBJ_ARMOUR:
+        if ( item.sub_type != ARM_HELMET )
+        {
+            return Armour_prop[Armour_index[item.sub_type]].name;
+        }
+        else
+        {
+            std::string result;
+            if (get_helmet_type(item) == THELM_HELM ||
+                get_helmet_type(item) == THELM_HELMET) 
+            {
+                const short dhelm = get_helmet_desc( item );
+                
+                result +=
+                    (dhelm == THELM_DESC_PLAIN)    ? "" :
+                    (dhelm == THELM_DESC_WINGED)   ? "winged " :
+                    (dhelm == THELM_DESC_HORNED)   ? "horned " :
+                    (dhelm == THELM_DESC_CRESTED)  ? "crested " :
+                    (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
+                    (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
+                    (dhelm == THELM_DESC_VISORED)  ? "visored " :
+                    (dhelm == THELM_DESC_JEWELLED) ? "jeweled "
+                                                   : "buggy ";
+            }
+            
+            const short helm_type = get_helmet_type( item );
+            if (helm_type == THELM_HELM)
+                result += "helm";
+            else if (helm_type == THELM_CAP)
+                result += "cap";
+            else if (helm_type == THELM_WIZARD_HAT)
+                result += "wizard's hat";
+            else 
+                result += "helmet";
+            
+            return result;
+        }
     default:
         return "";
     }
+}
+
+const char* weapon_base_name(unsigned char subtype)
+{
+    return Weapon_prop[Weapon_index[subtype]].name;
 }

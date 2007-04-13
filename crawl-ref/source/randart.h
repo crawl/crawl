@@ -77,17 +77,10 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which = 0 );
 bool make_item_randart( item_def &item );
 bool make_item_unrandart( item_def &item, int unrand_index );
 
-
 /* ***********************************************************************
  * called from: files - newgame
  * *********************************************************************** */
 void set_unrandart_exist(int whun, bool is_exist);
-
-
-/* ***********************************************************************
- * called from: itemname
- * *********************************************************************** */
-void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] );
 
 /* ***********************************************************************
  * called from: items

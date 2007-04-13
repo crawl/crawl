@@ -1265,14 +1265,14 @@ const char *randart_name( const item_def &item )
         case 20: strcat(art_n, "shiny "); break;
         }
 
-        strcat(art_n, item_base_name(item));
+        strcat(art_n, item_base_name(item).c_str());
         pop_rng_state();
         return (art_n);
     }
 
     if (coinflip())
     {
-        strcat(art_n, item_base_name(item));
+        strcat(art_n, item_base_name(item).c_str());
         strcat(art_n, rand_wpn_names[random2(390)]);
     }
     else
@@ -1280,7 +1280,7 @@ const char *randart_name( const item_def &item )
         char st_p[ITEMNAME_SIZE];
 
         make_name(random_int(), false, st_p);
-        strcat(art_n, item_base_name(item));
+        strcat(art_n, item_base_name(item).c_str());
 
         if (one_chance_in(3))
         {
@@ -1344,29 +1344,22 @@ const char *randart_armour_name( const item_def &item )
         case 19: strcat(art_n, "steaming "); break;
         case 20: strcat(art_n, "shiny "); break;
         }
-        char st_p3[ITEMNAME_SIZE];
-
-        standard_name_armour(item, st_p3);
-        strcat(art_n, st_p3);
+        strcat(art_n, item_base_name(item).c_str());
         pop_rng_state();
         return (art_n);
     }
 
-    char st_p[ITEMNAME_SIZE];
-
     if (coinflip())
     {
-        standard_name_armour(item, st_p);
-        strcat(art_n, st_p);
+        strcat(art_n, item_base_name(item).c_str());
         strcat(art_n, rand_armour_names[random2(71)]);
     }
     else
     {
-        char st_p2[ITEMNAME_SIZE];
+        char st_p[ITEMNAME_SIZE];
 
         make_name(random_int(), false, st_p);
-        standard_name_armour(item, st_p2);
-        strcat(art_n, st_p2);
+        strcat(art_n, item_base_name(item).c_str());
         if (one_chance_in(3))
         {
             strcat(art_n, " of ");
@@ -1729,180 +1722,3 @@ const char *unrandart_descrip( char which_descrip, const item_def &item )
             (which_descrip == 2) ? unrand->spec_descrip3 : "Unknown.");
 
 }                               // end unrandart_descrip()
-
-void standard_name_armour( const item_def &item, char glorg[ITEMNAME_SIZE] )
-{
-    short helm_type; 
-
-    glorg[0] = 0;
-
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
-        strcat(glorg, "robe");
-        break;
-
-    case ARM_LEATHER_ARMOUR:
-        strcat(glorg, "leather armour");
-        break;
-
-    case ARM_RING_MAIL:
-        strcat(glorg, "ring mail");
-        break;
-
-    case ARM_SCALE_MAIL:
-        strcat(glorg, "scale mail");
-        break;
-
-    case ARM_CHAIN_MAIL:
-        strcat(glorg, "chain mail");
-        break;
-
-    case ARM_SPLINT_MAIL:
-        strcat(glorg, "splint mail");
-        break;
-
-    case ARM_BANDED_MAIL:
-        strcat(glorg, "banded mail");
-        break;
-
-    case ARM_PLATE_MAIL:
-        strcat(glorg, "plate mail");
-        break;
-
-    case ARM_SHIELD:
-        strcat(glorg, "shield");
-        break;
-
-    case ARM_CLOAK:
-        strcat(glorg, "cloak");
-        break;
-
-    case ARM_HELMET:
-        if (get_helmet_type(item) == THELM_HELM
-                    || get_helmet_type(item) == THELM_HELMET)
-        {   
-            short dhelm = get_helmet_desc( item );
-
-            if (dhelm != THELM_DESC_PLAIN)
-            {   
-                strcat( glorg,
-                        (dhelm == THELM_DESC_WINGED)   ? "winged " :
-                        (dhelm == THELM_DESC_HORNED)   ? "horned " :
-                        (dhelm == THELM_DESC_CRESTED)  ? "crested " :
-                        (dhelm == THELM_DESC_PLUMED)   ? "plumed " :
-                        (dhelm == THELM_DESC_SPIKED)   ? "spiked " :
-                        (dhelm == THELM_DESC_VISORED)  ? "visored " :
-                        (dhelm == THELM_DESC_JEWELLED) ? "jeweled "
-                                                       : "buggy " );
-            }
-        }
-
-        helm_type = get_helmet_type( item );
-        if (helm_type == THELM_HELM)
-            strcat(glorg, "helm");
-        else if (helm_type == THELM_CAP)
-            strcat(glorg, "cap");
-        else if (helm_type == THELM_WIZARD_HAT)
-            strcat(glorg, "wizard's hat");
-        else 
-            strcat(glorg, "helmet");
-        break;
-
-    case ARM_GLOVES:
-        strcat(glorg, "gloves");
-        break;
-
-    case ARM_NAGA_BARDING:
-        strcat(glorg, "naga barding");
-        break;
-
-    case ARM_CENTAUR_BARDING:
-        strcat(glorg, "centaur barding");
-        break;
-
-    case ARM_BOOTS:
-        strcat(glorg, "boots");
-        break;
-
-    case ARM_BUCKLER:
-        strcat(glorg, "buckler");
-        break;
-
-    case ARM_LARGE_SHIELD:
-        strcat(glorg, "large shield");
-        break;
-
-    case ARM_DRAGON_HIDE:
-        strcat(glorg, "dragon hide");
-        break;
-
-    case ARM_TROLL_HIDE:
-        strcat(glorg, "troll hide");
-        break;
-
-    case ARM_CRYSTAL_PLATE_MAIL:
-        strcat(glorg, "crystal plate mail");
-        break;
-
-    case ARM_DRAGON_ARMOUR:
-        strcat(glorg, "dragon armour");
-        break;
-
-    case ARM_TROLL_LEATHER_ARMOUR:
-        strcat(glorg, "troll leather armour");
-        break;
-
-    case ARM_ICE_DRAGON_HIDE:
-        strcat(glorg, "ice dragon hide");
-        break;
-
-    case ARM_ICE_DRAGON_ARMOUR:
-        strcat(glorg, "ice dragon armour");
-        break;
-
-    case ARM_STEAM_DRAGON_HIDE:
-        strcat(glorg, "steam dragon hide");
-        break;
-
-    case ARM_STEAM_DRAGON_ARMOUR:
-        strcat(glorg, "steam dragon armour");
-        break;
-
-    case ARM_MOTTLED_DRAGON_HIDE:
-        strcat(glorg, "mottled dragon hide");
-        break;
-
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        strcat(glorg, "mottled dragon armour");
-        break;
-
-    case ARM_STORM_DRAGON_HIDE:
-        strcat(glorg, "storm dragon hide");
-        break;
-
-    case ARM_STORM_DRAGON_ARMOUR:
-        strcat(glorg, "storm dragon armour");
-        break;
-
-    case ARM_GOLD_DRAGON_HIDE:
-        strcat(glorg, "gold dragon hide");
-        break;
-
-    case ARM_GOLD_DRAGON_ARMOUR:
-        strcat(glorg, "gold dragon armour");
-        break;
-
-    case ARM_ANIMAL_SKIN:
-        strcat(glorg, "animal skin");
-        break;
-
-    case ARM_SWAMP_DRAGON_HIDE:
-        strcat(glorg, "swamp dragon hide");
-        break;
-
-    case ARM_SWAMP_DRAGON_ARMOUR:
-        strcat(glorg, "swamp dragon armour");
-        break;
-    }
-}                               // end standard_name_armour()

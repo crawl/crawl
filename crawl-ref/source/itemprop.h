@@ -146,7 +146,7 @@ bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = NULL);
 
 // Only works for armour/weapons/missiles
-const char* item_base_name(const item_def &item);
-const char* item_base_name(object_class_type basetype, unsigned char subtype);
+std::string item_base_name(const item_def &item);
+const char* weapon_base_name(unsigned char subtype);
 
 #endif

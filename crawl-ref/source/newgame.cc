@@ -1543,7 +1543,7 @@ static void choose_weapon( void )
         {
             int x = effective_stat_bonus(startwep[i]);
             cprintf("%c - %s%s" EOL, 'a' + i,
-                    item_base_name(OBJ_WEAPONS, startwep[i]),
+                    weapon_base_name(startwep[i]),
                     (x <= -4) ? " (not ideal)" : "" );
 
             if (Options.prev_weapon == startwep[i])
@@ -1558,7 +1558,7 @@ static void choose_weapon( void )
         {
             cprintf("; Enter - %s",
                     Options.prev_weapon == WPN_RANDOM ? "Random" :
-                    item_base_name(OBJ_WEAPONS, Options.prev_weapon));
+                    weapon_base_name(Options.prev_weapon));
         }
         cprintf(EOL);
             

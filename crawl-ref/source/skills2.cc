@@ -2337,7 +2337,7 @@ void wield_warning(bool newWeapon)
         return;
 
     // put the standard wep name in.
-    strcat(wepstr, item_base_name(wep));
+    strcat(wepstr, item_base_name(wep).c_str());
 
     // only warn about str/dex for non-launcher weapons
     if (!is_range_weapon( wep ))

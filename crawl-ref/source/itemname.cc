@@ -481,7 +481,7 @@ static const char *item_name_2(
                 strncat(buff, "vampiric ", ITEMNAME_SIZE );
         }                       // end if
 
-        strncat(buff, item_base_name(item), ITEMNAME_SIZE);
+        strncat(buff, item_base_name(item).c_str(), ITEMNAME_SIZE);
 
         if (item_type_known( item ))
         {
@@ -718,8 +718,7 @@ static const char *item_name_2(
             break;
         }               // end switch
 
-        standard_name_armour( item, tmp_buff );  // in randart.cc
-        strncat( buff, tmp_buff, ITEMNAME_SIZE );
+        strncat( buff, item_base_name(item).c_str(), ITEMNAME_SIZE );
 
         sparm = get_armour_ego_type( item );
 
