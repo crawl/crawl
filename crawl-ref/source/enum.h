@@ -533,7 +533,7 @@ enum cloud_type
     CLOUD_MIASMA,
     CLOUD_BLACK_SMOKE,
     CLOUD_MIST,
-    CLOUD_RANDOM = 98, 
+    CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
 

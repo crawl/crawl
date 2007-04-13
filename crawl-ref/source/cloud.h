@@ -24,4 +24,6 @@ void place_cloud(int cl_type, int ctarget_x, int ctarget_y, int cl_range,
 
 void manage_clouds(void);
 
+bool is_opaque_cloud(unsigned char cloud_idx);
+
 #endif

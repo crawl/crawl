@@ -264,3 +264,12 @@ void place_cloud(int cl_type, int ctarget_x,
         }
     }
 }                               // end place_cloud();
+
+bool is_opaque_cloud(unsigned char cloud_idx)
+{
+    if ( cloud_idx == EMPTY_CLOUD )
+        return false;
+    const int ctype = env.cloud[cloud_idx].type;
+    return ( ctype == CLOUD_BLACK_SMOKE ||
+             (ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM) );
+}

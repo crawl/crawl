@@ -35,6 +35,7 @@
 #include "externs.h"
 
 #include "command.h"
+#include "cloud.h"
 #include "clua.h"
 #include "debug.h"
 #include "delay.h"
@@ -1667,7 +1668,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy]))
+                if ( grid_is_opaque(gr[realx][realy]) ||
+                     is_opaque_cloud(env.cgrid[realx][realy]) )
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
