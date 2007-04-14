@@ -5857,7 +5857,9 @@ static void dig_vault_loose(
 
 static bool grid_needs_exit(int x, int y)
 {
-    return (!grid_is_solid(x, y) || grd[x][y] == DNGN_CLOSED_DOOR);
+    return (!grid_is_solid(x, y)
+            || grd[x][y] == DNGN_CLOSED_DOOR
+            || grd[x][y] == DNGN_SECRET_DOOR);
 }
 
 static void pick_float_exits(vault_placement &place,

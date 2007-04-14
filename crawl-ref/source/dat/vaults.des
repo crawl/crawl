@@ -4952,6 +4952,90 @@ xxccFc+cFccxx
 xxcc@c@c@ccxx
 ENDMAP
 
+#############################################################################
+# Centaur isle (Lemuel)
+
+NAME: centaur_isle
+TAGS: no_monster_gen
+ORIENT: float
+SUBST: ? = *$
+DEPTH: 6-12
+MONS: centaur
+MAP
+..........wwww.........
+.......wwwwwwww........
+....wwwwwwwwwwwwwww....
+.wwwwwwwwwwwwwwwwwwwww.
+wwwwwwww..wwwwwwwwwwwww
+wwwwww.11...wwwwwwwwwww
+wwwww........wwwwwwwwww
+wwwww...x=x..wwwwwwwwww
+wwww..11x.x..wwwwwwwww.
+.www...xx.x11wwwwwwwww.
+.www..xx??x.wwwwwwwww..
+.wwww.xx??x.wwwwwww....
+..wwww.xxxx.wwwwww.....
+...wwwwww..wwwww.......
+....wwwwwwwwwww........
+.......wwwwww..........
+ENDMAP
+
+#############################################################################
+# Insect pit (Lemuel)
+
+NAME: insect_pit
+ORIENT: float
+DEPTH: 5-12
+
+MONS: giant beetle w:20 / giant cockroach w:30 / butterfly w:20 / bumblebee / giant centipede / giant mite w:30 / giant mosquito / giant blowfly / scorpion / redback w:5
+
+MAP
+ccccccccccc+ccccccccccc
+c.....................c
+c.....................c
+c.....................c
+c.....................c
+c.....................c
+c.....vvvvvvvvvvv.....c
+c.....v111111111v.....c
+c.....v111111111v.....c
+c.....=111111111=.....c
+c.....v111111111v.....c
+c.....v111111111v.....c
+c.....vvvvvvvvvvv.....c
+c.....................c
+c.....................c
+c.....................c
+c.....................c
+c.....................c
+ccccccccccc+ccccccccccc
+ENDMAP
+
+#############################################################################
+# Troll bridge (Lemuel)
+
+NAME: troll_bridge
+DEPTH: 7-15
+ORIENT: float
+TAGS: no_pool_fixup
+MONS: troll w:50 / rock troll / iron troll w:5
+MAP
+xxxxx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwx...........................xxxxxx
+xwwwwwwwwwwwwwwwww.wwwwwwwwwww..xxxxxx
+xxwwwwwwwwwwwxxxxw.wwwwwwwwwwwwwwwwxxx
+xxwwwwwwwwwwwx11xw.wxxxxwwwwwwwwwwwwxx
+xxwwwwwwwwwwwx11=...=11xwwwwwwwwwwwwwx
+xxxwwwwwwwwwwxxxxw.wx11xwwwwwwwwwwwwwx
+xxxxxwwwwwwwwwwwww.wxxxxwwwwwwwwwwwwwx
+xxxxx...wwwwwwwwww.wwwwwwwwwwwwwwwwwwx
+xxxxx...........................xwwwwx
+xxxxx...........................xxwwwx
+xxxxx...........................xxwwwx
+xxxxx...........................xxxxxx
+ENDMAP
 
 #############################################################################
 
@@ -6452,6 +6536,34 @@ x11.2.11x
 xxxx+xxxx
 ENDMAP
 
+##############################################################################
+# Supply closet (Lemuel)
+
+NAME: supply_closet
+DEPTH: 1-9
+TAGS: no_monster_gen
+ITEM: potion of water w:20 / bread ration / meat ration / arrow / bolt / spear / any potion w:5
+SUBST: ? = +=
+MAP
+x?xx
+xddx
+xddx
+xxxx
+ENDMAP
+
+##############################################################################
+# Columned hall (Lemuel)
+
+NAME: columns_hall
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.............................
+..x..x..x..x..x..x..x..x..x..
+.............................
+..x..x..x..x..x..x..x..x..x..
+.............................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 #############################################################################
 # Pandemonium lesser demon vaults
