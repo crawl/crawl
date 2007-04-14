@@ -5277,3 +5277,8 @@ void player::mutate()
     else
         give_bad_mutation();
 }
+
+bool player::is_icy() const
+{
+    return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
+}

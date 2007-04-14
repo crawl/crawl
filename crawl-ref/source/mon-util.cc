@@ -308,7 +308,7 @@ bool mons_is_stationary(const monsters *mons)
 
 bool mons_is_icy(const monsters *mons)
 {
-    return (mons_is_icy(mons->type));
+    return (mons->is_icy());
 }
 
 bool mons_is_icy(int mtype)
@@ -3717,6 +3717,11 @@ void monsters::mutate()
         return;
 
     monster_polymorph(this, RANDOM_MONSTER, 100);
+}
+
+bool monsters::is_icy() const
+{
+    return (mons_is_icy(type));
 }
 
 /////////////////////////////////////////////////////////////////////////

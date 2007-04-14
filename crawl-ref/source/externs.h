@@ -144,6 +144,7 @@ public:
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
+    virtual bool is_icy() const = 0;
     virtual bool invisible() const = 0;
     virtual void go_berserk(bool intentional) = 0;
     virtual void mutate() = 0;
@@ -718,6 +719,7 @@ public:
     bool cannot_speak() const;
     bool invisible() const;
     bool can_see_invisible() const;
+    bool is_icy() const;
 
     kill_category kill_alignment() const;
 
@@ -1001,6 +1003,7 @@ public:
     int levitates() const;
     bool invisible() const;
     bool can_see_invisible() const;
+    bool is_icy() const;
     bool paralysed() const;
     bool confused() const;
     bool asleep() const;

@@ -1537,7 +1537,7 @@ bool melee_attack::apply_damage_brand()
     {
     case SPWPN_FLAMING:
         res = fire_res_apply_cerebov_downgrade( defender->res_fire() );
-        calc_elemental_brand_damage(res, "burn");
+        calc_elemental_brand_damage(res, defender->is_icy()? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         break;
 
