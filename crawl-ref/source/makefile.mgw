@@ -43,7 +43,7 @@ CFOTHERS := -fsigned-char \
 		-fstrict-aliasing \
 		-pedantic \
 		-D$(OS_TYPE) $(EXTRA_FLAGS) \
-		-DWINMM_PLAY_SOUNDS
+		-DWINMM_PLAY_SOUNDS -DCLUA_BINDINGS
 
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
