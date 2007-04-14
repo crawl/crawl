@@ -60,12 +60,12 @@
 #include "view.h"
 #include "stash.h"
 
-static bool handle_special_ability(struct monsters *monster, bolt & beem);
-static bool handle_pickup(struct monsters *monster);
-static void handle_behaviour(struct monsters *monster);
-static void mons_in_cloud(struct monsters *monster);
-static void monster_move(struct monsters *monster);
-static bool plant_spit(struct monsters *monster, struct bolt &pbolt);
+static bool handle_special_ability(monsters *monster, bolt & beem);
+static bool handle_pickup(monsters *monster);
+static void handle_behaviour(monsters *monster);
+static void mons_in_cloud(monsters *monster);
+static void monster_move(monsters *monster);
+static bool plant_spit(monsters *monster, bolt &pbolt);
 static int map_wand_to_mspell(int wand_type);
 
 // [dshaligram] Doesn't need to be extern.
@@ -176,7 +176,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
 // Sets the colour of a mimic to match its description... should be called
 // whenever a mimic is created or teleported. -- bwr
-int get_mimic_colour( struct monsters *mimic )
+int get_mimic_colour( const monsters *mimic )
 {
     ASSERT( mimic != NULL && mons_is_mimic( mimic->type ) );
 
@@ -248,7 +248,7 @@ bool curse_an_item( char which, char power )
     return (true);
 }
 
-static void monster_drop_ething(struct monsters *monster, 
+static void monster_drop_ething(monsters *monster, 
                                 bool mark_item_origins = false)
 {
     /* drop weapons & missiles last (ie on top) so others pick up */
@@ -857,11 +857,11 @@ void monster_cleanup(monsters *monster)
         you.pet_target = MHITNOT;
 }                               // end monster_cleanup()
 
-static bool jelly_divide(struct monsters * parent)
+static bool jelly_divide(monsters * parent)
 {
     int jex = 0, jey = 0;       // loop variables {dlb}
     bool foundSpot = false;     // to rid code of hideous goto {dlb}
-    struct monsters *child = 0; // NULL - value determined with loop {dlb}
+    monsters *child = NULL;     // value determined with loop {dlb}
 
     if (!mons_class_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
         return (false);
@@ -941,7 +941,7 @@ static bool jelly_divide(struct monsters * parent)
 // if you're invis and throw/zap whatever, alerts menv to your position
 void alert_nearby_monsters(void)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
+    monsters *monster = 0;       // NULL {dlb}
 
     for (int it = 0; it < MAX_MONSTERS; it++)
     {
@@ -961,7 +961,7 @@ void alert_nearby_monsters(void)
     }
 }                               // end alert_nearby_monsters()
 
-static bool valid_morph( struct monsters *monster, int new_mclass )
+static bool valid_morph( monsters *monster, int new_mclass )
 {
     unsigned char current_tile = grd[monster->x][monster->y];
 
@@ -1179,7 +1179,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     return (tries < 150);
 }                               // end random_near_space()
 
-static bool habitat_okay( struct monsters *monster, int targ )
+static bool habitat_okay( const monsters *monster, int targ )
 {
     return (monster_habitable_grid(monster, targ));
 }
@@ -1201,7 +1201,7 @@ static bool habitat_okay( struct monsters *monster, int targ )
 // to worse, at least consider making the Swap spell not work
 // when the player is over lava or water (if the player want's to
 // swap pets to their death, we can let that go). -- bwr
-bool swap_places(struct monsters *monster)
+bool swap_places(monsters *monster)
 {
     int loc_x = you.x_pos;
     int loc_y = you.y_pos;
@@ -1279,7 +1279,7 @@ bool swap_places(struct monsters *monster)
     return (swap);
 }                               // end swap_places()
 
-void print_wounds(struct monsters *monster)
+void print_wounds(monsters *monster)
 {
     // prevents segfault -- cannot use info[] here {dlb}
     char str_wound[INFO_SIZE];
@@ -1357,7 +1357,7 @@ bool wounded_damaged(int wound_class)
 // 2. Call handle_behaviour to re-evaluate AI state and target x,y
 //
 //---------------------------------------------------------------
-void behaviour_event( struct monsters *mon, int event, int src, 
+void behaviour_event( monsters *mon, int event, int src, 
                       int src_x, int src_y )
 {
     bool isSmart = (mons_intel(mon->type) > I_ANIMAL);
@@ -1482,7 +1482,7 @@ void behaviour_event( struct monsters *mon, int event, int src,
 // 2. Sets monster targetx,y based on current foe
 //
 //---------------------------------------------------------------
-static void handle_behaviour(struct monsters *mon)
+static void handle_behaviour(monsters *mon)
 {
     bool changed = true;
     bool isFriendly = mons_friendly(mon);
@@ -1849,7 +1849,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
     return (false);
 }                               // end simple_monster_message()
 
-static bool handle_enchantment(struct monsters *monster)
+static bool handle_enchantment(monsters *monster)
 {
     // Yes, this is the speed we want.  This function will be called in
     // two circumstances: (1) the monster can move and has enough energy, 
@@ -1891,7 +1891,7 @@ static bool handle_enchantment(struct monsters *monster)
 // Move the monster closer to its target square.
 //
 //---------------------------------------------------------------
-static void handle_movement(struct monsters *monster)
+static void handle_movement(monsters *monster)
 {
     int dx, dy;
 
@@ -1961,7 +1961,7 @@ static void handle_movement(struct monsters *monster)
 // next to the player.
 //
 //---------------------------------------------------------------
-static void handle_nearby_ability(struct monsters *monster)
+static void handle_nearby_ability(monsters *monster)
 {
     if (!mons_near( monster )
         || monster->behaviour == BEH_SLEEP
@@ -2070,7 +2070,7 @@ static void handle_nearby_ability(struct monsters *monster)
 // $$$ not sure what to say here...
 //
 //---------------------------------------------------------------
-static bool handle_special_ability(struct monsters *monster, bolt & beem)
+static bool handle_special_ability(monsters *monster, bolt & beem)
 {
     bool used = false;
 
@@ -2110,7 +2110,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 
         for (int i = 0; i < MAX_MONSTERS; i++)
         {
-            struct monsters *targ = &menv[i];
+            monsters *targ = &menv[i];
 
             if (targ->type == -1 || targ->type == NON_MONSTER)
                 continue;
@@ -2391,7 +2391,7 @@ static bool handle_special_ability(struct monsters *monster, bolt & beem)
 // the monster imbibed.
 //
 //---------------------------------------------------------------
-static bool handle_potion(struct monsters *monster, bolt & beem)
+static bool handle_potion(monsters *monster, bolt & beem)
 {
 
     // yes, there is a logic to this ordering {dlb}:
@@ -2475,7 +2475,7 @@ static bool handle_potion(struct monsters *monster, bolt & beem)
     }
 }                               // end handle_potion()
 
-static bool handle_reaching(struct monsters *monster)
+static bool handle_reaching(monsters *monster)
 {
     bool       ret = false;
     const int  wpn = monster->inv[MSLOT_WEAPON];
@@ -2531,7 +2531,7 @@ static bool handle_reaching(struct monsters *monster)
 // the monster read something.
 //
 //---------------------------------------------------------------
-static bool handle_scroll(struct monsters *monster)
+static bool handle_scroll(monsters *monster)
 {
     // yes, there is a logic to this ordering {dlb}:
     if (monster->has_ench(ENCH_CONFUSION) 
@@ -2606,7 +2606,7 @@ static bool handle_scroll(struct monsters *monster)
 // monster zapped.
 //
 //---------------------------------------------------------------
-static bool handle_wand(struct monsters *monster, bolt &beem)
+static bool handle_wand(monsters *monster, bolt &beem)
 {
     // yes, there is a logic to this ordering {dlb}:
     if (monster->behaviour == BEH_SLEEP)
@@ -3243,7 +3243,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
 // the monster hurled.
 //
 //---------------------------------------------------------------
-static bool handle_throw(struct monsters *monster, bolt & beem)
+static bool handle_throw(monsters *monster, bolt & beem)
 {
     // yes, there is a logic to this ordering {dlb}:
     if (monster->has_ench(ENCH_CONFUSION) 
@@ -3382,7 +3382,7 @@ static void monster_regenerate(monsters *monster)
 static void handle_monster_move(int i, monsters *monster)
 {
     bool brkk = false;
-    struct bolt beem;
+    bolt beem;
     FixedArray <unsigned int, 19, 19> show;
 
     if (monster->hit_points > monster->max_hit_points)
@@ -3733,7 +3733,7 @@ void handle_monsters(void)
 
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        struct monsters *monster = &menv[i];
+        monsters *monster = &menv[i];
 
         if (monster->type == -1 || immobile_monster[i])
             continue;
@@ -3804,7 +3804,7 @@ static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
 // Returns false if monster doesn't spend any time pickup up
 //
 //---------------------------------------------------------------
-static bool handle_pickup(struct monsters *monster)
+static bool handle_pickup(monsters *monster)
 {
     // single calculation permissible {dlb}
     char str_pass[ ITEMNAME_SIZE ];
@@ -4324,7 +4324,31 @@ void mons_check_pool(monsters *mons, int killer)
     }
 }
 
-static void monster_move(struct monsters *monster)
+static bool is_trap_safe(const monsters *monster, const trap_struct &trap)
+{
+    // Dumb monsters don't care at all.
+    if (mons_intel(monster->type) == I_PLANT)
+        return (true);
+
+    // Healthy monsters don't mind a little pain. XXX: Smart humanoids
+    // with low hp should probably not try to go through high-damage
+    // traps.
+    if (monster->hit_points >= monster->max_hit_points / 2)
+        return (true);
+
+    // Monsters are not afraid of non-mechanical traps. XXX: If we add
+    // any non-mechanical traps that can damage monsters, must add
+    // check here.
+    const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
+
+    // Friendly monsters don't enjoy Zot trap perks, handle accordingly.
+    if (mons_friendly(monster))
+        return (mechanical? mons_flies(monster) : trap.type != TRAP_ZOT);
+    else
+        return (!mechanical || mons_flies(monster));
+}
+
+static void monster_move(monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
     int count_x, count_y, count;
@@ -4492,11 +4516,8 @@ static void monster_move(struct monsters *monster)
             // wandering through a trap is OK if we're pretty healthy,
             // really stupid, or immune to the trap
             const int which_trap = trap_at_xy(targ_x,targ_y);
-            if ( which_trap >= 0 &&
-                 mons_intel(monster->type) != I_PLANT &&
-                 monster->hit_points < monster->max_hit_points / 2 &&
-                 (!mons_flies(monster) ||
-                  trap_category(env.trap[which_trap].type) != DNGN_TRAP_MECHANICAL) )
+            if (which_trap >= 0 &&
+                 !is_trap_safe(monster, env.trap[which_trap]))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -4829,7 +4850,7 @@ forget_it:
         do_move_monster(monster, mmov_x, mmov_y);
 }                               // end monster_move()
 
-static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
+static bool plant_spit(monsters *monster, bolt &pbolt)
 {
     bool didSpit = false;
 
@@ -4867,11 +4888,11 @@ static bool plant_spit(struct monsters *monster, struct bolt &pbolt)
     return (didSpit);
 }                               // end plant_spit()
 
-static void mons_in_cloud(struct monsters *monster)
+static void mons_in_cloud(monsters *monster)
 {
     int wc = env.cgrid[monster->x][monster->y];
     int hurted = 0;
-    struct bolt beam;
+    bolt beam;
 
     const int speed = ((monster->speed > 0) ? monster->speed : 10);
     bool wake = false;
@@ -5136,7 +5157,7 @@ unsigned int monster_index(const monsters *monster)
     return (monster - menv.buffer());
 }                               // end monster_index()
 
-bool hurt_monster(struct monsters * victim, int damage_dealt)
+bool hurt_monster(monsters * victim, int damage_dealt)
 {
     bool just_a_scratch = true;
 
@@ -5149,7 +5170,7 @@ bool hurt_monster(struct monsters * victim, int damage_dealt)
     return (!just_a_scratch);
 }                               // end hurt_monster()
 
-bool heal_monster(struct monsters * patient, int health_boost,
+bool heal_monster(monsters * patient, int health_boost,
                   bool permit_growth)
 {
     if (mons_is_statue(patient->type))
@@ -5258,7 +5279,7 @@ void seen_monster(monsters *monster)
 // if monster was moved.
 //
 //---------------------------------------------------------------
-bool shift_monster( struct monsters *mon, int x, int y )
+bool shift_monster( monsters *mon, int x, int y )
 {
     bool found_move = false;
 

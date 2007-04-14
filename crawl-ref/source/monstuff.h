@@ -24,8 +24,8 @@
 #include "externs.h"
 // for definition of type monsters {dlb}
 
-void get_mimic_item( const struct monsters *mimic, item_def & item );
-int  get_mimic_colour( struct monsters *mimic );
+void get_mimic_item( const monsters *mimic, item_def & item );
+int  get_mimic_colour( const monsters *mimic );
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
