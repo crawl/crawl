@@ -117,7 +117,6 @@ mingw:
 
 crawl_unix:
 	$(MAKE) "LUA_A=liblua.a" \
-	"RANLIB=strip --strip-unneeded" \
 	"MYCFLAGS=" "MYLIBS=" "MYLDFLAGS=" liblua.a
 
 crawl_mingw: crawl_unix
