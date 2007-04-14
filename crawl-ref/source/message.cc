@@ -564,8 +564,7 @@ void more(void)
         keypress = getch();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n');
 
-    mesclr( !Options.delay_message_clear &&
-            Message_Line >= get_message_window_height() - 1 );
+    mesclr(true);
 }                               // end more()
 
 static bool is_channel_dumpworthy(int channel)
