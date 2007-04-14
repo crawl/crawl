@@ -458,6 +458,11 @@ int mons_shouts(int mc)
     return (u);
 }                               // end mons_shouts()
 
+const char *mons_longDesc(int mc) 
+{
+    return smc->longDesc;
+}
+
 bool mons_is_unique( int mc )
 {
     return (mons_class_flag(mc, M_UNIQUE));

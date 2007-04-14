@@ -30,6 +30,7 @@
     - row 7: AC, evasion, speed, speed_inc, sec(spell), corpse_thingy,
              zombie size, shouts, intel
     - row 8: gmon_use class, body size
+    - row 9: long description
 
  - Some further explanations:
 
@@ -116,7 +117,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_HUGE
+    MONUSE_NOTHING, SIZE_HUGE,
+    "Program bug"
 }
 ,
 
@@ -129,7 +131,8 @@
     { {AT_BITE, AF_POISON, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     4, 10, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A black ant with poisonous pincers, about the size of a large dog."
 }
 ,
 
@@ -141,7 +144,8 @@
     { {AT_HIT, AF_PLAIN, 1}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 2, 3, 0 },
     1, 14, 30, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A huge black bat."
 }
 ,
 
@@ -153,7 +157,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     3, 7, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid with the torso of a human atop the body of a large horse."
 }
 ,
 
@@ -165,7 +170,8 @@
     { {AT_HIT, AF_PLAIN, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "The Red Devil is slightly shorter than a human, but muscular and covered in spikes and horns. Two short wings sprout from its shoulders."
 }
 ,
 
@@ -177,7 +183,8 @@
     { {AT_HIT, AF_PLAIN, 18}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     3, 4, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT2, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT,
+    "A large, two headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about."
 }
 ,
 
@@ -189,7 +196,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     1, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A lumpy grey fungus, growing well in the dank underground dungeon."
 }
 ,
 
@@ -201,7 +209,8 @@
     { {AT_HIT, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 2, 4, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "A race of short, ugly and unfriendly humanoids."
 }
 ,
 
@@ -213,7 +222,8 @@
     { {AT_BITE, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     2, 13, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A fearsome hunting dog."
 }
 ,
 
@@ -226,7 +236,8 @@
     { {AT_HIT, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 3, 0 },
     3, 14, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE,
+    "A small, ugly minor demon."
 }
 ,
 
@@ -238,7 +249,8 @@
     { {AT_BITE, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     2, 12, 14, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A small, dog-like scavenger. Packs of these creatures roam the underworld, searching for carrion to devour."
 }
 ,
 
@@ -250,7 +262,8 @@
     { {AT_STING, AF_POISON, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     2, 18, 20, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A giant bee, bearing a deadly barb which can sting repeatedly."
 }
 ,
 
@@ -262,7 +275,8 @@
     { {AT_BITE, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     1, 5, 5, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A small, powerless larva of killer bee."
 }
 ,
 
@@ -274,7 +288,8 @@
     { {AT_BITE, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     5, 7, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey."
 }
 ,
 
@@ -287,7 +302,8 @@
     { {AT_HIT, AF_ROT, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A vile undead creation of the most unholy necromancy, these creatures are made from the decaying corpses of humanoid creatures.  They exist to spread disease and decay, and gain power from the decaying corpses of other beings."
 }
 ,
 
@@ -299,7 +315,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 4, 6, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An ugly subterranean race, orcs combine the worst features of humans, pigs, and several other unpleasant creatures."
 }
 ,
 
@@ -313,7 +330,8 @@
     { {AT_HIT, AF_BLINK, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     3, 13, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A transparent man-like undead spirit."
 }
 ,
 
@@ -325,7 +343,8 @@
     { {AT_BITE, AF_DRAIN_DEX, 3}, {AT_CLAW, AF_DRAIN_DEX, 2}, {AT_CLAW, AF_DRAIN_DEX, 2}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 2, 6, 0 },
     5, 17, 13, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A small twisted demon with long sharply pointed tail."
 }
 ,
 
@@ -337,7 +356,8 @@
     { {AT_BITE, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 1, 3, 0 },
     1, 10, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "Rats which have grown large and aggressive in the pestilential dungeon environment."
 }
 ,
 
@@ -349,7 +369,8 @@
     { {AT_STING, AF_POISON_MEDIUM, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     5, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A giant black scorpion, its body covered in thick armour plating, and its tail tipped by a nasty venomous sting."
 }
 ,
 
@@ -364,7 +385,8 @@
     { 50, 0, 0, 0 },
     { 10, 5, 5, 0 },
     3, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_HUGE
+    MONUSE_NOTHING, SIZE_HUGE,
+    ""
 }
 ,
 ****************************************************************** */
@@ -377,7 +399,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "An ugly thing. Yuck."
 }
 ,
 
@@ -389,7 +412,8 @@
     { {AT_HIT, AF_FIRE, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     0, 5, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A swirling cloud of flame."
 }
 ,
 
@@ -401,7 +425,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     1, 5, 6, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A giant worm, with unusually large teeth."
 }
 ,
 
@@ -414,7 +439,8 @@
     { {AT_HIT, AF_PLAIN, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 2, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A hideous form, created or summoned by some arcane process."
 }
 ,
 
@@ -426,7 +452,8 @@
     { {AT_STING, AF_PARALYSE, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     5, 14, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A giant wasp covered with thick plates of yellow chitinous armour."
 }
 ,
 
@@ -439,7 +466,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 5, 5, 0 },
     0, 4, 5, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A corpse raised to undeath by necromancy."
 }
 ,
 
@@ -451,7 +479,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 6, 5, 0 },
     10, 20, 15, 7, MST_ANGEL, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A winged holy being of unnatural beauty. It has an aura of brilliant white light. "
 }
 ,
 
@@ -463,7 +492,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 7, 6, 0 },
     10, 3, 5, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A huge black beetle with great crunching mandibles and very hard chitinous armour."
 }
 ,
 
@@ -475,7 +505,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     5, 3, 7, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT,
+    "A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopes throw boulders with fearsome accuracy."
 }
 ,
 
@@ -487,7 +518,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 13}, {AT_CLAW, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 5, 5, 0 },
     10, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A great reptilian beast, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw."
 }
 ,
 
@@ -501,7 +533,8 @@
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     1, 4, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT2, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE,
+    "A huge ogre with two heads on top of a bloated ogre body. It is capable of holding a weapon in each giant hand."
 }
 ,
 
@@ -513,7 +546,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 3, 5, 0 },
       15, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings."
 }
 ,
 
@@ -525,7 +559,8 @@
     { {AT_HIT, AF_PLAIN, 1}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 0, 0, 1 },
     0, 10, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A volatile floating ball of spores, covered in knobbly rhizome growths."
 }
 ,
 
@@ -537,7 +572,10 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 4, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A larger and stronger relative of the goblin.$$\
+\"Consistency is the hobgoblin of small minds\"$\
+-Ralph Waldo Emerson"\
 }
 ,
 
@@ -549,7 +587,8 @@
     { {AT_CLAW, AF_COLD, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     5, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A terrible creature, formed of snow and crystalline ice. Its feet leave puddles of icy water on the floor."
 }
 ,
 
@@ -561,7 +600,8 @@
     { {AT_HIT, AF_ACID, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 5, 5, 0 },
     0, 2, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_MEDIUM
+    MONUSE_EATS_ITEMS, SIZE_MEDIUM,
+    "A pulsating mass of acidic protoplasm. It can and will eat almost anything, and grows a little each time..."
 }
 ,
 
@@ -573,7 +613,8 @@
     { {AT_HIT, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 2, 3, 0 },
     2, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "Reputedly the creation of an ancient demon-god, kobolds are small goblin-like creatures with canine heads."
 }
 ,
 
@@ -585,7 +626,8 @@
     { {AT_TOUCH, AF_DRAIN_XP, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 2, 4, 0 },
     10, 10, 10, 7, MST_LICH_I, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  These undead creatures can wield great magic and are best avoided by all but the most confident."
 }
 ,
 
@@ -597,7 +639,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 5, 3, 0 },
     3, 6, 6, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse. It radiates a malign aura to those who intrude on its domain."        
 }
 ,
 
@@ -609,7 +652,8 @@
     { {AT_HIT, AF_PLAIN, 19}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     6, 14, 15, 7, MST_GUARDIAN_NAGA, CE_MUTAGEN_RANDOM, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. "
 }
 ,
 
@@ -621,7 +665,8 @@
     { {AT_HIT, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     1, 6, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE
+    MONUSE_STARTING_EQUIPMENT, SIZE_LARGE,
+    "A larger, uglier and fatter relative of orcs and goblins."
 }
 ,
 
@@ -633,7 +678,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     10, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "Few plants can grow in the unpleasant dungeon environment, but some have managed to adapt and even thrive underground in the absence of the sun."
 }
 ,
 
@@ -645,7 +691,8 @@
     { {AT_STING, AF_POISON_NASTY, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "Even larger and more dangerous-looking than its offspring, this creature wants you out of its hive. Now!"
 }
 ,
 
@@ -657,7 +704,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     10, 14, 10, 7, MST_RAKSHASA, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things."
 }
 ,
 
@@ -669,7 +717,8 @@
     { {AT_BITE, AF_POISON, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     1, 15, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "The common dungeon snake."
 }
 ,
 
@@ -681,7 +730,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A huge, nasty-looking creature. Its thick and knobbly hide seems to heal almost instantly from most wounds."
 }
 ,
 
@@ -693,7 +743,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     5, 10, 30, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "These creatures are usually unseen by the eyes of most, and those few who have seen them would rather not have."
 }
 ,
 
@@ -705,7 +756,8 @@
     { {AT_BITE, AF_VAMPIRIC, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     10, 10, 10, 7, MST_VAMPIRE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A powerful undead."
 }
 ,
 
@@ -717,7 +769,8 @@
     { {AT_HIT, AF_DRAIN_XP, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     10, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "This undead spirit appears as a cloud of black mist surrounding an insubstantial skeletal form. Its eyes burn bright with unholy malevolence."
 }
 ,
 
@@ -730,7 +783,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 2, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A huge and hideous form, created or summoned by some arcane process."
 }
 ,
 
@@ -742,7 +796,8 @@
     { {AT_HIT, AF_PLAIN, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     4, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "The common dungeon yak, covered in shaggy yak hair and bearing a nasty pair of yak horns."
 }
 ,
 
@@ -755,7 +810,8 @@
     { {AT_HIT, AF_PLAIN, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     8, 5, 5, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A large corpse raised to undeath by necromancy."
 }
 ,
 
@@ -767,7 +823,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 4, 6, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An armoured orc, obviously experienced in the ways of hacking other creatures apart."
 }
 ,
 
@@ -779,7 +836,8 @@
     { {AT_HIT, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     2, 13, 10, 7, MST_KOBOLD_DEMONOLOGIST, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "A kobold who has learned to summon and direct demons."
 }
 ,
 
@@ -791,7 +849,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 4, 0 },
     1, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "While orcs are generally quite stupid, occasionally one develops an aptitude for magic."
 }
 ,
 
@@ -803,7 +862,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 4, 7, 0 },
     2, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A heavily armoured orc, covered in scars from many past battles."
 }
 ,
 
@@ -818,7 +878,8 @@
     { 0, 0, 0, 0 },
     { 10, 5, 5, 0 },
     3, 3, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_HUGE
+    MONUSE_NOTHING, SIZE_HUGE,
+    ""
 }
 ,
 ****************************************************************** */
@@ -831,7 +892,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     5, 10, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A dragon-like creature with long sharply pointed tail.  Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with."
 }
 ,
 
@@ -843,7 +905,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     3, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "An unusually large kobold."
 }
 ,
 
@@ -855,7 +918,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     0, 1, 3, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A giant eyeball, with a captivating stare."
 }
 ,
 
@@ -867,7 +931,8 @@
     { {AT_HIT, AF_DRAIN_XP, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An ancient warrior, kept in a state of undeath by its will to live."
 }
 ,
 
@@ -879,7 +944,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     10, 0, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A vicious plant, dripping with vitriol."
 }
 ,
 
@@ -891,7 +957,8 @@
     { {AT_BITE, AF_POISON_MEDIUM, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     3, 10, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_HISS, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A large hairy spider with vicious mandibles, roaming the dungeon in search of food."
 }
 ,
 
@@ -903,7 +970,8 @@
     { {AT_HIT, AF_DRAIN_STR, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     12, 10, 10, 7, BLACK, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "An wisp of unliving shadow, drifting on the edge of vision."
 }
 ,
 
@@ -915,7 +983,8 @@
     { {AT_HIT, AF_HUNGER, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     0, 17, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "The undead form of someone who died of starvation, this creature wants the same thing to happen to you!"
 }
 ,
 
@@ -927,7 +996,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     3, 1, 5, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "These hovering horrors are especially loathed by wizards."
 }
 ,
 
@@ -939,7 +1009,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     0, 25, 25, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A large multicoloured butterfly with beautifully patterned wings."
 }
 ,
 
@@ -951,7 +1022,8 @@
     { {AT_SPORE, AF_CONFUSE, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     5, 0, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A large, fat mushroom."
 }
 ,
 
@@ -963,7 +1035,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     10, 5, 10, 7, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "A huge and muscular figure engulfed in a cloud of searing flame."
 }
 ,
 
@@ -975,7 +1048,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 3, 0 },
     1, 5, 10, 7, MST_BRAIN_WORM, CE_POISONOUS, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A slimy mauve worm with a greatly distended head."
 }
 ,
 
@@ -987,7 +1061,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     2, 4, 10, 7, MST_GIANT_ORANGE_BRAIN, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate."
 }
 ,
 
@@ -999,7 +1074,8 @@
     { {AT_BITE, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     20, 2, 3, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A huge grey beetle with an almost impenetrable rocky carapace."
 }
 ,
 
@@ -1011,7 +1087,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     10, 17, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "Unholy magic keeps a disembodied undead skull hovering above the floor. It has a nasty set of teeth."
 }
 ,
 
@@ -1023,7 +1100,8 @@
     { {AT_BITE, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     6, 13, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_BARK, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A huge black dog, with glowing red eyes and smoke pouring from its fanged mouth."
 }
 ,
 
@@ -1035,7 +1113,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_BUTT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     5, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_BELLOW, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A large muscular human with the head of a bull. It makes its home in secluded labyrinths."
 }
 ,
 
@@ -1047,7 +1126,8 @@
     { {AT_BITE, AF_PLAIN, 17}, {AT_CLAW, AF_PLAIN, 17}, {AT_CLAW, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 5, 5, 0 },
     10, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "Like a normal dragon, only white and covered in frost."
 }
 ,
 
@@ -1059,7 +1139,8 @@
     { {AT_HIT, AF_PLAIN, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     1, 4, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "An icky glob of slime, which slithers along the ground."
 }
 ,
 
@@ -1071,7 +1152,8 @@
     { {AT_HIT, AF_COLD, 19}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     12, 10, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A cloud of freezing air surrounding an incorporeal skeletal form."
 }
 ,
 
@@ -1084,7 +1166,8 @@
     { {AT_HIT, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 0, 0, 1 },
     0, 30, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_PLANT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things."
 }
 ,
 
@@ -1096,7 +1179,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     10, 3, 10, 7, MST_GREAT_ORB_OF_EYES, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A levitating ball, covered in malignant eyes."
 }
 ,
 
@@ -1108,7 +1192,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     5, 10, 13, 7, MST_BURNING_DEVIL, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A frightful demon, covered in roaring hellfire."
 }
 ,
 
@@ -1120,7 +1205,8 @@
     { {AT_HIT, AF_ROT, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     2, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous decaying form."
 }
 ,
 
@@ -1132,7 +1218,8 @@
     { {AT_HIT, AF_PLAIN, 8}, {AT_HIT, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     12, 12, 13, 7, MST_TORMENTOR, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "This malign devil is covered in all manner of claws, spines and cruel hooks."
 }
 ,
 
@@ -1144,7 +1231,8 @@
     { {AT_HIT, AF_PLAIN, 32}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     15, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "A skeletal form wielding a giant scythe."
 }
 ,
 
@@ -1156,7 +1244,8 @@
     { {AT_HIT, AF_DRAIN_XP, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     18, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "This greater demon looks like a shadow gliding through the air towards you. It radiates an intense aura of negative power."
 }
 ,
 
@@ -1168,7 +1257,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     7, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "A small humanoid demon covered in brown hair. Watch out - it may have fleas!"
 }
 ,
 
@@ -1180,7 +1270,8 @@
     { {AT_HIT, AF_COLD, 16}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     12, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A man-sized demon covered in glittering ice."
 }
 ,
 
@@ -1192,7 +1283,8 @@
     { {AT_HIT, AF_PLAIN, 21}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     14, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A strange and nasty blue thing. It looks cold."
 }
 ,
 
@@ -1205,7 +1297,8 @@
     { {AT_CLAW, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     0, 0, 0, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_RANDOM, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A weird and hideous cross between beast and human."
 }
 ,
 
@@ -1217,7 +1310,8 @@
     { {AT_HIT, AF_PLAIN, 14}, {AT_HIT, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     16, 8, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREECH, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous humanoid figure with metal skin."
 }
 ,
 
@@ -1229,7 +1323,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A shapeshifter who has lost control over its transformations, and is constantly changing form."
 }
 ,
 
@@ -1241,7 +1336,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A weird creature with the power to change its form. It is very rarely observed alive in its natural state."
 }
 ,
 
@@ -1253,7 +1349,8 @@
     { {AT_BITE, AF_POISON, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     1, 7, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A large arachnid with vicious poisoned mouth-parts."
 }
 ,
 
@@ -1265,7 +1362,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 5, 5, 0 },
     5, 10, 10, 7, MST_STEAM_DRAGON, CE_CLEAN, Z_BIG, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A relatively small grey dragon, with steam pouring from its mouth."
 }
 ,
 
@@ -1277,7 +1375,8 @@
     { {AT_HIT, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     4, 8, 8, 7, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A very ugly thing. Double yuck."
 }
 ,
 
@@ -1289,7 +1388,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 2, 3, 0 },
     5, 12, 10, 7, MST_ORC_SORCERER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An orc who draws magical power from Hell."
 }
 ,
 
@@ -1301,7 +1401,8 @@
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     2, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SCREECH, I_ANIMAL, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A large creature with the hindquarters of a horse and the wings, head, and talons of a great eagle."
 }
 ,
 
@@ -1313,7 +1414,8 @@
     { {AT_BITE, AF_PLAIN, 18}, {AT_CLAW, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     4, 6, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SCREECH, I_ANIMAL, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+        "A large creature with the hindquarters of a lion and the wings, head, and talons of a great eagle."
 }
 ,
 
@@ -1325,7 +1427,8 @@
     { {AT_BITE, AF_PLAIN, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     0, 5, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_ROAR, I_REPTILE, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A great reptilian beast, distantly related to the dragon. It has many heads, and the potential to grow many more!"
 }
 ,
 
@@ -1338,7 +1441,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A skeleton compelled to unlife by the exercise of necromancy."
 }
 ,
 
@@ -1351,7 +1455,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 0, 0, 0, 0 },
     0, 0, 0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A skeleton compelled to unlife by the exercise of necromancy."
 }
 ,
 
@@ -1364,7 +1469,8 @@
     { {AT_HIT, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 6, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A heavily armoured warrior, in league with the powers of Hell."
 }
 ,
 
@@ -1376,7 +1482,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 2, 4, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A wizard specializing in the practices of necromantic magic."
 }
 ,
 
@@ -1388,7 +1495,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 2, 4, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An rather eccentric person, dabbling in all sorts of arcanities"
 }
 ,
 
@@ -1400,7 +1508,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 4, 0 },
     1, 10, 10, 7, MST_ORC_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It continually mumbles strange prayers. You should hope that they remain unheard."
 }
 ,
 
@@ -1412,7 +1521,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 4, 0 },
     1, 12, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An exalted servant of the orc god."
 }
 ,
 
@@ -1429,7 +1539,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A remarkably nondescript person.  How odd!"
 }
 ,
 
@@ -1441,7 +1552,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 4, 5, 0 },
     2, 9, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A taller and better equipped relative of goblins and orcs, somewhat doglike in appearance."
 }
 ,
 
@@ -1453,7 +1565,8 @@
     { {AT_HIT, AF_PLAIN, 11}, {AT_HIT, AF_PLAIN, 11}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 7, 3, 0 },
     7, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A huge animated clay statue."
 }
 ,
 
@@ -1465,7 +1578,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 6, 3, 0 },
     5, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An animated wooden statue."
 }
 ,
 
@@ -1477,7 +1591,8 @@
     { {AT_HIT, AF_PLAIN, 28}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 7, 4, 0 },
     12, 4, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An animated stone statue."
 }
 ,
 
@@ -1489,7 +1604,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 7, 4, 0 },
     15, 3, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An animated metal statue."
 }
 ,
 
@@ -1501,7 +1617,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 7, 4, 0 },
     22, 3, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An animated crystal statue."
 }
 ,
 
@@ -1513,7 +1630,8 @@
     { {AT_HIT, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 5, 3, 0 },
     8, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A huge animated statue made entirely from toenail clippings. Some people just have too much time on their hands."
 }
 ,
 
@@ -1525,7 +1643,8 @@
     { {AT_BITE, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     5, 10, 10, 7, MST_MOTTLED_DRAGON, CE_POISONOUS, Z_BIG, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A small dragon with strangely mottled scales."
 }
 ,
 
@@ -1537,7 +1656,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 5, 5, 0 },
     14, 4, 6, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A spirit drawn from the elemental plane of earth, which exists in this world by inhabiting a lump of earth and rocks."
 }
 ,
 
@@ -1549,7 +1669,8 @@
     { {AT_HIT, AF_FIRE, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     4, 12, 13, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A spirit drawn from the elemental plane of fire, which exists in this world as a brilliant column of raging flames."
 }
 ,
 
@@ -1561,7 +1682,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     2, 18, 25, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming."
 }
 ,
 
@@ -1575,7 +1697,8 @@
     { {AT_CLAW, AF_COLD, 25}, {AT_CLAW, AF_COLD, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 3, 5, 0 },
     15, 6, 10, 7, MST_ICE_FIEND, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "One of the most terrible denizens of the many Hells, the Ice Fiend is a huge icy figure, covered in frost and wreathed in freezing air."
 }
 ,
 
@@ -1587,7 +1710,8 @@
     { {AT_HIT, AF_DRAIN_XP, 25}, {AT_HIT, AF_DRAIN_XP, 15}, {AT_HIT, AF_DRAIN_XP, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 3, 5, 0 },
     15, 6, 10, 7, MST_SHADOW_FIEND, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveal a huge, horned skeleton."
 }
 ,
 
@@ -1599,7 +1723,8 @@
     { {AT_BITE, AF_POISON_MEDIUM, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     2, 15, 14, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A large brown snake."
 }
 ,
 
@@ -1611,7 +1736,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A huge lizard with great crunching jaws."
 }
 ,
 
@@ -1623,7 +1749,8 @@
     { {AT_HIT, AF_DRAIN_XP, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     12, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous translucent green undead spirit."
 }
 ,
 
@@ -1635,7 +1762,8 @@
     { {AT_HIT, AF_MUTATE, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     2, 6, 5, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A revolting glob of writhing flesh."
 }
 ,
 
@@ -1647,7 +1775,8 @@
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 5, 5, 0 },
     13, 10, 12, 7, MST_STORM_DRAGON, CE_CLEAN, Z_BIG, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A huge and very powerful dragon. Sparks crackle along its enormous scaly wings."
 }
 ,
 
@@ -1659,7 +1788,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     4, 4, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "Like a centaur, but half yak."
 }
 ,
 
@@ -1671,7 +1801,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 3, 5, 0 },
     9, 5, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A larger and beefier relative of the common dungeon yak. Its little red eyes gleam with hunger for living flesh."
 }
 ,
 
@@ -1683,7 +1814,8 @@
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     13, 6, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds."
 }
 ,
 
@@ -1695,7 +1827,8 @@
     { {AT_HIT, AF_PLAIN, 45}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 3, 5, 0 },
     12, 2, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT,
+    "A gigantic humanoid with grey skin almost as hard as rock. It carries several boulders - are you up for a game of 'catch'?"
 }
 ,
 
@@ -1707,7 +1840,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     0, 14, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous undead creature, with torn skin hanging from an emaciated body."
 }
 ,
 
@@ -1719,7 +1853,8 @@
     { {AT_STING, AF_POISON_MEDIUM, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     4, 15, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A very large and fat hairy bee."
 }
 ,
 
@@ -1731,7 +1866,8 @@
     { {AT_BITE, AF_POISON_STRONG, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     2, 12, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison."
 }
 ,
 
@@ -1743,7 +1879,8 @@
     { {AT_HIT, AF_BLINK, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 1, 2, 0 },
     20, 20, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A thin wisp of floating gas."
 }
 ,
 
@@ -1755,7 +1892,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 2, 3, 0 },
     0, 12, 10, 7, MST_STORM_DRAGON, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A normally invisible cloud of weird-looking vapour."
 }
 ,
 
@@ -1767,7 +1905,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     1, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "A rare breed of ogre, skilled in the use of magic."
 }
 ,
 
@@ -1779,7 +1918,8 @@
     { {AT_STING, AF_ACID, 32}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     10, 6, 9, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A great black worm, its many-segmented body covered in spiky plates of chitinous armour. Acidic venom drips from its toothy maw."
 }
 ,
 
@@ -1793,7 +1933,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 0, 0, 15 },
     10, 20, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A weapon dancing in the air."
 }
 ,
 
@@ -1805,7 +1946,8 @@
     { {AT_HIT, AF_PLAIN, 55}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 3, 5, 0 },
     10, 3, 10, 7, MST_TITAN, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "This lightning-limned humanoid is unusually large and powerful, even among giants."
 }
 ,
 
@@ -1817,7 +1959,8 @@
     { {AT_BITE, AF_PLAIN, 40}, {AT_CLAW, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 4, 4, 0 },
     15, 7, 10, 7, MST_GOLDEN_DRAGON, CE_POISONOUS, Z_BIG, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A great dragon covered in shining golden scales."
 }
 ,
 
@@ -1831,7 +1974,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 3, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_NORMAL,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -1847,7 +1991,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     8, 6, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_ROAR, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_GIANT
+    MONUSE_NOTHING, SIZE_GIANT,
+    "A small serpentine dragon with a pair of strong forelimbs.  Its thick scales give off an eerie green glow."
 }
 ,
 
@@ -1859,7 +2004,8 @@
     { {AT_BITE, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 5, 3, 0 },
     2, 1, 4, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A huge grey slug with folds of wrinkled skin."
 }
 ,
 
@@ -1871,7 +2017,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     4, 15, 17, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A vicious dog, trained to kill.  Its neck is protected by massive spiked collar."
 }
 ,
 
@@ -1883,7 +2030,8 @@
     { {AT_BITE, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 6, 0 },
     2, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A very large grey rat."
 }
 ,
 
@@ -1895,7 +2043,8 @@
     { {AT_BITE, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     5, 11, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A very large rat, with hair and skin of a most peculiar green colour."
 }
 ,
 
@@ -1907,7 +2056,8 @@
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     7, 10, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_ROAR, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A huge rat, with weird knobbly orange skin.  It glows with unholy energies."
 }
 ,
 
@@ -1919,7 +2069,8 @@
     { {AT_BITE, AF_POISON_STRONG, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     4, 15, 18, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A large black snake."
 }
 ,
 
@@ -1931,7 +2082,8 @@
     { {AT_BITE, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     2, 7, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BELLOW, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A stupid woolly animal, with murder in its eyes.  It looks surprised."
 }
 ,
 
@@ -1943,7 +2095,8 @@
     { {AT_CLAW, AF_ROT, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "An undead humanoid creature created from the decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from the decaying corpses same way as necrophage does."
 }
 ,
 
@@ -1955,7 +2108,8 @@
     { {AT_BITE, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     2, 9, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A large, fat and very ugly pig."
 }
 ,
 
@@ -1967,7 +2121,8 @@
     { {AT_BITE, AF_DISEASE, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     0, 13, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_WHINE, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A huge, bloated mosquito. It looks diseased."
 }
 ,
 
@@ -1979,11 +2134,10 @@
     { {AT_STING, AF_POISON_NASTY, 2}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 3, 0 },
     2, 14, 13, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "It has a lot of legs."
 }
 ,
-
-
 
 {
     MONS_IRON_TROLL, 'T', CYAN, "iron troll",
@@ -1993,7 +2147,8 @@
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 3, 5, 0 },
     20, 4, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A great troll, plated with thick scales of rusty iron."
 }
 ,
 
@@ -2005,7 +2160,8 @@
     { {AT_HIT, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. "
 }
 ,
 
@@ -2017,7 +2173,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 3, 6, 0 },
     8, 4, 10, 7, MST_EFREET, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT,
+    "A huge ruddy humanoid with bright hair. "
 }
 ,
 
@@ -2029,7 +2186,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 4, 5, 0 },
     9, 3, 10, 7, MST_FROST_GIANT, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT,
+    "A huge blue humanoid with hoarfrost hair."
 }
 ,
 
@@ -2041,7 +2199,8 @@
     { {AT_BITE, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     3, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_ANIMAL, 
-    MONUSE_OPEN_DOORS
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A small dragon, puffing clouds of smoke."
 }
 ,
 
@@ -2053,7 +2212,8 @@
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 17, 5, 5, 0 },
     15, 10, 10, 7, MST_SHADOW_DRAGON, CE_CLEAN, Z_BIG, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A great shadowy shape, radiating evil and death."
 }
 ,
 {
@@ -2064,7 +2224,8 @@
     { {AT_BITE, AF_POISON_MEDIUM, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     4, 14, 13, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A large yellow tubular reptile."
 }
 ,
 
@@ -2076,7 +2237,8 @@
     { {AT_BITE, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     4, 16, 18, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A very large grey python."
 }
 ,
 
@@ -2088,7 +2250,8 @@
     { {AT_BITE, AF_PLAIN, 27}, {AT_CLAW, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     6, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A stooped troll."
 }
 ,
 
@@ -2100,7 +2263,8 @@
     { {AT_BITE, AF_PLAIN, 13}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     2, 15, 19, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_BUZZ, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A huge and irritating fly."
 }
 ,
 
@@ -2112,7 +2276,8 @@
     { {AT_STING, AF_PARALYSE, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     7, 14, 15, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_BUZZ, I_PLANT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A huge red wasp with a viciously barbed stinger."
 }
 ,
 
@@ -2124,7 +2289,8 @@
     { {AT_BITE, AF_PLAIN, 18}, {AT_CLAW, AF_PLAIN, 9}, {AT_CLAW, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 5, 5, 0 },
     7, 7, 10, 7, MST_SWAMP_DRAGON, CE_CONTAMINATED, Z_BIG, S_ROAR, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A slimy dragon, covered in swamp muck. Poisonous gasses dribble from its snout."
 }
 ,
 
@@ -2136,7 +2302,8 @@
     { {AT_BITE, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 5, 5, 0 },
     3, 11, 11, 7, MST_SWAMP_DRAKE, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_ANIMAL_LIKE, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A small and slimy dragon, covered in swamp muck. "
 }
 ,
 
@@ -2148,7 +2315,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 5, 7, 0 },
     6, 14, 13, 10, MST_DEATH_DRAKE, CE_HCL, Z_BIG, S_ROAR, I_ANIMAL_LIKE,
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A small dragon, radiating evil."
 }
 ,
 
@@ -2160,7 +2328,8 @@
     { {AT_STING, AF_POISON_NASTY, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     8, 10, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A giant ant with large mandibles and a vicious sting."
 }
 ,
 
@@ -2172,7 +2341,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     3, 4, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "Although one of the smaller giant varieties, this hill giant is still big enough to be dangerous."
 }
 ,
 
@@ -2184,7 +2354,8 @@
     { {AT_STING, AF_POISON_NASTY, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     14, 3, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A bloated insect, covered in thick chitinous armour.  Now you know where all those ants keep coming from!"
 }
 ,
 
@@ -2196,7 +2367,8 @@
     { {AT_BITE, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     2, 6, 6, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A baby ant. Isn't it cute?"
 }
 ,
 
@@ -2209,7 +2381,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     0, 12, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "It probably didn't get this big by eating little insects."
 }
 ,
 
@@ -2221,7 +2394,8 @@
     { {AT_HIT, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     2, 11, 13, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A very large and vicious-looking carnivorous frog. Its knobbly brown skin blends in with the rough rock of your surroundings."
 }
 ,
 
@@ -2233,7 +2407,8 @@
     { {AT_STING, AF_POISON_MEDIUM, 26}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     6, 9, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "Although slightly smaller than its cousin, the giant brown frog, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs."
 }
 ,
 
@@ -2245,7 +2420,8 @@
     { {AT_HIT, AF_BLINK, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     3, 12, 14, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_CROAK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A weird-looking frog, constantly blinking in and out of reality."
 }
 ,
 {
@@ -2256,7 +2432,8 @@
     { {AT_BITE, AF_PLAIN, 2}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 4, 0 },
     3, 10, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A large brown cockroach.  I call him 'Gregor'."
 }
 ,
 {
@@ -2267,7 +2444,8 @@
     { {AT_BITE, AF_POISON, 2}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 2, 3, 0 },
     0, 11, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "The lesser dungeon snake."
 }
 ,
 
@@ -2279,7 +2457,8 @@
     { {AT_HIT, AF_COLD, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     4, 10, 10, 7, MST_WHITE_IMP, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LITTLE
+    MONUSE_OPEN_DOORS, SIZE_LITTLE,
+    "A small and mischievous minor demon."
 }
 ,
 
@@ -2291,7 +2470,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     1, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "A vaguely humanoid blob of putrid white flesh. "
 }
 ,
 
@@ -2303,7 +2483,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 4, 6, 0 },
     2, 15, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A chattering and shrieking minor demon."
 }
 ,
 
@@ -2315,7 +2496,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 3}, {AT_HIT, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     2, 8, 8, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "An ugly, twisted little minor demon."
 }
 ,
 
@@ -2327,7 +2509,8 @@
     { {AT_HIT, AF_BLINK, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     4, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "A small flying demon."
 }
 ,
 
@@ -2339,7 +2522,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     4, 12, 10, 7, MST_NEQOXEC, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A weirdly shaped demon."
 }
 ,
 
@@ -2351,7 +2535,8 @@
     { {AT_STING, AF_POISON_STR, 10}, {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 4, 5, 0 },
     3, 7, 7, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SCREECH, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A bright orange demon with a venomous stinger."
 }
 ,
 
@@ -2363,7 +2548,8 @@
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 4, 5, 0 },
     8, 10, 10, 7, MST_HELLWING, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A hideous skeletal demon, with wings of ancient withered skin."
 }
 ,
 
@@ -2375,7 +2561,8 @@
     { {AT_HIT, AF_PLAIN, 8}, {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     5, 9, 9, 7, MST_SMOKE_DEMON, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "A writhing cloud of smoke hanging in the air. "
 }
 ,
 
@@ -2387,7 +2574,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     3, 10, 10, 7, MST_YNOXINUL, CE_CONTAMINATED, Z_NOZOMBIE, S_BELLOW, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A demon with shiny metallic scales. "
 }
 ,
 
@@ -2399,7 +2587,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     10, 15, 20, 7, MST_HELL_KNIGHT_I, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A horribly powerful demon. "
 }
 ,
 
@@ -2411,7 +2600,8 @@
     { {AT_HIT, AF_PLAIN, 32}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     5, 7, 12, 7, MST_GREEN_DEATH, CE_POISONOUS, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A bloated form covered in oozing sores and exhaling clouds of lethal poison."
 }
 ,
 
@@ -2423,7 +2613,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     10, 10, 12, 7, MST_BLUE_DEATH, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A blue greater demon."
 }
 ,
 
@@ -2435,7 +2626,8 @@
     { {AT_HIT, AF_FIRE, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 3, 5, 0 },
     5, 12, 12, 7, MST_BALRUG, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A huge and very powerful demon, wreathed in fire and shadows."
 }
 ,
 
@@ -2447,7 +2639,8 @@
     { {AT_HIT, AF_PLAIN, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     11, 10, 10, 7, MST_CACODEMON, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A hideously ugly demon of rage and legendary power."
 }
 ,
 
@@ -2460,7 +2653,8 @@
     { {AT_HIT, AF_PLAIN, 13}, {AT_HIT, AF_PLAIN, 13}, {AT_HIT, AF_PLAIN, 13} },
     { 9, 3, 5, 0 },
     10, 6, 9, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A long and bloated body, supported by dozens of short legs and topped with an evil-looking head."
 }
 ,
 
@@ -2472,7 +2666,8 @@
     { {AT_HIT, AF_FIRE, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     10, 12, 12, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A demonic figure shining with the light and fury of a fallen star."
 }
 ,
 
@@ -2484,7 +2679,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     3, 11, 10, 7, MST_SHADOW_IMP, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LITTLE
+    MONUSE_OPEN_DOORS, SIZE_LITTLE,
+    "A small and shadowy minor demon."
 }
 ,
 
@@ -2496,7 +2692,8 @@
     { {AT_HIT, AF_PLAIN, 21}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     7, 12, 11, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_CROAK, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_SMALL
+    MONUSE_OPEN_DOORS, SIZE_SMALL,
+    "A mysterious demonic figure, constantly blurring into multiple shadows of itself."
 }
 ,
 
@@ -2508,7 +2705,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     10, 12, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A tall and gaunt figure, draped in long robes which flow as if alive."
 }
 ,
 
@@ -2520,7 +2718,8 @@
     { {AT_HIT, AF_DRAIN_XP, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     7, 7, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A mist-wreathed skeletal shadow hanging in mid-air, this creature is almost invisible even to your enhanced sight."
 }
 ,
 
@@ -2532,7 +2731,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 5, 0 },
     0, 4, 10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A pulsating lump of protoplasm."
 }
 ,
 
@@ -2544,7 +2744,8 @@
     { {AT_BITE, AF_PLAIN, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 5, 3, 0 },
     0, 2, 6, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A huge and disgusting gastropod. "
 }
 ,
 
@@ -2556,7 +2757,8 @@
     { {AT_BITE, AF_PLAIN, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 5, 3, 0 },
     7, 2, 4, 10, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A huge and disgusting gastropod with light green shell."
 }
 ,
 
@@ -2568,7 +2770,8 @@
     { {AT_HIT, AF_DISTORT, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 6, 6, 0 },
     0, 5, 15, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A crazily shifting twist in the fabric of reality."
 }
 ,
 
@@ -2580,7 +2783,8 @@
     { {AT_HIT, AF_PLAIN, 28}, {AT_HIT, AF_PLAIN, 21}, {AT_HIT, AF_PLAIN, 21}, {AT_NONE, AF_PLAIN, 0} },
     { 19, 4, 5, 0 },
     17, 5, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A huge winged fiend with incredibly tough skin."
 }
 ,
 
@@ -2592,7 +2796,8 @@
     { {AT_BITE, AF_PLAIN, 26}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     13, 4, 6, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT, I_INSECT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A large brown beetle with huge, rock-crushing mandibles."
 }
 ,
 
@@ -2604,7 +2809,8 @@
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 6}, {AT_CLAW, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     18, 6, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous stone statue come to life."
 }
 ,
 
@@ -2617,7 +2823,8 @@
     { {AT_BITE, AF_PLAIN, 19}, {AT_CLAW, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     20, 4, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous metal statue come to life."
 }
 ,
 
@@ -2630,7 +2837,8 @@
     { {AT_BITE, AF_FIRE, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     14, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous molten stone statue come to life."
 }
 ,
 
@@ -2646,7 +2854,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_HIT, AF_PLAIN, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 17, 0, 0, 199 },
     10, 13, 13, 7, MST_MNOLEG, CE_CONTAMINATED, Z_NOZOMBIE, S_BUZZ, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A weirdly glowing figure, dancing through the twisted air of Pandemonium."
 }
 ,
 
@@ -2658,7 +2867,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 19, 0, 0, 223 },
     10, 7, 8, 7, MST_LOM_LOBON, CE_CONTAMINATED, Z_NOZOMBIE, S_SCREAM, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An ancient and strangely serene demon. It regards you coldly from the huge glowing eye in the centre of its forehead."
 }
 ,
 
@@ -2670,7 +2880,8 @@
     { {AT_HIT, AF_PLAIN, 60}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 21, 0, 0, 253 },
     15, 8, 10, 7, MST_CEREBOV, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT,
+    "A violent and wrathful demon, Cerebov appears as a giant human covered in shining golden armour and wielding a huge twisted sword."
 }
 ,
 
@@ -2682,7 +2893,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 0, 0, 234 },
     10, 10, 10, 7, MST_GLOORX_VLOQ, CE_CONTAMINATED, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A shadowy figure clothed in profound darkness."
 }
 ,
 
@@ -2701,7 +2913,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA_MAGE, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. "
 }
 ,
 
@@ -2713,7 +2926,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 5, 5, 0 },
     6, 10, 8, 7, MST_NAGA, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. "
 }
 ,
 
@@ -2725,7 +2939,8 @@
     { {AT_HIT, AF_PLAIN, 32}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 4, 7, 0 },
     3, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A very large and strong looking orc."
 }
 ,
 
@@ -2737,7 +2952,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 3, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2749,7 +2965,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2761,7 +2978,8 @@
     { {AT_HIT, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 3, 0 },
     0, 15, 11, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2773,7 +2991,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2785,7 +3004,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_SUMMONER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    ""
 }
 ,
 
@@ -2797,7 +3017,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 3, 0 },
     0, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2809,7 +3030,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2821,7 +3043,8 @@
     { {AT_HIT, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 3, 0 },
     3, 13, 10, 7, MST_DEEP_ELF_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2833,7 +3056,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_DEMONOLOGIST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2845,7 +3069,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_ANNIHILATOR, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2857,7 +3082,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_SORCERER, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2869,7 +3095,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 3, 3, 0 },
     0, 13, 10, 7, MST_DEEP_ELF_DEATH_MAGE, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "One of the race of elves which inhabits this dreary cave. "
 }
 ,
 
@@ -2881,7 +3108,8 @@
     { {AT_HIT, AF_ACID, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     10, 1, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_LITTLE
+    MONUSE_EATS_ITEMS, SIZE_LITTLE,
+    "A viscous liquid, flowing along the floor in search of organic matter to corrode."
 }
 ,
 
@@ -2894,7 +3122,8 @@
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12} },
     { 15, 3, 5, 0 },
     5, 10, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_LITTLE
+    MONUSE_EATS_ITEMS, SIZE_LITTLE,
+    "A frosty blob of bright blue cytoplasm."
 }
 ,
 
@@ -2906,7 +3135,8 @@
     { {AT_HIT, AF_ROT, 32}, {AT_HIT, AF_PLAIN, 32}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 3, 0 },
     2, 4, 12, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_LITTLE
+    MONUSE_EATS_ITEMS, SIZE_LITTLE,
+    "A putrid mass of decaying flesh."
 }
 ,
 
@@ -2918,7 +3148,8 @@
     { {AT_HIT, AF_ACID, 42}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 3, 5, 0 },
     1, 3, 14, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_LITTLE
+    MONUSE_EATS_ITEMS, SIZE_LITTLE,
+    "A lump of sickly green flesh, dripping with lethal acid."
 }
 ,
 
@@ -2930,7 +3161,8 @@
     { {AT_HIT, AF_ACID, 50}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 21, 0, 0, 111 },
     8, 4, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_EATS_ITEMS, SIZE_SMALL
+    MONUSE_EATS_ITEMS, SIZE_SMALL,
+    "A particularly rich and golden gelatinous thing."
 }
 ,
 
@@ -2942,7 +3174,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 0, 0, 20 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil human fighter."
 }
 ,
 
@@ -2954,7 +3187,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 0, 0, 10 },
     0, 10, 10, 7, MST_ORC_WIZARD_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil apprentice sorceress."
 }
 ,
 
@@ -2966,7 +3200,8 @@
     { {AT_HIT, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 0, 0, 28 },
     2, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
+    "A small and twisted goblin, wearing some ugly blue rags."
 }
 ,
 
@@ -2978,7 +3213,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 0, 0, 30 },
     0, 11, 10, 7, MST_ORC_WIZARD_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil and spry old human, whose eyes twinkle with madness. Sigmund wields a nasty looking scythe."
 }
 ,
 
@@ -2990,7 +3226,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 0, 0, 32 },
     0, 9, 8, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A particularly fat and ugly orc."
 }
 ,
 
@@ -3002,7 +3239,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 0, 0, 44 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A lightly armoured warrior."
 }
 ,
 
@@ -3014,7 +3252,8 @@
     { {AT_HIT, AF_PLAIN, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 0, 0, 39 },
     0, 12, 13, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A fair-haired mage."
 }
 ,
 
@@ -3027,7 +3266,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 0, 0, 54 },
     3, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "An especially cunning ogre mage."
 }
 ,
 
@@ -3039,7 +3279,8 @@
     { {AT_HIT, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 0, 0, 54 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An adventurer like you, trying to find the Orb."
 }
 ,
 
@@ -3051,7 +3292,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 0, 0, 66 },
     0, 11, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A rude orc."
 }
 ,
 
@@ -3063,7 +3305,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 0, 0, 50 },
     0, 10, 10, 7, MST_ORC_WIZARD_III, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A powerful spellcaster, dressed in a long robe."
 }
 ,
 
@@ -3075,7 +3318,8 @@
     { {AT_HIT, AF_PLAIN, 9}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 0, 0, 66 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "Looks like a mercenary."
 }
 ,
 
@@ -3087,7 +3331,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 0, 0, 96 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A hairy troll."
 }
 ,
 
@@ -3099,7 +3344,8 @@
     { {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 0, 0, 64 },
     0, 11, 11, 7, MST_WIZARD_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    " comely spellweaver."
 }
 ,
 
@@ -3111,7 +3357,8 @@
     { {AT_HIT, AF_PLAIN, 11}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 0, 0, 69 },
     0, 10, 10, 7, MST_NECROMANCER_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "n ugly elderly figure, dressed in Druidic clothes."
 }
 ,
 
@@ -3123,7 +3370,8 @@
     { {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 0, 0, 76 },
     0, 8, 10, 7, MST_HELL_KNIGHT_II, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil human bounty hunter."
 }
 ,
 
@@ -3135,7 +3383,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 0, 0, 105 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A skilled warrior."
 }
 ,
 
@@ -3147,7 +3396,8 @@
     { {AT_HIT, AF_PLAIN, 18}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 0, 0, 90 },
     0, 9, 10, 7, MST_GUARDIAN_NAGA, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A tall bounty hunter."
 }
 ,
 
@@ -3159,7 +3409,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 0, 0, 140 },
     0, 10, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A lanky warrior."
 }
 ,
 
@@ -3171,7 +3422,8 @@
     { {AT_HIT, AF_PLAIN, 24}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 0, 0, 118 },
     0, 10, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil warrior who looks inexplicably like a rodent.  Looking in to her eyes, you feel yourself forgetting everything else."
 }
 ,
 
@@ -3183,7 +3435,8 @@
     { {AT_HIT, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 0, 0, 106 },
     0, 10, 10, 7, MST_WIZARD_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An unusually heavily armoured spellcaster."
 }
 ,
 
@@ -3196,7 +3449,8 @@
     { {AT_HIT, AF_PLAIN, 19}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 0, 0, 110 },
     0, 10, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A wizened spellcaster."
 }
 ,
 
@@ -3209,7 +3463,8 @@
     { {AT_HIT, AF_PLAIN, 29}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 0, 0, 121 },
     0, 10, 10, 7, MST_ORC_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A stout warrior, bearing a deep facial scar."
 }
 ,
 
@@ -3222,7 +3477,8 @@
     { {AT_HIT, AF_PLAIN, 21}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 0, 0, 123 },
     0, 10, 10, 7, MST_RUPERT, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil berserker."
 }
 ,
 
@@ -3235,7 +3491,8 @@
     { {AT_HIT, AF_PLAIN, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 17, 0, 0, 140 },
     1, 10, 7, 7, MST_ORC_PRIEST, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A fat, evil dwarf in a stupid looking hat."
 }
 ,
 
@@ -3248,7 +3505,8 @@
     { {AT_HIT, AF_PLAIN, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 0, 0, 136 },
     0, 10, 10, 7, MST_ORC_WIZARD_I, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "An evil mercenary with unusually large ears."
 }
 ,
 
@@ -3260,7 +3518,8 @@
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0} },
     { 19, 0, 0, 133 },
     15, 7, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "An ancient and mighty dragon."
 }
 ,
 
@@ -3273,7 +3532,8 @@
     { {AT_HIT, AF_PLAIN, 36}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 0, 0, 214 },
     1, 9, 9, 7, MST_MYSTIC, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A tan, fit and thoroughly evil surfer."
 }
 ,
 
@@ -3286,7 +3546,8 @@
     { {AT_HIT, AF_PLAIN, 27}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 21, 0, 0, 159 },
     0, 10, 10, 7, MST_LICH_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A svelte fighter-mage, wearing a gold-rimmed monocle."
 }
 ,
 
@@ -3299,7 +3560,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 22, 0, 0, 164 },
     0, 10, 10, 7, MST_EFREET, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A lithe spellcaster."
 }
 ,
 
@@ -3312,7 +3574,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_TOUCH, AF_DRAIN_XP, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 22, 0, 0, 154 },
     12, 10, 10, 7, MST_LICH_IV, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "An ancient lich. The air around his shrouded form crackles with evil energy."
 }
 ,
 
@@ -3325,7 +3588,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 0, 0, 240 },
     15, 6, 10, 7, MST_GERYON, CE_CONTAMINATED, Z_NOZOMBIE, S_ROAR, I_NORMAL, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT
+    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT,
+    "A huge and slithery arch-demon, guarding the gates of Hell."
 }
 ,
 
@@ -3337,7 +3601,8 @@
     { {AT_HIT, AF_PLAIN, 50}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 0, 0, 222 },
     15, 3, 6, 7, MST_DISPATER, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "The lord of the Iron City of Dis."
 }
 ,
 
@@ -3349,7 +3614,8 @@
     { {AT_HIT, AF_PLAIN, 50}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 17, 0, 0, 245 },
     12, 7, 9, 7, MST_ASMODEUS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "One of the arch-demons who dwell in the depths of Hell."
 }
 ,
 
@@ -3362,7 +3628,8 @@
     { {AT_HIT, AF_COLD, 55}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 22, 0, 0, 250 },
     10, 4, 7, 7, MST_ANTAEUS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT
+    MONUSE_WEAPONS_ARMOUR, SIZE_GIANT,
+    "A great titan who lives in the depths of Cocytus."
 }
 ,
 
@@ -3374,7 +3641,8 @@
     { {AT_HIT, AF_PLAIN, 40}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 0, 0, 238 },
     15, 6, 9, 7, MST_ERESHKIGAL, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LARGE,
+    "A fearsome arch-fiend who rules the deathly netherworld of Tartarus."
 }
 ,
 
@@ -3386,7 +3654,8 @@
     { {AT_TOUCH, AF_DRAIN_XP, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 27, 2, 4, 0 },
     20, 10, 12, 7, MST_LICH_I, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A lich who has grown mighty over countless years."
 }
 ,
 /* number is set in define_monster */
@@ -3399,7 +3668,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     1, 3, 8, 7, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A disgusting glob of grey sludge."
 }
 ,
 
@@ -3411,7 +3681,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 3, 5, 0 },
     1, 13, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A heavily armed and armoured guardian of the Vaults."
 }
 ,
 
@@ -3425,7 +3696,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 13, 0, 0, 66 },
     40, 3, 10, 7, MST_CURSE_SKULL, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A charred skull floating in the air and rotating slowly.  Mystic symbols carved into its blackened surface indicate its resistance to almost any form of attack."
 }
 ,
 
@@ -3437,7 +3709,8 @@
     { {AT_HIT, AF_PLAIN, 33}, {AT_BITE, AF_VAMPIRIC, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 7, 0 },
     10, 10, 10, 7, MST_VAMPIRE_KNIGHT, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A powerful warrior, with skills undiminished by undeath."
 }
 ,
 
@@ -3449,7 +3722,8 @@
     { {AT_BITE, AF_VAMPIRIC, 22}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 4, 0 },
     10, 10, 10, 7, MST_VAMPIRE_MAGE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "Undeath has not lessened this powerful mage."
 }
 ,
 
@@ -3461,7 +3735,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     3, 1, 7, 7, MST_SHINING_EYE, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A huge and strangely deformed eyeball, pulsating with light.  Beauty is certainly nowhere to be found in this beholder."
 }
 ,
 
@@ -3473,7 +3748,8 @@
     { {AT_HIT, AF_PLAIN, 45}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 3, 5, 0 },
     13, 13, 14, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A huge and glowing purple creature, created by the Orb to defend itself."
 }
 ,
 
@@ -3485,7 +3761,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 6, 5, 0 },
     10, 13, 10, 7, MST_DAEVA, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A divine agent of the Shining One, it is a towering winged figure with an aura of brilliant golden light."
 }
 ,
 
@@ -3498,7 +3775,8 @@
     { {AT_HIT, AF_DRAIN_XP, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     8, 5, 7, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A hideous glowing apparition."
 }
 ,
 
@@ -3510,7 +3788,8 @@
     { {AT_HIT, AF_PLAIN, 24}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 3, 5, 0 },
     6, 10, 8, 7, MST_NAGA_MAGE, CE_POISONOUS, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. "
 }
 ,
 
@@ -3522,7 +3801,8 @@
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 8, 8, 0 },
     20, 4, 8, 7, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A huge undead abomination, pieced together from the broken bones of many dragons."
 }
 ,
 
@@ -3534,7 +3814,8 @@
     { {AT_HIT, AF_PLAIN, 22}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 13} },
     { 25, 3, 5, 0 },
     5, 5, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A writhing mass of tentacles, all covered in putrid mucous"
 }
 ,
 
@@ -3546,7 +3827,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 3, 5, 0 },
     5, 5, 13, 7, MST_SPHINX, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A large creature with a human head, the body of a lion, and the wings of a huge bird."
 }
 ,
 
@@ -3558,7 +3840,8 @@
     { {AT_HIT, AF_DISEASE, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     5, 7, 8, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "A shambling undead creature, related to the ghoul."
 }
 ,
 
@@ -3570,7 +3853,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 5, 3, 0 },
     6, 9, 9, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "An ancient warrior, embalmed and cursed to walk in undeath for eternity."
 }
 ,
 
@@ -3582,7 +3866,8 @@
     { {AT_HIT, AF_PLAIN, 35}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 15, 5, 3, 100 },
     10, 6, 10, 7, MST_MUMMY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    ""
 }
 ,
 
@@ -3594,7 +3879,8 @@
     { {AT_HIT, AF_PLAIN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 5, 3, 0 },
     8, 7, 9, 7, MST_MUMMY, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    ""
 }
 ,
 
@@ -3606,7 +3892,8 @@
     { {AT_HIT, AF_PLAIN, 16}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     4, 8, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    MONUSE_WEAPONS_ARMOUR, SIZE_BIG,
+    "A hybrid with the torso of a human atop the body of a large horse.  It looks strong and aggressive."
 }
 ,
 
@@ -3618,7 +3905,8 @@
     { {AT_HIT, AF_PLAIN, 23}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 3, 5, 0 },
     5, 5, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SHOUT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "Like a centaur, but half yak. It looks very strong and aggressive."
 }
 ,
 
@@ -3632,7 +3920,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 3, 6, 4, 0 },
     7, 8, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3644,7 +3933,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3656,7 +3946,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3668,7 +3959,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 14, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3680,7 +3972,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3692,7 +3985,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     8, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3704,7 +3998,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3716,7 +4011,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3728,7 +4024,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 14, 5, 4, 0 },
     9, 10, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH,
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3740,7 +4037,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 4, 3, 0 },
     9, 10, 10, 10, MST_DRAC_CALLER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3753,7 +4051,8 @@
                               {AT_TAIL_SLAP, AF_PLAIN, 15} },
     { 16, 6, 3, 0 },
     6, 20, 10, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3765,7 +4064,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 4, 2, 0 },
     12, 10, 10, 10, MST_DEEP_ELF_HIGH_PRIEST, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3777,7 +4077,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 4, 4, 0 },
     8, 16, 10, 10, MST_DRAC_SHIFTER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3789,7 +4090,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 4, 2, 0 },
     8, 10, 10, 10, MST_DEEP_ELF_ANNIHILATOR, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3801,7 +4103,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 6, 4, 0 },
     12, 12, 10, 6, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3813,7 +4116,8 @@
     { {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 0}, {AT_HIT, AF_PLAIN, 0} },
     { 16, 4, 2, 0 },
     8, 12, 10, 10, MST_DRAC_SCORCHER, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "Before you stands a draconian.  "
 }
 ,
 
@@ -3825,7 +4129,8 @@
     { {AT_HIT, AF_KLOWN, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 5, 5, 0 },
     10, 15, 15, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    "A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?  Join in the fun, and maybe you'll find out!"
 }
 ,
 
@@ -3837,7 +4142,8 @@
     { {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_ELEC, 15}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15} },
     { 15, 7, 4, 0 },
     5, 20, 20, 7, MST_ELECTRIC_GOLEM, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "An animated figure made completely of electricity."
 }
 ,
 
@@ -3849,7 +4155,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 12, 0, 0, 1 },
     0, 10, 20, 7, MST_STORM_DRAGON, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_LITTLE
+    MONUSE_OPEN_DOORS, SIZE_LITTLE,
+    "An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning."
 }
 ,
 
@@ -3861,7 +4168,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 30, 0, 0, 150 },
     20, 20, 20, 7, MST_ORB_OF_FIRE, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_LITTLE
+    MONUSE_OPEN_DOORS, SIZE_LITTLE,
+    "A globe of raw primordial fire, capable of impressive pyrotechnics."
 }
 ,
 
@@ -3873,7 +4181,8 @@
     { {AT_BITE, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     2, 13, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A small marsupial.  Don't call it a rat."
 }
 ,
 
@@ -3885,7 +4194,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 3, 5, 0 },
     12, 1, 7, 7, MST_EYE_OF_DEVASTATION, CE_POISONOUS, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A huge eyeball, encased in a levitating globe of incandescent energy."
 }
 ,
 
@@ -3897,7 +4207,8 @@
     { {AT_BITE, AF_RAGE, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 9, 3, 5, 0 },
     0, 10, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SHOUT, I_HIGH,
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A huge moth, as violent as it is hairy."
 }
 ,
 
@@ -3909,7 +4220,8 @@
     { {AT_HIT, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 4, 5, 0 },
     10, 15, 25, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_MOAN, I_NORMAL, 
-    MONUSE_OPEN_DOORS, SIZE_TINY
+    MONUSE_OPEN_DOORS, SIZE_TINY,
+    "A dreadful undead cob of corn."
 }
 ,
 
@@ -3921,7 +4233,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 0, 0, 77 },
     50, 1, 12, 7, MST_CURSE_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A disembodied toe, hanging in the air and radiating an intense field of negative energy."
 }
 ,
 
@@ -3934,7 +4247,8 @@
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator."
 }
 ,
 
@@ -3946,7 +4260,8 @@
     { {AT_HIT, AF_POISON, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "An apparently abandoned weapon, actually a vicious little beast in disguise."
 }
 ,
 
@@ -3958,7 +4273,8 @@
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     15, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "An apparently abandoned suit of finely-made armour, actually  a vicious little beast in disguise."
 }
 ,
 
@@ -3970,7 +4286,8 @@
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "An ancient parchment covered in arcane runes. Did it just twitch?"
 }
 ,
 
@@ -3982,7 +4299,8 @@
     { {AT_HIT, AF_POISON, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     5, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_NORMAL, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A delicious looking magical drink. Go on, pick it up!"
 }
 ,
 
@@ -3994,7 +4312,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 11, 3, 5, 0 },
     2, 9, 14, 7, MST_HELL_HOG, CE_CLEAN, Z_NOZOMBIE, S_SILENT, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A large, fat and very ugly pig, suckled in the pits of Hell.  Roast suckling pig technology will never be the same."
 }
 ,
 
@@ -4006,7 +4325,8 @@
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 15}, {AT_CLAW, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0} },
     { 20, 4, 4, 0 },
     12, 9, 14, 7, MST_SERPENT_OF_HELL, CE_CLEAN, Z_NOZOMBIE, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A huge red glowing dragon, burning with hellfire."
 }
 ,
 
@@ -4018,7 +4338,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     0, 12, 12, 7, MST_BOGGART, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE
+    MONUSE_WEAPONS_ARMOUR, SIZE_LITTLE,
+    "A twisted little sprite-goblin. Beware of its magical tricks!"
 }
 ,
 
@@ -4030,7 +4351,8 @@
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 16, 3, 5, 0 },
     10, 15, 15, 7, MST_QUICKSILVER_DRAGON, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_GIANT
+    MONUSE_OPEN_DOORS, SIZE_GIANT,
+    "A long and sinuous dragon, seemingly more neck and tail than anything else. Its skin shines like molten mercury, and magical energies arc from its pointed snout."
 }
 ,
 
@@ -4042,7 +4364,8 @@
     { {AT_BITE, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 25}, {AT_CLAW, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0} },
     { 18, 5, 3, 0 },
     20, 6, 8, 7, MST_IRON_DRAGON, CE_CONTAMINATED, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_HUGE
+    MONUSE_OPEN_DOORS, SIZE_HUGE,
+    "A very heavy and apparently flightless dragon."
 }
 ,
 
@@ -4054,7 +4377,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 5, 3, 0 },
     15, 10, 10, 7, MST_SKELETAL_WARRIOR, CE_CONTAMINATED, Z_SMALL, S_SILENT, I_NORMAL, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power."
 }
 ,
 
@@ -4068,7 +4392,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 2, 3, 0 },
     1, 2, 10, 7, MST_GHOST, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_MEDIUM
+    MONUSE_OPEN_DOORS, SIZE_MEDIUM,
+    ""
 }
 ,
 
@@ -4081,7 +4406,8 @@
     { {AT_HIT, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 2, 3, 0 },
     1, 2, 10, 7, MST_GHOST, CE_CONTAMINATED, Z_NOZOMBIE, S_RANDOM, I_HIGH, 
-    MONUSE_OPEN_DOORS, SIZE_LARGE
+    MONUSE_OPEN_DOORS, SIZE_LARGE,
+    "You feel the a lump in the pit of your stomach.  "
 }
 ,
 
@@ -4094,7 +4420,8 @@
     { {AT_BITE, AF_FIRE, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 5, 0 },
     1, 10, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A vicious red worm which swims through molten rock."
 }
 ,
 
@@ -4106,7 +4433,8 @@
     { {AT_BITE, AF_FIRE, 10}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     4, 15, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A fish which lives in lava."
 }
 ,
 
@@ -4118,7 +4446,8 @@
     { {AT_BITE, AF_FIRE, 7}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     2, 17, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_HISS, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A burning red snake which rears up from pools of lava and tries to bite you."
 }
 ,
 
@@ -4130,7 +4459,8 @@
     { {AT_HIT, AF_FIRE, 23}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 3, 5, 0 },
     5, 5, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_HIGH, 
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
+    "A strange half-human half-snake creature covered in thick red scales and thorns."
 }
 
 ,
@@ -4145,7 +4475,8 @@
     { {AT_BITE, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     1, 12, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A fish of unusual size."
 }
 ,
 
@@ -4157,7 +4488,8 @@
     { {AT_BITE, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 5, 0 },
     5, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "This is what happens when you give your pet goldfish too much food!"
 }
 ,
 
@@ -4169,7 +4501,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     1, 15, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_ANIMAL_LIKE, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A small and slimy eel, crackling with electrical discharge."
 }
 ,
 
@@ -4181,7 +4514,8 @@
     { {AT_STING, AF_POISON_STR, 1}, {AT_HIT, AF_PLAIN, 1}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     0, 5, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles."
 }
 ,
 
@@ -4193,7 +4527,8 @@
     { {AT_HIT, AF_PLAIN, 25}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 5, 3, 0 },
     0, 7, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_OPEN_DOORS, SIZE_BIG
+    MONUSE_OPEN_DOORS, SIZE_BIG,
+    "A spirit drawn from the elemental plane of water. It exists on this world as part of a body of water."
 }
 ,
 
@@ -4205,7 +4540,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 5, 5, 0 },
     3, 12, 12, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A large slimy worm, adept at swimming through the muck of this foul swamp."
 },
 // end water monsters {dlb}
 
@@ -4217,7 +4553,8 @@
     { {AT_BITE, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 2}, {AT_CLAW, AF_PLAIN, 2}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 3, 5, 0 },
     3, 15, 17, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "A large and strong grey canine."
 }
 ,
 
@@ -4229,7 +4566,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 3}, {AT_CLAW, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0} },
     { 4, 4, 5, 0 },
     4, 12, 13, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_BARK, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A particularly large and evil looking wolf, usually found in the company of orcs."
 }
 ,
 
@@ -4241,7 +4579,8 @@
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 6}, {AT_CLAW, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 3, 3, 0 },
     4, 4, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A common cave bear."
 }
 ,
 
@@ -4253,7 +4592,8 @@
     { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 4, 4, 0 },
     5, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A large, nasty bear with grey fur."
 }
 ,
 
@@ -4265,7 +4605,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0} },
     { 7, 5, 3, 0 },
     7, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_BIG
+    MONUSE_NOTHING, SIZE_BIG,
+    "A large and very strong bear covered in glistening white fur"
 }
 ,
 
@@ -4277,7 +4618,8 @@
     { {AT_BITE, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 3, 3, 0 },
     2, 8, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_GROWL, I_ANIMAL, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "A small black bear."
 }
 ,
 
@@ -4290,7 +4632,8 @@
     { {AT_HIT, AF_PLAIN, 6}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 2, 3, 5, 0 },
     10, 4, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_SMALL
+    MONUSE_NOTHING, SIZE_SMALL,
+    "An ice replica of a monster that is animated by the powers of necromancy."
 }
 ,
 
@@ -4303,7 +4646,8 @@
     { {AT_HIT, AF_PLAIN, 14}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 3, 5, 0 },
     10, 5, 7, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "An ice replica of a monster that is animated by the powers of necromancy."
 }
 ,
 
@@ -4315,7 +4659,8 @@
     { {AT_BITE, AF_PLAIN, 3}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 1, 2, 0 },
     0, 15, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "Several times the size of a normal newt, but still not really impressive."
 }
 ,
 
@@ -4327,7 +4672,8 @@
     { {AT_BITE, AF_PLAIN, 5}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 1, 3, 5, 0 },
     1, 14, 12, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A lizard with pads on its toes allowing it to cling to walls and ceilings.  It's much larger than a normal gecko... perhaps it's something in the water?"
 }
 ,
 
@@ -4339,7 +4685,8 @@
     { {AT_BITE, AF_PLAIN, 15}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 3, 3, 5, 0 },
     5, 9, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A huge lizard with great crunching jaws."
 }
 ,
 
@@ -4352,7 +4699,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 5, 4, 4, 0 },
     3, 12, 10, 7, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_LITTLE
+    MONUSE_NOTHING, SIZE_LITTLE,
+    "A large lizard with brightly coloured stripes and splotches."
 }
 ,
 
@@ -4364,7 +4712,8 @@
     { {AT_BITE, AF_DISEASE, 30}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 3, 5, 0 },
     7, 8, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_HISS, I_REPTILE, 
-    MONUSE_NOTHING, SIZE_MEDIUM
+    MONUSE_NOTHING, SIZE_MEDIUM,
+    "An enormous monitor lizard.  It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth."
 }
 ,
 
@@ -4376,7 +4725,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 10, 0, 0, 160 },
     20, 1, 6, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze."
 }
 ,
 
@@ -4388,7 +4738,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 6, 0, 0, 150 },
     15, 1, 10, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "A beautiful statue of silver. Its eyes glow with an otherworldly radiance."
 }
 ,
 
@@ -4400,7 +4751,8 @@
     { {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 8, 0, 0, 140 },
     12, 1, 10, 7, MST_ICE_STATUE, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_HIGH, 
-    MONUSE_NOTHING, SIZE_LARGE
+    MONUSE_NOTHING, SIZE_LARGE,
+    "An imposing statue carved in glistening ice. Freezing vapours swirl about it."
 }
 ,
 
@@ -4412,7 +4764,8 @@
     { {AT_BITE, AF_PLAIN, 20}, {AT_BITE, AF_PLAIN, 20}, {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 14, 0, 0, 180 },
     30, 10, 10, 7, MST_CURSE_SKULL, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH, 
-    MONUSE_NOTHING, SIZE_TINY
+    MONUSE_NOTHING, SIZE_TINY,
+    "A demonic skull rolling along the dungeon floor."
 }
 ,
 {
@@ -4424,7 +4777,8 @@
       {AT_NONE, AF_PLAIN, 0}, {AT_NONE, AF_PLAIN, 0} },
     { 22, 0, 0, 200 },
     8, 10, 10, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_ROAR, I_HIGH, 
-    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM
+    MONUSE_STARTING_EQUIPMENT, SIZE_MEDIUM,
+    "A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch."
 },
 
 #endif

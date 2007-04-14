@@ -18,6 +18,7 @@
 
 #include "AppHdr.h"
 #include "direct.h"
+#include "format.h"
 
 #include <cstdarg>
 #include <stdlib.h>
@@ -1449,7 +1450,7 @@ static void describe_cell(int mx, int my)
 {
     char  str_pass[ ITEMNAME_SIZE ];
     bool  mimic_item = false;
-
+    
     if (mgrd[mx][my] != NON_MONSTER)
     {
         int i = mgrd[mx][my];
@@ -1472,9 +1473,12 @@ static void describe_cell(int mx, int my)
 
         const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-
-        mprf("%s.", ptr_monam(&(menv[i]), DESC_CAP_A));
-
+        const char *longDesc = mons_longDesc(menv[i].type);
+        if (longDesc && longDesc != "") {
+            mprf("%s. ('v' to describe)", ptr_monam(&(menv[i]), DESC_CAP_A));
+        } else {
+            mprf("%s.", ptr_monam(&(menv[i]), DESC_CAP_A));
+        }
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
             snprintf( info, INFO_SIZE, "%s is wielding ",
@@ -1552,7 +1556,6 @@ static void describe_cell(int mx, int my)
         {
             describe_mons_enchantment(menv[i], *e, paralysed);
         }
-
 #if DEBUG_DIAGNOSTICS
         stethoscope(i);
 #endif

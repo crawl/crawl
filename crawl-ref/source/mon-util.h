@@ -109,6 +109,7 @@ struct monsterentry
     char gmon_use;
 
     size_type size;
+    const char *longDesc;
 };    // mondata[] - again, no idea why this was externed {dlb}
 
 
@@ -137,6 +138,7 @@ const char *ptr_monam(const monsters *mon, char desc, bool force_seen = false);
 std::string str_monam(const monsters *mon, description_level_type desc,
                       bool force_seen = false);
 
+                  
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: beam - direct - fight - monstuff - mstuff2 - spells4 - view
@@ -167,6 +169,8 @@ bool mons_player_visible( struct monsters *mon );
  * called from: view
  * *********************************************************************** */
 int mons_shouts(int mclass);
+
+const char *mons_longDesc(int mclass);
 
 bool mons_is_unique(int mclass);
 
