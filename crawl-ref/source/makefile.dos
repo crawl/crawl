@@ -19,7 +19,7 @@ LEX  := flex
 YACC := bison -y
 
 ifeq ($(LUASRC),)
-LUASRC := util\lua\src\\
+LUASRC := util\lua\src
 endif
 
 LUALIB = lua
@@ -57,7 +57,7 @@ endif
 
 OBJECTS := $(UTIL)levcomp.o $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
 
-GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -162,7 +162,7 @@ profile:	$(GAME_DEPENDS)
 #############################################################################
 # Build Lua
 
-$(LUASRC)$(LUALIBA):
+$(LUASRC)\$(LUALIBA):
 	@echo Building Lua...
 	@cd $(LUASRC)
 	@$(MAKE) crawl_dos

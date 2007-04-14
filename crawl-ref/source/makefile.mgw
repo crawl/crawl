@@ -25,7 +25,7 @@ LEX  := flex
 YACC := bison -y
 
 ifeq ($(LUASRC),)
-LUASRC := util\lua\src\\
+LUASRC := util\lua\src
 endif
 
 LUALIB = lua
@@ -74,7 +74,7 @@ OBJECTS      := levcomp.tab.o levcomp.lex.o levcomp.o \
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
-GAME_DEPENDS := prepare $(LUASRC)$(LUALIBA) $(OBJECTS)
+GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -175,6 +175,6 @@ $(OPATH)/%.o: $(UTIL)%.cc
 #############################################################################
 # Build Lua
 
-$(LUASRC)$(LUALIBA):
+$(LUASRC)\$(LUALIBA):
 	@echo Building Lua...
 	@cd $(LUASRC) && $(MAKE) crawl_mingw
