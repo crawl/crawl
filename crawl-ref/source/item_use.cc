@@ -2671,7 +2671,6 @@ void zap_wand(void)
     you.turn_is_over = true;
 }                               // end zap_wand()
 
-/*** HP CHANGE ***/
 void inscribe_item()
 {
     int item_slot;
@@ -2690,6 +2689,7 @@ void inscribe_item()
         canned_msg( MSG_OK );
         return;
     }
+    mpr( item_name( you.inv[item_slot], DESC_INVENTORY ), MSGCH_EQUIPMENT );
     mpr( "Inscribe with what? ", MSGCH_PROMPT );
     get_input_line( buf, sizeof(buf) );
     you.inv[item_slot].inscription = std::string(buf);
