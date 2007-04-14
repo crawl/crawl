@@ -41,9 +41,16 @@ INSTALLDIR   := /usr/games
 # SAVEDIR := /usr/games/crawl-saves/
 # DATADIR := /usr/games/crawl-data/
 
-LIB = -lncurses
+ifeq ($(LUASRC),)
+LUASRC := util/lua/src
+endif
 
-INCLUDES := $(INCLUDES) -Iutil -I.
+LUALIB = lua
+LUALIBA = l$(LUALIB).a
+
+LIB = -lncurses -L$(LUASRC) -l$(LUALIB)
+
+INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC)
 
 CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
@@ -173,7 +180,10 @@ clean:
 	$(DELETE) $(UTIL)*.tab.cc $(UTIL)*.tab.c $(UTIL)*.tab.h $(UTIL)*.lex.cc
 	$(DELETE) *.ixx
 
-distclean: clean
+clean-lua:
+	cd $(LUASRC) && $(MAKE) clean
+
+distclean: clean clean-lua
 	$(DELETE) bones.*
 	$(DELETE) morgue.txt
 	$(DELETE) scores
@@ -184,7 +194,7 @@ distclean: clean
 	$(DELETE) *.lab
 	$(DELETE) $(DEPENDENCY_MKF)
 
-$(GAME): $(GAME_DEPENDS)
+$(GAME): $(LUASRC)$(LUALIBA) $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 debug: $(GAME_DEPENDS)
@@ -203,12 +213,20 @@ $(UTIL)%.o: $(UTIL)%.cc
 	$(CXX) $(YCFLAGS) -o $@ -c $<
 
 #############################################################################
+# Build Lua
+
+$(LUASRC)$(LUALIBA):
+	echo Building Lua...
+	cd $(LUASRC) && $(MAKE) crawl_unix
+
+#############################################################################
 # Packaging a source tarball for release
 #
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 ifeq ($(DOYACC),y)
-package-source: distclean prebuildyacc pkgtidy depend removeold vlink pkgtarbz2 pkgzip
+package-source: distclean prebuildyacc pkgtidy depend removeold vlink \
+				pkgtarbz2 pkgzip
 
 pkgtidy:
 	$(DELETE) $(PKG_TIDY_LIST)

@@ -13,14 +13,22 @@ DELETE = del
 COPY = copy
 OS_TYPE = DOS
 
-LIB =
-
 # If you don't have flex or bison, set DOYACC to N or empty.
 DOYACC := n
 LEX  := flex
 YACC := bison -y
 
-INCLUDES := -Iutil -I.
+ifeq ($(LUASRC),)
+LUASRC := util\lua\src\\
+endif
+
+LUALIB = lua
+LUALIBA = lib$(LUALIB).a
+
+LIB = -L$(LUASRC) -l$(LUALIB)
+INCLUDES := -Iutil -I. -I$(LUASRC)
+
+WORKDIR := $(shell cd)
 
 CFWARN   := -Wall -Wwrite-strings -Wshadow -Werror -pedantic
 CFOTHERS := -D$(OS_TYPE) $(EXTRA_FLAGS) -fsigned-char -fstrict-aliasing
@@ -49,7 +57,7 @@ endif
 
 OBJECTS := $(UTIL)levcomp.o $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
 
-GAME_DEPENDS := $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)$(LUALIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -117,7 +125,12 @@ clean:
 		$(subst /,\,$(DELETE) $(UTIL)levtab.*)
 		$(subst /,\,$(DELETE) $(UTIL)levlex.*)
 
-distclean:
+clean-lua:
+		cd $(LUASRC)
+		$(MAKE) clean_win
+		cd $(WORKDIR)
+
+distclean: clean-lua
 		$(DELETE) *.o 
 		$(DELETE) bones.*
 		$(DELETE) morgue.txt
@@ -145,3 +158,12 @@ profile:	$(GAME_DEPENDS)
 #
 #.h.cc:
 #		touch $@
+
+#############################################################################
+# Build Lua
+
+$(LUASRC)$(LUALIBA):
+	@echo Building Lua...
+	@cd $(LUASRC)
+	@$(MAKE) crawl_dos
+	@cd $(WORKDIR)

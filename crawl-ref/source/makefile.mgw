@@ -18,14 +18,26 @@ OS_TYPE = WIN32CONSOLE
 
 INSTALLDIR := $(OPATH)
 
-LIB = -lwinmm -static
+# If you don't have flex or bison, set DOYACC to N or empty.
+DOYACC := n
+
+LEX  := flex
+YACC := bison -y
+
+ifeq ($(LUASRC),)
+LUASRC := util\lua\src\\
+endif
+
+LUALIB = lua
+LUALIBA = lib$(LUALIB).a
+
+LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB)
+INCLUDES := -Iutil -I. -I$(LUASRC)
 
 CFWARN := -Wall -Wwrite-strings \
 			-Wshadow \
 			-Werror \
-		        -pedantic
-
-INCLUDES := -Iutil -I.
+		    -pedantic
 
 CFOTHERS := -fsigned-char \
 		-fstrict-aliasing \
@@ -43,12 +55,6 @@ LDFLAGS =
 #LIB = -lcurso -lpano
 
 UTIL = util/
-
-# If you don't have flex or bison, set DOYACC to N or empty.
-DOYACC := n
-
-LEX  := flex
-YACC := bison -y
 
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
@@ -68,7 +74,7 @@ OBJECTS      := levcomp.tab.o levcomp.lex.o levcomp.o \
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
-GAME_DEPENDS := prepare $(OBJECTS)
+GAME_DEPENDS := prepare $(LUASRC)$(LUALIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -127,7 +133,10 @@ clean:
 		$(subst /,\,$(DELETE) $(UTIL)*.tab.c)
 		$(subst /,\,$(DELETE) *.ixx)
 
-distclean: clean
+clean-lua:
+	    cd $(LUASRC) && $(MAKE) clean_win
+
+distclean: clean clean-lua
 		$(DELETE) $(OPATH)\*.o 
 		$(DELETE) *.o
 		$(DELETE) bones.*
@@ -162,3 +171,10 @@ $(OPATH)/%.o: %.cc
 
 $(OPATH)/%.o: $(UTIL)%.cc
 		$(CXX) $(YCFLAGS) -o $@ -c $<
+
+#############################################################################
+# Build Lua
+
+$(LUASRC)$(LUALIBA):
+	@echo Building Lua...
+	@cd $(LUASRC) && $(MAKE) crawl_mingw
