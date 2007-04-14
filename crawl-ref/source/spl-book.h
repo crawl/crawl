@@ -22,10 +22,10 @@
 /* ***********************************************************************
  * called from: dungeon - effects - shopping
  * *********************************************************************** */
-char book_rarity(unsigned char which_book);
+int book_rarity(unsigned char which_book);
 
 
-bool is_valid_spell_in_book( unsigned int splbook, int spell );
+bool is_valid_spell_in_book( int splbook, int spell );
 
 
 // updated 24may2000 {dlb}
@@ -46,7 +46,7 @@ spell_type which_spell_in_book(int sbook_type, int spl);
 // returns amount practised (or -1 for abort)
 int staff_spell( int zap_device_2 );
 
-bool undead_cannot_memorise(unsigned char spell, unsigned char being);
+bool undead_cannot_memorise(spell_type spell, char being);
 
 unsigned char spellbook_contents( item_def &book, int action,
                                   formatted_string *fs = NULL );

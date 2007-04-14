@@ -245,7 +245,7 @@ char list_spells(void)
     return (ki);
 }                               // end list_spells()
 
-static int apply_vehumet_wizardry_boost(int spell, int chance)
+static int apply_vehumet_wizardry_boost(spell_type spell, int chance)
 {
     int wizardry = player_mag_abil(false);
     int fail_reduce = 100;
@@ -823,9 +823,9 @@ void spellcasting_side_effects(spell_type spc2, bool idonly = false)
     alert_nearby_monsters();
 }
 
-static bool spell_is_uncastable(int spell)
+static bool spell_is_uncastable(spell_type spell)
 {
-    if (you.is_undead && spell_typematch( spell, SPTYP_HOLY ))
+    if (you.is_undead && spell_typematch(spell, SPTYP_HOLY))
     {
         mpr( "You can't use this type of magic!" );
         return (true);

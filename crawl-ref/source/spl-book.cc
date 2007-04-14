@@ -849,7 +849,7 @@ unsigned char spellbook_contents( item_def &book, int action,
 }
 
 //jmf: was in shopping.cc
-char book_rarity(unsigned char which_book)
+int book_rarity(unsigned char which_book)
 {
     switch (which_book)
     {
@@ -940,7 +940,7 @@ char book_rarity(unsigned char which_book)
     }
 }                               // end book_rarity()
 
-bool is_valid_spell_in_book( unsigned int splbook, int spell )
+bool is_valid_spell_in_book( int splbook, int spell )
 {
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
 }
@@ -1074,7 +1074,7 @@ unsigned char read_book( item_def &book, int action )
 // the living by setting up an US_ALIVE case returning
 // a value of false for a set of spells ... might be
 // an idea worth further consideration - 12mar2000 {dlb}
-bool undead_cannot_memorise(unsigned char spell, unsigned char being)
+bool undead_cannot_memorise(spell_type spell, char being)
 {
     switch (being)
     {
@@ -1091,6 +1091,8 @@ bool undead_cannot_memorise(unsigned char spell, unsigned char being)
         case SPELL_TAME_BEASTS:
         case SPELL_BERSERKER_RAGE:
             return true;
+        default:
+            return false;
         }
         break;
 
@@ -1118,6 +1120,8 @@ bool undead_cannot_memorise(unsigned char spell, unsigned char being)
         case SPELL_TAME_BEASTS:
         case SPELL_BERSERKER_RAGE:
             return true;
+        default:
+            return false;
         }
         break;
     }

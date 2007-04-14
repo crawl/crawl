@@ -227,13 +227,13 @@ const char *get_spell_target_prompt( spell_type which_spell )
     return (seekspell(which_spell)->target_prompt);
 }
 
-bool spell_typematch(int which_spell, unsigned int which_discipline)
+bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 {
     return (seekspell(which_spell)->disciplines & which_discipline);
 }
 
 //jmf: next two for simple bit handling
-unsigned int get_spell_type(int spell)
+unsigned int get_spell_type(spell_type spell)
 {
     return (seekspell(spell)->disciplines);
 }
@@ -251,20 +251,6 @@ int count_bits(unsigned int bits)
 
     return (c);
 }
-
-// this will probably be used often, so rather than use malloc/free
-// (which may lead to memory fragmentation) I'll just use a static
-// array of characters -- if/when the String changeover takes place,
-// this will all shift, no doubt {dlb}
-/*
-  const char *spell_title( int which_spell )
-  {
-  static char this_title[41] = ""; // this is generous, to say the least {dlb}
-  strncpy(this_title, seekspell(which_spell)->title, 41);
-  // truncation better than overrun {dlb}
-  return ( this_title );
-  }         // end spell_title()
-*/
 
 const char *spell_title(spell_type spell)
 {
@@ -379,7 +365,7 @@ int apply_random_around_square( int (*func) (int, int, int, int),
             // Found target
             count++;
 
-            // Slight differece here over the basic algorithm...
+            // Slight difference here over the basic algorithm...
             //
             // For cases where the number of choices <= max_targs it's
             // obvious (all available choices will be selected).
@@ -423,7 +409,7 @@ int apply_random_around_square( int (*func) (int, int, int, int),
             // probability is that the chosen elements have already
             // passed tests which verify that they *don't* belong
             // in slots m+1...m+k, so the only positions an already
-            // chosen element can end up in are it's original
+            // chosen element can end up in are its original
             // position (in one of the chosen slots), or in the
             // new slot.
             //
@@ -714,7 +700,8 @@ char spell_direction( struct dist &spelld, struct bolt &pbolt,
     return 1;
 }                               // end spell_direction()
 
-const char* spelltype_short_name( int which_spelltype ) {
+const char* spelltype_short_name( int which_spelltype )
+{
     switch (which_spelltype)
     {
     case SPTYP_CONJURATION:
@@ -750,8 +737,6 @@ const char* spelltype_short_name( int which_spelltype ) {
 
 const char *spelltype_name(unsigned int which_spelltype)
 {
-    static char bug_string[80];
-
     switch (which_spelltype)
     {
     case SPTYP_CONJURATION:
@@ -781,17 +766,12 @@ const char *spelltype_name(unsigned int which_spelltype)
     case SPTYP_AIR:
         return ("Air");
     default:
-        snprintf( bug_string, sizeof(bug_string), 
-                  "invalid(%d)", which_spelltype );
-
-        return (bug_string);
+        return "Buggy";
     }
 }                               // end spelltype_name()
 
 int spell_type2skill(unsigned int spelltype)
 {
-    char buffer[80];
-
     switch (spelltype)
     {
     case SPTYP_CONJURATION:    return (SK_CONJURATIONS);
@@ -809,10 +789,10 @@ int spell_type2skill(unsigned int spelltype)
 
     default:
     case SPTYP_HOLY:
-        snprintf( buffer, sizeof(buffer), 
-                  "spell_type2skill: called with spelltype %d", spelltype );
-
-        mpr( buffer );
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
+             spelltype );
+#endif
         return (-1);
     }
 }                               // end spell_type2skill()

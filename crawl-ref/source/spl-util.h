@@ -62,8 +62,8 @@ int spell_levels_required(spell_type which_spell);
 unsigned int get_spell_flags( spell_type which_spell );
 
 // * called from: chardump - spell - spl-book - spells0
-bool spell_typematch(int which_spell, unsigned int which_discipline);
-unsigned int get_spell_type( int which_spell ); //jmf: simplification of above
+bool spell_typematch(spell_type which_spell, unsigned int which_discipline);
+unsigned int get_spell_type( spell_type which_spell );
 int count_bits( unsigned int bits );
 
 // * called from: chardump - command - debug - spl-book - spells0

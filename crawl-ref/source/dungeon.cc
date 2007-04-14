@@ -2462,42 +2462,27 @@ int items( int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_BOOKS:
-      create_book:
         do
         {
             mitm[p].sub_type = random2(NUM_BOOKS);
 
-            if (book_rarity(mitm[p].sub_type) == 100)
-                continue;
-
-            if (mitm[p].sub_type != BOOK_DESTRUCTION
-                && mitm[p].sub_type != BOOK_MANUAL)
+            if (mitm[p].sub_type != BOOK_DESTRUCTION &&
+                mitm[p].sub_type != BOOK_MANUAL &&
+                book_rarity(mitm[p].sub_type) != 100 &&
+                one_chance_in(10))
             {
-                if (one_chance_in(10))
-                {
-                    if (coinflip())
-                        mitm[p].sub_type = BOOK_WIZARDRY;
-                    else
-                        mitm[p].sub_type = BOOK_POWER;
-                }
+                mitm[p].sub_type = coinflip() ? BOOK_WIZARDRY : BOOK_POWER;
+            }
 
-                if (random2(item_level + 1) + 1 >= book_rarity(mitm[p].sub_type)
-                    || one_chance_in(100))
-                {
-                    break;
-                }
-                else
-                {
-                    mitm[p].sub_type = BOOK_DESTRUCTION;
-                    continue;
-                }
+            if (!one_chance_in(100) &&
+                random2(item_level+1) + 1 < book_rarity(mitm[p].sub_type))
+            {
+                mitm[p].sub_type = BOOK_DESTRUCTION; // continue trying
             }
         }
-        while (mitm[p].sub_type == BOOK_DESTRUCTION
-                   || mitm[p].sub_type == BOOK_MANUAL);
-
-        if (book_rarity(mitm[p].sub_type) == 100)
-            goto create_book;
+        while (mitm[p].sub_type == BOOK_DESTRUCTION ||
+               mitm[p].sub_type == BOOK_MANUAL ||
+               book_rarity(mitm[p].sub_type) == 100);
 
         mitm[p].special = random2(5);
 
