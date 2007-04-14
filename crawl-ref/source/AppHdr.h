@@ -48,7 +48,9 @@
 #   define HASH_CONTAINERS
 #endif
 
-// Uncomment to enable the Crawl Lua bindings.
+// Uncomment to enable the Crawl Lua bindings. You can also set this in your
+// makefile by adding -DCLUA_BINDINGS to the CFLAGS line (this is preferred to
+// editing AppHdr.h directly).
 //
 // #define CLUA_BINDINGS
 
@@ -231,6 +233,10 @@
     // Uses Options.macro_dir as the full path to the macro file. Mutually
     // exclusive with DGL_NAMED_MACRO_FILE.
     #define DGL_MACRO_ABSOLUTE_PATH
+#endif
+
+#if defined(REGEX_POSIX) && defined(REGEX_PCRE)
+#error You can use either REGEX_POSIX or REGEX_PCRE, or neither, but not both.
 #endif
 
 // =========================================================================

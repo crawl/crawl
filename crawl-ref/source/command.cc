@@ -58,7 +58,7 @@ static const char *features[] = {
     "Stash-tracking",
 
 #ifdef CLUA_BINDINGS
-    "Lua",
+    "Lua user scripts",
 #endif
 
 #if defined(REGEX_POSIX)

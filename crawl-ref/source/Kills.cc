@@ -701,7 +701,6 @@ void kill_monster_desc::load(FILE *file)
     modifier = (name_modifier) readShort(file);
 }
 
-#ifdef CLUA_BINDINGS
 ///////////////////////////////////////////////////////////////////////////
 // Kill Lua interface
 //
@@ -1019,5 +1018,3 @@ static void kill_lua_filltable(std::vector<kill_exp> &v)
         lua_rawseti(ls, -2, i + 1);
     }
 }
-
-#endif

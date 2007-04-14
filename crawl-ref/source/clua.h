@@ -3,8 +3,6 @@
 
 #include "AppHdr.h"
 
-#ifdef CLUA_BINDINGS
-
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
@@ -116,7 +114,5 @@ private:
 extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);
-
-#endif // CLUA_BINDINGS
 
 #endif

@@ -1327,12 +1327,10 @@ void StashTracker::search_stashes()
     text_pattern tpat( csearch, true );
     search = &tpat;
 
-#ifdef CLUA_BINDINGS
     lua_text_pattern ltpat( csearch );
     
     if (lua_text_pattern::is_lua_pattern(csearch))
         search = &ltpat;
-#endif
 
     if (!search->valid())
     {
