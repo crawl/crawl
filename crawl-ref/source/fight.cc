@@ -2503,7 +2503,10 @@ bool melee_attack::attack_shield_blocked(bool verbose)
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit)
                                   + defender->shield_block_penalty());
-    const int pro_block = defender->shield_bonus();
+    int pro_block = defender->shield_bonus();
+
+    if (attacker->invisible() && !defender->can_see_invisible())
+        pro_block /= 3;
     
     if (pro_block >= con_block)
     {

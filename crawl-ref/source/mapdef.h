@@ -375,49 +375,6 @@ private:
             const std::string &s, bool fixed));
 };
 
-class monster_chance
-{
-public:
-    int mclass;
-    int level;
-    int rarity;
-};
-
-class level_def
-{
-public:
-    // The range of levels to which this def applies.
-    level_range range;
-
-    // Can be empty, in which case the default colours are applied.
-    std::string floor_colour, rock_colour;
-        std::string tags;
-
-    // The probability of requesting a random vault.
-    int p_vault;
-
-    // The probability of requesting a random minivault.
-    int p_minivault;
-
-    // If non-empty, any upstair will go straight to this level.
-    std::string upstair_targ, downstair_targ;
-
-    std::vector<monster_chance> monsters;
-};
-
-class dungeon_def
-{
-public:
-    std::string idstr;
-    int id;
-    std::string short_desc, full_desc;
-
-    std::vector<level_def> level_specs;
-
-public:
-    const level_def &specs(int subdepth);
-};
-
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);
 
