@@ -210,7 +210,22 @@
     { 1, 2, 4, 0 },
     0, 12, 10, 7, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL, 
     MONUSE_WEAPONS_ARMOUR, SIZE_SMALL,
-    "A race of short, ugly and unfriendly humanoids."
+    "A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.$$\
+    Clap! Snap! the black crack!$\
+    Grip, grab! Pinch, nab!$\
+    And down down to Goblin-town$\
+    You go, my lad!$$\
+    Clash, crash! Crush, smash!$\
+    Hammer and tongs! Knocker and gongs!$\
+    Pound, pound, far underground!$\
+    Ho, ho! my lad!$$\
+    Swish, smack! Whip crack!$\
+    Batter and beat! Yammer and bleat!$\
+    Work, work! Nor dare to shirk,$\
+    While Goblins quaff, and Goblins laugh,$\
+    Round and round far underground$\
+    Below, my lad!$\
+         J.R.R. Tolkien, _The Hobbit_"
 }
 ,
 
@@ -223,7 +238,13 @@
     { 3, 3, 5, 0 },
     2, 13, 15, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_BARK, I_ANIMAL, 
     MONUSE_NOTHING, SIZE_SMALL,
-    "A fearsome hunting dog."
+    "A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dissheveled, and has a lean and hungry look.$$\
+    A traveller, by the faithful hound,$\
+    Half-buried in the snow was found,$\
+    Still grasping in his hand of ice$\
+    That banner with the strange device,$\
+    Excelsior!$\
+         Henry Wadsworth Longfellow, \"Excelsior\""
 }
 ,
 
@@ -357,7 +378,9 @@
     { 1, 1, 3, 0 },
     1, 10, 10, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT, I_ANIMAL, 
     MONUSE_NOTHING, SIZE_TINY,
-    "Rats which have grown large and aggressive in the pestilential dungeon environment."
+    "Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.$$\
+    How now? a rat? Dead, for a ducat, dead!$\
+         -William Shakespeare, Hamlet, Act III, 4"
 }
 ,
 
