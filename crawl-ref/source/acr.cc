@@ -2190,8 +2190,8 @@ static void world_reacts()
 
     if ( !you.paralysis && !you.mutation[MUT_BLURRY_VISION] &&
          (you.mutation[MUT_ACUTE_VISION] >= 2 ||
-          random2(30) < you.skills[SK_TRAPS_DOORS]) )
-        search_around(true); // only check adjacent squares
+          random2(50) < you.skills[SK_TRAPS_DOORS]) )
+        search_around(false); // check nonadjacent squares too
 
     stealth = check_stealth();
 
