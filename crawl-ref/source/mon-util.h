@@ -197,7 +197,8 @@ int mons_type_hit_dice( int type );
  * *********************************************************************** */
 int mons_resist_magic( const monsters *mon );
 int mons_resist_turn_undead( const monsters *mon );
-
+bool mons_immune_magic( const monsters *mon );
+const char* mons_resist_string(const monsters *mon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

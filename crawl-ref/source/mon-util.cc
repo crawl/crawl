@@ -647,8 +647,16 @@ int mons_damage(int mc, int rt)
     return smc->attack[rt].damage;
 }                               // end mons_damage()
 
+bool mons_immune_magic(const monsters *mon)
+{
+    return seekmonster(mon->type)->resist_magic == MAG_IMMUNE;
+}
+
 int mons_resist_magic( const monsters *mon )
 {
+    if ( mons_immune_magic(mon) )
+        return MAG_IMMUNE;
+
     int u = (seekmonster(mon->type))->resist_magic;
 
     // negative values get multiplied with mhd
@@ -671,6 +679,13 @@ int mons_resist_magic( const monsters *mon )
     return (u);
 }                               // end mon_resist_magic()
 
+const char* mons_resist_string(const monsters *mon)
+{
+    if ( mons_immune_magic(mon) )
+        return "is unaffected";
+    else
+        return "resists";
+}
 
 // Returns true if the monster made its save against hostile
 // enchantments/some other magics.

@@ -345,7 +345,8 @@ void mons_direct_effect(struct bolt &pbolt, int i)
         break;
 
     case DMNBM_MUTATION:
-        if (mons_holiness(monster) != MH_NATURAL)
+        if (mons_holiness(monster) != MH_NATURAL ||
+            mons_immune_magic(monster))
             simple_monster_message(monster, " is unaffected.");
         else if (check_mons_resist_magic( monster, pbolt.ench_power ))
             simple_monster_message(monster, " resists.");

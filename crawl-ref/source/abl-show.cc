@@ -2148,7 +2148,8 @@ static int lugonu_warp_monster(int x, int y, int pow, int)
     
     if (check_mons_resist_magic(&mon, pow * 2))
     {
-        mprf("%s resists.", mon.name(DESC_CAP_THE).c_str());
+        mprf("%s %s.",
+             mon.name(DESC_CAP_THE).c_str(), mons_resist_string(&mon));
         return (1);
     }
 

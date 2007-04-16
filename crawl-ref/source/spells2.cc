@@ -745,7 +745,8 @@ void turn_undead(int pow)
         {
             if (check_mons_resist_magic( monster, pow ))
             {
-                simple_monster_message( monster, " resists." );
+                simple_monster_message( monster, mons_immune_magic(monster) ?
+                                        " is unaffected." : " resists." );
                 continue;
             }
 

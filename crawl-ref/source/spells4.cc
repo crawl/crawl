@@ -1447,6 +1447,7 @@ int disperse_monsters(int x, int y, int pow, int message)
     }
     else if (check_mons_resist_magic(defender, pow))
     {
+        // XXX Note that this might affect magic-immunes!
         if (coinflip())
         {
             simple_monster_message(defender, " partially resists.");
@@ -1489,7 +1490,8 @@ static int spell_swap_func(int x, int y, int pow, int message)
     if (defender->type == MONS_BLINK_FROG
         || check_mons_resist_magic( defender, pow ))
     {
-        simple_monster_message( defender, " resists." );
+        simple_monster_message( defender, mons_immune_magic(defender) ?
+                                " is unaffected." : " resists." );
     }
     else
     {
@@ -2714,7 +2716,8 @@ void cast_twist(int pow)
     // Monster can magically save vs attack.
     if (check_mons_resist_magic( &menv[ mons ], pow * 2 ))
     {
-        simple_monster_message( &menv[ mons ], " resists." );
+        simple_monster_message( &menv[mons], mons_immune_magic(&menv[mons]) ?
+                                " is unaffected." : " resists." );
         return;
     }
 
@@ -2848,7 +2851,8 @@ void cast_far_strike(int pow)
     // augmented with an EV check).
     if (check_mons_resist_magic( monster, pow * 2 ))
     {
-        simple_monster_message( monster, " resists." );
+        simple_monster_message( monster, mons_immune_magic(monster) ?
+                                " is unaffected." : " resists." );
         return;
     }
 

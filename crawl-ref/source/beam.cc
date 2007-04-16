@@ -1813,7 +1813,8 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
 
             if (check_mons_resist_magic( monster, pow ))
             {
-                simple_monster_message(monster, " resists.");
+                simple_monster_message(monster, mons_immune_magic(monster) ?
+                                       " is unaffected." : " resists.");
                 continue; 
             }
         }
@@ -1821,7 +1822,8 @@ bool mass_enchantment( int wh_enchant, int pow, int origin )
         {
             if (check_mons_resist_magic( monster, pow ))
             {
-                simple_monster_message(monster, " resists.");
+                simple_monster_message(monster, mons_immune_magic(monster) ?
+                                       " is unaffected." : " resists.");
                 continue;
             }
         }
@@ -3666,7 +3668,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (check_mons_resist_magic( mon, beam.ench_power )
             && !beam.aimed_at_feet)
         {
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
         }
 
         if (simple_monster_message(mon, " looks slightly unstable."))
@@ -3682,7 +3684,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         if (!beam.aimed_at_feet
             && check_mons_resist_magic( mon, beam.ench_power ))
         {
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
         }
 
         if (mons_near( mon ) && player_monster_visible( mon ))
@@ -3698,7 +3700,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
             return (MON_UNAFFECTED);
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         if (monster_polymorph(mon, RANDOM_MONSTER, 100))
             beam.obvious_effect = true;
@@ -3709,7 +3711,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
     if (beam.flavour == BEAM_BANISH)
     {
         if (check_mons_resist_magic( mon, beam.ench_power ))
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         if (you.level_type == LEVEL_ABYSS)
         {
@@ -3731,7 +3733,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         }
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         if (monster_polymorph(mon, MONS_PULSATING_LUMP, 100))
             beam.obvious_effect = true;
@@ -3763,7 +3765,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
 #endif
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
-            return (MON_RESIST);
+            return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         simple_monster_message(mon, " is enslaved.");
         beam.obvious_effect = true;
@@ -3807,7 +3809,7 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         && beam.flavour != BEAM_HEALING
         && beam.flavour != BEAM_INVISIBILITY)
     {
-        return (MON_RESIST);
+        return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
     }
 
     if (beam.flavour == BEAM_PAIN)      /* pain/agony */
