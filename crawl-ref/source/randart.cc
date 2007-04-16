@@ -17,6 +17,8 @@
 #include "AppHdr.h"
 #include "randart.h"
 
+#include <cstdlib>
+#include <climits>
 #include <string.h>
 #include <stdio.h>
 

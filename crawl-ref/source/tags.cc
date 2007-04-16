@@ -55,6 +55,7 @@
 
 */
 
+#include <cstdlib>
 #include <stdio.h>
 #include <string.h>            // for memcpy
 

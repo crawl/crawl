@@ -82,7 +82,7 @@ const char *skills[50][6] =
     {NULL},                     // 24- empty
 
     {"Spellcasting", "Magician", "Thaumaturge", "Eclecticist", "Sorcerer", "Archmage"},     // 25
-    {"Conjurations", "Ruinous", "Conjurer", "Destroyer", "Devastator", "Annihilator"},
+    {"Conjurations", "Ruiner", "Conjurer", "Destroyer", "Devastator", "Annihilator"},
     {"Enchantments", "Charm-Maker", "Infuser", "Bewitcher", "Enchanter", "Spellbinder"},
     {"Summonings", "Caller", "Summoner", "Convoker", "Demonologist", "Hellbinder"},
     {"Necromancy", "Grave Robber", "Reanimator", "Necromancer", "Thanatomancer", "%s of Death"},

@@ -332,6 +332,9 @@ void unixcurses_startup( void )
 
 void unixcurses_shutdown()
 {
+    // resetty();
+    endwin();
+
     tcsetattr(0, TCSAFLUSH, &def_term);
 
 #ifdef USE_UNIX_SIGNALS
@@ -343,9 +346,6 @@ void unixcurses_shutdown()
     signal(SIGINT, SIG_DFL);
 #endif
 #endif
-
-    // resetty();
-    endwin();
 }
 
 
