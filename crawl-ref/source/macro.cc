@@ -737,7 +737,6 @@ int macro_init( void )
     return (0);
 }
 
-#ifdef CLUA_BINDINGS
 void macro_userfn(const char *keys, const char *regname)
 {
     // TODO: Implement.
@@ -745,4 +744,3 @@ void macro_userfn(const char *keys, const char *regname)
     // requires a mapping of key names to whatever getch() spits back, unlikely
     // to happen in a hurry.
 }
-#endif
