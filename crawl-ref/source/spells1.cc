@@ -102,8 +102,7 @@ int blink(void)
         }
         else
         {
-            you.x_pos = beam.tx;
-            you.y_pos = beam.ty;
+            move_player_to_grid(beam.tx, beam.ty, false, true, true);
 
             // controlling teleport contaminates the player -- bwr
             contaminate_player( 1 );
