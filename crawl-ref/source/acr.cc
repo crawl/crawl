@@ -802,8 +802,12 @@ static bool recharge_rod( item_def &rod, bool wielded )
     if (rod.plus > rod.plus2)
         rod.plus = rod.plus2;
 
-    if (wielded && rod.plus == rod.plus2 && is_resting())
-        stop_running();
+    if (wielded && rod.plus == rod.plus2)
+    {
+        mpr("Your rod has recharged.");
+        if (is_resting())
+            stop_running();
+    }
 
     return (true);
 }

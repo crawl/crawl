@@ -1314,15 +1314,11 @@ int count_staff_spells(const item_def &item, bool need_id)
     if (stype < STAFF_SMITING || stype >= STAFF_AIR)
         return (0);
 
-    int num_spells = 0;
-    for (int i = 0; i < SPELLBOOK_SIZE; num_spells++) 
-    {
-        if (is_valid_spell_in_book(type, i))
-            ++num_spells;
-        else
-            break;
-    }
-    return num_spells;
+    int nspel = 0;
+    while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(type, nspel))
+        ++nspel;
+
+    return (nspel);
 }
 
 // Returns a measure of the rod spell power disrupted by a worn shield.
