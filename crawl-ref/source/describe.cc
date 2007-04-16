@@ -82,7 +82,7 @@ static void append_value( std::string & description, int valu, bool plussed )
 //---------------------------------------------------------------
 static void print_description( const std::string &d )
 {
-    unsigned int  nextLine = std::string::npos;
+    std::string::size_type nextLine = std::string::npos;
     unsigned int  currentPos = 0;
 
     const unsigned int lineWidth = 70;

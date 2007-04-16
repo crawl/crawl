@@ -3538,7 +3538,7 @@ void give_armour(monsters *mon, int level)
         break;
 
     case MONS_ORC_WARLORD:
-        // being at the top has it's priviledges
+        // being at the top has its privileges
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall through

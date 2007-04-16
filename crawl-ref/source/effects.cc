@@ -13,6 +13,7 @@
 #include "AppHdr.h"
 #include "effects.h"
 
+#include <cstdlib>
 #include <string.h>
 #include <stdio.h>
 
