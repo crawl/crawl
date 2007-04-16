@@ -3270,6 +3270,9 @@ job_query:
 
             for (i = 0; i < NUM_JOBS; i++)
             {
+                if ( i == JOB_QUITTER )
+                    continue;
+
                 if (!you.species || class_allowed(you.species, i))
                 {
                     job_count++;
