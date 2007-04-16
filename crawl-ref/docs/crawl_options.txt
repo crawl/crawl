@@ -736,7 +736,7 @@ increasing_skill_progress = true
         read (0%). With false, you get the old behaviour which counts backwards
         from 10.
 
-show_turns = true
+show_turns = false
         This option controls whether the turn counter (of turns elapsed) is
         displayed in the main view.
 

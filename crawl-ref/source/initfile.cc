@@ -557,7 +557,7 @@ void game_options::reset_options()
     autopickup_on = true;
     autoprayer_on = false;
 
-    show_turns = true;
+    show_turns = false;
 
     prev_race = 0;
     prev_cls  = 0;

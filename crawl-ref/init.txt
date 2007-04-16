@@ -163,7 +163,7 @@ stab_brand = hi:blue
 # delay_message_clear = true
 # always_greet = false
 # increasing_skill_progress = false
-# show_turns = false
+# show_turns = true
 
 # Colouring for the inventory
 menu_colour = lightred: cursed.*(worn|neck|hand|weapon)\)
