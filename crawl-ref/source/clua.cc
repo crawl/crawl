@@ -4,6 +4,8 @@
 
 #include "AppHdr.h"
 
+#ifdef CLUA_BINDINGS
+
 #include "clua.h"
 
 #include "abl-show.h"
@@ -2323,3 +2325,5 @@ bool lua_text_pattern::translate() const
 
     return translated;
 }
+
+#endif

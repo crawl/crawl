@@ -1008,6 +1008,7 @@ void lua_open_kills(lua_State *ls)
     luaL_openlib(ls, "kills", kill_lib, 0);
 }
 
+#ifdef CLUA_BINDINGS
 static void kill_lua_filltable(std::vector<kill_exp> &v)
 {
     lua_State *ls = clua.state();
@@ -1018,3 +1019,4 @@ static void kill_lua_filltable(std::vector<kill_exp> &v)
         lua_rawseti(ls, -2, i + 1);
     }
 }
+#endif

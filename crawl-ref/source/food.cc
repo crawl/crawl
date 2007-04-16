@@ -348,6 +348,7 @@ bool butchery(void)
     return false;
 }                               // end butchery()
 
+#ifdef CLUA_BINDINGS
 void lua_push_items(lua_State *ls, int link)
 {
     lua_newtable(ls);
@@ -379,6 +380,7 @@ void lua_push_inv_items(lua_State *ls = NULL)
         }
     }
 }
+#endif
 
 static bool userdef_eat_food()
 {
