@@ -3724,8 +3724,8 @@ static void hide_doors()
 // Places a randomized ellipse with centre (x,y) and half axes a and b
 static void place_ellipse(int x, int y, int a, int b, int feat, int margin)
 {
-    for (int i = std::max(x-a,margin); i <= std::min(x+a,GXM-margin); ++i)
-        for (int j = std::max(y-b,margin); j <= std::min(y+b, GYM-margin); ++j)
+    for (int i = std::max(x-a,margin); i < std::min(x+a,GXM-margin); ++i)
+        for (int j = std::max(y-b,margin); j < std::min(y+b, GYM-margin); ++j)
             if ( (x-i)*(x-i)*b*b + (y-j)*(y-j)*a*a <=
                  a*a*b*b/2 + roll_dice(2, a*a*b*b)/4 + random2(3) )
                 grd[i][j] = feat;
@@ -3751,25 +3751,45 @@ static void replace_in_grid(int x1, int y1, int x2, int y2,
                 grd[x][y] = newfeat;
 }
 
-static void prepare_islands()
+static void connected_flood(int margin, int i, int j, bool taken[GXM][GYM])
 {
-    // dpeg's algorithm.
-    // We could have just used spotty_level() and changed rock to
-    // water, but this is much cooler. Right?
-    const int margin = 6;
-    coord_def centres[10];
+    if ( i < margin || i >= GXM - margin ||
+         j < margin || j >= GYM - margin ||
+         taken[i][j] )
+        return;
 
-    // It seems very difficult to get these numbers right, so I'm
-    // fixing them for now.
-    // const int estradius = std::max(50 - num_islands*10, 10);
-    // const int num_islands = std::min(player_branch_depth(), 10);
-    const int num_islands = 4;
-    const int estradius = 12;
+    taken[i][j] = true;
+    for ( int idelta = -1; idelta <= 1; ++idelta )
+        for ( int jdelta = -1; jdelta <= 1; ++jdelta )
+            connected_flood(margin, i + idelta, j + jdelta, taken);
+}
 
-    for (int x = margin; x < GXM-margin; ++x)
-        for (int y = margin; y < GYM-margin; ++y)
-            grd[x][y] = DNGN_DEEP_WATER;
-    
+// yes, yes, this can probably use travel to avoid duplicating code.
+static int count_connected(int margin)
+{
+    bool taken[GXM][GYM];
+
+    for ( int i = margin; i < GXM - margin; ++i )
+        for ( int j = margin; j < GYM - margin; ++j )
+            taken[i][j] = (grd[i][j] == DNGN_DEEP_WATER ||
+                           grd[i][j] == DNGN_SHALLOW_WATER);
+
+    int count = 0;
+
+    for ( int i = margin; i < GXM - margin; ++i )
+        for ( int j = margin; j < GYM - margin; ++j )
+            if ( !taken[i][j] )
+            {
+                ++count;
+                connected_flood(margin,i,j,taken);
+            }
+
+    return count;
+}
+
+static void place_base_islands(int margin, int num_islands, int estradius,
+                               coord_def centres[10])
+{
     for (int i = 0; i < num_islands; ++i)
     {
         // smaller axis
@@ -3808,8 +3828,38 @@ static void prepare_islands()
         // place an ellipse around the new coordinate
         place_ellipse( centres[i].x, centres[i].y, a, b, DNGN_FLOOR, margin);
     }
+}
 
+static void prepare_islands()
+{
+    // dpeg's algorithm.
+    // We could have just used spotty_level() and changed rock to
+    // water, but this is much cooler. Right?
+    const int margin = 6;
 
+    const bool at_bottom = (your_branch().depth == player_branch_depth());
+
+    int num_islands = player_branch_depth() + 1;
+    
+    if ( at_bottom )
+        num_islands += random2(3);
+
+    const int estradius = 50 / num_islands - (num_islands == 2 ? 5 : 0);
+
+    int num_tries = 0;
+    coord_def centres[10];
+    do {
+        for (int x = margin; x < GXM-margin; ++x)
+            for (int y = margin; y < GYM-margin; ++y)
+                grd[x][y] = DNGN_DEEP_WATER;
+        place_base_islands(margin, num_islands, estradius, centres);
+    } while ( ++num_tries < 100 &&
+              count_connected(margin) != num_islands );
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "Num tries: %d Connected components: %d",
+         num_tries, count_connected(margin));
+#endif
+    
     // Adding shallow water at deep water adjacent to floor.
     // Randomisation: place shallow water if at least 1d(1d3) floor neighbours
     for ( int i = margin; i < GXM - margin; ++i)
@@ -3869,21 +3919,58 @@ static void prepare_islands()
     replace_in_grid(margin, margin, GXM-margin, GYM-margin,
                     DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
 
-    // Place stairs randomly. No elevators.
-    for ( int i = 0; i < 3; ++i )
+    if ( at_bottom )
     {
-        int x, y;
-        do {
-            x = random2(GXM);
-            y = random2(GYM);
-        } while ( grd[x][y] != DNGN_FLOOR );
-        grd[x][y] = DNGN_STONE_STAIRS_DOWN_I + i;
+        // Put all the stairs on one island
+        grd[centres[0].x][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
+        grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
+        grd[centres[0].x+2][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
+        
+        // turn all island centres into floor
+        for ( int i = 1; i < num_islands; ++i )
+            grd[centres[i].x][centres[i].y] = DNGN_FLOOR;
 
-        do {
-            x = random2(GXM);
-            y = random2(GYM);
-        } while ( grd[x][y] != DNGN_FLOOR );
-        grd[x][y] = DNGN_STONE_STAIRS_UP_I + i;
+        // Put a rune in the centre of another island
+        {
+            int item_made = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
+                                   0, RUNE_ISLANDS );
+            if (item_made != NON_ITEM && item_made != -1)
+            {
+                mitm[item_made].x = centres[1].x;
+                mitm[item_made].y = centres[1].y;
+            }
+        }
+
+        // Put good items in the other islands
+        for ( int i = 2; i < num_islands; ++i )
+        {
+            int item_made = items( 1, OBJ_RANDOM, OBJ_RANDOM, true,
+                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE );
+            if (item_made != NON_ITEM && item_made != -1)
+            {
+                mitm[item_made].x = centres[i].x;
+                mitm[item_made].y = centres[i].y;
+            }
+        }
+    }
+    else
+    {
+        // Place stairs randomly. No elevators.   
+        for ( int i = 0; i < 3; ++i )
+        {
+            int x, y;
+            do {
+                x = random2(GXM);
+                y = random2(GYM);
+            } while ( grd[x][y] != DNGN_FLOOR );
+            grd[x][y] = DNGN_STONE_STAIRS_DOWN_I + i;
+            
+            do {
+                x = random2(GXM);
+                y = random2(GYM);
+            } while ( grd[x][y] != DNGN_FLOOR );
+            grd[x][y] = DNGN_STONE_STAIRS_UP_I + i;
+        }
     }
 }
 
@@ -9415,7 +9502,7 @@ void define_zombie( int mid, int ztype, int cs, int power )
 
             // every so often, we'll relax the OOD restrictions.  Avoids
             // infinite loops (if we don't do this, things like creating
-            // a large skeleton on level 1 may hang the game!
+            // a large skeleton on level 1 may hang the game!)
             if (one_chance_in(5))
                 relax++;
         }
