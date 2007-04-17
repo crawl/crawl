@@ -38,7 +38,7 @@ A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it l
 Half-buried in the snow was found,
 Still grasping in his hand of ice
 That banner with the strange device,
-Excelsior!
+Excelsior!"
      -Henry Wadsworth Longfellow, "Excelsior"
 %%%%
 imp
@@ -120,7 +120,7 @@ A volatile floating ball of spores, covered in knobbly rhizome growths.
 %%%%
 hobgoblin
 A larger and stronger relative of the goblin.
-Consistency is the hobgoblin of small minds
+Consistency is the hobgoblin of small minds.
      -Ralph Waldo Emerson
 %%%%
 ice beast
@@ -190,7 +190,7 @@ orc knight
 A heavily armoured orc, covered in scars from many past battles.
 %%%%
 wyvern
-A dragon-like creature with long sharply pointed tail.  Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with.
+A dragon-like creature with a long, sharply pointed tail.  Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with.
 %%%%
 big kobold
 An unusually large kobold.
@@ -235,7 +235,7 @@ boulder beetle
 A huge grey beetle with an almost impenetrable rocky carapace.
 %%%%
 flying skull
-Unholy magic keeps a disembodied undead skull hovering above the floor. It has a nasty set of teeth.
+Unholy magic keeps this disembodied undead skull hovering above the floor. It has a nasty set of teeth.
 %%%%
 hell hound
 A huge black dog, with glowing red eyes and smoke pouring from its fanged mouth.
@@ -289,7 +289,7 @@ iron devil
 A hideous humanoid figure with metal skin.
 %%%%
 glowing shapeshifter
-A shapeshifter who has lost control over its transformations, and is constantly changing form.
+A shapeshifter which has lost control over its transformations, and is constantly changing form.
 %%%%
 shapeshifter
 A weird creature with the power to change its form. It is very rarely observed alive in its natural state.
@@ -457,7 +457,7 @@ sheep
 A stupid woolly animal, with murder in its eyes.  It looks surprised.
 %%%%
 ghoul
-An undead humanoid creature created from the decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from the decaying corpses same way as necrophage does.
+An undead humanoid creature created from a decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from the decaying corpses in the same way a necrophage does.
 %%%%
 hog
 A large, fat and very ugly pig.
@@ -818,7 +818,7 @@ A lanky warrior.
 %%%%
 Maud
 
-An evil warrior who looks inexplicably like a rodent.  Looking in to her eyes, you feel yourself forgetting everything else.
+An evil warrior who looks inexplicably like a rodent.  Looking into her eyes, you feel yourself forgetting everything else.
 %%%%
 Louise
 
@@ -932,7 +932,7 @@ A huge undead abomination, pieced together from the broken bones of many dragons
 %%%%
 tentacled monster
 
-A writhing mass of tentacles, all covered in putrid mucous
+A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
 sphinx
 
@@ -950,7 +950,7 @@ greater mummy
 A greater mummy.
 %%%%
 mummy priest
-A mummy priest
+A mummy priest.
 %%%%
 centaur warrior
 
@@ -973,16 +973,16 @@ pale draconian
 Before you stands a draconian.
 %%%%
 green draconian
-Before you stands a draconian
+Before you stands a draconian.
 %%%%
 purple draconian
-Before you stands a draconian
+Before you stands a draconian.
 %%%%
 red draconian
-Before you stands a draconian
+Before you stands a draconian.
 %%%%
 white draconian
-Before you stands a draconian
+Before you stands a draconian.
 %%%%
 mottled draconian
 Before you stands a draconian.
@@ -1078,7 +1078,7 @@ The vicious and heavily armed skeleton of a humanoid creature, animated by unhol
 %%%%
 &
 
-You feel the a lump in the pit of your stomach.  
+You feel a lump in the pit of your stomach.  
 %%%%
 lava worm
 
@@ -1138,7 +1138,7 @@ A large, nasty bear with grey fur.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur
+A large and very strong bear covered in glistening white fur.
 %%%%
 black bear
 
