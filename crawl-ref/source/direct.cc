@@ -595,13 +595,21 @@ void direction(struct dist& moves, targeting_type restricts,
                 break;
             mid = mgrd[moves.tx][moves.ty];
             if (mid == NON_MONSTER) // can put in terrain description here
-                break;
-            
+            {
+                int oid = igrd[moves.tx][moves.ty];
+                if ( oid == NON_ITEM || mitm[oid].base_type == OBJ_GOLD )
+                    break;
+                describe_item( mitm[igrd[moves.tx][moves.ty]] );
+            }
+            else
+            {
 #if (!DEBUG_DIAGNOSTICS)
-            if (!player_monster_visible( &menv[mid] ))
-                break;
+                if (!player_monster_visible( &menv[mid] ))
+                    break;
 #endif
-            describe_monsters(menv[mid].type, mid);
+
+                describe_monsters(menv[mid].type, mid);
+            }
             force_redraw = true;
             redraw_screen();
             mesclr(true);
