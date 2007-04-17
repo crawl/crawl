@@ -75,6 +75,7 @@
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
@@ -227,7 +228,7 @@ int main( int argc, char *argv[] )
 
     // override some options for tutorial
     init_tutorial_options();
-
+    databaseSystemInit();
     if (game_start || Options.always_greet)
     {
         mprf( "Welcome, %s the %s %s.", 

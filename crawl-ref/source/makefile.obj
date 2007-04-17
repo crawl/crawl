@@ -9,6 +9,7 @@ branch.o \
 chardump.o \
 cloud.o \
 command.o \
+database.o \
 debug.o \
 delay.o \
 decks.o \

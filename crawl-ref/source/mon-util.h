@@ -109,7 +109,6 @@ struct monsterentry
     char gmon_use;
 
     size_type size;
-    const char *longDesc;
 };    // mondata[] - again, no idea why this was externed {dlb}
 
 
@@ -169,8 +168,6 @@ bool mons_player_visible( struct monsters *mon );
  * called from: view
  * *********************************************************************** */
 int mons_shouts(int mclass);
-
-const char *mons_longDesc(int mclass);
 
 bool mons_is_unique(int mclass);
 

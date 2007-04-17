@@ -1,0 +1,1190 @@
+%%%%
+program bug
+Program bug
+%%%%
+giant ant
+A black ant with poisonous pincers, about the size of a large dog.
+%%%%
+giant bat
+A huge black bat.
+%%%%
+centaur
+A hybrid with the torso of a human atop the body of a large horse.
+%%%%
+red devil
+The Red Devil is slightly shorter than a human, but muscular and covered in spikes and horns. Two short wings sprout from its shoulders.
+%%%%
+ettin
+A large, two headed humanoid. Most often seen wielding two weapons, so that the heads will have one less thing to bicker about.
+%%%%
+fungus
+A lumpy grey fungus, growing well in the dank underground dungeon.
+%%%%
+goblin
+A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
+
+"Swish, smack! Whip crack!
+Batter and beat! Yammer and bleat!
+Work, work! Nor dare to shirk,
+While Goblins quaff, and Goblins laugh,
+Round and round far underground
+Below, my lad!"
+     -J.R.R. Tolkien, _The Hobbit_
+%%%%
+hound
+A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dissheveled, and has a lean and hungry look.
+
+"A traveller, by the faithful hound,
+Half-buried in the snow was found,
+Still grasping in his hand of ice
+That banner with the strange device,
+Excelsior!
+     -Henry Wadsworth Longfellow, "Excelsior"
+%%%%
+imp
+A small, ugly minor demon.
+%%%%
+phantom
+A transparent man-like undead spirit.
+%%%%
+elephant slug
+A huge grey slug with folds of wrinkled skin.
+%%%%
+jackal
+A small, dog-like scavenger. Packs of these creatures roam the underworld, searching for carrion to devour.
+%%%%
+killer bee
+A giant bee, bearing a deadly barb which can sting repeatedly.
+%%%%
+killer bee larva
+A small, powerless larva of killer bee.
+%%%%
+manticore
+A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
+%%%%
+necrophage
+A vile undead creation of the most unholy necromancy, these creatures are made from the decaying corpses of humanoid creatures.  They exist to spread disease and decay, and gain power from the decaying corpses of other beings.
+%%%%
+orc
+An ugly subterranean race, orcs combine the worst features of humans, pigs, and several other unpleasant creatures.
+%%%%
+quasit
+A small twisted demon with long sharply pointed tail.
+%%%%
+rat
+Wherever there are men, there are rats -- rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
+How now? a rat? Dead, for a ducat, dead!
+     -William Shakespeare, Hamlet, Act III, 4
+%%%%
+scorpion
+A giant black scorpion, its body covered in thick armour plating, and its tail tipped by a nasty venomous sting.
+%%%%
+ugly thing
+An ugly thing. Yuck.
+%%%%
+fire vortex
+A swirling cloud of flame
+%%%%
+worm
+A giant worm, with unusually large teeth.
+%%%%
+abomination
+A hideous form, created or summoned by some arcane process.
+%%%%
+yellow wasp
+A giant wasp covered with thick plates of yellow chitinous armour.
+%%%%
+zombie
+A corpse raised to undeath by necromancy.
+%%%%
+angel
+A winged holy being of unnatural beauty. It has an aura of brilliant white light.
+%%%%
+giant beetle
+A huge black beetle with great crunching mandibles and very hard chitinous armour.
+%%%%
+cyclops
+A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopes throw boulders with fearsome accuracy.
+%%%%
+dragon
+A great reptilian beast, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw.
+%%%%
+two-headed ogre
+A huge ogre with two heads on top of a bloated ogre body. It is capable of holding a weapon in each giant hand.
+%%%%
+fiend
+One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
+%%%%
+giant spore
+A volatile floating ball of spores, covered in knobbly rhizome growths.
+%%%%
+hobgoblin
+A larger and stronger relative of the goblin.
+Consistency is the hobgoblin of small minds
+     -Ralph Waldo Emerson
+%%%%
+ice beast
+A terrible creature, formed of snow and crystalline ice. Its feet leave puddles of icy water on the floor.
+%%%%
+jelly
+A pulsating mass of acidic protoplasm. It can and will eat almost anything, and grows a little each time...
+%%%%
+kobold
+Reputedly the creation of an ancient demon-god, kobolds are small goblin-like creatures with canine heads.
+%%%%
+lich
+A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  These undead creatures can wield great magic and are best avoided by all but the most confident.
+%%%%
+mummy
+An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse. It radiates a malign aura to those who intrude on its domain.
+%%%%
+guardian naga
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+%%%%
+ogre
+A larger, uglier and fatter relative of orcs and goblins.
+%%%%
+plant
+Few plants can grow in the unpleasant dungeon environment, but some have managed to adapt and even thrive underground in the absence of the sun.
+%%%%
+queen bee
+Even larger and more dangerous-looking than its offspring, this creature wants you out of its hive. Now!
+%%%%
+rakshasa
+A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things.
+%%%% 
+snake
+The common dungeon snake.
+%%%%
+troll
+A huge, nasty-looking creature. Its thick and knobbly hide seems to heal almost instantly from most wounds.
+%%%%
+unseen horror
+These creatures are usually unseen by the eyes of most, and those few who have seen them would rather not have.
+%%%%
+vampire
+A powerful undead.
+%%%%
+wraith
+This undead spirit appears as a cloud of black mist surrounding an insubstantial skeletal form. Its eyes burn bright with unholy malevolence.
+%%%%
+huge abomination
+A huge and hideous form, created or summoned by some arcane process.
+%%%%
+yak
+The common dungeon yak, covered in shaggy yak hair and bearing a nasty pair of yak horns.
+%%%%
+large zombie
+A large corpse raised to undeath by necromancy.
+%%%%
+orc warrior
+An armoured orc, obviously experienced in the ways of hacking other creatures apart.
+%%%%
+kobold demonologist
+A kobold who has learned to summon and direct demons.
+%%%%
+orc wizard
+While orcs are generally quite stupid, occasionally one develops an aptitude for magic.
+%%%%
+orc knight
+A heavily armoured orc, covered in scars from many past battles.
+%%%%
+wyvern
+A dragon-like creature with long sharply pointed tail.  Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with.
+%%%%
+big kobold
+An unusually large kobold.
+%%%%
+giant eyeball
+A giant eyeball, with a captivating stare.
+%%%%
+wight
+An ancient warrior, kept in a state of undeath by its will to live.
+%%%%
+oklob plant
+A vicious plant, dripping with vitriol.
+%%%%
+wolf spider
+A large hairy spider with vicious mandibles, roaming the dungeon in search of food.
+%%%%
+shadow
+An wisp of unliving shadow, drifting on the edge of vision.
+%%%%
+hungry ghost
+The undead form of someone who died of starvation, this creature wants the same thing to happen to you!
+%%%%
+eye of draining
+These hovering horrors are especially loathed by wizards.
+%%%%
+butterfly
+A large multicoloured butterfly with beautifully patterned wings.
+%%%%
+wandering mushroom
+A large, fat mushroom.
+%%%%
+efreet
+A huge and muscular figure engulfed in a cloud of searing flame.
+%%%%
+brain worm
+A slimy mauve worm with a greatly distended head.
+%%%%
+giant orange brain
+A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
+%%%%
+boulder beetle
+A huge grey beetle with an almost impenetrable rocky carapace.
+%%%%
+flying skull
+Unholy magic keeps a disembodied undead skull hovering above the floor. It has a nasty set of teeth.
+%%%%
+hell hound
+A huge black dog, with glowing red eyes and smoke pouring from its fanged mouth.
+%%%%
+minotaur
+A large muscular human with the head of a bull. It makes its home in secluded labyrinths.
+%%%%
+ice dragon
+Like a normal dragon, only white and covered in frost.
+%%%%
+slime creature
+An icky glob of slime, which slithers along the ground.
+%%%%
+freezing wraith
+A cloud of freezing air surrounding an incorporeal skeletal form.
+%%%%
+rakshasa
+A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things.
+%%%%
+great orb of eyes
+A levitating ball, covered in malignant eyes.
+%%%%
+hellion
+A frightful demon, covered in roaring hellfire.
+%%%%
+rotting devil
+A hideous decaying form.
+%%%%
+tormentor
+This malign devil is covered in all manner of claws, spines and cruel hooks.
+%%%%
+reaper
+A skeletal form wielding a giant scythe.
+%%%%
+soul eater
+This greater demon looks like a shadow gliding through the air towards you. It radiates an intense aura of negative power.
+%%%%
+hairy devil
+A small humanoid demon covered in brown hair. Watch out - it may have fleas!
+%%%%
+ice devil
+A man-sized demon covered in glittering ice.
+%%%%
+blue devil
+A strange and nasty blue thing. It looks cold.
+%%%%
+beast
+A weird and hideous cross between beast and human.
+%%%%
+iron devil
+A hideous humanoid figure with metal skin.
+%%%%
+glowing shapeshifter
+A shapeshifter who has lost control over its transformations, and is constantly changing form.
+%%%%
+shapeshifter
+A weird creature with the power to change its form. It is very rarely observed alive in its natural state.
+%%%%
+giant mite
+A large arachnid with vicious poisoned mouth-parts.
+%%%%
+steam dragon
+A relatively small grey dragon, with steam pouring from its mouth.
+%%%%
+very ugly thing
+A very ugly thing. Double yuck.
+%%%%
+orc sorcerer
+An orc who draws magical power from Hell.
+%%%%
+hippogriff
+A large creature with the hindquarters of a horse and the wings, head, and talons of a great eagle.
+%%%%
+griffon
+A large creature with the hindquarters of a lion and the wings, head, and talons of a great eagle.
+%%%%
+hydra
+A great reptilian beast, distantly related to the dragon. It has many heads, and the potential to grow many more!
+%%%%
+large skeleton
+A skeleton compelled to unlife by the exercise of necromancy.
+%%%%
+hell knight
+A heavily armoured warrior, in league with the powers of Hell.
+%%%%
+necromancer
+A wizard specializing in the practice of death magic.
+%%%%
+wizard
+An rather eccentric person, dabbling in all sorts of arcanities
+%%%%
+orc priest
+A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It continually mumbles strange prayers. You should hope that they remain unheard.
+%%%%
+orc high priest
+An exalted servant of the orc god.
+%%%%
+human
+A remarkably nondescript person.  How odd!
+%%%%
+gnoll
+A taller and better equipped relative of goblins and orcs, somewhat doglike in appearance.
+%%%%
+clay golem
+A huge animated clay statue.
+%%%%
+wood golem
+A huge animated wood statue.
+%%%%
+stone golem
+A huge animated stone statue.
+%%%%
+iron golem
+A huge animated metal statue.
+%%%%
+crystal golem
+A huge animated crystal statue.
+%%%%
+toenail golem
+A huge animated statue made entirely from toenail clippings. Some people just have too much time on their hands.
+%%%%
+mottled dragon
+A small dragon with strangely mottled scales.
+%%%%
+earth elemental
+A spirit drawn from the elemental plane of earth, which exists in this world by inhabiting a lump of earth and rocks.
+%%%%
+fire elemental
+A spirit drawn from the elemental plane of fire, which exists in this world as a brilliant column of raging flames.
+%%%%
+air elemental
+A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming.
+%%%%
+ice fiend
+One of the most terrible denizens of the many Hells, the Ice Fiend is a huge icy figure, covered in frost and wreathed in freezing air.
+%%%%
+Shadow Fiend
+One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveal a huge, horned skeleton.
+%%%%
+brown snake
+A large brown snake.
+%%%%
+giant lizard
+A huge lizard with great crunching jaws.
+%%%%
+spectral warrior
+A hideous translucent green undead spirit.
+%%%%
+pulsating lump
+A revolting glob of writhing flesh.
+%%%%
+storm dragon
+A huge and very powerful dragon. Sparks crackle along its enormous scaly wings.
+%%%%
+yaktaur
+Like a centaur, but half yak.
+%%%%
+death yak
+A larger and beefier relative of the common dungeon yak. Its little red eyes gleam with hunger for living flesh.
+%%%%
+rock troll
+An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds.
+%%%%
+stone giant
+A gigantic humanoid with grey skin almost as hard as rock. It carries several boulders - are you up for a game of 'catch'?
+%%%%
+flayed ghost
+A hideous undead creature, with torn skin hanging from an emaciated body.
+%%%%
+bumblebee
+A very large and fat hairy bee.
+%%%%
+redback
+A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison.
+%%%%
+insubstantial wisp
+A thin wisp of floating gas.
+%%%%
+vapour
+A normally invisible cloud of weird-looking vapour.
+%%%%
+ogre-mage
+A rare breed of ogre, skilled in the use of magic.
+%%%%
+spiny worm
+A great black worm, its many-segmented body covered in spiky plates of chitinous armour. Acidic venom drips from its toothy maw.
+%%%%
+dancing weapon
+A weapon dancing in the air.
+%%%%
+titan
+This lightning-limned humanoid is unusually large and powerful, even among giants.
+%%%%
+golden dragon
+A great dragon covered in shining golden scales.
+%%%%
+elf
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+lindwurm
+A small serpentine dragon with a pair of strong forelimbs.  Its thick scales give off an eerie green glow.
+%%%%
+war dog
+A vicious dog, trained to kill.  Its neck is protected by massive spiked collar.
+%%%%
+grey rat
+A very large grey rat.
+%%%%
+green rat
+A very large rat, with hair and skin of a most peculiar green colour.
+%%%%
+orange rat
+A huge rat, with weird knobbly orange skin.  It glows with unholy energies.
+%%%%
+black snake
+A large black snake.
+%%%%
+sheep
+A stupid woolly animal, with murder in its eyes.  It looks surprised.
+%%%%
+ghoul
+An undead humanoid creature created from the decaying corpse by some unholy means of necromancy. It exists to spread disease and decay, and gains power from the decaying corpses same way as necrophage does.
+%%%%
+hog
+A large, fat and very ugly pig.
+%%%%
+giant mosquito
+A huge, bloated mosquito. It looks diseased.
+%%%%
+giant centipede
+It has a lot of legs.
+%%%%
+iron troll
+A great troll, plated with thick scales of rusty iron.
+%%%%
+naga
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+%%%%
+fire giant
+A huge ruddy humanoid with bright hair.
+%%%%
+frost giant
+A huge blue humanoid with hoarfrost hair.
+%%%%
+firedrake
+A small dragon, puffing clouds of smoke.
+%%%%
+shadow dragon
+A great shadowy shape, radiating evil and death.
+%%%%
+yellow snake
+A large yellow tubular reptile.
+%%%%
+grey snake
+A very large grey python.
+%%%%
+deep troll
+A stooped troll.
+%%%%
+giant blowfly
+A huge and irritating fly.
+%%%%
+red wasp
+A huge red wasp with a viciously barbed stinger.
+%%%%
+swamp dragon
+A slimy dragon, covered in swamp muck. Poisonous gasses dribble from its snout.
+%%%%
+swamp drake
+A small and slimy dragon, covered in swamp muck.
+%%%%
+death drake
+A small dragon, radiating evil.
+%%%%
+soldier ant
+A giant ant with large mandibles and a vicious sting.
+%%%%
+hill giant
+Although one of the smaller giant varieties, this hill giant is still big enough to be dangerous.
+%%%%
+queen ant
+A bloated insect, covered in thick chitinous armour.  Now you know where all those ants keep coming from!
+%%%%
+ant larva
+A baby ant. Isn't it cute?
+%%%%
+giant frog
+It probably didn't get this big by eating little insects.
+%%%%
+giant brown frog
+A very large and vicious-looking carnivorous frog. Its knobbly brown skin blends in with the rough rock of your surroundings.
+%%%%
+spiny frog
+Although slightly smaller than its cousin, the giant brown frog, the spiny frog makes up for lack of size by being covered in wickedly barbed spines and spurs.
+%%%%
+blink frog
+A weird-looking frog, constantly blinking in and out of reality.
+%%%%
+giant cockroach
+A large brown cockroach.  I call him 'Gregor'.
+%%%%
+small snake
+The lesser dungeon snake.
+%%%%
+white imp
+A small and mischievous minor demon.
+%%%%
+lemure
+A vaguely humanoid blob of putrid white flesh.
+%%%%
+ufetubus
+A chattering and shrieking minor demon.
+%%%%
+manes
+An ugly, twisted little minor demon.
+%%%%
+midge
+A small flying demon.
+%%%%
+neqoxec
+A weirdly shaped demon.
+%%%%
+orange demon
+A bright orange demon with a venomous stinger.
+%%%%
+hellwing
+A hideous skeletal demon, with wings of ancient withered skin.
+%%%%
+smoke demon
+A writhing cloud of smoke hanging in the air.
+%%%%
+ynoxinul
+A demon with shiny metallic scales.
+%%%%
+Executioner
+A horribly powerful demon.
+%%%%
+Green Death
+A bloated form covered in oozing sores and exhaling clouds of lethal poison.
+%%%%
+Blue Death
+A blue greater demon.
+%%%%
+Balrug
+A huge and very powerful demon, wreathed in fire and shadows.
+%%%%
+Cacodemon
+
+A hideously ugly demon of rage and legendary power.
+%%%%
+demonic crawler
+
+A long and bloated body, supported by dozens of short legs and topped with an evil-looking head.
+%%%%
+sun demon
+
+A demonic figure shining with the light and fury of a fallen star.
+%%%%
+shadow imp
+
+A small and shadowy minor demon.
+%%%%
+shadow demon
+
+A mysterious demonic figure, constantly blurring into multiple shadows of itself.
+%%%%
+Lorocyproca
+
+A tall and gaunt figure, draped in long robes which flow as if alive.
+%%%%
+shadow wraith
+
+A mist-wreathed skeletal shadow hanging in mid-air, this creature is almost invisible even to your enhanced sight.
+%%%%
+giant amoeba
+
+A pulsating lump of protoplasm.
+%%%%
+giant slug
+
+A huge and disgusting gastropod. 
+%%%%
+giant snail
+
+A huge and disgusting gastropod with light green shell.
+%%%%
+spatial vortex
+
+A crazily shifting twist in the fabric of reality.
+%%%%
+Pit Fiend
+
+A huge winged fiend with incredibly tough skin.
+%%%%
+boring beetle
+A large brown beetle with huge, rock-crushing mandibles.
+%%%%
+gargoyle
+
+A hideous stone statue come to life.
+%%%%
+metal gargoyle
+
+A hideous metal statue come to life.
+%%%%
+molten gargoyle
+
+A hideous molten stone statue come to life.
+%%%%
+Mnoleg
+
+A weirdly glowing figure, dancing through the twisted air of Pandemonium.
+%%%%
+Lom Lobon
+
+An ancient and strangely serene demon. It regards you coldly from the huge glowing eye in the centre of its forehead.
+%%%%
+Cerebov
+
+A violent and wrathful demon, Cerebov appears as a giant human covered in shining golden armour and wielding a huge twisted sword.
+%%%%
+Gloorx Vloq
+
+A shadowy figure clothed in profound darkness.
+%%%%
+naga mage
+
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+%%%%
+naga warrior
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+%%%%
+orc warlord
+
+A very large and strong looking orc.
+%%%%
+deep elf soldier
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf fighter
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf knight
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf mage
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf summoner
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf conjurer
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf priest
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf high priest
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf demonologist
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf annihilator
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf sorcerer
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+deep elf death mage
+
+One of the race of elves which inhabits this dreary cave. 
+%%%%
+brown ooze
+
+A viscous liquid, flowing along the floor in search of organic matter to corrode.
+%%%%
+azure jelly
+
+A frosty blob of bright blue cytoplasm.
+%%%%
+death ooze
+
+A putrid mass of decaying flesh.
+%%%%
+acid blob
+
+A lump of sickly green flesh, dripping with lethal acid.
+%%%%
+royal jelly
+
+A particularly rich and golden gelatinous thing.
+%%%%
+Terence
+
+An evil human fighter.
+%%%%
+Jessica
+
+An evil apprentice sorceress.
+%%%%
+Ijyb
+
+A small and twisted goblin, wearing some ugly blue rags.
+%%%%
+Sigmund
+
+An evil and spry old human, whose eyes twinkle with madness. Sigmund wields a nasty looking scythe.
+%%%%
+Blork the Orc
+
+A particularly fat and ugly orc.
+%%%%
+Edmund
+
+A lightly armoured warrior.
+%%%%
+Psyche
+
+A fair-haired mage.
+%%%%
+Erolcha
+
+An especially cunning ogre mage.
+%%%%
+Donald
+
+An adventurer like you, trying to find the Orb.
+%%%%
+Urug
+
+A rude orc.
+%%%%
+Michael
+
+A powerful spellcaster, dressed in a long robe.
+%%%%
+Joseph
+
+Looks like a mercenary.
+%%%%
+Snorg
+
+A hairy troll.
+%%%%
+Erica
+
+A comely spellweaver.
+%%%%
+Josephine
+
+An ugly elderly figure, dressed in Druidic clothes.
+%%%%
+Harold
+
+An evil human bounty hunter.
+%%%%
+Norbert
+
+A skilled warrior.
+%%%%
+Jozef
+
+A tall bounty hunter.
+%%%%
+Agnes
+
+A lanky warrior.
+%%%%
+Maud
+
+An evil warrior who looks inexplicably like a rodent.  Looking in to her eyes, you feel yourself forgetting everything else.
+%%%%
+Louise
+
+An unusually heavily armoured spellcaster.
+%%%%
+Francis
+
+A wizened spellcaster.
+%%%%
+Frances
+
+A stout warrior, bearing a deep facial scar.
+%%%%
+Rupert
+
+An evil berserker.
+%%%%
+Wayne
+
+A fat, evil dwarf in a stupid looking hat.
+%%%%
+Duane
+
+An evil mercenary with unusually large ears.
+%%%%
+Xtahua
+An ancient and mighty dragon.
+%%%%
+Norris
+
+A tan, fit and thoroughly evil surfer.
+%%%%
+Frederick
+
+A svelte fighter-mage, wearing a gold-rimmed monocle.
+%%%%
+Margery
+
+A lithe spellcaster.
+%%%%
+Boris
+
+An ancient lich. The air around his shrouded form crackles with evil energy.
+%%%%
+Geryon
+
+A huge and slithery arch-demon, guarding the gates of Hell.
+%%%%
+Dispater
+The lord of the Iron City of Dis.
+%%%%
+Asmodeus
+
+One of the arch-demons who dwell in the depths of Hell.
+%%%%
+Antaeus
+
+A great titan who lives in the depths of Cocytus.
+%%%%
+Ereshkigal
+
+A fearsome arch-fiend who rules the deathly netherworld of Tartarus.
+%%%%
+ancient lich
+
+A lich who has grown mighty over countless years.
+%%%%
+ooze
+
+A disgusting glob of grey sludge.
+%%%%
+vault guard
+
+A heavily armed and armoured guardian of the Vaults.
+%%%%
+curse skull
+
+A charred skull floating in the air and rotating slowly.  Mystic symbols carved into its blackened surface indicate its resistance to almost any form of attack.
+%%%%
+vampire knight
+
+A powerful warrior, with skills undiminished by undeath.
+%%%%
+vampire mage
+
+Undeath has not lessened this powerful mage.
+%%%%
+shining eye
+
+A huge and strangely deformed eyeball, pulsating with light.  Beauty is certainly nowhere to be found in this beholder.
+%%%%
+Orb Guardian
+
+A huge and glowing purple creature, created by the Orb to defend itself.
+%%%%
+Daeva
+
+A divine agent of the Shining One, it is a towering winged figure with an aura of brilliant golden light.
+%%%%
+spectral thing
+
+A hideous glowing apparition.
+%%%%
+greater naga
+
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake. 
+%%%%
+skeletal dragon
+
+A huge undead abomination, pieced together from the broken bones of many dragons.
+%%%%
+tentacled monster
+
+A writhing mass of tentacles, all covered in putrid mucous
+%%%%
+sphinx
+
+A large creature with a human head, the body of a lion, and the wings of a huge bird.
+%%%%
+rotting hulk
+
+A shambling undead creature, related to the ghoul.
+%%%%
+guardian mummy
+
+An ancient warrior, embalmed and cursed to walk in undeath for eternity.
+%%%%
+greater mummy
+A greater mummy.
+%%%%
+mummy priest
+A mummy priest
+%%%%
+centaur warrior
+
+A hybrid with the torso of a human atop the body of a large horse.  It looks strong and aggressive.
+%%%%
+yaktaur captain
+
+Like a centaur, but half yak. It looks very strong and aggressive.
+%%%%
+draconian
+Before you stands a draconian.
+%%%%
+black draconian
+Before you stands a draconian.
+%%%%
+yellow draconian
+Before you stands a draconian.
+%%%%
+pale draconian
+Before you stands a draconian.
+%%%%
+green draconian
+Before you stands a draconian
+%%%%
+purple draconian
+Before you stands a draconian
+%%%%
+red draconian
+Before you stands a draconian
+%%%%
+white draconian
+Before you stands a draconian
+%%%%
+mottled draconian
+Before you stands a draconian.
+%%%%
+draconian caller
+Before you stands a draconian.
+%%%%
+draconian monk
+Before you stands a draconian.
+%%%%
+draconian zealot
+Before you stands a draconian.
+%%%%
+draconian shifter
+Before you stands a draconian.
+%%%%
+draconian annihilator
+Before you stands a draconian.
+%%%%
+draconian knight
+Before you stands a draconian.
+%%%%
+draconian scorcher
+Before you stands a draconian.
+%%%%
+Killer Klown
+
+A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?  Join in the fun, and maybe you'll find out!
+%%%%
+electric golem
+
+An animated figure made completely of electricity.
+%%%%
+ball lightning
+
+An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
+%%%%
+orb of fire
+
+A globe of raw primordial fire, capable of impressive pyrotechnics.
+%%%%
+quokka
+A small marsupial.  Don't call it a rat.
+%%%%
+eye of devastation
+
+A huge eyeball, encased in a levitating globe of incandescent energy.
+%%%%
+moth of wrath
+
+A huge moth, as violent as it is hairy.
+%%%%
+death cob
+
+A dreadful undead cob of corn.
+%%%%
+curse toe
+
+A disembodied toe, hanging in the air and radiating an intense field of negative energy.
+%%%%
+pile of gold coins
+
+An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
+%%%%
+# We need to do something smarter about the various types of mimics.
+mimic
+
+An apparently abandoned item, actually a vicious little beast in disguise.
+%%%%
+hell-hog
+
+A large, fat and very ugly pig, suckled in the pits of Hell.  Roast suckling pig technology will never be the same.
+%%%%
+Serpent of Hell
+
+A huge red glowing dragon, burning with hellfire.
+%%%%
+boggart
+
+A twisted little sprite-goblin. Beware of its magical tricks!
+%%%%
+quicksilver dragon
+
+A long and sinuous dragon, seemingly more neck and tail than anything else. Its skin shines like molten mercury, and magical energies arc from its pointed snout.
+%%%%
+iron dragon
+
+A very heavy and apparently flightless dragon.
+%%%%
+skeletal warrior
+
+The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power.
+%%%%
+&
+
+You feel the a lump in the pit of your stomach.  
+%%%%
+lava worm
+
+A vicious red worm which swims through molten rock.
+%%%%
+lava fish
+
+A fish which lives in lava.
+%%%%
+lava snake
+
+A burning red snake which rears up from pools of lava and tries to bite you.
+%%%%
+salamander
+
+A strange half-human half-snake creature covered in thick red scales and thorns.
+%%%%
+big fish
+
+A fish of unusual size.
+%%%%
+giant goldfish
+
+This is what happens when you give your pet goldfish too much food!
+%%%%
+electrical eel
+
+A small and slimy eel, crackling with electrical discharge.
+%%%%
+jellyfish
+
+A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
+%%%%
+water elemental
+
+A spirit drawn from the elemental plane of water. It exists on this world as part of a body of water.
+%%%%
+swamp worm
+
+A large slimy worm, adept at swimming through the muck of this foul swamp.
+%%%%
+wolf
+
+A large and strong grey canine.
+%%%%
+warg
+
+A particularly large and evil looking wolf, usually found in the company of orcs.
+%%%%
+bear
+
+A common cave bear.
+%%%%
+grizzly bear
+
+A large, nasty bear with grey fur.
+%%%%
+polar bear
+
+A large and very strong bear covered in glistening white fur
+%%%%
+black bear
+
+A small black bear.
+%%%%
+simulacrum
+
+An ice replica of a monster that is animated by the powers of necromancy.
+%%%%
+giant newt
+
+Several times the size of a normal newt, but still not really impressive.
+%%%%
+giant gecko
+
+A lizard with pads on its toes allowing it to cling to walls and ceilings.  It's much larger than a normal gecko... perhaps it's something in the water?
+%%%%
+giant iguana
+
+A huge lizard with great crunching jaws.
+%%%%
+gila monster
+
+A large lizard with brightly coloured stripes and splotches.
+%%%%
+komodo dragon
+
+An enormous monitor lizard.  It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
+%%%%
+orange crystal statue
+
+An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
+%%%%
+silver statue
+
+A beautiful statue of silver. Its eyes glow with an otherworldly radiance.
+%%%%
+ice statue
+
+An imposing statue carved in glistening ice. Freezing vapours swirl about it.
+%%%%
+Murray
+
+A demonic skull rolling along the dungeon floor.
+%%%%
+Tiamat
+
+A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch.
+%%%%

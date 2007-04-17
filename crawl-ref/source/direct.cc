@@ -1481,12 +1481,8 @@ static void describe_cell(int mx, int my)
 
         const int mon_wep = menv[i].inv[MSLOT_WEAPON];
         const int mon_arm = menv[i].inv[MSLOT_ARMOUR];
-        const char *longDesc = mons_longDesc(menv[i].type);
-        if (longDesc && longDesc != "") {
-            mprf("%s. ('v' to describe)", ptr_monam(&(menv[i]), DESC_CAP_A));
-        } else {
-            mprf("%s.", ptr_monam(&(menv[i]), DESC_CAP_A));
-        }
+        mprf("%s. ('v' to describe)", ptr_monam(&(menv[i]), DESC_CAP_A));
+
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
             snprintf( info, INFO_SIZE, "%s is wielding ",

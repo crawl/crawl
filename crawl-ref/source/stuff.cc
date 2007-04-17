@@ -14,6 +14,7 @@
  */
 
 #include "AppHdr.h"
+#include "database.h"
 #include "direct.h"
 #include "monplace.h"
 #include "stuff.h"
@@ -355,7 +356,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     std::string error = print_error? strerror(errno) : "";
     
     cio_cleanup();
-
+    databaseSystemShutdown();
     if (format)
     {
         va_list arg;

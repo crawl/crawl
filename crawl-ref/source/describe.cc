@@ -20,6 +20,7 @@
 
 #include "AppHdr.h"
 #include "describe.h"
+#include "database.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -109,6 +110,15 @@ static void print_description( const std::string &d )
                 continue;
             }
 
+            // Handle real line breaks.  No substitutions necessary, just update
+            // the counts.
+            nextLine = d.find('\n', currentPos);
+            if (nextLine >= currentPos && nextLine < currentPos + lineWidth) {
+                cprintf("%s", (d.substr(currentPos, nextLine - currentPos)).c_str());
+                currentPos = nextLine +1;
+                continue;
+            }
+            
             if (nextLine == std::string::npos)
                 nlSearch = false;       // there are no newlines, don't search again.
         }
@@ -4608,7 +4618,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description += mons_longDesc(menv[which_mons].type);
+    description += (std::string)getLongDescription(ptr_monam(&mons, DESC_PLAIN));
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
