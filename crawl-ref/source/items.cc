@@ -2756,7 +2756,7 @@ void handle_time( long time_delta )
             temp_rand = random2(8);
             mpr( ((temp_rand  < 5) ? "You smell something rotten." :
                   (temp_rand == 5) ? "The smell of rotting flesh makes you sick." :
-                  (temp_rand == 6) ? "You smell decay. Yuk..."
+                  (temp_rand == 6) ? "You smell decay. Yuck!"
                                    : "Ugh! There is something really disgusting in your inventory."), 
                 MSGCH_ROTTEN_MEAT );
             break;
