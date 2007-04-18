@@ -2016,7 +2016,7 @@ bool orange_statue_effects(monsters *mons)
 
 static bool make_monster_angry(const monsters *mon, monsters *targ)
 {
-    if (mon->attitude != targ->attitude)
+    if (mons_friendly(mon) != mons_friendly(targ))
         return (false);
 
     // targ is guaranteed to have a foe (needs_berserk checks this).
