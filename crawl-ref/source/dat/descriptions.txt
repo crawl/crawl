@@ -120,7 +120,7 @@ A volatile floating ball of spores, covered in knobbly rhizome growths.
 %%%%
 hobgoblin
 A larger and stronger relative of the goblin.
-Consistency is the hobgoblin of small minds.
+A foolish consistency is the hobgoblin of little minds.
      -Ralph Waldo Emerson
 %%%%
 ice beast
