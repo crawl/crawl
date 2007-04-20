@@ -3881,7 +3881,7 @@ FLAGS: no_rotate
 ORIENT: float
 ITEM: stone
 MONS: rat, goblin, kobold, ooze
-SHUFFLE: {[( 
+SHUFFLE: {[(
 MAP
 xxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 x.........l.l................x
@@ -3903,7 +3903,7 @@ x.....lllll..4....lllllll....x
 x.....llllll....lllllll......x
 x.....lllllllllllll..........x
 x.........lllllll............x
-x............................x
+x>..........................>x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
  

@@ -48,7 +48,10 @@ endif
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
 
-LIB = -lncurses -L$(LUASRC) -l$(LUALIB)
+LIBDBM = $(shell [ "`ls /usr/lib/libdbm.* 2>/dev/null`" != "" ] \
+			&& echo 'dbm' || echo 'db')
+
+LIB = -lncurses -L$(LUASRC) -l$(LUALIB) -l$(LIBDBM)
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC)
 

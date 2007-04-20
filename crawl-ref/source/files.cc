@@ -80,12 +80,6 @@
 #include "travel.h"
 #include "tutorial.h"
 
-#ifdef SHARED_FILES_CHMOD_PRIVATE
-#define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
-#else
-#define DO_CHMOD_PRIVATE(x) // empty command
-#endif
-
 void save_level(int level_saved, level_area_type lt,
                 branch_type where_were_you);
 
@@ -1644,5 +1638,27 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     if (mode && mode[0] == 'w')
         chmod(file.c_str(), SHARED_FILES_CHMOD_PUBLIC);
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// file_lock
+//
+// Locks a named file (usually an empty lock file), creating it if necessary.
+
+file_lock::file_lock(const std::string &s, const char *_mode, bool die_on_fail)
+    : handle(NULL), mode(_mode), filename(s)
+{
+#ifdef USE_FILE_LOCKING
+    if (!(handle = lk_open(mode, filename)) && die_on_fail)
+        end(1, true, "Unable to open lock file \"%s\"", filename.c_str());
+#endif
+}
+
+file_lock::~file_lock()
+{
+#ifdef USE_FILE_LOCKING
+    if (handle)
+        lk_close(handle, mode, filename);
 #endif
 }

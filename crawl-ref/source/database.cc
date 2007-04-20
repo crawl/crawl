@@ -14,48 +14,71 @@
 #include <unistd.h>
 #include <stdlib.h>
 #endif
-#include <stdlib.h>
+#include <cstdlib>
+#include <fstream>
 #include "database.h"
 #include "files.h"
+#include "libutil.h"
+#include "stuff.h"
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
 
-#define nil 0
+db_list openDBList;
+DBM     *descriptionDB;
 
-static bool databaseIsInitted = false;
-dbList_t *openDBList;
-DBM      *descriptionDB;
+#define DESC_BASE_NAME "descript"
+#define DESC_TXT       (DESC_BASE_NAME ".txt")
+#define DESC_DB        (DESC_BASE_NAME ".db")
 
-struct dbList_s {
-    DBM         *dbPtr;
-    dbList_s    *next;
-} dbList_s;
+static void generate_description_db();
 
+time_t file_modtime(const std::string &file)
+{
+    struct stat filestat;
+    if (stat(file.c_str(), &filestat))
+        return (0);
 
-void databaseSystemInit() {
-    if (!databaseIsInitted) {
-        databaseIsInitted = true;
-        openDBList = nil;
-        std::string descriptionPath = datafile_path("descriptions.db");
-        descriptionPath.erase(descriptionPath.length() - 3, descriptionPath.length());
-        descriptionDB = openDB(descriptionPath.c_str());
+    return (filestat.st_mtime);
+}
+
+// Returns true if file a is newer than file b.
+bool is_newer(const std::string &a, const std::string &b)
+{
+    return (file_modtime(a) > file_modtime(b));
+}
+
+void check_newer(const std::string &target,
+                 const std::string &dependency,
+                 void (*action)())
+{
+    if (is_newer(dependency, target))
+        action();
+}
+
+void databaseSystemInit()
+{
+    if (!descriptionDB)
+    {
+        std::string descriptionPath = get_savedir_path(DESC_DB);
+        check_newer(descriptionPath,
+                    datafile_path(DESC_TXT),
+                    generate_description_db);
+        descriptionPath.erase(descriptionPath.length() - 3);
+        if (!(descriptionDB = openDB(descriptionPath.c_str())))
+            end(1, true, "Failed to open DB: %s", descriptionPath.c_str());
     }
 }
 
-void databaseSystemShutdown() {
-    if (!databaseIsInitted) {
-        // All done.
-        return;
+void databaseSystemShutdown()
+{
+    for (db_list::iterator i = openDBList.begin();
+         i != openDBList.end(); ++i)
+    {
+        dbm_close(*i);
     }
-    dbList_t *current = openDBList;
-    dbList_t *prev = nil;
-    while (current) {
-        dbm_close(current->dbPtr);
-        prev = current;
-        current = current->next;
-        free(prev);
-    }
+    openDBList.clear();
+    descriptionDB = NULL;
 }
 
 // This is here, and is external, just for future expansion -- if we
@@ -64,76 +87,141 @@ void databaseSystemShutdown() {
 // morally wrong to have the database module manage the memory here.
 // But hey, life is hard and you can write your own berkeley DB
 // calls if you like.
-DBM   *openDB(const char *dbFilename) {
-    if (!databaseIsInitted) {
-        return nil;
-    }
+DBM   *openDB(const char *dbFilename)
+{
     DBM *dbToReturn = dbm_open(dbFilename, O_RDONLY, 0660);
-    if (dbToReturn) {
-        if (openDBList) {
-            dbList_t *endOfDBList = openDBList; 
-            while (openDBList->next) {
-                endOfDBList = openDBList->next;
-            }
-            endOfDBList->next = (dbList_t *)malloc(sizeof(dbList_t));
-            endOfDBList = endOfDBList->next;
-            endOfDBList->next = nil;
-            endOfDBList->dbPtr = dbToReturn;
-            
-        } else {
-            openDBList = (dbList_t *)malloc(sizeof(dbList_t));
-            openDBList->next = nil;
-            openDBList->dbPtr = dbToReturn;
-        }
-    } else {
-        dbToReturn = nil;
-    }
+    if (dbToReturn)
+        openDBList.push_front(dbToReturn);
+
     return dbToReturn;
 }
 
-datum database_fetch(DBM *database, const char *key) {
+datum database_fetch(DBM *database, const std::string &key)
+{
     datum result;
-    result.dptr = nil;
+    result.dptr = NULL;
     result.dsize = 0;
-    if (!databaseIsInitted) {
-        return result;
-    }
     datum dbKey;
     
-    dbKey.dptr = (void *)key;
-    dbKey.dsize = strlen(key); 
+    dbKey.dptr = (DPTR_COERCE) key.c_str();
+    dbKey.dsize = key.length(); 
     
     result = dbm_fetch(database, dbKey);
     
     return result;
 }
 
-char *private_strlwr(char *string) {
-    int i;
-    for (i = 0; string[i]; i++) {
-        string[i] = tolower(string[i]);
-    }
-    return string;
-} 
+std::string getLongDescription(const char *key)
+{
+    if (!descriptionDB)
+        return ("");
 
-std::string getLongDescription(const char *key) {
-    if (!databaseIsInitted) {
-        return nil;
-    }
     // We have to canonicalize the key (in case the user typed it
     // in and got the case wrong.
-    int len = strlen(key);
-    char *lowercaseKey = (char *)malloc(len+1);
-    (void) strncpy(lowercaseKey, key, len+1);
-    lowercaseKey = private_strlwr(lowercaseKey);
+    std::string canonical_key = key;
+    lowercase(canonical_key);
     
     // Query the DB.
-    datum result = database_fetch(descriptionDB, (const char *)lowercaseKey);
+    datum result = database_fetch(descriptionDB, canonical_key);
     
     // Cons up a (C++) string to return.  The caller must release it.
-    std::string stringToReturn((const char *)result.dptr, result.dsize);
-    // free the result...
-    free(lowercaseKey);
-    
-    return stringToReturn;
+    return std::string((const char *)result.dptr, result.dsize);
+}
+
+static void store_descriptions(const std::string &in, const std::string &out);
+static void generate_description_db()
+{
+    std::string db_path = get_savedir_path(DESC_BASE_NAME);
+    std::string txt_path = datafile_path(DESC_TXT);
+
+    file_lock lock(get_savedir_path(DESC_BASE_NAME ".lk"), "wb");
+    store_descriptions(txt_path, db_path);
+    DO_CHMOD_PRIVATE(get_savedir_path(DESC_DB).c_str());
+}
+
+static void trim_right(std::string &s)
+{
+    s.erase(s.find_last_not_of(" \r\t\n") + 1);
+}
+
+static void trim_leading_newlines(std::string &s)
+{
+    s.erase(0, s.find_first_not_of("\n"));
+}
+
+static void add_entry(DBM *db, const std::string &k, std::string &v)
+{
+    trim_leading_newlines(v);
+    datum key, value;
+    key.dptr = (char *) k.c_str();
+    key.dsize = k.length();
+
+    value.dptr = (char *) v.c_str();
+    value.dsize = v.length();
+
+    if (dbm_store(db, key, value, DBM_REPLACE))
+        end(1, true, "Error storing %s", k.c_str());
+}
+
+static void parse_descriptions(std::ifstream &inf, DBM *db)
+{
+    char buf[1000];
+
+    std::string key;
+    std::string value;
+
+    bool in_entry = false;
+    while (!inf.eof())
+    {
+        inf.getline(buf, sizeof buf);
+
+        if (*buf == '#')
+            continue;
+
+        if (!strncmp(buf, "%%%%", 4))
+        {
+            if (!key.empty())
+                add_entry(db, key, value);
+            key.clear();
+            value.clear();
+            in_entry = true;
+            continue;
+        }
+
+        if (!in_entry)
+            continue;
+
+        if (key.empty())
+        {
+            key = buf;
+            trim_string(key);
+            lowercase(key);
+        }
+        else
+        {
+            std::string line = buf;
+            trim_right(line);
+            value += line + "\n";
+        }
+    }
+
+    if (!key.empty())
+        add_entry(db, key, value);
+}
+
+static void store_descriptions(const std::string &in, const std::string &out)
+{
+    std::ifstream inf(in.c_str());
+    if (!inf)
+        end(1, true, "Unable to open input file: %s", in.c_str());
+
+    if (DBM *db = dbm_open(out.c_str(), O_RDWR | O_CREAT, 0660))
+    {
+        parse_descriptions(inf, db);
+        dbm_close(db);
+    }
+    else
+        end(1, true, "Unable to open DB: %s", out.c_str());
+
+    inf.close();
 }

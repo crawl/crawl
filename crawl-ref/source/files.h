@@ -40,6 +40,7 @@ std::string get_savedir_filename(const std::string &pre,
                                  const std::string &suf,
                                  const std::string &ext,
                                  bool suppress_uid = false);
+std::string get_savedir_path(const std::string &shortpath);
 
 std::string get_prefs_filename();
 
@@ -99,5 +100,23 @@ void lk_close(FILE *handle, const char *mode, const std::string &file);
 bool lock_file_handle( FILE *handle, int type );
 bool unlock_file_handle( FILE *handle );
 #endif // USE_FILE_LOCKING
+
+#ifdef SHARED_FILES_CHMOD_PRIVATE
+#define DO_CHMOD_PRIVATE(x) chmod( (x), SHARED_FILES_CHMOD_PRIVATE )
+#else
+#define DO_CHMOD_PRIVATE(x) // empty command
+#endif
+
+class file_lock
+{
+public:
+    file_lock(const std::string &filename, const char *mode,
+              bool die_on_fail = true);
+    ~file_lock();
+private:
+    FILE *handle;
+    const char *mode;
+    std::string filename;
+};
 
 #endif

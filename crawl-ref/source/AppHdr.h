@@ -72,6 +72,8 @@
     #define UNIX
     #define USE_8_COLOUR_TERM_MAP
     #define COL_TO_REPLACE_DARKGREY     BLUE
+
+    #define DB_NDBM
 #endif
 
 // =========================================================================
@@ -397,6 +399,10 @@
 
 #if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
 #   error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
+#endif
+
+#ifndef DB_NDBM
+#define DB_DBH
 #endif
 
 // Uncomment these if you can't find these functions on your system

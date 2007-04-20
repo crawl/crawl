@@ -228,7 +228,6 @@ int main( int argc, char *argv[] )
 
     // override some options for tutorial
     init_tutorial_options();
-    databaseSystemInit();
     if (game_start || Options.always_greet)
     {
         mprf( "Welcome, %s the %s %s.", 
@@ -2878,6 +2877,9 @@ static bool initialise(void)
 
     // Read special levels and vaults.
     read_maps();
+
+    // Initialise internal databases.
+    databaseSystemInit();
     
     cio_init();
 

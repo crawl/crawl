@@ -2936,16 +2936,15 @@ MAP
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .ww2ccccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
-.wwxx........3.3.......wwcww.
+.wwxx........3.3.......cccww.
 .122........3.I.3......4Ocww.
-.wwxx........3.3.......wwcww.
+.wwxx........3.3.......cccww.
 .ww.c.......3.3.3......w2cww.
 .ww2ccccccccccccccccccccccww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .............................
 ENDMAP
-
 
 ##############################################################################
 # Just like home

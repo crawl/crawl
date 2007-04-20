@@ -10,29 +10,34 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#undef DEBUG // hack
-#define NDEBUG
+#include "AppHdr.h"
 #include "externs.h"
+#include <list>
 
-#ifdef __cplusplus
 extern "C" {
+#ifdef DB_NDBM
+
+#   include <ndbm.h>
+#   define DPTR_COERCE void *
+
+#else
+
+#   define DB_DBM_HSEARCH 1
+#   include <db.h>
+#   define DPTR_COERCE char *
+
 #endif
-
-#include <ndbm.h>
-
-// For convenience during shutdown.
-typedef struct dbList_s dbList_t;
-#ifdef __cplusplus
 }
-#endif
-extern dbList_t *openDBList;
+
+typedef std::list<DBM *> db_list;
+
+extern db_list openDBList;
 
 void databaseSystemInit();
 void databaseSystemShutdown();
 DBM  *openDB(const char *dbFilename);
-datum *database_fetch(DBM *database, char *key);
+datum database_fetch(DBM *database, const std::string &key);
 
-
-std::string getLongDescription(const char *key);
+std::string getLongDescription(const std::string &key);
 
 #endif
