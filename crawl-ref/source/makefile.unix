@@ -68,6 +68,12 @@ ifneq ($(DATADIR),)
 CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
 endif
 
+HAVE_NDBM := $(shell [ -f /usr/include/ndbm.h ] && echo y)
+
+ifeq ($(HAVE_NDBM),y)
+CFOTHERS += -DDB_NDBM
+endif
+
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
 
