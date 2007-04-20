@@ -111,7 +111,7 @@ datum database_fetch(DBM *database, const std::string &key)
     return result;
 }
 
-std::string getLongDescription(const char *key)
+std::string getLongDescription(const std::string &key)
 {
     if (!descriptionDB)
         return ("");
@@ -132,11 +132,13 @@ static void store_descriptions(const std::string &in, const std::string &out);
 static void generate_description_db()
 {
     std::string db_path = get_savedir_path(DESC_BASE_NAME);
+    std::string full_db_path = get_savedir_path(DESC_DB);
     std::string txt_path = datafile_path(DESC_TXT);
 
     file_lock lock(get_savedir_path(DESC_BASE_NAME ".lk"), "wb");
+    unlink( full_db_path.c_str() );
     store_descriptions(txt_path, db_path);
-    DO_CHMOD_PRIVATE(get_savedir_path(DESC_DB).c_str());
+    DO_CHMOD_PRIVATE(full_db_path.c_str());
 }
 
 static void trim_right(std::string &s)

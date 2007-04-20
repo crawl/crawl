@@ -4618,7 +4618,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description += (std::string)getLongDescription(ptr_monam(&mons, DESC_PLAIN));
+    description += getLongDescription(ptr_monam(&mons, DESC_PLAIN));
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
