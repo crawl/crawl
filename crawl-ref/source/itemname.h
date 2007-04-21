@@ -25,16 +25,6 @@ char get_ident_type(char cla, int ty);
 
 
 /* ***********************************************************************
- * called from: acr - chardump - direct - effects - fight - invent -
- *              it_use2 - item_use - items - monstuff - mstuff2 - ouch -
- *              shopping - spells1 - spells2 - spells3
- * *********************************************************************** */
-const char *item_name( const item_def &item, char descrip, 
-                char *buff = NULL,
-                bool terse = false );
-
-
-/* ***********************************************************************
  * called from: debug - describe - dungeon - fight - files - item_use -
  *              monstuff - mstuff2 - players - spells0
  * *********************************************************************** */
@@ -53,24 +43,8 @@ void check_item_knowledge(void);
 void clear_ids(void);
 
 
-/* ***********************************************************************
- * called from: direct - fight - food - items - monstuff - religion -
- *              shopping
- * *********************************************************************** */
-const char *it_name(int itn, char des, char *buff = NULL, bool terse = false);
-
-/* ***********************************************************************
- * called from: acr - chardump - command - effects - fight - invent -
- *              it_use2 - it_use3 - item_use - items - ouch - output -
- *              spell - spells1 - spells2 - spells3 - spells4 - transfor
- * *********************************************************************** */
-const char *in_name(int inn, char des, char *buff = NULL, bool terse = false);
-
-/* ***********************************************************************
- * called from: itemname.cc items.cc item_use.cc mstuff2.cc
- * *********************************************************************** */
-const char *quant_name( const item_def &item, int quant, char des, 
-                 char buff[ITEMNAME_SIZE], bool terse = false );
+std::string quant_name( const item_def &item, int quant,
+                        description_level_type des, bool terse = false );
 
 /* ***********************************************************************
  * bit operations called from a large number of files

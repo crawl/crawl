@@ -1371,7 +1371,8 @@ std::string str_monam(const monsters *mon, description_level_type desc,
 }
 
 /* ------------------------- monam/moname ------------------------- */
-const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
+const char *ptr_monam( const monsters *mon, description_level_type desc,
+                       bool force_seen )
 {
     // We give an item type description for mimics now, note that 
     // since gold mimics only have one description (to match the
@@ -1379,11 +1380,13 @@ const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
     // this for them. -- bwr
     if (mons_is_mimic( mon->type ) && mon->type != MONS_GOLD_MIMIC)
     {
+        // XXX Ugly hack - FIXME XXX
         static char mimic_name_buff[ ITEMNAME_SIZE ];
 
         item_def item;
         get_mimic_item( mon, item );
-        item_name( item, desc, mimic_name_buff );
+        strncpy(mimic_name_buff, item.name(desc).c_str(),
+                sizeof mimic_name_buff);
 
         return (mimic_name_buff);
     }
@@ -1394,7 +1397,8 @@ const char *ptr_monam( const monsters *mon, char desc, bool force_seen )
 }
 
 const char *monam( const monsters *mon,
-                   int mons_num, int mons, bool vis, char desc, int mons_wpn )
+                   int mons_num, int mons, bool vis, 
+                   description_level_type desc, int mons_wpn )
 {
     static char gmo_n[ ITEMNAME_SIZE ];
     char gmo_n2[ ITEMNAME_SIZE ] = "";
@@ -1427,6 +1431,7 @@ const char *monam( const monsters *mon,
             strcpy(gmo_n, "a");
             break;
         case DESC_PLAIN:         /* do nothing */ ;
+        default:
             break;
             //default: DEBUGSTR("bad desc flag");
         }
@@ -1493,7 +1498,7 @@ const char *monam( const monsters *mon,
         {
             item_def item = mitm[mons_wpn];
             unset_ident_flags( item, ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES );
-            item_name( item, desc, gmo_n );
+            strncpy( gmo_n, item.name(desc).c_str(), sizeof gmo_n );
         }
         break;
 
@@ -1514,7 +1519,8 @@ const char *monam( const monsters *mon,
     return (gmo_n);
 }                               // end monam()
 
-const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZE ])
+const char *moname(int mons_num, bool vis, description_level_type descrip,
+                   char glog[ ITEMNAME_SIZE ])
 {
     glog[0] = 0;
 
@@ -1540,6 +1546,8 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
         case DESC_CAP_YOUR:
             strcpy(glog, "Its");
             break;
+        default:
+            strcpy(glog, "Its buggy");
         }
 
         strcpy(gmon_name, glog);
@@ -1565,6 +1573,7 @@ const char *moname(int mons_num, bool vis, char descrip, char glog[ ITEMNAME_SIZ
             strcpy(glog, "a");
             break;
         case DESC_PLAIN:
+        default:
             break;
         // default: DEBUGSTR("bad monster descrip flag");
         }

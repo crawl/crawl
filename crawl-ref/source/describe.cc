@@ -3228,11 +3228,7 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
     description.reserve(500);
 
     if (!dump)
-    {
-        char str_pass[ ITEMNAME_SIZE ];
-        item_name( item, DESC_INVENTORY_EQUIP, str_pass );
-        description += std::string(str_pass);
-    }
+        description += item.name(DESC_INVENTORY_EQUIP);
 
     description += "$$";
 
@@ -4878,13 +4874,11 @@ void describe_monsters(int class_described, unsigned char which_mons)
                 has_item = true;
             }
 
-            char buff[ ITEMNAME_SIZE ];
-
+            // duplicate it, because we're going to change it
             item_def item = mitm[ menv[which_mons].inv[i] ];
             set_ident_flags( item, ISFLAG_IDENT_MASK );
-
-            item_name( item, DESC_NOCAP_A, buff );
-            snprintf( info, INFO_SIZE, "    %d: %s$", i, buff );
+            snprintf( info, INFO_SIZE, "    %d: %s$", i,
+                      item.name(DESC_NOCAP_A).c_str() );
             description += info;
         }
     }

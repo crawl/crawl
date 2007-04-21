@@ -122,15 +122,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     if (verbose)
     {
-        char str_pass[ ITEMNAME_SIZE ];
-        in_name( to_slot, DESC_INVENTORY_EQUIP, str_pass );
-        mpr( str_pass );
+        mpr( you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str() );
 
         if (is_valid_item( you.inv[from_slot] ))
-        {
-            in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
-            mpr( str_pass );
-        }
+            mpr( you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str() );
     }
 
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
@@ -140,7 +135,6 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 static void adjust_item(void)
 {
     int from_slot, to_slot;
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (inv_count() < 1)
     {
@@ -155,8 +149,7 @@ static void adjust_item(void)
         return;
     }
 
-    in_name( from_slot, DESC_INVENTORY_EQUIP, str_pass );
-    mpr( str_pass );
+    mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     to_slot = prompt_invent_item(
                     "Adjust to which letter?", 
@@ -458,9 +451,7 @@ void list_armour(void)
 
         if (armour_id != -1)
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(armour_id, DESC_INVENTORY, str_pass);
-            strcat(info, str_pass);
+            strcat(info, you.inv[armour_id].name(DESC_INVENTORY).c_str());
         }
         else
         {
@@ -486,9 +477,7 @@ void list_jewellery(void)
 
         if (jewellery_id != -1)
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(jewellery_id, DESC_INVENTORY, str_pass);
-            strcat(info, str_pass);
+            strcat(info, you.inv[jewellery_id].name(DESC_INVENTORY).c_str());
         }
         else
         {
@@ -511,9 +500,7 @@ void list_weapons(void)
 
     if (weapon_id != -1)
     {
-        char str_pass[ ITEMNAME_SIZE ];
-        in_name( weapon_id, DESC_INVENTORY_EQUIP, str_pass );
-        strcat(info, str_pass);
+        strcat(info, you.inv[weapon_id].name(DESC_INVENTORY_EQUIP).c_str());
     }
     else
     {
@@ -537,9 +524,7 @@ void list_weapons(void)
 
         if (is_valid_item( you.inv[i] ))
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(i, DESC_INVENTORY_EQUIP, str_pass);
-            strcat(info, str_pass);
+            strcat(info, you.inv[i].name(DESC_INVENTORY_EQUIP).c_str());
         }
         else
             strcat(info, "    none");
@@ -555,11 +540,7 @@ void list_weapons(void)
     if (item == ENDOFPACK)
         strcat(info, "    nothing");
     else
-    {
-        char str_pass[ ITEMNAME_SIZE ];
-        in_name( item, DESC_INVENTORY_EQUIP, str_pass );
-        strcat( info, str_pass );
-    }
+        strcat(info, you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
     mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
 }                               // end list_weapons()

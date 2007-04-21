@@ -322,9 +322,7 @@ void unwield_item(char unw, bool showMsgs)
 
         if (brand != SPWPN_NORMAL)
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(unw, DESC_CAP_YOUR, str_pass);
-            strcpy(info, str_pass);
+            strcpy(info, you.inv[unw].name(DESC_CAP_YOUR).c_str());
             
             switch (brand)
             {

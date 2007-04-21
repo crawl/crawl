@@ -1242,13 +1242,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     else
     {
         // build shoot message
-        char str_pass[ ITEMNAME_SIZE ];
-        item_name( item, DESC_NOCAP_A, str_pass );
-        strcat(info, str_pass);
+        strcat(info, item.name(DESC_NOCAP_A).c_str());
 
         // build beam name
-        item_name( item, DESC_PLAIN, str_pass );
-        pbolt.name = str_pass;
+        pbolt.name = item.name(DESC_PLAIN);
     }
 
     strcat(info, ".");

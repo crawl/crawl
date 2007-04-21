@@ -714,9 +714,7 @@ unsigned char spellbook_contents( item_def &book, int action,
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
-    char str_pass[ ITEMNAME_SIZE ];
-    item_name( book, DESC_CAP_THE, str_pass );
-    out.cprintf( "%s", str_pass );
+    out.cprintf( "%s", book.name(DESC_CAP_THE).c_str() );
 
     out.cprintf( EOL EOL " Spells                             Type                      Level" EOL );
 

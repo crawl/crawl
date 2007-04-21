@@ -125,13 +125,10 @@ void weapon_switch( int targ )
     }
     else
     {
-        char buff[80];
-        in_name( targ, DESC_NOCAP_A, buff );
-
-        char let = index_to_letter( targ );
-
-        snprintf( info, INFO_SIZE, "Switching back to %c - %s.", let, buff );
-        mpr( info );
+        // XXX XXX FIXME Why not just use DESC_INVENTORY?
+        mprf("Switching back to %c - %s.",
+             index_to_letter(targ),
+             you.inv[targ].name(DESC_NOCAP_A).c_str());
     }
 
     // unwield the old weapon and wield the new.
@@ -193,8 +190,6 @@ static bool find_butchering_implement()
 
 bool butchery(void)
 {
-    char str_pass[ ITEMNAME_SIZE ];
-
     bool can_butcher = false;
     bool wpn_switch = false;
     bool new_cursed = false;
@@ -250,8 +245,8 @@ bool butchery(void)
         found_nonzero_corpses = true;
         
         // offer the possibility of butchering
-        it_name(objl, DESC_NOCAP_A, str_pass);
-        snprintf(info, INFO_SIZE, "Butcher %s?", str_pass);
+        snprintf(info, INFO_SIZE, "Butcher %s?",
+                 mitm[objl].name(DESC_NOCAP_A).c_str());
         int answer = yesnoquit( info, true, 'n', false );
         if ( answer == -1 )
         {
@@ -597,21 +592,20 @@ void eat_floor_item(int item_link)
 
 bool eat_from_floor(void)
 {
-    char str_pass[ ITEMNAME_SIZE ];
-
     if (player_is_levitating() && !wearing_amulet(AMU_CONTROLLED_FLIGHT))
         return (false);
 
     bool need_more = false;
     for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
     {
-        if (mitm[o].base_type != OBJ_FOOD)
+        item_def& item = mitm[o];
+
+        if (item.base_type != OBJ_FOOD)
             continue;
 
-        it_name( o, DESC_NOCAP_A, str_pass );
         mprf( MSGCH_PROMPT,
-                  "Eat %s%s?", (mitm[o].quantity > 1) ? "one of " : "", 
-                  str_pass );
+              "Eat %s%s?", (item.quantity > 1) ? "one of " : "", 
+              item.name(DESC_NOCAP_A).c_str() );
 
         // If we're prompting now, we don't need a -more- when
         // breaking out, because the prompt serves as a -more-. Of
@@ -631,7 +625,7 @@ bool eat_from_floor(void)
 
         if (keyin == 'y')
         {
-            if (!can_ingest( mitm[o].base_type, mitm[o].sub_type, false ))
+            if (!can_ingest( item.base_type, item.sub_type, false ))
             {
                 need_more = true;
                 continue;

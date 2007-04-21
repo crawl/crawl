@@ -655,8 +655,8 @@ void create_spec_object()
 
             for (i = 0; i < max_subtype[ mitm[thing_created].base_type ]; i++)
             {
-                mitm[thing_created].sub_type = i;     
-                item_name( mitm[thing_created], DESC_PLAIN, obj_name );
+                mitm[thing_created].sub_type = i;
+                strcpy(obj_name,mitm[thing_created].name(DESC_PLAIN).c_str());
 
                 ptr = strstr( strlwr(obj_name), strlwr(specs) );
                 if (ptr != NULL)
@@ -705,7 +705,8 @@ void create_spec_object()
                 for (i = 1; i < 25; i++)
                 {
                     mitm[thing_created].special = i;
-                    item_name( mitm[thing_created], DESC_PLAIN, obj_name );
+                    strcpy(obj_name,
+                           mitm[thing_created].name(DESC_PLAIN).c_str());
 
                     ptr = strstr( strlwr(obj_name), strlwr(specs) );
                     if (ptr != NULL)
@@ -803,8 +804,7 @@ void tweak_object(void)
 
         for (;;) 
         {
-            item_name( you.inv[item], DESC_INVENTORY_EQUIP, info );
-            mpr( info );
+            mpr( you.inv[item].name(DESC_INVENTORY_EQUIP).c_str() );
 
             mpr( "a - plus  b - plus2  c - special  d - quantity  e - flags  ESC - exit",
                  MSGCH_PROMPT );
@@ -1066,10 +1066,9 @@ void debug_item_scan( void )
                 // Check for invalid (zero quantity) items that are linked in
                 if (!is_valid_item( mitm[obj] ))
                 {
-                    snprintf( info, INFO_SIZE, "Linked invalid item at (%d,%d)!", x, y);
-                    mpr( info, MSGCH_WARN );
-                    item_name( mitm[obj], DESC_PLAIN, name );
-                    dump_item( name, obj, mitm[obj] );
+                    mprf(MSGCH_WARN, "Linked invalid item at (%d,%d)!", x, y);
+                    dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
+                               obj, mitm[obj] );
                 }
 
                 // Check that item knows what stack it's in
@@ -1077,8 +1076,8 @@ void debug_item_scan( void )
                 {
                     snprintf( info, INFO_SIZE, "Item position incorrect at (%d,%d)!", x, y);
                     mpr( info, MSGCH_WARN );
-                    item_name( mitm[obj], DESC_PLAIN, name );
-                    dump_item( name, obj, mitm[obj] );
+                    dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
+                               obj, mitm[obj] );
                 }
 
                 // If we run into a premarked item we're in real trouble,
@@ -1101,7 +1100,7 @@ void debug_item_scan( void )
         if (!is_valid_item( mitm[i] ))
             continue;
 
-        item_name( mitm[i], DESC_PLAIN, name );
+        strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
         // Don't check (-1,-1) player items or (0,0) monster items
         if ((mitm[i].x > 0 || mitm[i].y > 0) 
@@ -1670,11 +1669,11 @@ static std::string fsim_wskill()
 
 static std::string fsim_weapon(int missile_slot)
 {
-    char item_buf[ITEMNAME_SIZE];
+    std::string item_buf;
     if (you.equip[EQ_WEAPON] != -1)
     {
         const item_def &weapon = you.inv[ you.equip[EQ_WEAPON] ];
-        item_name(weapon, DESC_PLAIN, item_buf, true);
+        item_buf = weapon.name(DESC_PLAIN, true);
 
         if (is_range_weapon(weapon))
         {
@@ -1682,19 +1681,14 @@ static std::string fsim_weapon(int missile_slot)
                 missile_slot == -1? get_fire_item_index() :
                                     missile_slot;
             if (missile < ENDOFPACK)
-            {
-                std::string base = item_buf;
-                base += " with ";
-                in_name(missile, DESC_PLAIN, item_buf, true);
-                return (base + item_buf);
-            }
+                return item_buf+" with "+you.inv[missile].name(DESC_PLAIN);
         }
     }
     else
     {
-        strncpy(item_buf, "unarmed", sizeof item_buf);
+        return "unarmed";
     }
-    return (item_buf);
+    return item_buf;
 }
 
 static std::string fsim_time_string()
@@ -1903,7 +1897,6 @@ static bool debug_fight_sim(int mindex, int missile_slot,
 int fsim_kit_equip(const std::string &kit)
 {
     int missile_slot = -1;
-    char item_buf[ITEMNAME_SIZE];
 
     std::string::size_type ammo_div = kit.find("/");
     std::string weapon = kit;
@@ -1921,8 +1914,7 @@ int fsim_kit_equip(const std::string &kit)
         if (!is_valid_item(you.inv[i]))
             continue;
 
-        in_name(i, DESC_PLAIN, item_buf, true);
-        if (std::string(item_buf).find(weapon) != std::string::npos)
+        if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
         {
             if (i != you.equip[EQ_WEAPON])
             {
@@ -1941,8 +1933,7 @@ int fsim_kit_equip(const std::string &kit)
             if (!is_valid_item(you.inv[i]))
                 continue;
             
-            in_name(i, DESC_PLAIN, item_buf, true);
-            if (std::string(item_buf).find(missile) != std::string::npos)
+            if (you.inv[i].name(DESC_PLAIN).find(missile)!=std::string::npos)
             {
                 missile_slot = i;
                 break;

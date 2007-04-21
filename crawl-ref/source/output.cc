@@ -337,28 +337,24 @@ void print_stats(void)
         cprintf("                                       ");
 #endif
 
+        gotoxy(40, 13);
+
         if (you.equip[EQ_WEAPON] != -1)
         {
-            gotoxy(40, 13);
-            textcolor(you.inv[you.equip[EQ_WEAPON]].colour);
 
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass, false );
-            int prefcol = menu_colour(str_pass);
+            const item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
+            textcolor(wpn.colour);
+
+            const int prefcol = menu_colour(wpn.name(DESC_INVENTORY));
             if (prefcol != -1)
                 textcolor(prefcol);
 
-            in_name( you.equip[EQ_WEAPON], DESC_INVENTORY, str_pass,
-                     Options.terse_hand );
-            str_pass[39] = 0;
-
-            cprintf("%s", str_pass);
+            cprintf("%s",
+                    wpn.name(DESC_INVENTORY, Options.terse_hand).c_str());
             textcolor(LIGHTGREY);
         }
         else
         {
-            gotoxy(40, 13);
-
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
             {
                 textcolor(RED);
@@ -855,7 +851,6 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
     cols.add_formatted(1, buf, true);
 
     {
-        char str_pass[ITEMNAME_SIZE];
         const int e_order[] =
         {
             EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
@@ -874,12 +869,11 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
 
             if ( you.equip[ e_order[i] ] != -1)
             {
-                const int inum = you.equip[e_order[i]];
-                in_name( inum, DESC_PLAIN, str_pass, true );
-                str_pass[38] = 0; // truncate
-                const char* colname = colour_to_str(you.inv[inum].colour);
+                const item_def& item = you.inv[you.equip[e_order[i]]];
+                const char* colname = colour_to_str(item.colour);
                 snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
-                         slot, colname, str_pass, colname);
+                         slot, colname,
+                         item.name(DESC_PLAIN).substr(0,38).c_str(), colname);
             }
             else
             {
@@ -1262,7 +1256,6 @@ void print_overview_screen()
     cols.add_formatted(1, buf, false);
 
     {
-        char str_pass[ITEMNAME_SIZE];
         const int e_order[] =
         {
             EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
@@ -1281,12 +1274,11 @@ void print_overview_screen()
 
             if ( you.equip[ e_order[i] ] != -1)
             {
-                const int inum = you.equip[e_order[i]];
-                in_name( inum, DESC_PLAIN, str_pass, true );
-                str_pass[38] = 0; // truncate
-                const char* colname = colour_to_str(you.inv[inum].colour);
+                const item_def& item = you.inv[you.equip[e_order[i]]];
+                const char* colname = colour_to_str(item.colour);
                 snprintf(buf, sizeof buf, "%-7s: <%s>%s</%s>",
-                         slot, colname, str_pass, colname);
+                         slot, colname,
+                         item.name(DESC_PLAIN).substr(0,37).c_str(), colname);
             }
             else
             {

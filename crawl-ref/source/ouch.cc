@@ -74,8 +74,8 @@
 #include "view.h"
 
 
-void end_game( struct scorefile_entry &se );
-void item_corrode( char itco );
+static void end_game( scorefile_entry &se );
+static void item_corrode( int itco );
 
 
 /* NOTE: DOES NOT check for hellfire!!! */
@@ -319,7 +319,7 @@ void weapon_acid( char acid_strength )
     }
 }                               // end weapon_acid()
 
-void item_corrode( char itco )
+void item_corrode( int itco )
 {
     int chance_corr = 0;        // no idea what its full range is {dlb}
     bool it_resists = false;    // code simplifier {dlb}
@@ -340,17 +340,18 @@ void item_corrode( char itco )
     if (how_rusty < -5)
         return;
 
+    item_def& item = you.inv[itco];
     // determine possibility of resistance by object type {dlb}:
-    switch (you.inv[itco].base_type)
+    switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if (is_random_artefact( you.inv[itco] ))
+        if (is_random_artefact( item ))
         {
             it_resists = true;
             suppress_msg = true;
         }
-        else if ((you.inv[itco].sub_type == ARM_CRYSTAL_PLATE_MAIL
-                    || get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN)
+        else if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
+                    || get_equip_race(item) == ISFLAG_DWARVEN)
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -359,13 +360,13 @@ void item_corrode( char itco )
         break;
 
     case OBJ_WEAPONS:
-        if (is_fixed_artefact(you.inv[itco]) 
-            || is_random_artefact(you.inv[itco]))
+        if (is_fixed_artefact(item) 
+            || is_random_artefact(item))
         {
             it_resists = true;
             suppress_msg = true;
         }
-        else if (get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN
+        else if (get_equip_race(item) == ISFLAG_DWARVEN
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -374,7 +375,7 @@ void item_corrode( char itco )
         break;
 
     case OBJ_MISSILES:
-        if (get_equip_race(you.inv[itco]) == ISFLAG_DWARVEN 
+        if (get_equip_race(item) == ISFLAG_DWARVEN 
                 && !one_chance_in(5))
         {
             it_resists = true;
@@ -402,7 +403,7 @@ void item_corrode( char itco )
         if (chance_corr >= 0 && chance_corr <= 4)
         {
             it_resists = (random2(100) <
-                            2 + (2 << (1 + chance_corr)) + (chance_corr * 8));
+                            2 + (4 << chance_corr) + (chance_corr * 8));
         }
         else
             it_resists = true;  // no idea how often this occurs {dlb}
@@ -414,21 +415,18 @@ void item_corrode( char itco )
     // handle message output and item damage {dlb}:
     if (!suppress_msg)
     {
-        char str_pass[ ITEMNAME_SIZE ];
-        in_name(itco, DESC_CAP_YOUR, str_pass);
-        strcpy(info, str_pass);
-        strcat(info, (it_resists) ? " resists." : " is eaten away!");
-        mpr(info);
+        mprf("%s %s", item.name(DESC_CAP_YOUR).c_str(),
+             (it_resists) ? " resists." : " is eaten away!");
     }
 
     if (!it_resists)
     {
         how_rusty--;
 
-        if (you.inv[itco].base_type == OBJ_WEAPONS)
-            you.inv[itco].plus2 = how_rusty;
+        if (item.base_type == OBJ_WEAPONS)
+            item.plus2 = how_rusty;
         else
-            you.inv[itco].plus = how_rusty;
+            item.plus = how_rusty;
 
         you.redraw_armour_class = 1;     // for armour, rings, etc. {dlb}
 

@@ -37,7 +37,6 @@
 #include "effects.h"
 #include "enum.h"
 #include "it_use2.h"
-#include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
 #include "misc.h"

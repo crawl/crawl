@@ -355,11 +355,12 @@ std::string Stash::stash_item_name(const item_def &item)
 {
     char buf[ITEMNAME_SIZE];
     
+    // XXX XXX FIXME why the special-casing?
     if (item.base_type == OBJ_GOLD)
         snprintf(buf, sizeof buf, "%d gold piece%s", item.quantity, 
                     (item.quantity > 1? "s" : ""));
     else
-        item_name(item, DESC_NOCAP_A, buf, false);
+        return item.name(DESC_NOCAP_A);
 
     return buf;
 }
@@ -658,7 +659,7 @@ std::string ShopInfo::shop_item_name(const shop_item &si) const
     char shopitem[ITEMNAME_SIZE * 2];
     std::string itemname = Stash::stash_item_name(si.item);
     snprintf(shopitem, sizeof shopitem, "%s (%u gold)", 
-            itemname.c_str(), si.price);
+             itemname.c_str(), si.price);
     return shopitem;   
 }
 

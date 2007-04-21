@@ -38,7 +38,6 @@
 #include "debug.h"
 #include "describe.h"
 #include "hiscores.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "macro.h"
@@ -637,7 +636,6 @@ static void sdump_inventory(const std::string &, std::string & text)
         }
     }
 
-    char st_pass[ ITEMNAME_SIZE ] = "";
     int inv_class2[OBJ_GOLD];
     int inv_count = 0;
     char tmp_quant[20];
@@ -697,9 +695,7 @@ static void sdump_inventory(const std::string &, std::string & text)
                     if (is_valid_item(you.inv[j]) && you.inv[j].base_type == i)
                     {
                         text += " ";
-
-                        in_name( j, DESC_INVENTORY_EQUIP, st_pass );
-                        text += st_pass;
+                        text += you.inv[j].name(DESC_INVENTORY_EQUIP);
 
                         inv_count--;
 

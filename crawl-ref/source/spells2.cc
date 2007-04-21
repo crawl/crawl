@@ -552,9 +552,7 @@ bool brand_weapon(int which_brand, int power)
         return false;
     }
 
-    char str_pass[ ITEMNAME_SIZE ];
-    in_name( wpn, DESC_CAP_YOUR, str_pass );
-    strcpy( info, str_pass );
+    strcpy( info, you.inv[wpn].name(DESC_CAP_YOUR).c_str() );
 
     const int wpn_type = get_vorpal_type(you.inv[wpn]);
 

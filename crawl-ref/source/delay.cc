@@ -278,8 +278,6 @@ bool is_being_butchered(const item_def &item)
 void handle_delay( void )
 /***********************/
 {
-    char  str_pass[ ITEMNAME_SIZE ];
-
     if (!you_are_delayed())
         return;
 
@@ -373,16 +371,12 @@ void handle_delay( void )
         switch ( delay.type )
         {
         case DELAY_ARMOUR_ON:
-            in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass );
-            snprintf( info, INFO_SIZE,
-                      "You continue putting on %s.", str_pass );
-            mpr(info, MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
+                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
             break;
         case DELAY_ARMOUR_OFF:
-            in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass );
-            snprintf( info, INFO_SIZE,
-                      "You continue taking off %s.", str_pass );
-            mpr(info, MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
+                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
             break;
         case DELAY_BUTCHER:
             mpr("You continue butchering the corpse.",
@@ -413,7 +407,6 @@ void handle_delay( void )
 
 static void finish_delay(const delay_queue_item &delay)
 {
-    char  str_pass[ ITEMNAME_SIZE ];
     switch (delay.type)
     {
     case DELAY_WEAPON_SWAP:
@@ -430,9 +423,8 @@ static void finish_delay(const delay_queue_item &delay)
 
     case DELAY_ARMOUR_OFF:
     {
-        in_name( delay.parm1, DESC_NOCAP_YOUR, str_pass ); 
-        snprintf( info, INFO_SIZE, "You finish taking off %s.", str_pass );
-        mpr(info);
+        mprf("You finish taking off %s.",
+             you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
 
         const equipment_type slot = 
             get_armour_slot( you.inv[delay.parm1] );
@@ -585,10 +577,9 @@ static void finish_delay(const delay_queue_item &delay)
         }
         else
         {
-            quant_name( you.inv[ delay.parm1 ], delay.parm2, 
-                        DESC_NOCAP_A, str_pass );
-
-            snprintf( info, INFO_SIZE, "You drop %s.", str_pass );
+            snprintf( info, INFO_SIZE, "You drop %s.",
+                      quant_name(you.inv[delay.parm1], delay.parm2,
+                                 DESC_NOCAP_A).c_str());
             mpr(info);
 
             dec_inv_item_quantity( delay.parm1, delay.parm2 );
@@ -626,7 +617,7 @@ static void armour_wear_effects(const int item_slot)
     item_def &arm = you.inv[item_slot];
 
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
-    mprf("You finish putting on %s.", item_name(arm, DESC_NOCAP_YOUR));
+    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
     const equipment_type eq_slot = get_armour_slot(arm);
 

@@ -1158,7 +1158,7 @@ static int l_item_worn(lua_State *ls)
     return (2);
 }
 
-static int desc_code(const char *desc)
+static description_level_type desc_code(const char *desc)
 {
     if (!desc)
         return DESC_PLAIN;
@@ -1190,14 +1190,11 @@ static int l_item_name(lua_State *ls)
     LUA_ITEM(item, 1);
     if (item)
     {
-        int ndesc = DESC_PLAIN;
+        description_level_type ndesc = DESC_PLAIN;
         if (lua_isstring(ls, 2))
             ndesc = desc_code(lua_tostring(ls, 2));
         bool terse = lua_toboolean(ls, 3);
-        char bufitemname[ITEMNAME_SIZE];
-        item_name(*item, ndesc, bufitemname, terse);
-
-        lua_pushstring(ls, bufitemname);
+        lua_pushstring(ls, item->name(ndesc, terse).c_str());
     }
     else
         lua_pushnil(ls);

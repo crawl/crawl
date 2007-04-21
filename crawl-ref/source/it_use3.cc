@@ -62,7 +62,6 @@ void special_wielded(void)
     const int old_plus2 = you.inv[wpn].plus2;
     const char old_colour = you.inv[wpn].colour;
 
-    char str_pass[ ITEMNAME_SIZE ];
     int temp_rand = 0;          // for probability determination {dlb}
     bool makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
 
@@ -200,20 +199,14 @@ void special_wielded(void)
     case SPWLD_HUM:
         if (makes_noise)
         {
-            in_name(wpn, DESC_CAP_YOUR, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, " lets out a weird humming sound.");
-            mpr(info, MSGCH_SOUND);
         }
         break;                  // to noisy() call at foot 2apr2000 {dlb}
 
     case SPWLD_CHIME:
         if (makes_noise)
         {
-            in_name(wpn, DESC_CAP_YOUR, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, " chimes like a gong.");
-            mpr(info, MSGCH_SOUND);
+            mprf(MSGCH_SOUND, "%s chimes like a gong.",
+                 you.inv[wpn].name(DESC_CAP_YOUR).c_str());
         }
         break;
 
@@ -335,8 +328,6 @@ bool evoke_wielded( void )
     int pract = 0;
     bool did_work = false;  // used for default "nothing happens" message
 
-    char str_pass[ ITEMNAME_SIZE ];
-
     int wield = you.equip[EQ_WEAPON];
 
     if (you.berserker)
@@ -350,10 +341,12 @@ bool evoke_wielded( void )
         return (false);
     }
 
-    switch (you.inv[wield].base_type)
+    item_def& wpn = you.inv[wield];
+
+    switch (wpn.base_type)
     {
     case OBJ_WEAPONS:
-        if (get_weapon_brand( you.inv[wield] ) == SPWPN_REACHING
+        if (get_weapon_brand( wpn ) == SPWPN_REACHING
             && enough_mp(1, false))
         {
             // needed a cost to prevent evocation training abuse -- bwr
@@ -363,9 +356,9 @@ bool evoke_wielded( void )
             pract = (one_chance_in(5) ? 1 : 0);
             did_work = true;
         }
-        else if (is_fixed_artefact( you.inv[wield] ))
+        else if (is_fixed_artefact( wpn ))
         {
-            switch (you.inv[wield].special)
+            switch (wpn.special)
             {
             case SPWPN_STAFF_OF_DISPATER:
                 if (you.deaths_door || !enough_hp(11, true) 
@@ -486,7 +479,7 @@ bool evoke_wielded( void )
         break;
 
     case OBJ_STAVES:
-        if (item_is_rod( you.inv[wield] ))
+        if (item_is_rod( wpn ))
         {
             pract = staff_spell( wield );
             // [ds] Early exit, no turns are lost.
@@ -495,7 +488,7 @@ bool evoke_wielded( void )
 
             did_work = true;  // staff_spell() will handle messages
         }
-        else if (you.inv[wield].sub_type == STAFF_CHANNELING)
+        else if (wpn.sub_type == STAFF_CHANNELING)
         {
             if (you.magic_points < you.max_magic_points 
                 && you.skills[SK_EVOCATIONS] >= random2(30)) 
@@ -506,17 +499,13 @@ bool evoke_wielded( void )
                 pract = (one_chance_in(5) ? 1 : 0);
                 did_work = true;
 
-                if (!item_type_known( you.inv[you.equip[EQ_WEAPON]] ))
+                if (!item_type_known(wpn))
                 {
-                    set_ident_flags( you.inv[you.equip[EQ_WEAPON]], 
-                                     ISFLAG_KNOW_TYPE );
+                    set_ident_flags( wpn, ISFLAG_KNOW_TYPE );
 
-                    strcpy( info, "You are wielding " );
-                    in_name( you.equip[EQ_WEAPON], DESC_NOCAP_A, str_pass );
-                    strcat( info, str_pass );
-                    strcat( info, "." );
-
-                    mpr( info );
+                    mprf("You are wielding %s.",
+                         wpn.name(DESC_NOCAP_A).c_str());
+                         
                     more();
 
                     you.wield_change = true;
@@ -527,7 +516,7 @@ bool evoke_wielded( void )
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
-        switch (you.inv[wield].sub_type)
+        switch (wpn.sub_type)
         {
         case MISC_BOTTLED_EFREET:
             if (efreet_flask())

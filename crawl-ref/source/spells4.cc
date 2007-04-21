@@ -1078,7 +1078,8 @@ void cast_ignite_poison(int pow)
     {
         if (set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_FLAMING ))
         {
-            mprf("%s bursts into flame!", in_name(wpn, DESC_CAP_YOUR));
+            mprf("%s bursts into flame!",
+                 you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
             you.wield_change = true;
             you.duration[DUR_WEAPON_BRAND] += 1 + you.duration[DUR_WEAPON_BRAND] / 2;
@@ -2031,8 +2032,6 @@ void cast_evaporate(int pow)
 // using up the corpse might also lead to game balance problems. -- bwr
 void cast_fulsome_distillation( int powc )
 {
-    char str_pass[ ITEMNAME_SIZE ];
-
     if (powc > 50)
         powc = 50;
 
@@ -2047,11 +2046,11 @@ void cast_fulsome_distillation( int powc )
              curr_item != NON_ITEM; 
              curr_item = mitm[curr_item].link) 
     {
-        if (mitm[curr_item].base_type == OBJ_CORPSES
-            && mitm[curr_item].sub_type == CORPSE_BODY)
+        const item_def& item = mitm[curr_item];
+        if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY)
         {
-            it_name( curr_item, DESC_NOCAP_THE, str_pass );
-            snprintf( info, INFO_SIZE, "Distill a potion from %s?", str_pass );
+            snprintf( info, INFO_SIZE, "Distill a potion from %s?",
+                      item.name(DESC_NOCAP_THE).c_str() );
 
             if (yesno( info, true, 0, false ))
             {
@@ -2169,10 +2168,8 @@ void cast_fulsome_distillation( int powc )
     mitm[corpse].plus2 = 0;
     item_colour( mitm[corpse] );  // sets special as well
 
-    it_name( corpse, DESC_NOCAP_A, str_pass );
-    snprintf( info, INFO_SIZE, "You extract %s from the corpse.",
-              str_pass );
-    mpr( info );
+    mprf("You extract %s from the corpse.",
+         mitm[corpse].name(DESC_NOCAP_A).c_str());
 
     // try to move the potion to the player (for convenience)
     if (move_item_to_player( corpse, 1 ) != 1)

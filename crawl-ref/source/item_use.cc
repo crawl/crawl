@@ -170,7 +170,6 @@ bool can_wield(const item_def *weapon, bool say_reason)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 {
     int item_slot = 0;
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (inv_count() < 1)
     {
@@ -258,8 +257,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     // any oddness on wielding taken care of here
     wield_effects(item_slot, show_weff_messages);
 
-    in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
-    mpr( str_pass );
+    mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     // warn player about low str/dex or throwing skill
     wield_warning();
@@ -951,9 +949,8 @@ bool takeoff_armour(int item)
         {
             if (item == you.equip[loopy])
             {
-                in_name(item, DESC_CAP_YOUR, info);
-                strcat(info, " is stuck to your body!");
-                mpr(info);
+                mprf("%s is stuck to your body!",
+                     you.inv[item].name(DESC_CAP_YOUR).c_str());
                 return false;
             }
         }
@@ -1212,7 +1209,6 @@ int get_fire_item_index( void )
 void shoot_thing(void)
 {
     struct bolt beam;  // passed in by reference, but never used here
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (you.berserker)
     {
@@ -1228,7 +1224,7 @@ void shoot_thing(void)
         return;
     }
 
-    mprf("Firing: %s", in_name(item, DESC_INVENTORY_EQUIP, str_pass));
+    mprf("Firing: %s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
     throw_it( beam, item );
 }                               // end shoot_thing()
@@ -1393,12 +1389,10 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     }
 
     // Making a copy of the item: changed only for venom launchers
-    item_def item = you.inv[throw_2];  
+    item_def item = you.inv[throw_2];
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
     origin_set_unknown(item);
-
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (you.conf)
     {
@@ -1436,8 +1430,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
     pbolt.source_y = you.y_pos;
     pbolt.colour = item.colour;
 
-    item_name( item, DESC_PLAIN, str_pass );
-    pbolt.name = str_pass;
+    pbolt.name = item.name(DESC_PLAIN);
 
     pbolt.thrower = KILL_YOU_MISSILE;
     pbolt.aux_source.clear();
@@ -1713,8 +1706,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         {
             // poison brand the ammo
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
-            item_name( item, DESC_PLAIN, str_pass );
-            pbolt.name = str_pass;
+            pbolt.name = item.name(DESC_PLAIN);
         }
         
         // Note that bow_brand is known since the bow is equiped.
@@ -1769,23 +1761,19 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         {
             if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
                  random2(100) < rc_skill )
-            { 
+            {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
-                in_name( throw_2, DESC_NOCAP_A, str_pass);
-                snprintf(info, INFO_SIZE, "You are firing %s.", str_pass);
-                mpr(info);
+                mprf("You are firing %s.",
+                     you.inv[throw_2].name(DESC_NOCAP_A).c_str());
             }
         }
         else if (random2(100) < shoot_skill)
         {
-            set_ident_flags(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES);
+            item_def& weapon = you.inv[you.equip[EQ_WEAPON]];            
+            set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
 
-            strcpy(info, "You are wielding ");
-            in_name(you.equip[EQ_WEAPON], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("You are wielding %s.", weapon.name(DESC_NOCAP_A).c_str());
 
             more();
             you.wield_change = true;
@@ -1873,12 +1861,11 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         // ID check
         if ( !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES) &&
              random2(100) < you.skills[SK_RANGED_COMBAT] )
-        { 
+        {                
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
-            in_name( throw_2, DESC_NOCAP_A, str_pass);
-            snprintf(info, INFO_SIZE, "You are throwing %s.", str_pass);
-            mpr(info);
+            mprf("You are throwing %s.",
+                 you.inv[throw_2].name(DESC_NOCAP_A).c_str());
         }
     }
 
@@ -1975,16 +1962,8 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 #endif
 
     // create message
-    if (launched)
-        strcpy(info, "You shoot ");
-    else
-        strcpy(info, "You throw ");
-
-    item_name( item, DESC_NOCAP_A, str_pass );
-
-    strcat(info, str_pass);
-    strcat(info, ".");
-    mpr(info);
+    mprf( "You %s %s.", launched ? "shoot" : "throw",
+          item.name(DESC_NOCAP_A).c_str() );
 
     // ensure we're firing a 'missile'-type beam
     pbolt.is_beam = false;
@@ -2119,7 +2098,7 @@ void jewellery_wear_effects(item_def &item)
     // cursed or not, we know that since we've put the ring on
     set_ident_flags( item, ISFLAG_KNOW_CURSE );
 
-    mpr( item_name( item, DESC_INVENTORY_EQUIP ) );
+    mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
 }
 
 static int prompt_ring_to_remove(int new_ring)
@@ -2134,7 +2113,7 @@ static int prompt_ring_to_remove(int new_ring)
     }
 
     mesclr();
-    mprf("Wearing %s.", in_name(new_ring, DESC_NOCAP_A));
+    mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
 
     char lslot = index_to_letter(left.link),
          rslot = index_to_letter(right.link);
@@ -2142,8 +2121,8 @@ static int prompt_ring_to_remove(int new_ring)
     mprf(MSGCH_PROMPT,
             "You're wearing two rings. Remove which one? (%c/%c/Esc)",
             lslot, rslot);
-    mprf(" %s", item_name( left, DESC_INVENTORY ));
-    mprf(" %s", item_name( right, DESC_INVENTORY ));
+    mprf(" %s", left.name(DESC_INVENTORY).c_str() );
+    mprf(" %s", right.name(DESC_INVENTORY).c_str() );
 
     int c;
     do
@@ -2308,10 +2287,10 @@ void jewellery_remove_effects(item_def &item)
     
     // Turn off show_uncursed before getting the item name, because this item
     // was just removed, and the player knows it's uncursed.
-    bool old_showuncursed = Options.show_uncursed;
+    const bool old_showuncursed = Options.show_uncursed;
     Options.show_uncursed = false;
 
-    mprf("You remove %s.", item_name(item, DESC_NOCAP_YOUR));
+    mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str() );
 
     Options.show_uncursed = old_showuncursed;
 
@@ -2479,8 +2458,7 @@ bool remove_ring(int slot, bool announce)
     {
         if (announce)
             mprf("%s is stuck to you!",
-                in_name(you.equip[hand_used + EQ_LEFT_RING], 
-                        DESC_CAP_YOUR));
+                 you.inv[you.equip[hand_used + EQ_LEFT_RING]].name(DESC_CAP_YOUR).c_str());
         else
             mpr("It's stuck to you!");
 
@@ -2505,7 +2483,6 @@ void zap_wand(void)
     struct bolt beam;
     struct dist zap_wand;
     int item_slot;
-    char str_pass[ ITEMNAME_SIZE ];
 
     // Unless the character knows the type of the wand, the targeting
     // system will default to enemies. -- [ds]
@@ -2631,8 +2608,7 @@ void zap_wand(void)
             set_ident_type( you.inv[item_slot].base_type, 
                             you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
 
-            in_name(item_slot, DESC_INVENTORY_EQUIP, str_pass);
-            mpr( str_pass );
+            mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
             // update if wielding
             if (you.equip[EQ_WEAPON] == item_slot)
@@ -2689,7 +2665,7 @@ void inscribe_item()
         canned_msg( MSG_OK );
         return;
     }
-    mpr( item_name( you.inv[item_slot], DESC_INVENTORY ), MSGCH_EQUIPMENT );
+    mpr( you.inv[item_slot].name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT );
     mpr( "Inscribe with what? ", MSGCH_PROMPT );
     get_input_line( buf, sizeof(buf) );
     you.inv[item_slot].inscription = std::string(buf);
@@ -2953,7 +2929,6 @@ bool enchant_weapon( int which_stat, bool quiet )
     const int wpn = you.equip[ EQ_WEAPON ];
     bool affected = true;
     int enchant_level;
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (wpn == -1 
         || (you.inv[ wpn ].base_type != OBJ_WEAPONS
@@ -2965,19 +2940,21 @@ bool enchant_weapon( int which_stat, bool quiet )
         return (false);
     }
 
+    item_def& item = you.inv[wpn];
+
     you.wield_change = true;
 
     // missiles only have one stat
-    if (you.inv[ wpn ].base_type == OBJ_MISSILES)
+    if (item.base_type == OBJ_MISSILES)
         which_stat = ENCHANT_TO_HIT;
 
     if (which_stat == ENCHANT_TO_HIT)
-        enchant_level = you.inv[ wpn ].plus;
+        enchant_level = item.plus;
     else
-        enchant_level = you.inv[ wpn ].plus2;
+        enchant_level = item.plus2;
 
     // artefacts can't be enchanted, but scrolls still remove curses
-    if (you.inv[ wpn ].base_type == OBJ_WEAPONS
+    if (item.base_type == OBJ_WEAPONS
         && (is_fixed_artefact( you.inv[wpn] )
             || is_random_artefact( you.inv[wpn] )))
     {
@@ -2993,14 +2970,12 @@ bool enchant_weapon( int which_stat, bool quiet )
     // be uncursed:
     if (!affected)
     {
-        if (item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
+        if (item_cursed(item))
         {
             if (!quiet)
             {
-                in_name(you.equip[EQ_WEAPON], DESC_CAP_YOUR, str_pass);
-                strcpy(info, str_pass);
-                strcat(info, " glows silver for a moment.");
-                mpr(info);
+                mprf("%s glows silver for a moment.",
+                     item.name(DESC_CAP_YOUR).c_str());
             }
 
             do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
@@ -3016,43 +2991,34 @@ bool enchant_weapon( int which_stat, bool quiet )
         }
     }
 
-    // vVvVv    This is *here* (as opposed to lower down) for a reason!
-    in_name( wpn, DESC_CAP_YOUR, str_pass );
-    strcpy( info, str_pass );
+    // Get the item name now before the enchantment changes it.
+    std::string iname = item.name(DESC_CAP_YOUR);
 
-    do_uncurse_item( you.inv[ wpn ] );
+    do_uncurse_item( item );
 
-    if (you.inv[ wpn ].base_type == OBJ_WEAPONS)
+    if (item.base_type == OBJ_WEAPONS)
     {
         if (which_stat == ENCHANT_TO_DAM)
         {
-            you.inv[ wpn ].plus2++;
+            item.plus2++;
 
             if (!quiet)
-            {
-                strcat(info, " glows red for a moment.");
-                mpr(info);
-            }
+                mprf("%s glows red for a moment.", iname.c_str());
         }
         else if (which_stat == ENCHANT_TO_HIT)
         {
-            you.inv[ wpn ].plus++;
+            item.plus++;
 
             if (!quiet)
-            {
-                strcat(info, " glows green for a moment.");
-                mpr(info);
-            }
+                mprf("%s glows green for a moment.", iname.c_str());
         }
     }
-    else if (you.inv[ wpn ].base_type == OBJ_MISSILES)
+    else if (item.base_type == OBJ_MISSILES)
     {
-        strcat( info, (you.inv[ wpn ].quantity > 1) ? " glow"
-                                                    : " glows" );
+        mprf("%s %s red for a moment.", iname.c_str(),
+             item.quantity > 1 ? "glow" : "glows");
 
-        strcat(info, " red for a moment.");
-
-        you.inv[ wpn ].plus++;
+        item.plus++;
     }
 
     return (true);
@@ -3062,7 +3028,6 @@ static bool enchant_armour( void )
 {
     // NOTE: It is assumed that armour which changes in this way does
     // not change into a form of armour with a different evasion modifier.
-    char str_pass[ ITEMNAME_SIZE ];
     int nthing = you.equip[EQ_BODY_ARMOUR];
 
     if (nthing != -1
@@ -3075,10 +3040,8 @@ static bool enchant_armour( void )
             || you.inv[nthing].sub_type == ARM_SWAMP_DRAGON_HIDE
             || you.inv[nthing].sub_type == ARM_TROLL_HIDE))
     {
-        in_name( you.equip[EQ_BODY_ARMOUR], DESC_CAP_YOUR, str_pass );
-        strcpy(info, str_pass);
-        strcat(info, " glows purple and changes!");
-        mpr(info);
+        mprf("%s glows purple and changes!",
+             you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR).c_str());
 
         you.redraw_armour_class = 1;
 
@@ -3127,10 +3090,8 @@ static bool enchant_armour( void )
     {
         if (item_cursed( item ))
         {
-            item_name(item, DESC_CAP_YOUR, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, " glows silver for a moment.");
-            mpr(info);
+            mprf("%s glows silver for a moment.",
+                 item.name(DESC_CAP_YOUR).c_str());
 
             do_uncurse_item( item );
             return (true);
@@ -3143,10 +3104,8 @@ static bool enchant_armour( void )
     }
 
     // vVvVv    This is *here* for a reason!
-    item_name(item, DESC_CAP_YOUR, str_pass);
-    strcpy(info, str_pass);
-    strcat(info, " glows green for a moment.");
-    mpr(info);
+    mprf("%s glows green for a moment.",
+         item.name(DESC_CAP_YOUR).c_str());
 
     item.plus++;
 
@@ -3211,7 +3170,6 @@ void read_scroll(void)
     int count;
     int nthing;
     struct bolt beam;
-    char str_pass[ ITEMNAME_SIZE ];
 
     // added: scroll effects are never tracers.
     beam.is_tracer = false;
@@ -3431,10 +3389,8 @@ void read_scroll(void)
         }
         else
         {
-            in_name( nthing, DESC_CAP_YOUR, str_pass );
-            strcpy(info, str_pass);
-            strcat(info, " glows black for a moment.");
-            mpr(info);
+            mprf("%s glows black for a moment.",
+                 you.inv[nthing].name(DESC_CAP_YOUR).c_str());
 
             do_curse_item( you.inv[nthing] );
             you.wield_change = true;
@@ -3453,11 +3409,15 @@ void read_scroll(void)
     case SCR_ENCHANT_WEAPON_III:
         if (you.equip[ EQ_WEAPON ] != -1) 
         {
-            in_name( you.equip[EQ_WEAPON], DESC_CAP_YOUR, info );
+            // Get the name before it changes.
+            const std::string iname =
+                you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR);
+
+            // Successfully affixing the enchantment will print
+            // its own message.
             if (!affix_weapon_enchantment())
             {
-                strcat( info, " glows bright yellow for a while." );
-                mpr( info );
+                mprf("%s glows bright yellow for a while.", iname.c_str() );
 
                 enchant_weapon( ENCHANT_TO_HIT, true );
 
@@ -3492,11 +3452,8 @@ void read_scroll(void)
             break;
         }
 
-        in_name(nthing, DESC_CAP_YOUR, str_pass);
-
-        strcpy(info, str_pass);
-        strcat(info, " emits a brilliant flash of light!");
-        mpr(info);
+        mprf("%s emits a brilliant flash of light!",
+             you.inv[nthing].name(DESC_CAP_YOUR).c_str());
 
         alert_nearby_monsters();
 
@@ -3553,14 +3510,14 @@ void read_scroll(void)
             id_the_scroll = false;
             break;
         }
-
-        // make the name _before_ we curse it
-        in_name( you.equip[affected], DESC_CAP_YOUR, str_pass );
-        do_curse_item( you.inv[you.equip[affected]] );
-
-        strcpy(info, str_pass);
-        strcat(info, " glows black for a moment.");
-        mpr(info);
+        else
+        {
+            // make the name before we curse it
+            item_def& item = you.inv[you.equip[affected]];
+            mprf("%s glows black for a moment.",
+                 item.name(DESC_CAP_YOUR).c_str());
+            do_curse_item( item );
+        }
         break;
     }                           // end switch
 

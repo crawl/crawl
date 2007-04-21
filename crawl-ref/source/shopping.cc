@@ -199,8 +199,7 @@ char in_a_shop( char shoppy, id_arr id )
 
         textcolor((i % 2) ? WHITE : LIGHTGREY);
 
-        it_name(itty, DESC_NOCAP_A, st_pass);
-        cprintf("%s", st_pass);
+        cprintf("%s", mitm[itty].name(DESC_NOCAP_A).c_str());
 
         std::string desc;
         if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
@@ -315,7 +314,7 @@ char in_a_shop( char shoppy, id_arr id )
         goto purchase;
     }
     snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? [y/n]",
-             item_name(mitm[shop_items[ft]], DESC_NOCAP_A), gp_value);
+             mitm[shop_items[ft]].name(DESC_NOCAP_A).c_str(), gp_value);
     shop_print(info, 20);
     if ( yesno(NULL, true, 'n', false, false, true) )
     {        
@@ -441,31 +440,31 @@ static void purchase( int shop, int item_got, int cost )
 {
     you.gold -= cost;
 
-    origin_purchased(mitm[item_got]);
+    item_def& item = mitm[item_got];
 
-    if ( fully_identified(mitm[item_got]) &&
-         is_interesting_item(mitm[item_got]) ) {
+    origin_purchased(item);
 
+    if ( fully_identified(item) && is_interesting_item(item) )
+    {
         activate_notes(true);
 
-        char buf[ITEMNAME_SIZE];
-        char buf2[ITEMNAME_SIZE];
-        item_name( mitm[item_got], DESC_NOCAP_A, buf );
-        strcpy(buf2, origin_desc(mitm[item_got]).c_str());
-        take_note(Note(NOTE_ID_ITEM, 0, 0, buf, buf2));
+        take_note(Note(NOTE_ID_ITEM, 0, 0,
+                       item.name(DESC_NOCAP_A).c_str(),
+                       origin_desc(item).c_str()));
 
         activate_notes(false);
     }
 
-    int num = move_item_to_player( item_got, mitm[item_got].quantity, true );
+    const int quant = item.quantity;
+    // note that item will be invalidated if num == item.quantity
+    const int num = move_item_to_player( item_got, item.quantity, true );
 
     // Shopkeepers will now place goods you can't carry outside the shop.
-    if (num < mitm[item_got].quantity)
+    if (num < quant)
     {
         snprintf( info, INFO_SIZE, "I'll put %s outside for you.",
-                 (mitm[item_got].quantity == 1) ? "it" :
-                 (num > 0)                      ? "the rest" 
-                                                : "these" );
+                 (quant == 1) ? "it" :
+                 (num > 0) ? "the rest" : "these" );
 
         shop_print( info, 20 );
         more3();

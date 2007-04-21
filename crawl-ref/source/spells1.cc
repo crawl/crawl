@@ -360,7 +360,6 @@ void identify(int power)
 {
     int id_used = 1;
     int item_slot;
-    char str_pass[ ITEMNAME_SIZE ];
 
     // scrolls of identify *may* produce "extra" identifications {dlb}:
     if (power == -1 && one_chance_in(5))
@@ -383,8 +382,7 @@ void identify(int power)
         remove_empty_inscription(you.inv[item_slot]);
         
         // output identified item
-        in_name( item_slot, DESC_INVENTORY_EQUIP, str_pass );
-        mpr( str_pass );
+        mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 

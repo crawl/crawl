@@ -61,15 +61,19 @@ InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 {
     data = const_cast<item_def *>( item );
         
-    char buf[ITEMNAME_SIZE];
     if (i.base_type == OBJ_GOLD)
+    {
+        // XXX XXX FIXME XXX XXX Why the special-casing?
+        char buf[ITEMNAME_SIZE];
         snprintf(buf, sizeof buf, "%d gold piece%s", i.quantity, 
-                (i.quantity > 1? "s" : ""));
+                 (i.quantity > 1? "s" : ""));
+        text = buf;
+    }
     else
-        item_name(i, 
-                in_inventory(i)? 
-                    DESC_INVENTORY_EQUIP : DESC_NOCAP_A, buf, false);    
-    text = buf;
+    {
+        text = i.name(in_inventory(i)? DESC_INVENTORY_EQUIP : DESC_NOCAP_A,
+                      false);
+    }
 
     if (i.base_type != OBJ_GOLD && in_inventory(i))
     {
@@ -738,26 +742,23 @@ static bool has_warning_inscription(const item_def& item,
 {
     char iletter = (char)(oper);
     unsigned int i;
-    char name[ITEMNAME_SIZE];
-    item_name(item, DESC_INVENTORY, name, false);
     
     const std::string& r(item.inscription);
     for ( i = 0; i + 1 < r.size(); ++i )
         if (r[i] == '!' && (r[i+1] == iletter || r[i+1] == '*'))
             return true;
     return false;
-}    
+}
 
 /* return true if user OK'd it (or no warning), false otherwise */ 
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
     char prompt[ITEMNAME_SIZE + 100];
-    char name[ITEMNAME_SIZE];
     if ( has_warning_inscription(item, oper) )
     {
         snprintf(prompt, sizeof prompt, "Really choose %s?",
-                 item_name(item, DESC_INVENTORY, name, false));
+                 item.name(DESC_INVENTORY).c_str());
         return yesno(prompt, false, 'n');
     }
     else

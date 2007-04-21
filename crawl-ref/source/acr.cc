@@ -452,16 +452,15 @@ static void handle_wizard_command( void )
 
         make_item_randart( you.inv[i] );
 
-        // if equiped, apply new randart benefits
+        // if equipped, apply new randart benefits
         if (j != NUM_EQUIP)
             use_randart( i );
 
-        item_name( you.inv[i], DESC_INVENTORY_EQUIP, info );
-        mpr( info );
+        mpr( you.inv[i].name(DESC_INVENTORY_EQUIP).c_str() );
         break;
 
     case '|':
-        // create all unrand arts
+        // create all unrandarts
         for (tmp = 1; tmp < NO_UNRANDARTS; tmp++)
         {
             int islot = get_item_slot();
@@ -1640,11 +1639,8 @@ static void decrement_durations()
 
         you.duration[DUR_WEAPON_BRAND] = 0;
 
-        char str_pass[ITEMNAME_SIZE];
-
         set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_NORMAL );
-        in_name(wpn, DESC_CAP_YOUR, str_pass);
-        strncpy(info, str_pass, INFO_SIZE);
+        strncpy(info, you.inv[wpn].name(DESC_CAP_YOUR).c_str(), INFO_SIZE);
 
         switch (temp_effect)
         {

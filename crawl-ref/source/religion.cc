@@ -2519,7 +2519,8 @@ void offer_items()
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_NEMELEX_XOBEH:
-            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
+            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+                 sacrifice[you.religion - 1]);
 
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
@@ -2536,7 +2537,8 @@ void offer_items()
             break;
 
         case GOD_SIF_MUNA:
-            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
+            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+                 sacrifice[you.religion - 1]);
 
             if (value >= 150)
                 gain_piety(1 + random2(3));
@@ -2549,7 +2551,8 @@ void offer_items()
             if (mitm[i].base_type != OBJ_CORPSES)
                 break;
 
-            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
+            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+                 sacrifice[you.religion - 1]);
 
             gain_piety(1);
             destroy_item(i);
@@ -2562,7 +2565,8 @@ void offer_items()
                 break;
             }
 
-            mprf("%s%s", it_name(i, DESC_CAP_THE), sacrifice[you.religion - 1]);
+            mprf("%s%s", mitm[i].name(DESC_CAP_THE).c_str(),
+                 sacrifice[you.religion - 1]);
 
             if (random2(value) >= random2(50) 
                 || (mitm[i].base_type == OBJ_WEAPONS 
@@ -2672,11 +2676,8 @@ void god_pitch(unsigned char which_god)
 
 void offer_corpse(int corpse)
 {
-    char str_pass[ ITEMNAME_SIZE ];
-    it_name(corpse, DESC_CAP_THE, str_pass);
-    strcpy(info, str_pass);
-    strcat(info, sacrifice[you.religion - 1]);
-    mpr(info);
+    mprf("%s%s", mitm[corpse].name(DESC_CAP_THE).c_str(),
+         sacrifice[you.religion - 1]);
 
     did_god_conduct(DID_DEDICATED_BUTCHERY, 10);
 }                               // end offer_corpse()

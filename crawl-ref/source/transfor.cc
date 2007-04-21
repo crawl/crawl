@@ -33,8 +33,6 @@ void extra_hp(int amount_extra);
 
 bool remove_equipment(FixedVector < char, 8 > &remove_stuff)
 {
-    char str_pass[ ITEMNAME_SIZE ];
-
     // if we're removing body armour, the cloak will come off as well -- bwr
     if (remove_stuff[EQ_BODY_ARMOUR] == 1 && you.equip[EQ_BODY_ARMOUR] != -1)
         remove_stuff[EQ_CLOAK] = 1;
@@ -56,10 +54,8 @@ bool remove_equipment(FixedVector < char, 8 > &remove_stuff)
         if (remove_stuff[i] == 0 || you.equip[i] == -1)
             continue;
 
-        in_name( you.equip[i], DESC_CAP_YOUR, str_pass );
-
-        snprintf( info, INFO_SIZE, "%s falls away.", str_pass );
-        mpr(info);
+        mprf("%s falls away.",
+             you.inv[you.equip[i]].name(DESC_CAP_YOUR).c_str());
 
         unwear_armour( you.equip[i] );
         you.equip[i] = -1;

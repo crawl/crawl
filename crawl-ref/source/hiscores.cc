@@ -983,8 +983,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                 // Setting this is redundant for dancing weapons, however
                 // we do care about the above indentification. -- bwr
                 if (monster->type != MONS_DANCING_WEAPON) 
-                    auxkilldata = it_name( monster->inv[MSLOT_WEAPON], 
-                                           DESC_NOCAP_A );
+                    auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
             death_source_name =

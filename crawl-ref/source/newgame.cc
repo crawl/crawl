@@ -1449,10 +1449,8 @@ static void choose_book( item_def& book, int firstbook, int numbooks )
 
         for (int i=0; i < numbooks; ++i)
         {
-            char buf[ITEMNAME_SIZE];
             book.sub_type = firstbook + i;
-            item_name( book, DESC_PLAIN, buf );
-            cprintf("%c - %s" EOL, 'a' + i, buf);
+            cprintf("%c - %s" EOL, 'a' + i, book.name(DESC_PLAIN).c_str());
         }
 
         textcolor(BROWN);

@@ -95,7 +95,7 @@ static bool surge_identify_boosters(int spell)
                                             ID_KNOWN_TYPE );
                             set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
                             mprf("You are wearing: %s",
-                                 item_name(ring, DESC_INVENTORY_EQUIP));
+                                 ring.name(DESC_INVENTORY_EQUIP).c_str());
                         }
                     }
                 }
@@ -776,17 +776,10 @@ void spellcasting_side_effects(spell_type spc2, bool idonly = false)
 
         if (random2(100) < total_skill)
         {
-            char str_pass[ ITEMNAME_SIZE ];
-
+            item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
             // changed from ISFLAG_KNOW_TYPE
-            set_ident_flags( you.inv[you.equip[EQ_WEAPON]], ISFLAG_IDENT_MASK);
-
-            strcpy(info, "You are wielding ");
-            in_name(you.equip[EQ_WEAPON], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
-
+            set_ident_flags( wpn, ISFLAG_IDENT_MASK);
+            mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
             more();
 
             you.wield_change = true;

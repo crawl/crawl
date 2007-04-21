@@ -797,9 +797,7 @@ void item_check(char keyin)
         }
         else
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            it_name(objl, DESC_NOCAP_A, str_pass);
-            strcpy(item_show[counter], str_pass);
+            strcpy(item_show[counter], mitm[objl].name(DESC_NOCAP_A).c_str());
         }
 
     }
@@ -967,7 +965,7 @@ static int first_corpse_monnum(int x, int y)
 #ifdef DGL_MILESTONES
 static std::string milestone_rune(const item_def &item)
 {
-    return std::string("found ") + item_name( item, DESC_NOCAP_A ) + ".";
+    return std::string("found ") + item.name(DESC_NOCAP_A) + ".";
 }
 
 static void milestone_check(const item_def &item)
@@ -1198,7 +1196,6 @@ void pickup()
 {
     int m = 0;
     int keyin = 'x';
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR 
         && you.duration[DUR_TRANSFORMATION] > 0)
@@ -1231,25 +1228,24 @@ void pickup()
             {
                 if (!is_valid_item( you.inv[m] ))
                 {
-                    you.inv[m].base_type = OBJ_MISCELLANY;
-                    you.inv[m].sub_type = MISC_PORTABLE_ALTAR_OF_NEMELEX;
-                    you.inv[m].plus = 0;
-                    you.inv[m].plus2 = 0;
-                    you.inv[m].special = 0;
-                    you.inv[m].colour = LIGHTMAGENTA;
-                    you.inv[m].quantity = 1;
-                    you.inv[m].inscription = you.last_altar_inscription;
-                    set_ident_flags( you.inv[m], ISFLAG_IDENT_MASK );
+                    item_def& item = you.inv[m];
+                    item.base_type = OBJ_MISCELLANY;
+                    item.sub_type = MISC_PORTABLE_ALTAR_OF_NEMELEX;
+                    item.plus = 0;
+                    item.plus2 = 0;
+                    item.special = 0;
+                    item.colour = LIGHTMAGENTA;
+                    item.quantity = 1;
+                    item.inscription = you.last_altar_inscription;
+                    set_ident_flags( item, ISFLAG_IDENT_MASK );
 
-                    you.inv[m].x = -1;
-                    you.inv[m].y = -1;
-                    you.inv[m].link = m;
+                    item.x = -1;
+                    item.y = -1;
+                    item.link = m;
 
                     burden_change();
 
-                    in_name( m, DESC_INVENTORY_EQUIP, str_pass );
-                    strcpy( info, str_pass );
-                    mpr( info );
+                    mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
                     break;
                 }
             }
@@ -1294,9 +1290,8 @@ void pickup()
 
             if (keyin != 'a')
             {
-                char buf[ITEMNAME_SIZE];
-                item_name( mitm[o], DESC_NOCAP_A, buf );
-                snprintf( info, INFO_SIZE, "Pick up %s? (y/n/a/*?g,/q)", buf );
+                snprintf( info, INFO_SIZE, "Pick up %s? (y/n/a/*?g,/q)",
+                          mitm[o].name(DESC_NOCAP_A).c_str() );
                 mpr( info, MSGCH_PROMPT );
                 keyin = get_ch();
             }
@@ -1551,10 +1546,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 burden_change();
 
                 if (!quiet)
-                {
-                    in_name( m, DESC_INVENTORY, info );
-                    mpr(info);
-                }
+                    mpr( you.inv[m].name(DESC_INVENTORY).c_str() );
 
                 you.turn_is_over = true;
 
@@ -1594,10 +1586,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     burden_change();
 
     if (!quiet)
-    {
-        in_name( freeslot, DESC_INVENTORY, info );
-        mpr(info);
-    }
+        mpr( you.inv[freeslot].name(DESC_INVENTORY).c_str() );
     
     if (Options.tutorial_left)
     {
@@ -1833,9 +1822,8 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         return (false);
     }
 
-    char str_pass[ ITEMNAME_SIZE ];
-    quant_name( you.inv[item_dropped], quant_drop, DESC_NOCAP_A, str_pass );
-    mprf( "You drop %s.", str_pass );
+    mprf("You drop %s.",
+         quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
     
     if ( grid_destroys_items(my_grid) )
         mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));
@@ -2628,12 +2616,10 @@ void handle_time( long time_delta )
 
         if (random2(100) < total_skill)
         {
-            set_ident_flags( you.inv[you.equip[EQ_WEAPON]], ISFLAG_IDENT_MASK );
+            item_def& item = you.inv[you.equip[EQ_WEAPON]];
+            set_ident_flags( item, ISFLAG_IDENT_MASK );
 
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(you.equip[EQ_WEAPON], DESC_NOCAP_A, str_pass);
-            snprintf( info, INFO_SIZE, "You are wielding %s.", str_pass );
-            mpr(info);
+            mprf("You are wielding %s.", item.name(DESC_NOCAP_A).c_str());
             more();
 
             you.wield_change = true;
@@ -2796,12 +2782,9 @@ void handle_time( long time_delta )
 
 static void autoinscribe_item( item_def& item )
 {
-    char name[ITEMNAME_SIZE];
-    item_name(item, DESC_INVENTORY, name, false);
-
-    std::string iname = name;
+    std::string iname = item.name(DESC_INVENTORY);
     
-    /* if there's an inscription already do nothing */
+    /* if there's an inscription already, do nothing */
     if ( item.inscription.size() > 0 )
         return;
 
@@ -2809,6 +2792,8 @@ static void autoinscribe_item( item_def& item )
     {
         if ( Options.autoinscriptions[i].first.matches(iname) )
         {
+            // Note that this might cause the item inscription to
+            // pass 80 characters.
             item.inscription += Options.autoinscriptions[i].second;
         }
     }
@@ -2816,7 +2801,7 @@ static void autoinscribe_item( item_def& item )
 
 static bool is_denied_autopickup(const item_def &item)
 {
-    std::string iname = item_name(item, DESC_PLAIN);
+    const std::string iname = item.name(DESC_PLAIN);
     for (unsigned i = 0, size = Options.never_pickup.size(); i < size; ++i)
     {
         if (Options.never_pickup[i].matches(iname))
@@ -2827,7 +2812,7 @@ static bool is_denied_autopickup(const item_def &item)
 
 static bool is_forced_autopickup(const item_def &item)
 {
-    std::string iname = item_name(item, DESC_PLAIN);
+    const std::string iname = item.name(DESC_PLAIN);
     for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
     {
         if (Options.always_pickup[i].matches(iname))
@@ -3031,12 +3016,12 @@ static bool find_subtype_by_name(item_def &item,
     int type_wanted = -1;
     int best_index  = 10000;
 
-    char obj_name[ITEMNAME_SIZE];
     const char *ptr;
     for (int i = 0; i < ntypes; i++)
     {
-        item.sub_type = i;     
-        item_name( item, DESC_PLAIN, obj_name );
+        item.sub_type = i;
+        char obj_name[ITEMNAME_SIZE];
+        strncpy(obj_name, item.name(DESC_PLAIN).c_str(), sizeof obj_name);
 
         ptr = strstr( strlwr(obj_name), name.c_str() );
         if (ptr != NULL)
@@ -3144,7 +3129,6 @@ item_def find_item_type(int base_type, std::string name)
 void cmd_destroy_item( void )
 {
     int i;
-    char str_pass[ ITEMNAME_SIZE ];
 
     // ask the item to destroy
     int item = prompt_invent_item( "Destroy which item? ", -1, true, false );
@@ -3163,15 +3147,14 @@ void cmd_destroy_item( void )
     }
 
     // ask confirmation
-    // quant_name(you.inv[item], you.inv[item].quantity, DESC_NOCAP_A, str_pass );
-    item_name( you.inv[item], DESC_NOCAP_THE, str_pass );
-    snprintf( info, INFO_SIZE, "Destroy %s? ", str_pass );
+    snprintf( info, INFO_SIZE, "Destroy %s? ",
+              you.inv[item].name(DESC_NOCAP_THE).c_str() );
     
     if (yesno( info, true )) 
     {
        //destroy it!!
-        snprintf( info, INFO_SIZE, "You destroy %s.", str_pass );
-        mpr( info );
+        mprf( "You destroy %s.",
+              you.inv[item].name(DESC_NOCAP_THE).c_str() );
         dec_inv_item_quantity( item, you.inv[item].quantity );
         burden_change();
     }

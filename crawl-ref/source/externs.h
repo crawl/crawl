@@ -430,10 +430,15 @@ struct item_def
     {
     }
 
+    std::string name(description_level_type descrip,
+                     bool terse = false) const;
+
     void clear()
     {
         *this = item_def();
     }
+private:
+    void name_aux( char* buff, bool terse ) const;
 };
 
 class input_history

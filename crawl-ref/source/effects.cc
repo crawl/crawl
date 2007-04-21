@@ -376,11 +376,8 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     switch (ru)
     {
     case 0:
-        strcpy(info, "The dust glows a ");
         weird_colours(random2(256), wc);
-        strcat(info, wc);
-        strcat(info, " colour!");
-        mpr(info);
+        mprf("The dust glows a %s colour!", wc);
         break;
 
     case 1:
@@ -391,14 +388,10 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     case 2:
         if (you.equip[EQ_WEAPON] != -1)
         {
-            char str_pass[ ITEMNAME_SIZE ];
-            in_name(you.equip[EQ_WEAPON], DESC_CAP_YOUR, str_pass);
-            strcpy(info, str_pass);
-            strcat(info, " glows ");
             weird_colours(random2(256), wc);
-            strcat(info, wc);
-            strcat(info, " for a moment.");
-            mpr(info);
+            mprf("%s glows %s for a moment.",
+                 you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR).c_str(),
+                 wc);
         }
         else
         {
@@ -1479,9 +1472,7 @@ bool recharge_wand(void)
             break;
         }
 
-        char str_pass[ ITEMNAME_SIZE ];
-        item_name(wand, DESC_CAP_YOUR, str_pass);
-        mprf("%s glows for a moment.", str_pass);
+        mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
 
         wand.plus += 1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
 
@@ -1512,9 +1503,7 @@ bool recharge_wand(void)
         if (!work) 
             return (false);
 
-        char str_pass[ITEMNAME_SIZE];
-        item_name( wand, DESC_CAP_YOUR, str_pass );
-        mprf("%s glows for a moment.", str_pass);
+        mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
     }
 
     you.wield_change = true;

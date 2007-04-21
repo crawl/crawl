@@ -413,11 +413,10 @@ void simulacrum(int power)
 void dancing_weapon(int pow, bool force_hostile)
 {
     int numsc = cap_int(2 + (random2(pow) / 5), 6);
-    char str_pass[ ITEMNAME_SIZE ];
 
     int i;
     int summs = 0;
-    char behavi = BEH_FRIENDLY;
+    beh_type behavi = BEH_FRIENDLY;
 
     const int wpn = you.equip[EQ_WEAPON];
 
@@ -463,10 +462,7 @@ void dancing_weapon(int pow, bool force_hostile)
     // Mark the weapon as thrown so we'll autograb it when the tango's done.
     mitm[i].flags |= ISFLAG_THROWN;
 
-    in_name( wpn, DESC_CAP_YOUR, str_pass );
-    strcpy( info, str_pass );
-    strcat( info, " dances into the air!" );
-    mpr( info );
+    mprf("%s dances into the air!", you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
     you.inv[ wpn ].quantity = 0;
     you.equip[EQ_WEAPON] = -1;
@@ -811,7 +807,6 @@ bool entomb(void)
 void cast_poison_ammo(void)
 {
     const int ammo = you.equip[EQ_WEAPON];
-    char str_pass[ ITEMNAME_SIZE ];
 
     if (ammo == -1
         || you.inv[ammo].base_type != OBJ_MISSILES
@@ -825,12 +820,9 @@ void cast_poison_ammo(void)
 
     if (set_item_ego_type( you.inv[ammo], OBJ_MISSILES, SPMSL_POISONED ))
     {
-        in_name(ammo, DESC_CAP_YOUR, str_pass);
-        strcpy(info, str_pass);
-        strcat(info, (you.inv[ammo].quantity == 1) ? " is" : " are");
-        strcat(info, " covered in a thin film of poison.");
-        mpr(info);
-
+        mprf("%s %s covered in a thin film of poison.",
+             you.inv[ammo].name(DESC_CAP_YOUR).c_str(),
+             (you.inv[ammo].quantity == 1) ? " is" : " are");
         you.wield_change = true;
     }
     else

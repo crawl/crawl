@@ -55,7 +55,7 @@ static int newwave_weapon_colour(const item_def &item)
     int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
-    std::string itname = item_name( item, DESC_PLAIN );
+    std::string itname = item.name(DESC_PLAIN);
     lowercase(itname);
     
     const bool item_runed = itname.find(" runed ") != std::string::npos;

@@ -3445,13 +3445,13 @@ void explore_discoveries::add_item(const item_def &i)
             if (items_stack(i, items[j].thing))
             {
                 items[j].thing.quantity += i.quantity;
-                items[j].name = item_name(items[j].thing, DESC_NOCAP_A);
+                items[j].name = items[j].thing.name(DESC_NOCAP_A);
                 return;
             }
         }
     }
 
-    items.push_back( named_thing<item_def>(item_name(i, DESC_NOCAP_A), i) );
+    items.push_back( named_thing<item_def>(i.name(DESC_NOCAP_A), i) );
 
     // first item of this type?
     // only works when travelling

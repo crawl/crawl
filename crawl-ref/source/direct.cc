@@ -1456,8 +1456,7 @@ static void describe_mons_enchantment(const monsters &mons,
 
 static void describe_cell(int mx, int my)
 {
-    char  str_pass[ ITEMNAME_SIZE ];
-    bool  mimic_item = false;
+    bool mimic_item = false;
     
     if (mgrd[mx][my] != NON_MONSTER)
     {
@@ -1485,21 +1484,18 @@ static void describe_cell(int mx, int my)
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
-            snprintf( info, INFO_SIZE, "%s is wielding ",
-                      mons_pronoun( menv[i].type, PRONOUN_CAP ));
-            it_name(mon_wep, DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
+            snprintf( info, INFO_SIZE, "%s is wielding %s",
+                      mons_pronoun( menv[i].type, PRONOUN_CAP ),
+                      mitm[mon_wep].name(DESC_NOCAP_A).c_str());
 
             // 2-headed ogres can wield 2 weapons
-            if ((menv[i].type == MONS_TWO_HEADED_OGRE 
-                    || menv[i].type == MONS_ETTIN)
+            if ((menv[i].type == MONS_TWO_HEADED_OGRE
+                 || menv[i].type == MONS_ETTIN)
                 && menv[i].inv[MSLOT_MISSILE] != NON_ITEM)
             {
-                strcat( info, " and " );
-                it_name(menv[i].inv[MSLOT_MISSILE], DESC_NOCAP_A, str_pass);
-                strcat(info, str_pass);
+                strcat(info, " and " );
+                strcat(info, mitm[menv[i].inv[MSLOT_MISSILE]].name(DESC_NOCAP_A).c_str());
                 strcat(info, ".");
-
                 mpr(info);
             }
             else
@@ -1512,8 +1508,7 @@ static void describe_cell(int mx, int my)
         if (mon_arm != NON_ITEM)
             mprf("%s is wearing %s.",
                  mons_pronoun(menv[i].type, PRONOUN_CAP),
-                 it_name(mon_arm, DESC_NOCAP_A, str_pass));
-
+                 mitm[mon_arm].name(DESC_NOCAP_A).c_str());
 
         if (menv[i].type == MONS_HYDRA)
             mprf("It has %d head%s.", menv[i].number,
@@ -1590,7 +1585,7 @@ static void describe_cell(int mx, int my)
                 mprf( MSGCH_FLOOR_ITEMS, "A pile of gold coins." );
             else
                 mprf( MSGCH_FLOOR_ITEMS, "You see %s here.",
-                      it_name(targ_item, DESC_NOCAP_A, str_pass));
+                      mitm[targ_item].name(DESC_NOCAP_A).c_str());
 
             if (mitm[ targ_item ].link != NON_ITEM)
                 mprf( MSGCH_FLOOR_ITEMS,

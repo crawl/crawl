@@ -2635,9 +2635,6 @@ static bool handle_wand(monsters *monster, bolt &beem)
         int power = 30 + monster->hit_dice;
         bolt theBeam = mons_spells(mzap, power);
 
-        // XXX: ugly hack this:
-        static char wand_buff[ ITEMNAME_SIZE ];
-
         beem.name = theBeam.name;
         beem.beam_source = monster_index(monster);
         beem.source_x = monster->x;
@@ -2663,9 +2660,7 @@ static bool handle_wand(monsters *monster, bolt &beem)
         set_ident_flags( item, ISFLAG_KNOW_TYPE );
 #endif
 
-        item_name( item, DESC_PLAIN, wand_buff );
-
-        beem.aux_source = wand_buff;
+        beem.aux_source = item.name(DESC_PLAIN);
 
         switch (mitm[monster->inv[MSLOT_WAND]].sub_type)
         {
@@ -3808,7 +3803,6 @@ static bool monster_wants_weapon(const monsters *monster, const item_def &weap)
 static bool handle_pickup(monsters *monster)
 {
     // single calculation permissible {dlb}
-    char str_pass[ ITEMNAME_SIZE ];
     bool monsterNearby = mons_near(monster);
     int  item = NON_ITEM;
 
@@ -3931,12 +3925,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " picks up ");
-            it_name(monster->inv[MSLOT_WEAPON], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A).c_str());
         }
         break;
 
@@ -3952,12 +3942,8 @@ static bool handle_pickup(monsters *monster)
         {
             if (monsterNearby)
             {
-                strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-                strcat(info, " picks up ");
-                it_name(item, DESC_NOCAP_A, str_pass);
-                strcat(info, str_pass);
-                strcat(info, ".");
-                mpr(info);
+                mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                     mitm[item].name(DESC_NOCAP_A).c_str());
             }
 
             inc_mitm_item_quantity( monster->inv[MSLOT_MISSILE], 
@@ -3979,12 +3965,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " picks up ");
-            it_name(monster->inv[MSLOT_MISSILE], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[item].name(DESC_NOCAP_A).c_str());
         }
         break;
 
@@ -3996,12 +3978,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " picks up ");
-            it_name(monster->inv[MSLOT_WAND], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[item].name(DESC_NOCAP_A).c_str());
         }
         break;
 
@@ -4013,12 +3991,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " picks up ");
-            it_name(monster->inv[MSLOT_SCROLL], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[item].name(DESC_NOCAP_A).c_str());
         }
         break;
 
@@ -4030,12 +4004,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " picks up ");
-            it_name(monster->inv[MSLOT_POTION], DESC_NOCAP_A, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s picks up %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[item].name(DESC_NOCAP_A).c_str());
         }
         break;
 
@@ -4043,7 +4013,7 @@ static bool handle_pickup(monsters *monster)
         if (monster->type != MONS_NECROPHAGE && monster->type != MONS_GHOUL)
             return (false);
 
-        monster->hit_points += 1 + random2(mons_weight(mitm[item].plus)) / 100;
+        monster->hit_points += 1 + random2(mons_weight(mitm[item].plus))/100;
 
         // limited growth factor here -- should 77 really be the cap? {dlb}:
         if (monster->hit_points > 100)
@@ -4054,12 +4024,8 @@ static bool handle_pickup(monsters *monster)
 
         if (monsterNearby)
         {
-            strcpy(info, ptr_monam(monster, DESC_CAP_THE));
-            strcat(info, " eats ");
-            it_name(item, DESC_NOCAP_THE, str_pass);
-            strcat(info, str_pass);
-            strcat(info, ".");
-            mpr(info);
+            mprf("%s eats %s.", ptr_monam(monster, DESC_CAP_THE),
+                 mitm[item].name(DESC_NOCAP_THE).c_str());
         }
 
         destroy_item( item );
