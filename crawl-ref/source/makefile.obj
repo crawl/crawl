@@ -35,6 +35,7 @@ items.o \
 lev-pand.o \
 libutil.o \
 macro.o \
+makeitem.o \
 mapdef.o \
 maps.o \
 menu.o \

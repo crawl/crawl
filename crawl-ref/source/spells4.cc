@@ -33,6 +33,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "invent.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

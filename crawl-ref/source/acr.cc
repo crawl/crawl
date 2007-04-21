@@ -96,6 +96,7 @@
 #include "items.h"
 #include "lev-pand.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "maps.h"
 #include "misc.h"
 #include "monplace.h"

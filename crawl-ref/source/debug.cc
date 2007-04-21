@@ -45,6 +45,7 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "items.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

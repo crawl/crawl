@@ -35,12 +35,13 @@
 #include "cloud.h"
 #include "debug.h"
 #include "describe.h"
-#include "dungeon.h"
+//#include "dungeon.h"
 #include "fight.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monspeak.h"
@@ -171,7 +172,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         break;
     }
 
-    item_colour( item ); // also sets special vals for scrolls/poitions
+    item_colour( item ); // also sets special vals for scrolls/potions
 }
 
 // Sets the colour of a mimic to match its description... should be called

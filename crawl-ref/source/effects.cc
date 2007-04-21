@@ -21,11 +21,12 @@
 
 #include "beam.h"
 #include "direct.h"
-#include "dungeon.h"
+//#include "dungeon.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"

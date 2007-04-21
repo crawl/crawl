@@ -19,6 +19,7 @@
 #include "externs.h"
 
 #include "cloud.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "monplace.h"
 #include "mtransit.h"

@@ -49,6 +49,7 @@
 #include "itemname.h"
 #include "lev-pand.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
