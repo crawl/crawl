@@ -51,7 +51,6 @@ endif
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
 
-SELDBM    :=
 DBH_FILE  := /usr/include/db.h
 NDBM_FILE := /usr/include/ndbm.h
 
@@ -67,7 +66,7 @@ endif
 
 ifeq ($(HAVE_NDBM),y)
 SELDBM ?= -DDB_NDBM
-ifeq ($(SELDBM), -DDB_NDBM)
+ifeq ($(SELDBM),-DDB_NDBM)
 LIBDBM := -ldbm
 endif
 endif

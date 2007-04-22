@@ -7,7 +7,7 @@
 
 #include <sys/types.h>
 
-#ifdef DOS
+#if defined(DOS) || defined(WIN32CONSOLE)
 #define SQLITE_INT64_TYPE int
 #define SQLITE_UINT64_TYPE unsigned int
 #else
