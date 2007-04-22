@@ -25,8 +25,13 @@ endif
 LUALIB = lua
 LUALIBA = lib$(LUALIB).a
 
-LIB = -L$(LUASRC) -l$(LUALIB)
-INCLUDES := -Iutil -I. -I$(LUASRC)
+SQLSRC := util\sqlite
+SQLLIB := sql3
+SQLLIBA := lib$(SQLLIB).a
+FSQLLIBA := $(SQLSRC)\$(SQLLIBA)
+
+LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 WORKDIR := $(shell cd)
 
@@ -58,7 +63,7 @@ endif
 
 OBJECTS := $(UTIL)levcomp.o $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
 
-GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -131,7 +136,12 @@ clean-lua:
 		$(MAKE) clean_win
 		cd $(WORKDIR)
 
-distclean: clean-lua
+clean-sql:
+		cd $(SQLSRC)
+		$(MAKE) "RM_F=cmd /c del /f" clean
+		cd $(WORKDIR)
+
+distclean: clean-lua clean-sql
 		$(DELETE) *.o 
 		$(DELETE) bones.*
 		$(DELETE) morgue.txt
@@ -168,3 +178,13 @@ $(LUASRC)\$(LUALIBA):
 	@cd $(LUASRC)
 	@$(MAKE) crawl_dos
 	@cd $(WORKDIR)
+
+#############################################################################
+# Build SQLite
+
+$(FSQLLIBA):
+	@echo Building SQLite
+	cd $(SQLSRC)
+	$(MAKE) LIBSQL=$(SQLLIBA)
+	cd $(WORKDIR)
+

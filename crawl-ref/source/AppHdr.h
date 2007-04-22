@@ -403,8 +403,8 @@
 #   error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
 #endif
 
-#ifndef DB_NDBM
-#define DB_DBH
+#if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
+#define USE_SQLITE_DBM
 #endif
 
 // Uncomment these if you can't find these functions on your system

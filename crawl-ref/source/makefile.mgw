@@ -31,8 +31,13 @@ endif
 LUALIB = lua
 LUALIBA = lib$(LUALIB).a
 
-LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB)
-INCLUDES := -Iutil -I. -I$(LUASRC)
+SQLSRC := util\sqlite
+SQLLIB := sqlite3
+SQLIBA   := lib$(SQLLIB).a
+FSQLLIBA := $(SQLLIB)\$(SQLIBA)
+
+LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 CFWARN := -Wall -Wwrite-strings \
 			-Wshadow \
@@ -74,7 +79,7 @@ OBJECTS      := levcomp.tab.o levcomp.lex.o levcomp.o \
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
-GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(OBJECTS)
+GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -136,7 +141,10 @@ clean:
 clean-lua:
 	    cd $(LUASRC) && $(MAKE) clean_win
 
-distclean: clean clean-lua
+clean-sql:
+	    cd $(SQLSRC) && $(MAKE) "RM_F=del /f" clean
+
+distclean: clean clean-lua clean-sql
 		$(DELETE) $(OPATH)\*.o 
 		$(DELETE) *.o
 		$(DELETE) bones.*
@@ -178,3 +186,10 @@ $(OPATH)/%.o: $(UTIL)%.cc
 $(LUASRC)\$(LUALIBA):
 	@echo Building Lua...
 	@cd $(LUASRC) && $(MAKE) crawl_mingw
+
+#############################################################################
+# Build SQLite
+
+$(FSQLLIBA):
+	@echo Building SQLite
+	cd $(SQLSRC) && $(MAKE)

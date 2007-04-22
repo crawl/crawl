@@ -67,6 +67,7 @@ spells4.o \
 spl-book.o \
 spl-cast.o \
 spl-util.o \
+sqldbm.o \
 stash.o \
 stuff.o \
 tags.o \

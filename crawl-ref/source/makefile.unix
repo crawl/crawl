@@ -41,6 +41,9 @@ INSTALLDIR   := /usr/games
 # SAVEDIR := /usr/games/crawl-saves/
 # DATADIR := /usr/games/crawl-data/
 
+LEX  := flex
+YACC := bison -y
+
 ifeq ($(LUASRC),)
 LUASRC := util/lua/src
 endif
@@ -48,12 +51,41 @@ endif
 LUALIB = lua
 LUALIBA = l$(LUALIB).a
 
-LIBDBM = $(shell [ "`ls /usr/lib/libdbm.* 2>/dev/null`" != "" ] \
-			&& echo 'dbm' || echo 'db')
+SELDBM    :=
+DBH_FILE  := /usr/include/db.h
+NDBM_FILE := /usr/include/ndbm.h
 
-LIB = -lncurses -L$(LUASRC) -l$(LUALIB) -l$(LIBDBM)
+HAVE_DBH  := $(shell [ -f $(DBH_FILE) ] && echo y)
+HAVE_NDBM := $(shell [ -f $(NDBM_FILE) ] && echo y)
 
-INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC)
+ifeq ($(HAVE_DBH),y)
+ifneq ($(shell grep dbm_open $(DBH_FILE)),)
+SELDBM := -DDB_DBH
+LIBDBM := -ldb
+endif
+endif
+
+ifeq ($(HAVE_NDBM),y)
+SELDBM ?= -DDB_NDBM
+ifeq ($(SELDBM), -DDB_NDBM)
+LIBDBM := -ldbm
+endif
+endif
+
+SQLSRC   := util/sqlite
+SQLLIB   := sqlite3
+SQLLIBA  := lib$(SQLLIB).a
+FSQLLIBA := $(SQLSRC)/$(SQLLIBA)
+
+ifeq ($(LIBDBM),)
+LIBDBM         := -L$(SQLSRC) -lsqlite3
+EXTRA_INCLUDES += -I$(SQLSRC)
+EXTRA_DEPENDS  += $(FSQLLIBA)
+endif
+
+LIB = -lncurses -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
+
+INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
 CFWARN := -Wall -Wwrite-strings \
 	-Wshadow -pedantic
@@ -68,19 +100,12 @@ ifneq ($(DATADIR),)
 CFOTHERS += '-DDATA_DIR_PATH="$(DATADIR)"'
 endif
 
-HAVE_NDBM := $(shell [ -f /usr/include/ndbm.h ] && echo y)
-
-ifeq ($(HAVE_NDBM),y)
-CFOTHERS += -DDB_NDBM
-endif
+CFOTHERS += $(SELDBM)
 
 CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
 
 UTIL = util/
-
-LEX  := flex
-YACC := bison -y
 
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
@@ -96,7 +121,7 @@ ifeq ($(YACC),)
 DOYACC :=
 endif
 
-GAME_DEPENDS := $(OBJECTS)
+GAME_DEPENDS := $(EXTRA_DEPENDS) $(OBJECTS)
 SRC_PKG_BASE := stone_soup
 SRC_VERSION  := $(shell egrep 'VER_NUM  *".*"' version.h | \
 			egrep -o '[0-9]\.[0-9](\.[0-9])?')
@@ -122,7 +147,7 @@ depend: $(OBJECTS:.o=.cc)
 	@for i in $^; do \
 	    echo "Updating dependencies for $$i"; \
 	    $(CXX) -MM $(CFLAGS) $$i >>$(DEPENDENCY_MKF) 2>/dev/null; \
-	done 
+	done
 
 -include $(DEPENDENCY_MKF)
 
@@ -192,7 +217,10 @@ clean:
 clean-lua:
 	cd $(LUASRC) && $(MAKE) clean
 
-distclean: clean clean-lua
+clean-sql:
+	cd $(SQLSRC) && $(MAKE) clean
+
+distclean: clean clean-lua clean-sql
 	$(DELETE) bones.*
 	$(DELETE) morgue.txt
 	$(DELETE) scores
@@ -227,6 +255,13 @@ $(UTIL)%.o: $(UTIL)%.cc
 $(LUASRC)$(LUALIBA):
 	echo Building Lua...
 	cd $(LUASRC) && $(MAKE) crawl_unix
+
+#############################################################################
+# Build SQLite
+
+$(FSQLLIBA):
+	echo Building SQLite
+	cd $(SQLSRC) && $(MAKE)
 
 #############################################################################
 # Packaging a source tarball for release

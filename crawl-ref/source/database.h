@@ -14,20 +14,22 @@
 #include "externs.h"
 #include <list>
 
-extern "C" {
 #ifdef DB_NDBM
-
+extern "C" {
 #   include <ndbm.h>
-#   define DPTR_COERCE void *
-
-#else
-
+}
+#elif defined(DB_DBH)
+extern "C" {
 #   define DB_DBM_HSEARCH 1
 #   include <db.h>
-#   define DPTR_COERCE char *
-
-#endif
 }
+#elif defined(USE_SQLITE_DBM)
+#   include <sqldbm.h>
+#else
+#   error DBM interfaces unavailable!
+#endif
+
+#define DPTR_COERCE char *
 
 typedef std::list<DBM *> db_list;
 

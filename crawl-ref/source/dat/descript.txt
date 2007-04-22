@@ -120,6 +120,7 @@ A volatile floating ball of spores, covered in knobbly rhizome growths.
 %%%%
 hobgoblin
 A larger and stronger relative of the goblin.
+
 A foolish consistency is the hobgoblin of little minds.
      -Ralph Waldo Emerson
 %%%%
@@ -251,9 +252,6 @@ An icky glob of slime, which slithers along the ground.
 %%%%
 freezing wraith
 A cloud of freezing air surrounding an incorporeal skeletal form.
-%%%%
-rakshasa
-A type of demon who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, among other things.
 %%%%
 great orb of eyes
 A levitating ball, covered in malignant eyes.
