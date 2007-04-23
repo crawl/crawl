@@ -84,7 +84,7 @@ unsigned int skill_exp_needed(int lev);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void show_skills(void);
+void show_skills();
 
 
 // last_updated 14jan2001 {gdl}

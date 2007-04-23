@@ -1818,7 +1818,7 @@ static const int skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-void show_skills(void)
+void show_skills()
 {
     int i;
     int x;
@@ -1836,7 +1836,8 @@ void show_skills(void)
     textcolor(LIGHTGREY);
 
 #if DEBUG_DIAGNOSTICS
-    cprintf( "You have %d points of unallocated experience (cost lvl %d; total %d)." EOL EOL, 
+    cprintf( "You have %d points of unallocated experience "
+             " (cost lvl %d; total %d)." EOL EOL, 
              you.exp_available, you.skill_cost_level, you.total_skill_points );
 #else
     cprintf(" You have %s unallocated experience." EOL EOL, 
@@ -1846,7 +1847,7 @@ void show_skills(void)
                          you.exp_available == 1? "" : "s").c_str());
 #endif
 
-    char scrln = 3, scrcol = 1;
+    int scrln = 3, scrcol = 1;
 
     // Don't want the help line to appear too far down a big window.
     int bottom_line = ((num_lines > 30) ? 30 : num_lines);
@@ -1900,8 +1901,6 @@ void show_skills(void)
                      (you.practise_skill[x] == 0) ? '-' : '+',
                      skills[x][0], you.skills[x] );
 
-            textcolor(BLUE);
-
 #if DEBUG_DIAGNOSTICS
             cprintf( " %5d", you.skill_points[x] );
 #endif
@@ -1921,6 +1920,7 @@ void show_skills(void)
 
                 if ( !show_aptitudes )
                 {
+                    textcolor(BLUE);
                     if ( !Options.increasing_skill_progress )
                         cprintf( " (%d)", (100 - percent_done) / 10 );
                     else
@@ -1928,6 +1928,7 @@ void show_skills(void)
                 }
                 else
                 {
+                    textcolor(RED);
                     cprintf(" %3d  ", spec_abil);
                 }
             }
@@ -1944,12 +1945,13 @@ void show_skills(void)
     if (!player_genus(GENPC_DRACONIAN) || you.max_level >= 7)
     {
         gotoxy(1, bottom_line);
-        cprintf("Press '!' to toggle between aptitude and progress display.");
+        formatted_string::parse_string("Press '!' to toggle between "
+                                       "<blue>progress</blue> and "
+                                       "<red>aptitude</red> "
+                                       "display.").display();
     }
 
-    char get_thing;
-
-    get_thing = getch();
+    int get_thing = getch();
 
     if (get_thing == 0)
         getch();
