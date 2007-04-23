@@ -872,7 +872,7 @@
 ,
 
 {
-    MONS_OKLOB_PLANT, 'P', GREEN, "oklob plant",
+    MONS_OKLOB_PLANT, 'P', LIGHTGREEN, "oklob plant",
     M_SPECIAL_ABILITY,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_OKLOB_PLANT, MH_PLANT, -3,
