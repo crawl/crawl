@@ -64,6 +64,7 @@ void formatted_message_history(const std::string st,
                                int channel = MSGCH_PLAIN, int param = 0);
                                
 // 4.1-style mpr, currently named mprf for minimal disruption.
+void mprf( int channel, int param, const char *format, ... );
 void mprf( int channel, const char *format, ... );
 void mprf( const char *format, ... );
 

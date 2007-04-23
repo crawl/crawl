@@ -1439,13 +1439,11 @@ void disarm_trap( struct dist &disa )
     if (env.trap[i].type != TRAP_BLADE
         && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
     {
-        for (j = 0; j < 20; j++)
-        {
+        const int num_to_make = 10 + random2(you.skills[SK_TRAPS_DOORS]);
+        for (j = 0; j < num_to_make; j++)
+        {           
             // places items (eg darts), which will automatically stack
             itrap(beam, i);
-
-            if (j > 10 && one_chance_in(3))
-                break;
         }
     }
 

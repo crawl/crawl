@@ -250,6 +250,14 @@ static void do_message_print( int channel, int param,
     mpr(buff, channel, param);
 }
 
+void mprf( int channel, int param, const char *format, ... )
+{
+    va_list  argp;
+    va_start( argp, format );
+    do_message_print( channel, param, format, argp );
+    va_end( argp );
+}    
+
 void mprf( int channel, const char *format, ... )
 {
     va_list  argp;

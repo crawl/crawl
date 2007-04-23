@@ -582,10 +582,8 @@ void monster_grid(bool do_updates)
                         }
                         else
                         {
-                            int the_shout = mons_shouts(monster->type);
-
                             strcpy(info, "You hear ");
-                            switch (the_shout)
+                            switch (mons_shouts(monster->type))
                             {
                             case S_SILENT:
                             default:
@@ -639,7 +637,7 @@ void monster_grid(bool do_updates)
                                 break;
                             }
 
-                            mpr(info);
+                            mpr(info, MSGCH_SOUND);
                         }
                     }
 
