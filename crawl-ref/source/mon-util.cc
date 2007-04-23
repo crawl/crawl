@@ -711,11 +711,9 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
     const int mrch2 = random2(100) + random2(101);
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, 
-              "Power: %d, monster's MR: %d, target: %d, roll: %d", 
-              pow, mrs, mrchance, mrch2 );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "Power: %d, monster's MR: %d, target: %d, roll: %d", 
+         pow, mrs, mrchance, mrch2 );
 #endif
 
     return (mrch2 < mrchance);
@@ -3381,8 +3379,7 @@ void monsters::apply_enchantment(mon_enchant me, int spd)
             // for debugging, we don't have this silent.
             simple_monster_message( this, " takes poison damage.", 
                                     MSGCH_DIAGNOSTICS );
-            snprintf( info, INFO_SIZE, "poison damage: %d", dam );
-            mpr( info, MSGCH_DIAGNOSTICS );
+            mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam );
 #endif
 
             if (hit_points < 1)

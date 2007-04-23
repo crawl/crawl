@@ -395,10 +395,9 @@ void simulacrum(int power)
 
         if (summoned)
         {
-            strcpy( info, (summoned == 1) ? "An icy figure forms "
-                                          : "Some icy figures form " );
-            strcat( info, "before you!" );
-            mpr( info );
+            mprf("%s before you!",
+                 (summoned == 1) ? "An icy figure forms "
+                                 : "Some icy figures form ");
         }
         else
             mpr( "You feel cold for a second." );
@@ -635,8 +634,7 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
         redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Target square (%d,%d)", plox[0], plox[1] );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
 #endif
 
         plox[0] += random2(3) - 1;
@@ -656,8 +654,8 @@ void you_teleport2( bool allow_control, bool new_abyss_area )
         }
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Scattered target square (%d,%d)", plox[0], plox[1] );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "Scattered target square (%d,%d)", plox[0], plox[1] );
 #endif
 
         if (is_controlled)
@@ -846,8 +844,7 @@ bool project_noise(void)
     redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Target square (%d,%d)", plox[0], plox[1] );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", plox[0], plox[1] );
 #endif
 
     if (!silenced( plox[0], plox[1] ))
@@ -863,14 +860,11 @@ bool project_noise(void)
 
         if (!silenced( you.x_pos, you.y_pos ))
         {
-            if (!success)
-                mpr("You hear a dull thud.", MSGCH_SOUND);
+            if (success)
+                mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
+                     (see_grid( plox[0], plox[1] ) ? "distant " : "") );
             else
-            {
-                snprintf( info, INFO_SIZE, "You hear a %svoice call your name.",
-                          (see_grid( plox[0], plox[1] ) ? "distant " : "") );
-                mpr( info , MSGCH_SOUND );
-            }
+                mprf(MSGCH_SOUND, "You hear a dull thud.");
         }
     }
 

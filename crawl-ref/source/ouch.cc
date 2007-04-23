@@ -84,8 +84,7 @@ int check_your_resists(int hurted, int flavour)
     int resist;
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "checking resistance: flavour=%d", flavour );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "checking resistance: flavour=%d", flavour );
 #endif
 
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA 
@@ -308,9 +307,7 @@ void weapon_acid( char acid_strength )
 
     if (hand_thing == -1)
     {
-        snprintf( info, INFO_SIZE, "Your %s burn!", your_hand(true) );
-        mpr( info );
-
+        mprf("Your %s burn!", your_hand(true) );
         ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );  
     }
     else if (random2(20) <= acid_strength)
@@ -518,30 +515,28 @@ static void expose_invent_to_element( beam_type flavour, int strength )
         switch (target_class)
         {
         case OBJ_SCROLLS:
-            snprintf( info, INFO_SIZE, "%s you are carrying %s fire!",
-                      (num_dest > 1) ? "Some of the scrolls" : "A scroll",
-                      (num_dest > 1) ? "catch" : "catches" );
+            mprf("%s you are carrying %s fire!",
+                 (num_dest > 1) ? "Some of the scrolls" : "A scroll",
+                 (num_dest > 1) ? "catch" : "catches" );
             break;
 
         case OBJ_POTIONS:
-            snprintf( info, INFO_SIZE, "%s you are carrying %s and %s!",
-                      (num_dest > 1) ? "Some of the potions" : "A potion",
-                      (num_dest > 1) ? "freeze" : "freezes",
-                      (num_dest > 1) ? "shatter" : "shatters" );
+            mprf("%s you are carrying %s and %s!",
+                 (num_dest > 1) ? "Some of the potions" : "A potion",
+                 (num_dest > 1) ? "freeze" : "freezes",
+                 (num_dest > 1) ? "shatter" : "shatters" );
             break;
 
         case OBJ_FOOD:
-            snprintf( info, INFO_SIZE, "Some of your food is covered with spores!" );
+            mprf("Some of your food is covered with spores!");
             break;
 
         default:
-            snprintf( info, INFO_SIZE, "%s you are carrying %s destroyed!",
-                      (num_dest > 1) ? "Some items" : "An item",
-                      (num_dest > 1) ? "were" : "was" );
+            mprf("%s you are carrying %s destroyed!",
+                 (num_dest > 1) ? "Some items" : "An item",
+                 (num_dest > 1) ? "were" : "was" );
             break;
         }
-
-        mpr( info );    // XXX: should this be in a channel?
     }
 }
 
@@ -586,9 +581,8 @@ void lose_level(void)
     you.experience = exp_needed( you.experience_level + 1 ) - 1;
     you.experience_level--;
 
-    snprintf( info, INFO_SIZE, "You are now a level %d %s!", 
-             you.experience_level, you.class_name );
-    mpr( info, MSGCH_WARN );
+    mprf(MSGCH_WARN,
+         "You are now a level %d %s!", you.experience_level, you.class_name);
 
     // Constant value to avoid grape jelly trick... see level_change() for
     // where these HPs and MPs are given back.  -- bwr
@@ -658,9 +652,7 @@ void drain_exp(void)
             you.exp_available = 0;
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "You lose %ld experience points.",
-                  exp_drained );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "You lose %ld experience points.",exp_drained);
 #endif
 
         you.redraw_experience = 1;
@@ -685,9 +677,8 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
     // assumed bug for high damage amounts
     if (dam > 300)
     {
-        snprintf( info, INFO_SIZE, 
-                  "Potential bug: Unexpectedly high damage = %d", dam );
-        mpr( info, MSGCH_DANGER );
+        mprf(MSGCH_DANGER,
+             "Potential bug: Unexpectedly high damage = %d", dam );
         return;                 
     }
 
@@ -755,9 +746,8 @@ void ouch( int dam, int death_source, char death_type, const char *aux )
 #ifdef USE_OPTIONAL_WIZARD_DEATH
 
 #if DEBUG_DIAGNOSTICS
-            snprintf( info, INFO_SIZE, "Damage: %d; Hit points: %d", dam, you.hp );
-            mpr( info, MSGCH_DIAGNOSTICS );
-#endif // DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Damage: %d; Hit points: %d", dam, you.hp);
+#endif
 
             if (!yesno("Die?", false, 'n'))
             {

@@ -834,13 +834,11 @@ void tome_of_power(char sc_read_2)
     spell_type spell_casted = SPELL_NO_SPELL;
     struct bolt beam;
 
-    strcpy(info, "The book opens to a page covered in ");
 
-    char wc[30];
+    char wc[40];
     weird_writing( wc );
-    strcat( info, wc );
-    strcat( info, "." );
-    mpr( info );
+    
+    mprf("The book opens to a page covered in %s.", wc);
 
     you.turn_is_over = true;
 
@@ -955,28 +953,21 @@ void tome_of_power(char sc_read_2)
 
 void skill_manual(char sc_read_2)
 {
-    char skname[30];
-
     set_ident_flags( you.inv[sc_read_2], ISFLAG_IDENT_MASK );
 
-    strcpy(skname, skill_name(you.inv[sc_read_2].plus));
+    const int skill = you.inv[sc_read_2].plus;
 
-    strcpy(info, "This is a manual of ");
-    strcat(info, skname);
-    strcat(info, "!");
-    mpr(info);
+    const char* skname = skill_name(skill);
+    mprf("This is a manual of %s!", skname);
 
     you.turn_is_over = true;
 
     if (!yesno("Read it?"))
         return;
 
-    strcpy(info, "You read about ");
-    strcat(info, strlwr(skname));
-    strcat(info, ".");
-    mpr(info);
+    mprf("You read about %s.", skname);
 
-    exercise( you.inv[sc_read_2].plus, 500 );
+    exercise(skill, 500);
 
     if (one_chance_in(10))
     {

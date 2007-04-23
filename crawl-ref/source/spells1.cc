@@ -514,10 +514,7 @@ static int healing_spell( int healed )
 
     if (heal_monster(monster, healed, false))
     {
-        strcpy(info, "You heal ");
-        strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-        strcat(info, ".");
-        mpr(info);
+        mprf("You heal %s.", ptr_monam( monster, DESC_NOCAP_THE ));
 
         if (monster->hit_points == monster->max_hit_points)
             simple_monster_message( monster, " is completely healed." );
@@ -1073,10 +1070,8 @@ void cast_ring_of_flames(int power)
 
 void cast_confusing_touch(int power)
 {
-    snprintf( info, INFO_SIZE, "Your %s begin to glow %s.",
-              your_hand(true), (you.confusing_touch ? "brighter" : "red") ); 
-
-    mpr( info ); 
+    mprf("Your %s begin to glow %s.",
+         your_hand(true), (you.confusing_touch ? "brighter" : "red") ); 
 
     you.confusing_touch += 5 + (random2(power) / 5);
 

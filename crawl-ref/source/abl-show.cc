@@ -698,9 +698,7 @@ bool activate_ability(void)
 
             // don't check for hell serpents - they get hell fire,
             // never regular fire (GDL)
-
-            snprintf( info, INFO_SIZE, "You breathe fire%c", (power < 15)?'.':'!');
-            mpr(info);
+            mprf("You breathe fire%c", (power < 15)?'.':'!');
 
             zapping( ZAP_BREATHE_FIRE, power, beam);
             break;
@@ -1338,10 +1336,8 @@ bool activate_ability(void)
     const int piety_cost = abil.piety_cost + random2((abil.piety_cost + 1) / 2 + 1);
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
-              abil.mp_cost, abil.hp_cost, food_cost, piety_cost );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Cost: mp=%d; hp=%d; food=%d; piety=%d",
+         abil.mp_cost, abil.hp_cost, food_cost, piety_cost );
 #endif
 
     if (abil.mp_cost)

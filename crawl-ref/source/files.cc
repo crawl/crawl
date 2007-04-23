@@ -943,8 +943,7 @@ found_stair:
         val -= (stepdown_value( check_stealth(), 50, 50, 150, 150 ) / 10);
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "arrival time: %d", val );
-        mpr( info, MSGCH_DIAGNOSTICS ); 
+        mprf(MSGCH_DIAGNOSTICS, "arrival time: %d", val );
 #endif
 
         if (val > 0)
@@ -1114,9 +1113,8 @@ void load_ghost(void)
     {
         fclose(gfile);
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Ghost file \"%s\" seems to be invalid.",
-                  cha_fil.c_str());
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "Ghost file \"%s\" seems to be invalid.", cha_fil.c_str());
         more();
 #endif
         return;

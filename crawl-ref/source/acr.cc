@@ -421,8 +421,7 @@ static void handle_wizard_command( void )
         }
         else
         {
-            snprintf( info, INFO_SIZE, "randart val: %d", randart_value( you.inv[i] ) ); 
-            mpr( info );
+            mprf("randart val: %d", randart_value(you.inv[i])); 
         }
         break;
 
@@ -696,19 +695,15 @@ static void handle_wizard_command( void )
             int old_piety = you.piety;
 
             gain_piety(50);
-            snprintf( info, INFO_SIZE, "Congratulations, your piety went from %d to %d!",
-                    old_piety, you.piety);
-            mpr(info);
+            mprf("Congratulations, your piety went from %d to %d!",
+                 old_piety, you.piety);
         }
         break;
 
     case '=':
-        snprintf( info, INFO_SIZE, 
-                  "Cost level: %d  Skill points: %d  Next cost level: %d", 
-                  you.skill_cost_level, you.total_skill_points,
-                  skill_cost_needed( you.skill_cost_level + 1 ) );
-
-        mpr( info );
+        mprf( "Cost level: %d  Skill points: %d  Next cost level: %d", 
+              you.skill_cost_level, you.total_skill_points,
+              skill_cost_needed( you.skill_cost_level + 1 ) );
         break;
 
     case '_':
@@ -721,17 +716,15 @@ static void handle_wizard_command( void )
             if (mitm[i].link == NON_ITEM)
                 continue;
     
-            snprintf( info, INFO_SIZE, "item:%3d link:%3d cl:%3d ty:%3d pl:%3d pl2:%3d sp:%3ld q:%3d",
-                     i, mitm[i].link, 
-                     mitm[i].base_type, mitm[i].sub_type,
-                     mitm[i].plus, mitm[i].plus2, mitm[i].special, 
-                     mitm[i].quantity );
-
-            mpr(info);
+            mprf("item:%3d link:%3d cl:%3d ty:%3d pl:%3d pl2:%3d "
+                 "sp:%3ld q:%3d",
+                 i, mitm[i].link, 
+                 mitm[i].base_type, mitm[i].sub_type,
+                 mitm[i].plus, mitm[i].plus2, mitm[i].special, 
+                 mitm[i].quantity );
         }
 
-        strcpy(info, "igrid:");
-        mpr(info);
+        mpr("igrid:");
 
         for (i = 0; i < GXM; i++)
         {
@@ -739,13 +732,12 @@ static void handle_wizard_command( void )
             {
                 if (igrd[i][j] != NON_ITEM)
                 {
-                    snprintf( info, INFO_SIZE, "%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d sp:%3ld q:%3d", 
-                             igrd[i][j], i, j,
-                             mitm[i].base_type, mitm[i].sub_type,
-                             mitm[i].plus, mitm[i].plus2, mitm[i].special, 
-                             mitm[i].quantity );
-
-                    mpr(info);
+                    mprf("%3d at (%2d,%2d), cl:%3d ty:%3d pl:%3d pl2:%3d "
+                         "sp:%3ld q:%3d", 
+                         igrd[i][j], i, j,
+                         mitm[i].base_type, mitm[i].sub_type,
+                         mitm[i].plus, mitm[i].plus2, mitm[i].special, 
+                         mitm[i].quantity );
                 }
             }
         }
@@ -929,13 +921,10 @@ static void input()
         viewwindow(true, false);
 }
 
-static int toggle_flag( bool* flag, const char* flagname )
+static bool toggle_flag( bool* flag, const char* flagname )
 {
-    char buf[INFO_SIZE];
     *flag = !(*flag);
-    sprintf( buf, "%s is now %s.", flagname,
-             (*flag) ? "on" : "off" );
-    mpr(buf);
+    mprf( "%s is now %s.", flagname, (*flag) ? "on" : "off" );
     return *flag;
 }
 
@@ -996,22 +985,18 @@ static void go_downstairs()
 
 static void experience_check()
 {
-    snprintf( info, INFO_SIZE, "You are a level %d %s %s.",
-              you.experience_level,
-              species_name(you.species,you.experience_level),
-              you.class_name);
-    mpr(info);
+    mprf("You are a level %d %s %s.",
+         you.experience_level, species_name(you.species,you.experience_level),
+         you.class_name);
 
     if (you.experience_level < 27)
     {
         int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
-        snprintf( info, INFO_SIZE,
-                  "Level %d requires %ld experience (%d point%s to go!)",
-                  you.experience_level + 1, 
-                  exp_needed(you.experience_level + 2) + 1,
-                  xp_needed, 
-                  (xp_needed > 1) ? "s" : "");
-        mpr(info);
+        mprf( "Level %d requires %ld experience (%d point%s to go!)",
+              you.experience_level + 1, 
+              exp_needed(you.experience_level + 2) + 1,
+              xp_needed, 
+              (xp_needed > 1) ? "s" : "");
     }
     else
     {
@@ -1024,12 +1009,8 @@ static void experience_check()
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
         char buff[200];
 
-        make_time_string( curr, buff, sizeof(buff) );
-
-        snprintf( info, INFO_SIZE, "Play time: %s (%ld turns)", 
-                  buff, you.num_turns );
-
-        mpr( info );
+        mprf("Play time: %s (%ld turns)",
+             make_time_string(curr, buff, sizeof buff), you.num_turns );
     }
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
@@ -2025,8 +2006,7 @@ static void decrement_durations()
         you.confusing_touch--;
     else if (you.confusing_touch == 1)
     {
-        snprintf( info, INFO_SIZE, "Your %s stop glowing.", your_hand(true) );
-        mpr( info, MSGCH_DURATION );
+        mprf(MSGCH_DURATION, "Your %s stop glowing.", your_hand(true) );
         you.confusing_touch = 0;
     }
 
@@ -2198,8 +2178,7 @@ static void world_reacts()
 
 #if 0
     // too annoying for regular diagnostics
-    snprintf( info, INFO_SIZE, "stealth: %d", stealth );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth );
 #endif
 
     if (you.special_wield != SPWLD_NONE)
@@ -3146,11 +3125,8 @@ static void move_player(int move_x, int move_y)
                 ig2++;
         }
 
-        snprintf( info, INFO_SIZE, "Number of monsters present: %d", ig2 );
-        mpr( info, MSGCH_DIAGNOSTICS );
-
-        snprintf( info, INFO_SIZE, "Number of clouds present: %d", env.cloud_no );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf( MSGCH_DIAGNOSTICS, "Number of monsters present: %d", ig2);
+        mprf( MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
 #endif
     }
 

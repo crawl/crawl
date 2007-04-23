@@ -2588,11 +2588,7 @@ void offer_items()
 
 void god_pitch(unsigned char which_god)
 {
-    strcpy(info, "You kneel at the altar of ");
-    strcat(info, god_name(which_god));
-    strcat(info, ".");
-    mpr(info);
-
+    mprf("You kneel at the altar of %s.", god_name(which_god));
     more();
 
     // Note: using worship we could make some gods not allow followers to

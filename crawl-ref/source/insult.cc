@@ -53,15 +53,12 @@ void imp_taunt( const monsters *mons )
     // XXX: Not pretty, but stops truncation...
     if (strlen( mon_name ) + 11 + strlen( buff ) >= 79)
     {
-        snprintf( info, INFO_SIZE, "%s shouts:", mon_name );
-        mpr( info, MSGCH_TALK );
-
-        mpr( buff, MSGCH_TALK );
+        mprf(MSGCH_TALK, "%s shouts:", mon_name );
+        mprf(MSGCH_TALK, "%s", buff );
     }
     else
     {
-        snprintf( info, INFO_SIZE, "%s shouts, \"%s\"", mon_name, buff );
-        mpr( info, MSGCH_TALK );
+        mprf(MSGCH_TALK, "%s shouts, \"%s\"", mon_name, buff );
     }
 }
 
@@ -132,15 +129,12 @@ void demon_taunt( const monsters *mons )
     // XXX: Not pretty, but stops truncation...
     if (strlen(mon_name) + strlen(voice) + strlen(buff) + 5 >= 79)
     {
-        snprintf( info, INFO_SIZE, "%s %s:", mon_name, voice );
-        mpr( info, MSGCH_TALK );
-
-        mpr( buff, MSGCH_TALK );
+        mprf(MSGCH_TALK, "%s %s:", mon_name, voice );
+        mprf(MSGCH_TALK, "%s",  buff);
     }
     else
     {
-        snprintf( info, INFO_SIZE, "%s %s, \"%s\"", mon_name, voice, buff );
-        mpr( info, MSGCH_TALK );
+        mprf(MSGCH_TALK, "%s %s, \"%s\"", mon_name, voice, buff );
     }
 }
 

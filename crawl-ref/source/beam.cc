@@ -200,8 +200,7 @@ void zapping(char ztype, int power, struct bolt &pbolt)
 {
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "zapping:  power=%d", power ); 
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power ); 
 #endif
 
     // GDL: note that rangeMax is set to 0, which means that max range is
@@ -3242,10 +3241,8 @@ static int affect_player( struct bolt &beam )
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Player damage: rolled=%d; after AC=%d",
-              roll, hurted );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
 
     if (you.equip[EQ_BODY_ARMOUR] != -1)
@@ -3321,8 +3318,7 @@ static int affect_player( struct bolt &beam )
         expose_player_to_element(BEAM_SPORE, burn_power);
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Damage: %d", hurted );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif
 
     beam_ouch( hurted, beam );
@@ -3757,10 +3753,8 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         && mons_holiness(mon) == MH_UNDEAD)
     {
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "HD: %d; pow: %d", 
-                  mon->hit_dice, beam.ench_power );
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
 #endif
 
         if (check_mons_resist_magic( mon, beam.ench_power ))
@@ -3778,10 +3772,8 @@ static int affect_monster_enchantment(struct bolt &beam, struct monsters *mon)
         && mons_holiness(mon) == MH_DEMONIC)
     {
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "HD: %d; pow: %d", 
-                  mon->hit_dice, beam.ench_power );
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
 #endif
 
         if (mon->hit_dice * 7 >= random2(beam.ench_power)
@@ -4103,13 +4095,11 @@ void explosion( struct bolt &beam, bool hole_in_the_middle )
     beam.in_explosion_phase = true;
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, 
-              "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
-              beam.target_x, beam.target_y, 
-              beam.type, beam.colour, beam.flavour, 
-              beam.hit, beam.damage.num, beam.damage.size );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
+         beam.target_x, beam.target_y, 
+         beam.type, beam.colour, beam.flavour, 
+         beam.hit, beam.damage.num, beam.damage.size );
 #endif
 
     // for now, we don't support explosions greater than 9 radius

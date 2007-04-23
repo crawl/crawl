@@ -789,10 +789,9 @@ static void cards(unsigned char which_card)
         {
             dvar1 = 179 + you.religion;
             
-            snprintf( info, INFO_SIZE, "An altar grows from the floor %s!",
-                      (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                      ? "before you" : "at your feet");
-            mpr(info);
+            mprf("An altar grows from the floor %s!",
+                 (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                 ? "before you" : "at your feet");
             grd[you.x_pos][you.y_pos] = dvar1;
         }
         break;

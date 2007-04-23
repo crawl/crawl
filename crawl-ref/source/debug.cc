@@ -836,15 +836,13 @@ void tweak_object(void)
         if (keyin != 'c' && keyin != 'e')
         {
             const short *const ptr = static_cast< short * >( field_ptr );
-            snprintf( info, INFO_SIZE, "Old value: %d (0x%04x)", *ptr, *ptr );
+            mprf("Old value: %d (0x%04x)", *ptr, *ptr );
         }
         else 
         {
             const long *const ptr = static_cast< long * >( field_ptr );
-            snprintf( info, INFO_SIZE, "Old value: %ld (0x%08lx)", *ptr, *ptr );
+            mprf("Old value: %ld (0x%08lx)", *ptr, *ptr );
         }
-
-        mpr( info );
 
         mpr( "New value? ", MSGCH_PROMPT );
         get_input_line( specs, sizeof( specs ) );
@@ -910,17 +908,14 @@ void stethoscope(int mwh)
 
         if (env.cgrid[steth_x][steth_y] != EMPTY_CLOUD)
         {
-            snprintf( info, INFO_SIZE, "cloud type: %d delay: %d", 
-                     env.cloud[ env.cgrid[steth_x][steth_y] ].type,
-                     env.cloud[ env.cgrid[steth_x][steth_y] ].decay );
-
-            mpr( info, MSGCH_DIAGNOSTICS );
+            mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d", 
+                 env.cloud[ env.cgrid[steth_x][steth_y] ].type,
+                 env.cloud[ env.cgrid[steth_x][steth_y] ].decay );
         }
 
         if (mgrd[steth_x][steth_y] == NON_MONSTER)
         {
-            snprintf( info, INFO_SIZE, "item grid = %d", igrd[steth_x][steth_y] );
-            mpr( info, MSGCH_DIAGNOSTICS );
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd[steth_x][steth_y] );
             return;
         }
 
@@ -928,68 +923,56 @@ void stethoscope(int mwh)
     }
 
     // print type of monster
-    snprintf( info, INFO_SIZE, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-              monam( &menv[i], menv[i].number, menv[i].type, true,
-                     DESC_CAP_THE ),
-              i, menv[i].type,
-              menv[i].x, menv[i].y,
-              ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
-               (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
-               (menv[i].attitude == ATT_NEUTRAL)  ? "neutral" 
-                                                  : "unknown alignment") );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
+         monam( &menv[i], menv[i].number, menv[i].type, true, DESC_CAP_THE ),
+         i, menv[i].type, menv[i].x, menv[i].y,
+         ((menv[i].attitude == ATT_FRIENDLY) ? "friendly" :
+          (menv[i].attitude == ATT_HOSTILE)  ? "hostile" :
+          (menv[i].attitude == ATT_NEUTRAL)  ? "neutral" 
+                                             : "unknown alignment") );
 
     // print stats and other info
-    snprintf( info, INFO_SIZE,"HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%04lx",
-             menv[i].hit_dice, 
-             menv[i].hit_points, menv[i].max_hit_points, 
-             menv[i].ac, menv[i].ev,
-             mons_resist_magic( &menv[i] ),
-             menv[i].speed, menv[i].speed_increment,
-             menv[i].number, menv[i].flags );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "HD=%d HP=%d/%d AC=%d EV=%d MR=%d SP=%d energy=%d num=%d flags=%04lx",
+         menv[i].hit_dice, 
+         menv[i].hit_points, menv[i].max_hit_points, 
+         menv[i].ac, menv[i].ev,
+         mons_resist_magic( &menv[i] ),
+         menv[i].speed, menv[i].speed_increment,
+         menv[i].number, menv[i].flags );
 
     // print behaviour information
     
     const int hab = monster_habitat( menv[i].type );
 
-    snprintf( info, INFO_SIZE, "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)", 
-             ((hab == DNGN_DEEP_WATER)            ? "water" :
-              (hab == DNGN_LAVA)                  ? "lava" 
-                                                  : "floor"),
-
-             ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
-              (menv[i].behaviour == BEH_WANDER)   ? "wander" :
-              (menv[i].behaviour == BEH_SEEK)     ? "seek" :
-              (menv[i].behaviour == BEH_FLEE)     ? "flee" :
-              (menv[i].behaviour == BEH_CORNERED) ? "cornered" 
-                                                  : "unknown"), 
-             menv[i].behaviour,
-
-             ((menv[i].foe == MHITYOU)            ? "you" :
-              (menv[i].foe == MHITNOT)            ? "none" :
-              (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
-              : monam( &menv[menv[i].foe],
-                       menv[menv[i].foe].number, menv[menv[i].foe].type,
-                       true, DESC_PLAIN )),
-             menv[i].foe, 
-             menv[i].foe_memory, 
-
-             menv[i].target_x, menv[i].target_y );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d)", 
+         ((hab == DNGN_DEEP_WATER)            ? "water" :
+          (hab == DNGN_LAVA)                  ? "lava" 
+                                              : "floor"),
+         ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
+          (menv[i].behaviour == BEH_WANDER)   ? "wander" :
+          (menv[i].behaviour == BEH_SEEK)     ? "seek" :
+          (menv[i].behaviour == BEH_FLEE)     ? "flee" :
+          (menv[i].behaviour == BEH_CORNERED) ? "cornered" 
+                                              : "unknown"), 
+         menv[i].behaviour,
+         ((menv[i].foe == MHITYOU)            ? "you" :
+          (menv[i].foe == MHITNOT)            ? "none" :
+          (menv[menv[i].foe].type == -1)      ? "unassigned monster" 
+          : monam( &menv[menv[i].foe], menv[menv[i].foe].number,
+                   menv[menv[i].foe].type, true, DESC_PLAIN )),
+         menv[i].foe, 
+         menv[i].foe_memory,          
+         menv[i].target_x, menv[i].target_y );
 
     // print resistances
-    snprintf( info, INFO_SIZE, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",
-              mons_res_fire( &menv[i] ),
-              mons_res_cold( &menv[i] ),
-              mons_res_elec( &menv[i] ),
-              mons_res_poison( &menv[i] ),
-              mons_res_negative_energy( &menv[i] ) );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",
+         mons_res_fire( &menv[i] ),
+         mons_res_cold( &menv[i] ),
+         mons_res_elec( &menv[i] ),
+         mons_res_poison( &menv[i] ),
+         mons_res_negative_energy( &menv[i] ) );
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          comma_separated_line(menv[i].enchantments.begin(),
@@ -1018,22 +1001,15 @@ static void dump_item( const char *name, int num, const item_def &item )
 {
     mpr( name, MSGCH_WARN );
 
-    snprintf( info, INFO_SIZE, "    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %ld",
-             num, item.base_type, item.sub_type, 
+    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %ld",
+         num, item.base_type, item.sub_type,
              item.plus, item.plus2, item.special );
 
-    mpr( info );
+    mprf("    quant: %d; colour: %d; ident: 0x%08lx; ident_type: %d",
+         item.quantity, item.colour, item.flags,
+         get_ident_type( item.base_type, item.sub_type ) );
 
-    snprintf( info, INFO_SIZE, "    quant: %d; colour: %d; ident: 0x%08lx; ident_type: %d",
-             item.quantity, item.colour, item.flags,
-             get_ident_type( item.base_type, item.sub_type ) );
-
-    mpr( info );
-
-    snprintf( info, INFO_SIZE, "    x: %d; y: %d; link: %d",
-             item.x, item.y, item.link );
-
-    mpr( info );
+    mprf("    x: %d; y: %d; link: %d", item.x, item.y, item.link );
 }
 
 //---------------------------------------------------------------
@@ -1074,8 +1050,7 @@ void debug_item_scan( void )
                 // Check that item knows what stack it's in
                 if (mitm[obj].x != x || mitm[obj].y != y)
                 {
-                    snprintf( info, INFO_SIZE, "Item position incorrect at (%d,%d)!", x, y);
-                    mpr( info, MSGCH_WARN );
+                    mprf(MSGCH_WARN,"Item position incorrect at (%d,%d)!",x,y);
                     dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
                                obj, mitm[obj] );
                 }
@@ -1084,8 +1059,8 @@ void debug_item_scan( void )
                 // this will also keep this from being an infinite loop.
                 if (mitm[obj].flags & ISFLAG_DEBUG_MARK)
                 {
-                    snprintf( info, INFO_SIZE, "Potential INFINITE STACK at (%d, %d)", x, y);
-                    mpr( info, MSGCH_WARN );
+                    mprf(MSGCH_WARN,
+                         "Potential INFINITE STACK at (%d, %d)", x, y);
                     break;
                 }
 
@@ -1109,9 +1084,8 @@ void debug_item_scan( void )
             mpr( "Unlinked item:", MSGCH_WARN );
             dump_item( name, i, mitm[i] );
             
-            snprintf( info, INFO_SIZE, "igrd(%d,%d) = %d", mitm[i].x, mitm[i].y, 
-                     igrd[ mitm[i].x ][ mitm[i].y ] );
-            mpr( info );
+            mprf("igrd(%d,%d) = %d",
+                 mitm[i].x, mitm[i].y, igrd[ mitm[i].x ][ mitm[i].y ] );
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; j++)
@@ -1120,11 +1094,9 @@ void debug_item_scan( void )
                 {
                     if (menv[j].inv[k] == i)
                     {
-                        snprintf( info, INFO_SIZE, "Held by monster #%d: %s at (%d,%d)", 
-                                 j, ptr_monam( &menv[j], DESC_CAP_A ),
-                                 menv[j].x, menv[j].y );
-
-                        mpr( info );
+                        mprf("Held by monster #%d: %s at (%d,%d)", 
+                             j, ptr_monam( &menv[j], DESC_CAP_A ),
+                             menv[j].x, menv[j].y );
                     }
                 }
             }
@@ -1189,13 +1161,10 @@ void debug_item_scan( void )
 
         if (strcmp( name, "program bug" ) == 0)
         {
-            mpr( "Program bug detected!", MSGCH_WARN );
-
-            snprintf( info, INFO_SIZE,
-                      "Buggy monster detected: monster #%d; position (%d,%d)",
-                      i, monster->x, monster->y );
-
-            mpr( info, MSGCH_WARN );
+            mprf( MSGCH_WARN, "Program bug detected!" );
+            mprf( MSGCH_WARN,
+                  "Buggy monster detected: monster #%d; position (%d,%d)",
+                  i, monster->x, monster->y );
         }   
     }
 }
@@ -1368,10 +1337,9 @@ bool debug_add_mutation(void)
         mpr("I can't warp you that way!");
     else
     {
-        snprintf( info, INFO_SIZE, "Found: %s", mutation_name( mutation, 1 ) );
-        mpr( info );
+        mprf("Found: %s", mutation_name( mutation, 1 ) );
 
-        int levels = debug_prompt_for_int( "How many levels? ", false );
+        const int levels = debug_prompt_for_int( "How many levels? ", false );
 
         if (levels == 0)
         {

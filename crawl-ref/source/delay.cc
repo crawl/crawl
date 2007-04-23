@@ -356,10 +356,8 @@ void handle_delay( void )
     if (delay.duration > 0)
     {
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "Delay type: %d (%s), duration: %d", 
-                  delay.type, delay_name(delay.type), delay.duration ); 
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d", 
+             delay.type, delay_name(delay.type), delay.duration ); 
 #endif
         // delay.duration-- *must* be done before multidrop, because
         // multidrop is now a parent delay, which means other delays
@@ -537,10 +535,9 @@ static void finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_BUTCHER:
-        snprintf(info, INFO_SIZE, "You finish %s the corpse into pieces.",
-                 (you.species == SP_TROLL ||
-                  you.species == SP_GHOUL) ? "ripping" : "chopping" );
-        mpr(info);
+        mprf("You finish %s the corpse into pieces.",
+             (you.species==SP_TROLL || you.species == SP_GHOUL) ? "ripping"
+                                                                : "chopping");
 
         turn_corpse_into_chunks( mitm[ delay.parm1 ] );
 
@@ -577,11 +574,8 @@ static void finish_delay(const delay_queue_item &delay)
         }
         else
         {
-            snprintf( info, INFO_SIZE, "You drop %s.",
-                      quant_name(you.inv[delay.parm1], delay.parm2,
-                                 DESC_NOCAP_A).c_str());
-            mpr(info);
-
+            mprf("You drop %s.", quant_name(you.inv[delay.parm1], delay.parm2,
+                                            DESC_NOCAP_A).c_str());
             dec_inv_item_quantity( delay.parm1, delay.parm2 );
         }
         break;

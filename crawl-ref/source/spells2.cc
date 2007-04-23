@@ -465,8 +465,7 @@ void cast_twisted(int power, int corps_beh, int corps_hit)
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Mass for abomination: %d", total_mass);
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
 #endif
 
     // This is what the old statement pretty much boils down to, 
@@ -477,8 +476,7 @@ void cast_twisted(int power, int corps_beh, int corps_hit)
     total_mass += roll_dice( 20, power );
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Mass including power bonus: %d", total_mass);
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Mass including power bonus: %d", total_mass);
 #endif
 
     if (total_mass < 400 + roll_dice( 2, 500 )
@@ -847,10 +845,8 @@ void cast_toxic_radiance(void)
             else if (player_see_invis())
             {
                 // message player re:"miss" where appropriate {dlb}
-                strcpy(info, "The light passes through ");
-                strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-                strcat(info, ".");
-                mpr(info);
+                mprf("The light passes through %s.",
+                     ptr_monam( monster, DESC_NOCAP_THE ));
             }
         }
     }
@@ -899,10 +895,7 @@ void cast_refrigeration(int pow)
 
         if (mons_near(monster))
         {
-            snprintf( info, INFO_SIZE, "You freeze %s.", 
-                      ptr_monam( monster, DESC_NOCAP_THE ));
-
-            mpr(info);
+            mprf("You freeze %s.", ptr_monam( monster, DESC_NOCAP_THE ));
 
             hurted = roll_dice( dam_dice );
             hurted = mons_adjust_flavoured( monster, beam, hurted );
@@ -959,10 +952,7 @@ void drain_life(int pow)
 
         if (mons_near(monster))
         {
-            strcpy(info, "You draw life from ");
-            strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-            strcat(info, ".");
-            mpr(info);
+            mprf("You draw life from %s.", ptr_monam(monster, DESC_NOCAP_THE));
 
             hurted = 3 + random2(7) + random2(pow);
 
@@ -1037,10 +1027,8 @@ int vampiric_drain(int pow, const dist &vmove)
 
     hurt_monster(monster, inflicted);
 
-    strcpy(info, "You feel life coursing from ");
-    strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-    strcat(info, " into your body!");
-    mpr(info);
+    mprf("You feel life coursing from %s into your body!",
+         ptr_monam( monster, DESC_NOCAP_THE ));
 
     print_wounds(monster);
 
@@ -1091,17 +1079,13 @@ char burn_freeze(int pow, char flavour)
 
     monster = &menv[mgr];
 
-    strcpy(info, "You ");
-    strcat(info, (flavour == BEAM_FIRE)        ? "burn" :
-                 (flavour == BEAM_COLD)        ? "freeze" :
-                 (flavour == BEAM_MISSILE)     ? "crush" :
-                 (flavour == BEAM_ELECTRICITY) ? "zap"
-                                               : "______");
-
-    strcat(info, " ");
-    strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
-    strcat(info, ".");
-    mpr(info);
+    mprf("You %s %s.",
+         (flavour == BEAM_FIRE)        ? "burn" :
+         (flavour == BEAM_COLD)        ? "freeze" :
+         (flavour == BEAM_MISSILE)     ? "crush" :
+         (flavour == BEAM_ELECTRICITY) ? "zap"
+                                       : "______",
+         ptr_monam( monster, DESC_NOCAP_THE ));
 
     int hurted = roll_dice( 1, 3 + pow / 3 ); 
 
@@ -1576,10 +1560,8 @@ void summon_things( int pow )
             numsc--;
         }
 
-        snprintf( info, INFO_SIZE, "Some Thing%s answered your call!", 
-                  (numsc + big_things > 1) ? "s" : "" );
-
-        mpr(info);
+        mprf("Some Thing%s answered your call!",
+             (numsc + big_things > 1) ? "s" : "" );
     }
 
     return;

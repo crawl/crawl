@@ -437,7 +437,8 @@ bool new_game(void)
         clrscr();
 
         char spec_buff[80];
-        strncpy(spec_buff, species_name(you.species, you.experience_level), 80);
+        strncpy(spec_buff,
+                species_name(you.species, you.experience_level), 80);
 
         snprintf( info, INFO_SIZE, "You are a%s %s %s." EOL, 
                   (is_vowel( spec_buff[0] )) ? "n" : "", spec_buff,

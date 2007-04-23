@@ -630,25 +630,20 @@ void macro_add_query( void )
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
 
-    snprintf( info, INFO_SIZE, "Input %s%s trigger key: ",
-               keymap? 
-                    (keymc == KC_DEFAULT? "default " :
-                     keymc == KC_LEVELMAP? "level-map " :
-                                           "targeting ") :
-                    "",
-              (keymap ? "keymap" : "macro") );
+    mprf(MSGCH_PROMPT, "Input %s%s trigger key: ",
+         keymap ? (keymc == KC_DEFAULT  ? "default " :
+                   keymc == KC_LEVELMAP ? "level-map "
+                                        : "targeting ")
+                : "",
+         (keymap ? "keymap" : "macro") );
 
-    mpr( info, MSGCH_PROMPT );
     keyseq key = getch_mul();
 
     cprintf( "%s" EOL, (vtostr( key )).c_str() ); // echo key to screen
 
     if (mapref[key].size() > 0) 
     {
-        snprintf( info, INFO_SIZE, "Current Action: %s", 
-                  (vtostr( mapref[key] )).c_str() );
-
-        mpr( info, MSGCH_WARN );
+        mprf(MSGCH_WARN, "Current Action: %s", vtostr(mapref[key]).c_str());
         mpr( "Do you wish to (r)edefine, (c)lear, or (a)bort?", MSGCH_PROMPT );
 
         input = getch();

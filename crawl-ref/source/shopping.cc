@@ -128,10 +128,10 @@ char in_a_shop( char shoppy, id_arr id )
     clrscr();
     int itty = 0;
 
+    ShopInfo &si = stashes.get_shop(env.shop[shoppy].x, env.shop[shoppy].y);
+
     snprintf( info, INFO_SIZE, "Welcome to %s!", 
              shop_name(env.shop[shoppy].x, env.shop[shoppy].y) );
-
-    ShopInfo &si = stashes.get_shop(env.shop[shoppy].x, env.shop[shoppy].y);
 
     shop_print(info, 20);
 

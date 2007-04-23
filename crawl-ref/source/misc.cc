@@ -824,11 +824,8 @@ void down_stairs( bool remove_stairs, int old_level, int force_stair )
                 break;
 
             default:
-                snprintf( info, INFO_SIZE, 
-                          "You need at least %d Runes to enter this place.",
-                          NUMBER_OF_RUNES_NEEDED );
-
-                mpr(info);
+                mprf( "You need at least %d Runes to enter this place.",
+                      NUMBER_OF_RUNES_NEEDED );
             }
             return;
         }
@@ -1195,9 +1192,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
 
     if (random2(10) < 2 || (trap_known && !one_chance_in(4)))
     {
-        snprintf( info, INFO_SIZE, "You avoid triggering a%s trap.",
-                                    pbolt.name.c_str() );
-        mpr(info);
+        mprf( "You avoid triggering a%s trap.", pbolt.name.c_str() );
         return;
     }
 

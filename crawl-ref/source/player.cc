@@ -2158,10 +2158,9 @@ bool you_resist_magic(int power)
     int mrch2 = random2(100) + random2(101);
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Power: %d, player's MR: %d, target: %d, roll: %d", 
-             ench_power, player_res_magic(), mrchance, mrch2 ); 
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS,
+         "Power: %d, player's MR: %d, target: %d, roll: %d", 
+         ench_power, player_res_magic(), mrchance, mrch2 ); 
 #endif
 
     if (mrch2 < mrchance)
@@ -2199,8 +2198,7 @@ void gain_exp( unsigned int exp_gained )
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "gain_exp: %d", exp_gained );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "gain_exp: %d", exp_gained );
 #endif
 
     if (you.experience + exp_gained > 8999999)
@@ -2234,10 +2232,8 @@ void level_change(void)
 
         if (you.experience_level <= you.max_level)
         {
-            snprintf( info, INFO_SIZE, "Welcome back to level %d!",
-                      you.experience_level );
-
-            mpr(info, MSGCH_INTRINSIC_GAIN);
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "Welcome back to level %d!", you.experience_level );
             more();
 
             // Gain back the hp and mp we lose in lose_level().  -- bwr
@@ -2246,10 +2242,8 @@ void level_change(void)
         }
         else  // character has gained a new level
         {
-            snprintf( info, INFO_SIZE, "You are now a level %d %s!", 
-                      you.experience_level, you.class_name );
-
-            mpr(info, MSGCH_INTRINSIC_GAIN);
+            mprf(MSGCH_INTRINSIC_GAIN, "You are now a level %d %s!",
+                 you.experience_level, you.class_name );
             more();
 
             int brek = 0;
@@ -2942,7 +2936,7 @@ void ability_increase(void)
 /* this is an infinite loop because it is reasonable to assume that you're not going to want to leave it prematurely. */
 }                               // end ability_increase()
 
-void display_char_status(void)
+void display_char_status()
 {
     if (you.is_undead)
         mpr( "You are undead." );
@@ -3071,54 +3065,50 @@ void display_char_status(void)
 
     if (you.poisoning)
     { 
-        snprintf( info, INFO_SIZE, "You are %s poisoned.",
-                  (you.poisoning > 10) ? "extremely" :
-                  (you.poisoning > 5)  ? "very" :
-                  (you.poisoning > 3)  ? "quite"
-                                    : "mildly" );
-        mpr(info);
+        mprf("You are %s poisoned.",
+             (you.poisoning > 10) ? "extremely" :
+             (you.poisoning > 5)  ? "very" :
+             (you.poisoning > 3)  ? "quite"
+                                  : "mildly" );
     }
 
     if (you.disease)
     {
-        snprintf( info, INFO_SIZE, "You are %sdiseased.",
-                  (you.disease > 120) ? "badly " :
-                  (you.disease >  40) ? ""
-                                      : "mildly " );
-        mpr(info);
+        mprf("You are %sdiseased.",
+             (you.disease > 120) ? "badly " :
+             (you.disease >  40) ? ""
+                                 : "mildly " );
     }
 
     if (you.rotting || you.species == SP_GHOUL)
     {
         // I apologize in advance for the horrendous ugliness about to
         // transpire.  Avert your eyes!
-        snprintf( info, INFO_SIZE, "Your flesh is rotting%s",
-                  (you.rotting > 15) ? " before your eyes!":
-                  (you.rotting > 8)  ? " away quickly.":
-                  (you.rotting > 4)  ? " badly."
-             : ((you.species == SP_GHOUL && you.rotting > 0)
-                        ? " faster than usual." : ".") );
-        mpr(info);
+        mprf("Your flesh is rotting%s",
+             (you.rotting > 15) ? " before your eyes!" :
+             (you.rotting > 8)  ? " away quickly." :
+             (you.rotting > 4)  ? " badly." :
+             ((you.species == SP_GHOUL && you.rotting) ?
+              " faster than usual." : ".") );
     }
 
+    // prints a contamination message
     contaminate_player( 0, true );
 
     if (you.confusing_touch)
     {
-        snprintf( info, INFO_SIZE, "Your hands are glowing %s red.",
-                  (you.confusing_touch > 40) ? "an extremely bright" :
-                  (you.confusing_touch > 20) ? "bright"
-                                             : "a soft" );
-        mpr(info);
+        mprf("Your hands are glowing %s red.",
+             (you.confusing_touch > 40) ? "an extremely bright" :
+             (you.confusing_touch > 20) ? "bright"
+                                        : "a soft" );
     }
 
     if (you.sure_blade)
     {
-        snprintf( info, INFO_SIZE, "You have a %sbond with your blade.",
-                  (you.sure_blade > 15) ? "strong " :
-                  (you.sure_blade >  5) ? ""
-                                        : "weak " );
-        mpr(info);
+        mprf("You have a %sbond with your blade.",
+             (you.sure_blade > 15) ? "strong " :
+             (you.sure_blade >  5) ? ""
+                                   : "weak " );
     }
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
@@ -3131,28 +3121,27 @@ void display_char_status(void)
     const bool lev    = player_is_levitating();
     const bool fly    = (lev && you.duration[DUR_CONTROLLED_FLIGHT]);
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
-    snprintf( info, INFO_SIZE,
-              "Your %s speed is %s%s%s.",
-              // order is important for these:
-              (swim)    ? "swimming" :
-              (water)   ? "wading" :
-              (fly)     ? "flying" :
-              (lev)     ? "levitating" 
-                        : "movement", 
 
-              (water && !swim)  ? "uncertain and " :
-              (!water && swift) ? "aided by the wind" : "",
+    mprf( "Your %s speed is %s%s%s.",
+          // order is important for these:
+          (swim)    ? "swimming" :
+          (water)   ? "wading" :
+          (fly)     ? "flying" :
+          (lev)     ? "levitating" 
+                    : "movement", 
 
-              (!water && swift) ? ((move_cost >= 10) ? ", but still "
-                                                     :  " and ") 
-                                : "",
+          (water && !swim)  ? "uncertain and " :
+          (!water && swift) ? "aided by the wind" : "",
 
-              (move_cost <   8) ? "very quick" :
-              (move_cost <  10) ? "quick" :
-              (move_cost == 10) ? "average" :
-              (move_cost <  13) ? "slow" 
-                                : "very slow" );
-    mpr(info);
+          (!water && swift) ? ((move_cost >= 10) ? ", but still "
+                                                 : " and ")
+                            : "",
+
+          (move_cost <   8) ? "very quick" :
+          (move_cost <  10) ? "quick" :
+          (move_cost == 10) ? "average" :
+          (move_cost <  13) ? "slow" 
+                            : "very slow" );
 
     const int to_hit = calc_your_to_hit( false ) * 2;
     // Messages based largely on percentage chance of missing the 
@@ -3162,67 +3151,57 @@ void display_char_status(void)
     // "awkward"    - need lucky hit (less than EV)
     // "difficult"  - worse than 2 in 3
     // "hard"       - worse than fair chance
-    snprintf( info, INFO_SIZE, 
-              "%s given your current equipment.",
-              (to_hit <   1) ? "You are completely incapable of fighting" :
-              (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
-              (to_hit <  10) ? "Hitting average monsters is awkward" :
-              (to_hit <  15) ? "Hitting average monsters is difficult" :
-              (to_hit <  20) ? "Hitting average monsters is hard" :
-              (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
-              (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
-              (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
-              (to_hit < 100) ? "You feel comfortable with your ability to fight" 
-              : "You feel confident with your ability to fight" );
-    
+    mprf("%s given your current equipment.",
+         (to_hit <   1) ? "You are completely incapable of fighting" :
+         (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
+         (to_hit <  10) ? "Hitting average monsters is awkward" :
+         (to_hit <  15) ? "Hitting average monsters is difficult" :
+         (to_hit <  20) ? "Hitting average monsters is hard" :
+         (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
+         (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
+         (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
+         (to_hit < 100) ? "You feel comfortable with your ability to fight" 
+                        : "You feel confident with your ability to fight" );
+
 #if DEBUG_DIAGNOSTICS
-    char str_pass[INFO_SIZE];
-    snprintf( str_pass, INFO_SIZE, " (%d)", to_hit );
-    strncat( info, str_pass, INFO_SIZE );
+    mprf("To-hit: %d", to_hit);
 #endif
-    mpr(info);
-    
 
     // magic resistance
     const int mr = player_res_magic();
-    snprintf(info, INFO_SIZE, "You are %s resistant to magic.",
-             (mr <  10) ? "not" :
-             (mr <  30) ? "slightly" :
-             (mr <  60) ? "somewhat" :
-             (mr <  90) ? "quite" :
-             (mr < 120) ? "very" :
-             (mr < 140) ? "extremely" :
-             "incredibly");
-    mpr(info);
+    mprf("You are %s resistant to magic.",
+         (mr <  10) ? "not" :
+         (mr <  30) ? "slightly" :
+         (mr <  60) ? "somewhat" :
+         (mr <  90) ? "quite" :
+         (mr < 120) ? "very" :
+         (mr < 140) ? "extremely"
+                    : "incredibly");
 
     // character evaluates their ability to sneak around: 
     const int ustealth = check_stealth();
 
     // XXX: made these values up, probably could be better.
-    snprintf( info, INFO_SIZE, "You feel %sstealthy.",
-              (ustealth <  10) ? "extremely un" :
-              (ustealth <  20) ? "very un" :
-              (ustealth <  30) ? "un" :
-              (ustealth <  50) ? "fairly " :
-              (ustealth <  80) ? "" :
-              (ustealth < 120) ? "quite " :
-              (ustealth < 160) ? "very " : 
-              (ustealth < 200) ? "extremely " 
-              : "incredibly " );
+    mprf("You feel %sstealthy.",
+         (ustealth <  10) ? "extremely un" :
+         (ustealth <  20) ? "very un" :
+         (ustealth <  30) ? "un" :
+         (ustealth <  50) ? "fairly " :
+         (ustealth <  80) ? "" :
+         (ustealth < 120) ? "quite " :
+         (ustealth < 160) ? "very " : 
+         (ustealth < 200) ? "extremely " 
+                          : "incredibly " );
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( str_pass, INFO_SIZE, " (%d)", ustealth );
-    strncat( info, str_pass, INFO_SIZE );
+    mprf("stealth: %d", ustealth);
 #endif
-
-    mpr( info );    
 }                               // end display_char_status()
 
 void redraw_skill(const char your_name[kNameLen], const char class_name[80])
 {
     char print_it[80];
 
-    memset( print_it, ' ', sizeof(print_it) );
     snprintf( print_it, sizeof(print_it), "%s the %s", your_name, class_name );
 
     int in_len = strlen( print_it );
@@ -4179,10 +4158,8 @@ void contaminate_player(int change, bool statusOnly)
 #if DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
     {
-        snprintf( info, INFO_SIZE, "change: %d  radiation: %d", 
-                 change, change + you.magic_contamination );
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "change: %d  radiation: %d", 
+             change, change + you.magic_contamination );
     }
 #endif
 
@@ -4216,20 +4193,18 @@ void contaminate_player(int change, bool statusOnly)
         {
             if (new_level > 3)
             {
-                strcpy(info, (new_level == 4) ?
-                    "Your entire body has taken on an eerie glow!" :
-                    "You are engulfed in a nimbus of crackling magics!");
+                mpr( (new_level == 4) ?
+                     "Your entire body has taken on an eerie glow!" :
+                     "You are engulfed in a nimbus of crackling magics!");
             }
             else
             {
-                snprintf( info, INFO_SIZE, "You are %s with residual magics%c",
-                    (new_level == 3) ? "practically glowing" :
-                    (new_level == 2) ? "heavily infused"
-                                     : "contaminated",
-                    (new_level == 3) ? '!' : '.');
+                mprf("You are %s with residual magics%s",
+                     (new_level == 3) ? "practically glowing" :
+                     (new_level == 2) ? "heavily infused"
+                                      : "contaminated",
+                     (new_level == 3) ? "!" : ".");
             }
-
-            mpr(info);
         }
         return;
     }
@@ -4237,10 +4212,9 @@ void contaminate_player(int change, bool statusOnly)
     if (new_level == old_level)
         return;
 
-    snprintf( info, INFO_SIZE, "You feel %s contaminated with magical energies.", 
-              (change < 0) ? "less" : "more" );
-
-    mpr( info, (change > 0) ? MSGCH_WARN : MSGCH_RECOVERY );
+    mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
+         "You feel %s contaminated with magical energies.", 
+         (change > 0) ? "more" : "less" );
 }
 
 void poison_player( int amount, bool force )
@@ -4256,11 +4230,8 @@ void poison_player( int amount, bool force )
 
     if (you.poisoning > old_value)
     {
-        snprintf( info, INFO_SIZE, "You are %spoisoned.",
-                  (old_value > 0) ? "more " : "" );
-
         // XXX: which message channel for this message?
-        mpr( info );
+        mprf("You are %spoisoned.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_POISON);
     }
 }
@@ -4302,11 +4273,8 @@ void confuse_player( int amount, bool resistable )
 
     if (you.conf > old_value)
     {
-        snprintf( info, INFO_SIZE, "You are %sconfused.", 
-                  (old_value > 0) ? "more " : "" );
-
         // XXX: which message channel for this message?
-        mpr( info );
+        mprf("You are %sconfused.", (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_ENCHANTED);
     }
 }
@@ -4453,9 +4421,8 @@ void rot_player( int amount )
     {
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
-        snprintf( info, INFO_SIZE, "You feel your flesh %s away!",
-                  (you.rotting) ? "rotting" : "start to rot" );
-        mpr( info, MSGCH_WARN );
+        mprf(MSGCH_WARN, "You feel your flesh %s away!",
+             (you.rotting) ? "rotting" : "start to rot" );
 
         you.rotting += amount;
     }

@@ -2352,27 +2352,21 @@ void wield_warning(bool newWeapon)
             if (you.strength < you.dex)
             {
                 if (you.strength < 11)
-                    snprintf( info, INFO_SIZE, "You have %strouble swinging %s.",
+                    mprf(MSGCH_WARN, "You have %strouble swinging %s.",
                         (you.strength < 7)?"":"a little ", wepstr);
                 else
-                    snprintf( info, INFO_SIZE, "You'd be more effective with "
+                    mprf(MSGCH_WARN, "You'd be more effective with "
                         "%s if you were stronger.", wepstr);
             }
             else
             {
                 if (you.dex < 11)
-                {
-                    snprintf( info, INFO_SIZE, "Wielding %s is %s awkward.", 
-                              wepstr, (you.dex < 7) ? "fairly" : "a little" );
-                }
+                    mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
+                         wepstr, (you.dex < 7) ? "fairly" : "a little" );
                 else
-                {
-                    snprintf( info, INFO_SIZE, "You'd be more effective with "
+                    mprf(MSGCH_WARN, "You'd be more effective with "
                         "%s if you were nimbler.", wepstr );
-                }
             }
-
-            mpr( info, MSGCH_WARN );
         }
 #endif
         return;
@@ -2406,9 +2400,9 @@ void wield_warning(bool newWeapon)
 
     if (shoot_skill > effSkill)
     {
-        strcpy( info, "Your low throwing skill limits the effectiveness of ");
-        strcat( info, wepstr );
-        mpr( info, MSGCH_WARN );
+        mprf(MSGCH_WARN,
+             "Your low throwing skill limits the effectiveness of %s.",
+             wepstr);
     }
 #endif
 }

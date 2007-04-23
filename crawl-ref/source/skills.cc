@@ -388,10 +388,10 @@ static int exercise2( int exsk )
     exercised and how much you spent on it. Too irritating to be a regular 
     WIZARD feature.
 
+
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Exercised %s * %d for %d xp.", 
-             skill_name(exsk), skill_inc, skill_change );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf( MSGCH_DIAGNOSTICS, "Exercised %s * %d for %d xp.", 
+          skill_name(exsk), skill_inc, skill_change );
 #endif
 */
 
@@ -403,20 +403,22 @@ static int exercise2( int exsk )
         you.skills[exsk]++;
         take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
 
-        if (you.skills[exsk] == 27) {
-            snprintf( info, INFO_SIZE, "You have mastered %s!", 
-                      skill_name( exsk ) );
+        if (you.skills[exsk] == 27)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "You have mastered %s!", skill_name( exsk ) );
         }
-        else if (you.skills[exsk] == 1) {
-            snprintf( info, INFO_SIZE, "You have gained %s skill!", 
-                      skill_name( exsk ) );
+        else if (you.skills[exsk] == 1)
+        {
+            mprf(MSGCH_INTRINSIC_GAIN,
+                 "You have gained %s skill!", skill_name( exsk ) );
         }
-        else {
-            snprintf( info, INFO_SIZE, "Your %s skill increases to level %d!", 
-                      skill_name( exsk ), you.skills[exsk] );
+        else
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill increases to level %d!",
+                 skill_name( exsk ), you.skills[exsk] );
         }
 
-        mpr( info, MSGCH_INTRINSIC_GAIN );
         learned_something_new(TUT_SKILL_RAISE);
 
         // Recalculate this skill's order for tie breaking skills 

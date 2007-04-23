@@ -519,17 +519,13 @@ static void describe_floor() {
     {
         if (grid >= DNGN_STONE_STAIRS_DOWN_I && grid <= DNGN_ROCK_STAIRS_DOWN)
         {
-            snprintf( info, INFO_SIZE, "There is a %s staircase leading down here.",
-                     (grid == DNGN_ROCK_STAIRS_DOWN) ? "rock" : "stone" );
-
-            mpr(info);
+            mprf("There is a %s staircase leading down here.",
+                 (grid == DNGN_ROCK_STAIRS_DOWN) ? "rock" : "stone" );
         }
         else if (grid >= DNGN_STONE_STAIRS_UP_I && grid <= DNGN_ROCK_STAIRS_UP)
         {
-            snprintf( info, INFO_SIZE, "There is a %s staircase leading upwards here.",
-                     (grid == DNGN_ROCK_STAIRS_UP) ? "rock" : "stone" );
-
-            mpr(info);
+            mprf("There is a %s staircase leading upwards here.",
+                 (grid == DNGN_ROCK_STAIRS_UP) ? "rock" : "stone" );
         }
         else
         {
@@ -551,8 +547,8 @@ static void describe_floor() {
                 mpr("There is a gateway to the Iron City of Dis here.");
                 break;
             case DNGN_ENTER_SHOP:
-                snprintf( info, INFO_SIZE, "There is an entrance to %s here.", shop_name(you.x_pos, you.y_pos));
-                mpr(info);
+                mprf("There is an entrance to %s here.",
+                     shop_name(you.x_pos, you.y_pos));
                 break;
             case DNGN_ENTER_LABYRINTH:
                 mpr("There is an entrance to a labyrinth here.");
@@ -807,11 +803,7 @@ void item_check(char keyin)
 
     if (counter_max == 1)
     {
-        strcpy(info, "You see here ");  // remember 'an'.
-
-        strcat(info, item_show[counter_max]);
-        strcat(info, ".");
-        mpr(info);
+        mprf("You see here %s.", item_show[counter_max]);  // remember 'an'.
 
         counter++;
         counter_max = 0;        // to skip next part.
@@ -1290,9 +1282,8 @@ void pickup()
 
             if (keyin != 'a')
             {
-                snprintf( info, INFO_SIZE, "Pick up %s? (y/n/a/*?g,/q)",
-                          mitm[o].name(DESC_NOCAP_A).c_str() );
-                mpr( info, MSGCH_PROMPT );
+                mprf(MSGCH_PROMPT, "Pick up %s? (y/n/a/*?g,/q)",
+                     mitm[o].name(DESC_NOCAP_A).c_str() );
                 keyin = get_ch();
             }
 
@@ -1497,10 +1488,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
         if (!quiet)
         {
-            snprintf( info, INFO_SIZE, "You pick up %d gold piece%s.", 
-                     quant_got, (quant_got > 1) ? "s" : "" );
-
-            mpr(info);
+            mprf("You pick up %d gold piece%s.",
+                 quant_got, (quant_got > 1) ? "s" : "" );
         }
 
         you.turn_is_over = true;
@@ -2116,8 +2105,7 @@ void update_level( double elapsedTime )
 #if DEBUG_DIAGNOSTICS
     int mons_total = 0;
 
-    snprintf( info, INFO_SIZE, "turns: %d", turns );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns );
 #endif
 
     update_corpses( elapsedTime );
@@ -2176,12 +2164,11 @@ void update_level( double elapsedTime )
 
 #if DEBUG_DIAGNOSTICS
         // probably too annoying even for DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, 
-                  "mon #%d: range %d; long %d; pos (%d,%d); targ %d(%d,%d); flags %ld", 
-                  m, range, long_time, mon->x, mon->y, 
-                  mon->foe, mon->target_x, mon->target_y, mon->flags );
-
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS,
+             "mon #%d: range %d; long %d; "
+             "pos (%d,%d); targ %d(%d,%d); flags %ld", 
+             m, range, long_time, mon->x, mon->y, 
+             mon->foe, mon->target_x, mon->target_y, mon->flags );
 #endif 
 
         if (range <= 0)
@@ -2243,8 +2230,7 @@ void update_level( double elapsedTime )
                 shift_monster( mon, mon->x, mon->y );
 
 #if DEBUG_DIAGNOSTICS
-                snprintf(info, INFO_SIZE, "shifted to (%d,%d)", mon->x, mon->y);
-                mpr( info, MSGCH_DIAGNOSTICS );
+                mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)", mon->x, mon->y);
 #endif
                 continue;
             }
@@ -2289,14 +2275,12 @@ void update_level( double elapsedTime )
             shift_monster( mon, mon->x, mon->y );
 
 #if DEBUG_DIAGNOSTICS
-        snprintf( info, INFO_SIZE, "moved to (%d,%d)", mon->x, mon->y );
-        mpr( info, MSGCH_DIAGNOSTICS );
+        mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->x, mon->y );
 #endif
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "total monsters on level = %d", mons_total );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total );
 #endif
 
     for (i = 0; i < MAX_CLOUDS; i++)

@@ -136,9 +136,8 @@ void tag_followers( void )
             fmenv->flags |= MF_TAKING_STAIRS;
 
 #if DEBUG_DIAGNOSTICS
-            snprintf( info, INFO_SIZE, "%s is marked for following.",
-                      ptr_monam( fmenv, DESC_CAP_THE ) );
-            mpr( info, MSGCH_DIAGNOSTICS );
+            mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+                 ptr_monam( fmenv, DESC_CAP_THE ) );
 #endif  
         }
     }

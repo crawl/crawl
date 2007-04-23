@@ -2633,11 +2633,9 @@ void zap_wand(void)
             mpr("Your skill with magical items lets you calculate the power of this device...");
         }
 
-        snprintf( info, INFO_SIZE, "This wand has %d charge%s left.",
-                 you.inv[item_slot].plus, 
-                 (you.inv[item_slot].plus == 1) ? "" : "s" );
-
-        mpr(info);
+        mprf("This wand has %d charge%s left.",
+             you.inv[item_slot].plus, 
+             (you.inv[item_slot].plus == 1) ? "" : "s" );
         set_ident_flags( you.inv[item_slot], ISFLAG_KNOW_PLUSES );
     }
 
@@ -2825,7 +2823,7 @@ bool drink_fountain(void)
     return true;
 }                               // end drink_fountain()
 
-static bool affix_weapon_enchantment( void )
+static bool affix_weapon_enchantment()
 {
     const int wpn = you.equip[ EQ_WEAPON ];
     bool success = true;
@@ -2834,6 +2832,8 @@ static bool affix_weapon_enchantment( void )
 
     if (wpn == -1 || !you.duration[ DUR_WEAPON_BRAND ])
         return (false);
+
+    strcpy(info, you.inv[wpn].name(DESC_CAP_YOUR).c_str());
 
     switch (get_weapon_brand( you.inv[wpn] ))
     {
@@ -3409,14 +3409,14 @@ void read_scroll(void)
     case SCR_ENCHANT_WEAPON_III:
         if (you.equip[ EQ_WEAPON ] != -1) 
         {
-            // Get the name before it changes.
-            const std::string iname =
-                you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR);
 
             // Successfully affixing the enchantment will print
             // its own message.
             if (!affix_weapon_enchantment())
             {
+                const std::string iname =
+                    you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR);
+
                 mprf("%s glows bright yellow for a while.", iname.c_str() );
 
                 enchant_weapon( ENCHANT_TO_HIT, true );

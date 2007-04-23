@@ -441,14 +441,11 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 6:
-        strcpy(info, "Your ");
-
         temp_rand = random2(3);
-
-        strcat(info, (temp_rand == 0) ? "ears itch."   :
-                     (temp_rand == 1) ? "brain hurts!"
-                                      : "nose twitches suddenly!");
-        mpr(info);
+        mprf("Your %s",
+             (temp_rand == 0) ? "ears itch."   :
+             (temp_rand == 1) ? "brain hurts!"
+                              : "nose twitches suddenly!");
         break;
 
     case 7:
@@ -827,11 +824,9 @@ bool acquirement(unsigned char force_class, int agent)
 
               which_book:
 #if DEBUG_DIAGNOSTICS
-                snprintf( info, INFO_SIZE, 
-                          "acquirement: iteration = %d, best_spell = %d",
-                          iteration, best_spell );
-
-                mpr( info, MSGCH_DIAGNOSTICS );
+                mprf(MSGCH_DIAGNOSTICS,
+                     "acquirement: iteration = %d, best_spell = %d",
+                     iteration, best_spell );
 #endif //jmf: debugging
 
                 switch (best_spell)

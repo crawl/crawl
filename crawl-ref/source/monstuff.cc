@@ -517,16 +517,14 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
             bool created_friendly = 
                         testbits(monster->flags, MF_CREATED_FRIENDLY);
 
-            if (!silent)
+            if (death_message)
             {
                 snprintf(info, INFO_SIZE,
                          "You %s %s!",
                          wounded_damaged(monster->type) ? "destroy" : "kill",
                          ptr_monam(monster, DESC_NOCAP_THE));
-            }
-
-            if (death_message)
                 mpr(info, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            }
 
             if (!created_friendly)
             {
@@ -4766,10 +4764,9 @@ forget_it:
         if (testbits( monster->flags, MF_TAKING_STAIRS ))
         {
 #if DEBUG_DIAGNOSTICS
-            snprintf( info, INFO_SIZE, "%s is skipping movement in order to follow.",
-                      ptr_monam( monster, DESC_CAP_THE ) );
-
-            mpr( info, MSGCH_DIAGNOSTICS );
+            mprf(MSGCH_DIAGNOSTICS,
+                 "%s is skipping movement in order to follow.",
+                 ptr_monam( monster, DESC_CAP_THE ) );
 #endif
             mmov_x = 0;
             mmov_y = 0;

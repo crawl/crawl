@@ -398,8 +398,8 @@ void cast_shatter(int pow)
     if (!sil)
         noisy( 30, you.x_pos, you.y_pos );
 
-    snprintf(info, INFO_SIZE, "The dungeon %s!", (sil ? "shakes" : "rumbles"));
-    mpr(info, (sil? MSGCH_PLAIN : MSGCH_SOUND));
+    mprf((sil ? MSGCH_PLAIN : MSGCH_SOUND),
+         "The dungeon %s!", (sil ? "shakes" : "rumbles"));
 
     switch (you.attribute[ATTR_TRANSFORMATION])
     {
@@ -602,9 +602,8 @@ void cast_detect_secret_doors(int pow)
     {
         redraw_screen();
 
-        snprintf( info, INFO_SIZE, "You detect %s secret door%s.", 
-                 (found > 1) ? "some" : "a", (found > 1) ? "s" : "" );
-        mpr( info );
+        mprf("You detect %s secret door%s.", 
+             (found > 1) ? "some" : "a", (found > 1) ? "s" : "" );
     }
 }                               // end cast_detect_secret_doors()
 
@@ -669,8 +668,7 @@ void cast_sticks_to_snakes(int pow)
 
     if (weapon == -1)
     {
-        snprintf( info, INFO_SIZE, "Your %s feel slithery!", your_hand(true));
-        mpr(info);
+        mprf("Your %s feel slithery!", your_hand(true));
         return;
     }
 
@@ -762,42 +760,35 @@ void cast_sticks_to_snakes(int pow)
     {
         dec_inv_item_quantity( you.equip[EQ_WEAPON], how_many );
 
-        snprintf( info, INFO_SIZE, "You create %s snake%s!",
-                how_many > 1 ? "some" : "a", how_many > 1 ? "s" : "");
+        mprf("You create %s snake%s!",
+             how_many > 1 ? "some" : "a", how_many > 1 ? "s" : "");
     }
     else
     {
-        snprintf( info, INFO_SIZE, "Your %s feel slithery!", your_hand(true));
+        mprf("Your %s feel slithery!", your_hand(true));
     }
 
-    mpr(info);
-    return;
 }                               // end cast_sticks_to_snakes()
 
 void cast_summon_dragon(int pow)
 {
-    int happy;
 
     // Removed the chance of multiple dragons... one should be more
     // than enough, and if it isn't, the player can cast again...
     // especially since these aren't on the Abjuration plan... they'll
     // last until they die (maybe that should be changed, but this is
     // a very high level spell so it might be okay).  -- bwr
-    happy = (random2(pow) > 5);
+    const bool happy = (random2(pow) > 5);
 
     if (create_monster( MONS_DRAGON, 3,
                         (happy ? BEH_FRIENDLY : BEH_HOSTILE),
                         you.x_pos, you.y_pos, MHITYOU, 250 ) != -1)
     {
-        strcpy(info, "A dragon appears.");
-
-        if (!happy)
-            strcat(info, " It doesn't look very happy.");
+        mprf("A dragon appears.%s",
+             happy ? "" : " It doesn't look very happy.");
     }
     else
-        strcpy(info, "Nothing happens.");
-
-    mpr(info);
+        mprf("Nothing happens.");
 }                               // end cast_summon_dragon()
 
 void cast_conjure_ball_lightning( int pow )
@@ -1143,11 +1134,10 @@ void cast_ignite_poison(int pow)
 
     if (pcount > 0)
     {
-        snprintf( info, INFO_SIZE, "%s potion%s you are carrying explode%s!",
-            pcount > 1 ? "Some" : "A",
-            pcount > 1 ? "s" : "",
-            pcount > 1 ? "" : "s");
-        mpr(info);
+        mprf("%s potion%s you are carrying explode%s!",
+             pcount > 1 ? "Some" : "A",
+             pcount > 1 ? "s" : "",
+             pcount > 1 ? "" : "s");
     }
 
     if (wasWielding == true)
@@ -1272,10 +1262,8 @@ static int discharge_monsters( int x, int y, int pow, int garbage )
 
         if (damage)
         {
-            strcpy( info, ptr_monam( &(menv[mon]), DESC_CAP_THE ) );
-            strcat( info, " is struck by lightning." );
-            mpr( info );
-
+            mprf( "%s is struck by lightning.",
+                  ptr_monam( &(menv[mon]), DESC_CAP_THE));
             player_hurt_monster( mon, damage );
         }
     }
@@ -1308,8 +1296,7 @@ void cast_discharge( int pow )
                                       true, pow, num_targs );
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Arcs: %d Damage: %d", num_targs, dam );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Arcs: %d Damage: %d", num_targs, dam );
 #endif
 
     if (dam == 0) 
@@ -1318,16 +1305,13 @@ void cast_discharge( int pow )
             mpr("The air around you crackles with electrical energy.");
         else 
         {
-            bool plural = coinflip();
-            snprintf( info, INFO_SIZE, "%s blue arc%s ground%s harmlessly %s you.",
-                plural ? "Some" : "A",
-                plural ? "s" : "",
-                plural ? " themselves" : "s itself",
-                plural ? "around" : (coinflip() ? "beside" :
-                                     coinflip() ? "behind" : "before")
-                );
-
-            mpr(info);
+            const bool plural = coinflip();
+            mprf("%s blue arc%s ground%s harmlessly %s you.",
+                 plural ? "Some" : "A",
+                 plural ? "s" : "",
+                 plural ? " themselves" : "s itself",
+                 plural ? "around" : (coinflip() ? "beside" :
+                                      coinflip() ? "behind" : "before"));
         }
     }
 }                               // end cast_discharge()
@@ -1382,19 +1366,14 @@ static int distortion_monsters(int x, int y, int pow, int message)
     }
     else if (coinflip())
     {
-        strcpy(info, "Space bends around ");
-        strcat(info, ptr_monam(defender, DESC_NOCAP_THE));
-        strcat(info, ".");
-        mpr(info);
+        mprf("Space bends around %s.",
+             ptr_monam(defender, DESC_NOCAP_THE));
         specdam += 1 + random2avg( 7, 2 ) + random2(pow) / 40;
     }
     else if (coinflip())
     {
-        strcpy(info, "Space warps horribly around ");
-        strcat(info, ptr_monam( defender, DESC_NOCAP_THE ));
-        strcat(info, "!");
-        mpr(info);
-
+        mprf("Space warps horribly around %s!",
+             ptr_monam( defender, DESC_NOCAP_THE ));
         specdam += 3 + random2avg( 12, 2 ) + random2(pow) / 25;
     }
     else if (one_chance_in(3))
@@ -1899,10 +1878,7 @@ void cast_evaporate(int pow)
 
     if (potion == -1)
     {
-        snprintf( info, INFO_SIZE, "Wisps of steam play over your %s!", 
-                  your_hand(true) );
-
-        mpr(info);
+        mprf("Wisps of steam play over your %s!", your_hand(true) );
         return;
     } 
     else if (you.inv[potion].base_type != OBJ_POTIONS)
@@ -2316,8 +2292,7 @@ static int snake_charm_monsters(int x, int y, int pow, int message)
     if (check_mons_resist_magic(&menv[mon], pow))       return 0;
 
     menv[mon].attitude = ATT_FRIENDLY;
-    snprintf( info, INFO_SIZE, "%s sways back and forth.", ptr_monam( &(menv[mon]), DESC_CAP_THE ));
-    mpr(info);
+    mprf("%s sways back and forth.", ptr_monam( &(menv[mon]), DESC_CAP_THE ));
 
     return 1;
 }
@@ -2396,8 +2371,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         case MONS_SKELETON_LARGE:       // blast of bone
             explode = true;
 
-            snprintf( info, INFO_SIZE, "The sk%s explodes into sharp fragments of bone!",
-                    (menv[mon].type == MONS_FLYING_SKULL) ? "ull" : "eleton");
+            mprf("The %s explodes into sharp fragments of bone!",
+                 (menv[mon].type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
 
             blast.name = "blast of bone shards";
 
@@ -2485,7 +2460,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             blast.damage.num = 1;  // to mark that a monster was targetted
 
             // Yes, this spell does lousy damage if the 
-            // monster isn't susceptable. -- bwr 
+            // monster isn't susceptible. -- bwr 
             player_hurt_monster( mon, roll_dice( 1, 5 + pow / 25 ) );
             goto do_terrain;
         }
@@ -2655,10 +2630,9 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_PERMAROCK_WALL:
     case DNGN_FLOOR:
         explode = false;
-        snprintf( info, INFO_SIZE, "%s seems to be unnaturally hard.",
-                  (grid == DNGN_PERMAROCK_WALL) ? "That wall" 
-                                                : "The dungeon floor" );
-        explode = false;
+        mprf("%s seems to be unnaturally hard.",
+             (grid == DNGN_PERMAROCK_WALL) ? "That wall" 
+                                           : "The dungeon floor");
         break;
 
     case DNGN_TRAP_III: // What are these? Should they explode? -- bwr
@@ -2671,10 +2645,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     if (explode && blast.damage.num > 0)
     {
         if (what != NULL)
-        {
-            snprintf( info, INFO_SIZE, "The %s explodes!", what);
-            mpr(info);
-        }
+            mprf("The %s explodes!", what);
 
         explosion( blast, hole );
     }
@@ -2920,9 +2891,7 @@ int cast_apportation(int pow)
             mpr( "There are no items there." );
         else if (mons_is_mimic( menv[ mon ].type ))
         {
-            snprintf( info, INFO_SIZE, "%s twitches.",
-                      ptr_monam( &(menv[ mon ]), DESC_CAP_THE ) );
-            mpr( info );
+            mprf("%s twitches.", ptr_monam( &(menv[ mon ]), DESC_CAP_THE));
         }
         else 
             mpr( "This spell does not work on creatures." );
@@ -2964,9 +2933,8 @@ int cast_apportation(int pow)
         else
         {
             mpr( "Yoink!" );
-            snprintf( info, INFO_SIZE, "You pull the item%s to yourself.",
-                                 (mitm[ item ].quantity > 1) ? "s" : "" );
-            mpr( info );
+            mprf("You pull the item%s to yourself.",
+                 (mitm[ item ].quantity > 1) ? "s" : "" );
         }
         done = 1;
     }

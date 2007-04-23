@@ -959,10 +959,8 @@ static bool which_spellbook( int &book, int &spell )
         return (false);
     }
 
-    snprintf( info, INFO_SIZE, "You can memorise %d more level%s of spells.",
-             avail_levels, (avail_levels > 1) ? "s" : "" );
-
-    mpr( info );
+    mprf("You can memorise %d more level%s of spells.",
+         avail_levels, (avail_levels > 1) ? "s" : "" );
 
     book = prompt_invent_item("Memorise from which spellbook?", MT_INVSELECT,
                               OBJ_BOOKS );
@@ -1224,23 +1222,22 @@ bool learn_spell(void)
     }
 
     chance = spell_fail(specspell);
-    int temp_rand1 = random2(3);
-    int temp_rand2 = random2(4);
+    const int temp_rand1 = random2(3);
+    const int temp_rand2 = random2(4);
 
-    snprintf(info, INFO_SIZE, "This spell is %s %s to %s.",
-             ((chance >= 80) ? "very" :
-              (chance >= 60) ? "quite" :
-              (chance >= 45) ? "rather" :
-              (chance >= 30) ? "somewhat"
-              : "not that"),
-             ((temp_rand1 == 0) ? "difficult" :
-              (temp_rand1 == 1) ? "tricky" :
-              "challenging"),
-             ((temp_rand2 == 0) ? "memorise" :
-              (temp_rand2 == 1) ? "commit to memory" :
-              (temp_rand2 == 2) ? "learn" :
-              "absorb"));
-    mpr(info);
+    mprf("This spell is %s %s to %s.",
+         ((chance >= 80) ? "very" :
+          (chance >= 60) ? "quite" :
+          (chance >= 45) ? "rather" :
+          (chance >= 30) ? "somewhat"
+                         : "not that"),
+         ((temp_rand1 == 0) ? "difficult" :
+          (temp_rand1 == 1) ? "tricky"
+                            : "challenging"),
+         ((temp_rand2 == 0) ? "memorise" :
+          (temp_rand2 == 1) ? "commit to memory" :
+          (temp_rand2 == 2) ? "learn"
+                            : "absorb"));
 
     snprintf(info, INFO_SIZE, "Memorise %s?", spell_title(specspell));
     if ( !yesno(info, true, 0, false) )
@@ -1377,9 +1374,9 @@ int staff_spell( int staff )
         spell = 'a';  // automatically selected if its the only option
     else
     {
-        snprintf( info, INFO_SIZE, 
-                  "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
-                  'a' + num_spells - 1 );
+        mprf(MSGCH_PROMPT,
+             "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
+             'a' + num_spells - 1 );
 
         mpr( info, MSGCH_PROMPT );
         spell = get_ch();

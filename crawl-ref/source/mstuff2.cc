@@ -221,10 +221,9 @@ void mons_trap(struct monsters *monster)
                 && !silenced(you.x_pos, you.y_pos))
         {
             if (monsterNearby)
-                strcpy(info, "You hear a loud \"Zot\"!");
+                mpr("You hear a loud \"Zot\"!");
             else
-                strcpy(info, "You hear a distant \"Zot\"!");
-            mpr(info);
+                mpr("You hear a distant \"Zot\"!");
         }
 
         // determine trap effects upon monster, based upon
@@ -405,10 +404,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     int duration = 0;
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "Mon #%d casts %s (#%d)", monster_index(monster),
-             mons_spell_name( spell_cast ), spell_cast );
-
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
+         monster_index(monster), mons_spell_name( spell_cast ), spell_cast);
 #endif
 
     if (spell_cast == SPELL_HELLFIRE_BURST || spell_cast == SPELL_BRAIN_FEED
@@ -1331,7 +1328,7 @@ void spore_goes_pop(struct monsters *monster)
     if (mons_near(monster))
     {
         viewwindow(1, false);
-        mpr( info );
+        mpr(info);
     }
 
     explosion(beam);

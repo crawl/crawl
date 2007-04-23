@@ -946,11 +946,9 @@ static void eating(unsigned char item_class, int item_type)
                 mpr("That meat ration really hit the spot!");
                 break;
             case FOOD_BEEF_JERKY:
-                strcpy(info, "That beef jerky was ");
-                strcat(info, (one_chance_in(4)) ? "jerk-a-riffic"
-                                                : "delicious");
-                strcat(info, "!");
-                mpr(info);
+                mprf("That beef jerky was %s!",
+                     one_chance_in(4) ? "jerk-a-riffic"
+                                      : "delicious");
                 break;
             default:
                 break;
@@ -967,12 +965,11 @@ static void eating(unsigned char item_class, int item_type)
             case FOOD_PEAR:
             case FOOD_APPLE:
             case FOOD_APRICOT:
-                strcpy(info, "Mmmm... Yummy ");
-                strcat(info, (item_type == FOOD_APPLE)   ? "apple." :
-                             (item_type == FOOD_PEAR)    ? "pear." :
-                             (item_type == FOOD_APRICOT) ? "apricot."
-                                                         : "fruit.");
-                mpr(info);
+                mprf("Mmmm... Yummy %s.",
+                     (item_type == FOOD_APPLE)   ? "apple." :
+                     (item_type == FOOD_PEAR)    ? "pear." :
+                     (item_type == FOOD_APRICOT) ? "apricot."
+                                                 : "fruit.");
                 break;
             case FOOD_CHOKO:
                 mpr("That choko was very bland.");
@@ -1026,39 +1023,33 @@ static void eating(unsigned char item_class, int item_type)
             break;
         case FOOD_PIZZA:
             if (SysEnv.crawl_pizza && !one_chance_in(3))
-                snprintf(info, INFO_SIZE, "Mmm... %s", SysEnv.crawl_pizza);
+                mprf("Mmm... %s.", SysEnv.crawl_pizza);
             else
             {
                 temp_rand = random2(9);
-
-                snprintf(info, INFO_SIZE, "Mmm... %s",
-                             (temp_rand == 0) ? "Ham and pineapple." :
-                             (temp_rand == 2) ? "Vegetable." :
-                             (temp_rand == 3) ? "Pepperoni." :
-                             (temp_rand == 4) ? "Yeuchh - Anchovies!" :
-                             (temp_rand == 5) ? "Cheesy." :
-                             (temp_rand == 6) ? "Supreme." :
-                             (temp_rand == 7) ? "Super Supreme!"
-                                              : "Chicken.");
+                mprf("Mmm... %s",
+                     (temp_rand == 0) ? "Ham and pineapple." :
+                     (temp_rand == 2) ? "Vegetable." :
+                     (temp_rand == 3) ? "Pepperoni." :
+                     (temp_rand == 4) ? "Yeuchh - Anchovies!" :
+                     (temp_rand == 5) ? "Cheesy." :
+                     (temp_rand == 6) ? "Supreme." :
+                     (temp_rand == 7) ? "Super Supreme!"
+                                      : "Chicken.");
             }
-            mpr(info);
             break;
         case FOOD_CHEESE:
-            strcpy(info, "Mmm... ");
             temp_rand = random2(9);
-
-            strcat(info, (temp_rand == 0) ? "Cheddar" :
-                         (temp_rand == 1) ? "Edam" :
-                         (temp_rand == 2) ? "Wensleydale" :
-                         (temp_rand == 3) ? "Camembert" :
-                         (temp_rand == 4) ? "Goat cheese" :
-                         (temp_rand == 5) ? "Fruit cheese" :
-                         (temp_rand == 6) ? "Mozzarella" :
-                         (temp_rand == 7) ? "Sheep cheese"
-                                          : "Yak cheese");
-
-            strcat(info, ".");
-            mpr(info);
+            mprf("Mmm...%s.",
+                 (temp_rand == 0) ? "Cheddar" :
+                 (temp_rand == 1) ? "Edam" :
+                 (temp_rand == 2) ? "Wensleydale" :
+                 (temp_rand == 3) ? "Camembert" :
+                 (temp_rand == 4) ? "Goat cheese" :
+                 (temp_rand == 5) ? "Fruit cheese" :
+                 (temp_rand == 6) ? "Mozzarella" :
+                 (temp_rand == 7) ? "Sheep cheese"
+                                  : "Yak cheese");
             break;
         case FOOD_SAUSAGE:
             mpr("That sausage was delicious!");

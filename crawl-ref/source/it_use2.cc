@@ -124,10 +124,8 @@ bool potion_effect( char pot_eff, int pow )
         break;
 
     case POT_LEVITATION:
-        strcpy(info, "You feel");
-        strcat(info, (!player_is_levitating()) ? " very" : " more");
-        strcat(info, " buoyant.");
-        mpr(info);
+        mprf("You feel %s buoyant.",
+             (!player_is_levitating()) ? " very" : " more");
 
         if (!player_is_levitating())
             mpr("You gently float upwards from the floor.");
@@ -144,17 +142,13 @@ bool potion_effect( char pot_eff, int pow )
     case POT_STRONG_POISON:
         if (player_res_poison())
         {
-            snprintf( info, INFO_SIZE, "You feel %s nauseous.",
-                        (pot_eff == POT_POISON) ? "slightly" : "quite" );
-
-            mpr(info);
+            mprf("You feel %s nauseous.",
+                 (pot_eff == POT_POISON) ? "slightly" : "quite" );
         }
         else
         {
-            snprintf( info, INFO_SIZE, "That liquid tasted %s nasty...",
-                        (pot_eff == POT_POISON) ? "very" : "extremely" );
-
-            mpr(info);
+            mprf("That liquid tasted %s nasty...",
+                 (pot_eff == POT_POISON) ? "very" : "extremely" );
 
             poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2) 
                                                     : 3 + random2avg(13, 2)) );

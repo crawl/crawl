@@ -1634,8 +1634,7 @@ int how_mutated(void)
     }
 
 #if DEBUG_DIAGNOSTICS
-    snprintf( info, INFO_SIZE, "levels: %d", j );
-    mpr( info, MSGCH_DIAGNOSTICS );
+    mprf(MSGCH_DIAGNOSTICS, "levels: %d", j );
 #endif
 
     return (j);

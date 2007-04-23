@@ -283,18 +283,13 @@ static void adjust_spells(void)
     you.spell_letter_table[index_1] = tmp;
 
     // print out spell in new slot (now at input_2)
-    snprintf( info, INFO_SIZE, "%c - %s", input_2, 
-              spell_title( get_spell_by_letter(input_2) ) );
-
-    mpr(info);
+    mprf("%c - %s", input_2, spell_title( get_spell_by_letter(input_2) ) );
 
     // print out other spell if one was involved (now at input_1)
     spell = get_spell_by_letter( input_1 );
+
     if (spell != SPELL_NO_SPELL)
-    {
-        snprintf( info, INFO_SIZE, "%c - %s", input_1, spell_title(spell) );
-        mpr(info);
-    }
+        mprf("%c - %s", input_1, spell_title(spell) );
 }                               // end adjust_spells()
 
 static void adjust_ability(void)
@@ -358,10 +353,7 @@ static void adjust_ability(void)
     }
 
     // print out targeted spell:
-    snprintf( info, INFO_SIZE, "%c - %s", input_1, 
-              get_ability_name_by_index( index_1 ) );
-
-    mpr(info);
+    mprf("%c - %s", input_1, get_ability_name_by_index( index_1 ) );
 
     mpr( "Adjust to which letter?", MSGCH_PROMPT );
 
@@ -413,17 +405,10 @@ static void adjust_ability(void)
     // This is because nothing actually moves until generate_abilities is
     // called again... fortunately that has to be done everytime because
     // that's the silly way this system currently works.  -- bwr
-    snprintf( info, INFO_SIZE, "%c - %s", input_2, 
-              get_ability_name_by_index( index_1 ) );
-
-    mpr(info);
+    mprf("%c - %s", input_2, get_ability_name_by_index( index_1 ) );
 
     if (you.ability_letter_table[index_1] != ABIL_NON_ABILITY)
-    {
-        snprintf( info, INFO_SIZE, "%c - %s", input_1, 
-                  get_ability_name_by_index( index_2 ) );
-        mpr(info);
-    }
+        mprf("%c - %s", input_1, get_ability_name_by_index( index_2 ) );
 }                               // end adjust_ability()
 
 void list_armour(void)
