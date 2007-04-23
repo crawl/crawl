@@ -88,8 +88,6 @@ static void print_description( const std::string &d )
 
     const unsigned int lineWidth = 70;
 
-    bool nlSearch = true;       // efficiency
-
     textcolor(LIGHTGREY);
 
     while(currentPos < d.length())
@@ -98,31 +96,25 @@ static void print_description( const std::string &d )
             gotoxy(1, wherey() + 1);
 
         // see if $ sign is within one lineWidth
-        if (nlSearch)
+        nextLine = d.find('$', currentPos);
+
+        if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
         {
-            nextLine = d.find('$', currentPos);
-
-            if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
-            {
-                cprintf("%s",
-                        (d.substr(currentPos, nextLine - currentPos)).c_str());
-                currentPos = nextLine + 1;
-                continue;
-            }
-
-            // Handle real line breaks.  No substitutions necessary, just update
-            // the counts.
-            nextLine = d.find('\n', currentPos);
-            if (nextLine >= currentPos && nextLine < currentPos + lineWidth) {
-                cprintf("%s", (d.substr(currentPos, nextLine - currentPos)).c_str());
-                currentPos = nextLine +1;
-                continue;
-            }
-            
-            if (nextLine == std::string::npos)
-                nlSearch = false;       // there are no newlines, don't search again.
+            cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
+            currentPos = nextLine + 1;
+            continue;
         }
-
+        
+        // Handle real line breaks.  No substitutions necessary, just update
+        // the counts.
+        nextLine = d.find('\n', currentPos);
+        if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
+        {
+            cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
+            currentPos = nextLine +1;
+            continue;
+        }            
+        
         // no newline -- see if rest of string will fit.
         if (currentPos + lineWidth >= d.length())
         {
@@ -1254,6 +1246,13 @@ static std::string describe_weapon( const item_def &item, bool verbose)
         {
         case ISFLAG_DWARVEN:
             description += "$It is well-crafted and very durable.";
+            description += "$Dwarves are more deadly with it.";
+            break;
+        case ISFLAG_ELVEN:
+            description += "$Elves are more accurate with it.";
+            break;
+        case ISFLAG_ORCISH:
+            description += "$Orcs are more deadly with it.";
             break;
         }
 
@@ -1370,6 +1369,22 @@ static std::string describe_ammo( const item_def &item )
     default:
         DEBUGSTR("Unknown ammo type");
         break;
+    }
+
+    switch ( get_equip_race(item) )
+    {
+        case ISFLAG_DWARVEN:
+            description +=
+                "$It is more effective in conjunction with dwarven launchers.";
+            break;
+        case ISFLAG_ELVEN:
+            description +=
+                "$It is more effective in conjunction with elven launchers.";
+            break;
+        case ISFLAG_ORCISH:
+            description +=
+                "$It is more effective in conjunction with orcish launchers.";
+            break;
     }
 
     if (item.special != 0 && item_type_known(item))
@@ -1747,13 +1762,18 @@ static std::string describe_armour( const item_def &item, bool verbose )
                 description += ", and helps its wearer avoid being noticed";
 
             description += ".";
+            description += "$It fits elves well.";
             break;
 
         case ISFLAG_DWARVEN:
             description += "$It is well-crafted and very durable.";
+            description += "$It fits dwarves well.";
             break;
         
         case ISFLAG_ORCISH:
+            description += "$It fits orcs well.";
+            break;
+
         default:
             break;
         }
