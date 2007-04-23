@@ -1881,23 +1881,34 @@ int mons_islands_level(int mcls)
     {
     case MONS_BUTTERFLY:
     case MONS_PLANT:
+    case MONS_GIANT_BAT:
         break;
 
     case MONS_CENTAUR:
     case MONS_ETTIN:
     case MONS_SHEEP:
+    case MONS_HIPPOGRIFF:
         mlev++;
         break;
-    case MONS_CENTAUR_WARRIOR:
-    case MONS_CYCLOPS:          // will have a sheep band
+
     case MONS_YAKTAUR:
         mlev += 2;
         break;
+
+    case MONS_CENTAUR_WARRIOR:
+    case MONS_CYCLOPS:          // will have a sheep band
+        mlev += 3;
+        break;
+
     case MONS_STONE_GIANT:
-    case MONS_YAKTAUR_CAPTAIN:
     case MONS_OKLOB_PLANT:
         mlev += 4;
         break;
+
+    case MONS_YAKTAUR_CAPTAIN:
+        mlev += 5;
+        break;
+
     default:
         mlev += 99;
     }
@@ -1912,13 +1923,17 @@ int mons_islands_rare(int mcls)
         return 150;
 
     case MONS_ETTIN:
-    case MONS_CENTAUR:
+    case MONS_SHEEP:
         return 50;
 
-    case MONS_SHEEP:
+    case MONS_HIPPOGRIFF:
+    case MONS_GIANT_BAT:
     case MONS_BUTTERFLY:
-    case MONS_YAKTAUR:
+    case MONS_CENTAUR:
         return 35;
+
+    case MONS_YAKTAUR:
+        return 25;
 
     case MONS_CYCLOPS:
     case MONS_CENTAUR_WARRIOR:

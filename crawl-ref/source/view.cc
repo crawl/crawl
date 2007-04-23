@@ -2139,7 +2139,7 @@ void show_map( FixedVector<int, 2> &spec_place, bool travel_mode )
     const int num_lines = get_number_of_lines_levelmap();
     const int half_screen = (num_lines - 1) / 2;
 
-    const int top    = 1 + Options.level_map_title;
+    const int top = 1 + Options.level_map_title;
 
     for (j = 0; j < GYM; j++)
     {
