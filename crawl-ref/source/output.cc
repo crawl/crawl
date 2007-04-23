@@ -961,7 +961,7 @@ std::vector<formatted_string> get_full_detail(bool calc_unid)
                  determine_color_string(-1), itosym1(1));
     else
     {
-        const int rrtel = player_teleport(calc_unid);
+        const int rrtel = !!player_teleport(calc_unid);
         snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
                  determine_color_string(rrtel), itosym1(rrtel));
     }
@@ -1237,7 +1237,7 @@ void print_overview_screen()
                  determine_color_string(-1), itosym1(1));
     else
     {
-        const int rrtel = player_teleport(calc_unid);
+        const int rrtel = !!player_teleport(calc_unid);
         snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
                  determine_color_string(rrtel), itosym1(rrtel));
     }
