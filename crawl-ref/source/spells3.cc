@@ -408,7 +408,7 @@ void simulacrum(int power)
         mpr( "You need to wield a piece of raw flesh for this spell "
              "to be effective!" );
     }
-}                               // end sublimation()
+}
 
 void dancing_weapon(int pow, bool force_hostile)
 {
