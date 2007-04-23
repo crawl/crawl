@@ -295,7 +295,7 @@ static void get_symbol( int x, int y,
 
     if (object < NUM_FEATURES)
     {
-        *ch = Feature[object].symbol;    
+        *ch = Feature[object].symbol;
 
         // Don't clobber with BLACK, because the colour should be already set.
         if (Feature[object].colour != BLACK)
@@ -528,6 +528,13 @@ static int get_mons_colour(const monsters *mons)
              && mons_looks_distracted(mons))
     {
         col |= COLFLAG_MAYSTAB;
+    }
+    else if (Options.heap_brand != CHATTR_NORMAL
+             && mons_is_stationary(mons)
+             && in_bounds(mons->x, mons->y)
+             && igrd[mons->x][mons->y] != NON_ITEM)
+    {
+        col |= COLFLAG_ITEM_HEAP;
     }
 
     return (col);
