@@ -233,7 +233,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 }
 
 //jmf: next two for simple bit handling
-unsigned int get_spell_type(spell_type spell)
+unsigned int get_spell_disciplines(spell_type spell)
 {
     return (seekspell(spell)->disciplines);
 }

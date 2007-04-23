@@ -106,14 +106,14 @@ static bool surge_identify_boosters(int spell)
     return false;
 }
 
-static void surge_power(int spell)
+static void surge_power(spell_type spell)
 {
     int enhanced = 0;
 
     surge_identify_boosters(spell);
 
     //jmf: simplified
-    enhanced += spell_enhancement(spell_type(spell));
+    enhanced += spell_enhancement(get_spell_disciplines(spell));
 
     if (enhanced)               // one way or the other {dlb}
     {
@@ -468,7 +468,7 @@ int spell_fail(spell_type spell)
 }                               // end spell_fail()
 
 
-int calc_spell_power( int spell, bool apply_intel, bool fail_rate_check )
+int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 {
     unsigned int bit;
     int ndx;
@@ -480,7 +480,7 @@ int calc_spell_power( int spell, bool apply_intel, bool fail_rate_check )
             + (fail_rate_check? 0 : player_mag_abil(false));
     int enhanced = 0;
 
-    unsigned int disciplines = spell_type( spell );
+    unsigned int disciplines = get_spell_disciplines( spell );
 
     //jmf: evil evil evil -- exclude HOLY bit
     disciplines &= (~SPTYP_HOLY);       

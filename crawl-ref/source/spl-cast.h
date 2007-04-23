@@ -18,7 +18,8 @@
 
 char list_spells( void );
 int spell_fail( spell_type spell );
-int calc_spell_power( int spell, bool apply_intel, bool fail_rate_chk = false );
+int calc_spell_power(spell_type spell, bool apply_intel,
+                     bool fail_rate_chk = false );
 int spell_enhancement( unsigned int typeflags );
 
 // last updaetd 12may2000 {dlb}
