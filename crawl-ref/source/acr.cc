@@ -1621,45 +1621,44 @@ static void decrement_durations()
         you.duration[DUR_WEAPON_BRAND] = 0;
 
         set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_NORMAL );
-        strncpy(info, you.inv[wpn].name(DESC_CAP_YOUR).c_str(), INFO_SIZE);
+
+        std::string msg = you.inv[wpn].name(DESC_CAP_YOUR);
 
         switch (temp_effect)
         {
         case SPWPN_VORPAL:
-            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]])
-                    == DVORP_SLICING)
-                strcat(info, " seems blunter.");
+            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]])==DVORP_SLICING)
+                msg += " seems blunter.";
             else
-                strcat(info, " feels lighter.");
+                msg += " feels lighter.";
             break;
-
         case SPWPN_FLAMING:
-            strcat(info, " goes out.");
+            msg += " goes out.";
             break;
         case SPWPN_FREEZING:
-            strcat(info, " stops glowing.");
+            msg += " stops glowing.";
             break;
         case SPWPN_VENOM:
-            strcat(info, " stops dripping with poison.");
+            msg += " stops dripping with poison.";
             break;
         case SPWPN_DRAINING:
-            strcat(info, " stops crackling.");
+            msg += " stops crackling.";
             break;
         case SPWPN_DISTORTION:
-            strcat(info, " seems straighter.");
+            msg += " seems straighter.";
             // [dshaligram] Makes the brand unusable
             // miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "a distortion effect" );
             break;
         case SPWPN_PAIN:
-            strcat(info, " seems less painful.");
+            msg += " seems less painful.";
             break;
         default:
-            strcat(info, " seems inexplicably less special.");
+            msg += " seems inexplicably less special.";
             break;
         }
 
         //you.attribute[ATTR_WEAPON_BRAND] = 0;
-        mpr(info, MSGCH_DURATION);
+        mpr(msg.c_str(), MSGCH_DURATION);
         you.wield_change = true;
     }
 

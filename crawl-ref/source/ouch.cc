@@ -663,7 +663,8 @@ void drain_exp(void)
 }                               // end drain_exp()
 
 // death_source should be set to zero for non-monsters {dlb}
-void ouch( int dam, int death_source, char death_type, const char *aux )
+void ouch( int dam, int death_source, kill_method_type death_type,
+           const char *aux )
 {
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );

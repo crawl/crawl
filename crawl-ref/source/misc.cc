@@ -1511,7 +1511,6 @@ void weird_writing(char stringy[40])
     return;
 }                               // end weird_writing()
 
-// must be a better name than 'place' for the first parameter {dlb}
 // returns true if we manage to scramble free.
 bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
                        unsigned char terrain )
@@ -1526,14 +1525,10 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         return (false);
     }
 
-    strcpy(info, "You fall into the ");
-
-    strcat(info, (terrain == DNGN_LAVA)       ? "lava" :
-                 (terrain == DNGN_DEEP_WATER) ? "water"
-                                              : "programming rift");
-
-    strcat(info, "!");
-    mpr(info);
+    mprf("You fall into the %s!",
+         (terrain == DNGN_LAVA)       ? "lava" :
+         (terrain == DNGN_DEEP_WATER) ? "water"
+                                      : "programming rift");
 
     more();
     mesclr();
