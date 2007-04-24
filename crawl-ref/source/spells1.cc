@@ -374,6 +374,11 @@ void identify(int power)
             canned_msg( MSG_OK );
             return;
         }
+        if ( fully_identified(you.inv[item_slot]) )
+        {
+            mpr("Choose an unidentified item, or Esc to abort.");
+            continue;
+        }
 
         set_ident_type( you.inv[item_slot].base_type, 
                         you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
