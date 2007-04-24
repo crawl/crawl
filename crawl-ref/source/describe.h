@@ -38,19 +38,17 @@ std::string get_item_description( const item_def &item, bool verbose,
  * *********************************************************************** */
 void describe_god( int which_god, bool give_title );
 
+void describe_feature_wide(int x, int y);
 
-// last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: item_use - shopping
  * *********************************************************************** */
 void describe_item( const item_def &item );
 
-// last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: direct
  * *********************************************************************** */
-void describe_monsters(int class_described, unsigned char which_mons);
-
+void describe_monsters(monsters &mons);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

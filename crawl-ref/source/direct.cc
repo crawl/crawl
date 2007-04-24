@@ -388,7 +388,7 @@ void direction(struct dist& moves, targeting_type restricts,
         const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
         const int old_ty = moves.ty;
 
-        int i, mid;
+        int i, mid, oid;
 
         switch ( key_command )
         {
@@ -591,26 +591,29 @@ void direction(struct dist& moves, targeting_type restricts,
 #endif
             
         case CMD_TARGET_DESCRIBE:
-            // Maybe we can skip this check...but it can't hurt
-            if (!in_bounds(moves.tx, moves.ty))
+            // Don't give out information for things outside LOS
+            if (!see_grid(moves.tx, moves.ty))
                 break;
+
             mid = mgrd[moves.tx][moves.ty];
-            if (mid == NON_MONSTER) // can put in terrain description here
+            oid = igrd[moves.tx][moves.ty];
+
+            if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
             {
-                int oid = igrd[moves.tx][moves.ty];
-                if ( oid == NON_ITEM || mitm[oid].base_type == OBJ_GOLD )
-                    break;
-                describe_item( mitm[igrd[moves.tx][moves.ty]] );
+                // First priority: monsters
+                describe_monsters(menv[mid]);
+            }
+            else if (oid != NON_ITEM)
+            {
+                // Second priority: objects
+                describe_item( mitm[oid] );
             }
             else
             {
-#if (!DEBUG_DIAGNOSTICS)
-                if (!player_monster_visible( &menv[mid] ))
-                    break;
-#endif
-
-                describe_monsters(menv[mid].type, mid);
+                // Third priority: features
+                describe_feature_wide(moves.tx, moves.ty);
             }
+
             force_redraw = true;
             redraw_screen();
             mesclr(true);
@@ -1137,8 +1140,6 @@ static void describe_feature(int mx, int my, bool oos)
         mpr(desc.c_str());
     }
 }
-
-
 
 // Returns a vector of features matching the given pattern.
 std::vector<dungeon_feature_type> features_by_desc(const text_pattern &pattern)

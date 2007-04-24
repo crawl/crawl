@@ -3334,6 +3334,10 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
                                         : "A decaying skeleton. ");
         break;
 
+    case OBJ_GOLD:
+        description += "A pile of glittering gold coins. ";
+        break;
+
     default:
         DEBUGSTR("Bad item class");
         description += "This item should not exist. Mayday! Mayday! ";
@@ -3376,6 +3380,103 @@ std::string get_item_description( const item_def &item, bool verbose, bool dump 
     return (description);
 }                               // end get_item_description()
 
+static std::string get_feature_description_wide(int feat)
+{
+    switch ( feat )
+    {
+    case DNGN_ROCK_WALL:
+    case DNGN_SECRET_DOOR:      // to prevent detection with 'x'
+        return "The typical dungeon barrier. Though it is impenetrable at "
+            "first sight, there are several ways to get through "
+            "or around it.";
+    case DNGN_STONE_WALL:
+        return "A harder obstacle than rock walls. Only the mightiest "
+            "magic can shatter stone walls.";
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return "For some reason, some dungeon walls, like this one, "
+            "have been made of this polished crystal, imbued with arcane "
+            "magics. They prevent its destruction, and make it reflect heat "
+            "and cold.";
+    case DNGN_METAL_WALL:
+        return "An impenetrable barrier. As every dungeon electrician "
+            "knows, it grounds all forms of electricity.";
+    case DNGN_WAX_WALL:
+        return "These walls are built by bees. Occasionally a dungeon "
+            "architect will manipulate bees into building wax walls for "
+            "esthetic reasons. (Theirs, not the bees'.) They are susceptible "
+            "to heat and can easily melt.";
+    case DNGN_SHALLOW_WATER:
+        return "This waist-deep, misty water makes movement and combat "
+            "cumbersome for landlubbers -- sometimes dangerous, but never "
+            "directly fatal.";
+    case DNGN_DEEP_WATER:
+        if (you.species != SP_MERFOLK)
+            return "This deep, misty water will drown any who set foot in it, "
+                "unless they feel at home in water. Nothing in the dungeon "
+                "-- not even you! -- is dumb enough to go there without "
+                "thinking twice. Except when they're really confused...";
+        else
+            return "This is the deep, misty water which you call home.";
+    case DNGN_LAVA:
+        return "Lava, like the smoke that billows from it, sure looks "
+            "pretty from above! But walking on lava will burn everything "
+            "but lava creatures to a crisp. If the lava creatures themselves "
+            "haven't already done that job at range, that is.";
+    case DNGN_SPARKLING_FOUNTAIN:
+        return "'q'uaff to drink from this magic fountain. Expect magical "
+            "effects, as long as it's still magic.";
+    case DNGN_BLUE_FOUNTAIN:
+        return "'q'uaff to drink from this fountain. But it's far more "
+            "pretty than useful, unless you're trying to fetch the Orb "
+            "without eating, I guess.";
+    case DNGN_FLOOR:
+        switch (random2(6))
+        {
+        default:
+        case 0:
+        case 1:
+        case 2:
+            return "A plain floor space, for walking on.";
+        case 3:
+            return "Just a floor. Walk on it. Fly over it. I don't care.";
+        case 4:
+            return "A plain floor space, for walking on. "
+                "It could contain a nasty trap, but "
+                "who would be paranoid enough to believe that?";
+        case 5:
+            return "A plain floor space, for walking on. "
+                "Perhaps an invisible creature is lurking there, "
+                "but then, the dungeon is no playground for the "
+                "superstitious.";
+        }
+    case DNGN_OPEN_DOOR:
+        return "A plain door. "
+            "You can close it by standing next to it and pressing 'c'.";
+    case DNGN_CLOSED_DOOR:
+        return "A plain door. "
+            "To open it, try simply walking into it, or press 'o'.";
+    case DNGN_ENTER_SHOP:
+        return "A shop! Here, of all places! Some souls question the "
+            "wisdom of the dungeon's shopkeepers, who import wares to "
+            "hawk among a populace nearly as penniless as it is merciless. "
+            "But then, you're here and itching to spend, so... "
+            "what's the problem?";
+    default:
+        return std::string();
+    }
+}
+
+void describe_feature_wide(int x, int y)
+{
+    std::string desc = feature_description(x, y);
+    desc += "$$";
+    desc += get_feature_description_wide(grd[x][y]);
+
+    clrscr();
+    print_description(desc);
+    if ( getch() == 0 )
+        getch();
+}
 
 //---------------------------------------------------------------
 //
@@ -4607,10 +4708,9 @@ static std::string describe_draconian(const monsters *mon)
 // Contains sketchy descriptions of every monster in the game.
 //
 //---------------------------------------------------------------
-void describe_monsters(int class_described, unsigned char which_mons)
+void describe_monsters(monsters& mons)
 {
     std::string description;
-    monsters &mons = menv[which_mons];
 
     description.reserve(200);
 
@@ -4640,7 +4740,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     if (mons_is_mimic(mons.type))
         mons.flags |= MF_KNOWN_MIMIC;
 
-    switch (class_described)
+    switch (mons.type)
     {
         // (missing) case 423 - MONS_ANOTHER_LAVA_THING ??? 15jan2000 {dlb}
         //                      no entry in m_list.h 17jan200 {dlb}
@@ -4674,7 +4774,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_GREATER_MUMMY:
     case MONS_MUMMY_PRIEST:
         description += "The embalmed and undead corpse of an ancient ";
-        if (class_described == MONS_GREATER_MUMMY)
+        if (mons.type == MONS_GREATER_MUMMY)
             description += "ruler";
         else
             description += "servant of darkness";
@@ -4686,7 +4786,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_NAGA_WARRIOR:
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
-        switch (class_described)
+        switch (mons.type)
         {
         case MONS_GUARDIAN_NAGA:
             description += "These nagas are "
@@ -4696,16 +4796,16 @@ void describe_monsters(int class_described, unsigned char which_mons)
             description += "It looks strong and aggressive.";
             break;
         case MONS_NAGA_MAGE:
-            description += "An eldritch nimbus trails its motions. ";
+            description += "An eldritch nimbus trails its motions.";
             break;
         case MONS_NAGA_WARRIOR:
-            description += "It bears scars of many past battles. ";
+            description += "It bears scars of many past battles.";
             break;
         }
         if (you.species == SP_NAGA)
-            description = "It is particularly attractive";
+            description = "It is particularly attractive.";
         else
-            description = "It is strange and repulsive. ";
+            description = "It is strange and repulsive.";
         break;
 
     case MONS_VAMPIRE:
@@ -4741,7 +4841,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_DEATH_MAGE:
-        switch (class_described)
+        switch (mons.type)
         {
 
         case MONS_DEEP_ELF_SOLDIER:
@@ -4763,7 +4863,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
         case MONS_DEEP_ELF_SUMMONER:
         case MONS_DEEP_ELF_CONJURER:
             description += "This one is a mage specialized in the ancient art ";
-            if (class_described == MONS_DEEP_ELF_SUMMONER)
+            if (mons.type == MONS_DEEP_ELF_SUMMONER)
                 description += "of summoning servants";
             else
                 description += "of hurling energies";
@@ -4822,7 +4922,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        description += describe_draconian( &menv[which_mons] );
+        description += describe_draconian( &mons );
         break;        
     }
     case MONS_PLAYER_GHOST:
@@ -4859,9 +4959,9 @@ void describe_monsters(int class_described, unsigned char which_mons)
 
 #if DEBUG_DIAGNOSTICS
 
-    if (mons_class_flag( menv[ which_mons ].type, M_SPELLCASTER ))
+    if (mons_class_flag( mons.type, M_SPELLCASTER ))
     {
-        const monster_spells &hspell_pass = menv[which_mons].spells;
+        const monster_spells &hspell_pass = mons.spells;
         bool found_spell = false;
 
         for (int i = 0; i < 6; i++)
@@ -4886,7 +4986,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
     bool has_item = false;
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
-        if (menv[ which_mons ].inv[i] != NON_ITEM)
+        if (mons.inv[i] != NON_ITEM)
         {
             if (!has_item)
             {
@@ -4895,7 +4995,7 @@ void describe_monsters(int class_described, unsigned char which_mons)
             }
 
             // duplicate it, because we're going to change it
-            item_def item = mitm[ menv[which_mons].inv[i] ];
+            item_def item = mitm[ mons.inv[i] ];
             set_ident_flags( item, ISFLAG_IDENT_MASK );
             snprintf( info, INFO_SIZE, "    %d: %s$", i,
                       item.name(DESC_NOCAP_A).c_str() );
