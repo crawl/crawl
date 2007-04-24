@@ -21,6 +21,7 @@
 #include "format.h"
 
 #include <cstdarg>
+#include <sstream>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -1484,25 +1485,21 @@ static void describe_cell(int mx, int my)
 
         if (menv[i].type != MONS_DANCING_WEAPON && mon_wep != NON_ITEM)
         {
-            snprintf( info, INFO_SIZE, "%s is wielding %s",
-                      mons_pronoun( menv[i].type, PRONOUN_CAP ),
-                      mitm[mon_wep].name(DESC_NOCAP_A).c_str());
+            std::ostringstream msg;
+            msg << mons_pronoun( menv[i].type, PRONOUN_CAP )
+                << " is wielding "
+                << mitm[mon_wep].name(DESC_NOCAP_A);
 
             // 2-headed ogres can wield 2 weapons
             if ((menv[i].type == MONS_TWO_HEADED_OGRE
                  || menv[i].type == MONS_ETTIN)
                 && menv[i].inv[MSLOT_MISSILE] != NON_ITEM)
             {
-                strcat(info, " and " );
-                strcat(info, mitm[menv[i].inv[MSLOT_MISSILE]].name(DESC_NOCAP_A).c_str());
-                strcat(info, ".");
-                mpr(info);
+                msg << " and "
+                    <<  mitm[menv[i].inv[MSLOT_MISSILE]].name(DESC_NOCAP_A);
             }
-            else
-            {
-                strcat(info, ".");
-                mpr(info);
-            }
+            msg << ".";
+            mpr(msg.str().c_str());
         }
 
         if (mon_arm != NON_ITEM)

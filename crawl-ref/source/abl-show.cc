@@ -24,6 +24,7 @@
 #include "AppHdr.h"
 #include "abl-show.h"
 
+#include <sstream>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -327,91 +328,87 @@ std::string print_abilities()
 const std::string make_cost_description( const struct ability_def &abil )
 /***********************************************************************/
 {
-    char         tmp_buff[80];  // avoiding string steams for portability 
-    std::string  ret = "";
-
+    std::ostringstream ret;
     if (abil.mp_cost)
     {
-        snprintf( tmp_buff, sizeof(tmp_buff), "%d%s MP", 
-                  abil.mp_cost, 
-                  (abil.flags & ABFLAG_PERMANENT_MP) ? " Permanent" : "" );
-
-        ret += tmp_buff;
+        ret << abil.mp_cost;
+        if (abil.flags & ABFLAG_PERMANENT_MP)
+            ret << " Permanent";
+        ret << " MP";
     }
 
     if (abil.hp_cost)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        snprintf( tmp_buff, sizeof(tmp_buff), "%d%s HP", 
-                  abil.hp_cost,
-                  (abil.flags & ABFLAG_PERMANENT_HP) ? " Permanent" : "" );
-
-        ret += tmp_buff;
+        ret << abil.hp_cost;
+        if (abil.flags & ABFLAG_PERMANENT_HP)
+            ret << " Permanent";
+        ret << " HP";
     }
 
     if (abil.food_cost)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Food";   // randomized and amount hidden from player
+        ret << "Food";   // randomized and amount hidden from player
     }
 
     if (abil.piety_cost)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Piety";  // randomized and amount hidden from player
+        ret << "Piety";  // randomized and amount hidden from player
     }
 
     if (abil.flags & ABFLAG_BREATH)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Breath"; 
+        ret << "Breath"; 
     }
 
     if (abil.flags & ABFLAG_DELAY)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Delay";
+        ret << "Delay";
     }
 
     if (abil.flags & ABFLAG_PAIN)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Pain";
+        ret << "Pain";
     }
 
     if (abil.flags & ABFLAG_EXHAUSTION)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Exhaustion";
+        ret << "Exhaustion";
     }
 
     if (abil.flags & ABFLAG_INSTANT)
     {
-        if (ret.length())
-            ret += ", ";
+        if (ret.str().length())
+            ret << ", ";
 
-        ret += "Instant"; // not really a cost, more of a bonus -bwr
+        ret << "Instant"; // not really a cost, more of a bonus -bwr
     }
 
     // If we haven't output anything so far, then the effect has no cost
-    if (!ret.length())
-        ret += "None";
+    if (!ret.str().length())
+        ret << "None";
 
-    return (ret);
+    return (ret.str());
 }
 
 std::vector<const char *> get_ability_names()
