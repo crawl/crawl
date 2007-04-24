@@ -54,7 +54,6 @@ class InvEntry : public MenuEntry
 {
 private:
     static bool show_prices;
-    static char temp_id[4][50];
     static void set_show_prices(bool doshow);
 
     friend class InvShowPrices;

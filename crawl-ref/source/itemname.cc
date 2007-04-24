@@ -38,14 +38,10 @@
 #include "view.h"
 #include "items.h"
 
-id_arr id;
-
-// Backup of the id array used to save ids if the game receives SIGHUP
-// when the character is in a shop.
-id_arr shop_backup_id;
+id_arr type_ids;
 
 static bool is_random_name_space( char let );
-static bool is_random_name_vowel( char let);
+static bool is_random_name_vowel( char let );
 
 static char retvow(int sed);
 static char retlet(int sed);
@@ -55,11 +51,11 @@ static bool is_tried_type( int basetype, int subtype )
     switch ( basetype )
     {
     case OBJ_SCROLLS:
-        return id[IDTYPE_SCROLLS][subtype] == ID_TRIED_TYPE;
+        return type_ids[IDTYPE_SCROLLS][subtype] == ID_TRIED_TYPE;
     case OBJ_POTIONS:
-        return id[IDTYPE_POTIONS][subtype] == ID_TRIED_TYPE;
+        return type_ids[IDTYPE_POTIONS][subtype] == ID_TRIED_TYPE;
     case OBJ_WANDS:
-        return id[IDTYPE_WANDS][subtype] == ID_TRIED_TYPE;
+        return type_ids[IDTYPE_WANDS][subtype] == ID_TRIED_TYPE;
     default:
         return false;
     }
@@ -68,29 +64,8 @@ static bool is_tried_type( int basetype, int subtype )
 bool is_vowel( const char chr )
 {
     const char low = tolower( chr );
-
-    return (low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u');
-}
-
-item_type_id_type objtype_to_idtype(int base_type)
-{
-    switch (base_type)
-    {
-    case OBJ_WANDS:     return (IDTYPE_WANDS);
-    case OBJ_SCROLLS:   return (IDTYPE_SCROLLS);
-    case OBJ_JEWELLERY: return (IDTYPE_JEWELLERY);
-    case OBJ_POTIONS:   return (IDTYPE_POTIONS);
-    default:            return (NUM_IDTYPE);
-    }
-}
-
-bool item_type_known( const item_def &item )
-{
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
-        return (true);
-
-    const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    return (idt != NUM_IDTYPE? id[idt][item.sub_type] == ID_KNOWN_TYPE : false);
+    return (low == 'a' || low == 'e' || low == 'i' ||
+            low == 'o' || low == 'u');
 }
 
 // quant_name is useful since it prints out a different number of items
@@ -108,13 +83,13 @@ std::string quant_name( const item_def &item, int quant,
 // buff must be at least ITEMNAME_SIZE if non-NULL. If NULL, a static
 // item buffer will be used.
 std::string item_def::name(description_level_type descrip,
-                           bool terse) const
+                           bool terse, bool ident) const
 {
     char tmp_quant[20];
     char itm_name[ITEMNAME_SIZE] = "";
     char buff[ITEMNAME_SIZE] = "";
 
-    this->name_aux(itm_name, terse);
+    this->name_aux(itm_name, terse, ident);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
@@ -129,11 +104,11 @@ std::string item_def::name(description_level_type descrip,
         descrip = DESC_PLAIN;
 
     if (this->base_type == OBJ_ORBS
-        || (item_type_known( *this )
-            && ((this->base_type == OBJ_MISCELLANY
-                 && this->sub_type == MISC_HORN_OF_GERYON)
-                || (is_fixed_artefact( *this )
-                || (is_random_artefact( *this ))))))
+        || ( (ident || item_type_known( *this ))
+             && ((this->base_type == OBJ_MISCELLANY
+                  && this->sub_type == MISC_HORN_OF_GERYON)
+                 || (is_fixed_artefact( *this )
+                     || (is_random_artefact( *this ))))))
     {
         // artefacts always get "the" unless we just want the plain name
         switch (descrip)
@@ -295,11 +270,16 @@ std::string item_def::name(description_level_type descrip,
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-void item_def::name_aux( char* buff, bool terse ) const
+void item_def::name_aux( char* buff, bool terse, bool ident ) const
 {
+    // Shortcuts
     const int item_typ = this->sub_type;
     const int it_plus = this->plus;
     const int item_plus2 = this->plus2;
+
+    const bool know_curse = ident || item_ident(*this, ISFLAG_KNOW_CURSE);
+    const bool know_type = ident || item_type_known(*this);
+    const bool know_pluses = ident || item_ident(*this, ISFLAG_KNOW_PLUSES);
 
     char tmp_quant[20];
     char tmp_buff[ITEMNAME_SIZE];
@@ -311,7 +291,7 @@ void item_def::name_aux( char* buff, bool terse ) const
     switch (this->base_type)
     {
     case OBJ_WEAPONS:
-        if (item_ident( *this, ISFLAG_KNOW_CURSE ) && !terse)
+        if (know_curse && !terse)
         {
             // We don't bother printing "uncursed" if the item is identified
             // for pluses (its state should be obvious), this is so that
@@ -322,13 +302,13 @@ void item_def::name_aux( char* buff, bool terse ) const
             if (item_cursed( *this ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed 
-                    && !item_ident( *this, ISFLAG_KNOW_PLUSES ))
+                    && !know_pluses)
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }
         }
 
-        if (item_ident( *this, ISFLAG_KNOW_PLUSES ))
+        if (know_pluses)
         {
             if (it_plus == 0 && item_plus2 == 0)
                 strncat(buff, "+0 ", ITEMNAME_SIZE );
@@ -363,7 +343,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
         if (is_fixed_artefact( *this ))
         {
-            if (item_type_known( *this ))
+            if (know_type)
             {
                 strncat(buff, 
                        (this->special == SPWPN_SINGING_SWORD) ? "Singing Sword" :
@@ -411,7 +391,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         // Now that we can have "glowing elven" weapons, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!item_ident( *this, ISFLAG_KNOW_PLUSES ) && !terse)
+        if (!know_pluses && !terse)
         {
             switch (get_equip_desc( *this ))
             {
@@ -441,7 +421,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
         brand = get_weapon_brand( *this );
 
-        if (item_type_known(*this) && !terse)
+        if (know_type && !terse)
         {
             if (brand == SPWPN_VAMPIRICISM)
                 strncat(buff, "vampiric ", ITEMNAME_SIZE );
@@ -449,7 +429,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
         strncat(buff, item_base_name(*this).c_str(), ITEMNAME_SIZE);
 
-        if (item_type_known( *this ))
+        if (know_type)
         {
             switch (brand)
             {
@@ -544,7 +524,7 @@ void item_def::name_aux( char* buff, bool terse ) const
             }
         }
 
-        if (item_ident(*this, ISFLAG_KNOW_CURSE) && item_cursed(*this) && terse)
+        if (know_curse && item_cursed(*this) && terse)
             strncat( buff, " (curse)", ITEMNAME_SIZE );
         break;
 
@@ -559,7 +539,7 @@ void item_def::name_aux( char* buff, bool terse ) const
             strncat( buff, (terse) ? "curare " : "curare-tipped ", ITEMNAME_SIZE);
         }
 
-        if (item_ident( *this, ISFLAG_KNOW_PLUSES ))
+        if (know_pluses)
         {
             if (it_plus >= 0)
                 strncat(buff, "+", ITEMNAME_SIZE );
@@ -594,7 +574,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         if (this->quantity > 1)
             strncat(buff, "s", ITEMNAME_SIZE );
 
-        if (item_type_known( *this ))
+        if (know_type)
         {
             strncat( buff,
               (brand == SPMSL_FLAME)   ? ((terse) ? " (flame)" : " of flame") :
@@ -607,18 +587,18 @@ void item_def::name_aux( char* buff, bool terse ) const
         break;
 
     case OBJ_ARMOUR:
-        if (item_ident( *this, ISFLAG_KNOW_CURSE ) && !terse)
+        if (know_curse && !terse)
         {
             if (item_cursed( *this ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed 
-                    && !item_ident( *this, ISFLAG_KNOW_PLUSES ))
+                    && !know_pluses)
             {
                 strncat(buff, "uncursed ", ITEMNAME_SIZE );
             }
         }
 
-        if (item_ident( *this, ISFLAG_KNOW_PLUSES ))
+        if (know_pluses)
         {
             if (it_plus >= 0)
                 strncat(buff, "+", ITEMNAME_SIZE );
@@ -643,7 +623,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         // Now that we can have "glowing elven" armour, it's 
         // probably a good idea to cut out the descriptive
         // term once it's become obsolete. -- bwr
-        if (!item_ident( *this, ISFLAG_KNOW_PLUSES ) && !terse)
+        if (!know_pluses && !terse)
         {
             switch (get_equip_desc( *this ))
             {
@@ -688,7 +668,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
         sparm = get_armour_ego_type( *this );
 
-        if (item_type_known(*this) && sparm != SPARM_NORMAL)
+        if (know_type && sparm != SPARM_NORMAL)
         {
             if (!terse)
             {
@@ -740,13 +720,13 @@ void item_def::name_aux( char* buff, bool terse ) const
             }
         }
 
-        if (item_ident(*this, ISFLAG_KNOW_CURSE) && item_cursed(*this) && terse)
+        if (know_curse && item_cursed(*this) && terse)
             strncat( buff, " (curse)", ITEMNAME_SIZE );
         break;
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_WANDS:
-        if (item_type_known(*this))
+        if (know_type)
         {
             strncat(buff, "wand of ", ITEMNAME_SIZE );
             strncat(buff, (item_typ == WAND_FLAME) ? "flame" :
@@ -813,7 +793,7 @@ void item_def::name_aux( char* buff, bool terse ) const
             strncat(buff, " wand", ITEMNAME_SIZE );
         }
 
-        if (item_ident( *this, ISFLAG_KNOW_PLUSES ))
+        if (know_pluses)
         {
             strncat(buff, " (", ITEMNAME_SIZE );
             itoa( it_plus, tmp_quant, 10 );
@@ -827,7 +807,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_POTIONS:
-        if (item_type_known(*this))
+        if (know_type)
         {
             strncat(buff, "potion", ITEMNAME_SIZE );
             strncat(buff, (this->quantity == 1) ? " " : "s ", ITEMNAME_SIZE);
@@ -992,7 +972,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         strncat(buff, "scroll", ITEMNAME_SIZE );
         strncat(buff, (this->quantity == 1) ? " " : "s ", ITEMNAME_SIZE);
 
-        if (item_type_known(*this))
+        if (know_type)
         {
             strncat(buff, "of ", ITEMNAME_SIZE );
             strncat(buff, (item_typ == SCR_IDENTIFY) ? "identify" :
@@ -1041,14 +1021,13 @@ void item_def::name_aux( char* buff, bool terse ) const
         // not using {tried} here because there are some confusing 
         // issues to work out with how we want to handle jewellery 
         // artefacts and base type id. -- bwr
-        if (item_ident( *this, ISFLAG_KNOW_CURSE ))
+        if (know_curse)
         {
             if (item_cursed( *this ))
                 strncat(buff, "cursed ", ITEMNAME_SIZE );
             else if (Options.show_uncursed
-                    && !terse
-                    && (!ring_has_pluses(*this)
-                        || !item_ident(*this, ISFLAG_KNOW_PLUSES))
+                     && !terse
+                     && (!ring_has_pluses(*this) || !know_pluses)
 
                     // If the item is worn, its curse status is known,
                     // no need to belabour the obvious.
@@ -1064,10 +1043,10 @@ void item_def::name_aux( char* buff, bool terse ) const
             break;
         }
 
-        if (item_type_known(*this))
+        if (know_type)
         {
 
-            if (item_ident( *this, ISFLAG_KNOW_PLUSES )
+            if (know_pluses
                 && (item_typ == RING_PROTECTION || item_typ == RING_STRENGTH
                     || item_typ == RING_SLAYING || item_typ == RING_EVASION
                     || item_typ == RING_DEXTERITY
@@ -1435,7 +1414,7 @@ void item_def::name_aux( char* buff, bool terse ) const
             if (this->quantity > 1)
                 strncat(buff, "s", ITEMNAME_SIZE );
 
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of Zot", ITEMNAME_SIZE );
             break;
 
@@ -1444,7 +1423,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         case MISC_DECK_OF_TRICKS:
         case MISC_DECK_OF_WONDERS:
             strncat(buff, "deck of ", ITEMNAME_SIZE );
-            strncat(buff, !item_type_known(*this)  ? "cards"  :
+            strncat(buff, !know_type  ? "cards"  :
                    (item_typ == MISC_DECK_OF_WONDERS)      ? "wonders" :
                    (item_typ == MISC_DECK_OF_SUMMONINGS)   ? "summonings" :
                    (item_typ == MISC_DECK_OF_TRICKS)       ? "tricks" :
@@ -1457,7 +1436,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         case MISC_CRYSTAL_BALL_OF_FIXATION:
         case MISC_CRYSTAL_BALL_OF_SEEING:
             strncat(buff, "crystal ball", ITEMNAME_SIZE );
-            if (item_type_known(*this))
+            if (know_type)
             {
                 strncat(buff, " of ", ITEMNAME_SIZE );
                 strncat(buff,
@@ -1470,69 +1449,69 @@ void item_def::name_aux( char* buff, bool terse ) const
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, "box of beasts", ITEMNAME_SIZE );
             else
                 strncat(buff, "small ebony casket", ITEMNAME_SIZE );
             break;
 
         case MISC_EMPTY_EBONY_CASKET:
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, "empty ebony casket", ITEMNAME_SIZE );
             else
                 strncat(buff, "small ebony casket", ITEMNAME_SIZE );
             break;
 
         case MISC_AIR_ELEMENTAL_FAN:
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, "air elemental ", ITEMNAME_SIZE );
             strncat(buff, "fan", ITEMNAME_SIZE );
             break;
 
         case MISC_LAMP_OF_FIRE:
             strncat(buff, "lamp", ITEMNAME_SIZE );
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of fire", ITEMNAME_SIZE );
             break;
 
         case MISC_LANTERN_OF_SHADOWS:
-            if (!item_type_known(*this))
+            if (!know_type)
                 strncat(buff, "bone ", ITEMNAME_SIZE );
             strncat(buff, "lantern", ITEMNAME_SIZE );
 
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of shadows", ITEMNAME_SIZE );
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (!item_type_known(*this))
+            if (!know_type)
                 strncat(buff, "silver ", ITEMNAME_SIZE );
             strncat(buff, "horn", ITEMNAME_SIZE );
 
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of Geryon", ITEMNAME_SIZE );
             break;
 
         case MISC_DISC_OF_STORMS:
-            if (!item_type_known(*this))
+            if (!know_type)
                 strncat(buff, "grey ", ITEMNAME_SIZE );
             strncat(buff, "disc", ITEMNAME_SIZE );
 
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of storms", ITEMNAME_SIZE );
             break;
 
         case MISC_STONE_OF_EARTH_ELEMENTALS:
-            if (!item_type_known(*this))
+            if (!know_type)
                 strncat(buff, "nondescript ", ITEMNAME_SIZE );
             strncat(buff, "stone", ITEMNAME_SIZE );
 
-            if (item_type_known(*this))
+            if (know_type)
                 strncat(buff, " of earth elementals", ITEMNAME_SIZE );
             break;
 
         case MISC_BOTTLED_EFREET:
-            strncat(buff, (!item_type_known(*this)) 
+            strncat(buff, (!know_type) 
                                 ? "sealed bronze flask" : "bottled efreet",
                                 ITEMNAME_SIZE );
             break;
@@ -1549,7 +1528,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_BOOKS:
-        if (!item_type_known(*this))
+        if (!know_type)
         {
             char primary = (this->special / 10);
             char secondary = (this->special % 10);
@@ -1646,7 +1625,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
     // compacted 15 Apr 2000 {dlb}:
     case OBJ_STAVES:
-        if (!item_type_known(*this))
+        if (!know_type)
         {
             strncat(buff, (this->special == 0) ? "curved" :
                    (this->special == 1) ? "glowing" :
@@ -1683,7 +1662,7 @@ void item_def::name_aux( char* buff, bool terse ) const
 
         strncat( buff, (item_is_rod( *this ) ? "rod" : "staff"), ITEMNAME_SIZE );
 
-        if (item_type_known(*this))
+        if (know_type)
         {
             strncat(buff, " of ", ITEMNAME_SIZE );
 
@@ -1714,7 +1693,7 @@ void item_def::name_aux( char* buff, bool terse ) const
         }
 
         if (item_is_rod( *this )
-            && item_type_known(*this))
+            && know_type)
         {
             strncat( buff, " (", ITEMNAME_SIZE );
             itoa( this->plus / ROD_CHARGE_MULT, tmp_quant, 10 );
@@ -1760,7 +1739,7 @@ void item_def::name_aux( char* buff, bool terse ) const
     }                           // end of switch?
 
     // Disambiguation
-    if (!terse && item_type_known(*this))
+    if (!terse && know_type)
     {
 #define name_append(x) strncat(buff, x, ITEMNAME_SIZE)
         switch (this->base_type)
@@ -1843,89 +1822,66 @@ void item_def::name_aux( char* buff, bool terse ) const
     }
 }
 
-void save_id(id_arr identy, bool saving_game)
+item_type_id_type objtype_to_idtype(int base_type)
 {
-    memcpy(identy,
-           (!saving_game || !crawl_state.shopping)? id : shop_backup_id,
-           sizeof id);
-}                               // end save_id()
-
-void clear_ids(void)
-{
-
-    int i = 0, j = 0;
-
-    for (i = 0; i < 4; i++)
+    switch (base_type)
     {
-        for (j = 0; j < 50; j++)
-        {
-            id[i][j] = ID_UNKNOWN_TYPE;
-        }
+    case OBJ_WANDS:     return (IDTYPE_WANDS);
+    case OBJ_SCROLLS:   return (IDTYPE_SCROLLS);
+    case OBJ_JEWELLERY: return (IDTYPE_JEWELLERY);
+    case OBJ_POTIONS:   return (IDTYPE_POTIONS);
+    default:            return (NUM_IDTYPE);
     }
+}
 
-}                               // end clear_ids()
+bool item_type_known( const item_def &item )
+{
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
+        return (true);
 
+    const item_type_id_type idt = objtype_to_idtype(item.base_type);
+    if ( idt != NUM_IDTYPE )
+        return ( type_ids[idt][item.sub_type] == ID_KNOWN_TYPE );
+    else
+        return false;
+}
 
-void set_ident_type( char cla, int ty, char setting, bool force )
+id_arr& get_typeid_array()
+{
+    return type_ids;
+}
+
+void set_ident_type( int basetype, int subtype,
+                     item_type_id_state_type setting, bool force )
 {
     // Don't allow overwriting of known type with tried unless forced.
     if (!force 
         && setting == ID_TRIED_TYPE
-        && get_ident_type( cla, ty ) == ID_KNOWN_TYPE)
+        && get_ident_type( basetype, subtype ) == ID_KNOWN_TYPE)
     {
         return;
     }
 
-    switch (cla)
-    {
-    case OBJ_WANDS:
-        id[ IDTYPE_WANDS ][ty] = setting;
-        break;
+    const item_type_id_type idt = objtype_to_idtype(basetype);
 
-    case OBJ_SCROLLS:
-        id[ IDTYPE_SCROLLS ][ty] = setting;
-        break;
+    if ( idt != NUM_IDTYPE )
+        type_ids[idt][subtype] = setting;
+}
 
-    case OBJ_JEWELLERY:
-        id[ IDTYPE_JEWELLERY ][ty] = setting;
-        break;
-
-    case OBJ_POTIONS:
-        id[ IDTYPE_POTIONS ][ty] = setting;
-        break;
-
-    default:
-        break;
-    }
-}                               // end set_ident_type()
-
-char get_ident_type(char cla, int ty)
+item_type_id_state_type get_ident_type(int basetype, int subtype)
 {
-    switch (cla)
-    {
-    case OBJ_WANDS:
-        return id[ IDTYPE_WANDS ][ty];
-
-    case OBJ_SCROLLS:
-        return id[ IDTYPE_SCROLLS ][ty];
-
-    case OBJ_JEWELLERY:
-        return id[ IDTYPE_JEWELLERY ][ty];
-
-    case OBJ_POTIONS:
-        return id[ IDTYPE_POTIONS ][ty];
-
-    default:
-        return (ID_UNKNOWN_TYPE);
-    }
-}                               // end get_ident_type()
+    const item_type_id_type idt = objtype_to_idtype(basetype);
+    if ( idt != NUM_IDTYPE && subtype < type_ids.height() )
+        return type_ids[idt][subtype];
+    else
+        return ID_UNKNOWN_TYPE;
+}
 
 static MenuEntry *discoveries_item_mangle(MenuEntry *me)
 {
     InvEntry *ie = dynamic_cast<InvEntry*>(me);
     MenuEntry *newme = new MenuEntry;
-    const std::string txt = ie->item->name(DESC_PLAIN);
-    newme->text = " " + txt;
+    newme->text = std::string(" ") + ie->item->name(DESC_PLAIN);
     newme->quantity = 0;
     delete me;
 
@@ -1934,20 +1890,22 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
 
 void check_item_knowledge()
 {
-    int i,j;
-
     std::vector<const item_def*> items;
 
-    int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
-                              OBJ_JEWELLERY, OBJ_POTIONS };
-    int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
-                              NUM_JEWELLERY, NUM_POTIONS };
+    const int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
+                                    OBJ_JEWELLERY, OBJ_POTIONS };
+    const int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
+                                    NUM_JEWELLERY, NUM_POTIONS };
 
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < idx_to_maxtype[i]; j++) {
-            if (id[i][j] == ID_KNOWN_TYPE) {
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < idx_to_maxtype[i]; j++)
+        {
+            if (type_ids[i][j] == ID_KNOWN_TYPE)
+            {
                 item_def* ptmp = new item_def;
-                if ( ptmp != 0 ) {
+                if ( ptmp != 0 )
+                {
                     ptmp->base_type = idx_to_objtype[i];
                     ptmp->sub_type  = j;
                     ptmp->colour    = 1;
@@ -1960,7 +1918,8 @@ void check_item_knowledge()
 
     if (items.empty())
         mpr("You don't recognise anything yet!");
-    else {    
+    else
+    {
         InvMenu menu;
         menu.set_title("You recognise:");
         menu.load_items(items, discoveries_item_mangle);

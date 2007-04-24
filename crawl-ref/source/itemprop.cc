@@ -398,7 +398,7 @@ static food_def Food_prop[NUM_FOODS] =
 
 // Must call this functions early on so that the above tables can
 // be accessed correctly.
-void init_properties(void)
+void init_properties()
 {
     int i;
 
@@ -460,7 +460,8 @@ void set_ident_flags( item_def &item, unsigned long flags )
 {
     const bool known_before = fully_identified(item);
     item.flags |= flags;
-    if ( !known_before && fully_identified(item) && is_interesting_item(item))
+    if ( notes_are_active() &&
+         !known_before && fully_identified(item) && is_interesting_item(item))
     {
         /* make a note of it */
         take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),

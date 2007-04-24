@@ -867,22 +867,15 @@ static void tag_construct_you_items(struct tagHeader &th)
     }
 
     // identification status
+    const id_arr& identy(get_typeid_array());
     // how many types?
-    marshallByte(th, 4);
+    marshallByte(th, static_cast<char>(identy.width()));
     // how many subtypes?
-    marshallByte(th, 50);
+    marshallByte(th, static_cast<char>(identy.height()));
 
-    // this is really dumb. We copy the id[] array from itemname
-    // to the stack, for no good reason that I can see.
-    id_arr identy;
-
-    save_id(identy, true);
-
-    for (i = 0; i < 4; ++i)
-    {
-        for (j = 0; j < 50; ++j)
-            marshallByte(th, identy[i][j]);
-    }
+    for (i = 0; i < identy.width(); ++i)
+        for (j = 0; j < identy.height(); ++j)
+            marshallByte(th, static_cast<char>(identy[i][j]));
 
     // how many unique items?
     marshallByte(th, 50);
@@ -1198,8 +1191,8 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     {
         for (j = 0; j < count_c2; ++j)
         {
-            char ch;
-            ch = unmarshallByte(th);
+            const item_type_id_state_type ch =
+                static_cast<item_type_id_state_type>(unmarshallByte(th));
 
             switch (i)
             {

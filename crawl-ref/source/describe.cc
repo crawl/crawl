@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 #ifdef DOS
 #include <conio.h>
@@ -3242,142 +3244,132 @@ bool is_dumpable_artifact( const item_def &item, bool verbose)
 // be interpreted as carriage returns.
 //
 //---------------------------------------------------------------
-std::string get_item_description( const item_def &item, bool verbose, bool dump )
+std::string get_item_description( const item_def &item, bool verbose,
+                                  bool dump )
 {
-    std::string description;
-    description.reserve(500);
+    std::ostringstream description;
 
     if (!dump)
-        description += item.name(DESC_INVENTORY_EQUIP);
+        description << item.name(DESC_INVENTORY_EQUIP);
 
-    description += "$$";
+    description << "$$";
 
 #if DEBUG_DIAGNOSTICS
     if (!dump)
     {
-        snprintf( info, INFO_SIZE, 
-                  "base: %d; sub: %d; plus: %d; plus2: %d; special: %ld$"
-                  "quant: %d; colour: %d; flags: 0x%08lx$"
-                  "x: %d; y: %d; link: %d$ident_type: %d$$", 
-                  item.base_type, item.sub_type, item.plus, item.plus2,
-                  item.special, item.quantity, item.colour, item.flags,
-                  item.x, item.y, item.link, 
-                  get_ident_type( item.base_type, item.sub_type ) );
-
-        description += info;
+        description << std::setfill('0');
+        description << "base: " << static_cast<int>(item.base_type)
+                    << " sub: " << static_cast<int>(item.sub_type)
+                    << " plus: " << item.plus << " plus2: " << item.plus2
+                    << " special: " << item.special
+                    << "$"
+                    << "quant: " << item.quantity
+                    << " colour: " << static_cast<int>(item.colour)
+                    << " flags: " << std::hex << std::setw(8) << item.flags
+                    << std::dec << "$"
+                    << "x: " << item.x << " y: " << item.y
+                    << " link: " << item.link
+                    << "$"
+                    << "ident_type: "
+                    << get_ident_type(item.base_type, item.sub_type)
+                    << "$";
     }
 #endif
 
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        description += describe_weapon( item, verbose );
+        description << describe_weapon( item, verbose );
         break;
     case OBJ_MISSILES:
-        description += describe_ammo( item );
+        description << describe_ammo( item );
         break;
     case OBJ_ARMOUR:
-        description += describe_armour( item, verbose );
+        description << describe_armour( item, verbose );
         break;
     case OBJ_WANDS:
-        description += describe_stick( item );
+        description << describe_stick( item );
         break;
     case OBJ_FOOD:
-        description += describe_food( item );
+        description << describe_food( item );
         break;
     case OBJ_SCROLLS:
-        description += describe_scroll( item );
+        description << describe_scroll( item );
         break;
     case OBJ_JEWELLERY:
-        description += describe_jewellery( item, verbose );
+        description << describe_jewellery( item, verbose );
         break;
     case OBJ_POTIONS:
-        description += describe_potion( item );
+        description << describe_potion( item );
         break;
     case OBJ_STAVES:
-        description += describe_staff( item );
+        description << describe_staff( item );
         break;
 
     case OBJ_BOOKS:
         switch (item.sub_type)
         {
         case BOOK_DESTRUCTION:
-            description += "An extremely powerful but unpredictable book "
+            description << "An extremely powerful but unpredictable book "
                 "of magic. ";
             break;
 
         case BOOK_MANUAL:
-            description += "A valuable book of magic which allows one to "
-                "practise a certain skill greatly. As it is used, it gradually "
-                "disintegrates and will eventually fall apart. ";
+            description << "A valuable book of magic which allows one to "
+                "practise a certain skill greatly. As it is used, it "
+                "gradually disintegrates and will eventually fall apart. ";
             break;
 
         default:
-            description += "A book of magic spells. Beware, for some of the "
+            description << "A book of magic spells. Beware, for some of the "
                 "more powerful grimoires are not to be toyed with. ";
             break;
         }
         break;
 
     case OBJ_ORBS:
-        description += "Once you have escaped to the surface with "
+        description << "Once you have escaped to the surface with "
             "this invaluable artefact, your quest is complete. ";
         break;
 
     case OBJ_MISCELLANY:
-        description += describe_misc_item( item );
+        description << describe_misc_item( item );
         break;
 
     case OBJ_CORPSES:
-        description +=
-            ((item.sub_type == CORPSE_BODY) ? "A corpse. "
-                                        : "A decaying skeleton. ");
+        if ( item.sub_type == CORPSE_BODY)
+            description << "A corpse. ";
+        else
+            description << "A decaying skeleton. ";
         break;
 
     case OBJ_GOLD:
-        description += "A pile of glittering gold coins. ";
+        description << "A pile of glittering gold coins. ";
         break;
 
     default:
         DEBUGSTR("Bad item class");
-        description += "This item should not exist. Mayday! Mayday! ";
+        description << "This item should not exist. Mayday! Mayday! ";
     }
 
     if (verbose)
     {
-
-        description += "$It weighs around ";
-
         const int mass = item_mass( item );
-
-        char item_mass[16];
-        itoa( mass / 10, item_mass, 10 ); 
-        
-        for (int i = 0; i < 14; i++) 
-        {
-            if (item_mass[i] == 0)
-            {
-                item_mass[i] = '.';
-                item_mass[i+1] = (mass % 10) + '0';
-                item_mass[i+2] = 0;
-                break;
-            }
-        }
-
-        description += item_mass;
-        description += " aum. ";        // arbitrary unit of mass
+        description << "$It weighs around " << (mass / 10)
+                    << "." << (mass % 10)
+                    << " aum. "; // arbitrary unit of mass
 
         if ( is_dumpable_artifact(item, false) )
         {
             if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_WEAPONS)
-                description += "$$This ancient artifact cannot be changed "
+                description << "$$This ancient artifact cannot be changed "
                     "by magic or mundane means.";
             else
-                description += "$$It is an ancient artifact.";
+                description << "$$It is an ancient artifact.";
         }
     }
 
-    return (description);
+    return description.str();
 }                               // end get_item_description()
 
 static std::string get_feature_description_wide(int feat)

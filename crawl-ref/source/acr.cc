@@ -55,6 +55,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <sstream>
 
 #ifdef DOS
 #include <dos.h>
@@ -309,24 +310,29 @@ int main( int argc, char *argv[] )
             Options.tut_just_triggered = true;
             // print stats and everything
             prep_input();
-            char ch = 'x';    
-            mpr("Press any key to start the tutorial intro, or Escape to skip it.",
-            MSGCH_TUTORIAL);
+            int ch = 'x';    
+            mpr("Press any key to start the tutorial intro, "
+                "or Escape to skip it.", MSGCH_TUTORIAL);
             ch = c_getch();
-        
+
             if (ch != ESCAPE)
                 tut_starting_screen();
-        }    
+        }
 
-        snprintf(info, INFO_SIZE,
-                 "%s, the %s %s, began the quest for the Orb.",
-                 you.your_name,
-                 species_name(you.species,you.experience_level),
-                 you.class_name);                 
-        take_note(Note(NOTE_USER_NOTE, 0, 0, info));
-        snprintf(info, INFO_SIZE, "HP: %d/%d MP: %d/%d",
-                 you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, info));
+        std::ostringstream notestr;
+        notestr << you.your_name << ", the "
+                << species_name(you.species,you.experience_level) << " "
+                << you.class_name
+                << ", began the quest for the Orb.";
+        take_note(Note(NOTE_USER_NOTE, 0, 0, notestr.str().c_str()));
+
+        notestr.str("");
+        notestr.clear();
+
+        notestr << "HP: " << you.hp << "/" << you.hp_max
+                << " MP: " << you.magic_points << "/" << you.max_magic_points;
+        take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+                       notestr.str().c_str()));
     }
 
     while (true)
@@ -2815,7 +2821,7 @@ static bool initialise(void)
     you.colour = LIGHTGREY;
 
     seed_rng();
-    clear_ids();                // in itemname.cc
+    get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
     init_feature_table();
 

@@ -1063,13 +1063,6 @@ void scorefile_entry::init()
     //if (death_type == KILLED_BY_WINNING) points += points / 2;
     //if (death_type == KILLED_BY_LEAVING) points += points / 10;
     // these now handled by giving player the value of their inventory
-    char temp_id[4][50];
-
-    for (int d = 0; d < 4; d++)
-    {
-        for (int e = 0; e < 50; e++)
-            temp_id[d][e] = 1;
-    }
 
     FixedVector< int, NUM_RUNE_TYPES >  rune_array;
 
@@ -1088,7 +1081,7 @@ void scorefile_entry::init()
         if (is_valid_item( you.inv[d] ))
         {
             if (calc_item_values)
-                points += item_value( you.inv[d], temp_id, true );
+                points += item_value( you.inv[d], true );
 
             if (you.inv[d].base_type == OBJ_MISCELLANY
                 && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)

@@ -1998,7 +1998,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
 
 void jewellery_wear_effects(item_def &item)
 {
-    int ident = ID_TRIED_TYPE;
+    item_type_id_state_type ident = ID_TRIED_TYPE;
 
     switch (item.sub_type)
     {

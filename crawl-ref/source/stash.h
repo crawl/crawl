@@ -140,7 +140,7 @@ private:
     // Messy!
     struct shop_item
     {
-        item_def      item;
+        item_def item;
         unsigned price;
     };
     std::vector<shop_item> items;
@@ -148,16 +148,6 @@ private:
     std::string shop_item_name(const shop_item &si) const;
     std::string shop_item_desc(const shop_item &si) const;
     void describe_shop_item(const shop_item &si) const;
-
-    class ShopId : public shopping_hup_protect
-    {
-    public:
-        ShopId(int stype);
-        ~ShopId();
-    private:
-        int shoptype;
-        id_fix_arr id;
-    };
 };
 
 struct stash_search_result

@@ -431,14 +431,14 @@ struct item_def
     }
 
     std::string name(description_level_type descrip,
-                     bool terse = false) const;
+                     bool terse = false, bool ident = false) const;
 
     void clear()
     {
         *this = item_def();
     }
 private:
-    void name_aux( char* buff, bool terse ) const;
+    void name_aux( char* buff, bool terse, bool ident ) const;
 };
 
 class input_history
@@ -1541,7 +1541,6 @@ extern const char* god_gain_power_messages[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
 typedef int keycode_type;
 
-typedef FixedArray < int, 4, 50 > id_fix_arr;
-typedef char id_arr[4][50];
+typedef FixedArray < item_type_id_state_type, 4, 50 > id_arr;
 
 #endif // EXTERNS_H

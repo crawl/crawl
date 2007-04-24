@@ -99,7 +99,7 @@ std::string InvEntry::get_text() const
 
     if (InvEntry::show_prices)
     {
-        int value = item_value(*item, temp_id, true);
+        const int value = item_value(*item, show_prices);
         if (value > 0)
             snprintf(suffix, sizeof suffix,
                 " (%d gold)", value);
@@ -164,14 +164,10 @@ void InvEntry::add_class_hotkeys(const item_def &i)
 }
 
 bool InvEntry::show_prices = false;
-char InvEntry::temp_id[4][50];
 
 void InvEntry::set_show_prices(bool doshow)
 {
-    if ((show_prices = doshow))
-    {
-        memset(temp_id, 1, sizeof temp_id);
-    }
+    show_prices = doshow;
 }
 
 InvShowPrices::InvShowPrices(bool doshow)

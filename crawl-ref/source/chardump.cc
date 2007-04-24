@@ -563,7 +563,6 @@ static void sdump_religion(const std::string &, std::string & text)
     }
 }
 
-extern char id[4][50];  // itemname.cc
 static bool dump_item_origin(const item_def &item, int value)
 {
 #define fs(x) (flags & (x))
@@ -611,7 +610,7 @@ static bool dump_item_origin(const item_def &item, int value)
     if (refpr == -1)
         return (false);
     if (value == -1)
-        value = item_value( item, id, false );
+        value = item_value( item, false );
     return (value >= refpr);
 #undef fs
 }
@@ -624,17 +623,8 @@ static bool dump_item_origin(const item_def &item, int value)
 static void sdump_inventory(const std::string &, std::string & text)
 {
     int i, j;
-    char temp_id[4][50];
 
     std::string text2;
-
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 50; j++)
-        {
-            temp_id[i][j] = 1;
-        }
-    }
 
     int inv_class2[OBJ_GOLD];
     int inv_count = 0;
@@ -704,8 +694,7 @@ static void sdump_inventory(const std::string &, std::string & text)
                         {
                             text += " (";
 
-                            itoa( ival = 
-                                      item_value( you.inv[j], temp_id, true ), 
+                            itoa( ival = item_value( you.inv[j], true ), 
                                   tmp_quant, 10 );
 
                             text += tmp_quant;

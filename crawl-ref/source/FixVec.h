@@ -59,40 +59,35 @@ public:
     // instead of "int a[3] = {0, 1, 2}" you'd use "FixedVector<int, 3>
     // a(0, 1, 2)". Note that there must be SIZE arguments.
 
-// public:
-//                        FixedVector(const FixedVector& rhs);
-//
-//            FixedVector& operator=(const FixedVector& rhs);
-
 //-----------------------------------
 //    API
 //
 public:
-// ----- Size -----
-    bool        empty() const                          {return SIZE == 0;}
-    size_t      size() const                           {return SIZE;}
+    // ----- Size -----
+    bool empty() const { return SIZE == 0; }
+    size_t size() const { return SIZE; }
 
-// ----- Access -----
-    TYPE&       operator[](unsigned long index)        {ASSERT(index < SIZE); return mData[index];}
-    const TYPE& operator[](unsigned long index) const  {ASSERT(index < SIZE); return mData[index];}
-        
-    TYPE&       front()                                {ASSERT(SIZE > 0); return mData[0];}
-    const TYPE& front() const                          {ASSERT(SIZE > 0); return mData[0];}
+    // ----- Access -----
+    TYPE& operator[](unsigned long index) {
+        ASSERT(index < SIZE);
+        return mData[index];
+    }
 
-    TYPE&       back()                                 {ASSERT(SIZE > 0); return mData[SIZE - 1];}
-    const TYPE& back() const                           {ASSERT(SIZE > 0); return mData[SIZE - 1];}
-    
-    TYPE*       buffer()                               {return mData;}
-    const TYPE* buffer() const                         {return mData;}
+    const TYPE& operator[](unsigned long index) const {
+        ASSERT(index < SIZE);
+        return mData[index];
+    }
 
-// ----- Iterating -----
-    iterator                 begin()                   {return mData;}
-    const_iterator           begin() const             {return mData;}
+    const TYPE* buffer() const { return mData; }
+    TYPE* buffer() { return mData; }
 
-    iterator                 end()                     {return this->begin() + this->size();}
-    const_iterator           end() const               {return this->begin() + this->size();}
+    // ----- Iterating -----
+    iterator begin() { return mData; }
+    const_iterator begin() const { return mData; }
 
-    void                     init(TYPE def);
+    iterator end() { return this->begin() + this->size(); }
+    const_iterator end() const { return this->begin() + this->size(); }
+    void init(const TYPE& def);
 
 //-----------------------------------
 //    Member Data
@@ -124,7 +119,7 @@ FixedVector<TYPE, SIZE>::FixedVector(TYPE value0, TYPE value1, ...)
 }
 
 template <class TYPE, int SIZE>
-void FixedVector<TYPE, SIZE>::init(TYPE def)
+void FixedVector<TYPE, SIZE>::init(const TYPE& def)
 {
     for (int i = 0; i < SIZE; ++i)
         mData[i] = def;

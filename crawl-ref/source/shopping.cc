@@ -40,14 +40,10 @@
 #include "stuff.h"
 #include "view.h"
 
-static char in_a_shop(char shoppy, id_arr id);
-static char more3(void);
-static void purchase( int shop, int item_got, int cost );
-static void shop_init_id(int i, id_fix_arr &shop_id);
-static void shop_print(const char *shoppy, char sh_line);
-static void shop_set_ident_type(int i, id_fix_arr &shop_id,
-                                unsigned char base_type, unsigned char sub_type);
-static void shop_uninit_id(int i, const id_fix_arr &shop_id);
+static void in_a_shop(char shoppy);
+static char more3();
+static void purchase( int shop, int item_got, int cost);
+static void shop_print(const char *shoppy, int sh_line);
 
 static std::string hyphenated_suffix(char prev, char last)
 {
@@ -110,44 +106,34 @@ static void list_shop_keys(const std::string &purchasable)
     fs.display();
 }
 
-char in_a_shop( char shoppy, id_arr id )
+static void in_a_shop( char shoppy )
 {
-    // easier to work with {dlb}
-    unsigned int greedy = env.shop[shoppy].greed;
+    shop_struct& the_shop = env.shop[shoppy];
+
     cursor_control coff(false);
 
-    id_fix_arr shop_id;
     FixedVector < int, 20 > shop_items;
 
     char st_pass[ ITEMNAME_SIZE ] = "";
     unsigned int gp_value = 0;
-    char i;
     unsigned char ft;
     std::string purchasable;
 
     clrscr();
     int itty = 0;
 
-    ShopInfo &si = stashes.get_shop(env.shop[shoppy].x, env.shop[shoppy].y);
+    ShopInfo &si = stashes.get_shop(the_shop.x, the_shop.y);
 
-    snprintf( info, INFO_SIZE, "Welcome to %s!", 
-             shop_name(env.shop[shoppy].x, env.shop[shoppy].y) );
+    snprintf(info, INFO_SIZE, "Welcome to %s!",
+             shop_name(the_shop.x, the_shop.y) );
 
     shop_print(info, 20);
 
     more3();
     
     activate_notes(false);      /* should do a better job here */
-    shop_init_id(shoppy, shop_id);
 
-    /* *************************************
-    THINGS TO DO:
-      Allow inventory
-      Remove id change for antique shops
-      selling?
-    ************************************* */
-
-    save_id(id);
+    const bool id_stock = shoptype_identifies_stock(the_shop.type);
 
   print_stock:
     clrscr();
@@ -162,11 +148,11 @@ char in_a_shop( char shoppy, id_arr id )
         goto goodbye;
     }
 
-    for (i = 1; i < 20; i++)
+    for (int i = 1; i < 20; i++)
     {
         shop_items[i - 1] = itty;
 
-        if (itty == NON_ITEM)   //mitm.link [itty] == NON_ITEM)
+        if (itty == NON_ITEM)
         {
             shop_items[i - 1] = NON_ITEM;
             continue;
@@ -178,13 +164,13 @@ char in_a_shop( char shoppy, id_arr id )
     itty = igrd[0][5 + shoppy];
 
     purchasable.clear();
-    for (i = 1; i < 18; i++)
+    for (int i = 1; i < 18; i++)
     {
         const char c = i + 96;
 
         gotoxy(1, i);
 
-        gp_value = greedy * item_value( mitm[itty], id );
+        gp_value = the_shop.greed * item_value(mitm[itty], id_stock);
         gp_value /= 10;
         if (gp_value <= 1)
             gp_value = 1;
@@ -199,13 +185,16 @@ char in_a_shop( char shoppy, id_arr id )
 
         textcolor((i % 2) ? WHITE : LIGHTGREY);
 
-        cprintf("%s", mitm[itty].name(DESC_NOCAP_A).c_str());
+        cprintf("%s", mitm[itty].name(DESC_NOCAP_A, false, id_stock).c_str());
 
+#if 0
+        // huh? XXX XXX does this code do anything?
         std::string desc;
         if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
             desc = munge_description(get_item_description(mitm[itty], 
                                                           Options.verbose_dump,
                                                           true ));
+#endif
         si.add_item(mitm[itty], gp_value);
 
         gotoxy(60, i);
@@ -242,10 +231,7 @@ char in_a_shop( char shoppy, id_arr id )
 
     if (ft == '\\')
     {
-        shop_uninit_id(shoppy, shop_id);
         check_item_knowledge();
-        shop_init_id(shoppy, shop_id);
-
         goto print_stock;
     }
 
@@ -279,9 +265,7 @@ char in_a_shop( char shoppy, id_arr id )
 
     if (ft == '?' || ft == '*')
     {
-        shop_uninit_id(shoppy, shop_id);
         invent(-1, false);
-        shop_init_id(shoppy, shop_id);
         goto print_stock;
     }
 
@@ -305,7 +289,7 @@ char in_a_shop( char shoppy, id_arr id )
         goto purchase;
     }
 
-    gp_value = greedy * item_value( mitm[shop_items[ft]], id ) / 10;
+    gp_value = the_shop.greed * item_value(mitm[shop_items[ft]], id_stock)/10;
 
     if (gp_value > you.gold)
     {
@@ -317,103 +301,36 @@ char in_a_shop( char shoppy, id_arr id )
              mitm[shop_items[ft]].name(DESC_NOCAP_A).c_str(), gp_value);
     shop_print(info, 20);
     if ( yesno(NULL, true, 'n', false, false, true) )
-    {        
-        shop_set_ident_type( shoppy, shop_id, mitm[shop_items[ft]].base_type,
-                             mitm[shop_items[ft]].sub_type );
+    {
+        if ( id_stock )
+        {
+            // Identify the item and its type.
+            item_def& pitem = mitm[shop_items[ft]];
+            set_ident_type(pitem.base_type, pitem.sub_type, ID_KNOWN_TYPE);
+            set_ident_flags(pitem, ISFLAG_IDENT_MASK);
+        }
+        // purchase() will take the note if necessary.
         purchase( shoppy, shop_items[ft], gp_value );
     }
 
     goto print_stock;
 
   goodbye:
-    //clear_line();
     shop_print("Goodbye!", 20);
     more3();
 
-    shop_uninit_id( shoppy, shop_id );
     activate_notes(true);
-    return 0;
 }
 
-void shop_init_id_type(int shoptype, id_fix_arr &shop_id)
+bool shoptype_identifies_stock(int shoptype)
 {
-    if (shoptype != SHOP_WEAPON_ANTIQUE
-        && shoptype != SHOP_ARMOUR_ANTIQUE
-        && shoptype != SHOP_GENERAL_ANTIQUE)
-    {
-        for (int j = 0; j < 50; j++)
-        {
-            shop_id[ IDTYPE_WANDS ][j] = get_ident_type(OBJ_WANDS, j);
-            set_ident_type(OBJ_WANDS, j, ID_KNOWN_TYPE);
-
-            shop_id[ IDTYPE_SCROLLS ][j] = get_ident_type(OBJ_SCROLLS, j);
-            set_ident_type(OBJ_SCROLLS, j, ID_KNOWN_TYPE);
-
-            shop_id[ IDTYPE_JEWELLERY ][j] = get_ident_type(OBJ_JEWELLERY, j);
-            set_ident_type(OBJ_JEWELLERY, j, ID_KNOWN_TYPE);
-
-            shop_id[ IDTYPE_POTIONS ][j] = get_ident_type(OBJ_POTIONS, j);
-            set_ident_type(OBJ_POTIONS, j, ID_KNOWN_TYPE);
-        }
-    }
+    return
+        shoptype != SHOP_WEAPON_ANTIQUE &&
+        shoptype != SHOP_ARMOUR_ANTIQUE &&
+        shoptype != SHOP_GENERAL_ANTIQUE;
 }
 
-static void shop_init_id(int i, id_fix_arr &shop_id)
-{
-    shop_init_id_type( env.shop[i].type, shop_id );
-}
-
-void shop_uninit_id_type(int shoptype, const id_fix_arr &shop_id)
-{
-    if (shoptype != SHOP_WEAPON_ANTIQUE
-        && shoptype != SHOP_ARMOUR_ANTIQUE
-        && shoptype != SHOP_GENERAL_ANTIQUE)
-    {
-        for (int j = 0; j < 50; j++)
-        {
-            set_ident_type( OBJ_WANDS, j, 
-                    shop_id[ IDTYPE_WANDS ][j], true );
-            set_ident_type( OBJ_SCROLLS, j, 
-                    shop_id[ IDTYPE_SCROLLS ][j], true );
-            set_ident_type( OBJ_JEWELLERY, j, 
-                    shop_id[ IDTYPE_JEWELLERY ][j], true );
-            set_ident_type( OBJ_POTIONS, j, 
-                    shop_id[ IDTYPE_POTIONS ][j], true );
-        }
-    }
-}
-
-static void shop_uninit_id(int i, const id_fix_arr &shop_id)
-{
-    shop_uninit_id_type(env.shop[i].type, shop_id);
-}
-
-void shop_set_ident_type( int i, id_fix_arr &shop_id,
-                          unsigned char base_type, unsigned char sub_type )
-{
-    if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-        && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-        && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-    {
-        switch (base_type)
-        {
-        case OBJ_WANDS:
-            shop_id[ IDTYPE_WANDS ][sub_type] = ID_KNOWN_TYPE;
-            break;
-        case OBJ_SCROLLS:
-            shop_id[ IDTYPE_SCROLLS ][sub_type] = ID_KNOWN_TYPE;
-            break;
-        case OBJ_JEWELLERY:
-            shop_id[ IDTYPE_JEWELLERY ][sub_type] = ID_KNOWN_TYPE;
-            break;
-        case OBJ_POTIONS:
-            shop_id[ IDTYPE_POTIONS ][sub_type] = ID_KNOWN_TYPE;
-            break;
-        }
-    }
-}
-
-void shop_print( const char *shoppy, char sh_lines )
+static void shop_print( const char *shoppy, int sh_lines )
 {
     gotoxy(1, sh_lines);
 
@@ -423,7 +340,7 @@ void shop_print( const char *shoppy, char sh_lines )
         cprintf(" ");
 }
 
-char more3(void)
+static char more3()
 {
     char keyin = 0;
 
@@ -574,7 +491,7 @@ int randart_value( const item_def &item )
     return ((ret > 0) ? ret : 0);
 }
 
-unsigned int item_value( item_def item, id_arr id, bool ident )
+unsigned int item_value( item_def item, bool ident )
 {
     // Note that we pass item in by value, since we want a local
     // copy to mangle as necessary... maybe that should be fixed,
@@ -1134,8 +1051,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
             else
                 valued += 50;
         }
-        else if (item_type_known(item) 
-                && get_equip_desc(item) != 0)
+        else if (item_type_known(item) && get_equip_desc(item) != 0)
         {
             valued += 20;
         }
@@ -1148,7 +1064,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_WANDS:
-        if (!id[ IDTYPE_WANDS ][item.sub_type])
+        if ( !item_type_known(item) )
             valued += 200;
         else
         {
@@ -1217,7 +1133,7 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_POTIONS:
-        if (!id[3][item.sub_type])
+        if ( !item_type_known(item) )
             valued += 9;
         else
         {
@@ -1328,9 +1244,10 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         break;
 
     case OBJ_SCROLLS:
-        if (!id[1][item.sub_type])
+        if ( !item_type_known(item) )
             valued += 10;
         else
+        {
             switch (item.sub_type)
             {
             case SCR_ACQUIREMENT:
@@ -1383,16 +1300,16 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
                 valued++;
                 break;
             }
+        }
         break;
 
     case OBJ_JEWELLERY:
-        if (!id[2][item.sub_type])
-            valued += 50;
-
         if (item_cursed( item ))
             valued -= 10;
 
-        if (id[2][item.sub_type] > 0)
+        if ( !item_type_known(item) )
+            valued += 50;
+        else
         {
             if (item_ident( item, ISFLAG_KNOW_PLUSES ) 
                 && (item.sub_type == RING_PROTECTION
@@ -1484,17 +1401,12 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
 
             if (is_random_artefact(item))
             {
-                if (item_type_known(item))
-                {
-                    if (valued < 0)
-                        valued = randart_value( item ) - 5;
-                    else
-                        valued += randart_value( item );
-                }
+                // in this branch we're guaranteed to know
+                // the item type!
+                if (valued < 0)
+                    valued = randart_value( item ) - 5;
                 else
-                {
-                    valued += 50;
-                }
+                    valued += randart_value( item );
             }
 
             valued *= 7;
@@ -1554,11 +1466,10 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
         }
         break;
 
-    //case 10: break;
-
     case OBJ_BOOKS:
-        valued = 150 + (item_type_known(item) 
-                                    ? book_rarity(item.sub_type) * 50 : 0);
+        valued = 150;
+        if (item_type_known(item))
+            valued += book_rarity(item.sub_type) * 50;
         break;
 
     case OBJ_STAVES:
@@ -1592,9 +1503,9 @@ unsigned int item_value( item_def item, id_arr id, bool ident )
     return (valued);
 }                               // end item_value()
 
-void shop(void)
+void shop()
 {
-    unsigned char i = 0;
+    int i;
 
     for (i = 0; i < MAX_SHOPS; i++)
     {
@@ -1604,18 +1515,11 @@ void shop(void)
 
     if (i == MAX_SHOPS)
     {
-        mpr("Help! Non-existent shop.");
+        mpr("Help! Non-existent shop.", MSGCH_DANGER);
         return;
     }
 
-    id_arr identy;
-
-    save_id(identy);
-
-    {
-        shopping_hup_protect shp;
-        in_a_shop(i, identy);
-    }
+    in_a_shop(i);
     
     you.redraw_gold = 1;
     burden_change();

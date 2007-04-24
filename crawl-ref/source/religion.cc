@@ -2499,10 +2499,7 @@ void offer_items()
 {
     if (you.religion == GOD_NO_GOD)
         return;
-    
-    char subst_id[4][50];
-    memset(subst_id, 1, sizeof subst_id);
-    
+       
     int i = igrd[you.x_pos][you.y_pos];
     while (i != NON_ITEM)
     {
@@ -2511,7 +2508,7 @@ void offer_items()
 
         const int next = mitm[i].link;  // in case we can't get it later.
 
-        const int value = item_value( mitm[i], subst_id, true );
+        const int value = item_value( mitm[i], true );
 
         switch (you.religion)
         {

@@ -635,17 +635,6 @@ ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),
         shoptype = sh->type;
 }
 
-ShopInfo::ShopId::ShopId(int stype)
-    : shopping_hup_protect(), shoptype(stype), id()
-{
-    shop_init_id_type( shoptype, id );
-}
-
-ShopInfo::ShopId::~ShopId()
-{
-    shop_uninit_id_type( shoptype, id );
-}
-
 void ShopInfo::add_item(const item_def &sitem, unsigned price)
 {
     shop_item it;
@@ -657,18 +646,31 @@ void ShopInfo::add_item(const item_def &sitem, unsigned price)
 std::string ShopInfo::shop_item_name(const shop_item &si) const
 {
     char shopitem[ITEMNAME_SIZE * 2];
-    std::string itemname = Stash::stash_item_name(si.item);
+
+    // mangle a temporary
+    item_def temp_item = si.item;
+    if ( shoptype_identifies_stock(this->shoptype) )
+        temp_item.flags |= ISFLAG_IDENT_MASK;
+           
+    const std::string itemname = Stash::stash_item_name(temp_item);
     snprintf(shopitem, sizeof shopitem, "%s (%u gold)", 
              itemname.c_str(), si.price);
-    return shopitem;   
+
+    return shopitem;
 }
 
 std::string ShopInfo::shop_item_desc(const shop_item &si) const
 {
     std::string desc;
-    if (is_dumpable_artifact(si.item, Options.verbose_dump))
+
+    // mangle a temporary
+    item_def temp_item = si.item;
+    if (shoptype_identifies_stock(this->shoptype))
+        temp_item.flags |= ISFLAG_IDENT_MASK;
+
+    if (is_dumpable_artifact(temp_item, Options.verbose_dump))
     {
-        desc = munge_description(get_item_description(si.item, 
+        desc = munge_description(get_item_description(temp_item, 
                     Options.verbose_dump,
                     true));
         trim_string(desc);
@@ -683,13 +685,16 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
 
 void ShopInfo::describe_shop_item(const shop_item &si) const
 {
-    describe_item( si.item );
+    // mangle a temporary
+    item_def temp_item = si.item;
+    if ( shoptype_identifies_stock(this->shoptype) )
+        temp_item.flags |= ISFLAG_IDENT_MASK;
+    describe_item( temp_item );
 }
 
 bool ShopInfo::show_menu(const std::string &place,
                          bool can_travel) const
 {
-    ShopId id(shoptype);
     StashMenu menu;
 
     MenuEntry *mtitle = new MenuEntry(name + " (" + place, MEL_TITLE);
@@ -749,7 +754,6 @@ bool ShopInfo::matches_search(const std::string &prefix,
 {
     if (items.empty() && visited) return false;
 
-    ShopId id(shoptype);
     bool match = false;
 
     for (unsigned i = 0; i < items.size(); ++i)
@@ -800,8 +804,6 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
 void ShopInfo::write(std::ostream &os, bool identify) const
 {
-    ShopId id(shoptype);
-
     os << "[Shop] " << name << std::endl;
     if (items.size() > 0)
     {
