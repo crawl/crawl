@@ -377,6 +377,8 @@ void identify(int power)
         if ( fully_identified(you.inv[item_slot]) )
         {
             mpr("Choose an unidentified item, or Esc to abort.");
+            if ( Options.auto_list )
+                more();
             continue;
         }
 
