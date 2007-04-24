@@ -459,6 +459,8 @@ static bool item_class_selected(const item_def &i, int selector)
 
     switch (selector)
     {
+    case OSEL_UNIDENT:
+        return !fully_identified(i);
     case OBJ_MISSILES:
         return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
     case OBJ_WEAPONS:

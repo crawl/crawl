@@ -2622,8 +2622,9 @@ enum object_class_type                 // (unsigned char) mitm[].base_type
 
 enum object_selector
 {
-    OSEL_ANY   = -1,
-    OSEL_WIELD = -2
+    OSEL_ANY     = -1,
+    OSEL_WIELD   = -2,
+    OSEL_UNIDENT = -3
 };
 
 enum operation_types
