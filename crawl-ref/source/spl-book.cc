@@ -1147,6 +1147,12 @@ bool learn_spell(void)
         return (false);
     }
 
+    if (you.conf)
+    {
+        mpr("You are too confused!");
+        return (false);
+    }
+    
     if (!which_spellbook( book, spell ))
         return (false);
 
