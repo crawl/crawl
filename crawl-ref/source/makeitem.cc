@@ -1,3 +1,10 @@
+/*
+ * File:       makeitem.cc
+ * Summary:    Item creation routines.
+ *
+ *  Modified for Crawl Reference by $Author: haranp $ on $Date: 2007-03-15T20:10:20.648083Z $
+ */
+
 #include "AppHdr.h"
 
 #include "enum.h"

@@ -1773,10 +1773,7 @@ bool mons_is_known_mimic(const monsters *m)
 
 bool mons_looks_stabbable(const monsters *m)
 {
-    // Make sure oklob plants are never highlighted. That'll defeat the
-    // point of making them look like normal plants.
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
-                && m->type != MONS_OKLOB_PLANT
                 && !mons_is_mimic(m->type)
                 && !mons_is_statue(m->type)
                 && !mons_friendly(m)
@@ -1786,7 +1783,6 @@ bool mons_looks_stabbable(const monsters *m)
 bool mons_looks_distracted(const monsters *m)
 {
     return (!mons_class_flag(m->type, M_NO_EXP_GAIN)
-                && m->type != MONS_OKLOB_PLANT
                 && !mons_is_mimic(m->type)
                 && !mons_is_statue(m->type)
                 && !mons_friendly(m)
