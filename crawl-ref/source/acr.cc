@@ -1022,6 +1022,9 @@ static void experience_check()
     if (wearing_amulet(AMU_THE_GOURMAND))
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d", 
              you.duration[DUR_GOURMAND]);
+
+    mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
+         env.turns_on_level);
 #endif
 }
 
@@ -2168,6 +2171,8 @@ static void world_reacts()
     if (you.num_turns != -1)
     {
         you.num_turns++;
+        if (env.turns_on_level + 1 > env.turns_on_level)
+            env.turns_on_level++;
         update_turn_count();
     }
     check_banished();

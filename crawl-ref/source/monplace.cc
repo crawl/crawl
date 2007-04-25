@@ -121,6 +121,18 @@ bool monster_can_submerge(int monster_class, int grid)
     }
 }
 
+static bool need_super_ood(int lev_mons)
+{
+    return (env.turns_on_level > 1400 - lev_mons * 117
+            && one_chance_in(5000));
+}
+
+static bool need_moderate_ood(int lev_mons)
+{
+    return (env.turns_on_level > 700 - lev_mons * 117
+            && one_chance_in(50));
+}
+
 bool place_monster(int &id, int mon_type, int power, char behaviour,
                    int target, bool summoned, int px, int py, bool allow_bands,
                    int proximity, int extra, int dur,
@@ -158,11 +170,11 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
             && lev_mons < 28)
         {
             // potentially nasty surprise, but very rare
-            if (lev_mons > 0 && one_chance_in(5000))
+            if (need_super_ood(lev_mons))
                 lev_mons += random2(12);
 
             // slightly out of depth monsters are more common:
-            if (one_chance_in(50))
+            if (need_moderate_ood(lev_mons))
                 lev_mons += random2(5);
 
             if (lev_mons > 27)

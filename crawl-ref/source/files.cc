@@ -929,6 +929,7 @@ void load( int stair_taken, load_mode_type load_mode, bool was_a_labyrinth,
         {
             load_ghost();       // no ghosts in Labyrinth
         }
+        env.turns_on_level = 0;
     }
     else
     {

@@ -1293,6 +1293,9 @@ static void tag_construct_level(struct tagHeader &th)
     marshallShort(th, GXM);
     // how many Y?
     marshallShort(th, GYM);
+
+    marshallLong(th, env.turns_on_level);
+
     for (count_x = 0; count_x < GXM; count_x++)
     {
         for (count_y = 0; count_y < GYM; count_y++)
@@ -1510,6 +1513,9 @@ static void tag_read_level( struct tagHeader &th, char minorVersion )
     gx = unmarshallShort(th);
     // how many Y?
     gy = unmarshallShort(th);
+
+    env.turns_on_level = unmarshallLong(th);
+    
     for (i = 0; i < gx; i++)
     {
         for (j = 0; j < gy; j++)
