@@ -224,7 +224,7 @@ const char *rand_wpn_names[] = {
     " of the Lurker",
     " of the Crawling Thing",
     " of the Thing",
-    "\"Thing\"",
+    " \"Thing\"",
     " of the Sea",
     " of the Forest",
     " of the Trees",

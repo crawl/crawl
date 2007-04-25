@@ -103,10 +103,10 @@ int SQL_DBM::insert(const std::string &key, const std::string &value)
     if (init_insert() != SQLITE_OK)
         return (errc);
 
-    ec(sqlite3_bind_text(s_insert, 1, key.c_str(), -1, SQLITE_STATIC));
+    ec(sqlite3_bind_text(s_insert, 1, key.c_str(), -1, SQLITE_TRANSIENT));
     if (errc != SQLITE_OK)
         return (errc);
-    ec(sqlite3_bind_text(s_insert, 2, value.c_str(), -1, SQLITE_STATIC));
+    ec(sqlite3_bind_text(s_insert, 2, value.c_str(), -1, SQLITE_TRANSIENT));
     if (errc != SQLITE_OK)
         return (errc);
 

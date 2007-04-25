@@ -1070,8 +1070,6 @@ formatted_string describe_mutations()
         break;
     }                           //end switch - innate abilities
     
-     
-
     // a bit more stuff
     if ( (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE) ||
          player_genus(GENPC_DRACONIAN) ||

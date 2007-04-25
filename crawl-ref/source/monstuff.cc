@@ -4276,7 +4276,11 @@ void mons_check_pool(monsters *mons, int killer)
             {
                 if (grid == DNGN_LAVA)
                     simple_monster_message(
-                        mons, " is incinerated!",
+                        mons, " is incinerated.",
+                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                else if (mons_genus(mons->type) == MONS_MUMMY)
+                    simple_monster_message(
+                        mons, " falls apart.",
                         MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 else
                     simple_monster_message(

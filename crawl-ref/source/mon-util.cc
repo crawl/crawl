@@ -2332,7 +2332,9 @@ bool monsters::floundering() const
 
 bool monsters::can_drown() const
 {
-    return (!mons_res_asphyx(this));
+    // Mummies can fall apart in water; demons can drown in water/lava.
+    return (!mons_res_asphyx(this) || mons_genus(type) == MONS_MUMMY
+            || holiness() == MH_DEMONIC);
 }
 
 size_type monsters::body_size(int /* psize */, bool /* base */) const
