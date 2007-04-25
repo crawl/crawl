@@ -479,7 +479,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     return fix_colour(tc);
 }
 
-void clear_map()
+void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 {
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
     {
@@ -497,6 +497,12 @@ void clear_map()
                 continue;
 
             if (is_envmap_item(x, y))
+                continue;
+
+            if (!clear_detected_items && is_envmap_detected_item(x, y))
+                continue;
+
+            if (!clear_detected_monsters && is_envmap_detected_mons(x, y))
                 continue;
 
             set_envmap_char(x, y,

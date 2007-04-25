@@ -108,7 +108,7 @@ void setLOSRadius(int newLR);
  * *********************************************************************** */
 bool check_awaken(int mons_aw);
 
-void clear_map();
+void clear_map(bool clear_items = true, bool clear_mons = true);
 
 bool is_feature(int feature, int x, int y);
 

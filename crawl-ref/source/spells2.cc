@@ -176,7 +176,7 @@ unsigned char detect_creatures( int pow )
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    clear_map();
+    clear_map(false);
 
     mpr("You detect creatures!");
 

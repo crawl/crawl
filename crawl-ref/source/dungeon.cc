@@ -1102,7 +1102,7 @@ static builder_rc_type builder_by_type(int level_number, char level_type)
 
 static int random_portal_vault(const std::string &tag)
 {
-    return random_map_for_tag(tag, false);
+    return random_map_for_tag(tag, false, true);
 }
 
 static bool place_portal_vault(int stair, const std::string &tag, int dlevel)

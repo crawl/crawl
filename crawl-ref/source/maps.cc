@@ -309,14 +309,18 @@ int random_map_for_depth(int depth, bool want_minivault)
     return (mapindex);
 }
 
-int random_map_for_tag(const std::string &tag, bool want_minivault)
+int random_map_for_tag(const std::string &tag,
+                       bool want_minivault,
+                       bool check_depth)
 {
     int mapindex = -1;
     int rollsize = 0;
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
-        if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault)
+        if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault
+            && (!check_depth || !vdefs[i].depth.valid()
+                || vdefs[i].depth.contains(you.your_level)))
         {
             rollsize += vdefs[i].chance;
 
