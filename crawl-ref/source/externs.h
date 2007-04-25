@@ -182,7 +182,7 @@ public:
 
     virtual int mons_species() const = 0;
     
-    virtual int holiness() const = 0;
+    virtual mon_holy_type holiness() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
@@ -637,12 +637,12 @@ public:
 
   FixedVector<unsigned char, 30> attribute;        // see ATTRIBUTES in enum.h
 
-  char is_undead;                     // see UNDEAD_STATES in enum.h
+  undead_state_type is_undead;
 
   delay_queue_type delay_queue;       // pending actions
 
   FixedVector<unsigned char, 50>  skills;
-  FixedVector<unsigned char, 50>  practise_skill;
+  FixedVector<bool, 50>  practise_skill;
   FixedVector<unsigned int, 50>   skill_points;
   FixedVector<unsigned char, 50>  skill_order;
   int  skill_cost_level;
@@ -677,7 +677,7 @@ public:
   char confusing_touch;
   char sure_blade;
 
-  FixedVector<unsigned char, 50> had_book;
+  FixedVector<bool, 50> had_book;
 
   unsigned char betrayal;
   unsigned char normal_vision;        // how far the species gets to see
@@ -791,7 +791,7 @@ public:
 
     int mons_species() const;
 
-    int holiness() const;
+    mon_holy_type holiness() const;
     int res_fire() const;
     int res_cold() const;
     int res_elec() const;
@@ -1001,7 +1001,7 @@ public:
 
     int mons_species() const;
 
-    int holiness() const;
+    mon_holy_type holiness() const;
     int res_fire() const;
     int res_cold() const;
     int res_elec() const;

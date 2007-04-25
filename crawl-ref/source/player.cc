@@ -4534,53 +4534,36 @@ void player::init()
 
     gift_timeout = 0;
 
-    for (int i = 0; i < MAX_NUM_GODS; i++)
-    {
-        penance[i] = 0;
-        worshipped[i] = 0;
-        num_gifts[i] = 0;
-    }
+    penance.init(0);
+    worshipped.init(0);
+    num_gifts.init(0);
 
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
-        equip[i] = -1;
+    equip.init(-1);
 
-    for (int i = 0; i < 25; i++)
-        spells[i] = SPELL_NO_SPELL;
+    spells.init(SPELL_NO_SPELL);
 
-    for (int i = 0; i < 52; i++)
-    {
-        spell_letter_table[i] = -1;
-        ability_letter_table[i] = ABIL_NON_ABILITY;
-    }
+    spell_letter_table.init(-1);
+    ability_letter_table.init(ABIL_NON_ABILITY);
 
-    for (int i = 0; i < 100; i++)
-        mutation[i] = 0;
+    mutation.init(0);
+    demon_pow.init(0);
 
-    for (int i = 0; i < 100; i++)
-        demon_pow[i] = 0;
+    had_book.init(false);
 
-    for (int i = 0; i < 50; i++)
-        had_book[i] = 0;
-
-    for (int i = 0; i < 50; i++)
-        unique_items[i] = UNIQ_NOT_EXISTS;
+    unique_items.init(UNIQ_NOT_EXISTS);
 
     for (int i = 0; i < NO_UNRANDARTS; i++)
         set_unrandart_exist(i, 0);
 
-    for (int i = 0; i < 50; i++)
-    {
-        skills[i] = 0;
-        skill_points[i] = 0;
-        skill_order[i] = MAX_SKILL_ORDER;
-        practise_skill[i] = 1;
-    }
+    skills.init(0);
+    skill_points.init(0);
+    skill_order.init(MAX_SKILL_ORDER);
+    practise_skill.init(true);
 
     skill_cost_level = 1;
     total_skill_points = 0;
 
-    for (int i = 0; i < 30; i++)
-        attribute[i] = 0;
+    attribute.init(0);
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -4598,8 +4581,7 @@ void player::init()
         inv[i].link = i;
     }
 
-    for (int i = 0; i < NUM_DURATIONS; i++)
-        duration[i] = 0;
+    duration.init(0);
 
     exp_available = 25;
 }
@@ -5052,7 +5034,7 @@ void player::heal(int amount, bool max_too)
     ::inc_hp(amount, max_too);
 }
 
-int player::holiness() const
+mon_holy_type player::holiness() const
 {
     if (is_undead)
         return (MH_UNDEAD);

@@ -148,4 +148,6 @@ bool can_autopickup();
 bool need_to_autopickup();
 void autopickup();
 
+int find_free_slot(const item_def &i);
+
 #endif

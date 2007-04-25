@@ -1790,7 +1790,7 @@ JOB_PALADIN:
 
 ************************************************************* */
 
-static const int skill_display_order[] =
+static const skill_type skill_display_order[] =
 {
     SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_SWORDS, SK_AXES,
     SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,

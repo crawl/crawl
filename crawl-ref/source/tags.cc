@@ -995,7 +995,7 @@ static void tag_read_you(struct tagHeader &th, char minorVersion)
     you.where_are_you = static_cast<branch_type>( unmarshallByte(th) );
     you.char_direction = unmarshallByte(th);
     you.your_level = unmarshallByte(th);
-    you.is_undead = unmarshallByte(th);
+    you.is_undead = static_cast<undead_state_type>(unmarshallByte(th));
     you.special_wield = unmarshallByte(th);
     you.berserker = unmarshallByte(th);
     you.berserk_penalty = unmarshallByte(th);

@@ -372,10 +372,319 @@ static void initialise_branch_depths()
     branches[BRANCH_TOMB].startdepth = random_range(2, 3);
 }
 
+static void initialise_item_descriptions()
+{
+    // must remember to check for already existing colours/combinations
+    you.item_description.init(255);
+
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE] =
+        PDESCQ(PDQ_GLUGGY, PDC_WHITE);
+
+    you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
+
+    for (int i = 0; i < NUM_IDESC; i++)
+    {
+        // We really should only loop until NUM_WANDS, etc., here
+        for (int j = 0; j < you.item_description.height(); j++)
+        {
+            // Don't override predefines
+            if (you.item_description[i][j] != 255)
+                continue;
+
+            // pick a new description until it's good
+            while (true)
+            {
+
+                switch (i)
+                {
+                case IDESC_WANDS: // wands
+                    you.item_description[i][j] = random2( 16 * 12 );
+                    if (coinflip())
+                        you.item_description[i][j] %= 12;
+                    break;
+
+                case IDESC_POTIONS: // potions
+                    you.item_description[i][j] = random_potion_description();
+                    break;
+
+                case IDESC_SCROLLS: // scrolls
+                case IDESC_SCROLLS_II:
+                    you.item_description[i][j] = random2(151);
+                    break;
+
+                case IDESC_RINGS: // rings
+                    you.item_description[i][j] = random2( 13 * 13 );
+                    if (coinflip())
+                        you.item_description[i][j] %= 13;
+                    break;
+                }
+
+                bool is_ok = true;
+
+                // test whether we've used this description before
+                // don't have p < j because some are preassigned
+                for (int p = 0; p < you.item_description.height(); p++)
+                {
+                    if ( p == j )
+                        continue;
+
+                    if (you.item_description[i][p]==you.item_description[i][j])
+                    {
+                        is_ok = false;
+                        break;
+                    }
+                }
+                if ( is_ok )
+                    break;
+            }
+        }
+    }
+}
+
+static void give_starting_food()
+{
+    // the undead start with no food
+    if (you.is_undead != US_ALIVE)
+        return;
+
+    item_def item;
+    if ( you.species == SP_SPRIGGAN )
+    {
+        item.base_type = OBJ_POTIONS;
+        item.sub_type = POT_PORRIDGE;
+    }
+    else
+    {
+        item.base_type = OBJ_FOOD;
+        if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD ||
+            you.species == SP_OGRE || you.species == SP_TROLL)
+            item.sub_type = FOOD_MEAT_RATION;
+        else
+            item.sub_type = FOOD_BREAD_RATION;
+    }
+    item.quantity = 1;
+
+    const int slot = find_free_slot(item);
+    you.inv[slot] = item;       // will ASSERT if couldn't find free slot
+}
+
+static void mark_starting_books()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
+        {
+            const int subtype = you.inv[i].sub_type;
+
+            you.had_book[subtype] = true;
+
+            // one for all, all for one
+            if (subtype == BOOK_MINOR_MAGIC_I ||
+                subtype == BOOK_MINOR_MAGIC_II ||
+                subtype == BOOK_MINOR_MAGIC_III)
+            {
+                you.had_book[BOOK_MINOR_MAGIC_I] = true;
+                you.had_book[BOOK_MINOR_MAGIC_II] = true;
+                you.had_book[BOOK_MINOR_MAGIC_III] = true;
+            }
+
+            if (subtype == BOOK_CONJURATIONS_I ||
+                subtype == BOOK_CONJURATIONS_II)
+            {
+                you.had_book[BOOK_CONJURATIONS_I] = true;
+                you.had_book[BOOK_CONJURATIONS_II] = true;
+            }
+        }
+    }
+}
+
+static void racialise_starting_equipment()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item(you.inv[i]))
+        {
+            // don't change object type modifier unless it starts plain
+            if ((you.inv[i].base_type == OBJ_ARMOUR ||
+                 you.inv[i].base_type == OBJ_WEAPONS ||
+                 you.inv[i].base_type == OBJ_MISSILES)
+                && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE )
+            {
+                // now add appropriate species type mod
+                switch (you.species)
+                {
+                case SP_ELF:
+                case SP_HIGH_ELF:
+                case SP_GREY_ELF:
+                case SP_DEEP_ELF:
+                case SP_SLUDGE_ELF:
+                    set_equip_race( you.inv[i], ISFLAG_ELVEN );
+                    break;
+
+                case SP_HILL_DWARF:
+                case SP_MOUNTAIN_DWARF:
+                    set_equip_race( you.inv[i], ISFLAG_DWARVEN );
+                    break;
+
+                case SP_HILL_ORC:
+                    set_equip_race( you.inv[i], ISFLAG_ORCISH );
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// Characters are actually granted skill points, not skill levels.
+// Here we take racial aptitudes into account in determining final
+// skill levels.
+static void reassess_starting_skills()
+{
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        if (!you.skills[i])
+            continue;
+
+        // Grant the amount of skill points required for a human
+        const int points = skill_exp_needed( you.skills[i] + 1 );
+        you.skill_points[i] = (points * species_skills(i, SP_HUMAN))/100 + 1;
+
+        // Find out what level that earns this character.
+        const int sp_diff = species_skills( i, you.species );
+        you.skills[i] = 0;
+
+        for (int lvl = 1; lvl <= 8; lvl++) 
+        {
+            if (you.skill_points[i] > (skill_exp_needed(lvl+1) * sp_diff)/100)
+                you.skills[i] = lvl;
+            else
+                break;
+        }
+    }
+}
+
+// randomly boost stats a number of times
+static void assign_remaining_stats( int points_left )
+{
+    // first spend points to get us to the minimum allowed value -- bwr
+    if (you.strength < MIN_START_STAT)
+    {
+        points_left -= (MIN_START_STAT - you.strength);
+        you.strength = MIN_START_STAT;
+    }
+
+    if (you.intel < MIN_START_STAT)
+    {
+        points_left -= (MIN_START_STAT - you.intel);
+        you.intel = MIN_START_STAT;
+    }
+
+    if (you.dex < MIN_START_STAT)
+    {
+        points_left -= (MIN_START_STAT - you.dex);
+        you.dex = MIN_START_STAT;
+    }
+
+    // now randomly assign the remaining points --bwr
+    while (points_left > 0)
+    {
+        // stats that are already high will be chosen half as often
+        switch (random2( NUM_STATS ))
+        {
+        case STAT_STRENGTH:
+            if (you.strength > 17 && coinflip())
+                continue;
+
+            you.strength++;
+            break;
+
+        case STAT_DEXTERITY:
+            if (you.dex > 17 && coinflip())
+                continue;
+
+            you.dex++;
+            break;
+
+        case STAT_INTELLIGENCE:
+            if (you.intel > 17 && coinflip())
+                continue;
+
+            you.intel++;
+            break;
+        }
+
+        points_left--;
+    }
+}
+
+static void give_species_bonus_hp()
+{
+    if (player_genus(GENPC_DRACONIAN) || player_genus(GENPC_DWARVEN))
+        inc_max_hp(1);
+    else
+    {
+        switch (you.species)
+        {
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+            inc_max_hp(3);
+            break;
+
+        case SP_GHOUL:
+        case SP_MINOTAUR:
+        case SP_NAGA:
+        case SP_OGRE_MAGE:
+        case SP_DEMIGOD:
+            inc_max_hp(2);
+            break;
+
+        case SP_HILL_ORC:
+        case SP_MUMMY:
+        case SP_MERFOLK:
+            inc_max_hp(1);
+            break;
+
+        case SP_ELF:
+        case SP_GREY_ELF:
+        case SP_HIGH_ELF:
+            dec_max_hp(1);
+            break;
+
+        case SP_DEEP_ELF:
+        case SP_GNOME:
+        case SP_HALFLING:
+        case SP_KENKU:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+            dec_max_hp(2);
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+static void give_species_bonus_mp()
+{
+    // adjust max_magic_points by species {dlb}
+    switch (you.species)
+    {
+    case SP_SPRIGGAN:
+    case SP_DEMIGOD:
+    case SP_GREY_ELF:
+    case SP_DEEP_ELF:
+        inc_max_mp(1);
+        break;
+
+    default:
+        break;
+    }
+}
+
 bool new_game(void)
 {
-    int i, j;                   // loop variables {dlb}
-
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     ASSERT(NUM_SPELLS < SPELL_NO_SPELL);
     ASSERT(NUM_JOBS < JOB_UNKNOWN);
@@ -481,313 +790,38 @@ bool new_game(void)
     jobs_stat_init( you.char_class );
     give_last_paycheck( you.char_class );
 
-    // randomly boost stats a number of times based on species
-    // - should be a function {dlb}
-    unsigned char points_left = (you.species == SP_DEMIGOD
-                                 || you.species == SP_DEMONSPAWN) ? 15 : 8;
-
-    // first spend points to get us to the minimum allowed value -- bwr
-    if (you.strength < MIN_START_STAT)
-    {
-        points_left -= (MIN_START_STAT - you.strength);
-        you.strength = MIN_START_STAT;
-    }
-
-    if (you.intel < MIN_START_STAT)
-    {
-        points_left -= (MIN_START_STAT - you.intel);
-        you.intel = MIN_START_STAT;
-    }
-
-    if (you.dex < MIN_START_STAT)
-    {
-        points_left -= (MIN_START_STAT - you.dex);
-        you.dex = MIN_START_STAT;
-    }
-
-    // now randomly assign the remaining points --bwr
-    while (points_left > 0)
-    {
-        switch (random2( NUM_STATS ))
-        {
-        case STAT_STRENGTH:
-            if (you.strength > 17 && coinflip())
-                continue;
-
-            you.strength++;
-            break;
-
-        case STAT_DEXTERITY:
-            if (you.dex > 17 && coinflip())
-                continue;
-
-            you.dex++;
-            break;
-
-        case STAT_INTELLIGENCE:
-            if (you.intel > 17 && coinflip())
-                continue;
-
-            you.intel++;
-            break;
-        }
-
-        points_left--;
-    }
+    assign_remaining_stats((you.species == SP_DEMIGOD ||
+                            you.species == SP_DEMONSPAWN) ? 15 : 8);
 
     // this function depends on stats being finalized
     give_items_skills();
 
-    // then: adjust hp_max by species {dlb}
-    if (player_genus(GENPC_DRACONIAN) || player_genus(GENPC_DWARVEN))
-        inc_max_hp(1);
-    else
-    {
-        switch (you.species)
-        {
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-            inc_max_hp(3);
-            break;
-
-        case SP_GHOUL:
-        case SP_MINOTAUR:
-        case SP_NAGA:
-        case SP_OGRE_MAGE:
-        case SP_DEMIGOD:
-            inc_max_hp(2);
-            break;
-
-        case SP_HILL_ORC:
-        case SP_MUMMY:
-        case SP_MERFOLK:
-            inc_max_hp(1);
-            break;
-
-        case SP_ELF:
-        case SP_GREY_ELF:
-        case SP_HIGH_ELF:
-            dec_max_hp(1);
-            break;
-
-        case SP_DEEP_ELF:
-        case SP_GNOME:
-        case SP_HALFLING:
-        case SP_KENKU:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-            dec_max_hp(2);
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    // then: adjust max_magic_points by species {dlb}
-    switch (you.species)
-    {
-    case SP_SPRIGGAN:
-    case SP_DEMIGOD:
-    case SP_GREY_ELF:
-    case SP_DEEP_ELF:
-        inc_max_mp(1);
-        break;
-
-    default:
-        break;
-    }
+    give_species_bonus_hp();
+    give_species_bonus_mp();
 
     // these need to be set above using functions!!! {dlb}
     you.max_dex = you.dex;
     you.max_strength = you.strength;
     you.max_intel = you.intel;
 
-    if (!you.is_undead)
-    {
-        for (i = 0; i < ENDOFPACK; i++)
-        {
-            if (!you.inv[i].quantity)
-            {
-                you.inv[i].quantity = 1;
-                if (you.species == SP_SPRIGGAN)
-                {
-                    you.inv[i].base_type = OBJ_POTIONS;
-                    you.inv[i].sub_type = POT_PORRIDGE;
-                }
-                else
-                {
-                    you.inv[i].base_type = OBJ_FOOD;
-                    you.inv[i].sub_type = FOOD_BREAD_RATION;
-                }
+    give_starting_food();
+    mark_starting_books();
+    racialise_starting_equipment();
 
-                if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-                    || you.species == SP_OGRE || you.species == SP_TROLL)
-                {
-                    you.inv[i].sub_type = FOOD_MEAT_RATION;
-                }
+    initialise_item_descriptions();
 
-                break;
-            }
-        }
-    }
-
-    for (i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].quantity)
-        {
-            if (you.inv[i].base_type == OBJ_BOOKS)
-            {
-                you.had_book[you.inv[i].sub_type] = 1;
-                if (you.inv[i].sub_type == BOOK_MINOR_MAGIC_I
-                    || you.inv[i].sub_type == BOOK_MINOR_MAGIC_II
-                    || you.inv[i].sub_type == BOOK_MINOR_MAGIC_III)
-                {
-                    you.had_book[BOOK_MINOR_MAGIC_I] = 1;
-                    you.had_book[BOOK_MINOR_MAGIC_II] = 1;
-                    you.had_book[BOOK_MINOR_MAGIC_III] = 1;
-                }
-                if (you.inv[i].sub_type == BOOK_CONJURATIONS_I
-                    || you.inv[i].sub_type == BOOK_CONJURATIONS_II)
-                {
-                    you.had_book[BOOK_CONJURATIONS_I] = 1;
-                    you.had_book[BOOK_CONJURATIONS_II] = 1;
-                }
-            }
-
-            // don't change object type modifier unless it starts plain
-            if (you.inv[i].base_type <= OBJ_ARMOUR
-                && get_equip_race(you.inv[i]) == 0 )   // == DARM_PLAIN
-            {
-                // now add appropriate species type mod:
-                switch (you.species)
-                {
-                case SP_ELF:
-                case SP_HIGH_ELF:
-                case SP_GREY_ELF:
-                case SP_DEEP_ELF:
-                case SP_SLUDGE_ELF:
-                    set_equip_race( you.inv[i], ISFLAG_ELVEN );
-                    break;
-
-                case SP_HILL_DWARF:
-                case SP_MOUNTAIN_DWARF:
-                    set_equip_race( you.inv[i], ISFLAG_DWARVEN );
-                    break;
-
-                case SP_HILL_ORC:
-                    set_equip_race( you.inv[i], ISFLAG_ORCISH );
-                    break;
-                }
-            }
-        }
-    }
-
-    // must remember to check for already existing colours/combinations
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 50; j++)
-        {
-            you.item_description[i][j] = 255;
-        }
-    }
-
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE] = 
-        PDESCQ(PDQ_GLUGGY, PDC_WHITE);
-
-    you.item_description[IDESC_POTIONS][POT_WATER] =
-        PDESCS(PDC_CLEAR);
-
-    int passout;
-
-    for (i = 0; i < 4; i++)
-    {
-        for (j = 0; j < 50; j++)
-        {
-            if (you.item_description[i][j] != 255)
-                continue;
-
-            do
-            {
-                passout = 1;
-
-                switch (i)
-                {
-                case IDESC_WANDS: // wands
-                    you.item_description[i][j] = random2( 16 * 12 );
-                    if (coinflip())
-                        you.item_description[i][j] %= 12;
-                    break;
-
-                case IDESC_POTIONS: // potions
-                    you.item_description[i][j] = random_potion_description();
-                    break;
-
-                case IDESC_SCROLLS: // scrolls
-                    you.item_description[i][j] = random2(151);
-                    you.item_description[IDESC_SCROLLS_II][j] = random2(151);
-                    break;
-
-                case IDESC_RINGS: // rings
-                    you.item_description[i][j] = random2( 13 * 13 );
-                    if (coinflip())
-                        you.item_description[i][j] %= 13;
-                    break;
-                }
-
-                // don't have p < j because some are preassigned
-                for (int p = 0; p < 50; p++)
-                {
-                    if (you.item_description[i][p] == you.item_description[i][j]
-                        && j != p)
-                    {
-                        passout = 0;
-                    }
-                }
-            }
-            while (passout == 0);
-        }
-    }
-
-    for (i = 0; i < 50; i++)
-    {
-        if (!you.skills[i])
-            continue;
-
-        // Start with the amount of skill points required for a human...
-        const int points = skill_exp_needed( you.skills[i] + 1 );
-
-        you.skill_points[i] = points + 1;
-
-        if (i == SK_SPELLCASTING)
-            you.skill_points[i] = (points * 130) / 100 + 1;
-        else if (i == SK_INVOCATIONS || i == SK_EVOCATIONS)
-            you.skill_points[i] = (points * 75) / 100 + 1;
-
-        // ...and find out what level that earns this character.
-        const int sp_diff = species_skills( i, you.species );
-        you.skills[i] = 0;
-
-        for (int lvl = 1; lvl <= 8; lvl++) 
-        {
-            if (you.skill_points[i] > (skill_exp_needed(lvl+1) * sp_diff) / 100)
-                you.skills[i] = lvl;
-            else
-                break;
-        }
-    }
-
+    reassess_starting_skills();
     calc_total_skill_points();
 
-    for (i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; i++)
     {
         if (is_valid_item(you.inv[i]))
         {
             // identify all items in pack
             set_ident_type( you.inv[i].base_type, 
                             you.inv[i].sub_type, ID_KNOWN_TYPE );
-
+            // link properly
+            you.inv[i].link = i;
             you.inv[i].slot = index_to_letter(you.inv[i].link);
             item_colour( you.inv[i] );  // set correct special and colour
         }
@@ -796,7 +830,7 @@ bool new_game(void)
     // Brand items as original equipment.
     origin_set_inventory(origin_set_startequip);
 
-    // we calculate hp and mp here;  all relevant factors should be
+    // we calculate hp and mp here; all relevant factors should be
     // finalized by now (GDL)
     calc_hp();
     calc_mp();
@@ -809,13 +843,7 @@ bool new_game(void)
     give_basic_knowledge(you.char_class);
 
     // tmpfile purging removed in favour of marking
-    for (int lvl = 0; lvl < MAX_LEVELS; lvl++)
-    {
-        for (int dng = 0; dng < NUM_BRANCHES; dng++)
-        {
-            tmp_file_pairs[lvl][dng] = false;
-        }
-    }
+    tmp_file_pairs.init(false);
     
     give_basic_mutations(you.species);
     initialise_branch_depths();

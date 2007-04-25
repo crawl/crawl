@@ -2584,7 +2584,7 @@ void monsters::heal(int amount, bool max_too)
         hit_points = max_hit_points;
 }
 
-int monsters::holiness() const
+mon_holy_type monsters::holiness() const
 {
     return (mons_holiness(this));
 }

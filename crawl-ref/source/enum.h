@@ -1455,7 +1455,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
 enum item_description_type
 {
-    IDESC_WANDS,
+    IDESC_WANDS = 0,
     IDESC_POTIONS,
     IDESC_SCROLLS,                      // special field (like the others)
     IDESC_RINGS,
@@ -3613,7 +3613,7 @@ enum unarmed_attack_type
 
 enum undead_state_type                // you.is_undead
 {
-    US_ALIVE,                          //    0
+    US_ALIVE = 0,
     US_HUNGRY_DEAD,
     US_UNDEAD
 };
