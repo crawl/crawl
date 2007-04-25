@@ -524,13 +524,13 @@ MONS: Serpent of Hell, random, random
 # Antaeus; bottom of Cocytus. David's Improved Demon Lairs, episode I.
 #
 
-NAME: antaeus_david_1
-PLACE: Coc:7
-ORIENT: encompass
-MONS: Antaeus, Ice Fiend, ice dragon / nothing
-MONS: random, random, random, random
-ITEM: any, any misc, any misc, any misc
+NAME:    antaeus_david_1
+PLACE:   Coc:7
+ORIENT:  encompass
+MONS:    Antaeus, Ice Fiend, ice dragon / nothing
+ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
+SUBST:   ' = w .
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -545,54 +545,54 @@ xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww....wwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwww...wwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwxxxxxxxxx
-xxxxxxxxxwww.wwww......wwwwww..wwwwwwwwwwwwwwwwwwwww.......ccccc...wwwwxxxxxxxxx
+xxxxxxxxxwwwww....wwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww''wwwwwwwwxxxxxxxxx
+xxxxxxxxxwww...wwwwwwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwwww'.......wwwwwwxxxxxxxxx
+xxxxxxxxxwww.wwww......wwwwww..wwwwwwwwwwwwwwwwwwww'.......ccccc...wwwwxxxxxxxxx
 xxxxxxxxxww..ww....cc......www.3wwwwwwwwwwwww..........ccccccccccc..wwwxxxxxxxxx
-xxxxxxxxxw...ww..cccccc.....www.wwwwwwwwwww3..........cc....9.2..cc..wwxxxxxxxxx
-xxxxxxxxxw..ww..ccccccc+c....ww.wwwwwwwwwwwwww........ccf********cc..wwxxxxxxxxx
-xxxxxxxxxw..ww..cc.%%%%.cc...ww..wwwwwwwwwwwwwwwwww....ccccccc+ccc...wwxxxxxxxxx
-xxxxxxxxxw..ww..cc2.e0.2cc...ww..wwwwwwwwwwwwwwwwwwwww......c...c.....wxxxxxxxxx
-xxxxxxxxxw..ww..cc.%%%%.cc..www.wwwwwwwwwwwwwwwwwwwwwwwwwww.cc+cc.....wxxxxxxxxx
+xxxxxxxxxw...ww..cccccc.....www.wwwwwwwwww'3..........cc....9.2..cc..wwxxxxxxxxx
+xxxxxxxxxw..ww..ccccccc+c....ww.'wwwwwwwwwww''........ccf********cc..wwxxxxxxxxx
+xxxxxxxxxw..ww..cc.%%%%.cc...ww..wwwwwwwwwwwwwwwww'....ccccccc+ccc...'wxxxxxxxxx
+xxxxxxxxxw..ww..cc2.e0.2cc...ww..wwwwwwwwwwwwwwwwwwww'......c...c.....wxxxxxxxxx
+xxxxxxxxxw..ww..cc.%%%%.cc..www.'wwwwwwwwwwwwwwwwwwwwwwwww'.cc+cc.....wxxxxxxxxx
 xxxxxxxxxw..www..c+cccccc...ww..wwwwwwwwwwwwwwwwwwwwwwwwwww..........wwxxxxxxxxx
 xxxxxxxxxww..ww....cccc....www.wwwwwwwwwwwwwwwwwwwwwwwwwwwww........wwwxxxxxxxxx
-xxxxxxxxxww..www..........www..wwwwwwwwwwwwwwwwwwwwwwwwwwwww..2....w..wxxxxxxxxx
-xxxxxxxxxwww..wwww......wwww..wwwwwwwwwwwwwwwwwwwwwwwwwwww............wxxxxxxxxx
+xxxxxxxxxww..www..........www..wwwwwwwwwwwwwwwwwwwwwwwwwwww'..2....w..wxxxxxxxxx
+xxxxxxxxxwww..wwww......wwww..wwwwwwwwwwwwwwwwwwwwwwwwwww'............wxxxxxxxxx
 xxxxxxxxxwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwww..............wwxxxxxxxxx
-xxxxxxxxxwwwww...wwwwwww....wwwwwwwwwwwwwwwwwwwwwwwwww............wwwwwxxxxxxxxx
-xxxxxxxxxwwwwwwww........wwwwwwwwwwwwwwwwwwwwwwwwww3..wwww....wwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwwwwwwwwww...3wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww...'wwwwww....wwwwwwwwwwwwwwwwwwwwwwwwww............'wwwwxxxxxxxxx
+xxxxxxxxxwwwwwwww........'wwwwwwwwwwwwwwwwwwwwwwww'3..'ww'....''wwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwww'...3wwwwwwwwwwwwwwwwwwwwwwwwww''wwwwww''wwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww........wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww............wwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww...ccc+ccc...wwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...cc.....cc...wwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...cc.....cc...wwwwwwwwwwwww'wwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...c.......c...wwwwwwwwwwwww3wwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...+.[.{.(.+...wwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...c.......c...wwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww...cc.....cc...wwwwwwwwwww.....wwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwww...ccc+ccc...wwwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww'wwwwwwwwwwwwwwwwww...ccc+ccc...wwwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwww3wwwwwwwwwwwwwwwwww............wwwwwwwwwwwwww...wwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww.wwwwwwwwww.3wwwwwwww.........wwwwwwwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww.wwwwwwwww.3.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww.wwwwwwwww..wwwwwwwwwwwwwwwwwwwwww3wwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwwwww.3'wwwwwww.........wwwwwwwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwww'.3.'wwwwwwwwwwwwwwwwwwww'wwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww.wwwwwwwww..'wwwwwwwwwwwwwwwwwwww'3wwwwwwwwwww.wwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwww.wwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...w.wwwww..wwwwwwwwwxxxxxxxxx
-xxxxxxxxxwwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....www...w.wwwwwwwxxxxxxxxx
-xxxxxxxxxwwww....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..ccccccc.c.wwwwwwwwxxxxxxxxx
+xxxxxxxxxwwwww..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...w.wwwww..wwwwwwwwwxxxxxxxxx
+xxxxxxxxxwwww'...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....www...w.wwwwwwwxxxxxxxxx
+xxxxxxxxxwwww....'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..ccccccc.c.wwwwwwwwxxxxxxxxx
 xxxxxxxxxwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..cc$$$$$$.c..wwwwwwwxxxxxxxxx
-xxxxxxxxxwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..c.$dddd$.c...wwwwwwxxxxxxxxx
-xxxxxxxxxwww..cc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww...$$$$$$cc....wwwwwxxxxxxxxx
-xxxxxxxxxwww.cccc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.ccccccc....wwwwwwxxxxxxxxx
-xxxxxxxxxwww.cg.cc..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww........ww..wwwwwwwxxxxxxxxx
-xxxxxxxxxwww.c||.cc...wwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxwww.c||.8cc......wwwwwwwwwwwwwwwwwwwwwwwww...w..wwwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxww..c||2.2cc........wwwwwwwwwwwwwwwwwww....wwww..wwwwwwwwwwwwwxxxxxxxxx
-xxxxxxxxxww..c||....cc..............3wwwwwwwwww...wwwwwww.....wwccccwwwxxxxxxxxx
-xxxxxxxxxww..cccc+ccccc..........wwwwwwwwwwww3...wwwwwwwwwww.2.cc2dccwwxxxxxxxxx
-xxxxxxxxxwww..ccc...........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.+dd1Ocwwxxxxxxxxx
-xxxxxxxxxwwww......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcc2dccwwxxxxxxxxx
-xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccwwwxxxxxxxxx
+xxxxxxxxxwww'.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..c.$dddd$.c...wwwwwwxxxxxxxxx
+xxxxxxxxxwww..cc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'...$$$$$$cc....wwwwwxxxxxxxxx
+xxxxxxxxxwww.cccc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'.ccccccc....wwwwwwxxxxxxxxx
+xxxxxxxxxwww.cg.cc..'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww........ww..wwwwwwwxxxxxxxxx
+xxxxxxxxxww'.c||.cc...'wwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxww'.c||.8cc......'wwwwwwwwwwwwwwwwwwwwwww'...w..wwwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxww..c||2.2cc........'wwwwwwwwwwwwwwwwww....wwww..wwwwwwwwwwwwwxxxxxxxxx
+xxxxxxxxxww..c||....cc..............3'wwwwwwwww...wwwwwww.....wwccccwwwxxxxxxxxx
+xxxxxxxxxww..cccc+ccccc..........wwwwwwwwwww'3...wwwwwwwwwww.2.cc2dccwwxxxxxxxxx
+xxxxxxxxxwww..ccc...........'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.+dd1Ocwwxxxxxxxxx
+xxxxxxxxxwwww......'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcc2dccwwxxxxxxxxx
+xxxxxxxxxwwwwww'''wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
 xxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxx
@@ -1066,9 +1066,62 @@ MONS: random, random
 # Vault:8 last level of the vaults -- dungeon.cc will change all these 'x's
 #
 
-NAME: vaults_vault
-PLACE: Vault:8
-ORIENT: encompass
+NAME:    vaults_vault
+PLACE:   Vault:8
+ORIENT:  encompass
+
+# the rune's spot, occassionally put nasty on the rune
+SHUFFLE: OPQR, Rr
+SUBST:   r = |
+KMONS:   O = 8 / 9 / w:80 nothing
+KMONS:   P = 8 / 9 / w:80 nothing
+KMONS:   Q = 8 / 9 / w:80 nothing
+KMONS:   R = 8 / 9 / w:80 nothing
+KITEM:   P = any good_item
+KITEM:   Q = any good_item
+KITEM:   R = any good_item
+KFEAT:   P = w:150 . / any shop / jewellery shop / wand shop
+KFEAT:   Q = w:150 . / any shop / scroll shop / book shop 
+KFEAT:   R = w:150 . / any shop / armour shop / weapon shop
+
+# NW
+SHUFFLE: AC/BD, EG/FH, IKN/NJL, '"
+SUBST:   A=., B=X, C=+, D=x, E=+, F=X, G=., H=x, I=., M=X, J=x, K=+, N=+, L=x
+SUBST:   X = x =:5
+SUBST:   ':$, ":*, ^=^., a:x.
+
+# SW
+SHUFFLE: !_
+SUBST:   ! = | * .:20
+SUBST:   _ = 8 9 .:20
+SUBST:   b : x .
+
+# NE
+SHUFFLE: UVW
+SUBST:   U=., V=X, W=X
+SUBST:   X = x =:2
+SUBST:   - = 8 9 .:20
+
+# SE (double use of Y=Y. and Z=Z. for decreasing variance)
+SUBST:   ? = | * .:40 ^:3
+SUBST:   Y = Y ., Z = Z .
+SUBST:   Y = Y ., Z = Z .
+SUBST:   Y = 9:30 8:10 .:40
+SUBST:   Z = 9:10 8:30 .:40
+SUBST:   c = x .:20
+
+# general loot and additional features
+SUBST:   | = | *:2
+SUBST:   * = * |:2
+SUBST:   / : / .:3
+SUBST:   / = 8 9 ^ * | .:50
+SHUFFLE: klmnopqr
+SUBST:   k : ^ x =:3 .:40
+SUBST:   l : ^ x =:3 .:40
+SUBST:   m : ^ x =:3 .:80
+SUBST:   n : ^ x =:3 .:80
+
+MONS: vault guard
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1078,61 +1131,61 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx??/.............m.............................l............/??xxxxxxxxx
+xxxxxxxxx??/.............m.............................l............/??xxxxxxxxx
+xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
 xxxxxxxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxxx.x....xxxxx.................xxxxx..xxxxxxxxx
-xxxxxxxxx..x.x*.*.*.*.*x..x........x.x....xxx..........8..........xxx..xxxxxxxxx
-xxxxxxxxx..x.x.*.*.*.*.x..x........x.x....xxx.....................xxx..xxxxxxxxx
-xxxxxxxxx..x.x*.*.*.*.*x..x...||...x.x....xx......9........9.......xx..xxxxxxxxx
-xxxxxxxxx..x.x.*.*.*.*.x..x...||...x.x....xx.......................xx..xxxxxxxxx
-xxxxxxxxx..x.x*.*.*.*.*x..x...||...x.x....xx......xxxxxxxxxxx......xx..xxxxxxxxx
-xxxxxxxxx..x.x.*.*.*.*.x..x........x.x....xx......x.........x......xx..xxxxxxxxx
-xxxxxxxxx..x.x*.*.*.*.*+..+........x.x....xx....xxx..........xx....xx..xxxxxxxxx
-xxxxxxxxx..x.x.*.*.*.*.xxxxxxxxxxxxx.x....xx.9..x....xxxxx....x..8.xx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxxx9998.........x....xx....x...xx$$$xx...x....xx..xxxxxxxxx
-xxxxxxxxx..x...........899xxxxxxxxxx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxxx99x........x.x....xx....x..x$$*|*$$x..x....xx..xxxxxxxxx
-xxxxxxxxx..x.x.....|...x88x.$$$$$$.x.x....xx..8.x..xx$***$xx..x....xx..xxxxxxxxx
-xxxxxxxxx..x.x.|..|..|.x..x.$$$$$$.x.x....xx....x....x$$$xx...x..9.xx..xxxxxxxxx
-xxxxxxxxx..x.x.........x..x.$$$$$$.x.x....xx....xxx..xxxxx..xxx....xx..xxxxxxxxx
-xxxxxxxxx..x.x.|..|..|.x..x.$$$$$$.x.x....xx......x.........x......xx..xxxxxxxxx
-xxxxxxxxx..x.x.........x..x.$$$$$$.x.x....xx......xxxxxxxxxxx......xx..xxxxxxxxx
-xxxxxxxxx..x.x|..|..|..x..x.$$$$$$.x.x....xxx.....................xxx..xxxxxxxxx
-xxxxxxxxx..x.x.........x..+........x.x....xxx......9.........9....xxx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxx+x..xxxxxxxxxx.xx.11....xx................xxxxx..xxxxxxxxx
-xxxxxxxxx..x...........x..x...........x1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..........................xx1..(}..1..........................xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxxxxxxx
+xxxxxxxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxxxxxxx
+xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xxx...-.................xxx..xxxxxxxxx
+xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.........-.......-.....xx..xxxxxxxxx
+xxxxxxxxx..x.x.'.'.'.'.x..x..^Rr^..x.x....xx.......................xx..xxxxxxxxx
+xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.-....xxxxxxxxxxx....-.xx..xxxxxxxxx
+xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xx......x.........x......xx..xxxxxxxxx
+xxxxxxxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Vxx....xx..xxxxxxxxx
+xxxxxxxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxxxxxxx
+xxxxxxxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Wx$$$xx...x.-..xx..xxxxxxxxx
+xxxxxxxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxHx99x........x.x....xx.-..x..x$$*Q*$$x-.x....xx..xxxxxxxxx
+xxxxxxxxxnnx.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xxkkxxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xU...x..-.xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Wxx....xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......xxxxxxxxxxx.-....xx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..x."""""".x.x....xxx...-.................xxx..xxxxxxxxx
+xxxxxxxxx..x.x?????????x..C........x.x....xxx........-....-.......xxx..xxxxxxxxx
+xxxxxxxxx..x.xxxxxxxxxEx..xxxxxxxxxx.a..11....xx................xxxxx..xxxxxxxxx
+xxxxxxxxx..x...........F..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxa..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx............................1..(}..1..........................xxxxxxxxx
 xxxxxxxxx...........................11.[..{.11.........................xxxxxxxxx
 xxxxxxxxx............................1..])..1..........................xxxxxxxxx
 xxxxxxxxx.............................1....1...........................xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.....1111..x.xxx.xxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.....11..........................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x|x.x.x.x.x................................x..xxxxxxxxx
-xxxxxxxxx..xx.x|x.x.x.x.x.x.x.x.x.x.x.....x.........................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x9x.x.x.x.x.x..........8..........9........x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x..9......................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x.x|x.x.x.x....x.........................x..xxxxxxxxx
-xxxxxxxxx..xx.x8x.x.x|x.x.x.x.x.x.x.xx....x..............9...9......x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x9x.x.x.x.x.x.x.x.x...........8..................x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x..9......................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x|x.x9x.x.x....x.........................x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x...................9.....x..xxxxxxxxx
-xxxxxxxxx..x.x.x9x.x.x.x.x.x.x.x.x.x.x....x....9......8.............x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x9x.x.x.x.x.xx....x.........................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x.x.x.x.x.x....x.........................x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.......9......9..........x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x.x8x.x.x.x....x.....................8...x..xxxxxxxxx
-xxxxxxxxx..xx.x8x.x.x.x.x.x.x.x.x.x.xx....x.....................||.|x..xxxxxxxxx
-xxxxxxxxx..x.x|x.x.x.x.x.x.x|x.x.x.x.x....x.....................|...x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x8x.x.x.x.x.xx....x......8..................x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x.x.x.x.x.x....x..........8..8...8.....||x..xxxxxxxxx
-xxxxxxxxx..xO.x.x.x.x.x.x.x.x.x.x|x.xx....x.....................|.||x..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.b...1111.cxcxxxcxxxxxxxxxxxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xx!x.x.x!x.x.x.x.x.x.x.x.b...11........................??x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.b....c................Y..Z...??x..xxxxxxxxx
+xxxxxxxxx..xx.x!x.x.x.x.x.x.x.x!x.x.x.....x..Y..Y..Y..Y..Y..Z..Y..Y.x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....c...Y..Y..Y..Z..Y..Y..Z...x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxxxxxxx
+xxxxxxxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxxxxxxx
+xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....x...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....c.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
+xxxxxxxxxooxx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.xrrxxxxxxxxx
+xxxxxxxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxxxxxxx
+xxxxxxxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Z..Z..Y..Z..Z..Y...x..xxxxxxxxx
+xxxxxxxxx..x!x.x.x.x!x.x.x.x.x.x.x.x.x....x.Y..Z..Y..Z..Z..Z..Z..Z..x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x!x.x.x.x.x.xx....x..Z..Y..Z..Y.............x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x.x.x.x.x_x.x.x.x....x...Y..Z..Z..Z...ZZZZZZZZ.x..xxxxxxxxx
+xxxxxxxxx..xx.x_x.x.x.x.x.x.x.x.x.x_xx....x....Z..Y..Z..Y..Z........x..xxxxxxxxx
+xxxxxxxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxxxxxxx
+xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxxxxxxx
+xxxxxxxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxxxxxxx
+xxxxxxxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Px..xxxxxxxxx
+xxxxxxxxx//xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx//xxxxxxxxx
+xxxxxxxxx??/.............p.............................q............/??xxxxxxxxx
+xxxxxxxxx??/.............p.............................q............/??xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1142,9 +1195,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
-MONS: vault guard
-MONS: random, random, random, random, random, random
 
 ##########################################################################
 # Snakes' Hunt
@@ -1206,7 +1256,6 @@ ENDMAP
 
 ############################################################################
 # snake_pit
-# now slightly randomised (dp) - changes welcome
 
 NAME:   snake_pit
 PLACE:  Snake:5
@@ -1256,7 +1305,6 @@ ENDMAP
 
 ############################################################################
 # elf_hall
-# now slightly randomised (dp) - changes welcome
 
 NAME:    elf_hall
 PLACE:   Elf:7
@@ -1812,7 +1860,6 @@ ENDMAP
 
 ##############################################################################
 # slime_pit
-# now slightly randomised (dp) - changes welcome
 
 NAME:    slime_pit
 PLACE:   Slime:$
@@ -1947,9 +1994,36 @@ ENDMAP
 ##############################################################################
 # hall_of_Zot
 
-NAME: hall_of_Zot
-PLACE: Zot:5
-ORIENT: north
+NAME:    hall_of_Zot
+PLACE:   Zot:5
+ORIENT:  north
+
+#traps
+SUBST:   C = c:1000 =
+KFEAT:   1 = any trap / w:20 floor
+KMONS:   1 = Orb Guardian
+KFEAT:   8 = any trap / w:20 floor
+KMONS:   8 = 8
+KFEAT:   F = ^ / .
+KMONS:   F = orange crystal statue / silver statue / ice statue
+SHUFFLE: ABab / ^^FF / ^^FF / ^^FF
+SHUFFLE: Aa / Bb 
+KFEAT:   A = ^
+SUBST:   B = ^
+SUBST:   a=F, b=F:18 HS
+SUBST:   ^ = ^ .:20
+SUBST:   ! = ^ .:40
+SUBST:   . = .:5000 ^
+
+#monsters
+MONS:    Orb Guardian, Killer Klown, electric golem, orb of fire, ancient lich
+SUBST:   8=8., 5=5.
+SHUFFLE: 234
+SUBST:   ? = .:8 ?
+SUBST:   ? : KLM
+SUBST:   K = 4:30 5 8 9
+SUBST:   L = 4 5:30 8 9
+SUBST:   M = 4 5 8:30 9
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1958,41 +2032,37 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxcccc..............ccccxxxxxxxxxxxxxxxxxcccc............ccccxxxxxxxxxx
-xxxxxxxxxxcc....................cccxxxxxxxxxxxxxccc..................ccxxxxxxxxx
-xxxxxxxxxcc...........3...........ccxxxxxxxxxxxcc...........3.........ccxxxxxxxx
-xxxxxxxxxc..8......................cXXXXXXXXXXXc....................8..cxxxxxxxx
-xxxxxxxxxc...................8.....XXX...1...XXX....8..................cxxxxxxxx
-xxxxxxxxxcc........................XX..1...1..XX......................ccxxxxxxxx
-xxxxxxxxxxcc.......................X1.........1X.....................ccxxxxxxxxx
-xxxxxxxxxxxcc.....4....2..............1..Z..1............2....4.....ccxxxxxxxxxx
-xxxxxxxxxxcc.......................X1.........1X.....................ccxxxxxxxxx
-xxxxxxxxxcc........................XX..1...1..XX......................ccxxxxxxxx
-xxxxxxxxxc...................8.....XXX...1...XXX....8..................cxxxxxxxx
-xxxxxxxxxc...8.....................cXXXXXXXXXXXc...................8...cxxxxxxxx
-xxxxxxxxxcc..........8............ccccccccccccccc..........8..........ccxxxxxxxx
-xxxxxxxxxxcc....................ccccccccccccccccccc..................ccxxxxxxxxx
-xxxxxxxxxxxcc................ccccccccccccccccccccccccc..............ccxxxxxxxxxx
-xxxxxxxxxxxxccF111FcccccccccccccccccccccccccccccccccccccccccccF111Fccxxxxxxxxxxx
-xxxxxxxxxxxcc................^^1.ccccccccccccccccc.1^^..............ccxxxxxxxxxx
-xxxxxxxxxxcc.................cc1...ccccccccccccc...1cc...............ccxxxxxxxxx
-xxxxxxxxxcc.............8.....ccc...ccccccccccc...ccc...8.............ccxxxxxxxx
-xxxxxxxxxc....8................ccc...............ccc...........8...8...cxxxxxxxx
-xxxxxxxxxc.......8.....8...8...cxcc.............ccxc...................cxxxxxxxx
-xxxxxxxxxc.....................cxxc.............cxxc.......8...........cxxxxxxxx
-xxxxxxxxxc.....................cxxcc.1...1...1.ccxxc............8....8.cxxxxxxxx
-xxxxxxxxxc.......8....8.....8..cxxxc...........cxxxc....8..............cxxxxxxxx
-xxxxxxxxxc.....................cxxcc...........ccxxc..........8........cxxxxxxxx
-xxxxxxxxxcc...5...............ccxxc.............cxxcc..............8..ccxxxxxxxx
-xxxxxxxxxxcc........8........ccxxcc.............ccxxcc....8....5.....ccxxxxxxxxx
-xxxxxxxxxxxcc...............ccxxxc...............cxxxcc.............ccxxxxxxxxxx
-xxxxxxxxxxxxcccccccccccccccccxxxxcccccccc@ccccccccxxxxcccccccccccccccxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxcccc.............ccccxxxxxxxxxxxxxxxxxcccc.............ccccxxxxxxxxxx
+xxxxxxxxxxcc...................cccxxxxxxxxxxxxxccc...................ccxxxxxxxxx
+xxxxxxxxxcc..........3...........ccxxxxxxxxxxxcc...........3..........ccxxxxxxxx
+xxxxxxxxxc..8.....................cXXXXXXXXXXXc.....................8..cxxxxxxxx
+xxxxxxxxxc.......?..?.......8.....XXX...1...XXX.....8.......?..?.......cxxxxxxxx
+xxxxxxxxxcc.............?.........XX..1...1..XX.........?.............ccxxxxxxxx
+xxxxxxxxxxcc......................X1...!!!...1X......................ccxxxxxxxxx
+xxxxxxxxxxxcc.....4....2....8........1.!Z!.1........8....2....4.....ccxxxxxxxxxx
+xxxxxxxxxxcc....?...?.....?...?...X1...!!!...1X...?...?.....?....?...ccxxxxxxxxx
+xxxxxxxxxcc.......?....?..........XX..1...1..XX..........?....2.......ccxxxxxxxx
+xxxxxxxxxc..................8.....XXX...1...XXX.....8..................cxxxxxxxx
+xxxxxxxxxc...8....................cXXXXXXXXXXXc....................8...cxxxxxxxx
+xxxxxxxxxcc.....8...8............ccccccccccccccc............8...8.....ccxxxxxxxx
+xxxxxxxxxxcc...................ccccccccccccccccccc...................ccxxxxxxxxx
+xxxxxxxxxxxcc........8..8...ccccccccccccccccccccccccc...8..8........ccxxxxxxxxxx
+xxxxxxxxxxxxcca111acCCCCCCCcccccccccccccccccccccccccccCCCCCCCcb111bccxxxxxxxxxxx
+xxxxxxxxxxxcc...............AA1.ccccccccccccccccc.1BB...............ccxxxxxxxxxx
+xxxxxxxxxxcc.....8..8.......cc1...ccccccccccccc...1cc.......8..8.....ccxxxxxxxxx
+xxxxxxxxxcc............8.8...ccc...ccccccccccc...ccc...8.8............ccxxxxxxxx
+xxxxxxxxxc....8....8..........ccc...............ccc..........8....8....cxxxxxxxx
+xxxxxxxxxc.......8....8...8.5.cxcc.............ccxc.5.8...8....8.......cxxxxxxxx
+xxxxxxxxxc..8.......8.........cxxc.............cxxc.........8.......8..cxxxxxxxx
+xxxxxxxxxc.....8........8.....cxxcc.1...1...1.ccxxc..............8.....cxxxxxxxx
+xxxxxxxxxc...8...8...8.....8..cxxxc...........cxxxc..8.....8...8...8...cxxxxxxxx
+xxxxxxxxxc...............8....cxxcc...........ccxxc....8...............cxxxxxxxx
+xxxxxxxxxcc...5..8....8......ccxxc.............cxxcc......8....8..5...ccxxxxxxxx
+xxxxxxxxxxcc.......8....8...ccxxcc.............ccxxcc...8....8.......ccxxxxxxxxx
+xxxxxxxxxxxcc..............ccxxxc...............cxxxcc..............ccxxxxxxxxxx
+xxxxxxxxxxxxccccccccccccccccxxxxcccccccc@ccccccccxxxxccccccccccccccccxxxxxxxxxxx
 ENDMAP
-
-MONS: Orb Guardian, Killer Klown, electric golem, orb of fire
-MONS: ancient lich
-MONS: random, random
 
 
 ##########################################################################
@@ -2200,6 +2270,7 @@ ENDMAP
 ##########################################################################
 # Watery temple
 NAME: water_temple
+TAGS: no_pool_fixup
 PLACE: Temple
 FLAGS: no_rotate
 ORIENT: encompass
@@ -2230,9 +2301,28 @@ ENDMAP
 ##############################################################################
 # Tomb:1
 
-NAME: tomb_1
-PLACE: Tomb:1
-ORIENT: encompass
+NAME:    tomb_1
+PLACE:   Tomb:1
+ORIENT:  encompass
+
+SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
+SUBST:   A=|*, B=|*
+SUBST:   f = F, i = G, j = G, k = G, l = F
+SUBST:   I = G:1800 H S
+SUBST:   J = G:1500 H S
+SUBST:   K = G:1100 H S
+SUBST:   L = G:600 H S
+SUBST:   - = T
+SUBST:   _ = F G:5 H:5 ^:30 .:30
+SUBST:   T = ^ .
+SUBST:   t = ~ .:50
+SUBST:   ' = ^ ':200
+SUBST:   ' = 5 .:100  
+SUBST:   2 = 2 1:2 .
+SUBST:   1 = 1 2:3 .
+SUBST:   3 = 3., 4 = 4., 5 = 5.
+
+MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
 
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2249,50 +2339,50 @@ xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
-xxxxxxxxx..........cc..........................^............cc.........xxxxxxxxx
-xxxxxxxxx..........cc.........^....................^........cc.........xxxxxxxxx
-xxxxxxxxx..........cc..ccccccccccccccccccccccccccccccccccc..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c....^....^..c................c.^)c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..ccccccccc.c..3.............c.^.c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c222c111c.c...............5c..^c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c2c222c.^.c......2.........+cccc..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..ccccccccccc..........3......5..c.^cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..........................3......c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc^.cccccccccccccc.......2............c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c............c....................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c............c.................3..c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..cccccccc..c..........2.........c^5cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c.^.c11c..c....................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c.c.c11c..c...3................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c^c.11cc..c..............2.....c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c.cccccc..c.......2............c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c..^..^...c.................2..c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc5^c..ccccccccccc....................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c.................................c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..cccccccccccccc..^.^..cccccccccccccc..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c...........ccc+++++ccc........^..c.^cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c.^.....^...cc.2...2.cc......^....c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..ccccccc..cc.F...F.cc..ccccccc..c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..cc.322c..cc.......cc..c22..cc..c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..c].c22c..cc.......cc..c22c.}c^.c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c..cccc..c.^cc.G...G.cc..c3.cccc..c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c.....^..c..cc.......cc.^c........c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc..c........c..cc.......cc..c....^...c..cc.........xxxxxxxxx
-xxxxxxxxx..........cc^.cccccccccc..cc.G...G.cc..cccccccccc.^cc.........xxxxxxxxx
-xxxxxxxxx..........cc......^.......cc.......cc..........^...cc.........xxxxxxxxx
-xxxxxxxxx..........cc...........^..cc.......cc.....^........cc.........xxxxxxxxx
-xxxxxxxxx..........cccccccccccccccccc.G...G.cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''ccccccccccccccccccccccccccccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ttttttttttc................ctt)c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccctc..3..........2..ct-tc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cA22c111ctc....3..........5c_ttc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..c2c222ctttc......2.........+cccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccccc.5........3...3..5..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............3.............3....2.c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccccccc.......2...2........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............c....................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c............c.................3..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cccccccc..c..........2..2......c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctttc1Bc..c....................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctctc11c..c...3.......3........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctct11cc..c..............2.....c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ctcccccc..c.......2............c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..cttttttt..c.3...............2..c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c..ccccccccccc....2.....3.........c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.......5.........................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''ccccccccccccccTTTTTTTcccccccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c'''''''''''ccc+++++ccc'''''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c'''''''''''cc.2...2.cc'''''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''ccccccc''cc.L...L.cc''ccccccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cc.322c''cc.......cc''c22.'cc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''c]'c22c''cc.2...2.cc''c22c.}c''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cccc''c''cc.K...K.cc''c3'cccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''''''''c''cc.......cc''c''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''''''''c''cc.2...2.cc''c''''''''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccc''cc.J...J.cc''cccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.I...I.cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx.............................G...G............................xxxxxxxxx
-xxxxxxxxx...........................4.......4..........................xxxxxxxxx
+xxxxxxxxx.............................4...4............................xxxxxxxxx
+xxxxxxxxx.............................F...F............................xxxxxxxxx
+xxxxxxxxx...........................4.4...4.4..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx...........................4..V.V..4..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
+xxxxxxxxx.............................4...4............................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx...........................4.......4..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
@@ -2306,9 +2396,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
-MONS: mummy, guardian mummy, mummy priest, sphinx, greater mummy
-MONS: random, random
 
 ###############################################################################
 # Tomb:2
@@ -2484,7 +2571,6 @@ MONS: random, random
 
 #############################################################################
 # Swamp:5
-# now slightly randomised (dp) - changes welcome
 
 NAME:    swamp
 PLACE:   Swamp:5
@@ -2853,7 +2939,8 @@ TAGS: orc_entry
 ORIENT: float
 FLAGS: no_rotate
 SHUFFLE: XYZ
-SUBST: ? = I:11 G F:1
+SUBST: ? = I F
+# around 4% of these entries have a dangerous statue
 SUBST: a = ~:4  .
 SUBST: b = ~:8  .
 SUBST: c = ~:12 .
@@ -2945,6 +3032,7 @@ MAP
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .............................
 ENDMAP
+
 
 ##############################################################################
 # Just like home
@@ -3536,26 +3624,28 @@ ENDMAP
 ##############################################################################
 # Object lesson
 #
-NAME: erik_hive_3
-TAGS: hive_entry
-MONS: killer bee larva, killer bee, queen bee, firedrake
-SHUFFLE: UVWXYZ
-SUBST: l=.l, U==, V=a, W=a, X=a, Y=a, Z=a
-ORIENT: float
+NAME:    erik_hive_3
+TAGS:    hive_entry
+MONS:    killer bee larva, killer bee, queen bee, firedrake / w:5 nothing
+MONS:    nothing, nothing, nothing
+SHUFFLE: UVWXYZ, l4/c5/v6/w7
+SUBST:   c:l, v:l, 5:4, 6:4, l=.l, w=.w, U==, V=a, W=a, X=a, Y=a, Z=a, '=.a
+KMONS:   l = firedrake / w:200 nothing
+ORIENT:  float
 MAP
 ..................
-...aaaaa..........
-..aaRa....a...a...
-..a2.Y.aaaX.aa....
-.aV.1aaa.1aaa...a.
-..aa21.2O2aaa4.aa.
-...Zaa2131Waaaa...
-..aaaaaRaUa..aa...
-..aa.4aaa.a...a...
+.'.aa'aa.'.'......
+..aaRa'...a'.'a...
+.'a2'Y.aaaX.aa.'..
+.aV.1aaa'1aaa.'.a.
+..aa21'2O2aaa4.aa.
+.'.Zaa2131Waaaa...
+.'aaaaaRaUa..aa'..
+..aa.4aaa.a.'.a...
 .aa...aaa.aa......
-.a..aaaa..........
-......a..a.llllll.
-.......aaa.llllll.
-...........llllll.
+.a..aaaa.'........
+..''..a..a.llllll.
+....'..aaa.llllll.
+.......''..llllll.
 ..................
 ENDMAP
