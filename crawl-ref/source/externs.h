@@ -422,7 +422,8 @@ struct item_def
     short          orig_monnum;
 
     std::string inscription;
-    
+
+public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0L), colour(0), flags(0L), quantity(0),
                  x(0), y(0), link(NON_ITEM), slot(0), orig_place(0),
@@ -432,6 +433,8 @@ struct item_def
 
     std::string name(description_level_type descrip,
                      bool terse = false, bool ident = false) const;
+    bool has_spells() const;
+    int  book_number() const;
 
     void clear()
     {

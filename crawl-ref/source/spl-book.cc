@@ -693,10 +693,7 @@ unsigned char spellbook_contents( item_def &book, int action,
     bool update_screen = !fs;
 
     const int spell_levels = player_spell_levels();
-
-    // special case for staves
-    const int type = (book.base_type == OBJ_STAVES) ? book.sub_type + 40
-                                                    : book.sub_type;
+    const int type = book.book_number();
 
     bool spell_skills = false;
 
@@ -1311,8 +1308,8 @@ int count_staff_spells(const item_def &item, bool need_id)
         return (0);
 
     const int stype = item.sub_type;
-    const int type = stype + 40;
-    if (stype < STAFF_SMITING || stype >= STAFF_AIR)
+    const int type = item.book_number();
+    if (stype < STAFF_SMITING || stype >= STAFF_AIR || type == -1)
         return (0);
 
     int nspel = 0;
@@ -1347,7 +1344,7 @@ int staff_spell( int staff )
     int mana, diff, food, energy;
     item_def& istaff(you.inv[staff]);
     // converting sub_type into book index type
-    const int type = istaff.sub_type + 40;
+    const int type = istaff.book_number();
 
     // Spell staves are mostly for the benefit of non-spellcasters, so we're 
     // not going to involve INT or Spellcasting skills for power. -- bwr

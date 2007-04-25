@@ -3470,25 +3470,14 @@ void describe_feature_wide(int x, int y)
         getch();
 }
 
-//---------------------------------------------------------------
-//
-// describe_item
-//
-// Describes all items in the game.
-//
-//---------------------------------------------------------------
-void describe_item( const item_def &item )
+static void show_item_description(const item_def &item)
 {
     clrscr();
 
     std::string description = get_item_description( item, 1 );
     print_description(description);
 
-    if ( (item.base_type == OBJ_BOOKS && item_type_known(item)
-            && item.sub_type != BOOK_DESTRUCTION
-            && item.sub_type != BOOK_MANUAL)
-         ||
-         count_staff_spells(item, true) > 1 )
+    if (item.has_spells())
     {
         formatted_string fs;
         item_def dup = item;
@@ -3499,10 +3488,55 @@ void describe_item( const item_def &item )
                 &fs );
         fs.display(2, -2);
     }
+}
 
+static bool describe_spells(const item_def &item)
+{
+    int c = getch();
+    if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
+    {
+        mesclr( true );
+        return (false);
+    }
+
+    const int spell_index = letter_to_index(c);
+
+    spell_type nthing =
+        which_spell_in_book(item.book_number(), spell_index);
+    if (nthing == SPELL_NO_SPELL)
+        return (false);
+
+    describe_spell( nthing );
+    return (true);
+}
+
+//---------------------------------------------------------------
+//
+// describe_item
+//
+// Describes all items in the game.
+//
+//---------------------------------------------------------------
+void describe_item( const item_def &item )
+{
+    for (;;)
+    {
+        show_item_description(item);
+        if (item.has_spells())
+        {
+            gotoxy(1, wherey());
+            textcolor(LIGHTGREY);
+            cprintf("Select a spell to read its description.");
+            if (!describe_spells(item))
+                return;
+            continue;
+        }
+        break;
+    }
+    
     if (getch() == 0)
         getch();
-}                               // end describe_item()
+}
 
 
 //---------------------------------------------------------------

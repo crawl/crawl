@@ -58,6 +58,7 @@
 #include "shopping.h"
 #include "skills.h"
 #include "spl-cast.h"
+#include "spl-book.h"
 #include "stuff.h"
 #include "stash.h"
 #include "tutorial.h"
@@ -3144,3 +3145,21 @@ void cmd_destroy_item( void )
     }
 }
 #endif
+
+////////////////////////////////////////////////////////////////////////
+// item_def functions.
+
+bool item_def::has_spells() const
+{
+    return ((base_type == OBJ_BOOKS && item_type_known(*this)
+            && sub_type != BOOK_DESTRUCTION
+            && sub_type != BOOK_MANUAL)
+            || count_staff_spells(*this, true) > 1);
+}
+
+int item_def::book_number() const
+{
+    return (base_type == OBJ_BOOKS?   sub_type      :
+            base_type == OBJ_STAVES?  sub_type + 40 :
+            -1);
+}
