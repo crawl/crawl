@@ -647,14 +647,17 @@ std::string ShopInfo::shop_item_name(const shop_item &si) const
 {
     char shopitem[ITEMNAME_SIZE * 2];
 
-    // mangle a temporary
-    item_def temp_item = si.item;
+    const unsigned long oldflags = si.item.flags;
+
     if ( shoptype_identifies_stock(this->shoptype) )
-        temp_item.flags |= ISFLAG_IDENT_MASK;
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
            
-    const std::string itemname = Stash::stash_item_name(temp_item);
+    const std::string itemname = Stash::stash_item_name(si.item);
     snprintf(shopitem, sizeof shopitem, "%s (%u gold)", 
              itemname.c_str(), si.price);
+
+    if ( oldflags != si.item.flags )
+        const_cast<shop_item&>(si).item.flags = oldflags;
 
     return shopitem;
 }
@@ -662,15 +665,15 @@ std::string ShopInfo::shop_item_name(const shop_item &si) const
 std::string ShopInfo::shop_item_desc(const shop_item &si) const
 {
     std::string desc;
+  
+    const unsigned long oldflags = si.item.flags;
 
-    // mangle a temporary
-    item_def temp_item = si.item;
     if (shoptype_identifies_stock(this->shoptype))
-        temp_item.flags |= ISFLAG_IDENT_MASK;
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
-    if (is_dumpable_artifact(temp_item, Options.verbose_dump))
+    if (is_dumpable_artifact(si.item, Options.verbose_dump))
     {
-        desc = munge_description(get_item_description(temp_item, 
+        desc = munge_description(get_item_description(si.item,
                     Options.verbose_dump,
                     true));
         trim_string(desc);
@@ -680,16 +683,24 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
             if (desc[i] == '\n')
                 desc.insert(i + 1, " ");
     }
+
+    if ( oldflags != si.item.flags )
+        const_cast<shop_item&>(si).item.flags = oldflags;
+
     return desc;
 }
 
 void ShopInfo::describe_shop_item(const shop_item &si) const
 {
-    // mangle a temporary
-    item_def temp_item = si.item;
-    if ( shoptype_identifies_stock(this->shoptype) )
-        temp_item.flags |= ISFLAG_IDENT_MASK;
-    describe_item( temp_item );
+    const unsigned long oldflags = si.item.flags;
+
+    if (shoptype_identifies_stock(this->shoptype))
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
+    
+    describe_item( si.item );
+
+    if ( oldflags != si.item.flags )
+        const_cast<shop_item&>(si).item.flags = oldflags;
 }
 
 bool ShopInfo::show_menu(const std::string &place,
