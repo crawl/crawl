@@ -1014,6 +1014,7 @@ int los_radius_squared = 8*8 + 1;
 
 unsigned long* los_blockrays = NULL;
 unsigned long* dead_rays = NULL;
+unsigned long* smoke_rays = NULL;
 std::vector<short> ray_coord_x;
 std::vector<short> ray_coord_y;
 std::vector<short> compressed_ray_x;
@@ -1406,6 +1407,7 @@ static void create_blockrays()
     delete [] full_los_blockrays;
 
     dead_rays = new unsigned long[num_nondupe_words];
+    smoke_rays = new unsigned long[num_nondupe_words];
     
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Compressed: %u",
@@ -1640,18 +1642,19 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // after removing duplicates. That means that we need to do
 // around 22*100*4 ~ 9,000 memory reads + writes per LOS call on a
 // 32-bit system. Not too bad.
+// IMPROVEMENTS:
+// Smoke will now only block LOS after two cells of smoke. This is
+// done by updating with a second array.
 void losight(FixedArray < unsigned int, 19, 19 > &sh,
              FixedArray < unsigned char, 80, 70 > &gr, int x_p, int y_p)
 {
     raycast();
     // go quadrant by quadrant
-    int quadrant_x[4] = {  1, -1, -1,  1 };
-    int quadrant_y[4] = {  1,  1, -1, -1 };
+    const int quadrant_x[4] = {  1, -1, -1,  1 };
+    const int quadrant_y[4] = {  1,  1, -1, -1 };
 
     // clear out sh
-    for ( int i = 0; i < 19; ++i )
-        for ( int j = 0; j < 19; ++j )
-            sh[i][j] = 0;
+    sh.init(0);
 
     const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
@@ -1662,7 +1665,8 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
         const int ymult = quadrant_y[quadrant];
 
         // clear out the dead rays array
-        memset( (void*)dead_rays, 0, sizeof(unsigned long) * num_words);
+        memset( (void*)dead_rays,  0, sizeof(unsigned long) * num_words);
+        memset( (void*)smoke_rays, 0, sizeof(unsigned long) * num_words);
 
         // kill all blocked rays
         const unsigned long* inptr = los_blockrays;
@@ -1679,12 +1683,20 @@ void losight(FixedArray < unsigned int, 19, 19 > &sh,
                     continue;
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(gr[realx][realy]) ||
-                     is_opaque_cloud(env.cgrid[realx][realy]) )
+                if ( grid_is_opaque(gr[realx][realy]) )
                 {
                     // then block the appropriate rays
                     for ( unsigned int i = 0; i < num_words; ++i )
                         dead_rays[i] |= inptr[i];
+                }
+                else if ( is_opaque_cloud(env.cgrid[realx][realy]) )
+                {
+                    // block rays which have already seen a cloud
+                    for ( unsigned int i = 0; i < num_words; ++i )
+                    {
+                        dead_rays[i] |= (smoke_rays[i] & inptr[i]);
+                        smoke_rays[i] |= inptr[i];
+                    }
                 }
             }
         }
