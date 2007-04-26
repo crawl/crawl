@@ -161,7 +161,7 @@ static bool build_vaults(int level_number, int vault_number, int rune_subst = -1
 static void build_minivaults(int level_number, int force_vault);
 static int vault_grid( vault_placement &,
                        int level_number, int vx, int vy, int altar_count,
-                       FixedVector < char, 7 > &acq_item_class, 
+                       FixedVector < object_class_type, 7 > &acq_item_class, 
                        int vgrid, std::vector<coord_def> &targets,
                        int &num_runes, int rune_subst = -1, bool foll = false);
 
@@ -2045,7 +2045,7 @@ static void builder_items(int level_number, char level_type, int items_wanted)
     UNUSED( level_type );
 
     int i = 0;
-    unsigned char specif_type = OBJ_RANDOM;
+    object_class_type specif_type = OBJ_RANDOM;
     int items_levels = level_number;
     int item_no;
 
@@ -2282,7 +2282,7 @@ static void special_room(int level_number, spec_room &sr)
     int thing_created = 0;
     int x, y;
 
-    unsigned char obj_type = OBJ_RANDOM;  // used in calling items() {dlb}
+    object_class_type obj_type = OBJ_RANDOM;  // used in calling items() {dlb}
     unsigned char i;        // general purpose loop variable {dlb}
     int temp_rand = 0;          // probability determination {dlb}
 
@@ -2546,7 +2546,7 @@ static void build_minivaults(int level_number, int force_vault)
     // isn't generated.
     int altar_count = 0;
 
-    FixedVector < char, 7 > acq_item_class;
+    FixedVector < object_class_type, 7 > acq_item_class;
     // hack - passing chars through '...' promotes them to ints, which
     // barfs under gcc in fixvec.h.  So don't.
     acq_item_class[0] = OBJ_WEAPONS;
@@ -2974,7 +2974,7 @@ static bool build_vaults(int level_number, int force_vault, int rune_subst,
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
 
-    FixedVector < char, 7 > acq_item_class;
+    FixedVector < object_class_type, 7 > acq_item_class;
     // hack - passing chars through '...' promotes them to ints, which
     // barfs under gcc in fixvec.h.  So don't. -- GDL
     acq_item_class[0] = OBJ_WEAPONS;
@@ -3255,7 +3255,7 @@ static int vault_grid( vault_placement &place,
                        int level_number,
                        int vx, int vy,
                        int altar_count,
-                       FixedVector < char, 7 > &acq_item_class, 
+                       FixedVector < object_class_type, 7 > &acq_item_class, 
                        int vgrid,
                        std::vector<coord_def> &targets,
                        int &num_runes,
@@ -3378,7 +3378,7 @@ static int vault_grid( vault_placement &place,
     case 'Z':                   // definite orb
         {
             int item_made = NON_ITEM;
-            unsigned char which_class = OBJ_RANDOM;
+            object_class_type which_class = OBJ_RANDOM;
             unsigned char which_type = OBJ_RANDOM;
             int which_depth;
             bool possible_rune = one_chance_in(3);      // lame, I know {dlb}
@@ -4758,7 +4758,7 @@ static void labyrinth_level(int level_number)
   finishing:
     start_point_x = 10 + random2(GXM - 20);
 
-    int glopop = OBJ_RANDOM;  // used in calling items() {dlb}
+    object_class_type glopop = OBJ_RANDOM;  // used in calling items() {dlb}
 
     int num_items = 8 + random2avg(9, 2);
     for (int i = 0; i < num_items; i++)

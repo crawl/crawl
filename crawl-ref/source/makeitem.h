@@ -10,7 +10,7 @@
 
 #include "dungeon.h"
 
-int items( int allow_uniques, int force_class, int force_type, 
+int items( int allow_uniques, object_class_type force_class, int force_type, 
            bool dont_place, int item_level, int item_race,
            const dgn_region_list &forbidden = dgn_region_list() );
 

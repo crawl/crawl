@@ -31,7 +31,7 @@ int  move_item_to_player( int obj, int quant_got, bool quiet = false );
 bool is_stackable_item( const item_def &item );
 bool items_stack( const item_def &item1, const item_def &item2 );
 
-item_def find_item_type(int base_type, std::string name);
+item_def find_item_type(object_class_type base_type, std::string name);
 
 void init_item( int item );
 

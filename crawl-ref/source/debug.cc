@@ -496,7 +496,7 @@ void create_spec_object()
     int            mon;
     int            i;
 
-    int            class_wanted   = OBJ_UNASSIGNED;
+    object_class_type class_wanted   = OBJ_UNASSIGNED;
     int            type_wanted    = -1;
     int            special_wanted = 0;
 

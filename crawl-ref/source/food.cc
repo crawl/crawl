@@ -125,10 +125,8 @@ void weapon_switch( int targ )
     }
     else
     {
-        // XXX XXX FIXME Why not just use DESC_INVENTORY?
-        mprf("Switching back to %c - %s.",
-             index_to_letter(targ),
-             you.inv[targ].name(DESC_NOCAP_A).c_str());
+        mprf("Switching back to %s.",
+             you.inv[targ].name(DESC_INVENTORY).c_str());
     }
 
     // unwield the old weapon and wield the new.

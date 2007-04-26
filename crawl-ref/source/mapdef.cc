@@ -1174,7 +1174,7 @@ void item_list::parse_random_by_class(std::string c, item_spec &spec)
     {
         if (c == item_class_name(type, true))
         {
-            spec.base_type = type;
+            spec.base_type = static_cast<object_class_type>(type);
             return;
         }
     }
@@ -1191,7 +1191,7 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
         return ;
     }
 
-    item_def parsed = find_item_type(-1, name);
+    item_def parsed = find_item_type(OBJ_UNASSIGNED, name);
     if (parsed.sub_type != OBJ_RANDOM)
     {
         spec.base_type = parsed.base_type;

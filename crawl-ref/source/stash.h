@@ -36,7 +36,7 @@ class Stash
 public:
     Stash(int xp = -1, int yp = -1);
 
-    static void filter(unsigned char base_type, unsigned char sub_type);
+    static void filter(object_class_type base_type, unsigned char sub_type);
     static void filter(const std::string &filt);
 
     static std::string stash_item_name(const item_def &item);

@@ -1148,7 +1148,8 @@ static void tag_read_you_items(struct tagHeader &th, char minorVersion)
     {
         you.inv[i].orig_monnum = you.inv[i].orig_place = 0;
         you.inv[i].inscription.clear();
-        you.inv[i].base_type = (unsigned char) unmarshallByte(th);
+        you.inv[i].base_type =
+            static_cast<object_class_type>(unmarshallByte(th));
         you.inv[i].sub_type = (unsigned char) unmarshallByte(th);
         you.inv[i].plus = unmarshallShort(th);
         you.inv[i].special = unmarshallLong(th);
@@ -1362,7 +1363,7 @@ static void marshall_item(tagHeader &th, const item_def &item)
 
 static void unmarshall_item(tagHeader &th, item_def &item)
 {
-    item.base_type = (unsigned char) unmarshallByte(th);
+    item.base_type = static_cast<object_class_type>(unmarshallByte(th));
     item.sub_type = (unsigned char) unmarshallByte(th);
     item.plus = unmarshallShort(th);
     item.plus2 = unmarshallShort(th);

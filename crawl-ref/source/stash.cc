@@ -143,7 +143,7 @@ static void save_item(FILE *file, const item_def &item)
 
 static void load_item(FILE *file, item_def &item)
 {
-    item.base_type  = readByte(file);
+    item.base_type  = static_cast<object_class_type>(readByte(file));
     item.sub_type   = readByte(file);
     item.plus       = readShort(file);
     item.plus2      = readShort(file);
@@ -212,11 +212,12 @@ void Stash::filter(const std::string &str)
         base = base.substr(0, cpos);
     }
 
-    unsigned char basec = atoi(base.c_str());
+    const object_class_type basec =
+        static_cast<object_class_type>(atoi(base.c_str()));
     filter(basec, subc);
 }
 
-void Stash::filter(unsigned char base, unsigned char sub)
+void Stash::filter(object_class_type base, unsigned char sub)
 {
     item_def item;
     item.base_type = base;
@@ -353,16 +354,7 @@ void Stash::update()
 // stash-tracking pre/suffixes.
 std::string Stash::stash_item_name(const item_def &item)
 {
-    char buf[ITEMNAME_SIZE];
-    
-    // XXX XXX FIXME why the special-casing?
-    if (item.base_type == OBJ_GOLD)
-        snprintf(buf, sizeof buf, "%d gold piece%s", item.quantity, 
-                    (item.quantity > 1? "s" : ""));
-    else
-        return item.name(DESC_NOCAP_A);
-
-    return buf;
+    return item.name(DESC_NOCAP_A);
 }
 
 class StashMenu : public InvMenu

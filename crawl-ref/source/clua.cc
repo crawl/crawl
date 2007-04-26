@@ -1313,6 +1313,8 @@ static int l_item_branded(lua_State *ls)
     case OBJ_MISSILES:
         branded = get_ammo_brand(*item) != SPMSL_NORMAL;
         break;
+    default:
+        break;
     }
     lua_pushboolean(ls, branded);
     return (1);

@@ -3226,7 +3226,7 @@ bool monsters_fight(int monster_attacking, int monster_attacked)
 */
 
 // Returns a value between 0 and 10 representing the weight given to str
-int weapon_str_weight( int wpn_class, int wpn_type )
+int weapon_str_weight( object_class_type wpn_class, int wpn_type )
 {
     int  ret;
 

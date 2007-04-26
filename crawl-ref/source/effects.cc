@@ -475,13 +475,13 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
     return;
 }                               // end random_uselessness()
 
-bool acquirement(unsigned char force_class, int agent)
+bool acquirement(object_class_type force_class, int agent)
 {
     int thing_created = 0;
     int iteration = 0;
 
     // Remember lava!
-    unsigned char class_wanted = OBJ_RANDOM;
+    object_class_type class_wanted = OBJ_RANDOM;
     unsigned char type_wanted = OBJ_RANDOM;
 
     unsigned char unique = 1;
@@ -1202,16 +1202,16 @@ bool acquirement(unsigned char force_class, int agent)
 
         if (thing.base_type == OBJ_BOOKS)
         {
-            if (thing.base_type == BOOK_MINOR_MAGIC_I
-                || thing.base_type == BOOK_MINOR_MAGIC_II
-                || thing.base_type == BOOK_MINOR_MAGIC_III)
+            if (thing.sub_type == BOOK_MINOR_MAGIC_I
+                || thing.sub_type == BOOK_MINOR_MAGIC_II
+                || thing.sub_type == BOOK_MINOR_MAGIC_III)
             {
                 you.had_book[ BOOK_MINOR_MAGIC_I ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_II ] = 1;    
                 you.had_book[ BOOK_MINOR_MAGIC_III ] = 1;    
             }
-            else if (thing.base_type == BOOK_CONJURATIONS_I
-                || thing.base_type == BOOK_CONJURATIONS_II)
+            else if (thing.sub_type == BOOK_CONJURATIONS_I
+                || thing.sub_type == BOOK_CONJURATIONS_II)
             {
                 you.had_book[ BOOK_CONJURATIONS_I ] = 1;    
                 you.had_book[ BOOK_CONJURATIONS_II ] = 1;    

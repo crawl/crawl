@@ -28,7 +28,7 @@ int effective_stat_bonus( int wepType = -1 );
 /* ***********************************************************************
  * called from: describe.cc
  * *********************************************************************** */
-int weapon_str_weight( int wpn_class, int wpn_type );
+int weapon_str_weight( object_class_type wpn_class, int wpn_type );
 
 
 // last updated: 08jun2000 {dlb}

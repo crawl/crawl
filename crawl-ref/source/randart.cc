@@ -632,7 +632,7 @@ struct unrandart_entry
     const char *name;        // true name of unrandart (max 31 chars)
     const char *unid_name;   // un-id'd name of unrandart (max 31 chars)
 
-    int ura_cl;        // class of ura
+    object_class_type ura_cl;        // class of ura
     int ura_ty;        // type of ura
     int ura_pl;        // plus of ura
     int ura_pl2;       // plus2 of ura

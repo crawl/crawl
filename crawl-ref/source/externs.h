@@ -404,7 +404,7 @@ struct delay_queue_item
 
 struct item_def 
 {
-    unsigned char  base_type;  // basic class (ie OBJ_WEAPON)
+    object_class_type  base_type;  // basic class (ie OBJ_WEAPON)
     unsigned char  sub_type;   // type within that class (ie WPN_DAGGER)
     short          plus;       // +to hit, charges, corpse mon id
     short          plus2;      // +to dam, sub-sub type for boots and helms

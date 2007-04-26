@@ -2960,7 +2960,7 @@ int inv_count(void)
 }
 
 static bool find_subtype_by_name(item_def &item,
-                                 int base_type, int ntypes,
+                                 object_class_type base_type, int ntypes,
                                  const std::string &name)
 {
     // In order to get the sub-type, we'll fill out the base type... 
@@ -3031,7 +3031,7 @@ static bool find_subtype_by_name(item_def &item,
 // Returns an incomplete item_def with base_type and sub_type set correctly
 // for the given item name. If the name is not found, sets sub_type to
 // OBJ_RANDOM.
-item_def find_item_type(int base_type, std::string name)
+item_def find_item_type(object_class_type base_type, std::string name)
 {
     item_def item;
     item.base_type = OBJ_RANDOM;
@@ -3039,7 +3039,7 @@ item_def find_item_type(int base_type, std::string name)
     lowercase(name);
 
     if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
-        base_type = -1;
+        base_type = OBJ_UNASSIGNED;
     
     static int max_subtype[] = 
     {
@@ -3062,14 +3062,15 @@ item_def find_item_type(int base_type, std::string name)
         0,              // "gemstones"  -- no items of type
     };
 
-    if (base_type == -1)
+    if (base_type == OBJ_UNASSIGNED)
     {
         for (unsigned i = 0; i < sizeof(max_subtype) / sizeof(*max_subtype);
              ++i)
         {
             if (!max_subtype[i])
                 continue;
-            if (find_subtype_by_name(item, i, max_subtype[i], name))
+            if (find_subtype_by_name(item, static_cast<object_class_type>(i),
+                                     max_subtype[i], name))
                 break;
         }
     }

@@ -1780,6 +1780,8 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
                 name_append(" [ice]");
                 break;
             }
+        default:
+            break;
         }
 #undef name_append
     }
@@ -1822,7 +1824,7 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
     }
 }
 
-item_type_id_type objtype_to_idtype(int base_type)
+static item_type_id_type objtype_to_idtype(object_class_type base_type)
 {
     switch (base_type)
     {
@@ -1851,7 +1853,7 @@ id_arr& get_typeid_array()
     return type_ids;
 }
 
-void set_ident_type( int basetype, int subtype,
+void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force )
 {
     // Don't allow overwriting of known type with tried unless forced.
@@ -1868,7 +1870,7 @@ void set_ident_type( int basetype, int subtype,
         type_ids[idt][subtype] = setting;
 }
 
-item_type_id_state_type get_ident_type(int basetype, int subtype)
+item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
 {
     const item_type_id_type idt = objtype_to_idtype(basetype);
     if ( idt != NUM_IDTYPE && subtype < type_ids.height() )
@@ -1892,8 +1894,8 @@ void check_item_knowledge()
 {
     std::vector<const item_def*> items;
 
-    const int idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
-                                    OBJ_JEWELLERY, OBJ_POTIONS };
+    const object_class_type idx_to_objtype[4] = { OBJ_WANDS, OBJ_SCROLLS,
+                                                  OBJ_JEWELLERY, OBJ_POTIONS };
     const int idx_to_maxtype[4] = { NUM_WANDS, NUM_SCROLLS,
                                     NUM_JEWELLERY, NUM_POTIONS };
 

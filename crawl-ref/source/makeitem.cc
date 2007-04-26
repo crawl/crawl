@@ -820,13 +820,15 @@ void item_colour( item_def &item )
     case OBJ_GOLD:
         item.colour = YELLOW;
         break;
+    default:
+        break;
     }
 }                               // end item_colour()
 
 // Returns item slot or NON_ITEM if it fails
 int items( int allow_uniques,       // not just true-false,
                                     //     because of BCR acquirement hack
-           int force_class,         // desired OBJECTS class {dlb}
+           object_class_type force_class, // desired OBJECTS class {dlb}
            int force_type,          // desired SUBTYPE - enum varies by OBJ
            bool dont_place,         // don't randomly place item on level
            int item_level,          // level of the item, can differ from global
@@ -3045,7 +3047,7 @@ static int give_weapon(monsters *mon, int level)
     int item_race = MAKE_ITEM_RANDOM_RACE;
 
     // this flags things to "goto give_armour" below ... {dlb}
-    item.base_type = 101;
+    item.base_type = OBJ_UNASSIGNED;
 
     if (mon->type == MONS_DANCING_WEAPON
         && player_in_branch( BRANCH_HALL_OF_BLADES ))
@@ -3109,7 +3111,7 @@ static int give_weapon(monsters *mon, int level)
         if (one_chance_in(12) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
-            item.base_type = WPN_BLOWGUN;
+            item.sub_type = WPN_BLOWGUN;
             break;
         }
         // deliberate fall through {dlb}
@@ -3169,7 +3171,7 @@ static int give_weapon(monsters *mon, int level)
         if (one_chance_in(15) && level > 1)
         {
             item.base_type = OBJ_WEAPONS;
-            item.base_type = WPN_BLOWGUN;
+            item.sub_type = WPN_BLOWGUN;
             break;
         }
         // deliberate fall through {gdl}
@@ -3606,11 +3608,8 @@ static int give_weapon(monsters *mon, int level)
     }                           // end "switch(mon->type)"
 
     // only happens if something in above switch doesn't set it {dlb}
-    if (item.base_type == 101)
-    {
-        item.base_type = OBJ_UNASSIGNED;
+    if (item.base_type == OBJ_UNASSIGNED)
         return (item_race);
-    }
 
     item.x = 0;
     item.y = 0;
@@ -3626,7 +3625,7 @@ static int give_weapon(monsters *mon, int level)
             level += 5;
     }
 
-    const int xitc = item.base_type;
+    const object_class_type xitc = item.base_type;
     const int xitt = item.sub_type;
 
     // Note this mess, all the work above doesn't mean much unless
@@ -3651,7 +3650,7 @@ static void give_ammo(monsters *mon, int level, int item_race)
     if (mon->inv[MSLOT_WEAPON] != NON_ITEM
         && is_range_weapon( mitm[mon->inv[MSLOT_WEAPON]] ))
     {
-        const int xitc = OBJ_MISSILES;
+        const object_class_type xitc = OBJ_MISSILES;
         const int xitt = fires_ammo_type(mitm[mon->inv[MSLOT_WEAPON]]);
 
         const int thing_created =
@@ -3839,7 +3838,7 @@ void give_armour(monsters *mon, int level)
         return;
     }                           // end of switch(menv [mid].type)
 
-    const int xitc = mitm[bp].base_type;
+    const object_class_type xitc = mitm[bp].base_type;
     const int xitt = mitm[bp].sub_type;
 
     if (mons_is_unique( mon->type ) && level != MAKE_GOOD_ITEM)

@@ -60,8 +60,9 @@ int make_name( unsigned long seed, bool all_caps, char buff[ ITEMNAME_SIZE ] );
 void init_properties();
 
 id_arr& get_typeid_array();
-item_type_id_state_type get_ident_type(int basetype, int subtype);
-void set_ident_type( int basetype, int subtype,
+item_type_id_state_type get_ident_type(object_class_type basetype,
+                                       int subtype);
+void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
 
 

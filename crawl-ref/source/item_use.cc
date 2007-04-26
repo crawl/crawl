@@ -1424,6 +1424,7 @@ bool throw_it(struct bolt &pbolt, int throw_2, monsters *dummy_target)
         // this does not seem right, but value was 11 {dlb}
         // notice how the .type does not match the class -- hmmm... {dlb}
     case OBJ_STAVES:      pbolt.type = SYM_CHUNK;  break;
+    default: break;
     }
 
     pbolt.source_x = you.x_pos;

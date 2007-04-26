@@ -134,7 +134,7 @@
 {
     "Dum", "",
 /* class, type, plus (to-hit), plus2 (depends on class), colour */
-        250, 250, 250, 250, 0,
+        OBJ_UNASSIGNED, 250, 250, 250, 0,
 /* Properties, all approx thirty of them: */
     {
 /* brand, +/- to AC, +/- to ev, +/- to str, +/- to int, +/- to dex */
@@ -1134,7 +1134,7 @@
 {
     "Dum", "",
 /* class, type, plus (to-hit), plus2 (depends on class), colour */
-        250, 250, 250, 250, 0,
+        OBJ_UNASSIGNED, 250, 250, 250, 0,
 /* Properties, all approx thirty of them: */
     {
 /* brand, +/- to AC, +/- to ev, +/- to str, +/- to int, +/- to dex */

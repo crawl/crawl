@@ -70,7 +70,8 @@
 #include "view.h"
 
 bool scramble(void);
-bool trap_item(char base_type, char sub_type, char beam_x, char beam_y);
+static bool trap_item(object_class_type base_type, char sub_type,
+                      char beam_x, char beam_y);
 static void dart_trap(bool trap_known, int trapped, struct bolt &pbolt, bool poison);
 
 // void place_chunks(int mcls, unsigned char rot_status, unsigned char chx,
@@ -1257,7 +1258,7 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
 
 void itrap( struct bolt &pbolt, int trapped )
 {
-    int base_type = OBJ_MISSILES;
+    object_class_type base_type = OBJ_MISSILES;
     int sub_type = MI_DART;
 
     switch (env.trap[trapped].type)
@@ -1694,7 +1695,8 @@ bool go_berserk(bool intentional)
     return true;
 }                               // end go_berserk()
 
-bool trap_item(char base_type, char sub_type, char beam_x, char beam_y)
+bool trap_item(object_class_type base_type, char sub_type,
+               char beam_x, char beam_y)
 {
     item_def  item;
 

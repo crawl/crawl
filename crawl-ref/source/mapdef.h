@@ -221,7 +221,8 @@ struct item_spec
 {
     int genweight;
     
-    int base_type, sub_type;
+    object_class_type base_type;
+    int sub_type;
     int allow_uniques;
     int level;
     int race;

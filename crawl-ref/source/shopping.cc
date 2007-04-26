@@ -1493,6 +1493,8 @@ unsigned int item_value( item_def item, bool ident )
     case OBJ_ORBS:
         valued = 250000;
         break;
+    default:
+        break;
     }                           // end switch
 
     if (valued < 1)

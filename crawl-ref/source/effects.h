@@ -52,7 +52,7 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2);
 /* ***********************************************************************
  * called from: acr - decks - item_use - religion
  * *********************************************************************** */
-bool acquirement(unsigned char force_class, int agent);
+bool acquirement(object_class_type force_class, int agent);
 
 
 // last updated 12may2000 {dlb}

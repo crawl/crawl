@@ -1216,7 +1216,8 @@ bool does_damage_type( const item_def &item, int dam_type )
 }                               // end does_damage_type()
 
 
-hands_reqd_type hands_reqd(int base_type, int sub_type, size_type size)
+hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
+                           size_type size)
 {
     item_def item;
     item.base_type = base_type;
@@ -1394,7 +1395,7 @@ skill_type weapon_skill( const item_def &item )
 }
 
 // front function for the above when we don't have a physical item to check
-skill_type weapon_skill( int wclass, int wtype )
+skill_type weapon_skill( object_class_type wclass, int wtype )
 {
     item_def    wpn;
 
@@ -1416,7 +1417,7 @@ skill_type range_skill( const item_def &item )
 }
 
 // front function for the above when we don't have a physical item to check
-skill_type range_skill( int wclass, int wtype )
+skill_type range_skill( object_class_type wclass, int wtype )
 {
     item_def    wpn;
 
