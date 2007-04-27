@@ -3035,7 +3035,7 @@ static bool handle_spell( monsters *monster, bolt & beem )
                 finalAnswer = true;
             }
             else if (hspell_pass[2] == SPELL_LESSER_HEALING
-                        && monster->hit_points < monster->max_hit_points)
+                     && monster->hit_points < monster->max_hit_points)
             {
                 // The player's out of sight!  
                 // Quick, let's take a turn to heal ourselves. -- bwr

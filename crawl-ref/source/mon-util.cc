@@ -1892,6 +1892,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
             ret = true;
         break;
 
+    case SPELL_NO_SPELL:
+        ret = false;
+
     default:
         if (!targ_adj && (get_spell_flags(monspell) & SPTYP_SUMMONING))
             ret = true;
@@ -1904,9 +1907,8 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 // Checks to see if a particular spell is worth casting in the first place.
 bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 {
-    bool  ret = false;
+    bool ret = false;
     int intel, est_magic_resist, power, diff;
-    struct monsters *targ;
 
     // Eventually, we'll probably want to be able to have monsters 
     // learn which of their elemental bolts were resisted and have those 
@@ -1986,8 +1988,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
                 est_magic_resist = player_res_magic();
             else
             {
-                targ = &menv[ mon->foe ];
-                est_magic_resist = mons_resist_magic( targ );
+                est_magic_resist = mons_resist_magic(&menv[mon->foe]);
             }
 
             // now randomize (normal intels less accurate than high):
