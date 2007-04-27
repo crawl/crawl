@@ -224,55 +224,70 @@ static int missile_colour(const item_def &item)
             classic_missile_colour(item) : newwave_missile_colour(item));
 }
 
+static int special_colour()
+{
+    switch(random2(3))
+    {
+        case 0: return RED;
+        case 1: return LIGHTBLUE;
+        case 2: return MAGENTA;
+    }
+}
+
 static int newwave_armour_colour(const item_def &item)
 {
     int item_colour = BLACK;
+    std::string itname = item.name(DESC_PLAIN);
+    lowercase(itname);
+    
+    const bool item_runed = itname.find(" runed ") != std::string::npos;
+    const bool heav_runed = itname.find(" heavily ") != std::string::npos;
+
+    if ( is_random_artefact(item) && (!item_runed || heav_runed) )
+        return exciting_colour();
+
     switch (item.sub_type)
     {
-    case ARM_CLOAK:
+      case ARM_CLOAK:
         item_colour = WHITE;
         break;
-    case ARM_NAGA_BARDING:
-        item_colour = LIGHTGREEN;
-        break;
-    case ARM_CENTAUR_BARDING:
+      case ARM_NAGA_BARDING:
+      case ARM_CENTAUR_BARDING:
         item_colour = GREEN;
         break;
-    case ARM_ROBE:
-    case ARM_CAP:
-        item_colour = random_uncommon_colour();
+      case ARM_ROBE:
+      case ARM_CAP:
+        item_colour = special_colour();
         break;
-
-    case ARM_HELMET:
+      case ARM_HELMET:
         //caps and wizard's hats are random coloured
         if (get_helmet_type(item) == THELM_CAP
             || get_helmet_type(item) == THELM_WIZARD_HAT)
         {
-            item_colour = random_uncommon_colour();
+            item_colour = special_colour();
         } 
         else
             item_colour = DARKGREY;
         break;
 
-    case ARM_BOOTS:
+      case ARM_BOOTS:
         item_colour = BLUE;
         break;
-    case ARM_GLOVES:
-        item_colour = LIGHTBLUE;
+      case ARM_GLOVES:
+        item_colour = LIGHTGREY;
         break;
-    case ARM_LEATHER_ARMOUR:
+      case ARM_LEATHER_ARMOUR:
+      case ARM_ANIMAL_SKIN:
         item_colour = BROWN;
         break;
-    case ARM_CRYSTAL_PLATE_MAIL:
+      case ARM_CRYSTAL_PLATE_MAIL:
         item_colour = WHITE;
         break;
-    case ARM_ANIMAL_SKIN:
-        item_colour = YELLOW;
+      case ARM_SHIELD:
+        item_colour = CYAN;
         break;
-    default:
+      default:
         item_colour = LIGHTCYAN;
-        if (get_equip_race(item) == ISFLAG_DWARVEN)
-            item_colour = CYAN;
         break;
     }
 
