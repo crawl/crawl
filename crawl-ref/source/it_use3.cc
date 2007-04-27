@@ -762,7 +762,8 @@ static bool ball_of_seeing(void)
         confuse_player( 10 + random2(10), false );
     }
     else if (use < 15
-             || you.level_type == LEVEL_LABYRINTH
+             || (you.level_type == LEVEL_LABYRINTH &&
+                 you.species != SP_MINOTAUR)
              || you.level_type == LEVEL_ABYSS || coinflip())
     {
         mpr("You see nothing.");

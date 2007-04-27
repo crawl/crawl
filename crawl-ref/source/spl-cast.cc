@@ -1263,7 +1263,8 @@ spret_type your_spells( spell_type spc2, int powc, bool allow_fail )
         break;
 
     case SPELL_MAGIC_MAPPING:
-        if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+        if ( (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR)
+             || you.level_type == LEVEL_ABYSS)
             mpr("You feel momentarily disoriented.");
         else if (you.level_type == LEVEL_PANDEMONIUM)
             mpr("Your Earth magic cannot map Pandemonium.");
