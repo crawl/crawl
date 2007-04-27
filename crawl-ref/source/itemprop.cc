@@ -710,7 +710,7 @@ int get_ammo_brand( const item_def &item )
     return (item.special);
 }
 
-int get_armour_ego_type( const item_def &item )
+special_armour_type get_armour_ego_type( const item_def &item )
 {
     // artefact armours have no ego type, must look up powers separately
     if (item.base_type != OBJ_ARMOUR 
@@ -719,7 +719,7 @@ int get_armour_ego_type( const item_def &item )
         return (SPARM_NORMAL);
     }
 
-    return (item.special);
+    return (static_cast<special_armour_type>(item.special));
 }
 
 // 

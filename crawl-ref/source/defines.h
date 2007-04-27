@@ -212,7 +212,7 @@
 #define MAX_ARM_ENCHANT                 5
 #define MAX_SEC_ENCHANT                 2
 
-#define NUM_STAVE_ADJ                   9
+#define NUM_STAVE_ADJ                   10
 
 // some shortcuts:
 #define menv   env.mons

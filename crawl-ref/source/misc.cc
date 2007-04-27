@@ -46,7 +46,7 @@
 #include "hiscores.h"
 #include "it_use2.h"
 #include "items.h"
-#include "itemname.h"
+#include "itemprop.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -91,7 +91,7 @@ void turn_corpse_into_chunks( item_def &item )
 
     // seems to me that this should come about only
     // after the corpse has been butchered ... {dlb}
-    if (monster_descriptor( mons_class, MDSC_LEAVES_HIDE ) && !one_chance_in(3))
+    if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
     {
         int o = get_item_slot( 100 + random2(200) );
         if (o == NON_ITEM)

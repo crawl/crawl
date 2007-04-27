@@ -1380,7 +1380,7 @@ const char *randart_armour_name( const item_def &item )
     return (art_n);
 }
 
-const char *randart_ring_name( const item_def &item )
+const char *randart_jewellery_name( const item_def &item )
 {
     ASSERT( item.base_type == OBJ_JEWELLERY );
 

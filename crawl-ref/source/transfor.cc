@@ -21,7 +21,7 @@
 #include "externs.h"
 
 #include "it_use2.h"
-#include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "misc.h"
 #include "player.h"

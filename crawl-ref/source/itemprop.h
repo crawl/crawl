@@ -47,7 +47,7 @@ bool  is_helmet_type( const item_def &item, short val );
 // ego items:
 bool set_item_ego_type( item_def &item, int item_type, int ego_type ); 
 int  get_weapon_brand( const item_def &item );
-int  get_armour_ego_type( const item_def &item );
+special_armour_type get_armour_ego_type( const item_def &item );
 int  get_ammo_brand( const item_def &item );
 
 // armour functions:

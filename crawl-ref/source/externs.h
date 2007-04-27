@@ -441,7 +441,7 @@ public:
         *this = item_def();
     }
 private:
-    void name_aux( char* buff, bool terse, bool ident ) const;
+    std::string name_aux( bool terse, bool ident ) const;
 };
 
 class input_history

@@ -16,10 +16,10 @@
 #include "AppHdr.h"
 #include "itemname.h"
 
+#include <sstream>
+#include <iomanip>
 #include <ctype.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 #ifdef DOS
 #include <conio.h>
@@ -85,17 +85,21 @@ std::string quant_name( const item_def &item, int quant,
 std::string item_def::name(description_level_type descrip,
                            bool terse, bool ident) const
 {
-    char tmp_quant[20];
-    char itm_name[ITEMNAME_SIZE] = "";
-    char buff[ITEMNAME_SIZE] = "";
+    std::ostringstream buff;
 
-    this->name_aux(itm_name, terse, ident);
+    const std::string auxname = this->name_aux(terse, ident);
+    const bool startvowel = is_vowel(auxname[0]);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY) 
     {
         if (in_inventory(*this)) // actually in inventory
-            snprintf( buff, ITEMNAME_SIZE, (terse) ? "%c) " : "%c - ",
-                      index_to_letter( this->link ) );
+        {
+            buff << index_to_letter(this->link);
+            if ( terse)
+                buff << ") ";
+            else
+                buff << " - ";
+        }
         else 
             descrip = DESC_CAP_A;
     }
@@ -116,7 +120,7 @@ std::string item_def::name(description_level_type descrip,
         case DESC_CAP_A:
         case DESC_CAP_YOUR:
         case DESC_CAP_THE:
-            strncat(buff, "The ", ITEMNAME_SIZE );
+            buff << "The ";
             break;
         case DESC_NOCAP_A:
         case DESC_NOCAP_YOUR:
@@ -124,7 +128,7 @@ std::string item_def::name(description_level_type descrip,
         case DESC_NOCAP_ITS:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
-            strncat(buff, "the ", ITEMNAME_SIZE );
+            buff << "the ";
             break;
         default:
         case DESC_PLAIN:
@@ -135,84 +139,46 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:
-            strncat(buff, "The ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_THE:
-            strncat(buff, "the ", ITEMNAME_SIZE );
-            break;
+        case DESC_CAP_THE: buff << "The "; break;
+        case DESC_NOCAP_THE: buff << "the "; break;
+        case DESC_CAP_YOUR: buff << "Your "; break;
+        case DESC_NOCAP_YOUR: buff << "your "; break;
+        case DESC_NOCAP_ITS: buff << "its "; break;
         case DESC_CAP_A:
         case DESC_NOCAP_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
-            break;
-        case DESC_CAP_YOUR:
-            strncat(buff, "Your ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_YOUR:
-            strncat(buff, "your ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_ITS:
-            strncat(buff, "its ", ITEMNAME_SIZE );
-            break;
         case DESC_PLAIN:
         default:
             break;
         }
 
-        itoa(this->quantity, tmp_quant, 10);
-        strncat(buff, tmp_quant, ITEMNAME_SIZE );
-        strncat(buff, " ", ITEMNAME_SIZE );
+        buff << this->quantity << " ";
     }
     else
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:
-            strncat(buff, "The ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_THE:
-            strncat(buff, "the ", ITEMNAME_SIZE );
-            break;
-        case DESC_CAP_A:
-            strncat(buff, "A", ITEMNAME_SIZE );
+        case DESC_CAP_THE:   buff << "The "; break;
+        case DESC_NOCAP_THE: buff << "the "; break;
+        case DESC_CAP_A: buff << (startvowel ? "An " : "A "); break;
 
-            if (is_vowel(itm_name[0]))
-            {
-                strncat(buff, "n", ITEMNAME_SIZE );
-            }
-            strncat(buff, " ", ITEMNAME_SIZE );
-            break;              // A/An
+        case DESC_CAP_YOUR: buff << "Your "; break;
+        case DESC_NOCAP_YOUR: buff << "your "; break;
+        case DESC_NOCAP_ITS: buff << "its "; break;
 
         case DESC_NOCAP_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
-            strncat(buff, "a", ITEMNAME_SIZE );
+            buff << (startvowel ? "an " : "a "); break;
 
-            if (is_vowel(itm_name[0]))
-            {
-                strncat(buff, "n", ITEMNAME_SIZE );
-            }
-
-            strncat(buff, " ", ITEMNAME_SIZE );
-            break;              // a/an
-
-        case DESC_CAP_YOUR:
-            strncat(buff, "Your ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_YOUR:
-            strncat(buff, "your ", ITEMNAME_SIZE );
-            break;
-        case DESC_NOCAP_ITS:
-            strncat(buff, "its ", ITEMNAME_SIZE );
-            break;
         case DESC_PLAIN:
         default:
             break;
         }
-    }                           // end of else
+    }
 
-    strncat(buff, itm_name, ITEMNAME_SIZE );
+    buff << auxname;
 
     if (descrip == DESC_INVENTORY_EQUIP && this->x == -1 && this->y == -1)
     {
@@ -223,11 +189,11 @@ std::string item_def::name(description_level_type descrip,
             if (you.inv[ you.equip[EQ_WEAPON] ].base_type == OBJ_WEAPONS
                 || item_is_staff( you.inv[ you.equip[EQ_WEAPON] ] ))
             {
-                strncat( buff, " (weapon)", ITEMNAME_SIZE );
+                buff << " (weapon)";
             }
             else
             {
-                strncat( buff, " (in hand)", ITEMNAME_SIZE );
+                buff << " (in hand)";
             }
         }
         else if (this->link == you.equip[EQ_CLOAK]
@@ -237,40 +203,662 @@ std::string item_def::name(description_level_type descrip,
                 || this->link == you.equip[EQ_SHIELD]
                 || this->link == you.equip[EQ_BODY_ARMOUR])
         {
-            strncat( buff, " (worn)", ITEMNAME_SIZE );
+            buff << " (worn)";
         }
         else if (this->link == you.equip[EQ_LEFT_RING])
         {
-            strncat( buff, " (left hand)", ITEMNAME_SIZE );
+            buff << " (left hand)";
         }
         else if (this->link == you.equip[EQ_RIGHT_RING])
         {
-            strncat( buff, " (right hand)", ITEMNAME_SIZE );
+            buff << " (right hand)";
         }
         else if (this->link == you.equip[EQ_AMULET])
         {
-            strncat( buff, " (around neck)", ITEMNAME_SIZE );
+            buff << " (around neck)";
         }
     }
 
     if ( !(this->inscription.empty()) )
     {
-        strncat( buff, " {", 2 );
+        buff << " {";        
         if ( is_tried_type(this->base_type, this->sub_type) )
-            strncat(buff, "tried, ", 10);
-        strncat( buff, this->inscription.c_str(), ITEMNAME_SIZE );
-        strncat( buff, "}", 1 );
+            buff << "tried, ";
+        buff << this->inscription << "}";
     }
     else if ( is_tried_type(this->base_type, this->sub_type) )
-        strncat(buff, " {tried}", 10);
+        buff << " {tried}";
 
-    return std::string(buff);
+    return buff.str();
 }                               // end item_name()
 
 
+static const char* fixed_artefact_name( const item_def& item, bool ident )
+{
+    if (ident)
+    {
+        switch (item.special)
+        {
+        case SPWPN_SINGING_SWORD:       return "Singing Sword";
+        case SPWPN_WRATH_OF_TROG:       return "Wrath of Trog";
+        case SPWPN_SCYTHE_OF_CURSES:    return "Scythe of Curses";
+        case SPWPN_MACE_OF_VARIABILITY: return "Mace of Variability";
+        case SPWPN_GLAIVE_OF_PRUNE:     return "Glaive of Prune";
+        case SPWPN_SCEPTRE_OF_TORMENT:  return "Sceptre of Torment";
+        case SPWPN_SWORD_OF_ZONGULDROK: return "Sword of Zonguldrok";
+        case SPWPN_SWORD_OF_CEREBOV:    return "Sword of Cerebov";
+        case SPWPN_STAFF_OF_DISPATER:   return "Staff of Dispater";
+        case SPWPN_SCEPTRE_OF_ASMODEUS: return "Sceptre of Asmodeus";
+        case SPWPN_SWORD_OF_POWER:      return "Sword of Power";
+        case SPWPN_KNIFE_OF_ACCURACY:   return "Knife of Accuracy";
+        case SPWPN_STAFF_OF_OLGREB:     return "Staff of Olgreb";
+        case SPWPN_VAMPIRES_TOOTH:      return "Vampire's Tooth";
+        case SPWPN_STAFF_OF_WUCAD_MU:   return "Staff of Wucad Mu";
+        default:                        return "Brodale's Buggy Bola";
+        }
+    }   
+    else
+    {
+        switch (item.special)
+        {
+        case SPWPN_SINGING_SWORD:       return "golden long sword";
+        case SPWPN_WRATH_OF_TROG:       return "bloodstained battleaxe";
+        case SPWPN_SCYTHE_OF_CURSES:    return "warped scythe";
+        case SPWPN_MACE_OF_VARIABILITY: return "shimmering mace";
+        case SPWPN_GLAIVE_OF_PRUNE:     return "purple glaive";
+        case SPWPN_SCEPTRE_OF_TORMENT:  return "jeweled golden mace";
+        case SPWPN_SWORD_OF_ZONGULDROK: return "bone long sword";
+        case SPWPN_SWORD_OF_CEREBOV:    return "great serpentine sword";
+        case SPWPN_STAFF_OF_DISPATER:   return "golden staff";
+        case SPWPN_SCEPTRE_OF_ASMODEUS: return "ruby sceptre";
+        case SPWPN_SWORD_OF_POWER:      return "chunky great sword";
+        case SPWPN_KNIFE_OF_ACCURACY:   return "thin dagger";
+        case SPWPN_STAFF_OF_OLGREB:     return "green glowing staff";
+        case SPWPN_VAMPIRES_TOOTH:      return "ivory dagger";
+        case SPWPN_STAFF_OF_WUCAD_MU:   return "ephemeral quarterstaff";
+        default:                        return "buggy bola";
+        }
+    }
+}
+
+static const char* armour_ego_name( special_armour_type sparm, bool terse )
+{   
+    if (!terse)
+    {
+        switch ( sparm )
+        {          
+        case SPARM_RUNNING:           return "running";
+        case SPARM_FIRE_RESISTANCE:   return "fire resistance";
+        case SPARM_COLD_RESISTANCE:   return "cold resistance";
+        case SPARM_POISON_RESISTANCE: return "poison resistance";
+        case SPARM_SEE_INVISIBLE:     return "see invisible";
+        case SPARM_DARKNESS:          return "darkness";
+        case SPARM_STRENGTH:          return "strength";
+        case SPARM_DEXTERITY:         return "dexterity";
+        case SPARM_INTELLIGENCE:      return "intelligence";
+        case SPARM_PONDEROUSNESS:     return "ponderousness";
+        case SPARM_LEVITATION:        return "levitation";
+        case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
+        case SPARM_PROTECTION:        return "protection";
+        case SPARM_STEALTH:           return "stealth";
+        case SPARM_RESISTANCE:        return "resistance";
+        case SPARM_POSITIVE_ENERGY:   return "positive energy";
+        case SPARM_ARCHMAGI:          return "the Archmagi";
+        case SPARM_PRESERVATION:      return "preservation";
+        default:                      return "bugginess";
+        }
+    }
+    else
+    {
+        switch (sparm)
+        {
+        case SPARM_RUNNING:           return " (run)";
+        case SPARM_FIRE_RESISTANCE:   return " (R-fire)";
+        case SPARM_COLD_RESISTANCE:   return " (R-cold)";
+        case SPARM_POISON_RESISTANCE: return " (R-poison)";
+        case SPARM_SEE_INVISIBLE:     return " (see invis)";
+        case SPARM_DARKNESS:          return " (darkness)";
+        case SPARM_STRENGTH:          return " (str)";
+        case SPARM_DEXTERITY:         return " (dex)";
+        case SPARM_INTELLIGENCE:      return " (int)";
+        case SPARM_PONDEROUSNESS:     return " (ponderous)";
+        case SPARM_LEVITATION:        return " (levitate)";
+        case SPARM_MAGIC_RESISTANCE:  return " (R-magic)";
+        case SPARM_PROTECTION:        return " (protect)";
+        case SPARM_STEALTH:           return " (stealth)";
+        case SPARM_RESISTANCE:        return " (resist)";
+        case SPARM_POSITIVE_ENERGY:   return " (R-neg)"; // ha ha
+        case SPARM_ARCHMAGI:          return " (Archmagi)";
+        case SPARM_PRESERVATION:      return " (preserve)";
+        default:                      return " (buggy)";
+        }
+    }
+}
+
+static const char* wand_type_name(int wandtype)
+{
+    switch (static_cast<wand_type>(wandtype))
+    {
+    case WAND_FLAME:           return "flame";
+    case WAND_FROST:           return "frost";
+    case WAND_SLOWING:         return "slowing";
+    case WAND_HASTING:         return "hasting";
+    case WAND_MAGIC_DARTS:     return "magic darts";
+    case WAND_HEALING:         return "healing";
+    case WAND_PARALYSIS:       return "paralysis";
+    case WAND_FIRE:            return "fire";
+    case WAND_COLD:            return "cold";
+    case WAND_CONFUSION:       return "confusion";
+    case WAND_INVISIBILITY:    return "invisibility";
+    case WAND_DIGGING:         return "digging";
+    case WAND_FIREBALL:        return "fireball";
+    case WAND_TELEPORTATION:   return "teleportation";
+    case WAND_LIGHTNING:       return "lightning";
+    case WAND_POLYMORPH_OTHER: return "polymorph other";
+    case WAND_ENSLAVEMENT:     return "enslavement";
+    case WAND_DRAINING:        return "draining";
+    case WAND_RANDOM_EFFECTS:  return "random effects";
+    case WAND_DISINTEGRATION:  return "disintegration";
+    default:                   return "bugginess";
+    }
+}
+
+static const char* wand_secondary_string(int s)
+{
+    switch (s)
+    {
+    case 0:  return "";      
+    case 1:  return "jeweled ";
+    case 2:  return "curved ";
+    case 3:  return "long ";
+    case 4:  return "short ";
+    case 5:  return "twisted ";
+    case 6:  return "crooked ";
+    case 7:  return "forked ";
+    case 8:  return "shiny ";
+    case 9:  return "blackened ";
+    case 10: return "tapered ";
+    case 11: return "glowing ";
+    case 12: return "worn ";
+    case 13: return "encrusted ";
+    case 14: return "runed ";
+    case 15: return  "sharpened ";
+    default: return "buggily ";
+    }
+}
+
+static const char* wand_primary_string(int p)
+{
+    switch (p)
+    {
+    case 0:  return "iron";
+    case 1:  return "brass";
+    case 2:  return "bone";
+    case 3:  return "wooden";
+    case 4:  return "copper";
+    case 5:  return "gold";
+    case 6:  return "silver";
+    case 7:  return "bronze";
+    case 8:  return "ivory";
+    case 9:  return "glass";
+    case 10: return "lead";
+    case 11: return "plastic";
+    default: return "buggy";
+    }
+}        
+
+static const char* potion_type_name(int potiontype)
+{
+    switch ( static_cast<potion_type>(potiontype) )
+    {
+    case POT_HEALING:           return "healing";
+    case POT_HEAL_WOUNDS:       return "heal wounds";
+    case POT_SPEED:             return "speed";
+    case POT_MIGHT:             return "might";
+    case POT_GAIN_STRENGTH:     return "gain strength";
+    case POT_GAIN_DEXTERITY:    return "gain dexterity";
+    case POT_GAIN_INTELLIGENCE: return "gain intelligence";
+    case POT_LEVITATION:        return "levitation";
+    case POT_POISON:            return "poison";
+    case POT_SLOWING:           return "slowing";
+    case POT_PARALYSIS:         return "paralysis";
+    case POT_CONFUSION:         return "confusion";
+    case POT_INVISIBILITY:      return "invisibility";
+    case POT_PORRIDGE:          return "porridge";
+    case POT_DEGENERATION:      return "degeneration";
+    case POT_DECAY:             return "decay";
+    case POT_WATER:             return "water";
+    case POT_EXPERIENCE:        return "experience";
+    case POT_MAGIC:             return "magic";
+    case POT_RESTORE_ABILITIES: return "restore abilities";
+    case POT_STRONG_POISON:     return "strong poison";
+    case POT_BERSERK_RAGE:      return "berserk rage";
+    case POT_CURE_MUTATION:     return "cure mutation";
+    case POT_MUTATION:          return "mutation";
+    default:                    return "bugginess";
+    }
+}
+
+static const char* scroll_type_name(int scrolltype)
+{
+    switch ( static_cast<scroll_type>(scrolltype) )
+    {
+    case SCR_IDENTIFY:           return "identify";
+    case SCR_TELEPORTATION:      return "teleportation";
+    case SCR_FEAR:               return "fear";
+    case SCR_NOISE:              return "noise";
+    case SCR_REMOVE_CURSE:       return "remove curse";
+    case SCR_DETECT_CURSE:       return "detect curse";
+    case SCR_SUMMONING:          return "summoning";
+    case SCR_ENCHANT_WEAPON_I:   return "enchant weapon I";
+    case SCR_ENCHANT_ARMOUR:     return "enchant armour";
+    case SCR_TORMENT:            return "torment";
+    case SCR_RANDOM_USELESSNESS: return "random uselessness";
+    case SCR_CURSE_WEAPON:       return "curse weapon";
+    case SCR_CURSE_ARMOUR:       return "curse armour";
+    case SCR_IMMOLATION:         return "immolation";
+    case SCR_BLINKING:           return "blinking";
+    case SCR_PAPER:              return "paper";
+    case SCR_MAGIC_MAPPING:      return "magic mapping";
+    case SCR_FORGETFULNESS:      return "forgetfulness";
+    case SCR_ACQUIREMENT:        return "acquirement";
+    case SCR_ENCHANT_WEAPON_II:  return "enchant weapon II";
+    case SCR_VORPALISE_WEAPON:   return "vorpalise weapon";
+    case SCR_RECHARGING:         return "recharging";
+    case SCR_ENCHANT_WEAPON_III: return "enchant weapon III";
+    default:                     return "bugginess";
+    }
+}
+
+static const char* jewellery_type_name(int jeweltype)
+{
+    switch (static_cast<jewellery_type>(jeweltype))
+    {
+    case RING_REGENERATION:          return "ring of regeneration";
+    case RING_PROTECTION:            return "ring of protection";
+    case RING_PROTECTION_FROM_FIRE:  return "ring of protection from fire";
+    case RING_POISON_RESISTANCE:     return "ring of poison resistance";
+    case RING_PROTECTION_FROM_COLD:  return "ring of protection from cold";
+    case RING_STRENGTH:              return "ring of strength";
+    case RING_SLAYING:               return "ring of slaying";
+    case RING_SEE_INVISIBLE:         return "ring of see invisible";
+    case RING_INVISIBILITY:          return "ring of invisibility";
+    case RING_HUNGER:                return "ring of hunger";
+    case RING_TELEPORTATION:         return "ring of teleportation";
+    case RING_EVASION:               return "ring of evasion";
+    case RING_SUSTAIN_ABILITIES:     return "ring of sustain abilities";
+    case RING_SUSTENANCE:            return "ring of sustenance";
+    case RING_DEXTERITY:             return "ring of dexterity";
+    case RING_INTELLIGENCE:          return "ring of intelligence";
+    case RING_WIZARDRY:              return "ring of wizardry";
+    case RING_MAGICAL_POWER:         return "ring of magical power";
+    case RING_LEVITATION:            return "ring of levitation";
+    case RING_LIFE_PROTECTION:       return "ring of life protection";
+    case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
+    case RING_FIRE:                  return "ring of fire";
+    case RING_ICE:                   return "ring of ice";
+    case RING_TELEPORT_CONTROL:      return "ring of teleport control";
+    case AMU_RAGE:              return "amulet of rage";
+    case AMU_RESIST_SLOW:       return "amulet of resist slowing";
+    case AMU_CLARITY:           return "amulet of clarity";
+    case AMU_WARDING:           return "amulet of warding";
+    case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
+    case AMU_THE_GOURMAND:      return "amulet of the gourmand";
+    case AMU_CONSERVATION:      return "amulet of conservation";
+    case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
+    case AMU_INACCURACY:        return "amulet of inaccuracy";
+    case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
+    default: return "buggy jewellery";
+    }
+}
+
+static const char* ring_secondary_string(int s)
+{
+    switch (s)
+    {
+    case 1:  return "encrusted ";
+    case 2:  return "glowing ";
+    case 3:  return "tubular ";
+    case 4:  return "runed ";
+    case 5:  return "blackened ";
+    case 6:  return "scratched ";
+    case 7:  return "small ";
+    case 8:  return "large ";
+    case 9:  return "twisted ";
+    case 10: return "shiny ";
+    case 11: return "notched ";
+    case 12: return "knobbly ";
+    default: return "";
+    }
+}
+
+static const char* ring_primary_string(int p)
+{
+    switch (p)
+    {
+    case 0:  return "wooden";
+    case 1:  return "silver";
+    case 2:  return "golden";
+    case 3:  return "iron";
+    case 4:  return "steel";
+    case 5:  return "bronze";
+    case 6:  return "brass";
+    case 7:  return "copper";
+    case 8:  return "granite";
+    case 9:  return "ivory";
+    case 10: return "bone";
+    case 11: return "marble";
+    case 12: return "jade";
+    case 13: return "glass";
+    default: return "buggy";
+    }
+}
+
+static const char* amulet_secondary_string(int s)
+{
+    switch (s)
+    {
+    case 0:  return "dented ";
+    case 1:  return "square ";
+    case 2:  return "thick ";
+    case 3:  return "thin ";
+    case 4:  return "runed ";
+    case 5:  return "blackened ";
+    case 6:  return "glowing ";
+    case 7:  return "small ";
+    case 8:  return "large ";
+    case 9:  return "twisted ";
+    case 10: return "tiny ";
+    case 11: return "triangular ";
+    case 12: return "lumpy ";
+    default: return "";
+    }
+}
+
+static const char* amulet_primary_string(int p)
+{
+    switch (p)
+    {
+    case 0:  return "zirconium";
+    case 1:  return "sapphire";
+    case 2:  return "golden";
+    case 3:  return "emerald";
+    case 4:  return "garnet";
+    case 5:  return "bronze";
+    case 6:  return "brass";
+    case 7:  return "copper";
+    case 8:  return "ruby";
+    case 9:  return "ivory";
+    case 10: return "bone";
+    case 11: return "platinum";
+    case 12: return "jade";
+    case 13: return "plastic";
+    default: return "buggy";
+    }
+}
+
+static const char* rune_type_name(int p)
+{
+    switch (static_cast<rune_type>(p))
+    {
+    case RUNE_DIS:         return "iron";
+    case RUNE_GEHENNA:     return "obsidian";
+    case RUNE_COCYTUS:     return "icy";
+    case RUNE_TARTARUS:    return "bone";
+    case RUNE_SLIME_PITS:  return "slimy";
+    case RUNE_VAULTS:      return "silver";
+    case RUNE_SNAKE_PIT:   return "serpentine";
+    case RUNE_ELVEN_HALLS: return "elven";
+    case RUNE_TOMB:        return "golden";
+    case RUNE_SWAMP:       return "decaying";
+    case RUNE_ISLANDS:     return "liquid";
+
+    // pandemonium and abyss runes:
+    case RUNE_DEMONIC:     return "demonic";
+    case RUNE_ABYSSAL:     return "abyssal";
+
+    // special pandemonium runes:
+    case RUNE_MNOLEG:      return "glowing";
+    case RUNE_LOM_LOBON:   return "magical";
+    case RUNE_CEREBOV:     return "fiery";
+    case RUNE_GLOORX_VLOQ: return "dark";
+    default:               return "buggy";
+    }
+}
+
+static const char* misc_type_name(int type, bool known)
+{
+    if (known)
+    {
+        switch ( static_cast<misc_item_type>(type) )
+        {
+        case MISC_DECK_OF_POWER: return "deck of power";
+        case MISC_DECK_OF_SUMMONINGS: return "deck of summonings";
+        case MISC_DECK_OF_TRICKS: return "deck of tricks";
+        case MISC_DECK_OF_WONDERS: return "deck of wonders";
+        case MISC_CRYSTAL_BALL_OF_ENERGY: return "crystal ball of energy";
+        case MISC_CRYSTAL_BALL_OF_FIXATION: return "crystal ball of fixation";
+        case MISC_CRYSTAL_BALL_OF_SEEING: return "crystal ball of seeing";
+        case MISC_BOX_OF_BEASTS: return "box of beasts";
+        case MISC_EMPTY_EBONY_CASKET: return "empty ebony casket";
+        case MISC_AIR_ELEMENTAL_FAN: return "air elemental fan";
+        case MISC_LAMP_OF_FIRE: return "lamp of fire";
+        case MISC_LANTERN_OF_SHADOWS: return "lantern of shadows";
+        case MISC_HORN_OF_GERYON: return "horn of Geryon";
+        case MISC_DISC_OF_STORMS: return "disc of storms";
+        case MISC_STONE_OF_EARTH_ELEMENTALS:
+            return "stone of earth elementals";
+        case MISC_BOTTLED_EFREET: return "bottled efreet";
+        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
+            return "portable altar of Nemelex";
+
+        case MISC_RUNE_OF_ZOT:
+        case NUM_MISCELLANY:
+            return "buggy miscellaneous item";
+        }
+    }
+    else
+    {
+        switch ( static_cast<misc_item_type>(type) )
+        {
+        case MISC_DECK_OF_POWER:
+        case MISC_DECK_OF_SUMMONINGS:
+        case MISC_DECK_OF_TRICKS:
+        case MISC_DECK_OF_WONDERS:
+            return "deck of cards";
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+        case MISC_CRYSTAL_BALL_OF_FIXATION:
+        case MISC_CRYSTAL_BALL_OF_SEEING:
+            return "crystal ball";
+        case MISC_BOX_OF_BEASTS:
+        case MISC_EMPTY_EBONY_CASKET:
+            return "small ebony casket";
+        case MISC_AIR_ELEMENTAL_FAN: return "gauzy fan";
+        case MISC_LAMP_OF_FIRE: return "blazing lamp";
+        case MISC_LANTERN_OF_SHADOWS: return "bone lantern";
+        case MISC_HORN_OF_GERYON: return "silver horn";
+        case MISC_DISC_OF_STORMS: return "grey disc";
+        case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
+        case MISC_BOTTLED_EFREET: return "sealed bronze flask";
+        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
+            return "portable altar of Nemelex";
+
+        case MISC_RUNE_OF_ZOT:
+        case NUM_MISCELLANY:
+            return "buggy miscellaneous item";
+        }
+    }
+    return "very buggy miscellaneous item";
+}
+
+static const char* book_secondary_string(int s)
+{
+    switch (s)
+    {
+    case 0:  return "";
+    case 1:  return "chunky ";
+    case 2:  return "thick ";
+    case 3:  return "thin ";
+    case 4:  return "wide ";
+    case 5:  return "glowing ";
+    case 6:  return "dog-eared ";
+    case 7:  return "oblong ";
+    case 8:  return "runed ";
+    case 9:  return "";
+    case 10: return "";
+    case 11: return "";
+    default: return "buggily ";
+    }
+}
+
+static const char* book_primary_string(int p)
+{
+    switch (p)
+    {
+    case 0: return "paperback ";
+    case 1: return "hardcover ";
+    case 2: return "leatherbound ";
+    case 3: return "metal-bound ";
+    case 4: return "papyrus ";
+    case 5: return "";
+    case 6: return "";
+    default: return "buggy ";
+    }
+}
+
+static const char* book_type_name(int booktype)
+{
+    switch ( static_cast<book_type>(booktype) )
+    {
+    case BOOK_MINOR_MAGIC_I:
+    case BOOK_MINOR_MAGIC_II:
+    case BOOK_MINOR_MAGIC_III:
+        return "Minor Magic";
+    case BOOK_CONJURATIONS_I:
+    case BOOK_CONJURATIONS_II:
+        return "Conjurations";
+    case BOOK_FLAMES:                 return "Flames";
+    case BOOK_FROST:                  return "Frost";
+    case BOOK_SUMMONINGS:             return "Summonings";
+    case BOOK_FIRE:                   return "Fire";
+    case BOOK_ICE:                    return "Ice";
+    case BOOK_SURVEYANCES:            return "Surveyances";
+    case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
+    case BOOK_ENCHANTMENTS:           return "Enchantments";
+    case BOOK_TEMPESTS:               return "the Tempests";
+    case BOOK_DEATH:                  return "Death";
+    case BOOK_HINDERANCE:             return "Hinderance";
+    case BOOK_CHANGES:                return "Changes";
+    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
+    case BOOK_PRACTICAL_MAGIC:        return "Practical Magic";
+    case BOOK_WAR_CHANTS:             return "War Chants";
+    case BOOK_CLOUDS:                 return "Clouds";
+    case BOOK_HEALING:                return "Healing";
+    case BOOK_NECROMANCY:             return "Necromancy";
+    case BOOK_CALLINGS:               return "Callings";
+    case BOOK_CHARMS:                 return "Charms";
+    case BOOK_DEMONOLOGY:             return "Demonology";
+    case BOOK_AIR:                    return "Air";
+    case BOOK_SKY:                    return "the Sky";
+    case BOOK_DIVINATIONS:            return "Divinations";
+    case BOOK_WARP:                   return "the Warp";
+    case BOOK_ENVENOMATIONS:          return "Envenomations";
+    case BOOK_ANNIHILATIONS:          return "Annihilations";
+    case BOOK_UNLIFE:                 return "Unlife";
+    case BOOK_CONTROL:                return "Control";
+    case BOOK_MUTATIONS:              return "Morphology";
+    case BOOK_TUKIMA:                 return "Tukima";
+    case BOOK_GEOMANCY:               return "Geomancy";
+    case BOOK_EARTH:                  return "the Earth";
+    case BOOK_WIZARDRY:               return "Wizardry";
+    case BOOK_POWER:                  return "Power";
+    case BOOK_CANTRIPS:               return "Cantrips";
+    case BOOK_PARTY_TRICKS:           return "Party Tricks";
+    case BOOK_STALKING:               return "Stalking";
+    default:                          return "Bugginess";
+    }
+}
+
+static const char* staff_primary_string(int p)
+{
+    switch (p)
+    {
+        
+    case 0: return "curved";
+    case 1: return "glowing";
+    case 2: return "thick";
+    case 3: return "thin";
+    case 4: return "long";
+    case 5: return "twisted";
+    case 6: return "jeweled";
+    case 7: return "runed";
+    case 8: return "smoking";
+    case 9: return "gnarled";
+    default: return "buggy";
+    }
+}
+
+static const char* staff_type_name(int stafftype)
+{
+    switch (static_cast<stave_type>(stafftype))
+    {
+    // staves
+    case STAFF_WIZARDRY:    return "wizardry";
+    case STAFF_POWER:       return "power";
+    case STAFF_FIRE:        return "fire";
+    case STAFF_COLD:        return "cold";
+    case STAFF_POISON:      return "poison";
+    case STAFF_ENERGY:      return "energy";
+    case STAFF_DEATH:       return "death";
+    case STAFF_CONJURATION: return "conjuration";
+    case STAFF_ENCHANTMENT: return "enchantment";
+    case STAFF_SMITING:     return "smiting";
+    case STAFF_STRIKING:    return "striking";
+    case STAFF_WARDING:     return "warding";
+    case STAFF_DISCOVERY:   return "discovery";
+    case STAFF_DEMONOLOGY:  return "demonology";
+    case STAFF_AIR:         return "air";
+    case STAFF_EARTH:       return "earth";
+    case STAFF_SUMMONING:   return "summoning";
+    // rods
+    case STAFF_SPELL_SUMMONING: return "summoning";
+    case STAFF_DESTRUCTION_I:
+    case STAFF_DESTRUCTION_II:
+    case STAFF_DESTRUCTION_III:
+    case STAFF_DESTRUCTION_IV:
+        return "destruction";
+    case STAFF_CHANNELING:      return "channeling";
+    default: return "bugginess";
+    }
+}
+
+static const char* racial_description_string(const item_def& item, bool terse)
+{
+    switch (get_equip_race( item ))
+    {
+    case ISFLAG_ORCISH:
+        return terse ? "orc " : "orcish ";
+    case ISFLAG_ELVEN:
+        return terse ? "elf " : "elven ";
+    case ISFLAG_DWARVEN:
+        return terse ? "dwarf " : "dwarven ";
+    default:
+        return "";
+    }
+}
+
+// gcc (and maybe the C standard) says that if you output
+// 0, even with showpos set, you get 0, not +0. This is a workaround.
+static void output_with_sign(std::ostream& os, int val)
+{
+    if ( val >= 0 )
+        os << '+';
+    os << val;
+}
+
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-void item_def::name_aux( char* buff, bool terse, bool ident ) const
+std::string item_def::name_aux( bool terse, bool ident ) const
 {
     // Shortcuts
     const int item_typ = this->sub_type;
@@ -281,12 +869,9 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
     const bool know_type = ident || item_type_known(*this);
     const bool know_pluses = ident || item_ident(*this, ISFLAG_KNOW_PLUSES);
 
-    char tmp_quant[20];
-    char tmp_buff[ITEMNAME_SIZE];
-    int  brand;
-    int  sparm;
+    int brand;
 
-    buff[0] = 0;
+    std::ostringstream buff;
 
     switch (this->base_type)
     {
@@ -300,91 +885,33 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
             // this behaviour, *please* make it so that there is an option
             // that maintains this behaviour. -- bwr
             if (item_cursed( *this ))
-                strncat(buff, "cursed ", ITEMNAME_SIZE );
-            else if (Options.show_uncursed 
-                    && !know_pluses)
-            {
-                strncat(buff, "uncursed ", ITEMNAME_SIZE );
-            }
+                buff << "cursed ";
+            else if (Options.show_uncursed && !know_pluses)
+                buff << "uncursed ";
         }
 
         if (know_pluses)
         {
-            if (it_plus == 0 && item_plus2 == 0)
-                strncat(buff, "+0 ", ITEMNAME_SIZE );
+            if ( terse && (it_plus == item_plus2) )
+                output_with_sign(buff, it_plus);
             else
             {
-                if (it_plus >= 0)
-                    strncat( buff, "+" , ITEMNAME_SIZE );
-
-                itoa( it_plus, tmp_quant, 10 );
-                strncat( buff, tmp_quant , ITEMNAME_SIZE );
-
-                if (it_plus != item_plus2 || !terse)
-                {
-                    strncat( buff, "," , ITEMNAME_SIZE );
-
-                    if (item_plus2 >= 0)
-                        strncat(buff, "+", ITEMNAME_SIZE );
-
-                    itoa( item_plus2, tmp_quant, 10 );
-                    strncat( buff, tmp_quant , ITEMNAME_SIZE );
-                }
-
-                strncat( buff, " " , ITEMNAME_SIZE );
+                output_with_sign(buff, it_plus);
+                buff << ',';
+                output_with_sign(buff, item_plus2);
             }
+            buff << " ";
         }
 
         if (is_random_artefact( *this ))
         {
-            strncat( buff, randart_name(*this), ITEMNAME_SIZE );
+            buff << randart_name(*this);
             break;
         }
 
         if (is_fixed_artefact( *this ))
         {
-            if (know_type)
-            {
-                strncat(buff, 
-                       (this->special == SPWPN_SINGING_SWORD) ? "Singing Sword" :
-                       (this->special == SPWPN_WRATH_OF_TROG) ? "Wrath of Trog" :
-                       (this->special == SPWPN_SCYTHE_OF_CURSES) ? "Scythe of Curses" :
-                       (this->special == SPWPN_MACE_OF_VARIABILITY) ? "Mace of Variability" :
-                       (this->special == SPWPN_GLAIVE_OF_PRUNE) ? "Glaive of Prune" :
-                       (this->special == SPWPN_SCEPTRE_OF_TORMENT) ? "Sceptre of Torment" :
-                       (this->special == SPWPN_SWORD_OF_ZONGULDROK) ? "Sword of Zonguldrok" :
-                       (this->special == SPWPN_SWORD_OF_CEREBOV) ? "Sword of Cerebov" :
-                       (this->special == SPWPN_STAFF_OF_DISPATER) ? "Staff of Dispater" :
-                       (this->special == SPWPN_SCEPTRE_OF_ASMODEUS) ? "Sceptre of Asmodeus" :
-                       (this->special == SPWPN_SWORD_OF_POWER) ? "Sword of Power" :
-                       (this->special == SPWPN_KNIFE_OF_ACCURACY) ? "Knife of Accuracy" :
-                       (this->special == SPWPN_STAFF_OF_OLGREB) ? "Staff of Olgreb" :
-                       (this->special == SPWPN_VAMPIRES_TOOTH) ? "Vampire's Tooth" :
-                       (this->special == SPWPN_STAFF_OF_WUCAD_MU) ? "Staff of Wucad Mu"
-                                                   : "Brodale's Buggy Bola", 
-                                                   ITEMNAME_SIZE );
-            }
-            else
-            {
-                strncat(buff, 
-                       (this->special == SPWPN_SINGING_SWORD) ? "golden long sword" :
-                       (this->special == SPWPN_WRATH_OF_TROG) ? "bloodstained battleaxe" :
-                       (this->special == SPWPN_SCYTHE_OF_CURSES) ? "warped scythe" :
-                       (this->special == SPWPN_MACE_OF_VARIABILITY) ? "shimmering mace" :
-                       (this->special == SPWPN_GLAIVE_OF_PRUNE) ? "purple glaive" :
-                       (this->special == SPWPN_SCEPTRE_OF_TORMENT) ? "jeweled golden mace" :
-                       (this->special == SPWPN_SWORD_OF_ZONGULDROK) ? "bone long sword" :
-                       (this->special == SPWPN_SWORD_OF_CEREBOV) ? "great serpentine sword" :
-                       (this->special == SPWPN_STAFF_OF_DISPATER) ? "golden staff" :
-                       (this->special == SPWPN_SCEPTRE_OF_ASMODEUS) ? "ruby sceptre" :
-                       (this->special == SPWPN_SWORD_OF_POWER) ? "chunky great sword" :
-                       (this->special == SPWPN_KNIFE_OF_ACCURACY) ? "thin dagger" :
-                       (this->special == SPWPN_STAFF_OF_OLGREB) ? "green glowing staff" :
-                       (this->special == SPWPN_VAMPIRES_TOOTH) ? "ivory dagger" :
-                       (this->special == SPWPN_STAFF_OF_WUCAD_MU) ? "ephemeral quarterstaff"
-                                                           : "buggy bola", 
-                                                           ITEMNAME_SIZE );
-            }
+            buff << fixed_artefact_name( *this, know_type );
             break;
         }
 
@@ -396,38 +923,26 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
             switch (get_equip_desc( *this ))
             {
             case ISFLAG_RUNED:
-                strncat(buff, "runed ", ITEMNAME_SIZE );
+                buff << "runed ";
                 break;
             case ISFLAG_GLOWING:
-                strncat(buff, "glowing ", ITEMNAME_SIZE );
+                buff << "glowing ";
                 break;
             }
         } 
 
         // always give racial type (it does have game effects)
-
-        switch (get_equip_race( *this ))
-        {
-        case ISFLAG_ORCISH:
-            strncat( buff, (terse) ? "orc " : "orcish ", ITEMNAME_SIZE );
-            break;
-        case ISFLAG_ELVEN:
-            strncat( buff, (terse) ? "elf " : "elven ", ITEMNAME_SIZE );
-            break;
-        case ISFLAG_DWARVEN:
-            strncat( buff, (terse) ? "dwarf " : "dwarven ", ITEMNAME_SIZE );
-            break;
-        }
+        buff << racial_description_string(*this, terse);
 
         brand = get_weapon_brand( *this );
 
         if (know_type && !terse)
         {
             if (brand == SPWPN_VAMPIRICISM)
-                strncat(buff, "vampiric ", ITEMNAME_SIZE );
+                buff << "vampiric ";
         }                       // end if
 
-        strncat(buff, item_base_name(*this).c_str(), ITEMNAME_SIZE);
+        buff << item_base_name(*this);
 
         if (know_type)
         {
@@ -436,153 +951,147 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
             case SPWPN_NORMAL:
                 break;
             case SPWPN_FLAMING:
-                strncat(buff, (terse) ? " (flame)" : " of flaming", ITEMNAME_SIZE );
+                buff << ((terse) ? " (flame)" : " of flaming");
                 break;
             case SPWPN_FREEZING:
-                strncat(buff, (terse) ? " (freeze)" : " of freezing", ITEMNAME_SIZE );
+                buff << ((terse) ? " (freeze)" : " of freezing");
                 break;
             case SPWPN_HOLY_WRATH:
-                strncat(buff, (terse) ? " (holy)" : " of holy wrath", ITEMNAME_SIZE );
+                buff << ((terse) ? " (holy)" : " of holy wrath");
                 break;
             case SPWPN_ELECTROCUTION:
-                strncat(buff, (terse) ? " (elec)" : " of electrocution", ITEMNAME_SIZE );
+                buff << ((terse) ? " (elec)" : " of electrocution");
                 break;
             case SPWPN_ORC_SLAYING:
-                strncat(buff, (terse) ? " (slay orc)" : " of orc slaying", ITEMNAME_SIZE );
+                buff << ((terse) ? " (slay orc)" : " of orc slaying");
                 break;
             case SPWPN_VENOM:
-                strncat(buff, (terse) ? " (venom)" : " of venom", ITEMNAME_SIZE );
+                buff << ((terse) ? " (venom)" : " of venom");
                 break;
             case SPWPN_PROTECTION:
-                strncat(buff, (terse) ? " (protect)" : " of protection", ITEMNAME_SIZE );
+                buff << ((terse) ? " (protect)" : " of protection");
                 break;
             case SPWPN_DRAINING:
-                strncat(buff, (terse) ? " (drain)" : " of draining", ITEMNAME_SIZE );
+                buff << ((terse) ? " (drain)" : " of draining");
                 break;
             case SPWPN_SPEED:
-                strncat(buff, (terse) ? " (speed)" : " of speed", ITEMNAME_SIZE );
+                buff << ((terse) ? " (speed)" : " of speed");
                 break;
             case SPWPN_VORPAL:
                 if (is_range_weapon( *this ))
                 {
-                    strncat(buff, (terse) ? " (velocity)" : " of velocity", 
-                            ITEMNAME_SIZE );
+                    buff << ((terse) ? " (velocity)" : " of velocity");
                     break;
                 }
 
                 switch (get_vorpal_type(*this))
                 {
                 case DVORP_CRUSHING:
-                    strncat(buff, (terse) ? " (crush)" : " of crushing", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (crush)" : " of crushing");
                     break;
                 case DVORP_SLICING:
-                    strncat(buff, (terse) ? " (slice)" : " of slicing", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (slice)" : " of slicing");
                     break;
                 case DVORP_PIERCING:
-                    strncat(buff, (terse) ? " (pierce)" : " of piercing", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (pierce)" : " of piercing");
                     break;
                 case DVORP_CHOPPING:
-                    strncat(buff, (terse) ? " (chop)" : " of chopping", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (chop)" : " of chopping");
                     break;
                 case DVORP_SLASHING:
-                    strncat(buff, (terse) ? " (slash)" : " of slashing", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (slash)" : " of slashing");
                     break;
                 case DVORP_STABBING:
-                    strncat(buff, (terse) ? " (stab)" : " of stabbing", ITEMNAME_SIZE );
+                    buff << ((terse) ? " (stab)" : " of stabbing");
                     break;
                 }
                 break;
 
             case SPWPN_FLAME:
-                strncat(buff, (terse) ? " (flame)" : " of flame", ITEMNAME_SIZE );
+                buff << ((terse) ? " (flame)" : " of flame");
                 break;          // bows/xbows
 
             case SPWPN_FROST:
-                strncat(buff, (terse) ? " (frost)" : " of frost", ITEMNAME_SIZE );
+                buff << ((terse) ? " (frost)" : " of frost");
                 break;          // bows/xbows
 
             case SPWPN_VAMPIRICISM:
-                if (terse)
-                    strncat( buff, " (vamp)", ITEMNAME_SIZE );
+                if (terse)      // non-terse already handled above
+                    buff << " (vamp)";
                 break;
 
             case SPWPN_DISRUPTION:
-                strncat(buff, (terse) ? " (disrupt)" : " of disruption", ITEMNAME_SIZE );
+                buff << ((terse) ? " (disrupt)" : " of disruption");
                 break;
             case SPWPN_PAIN:
-                strncat(buff, (terse) ? " (pain)" : " of pain", ITEMNAME_SIZE );
+                buff << ((terse) ? " (pain)" : " of pain");
                 break;
             case SPWPN_DISTORTION:
-                strncat(buff, (terse) ? " (distort)" : " of distortion", ITEMNAME_SIZE );
+                buff << ((terse) ? " (distort)" : " of distortion");
                 break;
 
             case SPWPN_REACHING:
-                strncat(buff, (terse) ? " (reach)" : " of reaching", ITEMNAME_SIZE );
+                buff << ((terse) ? " (reach)" : " of reaching");
                 break;
 
-                /* 25 - 29 are randarts */
+            /* 25 - 29 are randarts */
+            default:
+                break;
             }
         }
 
         if (know_curse && item_cursed(*this) && terse)
-            strncat( buff, " (curse)", ITEMNAME_SIZE );
+            buff << " (curse)";
         break;
 
     case OBJ_MISSILES:
-        brand = get_ammo_brand( *this );  
+        brand = get_ammo_brand( *this );
 
         if (brand == SPMSL_POISONED)
-            strncat( buff, (terse) ? "poison " : "poisoned ", ITEMNAME_SIZE );
+            buff << ((terse) ? "poison " : "poisoned ");
         
         if (brand == SPMSL_CURARE)
-        {
-            strncat( buff, (terse) ? "curare " : "curare-tipped ", ITEMNAME_SIZE);
-        }
+            buff << ((terse) ? "curare " : "curare-tipped ");
 
         if (know_pluses)
         {
-            if (it_plus >= 0)
-                strncat(buff, "+", ITEMNAME_SIZE );
-
-            itoa( it_plus, tmp_quant, 10 );
-
-            strncat(buff, tmp_quant, ITEMNAME_SIZE );
-            strncat(buff, " ", ITEMNAME_SIZE );
+            output_with_sign(buff, it_plus);
+            buff << ' ';
         }
 
-        if (get_equip_race( *this ))
+        buff << racial_description_string(*this, terse);
+
+        switch (item_typ)
         {
-            int dwpn = get_equip_race( *this );
-
-            strncat(buff, 
-                   (dwpn == ISFLAG_ORCISH)  ? ((terse) ? "orc " : "orcish ") :
-                   (dwpn == ISFLAG_ELVEN)   ? ((terse) ? "elf " : "elven ") :
-                   (dwpn == ISFLAG_DWARVEN) ? ((terse) ? "dwarf " : "dwarven ")
-                                            : "buggy ",
-                   ITEMNAME_SIZE);
+        case MI_STONE:      buff << "stone"; break;
+        case MI_ARROW:      buff << "arrow"; break;
+        case MI_BOLT:       buff << "bolt"; break;
+        case MI_DART:       buff << "dart"; break;
+        case MI_NEEDLE:     buff << "needle"; break;
+        case MI_LARGE_ROCK: buff << "large rock" ; break;
+        default:            buff << "hysterical raisin"; break;
         }
-
-        strncat(buff, (item_typ == MI_STONE) ? "stone" :
-               (item_typ == MI_ARROW) ? "arrow" :
-               (item_typ == MI_BOLT) ? "bolt" :
-               (item_typ == MI_DART) ? "dart" :
-               (item_typ == MI_NEEDLE) ? "needle" :
-               (item_typ == MI_LARGE_ROCK) ? "large rock" : 
-                                        "hysterical raisin", ITEMNAME_SIZE);
-               // this should probably be "" {dlb}
 
         if (this->quantity > 1)
-            strncat(buff, "s", ITEMNAME_SIZE );
+            buff << "s";
 
         if (know_type)
         {
-            strncat( buff,
-              (brand == SPMSL_FLAME)   ? ((terse) ? " (flame)" : " of flame") :
-              (brand == SPMSL_ICE)     ? ((terse) ? " (ice)" : " of ice") :
-              (brand == SPMSL_NORMAL)      ? "" :
-              (brand == SPMSL_POISONED)    ? "" :
-              (brand == SPMSL_CURARE)      ? "" :
-                                             " (buggy)", ITEMNAME_SIZE );
+            switch (brand)
+            {
+            case SPMSL_FLAME:
+                buff << ((terse) ? " (flame)" : " of flame");
+                break;
+            case SPMSL_ICE:
+                buff << ((terse) ? " (ice)" : " of ice");
+                break;
+            case SPMSL_NORMAL:
+            case SPMSL_POISONED:
+            case SPMSL_CURARE:
+                break;
+            default:
+                buff << " (buggy)";
+            }
         }
         break;
 
@@ -590,33 +1099,23 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
         if (know_curse && !terse)
         {
             if (item_cursed( *this ))
-                strncat(buff, "cursed ", ITEMNAME_SIZE );
-            else if (Options.show_uncursed 
-                    && !know_pluses)
-            {
-                strncat(buff, "uncursed ", ITEMNAME_SIZE );
-            }
+                buff << "cursed ";
+            else if (Options.show_uncursed && !know_pluses)
+                buff << "uncursed ";
         }
 
         if (know_pluses)
         {
-            if (it_plus >= 0)
-                strncat(buff, "+", ITEMNAME_SIZE );
-
-            itoa( it_plus, tmp_quant, 10 );
-
-            strncat(buff, tmp_quant, ITEMNAME_SIZE );
-            strncat(buff, " ", ITEMNAME_SIZE );
+            output_with_sign(buff, it_plus);
+            buff << ' ';
         }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
-        {
-            strncat( buff, "pair of ", ITEMNAME_SIZE );
-        }
+            buff << "pair of ";
 
         if (is_random_artefact( *this ))
         {
-            strncat(buff, randart_armour_name(*this), ITEMNAME_SIZE);
+            buff << randart_armour_name(*this);
             break;
         }
 
@@ -631,217 +1130,73 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
                 {
-                    strncat(buff, "embroidered ", ITEMNAME_SIZE );
+                    buff << "embroidered ";
                 }
                 else if (item_typ != ARM_LEATHER_ARMOUR 
                         && item_typ != ARM_ANIMAL_SKIN)
                 {
-                    strncat(buff, "shiny ", ITEMNAME_SIZE );
+                    buff << "shiny ";
                 }
                 break;
 
             case ISFLAG_RUNED:
-                strncat(buff, "runed ", ITEMNAME_SIZE );
+                buff << "runed ";
                 break;
 
             case ISFLAG_GLOWING:
-                strncat(buff, "glowing ", ITEMNAME_SIZE );
+                buff << "glowing ";
                 break;
             }
         }
 
         // always give racial description (has game effects)
-        switch (get_equip_race( *this ))
+        buff << racial_description_string(*this, terse);
+
+        buff << item_base_name(*this);
+
         {
-        case ISFLAG_ELVEN:
-            strncat(buff, (terse) ? "elf " :"elven ", ITEMNAME_SIZE );
-            break;
-        case ISFLAG_DWARVEN:
-            strncat(buff, (terse) ? "dwarf " : "dwarven ", ITEMNAME_SIZE );
-            break;
-        case ISFLAG_ORCISH:
-            strncat(buff, (terse) ? "orc " : "orcish ", ITEMNAME_SIZE );
-            break;
-        }               // end switch
+            const special_armour_type sparm = get_armour_ego_type( *this );
 
-        strncat( buff, item_base_name(*this).c_str(), ITEMNAME_SIZE );
-
-        sparm = get_armour_ego_type( *this );
-
-        if (know_type && sparm != SPARM_NORMAL)
-        {
-            if (!terse)
+            if (know_type && sparm != SPARM_NORMAL)
             {
-                strncat(buff, " of ", ITEMNAME_SIZE );
-
-                strncat(buff, (sparm == SPARM_RUNNING) ? "running" :
-                       (sparm == SPARM_FIRE_RESISTANCE) ? "fire resistance" :
-                       (sparm == SPARM_COLD_RESISTANCE) ? "cold resistance" :
-                       (sparm == SPARM_POISON_RESISTANCE) ? "poison resistance" :
-                       (sparm == SPARM_SEE_INVISIBLE) ? "see invisible" :
-                       (sparm == SPARM_DARKNESS) ? "darkness" :
-                       (sparm == SPARM_STRENGTH) ? "strength" :
-                       (sparm == SPARM_DEXTERITY) ? "dexterity" :
-                       (sparm == SPARM_INTELLIGENCE) ? "intelligence" :
-                       (sparm == SPARM_PONDEROUSNESS) ? "ponderousness" :
-                       (sparm == SPARM_LEVITATION) ? "levitation" :
-                       (sparm == SPARM_MAGIC_RESISTANCE) ? "magic resistance" :
-                       (sparm == SPARM_PROTECTION) ? "protection" :
-                       (sparm == SPARM_STEALTH) ? "stealth" :
-                       (sparm == SPARM_RESISTANCE) ? "resistance" :
-                       (sparm == SPARM_POSITIVE_ENERGY) ? "positive energy" :
-                       (sparm == SPARM_ARCHMAGI) ? "the Archmagi" :
-                       (sparm == SPARM_PRESERVATION) ? "preservation"
-                                                       : "bugginess",
-                       ITEMNAME_SIZE);
-            }
-            else
-            {
-                strncat(buff, (sparm == SPARM_RUNNING) ? " (run)" :
-                       (sparm == SPARM_FIRE_RESISTANCE) ? " (R-fire)" :
-                       (sparm == SPARM_COLD_RESISTANCE) ? " (R-cold)" :
-                       (sparm == SPARM_POISON_RESISTANCE) ? " (R-poison)" :
-                       (sparm == SPARM_SEE_INVISIBLE) ? " (see invis)" :
-                       (sparm == SPARM_DARKNESS) ? " (darkness)" :
-                       (sparm == SPARM_STRENGTH) ? " (str)" :
-                       (sparm == SPARM_DEXTERITY) ? " (dex)" :
-                       (sparm == SPARM_INTELLIGENCE) ? " (int)" :
-                       (sparm == SPARM_PONDEROUSNESS) ? " (ponderous)" :
-                       (sparm == SPARM_LEVITATION) ? " (levitate)" :
-                       (sparm == SPARM_MAGIC_RESISTANCE) ? " (R-magic)" :
-                       (sparm == SPARM_PROTECTION) ? " (protect)" :
-                       (sparm == SPARM_STEALTH) ? " (stealth)" :
-                       (sparm == SPARM_RESISTANCE) ? " (resist)" :
-                       (sparm == SPARM_POSITIVE_ENERGY) ? " (R-neg)" : // ha ha
-                       (sparm == SPARM_ARCHMAGI) ? " (Archmagi)" :
-                       (sparm == SPARM_PRESERVATION) ? " (preserve)"
-                                                       : " (buggy)",
-                       ITEMNAME_SIZE);
+                if ( !terse )
+                    buff << " of ";
+                buff << armour_ego_name(sparm, terse);
             }
         }
 
         if (know_curse && item_cursed(*this) && terse)
-            strncat( buff, " (curse)", ITEMNAME_SIZE );
+            buff << " (curse)";
         break;
 
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_WANDS:
         if (know_type)
         {
-            strncat(buff, "wand of ", ITEMNAME_SIZE );
-            strncat(buff, (item_typ == WAND_FLAME) ? "flame" :
-                   (item_typ == WAND_FROST) ? "frost" :
-                   (item_typ == WAND_SLOWING) ? "slowing" :
-                   (item_typ == WAND_HASTING) ? "hasting" :
-                   (item_typ == WAND_MAGIC_DARTS) ? "magic darts" :
-                   (item_typ == WAND_HEALING) ? "healing" :
-                   (item_typ == WAND_PARALYSIS) ? "paralysis" :
-                   (item_typ == WAND_FIRE) ? "fire" :
-                   (item_typ == WAND_COLD) ? "cold" :
-                   (item_typ == WAND_CONFUSION) ? "confusion" :
-                   (item_typ == WAND_INVISIBILITY) ? "invisibility" :
-                   (item_typ == WAND_DIGGING) ? "digging" :
-                   (item_typ == WAND_FIREBALL) ? "fireball" :
-                   (item_typ == WAND_TELEPORTATION) ? "teleportation" :
-                   (item_typ == WAND_LIGHTNING) ? "lightning" :
-                   (item_typ == WAND_POLYMORPH_OTHER) ? "polymorph other" :
-                   (item_typ == WAND_ENSLAVEMENT) ? "enslavement" :
-                   (item_typ == WAND_DRAINING) ? "draining" :
-                   (item_typ == WAND_RANDOM_EFFECTS) ? "random effects" :
-                   (item_typ == WAND_DISINTEGRATION) ? "disintegration"
-                                                   : "bugginess",
-                   ITEMNAME_SIZE );
+            buff << "wand of " << wand_type_name(item_typ);
         }
         else
         {
-            char primary = (this->special % 12);
-            char secondary = (this->special / 12);
-
-            strncat(buff,(secondary == 0) ? "" :        // hope this works {dlb}
-                   (secondary == 1) ? "jeweled" :
-                   (secondary == 2) ? "curved" :
-                   (secondary == 3) ? "long" :
-                   (secondary == 4) ? "short" :
-                   (secondary == 5) ? "twisted" :
-                   (secondary == 6) ? "crooked" :
-                   (secondary == 7) ? "forked" :
-                   (secondary == 8) ? "shiny" :
-                   (secondary == 9) ? "blackened" :
-                   (secondary == 10) ? "tapered" :
-                   (secondary == 11) ? "glowing" :
-                   (secondary == 12) ? "worn" :
-                   (secondary == 13) ? "encrusted" :
-                   (secondary == 14) ? "runed" :
-                   (secondary == 15) ? "sharpened" : "buggily", ITEMNAME_SIZE);
-
-            if (secondary != 0)
-                strncat(buff, " ", ITEMNAME_SIZE );
-
-            strncat(buff, (primary == 0) ? "iron" :
-                   (primary == 1) ? "brass" :
-                   (primary == 2) ? "bone" :
-                   (primary == 3) ? "wooden" :
-                   (primary == 4) ? "copper" :
-                   (primary == 5) ? "gold" :
-                   (primary == 6) ? "silver" :
-                   (primary == 7) ? "bronze" :
-                   (primary == 8) ? "ivory" :
-                   (primary == 9) ? "glass" :
-                   (primary == 10) ? "lead" :
-                   (primary == 11) ? "plastic" : "buggy", ITEMNAME_SIZE);
-
-            strncat(buff, " wand", ITEMNAME_SIZE );
+            buff << wand_secondary_string(this->special / 12)
+                 << wand_primary_string(this->special % 12)
+                 << " wand";
         }
 
         if (know_pluses)
-        {
-            strncat(buff, " (", ITEMNAME_SIZE );
-            itoa( it_plus, tmp_quant, 10 );
-            strncat(buff, tmp_quant, ITEMNAME_SIZE );
-            strncat(buff, ")", ITEMNAME_SIZE);
-        }
+            buff << " (" << it_plus << ")";
         break;
 
-    // NB: potions, food, and scrolls stack on the basis of class and
-    // type ONLY !!!
-
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_POTIONS:
         if (know_type)
         {
-            strncat(buff, "potion", ITEMNAME_SIZE );
-            strncat(buff, (this->quantity == 1) ? " " : "s ", ITEMNAME_SIZE);
-            strncat(buff, "of ", ITEMNAME_SIZE );
-            strncat(buff, (item_typ == POT_HEALING) ? "healing" :
-                   (item_typ == POT_HEAL_WOUNDS) ? "heal wounds" :
-                   (item_typ == POT_SPEED) ? "speed" :
-                   (item_typ == POT_MIGHT) ? "might" :
-                   (item_typ == POT_GAIN_STRENGTH) ? "gain strength" :
-                   (item_typ == POT_GAIN_DEXTERITY) ? "gain dexterity" :
-                   (item_typ == POT_GAIN_INTELLIGENCE) ? "gain intelligence" :
-                   (item_typ == POT_LEVITATION) ? "levitation" :
-                   (item_typ == POT_POISON) ? "poison" :
-                   (item_typ == POT_SLOWING) ? "slowing" :
-                   (item_typ == POT_PARALYSIS) ? "paralysis" :
-                   (item_typ == POT_CONFUSION) ? "confusion" :
-                   (item_typ == POT_INVISIBILITY) ? "invisibility" :
-                   (item_typ == POT_PORRIDGE) ? "porridge" :
-                   (item_typ == POT_DEGENERATION) ? "degeneration" :
-                   (item_typ == POT_DECAY) ? "decay" :
-                   (item_typ == POT_WATER) ? "water" :
-                   (item_typ == POT_EXPERIENCE) ? "experience" :
-                   (item_typ == POT_MAGIC) ? "magic" :
-                   (item_typ == POT_RESTORE_ABILITIES) ? "restore abilities" :
-                   (item_typ == POT_STRONG_POISON) ? "strong poison" :
-                   (item_typ == POT_BERSERK_RAGE) ? "berserk rage" :
-                   (item_typ == POT_CURE_MUTATION) ? "cure mutation" :
-                   (item_typ == POT_MUTATION) ? "mutation" : "bugginess",
-                   ITEMNAME_SIZE);
+            buff << "potion";
+            if ( this->quantity > 1 )
+                buff << "s";
+            buff << " of " << potion_type_name(item_typ);
         }
         else
         {
-            int pqual   = PQUAL(this->special);
-            int pcolour = PCOLOUR(this->special);
+            const int pqual   = PQUAL(this->special);
+            const int pcolour = PCOLOUR(this->special);
 
             static const char *potion_qualifiers[] = {
                 "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
@@ -867,144 +1222,118 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
                 (pcolour < 0 || pcolour >= PDC_NCOLOURS)? "bogus"
                                     : potion_colours[pcolour];
 
-            strncat(buff, qualifier, ITEMNAME_SIZE - strlen(buff));
-            strncat(buff, clr, ITEMNAME_SIZE - strlen(buff));
-            strncat(buff, " potion", ITEMNAME_SIZE - strlen(buff) );
+            buff << qualifier << clr << " potion";
 
             if (this->quantity > 1)
-                strncat(buff, "s", ITEMNAME_SIZE );
+                buff << "s";
         }
         break;
 
-    // NB: adding another food type == must set for carnivorous chars
-    // (Kobolds and mutants)
     case OBJ_FOOD:
         switch (item_typ)
         {
         case FOOD_MEAT_RATION:
-            strncat(buff, "meat ration", ITEMNAME_SIZE );
+            buff << "meat ration";
             break;
         case FOOD_BREAD_RATION:
-            strncat(buff, "bread ration", ITEMNAME_SIZE );
+            buff << "bread ration";
             break;
         case FOOD_PEAR:
-            strncat(buff, "pear", ITEMNAME_SIZE );
+            buff << "pear";
             break;
         case FOOD_APPLE:        // make this less common
-            strncat(buff, "apple", ITEMNAME_SIZE );
+            buff << "apple";
             break;
         case FOOD_CHOKO:
-            strncat(buff, "choko", ITEMNAME_SIZE );
+            buff << "choko";
             break;
         case FOOD_HONEYCOMB:
-            strncat(buff, "honeycomb", ITEMNAME_SIZE );
+            buff << "honeycomb";
             break;
         case FOOD_ROYAL_JELLY:
-            strncat(buff, "royal jell", ITEMNAME_SIZE );
+            buff << "royal jell";
             break;
         case FOOD_SNOZZCUMBER:
-            strncat(buff, "snozzcumber", ITEMNAME_SIZE );
+            buff << "snozzcumber";
             break;
         case FOOD_PIZZA:
-            strncat(buff, "slice of pizza", ITEMNAME_SIZE );
+            buff << "slice of pizza";
             break;
         case FOOD_APRICOT:
-            strncat(buff, "apricot", ITEMNAME_SIZE );
+            buff << "apricot";
             break;
         case FOOD_ORANGE:
-            strncat(buff, "orange", ITEMNAME_SIZE );
+            buff << "orange";
             break;
         case FOOD_BANANA:
-            strncat(buff, "banana", ITEMNAME_SIZE );
+            buff << "banana";
             break;
         case FOOD_STRAWBERRY:
-            strncat(buff, "strawberr", ITEMNAME_SIZE );
+            buff << "strawberr";
             break;
         case FOOD_RAMBUTAN:
-            strncat(buff, "rambutan", ITEMNAME_SIZE );
+            buff << "rambutan";
             break;
         case FOOD_LEMON:
-            strncat(buff, "lemon", ITEMNAME_SIZE );
+            buff << "lemon";
             break;
         case FOOD_GRAPE:
-            strncat(buff, "grape", ITEMNAME_SIZE );
+            buff << "grape";
             break;
         case FOOD_SULTANA:
-            strncat(buff, "sultana", ITEMNAME_SIZE );
+            buff << "sultana";
             break;
         case FOOD_LYCHEE:
-            strncat(buff, "lychee", ITEMNAME_SIZE );
+            buff << "lychee";
             break;
         case FOOD_BEEF_JERKY:
-            strncat(buff, "beef jerk", ITEMNAME_SIZE );
+            buff << "beef jerk";
             break;
         case FOOD_CHEESE:
-            strncat(buff, "cheese", ITEMNAME_SIZE );
+            buff << "cheese";
             break;
         case FOOD_SAUSAGE:
-            strncat(buff, "sausage", ITEMNAME_SIZE );
+            buff << "sausage";
             break;
         case FOOD_CHUNK:
-            moname( it_plus, true, DESC_PLAIN, tmp_buff );
-
+        {
             if (this->special < 100)
-                strncat(buff, "rotting ", ITEMNAME_SIZE );
+                buff << "rotting ";
 
-            strncat(buff, "chunk", ITEMNAME_SIZE );
+            buff << "chunk";
 
             if (this->quantity > 1)
-                strncat(buff, "s", ITEMNAME_SIZE );
+                buff << "s";
 
-            strncat(buff, " of ", ITEMNAME_SIZE );
-            strncat(buff, tmp_buff, ITEMNAME_SIZE );
-            strncat(buff, " flesh", ITEMNAME_SIZE );
+            buff << " of ";
+
+            char tmp_buff[ITEMNAME_SIZE];
+            moname( it_plus, true, DESC_PLAIN, tmp_buff );
+            buff << tmp_buff << " flesh";
             break;
-
+        }
         }
 
         if (item_typ == FOOD_ROYAL_JELLY || item_typ == FOOD_STRAWBERRY
             || item_typ == FOOD_BEEF_JERKY)
-            strncat(buff, (this->quantity > 1) ? "ie" : "y", ITEMNAME_SIZE );
+            buff << ((this->quantity > 1) ? "ie" : "y");
+
+        // 's' gets added later if necessary
         break;
 
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_SCROLLS:
-        strncat(buff, "scroll", ITEMNAME_SIZE );
-        strncat(buff, (this->quantity == 1) ? " " : "s ", ITEMNAME_SIZE);
+        buff << "scroll";
+        if ( this->quantity > 1 )
+            buff << "s";
+        buff << " ";
 
         if (know_type)
         {
-            strncat(buff, "of ", ITEMNAME_SIZE );
-            strncat(buff, (item_typ == SCR_IDENTIFY) ? "identify" :
-                   (item_typ == SCR_TELEPORTATION) ? "teleportation" :
-                   (item_typ == SCR_FEAR) ? "fear" :
-                   (item_typ == SCR_NOISE) ? "noise" :
-                   (item_typ == SCR_REMOVE_CURSE) ? "remove curse" :
-                   (item_typ == SCR_DETECT_CURSE) ? "detect curse" :
-                   (item_typ == SCR_SUMMONING) ? "summoning" :
-                   (item_typ == SCR_ENCHANT_WEAPON_I) ? "enchant weapon I" :
-                   (item_typ == SCR_ENCHANT_ARMOUR) ? "enchant armour" :
-                   (item_typ == SCR_TORMENT) ? "torment" :
-                   (item_typ == SCR_RANDOM_USELESSNESS) ? "random uselessness" :
-                   (item_typ == SCR_CURSE_WEAPON) ? "curse weapon" :
-                   (item_typ == SCR_CURSE_ARMOUR) ? "curse armour" :
-                   (item_typ == SCR_IMMOLATION) ? "immolation" :
-                   (item_typ == SCR_BLINKING) ? "blinking" :
-                   (item_typ == SCR_PAPER) ? "paper" :
-                   (item_typ == SCR_MAGIC_MAPPING) ? "magic mapping" :
-                   (item_typ == SCR_FORGETFULNESS) ? "forgetfulness" :
-                   (item_typ == SCR_ACQUIREMENT) ? "acquirement" :
-                   (item_typ == SCR_ENCHANT_WEAPON_II) ? "enchant weapon II" :
-                   (item_typ == SCR_VORPALISE_WEAPON) ? "vorpalise weapon" :
-                   (item_typ == SCR_RECHARGING) ? "recharging" :
-                   //(item_typ == 23)                   ? "portal travel" :
-                   (item_typ == SCR_ENCHANT_WEAPON_III) ? "enchant weapon III"
-                                                       : "bugginess", 
-                    ITEMNAME_SIZE);
+            buff << "of " << scroll_type_name(item_typ);
         }
         else
         {
-            strncat(buff, "labeled ", ITEMNAME_SIZE );
+            buff << "labeled ";
             char buff3[ ITEMNAME_SIZE ];
 
             const unsigned long sseed = 
@@ -1012,11 +1341,10 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
                 + (static_cast<unsigned long>(it_plus) << 8)
                 + (static_cast<unsigned long>(OBJ_SCROLLS) << 16);
             make_name( sseed, true, buff3 );
-            strncat( buff, buff3 , ITEMNAME_SIZE );
+            buff << buff3;
         }
         break;
 
-    // compacted 15 Apr 2000 {dlb}: -- on hold ... what a mess!
     case OBJ_JEWELLERY:
         // not using {tried} here because there are some confusing 
         // issues to work out with how we want to handle jewellery 
@@ -1024,792 +1352,200 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
         if (know_curse)
         {
             if (item_cursed( *this ))
-                strncat(buff, "cursed ", ITEMNAME_SIZE );
-            else if (Options.show_uncursed
-                     && !terse
+                buff << "cursed ";
+            else if (Options.show_uncursed && !terse
                      && (!ring_has_pluses(*this) || !know_pluses)
-
-                    // If the item is worn, its curse status is known,
-                    // no need to belabour the obvious.
-                    && get_equip_slot( this ) == -1)
+                     // If the item is worn, its curse status is known,
+                     // no need to belabour the obvious.
+                     && get_equip_slot( this ) == -1)
             {
-                strncat(buff, "uncursed ", ITEMNAME_SIZE );
+                buff << "uncursed ";
             }
         }
 
         if (is_random_artefact( *this ))
         {
-            strncat(buff, randart_ring_name(*this), ITEMNAME_SIZE);
+            buff << randart_jewellery_name(*this);
             break;
         }
 
         if (know_type)
         {
-
-            if (know_pluses
-                && (item_typ == RING_PROTECTION || item_typ == RING_STRENGTH
-                    || item_typ == RING_SLAYING || item_typ == RING_EVASION
-                    || item_typ == RING_DEXTERITY
-                    || item_typ == RING_INTELLIGENCE))
+            if (know_pluses && ring_has_pluses(*this))
             {
-                char gokh = it_plus;
+                output_with_sign(buff, it_plus);
 
-                if (gokh >= 0)
-                    strncat( buff, "+" , ITEMNAME_SIZE );
-
-                itoa( gokh, tmp_quant, 10 );
-                strncat( buff, tmp_quant , ITEMNAME_SIZE );
-
-                if (item_typ == RING_SLAYING)
+                if ( ring_has_pluses(*this) == 2 )
                 {
-                    strncat( buff, "," , ITEMNAME_SIZE );
-
-                    if (item_plus2 >= 0)
-                        strncat(buff, "+", ITEMNAME_SIZE );
-
-                    itoa( item_plus2, tmp_quant, 10 );
-                    strncat( buff, tmp_quant , ITEMNAME_SIZE );
+                    buff << ',';
+                    output_with_sign(buff, item_plus2);
                 }
-
-                strncat(buff, " ", ITEMNAME_SIZE );
+                buff << ' ';
             }
 
-            switch (item_typ)
-            {
-            case RING_REGENERATION:
-                strncat(buff, "ring of regeneration", ITEMNAME_SIZE );
-                break;
-            case RING_PROTECTION:
-                strncat(buff, "ring of protection", ITEMNAME_SIZE );
-                break;
-            case RING_PROTECTION_FROM_FIRE:
-                strncat(buff, "ring of protection from fire", ITEMNAME_SIZE );
-                break;
-            case RING_POISON_RESISTANCE:
-                strncat(buff, "ring of poison resistance", ITEMNAME_SIZE );
-                break;
-            case RING_PROTECTION_FROM_COLD:
-                strncat(buff, "ring of protection from cold", ITEMNAME_SIZE );
-                break;
-            case RING_STRENGTH:
-                strncat(buff, "ring of strength", ITEMNAME_SIZE );
-                break;
-            case RING_SLAYING:
-                strncat(buff, "ring of slaying", ITEMNAME_SIZE );
-                break;
-            case RING_SEE_INVISIBLE:
-                strncat(buff, "ring of see invisible", ITEMNAME_SIZE );
-                break;
-            case RING_INVISIBILITY:
-                strncat(buff, "ring of invisibility", ITEMNAME_SIZE );
-                break;
-            case RING_HUNGER:
-                strncat(buff, "ring of hunger", ITEMNAME_SIZE );
-                break;
-            case RING_TELEPORTATION:
-                strncat(buff, "ring of teleportation", ITEMNAME_SIZE );
-                break;
-            case RING_EVASION:
-                strncat(buff, "ring of evasion", ITEMNAME_SIZE );
-                break;
-            case RING_SUSTAIN_ABILITIES:
-                strncat(buff, "ring of sustain abilities", ITEMNAME_SIZE );
-                break;
-            case RING_SUSTENANCE:
-                strncat(buff, "ring of sustenance", ITEMNAME_SIZE );
-                break;
-            case RING_DEXTERITY:
-                strncat(buff, "ring of dexterity", ITEMNAME_SIZE );
-                break;
-            case RING_INTELLIGENCE:
-                strncat(buff, "ring of intelligence", ITEMNAME_SIZE );
-                break;
-            case RING_WIZARDRY:
-                strncat(buff, "ring of wizardry", ITEMNAME_SIZE );
-                break;
-            case RING_MAGICAL_POWER:
-                strncat(buff, "ring of magical power", ITEMNAME_SIZE );
-                break;
-            case RING_LEVITATION:
-                strncat(buff, "ring of levitation", ITEMNAME_SIZE );
-                break;
-            case RING_LIFE_PROTECTION:
-                strncat(buff, "ring of life protection", ITEMNAME_SIZE );
-                break;
-            case RING_PROTECTION_FROM_MAGIC:
-                strncat(buff, "ring of protection from magic", ITEMNAME_SIZE );
-                break;
-            case RING_FIRE:
-                strncat(buff, "ring of fire", ITEMNAME_SIZE );
-                break;
-            case RING_ICE:
-                strncat(buff, "ring of ice", ITEMNAME_SIZE );
-                break;
-            case RING_TELEPORT_CONTROL:
-                strncat(buff, "ring of teleport control", ITEMNAME_SIZE );
-                break;
-            case AMU_RAGE:
-                strncat(buff, "amulet of rage", ITEMNAME_SIZE );
-                break;
-            case AMU_RESIST_SLOW:
-                strncat(buff, "amulet of resist slowing", ITEMNAME_SIZE );
-                break;
-            case AMU_CLARITY:
-                strncat(buff, "amulet of clarity", ITEMNAME_SIZE );
-                break;
-            case AMU_WARDING:
-                strncat(buff, "amulet of warding", ITEMNAME_SIZE );
-                break;
-            case AMU_RESIST_CORROSION:
-                strncat(buff, "amulet of resist corrosion", ITEMNAME_SIZE );
-                break;
-            case AMU_THE_GOURMAND:
-                strncat(buff, "amulet of the gourmand", ITEMNAME_SIZE );
-                break;
-            case AMU_CONSERVATION:
-                strncat(buff, "amulet of conservation", ITEMNAME_SIZE );
-                break;
-            case AMU_CONTROLLED_FLIGHT:
-                strncat(buff, "amulet of controlled flight", ITEMNAME_SIZE );
-                break;
-            case AMU_INACCURACY:
-                strncat(buff, "amulet of inaccuracy", ITEMNAME_SIZE );
-                break;
-            case AMU_RESIST_MUTATION:
-                strncat(buff, "amulet of resist mutation", ITEMNAME_SIZE );
-                break;
-            }
-            /* ? of imputed learning - 100% exp from tames/summoned kills */
-            break;
+            buff << jewellery_type_name(item_typ);
         }
 
-        if (item_typ < AMU_RAGE)        // rings
+        if (item_typ < AMU_RAGE) // rings
         {
-            if (is_random_artefact( *this ))
-            {
-                strncat(buff, randart_ring_name(*this), ITEMNAME_SIZE);
-                break;
-            }
-
-            switch (this->special / 13)       // secondary characteristic of ring
-            {
-            case 1:
-                strncat(buff, "encrusted ", ITEMNAME_SIZE );
-                break;
-            case 2:
-                strncat(buff, "glowing ", ITEMNAME_SIZE );
-                break;
-            case 3:
-                strncat(buff, "tubular ", ITEMNAME_SIZE );
-                break;
-            case 4:
-                strncat(buff, "runed ", ITEMNAME_SIZE );
-                break;
-            case 5:
-                strncat(buff, "blackened ", ITEMNAME_SIZE );
-                break;
-            case 6:
-                strncat(buff, "scratched ", ITEMNAME_SIZE );
-                break;
-            case 7:
-                strncat(buff, "small ", ITEMNAME_SIZE );
-                break;
-            case 8:
-                strncat(buff, "large ", ITEMNAME_SIZE );
-                break;
-            case 9:
-                strncat(buff, "twisted ", ITEMNAME_SIZE );
-                break;
-            case 10:
-                strncat(buff, "shiny ", ITEMNAME_SIZE );
-                break;
-            case 11:
-                strncat(buff, "notched ", ITEMNAME_SIZE );
-                break;
-            case 12:
-                strncat(buff, "knobbly ", ITEMNAME_SIZE );
-                break;
-            }
-
-            switch (this->special % 13)
-            {
-            case 0:
-                strncat(buff, "wooden ring", ITEMNAME_SIZE );
-                break;
-            case 1:
-                strncat(buff, "silver ring", ITEMNAME_SIZE );
-                break;
-            case 2:
-                strncat(buff, "golden ring", ITEMNAME_SIZE );
-                break;
-            case 3:
-                strncat(buff, "iron ring", ITEMNAME_SIZE );
-                break;
-            case 4:
-                strncat(buff, "steel ring", ITEMNAME_SIZE );
-                break;
-            case 5:
-                strncat(buff, "bronze ring", ITEMNAME_SIZE );
-                break;
-            case 6:
-                strncat(buff, "brass ring", ITEMNAME_SIZE );
-                break;
-            case 7:
-                strncat(buff, "copper ring", ITEMNAME_SIZE );
-                break;
-            case 8:
-                strncat(buff, "granite ring", ITEMNAME_SIZE );
-                break;
-            case 9:
-                strncat(buff, "ivory ring", ITEMNAME_SIZE );
-                break;
-            case 10:
-                strncat(buff, "bone ring", ITEMNAME_SIZE );
-                break;
-            case 11:
-                strncat(buff, "marble ring", ITEMNAME_SIZE );
-                break;
-            case 12:
-                strncat(buff, "jade ring", ITEMNAME_SIZE );
-                break;
-            case 13:
-                strncat(buff, "glass ring", ITEMNAME_SIZE );
-                break;
-            }
-        }                       // end of rings
-        else                    // ie is an amulet
+            buff << ring_secondary_string(this->special / 13)
+                 << ring_primary_string(this->special % 13)
+                 << " ring";
+        }
+        else                    // amulets
         {
-            if (is_random_artefact( *this ))
-            {
-                strncat(buff, randart_ring_name(*this), ITEMNAME_SIZE);
-                break;
-            }
-
-            if (this->special > 13)
-            {
-                switch (this->special / 13)   // secondary characteristic of amulet
-                {
-                case 0:
-                    strncat(buff, "dented ", ITEMNAME_SIZE );
-                    break;
-                case 1:
-                    strncat(buff, "square ", ITEMNAME_SIZE );
-                    break;
-                case 2:
-                    strncat(buff, "thick ", ITEMNAME_SIZE );
-                    break;
-                case 3:
-                    strncat(buff, "thin ", ITEMNAME_SIZE );
-                    break;
-                case 4:
-                    strncat(buff, "runed ", ITEMNAME_SIZE );
-                    break;
-                case 5:
-                    strncat(buff, "blackened ", ITEMNAME_SIZE );
-                    break;
-                case 6:
-                    strncat(buff, "glowing ", ITEMNAME_SIZE );
-                    break;
-                case 7:
-                    strncat(buff, "small ", ITEMNAME_SIZE );
-                    break;
-                case 8:
-                    strncat(buff, "large ", ITEMNAME_SIZE );
-                    break;
-                case 9:
-                    strncat(buff, "twisted ", ITEMNAME_SIZE );
-                    break;
-                case 10:
-                    strncat(buff, "tiny ", ITEMNAME_SIZE );
-                    break;
-                case 11:
-                    strncat(buff, "triangular ", ITEMNAME_SIZE );
-                    break;
-                case 12:
-                    strncat(buff, "lumpy ", ITEMNAME_SIZE );
-                    break;
-                }
-            }
-
-            switch (this->special % 13)
-            {
-            case 0:
-                strncat(buff, "zirconium amulet", ITEMNAME_SIZE );
-                break;
-            case 1:
-                strncat(buff, "sapphire amulet", ITEMNAME_SIZE );
-                break;
-            case 2:
-                strncat(buff, "golden amulet", ITEMNAME_SIZE );
-                break;
-            case 3:
-                strncat(buff, "emerald amulet", ITEMNAME_SIZE );
-                break;
-            case 4:
-                strncat(buff, "garnet amulet", ITEMNAME_SIZE );
-                break;
-            case 5:
-                strncat(buff, "bronze amulet", ITEMNAME_SIZE );
-                break;
-            case 6:
-                strncat(buff, "brass amulet", ITEMNAME_SIZE );
-                break;
-            case 7:
-                strncat(buff, "copper amulet", ITEMNAME_SIZE );
-                break;
-            case 8:
-                strncat(buff, "ruby amulet", ITEMNAME_SIZE );
-                break;
-            case 9:
-                strncat(buff, "ivory amulet", ITEMNAME_SIZE );
-                break;
-            case 10:
-                strncat(buff, "bone amulet", ITEMNAME_SIZE );
-                break;
-            case 11:
-                strncat(buff, "platinum amulet", ITEMNAME_SIZE );
-                break;
-            case 12:
-                strncat(buff, "jade amulet", ITEMNAME_SIZE );
-                break;
-            case 13:
-                strncat(buff, "plastic amulet", ITEMNAME_SIZE );
-                break;
-            }
-        }                       // end of amulets
+            buff << amulet_secondary_string(this->special / 13)
+                 << amulet_primary_string(this->special % 13)
+                 << " amulet";
+        }
         break;
 
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_MISCELLANY:
-        switch (item_typ)
+        if ( item_typ == MISC_RUNE_OF_ZOT )
         {
-        case MISC_RUNE_OF_ZOT:
-            strncat(buff, (it_plus == RUNE_DIS)          ? "iron" :
-                          (it_plus == RUNE_GEHENNA)      ? "obsidian" :
-                          (it_plus == RUNE_COCYTUS)      ? "icy" :
-                          (it_plus == RUNE_TARTARUS)     ? "bone" :
-                          (it_plus == RUNE_SLIME_PITS)   ? "slimy" :
-                          (it_plus == RUNE_VAULTS)       ? "silver" :
-                          (it_plus == RUNE_SNAKE_PIT)    ? "serpentine" :
-                          (it_plus == RUNE_ELVEN_HALLS)  ? "elven" :
-                          (it_plus == RUNE_TOMB)         ? "golden" :
-                          (it_plus == RUNE_SWAMP)        ? "decaying" :
-                          (it_plus == RUNE_ISLANDS)      ? "liquid" :
- 
-                          // pandemonium and abyss runes:
-                          (it_plus == RUNE_DEMONIC)      ? "demonic" :
-                          (it_plus == RUNE_ABYSSAL)      ? "abyssal" :
-
-                          // special pandemonium runes:
-                          (it_plus == RUNE_MNOLEG)       ? "glowing" :
-                          (it_plus == RUNE_LOM_LOBON)    ? "magical" :
-                          (it_plus == RUNE_CEREBOV)      ? "fiery" :
-                          (it_plus == RUNE_GLOORX_VLOQ)  ? "dark"
-                                                         : "buggy", 
-                     ITEMNAME_SIZE);
-
-            strncat(buff, " ", ITEMNAME_SIZE );
-            strncat(buff, "rune", ITEMNAME_SIZE );
+            buff << rune_type_name(it_plus) << " rune";
 
             if (this->quantity > 1)
-                strncat(buff, "s", ITEMNAME_SIZE );
+                buff << "s";
 
             if (know_type)
-                strncat(buff, " of Zot", ITEMNAME_SIZE );
-            break;
-
-        case MISC_DECK_OF_POWER:
-        case MISC_DECK_OF_SUMMONINGS:
-        case MISC_DECK_OF_TRICKS:
-        case MISC_DECK_OF_WONDERS:
-            strncat(buff, "deck of ", ITEMNAME_SIZE );
-            strncat(buff, !know_type  ? "cards"  :
-                   (item_typ == MISC_DECK_OF_WONDERS)      ? "wonders" :
-                   (item_typ == MISC_DECK_OF_SUMMONINGS)   ? "summonings" :
-                   (item_typ == MISC_DECK_OF_TRICKS)       ? "tricks" :
-                   (item_typ == MISC_DECK_OF_POWER)        ? "power" 
-                                                           : "bugginess",
-                   ITEMNAME_SIZE);
-            break;
-
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
-        case MISC_CRYSTAL_BALL_OF_SEEING:
-            strncat(buff, "crystal ball", ITEMNAME_SIZE );
-            if (know_type)
-            {
-                strncat(buff, " of ", ITEMNAME_SIZE );
-                strncat(buff,
-                       (item_typ == MISC_CRYSTAL_BALL_OF_SEEING) ? "seeing" :
-                       (item_typ == MISC_CRYSTAL_BALL_OF_ENERGY) ? "energy" :
-                       (item_typ == MISC_CRYSTAL_BALL_OF_FIXATION) ? "fixation"
-                                                               : "bugginess",
-                       ITEMNAME_SIZE);
-            }
-            break;
-
-        case MISC_BOX_OF_BEASTS:
-            if (know_type)
-                strncat(buff, "box of beasts", ITEMNAME_SIZE );
-            else
-                strncat(buff, "small ebony casket", ITEMNAME_SIZE );
-            break;
-
-        case MISC_EMPTY_EBONY_CASKET:
-            if (know_type)
-                strncat(buff, "empty ebony casket", ITEMNAME_SIZE );
-            else
-                strncat(buff, "small ebony casket", ITEMNAME_SIZE );
-            break;
-
-        case MISC_AIR_ELEMENTAL_FAN:
-            if (know_type)
-                strncat(buff, "air elemental ", ITEMNAME_SIZE );
-            strncat(buff, "fan", ITEMNAME_SIZE );
-            break;
-
-        case MISC_LAMP_OF_FIRE:
-            strncat(buff, "lamp", ITEMNAME_SIZE );
-            if (know_type)
-                strncat(buff, " of fire", ITEMNAME_SIZE );
-            break;
-
-        case MISC_LANTERN_OF_SHADOWS:
-            if (!know_type)
-                strncat(buff, "bone ", ITEMNAME_SIZE );
-            strncat(buff, "lantern", ITEMNAME_SIZE );
-
-            if (know_type)
-                strncat(buff, " of shadows", ITEMNAME_SIZE );
-            break;
-
-        case MISC_HORN_OF_GERYON:
-            if (!know_type)
-                strncat(buff, "silver ", ITEMNAME_SIZE );
-            strncat(buff, "horn", ITEMNAME_SIZE );
-
-            if (know_type)
-                strncat(buff, " of Geryon", ITEMNAME_SIZE );
-            break;
-
-        case MISC_DISC_OF_STORMS:
-            if (!know_type)
-                strncat(buff, "grey ", ITEMNAME_SIZE );
-            strncat(buff, "disc", ITEMNAME_SIZE );
-
-            if (know_type)
-                strncat(buff, " of storms", ITEMNAME_SIZE );
-            break;
-
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
-            if (!know_type)
-                strncat(buff, "nondescript ", ITEMNAME_SIZE );
-            strncat(buff, "stone", ITEMNAME_SIZE );
-
-            if (know_type)
-                strncat(buff, " of earth elementals", ITEMNAME_SIZE );
-            break;
-
-        case MISC_BOTTLED_EFREET:
-            strncat(buff, (!know_type) 
-                                ? "sealed bronze flask" : "bottled efreet",
-                                ITEMNAME_SIZE );
-            break;
-
-        case MISC_PORTABLE_ALTAR_OF_NEMELEX:
-            strncat(buff, "portable altar of Nemelex", ITEMNAME_SIZE );
-            break;
-
-        default:
-            strncat(buff, "buggy miscellaneous item", ITEMNAME_SIZE );
-            break;
+                buff << " of Zot";
+        }
+        else
+        {
+            buff << misc_type_name(item_typ, know_type);
         }
         break;
 
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_BOOKS:
         if (!know_type)
         {
-            char primary = (this->special / 10);
-            char secondary = (this->special % 10);
-
-            strncat(buff, (primary == 0) ? "" :
-                   (primary == 1) ? "chunky " :
-                   (primary == 2) ? "thick " :
-                   (primary == 3) ? "thin " :
-                   (primary == 4) ? "wide " :
-                   (primary == 5) ? "glowing " :
-                   (primary == 6) ? "dog-eared " :
-                   (primary == 7) ? "oblong " :
-                   (primary == 8) ? "runed " :
-
-                   // these last three were single spaces {dlb}
-                   (primary == 9) ? "" :
-                   (primary == 10) ? "" : (primary == 11) ? "" : "buggily ",
-                   ITEMNAME_SIZE);
-
-            strncat(buff, (secondary == 0) ? "paperback " :
-                   (secondary == 1) ? "hardcover " :
-                   (secondary == 2) ? "leatherbound " :
-                   (secondary == 3) ? "metal-bound " :
-                   (secondary == 4) ? "papyrus " :
-                   // these two were single spaces, too {dlb}
-                   (secondary == 5) ? "" :
-                   (secondary == 6) ? "" : "buggy ", ITEMNAME_SIZE);
-
-            strncat(buff, "book", ITEMNAME_SIZE );
+            buff << book_secondary_string(this->special / 10)
+                 << book_primary_string(this->special % 10)
+                 << "book";
         }
         else if (item_typ == BOOK_MANUAL)
-        {
-            strncat(buff, "manual of ", ITEMNAME_SIZE );
-            strncat(buff, skill_name(it_plus), ITEMNAME_SIZE );
-        }
+            buff << "manual of " << skill_name(it_plus);
         else if (item_typ == BOOK_NECRONOMICON)
-            strncat(buff, "Necronomicon", ITEMNAME_SIZE );
+            buff << "Necronomicon";
         else if (item_typ == BOOK_DESTRUCTION)
-            strncat(buff, "tome of Destruction", ITEMNAME_SIZE );
+            buff << "tome of Destruction";
         else if (item_typ == BOOK_YOUNG_POISONERS)
-            strncat(buff, "Young Poisoner's Handbook", ITEMNAME_SIZE );
+            buff << "Young Poisoner's Handbook";
         else if (item_typ == BOOK_BEASTS)
-            strncat(buff, "Monster Manual", ITEMNAME_SIZE );
+            buff << "Monster Manual";
         else
-        {
-            strncat(buff, "book of ", ITEMNAME_SIZE );
-            strncat(buff, (item_typ == BOOK_MINOR_MAGIC_I
-                          || item_typ == BOOK_MINOR_MAGIC_II
-                          || item_typ == BOOK_MINOR_MAGIC_III) ? "Minor Magic" :
-                          (item_typ == BOOK_CONJURATIONS_I
-                          || item_typ == BOOK_CONJURATIONS_II) ? "Conjurations" :
-                          (item_typ == BOOK_FLAMES) ? "Flames" :
-                          (item_typ == BOOK_FROST) ? "Frost" :
-                          (item_typ == BOOK_SUMMONINGS) ? "Summonings" :
-                          (item_typ == BOOK_FIRE) ? "Fire" :
-                          (item_typ == BOOK_ICE) ? "Ice" :
-                          (item_typ == BOOK_SURVEYANCES) ? "Surveyances" :
-                          (item_typ == BOOK_SPATIAL_TRANSLOCATIONS) ? "Spatial Translocations" :
-                          (item_typ == BOOK_ENCHANTMENTS) ? "Enchantments" :
-                          (item_typ == BOOK_TEMPESTS) ? "the Tempests" :
-                          (item_typ == BOOK_DEATH) ? "Death" :
-                          (item_typ == BOOK_HINDERANCE) ? "Hinderance" :
-                          (item_typ == BOOK_CHANGES) ? "Changes" :
-                          (item_typ == BOOK_TRANSFIGURATIONS) ? "Transfigurations" :
-                          (item_typ == BOOK_PRACTICAL_MAGIC) ? "Practical Magic" :
-                          (item_typ == BOOK_WAR_CHANTS) ? "War Chants" :
-                          (item_typ == BOOK_CLOUDS) ? "Clouds" :
-                          (item_typ == BOOK_HEALING) ? "Healing" :
-                          (item_typ == BOOK_NECROMANCY) ? "Necromancy" :
-                          (item_typ == BOOK_CALLINGS) ? "Callings" :
-                          (item_typ == BOOK_CHARMS) ? "Charms" :
-                          (item_typ == BOOK_DEMONOLOGY) ? "Demonology" :
-                          (item_typ == BOOK_AIR) ? "Air" :
-                          (item_typ == BOOK_SKY) ? "the Sky" :
-                          (item_typ == BOOK_DIVINATIONS) ? "Divinations" :
-                          (item_typ == BOOK_WARP) ? "the Warp" :
-                          (item_typ == BOOK_ENVENOMATIONS) ? "Envenomations" :
-                          (item_typ == BOOK_ANNIHILATIONS) ? "Annihilations" :
-                          (item_typ == BOOK_UNLIFE) ? "Unlife" :
-                          (item_typ == BOOK_CONTROL) ? "Control" :
-                          (item_typ == BOOK_MUTATIONS) ? "Morphology" :
-                          (item_typ == BOOK_TUKIMA) ? "Tukima" :
-                          (item_typ == BOOK_GEOMANCY) ? "Geomancy" :
-                          (item_typ == BOOK_EARTH) ? "the Earth" :
-                          (item_typ == BOOK_WIZARDRY) ? "Wizardry" :
-                          (item_typ == BOOK_POWER) ? "Power" :
-                          (item_typ == BOOK_CANTRIPS) ? "Cantrips" :
-                          (item_typ == BOOK_PARTY_TRICKS) ? "Party Tricks" :
-                          (item_typ == BOOK_STALKING) ? "Stalking"
-                                                           : "Bugginess",
-                        ITEMNAME_SIZE );
-        }
+            buff << "book of " << book_type_name(item_typ);
         break;
 
-    // compacted 15 Apr 2000 {dlb}:
     case OBJ_STAVES:
         if (!know_type)
         {
-            strncat(buff, (this->special == 0) ? "curved" :
-                   (this->special == 1) ? "glowing" :
-                   (this->special == 2) ? "thick" :
-                   (this->special == 3) ? "thin" :
-                   (this->special == 4) ? "long" :
-                   (this->special == 5) ? "twisted" :
-                   (this->special == 6) ? "jeweled" :
-                   (this->special == 7) ? "runed" :
-                   (this->special == 8) ? "smoking" :
-                   (this->special == 9) ? "gnarled" :    // was "" {dlb}
-                   (this->special == 10) ? "" :
-                   (this->special == 11) ? "" :
-                   (this->special == 12) ? "" :
-                   (this->special == 13) ? "" :
-                   (this->special == 14) ? "" :
-                   (this->special == 15) ? "" :
-                   (this->special == 16) ? "" :
-                   (this->special == 17) ? "" :
-                   (this->special == 18) ? "" :
-                   (this->special == 19) ? "" :
-                   (this->special == 20) ? "" :
-                   (this->special == 21) ? "" :
-                   (this->special == 22) ? "" :
-                   (this->special == 23) ? "" :
-                   (this->special == 24) ? "" :
-                   (this->special == 25) ? "" :
-                   (this->special == 26) ? "" :
-                   (this->special == 27) ? "" :
-                   (this->special == 28) ? "" :
-                   (this->special == 29) ? "" : "buggy", ITEMNAME_SIZE);
-            strncat(buff, " ", ITEMNAME_SIZE );
-        }
-
-        strncat( buff, (item_is_rod( *this ) ? "rod" : "staff"), ITEMNAME_SIZE );
-
-        if (know_type)
+            buff << staff_primary_string(this->special) << " "
+                 << (item_is_rod( *this ) ? "rod" : "staff");
+        }      
+        else
         {
-            strncat(buff, " of ", ITEMNAME_SIZE );
+            buff << (item_is_rod( *this ) ? "rod" : "staff")
+                 << " of " << staff_type_name(item_typ);
 
-            strncat(buff, (item_typ == STAFF_WIZARDRY) ? "wizardry" :
-                   (item_typ == STAFF_POWER) ? "power" :
-                   (item_typ == STAFF_FIRE) ? "fire" :
-                   (item_typ == STAFF_COLD) ? "cold" :
-                   (item_typ == STAFF_POISON) ? "poison" :
-                   (item_typ == STAFF_ENERGY) ? "energy" :
-                   (item_typ == STAFF_DEATH) ? "death" :
-                   (item_typ == STAFF_CONJURATION) ? "conjuration" :
-                   (item_typ == STAFF_ENCHANTMENT) ? "enchantment" :
-                   (item_typ == STAFF_SMITING) ? "smiting" :
-                   (item_typ == STAFF_STRIKING) ? "striking" :
-                   (item_typ == STAFF_WARDING) ? "warding" :
-                   (item_typ == STAFF_DISCOVERY) ? "discovery" :
-                   (item_typ == STAFF_DEMONOLOGY) ? "demonology" :
-                   (item_typ == STAFF_AIR) ? "air" :
-                   (item_typ == STAFF_EARTH) ? "earth" :
-                   (item_typ == STAFF_SUMMONING
-                    || item_typ == STAFF_SPELL_SUMMONING) ? "summoning" :
-                   (item_typ == STAFF_DESTRUCTION_I
-                    || item_typ == STAFF_DESTRUCTION_II
-                    || item_typ == STAFF_DESTRUCTION_III
-                    || item_typ == STAFF_DESTRUCTION_IV) ? "destruction" :
-                   (item_typ == STAFF_CHANNELING) ? "channeling"
-                   : "bugginess", ITEMNAME_SIZE );
+            if (item_is_rod(*this))
+            {
+                buff << " (" << (this->plus / ROD_CHARGE_MULT)
+                     << "/" << (this->plus2 / ROD_CHARGE_MULT)
+                     << ")";
+            }
         }
-
-        if (item_is_rod( *this )
-            && know_type)
-        {
-            strncat( buff, " (", ITEMNAME_SIZE );
-            itoa( this->plus / ROD_CHARGE_MULT, tmp_quant, 10 );
-            strncat( buff, tmp_quant, ITEMNAME_SIZE );
-            strncat( buff, "/", ITEMNAME_SIZE );
-            itoa( this->plus2 / ROD_CHARGE_MULT, tmp_quant, 10 );
-            strncat( buff, tmp_quant, ITEMNAME_SIZE );
-            strncat( buff, ")", ITEMNAME_SIZE );
-        }
-
         break;
 
 
     // rearranged 15 Apr 2000 {dlb}:
     case OBJ_ORBS:
-        strncpy(buff, "Orb of Zot", ITEMNAME_SIZE);
+        buff.str("Orb of Zot");
         break;
 
     case OBJ_GOLD:
-        strncat(buff, "gold piece", ITEMNAME_SIZE );
+        buff << "gold piece";
         break;
 
-    // still not implemented, yet:
+    // not implemented
     case OBJ_GEMSTONES:
         break;
 
-    // rearranged 15 Apr 2000 {dlb}:
     case OBJ_CORPSES:
         if (item_typ == CORPSE_BODY && this->special < 100)
-            strncat(buff, "rotting ", ITEMNAME_SIZE );
-
-        moname( it_plus, true, DESC_PLAIN, tmp_buff );
-
-        strncat(buff, tmp_buff, ITEMNAME_SIZE );
-        strncat(buff, " ", ITEMNAME_SIZE );
-        strncat(buff, (item_typ == CORPSE_BODY) ? "corpse" :
-               (item_typ == CORPSE_SKELETON) ? "skeleton" : "corpse bug", 
-               ITEMNAME_SIZE );
+            buff << "rotting ";
+        {
+            char tmp_buff[ITEMNAME_SIZE];
+            moname( it_plus, true, DESC_PLAIN, tmp_buff );
+            buff << tmp_buff << " ";
+            if (item_typ == CORPSE_BODY)
+                buff << "corpse";
+            else if (item_typ == CORPSE_SKELETON)
+                buff << "skeleton";
+            else
+                buff << "corpse bug";
+        }
         break;
 
     default:
-        strncat(buff, "!", ITEMNAME_SIZE );
-    }                           // end of switch?
+        buff << "!";
+    }
 
     // Disambiguation
     if (!terse && know_type)
     {
-#define name_append(x) strncat(buff, x, ITEMNAME_SIZE)
         switch (this->base_type)
         {
         case OBJ_STAVES:
             switch (item_typ)
             {
             case STAFF_DESTRUCTION_I:
-                name_append(" [fire]");
+                buff << " [fire]";
                 break;
             case STAFF_DESTRUCTION_II:
-                name_append(" [ice]");
+                buff << " [ice]";
                 break;
             case STAFF_DESTRUCTION_III:
-                name_append(" [iron,fireball,lightning]");
+                buff << " [iron,fireball,lightning]";
                 break;
             case STAFF_DESTRUCTION_IV:
-                name_append(" [inacc,magma,cold]");
+                buff << " [inacc,magma,cold]";
                 break;
             }
             break;
+
         case OBJ_BOOKS:
             switch (item_typ)
             {
             case BOOK_MINOR_MAGIC_I:
-                name_append(" [flame]");
+                buff << " [flame]";
                 break;
             case BOOK_MINOR_MAGIC_II:
-                name_append(" [frost]");
+                buff << " [frost]";
                 break;
             case BOOK_MINOR_MAGIC_III:
-                name_append(" [summ]");
+                buff << " [summ]";
                 break;
             case BOOK_CONJURATIONS_I:
-                name_append(" [fire]");
+                buff << " [fire]";
                 break;
             case BOOK_CONJURATIONS_II:
-                name_append(" [ice]");
+                buff << " [ice]";
                 break;
             }
         default:
             break;
         }
-#undef name_append
     }
 
     // debugging output -- oops, I probably block it above ... dang! {dlb}
-    if (strlen(buff) < 3)
+    if (buff.str().length() < 3)
     {
-        char ugug[20];
-
-        strncat(buff, "bad item (cl:", ITEMNAME_SIZE );
-        itoa(this->base_type, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ",ty:", ITEMNAME_SIZE );
-        itoa(item_typ, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ",pl:", ITEMNAME_SIZE );
-        itoa(it_plus, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ",pl2:", ITEMNAME_SIZE );
-        itoa(item_plus2, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ",sp:", ITEMNAME_SIZE );
-        itoa(this->special, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ",qu:", ITEMNAME_SIZE );
-        itoa(this->quantity, ugug, 10);
-        strncat(buff, ugug, ITEMNAME_SIZE );
-        strncat(buff, ")", ITEMNAME_SIZE );
+        buff << "bad item (cl:" << static_cast<int>(this->base_type)
+             << ",ty:" << item_typ << ",pl:" << it_plus
+             << ",pl2:" << item_plus2 << ",sp:" << this->special
+             << ",qu:" << this->quantity << ")";
     }
 
     // hackish {dlb}
@@ -1820,8 +1556,9 @@ void item_def::name_aux( char* buff, bool terse, bool ident ) const
         && this->base_type != OBJ_MISCELLANY
         && (this->base_type != OBJ_FOOD || item_typ != FOOD_CHUNK))
     {
-        strncat(buff, "s", ITEMNAME_SIZE );
+        buff << "s";
     }
+    return buff.str();
 }
 
 static item_type_id_type objtype_to_idtype(object_class_type base_type)

@@ -28,7 +28,7 @@ int property( const item_def &item, int prop_type );
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void check_item_knowledge(void);
+void check_item_knowledge();
 
 std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );
@@ -36,19 +36,10 @@ std::string quant_name( const item_def &item, int quant,
 /* ***********************************************************************
  * bit operations called from a large number of files
  * *********************************************************************** */
-bool item_cursed( const item_def &item );
-bool item_known_cursed( const item_def &item );
-bool item_known_uncursed( const item_def &item );
 bool fully_identified( const item_def &item );
 unsigned long full_ident_mask( const item_def& item );
 
 bool item_type_known( const item_def &item );
-
-bool set_item_ego_type( item_def &item, int item_type, int ego_type ); 
-
-int get_weapon_brand( const item_def &item );
-int get_ammo_brand( const item_def &item );
-int get_armour_ego_type( const item_def &item );
 
 bool is_interesting_item( const item_def& item );
 

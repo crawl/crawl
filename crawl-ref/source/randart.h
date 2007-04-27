@@ -44,7 +44,7 @@ const char *randart_name( const item_def &item );
 /* ***********************************************************************
  * called from: itemname
  * *********************************************************************** */
-const char *randart_ring_name( const item_def &item );
+const char *randart_jewellery_name( const item_def &item );
 
 /* ***********************************************************************
  * called from: describe

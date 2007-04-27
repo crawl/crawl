@@ -28,6 +28,7 @@
 #include "effects.h"
 #include "food.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
@@ -492,6 +493,9 @@ void unwear_armour(char unw)
 
     case SPARM_ARCHMAGI:
         mpr("You feel strangely numb.");
+        break;
+
+    default:
         break;
     }
 
