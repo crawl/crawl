@@ -2347,6 +2347,13 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
+    // maybe we can remove the YOU_KILL...
+    if ( grid_destroys_items(grd[x][y]) && YOU_KILL(beam.thrower) )
+    {
+        mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
+        return;
+    }
+
     if (YOU_KILL(beam.thrower) // ie if you threw it.
         && (!grid_destroys_items(grd[x][y])))
     {
@@ -2373,8 +2380,7 @@ static void beam_drop_object( struct bolt &beam, item_def *item, int x, int y )
         if (item->base_type != OBJ_MISSILES || !one_chance_in(chance))
             copy_item_to_grid( *item, x, y, 1 );
     }
-    else if (MON_KILL(beam.thrower) // monster threw it.
-             && !grid_destroys_items(grd[x][y]) && coinflip())
+    else if (MON_KILL(beam.thrower) && coinflip()) // monster threw it.
     {
         copy_item_to_grid( *item, x, y, 1 );
     }                           // if (thing_throw == 2) ...

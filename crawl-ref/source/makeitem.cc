@@ -228,9 +228,10 @@ static int special_colour()
 {
     switch(random2(3))
     {
-        case 0: return RED;
-        case 1: return LIGHTBLUE;
-        case 2: return MAGENTA;
+    case 0: return RED;
+    case 1: return LIGHTBLUE;
+    case 2: return MAGENTA;
+    default: return RED;        // compiler warnings, hush
     }
 }
 
