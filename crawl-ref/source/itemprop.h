@@ -27,6 +27,8 @@ void do_uncurse_item(  item_def &item );
 bool item_ident( const item_def &item, unsigned long flags );
 void set_ident_flags( item_def &item, unsigned long flags );
 void unset_ident_flags( item_def &item, unsigned long flags );
+bool fully_identified( const item_def &item );
+unsigned long full_ident_mask( const item_def& item );
 
 // racial item and item descriptions:
 void set_equip_race( item_def &item, unsigned long flags );

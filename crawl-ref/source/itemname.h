@@ -33,12 +33,6 @@ void check_item_knowledge();
 std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );
 
-/* ***********************************************************************
- * bit operations called from a large number of files
- * *********************************************************************** */
-bool fully_identified( const item_def &item );
-unsigned long full_ident_mask( const item_def& item );
-
 bool item_type_known( const item_def &item );
 
 bool is_interesting_item( const item_def& item );
@@ -55,6 +49,5 @@ item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
 void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
-
 
 #endif

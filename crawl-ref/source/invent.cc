@@ -28,7 +28,7 @@
 #include "externs.h"
 
 #include "clua.h"
-#include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "macro.h"
 #include "player.h"

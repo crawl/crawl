@@ -281,6 +281,55 @@ static const char* fixed_artefact_name( const item_def& item, bool ident )
     }
 }
 
+static const char* weapon_brand_name(const item_def& item, bool terse)
+{
+    switch (get_weapon_brand(item))
+    {
+    case SPWPN_NORMAL: return "";
+    case SPWPN_FLAMING: return ((terse) ? " (flame)" : " of flaming");
+    case SPWPN_FREEZING: return ((terse) ? " (freeze)" : " of freezing");
+    case SPWPN_HOLY_WRATH: return ((terse) ? " (holy)" : " of holy wrath");
+    case SPWPN_ELECTROCUTION: return ((terse) ? " (elec)":" of electrocution");
+    case SPWPN_ORC_SLAYING: return ((terse) ? " (slay orc)":" of orc slaying");
+    case SPWPN_VENOM: return ((terse) ? " (venom)" : " of venom");
+    case SPWPN_PROTECTION: return ((terse) ? " (protect)" : " of protection");
+    case SPWPN_DRAINING: return ((terse) ? " (drain)" : " of draining");
+    case SPWPN_SPEED: return ((terse) ? " (speed)" : " of speed");
+    case SPWPN_DISRUPTION: return ((terse) ? " (disrupt)" : " of disruption");
+    case SPWPN_PAIN: return ((terse) ? " (pain)" : " of pain");
+    case SPWPN_DISTORTION: return ((terse) ? " (distort)" : " of distortion");
+    case SPWPN_REACHING: return ((terse) ? " (reach)" : " of reaching");
+
+    case SPWPN_VAMPIRICISM:
+        return ((terse) ? " (vamp)" : ""); // non-terse already handled
+
+    case SPWPN_VORPAL:
+        if (is_range_weapon(item))
+            return ((terse) ? " (velocity)" : " of velocity");
+        else
+        {
+            switch (get_vorpal_type(item))
+            {
+            case DVORP_CRUSHING: return ((terse) ? " (crush)" :" of crushing");
+            case DVORP_SLICING:  return ((terse) ? " (slice)" : " of slicing");
+            case DVORP_PIERCING: return ((terse) ? " (pierce)":" of piercing");
+            case DVORP_CHOPPING: return ((terse) ? " (chop)" : " of chopping");
+            case DVORP_SLASHING: return ((terse) ? " (slash)" :" of slashing");
+            case DVORP_STABBING: return ((terse) ? " (stab)" : " of stabbing");
+            default:             return "";
+            }
+        }
+
+    // ranged weapon brands
+    case SPWPN_FLAME: return ((terse) ? " (flame)" : " of flame");
+    case SPWPN_FROST: return ((terse) ? " (frost)" : " of frost");
+
+    // randart brands
+    default: return "";
+    }
+}
+
+
 static const char* armour_ego_name( special_armour_type sparm, bool terse )
 {   
     if (!terse)
@@ -869,6 +918,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
     const bool know_type = ident || item_type_known(*this);
     const bool know_pluses = ident || item_ident(*this, ISFLAG_KNOW_PLUSES);
 
+    bool need_plural = true;
     int brand;
 
     std::ostringstream buff;
@@ -934,117 +984,20 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         // always give racial type (it does have game effects)
         buff << racial_description_string(*this, terse);
 
-        brand = get_weapon_brand( *this );
-
-        if (know_type && !terse)
-        {
-            if (brand == SPWPN_VAMPIRICISM)
-                buff << "vampiric ";
-        }                       // end if
+        if (know_type && !terse &&
+            (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
+            buff << "vampiric ";
 
         buff << item_base_name(*this);
-
-        if (know_type)
-        {
-            switch (brand)
-            {
-            case SPWPN_NORMAL:
-                break;
-            case SPWPN_FLAMING:
-                buff << ((terse) ? " (flame)" : " of flaming");
-                break;
-            case SPWPN_FREEZING:
-                buff << ((terse) ? " (freeze)" : " of freezing");
-                break;
-            case SPWPN_HOLY_WRATH:
-                buff << ((terse) ? " (holy)" : " of holy wrath");
-                break;
-            case SPWPN_ELECTROCUTION:
-                buff << ((terse) ? " (elec)" : " of electrocution");
-                break;
-            case SPWPN_ORC_SLAYING:
-                buff << ((terse) ? " (slay orc)" : " of orc slaying");
-                break;
-            case SPWPN_VENOM:
-                buff << ((terse) ? " (venom)" : " of venom");
-                break;
-            case SPWPN_PROTECTION:
-                buff << ((terse) ? " (protect)" : " of protection");
-                break;
-            case SPWPN_DRAINING:
-                buff << ((terse) ? " (drain)" : " of draining");
-                break;
-            case SPWPN_SPEED:
-                buff << ((terse) ? " (speed)" : " of speed");
-                break;
-            case SPWPN_VORPAL:
-                if (is_range_weapon( *this ))
-                {
-                    buff << ((terse) ? " (velocity)" : " of velocity");
-                    break;
-                }
-
-                switch (get_vorpal_type(*this))
-                {
-                case DVORP_CRUSHING:
-                    buff << ((terse) ? " (crush)" : " of crushing");
-                    break;
-                case DVORP_SLICING:
-                    buff << ((terse) ? " (slice)" : " of slicing");
-                    break;
-                case DVORP_PIERCING:
-                    buff << ((terse) ? " (pierce)" : " of piercing");
-                    break;
-                case DVORP_CHOPPING:
-                    buff << ((terse) ? " (chop)" : " of chopping");
-                    break;
-                case DVORP_SLASHING:
-                    buff << ((terse) ? " (slash)" : " of slashing");
-                    break;
-                case DVORP_STABBING:
-                    buff << ((terse) ? " (stab)" : " of stabbing");
-                    break;
-                }
-                break;
-
-            case SPWPN_FLAME:
-                buff << ((terse) ? " (flame)" : " of flame");
-                break;          // bows/xbows
-
-            case SPWPN_FROST:
-                buff << ((terse) ? " (frost)" : " of frost");
-                break;          // bows/xbows
-
-            case SPWPN_VAMPIRICISM:
-                if (terse)      // non-terse already handled above
-                    buff << " (vamp)";
-                break;
-
-            case SPWPN_DISRUPTION:
-                buff << ((terse) ? " (disrupt)" : " of disruption");
-                break;
-            case SPWPN_PAIN:
-                buff << ((terse) ? " (pain)" : " of pain");
-                break;
-            case SPWPN_DISTORTION:
-                buff << ((terse) ? " (distort)" : " of distortion");
-                break;
-
-            case SPWPN_REACHING:
-                buff << ((terse) ? " (reach)" : " of reaching");
-                break;
-
-            /* 25 - 29 are randarts */
-            default:
-                break;
-            }
-        }
+        if ( know_type )
+            buff << weapon_brand_name(*this, terse);
 
         if (know_curse && item_cursed(*this) && terse)
             buff << " (curse)";
         break;
 
     case OBJ_MISSILES:
+        need_plural = false;
         brand = get_ammo_brand( *this );
 
         if (brand == SPMSL_POISONED)
@@ -1186,6 +1139,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         break;
 
     case OBJ_POTIONS:
+        need_plural = false;
         if (know_type)
         {
             buff << "potion";
@@ -1232,71 +1186,31 @@ std::string item_def::name_aux( bool terse, bool ident ) const
     case OBJ_FOOD:
         switch (item_typ)
         {
-        case FOOD_MEAT_RATION:
-            buff << "meat ration";
-            break;
-        case FOOD_BREAD_RATION:
-            buff << "bread ration";
-            break;
-        case FOOD_PEAR:
-            buff << "pear";
-            break;
-        case FOOD_APPLE:        // make this less common
-            buff << "apple";
-            break;
-        case FOOD_CHOKO:
-            buff << "choko";
-            break;
-        case FOOD_HONEYCOMB:
-            buff << "honeycomb";
-            break;
-        case FOOD_ROYAL_JELLY:
-            buff << "royal jell";
-            break;
-        case FOOD_SNOZZCUMBER:
-            buff << "snozzcumber";
-            break;
-        case FOOD_PIZZA:
-            buff << "slice of pizza";
-            break;
-        case FOOD_APRICOT:
-            buff << "apricot";
-            break;
-        case FOOD_ORANGE:
-            buff << "orange";
-            break;
-        case FOOD_BANANA:
-            buff << "banana";
-            break;
-        case FOOD_STRAWBERRY:
-            buff << "strawberr";
-            break;
-        case FOOD_RAMBUTAN:
-            buff << "rambutan";
-            break;
-        case FOOD_LEMON:
-            buff << "lemon";
-            break;
-        case FOOD_GRAPE:
-            buff << "grape";
-            break;
-        case FOOD_SULTANA:
-            buff << "sultana";
-            break;
-        case FOOD_LYCHEE:
-            buff << "lychee";
-            break;
-        case FOOD_BEEF_JERKY:
-            buff << "beef jerk";
-            break;
-        case FOOD_CHEESE:
-            buff << "cheese";
-            break;
-        case FOOD_SAUSAGE:
-            buff << "sausage";
-            break;
+        case FOOD_MEAT_RATION: buff << "meat ration"; break;
+        case FOOD_BREAD_RATION: buff << "bread ration"; break;
+        case FOOD_PEAR: buff << "pear"; break;
+        case FOOD_APPLE: buff << "apple"; break;
+        case FOOD_CHOKO: buff << "choko"; break;
+        case FOOD_HONEYCOMB: buff << "honeycomb"; break;
+        case FOOD_ROYAL_JELLY: buff << "royal jell"; break;
+        case FOOD_SNOZZCUMBER: buff << "snozzcumber"; break;
+        case FOOD_PIZZA: buff << "slice of pizza"; break;
+        case FOOD_APRICOT: buff << "apricot"; break;
+        case FOOD_ORANGE: buff << "orange"; break;
+        case FOOD_BANANA: buff << "banana"; break;
+        case FOOD_STRAWBERRY: buff << "strawberr"; break;
+        case FOOD_RAMBUTAN: buff << "rambutan"; break;
+        case FOOD_LEMON: buff << "lemon"; break;
+        case FOOD_GRAPE: buff << "grape"; break;
+        case FOOD_SULTANA: buff << "sultana"; break;
+        case FOOD_LYCHEE: buff << "lychee"; break;
+        case FOOD_BEEF_JERKY: buff << "beef jerk"; break;
+        case FOOD_CHEESE: buff << "cheese"; break;
+        case FOOD_SAUSAGE: buff << "sausage"; break;
         case FOOD_CHUNK:
         {
+            need_plural = false;
+
             if (this->special < 100)
                 buff << "rotting ";
 
@@ -1318,10 +1232,10 @@ std::string item_def::name_aux( bool terse, bool ident ) const
             || item_typ == FOOD_BEEF_JERKY)
             buff << ((this->quantity > 1) ? "ie" : "y");
 
-        // 's' gets added later if necessary
         break;
 
     case OBJ_SCROLLS:
+        need_plural = false;
         buff << "scroll";
         if ( this->quantity > 1 )
             buff << "s";
@@ -1401,6 +1315,7 @@ std::string item_def::name_aux( bool terse, bool ident ) const
         break;
 
     case OBJ_MISCELLANY:
+        need_plural = false;
         if ( item_typ == MISC_RUNE_OF_ZOT )
         {
             buff << rune_type_name(it_plus) << " rune";
@@ -1548,16 +1463,9 @@ std::string item_def::name_aux( bool terse, bool ident ) const
              << ",qu:" << this->quantity << ")";
     }
 
-    // hackish {dlb}
-    if (this->quantity > 1
-        && this->base_type != OBJ_MISSILES
-        && this->base_type != OBJ_SCROLLS
-        && this->base_type != OBJ_POTIONS
-        && this->base_type != OBJ_MISCELLANY
-        && (this->base_type != OBJ_FOOD || item_typ != FOOD_CHUNK))
-    {
+    if (need_plural && this->quantity > 1)
         buff << "s";
-    }
+
     return buff.str();
 }
 
@@ -1982,53 +1890,4 @@ bool is_interesting_item( const item_def& item )
         if (Options.note_items[i].matches(iname))
             return true;
     return false;
-}
-
-// Returns the mask of interesting identify bits for this item
-// (e.g., scrolls don't have know-cursedness.)
-unsigned long full_ident_mask( const item_def& item )
-{
-    unsigned long flagset = ISFLAG_IDENT_MASK;
-    switch ( item.base_type )
-    {
-    case OBJ_FOOD:
-        flagset = 0;
-        break;
-    case OBJ_BOOKS:
-    case OBJ_MISCELLANY:
-    case OBJ_ORBS:
-    case OBJ_SCROLLS:
-    case OBJ_POTIONS:
-    case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_WANDS:
-        flagset = (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES);
-        break;
-    case OBJ_JEWELLERY:
-        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-        if ( ring_has_pluses(item) )
-            flagset |= ISFLAG_KNOW_PLUSES;
-        break;
-    case OBJ_MISSILES:
-        flagset = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE;
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            flagset &= ~ISFLAG_KNOW_TYPE;
-        break;
-    case OBJ_WEAPONS:
-    case OBJ_ARMOUR:
-    default:
-        break;
-    }
-    if ( is_random_artefact(item) ||
-         is_fixed_artefact(item) )
-    {
-        flagset |= ISFLAG_KNOW_PROPERTIES;
-    }
-    return flagset;
-}
-
-bool fully_identified( const item_def& item )
-{
-    return item_ident(item, full_ident_mask(item));
 }
