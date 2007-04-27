@@ -1299,18 +1299,20 @@ std::string item_def::name_aux( bool terse, bool ident ) const
 
             buff << jewellery_type_name(item_typ);
         }
-
-        if (item_typ < AMU_RAGE) // rings
+        else
         {
-            buff << ring_secondary_string(this->special / 13)
-                 << ring_primary_string(this->special % 13)
-                 << " ring";
-        }
-        else                    // amulets
-        {
-            buff << amulet_secondary_string(this->special / 13)
-                 << amulet_primary_string(this->special % 13)
-                 << " amulet";
+            if (item_typ < AMU_RAGE) // rings
+            {
+                buff << ring_secondary_string(this->special / 13)
+                     << ring_primary_string(this->special % 13)
+                     << " ring";
+            }
+            else                    // amulets
+            {
+                buff << amulet_secondary_string(this->special / 13)
+                     << amulet_primary_string(this->special % 13)
+                     << " amulet";
+            }
         }
         break;
 

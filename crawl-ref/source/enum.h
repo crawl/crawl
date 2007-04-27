@@ -3602,6 +3602,67 @@ enum trap_type                         // env.trap_type[]
     TRAP_RANDOM = 255                  // set at 255 to avoid potential conflicts {dlb}
 };
 
+// any change in this list warrants an increase in the
+// version number in tutorial.cc
+enum tutorial_event_type
+{
+    TUT_SEEN_FIRST_OBJECT,  // 0
+    // seen certain items
+    TUT_SEEN_POTION,        
+    TUT_SEEN_SCROLL,
+    TUT_SEEN_WAND,
+    TUT_SEEN_SPBOOK,
+    TUT_SEEN_JEWELLERY,     // 5    
+    TUT_SEEN_MISC,      
+    TUT_SEEN_STAFF,
+    TUT_SEEN_WEAPON,
+    TUT_SEEN_MISSILES,
+    TUT_SEEN_ARMOUR,        // 10
+    TUT_SEEN_RANDART, 
+    TUT_SEEN_FOOD,  
+    TUT_SEEN_CARRION,
+    // encountered dungeon features
+    TUT_SEEN_STAIRS,        
+    TUT_SEEN_TRAPS,         // 15
+    TUT_SEEN_ALTAR,         
+    TUT_SEEN_SHOP,          
+    TUT_SEEN_DOOR,
+    // other 'first events'
+    TUT_SEEN_MONSTER,
+    TUT_KILLED_MONSTER,     // 20
+    TUT_NEW_LEVEL,       
+    TUT_SKILL_RAISE,
+    TUT_YOU_ENCHANTED,
+    TUT_YOU_SICK,   
+    TUT_YOU_POISON,         // 25
+    TUT_YOU_CURSED,         
+    TUT_YOU_HUNGRY, 
+    TUT_YOU_STARVING,
+    TUT_MULTI_PICKUP,
+    TUT_HEAVY_LOAD,         // 30
+    TUT_ROTTEN_FOOD,
+    TUT_NEED_HEALING,       
+    TUT_NEED_POISON_HEALING,
+    TUT_RUN_AWAY,   
+    TUT_MAKE_CHUNKS,        // 35
+    TUT_POSTBERSERK, 
+    TUT_SHIFT_RUN,
+    TUT_MAP_VIEW,   
+    TUT_DONE_EXPLORE,
+    TUT_YOU_MUTATED,        // 40
+    TUT_NEW_ABILITY,  
+    TUT_WIELD_WEAPON,
+    TUT_EVENTS_NUM          // 43
+}; // for numbers higher than 45 change size of tutorial_events in externs.h
+
+enum tutorial_types
+{
+    TUT_BERSERK_CHAR,
+    TUT_MAGIC_CHAR,
+    TUT_RANGER_CHAR,
+    TUT_TYPES_NUM   // 3
+};    
+
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0

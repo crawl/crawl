@@ -799,7 +799,7 @@ static std::string colour_to_tag(int col, bool closed = false)
     return tag;
 }
 
-void tutorial_first_monster(monsters mon)
+void tutorial_first_monster(const monsters& mon)
 {
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
         return;
@@ -849,7 +849,7 @@ void tutorial_first_monster(monsters mon)
     Options.tut_just_triggered = 1;
 }
 
-void tutorial_first_item(item_def item)
+void tutorial_first_item(const item_def& item)
 {
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] || Options.tut_just_triggered)
         return;
@@ -873,7 +873,7 @@ void tutorial_first_item(item_def item)
 }
 
 // Here most of the tutorial messages for various triggers are handled.
-void learned_something_new(unsigned int seen_what, int x, int y)
+void learned_something_new(tutorial_event_type seen_what, int x, int y)
 { 
     // already learned about that
     if (!Options.tutorial_events[seen_what])
@@ -1279,10 +1279,11 @@ void learned_something_new(unsigned int seen_what, int x, int y)
       case TUT_SEEN_MONSTER:
       case TUT_SEEN_FIRST_OBJECT:
           break;
-      default:
-          text += "You've found something new (but I don't know what)!";
+    case TUT_EVENTS_NUM:
+        text += "You've found something new (but I don't know what)!";
     }
-    if (seen_what != TUT_SEEN_MONSTER && seen_what != TUT_SEEN_FIRST_OBJECT)
+
+    if ( !text.empty() )
        print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
 
     Options.tut_just_triggered = true;

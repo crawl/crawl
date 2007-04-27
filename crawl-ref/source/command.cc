@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
 #include <ctype.h>
 
 #include "externs.h"
@@ -1029,27 +1030,28 @@ void list_tutorial_help()
     cols.set_pagesize(get_number_of_lines());
 
     unsigned short ch, colour;
-    std::string text =
-            "<h>Item types (and common commands)\n"
-            "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-            "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
-            "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-            "<brown>%</brown> : food and corpses (<w>e</w>at and <w>D</w>issect)\n"
-            "<w>?</w> : scrolls (<w>r</w>ead)\n"
-            "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-            "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-            "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-            "<darkgrey>/</darkgrey> : wands (<w>z</w>ap)\n"
-            "<lightcyan>";
+
+    std::ostringstream text;
+    text <<
+        "<h>Item types (and common commands)\n"
+        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
+        "<brown>(</brown> : missiles (<w>t</w>hrow or <w>f</w>ire)\n"
+        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
+        "<brown>%</brown> : food and corpses (<w>e</w>at and <w>D</w>issect)\n"
+        "<w>?</w> : scrolls (<w>r</w>ead)\n"
+        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
+        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
+        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
+        "<darkgrey>/</darkgrey> : wands (<w>z</w>ap)\n"
+        "<lightcyan>";
     get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
-    snprintf(info, INFO_SIZE, "%c", ch);
-    text += info;
-    text += "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>Z</w>ap)\n"
-            "<brown>";
+    text << static_cast<char>(ch);
+    text << "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and "
+        "<w>Z</w>ap)\n"
+        "<brown>";
     get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
-    snprintf(info, INFO_SIZE, "%c", ch);
-    text += info;
-    text += "</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
+    text << static_cast<char>(ch);
+    text << "</brown> : staves, rods (<w>w</w>ield and <w>E</w>voke)\n"
             "\n"
             "<h>Movement and attacking\n"
             "Use the <w>numpad</w> for movement (try both\n"
@@ -1064,7 +1066,7 @@ void list_tutorial_help()
             "<w>Z</w> to cast spells (<w>Z?</w> lists spells).\n",
 
     cols.add_formatted(
-            0, text.c_str(),
+            0, text.str().c_str(),
             true, true, cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1089,7 +1091,7 @@ void list_tutorial_help()
             "If the previous target is still alive\n"
             "and in sight, one of <w>f</w>, <w>p</w>, <w>t</w> fires\n"
             "at it again (without selecting anything).\n",
-            true, true, cmdhelp_textfilter,40);
+            true, true, cmdhelp_textfilter, 40);
             
     show_keyhelp_menu(cols.formatted_lines(), false);
 }

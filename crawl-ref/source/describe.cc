@@ -2141,225 +2141,77 @@ static std::string describe_food( const item_def &item )
 // describe_potion
 //
 //---------------------------------------------------------------
-static std::string describe_potion( const item_def &item )
+static const char* describe_potion( const item_def &item )
 {
-    std::string description;
-
-    description.reserve(64);
-
     if (get_ident_type( OBJ_POTIONS, item.sub_type ) != ID_KNOWN_TYPE)
-        description += "A small bottle of liquid.";
-    else
+        return "A small bottle of liquid.$";
+
+    switch (static_cast<potion_type>(item.sub_type))
     {
-        description += "A";
-
-        switch (item.sub_type)
-        {
-        case POT_HEALING:
-            description += " blessed";
-            break;
-        case POT_HEAL_WOUNDS:
-            description += " magical healing";
-            break;
-        case POT_SPEED:
-            description += "n enchanted";
-            break;
-        case POT_MIGHT:
-            description += " magic";
-            break;
-        case POT_POISON:
-            description += " nasty poisonous";
-            break;
-        case POT_PORRIDGE:
-            description += " filling";
-            break;
-        case POT_DEGENERATION:
-            description += " noxious";
-            break;
-        case POT_DECAY:
-            description += " vile and putrid cursed";
-            break;
-        case POT_WATER:
-            description += " unique";
-            break;
-        case POT_EXPERIENCE:
-            description += " truly wonderful and very rare";
-            break;
-        case POT_MAGIC:
-            description += " valuable";
-            break;
-        case POT_STRONG_POISON:
-            description += " terribly venomous";
-            break;
-        }
-
-        description += " ";
-
-        switch (item.sub_type)
-        {
-        case POT_MIGHT:
-        case POT_GAIN_STRENGTH:
-        case POT_GAIN_DEXTERITY:
-        case POT_GAIN_INTELLIGENCE:
-        case POT_LEVITATION:
-        case POT_SLOWING:
-        case POT_PARALYSIS:
-        case POT_CONFUSION:
-        case POT_INVISIBILITY:
-        case POT_PORRIDGE:
-        case POT_MAGIC:
-        case POT_RESTORE_ABILITIES:
-        case POT_STRONG_POISON:
-        case POT_BERSERK_RAGE:
-        case POT_CURE_MUTATION:
-        case POT_MUTATION:
-            description += "potion";
-            break;
-        case POT_HEALING:
-            description += "fluid";
-            break;
-        case POT_HEAL_WOUNDS:
-            description += "elixir";
-            break;
-        case POT_SPEED:
-            description += "beverage";
-            break;
-        case POT_POISON:
-        case POT_DECAY:
-            description += "liquid";
-            break;
-        case POT_DEGENERATION:
-            description += "concoction";
-            break;
-        case POT_WATER:
-            description += "substance";
-            break;
-        case POT_EXPERIENCE:
-            description += "drink";
-            break;
-        }
-
-        switch (item.sub_type)
-        {
-        case POT_HEALING:
-        case POT_HEAL_WOUNDS:
-        case POT_SPEED:
-        case POT_MIGHT:
-        case POT_LEVITATION:
-        case POT_SLOWING:
-        case POT_PARALYSIS:
-        case POT_CONFUSION:
-        case POT_INVISIBILITY:
-        case POT_DEGENERATION:
-        case POT_DECAY:
-        case POT_MAGIC:
-        case POT_RESTORE_ABILITIES:
-        case POT_BERSERK_RAGE:
-        case POT_CURE_MUTATION:
-        case POT_MUTATION:
-            description += " which ";
-            break;
-        case POT_GAIN_STRENGTH:
-        case POT_GAIN_DEXTERITY:
-        case POT_GAIN_INTELLIGENCE:
-        case POT_PORRIDGE:
-            description += " of ";
-            break;
-        }
-
-        switch (item.sub_type)
-        {
-        case POT_HEALING:
-            description += "heals some wounds, clears the mind, "
-                "and cures diseases";
-            break;
-        case POT_HEAL_WOUNDS:
-            description += "causes wounds to close and heal "
-                "almost instantly";
-            break;
-        case POT_SPEED:
-            description += "speeds the actions of anyone who drinks it";
-            break;
-        case POT_MIGHT:
-            description += "greatly increases the strength and "
-                "physical power of one who drinks it";
-            break;
-        case POT_GAIN_STRENGTH:
-        case POT_GAIN_DEXTERITY:
-        case POT_GAIN_INTELLIGENCE:
-            description += "beneficial mutation";
-            break;
-        case POT_LEVITATION:
-            description += "confers great buoyancy on one who consumes it";
-            break;
-        case POT_SLOWING:
-            description += "slows your actions";
-            break;
-        case POT_PARALYSIS:
-            description += "eliminates your control over your own body";
-            break;
-        case POT_CONFUSION:
-            description += "confuses your perceptions and reduces "
-                "your control over your own actions";
-            break;
-        case POT_INVISIBILITY:
-            description += "hides you from the sight of others";
-            break;
-        case POT_PORRIDGE:
-            description += "sludge, high in cereal fibre";
-            break;
-        case POT_DEGENERATION:
-            description += "can do terrible things to your "
-                "body, brain and reflexes";
-            break;
-        case POT_DECAY:
-            description += "causes your flesh to decay "
-                "before your very eyes";
-            break;
-        case POT_WATER:
-            description += ", vital for the existence of most life";
-            break;
-        case POT_MAGIC:
-            description += "grants a person with an "
-                "infusion of magical energy";
-            break;
-        case POT_RESTORE_ABILITIES:
-            description += "restores the abilities of one who drinks it";
-            break;
-        case POT_BERSERK_RAGE:
-            description += "can send one into an incoherent rage";
-            break;
-        case POT_CURE_MUTATION:
-            description += "removes some or all of any mutations "
-                "which may be afflicting you";
-            break;
-        case POT_MUTATION:
-            description += "does very strange things to you";
-            break;
-        }
-
-        description += ". ";
-
-        switch (item.sub_type)
-        {
-        case POT_HEALING:
-        case POT_HEAL_WOUNDS:
-            description += "If one uses it when they are "
-                "at or near full health, it can also ";
-
-            if (item.sub_type == POT_HEALING)
-                description += "slightly ";
-            description += "repair permanent injuries. ";
-            break;
-        }
-
-        //default:
-        //    DEBUGSTR("Unknown potion");          // I had no idea where to put this back 16jan2000 {dlb}
+    case POT_HEALING:
+        return "A blessed fluid which heals some wounds, clears the mind, "
+            "and cures diseases. If one uses it when they are at or near "
+            "full health, it can also slightly repair permanent injuries.$";
+    case POT_HEAL_WOUNDS:
+        return "A magical healing elixir which causes wounds to close and "
+            "heal almost instantly. If one uses it when they are at or near "
+            "full health, it can also repair permanent injuries.$";
+    case POT_SPEED:
+        return "An enchanted beverage which speeds the actions of anyone who "
+            "drinks it.$";
+    case POT_MIGHT:
+        return "A magic potion which greatly increases the strength and "
+            "physical power of one who drinks it.$";
+    case POT_GAIN_STRENGTH:
+        return "A potion of beneficial mutation.$";
+    case POT_GAIN_DEXTERITY:
+        return "A potion of beneficial mutation.$";
+    case POT_GAIN_INTELLIGENCE:
+        return "A potion of beneficial mutation.$";
+    case POT_LEVITATION:
+        return "A potion which confers great buoyancy "
+            "on one who consumes it.$";
+    case POT_POISON:
+        return "A nasty poisonous liquid.$";
+    case POT_SLOWING:
+        return "A potion which slows your actions.$";
+    case POT_PARALYSIS:
+        return "A potion which eliminates your control over your own body.$";
+    case POT_CONFUSION:
+        return "A potion which confuses your perceptions and "
+            "reduces your control over your own actions.$";
+    case POT_INVISIBILITY:
+        return "A potion which hides you from the sight of others.$";
+    case POT_PORRIDGE:
+        return "A filling potion of sludge, high in cereal fibre.$";
+    case POT_DEGENERATION:
+        return "A noxious concoction which can do terrible things "
+            "to your body, brain and reflexes.$";
+    case POT_DECAY:
+        return "A vile and putrid cursed liquid which causes your "
+            "flesh to decay before your very eyes.$";
+    case POT_WATER:
+        return "A unique substance, vital for the existence of most life.$";
+    case POT_EXPERIENCE:
+        return "A truly wonderful and very rare drink.$";
+    case POT_MAGIC:
+        return "A valuable potion which grants a person with an "
+            "infusion of magical energy.$";
+    case POT_RESTORE_ABILITIES:
+        return "A potion which restores the abilities of one who drinks it.$";
+    case POT_STRONG_POISON:
+        return "A terribly venomous potion.$";
+    case POT_BERSERK_RAGE:
+        return "A potion which can send one into an incoherent rage.$";
+    case POT_CURE_MUTATION:
+        return "A potion which removes some or all of any mutations "
+            "which may be afflicting you.$";
+    case POT_MUTATION:
+        return "A potion which does very strange things to you.$";
+    case NUM_POTIONS:
+        return "A buggy potion.";
     }
-
-    description += "$";
-
-    return (description);
+    return "A very buggy potion.";
 }
 
 
@@ -3269,10 +3121,9 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << std::dec << "$"
                     << "x: " << item.x << " y: " << item.y
                     << " link: " << item.link
-                    << "$"
-                    << "ident_type: "
+                    << " ident_type: "
                     << get_ident_type(item.base_type, item.sub_type)
-                    << "$";
+                    << "$$";
     }
 #endif
 
