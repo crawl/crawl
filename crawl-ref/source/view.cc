@@ -1850,7 +1850,7 @@ bool is_feature(int feature, int x, int y)
         case DNGN_RETURN_FROM_ELVEN_HALLS:
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
-        case DNGN_RETURN_FROM_ISLANDS:
+        case DNGN_RETURN_FROM_SHOALS:
             return true;
         default:
             return false;
@@ -1874,7 +1874,7 @@ bool is_feature(int feature, int x, int y)
         case DNGN_ENTER_ELVEN_HALLS:
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
-        case DNGN_ENTER_ISLANDS:
+        case DNGN_ENTER_SHOALS:
             return true;
         default:
             return false;
@@ -3022,7 +3022,7 @@ void init_feature_table( void )
         case DNGN_ENTER_ELVEN_HALLS:
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
-        case DNGN_ENTER_ISLANDS:
+        case DNGN_ENTER_SHOALS:
         case DNGN_ENTER_RESERVED_2:
         case DNGN_ENTER_RESERVED_3:
         case DNGN_ENTER_RESERVED_4:
@@ -3053,7 +3053,7 @@ void init_feature_table( void )
         case DNGN_RETURN_FROM_ELVEN_HALLS:
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
-        case DNGN_RETURN_FROM_ISLANDS:
+        case DNGN_RETURN_FROM_SHOALS:
         case DNGN_RETURN_RESERVED_2:
         case DNGN_RETURN_RESERVED_3:
         case DNGN_RETURN_RESERVED_4:

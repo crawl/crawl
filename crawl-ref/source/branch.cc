@@ -63,12 +63,12 @@ Branch branches[] = {
       mons_swamp_rare, mons_swamp_level, 
       0, 'S' },
     
-    { BRANCH_ISLANDS, BRANCH_LAIR, 5, 4,
-      DNGN_ENTER_ISLANDS, DNGN_RETURN_FROM_ISLANDS,
-      "Islands", "the Islands", "Isle",
+    { BRANCH_SHOALS, BRANCH_LAIR, 5, 4,
+      DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
+      "Shoals", "the Shoals", "Shoal",
       NULL,
       true, true, BROWN, BROWN,
-      mons_islands_rare, mons_islands_level,
+      mons_shoals_rare, mons_shoals_level,
       0, 'A' },
 
     { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 4,

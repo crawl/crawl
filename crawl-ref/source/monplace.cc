@@ -853,7 +853,7 @@ static band_type choose_band( int mon_type, int power, int &band_size )
         band_size = 2 + random2(3);
         break;
     case MONS_CYCLOPS:
-        if ( one_chance_in(5) || player_in_branch(BRANCH_ISLANDS) )
+        if ( one_chance_in(5) || player_in_branch(BRANCH_SHOALS) )
         {
             band = BAND_SHEEP;  // Odyssey reference
             band_size = 2 + random2(3);

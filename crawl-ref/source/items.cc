@@ -612,8 +612,8 @@ static void describe_floor() {
             case DNGN_ENTER_SWAMP:
                 mpr("There is a staircase to the Swamp here.");
                 break;
-            case DNGN_ENTER_ISLANDS:
-                mpr("There is a staircase to the Islands here.");
+            case DNGN_ENTER_SHOALS:
+                mpr("There is a staircase to the Shoals here.");
                 break;
             case DNGN_RETURN_FROM_ORCISH_MINES:
             case DNGN_RETURN_FROM_HIVE:
@@ -625,7 +625,7 @@ static void describe_floor() {
             case DNGN_RETURN_FROM_SLIME_PITS:
             case DNGN_RETURN_FROM_SNAKE_PIT:
             case DNGN_RETURN_FROM_SWAMP:
-            case DNGN_RETURN_FROM_ISLANDS:
+            case DNGN_RETURN_FROM_SHOALS:
                 mpr("There is a staircase back to the Lair here.");
                 break;
             case DNGN_RETURN_FROM_CRYPT:

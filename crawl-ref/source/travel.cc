@@ -521,7 +521,7 @@ void initialise_travel()
     traversable_terrain[DNGN_ENTER_ELVEN_HALLS] =
     traversable_terrain[DNGN_ENTER_TOMB] =
     traversable_terrain[DNGN_ENTER_SWAMP] =
-    traversable_terrain[DNGN_ENTER_ISLANDS] =
+    traversable_terrain[DNGN_ENTER_SHOALS] =
     traversable_terrain[DNGN_RETURN_FROM_ORCISH_MINES] =
     traversable_terrain[DNGN_RETURN_FROM_HIVE] =
     traversable_terrain[DNGN_RETURN_FROM_LAIR] =
@@ -535,7 +535,7 @@ void initialise_travel()
     traversable_terrain[DNGN_RETURN_FROM_ELVEN_HALLS] =
     traversable_terrain[DNGN_RETURN_FROM_TOMB] =
     traversable_terrain[DNGN_RETURN_FROM_SWAMP] =
-    traversable_terrain[DNGN_RETURN_FROM_ISLANDS] =
+    traversable_terrain[DNGN_RETURN_FROM_SHOALS] =
     traversable_terrain[DNGN_ALTAR_ZIN] =
     traversable_terrain[DNGN_ALTAR_SHINING_ONE] =
     traversable_terrain[DNGN_ALTAR_KIKUBAAQUDGHA] =
@@ -645,7 +645,7 @@ bool is_travelable_stair(unsigned gridc)
     case DNGN_ENTER_ELVEN_HALLS:
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
-    case DNGN_ENTER_ISLANDS:
+    case DNGN_ENTER_SHOALS:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -659,7 +659,7 @@ bool is_travelable_stair(unsigned gridc)
     case DNGN_RETURN_FROM_ELVEN_HALLS:
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_ISLANDS:
+    case DNGN_RETURN_FROM_SHOALS:
         return true;
     default:
         return false;

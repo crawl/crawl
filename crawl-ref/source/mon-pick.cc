@@ -1874,9 +1874,9 @@ int mons_tomb_rare(int mcls)
     }
 }                               // end mons_tomb_rare()
 
-int mons_islands_level(int mcls)
+int mons_shoals_level(int mcls)
 {
-    int mlev = absdungeon_depth(BRANCH_ISLANDS, 1);
+    int mlev = absdungeon_depth(BRANCH_SHOALS, 1);
     switch (mcls)
     {
     case MONS_BUTTERFLY:
@@ -1915,7 +1915,7 @@ int mons_islands_level(int mcls)
     return mlev;
 }
 
-int mons_islands_rare(int mcls)
+int mons_shoals_rare(int mcls)
 {
     switch (mcls)
     {

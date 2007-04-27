@@ -99,7 +99,7 @@ static void place_branch_entrances(int dlevel, char level_type);
 static void place_special_minivaults(int level_number, int level_type);
 static void place_traps( int level_number );
 static void prepare_swamp();
-static void prepare_islands();
+static void prepare_shoals();
 static void prepare_water( int level_number );
 static void check_doors();
 static void hide_doors();
@@ -392,7 +392,7 @@ static void build_layout_skeleton(int level_number, int level_type,
     {
         // do 'normal' building.  Well, except for the swamp.
         if (!player_in_branch(BRANCH_SWAMP) &&
-            !player_in_branch(BRANCH_ISLANDS))
+            !player_in_branch(BRANCH_SHOALS))
             skip_build = builder_normal(level_number, level_type, sr);
 
         if (skip_build == BUILD_CONTINUE)
@@ -538,8 +538,8 @@ static void build_dungeon_level(int level_number, int level_type)
     // time to make the swamp {dlb}:
     if (player_in_branch( BRANCH_SWAMP ))
         prepare_swamp();
-    else if (player_in_branch(BRANCH_ISLANDS))
-        prepare_islands();
+    else if (player_in_branch(BRANCH_SHOALS))
+        prepare_shoals();
 
     place_branch_entrances( level_number, level_type );
 
@@ -574,7 +574,7 @@ static void build_dungeon_level(int level_number, int level_type)
 
     if (!player_in_branch(BRANCH_COCYTUS) &&
         !player_in_branch(BRANCH_SWAMP) &&
-        !player_in_branch(BRANCH_ISLANDS))
+        !player_in_branch(BRANCH_SHOALS))
         prepare_water( level_number );
 }                               // end builder()
 
@@ -750,7 +750,7 @@ static void place_base_islands(int margin, int num_islands, int estradius,
     }
 }
 
-static void prepare_islands()
+static void prepare_shoals()
 {
     // dpeg's algorithm.
     // We could have just used spotty_level() and changed rock to
@@ -853,7 +853,7 @@ static void prepare_islands()
         // Put a rune in the centre of another island
         {
             int item_made = items( 1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
-                                   0, RUNE_ISLANDS );
+                                   0, RUNE_SHOALS );
             if (item_made != NON_ITEM && item_made != -1)
             {
                 mitm[item_made].x = centres[1].x;

@@ -783,7 +783,7 @@ void item_colour( item_def &item )
                 item.colour = BROWN;
                 break;
                 
-            case RUNE_ISLANDS:
+            case RUNE_SHOALS:
                 item.colour = BLUE;             // liquid
 
             // These two are hardly unique, but since colour isn't used for 

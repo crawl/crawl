@@ -1272,8 +1272,8 @@ std::string feature_description(int grid)
         return ("A staircase to the Tomb.");
     case DNGN_ENTER_SWAMP:
         return ("A staircase to the Swamp.");
-    case DNGN_ENTER_ISLANDS:
-        return ("A staircase to the Islands.");
+    case DNGN_ENTER_SHOALS:
+        return ("A staircase to the Shoals.");
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
@@ -1283,7 +1283,7 @@ std::string feature_description(int grid)
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_ISLANDS:
+    case DNGN_RETURN_FROM_SHOALS:
         return ("A staircase back to the Lair.");
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
