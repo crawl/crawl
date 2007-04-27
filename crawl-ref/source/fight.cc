@@ -2427,8 +2427,12 @@ int melee_attack::player_calc_base_weapon_damage()
 
     // Quarterstaves can be wielded with a worn shield, but are much
     // less effective.
-    if (shield && hands_reqd(*weapon, player_size()) == HANDS_TWO)
-        damage /= 3;
+    if (shield && weapon->base_type == OBJ_WEAPONS
+        && weapon->sub_type == WPN_QUARTERSTAFF
+        && hands_reqd(*weapon, player_size()) == HANDS_HALF)
+    {
+        damage /= 2;
+    }
 
     return (damage);
 }
