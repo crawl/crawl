@@ -224,17 +224,6 @@ static int missile_colour(const item_def &item)
             classic_missile_colour(item) : newwave_missile_colour(item));
 }
 
-static int special_colour()
-{
-    switch(random2(3))
-    {
-    case 0: return RED;
-    case 1: return LIGHTBLUE;
-    case 2: return MAGENTA;
-    default: return RED;        // compiler warnings, hush
-    }
-}
-
 static int newwave_armour_colour(const item_def &item)
 {
     int item_colour = BLACK;
@@ -257,15 +246,16 @@ static int newwave_armour_colour(const item_def &item)
         item_colour = GREEN;
         break;
       case ARM_ROBE:
+        item_colour = RED;
+        break;
       case ARM_CAP:
-        item_colour = special_colour();
+        item_colour = MAGENTA;
         break;
       case ARM_HELMET:
-        //caps and wizard's hats are random coloured
         if (get_helmet_type(item) == THELM_CAP
             || get_helmet_type(item) == THELM_WIZARD_HAT)
         {
-            item_colour = special_colour();
+            item_colour = MAGENTA;
         } 
         else
             item_colour = DARKGREY;
@@ -275,11 +265,13 @@ static int newwave_armour_colour(const item_def &item)
         item_colour = BLUE;
         break;
       case ARM_GLOVES:
-        item_colour = LIGHTGREY;
+        item_colour = LIGHTBLUE;
         break;
       case ARM_LEATHER_ARMOUR:
-      case ARM_ANIMAL_SKIN:
         item_colour = BROWN;
+        break;
+      case ARM_ANIMAL_SKIN:
+        item_colour = LIGHTGREY;
         break;
       case ARM_CRYSTAL_PLATE_MAIL:
         item_colour = WHITE;
