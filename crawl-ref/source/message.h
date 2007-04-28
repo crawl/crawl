@@ -15,6 +15,7 @@
 #define MESSAGE_H
 
 #include <string>
+#include <streambuf>
 
 #include "externs.h"
 
@@ -104,5 +105,35 @@ bool any_messages(void);
 std::string get_last_messages(int mcount);
 
 int channel_to_colour( int channel, int param = 0 );
+
+struct setchan
+{
+    setchan(msg_channel_type chan);
+    msg_channel_type m_chan;
+};
+
+struct setparam
+{
+    setparam(int param);
+    int m_param;
+};
+
+std::ostream& operator<<(std::ostream& os, const setchan& sc);
+std::ostream& operator<<(std::ostream& os, const setparam& sp);
+
+class mpr_stream_buf : public std::streambuf
+{
+public:
+    mpr_stream_buf();
+protected:
+    int overflow(int c);
+private:
+    static const int INTERNAL_LENGTH = 500;
+    char internal_buf[500]; // if your terminal is wider than this, too bad
+    int internal_count;
+};
+
+extern std::ostream mpr_stream;
+
 
 #endif

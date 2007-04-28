@@ -47,14 +47,82 @@ int New_Message_Count = 0;
 static bool suppress_messages = false;
 static void base_mpr(const char *inf, int channel, int param);
 
+// globals controlling message output
+// there must be a better way to do this!
+static bool mpr_stream_silent = false;
+static msg_channel_type mpr_stream_channel = MSGCH_PLAIN;
+static int mpr_stream_param = 0;
+
+std::ostream mpr_stream(new mpr_stream_buf);
+
+setchan::setchan(msg_channel_type chan)
+{
+    m_chan = chan;
+}
+
+setparam::setparam(int param)
+{
+    m_param = param;
+}
+
+std::ostream& operator<<(std::ostream& os, const setchan& sc)
+{
+    mpr_stream_channel = sc.m_chan;
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const setparam& sp)
+{
+    mpr_stream_param = sp.m_param;
+    return os;
+}
+
+mpr_stream_buf::mpr_stream_buf()
+{
+    for ( int i = 0; i < INTERNAL_LENGTH; ++i )
+        internal_buf[0] = 0;
+    internal_count = 0;
+}
+
+// again, can be improved
+int mpr_stream_buf::overflow(int c)
+{
+    if ( c == '\n' )
+    {
+        // null-terminate the string
+        internal_buf[internal_count] = 0;
+
+        if ( !mpr_stream_silent )
+            mpr(internal_buf, mpr_stream_channel, mpr_stream_param);
+
+        internal_count = 0;
+
+        // reset to defaults (channel changing isn't sticky)
+        mpr_stream_channel = MSGCH_PLAIN;
+        mpr_stream_param = 0;
+    }
+    else
+        internal_buf[internal_count++] = c;
+
+    if ( internal_count + 3 > INTERNAL_LENGTH )
+    {
+        mpr("oops, hit overflow", MSGCH_DANGER);
+        internal_count = 0;
+        return std::streambuf::traits_type::eof();
+    }
+    return 0;
+}
+
 no_messages::no_messages() : msuppressed(suppress_messages)
 {
     suppress_messages = true;
+    mpr_stream_silent = true;
 }
 
 no_messages::~no_messages()
 {
     suppress_messages = msuppressed;
+    mpr_stream_silent = msuppressed;
 }
 
 static char god_message_altar_colour( char god )

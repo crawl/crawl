@@ -56,6 +56,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <sstream>
+#include <iostream>
 
 #ifdef DOS
 #include <dos.h>
@@ -99,6 +100,7 @@
 #include "macro.h"
 #include "makeitem.h"
 #include "maps.h"
+#include "message.h"
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
@@ -226,16 +228,16 @@ int main( int argc, char *argv[] )
         SysEnv.scorefile.clear();
     }
 
-    bool game_start = initialise();
+    const bool game_start = initialise();
 
     // override some options for tutorial
     init_tutorial_options();
     if (game_start || Options.always_greet)
     {
-        mprf( "Welcome, %s the %s %s.", 
-              you.your_name,
-              species_name( you.species,you.experience_level ),
-              you.class_name );
+        mpr_stream << "Welcome, " << you.your_name << " the "
+                   << species_name( you.species,you.experience_level )
+                   << " " << you.class_name << "."
+                   << std::endl;
 
         // Starting messages can go here as this should only happen
         // at the start of a new game -- bwr
@@ -310,9 +312,11 @@ int main( int argc, char *argv[] )
             Options.tut_just_triggered = true;
             // print stats and everything
             prep_input();
-            int ch = 'x';    
-            mpr("Press any key to start the tutorial intro, "
-                "or Escape to skip it.", MSGCH_TUTORIAL);
+            int ch = 'x';
+            mpr_stream << setchan(MSGCH_TUTORIAL)
+                       << "Press any key to start the tutorial intro, "
+                       << "or Escape to skip it."
+                       << std::endl;
             ch = c_getch();
 
             if (ch != ESCAPE)
@@ -2818,10 +2822,6 @@ static void close_door(int door_x, int door_y)
 // returns true if a new character
 static bool initialise(void)
 {
-    bool ret;
-
-    int i = 0, j = 0;           // counter variables {dlb}
-
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
@@ -2834,26 +2834,26 @@ static bool initialise(void)
     init_monsters(mcolour);     // this needs to be way up top {dlb}
     init_spell_descs();        // this needs to be way up top {dlb}
 
+    // Ensure no buffering on the mpr() stream.
+    mpr_stream << std::nounitbuf;
+
     // init item array:
-    for (i = 0; i < MAX_ITEMS; i++)
+    for (int i = 0; i < MAX_ITEMS; i++)
         init_item( i );
 
     // empty messaging string
     strcpy(info, "");
 
-    for (i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].reset();
 
-    for (i = 0; i < GXM; i++)
-    {
-        for (j = 0; j < GYM; j++)
-        {
-            igrd[i][j] = NON_ITEM;
-            mgrd[i][j] = NON_MONSTER;
-            env.map[i][j] = 0;
+    igrd.init(NON_ITEM);
+    mgrd.init(NON_MONSTER);
+    env.map.init(0);
+
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
             env.map_col[i][j].clear();
-        }
-    }
 
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);
@@ -2879,8 +2879,7 @@ static bool initialise(void)
     clrscr();
 
     // sets up a new game:
-    bool newc = new_game();
-    ret = newc;  // newc will be mangled later so we'll take a copy --bwr
+    const bool newc = new_game();
 
     if (!newc)
         restore_game();
@@ -2934,7 +2933,7 @@ static bool initialise(void)
     }
 
 #ifdef CLUA_BINDINGS
-    clua.runhook("chk_startgame", "%b", ret);
+    clua.runhook("chk_startgame", "%b", newc);
     std::string yname = you.your_name;
     read_init_file(true);
     strncpy(you.your_name, yname.c_str(), kNameLen);
@@ -2952,7 +2951,7 @@ static bool initialise(void)
 
     crawl_state.need_save = true;
 
-    return (ret);
+    return (newc);
 }
 
 // An attempt to tone down berserk a little bit. -- bwross
