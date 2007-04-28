@@ -35,7 +35,6 @@
 #include "cloud.h"
 #include "debug.h"
 #include "describe.h"
-//#include "dungeon.h"
 #include "fight.h"
 #include "hiscores.h"
 #include "itemname.h"

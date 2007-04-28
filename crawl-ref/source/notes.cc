@@ -3,6 +3,8 @@
  */
 
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "AppHdr.h"
 #include "notes.h"
@@ -209,122 +211,106 @@ const char* number_to_ordinal( int number )
 std::string Note::describe( bool when, bool where, bool what ) const
 {
 
-    std::string result;
+    std::ostringstream result;
 
     if ( when )
-    {
-        char buf[20];
-        snprintf(buf, sizeof buf, "| %5ld ", turn );
-        result += buf;
-    }
+        result << "| " << std::setw(5) << turn << " ";
+
     if ( where )
     {
-        result += "| ";
-        std::string placename = short_place_name(packed_place);
-        while ( placename.length() < 7 )
-            placename += ' ';
-        result += placename;
-        result += " | ";
+        result << "| " << std::setw(7) << std::left
+               << short_place_name(packed_place) << " | ";
     }
+
     if ( what )
     {
-        char buf[200];
         switch ( type )
         {
         case NOTE_HP_CHANGE:
             // [ds] Shortened HP change note from "Had X hitpoints" to
             // accommodate the cause for the loss of hitpoints.
-            snprintf(buf, sizeof buf, "HP: %d/%d [%s]", 
-                     first, second, name.c_str());
+            result << "HP: " << first << "/" << second
+                   << " [" << name << "]";
             break;
         case NOTE_MP_CHANGE:
-            snprintf(buf, sizeof buf, "Mana: %d/%d", first, second);
+            result << "Mana: " << first << "/" << second;
             break;
         case NOTE_MAXHP_CHANGE:
-            snprintf(buf, sizeof buf, "Reached %d max hit points", first);
+            result << "Reached " << first << " max hit points";
             break;
         case NOTE_MAXMP_CHANGE:
-            snprintf(buf, sizeof buf, "Reached %d max mana", first);
+            result << "Reached " << first << " max mana";
             break;
         case NOTE_XP_LEVEL_CHANGE:
-            snprintf(buf, sizeof buf, "Reached XP level %d. %s", first, 
-                     name.c_str());
+            result << "Reached XP level " << first << ". " << name;
             break;
         case NOTE_DUNGEON_LEVEL_CHANGE:
-            snprintf(buf, sizeof buf, "Entered %s",
-                     place_name(packed_place, true, true).c_str());
+            result << "Entered " << place_name(packed_place, true, true);
             break;
         case NOTE_LEARN_SPELL:
-            snprintf(buf, sizeof buf, "Learned a level %d spell: %s",
-                     spell_difficulty(static_cast<spell_type>(first)),
-                     spell_title(static_cast<spell_type>(first)));
+            result << "Learned a level "
+                   << spell_difficulty(static_cast<spell_type>(first))
+                   << " spell: "
+                   << spell_title(static_cast<spell_type>(first));
             break;
         case NOTE_GET_GOD:
-            snprintf(buf, sizeof buf, "Became a worshipper of %s",
-                     god_name(first, true));
+            result << "Became a worshipper of " << god_name(first, true);
             break;
         case NOTE_LOSE_GOD:
-            snprintf(buf, sizeof buf, "Fell from the grace of %s",
-                     god_name(first));
+            result << "Fell from the grace of " << god_name(first);
             break;
         case NOTE_MOLLIFY_GOD:
-            snprintf(buf, sizeof buf, "Was forgiven by %s",
-                     god_name(first));
+            result << "Was forgiven by " << god_name(first);
             break;
         case NOTE_GOD_GIFT:
-            snprintf(buf, sizeof buf, "Received a gift from %s",
-                     god_name(first));
+            result << "Received a gift from " << god_name(first);
             break;
         case NOTE_ID_ITEM:
-            if (desc.length() > 0)
-                snprintf(buf, sizeof buf, "Identified %s (%s)",
-                         name.c_str(), desc.c_str());
-            else
-                snprintf(buf, sizeof buf, "Identified %s", name.c_str());
+            result << "Identified " << name;
+            if ( !desc.empty() )
+                result << " (" << desc << ")";
             break;
         case NOTE_GET_ITEM:
-            snprintf(buf, sizeof buf, "Got %s", name.c_str());
+            result << "Got " << name;
             break;
         case NOTE_GAIN_SKILL:
-            snprintf(buf, sizeof buf, "Reached skill %d in %s",
-                     second, skill_name(first));
+            result << "Reached skill " << second
+                   << " in " << skill_name(first);
             break;
         case NOTE_SEEN_MONSTER:
-            snprintf(buf, sizeof buf, "Noticed %s", name.c_str() );
+            result << "Noticed " << name;
             break;
         case NOTE_KILL_MONSTER:
-            snprintf(buf, sizeof buf, "Defeated %s", name.c_str());
+            result << "Defeated " << name;
             break;
         case NOTE_POLY_MONSTER:
-            snprintf(buf, sizeof buf, "%s changed form", name.c_str() );
+            result << name << " changed form";
             break;
         case NOTE_GOD_POWER:
-            snprintf(buf, sizeof buf, "Acquired %s's %s power", 
-                     god_name(first),
-                     number_to_ordinal(real_god_power(first, second)+1));
+            result << "Acquired " << god_name(first) << "'s "
+                   << number_to_ordinal(real_god_power(first, second)+1)
+                   << " power";
             break;
         case NOTE_GET_MUTATION:
-            snprintf(buf, sizeof buf, "Gained mutation: %s",
-                     mutation_name(first, second == 0 ? 1 : second));
+            result << "Gained mutation: "
+                   << mutation_name(first, second == 0 ? 1 : second);
             break;
         case NOTE_LOSE_MUTATION:
-            snprintf(buf, sizeof buf, "Lost mutation: %s",
-                     mutation_name(first, second == 3 ? 3 : second+1));
+            result << "Lost mutation: "
+                   << mutation_name(first, second == 3 ? 3 : second+1);
             break;
         case NOTE_USER_NOTE:
-            snprintf(buf, sizeof buf, "%s", name.c_str());
+            result << name;
             break;
         case NOTE_MESSAGE:
-            snprintf(buf, sizeof buf, "%s", name.c_str());
+            result << name;
             break;
         default:
-            snprintf(buf, sizeof buf,
-                     "Buggy note description: unknown note type");
+            result << "Buggy note description: unknown note type";
             break;
         }
-        result += buf;
     }
-    return result;
+    return result.str();
 }
 
 Note::Note()
@@ -361,14 +347,13 @@ void Note::check_milestone() const
                 mark_milestone("enter", "entered " + branch + ".");
             else if (dep == dungeon_branch_depth(br))
             {
-                char branch_finale[500];
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
                     level[0] = tolower(level[0]);
                 
-                snprintf(branch_finale, sizeof branch_finale,
-                         "reached %s.", level.c_str());
-                mark_milestone("branch-finale", branch_finale);
+                std::ostringstream branch_finale;
+                branch_finale << "reached " << level << ".";
+                mark_milestone("branch-finale", branch_finale.str());
             }
         }
     }

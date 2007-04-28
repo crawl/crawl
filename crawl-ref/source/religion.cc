@@ -39,7 +39,6 @@
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
-//#include "dungeon.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -253,7 +252,7 @@ void divine_retribution(int god);
 void inc_penance(int god, int val);
 void inc_penance(int val);
 
-static bool is_evil_god(int god)
+static bool is_evil_god(god_type god)
 {
     return
         god == GOD_KIKUBAAQUDGHA ||
@@ -263,7 +262,7 @@ static bool is_evil_god(int god)
         god == GOD_LUGONU;
 }
 
-static bool is_good_god(int god)
+static bool is_good_god(god_type god)
 {
     return
         god == GOD_SHINING_ONE ||

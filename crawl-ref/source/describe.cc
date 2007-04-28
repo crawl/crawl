@@ -22,7 +22,6 @@
 #include "describe.h"
 #include "database.h"
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <sstream>
@@ -4587,14 +4586,9 @@ static std::string describe_draconian(const monsters *mon)
 //---------------------------------------------------------------
 void describe_monsters(monsters& mons)
 {
-    std::string description;
+    std::ostringstream description;
 
-    description.reserve(200);
-
-    clrscr();
-
-    description = ptr_monam( &mons, DESC_CAP_A );
-    description += "$$";
+    description << ptr_monam( &mons, DESC_CAP_A ) << "$$";
     
     // Note: Nearly all of the "long" descriptions have moved to 
     // mon-data.h, in an effort to give them some locality with the
@@ -4611,7 +4605,7 @@ void describe_monsters(monsters& mons)
     // than what we have today.
     //
     // -peterb 4/14/07
-    description += getLongDescription(ptr_monam(&mons, DESC_PLAIN));
+    description << getLongDescription(ptr_monam(&mons, DESC_PLAIN));
 
     // Now that the player has examined it, he knows it's a mimic.
     if (mons_is_mimic(mons.type))
@@ -4619,43 +4613,25 @@ void describe_monsters(monsters& mons)
 
     switch (mons.type)
     {
-        // (missing) case 423 - MONS_ANOTHER_LAVA_THING ??? 15jan2000 {dlb}
-        //                      no entry in m_list.h 17jan200 {dlb}
-        //          monster has no stats!
-        // mv: changed ANOTHER_LAVA_THING to SALAMANDER, added stats and
-        //     description
-        // (missing) case 250 - MONS_PROGRAM_BUG ??? 16jan2000 {dlb}
-
     case MONS_ROTTING_DEVIL:
         if (you.species == SP_GHOUL)
-            description += "$It smells great!";
+            description << "It smells great!";
         else if (player_can_smell())
-            description += "$It stinks.";
+            description << "It stinks.";
         break;
-
-
-/* ******************************************************************
-// the tunneling worm is no more ...
-// not until it can be re-implemented safely {dlb}
-    case MONS_TUNNELING_WORM:
-    case MONS_WORM_TAIL:
-        description += "A gargantuan worm, its huge maw capable of crushing rock into dust with little trouble.";
-        break;
-****************************************************************** */
 
     case MONS_SWAMP_DRAKE:
         if (player_can_smell())
-            description += "It smells horrible.";
+            description << "It smells horrible.";
         break;
 
     case MONS_GREATER_MUMMY:
+        description << "The embalmed and undead corpse of an ancient ruler.";
+        break;
+
     case MONS_MUMMY_PRIEST:
-        description += "The embalmed and undead corpse of an ancient ";
-        if (mons.type == MONS_GREATER_MUMMY)
-            description += "ruler";
-        else
-            description += "servant of darkness";
-        description += ".";
+        description << "The embalmed and undead corpse of an ancient "
+            "servant of darkness.";
         break;
 
     case MONS_NAGA:
@@ -4666,120 +4642,94 @@ void describe_monsters(monsters& mons)
         switch (mons.type)
         {
         case MONS_GUARDIAN_NAGA:
-            description += "These nagas are "
+            description << "These nagas are "
                 "often used as guardians by powerful creatures.";
             break;
         case MONS_GREATER_NAGA:
-            description += "It looks strong and aggressive.";
+            description << "It looks strong and aggressive.";
             break;
         case MONS_NAGA_MAGE:
-            description += "An eldritch nimbus trails its motions.";
+            description << "An eldritch nimbus trails its motions.";
             break;
         case MONS_NAGA_WARRIOR:
-            description += "It bears scars of many past battles.";
+            description << "It bears scars of many past battles.";
             break;
         }
         if (you.species == SP_NAGA)
-            description = "It is particularly attractive.";
+            description << "It is particularly attractive.";
         else
-            description = "It is strange and repulsive.";
+            description << "It is strange and repulsive.";
         break;
 
     case MONS_VAMPIRE:
-        if (you.is_undead == US_ALIVE)
-            description += " It wants to drink your blood! ";
-        break;
-
     case MONS_VAMPIRE_KNIGHT:
-        if (you.is_undead == US_ALIVE)
-            description += " It wants to drink your blood! ";
-        break;
-
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE)
-            description += " It wants to drink your blood! ";
+            description << " It wants to drink your blood! ";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE)
-            description += "It has come for your soul!";
+            description << "It has come for your soul!";
         break;
 
-    case MONS_ELF: 
     case MONS_DEEP_ELF_SOLDIER:
-    case MONS_DEEP_ELF_FIGHTER:
-    case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_ELF_MAGE:
-    case MONS_DEEP_ELF_SUMMONER:
-    case MONS_DEEP_ELF_CONJURER:
-    case MONS_DEEP_ELF_PRIEST:
-    case MONS_DEEP_ELF_HIGH_PRIEST:
-    case MONS_DEEP_ELF_DEMONOLOGIST:
-    case MONS_DEEP_ELF_ANNIHILATOR:
-    case MONS_DEEP_ELF_SORCERER:
-    case MONS_DEEP_ELF_DEATH_MAGE:
-        switch (mons.type)
-        {
-
-        case MONS_DEEP_ELF_SOLDIER:
-            description += "This one is just common soldier.";
-            break;
-
-        case MONS_DEEP_ELF_FIGHTER:
-            description += "This soldier has learned some magic.";
-            break;
-
-        case MONS_DEEP_ELF_KNIGHT:
-            description += "This one bears the scars of battles past.";
-            break;
-
-        case MONS_DEEP_ELF_MAGE:
-            description += "Mana crackles between this one's long fingers.";
-            break;
-
-        case MONS_DEEP_ELF_SUMMONER:
-        case MONS_DEEP_ELF_CONJURER:
-            description += "This one is a mage specialized in the ancient art ";
-            if (mons.type == MONS_DEEP_ELF_SUMMONER)
-                description += "of summoning servants";
-            else
-                description += "of hurling energies";
-            description += " of destruction.";
-            break;
-
-        case MONS_DEEP_ELF_PRIEST:
-            description += "This one is a servant of the deep elves' god.";
-            break;
-
-        case MONS_DEEP_ELF_HIGH_PRIEST:
-            description +=
-                "This one is an exalted servant of the deep elves' god.";
-            break;
-
-        case MONS_DEEP_ELF_DEMONOLOGIST:
-            description +=
-                "This mage specialized in demonology, and is marked heavily "
-                "from long years in contact with unnatural demonic forces.";
-            break;
-
-        case MONS_DEEP_ELF_ANNIHILATOR:
-            description += "This one likes destructive magics more than most, "
-                "and is better at them.";
-            break;
-
-        case MONS_DEEP_ELF_SORCERER:
-            description += "This mighty spellcaster draws power from Hell.";
-            break;
-
-        case MONS_DEEP_ELF_DEATH_MAGE:
-            description += "A strong negative aura surrounds this one.";
-            break;
+        description << "This one is just a common soldier.";
+        break;
         
-        case MONS_ELF:
-            // These are only possible from polymorphing or shapeshifting.
-            description += "This one is remarkably plain looking.";
-            break;
-        }
+    case MONS_DEEP_ELF_FIGHTER:
+        description << "This soldier has learned some magic.";
+        break;
+        
+    case MONS_DEEP_ELF_KNIGHT:
+        description << "This one bears the scars of battles past.";
+        break;
+        
+    case MONS_DEEP_ELF_MAGE:
+        description << "Mana crackles between this one's long fingers.";
+        break;
+        
+    case MONS_DEEP_ELF_SUMMONER:
+        description << "This one is a mage specialized in the ancient "
+            "art of summoning servants of destruction.";
+        break;
+        
+    case MONS_DEEP_ELF_CONJURER:
+        description << "This one is a mage specialized in the ancient "
+            "art of hurling energies of destruction.";
+        break;
+        
+    case MONS_DEEP_ELF_PRIEST:
+        description << "This one is a servant of the deep elves' god.";
+        break;
+        
+    case MONS_DEEP_ELF_HIGH_PRIEST:
+        description <<
+            "This one is an exalted servant of the deep elves' god.";
+        break;
+        
+    case MONS_DEEP_ELF_DEMONOLOGIST:
+        description <<
+            "This mage specialized in demonology, and is marked heavily "
+            "from long years in contact with unnatural demonic forces.";
+        break;
+        
+    case MONS_DEEP_ELF_ANNIHILATOR:
+        description << "This one likes destructive magics more than most, "
+            "and is better at them.";
+        break;
+        
+    case MONS_DEEP_ELF_SORCERER:
+        description << "This mighty spellcaster draws power from Hell.";
+        break;
+        
+    case MONS_DEEP_ELF_DEATH_MAGE:
+        description << "A strong negative aura surrounds this one.";
+        break;
+        
+    case MONS_ELF:
+        // These are only possible from polymorphing or shapeshifting.
+        description << "This one is remarkably plain looking.";
         break;
 
     case MONS_DRACONIAN:
@@ -4799,37 +4749,34 @@ void describe_monsters(monsters& mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        description += describe_draconian( &mons );
+        description << describe_draconian( &mons );
         break;        
     }
     case MONS_PLAYER_GHOST:
-        description += "The apparition of ";
-        description += ghost_description(mons);
-        description += ".$";
+        description << "The apparition of " << ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        description += describe_demon(mons);
+        description << describe_demon(mons);
         break;
 
     case MONS_URUG:
         if (player_can_smell())
-            description += "He smells terrible.";
+            description << "He smells terrible.";
         break;
 
     case MONS_SHUGGOTH:
-        description += "A vile creature with an elongated head, spiked tail "
-            "and wicked six-fingered claws. Its awesome strength is matched by "
-            "its umbrage at being transported to this backwater dimension. ";
+        description << "A vile creature with an elongated head, spiked tail "
+            "and wicked six-fingered claws. Its awesome strength is matched "
+            "by its umbrage at being transported to this backwater dimension.";
         break;
 
     case MONS_PROGRAM_BUG:
-        description += "If this monster is a \"program bug\", then it's "
+        description << "If this monster is a \"program bug\", then it's "
             "recommended that you save your game and reload.  Please report "
             "monsters who masquerade as program bugs or run around the "
             "dungeon without a proper description to the authorities.";
         break;
-        // onocentaur - donkey
     default:
         break;
     }
@@ -4841,21 +4788,20 @@ void describe_monsters(monsters& mons)
         const monster_spells &hspell_pass = mons.spells;
         bool found_spell = false;
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
         {
             if (hspell_pass[i] != SPELL_NO_SPELL)
             {
                 if (!found_spell)
                 {
-                    description += "$$Monster Spells:$";
+                    description << "$$Monster Spells:$";
                     found_spell = true;
                 }
 
-                snprintf( info, INFO_SIZE, "    %d: %s (%d)$", i, 
-                          mons_spell_name( hspell_pass[i] ),
-                          hspell_pass[i] );
-
-                description += info;
+                description << "    " << i << ": "
+                            << mons_spell_name(hspell_pass[i])
+                            << " (" << static_cast<int>(hspell_pass[i])
+                            << ")$";
             }
         }
     }
@@ -4867,20 +4813,17 @@ void describe_monsters(monsters& mons)
         {
             if (!has_item)
             {
-                description += "$Monster Inventory:$";
+                description << "$Monster Inventory:$";
                 has_item = true;
             }
-
-            // duplicate it, because we're going to change it
-            item_def item = mitm[ mons.inv[i] ];
-            set_ident_flags( item, ISFLAG_IDENT_MASK );
-            snprintf( info, INFO_SIZE, "    %d: %s$", i,
-                      item.name(DESC_NOCAP_A).c_str() );
-            description += info;
+            description << "    " << i
+                        << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }
 #endif
-    print_description(description);
+
+    clrscr();
+    print_description(description.str());
 
     if (getch() == 0)
         getch();
@@ -4898,13 +4841,13 @@ void describe_monsters(monsters& mons)
 std::string ghost_description(const monsters &mons, bool concise)
 {
     ASSERT(mons.ghost.get());
-    char tmp_buff[ INFO_SIZE ];
+    std::ostringstream gstr;
 
-    const ghost_demon &ghost = *mons.ghost;
+    const ghost_demon &ghost = *(mons.ghost);
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact 
-    // stats are required anyways, all that matters is whether
+    // stats aren't required anyways, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
     int str;
@@ -4935,34 +4878,31 @@ std::string ghost_description(const monsters &mons, bool concise)
         break;
     }
 
-    snprintf( tmp_buff, sizeof(tmp_buff), 
-              "%s the %s, a%s %s%s%s",
-              ghost.name.c_str(), 
+    gstr << ghost.name << " the "
+         << skill_title( ghost.values[GVAL_BEST_SKILL], 
+                         ghost.values[GVAL_SKILL_LEVEL],
+                         ghost.values[GVAL_SPECIES], 
+                         str, dex, GOD_NO_GOD )
+         << ", a"
+         << ((ghost.values[GVAL_EXP_LEVEL] <  4) ? " weakling" :
+             (ghost.values[GVAL_EXP_LEVEL] <  7) ? "n average" :
+             (ghost.values[GVAL_EXP_LEVEL] < 11) ? "n experienced" :
+             (ghost.values[GVAL_EXP_LEVEL] < 16) ? " powerful" :
+             (ghost.values[GVAL_EXP_LEVEL] < 22) ? " mighty" :
+             (ghost.values[GVAL_EXP_LEVEL] < 26) ? " great" :
+             (ghost.values[GVAL_EXP_LEVEL] < 27) ? "n awesomely powerful"
+                                                 : " legendary")
+         << " ";
+    if ( concise )
+        gstr << get_species_abbrev(ghost.values[GVAL_SPECIES])
+             << get_class_abbrev(ghost.values[GVAL_CLASS]);
+    else
+        gstr << species_name(ghost.values[GVAL_SPECIES], 
+                             ghost.values[GVAL_EXP_LEVEL])
+             << " "
+             << get_class_name(ghost.values[GVAL_CLASS]);
 
-            skill_title( ghost.values[GVAL_BEST_SKILL], 
-                ghost.values[GVAL_SKILL_LEVEL],
-                ghost.values[GVAL_SPECIES], 
-                str, dex, GOD_NO_GOD ), 
-
-            (ghost.values[GVAL_EXP_LEVEL] <  4) ? " weakling" :
-            (ghost.values[GVAL_EXP_LEVEL] <  7) ? "n average" :
-            (ghost.values[GVAL_EXP_LEVEL] < 11) ? "n experienced" :
-            (ghost.values[GVAL_EXP_LEVEL] < 16) ? " powerful" :
-            (ghost.values[GVAL_EXP_LEVEL] < 22) ? " mighty" :
-            (ghost.values[GVAL_EXP_LEVEL] < 26) ? " great" :
-            (ghost.values[GVAL_EXP_LEVEL] < 27) ? "n awesomely powerful"
-            : " legendary", 
-
-            ( concise? get_species_abbrev(ghost.values[GVAL_SPECIES]) :
-                species_name( ghost.values[GVAL_SPECIES], 
-                    ghost.values[GVAL_EXP_LEVEL] ) ),
-              
-            ( concise? "" : " " ),
-              
-            ( concise? get_class_abbrev(ghost.values[GVAL_CLASS]) :
-                get_class_name( ghost.values[GVAL_CLASS] ) ) );
-
-    return std::string(tmp_buff);
+    return gstr.str();
 }
 
 extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
@@ -4970,27 +4910,30 @@ extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 static bool print_god_abil_desc( int god, int numpower )
 {
     const char* pmsg = god_gain_power_messages[god][numpower];
-    char buf[200];
+
     // if no message then no power
     if ( !pmsg[0] )
         return false;
     
-    // The power could be either passive or an active ability.
-    // Determine which.
-    const ability_type abil = god_abilities[god][numpower];
+    std::ostringstream buf;
+
     if ( isupper(pmsg[0]) )
-        strcpy(buf, pmsg);
+        buf << pmsg;            // complete sentence given
     else
-        snprintf(buf, sizeof buf, "You can %s.", pmsg);
-    std::string cost;
+        buf << "You can " << pmsg << ".";
+
+    // this might be ABIL_NON_ABILITY for passive abilities
+    const ability_type abil = god_abilities[god][numpower];
+
     if ( abil != ABIL_NON_ABILITY )
     {
-        cost = "(" + make_cost_description(get_ability_def(abil)) + ")";
-        cost = std::string(79 - strlen(buf) - cost.length(), ' ') + cost;
+        const int spacesleft = 79 - buf.str().length();
+        const std::string cost =
+            "(" + make_cost_description(get_ability_def(abil)) + ")";
+        buf << std::setw(spacesleft) << cost;
     }
     
-    // Produce a 79 character string with cost right justified:
-    cprintf( "%s%s\n", buf, cost.c_str() );
+    cprintf( "%s\n", buf.str().c_str() );
     return true;
 }
 
@@ -5263,7 +5206,7 @@ void describe_god( int which_god, bool give_title )
 
         //mv: following code shows abilities given from god (if any)
         textcolor(LIGHTGRAY);
-        cprintf(EOL EOL "Granted powers :                                                         (Cost)" EOL);
+        cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
         textcolor(colour);
 
         // mv: these gods protects you during your prayer (not mentioning XOM)

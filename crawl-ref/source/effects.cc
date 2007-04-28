@@ -21,7 +21,6 @@
 
 #include "beam.h"
 #include "direct.h"
-//#include "dungeon.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"

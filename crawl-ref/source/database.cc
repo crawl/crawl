@@ -115,7 +115,7 @@ std::string getLongDescription(const std::string &key)
         return ("");
 
     // We have to canonicalize the key (in case the user typed it
-    // in and got the case wrong.
+    // in and got the case wrong.)
     std::string canonical_key = key;
     lowercase(canonical_key);
     

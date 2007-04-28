@@ -14,7 +14,6 @@
 #include "monplace.h"
 
 #include "externs.h"
-//#include "dungeon.h"
 #include "makeitem.h"
 #include "monstuff.h"
 #include "mon-pick.h"
