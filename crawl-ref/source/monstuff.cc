@@ -518,11 +518,9 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
 
             if (death_message)
             {
-                snprintf(info, INFO_SIZE,
-                         "You %s %s!",
-                         wounded_damaged(monster->type) ? "destroy" : "kill",
-                         ptr_monam(monster, DESC_NOCAP_THE));
-                mpr(info, MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
+                     wounded_damaged(monster->type) ? "destroy" : "kill",
+                     ptr_monam(monster, DESC_NOCAP_THE));
             }
 
             if (!created_friendly)
@@ -3881,11 +3879,8 @@ static bool handle_pickup(monsters *monster)
             if (!silenced(you.x_pos, you.y_pos)
                 && !silenced(monster->x, monster->y))
             {
-                strcpy(info, "You hear a");
-                if (!monsterNearby)
-                    strcat(info, " distant");
-                strcat(info, " slurping noise.");
-                mpr(info, MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+                     monsterNearby ? "" : " distant");
             }
 
             if (mons_class_flag( monster->type, M_SPLITS )) 
@@ -4076,11 +4071,8 @@ static void jelly_grows(monsters *monster)
     if (!silenced(you.x_pos, you.y_pos)
         && !silenced(monster->x, monster->y))
     {
-        strcpy(info, "You hear a");
-        if (!mons_near(monster))
-            strcat(info, " distant");
-        strcat(info, " slurping noise.");
-        mpr(info, MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+             mons_near(monster) ? "" : " distant");
     }
 
     monster->hit_points += 5;

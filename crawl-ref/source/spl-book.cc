@@ -1381,7 +1381,6 @@ int staff_spell( int staff )
              "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
              'a' + num_spells - 1 );
 
-        mpr( info, MSGCH_PROMPT );
         spell = get_ch();
         
         if (spell == '?' || spell == '*')

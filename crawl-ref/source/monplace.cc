@@ -392,26 +392,31 @@ bool place_monster(int &id, int mon_type, int power, char behaviour,
     // message to player from stairwell/gate appearance?
     if (see_grid(px, py) && proximity == PROX_NEAR_STAIRS)
     {
-        info[0] = 0;
+        std::string msg;
 
         if (player_monster_visible( &menv[id] ))
-            strcpy(info, ptr_monam( &menv[id], DESC_CAP_A ));
+            msg = ptr_monam( &menv[id], DESC_CAP_A );
         else if (shoved)
-            strcpy(info, "Something");
+            msg = "Something";
 
         if (shoved)
         {
-            strcat(info, " shoves you out of the ");
-            strcat(info, (stair_gfx == '>' || stair_gfx == '<') ? "stairwell!"
-                                                                : "gateway!");
-            mpr(info);
+            msg += " shoves you out of the ";
+            if (stair_gfx == '>' || stair_gfx == '<')
+                msg += "stairwell!";
+            else
+                msg += "gateway!";
+            mpr(msg.c_str());
         }
-        else if (info[0] != '\0')
+        else if (!msg.empty())
         {
-            strcat(info, (stair_gfx == '>') ? " comes up the stairs." :
-                         (stair_gfx == '<') ? " comes down the stairs."
-                                            : " comes through the gate.");
-            mpr(info);
+            if ( stair_gfx == '>' )
+                msg += " comes up the stairs.";
+            else if (stair_gfx == '<')
+                msg += " comes down the stairs.";
+            else
+                msg += " comes through the gate.";
+            mpr(msg.c_str());
         }
 
         // special case: must update the view for monsters created in player LOS

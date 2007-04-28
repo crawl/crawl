@@ -55,14 +55,13 @@ static bool box_of_beasts(void);
 static bool disc_of_storms(void);
 static bool efreet_flask(void);
 
-void special_wielded(void)
+void special_wielded()
 {
     const int wpn = you.equip[EQ_WEAPON];
     const int old_plus = you.inv[wpn].plus;
     const int old_plus2 = you.inv[wpn].plus2;
     const char old_colour = you.inv[wpn].colour;
 
-    int temp_rand = 0;          // for probability determination {dlb}
     bool makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
 
     switch (you.special_wield)
@@ -70,42 +69,22 @@ void special_wielded(void)
     case SPWLD_SING:
         if (makes_noise)
         {
-            strcpy(info, "The Singing Sword ");
-            temp_rand = random2(32);
-            strcat(info,
-                     (temp_rand ==  0) ? "hums a little tune." :
-                     (temp_rand ==  1) ? "breaks into glorious song!" :
-                     (temp_rand ==  2) ? "sings." :
-                     (temp_rand ==  3) ? "sings loudly." :
-                     (temp_rand ==  4) ? "chimes melodiously." :
-                     (temp_rand ==  5) ? "makes a horrible noise." :
-                     (temp_rand ==  6) ? "sings off-key." :
-                     (temp_rand ==  7) ? "sings 'tra-la-la'." :
-                     (temp_rand ==  8) ? "burbles away merrily." :
-                     (temp_rand ==  9) ? "gurgles." :
-                     (temp_rand == 10) ? "suddenly shrieks!" :
-                     (temp_rand == 11) ? "cackles." :
-                     (temp_rand == 12) ? "warbles." :
-                     (temp_rand == 13) ? "chimes harmoniously." :
-                     (temp_rand == 14) ? "makes beautiful music." :
-                     (temp_rand == 15) ? "produces a loud orchestral chord." :
-                     (temp_rand == 16) ? "whines plaintively." :
-                     (temp_rand == 17) ? "tinkles." :
-                     (temp_rand == 18) ? "rings like a bell." :
-                     (temp_rand == 19) ? "wails mournfully." :
-                     (temp_rand == 20) ? "practices its scales." :
-                     (temp_rand == 21) ? "lilts tunefully." :
-                     (temp_rand == 22) ? "hums tunelessly." :
-                     (temp_rand == 23) ? "sighs." :
-                     (temp_rand == 24) ? "makes a deep moaning sound." :
-                     (temp_rand == 25) ? "makes a popping sound." :
-                     (temp_rand == 26) ? "sings a sudden staccato note." :
-                     (temp_rand == 27) ? "says 'Hi! I'm the Singing Sword!'." :
-                     (temp_rand == 28) ? "whispers something." :
-                     (temp_rand == 29) ? "speaks gibberish." :
-                     (temp_rand == 30) ? "raves incoherently."
-                                       : "yells in some weird language.");
-            mpr(info, MSGCH_SOUND);
+            const char* suffixes[32] = {
+                "hums a little tune.", "breaks into glorious song!",
+                "sings.", "sings loudly.", "chimes melodiously.",
+                "makes a horrible noise.", "sings off-key.",
+                "sings 'tra-la-la'.", "burbles away merrily.",
+                "gurgles.", "suddenly shrieks!", "cackles.", "warbles.",
+                "chimes harmoniously.", "makes beautiful music.",
+                "produces a loud orchestral chord.", "whines plaintively.",
+                "tinkles.", "rings like a bell.", "wails mournfully.",
+                "practices its scales.", "lilts tunefully.",
+                "hums tunelessly.", "sighs.", "makes a deep moaning sound.",
+                "makes a popping sound.", "sings a sudden staccato note.",
+                "says 'Hi! I'm the Singing Sword!'.", "whispers something.",
+                "speaks gibberish.", "raves incoherently",
+                "yells in some weird language." };
+            mprf("The Singing Sword %s", suffixes[random2(32)]);
         }
         break;
 

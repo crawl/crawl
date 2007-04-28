@@ -529,23 +529,27 @@ static bool food_change(bool suppress_message)
 static void describe_food_change(int food_increment)
 {
     int magnitude = (food_increment > 0)?food_increment:(-food_increment);
+    std::string msg;
 
     if (magnitude == 0)
         return;
 
-    strcpy(info, (magnitude <= 100) ? "You feel slightly " :
-                 (magnitude <= 350) ? "You feel somewhat " :
-                 (magnitude <= 800) ? "You feel a quite a bit "
-                                    : "You feel a lot ");
+    if ( magnitude <= 100 )
+        msg = "You feel slightly ";
+    else if (magnitude <= 350)
+        msg = "You feel somewhat ";
+    else if (magnitude <= 800)
+        msg = "You feel a quite a bit ";
+    else
+        msg = "You feel a lot ";
 
     if ((you.hunger_state > HS_SATIATED) ^ (food_increment < 0))
-        strcat(info, "more ");
+        msg += "more ";
     else
-        strcat(info, "less ");
+        msg += "less ";
 
-    strcat(info, (you.hunger_state > HS_SATIATED) ? "full."
-                                                  : "hungry.");
-    mpr(info);
+    msg += ((you.hunger_state > HS_SATIATED) ? "full." : "hungry.");
+    mpr(msg.c_str());
 }                               // end describe_food_change()
 
 void eat_from_inventory(int which_inventory_slot)
@@ -976,16 +980,12 @@ static void eating(unsigned char item_class, int item_type)
                 mpr("That snozzcumber tasted truly putrid!");
                 break;
             case FOOD_ORANGE:
-                strcpy(info, "That orange was delicious!");
-                if (one_chance_in(8))
-                    strcat(info, " Even the peel tasted good!");
-                mpr(info);
+                mprf("That orange was delicious!%s",
+                     one_chance_in(8) ? " Even the peel tasted good!" : "");
                 break;
             case FOOD_BANANA:
-                strcpy(info, "That banana was delicious!");
-                if (one_chance_in(8))
-                    strcat(info, " Even the peel tasted good!");
-                mpr(info);
+                mprf("That banana was delicious!%s",
+                     one_chance_in(8) ? " Even the peel tasted good!" : "");
                 break;
             case FOOD_STRAWBERRY:
                 mpr("That strawberry was delicious!");

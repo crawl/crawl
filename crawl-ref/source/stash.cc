@@ -31,6 +31,7 @@
 #include <cctype>
 #include <cstdio>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
 
 #define ST_MAJOR_VER ((unsigned char) 4)
@@ -1461,26 +1462,13 @@ void StashTracker::display_search_results(
     for (unsigned i = 0; i < results.size(); ++i, ++hotkey)
     {
         stash_search_result &res = results[i];
-        char matchtitle[ITEMNAME_SIZE];
-        std::string place = short_place_name(res.pos.id);
+        std::ostringstream matchtitle;
+        matchtitle << "[" << short_place_name(res.pos.id) << "] "
+                   << res.match;
         if (res.matches > 1 && res.count > 1)
-        {
-            snprintf(matchtitle, sizeof matchtitle,
-                    "[%s] %s (%d)",
-                    place.c_str(),
-                    res.match.c_str(),
-                    res.matches);
-        }
-        else
-        {
-            snprintf(matchtitle, sizeof matchtitle,
-                    "[%s] %s",
-                    place.c_str(),
-                    res.match.c_str());
-        }
-        std::string mename = matchtitle;
-        
-        MenuEntry *me = new MenuEntry(mename, MEL_ITEM, 1, hotkey);
+            matchtitle << " (" << res.matches << ")";
+
+        MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;

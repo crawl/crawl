@@ -1485,7 +1485,7 @@ public:
     unsigned int tut_throw_counter;
     unsigned int tut_berserk_counter;
     unsigned int tut_melee_counter;
-    unsigned tut_last_healed;
+    unsigned int tut_last_healed;
     
     bool tut_just_triggered;
     unsigned int tutorial_type;

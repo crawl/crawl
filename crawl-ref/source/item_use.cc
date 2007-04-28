@@ -2834,25 +2834,19 @@ static bool affix_weapon_enchantment()
     if (wpn == -1 || !you.duration[ DUR_WEAPON_BRAND ])
         return (false);
 
-    strcpy(info, you.inv[wpn].name(DESC_CAP_YOUR).c_str());
+    std::string itname = you.inv[wpn].name(DESC_CAP_YOUR);
 
     switch (get_weapon_brand( you.inv[wpn] ))
     {
     case SPWPN_VORPAL:
         if (get_vorpal_type( you.inv[wpn] ) != DVORP_CRUSHING)
-        {
-            strcat(info, "'s sharpness seems more permanent.");
-        }
+            mprf("%s's sharpness seems more permanent.", itname.c_str());
         else
-        {
-            strcat(info, "'s heaviness feels very stable.");
-        }
-        mpr(info);
+            mprf("%s's heaviness feels very stable.", itname.c_str());
         break;
 
     case SPWPN_FLAMING:
-        strcat(info," is engulfed in an explosion of flames!");
-        mpr(info);
+        mprf("%s is engulfed in an explosion of flames!", itname.c_str());
 
         beam.type = SYM_BURST;
         beam.damage = dice_def( 3, 10 );
@@ -2871,27 +2865,23 @@ static bool affix_weapon_enchantment()
         break;
 
     case SPWPN_FREEZING:
-        strcat(info," glows brilliantly blue for a moment.");
-        mpr(info);
+        mprf("%s glows brilliantly blue for a moment.", itname.c_str());
         cast_refrigeration(60);
         break;
 
     case SPWPN_DRAINING:
-        strcat(info," thirsts for the lives of mortals!");
-        mpr(info);
+        mprf("%s thirsts for the lives of mortals!", itname.c_str());
         drain_exp();
         break;
 
     case SPWPN_VENOM:
-        strcat(info, " seems more permanently poisoned.");
-        mpr(info);
+        mprf("%s seems more permanently poisoned.", itname.c_str());
         cast_toxic_radiance();
         break;
 
     case SPWPN_PAIN:
         // Can't fix pain brand (balance)...you just get tormented.
-        strcat(info, " shrieks out in agony!");
-        mpr(info);
+        mprf("%s shrieks out in agony!", itname.c_str());
 
         torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
         success = false;
@@ -2905,8 +2895,7 @@ static bool affix_weapon_enchantment()
     case SPWPN_DISTORTION:
         // [dshaligram] Attempting to fix a distortion brand gets you a free
         // distortion effect, and no permabranding. Sorry, them's the breaks.
-        strcat(info, " twongs alarmingly.");
-        mpr(info);
+        mprf("%s twongs alarmingly.", itname.c_str());
 
         // from unwield_item
         miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, 

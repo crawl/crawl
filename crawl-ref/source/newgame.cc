@@ -748,11 +748,9 @@ bool new_game(void)
         strncpy(spec_buff,
                 species_name(you.species, you.experience_level), 80);
 
-        snprintf( info, INFO_SIZE, "You are a%s %s %s." EOL, 
-                  (is_vowel( spec_buff[0] )) ? "n" : "", spec_buff,
-                  you.class_name );
-
-        cprintf( info );
+        cprintf( "You are a%s %s %s." EOL, 
+                 (is_vowel( spec_buff[0] )) ? "n" : "", spec_buff,
+                 you.class_name );
 
         enter_player_name(false);
 

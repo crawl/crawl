@@ -1191,6 +1191,8 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     int damage_taken = 0;
     int trap_hit, your_dodge;
 
+    std::string msg;
+
     if (random2(10) < 2 || (trap_known && !one_chance_in(4)))
     {
         mprf( "You avoid triggering a%s trap.", pbolt.name.c_str() );
@@ -1200,14 +1202,16 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     if (you.equip[EQ_SHIELD] != -1 && one_chance_in(3))
         exercise( SK_SHIELDS, 1 );
 
-    snprintf( info, INFO_SIZE, "A%s shoots out and ", pbolt.name.c_str() );
+    msg = "A";
+    msg += pbolt.name;
+    msg += " shoots out and ";
 
     if (random2( 20 + 5 * you.shield_blocks * you.shield_blocks ) 
                                                 < player_shield_class())
     {
         you.shield_blocks++;
-        strcat( info, "hits your shield." );
-        mpr(info);
+        msg += "hits your shield.";
+        mpr(msg.c_str());
         goto out_of_trap;
     }
 
@@ -1219,8 +1223,8 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
 
     if (trap_hit >= your_dodge && you.duration[DUR_DEFLECT_MISSILES] == 0)
     {
-        strcat( info, "hits you!" );
-        mpr(info);
+        msg += "hits you!";
+        mpr(msg.c_str());
 
         if (poison && random2(100) < 50 - (3 * player_AC()) / 2
                 && !player_res_poison())
@@ -1236,8 +1240,8 @@ static void dart_trap( bool trap_known, int trapped, struct bolt &pbolt,
     }
     else
     {
-        strcat( info, "misses you." );
-        mpr(info);
+        msg += "misses you.";
+        mpr(msg.c_str());
     }
 
     if (player_light_armour(true) && coinflip())

@@ -3709,6 +3709,7 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     char *ptr_stat_max = NULL;
     char *ptr_redraw = NULL;
 
+
     // sanity - is non-zero amount?
     if (amount == 0)
         return;
@@ -3717,8 +3718,7 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
     if (amount < 0)
         interrupt_activity( AI_STAT_CHANGE );
 
-    if (!suppress_msg)
-        strcpy(info, "You feel ");
+    std::string msg = "You feel ";
 
     if (which_stat == STAT_RANDOM)
         which_stat = random2(NUM_STATS);
@@ -3729,29 +3729,26 @@ void modify_stat(unsigned char which_stat, char amount, bool suppress_msg)
         ptr_stat = &you.strength;
         ptr_stat_max = &you.max_strength;
         ptr_redraw = &you.redraw_strength;
-        if (!suppress_msg)
-            strcat(info, (amount > 0) ? "stronger." : "weaker.");
+        msg += ((amount > 0) ? "stronger." : "weaker.");
         break;
 
     case STAT_DEXTERITY:
         ptr_stat = &you.dex;
         ptr_stat_max = &you.max_dex;
         ptr_redraw = &you.redraw_dexterity;
-        if (!suppress_msg)
-            strcat(info, (amount > 0) ? "agile." : "clumsy.");
+        msg += ((amount > 0) ? "agile." : "clumsy.");
         break;
 
     case STAT_INTELLIGENCE:
         ptr_stat = &you.intel;
         ptr_stat_max = &you.max_intel;
         ptr_redraw = &you.redraw_intelligence;
-        if (!suppress_msg)
-            strcat(info, (amount > 0) ? "clever." : "stupid.");
+        msg += ((amount > 0) ? "clever." : "stupid.");
         break;
     }
 
     if (!suppress_msg)
-        mpr( info, (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
+        mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
     *ptr_stat += amount;
     *ptr_stat_max += amount;

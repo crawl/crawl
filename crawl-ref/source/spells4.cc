@@ -1775,28 +1775,28 @@ static int glamour_monsters(int x, int y, int pow, int garbage)
     // why no, there's no message as to which effect happened >:^)
     if (!one_chance_in(4))
     {
-        strcpy(info, ptr_monam( &(menv[mon]), DESC_CAP_THE));
+        std::string msg = ptr_monam( &(menv[mon]), DESC_CAP_THE);
 
         switch (random2(4))
         {
         case 0:
-            strcat(info, " looks dazed.");
+            msg += " looks dazed.";
             break;
         case 1:
-            strcat(info, " blinks several times.");
+            msg += " blinks several times.";
             break;
         case 2:
-            strcat(info, " rubs its eye");
+            msg += " rubs its eye";
             if (menv[mon].type != MONS_CYCLOPS)
-                strcat(info, "s");
-            strcat(info, ".");
+                msg += "s";
+            msg += ".";
             break;
         case 4:
-            strcat(info, " tilts its head.");
+            msg += " tilts its head.";
             break;
         }
 
-        mpr(info);
+        mpr(msg.c_str());
     }
 
     return (1);

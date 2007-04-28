@@ -23,8 +23,6 @@ void init_tutorial_options(void);
 
 bool pick_tutorial(void);
 void print_tutorial_menu(unsigned int type);
-unsigned int get_tutorial_species(unsigned int type);
-unsigned int get_tutorial_job(unsigned int type); 
 
 formatted_string tut_starting_info2();
 void tut_starting_screen();

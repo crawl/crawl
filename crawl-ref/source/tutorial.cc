@@ -2,8 +2,10 @@
  *  Created for Crawl Reference by JPEG on $Date: 2007-01-11$
  */
 
-#include "tutorial.h"
 #include <cstring>
+#include <sstream>
+
+#include "tutorial.h"
 
 #include "command.h"
 #include "files.h"
@@ -19,6 +21,10 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "view.h"
+
+static species_type get_tutorial_species(unsigned int type);
+static job_type get_tutorial_job(unsigned int type); 
+
 
 //#define TUTORIAL_DEBUG
 #define TUTORIAL_VERSION 110
@@ -65,94 +71,88 @@ void init_tutorial_options()
 // tutorial selection screen and choice
 bool pick_tutorial()
 {
-    char keyn;
-    bool printed = false;
+    clrscr();
+
+    gotoxy(1,1);
+    formatted_string::parse_string(
+        "<white>You must be new here indeed!</white>"
+        EOL EOL
+        "<cyan>You can be:</cyan>"
+        EOL EOL).display();
     
-tut_query:
-    if (!printed)
-    {
-        clrscr();
-
-        textcolor( WHITE );
-        cprintf("You must be new here indeed!");
-
-        cprintf(EOL EOL);
-        textcolor( CYAN );
-        cprintf("You can be:");
-        cprintf(EOL EOL);
-
-        textcolor( LIGHTGREY );
-
-        for (int i = 0; i < TUT_TYPES_NUM; i++)
-            print_tutorial_menu(i);
-        
-        textcolor( BROWN );
-        cprintf(EOL "SPACE - Back to class selection; Bksp - Back to race selection; X - Quit"
-                EOL "* - Random tutorial" 
-                EOL);
-        printed = true;
-    }
-    keyn = c_getch();
-
-    if (keyn == '*')
-        keyn = 'a' + random2(TUT_TYPES_NUM);
-
-    // choose character for tutorial game and set starting values
-    if (keyn >= 'a' && keyn <= 'a' + TUT_TYPES_NUM - 1)
-    {
-        Options.tutorial_type = keyn - 'a';
-        you.species = get_tutorial_species(Options.tutorial_type);
-        you.char_class = get_tutorial_job(Options.tutorial_type);
-
-        // activate all triggers
-        for (int i = 0; i < TUT_EVENTS_NUM; i++)
-            Options.tutorial_events[i] = 1;
-        Options.tutorial_left = TUT_EVENTS_NUM;
-
-        // store whether explore, stash search or travelling was used
-        Options.tut_explored = 1;
-        Options.tut_stashes = 1;
-        Options.tut_travel = 1; 
-
-        // used to compare which fighting means was used most often
-        Options.tut_spell_counter = 0;
-        Options.tut_throw_counter = 0;
-        Options.tut_berserk_counter = 0;
-        Options.tut_melee_counter = 0;
-        
-        // for occasional healing reminders
-        Options.tut_last_healed = 0;
-
-        Options.random_pick = true; // random choice of starting spellbook
-        Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
-        return true;
-    }
-
-    if (keyn == CK_BKSP || keyn == ' ')
-    {
-        // in this case, undo previous choices
-//        set_startup_options(); 
-        you.species = 0; you.char_class = JOB_UNKNOWN;
-        Options.race = 0; Options.cls = 0;
-    }
-
-    switch (keyn)
-    {
-       case CK_BKSP:
-           choose_race();
-           break;
-       case ' ':
-           choose_class();
-           break;
-       case 'X':
-           cprintf(EOL "Goodbye!");
-           end(0);
-           break;
-       default:
-           printed = false;
-           goto tut_query;
-    }
+    textcolor( LIGHTGREY );
     
+    for (int i = 0; i < TUT_TYPES_NUM; i++)
+        print_tutorial_menu(i);
+
+    formatted_string::parse_string(
+        EOL
+        "<brown>SPACE - Back to class selection; "
+        "Bksp - Back to race selection; X - Quit"
+        EOL "* - Random tutorial"
+        "</brown>" EOL).display();
+
+    while (1)
+    {
+        char keyn = c_getch();
+
+        if (keyn == '*')
+            keyn = 'a' + random2(TUT_TYPES_NUM);
+        
+        // choose character for tutorial game and set starting values
+        if (keyn >= 'a' && keyn <= 'a' + TUT_TYPES_NUM - 1)
+        {
+            Options.tutorial_type = keyn - 'a';
+            you.species = get_tutorial_species(Options.tutorial_type);
+            you.char_class = get_tutorial_job(Options.tutorial_type);
+            
+            // activate all triggers
+            Options.tutorial_events.init(true);
+            Options.tutorial_left = TUT_EVENTS_NUM;
+            
+            // store whether explore, stash search or travelling was used
+            Options.tut_explored = true;
+            Options.tut_stashes = true;
+            Options.tut_travel = true;
+            
+            // used to compare which fighting means was used most often
+            Options.tut_spell_counter = 0;
+            Options.tut_throw_counter = 0;
+            Options.tut_berserk_counter = 0;
+            Options.tut_melee_counter = 0;
+            
+            // for occasional healing reminders
+            Options.tut_last_healed = 0;
+            
+            Options.random_pick = true; // random choice of starting spellbook
+            Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
+            return true;
+        }
+
+        if (keyn == CK_BKSP || keyn == ' ')
+        {
+            // in this case, undo previous choices
+            // set_startup_options(); 
+            you.species = 0;
+            you.char_class = JOB_UNKNOWN;
+            Options.race = 0;
+            Options.cls = 0;
+        }
+
+        switch (keyn)
+        {
+        case CK_BKSP:
+            choose_race();
+            return false;
+        case ' ':
+            choose_class();
+            return false;
+        case 'X':
+            cprintf(EOL "Goodbye!");
+            end(0);
+            return false;       // as if
+        }
+    }
     return false;
 }
 
@@ -181,7 +181,7 @@ void print_tutorial_menu(unsigned int type)
             get_class_name(get_tutorial_job(type)), desc);
 }
 
-unsigned int get_tutorial_species(unsigned int type)
+static species_type get_tutorial_species(unsigned int type)
 {
     switch(type)
     {
@@ -197,7 +197,7 @@ unsigned int get_tutorial_species(unsigned int type)
 }
 
 // TO DO: check whether job and species are compatible...
-unsigned int get_tutorial_job(unsigned int type)
+static job_type get_tutorial_job(unsigned int type)
 {
     switch(type)
     {
@@ -215,43 +215,42 @@ unsigned int get_tutorial_job(unsigned int type)
 // the tutorial welcome screen
 static formatted_string tut_starting_info(unsigned int width)
 {
-    std::string result; // the entire page
-    std::string text; // one paragraph
+    std::ostringstream istr;
     
-    result += "<white>Welcome to Dungeon Crawl!</white>" EOL EOL;
-    
-    text += "Your object is to lead a ";
-    snprintf(info, INFO_SIZE, "%s %s ", species_name(get_tutorial_species(Options.tutorial_type), 1), 
-             get_class_name(get_tutorial_job(Options.tutorial_type)));
-    text += info;
-    text += "safely through the depths of the dungeon, retrieving the fabled orb of Zot and "
-            "returning it to the surface. In the beginning, however, let discovery be your "
-            "main goal. Try to delve as deeply as possible but beware; death lurks around "
-            "every corner." EOL EOL;
-    linebreak_string2(text, width);
-    result += formatted_string::parse_string(text);
-                
-    result += "For the moment, just remember the following keys and their functions:" EOL;
-    result += "  <white>?</white> - shows the items and the commands" EOL;
-    result += "  <white>S</white> - saves the game, to be resumed later (but note that death is permanent)" EOL;
-    result += "  <white>x</white> - examine something in your vicinity" EOL EOL;
-
-    text = "This tutorial will help you play Crawl without reading any documentation. "
-           "If you feel intrigued, there is more information available in these files "
-           "(all of which can also be read in-game):" EOL;
-    linebreak_string2(text, width);
-    result += formatted_string::parse_string(text);
-
-    result += "  <lightblue>readme.txt</lightblue>         - A very short guide to Crawl." EOL;
-    result += "  <lightblue>manual.txt</lightblue>         - This contains all details on races, magic, skills, etc." EOL;
-    result += "  <lightblue>crawl_options.txt</lightblue>  - Crawl's interface is highly configurable. This document " EOL;
-    result += "                       explains all the options." EOL;
-    result += EOL;        
-    result += "Press <white>Space</white> to proceed to the basics (the screen division and movement)." EOL;
-    result += "Press <white>Esc</white> to fast forward to the game start.";
-
-
-    return formatted_string::parse_block(result);
+    istr << "<white>Welcome to Dungeon Crawl!</white>" EOL EOL
+         << "Your object is to lead a "
+         << species_name(get_tutorial_species(Options.tutorial_type), 1)
+         << " " << get_class_name(get_tutorial_job(Options.tutorial_type))
+         <<
+        " safely through the depths of the dungeon, retrieving the "
+        "fabled orb of Zot and returning it to the surface. "
+        " In the beginning, however, let discovery be your "
+        "main goal. Try to delve as deeply as possible but beware; "
+        "death lurks around every corner." EOL EOL
+        "For the moment, just remember the following keys "
+        "and their functions:" EOL
+        "  <white>?</white> - shows the items and the commands" EOL
+        "  <white>S</white> - saves the game, to be resumed later "
+        "(but note that death is permanent)" EOL
+        "  <white>x</white> - examine something in your vicinity" EOL EOL
+        "This tutorial will help you play Crawl without reading any "
+        "documentation. If you feel intrigued, there is more information "
+        "available in these files (all of which can also be read in-game):"
+        EOL
+        "  <lightblue>readme.txt</lightblue>         - "
+        "A very short guide to Crawl." EOL        
+        "  <lightblue>manual.txt</lightblue>         - "
+        "This contains all details on races, magic, skills, etc." EOL
+        "  <lightblue>crawl_options.txt</lightblue>  - "
+        "Crawl's interface is highly configurable. This document " EOL
+        "                       explains all the options." EOL
+        EOL
+        "Press <white>Space</white> to proceed to the basics "
+        "(the screen division and movement)." EOL
+        "Press <white>Esc</white> to fast forward to the game start.";
+    std::string broken = istr.str();
+    linebreak_string2(broken, width);
+    return formatted_string::parse_block(broken);
 }
 
 #ifdef TUTORIAL_DEBUG
@@ -399,12 +398,12 @@ static formatted_string tutorial_map_intro()
 {
     std::string result;
 
-    result =  "<magenta>"
-              "What you see here is the typical Crawl screen. The upper left map "
-              "shows your hero as the <white>@<magenta> in the center. The parts "
-              "of the map you remember but cannot currently see, will be greyed "
-              "out."
-              "</magenta>" EOL;
+    result = "<magenta>"
+        "What you see here is the typical Crawl screen. The upper left map "
+        "shows your hero as the <white>@<magenta> in the center. The parts "
+        "of the map you remember but cannot currently see, will be greyed "
+        "out."
+        "</magenta>" EOL;        
     result += " --more--                               Press <white>Escape</white> to skip the basics";
 
     linebreak_string2(result,get_tutorial_cols());
@@ -413,37 +412,37 @@ static formatted_string tutorial_map_intro()
 
 static formatted_string tutorial_stats_intro()
 {
-    std::string result;
-    result += "<magenta>";
+    std::ostringstream istr;
 
-    result += "To the right, important properties of \n";
-    result += "the character are displayed. The most \n";
-    result += "basic one is your health, measured as \n";
-    snprintf(info, INFO_SIZE, "<white>HP: %d/%d<magenta>. ",
-             you.hp, you.hp_max);
-    result += info; 
+    // Note: must fill up everything to override the map
+    istr << "<magenta>"
+        "To the right, important properties of \n"
+        "the character are displayed. The most \n"
+        "basic one is your health, measured as \n"
+        "<white>HP: " << you.hp << "/" << you.hp_max << "<magenta>. ";
+
     if (Options.tutorial_type==TUT_MAGIC_CHAR)
-        result += "  ";
-    result += "These are your current out \n";
-    result += "of maximum health points. When health \n";
-    result += "drops to zero, you die.               \n";
-    snprintf(info, INFO_SIZE, "<white>Magic: %d/%d<magenta>", you.magic_points, you.max_magic_points);
-    result += info; 
-    result += " is your energy for casting \n";
-    result += "spells, although more mundane actions \n";
-    result += "often draw from Magic, too.           \n";
-    result += "Further down, <white>Str<magenta>ength, <white>Dex<magenta>terity and \n";
-    result += "<white>Int<magenta>elligence are shown and provide an \n";
-    result += "all-around account of the character's \n";
-    result += "attributes.                           \n";
+        istr << "  ";
 
-    result += "<lightgrey>";
-    result += "                                      \n";
-    result += " --more--                               Press <white>Escape</white> to skip the basics\n";
-    result += "                                      \n";
-    result += "                                      \n";
-
-    return formatted_string::parse_block(result, false);
+    istr <<
+        "These are your current out \n"
+        "of maximum health points. When health \n"
+        "drops to zero, you die.               \n"
+        "<white>Magic: "
+         << you.magic_points << "/" << you.max_magic_points <<
+        "<magenta> is your energy for casting \n"
+        "spells, although more mundane actions \n"
+        "often draw from Magic, too.           \n"
+        "Further down, <white>Str<magenta>ength, <white>Dex<magenta>terity and \n"
+        "<white>Int<magenta>elligence are shown and provide an \n"
+        "all-around account of the character's \n"
+        "attributes.                           \n"
+        "<lightgrey>"
+        "                                      \n"
+        " --more--                               Press <white>Escape</white> to skip the basics\n"
+        "                                      \n"
+        "                                      \n";
+    return formatted_string::parse_block(istr.str(), false);
 }
 
 static formatted_string tutorial_message_intro()
@@ -883,7 +882,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     if (Options.tut_just_triggered)
         return;
 
-    std::string text;
+    std::ostringstream text;
     unsigned short ch, colour;
     const int ex = x - you.x_pos + 9;
     const int ey = y - you.y_pos + 9;
@@ -891,119 +890,123 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     switch(seen_what)
     {
-      case TUT_SEEN_POTION:
-          text =  "You have picked up your first potion ('<w>!<magenta>'). Use "
-                  "<w>q<magenta> to drink (quaff) it.";
+      case TUT_SEEN_POTION:          
+          text << "You have picked up your first potion ('<w>!<magenta>'). "
+              "Use <w>q<magenta> to drink (quaff) it.";
           break;
       case TUT_SEEN_SCROLL:
-          text =  "You have picked up your first scroll ('<w>?<magenta>'). Type "
-                  "<w>r<magenta> to read it.";
+          text << "You have picked up your first scroll ('<w>?<magenta>'). "
+              "Type <w>r<magenta> to read it.";
           break;
       case TUT_SEEN_WAND:
-          text =  "You have picked up your first wand ('<w>/<magenta>'). Type "
-                  "<w>z<magenta> to zap it.";
+          text << "You have picked up your first wand ('<w>/<magenta>'). "
+              "Type <w>z<magenta> to zap it.";
           break;
       case TUT_SEEN_SPBOOK:
           get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
-          text =  "You have picked up a spellbook ('<w>";
-          text += ch;
-          text += "'<magenta>). You can read it by typing <w>r<magenta>, "
-                  "memorise spells via <w>M<magenta> and cast a memorised spell "
-                  "with <w>Z<magenta>.";
-
+          text << "You have picked up a spellbook ('<w>"
+               << static_cast<char>(ch)
+               <<
+              "'<magenta>). You can read it by typing <w>r<magenta>, "
+              "memorise spells via <w>M<magenta> and cast a memorised "
+              "spell with <w>Z<magenta>.";
+          
           if (!you.skills[SK_SPELLCASTING])
           {
-              text += "\nHowever, first you will have to get accustomed to "
+              text << "\nHowever, first you will have to get accustomed to "
                       "spellcasting by reading lots of scrolls.";
           }
           break;
       case TUT_SEEN_WEAPON:
-          text =  "This is the first weapon ('<w>(<magenta>') you've picked up. "
-                  "Use <w>w<magenta> to wield it, but be aware that this weapon "
-                  "might train a different skill from your current one. You can "
-                  "view the weapon's properties with <w>v<magenta>.";
+          text <<
+              "This is the first weapon ('<w>(<magenta>') you've picked up. "
+              "Use <w>w<magenta> to wield it, but be aware that this weapon "
+              "might train a different skill from your current one. You can "
+              "view the weapon's properties with <w>v<magenta>.";
+
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
           {
-              text += "\nAs you're already trained in Axes you should stick with "
-                      "these. Checking other axes can be worthwhile.";
+              text <<
+                  "\nAs you're already trained in Axes you should stick "
+                  "with these. Checking other axes can be worthwhile.";
           }
           break;
       case TUT_SEEN_MISSILES:
-          text =  "This is the first stack of missiles ('<w>)<magenta>') you've "
+          text << "This is the first stack of missiles ('<w>)<magenta>') you've "
                   "picked up. Darts can be thrown by hand, but other missile types "
                   "like arrows and needles require a launcher and training in "
                   "using it to be really effective. <w>v<magenta> gives more "
                   "information about both missiles and launcher.";
           if (Options.tutorial_type == TUT_RANGER_CHAR)
           {
-              text += "\nAs you're already trained in Bows you should stick with "
+              text << "\nAs you're already trained in Bows you should stick with "
                       "arrows and collect more of them in the dungeon.";
           }
           else if (Options.tutorial_type == TUT_MAGIC_CHAR)
           {
-              text += "\nHowever, as a spellslinger you don't really need another "
+              text << "\nHowever, as a spellslinger you don't really need another "
                       "type of ranged attack, unless there's another effect in "
                       "addition to damage.";
           }
           else
           {
-              text += "\nFor now you might be best off with sticking to darts or "
+              text << "\nFor now you might be best off with sticking to darts or "
                       "stones for ranged attacks.";
           }
           break;
       case TUT_SEEN_ARMOUR:
-          text =  "This is the first piece of armour ('<w>[<magenta>') you've "
+          text << "This is the first piece of armour ('<w>[<magenta>') you've "
                   "picked up. Use <w>W<magenta> to wear it and <w>T<magenta> to "
                   "take it off again. You can view its properties with "
                   "<w>v<magenta>.";
 
           if (you.species == SP_CENTAUR || you.species == SP_MINOTAUR)
           {
-              snprintf( info, INFO_SIZE, "\nNote that as a %s, you will be unable to wear %s.",
-              species_name(you.species, 1), you.species == SP_CENTAUR ? "boots" : "helmets");
-              text += info;
+              text << "\nNote that as a " << species_name(you.species, 1)
+                   << "you will be unable to wear "
+                   << (you.species == SP_CENTAUR ? "boots" : "helmets");
           }
           break;
       case TUT_SEEN_RANDART:
-          text =  "Weapons and armour that have unusual descriptions like this "
+          text << "Weapons and armour that have unusual descriptions like this "
                   "are much more likely to be of higher enchantment or have "
                   "special properties, good or bad. The rarer the description, "
                   "the greater the potential value of an item.";
           break;
       case TUT_SEEN_FOOD:
-          text =  "You have picked up some food ('<w>%<magenta>'). You can eat it "
+          text << "You have picked up some food ('<w>%<magenta>'). You can eat it "
                   "by typing <w>e<magenta>.";
           break;
       case TUT_SEEN_CARRION:
-          text =  "You have picked up a corpse ('<w>%<magenta>'). When a corpse "
+          text << "You have picked up a corpse ('<w>%<magenta>'). When a corpse "
                   "is lying on the ground, you can <w>D<magenta>issect with a "
                   "sharp implement. Once hungry you can <w>e<magenta>at the "
                   "resulting chunks (though they may not be healthy).";
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
           {
-             text += " During prayer you can offer corpses to ";
-             text += god_name(you.religion);
-             text += " by dissecting them, as well.";
+              text << " During prayer you can offer corpses to "
+                   << god_name(you.religion)
+                   << " by dissecting them, as well.";
           }
           break;
       case TUT_SEEN_JEWELLERY:
-          text =  "You have picked up a a piece of jewellery, either a ring "
+          text << "You have picked up a a piece of jewellery, either a ring "
                   "('<w>=<magenta>') or an amulet ('<w>\"<magenta>'). Type "
                   "<w>P<magenta> to put it on and <w>R<magenta> to remove it. You "
                   "can view it with <w>v<magenta> although often magic is "
                   "necessary to reveal its true nature.";
           break;
       case TUT_SEEN_MISC:
-          text =  "This is a curious object indeed. You can play around with it "
+          text << "This is a curious object indeed. You can play around with it "
                   "to find out what it does by <w>w<magenta>ielding and "
                   "<w>E<magenta>voking it.";
           break;
       case TUT_SEEN_STAFF:
           get_item_symbol(DNGN_ITEM_STAVE, &ch, &colour);
-          text =  "You have picked up a magic staff or a rod, both of which are "
-                  "represented by '<w>";
-          text += ch;
-          text += "<magenta>'. Both must be <w>i<magenta>elded to be of use. "
+          text << "You have picked up a magic staff or a rod, both of which are "
+                  "represented by '<w>"
+               << static_cast<char>(ch)
+               << "<magenta>'. Both must be <w>i<magenta>elded to be of use. "
                   "Magicians use staves to increase their power in certain spell "
                   "schools. By contrast, a rod allows the casting of certain "
                   "spells even without magic knowledge simply by "
@@ -1018,17 +1021,15 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
 
-          text =  "The <w>";
-          text += colour_to_tag(colour);
-          text += ch;
-          text += "<magenta> are some downstairs. You can enter the next (deeper) "
+          text << "The <w>" << colour_to_tag(colour) << static_cast<char>(ch)
+               << "<magenta> are some downstairs. You can enter the next (deeper) "
                   "level by following them down (<w>><magenta>). To get back to "
                   "this level again, press <w><<<magenta> while standing on the "
                   "upstairs.";
 
           break;
       case TUT_SEEN_TRAPS:
-          text =  "Oops... you just triggered a trap. An unwary adventurer will "
+          text << "Oops... you just triggered a trap. An unwary adventurer will "
                   "occasionally stumble into one of these nasty constructions "
                   "depicted by <w>^<magenta>. They can do physical damage (with "
                   "darts or needles, for example) or have other, more magical "
@@ -1039,56 +1040,53 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           colour = env.show_col[ex][ey];
           get_item_symbol( object, &ch, &colour );
           
-          text =  "The ";
-          text += colour_to_tag(colour);
-          text += ch;
-          text += "<magenta> is an altar. You can get information about it by pressing "
+          text << "The " << colour_to_tag(colour) << static_cast<char>(ch)
+               << "<magenta> is an altar. You can get information about it by pressing "
                   "<w>p<magenta> while standing on the square. Before taking up "
                   "the responding faith you'll be asked for confirmation.";
           break;
       case TUT_SEEN_SHOP:
-          text =  "The <yellow>";
-          text += get_screen_glyph(x,y);
-          text += "<magenta> is a shop. You can enter it by typing <w><<<magenta>.";
+          text << "The <yellow>" << static_cast<char>(get_screen_glyph(x,y))
+               << "<magenta> is a shop. You can enter it by typing "
+              "<w><<<magenta>.";
           break;
       case TUT_SEEN_DOOR:
           if (you.num_turns < 1)
           	return;
 
-          text =  "The <w>";
-          text += get_screen_glyph(x,y);
-          text += "<magenta> is a closed door. You can open it by walking into it. "
+          text << "The <w>" << static_cast<char>(get_screen_glyph(x,y))
+               << "<magenta> is a closed door. You can open it by walking into it. "
                   "Sometimes it is useful to close a door. Do so by pressing "
                   "<w>c<magenta>, followed by the direction.";
           break;
       case TUT_KILLED_MONSTER:
-          text =  "Congratulations, your character just gained some experience by "
+          text << "Congratulations, your character just gained some experience by "
                   "killing this monster! Every action will use up some of it to "
                   "train certain skills. For example, fighting monsters ";
           if (Options.tutorial_type == TUT_BERSERK_CHAR)
-              text += "in melee battle will raise your Axes and Fighting skills.";
+              text << "in melee battle will raise your Axes and Fighting skills.";
           else if (Options.tutorial_type == TUT_RANGER_CHAR)
-              text += "using bow and arrows will raise your Bows and Ranged Combat "
+              text << "using bow and arrows will raise your Bows and Ranged Combat "
                       "skills.";
           else // if (Options.tutorial_type == TUT_MAGIC_CHAR)
-              text += "with offensive magic will raise your Conjurations and "
+              text << "with offensive magic will raise your Conjurations and "
                       "Spellcasting skills.";
 
           if (you.religion != GOD_NO_GOD)
           {
-              text += "\nTo dedicate your kills to ";
-              text += god_name(you.religion);
-              text += " <w>p<magenta>ray before battle. Not all gods will be "
+              text << "\nTo dedicate your kills to "
+                   << god_name(you.religion)
+                   << " <w>p<magenta>ray before battle. Not all gods will be "
                       "pleased by doing this.";
           }
           break;
       case TUT_NEW_LEVEL:
-          text =  "Well done! Reaching a new experience level is always a nice "
+          text << "Well done! Reaching a new experience level is always a nice "
                   "event: you get more health and magic points, and occasionally "
                   "increases to your attributes (strength, dexterity, intelligence).";
           if (Options.tutorial_type == TUT_MAGIC_CHAR)
           {
-              text += "\nAlso, new experience levels let you learn more spells "
+              text << "\nAlso, new experience levels let you learn more spells "
                       "(the Spellcasting skill also does this). For now, "
                       "you should try to memorise the second spell of your "
                       "starting book with <w>Mcb<magenta>, which can then be "
@@ -1096,18 +1094,18 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           }
           break;
       case TUT_SKILL_RAISE:
-          text =  "One of your skills just got raised. Type <w>m<magenta> to take "
+          text << "One of your skills just got raised. Type <w>m<magenta> to take "
                   "a look at your skills screen.";
           break;
       case TUT_YOU_ENCHANTED:
-          text =  "Enchantments of all types can befall you temporarily. "
+          text << "Enchantments of all types can befall you temporarily. "
                   "Brief descriptions of these appear at the lower end of the stats "
                   "area. Press <w>@<magenta> for more details. A list of all "
                   "possible enchantments is in the manual.";
           break;
       case TUT_YOU_SICK:
           learned_something_new(TUT_YOU_ENCHANTED);
-          text =  "Corpses can be spoiled or inedible, making you sick. "
+          text << "Corpses can be spoiled or inedible, making you sick. "
                   "Also, some monsters' flesh is less palatable than others'. "
                   "While sick, your hitpoints won't regenerate and sometimes "
                   "an attribute may decrease. It wears off with time (wait with "
@@ -1115,32 +1113,32 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
       case TUT_YOU_POISON:
           learned_something_new(TUT_YOU_ENCHANTED);
-          text =  "Poison will slowly reduce your hp. It wears off with time "
+          text << "Poison will slowly reduce your hp. It wears off with time "
                   "(wait with <w>5<magenta>) or you could quaff a potion of "
                   "healing.";
           break;
       case TUT_YOU_CURSED:
-          text =  "Curses are comparatively harmless, but they do mean that you "
+          text << "Curses are comparatively harmless, but they do mean that you "
                   "cannot remove cursed equipment and will have to suffer the "
                   "(possibly) bad effects until you find and read a scroll of "
                   "remove curse. Weapons can also be uncursed using enchanting "
                   "scrolls.";
           break;
       case TUT_YOU_HUNGRY:
-          text =  "There are two ways to overcome hunger: food you started "
+          text << "There are two ways to overcome hunger: food you started "
                   "with or found, and selfmade chunks from corpses. To get the "
                   "latter, all you need to do is <w>D<magenta> a corpse with a "
                   "sharp implement. Your starting weapon will do nicely. "
                   "Try to dine on chunks in order to save permanent food.";
           break;
       case TUT_YOU_STARVING:
-          text =  "You are now suffering from terrible hunger. You'll need to "
+          text << "You are now suffering from terrible hunger. You'll need to "
                   "<w>e<magenta>at something quickly, or you'll die. The safest "
                   "way to deal with this is to simply eat something from your "
                   "inventory rather than wait for a monster to leave a corpse.";
           break;
       case TUT_MULTI_PICKUP:
-          text =  "There's a more comfortable way to pick up several items at the "
+          text << "There's a more comfortable way to pick up several items at the "
                   "same time. If you press <w>,<magenta> or <w>g<magenta> twice "
                   "you can choose items from a menu. This takes less keystrokes "
                   "but has no influence on the number of turns needed. Multi-pickup "
@@ -1148,32 +1146,32 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           break;
       case TUT_HEAVY_LOAD:
           if (you.burden_state != BS_UNENCUMBERED)
-              text =  "It is not usually a good idea to run around encumbered; it "
+              text << "It is not usually a good idea to run around encumbered; it "
                       "slows you down and increases your hunger.";
           else
-              text =  "Sadly, your inventory is limited to 52 items, and it appears "
+              text << "Sadly, your inventory is limited to 52 items, and it appears "
                       "your knapsack is full.";
 
-          text += " However, this is easy enough to rectify: simply <w>d<magenta>rop "
+          text << " However, this is easy enough to rectify: simply <w>d<magenta>rop "
                   "some of the stuff you don't need or that's too heavy to lug "
                   "around permanently.";
           break;
       case TUT_ROTTEN_FOOD:
-          text =  "One or more of the chunks or corpses you carry has started to "
+          text << "One or more of the chunks or corpses you carry has started to "
                   "rot. Few races can digest these safely, so you might just as "
                   "well <w>d<magenta>rop them now.";
           if (you.religion == GOD_TROG || you.religion == GOD_MAKHLEB ||
               you.religion == GOD_OKAWARU)
           {
-              text += "\nIf it is a rotting corpse you carry now might be a good "
+              text << "\nIf it is a rotting corpse you carry now might be a good "
                       "time to <w>d<magenta>rop and <w>D<magenta>issect it during "
-                      "prayer (<w>p<magenta>) as an offer to ";
-              text += god_name(you.religion);
-              text += ".";
+                      "prayer (<w>p<magenta>) as an offer to "
+                   << god_name(you.religion)
+                   << ".";
           }
           break;
       case TUT_MAKE_CHUNKS:
-          text =  "How lucky! That monster left a corpse which you can now "
+          text << "How lucky! That monster left a corpse which you can now "
                   "<w>D<magenta>issect. One or more chunks will appear that you can "
                   "then <w>e<magenta>at. Beware that some chunks may be, "
                   "sometimes or always, hazardous. Only experience can help "
@@ -1183,19 +1181,19 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 (you.religion == GOD_OKAWARU || you.religion == GOD_MAKHLEB ||
                  you.religion == GOD_TROG || you.religion == GOD_ELYVILON))
           {
-              text += "\nNote that dissection under prayer offers the corpse to ";
-              text += god_name(you.religion);
-              text += " - check your god's attitude about this with <w>^<magenta>.";
+              text << "\nNote that dissection under prayer offers the corpse to "
+                   << god_name(you.religion)
+                   << " - check your god's attitude about this with <w>^<magenta>.";
           }
           break;
       case TUT_SHIFT_RUN:
-          text =  "Walking around takes less keystrokes if you press "
+          text << "Walking around takes less keystrokes if you press "
                   "<w>Shift-direction<magenta> or <w>/ direction<magenta>. "
                   "That will let you run until a monster comes into sight or "
                   "your character sees something interesting.";
           break;
       case TUT_MAP_VIEW:
-          text =  "As you explore a level, orientation can become difficult. "
+          text << "As you explore a level, orientation can become difficult. "
                   "Press <w>X<magenta> to bring up the level map. Typing "
                   "<w>?<magenta> shows the list of level map commands. "
                   "Most importantly, moving the cursor to a spot and pressing "
@@ -1203,19 +1201,19 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "there on its own.";
           break;
       case TUT_DONE_EXPLORE:
-          text =  "You have explored the dungeon on this level. The downstairs look "
+          text << "You have explored the dungeon on this level. The downstairs look "
                   "like '<w>><magenta>'. Proceed there and press <w>><magenta> to "
                   "go down. ";
 
           if (Options.tutorial_events[TUT_SEEN_STAIRS])
           {
-              text += "In rare cases, you may have found no downstairs at all. "
+              text << "In rare cases, you may have found no downstairs at all. "
                       "Try searching for secret doors in suspicious looking spots; "
                       "use <w>s<magenta>, <w>.<magenta> or <w>5<magenta> to do so.";
           }
           else
           {
-              text += "Each level of Crawl has three white up and three white down "
+              text << "Each level of Crawl has three white up and three white down "
                       "stairs. Unexplored parts can often be accessed via another "
                       "level or through secret doors. To find the latter, search "
                       "the adjacent squares of walls for one turn with <w>s<magenta> "
@@ -1224,38 +1222,38 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
           }
           break;
       case TUT_NEED_HEALING:
-          text =  "If you're low on hitpoints or magic and there's no urgent need "
+          text << "If you're low on hitpoints or magic and there's no urgent need "
                   "to move, you can rest for a bit. Press <w>5<magenta> or "
                   "<w>shift-numpad-5<magenta> to do so.";
           break;
       case TUT_NEED_POISON_HEALING:
-          text =  "Your poisoning could easily kill you, so now would be a good "
+          text << "Your poisoning could easily kill you, so now would be a good "
                   "time to <w>q<magenta>uaff a potion of heal wounds or, better "
                   "yet, a potion of healing. If you have seen neither of these so "
                   "far, try unknown ones in your inventory. Good luck!";
           break;
       case TUT_POSTBERSERK:
-          text =  "Berserking is extremely exhausting! It burns a lot of nutrition, "
+          text << "Berserking is extremely exhausting! It burns a lot of nutrition, "
                   "and afterwards you are slowed down and occasionally even pass "
                   "out.";
           break;
       case TUT_RUN_AWAY:
-          text =  "Whenever you've got only a few hitpoints left and you're in "
+          text << "Whenever you've got only a few hitpoints left and you're in "
                   "danger of dying, check your options carefully. Often, retreat or "
                   "use of some item might be a viable alternative to fighting on.";
           if (you.species == SP_CENTAUR)
-              text += " As a four-legged centaur you are particularly quick - "
+              text << " As a four-legged centaur you are particularly quick - "
                       "running is an option! ";
           if (Options.tutorial_type == TUT_BERSERK_CHAR && !you.berserker)
           {
-              text += "\nAlso, with ";
-              text += god_name(you.religion);
-              text += "'s support you can use your Berserk ability (<w>a<magenta>) "
+              text << "\nAlso, with "
+                   << god_name(you.religion)
+                   << "'s support you can use your Berserk ability (<w>a<magenta>) "
                       "to temporarily gain more hitpoints and greater strength. ";
           }
           break;
       case TUT_YOU_MUTATED:
-          text =  "Mutations can be obtained from several sources, among them "
+          text << "Mutations can be obtained from several sources, among them "
                   "potions, spell miscasts, and overuse of strong enchantments "
                   "like Invisibility. The only reliable way to get rid of mutations "
                   "is with potions of cure mutation. There are about as many "
@@ -1263,16 +1261,16 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                   "levels. Check your mutations with <w>A<magenta>.";
           break;
       case TUT_NEW_ABILITY:
-          text =  "You just gained a new ability. Press <w>a<magenta> to take a "
+          text <<  "You just gained a new ability. Press <w>a<magenta> to take a "
                   "look at your abilities or to use one of them.";
           break;
       case TUT_WIELD_WEAPON:
-          text =  "You might want to <w>w<magenta>ield a more suitable implement "
+          text << "You might want to <w>w<magenta>ield a more suitable implement "
                   "when attacking monsters.";
           if (Options.tutorial_type == TUT_RANGER_CHAR
                   && you.inv[ you.equip[EQ_WEAPON] ].sub_type == WPN_BOW)
           {
-              text += "You can easily switch between weapons in slots a and "
+              text << "You can easily switch between weapons in slots a and "
                       "b by pressing <w>'<magenta>.";
           }
           break;
@@ -1280,11 +1278,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
       case TUT_SEEN_FIRST_OBJECT:
           break;
     case TUT_EVENTS_NUM:
-        text += "You've found something new (but I don't know what)!";
+        text << "You've found something new (but I don't know what)!";
     }
 
-    if ( !text.empty() )
-       print_formatted_paragraph(text, get_tutorial_cols(), MSGCH_TUTORIAL);
+    if ( !text.str().empty() )
+    {
+        std::string s = text.str();
+        print_formatted_paragraph(s, get_tutorial_cols(), MSGCH_TUTORIAL);
+    }
 
     Options.tut_just_triggered = true;
     Options.tutorial_events[seen_what] = 0;

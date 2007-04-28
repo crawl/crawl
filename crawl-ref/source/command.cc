@@ -412,65 +412,58 @@ static void adjust_ability(void)
         mprf("%c - %s", input_1, get_ability_name_by_index( index_2 ) );
 }                               // end adjust_ability()
 
-void list_armour(void)
-{
+void list_armour()
+{    
+    std::ostringstream estr;
     for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
-    {
-        int armour_id = you.equip[i];
+    {        
+        const int armour_id = you.equip[i];
 
-        strcpy( info,
-                (i == EQ_CLOAK)       ? "Cloak  " :
-                (i == EQ_HELMET)      ? "Helmet " :
-                (i == EQ_GLOVES)      ? "Gloves " :
-                (i == EQ_SHIELD)      ? "Shield " :
-                (i == EQ_BODY_ARMOUR) ? "Armour " :
+        estr.str("");
+        estr.clear();
 
-                (i == EQ_BOOTS
-                    && !(you.species == SP_CENTAUR || you.species == SP_NAGA))
-                                      ? "Boots  " :
-                (i == EQ_BOOTS
-                    && (you.species == SP_CENTAUR || you.species == SP_NAGA))
-                                      ? "Barding"
-                                      : "unknown" );
-
-        strcat(info, " : ");
+        estr << ((i == EQ_CLOAK)       ? "Cloak  " :
+                 (i == EQ_HELMET)      ? "Helmet " :
+                 (i == EQ_GLOVES)      ? "Gloves " :
+                 (i == EQ_SHIELD)      ? "Shield " :
+                 (i == EQ_BODY_ARMOUR) ? "Armour " :
+                 (i == EQ_BOOTS) ?
+                 ((you.species == SP_CENTAUR || you.species == SP_NAGA) ?
+                  "Barding" : "Boots  ") : "unknown")
+             << " : ";
 
         if (armour_id != -1)
-        {
-            strcat(info, you.inv[armour_id].name(DESC_INVENTORY).c_str());
-        }
+            estr << you.inv[armour_id].name(DESC_INVENTORY);
         else
-        {
-            strcat(info, "    none");
-        }
+            estr << "    none";
 
-        mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
+        mpr( estr.str().c_str(), MSGCH_EQUIPMENT, menu_colour(estr.str()) );
     }
 }                               // end list_armour()
 
 void list_jewellery(void)
 {
+    std::ostringstream jstr;
+
     for (int i = EQ_LEFT_RING; i <= EQ_AMULET; i++)
     {
-        int jewellery_id = you.equip[i];
+        const int jewellery_id = you.equip[i];
 
-        strcpy( info, (i == EQ_LEFT_RING)  ? "Left ring " :
-                      (i == EQ_RIGHT_RING) ? "Right ring" :
-                      (i == EQ_AMULET)     ? "Amulet    "
-                                           : "unknown   " );
+        jstr.str("");
+        jstr.clear();
 
-        strcat(info, " : ");
+        jstr << ((i == EQ_LEFT_RING)  ? "Left ring " :
+                 (i == EQ_RIGHT_RING) ? "Right ring" :
+                 (i == EQ_AMULET)     ? "Amulet    "
+                                      : "unknown   ")
+             << " : ";
 
         if (jewellery_id != -1)
-        {
-            strcat(info, you.inv[jewellery_id].name(DESC_INVENTORY).c_str());
-        }
+            jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
         else
-        {
-            strcat(info, "    none");
-        }
+            jstr << "    none";
 
-        mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
+        mpr( jstr.str().c_str(), MSGCH_EQUIPMENT, menu_colour(jstr.str()) );
     }
 }                               // end list_jewellery()
 
@@ -482,21 +475,21 @@ void list_weapons(void)
     //
     // Yes, this is already on the screen... I'm outputing it
     // for completeness and to avoid confusion.
-    strcpy(info, "Current   : ");
+    std::string wstring = "Current   : ";
 
     if (weapon_id != -1)
     {
-        strcat(info, you.inv[weapon_id].name(DESC_INVENTORY_EQUIP).c_str());
+        wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
     }
     else
     {
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-            strcat(info, "    blade hands");
+            wstring += "    blade hands";
         else
-            strcat(info, "    empty hands");
+            wstring += "    empty hands";
     }
 
-    mpr(info, MSGCH_EQUIPMENT, menu_colour(info));
+    mpr(wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring));
 
     // Print out the swap slots
     for (int i = 0; i <= 1; i++)
@@ -506,29 +499,30 @@ void list_weapons(void)
         if (weapon_id == i)
             continue;
 
-        strcpy(info, (i == 0) ? "Primary   : " : "Secondary : ");
+        if ( i == 0 )
+            wstring = "Primary   : ";
+        else
+            wstring = "Secondary : ";
 
         if (is_valid_item( you.inv[i] ))
-        {
-            strcat(info, you.inv[i].name(DESC_INVENTORY_EQUIP).c_str());
-        }
+            wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
         else
-            strcat(info, "    none");
+            wstring += "    none";
 
-        mpr(info, MSGCH_EQUIPMENT, menu_colour(info));   // Output slot
+        mpr(wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring));
     }
 
     // Now we print out the current default fire weapon
-    strcpy(info, "Firing    : ");
+    wstring = "Firing    : ";
 
     const int item = get_fire_item_index();
 
     if (item == ENDOFPACK)
-        strcat(info, "    nothing");
+        wstring += "    nothing";
     else
-        strcat(info, you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+        wstring += you.inv[item].name(DESC_INVENTORY_EQUIP);
 
-    mpr( info, MSGCH_EQUIPMENT, menu_colour(info) );
+    mpr( wstring.c_str(), MSGCH_EQUIPMENT, menu_colour(wstring) );
 }                               // end list_weapons()
 
 static bool cmdhelp_textfilter(const std::string &tag)

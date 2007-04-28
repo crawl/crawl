@@ -124,10 +124,12 @@ static void in_a_shop( char shoppy )
 
     ShopInfo &si = stashes.get_shop(the_shop.x, the_shop.y);
 
-    snprintf(info, INFO_SIZE, "Welcome to %s!",
-             shop_name(the_shop.x, the_shop.y) );
-
-    shop_print(info, 20);
+    {
+        std::string welcome_message = "Welcome to ";
+        welcome_message += shop_name(the_shop.x, the_shop.y);
+        welcome_message += "!";
+        shop_print(welcome_message.c_str(), 20);
+    }
 
     more3();
     

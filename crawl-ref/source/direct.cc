@@ -1410,50 +1410,51 @@ static void describe_mons_enchantment(const monsters &mons,
 
     if (ench.ench == ENCH_HASTE && mons.has_ench(ENCH_BERSERK))
         return;
-            
-    strcpy(info, mons_pronoun(mons.type, PRONOUN_CAP));
+
+    std::string msg = mons_pronoun(mons.type, PRONOUN_CAP);
 
     switch (ench.ench)
     {
     case ENCH_POISON:
-        strcat(info, " is poisoned.");
+        msg += " is poisoned.";
         break;
     case ENCH_SICK:
-        strcat(info, " is sick.");
+        msg += " is sick.";
         break;
     case ENCH_ROT:
-        strcat(info, " is rotting away."); //jmf: "covered in sores"?
+        msg += " is rotting away."; //jmf: "covered in sores"?
         break;
     case ENCH_BACKLIGHT:
-        strcat(info, " is softly glowing.");
+        msg += " is softly glowing.";
         break;
     case ENCH_SLOW:
-        strcat(info, " is moving slowly.");
+        msg += " is moving slowly.";
         break;
     case ENCH_BERSERK:
-        strcat(info, " is berserk!");
+        msg += " is berserk!";
         break;
     case ENCH_HASTE:
-        strcat(info, " is moving very quickly.");
+        msg += " is moving very quickly.";
         break;
     case ENCH_CONFUSION:
-        strcat(info, " appears to be bewildered and confused.");
+        msg += " appears to be bewildered and confused.";
         break;
     case ENCH_INVIS:
-        strcat(info, " is slightly transparent.");
+        msg += " is slightly transparent.";
         break;
     case ENCH_CHARM:
-        strcat(info, " is in your thrall.");
+        msg += " is in your thrall.";
         break;
     case ENCH_STICKY_FLAME:
-        strcat(info, " is covered in liquid flames.");
+        msg += " is covered in liquid flames.";
         break;
     default:
-        info[0] = 0;
+        msg.clear();
         break;
     } // end switch
-    if (info[0])
-        mpr(info);
+
+    if (!msg.empty())
+        mpr(msg.c_str());
 }
 
 static void describe_cell(int mx, int my)

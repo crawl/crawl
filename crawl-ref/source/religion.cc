@@ -1890,9 +1890,9 @@ void divine_retribution( int god )
 
                 if (!player_under_penance() && you.piety > random2(400))
                 {
-                    strcpy(info, "Mortal, I have averted the wrath of "
-                        "the Shining One... this time.");
-                    god_speaks(you.religion, info);
+                    god_speaks(you.religion,
+                               "Mortal, I have averted the wrath of "
+                               "the Shining One... this time.");
                 }
                 else
                 {

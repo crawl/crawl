@@ -177,16 +177,14 @@ void mons_trap(struct monsters *monster)
         {
             if (monsterNearby)
             {
-                strcpy(info, "A huge blade swings out");
-
+                std::string msg = "A huge blade swings out";
                 if (player_monster_visible( monster ))
                 {
-                    strcat(info, " and slices into ");
-                    strcat(info, ptr_monam( monster, DESC_NOCAP_THE ));
+                    msg += " and slices into ";
+                    msg += ptr_monam( monster, DESC_NOCAP_THE );
                 }
-
-                strcat(info, "!");
-                mpr(info);
+                msg += "!";
+                mpr(msg.c_str());
             }
 
             damage_taken = 10 + random2avg(29, 2);
@@ -1227,26 +1225,24 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    strcpy(info, ptr_monam( monster, DESC_CAP_THE) );
+    std::string msg = ptr_monam( monster, DESC_CAP_THE);
+    msg += ((launched) ? " shoots " : " throws ");
 
-    strcat(info, (launched) ? " shoots " : " throws ");
-
-    if (pbolt.name.length())
+    if (!pbolt.name.empty())
     {
-        strcat(info, "a ");
-        strcat(info, pbolt.name.c_str());
+        msg += "a ";
+        msg += pbolt.name;
     }
     else
     {
         // build shoot message
-        strcat(info, item.name(DESC_NOCAP_A).c_str());
+        msg += item.name(DESC_NOCAP_A);
 
         // build beam name
         pbolt.name = item.name(DESC_PLAIN);
     }
-
-    strcat(info, ".");
-    mpr(info);
+    msg += ".";
+    mpr(msg.c_str());
 
     // [dshaligram] When changing bolt names here, you must edit 
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
@@ -1306,6 +1302,8 @@ void spore_goes_pop(struct monsters *monster)
     beam.thrower = KILL_MON;    // someone else's explosion
     beam.aux_source.clear();
 
+    const char* msg = "";
+
     if (type == MONS_GIANT_SPORE)
     {
         beam.flavour = BEAM_SPORE;
@@ -1313,7 +1311,7 @@ void spore_goes_pop(struct monsters *monster)
         beam.colour = LIGHTGREY;
         beam.damage = dice_def( 3, 15 );
         beam.ex_size = 2;
-        strcpy( info, "The giant spore explodes!" );
+        msg = "The giant spore explodes!";
     }
     else
     {
@@ -1322,13 +1320,13 @@ void spore_goes_pop(struct monsters *monster)
         beam.colour = LIGHTCYAN;
         beam.damage = dice_def( 3, 20 );
         beam.ex_size = coinflip() ? 3 : 2;
-        strcpy( info, "The ball lightning explodes!" );
+        msg = "The ball lightning explodes!";
     }
 
     if (mons_near(monster))
     {
         viewwindow(1, false);
-        mpr(info);
+        mpr(msg);
     }
 
     explosion(beam);
@@ -1980,8 +1978,9 @@ bool silver_statue_effects(monsters *mons)
         char wc[30];
 
         weird_colours( random2(256), wc );
-        snprintf(info, INFO_SIZE, "'s eyes glow %s.", wc);
-        simple_monster_message(mons, info, MSGCH_WARN);
+        std::string msg = "'s eyes glow ";
+        msg += wc;
+        simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
 
         create_monster( summon_any_demon((coinflip() ? DEMON_COMMON
                                                      : DEMON_LESSER)),

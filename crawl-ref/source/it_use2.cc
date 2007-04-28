@@ -317,42 +317,30 @@ void unwield_item(char unw, bool showMsgs)
 
         if (brand != SPWPN_NORMAL)
         {
-            strcpy(info, you.inv[unw].name(DESC_CAP_YOUR).c_str());
+            std::string msg = you.inv[unw].name(DESC_CAP_YOUR);
             
             switch (brand)
             {
             case SPWPN_SWORD_OF_CEREBOV:
             case SPWPN_FLAMING:
                 if (showMsgs)
-                {
-                    strcat(info, " stops flaming.");
-                    mpr(info);
-                }
+                    mprf("%s stops flaming.", msg.c_str());
                 break;
 
             case SPWPN_FREEZING:
             case SPWPN_HOLY_WRATH:
                 if (showMsgs)
-                {
-                    strcat(info, " stops glowing.");
-                    mpr(info);
-                }
+                    mprf("%s stops glowing.", msg.c_str());
                 break;
 
             case SPWPN_ELECTROCUTION:
                 if (showMsgs)
-                {
-                    strcat(info, " stops crackling.");
-                    mpr(info);
-                }
+                    mprf("%s stops crackling.", msg.c_str());
                 break;
 
             case SPWPN_VENOM:
                 if (showMsgs)
-                {
-                    strcat(info, " stops dripping with poison.");
-                    mpr(info);
-                }
+                    mprf("%s stops dripping with poison.", msg.c_str());
                 break;
 
             case SPWPN_PROTECTION:
@@ -399,7 +387,7 @@ void unwield_item(char unw, bool showMsgs)
 
     if (player_equip( EQ_STAFF, STAFF_POWER ))
     {
-        // XXX: Ugly hack so that thhis currently works (don't want to
+        // XXX: Ugly hack so that this currently works (don't want to
         // mess with the fact that currently this function doesn't 
         // actually unwield the item, but we need it out of the player's
         // hand for this to work. -- bwr

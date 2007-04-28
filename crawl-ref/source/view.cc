@@ -588,62 +588,61 @@ void monster_grid(bool do_updates)
                         }
                         else
                         {
-                            strcpy(info, "You hear ");
+                            std::string msg = "You hear ";
                             switch (mons_shouts(monster->type))
                             {
                             case S_SILENT:
                             default:
-                                strcat(info, "buggy behaviour!");
+                                msg += "buggy behaviour!";
                                 break;
                             case S_SHOUT:
-                                strcat(info, "a shout!");
+                                msg += "a shout!";
                                 break;
                             case S_BARK:
-                                strcat(info, "a bark!");
+                                msg += "a bark!";
                                 break;
                             case S_SHOUT2:
-                                strcat(info, "two shouts!");
+                                msg += "two shouts!";
                                 noise_level = 12;
                                 break;
                             case S_ROAR:
-                                strcat(info, "a roar!");
+                                msg += "a roar!";
                                 noise_level = 12;
                                 break;
                             case S_SCREAM:
-                                strcat(info, "a hideous shriek!");
+                                msg += "a hideous shriek!";
                                 break;
                             case S_BELLOW:
-                                strcat(info, "a bellow!");
+                                msg += "a bellow!";
                                 break;
                             case S_SCREECH:
-                                strcat(info, "a screech!");
+                                msg += "a screech!";
                                 break;
                             case S_BUZZ:
-                                strcat(info, "an angry buzzing noise.");
+                                msg += "an angry buzzing noise.";
                                 break;
                             case S_MOAN:
-                                strcat(info, "a chilling moan.");
+                                msg += "a chilling moan.";
                                 break;
                             case S_WHINE:
-                                strcat(info,
-                                       "an irritating high-pitched whine.");
+                                msg += "an irritating high-pitched whine.";
                                 break;
                             case S_CROAK:
                                 if (coinflip())
-                                    strcat(info, "a loud, deep croak!");
+                                    msg += "a loud, deep croak!";
                                 else
-                                    strcat(info, "a croak.");
+                                    msg += "a croak.";
                                 break;
                             case S_GROWL:
-                                strcat(info, "an angry growl!");
+                                msg += "an angry growl!";
                                 break;
                             case S_HISS:
-                                strcat(info, "an angry hiss!");
+                                msg += "an angry hiss!";
                                 noise_level = 4;  // not very loud -- bwr
                                 break;
                             }
 
-                            mpr(info, MSGCH_SOUND);
+                            mpr(msg.c_str(), MSGCH_SOUND);
                         }
                     }
 

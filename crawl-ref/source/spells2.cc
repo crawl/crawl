@@ -550,19 +550,19 @@ bool brand_weapon(int which_brand, int power)
         return false;
     }
 
-    strcpy( info, you.inv[wpn].name(DESC_CAP_YOUR).c_str() );
+    std::string msg = you.inv[wpn].name(DESC_CAP_YOUR);
 
     const int wpn_type = get_vorpal_type(you.inv[wpn]);
 
     switch (which_brand)        // use SPECIAL_WEAPONS here?
     {
     case SPWPN_FLAMING:
-        strcat(info, " bursts into flame!");
+        msg += " bursts into flame!";
         duration_affected = 7;
         break;
 
     case SPWPN_FREEZING:
-        strcat(info, " glows blue.");
+        msg += " glows blue.";
         duration_affected = 7;
         break;
 
@@ -570,12 +570,12 @@ bool brand_weapon(int which_brand, int power)
         if (wpn_type == DVORP_CRUSHING)
             return false;
 
-        strcat(info, " starts dripping with poison.");
+        msg += " starts dripping with poison.";
         duration_affected = 15;
         break;
 
     case SPWPN_DRAINING:
-        strcat(info, " crackles with unholy energy.");
+        msg += " crackles with unholy energy.";
         duration_affected = 12;
         break;
 
@@ -583,22 +583,22 @@ bool brand_weapon(int which_brand, int power)
         if (wpn_type != DVORP_SLICING)
             return false;
 
-        strcat(info, " glows silver and looks extremely sharp.");
+        msg += " glows silver and looks extremely sharp.";
         duration_affected = 10;
         break;
 
     case SPWPN_DISTORTION:      //jmf: added for Warp Weapon
-        strcat(info, " seems to ");
+        msg += " seems to ";
 
         temp_rand = random2(6);
-        strcat(info, (temp_rand == 0) ? "twist" :
-                     (temp_rand == 1) ? "bend" :
-                     (temp_rand == 2) ? "vibrate" :
-                     (temp_rand == 3) ? "flex" :
-                     (temp_rand == 4) ? "wobble"
-                                      : "twang");
+        msg += ((temp_rand == 0) ? "twist" :
+                (temp_rand == 1) ? "bend" :
+                (temp_rand == 2) ? "vibrate" :
+                (temp_rand == 3) ? "flex" :
+                (temp_rand == 4) ? "wobble"
+                                 : "twang");
 
-        strcat( info, coinflip() ? " oddly." : " strangely." );
+        msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
         // [dshaligram] Clamping power to 2.
@@ -616,7 +616,7 @@ bool brand_weapon(int which_brand, int power)
     case SPWPN_PAIN:
         // well, in theory, we could be silenced, but then how are
         // we casting the brand spell?
-        strcat(info, " shrieks in agony.");
+        msg += " shrieks in agony.";
         noisy( 15, you.x_pos, you.y_pos );
         duration_affected = 8;
         break;
@@ -626,14 +626,14 @@ bool brand_weapon(int which_brand, int power)
             return false;
 
         which_brand = SPWPN_VORPAL;
-        strcat(info, " glows silver and feels heavier.");
+        msg += " glows silver and feels heavier.";
         duration_affected = 7;
         break;
     }
 
     set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, which_brand );
 
-    mpr(info);
+    mpr(msg.c_str());
     you.wield_change = true;
 
     int dur_change = duration_affected + roll_dice( 2, power );
@@ -667,8 +667,7 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
     char *ptr_stat_max = 0;     // NULL {dlb}
     char *ptr_redraw = 0;       // NULL {dlb}
 
-    if (!suppress_msg)
-        strcpy(info, "You feel your ");
+    std::string msg = "You feel your ";
 
     if (which_stat == STAT_RANDOM)
         which_stat = random2(NUM_STATS);
@@ -676,8 +675,7 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
     switch (which_stat)
     {
     case STAT_STRENGTH:
-        if (!suppress_msg)
-            strcat(info, "strength");
+        msg += "strength";
 
         ptr_stat = &you.strength;
         ptr_stat_max = &you.max_strength;
@@ -685,8 +683,7 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
         break;
 
     case STAT_DEXTERITY:
-        if (!suppress_msg)
-            strcat(info, "dexterity");
+        msg += "dexterity";
 
         ptr_stat = &you.dex;
         ptr_stat_max = &you.max_dex;
@@ -694,8 +691,7 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
         break;
 
     case STAT_INTELLIGENCE:
-        if (!suppress_msg)
-            strcat(info, "intelligence");
+        msg += "intelligence";
 
         ptr_stat = &you.intel;
         ptr_stat_max = &you.max_intel;
@@ -705,11 +701,9 @@ bool restore_stat(unsigned char which_stat, bool suppress_msg)
 
     if (*ptr_stat < *ptr_stat_max)
     {
-        if (!suppress_msg)
-        {
-            strcat(info, " returning.");
-            mpr(info);
-        }
+        msg += " returning.";
+        if ( !suppress_msg )
+            mpr(msg.c_str());
 
         *ptr_stat = *ptr_stat_max;
         *ptr_redraw = 1;

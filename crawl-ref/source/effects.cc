@@ -194,7 +194,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
     char newValue = 0;          // holds new value, for comparison to old {dlb}
 
     // begin outputing message: {dlb}
-    strcpy(info, "You feel ");
+    std::string msg = "You feel ";
 
     // set pointers to appropriate variables: {dlb}
     if (which_stat == STAT_RANDOM)
@@ -203,19 +203,19 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
     switch (which_stat)
     {
     case STAT_STRENGTH:
-        strcat(info, "weakened");
+        msg += "weakened";
         ptr_stat = &you.strength;
         ptr_redraw = &you.redraw_strength;
         break;
 
     case STAT_DEXTERITY:
-        strcat(info, "clumsy");
+        msg += "clumsy";
         ptr_stat = &you.dex;
         ptr_redraw = &you.redraw_dexterity;
         break;
 
     case STAT_INTELLIGENCE:
-        strcat(info, "dopey");
+        msg += "dopey";
         ptr_stat = &you.intel;
         ptr_redraw = &you.redraw_intelligence;
         break;
@@ -255,11 +255,11 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force)
 
     // a warning to player that s/he cut it close: {dlb}
     if (!statLowered)
-        strcat(info, " for a moment");
+        msg += " for a moment";
 
     // finish outputting message: {dlb}
-    strcat(info, ".");
-    mpr(info);
+    msg += ".";
+    mpr(msg.c_str());
 
     return (statLowered);
 }                               // end lose_stat()
@@ -399,39 +399,31 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 3:
-        strcpy(info, "You hear the distant roaring of an enraged ");
-
         temp_rand = random2(8);
-
-        strcat(info, (temp_rand == 0) ? "frog"          :
-                     (temp_rand == 1) ? "pill bug"      :
-                     (temp_rand == 2) ? "millipede"     :
-                     (temp_rand == 3) ? "eggplant"      :
-                     (temp_rand == 4) ? "albino dragon" :
-                     (temp_rand == 5) ? "dragon"        :
-                     (temp_rand == 6) ? "human"
-                                      : "slug");
-
-        strcat(info, "!");
-        mpr(info);
+        mprf("You hear the distant roaring of an enraged %s!",
+             (temp_rand == 0) ? "frog"          :
+             (temp_rand == 1) ? "pill bug"      :
+             (temp_rand == 2) ? "millipede"     :
+             (temp_rand == 3) ? "eggplant"      :
+             (temp_rand == 4) ? "albino dragon" :
+             (temp_rand == 5) ? "dragon"        :
+             (temp_rand == 6) ? "human"
+                              : "slug");
         break;
 
     case 4:
         if (player_can_smell())
         {
-            strcpy(info, "You smell ");
-
             temp_rand = random2(8);
-
-            strcat(info, (temp_rand == 0) ? "coffee."          :
-                         (temp_rand == 1) ? "salt."            :
-                         (temp_rand == 2) ? "burning hair!"    :
-                         (temp_rand == 3) ? "baking bread."    :
-                         (temp_rand == 4) ? "something weird." :
-                         (temp_rand == 5) ? "wet wool."        :
-                         (temp_rand == 6) ? "sulphur."
-                                          : "fire and brimstone!");
-            mpr(info);
+            mprf("You smell %s",
+                 (temp_rand == 0) ? "coffee."          :
+                 (temp_rand == 1) ? "salt."            :
+                 (temp_rand == 2) ? "burning hair!"    :
+                 (temp_rand == 3) ? "baking bread."    :
+                 (temp_rand == 4) ? "something weird." :
+                 (temp_rand == 5) ? "wet wool."        :
+                 (temp_rand == 6) ? "sulphur."
+                                  : "fire and brimstone!");
         }
         break;
 
@@ -453,21 +445,17 @@ void random_uselessness(unsigned char ru, unsigned char sc_read_2)
         break;
 
     case 8:
-        strcpy(info, "You hear ");
-
         temp_rand = random2(9);
-
-        strcat(info, (temp_rand == 0) ? "snatches of song"                 :
-                     (temp_rand == 1) ? "a voice call someone else's name" :
-                     (temp_rand == 2) ? "a very strange noise"             :
-                     (temp_rand == 3) ? "roaring flame"                    :
-                     (temp_rand == 4) ? "a very strange noise indeed"      :
-                     (temp_rand == 5) ? "the chiming of a distant gong"    :
-                     (temp_rand == 6) ? "the bellowing of a yak"           :
-                     (temp_rand == 7) ? "a crunching sound"
-                                      : "the tinkle of an enormous bell");
-        strcat(info, ".");
-        mpr(info);
+        mprf("You hear %s.",
+             (temp_rand == 0) ? "snatches of song"                 :
+             (temp_rand == 1) ? "a voice call someone else's name" :
+             (temp_rand == 2) ? "a very strange noise"             :
+             (temp_rand == 3) ? "roaring flame"                    :
+             (temp_rand == 4) ? "a very strange noise indeed"      :
+             (temp_rand == 5) ? "the chiming of a distant gong"    :
+             (temp_rand == 6) ? "the bellowing of a yak"           :
+             (temp_rand == 7) ? "a crunching sound"
+                              : "the tinkle of an enormous bell");
         break;
     }
 
