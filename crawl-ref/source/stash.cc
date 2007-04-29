@@ -481,11 +481,11 @@ bool Stash::matches_search(const std::string &prefix,
             continue;
         }
 
-        if (is_dumpable_artifact(item, Options.verbose_dump))
+        if (is_dumpable_artifact(item, false))
         {
-            std::string desc = munge_description(get_item_description(item, 
-                                                          Options.verbose_dump,
-                                                          true ));
+            std::string desc =
+                munge_description(get_item_description(item, false, true));
+            
             if (search.matches(desc))
             {
                 if (!res.count++)
@@ -542,11 +542,11 @@ void Stash::write(std::ostream &os,
            << (!verified && (items.size() > 1 || i)? " (still there?)" : "")
            << std::endl;
 
-        if (is_dumpable_artifact(item, Options.verbose_dump))
+        if (is_dumpable_artifact(item, false))
         {
-            std::string desc = munge_description(get_item_description(item, 
-                                                          Options.verbose_dump,
-                                                          true ));
+            std::string desc =
+                munge_description(get_item_description(item, false, true));
+
             // Kill leading and trailing whitespace
             desc.erase(desc.find_last_not_of(" \n\t") + 1);
             desc.erase(0, desc.find_first_not_of(" \n\t"));
@@ -664,11 +664,9 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
     if (shoptype_identifies_stock(this->shoptype))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
-    if (is_dumpable_artifact(si.item, Options.verbose_dump))
+    if (is_dumpable_artifact(si.item, false))
     {
-        desc = munge_description(get_item_description(si.item,
-                    Options.verbose_dump,
-                    true));
+        desc = munge_description(get_item_description(si.item, false, true));
         trim_string(desc);
         
         // Walk backwards and prepend indenting spaces to \n characters

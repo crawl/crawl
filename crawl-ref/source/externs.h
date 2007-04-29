@@ -1280,8 +1280,6 @@ public:
 
     long        autopickups;    // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings
-    bool        verbose_dump;   // make character dumps contain more detail
-    bool        detailed_stat_dump; // add detailed stat and resist dump
     bool        colour_map;     // add colour to the map
     bool        clean_map;      // remove unseen clouds/monsters
     bool        show_uncursed;  // label known uncursed items as "uncursed"

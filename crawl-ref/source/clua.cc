@@ -1874,8 +1874,6 @@ static option_handler handlers[] =
 {
     // Boolean options come first
     { "easy_open", &Options.easy_open, option_hboolean },
-    { "verbose_dump", &Options.verbose_dump, option_hboolean },
-    { "detailed_stat_dump", &Options.detailed_stat_dump, option_hboolean },
     { "colour_map", &Options.colour_map, option_hboolean },
     { "clean_map", &Options.clean_map, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },

@@ -189,14 +189,6 @@ static void in_a_shop( char shoppy )
 
         cprintf("%s", mitm[itty].name(DESC_NOCAP_A, false, id_stock).c_str());
 
-#if 0
-        // huh? XXX XXX does this code do anything?
-        std::string desc;
-        if (is_dumpable_artifact(mitm[itty], Options.verbose_dump))
-            desc = munge_description(get_item_description(mitm[itty], 
-                                                          Options.verbose_dump,
-                                                          true ));
-#endif
         si.add_item(mitm[itty], gp_value);
 
         gotoxy(60, i);

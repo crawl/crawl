@@ -87,7 +87,6 @@ static void sdump_lua(const std::string &section, std::string &text);
 static bool write_dump(const std::string &fname, const std::string &text, 
                        bool full_id);
 static void dump_stats2( std::string & text, bool calc_unid);
-static void dump_stats( std::string & text );
 
 struct dump_section_handler
 {
@@ -163,10 +162,7 @@ static void sdump_header(const std::string &, std::string &text)
 
 static void sdump_stats(const std::string &, std::string &text)
 {
-    if (Options.detailed_stat_dump)
-        dump_stats2(text, dump_full_id);
-    else
-        dump_stats(text);
+    dump_stats2(text, dump_full_id);
 }
 
 static void sdump_burden(const std::string &, std::string &text)
@@ -354,6 +350,7 @@ static void sdump_screenshot(const std::string &, std::string &text)
     text += "\n\n";
 }
 
+#if 0
 static void dump_stats( std::string & text )
 {
     char st_prn[20];
@@ -487,6 +484,7 @@ static void dump_stats( std::string & text )
     text += "\n";
     text += "\n";
 }                               // end dump_stats()
+#endif
 
  //---------------------------------------------------------------
  //
@@ -707,11 +705,10 @@ static void sdump_inventory(const std::string &, std::string & text)
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }
 
-                        if (is_dumpable_artifact( you.inv[j], 
-                                                  Options.verbose_dump ))
+                        if (is_dumpable_artifact( you.inv[j], false ))
                         {
                             text2 = get_item_description( you.inv[j], 
-                                                          Options.verbose_dump,
+                                                          false,
                                                           true );
 
                             text += munge_description(text2);
