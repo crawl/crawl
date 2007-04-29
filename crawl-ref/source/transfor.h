@@ -36,7 +36,7 @@ size_type transform_size(int psize = PSIZE_BODY);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-bool transform(int pow, char which_trans);
+bool transform(int pow, transformation_type which_trans);
 
 
 // last updated 12may2000 {dlb}

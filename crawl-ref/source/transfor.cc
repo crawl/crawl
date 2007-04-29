@@ -110,7 +110,7 @@ size_type player::transform_size(int psize) const
     }
 }
 
-bool transform(int pow, char which_trans)
+bool transform(int pow, transformation_type which_trans)
 {
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON)
@@ -359,6 +359,9 @@ bool transform(int pow, char which_trans)
         you.symbol = 'S';
         you.colour = RED;
         return (true);
+    case TRAN_NONE:
+    case NUM_TRANSFORMATIONS:
+        break;
     }
 
     return (false);
