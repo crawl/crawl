@@ -1103,7 +1103,7 @@ int melee_attack::player_apply_monster_ac(int damage)
         // when stabbing we can get by some of the armour
         if (def->ac > 0)
         {
-            int ac = def->ac
+            const int ac = def->ac
                 - random2( you.skills[SK_STABBING] / stab_bonus );
             
             if (ac > 0)
@@ -2218,6 +2218,13 @@ void melee_attack::player_stab_check()
     {
         stab_attempt = true;
         stab_bonus = 2;
+    }
+
+    if (attacker->invisible() && !defender->can_see_invisible())
+    {
+        stab_attempt = true;
+        roll_needed = !mons_sense_invis(def);
+        stab_bonus = (roll_needed ? 2 : 1);
     }
 
     // sleeping
