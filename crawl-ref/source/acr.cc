@@ -2331,8 +2331,8 @@ static void world_reacts()
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         && one_chance_in((you.char_direction == DIR_DESCENDING) ? 240 : 10))
     {
-        int prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
-                                      : PROX_AWAY_FROM_PLAYER);
+        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS 
+                                                 : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
         if (you.char_direction == DIR_ASCENDING)

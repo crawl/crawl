@@ -39,7 +39,7 @@
  * *********************************************************************** */
 int mons_place( int mon_type, char behaviour, int target, bool summoned,
                 int px, int py, int level_type = LEVEL_DUNGEON, 
-                int proximity = PROX_ANYWHERE, int extra = 250,
+                proximity_type proximity = PROX_ANYWHERE, int extra = 250,
                 int dur = 0, bool permit_bands = false );
 
 // last updated 12may2000 {dlb}
@@ -80,7 +80,7 @@ int summon_any_demon( char demon_class );
  * *********************************************************************** */
 bool place_monster( int &id, int mon_type, int power, char behaviour,
                     int target, bool summoned, int px, int py, bool allow_bands,
-                    int proximity = PROX_ANYWHERE, int extra = 250,
+                    proximity_type proximity = PROX_ANYWHERE, int extra = 250,
                     int dur = 0,
                     const dgn_region_list &proscribed = dgn_region_list() );
 

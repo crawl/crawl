@@ -2027,10 +2027,10 @@ static void builder_monsters(int level_number, char level_type, int mon_wanted)
                        no_monster_zones );
 
     place_uniques(level_number, level_type);
-    place_aquatic_monsters(level_number, level_type);
 
-    // Special handling
-    if (player_in_branch( BRANCH_CRYPT ))
+    if ( !player_in_branch(BRANCH_CRYPT) ) // no water creatures in the Crypt
+        place_aquatic_monsters(level_number, level_type);
+    else
     {
         if (one_chance_in(3))
             mons_place( MONS_CURSE_SKULL, BEH_SLEEP, MHITNOT, false, 0, 0 );
