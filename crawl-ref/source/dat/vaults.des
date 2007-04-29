@@ -6528,12 +6528,14 @@ NAME: fake_naga_vault
 DEPTH: 15-26
 MONS: mimic, guardian naga
 MAP
-xxxxxxxxx
-x1111111x
-x1111111x
-x1111111x
-x11.2.11x
-xxxx+xxxx
+...........
+.xxxxxxxxx.
+.x1111111x.
+.x1111111x.
+.x1111111x.
+.x11.2.11x.
+.xxxx+xxxx.
+...........
 ENDMAP
 
 ##############################################################################

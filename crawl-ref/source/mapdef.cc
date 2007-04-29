@@ -881,6 +881,9 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
     
+    if (pick.mid == MONS_WEAPON_MIMIC && !pick.fix_mons)
+        pick.mid = random_range(MONS_GOLD_MIMIC, MONS_POTION_MIMIC);
+
     return (pick);
 }
 
@@ -895,6 +898,31 @@ mons_spec mons_list::get_monster(int index)
 void mons_list::clear()
 {
     mons.clear();
+}
+
+bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
+{
+    if (s == "mimic")
+    {
+        *mid = MONS_WEAPON_MIMIC;
+        *fix = false;
+        return (true);
+    }
+    else if (s == "gold mimic")
+        *mid = MONS_GOLD_MIMIC;
+    else if (s == "weapon mimic")
+        *mid = MONS_WEAPON_MIMIC;
+    else if (s == "armour mimic")
+        *mid = MONS_ARMOUR_MIMIC;
+    else if (s == "scroll mimic")
+        *mid = MONS_SCROLL_MIMIC;
+    else if (s == "potion mimic")
+        *mid = MONS_POTION_MIMIC;
+    else
+        return (false);
+
+    *fix = true;
+    return (true);
 }
 
 mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
@@ -913,7 +941,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (weight == TAG_UNFOUND || weight <= 0)
             weight = 10;
 
-        const bool fixmons = strip_tag(s, "fix_mons");
+        bool fixmons = strip_tag(s, "fix_mons");
         const bool generate_awake = strip_tag(s, "generate_awake");
 
         trim_string(s);
@@ -924,6 +952,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mlevel = -8;
         else if (s == "9")
             mlevel = -9;
+        else if (check_mimic(s, &mid, &fixmons))
+            ;
         else if (s != "0")
         {
             mid = mons_by_name(s);

@@ -205,6 +205,7 @@ private:
     mons_spec_slot parse_mons_spec(std::string spec);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
+    bool check_mimic(const std::string &s, int *mid, bool *fix) const;
 
 private:
     std::vector< mons_spec_slot > mons;
