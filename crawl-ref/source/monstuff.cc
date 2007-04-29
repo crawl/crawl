@@ -623,7 +623,10 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         case KILL_MON:          /* Monster kills in combat */
         case KILL_MON_MISSILE:  /* Monster kills by missile or beam */
             if (!silent)
-                simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
+                simple_monster_message(monster,
+                                       wounded_damaged(monster->type) ?
+                                       " is destroyed!" : " dies!",
+                                       MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
 
             // no piety loss if god gifts killed by other monsters
@@ -639,7 +642,7 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
                 const bool anon = (i == ANON_FRIENDLY_MONSTER);
                 gain_exp(exper_value( monster ) / 2 + 1);
 
-                int targ_holy   = mons_holiness(monster),
+                const mon_holy_type targ_holy  = mons_holiness(monster),
                     attacker_holy = anon? MH_NATURAL : mons_holiness(&menv[i]);
 
                 if (attacker_holy == MH_UNDEAD)
@@ -713,7 +716,10 @@ void monster_die(monsters *monster, char killer, int i, bool silent)
         /* Monster killed by trap/inanimate thing/itself/poison not from you */
         case KILL_MISC:
             if (!silent)
-                simple_monster_message(monster, " dies!", MSGCH_MONSTER_DAMAGE,
+                simple_monster_message(monster,
+                                       wounded_damaged(monster->type) ?
+                                       " is destroyed!" : " dies!",
+                                       MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             break;
 
@@ -1338,7 +1344,7 @@ void print_wounds(monsters *monster)
 bool wounded_damaged(int wound_class)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    const int holy = mons_class_holiness(wound_class);
+    const mon_holy_type holy = mons_class_holiness(wound_class);
     if (holy == MH_UNDEAD || holy == MH_NONLIVING || holy == MH_PLANT)
         return (true);
 
