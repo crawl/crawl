@@ -583,6 +583,7 @@ void game_options::reset_options()
                    (1L <<  7) | // jewellery
                    (1L <<  3) | // wands
                    (1L <<  4)); // food
+    show_inventory_weights = false;
     verbose_dump           = false;
     detailed_stat_dump     = true;
     colour_map             = true;
@@ -1474,6 +1475,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // should autoprayer default to on or off?
         autoprayer_on = read_bool( field, autoprayer_on );
+    }
+    else if (key == "show_inventory_weights")
+    {
+        // should weights be shown on inventory items?
+        show_inventory_weights = read_bool( field, show_inventory_weights );
     }
     else if (key == "detailed_stat_dump")
     {

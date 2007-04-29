@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sstream>
 
 #ifdef DOS
 #include <conio.h>
@@ -94,23 +95,29 @@ InvEntry::InvEntry( const item_def &i ) : MenuEntry( "", MEL_ITEM ), item( &i )
 
 std::string InvEntry::get_text() const
 {
-    char buf[ITEMNAME_SIZE];
-    char suffix[ITEMNAME_SIZE] = "";
+    std::ostringstream tstr;
 
+    tstr << ' ' << static_cast<char>(hotkeys[0]) << ' ';
+    if ( !selected_qty )
+        tstr << '-';
+    else if ( selected_qty < quantity )
+        tstr << '#';
+    else
+        tstr << '+';
+    tstr << ' ' << text;
     if (InvEntry::show_prices)
     {
         const int value = item_value(*item, show_prices);
         if (value > 0)
-            snprintf(suffix, sizeof suffix,
-                " (%d gold)", value);
+            tstr << " (" << value << " gold)";
     }
-    snprintf( buf, sizeof buf,
-            " %c %c %s%s",
-            hotkeys[0],
-            (!selected_qty? '-' : selected_qty < quantity? '#' : '+'),
-            text.c_str(),
-            suffix );
-    return (buf);
+
+    if ( Options.show_inventory_weights )
+    {
+        const int mass = item_mass(*item);
+        tstr << " [" << (mass/10) << '.' << (mass%10) << " aum]";
+    }
+    return tstr.str();
 }
 
 void InvEntry::add_class_hotkeys(const item_def &i)

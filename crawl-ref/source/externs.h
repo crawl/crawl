@@ -1279,6 +1279,7 @@ public:
     bool        show_turns;     // Show turns used in HUD.
 
     long        autopickups;    // items to autopickup
+    bool        show_inventory_weights; // show weights in inventory listings
     bool        verbose_dump;   // make character dumps contain more detail
     bool        detailed_stat_dump; // add detailed stat and resist dump
     bool        colour_map;     // add colour to the map
