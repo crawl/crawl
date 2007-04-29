@@ -163,6 +163,7 @@ stab_brand = hi:blue
 # delay_message_clear = true
 # always_greet = false
 # increasing_skill_progress = false
+# show_inventory_weights = true
 # show_turns = true
 
 # Colouring for the inventory

@@ -26,7 +26,7 @@ The contents of this text are:
                 target_zero_exp, target_oos, target_los_first,
                 confirm_self_target, default_target,
                 target_unshifted_dirs
-4-c     Passive Sightings (Detection and Rememberance).
+4-c     Passive Sightings (Detection and Remembrance).
                 detected_monster_colour, detected_item_colour, 
                 remembered_monster_colour, colour_map, clean_map
 4-d     Branding (Item and Monster Highlighting).
@@ -48,7 +48,8 @@ The contents of this text are:
 4-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, always_greet,
                 terse_hand, delay_message_clear, menu_colour, message_colour,
-                increasing_skill_progress, show_turns
+                increasing_skill_progress, show_inventory_weights,
+                show_turns
 4-j     Missiles.
                 fire_items_start, fire_order
 4-k     Message Channels.
@@ -143,10 +144,10 @@ priest       = (Zin | Yredelemnul | random)
         Chaos Knights, Death Knights, and Priests.
 
 race = (Human |...| Merfolk | random)
-        The usual abbrevations (Hu, El, HE, etc.) work.
+        The usual abbreviations (Hu, El, HE, etc.) work.
 
 class = (Fighter |...| Wanderer | random)
-        Here again the abbrevations (Fi, Wi, Pr, etc.) can be used.
+        Here again the abbreviations (Fi, Wi, Pr, etc.) can be used.
 
 random_pick = false
         The random_pick option will randomly generate a character.
@@ -175,7 +176,7 @@ sound = <regex>:<path to sound file>
         not include commas or colons. For example
           sound = LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         Getting appropriate sound files may be difficult. Check other
-        roguelikes or old computer rpg's. Alternatively, ask for help at
+        roguelikes or old computer RPGs. Alternatively, ask for help in
         the newsgroup rec.games.roguelike.misc.
 
 
@@ -194,17 +195,17 @@ The currently available lua's are
   stash.lua     -- annotates the stash file for better searching (Ctrl-F)
                    Searching for 'Long blades' will also turn up all weapons
                    with the long blade skill. Similarly, you can use 'altar',
-                   'portal' etc. Also, you can now look for spellbooks 
-                   ('book'), artifacts ('artifact'), ego items ('ego'). 
+                   'portal' etc. Also, you can look for spellbooks ('book'),
+                   artifacts ('artifact'), and ego items ('ego'). 
   wield.lua     -- shows more intelligent options when using 'w?'
   kills.lua     -- improves the Vanquished Creatures list in dump files; 
                    currently gives three lists (Vanquished, Friendly, Others)
-  runrest.lua   -- allows to remove certain stop condition when running
+  runrest.lua   -- allows overriding certain stop conditions when running
                    New options: runrest_ignore_poison, runrest_ignore_message
   gearset.lua   -- provides commands for switching of complete sets via macro
                    New macroable functions: rememberkit, swapkit
   eat.lua       -- prompts to eat chunks in inventory.
-  trapwalk.lua  -- allows travel to cross certain traps if you have enough hp.
+  trapwalk.lua  -- allows travel to cross certain traps if you have enough HP.
 
 
 4-  Interface.
@@ -255,8 +256,8 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
         is the same as using
           ban_pickup = decay, degeneration
 
-        If the regexes are not prefixed with < or >, > is implied, so the option
-        setting above can also be written as
+        If the regexes are not prefixed with < or >, > is implied, so the
+        option setting above can also be written as
           autopickup_exceptions = decay, degeneration
 
         You can use multiple autopickup_exceptions lines. Some examples:
@@ -311,8 +312,8 @@ assign_item_slot = (forward | backward)
 drop_mode = (multi | single)
         Single is the classic behaviour; when you select an inventory letter,
         that item will be dropped immediately. Multidrop allows you to select
-        multiple items to be dropped. (You can also switch to multidrop from the
-        classic drop menu using the '@' key).
+        multiple items to be dropped. (You can also switch to multidrop from
+        the classic drop menu using the '@' key).
 
         Multidrop can be very convenient, but be aware that every item dropped
         takes one turn. (This is different from picking up.) When selecting
@@ -323,11 +324,11 @@ drop_mode = (multi | single)
         dropped out of order.
 
 pickup_mode = (multi | single | auto:X)
-        Single is the classical behaviour (and default): when picking up items, 
+        Single is the classical behaviour (and default): when picking up items,
         you are prompted for them one by one. Multi makes a menu appear, where 
         you can choose which items to pick up. Note that no matter how many 
         items you choose, picking up will always take one turn.
-        If pickup_mode is auto:X, where X is some number (for example, auto:5), 
+        If pickup_mode is auto:X, where X is some number (for example, auto:5),
         then pickup will give a menu if there are at least X items on your 
         square, and will prompt one by one otherwise.
 
@@ -336,7 +337,7 @@ drop_filter = <regex>
         multidrop menu, you can choose to select only items that match a 
         search regex using this option.
 
-        For instance, to quickly select carrion and rotting chunks of meat, you 
+        For instance, to quickly select carrion and rotting chunks of meat, you
         could use:
           drop_filter = skeleton, rotting, corpse
         Other choices can come in handy as well, e.g. if you want to sacrifice
@@ -356,10 +357,10 @@ target_zero_exp = false
 target_oos = true
         When cycling through items with 'x' look-around, setting target_oos to
         true allows you to jump the cursor to dungeon features (<> for stairs,
-        Tab for shops, ^ for traps) and stashes (with the '*' and '/' keys) that
-        are outside line-of-sight but in the main view. This is most sensibly
-        used in connection with stash_tracking=all (see 4-g).  Also see also
-        target_los_first below.
+        Tab for shops, ^ for traps) and stashes (with the '*' and '/' keys)
+        that are outside line-of-sight but in the main view. This is most
+        sensibly used in connection with stash_tracking=all (see 4-g).  Also
+        see also target_los_first below.
 
 target_los_first = true
         When cycling through items/features with the 'x' look-around command, 
@@ -384,7 +385,7 @@ target_unshifted_dirs = false
         unshifted direction keys move the targeting cursor (and shifted
         directions fire in the given direction immediately).
 
-4-c     Passive Sightings (via detection and rememberance).
+4-c     Passive Sightings (via detection and remembrance).
 -----------------------------------------------------------
 
 detected_monster_colour = darkgrey
@@ -497,8 +498,8 @@ travel_stop_message = <list of regexes>
              travel_stop_message = god:wrath finds you
         If you'd like to stop travel for any message sent to a particular 
         channel, use a travel_stop_message line with that message channel name
-        and a colon alone. For example, if you've an amulet of the gourmand, and
-        are hankering after rotten meat, or you're playing a ghoul: 
+        and a colon alone. For example, if you've an amulet of the gourmand,
+        and are hankering after rotten meat, or you're playing a ghoul: 
              travel_stop_message = rotten_meat:
         Stop travel for any god messages (including prayer)
              travel_stop_message = god:
@@ -546,8 +547,8 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
 
         All the existing trap types can be used, but in practice only the
         mechanical traps (dart, bolt, arrow, needle, spear, axe, blade) make
-        sense. Note that travel tries to avoid traps if this is easily possible.
-        Defaults to none. For example,
+        sense. Note that travel tries to avoid traps if this is easily
+        possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 tc_reachable = blue
@@ -606,7 +607,7 @@ easy_open = false
 
 easy_butcher = true
         If true, auto-switch to uncursed short blade for butchery. For such 
-        tools any special messages are ignored. If false, you have to wield the 
+        tools any special messages are ignored. If false, you have to wield the
         tool manually.
 
 easy_unequip = true
@@ -635,7 +636,8 @@ default_autoprayer = false
         When set to true, the game will start with automatic prayers. This 
         option can be toggled in-game with Ctrl-V.
         Letting Crawl pray throughout and automatically can be useful for gods 
-        like Trog and Makhleb, who constantly demand kills from their followers.
+        like Trog and Makhleb, who constantly demand kills from their
+        followers.
 
         Automatic prayers take a turn like manual prayers and happen only if
         - there is no hostile monster in sight
@@ -653,7 +655,7 @@ sort_menus = (true | false | auto:X)
         equipment slot. 
         When set to a number - using a syntax of the form 
          sort_menus = auto:5
-        - items are sorted by their description if the total number of items in 
+        - items are sorted by their description if the total number of items in
         that category is at least that number; in the example, having 4 
         kinds of potions would not sort them, but having 5 would.
         
@@ -736,6 +738,10 @@ increasing_skill_progress = true
         read (0%). With false, you get the old behaviour which counts backwards
         from 10.
 
+show_inventory_weights = false
+        When this is set to true, inventory listings will mention the
+        weight of each item.
+
 show_turns = false
         This option controls whether the turn counter (of turns elapsed) is
         displayed in the main view.
@@ -763,9 +769,9 @@ fire_order = launcher, dart, stone, dagger, spear, handaxe, club
 4-k     Message Channels.
 -------------------------
 
-Crawl communicates to the players with its message window. Every message belongs
-to one of the so-called channels. The behaviour of each channel can be changed
-with the option
+Crawl communicates to the players with its message window. Every message
+belongs to one of the so-called channels. The behaviour of each channel can be
+changed with the option
 
         channel.CHANNEL_NAME = (COLOUR | mute | default | on | off | plain)
 
@@ -800,10 +806,10 @@ The channel options are
 
 The only multi-colour channels currently are monster_damage and god. All other
 channels are defaulted to on, except for multiturn, which defaults to mute.
-Note that the template init.txt sets 
+Note that the template init.txt sets
           channel.multiturn = on
 in order to help new players. You may want to comment out this option, if 
-the messages are too verbose.      
+the messages are too verbose.
 
 4-l     Inscriptions.
 ---------------------
@@ -854,11 +860,13 @@ flush.message = false
 5-a     Items and Kills.
 ------------------------
 
-The character dump or morgue files end with a list of all monsters that perished 
-while the character was active. By default, dead monsters are grouped in three parts:
+The character dump or morgue files end with a list of all monsters that
+perished while the character was active. By default, dead monsters are grouped
+in three parts:
    Vanquished Creatures    -- monsters killed by the character
    Collateral Kills        -- kills of friendly monsters
-   Others                  -- all other casualties (e.g. traps, hostile monsters)
+   Others                  -- all other casualties (e.g. traps, hostile
+                              monsters)
 
 kill_map = friend:you, other:you
         will merge friendly and other kills into the main vanquished creatures
@@ -880,8 +888,8 @@ dump_item_origins = artifacts, rods
         annotated. Available selectors are: 
                 artifacts, ego_arm, ego_weap, jewellery, runes, 
                 rods, staves, books, all, none.
-        If you use multiple dump_item_origins lines, the last line takes effect;
-        all preceding lines are ignored.
+        If you use multiple dump_item_origins lines, the last line takes
+        effect; all preceding lines are ignored.
 
         If you don't want any items to be annotated, set dump_item_origins to 
         none, and set dump_item_origin_price to -1.
@@ -928,9 +936,9 @@ note_items = <regexes>
           note_items = rod,book,rune,acquirement
 
 ood_interesting = 8
-        Monsters which are out of depth (OOD for short) for their current level,
-        e.g. a dragon on level 2, will be noted if they are out of depth by at 
-        least ood_interesting levels. To disable OOD monster noting, set 
+        Monsters which are out of depth (OOD for short) for their current
+        level, e.g. a dragon on level 2, will be noted if they are out of depth
+        by at least ood_interesting levels. To disable OOD monster noting, set 
         ood_interesting to 500; the default is 8.
         Unique monsters are always noted, regardless of this setting.
         OOD monsters are only noted in the main dungeon.
@@ -1035,9 +1043,10 @@ cset_XXX = <dungeon_character_name : symbol>
 
 feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour> }
-        where <regex> is a regular expression describing a dungeon feature. This
-        regex should match the description when using the 'x' command. In case
-        the regex matches several descriptions, all such features are affected.
+        where <regex> is a regular expression describing a dungeon feature.
+        This regex should match the description when using the 'x' command.
+        In case the regex matches several descriptions, all such features are
+        affected.
 
         The list in {...} specifies the appearance of the dungeon feature(s),
         and should be self-explanatory. <symbol> can be used to override the
@@ -1045,8 +1054,8 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         character.
 
         'magic' always refers to magic mapping. So the <magicmap symbol> entry
-        determines what symbol will be used for features only detected via magic
-        mapping.
+        determines what symbol will be used for features only detected via
+        magic mapping.
 
         Leading parameters in the {...} list can be omitted by leaving them 
         blank and using placeholder commas. Trailing parameters can be omitted
@@ -1069,11 +1078,12 @@ classic_item_colours = false
 ------------------------
 
 dos_use_background_intensity = false
-        On DOS and Windows, if you're using a console that can do high-intensity
-        background colours, set this option to true for superior
-        friend-branding. If your console doesn't like this option, some friendly
-        monsters will appear as blinking characters (and setting this option to
-        false may be advisable to preserve your sanity in such cases).
+        On DOS and Windows, if you're using a console that can do
+        high-intensity background colours, set this option to true for superior
+        friend-branding. If your console doesn't like this option, some
+        friendly monsters will appear as blinking characters (and setting this
+        option to false may be advisable to preserve your sanity in such
+        cases).
 
 6-c     Unix
 ------------
