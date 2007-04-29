@@ -1834,7 +1834,8 @@ static void handle_behaviour(monsters *mon)
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. -- bwr
 bool simple_monster_message(const monsters *monster, const char *event,
-                            int channel, int param)
+                            int channel, int param,
+                            description_level_type descrip)
 {
     char buff[INFO_SIZE];
 
@@ -1842,7 +1843,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || player_monster_visible(monster)))
     {
         snprintf( buff, sizeof(buff), "%s%s", 
-                  ptr_monam(monster, DESC_CAP_THE), event );
+                  ptr_monam(monster, descrip), event );
 
         mpr( buff, channel, param );
         return (true);

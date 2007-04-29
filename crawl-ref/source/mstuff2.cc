@@ -870,7 +870,8 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
         if (was_seen)
             simple_monster_message(monster, " reappears nearby!");
         else
-            simple_monster_message(monster, " appears out of thin air!");
+            simple_monster_message(monster, " appears out of thin air!",
+                                   MSGCH_PLAIN, 0, DESC_CAP_A);
     }
 
     if (player_monster_visible(monster) && now_visible)
