@@ -818,6 +818,8 @@ bool new_game(void)
             set_ident_type( you.inv[i].base_type, 
                             you.inv[i].sub_type, ID_KNOWN_TYPE );
             // link properly
+            you.inv[i].x = -1;
+            you.inv[i].y = -1;
             you.inv[i].link = i;
             you.inv[i].slot = index_to_letter(you.inv[i].link);
             item_colour( you.inv[i] );  // set correct special and colour
@@ -3866,31 +3868,30 @@ void give_items_skills()
         you.inv[3].plus = 0;
         you.inv[3].special = 0;
 
-        you.inv[4].base_type = OBJ_MISSILES;
-        you.inv[4].sub_type = MI_NEEDLE;
-        you.inv[4].quantity = 10 + roll_dice( 2, 10 );
-        you.inv[4].plus = 0;
-        set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
-
         // deep elves get hand crossbows, everyone else gets blowguns
         // (deep elves tend to suck at melee and need something that
         // can do ranged damage)
+        you.inv[4].base_type = OBJ_MISSILES;
         if (you.species == SP_DEEP_ELF)
         {
             you.inv[1].sub_type = WPN_HAND_CROSSBOW;
+            you.inv[4].base_type = OBJ_MISSILES;
             you.inv[4].sub_type = MI_DART;
+            you.inv[4].quantity = 10 + roll_dice( 2, 10 );
+            you.inv[4].plus = 0;
+            set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
         }
-        else if ( coinflip() )       // 50% chance of curare
+        else
         {
-            you.inv[5].base_type = OBJ_MISSILES;
-            you.inv[5].sub_type = MI_NEEDLE;
-            you.inv[5].quantity = 0;
-            while ( you.inv[4].quantity > 9 )
-            {
-                you.inv[4].quantity -= 7; // 7-1 tradeoff
-                you.inv[5].quantity++;
-            }
-            you.inv[5].plus = 0;
+            you.inv[4].base_type = OBJ_MISSILES;
+            you.inv[4].sub_type = MI_NEEDLE;
+            you.inv[4].plus = 0;
+
+            you.inv[5] = you.inv[4];
+            
+            you.inv[4].quantity = 5 + roll_dice(2, 5);
+            you.inv[5].quantity = 1 + random2(4);
+
             set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         }
 
